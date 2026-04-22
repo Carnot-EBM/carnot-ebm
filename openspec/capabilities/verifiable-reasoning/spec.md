@@ -13357,6 +13357,42 @@ Then: exit code is still 0 and a WARNING line is printed (non-blocking).
 
 **Implementation Status:** Implemented (tests/python/test_legacy_retirement.py, Exp 678)
 
+### REQ-INFRA-037: Slowest-5 Unchanged for >= 4 Milestones Triggers Mandatory Formal Retirement
+
+If any experiment appears in the slowest-5 for four or more consecutive milestones, the top-2
+offenders by total appearances MUST be formally retired in that milestone.  Retirement means:
+- results/experiment_N_retired.json with schema="carnot.retirement.v1" and status="retired".
+- An entry added to scripts/conductor_exclusion_manifest.json with reason="slowest_5_retired".
+This threshold was established after the Exp 425/410 case (4 consecutive milestones unchanged).
+
+**Implementation Status:** Implemented (results/experiment_425_retired.json, results/experiment_410_retired.json, Exp 692)
+
+### REQ-INFRA-038: JEPA v15 Cascade Blocked in Manifest Until v16 OOD AUC >= 0.75
+
+When a JEPA model version posts OOD AUC below random chance (< 0.5), the cascade of experiments
+that depend on it MUST be blocked in the conductor exclusion manifest with reason
+"ood_auc_below_random_blocked_until_v16".  The block is lifted only when v16 achieves OOD AUC >= 0.75.
+This rule was triggered by JEPA v15 posting OOD AUC=0.4751 (Exp 682, RETRO-072).
+
+**Implementation Status:** Implemented (scripts/conductor_exclusion_manifest.json, Exp 692)
+
+### SCENARIO-INFRA-046: Retirement Files Created for Slowest-5 Four-Consecutive Offenders
+
+Given: Exps 425, 410, 383 have appeared in slowest-5 for >= 4 consecutive milestones or are superseded.
+When: Exp 692 creates results/experiment_N_retired.json for each.
+Then: Each file is valid JSON with schema="carnot.retirement.v1", status="retired", and
+      honest_verdict="retired_formal_threshold_crossed".
+
+**Implementation Status:** Implemented (tests/python/test_experiment_692_preflight_v5.py, Exp 692)
+
+### SCENARIO-INFRA-047: JEPA v15 Cascade Block Verified in Manifest and Pre-flight Output
+
+Given: JEPA v15 OOD AUC=0.4751 (below random, Exp 682).
+When: Exp 692 adds "jepa_v15_cascade" entry to conductor_exclusion_manifest.json.
+Then: conductor_pre_flight.py stdout contains "Excluded experiments" listing the jepa_v15_cascade block.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_692_preflight_v5.py, Exp 692)
+
 ### REQ-VERIFY-155: VR 200q Scale — Signed Improvement with Wilson 95% CI Confirms .51 Win
 
 The VR 200-question scale experiment (Exp 679 VR 200q scale) MUST run structured-equation

@@ -48,11 +48,11 @@ tasks:
        in manifest until v16 OOD AUC >= 0.75), SCENARIO-INFRA-046/047 to spec.md.
     3. For each of Exps 425, 410, 383: check if retirement file exists.
        If missing or partial: create results/experiment_(N)_retired.json:
-         {"experiment": N, "status": "retired",
+         ("experiment": N, "status": "retired",
           "reason": "slowest_5_four_consecutive_milestones_or_superseded",
           "honest_verdict": "retired_formal_threshold_crossed",
           "milestone_retired": "2026.04.53",
-          "schema": "carnot.retirement.v1"}
+          "schema": "carnot.retirement.v1")
     4. Update scripts/conductor_exclusion_manifest.json:
        - Add entries for 425, 410, 383 (reason: "slowest_5_retired").
        - Add entry for "jepa_v15_cascade" (reason: "ood_auc_below_random_blocked_until_v16").
@@ -178,7 +178,7 @@ tasks:
        - test v16_architecture_spec is non-empty.
        Each test traces to REQ-LEARN-049/050.
     5. Reconcile:
-       - ops/status.md: add "JEPA v15 root cause identified: {root_cause} (Exp 693)".
+       - ops/status.md: add "JEPA v15 root cause identified: (root_cause) (Exp 693)".
        - ops/changelog.md: one-line with root_cause and honest_verdict.
     6. tmpl.assert_deliverable_written() as final line.
 
@@ -463,9 +463,9 @@ tasks:
        b. ExperimentTimeoutWatchdog(694, timeout_minutes=120).
        c. Read Exp 679 result; if signed_improvement <= 0: write analysis artifact, exit 0.
        d. GPU gate: CARNOT_FORCE_LIVE=1 required for Gemma inference.
-       e. setup_gpu([{"name": "google/gemma-4-E4B-it",
+       e. setup_gpu([("name": "google/gemma-4-E4B-it",
                       "hf_id": "unsloth/google-gemma-4-E4B-it-GGUF",
-                      "gpu": 0}]).
+                      "gpu": 0)]).
        f. Select hard GSM8K: load questions and filter to those where Qwen3.5-0.8B
           baseline accuracy was < 40% (use Exp 679 per-question results if available,
           else use questions 600-649 as proxy hard set). Select 50 questions.
@@ -546,7 +546,7 @@ tasks:
           verify_chain(steps: list[str]) -> list[dict]:
             For each step i: check if step[i] arithmetically entails step[i+1]
             using Z3StepVerifier.verify_step(prior_steps=steps[:i], current_step=steps[i+1]).
-            Return: [{"step_idx": i, "verdict": str, "entailment": bool}].
+            Return: [("step_idx": i, "verdict": str, "entailment": bool)].
           chain_correct(steps: list[str]) -> bool:
             All step entailments pass AND no "violation" verdict.
        b. EidokuCSP (arXiv 2512.20664 approach):
@@ -575,7 +575,7 @@ tasks:
     5. Write tests/python/test_formal_step_verifier.py and
        tests/python/test_eidoku_csp.py with 100% module coverage.
     6. Reconcile:
-       - ops/status.md: add "Tier 2.8 candidate: {tier_28_winner} (Exp 695)".
+       - ops/status.md: add "Tier 2.8 candidate: (tier_28_winner) (Exp 695)".
        - ops/changelog.md: one-line with tier_28_winner and both AUCs.
     7. tmpl.assert_deliverable_written() as final line.
 
@@ -689,7 +689,7 @@ tasks:
 
     GATE: Read results/experiment_679_vr_200q_scale.json (signed_improvement > 0 required)
     AND results/experiment_683_fr11_real_positives.json (fr11_real_positives_confirmed=True).
-    If either gate fails: emit "psv_real_blocked_gate_{which}" and exit 0.
+    If either gate fails: emit "psv_real_blocked_gate_(which)" and exit 0.
 
     EXISTING CODE TO READ FIRST:
     - results/experiment_679_vr_200q_scale.json — VR win gate.
@@ -720,14 +720,14 @@ tasks:
               For each chain: PSVSelfPlayLoop(n_iterations, n_questions_per_iter,
                               constraint_memory).run_iteration() x n_iterations.
             Merge: aggregate all violation pairs from both chains into shared memory.
-            Return: {"chain_results": list, "merged_constraint_updates": int,
-                     "parallel_speedup_factor": float}.
+            Return: ("chain_results": list, "merged_constraint_updates": int,
+                     "parallel_speedup_factor": float).
     4. Create scripts/experiment_697_psv_real_selfplay.py:
        a. apply_env_autofix() inside main() first.
        b. ExperimentTimeoutWatchdog(697, timeout_minutes=180).
        c. Read both gate files. Emit blocked artifact if either fails.
        d. GPU gate: CARNOT_FORCE_LIVE=1 required. If missing: emit blocked artifact.
-       e. setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+       e. setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
        f. Load 200 GSM8K questions (indices 400-599, same pool as Exp 688 for comparability).
        g. inference_fn = lambda q: generate_with_qwen(q, structured_equation_forcer).
           verify_fn = lambda r: SymCodeVerifier.verify(r).is_correct.
@@ -842,7 +842,7 @@ tasks:
        - test cascade unblock logic.
        Each test traces to REQ-LEARN-053/054.
     7. Reconcile:
-       - ops/status.md: update "JEPA v16: {honest_verdict}, OOD AUC={v16_ood_auc}".
+       - ops/status.md: update "JEPA v16: (honest_verdict), OOD AUC=(v16_ood_auc)".
        - ops/changelog.md: one-line with honest_verdict and ood_auc_delta.
     8. tmpl.assert_deliverable_written() as final line.
 
@@ -871,7 +871,7 @@ tasks:
 
     GATE: Read results/experiment_698_jepa_v16.json (v16 weights must exist).
     Read results/experiment_687_hallusat_sparse_ae.json (sparse AE weights must exist).
-    If either is missing: emit "blocked_on_upstream_{exp}" and exit 0.
+    If either is missing: emit "blocked_on_upstream_(exp)" and exit 0.
 
     EXISTING CODE TO READ FIRST:
     - results/experiment_698_jepa_v16.json — v16 baseline AUC and weights path.
@@ -919,7 +919,7 @@ tasks:
           sae_features_dim, sae_sparsity_rate, honest_verdict.
     5. Write tests/python/test_jepa_hallusae_v16.py with 100% module coverage.
     6. Reconcile:
-       - ops/status.md: update "JEPA v16 + HalluSAE: {honest_verdict}, delta_auc={delta_auc}".
+       - ops/status.md: update "JEPA v16 + HalluSAE: (honest_verdict), delta_auc=(delta_auc)".
        - ops/changelog.md: one-line with honest_verdict and delta_auc.
     7. tmpl.assert_deliverable_written() as final line.
 
@@ -974,8 +974,8 @@ tasks:
        a. ExperimentTimeoutWatchdog(700, timeout_minutes=30).
        b. Load all gate results.
        c. Provenance audit table:
-          For each headline result: {"metric": str, "value": float, "source_exp": int,
-          "inference_mode": str, "provenance_valid": bool (inference_mode=="live_gpu")}.
+          For each headline result: ("metric": str, "value": float, "source_exp": int,
+          "inference_mode": str, "provenance_valid": bool (inference_mode=="live_gpu")).
           All provenance_valid must be True for publication_ready=True.
        d. Write docs/technical_report_provenance.md (append or create):
           Table: | Metric | Value | Exp | inference_mode | Provenance |
@@ -999,7 +999,7 @@ tasks:
           n_headline_metrics, n_negative_results_documented, honest_verdict.
     4. Write tests/python/test_experiment_700_publication.py with 100% coverage.
     5. Reconcile:
-       - ops/status.md: add "Publication readiness: {honest_verdict} (Exp 700)".
+       - ops/status.md: add "Publication readiness: (honest_verdict) (Exp 700)".
        - ops/changelog.md: one-line with honest_verdict.
     6. tmpl.assert_deliverable_written() as final line.
 
@@ -1165,7 +1165,7 @@ tasks:
        - jepa_v16_cascade_unblocked: jepa_v16_ood_auc >= 0.75.
        Compute fr11_tier_advancement: count of tiers 1-4 with at least one positive result.
     8. Compute honest_verdict string:
-       Format: "wall_time_{direction}_jepa_v16_{auc_verdict}_psv_{psv_verdict}_distill_{distill_verdict}"
+       Format: "wall_time_(direction)_jepa_v16_(auc_verdict)_psv_(psv_verdict)_distill_(distill_verdict)"
        Where: auc_verdict = "unblocked" if >= 0.75 else "still_blocked"
               psv_verdict = "improving" if slope < 0 else "stable_or_degrading"
               distill_verdict = "confirmed" if invariant held else "violated"
