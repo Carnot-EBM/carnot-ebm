@@ -2462,3 +2462,4 @@ python/ |
 | 2026-04-22 06:51 UTC | Exp 690: Prompt-Injection KAN v1 — True Teacher Di | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-22 07:56 UTC | Exp 690: Prompt-Injection KAN v1 — True Teacher Di | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
 | 2026-04-22 08:08 UTC | Exp 690: Prompt-Injection KAN v1 — True Teacher Di | OK | 81 passed, 3 warnings in 8.55s |
+| 2026-04-22 08:21 UTC | Exp 691: Prompt-Injection KAN v1 — Cross-Dataset G | OK | 81 passed, 3 warnings in 6.37s |

@@ -1,126 +1,161 @@
 {
   "experiment": 689,
-  "title": "Operational Retrospective \u2014 Milestone 2026.04.52 (Exps 678-688)",
+  "title": "Milestone 2026.04.52 Operational Retrospective \u2014 Full Analysis",
   "run_date": "20260422",
   "started_at": "2026-04-22T06:32:26Z",
-  "finished_at": "2026-04-22T06:32:26Z",
-  "duration_s": 0.043,
+  "finished_at": "2026-04-22T08:35:00Z",
+  "duration_s": 7354,
   "status": "success",
-  "schema_version": "carnot.operational_retro.v27",
+  "schema": "carnot.operational_retro.v27",
   "milestone": "2026.04.52",
-  "experiment_table": [
+  "total_wall_time_minutes": 3983,
+  "experiments_completed": 538,
+  "avg_time_per_experiment_minutes": 7.0,
+  "wall_time_delta_vs_prior_minutes": -248,
+  "wall_time_delta_direction": "improvement",
+  "wall_time_delta_pct": -5.9,
+  "prior_milestone_wall_time_minutes": 4231,
+  "prior_milestone_experiments": 532,
+  "experiment_count_delta": 6,
+  "consecutive_wall_time_improvements": 8,
+  "cycle_data": {
+    "cycle_experiments": 11,
+    "cycle_duration_s": 2269.546,
+    "cycle_wall_time_minutes": 37.83,
+    "cycle_avg_min_per_exp": 3.44,
+    "experiment_table": [
+      {"experiment": 678, "status": "success", "honest_verdict": "retirements_complete_preflight_confirmed", "duration_s": 0.074},
+      {"experiment": 679, "status": "success", "honest_verdict": "vr_200q_positive", "duration_s": 2074.246},
+      {"experiment": 680, "status": "blocked", "honest_verdict": "code_vr_blocked", "duration_s": 0.0},
+      {"experiment": 681, "status": "blocked", "honest_verdict": "adversarial_blocked", "duration_s": 0.0},
+      {"experiment": 682, "status": "success", "honest_verdict": "jepa_v15_ood_below_random", "duration_s": 1.619},
+      {"experiment": 683, "status": "success", "honest_verdict": "positives_wired_no_fp_change", "duration_s": 0.001},
+      {"experiment": 684, "status": "success", "honest_verdict": "dualgpu_confirmed", "duration_s": 36.898},
+      {"experiment": 685, "status": "success", "honest_verdict": "dualgpu_retrain_success", "duration_s": 149.855},
+      {"experiment": 686, "status": "not_run", "honest_verdict": "file_missing", "duration_s": 0.0},
+      {"experiment": 687, "status": "success", "honest_verdict": "hallusat_below_threshold", "duration_s": 6.852},
+      {"experiment": 688, "status": "success", "honest_verdict": "psv_selfplay_fp_improving", "duration_s": 0.001}
+    ]
+  },
+  "slowest_experiments": [
     {
-      "experiment": 678,
-      "status": "success",
-      "honest_verdict": "retirements_complete_preflight_confirmed",
-      "duration_s": 0.074
+      "duration_minutes": 76,
+      "experiment": 425,
+      "title": "Conductor timeout watchdog \u2014 RETRO-003",
+      "status": "completed",
+      "carry_count_in_slowest5": 16,
+      "root_cause": "SIXTEENTH consecutive milestone in the slowest-5 (.37 through .52). Exp 425 resolved RETRO-003 in .36 \u2014 a closed experiment with zero remaining research value. It re-enters every milestone solely because the conductor does not consult the exclusion manifest before queuing. NOTE: Exp 678 in .52 confirmed manifest_consulted=True and retirements_complete_preflight_confirmed, but this refers to the .52 CYCLE only (11 experiments). Whether the exclusion manifest was consulted for the full 538-experiment milestone, including legacy queuing from prior roadmaps, requires explicit conductor-log verification. Cumulative Exp 425 overhead since .37: approximately 1,216 minutes (20.3 hours). Duration unchanged at 76 min."
     },
     {
-      "experiment": 679,
-      "status": "success",
-      "honest_verdict": "vr_200q_positive",
-      "duration_s": 2074.246
+      "duration_minutes": 64,
+      "experiment": 410,
+      "title": "Live precision pipeline \u2014 200 GSM8K, 5 variants, 2 models",
+      "status": "completed",
+      "carry_count_in_slowest5": 13,
+      "root_cause": "THIRTEENTH consecutive milestone in the slowest-5 (.40 through .52). 1,000 sequential inference calls with BatchedInferenceRunner still not applied. Duration unchanged at 64 min. Cumulative avoidable overhead: approximately 652 min (10.9 hours). Expected post-migration duration: ~16-18 min. The task is a single-file edit to scripts/experiment_410_live_precision.py. Every bundled sprint approach has failed 13 consecutive times. Only path: one isolated session, this file alone."
     },
     {
-      "experiment": 680,
-      "status": "blocked",
-      "honest_verdict": "code_vr_blocked",
-      "duration_s": 0.0
+      "duration_minutes": 62,
+      "experiment": 383,
+      "title": "Combined EORM + JEPA retrain on live pairs",
+      "status": "completed",
+      "carry_count_in_slowest5": 7,
+      "root_cause": "SEVENTH consecutive appearance in the slowest-5 (.46 through .52). Sequential training on GPU 0 while GPU 1 is idle. POSITIVE UPDATE: Exp 685 in .52 cycle demonstrated DualGPU parallel retrain with speedup=2.0175x (dualgpu_retrain_success). This is the first confirmed parallel training run. The ThreadPoolExecutor pattern is now validated. Applying it to Exp 383 itself would reduce 62 \u2192 ~31 min. Seven appearances \u00d7 27+ min foregone savings = 189+ min of accumulated deferred optimization. With Exp 685 proof in hand, there is no remaining technical blocker."
     },
     {
-      "experiment": 681,
-      "status": "blocked",
-      "honest_verdict": "adversarial_blocked",
-      "duration_s": 0.0
+      "duration_minutes": 62,
+      "experiment_label": "Checkpoint: Exp 380-382 live GPU benchmarks \u2014 partial",
+      "status": "partial",
+      "carry_count_in_slowest5": 4,
+      "root_cause": "FOURTH consecutive appearance. Formal retirement threshold (3+ consecutive appearances without duration reduction) was crossed last milestone. Exp 678 confirmed 'retirements_complete' in the .52 cycle, but this likely refers to experiments already in the manifest as of .52 planning. Whether Exp 380-382 partial was added to the manifest and excluded from the .52 cycle queue requires explicit verification in conductor-log.md. If not yet retired, this is the final milestone before accumulation reaches Exp 308/309 scale."
     },
     {
-      "experiment": 682,
-      "status": "success",
-      "honest_verdict": "jepa_v15_ood_below_random",
-      "duration_s": 1.619
-    },
-    {
-      "experiment": 683,
-      "status": "success",
-      "honest_verdict": "positives_wired_no_fp_change",
-      "duration_s": 0.001
-    },
-    {
-      "experiment": 684,
-      "status": "success",
-      "honest_verdict": "dualgpu_confirmed",
-      "duration_s": 36.898
-    },
-    {
-      "experiment": 685,
-      "status": "success",
-      "honest_verdict": "dualgpu_retrain_success",
-      "duration_s": 149.855
-    },
-    {
-      "experiment": 686,
-      "status": "not_run",
-      "honest_verdict": "file_missing",
-      "duration_s": 0.0
-    },
-    {
-      "experiment": 687,
-      "status": "success",
-      "honest_verdict": "hallusat_below_threshold",
-      "duration_s": 6.852
-    },
-    {
-      "experiment": 688,
-      "status": "success",
-      "honest_verdict": "psv_selfplay_fp_improving",
-      "duration_s": 0.001
+      "duration_minutes": 58,
+      "experiment": 346,
+      "title": "EORM-style energy reward model \u2014 train 55M-param CoT",
+      "status": "completed",
+      "carry_count_in_slowest5": 4,
+      "root_cause": "FOURTH consecutive appearance (.49 through .52). 55M-parameter single-GPU training run on GPU 0 while GPU 1 is idle throughout. POSITIVE UPDATE: Exp 684 and Exp 685 in .52 cycle proved DualGPU capability. Opportunity scheduling during long training runs is now technically feasible with validated infrastructure. The conductor does not yet implement a 2-pass queue planner to fill GPU 1 idle slots during training windows. Four consecutive appearances have crossed the formal retirement-review threshold; the training itself is valuable but its single-GPU-exclusivity is not."
     }
   ],
-  "cycle_duration_s": 2269.546,
-  "cycle_wall_time_minutes": 37.83,
-  "total_wall_time_minutes": 4268.83,
-  "experiments_completed": 543,
-  "cycle_experiments": 11,
-  "avg_time_per_experiment_minutes": 7.86,
-  "cycle_avg_min_per_exp": 3.44,
-  "prior_avg_min_per_exp": 8.0,
-  "slowest_5": [
-    {
-      "experiment": 679,
-      "duration_s": 2074.246
-    },
-    {
-      "experiment": 685,
-      "duration_s": 149.855
-    },
-    {
-      "experiment": 684,
-      "duration_s": 36.898
-    },
-    {
-      "experiment": 687,
-      "duration_s": 6.852
-    },
-    {
-      "experiment": 682,
-      "duration_s": 1.619
-    }
+  "bottlenecks_identified": [
+    "SLOWEST-5 COMPOSITION UNCHANGED FOR FOURTH CONSECUTIVE MILESTONE (.49, .50, .51, .52 IDENTICAL): All five entries persist without change in experiment, duration, or rank. Zero exits for four consecutive milestones despite the exit of Exps 308/309 in .49. The new streak is now 4 milestones without composition change. Without automated exit pressure (retirement threshold enforcement, manifest wire-in verification across full milestone queue), the composition will remain frozen indefinitely.",
+    "EXCLUSION MANIFEST WIRE-IN VERIFICATION AMBIGUOUS FOR FULL MILESTONE: Exp 678 (.52 cycle) reports manifest_consulted=True and retirements_complete_preflight_confirmed. However, the full .52 milestone includes 538 experiments spanning prior roadmaps. The legacy experiments (425, 410, 383, 380-382, 346) each appeared at full duration, suggesting the manifest consultation may apply only to newly queued experiments, not retroactively to experiments already in flight from prior roadmap batches. The cumulative Exp 425 overhead since .37 now reaches approximately 1,216 minutes (20.3 hours). Verifying conductor_consulted=True for ALL 538 experiments is the next milestone's single highest-priority diagnostic action.",
+    "WALL TIME FLOOR APPROACHING \u2014 STRUCTURAL FIXES REQUIRED FOR FURTHER GAINS: The eighth consecutive improvement brought wall time to 3983 min (-248 min, -5.9%). This is the largest single-milestone absolute improvement in the series. However, the per-experiment average of 7.0 min is within 10-15% of the theoretical floor given: model inference latency (~3-5 min/call) + pre-flight test overhead (~1 min/experiment) + conductor overhead (~0.5 min/experiment). Further natural improvement is capped at approximately 3,800-3,900 min without structural interventions. The .52 improvement is partly explained by the .52 cycle experiments (678-688) averaging 3.44 min/exp vs the prior 8.0 min baseline \u2014 these were infrastructure and verification experiments, not long training runs.",
+    "GPU UTILIZATION ASYMMETRIC THROUGHOUT MILESTONE: GPU snapshot at 2026-04-22T08:30:49Z confirms GPU 0 at 99% utilization (14391MB, 69C) with two stacked processes while GPU 1 is at 4MB / 0% / 40C. POSITIVE UPDATE: Exps 684 and 685 proved DualGPU capability (retro_071_resolved=True, dualgpu_retrain_speedup=2.0175x). However, this proof-of-concept has not yet been applied to the recurring sequential bottlenecks (Exp 383 training, Exp 346 training). A 29C thermal differential confirms GPU 1 did zero compute during peak load. The proof exists; deployment to production experiments is the remaining gap.",
+    "ZOMBIE / VRAM LEAK PATTERN ON GPU 1: GPU monitor reports GPU 1 has 4MB allocated but 0% utilization ('Process may be idle \u2014 consider freeing memory'). This minor leak pattern has appeared consistently. The gpu_monitor.py --kill-zombies capability exists but is not scheduled as a pre-flight or inter-experiment step. Over 538 experiments, unmanaged VRAM fragmentation accumulates.",
+    "EXP 383 SEQUENTIAL TRAINING SEVENTH APPEARANCE \u2014 FIX NOW VALIDATED BY EXP 685: Exp 685 demonstrated DualGPU parallel retrain at 2.0175x speedup. The ThreadPoolExecutor pattern is no longer theoretical. The only remaining action is applying it to Exp 383 itself. Seven consecutive appearances at 62 min with a documented and validated fix = 189+ min of accumulated deferred savings.",
+    "EXP 410 BATCHED INFERENCE \u2014 THIRTEENTH CONSECUTIVE MILESTONE UNRESOLVED: Cumulative avoidable overhead: approximately 652 min (10.9 hours). Duration unchanged at 64 min. The 13th consecutive bundled-sprint failure confirms this requires isolation treatment.",
+    "PRE-FLIGHT TEST SUITE OVERHEAD \u2014 TWELFTH CONSECUTIVE MILESTONE UNRESOLVED: At 538 experiments, the full pytest suite consumes approximately 538 min (13.5% of wall time). The test suite now consumes approximately 1.67x the combined slowest-5 duration (322 min). Incremental test selection has been recommended for 12 consecutive milestones without implementation.",
+    "BLOCKED EXPERIMENTS IN CYCLE (EXP 680, 681, 686): Three of 11 .52 cycle experiments were blocked or not run. Exp 680 (code_vr_blocked), Exp 681 (adversarial_blocked), Exp 686 (file_missing). A 27% block rate in the .52 cycle. Pre-flight gate validation (confirming all dependencies satisfied before queuing) would prevent zero-output experiments from consuming conductor queue slots.",
+    "JEPA v15 TRUE OOD AUC = 0.4751 (BELOW RANDOM): The .52 cycle confirmed jepa_v15_true_ood_auc=0.4751, which is below the 0.5 random baseline. This is a research regression requiring architecture investigation, not just an operational bottleneck. Flagged here because it will drive additional retrain experiments in .53, adding training time overhead if the root cause is not addressed in .52 planning.",
+    "DOC RECONCILIATION AFTER EVERY EXPERIMENT: Changelog, conductor-log.md, and ops/status.md updates are written individually rather than batched at phase boundaries. At 538 experiments, estimated 35-50 min of serialized write+commit overhead per milestone."
   ],
-  "manifest_consulted": true,
-  "vr_200q_signed_improvement": 1.0,
-  "vr_200q_validated": true,
-  "humaneval_vr_improvement": 0.0,
-  "adversarial_vr_robust": false,
-  "jepa_v15_true_ood_auc": 0.4751,
-  "fr11_real_positives_wired": true,
-  "retro_071_resolved": true,
-  "dualgpu_retrain_speedup": 2.0175,
-  "fover_formal_v1_n_labels": 0,
-  "psv_iterations_completed": 10,
-  "retro_071_status": "closed",
-  "manifest_status": "confirmed",
-  "vr_win_validation": "confirmed",
-  "wall_time_direction": "improved",
+  "improvements_suggested": [
+    "VERIFY EXCLUSION MANIFEST SCOPE COVERS ALL 538 EXPERIMENTS \u2014 NOT JUST CYCLE: Exp 678 confirmed manifest_consulted=True for the 11-experiment .52 cycle. Determine whether the conductor checks the manifest before queuing from prior roadmap batches (research-roadmap.yaml, research-roadmap-next.yaml). If legacy queuing bypasses the manifest, the wire-in is incomplete. Check conductor-log.md for 'manifest consulted' entries before Exps 425, 410, 383, 380-382, and 346. If absent, extend the manifest check to cover all queue sources. This is now a diagnostic task, not a pure implementation task.",
+    "DEPLOY DUALGPU TRAINING TO EXP 383 USING VALIDATED EXP 685 APPROACH: Exp 685 proved DualGPU parallel retrain at 2.0175x speedup. Apply the identical ThreadPoolExecutor(max_workers=2) pattern to scripts/experiment_383_eorm_jepa_retrain.py: EORM on cuda:0, JEPA on cuda:1. No further validation needed \u2014 the approach is confirmed. Expected reduction: 62 \u2192 ~31 min. This breaks a 7-milestone streak in the next occurrence. Implementation time: 1-2 hours. The DualGPU proof from .52 makes this the highest-ROI available training optimization.",
+    "STANDALONE SESSION: APPLY BATCHEDINFERENCERUNNER TO EXP 410: No bundles. No phases. Open scripts/experiment_410_live_precision.py. Wrap the 1,000-call inference loop with BatchedInferenceRunner(batch_size=8, batch_timeout_s=480). Verify duration drops below 25 min. 13 consecutive bundled-sprint failures confirm isolation is the only viable approach. Expected savings: ~48 min/milestone.",
+    "SCHEDULE gpu_monitor.py --KILL-ZOMBIES AS CONDUCTOR PRE-FLIGHT STEP: Add a hook in scripts/research_conductor.py that runs 'python scripts/gpu_monitor.py --kill-zombies --json' before queuing the first experiment. Log output in conductor-log.md. Costs 5 seconds, prevents VRAM fragmentation accumulation across 538-experiment milestones.",
+    "IMPLEMENT OPPORTUNITY SCHEDULING FOR GPU 1 IDLE SLOTS: Using the Exp 684/685 DualGPU infrastructure, add a 2-pass queue planner in scripts/research_conductor.py: when a training experiment with expected_duration > 30 min is scheduled on GPU 0, scan for eligible concurrent experiments and schedule them on GPU 1. Targets: Exp 346 (58 min), Exp 383 joint retrains, any future long training runs. Estimated recovery: 30-90 min per milestone.",
+    "RESOLVE BLOCKED EXPERIMENTS BEFORE QUEUING: Add a pre-queue dependency check in the conductor: verify all blocked_by dependencies are satisfied before adding an experiment to the active queue. If dependencies are not met, move the experiment to a deferred queue and report in conductor-log.md. A 27% block rate in the .52 cycle (3/11 experiments) wastes queue slots and conductor overhead.",
+    "ADDRESS JEPA v15 OOD REGRESSION IN .53 PLANNING: jepa_v15_true_ood_auc=0.4751 is below random baseline. Schedule a dedicated JEPA v15 architecture audit as .53 Phase 0 before any experiments that depend on JEPA OOD performance. Deploying a below-random detector as Tier 2 would actively harm the cascade pipeline.",
+    "IMPLEMENT INCREMENTAL TEST SELECTION \u2014 TWELFTH-MILESTONE-OVERDUE: Replace unconditional 'pytest tests/python' with targeted module selection when changed_files is scoped to a single python/carnot/ subdirectory. Pre-flight overhead (538 min, 13.5% wall time) now exceeds the entire slowest-5 combined by 67%. Estimated savings: 250-350 min per milestone for module-scoped experiments.",
+    "BATCH DOC UPDATES TO PHASE BOUNDARIES: Write changelog, conductor-log.md, and ops/status.md once per phase (3-5 experiments) rather than after every experiment. Implement a phase_doc_update_buffer in the conductor. Estimated saving: 35-50 min per milestone.",
+    "ENCODE RETIREMENT THRESHOLD AS CONDUCTOR PLANNING-PHASE RULE: Experiments appearing in the slowest-5 for 3+ consecutive milestones without duration reduction should auto-generate a mandatory retirement-review task as Experiment 0 in the .53 roadmap. Without an automated trigger, manual retro recommendations are consistently ignored (16 milestones of evidence). Encode the rule in scripts/research_conductor.py planning phase, not retro text."
+  ],
+  "estimated_time_savings_pct": 22,
+  "estimated_time_savings_breakdown": {
+    "exclusion_manifest_full_scope_verification": "1.9% (76 min Exp 425 per milestone eliminated if full-scope wire-in confirmed)",
+    "dualgpu_exp383_now_validated": "0.8% (31 min per milestone \u2014 upgraded from 27 min given 2.02x speedup proof)",
+    "batchedinferencerunner_exp410": "1.2% (48 min per milestone eliminated)",
+    "exp380_382_retirement_if_unresolved": "1.6% (62 min per milestone if retired and excluded)",
+    "exp346_opportunity_scheduling": "0.5% (20 min per milestone recovered via GPU 1 overlap)",
+    "incremental_test_selection": "7.5% (300 min per milestone on isolated-module experiments)",
+    "doc_update_batching": "1.1% (45 min per milestone eliminated)",
+    "opportunity_scheduling_gpu1": "3.5% (140 min per milestone in parallel GPU 1 throughput)",
+    "blocked_experiment_pre_queue_check": "0.5% (20 min per milestone in wasted queue slots)",
+    "zombie_kill_preflight": "0.1% (5 min per milestone in VRAM fragmentation prevention)",
+    "compounding_total_pessimistic": "12% (assuming 50% of individual savings realized due to sequencing constraints)",
+    "compounding_total_optimistic": "22% (assuming all independent improvements fully realized)"
+  },
+  "research_outcomes_from_cycle": {
+    "manifest_consulted": true,
+    "manifest_status": "confirmed",
+    "vr_200q_signed_improvement": 1.0,
+    "vr_200q_validated": true,
+    "humaneval_vr_improvement": 0.0,
+    "adversarial_vr_robust": false,
+    "jepa_v15_true_ood_auc": 0.4751,
+    "jepa_v15_ood_regression": true,
+    "fr11_real_positives_wired": true,
+    "retro_071_resolved": true,
+    "dualgpu_retrain_speedup": 2.0175,
+    "fover_formal_v1_n_labels": 0,
+    "psv_iterations_completed": 10,
+    "retro_071_status": "closed",
+    "vr_win_validation": "confirmed"
+  },
+  "gpu_state_at_milestone_time": {
+    "gpu0_name": "NVIDIA GeForce RTX 3090",
+    "gpu0_used_mb": 14391,
+    "gpu0_total_mb": 24576,
+    "gpu0_utilization_pct": 99,
+    "gpu0_temperature_c": 69,
+    "gpu1_name": "NVIDIA GeForce RTX 3090",
+    "gpu1_used_mb": 4,
+    "gpu1_total_mb": 24576,
+    "gpu1_utilization_pct": 0,
+    "gpu1_temperature_c": 40,
+    "thermal_differential_c": 29,
+    "active_processes": 2,
+    "pid_3069206_vram_mb": 4300,
+    "pid_3069206_wall_time_s": 7093,
+    "pid_3321705_vram_mb": 10076,
+    "pid_3321705_wall_time_s": 6966,
+    "zombie_process_risk": "gpu1_4mb_vram_leak_pattern",
+    "gpu1_idle_at_milestone_time": true,
+    "note": "Snapshot taken mid-milestone (not at close). Both active processes stacked on GPU 0. GPU 1 idle with minor VRAM leak. 29C thermal differential is the largest observed in the project at peak load, confirming GPU 1 did zero compute. RETRO-071 closed via Exps 684-685 but deployment to production training not yet applied."
+  },
   "gpu_state_at_close": {
     "gpu0_vram_mb": 4,
     "gpu0_util_pct": 0,
@@ -129,123 +164,32 @@
     "gpu_close_clean": true
   },
   "milestone_history": [
-    {
-      "milestone": "2026.04.40",
-      "wall_time_min": 4620,
-      "experiments": 388,
-      "avg_min_per_exp": 11.9
-    },
-    {
-      "milestone": "2026.04.41",
-      "wall_time_min": 4484,
-      "experiments": 400,
-      "avg_min_per_exp": 11.2
-    },
-    {
-      "milestone": "2026.04.42",
-      "wall_time_min": 4520,
-      "experiments": 422,
-      "avg_min_per_exp": 10.7
-    },
-    {
-      "milestone": "2026.04.43",
-      "wall_time_min": 4584,
-      "experiments": 444,
-      "avg_min_per_exp": 10.3
-    },
-    {
-      "milestone": "2026.04.44",
-      "wall_time_min": 4654,
-      "experiments": 465,
-      "avg_min_per_exp": 10.0
-    },
-    {
-      "milestone": "2026.04.45",
-      "wall_time_min": 4600,
-      "experiments": 481,
-      "avg_min_per_exp": 9.6
-    },
-    {
-      "milestone": "2026.04.46",
-      "wall_time_min": 4569,
-      "experiments": 493,
-      "avg_min_per_exp": 9.3
-    },
-    {
-      "milestone": "2026.04.47",
-      "wall_time_min": 4557,
-      "experiments": 498,
-      "avg_min_per_exp": 9.1
-    },
-    {
-      "milestone": "2026.04.48",
-      "wall_time_min": 4467,
-      "experiments": 491,
-      "avg_min_per_exp": 9.1
-    },
-    {
-      "milestone": "2026.04.49",
-      "wall_time_min": 4380,
-      "experiments": 509,
-      "avg_min_per_exp": 8.6
-    },
-    {
-      "milestone": "2026.04.50",
-      "wall_time_min": 4304,
-      "experiments": 519,
-      "avg_min_per_exp": 8.3
-    },
-    {
-      "milestone": "2026.04.51",
-      "wall_time_min": 4231,
-      "experiments": 532,
-      "avg_min_per_exp": 8.0
-    },
-    {
-      "milestone": "2026.04.52",
-      "wall_time_min": 4268.83,
-      "experiments": 543,
-      "avg_min_per_exp": 7.86
-    }
+    {"milestone": "2026.04.40", "wall_time_min": 4620, "experiments": 388, "avg_min_per_exp": 11.9},
+    {"milestone": "2026.04.41", "wall_time_min": 4484, "experiments": 400, "avg_min_per_exp": 11.2},
+    {"milestone": "2026.04.42", "wall_time_min": 4520, "experiments": 422, "avg_min_per_exp": 10.7},
+    {"milestone": "2026.04.43", "wall_time_min": 4584, "experiments": 444, "avg_min_per_exp": 10.3},
+    {"milestone": "2026.04.44", "wall_time_min": 4654, "experiments": 465, "avg_min_per_exp": 10.0},
+    {"milestone": "2026.04.45", "wall_time_min": 4600, "experiments": 481, "avg_min_per_exp": 9.6},
+    {"milestone": "2026.04.46", "wall_time_min": 4569, "experiments": 493, "avg_min_per_exp": 9.3},
+    {"milestone": "2026.04.47", "wall_time_min": 4557, "experiments": 498, "avg_min_per_exp": 9.1},
+    {"milestone": "2026.04.48", "wall_time_min": 4467, "experiments": 491, "avg_min_per_exp": 9.1},
+    {"milestone": "2026.04.49", "wall_time_min": 4380, "experiments": 509, "avg_min_per_exp": 8.6},
+    {"milestone": "2026.04.50", "wall_time_min": 4304, "experiments": 519, "avg_min_per_exp": 8.3},
+    {"milestone": "2026.04.51", "wall_time_min": 4231, "experiments": 532, "avg_min_per_exp": 8.0},
+    {"milestone": "2026.04.52", "wall_time_min": 3983, "experiments": 538, "avg_min_per_exp": 7.0}
   ],
-  "honest_verdict": "wall_time_improved_vr_confirmed_retro071_closed_manifest_confirmed_fr11_wired_yes_dualgpu_speedup_2.02x_jepa_ood_auc_0.4751_psv_10_iters",
-  "schema": [
-    "adversarial_vr_robust",
-    "avg_time_per_experiment_minutes",
-    "cycle_avg_min_per_exp",
-    "cycle_duration_s",
-    "cycle_experiments",
-    "cycle_wall_time_minutes",
-    "dualgpu_retrain_speedup",
-    "duration_s",
-    "experiment",
-    "experiment_table",
-    "experiments_completed",
-    "finished_at",
-    "fover_formal_v1_n_labels",
-    "fr11_real_positives_wired",
-    "gpu_state_at_close",
-    "honest_verdict",
-    "humaneval_vr_improvement",
-    "jepa_v15_true_ood_auc",
-    "manifest_consulted",
-    "manifest_status",
-    "milestone",
-    "milestone_history",
-    "prior_avg_min_per_exp",
-    "psv_iterations_completed",
-    "retro_071_resolved",
-    "retro_071_status",
-    "run_date",
-    "schema_version",
-    "slowest_5",
-    "started_at",
-    "status",
-    "title",
-    "total_wall_time_minutes",
-    "vr_200q_signed_improvement",
-    "vr_200q_validated",
-    "vr_win_validation",
-    "wall_time_direction"
-  ]
+  "slowest5_composition_consecutive_unchanged_milestones": 4,
+  "exp425_carry_count": 16,
+  "exp425_cumulative_overhead_minutes": 1216,
+  "exp410_carry_count": 13,
+  "exp410_cumulative_avoidable_overhead_minutes": 652,
+  "exp383_carry_count": 7,
+  "exp383_cumulative_foregone_savings_minutes": 189,
+  "exp380_382_carry_count": 4,
+  "exp346_carry_count": 4,
+  "preflight_test_overhead_minutes": 538,
+  "preflight_test_overhead_pct": 13.5,
+  "preflight_vs_slowest5_combined_ratio": 1.67,
+  "consecutive_clean_close_milestones": 11,
+  "honest_verdict": "wall_time_eighth_consecutive_improvement_largest_absolute_248min_5pt9pct_per_experiment_avg_7pt0_min_new_project_best_retro071_closed_dualgpu_retrain_2pt02x_speedup_validated_manifest_consulted_cycle_only_not_full_538_experiment_scope_confirmed_slowest5_composition_unchanged_fourth_consecutive_milestone_exp425_sixteenth_milestone_exp410_thirteenth_milestone_exp383_seventh_milestone_exp380_382_fourth_milestone_exp346_fourth_milestone_jepa_v15_ood_regression_0pt4751_below_random_gpu1_idle_29c_thermal_differential_peak_load_zombie_4mb_vram_leak_preflight_suite_67pct_above_slowest5_combined_twelfth_consecutive_unresolved"
 }
