@@ -263,6 +263,61 @@ OWASP LLM-01 stress test (seed=679),
 `honest_verdict == "generalization_verified_publishable"`, a model card is
 written to `python/carnot/models/prompt_injection_kan_v1_MODELCARD.md`.
 
+### REQ-SAFE-011: Distillation Invariant — Machine-Checkable Teacher Inference Guard
+
+**Motivation:**
+Exps 652 and 669 declared `distillation_*` verdicts without invoking the teacher
+model.  Evidence: Exp 652 completed in ~30 s for a claimed 2000-prompt corpus;
+Exp 669 in 16.84 s for 200 prompts.  A single `gpt-oss-safeguard-20b` Q4_K_M
+inference call takes 5-30 s on GPU; 200 prompts require 400-700 s minimum.  Both
+runs silently used corpus-origin labels — a source detector, not a distilled model.
+
+**Requirement:**
+Any result artifact that contains an `honest_verdict` beginning with
+`"distillation_"` MUST satisfy:
+
+```
+teacher_inference_duration_s >= len(corpus) * 0.5
+```
+
+where `teacher_inference_duration_s` is the sum of per-prompt `elapsed_s` values
+across ALL corpus examples (including prior cached runs), and `len(corpus)` is the
+number of unique prompts used to build the classifier.
+
+**Enforcement:**
+If the assertion fails, the script MUST:
+1. Log `teacher_inference_duration_s` and the threshold prominently.
+2. Refuse to emit any `distillation_*` verdict.
+3. Emit `honest_verdict="distillation_invariant_violated_source_labels_used"` instead.
+
+**Result schema additions (MANDATORY when a `distillation_` verdict is emitted):**
+- `teacher_inference_duration_s` (float): total seconds of teacher inference across corpus.
+- `teacher_inference_mean_s_per_prompt` (float): mean seconds per prompt.
+- `teacher_vs_source_agreement_rate` (float in [0, 1]): agreement between teacher
+  labels and corpus-origin labels.  If < 0.80, this is a headline research finding
+  that v0 was learning dataset artifacts.
+- `invariant_passed` (bool): True iff the invariant was satisfied.
+- `req_safe_011_compliant` (bool): True only when invariant passed and verdict is honest.
+
+### SCENARIO-SAFE-011: Distillation Invariant Enforcement
+
+**Given** an experiment script that runs teacher inference with `gpt-oss-safeguard-20b`
+and builds a teacher-labeled corpus,
+
+**When** the total `teacher_inference_duration_s` is less than
+`len(corpus) * 0.5` (i.e. the inference was too fast to be real),
+
+**Then** the script emits `honest_verdict="distillation_invariant_violated_source_labels_used"`
+and does NOT emit any `distillation_*` verdict, even if such a verdict would otherwise
+match the AUROC threshold.  The violation is logged with the duration and threshold
+prominently.
+
+**And** when `teacher_inference_duration_s >= len(corpus) * 0.5`,
+
+**Then** the script emits the appropriate `distillation_*` verdict based on AUROC,
+and the result JSON includes `teacher_inference_duration_s`, `teacher_inference_mean_s_per_prompt`,
+`teacher_vs_source_agreement_rate`, `invariant_passed=True`, and `req_safe_011_compliant=True`.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -274,3 +329,4 @@ written to `python/carnot/models/prompt_injection_kan_v1_MODELCARD.md`.
 | REQ-SAFE-008 | Proposed | Target: Exp 652 (distillation CLI + dataset artifact) |
 | REQ-SAFE-009 | Proposed | Enforced via result-schema validator in Exp 652 |
 | REQ-SAFE-010 | Implemented | Exp 679 gate; currently blocked on Exp 678 (v1 weights absent) |
+| REQ-SAFE-011 | Implemented | Exp 690 distillation invariant guard; prevents rubber-stamp verdicts |
