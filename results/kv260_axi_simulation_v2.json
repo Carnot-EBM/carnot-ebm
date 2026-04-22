@@ -1,0 +1,66 @@
+{
+  "experiment": "kv260_axi_simulation_v2",
+  "title": "KV260 AXI-Lite slave simulation — RTL protocol compliance verified, on-hardware hang narrowed to infrastructure",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T15:58:00Z",
+  "finished_at": "2026-04-22T15:59:02Z",
+  "duration_s": 3,
+  "status": "success",
+  "schema": "carnot.kv260_sim.v1",
+  "honest_verdict": "rtl_axi_compliance_verified_hang_narrowed_to_infra",
+
+  "context": "On-hardware Exp 661 wedged the KV260 PS twice. Hypothesis: the AXI-Lite state machine in ising_sampler_v2.v line 325-352 deadlocks when AW and W channels arrive on different cycles. This simulation tested that hypothesis directly and REJECTED it.",
+
+  "tool": "Vivado xsim 2025.2.1",
+  "dut_source": "hardware/kv260/ising_sampler_v2.v",
+  "testbench_source": "hardware/kv260/ising_sampler_v2_axi_tb.v",
+
+  "scenarios_tested": [
+    {"id": 1, "name": "AWVALID+WVALID same cycle",      "result": "PASS", "cycles_to_bvalid": 3},
+    {"id": 2, "name": "AWVALID leads WVALID by 3 cycles", "result": "PASS", "cycles_to_awready": 2, "cycles_to_bvalid": 1},
+    {"id": 3, "name": "WVALID leads AWVALID by 3 cycles", "result": "PASS", "cycles_to_awready": 2, "cycles_to_bvalid": 1},
+    {"id": 4, "name": "SPIN_COUNT readback",             "result": "PASS", "read_value": 128, "expected": 128}
+  ],
+  "total_scenarios": 4,
+  "scenarios_passed": 4,
+  "scenarios_failed": 0,
+  "errors": 0,
+
+  "hypothesis_rejected": "AXI-Lite state machine deadlocks on split AW/W channels — the state machine correctly waits for both VALIDs to coincide and acknowledges in 2 cycles regardless of interleaving. The on-hardware hang is NOT in the AXI protocol logic.",
+
+  "remaining_hypotheses_for_hang": [
+    {
+      "rank": 1,
+      "description": "pl_clk0 not actually running on-hardware despite xmutil loadapp success — overlay's fclk_cfg fragment did not activate the clock. PL has no ACLK, slave's clocked always-block never fires, ACK never asserts, PS AXI master blocks forever.",
+      "evidence": "Matches observed symptom (first access hangs the whole PS). Simulation assumes ACLK is toggling; hardware might not.",
+      "next_experiment": "On Kria, after xmutil loadapp, probe /sys/class/fclk/fclk0/ state AND read CRL_APB PL0_REF_CTRL register via devmem2 to confirm pl_clk0 is actually running at 40 MHz before any AXI access."
+    },
+    {
+      "rank": 2,
+      "description": "AXI SmartConnect upstream of the sampler has a protocol-violation monitor that hangs the PS interconnect on some edge case not reproduced in a bare-DUT testbench.",
+      "evidence": "SmartConnect is authored by Xilinx; protocol monitors are aggressive by default. This testbench connects directly to the sampler with no SmartConnect in the loop.",
+      "next_experiment": "Extend testbench to instantiate an axi_protocol_checker (or hand-code one) between the master BFM and the sampler to catch any subtle protocol errors."
+    },
+    {
+      "rank": 3,
+      "description": "Dynamic power integrity — 128 LFSRs + 128 sigmoid LUTs + 128 DSP multipliers switching simultaneously exceeds K26 power envelope on a cold start.",
+      "evidence": "N=64 build uses 1088 DSPs (87% of XCK26 budget). Simultaneous activation on first cycle could cause a supply droop that corrupts PS registers.",
+      "next_experiment": "Add a 16-cycle 'warmup' sequence to the RTL that staggers LFSR enable signals across 16 cycles to spread the switching current. Cheap RTL change, would rule this out."
+    },
+    {
+      "rank": 4,
+      "description": "ARESETN held low — dfx-mgr did not release reset, state machine is parked and ACK never asserts.",
+      "evidence": "Less likely: dfx-mgr's reset-release is standard and well-tested. But trivial to verify from on-kria probe.",
+      "next_experiment": "On-kria, read the pl_resetn0 signal state via the proc_sys_reset AXI handle (or inspect /sys/bus/platform output)."
+    }
+  ],
+
+  "retro_074_status": "partial_diagnosis",
+  "retro_074_progress": "RTL AXI protocol hypothesis rejected (1 of 4 hypotheses eliminated). Next hypothesis to test: pl_clk0 not running. Does NOT require power-cycling the board — the fclk state probe is read-only.",
+
+  "artifacts_written": [
+    "hardware/kv260/ising_sampler_v2_axi_tb.v",
+    "hardware/kv260/sim_work/axi_tb.vcd",
+    "results/kv260_axi_simulation_v2.json"
+  ]
+}
