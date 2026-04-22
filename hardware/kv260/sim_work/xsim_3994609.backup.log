@@ -3,8 +3,8 @@
 # SW Build 6403652 on Thu Mar 19 13:47:00 MDT 2026
 # IP Build 6403511 on Thu Mar 19 12:41:45 MDT 2026
 # SharedData Build 6403650 on Thu Mar 19 14:02:13 MDT 2026
-# Start of session at: Wed Apr 22 17:26:23 2026
-# Process ID         : 1837371
+# Start of session at: Wed Apr 22 13:47:36 2026
+# Process ID         : 3994609
 # Current directory  : /home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/sim_work
 # Command line       : xsim -mode tcl -source {xsim.dir/split_sim/xsim_script.tcl}
 # Log file           : /home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/sim_work/xsim.log
@@ -13,13 +13,13 @@
 # Platform           : cachyos
 # Operating System   : CachyOS
 # Processor Detail   : AMD Ryzen AI 9 HX 370 w/ Radeon 890M
-# CPU Frequency      : 3399.082 MHz
+# CPU Frequency      : 3964.059 MHz
 # CPU Physical cores : 12
 # CPU Logical cores  : 24
 # Host memory        : 134305 MB
 # Swap memory        : 271743 MB
 # Total Virtual      : 406049 MB
-# Available Virtual  : 354119 MB
+# Available Virtual  : 378039 MB
 #-----------------------------------------------------------
 source xsim.dir/split_sim/xsim_script.tcl
 # xsim {split_sim} -autoloadwcfg -runall
@@ -33,31 +33,20 @@ run -all
 
 === SPIN_COUNT readback ===
 [732000] OK    ARREADY asserted after 2 cycles
-[780000] OK    RVALID asserted after 1 cycles
-[780000] OK    RDATA=0x00000080 (128)
-
-=== Aggressive AR drop (SmartConnect read pattern) ===
-[876000] OK    ARREADY asserted after 2 cycles (aggressive)
-[924000] OK    RVALID (after aggressive AR drop) asserted after 2 cycles
-[924000] OK    RDATA=0xdeadbeef (control reg read)
-
-=== Back-to-back reads (ar_done clear verification) ===
-[1020000] OK    ARREADY (B2B #1) asserted after 2 cycles
-[1068000] OK    RVALID (B2B #1) asserted after 1 cycles
-[1140000] OK    ARREADY (B2B #2) asserted after 2 cycles
-[1188000] OK    RVALID (B2B #2) asserted after 1 cycles
+[756000] OK    RVALID asserted after 0 cycles
+[756000] OK    RDATA=0x00000080 (128)
 
 === Second write (verify flags cleared) ===
-[1284000] OK    AWREADY #2 asserted after 2 cycles
-[1404000] OK    WREADY #2 asserted after 2 cycles
-[1452000] OK    BVALID #2 asserted after 1 cycles
+[852000] OK    AWREADY #2 asserted after 2 cycles
+[972000] OK    WREADY #2 asserted after 2 cycles
+[1020000] OK    BVALID #2 asserted after 1 cycles
 
 ==============================================
   Split AW/W tb: errors=0
   RESULT: RTL fix works — independent AW/W ACK verified
 ==============================================
 
-$finish called at time : 1476 ns : File "/home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/ising_sampler_v2_axi_tb_split.v" Line 226
+$finish called at time : 1044 ns : File "/home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/ising_sampler_v2_axi_tb_split.v" Line 171
 exit
-INFO: xsimkernel Simulation Memory Usage: 296876 KB (Peak: 354928 KB), Simulation CPU Usage: 1010 ms
-INFO: [Common 17-206] Exiting xsim at Wed Apr 22 17:26:26 2026...
+INFO: xsimkernel Simulation Memory Usage: 296864 KB (Peak: 354916 KB), Simulation CPU Usage: 1430 ms
+INFO: [Common 17-206] Exiting xsim at Wed Apr 22 13:47:39 2026...

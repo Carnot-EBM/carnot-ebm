@@ -148,6 +148,61 @@ initial begin
     @(posedge ACLK);  RREADY <= 0;
 
     // -----------------------------------------------------------------------
+    // Scenario: aggressive AR drop — master drops ARVALID the instant it
+    // sees ARREADY assert.  RETRO-074 hang #6 analysis: SmartConnect drives
+    // the read channel with single-cycle ARVALID pulses; old RTL required
+    // ARVALID to stay high long enough for RVALID to fire, which never
+    // happened because the address decoder keyed off live S_AXI_ARADDR and
+    // the `axi_arready && S_AXI_ARVALID && !axi_rvalid` gate only fired
+    // when all three were true in the same cycle.  New RTL uses an
+    // ar_done/ar_addr_lat latch and must respond regardless of whether
+    // ARVALID is held past the handshake cycle.
+    // -----------------------------------------------------------------------
+    $display("\n=== Aggressive AR drop (SmartConnect read pattern) ===");
+    @(posedge ACLK);
+    ARADDR  <= ADDR_CONTROL;  ARVALID <= 1;  RREADY <= 1;
+    // Poll for ARREADY one cycle at a time so we can drop ARVALID on the
+    // very cycle ARREADY is sampled high.
+    waited = 0;
+    while (!ARREADY && waited < TIMEOUT) begin
+        @(posedge ACLK);
+        waited = waited + 1;
+    end
+    if (!ARREADY) begin
+        $display("[%0t] ERROR aggressive AR: ARREADY timeout after %0d cycles",
+                 $time, waited);
+        errors = errors + 1;
+    end else begin
+        $display("[%0t] OK    ARREADY asserted after %0d cycles (aggressive)",
+                 $time, waited);
+        ARVALID <= 0;  // drop immediately — takes effect next posedge
+    end
+    // RVALID must still fire because ar_done is latched.
+    `WAIT_OR_FAIL(RVALID, "RVALID (after aggressive AR drop)")
+    if (RVALID) begin
+        $display("[%0t] OK    RDATA=0x%08x (control reg read)", $time, RDATA);
+    end
+    @(posedge ACLK);  RREADY <= 0;
+
+    // -----------------------------------------------------------------------
+    // Scenario: back-to-back reads — exercises ar_done clear-on-RREADY path.
+    // -----------------------------------------------------------------------
+    $display("\n=== Back-to-back reads (ar_done clear verification) ===");
+    @(posedge ACLK);
+    ARADDR  <= ADDR_SPIN_COUNT;  ARVALID <= 1;  RREADY <= 1;
+    `WAIT_OR_FAIL(ARREADY, "ARREADY (B2B #1)")
+    @(posedge ACLK);  ARVALID <= 0;
+    `WAIT_OR_FAIL(RVALID, "RVALID (B2B #1)")
+    @(posedge ACLK);  // consume R beat
+
+    // Immediately issue second read — ar_done must have cleared.
+    ARADDR  <= ADDR_CONTROL;  ARVALID <= 1;
+    `WAIT_OR_FAIL(ARREADY, "ARREADY (B2B #2)")
+    @(posedge ACLK);  ARVALID <= 0;
+    `WAIT_OR_FAIL(RVALID, "RVALID (B2B #2)")
+    @(posedge ACLK);  RREADY <= 0;
+
+    // -----------------------------------------------------------------------
     // Second write (to confirm flags clear correctly after BREADY).
     // -----------------------------------------------------------------------
     $display("\n=== Second write (verify flags cleared) ===");
