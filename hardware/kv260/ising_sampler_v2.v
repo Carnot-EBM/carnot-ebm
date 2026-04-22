@@ -184,6 +184,13 @@ reg [31:0] axi_rdata;
 reg [1:0]  axi_rresp;
 reg [C_S_AXI_ADDR_WIDTH-1:0] aw_addr_lat;
 reg [C_S_AXI_DATA_WIDTH-1:0] w_data_lat;
+// AR handshake latch — decouples ARREADY pulse from RVALID assertion so the
+// response fires even when the master drops ARVALID the cycle after ARREADY
+// is sampled (which SmartConnect does). Mirrors aw_done/w_done on the write
+// path. RETRO-074 hang #6 root cause: read-channel had same AXI-Lite spec
+// non-compliance that the write path had before the aw_done/w_done fix.
+reg        ar_done;
+reg [C_S_AXI_ADDR_WIDTH-1:0] ar_addr_lat;
 
 assign S_AXI_AWREADY = axi_awready;
 assign S_AXI_WREADY  = axi_wready;
@@ -416,34 +423,52 @@ always @(posedge S_AXI_ACLK) begin
         axi_rvalid  <= 1'b0;
         axi_rdata   <= 32'h0;
         axi_rresp   <= 2'b00;
+        ar_done     <= 1'b0;
+        ar_addr_lat <= {C_S_AXI_ADDR_WIDTH{1'b0}};
     end else begin
-        if (!axi_arready && S_AXI_ARVALID) begin
+        // Assert ARREADY for one cycle when a new AR transaction arrives
+        // and none is in flight; latch ADDR at the same time so the address
+        // decoder below does not depend on ARADDR staying valid past the
+        // handshake cycle (SmartConnect may not hold it).
+        if (S_AXI_ARVALID && !axi_arready && !ar_done) begin
             axi_arready <= 1'b1;
+            ar_addr_lat <= S_AXI_ARADDR;
         end else begin
             axi_arready <= 1'b0;
         end
 
-        if (axi_arready && S_AXI_ARVALID && !axi_rvalid) begin
+        // After ARREADY was asserted, hold ar_done=1 until the R handshake.
+        // This decouples the response from ARVALID — even if the master
+        // drops ARVALID immediately after sampling ARREADY, we still drive
+        // a valid R beat.
+        if (axi_arready) begin
+            ar_done <= 1'b1;
+        end
+
+        // Drive RVALID once AR is latched and no prior R beat is in flight.
+        if (ar_done && !axi_rvalid) begin
             axi_rvalid <= 1'b1;
             axi_rresp  <= 2'b00;
-            if (S_AXI_ARADDR == ADDR_CONTROL) begin
+            if (ar_addr_lat == ADDR_CONTROL) begin
                 axi_rdata <= reg_control;
-            end else if (S_AXI_ARADDR == ADDR_STATUS) begin
+            end else if (ar_addr_lat == ADDR_STATUS) begin
                 axi_rdata <= reg_status;
-            end else if (S_AXI_ARADDR == ADDR_SPIN_COUNT) begin
+            end else if (ar_addr_lat == ADDR_SPIN_COUNT) begin
                 axi_rdata <= reg_spin_count;
-            end else if (S_AXI_ARADDR == ADDR_BETA_FINAL) begin
+            end else if (ar_addr_lat == ADDR_BETA_FINAL) begin
                 axi_rdata <= {16'h0, reg_beta_final};
-            end else if (S_AXI_ARADDR >= ADDR_BIAS_BASE && S_AXI_ARADDR < ADDR_ADJ_BASE) begin
+            end else if (ar_addr_lat >= ADDR_BIAS_BASE && ar_addr_lat < ADDR_ADJ_BASE) begin
                 axi_rdata <= {{(32-Q88_BITS){1'b0}},
-                              bias_ram[(S_AXI_ARADDR - ADDR_BIAS_BASE) >> 2]};
-            end else if (S_AXI_ARADDR >= ADDR_SPOUT_BASE) begin
-                axi_rdata <= state_ram[(S_AXI_ARADDR - ADDR_SPOUT_BASE) >> 2];
+                              bias_ram[(ar_addr_lat - ADDR_BIAS_BASE) >> 2]};
+            end else if (ar_addr_lat >= ADDR_SPOUT_BASE) begin
+                axi_rdata <= state_ram[(ar_addr_lat - ADDR_SPOUT_BASE) >> 2];
             end else begin
                 axi_rdata <= 32'h0;
             end
         end else if (axi_rvalid && S_AXI_RREADY) begin
+            // R handshake completed — release ar_done so a fresh AR can start.
             axi_rvalid <= 1'b0;
+            ar_done    <= 1'b0;
         end
     end
 end
