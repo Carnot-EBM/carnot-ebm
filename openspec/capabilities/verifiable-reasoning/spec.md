@@ -13356,3 +13356,67 @@ When: invoked with --manifest pointing to a nonexistent file.
 Then: exit code is still 0 and a WARNING line is printed (non-blocking).
 
 **Implementation Status:** Implemented (tests/python/test_legacy_retirement.py, Exp 678)
+
+### REQ-VERIFY-155: VR 200q Scale — Signed Improvement with Wilson 95% CI Confirms .51 Win
+
+The VR 200-question scale experiment (Exp 679 VR 200q scale) MUST run structured-equation
+forcing on 200 GSM8K questions (indices 0-199) using LongRunBenchmarkExecutor (8 batches of 25),
+compute Wilson 95% confidence intervals for signed_improvement, and produce an honest verdict
+confirming or refuting the Exp 668 .51 signed_improvement.
+
+- REQ-VERIFY-155-1: n_questions MUST be 200 (8 batches of 25 via LongRunBenchmarkExecutor).
+- REQ-VERIFY-155-2: Wilson 95% CI MUST be computed manually (no scipy dependency).
+  Formula: (2n*p + z^2 ± z*sqrt(z^2 + 4*n*p*(1-p))) / (2*(n + z^2)) with z=1.96.
+- REQ-VERIFY-155-3: honest_verdict MUST be one of:
+  "vr_200q_positive" (signed_improvement > 0.05 AND wilson_ci_lower > 0),
+  "vr_200q_marginal" (0 < signed_improvement <= 0.05),
+  "vr_200q_no_improvement" (signed_improvement <= 0),
+  "vr_200q_blocked" (no live GPU or gate failed).
+- REQ-VERIFY-155-4: artifact MUST include retro_033_validated=True when signed_improvement > 0.
+- REQ-VERIFY-155-5: Each batch MUST be checkpointed to results/experiment_679_checkpoint_batch_N.json.
+
+**Implementation Status:** Implemented (scripts/experiment_679_vr_200q_scale.py, Exp 679)
+
+### REQ-VERIFY-156: VR 200q Scale MUST Use inference_mode='live_gpu'; No Simulation Fallback
+
+When CARNOT_FORCE_LIVE=1 is set and GPU hardware is available, Exp 679 VR 200q scale MUST
+run inference in 'live_gpu' mode using the actual Qwen/Qwen3.5-0.8B model.  If the env var
+is absent or GPU hardware is unavailable, the artifact MUST record inference_mode='blocked'
+and honest_verdict='vr_200q_blocked'; simulation fallback is explicitly prohibited.
+
+- REQ-VERIFY-156-1: CARNOT_FORCE_LIVE=1 is a hard prerequisite; absent var → immediate blocked exit.
+- REQ-VERIFY-156-2: The artifact MUST record inference_mode in every code path.
+- REQ-VERIFY-156-3: Simulated or stubbed inference MUST NOT produce honest_verdict other than
+  'vr_200q_blocked'.
+
+**Implementation Status:** Implemented (scripts/experiment_679_vr_200q_scale.py, Exp 679)
+
+### SCENARIO-VERIFY-205: Wilson CI Is Computed Correctly for Known Proportions
+
+Given: n_correct=80, n_total=100 (p=0.80), z=1.96.
+When: compute_wilson_ci(80, 100) is called.
+Then: lower bound is in [0.71, 0.73] and upper bound is in [0.87, 0.89].
+
+**Implementation Status:** Implemented (tests/python/test_experiment_679_vr_200q_scale.py, Exp 679)
+
+### SCENARIO-VERIFY-206: honest_verdict Logic Covers All Four Cases
+
+Given: compute_honest_verdict_679(signed_improvement, wilson_ci_lower, inference_mode).
+When: signed_improvement=0.10 AND wilson_ci_lower=0.02 AND inference_mode='live_gpu'.
+Then: honest_verdict == 'vr_200q_positive'.
+When: signed_improvement=0.02 AND inference_mode='live_gpu'.
+Then: honest_verdict == 'vr_200q_marginal'.
+When: signed_improvement=-0.05 AND inference_mode='live_gpu'.
+Then: honest_verdict == 'vr_200q_no_improvement'.
+When: inference_mode='blocked'.
+Then: honest_verdict == 'vr_200q_blocked'.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_679_vr_200q_scale.py, Exp 679)
+
+### SCENARIO-VERIFY-207: LongRunBenchmarkExecutor Checkpoint Path Uses exp679 Prefix
+
+Given: LongRunBenchmarkExecutor(batch_size=25, checkpoint_dir='results').
+When: executor.save_batch(batch, prefix='exp679') is called for batch_id=0.
+Then: checkpoint file is named 'results/exp679_batch_0000.json'.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_679_vr_200q_scale.py, Exp 679)
