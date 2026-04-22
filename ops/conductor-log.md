@@ -2489,3 +2489,4 @@ python/ |
 | 2026-04-22 14:58 UTC | Exp 711: SC-Energy Set Consistency Verifier — Tier | OK | 81 passed, 3 warnings in 4.28s |
 | 2026-04-22 15:13 UTC | Exp 712: FoVer v2 Dataset Synthesis via PDDL Plann | OK | 81 passed, 3 warnings in 3.94s |
 | 2026-04-22 15:26 UTC | Exp 713: FR-11 Tier 2 Relay — Wire JEPA v17 Violat | OK | 81 passed, 3 warnings in 4.41s |
+| 2026-04-22 15:39 UTC | Exp 714: AMD XDNA NPU Unblock v8 — IRON Toolchain  | OK | 81 passed, 3 warnings in 4.13s |
