@@ -2452,3 +2452,4 @@ python/ |
 | 2026-04-22 04:24 UTC | Exp 681: Adversarial VR Robustness — Structured Fo | OK | 81 passed, 2 warnings in 4.85s |
 | 2026-04-22 04:57 UTC | Exp 682: JEPA v15 OOD Audit — Investigate Suspicio | OK | 106 passed, 2 warnings in 14.26s |
 | 2026-04-22 05:11 UTC | Exp 683: FR-11 Real Verified Positives Relay — Wir | OK | 81 passed, 2 warnings in 4.27s |
+| 2026-04-22 05:24 UTC | Exp 684: DualGPU Proof v4 — Confirm GPU1 Utilizati | OK | 81 passed, 3 warnings in 4.26s |
