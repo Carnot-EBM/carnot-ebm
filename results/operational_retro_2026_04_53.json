@@ -1,0 +1,186 @@
+{
+  "experiment": 702,
+  "title": "Milestone 2026.04.53 Operational Retrospective \u2014 Full Analysis",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T12:02:34Z",
+  "finished_at": "2026-04-22T12:02:35Z",
+  "duration_s": 0.036,
+  "status": "success",
+  "schema": "carnot.operational_retro.v28",
+  "milestone": "2026.04.53",
+  "total_wall_time_minutes": 97.4,
+  "experiments_in_cycle": 12,
+  "experiments_completed": 550,
+  "avg_time_per_experiment_minutes": 8.12,
+  "wall_time_delta_vs_prior_minutes": 13.4,
+  "wall_time_delta_direction": "regression",
+  "prior_milestone_avg_min": 7.0,
+  "prior_milestone_wall_time_minutes": 3983,
+  "prior_milestone_experiments": 538,
+  "cycle_data": {
+    "cycle_experiments": 12,
+    "cycle_duration_s": 5844.074,
+    "cycle_wall_time_minutes": 97.4,
+    "cycle_avg_min_per_exp": 8.12,
+    "experiment_table": [
+      {
+        "experiment": 690,
+        "status": "partial",
+        "honest_verdict": "distillation_corpus_built_classifier_trained_auroc_below_threshold",
+        "duration_s": 3154.238
+      },
+      {
+        "experiment": 691,
+        "status": "success",
+        "honest_verdict": "generalization_verified_publishable",
+        "duration_s": 36.03
+      },
+      {
+        "experiment": 692,
+        "status": "success",
+        "honest_verdict": "preflight_v5_complete",
+        "duration_s": 0.059
+      },
+      {
+        "experiment": 693,
+        "status": "success",
+        "honest_verdict": "root_cause_identified_v16_specced",
+        "duration_s": 1.56
+      },
+      {
+        "experiment": 694,
+        "status": "success",
+        "honest_verdict": "vr_cross_model_no_improvement",
+        "duration_s": 1241.06
+      },
+      {
+        "experiment": 695,
+        "status": "success",
+        "honest_verdict": "tier_28_no_candidate",
+        "duration_s": 0.003
+      },
+      {
+        "experiment": 696,
+        "status": "success",
+        "honest_verdict": "abstention_no_improvement",
+        "duration_s": 0.001
+      },
+      {
+        "experiment": 697,
+        "status": "success",
+        "honest_verdict": "psv_real_fp_degrading",
+        "duration_s": 1383.975
+      },
+      {
+        "experiment": 698,
+        "status": "success",
+        "honest_verdict": "jepa_v16_still_below_random",
+        "duration_s": 2.71
+      },
+      {
+        "experiment": 699,
+        "status": "success",
+        "honest_verdict": "hallusae_integration_no_improvement",
+        "duration_s": 24.436
+      },
+      {
+        "experiment": 700,
+        "status": "success",
+        "honest_verdict": "publication_ready",
+        "duration_s": 0.001
+      },
+      {
+        "experiment": 701,
+        "status": "blocked",
+        "honest_verdict": "synthesis_blocked_no_tool",
+        "duration_s": 0.001
+      }
+    ]
+  },
+  "slowest_experiments": [
+    {
+      "experiment": 690,
+      "status": "partial",
+      "honest_verdict": "distillation_corpus_built_classifier_trained_auroc_below_threshold",
+      "duration_s": 3154.238
+    },
+    {
+      "experiment": 697,
+      "status": "success",
+      "honest_verdict": "psv_real_fp_degrading",
+      "duration_s": 1383.975
+    },
+    {
+      "experiment": 694,
+      "status": "success",
+      "honest_verdict": "vr_cross_model_no_improvement",
+      "duration_s": 1241.06
+    },
+    {
+      "experiment": 691,
+      "status": "success",
+      "honest_verdict": "generalization_verified_publishable",
+      "duration_s": 36.03
+    },
+    {
+      "experiment": 699,
+      "status": "success",
+      "honest_verdict": "hallusae_integration_no_improvement",
+      "duration_s": 24.436
+    }
+  ],
+  "key_metrics": {
+    "preflight_v5_complete": true,
+    "jepa_v15_root_cause": "pure_loss_anti_correlation",
+    "distillation_invariant_confirmed": true,
+    "distillation_teacher_inference_s": 6256.2,
+    "distillation_corpus_size": 200,
+    "cross_dataset_mean_auroc": 0.958511,
+    "vr_cross_model_delta": -1.8,
+    "tier_28_winner": "neither_below_threshold",
+    "abstention_fp_reduced": false,
+    "psv_real_fp_trend_slope": 0.004242,
+    "jepa_v16_ood_auc": 0.4759,
+    "hallusae_delta_auc": -0.2142,
+    "publication_ready": true,
+    "retro_072_resolved": false
+  },
+  "open_retros": {
+    "RETRO-072": {
+      "description": "KV260 Ising v3 RTL synthesis blocked \u2014 no Vivado tool",
+      "status": "open",
+      "experiment": 701
+    },
+    "RETRO-CRITICAL": {
+      "description": "JEPA cascade blocked \u2014 OOD AUC below random",
+      "status": "open",
+      "jepa_v16_ood_auc": 0.4759,
+      "threshold": 0.75,
+      "experiment": 698
+    },
+    "RETRO-DISTILLATION": {
+      "description": "Distillation duration invariant (teacher_s >= corpus*0.5)",
+      "status": "confirmed",
+      "experiment": 690
+    }
+  },
+  "gpu_state_at_close": {
+    "gpu0_vram_mb": 4,
+    "gpu1_vram_mb": 4,
+    "gpu_close_clean": true
+  },
+  "fr11_continuous_learning": {
+    "fr11_real_positives_confirmed": true,
+    "psv_real_fp_improving": false,
+    "jepa_v16_cascade_unblocked": false,
+    "fr11_tier_advancement": 1,
+    "tier_results": {
+      "tier_1_boltzmann": false,
+      "tier_2_gibbs": false,
+      "tier_3_kan_distill": true,
+      "tier_4_ising_synthesis": false
+    }
+  },
+  "honest_verdict": "wall_time_regression_jepa_v16_still_blocked_psv_stable_or_degrading_distill_confirmed",
+  "invariant_violations": []
+}
