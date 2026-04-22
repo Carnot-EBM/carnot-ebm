@@ -2885,3 +2885,55 @@ thermodynamic computing Ising FPGA
   input encoding, it could improve AUC beyond 0.571 by making the EORM input more "consistent"
   before scoring. Experiment: add Langevin calibration step to EORM's forward pass on hidden
   states from Exp 443's real training data.
+
+## 2026-04-22 arxiv Scan (Milestone 2026.04.54 Planning)
+
+### SC-Energy — Set Consistency Energy Networks (arXiv 2503.10695)
+- **Paper:** arXiv 2503.10695 (March 2025)
+- **What:** Introduces SC-Energy, a neural energy model that assesses logical coherence
+  of entire statement sets using contrastive learning. Unlike pairwise verification, SC-Energy
+  computes a global consistency score over N statements simultaneously, enabling detection of
+  contradictions that span multiple reasoning steps.
+- **Relevance to Carnot:** Extends SymCodeVerifier (Tier 2.5) and CausalReasoningVerifier
+  (Tier 2.7) which check pairwise step transitions. SC-Energy could catch "correct arithmetic
+  at each step, but globally contradictory conclusion" errors — the class of errors that
+  neither tier currently detects. Tier 2.9 candidate.
+- **Concrete experiment:** Implement SetConsistencyVerifier wrapping SC-Energy on GSM8K CoT
+  step sets. Compare AUC on FoVer formal v1 corpus vs SymCodeVerifier and CausalVerifier.
+  Target: AUC >= 0.75 on multi-step contradiction detection.
+- **When to incorporate:** Milestone 2026.04.54 — Phase 4 new research (Exp 711).
+
+### PRM Planning Dataset — PDDL-Based Step-Level Reward Synthesis (arXiv 2604.17957)
+- **Paper:** arXiv 2604.17957 (April 2026)
+- **What:** Uses PDDL formal planning to automatically generate ~1M step-level reward labels
+  for PRM training. A step is labeled correct iff it is a valid plan transition. Achieves
+  cross-domain generalization (math, planning, NLI) without human annotation. Demonstrated
+  on GSM8K, MATH, and PDDL-structured tasks.
+- **Relevance to Carnot:** Carnot's JEPA predictor is bottlenecked by FoVer formal v1
+  (200 Z3-labeled pairs). PDDL-based synthesis could scale the training corpus 5-10x without
+  human effort, addressing the persistent data bottleneck. Z3 (Exp 686) and PDDL are
+  complementary — Z3 handles arithmetic entailment, PDDL handles procedural planning steps.
+- **Concrete experiment:** Implement PDDL step synthesizer for GSM8K word problems (encode
+  state as noun-quantity pairs, transitions as arithmetic operations). Generate 1000 labeled
+  pairs. Combine with FoVer Z3 labels → fover_v2_combined.json (1200+ pairs total).
+  Use as JEPA v17 training data.
+- **When to incorporate:** Milestone 2026.04.54 — Phase 4 new research (Exp 712).
+
+### Multi-Domain RL for Cross-Model Verification Generalization (arXiv 2602.12566)
+- **Paper:** arXiv 2602.12566 (February 2026)
+- **What:** Investigates how verification/reward models trained on one domain (math, code,
+  science) transfer to others under reinforcement learning. Key finding: models trained on
+  mixed domains show better cross-model generalization than single-domain training, and
+  "synergistic mixing" (math + code + science together) outperforms any single-domain
+  specialist.
+- **Relevance to Carnot:** Carnot's VR pipeline works for Qwen3.5-0.8B (signed_improvement=1.0)
+  but HURTS Gemma4-E4B-it (signed_improvement=-0.8). The cross_model_delta=-1.8 is a
+  critical failure. This paper explains why: the SymCodeVerifier and constraint extractors
+  were calibrated on Qwen-format arithmetic chains, making them incompatible with Gemma's
+  reasoning format. The fix: multi-domain training with Gemma-format chains as a second
+  training domain, or model-specific threshold adaptation.
+- **Concrete experiment:** Diagnose Gemma4 VR failure by tracing which pipeline step
+  causes harm (Exp 706). Then implement model-adaptive constraint thresholds: suppress
+  constraint types with FP rate > TP rate for Gemma specifically. Target: Gemma4
+  signed_improvement >= 0 (remove harm while preserving Qwen win).
+- **When to incorporate:** Milestone 2026.04.54 — Phase 2 Gemma VR fix (Exps 706-708).

@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-22 Milestone 2026.04.54 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-22T12:19:48Z | 2026-04-22T12:32:45Z | Planned milestone 2026.04.54 "JEPA v17 RankNet Loss + Gemma4 VR Diagnostic + PSV PaCoRe K=2". Read 11 project files + .53 retro + key Exp result files (692-702). Spawned arxiv research subagent (3 genuinely new papers): arXiv 2503.10695 SC-Energy → Exp 711; arXiv 2604.17957 PRM PDDL labels → Exp 712; arXiv 2602.12566 multi-domain RL for cross-model → Exp 706-708. Appended 3 entries to research-references.md. Identified 3 biggest gaps: (1) JEPA blocked two consecutive retrains — fix RankNet pairwise ranking loss eliminating anti-correlation; (2) VR hurts Gemma4 (signed=-0.8) — fix diagnostic + model-adaptive threshold gating; (3) Slowest-5 UNCHANGED 5th consecutive milestone — governance failure forcing Phase 0 retirement of 6 experiments. Wrote openspec/change-proposals/research-roadmap-vNEXT.md (13 experiments 703-715, 6 phases, cascade diagram, dependency graph, success criteria, 6 RETROs). Wrote research-roadmap-next.yaml (13 experiments with complete prompts). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~95k |
+
+---
+
 ## Session: 2026-04-22 Milestone 2026.04.52 Planning
 
 ### Turn Log
