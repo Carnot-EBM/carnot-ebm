@@ -92,8 +92,8 @@ set bitstream_dst "output/carnot_ising_bd/carnot_ising_bd_wrapper.bit"
 #
 # Empirical numbers: first post-opt place_design on (64,16) will be logged to
 # results/kv260_bd_build_N64.json so the expected-vs-actual table stays honest.
-set n_spins    [expr {[info exists env(CARNOT_N_SPINS)]    ? $env(CARNOT_N_SPINS)    : 64}]
-set max_degree [expr {[info exists env(CARNOT_MAX_DEGREE)] ? $env(CARNOT_MAX_DEGREE) : 16}]
+set n_spins    [expr {[info exists env(CARNOT_N_SPINS)]    ? $env(CARNOT_N_SPINS)    : 32}]
+set max_degree [expr {[info exists env(CARNOT_MAX_DEGREE)] ? $env(CARNOT_MAX_DEGREE) : 8}]
 puts "=== RTL parameters: N_SPINS=$n_spins, MAX_DEGREE=$max_degree ==="
 
 file mkdir [file dirname $project_dir]
@@ -158,7 +158,7 @@ set_property -dict [list \
     CONFIG.PSU__USE__S_AXI_GP2         {0} \
     CONFIG.PSU__FPGA_PL0_ENABLE        {1} \
     CONFIG.PSU__FPGA_PL1_ENABLE        {0} \
-    CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ {30} \
+    CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ {60} \
 ] [get_bd_cells zynq_ultra_ps_e_0]
 
 # --- AXI SmartConnect ---
