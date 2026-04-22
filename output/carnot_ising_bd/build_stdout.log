@@ -1186,3 +1186,68 @@ Finished Running Vector-less Activity Propagation
 report_power completed successfully
 report_power: Time (s): cpu = 00:00:39 ; elapsed = 00:00:14 . Memory (MB): peak = 6395.953 ; gain = 48.078 ; free physical = 72035 ; free virtual = 354651
 INFO: [Vivado 12-24828] Executing command : report_clock_utilization -file carnot_ising_bd_wrapper_clock_utilization_routed.rpt
+report_clock_utilization: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 6395.953 ; gain = 0.000 ; free physical = 72409 ; free virtual = 355025
+generate_parallel_reports: Time (s): cpu = 00:04:57 ; elapsed = 00:01:21 . Memory (MB): peak = 6395.953 ; gain = 48.078 ; free physical = 72409 ; free virtual = 355025
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Write ShapeDB Complete: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.21 . Memory (MB): peak = 6395.953 ; gain = 0.000 ; free physical = 72462 ; free virtual = 355094
+Wrote PlaceDB: Time (s): cpu = 00:00:12 ; elapsed = 00:00:05 . Memory (MB): peak = 6395.953 ; gain = 0.000 ; free physical = 72301 ; free virtual = 355144
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 6395.953 ; gain = 0.000 ; free physical = 72301 ; free virtual = 355144
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 6395.953 ; gain = 0.000 ; free physical = 72224 ; free virtual = 355090
+Wrote Netlist Cache: Time (s): cpu = 00:00:00.19 ; elapsed = 00:00:00.19 . Memory (MB): peak = 6395.953 ; gain = 0.000 ; free physical = 72202 ; free virtual = 355090
+Wrote Device Cache: Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 6395.953 ; gain = 0.000 ; free physical = 72199 ; free virtual = 355091
+Write Physdb Complete: Time (s): cpu = 00:00:14 ; elapsed = 00:00:07 . Memory (MB): peak = 6395.953 ; gain = 0.000 ; free physical = 72260 ; free virtual = 355152
+INFO: [Common 17-1381] The checkpoint '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/impl_1/carnot_ising_bd_wrapper_routed.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:00:16 ; elapsed = 00:00:10 . Memory (MB): peak = 6395.953 ; gain = 0.000 ; free physical = 72354 ; free virtual = 355029
+
+WARNING::74 - Unsupported FPGA device name 'xck26-sfvc784-2LV-c'. Verify that the specified device is a valid customer supported device.
+-p xck26-sfvc784-2LV-c
+   ^
+
+Command: write_bitstream -force carnot_ising_bd_wrapper.bit
+Attempting to get a license for feature 'Implementation' and/or device 'xck26'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xck26'
+Running DRC as a precondition to command write_bitstream
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado 12-3199] DRC finished with 0 Errors
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+Integrating Hard IP ELF/MEM with the PDI.
+INFO: [Designutils 20-2272] Running write_bitstream with 8 threads.
+Loading data files...
+Loading site data...
+Loading route data...
+Processing options...
+Creating bitmap...
+Creating bitstream...
+Writing bitstream ./carnot_ising_bd_wrapper.bit...
+INFO: [Vivado 12-1842] Bitgen Completed Successfully.
+INFO: [Common 17-83] Releasing license: Implementation
+138 Infos, 1 Warnings, 0 Critical Warnings and 0 Errors encountered.
+write_bitstream completed successfully
+write_bitstream: Time (s): cpu = 00:00:49 ; elapsed = 00:00:18 . Memory (MB): peak = 6573.688 ; gain = 177.734 ; free physical = 72201 ; free virtual = 354882
+INFO: [Common 17-206] Exiting Vivado at Wed Apr 22 14:33:43 2026...
+[Wed Apr 22 14:33:44 2026] impl_1 finished
+wait_on_runs: Time (s): cpu = 00:38:08 ; elapsed = 00:14:00 . Memory (MB): peak = 2038.512 ; gain = 0.000 ; free physical = 77160 ; free virtual = 359841
+# puts "=== [7/7] Verify + copy bitstream ==="
+=== [7/7] Verify + copy bitstream ===
+# set bit_src "${project_dir}/${project_name}.runs/impl_1/${bd_name}_wrapper.bit"
+# if {![file exists $bit_src]} {
+#     error "Bitstream not produced at expected path: $bit_src — check impl_1 logs"
+# }
+# file copy -force $bit_src $bitstream_dst
+# puts ""
+
+# puts "=== BUILD COMPLETE ==="
+=== BUILD COMPLETE ===
+# puts "Bitstream: $bitstream_dst"
+Bitstream: output/carnot_ising_bd/carnot_ising_bd_wrapper.bit
+# puts "Next: scp $bitstream_dst kria:/opt/carnot/bitstreams/carnot_ising_v2.bit"
+Next: scp output/carnot_ising_bd/carnot_ising_bd_wrapper.bit kria:/opt/carnot/bitstreams/carnot_ising_v2.bit
+# puts "      ssh kria 'sudo dfx-mgr-client -load /opt/carnot/bitstreams/carnot_ising_v2.bit'"
+      ssh kria 'sudo dfx-mgr-client -load /opt/carnot/bitstreams/carnot_ising_v2.bit'
+# puts "      ssh kria 'xrt-smi examine'"
+      ssh kria 'xrt-smi examine'
+INFO: [Common 17-206] Exiting Vivado at Wed Apr 22 14:33:44 2026...

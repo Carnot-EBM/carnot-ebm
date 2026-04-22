@@ -1,0 +1,53 @@
+{
+  "experiment": "kv260_fourth_hang",
+  "title": "KV260 fourth hang despite AXI-Lite fix + timing-clean bitstream — root cause is still incomplete",
+  "run_date": "20260422",
+  "status": "blocked",
+  "schema": "carnot.kv260_hang.v1",
+  "honest_verdict": "axi_lite_fix_verified_in_sim_but_hardware_still_wedges_unknown_additional_cause",
+
+  "context": "After six months of hypothesis-then-eliminate (see results/kv260_*.json chain from this session), I was confident the AXI-Lite state machine bug (requiring AWVALID+WVALID coincidence, confirmed by SmartConnect co-sim in results/kv260_smartconnect_cosim.json) was THE root cause. Fixed the RTL, verified in a split-channel testbench (all scenarios pass), rebuilt at 30 MHz target for +9.4 ns positive timing slack, deployed with devmem-forced DIVISOR0=50. First AXI access still wedged the PS. Fourth Kria hang this session.",
+
+  "what_we_fixed": [
+    "AXI-Lite state machine — aw_done/w_done flags for independent AW/W ACK (commit with RTL fix, verified in ising_sampler_v2_axi_tb_split.v)",
+    "Clock frequency mismatch — 30 MHz target matched bitstream synth constraint with +9.4 ns slack",
+    "Clock actual on hardware — forced DIVISOR0=50 via devmem; probe confirmed 30.00 MHz exact",
+    "Bundle packaging — bit.bin + dtbo + shell.json redeployed fresh",
+    "Earlier filesystem corruption (null-byte files) — redeployed clean bundle"
+  ],
+
+  "what_we_checked_and_cleared": [
+    "RTL AXI-Lite protocol (xsim bare-DUT all scenarios pass)",
+    "RTL wiring (DCP netlist inspection: ACLK 1169 segments clean, ARESETN 75 segments from proc_sys_reset, AWVALID 9 segments from SmartConnect)",
+    "pl_clk0 running (CLKACT=1 in every probe)",
+    "Clock frequency matching bitstream (30 MHz forced, bitstream timing-clean at 30 MHz)",
+    "Bundle file integrity (sha256 verified, bytes non-zero, dtbo magic d00d feed)"
+  ],
+
+  "remaining_hypotheses": [
+    {
+      "rank": 1,
+      "hypothesis": "Clock-switch glitch from devmem DIVISOR write mid-run",
+      "explanation": "Changing PL0_REF_CTRL divisor while the fabric is loaded and running may glitch the PL clock tree. A glitch corrupts clocked-logic state including proc_sys_reset's synchronizers, leaving ARESETN stuck metastable. Would explain ALL four hangs this session — each one happened AFTER a clock or reset state transition.",
+      "next_test": "Boot Kria with the divisor already set to 50 (pre-fclk). Candidates: kernel boot parameter, u-boot CRL_APB init script, or dynamically re-loading the whole app AFTER devmem write (unload + re-load so fclk can't re-fight us)."
+    },
+    {
+      "rank": 2,
+      "hypothesis": "Power/clock-tree issue specific to our 1088-DSP design at startup",
+      "explanation": "k26-starter-kits runs at 150 MHz without issue — PL clock infrastructure works at high frequencies. But our design has 1088 DSPs idle-but-clocked; their parasitic switching may cause supply droop at specific frequencies.",
+      "next_test": "Rebuild with DSPs clock-gated at idle (requires RTL change — add a gate enable on the DSP chain that only opens when reg_control[0]=1)."
+    },
+    {
+      "rank": 3,
+      "hypothesis": "Address decoding upstream of SmartConnect — our AXI access hits an invalid PS AXI region",
+      "explanation": "The PS M_AXI_HPM0_FPD might not be routed to 0xA0000000 the way we think. Checking the BD's address assignment output in Vivado would confirm.",
+      "next_test": "Open the BD and run ``report_bd_address`` to dump the full address map. Compare to the 0xA0000000 we've been using."
+    }
+  ],
+
+  "recommendation": "STOP on-hardware attempts. Four power-cycles today is excessive. Pursue one of: (1) ILA debug probe on the PL AXI signals for a real transaction capture; (2) minimal-design test (AXI-Lite register file, no sampler internals) to isolate whether sampler is still the cause; (3) report_bd_address + dmesg-post-loadapp inspection for infrastructure-level issues. None require power-cycling.",
+
+  "retro_074_status": "fourth_attempt_failed_bug_partially_but_not_fully_diagnosed",
+
+  "operator_action_required": "Power-cycle Kria (fourth time today, sorry). No further on-hardware attempts until a new diagnostic method produces new evidence."
+}
