@@ -13790,3 +13790,81 @@ When: experiment_688 runs.
 Then: inference_mode == "synthetic" and honest_verdict == "psv_synthetic_mode".
 
 **Implementation Status:** Implemented (scripts/experiment_688_psv_selfplay.py, Exp 688)
+
+## REQ-VERIFY-162: VR Cross-Model — Gemma-4-E4B-it Signed Improvement on 50 Hard GSM8K Questions
+
+**Rationale:** Exp 679 confirmed VR signed_improvement=1.0 on Qwen3.5-0.8B, but a single-model
+result is not publication-credible.  REQ-VERIFY-162 requires replicating the VR improvement on
+a second, architecturally distinct model (Gemma-4-E4B-it) on hard GSM8K questions (model baseline
+< 40%) to demonstrate that the structured-forcing mechanism is robust, not model-specific.
+
+**Requirements:**
+- REQ-VERIFY-162-1: The cross-model experiment SHALL run VR baseline + grammar-constrained post
+  on at least 50 questions from the hard GSM8K subset (baseline < 40%).
+- REQ-VERIFY-162-2: The artifact SHALL record gemma_signed_improvement, cross_model_delta,
+  grammar_recall, and honest_verdict.
+- REQ-VERIFY-162-3: If gemma_signed_improvement > 0 AND grammar_recall > 0.9, honest_verdict
+  SHALL be "vr_cross_model_confirmed".
+- REQ-VERIFY-162-4: If gemma_signed_improvement > 0 AND grammar_recall <= 0.9, honest_verdict
+  SHALL be "vr_cross_model_partial".
+- REQ-VERIFY-162-5: If gemma_signed_improvement <= 0, honest_verdict SHALL be
+  "vr_cross_model_no_improvement".
+
+**Implementation Status:** Implemented (scripts/experiment_694_vr_cross_model.py, Exp 694)
+
+## REQ-VERIFY-163: Hard GSM8K Subset — Model Baseline < 40%, No Overlap With Prior VR Runs
+
+**Rationale:** Testing VR on questions the model already answers correctly is uninformative.
+REQ-VERIFY-163 defines the hard GSM8K subset as questions where the model's baseline accuracy
+falls below 40%, and requires that these questions do not overlap with the 200 questions used
+in Exp 679 (indices 0-199).
+
+**Requirements:**
+- REQ-VERIFY-163-1: hard_baseline_threshold SHALL be 0.40.
+- REQ-VERIFY-163-2: The hard question set SHALL consist of at least 50 questions with index >= 200
+  (no overlap with Exp 679 indices 0-199), OR proxy questions 600-649 when per-question results
+  are unavailable.
+- REQ-VERIFY-163-3: n_hard_questions SHALL be exactly 50 in the artifact.
+
+**Implementation Status:** Implemented (scripts/experiment_694_vr_cross_model.py, Exp 694)
+
+## REQ-VERIFY-164: Grammar-Constrained Decoding Produces COMPUTE: Lines With 100% Recall
+
+**Rationale:** arXiv 2602.01090 (Hard Constraints + Soft Generation Hybrid Decoding) proposes
+grammar-constrained decoding where logit masking enforces structural tokens at fixed positions.
+REQ-VERIFY-164 requires that GrammarConstrainedDecoder produces at least one COMPUTE: line in
+each output, achieving grammar_recall > 0.9 without post-hoc regex reliance.
+
+**Requirements:**
+- REQ-VERIFY-164-1: GrammarConstrainedDecoder.__init__ SHALL accept required_tokens: list[str].
+- REQ-VERIFY-164-2: GrammarConstrainedDecoder.decode SHALL boost token IDs for required_tokens
+  by +10.0 in logits after 50 output tokens if no required token has appeared yet.
+- REQ-VERIFY-164-3: GrammarConstrainedDecoder.grammar_recall SHALL return the fraction of
+  outputs containing at least one COMPUTE: line (any required_token match).
+- REQ-VERIFY-164-4: grammar_recall >= 0.9 is required for honest_verdict "vr_cross_model_confirmed".
+
+**Implementation Status:** Implemented (python/carnot/pipeline/grammar_constrained_decoder.py, Exp 694)
+
+### SCENARIO-VERIFY-214: Cross-Model Delta Computation Is Correct
+
+Given: qwen_signed_improvement=0.10, gemma_signed_improvement=0.08.
+When: cross_model_delta = gemma_signed_improvement - qwen_signed_improvement.
+Then: cross_model_delta == -0.02.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_694_vr_cross_model.py, Exp 694)
+
+### SCENARIO-VERIFY-215: Grammar Recall Counts COMPUTE: Lines Correctly
+
+Given: outputs = ["step1 COMPUTE: 2+2=4 done", "no compute here", "COMPUTE: 5*3=15"].
+When: grammar_recall(outputs) is called.
+Then: grammar_recall == 2/3 ≈ 0.667.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_694_vr_cross_model.py, Exp 694)
+
+### SCENARIO-VERIFY-216: Hard Question Filter Selects Proxy Set When Per-Question Data Absent
+
+Given: no per-question Exp 679 accuracy data available.
+When: select_hard_questions is called with n=50.
+Then: returns questions with indices 600-649 (proxy hard set, no overlap with Exp 679 0-199).
+
+**Implementation Status:** Implemented (tests/python/test_experiment_694_vr_cross_model.py, Exp 694)
