@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-22 Milestone 2026.04.57 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-22T22:48:42Z | 2026-04-22T23:08:01Z | Planned milestone 2026.04.57 "FR-11 Formal Closure + CoCoA Tier 0f + Iterative 2-Round Code Repair + Tier 2 Memory Stress Test". Read 11 project files + .56 retro JSON. Arxiv scan (5 papers): CoCoA inter-layer disagreement (arXiv 2602.09486) → Tier 0f; Iterative 2-round code repair (arXiv 2604.10508) → +4.9-17.1pp HumanEval; Vitis HLS Ising on FPGA (arXiv 2604.17109) → FPGA path without Vivado; SETS self-verification (arXiv 2501.19306); D-Wave Neal SamplerBackend. Appended 5 entries to research-references.md. Identified 3 biggest gaps: (1) FR-11 operational but not formally closed in docs; (2) RETRO-033 only marginally confirmed (0.51pp) + code repair never iterated; (3) Privacy filter blocked 2 cycles + HF publishing blocked. Wrote openspec/change-proposals/research-roadmap-vNEXT.md (overwrite .56 content with .57: 13 experiments 740-753, 4 phases, CoCoA/iterative-repair/DualGPU/self-learning focus). Wrote research-roadmap-next.yaml (new file, 13 experiments with full conductor prompts). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~90k |
+
+---
+
 ## Session: 2026-04-22 Milestone 2026.04.56 Planning
 
 ### Turn Log
