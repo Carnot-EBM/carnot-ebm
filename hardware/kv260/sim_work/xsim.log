@@ -1,0 +1,56 @@
+#-----------------------------------------------------------
+# xsim v2025.2.1 (64-bit)
+# SW Build 6403652 on Thu Mar 19 13:47:00 MDT 2026
+# IP Build 6403511 on Thu Mar 19 12:41:45 MDT 2026
+# SharedData Build 6403650 on Thu Mar 19 14:02:13 MDT 2026
+# Start of session at: Wed Apr 22 11:58:59 2026
+# Process ID         : 109641
+# Current directory  : /home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/sim_work
+# Command line       : xsim -mode tcl -source {xsim.dir/tb_sim/xsim_script.tcl}
+# Log file           : /home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/sim_work/xsim.log
+# Journal file       : /home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/sim_work/xsim.jou
+# Running On         : icbfl1
+# Platform           : cachyos
+# Operating System   : CachyOS
+# Processor Detail   : AMD Ryzen AI 9 HX 370 w/ Radeon 890M
+# CPU Frequency      : 3982.727 MHz
+# CPU Physical cores : 12
+# CPU Logical cores  : 24
+# Host memory        : 134305 MB
+# Swap memory        : 271743 MB
+# Total Virtual      : 406049 MB
+# Available Virtual  : 377966 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_sim/xsim_script.tcl
+# xsim {tb_sim} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+
+[375000] === Scenario 1: AWVALID+WVALID same cycle ===
+[444000] OK    scenario=1 AWREADY+WREADY asserted after 2 cycles
+[468000] OK    scenario=1 BVALID asserted after 0 cycles
+
+[492000] === Scenario 2: AWVALID leads WVALID by 3 cycles ===
+[636000] OK    scenario=2 AWREADY (scenario 2) asserted after 2 cycles
+[636000] OK    scenario=2 WREADY  (scenario 2) asserted after 0 cycles
+[660000] OK    scenario=2 BVALID  (scenario 2) asserted after 0 cycles
+
+[684000] === Scenario 3: WVALID leads AWVALID by 3 cycles ===
+[828000] OK    scenario=3 AWREADY (scenario 3) asserted after 2 cycles
+[828000] OK    scenario=3 WREADY  (scenario 3) asserted after 0 cycles
+[852000] OK    scenario=3 BVALID  (scenario 3) asserted after 0 cycles
+
+[876000] === Scenario 4: read SPIN_COUNT (expect 128) ===
+[948000] OK    scenario=4 ARREADY (scenario 4) asserted after 2 cycles
+[972000] OK    scenario=4 RVALID  (scenario 4) asserted after 0 cycles
+[972000] OK    scenario=4 SPIN_COUNT readback=0x00000080 (128)
+
+==============================================
+  AXI-Lite testbench summary: errors=0
+  RESULT: all scenarios passed
+==============================================
+
+$finish called at time : 996 ns : File "/home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/ising_sampler_v2_axi_tb.v" Line 233
+exit
+INFO: xsimkernel Simulation Memory Usage: 302568 KB (Peak: 354924 KB), Simulation CPU Usage: 990 ms
+INFO: [Common 17-206] Exiting xsim at Wed Apr 22 11:59:02 2026...
