@@ -2450,3 +2450,4 @@ python/ |
 | 2026-04-22 03:59 UTC | Exp 679: VR 200q Scale Validation — Scale the .51  | OK | 81 passed, 2 warnings in 5.65s |
 | 2026-04-22 04:11 UTC | Exp 680: HumanEval VR Code Verification — Executio | OK | 81 passed, 2 warnings in 5.11s |
 | 2026-04-22 04:24 UTC | Exp 681: Adversarial VR Robustness — Structured Fo | OK | 81 passed, 2 warnings in 4.85s |
+| 2026-04-22 04:57 UTC | Exp 682: JEPA v15 OOD Audit — Investigate Suspicio | OK | 106 passed, 2 warnings in 14.26s |
