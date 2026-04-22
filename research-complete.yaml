@@ -3529,3 +3529,53 @@ milestones:
     title: "Exp 730: PrivacyFilter KAN v1 \u2014 Cross-Dataset Gate (user-pinned, AUROC + min_tp strict gate)"
     deliverable: results/experiment_730_privacy_filter_kan_cross_dataset.json
     result: OK (conductor)
+- id: 2026.04.56
+  title: Tier 2.1 Production Deploy + FR-11 Relay + Privacy Safety Integration
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-22'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp731-zombie-kill-preflight-v8
+    title: 'Exp 731: GPU Zombie Kill + Pre-flight v8 + Manifest Enforcement Audit (MANDATORY FIRST)'
+    deliverable: results/experiment_731_zombie_kill_preflight_v8.json
+    result: OK (conductor)
+  - id: exp732-probe-xval
+    title: 'Exp 732: JEPAReasonerProbe 5-Fold Cross-Validation (gate for Tier 2.1 cascade deploy)'
+    deliverable: results/experiment_732_probe_xval.json
+    result: OK (conductor)
+  - id: exp733-tier21-cascade-integration
+    title: 'Exp 733: Tier 2.1 Cascade Integration (GATED on Exp 732 tier21_gate.json)'
+    deliverable: results/experiment_733_tier21_cascade.json
+    result: OK (conductor)
+  - id: exp734-fr11-tier21-relay
+    title: "Exp 734: FR-11 Tier 2.1 Relay \u2014 Autonomous Self-Learning Loop (GATED on Exp 733, FR-11 MANDATORY)"
+    deliverable: results/experiment_734_fr11_tier21_relay.json
+    result: OK (conductor)
+  - id: exp735-kan-tier0b-integration
+    title: "Exp 735: KAN Distill v3 Tier 0b Integration \u2014 Prompt-Injection Pre-filter Production Deploy"
+    deliverable: results/experiment_735_kan_tier0b_integration.json
+    result: OK (conductor)
+  - id: exp736-psv-specialization-diagnosis
+    title: 'Exp 736: PSV Constraint Specialization Diagnosis (3rd consecutive degradation, pool exhaustion ruled out)'
+    deliverable: results/experiment_736_psv_specialization.json
+    result: OK (conductor)
+  - id: exp737-psv-domain-diverse-recovery
+    title: 'Exp 737: PSV Domain-Diverse Recovery (GATED on Exp 736 psv_specialization_gate.json)'
+    deliverable: results/experiment_737_psv_domain_diverse.json
+    result: OK (conductor)
+  - id: exp729-privacy-filter-kan-true-distillation
+    title: "Exp 729: PrivacyFilter KAN v1 \u2014 True Teacher Distillation from openai/privacy-filter (user-pinned)"
+    deliverable: results/experiment_729_privacy_filter_kan_true_distillation.json
+    result: OK (conductor)
+  - id: exp730-privacy-filter-kan-cross-dataset-gate
+    title: "Exp 730: PrivacyFilter KAN v1 \u2014 Cross-Dataset Gate (user-pinned, AUROC + min_tp strict gate)"
+    deliverable: results/experiment_730_privacy_filter_kan_cross_dataset.json
+    result: OK (conductor)
+  - id: exp738-step-probe-tier2-memory
+    title: 'Exp 738: Step-Level Latent Probe + Tier 2 Cross-Session Memory (arXiv 2511.06209, GATED on Exp 734)'
+    deliverable: results/experiment_738_step_probe_tier2_memory.json
+    result: OK (conductor)
+  - id: exp739-operational-retro
+    title: 'Exp 739: Milestone 2026.04.56 Operational Retrospective'
+    deliverable: results/operational_retro_2026_04_56.json
+    result: OK (conductor)
