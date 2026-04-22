@@ -1,0 +1,168 @@
+{
+  "experiment": 715,
+  "title": "Milestone 2026.04.54 Operational Retrospective \u2014 Full Analysis",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T15:47:35Z",
+  "finished_at": "2026-04-22T15:47:35Z",
+  "duration_s": 0.026,
+  "status": "success",
+  "schema": "carnot.operational_retro.v29",
+  "milestone": "2026.04.54",
+  "honest_verdict": "wall_time_down_jepa_v17_still_blocked_gemma4_fixed_psv_stable_or_degrading_slowest5_held",
+  "wall_time_minutes": 24.32,
+  "per_experiment_avg_min": 2.03,
+  "prior_per_exp_avg_min": 7.1,
+  "wall_time_delta_direction": "improvement",
+  "cycle_duration_s": 1459.481,
+  "total_experiments": 12,
+  "slowest_5": [
+    {
+      "experiment": 709,
+      "status": "success",
+      "honest_verdict": "psv_pacore_still_degrading",
+      "duration_s": 946.215
+    },
+    {
+      "experiment": 706,
+      "status": "success",
+      "honest_verdict": "failure_mode_identified",
+      "duration_s": 402.033
+    },
+    {
+      "experiment": 708,
+      "status": "success",
+      "honest_verdict": "vr19_gemma4_no_harm",
+      "duration_s": 85.794
+    },
+    {
+      "experiment": 705,
+      "status": "success",
+      "honest_verdict": "jepa_v17_gate_failed_v18_specced",
+      "duration_s": 11.0
+    },
+    {
+      "experiment": 710,
+      "status": "success",
+      "honest_verdict": "distillation_improved_below_gate",
+      "duration_s": 10.136
+    }
+  ],
+  "slowest_5_governance_held": true,
+  "retired_slow_exps": [
+    346,
+    380,
+    381,
+    382,
+    383,
+    410,
+    425
+  ],
+  "preflight_v6_complete": true,
+  "jepa_v17_ood_auc": 0.4819,
+  "jepa_v17_cascade_unblocked": false,
+  "gemma4_failure_mode": "threshold_too_high",
+  "adaptive_thresholds_implemented": true,
+  "vr19_gemma4_signed_improvement": 0.0,
+  "psv_pacore_slope": 0.001212,
+  "psv_pacore_improving": false,
+  "distillation_auroc_v2": 0.8747,
+  "distillation_gate_met": false,
+  "sc_energy_auc": 0.5,
+  "fover_v2_n_pairs": 1400,
+  "fover_v2_target_met": true,
+  "fr11_tier_advancement": 2,
+  "npu_benchmarkable": false,
+  "npu_unblocked": false,
+  "retro_critical_resolved": false,
+  "gpu_close_clean": true,
+  "gpu_vram_used_mb": [
+    4,
+    4
+  ],
+  "retros_resolved": [],
+  "retros_new": [
+    "RETRO-NEW-WATCH: exp_709 duration 946s (15.8min) \u2014 watch for recurrence in .55",
+    "RETRO-NEW-WATCH: exp_706 duration 402s (6.7min) \u2014 watch for recurrence in .55"
+  ],
+  "cycle_data": {
+    "cycle_experiments": 12,
+    "cycle_duration_s": 1459.481,
+    "cycle_wall_time_minutes": 24.32,
+    "cycle_avg_min_per_exp": 2.03,
+    "experiment_table": [
+      {
+        "experiment": 703,
+        "status": "success",
+        "honest_verdict": "preflight_v6_complete",
+        "duration_s": 0.051
+      },
+      {
+        "experiment": 704,
+        "status": "success",
+        "honest_verdict": "jepa_v17_still_below_random",
+        "duration_s": 1.675
+      },
+      {
+        "experiment": 705,
+        "status": "success",
+        "honest_verdict": "jepa_v17_gate_failed_v18_specced",
+        "duration_s": 11.0
+      },
+      {
+        "experiment": 706,
+        "status": "success",
+        "honest_verdict": "failure_mode_identified",
+        "duration_s": 402.033
+      },
+      {
+        "experiment": 707,
+        "status": "success",
+        "honest_verdict": "adaptive_thresholds_implemented",
+        "duration_s": 0.001
+      },
+      {
+        "experiment": 708,
+        "status": "success",
+        "honest_verdict": "vr19_gemma4_no_harm",
+        "duration_s": 85.794
+      },
+      {
+        "experiment": 709,
+        "status": "success",
+        "honest_verdict": "psv_pacore_still_degrading",
+        "duration_s": 946.215
+      },
+      {
+        "experiment": 710,
+        "status": "success",
+        "honest_verdict": "distillation_improved_below_gate",
+        "duration_s": 10.136
+      },
+      {
+        "experiment": 711,
+        "status": "success",
+        "honest_verdict": "tier_29_below_threshold",
+        "duration_s": 1.791
+      },
+      {
+        "experiment": 712,
+        "status": "success",
+        "honest_verdict": "fover_v2_target_met",
+        "duration_s": 0.022
+      },
+      {
+        "experiment": 713,
+        "status": "success",
+        "honest_verdict": "fr11_tier2_fallback_relay",
+        "duration_s": 0.001
+      },
+      {
+        "experiment": 714,
+        "status": "blocked",
+        "honest_verdict": "npu_iron_install_failed",
+        "duration_s": 0.762
+      }
+    ]
+  },
+  "invariant_violations": []
+}
