@@ -2500,3 +2500,4 @@ python/ |
 | 2026-04-22 17:37 UTC | Exp 720: Live VR Attempt #20 — 200q Qwen3.5-0.8B ( | OK | 81 passed, 3 warnings in 4.01s |
 | 2026-04-22 17:49 UTC | Exp 721: Live VR Gemma4 Graduated Threshold Search | OK | 81 passed, 3 warnings in 4.97s |
 | 2026-04-22 18:01 UTC | Exp 722: PSV Root Cause Analysis — Question Pool E | OK | 81 passed, 3 warnings in 4.45s |
+| 2026-04-22 18:08 UTC | Exp 723: PSV PaCoRe v2 — Diverse 100-Question Pool | OK | 81 passed, 3 warnings in 4.03s |
