@@ -14482,3 +14482,45 @@ Then:
   - batch_log is non-empty, proving BatchedInferenceRunner was invoked.
 
 **Implementation Status:** Pending (scripts/experiment_720_vr_200q_qwen.py, Exp 720)
+
+---
+
+## REQ-VER-031: Gemma4-A4B VR Threshold MUST Be Calibrated Per arXiv 2601.01490 Distortion Analysis Before Deployment
+
+Before deploying the VR pipeline with Gemma4-A4B as the backbone model, the constraint
+satisfaction threshold MUST be empirically calibrated using the graduated threshold
+evaluation defined in Exp 721.  arXiv 2601.01490 ("Constraint-Induced Distortion in Small
+LLMs") showed that tight thresholds (<=0.20) cause internal representations to shift away
+from factual recall toward constraint compliance — meaning constrained outputs hallucinate
+MORE than unconstrained outputs, which is the root cause of signed_improvement <= 0 across
+all prior Gemma4 VR attempts.
+
+- REQ-VER-031-1: Exp 721 SHALL evaluate 5 threshold conditions:
+  0.10, 0.20, 0.30, 0.40, and "abstain" (apply constraint only when EORM confidence > 0.90).
+- REQ-VER-031-2: Each condition SHALL be evaluated over exactly 50 questions using
+  BatchedInferenceRunner with batch_size=8 (250 questions total across all conditions).
+- REQ-VER-031-3: signed_improvement SHALL be recorded per condition as a
+  (threshold, signed_improvement) pair in results_per_condition.
+- REQ-VER-031-4: Abstain mode SHALL apply the constraint ONLY when EORM confidence > 0.90;
+  otherwise the baseline response is used unchanged.
+- REQ-VER-031-5: honest_verdict SHALL be:
+  - "gemma4_optimal_threshold_found" if any condition produces signed_improvement > 0
+  - "gemma4_abstain_wins" if the abstain condition is the ONLY one producing signed_improvement > 0
+  - "gemma4_distortion_confirmed_all_negative" if all five conditions produce signed_improvement <= 0
+- REQ-VER-031-6: The artifact MUST contain optimal_threshold (float, "abstain", or null when all negative)
+  and results_per_condition (list of {threshold, signed_improvement} dicts).
+
+**Implementation Status:** Implemented (scripts/experiment_721_vr_gemma4_graduated.py, Exp 721)
+
+### SCENARIO-VER-038: Graduated Thresholds Surface Distortion-Free Operating Point
+
+Given: Gemma4-A4B VR showing signed_improvement <= 0 under tight constraint threshold (<=0.20).
+When: Exp 721 runs 5 threshold conditions (0.10, 0.20, 0.30, 0.40, abstain) over 50q each.
+Then:
+  - results_per_condition contains exactly 5 entries, one per threshold condition.
+  - abstain mode fires constraint application only when EORM confidence > 0.90.
+  - honest_verdict is one of the three canonical strings from REQ-VER-031-5.
+  - optimal_threshold identifies the lowest-distortion operating point (or null if all negative).
+  - batch_log is non-empty, proving BatchedInferenceRunner was invoked.
+
+**Implementation Status:** Implemented (scripts/experiment_721_vr_gemma4_graduated.py, Exp 721)
