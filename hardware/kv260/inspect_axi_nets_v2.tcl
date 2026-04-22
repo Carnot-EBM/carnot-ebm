@@ -8,11 +8,19 @@ open_checkpoint $dcp
 foreach sig {S_AXI_ACLK S_AXI_ARESETN S_AXI_AWVALID} {
     puts ""
     puts "=== tracing $sig ==="
-    set pin "carnot_ising_bd_i/ising_sampler_0/inst/$sig"
-    set direct_net [get_nets -of_objects $pin]
+    set pin_obj [get_pins -quiet "carnot_ising_bd_i/ising_sampler_0/inst/$sig"]
+    if {[llength $pin_obj] == 0} {
+        puts "  FATAL: pin not found"; continue
+    }
+    set direct_net [get_nets -quiet -of_objects $pin_obj]
+    if {[llength $direct_net] == 0} {
+        puts "  FATAL: no net on pin"; continue
+    }
     puts "  direct net:      $direct_net"
 
-    # Get ALL segments of the net (climbs hierarchy).
+    # Get ALL segments of the net (climbs hierarchy).  Passing a net pattern
+    # re-selects the net by name; the -segments flag then returns all its
+    # aliased top-down names across hierarchy boundaries.
     set segments [get_nets -segments $direct_net]
     puts "  total segments:  [llength $segments]"
     foreach s $segments { puts "    seg: $s" }

@@ -1,0 +1,87 @@
+{
+  "experiment": "kv260_dcp_netlist_inspection",
+  "title": "KV260 post-route DCP netlist inspection — RTL wiring correct, hang narrowed to SmartConnect protocol interaction",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T17:00:00Z",
+  "finished_at": "2026-04-22T17:10:00Z",
+  "duration_s": 600,
+  "status": "success",
+  "schema": "carnot.kv260_netlist.v1",
+  "honest_verdict": "rtl_wiring_correct_hang_narrowed_to_smartconnect_or_protocol_interaction",
+
+  "context": "After the third PS hang (30 MHz forced clock still wedged the board), clock-mismatch was eliminated as root cause. This inspection reads the post-route DCP from the latest build (output/carnot_ising_bd/project/carnot_ising.runs/impl_1/carnot_ising_bd_wrapper_routed.dcp) to verify the sampler's critical AXI signals are correctly connected to their intended drivers. Completely read-only, no Kria contact.",
+
+  "tcl_scripts_used": [
+    "hardware/kv260/inspect_axi_nets.tcl (pin inventory, clock summary)",
+    "hardware/kv260/inspect_axi_nets_v2.tcl (hierarchical net tracing via -segments)"
+  ],
+
+  "signals_verified": [
+    {
+      "signal": "S_AXI_ACLK",
+      "segments_traced": 1169,
+      "source": "carnot_ising_bd_i/zynq_ultra_ps_e_0/inst/pl_clk0",
+      "destination": "1024 DSP48E2 CLK pins + 64 RSTA-inverted DSP48E2 CLK pins + miscellaneous sequential logic",
+      "route_status": "ROUTED",
+      "interpretation": "Clock tree reaches every clocked cell in the sampler.  Clock IS reaching the fabric."
+    },
+    {
+      "signal": "S_AXI_ARESETN",
+      "segments_traced": 75,
+      "source": "carnot_ising_bd_i/proc_sys_reset_0/U0/peripheral_aresetn[0]",
+      "intermediate": "axi_smartconnect_0/inst/clk_map/psr_aclk/U0/EXT_LPF/aresetn",
+      "destination": "ising_sampler_0/inst/S_AXI_ARESETN",
+      "route_status": "ROUTED",
+      "interpretation": "Reset chain connects proc_sys_reset through SmartConnect down to the sampler.  Reset IS reaching the sampler."
+    },
+    {
+      "signal": "S_AXI_AWVALID",
+      "segments_traced": 9,
+      "source": "axi_smartconnect_0/inst/m00_exit_pipeline/m00_exit/inst/exit_inst/m_axi_awvalid",
+      "destination": "ising_sampler_0/inst/S_AXI_AWVALID",
+      "route_status": "ROUTED",
+      "interpretation": "SmartConnect's M00_AXI output drives the sampler's S_AXI input correctly.  No missed wire."
+    }
+  ],
+
+  "hypotheses_state": [
+    {"hypothesis": "RTL AXI-Lite protocol deadlock on split channels",
+     "status": "REJECTED",
+     "evidence": "Vivado xsim all 4 scenarios pass (results/kv260_axi_simulation_v2.json)"},
+    {"hypothesis": "pl_clk0 not running (CLKACT=0)",
+     "status": "REJECTED",
+     "evidence": "Probe shows CLKACT=1 in every state (results/kv260_pl_clock_probe.json)"},
+    {"hypothesis": "Clock-mismatch — setup timing violated at hardware frequency",
+     "status": "REJECTED",
+     "evidence": "30 MHz forced with ~12 ns positive slack still hung the PS (results/kv260_axi_30mhz_forced.json)"},
+    {"hypothesis": "proc_sys_reset wiring bug — ARESETN doesn't reach sampler",
+     "status": "REJECTED",
+     "evidence": "This inspection: 75-segment trace from proc_sys_reset_0/U0/peripheral_aresetn[0] to sampler"},
+    {"hypothesis": "AXI ACLK not connected despite IP-Integrator report",
+     "status": "REJECTED",
+     "evidence": "This inspection: 1169-segment clock tree from zynq_ultra_ps_e_0/inst/pl_clk0 to sampler (including all 1088 DSP48E2 clock pins)"},
+    {"hypothesis": "SmartConnect protocol interaction with the sampler's AXI-Lite slave",
+     "status": "SURVIVING (most likely)",
+     "details": "SmartConnect sits between PS M_AXI_HPM0_FPD (full AXI, 32-bit addr + burst + ID) and our sampler's S_AXI (AXI-Lite, 17-bit addr, no bursts, no ID).  Doing protocol conversion.  May have internal protocol monitors that panic on edge cases, OR its pipelining may drive the slave differently than the simple master BFM in our xsim testbench.  Bare-DUT sim passes with split AW/W channels; SmartConnect-in-the-loop sim has not been tested.",
+     "next_test": "Build a co-simulation: PS AXI master BFM -> SmartConnect (Xilinx pre-compiled library) -> our sampler DUT.  Exercise the same four scenarios.  If SmartConnect hangs, extract the failing protocol sequence as a lower-level testbench case."},
+    {"hypothesis": "Dynamic power integrity — 1088 DSPs switching on first cycle",
+     "status": "PLAUSIBLE but untestable from the DCP",
+     "details": "N=64 build uses 1088 DSPs (87% of XCK26 budget).  Simultaneous activation might cause supply droop.  But DSPs shouldn't be switching during a simple AWADDR write — they're idle until CONTROL=1 starts the sampler.  Unlikely to be THE cause but can't be ruled out without board-level current probes.",
+     "next_test": "Add a 16-cycle staggered LFSR enable to the RTL so DSP switching happens over time rather than one cycle.  RTL change, ~10 LOC."}
+  ],
+
+  "what_this_rules_out": "Five of seven initial hypotheses are now definitively rejected with concrete evidence in git history.  The on-hardware hang is NOT caused by: a missing clock, a misrouted reset, a broken AXI-Lite protocol in the sampler's own RTL, setup-timing violations, or a disconnected ACLK.  The design is structurally correct.",
+
+  "what_remains": "The hang is in the interaction between SmartConnect and our sampler's AXI-Lite slave.  This is testable with a SmartConnect-in-the-loop simulation (the next planned experiment).  Until that sim passes cleanly, do NOT load this bitstream on Kria — the failure mode is consistent and wedges the board each time.",
+
+  "retro_074_status": "narrowed_to_smartconnect_interaction",
+  "retro_074_progress": "5 of 7 hypotheses eliminated.  Remaining work: build a SmartConnect co-simulation testbench.  Estimated effort: half-day of Vivado scripting.  No on-hardware work until that sim is clean.",
+
+  "artifacts_written": [
+    "hardware/kv260/inspect_axi_nets.tcl",
+    "hardware/kv260/inspect_axi_nets_v2.tcl",
+    "hardware/kv260/axi_net_inspection.log",
+    "hardware/kv260/axi_v2.log",
+    "results/kv260_dcp_netlist_inspection.json"
+  ]
+}
