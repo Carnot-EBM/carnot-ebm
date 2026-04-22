@@ -98,6 +98,10 @@
 - 2026-04-20: Exp 557 complete — JEPA v9 Retrain, Diverse 100+ Corpus, LeWorldModel Objective, RETRO-056. Status: success. Phase 4 autoresearch retraining on real corpus. (Exp 557 result)
 - 2026-04-20: Exp 551 complete — Live 50q Data Collection A, GSM8K indices 0-49, no repair. Status: success. Phase 2 autoresearch live data sprint. (Exp 551 result)
 
+## 2026-04-22 (Exp 698: JEPA v16 Retrain on FoVer Formal v1)
+
+- 2026-04-22 11:13 UTC: Exp 698 — JEPA v16: InfoNCE Contrastive Loss — OOD AUC Target >= 0.75 on GSM8K 500-699 (root cause from Exp 693: pure_loss_anti_correlation). Architecture applied: InfoNCE contrastive loss replacing PUREMinFormLoss. Result: ⚠️ Research Finding. honest_verdict=jepa_v16_still_below_random; v16_ood_auc=0.4759 (ood_auc_delta=+0.0008 vs v15_baseline_auc=0.4751 — no meaningful improvement, still below random 0.5). cascade_unblocked=false. Research finding: architectural pivot to InfoNCE did not resolve the anti-correlation root cause; JEPA v16 remains non-viable for cascade deployment.
+
 ## 2026-04-22 (Exp 695: Tier 2.8 Candidate Benchmark)
 
 - 2026-04-22 10:07 UTC: Exp 695 — FormalStepVerifier vs EidokuCSP: Tier 2.8 Candidate Benchmark. (Conductor autoresearch) Compared three verifiers (FormalStepVerifier, SymCodeVerifier, EidokuCSP) on FoVer corpus v1. Status: success. All verifiers achieved AUC=0.5 (random baseline). honest_verdict=tier_28_no_candidate: FoVer v1 contains only step_correct=True labels; all Z3 verdicts are 'unparseable' (single-step "The answer is 42." format with no arithmetic). Corpus is degenerate for Tier 2.8 benchmarking. ⚠️ Research Finding. Recommendation: construct corpus with genuine violation examples (step_correct=False cases with parseable Z3 verdicts) before re-attempting verifier comparison.
