@@ -2460,3 +2460,4 @@ python/ |
 | 2026-04-22 06:24 UTC | Exp 688: PSV Self-Play Constraint Learning — 10-It | OK | 81 passed, 3 warnings in 4.01s |
 | 2026-04-22 06:36 UTC | Exp 689: Milestone 2026.04.52 Operational Retrospe | OK | 81 passed, 3 warnings in 7.22s |
 | 2026-04-22 06:51 UTC | Exp 690: Prompt-Injection KAN v1 — True Teacher Di | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-22 07:56 UTC | Exp 690: Prompt-Injection KAN v1 — True Teacher Di | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
