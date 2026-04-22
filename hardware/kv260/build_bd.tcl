@@ -158,7 +158,7 @@ set_property -dict [list \
     CONFIG.PSU__USE__S_AXI_GP2         {0} \
     CONFIG.PSU__FPGA_PL0_ENABLE        {1} \
     CONFIG.PSU__FPGA_PL1_ENABLE        {0} \
-    CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ {50} \
+    CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ {30} \
 ] [get_bd_cells zynq_ultra_ps_e_0]
 
 # --- AXI SmartConnect ---
