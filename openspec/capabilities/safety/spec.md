@@ -363,6 +363,73 @@ contains all required schema fields regardless of verdict.
 **Then** the experiment emits honest_verdict="blocked_on_upstream_exp_690" immediately
 without performing any evaluation.
 
+### REQ-SAFE-013: Prompt-Injection KAN v2 — Distillation AUROC >= 0.90 on 2000-Example Corpus
+
+**Motivation:**
+KAN v1 (Exp 690) achieved cross-dataset AUROC=0.9585 (publication-ready) but teacher
+distillation AUROC=0.7995 on the in-distribution training set.  The gap means the KAN
+has not fully internalized the teacher's classification boundary.  Closing it requires
+both more training data (1000 → 2000 labeled examples) and longer training (50 → 100 epochs).
+
+**Requirement:**
+A retrained KAN v2 must achieve distillation_auroc >= 0.90 on all 2000 training examples
+(train-set AUROC, measuring how well the KAN has absorbed the teacher's labeling).
+
+**Corpus:**
+- v1 corpus: 200 teacher-labeled examples from Exp 690 (reused verbatim)
+- New examples: 1000 additional prompts (500 benign + 500 injection, not in v1 corpus)
+  labeled by gpt-oss-safeguard-20b or by source origin if teacher unavailable
+- Total: 2000 examples
+
+**Result schema fields (MANDATORY):**
+- `distillation_auroc` (float): train AUROC on all 2000 examples
+- `distillation_gate_open` (bool): True iff distillation_auroc >= 0.90
+- `n_training_examples` (int): total corpus size (target 2000)
+- `teacher_inference_duration_s` (float): total seconds spent on teacher calls
+- `honest_verdict` (str): see SCENARIO-SAFE-013
+
+### SCENARIO-SAFE-013: KAN v2 Distillation Gate
+
+**Given** a combined 2000-example corpus (v1 teacher labels + new examples),
+
+**When** Exp 710 trains a v2 KAN for 100 epochs with n_knots=8, weight_decay=1e-4,
+
+**Then** the result artifact contains distillation_auroc, distillation_gate_open,
+honest_verdict, n_training_examples, and n_knots.
+
+**And** honest_verdict is:
+- "distillation_gate_open" if distillation_auroc >= 0.90
+- "distillation_improved_below_gate" if 0.7995 < distillation_auroc < 0.90
+- "distillation_regressed" if distillation_auroc <= 0.7995
+
+### REQ-SAFE-014: KAN v2 Architecture — 8 Knots Per Spline, L2 weight_decay=1e-4
+
+**Motivation:**
+v1 used 10 knots and weight_decay=1e-3.  On a 2000-example corpus the extra knot
+resolution leads to overfitting and the strong L2 penalty suppresses the teacher signal.
+8 knots with weight_decay=1e-4 gives sufficient expressiveness without overfitting.
+
+**Requirement:**
+PromptInjectionEnergyCheckerV2 must use n_knots=8 per spline and weight_decay=1e-4
+in the contrastive training loss.
+
+**Acceptance criteria:**
+- v2.n_params() returns a value consistent with n_knots=8, degree=3
+  (n_ctrl = 8 + 3 = 11 per spline; vs v1's 13)
+- v2.train() loss curve converges (final loss < first-epoch loss) on a 200-example set
+
+### SCENARIO-SAFE-014: KAN v2 Architecture Verification
+
+**Given** a PromptInjectionEnergyCheckerV2 instance,
+
+**When** n_params() is called,
+
+**Then** it returns n_hidden * n_features * (n_knots + degree) + n_hidden * (n_knots + degree)
+= 8 * 32 * 11 + 8 * 11 = 2816 + 88 = 2904 with defaults.
+
+**And** training for 10 epochs on 20 balanced examples converges
+(loss[-1] < loss[0]).
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -376,3 +443,5 @@ without performing any evaluation.
 | REQ-SAFE-010 | Implemented | Exp 679 gate; currently blocked on Exp 678 (v1 weights absent) |
 | REQ-SAFE-011 | Implemented | Exp 690 distillation invariant guard; prevents rubber-stamp verdicts |
 | REQ-SAFE-012 | Implemented | Exp 691 cross-dataset gate; mean_auroc=0.9585 => generalization_verified_publishable |
+| REQ-SAFE-013 | Proposed | Exp 710 target: distillation AUROC >= 0.90 on 2000-example corpus |
+| REQ-SAFE-014 | Proposed | Exp 710 target: 8 knots/spline + weight_decay=1e-4 in v2 KAN |
