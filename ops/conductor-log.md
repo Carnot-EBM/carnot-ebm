@@ -2503,3 +2503,4 @@ python/ |
 | 2026-04-22 18:08 UTC | Exp 723: PSV PaCoRe v2 — Diverse 100-Question Pool | OK | 81 passed, 3 warnings in 4.03s |
 | 2026-04-22 18:20 UTC | Exp 724: KAN Distillation v3 — 3000 Examples + 16  | OK | 81 passed, 3 warnings in 5.46s |
 | 2026-04-22 18:33 UTC | Exp 725: SC-Energy v2 on FoVer v2 — Self-Consisten | OK | 81 passed, 3 warnings in 4.12s |
+| 2026-04-22 18:49 UTC | Exp 726: JEPAReasonerProbe — Pre-generative Latent | OK | 81 passed, 3 warnings in 4.01s |
