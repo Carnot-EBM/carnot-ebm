@@ -13633,3 +13633,59 @@ When: verify_step_z3() or extract_arithmetic_claim() is called.
 Then: verdict is "unparseable" and step_correct=True (conservative label).
 
 **Implementation Status:** Implemented (tests/python/test_fover_z3_labeler.py, Exp 686)
+
+**Implementation Status:** Implemented (tests/python/test_fover_z3_labeler.py, Exp 686)
+
+## REQ-VERIFY-160: HalluSAE — Sparse AE Identifies >= 10 Distinct Hallucination Features
+
+A sparse auto-encoder trained on FOVER step-level text features SHALL identify at
+least 10 distinct latent dimensions that respond differentially to hallucinated vs
+correct reasoning steps.
+
+- REQ-VERIFY-160-1: SparseAutoEncoder SHALL accept input_dim, hidden_dim (default 512),
+  and sparsity_weight (default 0.01) at construction.
+- REQ-VERIFY-160-2: The encoder applies Dense -> ReLU; the decoder applies Dense.
+- REQ-VERIFY-160-3: The sparse activation uses top-1 per sample (only the maximum
+  activation fires; all others are zeroed out).
+- REQ-VERIFY-160-4: Training loss = MSE reconstruction + sparsity_weight * L1(h_sparse).
+- REQ-VERIFY-160-5: extract_text_features(text) SHALL return a jnp.ndarray of shape
+  (128,) encoding bag-of-hash features plus: digit_count, operator_count,
+  equals_count, carry_pattern_count, compute_line_count, step_length.
+- REQ-VERIFY-160-6: identify_hallucination_features() SHALL return at least 10 distinct
+  feature entries from the hidden_dim dimensions.
+
+**Implementation Status:** Implemented (python/carnot/models/hallusal_sparse_ae.py, Exp 687)
+
+## REQ-VERIFY-161: HalluSAE Top-10 Features Have feature_auroc >= 0.60
+
+The top-10 hallucination features identified by the sparse AE SHALL each have an
+AUC score (feature activation vs hallucination label) of at least 0.60 on the FOVER
+test set, OR the honest_verdict SHALL be "hallusat_below_threshold".
+
+- REQ-VERIFY-161-1: For each hidden dimension, compute AUC of activation values vs
+  binary hallucination labels (1=incorrect, 0=correct).
+- REQ-VERIFY-161-2: Return top-10 dimensions sorted by AUC descending.
+- REQ-VERIFY-161-3: honest_verdict SHALL be "hallusat_features_found" if
+  max_auroc >= 0.60.
+- REQ-VERIFY-161-4: honest_verdict SHALL be "hallusat_compute_line_causal" if
+  compute_line_count feature is among the top-10.
+- REQ-VERIFY-161-5: honest_verdict SHALL be "hallusat_below_threshold" if
+  max_auroc < 0.60.
+
+**Implementation Status:** Implemented (scripts/experiment_687_hallusat_sparse_ae.py, Exp 687)
+
+### SCENARIO-VERIFY-212: SparseAutoEncoder Forward Pass Produces Sparse Activations
+
+Given: a SparseAutoEncoder with input_dim=10, hidden_dim=8.
+When: __call__(x) is called with a batch of inputs.
+Then: h_sparse has exactly one non-zero value per sample (top-1 sparsity).
+
+**Implementation Status:** Implemented (tests/python/test_hallusal_sparse_ae.py, Exp 687)
+
+### SCENARIO-VERIFY-213: extract_text_features Returns Correct Shape and Dtype
+
+Given: a step text string "3 * 4 = 12 COMPUTE: total = 12".
+When: extract_text_features(text) is called.
+Then: output has shape (134,) [128 hash features + 6 structured features] and dtype float32.
+
+**Implementation Status:** Implemented (tests/python/test_hallusal_sparse_ae.py, Exp 687)
