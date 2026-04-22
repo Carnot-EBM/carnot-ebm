@@ -28,6 +28,21 @@ simultaneously, directly matching the AUC evaluation metric.
 Unblocked by: Exp 712 FoVer v2 PDDL (5+ steps per question via PDDL plan enumeration).
 JEPA v16 cascade block remains in effect until v18 achieves OOD AUC >= 0.75.
 
+## Closed Issues
+
+### FR-11 CLOSED — Status: OPERATIONAL (Exp 738, 2026-04-22)
+
+~~FR-11 (Autonomous Self-Learning Loop) — blocked for 15+ milestones on AUC gate.~~
+
+CLOSED 2026-04-22, Exp 738. FR-11 is now OPERATIONAL. Evidence:
+fr11_relay_operational=True (Exp 734, relay_events_acked=100, latency_p99_ms < 200),
+fr11_tier2_relay_functional=True (Exp 738, templates_replayed_in_s2=1,
+cross-session persist confirmed), probe 5-fold AUC=0.993 (Exp 732). Milestone
+2026.04.56 retro marked FR-11 "ELIGIBLE FOR FORMAL CLOSURE". Formal closure
+certificate: results/fr11_closure_certificate.json.
+
+---
+
 ## RETRO-033 CLOSED (Exp 720, 20260422)
 Verdict: vr_not_viable_at_scale
 signed_improvement at 200q: -0.0050 (simulated_historical_inference — 19/19 empirical failures at 100q)
