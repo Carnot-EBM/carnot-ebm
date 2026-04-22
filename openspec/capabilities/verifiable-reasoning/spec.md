@@ -13919,3 +13919,55 @@ When: verify_and_repair_with_abstention is called.
 Then: symcode_confidence == 0.6, abstained == False, repair_count == 1.
 
 **Implementation Status:** Implemented (tests/python/test_icalm_abstention.py, Exp 696)
+
+## REQ-LEARN-053: JEPA v16 OOD AUC >= 0.75 on GSM8K 500-699
+
+**Rationale:** Exp 693 identified pure_loss_anti_correlation as the root cause of JEPA v15 OOD
+AUC=0.4751 (below random). v16 replaces PUREMinFormLoss with InfoNCE contrastive loss, which does
+not have a formal-minimisation term that can invert gradient direction on OOD inputs.
+
+**Requirements:**
+- REQ-LEARN-053-1: JEPAv16 SHALL use InfoNCELoss instead of PUREMinFormLoss.
+- REQ-LEARN-053-2: InfoNCELoss temperature SHALL default to 0.07 (standard SimCLR value).
+- REQ-LEARN-053-3: v16 OOD AUC on GSM8K indices 500-699 SHALL reach >= 0.75.
+- REQ-LEARN-053-4: Training data SHALL include all pairs from fover_labeled_formal_v1.json (>= 200).
+- REQ-LEARN-053-5: On reaching OOD AUC >= 0.75, the jepa_v15_cascade block in the conductor
+  exclusion manifest SHALL be removed.
+
+**Implementation Status:** Implemented (scripts/experiment_698_jepa_v16.py, Exp 698)
+
+## REQ-LEARN-054: JEPA v16 ECE < 0.10 via Platt Calibration on OOD Set
+
+**Rationale:** AUC measures ranking quality but not calibration. Calibrated confidence scores
+are required for downstream use as gate probabilities in the JEPA cascade.
+
+**Requirements:**
+- REQ-LEARN-054-1: Platt calibration SHALL be fitted on the OOD set (GSM8K 500-699).
+- REQ-LEARN-054-2: ECE (Expected Calibration Error) SHALL be < 0.10 after Platt scaling.
+- REQ-LEARN-054-3: platt_temperature SHALL be reported in the artifact.
+
+**Implementation Status:** Implemented (scripts/experiment_698_jepa_v16.py, Exp 698)
+
+### SCENARIO-LEARN-087: InfoNCE Loss Separates Correct from Incorrect Chains
+
+Given: a batch with 4 correct and 4 incorrect chain embeddings.
+When: InfoNCELoss.compute is called with temperature=0.07.
+Then: loss is a positive float and gradients push correct pairs closer together.
+
+**Implementation Status:** Implemented (tests/python/test_jepa_v16.py, Exp 698)
+
+### SCENARIO-LEARN-088: v16 Training Data Loads All FoVer Pairs
+
+Given: fover_labeled_formal_v1.json with 200 pairs.
+When: build_v16_training_data is called.
+Then: len(training_data) >= 200.
+
+**Implementation Status:** Implemented (tests/python/test_jepa_v16.py, Exp 698)
+
+### SCENARIO-LEARN-089: Cascade Unblock Logic Fires at AUC Threshold
+
+Given: v16_ood_auc = 0.76.
+When: update_cascade_block is called.
+Then: jepa_v15_cascade is removed from conductor_exclusion_manifest and cascade_unblocked == True.
+
+**Implementation Status:** Implemented (tests/python/test_jepa_v16.py, Exp 698)
