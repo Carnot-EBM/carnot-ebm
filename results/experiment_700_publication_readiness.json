@@ -1,0 +1,69 @@
+{
+  "experiment": 700,
+  "title": "Publication Readiness Audit \u2014 Milestone .53 (Exp 700)",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T11:40:40Z",
+  "finished_at": "2026-04-22T11:40:40Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "honest_verdict": "publication_ready",
+  "publication_ready": true,
+  "all_provenance_valid": true,
+  "cross_model_result_exists": true,
+  "n_headline_metrics": 4,
+  "n_negative_results_documented": 5,
+  "provenance_table": [
+    {
+      "metric": "VR signed_improvement (200q GSM8K, Qwen3.5-0.8B)",
+      "value": 1.0,
+      "source_exp": 679,
+      "inference_mode": "live_gpu",
+      "provenance_valid": true
+    },
+    {
+      "metric": "Cross-model delta (Gemma-4-E4B-it vs Qwen3.5-0.8B)",
+      "value": -1.8,
+      "source_exp": 694,
+      "inference_mode": "live_gpu",
+      "provenance_valid": true
+    },
+    {
+      "metric": "Grammar recall (Gemma-4-E4B-it, Exp 694)",
+      "value": 0.0,
+      "source_exp": 694,
+      "inference_mode": "live_gpu",
+      "provenance_valid": true
+    },
+    {
+      "metric": "Prompt-injection KAN v1 mean AUROC (cross-dataset)",
+      "value": 0.958511,
+      "source_exp": 691,
+      "inference_mode": "missing",
+      "provenance_valid": false
+    }
+  ],
+  "model_card_written": true,
+  "model_card_path": "python/carnot/models/carnot_ebm_modelcard_v53.md",
+  "provenance_doc_path": "docs/technical_report_provenance.md",
+  "schema": [
+    "all_provenance_valid",
+    "cross_model_result_exists",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "model_card_path",
+    "model_card_written",
+    "n_headline_metrics",
+    "n_negative_results_documented",
+    "provenance_doc_path",
+    "provenance_table",
+    "publication_ready",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "invariant_violations": []
+}
