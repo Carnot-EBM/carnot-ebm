@@ -477,14 +477,26 @@ always @(posedge S_AXI_ACLK) begin
 
     end else begin
 
-        // Advance all LFSRs every clock (maximal-length 16-bit Fibonacci).
-        // No central mux or DAC — each spin owns its own RNG lane.
-        for (spin_i = 0; spin_i < N_SPINS; spin_i = spin_i + 1) begin
-            lfsr[spin_i] <= {lfsr[spin_i][14:0],
-                             lfsr[spin_i][15] ^ lfsr[spin_i][13]
-                             ^ lfsr[spin_i][12] ^ lfsr[spin_i][10]};
-            if (lfsr[spin_i] == 16'h0000)
-                lfsr[spin_i] <= 16'hACE1;
+        // RETRO-074 fix: gate LFSR advances on reg_control[0] (sampler-active
+        // bit).  128 LFSRs * 16 flops = 2048 flops switching every clock cycle
+        // was drawing enough switching current at startup to collapse the
+        // VCCINT rail and prevent the PS from completing its first AXI access
+        // on the KV260 (four hangs this session before this change).  Holding
+        // the LFSRs constant at idle cuts idle switching to near-zero;
+        // they kick in when the CPU writes reg_control[0]=1 to start sampling.
+        // Net effect on correctness: the sampler only uses LFSRs once
+        // fsm_state == FSM_RUNNING, which can only happen after reg_control[0]
+        // is set.  So gating on reg_control[0] is observationally equivalent
+        // to always-advance for any external observer, and eliminates the
+        // rail-droop at cold-start.
+        if (reg_control[0]) begin
+            for (spin_i = 0; spin_i < N_SPINS; spin_i = spin_i + 1) begin
+                lfsr[spin_i] <= {lfsr[spin_i][14:0],
+                                 lfsr[spin_i][15] ^ lfsr[spin_i][13]
+                                 ^ lfsr[spin_i][12] ^ lfsr[spin_i][10]};
+                if (lfsr[spin_i] == 16'h0000)
+                    lfsr[spin_i] <= 16'hACE1;
+            end
         end
 
         case (fsm_state)
