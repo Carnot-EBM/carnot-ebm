@@ -378,6 +378,38 @@ Sub-requirements:
 
 ---
 
+## FR-11 Formal Closure — Implementation Status: OPERATIONAL
+
+**Status:** OPERATIONAL as of Milestone 2026.04.56 (2026-04-22).
+
+FR-11 (Autonomous Self-Learning Loop) is formally closed.  The requirement is
+satisfied end-to-end: violation events from Tier 2.1 (JEPAReasonerProbe) are
+relayed through FR11EventBus to Tier 1 (PerModelFPTracker) and Tier 2
+(SessionMemory), and SessionMemory state persists across sessions.
+
+**Closing experiments:**
+- Exp 734 (fr11_relay_operational=True): FR11EventBus delivers ViolationEvents
+  to all subscribers within 200ms; relay_events_acked >= 1 (confirmed 100 events).
+- Exp 738 (fr11_tier2_relay_functional=True): SessionMemory cross-session persist
+  confirmed; templates_replayed_in_s2=1, precision improves across sessions.
+- Exp 732: 5-fold CV probe AUC = 0.993 (signal quality gate for FR-11 Tier 2.1).
+
+**Evidence summary:**
+
+| Metric | Value | Source |
+|--------|-------|--------|
+| relay_events_acked | 100 | Exp 734 |
+| relay_latency_p99_ms | < 200 | Exp 734 |
+| fr11_relay_operational | True | Exp 734 |
+| fr11_tier2_relay_functional | True | Exp 738 |
+| templates_replayed_in_s2 | >= 1 | Exp 738 |
+| probe_5fold_auc | 0.993 | Exp 732 |
+
+**Formal closure certificate:** results/fr11_closure_certificate.json
+**Closure experiment:** scripts/experiment_741_fr11_formal_closure.py
+
+---
+
 ## REQ-FR11-005: SessionMemory MUST Persist Violation Type Mappings Across Sessions
 
 **Given** a SessionMemory that has accumulated violation_type counts during a pipeline run
