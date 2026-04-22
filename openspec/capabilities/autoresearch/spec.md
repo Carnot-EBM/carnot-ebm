@@ -2135,6 +2135,43 @@ Spec: REQ-LEARN-084, SCENARIO-LEARN-131
 **And** domain_emphasis matches the original
 **And** get_adapted_addendum() produces identical output before and after round-trip
 
+### REQ-LEARN-087: JEPA v15 OOD AUC Measured on Truly Unseen GSM8K 500-699
+
+**Given** a trained JEPA v15 model (jepa_predictor_v15_real.safetensors)
+**When** evaluated on 200 GSM8K questions with indices 500-699 that were never present
+    in any form during training (the FOVER corpus covers ~indices 150-499)
+**Then** true_ood_auc is computed via ROC-AUC on the held-out questions
+**And** if true_ood_auc == 1.0, honest_verdict = 'jepa_v15_overfit' (confirms data leakage suspicion)
+**And** if true_ood_auc >= 0.80 and ece < 0.10, honest_verdict = 'jepa_v15_ood_target_met'
+**And** if 0.60 <= true_ood_auc < 0.80, honest_verdict = 'jepa_v15_ood_partial'
+**And** if true_ood_auc < 0.50, honest_verdict = 'jepa_v15_ood_below_random'
+
+Spec: REQ-LEARN-087, SCENARIO-LEARN-136
+
+### REQ-LEARN-088: JEPA v15 ECE < 0.10 on True OOD Set via Platt Calibration
+
+**Given** JEPA v15 raw energy scores on GSM8K 500-699
+**When** Platt temperature T is fitted on those same 200 OOD samples (post-hoc calibration)
+**Then** ECE (10-bin histogram) of calibrated probabilities is reported in the artifact
+**And** platt_temperature is a finite positive scalar in [0.01, 10.0]
+
+Spec: REQ-LEARN-088, SCENARIO-LEARN-137
+
+### SCENARIO-LEARN-136: JEPA v15 OOD Verdict Matches True AUC Threshold
+
+**Given** Exp 682 runs on GSM8K indices 500-699 (never seen during training)
+**When** true_ood_auc is computed and compared against the thresholds in REQ-LEARN-087
+**Then** honest_verdict is a member of VALID_VERDICTS
+**And** the artifact includes true_ood_auc, training_indices_avoided, and n_ood_questions=200
+
+### SCENARIO-LEARN-137: ECE Is Computed After Platt Temperature Scaling on OOD Set
+
+**Given** JEPA v15 raw scores on GSM8K 500-699
+**When** Platt temperature T is fitted via Brent's method (or grid fallback) on the OOD set
+**Then** calibrated_probs = sigmoid(score / T) are computed for all 200 questions
+**And** ece = weighted mean |confidence - accuracy| across 10 equal-width probability bins
+**And** ece is a finite non-negative float in [0, 1]
+
 ---
 
 ## Implementation Status
@@ -2214,3 +2251,5 @@ Spec: REQ-LEARN-084, SCENARIO-LEARN-131
 | REQ-LEARN-084 | N/A | Implemented | Python (test_experiment_671_jepa_v15.py) |
 | REQ-LEARN-085 | N/A | Implemented | Python (test_metajuls_forcing_adapter.py) |
 | REQ-LEARN-086 | N/A | Implemented | Python (test_metajuls_forcing_adapter.py) |
+| REQ-LEARN-087 | N/A | Implemented | Python (test_experiment_682_jepa_v15_ood_audit.py) |
+| REQ-LEARN-088 | N/A | Implemented | Python (test_experiment_682_jepa_v15_ood_audit.py) |

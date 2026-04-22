@@ -2,6 +2,8 @@
 
 ## 2026-04-22 (Milestone 2026.04.52 Research Planning)
 
+- 2026-04-22 04:55 UTC: ModelServer timeout fix verification (Commit ce3219c2: "bound generate_batch wait() to prevent 130-min stalls"). (User instruction: "Fix the failing tests. Do NOT revert your changes — fix the code so all tests pass with 100% coverage.") Verified all tests pass with existing fix: 25/25 test_model_server.py pass (0 failures). test_generate_batch_times_out_when_worker_stalls correctly validates bounded wait(timeout=timeout_s) on worker stall: timeout_s read from CARNOT_MODELSERVER_BATCH_TIMEOUT_S env var (default 120s), TimeoutError raised with diagnostic fields (model, batch_size, max_new_tokens, worker_alive, queue_depth) when wait() expires. Also verified 28/28 test_experiment_682_jepa_v15_ood_audit.py pass. Code fix is correct and complete; no further changes needed. Updated ops/metrics.md turn log.
+
 - 2026-04-22 01:19 UTC: Planned milestone 2026.04.52 "VR Win Scale-Up + DualGPU Proof + JEPA Calibration". (User instruction: research planning agent) Read 11 project files + 12 Exp .51 result JSONs. Spawned arxiv subagent; added 5 papers to research-references.md (FoVer arXiv 2505.15960, HalluSAE arXiv 2604.16430, PSV arXiv 2512.18160, Eidoku + I-CALM filed .53). Identified 3 biggest gaps: VR scale validation (Exp 679-681), DualGPU pynvml proof (Exp 684, RETRO-071), JEPA v15 ECE audit + FR-11 relay (Exp 682-683). Wrote openspec/change-proposals/research-roadmap-vNEXT.md (12 experiments 678-689, dependency graph, success criteria, RETRO tracking). Wrote research-roadmap-next.yaml (12 experiments with complete conductor prompts). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py.
 
 ## 2026-04-22 (Milestone 2026.04.51 Operational Retrospective)
