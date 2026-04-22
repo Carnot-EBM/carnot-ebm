@@ -2099,6 +2099,42 @@ Spec: REQ-LEARN-084, SCENARIO-LEARN-131
     'jepa_v15_target_met' | 'jepa_v15_auc_met' | 'jepa_v15_partial'
     | 'jepa_v15_no_improvement' | 'ci_mode_synthetic'
 
+### REQ-LEARN-085: MetaJuLS Forcing Adapter Updates Forcing Strategy from Live Feedback
+
+**Given** a MetaJuLSForcingAdapter initialized with base FORCER_SYSTEM_ADDENDUM
+**When** ForcingFeedback observations are submitted via update()
+**Then** the adapter accumulates per-domain recall history
+**And** domains with mean recall < 0.30 receive a CRITICAL: emphasis string
+
+### REQ-LEARN-086: Adapted Forcing Addendum Is Extended for Low-Recall Domains
+
+**Given** a MetaJuLSForcingAdapter that has received low-recall feedback for a domain
+**When** get_adapted_addendum() is called for that domain
+**Then** the returned addendum is longer than the base FORCER_SYSTEM_ADDENDUM
+**And** the base addendum is preserved as a prefix in the extended addendum
+
+### SCENARIO-LEARN-133: Low Recall Domain Triggers CRITICAL Emphasis
+
+**Given** a MetaJuLSForcingAdapter with base addendum
+**When** ForcingFeedback with recall < 0.30 is submitted for domain 'percentage'
+**Then** adapter.domain_emphasis['percentage'] contains "CRITICAL"
+**And** the emphasis string references the 'percentage' domain by name
+
+### SCENARIO-LEARN-134: High Recall Domain Keeps Base Addendum Unchanged
+
+**Given** a MetaJuLSForcingAdapter
+**When** ForcingFeedback with recall >= 0.30 is submitted for domain 'arithmetic'
+**Then** no emphasis is installed for 'arithmetic'
+**And** get_adapted_addendum() returns the base addendum unchanged
+
+### SCENARIO-LEARN-135: Save/Load Round-Trip Preserves Full Adapter State
+
+**Given** a MetaJuLSForcingAdapter with accumulated recall history and installed emphasis
+**When** save_state() is called and load_state() restores from that file
+**Then** domain_recalls matches the original
+**And** domain_emphasis matches the original
+**And** get_adapted_addendum() produces identical output before and after round-trip
+
 ---
 
 ## Implementation Status
@@ -2176,3 +2212,5 @@ Spec: REQ-LEARN-084, SCENARIO-LEARN-131
 | REQ-LEARN-082 | N/A | Implemented | Python (test_experiment_645_fr11_relay.py) |
 | REQ-LEARN-083 | N/A | Implemented | Python (test_experiment_671_jepa_v15.py) |
 | REQ-LEARN-084 | N/A | Implemented | Python (test_experiment_671_jepa_v15.py) |
+| REQ-LEARN-085 | N/A | Implemented | Python (test_metajuls_forcing_adapter.py) |
+| REQ-LEARN-086 | N/A | Implemented | Python (test_metajuls_forcing_adapter.py) |
