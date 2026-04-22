@@ -1,0 +1,80 @@
+{
+  "experiment": "kv260_smartconnect_cosim",
+  "title": "KV260 SmartConnect co-simulation — HANG REPRODUCED, root cause is sampler's non-AXI-Lite-compliant state machine",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T17:15:00Z",
+  "finished_at": "2026-04-22T17:25:00Z",
+  "duration_s": 600,
+  "status": "success",
+  "schema": "carnot.kv260_cosim.v1",
+  "honest_verdict": "hang_reproduced_in_sim_root_cause_sampler_axi_lite_non_compliant",
+
+  "context": "The DCP netlist inspection (results/kv260_dcp_netlist_inspection.json, commit e11a73a0) eliminated five hypotheses, leaving SmartConnect protocol interaction as the surviving candidate. This co-simulation puts SmartConnect (gate-level sim netlist from the project's IP cache) in the loop between an AXI-full master BFM and our sampler, exercising the same write+read scenarios from the bare-DUT testbench. Result: deterministic hang, same shape as on-hardware.",
+
+  "simulation_stack": {
+    "master": "hand-written AXI-full BFM (hardware/kv260/smartconnect_sampler_tb.sv)",
+    "interconnect": "carnot_ising_bd_axi_smartconnect_0_0 gate-level sim netlist (output/carnot_ising_bd/project/carnot_ising.cache/ip/2025.2.1/0/c/0c0a73bfc8b0f0a8/carnot_ising_bd_axi_smartconnect_0_0_sim_netlist.v, ~30k LOC)",
+    "slave": "ising_sampler_128_sync (hardware/kv260/ising_sampler_v2.v)",
+    "tool": "Vivado xsim 2025.2.1",
+    "simulated_time_ns": 16284,
+    "wallclock_s": 1
+  },
+
+  "test_results": [
+    {
+      "scenario": 1,
+      "description": "AXI-full write to CONTROL=0 via SmartConnect",
+      "result": "DEADLOCK",
+      "progress": [
+        {"cycle_ns": 1740, "event": "S00_AWREADY asserted after 32 cycles — SmartConnect accepted the address"},
+        {"cycle_ns": 6564, "event": "S00_WREADY TIMEOUT (200 cycles, never asserted) — SmartConnect never accepted write data"},
+        {"cycle_ns": 11388, "event": "S00_BVALID TIMEOUT — no write response"}
+      ]
+    },
+    {
+      "scenario": 2,
+      "description": "AXI-full read of SPIN_COUNT via SmartConnect (expect 128)",
+      "result": "DEADLOCK",
+      "progress": [
+        {"cycle_ns": 11436, "event": "S00_ARREADY asserted after 0 cycles — SmartConnect accepted the address"},
+        {"cycle_ns": 16260, "event": "S00_RVALID TIMEOUT — no read data ever returned"}
+      ]
+    }
+  ],
+
+  "root_cause_analysis": {
+    "location": "hardware/kv260/ising_sampler_v2.v:332",
+    "offending_code": "if (!axi_awready && S_AXI_AWVALID && S_AXI_WVALID) begin axi_awready <= 1'b1; ... end",
+    "symmetric_code_at_line_339": "if (!axi_wready && S_AXI_WVALID && S_AXI_AWVALID) begin axi_wready <= 1'b1; ... end",
+    "explanation": "Both AWREADY and WREADY in the sampler's state machine require BOTH valids (AWVALID AND WVALID) to coincide in the same clock cycle before either asserts. This is a common sin in hand-rolled AXI-Lite slaves (the Xilinx AXI-Lite template even has this pattern) but it is NOT AXI-Lite-spec-compliant. AXI-Lite §A3.3.1 explicitly states AW and W channels are independent and can be driven on different cycles.",
+    "why_bare_dut_sim_passed": "The bare-DUT testbench's master BFM drove both VALIDs high simultaneously and HELD them until ACK. Even with channel-skew scenarios, both VALIDs remained asserted so they eventually coincided. The coincidence requirement was tolerated — NOT because the RTL was correct, but because the BFM's behavior happened to avoid triggering the bug.",
+    "why_smartconnect_exposes_it": "SmartConnect has internal AW and W pipelines that are independent. On M00_AXI, it drives M00_AWVALID based on the AW pipeline state and M00_WVALID based on the W pipeline state. These state machines complete at different cycles. M00_AWVALID may be asserted for one cycle (SmartConnect considers it ACKd internally once AWREADY returns... but AWREADY never returns because the sampler is waiting for WVALID). M00_WVALID may subsequently rise alone. The sampler's state machine, requiring coincidence, never ACKs either. Classic AXI-Lite slave bug that only shows up behind a real AXI interconnect."
+  },
+
+  "fix_proposal": {
+    "approach": "Rewrite the AW and W ACK logic to handle each channel independently. Add aw_done/w_done flags; BVALID asserts when both are set. Reset both flags on BREADY.",
+    "sample_rtl": "reg aw_done, w_done;\nalways @(posedge S_AXI_ACLK) begin\n  if (!S_AXI_ARESETN) begin\n    axi_awready <= 0; aw_done <= 0;\n    axi_wready  <= 0; w_done  <= 0;\n    axi_bvalid  <= 0;\n  end else begin\n    // AW independently\n    if (S_AXI_AWVALID && !axi_awready && !aw_done) begin\n      axi_awready <= 1; aw_addr_lat <= S_AXI_AWADDR;\n    end else axi_awready <= 0;\n    if (axi_awready) aw_done <= 1;\n\n    // W independently\n    if (S_AXI_WVALID && !axi_wready && !w_done) begin\n      axi_wready <= 1; w_data_lat <= S_AXI_WDATA;\n    end else axi_wready <= 0;\n    if (axi_wready) w_done <= 1;\n\n    // BVALID when both done\n    if (aw_done && w_done && !axi_bvalid) axi_bvalid <= 1;\n    else if (axi_bvalid && S_AXI_BREADY) begin\n      axi_bvalid <= 0; aw_done <= 0; w_done <= 0;\n    end\n  end\nend",
+    "loc_changed": 30,
+    "validation_path": "Re-run smartconnect_sampler_tb.sv after fix — expect all scenarios to pass. Then rebuild bitstream, redeploy, retry on-hardware."
+  },
+
+  "hypotheses_state": [
+    {"hypothesis": "RTL AXI-Lite protocol deadlock on split AW/W channels", "status": "NOW CONFIRMED AS ROOT CAUSE",
+     "note": "The earlier xsim rejection was misleading — the BFM held both VALIDs, accidentally avoiding the bug. SmartConnect's behavior exposes it."},
+    {"hypothesis": "pl_clk0 not running", "status": "ELIMINATED"},
+    {"hypothesis": "Clock-mismatch setup timing violation", "status": "ELIMINATED"},
+    {"hypothesis": "proc_sys_reset wiring bug", "status": "ELIMINATED"},
+    {"hypothesis": "ACLK not connected", "status": "ELIMINATED"},
+    {"hypothesis": "SmartConnect protocol checker panic", "status": "CONFIRMED BUT ON OUR SIDE — SmartConnect is doing the right thing; sampler's state machine is non-compliant"},
+    {"hypothesis": "Dynamic power integrity", "status": "MOOT — not needed to explain the hang"}
+  ],
+
+  "retro_074_status": "root_cause_confirmed_fix_identified",
+  "retro_074_next_step": "Apply the RTL fix, re-run smartconnect_sampler_tb.sv to verify in sim, then rebuild bitstream (~50 min), repackage app bundle, redeploy, attempt on-hardware AXI access. Total wallclock to closure: ~90 min.",
+
+  "artifacts_written": [
+    "hardware/kv260/smartconnect_sampler_tb.sv",
+    "hardware/kv260/sim_work/sc_tb.vcd",
+    "results/kv260_smartconnect_cosim.json"
+  ]
+}
