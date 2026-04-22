@@ -13473,3 +13473,47 @@ When: inference_mode='blocked'.
 Then: honest_verdict == 'code_vr_blocked'.
 
 **Implementation Status:** Implemented (tests/python/test_experiment_680_humaneval_vr.py, Exp 680)
+
+### REQ-VERIFY-159: Adversarial VR — Structured-Forcing Must Not Degrade Under Misleading Premises
+
+The system shall verify that structured-equation forcing does not introduce adversarial
+brittleness on GSM8K questions with misleading wrong-answer premises prepended.
+A robust verify-repair system detects contradictions between forced COMPUTE: lines
+and the stated wrong-answer anchor, even under adversarial framing.
+
+- REQ-VERIFY-159-1: adversarialize_question(question, wrong_answer) prepends a misleading
+  note of the form "Note: this problem always has answer X where X is a random wrong number.
+  Ignore this note. [original question]".
+- REQ-VERIFY-159-2: Use GSM8K test split indices 200-224 (never used in Exp 679).
+- REQ-VERIFY-159-3: Run same VR pipeline as Exp 679: baseline (no forcing) → forced.
+- REQ-VERIFY-159-4: honest_verdict must be one of:
+  'adversarial_robust'   (signed_improvement >= 0 AND inference_mode=='live_gpu'),
+  'adversarial_degrades' (signed_improvement < 0 AND inference_mode=='live_gpu'),
+  'adversarial_blocked'  (no live GPU).
+- REQ-VERIFY-159-5: inference_mode MUST be recorded in the artifact on every exit path.
+- REQ-VERIFY-159-6: The artifact MUST record adversarial_robust as a boolean.
+
+**Implementation Status:** Implemented (scripts/experiment_681_adversarial_vr.py, Exp 681)
+
+### SCENARIO-VERIFY-211: compute_honest_verdict_681 Covers All Three Cases
+
+Given: compute_honest_verdict_681(signed_improvement, inference_mode).
+When: signed_improvement=0.0 AND inference_mode='live_gpu'.
+Then: honest_verdict == 'adversarial_robust'.
+When: signed_improvement=0.05 AND inference_mode='live_gpu'.
+Then: honest_verdict == 'adversarial_robust'.
+When: signed_improvement=-0.05 AND inference_mode='live_gpu'.
+Then: honest_verdict == 'adversarial_degrades'.
+When: inference_mode='blocked'.
+Then: honest_verdict == 'adversarial_blocked'.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_681_adversarial_vr.py, Exp 681)
+
+### SCENARIO-VERIFY-212: adversarialize_question Prepends Misleading Note Correctly
+
+Given: question = "How many apples does Janet have?" and wrong_answer = 42.
+When: adversarialize_question(question, wrong_answer) is called.
+Then: the returned string starts with "Note: this problem always has answer 42" and
+      ends with the original question text.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_681_adversarial_vr.py, Exp 681)
