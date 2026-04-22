@@ -4,6 +4,92 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-22 arxiv Scan (Milestone 2026.04.52 Planning)
+
+### FoVer — Formal Verification for Scalable PRM Training Data Generation
+- **Paper:** arXiv 2505.15960 (May 2025)
+- **What:** Uses Z3 SMT solver and Isabelle to automatically annotate step-level error
+  labels in PRM training data. Replaces costly human annotation with formal proofs —
+  a step is labeled correct if and only if it is provably reachable from premises via
+  valid arithmetic reasoning chains.
+- **Relevance to Carnot:** Carnot's JEPA predictor (Tier 2) is trained on the
+  hand-annotated FOVER corpus (57 live pairs as of .51), limiting training data
+  diversity. FoVer provides a scalable, provably-correct annotation pipeline: run
+  Qwen3.5-0.8B on 200 GSM8K questions, extract CoT steps, run Z3 on each step to
+  determine correct/incorrect, generate fover_labeled_formal_v1.json. This could
+  expand the training corpus 10x without human annotation, addressing the persistent
+  training-data bottleneck for JEPA.
+- **Concrete experiment:** Exp 686 (FoVer Formal PRM Labels): integrate Z3 step-level
+  annotation pipeline. Run 200 GSM8K CoT chains, auto-label each step. Produce
+  fover_labeled_formal_v1.json. Verify label agreement rate with existing FOVER
+  hand-labels (should be > 80%). Use as JEPA v16 training data in next milestone.
+- **When to incorporate:** Milestone 2026.04.52 — Phase 4 new research.
+
+### HalluSAE — Sparse Auto-Encoder Feature Attribution for Hallucination Detection
+- **Paper:** arXiv 2604.16430 (April 2026)
+- **What:** Detects hallucinations via sparse auto-encoder decomposition of LLM hidden
+  states. Identifies monosemantic features causally linked to factual errors. Achieves
+  0.91+ AUROC on factual verification tasks by attributing energy spikes to specific
+  learned features, not just aggregate hidden-state statistics.
+- **Relevance to Carnot:** Carnot's EORM (Tier 2) scores full CoT sequences; it cannot
+  attribute which specific features caused the energy spike. HalluSAE's sparse feature
+  attribution would enable causal diagnosis: "this response flagged because Feature 47
+  (off-by-one arithmetic) activated." This maps to Tier 2.5 feature attribution and
+  could replace the NUP Probe v4 (Tier 0c) with a more interpretable, causally-grounded
+  signal. Also relevant to explaining why structured-equation forcing reduces hallucinations.
+- **Concrete experiment:** Exp 687 (HalluSAE Sparse AE): train a 512-dim sparse AE on
+  Qwen3.5-0.8B hidden states from FOVER corpus. Identify top-10 hallucination-predictive
+  features. Compare: do these features correlate with COMPUTE: line presence? If yes,
+  provides mechanistic explanation for the VR win (Exp 668).
+- **When to incorporate:** Milestone 2026.04.52 — Phase 4 new research (Exp 687).
+
+### PSV — Self-Play via Formal Verification for Autonomous Learning
+- **Paper:** arXiv 2512.18160 (December 2025)
+- **What:** Propose, Solve, Verify (PSV) framework where a generator model proposes
+  problems, a solver model attempts them, and formal verification provides binary
+  correctness labels. Uses this labeled data for self-play to improve both problem
+  quality and solution accuracy without human supervision.
+- **Relevance to Carnot:** Directly implements Tier 3 of Carnot's self-learning roadmap
+  (JEPA predictive verification). The PSV loop adapted to Carnot: (1) select GSM8K
+  question variants, (2) run VR pipeline to verify/repair, (3) use verification verdict
+  as a training signal for constraint weight updates and JEPA retraining. Unlike prior
+  FR-11 experiments that relied on pre-collected violation pairs, PSV continuously
+  generates fresh labeled data. The structured-equation forcing (Exp 653) makes the
+  "solve" step verification-friendly.
+- **Concrete experiment:** Exp 688 (PSV Self-Play Loop): implement a 10-iteration
+  self-play loop where each iteration generates 20 questions, runs VR pipeline with
+  structured forcing, uses binary correct/incorrect labels to update ConstraintTemplateLibrary
+  weights (Tier 1 online learning). Measure: does constraint weight quality improve
+  across iterations (reduction in FP rate)?
+- **When to incorporate:** Milestone 2026.04.52 — Phase 4 new research (Exp 688).
+
+### Eidoku — CSP-Based Structural Verification Gate for LLM Reasoning
+- **Paper:** arXiv 2512.20664 (December 2025)
+- **What:** Reformulates LLM output verification as a Constraint Satisfaction Problem
+  operating independently of generation likelihood. Models feasibility checks via
+  structural violation cost functions that are independent of model confidence — avoiding
+  the calibration gap between high-confidence hallucinations and correctly-uncertain
+  correct responses.
+- **Relevance to Carnot:** Carnot's SymCodeVerifier (Tier 2.5) executes Python to check
+  arithmetic — which is structure-blind (can't check logical consistency). Eidoku's CSP
+  gate could complement SymCode: first check arithmetic correctness (SymCode), then check
+  structural consistency via CSP (Eidoku). Filed for .53.
+- **When to incorporate:** Milestone 2026.04.53 — Tier 2.8 candidate.
+
+### I-CALM — Confidence-Aware Abstention for Hallucination Mitigation
+- **Paper:** arXiv 2604.03904 (April 2026)
+- **What:** Prompt-only intervention that reduces hallucination via abstention incentives.
+  Teaches models to say "I don't know" when confidence is low via targeted system prompts.
+  Dramatically reduces false positive hallucination repairs (model defers rather than
+  guessing) without changing model weights.
+- **Relevance to Carnot:** Carnot's repair pipeline currently always attempts repair when
+  a violation is detected — even on low-confidence detections, which causes false positives.
+  I-CALM's abstention pattern applied to repair: when energy is high but below a confidence
+  threshold, output "abstain" rather than a potentially-wrong repair. Aligns with the false
+  positive problem identified after the .51 VR win (post_accuracy=1.0 suspicious — may be
+  abstentions counted as correct). Filed for .53.
+- **When to incorporate:** Milestone 2026.04.53 — Repair abstention layer.
+
 ## 2026-04-21 arxiv Scan (Milestone 2026.04.51 Planning)
 
 ### IAS — Instance-Adaptive Scaling for Process Reward Model Uncertainty Calibration

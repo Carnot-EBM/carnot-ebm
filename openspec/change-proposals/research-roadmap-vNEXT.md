@@ -1,246 +1,278 @@
-# Research Roadmap v49 — Milestone 2026.04.49
+# Research Roadmap — Milestone 2026.04.52
 
-**Status:** Proposed
-**Milestone:** 2026.04.49
-**Title:** HERMES v2 Live Generation Loop + Platt JEPA + Parallel Ising Inertia
-**Planned:** 2026-04-21
-**Experiments:** 640–651 (12 experiments)
+**Title:** VR Win Scale-Up + DualGPU Proof + JEPA Calibration
 
----
+**CalVer:** 2026.04.52 (sequence increment from 2026.04.51)
 
-## What Milestone 2026.04.48 Proved
+**Authored:** 2026-04-22
 
-Milestone 2026.04.48 ran 13 experiments (627–639) and produced these honest findings:
-
-**Partially resolved:**
-- SymCodeVerifier confirmed as the strongest verification primitive (AUC=0.804, distribution-invariant via eval()).
-- HERMES step-boundary architecture: recall improved from 4% (post-hoc) to 12% (HERMES v1, Exp 633). First architecture to show meaningful improvement over raw extraction.
-- interwhen mid-generation recall also 12% (Exp 627). Early detection rate = 1.0 (violations detectable early in the sentence, not just at end).
-- JEPA v14 OOD AUC=0.912 (architecture excellent). ECE=0.132 — calibration target 0.10 NOT MET.
-- Multilevel KAN training implemented (Exp 634): KnotRefinementInterpolator + MultilevelKAEMTrainer.
-- AdapTrack backtracking implemented (Exp 635): proportional backtrack on SymCodeVerifier violation.
-- FPGA TCL v2 written (Exp 636): synth_ising_v2.tcl targets synchronous RTL. Vivado still not installed.
-
-**Still blocked — escalated:**
-- RETRO-070 (CRITICAL, carry 3): interwhen AND HERMES both achieve 12% recall. Both run post-hoc on COMPLETED responses. Root cause confirmed: IT models write violations in prose; no post-hoc extractor crosses 20% recall. The fix is a LIVE generation loop — generate one step, verify mid-generation, inject feedback, generate next step. This was NOT implemented in .48 (Exp 633 was CPU prototype on completed responses, not a live loop).
-- RETRO-033 (carry 16): VR attempt #16 blocked (gate_open=False, recall < 20%). Sixteen consecutive 0% attempts. Gate upgraded to 30% minimum recall before attempt #17.
-- RETRO-071: DualGPU 13B proof — model_load_failed (HF weights not cached). Need pre-downloaded Qwen2.5-7B-Instruct.
-- RETRO-057: SparseKAEM sparse_vs_dense_error=0.429 — far outside 5% threshold. Multilevel + sparse COMBINED approach required.
-- JEPA v14: ECE=0.132 (target 0.10) — Platt temperature scaling is the next calibration intervention.
-
-**Research advances:**
-- ORACLE corpus builder implemented (Exp 628). Step-level SymCodeVerifier labels on live responses.
-- Sparse KAEM architecture designed (Exp 637). Combined multilevel+sparse is next step.
-- HERMES v1 adapter operational. v2 live loop is the .49 critical path.
-- arXiv 2604.17109 (parallel dense Ising with inertia): new FPGA architecture, 35x speedup, v3 RTL path identified.
+**Previous Milestone:** 2026.04.51 — "VR Gate Unblock + Prompt-Injection Rescue + Cascade Hardening"
 
 ---
 
-## The 3 Biggest Gaps vs PRD Vision
+## What Milestone 2026.04.51 Proved
 
-### Gap 1: Post-hoc Approaches Architecturally Capped at 12% Recall (RETRO-070, CRITICAL)
+Milestone .51 achieved the project's most significant research breakthrough to date:
 
-**Evidence:** After 16 VR attempts, 6 extractor architectures, and both interwhen and HERMES v1, live recall is stuck at 12%. The ceiling is not an implementation bug — it is a distribution mismatch:
-1. IT models write "The total of 47 apples and 28 oranges is 76 fruits." Completed responses show only "76" at the end of a natural language sentence.
-2. SymCodeVerifier AUC=0.804 on completed responses means it catches ~80% of violations WHEN it can find an arithmetic expression. The problem is that only ~12% of violations produce a parseable expression in the completed response.
-3. Post-hoc running on the completed response loses context: "47 apples and 28 oranges" precede the violation; they appear in adjacent sentences, not as a standalone equation.
+- **Exp 666 (Manifest Wire-In v3):** `manifest_wired_xdist_available` — manifest loads and xdist confirmed, but `conductor_consulted=null` (15th consecutive milestone without confirmed conductor consultation).
+- **Exp 667 (EnsembleGate v4):** `gate_open_retro_070_unblocked` — structured-first gate logic opens with causal_recall=0.36 >= 0.30. Gate redesign confirmed.
+- **Exp 668 (VR #18 v2): BREAKTHROUGH** — `vr_positive`, `signed_improvement=0.64`, `baseline_accuracy=0.36`, `post_accuracy=1.0` on 25 live-GPU questions. FIRST POSITIVE VR RESULT IN 18 ATTEMPTS. RETRO-033 attempt #19 succeeded.
+- **Exp 669 (Prompt-Injection KAN v5):** `distillation_corpus_built_classifier_trained_auroc_below_threshold` — 6th consecutive partial. AUROC still below 0.90 threshold. New approach needed.
+- **Exp 670 (JEPA v14 Cascade Deploy):** `jepa_v14_deployed=True` — Platt temperature wired into ThreeTierPipeline. JEPA v14 is now the default Tier 2.
+- **Exp 671 (JEPA v15 Retrain):** `jepa_v15_auc_met`, `ood_auc=1.0` — suspicious overfit on tiny held-out set (same pattern as JEPA v12). ECE not computed. OOD validation on 500+ unseen questions required.
+- **Exp 672 (KV260 DFX Fix):** `blocked_bitfile_not_configured` — CARNOT_KV260_BITFILE env var not set. Bitfile path must be configured from prior synthesis result.
+- **Exp 673 (DualGPU v3):** `dualgpu_partial`, `throughput_ratio=1.963` — 2x throughput via ThreadPoolExecutor confirmed, but `max_gpu1_util_pct=0.0` (pynvml not available for utilization polling). RETRO-071 still open.
+- **Exp 674 (IAS Gate Calibration):** `ias_gate_improves_v3` — adaptive quantile regression thresholds improve on fixed threshold. Gate opens where v3 failed.
+- **Exp 675 (LOS-Net):** `below_threshold` — AUC < 0.75 on synthetic logit sequences. Not deployed as Tier 0h.
+- **Exp 676 (MetaJuLS Adapter):** `metajuls_adapted` — domain-specific forcing policy updates from feedback. Online adaptation confirmed on synthetic data.
+- **Exp 677 (Retro):** 7th consecutive wall-time improvement, 8.0 min/exp new project best; pre-flight test suite (532 min, 1.65x slowest-5) still unresolved; slowest-5 composition unchanged for 3rd consecutive milestone.
 
-**Fix:** HERMES v2 live generation loop. Generate step-by-step: prompt → step_1 → SymCodeVerifier(step_1) → [optional: inject hint] → prompt+step_1+hint → step_2 → SymCodeVerifier(step_2) → ... When SymCodeVerifier detects a violation mid-generation, the violation signal arrives while "47" and "28" are still visible in the generation context, not buried in a completed response. The correction hint informs the next step BEFORE the model commits to the wrong path.
-
-**Gate for VR #17 (UPGRADED):** Combined ensemble recall >= 0.30 on 25 known-incorrect responses (Exp 643). Gate increased from 0.20 to 0.30 because 12 consecutive 0.12 results confirm 0.20 was not meaningful signal. 0.30 represents genuine extraction capability above current ceiling.
-
-### Gap 2: JEPA v14 Calibration Incomplete — ECE=0.132 vs Target 0.10
-
-**Evidence:** JEPA v14 achieves OOD AUC=0.912 (sound architecture), but ECE=0.132 means the model's confidence scores are overconfident — a score of 0.80 predicts only ~68% accuracy. This matters for Tier 3 (predictive verification): if the predictor says "80% likely to violate," the pipeline should apply proportional verification effort. Overconfidence leads to either wasted verification or missed violations depending on threshold setting.
-
-**Fix:** Platt scaling (temperature parameter T): calibrated_prob = sigmoid(logit/T). Optimize T to minimize ECE on a validation set. Expected to reduce ECE from 0.132 to ~0.05 without changing AUC. This is a 5-minute postprocessing step once v14 weights are available.
-
-### Gap 3: DualGPU Unproven for Real Models (RETRO-071) and Structural Inefficiency Persisting
-
-**Evidence:**
-- RETRO-071: Exp 632 DualGPU 13B proof — model_load_failed because HF weights for Qwen2.5-14B-Instruct were not cached. Two RTX 3090s (48GB total) available but never demonstrated simultaneously carrying a real model.
-- Operational: Exclusion manifest wire-in NOT DONE for the 13th consecutive milestone. Pre-flight test suite consuming ~491 min per milestone (11% wall time). Exp 383 (combined EORM+JEPA retrain) runs sequentially on one GPU — DualGPU parallelization would cut 62 min to ~35 min.
-
-**Fix:**
-- Exp 640: Wire exclusion manifest into conductor (MANDATORY FIRST ACTION, 13th attempt). Also implement DualGPU EORM+JEPA retrain (parallel forward passes on cuda:0 and cuda:1).
-- Exp 649: Pre-download Qwen2.5-7B-Instruct weights, re-run DualGPU proof with pre-cached model.
+**Still open after .51:**
+- RETRO-071: DualGPU parallel utilization unconfirmed (15 milestones) — need pynvml
+- RETRO-072: KV260 bitfile not configured (hardware action required by user)
+- RETRO-CRITICAL: Exclusion manifest not wired into conductor (15th consecutive miss)
+- Prompt-injection KAN: 6th consecutive partial (architectural approach change needed)
+- Exp 380-382: partial checkpoint 3rd consecutive (formal retirement threshold crossed)
+- Exp 425/410/383/346: slowest-5 composition unchanged (3rd consecutive milestone)
+- JEPA v15: suspicious ood_auc=1.0 needs OOD audit
 
 ---
 
-## Architecture Diagram — Verification Cascade (Post-.49)
+## The 3 Biggest Gaps Between Current State and PRD Vision
+
+### Gap 1: VR Win (0.64 on 25q) Needs Validation at Scale — Credibility Risk If Anomalous
+
+**Root cause:** The Exp 668 result (`post_accuracy=1.0`, `signed_improvement=0.64`) on only 25 questions may be anomalous. Common failure modes:
+- Only 9 baseline errors (0.36 × 25 = 9) — small sample, high variance
+- Structured forcing may cause the model to write answers instead of chain-of-thought (recall bias)
+- Gate check passed trivially; questions may have been easy cases
+
+**The fix:** Scale to 200 questions with Wilson 95% CI. If the win holds, Carnot has its first credible improvement claim since the project began. If it doesn't, we need to understand why 25q showed a win that 200q does not.
+
+**Experiments:** Exps 679-681 (200q scale, HumanEval code, adversarial GSM8K)
+
+### Gap 2: DualGPU Parallel Compute Still Unproven — RETRO-071 (15 Milestones)
+
+**Root cause (confirmed from Exp 673):** `throughput_ratio=1.963` confirms two independent inferences ran concurrently. But `max_gpu1_util_pct=0.0` because pynvml was not available to poll GPU utilization during inference. The proof requires pynvml to measure actual GPU1 compute utilization.
+
+**The fix:** Install pynvml (`pip install pynvml`) and use `pynvml.nvmlDeviceGetUtilizationRates(handle).gpu` to poll every 2 seconds during parallel inference. Also apply proven DualGPU to the Exp 383 pattern (EORM+JEPA sequential retrain, 6th consecutive slowest-5 appearance).
+
+**Experiments:** Exps 684-685 (DualGPU proof v4 + EORM+JEPA parallel retrain)
+
+### Gap 3: JEPA v15 Overfit + FR-11 Never Had Real Verified Positives
+
+**Root cause (from Exp 671):** `ood_auc=1.0` on a tiny held-out set is suspicious. ECE not computed — Platt calibration is incomplete. The self-learning loop (FR-11) has had real violations available for several milestones but has never incorporated VERIFIED CORRECT responses (true positives). Exp 668's VR win finally provides verified-correct repairs.
+
+**The fix:**
+- Exp 682: Audit JEPA v15 on 500 unseen GSM8K questions. Compute ECE. Report honest OOD AUC.
+- Exp 683: Wire Exp 668 verified-correct repairs into ConstraintTemplateLibrary as positive examples. This is FR-11's first genuine closed loop: the pipeline verified a repair was correct, now that verification informs the constraint weights.
+
+**Experiments:** Exps 682-683 (JEPA OOD audit + FR-11 real verified positives relay)
+
+---
+
+## Architecture: Verification Cascade After Milestone 2026.04.52
 
 ```
-LLM Generation (in progress)
-     │
-     ├─── HERMES v2 Live Loop (NEW .49):
-     │    Every sentence: generate_step → SymCodeVerifier → inject hint → next step
-     │    [step-level feedback loop — live generation, not post-hoc]
-     │
-     ▼
-LLM Response (completed)
-     │
-     ▼
-[Tier 0a] CarnotThinkProbe — generative CoT verdict (optional)
-     │
-     ▼
-[Tier 0b] SpilledEnergyDetector — token logit discrepancy
-     │
-     ▼
-[Tier 0c] NUP Probe v6 — AUC=0.964 (deployed .47)
-     │
-     ▼
-[Tier 0d] HallucinationBasinDetector — latent basin depth
-     │
-     ▼
-[Tier 0e] HalluField — thermodynamic instability (advisory)
-     │
-     ▼
-[Tier 1]  SinkProbe — attention sink concentration
-     │
-     ▼
-[Tier 2]  EORM — CoT energy reward model (55M params)
-     │    OR: OTV One-Token Verifier (candidate .49, arXiv 2603.01025)
-     │
-     ▼
-[Tier 2.5] SymCodeVerifier — executable Python arithmetic verification
-     │
-     ▼
-[Tier 2.6] HermesVerifierAdapter v2 — live generation loop (NEW .49)
-     │
-     ▼
-[Tier 3]  Ising — full constraint verification + repair
+Input: LLM response (text)
+         |
+[Tier 0a] CarnotThinkProbe  — generative 3-step CoT verdict
+         | short-circuit if verdict='incorrect'
+[Tier 0b] SpilledEnergyDetector — per-token logit-discrepancy signal
+         | skip if model confident
+[Tier 0c] NUPProbeV4  — contrastive energy probe (AUC=1.0 in-dist)
+         | skip if score <= nup_threshold
+[Tier 0d] HallucinationBasinDetector — latent-space basin depth
+         | skip if basin_risk_score <= basin_threshold
+[Tier 0e] HalluField  — thermodynamic partition-function variance
+         | advisory only (no early-exit)
+[Tier 1 ] SinkProbe  — attention sink concentration
+         | skip if mean_sink_score >= threshold
+[Tier 2 ] JEPA v14 + Platt [DEPLOYED .51] — CoT energy reward model
+         | JEPA v15 OOD audit [.52] — auditing ood_auc=1.0 suspicious
+         | skip if energy < eorm_threshold
+[Tier 2.5] SymCodeVerifier — executable Python step verification (AUC=0.804 live)
+         | skip if no arithmetic violations
+[Tier 2.6] HermesV2LiveLoop + StructuredEquationForcer [ACTIVE .50/.51]
+         | step-by-step generation with forced equations
+[Tier 2.7] CausalReasoningVerifier — causal_recall=0.36
+         | skip if no causal violations
+[Tier 3 ] Ising  — full constraint verification (0.006ms/constraint)
+         ↓
+[Repair  ] VerifyRepairPipeline + structured-equation forcing
+         → signed_improvement=0.64 on 25q (.51 breakthrough)
+         → SCALE VALIDATION in .52 (200q, HumanEval, adversarial)
+
+Self-Learning Loop (FR-11):
+  [Tier 1 ] Online weight updates — real positives from Exp 668 [NEW .52, Exp 683]
+  [Tier 2 ] PSV self-play loop — formal verification guided data [NEW .52, Exp 688]
+  [Tier 3 ] FoVer Z3 labels for JEPA v16 training [NEW .52, Exp 686]
 ```
 
----
-
-## Phase Descriptions
-
-### Phase 0: Operational Pre-Flight (MANDATORY FIRST — Exp 640)
-
-**Objective:** Wire exclusion manifest into conductor before the 5 chronic slow experiments (308, 425, 309, 410, 383) re-queue for the 14th consecutive milestone. Also implement DualGPU EORM+JEPA parallel retrain to eliminate Exp 383 as a structural bottleneck.
-
-**Key deliverable:** `scripts/conductor_exclusion_manifest.json` wired into conductor with `conductor_consulted=True` verification. DualGPURetrain class running EORM on cuda:0 and JEPA on cuda:1 simultaneously.
-
-### Phase 1: RETRO-070 Resolution — HERMES v2 Live Generation Loop (Exps 641-643)
-
-**Objective:** Implement the first live-generation verification loop where SymCodeVerifier intercepts at step boundaries DURING generation, not after. This is architecturally different from all prior approaches which processed completed responses.
-
-**Exp 641 (HermesV2LiveLoop):** Qwen3.5-0.8B generates one sentence at a time. After each sentence, SymCodeVerifier runs. If violation detected: inject correction hint into the generation context. Measure recall on 25 known-incorrect questions (live generation, not from live_pairs corpus).
-
-**Exp 642 (CausalReasoningVerifier):** Extend SymCodeVerifier with step-entailment checking (arXiv 2601.21210). Given step_k text and step_{k+1} text: does step_k causally justify step_{k+1}? This catches logical incoherence violations that arithmetic checking misses.
-
-**Exp 643 (EnsembleRecallGateV2):** OR ensemble: any_violation = hermes_v2 OR interwhen OR causal_check. Compute combined recall on 25 incorrect + 10 correct from live corpus. gate_open = combined_recall >= 0.30.
-
-### Phase 2: VR Attempt #17 + FR-11 (Exps 644-645)
-
-**Exp 644 (LiveVRAttempt17):** GATED on Exp 643 gate_open=True. Use ensemble extractor. 25 live questions. Compare baseline vs repaired correctness.
-
-**Exp 645 (FR11Tier1Relay):** FR-11 mandatory. If signed_improvement > 0 from Exp 644: use real violations. If not: semi-real from Exp 643.
-
-### Phase 3: JEPA Calibration + OTV Verifier (Exps 646-647)
-
-**Exp 646 (JEPAv14PlattScaling):** Apply temperature scaling T to v14 logits. Grid search T in [0.5, 2.0]. Minimize ECE on held-out validation set. Target ECE < 0.10 (current: 0.132).
-
-**Exp 647 (OTVVerifier):** One-Token Verifier (arXiv 2603.01025): attach LoRA verification head to Qwen3.5-0.8B. Train on 100 live FOVER pairs. Compare AUC vs EORM (55M params). If AUC >= EORM_AUC - 0.05: recommend as Tier 2 default (10ms → sub-1ms).
-
-### Phase 4: New Research + Hardware (Exps 648-650)
-
-**Exp 648 (ParallelDenseIsingInertia):** Implement inertia Ising dynamics (arXiv 2604.17109). ParallelDenseIsingSampler with alpha parameter. Benchmark convergence vs checkerboard Gibbs. Generate v3 RTL specification for KV260 synthesis.
-
-**Exp 649 (DualGPU13BProofV2):** RETRO-071 closure attempt. Pre-download Qwen2.5-7B-Instruct. Load with explicit layer-to-GPU mapping. Measure GPU-1 sustained utilization during 10 forward passes. Target: peak_gpu1_util > 50%.
-
-**Exp 650 (KAEMMultilevelSparse):** RETRO-057 closure attempt. Combine MultilevelKAEMTrainer (Exp 634) + SparseKAEMEnergy (Exp 637). Train SparseKAEMEnergy at each multilevel schedule step (16→32→64 knots with sparsification). Target: energy accuracy within 5% vs dense baseline.
-
-### Phase 5: Retrospective (Exp 651)
-
-Analyze: RETRO-070 resolved (recall >= 0.30)? RETRO-033 first positive? RETRO-071 DualGPU proven? RETRO-057 KAEM accuracy? JEPA v14 calibrated (ECE < 0.10)? Top 3 priorities for .50.
+New in .52:
+- VR win scaled to 200q + HumanEval + adversarial (Exps 679-681)
+- JEPA v15 OOD audit + ECE fix (Exp 682)
+- FR-11 real verified positives relay from Exp 668 (Exp 683)
+- DualGPU proof via pynvml (Exp 684)
+- DualGPU applied to EORM+JEPA retrain (Exp 685) — resolves Exp 383 pattern
+- FoVer Z3-verified PRM labels 200q (Exp 686)
+- HalluSAE sparse AE feature attribution (Exp 687)
+- PSV self-play constraint learning 10-iteration loop (Exp 688)
 
 ---
 
 ## Dependency Graph
 
 ```
-Exp 640 (pre-flight infra)
-    │
-    ├─── Exp 641 (HERMES v2 live loop) ─── GPU REQUIRED
-    │         │
-    │    Exp 642 (causal verifier) ─────── CPU
-    │         │
-    │    Exp 643 (ensemble gate v2) ──────  gate_open check
-    │              │
-    │    Exp 644 (VR #17) ──────────────── GATED on gate_open=True, GPU
-    │              │
-    │    Exp 645 (FR-11 relay) ─────────── reads Exp 644
-    │
-    ├─── Exp 646 (JEPA Platt) ──────────── reads Exp 631 weights
-    │
-    ├─── Exp 647 (OTV verifier) ────────── GPU
-    │
-    ├─── Exp 648 (Ising inertia) ───────── CPU
-    │
-    ├─── Exp 649 (DualGPU v2) ─────────── GPU, reads Exp 632 result
-    │
-    ├─── Exp 650 (KAEM multilevel+sparse)  CPU, reads Exps 634+637
-    │
-    └─── Exp 651 (retro) ───────────────── reads all above
+Exp 678 (legacy retirement + pre-flight, MANDATORY FIRST)   — independent
+Exp 679 (VR 200q scale, GPU, uses Exp 668 pipeline)        — depends on Exp 668 confirmed
+Exp 680 (HumanEval VR, GPU)                                — independent of 679
+Exp 681 (adversarial VR, GPU)                              — independent of 679
+Exp 682 (JEPA v15 OOD audit, CPU)                          — depends on Exp 671 weights
+Exp 683 (FR-11 relay real positives, CPU)                  — depends on Exp 668 violations
+Exp 684 (DualGPU proof v4, GPU, pynvml required)           — independent
+Exp 685 (DualGPU EORM+JEPA retrain, GPU)                   — depends on Exp 684 success
+Exp 686 (FoVer Z3 formal labels, CPU)                      — independent
+Exp 687 (HalluSAE sparse AE, CPU)                          — independent
+Exp 688 (PSV self-play loop, CPU+GPU)                      — depends on Exp 683 FR-11
+Exp 689 (retrospective)                                     — depends on all
 ```
 
----
-
-## Hardware Requirements
-
-| Experiment | GPU Required | Notes |
-|-----------|--------------|-------|
-| Exp 640 | No | CPU-only infrastructure |
-| Exp 641 | Yes | CARNOT_FORCE_LIVE=1, Qwen3.5-0.8B live generation |
-| Exp 642 | No | CPU, post-hoc causal verification |
-| Exp 643 | No | CPU, ensemble on live_pairs corpus |
-| Exp 644 | Yes | CARNOT_FORCE_LIVE=1, GATED on gate_open=True |
-| Exp 645 | No | CPU, constraint addition |
-| Exp 646 | No | CPU, Platt scaling on saved weights |
-| Exp 647 | No | CPU, OTV LoRA training on saved FOVER pairs |
-| Exp 648 | No | CPU, Ising simulation |
-| Exp 649 | Yes | Both RTX 3090s, CARNOT_FORCE_LIVE=1 |
-| Exp 650 | No | CPU, KAEM training |
-| Exp 651 | No | CPU, retro analysis |
+Recommended execution order:
+678 [FIRST] → 679 || 680 || 681 || 682 || 683 || 684 || 686 || 687
+           → 685 (GPU, after 684 confirms GPU1 available)
+           → 688 (after 683 FR-11 relay complete)
+           → 689 (retro)
 
 ---
 
-## Open RETROs Addressed
+## Phase Descriptions
 
-| RETRO | Status | Action |
-|-------|--------|--------|
-| RETRO-033 | Carry 16 — gated on RETRO-070 resolution | Exp 644 (VR #17, gated on 0.30 recall) |
-| RETRO-057 | Carry 5 — SparseKAEM 43% error | Exp 650 (multilevel + sparse combined) |
-| RETRO-060 | Carry 5 — JEPA ECE 0.132 | Exp 646 (Platt scaling) |
-| RETRO-070 | Carry 3 — recall 12%, post-hoc cap | Exp 641 (HERMES v2 live loop) |
-| RETRO-071 | Carry 1 — DualGPU model_load_failed | Exp 649 (pre-downloaded weights) |
-| RETRO-CRITICAL | Carry 13 — exclusion manifest not wired | Exp 640 (MANDATORY FIRST) |
+### Phase 0: Operational Debt Resolution — Exp 678 (MANDATORY FIRST)
+
+Formally retire Exps 380-382 (partial checkpoint, 3rd consecutive — formal threshold
+crossed per Exp 308/309 precedent). Create final retirement JSON placeholder files.
+Add Exps 380, 381, 382 to conductor_exclusion_manifest.json. Create
+`scripts/conductor_pre_flight.py` that reads the manifest and prints excluded IDs
+before session start (non-invasive; does not modify research_conductor.py).
+Also create placeholder result files for Exp 346 (55M-param training, 3rd consecutive)
+so the conductor skips it and it exits the slowest-5.
+Target: Exps 380-382 and 346 excluded, manifest has 10 entries total, pre-flight script exists.
+
+### Phase 1: VR Win Validation — Exps 679-681
+
+Scale the .51 VR win (signed_improvement=0.64, 25q) to 200 questions with Wilson CI.
+If the win holds at 200q (signed_improvement > 0.05 with p < 0.05), Carnot has its
+first credible headline result. If it doesn't hold, diagnose why.
+
+Exp 679: 200q GSM8K validation via LongRunBenchmarkExecutor (8 batches of 25).
+Exp 680: 25 HumanEval problems with execution-based verification (no regex).
+Exp 681: Adversarial GSM8K (wrong premises) — does VR maintain improvement or degrade?
+
+### Phase 2: JEPA v15 Calibration + FR-11 Real Positives — Exps 682-683
+
+Exp 682: Audit JEPA v15 (ood_auc=1.0 suspicious) on 500 unseen GSM8K questions.
+Compute ECE. Apply Platt calibration post-hoc. Report honest OOD AUC.
+Exp 683: Wire Exp 668 true positives into FR-11 self-learning relay.
+This is the first time the FR-11 loop has verified-correct examples — not just violations.
+Constraint weight updates from verified-correct repairs should reduce FP rate by
+reinforcing constraint weights for arithmetic patterns that matched real correct answers.
+
+### Phase 3: DualGPU Proof and Application — Exps 684-685
+
+Exp 684: Install pynvml, poll GPU1 utilization during ThreadPoolExecutor parallel
+inference. Two Qwen3.5-0.8B instances on GPU0 and GPU1 simultaneously. If GPU1
+utilization > 0%, RETRO-071 is finally closed after 15 milestones.
+Exp 685: Apply proven DualGPU to EORM+JEPA parallel retraining. EORM on cuda:0,
+JEPA v15 on cuda:1 simultaneously via ThreadPoolExecutor. Reduces retrain from
+~62 min to ~35 min, resolving Exp 383's 6th consecutive slowest-5 appearance.
+
+### Phase 4: New Research — Exps 686-688
+
+Exp 686: FoVer Z3 formal PRM labels (arXiv 2505.15960). Auto-annotate 200 GSM8K
+CoT chains using Z3 SMT solver for step-level correctness labels. Produce
+fover_labeled_formal_v1.json. Verify label agreement > 80% with existing FOVER
+hand-labels. Implements the data-generation step for JEPA v16 training.
+
+Exp 687: HalluSAE sparse auto-encoder (arXiv 2604.16430). Train 512-dim sparse AE
+on Qwen3.5-0.8B hidden states from FOVER corpus. Identify top-10 hallucination-predictive
+features. Check whether COMPUTE: presence correlates with low-energy features — this
+would provide mechanistic explanation for the Exp 668 VR win.
+
+Exp 688: PSV self-play constraint learning (arXiv 2512.18160). Implements Tier 3
+continuous self-learning from research-program.md. 10-iteration loop: each iteration
+generates 20 GSM8K questions with Qwen3.5-0.8B, runs VR pipeline with structured
+forcing, uses binary correct/incorrect labels to update ConstraintTemplateLibrary
+constraint weights (Tier 1 online learning). Measure: does FP rate decrease across
+iterations?
+
+### Phase 5: Retrospective — Exp 689
+
+Standard milestone retrospective (carnot.operational_retro schema). Focus metrics:
+(1) Did VR win hold at 200q? (2) Is RETRO-071 closed? (3) Did FR-11 relay show
+measurable constraint weight improvement? (4) Did slowest-5 composition change?
+
+---
+
+## Open RETROs Being Addressed
+
+| RETRO | Status | Addressed By |
+|-------|--------|-------------|
+| RETRO-071 (DualGPU, 15 milestones) | CRITICAL | Exp 684 (pynvml proof) + Exp 685 (training) |
+| RETRO-072 (KV260 bitfile) | HIGH | USER ACTION: set CARNOT_KV260_BITFILE |
+| RETRO-CRITICAL (manifest, 15 milestones) | CRITICAL | Exp 678 (pre-flight script) |
+| JEPA v15 overfit | HIGH | Exp 682 (OOD audit) |
+| FR-11 relay never had real verified positives | HIGH | Exp 683 (positives from Exp 668) |
+| VR win unvalidated (25q only) | HIGH | Exps 679-681 (scale validation) |
+| Exp 380-382 checkpoint partial (3rd milestone) | HIGH | Exp 678 (formal retirement) |
+| Exp 383 sequential EORM+JEPA (6th milestone) | MEDIUM | Exp 685 (DualGPU parallel) |
+| Prompt-injection KAN (6th fail) | LOW | Deferred — architectural pivot needed in .53 |
 
 ---
 
 ## Success Criteria
 
-| Criterion | Pass | Experiment |
-|-----------|------|-----------|
-| Exclusion manifest wired | conductor_consulted=True | Exp 640 |
-| HERMES v2 live recall | >= 0.20 (target 0.30) | Exp 641 |
-| Ensemble recall gate | >= 0.30 | Exp 643 |
-| VR attempt #17 | signed_improvement > 0 | Exp 644 (if gate opens) |
-| JEPA v14 ECE | < 0.10 | Exp 646 |
-| OTV vs EORM | AUC within 0.05 | Exp 647 |
-| Ising inertia speedup | convergence steps reduced >= 20% | Exp 648 |
-| DualGPU proven | peak_gpu1_util > 50% | Exp 649 |
-| KAEM accuracy | error < 5% | Exp 650 |
-| FR-11 relay | fr11_real_violations_confirmed=True | Exp 645 (if VR positive) |
+| Criterion | Target | Gated On |
+|-----------|--------|---------|
+| legacy_retired_380_382_346=True | placeholder result files + manifest | Exp 678 |
+| vr_200q_signed_improvement > 0 | positive win at scale, Wilson CI | Exp 679 |
+| humaneval_vr_improvement >= 0 | no degradation on code | Exp 680 |
+| adversarial_vr_signed_improvement >= 0 | no degradation on adversarial | Exp 681 |
+| jepa_v15_honest_ood_auc reported | suspicious 1.0 investigated | Exp 682 |
+| fr11_real_positives_wired=True | verified-correct repairs in FR-11 | Exp 683 |
+| retro_071_resolved=True | GPU1 utilization > 0% confirmed | Exp 684 |
+| eorm_jepa_parallel_retrain_time < 40min | DualGPU applied to training | Exp 685 |
+| fover_formal_v1_n_labels >= 200 | Z3 auto-annotation pipeline works | Exp 686 |
+| hallusat_features_identified=True | top-10 causal features found | Exp 687 |
+| psv_iterations_completed=10 | self-play loop runs end-to-end | Exp 688 |
 
 ---
 
-## Key New Papers (from 2026-04-21 Scan)
+## Hardware Requirements
 
-| Paper | Filed For | Relevance |
-|-------|-----------|-----------|
-| arXiv 2604.17109 (Parallel Dense Ising + Inertia) | Exp 648 | 35x speedup, inertia dynamics |
-| arXiv 2601.04358 (Energy-Time-Accuracy Thermodynamics) | .50+ | EDD bounds for hardware calibration |
-| arXiv 2512.21911 (Sparse Speculative Verification) | .50+ | Selective SymCodeVerifier calls |
-| arXiv 2601.21210 (Causal Symbolic Verification) | Exp 642 | Step-entailment checker |
+| Experiment | Hardware | Notes |
+|-----------|----------|-------|
+| Exp 678 | CPU only | Retirement + pre-flight script |
+| Exp 679 | 1x RTX 3090 | CARNOT_FORCE_LIVE=1, 200 questions |
+| Exp 680 | 1x RTX 3090 | HumanEval, execution-based verification |
+| Exp 681 | 1x RTX 3090 | Adversarial GSM8K |
+| Exp 682 | CPU only | JEPA v15 weights loaded; OOD eval is inference only |
+| Exp 683 | CPU only | FR-11 relay reads Exp 668 result JSON |
+| Exp 684 | 2x RTX 3090 | pynvml required; CARNOT_FORCE_LIVE=1 |
+| Exp 685 | 2x RTX 3090 | EORM on cuda:0, JEPA on cuda:1 |
+| Exp 686 | CPU only | Z3 is pure CPU; no model inference required |
+| Exp 687 | CPU only | Sparse AE on pre-computed hidden states |
+| Exp 688 | 1x RTX 3090 | VR pipeline with live GPU for inference |
+| Exp 689 | CPU only | Retrospective analysis |
+
+---
+
+## New Papers Incorporated (arXiv Scan 2026-04-22)
+
+| Paper | Title | Filed As |
+|-------|-------|---------|
+| arXiv 2505.15960 | FoVer: Formal Verification for Scalable PRM Labels | Exp 686 |
+| arXiv 2604.16430 | HalluSAE: Sparse AE Hallucination Detection | Exp 687 |
+| arXiv 2512.18160 | PSV: Propose, Solve, Verify Self-Play | Exp 688 |
+| arXiv 2512.20664 | Eidoku: CSP-Based Structural Verification Gate | Filed .53 |
+| arXiv 2604.03904 | I-CALM: Confidence-Aware Abstention | Filed .53 |
