@@ -2,7 +2,7 @@
 -- Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2025.2.1 (lin64) Build 6403652 Thu Mar 19 13:47:00 MDT 2026
--- Date        : Tue Apr 21 15:09:39 2026
+-- Date        : Wed Apr 22 12:16:12 2026
 -- Host        : icbfl1 running 64-bit CachyOS
 -- Command     : write_vhdl -force -mode synth_stub -rename_top decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix -prefix
 --               decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_ carnot_ising_bd_proc_sys_reset_0_0_stub.vhdl
@@ -45,7 +45,7 @@ architecture stub of decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix is
   attribute x_interface_mode : string;
   attribute x_interface_mode of slowest_sync_clk : signal is "slave clock";
   attribute x_interface_parameter : string;
-  attribute x_interface_parameter of slowest_sync_clk : signal is "XIL_INTERFACENAME clock, ASSOCIATED_RESET mb_reset:bus_struct_reset:interconnect_aresetn:peripheral_aresetn:peripheral_reset, FREQ_HZ 39505779, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN carnot_ising_bd_zynq_ultra_ps_e_0_0_pl_clk0, INSERT_VIP 0";
+  attribute x_interface_parameter of slowest_sync_clk : signal is "XIL_INTERFACENAME clock, ASSOCIATED_RESET mb_reset:bus_struct_reset:interconnect_aresetn:peripheral_aresetn:peripheral_reset, FREQ_HZ 48484364, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN carnot_ising_bd_zynq_ultra_ps_e_0_0_pl_clk0, INSERT_VIP 0";
   attribute x_interface_info of ext_reset_in : signal is "xilinx.com:signal:reset:1.0 ext_reset RST";
   attribute x_interface_mode of ext_reset_in : signal is "slave ext_reset";
   attribute x_interface_parameter of ext_reset_in : signal is "XIL_INTERFACENAME ext_reset, BOARD.ASSOCIATED_PARAM RESET_BOARD_INTERFACE, POLARITY ACTIVE_LOW, INSERT_VIP 0";
