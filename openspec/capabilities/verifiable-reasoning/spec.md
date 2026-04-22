@@ -13302,3 +13302,57 @@ When: clf.score(features) is called on a trained or untrained classifier.
 Then: result is a float in [0, 1]; untrained returns 0.5.
 
 **Implementation Status:** Implemented (tests/python/test_losnet_detector.py, Exp 675)
+
+**Implementation Status:** Implemented (tests/python/test_losnet_detector.py, Exp 675)
+
+### REQ-INFRA-095: ExclusionManifest Must Contain Retired Experiments Within One Milestone
+
+The conductor exclusion manifest (scripts/conductor_exclusion_manifest.json) MUST be updated
+to include any experiment that has crossed the formal retirement threshold (slowest-5 for
+three consecutive milestones, per the Exp 308/309 precedent) within the same milestone that
+the retirement decision is made.
+
+- REQ-INFRA-095-1: A retirement placeholder file (results/experiment_N_retired.json) MUST
+  be created for each retired experiment with schema="carnot.retirement.v1".
+- REQ-INFRA-095-2: The retirement file MUST contain: experiment (int), status="retired",
+  reason, honest_verdict, milestone_retired, schema fields.
+- REQ-INFRA-095-3: The exclusion manifest MUST be updated atomically (no partial writes)
+  within the same milestone as the retirement decision.
+
+Spec: REQ-INFRA-095, SCENARIO-INFRA-103
+
+**Implementation Status:** Implemented (scripts/experiment_678_legacy_retirement.py, Exp 678)
+
+### REQ-INFRA-096: conductor_pre_flight.py Must Print Excluded IDs Before Session
+
+A standalone script scripts/conductor_pre_flight.py MUST exist that:
+- Reads the conductor exclusion manifest.
+- Prints "Excluded experiments (N total):" followed by each experiment's ID, milestone, and reason.
+- Always exits 0 (never blocks the conductor).
+- Accepts --manifest PATH to override the default manifest location.
+
+This script is the non-invasive solution to the conductor_consulted=null problem (15 consecutive
+milestones without manifest consultation since Exp 666).  The conductor can invoke it as an
+optional first step; a human can grep the output for "Excluded experiments" to confirm it ran.
+
+Spec: REQ-INFRA-096, SCENARIO-INFRA-104
+
+**Implementation Status:** Implemented (scripts/conductor_pre_flight.py, Exp 678)
+
+### SCENARIO-INFRA-103: Retirement Files Have Required Schema and Status Fields
+
+Given: Exps 380, 381, 382, 346 have crossed the three-consecutive-milestone retirement threshold.
+When: Exp 678 creates results/experiment_N_retired.json for each.
+Then: Each file is valid JSON with schema="carnot.retirement.v1" and status="retired".
+
+**Implementation Status:** Implemented (tests/python/test_legacy_retirement.py, Exp 678)
+
+### SCENARIO-INFRA-104: conductor_pre_flight.py Exits 0 and Prints Excluded IDs
+
+Given: scripts/conductor_exclusion_manifest.json exists with >= 1 entry.
+When: python scripts/conductor_pre_flight.py is invoked.
+Then: exit code is 0 and stdout contains "Excluded experiments" followed by each excluded ID.
+When: invoked with --manifest pointing to a nonexistent file.
+Then: exit code is still 0 and a WARNING line is printed (non-blocking).
+
+**Implementation Status:** Implemented (tests/python/test_legacy_retirement.py, Exp 678)

@@ -940,7 +940,7 @@ tasks:
        - Llama(model_path=..., n_gpu_layers=-1, n_ctx=2048).
        - Wrap each prompt in the gpt-oss-safeguard classification template
          documented on the unsloth model card.
-       - Parse teacher output to {label: 0|1, reasoning: str}.
+       - Parse teacher output to (label: 0|1, reasoning: str).
        - Record (prompt_sha, teacher_label, teacher_reasoning, model_sha).
        - Cache to data/prompt_injection_distill/teacher_outputs_v690.jsonl.
        - MANDATORY: record teacher_inference_duration_s (float) and
@@ -1073,10 +1073,10 @@ tasks:
        Do NOT push to HuggingFace — separate operator action.
 
     6. Emit result with: per_dataset_auroc, mean_auroc, per_dataset_cm,
-       honest_verdict in {generalization_verified_publishable,
+       honest_verdict in (generalization_verified_publishable,
        generalization_partial_shareable_with_caveat,
        generalization_failed_do_not_publish, blocked_on_upstream_exp_690,
-       blocked_on_dataset_download_failure}, model_card_written (bool),
+       blocked_on_dataset_download_failure), model_card_written (bool),
        upstream_teacher_inference_duration_s (copied from Exp 690 for
        audit trail).
 
