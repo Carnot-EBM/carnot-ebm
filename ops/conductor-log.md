@@ -2499,3 +2499,4 @@ python/ |
 | 2026-04-22 17:18 UTC | Exp 719: FR-11 Tier 2 Relay — Autonomous Self-Lear | OK | 81 passed, 3 warnings in 3.77s |
 | 2026-04-22 17:37 UTC | Exp 720: Live VR Attempt #20 — 200q Qwen3.5-0.8B ( | OK | 81 passed, 3 warnings in 4.01s |
 | 2026-04-22 17:49 UTC | Exp 721: Live VR Gemma4 Graduated Threshold Search | OK | 81 passed, 3 warnings in 4.97s |
+| 2026-04-22 18:01 UTC | Exp 722: PSV Root Cause Analysis — Question Pool E | OK | 81 passed, 3 warnings in 4.45s |
