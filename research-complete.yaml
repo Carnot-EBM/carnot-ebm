@@ -3463,3 +3463,69 @@ milestones:
     title: 'Exp 715: Milestone 2026.04.54 Operational Retrospective'
     deliverable: results/operational_retro_2026_04_54.json
     result: OK (conductor)
+- id: 2026.04.55
+  title: JEPA v18 LambdaRank + Pre-flight Optimization + VR 200q Credibility Run
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-22'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp716-preflight-v7-incremental
+    title: "Exp 716: Pre-flight v7 + Incremental Test Selection (MANDATORY FIRST \u2014 reduce overhead from 562 min)"
+    deliverable: results/experiment_716_preflight_v7.json
+    result: OK (conductor)
+  - id: exp717-jepa-v18-lambdarank
+    title: "Exp 717: JEPA v18 LambdaRank Listwise Loss on FoVer v2 (RETRO-CRITICAL \u2014 4th attempt)"
+    deliverable: results/experiment_717_jepa_v18_lambdarank.json
+    result: OK (conductor)
+  - id: exp718-jepa-v18-cascade-deploy
+    title: 'Exp 718: JEPA v18 Cascade Deploy (GATED on Exp 717 AUC >= 0.75)'
+    deliverable: results/experiment_718_jepa_v18_cascade.json
+    result: OK (conductor)
+  - id: exp719-fr11-tier2-relay
+    title: "Exp 719: FR-11 Tier 2 Relay \u2014 Autonomous Self-Learning Loop (GATED on Exp 718, FR-11 MANDATORY)"
+    deliverable: results/experiment_719_fr11_relay.json
+    result: OK (conductor)
+  - id: exp720-vr-200q-qwen
+    title: "Exp 720: Live VR Attempt #20 \u2014 200q Qwen3.5-0.8B (RETRO-033, scale credibility run)"
+    deliverable: results/experiment_720_vr_200q_qwen.json
+    result: OK (conductor)
+  - id: exp721-vr-gemma4-graduated
+    title: 'Exp 721: Live VR Gemma4 Graduated Threshold Search (constraint-induced distortion diagnosis)'
+    deliverable: results/experiment_721_vr_gemma4_graduated.json
+    result: OK (conductor)
+  - id: exp722-psv-pool-exhaustion
+    title: "Exp 722: PSV Root Cause Analysis \u2014 Question Pool Exhaustion Diagnosis (CPU)"
+    deliverable: results/experiment_722_psv_pool_exhaustion.json
+    result: OK (conductor)
+  - id: exp723-psv-pcore-v2
+    title: "Exp 723: PSV PaCoRe v2 \u2014 Diverse 100-Question Pool + K=2 (GATED on Exp 722)"
+    deliverable: results/experiment_723_psv_pcore_v2.json
+    result: OK (conductor)
+  - id: exp724-kan-distill-v3
+    title: "Exp 724: KAN Distillation v3 \u2014 3000 Examples + 16 Knots (AUROC 0.90 gate)"
+    deliverable: results/experiment_724_kan_distill_v3.json
+    result: OK (conductor)
+  - id: exp725-sc-energy-v2
+    title: "Exp 725: SC-Energy v2 on FoVer v2 \u2014 Self-Consistency EBM Retrain (Tier 2.9)"
+    deliverable: results/experiment_725_sc_energy_v2.json
+    result: OK (conductor)
+  - id: exp726-jepa-reasoner-probe
+    title: "Exp 726: JEPAReasonerProbe \u2014 Pre-generative Latent Verification (arXiv 2512.19171)"
+    deliverable: results/experiment_726_jepa_reasoner_probe.json
+    result: OK (conductor)
+  - id: exp727-vargran-gate
+    title: 'Exp 727: Variable Granularity Verification Gate (arXiv 2505.11730, Ising skip rate)'
+    deliverable: results/experiment_727_vargran_gate.json
+    result: OK (conductor)
+  - id: exp728-operational-retro
+    title: 'Exp 728: Milestone 2026.04.55 Operational Retrospective'
+    deliverable: results/operational_retro_2026_04_55.json
+    result: OK (conductor)
+  - id: exp729-privacy-filter-kan-true-distillation
+    title: "Exp 729: PrivacyFilter KAN v1 \u2014 True Teacher Distillation from openai/privacy-filter (user-pinned)"
+    deliverable: results/experiment_729_privacy_filter_kan_true_distillation.json
+    result: OK (conductor)
+  - id: exp730-privacy-filter-kan-cross-dataset-gate
+    title: "Exp 730: PrivacyFilter KAN v1 \u2014 Cross-Dataset Gate (user-pinned, AUROC + min_tp strict gate)"
+    deliverable: results/experiment_730_privacy_filter_kan_cross_dataset.json
+    result: OK (conductor)
