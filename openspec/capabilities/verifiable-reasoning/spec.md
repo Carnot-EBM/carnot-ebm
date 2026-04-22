@@ -14245,3 +14245,32 @@ When: save() then load() on a fresh gate instance.
 Then: is_suppressed() returns the same result as before the save.
 
 **Implementation Status:** Implemented (tests/python/test_experiment_707_adaptive_thresholds.py, Exp 707)
+
+## REQ-VERIFY-148: Gemma4-E4B-it VR with Adaptive Gating Produces No Harm
+
+Running Verify-Repair with ModelAdaptiveThresholdGate enabled on Gemma4-E4B-it SHALL
+produce signed_improvement >= 0.0 on a 25-question GSM8K benchmark, where
+signed_improvement = vr_accuracy - baseline_accuracy.
+
+Context: Exp 694 showed VR without adaptive gating produced signed_improvement=-0.8 for
+Gemma4 (baseline). The gate suppresses SymCodeVerifier for Gemma4 (precision < 0.5) to
+prevent the FP-driven repair regression observed in prior experiments.
+
+- REQ-VERIFY-148-1: The experiment SHALL load gate state before any inference begins.
+- REQ-VERIFY-148-2: signed_improvement SHALL be computed as vr_accuracy - baseline_accuracy over the 25-question set.
+- REQ-VERIFY-148-3: honest_verdict SHALL be "vr19_gemma4_no_harm" when signed_improvement == 0.0.
+- REQ-VERIFY-148-4: honest_verdict SHALL be "vr19_gemma4_improved" when signed_improvement > 0.0.
+- REQ-VERIFY-148-5: honest_verdict SHALL be "vr19_gemma4_still_harmful" when signed_improvement < 0.0.
+- REQ-VERIFY-148-6: honest_verdict SHALL be "vr19_gemma4_blocked" when live inference fails or GPU is unavailable.
+- REQ-VERIFY-148-7: inference_mode SHALL be "live_gpu" when CARNOT_FORCE_LIVE=1 and GPU is available.
+- REQ-VERIFY-148-8: inference_mode SHALL be "blocked_no_gpu" when no GPU is available.
+
+**Implementation Status:** Implemented (scripts/experiment_708_vr_attempt_19_gemma4.py, Exp 708)
+
+### SCENARIO-VERIFY-148: Adaptive Gate Prevents Gemma4 VR Regression
+
+Given: A ModelAdaptiveThresholdGate with SymCodeVerifier suppressed for Gemma4-E4B-it.
+When: VR pipeline runs on 25 GSM8K questions with the gate enabled.
+Then: signed_improvement >= 0.0 (gate prevents the -0.8 regression from Exp 694).
+
+**Implementation Status:** Implemented (tests/python/test_experiment_708_vr_attempt_19_gemma4.py, Exp 708)
