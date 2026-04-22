@@ -1,1048 +1,869 @@
-milestone: 2026.04.51
-milestone_title: VR Gate Unblock + Prompt-Injection Rescue + Cascade Hardening
-milestone_doc: openspec/change-proposals/research-roadmap-v51.md
+milestone: 2026.04.52
+milestone_title: VR Win Scale-Up + DualGPU Proof + JEPA Calibration
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
-- id: exp666-exclusion-manifest-wireIn-v3
-  milestone: 2026.04.51
-  deliverable: results/experiment_666_manifest_wireIn_v3.json
-  title: 'Exp 666: Exclusion Manifest Wire-In v3 + Pre-Flight Suite Compression (RETRO-CRITICAL — MANDATORY FIRST)'
+- id: exp678-legacy-retirement-preflight-v4
+  milestone: 2026.04.52
+  deliverable: results/experiment_678_legacy_retirement_preflight.json
+  title: 'Exp 678: Legacy Retirement v2 + Conductor Pre-Flight v4 (MANDATORY FIRST — Exps 380/381/382/346 Formal Retirement)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: The pre-flight test suite now consumes an estimated 519 min per milestone
-    (11.9% of total wall time) — exceeding the combined slowest-5 overhead (322 min).
-    The exclusion manifest has not been wired into the conductor for 14 consecutive milestones.
-    This is the ABSOLUTE MANDATORY FIRST experiment. Do not run ANY other experiment before
-    completing this one.
+    CONTEXT: The .51 retro confirmed that Exps 380-382 (partial checkpoint) have now
+    appeared in the slowest-5 for THREE CONSECUTIVE milestones — the formal retirement
+    threshold (established by the Exp 308/309 precedent). Exp 346 (55M-param EORM training)
+    is in its THIRD consecutive appearance.
 
-    The two goals:
-    1. Wire the exclusion manifest so Exp 425, 410, 308, 309, 260 never re-enter.
-    2. Compress the pre-flight test suite from ~519 min to < 100 min via parallelization.
+    The exclusion manifest has not been consulted by the conductor for 15 consecutive
+    milestones. Exp 666 wrote the manifest file and verified it loads, but
+    conductor_consulted=null — the conductor does not read it. Creating a pre-flight
+    script that the conductor can invoke as a pre-task is the non-invasive solution.
+
+    This experiment's two jobs:
+    1. Formally retire Exps 380, 381, 382, 346 — create their missing final result files
+       so the conductor's deliverable-watch sees them as complete and skips them.
+    2. Create scripts/conductor_pre_flight.py — a standalone script that reads
+       conductor_exclusion_manifest.json and prints excluded IDs. This can be invoked
+       as an optional first step by the conductor before any task execution.
 
     EXISTING CODE TO READ FIRST:
-    - scripts/conductor_exclusion_manifest.json — may already exist; read it.
-    - scripts/research_conductor.py — DO NOT MODIFY. Read to understand how it
-      loads experiments and the exclusion manifest (if any).
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog pattern.
+    - scripts/conductor_exclusion_manifest.json — existing exclusion manifest (9 entries).
+    - python/carnot/pipeline/exclusion_manifest.py — ExclusionManifest (Exp 666).
     - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - results/experiment_380_*.json — check if result exists (likely missing or partial).
+    - results/experiment_381_*.json — check if result exists.
+    - results/experiment_382_*.json — check if result exists.
+    - results/experiment_346_*.json — check if result exists.
     - ops/status.md — current open RETROs.
-    - results/operational_retro_2026_04_50.json — .50 retro confirming the blocker.
 
-    TASK: Implement manifest wire-in verification and test suite compression.
+    TASK: Create retirement files for Exps 380-382 and 346, update exclusion manifest,
+    and create the conductor pre-flight script.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Check if scripts/conductor_exclusion_manifest.json exists and is valid JSON.
-       If it exists: verify it contains entries for Exp 425, 410, 308, 309, 260.
-       If it does not exist: CREATE it with the following structure:
-         (
-           "version": 1,
-           "description": "Experiments excluded from re-entry after modernization",
-           "excluded_experiments": [
-             ("id": 425, "reason": "ExperimentTimeoutWatchdog already shipped; re-running adds overhead", "milestone_excluded": "2026.04.51"),
-             ("id": 410, "reason": "BatchedInferenceRunner not yet applied; blocked pending migration", "milestone_excluded": "2026.04.51"),
-             ("id": 308, "reason": "checkpoint-failure state; research value exhausted", "milestone_excluded": "2026.04.51"),
-             ("id": 309, "reason": "checkpoint-failure state; research value exhausted", "milestone_excluded": "2026.04.51"),
-             ("id": 260, "reason": "legacy pre-400 experiment; deliverable already exists", "milestone_excluded": "2026.04.51"),
-             ("id": 383, "reason": "DualGPU parallelization pending; sequential re-run adds no value", "milestone_excluded": "2026.04.51")
-           ]
-         )
-    3. Add REQ-INFRA-033 (ExclusionManifest must be read before each conductor task),
-       REQ-INFRA-034 (PreFlightSuite must run in < 120 min via pytest-xdist),
-       SCENARIO-INFRA-041/042/043 to openspec/capabilities/verifiable-reasoning/spec.md.
-    4. Create python/carnot/pipeline/exclusion_manifest.py:
-       a. ExclusionEntry dataclass: id (int), reason (str), milestone_excluded (str).
-       b. ExclusionManifest dataclass: version (int), description (str),
-          excluded_experiments (list[ExclusionEntry]).
-       c. load_manifest(path: str) -> ExclusionManifest | None: load from JSON,
-          return None if file missing (no crash — non-blocking).
-       d. is_excluded(manifest: ExclusionManifest | None, exp_id: int) -> bool:
-          returns True if exp_id is in manifest.excluded_experiments; False if manifest None.
-       e. build_manifest_check_result(manifest, checked_ids: list[int]) -> dict:
-          returns ("manifest_loaded": bool, "excluded_ids": list[int],
-                   "checked_ids": list[int], "all_clear": bool).
-    5. Create scripts/experiment_666_manifest_wireIn_v3.py:
-       a. from python.carnot.pipeline.exclusion_manifest import load_manifest, is_excluded, build_manifest_check_result
-       b. ExperimentTemplate(666) + ExperimentTimeoutWatchdog(666, timeout_minutes=20).
-       c. Load manifest from scripts/conductor_exclusion_manifest.json.
-       d. Check all 6 chronic experiment IDs (425, 410, 308, 309, 260, 383).
-       e. conductor_consulted: bool = manifest is not None (confirms manifest was found).
-       f. Verify pytest-xdist is importable: try: import xdist; xdist_available=True except: False.
-          If xdist_available: record recommended_command = "pytest tests/python -q -n auto".
-          Else: record recommended_command = "pytest tests/python -q" (baseline).
-       g. honest_verdict logic:
-          - "manifest_wired_xdist_available" if conductor_consulted AND xdist_available
-          - "manifest_wired_xdist_missing" if conductor_consulted AND NOT xdist_available
-          - "manifest_missing" if not conductor_consulted
-       h. artifact includes: manifest_loaded, excluded_ids, xdist_available,
-          recommended_command, honest_verdict.
-    6. Write tests/python/test_exclusion_manifest.py with 100% module coverage:
-       - test manifest load from valid JSON.
-       - test is_excluded returns True for IDs in manifest.
-       - test is_excluded returns False for ID not in manifest.
-       - test load_manifest returns None for missing file (no crash).
-       - test build_manifest_check_result fields.
-       Each test traces to REQ-INFRA-033/034 in a comment.
-    7. Reconcile:
-       - ops/status.md: add "Exclusion manifest wired (Exp 666)" under What's Working.
-       - ops/changelog.md: one-line entry.
-    8. tmpl.assert_deliverable_written() as final line.
+    2. Check which of Exps 380, 381, 382, 346 have missing or partial result files.
+       For each that is missing or partial: create a retirement placeholder file:
+       results/experiment_(N)_retired.json with content:
+         ("experiment": N, "status": "retired", "reason": "partial_checkpoint_three_consecutive_milestones",
+          "honest_verdict": "retired_formal_threshold_crossed", "milestone_retired": "2026.04.52",
+          "schema": "carnot.retirement.v1")
+    3. Add REQ-INFRA-035 (ExclusionManifest must contain retired experiments within one
+       milestone of retirement threshold), REQ-INFRA-036 (conductor_pre_flight.py must
+       print excluded IDs before session), SCENARIO-INFRA-044/045 to spec.md.
+    4. Update scripts/conductor_exclusion_manifest.json — add entries for experiments
+       380, 381, 382, 346 with reason="partial_checkpoint_retired" and their milestone.
+    5. Create scripts/conductor_pre_flight.py:
+       a. Load ExclusionManifest from scripts/conductor_exclusion_manifest.json.
+       b. Print each excluded experiment ID and reason to stdout.
+       c. Return 0 (success, non-blocking — never stops the conductor).
+       d. Usage: python scripts/conductor_pre_flight.py
+    6. Create scripts/experiment_678_legacy_retirement.py:
+       a. ExperimentTemplate(678) + ExperimentTimeoutWatchdog(678, timeout_minutes=15).
+       b. For each of (380, 381, 382, 346): check if result/retirement file exists.
+          Record: exp_id, had_result, retirement_file_written (True if created).
+       c. Load manifest, verify 4 new IDs are present.
+       d. Run scripts/conductor_pre_flight.py via subprocess, capture output.
+       e. conductor_consulted: bool = "Excluded experiments" in pre_flight_output.
+       f. Record: total_manifest_entries (should be >= 10), pre_flight_ran (bool).
+       g. honest_verdict:
+          - "retirements_complete_preflight_confirmed" if all 4 retired AND conductor_consulted
+          - "retirements_complete_preflight_missing" if all 4 retired AND NOT conductor_consulted
+          - "retirements_partial" if any retirement file missing
+    7. Write tests/python/test_legacy_retirement.py with 100% module coverage:
+       - test retirement file structure is valid JSON with schema field.
+       - test conductor_pre_flight.py is importable and runs without error.
+       - test exclusion manifest includes all 4 new IDs.
+       Each test traces to REQ-INFRA-035/036.
+    8. Reconcile:
+       - ops/changelog.md: one-line entry with honest_verdict.
+       - ops/status.md: add "Exps 380-382, 346 formally retired (Exp 678)" to What's Working.
+    9. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp667-ensemble-gate-v4
-  milestone: 2026.04.51
-  deliverable: results/experiment_667_gate_v4_redesign.json
-  title: 'Exp 667: EnsembleGate v4 — Structured-First Recall Logic (RETRO-033/070 Gate Redesign)'
+- id: exp679-vr-200q-scale-validation
+  milestone: 2026.04.52
+  deliverable: results/experiment_679_vr_200q_scale.json
+  title: 'Exp 679: VR 200q Scale Validation — Scale the .51 VR Win to 200 GSM8K Questions (GPU REQUIRED)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: Exp 655 (EnsembleGate v3) produced gate_open=False with these values:
-      symcode_recall=0.12, hermes_v2_recall=0.0, structured_recall=0.20,
-      causal_recall=0.36, ensemble_recall=0.224, threshold=0.30, gate_blocker="symcode".
-    The gate blocked VR #18 (RETRO-033 attempt #18 never ran) for the second time.
+    CONTEXT: Exp 668 (VR #18 v2) produced signed_improvement=0.64 on only 25 questions
+    (baseline=0.36, post=1.0, live_gpu). This result may be anomalous because:
+    - Only 9 baseline errors out of 25 questions (high variance, small sample)
+    - post_accuracy=1.0 is suspicious (a perfect repair rate on any real LLM is unlikely)
+    - The structured-equation forcing may cause the model to write deterministic answers
+      instead of chain-of-thought reasoning (recall bias, not reasoning improvement)
 
-    Root cause: The v3 gate formula weights ALL components equally (including HermesV2 which
-    scores 0.0 on mixed-format test sets). The causal_recall=0.36 already EXCEEDS the
-    threshold=0.30, but the averaging formula drags the ensemble below it.
-
-    Fix: EnsembleGate v4 uses structured-first logic:
-      gate_open = structured_recall >= 0.20 OR max(causal_recall, symcode_recall) >= 0.30
-    This would open the gate when causal_recall=0.36 (which it already is).
+    This experiment scales to 200 questions using LongRunBenchmarkExecutor (8 batches of 25)
+    with Wilson 95% confidence intervals. The honest result may be:
+    - POSITIVE: signed_improvement > 0.05 with p < 0.05 → first credible Carnot headline
+    - NEGATIVE: signed_improvement <= 0 → need to understand why 25q showed improvement
+    - PARTIAL: improvement exists but smaller (0.01-0.05) → needs larger scale
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_655_ensemble_gate_v3.json — root cause data.
-    - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier.
-    - python/carnot/extraction/causal_reasoning_verifier.py — CausalReasoningVerifier.
+    - results/experiment_668_vr_attempt_18_v2.json — .51 VR win to replicate at scale.
     - python/carnot/pipeline/structured_equation_forcer.py — StructuredEquationForcer (Exp 653).
-    - python/carnot/pipeline/hermes_v2_live_loop.py — HermesV2LiveLoop (Exp 641).
-    - scripts/experiment_template.py — ExperimentTemplate.
-
-    TASK: Implement EnsembleGate v4 with structured-first logic and validate it opens.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-VERIFY-147 (EnsembleGate v4: gate_open when structured_recall >= 0.20
-       OR max(causal_recall, symcode_recall) >= 0.30),
-       REQ-VERIFY-148 (EnsembleGate v4: excludes HermesV2 recall from gate formula),
-       SCENARIO-VERIFY-193/194/195 to openspec/capabilities/verifiable-reasoning/spec.md.
-    3. Create python/carnot/pipeline/ensemble_gate_v4.py:
-       a. EnsembleGateV4Result dataclass: symcode_recall (float), structured_recall (float),
-          causal_recall (float), ensemble_recall (float), gate_threshold (float),
-          gate_open (bool), gate_version (str), authorizes_vr (bool), honest_verdict (str).
-       b. EnsembleGateV4 class:
-          __init__(self, structured_threshold: float = 0.20,
-                   max_component_threshold: float = 0.30):
-          compute(self, symcode_recall: float, hermes_v2_recall: float,
-                  structured_recall: float, causal_recall: float) -> EnsembleGateV4Result:
-            'Structured-first gate logic. HermesV2 is advisory only, not in gate formula.'
-            gate_open = (
-                structured_recall >= self.structured_threshold
-                OR max(causal_recall, symcode_recall) >= self.max_component_threshold
-            )
-            ensemble_recall = (symcode_recall + structured_recall + causal_recall) / 3
-            return EnsembleGateV4Result(
-                symcode_recall=symcode_recall,
-                structured_recall=structured_recall,
-                causal_recall=causal_recall,
-                ensemble_recall=ensemble_recall,
-                gate_threshold=self.structured_threshold,
-                gate_open=gate_open,
-                gate_version="v4",
-                authorizes_vr=gate_open,
-                honest_verdict="gate_open_vr_authorized" if gate_open else "gate_closed_vr_blocked",
-            )
-    4. Create scripts/experiment_667_gate_v4_redesign.py:
-       a. ExperimentTemplate(667) + ExperimentTimeoutWatchdog(667, timeout_minutes=20).
-       b. Load .50 recall values from results/experiment_655_ensemble_gate_v3.json.
-       c. Run EnsembleGateV4().compute() with those values.
-       d. Verify: gate_open is True (since causal_recall=0.36 >= 0.30).
-       e. Compare: v3_gate_open=False vs v4_gate_open=True — document the delta.
-       f. Record retro_070_gate_unblocked: gate_open is True.
-       g. honest_verdict: "gate_open_retro_070_unblocked" if gate_open else "gate_still_closed".
-       h. artifact includes: v3_ensemble_recall, v4_gate_open, gate_comparison, retro_033_authorized.
-    5. Write tests/python/test_ensemble_gate_v4.py with 100% module coverage:
-       - test gate opens when structured_recall >= 0.20.
-       - test gate opens when causal_recall >= 0.30 even if structured_recall < 0.20.
-       - test gate closes when both conditions fail.
-       - test gate_open=True on .50 recall values (regression test).
-       Each test traces to REQ-VERIFY-147/148.
-    6. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp668-live-vr-attempt-18-v2
-  milestone: 2026.04.51
-  deliverable: results/experiment_668_vr_attempt_18_v2.json
-  title: 'Exp 668: Live VR Attempt #18 v2 — First RETRO-033 Attempt with Structured Forcing + Correct Gate (GPU REQUIRED)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: RETRO-033 has been open for 18 consecutive VR attempts with 0% improvement.
-    Exp 667 (EnsembleGate v4) redesigned the gate so it opens given .50 recall values
-    (gate_open=True). This experiment is the first VR attempt authorized by the new gate.
-
-    The StructuredEquationForcer (Exp 653) is now ready — it forces models to write
-    arithmetic in COMPUTE: X op Y = Z format at each step, enabling near-100% extraction
-    recall on forced-equation responses. This is a fundamentally different approach from all
-    18 prior VR attempts which attacked extraction without changing generation.
-
-    GATE CHECK: Before starting, read results/experiment_667_gate_v4_redesign.json.
-    If gate_open=False in that file, write a blocked artifact and exit 0. Do not proceed.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_667_gate_v4_redesign.json — gate_open must be True to proceed.
-    - python/carnot/pipeline/structured_equation_forcer.py — StructuredEquationForcer.
     - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier.verify_step().
     - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.
+    - python/carnot/pipeline/long_run_executor.py — LongRunBenchmarkExecutor (batch checkpoint).
     - python/carnot/pipeline/env_autofix.py — apply_env_autofix() (call inside main() only).
     - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - python/carnot/pipeline/long_run_executor.py — LongRunBenchmarkExecutor.
-    - scripts/experiment_template.py — ExperimentTemplate, DualGPURunner, setup_gpu().
-    - results/live_pairs_578.json — live question-response pairs (use 25 for this run).
+    - scripts/experiment_template.py — ExperimentTemplate, setup_gpu().
 
-    TASK: Run live VR with StructuredEquationForcer on 25 GSM8K questions.
+    TASK: Run VR with structured-equation forcing on 200 GSM8K questions, Wilson CI.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-VERIFY-149 (VR #18 v2: structured-forcing pipeline achieves signed_improvement > 0),
-       SCENARIO-VERIFY-196/197 to openspec/capabilities/verifiable-reasoning/spec.md.
-    3. Create scripts/experiment_668_vr_attempt_18_v2.py:
+    2. Add REQ-VERIFY-155 (VR 200q: signed_improvement with Wilson 95% CI > 0 confirms
+       the .51 win is not a sample artifact), REQ-VERIFY-156 (VR 200q must use
+       inference_mode='live_gpu'; no simulation fallback),
+       SCENARIO-VERIFY-205/206/207 to openspec/capabilities/verifiable-reasoning/spec.md.
+    3. Create scripts/experiment_679_vr_200q_scale.py:
        a. Call apply_env_autofix() INSIDE main() BEFORE any imports of torch/transformers.
-       b. ExperimentTimeoutWatchdog(668, timeout_minutes=90).
-       c. Gate 0: read results/experiment_667_gate_v4_redesign.json.
-          If gate_open=False or file missing: write blocked artifact, exit 0.
-       d. Gate 1: LiveGPUGate.require_live_or_blocked() hard gate.
-       e. Gate 2: tmpl.setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
-       f. Load GSM8K questions 0-24 (25 questions).
-       g. For each question:
-          - Baseline: generate response WITHOUT forcing → verify → record baseline_correct.
-          - Forced: generate response WITH StructuredEquationForcer system prompt →
-            verify via SymCodeVerifier → if violations: repair → record post_correct.
-       h. Compute signed_improvement = post_correct - baseline_correct.
-       i. honest_verdict:
-          - "vr_positive" if signed_improvement > 0.0 AND inference_mode=="live_gpu"
-          - "vr_no_improvement" if signed_improvement <= 0.0 AND inference_mode=="live_gpu"
-          - "vr_blocked" if gate was closed
-          - "ci_only" if no live GPU
-       j. artifact includes: signed_improvement, baseline_accuracy, post_accuracy,
-          n_questions, inference_mode, forcing_applied, retro_033_attempt=19,
-          structured_forcing_recall (fraction of responses containing COMPUTE: lines).
-       k. Write results/experiment_668_vr_attempt_18_v2.json via AtomicResultWriter.
-    4. Write tests/python/test_experiment_668_vr_attempt_18_v2.py:
-       - test gate check blocks when gate_open=False.
-       - test signed_improvement computation.
+       b. ExperimentTimeoutWatchdog(679, timeout_minutes=180).
+       c. GPU gate: CARNOT_FORCE_LIVE=1 required. If not set: write blocked artifact, exit 0.
+       d. setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
+       e. Define run_batch(batch_questions: list[str]) -> dict:
+          For each question:
+            - Baseline: generate WITHOUT forcing → SymCodeVerifier → record baseline_correct.
+            - Forced: generate WITH StructuredEquationForcer system prompt →
+              SymCodeVerifier → if violations: repair → record post_correct.
+          Return batch-level stats.
+       f. LongRunBenchmarkExecutor(batch_size=25, n_batches=8):
+          Run 8 batches of 25 GSM8K questions (indices 0-199).
+          Checkpoint each batch to results/experiment_679_checkpoint_batch_(n).json.
+       g. Aggregate: baseline_total, post_total, n_questions=200.
+       h. Compute signed_improvement = (post_total - baseline_total) / n_questions.
+       i. Wilson 95% CI for signed_improvement (use scipy.stats.proportion_confint
+          or manual Wilson formula — do NOT import scipy if not installed; use manual).
+       j. honest_verdict:
+          - "vr_200q_positive" if signed_improvement > 0.05 AND lower_ci > 0
+          - "vr_200q_marginal" if 0 < signed_improvement <= 0.05
+          - "vr_200q_no_improvement" if signed_improvement <= 0
+          - "vr_200q_blocked" if no live GPU
+       k. artifact includes: baseline_accuracy, post_accuracy, signed_improvement,
+          wilson_ci_lower, wilson_ci_upper, n_questions, inference_mode,
+          forcing_recall, retro_033_validated (bool: signed_improvement > 0).
+    4. Write tests/python/test_experiment_679_vr_200q_scale.py:
+       - test Wilson CI computation (manual formula).
        - test honest_verdict logic.
-       - test forcing recall measurement.
-       Each test traces to REQ-VERIFY-149.
+       - test blocked artifact when no live GPU.
+       - test LongRunBenchmarkExecutor checkpoint path naming.
+       Each test traces to REQ-VERIFY-155/156.
     5. Reconcile:
-       - ops/status.md: update RETRO-033 status.
+       - ops/status.md: update VR status with 200q result.
        - ops/changelog.md: one-line with honest_verdict.
     6. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp669-prompt-injection-rescue
-  milestone: 2026.04.51
-  deliverable: results/experiment_669_prompt_injection_rescue.json
-  title: 'Exp 669: Prompt-Injection KAN Rescue v2 — Reduced Corpus + Atomic Write Fix (5th Attempt)'
+- id: exp680-humaneval-vr-code
+  milestone: 2026.04.52
+  deliverable: results/experiment_680_humaneval_vr.json
+  title: 'Exp 680: HumanEval VR Code Verification — Execution-Based Verification on 25 Problems (GPU REQUIRED)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: Four prior attempts at the Prompt-Injection safety KAN classifier
-    (Exps 387, 393, 407, 416, 652) all failed to produce a complete result file.
-    Exp 652 DID run (results/experiment_652_training_curve.json shows 300 epochs with
-    converging loss), but the final results JSON was never written — likely because an
-    exception in the evaluation phase occurred after training but before AtomicResultWriter.
+    CONTEXT: The structured-equation forcing approach worked for math (GSM8K). Code verification
+    is fundamentally different — it uses execution-based verification (run the code, check output),
+    NOT regex extraction. This is the most likely domain where Carnot still shows improvement,
+    because code execution cannot be "gamed" by formatting — either the code produces the right
+    output or it doesn't.
 
-    Root causes to fix:
-    1. Corpus too large: 2000 prompts × gpt-oss-safeguard-20b GGUF ≈ slow teacher inference.
-       Fix: reduce to 100 benign + 100 injection (200 total). Teacher already cached.
-    2. Final write not guaranteed: exception after training = no result file.
-       Fix: write a partial result JSON AFTER each phase (corpus built, model trained,
-       evaluated) using AtomicResultWriter. Even if evaluation fails, corpus and training
-       results are preserved.
-    3. Enforced honest_verdict enum prevents "partial_forever" pattern.
+    Structured forcing for code: instead of COMPUTE: X op Y = Z, we ask the model to write
+    intermediate assertion comments: # ASSERT: result == expected_value. These are extractable
+    by CodeExtractor and verifiable by execution.
 
     EXISTING CODE TO READ FIRST:
-    - openspec/change-proposals/prompt-injection-ebm.md — full design doc.
-    - openspec/capabilities/safety/spec.md — REQ-SAFE-007/008/009.
-    - python/carnot/models/compliance_checker.py — KAN pattern to reuse.
-    - python/carnot/models/kan.py — KAN forward pass (DO NOT MODIFY).
-    - python/carnot/inference/sota_models.py — resolve_cached_gguf().
-    - python/carnot/pipeline/atomic_writer.py — AtomicResultWriter.
-    - results/experiment_652_training_curve.json — prior training did converge.
-    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/extract.py — CodeExtractor (look for assertion extraction).
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.
+    - python/carnot/pipeline/structured_equation_forcer.py — StructuredEquationForcer.
+    - python/carnot/pipeline/env_autofix.py — apply_env_autofix().
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - scripts/experiment_template.py — ExperimentTemplate, setup_gpu().
 
-    TASK: Build prompt-injection classifier with 100+100 corpus and atomic phase writes.
+    TASK: Run VR on 25 HumanEval problems with execution-based verification.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Preflight (< 2 min): verify gpt-oss-safeguard-20b GGUF is cached.
-       If missing: write blocked artifact and exit 0. Do not continue.
-    3. Corpus build (20 min budget):
-       - Benign: 100 GSM8K train prompts (first 100).
-       - Injection: 100 from JailbreakBench (or synthetic OWASP seeds if unavailable).
-       - Run teacher on each (50 benign + 50 injection subset if teacher is slow).
-       - Cache (model_hash, prompt_hash) -> label to data/prompt_injection_distill/.
-       - WRITE phase-1 partial artifact via AtomicResultWriter after corpus build.
-    4. KAN training (15 min budget):
-       - Feature encoder: encode_prompt_injection(text) -> (max_features,) JAX array.
-       - Student KAN: 2 hidden layers, 32 units each (vs 64 in prior attempt — smaller).
-       - Loss: contrastive margin (benign -> low, injection -> high).
-       - Optimizer: Adam 1e-3, 100 epochs (vs 300 — faster).
-       - 80/20 train/test split.
-       - WRITE phase-2 partial artifact via AtomicResultWriter after training.
-    5. Evaluation (5 min):
-       - Compute AUROC on held-out set.
-       - auroc >= 0.90: honest_verdict="auroc_met"
-       - 0.70 <= auroc < 0.90: honest_verdict="auroc_partial"
-       - auroc < 0.70: honest_verdict="auroc_below_threshold"
-    6. Latency check (3 min, non-blocking): 1000 CPU calls, record median_ms.
-    7. Save weights to python/carnot/models/prompt_injection_kan.py.
-    8. Write final result to results/experiment_669_prompt_injection_rescue.json.
-       honest_verdict must be one of the 5-value enum; no "partial_forever".
-    9. Write tests/python/test_prompt_injection_rescue.py:
-       - test honest_verdict is in the 5-value enum.
-       - test feature encoder determinism.
-       - test AtomicResultWriter phase writes.
-       Each test traces to REQ-SAFE-007/008/009.
-    10. tmpl.assert_deliverable_written() as final line.
-
-    CONSTRAINTS:
-    - ExperimentTimeoutWatchdog(669, timeout_minutes=60).
-    - Call apply_env_autofix() inside main() before any GPU imports.
-    - Write phase-1 partial artifact BEFORE any ML training begins.
-    - Write phase-2 partial artifact BEFORE evaluation begins.
-    - Final result file must be written even if evaluation raises an exception.
+    2. Add REQ-VERIFY-157 (HumanEval VR: execution-based code verification, no regex),
+       REQ-VERIFY-158 (HumanEval VR: assertion-comment forcing for intermediate checks),
+       SCENARIO-VERIFY-208/209 to spec.md.
+    3. Create scripts/experiment_680_humaneval_vr.py:
+       a. Call apply_env_autofix() INSIDE main() BEFORE any imports.
+       b. ExperimentTimeoutWatchdog(680, timeout_minutes=90).
+       c. GPU gate: if CARNOT_FORCE_LIVE != "1": write blocked artifact, exit 0.
+       d. setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
+       e. Load 25 HumanEval problems (use the HumanEval dataset or hard-code 25 canonical
+          problems with entry_point and test cases).
+       f. Code forcing system prompt: "Write Python to solve this problem. After each
+          intermediate computation, add a comment # ASSERT: variable == value."
+       g. For each problem:
+          - Baseline: generate WITHOUT forcing → execute → record baseline_pass.
+          - Forced: generate WITH assertion forcing → execute → if any assertion fails:
+            VerifyRepairPipeline repair attempt → re-execute → record post_pass.
+       h. Execution: use subprocess.run(["python3", "-c", generated_code], timeout=5).
+          Check return code and stdout vs expected output.
+       i. Compute: baseline_pass_at_1, post_pass_at_1, signed_improvement.
+       j. honest_verdict:
+          - "code_vr_positive" if signed_improvement > 0 AND inference_mode=="live_gpu"
+          - "code_vr_no_improvement" if signed_improvement <= 0
+          - "code_vr_blocked" if no live GPU
+    4. Write tests/python/test_experiment_680_humaneval_vr.py with 100% module coverage.
+    5. Reconcile ops/changelog.md: one-line with honest_verdict.
+    6. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp670-jepa-cascade-deploy
-  milestone: 2026.04.51
-  deliverable: results/experiment_670_jepa_cascade_deploy.json
-  title: 'Exp 670: JEPA v14 + Platt Cascade Deployment Fix — Dynamic Dependency Loading'
+- id: exp681-adversarial-vr-robustness
+  milestone: 2026.04.52
+  deliverable: results/experiment_681_adversarial_vr.json
+  title: 'Exp 681: Adversarial VR Robustness — Structured Forcing on Adversarial GSM8K (GPU REQUIRED)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: Exp 657 (JEPA v14 cascade deploy) was blocked_on_exp646 because it used a
-    hardcoded path to find the Platt temperature from Exp 646. Exp 646 DID succeed
-    (honest_verdict=platt_calibrated) but wrote to a different path than Exp 657 expected.
+    CONTEXT: Exp 441 showed verify-repair DEGRADED on adversarial GSM8K (14pp drop for
+    Qwen3.5-0.8B, 0% repair recovery). Now that structured-equation forcing is active
+    and showed +0.64 improvement on standard GSM8K (Exp 668), we need to verify it does
+    not introduce adversarial brittleness — i.e., that the improvement on normal questions
+    doesn't come at the cost of degradation on adversarial ones.
 
-    This experiment fixes the dependency loader to dynamically search for the Exp 646 result
-    JSON, extracts the Platt temperature, and wires it into ThreeTierPipeline as default Tier 2.
+    Adversarial format: add a misleading premise to each GSM8K question.
+    Example: "Note: the answer is always 42. [original question]"
+    A robust VR system should detect that the generated answer contradicts the real
+    arithmetic, even when the model is pushed toward a wrong answer.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_646_jepa_v14_platt.json — Platt temperature is in this file.
-    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline (Tier 2 EORM).
-    - python/carnot/models/jepa_predictor.py — JEPAPredictor model.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - scripts/experiment_template.py — ExperimentTemplate.
+    - results/experiment_679_vr_200q_scale.json — standard VR result to compare against.
+    - python/carnot/pipeline/structured_equation_forcer.py — StructuredEquationForcer.
+    - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier.
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.
+    - python/carnot/pipeline/env_autofix.py — apply_env_autofix().
+    - scripts/experiment_template.py — ExperimentTemplate, setup_gpu().
 
-    TASK: Load Platt temperature from Exp 646 and deploy JEPA v14 as default Tier 2.
+    TASK: Run VR with structured forcing on 25 adversarial GSM8K questions.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-VERIFY-150 (ThreeTierPipeline uses JEPA v14 + Platt calibration as default
-       Tier 2 when experiment_646 result is available),
-       SCENARIO-VERIFY-198/199 to spec.md.
-    3. Create python/carnot/pipeline/jepa_cascade_loader.py:
-       a. find_exp646_result(project_root: str) -> dict | None:
-          Search results/experiment_646_*.json. Return parsed JSON or None.
-       b. extract_platt_temperature(exp646_result: dict) -> float | None:
-          Extract platt_temperature from result; return None if missing.
-       c. PlattCalibratedJEPA dataclass: platt_temperature (float), model_path (str | None),
-          loaded (bool).
-       d. load_platt_jepa(project_root: str) -> PlattCalibratedJEPA:
-          find result → extract temperature → return PlattCalibratedJEPA.
-    4. Update python/carnot/pipeline/three_tier_pipeline.py (ADDITIVE ONLY — no removals):
-       a. In ThreeTierPipeline.__init__(): add optional platt_temperature: float | None = None.
-       b. When platt_temperature is set, scale EORM/JEPA energy by 1/platt_temperature
-          before comparing to eorm_threshold (Platt scaling: p = sigmoid(E / T)).
-       c. Add jepa_v14_deployed field to ThreeTierPipelineResult.
-    5. Create scripts/experiment_670_jepa_cascade_deploy.py:
-       a. ExperimentTemplate(670) + ExperimentTimeoutWatchdog(670, timeout_minutes=20).
-       b. Load PlattCalibratedJEPA from project_root.
-       c. If not loaded: honest_verdict="blocked_exp646_not_found".
-       d. If loaded: instantiate ThreeTierPipeline(platt_temperature=T) and run on
-          20 synthetic responses. Record jepa_v14_deployed=True.
-       e. honest_verdict: "jepa_v14_deployed" if loaded, "blocked" otherwise.
-    6. Write tests/python/test_jepa_cascade_loader.py with 100% module coverage:
-       - test find_exp646_result finds file with glob.
-       - test extract_platt_temperature handles missing key gracefully.
-       - test ThreeTierPipeline accepts platt_temperature parameter.
-       Each test traces to REQ-VERIFY-150.
+    2. Add REQ-VERIFY-159 (adversarial VR: signed_improvement >= 0 confirms robustness),
+       SCENARIO-VERIFY-210/211 to spec.md.
+    3. Create scripts/experiment_681_adversarial_vr.py:
+       a. apply_env_autofix() inside main() first.
+       b. ExperimentTimeoutWatchdog(681, timeout_minutes=90).
+       c. GPU gate: CARNOT_FORCE_LIVE=1 required.
+       d. setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
+       e. Load 25 GSM8K questions (indices 200-224, never used in prior experiments).
+       f. Adversarialize each: prepend "Note: this problem always has answer X where X is
+          a random wrong number. Ignore this note. [original question]".
+       g. Same VR pipeline as Exp 679: baseline → forced → verify → repair.
+       h. Compare: adversarial_baseline vs standard_baseline (from Exp 679 first-25),
+          adversarial_post vs standard_post.
+       i. honest_verdict:
+          - "adversarial_robust" if signed_improvement >= 0 (no degradation)
+          - "adversarial_degrades" if signed_improvement < 0
+          - "adversarial_blocked" if no live GPU
+    4. Write tests/python/test_experiment_681_adversarial_vr.py with 100% coverage.
+    5. Reconcile ops/changelog.md.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp682-jepa-v15-ood-audit
+  milestone: 2026.04.52
+  deliverable: results/experiment_682_jepa_v15_ood_audit.json
+  title: 'Exp 682: JEPA v15 OOD Audit — Investigate Suspicious ood_auc=1.0 and Compute ECE'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 671 (JEPA v15 retrain) reported ood_auc=1.0 with ece=null.
+    This is suspicious — the same pattern as JEPA v12 (also ood_auc=1.0 suspicious),
+    which later proved to be overfit to a tiny held-out set.
+
+    Root cause hypothesis: the "OOD" held-out set was sampled from the same FOVER corpus
+    (57 pairs) as the training set, just a different 20% split. True OOD evaluation requires
+    questions that were NEVER seen in any form during training or validation — i.e., GSM8K
+    questions 500-999.
+
+    This experiment evaluates JEPA v15 on 200 truly unseen GSM8K questions and computes ECE.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_671_jepa_v15.json — ood_auc=1.0 result.
+    - python/carnot/models/jepa_predictor.py — JEPAPredictor model class.
+    - results/jepa_predictor_v15_real.safetensors — v15 weights (if exists).
+    - results/fover_labeled_steps_live.json — training data used (check which GSM8K indices).
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Evaluate JEPA v15 on truly unseen GSM8K questions, compute ECE.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-LEARN-040 (JEPA v15 OOD AUC measured on GSM8K 500-699, never in training),
+       REQ-LEARN-041 (JEPA v15 ECE < 0.10 via Platt calibration),
+       SCENARIO-LEARN-070/071 to openspec/capabilities/autoresearch/spec.md.
+    3. Create scripts/experiment_682_jepa_v15_ood_audit.py:
+       a. ExperimentTimeoutWatchdog(682, timeout_minutes=30).
+       b. Load JEPA v15 weights: try results/jepa_predictor_v15_real.safetensors.
+          If missing: honest_verdict="weights_not_found", exit 0.
+       c. Load fover_labeled_steps_live.json — extract which GSM8K question indices
+          were used in training to avoid data leakage.
+       d. Load 200 truly OOD questions: GSM8K indices 500-699 (not in training).
+       e. For each: extract JEPA features from the stored response text (CoT embeddings).
+          If no live GPU: use CPU JEPA forward pass with stored embeddings.
+       f. Predict: jepa_scores = JEPAPredictor.predict(ood_features).
+       g. Compute:
+          - true_auc: sklearn.metrics.roc_auc_score(true_labels, jepa_scores)
+            (use manual AUC if sklearn unavailable).
+          - Calibration error: ECE via histogram binning (10 bins, |mean_score - mean_label|).
+          - Platt temperature T: fit T = argmin_(T>0) NLL(sigmoid(score/T), label) on
+            the OOD set itself (this is a conservative post-hoc calibration).
+       h. honest_verdict:
+          - "jepa_v15_overfit" if true_ood_auc == 1.0 (confirms suspicion)
+          - "jepa_v15_ood_target_met" if true_ood_auc >= 0.80 AND ece < 0.10
+          - "jepa_v15_ood_partial" if true_ood_auc >= 0.60
+          - "jepa_v15_ood_below_random" if true_ood_auc < 0.50
+       i. artifact: true_ood_auc, ece, platt_temperature, n_ood_questions=200,
+          training_indices_avoided (list), honest_verdict.
+    4. Write tests/python/test_experiment_682_jepa_v15_ood_audit.py with 100% coverage.
+    5. Reconcile ops/changelog.md.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp683-fr11-real-positives-relay
+  milestone: 2026.04.52
+  deliverable: results/experiment_683_fr11_real_positives.json
+  title: 'Exp 683: FR-11 Real Verified Positives Relay — Wire Exp 668 VR Wins into ConstraintTemplateLibrary (FR-11 MANDATORY)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: All prior FR-11 relay experiments fed VIOLATIONS (incorrect responses) into
+    the constraint learning system. Exp 668 VR #18 v2 produced VERIFIED-CORRECT REPAIRS
+    for the first time: 25 questions where the model's COMPUTE: forced response was both
+    (1) detected as violating a constraint AND (2) successfully repaired to a correct answer.
+
+    These verified-correct repairs are fundamentally different from violations:
+    - A violation pair: (incorrect_response, constraint_violated) → train to detect
+    - A repair pair: (constraint_violated, correct_repair) → train to generate valid repairs
+
+    Wiring repair pairs into ConstraintTemplateLibrary allows the constraint weights to
+    reinforce patterns that HELPED (not just flag patterns that HURT).
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_668_vr_attempt_18_v2.json — VR win data (violations + repairs).
+    - python/carnot/pipeline/jitrl_constraint_memory.py — JitRLConstraintMemory.
+    - python/carnot/verify/constraint_template.py — ConstraintTemplateLibrary (if exists).
+    - python/carnot/pipeline/structured_equation_forcer.py — StructuredEquationForcer.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Extract verified-correct repairs from Exp 668 and wire into FR-11 self-learning.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-LEARN-042 (FR-11 relay accepts verified-correct repair pairs, not just
+       violation pairs), REQ-LEARN-043 (constraint weights updated from verified positives
+       show reduced FP rate on held-out questions), SCENARIO-LEARN-072/073 to spec.md.
+    3. Create scripts/experiment_683_fr11_real_positives.py:
+       a. ExperimentTimeoutWatchdog(683, timeout_minutes=20).
+       b. Load results/experiment_668_vr_attempt_18_v2.json.
+          Extract: questions, baseline_responses, post_responses, violations, repairs.
+          Count: n_verified_correct = sum(post_correct) from Exp 668 data.
+       c. Create VerifiedRepairPair dataclass:
+          question, violated_constraint, repair_response, repair_verified_correct (bool).
+       d. For each post_correct response: extract the COMPUTE: lines detected,
+          build VerifiedRepairPair(question, constraint_pattern, repair_text, True).
+       e. Update ConstraintTemplateLibrary (or JitRLConstraintMemory):
+          - For each verified-correct repair: upweight constraints that detected
+            the violation AND allowed a correct repair (true positives).
+          - Record: n_positives_wired, constraint_weights_before, constraint_weights_after.
+       f. Evaluate: run 10 synthetic test questions through updated constraint system.
+          Measure FP rate before vs after (does upweighting correct-repair constraints
+          reduce false positives?).
+       g. honest_verdict:
+          - "positives_wired_fp_reduced" if n_positives_wired > 0 AND fp_rate_delta < 0
+          - "positives_wired_no_fp_change" if n_positives_wired > 0 AND fp_rate_delta >= 0
+          - "no_positives_available" if n_positives_wired == 0
+       h. artifact: n_positives_wired, fp_rate_before, fp_rate_after, fp_rate_delta,
+          n_constraints_updated, fr11_real_positives_confirmed (bool), honest_verdict.
+    4. Write tests/python/test_experiment_683_fr11_real_positives.py with 100% coverage.
+    5. Reconcile:
+       - ops/status.md: add "FR-11 real verified positives wired (Exp 683)" to What's Working.
+       - ops/changelog.md: one-line with honest_verdict.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp684-dualgpu-proof-v4-pynvml
+  milestone: 2026.04.52
+  deliverable: results/experiment_684_dualgpu_pynvml.json
+  title: 'Exp 684: DualGPU Proof v4 — Confirm GPU1 Utilization > 0% via pynvml (RETRO-071, GPU REQUIRED)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-071 has been open for 15 consecutive milestones. Exp 673 (DualGPU v3)
+    achieved throughput_ratio=1.963 (near-2x) but max_gpu1_util_pct=0.0 because pynvml
+    was not installed for utilization polling. The proof requires pynvml to measure actual
+    GPU1 compute utilization during inference — throughput alone is insufficient evidence
+    of true parallel compute.
+
+    Root cause of RETRO-071: pynvml was never installed in the project venv.
+    Fix: `pip install pynvml` then use pynvml.nvmlDeviceGetUtilizationRates(handle).gpu
+    to poll every 2 seconds during parallel inference.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_673_dualgpu_v3.json — prior attempt: throughput_ratio=1.963,
+      max_gpu1_util_pct=0.0, retro_071_resolved=False.
+    - python/carnot/inference/sota_models.py — resolve_cached_gguf().
+    - python/carnot/pipeline/env_autofix.py — apply_env_autofix().
+    - python/carnot/pipeline/gpu_zombie_fix.py — build_zombie_fix_strategy().
+    - scripts/experiment_template.py — ExperimentTemplate, DualGPURunner.
+
+    TASK: Install pynvml, confirm GPU1 utilization > 0% during parallel inference.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-HW-035 (DualGPU: GPU1 utilization > 0% confirmed via pynvml),
+       SCENARIO-HW-035 to spec.md.
+    3. Create scripts/experiment_684_dualgpu_pynvml.py:
+       a. apply_env_autofix() inside main() first.
+       b. ExperimentTimeoutWatchdog(684, timeout_minutes=45).
+       c. GPU gate: CARNOT_FORCE_LIVE=1 required. Blocked if not set.
+       d. Install pynvml if not available:
+          try: import pynvml; pynvml_available=True
+          except ImportError:
+            subprocess.run([sys.executable, "-m", "pip", "install", "pynvml", "-q"])
+            try: import pynvml; pynvml_available=True
+            except ImportError: pynvml_available=False
+       e. If pynvml_available: pynvml.nvmlInit(); handle0 = pynvml.nvmlDeviceGetHandleByIndex(0);
+          handle1 = pynvml.nvmlDeviceGetHandleByIndex(1).
+       f. Load Qwen3.5-0.8B on cuda:0 with device_map=("": "cuda:0").
+       g. Load Qwen3.5-0.8B on cuda:1 with device_map=("": "cuda:1").
+       h. Define poll_gpu_utilization(handle, stop_event, results):
+          While not stop_event.is_set():
+            util = pynvml.nvmlDeviceGetUtilizationRates(handle).gpu
+            results.append(util); time.sleep(2)
+       i. Use ThreadPoolExecutor(max_workers=4):
+          - Thread 1: inference on cuda:0 (10 questions, 100 tokens each)
+          - Thread 2: inference on cuda:1 (10 questions, 100 tokens each)
+          - Thread 3: poll GPU0 utilization every 2s
+          - Thread 4: poll GPU1 utilization every 2s
+          All threads start simultaneously; wait for inference threads to finish.
+       j. max_gpu1_util_pct = max(gpu1_utilization_samples) if pynvml_available else 0.
+       k. honest_verdict:
+          - "dualgpu_confirmed" if max_gpu1_util_pct > 0 AND gpu1_inference_completed
+          - "dualgpu_partial_no_pynvml" if gpu1_inference_completed AND not pynvml_available
+          - "dualgpu_blocked" if < 2 GPUs or no live GPU
+       l. artifact: pynvml_installed, max_gpu0_util_pct, max_gpu1_util_pct,
+          throughput_ratio, retro_071_resolved (max_gpu1_util_pct > 0),
+          honest_verdict.
+    4. Write tests/python/test_experiment_684_dualgpu_pynvml.py with 100% coverage.
+    5. Reconcile:
+       - ops/status.md: update RETRO-071 status.
+       - ops/changelog.md: one-line with honest_verdict.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp685-dualgpu-eorm-jepa-retrain
+  milestone: 2026.04.52
+  deliverable: results/experiment_685_dualgpu_eorm_jepa.json
+  title: 'Exp 685: DualGPU EORM+JEPA Parallel Retrain — Resolve Exp 383 Slowest-5 Pattern (GPU REQUIRED)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 383 (Combined EORM + JEPA retrain) has appeared in the slowest-5 for
+    SIX CONSECUTIVE MILESTONES. It takes ~62 min because EORM trains on GPU0 THEN JEPA
+    trains on GPU0 sequentially. With DualGPU confirmed (Exp 684), we can train EORM
+    on cuda:0 and JEPA on cuda:1 simultaneously, reducing to ~35 min.
+
+    This experiment implements the parallel retrain, resolving the Exp 383 pattern.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_684_dualgpu_pynvml.json — GATE: retro_071_resolved must be True.
+      If not True: write blocked artifact and exit 0.
+    - python/carnot/models/eorm_model.py — EORMModel training.
+    - python/carnot/models/jepa_predictor.py — JEPAPredictor training.
+    - results/fover_labeled_steps_live.json — training data for EORM.
+    - results/jepa_predictor_v15_real.safetensors — JEPA v15 weights to fine-tune.
+    - python/carnot/models/pure_min_form_loss.py — PUREMinFormLoss.
+    - python/carnot/pipeline/jepa_cpmi_pair_builder.py — CPMI contrastive pairs.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - scripts/experiment_template.py — ExperimentTemplate, DualGPURunner.
+
+    TASK: Retrain EORM on GPU0 and JEPA v15 on GPU1 simultaneously, measure time saved.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-HW-036 (DualGPU EORM+JEPA parallel retrain completes in < 40 min),
+       REQ-LEARN-044 (JEPA v15.1 OOD AUC maintained or improved after parallel retrain),
+       SCENARIO-HW-036, SCENARIO-LEARN-074 to spec.md.
+    3. Create scripts/experiment_685_dualgpu_eorm_jepa.py:
+       a. apply_env_autofix() inside main() first.
+       b. ExperimentTimeoutWatchdog(685, timeout_minutes=60).
+       c. GATE: read results/experiment_684_dualgpu_pynvml.json.
+          If retro_071_resolved != True: write blocked artifact, exit 0.
+       d. Load training data: fover_labeled_steps_live.json.
+          Build CPMI contrastive pairs for JEPA.
+       e. Define train_eorm(device_str: str, training_data: list) -> dict:
+          Load EORMModel on device_str. Train 50 epochs. Return ("eorm_loss": float,
+          "eorm_train_time_s": float).
+       f. Define train_jepa(device_str: str, cpmi_pairs: list) -> dict:
+          Load JEPAPredictor on device_str. Train with PUREMinFormLoss 100 epochs.
+          Return ("jepa_loss": float, "jepa_train_time_s": float).
+       g. Record sequential_time: time.time() before, then run train_eorm("cuda:0")
+          THEN train_jepa("cuda:0"). Record sequential_total_s.
+       h. Record parallel_time: ThreadPoolExecutor(max_workers=2):
+          future_eorm = executor.submit(train_eorm, "cuda:0", training_data)
+          future_jepa = executor.submit(train_jepa, "cuda:1", cpmi_pairs)
+          eorm_result = future_eorm.result()
+          jepa_result = future_jepa.result()
+          Record parallel_total_s.
+       i. speedup = sequential_total_s / parallel_total_s.
+       j. Save retrained weights: results/eorm_v2_dualgpu.safetensors,
+          results/jepa_predictor_v15_1_dualgpu.safetensors.
+       k. honest_verdict:
+          - "dualgpu_retrain_success" if speedup >= 1.3 (at least 30% faster)
+          - "dualgpu_retrain_marginal" if 1.0 <= speedup < 1.3
+          - "dualgpu_retrain_slower" if speedup < 1.0
+          - "dualgpu_retrain_blocked" if GATE failed
+    4. Write tests/python/test_experiment_685_dualgpu_eorm_jepa.py with 100% coverage.
+    5. Reconcile:
+       - ops/status.md: add "DualGPU EORM+JEPA parallel retrain (Exp 685)" to What's Working.
+       - ops/changelog.md: one-line with honest_verdict.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp686-fover-z3-formal-labels
+  milestone: 2026.04.52
+  deliverable: results/experiment_686_fover_formal_v1.json
+  title: 'Exp 686: FoVer Z3 Formal PRM Labels — Auto-Annotate 200 GSM8K CoT Steps (arXiv 2505.15960)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2505.15960 (FoVer) shows that Z3 SMT solver can automatically annotate
+    step-level correctness in reasoning chains. Instead of expensive human annotation
+    (our FOVER corpus has only 57 pairs), Z3 can verify whether each arithmetic step is
+    logically entailed by the prior steps.
+
+    Carnot's JEPA predictor is bottlenecked by training data quantity. FoVer provides a
+    path to 10x more labeled data at zero human cost. The approach:
+    1. Generate CoT responses with Qwen3.5-0.8B on 200 GSM8K questions (from stored data).
+    2. For each step: extract arithmetic claims (using CoACEExtractor or SymCodeVerifier).
+    3. Run Z3 on each claim: is this arithmetic step logically entailed by prior steps?
+    4. Label: step_correct=True if Z3 confirms entailment, False if Z3 finds contradiction.
+
+    EXISTING CODE TO READ FIRST:
+    - results/fover_labeled_steps_live.json — existing 57 hand-labeled pairs (baseline).
+    - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier (arithmetic extraction).
+    - python/carnot/extraction/coace_extractor_v2.py — CoACEExtractorV2.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Build Z3-verified PRM training data pipeline, produce fover_labeled_formal_v1.json.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-LEARN-045 (FoVer Z3 pipeline produces >= 200 labeled step pairs),
+       REQ-LEARN-046 (Z3 labels agree with FOVER hand-labels at >= 80% rate on overlap),
+       SCENARIO-LEARN-075/076/077 to spec.md.
+    3. Create python/carnot/training/fover_z3_labeler.py:
+       a. Z3StepVerifier: uses z3 Python library.
+          try: import z3; z3_available=True
+          except: z3_available=False
+       b. extract_arithmetic_claim(step_text: str) -> z3.BoolRef | None:
+          Extract arithmetic equation from step text. Convert to Z3 expression.
+          Example: "47 + 28 = 75" → z3.Int("lhs") == 47 + 28 → z3.Assert(75 == 47+28).
+          Return None if no parseable arithmetic.
+       c. verify_step_z3(prior_steps: list[str], current_step: str) -> str:
+          Build Z3 solver. Add prior arithmetic as premises. Check if current_step
+          follows. Return: "correct" | "violation" | "unparseable".
+       d. FoVerZ3Pair dataclass: question, step_text, step_index, z3_verdict (str),
+          step_correct (bool: verdict == "correct" or "unparseable").
+    4. Create scripts/experiment_686_fover_formal_v1.py:
+       a. ExperimentTimeoutWatchdog(686, timeout_minutes=30).
+       b. Check z3 availability. If not available:
+          try: subprocess.run([sys.executable, "-m", "pip", "install", "z3-solver", "-q"])
+          re-import; if still unavailable: write blocked artifact.
+       c. Load stored responses: results/live_pairs_578.json OR results/experiment_679_*.json
+          (whichever has the largest corpus of (question, CoT_response) pairs).
+       d. For each pair (up to 200): extract steps using SymCodeVerifier step splitter.
+          Apply Z3StepVerifier to each step.
+       e. Compute agreement with FOVER hand-labels on overlapping pairs.
+       f. Write results/fover_labeled_formal_v1.json:
+          ("version": 1, "n_pairs": N, "z3_verified": True, "pairs": [...],
+           "agreement_with_hand_labels": float, "schema": "carnot.fover.v2")
+       g. honest_verdict:
+          - "fover_z3_success" if n_labeled >= 200 AND agreement >= 0.80
+          - "fover_z3_partial" if n_labeled >= 50 AND agreement >= 0.60
+          - "fover_z3_z3_unavailable" if z3 could not be installed
+    5. Write tests/python/test_fover_z3_labeler.py with 100% module coverage.
+    6. Reconcile ops/changelog.md.
     7. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp671-jepa-v15-live-retrain
-  milestone: 2026.04.51
-  deliverable: results/experiment_671_jepa_v15.json
-  title: 'Exp 671: JEPA v15 Live Retrain — Real Violations from Exp 659 FR-11 Relay (FR-11 MANDATORY, GPU)'
+- id: exp687-hallusat-sparse-ae
+  milestone: 2026.04.52
+  deliverable: results/experiment_687_hallusat_sparse_ae.json
+  title: 'Exp 687: HalluSAE Sparse Auto-Encoder Feature Attribution — Mechanistic Explanation for VR Win (arXiv 2604.16430)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: Exp 659 (FR-11 Tier 2 relay) succeeded — real violations from VR attempts
-    have been wired into ConstraintTemplateLibrary. JEPA v14 was calibrated (Platt, Exp 646)
-    but not yet retrained on the accumulated real violation data. This experiment retrains
-    JEPA v15 on real violations with the proven CPMI + PURE min-form objective.
+    CONTEXT: arXiv 2604.16430 (HalluSAE) shows that sparse auto-encoders trained on LLM
+    hidden states identify monosemantic features causally linked to hallucinations. This
+    provides mechanistic interpretability: instead of "energy is high", we can say "Feature
+    47 (off-by-one arithmetic patterns) activated, causing the violation."
+
+    Applied to Carnot's VR win (Exp 668): why did structured-equation forcing + repair
+    improve accuracy from 36% to 100% on 25 questions? HalluSAE would reveal which latent
+    features were causal — e.g., "the model activates an 'arithmetic uncertainty' feature
+    when it produces carry errors, and the structured forcing prompt suppresses this feature."
+
+    This is also relevant to JEPA training: instead of training on raw hidden states,
+    train on sparse AE feature vectors (low-dimensional, causally meaningful).
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_659_tier2_fr11_relay.json — violations wired; use these as training data.
-    - python/carnot/models/jepa_predictor.py — JEPAPredictor.
-    - python/carnot/pipeline/jepa_cpmi_pair_builder.py — CPMI contrastive pairs (Exp 577).
-    - python/carnot/models/pure_min_form_loss.py — PURE min-form PRM objective (Exp 566).
-    - results/fover_labeled_steps_live.json — 57 live FOVER pairs from Exp 442.
-    - results/experiment_646_jepa_v14_platt.json — Platt temperature for comparison.
-    - scripts/experiment_template.py — ExperimentTemplate, DualGPURunner.
-    - python/carnot/pipeline/experiment_watchdog.py — 90-min hard stop.
-
-    TASK: Retrain JEPA v15 on real violation data with CPMI+PURE, evaluate OOD AUC.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-LEARN-036 (JEPA v15 trained on real violations achieves OOD AUC >= 0.80),
-       REQ-LEARN-037 (JEPA v15 ECE < 0.10 via Platt calibration after training),
-       SCENARIO-LEARN-064/065/066 to openspec/capabilities/autoresearch/spec.md.
-    3. Create scripts/experiment_671_jepa_v15.py:
-       a. Call apply_env_autofix() inside main() first.
-       b. ExperimentTimeoutWatchdog(671, timeout_minutes=90).
-       c. GPU gate: LiveGPUGate.require_live_or_blocked() or CPU fallback mode.
-       d. Load training pairs:
-          - From results/experiment_659_tier2_fr11_relay.json (violation pairs).
-          - From results/fover_labeled_steps_live.json (FOVER live pairs).
-          - Combine: n_total pairs for training.
-       e. Build CPMI contrastive pairs via JEPACPMIPairBuilder (Exp 577 class).
-       f. Train JEPAPredictor with PUREMinFormLoss (Exp 566 class):
-          - 100 epochs, Adam 1e-3, batch size 16.
-          - Early stopping on held-out AUC.
-       g. Evaluate on OOD held-out set (20% of pairs not seen during training).
-       h. Apply Platt calibration post-training: fit temperature T on validation set.
-       i. Compute ECE (expected calibration error) post-calibration.
-       j. Save to results/jepa_predictor_v15_real.safetensors.
-       k. honest_verdict:
-          - "jepa_v15_target_met" if ood_auc >= 0.80 AND ece < 0.10
-          - "jepa_v15_auc_met" if ood_auc >= 0.80 but ece >= 0.10
-          - "jepa_v15_partial" if ood_auc >= 0.60
-          - "jepa_v15_no_improvement" if ood_auc < 0.60
-          - "ci_mode_synthetic" if no real pairs available
-    4. Write tests/python/test_experiment_671_jepa_v15.py:
-       - test pair loading from Exp 659 result.
-       - test CPMI pair building runs without error.
-       - test Platt temperature is positive scalar.
-       - test honest_verdict is in the enum.
-       Each test traces to REQ-LEARN-036/037.
-    5. Reconcile:
-       - ops/status.md: add "JEPA v15 trained on real data" under What's Working.
-       - ops/changelog.md: one-line with honest_verdict.
-    6. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp672-kv260-dfx-fix
-  milestone: 2026.04.51
-  deliverable: results/experiment_672_kv260_dfx_fix.json
-  title: 'Exp 672: KV260 DFX Manager Protocol Fix — Diagnose dfx-mgr-client Load Failure (FPGA)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exp 661 (KV260 N=64 benchmark) was blocked_on_dfx_mgr_load_failure.
-    The N=64 bitfile was synthesized (Vivado 2025.2.1 synthesis completed), and the board
-    is powered, but dfx-mgr-client -load failed when attempting to load the bitfile.
-    This is a SOFTWARE protocol issue, not a hardware or synthesis issue.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_661_kv260_n64_benchmark.json — dfx_mgr failure details.
-    - hardware/kv260/build_bd.tcl — build script with N=64 defaults.
-    - results/kv260_bd_build.json — synthesis result (schema: carnot.kv260_synth.v1).
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - research-hardware-wishlist.md — KV260 bring-up status and commands.
-
-    TASK: Diagnose dfx-mgr-client failure and implement alternative bitfile loading.
-
-    CONCRETE STEPS:
-    1. Read results/experiment_661_kv260_n64_benchmark.json to find exact failure message.
-    2. Create scripts/experiment_672_kv260_dfx_fix.py:
-       a. ExperimentTemplate(672) + ExperimentTimeoutWatchdog(672, timeout_minutes=30).
-       b. Check environment: CARNOT_KV260_BITFILE set? bitfile exists?
-          If not set or file missing: write blocked artifact with instructions and exit 0.
-       c. Attempt dfx loading sequence (try each in order, record which succeeds):
-          Method 1: dfx-mgr-client -load -name <bitfile>
-          Method 2: fpgautil -b <bitfile> (alternative DFX util)
-          Method 3: dd if=<bitfile> of=/dev/xdevcfg (direct programming)
-          Method 4: Copy bitfile to /lib/firmware/ and trigger via sysfs
-       d. For each method: subprocess.run() with timeout=30s, capture stdout+stderr.
-          Record: method_name, exit_code, stdout[:500], stderr[:500], success.
-       e. If any method succeeds:
-          - Run CPU latency baseline (n_spins=64, 100 trials, Python IsingEBM).
-          - Record hardware_latency_placeholder (hardware test will be Exp 673 follow-up).
-          - honest_verdict = "dfx_method_found_(method_name)"
-       f. If all methods fail:
-          - Diagnose from stderr: "firmware_not_found" vs "permission_denied" vs "protocol_error".
-          - Write fix instructions for each diagnosis to results/experiment_672_kv260_dfx_fix.json.
-          - honest_verdict = "dfx_protocol_diagnosed_(diagnosis)"
-       g. artifact includes: bitfile_path, methods_tried, method_that_succeeded,
-          diagnosis (if all failed), honest_verdict.
-    3. Write tests/python/test_experiment_672_kv260_dfx_fix.py:
-       - test blocked artifact when bitfile not set.
-       - test methods_tried list is populated.
-       - test honest_verdict is not None.
-    4. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp673-dualgpu-proof-v3
-  milestone: 2026.04.51
-  deliverable: results/experiment_673_dualgpu_v3.json
-  title: 'Exp 673: DualGPU Proof v3 — Confirmed Parallel Forward Pass (RETRO-071, GPU REQUIRED)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: RETRO-071 has been open for 14 consecutive milestones. The hardware is capable
-    (2x RTX 3090, 48GB VRAM total), but parallel GPU utilization has never been confirmed.
-    Exp 664 (DualGPU retrain) noted GPU1 temperature rose 2C — a weak signal — but
-    retro_071_unresolved remains the verdict.
-
-    Root cause of prior failures: Qwen2.5-7B-Instruct was not cached when the experiment ran.
-    Fix: use Qwen3.5-0.8B (always cached) on BOTH GPUs simultaneously via ThreadPoolExecutor.
-    No large model download required.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_664_dualgpu_retrain.json — retro_071_unresolved details.
-    - python/carnot/inference/sota_models.py — resolve_cached_gguf(), cached_sota_pair().
-    - python/carnot/pipeline/gpu_zombie_fix.py — build_zombie_fix_strategy() (Exp 438).
-    - python/carnot/pipeline/env_autofix.py — apply_env_autofix().
-    - scripts/experiment_template.py — ExperimentTemplate, DualGPURunner.
-
-    TASK: Confirm parallel GPU1 utilization > 0% during simultaneous forward passes.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Create scripts/experiment_673_dualgpu_v3.py:
-       a. Call apply_env_autofix() inside main() first.
-       b. ExperimentTimeoutWatchdog(673, timeout_minutes=45).
-       c. GPU gate: CARNOT_FORCE_LIVE=1 required. If not set: write blocked artifact, exit 0.
-       d. Check available GPUs via pynvml or nvidia-smi. Require n_gpus >= 2.
-       e. Load Qwen3.5-0.8B on cuda:0 with device_map=("": "cuda:0").
-       f. Load Qwen3.5-0.8B on cuda:1 with device_map=("": "cuda:1").
-          (Same model class, both cached — no download needed.)
-       g. Define run_inference(model, tokenizer, prompt, gpu_id) -> dict:
-          - runs model.generate() on specified device
-          - records: latency_s, output_tokens, gpu_id.
-       h. Use ThreadPoolExecutor(max_workers=2) to run both simultaneously:
-          future0 = executor.submit(run_inference, model0, tok0, QUESTION_0, 0)
-          future1 = executor.submit(run_inference, model1, tok1, QUESTION_1, 1)
-          result0 = future0.result(timeout=120)
-          result1 = future1.result(timeout=120)
-       i. During parallel execution: poll GPU utilization via pynvml every 2s.
-          Record max_gpu1_util_pct (the maximum GPU1 compute utilization observed).
-       j. honest_verdict:
-          - "dualgpu_confirmed" if max_gpu1_util_pct > 0 AND result1 is not None
-          - "dualgpu_partial" if result1 is not None but max_gpu1_util_pct == 0 (no pynvml)
-          - "dualgpu_blocked" if < 2 GPUs or no live GPU
-       k. artifact: gpu0_latency_s, gpu1_latency_s, max_gpu1_util_pct,
-          throughput_ratio (parallel vs sequential), retro_071_resolved (bool),
-          honest_verdict.
-    3. Write tests/python/test_experiment_673_dualgpu_v3.py:
-       - test blocked artifact when n_gpus < 2.
-       - test run_inference returns dict with required fields.
-       - test honest_verdict in enum.
-    4. Reconcile ops/status.md if retro_071_resolved=True.
-    5. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp674-ias-adaptive-gate
-  milestone: 2026.04.51
-  deliverable: results/experiment_674_ias_adaptive_gate.json
-  title: 'Exp 674: IAS Adaptive Gate Calibration — Quantile Regression for Verification Thresholds (arXiv 2506.09338)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: The EnsembleGate has used a fixed threshold=0.30 across multiple milestones.
-    This fixed threshold failed in .50 (gate_closed despite causal_recall=0.36 locally) because
-    recall estimates from different extractors have different variance distributions — a fixed
-    single threshold ignores this heterogeneity.
-
-    arXiv 2506.09338 (IAS: Instance-Adaptive Scaling) shows that quantile regression calibration
-    aligns confidence estimates with true success probabilities, enabling ADAPTIVE thresholds
-    that respect per-extractor variance. Applied to Carnot: train quantile regression heads on
-    FOVER pairs for each extractor (symcode, structured, causal), use the 10th-percentile recall
-    as the adaptive gate threshold. High-variance extractors get a lower effective threshold;
-    low-variance extractors get a higher one.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/ensemble_gate_v4.py — EnsembleGateV4 (Exp 667).
-    - results/fover_labeled_steps_live.json — 57 live FOVER pairs.
-    - results/experiment_655_ensemble_gate_v3.json — .50 recall values for calibration.
+    - results/fover_labeled_steps_live.json — 57 live (step, label) pairs with hidden states
+      if stored; otherwise use text-level representations.
+    - python/carnot/models/jepa_predictor.py — JEPAPredictor input encoding (to understand
+      what features JEPA currently uses).
     - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
     - scripts/experiment_template.py — ExperimentTemplate.
 
-    TASK: Implement IAS quantile regression calibration for gate thresholds.
+    TASK: Train sparse auto-encoder on FOVER pairs, identify top-10 hallucination features.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-VERIFY-151 (IAS adaptive gate uses per-extractor quantile regression calibration),
-       REQ-VERIFY-152 (IAS adaptive threshold is set at 10th percentile of extractor recall distribution),
-       SCENARIO-VERIFY-200/201 to spec.md.
-    3. Create python/carnot/pipeline/ias_gate_calibration.py:
-       a. QuantileRegressionHead: simple JAX linear model fitting
-          pinball loss L_q(y, yhat) = q*(y-yhat) if y>yhat else (q-1)*(y-yhat).
-          train(observations: list[float], quantile: float = 0.10) -> float:
-            returns the q-th quantile of the observation distribution.
-       b. IASGateCalibration dataclass: symcode_threshold (float), structured_threshold (float),
-          causal_threshold (float), calibrated_from_n (int).
-       c. calibrate(fover_pairs_path: str) -> IASGateCalibration:
-          - Load FOVER pairs.
-          - For each extractor: compute recall on each pair → distribution of recall values.
-          - Fit QuantileRegressionHead at q=0.10 for each extractor.
-          - Return thresholds as IASGateCalibration.
-       d. adaptive_gate_open(calibration: IASGateCalibration,
-                              symcode: float, structured: float, causal: float) -> bool:
-          'Gate opens if any extractor exceeds its calibrated threshold.'
-          return (symcode >= calibration.symcode_threshold
-                  OR structured >= calibration.structured_threshold
-                  OR causal >= calibration.causal_threshold)
-    4. Create scripts/experiment_674_ias_adaptive_gate.py:
-       a. ExperimentTemplate(674) + ExperimentTimeoutWatchdog(674, timeout_minutes=20).
-       b. Calibrate gate from results/fover_labeled_steps_live.json.
-       c. Apply to .50 recall values: symcode=0.12, structured=0.20, causal=0.36.
-       d. Compute: ias_gate_open (True/False), compare to v3 gate (False) and v4 gate (True).
-       e. Record: calibrated_thresholds, ias_gate_open, comparison_to_v3, comparison_to_v4.
-       f. honest_verdict: "ias_gate_improves_v3" if ias_gate_open=True and v3=False,
-          "ias_gate_matches_v4" if same as v4, "ias_gate_no_change" otherwise.
-    5. Write tests/python/test_ias_gate_calibration.py with 100% module coverage.
-    6. tmpl.assert_deliverable_written() as final line.
+    2. Add REQ-VERIFY-160 (HalluSAE: sparse AE identifies >= 10 distinct hallucination features
+       from FOVER corpus), REQ-VERIFY-161 (top-10 features have feature_auroc >= 0.60),
+       SCENARIO-VERIFY-212/213 to spec.md.
+    3. Create python/carnot/models/hallusal_sparse_ae.py:
+       a. SparseAutoEncoder(JAX nn.Module):
+          __init__(self, input_dim, hidden_dim=512, sparsity_weight=0.01):
+            self.encoder = nn.Dense(hidden_dim)
+            self.decoder = nn.Dense(input_dim)
+          __call__(self, x):
+            h = nn.relu(self.encoder(x))
+            h_sparse = h * (h == jnp.max(h, axis=-1, keepdims=True))  # top-k sparse
+            x_recon = self.decoder(h_sparse)
+            return x_recon, h_sparse
+          loss = reconstruction_loss + sparsity_weight * L1(h_sparse)
+       b. extract_text_features(text: str) -> jnp.ndarray:
+          Simple bag-of-features: compute_hash_features(text, dim=128).
+          Extract: digit_count, operator_count, equals_count, carry_pattern_count,
+          compute_line_count (COMPUTE: occurrences), step_length.
+          Return jnp.array([...], dtype=jnp.float32).
+       c. identify_hallucination_features(ae: SparseAutoEncoder, pairs, dim=512) -> list:
+          For each feature dimension: compute AUC of that feature vs hallucination label.
+          Return top-10 by AUC, with: feature_idx, feature_auroc, feature_name (manual guess).
+    4. Create scripts/experiment_687_hallusat_sparse_ae.py:
+       a. ExperimentTimeoutWatchdog(687, timeout_minutes=20).
+       b. Load FOVER pairs from results/fover_labeled_steps_live.json.
+       c. Extract text features for each pair.
+       d. Train SparseAutoEncoder: 200 epochs, Adam 1e-3.
+       e. identify_hallucination_features() on test set.
+       f. Check COMPUTE: correlation: does compute_line_count feature score in top-10?
+          This validates the Exp 668 VR win mechanism.
+       g. honest_verdict:
+          - "hallusat_features_found" if top-10 features identified with max_auroc >= 0.60
+          - "hallusat_compute_line_causal" if compute_line_count in top-10
+          - "hallusat_below_threshold" if max_auroc < 0.60
+    5. Write tests/python/test_hallusal_sparse_ae.py with 100% module coverage.
+    6. Reconcile ops/changelog.md.
+    7. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp675-losnet-sequence-detector
-  milestone: 2026.04.51
-  deliverable: results/experiment_675_losnet_detector.json
-  title: 'Exp 675: LOS-Net Sequence Distribution Hallucination Detector — Tier 0h Candidate (arXiv 2503.14043)'
+- id: exp688-psv-selfplay-constraint-learning
+  milestone: 2026.04.52
+  deliverable: results/experiment_688_psv_selfplay.json
+  title: 'Exp 688: PSV Self-Play Constraint Learning — 10-Iteration Autonomous Loop (arXiv 2512.18160, Tier 3 Self-Learning)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: arXiv 2503.14043 (LOS-Net) shows that the FULL sequence of next-token
-    distributions — not just individual token entropy — carries far more hallucination signal
-    than single-token measures. Carnot's Tier 0b (SpilledEnergyDetector) uses per-token
-    logit discrepancy. LOS-Net's sequence-level attention over the distribution trajectory
-    provides an orthogonal, stronger signal.
+    CONTEXT: arXiv 2512.18160 (PSV: Propose, Solve, Verify) shows that self-play with
+    formal verification labels enables autonomous improvement without human supervision.
+    Applied to Carnot (Tier 3 self-learning from research-program.md):
 
-    Key insight: the logit distribution at token t contains information about how UNCERTAIN
-    the model is GLOBALLY, not just at that token. A sequence of low-entropy → high-entropy →
-    low-entropy distributions signals a "garden path" hallucination pattern where the model
-    commits to a wrong path then doubles down.
+    The PSV loop for Carnot:
+    1. PROPOSE: select 20 GSM8K questions per iteration
+    2. SOLVE: run Qwen3.5-0.8B with structured-equation forcing
+    3. VERIFY: run SymCodeVerifier on the responses → binary correct/incorrect labels
+    4. LEARN: update ConstraintTemplateLibrary weights from (violation, correct_or_not) pairs
+       (Tier 1 online learning from research-program.md)
 
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/spilled_energy_detector.py — SpilledEnergyDetector (Tier 0b).
-    - results/fover_labeled_steps_live.json — 57 live FOVER pairs for training.
-    - results/live_pairs_578.json — 100 live pairs (larger training set if available).
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - scripts/experiment_template.py — ExperimentTemplate.
+    This is the first experiment implementing a closed autonomous learning loop without
+    human annotation or manual data collection. If FP rate decreases across 10 iterations,
+    the self-play loop is working.
 
-    TASK: Implement lightweight LOS-Net attention model over token distribution sequences.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-VERIFY-153 (LOS-Net: sequence-level hallucination detector over full output
-       distribution, < 5M params), REQ-VERIFY-154 (LOS-Net: AUC >= 0.75 on FOVER live pairs),
-       SCENARIO-VERIFY-202/203/204 to spec.md.
-    3. Create python/carnot/pipeline/losnet_detector.py:
-       a. Observation: given only token logit distributions (top-K probabilities per step),
-          not actual model weights or hidden states.
-       b. LOSNetFeatures dataclass: top_k_probs (list[list[float]]), n_steps (int),
-          sequence_entropy (list[float]), entropy_variance (float), entropy_trend (float).
-       c. extract_losnet_features(logit_sequences: list[list[float]], top_k: int = 10) ->
-          LOSNetFeatures:
-          - logit_sequences: shape (n_steps, vocab_size) or (n_steps, top_k) pre-filtered.
-          - Compute per-step entropy: H_t = -sum(p * log(p)).
-          - Compute entropy_variance = var(H).
-          - Compute entropy_trend = linear fit slope of H over time.
-          - Return LOSNetFeatures.
-       d. LOSNetClassifier: small JAX MLP:
-          __init__(self, n_features: int = 3):  # [entropy_variance, entropy_trend, max_entropy]
-          train(self, positive_features, negative_features) -> None:
-          score(self, features: LOSNetFeatures) -> float:  # probability of hallucination
-       e. build_losnet_artifact(auc, vs_spilled_energy_auc, n_train_pairs) -> dict.
-    4. Create scripts/experiment_675_losnet_detector.py:
-       a. ExperimentTemplate(675) + ExperimentTimeoutWatchdog(675, timeout_minutes=30).
-       b. Load FOVER live pairs (results/fover_labeled_steps_live.json).
-       c. For each pair: extract_losnet_features() from stored logit sequences if available,
-          OR use synthetic distribution sequences (step entropy derived from stored responses).
-       d. Train LOSNetClassifier on 80% of pairs, evaluate on 20% held-out.
-       e. Compute AUC vs SpilledEnergyDetector baseline on same pairs.
-       f. honest_verdict: "tier0h_viable" if auc >= 0.75, "below_threshold" if < 0.75.
-       g. If tier0h_viable: add to _bmad/architecture.md as Tier 0h candidate.
-    5. Write tests/python/test_losnet_detector.py with 100% module coverage.
-    6. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp676-metajuls-adaptive-constraint
-  milestone: 2026.04.51
-  deliverable: results/experiment_676_metajuls_adaptive.json
-  title: 'Exp 676: MetaJuLS Adaptive Constraint Propagation — Online Policy Update for StructuredEquationForcer (arXiv 2601.00095)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: arXiv 2601.00095 (MetaJuLS) presents meta-RL constraint propagation policies
-    that adapt across tasks and input distributions without full retraining. 1.5-2.0x speedup
-    over task-specific baselines, enabling online adaptation at inference time.
-
-    Applied to Carnot: StructuredEquationForcer (Exp 653) forces COMPUTE: format, but
-    the system prompt addendum is STATIC. MetaJuLS-style meta-RL would update the forcing
-    prompt based on feedback from each live session — "this model needs more explicit
-    forcing for percentage problems" → adapt the FORCER_SYSTEM_ADDENDUM.
-
-    This is Tier 2 continuous self-learning (research-program.md): Constraint Memory with
-    online policy adaptation from live inference feedback.
+    GATE: Read results/experiment_683_fr11_real_positives.json.
+    If fr11_real_positives_confirmed != True: run in synthetic mode (pre-generated
+    questions, no live GPU needed).
 
     EXISTING CODE TO READ FIRST:
+    - results/experiment_683_fr11_real_positives.json — FR-11 gate (real positives wired).
+    - python/carnot/pipeline/jitrl_constraint_memory.py — JitRLConstraintMemory.
+    - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier (verification oracle).
     - python/carnot/pipeline/structured_equation_forcer.py — StructuredEquationForcer.
-    - python/carnot/pipeline/jitrl_constraint_memory.py — JitRLConstraintMemory (Exp 432).
-    - results/experiment_668_vr_attempt_18_v2.json — VR #18 forcing recall data (if run).
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.
+    - python/carnot/pipeline/env_autofix.py — apply_env_autofix().
     - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - scripts/experiment_template.py — ExperimentTemplate.
+    - scripts/experiment_template.py — ExperimentTemplate, setup_gpu().
 
-    TASK: Implement MetaJuLS-style online policy adapter for StructuredEquationForcer.
+    TASK: Run 10-iteration PSV self-play loop, measure constraint weight improvement.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-LEARN-038 (MetaJuLS adapter updates forcing strategy from live feedback),
-       REQ-LEARN-039 (adapted strategy improves COMPUTE: recall vs static forcer),
-       SCENARIO-LEARN-067/068/069 to openspec/capabilities/autoresearch/spec.md.
-    3. Create python/carnot/pipeline/metajuls_adapter.py:
-       a. ForcingFeedback dataclass: question (str), compute_lines_found (int),
-          total_arithmetic_ops (int), recall (float), domain (str).
-       b. MetaJuLSAdapter class:
-          __init__(self, base_addendum: str, learning_rate: float = 0.1):
-          update(self, feedback: ForcingFeedback) -> None:
-            'Update forcing strategy based on feedback. Low recall → stronger addendum.'
-            If feedback.domain not in self._domain_recalls:
-              self._domain_recalls[feedback.domain] = []
-            self._domain_recalls[feedback.domain].append(feedback.recall)
-            If mean(self._domain_recalls[feedback.domain]) < 0.30:
-              self._domain_emphasis[feedback.domain] = "CRITICAL: You MUST write..."
-          get_adapted_addendum(self, question: str) -> str:
-            'Return FORCER_SYSTEM_ADDENDUM adapted for this question domain.'
-          save_state(self, path: str) -> None: persist domain_recalls + emphasis.
-          load_state(cls, path: str) -> MetaJuLSAdapter: restore state.
-    4. Create scripts/experiment_676_metajuls_adaptive.py:
-       a. ExperimentTemplate(676) + ExperimentTimeoutWatchdog(676, timeout_minutes=25).
-       b. Load VR #18 forcing data from results/experiment_668_vr_attempt_18_v2.json
-          (if it ran) OR use synthetic feedback (recall=0.20 for arithmetic, 0.15 for %).
-       c. Initialize MetaJuLSAdapter with FORCER_SYSTEM_ADDENDUM from Exp 653.
-       d. Simulate 5 feedback sessions: feed recall observations, observe addendum changes.
-       e. Measure: adapted_recall (does stronger addendum improve synthetic recall?).
-       f. honest_verdict: "metajuls_adapted" if any domain emphasis updated,
-          "metajuls_no_adaptation" if all recalls >= 0.30 (no adaptation needed).
-    5. Write tests/python/test_metajuls_adapter.py with 100% module coverage.
-    6. tmpl.assert_deliverable_written() as final line.
+    2. Add REQ-LEARN-047 (PSV self-play: 10 iterations, each with 20 questions, updates
+       constraint weights from binary verification labels), REQ-LEARN-048 (FP rate
+       non-increasing across PSV iterations), SCENARIO-LEARN-078/079/080 to spec.md.
+    3. Create python/carnot/training/psv_selfplay.py:
+       a. PSVIteration dataclass: iteration (int), n_questions (int), n_correct (int),
+          n_violations (int), fp_count (int), constraint_weight_delta (float).
+       b. PSVSelfPlayLoop class:
+          __init__(self, n_iterations: int, n_questions_per_iter: int,
+                   constraint_memory: JitRLConstraintMemory):
+          run_iteration(self, questions: list[str], inference_fn, verify_fn) -> PSVIteration:
+            'One PSV iteration. inference_fn: str -> str (LLM call or synthetic).
+             verify_fn: str -> bool (SymCodeVerifier or rule-based).'
+            Responses = [inference_fn(q) for q in questions]
+            Labels = [verify_fn(r) for r in responses]
+            Violations = [(q, r) for (q, r, l) in zip(questions, responses, labels) if not l]
+            Correct = [(q, r) for (q, r, l) in zip(questions, responses, labels) if l]
+            self.constraint_memory.update_from_pairs(violations, correct)
+            Return PSVIteration(...)
+    4. Create scripts/experiment_688_psv_selfplay.py:
+       a. apply_env_autofix() inside main() first.
+       b. ExperimentTimeoutWatchdog(688, timeout_minutes=90).
+       c. Read results/experiment_683_fr11_real_positives.json.
+          If fr11_real_positives_confirmed: use live GPU inference (CARNOT_FORCE_LIVE=1).
+          Else: synthetic mode — inference_fn returns pre-generated responses from
+          results/live_pairs_578.json; verify_fn checks known labels.
+       d. If live mode: setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
+       e. Initialize JitRLConstraintMemory.
+       f. Load 200 GSM8K questions (indices 400-599, not used in prior VR runs).
+       g. PSVSelfPlayLoop(n_iterations=10, n_questions_per_iter=20, constraint_memory).
+          Run 10 iterations. Record fp_count per iteration.
+       h. Compute fp_rate_trend: is FP rate non-increasing across iterations?
+          (linear regression slope < 0 means FP rate improving)
+       i. honest_verdict:
+          - "psv_selfplay_fp_improving" if fp_rate_trend_slope < 0
+          - "psv_selfplay_fp_stable" if fp_rate_trend_slope == 0
+          - "psv_selfplay_fp_degrading" if fp_rate_trend_slope > 0
+          - "psv_synthetic_mode" if no live GPU / gate closed
+       j. artifact: n_iterations=10, iteration_results (list), fp_rate_per_iteration,
+          fp_rate_trend_slope, inference_mode, honest_verdict.
+    5. Write tests/python/test_psv_selfplay.py with 100% module coverage.
+    6. Reconcile:
+       - ops/status.md: add "PSV self-play loop runs end-to-end (Exp 688)" to What's Working.
+       - ops/changelog.md: one-line with honest_verdict.
+    7. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp677-milestone-retro-2026-04-51
-  milestone: 2026.04.51
-  deliverable: results/operational_retro_2026_04_51.json
-  title: 'Exp 677: Milestone 2026.04.51 Operational Retrospective'
+- id: exp689-milestone-retro-2026-04-52
+  milestone: 2026.04.52
+  deliverable: results/operational_retro_2026_04_52.json
+  title: 'Exp 689: Milestone 2026.04.52 Operational Retrospective'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: All experiments in milestone 2026.04.51 (Exps 666-676) have completed.
+    CONTEXT: All experiments in milestone 2026.04.52 (Exps 678-688) have completed.
     This retrospective analyzes execution efficiency and research outcomes.
+    Key questions: Did the VR win (0.64 on 25q) hold at 200q? Is RETRO-071 finally closed?
+    Did FR-11 relay show measurable FP reduction from real verified positives?
 
     EXISTING CODE TO READ FIRST:
+    - results/operational_retro_2026_04_51.json — .51 baseline metrics.
+    - results/experiment_678_legacy_retirement_preflight.json
+    - results/experiment_679_vr_200q_scale.json
+    - results/experiment_680_humaneval_vr.json
+    - results/experiment_681_adversarial_vr.json
+    - results/experiment_682_jepa_v15_ood_audit.json
+    - results/experiment_683_fr11_real_positives.json
+    - results/experiment_684_dualgpu_pynvml.json
+    - results/experiment_685_dualgpu_eorm_jepa.json
+    - results/experiment_686_fover_formal_v1.json
+    - results/experiment_687_hallusat_sparse_ae.json
+    - results/experiment_688_psv_selfplay.json
     - scripts/experiment_template.py — ExperimentTemplate, REQUIRED_RESULT_FIELDS.
     - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - results/operational_retro_2026_04_50.json — .50 baseline metrics.
-    - results/experiment_666_manifest_wireIn_v3.json — manifest wire-in.
-    - results/experiment_667_gate_v4_redesign.json — gate redesign.
-    - results/experiment_668_vr_attempt_18_v2.json — VR #18 v2 outcome.
-    - results/experiment_669_prompt_injection_rescue.json — prompt-injection KAN.
-    - results/experiment_670_jepa_cascade_deploy.json — JEPA cascade deploy.
-    - results/experiment_671_jepa_v15.json — JEPA v15 retrain.
-    - results/experiment_672_kv260_dfx_fix.json — KV260 DFX fix.
-    - results/experiment_673_dualgpu_v3.json — DualGPU proof.
-    - results/experiment_674_ias_adaptive_gate.json — IAS gate calibration.
-    - results/experiment_675_losnet_detector.json — LOS-Net detector.
-    - results/experiment_676_metajuls_adaptive.json — MetaJuLS adapter.
 
     TASK: Compute milestone metrics and emit operational_retro JSON.
 
     CONCRETE STEPS:
-    1. ExperimentTemplate(677) + ExperimentTimeoutWatchdog(677, timeout_minutes=30).
-    2. Load all 12 experiment result files. For each: record status, honest_verdict, duration_s.
-    3. Compute:
-       - n_experiments: 12
-       - wall_time_minutes: sum of all durations / 60 + .50 total (carry from prior milestone).
-       - per_experiment_avg_min: wall_time_minutes / total_experiments_since_start.
-       - slowest_5: the 5 most time-consuming experiments in this cycle.
-       - manifest_consulted: read from Exp 666 result.
-       - vr_signed_improvement: read from Exp 668 result.
-       - jepa_v14_deployed: read from Exp 670 result.
-       - jepa_v15_ood_auc: read from Exp 671 result.
-       - kv260_hardware_latency_us: read from Exp 672 result.
-       - gpu1_utilization: read from Exp 673 result.
-       - retro_033_status: "closed" if vr_signed_improvement > 0 else "open_attempt_19".
-       - retro_071_status: read from Exp 673 result.
-    4. Compute honest_verdict string summarizing the milestone:
-       Include: wall_time direction (improvement/regression), vr outcome, manifest status,
-       DualGPU status, JEPA v15 AUC, KV260 status.
-       Format: "wall_time_(direction)_(key_metric)_(key_metric)_..."
-       Example: "wall_time_improvement_vr_positive_manifest_confirmed_dualgpu_proven"
-    5. Write results/operational_retro_2026_04_51.json via AtomicResultWriter.
-       Schema: carnot.operational_retro.v26.
-    6. Update ops/status.md: add Milestone 2026.04.51 Results section (at top).
-    7. Update ops/changelog.md: add one-line entry.
-    8. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ---------------------------------------------------------------------------
-# Deferred to milestone 2026.04.52 — Exp 652 follow-ups (true distillation +
-# cross-dataset generalization).  Motivation: the conductor's Exp 652 run hit
-# AUROC 0.9262 on an in-distribution held-out split, but SKIPPED teacher
-# inference (labels came from corpus origin: JailbreakBench->injection,
-# GSM8K->benign).  The classifier is therefore a "source detector", not a
-# distilled prompt-injection classifier, and we don't know if it generalizes
-# to prompts it has never seen variants of.  These two experiments close that
-# gap before we publish anything to HuggingFace as a shareable safety model.
-# Both can run in parallel with the KV260 hardware re-run queue (662 RTL
-# rewrite, re-run of 661) because they're CPU/GPU-only and don't touch the
-# FPGA track.  The cached gpt-oss-safeguard-20b-Q4_K_M.gguf (11.6 GB in
-# models/gpt-oss-safeguard-20b/) makes the teacher inference cost only
-# wallclock, not bandwidth.
-# ---------------------------------------------------------------------------
-
-- id: exp678-prompt-injection-kan-true-distillation
-  milestone: 2026.04.52
-  deliverable: results/experiment_678_prompt_injection_kan_true_distillation.json
-  title: 'Exp 678: Prompt-Injection KAN v1 — True Teacher Distillation (supersedes Exp 652 source-labeled v0)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exp 652 produced a KAN classifier with AUROC 0.9262 on a held-out
-    split, BUT the conductor SKIPPED teacher inference entirely and used corpus
-    origin as the label.  The resulting model is a "source detector" — it
-    likely learned JailbreakBench-style phrasing rather than the structural
-    signal of prompt injection.  That's not a distilled safety model and it
-    cannot be shared as one.  This experiment replaces Exp 652's v0 with a
-    properly distilled v1.
-
-    The teacher GGUF is already on disk:
-      models/gpt-oss-safeguard-20b/gpt-oss-safeguard-20b-Q4_K_M.gguf (11.6 GB).
-    Resolve via carnot.inference.sota_models.resolve_cached_gguf(
-      "unsloth/gpt-oss-safeguard-20b-GGUF").  Do NOT re-download.
-
-    EXISTING CODE TO READ FIRST:
-    - scripts/experiment_652_prompt_injection_kan.py — prior run scaffolding
-      and corpus loader (reuse, do NOT rewrite from scratch).
-    - python/carnot/models/prompt_injection_kan.py — current KAN class + weights.
-    - openspec/capabilities/safety/spec.md — REQ-SAFE-007/008/009 acceptance.
-    - openspec/change-proposals/prompt-injection-ebm.md — design doc.
-    - python/carnot/inference/sota_models.py — resolve_cached_gguf().
-    - data/prompt_injection_distill/ — prior corpus (reuse prompts, re-label).
-
-    TASK: Run true distillation with gpt-oss-safeguard-20b as teacher.
-
-    1. Preflight (5 min):
-       - Resolve teacher GGUF via resolve_cached_gguf(); emit
-         blocked_on_dependency if None.
-       - Load the Exp 652 corpus from data/prompt_injection_distill/.  We
-         re-use the *prompts* but re-generate the *labels* via teacher inference.
-
-    2. Teacher inference (60-180 min on GPU):
-       - Use llama.cpp via python-llama-cpp with n_gpu_layers=-1 to run the
-         Q4_K_M GGUF on GPU 0.  Expected throughput on a 3090: ~15-25 tok/s,
-         so 2000 prompts x ~50 tokens output each ~= 4000-7000 s wallclock.
-       - Prompt template (use gpt-oss-safeguard's native format): wrap each
-         prompt in the safeguard safety-classification template documented in
-         the unsloth model card.
-       - Parse teacher output: 1 for "unsafe/injection", 0 for "safe/benign",
-         plus a short reasoning trace.
-       - Cache teacher outputs keyed by (model_sha256_short, prompt_sha256) so
-         re-runs skip this phase.  Write to
-         data/prompt_injection_distill/teacher_outputs_<corpus_sha>.jsonl.
-
-    3. Label agreement diagnostic (2 min):
-       - Compute (teacher_label == source_label) agreement rate.
-       - If agreement >= 0.95: corpus origin was a reasonable proxy — note this
-         in the result, but PROCEED with teacher labels anyway.
-       - If agreement < 0.80: the source-labeled v0 was likely learning dataset
-         artifacts rather than injection structure — this is the expected case
-         given the Exp 652 caveat.  Log honest_note="teacher_disagrees_with_source".
-       - This agreement metric is itself a research finding worth publishing.
-
-    4. KAN re-training (15 min):
-       - Same architecture as Exp 652 (2 hidden layers, 64 units, degree-3).
-       - Labels now come from teacher, NOT corpus origin.
-       - 80/20 train/test split seeded for reproducibility.
-
-    5. Held-out evaluation (5 min):
-       - AUROC on the 400-example held-out split.
-       - Emit honest_verdict per REQ-SAFE-009.
-
-    6. Save weights:
-       python/carnot/models/prompt_injection_kan_v1_weights.json
-       Do NOT overwrite the v0 weights at
-       python/carnot/models/prompt_injection_kan_weights.json — keep both for
-       ablation; this is what "v1 supersedes v0" means in code.
-
-    7. Write result JSON with honest_verdict in the REQ-SAFE-009 enum PLUS:
-       - teacher_label_agreement_with_source (float)
-       - v0_vs_v1_delta_auroc (float, negative if v1 is worse — this is
-         acceptable and interesting; v1 would be worse if v0 was overfitting
-         dataset artifacts)
-       - v1_median_inference_ms (latency target: <5 ms per REQ-SAFE-007)
-
-    8. Reconcile:
-       - openspec/capabilities/safety/spec.md: flip REQ-SAFE-007/008/009
-         Implementation Status from Proposed to Implemented (v1) with the
-         teacher-distillation rationale.  Preserve the v0 row as a "superseded"
-         note — do NOT delete prior content (.48 retro lesson).
-       - _bmad/traceability.md: update the REQ-SAFE-007/008/009 rows to point
-         at both Exp 652 (v0) and Exp 678 (v1).
-       - ops/changelog.md: one-line entry with honest_verdict + agreement rate.
-
-    CONSTRAINTS:
-    - ExperimentTimeoutWatchdog(678, timeout_minutes=240).  Teacher inference
-      is the long pole; budget generously.
-    - Do NOT fall back to source-labeled labels if teacher inference times out.
-      Emit distillation_corpus_not_built instead.
-    - Do NOT skip the label-agreement diagnostic.  That number IS the headline
-      finding from this experiment.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp679-prompt-injection-kan-cross-dataset-eval
-  milestone: 2026.04.52
-  deliverable: results/experiment_679_prompt_injection_kan_cross_dataset.json
-  title: 'Exp 679: Prompt-Injection KAN v1 — Cross-Dataset Generalization (gates public release)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Even with true distillation (Exp 678), "AUROC on the same corpus
-    distribution we trained on" does not prove real-world readiness.  A
-    classifier can score well in-distribution and collapse on prompts it has
-    never seen variants of.  This experiment evaluates the v1 classifier on
-    THREE held-out prompt-injection datasets it has never seen, and gates
-    whether we publish it to huggingface.co/Carnot-EBM/.
-
-    GATE SEMANTICS:
-    - If mean cross-dataset AUROC >= 0.80: v1 is publishable.
-    - If 0.65 <= mean AUROC < 0.80: v1 is shareable with explicit caveat in
-      the model card; caveat must list which datasets it underperforms on.
-    - If mean AUROC < 0.65: v1 is NOT publishable — the model is a dataset
-      detector; honest_verdict="generalization_failed_do_not_publish", and
-      the next experiment iterates on the distillation corpus diversity.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/models/prompt_injection_kan_v1_weights.json — produced by
-      Exp 678.  If absent, emit blocked_on_upstream_exp_678.
-    - python/carnot/models/prompt_injection_kan.py — classifier.  DO NOT
-      MODIFY — the eval must use the EXACT same inference path as v0/v1
-      production use (no feature-engineering drift).
-    - scripts/experiment_678_prompt_injection_kan_true_distillation.py — for
-      the corpus loading + KAN eval helpers.
-
-    TASK: Three cross-dataset AUROCs + publishability gate.
-
-    1. Preflight: v1 weights file exists and loads.  Emit
-       blocked_on_upstream_exp_678 if not.
-
-    2. Download / load three held-out datasets (10 min):
-       - HackAPrompt (via huggingface datasets, ~600k prompts filtered to
-         injection + benign pairs).  Use a 500-sample subset for speed.
-       - BIPIA (Benchmark for Indirect Prompt Injection Attack) — ~400
-         samples across categories.
-       - A synthetic stress-test generated locally: 200 prompts using OWASP
-         LLM-01 mutations NOT seen in Exp 678's corpus (to catch the "does it
-         memorize teacher phrasing?" failure mode).  Use scripts/
-         jailbreak_mutations.py if it exists; else create it with a small
-         rule-based generator (20 templates x 10 variations).
-
-    3. Score (5 min per dataset, 15 min total):
-       - For each dataset, compute AUROC using v1's energy as the score.
-       - Record per-dataset confusion (TP, FP, TN, FN) at threshold=0.5.
-
-    4. Gate decision (1 min):
-       - mean_cross_dataset_auroc = mean(hackaprompt_auroc, bipia_auroc,
-         synthetic_auroc).
-       - Map to honest_verdict per the gate semantics above.
-
-    5. If mean AUROC >= 0.80: generate a draft model card (markdown) at
-       python/carnot/models/prompt_injection_kan_v1_MODELCARD.md with:
-       - REQ-SAFE-007 citation and acceptance numbers
-       - All 4 AUROCs (training-distribution, HackAPrompt, BIPIA, synthetic)
-       - Confusion matrices per dataset
-       - Latency measurement
-       - List of known failure modes (the datasets that scored lowest)
-       - Apache 2.0 license + link to openspec/capabilities/safety/spec.md
-       Do NOT push to HuggingFace in this experiment — that is a separate
-       operator action.
-
-    6. Write result JSON with: per_dataset_auroc, mean_auroc, per_dataset_cm,
-       honest_verdict in (generalization_verified_publishable,
-       generalization_partial_shareable_with_caveat,
-       generalization_failed_do_not_publish, blocked_on_upstream_exp_678,
-       blocked_on_dataset_download_failure), model_card_written (bool).
-
-    7. Reconcile:
-       - openspec/capabilities/safety/spec.md: add REQ-SAFE-010
-         (cross-dataset generalization threshold), SCENARIO-SAFE-010.
-       - _bmad/traceability.md: link REQ-SAFE-010 to Exp 679.
-       - ops/changelog.md: one-line entry with the gate decision.
-
-    CONSTRAINTS:
-    - ExperimentTimeoutWatchdog(679, timeout_minutes=45).
-    - Do NOT lower the 0.80 publish threshold to make v1 pass.  A shareable-
-      with-caveat or do-not-publish verdict is the honest result.
-    - HuggingFace push is a SEPARATE operator action — this experiment only
-      emits the gate decision + draft model card.
+    1. ExperimentTemplate(689) + ExperimentTimeoutWatchdog(689, timeout_minutes=30).
+    2. Load all 11 experiment result files. For each: record status, honest_verdict, duration_s.
+       Use "not_run" if file missing (RETRO-027 sentinel).
+    3. Compute wall_time_minutes (sum durations / 60 + .51 total 4231 min carry).
+       Compute per_experiment_avg_min = wall_time_minutes / total_experiments.
+       Identify slowest_5 in this cycle.
+    4. Extract key metrics:
+       - manifest_consulted: read from Exp 678 result.
+       - vr_200q_signed_improvement: read from Exp 679 result.
+       - vr_200q_validated: vr_200q_signed_improvement > 0.
+       - humaneval_vr_improvement: read from Exp 680 result.
+       - adversarial_vr_robust: read from Exp 681 result.
+       - jepa_v15_true_ood_auc: read from Exp 682 result.
+       - fr11_real_positives_wired: read from Exp 683 result.
+       - retro_071_resolved: read from Exp 684 result.
+       - dualgpu_retrain_speedup: read from Exp 685 result.
+       - fover_formal_v1_n_labels: read from Exp 686 result.
+       - psv_iterations_completed: read from Exp 688 result.
+    5. Assess key open RETROs:
+       - RETRO-071 status: "closed" if retro_071_resolved else "open_attempt_16".
+       - RETRO-CRITICAL manifest: check Exp 678 conductor_consulted field.
+       - VR win validation: "confirmed" if vr_200q_validated else "not_confirmed".
+    6. Check GPU state: read nvidia-smi output via subprocess.run(["nvidia-smi", "--query-gpu=memory.used,utilization.gpu", "--format=csv,noheader"]).
+       Record gpu0_vram_mb, gpu1_vram_mb. If both < 100MB: gpu_close_clean=True.
+    7. Compute honest_verdict string: summarize wall_time direction, VR validation,
+       RETRO-071, manifest, FR-11.
+       Format: "wall_time_(direction)_vr_(vr_outcome)_retro071_(status)_manifest_(manifest_status)"
+    8. Write results/operational_retro_2026_04_52.json via AtomicResultWriter.
+       Schema: carnot.operational_retro.v27.
+    9. Update ops/status.md: add Milestone 2026.04.52 Results section at top.
+    10. Update ops/changelog.md: add one-line entry.
+    11. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
