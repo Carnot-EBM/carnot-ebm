@@ -14068,3 +14068,75 @@ When: experiment_ids are checked for "jepa_v15_cascade" and "jepa_v16_cascade".
 Then: both are present with reasons referencing OOD AUC values below random chance.
 
 **Implementation Status:** Implemented (tests/python/test_experiment_703_preflight_v6.py, Exp 703)
+
+## REQ-VERIFY-140: JEPA v17 RankNet OOD AUC >= 0.75 on GSM8K 500-699
+
+**Rationale:** JEPA v15 (OOD AUC=0.4751) and v16 (OOD AUC=0.4759) both fail below random chance.
+Root cause confirmed by Exp 693: pure_loss_anti_correlation. Both BCE and InfoNCE allow the model
+to hedge all outputs to P≈0.5, satisfying the loss without learning step-level discrimination.
+RankNet pairwise ranking loss cannot be hedged: L = -log(sigmoid(score(incorrect) - score(correct)))
+gives loss = log(2) when scores are equal, loss → 0 only when incorrect score strictly exceeds
+correct score. The model MUST learn a discriminative ordering.
+
+**Requirements:**
+- REQ-VERIFY-140-1: JEPARankNetV17 SHALL be trained on FoVer formal v1 pairs (fover_labeled_formal_v1.json).
+- REQ-VERIFY-140-2: v17_ood_auc SHALL be evaluated on GSM8K indices 500-699 (never seen in training).
+- REQ-VERIFY-140-3: cascade_gate_open = True iff v17_ood_auc >= 0.75.
+- REQ-VERIFY-140-4: honest_verdict SHALL be one of: jepa_v17_cascade_unblocked, jepa_v17_improved_below_threshold, jepa_v17_still_below_random.
+- REQ-VERIFY-140-5: If cascade_gate_open, model SHALL be saved to results/jepa_v17_ranknet.npz.
+
+**Implementation Status:** Implemented (scripts/experiment_704_jepa_v17_ranknet.py, Exp 704)
+
+## REQ-VERIFY-141: RankNet Loss Enforces Strict Partial Order
+
+**Rationale:** The RankNet loss L = -log(sigmoid(s_incorrect - s_correct)) requires
+score(incorrect) > score(correct) for each training pair. This is a strict partial order
+constraint — unlike BCE which can be satisfied by hedging. Hedging to s=0.5 yields
+L = log(2) per pair; correct ranking yields L → 0.
+
+**Requirements:**
+- REQ-VERIFY-141-1: ranknet_loss(scores_incorrect, scores_correct) SHALL return 0 when all
+  incorrect scores exceed correct scores by a large margin (e.g. +10).
+- REQ-VERIFY-141-2: ranknet_loss SHALL return approximately log(2) ≈ 0.693 when all scores are equal.
+- REQ-VERIFY-141-3: The gradient of ranknet_loss SHALL push scores_incorrect up and scores_correct down.
+
+**Implementation Status:** Implemented (python/carnot/inference/jepa_v17_ranknet.py, Exp 704)
+
+## REQ-VERIFY-142: Hard Negative Mining Selects Most Similar Incorrect Step
+
+**Rationale:** Without hard negative mining, RankNet trains on easy pairs (very different
+correct/incorrect steps) and fails to generalise to hard cases. Hard negative mining forces the
+model to learn fine-grained discrimination by selecting the incorrect step most similar
+(highest cosine similarity) to each correct anchor — the hardest possible training signal.
+
+**Requirements:**
+- REQ-VERIFY-142-1: hard_negative_mining(correct_embeddings, incorrect_embeddings) SHALL return
+  the index of the incorrect embedding with highest cosine similarity to each correct embedding.
+- REQ-VERIFY-142-2: When all incorrect embeddings are identical, any index is acceptable.
+- REQ-VERIFY-142-3: The returned indices SHALL have length equal to len(correct_embeddings).
+
+**Implementation Status:** Implemented (python/carnot/inference/jepa_v17_ranknet.py, Exp 704)
+
+### SCENARIO-VERIFY-140: RankNet Gate Opens Only When OOD AUC Meets Threshold
+
+Given: JEPARankNetV17 trained on FoVer formal v1 pairs.
+When: evaluate_ood_auc is called on GSM8K indices 500-699.
+Then: cascade_gate_open = True iff v17_ood_auc >= 0.75.
+
+**Implementation Status:** Implemented (scripts/experiment_704_jepa_v17_ranknet.py, Exp 704)
+
+### SCENARIO-VERIFY-141: Hedging Produces log(2) Loss
+
+Given: ranknet_loss called with equal correct and incorrect scores (both 0.0).
+When: loss is computed.
+Then: loss ≈ log(2) ≈ 0.693.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_704_jepa_v17_ranknet.py, Exp 704)
+
+### SCENARIO-VERIFY-142: Hard Negative Is Most Cosine-Similar Incorrect Step
+
+Given: correct_embeddings = [[1,0,0]], incorrect_embeddings = [[0,1,0], [0.9,0.1,0]].
+When: hard_negative_mining is called.
+Then: index 1 is returned (most similar to [1,0,0] is [0.9,0.1,0]).
+
+**Implementation Status:** Implemented (tests/python/test_experiment_704_jepa_v17_ranknet.py, Exp 704)
