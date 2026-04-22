@@ -86,9 +86,53 @@ is updated with the RETRO-072 note.
 
 ---
 
+---
+
+### REQ-HW-039
+
+**Title:** XDNA NPU GEMM kernel via IRON toolchain achieves >2x CPU speedup
+
+**Description:**
+Using the IRON toolchain (mlir-aie, pip-installable, no system ninja/openblas
+dependency), a minimal 16x16 GEMM kernel must be compiled and executed on the
+AMD XDNA NPU (Ryzen AI APU).  When benchmarked over 100 iterations, the NPU
+GEMM latency must be less than 50% of the equivalent CPU GEMM latency — i.e.
+gemm_speedup = cpu_time / npu_time >= 2.0.
+
+**Why IRON instead of VitisAI:**
+VitisAI requires ninja + openblas system packages.  These have been missing on
+every experiment host across 7 consecutive milestones (Exps 292, 303, 314, 335,
+435, and two others).  IRON (mlir-aie) is a Python-only install that targets
+the AMD AI Engine (AIE) array directly via MLIR dialects, eliminating the
+system-dependency bottleneck.  arXiv 2504.03083 demonstrates 2.8x GEMM speedup
+over CPU on the same XDNA NPU hardware using the IRON approach.
+
+**Acceptance criteria:**
+- `import mlir_aie` succeeds after `pip install mlir-aie`, AND
+- GEMM kernel compiles via `mlir_aie.compile()` without error, AND
+- gemm_speedup >= 2.0 over 100 CPU-vs-NPU timing iterations.
+
+**Fallback criteria (honest_verdict escalation):**
+- If IRON install or import fails: `honest_verdict = "npu_iron_install_failed"`.
+- If IRON works but speedup < 2.0: `honest_verdict = "npu_iron_installed_no_speedup"`.
+- If neither IRON nor VitisAI works: `honest_verdict = "npu_still_blocked"`.
+
+**Implementation status:** Pending (Exp 714)
+
+---
+
+### SCENARIO-HW-039 — IRON GEMM kernel achieves 2x speedup on XDNA NPU
+
+**Given:** An AMD XDNA NPU is present and `pip install mlir-aie` succeeds.
+**When:** Experiment 714 runs the 16x16 GEMM benchmark over 100 iterations.
+**Then:** gemm_speedup >= 2.0 and honest_verdict = "npu_iron_working".
+
+---
+
 ## Implementation Status
 
 | REQ | Status | Experiment |
 |-----|--------|-----------|
 | REQ-HW-037 | Pending | Exp 701 |
 | REQ-HW-038 | Pending | Exp 701 |
+| REQ-HW-039 | Pending | Exp 714 |

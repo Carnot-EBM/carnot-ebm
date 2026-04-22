@@ -295,6 +295,23 @@ that the binary Ising architecture cannot provide.
   - IRON path: not tested (mlir_aie not importable)
   - Result file: `results/experiment_435_npu_unblock.json`
 
+### AMD XDNA NPU Status (Exp 714 — 20260422)
+
+- **Exp 714 result:** `honest_verdict=npu_iron_install_failed` (7th consecutive milestone)
+  - IRON toolchain (mlir-aie): `pip install mlir-aie` failed — no matching distribution found on PyPI.
+  - AMD custom onnxruntime wheel (onnxruntime-vitisai): not found on PyPI either.
+  - amdxdna driver: still loaded (never the blocker).
+  - CPU GEMM baseline measured: ~117 µs / 100 iterations on 16x16 matrices.
+  - NPU GEMM: not reached (install blocked before compile/run).
+  - **RETRO-NPU-v8:** Both IRON and VitisAI PyPI paths exhausted. The mlir-aie package
+    does not appear to be distributed via the standard PyPI index — it may require the
+    AMD-internal or GitHub Releases wheel.  Human action required:
+    - Option A: Download mlir-aie wheel directly from AMD's GitHub:
+      `pip install https://github.com/Xilinx/mlir-aie/releases/latest/download/mlir_aie-*.whl`
+    - Option B: Install Ryzen AI Software from AMD (provides full VitisAI + ninja + openblas).
+    - Option C: Request IT to install `ninja-build` + `libopenblas-dev` (enables VitisAI build).
+  - Result file: `results/experiment_714_npu_iron_unblock.json`
+
 ### KV260 FPGA Ising Sampler Benchmark Status (Exp 585 — 20260420)
 
 - **Exp 585 result:** `honest_verdict=blocked_no_bitfile`
