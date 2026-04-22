@@ -369,6 +369,90 @@ def check_vr_positive_has_plausible_baseline(
 
 
 # ---------------------------------------------------------------------------
+# Invariant 5: corpus-combining experiments need non-zero labeler agreement
+# ---------------------------------------------------------------------------
+
+
+# Minimum agreement rate for two labelers measuring the same thing.  Real
+# labelers with minor disagreements converge above 0.70; 0.05 is our floor
+# for "the labels are at least rank-correlated."  Exact zero means the
+# labelers are contradictory — any model trained on the combined corpus
+# learns conflicting signals.
+_LABELER_AGREEMENT_FLOOR = 0.05
+
+
+# Heuristic pair-field names to scan for.  Each entry is (field_name,
+# label_origin_A, label_origin_B).  Add more patterns as experiments
+# introduce new labeler combinations.
+_AGREEMENT_FIELDS = [
+    ("pddl_z3_agreement_rate",     "PDDL", "Z3"),
+    ("teacher_vs_source_agreement_rate", "teacher", "source"),
+    ("labeler_agreement_rate",     "labeler_A", "labeler_B"),
+]
+
+
+def check_labeler_agreement_nonzero(artifact: dict[str, Any]) -> InvariantResult:
+    """Reject artifacts that combine two labeler sources with zero agreement.
+
+    Invariant: if an artifact reports an agreement rate between two label
+    sources that are supposedly measuring the same phenomenon, the rate
+    must be >= 0.05.  Exact zero means the labelers contradict on every
+    sample — any downstream model trained on the combined corpus learns
+    from pure noise and the corpus is unusable as ground truth.
+
+    Would have caught Exp 712 (FoVer v2 PDDL corpus synthesis):
+      n_z3_pairs=200, n_pddl_pairs=1200, pddl_z3_agreement_rate=0.0
+      => verdict claimed "fover_v2_target_met" but the corpus was junk
+         (Z3 and PDDL disagreed on every pair).
+
+    The field scan is heuristic; add more patterns to _AGREEMENT_FIELDS as
+    new experiments introduce labeler combinations.
+    """
+    name = "labeler_agreement_nonzero"
+    # Find the first agreement field present in the artifact.
+    for field, origin_a, origin_b in _AGREEMENT_FIELDS:
+        rate = artifact.get(field)
+        if rate is None:
+            continue
+        try:
+            rate_f = float(rate)
+        except (TypeError, ValueError):
+            continue
+        if rate_f < _LABELER_AGREEMENT_FLOOR:
+            verdict = str(artifact.get("honest_verdict", ""))
+            # Skip if already flagged as a known-negative verdict.
+            if any(marker in verdict for marker in (
+                "blocked_on", "invariant_violated", "below_threshold",
+                "no_improvement", "still_below",
+            )):
+                return InvariantResult(passed=True, invariant_name=name)
+            return InvariantResult(
+                passed=False, invariant_name=name,
+                reason=(
+                    f"Artifact reports {field}={rate_f:.3f} between '{origin_a}' "
+                    f"and '{origin_b}' labelers, below the floor {_LABELER_AGREEMENT_FLOOR}.  "
+                    f"A rate near zero means the two labelers are contradictory "
+                    f"on every sample — any model trained on the combined "
+                    f"corpus learns from pure noise."
+                ),
+                suggested_verdict=_with_invariant_violation(
+                    verdict, "labeler_agreement_invariant_violated_corpus_is_noise",
+                ),
+                evidence={
+                    "agreement_rate": rate_f,
+                    "floor": _LABELER_AGREEMENT_FLOOR,
+                    "field": field,
+                    "origin_a": origin_a,
+                    "origin_b": origin_b,
+                },
+            )
+        # Found a field; valid agreement; no further check needed.
+        return InvariantResult(passed=True, invariant_name=name)
+    # No agreement field in the artifact — invariant doesn't apply.
+    return InvariantResult(passed=True, invariant_name=name)
+
+
+# ---------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------
 
@@ -378,6 +462,7 @@ _INVARIANTS: list[InvariantCheck] = [
     check_publishable_has_nonzero_tp,
     check_ood_not_dramatically_better_than_indist,
     check_vr_positive_has_plausible_baseline,
+    check_labeler_agreement_nonzero,
 ]
 
 

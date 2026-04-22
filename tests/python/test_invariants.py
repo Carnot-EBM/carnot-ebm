@@ -15,6 +15,7 @@ from __future__ import annotations
 from carnot.invariants import (
     InvariantResult,
     check_distillation_has_real_teacher_time,
+    check_labeler_agreement_nonzero,
     check_ood_not_dramatically_better_than_indist,
     check_publishable_has_nonzero_tp,
     check_vr_positive_has_plausible_baseline,
@@ -257,6 +258,57 @@ class TestVrPositiveHasPlausibleBaseline:
 # ---------------------------------------------------------------------------
 # Runner: run_invariants aggregates failures across all registered checks
 # ---------------------------------------------------------------------------
+
+
+class TestLabelerAgreementNonzero:
+    """Tests for the fifth invariant: two labelers measuring the same thing
+    must agree on at least 5% of samples or the combined corpus is noise."""
+
+    def test_no_agreement_field_passes(self) -> None:
+        """Invariant does not apply when no agreement field is present."""
+        artifact = {"honest_verdict": "fover_v1_baseline_ok"}
+        result = check_labeler_agreement_nonzero(artifact)
+        assert result.passed is True
+
+    def test_high_agreement_passes(self) -> None:
+        """Exp 690's actual teacher_vs_source_agreement=0.965 passes."""
+        artifact = {
+            "honest_verdict": "distillation_corpus_built_classifier_trained_auroc_below_threshold",
+            "teacher_vs_source_agreement_rate": 0.965,
+        }
+        result = check_labeler_agreement_nonzero(artifact)
+        assert result.passed is True
+
+    def test_exp712_zero_agreement_fails(self) -> None:
+        """Exp 712's exact shape: pddl_z3_agreement_rate = 0.0 on 1400 pairs.
+        The verdict claimed "fover_v2_target_met" but the corpus was junk."""
+        artifact = {
+            "honest_verdict": "fover_v2_target_met",
+            "n_z3_pairs": 200,
+            "n_pddl_pairs": 1200,
+            "pddl_z3_agreement_rate": 0.0,
+        }
+        result = check_labeler_agreement_nonzero(artifact)
+        assert result.passed is False
+        assert result.suggested_verdict is not None
+        assert "corpus_is_noise" in result.suggested_verdict
+        assert result.reason is not None
+        assert "PDDL" in result.reason and "Z3" in result.reason
+
+    def test_below_threshold_verdict_is_not_reflagged(self) -> None:
+        """If the verdict already names a negative outcome, don't double-flag."""
+        artifact = {
+            "honest_verdict": "sc_energy_v2_below_threshold",
+            "labeler_agreement_rate": 0.0,
+        }
+        result = check_labeler_agreement_nonzero(artifact)
+        assert result.passed is True
+
+    def test_non_numeric_agreement_is_ignored(self) -> None:
+        """If the field has an unparseable value, invariant does not fire."""
+        artifact = {"teacher_vs_source_agreement_rate": "unknown"}
+        result = check_labeler_agreement_nonzero(artifact)
+        assert result.passed is True
 
 
 class TestRunInvariants:
