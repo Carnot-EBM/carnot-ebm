@@ -2218,6 +2218,49 @@ Spec: REQ-LEARN-090, SCENARIO-LEARN-138
 **And** honest_verdict = 'root_cause_identified_v16_specced' if root_cause != 'unknown_requires_ablation'
 **And** honest_verdict = 'root_cause_ambiguous_ablation_needed' otherwise
 
+### REQ-LEARN-091: PSV Real Self-Play with K=2 Parallel Chains (Exp 697)
+
+**Given** two parallel PSV chains running simultaneously on disjoint question subsets
+**When** each chain completes n_iterations=10 with live Qwen3.5-0.8B inference
+**Then** constraint updates from both chains are merged into shared JitRLConstraintMemory
+**And** fp_rate_trend_slope is non-increasing (slope <= 0) to confirm self-improvement
+**And** inference_mode must be 'live_gpu' for the verdict to count as 'psv_real_fp_improving'
+
+Spec: REQ-LEARN-091, SCENARIO-LEARN-141, SCENARIO-LEARN-142, SCENARIO-LEARN-143
+
+### REQ-LEARN-092: Parallel Chain Merge — Conflict-Free Constraint Update Aggregation
+
+**Given** two PSV chains that processed different questions and recorded different violation pairs
+**When** their constraint updates are merged via the shared JitRLConstraintMemory
+**Then** all violation pairs from both chains appear in the merged memory without conflicts
+**And** merged_constraint_updates >= sum(updates from each chain individually)
+**And** no constraint domain thresholds are lost or overwritten by the merge
+
+Spec: REQ-LEARN-092, SCENARIO-LEARN-142
+
+### SCENARIO-LEARN-141: PSV Parallel Chains Reduce FP Rate Over 10 Iterations
+
+**Given** PSVParallelChains(n_chains=2, n_iterations=10, n_questions_per_iter=10)
+**When** run_parallel is called with 200 GSM8K questions and live Qwen3.5-0.8B inference
+**Then** fp_rate_per_iteration is a list of 10 floats
+**And** fp_rate_trend_slope < 0 indicates the parallel self-play is improving the FP rate
+**And** honest_verdict = 'psv_real_fp_improving' when slope < 0 and inference_mode='live_gpu'
+
+### SCENARIO-LEARN-142: Parallel Chain Merge Produces Valid merged_constraint_updates Count
+
+**Given** two chains each running 10 iterations with 10 questions per iteration
+**When** all violation pairs from both chains are aggregated into the shared constraint memory
+**Then** merged_constraint_updates is an int >= 0
+**And** parallel_speedup_factor > 0.0 (positive speedup measured from wall-clock time)
+**And** the merged memory contains pairs from both chain 0 and chain 1
+
+### SCENARIO-LEARN-143: PSV Real Blocked When GPU Gate Missing
+
+**Given** CARNOT_FORCE_LIVE is not set or falsy and env_autofix cannot inject it
+**When** the experiment checks the GPU gate
+**Then** honest_verdict = 'psv_real_blocked_no_gpu'
+**And** the artifact is written with status='blocked' and the experiment exits 0
+
 ---
 
 ## Implementation Status
@@ -2301,3 +2344,5 @@ Spec: REQ-LEARN-090, SCENARIO-LEARN-138
 | REQ-LEARN-088 | N/A | Implemented | Python (test_experiment_682_jepa_v15_ood_audit.py) |
 | REQ-LEARN-089 | N/A | Implemented | Python (test_experiment_693_jepa_root_cause.py) |
 | REQ-LEARN-090 | N/A | Implemented | Python (test_experiment_693_jepa_root_cause.py) |
+| REQ-LEARN-091 | N/A | Implemented | Python (test_psv_parallel_chains.py) |
+| REQ-LEARN-092 | N/A | Implemented | Python (test_psv_parallel_chains.py) |

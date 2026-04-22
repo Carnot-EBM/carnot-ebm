@@ -1,0 +1,106 @@
+{
+  "experiment": 697,
+  "title": "PSV Real Self-Play: K=2 Parallel Chains with Live GPU Inference (Exp 697)",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T10:33:31Z",
+  "finished_at": "2026-04-22T10:55:22Z",
+  "duration_s": 1310.849,
+  "status": "success",
+  "n_chains": 2,
+  "n_iterations": 10,
+  "n_questions_per_iter": 10,
+  "gate_vr_passed": true,
+  "gate_fr11_passed": true,
+  "signed_improvement": 1.0,
+  "inference_mode": "live_gpu",
+  "fp_rate_per_iteration": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.05,
+    0.0,
+    0.05,
+    0.05,
+    0.05,
+    0.0
+  ],
+  "fp_rate_trend_slope": 0.004242,
+  "parallel_speedup_factor": 1.9992,
+  "merged_constraint_updates": 390,
+  "chain_results": [
+    {
+      "chain_id": 0,
+      "fp_rates": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.1,
+        0.0,
+        0.0,
+        0.0,
+        0.1,
+        0.0
+      ],
+      "wall_time_s": 1305.9514,
+      "n_iterations": 10,
+      "n_constraint_updates": 200
+    },
+    {
+      "chain_id": 1,
+      "fp_rates": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.1,
+        0.1,
+        0.0,
+        0.0
+      ],
+      "wall_time_s": 1304.8611,
+      "n_iterations": 10,
+      "n_constraint_updates": 190
+    }
+  ],
+  "exp688_final_fp_rate": 0.5,
+  "real_vs_synthetic_delta": -0.5,
+  "honest_verdict": "psv_real_fp_degrading",
+  "constraint_memory_state": {
+    "base_threshold": 0.5,
+    "lr": 0.02,
+    "thresholds": {
+      "psv_gsm8k": 0.95
+    },
+    "n_records": 200
+  },
+  "schema": [
+    "chain_results",
+    "constraint_memory_state",
+    "duration_s",
+    "exp688_final_fp_rate",
+    "experiment",
+    "finished_at",
+    "fp_rate_per_iteration",
+    "fp_rate_trend_slope",
+    "gate_fr11_passed",
+    "gate_vr_passed",
+    "honest_verdict",
+    "inference_mode",
+    "merged_constraint_updates",
+    "n_chains",
+    "n_iterations",
+    "n_questions_per_iter",
+    "parallel_speedup_factor",
+    "real_vs_synthetic_delta",
+    "run_date",
+    "signed_improvement",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "invariant_violations": []
+}
