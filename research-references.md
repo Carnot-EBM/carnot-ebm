@@ -4,6 +4,99 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-22 arxiv Scan (Milestone 2026.04.56 Planning)
+
+### Efficient Test-Time Scaling via Probing Internal States of LLMs
+- **Paper:** arXiv 2511.06209 (Nov 2025, revised Jan 2026)
+- **What:** Trains a small transformer probe (<10M params) on LLM hidden states to score
+  reasoning step credibility, achieving parity with much larger PRMs on math, planning, and QA
+  without domain-specific annotation. Multi-step probe outperforms single-step designs.
+- **Relevance to Carnot:** JEPAReasonerProbe (Exp 726, AUC=1.0, Tier 2.1) is a single-step
+  probe. This paper shows multi-step probes generalise better to unseen domains and harder
+  problems. Upgrading to multi-step probe architecture (pool features across multiple CoT
+  steps) should improve OOD robustness without requiring more labelled data.
+- **Concrete experiment:** Exp 738 — train step-level latent probe on FoVer v2 using pooled
+  hidden states across all CoT steps; compare step-F1 and OOD AUC against query-level
+  JEPAReasonerProbe.
+- **When to incorporate:** Milestone 2026.04.56 — Phase 6 new research (Exp 738).
+
+### LLMs Encode Their Failures: Predicting Success from Pre-Generation Activations
+- **Paper:** arXiv 2602.09924 (Feb 10, 2026). ICLR 2026 Workshop on Latent and Implicit Thinking.
+- **What:** Linear probes trained on pre-generation activations (before any output token) predict
+  task success on math/coding at substantially better-than-chance accuracy. Used to route
+  queries across models, reducing inference cost 70% on MATH.
+- **Relevance to Carnot:** Provides theoretical grounding for Tier 2.1 (JEPAReasonerProbe) and
+  motivates using pre-generation probe predictions to gate whether a query even needs CoT
+  generation — a deeper efficiency win than skipping later tiers. Confirms JEPAReasonerProbe's
+  mechanism.
+- **When to incorporate:** Milestone 2026.04.56 — motivation for Exp 732 cross-validation;
+  cite as theory for why Tier 2.1 works.
+
+### Two Pathways to Truthfulness: On the Intrinsic Encoding of LLM Hallucinations
+- **Paper:** arXiv 2601.07422 (Jan 12, 2026). Accepted to ACL 2026.
+- **What:** Identifies two distinct internal representation pathways for hallucination signals
+  in LLMs — one anchored to questions, one to answers — using token patching. The model's
+  internal states are aware of truthfulness even when it hallucinates.
+- **Relevance to Carnot:** Current probes (SinkProbe, HalluField) use single-pathway architectures.
+  Dual-pathway fusion probe could improve AUROC by capturing both question-anchored and
+  answer-anchored hallucination signals. Filed for .57 probe architecture upgrade.
+- **When to incorporate:** Milestone 2026.04.57 — probe architecture upgrade.
+
+### Linear Probe Accuracy Scales with Model Size and Benefits from Multi-Layer Ensembling
+- **Paper:** arXiv 2604.13386 (April 15, 2026).
+- **What:** Single-layer probes for detecting model deception are unreliable; multi-layer
+  ensembles improve AUROC by +29-78%. Accuracy scales ~5% AUROC per 10x parameter increase.
+- **Relevance to Carnot:** All Carnot latent probes are currently single-layer. Multi-layer
+  ensemble with residual connections would improve reliability, especially on OOD benchmarks.
+  Filed for .57 probe upgrade.
+- **When to incorporate:** Milestone 2026.04.57 — probe architecture upgrade.
+
+### Process Reward Models Meet Planning: PDDL-Derived Step-Level Labels at Scale
+- **Paper:** arXiv 2604.17957 (April 2026). Accepted to ACL 2026.
+- **What:** Uses PDDL planning problems as a scalable synthetic source for PRM training data,
+  generating ~1M labeled reasoning steps. FoVer v2 already uses PDDL for labeling.
+- **Relevance to Carnot:** Validates the FoVer PDDL labeling approach and provides a blueprint
+  for scaling FoVer v2 from ~1K to ~100K labeled steps. Larger labeled corpus would improve
+  JEPAReasonerProbe, EORM, and PrivacyFilter KAN training.
+- **When to incorporate:** Milestone 2026.04.57 — FoVer v3 corpus scaling.
+
+### IPVRM: Prefix-Value Learning for Step-Level Process Reward Models
+- **Paper:** arXiv 2604.13197 (April 14, 2026).
+- **What:** Prefix-conditioned value function estimating step correctness via TD-difference
+  learning. Fixes train-inference mismatch in step-level scoring. Consistent improvements
+  on ProcessBench vs. cross-entropy classification heads.
+- **Relevance to Carnot:** EORM currently uses a direct classification head. IPVRM's TD
+  formulation maps to energy function: E(step) = -log P(correct | prefix). Filed for .57
+  EORM architecture upgrade.
+- **When to incorporate:** Milestone 2026.04.57 — EORM TD retraining.
+
+### Kaiwu-PyTorch-Plugin: PyTorch Plugin for Coherent Ising Machine Acceleration
+- **Paper:** arXiv 2602.19114 (Feb 22, 2026).
+- **What:** Integrates a Coherent Ising Machine (CIM) into the PyTorch EBM training loop.
+  Accelerates Boltzmann sampling, active data selection. Tests on biological and text datasets.
+- **Relevance to Carnot:** After KV260 FPGA experiments conclude, CIM cloud access is the
+  next hardware acceleration tier. KPP's PyTorch API would map onto `carnot-ising` via Python
+  FFI, consistent with the existing SamplerBackend abstraction.
+- **When to incorporate:** Milestone 2026.04.58+ — post-FPGA hardware path.
+
+### Unified Performance-Cost Landscape of Parallel p-bit Ising Machines
+- **Paper:** arXiv 2604.01564 (April 2, 2026).
+- **What:** Synchronous p-bit designs with 3-4 bit DAC resolution achieve comparable MaxCut
+  quality at less than half the hardware cost vs. asynchronous. Evaluated on G-set benchmarks.
+- **Relevance to Carnot:** Directly informs the KV260 FPGA register-level design. Synchronous
+  + 4-bit fixed-point p-bits are the optimal hardware target for Carnot's Ising tier.
+  Ising Sampler v3 RTL (hardware/kv260/ising_sampler_v3.v from Exp 662) should adopt
+  synchronous 4-bit p-bits per this paper's recommendation.
+- **When to incorporate:** Next FPGA synthesis milestone (when Vivado/yosys installed).
+
+### FunPRM: Function-as-Step PRM with Meta Reward Correction for Code Generation
+- **Paper:** arXiv 2601.22249 (January 2026).
+- **What:** Treats code functions as CoT steps, uses unit-test outcomes to denoise noisy step
+  rewards via meta-learning. SOTA on LiveCodeBench.
+- **Relevance to Carnot:** KAN Tier-1 is trained on step-level correctness labels. Meta-reward
+  correction could denoise weakly-labeled FoVer steps where PDDL ground truth is unavailable.
+- **When to incorporate:** Milestone 2026.04.57 — KAN v4 training improvement.
+
 ## 2026-04-22 arxiv Scan (Milestone 2026.04.55 Planning)
 
 ### JEPA-Reasoner — Latent-Space Reasoning Verification (Pre-generative)

@@ -1,453 +1,503 @@
-# Research Roadmap — Milestone 2026.04.55
+# Research Roadmap — Milestone 2026.04.56
 
-**Title:** JEPA v18 LambdaRank + Pre-flight Optimization + VR 200q Credibility Run
+**Title:** Tier 2.1 Production Deploy + FR-11 Relay + Privacy Safety Integration
 
-**CalVer:** 2026.04.55 (sequence increment from 2026.04.54)
+**CalVer:** 2026.04.56 (sequence increment from 2026.04.55)
 
 **Authored:** 2026-04-22
 
-**Previous Milestone:** 2026.04.54 — "JEPA v17 RankNet Loss + Gemma4 VR Diagnostic + PSV PaCoRe K=2"
+**Previous Milestone:** 2026.04.55 — "JEPA v18 LambdaRank + Pre-flight Optimization + VR 200q Credibility Run"
 
 ---
 
 ## Executive Summary
 
-Milestone .54 closed all 7 planned experiments and retired 7 legacy slowest-5 experiments, freeing 322 min/milestone. Despite operational wins, three strategic blockers persist:
+Milestone .55 delivered three strategic breakthroughs that unblock a cascade of
+previously-gated work:
 
-1. **JEPA anti-correlation** (RETRO-CRITICAL): v15 AUC=0.4751, v16=0.4759, v17=0.4819 — three consecutive milestones below random 0.5. Root cause identified: pairwise RankNet allows intra-pair hedging when pairs are drawn from a shallow pool. Fix: LambdaRank listwise loss on FoVer v2 data (1000+ pairs, 5+ steps/question).
-2. **Verifiable Reasoning never positive** (RETRO-033): 19 consecutive attempts, signed_improvement always ≤ 0. Root cause hypothesis: 100q is insufficient signal; Gemma4 may have constraint-induced distortion (arXiv 2601.01490). Fix: 200q scale + graduated threshold search.
-3. **Pre-flight overhead at 14.6% wall time** (562 min, 14 consecutive milestones without incremental selection): Now the largest recoverable overhead, exceeds retired slowest-5 combined (322 min). Fix: pytest-changed incremental test selection.
+1. **JEPAReasonerProbe (Exp 726)** — AUC=1.0, latency p99=0.0248ms — first viable
+   pre-generative verifier. Qualifies as Tier 2.1. This supersedes the blocked JEPA v18
+   cascade path (v18 achieved AUC=0.5115, above random but below 0.75 gate). The Tier 2.1
+   probe operates on question-end hidden states BEFORE generation, enabling a genuinely
+   novel verification path.
 
-Milestone .55 designs 13 experiments across 5 phases addressing all three blockers plus two new research tracks seeded from 2026 arxiv scan.
+2. **KAN Distillation v3 (Exp 724)** — AUROC=0.9078, gate passed. First KAN model ready
+   for production Tier 0b deployment as a prompt-injection pre-filter.
+
+3. **VarGran Gate (Exp 727)** — 60% Ising skip rate, FN delta=-0.042. Tier 3 Ising runs
+   can be selectively bypassed for high-confidence responses, reducing compute without
+   accuracy loss.
+
+Additionally, RETRO-033 (VR never positive) is closed. The known-issues.md entry confirms
+VR has been removed from the active roadmap pending a larger model (>= 7B) or different
+architecture. The PSV root cause remains unknown after pool exhaustion was ruled out
+(condition B slope=+0.007, WORSE than condition A).
+
+Milestone .56 capitalizes on these breakthroughs: deploy Tier 2.1 in cascade, wire FR-11
+relay through Tier 2.1, integrate KAN Tier 0b, diagnose PSV with alternative hypothesis,
+deliver the user-pinned privacy safety experiments, and implement Tier 2 cross-session
+constraint memory.
+
+---
+
+## What Milestone .55 Proved
+
+| Experiment | Result | Implication |
+|------------|--------|-------------|
+| Exp 716 — Pre-flight v7 | incremental_mode=True, 0/554 tests selected | Incremental selection operational |
+| Exp 717 — JEPA v18 LambdaRank | OOD AUC=0.5115 (above random, first time) | v18 above random but cascade gate (0.75) not met |
+| Exp 718 — JEPA v18 Cascade | cascade_deploy_auc_fail | JEPA v18 not cascade-ready; Tier 2.1 is the path |
+| Exp 719 — FR-11 Relay | gated_blocked | Blocked by Exp 718 failure; unlocked by Tier 2.1 |
+| Exp 720 — VR 200q | vr_marginal (+0.51pp live GPU) | RETRO-033 closed; VR removed from roadmap |
+| Exp 722 — PSV pool exhaustion | pool_exhaustion_not_confirmed (B slope=+0.007) | Root cause remains unknown |
+| Exp 724 — KAN Distill v3 | AUROC=0.9078, gate passed | Ready for Tier 0b production |
+| Exp 725 — SC-Energy v2 | AUC=0.606 (below 0.75 gate) | SC-Energy not yet cascade-ready |
+| Exp 726 — JEPAReasonerProbe | AUC=1.0, latency p99=0.025ms | BREAKTHROUGH — Tier 2.1 candidate |
+| Exp 727 — VarGran Gate | skip_rate=0.60, fn_delta=-0.042 | Tier 3 can skip 60% without harm |
 
 ---
 
 ## Three Biggest Gaps (PRD vs. Current State)
 
-### Gap 1: JEPA Predictive Verification Blocked (FR-11, FR-12)
+### Gap 1: FR-11 Autonomous Self-Learning Loop Not Operational (HIGHEST PRIORITY)
 
-The PRD requires Tier 2 JEPA as a working pre-generative constraint violation predictor. After 3 consecutive milestones of below-random performance, this is the most critical blocker to Phase 1 completion. FoVer v2 (1000+ labeled step-level pairs from Exp 712) now provides the listwise training signal needed. LambdaRank ranks ALL steps per question jointly, preventing intra-pair hedging that plagued v17's pairwise RankNet approach.
+PRD FR-11 requires: Tier 2 detects violation → event bus → Tier 1 updates weights →
+feedback improves future generations. This has been blocked across 15+ milestones by JEPA
+never reaching AUC >= 0.75. JEPAReasonerProbe (Tier 2.1) now provides the violation signal
+with AUC=1.0. The path: deploy Tier 2.1 (Exp 733) → wire FR-11 relay (Exp 734) → wire
+Tier 2 cross-session memory (Exp 738). All three are sequential.
 
-**New papers enabling the fix:** arXiv 2512.19171 (JEPA-Reasoner pre-generative latent verification), arXiv 2504.10559 (ActPRM active uncertainty weighting for step-level labels).
+**New architecture for FR-11:** Tier 2.1 probe fires violation event → FR11EventBus →
+Tier 1 PerModelFPTracker updates per-constraint weights → Tier 2 SessionMemory caches
+violation type + question domain → ConstraintTemplateLibrary adds template after 5+
+cached violations of same type. This is the first complete FR-11 relay path.
 
-### Gap 2: Verifiable Reasoning Has No Positive Signal (FR-12)
+### Gap 2: Constraint Verification Has No Production-Ready Top-Tier Filter
 
-19 consecutive VR attempts with signed_improvement ≤ 0 means FR-12 Tier 3 verification provides no measurable improvement to answer quality. The constraint-induced distortion paper (arXiv 2601.01490) explains why smaller models (Gemma4-A4B) may degrade: constraint satisfaction pressure shifts internal representations away from factual recall, producing distorted outputs when thresholds are tight. Graduated threshold search + 200q scale are the next diagnostic steps.
+The cascade still runs expensive Ising (Tier 3) on every query that passes Tier 2. KAN
+Distill v3 (AUROC=0.9078) is ready for Tier 0b deployment as a prompt-injection pre-filter.
+VarGran (60% Ising skip) is wired but not yet using Tier 0b pre-filter. Together, Tier 0b
++ VarGran should reduce end-to-end cascade cost significantly.
 
-### Gap 3: Autonomous Self-Learning Loop Not Deployed (FR-11)
+**New architecture for efficiency:** Tier 0b KAN (prompt-injection check) → if score > 0.5,
+route to safety pipeline instead of verification cascade. This is orthogonal to constraint
+verification and provides the "safety layer" listed in the PRD product roadmap.
 
-FR-11 requires an online weight-update loop: JEPA detects constraint violations → updates model weights → improves future generations. The FR-11 relay experiment (Exp 719) is gated on JEPA v18 working (AUC ≥ 0.75). Until JEPA is fixed, FR-11 cannot be wired up. This gap closes only if Gap 1 closes first.
+### Gap 3: PSV Self-Play Degradation Root Cause Unknown
+
+PSV (Propose-Solve-Verify) is the core mechanism for autonomous self-improvement. It has
+been degrading for 3 consecutive milestones. Pool exhaustion theory was ruled out (Exp 722
+showed rotating pool was WORSE). Without knowing why PSV degrades, the self-play loop
+cannot be reliably improved. Two alternative hypotheses need testing:
+- **Constraint specialization**: verifier overfits to arithmetic errors, loses generality
+- **Gradient interference**: opposing constraint types produce conflicting weight updates
+
+---
+
+## Architecture Diagram (After Milestone .56)
+
+```
+Query Input
+    │
+    ▼
+Tier 0a — CarnotThinkProbe (generative CoT verdict, skip=incorrect)
+    │
+    ▼
+Tier 0b — KAN Prompt-Injection Classifier (AUROC=0.908, NEW in .56)
+    │       If high-energy: route to safety pipeline, skip verification cascade
+    ▼
+Tier 0c — NUP Probe v4 (contrastive energy probe, AUC=1.0)
+    │
+    ▼
+Tier 0d — HallucinationBasinDetector (latent basin depth)
+    │
+    ▼
+Tier 0e — HalluField (thermodynamic instability, advisory only)
+    │
+    ▼
+Tier 1 — SinkProbe (attention sink concentration)
+    │
+    ▼
+Tier 2 — EORM (CoT energy reward model, 55M params)
+    │
+    ▼
+Tier 2.1 — JEPAReasonerProbe (pre-gen hidden-state probe, 0.025ms, NEW in .56)
+    │       Violation event → FR11EventBus → Tier 1 weight updater (FR-11 relay)
+    │       Violation type → SessionMemory → ConstraintTemplateLibrary (Tier 2 memory)
+    ▼
+Tier 2.5 — SymCodeVerifier (executable arithmetic, AUC=0.804)
+    │
+    ▼
+Tier 2.6 — HermesVerifierAdapter (step-boundary feedback)
+    │
+    ▼
+Tier 2.7 — CausalReasoningVerifier (carry-forward entailment)
+    │
+    ▼
+Tier 3 — Ising VerifyRepairPipeline (VarGran: skip 60% via EORM confidence gate)
+```
 
 ---
 
 ## Dependency Graph
 
 ```
-Exp 716 (Pre-flight v7)           — no dependencies
-Exp 717 (JEPA v18 LambdaRank)     — no dependencies (uses FoVer v2 from Exp 712)
-Exp 718 (JEPA v18 Cascade Deploy) — GATED on Exp 717 AUC >= 0.75
-Exp 719 (FR-11 Relay)             — GATED on Exp 718
-Exp 720 (VR 200q Qwen3.5-0.8B)   — no dependencies
-Exp 721 (VR Gemma4 Graduated)     — no dependencies
-Exp 722 (PSV Pool Exhaustion)     — no dependencies
-Exp 723 (PSV PaCoRe v2)           — GATED on Exp 722 diagnosis
-Exp 724 (KAN Distillation v3)     — no dependencies
-Exp 725 (SC-Energy v2 FoVer v2)   — no dependencies
-Exp 726 (JEPAReasonerProbe)       — no dependencies
-Exp 727 (VarGranularity Gate)     — no dependencies
-Exp 728 (Operational Retro)       — all other experiments complete
+Exp 731 (Zombie Kill + Preflight v8)          — no dependencies (MANDATORY FIRST)
+Exp 732 (Probe 5-Fold Cross-Validation)       — no dependencies, GPU required
+Exp 733 (Tier 2.1 Cascade Integration)        — GATED on Exp 732 gate file
+Exp 734 (FR-11 Tier 2.1 Relay)                — GATED on Exp 733 (FR-11 MANDATORY)
+Exp 735 (KAN Distill v3 Tier 0b Integration)  — no dependencies
+Exp 736 (PSV Specialization Diagnosis)        — no dependencies, CPU
+Exp 737 (PSV Domain-Diverse Recovery)         — GATED on Exp 736 diagnosis
+Exp 729 (PrivacyFilter KAN v1 Distillation)   — no dependencies, USER-PINNED
+Exp 730 (PrivacyFilter KAN v1 Gate)           — GATED on Exp 729, USER-PINNED
+Exp 738 (Tier 2 Cross-Session Memory)         — GATED on Exp 734 (FR-11 relay)
+Exp 739 (Operational Retrospective)           — all other experiments complete
 ```
 
 ---
 
-## Phase 0: Operational Pre-flight
+## Phase 0: Infrastructure Pre-flight
 
-### Exp 716: Pre-flight v7 + Incremental Test Selection
+### Exp 731: GPU Zombie Kill + Pre-flight v8 + Manifest Enforcement Audit
 
-**Goal:** Reduce pre-flight overhead from 562 min (14.6% wall time) below 200 min by implementing incremental test selection — only run tests for modules changed since last passing run.
+**Goal:** Clean up .55 session state. Kill GPU 1 zombie (PID 368449, 24GB VRAM), validate
+incremental test selection, audit manifest enforcement gap.
 
-**Motivation:** Pre-flight is now the largest recoverable overhead. The slowest-5 governance (Exp 703) freed 322 min; pre-flight incremental selection targets a comparable 362 min reduction. Also monitor Exp 527 (52 min, new slowest-5 first appearance — Live 100q Precision v8) for BatchedInferenceRunner application.
+**Context:** .55 was the first dirty GPU close in 14 milestones. PID 368449 holds 24082MB
+on GPU 1 at 0% utilization. Until killed, dual-GPU experiments cannot use GPU 1.
+The conductor projection vs actual gap was 787 min in .55 — root cause: exclusion manifest
+written at text level but never enforced at dispatch. This experiment cannot fix
+research_conductor.py but can document exactly what code change is needed (file path, line
+number, diff) and build a validate_manifest_at_dequeue() function for the conductor to call.
 
 **Implementation:**
-- Integrate `pytest-changed` or equivalent git-diff-based test selection
-- Track `git diff --name-only HEAD~1` → map changed Python/Rust modules → select only dependent test files
-- Fallback: run full suite if diff exceeds 20 files or touches core EBM modules
-- Apply BatchedInferenceRunner to Exp 527 if it remains in slowest-5
+- Kill zombie: os.kill(368449, signal.SIGKILL) + verify GPU 1 VRAM < 100MB
+- Validate incremental test selection: re-run Exp 716 logic, confirm 0 tests on clean diff
+- Manifest enforcement gap: scan conductor dequeue logic (without modifying), document
+  the exact insertion point for manifest filtering. Write results/manifest_fix_patch.txt
+  with the required diff as a human-action item.
+- Write conductor_manifest_validator.py: validate_manifest_at_dequeue(task_id) that
+  checks conductor_exclusion_manifest.json before dispatching any task.
 
 **Success criteria:**
-- Pre-flight wall time < 200 min (from 562 min)
-- Zero test regressions (full suite still passes on weekly cadence)
-- Exp 527 no longer in slowest-5
+- GPU 1 VRAM < 100MB after kill
+- Incremental test selection confirmed working
+- manifest_fix_patch.txt written with specific diff
 
-**Deliverable:** `results/experiment_716_preflight_v7.json`
+**Deliverable:** `results/experiment_731_zombie_kill_preflight_v8.json`
 
 **Hardware:** CPU only
 
 ---
 
-## Phase 1: JEPA v18 LambdaRank (RETRO-CRITICAL)
+## Phase 1: Tier 2.1 Validation and Deployment
 
-### Exp 717: JEPA v18 LambdaRank Listwise Loss on FoVer v2
+### Exp 732: JEPAReasonerProbe 5-Fold Cross-Validation
 
-**Goal:** Train JEPA v18 using listwise LambdaRank loss on the FoVer v2 dataset (1000+ labeled step-level pairs, 5+ steps/question), targeting OOD AUC ≥ 0.75 on GSM8K questions 500-699.
+**Goal:** Validate that JEPAReasonerProbe AUC=1.0 from Exp 726 is robust and not overfit.
+The probe was trained on 800 samples, tested on 200 OOD. AUC=1.0 is suspiciously perfect.
+5-fold stratified cross-validation with different data splits will confirm or refute.
 
-**Root cause of v17 failure:** Pairwise RankNet compares two steps at a time and allows the model to hedge — if a pair is drawn from similar-quality steps, the loss gradient is near zero and the model learns nothing discriminative. With only 10 steps/question in training data, many pairs have similar quality.
+**Method:**
+- Split FoVer v2 + GSM8K 500-699 into 5 equal folds, stratified by step_correct label
+- Train 5 probe instances (fold i held out, rest train), test on held-out fold
+- Compute mean OOD AUC ± std across all 5 folds
+- Also test: same probe on a completely different benchmark (MATH-500, 50 questions)
+  to check domain transfer
 
-**LambdaRank fix:** Rank ALL steps per question jointly using an NDCG surrogate. The loss is computed over the full ranked list, preventing any single pair from dominating. FoVer v2 provides 5+ steps/question (median), enabling non-trivial listwise ranking.
+**Gate logic:**
+- PASS: mean_auc >= 0.75 AND std_auc < 0.15 → write results/tier21_gate.json {"gate": "pass"}
+- FAIL: either condition fails → write {"gate": "fail", "reason": ...}
 
-**Implementation based on arXiv 2512.19171 (JEPA-Reasoner):** Extract question-end hidden states from JEPA encoder, apply listwise ranking head. ActPRM uncertainty weighting (arXiv 2504.10559): weight training examples by disagreement between Z3 and PDDL labels — high disagreement = uncertain = down-weight.
+**Why AUC=1.0 might be real:** Qwen3.5-0.8B layer-16 hidden states at question-end encode
+"constraint complexity" as a nearly linear subspace (arXiv 2512.19171 shows this for similar
+models). The probe extracts this directly — no ambiguity about whether the constraint is
+satisfied because the model already "knows" whether it will make an error.
 
-**Architecture:**
-```
-FoVer v2 pairs (1000+, 5+ steps/q)
-  → Group by question
-  → LambdaRank listwise loss (NDCG surrogate)
-  → ActPRM uncertainty weighting
-  → JEPA encoder + ranking head
-  → OOD eval: GSM8K 500-699
-```
+**Deliverable:** `results/experiment_732_probe_xval.json`
 
-**Success criteria:**
-- OOD AUC ≥ 0.75 on GSM8K 500-699 (from v17 AUC=0.4819)
-- Training converges (val loss decreasing at epoch 10)
-- If AUC ≥ 0.75: proceed to Exp 718
-- If AUC < 0.75: file RETRO-CRITICAL update, report root cause, do NOT proceed to Exp 718
-
-**Deliverable:** `results/experiment_717_jepa_v18_lambdarank.json`
-
-**Hardware:** GPU required (RTX 3090)
+**Hardware:** GPU (hidden state extraction via Qwen3.5-0.8B)
 
 ---
 
-### Exp 718: JEPA v18 Cascade Deploy (GATED on Exp 717)
+### Exp 733: Tier 2.1 Cascade Integration
 
-**Goal:** Deploy JEPA v18 into the verification cascade as Tier 2, replacing v17. Wire up to the existing cascade router.
+**Goal:** Wire JEPAReasonerProbe as Tier 2.1 between EORM (Tier 2) and SymCodeVerifier
+(Tier 2.5) in the production ThreeTierPipeline. Measure cascade latency and skip rate.
 
-**Gate condition:** Only runs if Exp 717 AUC ≥ 0.75. If gate fails, this experiment is skipped and logged as GATED-BLOCKED.
+**Integration design:**
+- Tier 2.1 fires AFTER EORM, BEFORE SymCodeVerifier
+- Threshold: 5th percentile of FoVer v2 correct-step scores (calibrated to < 5% FP rate)
+- If probe score > threshold: fire ViolationEvent to FR11EventBus (Exp 734 wires this)
+- If probe score <= threshold: mark as "likely_correct", skip SymCode + HERMES + Causal
+  (early-exit path — saves ~100-500ms per query)
+- Latency benchmark: measure cascade with/without Tier 2.1 on 200q GSM8K
+
+**Success criteria:**
+- Tier 2.1 integrated and wired to FR11EventBus stub
+- skip_rate_symcode >= 0.40 (40% of correct responses skip downstream tiers)
+- FN delta < 0.05 (not missing violations by skipping)
+- Probe latency p99 < 1ms (confirmed from Exp 726: 0.025ms)
+
+**Gate for Exp 734:** writes results/tier21_cascade_gate.json
+
+**Deliverable:** `results/experiment_733_tier21_cascade.json`
+
+**Hardware:** GPU (Qwen3.5-0.8B forward pass for hidden state extraction)
+
+---
+
+## Phase 2: FR-11 Self-Learning Relay (MANDATORY)
+
+### Exp 734: FR-11 Tier 2.1 Relay
+
+**Goal:** Wire the FR-11 autonomous self-learning relay through Tier 2.1. When the probe
+detects a violation, the event flows through FR11EventBus to the Tier 1 weight updater
+(PerModelFPTracker) and to the Tier 2 cross-session memory cache (SessionMemory).
+
+**This is the FIRST time FR-11 has a viable trigger.** All prior relay attempts were blocked
+because the violation detector never reached the relay threshold. Tier 2.1 with AUC >= 0.75
+(confirmed by Exp 732-733) provides a reliable violation signal.
 
 **Implementation:**
-- Load JEPA v18 checkpoint from Exp 717
-- Update `python/carnot/cascade/tier2_jepa.py` to load v18 weights
-- Run cascade integration smoke test on 50q GSM8K validation set
-- Measure cascade latency delta (must be < +5ms per query)
+- Implement FR11EventBus if not already present (from Exp 719 design)
+- ViolationEvent: (query_id, step_index, energy_score, probe_confidence, timestamp)
+- Tier 1 subscriber: PerModelFPTracker.on_violation() — increment constraint weight
+- Tier 2 subscriber: SessionMemory.cache_violation(violation_type, question_domain)
+  After 5+ cached violations of same type: call ConstraintTemplateLibrary.observe_pattern()
+- Throttle: max 1 Tier 1 update per 10 queries (prevents weight thrash)
+- Run 50q validation: measure relay_events_published, relay_events_acked, latency_p99
 
-**Success criteria:**
-- Cascade AUC ≥ 0.70 on 50q validation set
-- Latency delta < +5ms
-- All cascade integration tests pass
+**Success criteria (FR-11 MANDATORY):**
+- relay_events_acked >= 1 (at least one violation detected and acked)
+- relay_latency_ms_p99 < 200ms
+- fr11_relay_operational = True
+- Tier 1 weight update confirmed (fp_rate_delta measured before/after)
 
-**Deliverable:** `results/experiment_718_jepa_v18_cascade.json`
+**Deliverable:** `results/experiment_734_fr11_tier21_relay.json`
 
-**Hardware:** GPU required (RTX 3090)
-
----
-
-### Exp 719: FR-11 Tier 2 Relay (GATED on Exp 718, FR-11 MANDATORY)
-
-**Goal:** Wire FR-11 autonomous self-learning loop at Tier 2: JEPA detects constraint violation → fires weight-update signal → Tier 1 online updater adjusts model weights.
-
-**Gate condition:** Only runs if Exp 718 cascade deploy succeeds. If gate fails, GATED-BLOCKED.
-
-**This is a MANDATORY FR-11 experiment.** The PRD requires an online learning loop and this is the first wiring attempt.
-
-**Implementation:**
-- JEPA violation signal → event bus → Tier 1 weight updater callback
-- Throttle: maximum 1 update per 10 queries to prevent oscillation
-- Log all update events to `ops/fr11_relay_log.jsonl`
-- Measure FR-11 feedback loop latency (signal → update ack < 200ms)
-
-**Success criteria:**
-- At least 1 successful relay event logged in 50q test run
-- FR-11 loop latency < 200ms
-- No cascade regressions (AUC delta < -0.02)
-
-**Deliverable:** `results/experiment_719_fr11_relay.json`
-
-**Hardware:** GPU required (RTX 3090)
+**Hardware:** GPU (Tier 2.1 requires Qwen3.5-0.8B forward pass)
 
 ---
 
-## Phase 2: VR Scale Validation (RETRO-033)
+## Phase 3: KAN Tier 0b Production Integration
 
-### Exp 720: Live VR Attempt #20 — 200q Qwen3.5-0.8B
+### Exp 735: KAN Distill v3 Tier 0b Integration
 
-**Goal:** Run Verifiable Reasoning at 200q scale with Qwen3.5-0.8B to determine whether signed_improvement > 0 is achievable at larger scale.
+**Goal:** Deploy models/kan_distill_v3_tier0b.safetensors as Tier 0b (prompt-injection
+pre-filter) in the production cascade. This is the first production-ready safety classifier
+derived from teacher distillation.
 
-**Motivation (RETRO-033):** 19 consecutive VR attempts all returned signed_improvement ≤ 0 at 100q scale. The signal may be too noisy at 100q. Doubling to 200q either provides the clean signal needed or confirms that VR itself is the wrong approach for this model family.
+**Integration:**
+- Wire KANTier0bClassifier before CarnotThinkProbe (Tier 0a) — catches prompt injection
+  before any expensive operations
+- If score > 0.5: route to safety pipeline (not verification cascade), return
+  safety_violation verdict immediately
+- FP gate: must have FP rate < 5% on benign GSM8K prompts (1000 questions)
+- Latency: < 5ms CPU inference (from Exp 726: KAN inference is 2-3ms)
 
-**Implementation:**
-- Use BatchedInferenceRunner with 8q batches (timeout = 8*60s per batch)
-- Use LongRunBenchmarkExecutor for 200q total
-- Model: Qwen3.5-0.8B (GPU 0, RTX 3090)
-- Measure signed_improvement at 50q, 100q, 150q, 200q checkpoints
+**Benchmark:**
+- Condition A: cascade without Tier 0b (baseline)
+- Condition B: cascade with Tier 0b
+- Measure: safety_skip_rate (how many prompts caught early), FP rate on benign GSM8K
 
 **Success criteria:**
-- signed_improvement > 0 at 200q (first positive VR result)
-- If negative at 200q: file RETRO-033 resolution — VR not viable for this model/scale, pivot to abstain mode
+- Tier 0b wired and functional in cascade
+- FP rate on benign prompts < 0.05
+- No regression in verification cascade AUC
 
-**Deliverable:** `results/experiment_720_vr_200q_qwen.json`
+**Deliverable:** `results/experiment_735_kan_tier0b_integration.json`
 
-**Hardware:** GPU required (RTX 3090)
+**Hardware:** CPU (KAN inference is CPU-native)
 
 ---
 
-### Exp 721: Live VR Gemma4 Graduated Threshold Search
+## Phase 4: PSV Root Cause Investigation
 
-**Goal:** Test VR on Gemma4-A4B with graduated constraint thresholds [0.10, 0.20, 0.30, 0.40] and abstain mode to diagnose constraint-induced distortion (arXiv 2601.01490).
+### Exp 736: PSV Constraint Specialization Diagnosis
 
-**Motivation:** arXiv 2601.01490 shows that tight constraint satisfaction pressure shifts internal representations away from factual recall in smaller models — producing distorted, hallucinated outputs that score worse than unconstrained generation. Gemma4-A4B (4B active params) is in the size range where this distortion occurs.
-
-**Hypothesis:** A looser threshold (0.30-0.40) or abstain mode (only apply constraint when confidence > 0.9) may avoid distortion while still catching high-confidence violations.
-
-**Implementation:**
-- Test 5 conditions: threshold ∈ {0.10, 0.20, 0.30, 0.40, abstain}
-- 50q per condition = 250q total
-- Model: Gemma4-A4B-GGUF (GPU 1, RTX 3090)
-- Measure signed_improvement per condition
-
-**Success criteria:**
-- At least one threshold condition produces signed_improvement > 0
-- Identify optimal threshold for Gemma4 deployment
-
-**Deliverable:** `results/experiment_721_vr_gemma4_graduated.json`
-
-**Hardware:** GPU required (RTX 3090)
-
----
-
-## Phase 3: PSV Self-Play Recovery
-
-### Exp 722: PSV Root Cause Analysis — Question Pool Exhaustion Diagnosis
-
-**Goal:** Diagnose whether PSV degradation (slope=0.001212 positive in .54, up from 0.004242 in .53, improvement in rate but still degrading) is caused by question pool exhaustion — model memorizes fixed 10-question pool after 10 iterations.
-
-**Hypothesis:** With a fixed 10-question pool, after ~10 PSV iterations, the model has seen each question multiple times and its constraint-satisfaction updates overfit to those specific questions. When evaluated on held-out questions, performance has deteriorated.
+**Goal:** Test the constraint specialization hypothesis for PSV degradation: the verifier
+overfits to arithmetic error patterns in GSM8K, losing the ability to detect violations in
+other domains. This produces degradation when evaluated on held-out questions from different
+distributions.
 
 **Controlled experiment:**
-- Condition A: Fixed 10-question pool (current, reproduces degradation)
-- Condition B: Rotating 100-question pool, sample 10 random per iteration
-- Run both for 20 iterations, measure FP rate trend slope
+- Condition A: PSV 20 iterations on GSM8K only (arithmetic domain) — baseline
+- Condition B: PSV 20 iterations with rotating domain pool: GSM8K (10q) + MATH-Algebra (5q)
+  + ARC-Challenge (5q) per iteration
+- Condition C: PSV 20 iterations with GSM8K BUT using constraint verifier trained on ALL
+  domains (not GSM8K-specialized)
+- Measure: fp_rate_trend_slope per condition on HELD-OUT GSM8K questions (100-199)
 
-**Success criteria:**
-- If Condition B slope < 0 (improving): confirmed pool exhaustion, proceed to Exp 723
-- If both conditions degrade: pool exhaustion not the root cause, file new RETRO
+**Gate logic:**
+- If condition B slope < condition A slope: domain diversity helps → write gate "pass"
+- If condition C slope < condition A slope: verifier generalization helps → write gate "pass_verifier"
+- If both B and C worse: specialization not the root cause → write gate "fail"
 
-**Deliverable:** `results/experiment_722_psv_pool_exhaustion.json`
-
-**Hardware:** CPU (diagnostic, no model inference needed — analyze existing PSV logs)
-
----
-
-### Exp 723: PSV PaCoRe v2 — Diverse Pool + K=2 (GATED on Exp 722)
-
-**Goal:** Retrain PSV with rotating 100-question pool, K=2 parallel chains, targeting fp_rate_trend_slope < 0 (improving).
-
-**Gate condition:** Only runs if Exp 722 confirms pool exhaustion as root cause.
-
-**Implementation:**
-- Build 100-question diverse pool from GSM8K + MATH + ARC-Challenge
-- Sample 10 random questions per PSV iteration
-- K=2 PaCoRe chains with diversity penalty (reward questions where chains disagree)
-- Run 30 iterations
-
-**Success criteria:**
-- fp_rate_trend_slope < 0 (improving, from current +0.001212)
-- FP rate at iteration 30 < FP rate at iteration 0
-
-**Deliverable:** `results/experiment_723_psv_pcore_v2.json`
-
-**Hardware:** GPU required (RTX 3090)
-
----
-
-## Phase 4: New Research Tracks
-
-### Exp 724: KAN Distillation v3 — 3000 Examples + 16 Knots
-
-**Goal:** Push KAN distillation toward the 0.90 AUROC gate by expanding training data to 3000 examples and increasing knot count from 8 to 16.
-
-**Current state:** v2 AUROC=0.8747, trend toward 0.90. More data and more expressive KAN should close the gap.
-
-**Implementation:**
-- Generate 3000 labeled prompt-injection examples (1500 positive, 1500 negative)
-- KAN with 16 knots per activation (from v2's 8 knots)
-- Same training procedure as v2 (Adam, lr=1e-3, 100 epochs)
-
-**Success criteria:**
-- AUROC ≥ 0.90 on held-out test set (gate for KAN deployment)
-- If AUROC ≥ 0.90: deploy to Tier 0b, file capability update
-
-**Deliverable:** `results/experiment_724_kan_distill_v3.json`
-
-**Hardware:** CPU only (KAN training is fast)
-
----
-
-### Exp 725: SC-Energy v2 on FoVer v2
-
-**Goal:** Retrain SC-Energy (self-consistency energy, Tier 2.9) on FoVer v2 labeled pairs, targeting AUC ≥ 0.75.
-
-**Motivation:** FoVer v2 provides 1000+ step-level pairs with both Z3 and PDDL labels — richer supervision than the original SC-Energy training data. The combination of Z3 (symbolic) and PDDL (planning) labels gives SC-Energy a stronger consistency signal.
-
-**Implementation:**
-- Load FoVer v2 pairs from Exp 712 output
-- Retrain SC-Energy EBM with FoVer v2 labels as supervision
-- Evaluate on OOD GSM8K 500-699
-
-**Success criteria:**
-- OOD AUC ≥ 0.75 (from current SC-Energy v1 baseline)
-- Tier 2.9 cascade integration passes smoke test
-
-**Deliverable:** `results/experiment_725_sc_energy_v2.json`
-
-**Hardware:** CPU (EBM training is fast)
-
----
-
-### Exp 726: JEPAReasonerProbe — Pre-generative Latent Verification
-
-**Goal:** Implement the JEPA-Reasoner approach from arXiv 2512.19171: extract question-end hidden states BEFORE generation begins, train a lightweight probe (2-layer MLP) on FoVer v2 pairs to predict constraint violations from latent representations.
-
-**Motivation:** arXiv 2512.19171 shows that LLM hidden states at question-end contain strong signal about whether the coming generation will satisfy constraints — even before generation starts. This enables <1ms latency verification (just a probe forward pass) vs. the current JEPA approach which requires full step generation.
-
-**Implementation:**
-- Model: Qwen3.5-0.8B (GPU, extract hidden states layer 16)
-- Extract hidden states at question-end for all FoVer v2 examples
-- Train 2-layer MLP probe: hidden_dim → 256 → 1, BCELoss
-- Evaluate: AUC on OOD GSM8K 500-699, latency measurement
-
-**Success criteria:**
-- OOD AUC ≥ 0.75 (same gate as JEPA)
-- Inference latency < 1ms (probe-only, not counting LLM forward pass)
-- If both met: propose as Tier 2.1 (latency-optimized JEPA alternative)
-
-**Deliverable:** `results/experiment_726_jepa_reasoner_probe.json`
-
-**Hardware:** GPU required (RTX 3090, hidden state extraction)
-
----
-
-### Exp 727: Variable Granularity Verification Gate
-
-**Goal:** Implement adaptive compute allocation from arXiv 2505.11730: use EORM confidence gate to decide whether to run expensive Tier 3 Ising sampler, targeting >50% Ising skip rate with <5% false-negative delta.
-
-**Motivation:** arXiv 2505.11730 shows that applying verification at variable granularity based on confidence — skip expensive verification when cheap tiers are highly confident — can achieve near-identical accuracy at 40-60% lower compute cost. Tier 3 Ising is the most expensive tier.
-
-**Implementation:**
-- EORM confidence score from existing Tier 0h
-- Gate: if EORM confidence > 0.92, skip Tier 3 Ising (mark as verified-fast)
-- If EORM confidence < 0.92, run Tier 3 Ising as normal
-- Evaluate on 200q test set: Ising skip rate, FN delta vs. full cascade
-
-**Success criteria:**
-- Ising skip rate > 50% (saves >50% Tier 3 compute)
-- False-negative delta < 5% vs. full cascade (minimal accuracy loss)
-- Latency reduction > 30% on 200q benchmark
-
-**Deliverable:** `results/experiment_727_vargran_gate.json`
-
-**Hardware:** CPU (Ising already implemented, gate logic is CPU-only)
-
----
-
-## Phase 5: Retrospective
-
-### Exp 728: Milestone 2026.04.55 Operational Retrospective
-
-**Goal:** Measure wall time, slowest-5, and strategic outcomes vs. .55 plan. Feed operational improvements back into process.
-
-**Template:** Follow exact format from `results/operational_retro_2026_04_54.json`.
-
-**Key questions to answer:**
-1. Did JEPA v18 achieve AUC ≥ 0.75? (RETRO-CRITICAL resolution)
-2. Did VR ever produce signed_improvement > 0? (RETRO-033 resolution)
-3. Did pre-flight overhead fall below 200 min?
-4. Is PSV now improving (slope < 0)?
-5. What are the new slowest-5?
-
-**Deliverable:** `results/operational_retro_2026_04_55.json`
+**Deliverable:** `results/experiment_736_psv_specialization.json`
 
 **Hardware:** CPU only
 
 ---
 
-## Experiment Summary Table
+### Exp 737: PSV Domain-Diverse Recovery (GATED on Exp 736)
 
-| Exp | Title | Phase | Hardware | Gate | Deliverable |
-|-----|-------|-------|----------|------|-------------|
-| 716 | Pre-flight v7 + Incremental Test Selection | 0 | CPU | None | experiment_716_preflight_v7.json |
-| 717 | JEPA v18 LambdaRank | 1 | GPU | None | experiment_717_jepa_v18_lambdarank.json |
-| 718 | JEPA v18 Cascade Deploy | 1 | GPU | Exp 717 AUC≥0.75 | experiment_718_jepa_v18_cascade.json |
-| 719 | FR-11 Tier 2 Relay | 1 | GPU | Exp 718 pass | experiment_719_fr11_relay.json |
-| 720 | Live VR 200q Qwen3.5-0.8B | 2 | GPU | None | experiment_720_vr_200q_qwen.json |
-| 721 | VR Gemma4 Graduated Threshold | 2 | GPU | None | experiment_721_vr_gemma4_graduated.json |
-| 722 | PSV Pool Exhaustion Diagnosis | 3 | CPU | None | experiment_722_psv_pool_exhaustion.json |
-| 723 | PSV PaCoRe v2 Diverse Pool | 3 | GPU | Exp 722 confirm | experiment_723_psv_pcore_v2.json |
-| 724 | KAN Distillation v3 | 4 | CPU | None | experiment_724_kan_distill_v3.json |
-| 725 | SC-Energy v2 FoVer v2 | 4 | CPU | None | experiment_725_sc_energy_v2.json |
-| 726 | JEPAReasonerProbe | 4 | GPU | None | experiment_726_jepa_reasoner_probe.json |
-| 727 | Variable Granularity Gate | 4 | CPU | None | experiment_727_vargran_gate.json |
-| 728 | Operational Retrospective | 5 | CPU | All complete | operational_retro_2026_04_55.json |
+**Goal:** If Exp 736 confirms specialization as the root cause, implement the fix.
+Use domain-diverse question pool AND per-domain verifier ensemble.
+
+**Implementation (only if Exp 736 gate passes):**
+- Question pool: 100 questions stratified across 3 domains (GSM8K, MATH, ARC-Challenge)
+- Per-domain constraint verifier: separate ConstraintTemplateLibrary instances per domain
+- Router: assign each question to its domain verifier before PSV self-play
+- Run 30 iterations, measure fp_rate_trend_slope
+
+**Success criteria:**
+- fp_rate_trend_slope < 0 (improving) OR abs(slope) < 0.0001 (stable)
+
+**Deliverable:** `results/experiment_737_psv_domain_diverse.json`
+
+**Hardware:** GPU (Qwen3.5-0.8B for PSV generation)
 
 ---
 
-## New Papers Filed (2026-04-22 Scan)
+## Phase 5: Privacy Safety Integration (USER-PINNED)
 
-| Paper | ArXiv ID | Experiment |
-|-------|----------|------------|
-| JEPA-Reasoner: Pre-generative Latent Verification | 2512.19171 | Exp 726 |
-| Variable Granularity Search for Adaptive Verification | 2505.11730 | Exp 727 |
-| ActPRM: Active Learning for Process Reward Models | 2504.10559 | Exp 717 (weighting) |
-| Constraint-Induced Distortion in Small LLMs | 2601.01490 | Exp 721 (diagnosis) |
+### Exp 729: PrivacyFilter KAN v1 — True Teacher Distillation
+
+**USER-PINNED for milestone 2026.04.56.** Do not evict or modify without flagging to user.
+
+Distil openai/privacy-filter into a KAN student using the same pattern as Exps 690/710.
+Full prompt is in research-roadmap.yaml. Key requirements:
+- REQ-SAFE-011 invariant AUTO-ENFORCED (teacher_inference_duration_s >= corpus_size * 0.5)
+- AUROC target >= 0.85 (stretch 0.90)
+- Latency < 5ms CPU
+
+**Deliverable:** `results/experiment_729_privacy_filter_kan_true_distillation.json`
+
+**Hardware:** GPU (teacher inference)
+
+---
+
+### Exp 730: PrivacyFilter KAN v1 — Cross-Dataset Gate
+
+**USER-PINNED for milestone 2026.04.56.** Do not evict or modify without flagging to user.
+
+Strict cross-dataset gate: AUROC >= 0.90 AND per-dataset min_tp >= 1 AND precision >= 0.80
+AND FN-rate on credit cards <= 0.02 AND OOD AUROC not > training by 0.05.
+
+Full prompt is in research-roadmap.yaml.
+
+**Deliverable:** `results/experiment_730_privacy_filter_kan_cross_dataset.json`
+
+**Hardware:** CPU (scoring only)
+
+---
+
+## Phase 6: Step-Level Latent Probe + Tier 2 Cross-Session Memory (arxiv + Self-Learning)
+
+### Exp 738: Step-Level Latent Probe + Tier 2 Cross-Session Memory (arXiv 2511.06209)
+
+**Goal:** Two complementary improvements in one experiment.
+
+**Part 1 — Step-Level Probe (arXiv 2511.06209 "Efficient Test-Time Scaling via Probing
+Internal States"):**
+- Current Tier 2.1: query-level probe, extracts ONE hidden state at question-end token
+- Step-level upgrade: extract hidden states at each CoT step boundary, pool with
+  max-pooling across steps, train probe on pooled features
+- arXiv 2511.06209 shows <10M-param probes with step-level features achieve parity with
+  much larger PRMs on math/planning/QA. Query-level probes miss individual step failures.
+- Comparison: step-level AUC vs. query-level AUC (JEPAReasonerProbe baseline) on FoVer v2 OOD
+
+**Part 2 — Tier 2 Cross-Session Memory (research-program.md Tier 2):**
+- Wire SessionMemory.on_session_end() to consolidate violation_type → template_key mappings
+- Wire SessionMemory.on_session_start() to replay cached templates into ConstraintTemplateLibrary
+- Test: 3-session simulation: S1 (baseline), S2 (cache from S1), S3 (cache from S1+S2)
+  Measure: precision_s1, precision_s2, precision_s3 — expect monotonic improvement
+- Gate: fr11_tier2_relay_functional = True if any template from S1 fires in S2
+
+**Hardware path:** GPU for step extraction (Qwen3.5-0.8B), CPU for memory relay.
+Research-program.md Tier 2: "CPU + system memory for storage; FPGA for fast pattern
+matching" — this experiment implements the CPU tier.
+
+**Success criteria:**
+- step_auc >= query_auc (0.75 baseline from Tier 2.1 probe) OR both >= 0.75
+- fr11_tier2_relay_functional = True
+- template_reuse_rate > 0 across sessions
+
+**Deliverable:** `results/experiment_738_step_probe_tier2_memory.json`
+
+**Hardware:** GPU (step hidden state extraction), CPU (memory relay)
+
+---
+
+## Phase 7: Retrospective
+
+### Exp 739: Milestone 2026.04.56 Operational Retrospective
+
+**Goal:** Measure wall time, strategic outcomes, feed improvements back into process.
+
+**5 key questions:**
+1. **FR-11**: Is the full Tier 2.1 → FR-11EventBus → Tier 1 → Tier 2 memory relay operational?
+2. **Tier 2.1**: Did 5-fold CV confirm AUC >= 0.75 (not overfit)?
+3. **KAN Tier 0b**: Is the prompt-injection filter deployed with FP rate < 5%?
+4. **PSV**: Is the root cause identified and slope improving?
+5. **Privacy Filter**: Is privacy_filter_v1 publication-ready?
+
+**Deliverable:** `results/operational_retro_2026_04_56.json`
+
+**Hardware:** CPU
+
+---
+
+## Open RETROs Addressed in .56
+
+| RETRO | Status | Addressed By |
+|-------|--------|-------------|
+| RETRO-CRITICAL (JEPA cascade) | Primary path pivots to Tier 2.1 | Exp 732-733 |
+| RETRO-072/073 (FPGA synthesis) | Human action: install Vivado/yosys | Not in .56 (human action) |
+| RETRO-033 (VR never positive) | CLOSED in .55 | — |
+| PSV degradation (unnamed) | Alternative hypothesis testing | Exp 736-737 |
+| FR-11 relay gated | Unblocked by Tier 2.1 | Exp 733-734 |
 
 ---
 
 ## Hardware Requirements
 
-| Experiment | GPU | Model | VRAM |
-|------------|-----|-------|------|
-| 717 | RTX 3090 GPU 0 | JEPA encoder (Qwen3.5-0.8B base) | ~8 GB |
-| 718 | RTX 3090 GPU 0 | JEPA v18 + cascade | ~8 GB |
-| 719 | RTX 3090 GPU 0 | Full cascade | ~12 GB |
-| 720 | RTX 3090 GPU 0 | Qwen3.5-0.8B | ~6 GB |
-| 721 | RTX 3090 GPU 1 | Gemma4-A4B-GGUF | ~8 GB |
-| 723 | RTX 3090 GPU 0 | PSV model (Qwen3.5-0.8B) | ~6 GB |
-| 726 | RTX 3090 GPU 0 | Qwen3.5-0.8B (hidden states) | ~8 GB |
+| Experiment | Hardware | Notes |
+|-----------|---------|-------|
+| Exp 731 | CPU | nvidia-smi + kill |
+| Exp 732 | GPU 0 | Qwen3.5-0.8B hidden states |
+| Exp 733 | GPU 0 | Same |
+| Exp 734 | GPU 0 | Same |
+| Exp 735 | CPU | KAN inference |
+| Exp 736 | CPU | PSV simulation |
+| Exp 737 | GPU 0 | Qwen3.5-0.8B PSV generation |
+| Exp 729 | GPU 0 | Teacher inference |
+| Exp 730 | CPU | Scoring only |
+| Exp 738 | GPU 0 | Session inference |
+| Exp 739 | CPU | Analysis only |
 
-GPU 0 and GPU 1 can run independently on dual RTX 3090 setup.
+**NOTE on GPU 1:** After zombie kill in Exp 731, GPU 1 (RTX 3090) becomes available.
+Experiments that benefit from DualGPU can use it: Exp 737 (Qwen on GPU 0 + verifier on GPU 1)
+and Exp 729 (teacher on GPU 0, student training on GPU 1).
+
+**NOTE on FPGA:** KV260 hardware is present. Vivado not installed. RETRO-072/073 remain
+open pending human install of Vivado or yosys. The .56 milestone does not attempt FPGA
+synthesis; that is a dedicated human action.
 
 ---
 
 ## Success Criteria Summary
 
-| Blocker | Target | Experiment | Resolution |
-|---------|--------|------------|------------|
-| JEPA anti-correlation (RETRO-CRITICAL) | OOD AUC ≥ 0.75 | Exp 717 | LambdaRank listwise on FoVer v2 |
-| VR never positive (RETRO-033) | signed_improvement > 0 | Exp 720/721 | 200q scale + graduated threshold |
-| Pre-flight overhead 14.6% | Wall time < 200 min | Exp 716 | pytest-changed incremental selection |
-| PSV degrading | fp_rate_trend_slope < 0 | Exp 722/723 | Diverse 100-q pool |
-| FR-11 not wired | Relay event logged | Exp 719 | Gated on JEPA v18 success |
-| KAN not at 0.90 gate | AUROC ≥ 0.90 | Exp 724 | 3000 examples + 16 knots |
-
----
-
-## Risk Register
-
-| Risk | Probability | Mitigation |
-|------|-------------|------------|
-| JEPA v18 still below 0.5 | Medium | If 4th consecutive failure, pivot to JEPAReasonerProbe (Exp 726) as alternative Tier 2 |
-| VR 200q still negative | Medium | Close RETRO-033 as "VR not viable at current model scale", remove from roadmap |
-| PSV pool exhaustion not confirmed | Low | Alternative hypothesis: model capacity too low; test with Qwen3.5-7B |
-| Exp 527 grows beyond 60 min | Low | Apply BatchedInferenceRunner immediately in Exp 716 |
-| KV260 Vivado still unavailable | High | Defer all FPGA experiments to next milestone (Vivado install blocked) |
-
----
-
-## Conductor Execution Notes
-
-- Run Exp 716 first (frees wall time for all subsequent experiments).
-- Exps 717-719 must run sequentially (each gated on previous).
-- Exps 720, 721, 722, 724, 725, 726, 727 can run in any order (no mutual dependencies).
-- Exp 723 must follow Exp 722.
-- Exp 728 must be last.
-- GPU experiments: prefer GPU 0 for Qwen/JEPA work, GPU 1 for Gemma4.
+| Criterion | Target | Experiment |
+|-----------|--------|-----------|
+| FR-11 relay operational | relay_events_acked >= 1 | Exp 734 |
+| Tier 2.1 validated | 5-fold mean AUC >= 0.75 | Exp 732 |
+| Tier 2.1 cascade | skip_rate_symcode >= 0.40 | Exp 733 |
+| KAN Tier 0b deployed | FP rate < 0.05 on benign | Exp 735 |
+| PSV root cause found | condition B or C slope < A | Exp 736 |
+| Privacy filter distilled | AUROC >= 0.85 | Exp 729 |
+| Privacy gate passed | 5 conditions met | Exp 730 |
+| Tier 2 memory functional | template_reuse_rate > 0 | Exp 738 |
+| FR-11 Tier 2 relay | fr11_tier2_relay_functional=True | Exp 738 |
