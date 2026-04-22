@@ -2438,3 +2438,4 @@ python/ |
 | 2026-04-21 23:59 UTC | Exp 673: DualGPU Proof v3 — Confirmed Parallel For | OK | 81 passed, 2 warnings in 5.37s |
 | 2026-04-22 00:11 UTC | Exp 674: IAS Adaptive Gate Calibration — Quantile  | OK | 81 passed, 2 warnings in 5.10s |
 | 2026-04-22 00:23 UTC | Exp 675: LOS-Net Sequence Distribution Hallucinati | OK | 81 passed, 2 warnings in 4.97s |
+| 2026-04-22 00:34 UTC | Exp 676: MetaJuLS Adaptive Constraint Propagation  | OK | 81 passed, 2 warnings in 5.29s |
