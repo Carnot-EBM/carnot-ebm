@@ -1,111 +1,127 @@
 # inspect_axi_nets.tcl — Post-route DCP inspection for RETRO-074 debug.
-#
-# Walks the S_AXI_ACLK and S_AXI_ARESETN signals from the ising_sampler's
-# pins back to their drivers, checking for:
-#   1. The pin exists and is an input.
-#   2. The net connected to the pin is driven by the expected source
-#      (pl_clk0 for ACLK, proc_sys_reset/peripheral_aresetn for ARESETN).
-#   3. The net is fully routed and has no tie-low / tie-high anomalies.
-#
-# Run from this directory:
-#   source /tools/Xilinx/2025.2.1/Vivado/settings64.sh
-#   vivado -mode batch -source inspect_axi_nets.tcl
-#
-# Output lands in axi_net_inspection.log in this directory and also on
-# stdout.
+# Walks S_AXI_ACLK and S_AXI_ARESETN back to their drivers.
 
 set dcp "../../output/carnot_ising_bd/project/carnot_ising.runs/impl_1/carnot_ising_bd_wrapper_routed.dcp"
 
 puts "=== Opening $dcp ==="
 open_checkpoint $dcp
 
-# -----------------------------------------------------------------------------
-# Find the sampler cell.  The BD wrapper instantiates it as ising_sampler_0
-# inside the BD hierarchy.
-# -----------------------------------------------------------------------------
-set sampler_cells [get_cells -hierarchical -filter {NAME =~ "*ising_sampler_0*"}]
+# The routed netlist is typically flattened.  Instead of finding a cell by
+# REF_NAME, find the sampler's top-level AXI port pins by PORT name.  The
+# BD wrapper exposes them via the sampler instance's ports in the hier.
+# Try several NAME-match patterns in order, stop at the first non-empty hit.
+
 puts ""
-puts "=== candidate sampler cells ==="
-foreach c $sampler_cells { puts "  $c" }
-
-# The actual 128_sync module instance.
-set sampler [lindex [get_cells -hierarchical -filter {REF_NAME == "ising_sampler_128_sync"}] 0]
-puts ""
-puts "=== DUT cell ==="
-puts "  $sampler"
-
-# -----------------------------------------------------------------------------
-# S_AXI_ACLK pin
-# -----------------------------------------------------------------------------
-puts ""
-puts "=== S_AXI_ACLK pin + net ==="
-set aclk_pin [get_pins -of_objects $sampler -filter {REF_PIN_NAME == "S_AXI_ACLK"}]
-puts "  pin: $aclk_pin"
-
-set aclk_net [get_nets -of_objects $aclk_pin]
-puts "  net: $aclk_net"
-
-set aclk_drivers [get_pins -of_objects $aclk_net -filter {DIRECTION == "OUT"}]
-puts "  driven by:"
-foreach d $aclk_drivers { puts "    $d ([get_property REF_NAME [get_cells -of_objects $d]])" }
-
-set aclk_rs [get_property ROUTE_STATUS $aclk_net]
-puts "  ROUTE_STATUS: $aclk_rs"
-
-# -----------------------------------------------------------------------------
-# S_AXI_ARESETN pin
-# -----------------------------------------------------------------------------
-puts ""
-puts "=== S_AXI_ARESETN pin + net ==="
-set arst_pin [get_pins -of_objects $sampler -filter {REF_PIN_NAME == "S_AXI_ARESETN"}]
-puts "  pin: $arst_pin"
-
-set arst_net [get_nets -of_objects $arst_pin]
-puts "  net: $arst_net"
-
-set arst_drivers [get_pins -of_objects $arst_net -filter {DIRECTION == "OUT"}]
-puts "  driven by:"
-foreach d $arst_drivers { puts "    $d ([get_property REF_NAME [get_cells -of_objects $d]])" }
-
-set arst_rs [get_property ROUTE_STATUS $arst_net]
-puts "  ROUTE_STATUS: $arst_rs"
-
-# -----------------------------------------------------------------------------
-# Source clock: walk ACLK back to pl_clk0
-# -----------------------------------------------------------------------------
-puts ""
-puts "=== clock network summary ==="
-report_clocks
-
-# -----------------------------------------------------------------------------
-# Reset source: confirm proc_sys_reset's peripheral_aresetn is the driver
-# -----------------------------------------------------------------------------
-puts ""
-puts "=== proc_sys_reset outputs ==="
-set psr_cells [get_cells -hierarchical -filter {REF_NAME =~ "proc_sys_reset*"}]
-foreach c $psr_cells {
-    puts "  cell: $c"
-    set out_pins [get_pins -of_objects $c -filter {DIRECTION == "OUT"}]
-    foreach p $out_pins {
-        set n [get_nets -of_objects $p]
-        set rs [get_property ROUTE_STATUS $n]
-        puts "    $p  -> net $n (route_status=$rs)"
+puts "=== searching for sampler instance ==="
+set patterns [list \
+    {*/ising_sampler_0*inst} \
+    {*/ising_sampler_0} \
+    {*ising_sampler_0/inst} \
+]
+set sampler ""
+foreach pat $patterns {
+    set hits [get_cells -hierarchical -filter "NAME =~ $pat"]
+    set n [llength $hits]
+    puts "  pattern $pat -> $n hits"
+    if {$n >= 1 && $sampler eq ""} {
+        set sampler [lindex $hits 0]
     }
 }
 
-# -----------------------------------------------------------------------------
-# Any nets with ROUTE_STATUS indicating trouble
-# -----------------------------------------------------------------------------
-puts ""
-puts "=== nets with non-ROUTED status (first 20) ==="
-set troubled [get_nets -filter {ROUTE_STATUS != "ROUTED" && ROUTE_STATUS != "INTRASITE"}]
-set i 0
-foreach n $troubled {
-    if {$i >= 20} break
-    puts "  [get_property ROUTE_STATUS $n]  $n"
-    incr i
+if {$sampler eq ""} {
+    # Fall back: any cell that has an S_AXI_ACLK pin.
+    puts ""
+    puts "=== fallback: search by S_AXI_ACLK pin ==="
+    set pins [get_pins -hierarchical -filter {REF_PIN_NAME == "S_AXI_ACLK"}]
+    puts "  [llength $pins] pins named S_AXI_ACLK found in hierarchy:"
+    foreach p $pins { puts "    $p" }
+    if {[llength $pins] > 0} {
+        set sampler [get_cells -of_objects [lindex $pins 0]]
+    }
 }
-puts "  total troubled: [llength $troubled]"
+
+if {$sampler eq ""} {
+    puts "FATAL: no candidate sampler cell found"
+    close_design
+    exit 1
+}
+puts ""
+puts "  sampler cell: $sampler"
+puts "  REF_NAME:     [get_property REF_NAME [get_cells $sampler]]"
+
+# Pin list inventory (just count + names, no deep traversal)
+puts ""
+puts "=== S_AXI_* pins on this cell ==="
+foreach p [get_pins -of_objects $sampler -filter {REF_PIN_NAME =~ "S_AXI_*"}] {
+    set rp [get_property REF_PIN_NAME $p]
+    set dir [get_property DIRECTION $p]
+    puts "  $rp  ($dir)"
+}
+
+# ACLK specifically
+puts ""
+puts "=== S_AXI_ACLK net ==="
+set aclk_pin [lindex [get_pins -of_objects $sampler -filter {REF_PIN_NAME == "S_AXI_ACLK"}] 0]
+puts "  pin: $aclk_pin"
+if {$aclk_pin ne ""} {
+    set aclk_net [get_nets -of_objects $aclk_pin]
+    puts "  net: $aclk_net"
+    puts "  ROUTE_STATUS: [get_property ROUTE_STATUS $aclk_net]"
+    set aclk_drivers [get_pins -of_objects $aclk_net -filter {DIRECTION == "OUT"}]
+    puts "  driven by [llength $aclk_drivers] pin(s):"
+    foreach d $aclk_drivers {
+        set dc [get_cells -of_objects $d]
+        set rn [get_property REF_NAME $dc]
+        puts "    $d (REF_NAME=$rn)"
+    }
+}
+
+# ARESETN
+puts ""
+puts "=== S_AXI_ARESETN net ==="
+set arst_pin [lindex [get_pins -of_objects $sampler -filter {REF_PIN_NAME == "S_AXI_ARESETN"}] 0]
+puts "  pin: $arst_pin"
+if {$arst_pin ne ""} {
+    set arst_net [get_nets -of_objects $arst_pin]
+    puts "  net: $arst_net"
+    puts "  ROUTE_STATUS: [get_property ROUTE_STATUS $arst_net]"
+    set arst_drivers [get_pins -of_objects $arst_net -filter {DIRECTION == "OUT"}]
+    puts "  driven by [llength $arst_drivers] pin(s):"
+    foreach d $arst_drivers {
+        set dc [get_cells -of_objects $d]
+        set rn [get_property REF_NAME $dc]
+        puts "    $d (REF_NAME=$rn)"
+    }
+}
+
+# Top-level clocks
+puts ""
+puts "=== top-level clocks ==="
+foreach c [get_clocks] {
+    set name [get_property NAME $c]
+    set period [get_property PERIOD $c]
+    puts "  $name  period=$period ns  (~[expr 1000.0/$period] MHz)"
+}
+
+# Constant-driver check on critical pins (catches tied-off ARESETN etc.)
+puts ""
+puts "=== constant-driver check on sampler AXI pins ==="
+foreach rp [list S_AXI_ACLK S_AXI_ARESETN S_AXI_AWVALID S_AXI_WVALID S_AXI_ARVALID S_AXI_BREADY S_AXI_RREADY S_AXI_AWREADY S_AXI_WREADY S_AXI_BVALID S_AXI_ARREADY S_AXI_RVALID] {
+    set p [lindex [get_pins -of_objects $sampler -filter "REF_PIN_NAME == $rp"] 0]
+    if {$p eq ""} { continue }
+    set n [get_nets -of_objects $p]
+    set is_const 0
+    set drv_cells ""
+    foreach d [get_pins -of_objects $n -filter {DIRECTION == "OUT"}] {
+        set dc [get_cells -of_objects $d]
+        set rn [get_property REF_NAME $dc]
+        append drv_cells "$rn "
+        if {$rn eq "GND" || $rn eq "VCC"} { set is_const 1 }
+    }
+    set tag ""
+    if {$is_const} { set tag "  !! CONSTANT DRIVER" }
+    puts "  $rp: drv=[string trim $drv_cells]$tag"
+}
 
 puts ""
 puts "=== inspection complete ==="
