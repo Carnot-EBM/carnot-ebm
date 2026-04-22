@@ -177,3 +177,47 @@ Spec: REQ-LEARN-021, SCENARIO-LEARN-021
 |-------------|--------|-------|
 | REQ-LEARN-022 | Implemented | Python (test_experiment_713_fr11_tier2_relay.py) |
 | REQ-LEARN-023 | Implemented | Python (test_experiment_713_fr11_tier2_relay.py) |
+
+---
+
+## REQ-PSV-005: PSV Question Pool Must Contain >= 100 Questions and Sample Randomly Per Iteration
+
+**Given** a PSV self-play loop running for multiple iterations
+**When** the question pool has fewer than 100 questions (e.g. 10 fixed questions)
+**Then** the loop overfits to those specific questions after ~10 iterations, causing
+         the constraint weights to memorize question-specific surface patterns instead
+         of generalizable violation signals, and fp_rate_trend_slope becomes positive
+         (degrading) on held-out evaluations
+
+**Given** a PSV self-play loop with a pool of >= 100 questions sampled randomly each iteration
+**When** any single iteration samples 10 questions from the 100-question pool
+**Then** repeated sampling prevents any individual question from dominating weight updates,
+         the constraint weights learn more general violation patterns, and fp_rate_trend_slope
+         remains <= 0 (improving or stable) over 20 iterations
+
+**Required behavior:**
+- The question pool passed to PSV self-play MUST contain >= 100 distinct questions.
+- Each iteration MUST sample a fresh random subset of questions (no fixed pool reuse).
+- Violation of this requirement causes monotonically increasing fp_rate_trend_slope
+  (confirmed experimentally in Exp 722: condition A slope > 0, condition B slope <= 0).
+
+### SCENARIO-PSV-005: Pool Exhaustion Controlled Experiment
+
+**Given** two PSV conditions run for 20 iterations each:
+         - Condition A: fixed 10-question pool (baseline degradation)
+         - Condition B: 100-question pool, 10 sampled randomly per iteration
+**When** fp_rate_trend_slope is computed via linear regression across 20 iterations
+**Then** condition_A_slope > 0 (degrading, pool exhaustion confirmed)
+**And** condition_B_slope < condition_A_slope (rotating pool slows or reverses degradation)
+**And** honest_verdict is one of:
+         - "pool_exhaustion_confirmed": condition_A_slope > 0 AND condition_B_slope < 0
+         - "pool_exhaustion_not_confirmed": condition_B_slope also > 0
+         - "pool_exhaustion_ambiguous": abs(condition_B_slope) < 0.0001
+
+---
+
+## Implementation Status (PSV-005)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-PSV-005 | Implemented | Python (test_experiment_722_psv_pool_exhaustion.py) |
