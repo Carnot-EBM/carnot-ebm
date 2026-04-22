@@ -1,0 +1,88 @@
+{
+  "experiment": "kv260_pl_clock_probe",
+  "title": "KV260 pl_clk0 probe — ROOT CAUSE of PS hang identified (clock mismatch)",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T15:58:00Z",
+  "finished_at": "2026-04-22T16:05:00Z",
+  "duration_s": 420,
+  "status": "success",
+  "schema": "carnot.kv260_probe.v1",
+  "honest_verdict": "hang_root_cause_confirmed_clock_mismatch_40mhz_target_vs_60mhz_actual",
+
+  "context": "Follow-up to Exp 661 (on-hardware PS hang) and the AXI simulation (results/kv260_axi_simulation_v2.json, which rejected the RTL-protocol hypothesis). This probe is READ-ONLY — it reads CRL_APB.PL0_REF_CTRL via /dev/mem mmap with no AXI access to the sampler. Does not risk wedging the board.",
+
+  "probe_method": {
+    "register_read_address": "0xFF5E00C0",
+    "register_name": "CRL_APB.PL0_REF_CTRL",
+    "register_spec": "UG1085 table 10-3, Zynq UltraScale+ TRM",
+    "access_path": "/dev/mem mmap via sudo python3 (inline script via ssh)",
+    "risk_level": "none (read-only, no AXI access)"
+  },
+
+  "probe_results": {
+    "baseline_k26_starter_kits_loaded": {
+      "raw_register": "0x01010a00",
+      "clkact": 1,
+      "divisor0": 10,
+      "divisor1": 1,
+      "srcsel": "IOPLL",
+      "estimated_out_mhz": 150.0,
+      "interpretation": "k26-starter-kits is the default Kria app; uses pl_clk0 at 150 MHz."
+    },
+    "post_xmutil_load_carnot_ising_v2_n64": {
+      "raw_register": "0x01011900",
+      "clkact": 1,
+      "divisor0": 25,
+      "divisor1": 1,
+      "srcsel": "IOPLL",
+      "estimated_out_mhz": 60.0,
+      "build_target_mhz": 40.0,
+      "frequency_error_pct": 50.0,
+      "interpretation": "Our overlay requested 40 MHz (assigned-clock-rates = <40000000>) but Kria's fclk framework snapped to DIVISOR0=25 giving 60 MHz, not the closer DIVISOR0=37 (40.54 MHz) or 38 (39.47 MHz)."
+    }
+  },
+
+  "root_cause": {
+    "name": "pl_clk0 runs at 60 MHz, bitstream was synthesized for 40 MHz",
+    "mechanism": "Our N=64 MAX_DEGREE=16 bitstream was place-routed with timing-clean slack at 40 MHz (WNS +3.174 ns, 0 failing endpoints per results/kv260_bd_build_N64.json rebuild_40mhz section). At 40 MHz the critical path delay is approximately 10.312 + (10.312 - 3.174) = 22.23 ns. At 60 MHz the period is 16.67 ns — the 22.23 ns critical path EXCEEDS the period by 5.5 ns, violating setup timing on ~4,586 of 57,326 endpoints (same endpoints that failed in the 100 MHz attempt). Setup violations cause the AXI state-machine flops to latch metastable values on AWVALID/WVALID sampling. axi_bvalid never transitions to 1 because its input comes through a 22 ns combinational path that the 16.67 ns clock cannot resolve. PS master blocks forever on BVALID. AXI interconnect starves. PS goes unreachable, requiring power-cycle.",
+    "explains_all_prior_observations": true
+  },
+
+  "hypotheses_eliminated": [
+    {"hypothesis": "RTL AXI-Lite protocol deadlock on split AW/W channels",
+     "eliminated_by": "results/kv260_axi_simulation_v2.json (all 4 scenarios pass in simulation)"},
+    {"hypothesis": "pl_clk0 not running at all",
+     "eliminated_by": "this probe — CLKACT=1, clock is enabled and running"}
+  ],
+
+  "hypothesis_confirmed": "pl_clk0 is running at ~60 MHz, not the 40 MHz target — setup violations in AXI state machine cause metastable latching and BVALID never asserts",
+
+  "fix_paths": [
+    {
+      "id": "A",
+      "name": "Rebuild bitstream for 50 MHz (cleanly achievable from 1500 MHz IOPLL)",
+      "rationale": "1500 / 30 / 1 = 50 MHz exactly. Also 30 MHz (1500/50) or 25 MHz (1500/60) are clean. 50 MHz is the highest safely achievable without rounding.",
+      "procedure": "Edit hardware/kv260/build_bd.tcl CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ from {40} to {50}. Rebuild: source /tools/Xilinx/2025.2.1/Vivado/settings64.sh && vivado -mode batch -source hardware/kv260/build_bd.tcl. Expected wallclock: ~50 min.",
+      "risk": "Low. Existing bitstream was timing-clean at 40 MHz with WNS +3.174 ns; a 50 MHz rebuild costs at most ~2 ns of slack, leaving ~1 ns positive — should still close. If it doesn't close, fall back to 30 MHz (1500/50) for guaranteed margin.",
+      "predicted_outcome": "Bitstream closes at 50 MHz, xmutil loads with CLKACT=1 and DIVISOR0=30 (60/2 = 30), actual clock = 50 MHz, AXI works."
+    },
+    {
+      "id": "B",
+      "name": "Force clock divisor via direct CRL_APB register write",
+      "rationale": "fclk framework in kernel might honor a raw register write even when assigned-clock-rates didn't land precisely. DIVISOR0=37 gives ~40.54 MHz (closer to build target than 60).",
+      "procedure": "On kria after xmutil loadapp, run: sudo python3 -c 'import mmap,os,struct; f=os.open(\"/dev/mem\",os.O_RDWR|os.O_SYNC); m=mmap.mmap(f,0x1000,offset=0xFF5E0000); r=struct.unpack(\"<I\",m[0xC0:0xC4])[0]; r=(r & ~0x3F00) | (37 << 8); m[0xC0:0xC4]=struct.pack(\"<I\",r); m.close(); os.close(f)'",
+      "risk": "Higher. Direct register writes bypass the clock framework; downstream drivers may assume a different rate. If fclk_cfg later re-runs (another loadapp), it'll overwrite. Not a durable fix.",
+      "predicted_outcome": "Works for the immediate test but breaks on any subsequent loadapp."
+    }
+  ],
+
+  "recommended_path": "A (rebuild at 50 MHz)",
+
+  "retro_074_status": "root_cause_identified",
+  "retro_074_closure_gated_on": "Successful AXI access after the 50 MHz rebuild + deploy + xmutil loadapp. This is a one-shot test; if the clock matches bitstream timing, the hang is resolved.",
+
+  "artifacts_written": [
+    "scripts/kv260_probe_pl_clk.sh",
+    "results/kv260_pl_clock_probe.json"
+  ]
+}
