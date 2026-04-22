@@ -14200,3 +14200,48 @@ When: classify_failure_mode is called.
 Then: failure_mode = "extraction_fp" (only fp_rate exceeds its threshold).
 
 **Implementation Status:** Implemented (tests/python/test_experiment_706_gemma4_diagnostic.py, Exp 706)
+
+## REQ-VERIFY-146: ModelAdaptiveThresholdGate Suppresses High-FP Constraint Types Per Model
+
+The pipeline SHALL support a ModelAdaptiveThresholdGate that tracks per-(model_id, constraint_type)
+precision and suppresses constraint types where precision < 0.5 for a specific model.
+
+For each (model_id, constraint_type) pair the gate maintains:
+- tp_count: extractor fired AND violation was real (true positive)
+- fp_count: extractor fired AND response was already correct (false positive)
+- precision: tp_count / (tp_count + fp_count)
+
+- REQ-VERIFY-146-1: is_suppressed(model_id, constraint_type) SHALL return True when precision < 0.5 and total observations > 0.
+- REQ-VERIFY-146-2: is_suppressed SHALL return False when there are no observations for the pair (default allow).
+- REQ-VERIFY-146-3: precision() SHALL return 0.5 when there are no observations (neutral prior, no suppression).
+- REQ-VERIFY-146-4: update(model_id, constraint_type, was_tp=True) SHALL increment tp_count.
+- REQ-VERIFY-146-5: update(model_id, constraint_type, was_tp=False) SHALL increment fp_count.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/adaptive_gate.py, Exp 707)
+
+## REQ-VERIFY-147: ModelAdaptiveThresholdGate State Persists Across Sessions
+
+The gate state (tp_count, fp_count per model/constraint pair) SHALL persist to a JSON file
+so that learning accumulates across sessions.
+
+- REQ-VERIFY-147-1: save() SHALL write state atomically (write-then-rename) to prevent corrupt files on crash.
+- REQ-VERIFY-147-2: load() SHALL restore state from the file so is_suppressed() reflects prior session observations.
+- REQ-VERIFY-147-3: load() SHALL be a no-op (empty state) when the file does not exist.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/adaptive_gate.py, Exp 707)
+
+### SCENARIO-VERIFY-146: Gate Suppresses High-FP Constraint Type for Specific Model
+
+Given: A ModelAdaptiveThresholdGate with 10 FP observations for ("gemma4", "SymCodeVerifier").
+When: is_suppressed("gemma4", "SymCodeVerifier") is called.
+Then: Returns True (precision = 0.0 < 0.5).
+
+**Implementation Status:** Implemented (tests/python/test_experiment_707_adaptive_thresholds.py, Exp 707)
+
+### SCENARIO-VERIFY-147: Gate State Survives Save/Load Round-Trip
+
+Given: A gate with suppression state seeded for a model/constraint pair.
+When: save() then load() on a fresh gate instance.
+Then: is_suppressed() returns the same result as before the save.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_707_adaptive_thresholds.py, Exp 707)
