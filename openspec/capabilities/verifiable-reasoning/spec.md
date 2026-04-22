@@ -14678,4 +14678,87 @@ Then:
   - If labeled MATH-500 unavailable, transfer_auc=null and reason is "manual_label_required".
   - The gate file reflects the transfer result alongside CV results.
 
-**Implementation Status:** Planned (Exp 732)
+**Implementation Status:** Implemented (Exp 732)
+
+## REQ-VER-035: Tier 2.1 JEPAReasonerProbe MUST Fire Between Tier 2 EORM and Tier 2.5 SymCodeVerifier
+
+Tier 2.1 is the latency-optimized pre-generative constraint probe (JEPAReasonerProbe).
+It MUST be inserted in the cascade pipeline immediately after Tier 2 EORM output is produced
+and before Tier 2.5 SymCodeVerifier is invoked.
+
+Sub-requirements:
+- REQ-VER-035-1: Tier 2.1 probe threshold SHALL be calibrated to the 5th percentile of
+  correct-step scores on the FoVer v2 corpus, ensuring < 5% false positive rate on correct steps.
+- REQ-VER-035-2: The threshold value SHALL be sourced from Exp 732 cross-validation outputs
+  (5th percentile of correct-step probe scores).
+- REQ-VER-035-3: Tier21ProbeWrapper SHALL expose score(query_text) returning (probe_score, verdict).
+
+**Implementation Status:** Implemented (python/carnot/cascade/tier21_probe.py, Exp 733)
+
+## REQ-VER-036: Tier 2.1 Early-Exit MUST Skip SymCodeVerifier, HERMES, and Causal Tiers When Verdict is likely_correct
+
+When Tier 2.1 probe score <= threshold (verdict == "likely_correct"), the cascade router
+MUST skip Tier 2.5 SymCodeVerifier, Tier 2.6 HERMES, and Tier 2.7 Causal tiers entirely
+and return the response marked "likely_correct".
+
+Sub-requirements:
+- REQ-VER-036-1: The cascade_router SHALL set tier21_skip=True in RouteResult.metadata when
+  the early-exit path fires.
+- REQ-VER-036-2: The probe_score SHALL be logged in RouteResult.metadata.probe_score for
+  every query regardless of skip decision.
+- REQ-VER-036-3: The skip rate (fraction of queries taking the early-exit path) SHALL be
+  measurable from RouteResult.metadata fields without re-running inference.
+
+**Implementation Status:** Implemented (python/carnot/cascade/cascade_router.py, Exp 733)
+
+## REQ-VER-037: Tier 2.1 MUST Emit ViolationEvent Stub to FR11EventBus When Score Exceeds Threshold
+
+When Tier 2.1 probe score > threshold (verdict == "likely_violation"), the probe wrapper
+MUST emit a ViolationEvent stub to the FR11EventBus.  Until Exp 734 implements the real bus,
+the stub is a no-op append to an in-memory list or a file log.
+
+Sub-requirements:
+- REQ-VER-037-1: emit_violation_stub(query_id, probe_score) SHALL be called for every
+  likely_violation verdict.
+- REQ-VER-037-2: The stub interface SHALL be replaceable by Exp 734 without changing callers:
+  the Tier21ProbeWrapper holds a reference to an event_bus callable.
+- REQ-VER-037-3: The stub SHALL record at minimum: query_id, probe_score, timestamp.
+
+**Implementation Status:** Implemented (python/carnot/cascade/tier21_probe.py, Exp 733)
+
+### SCENARIO-VER-044: Tier 2.1 Early-Exit Fires for Likely-Correct Response
+
+Given: A CascadeRouter with Tier 2.1 probe wired, threshold=T.
+When: Probe scores a query at probe_score <= T.
+Then:
+  - verdict == "likely_correct".
+  - SymCodeVerifier tier is NOT invoked.
+  - RouteResult.metadata["tier21_skip"] == True.
+  - RouteResult.metadata["probe_score"] == probe_score.
+
+**Spec traces:** REQ-VER-035, REQ-VER-036
+**Implementation Status:** Implemented (Exp 733)
+
+### SCENARIO-VER-045: Tier 2.1 Violation Path Emits Stub and Continues Cascade
+
+Given: A CascadeRouter with Tier 2.1 probe wired, threshold=T.
+When: Probe scores a query at probe_score > T.
+Then:
+  - verdict == "likely_violation".
+  - emit_violation_stub() is called with query_id and probe_score.
+  - Tier 2.5+ processing continues as normal.
+
+**Spec traces:** REQ-VER-035, REQ-VER-037
+**Implementation Status:** Implemented (Exp 733)
+
+### SCENARIO-VER-046: Tier 2.1 Gate File Written with Correct Schema
+
+Given: Exp 733 completes with valid skip_rate_symcode and fn_delta measurements.
+When: The gate file results/tier21_cascade_gate.json is written.
+Then:
+  - gate field is "pass" iff skip_rate_symcode >= 0.40 AND fn_delta < 0.05 AND probe_latency_p99_ms < 1.0.
+  - All four required fields (gate, skip_rate_symcode, fn_delta, probe_latency_p99_ms) are present.
+  - Exp 734 can read the file and act on the gate field without additional parsing.
+
+**Spec traces:** REQ-VER-035, REQ-VER-036, REQ-VER-037
+**Implementation Status:** Implemented (Exp 733)
