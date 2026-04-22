@@ -2479,3 +2479,4 @@ python/ |
 | 2026-04-22 12:33 UTC | Plan milestone 2026.04.54 | OK | 13 tasks proposed |
 | 2026-04-22 12:38 UTC | Milestone 2026.04.54 activated | OK | 13 tasks queued |
 | 2026-04-22 12:49 UTC | Exp 703: Pre-flight v6 + Slowest-5 Forced Retireme | OK | 81 passed, 3 warnings in 3.69s |
+| 2026-04-22 13:01 UTC | Exp 704: JEPA v17 Architecture — RankNet Pairwise  | OK | 81 passed, 3 warnings in 4.00s |
