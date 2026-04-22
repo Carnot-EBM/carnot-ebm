@@ -13573,3 +13573,63 @@ Then: no entry is added to ViolationPatternLibrary for that pair.
 **Implementation Status:** Implemented (tests/python/test_experiment_683_fr11_real_positives.py, Exp 683)
 
 **Implementation Status:** Implemented (tests/python/test_experiment_681_adversarial_vr.py, Exp 681)
+
+## REQ-LEARN-045: FoVer Z3 Pipeline Produces >= 200 Labeled Step Pairs
+
+The Z3-verified PRM training data pipeline SHALL produce at least 200 labeled
+(question, step, correct/incorrect) pairs from stored CoT response corpora,
+using the Z3 SMT solver to verify arithmetic entailment at zero human annotation cost.
+
+- REQ-LEARN-045-1: Z3StepVerifier SHALL extract arithmetic claims (A op B = C) from
+  step text and encode them as Z3 integer constraints.
+- REQ-LEARN-045-2: verify_step_z3(prior_steps, current_step) SHALL return one of
+  "correct" | "violation" | "unparseable".
+- REQ-LEARN-045-3: "correct" means Z3 found the claim satisfiable with prior premises.
+- REQ-LEARN-045-4: "violation" means Z3 found the claim unsatisfiable (contradiction).
+- REQ-LEARN-045-5: "unparseable" means no arithmetic claim could be extracted.
+- REQ-LEARN-045-6: FoVerZ3Pair dataclass SHALL capture (question, step_text,
+  step_index, z3_verdict, step_correct).
+- REQ-LEARN-045-7: step_correct SHALL be True iff z3_verdict is "correct" or "unparseable".
+
+**Implementation Status:** Implemented (python/carnot/training/fover_z3_labeler.py,
+scripts/experiment_686_fover_formal_v1.py, Exp 686)
+
+## REQ-LEARN-046: Z3 Labels Agree with FOVER Hand-Labels at >= 80% Rate on Overlap
+
+On the subset of step pairs that overlap with the 57 hand-labeled FOVER corpus,
+the Z3-assigned labels SHALL agree with human labels at a rate of >= 80%.
+
+- REQ-LEARN-046-1: The overlap is identified by step_text substring matching.
+- REQ-LEARN-046-2: agreement = n_matching / n_overlap_pairs.
+- REQ-LEARN-046-3: honest_verdict SHALL be "fover_z3_success" if n_labeled >= 200
+  AND agreement >= 0.80.
+- REQ-LEARN-046-4: honest_verdict SHALL be "fover_z3_partial" if n_labeled >= 50
+  AND agreement >= 0.60.
+- REQ-LEARN-046-5: honest_verdict SHALL be "fover_z3_z3_unavailable" if z3 could
+  not be installed.
+
+**Implementation Status:** Implemented (scripts/experiment_686_fover_formal_v1.py, Exp 686)
+
+### SCENARIO-LEARN-075: Correct Arithmetic Step Labeled as Correct
+
+Given: a CoT step "47 + 28 = 75".
+When: Z3StepVerifier.verify_step_z3([], "47 + 28 = 75") is called.
+Then: verdict is "correct" and step_correct=True.
+
+**Implementation Status:** Implemented (tests/python/test_fover_z3_labeler.py, Exp 686)
+
+### SCENARIO-LEARN-076: Incorrect Arithmetic Step Labeled as Violation
+
+Given: a CoT step "47 + 28 = 65" (arithmetic error).
+When: Z3StepVerifier.verify_step_z3([], "47 + 28 = 65") is called.
+Then: verdict is "violation" and step_correct=False.
+
+**Implementation Status:** Implemented (tests/python/test_fover_z3_labeler.py, Exp 686)
+
+### SCENARIO-LEARN-077: Z3 Unavailable Degrades Gracefully
+
+Given: z3-solver is not installed.
+When: verify_step_z3() or extract_arithmetic_claim() is called.
+Then: verdict is "unparseable" and step_correct=True (conservative label).
+
+**Implementation Status:** Implemented (tests/python/test_fover_z3_labeler.py, Exp 686)
