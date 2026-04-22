@@ -13238,3 +13238,67 @@ its calibrated threshold, even though the v3 fixed threshold of 0.30 would have 
 gate_closed for the ensemble average.
 
 **Implementation Status:** Implemented (python/carnot/pipeline/ias_gate_calibration.py, scripts/experiment_674_ias_adaptive_gate.py, Exp 674)
+
+
+### REQ-VERIFY-153: LOS-Net Sequence-Level Hallucination Detector (< 5M params)
+
+The LOS-Net module (losnet_detector.py) shall implement a sequence-level hallucination
+detector that scores the full trajectory of next-token distribution entropy, not
+individual token entropy.
+
+- REQ-VERIFY-153-1: extract_losnet_features(logit_sequences, top_k) shall accept a list
+  of per-step probability vectors, renormalise each step, compute per-step Shannon entropy,
+  entropy_variance, and entropy_trend (OLS slope of entropy vs. position), and return a
+  LOSNetFeatures dataclass.
+- REQ-VERIFY-153-2: LOSNetClassifier shall be a linear logistic classifier with exactly
+  4 parameters (3 weights + 1 bias) over the feature vector
+  [entropy_variance, entropy_trend, max_entropy]. Total < 5M parameters.
+- REQ-VERIFY-153-3: LOSNetClassifier.train(positive_features, negative_features) shall
+  minimise binary cross-entropy via gradient descent and set _trained=True.
+- REQ-VERIFY-153-4: build_losnet_artifact() shall return a JSON-serialisable dict with
+  auc_losnet, auc_spilled_energy_baseline, honest_verdict, n_train_pairs, n_eval_pairs.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/losnet_detector.py,
+tests/python/test_losnet_detector.py, scripts/experiment_675_losnet_detector.py, Exp 675)
+
+### REQ-VERIFY-154: LOS-Net AUC Target >= 0.75 on FOVER Live Pairs
+
+The LOSNetClassifier shall achieve AUROC >= 0.75 on the FOVER live pairs when real
+logit distributions are available. With synthetic text-derived entropy proxies, AUC
+is lower (reported as below_threshold with a note explaining the limitation).
+
+- REQ-VERIFY-154-1: score(features) shall return a float in [0, 1] — probability of
+  hallucination — using sigmoid(w^T x + b) where x = [variance, trend, max_entropy].
+- REQ-VERIFY-154-2: honest_verdict in the result artifact shall be "tier0h_viable" if
+  auc >= 0.75, "below_threshold" otherwise.
+- REQ-VERIFY-154-3: The module is pure Python (no JAX required) so it runs in CI
+  without GPU hardware.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/losnet_detector.py,
+scripts/experiment_675_losnet_detector.py, Exp 675)
+Note: Exp 675 reports below_threshold because FOVER lacks stored logit distributions;
+synthetic text proxies are used instead. AUC on real distributions expected to be higher.
+
+### SCENARIO-VERIFY-202: extract_losnet_features Returns Correct Entropy for Uniform Distribution
+
+Given: a sequence of n_steps uniform probability vectors over k tokens.
+When: extract_losnet_features(sequences, top_k=k) is called.
+Then: all per-step entropies equal log(k), entropy_variance == 0, entropy_trend == 0.
+
+**Implementation Status:** Implemented (tests/python/test_losnet_detector.py, Exp 675)
+
+### SCENARIO-VERIFY-203: LOSNetClassifier Scores Hallucinations Higher After Training
+
+Given: positive (high-variance, positive-trend entropy) and negative (peaked, flat) training features.
+When: clf.train(positives, negatives) is called followed by clf.score().
+Then: clf.score(positive_pattern) > clf.score(negative_pattern).
+
+**Implementation Status:** Implemented (tests/python/test_losnet_detector.py, Exp 675)
+
+### SCENARIO-VERIFY-204: score() Returns P(hallucination) in [0, 1]
+
+Given: any LOSNetFeatures instance.
+When: clf.score(features) is called on a trained or untrained classifier.
+Then: result is a float in [0, 1]; untrained returns 0.5.
+
+**Implementation Status:** Implemented (tests/python/test_losnet_detector.py, Exp 675)
