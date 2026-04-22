@@ -60,9 +60,16 @@ set part          "xck26-sfvc784-2LV-c"
 set project_name  "carnot_ising"
 set bd_name       "carnot_ising_bd"
 set top_rtl_module "ising_sampler_128_sync"
-set rtl_files [list \
-    "hardware/kv260/ising_sampler_v2.v" \
-]
+# CARNOT_RTL_FILES can override the default source list for isolation builds
+# (e.g. the RETRO-074 minimal AXI responder).  Colon-separated paths.
+if {[info exists env(CARNOT_RTL_FILES)]} {
+    set rtl_files [split $env(CARNOT_RTL_FILES) ":"]
+    puts "=== RTL source override: $rtl_files ==="
+} else {
+    set rtl_files [list \
+        "hardware/kv260/ising_sampler_v2.v" \
+    ]
+}
 # Output goes to an UNCOMMITTED dir — bitstream is ~5 MB, intermediate files
 # are ~1 GB.  .gitignore filters output/** so none of this ends up in git.
 set project_dir   "output/carnot_ising_bd/project"
