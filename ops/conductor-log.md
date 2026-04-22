@@ -2446,3 +2446,4 @@ python/ |
 | 2026-04-22 03:01 UTC | Exp 678: Prompt-Injection KAN v1 — True Teacher Di | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-22 03:12 UTC | Exp 679: Prompt-Injection KAN v1 — Cross-Dataset G | OK | 81 passed, 2 warnings in 4.06s |
 | 2026-04-22 03:17 UTC | Milestone 2026.04.52 activated | OK | 12 tasks queued |
+| 2026-04-22 03:28 UTC | Exp 678: Legacy Retirement v2 + Conductor Pre-Flig | OK | 81 passed, 2 warnings in 4.60s |
