@@ -2658,3 +2658,4 @@ python/ |
 | 2026-04-23 20:16 UTC | Exp 773: Carnot vs SETS — Test-Time Scaling Compar | OK | 81 passed, 3 warnings in 7.15s |
 | 2026-04-23 20:30 UTC | Exp 774: Adaptive Bayesian Sampling in PSV — Varia | OK | 81 passed, 3 warnings in 7.65s |
 | 2026-04-23 20:47 UTC | Exp 775: Jailbreak Detection KAN v1 — Safety Class | OK | 81 passed, 3 warnings in 8.64s |
+| 2026-04-23 21:01 UTC | Exp 776: KV260 nextpnr-xilinx Synthesis — Open-Sou | OK | 81 passed, 3 warnings in 7.56s |
