@@ -4,6 +4,93 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-23 arxiv Scan (Milestone 2026.04.58 Planning)
+
+### Detecting and Correcting Hallucinations in LLM-Generated Code via Deterministic AST Analysis
+- **Paper:** arXiv 2601.19106 (January 2026)
+- **What:** Proposes a post-processing framework that parses generated code into an Abstract
+  Syntax Tree (AST) and validates it against a dynamically-generated Knowledge Base built via
+  library introspection. Deterministic rules find and fix API-level and identifier-level
+  hallucinations (Knowledge Conflicting Hallucinations / KCHs). On 200 manually-curated
+  Python snippets: 100% precision, 87.6% recall, 77.0% auto-correction rate.
+- **Relevance to Carnot:** Carnot's CodeExtractor uses regex-based extraction which misses
+  API-level hallucinations. AST-based verification is execution-free (unlike runtime
+  instrumentation) and formally verifiable (unlike LLM re-checking). AST knowledge validation
+  complements CodeExtractor: use AST for fast pre-filter (catches KCHs), CodeExtractor for
+  arithmetic/logic violations. The 100% precision is the key property — zero FP rate means
+  every detected violation is real, directly addressing the FP-rate problem at larger models.
+- **Concrete experiment:** Exp 764 — ASTKnowledgeVerifier: implement AST parser + library
+  introspection KB for Python code. Test on HumanEval subset: compare KCH detection rate vs
+  CodeExtractor, measure precision/recall, integrate as Tier 0d pre-filter for code tasks.
+- **When to incorporate:** Milestone 2026.04.58 — Phase 4 new research (Exp 764).
+
+### Process Reward Models That Think
+- **Paper:** arXiv 2504.16828 (April 2025, late-2025 ICLR workshop)
+- **What:** Builds PRMs as verbalized step-wise reward models — instead of a discriminative
+  head, the PRM generates a chain-of-thought verification for each step, explaining WHY the
+  step is correct or incorrect. Requires orders of magnitude fewer process labels than
+  discriminative PRMs. Achieves SOTA on ProcessBench with fewer than 1,000 labeled steps.
+- **Relevance to Carnot:** EORM is a discriminative step-level oracle (binary correct/incorrect).
+  A verbalized PRM would explain the error in natural language, enabling the repair step to
+  receive structured feedback ("arithmetic carry is wrong in step 3 because 47+28=75, not 76").
+  This directly addresses the repair quality problem: right now repair prompts include the
+  raw violation signal; verbalized PRM would translate it to human-readable targeted feedback.
+  Filed for EORM upgrade: add a verbalized explanation head alongside the energy score.
+- **Concrete experiment:** Exp 765 Phase 4 enhancement — VerbalizePRM: train EORM with
+  verbalized explanation head on FoVer v2 steps. Compare: does verbalized feedback improve
+  repair accuracy vs raw energy signal? Measure: pass@1 improvement on HumanEval 2-round repair.
+- **When to incorporate:** Milestone 2026.04.58 — enhancement of Exp 759/765.
+
+### PPSEBM: Progressive Parameter Selection with Energy-Based Model for Continual Learning
+- **Paper:** arXiv 2512.15658 (December 2025)
+- **What:** Integrates an EBM with Progressive Parameter Selection (PPS) to prevent catastrophic
+  forgetting in continual NLP tasks. The EBM generates replay data from previous tasks; this
+  data guides PPS to focus parameter updates on task-relevant components. Best performance
+  83.4 when combining EBM + PPS.
+- **Relevance to Carnot:** PSV self-play has a recurring relapse problem (fp_rate_slope reverses
+  from negative to positive across milestones). PPSEBM's approach — use energy to identify
+  which constraint parameters are task-relevant and freeze others during adaptation — directly
+  addresses the PSV coupling decay hypothesis. When adapting to new questions, freeze
+  constraints that are already well-calibrated (low energy variance) and update only those
+  with high variance. This prevents the self-play loop from overwriting learned couplings.
+- **Concrete experiment:** Exp 762 — PPSConstraintSelector: EBM-guided progressive constraint
+  parameter freezing during PSV self-play. Gate: fp_rate_slope < 0 after 30 self-play steps.
+- **When to incorporate:** Milestone 2026.04.58 — Phase 4, PSV relapse fix via PPS (Exp 762).
+
+### Stabilizing Iterative Self-Training with Verified Reasoning via Symbolic Recursive Self-Alignment
+- **Paper:** arXiv 2603.21558 (March 2026)
+- **What:** Proposes Symbolic Recursive Self-Alignment (SRSA) — uses a symbolic verifier (Z3,
+  SMT solver) to screen self-generated training data before incorporating it into the next
+  training round. Self-training instability (mode collapse, reward hacking) is mitigated by
+  only accepting samples where the verifier confirms correctness. Achieves stable multi-round
+  self-improvement on GSM8K and MATH.
+- **Relevance to Carnot:** PSV self-play produces its own training data via VR repairs; the
+  relapse problem (fp_rate reversal) is likely caused by incorporating incorrect self-generated
+  repairs into the constraint memory. SRSA's symbolic screening approach maps directly:
+  before writing a VR repair to the session memory, verify it with Z3/SymCodeVerifier first.
+  Only repairs that pass Z3 verification enter the memory pool; others are discarded.
+  This is the missing gate in the FR-11 relay: currently all VR outputs write to memory,
+  including false positives and failed repairs.
+- **Concrete experiment:** Exp 756 — SRSAMemoryGate: add Z3 verification gate before
+  session_memory.write() in the FR-11 relay pipeline. Only Z3-verified repairs enter memory.
+  Test: does PSV fp_rate_slope return to negative with memory gating?
+- **When to incorporate:** Milestone 2026.04.58 — PSV relapse fix (Exp 756).
+
+### Spark: Stepwise Process-Aware Rewards for Reference-Free Process Reinforcement Learning
+- **Paper:** arXiv 2512.03244 (December 2025)
+- **What:** Three-stage framework: generator produces solutions; verifier evaluates each step
+  using parallel scaling (self-consistency) and sequential scaling (meta-critique); verification
+  outputs become synthetic PRM training data. Achieves 67.5 F1 on ProcessBench vs 66.4 for
+  reference-guided training, with NO ground-truth process labels needed.
+- **Relevance to Carnot:** PSV self-play is similar but uses energy scores instead of LLM
+  meta-critique. Incorporating the Spark meta-critique layer as a secondary verifier signal
+  could stabilize PSV training by weighting high-consensus (self-consistent) repairs more
+  strongly in the memory pool. Filed as complementary to SRSA memory gating.
+- **Concrete experiment:** Enhancement to Exp 756 — add self-consistency weighting for PSV
+  memory writes: run each VR repair K=3 times (cheap with CPU inference), only write to
+  memory if K≥2 agree. Stabilizes memory without needing Z3 for every repair.
+- **When to incorporate:** Milestone 2026.04.58 — Exp 756 PSV recovery enhancement.
+
 ## 2026-04-22 arxiv Scan (Milestone 2026.04.56 Planning)
 
 ### Efficient Test-Time Scaling via Probing Internal States of LLMs

@@ -1,0 +1,1208 @@
+milestone: 2026.04.58
+milestone_title: PSV Architecture Repair + HLS Energy Fix + Live Code Repair + SRSA Memory Gate
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+
+- id: exp754-preflight-v10
+  milestone: 2026.04.58
+  deliverable: results/experiment_754_preflight_v10.json
+  title: 'Exp 754: Pre-flight v10 + Manifest Enforcement + GPU Health (MANDATORY FIRST)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Milestone .57 closed with the manifest_fix_patch.txt still not applied for
+    the FOURTH consecutive cycle. Cumulative waste: 1,264 min (21.1 hours). The patch at
+    results/manifest_fix_patch.txt was written by Exp 731 and describes the exact dispatch
+    site in scripts/research_conductor.py that must be changed. Exp 527 appeared for the
+    4th full milestone despite mandatory retirement in .56. This experiment APPLIES the patch
+    (not just records that it should be applied) and confirms enforcement.
+
+    EXISTING CODE TO READ FIRST:
+    - results/manifest_fix_patch.txt — the patch; read FULLY before applying.
+    - scripts/conductor_exclusion_manifest.json — current exclusion list.
+    - python/carnot/pipeline/exclusion_manifest.py — ExclusionManifest class.
+    - scripts/conductor_pre_flight.py — pre-flight runner (incremental mode).
+    - results/experiment_740_preflight_v9.json — v9 baseline to compare against.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - python/carnot/pipeline/dualgpu_retrain.py — DualGPURetrain (added Exp 740).
+
+    TASK: Apply manifest_fix_patch.txt to scripts/research_conductor.py. Confirm GPU health.
+    Confirm Exp 527 exclusion is active. Run incremental test selection baseline.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-INFRA-050 (manifest patch MUST be applied at the dispatch site in
+       scripts/research_conductor.py before any .58 dequeue; enforcement via code change,
+       not retro text), REQ-INFRA-051 (pre-flight v10 MUST confirm patch application
+       by searching for the guard clause in scripts/research_conductor.py),
+       SCENARIO-INFRA-059/060 to openspec/capabilities/pipeline/spec.md.
+    3. Read results/manifest_fix_patch.txt IN FULL. Understand the exact code change needed
+       (which function, which line, what guard to add).
+    4. Apply the patch to scripts/research_conductor.py:
+       a. Read the current content of scripts/research_conductor.py around the dispatch site.
+       b. Apply the exact change described in the patch (add the exclusion manifest check
+          before dequeuing an experiment).
+       c. IMPORTANT: Do NOT break any existing functionality. Read the full dispatch function.
+       d. Run the existing test suite to confirm no regression:
+          JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q --tb=short 2>&1 | tail -20
+    5. GPU health check:
+       a. Run `nvidia-smi` to confirm both GPUs at <100MB VRAM / 0% util.
+       b. If zombie: `import os, signal; os.kill(pid, signal.SIGKILL)`.
+       c. Record: gpu0_vram_mb, gpu1_vram_mb, gpu0_util, gpu1_util, gpu0_temp_c, gpu1_temp_c.
+    6. Confirm Exp 527 exclusion:
+       a. Read scripts/conductor_exclusion_manifest.json.
+       b. Verify "exp527" is in the exclusion list (added by Exp 740).
+       c. Record: exp527_excluded (bool), n_excluded_experiments.
+    7. Run incremental test selection:
+       a. Run incremental selector on current diff.
+       b. Log: incremental_mode, tests_selected.
+    8. Confirm patch applied: search scripts/research_conductor.py for the guard clause
+       pattern from the patch. Record: patch_applied (bool).
+    9. Create scripts/experiment_754_preflight_v10.py:
+       a. ExperimentTemplate(754) + ExperimentTimeoutWatchdog(754, timeout_minutes=45).
+       b. Implement steps 3-8.
+       c. honest_verdict:
+          - "preflight_v10_patch_applied_gpu_clean" if patch_applied AND gpu_clean AND exp527_excluded
+          - "preflight_v10_patch_applied_gpu_dirty" if patch_applied AND NOT gpu_clean
+          - "preflight_v10_patch_failed" if NOT patch_applied (apply failed)
+          - "preflight_v10_exp527_leak" if patch_applied AND NOT exp527_excluded
+       d. artifact: patch_applied (bool), gpu0_vram_mb, gpu1_vram_mb, gpu_clean (bool),
+          exp527_excluded (bool), n_excluded_experiments, incremental_tests_selected,
+          manifest_fix_patch_path, honest_verdict.
+    10. Write tests/python/test_experiment_754_preflight_v10.py with 100% coverage:
+        - test patch_applied correctly reads research_conductor.py for the guard clause.
+        - test Exp 527 exclusion check reads manifest correctly.
+        - test honest_verdict branches map correctly.
+        Each test traces to REQ-INFRA-050/051.
+    11. Reconcile:
+        - ops/status.md: "Pre-flight v10: manifest patch APPLIED (patch_applied=True/False).
+          GPU state: clean/dirty. Exp 527: excluded. Manifest enforcement: ACTIVE."
+        - ops/changelog.md: one-line with honest_verdict.
+    12. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py EXCEPT to apply the patch
+    from results/manifest_fix_patch.txt.
+
+- id: exp755-psv-relapse-diagnosis
+  milestone: 2026.04.58
+  deliverable: results/experiment_755_psv_relapse_diagnosis.json
+  title: 'Exp 755: PSV Relapse Diagnosis — Architecture Root Cause (RETRO-PSV-RELAPSE)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: PSV (self-play verify-repair loop) has relapsed for the third time.
+    Milestone .57 retro (Exp 753) showed fp_rate_slope_new30=+0.00110 (positive =
+    deteriorating). Three prior recovery experiments (Exps 697, 737) each achieved
+    temporary recovery that subsequently reversed. This indicates an ARCHITECTURE problem,
+    not a hyperparameter problem. Three competing hypotheses:
+
+    HYPOTHESIS A (SRSA — arXiv 2603.21558): Unverified incorrect repairs write to session
+    memory and corrupt the constraint signal. Each relapse occurs when the memory pool
+    accumulates enough corrupted entries to flip the constraint weights.
+
+    HYPOTHESIS B (PPSEBM — arXiv 2512.15658): Calibrated constraint parameters get
+    overwritten during self-play adaptation. The coupling matrix entries that were correctly
+    learned via CD training get perturbed by the self-play update step.
+
+    HYPOTHESIS C (Curriculum collapse): The self-play question diversity is exhausted —
+    the system keeps sampling the same question types, leading to overfitting to a narrow
+    distribution of constraint violations.
+
+    This experiment diagnoses which hypothesis is correct so Exp 756 can apply the right fix.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/self_learning_relay.py — SelfLearningRelay; look for memory write.
+    - python/carnot/pipeline/session_memory.py — SessionMemory; how entries are written.
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline; the PSV entry point.
+    - results/experiment_736_psv_diagnosis.json — .56 root cause: "constraint_specialization".
+    - results/experiment_737_psv_recovery.json — .56 recovery: "domain_diverse_training".
+    - results/operational_retro_2026_04_57.json — .57 retro: PSV relapse confirmed.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Run a controlled diagnostic to test all three hypotheses on synthetic data.
+    Report: which hypothesis explains the relapse? Provide evidence for each.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-PSV-010 (PSV relapse root cause MUST be identified via controlled test of
+       at least 3 competing hypotheses before applying any fix), SCENARIO-PSV-020 to
+       openspec/capabilities/self_learning/spec.md.
+    3. Build a PSVDiagnostic framework:
+       a. Create python/carnot/pipeline/psv_diagnostic.py with:
+          PSVDiagnosticResult(hypothesis_a_confirmed, hypothesis_b_confirmed,
+            hypothesis_c_confirmed, primary_hypothesis, evidence_dict) dataclass.
+          PSVDiagnostic(pipeline, session_memory, n_trials=100):
+            test_hypothesis_a(): inject 20% corrupted (incorrect) repairs into memory,
+              run 30 self-play steps, measure fp_rate_slope. If slope > 0, hyp A confirmed.
+            test_hypothesis_b(): freeze coupling matrix before self-play, run 30 steps,
+              measure fp_rate_slope. If slope stays ≤ 0 when frozen, hyp B confirmed.
+            test_hypothesis_c(): duplicate the same 10 questions 10x (zero diversity),
+              run 30 self-play steps, measure fp_rate_slope. If slope > 0, hyp C confirmed.
+            diagnose() -> PSVDiagnosticResult: run all three, return primary hypothesis.
+    4. Run the diagnostic on synthetic GSM8K-style data (100 questions, CPU-only):
+       a. Initialize PSV with clean state.
+       b. Run test_hypothesis_a() with 20% corrupted memory writes.
+       c. Run test_hypothesis_b() with frozen coupling matrix.
+       d. Run test_hypothesis_c() with zero-diversity question set.
+       e. For each: record fp_rate at step 0, 10, 20, 30 and fp_rate_slope.
+    5. Compare results across hypotheses:
+       a. Which shows the strongest correlation with fp_rate_slope reversal?
+       b. Are multiple hypotheses partially true?
+       c. What is the PRIMARY root cause?
+    6. Write python/carnot/pipeline/psv_diagnostic.py with full implementation.
+    7. Create scripts/experiment_755_psv_relapse_diagnosis.py:
+       a. ExperimentTemplate(755) + ExperimentTimeoutWatchdog(755, timeout_minutes=60).
+       b. Run PSVDiagnostic.diagnose() on 100 synthetic questions.
+       c. honest_verdict:
+          - "hypothesis_a_confirmed" (SRSA — memory contamination)
+          - "hypothesis_b_confirmed" (PPSEBM — coupling overwrite)
+          - "hypothesis_c_confirmed" (curriculum collapse)
+          - "multiple_hypotheses" (≥2 confirmed, need combined fix)
+          - "diagnosis_inconclusive" (none confirmed, need deeper analysis)
+       d. artifact: hypothesis_a_slope, hypothesis_b_slope, hypothesis_c_slope,
+          primary_hypothesis, evidence_dict, honest_verdict.
+    8. Write tests/python/test_experiment_755_psv_diagnosis.py with 100% coverage:
+        - test PSVDiagnosticResult dataclass fields.
+        - test test_hypothesis_a injects corrupted repairs correctly.
+        - test test_hypothesis_b freezes coupling matrix before self-play.
+        - test test_hypothesis_c uses zero-diversity question set.
+        Each test traces to REQ-PSV-010.
+    9. Reconcile:
+       - ops/status.md: "RETRO-PSV-RELAPSE diagnosis: primary_hypothesis=X. Evidence: ..."
+       - ops/changelog.md: one-line with honest_verdict.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp756-psv-srsa-gate
+  milestone: 2026.04.58
+  deliverable: results/experiment_756_psv_srsa_gate.json
+  title: 'Exp 756: PSV Recovery v2 — SRSA Memory Gate + PPSEBM Constraint Freezing (GATED on Exp 755)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: GATED on Exp 755 (PSV relapse diagnosis). Read
+    results/experiment_755_psv_relapse_diagnosis.json FIRST. The fix to apply depends
+    on Exp 755's primary_hypothesis:
+    - hypothesis_a: Apply SRSA Memory Gate (arXiv 2603.21558) — Z3/SymCodeVerifier check
+      before memory writes; only verified-correct repairs enter the pool.
+    - hypothesis_b: Apply PPSEBM Constraint Freezing (arXiv 2512.15658) — freeze coupling
+      matrix entries with low energy variance during self-play adaptation.
+    - hypothesis_c: Apply curriculum diversity enforcement — shuffle question pool with
+      minimum Hamming distance between consecutive samples.
+    - multiple_hypotheses: Apply all three (layered fix).
+
+    The SUCCESS CRITERION is fp_rate_slope_new30 < 0 (recovering trend) confirmed on 30+
+    self-play steps. This is the same criterion that Exps 697 and 737 achieved temporarily
+    but did not sustain. The test: run 60 self-play steps total, check slope in two windows:
+    steps 0-30 AND steps 30-60. BOTH windows must show slope < 0 for "recovery_sustained".
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_755_psv_relapse_diagnosis.json — PRIMARY INPUT: primary_hypothesis.
+    - python/carnot/pipeline/self_learning_relay.py — SelfLearningRelay memory write path.
+    - python/carnot/pipeline/session_memory.py — SessionMemory.write() to add gate.
+    - python/carnot/extraction/vprm_verifier.py — VPRMArithmeticVerifier for Z3 checking.
+    - python/carnot/pipeline/psv_diagnostic.py — PSVDiagnostic from Exp 755.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Apply the Exp 755 diagnosis to implement the targeted fix. Validate:
+    fp_rate_slope_new30 < 0 in BOTH windows (steps 0-30 AND 30-60).
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_755_psv_relapse_diagnosis.json. Note primary_hypothesis.
+    3. Add REQ-PSV-011 (SRSA memory gate: SessionMemory.write() MUST verify repair with
+       VPRMArithmeticVerifier before accepting; unverified repairs are discarded),
+       REQ-PSV-012 (PPS constraint freezing: coupling entries with energy variance < threshold
+       MUST NOT be updated during self-play), REQ-PSV-013 (sustained recovery: fp_rate_slope
+       MUST be < 0 in both steps 0-30 AND 30-60 windows to declare RETRO-PSV-RELAPSE closed),
+       SCENARIO-PSV-021/022/023 to openspec/capabilities/self_learning/spec.md.
+    4. Implement the fix(es) based on primary_hypothesis:
+       a. HYPOTHESIS A fix (SRSA Memory Gate):
+          Add to python/carnot/pipeline/session_memory.py:
+          SessionMemory.write_with_verification(repair_text, constraint_type) -> bool:
+            - Run VPRMArithmeticVerifier.verify(repair_text) → if NOT verified: return False.
+            - If verified: call existing write(), return True.
+          Modify SelfLearningRelay to call write_with_verification instead of write().
+       b. HYPOTHESIS B fix (PPSEBM Constraint Freezing):
+          Add to python/carnot/pipeline/self_learning_relay.py:
+          SelfLearningRelay._freeze_stable_constraints():
+            - For each constraint type: compute energy variance over last 30 self-play steps.
+            - If variance < FREEZE_THRESHOLD (0.01): mark constraint as frozen.
+            - Frozen constraints: skip weight update in PerModelFPTracker.update().
+       c. HYPOTHESIS C fix (Curriculum Diversity):
+          Add to SelfLearningRelay: enforce minimum Hamming distance between consecutive
+          question samples. Reject questions with distance < 2 from the last 5 sampled.
+       d. MULTIPLE: apply all three (A + B + C layered).
+    5. Run validation: 60 self-play steps on 100 synthetic GSM8K-style questions.
+       - Measure fp_rate at steps 0, 10, 20, 30, 40, 50, 60.
+       - Compute fp_rate_slope_window1 (steps 0-30) and fp_rate_slope_window2 (steps 30-60).
+       - recovery_sustained = (window1_slope < 0) AND (window2_slope < 0).
+    6. Create scripts/experiment_756_psv_srsa_gate.py:
+       a. ExperimentTemplate(756) + ExperimentTimeoutWatchdog(756, timeout_minutes=60).
+       b. Implement steps 4-5.
+       c. honest_verdict:
+          - "recovery_sustained" if window1_slope < 0 AND window2_slope < 0
+          - "recovery_partial" if window1_slope < 0 AND window2_slope >= 0 (old pattern)
+          - "recovery_failed" if both slopes >= 0
+          - "fix_not_applicable" if primary_hypothesis == "diagnosis_inconclusive"
+       d. artifact: primary_hypothesis_applied, fix_type, fp_rate_series (list),
+          window1_slope, window2_slope, recovery_sustained (bool), honest_verdict.
+    7. Write tests/python/test_experiment_756_psv_srsa_gate.py with 100% coverage:
+        - test SessionMemory.write_with_verification rejects unverified repairs.
+        - test constraint freezing skips weight update for frozen constraints.
+        - test recovery_sustained requires BOTH window slopes to be negative.
+        Each test traces to REQ-PSV-011/012/013.
+    8. Reconcile:
+       - ops/status.md: "RETRO-PSV-RELAPSE: fix applied (hypothesis=X). Recovery: sustained/partial/failed."
+         If recovery_sustained: "RETRO-PSV-RELAPSE CLOSED."
+       - ops/changelog.md: one-line with honest_verdict.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp757-hls-energy-fix
+  milestone: 2026.04.58
+  deliverable: results/experiment_757_hls_energy_fix.json
+  title: 'Exp 757: HLS Energy Sign Fix — RETRO-HLS-ENERGY (CPU Validation)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 750 (Vitis HLS Ising Sampler v4) built and compiled successfully but
+    CPU validation FAILED: expected energy near -3.0 (ferromagnetic ground state for
+    all-aligned spins), got +3.0 (energy_delta_pct=200%). This is a sign convention bug:
+    the Ising Hamiltonian is E = -sum(J_ij * s_i * s_j). The negative sign is critical —
+    ground state (all spins aligned, J > 0) has NEGATIVE energy. A +3.0 result means
+    the code computes +J instead of -J.
+
+    This bug was reported as RETRO-HLS-ENERGY in the .57 retro and must be fixed before
+    KV260 synthesis can be validated.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_750_vitis_hls_ising_v4.json — baseline: energy_delta_pct=200.
+    - hardware/kv260/ — look for the HLS C++ kernel file (likely ising_sampler_v4.cpp
+      or similar); read it completely.
+    - hardware/kv260/ising_sampler_v3.v — the Verilog RTL for comparison on sign convention.
+    - crates/carnot-ising/src/ — Rust Ising implementation; verify sign convention there.
+    - python/carnot/samplers/parallel_ising.py — Python Ising; verify sign convention there.
+    - scripts/experiment_750_vitis_hls_ising_v4.py — Exp 750 script; find the CPU simulation.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Find and fix the sign bug in the HLS C++ energy function. Validate CPU simulation
+    shows energy near -3.0 for the ferromagnetic ground state test case.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_750_vitis_hls_ising_v4.json to understand the exact test
+       case that failed (which J matrix, which spin configuration, expected vs actual).
+    3. Read the HLS C++ kernel file (hardware/kv260/ising_sampler_v4.cpp or similar).
+       Find the energy accumulation code. Look for the pattern:
+       energy += J[i][j] * spin[i] * spin[j]  ← WRONG (positive)
+       Should be: energy -= J[i][j] * spin[i] * spin[j]  OR energy += -J[i][j] * spin[i] * spin[j]
+    4. Add REQ-HW-040 (HLS Ising kernel energy computation MUST use Hamiltonian
+       E = -sum(J_ij * s_i * s_j), negative sign required; CPU validation MUST confirm
+       energy of ferromagnetic ground state is negative and approximately -J*N*(N-1)/2 for
+       fully connected N-spin system), SCENARIO-HW-040 to
+       openspec/capabilities/verifiable-reasoning/spec.md.
+    5. Fix the sign bug in the HLS C++ kernel:
+       a. Apply the minimal change: negate the energy accumulation.
+       b. Check for any other sign issues: h_ema initialization, Metropolis criterion.
+          The Metropolis criterion for acceptance: accept if delta_E <= 0 (energy DECREASES).
+          Verify the C++ accepts flips that DECREASE energy, not INCREASE.
+    6. Write a CPU validation program:
+       a. Create hardware/kv260/validate_energy_sign.cpp (or Python equivalent):
+          - Set up a small N=4 ferromagnetic Ising system: J[i][j]=1.0 for all i,j.
+          - All spins = +1 (ground state).
+          - Expected energy: E = -sum_{i<j} J_ij * 1 * 1 = -N*(N-1)/2 = -6.0 for N=4.
+          - Run the energy function from the HLS kernel.
+          - Pass if |energy - (-6.0)| < 0.5.
+    7. Alternatively, port the energy calculation to Python for CPU validation:
+       a. Write python/carnot/pipeline/hls_energy_validator.py:
+          HLSEnergyValidator(n_spins, j_matrix, h_field):
+            compute_energy(spins) -> float: implement Hamiltonian E = -sum J_ij s_i s_j - sum h_i s_i
+            validate_ground_state() -> bool: all-ones spins should give minimum energy
+            compare_with_python_ising(n_samples=100) -> (max_delta, max_delta_pct)
+    8. Run validation and confirm:
+       - energy_ground_state < 0 (negative — required by physics)
+       - |energy_ground_state - expected| / |expected| < 0.10 (within 10%)
+       - Record energy_before_fix and energy_after_fix.
+    9. If Vivado is available on PATH: attempt synthesis of fixed kernel.
+       Record: vivado_available (bool), synthesis_attempted (bool), synthesis_result.
+    10. Create scripts/experiment_757_hls_energy_fix.py:
+        a. ExperimentTemplate(757) + ExperimentTimeoutWatchdog(757, timeout_minutes=45).
+        b. Implement steps 5-9.
+        c. honest_verdict:
+           - "sign_fixed_validated" if energy_ground_state < 0 AND delta_pct < 10
+           - "sign_fixed_synthesis_done" if sign_fixed AND vivado_available AND synthesis done
+           - "sign_fixed_not_validated" if fix applied but delta still > 10%
+           - "sign_not_found" if HLS C++ kernel not found at expected path
+        d. artifact: energy_before_fix, energy_after_fix, energy_ground_state, expected_energy,
+           delta_pct, sign_convention_fixed (bool), vivado_available (bool),
+           synthesis_attempted (bool), honest_verdict.
+    11. Write tests/python/test_experiment_757_hls_energy_fix.py with 100% coverage:
+        - test HLSEnergyValidator computes correct energy for N=4 all-ones spins.
+        - test validate_ground_state returns True when energy is negative.
+        - test compare_with_python_ising returns delta < 0.10 for correct implementation.
+        Each test traces to REQ-HW-040.
+    12. Reconcile:
+        - ops/status.md: "RETRO-HLS-ENERGY: sign_fixed=True/False. energy_after_fix=X.
+          Synthesis: attempted/blocked." Mark RETRO-HLS-ENERGY as CLOSED or PARTIAL.
+        - ops/changelog.md: one-line with honest_verdict.
+        - research-hardware-wishlist.md: update KV260 synthesis status section.
+    13. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp758-yosys-synthesis
+  milestone: 2026.04.58
+  deliverable: results/experiment_758_yosys_synthesis.json
+  title: 'Exp 758: Yosys RTL Synthesis — Open-Source Alternative to Vivado (GATED on Exp 757)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: GATED on Exp 757 (HLS energy sign fix). Read
+    results/experiment_757_hls_energy_fix.json first. If sign_fixed=False, this
+    experiment is blocked — write an honest_verdict="blocked_hls_fix_needed" artifact
+    and exit cleanly.
+
+    Vivado has been unavailable for every KV260 synthesis attempt across 6+ milestones.
+    The open-source alternative is yosys + nextpnr. yosys synthesizes Verilog RTL to a
+    gate-level netlist; nextpnr performs place-and-route for various FPGA families.
+    For iCE40 (Lattice), this is fully open-source. For Xilinx (KV260), yosys can target
+    a generic FPGA for resource estimation, or the nextpnr-xilinx experiment may work.
+
+    Even if the KV260 XCK26 is too large for full synthesis with open tools, synthesizing
+    the Ising sampler RTL for iCE40 (smaller) proves the RTL is synthesis-clean and gives
+    real resource utilization numbers. This unblocks KV260 comparison.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_757_hls_energy_fix.json — confirm sign_fixed=True before proceeding.
+    - hardware/kv260/ising_sampler_v3.v — Ising v3 RTL (EMA inertia, Exp 662).
+    - hardware/kv260/ising_sampler_v2.v — Ising v2 RTL (synchronous, smaller).
+    - hardware/kv260/synth_ising.tcl — existing Vivado synthesis TCL (for reference only).
+    - hardware/kv260/ising_sampler_v3_spec.md — v3 spec with target parameters.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Install yosys. Synthesize ising_sampler_v2.v or v3.v targeting a generic/iCE40
+    FPGA. Report synthesis result, resource utilization, and timing estimate.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_757_hls_energy_fix.json. If sign_fixed=False: write
+       artifact with honest_verdict="blocked_hls_fix_needed" and exit immediately.
+    3. Add REQ-HW-041 (Yosys open-source synthesis MUST be attempted as Vivado alternative;
+       honest_verdict=synthesis_successful when LUT count and timing reported without errors),
+       SCENARIO-HW-041 to openspec/capabilities/verifiable-reasoning/spec.md.
+    4. Check if yosys is installed:
+       a. Run `which yosys` and `yosys --version` in a subprocess.
+       b. If not found: attempt install via `pip install yowasp-yosys` (Python wrapper).
+       c. If pip install fails: try `sudo pacman -S yosys` (Arch Linux) or
+          `sudo apt install yosys` (Debian/Ubuntu) in a subprocess.
+       d. Record: yosys_found (bool), yosys_version (str or None).
+    5. If yosys found: run synthesis of hardware/kv260/ising_sampler_v2.v:
+       a. Write a synthesis script hardware/kv260/synth_yosys.ys:
+          read_verilog hardware/kv260/ising_sampler_v2.v
+          synth -top ising_sampler_v2 -flatten
+          stat -top ising_sampler_v2
+          write_json hardware/kv260/ising_sampler_v2_synth.json
+       b. Run: `yosys hardware/kv260/synth_yosys.ys` (or yowasp-yosys equivalent).
+       c. Parse the output: look for "Number of cells", "LUT count", "wire count".
+       d. Record: lut_count, wire_count, cell_count, synthesis_errors.
+    6. If nextpnr-ice40 is available: attempt place-and-route for iCE40-HX1K (small):
+       a. Run nextpnr-ice40 --hx1k --json hardware/kv260/ising_sampler_v2_synth.json
+          --pcf /dev/null --asc /tmp/ising_v2.asc (no pin constraints for resource est).
+       b. Parse timing report: critical_path_ns.
+       c. If timing available: fmax_mhz = 1000.0 / critical_path_ns.
+    7. Create scripts/experiment_758_yosys_synthesis.py:
+       a. ExperimentTemplate(758) + ExperimentTimeoutWatchdog(758, timeout_minutes=30).
+       b. Implement steps 4-6.
+       c. honest_verdict:
+          - "synthesis_successful" if yosys_found AND lut_count is not None AND errors=0
+          - "synthesis_with_warnings" if yosys_found AND lut_count is not None AND warnings>0
+          - "yosys_not_installable" if yosys not found AND all install attempts failed
+          - "blocked_hls_fix_needed" if sign_fixed=False from Exp 757
+          - "synthesis_failed" if yosys found but errors > 0
+       d. artifact: yosys_found (bool), yosys_version, lut_count, wire_count, cell_count,
+          fmax_mhz (if timing available), synthesis_errors, honest_verdict.
+    8. Write tests/python/test_experiment_758_yosys_synthesis.py with 100% coverage:
+        - test yosys_found check reads subprocess result correctly.
+        - test synthesis output parser extracts lut_count from yosys stat output.
+        - test honest_verdict maps correctly to yosys_found and lut_count.
+        Each test traces to REQ-HW-041.
+    9. Reconcile:
+       - ops/status.md: "Yosys synthesis: honest_verdict=X. LUT count: N (iCE40)."
+         Update research-hardware-wishlist.md with yosys status.
+       - ops/changelog.md: one-line with honest_verdict.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp759-iterative-code-repair-live
+  milestone: 2026.04.58
+  deliverable: results/experiment_759_iterative_code_repair_live.json
+  title: 'Exp 759: Iterative 2-Round Code Repair Live — HumanEval (GPU REQUIRED, CARNOT_FORCE_LIVE=1)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2604.10508 "How Many Tries Does It Take? Iterative Self-Repair in LLM
+    Code Generation" shows:
+    - Self-repair universally improves pass rates by +4.9 to +17.1pp on HumanEval
+    - Most gains come from the FIRST TWO ROUNDS
+    - Even small models benefit: round 1 improvement >> round 3+
+    - Error message quality matters: include full traceback, failed test inputs, expected vs actual
+    Exp 744 built the harness (iterative 2-round repair script) but deferred GPU execution.
+    This experiment EXECUTES that harness on live GPU with CARNOT_FORCE_LIVE=1.
+
+    The code verification path avoids the extraction problem that blocks VR on math tasks:
+    it verifies via EXECUTION (run the code, check output), not regex. This is the strongest
+    evidence path for showing Carnot adds value on real models.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/experiment_744_iterative_2round_repair.py — the Exp 744 harness to execute.
+    - results/experiment_744_iterative_2round_repair.json — Exp 744 result (harness status).
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline code repair path.
+    - python/carnot/pipeline/extract.py — CodeExtractor.
+    - python/carnot/pipeline/long_run_executor.py — LongRunBenchmarkExecutor (checkpoint+resume).
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Run the Exp 744 iterative 2-round code repair harness on live GPU (Qwen3.5-0.8B)
+    against 50 HumanEval problems. Report pass@1 improvement from 2-round vs single-round.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-REPAIR-020 (iterative 2-round code repair MUST include full traceback and
+       failed test case inputs in repair prompt; repair prompt MUST be different from the
+       original prompt), REQ-REPAIR-021 (live GPU execution MUST use CARNOT_FORCE_LIVE=1;
+       no simulated fallback allowed for this experiment), SCENARIO-REPAIR-040/041 to
+       openspec/capabilities/verification/spec.md.
+    3. GPU setup:
+       a. apply_env_autofix() FIRST (before any GPU import).
+       b. setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+       c. If CARNOT_FORCE_LIVE not set and GPU not detected: write artifact with
+          honest_verdict="blocked_no_live_gpu" and exit cleanly.
+    4. Read the Exp 744 harness (scripts/experiment_744_iterative_2round_repair.py).
+       Understand the pipeline: load HumanEval → generate → test → if fails: build error
+       message → round 2 generate → test. Reuse this pipeline.
+    5. Create scripts/experiment_759_iterative_code_repair_live.py:
+       a. ExperimentTemplate(759, requires_gpu=True) +
+          ExperimentTimeoutWatchdog(759, timeout_minutes=90).
+       b. Load 50 HumanEval problems (use datasets library or hardcoded subset).
+       c. For each problem:
+          Round 1:
+            - Generate code with Qwen3.5-0.8B (or Gemma4-E4B-it if Qwen unavailable).
+            - Execute code against HumanEval test cases (subprocess, 10s timeout).
+            - Record: round1_pass (bool).
+          Round 2 (only if round1_pass=False):
+            - Build repair prompt: include FULL traceback, test case input, expected output.
+              Format: "Your code failed. Error: {traceback}. Test case: {input}. Expected: {expected}."
+            - Generate repaired code.
+            - Execute repaired code against test cases.
+            - Record: round2_pass (bool).
+          Checkpoint every 10 problems (LongRunBenchmarkExecutor pattern).
+       d. Compute:
+          pass_at_1_round1 = sum(round1_pass) / 50
+          pass_at_1_round2 = sum(round1_pass OR round2_pass) / 50
+          signed_improvement = pass_at_1_round2 - pass_at_1_round1
+          n_repaired = sum(NOT round1_pass AND round2_pass)
+          n_broken_by_repair = 0  (round 2 only runs on failed problems)
+       e. honest_verdict:
+          - "code_repair_positive" if signed_improvement > 0 AND inference_mode="live_gpu"
+          - "code_repair_zero" if signed_improvement = 0 AND inference_mode="live_gpu"
+          - "code_repair_negative" if signed_improvement < 0 (unexpected)
+          - "blocked_no_live_gpu" if CARNOT_FORCE_LIVE not set
+       f. artifact: model_id, n_problems, pass_at_1_round1, pass_at_1_round2,
+          signed_improvement, n_repaired, inference_mode, honest_verdict.
+    6. Write tests/python/test_experiment_759_iterative_code_repair_live.py with 100% coverage:
+        - test repair prompt includes traceback and test case.
+        - test pass@1 computation from round1_pass and round2_pass lists.
+        - test signed_improvement computed correctly.
+        - test honest_verdict maps to signed_improvement and inference_mode.
+        Each test traces to REQ-REPAIR-020/021.
+    7. Reconcile:
+       - ops/status.md: "Live 2-round code repair: signed_improvement=X. pass@1: X->Y.
+         inference_mode=live_gpu/blocked."
+       - ops/changelog.md: one-line with honest_verdict.
+    8. tmpl.assert_deliverable_written() as final line.
+
+    GPU SETUP: RTX 3090 GPU 0. Run apply_env_autofix() BEFORE setup_gpu().
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp760-gemma4-threshold-grid
+  milestone: 2026.04.58
+  deliverable: results/experiment_760_gemma4_threshold_grid.json
+  title: 'Exp 760: Live Gemma4 VR Threshold Grid Search — 5 Thresholds x 50q (GPU REQUIRED)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Gemma4-E4B-it shows 0% VR improvement (or degradation) in all prior
+    experiments. arXiv 2601.01490 explains this as "constraint-induced distortion":
+    stronger models satisfy formal constraints at the cost of semantic correctness.
+    The fix is ADAPTIVE THRESHOLD GATING — only repair violations above a confidence
+    threshold. Exp 708 showed gate_suppressed_gemma4_symcode=True (25 constraints suppressed)
+    with zero accuracy impact — but the threshold wasn't tuned. A grid search across
+    5 thresholds should find the setting where VR provides net positive improvement for Gemma4.
+
+    arXiv 2601.01490 predicts: lower thresholds suppress more constraints (fewer FPs)
+    but risk missing real errors. The sweet spot is where precision is high enough that
+    fixed errors exceed broken ones. For Gemma4 (stronger model), the threshold should
+    be higher than for Qwen3.5-0.8B.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/experiment_708_vr_attempt_19_gemma4.py — Exp 708 adaptive gate pattern.
+    - results/experiment_708_vr_attempt_19_gemma4.json — baseline: n_constraints_suppressed=25.
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline; find threshold param.
+    - python/carnot/pipeline/extract.py — extraction logic for Gemma4.
+    - python/carnot/pipeline/gemma_loader.py — GemmaTransformersLoader (RETRO-028 fix).
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Run 5 VR threshold settings on Gemma4-E4B-it (50q each, 250q total).
+    Find the threshold where signed_improvement > 0.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-VERIFY-160 (Gemma4-E4B-it VR threshold grid: MUST test ≥5 thresholds in
+       [0.10, 0.50]; MUST report signed_improvement per threshold; honest_verdict MUST
+       identify the best_threshold), SCENARIO-VERIFY-210 to
+       openspec/capabilities/verification/spec.md.
+    3. GPU setup:
+       a. apply_env_autofix() FIRST.
+       b. setup_gpu([{"name": "google/gemma-4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0}]).
+       c. Use GemmaTransformersLoader for Gemma4 (RETRO-028 fix — llama.cpp has tokenizer bug).
+       d. If CARNOT_FORCE_LIVE not set: write artifact with honest_verdict="blocked" and exit.
+    4. Load 50 GSM8K questions (seed=0 to avoid overlap with Exp 742's seed=999).
+    5. Run VR at 5 threshold settings [0.10, 0.20, 0.30, 0.40, 0.50]:
+       For each threshold:
+         a. Run all 50 questions through VerifyRepairPipeline with Gemma4-E4B-it.
+         b. For each question: run with VR enabled at this threshold.
+            Constraint violations below threshold → skip repair (abstain).
+            Violations above threshold → run repair.
+         c. Compute: baseline_accuracy, vr_accuracy, signed_improvement.
+         d. Record: n_abstained (skipped due to low confidence), n_repaired, n_broken.
+    6. Find the best threshold:
+       a. best_threshold = threshold with highest signed_improvement.
+       b. If any threshold has signed_improvement > 0: positive_threshold_found=True.
+       c. If all thresholds have signed_improvement ≤ 0: positive_threshold_found=False.
+    7. Create scripts/experiment_760_gemma4_threshold_grid.py:
+       a. ExperimentTemplate(760, requires_gpu=True) +
+          ExperimentTimeoutWatchdog(760, timeout_minutes=120).
+       b. Implement steps 3-6 with checkpoint every threshold (5 checkpoints).
+       c. honest_verdict:
+          - "gemma4_positive_found" if positive_threshold_found AND inference_mode="live_gpu"
+          - "gemma4_no_positive_threshold" if NOT positive_threshold_found AND inference_mode="live_gpu"
+          - "blocked" if CARNOT_FORCE_LIVE not set
+       d. artifact: per_threshold_results (list of {threshold, signed_improvement, n_abstained}),
+          best_threshold, best_signed_improvement, positive_threshold_found,
+          inference_mode, honest_verdict.
+    8. Write tests/python/test_experiment_760_gemma4_threshold_grid.py with 100% coverage:
+        - test per_threshold_results has 5 entries.
+        - test best_threshold is the entry with highest signed_improvement.
+        - test positive_threshold_found is True when any signed_improvement > 0.
+        Each test traces to REQ-VERIFY-160.
+    9. Reconcile:
+       - ops/status.md: "Gemma4 threshold grid: best_threshold=X, best_improvement=Y.
+         positive_threshold_found=True/False."
+       - ops/changelog.md: one-line with honest_verdict.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    GPU SETUP: RTX 3090 GPU 0, Gemma4-E4B-it. apply_env_autofix() FIRST.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp761-tier1-constraint-addition
+  milestone: 2026.04.58
+  deliverable: results/experiment_761_tier1_constraint_addition.json
+  title: 'Exp 761: Tier 1 Real Constraint Addition from Memory — ConstraintAdditionEngine'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: research-program.md states (priority #1 for continuous self-learning):
+    "Make Tier 1 self-learning actually work — Exp 134 showed that precision-based
+    REWEIGHTING didn't improve accuracy. The fix: constraint ADDITION from memory patterns,
+    not just weight changes. When memory detects 'arithmetic carry errors are common,'
+    ADD a carry-check constraint — don't just upweight existing ones."
+
+    Exp 748 showed cross-session memory plateaus at session 2 with total_templates_at_s10=0.
+    This confirms the template accumulation is not wiring templates BACK into the active
+    constraint set. This experiment implements that wire-in: when session memory has
+    ≥3 instances of a violation pattern, it generates a new constraint and ADDS it to
+    the VerifyRepairPipeline's active constraint list.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/self_learning_relay.py — SelfLearningRelay; where to add.
+    - python/carnot/pipeline/session_memory.py — SessionMemory; how templates accumulate.
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline; constraint list.
+    - python/carnot/pipeline/extract.py — ConstraintExtractor; constraint types.
+    - results/experiment_748_cross_session_memory_10session.json — baseline: plateau at s2.
+    - results/experiment_761_tier1_constraint_addition.json — does not exist yet.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Implement ConstraintAdditionEngine that generates new constraints from session
+    memory patterns and injects them into VerifyRepairPipeline. Test on 10 sessions,
+    50 questions each. Target: constraints_added_total > 0 AND precision_s10 >= precision_s1.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-LEARN-040 (ConstraintAdditionEngine MUST generate new constraints from session
+       memory when ≥3 instances of the same violation pattern are accumulated; new constraints
+       MUST be added to VerifyRepairPipeline.active_constraints before the next session),
+       REQ-LEARN-041 (monotonic non-decrease: precision across 10 sessions MUST be
+       non-decreasing; any regression is a gate failure), SCENARIO-LEARN-080/081 to
+       openspec/capabilities/self_learning/spec.md.
+    3. Implement python/carnot/pipeline/constraint_addition_engine.py:
+       a. ConstraintPattern(violation_type, count, example_text) dataclass.
+       b. ConstraintAdditionEngine(session_memory, min_count=3):
+          scan_for_patterns() -> list[ConstraintPattern]:
+            - Read all entries in session_memory.
+            - Group by violation_type (carry_error, sign_error, unit_error, etc.).
+            - Return patterns where count >= min_count.
+          generate_constraint(pattern) -> ConstraintTerm:
+            - For "carry_error": create carry_check_constraint (verify addend carry digit).
+            - For "sign_error": create sign_check_constraint (verify sign consistency).
+            - For "unit_error": create unit_check_constraint (verify unit propagation).
+            - For "comparison_error": create comparison_direction_constraint.
+          inject_into_pipeline(pipeline) -> int:
+            - Call scan_for_patterns(), generate_constraint() for each.
+            - Append to pipeline.active_constraints (if not already present).
+            - Return n_injected.
+    4. Wire ConstraintAdditionEngine into SelfLearningRelay:
+       a. After each session: call engine.inject_into_pipeline(pipeline).
+       b. Record: constraints_added_this_session (int), cumulative_constraints_added (int).
+    5. Run 10-session validation:
+       a. 50 synthetic GSM8K-style questions per session.
+       b. Start with base constraints (no additions).
+       c. After session 1: scan memory, inject any patterns with count ≥ 3.
+       d. Continue through session 10.
+       e. Record: precision per session, constraints_added per session.
+    6. Create scripts/experiment_761_tier1_constraint_addition.py:
+       a. ExperimentTemplate(761) + ExperimentTimeoutWatchdog(761, timeout_minutes=60).
+       b. Implement steps 3-5.
+       c. honest_verdict:
+          - "constraint_addition_works" if constraints_added_total > 0 AND
+            precision_s10 >= precision_s1 (monotonic non-decrease)
+          - "constraint_added_no_improvement" if constraints_added_total > 0 AND
+            precision_s10 < precision_s1 (added constraints hurt)
+          - "no_patterns_found" if constraints_added_total == 0 (threshold too high)
+       d. artifact: constraints_added_per_session (list), cumulative_constraints_added,
+          precision_per_session (list), precision_s1, precision_s10,
+          monotonic_non_decreasing (bool), honest_verdict.
+    7. Write tests/python/test_experiment_761_tier1_constraint_addition.py with 100% coverage:
+        - test ConstraintAdditionEngine.scan_for_patterns groups by violation_type.
+        - test generate_constraint returns ConstraintTerm for each pattern type.
+        - test inject_into_pipeline avoids duplicate constraints.
+        Each test traces to REQ-LEARN-040/041.
+    8. Reconcile:
+       - ops/status.md: "Tier 1 constraint addition: constraints_added=N, precision_s10=X.
+         monotonic=True/False. Self-learning Tier 1: WORKING/BLOCKED."
+       - ops/changelog.md: one-line with honest_verdict.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp762-ppsebm-constraint-select
+  milestone: 2026.04.58
+  deliverable: results/experiment_762_ppsebm_constraint_select.json
+  title: 'Exp 762: PPSEBM Progressive Constraint Selection — EBM-Guided Parameter Freezing'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2512.15658 "PPSEBM: Progressive Parameter Selection with Energy-Based
+    Model for Continual Learning" uses an EBM to identify which model parameters are
+    task-relevant and freezes others during adaptation, preventing catastrophic forgetting.
+    Applied to Carnot: when the VerifyRepairPipeline adapts to new question types during
+    self-play, it should freeze constraint coupling weights that are already well-calibrated
+    (low energy variance across recent questions) and update only those with high variance.
+
+    This is complementary to the SRSA memory gate in Exp 756. The SRSA gate prevents bad
+    data from entering memory. The PPS freezing prevents good coupling weights from being
+    overwritten by gradient updates. Together they address both failure modes.
+
+    The "energy variance" of a constraint coupling J_{ij} is: how much the contribution
+    of that coupling to the energy fluctuates across the last N questions. Low variance =
+    the coupling has settled; high variance = it is still learning.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/samplers/parallel_ising.py — ParallelIsingSampler; J coupling matrix.
+    - python/carnot/pipeline/self_learning_relay.py — SelfLearningRelay; adaptation path.
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline; constraint weights.
+    - python/carnot/pipeline/psv_diagnostic.py — PSVDiagnostic from Exp 755 (if available).
+    - results/experiment_755_psv_relapse_diagnosis.json — read if available.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Implement PPSConstraintSelector that computes energy variance per coupling and
+    freezes low-variance couplings. Test: does freezing prevent fp_rate_slope reversal?
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-LEARN-042 (PPSConstraintSelector MUST compute energy variance per coupling
+       over a rolling window of W=30 questions; couplings with variance < FREEZE_THRESHOLD
+       MUST NOT be updated during self-play adaptation), SCENARIO-LEARN-082 to
+       openspec/capabilities/self_learning/spec.md.
+    3. Implement python/carnot/pipeline/pps_constraint_selector.py:
+       a. CouplingVarianceTracker(n_couplings, window_size=30):
+          update(coupling_contributions: np.ndarray) -> None:
+            Record the energy contribution of each coupling for this question.
+          get_variance() -> np.ndarray:
+            Return variance of each coupling's contribution over the window.
+          get_frozen_mask(freeze_threshold=0.01) -> np.ndarray:
+            Return boolean mask: True = coupling is frozen (variance < threshold).
+       b. PPSConstraintSelector(tracker, freeze_threshold=0.01):
+          apply_mask(gradient: np.ndarray) -> np.ndarray:
+            Zero out gradient for frozen couplings.
+          frozen_count() -> int:
+            Return number of frozen couplings.
+    4. Integrate PPSConstraintSelector into SelfLearningRelay:
+       a. After each constraint check: call tracker.update(coupling_contributions).
+       b. Before each coupling weight update: call selector.apply_mask(gradient).
+       c. Record: n_frozen at each step.
+    5. Run comparison: 60 self-play steps WITHOUT PPS vs WITH PPS.
+       - Measure fp_rate at steps 0, 10, 20, 30, 40, 50, 60.
+       - Compare: does PPS prevent fp_rate reversal in steps 30-60?
+    6. Create scripts/experiment_762_ppsebm_constraint_select.py:
+       a. ExperimentTemplate(762) + ExperimentTimeoutWatchdog(762, timeout_minutes=45).
+       b. Implement steps 3-5.
+       c. honest_verdict:
+          - "pps_prevents_relapse" if WITH_PPS: window1_slope < 0 AND window2_slope < 0
+            AND WITHOUT_PPS: window2_slope >= 0 (relapse without PPS)
+          - "pps_no_effect" if both WITH and WITHOUT show same slope pattern
+          - "pps_hurts" if WITH_PPS shows worse stability than WITHOUT_PPS
+       d. artifact: fp_rate_without_pps (list), fp_rate_with_pps (list),
+          n_frozen_at_step30, pps_prevents_relapse (bool), honest_verdict.
+    7. Write tests/python/test_experiment_762_ppsebm_constraint_select.py with 100% coverage:
+        - test CouplingVarianceTracker.get_variance returns correct rolling variance.
+        - test get_frozen_mask returns True for variance < freeze_threshold.
+        - test apply_mask zeros out frozen coupling gradients.
+        Each test traces to REQ-LEARN-042.
+    8. Reconcile:
+       - ops/status.md: "PPSEBM constraint selection: pps_prevents_relapse=True/False.
+         n_frozen at step 30: N."
+       - ops/changelog.md: one-line with honest_verdict.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp763-dual-pathway-probe
+  milestone: 2026.04.58
+  deliverable: results/experiment_763_dual_pathway_probe.json
+  title: 'Exp 763: Dual-Pathway Hallucination Probe — MoP Fusion (arXiv 2601.07422)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2601.07422 "Two Pathways to Truthfulness: On the Intrinsic Encoding
+    of LLM Hallucinations" identifies two distinct internal representation pathways:
+    1. QUESTION-ANCHORED pathway: hallucination signal encoded relative to the question.
+    2. ANSWER-ANCHORED pathway: hallucination signal encoded relative to the answer tokens.
+    Mixture-of-Probes (MoP) fusing both pathways achieves up to +10% AUC gain vs single
+    pathway. This was filed for .57 but deferred; now executing in .58.
+
+    Carnot's JEPAReasonerProbe (Exp 726, AUC=0.993 in-distribution, OOD untested) is a
+    single-pathway architecture. Adding the dual-pathway MoP may:
+    a. Improve OOD generalization (the main JEPA failure mode)
+    b. Catch hallucinations missed by single-pathway probes
+
+    The practical implementation: train two separate 2-layer MLP probes (one on question-side
+    hidden states, one on answer-side hidden states), then train a gate network to combine them.
+    The gate network takes both probe outputs as input and produces a final score.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/samplers/jepa_reasoner_probe.py — JEPAReasonerProbe (single-pathway).
+    - results/experiment_732_jepa_5fold_cv.json — probe 5-fold CV: AUC=0.993 baseline.
+    - results/fover_labeled_steps_live.json — FoVer v2 real labeled steps for training.
+    - python/carnot/pipeline/fover_annotator.py — FOVERAnnotator for step parsing.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Implement MixtureOfProbes with question-anchored and answer-anchored sub-probes.
+    Train on FoVer v2 labeled steps. Compare AUROC vs single-pathway JEPAReasonerProbe baseline.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-PROBE-010 (DualPathwayProbe MUST include a question-anchored probe and an
+       answer-anchored probe; MixtureOfProbes gate MUST be a 2-layer MLP trained jointly
+       with both sub-probes), REQ-PROBE-011 (dual-pathway AUROC on FoVer v2 test split
+       MUST be reported; if AUROC >= 0.993, it supersedes single-pathway JEPAReasonerProbe),
+       SCENARIO-PROBE-020/021 to openspec/capabilities/self_learning/spec.md.
+    3. Implement python/carnot/pipeline/dual_pathway_probe.py:
+       a. QuestionAnchoredProbe(hidden_dim=128, output_dim=1): 2-layer MLP on question tokens.
+       b. AnswerAnchoredProbe(hidden_dim=128, output_dim=1): 2-layer MLP on answer tokens.
+          Note: For CPU-only simulation, use word embedding mean as proxy for hidden states.
+          Full implementation: extract actual LLM hidden states at question-end and answer-end.
+          CPU proxy: TF-IDF embedding of first 50 tokens (question) and last 50 tokens (answer).
+       c. GateNetwork(input_dim=2, output_dim=1): 2-layer MLP taking both probe outputs.
+       d. MixtureOfProbes(question_probe, answer_probe, gate):
+          forward(question_text, answer_text) -> float: (0=correct, 1=hallucinated)
+          train(labeled_steps, n_epochs=100, lr=1e-3) -> None: joint training.
+          predict(question_text, answer_text) -> float: inference.
+    4. Build training data from FoVer v2:
+       a. Load results/fover_labeled_steps_live.json (57 labeled steps, 30 correct + 27 incorrect).
+       b. Split: 80% train (45 steps), 20% test (12 steps).
+       c. For each step: extract (question_side, answer_side, label).
+          question_side = CoT context before this step.
+          answer_side = this step's text.
+    5. Train MixtureOfProbes on train split.
+    6. Evaluate on test split:
+       a. Compute AUROC, precision, recall at threshold=0.5.
+       b. Compare to JEPAReasonerProbe baseline AUROC=0.993 (Exp 732, 5-fold CV).
+       c. Note: 12-sample test set is small — report with confidence interval caveat.
+    7. Create scripts/experiment_763_dual_pathway_probe.py:
+       a. ExperimentTemplate(763) + ExperimentTimeoutWatchdog(763, timeout_minutes=45).
+       b. Implement steps 3-6.
+       c. honest_verdict:
+          - "dual_pathway_superior" if AUROC >= 0.993 (matches or beats single-pathway)
+          - "dual_pathway_competitive" if 0.90 <= AUROC < 0.993
+          - "dual_pathway_marginal" if 0.75 <= AUROC < 0.90
+          - "dual_pathway_insufficient_data" if test_set_size < 10 (too few for reliable AUROC)
+          - "dual_pathway_below_baseline" if AUROC < 0.75
+       d. artifact: train_size, test_size, auroc, precision, recall,
+          baseline_auroc (0.993 from Exp 732), improvement_vs_baseline,
+          honest_verdict.
+    8. Write tests/python/test_experiment_763_dual_pathway_probe.py with 100% coverage:
+        - test QuestionAnchoredProbe forward pass returns scalar output.
+        - test GateNetwork combines two scalar inputs correctly.
+        - test MixtureOfProbes.train runs without error for 10 epochs.
+        - test AUROC computation from predictions and labels.
+        Each test traces to REQ-PROBE-010/011.
+    9. Reconcile:
+       - ops/status.md: "Dual-pathway probe (arXiv 2601.07422): AUROC=X vs baseline 0.993.
+         honest_verdict=X."
+       - ops/changelog.md: one-line with honest_verdict.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp764-ast-knowledge-verifier
+  milestone: 2026.04.58
+  deliverable: results/experiment_764_ast_knowledge_verifier.json
+  title: 'Exp 764: AST-Based Code Hallucination Detector — Tier 0d Candidate (arXiv 2601.19106)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2601.19106 "Detecting and Correcting Hallucinations in LLM-Generated
+    Code via Deterministic AST Analysis" proposes:
+    - Parse generated code into Abstract Syntax Tree (AST)
+    - Build a Knowledge Base (KB) via library introspection (inspect module, dir())
+    - Validate AST against KB: detect API calls with non-existent methods, wrong argument
+      counts, or non-existent attribute access patterns
+    - Results: 100% precision, 87.6% recall on 200 Python snippets, 77% auto-correction
+
+    This is EXECUTION-FREE hallucination detection for code. Unlike runtime instrumentation
+    (which requires executing code), AST analysis is static and safe. Unlike regex, it
+    understands Python syntax. It catches Knowledge Conflicting Hallucinations (KCHs) —
+    hallucinations about API contracts that linters miss.
+
+    For Carnot: integrate as Tier 0d pre-filter for code verification tasks. When LLM
+    generates Python code, run ASTKnowledgeVerifier BEFORE executing. If KCHs detected:
+    flag as high-confidence violation (no need to run expensive Ising verification).
+    100% precision means zero false positives — every detection is a real error.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/extract.py — CodeExtractor; understand current code extraction.
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline; where to integrate.
+    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline Tier 0 slot.
+    - scripts/experiment_764_ast_knowledge_verifier.py — does not exist yet (create it).
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Implement ASTKnowledgeVerifier. Evaluate on 50 Python code snippets (25 correct,
+    25 with API hallucinations). Target: precision=1.0, recall≥0.75. Integrate as Tier 0d.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-EXTRACT-035 (ASTKnowledgeVerifier MUST parse Python code to AST and validate
+       API calls against introspected module knowledge; precision MUST be 1.0 — zero FP),
+       REQ-EXTRACT-036 (ASTKnowledgeVerifier Tier 0d MUST return violation_detected=True
+       only when call target is absent from introspected module dict),
+       SCENARIO-EXTRACT-070/071/072 to openspec/capabilities/verification/spec.md.
+    3. Implement python/carnot/extraction/ast_knowledge_verifier.py:
+       a. KnowledgeBase:
+          build_from_modules(module_names: list[str]) -> KnowledgeBase:
+            For each module: import it, call dir(), inspect.getmembers().
+            Store: {module.attr: {"type", "signature", "exists": True}}.
+          lookup(module: str, attr: str) -> bool:
+            Return True if module.attr exists in KB.
+       b. ASTKnowledgeViolation(node_text, module, attr, violation_type) dataclass.
+       c. ASTKnowledgeVerifier(kb: KnowledgeBase):
+          verify(code_text: str) -> list[ASTKnowledgeViolation]:
+            Parse code with ast.parse().
+            Walk AST: find ast.Attribute nodes (obj.attr patterns).
+            For each: check kb.lookup(inferred_module, attr).
+            Return violations where attr not in KB.
+          verify_function(function_code: str) -> list[ASTKnowledgeViolation]:
+            Same but for a single function definition.
+    4. Build evaluation corpus (50 snippets, no external download needed):
+       a. 25 CORRECT snippets using built-in Python APIs correctly:
+          import os, sys, json, re, math, random, collections, itertools, functools
+          Example: "import json; data = json.loads(text)" — json.loads exists → no violation.
+       b. 25 HALLUCINATED snippets with plausible-sounding but non-existent APIs:
+          "json.parse(text)" (parse doesn't exist; loads does)
+          "os.read_file(path)" (no read_file; use open())
+          "math.relu(x)" (no relu in math)
+          "random.choice_weighted(lst, weights)" (no choice_weighted)
+          "re.findall_named(pattern, text)" (no findall_named)
+    5. Evaluate: for each snippet, run verify() and check if violation_detected matches label.
+       a. precision = TP / (TP + FP) — must be 1.0 (zero FP)
+       b. recall = TP / (TP + FN) — target ≥ 0.75
+       c. f1 = 2 * precision * recall / (precision + recall)
+    6. Integrate ASTKnowledgeVerifier into ThreeTierPipeline as Tier 0d:
+       a. In python/carnot/pipeline/three_tier_pipeline.py: add Tier0dResult(violations, passed_tier0d).
+       b. In ThreeTierPipeline: if code task, run ASTKnowledgeVerifier before Tier 1.
+          If violations detected: skip Tier 1 Ising (already flagged as violation).
+       c. The skip logic saves Ising computation time for high-confidence code KCHs.
+    7. Create scripts/experiment_764_ast_knowledge_verifier.py:
+       a. ExperimentTemplate(764) + ExperimentTimeoutWatchdog(764, timeout_minutes=30).
+       b. Implement steps 3-6.
+       c. honest_verdict:
+          - "tier0d_viable" if precision=1.0 AND recall >= 0.75
+          - "tier0d_partial" if precision=1.0 AND recall < 0.75 (safe but incomplete)
+          - "false_positives_detected" if precision < 1.0 (unsafe — DO NOT deploy)
+          - "corpus_construction_failed" if < 20 snippets available
+       d. artifact: n_correct_snippets, n_hallucinated_snippets, precision, recall, f1,
+          violations_per_snippet (list), tier0d_deployed (bool), honest_verdict.
+    8. Write tests/python/test_experiment_764_ast_knowledge_verifier.py with 100% coverage:
+        - test KnowledgeBase.lookup returns True for json.loads, False for json.parse.
+        - test ASTKnowledgeVerifier.verify catches "json.parse(text)" as violation.
+        - test ASTKnowledgeVerifier.verify does NOT flag "json.loads(text)" (no FP).
+        - test precision/recall computation from TP, FP, FN counts.
+        Each test traces to REQ-EXTRACT-035/036.
+    9. Reconcile:
+       - ops/status.md: "AST Knowledge Verifier (Tier 0d): precision=X, recall=X.
+         Tier 0d deployed=True/False. honest_verdict=X."
+       - ops/changelog.md: one-line with honest_verdict.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp765-jepa-v19-predictive
+  milestone: 2026.04.58
+  deliverable: results/experiment_765_jepa_v19_predictive.json
+  title: 'Exp 765: JEPA v19 — Tier 3 Predictive Verification on Real Accumulated Violations'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: research-program.md Tier 3 (JEPA-Style Predictive Verification):
+    "Train a model to predict constraint violations BEFORE the LLM finishes generating.
+    Input: partial response (first N tokens) → predict which constraints will be violated
+    in the full response. Enables preemptive guided decoding."
+
+    JEPA versions so far have struggled with OOD generalization (Exps 704, 717 below 0.5 AUC).
+    The root cause identified across milestones: training on synthetic data produces probes
+    that don't generalize to real model outputs. JEPA v18 used LambdaRank on synthetic data
+    (OOD AUC=0.5115 — barely above random). The key insight from arXiv 2511.06209:
+    multi-step probes trained on REAL model hidden states generalize much better than
+    probes trained on text embeddings or synthetic data.
+
+    Exps 742, 759, and 760 should produce real violation data (live GPU inference):
+    - Exp 742: 200q RETRO-033 confirmation (seed=999 VR data)
+    - Exp 759: 50 HumanEval iterative repair results
+    - Exp 760: 250q Gemma4 threshold grid VR results
+
+    JEPA v19 trains on this REAL accumulated data. If Exps 759/760 did not produce live
+    data (GPU blocked), fall back to Exp 442's 57 labeled FoVer steps.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/samplers/jepa_reasoner_probe.py — JEPAReasonerProbe current architecture.
+    - results/experiment_732_jepa_5fold_cv.json — v18 baseline: probe_5fold_auc=0.993 (in-dist).
+    - results/experiment_759_iterative_code_repair_live.json — load if available (real data).
+    - results/experiment_760_gemma4_threshold_grid.json — load if available (real data).
+    - results/experiment_742_retro033_confirmation.json — load (200q VR real data).
+    - results/fover_labeled_steps_live.json — fallback: 57 real labeled steps.
+    - python/carnot/pipeline/fover_annotator.py — FOVERAnnotator for step parsing.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Retrain JEPA v19 on real accumulated violation data from Exps 742+759+760.
+    Target: OOD AUC > 0.75 (project milestone for Tier 3 viability).
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-LEARN-043 (JEPA v19 MUST be trained exclusively on real accumulated
+       violation data from live GPU experiments; no synthetic data injection),
+       REQ-LEARN-044 (JEPA v19 OOD AUC MUST exceed 0.75 for Tier 3 deployment;
+       otherwise file new RETRO-JEPA-OOD), SCENARIO-LEARN-085/086 to
+       openspec/capabilities/self_learning/spec.md.
+    3. Collect training data:
+       a. Load results/experiment_742_retro033_confirmation.json — extract VR violation pairs.
+       b. Load results/experiment_759_iterative_code_repair_live.json — extract code repair pairs.
+          If blocked: use results/fover_labeled_steps_live.json as code substitute.
+       c. Load results/experiment_760_gemma4_threshold_grid.json — extract VR violation pairs.
+          If blocked: use fover_labeled_steps_live.json as math substitute.
+       d. Pool all real pairs. Minimum: 57 pairs (fover fallback). Target: 200+ pairs.
+       e. Record: n_real_pairs, data_sources (list of experiments that contributed).
+    4. Build JEPA v19 with multi-step architecture (arXiv 2511.06209 finding):
+       a. Upgrade JEPAReasonerProbe to pool features across multiple CoT steps (not just one).
+       b. MultiStepJEPAv19(hidden_dim=64, n_steps=3, output_dim=1):
+          forward(steps: list[str]) -> float: pool TF-IDF embeddings across n_steps steps.
+          train(step_sequences, labels, n_epochs=200, lr=1e-3) -> None.
+       c. Create python/carnot/samplers/jepa_v19.py with MultiStepJEPAv19.
+    5. Train on collected real data:
+       a. 80/20 split (in-distribution).
+       b. OOD test: use GSM8K questions 800-999 (never seen in Exps 742/759/760).
+       c. Train MultiStepJEPAv19 for 200 epochs.
+    6. Evaluate:
+       a. In-distribution AUC (20% held-out).
+       b. OOD AUC (GSM8K 800-999, 50 questions, synthetic violation pairs).
+       c. Compare: OOD AUC vs prior JEPA versions (v18=0.5115, target v19 > 0.75).
+    7. Create scripts/experiment_765_jepa_v19_predictive.py:
+       a. ExperimentTemplate(765) + ExperimentTimeoutWatchdog(765, timeout_minutes=60).
+       b. Implement steps 3-6.
+       c. honest_verdict:
+          - "jepa_v19_ood_viable" if ood_auc > 0.75 (Tier 3 deployment eligible)
+          - "jepa_v19_improving" if 0.60 < ood_auc <= 0.75 (above v18=0.5115, below gate)
+          - "jepa_v19_still_below_random" if ood_auc <= 0.5 (no progress)
+          - "jepa_v19_insufficient_data" if n_real_pairs < 20 (too few for reliable train)
+       d. artifact: n_real_pairs, data_sources, in_dist_auc, ood_auc,
+          n_steps_pooled, model_saved_path, honest_verdict.
+    8. Write tests/python/test_experiment_765_jepa_v19_predictive.py with 100% coverage:
+        - test MultiStepJEPAv19.forward pools across n_steps step embeddings.
+        - test training loop decreases loss over 10 epochs on synthetic data.
+        - test OOD AUC computation from predictions and labels.
+        Each test traces to REQ-LEARN-043/044.
+    9. Reconcile:
+       - ops/status.md: "JEPA v19 (Tier 3 predictive): ood_auc=X (target > 0.75).
+         n_real_pairs=N. honest_verdict=X. Tier 3: viable/not yet."
+         If ood_auc > 0.75: "JEPA Tier 3 UNBLOCKED — Tier 3 predictive verification viable."
+       - ops/changelog.md: one-line with honest_verdict.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp766-milestone-retro
+  milestone: 2026.04.58
+  deliverable: results/operational_retro_2026_04_58.json
+  title: 'Exp 766: Milestone 2026.04.58 Operational Retrospective'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: All experiments in milestone 2026.04.58 (Exps 754-765) have run. This is
+    the final retrospective. Read ALL result files listed below, compute the milestone
+    metrics, identify wins and failures, open/close RETROs, and write the standard
+    operational retro artifact.
+
+    MILESTONE TITLE: PSV Architecture Repair + HLS Energy Fix + Live Code Repair + SRSA Memory Gate
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_754_preflight_v10.json
+    - results/experiment_755_psv_relapse_diagnosis.json
+    - results/experiment_756_psv_srsa_gate.json
+    - results/experiment_757_hls_energy_fix.json
+    - results/experiment_758_yosys_synthesis.json
+    - results/experiment_759_iterative_code_repair_live.json
+    - results/experiment_760_gemma4_threshold_grid.json
+    - results/experiment_761_tier1_constraint_addition.json
+    - results/experiment_762_ppsebm_constraint_select.json
+    - results/experiment_763_dual_pathway_probe.json
+    - results/experiment_764_ast_knowledge_verifier.json
+    - results/experiment_765_jepa_v19_predictive.json
+    - results/operational_retro_2026_04_57.json (previous milestone baseline)
+    - ops/metrics.md (wall time series)
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Write milestone 2026.04.58 operational retrospective.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Load ALL result files listed above. For any missing result (experiment not run):
+       record status=not_run and note it explicitly.
+    3. Compute milestone metrics:
+       a. n_experiments = count of Exps 754-765 that ran.
+       b. total_wall_time_min = sum of duration_s/60 across all experiments.
+       c. mean_min_per_experiment = total_wall_time_min / n_experiments.
+       d. Compare to .57 baseline from results/operational_retro_2026_04_57.json.
+       e. wall_time_delta = total_wall_time_min - prev_milestone_wall_time_min.
+       f. improvement = (wall_time_delta < 0) (i.e., wall time decreased).
+    4. Evaluate success criteria (from the milestone design doc):
+       - manifest_enforcement_applied: from Exp 754 artifact.
+       - psv_relapse_root_cause_known: from Exp 755 artifact.
+       - psv_fp_rate_slope_negative: from Exp 756 artifact (window1_slope AND window2_slope).
+       - hls_energy_sign_fixed: from Exp 757 artifact.
+       - live_code_repair_positive: from Exp 759 artifact (signed_improvement > 0).
+       - gemma4_positive_threshold_found: from Exp 760 artifact.
+       - tier1_constraint_addition_works: from Exp 761 artifact.
+       - dual_pathway_probe_viable: from Exp 763 (AUROC >= 0.993).
+       - ast_verifier_precision: from Exp 764 (precision=1.0).
+       - jepa_v19_ood_viable: from Exp 765 (ood_auc > 0.75).
+    5. Identify the slowest 5 experiments (by duration_s). List for future governance.
+       If any experiment ran in .57 AND .58 slowest-5, note it as a structural issue.
+    6. Identify open RETROs from this milestone:
+       - RETRO-PSV-RELAPSE: CLOSED if recovery_sustained=True (Exp 756). OPEN otherwise.
+       - RETRO-HLS-ENERGY: CLOSED if sign_fixed=True (Exp 757). OPEN otherwise.
+       - Any new RETROs from experiments that failed their gates.
+    7. Write results/operational_retro_2026_04_58.json with schema=carnot.operational_retro.v33:
+       - experiment_range: "754-766"
+       - milestone: "2026.04.58"
+       - n_experiments, total_wall_time_min, mean_min_per_experiment
+       - wall_time_delta, improvement (bool)
+       - success_criteria_met (dict of criterion → bool)
+       - retros_closed (list), retros_opened (list), retros_still_open (list)
+       - slowest_5 (list of {exp_id, duration_min})
+       - headline_results (dict of criterion → result_value)
+       - honest_verdict: one of:
+         "wall_time_Nth_consecutive_improvement_..." (if improved)
+         "wall_time_regression_..." (if worse)
+         Include key wins and key failures in the verdict string.
+    8. Create scripts/experiment_766_milestone_retro_2026_04_58.py:
+       a. ExperimentTemplate(766) + ExperimentTimeoutWatchdog(766, timeout_minutes=30).
+       b. Implement steps 2-7.
+       c. assert_deliverable_written() as final line.
+    9. Write tests/python/test_experiment_766_milestone_retro.py with 100% coverage:
+        - test all 12 success criteria are checked from loaded artifacts.
+        - test slowest_5 is sorted by duration_s descending and capped at 5.
+        - test honest_verdict includes wall_time direction word ("improvement" or "regression").
+        Each test traces to REQ-METRICS-010 (operational retrospective correctness).
+    10. Reconcile:
+        - ops/status.md: FULL milestone status update.
+          Write a new section "Session 2026-04-XX — Milestone 2026.04.58 COMPLETE".
+          Summarize: what's working, what's next, open RETROs.
+          DO NOT remove any existing content — add a new section at the top.
+        - ops/changelog.md: one-line with honest_verdict.
+        - _bmad/traceability.md: update any rows that changed status in .58.
+    11. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
