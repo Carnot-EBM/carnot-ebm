@@ -98,8 +98,16 @@ class TestHfNotAuthenticated:
         assert username == ""
 
     def test_check_hf_authentication_returns_true_on_success(self):
-        """REQ-PUBLISH-010: whoami rc=0 → (True, username)."""
-        with patch.object(mod, "_run", return_value=(0, "testuser\n", "")):
+        """REQ-PUBLISH-010: whoami rc=0 → (True, username).
+
+        The `hf auth whoami` output format is `user=<name> orgs=<org1>,<org2>`
+        on a single stdout line.
+        """
+        with patch.object(
+            mod,
+            "_run",
+            return_value=(0, "user=testuser orgs=Carnot-EBM\n", ""),
+        ):
             ok, username = mod.check_hf_authentication()
         assert ok is True
         assert username == "testuser"
@@ -199,7 +207,7 @@ class TestReadmeUpdate:
 
     def test_readme_update_section_contains_github_url(self):
         """REQ-PUBLISH-011: production section references carnot github URL."""
-        assert "github.com/ianblenke/carnot" in mod._PRODUCTION_USE_SECTION
+        assert "github.com/Carnot-EBM/carnot-ebm" in mod._PRODUCTION_USE_SECTION
 
     def test_readme_update_section_mentions_phase1(self):
         """REQ-PUBLISH-011: section clarifies models are Phase 1 research artifacts."""

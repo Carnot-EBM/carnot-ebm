@@ -782,6 +782,44 @@ Given N problems with known round1_pass and round2_pass values, when compute_rep
 is called, then n_repaired == count(NOT round1_pass AND round2_pass), and
 signed_improvement == pass_at_1_round2 - pass_at_1_round1 to 4 decimal places.
 
+### REQ-REPAIR-024: SOTA GGUF v2 Must Kill GPU Zombies Before Model Load, Limit to 25 Problems
+
+The SOTA GGUF code repair v2 experiment (Exp 785) MUST call kill_gpu_zombies(gpu_index=0)
+from carnot.pipeline.gpu_zombie_killer BEFORE any model loading attempt. The experiment MUST
+limit the benchmark to 25 HumanEval problems with a per-problem timeout of 3 minutes.
+The overall experiment MUST use a 90-minute hard cap via ExperimentTimeoutWatchdog.
+
+Rationale: Exp 769 timed out (RETRO-SOTA-GGUF-TIMEOUT) for two reasons: (1) 15 GiB of zombie
+VRAM occupied GPU 0 before model load, causing OOM; (2) 50 problems × 3-4 min/problem = 150-200
+min exceeds the 120-min budget. Killing zombies first and halving the problem count fixes both.
+
+Spec: REQ-REPAIR-024, SCENARIO-REPAIR-044
+
+### REQ-REPAIR-025: VRAM-Based Model Fallback — 7B If Qwen3.6-35B OOM After Zombie Kill
+
+If free VRAM after kill_gpu_zombies() is < 20000 MB, Exp 785 MUST fall back to
+Qwen3.5-7B-Instruct-GGUF Q4_K_M (~4 GiB) instead of Qwen3.6-35B-A3B-GGUF Q4_K_M (~20 GiB).
+Both models are acceptable headline models for code repair results.
+The artifact MUST record model_used and free_vram_mb_after_kill to document which path ran.
+
+Rationale: The 7B fallback ensures the experiment produces a live_gpu result even when VRAM
+is constrained after zombie processes have been killed. Known from Exp 759: Qwen3.5-7B
+generates valid Python code (unlike 0.8B which produced pass@1=0.0).
+
+Spec: REQ-REPAIR-025, SCENARIO-REPAIR-045
+
+### SCENARIO-REPAIR-044: kill_gpu_zombies() Called Before Model Load in Exp 785
+
+Given Exp 785 is launched with CARNOT_FORCE_LIVE=1, when the experiment initialises,
+then kill_gpu_zombies(gpu_index=0) from carnot.pipeline.gpu_zombie_killer is called
+BEFORE any llama-cpp model load attempt, and free_vram_mb_after_kill is recorded in artifact.
+
+### SCENARIO-REPAIR-045: Exp 785 Falls Back to 7B When free_vram_mb < 20000
+
+Given free VRAM after zombie kill is < 20000 MB, when Exp 785 selects a model,
+then it uses Qwen3.5-7B-Instruct-GGUF Q4_K_M and records model_used="Qwen3.5-7B-Instruct-GGUF"
+in the artifact. The signed_improvement calculation is identical regardless of which model runs.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -825,6 +863,8 @@ signed_improvement == pass_at_1_round2 - pass_at_1_round1 to 4 decimal places.
 | REQ-REPAIR-021 | Implemented |
 | REQ-REPAIR-022 | Implemented |
 | REQ-REPAIR-023 | Implemented |
+| REQ-REPAIR-024 | Implemented |
+| REQ-REPAIR-025 | Implemented |
 
 ### REQ-EXTRACT-035: ASTKnowledgeVerifier Must Parse Python Code to AST and Validate API Calls
 

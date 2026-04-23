@@ -51,7 +51,7 @@ For production LLM output verification, install: `pip install carnot`
 
 This model is a Phase 1 research artifact (activation-based confidence detection).
 These 16 per-token activation EBMs detect confidence, not correctness.
-For the full verify-repair pipeline, see: https://github.com/ianblenke/carnot
+For the full verify-repair pipeline, see: https://github.com/Carnot-EBM/carnot-ebm
 """
 
 
@@ -170,11 +170,33 @@ def update_readme_with_production_section(repo_id: str) -> tuple[bool, str]:
         else:
             existing = f"# {repo_id.split('/')[-1]}\n\nCarnot-EBM model.\n"
 
-        if "## Production Use" in existing:
-            # Already updated — idempotent, counts as success.
-            return True, "already_present"
+        # Strip any existing "## Production Use" block so we can re-publish
+        # with updated content (e.g. corrected repo URL).  A "section" runs
+        # from its heading up to the next `## ` heading or end-of-file.
+        #
+        # Prior idempotent short-circuit (`if "## Production Use" in existing:
+        # return already_present`) blocked URL corrections from propagating
+        # to previously-published READMEs — removed in favor of this strip.
+        # The function is still idempotent in the "no net change" sense:
+        # running twice with the same _PRODUCTION_USE_SECTION produces the
+        # same final file.
+        lines = existing.splitlines(keepends=True)
+        stripped: list[str] = []
+        skipping = False
+        for line in lines:
+            if line.startswith("## Production Use"):
+                skipping = True
+                continue
+            if skipping and line.startswith("## "):
+                skipping = False
+            if not skipping:
+                stripped.append(line)
+        base = "".join(stripped).rstrip()
 
-        updated = existing.rstrip() + "\n" + _PRODUCTION_USE_SECTION
+        updated = base + "\n" + _PRODUCTION_USE_SECTION
+        if updated == existing:
+            # No change needed — README already has the current section verbatim.
+            return True, "already_current"
         readme_path.write_text(updated)
 
         ul_cmd = [
