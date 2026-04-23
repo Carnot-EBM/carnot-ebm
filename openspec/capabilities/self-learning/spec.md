@@ -1006,9 +1006,29 @@ injection is permitted.  The experiment artifact MUST list data_sources and n_re
 
 ---
 
-## Implementation Status (REQ-LEARN-043, REQ-LEARN-044)
+---
+
+## REQ-LEARN-045: MultiStepJEPAv19 MUST Pool TF-IDF Embeddings Across n_steps=3 Steps
+
+MultiStepJEPAv19 MUST pool TF-IDF embeddings across exactly n_steps=3 consecutive CoT
+steps for each training sample.  Fewer steps are zero-padded; extra steps beyond n_steps
+are ignored.  The pooling operation is element-wise max across the step dimension.
+
+---
+
+## SCENARIO-LEARN-087: MultiStepJEPAv19 Pools Exactly n_steps Step Embeddings
+
+**Given** a MultiStepJEPAv19 with n_steps=3
+**When** forward(steps) is called with 1, 2, or 3 step strings
+**Then** the pooled embedding always has length equal to vocab_size
+**And** steps fewer than n_steps are zero-padded before pooling
+
+---
+
+## Implementation Status (REQ-LEARN-043, REQ-LEARN-044, REQ-LEARN-045)
 
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
-| REQ-LEARN-043 | Planned (python/carnot/samplers/jepa_v19.py) | Planned (tests/python/test_experiment_765_jepa_v19_predictive.py) |
-| REQ-LEARN-044 | Planned (scripts/experiment_765_jepa_v19_predictive.py) | Planned (tests/python/test_experiment_765_jepa_v19_predictive.py) |
+| REQ-LEARN-043 | Implemented (python/carnot/samplers/jepa_v19.py) | Implemented (tests/python/test_experiment_770_jepa_v19_predictive.py) |
+| REQ-LEARN-044 | Implemented (scripts/experiment_770_jepa_v19_predictive.py) | Implemented (tests/python/test_experiment_770_jepa_v19_predictive.py) |
+| REQ-LEARN-045 | Implemented (python/carnot/samplers/jepa_v19.py) | Implemented (tests/python/test_experiment_770_jepa_v19_predictive.py) |
