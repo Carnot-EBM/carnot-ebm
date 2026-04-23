@@ -150,7 +150,7 @@ tasks:
        d. Run loader test: load google/gemma-4-E4B-it, generate 5-token response to "Hello",
           confirm NO infinite <unused> tokens in output. Record: loader_test_passed (bool).
     4. apply_env_autofix() FIRST before any GPU import.
-    5. setup_gpu([{"name": "google/gemma-4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0}]).
+    5. setup_gpu([("name": "google/gemma-4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0)]).
     6. If CARNOT_FORCE_LIVE not set: write artifact with honest_verdict="blocked_no_live_gpu" and exit.
     7. If loader_test_passed=False: write artifact with honest_verdict="loader_still_broken" and exit.
     8. Load 50 GSM8K questions (seed=42 to avoid overlap with Exps 742/760).
@@ -242,13 +242,13 @@ tasks:
        or use humaneval/problems.json if available locally). Sample first 50 problems.
     7. For each problem:
        Round 1:
-         - Build prompt: "Complete the Python function:\n{problem['prompt']}"
+         - Build prompt: "Complete the Python function:\n(problem['prompt'])"
          - Generate code (max_tokens=512).
          - Execute against HumanEval test cases (subprocess with 10s timeout):
            - Write code to temp file, run eval(problem['test'] + '\ncheck(' + problem['entry_point'] + ')')
          - Record: round1_pass (bool), round1_error (str or None).
        Round 2 (only if round1_pass=False):
-         - Build repair prompt: "Your code failed.\nError: {round1_error}\nFix the function:\n{original_code}"
+         - Build repair prompt: "Your code failed.\nError: (round1_error)\nFix the function:\n(original_code)"
          - Generate repaired code (max_tokens=512).
          - Execute repaired code against test cases.
          - Record: round2_pass (bool).
@@ -622,10 +622,10 @@ tasks:
                "Let me work through this:", "Using arithmetic:"] + question.
             - Oracle calls used: 4 (generation).
           self_verify(question: str, candidate: str) -> bool:
-            - Prompt: "Question: {q}\nAnswer: {a}\nIs this correct? Answer Yes or No."
+            - Prompt: "Question: (q)\nAnswer: (a)\nIs this correct? Answer Yes or No."
             - Parse Yes/No. Oracle calls used: 1 per candidate.
           self_correct(question: str, candidate: str) -> str:
-            - Prompt: "Your solution may have errors. Correct it: {q}\nCurrent: {a}"
+            - Prompt: "Your solution may have errors. Correct it: (q)\nCurrent: (a)"
             - Oracle calls used: 1.
           run(question: str) -> SETSResult(answer, pass_flag, n_oracle_calls, wall_time_s).
     4. Use a SIMPLE local LLM (CPU-friendly):
@@ -1003,7 +1003,7 @@ tasks:
        c. If authenticated: record hf_authenticated=True, hf_username.
     5. For each artifact in upload_manifest:
        a. Verify the local file exists (artifact_path from Exp 752).
-       b. Run: huggingface-cli upload Carnot-EBM/{model_name} {artifact_path} --repo-type model
+       b. Run: huggingface-cli upload Carnot-EBM/(model_name) (artifact_path) --repo-type model
        c. Record: upload_success (bool), uploaded_url (str or None).
     6. Update existing model READMEs — generate the README update for each of the 16 existing
        Carnot-EBM models on HuggingFace:
@@ -1012,7 +1012,7 @@ tasks:
           "## Production Use\nFor production LLM output verification, install: pip install carnot\n
           This model is a Phase 1 research artifact (activation-based confidence detection).\n
           See: https://github.com/ianblenke/carnot"
-       c. Update via: huggingface-cli upload Carnot-EBM/{model_name} README.md --repo-type model
+       c. Update via: huggingface-cli upload Carnot-EBM/(model_name) README.md --repo-type model
        d. Record: n_readmes_updated.
     7. Create scripts/experiment_777_hf_publishing.py:
        a. ExperimentTemplate(777) + ExperimentTimeoutWatchdog(777, timeout_minutes=30).

@@ -1,28 +1,142 @@
 {
   "jepa_v18_active": true,
   "excluded": [
-    {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "slowest-5 seven consecutive milestones, legacy checkpoint-failure state"},
-    {"experiment_id": 260, "completed_milestone": "2026.04.37", "reason": "slowest-5 seven consecutive milestones, sequential inference loop"},
-    {"experiment_id": 309, "completed_milestone": "2026.04.37", "reason": "slowest-5 seven consecutive milestones, checkpoint-failure state"},
-    {"experiment_id": 425, "completed_milestone": "2026.04.37", "reason": "slowest-5 seven consecutive milestones, ExperimentTimeoutWatchdog already implemented"},
-    {"experiment_id": 410, "completed_milestone": "2026.04.37", "reason": "slowest-5 seven consecutive milestones, 1000 sequential inference calls, BatchedInferenceRunner migration target"},
-    {"experiment_id": 383, "completed_milestone": "2026.04.51", "reason": "DualGPU parallelization pending; sequential re-run adds no value, excluded per Exp 666 manifest wire-in v3"},
-    {"experiment_id": 380, "completed_milestone": "2026.04.52", "reason": "partial_checkpoint_retired: slowest-5 three consecutive milestones, formal retirement threshold crossed"},
-    {"experiment_id": 381, "completed_milestone": "2026.04.52", "reason": "partial_checkpoint_retired: slowest-5 three consecutive milestones, formal retirement threshold crossed"},
-    {"experiment_id": 382, "completed_milestone": "2026.04.52", "reason": "partial_checkpoint_retired: slowest-5 three consecutive milestones, formal retirement threshold crossed"},
-    {"experiment_id": 346, "completed_milestone": "2026.04.52", "reason": "partial_checkpoint_retired: 55M-param EORM training, slowest-5 three consecutive milestones, formal retirement threshold crossed"},
-    {"experiment_id": 425, "completed_milestone": "2026.04.53", "reason": "slowest_5_retired: Ising chain sampling, slowest-5 four consecutive milestones, formal retirement threshold crossed (REQ-INFRA-037)"},
-    {"experiment_id": 410, "completed_milestone": "2026.04.53", "reason": "slowest_5_retired: EORM v3 retrain, slowest-5 four consecutive milestones, formal retirement threshold crossed (REQ-INFRA-037)"},
-    {"experiment_id": 383, "completed_milestone": "2026.04.53", "reason": "slowest_5_retired: EORM+JEPA sequential, superseded by Exp 685 DualGPU (2.0175x speedup), no value in re-running (REQ-INFRA-037)"},
-    {"experiment_id": "jepa_v15_cascade", "completed_milestone": "2026.04.53", "reason": "ood_auc_below_random_blocked_until_v16: JEPA v15 OOD AUC=0.4751 (below random chance), blocked per RETRO-072 until v16 achieves OOD AUC >= 0.75 (REQ-INFRA-038)"},
-    {"experiment_id": "jepa_v16_cascade", "completed_milestone": "2026.04.54", "reason": "ood_auc_below_random_0.4759: JEPA v16 OOD AUC=0.4759 (below random chance), blocked until v17 achieves OOD AUC >= 0.75 (REQ-INFRA-040)"},
-    {"experiment_id": 380, "completed_milestone": "2026.04.54", "reason": "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed (REQ-INFRA-039)"},
-    {"experiment_id": 381, "completed_milestone": "2026.04.54", "reason": "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed (REQ-INFRA-039)"},
-    {"experiment_id": 382, "completed_milestone": "2026.04.54", "reason": "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed (REQ-INFRA-039)"},
-    {"experiment_id": 346, "completed_milestone": "2026.04.54", "reason": "slowest_5_retired: 55M-param EORM training, slowest-5 five consecutive milestones, governance threshold crossed (REQ-INFRA-039)"},
-    {"experiment_id": 425, "completed_milestone": "2026.04.54", "reason": "slowest_5_retired: 17 consecutive milestones, 1292 min cumulative overhead, governance threshold crossed (REQ-INFRA-039)"},
-    {"experiment_id": 410, "completed_milestone": "2026.04.54", "reason": "slowest_5_retired: 14 consecutive milestones, 716 min cumulative overhead, governance threshold crossed (REQ-INFRA-039)"},
-    {"experiment_id": 383, "completed_milestone": "2026.04.54", "reason": "slowest_5_retired: superseded by Exp 685 DualGPU (2.0175x speedup), 8 consecutive milestones, governance threshold crossed (REQ-INFRA-039)"},
-    {"experiment_id": 527, "completed_milestone": "2026.04.57", "reason": "3rd consecutive slowest-5 appearance; RETRO-033 resolved by Exp 720; no remaining research mandate", "retired_in_milestone": "2026.04.57", "governance_rule": "3-consecutive-mandatory"}
+    {
+      "experiment_id": 308,
+      "completed_milestone": "2026.04.37",
+      "reason": "slowest-5 seven consecutive milestones, legacy checkpoint-failure state"
+    },
+    {
+      "experiment_id": 260,
+      "completed_milestone": "2026.04.37",
+      "reason": "slowest-5 seven consecutive milestones, sequential inference loop"
+    },
+    {
+      "experiment_id": 309,
+      "completed_milestone": "2026.04.37",
+      "reason": "slowest-5 seven consecutive milestones, checkpoint-failure state"
+    },
+    {
+      "experiment_id": 425,
+      "completed_milestone": "2026.04.37",
+      "reason": "slowest-5 seven consecutive milestones, ExperimentTimeoutWatchdog already implemented"
+    },
+    {
+      "experiment_id": 410,
+      "completed_milestone": "2026.04.37",
+      "reason": "slowest-5 seven consecutive milestones, 1000 sequential inference calls, BatchedInferenceRunner migration target"
+    },
+    {
+      "experiment_id": 383,
+      "completed_milestone": "2026.04.51",
+      "reason": "DualGPU parallelization pending; sequential re-run adds no value, excluded per Exp 666 manifest wire-in v3"
+    },
+    {
+      "experiment_id": 380,
+      "completed_milestone": "2026.04.52",
+      "reason": "partial_checkpoint_retired: slowest-5 three consecutive milestones, formal retirement threshold crossed"
+    },
+    {
+      "experiment_id": 381,
+      "completed_milestone": "2026.04.52",
+      "reason": "partial_checkpoint_retired: slowest-5 three consecutive milestones, formal retirement threshold crossed"
+    },
+    {
+      "experiment_id": 382,
+      "completed_milestone": "2026.04.52",
+      "reason": "partial_checkpoint_retired: slowest-5 three consecutive milestones, formal retirement threshold crossed"
+    },
+    {
+      "experiment_id": 346,
+      "completed_milestone": "2026.04.52",
+      "reason": "partial_checkpoint_retired: 55M-param EORM training, slowest-5 three consecutive milestones, formal retirement threshold crossed"
+    },
+    {
+      "experiment_id": 425,
+      "completed_milestone": "2026.04.53",
+      "reason": "slowest_5_retired: Ising chain sampling, slowest-5 four consecutive milestones, formal retirement threshold crossed (REQ-INFRA-037)"
+    },
+    {
+      "experiment_id": 410,
+      "completed_milestone": "2026.04.53",
+      "reason": "slowest_5_retired: EORM v3 retrain, slowest-5 four consecutive milestones, formal retirement threshold crossed (REQ-INFRA-037)"
+    },
+    {
+      "experiment_id": 383,
+      "completed_milestone": "2026.04.53",
+      "reason": "slowest_5_retired: EORM+JEPA sequential, superseded by Exp 685 DualGPU (2.0175x speedup), no value in re-running (REQ-INFRA-037)"
+    },
+    {
+      "experiment_id": "jepa_v15_cascade",
+      "completed_milestone": "2026.04.53",
+      "reason": "ood_auc_below_random_blocked_until_v16: JEPA v15 OOD AUC=0.4751 (below random chance), blocked per RETRO-072 until v16 achieves OOD AUC >= 0.75 (REQ-INFRA-038)"
+    },
+    {
+      "experiment_id": "jepa_v16_cascade",
+      "completed_milestone": "2026.04.54",
+      "reason": "ood_auc_below_random_0.4759: JEPA v16 OOD AUC=0.4759 (below random chance), blocked until v17 achieves OOD AUC >= 0.75 (REQ-INFRA-040)"
+    },
+    {
+      "experiment_id": 380,
+      "completed_milestone": "2026.04.54",
+      "reason": "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed (REQ-INFRA-039)"
+    },
+    {
+      "experiment_id": 381,
+      "completed_milestone": "2026.04.54",
+      "reason": "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed (REQ-INFRA-039)"
+    },
+    {
+      "experiment_id": 382,
+      "completed_milestone": "2026.04.54",
+      "reason": "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed (REQ-INFRA-039)"
+    },
+    {
+      "experiment_id": 346,
+      "completed_milestone": "2026.04.54",
+      "reason": "slowest_5_retired: 55M-param EORM training, slowest-5 five consecutive milestones, governance threshold crossed (REQ-INFRA-039)"
+    },
+    {
+      "experiment_id": 425,
+      "completed_milestone": "2026.04.54",
+      "reason": "slowest_5_retired: 17 consecutive milestones, 1292 min cumulative overhead, governance threshold crossed (REQ-INFRA-039)"
+    },
+    {
+      "experiment_id": 410,
+      "completed_milestone": "2026.04.54",
+      "reason": "slowest_5_retired: 14 consecutive milestones, 716 min cumulative overhead, governance threshold crossed (REQ-INFRA-039)"
+    },
+    {
+      "experiment_id": 383,
+      "completed_milestone": "2026.04.54",
+      "reason": "slowest_5_retired: superseded by Exp 685 DualGPU (2.0175x speedup), 8 consecutive milestones, governance threshold crossed (REQ-INFRA-039)"
+    },
+    {
+      "experiment_id": 527,
+      "completed_milestone": "2026.04.57",
+      "reason": "3rd consecutive slowest-5 appearance; RETRO-033 resolved by Exp 720; no remaining research mandate",
+      "retired_in_milestone": "2026.04.57",
+      "governance_rule": "3-consecutive-mandatory"
+    },
+    {
+      "experiment_id": 425,
+      "completed_milestone": "2026.04.58",
+      "reason": "all_dequeue_sites_extended: 22nd consecutive full-milestone slowest-5 appearance (.37-.58), 1672 min cumulative overhead (27.9 hours zero-value compute); ran from unguarded historical queue source despite manifest entries; REQ-INFRA-053/054 (Exp 767 v11)"
+    },
+    {
+      "experiment_id": 491,
+      "completed_milestone": "2026.04.58",
+      "reason": "all_dequeue_sites_extended: JEPA curriculum diagnostic 12th appearance in full-milestone slowest-5, 52 min cumulative; unbounded training loop without ExperimentTimeoutWatchdog; diagnostic experiments must be time-bounded (30 min max); REQ-INFRA-054 (Exp 767 v11)"
+    },
+    {
+      "experiment_id": 603,
+      "completed_milestone": "2026.04.58",
+      "reason": "all_dequeue_sites_extended: CoACEExtractorV4 repeated carry-over from unguarded historical queue source, 44 min; productive research superseded by DualGPU migration (GPU1 for training, GPU0 for inference); retire from unguarded queue, migrate to DualGPU milestone; REQ-INFRA-054 (Exp 767 v11)"
+    },
+    {
+      "experiment_id": 627,
+      "completed_milestone": "2026.04.58",
+      "reason": "all_dequeue_sites_extended: interwhen mid-generation monitor repeated carry-over from unguarded queue source, 51 min; sequential sentence-by-sentence verify loop superseded by paragraph-boundary batching (3-4x faster); REQ-INFRA-054 (Exp 767 v11)"
+    }
   ]
 }
