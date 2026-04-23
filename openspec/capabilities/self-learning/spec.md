@@ -1236,3 +1236,54 @@ and ``diversity_score`` (positive_fraction of selected labels).
 |-------------|--------|-------|
 | REQ-LEARN-050 | Implemented (python/carnot/pipeline/edu_prm_selector.py) | Implemented (tests/python/test_experiment_782_edu_prm_step_selection.py) |
 | REQ-LEARN-051 | Implemented (scripts/experiment_782_edu_prm_step_selection.py) | Implemented (tests/python/test_experiment_782_edu_prm_step_selection.py) |
+
+---
+
+## REQ-LEARN-052: JEPA v20 MUST Train Exclusively on Real Accumulated Data with EDU-PRM Preference
+
+JEPA v20 MUST be trained exclusively on real accumulated data from live GPU experiments.
+EDU-PRM selected corpus (``fover_edu_prm_selected.json``) MUST be preferred over uniform
+sampling when available; ``data_source`` MUST be ``"edu_prm_selected"`` in that case.
+Synthetic data injection is NOT allowed under any circumstances.
+Class-weight balancing (``weight_positive = n_negative / n_positive`` in BCE loss) MUST
+be applied to correct for potential label imbalance in the selected corpus.
+
+---
+
+## REQ-LEARN-053: JEPA v20 OOD AUC MUST Exceed 0.75 to Gate Tier 3.5 Deployment
+
+JEPA v20 OOD AUC MUST exceed 0.75 to unlock Tier 3.5 deployment in Exp 784.
+``ood_auc_delta_vs_v19`` MUST equal ``ood_auc - 0.5667`` (v19 baseline).
+If OOD AUC <= 0.75, RETRO-JEPA-OOD-V20 MUST be filed.
+``honest_verdict`` MUST be one of:
+  - ``"jepa_v20_ood_viable"`` if ood_auc > 0.75
+  - ``"jepa_v20_improving"`` if 0.60 < ood_auc <= 0.75
+  - ``"jepa_v20_below_v19"`` if ood_auc <= 0.5667
+  - ``"jepa_v20_insufficient_data"`` if n_training_pairs < 30
+
+---
+
+## SCENARIO-LEARN-096: JEPA v20 Uses EDU-PRM Corpus When Available
+
+**Given** ``results/fover_edu_prm_selected.json`` exists
+**When** Exp 783 collects training data
+**Then** ``data_source`` MUST equal ``"edu_prm_selected"``
+**And** ``n_training_pairs`` MUST equal the number of items in that file
+
+---
+
+## SCENARIO-LEARN-097: JEPA v20 Class Weighting Corrects Label Imbalance in BCE
+
+**Given** a training corpus with n_positive positives and n_negative negatives
+**When** ``MultiStepJEPAv20.train()`` computes BCE loss
+**Then** each positive example's loss MUST be multiplied by ``n_negative / n_positive``
+**And** ``class_weight_used`` MUST be ``True`` in the artifact
+
+---
+
+## Implementation Status (REQ-LEARN-052, REQ-LEARN-053)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-052 | Implemented (python/carnot/samplers/jepa_v20.py, scripts/experiment_783_jepa_v20_retrain.py) | Implemented (tests/python/test_experiment_783_jepa_v20_retrain.py) |
+| REQ-LEARN-053 | Implemented (scripts/experiment_783_jepa_v20_retrain.py) | Implemented (tests/python/test_experiment_783_jepa_v20_retrain.py) |
