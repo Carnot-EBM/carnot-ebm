@@ -2547,3 +2547,4 @@ python/ |
 | 2026-04-23 06:34 UTC | Exp 760: Live Gemma4 VR Threshold Grid Search — 5  | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
 | 2026-04-23 06:42 UTC | Exp 760: Live Gemma4 VR Threshold Grid Search — 5  | OK | 101 passed, 3 warnings in 6.84s |
 | 2026-04-23 06:56 UTC | Exp 761: Tier 1 Real Constraint Addition from Memo | OK | 81 passed, 3 warnings in 6.03s |
+| 2026-04-23 07:07 UTC | Exp 762: PPSEBM Progressive Constraint Selection — | OK | 81 passed, 3 warnings in 4.68s |
