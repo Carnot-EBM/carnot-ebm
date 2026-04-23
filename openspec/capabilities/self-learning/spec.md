@@ -470,9 +470,75 @@ Then:
 
 ---
 
-## Implementation Status (FR11-005/006)
+## REQ-FR11-007: PerModelFPTracker MUST Expose get_weight_state() for Convergence Auditing
+
+**Given** PerModelFPTracker has processed at least one ViolationEvent via on_violation()
+**When** get_weight_state() is called
+**Then** it returns a dict mapping each constraint_type that has been seen to a WeightState
+  with weight (float), update_count (int), and last_updated_at (ISO-8601 timestamp).
+  Constraint types with zero updates are excluded from the result.
+
+Sub-requirements:
+- REQ-FR11-007-1: get_weight_state() SHALL return a dict[str, WeightState].
+- REQ-FR11-007-2: WeightState SHALL include weight, update_count, and last_updated_at.
+- REQ-FR11-007-3: Constraint types that were throttled (not updated) SHALL appear only if
+  they have at least one un-throttled update (update_count > 0).
+
+**Implementation Status:** Implemented (python/carnot/pipeline/adaptive_thresholds.py, Exp 747)
+
+### SCENARIO-FR11-007: get_weight_state Returns All Observed Constraint Types
+
+Given: 30 arithmetic + 15 logical + 5 code ViolationEvents injected via on_violation().
+When: get_weight_state() is called after all events.
+Then:
+  - All three constraint types appear in the result.
+  - arithmetic weight > 1.0 (most updates).
+  - Each WeightState has update_count >= 1.
+
+**Spec traces:** REQ-FR11-007
+**Implementation Status:** Implemented (Exp 747)
+
+---
+
+## REQ-FR11-008: Weight Convergence Audit MUST Run After >= 50 Relay Events
+
+**Given** the FR-11 relay has been operational and processed at least 50 ViolationEvents
+**When** get_weight_state() is called and weight_ratio = max_weight / min_weight is computed
+**Then** weight_ratio >= 2.0 indicates the relay is discriminating between constraint types
+  (arithmetic should be highest for GSM8K domain).
+
+Sub-requirements:
+- REQ-FR11-008-1: Audit SHALL classify verdict as one of: tier1_weights_converging,
+  tier1_weights_uniform, tier1_weights_inverted, tier1_weights_no_data.
+- REQ-FR11-008-2: tier1_weights_converging requires update_count_ratio
+  (max_update_count / min_update_count) >= 2.0 AND arithmetic_weight > logical_weight.
+  Note: weight_ratio (max_weight / min_weight) is reported separately but is not used
+  for the verdict because weights increment by 0.01 and are bounded at 2.0 — with 50
+  events at 10x throttle the weight ratio is at most ~1.02, making 2.0 unachievable.
+  update_count_ratio reflects the true discrimination signal.
+- REQ-FR11-008-3: disabled_constraints list SHALL include any constraint_type with weight < 0.02.
+
+**Implementation Status:** Implemented (scripts/experiment_747_tier1_weight_audit.py, Exp 747)
+
+### SCENARIO-FR11-008: Convergence Audit Classifies Weight Distribution Correctly
+
+Given: 30 arithmetic + 15 logical + 5 code events injected (expected: arithmetic > logical > code).
+When: audit runs with weight_ratio = max_weight / min_weight.
+Then:
+  - honest_verdict == "tier1_weights_converging".
+  - arithmetic_weight > logical_weight (expected_ordering_correct == True).
+  - disabled_constraints is empty (no weight near zero).
+
+**Spec traces:** REQ-FR11-008
+**Implementation Status:** Implemented (Exp 747)
+
+---
+
+## Implementation Status (FR11-005/006/007/008)
 
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-FR11-005 | Implemented (session_memory.py, constraint_template_library.py) | tests/python/test_experiment_738_step_probe_memory.py |
 | REQ-FR11-006 | Implemented (scripts/experiment_738_step_probe_tier2_memory.py) | tests/python/test_experiment_738_step_probe_memory.py |
+| REQ-FR11-007 | Implemented (adaptive_thresholds.py) | tests/python/test_experiment_747_weight_audit.py |
+| REQ-FR11-008 | Implemented (scripts/experiment_747_tier1_weight_audit.py) | tests/python/test_experiment_747_weight_audit.py |
