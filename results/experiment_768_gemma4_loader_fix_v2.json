@@ -1,0 +1,43 @@
+{
+  "experiment": 768,
+  "title": "Gemma4 Loader Fix v2 + VR Threshold Grid (RETRO-028 Closure)",
+  "run_date": "20260423",
+  "started_at": "2026-04-23T16:55:10Z",
+  "finished_at": "2026-04-23T16:55:13Z",
+  "duration_s": 2.526,
+  "status": "blocked",
+  "inference_mode": "loader_failed",
+  "honest_verdict": "loader_still_broken",
+  "loader_test_passed": false,
+  "loader_error": "CUDA out of memory. Tried to allocate 14.89 GiB. GPU 0 has a total capacity of 23.56 GiB of which 8.03 GiB is free. Process 4051771 has 15.27 GiB memory in use. Including non-PyTorch memory, this process has 256.00 MiB memory in use. Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
+  "n_call_sites_fixed": 1,
+  "n_call_sites_audited": 20,
+  "flagged_files": [
+    "python/carnot/inference/sota_models.py"
+  ],
+  "per_threshold_results": [],
+  "best_threshold": null,
+  "best_signed_improvement": null,
+  "positive_threshold_found": false,
+  "schema": [
+    "best_signed_improvement",
+    "best_threshold",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "flagged_files",
+    "honest_verdict",
+    "inference_mode",
+    "loader_error",
+    "loader_test_passed",
+    "n_call_sites_audited",
+    "n_call_sites_fixed",
+    "per_threshold_results",
+    "positive_threshold_found",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "invariant_violations": []
+}
