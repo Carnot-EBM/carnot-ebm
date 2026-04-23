@@ -784,3 +784,55 @@ without attempting GPU inference.
 | REQ-CODE-032 | Implemented |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
+
+### REQ-EXTRACT-035: ASTKnowledgeVerifier Must Parse Python Code to AST and Validate API Calls
+
+The ASTKnowledgeVerifier MUST parse Python code to an Abstract Syntax Tree (AST) and
+validate all attribute-access API calls (obj.attr patterns) against a KnowledgeBase
+built by introspecting the actual Python module via import + dir() + inspect.getmembers().
+Precision MUST be 1.0 — zero false positives are tolerated.  Every flagged violation
+MUST correspond to an attribute that genuinely does not exist in the introspected module.
+
+Rationale: arXiv 2601.19106 shows 100% precision, 87.6% recall on 200 Python snippets,
+with 77% auto-correction.  Execution-free detection is safe for untrusted code.
+
+Spec: REQ-EXTRACT-035, SCENARIO-EXTRACT-070, SCENARIO-EXTRACT-071
+
+### REQ-EXTRACT-036: ASTKnowledgeVerifier Tier 0d Integration
+
+ASTKnowledgeVerifier, when wired as a Tier 0d pre-filter, MUST:
+- Return violation_detected=True only when the call target attr is absent from the
+  KnowledgeBase's introspected module dict.
+- Never flag attributes that exist in the module (precision=1.0 invariant).
+- Allow downstream callers to skip expensive Ising verification on high-confidence
+  Knowledge Conflicting Hallucinations (KCHs), since 100% precision means every
+  detection is a real error.
+
+Spec: REQ-EXTRACT-036, SCENARIO-EXTRACT-072
+
+### SCENARIO-EXTRACT-070: Correct API Call Is Not Flagged (No False Positive)
+
+Given code "import json; data = json.loads(text)" where json.loads exists in the
+Python standard library, when ASTKnowledgeVerifier.verify() runs, then the returned
+violations list MUST be empty — no false positive is generated.
+
+### SCENARIO-EXTRACT-071: Hallucinated API Call Is Flagged as Violation
+
+Given code "import json; data = json.parse(text)" where json.parse does NOT exist
+in the Python standard library (the real method is json.loads), when
+ASTKnowledgeVerifier.verify() runs, then exactly one ASTKnowledgeViolation is returned
+with module="json", attr="parse", violation_type="missing_attr".
+
+### SCENARIO-EXTRACT-072: Tier 0d Returns violation_detected=True for KCH
+
+Given a snippet that calls os.read_file(path) where os.read_file does not exist,
+when ASTKnowledgeVerifier.verify() is called and violations are non-empty, then
+the caller concludes violation_detected=True and skips Ising verification,
+because 100% precision guarantees this is a real error.
+
+## Implementation Status
+
+| Requirement | Status |
+|-------------|--------|
+| REQ-EXTRACT-035 | Implemented |
+| REQ-EXTRACT-036 | Implemented |
