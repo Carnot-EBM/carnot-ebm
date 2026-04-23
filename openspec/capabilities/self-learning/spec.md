@@ -795,3 +795,70 @@ Sub-requirements:
 |-------------|--------|-------|
 | REQ-FR11-009 | Implemented (scripts/experiment_748_cross_session_memory_10session.py) | tests/python/test_experiment_748_10session_memory.py |
 | REQ-FR11-010 | Implemented (scripts/experiment_748_cross_session_memory_10session.py) | tests/python/test_experiment_748_10session_memory.py |
+
+---
+
+## REQ-LEARN-040: ConstraintAdditionEngine MUST Generate New Constraints From Session Memory
+
+**Given** a SessionMemory instance that has accumulated ≥3 instances of the same violation pattern
+**When** ConstraintAdditionEngine.scan_for_patterns() is called
+**Then** patterns with count >= min_count (default 3) are returned as ConstraintPattern objects
+**And** generate_constraint(pattern) returns a ConstraintTerm for each recognised violation_type
+**And** inject_into_pipeline(pipeline) appends each generated ConstraintTerm to
+         pipeline.active_constraints before the next session starts
+
+### REQ-LEARN-040 Sub-requirements
+
+- REQ-LEARN-040-1: `ConstraintAdditionEngine.__init__` SHALL accept `session_memory` and
+  optional `min_count=3` parameters.
+- REQ-LEARN-040-2: `scan_for_patterns()` SHALL read `_violations_by_type` from `session_memory`
+  and return `ConstraintPattern` objects where count >= min_count.
+- REQ-LEARN-040-3: `generate_constraint(pattern)` SHALL return a `ConstraintTerm` instance for
+  `carry_error`, `sign_error`, `unit_error`, and `comparison_error` violation types.
+- REQ-LEARN-040-4: `inject_into_pipeline(pipeline)` SHALL NOT add duplicate constraints
+  (checked by ConstraintTerm name) and SHALL return the count of newly injected constraints.
+
+---
+
+## REQ-LEARN-041: Precision Across 10 Sessions MUST Be Monotonically Non-Decreasing
+
+**Given** a 10-session run with ConstraintAdditionEngine injecting constraints after each session
+**When** precision is measured per session as fraction of actual violations correctly detected
+**Then** precision_s10 >= precision_s1 (no regression from first to last session)
+**And** the `monotonic_non_decreasing` flag in the artifact is True when no session-to-session
+         regression occurs
+
+### REQ-LEARN-041 Sub-requirements
+
+- REQ-LEARN-041-1: `monotonic_non_decreasing` SHALL be True when every session's precision
+  is >= the previous session's precision (allowing equal).
+- REQ-LEARN-041-2: `precision_s1` and `precision_s10` SHALL be float values in [0.0, 1.0].
+- REQ-LEARN-041-3: Any precision regression (session i+1 < session i) is a gate failure
+  for the `constraint_addition_works` verdict.
+
+---
+
+## SCENARIO-LEARN-080: Patterns Accumulate to Threshold and Trigger Injection
+
+**Given** a SessionMemory with `_violations_by_type = {"carry_error": 5, "sign_error": 2}`
+**When** ConstraintAdditionEngine(session_memory, min_count=3).scan_for_patterns() is called
+**Then** exactly one ConstraintPattern is returned (carry_error, count=5)
+**And** sign_error is excluded because count=2 < min_count=3
+
+---
+
+## SCENARIO-LEARN-081: Duplicate Injection Is Prevented
+
+**Given** a pipeline with `active_constraints` already containing a carry_check constraint
+**When** inject_into_pipeline is called again with the same session memory
+**Then** the carry_check constraint is NOT added a second time
+**And** inject_into_pipeline returns 0 (zero new injections)
+
+---
+
+## Implementation Status (REQ-LEARN-040/041)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-040 | Pending | Pending |
+| REQ-LEARN-041 | Pending | Pending |
