@@ -218,10 +218,48 @@ EORM and JEPA sequentially on a host with >= 2 GPUs.
 
 **Spec traces:** REQ-INFRA-050
 
+### REQ-HW-010: Ising Sampler v4 HLS C++ Kernel
+
+The Ising sampler v4 MUST be expressed in Vitis HLS C++ with loop-pipelining
+pragmas embedded as comments (so the same file compiles as plain C++ for CPU
+validation).  The top-level function `update_spin_kernel` MUST include:
+
+- Sequential Gibbs updates with xorshift32 RNG (HLS-compatible, no stdlib rand)
+- EMA inertia field `h_ema[i]` per spin, blending instantaneous and historical fields
+- All HLS PIPELINE / UNROLL / ARRAY_PARTITION pragmas as `// #pragma HLS ...` comments
+- A CPU-compilable `main()` guarded by `#ifndef __SYNTHESIS__` for validation
+
+The same `ising_sampler_hls.cpp` MUST:
+1. Compile under `g++ -O2 -std=c++17` without errors.
+2. Produce a final energy within 20% of the ground-state energy for a 4-spin test case.
+3. Be synthesisable by Vitis HLS 2024.2 when `synth_ising_hls.tcl` is executed.
+
+**Rationale:** KV260 bitfile synthesis is blocked locally due to missing Vivado
+installation.  HLS C++ can be synthesised on any cloud instance with AMD Vitis 2024.2
+without requiring a full Vivado install.  The dual-compile approach (same C++ for CPU
+and FPGA) allows local validation before remote synthesis.
+
+**Acceptance criteria:**
+- `hardware/kv260/ising_sampler_hls.cpp` exists and compiles with g++.
+- Compiled binary returns exit code 0 (energy within tolerance).
+- `hardware/kv260/synth_ising_hls.tcl` references the correct KV260 part number.
+- `results/experiment_750_vitis_hls_ising_v4.json` records `cpp_compiles: true`.
+
+### SCENARIO-HW-010: HLS Kernel CPU Validation
+
+**Given** `hardware/kv260/ising_sampler_hls.cpp` is compiled with
+  `g++ -O2 -std=c++17 hardware/kv260/ising_sampler_hls.cpp -o /tmp/ising_hls_test`
+**When** the resulting binary is executed
+**Then** it prints "PASS" and exits with code 0, meaning the final energy of a
+  4-spin antiferromagnetic chain is within 20% of the -3.0 ground-state energy.
+
+**Spec traces:** REQ-HW-010
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
 |-------------|--------|-------|
+| REQ-HW-010 | Implemented | Exp 750 — ising_sampler_hls.cpp + synth_ising_hls.tcl |
 | REQ-INFRA-043 | Implemented | Exp 718 — tier2_jepa.py |
 | REQ-INFRA-044 | Implemented | Exp 718 smoke test |
 | REQ-INFRA-045 | Implemented | Exp 718 latency measurement |
