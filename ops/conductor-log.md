@@ -2657,3 +2657,4 @@ python/ |
 | 2026-04-23 20:04 UTC | Exp 772: Semantic Energy Probe — Tier 0g Candidate | OK | 81 passed, 3 warnings in 6.38s |
 | 2026-04-23 20:16 UTC | Exp 773: Carnot vs SETS — Test-Time Scaling Compar | OK | 81 passed, 3 warnings in 7.15s |
 | 2026-04-23 20:30 UTC | Exp 774: Adaptive Bayesian Sampling in PSV — Varia | OK | 81 passed, 3 warnings in 7.65s |
+| 2026-04-23 20:47 UTC | Exp 775: Jailbreak Detection KAN v1 — Safety Class | OK | 81 passed, 3 warnings in 8.64s |
