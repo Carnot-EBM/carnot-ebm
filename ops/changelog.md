@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-23 (Exp 783: JEPA v20 Retrain with EDU-PRM Selection)
+
+- 2026-04-23 22:59 UTC: Exp 783 — JEPA v20 Retrain: EDU-PRM Selected Corpus with Class-Weight Balancing. (⚠️ Not Viable / Research Finding) Retrained JEPA v20 on 18 EDU-PRM selected training pairs with class-weight balancing. In-distribution AUC=1.0 (perfect), out-of-distribution AUC=0.4467 (target: >0.75). Performance regression: OOD AUC delta vs v19 = -0.12 (deterioration). Insufficient data corpus (18 pairs) prevents model from learning generalized OOD distribution. honest_verdict=jepa_v20_insufficient_data. Research finding: Class-weight balancing on EDU-PRM selected corpus fails to produce OOD generalization; extremely limited training set (18 pairs) insufficient for OOD=0.75 target. Small-data regime requires either (a) larger pool of JEPA-quality pairs, (b) different corpus selection strategy (e.g., synthetic augmentation), or (c) relaxed OOD target for limited-data scenario. No new spec entries. results/experiment_783_jepa_v20_retrain.json.
+
 ## 2026-04-23 (Exp 773: Carnot vs SETS Test-Time Scaling)
 
 - 2026-04-23 20:14 UTC: Exp 773 — Carnot vs SETS (arXiv 2501.19306) — oracle efficiency comparison. (research comparison) Compared EBM oracle call efficiency: SETS 100% pass (6.0 oracle calls/q) vs Carnot 93.33% pass (1.0 oracle call/q). Oracle call ratio: 6.0x efficiency gain for Carnot. Pass rate delta: -6.67% (trade-off: lower accuracy for higher efficiency). n_questions=30, llm_mode=mock_deterministic. honest_verdict=inconclusive. Research finding: Experiment documents the Carnot-SETS efficiency trade-off cleanly (oracle calls 6x lower) but Carnot accuracy is 6.67% lower on this small benchmark. Does not definitively resolve which approach is superior — depends on downstream use case priorities (oracle cost vs accuracy). No new spec entries. results/experiment_773_carnot_vs_sets.json.
