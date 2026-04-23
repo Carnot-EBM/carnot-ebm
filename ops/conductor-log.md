@@ -2669,3 +2669,4 @@ python/ |
 | 2026-04-23 22:49 UTC | Exp 782: EDU-PRM Uncertainty Step Selection — Dive | OK | 81 passed, 3 warnings in 8.02s |
 | 2026-04-23 23:00 UTC | Exp 783: JEPA v20 Retrain — Pooled Real Data + EDU | OK | 81 passed, 3 warnings in 7.52s |
 | 2026-04-23 23:07 UTC | Exp 784: JEPA v20 Cascade Deploy — Tier 3.5 Predic | OK | 81 passed, 3 warnings in 8.40s |
+| 2026-04-23 23:25 UTC | Exp 785: SOTA GGUF Code Repair v2 — 25 Problems, 9 | OK | 99 passed, 3 warnings in 17.40s |
