@@ -956,7 +956,7 @@ tasks:
        a. KnowledgeBase:
           build_from_modules(module_names: list[str]) -> KnowledgeBase:
             For each module: import it, call dir(), inspect.getmembers().
-            Store: (module.attr: {"type", "signature", "exists": True)}.
+            Store: (module.attr: ("type", "signature", "exists": True)).
           lookup(module: str, attr: str) -> bool:
             Return True if module.attr exists in KB.
        b. ASTKnowledgeViolation(node_text, module, attr, violation_type) dataclass.
