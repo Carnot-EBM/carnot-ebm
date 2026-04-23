@@ -76,17 +76,24 @@ def _run(cmd: list[str], timeout: int = 120) -> tuple[int, str, str]:
 
 
 def check_hf_authentication() -> tuple[bool, str]:
-    """Return (authenticated, username) by calling `huggingface-cli whoami`.
+    """Return (authenticated, username) by calling `hf auth whoami`.
 
-    Why check whoami instead of reading env directly: the CLI handles both
-    HF_TOKEN env var and the cached token from `huggingface-cli login`.
-    A successful whoami is the definitive proof that uploads will work.
+    The legacy `huggingface-cli` binary is deprecated as of huggingface_hub
+    1.x and prints a warning + non-zero exit — historical reads of its
+    whoami call silently broke (RETRO-074 debug session, Exp 777 first run
+    reported blocked_hf_not_authenticated despite `hf auth whoami` working
+    on the same machine).  The modern CLI is `hf`; its whoami output is
+    `user=<name> orgs=<org1>,<org2>` on stdout.
     """
-    rc, stdout, _stderr = _run(["huggingface-cli", "whoami"], timeout=30)
-    if rc == 0:
-        username = stdout.strip().split("\n")[0].strip()
-        return True, username
-    return False, ""
+    rc, stdout, _stderr = _run(["hf", "auth", "whoami"], timeout=30)
+    if rc != 0:
+        return False, ""
+    # Output format: `user=ianblenke orgs=Carnot-EBM` (single line).
+    for token in stdout.strip().split():
+        if token.startswith("user="):
+            return True, token.split("=", 1)[1]
+    # Fall back — authenticated but couldn't parse username.
+    return True, ""
 
 
 def upload_artifact(
@@ -101,9 +108,10 @@ def upload_artifact(
     Why path_in_repo is optional: most uploads go to the repo root.
     huggingface-cli upload auto-creates the repo if it does not exist.
     """
-    cmd = ["huggingface-cli", "upload", repo_id, local_path, "--repo-type", "model"]
+    cmd = ["hf", "upload", repo_id, local_path]
     if path_in_repo:
-        cmd += ["--path-in-repo", path_in_repo]
+        cmd.append(path_in_repo)
+    cmd += ["--repo-type", "model"]
     rc, stdout, stderr = _run(cmd, timeout=300)
     if rc == 0:
         url = f"https://huggingface.co/{repo_id}"
@@ -121,7 +129,7 @@ def get_existing_org_models(org: str) -> list[str]:
     when huggingface-cli is authenticated; avoids an extra import path.
     """
     rc, stdout, _stderr = _run(
-        ["huggingface-cli", "list", "--organization", org, "--limit", "50"],
+        ["hf", "models", "list", "--author", org, "--limit", "50"],
         timeout=60,
     )
     if rc != 0 or not stdout.strip():
@@ -151,7 +159,7 @@ def update_readme_with_production_section(repo_id: str) -> tuple[bool, str]:
 
         # Try to download existing README.
         dl_cmd = [
-            "huggingface-cli", "download", repo_id, "README.md",
+            "hf", "download", repo_id, "README.md",
             "--repo-type", "model",
             "--local-dir", tmpdir,
         ]
@@ -170,7 +178,7 @@ def update_readme_with_production_section(repo_id: str) -> tuple[bool, str]:
         readme_path.write_text(updated)
 
         ul_cmd = [
-            "huggingface-cli", "upload", repo_id, str(readme_path),
+            "hf", "upload", repo_id, str(readme_path),
             "--repo-type", "model",
         ]
         ul_rc, _ul_out, ul_err = _run(ul_cmd, timeout=120)
