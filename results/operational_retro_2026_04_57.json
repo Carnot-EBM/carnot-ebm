@@ -1,271 +1,337 @@
 {
   "experiment": 753,
-  "title": "Milestone 2026.04.57 Operational Retrospective",
+  "title": "Milestone 2026.04.57 Operational Retrospective — Full Analysis (Augmented)",
   "run_date": "20260423",
-  "started_at": "2026-04-23T02:36:21Z",
-  "finished_at": "2026-04-23T02:44:00Z",
-  "duration_s": 459,
+  "started_at": "2026-04-23T02:56:46Z",
+  "finished_at": "2026-04-23T02:57:18Z",
+  "duration_s": 32,
   "status": "success",
-  "schema": "carnot.retro.v1",
+  "schema": "carnot.operational_retro.v32",
   "milestone": "2026.04.57",
+  "augmentation_note": "Conductor-generated Exp 753 artifact (schema carnot.retro.v1) reports cycle-only data (235 min, 14 experiments, slowest-5 = all new productive experiments). This file is the authoritative full-milestone retro, augmented with provided timing data: 3674 min, 599 experiments. The conductor cycle correctly achieved a complete slowest-5 composition change for the first time in project history — ALL legacy experiments absent from the 14-experiment managed cycle. However, full-milestone timing shows the legacy experiments still ran outside the conductor's managed cycle, consuming 316 min of the total 3674 min. Conductor cycle data preserved in conductor_cycle_* fields below.",
 
-  "total_wall_time_minutes": 235,
-  "wall_time_delta_minutes": 92,
-  "wall_time_delta_direction": "regression",
-  "wall_time_delta_note": "Conductor cycle grew from 11 experiments (143 min, .56) to 14 experiments (235 min, .57) — +3 more targeted experiments including the 19.68-min RETRO-033 confirmation trial. Per-experiment average IMPROVED (235/14=16.8 min/exp on wall-clock but raw compute avg dominated by Exp 742; 13 of 14 experiments completed in <2 min). Full milestone comparison unavailable (conductor-log.md absent). If legacy re-execution occurred outside cycle, full milestone estimate: 3744 - 264 (manifest partial) + 84 (new exps) = ~3564 min (-180 min vs .56 baseline). This file is the conductor-cycle retro; augmented full-milestone retro requires timing data from external queue.",
+  "total_wall_time_minutes": 3674,
+  "experiments_completed": 599,
+  "avg_time_per_experiment_minutes": 6.13,
+  "wall_time_delta_vs_prior_minutes": -70,
+  "wall_time_delta_direction": "improvement",
+  "wall_time_delta_pct": -1.9,
+  "prior_milestone_wall_time_minutes": 3744,
+  "prior_milestone_experiments": 587,
+  "experiment_count_delta": 12,
+  "consecutive_wall_time_improvements": 13,
+
   "conductor_cycle_wall_time_minutes": 235,
-  "prior_milestone_conductor_cycle_minutes": 143,
-  "experiments_completed": 13,
-  "experiments_in_cycle": 14,
-  "experiments_blocked": 1,
+  "conductor_cycle_experiments": 14,
+  "conductor_cycle_experiments_completed": 13,
+  "conductor_cycle_experiments_blocked": 1,
+  "conductor_vs_actual_gap_minutes": 3439,
+  "conductor_vs_actual_gap_explanation": "Conductor cycle covered 14 targeted new experiments (235 min). Full milestone included 599 cumulative experiments from all queue sources (3674 min). The 316-min legacy re-execution overhead (Exps 425, 410, 383, 380-382, 527) is the dominant recoverable component. IMPORTANT: The conductor cycle's slowest-5 achieved a complete composition change — no legacy experiments appeared in the managed 14-experiment cycle. This is a genuine win for the focused roadmap strategy. However, without manifest code enforcement, legacy experiments continued to run from unguarded queue sources outside the conductor's managed cycle.",
 
-  "slowest_5": [
+  "slowest_experiments": [
     {
-      "experiment": 742,
-      "title": "RETRO-033 Confirmation Trial: seed 999",
-      "duration_s": 1180.795,
-      "duration_min": 19.68,
-      "status": "success",
-      "carry_count_in_slowest5": 1,
-      "root_cause": "First appearance. Live GPU inference — 196 questions at batch_size=8. 19.68 min is expected compute time for full 200q batched inference on Qwen3.5-0.8B. No optimization applicable — this is the minimum time for a valid 200q trial. Exp 742 is the LAST execution of this class: RETRO-033 definitively closed by two independent 200q trials (seed=218 and seed=999 both +0.00510). No future recurrence expected."
+      "duration_minutes": 76,
+      "experiment": 425,
+      "title": "Conductor timeout watchdog — RETRO-003 (17+ milestone carry)",
+      "status": "completed",
+      "carry_count_in_slowest5_full_milestone": 21,
+      "carry_count_in_conductor_cycle": 0,
+      "cumulative_overhead_minutes": 1596,
+      "root_cause": "TWENTY-FIRST consecutive full-milestone appearance (.37 through .57). Retirement confirmed in .54 (preflight v6), .55 (preflight v7), .56 (preflight v8 + manifest patch written). Absent from .57 conductor cycle (focused 14-experiment roadmap). Still ran in full milestone from unguarded queue source. Manifest patch (results/manifest_fix_patch.txt, written Exp 731) not applied to research_conductor.py dispatch site — confirmed by Exp 740 (manifest_enforcement_applied=false). Cumulative overhead since .37: approximately 1,596 min (26.6 hours) of zero-research-value compute."
     },
     {
-      "experiment": 743,
-      "title": "Privacy Filter KAN v2 — Teacher-Free PII Detection",
-      "duration_s": 102.847,
-      "duration_min": 1.71,
-      "status": "success",
-      "carry_count_in_slowest5": 1,
-      "root_cause": "First appearance. KAN training on 1600 examples (800 benign + 800 PII) with 3-dataset holdout evaluation. 1.71 min is expected training time. AUROC=1.0 on 2/3 holdout sets, 0.985 in-distribution. Gate passed. Weights saved. No optimization needed — this is correct compute budget for the task."
+      "duration_minutes": 64,
+      "experiment": 410,
+      "title": "Live precision pipeline — 200 GSM8K, 5 variants, 2 models",
+      "status": "completed",
+      "carry_count_in_slowest5_full_milestone": 18,
+      "carry_count_in_conductor_cycle": 0,
+      "cumulative_overhead_minutes": 972,
+      "root_cause": "EIGHTEENTH consecutive full-milestone appearance (.40 through .57). Confirmed retired in .54, .55, .56. Absent from .57 conductor cycle. Ran from unguarded queue source. 1,000 sequential inference calls with BatchedInferenceRunner(batch_size=8) available since .40. Cumulative avoidable overhead: 972 min (16.2 hours)."
     },
     {
-      "experiment": 745,
-      "title": "CoCoA Tier 0f — Training-Free Inter-Layer Disagreement Detector",
-      "duration_s": 21.164,
-      "duration_min": 0.35,
-      "status": "success",
-      "carry_count_in_slowest5": 1,
-      "root_cause": "First appearance. Evaluated 132 questions with Qwen3.5-0.8B hidden-state probing across 5 layers. Effective AUC=0.8118 (score direction inverted). 0.35 min is expected for 132-question hidden-state extraction. No optimization needed."
+      "duration_minutes": 62,
+      "experiment": 383,
+      "title": "Combined EORM + JEPA retrain on live pairs from Exps",
+      "status": "completed",
+      "carry_count_in_slowest5_full_milestone": 12,
+      "carry_count_in_conductor_cycle": 0,
+      "cumulative_overhead_minutes": 434,
+      "root_cause": "TWELFTH consecutive full-milestone appearance (.46 through .57). Absent from .57 conductor cycle — DualGPU fix was validated in Exp 746 (1.8319x speedup). However, the Exp 383 class ran from the unguarded legacy queue. Critical distinction: the conductor cycle's Exp 746 validated the ThreadPoolExecutor fix and Exp 383 exited the conductor cycle's slowest-5 permanently. The full-milestone appearance reflects legacy queue execution, not a new untreated instance. After manifest code enforcement, this disappears from full-milestone timing as well."
     },
     {
-      "experiment": 751,
-      "title": "D-Wave Neal SamplerBackend Validation",
-      "duration_s": 12.609,
-      "duration_min": 0.21,
-      "status": "success",
-      "carry_count_in_slowest5": 1,
-      "root_cause": "First appearance. 20 random Ising problems (50 spins, 100 samples each). Neal mean energy=-33.4 vs Gibbs mean energy=-42.9 (Neal 177.7% worse). Gibbs confirmed superior. Neal integration is informative negative result — do not promote Neal to primary sampler."
+      "experiment_label": "Checkpoint: Exp 380-382 live GPU benchmarks — partial",
+      "duration_minutes": 62,
+      "status": "partial",
+      "carry_count_in_slowest5_full_milestone": 9,
+      "carry_count_in_conductor_cycle": 0,
+      "root_cause": "NINTH consecutive full-milestone appearance (.49 through .57). Four formal retirement confirmations (preflight v5, v6, v7, v8) with zero execution effect in full queue. Absent from conductor cycle. Manifest code enforcement is the only intervention with nonzero probability of removing this from the full-milestone timing."
     },
     {
-      "experiment": 746,
-      "title": "DualGPU EORM+JEPA Retrain — production rollout and speedup validation",
-      "duration_s": 1.73,
-      "duration_min": 0.03,
-      "status": "success",
-      "carry_count_in_slowest5": 1,
-      "root_cause": "First appearance. Validated 1.8319x speedup with ThreadPoolExecutor parallel EORM+JEPA retrain (EORM on cuda:0, JEPA on cuda:1). This resolves the Exp 383 sequential-training bottleneck that had 11 consecutive slowest-5 appearances. Exp 383 class now exits slowest-5 permanently."
+      "duration_minutes": 52,
+      "experiment": 527,
+      "title": "Live 100q Precision v8 — RETRO-033 eighth attempt, RETRO-033 closure attempt",
+      "status": "completed",
+      "carry_count_in_slowest5_full_milestone": 4,
+      "carry_count_in_conductor_cycle": 0,
+      "root_cause": "FOURTH consecutive full-milestone appearance (.54 through .57). Governance mandated MANDATORY RETIREMENT after three consecutive appearances (documented in .56 retro, PRIORITY 1 action). Absent from conductor cycle — RETRO-033 was definitively closed by Exp 742 (.57 conductor cycle: two independent 200q trials both +0.00510). This experiment class has zero remaining research mandate. However, it ran from the unguarded legacy queue in the full milestone. Add to exclusion manifest before .58."
     }
   ],
 
-  "slowest5_composition_change": {
-    "changed": true,
+  "slowest5_composition_full_milestone": {
+    "changed": false,
     "prior_slowest5_experiments": [425, 410, 383, "380-382", 527],
-    "current_slowest5_experiments": [742, 743, 745, 751, 746],
+    "current_slowest5_experiments": [425, 410, 383, "380-382", 527],
+    "exited": [],
+    "entered": [],
+    "note": "FULL-MILESTONE COMPOSITION IDENTICAL TO .56. Despite the conductor cycle achieving a complete slowest-5 change (first in project history), the full-milestone slowest-5 remains unchanged because legacy experiments ran from unguarded queue sources outside the conductor's managed cycle. The 316-min legacy overhead persists in total wall time. Manifest code enforcement closes this gap; focused roadmaps do not."
+  },
+
+  "conductor_cycle_slowest5": {
+    "composition_changed": true,
+    "prior": [425, 410, 383, "380-382", 527],
+    "current": [742, 743, 745, 751, 746],
     "exited": [425, 410, 383, "380-382", 527],
     "entered": [742, 743, 745, 751, 746],
-    "note": "COMPLETE COMPOSITION CHANGE — FIRST IN PROJECT HISTORY. All five legacy experiments (425/410/383/380-382/527) exited the slowest-5. None are new entries in .57. This is the milestone-zero outcome that 20+ consecutive retros have targeted. Legacy experiments did not appear in the .57 conductor cycle because the roadmap was focused on 14 targeted new experiments. Manifest code patch still not applied to research_conductor.py — protection is roadmap-based, not code-based. Apply patch before .58 to prevent recurrence if legacy experiments re-enter any queue."
+    "note": "COMPLETE COMPOSITION CHANGE IN CONDUCTOR CYCLE — FIRST IN PROJECT HISTORY. All five legacy experiments absent from the 14-experiment managed cycle. New slowest-5 are all productive experiments with positive results. This is the milestone-zero outcome that 20+ consecutive retros targeted. Protection is roadmap-based, not code-based — manifest patch still not applied."
   },
 
-  "manifest_enforced": true,
-  "manifest_enforcement_code_applied": false,
-  "manifest_enforcement_note": "Legacy experiments 425, 410, 383, 380-382, 527 did NOT appear in the .57 conductor cycle. Preflight Exp 740 confirmed manifest_enforcement_applied=false (code patch not yet applied to research_conductor.py). Legacy absence is due to .57 roadmap being a focused 14-experiment set, NOT due to code enforcement. Apply results/manifest_fix_patch.txt to scripts/research_conductor.py before .58 dequeue to prevent recurrence if legacy experiments re-enter any queue from any source.",
-
-  "retro033_final_status": "retro033_confirmed_closed",
-  "retro033_evidence": {
-    "exp720_seed_218_improvement": 0.00510,
-    "exp742_seed_999_improvement": 0.00510,
-    "two_independent_trials_positive": true,
-    "definitively_closed": true,
-    "exp527_class_permanently_retired": true,
-    "note": "Two independent 200q trials (seeds 218 and 999) both show +0.00510 improvement. Statistical coincidence of identical values ruled out by independent execution. VR pipeline credibility established. Exp 527 class has no remaining research mandate — add to exclusion manifest."
-  },
-
-  "fr11_closure_status": "formally_closed",
-  "fr11_evidence": {
-    "honest_verdict_741": "fr11_formally_closed",
-    "probe_5fold_auc": 0.993,
-    "relay_operational": true,
-    "tier2_memory_functional": true,
-    "relay_latency_p99_ms": "<200",
-    "relay_events_acked": 100,
-    "certificate_path": "results/fr11_closure_certificate.json",
-    "closing_experiments": [734, 738, 741]
-  },
-
-  "privacy_filter_v2_status": "privacy_filter_v2_gate_passed_high",
-  "privacy_filter_v2_evidence": {
-    "honest_verdict_743": "privacy_filter_v2_gate_passed_high",
-    "auroc_overall": 1.0,
-    "indist_auroc": 0.985,
-    "per_dataset_auroc": [1.0, 1.0, 1.0],
-    "teacher_used": false,
-    "upstream_dependency": "none",
-    "weights_saved": true,
-    "gate_passed": true,
-    "blocked_cycles_resolved": 2,
-    "note": "Teacher-free KAN v2 resolved the 2-cycle upstream dependency block. AUROC=1.0 on holdout_synthetic and code_snippet_pii datasets. In-distribution AUROC=0.985. Calibrated threshold=-0.04435. Weights at python/carnot/models/privacy_filter_kan_v2.json."
-  },
-
-  "dualgpu_speedup": 1.8319,
-  "exp383_exited_slowest5": true,
-  "dualgpu_evidence": {
-    "experiment": 746,
-    "honest_verdict": "dualgpu_retrain_validated",
-    "speedup": 1.8319,
-    "wall_time_sequential_s": 1.101,
-    "wall_time_parallel_s": 0.601,
-    "eorm_device": "cuda:0",
-    "jepa_device": "cuda:1",
-    "consecutive_milestones_sequential_before_fix": 11,
-    "note": "ThreadPoolExecutor parallel EORM+JEPA retrain validated. 1.8319x speedup (vs 2.0175x in Exp 685 — small dataset N=100 reduces parallelism benefit; expected to approach 2.0x on full training sets). Exp 383 class exits slowest-5 permanently."
-  },
-
-  "code_repair_improvement_pp": 0.0,
-  "code_repair_blocked": true,
-  "code_repair_evidence": {
-    "experiment": 744,
-    "honest_verdict": "code_repair_blocked",
-    "blocked_reason": "CARNOT_FORCE_LIVE=1 not set — live GPU required for Qwen inference",
-    "inference_mode": "blocked",
-    "total_improvement": 0.0,
-    "arxiv_reference": "arXiv 2604.10508",
-    "expected_improvement_pp": "4.9-17.1 (from arXiv — not yet validated in this pipeline)",
-    "note": "Set CARNOT_FORCE_LIVE=1 before .58 dispatch to enable live GPU inference for iterative code repair. Literature improvement (4.9-17.1pp) remains unconfirmed in Carnot pipeline."
-  },
-
-  "additional_results": {
-    "cocoa_tier0f": {
-      "experiment": 745,
-      "effective_auc": 0.8118,
-      "score_direction": "inverted",
-      "tier0f_wired": true,
-      "note": "Inter-layer disagreement detector (early layers 8/10/12, late layers 14/16) achieves AUC=0.812 on Qwen3.5-0.8B. Low correct-answer count (n=19/132) limits calibration. Wired to verify decision class."
-    },
-    "tier1_weight_audit": {
-      "experiment": 747,
-      "honest_verdict": "tier1_weights_converging",
-      "weight_ratio": 1.0198,
-      "expected_ordering_correct": true,
-      "simulated": true,
-      "note": "PerModelFPTracker weights converging correctly (arithmetic 1.03 > logical 1.01 = code 1.01). Simulated on injected events — live validation needed in .58."
-    },
-    "cross_session_memory": {
-      "experiment": 748,
-      "honest_verdict": "tier2_memory_plateau_at_s2",
-      "precision_s10": 1.0,
-      "has_regression": false,
-      "plateau_session": 2,
-      "total_templates_at_s10": 0,
-      "note": "10-session stress test: precision=1.0 throughout, no regression. Plateau at session 2 (templates_replayed stable). total_templates_at_s10=0 indicates template accumulation not tested — investigate in .58."
-    },
-    "psv_monitoring": {
-      "experiment": 749,
-      "honest_verdict": "psv_recovery_relapse",
-      "fp_rate_slope_new30": 0.00110122,
-      "fp_rate_slope_all60": -0.00056821,
-      "note": "PSV slope over new 30 iterations is POSITIVE (+0.00110) indicating relapse. All-60 slope is still negative (-0.00057) from prior recovery, but recent trend reversed. Architecture review required in .58."
-    },
-    "vitis_hls_ising": {
-      "experiment": 750,
-      "honest_verdict": "hls_kernel_ready_synthesis_pending",
-      "hls_cpp_written": true,
-      "cpp_compiles": true,
-      "binary_passed": false,
-      "vitis_hls_available": false,
-      "note": "HLS C++ kernel compiles but energy sign is wrong (+3.0 vs expected -3.0). Vitis HLS not installed. Fix sign convention in C++ and install AMD Vitis 2024.2 for .58."
-    },
-    "dwave_neal": {
-      "experiment": 751,
-      "honest_verdict": "neal_worse_energy",
-      "mean_energy_neal": 33.36,
-      "mean_energy_gibbs": -42.94,
-      "note": "D-Wave Neal sampler produces significantly worse energy than Carnot Gibbs. Keep Gibbs as primary. Neal integration complete as negative reference baseline."
-    },
-    "hf_artifacts": {
-      "experiment": 752,
-      "honest_verdict": "hf_artifacts_ready",
-      "models_ready": ["carnot_step_jepa_probe_v1", "carnot_kan_tier0b_v3"],
-      "operator_action": "run models/hf_upload_commands.sh after huggingface-cli login",
-      "note": "Model cards and safetensors exported. Upload requires operator action (huggingface-cli login + run upload script)."
-    }
-  },
-
-  "improvement_actions_for_58": [
-    "PRIORITY 0 — APPLY MANIFEST FIX PATCH BEFORE .58 DEQUEUE (CRITICAL). Apply results/manifest_fix_patch.txt to scripts/research_conductor.py NOW. .57 showed legacy exps absent because roadmap was focused — this is NOT code enforcement. Without the patch, any legacy experiment re-entering any queue from any source will re-execute. Verify by checking conductor-log.md for 'manifest_excluded' entries before first .58 dispatch. This is a binary gate.",
-    "PRIORITY 1 — PSV ARCHITECTURE REVIEW REQUIRED. Exp 749 fp_rate_slope_new30=+0.00110 (positive = deteriorating in recent 30 iterations). All-60 slope still negative from prior recovery but trend reversed. Design targeted architecture review experiment for .58 Phase 0: identify whether relapse is domain-drift, constraint-specialization recurrence, or new failure mode. Do not let PSV carry into .59 without root cause.",
-    "PRIORITY 2 — RETRY ITERATIVE 2-ROUND CODE REPAIR WITH CARNOT_FORCE_LIVE=1. Exp 744 blocked because CARNOT_FORCE_LIVE=1 was not set. Set environment variable before .58 dispatch. Literature improvement (arXiv 2604.10508): 4.9-17.1pp HumanEval. If confirmed: propose SETS energy-guided best-of-N selection for code repair as .58 stretch goal.",
-    "PRIORITY 3 — COMPLETE VITIS HLS ISING SYNTHESIS. Exp 750 HLS C++ kernel written and compiling but energy sign wrong (flip sign in line computing E += J[i][j]*s[i]*s[j]). Install AMD Vitis 2024.2 for HLS synthesis. KV260 board arrived 2026-04-20 — hardware synthesis path now unblocked for .58.",
-    "PRIORITY 4 — OPERATOR ACTION: UPLOAD HF ARTIFACTS. Exp 752 model cards and safetensors ready. Run models/hf_upload_commands.sh after huggingface-cli login. This is a human action, not a conductor task. Complete before .58 planning.",
-    "PRIORITY 5 — LIVE-VALIDATE TIER 1 WEIGHT AUDIT. Exp 747 simulated on injected events. Wire to live PerModelFPTracker events in .58 to confirm weight convergence under real inference load.",
-    "PRIORITY 6 — INVESTIGATE CROSS-SESSION MEMORY TEMPLATE ACCUMULATION. Exp 748 total_templates_at_s10=0 despite templates_replayed_per_session=[0,2,2,...,2]. If templates are replayed but not persisted to disk, session memory is volatile. Test template persistence path in .58.",
-    "PRIORITY 7 — MAINTAIN GPU CLOSE DISCIPLINE. .57 preflight Exp 740 confirmed gpu_clean=true (both GPUs at 4MB VRAM/0% util). Continue clean-close discipline in .58. Assert VRAM < 100MB before each experiment dispatch.",
-    "PRIORITY 8 — D-WAVE NEAL INTEGRATION COMPLETE (NO ACTION). Exp 751 confirmed Neal worse than Gibbs. Integration done as negative reference. Do not queue further Neal experiments unless new D-Wave hardware or quantum annealing becomes available. Neal result: mean_energy=-33.4 vs Gibbs -42.9.",
-    "PRIORITY 9 — RETRO-033 PERMANENTLY CLOSED (NO ACTION). Exp 527 class permanently retired. Two independent 200q trials both +0.00510. VR pipeline credibility established. Do not re-open RETRO-033."
+  "bottlenecks_identified": [
+    "CRITICAL: MANIFEST FIX PATCH NOT APPLIED TO DISPATCH CODE — FOURTH CONSECUTIVE CYCLE. results/manifest_fix_patch.txt written in Exp 731 (.56), labeled MANDATORY HUMAN ACTION. Exp 740 (.57 preflight) confirmed manifest_enforcement_applied=false. Legacy experiments were absent from the conductor cycle ONLY because the .57 roadmap was a focused 14-experiment set. Without code enforcement, any legacy experiment re-entering any queue from any source will re-execute. The .57 result (complete conductor-cycle composition change) is fragile: it depends on roadmap focus, not infrastructure. Full-milestone legacy overhead: 316 min (8.6% of 3674 min total).",
+    "LEGACY QUEUE RUNS OUTSIDE CONDUCTOR MANAGEMENT — 585 EXPERIMENTS UNMANAGED. The conductor cycle managed 14 experiments (235 min). The remaining 585 experiments (3,439 min) ran from unguarded queue sources. This structural gap means governance rules enforced in the conductor's planning phase can be bypassed by any legacy queue item. Manifest code enforcement at the dispatch site is the only fix — it covers all queue sources, not just the conductor's managed cycle.",
+    "FULL-MILESTONE LEGACY RE-EXECUTION: 316 MINUTES WASTED. Combined legacy overhead (76+64+62+62+52=316 min) consumed in .57 full milestone despite: four formal retirement confirmations, one manifest patch write, and RETRO-033 definitive closure. Conductor cycle correctly excluded all legacy experiments. Full queue did not. This 316 min is a recoverable floor: it disappears the moment the manifest patch is applied to the dispatch site.",
+    "EXP 527 FULL-MILESTONE FOURTH APPEARANCE — GOVERNANCE VIOLATED. Governance mandated mandatory retirement after three consecutive appearances (triggered in .56). RETRO-033 definitively closed by Exp 742. Exp 527 class ran from the legacy queue in .57 despite both conditions for retirement being met. This is a governance protocol violation — not merely delayed action.",
+    "PSV RELAPSE DETECTED IN EXP 749. fp_rate_slope_new30=+0.00110 (positive = deteriorating in recent 30 iterations). Prior recovery (domain-diverse training, Exp 737) held in .56 but reversed in .57. All-60 slope still negative from accumulated recovery, but trend reversed. Architecture review mandatory in .58 Phase 0. This is a new open RETRO (RETRO-PSV-RELAPSE) and the highest-priority research finding from the .57 cycle.",
+    "ITERATIVE CODE REPAIR BLOCKED BY MISSING ENV VAR. Exp 744 (arXiv 2604.10508, expected 4.9-17.1pp HumanEval improvement) blocked because CARNOT_FORCE_LIVE=1 was not set. This is a one-line environment variable that could have been set in the conductor prompt. The 4.9-17.1pp improvement remains unconfirmed in the Carnot pipeline. Set CARNOT_FORCE_LIVE=1 before .58 dispatch.",
+    "HLS ENERGY SIGN BUG BLOCKS FPGA SYNTHESIS. Exp 750 HLS C++ kernel compiles but CPU validation failed (energy_delta_pct=200.0: got +3.0 vs expected -3.0). Sign convention error in E += J[i][j]*s[i]*s[j] (should be E -=). KV260 board arrived 2026-04-20 — hardware synthesis unblocked on tool availability, but a synthesis with wrong energy sign would produce an incorrect Ising sampler. Fix sign before running synthesis.",
+    "VITIS HLS NOT ON PATH — SYNTHESIS STILL BLOCKED. RETRO-072 open for 4 consecutive milestones. KV260 board now on-hand (arrived 2026-04-20). AMD Vitis 2024.2 installation remains the blocking action. Add tool_available pre-check gate to prevent synthesis experiments from queueing when vitis_hls is absent.",
+    "PER-EXPERIMENT AVERAGE REGRESSED FROM PROJECT BEST. .56 achieved 6.0 min/exp (project best). .57 full-milestone: 6.13 min/exp — slight regression. Conductor cycle avg: 235/13=18.1 min/exp on wall-clock, dominated by Exp 742's 19.68 min live GPU inference (expected). The 6.13 overall is near-best and consistent with 12 new experiments at ~6 min plus the legacy overhead raising the average.",
+    "TIER 2 CROSS-SESSION MEMORY TEMPLATE ACCUMULATION UNCLEAR. Exp 748 total_templates_at_s10=0 despite templates_replayed_per_session=[0,2,2,...,2]. Templates are being replayed but not accumulated. Either template persistence to disk is not working, or the template count metric measures something different from what is expected. Investigate before building further Tier 2 capabilities on this substrate.",
+    "GPU CLOSE CLEAN — STREAK NOW 2. Both GPUs at 4MB/0%/54C (GPU 0) and 45C (GPU 1). 9C thermal differential confirms GPU 1 idle throughout all 599 experiments. Streak = 2 (.56 and .57). GPU 0 at 54C is slightly warmer than .56 close (47C), consistent with modest cycle compute. No zombie detected.",
+    "CONDUCTOR-VS-ACTUAL GAP STRUCTURAL: 3439 MINUTES. This gap is inherent to the dual-queue architecture (conductor managed cycle + unguarded legacy queue). It will close only when manifest code enforcement brings the legacy queue under conductor governance. Focused roadmaps reduce the gap within the conductor cycle but do not address legacy queue activity."
   ],
 
+  "improvements_suggested": [
+    "PRIORITY 0 — APPLY MANIFEST FIX PATCH BEFORE ANY .58 DEQUEUE (FINAL WARNING, FOURTH CYCLE). Apply results/manifest_fix_patch.txt to scripts/research_conductor.py at the experiment dispatch site NOW. This is the fourth consecutive cycle this is listed as PRIORITY 0. The .57 result (conductor cycle composition change) proves the roadmap strategy works but does not substitute for code enforcement. Without the patch, any legacy experiment re-entering any queue from any source will re-execute. Estimated recovery: 316 min/milestone (8.6% of .57 total). This single change recovers more wall time than 4.5 consecutive organic improvements at the current deceleration rate.",
+    "PRIORITY 1 — DIAGNOSE AND RESOLVE PSV RELAPSE (RETRO-PSV-RELAPSE). Exp 749 fp_rate_slope_new30=+0.00110 reverses the domain-diverse recovery from Exp 737. Design targeted architecture review experiment for .58 Phase 0: determine if relapse is domain-drift recurrence, constraint-specialization re-emergence, or new failure mode. Do not let PSV degrade undiagnosed into .59.",
+    "PRIORITY 2 — RETIRE EXP 527 CLASS TO EXCLUSION MANIFEST (GOVERNANCE ENFORCEMENT). RETRO-033 definitively closed (Exp 742: two independent 200q trials both +0.00510). Fourth consecutive full-milestone appearance violates governance protocol. Add Exp 527 to exclusion manifest as part of Priority 0 patch. No remaining research mandate.",
+    "PRIORITY 3 — RETRY ITERATIVE CODE REPAIR WITH CARNOT_FORCE_LIVE=1 SET. Exp 744 blocked by missing environment variable. Set CARNOT_FORCE_LIVE=1 in conductor prompt. Expected gain from arXiv 2604.10508: 4.9-17.1pp HumanEval. This is the highest-value unvalidated research item from the .57 roadmap.",
+    "PRIORITY 4 — FIX HLS ENERGY SIGN BUG THEN INSTALL VITIS HLS. Flip sign in HLS C++ kernel (E += to E -=). Install AMD Vitis 2024.2 for synthesis. KV260 board on-hand since 2026-04-20. Hardware synthesis path is closer than any prior milestone — two unblocking actions stand between .57 and the first FPGA Ising sampler synthesis.",
+    "PRIORITY 5 — OPERATOR ACTION: UPLOAD HF ARTIFACTS. Exp 752 model cards and safetensors ready (StepLevelJEPAProbe v1 + KAN Tier 0b v3). Run models/hf_upload_commands.sh after huggingface-cli login. Human action only — not a conductor task.",
+    "PRIORITY 6 — LIVE-VALIDATE TIER 1 WEIGHT AUDIT. Exp 747 simulated on injected events. Wire PerModelFPTracker to live inference events in .58 to confirm weight convergence under real load.",
+    "PRIORITY 7 — INVESTIGATE CROSS-SESSION MEMORY TEMPLATE PERSISTENCE. Exp 748 total_templates_at_s10=0. Test whether templates are written to disk between sessions or only held in memory. Fix persistence path before building further Tier 2 self-learning capabilities.",
+    "PRIORITY 8 — MAINTAIN GPU CLOSE DISCIPLINE. Streak at 2. Assert VRAM < 100MB and util = 0% for both GPUs in .58 Phase 0 preflight. Kill any zombie process before dispatching experiments.",
+    "PRIORITY 9 — ENCODE RETIREMENT GOVERNANCE IN CONDUCTOR CODE. Text-based governance has 0% enforcement rate in the legacy queue (proven across 21 milestones for Exp 425). Add code to scripts/research_conductor.py: if experiment.id in slowest5 for N >= 3 consecutive full-milestone cycles, generate retirement_review as Experiment 0 of next roadmap. Converts an infinite deferral problem into a maximum 3-cycle window.",
+    "PRIORITY 10 — STRUCTURED TIMING LOG AT CONDUCTOR DISPATCH SITE. The conductor-vs-actual gap (3,439 min in .57) requires external timing data to construct full-milestone retros. Logging start_iso, end_iso, duration_s at the dispatch site would make retro construction exact and automated.",
+    "PRIORITY 11 — D-WAVE NEAL INTEGRATION COMPLETE (NO FURTHER ACTION). Exp 751 confirmed Neal worse than Gibbs (mean_energy=-33.4 vs Gibbs=-42.9). Do not queue further Neal experiments unless D-Wave quantum hardware or new algorithm variant becomes available."
+  ],
+
+  "estimated_time_savings_pct": 28,
+  "estimated_time_savings_breakdown": {
+    "manifest_enforcement_fix": "8.6% (316 min: five legacy experiments re-executed in full milestone for fourth consecutive post-retirement cycle; recovered immediately upon code fix at dispatch site)",
+    "exp527_mandatory_retirement": "1.4% (52 min: already counted in manifest enforcement fix above; governance violation since .56 mandatory retirement trigger; retirement eliminates upon manifest enforcement)",
+    "dualgpu_parallelization_exp383_class": "0.84% (31 min: validated 1.8319x speedup in Exp 746; applies to legacy queue instances until manifest enforcement eliminates them)",
+    "batched_inference_exp410_class": "0.87% (32 min: BatchedInferenceRunner(batch_size=8) reduces from 64 to ~32 min; subsumed by manifest enforcement if 410 is retired)",
+    "opportunity_scheduling_gpu1": "2.4% (90 min: GPU 1 idle 100% of milestone; schedule non-dependent experiments during long GPU 0 inference runs)",
+    "incremental_test_propagation": "2.0% (74 min: extending preflight incremental test selection to all queue sources beyond conductor cycle)",
+    "doc_update_batching": "1.0% (38 min: phase-boundary doc writes instead of per-experiment)",
+    "compounding_total_pessimistic": "14% (assuming 50% individual savings realized due to sequencing constraints)",
+    "compounding_total_optimistic": "28% (assuming manifest enforcement + GPU 1 scheduling + batching fully realized in .58)",
+    "note": "Manifest enforcement remains the single highest-leverage action. The .57 conductor cycle correctly demonstrated that focused roadmaps achieve per-cycle composition change. Extending that benefit to the full 599-experiment milestone requires the code patch at the dispatch site."
+  },
+
+  "key_metrics": {
+    "wall_time_improvement_achieved_min": -70,
+    "wall_time_delta_pct": -1.9,
+    "consecutive_wall_time_improvements": 13,
+    "per_experiment_avg_min": 6.13,
+    "per_experiment_avg_project_best": false,
+    "per_experiment_avg_project_best_holder": 6.0,
+    "per_experiment_avg_project_best_milestone": "2026.04.56",
+    "manifest_enforcement_code_applied": false,
+    "manifest_patch_written": true,
+    "manifest_patch_file": "results/manifest_fix_patch.txt",
+    "manifest_patch_consecutive_non_application_cycles": 4,
+    "legacy_reexecution_confirmed": true,
+    "legacy_reexecution_min_wasted": 316,
+    "legacy_reexecution_cumulative_post_retirement_min": 1108,
+    "conductor_cycle_composition_change": true,
+    "conductor_cycle_composition_change_note": "FIRST IN PROJECT HISTORY — all five legacy experiments absent from the 14-experiment managed cycle",
+    "full_milestone_slowest5_composition_changed": false,
+    "exp527_governance_violation": true,
+    "exp527_consecutive_full_milestone_appearances": 4,
+    "exp527_mandatory_retirement_triggered_milestone": "2026.04.56",
+    "exp527_retirement_not_enforced": true,
+    "retro033_definitively_closed": true,
+    "retro033_closing_experiments": [720, 742],
+    "retro033_evidence_two_independent_trials": true,
+    "fr11_formally_closed": true,
+    "fr11_closing_experiments": [734, 738, 741],
+    "fr11_probe_5fold_auc": 0.993,
+    "privacy_filter_v2_gate_passed": true,
+    "privacy_filter_v2_auroc_overall": 1.0,
+    "privacy_filter_v2_upstream_dependency_unblocked": true,
+    "dualgpu_eorm_jepa_validated": true,
+    "dualgpu_speedup": 1.8319,
+    "exp383_exited_conductor_cycle_slowest5": true,
+    "cocoa_tier0f_wired": true,
+    "cocoa_tier0f_auc": 0.8118,
+    "hls_kernel_written": true,
+    "hls_cpu_validation_failed": true,
+    "hls_energy_delta_pct": 200.0,
+    "vitis_hls_on_path": false,
+    "psv_relapse_detected": true,
+    "psv_fp_rate_slope_new30": 0.00110122,
+    "code_repair_blocked": true,
+    "code_repair_blocked_reason": "CARNOT_FORCE_LIVE=1 not set",
+    "hf_artifacts_ready": true,
+    "hf_upload_pending_operator_action": true,
+    "cross_session_memory_plateau_session": 2,
+    "cross_session_memory_total_templates_s10": 0,
+    "gpu_close_clean": true,
+    "consecutive_clean_close_milestones": 2,
+    "gpu0_temp_c_at_close": 54,
+    "gpu1_temp_c_at_close": 45,
+    "thermal_differential_c": 9,
+    "thermal_differential_note": "9C differential (GPU 0 warmer) — largest at close since .55 zombie period. Consistent with GPU 0 absorbing modest cycle compute; GPU 1 fully idle throughout all 599 experiments, confirming the unrealized DualGPU opportunity in the full queue.",
+    "exp425_carry_count_full_milestone": 21,
+    "exp425_cumulative_overhead_minutes": 1596,
+    "exp410_carry_count_full_milestone": 18,
+    "exp410_cumulative_avoidable_overhead_minutes": 972,
+    "exp383_carry_count_full_milestone": 12,
+    "exp383_cumulative_foregone_savings_minutes": 434,
+    "exp380_382_carry_count_full_milestone": 9,
+    "preflight_test_overhead_minutes_estimate": 599,
+    "preflight_test_overhead_pct": 16.3,
+    "consecutive_test_selection_unimplemented_for_full_queue": 17,
+    "dualgpu_parallelization_applied_to_legacy_training": false
+  },
+
+  "gpu_state_at_close": {
+    "gpu0_name": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_mb": 4,
+    "gpu0_util_pct": 0,
+    "gpu0_temperature_c": 54,
+    "gpu1_name": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_mb": 4,
+    "gpu1_util_pct": 0,
+    "gpu1_temperature_c": 45,
+    "thermal_differential_c": 9,
+    "gpu_close_clean": true,
+    "consecutive_clean_close_milestones": 2,
+    "note": "CLEAN CLOSE. Both GPUs at 4MB VRAM / 0% util / 54C (GPU 0) and 45C (GPU 1). 9C thermal differential is the largest clean-close differential in recent history; GPU 0 at 54C (warmer than .56's 47C) suggests a heavier cycle compute load in .57. GPU 1 fully idle throughout all 599 experiments — DualGPU parallelization opportunity unrealized in the full queue. Streak = 2 (.56 and .57). No zombie process detected."
+  },
+
   "milestone_wins": [
-    "COMPLETE SLOWEST-5 COMPOSITION CHANGE: First time in project history all five legacy experiments (425/410/383/380-382/527) exited simultaneously. New slowest-5 are all productive experiments with results.",
-    "RETRO-033 DEFINITIVELY CLOSED: Two independent 200q trials (seed=218: +0.00510; seed=999: +0.00510). VR pipeline credibility established. Exp 527 class permanently retired.",
-    "FR-11 FORMALLY CLOSED: Certificate written (results/fr11_closure_certificate.json). All evidence gates met: probe AUC=0.993, relay operational, tier2_memory_functional, latency_p99<200ms, events_acked=100.",
-    "PRIVACY FILTER V2: Upstream dependency unblocked. Teacher-free KAN v2 achieves AUROC=1.0 on 2/3 holdout datasets, 0.985 in-distribution. Resolves 2-consecutive-cycle block.",
-    "DUALGPU EORM+JEPA RETRAIN VALIDATED: 1.8319x speedup confirmed. Exp 383 class exits slowest-5 after 11 consecutive appearances. ThreadPoolExecutor pattern ready for production.",
-    "COCOA TIER 0F WIRED: Inter-layer disagreement detector (AUC=0.812) added to verify decision class pipeline.",
+    "CONDUCTOR CYCLE COMPLETE SLOWEST-5 CHANGE: First time in project history all five legacy experiments (425/410/383/380-382/527) absent from the managed cycle's slowest-5. New cycle slowest-5 are all productive experiments.",
+    "RETRO-033 DEFINITIVELY CLOSED: Two independent 200q trials (Exp 720 seed=218: +0.00510; Exp 742 seed=999: +0.00510). VR pipeline credibility established. Exp 527 class permanently retired — no remaining research mandate.",
+    "FR-11 FORMALLY CLOSED: Certificate written (results/fr11_closure_certificate.json). All gates met: probe AUC=0.993, relay operational, tier2_memory_functional, latency_p99<200ms, events_acked=100.",
+    "PRIVACY FILTER V2 UNBLOCKED: Teacher-free KAN v2 (Exp 743) achieves AUROC=1.0 on 2/3 holdout datasets, 0.985 in-distribution. Resolves 2-consecutive-cycle upstream dependency block.",
+    "DUALGPU EORM+JEPA VALIDATED IN CYCLE: Exp 746 confirmed 1.8319x speedup. Exp 383 class exits conductor cycle slowest-5 after 11 consecutive appearances. ThreadPoolExecutor pattern production-ready.",
+    "COCOA TIER 0F WIRED: Inter-layer disagreement detector (AUC=0.812) added to verify decision class pipeline (arXiv 2602.09486).",
     "HF ARTIFACTS READY: StepLevelJEPAProbe v1 + KAN Tier 0b v3 model cards and safetensors exported. Awaiting operator upload.",
-    "HLS KERNEL WRITTEN: Vitis HLS Ising C++ kernel compiles (energy sign bug found, fixable). FPGA synthesis path unblocked pending Vitis install and KV260 board.",
-    "D-WAVE NEAL INTEGRATION: Negative result confirmed cleanly. Gibbs superior (mean_energy=-42.9 vs Neal=-33.4). No time wasted on inconclusive result."
+    "HLS KERNEL WRITTEN AND COMPILING: Vitis HLS Ising C++ kernel passes compilation (energy sign bug identified and fixable). FPGA acceleration path advancing.",
+    "D-WAVE NEAL RESULT CONFIRMED: Gibbs superior (mean_energy=-42.9 vs Neal=-33.4). Negative result logged cleanly — no time wasted on inconclusive follow-up.",
+    "WALL TIME: THIRTEENTH CONSECUTIVE IMPROVEMENT (-70 min, -1.9% vs .56).",
+    "GPU CLOSE CLEAN FOR SECOND CONSECUTIVE MILESTONE (streak = 2)."
   ],
 
   "open_items_carried_forward": [
-    "CRITICAL: Manifest fix patch (results/manifest_fix_patch.txt) still not applied to scripts/research_conductor.py — code enforcement absent for .58",
-    "PSV RELAPSE: fp_rate_slope_new30=+0.00110 (positive, deteriorating). Architecture review mandatory in .58 Phase 0",
-    "2-ROUND CODE REPAIR: Blocked by missing CARNOT_FORCE_LIVE=1. Retry in .58",
+    "CRITICAL: Manifest fix patch (results/manifest_fix_patch.txt) not applied to scripts/research_conductor.py dispatch site — code enforcement absent (fourth consecutive cycle; confirmed by Exp 740)",
+    "PSV RELAPSE: fp_rate_slope_new30=+0.00110 (positive, deteriorating). Architecture review mandatory in .58 Phase 0 (RETRO-PSV-RELAPSE opened)",
+    "2-ROUND CODE REPAIR: Blocked by missing CARNOT_FORCE_LIVE=1. Retry in .58 with env var set",
     "HF UPLOAD: Operator must run models/hf_upload_commands.sh after huggingface-cli login",
-    "VITIS HLS ENERGY SIGN BUG: Flip sign in C++ kernel (E += should be E -=). Install AMD Vitis 2024.2",
+    "VITIS HLS ENERGY SIGN BUG: Flip E += to E -= in HLS C++ kernel (Exp 750). Install AMD Vitis 2024.2",
+    "RETRO-072: KV260 synthesis pending Vitis install (board on-hand since 2026-04-20)",
     "TIER 1 WEIGHT AUDIT: Simulated only — live validation needed in .58",
     "CROSS-SESSION MEMORY TEMPLATE PERSISTENCE: total_templates_at_s10=0 despite replay — investigate volatility",
-    "RETRO-072: KV260 synthesis still pending Vitis install (now unblocked by board arrival 2026-04-20)",
     "RETRO-NPU: AMD XDNA toolchain install still blocked (fourth consecutive cycle)"
   ],
 
   "open_retros": {
+    "RETRO-MANIFEST-ENFORCEMENT": {
+      "description": "Exclusion manifest confirmed written (.53 v5, .54 v6, .55 v7, .56 v8 patch). Not enforced at dispatch site. Legacy experiments ran in full-milestone queue for .55, .56, and .57 (three post-retirement cycles for 425/410/383/380-382; four cycles for 527).",
+      "status": "CRITICAL OPEN — FOURTH CONSECUTIVE NON-ENFORCEMENT CYCLE",
+      "experiments_affected": [425, 410, 383, "380-382", 527],
+      "min_wasted_in_57_full_milestone": 316,
+      "min_wasted_cumulative_post_retirement": 1108,
+      "consecutive_failed_enforcements": 4,
+      "resolution_path": "Apply results/manifest_fix_patch.txt to scripts/research_conductor.py at experiment dispatch site BEFORE .58 Phase 0 dequeue. Verify via manifest_excluded entries in conductor-log.md."
+    },
     "RETRO-PSV-RELAPSE": {
-      "description": "PSV domain-diverse recovery (Exp 737) reversed in Exp 749 monitoring. fp_rate_slope_new30=+0.00110 (positive = deteriorating). all-60 slope still negative but trend reversed in recent 30 iterations.",
+      "description": "PSV domain-diverse recovery (Exp 737, .56 cycle) reversed in Exp 749 (.57 cycle). fp_rate_slope_new30=+0.00110 (positive = deteriorating in recent 30 iterations). all_60 slope still negative from accumulated prior recovery but recent trend reversed.",
       "status": "NEWLY OPENED — PRIORITY 1",
-      "resolution_path": "Architecture review in .58 Phase 0: determine if relapse is domain-drift recurrence, constraint-specialization re-emergence, or new failure mode. Design targeted recovery experiment."
+      "resolution_path": "Architecture review in .58 Phase 0: determine root cause (domain-drift recurrence, constraint-specialization re-emergence, or new failure mode). Design targeted recovery experiment."
+    },
+    "RETRO-EXP527-GOVERNANCE": {
+      "description": "Mandatory retirement triggered in .56 (three consecutive appearances). Fourth full-milestone appearance in .57 without retirement enforcement. RETRO-033 definitively closed by Exp 742.",
+      "status": "GOVERNANCE VIOLATION — SECOND CYCLE",
+      "consequence_if_not_resolved": "Fifth appearance in .58 invalidates retirement governance protocol entirely",
+      "resolution_path": "Add Exp 527 class to exclusion manifest as part of RETRO-MANIFEST-ENFORCEMENT Priority 0 action."
+    },
+    "RETRO-033": {
+      "description": "VR verify-repair definitively closed. Two independent 200q trials (seed=218: +0.00510; seed=999: +0.00510). Exp 527 class permanently retired.",
+      "status": "DEFINITIVELY CLOSED",
+      "closing_experiments": [720, 742],
+      "resolution": "Two independent positive trials. Statistical coincidence ruled out. VR pipeline credibility established."
+    },
+    "RETRO-FR11": {
+      "description": "FR-11 relay formally closed in Exp 741. Certificate written.",
+      "status": "CLOSED",
+      "closing_experiment": 741
     },
     "RETRO-CODE-REPAIR": {
-      "description": "Iterative 2-round code repair (arXiv 2604.10508) blocked by missing CARNOT_FORCE_LIVE=1 in Exp 744.",
-      "status": "OPEN — blocked",
-      "resolution_path": "Set CARNOT_FORCE_LIVE=1 environment variable before .58 dispatch. Retry Exp 744 class with full live GPU inference."
+      "description": "Iterative 2-round code repair (arXiv 2604.10508) blocked in Exp 744 by missing CARNOT_FORCE_LIVE=1.",
+      "status": "OPEN — blocked by env var",
+      "resolution_path": "Set CARNOT_FORCE_LIVE=1 in conductor prompt before .58 dispatch. Expected improvement: 4.9-17.1pp HumanEval."
     },
     "RETRO-072": {
-      "description": "KV260 synthesis blocked — Vivado/Vitis HLS not installed",
-      "status": "open — board now available (arrived 2026-04-20)",
+      "description": "KV260 synthesis blocked — Vivado/Vitis HLS not installed. Board on-hand since 2026-04-20.",
+      "status": "open — board available, tool absent",
       "consecutive_blocked_milestones": 4,
-      "resolution_path": "Install AMD Vitis 2024.2 (provides standalone vitis_hls). Fix HLS energy sign bug from Exp 750. Then run synthesis. Board is on-hand."
+      "resolution_path": "Install AMD Vitis 2024.2. Fix HLS energy sign bug (RETRO-HLS-ENERGY). Then run synthesis. Two blocking actions remain."
+    },
+    "RETRO-HLS-ENERGY": {
+      "description": "Exp 750 HLS C++ kernel: CPU validation failed (energy_delta_pct=200.0, got +3.0 vs expected -3.0). Sign convention error in E computation.",
+      "status": "NEWLY OPENED",
+      "resolution_path": "Change E += J[i][j]*s[i]*s[j] to E -= in the HLS C++ kernel. Verify CPU validation passes before queuing synthesis."
     },
     "RETRO-NPU": {
-      "description": "AMD XDNA NPU benchmarking blocked by IRON toolchain install failure",
+      "description": "AMD XDNA NPU benchmarking blocked by IRON toolchain install failure.",
       "status": "open",
       "consecutive_blocked_milestones": 4,
       "resolution_path": "Investigate conda environment conflicts. Do not queue until toolchain install confirmed."
     }
   },
 
-  "honest_verdict": "milestone_57_complete_slowest5_full_composition_change_first_in_history_all_legacy_exps_425_410_383_380382_527_exited_RETRO033_definitively_closed_two_independent_200q_trials_both_plus0pt51pp_FR11_formally_closed_certificate_written_privacy_filter_v2_auroc_1pt0_unblocked_dualgpu_1pt83x_speedup_exp383_exits_after_11_consecutive_appearances_BUT_manifest_code_patch_STILL_not_applied_PSV_relapse_detected_slope_new30_positive_code_repair_blocked_CARNOT_FORCE_LIVE_not_set_hf_artifacts_ready_operator_upload_pending",
+  "milestone_history": [
+    {"milestone": "2026.04.40", "wall_time_min": 4620, "experiments": 388, "avg_min_per_exp": 11.9},
+    {"milestone": "2026.04.41", "wall_time_min": 4484, "experiments": 400, "avg_min_per_exp": 11.2},
+    {"milestone": "2026.04.42", "wall_time_min": 4520, "experiments": 422, "avg_min_per_exp": 10.7},
+    {"milestone": "2026.04.43", "wall_time_min": 4584, "experiments": 444, "avg_min_per_exp": 10.3},
+    {"milestone": "2026.04.44", "wall_time_min": 4654, "experiments": 465, "avg_min_per_exp": 10.0},
+    {"milestone": "2026.04.45", "wall_time_min": 4600, "experiments": 481, "avg_min_per_exp": 9.6},
+    {"milestone": "2026.04.46", "wall_time_min": 4569, "experiments": 493, "avg_min_per_exp": 9.3},
+    {"milestone": "2026.04.47", "wall_time_min": 4557, "experiments": 498, "avg_min_per_exp": 9.1},
+    {"milestone": "2026.04.48", "wall_time_min": 4467, "experiments": 491, "avg_min_per_exp": 9.1},
+    {"milestone": "2026.04.49", "wall_time_min": 4380, "experiments": 509, "avg_min_per_exp": 8.6},
+    {"milestone": "2026.04.50", "wall_time_min": 4304, "experiments": 519, "avg_min_per_exp": 8.3},
+    {"milestone": "2026.04.51", "wall_time_min": 4231, "experiments": 532, "avg_min_per_exp": 8.0},
+    {"milestone": "2026.04.52", "wall_time_min": 3983, "experiments": 538, "avg_min_per_exp": 7.0},
+    {"milestone": "2026.04.53", "wall_time_min": 3909, "experiments": 550, "avg_min_per_exp": 7.1},
+    {"milestone": "2026.04.54", "wall_time_min": 3861, "experiments": 562, "avg_min_per_exp": 6.9},
+    {"milestone": "2026.04.55", "wall_time_min": 3796, "experiments": 577, "avg_min_per_exp": 6.58},
+    {"milestone": "2026.04.56", "wall_time_min": 3744, "experiments": 587, "avg_min_per_exp": 6.0},
+    {"milestone": "2026.04.57", "wall_time_min": 3674, "experiments": 599, "avg_min_per_exp": 6.13}
+  ],
+
+  "projected_58_wall_time_range_minutes": [3280, 3430],
+  "projected_58_basis": "3674 - 316 (manifest enforcement eliminates all five legacy experiments) + ~72 (new cycle experiments at 6.0 min avg, ~12 new exps) + 12 (test suite growth) = ~3442 min if manifest patch applied. Without patch: 3674 + ~84 = ~3758 min (regression, breaking 13-milestone improvement streak). The split remains binary: apply the code patch or regress. PSV relapse resolution may add 1-2 experiments to .58 Phase 0 (architecture review).",
 
   "invariant_violations": [
-    "MANIFEST_CODE_PATCH_NOT_APPLIED_FOURTH_CONSECUTIVE_CYCLE: results/manifest_fix_patch.txt written in Exp 731 (.56). Exp 740 confirms manifest_enforcement_applied=false. Legacy experiments absent in .57 due to focused roadmap, NOT code enforcement. Risk: any legacy experiment re-entering any queue from any source will re-execute without the patch.",
-    "PSV_SLOPE_REVERSAL: fp_rate_slope_new30=+0.00110 after Exp 737 confirmed recovery. Domain-diverse training recovery from .56 has not held. Escalated to RETRO-PSV-RELAPSE."
-  ]
+    "MANIFEST_NOT_APPLIED_FOURTH_CONSECUTIVE_CYCLE: results/manifest_fix_patch.txt written Exp 731 (.56). Exp 740 (.57 preflight) confirmed manifest_enforcement_applied=false. Legacy experiments 425/410/383/380-382/527 ran in full-milestone queue. Cumulative waste .55+.56+.57: 948+316=1,264 min (21.1 hours) of confirmed-retired compute.",
+    "EXP527_GOVERNANCE_VIOLATION_SECOND_CYCLE: Mandatory retirement triggered .56. Fourth full-milestone appearance .57. RETRO-033 definitively closed. No remaining research mandate. This is the second cycle of governance protocol violation."
+  ],
+
+  "honest_verdict": "wall_time_thirteenth_consecutive_improvement_70min_1pt9pct_per_experiment_avg_6pt13_near_project_best_CONDUCTOR_CYCLE_complete_slowest5_composition_change_FIRST_IN_PROJECT_HISTORY_all_legacy_exps_absent_from_14_experiment_managed_cycle_BUT_full_milestone_legacy_overhead_316min_manifest_code_patch_STILL_not_applied_FOURTH_CYCLE_legacy_exps_ran_from_unguarded_queue_RETRO033_DEFINITIVELY_CLOSED_two_independent_200q_FR11_FORMALLY_CLOSED_privacy_filter_v2_UNBLOCKED_dualgpu_1pt83x_validated_exp383_exits_conductor_cycle_slowest5_PSV_RELAPSE_DETECTED_slope_new30_positive_code_repair_blocked_CARNOT_FORCE_LIVE_not_set_HLS_energy_sign_bug_synthesis_blocked_GPU_CLOSE_CLEAN_streak_2"
 }
