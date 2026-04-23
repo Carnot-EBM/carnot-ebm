@@ -14898,3 +14898,47 @@ Then: The output contains a LUT count, cell count, and wire count. honest_verdic
 
 **Spec traces:** REQ-HW-041
 **Implementation Status:** Planned (Exp 758)
+
+## REQ-VERIFY-169: Gemma4-E4B-it VR Threshold Grid Search
+
+Gemma4-E4B-it VR threshold grid MUST test >= 5 thresholds in [0.10, 0.50].
+The experiment MUST report signed_improvement per threshold.
+The honest_verdict MUST identify the best_threshold with highest signed_improvement.
+
+Sub-requirements:
+- REQ-VERIFY-169-1: Five thresholds [0.10, 0.20, 0.30, 0.40, 0.50] MUST each be evaluated on >= 50 questions.
+- REQ-VERIFY-169-2: per_threshold_results MUST be a list of dicts with threshold, signed_improvement, n_abstained.
+- REQ-VERIFY-169-3: best_threshold MUST be the threshold with highest signed_improvement.
+- REQ-VERIFY-169-4: positive_threshold_found MUST be True if any signed_improvement > 0.
+- REQ-VERIFY-169-5: honest_verdict MUST be "gemma4_positive_found" when positive_threshold_found=True and inference_mode="live_gpu".
+- REQ-VERIFY-169-6: honest_verdict MUST be "gemma4_no_positive_threshold" when positive_threshold_found=False and inference_mode="live_gpu".
+- REQ-VERIFY-169-7: honest_verdict MUST be "blocked" when CARNOT_FORCE_LIVE is not set.
+
+**Implementation Status:** Planned (Exp 760)
+
+### SCENARIO-VERIFY-222: Threshold Grid Has 5 Entries
+
+Given: Exp 760 runs on Gemma4-E4B-it with thresholds [0.10, 0.20, 0.30, 0.40, 0.50].
+When: The experiment completes.
+Then: per_threshold_results contains exactly 5 entries, one per threshold.
+
+**Spec traces:** REQ-VERIFY-169-1, REQ-VERIFY-169-2
+**Implementation Status:** Planned (Exp 760)
+
+### SCENARIO-VERIFY-223: Best Threshold Identification
+
+Given: per_threshold_results with varying signed_improvement values.
+When: best_threshold is computed.
+Then: best_threshold equals the threshold entry with the highest signed_improvement.
+
+**Spec traces:** REQ-VERIFY-169-3
+**Implementation Status:** Planned (Exp 760)
+
+### SCENARIO-VERIFY-224: Positive Threshold Found Flag
+
+Given: per_threshold_results where at least one threshold has signed_improvement > 0.
+When: positive_threshold_found is evaluated.
+Then: positive_threshold_found is True.
+
+**Spec traces:** REQ-VERIFY-169-4
+**Implementation Status:** Planned (Exp 760)
