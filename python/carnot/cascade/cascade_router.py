@@ -68,6 +68,7 @@ if TYPE_CHECKING:
     import numpy as np
 
     from carnot.cascade.tier0b_kan import KANTier0bClassifier
+    from carnot.cascade.tier0f_cocoa import CoCoADetector
     from carnot.cascade.tier21_probe import Tier21ProbeWrapper
 
 
@@ -165,8 +166,15 @@ class CascadeRouter:
         before any other tier.  Queries with score > 0.5 are immediately routed to the
         safety pipeline (verdict="safety_violation") without running EORM or Ising.
         When None (default), the pre-filter is bypassed and behaviour is unchanged.
+    tier0f_cocoa : CoCoADetector | None
+        Optional Tier 0f CoCoA inter-layer disagreement detector (arXiv 2602.09486).
+        When supplied, it is called AFTER Tier 0b (if benign) and records ConMLDS and
+        is_unstable in RouteResult.metadata.  It is ADVISORY ONLY — it does NOT
+        short-circuit the cascade regardless of the is_unstable value.
+        When None (default), the advisory signal is omitted (backwards compatible).
 
-    Spec: REQ-INFRA-046, REQ-VER-035, REQ-VER-036, REQ-VER-037, REQ-SAFE-016
+    Spec: REQ-INFRA-046, REQ-VER-035, REQ-VER-036, REQ-VER-037, REQ-SAFE-016,
+          REQ-VERIFY-151, REQ-VERIFY-152
     """
 
     def __init__(
@@ -177,6 +185,7 @@ class CascadeRouter:
         tier21_probe: Optional["Tier21ProbeWrapper"] = None,
         hidden_state_fn: Optional[Callable[[str], "np.ndarray"]] = None,
         tier0b_classifier: Optional["KANTier0bClassifier"] = None,
+    tier0f_cocoa: Optional["CoCoADetector"] = None,
     ) -> None:
         self.eorm_fn = eorm_fn
         self.ising_fn = ising_fn
@@ -184,6 +193,7 @@ class CascadeRouter:
         self.tier21_probe = tier21_probe
         self.hidden_state_fn = hidden_state_fn
         self.tier0b_classifier = tier0b_classifier
+        self.tier0f_cocoa = tier0f_cocoa
 
         if tier21_probe is not None and hidden_state_fn is None:
             raise ValueError(
@@ -251,6 +261,21 @@ class CascadeRouter:
         else:
             tier0b_meta = {}
 
+        # --- Tier 0f CoCoA inter-layer disagreement advisory (REQ-VERIFY-151, REQ-VERIFY-152) ---
+        # Runs AFTER Tier 0b (only on benign queries) but BEFORE any hard gate.
+        # This detector measures representational instability across transformer layers —
+        # high ConMLDS indicates the model is "confused" about the factual claim.
+        # We record the signal for downstream analysis but NEVER alter the routing verdict.
+        # Advisory signals accumulate across the cascade and are available in RouteResult.metadata.
+        if self.tier0f_cocoa is not None:
+            tier0f_conmlds, tier0f_is_unstable = self.tier0f_cocoa.score(query)
+            tier0f_meta: dict[str, Any] = {
+                "tier0f_conmlds": tier0f_conmlds,
+                "tier0f_is_unstable": tier0f_is_unstable,
+            }
+        else:
+            tier0f_meta = {}
+
         eorm_confidence = float(self.eorm_fn(query))
 
         if eorm_confidence > self.eorm_ising_skip_threshold:
@@ -263,7 +288,7 @@ class CascadeRouter:
                 eorm_confidence=eorm_confidence,
                 ising_skip=True,
                 ising_result=None,
-                metadata=tier0b_meta,
+                metadata={**tier0b_meta, **tier0f_meta},
             )
 
         # --- Tier 2.1 probe gate (REQ-VER-035, REQ-VER-036) ---
@@ -285,6 +310,7 @@ class CascadeRouter:
                         "tier21_skip": True,
                         "probe_score": probe_score,
                         **tier0b_meta,
+                        **tier0f_meta,
                     },
                 )
             else:
@@ -305,6 +331,7 @@ class CascadeRouter:
                         "tier21_skip": False,
                         "probe_score": probe_score,
                         **tier0b_meta,
+                        **tier0f_meta,
                     },
                 )
 
@@ -317,5 +344,5 @@ class CascadeRouter:
             eorm_confidence=eorm_confidence,
             ising_skip=False,
             ising_result=ising_result,
-            metadata=tier0b_meta,
+            metadata={**tier0b_meta, **tier0f_meta},
         )

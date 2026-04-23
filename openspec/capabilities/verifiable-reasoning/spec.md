@@ -14825,3 +14825,53 @@ Then:
 
 **Spec traces:** REQ-VERIFY-150
 **Implementation Status:** Pending (Exp 742)
+
+## REQ-VERIFY-151: CoCoADetector MUST Compute ConMLDS Without Training
+
+**Given** a loaded LLM and a text input
+**When** CoCoADetector.score(text) is called
+**Then** it computes the Contrastive Multi-Layer Disagreement Score (ConMLDS) as the mean
+  cosine distance between hidden states at early-layer/late-layer pairs for the last input token
+**And** no fine-tuning or probe training is required — the detector is training-free
+**And** the score is in [0, 1] where 0 = identical representations, 1 = fully orthogonal
+
+Sub-requirements:
+- REQ-VERIFY-151-1: extract_hidden_states SHALL extract the last-token hidden state at each requested layer index.
+- REQ-VERIFY-151-2: compute_conmlds SHALL compute 1 - cosine_similarity for each (early, late) layer pair and return the mean.
+- REQ-VERIFY-151-3: CoCoADetector SHALL default to early_layers=(8, 10, 12) and late_layers=(14, 16) for Qwen3.5-0.8B.
+- REQ-VERIFY-151-4: The is_unstable flag SHALL be True when conmlds > calibrated threshold.
+
+**Implementation Status:** Implemented (python/carnot/cascade/tier0f_cocoa.py, Exp 745)
+
+### SCENARIO-VERIFY-201: ConMLDS is 0 for Identical Representations
+
+Given: An early hidden state e and a late hidden state l where e == l.
+When: compute_conmlds(e, l) is called.
+Then: The returned ConMLDS value is 0.0 (or within 1e-6 due to floating point).
+
+**Spec traces:** REQ-VERIFY-151
+**Implementation Status:** Implemented (tests/python/test_experiment_745_cocoa_tier0f.py)
+
+### SCENARIO-VERIFY-202: ConMLDS is 1 for Orthogonal Representations
+
+Given: An early hidden state e = [1, 0, 0, ...] and a late hidden state l = [0, 1, 0, ...].
+When: compute_conmlds(e, l) is called.
+Then: The returned ConMLDS value is 1.0 (cosine distance of orthogonal vectors).
+
+**Spec traces:** REQ-VERIFY-151
+**Implementation Status:** Implemented (tests/python/test_experiment_745_cocoa_tier0f.py)
+
+## REQ-VERIFY-152: Tier 0f CoCoA MUST Be Advisory (No Short-Circuit)
+
+**Given** the CascadeRouter is wired with a CoCoADetector as Tier 0f
+**When** CoCoADetector.score() returns is_unstable=True for a query
+**Then** the cascade continues to all downstream tiers normally — Tier 0f DOES NOT short-circuit
+**And** the conmlds score and is_unstable flag are recorded in RouteResult.metadata
+**And** the fields tier0f_conmlds and tier0f_is_unstable are always populated when Tier 0f is wired
+
+Sub-requirements:
+- REQ-VERIFY-152-1: Tier 0f SHALL record tier0f_conmlds (float) in RouteResult.metadata.
+- REQ-VERIFY-152-2: Tier 0f SHALL record tier0f_is_unstable (bool) in RouteResult.metadata.
+- REQ-VERIFY-152-3: Tier 0f SHALL NOT change the routing verdict — it is an advisory signal only.
+
+**Implementation Status:** Implemented (python/carnot/cascade/cascade_router.py, Exp 745)
