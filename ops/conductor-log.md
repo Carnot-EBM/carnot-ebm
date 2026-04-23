@@ -2668,3 +2668,4 @@ python/ |
 | 2026-04-23 22:37 UTC | Exp 781: JEPA v20 Live Data Collection — 100q Qwen | OK | 81 passed, 3 warnings in 7.85s |
 | 2026-04-23 22:49 UTC | Exp 782: EDU-PRM Uncertainty Step Selection — Dive | OK | 81 passed, 3 warnings in 8.02s |
 | 2026-04-23 23:00 UTC | Exp 783: JEPA v20 Retrain — Pooled Real Data + EDU | OK | 81 passed, 3 warnings in 7.52s |
+| 2026-04-23 23:07 UTC | Exp 784: JEPA v20 Cascade Deploy — Tier 3.5 Predic | OK | 81 passed, 3 warnings in 8.40s |
