@@ -369,12 +369,49 @@ Sub-requirements:
 
 ---
 
-## Implementation Status (PSV-010/011)
+---
+
+## REQ-PSV-012: PSV Monitoring MUST Run for at Least 60 Total Iterations to Confirm Recovery Sustainability
+
+**Given** Exp 737 confirmed domain-diverse recovery over 30 iterations (fp_rate_slope = -0.00131257)
+**When** the domain-diverse fix is applied for 30 additional iterations (iterations 31-60)
+**Then** fp_rate_slope over the new 30 iterations MUST be measured and compared to Exp 737's slope
+**And** honest_verdict MUST be one of:
+  - "psv_recovery_sustained" — new30 slope < 0 OR abs(new30 slope) < 0.0001
+  - "psv_recovery_decelerating" — new30 slope >= 0 AND new30 slope < condition_a slope (slowing but not reversed)
+  - "psv_recovery_relapse" — new30 slope > condition_a slope (root cause deeper than specialization)
+
+Sub-requirements:
+- REQ-PSV-012-1: The 30 new iterations MUST use the same domain_pool as Exp 737 (GSM8K 10q + MATH-Algebra 5q + ARC-Challenge 5q per iteration).
+- REQ-PSV-012-2: fp_rate_slope_all60 MUST be computed over all 60 iterations (Exp 737 fp_rates + new fp_rates).
+- REQ-PSV-012-3: The artifact MUST record both fp_rate_slope_new30 and fp_rate_slope_all60 for traceability.
+
+**Implementation Status:** Implemented (scripts/experiment_749_psv_monitoring.py, Exp 749)
+
+---
+
+## SCENARIO-PSV-012: Exp 749 Confirms Recovery is Sustained at 60 Iterations
+
+**Given** Exp 737 produced fp_rate_slope = -0.00131257 over 30 iterations
+**When** Exp 749 runs 30 more iterations (31-60) with the same domain-diverse pool
+**Then** fp_rate_slope_new30 is computed and compared to fp_rate_slope_737
+**And** honest_verdict is determined:
+  - "psv_recovery_sustained" if new30 slope < 0 OR abs(new30 slope) < 0.0001
+  - "psv_recovery_decelerating" if new30 slope >= 0 AND new30 slope < condition_a slope
+  - "psv_recovery_relapse" if new30 slope > condition_a slope
+
+**Spec traces:** REQ-PSV-012
+**Implementation Status:** Implemented (Exp 749)
+
+---
+
+## Implementation Status (PSV-010/011/012)
 
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-PSV-010 | Implemented (scripts/experiment_736_psv_specialization.py) | tests/python/test_experiment_736_psv_specialization.py |
 | REQ-PSV-011 | Implemented (scripts/experiment_736_psv_specialization.py) | tests/python/test_experiment_736_psv_specialization.py |
+| REQ-PSV-012 | Implemented (scripts/experiment_749_psv_monitoring.py) | tests/python/test_experiment_749_psv_monitoring.py |
 
 ---
 
