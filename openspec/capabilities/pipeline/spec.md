@@ -271,6 +271,62 @@ inspecting the patch file alone is insufficient.
 
 **Spec traces:** REQ-INFRA-052
 
+### REQ-INFRA-053: Exclusion Manifest Check MUST Be Applied at ALL Dequeue Sites
+
+Every site in `scripts/research_conductor.py` where a task/experiment is fetched from any
+source (YAML, history, queue) MUST call `_task_is_excluded(task)` before dispatching an agent.
+No dequeue may bypass the manifest check.  A single unguarded dequeue is sufficient to re-admit
+a retired experiment.
+
+**Rationale:** Exp 425 appeared for the 22nd consecutive milestone (.37 through .58, 1,672 min
+cumulative = 27.9 hours of zero-value compute) because the Exp 754 manifest patch covered only
+the conductor's managed cycle.  Other dequeue sites existed without the guard.  Full coverage
+means EVERY site is guarded.
+
+**Acceptance criteria:**
+- `coverage_pct = guarded_sites / total_dequeue_sites * 100 == 100.0`
+- `full_coverage == True` in the pre-flight v11 artifact.
+- `honest_verdict == "full_manifest_coverage_achieved"` when all sites are guarded and
+  `n_excluded_total >= 27`.
+
+**Spec traces:** REQ-INFRA-053 (Exp 767 pre-flight v11)
+
+### REQ-INFRA-054: Exps 425, 491, 603, 627 MUST Be in conductor_exclusion_manifest.json
+
+`scripts/conductor_exclusion_manifest.json` MUST contain entries for experiment IDs 425, 491,
+603, and 627 with `completed_milestone` set to at least "2026.04.58" (the milestone where they
+last appeared in the slowest-5 full-milestone timing).
+
+**Rationale:**
+- Exp 425: 22nd consecutive slowest-5 appearance, 1,672 min cumulative overhead.
+- Exp 491: JEPA curriculum diagnostic, 12th appearance, unbounded training loop.
+- Exp 603: CoACEExtractorV4 repeated carry-over from unguarded historical queue source.
+- Exp 627: interwhen mid-generation monitor, repeated carry-over from unguarded source.
+
+**Acceptance criteria:**
+- `manifest["n_excluded_total"] >= 27` (23 before this patch + 4 new entries).
+- `new_exclusions_added` list in pre-flight v11 artifact contains all four IDs.
+
+**Spec traces:** REQ-INFRA-054 (Exp 767 pre-flight v11)
+
+### SCENARIO-INFRA-062: Full Dequeue Coverage Confirmed at 100% After v11 Patch
+
+**Given** all dequeue sites in `scripts/research_conductor.py` have been audited
+**When** the pre-flight v11 script counts guarded vs unguarded dequeue sites
+**Then** `coverage_pct == 100.0`, `full_coverage == True`, and `guarded_sites_after_patch` equals
+  `total_dequeue_sites`.
+
+**Spec traces:** REQ-INFRA-053
+
+### SCENARIO-INFRA-063: New Exclusions 425/491/603/627 Present in Manifest After v11
+
+**Given** `conductor_exclusion_manifest.json` previously had 23 entries
+**When** the pre-flight v11 script adds Exps 425, 491, 603, 627 for milestone "2026.04.58"
+**Then** the manifest has at least 27 entries and all four IDs are excluded when queried
+  via `ExclusionManifest.is_excluded()`.
+
+**Spec traces:** REQ-INFRA-054
+
 ### REQ-HW-010: Ising Sampler v4 HLS C++ Kernel
 
 The Ising sampler v4 MUST be expressed in Vitis HLS C++ with loop-pipelining
@@ -423,3 +479,5 @@ Where REQ-SAFE-011 (teacher-duration invariant) applies, the model card MUST cit
 | REQ-INFRA-050 | Implemented | Exp 746 — DualGPU retrain made default; sequential deprecated |
 | REQ-INFRA-051 | Implemented | Exp 754 — manifest patch applied to research_conductor.py dispatch site |
 | REQ-INFRA-052 | Implemented | Exp 754 — pre-flight v10 confirms patch application via guard clause search |
+| REQ-INFRA-053 | Implemented | Exp 767 — pre-flight v11 confirms 100% dequeue-site manifest coverage |
+| REQ-INFRA-054 | Implemented | Exp 767 — Exps 425, 491, 603, 627 added to exclusion manifest (.58) |
