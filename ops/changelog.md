@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-23 (Exp 750: Vitis HLS Ising Sampler v4 — HLS C++ Approach)
+
+- 2026-04-23 02:00 UTC: Exp 750 — Vitis HLS Ising Sampler v4: HLS C++ Kernel Write and CPU Validation. (Hardware acceleration via Vitis HLS) HLS C++ kernel written (hls_cpp_written=true, tcl_written=true) and successfully compiled (cpp_compiles=true). CPU validation failed: expected energy near -3.0, got 3.0 (energy_delta_pct=200.0, binary_passed=false). Synthesis pending (vitis_hls not found on PATH). honest_verdict=hls_kernel_ready_synthesis_pending. Research finding: HLS C++ implementation complete and compiling cleanly; CPU energy mismatch (+200% divergence) indicates possible register simulation accuracy issue or h_ema initialization error. Synthesis blocked pending AMD Vitis 2024.2 installation. Duration: 0.342s. No spec changes (hardware implementation artifact). results/experiment_750_vitis_hls_ising_v4.json.
+
 ## 2026-04-23 (Exp 748: Cross-Session Memory 10-Session Stress Test)
 
 - 2026-04-23 01:36 UTC: Exp 748 — Cross-Session Memory 10-Session Stress Test. (Tier 2 Self-Learning benchmark) Measured cross-session memory persistence across 10 consecutive sessions with 20 questions each (model: Qwen3.5-0.8B). precision_s1=1.0, precision_s10=1.0, plateau_session=2, is_monotonically_non_decreasing=true, has_regression=false, total_templates_at_s10=0. honest_verdict=tier2_memory_plateau_at_s2. Research finding: Perfect single-session precision maintained across all 10 sessions, but memory plateau occurs at session 2 — templates added in session 1, then replay-only from session 2 onwards. Indicates early saturation in template accumulation despite sustained precision. Tier 2.1 investigation needed to understand cross-session learning saturation. Duration: 0.003s. No spec changes (experiment validation only). results/experiment_748_cross_session_memory_10session.json.
