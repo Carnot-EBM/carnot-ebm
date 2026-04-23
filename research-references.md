@@ -4,6 +4,35 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## Study Sources & Discovery Tools
+
+Meta-sources used to identify papers, repos, and tools worth evaluating.
+Not content itself, but signals to prioritise what to read next.
+
+### Gerolamo — Technical Intelligence Corpus
+- **URL:** https://gerolamo.org/
+- **What:** Searchable, scored index of open-source repos, arXiv papers, and HuggingFace
+  models. Proprietary metrics include defensibility, threat profile, composability, and
+  market-concentration/"deep moat" ratings, layered on top of star/fork counts. Covers AI
+  frameworks + transformer models, cryptography (incl. post-quantum), blockchain smart-
+  contract languages, and open-source infrastructure. Created by Adjective (adjective.us).
+  Free tier browses top-rated entries; premium tier adds workspaces, AI-assisted
+  composition, and custom corpus building.
+- **How Carnot should use it:** Complementary to arXiv scans — arXiv surfaces individual
+  papers; Gerolamo scores *adoption + defensibility signals at the repo level*. Useful for:
+  (1) vetting repos before citing them (see OpenMythos case: 9.3k stars but unvetted — a
+  moat/defensibility score would have flagged it); (2) discovering emerging hardware and
+  ML-framework projects relevant to Phase 2/3 (FPGA/Ising, EBT, photonic); (3) tracking the
+  competitive landscape around EBM tooling (thrml, EB-JEPA, TorchEBM).
+- **Caveats:** Scoring methodology is proprietary — treat "deep moat" rating as one signal,
+  not ground truth. Author "Adjective" is not a known institutional research source; the
+  value is in the aggregation + filter, not any editorial voice. Premium-gated features may
+  limit autonomous-conductor use unless an account is provisioned.
+- **When to consult:** Milestone planning — alongside the arXiv scan, spot-check Gerolamo's
+  top-rated entries in EBM / post-quantum / AI-framework categories for repos we haven't
+  seen. Also useful mid-experiment when deciding whether to invest in integrating a
+  third-party tool (use the defensibility/composability score as a risk input).
+
 ## 2026-04-23 arxiv Scan (Milestone 2026.04.58 Planning)
 
 ### Detecting and Correcting Hallucinations in LLM-Generated Code via Deterministic AST Analysis
@@ -90,6 +119,36 @@ should read this file when designing new milestones.
   memory writes: run each VR repair K=3 times (cheap with CPU inference), only write to
   memory if K≥2 agree. Stabilizes memory without needing Z3 for every repair.
 - **When to incorporate:** Milestone 2026.04.58 — Exp 756 PSV recovery enhancement.
+
+### Recurrent-Depth Transformers (RDT) — Phase 3 EBT Architecture Primitive
+- **Repo:** https://github.com/kyegomez/OpenMythos (speculative reconstruction of Claude Mythos;
+  9.3k stars but 35 commits — treat code as unvetted; read the underlying papers it cites)
+- **What:** A transformer architecture where a small set of layers is applied iteratively in a
+  recurrent block between a prelude and coda. The recurrent update
+  `h_{t+1} = A·h_t + B·e + Transformer(h_t, e)` reinjects the encoded input at every step and
+  keeps the injection matrix LTI-constrained (spectral radius < 1) to guarantee iterative
+  convergence. Adaptive Computation Time (ACT) halts iteration when refinement plateaus.
+  Loop-index positional embeddings let the network distinguish early vs late refinement steps.
+- **Relevance to Carnot:** Phase 3 (EBM/EBT foundation model) targets continuous-latent,
+  non-autoregressive, self-correcting reasoning. RDT is architecturally isomorphic: the
+  recurrent update can be viewed as implicit gradient descent on an energy function, and the
+  LTI stability constraint is exactly the kind of convergence proof an EBT needs. Specific
+  transferable primitives: (1) LTI spectral-radius constraint on any iterative refinement
+  block; (2) loop-index PE to parameterize "refinement depth"; (3) ACT-style halting as a
+  learned proxy for "energy converged." Not for Phase 1 (verify-repair) — it's a Phase 3
+  design reference.
+- **Concrete experiment:** Not now. When Phase 3 EBT architecture work begins (post–2026.Q3),
+  first-pass design should instantiate a 3-stage (prelude/recurrent/coda) EBT, bind the
+  recurrent iteration count to an energy-convergence criterion rather than ACT, and use the
+  LTI constraint on the injection parameters. Benchmark against a vanilla stacked-transformer
+  EBT for parameter efficiency and reasoning-task scaling.
+- **Credibility caveat:** The OpenMythos code itself is unvetted (prolific-author pattern;
+  hype-to-commit ratio concerning; no Claude-comparison benchmarks). The ideas are real and
+  cited; the implementation should not be treated as reference. Track the underlying
+  recurrent-depth-transformer papers (Geiping et al. on looped transformers, Banino et al. on
+  PonderNet/ACT) directly.
+- **When to incorporate:** Phase 3 kickoff (no specific milestone yet; Phase 1 + 2 still
+  active). Filed as an architectural primitive to consider when foundation-model work begins.
 
 ## 2026-04-22 arxiv Scan (Milestone 2026.04.56 Planning)
 
