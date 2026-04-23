@@ -327,6 +327,58 @@ last appeared in the slowest-5 full-milestone timing).
 
 **Spec traces:** REQ-INFRA-054
 
+### REQ-INFRA-055: kill_gpu_zombies() MUST Be Called Before Model Load in setup_gpu()
+
+`kill_gpu_zombies()` from `carnot.pipeline.gpu_zombie_killer` MUST be called inside
+`ExperimentTemplate.setup_gpu()` before any model load attempt when `CARNOT_FORCE_LIVE=1`.
+The function MUST use `subprocess` to run `nvidia-smi --query-compute-apps=pid
+--format=csv,noheader,nounits` to enumerate PIDs holding GPU memory, then send `SIGKILL`
+to each PID that is NOT the current process and NOT in the caller-supplied exclude list.
+The result MUST be recorded in setup_gpu()'s return dict under `zombie_kill_result`.
+
+**Rationale:** RETRO-028 (Gemma4 14.89 GiB allocation fails with 15 GiB already in use)
+and RETRO-SOTA-GGUF-TIMEOUT (Exp 769 timeout) share a common root cause: zombie processes
+holding GPU VRAM before model load.  Fixing only at setup() (session start) is insufficient
+because mid-session failures can accumulate zombies between experiments.
+
+**Acceptance criteria:**
+- `setup_gpu()` return dict contains `zombie_kill_result` key.
+- When CARNOT_FORCE_LIVE=1 and zombie PIDs exist, they are sent SIGKILL.
+- The calling process PID is never in the kill list.
+
+**Spec traces:** REQ-INFRA-055
+
+### REQ-INFRA-056: kill_gpu_zombies() MUST Be a No-Op When No Zombies Exist
+
+When `nvidia-smi` reports no compute processes on the target GPU, `kill_gpu_zombies()`
+MUST return a `GPUZombieResult` with `pids_killed=[]`, `vram_freed_mb=0.0`, and
+`honest_verdict="no_zombies_found"`.  The function MUST NOT kill the calling process
+itself under any circumstances.  When `nvidia-smi` is unavailable, `honest_verdict`
+MUST be `"nvidia_smi_unavailable"`.
+
+**Acceptance criteria:**
+- Empty nvidia-smi output → `honest_verdict="no_zombies_found"`, `pids_killed=[]`.
+- Calling PID is always in `exclude_pids`; never sent SIGKILL.
+- Missing nvidia-smi → `honest_verdict="nvidia_smi_unavailable"`.
+
+**Spec traces:** REQ-INFRA-056
+
+### SCENARIO-INFRA-064: kill_gpu_zombies() No-Op on Clean GPU
+
+**Given** `nvidia-smi --query-compute-apps=pid` returns no output (empty GPU)
+**When** `kill_gpu_zombies(gpu_index=0)` is called
+**Then** `honest_verdict="no_zombies_found"`, `pids_killed=[]`, `vram_freed_mb=0.0`
+
+**Spec traces:** REQ-INFRA-056
+
+### SCENARIO-INFRA-065: kill_gpu_zombies() Excludes Calling Process
+
+**Given** the calling process PID appears in `nvidia-smi --query-compute-apps=pid` output
+**When** `kill_gpu_zombies(gpu_index=0)` is called without explicit exclude_pids
+**Then** `os.getpid()` is never sent SIGKILL
+
+**Spec traces:** REQ-INFRA-055, REQ-INFRA-056
+
 ### REQ-HW-010: Ising Sampler v4 HLS C++ Kernel
 
 The Ising sampler v4 MUST be expressed in Vitis HLS C++ with loop-pipelining
@@ -585,6 +637,8 @@ be idempotent: re-running when the section already exists MUST succeed without r
 | REQ-INFRA-052 | Implemented | Exp 754 — pre-flight v10 confirms patch application via guard clause search |
 | REQ-INFRA-053 | Implemented | Exp 767 — pre-flight v11 confirms 100% dequeue-site manifest coverage |
 | REQ-INFRA-054 | Implemented | Exp 767 — Exps 425, 491, 603, 627 added to exclusion manifest (.58) |
+| REQ-INFRA-055 | Implemented | Exp 780 — kill_gpu_zombies() in gpu_zombie_killer.py; wired into ExperimentTemplate.setup_gpu() |
+| REQ-INFRA-056 | Implemented | Exp 780 — kill_gpu_zombies() is a no-op when no GPU zombies exist |
 | REQ-LOADER-010 | Planned | Exp 768 — Gemma4 call site audit + GemmaTransformersLoader enforcement |
 | REQ-PROBE-020 | Implemented | Exp 772 — SemanticEnergyProbe + SemanticCluster in python/carnot/pipeline/semantic_energy_probe.py |
 | REQ-PROBE-021 | Implemented | Exp 772 — is_high_energy advisory flag; tier0g_deployed=False (AUC=0.46, below NUP v4 baseline) |

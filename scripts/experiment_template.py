@@ -829,6 +829,34 @@ class ExperimentTemplate:
             - ``gpu_runner_active`` (bool): True iff a DualGPURunner was created.
             - ``cpu_fallback`` (bool): True iff running in CPU-only fallback mode.
         """
+        # --- Step 0a: REQ-INFRA-055 — kill_gpu_zombies() BEFORE any model load ---
+        # RETRO-028: Gemma4 14.89 GiB allocation failed with 15 GiB zombie-held VRAM.
+        # RETRO-SOTA-GGUF-TIMEOUT: Exp 769 timed out for the same reason.
+        # The setup()-time ExperimentTemplate.kill_gpu_zombies() runs once per session
+        # start but cannot catch mid-session zombie accumulation.  This call is mandatory
+        # per-experiment, using the more aggressive SIGKILL approach from gpu_zombie_killer.
+        force_live_early = os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
+        if force_live_early:
+            try:
+                from carnot.pipeline.gpu_zombie_killer import (  # noqa: PLC0415
+                    kill_gpu_zombies as _kill_gpu_zombies,
+                )
+
+                _zombie_result = _kill_gpu_zombies(gpu_index=0)
+                _log.info(
+                    "REQ-INFRA-055 kill_gpu_zombies: gpu=0 verdict=%s "
+                    "pids_killed=%d vram_freed_mb=%.0f",
+                    _zombie_result.honest_verdict,
+                    len(_zombie_result.pids_killed),
+                    _zombie_result.vram_freed_mb,
+                )
+                _zombie_kill_result_str = _zombie_result.honest_verdict
+            except Exception as _zk_exc:
+                _log.warning("kill_gpu_zombies raised %s — continuing (non-fatal)", _zk_exc)
+                _zombie_kill_result_str = "kill_gpu_zombies_error"
+        else:
+            _zombie_kill_result_str = "skipped_not_force_live"
+
         # --- Step 0: GPUVRAMGate — REQ-INFRA-039/040/041, RETRO-037/042 fix ---
         # Run BEFORE every GPU-required experiment.  The session-start zombie kill
         # (Exp 463) fires once per conductor session but cannot prevent mid-session
@@ -1115,6 +1143,7 @@ class ExperimentTemplate:
             "model_server_active": model_server_active,
             "gpu_runner_active": gpu_runner_active,
             "cpu_fallback": cpu_fallback,
+            "zombie_kill_result": _zombie_kill_result_str,
         }
 
         # --- Step 8: REQ-INFRA-003 / REQ-INFRA-004: GPU zombie + idle-GPU check ---
