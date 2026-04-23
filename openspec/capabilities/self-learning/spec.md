@@ -912,3 +912,58 @@ Sub-requirements:
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-042 | Implemented (python/carnot/pipeline/pps_constraint_selector.py) | Implemented (tests/python/test_experiment_762_ppsebm_constraint_select.py) |
+
+---
+
+## REQ-PROBE-010: DualPathwayProbe MUST Include Question-Anchored and Answer-Anchored Sub-Probes
+
+**Given** a FoVer v2 labeled dataset of (question_context, step_text, label) triples
+**When** MixtureOfProbes is instantiated and trained
+**Then** it MUST include a QuestionAnchoredProbe (2-layer MLP on question-side tokens)
+**And** it MUST include an AnswerAnchoredProbe (2-layer MLP on answer-side tokens)
+**And** the GateNetwork MUST be a 2-layer MLP trained jointly with both sub-probes
+
+### REQ-PROBE-010 Sub-requirements
+
+- REQ-PROBE-010-1: QuestionAnchoredProbe SHALL accept hidden_dim=128 and output_dim=1.
+- REQ-PROBE-010-2: AnswerAnchoredProbe SHALL accept hidden_dim=128 and output_dim=1.
+- REQ-PROBE-010-3: GateNetwork SHALL accept input_dim=2, output_dim=1.
+- REQ-PROBE-010-4: MixtureOfProbes.train() SHALL train all three components end-to-end
+  via a single Adam optimizer and BCELoss.
+
+---
+
+## REQ-PROBE-011: Dual-Pathway AUROC on FoVer v2 Test Split MUST Be Reported
+
+**Given** a trained MixtureOfProbes evaluated on the held-out 20% test split of FoVer v2
+**When** MixtureOfProbes.evaluate_auroc() is called on test predictions and labels
+**Then** the AUROC value MUST be recorded in the experiment artifact
+**And** if AUROC >= 0.993, the dual-pathway probe supersedes single-pathway JEPAReasonerProbe
+**And** a confidence interval caveat MUST be noted when test_set_size < 20
+
+---
+
+## SCENARIO-PROBE-020: Mixture-of-Probes Trains Without Error
+
+**Given** 45 labeled FoVer v2 steps (80% train split)
+**When** MixtureOfProbes.train(labeled_steps, n_epochs=100) is called
+**Then** training completes without raising an exception
+**And** the returned dict contains "final_loss" (float) and "n_train" (int == 45)
+
+---
+
+## SCENARIO-PROBE-021: Dual-Pathway AUROC Is Computed and Reported
+
+**Given** a trained MixtureOfProbes and a 12-sample test split
+**When** MixtureOfProbes.evaluate_auroc(scores, labels) is called
+**Then** the result is a float in [0.0, 1.0]
+**And** the experiment artifact contains auroc, precision, recall, honest_verdict
+
+---
+
+## Implementation Status (REQ-PROBE-010, REQ-PROBE-011)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-PROBE-010 | Implemented (python/carnot/pipeline/dual_pathway_probe.py) | Implemented (tests/python/test_experiment_763_dual_pathway_probe.py) |
+| REQ-PROBE-011 | Implemented (scripts/experiment_763_dual_pathway_probe.py) | Implemented (tests/python/test_experiment_763_dual_pathway_probe.py) |
