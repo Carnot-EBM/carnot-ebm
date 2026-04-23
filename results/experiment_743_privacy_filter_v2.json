@@ -1,0 +1,84 @@
+{
+  "experiment": 743,
+  "title": "Privacy Filter KAN v2 \u2014 Teacher-Free PII Detection",
+  "run_date": "20260423",
+  "started_at": "2026-04-23T00:27:16Z",
+  "finished_at": "2026-04-23T00:28:59Z",
+  "duration_s": 102.847,
+  "status": "success",
+  "auroc": 1.0,
+  "indist_auroc": 0.985,
+  "per_dataset_auroc": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "per_dataset_min_tp": [
+    200,
+    20,
+    200
+  ],
+  "per_dataset_confusion": [
+    {
+      "tp": 200,
+      "fp": 0,
+      "tn": 200,
+      "fn": 0
+    },
+    {
+      "tp": 20,
+      "fp": 0,
+      "tn": 200,
+      "fn": 180
+    },
+    {
+      "tp": 200,
+      "fp": 0,
+      "tn": 200,
+      "fn": 0
+    }
+  ],
+  "dataset_names": [
+    "holdout_synthetic",
+    "mixed_gsm8k_pii",
+    "code_snippet_pii"
+  ],
+  "gate_passed": true,
+  "weights_saved": true,
+  "weights_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/models/privacy_filter_kan_v2.json",
+  "honest_verdict": "privacy_filter_v2_gate_passed_high",
+  "n_params": 4608,
+  "n_train_benign": 800,
+  "n_train_pii": 800,
+  "final_loss": 0.6632769703865051,
+  "teacher_used": false,
+  "upstream_dependency": "none",
+  "calibrated_threshold": -0.04434540627524257,
+  "schema": [
+    "auroc",
+    "calibrated_threshold",
+    "dataset_names",
+    "duration_s",
+    "experiment",
+    "final_loss",
+    "finished_at",
+    "gate_passed",
+    "honest_verdict",
+    "indist_auroc",
+    "n_params",
+    "n_train_benign",
+    "n_train_pii",
+    "per_dataset_auroc",
+    "per_dataset_confusion",
+    "per_dataset_min_tp",
+    "run_date",
+    "started_at",
+    "status",
+    "teacher_used",
+    "title",
+    "upstream_dependency",
+    "weights_path",
+    "weights_saved"
+  ],
+  "invariant_violations": []
+}

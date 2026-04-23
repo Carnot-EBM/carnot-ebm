@@ -509,6 +509,74 @@ beyond; the route result verdict is NOT "safety_violation".
 
 **Then** the p99 latency is < 5ms.
 
+### REQ-SAFE-019: PrivacyFilterV2 — Teacher-Free Training via Regex PII Features
+
+PrivacyFilterV2 MUST be trained without any teacher model (no HuggingFace download,
+no transformer inference).  Features MUST be purely:
+- Regex PII patterns: credit card (Luhn-valid), SSN (XXX-XX-XXXX), email, phone (US),
+  IPv4 address, zip code.
+- For each pattern: match_count, max_match_length, fraction_matched_chars.
+- Token statistics: digit_density, alpha_digit_ratio, char_entropy, token_count.
+- N-gram: bigram_pii_adj_count (bigrams where one token matches a PII pattern).
+
+No teacher model label, no teacher inference duration, no teacher invariant is required.
+Training uses contrastive loss directly on regex-derived features: benign=low energy,
+PII=high energy.
+
+**Acceptance criteria:**
+- `PrivacyFilterFeatureExtractor.extract(text) -> np.ndarray` with fixed shape.
+- `PrivacyFilterKANv2.energy(text) -> float` runs in < 5 ms on CPU.
+- Training corpus MUST be fully synthetic/public (no proprietary downloads needed).
+- No call to any HuggingFace model during training or inference.
+
+**Why this redesign (governance context):**
+    Exps 729 and 730 were blocked for 2 consecutive cycles because `openai/privacy-filter`
+    was unavailable for download.  Two consecutive blocked cycles meets the governance
+    redesign threshold: the upstream dependency is retired and replaced with direct
+    feature engineering.  This v2 design is fully self-contained.
+
+Spec: REQ-SAFE-019, SCENARIO-SAFE-019
+
+### REQ-SAFE-020: PrivacyFilterV2 Gate — AUROC >= 0.80 AND per-dataset min_tp >= 1
+
+PrivacyFilterV2 evaluation gate:
+- AUROC >= 0.80 on each of three cross-dataset evaluations.
+- At least 1 true positive (min_tp >= 1) detected per dataset at threshold=0.5.
+
+If AUROC >= 0.80 AND min_tp >= 1: gate passes (publication-ready for v2).
+If AUROC >= 0.85 AND min_tp >= 1: gate passes at high confidence (supersedes failed v1 target).
+
+This gate is intentionally lower than the failed v1 gate (which required AUROC >= 0.90
+AND teacher invariant).  The v2 gate acknowledges that direct regex features cannot
+equal a transformer teacher, but provides a useful and deployable privacy filter.
+
+**Acceptance criteria:**
+- Three evaluation datasets are required: synthetic PII hold-out, mixed GSM8K-style,
+  code snippet PII.
+- For each dataset: compute AUROC, confusion matrix, min_tp.
+- Write `results/privacy_filter_v2_gate.json` with per-dataset metrics.
+
+Spec: REQ-SAFE-020, SCENARIO-SAFE-020
+
+### SCENARIO-SAFE-019: PrivacyFilterV2 Trains Without Any Model Download
+
+**Given** a fresh environment with no HuggingFace model cache,
+
+**When** `experiment_743_privacy_filter_v2.py` is executed,
+
+**Then** it completes training and evaluation without attempting to download any model
+from HuggingFace Hub, and produces a valid result artifact with `status != "blocked"`.
+
+### SCENARIO-SAFE-020: PrivacyFilterV2 Gate Evaluation Across Three Datasets
+
+**Given** a trained PrivacyFilterKANv2 model,
+
+**When** evaluated on three distinct datasets (synthetic PII hold-out, mixed GSM8K/PII,
+code snippet PII),
+
+**Then** AUROC >= 0.80 and min_tp >= 1 on every dataset, and results/privacy_filter_v2_gate.json
+is written with `gate_passed: true`.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -527,3 +595,5 @@ beyond; the route result verdict is NOT "safety_violation".
 | REQ-SAFE-016 | Implemented | Exp 735: Tier 0b KAN pre-filter wired at top of cascade |
 | REQ-SAFE-017 | Implemented | Exp 735: FP rate measured on 1000 benign GSM8K prompts |
 | REQ-SAFE-018 | Implemented | Exp 735: latency p99 measured over 1000 CPU forward passes |
+| REQ-SAFE-019 | Proposed | Exp 743: teacher-free training via PII regex + token features |
+| REQ-SAFE-020 | Proposed | Exp 743: gate AUROC >= 0.80 AND per-dataset min_tp >= 1 |

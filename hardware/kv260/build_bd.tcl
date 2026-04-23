@@ -129,9 +129,15 @@ set_param board.repoPaths "/tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardSt
 set_property board_part xilinx.com:kv260_som:part0:1.4 [current_project]
 
 puts "=== [2/7] Add RTL sources ==="
-add_files -norecurse $rtl_files
-# Don't set the RTL module as top — the BD wrapper will become top.
-update_compile_order -fileset sources_1
+# Skip RTL sourcing when CARNOT_USE_AXI_GPIO is set — the BD will use
+# Xilinx's axi_gpio IP directly, no custom RTL required.
+if {![info exists env(CARNOT_USE_AXI_GPIO)] || $env(CARNOT_USE_AXI_GPIO) != "1"} {
+    add_files -norecurse $rtl_files
+    # Don't set the RTL module as top — the BD wrapper will become top.
+    update_compile_order -fileset sources_1
+} else {
+    puts "=== axi_gpio isolation build: skipping RTL sources ==="
+}
 
 # ---------------------------------------------------------------------------
 # Block Design
@@ -209,18 +215,45 @@ set_property -dict [list \
 create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_0
 
 # --- Ising sampler (user RTL, added as a module reference) ---
-# Because we called add_files earlier with ising_sampler_v2.v in scope, the
-# BD can reference it as a module.  Vivado will instantiate the Verilog
-# module directly in the BD hierarchy.
-create_bd_cell -type module -reference $top_rtl_module ising_sampler_0
+# RETRO-074 axi_gpio isolation: when CARNOT_USE_AXI_GPIO=1 is set, replace
+# our custom RTL slave with a Xilinx axi_gpio IP block.  axi_gpio is a
+# battle-tested Xilinx-provided AXI-Lite slave; if it responds on hardware
+# at 0xA0000000 through our SmartConnect path, then every infrastructure
+# piece (PS, SmartConnect, resets, clocks, address decoding) is sound and
+# our custom module instantiation pattern has a bug.  If axi_gpio ALSO
+# hangs, the issue is above our RTL entirely — a BD/PS config problem the
+# board preset didn't address.
+set use_axi_gpio [expr {[info exists env(CARNOT_USE_AXI_GPIO)] \
+                        && $env(CARNOT_USE_AXI_GPIO) == "1"}]
 
-# RETRO-072: override the module parameters at BD instantiation time so the
-# post-synth utilisation fits on XCK26.  The 128-spin default is for larger
-# Zynq parts (XCU250 and up); 64/16 is the KV260-sized configuration.
-set_property -dict [list \
-    CONFIG.N_SPINS    $n_spins \
-    CONFIG.MAX_DEGREE $max_degree \
-] [get_bd_cells ising_sampler_0]
+if {$use_axi_gpio} {
+    puts "=== Using Xilinx axi_gpio IP as slave (RETRO-074 isolation) ==="
+    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 ising_sampler_0
+    set_property -dict [list \
+        CONFIG.C_GPIO_WIDTH       {32} \
+        CONFIG.C_ALL_OUTPUTS      {0} \
+        CONFIG.C_ALL_INPUTS       {1} \
+        CONFIG.C_IS_DUAL          {0} \
+    ] [get_bd_cells ising_sampler_0]
+    # Tie GPIO inputs to a fixed pattern so we can see whether the read
+    # path works by comparing observed RDATA to the constant.
+    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 gpio_const_0
+    set_property -dict [list \
+        CONFIG.CONST_WIDTH {32} \
+        CONFIG.CONST_VAL   {2779096666} \
+    ] [get_bd_cells gpio_const_0]
+    # 2779096666 = 0xA5A55A5A — xlconstant CONST_VAL takes decimal only
+    connect_bd_net \
+        [get_bd_pins gpio_const_0/dout] \
+        [get_bd_pins ising_sampler_0/gpio_io_i]
+} else {
+    create_bd_cell -type module -reference $top_rtl_module ising_sampler_0
+    # RETRO-072: override module parameters at BD instantiation time
+    set_property -dict [list \
+        CONFIG.N_SPINS    $n_spins \
+        CONFIG.MAX_DEGREE $max_degree \
+    ] [get_bd_cells ising_sampler_0]
+}
 
 # ---------------------------------------------------------------------------
 # Wiring
@@ -239,14 +272,16 @@ connect_bd_intf_net \
     [get_bd_intf_pins ising_sampler_0/S_AXI]
 
 # PL clock 0 (FCLK_CLK0) drives all AXI clocks + reset generator.
-# The ising_sampler's S_AXI_ACLK is a scalar pin (not inside an intf bundle),
-# so we use connect_bd_net not connect_bd_intf_net.
+# axi_gpio uses lowercase s_axi_aclk; our custom RTL uses uppercase S_AXI_ACLK.
+set sampler_aclk    [expr {$use_axi_gpio ? "ising_sampler_0/s_axi_aclk"    : "ising_sampler_0/S_AXI_ACLK"}]
+set sampler_aresetn [expr {$use_axi_gpio ? "ising_sampler_0/s_axi_aresetn" : "ising_sampler_0/S_AXI_ARESETN"}]
+
 connect_bd_net \
     [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] \
     [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk] \
     [get_bd_pins axi_smartconnect_0/aclk] \
     [get_bd_pins proc_sys_reset_0/slowest_sync_clk] \
-    [get_bd_pins ising_sampler_0/S_AXI_ACLK]
+    [get_bd_pins $sampler_aclk]
 
 # RETRO-074 hang #10 candidate: associate maxihpm0_fpd_aclk with
 # proc_sys_reset_0/interconnect_aresetn explicitly.  Without this, Vivado's
@@ -284,7 +319,7 @@ connect_bd_net \
 
 connect_bd_net \
     [get_bd_pins proc_sys_reset_0/peripheral_aresetn] \
-    [get_bd_pins ising_sampler_0/S_AXI_ARESETN]
+    [get_bd_pins $sampler_aresetn]
 
 # ---------------------------------------------------------------------------
 # Address assignment + validation
