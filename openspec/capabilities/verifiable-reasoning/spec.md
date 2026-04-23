@@ -14791,3 +14791,37 @@ Then:
 
 **Spec traces:** REQ-VER-038
 **Implementation Status:** Implemented (Exp 738)
+
+## REQ-VERIFY-150: RETRO-033 Closure MUST Be Confirmed With >= 2 Independent 200q Trials
+
+**Given** a verify-repair pipeline run against GSM8K-style questions at 200q scale
+**When** evaluating whether RETRO-033 (verify-repair never positive on live GPU) is definitively closed
+**Then** at least 2 independent trials using DIFFERENT random seeds MUST both show signed_improvement > 0
+**And** if only 1 trial is positive, the result is inconclusive — a second confirmation trial is required
+**And** "retro033_confirmed_closed" requires signed_improvement > 0.003 in each independent trial
+  (0.003 is the conservative noise floor for 200q; anything <= 0.003 is within statistical noise)
+
+Sub-requirements:
+- REQ-VERIFY-150-1: Each trial MUST use an explicitly documented random seed for question shuffling.
+- REQ-VERIFY-150-2: Trial seeds MUST differ from each other (seed A != seed B).
+- REQ-VERIFY-150-3: honest_verdict MUST be one of: "retro033_confirmed_closed", "retro033_marginal_inconclusive", "retro033_reopened".
+- REQ-VERIFY-150-4: The artifact MUST record seed_218_signed_improvement (from Exp 720) alongside the new trial's signed_improvement for direct comparison.
+- REQ-VERIFY-150-5: If both trials are positive, RETRO-033 status is "DEFINITIVELY CLOSED — 2 independent 200q trials positive".
+- REQ-VERIFY-150-6: If the confirmation trial is negative, RETRO-033 status is "REOPENED — Exp 720 may have been statistical fluke".
+
+**Implementation Status:** Pending (Exp 742)
+
+### SCENARIO-VERIFY-200: Confirmation Trial With Seed 999 Determines RETRO-033 Status
+
+Given: Exp 720 showed signed_improvement=0.00510 with seed=218.
+When: Exp 742 runs 200q GSM8K with seed=999 (explicitly different from seed=218).
+Then:
+  - If signed_improvement_seed999 > 0.003: honest_verdict = "retro033_confirmed_closed"
+    and RETRO-033 is definitively closed (2 independent positive trials).
+  - If 0 < signed_improvement_seed999 <= 0.003: honest_verdict = "retro033_marginal_inconclusive"
+    (positive but within noise floor — more data needed).
+  - If signed_improvement_seed999 <= 0: honest_verdict = "retro033_reopened"
+    (Exp 720 was likely a statistical fluke — investigate domain-specificity).
+
+**Spec traces:** REQ-VERIFY-150
+**Implementation Status:** Pending (Exp 742)
