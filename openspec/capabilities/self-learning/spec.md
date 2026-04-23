@@ -1140,3 +1140,51 @@ ebrm_outperforms_eorm, insufficient_data.
 |-------------|--------|-------|
 | REQ-EBRM-001 | Implemented (python/carnot/pipeline/ebrm_baseline.py) | Implemented (tests/python/test_experiment_771_ebrm_comparison.py) |
 | REQ-EBRM-002 | Implemented (scripts/experiment_771_ebrm_comparison.py) | Implemented (tests/python/test_experiment_771_ebrm_comparison.py) |
+
+---
+
+## REQ-LEARN-048: JEPA v20 Live Data Collection MUST Use kill_gpu_zombies() Before Model Load
+
+Live data collection for JEPA v20 training corpus expansion MUST call
+``kill_gpu_zombies(gpu_index=0)`` before any model load when ``CARNOT_FORCE_LIVE=1``.
+The labeled pairs MUST be written to ``results/fover_labeled_steps_live_v2.json``
+WITHOUT modifying ``results/fover_labeled_steps_live.json`` (the Exp 442 baseline file).
+
+---
+
+## REQ-LEARN-049: JEPA v20 Live Data Collection MUST Report n_labeled Honestly
+
+The artifact MUST report ``n_labeled`` as the exact count of labeled pairs written
+to ``fover_labeled_steps_live_v2.json``.
+``labeling_rate = n_labeled / n_steps_found`` MUST be computed and reported (0.0 when
+``n_steps_found == 0``).  The target is ``n_labeled >= 80`` new real pairs; honest
+under-reporting is required when the target is not met.
+
+---
+
+## SCENARIO-LEARN-092: kill_gpu_zombies() Called Before Model Load
+
+**Given** ``CARNOT_FORCE_LIVE=1`` is set in the environment
+**When** Exp 781 runs
+**Then** ``kill_gpu_zombies(gpu_index=0)`` MUST be called before any model load
+**And** the call order MUST be: apply_env_autofix → kill_gpu_zombies → setup_gpu
+
+---
+
+## SCENARIO-LEARN-093: Labeled Pairs Written to Separate v2 File
+
+**Given** 100 GSM8K questions answered by Qwen3.5-0.8B
+**When** FOVERAnnotator annotates the responses
+**Then** labeled pairs MUST be written to ``results/fover_labeled_steps_live_v2.json``
+**And** ``results/fover_labeled_steps_live.json`` MUST NOT be modified
+**And** honest_verdict MUST be ``"real_data_collected_sufficient"`` iff
+  ``n_labeled >= 80`` AND ``inference_mode="live_gpu"``
+
+---
+
+## Implementation Status (REQ-LEARN-048, REQ-LEARN-049)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-048 | Implemented (scripts/experiment_781_jepa_v20_data_collection.py) | Implemented (tests/python/test_experiment_781_jepa_v20_data_collection.py) |
+| REQ-LEARN-049 | Implemented (scripts/experiment_781_jepa_v20_data_collection.py) | Implemented (tests/python/test_experiment_781_jepa_v20_data_collection.py) |
