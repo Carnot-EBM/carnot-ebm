@@ -33,6 +33,109 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-23 arxiv Scan (Milestone 2026.04.60 Planning)
+
+### The Energy of Falsehood: Detecting Hallucinations via Diffusion Model Likelihoods
+- **Paper:** arXiv 2602.11364 (February 2026)
+- **What:** Introduces Semantic Energy as a metric measuring semantic divergence between original
+  claims and reconstructions using discrete text diffusion. A Generative Stress Test corrupts
+  claims with noise and reconstructs them; the reconstruction error (energy) detects hallucinations.
+  Achieves AUROC 0.725 on FEVER, outperforming entropy-based baselines by 1.5pp with no labels.
+- **Relevance to Carnot:** Directly validates energy as a detection signal beyond entropy.
+  The "reconstruction energy" framing maps onto Carnot's IsingEBM: high energy = poor reconstruction
+  = hallucination. Could unify Carnot's constraint energy with diffusion reconstruction energy as a
+  single detection signal without requiring constraint extraction.
+- **Concrete experiment:** Exp 789 — CalibrationAlignmentEBM: compare Carnot Ising energy scores
+  against diffusion-style reconstruction energy on FoVer v2 steps. Measure which signal better
+  separates correct from incorrect CoT steps. Combine both signals via learned linear fusion.
+- **When to incorporate:** Milestone 2026.04.60 — Phase 3 calibration/energy research (Exp 789).
+
+### EDU-PRM: Entropy-Driven Uncertainty for Process Reward Modeling
+- **Paper:** arXiv 2503.22233 (March 2025)
+- **What:** Entropy-driven framework for PRM training that uses only 1.5% of full training data.
+  Uncertainty-aligned step segmentation automatically identifies which CoT steps carry the most
+  labeling signal — steps near the decision boundary (high entropy across model samples).
+  Outperforms public PRM baselines on ProcessBench despite the fraction of training data used.
+- **Relevance to Carnot:** JEPA v19/v20 training uses FoVer-labeled CoT steps, but the labeling
+  may produce imbalanced examples (high step_correct rate for simple arithmetic). EDU-PRM's
+  uncertainty sampling would select the hardest-to-label steps for Z3 re-verification, improving
+  corpus quality without increasing annotation cost. The entropy-based signal also maps to EORM
+  energy: steps where EORM is uncertain (energy in the middle band) are the most valuable for
+  JEPA training. This directly addresses the JEPA OOD generalization problem.
+- **Concrete experiment:** Exp 782 — EDUPRMStepSelector: for each step in the FoVer v2 corpus,
+  compute model prediction variance (bootstrap over training data). Select the top 30% highest-
+  variance steps for JEPA v20 training. Compare OOD AUC: JEPA trained on EDU-selected steps
+  vs uniform sampling. Target: OOD AUC improvement without more data labels.
+- **When to incorporate:** Milestone 2026.04.60 — Phase 1 (Exp 782), feeds JEPA v20 retrain.
+
+### Know When You're Wrong: Aligning Confidence with Correctness for LLM Error Detection
+- **Paper:** arXiv 2603.06604 (March 2026)
+- **What:** Framework for enabling LLMs to reliably signal uncertainty via output probabilities.
+  Key finding: supervised fine-tuning (MLE) yields well-calibrated confidence; RL methods induce
+  overconfidence. Calibration gap between expressed confidence and correctness is 15-25pp across
+  tasks. Critical insight for designing reliable verifiers: probability ≠ correctness.
+- **Relevance to Carnot:** Carnot's energy function is a calibration target: low energy = high
+  confidence correct. If we align Carnot energy with actual correctness rates, we get better-
+  calibrated verification. This is orthogonal to precision/recall — it's about the energy score
+  being meaningful, not just discriminative. Addresses the model-size precision ceiling: larger
+  models have higher confidence but our FP rate doesn't decrease, because we don't calibrate.
+- **Concrete experiment:** Exp 789 — CalibrateEBMEnergy: for Qwen3.5-0.8B, compute Carnot
+  energy scores on 200 GSM8K questions. Bucket by energy decile. Measure actual accuracy per
+  bucket. If energy is well-calibrated, accuracy should increase monotonically with decreasing
+  energy. Use isotonic regression to re-calibrate energy → probability. Report Expected
+  Calibration Error (ECE) before and after calibration.
+- **When to incorporate:** Milestone 2026.04.60 — Phase 3 (Exp 789).
+
+### S*: Test Time Scaling for Code Generation via Energy-Ranked Candidate Selection
+- **Paper:** arXiv 2502.14382 (February 2026)
+- **What:** Hybrid test-time scaling combining parallel and sequential scaling with an adaptive
+  selection mechanism. Uses distinguishing inputs (test cases that distinguish between candidates)
+  for pairwise comparison. Enables a 3B model to outperform GPT-4o-mini on LiveCodeBench with
+  sufficient compute budget. The selection mechanism is the key contribution: not just BoN, but
+  structured tournament selection via execution.
+- **Relevance to Carnot:** Exp 773 showed Carnot has 6x fewer oracle calls than SETS for the
+  same pass rate. S* extends this further: instead of generating N candidates and taking the lowest
+  energy, S* uses distinguishing inputs to separate them. Carnot energy can replace the execution-
+  based selection mechanism for fast pre-filtering before running expensive tests. This could
+  reduce distinguishing-input generation by 50%: use energy to prune candidates before tests.
+- **Concrete experiment:** Exp 787 — SStarEnergyRanking: implement S*-style tournament selection
+  for HumanEval. Replace distinguishing-input test with Carnot energy pre-filter: eliminate
+  candidates with energy > threshold before running execution tests. Compare: pass@1, n_tests_run,
+  wall_time_s vs pure S* (execution-only) and pure Carnot (energy-only).
+- **When to incorporate:** Milestone 2026.04.60 — Phase 2 (Exp 787).
+
+### Adaptive Test-Time Compute Allocation via Constrained Policy Optimization
+- **Paper:** arXiv 2604.14853 (April 2026)
+- **What:** Frames adaptive test-time compute allocation as constrained optimization. Reduces
+  globally coupled budget-constrained programs to supervised classification via Lagrangian duality.
+  Key finding: no single scaling strategy universally dominates — optimal strategy depends on
+  per-instance difficulty. Achieves monotonic improvement with compute budget on MATH/GSM8K.
+- **Relevance to Carnot:** Carnot's cascade already allocates compute adaptively (fast Tier 0
+  gates to avoid expensive Tier 3 Ising). The constrained policy formulation provides a principled
+  way to learn which gates to apply for which question types. Carnot energy is a natural difficulty
+  signal: high energy questions need more verification compute; low energy can skip.
+- **Concrete experiment:** Add to Exp 788 (Constraint Memory) — use constrained policy to learn
+  which constraint types to add based on question energy profile. High-energy arithmetic questions
+  → add carry-check constraint. High-energy semantic questions → add consistency constraint.
+- **When to incorporate:** Milestone 2026.04.60 — as augmentation to Exp 788.
+
+### Beyond Outcome Verification: Verifiable Process Reward Models for Structured Reasoning
+- **Paper:** arXiv 2601.17223 (January 2026)
+- **What:** Extends outcome verification to process-level verification, providing step-wise
+  correctness signals with formal guarantees. Introduces verifiable PRM that maintains formal
+  correctness proofs throughout inference. Key mechanism: each verification step either
+  provably confirms or disproves partial solution correctness via SMT constraints.
+- **Relevance to Carnot:** Carnot's SymCodeVerifier (Tier 2.5) and CausalReasoningVerifier
+  (Tier 2.7) are partial implementations of this concept. This paper provides the formal
+  framework: encode each CoT step as a logical formula, verify via SMT (Z3). Difference
+  from current approach: step verification carries proof certificates, not just boolean flags.
+  This enables the repair step to receive structured proof-based feedback ("step 3 unsat
+  under constraint set {C1, C2}") rather than raw energy signals.
+- **Concrete experiment:** Enhancement to Exp 788 — add proof certificate tracking to the
+  constraint memory: when Z3 proves step_i UNSAT, store which constraints caused UNSAT.
+  These become the "constraint memory" patterns for Tier 2 memory → constraint generation.
+- **When to incorporate:** Milestone 2026.04.60 — integrated into Exp 788 design.
+
 ## 2026-04-23 arxiv Scan (Milestone 2026.04.58 Planning)
 
 ### Detecting and Correcting Hallucinations in LLM-Generated Code via Deterministic AST Analysis

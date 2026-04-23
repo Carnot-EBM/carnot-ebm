@@ -1,288 +1,295 @@
-# Research Roadmap — Milestone 2026.04.59
+# Research Roadmap — Milestone 2026.04.60
 
-**Title:** JEPA v19 Closure + SOTA GGUF Benchmarks + SETS Comparison + Semantic Energy
+**Title:** JEPA v20 Data Surge + SOTA GGUF Confirmed + Constraint Memory to Constraint Generation
 
-**CalVer:** 2026.04.59 (sequence increment from 2026.04.58)
-
-**Authored:** 2026-04-23
-
-**Previous Milestone:** 2026.04.58 — "PSV Architecture Repair + HLS Energy Fix + Live Code Repair + SRSA Memory Gate"
-
----
-
-## Executive Summary
-
-Milestone .58 closed two critical architecture RETROs (PSV relapse root cause identified
-and recovery sustained; HLS energy sign fixed) and delivered three important research wins
-(Tier 1 constraint addition works precision 0.52→1.0; Dual-pathway probe AUROC=1.0; AST
-Knowledge Verifier precision=1.0/recall=1.0). However, four items remain open:
-
-1. **JEPA v19 never ran** — Exp 765 was scheduled but not executed. Tier 3 predictive
-   verification OOD AUC is untested with real accumulated data.
-2. **Live code repair still zero** — Exp 759 used Qwen3.5-0.8B (too small, pass@1=0.0).
-   Research references MANDATE SOTA GGUF models (Qwen3.6-35B-A3B) for headline results.
-3. **Gemma4 loader blocked** — Exp 760 threshold grid blocked by persistent RETRO-028
-   loader failure. Gemma4 VR improvement at best threshold still unknown.
-4. **Full manifest enforcement incomplete** — Exp 754 applied patch to conductor's managed
-   cycle, but legacy Exp 425 (22nd milestone appearance, 1,672 cumulative minutes of
-   overhead) still runs from unguarded historical queue sources.
-
-Milestone .59 resolves all four open items, adds three new arxiv-driven capabilities
-(Semantic Energy probe arXiv 2508.14496, Carnot vs SETS comparison arXiv 2501.19306,
-EBRM validation arXiv 2504.13134), and advances the hardware path (KV260 synthesis via
-nextpnr-xilinx after Yosys success in Exp 758) and publishing (push HuggingFace artifacts
-prepared in Exp 752).
+**CalVer:** 2026.04.60 (sequence increment from 2026.04.59)
+**Planned Experiments:** Exps 780-792 (13 experiments)
+**Date Designed:** 2026-04-23
+**Prerequisite:** Milestone 2026.04.59 retro complete (Exp 779)
 
 ---
 
-## What Milestone .58 Proved
+## What Milestone 2026.04.59 Proved
 
-| Experiment | Result | Implication |
-|------------|--------|-------------|
-| Exp 754 — Pre-flight v10 | patch_applied=True, exp527_excluded=True | Manifest enforcement applied to conductor cycle (4th attempt) |
-| Exp 755 — PSV diagnosis | multiple_hypotheses (A+B+C all confirmed) | All three PSV hypotheses contribute — layered fix required |
-| Exp 756 — SRSA memory gate | window1_slope=-0.006, window2_slope=-0.003, recovery_sustained=True | RETRO-PSV-RELAPSE CLOSED — first sustained recovery |
-| Exp 757 — HLS energy sign fix | sign_convention_fixed=True, energy=-6.0 == expected | RETRO-HLS-ENERGY CLOSED — ground-state energy correct |
-| Exp 758 — Yosys synthesis | 2821 LUTs, 2237 DFFs, 0 errors | Open-source FPGA synthesis path CONFIRMED |
-| Exp 759 — Code repair live | signed_improvement=0.0 (pass@1=0.0) | Qwen3.5-0.8B too small; SOTA GGUF required for headline |
-| Exp 760 — Gemma4 threshold grid | blocked (loader failed) | RETRO-028 loader fix mandatory before Gemma4 experiments |
-| Exp 761 — Tier 1 constraint addition | precision 0.52→1.0, monotonic non-decreasing | Tier 1 self-learning WORKS via memory-driven constraint injection |
-| Exp 762 — PPSEBM constraint select | pps_no_effect | Coupling variance freezing alone insufficient (consistent with multi-hyp diagnosis) |
-| Exp 763 — Dual-pathway probe | AUROC=1.0 (> baseline 0.993) | Dual-pathway MoP superior to single-pathway for FoVer |
-| Exp 764 — AST Knowledge Verifier | precision=1.0, recall=1.0, Tier 0d deployed | Zero-FP code hallucination detection deployed to cascade |
-| Exp 765 — JEPA v19 | NOT RUN | Tier 3 predictive verification chain still incomplete |
+Milestone .59 (Exps 767-779) achieved significant governance and efficiency wins:
+- Manifest enforcement extended to ALL dequeue sites (Exp 767) — Exp 425 absent for first time since .37
+- EBRM comparison (Exp 771) confirmed EORM (AUC=0.993) outperforms EBRM (AUC=0.943): step-level granularity is correct
+- Carnot uses 6x fewer oracle calls than SETS (Exp 773): oracle_call_ratio=6.0
+- Adaptive PSV sampling achieves 75% sample reduction with +0.013 AUC improvement (Exp 774)
+- JailbreakKAN Tier 0h deployed with AUC=1.0, precision=1.0 (Exp 775)
+- Tier 3.5 gate governance confirmed working (Exp 778): blocked correctly when OOD AUC below gate
+
+**Four open retros carry forward:**
+- RETRO-028: Gemma4 CUDA OOM — 14.89 GiB allocation fails with ~15 GiB already occupied; GPU not cleared before load
+- RETRO-JEPA-OOD-V19: ood_auc=0.5667 < 0.75 gate — 57 pairs insufficient for OOD generalization
+- RETRO-SOTA-GGUF-TIMEOUT: Exp 769 timed out at 120 min — model load + 50 problems too large for 120 min
+- RETRO-HF-AUTH: HuggingFace authentication unavailable in conductor environment
 
 ---
 
-## Three Biggest Gaps (PRD vs. Current State)
+## The 3 Biggest Gaps vs PRD Vision
 
-### Gap 1: No Credible Live VR Improvement on SOTA Models (CRITICAL)
+### Gap 1: Tier 3 Self-Learning Not Deployed (FR-11 partial)
 
-The verify-repair pipeline produces positive results on Qwen3.5-0.8B (RETRO-033 closed:
-signed_improvement=+0.00510 on seed=999, Exp 742). But:
+JEPA v19 OOD AUC=0.5667 blocks Tier 3.5 cascade deployment (FR-11). Root cause: 57 training
+pairs from Exp 442 are predominantly Qwen3.5-0.8B arithmetic errors on GSM8K questions 1-300 —
+insufficient diversity to generalize to unseen question distributions. Fix requires two things:
+(1) More real data: 100+ new CoT steps from a second live benchmark covering different question types
+(2) Smarter selection: EDU-PRM (arxiv 2503.22233) identifies highest-uncertainty steps for training,
+    focusing the model on discriminative examples rather than easy clear-cut correct/incorrect pairs
 
-- **Qwen3.5-0.8B is no longer a credible headline model** — pass@1=0.0 on HumanEval
-  (Exp 759). The model is too small for code generation. Research references explicitly
-  mandate SOTA GGUF models (Qwen3.6-35B-A3B, Gemma-4-26B-A4B-it) for all headline results.
-- **Gemma4-E4B-it results remain unknown** — Exp 760 was blocked by loader failure.
-  The adaptive threshold approach (arXiv 2601.01490) predicts a positive threshold exists;
-  it just has not been tested with a working loader.
+### Gap 2: No Headline Code Repair Number (SOTA GGUF blocked)
 
-**Resolution:** Exp 768 (Gemma4 loader fix + threshold grid), Exp 769 (SOTA GGUF code repair with 35B model).
+The research-program.md's strongest credible result is code repair via execution verification.
+Exp 769 timed out because Qwen3.6-35B-A3B Q4_K_M requires ~20 GiB VRAM and the system had
+~15 GiB already occupied (GPU zombie). With GPU cleared (Exp 780 fix), the 35B model loads.
+Additionally, scoping to 25 problems with a 90-min budget (not 50 problems at 120 min) gives
+each problem a 3.6-min budget including model load — achievable.
 
-### Gap 2: JEPA v19 / Tier 3 Predictive Verification Never Validated (HIGH)
+### Gap 3: Self-Learning Architecture Ceiling (Tier 1-2)
 
-The Tier 3 self-learning path (research-program.md) requires a predictor model that achieves
-OOD AUC > 0.75 on real violation data. As of .58:
-
-- JEPA v18 (Exp 717) achieved OOD AUC=0.5115 (barely above random) on synthetic data
-- JEPA v19 was designed to train on REAL accumulated data from Exps 742+759+760
-- Exp 765 (JEPA v19) was scheduled but not executed in .58
-
-The self-learning loop cannot close Tier 3 without this experiment. Real-data training
-is the identified fix for OOD generalization (arXiv 2511.06209 finding: probes trained on
-real hidden states generalize; probes on text embeddings or synthetic data do not).
-
-**Resolution:** Exp 770 (JEPA v19 training on real data), Exp 778 (cascade deploy if gate passes).
-
-### Gap 3: Full Manifest Enforcement Not Extended to All Queue Sources (MEDIUM)
-
-Exp 754 applied the manifest patch to the conductor's managed 11-experiment cycle. But
-Exp 425 appeared for the 22nd consecutive milestone from an unguarded historical queue
-source, consuming 76 min (1,672 cumulative minutes = 27.9 hours since .37). Exp 491
-appeared for its 12th appearance from the same source.
-
-The fix requires extending the exclusion manifest check to EVERY dequeue site and adding
-Exps 425, 491, 603, 627 to the exclusion manifest explicitly.
-
-**Resolution:** Exp 767 (pre-flight v11 with full manifest extension to all dequeue sites).
+research-program.md highest priority: constraint ADDITION from memory patterns. The session
+memory (Tier 2) accumulates error patterns across queries. But the pipeline only uses this data
+for weight reweighting (proven ineffective in Exp 134). The correct mechanism is to read the
+memory and GENERATE new IsingEBM coupling rows: "arithmetic carry errors are common in step 2"
+→ add coupling J[carry_bit, result_bit] to the active constraint set. This upgrades the system
+from a fixed-topology EBM to a memory-guided growing EBM — the key step toward FR-11 Tier 2.
 
 ---
 
 ## Architecture Diagram
 
 ```
-                    ┌─────────────────────────────────────────────────────┐
-                    │          Verification Pipeline (Cascade)             │
-                    │                                                       │
-  LLM Output  ──►  │  Tier 0a: CarnotThinkProbe (ThinkPRM)                │
-                    │  Tier 0b: SpilledEnergyDetector (logit-discrepancy)  │
-                    │  Tier 0c: NUP Probe v4 (contrastive energy)          │
-                    │  Tier 0d: HallucinationBasinDetector (latent basin)  │
-                    │  Tier 0d*: ASTKnowledgeVerifier (code, NEW .58)      │
-                    │  Tier 0e: HalluField (thermodynamic variance)        │
-                    │  Tier 0g: SemanticEnergyProbe (logit energy, NEW .59)│
-                    │  Tier 0h: JailbreakDetectionKAN (safety, NEW .59)    │
-                    │  Tier 1: SinkProbe (attention sink concentration)    │
-                    │  Tier 2: EORM (55M param step-level EBM)             │
-                    │  Tier 2.1: JEPAReasonerProbe (dual-pathway MoP .58) │
-                    │  Tier 2.5: SymCodeVerifier (arithmetic execution)    │
-                    │  Tier 2.6: HermesVerifierAdapter (step boundary)     │
-                    │  Tier 2.7: CausalReasoningVerifier (carry-forward)   │
-                    │  Tier 3: Ising VerifyRepairPipeline (0.006ms/check)  │
-                    │  Tier 3.5: JEPA v19 Predictive (NEW .59, if viable) │
-                    └────────────────┬────────────────────────────────────┘
-                                     │ violation detected
-                                     ▼
-                    ┌─────────────────────────────────┐
-                    │  Self-Learning Loop (FR-11)      │
-                    │  Tier 1: Constraint addition     │  WORKS (.58): precision 0.52→1.0
-                    │  Tier 2: Session memory          │  Validated (.57): 10-session stable
-                    │  Tier 3: JEPA v19 predictor      │  NEW .59: real-data training
-                    └─────────────────────────────────┘
-                                     │
-                    ┌────────────────▼─────────────────┐
-                    │  Hardware Acceleration Backends   │
-                    │  CPU: ParallelIsingSampler (183x) │
-                    │  FPGA: KV260 (Yosys proven .58)   │  nextpnr-xilinx attempt (.59)
-                    │  QPU: D-Wave neal (validated .57) │
-                    └───────────────────────────────────┘
+Query
+  |
+  v
+[Tier 0a] CarnotThinkProbe (generative CoT verdict)
+  |  fast-path on "incorrect" verdict
+  v
+[Tier 0b] SpilledEnergyDetector (logit-discrepancy, arXiv 2602.18671)
+  |
+  v
+[Tier 0c] NUP Probe v4 (contrastive energy, AUC=1.0, Exp 523)
+  |
+  v
+[Tier 0d] HallucinationBasinDetector (latent basin depth, arXiv 2604.04743)
+  |
+  v
+[Tier 0e] HalluField (thermodynamic instability, advisory, arXiv 2509.10753)
+  |
+  v
+[Tier 0h] JailbreakDetectionKAN (safety gate, AUC=1.0) [.59 DEPLOYED]
+  |  returns SAFETY_GATE if jailbreak detected
+  v
+[Tier 1]  SinkProbe (attention sink concentration, arXiv 2604.10697)
+  |
+  v
+[Tier 2]  EORM (CoT energy reward model, 55M params)
+  |
+  v
+[Tier 2.5] SymCodeVerifier (executable arithmetic, AUC=0.804 live)
+  |
+  v
+[Tier 2.6] HermesVerifierAdapter (step-boundary feedback loop)
+  |
+  v
+[Tier 2.7] CausalReasoningVerifier (causal entailment across steps)
+  |
+  v
+[Tier 3]  IsingEBM (full constraint verification, 0.006 ms/check)
+  |
+  v
+[Tier 3.5] JEPA v20 Predictor [TARGET for .60] ← blocks Tier 3 for low-risk queries
+  |
+  v
+[VerifyRepairPipeline]
+  |
+  v
+[ConstraintGenerator] [NEW in .60] ← memory patterns → new IsingEBM coupling rows
+  |
+  v
+Result + Certificate
 ```
 
 ---
 
 ## Phase Descriptions
 
-### Phase 1: Infrastructure + Governance (Exp 767)
+### Phase 0: Infrastructure + GPU Hygiene (Exps 780-781, run first)
 
-**Pre-flight v11 — Full Manifest Enforcement Extension**
+**Exp 780: Pre-flight v12 — GPU Zombie Killer + Kill-Before-Load (MANDATORY FIRST)**
 
-The .58 governance win (Exp 754 patch applied) was partial: only the conductor's managed
-cycle was protected. Legacy experiments continue to flow from unguarded historical queue
-sources. Phase 1 extends the exclusion manifest check to ALL dequeue sites in
-research_conductor.py and adds all legacy carry-over experiments (425, 491, 603, 627)
-to the manifest. Success criterion: Exp 425 absent from full-milestone timing in .59 retro.
+The root cause of RETRO-028 and RETRO-SOTA-GGUF-TIMEOUT is the same: GPU memory occupied
+by prior processes prevents model load. The fix: every experiment that loads a GPU model MUST
+call `kill_gpu_zombies()` before any model load attempt. This parallels apply_env_autofix()
+(RETRO-022) — a mandatory systemic fix applied at ExperimentTemplate level.
 
-### Phase 2: Critical Carry-Overs from .58 (Exps 768-770)
+This experiment implements `kill_gpu_zombies()` in ExperimentTemplate, updates the pre-flight
+manifest, and validates that Gemma4 loads cleanly after killing zombies.
 
-**Exp 768: Gemma4 Loader Fix v2 + VR Threshold Grid**
-RETRO-028 (Gemma4 tokenizer infinite-\<unused\> token bug) has blocked Gemma4 experiments
-in four consecutive milestones (.55-.58). The fix: switch ALL Gemma4 call sites to
-GemmaTransformersLoader (which works) rather than llama.cpp (which has the tokenizer
-bug). Once fixed, immediately run the 5-threshold VR grid blocked in Exp 760 to find
-the positive-improvement threshold for Gemma4.
+**Exp 781: JEPA v20 Live Data Collection — 100q Qwen3.5-0.8B GSM8K (GPU REQUIRED)**
 
-**Exp 769: SOTA GGUF Code Repair — Qwen3.6-35B-A3B**
-Research references mandate SOTA GGUF models for all headline results. This experiment
-loads Qwen3.6-35B-A3B-GGUF via llama.cpp and runs 2-round iterative repair on 50
-HumanEval problems. Expected: baseline pass@1 50-70%, with +4.9-17.1pp after 2 rounds
-(per arXiv 2604.10508 findings for models of this scale).
+Run 100 GSM8K questions through the live verify-repair pipeline using Qwen3.5-0.8B (known to
+work). Extract all CoT steps, apply FOVER annotation (Z3 step labeling), write to
+results/fover_labeled_steps_live_v2.json. Target: n_labeled >= 80 new real pairs, tripling
+the training corpus from 57 to 137+ pairs. This directly unblocks JEPA v20.
 
-**Exp 770: JEPA v19 Predictive Verification (carried Exp 765)**
-Train JEPA v19 on real accumulated violation data from Exps 742 + 759 + 760. Use
-MultiStepJEPAv19 with n_steps=3 CoT pooling (arXiv 2511.06209). Target: OOD AUC > 0.75
-to unlock Tier 3 deployment. This is the mandatory self-learning experiment for .59.
+### Phase 1: Tier 3 Self-Learning — JEPA v20 (Exps 782-784)
 
-### Phase 3: New arxiv Research (Exps 771-775)
+**Exp 782: EDU-PRM Uncertainty Step Selection (CPU)**
 
-**Exp 771: EBRM Validation — arXiv 2504.13134**
-Energy-Based Reward Models (EBRM) from arXiv 2504.13134 are the closest published prior
-work to Carnot's EORM. Implementing EBRM as a comparison baseline on FoVer labeled steps
-validates EORM's architecture and identifies publication-worthy differences.
+Implement EDUPRMStepSelector (arxiv 2503.22233): for each step in the pooled FoVer corpus,
+compute model prediction variance across bootstrap samples. Select the top 30% highest-
+variance (most uncertain) steps for JEPA v20 training. The intuition: clear-cut correct
+and incorrect steps add little information; the hard borderline cases teach the most.
 
-**Exp 772: Semantic Energy Probe — arXiv 2508.14496**
-arXiv 2508.14496 shows logit-space energy E = -log p(x) over semantic equivalence classes
-outperforms standard semantic entropy for hallucination detection. Implement as
-SemanticEnergyProbe (Tier 0g candidate). Compare AUC on FoVer v2 vs NUP Probe v4.
+**Exp 783: JEPA v20 Retrain — Pooled Real Data + EDU-PRM Selection (CPU)**
 
-**Exp 773: Carnot vs SETS — arXiv 2501.19306**
-SETS (Self-Enhanced Test-Time Scaling) combines parallel BoN sampling, zero-shot LLM
-self-verification, and sequential self-correction — structurally identical to Carnot
-but using LLM self-verification instead of energy scores. Head-to-head comparison on
-50 HumanEval + 50 GSM8K: pass rate, oracle calls, wall-clock time. If Carnot uses fewer
-oracle calls for the same pass rate, this is the core publishable result.
+Train MultiStepJEPAv20 on pooled data: Exp 442 (57 pairs) + Exp 770 real pairs + Exp 781
+(80+ new pairs). Apply EDU-PRM selection from Exp 782 to weight training toward uncertain steps.
+Target: OOD AUC > 0.75 (unblocks Tier 3.5 deployment). OOD test: GSM8K 800-999, same as Exp 770.
 
-**Exp 774: Adaptive Bayesian Sampling in PSV — arXiv 2603.22812**
-Variance-based early stopping in the PSV sampling loop: stop when energy score variance
-drops below threshold instead of always running K=4 parallel samples. Target: 30-50%
-sample reduction with < 2pp AUC loss (matching arXiv 2603.22812 results).
+**Exp 784: JEPA v20 Cascade Deploy (GATED on Exp 783 OOD AUC > 0.75)**
 
-**Exp 775: Jailbreak Detection KAN v1 — arXiv 2602.11495**
-Train KAN classifier on EORM hidden state features to detect adversarial/jailbreak code
-prompts. Product roadmap Tier B: "Safety/Jailbreak Classifier — distill from safety model
-into KAN (2000x smaller)." Target: AUC >= 0.90. Deploy as Tier 0h if achieved.
+Wire JEPA v20 as Tier 3.5 in ThreeTierPipeline. Same deployment logic as Exp 778, but with
+higher-quality predictor. If successful: FR-11 Tier 3 self-learning loop closes.
 
-### Phase 4: Hardware + Publishing (Exps 776-777)
+### Phase 2: SOTA GGUF + Code Ranking (Exps 785-787)
 
-**Exp 776: KV260 nextpnr-xilinx Synthesis (GATED on Exp 758)**
-Exp 758 confirmed Yosys synthesizes ising_sampler_v2.v to 2821 LUTs with 0 errors.
-nextpnr-xilinx provides open-source place-and-route for Xilinx Series 7 FPGAs.
-Attempt full Yosys → nextpnr synthesis to produce a bitstream for KV260 hardware
-bring-up — potentially unblocking the FPGA path without 80GB Vivado installation.
+**Exp 785: SOTA GGUF Code Repair v2 — 25 Problems, 90-min Budget (GPU REQUIRED)**
 
-**Exp 777: HuggingFace Publishing — Push Exp 752 Artifacts**
-Exp 752 (.57) prepared the upload manifest for StepLevelJEPAProbe + KAN Tier 0b artifacts.
-Run `huggingface-cli upload` to actually publish. Update all 16 existing Carnot-EBM model
-READMEs to point to `pip install carnot`. Closes the "NOW: Update existing model READMEs"
-item from research-program.md HuggingFace Publishing Milestones.
+Retry Exp 769 with proper scoping. GPU cleared by Exp 780 fix. Load Qwen3.6-35B-A3B Q4_K_M
+(~20 GiB VRAM). If not enough VRAM: fallback to Qwen3.5-7B-Instruct Q4_K_M (~4 GiB VRAM).
+Run 25 HumanEval problems, 2-round repair. Per-problem timeout: 3 min. Checkpoint every 5.
+Target: signed_improvement > 0 on live GPU, resolving RETRO-SOTA-GGUF-TIMEOUT.
 
-### Phase 5: Self-Learning Closure + Retro (Exps 778-779)
+**Exp 786: Gemma4 OOM Fix v3 + VR Threshold Grid (GPU REQUIRED, RETRO-028)**
 
-**Exp 778: JEPA v19 Cascade Deploy (GATED on Exp 770 OOD AUC > 0.75)**
-Wire MultiStepJEPAv19 into the verification cascade as Tier 3.5. Update architecture
-diagram. In VerifyRepairPipeline: if JEPA v19 predicts high violation probability from
-first 50 tokens, trigger Ising verification earlier; if low, fast-path skip to save compute.
-Completes the Tier 3 self-learning loop from research-program.md.
+With kill_gpu_zombies() from Exp 780 in place, retry loading Gemma4-E4B-it. Run the
+5-threshold VR grid (thresholds [0.10, 0.20, 0.30, 0.40, 0.50]) on 50 GSM8K questions.
+Target: loader_test_passed=True (RETRO-028 CLOSED) AND positive_threshold_found=True.
 
-**Exp 779: Milestone 2026.04.59 Retrospective**
-Standard operational retrospective across all Exps 767-778.
+**Exp 787: S* Energy-Ranked Code Selection (CPU, arxiv 2502.14382)**
+
+Implement S*-style energy-ranked candidate selection. For each HumanEval problem, generate
+N=4 code candidates, compute Carnot energy for each, select the lowest-energy candidate
+before running execution tests. Compare: n_tests_run vs pure execution selection, pass@1
+(does energy pre-ranking improve? reduce? tie?). Report energy_prefilter_saves_tests fraction.
+
+### Phase 3: Constraint Memory to Constraint Generation (Exps 788-789)
+
+**Exp 788: Constraint Addition from Memory — Tier 2 Upgrade (CPU)**
+
+Implement ConstraintGenerator that reads session memory error patterns and synthesizes new
+IsingEBM coupling rows. Algorithm:
+1. After each verify-repair cycle, session memory records (violation_type, step_pattern) pairs.
+2. ConstraintGenerator.synthesize(memory) → new IsingEBM couplings for detected pattern types.
+3. Run 50 GSM8K questions with dynamic constraint addition (adaptive) vs fixed constraints (baseline).
+4. Compare: net_improvement (adaptive) vs net_improvement (baseline).
+This implements the "constraint addition" fix from research-program.md #1 priority, replacing
+the proven-ineffective precision-based reweighting (Exp 134).
+
+**Exp 789: EBM Calibration Alignment (CPU, arxiv 2603.06604 + 2602.11364)**
+
+Measure whether Carnot energy is calibrated to correctness probability. On 200 GSM8K questions
+with Qwen3.5-0.8B live data: bucket by Carnot energy decile, plot P(correct) per bucket.
+Compute Expected Calibration Error (ECE). Apply isotonic regression to learn energy → P(correct)
+mapping. This tells us whether energy is a reliable probability signal or just discriminative.
+Also implement diffusion-style reconstruction energy (arxiv 2602.11364) as a second signal,
+compare which is better calibrated and whether their fusion improves ECE.
+
+### Phase 4: Hardware + Publishing + Retro (Exps 790-792)
+
+**Exp 790: NPU Unblock v9 — GitHub Releases mlir-aie Wheel (CPU/NPU)**
+
+Previous 8 attempts blocked by same issue. Option A (RETRO-NPU-v8): download mlir-aie wheel
+from AMD GitHub Releases directly (not PyPI). Option B: download Ryzen AI Software installer.
+Binary verdict: NPU GEMM runs or doesn't. If neither option works: escalate with detailed
+human-action instructions and close the loop on automated attempts for this milestone.
+
+**Exp 791: KV260 N=32 Reduced Design Synthesis (CPU, open-source flow)**
+
+N=128 caused 2.48x LUT overflow in full Vivado run (.59 session). N=64 had 48.5% LUT / 87%
+DSPs per ops/status.md. N=32 spins with MAX_DEGREE=8 uses ~600-800 LUTs — fits iCE40 HX8K
+(7680 LUTs) with 90%+ headroom. Run: Yosys synth_ice40 + nextpnr-ice40 (available from .59
+Exp 776). Target: pnr_success_ice40=True AND bitstream_generated=True. First actual bitstream.
+
+**Exp 792: Milestone 2026.04.60 Operational Retrospective**
+
+Standard retro reading all Exps 780-791 results, computing milestone metrics, closing/opening
+RETROs, updating ops/status.md and ops/changelog.md.
 
 ---
 
 ## Dependency Graph
 
 ```
-Exp 767 (pre-flight v11, MANDATORY FIRST)
-  ├── Exp 768 (Gemma4 loader fix + threshold grid, GPU required)
-  ├── Exp 769 (SOTA GGUF code repair, GPU required)
-  ├── Exp 770 (JEPA v19 real data training) ──► Exp 778 (cascade deploy, GATED)
-  ├── Exp 771 (EBRM comparison, CPU)
-  ├── Exp 772 (semantic energy probe, CPU)
-  ├── Exp 773 (Carnot vs SETS, CPU)
-  ├── Exp 774 (adaptive Bayesian PSV, CPU)
-  ├── Exp 775 (jailbreak detection KAN, CPU)
-  ├── Exp 776 (KV260 nextpnr synthesis, CPU, GATED on .58 Exp 758)
-  ├── Exp 777 (HuggingFace publishing)
-  └── Exp 778 (JEPA v19 cascade, GATED on Exp 770 OOD AUC > 0.75)
-All above ──► Exp 779 (retro, mandatory last)
+Exp 780 (GPU zombie fix) → Exp 781 (live 100q, GPU)
+                                 |
+                         Exp 782 (EDU-PRM selection, CPU)
+                                 |         |
+                                 └────┬────┘
+                                      v
+                               Exp 783 (JEPA v20 retrain)
+                                      |
+                               Exp 784 (Cascade deploy, GATED)
+
+Exp 780 → Exp 785 (SOTA GGUF code repair v2, GPU)
+Exp 780 → Exp 786 (Gemma4 OOM fix v3, GPU)
+
+Exp 787 (S* energy ranking, CPU) — standalone
+Exp 788 (Constraint generation, CPU) — standalone
+Exp 789 (EBM calibration, CPU) — standalone
+Exp 790 (NPU unblock v9, CPU/NPU) — standalone
+Exp 791 (KV260 N=32 synthesis, CPU) — standalone
+
+All → Exp 792 (Milestone retro)
 ```
-
----
-
-## Success Criteria
-
-| Criterion | Target | Experiment |
-|-----------|--------|-----------|
-| manifest_enforcement_all_sites | Exps 425, 491, 603, 627 excluded from ALL queue sources | Exp 767 |
-| gemma4_loader_fixed | RETRO-028 eliminated; loader_path=transformers succeeds | Exp 768 |
-| sota_gguf_code_repair_positive | signed_improvement > 0 with Qwen3.6-35B-A3B | Exp 769 |
-| jepa_v19_ood_viable | OOD AUC > 0.75 on real accumulated data | Exp 770 |
-| ebrm_validation_complete | EORM vs EBRM comparison run; EORM AUC documented | Exp 771 |
-| semantic_energy_tier0g_viable | SemanticEnergyProbe AUC >= NUP Probe v4 baseline | Exp 772 |
-| carnot_vs_sets_advantage | Carnot oracle calls < SETS for same pass rate | Exp 773 |
-| adaptive_sampling_efficiency | sample_reduction >= 30% at < 2pp AUC loss | Exp 774 |
-| jailbreak_detection_viable | KAN safety classifier AUC >= 0.90 | Exp 775 |
-| kv260_synthesis_attempted | synthesis_attempted=True via nextpnr-xilinx | Exp 776 |
-| hf_models_published | n_models_published > 0, READMEs updated | Exp 777 |
-| jepa_v19_cascade_deployed | Tier 3.5 deployed OR blocked_gate_failed logged | Exp 778 |
 
 ---
 
 ## Hardware Requirements
 
-| Experiment | GPU Required | Model | Notes |
-|-----------|-------------|-------|-------|
-| Exp 768 | YES (CARNOT_FORCE_LIVE=1) | google/gemma-4-E4B-it | GemmaTransformersLoader only |
-| Exp 769 | YES (CARNOT_FORCE_LIVE=1) | unsloth/Qwen3.6-35B-A3B-GGUF | llama.cpp, RTX 3090 GPU 0 |
-| All others | NO (CPU) | — | CPU-only experiments |
+| Experiment | GPU | Notes |
+|-----------|-----|-------|
+| Exp 780 | Optional (RTX 3090) | GPU zombie kill implementation + validation |
+| Exp 781 | RTX 3090 #0 (24GB) | 100q live Qwen3.5-0.8B; kill_gpu_zombies first |
+| Exp 782-784 | None | CPU-only JEPA |
+| Exp 785 | RTX 3090 #0 (24GB) | SOTA GGUF; kill_gpu_zombies first |
+| Exp 786 | RTX 3090 #0 (24GB) | Gemma4; kill_gpu_zombies first |
+| Exp 787-789 | None | CPU-only |
+| Exp 790 | AMD XDNA NPU | Attempt Option A: GitHub releases wheel |
+| Exp 791 | None | iCE40 FPGA synthesis via nextpnr |
+| Exp 792 | None | Retro |
 
 ---
 
-## Open Issues Carried Forward
+## Success Criteria
 
-- **RETRO-028 (Gemma4 loader)** — OPEN. Exp 760 blocked 4th consecutive milestone. Exp 768 resolves.
-- **RETRO-MANIFEST (unguarded queue)** — PARTIAL (.58 Exp 754 applied to conductor cycle only).
-  Exp 767 extends to ALL sources. CLOSED when Exp 425 absent from .59 retro timing.
-- **JEPA v19 carry-over** — Exp 765 not run. Exp 770 executes it.
-- **Code repair on SOTA models** — Exp 759 showed Qwen3.5-0.8B too small. Exp 769 uses 35B model.
-- **HuggingFace publishing** — Exp 752 prepared artifacts. Exp 777 executes upload.
+| Criterion | Target | Exp |
+|-----------|--------|-----|
+| gpu_zombie_fix_deployed | kill_gpu_zombies() in ExperimentTemplate, validated | 780 |
+| jepa_v20_data_collected | n_labeled >= 80 real pairs from live 100q | 781 |
+| edu_prm_diversity | uncertainty_selected_pct >= 0.30 | 782 |
+| jepa_v20_ood_viable | ood_auc > 0.75 | 783 |
+| tier35_deployed | FR-11 Tier 3 CLOSED or gated correctly | 784 |
+| sota_code_repair_positive | signed_improvement > 0 AND live_gpu | 785 |
+| gemma4_retro028_closed | loader_test_passed=True | 786 |
+| sstar_prefilter_tested | energy_prefilter_saves_tests measured | 787 |
+| constraint_addition_tested | constraint_gen_net_improvement measured | 788 |
+| ebm_calibration_measured | ECE and isotonic calibration curve saved | 789 |
+| npu_iron_attempted | new option tried, verdict honest | 790 |
+| kv260_n32_bitstream | pnr_success_ice40=True | 791 |
+
+---
+
+## New arxiv Papers Incorporated (added to research-references.md 2026-04-23)
+
+| Paper | arXiv ID | Applied In |
+|-------|----------|-----------|
+| EDU-PRM: Entropy-Driven Uncertainty for PRMs | 2503.22233 | Exp 782 |
+| S*: Test Time Scaling for Code Generation | 2502.14382 | Exp 787 |
+| Know When You're Wrong: Calibration Alignment | 2603.06604 | Exp 789 |
+| Energy of Falsehood: Diffusion-Based Energy | 2602.11364 | Exp 789 |
+| Beyond Outcome Verification: Verifiable PRMs | 2601.17223 | Exp 788 |
+| Adaptive Test-Time Compute via Constrained Policy | 2604.14853 | Exp 788 |
