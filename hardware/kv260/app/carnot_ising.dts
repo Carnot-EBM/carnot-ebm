@@ -1,24 +1,31 @@
 /*
  * Device-tree overlay for the Carnot Ising sampler on KV260.
  *
- * Why this file exists:
- *   xmutil loadapp reprograms the PL region, but the kernel still needs a
- *   device-tree node describing the new fabric-side peripherals so user-space
- *   drivers (or /dev/mem mmap) can find them.  Without this overlay the PL
- *   loads silently but no peripheral appears under /sys/bus/platform — the
- *   fabric "exists" but no OS-visible handle.
+ * RETRO-074 ROOT CAUSE (after hangs #1-#12):
+ *   The prior version of this overlay targeted the root path `/` and
+ *   declared a `clocking0` + firmware-name, but targeted NOTHING at
+ *   fpga_full.  Worse, it declared no `resets` property at all.  The
+ *   Linux fpga-manager flow on Kria performs bitstream load AND
+ *   releases the PL-side AXI-isolation reset signals (zynqmp_reset
+ *   ids 0x74-0x77) ONLY when the overlay targets the `fpga_full`
+ *   fpga-region and lists those resets.  Without that targeting, the
+ *   bitstream loaded (PL fabric reported "operating") but the PS-PL
+ *   AXI isolation stayed asserted — every AXI transaction from the PS
+ *   master wedged silently because the PS-PL boundary was literally
+ *   cut off, not just the slave held in reset.  The behaviour matched
+ *   the symptom: loadapp succeeds, /dev/uio4 appears, passive idle is
+ *   fine, but the first AXI access from user-space hangs CPU3 on the
+ *   ARM load instruction and cascades into RCU stall + mmc1 timeouts.
  *
- * What this overlay declares:
- *   One AXI-Lite slave at 0xA000_0000, 128 KB window (matching the address
- *   assignment from hardware/kv260/build_bd.tcl: assign_bd_address picks
- *   0xA000_0000 [128K] for the ising_sampler_128_sync cell).  Clock source is
- *   pl_clk0 from the PS (CLK_LPD[0] = 0x47 for K26).  Compatible string is
- *   generic-uio so userspace can mmap /dev/uio* without a kernel driver —
- *   this matches the AXI mmap flow in
- *   scripts/experiment_661_kv260_n64_benchmark.py (KRIA_AXI_HELPER block).
+ *   This overlay now follows the k26-starter-kits structure:
+ *     Fragment@0 → targets fpga_full, declares firmware-name +
+ *                  resets = <zynqmp_reset 0x74..0x77>, which is what
+ *                  actually triggers PL fabric reset-release.
+ *     Fragment@1 → targets &amba, declares our UIO slave at 0xA0000000.
  *
- *   If/when we write a proper in-kernel driver, flip the compatible string to
- *   "carnot,ising-sampler-v1" and load that module before xmutil loadapp.
+ *   The clocking0 fragment is removed — prior experiments showed Kria's
+ *   fclk framework ignores overlay assigned-clock-rates anyway (pl_clk0
+ *   stays at whatever boot set it to, typically DIVISOR0=25 → 60 MHz).
  */
 /dts-v1/;
 /plugin/;
@@ -27,35 +34,32 @@
 	compatible = "xlnx,zynqmp";
 
 	/*
-	 * Fragment 0: request pl_clk0 (FCLK_CLK0) at 40 MHz via the Kria
-	 * fclk_cfg manager.  Kria's xmutil loadapp reads this and programs
-	 * the clock BEFORE the fabric is activated — critical, because the
-	 * sampler's AXI slave won't respond to anything if the AXI aclk is
-	 * dark, which causes PS-side AXI transactions to hang the CPU
-	 * (observed in Exp 661 first attempt: whole board went unreachable).
-	 *
-	 * Do NOT re-bind the clock at the peripheral node below (clocks = ...)
-	 * — that triggers a second clock-framework request that fights with
-	 * fclk_cfg and sometimes ends up with the PL running at 0 Hz.
+	 * Fragment 0: tell fpga-manager to load the PL image AND release the
+	 * PL-side AXI isolation resets.  This is the magic that the old
+	 * overlay was missing.  The reset indices 0x74..0x77 are lifted
+	 * verbatim from /lib/firmware/xilinx/k26-starter-kits/k26_starter_kits.dtbo
+	 * (the Xilinx-provided reference app that works).  They correspond to
+	 * PL AXI master / AXI isolation resets in the ZynqMP CRL_APB +
+	 * zynqmp_reset driver.
 	 */
 	fragment@0 {
-		target-path = "/";
+		target = <&fpga_full>;
 		__overlay__ {
+			#address-cells = <2>;
+			#size-cells = <2>;
 			firmware-name = "carnot_ising_v2_n64.bit.bin";
-			clocking0: clocking0 {
-				#clock-cells = <0>;
-				compatible = "xlnx,fclk";
-				clocks = <&zynqmp_clk 0x47>;
-				assigned-clocks = <&zynqmp_clk 0x47>;
-				assigned-clock-rates = <40000000>;
-			};
+			resets = <&zynqmp_reset 0x74>,
+			         <&zynqmp_reset 0x75>,
+			         <&zynqmp_reset 0x76>,
+			         <&zynqmp_reset 0x77>;
 		};
 	};
 
-	/* Fragment 1: AXI-Lite slave as a UIO device.  User-space opens
+	/*
+	 * Fragment 1: AXI-Lite slave as a UIO device.  User-space opens
 	 * /dev/uio<N> and mmaps the register window — kernel FPGA-manager/UIO
-	 * core handles the AXI timing properly, so a malformed access gets
-	 * a bus error on the user side rather than hanging the PS. */
+	 * core handles the AXI timing properly.
+	 */
 	fragment@1 {
 		target = <&amba>;
 		__overlay__ {
@@ -64,7 +68,7 @@
 
 			ising_sampler@a0000000 {
 				compatible = "generic-uio";
-				reg = <0x0 0xa0000000 0x0 0x20000>;  /* 128 KB @ 0xA000_0000 */
+				reg = <0x0 0xa0000000 0x0 0x20000>;
 				status = "okay";
 			};
 		};
