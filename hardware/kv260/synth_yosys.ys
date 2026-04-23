@@ -1,0 +1,17 @@
+# synth_yosys.ys — Yosys open-source synthesis script for ising_sampler_v2
+#
+# Why: Vivado is unavailable on this host. Yosys (via yowasp-yosys) provides
+# open-source synthesis that can at minimum verify RTL is synthesis-clean
+# and report resource estimates. Targeting generic synth rather than a
+# specific technology library because we need portability; nextpnr-ice40
+# can optionally perform place-and-route for iCE40 after this step.
+#
+# Usage (from repo root):
+#   yosys hardware/kv260/synth_yosys.ys
+# or via yowasp-yosys Python API:
+#   from yowasp_yosys import run_yosys
+#   run_yosys(['-s', 'hardware/kv260/synth_yosys.ys'])
+read_verilog hardware/kv260/ising_sampler_v2.v
+synth -top ising_sampler_v2 -flatten
+stat -top ising_sampler_v2
+write_json hardware/kv260/ising_sampler_v2_synth.json

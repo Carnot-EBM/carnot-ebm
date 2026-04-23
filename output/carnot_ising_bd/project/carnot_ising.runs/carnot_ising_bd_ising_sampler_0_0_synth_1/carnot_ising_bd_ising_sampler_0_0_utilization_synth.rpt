@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2025.2.1 (lin64) Build 6403652 Thu Mar 19 13:47:00 MDT 2026
-| Date         : Wed Apr 22 20:28:37 2026
+| Date         : Thu Apr 23 00:33:55 2026
 | Host         : icbfl1 running 64-bit CachyOS
 | Command      : report_utilization -file carnot_ising_bd_ising_sampler_0_0_utilization_synth.rpt -pb carnot_ising_bd_ising_sampler_0_0_utilization_synth.pb
 | Design       : carnot_ising_bd_ising_sampler_0_0
@@ -29,21 +29,21 @@ Table of Contents
 1. CLB Logic
 ------------
 
-+-------------------------+------+-------+------------+-----------+-------+
-|        Site Type        | Used | Fixed | Prohibited | Available | Util% |
-+-------------------------+------+-------+------------+-----------+-------+
-| CLB LUTs*               |   95 |     0 |          0 |    117120 |  0.08 |
-|   LUT as Logic          |   95 |     0 |          0 |    117120 |  0.08 |
-|   LUT as Memory         |    0 |     0 |          0 |     57600 |  0.00 |
-| CLB Registers           |  318 |     0 |          0 |    234240 |  0.14 |
-|   Register as Flip Flop |  318 |     0 |          0 |    234240 |  0.14 |
-|   Register as Latch     |    0 |     0 |          0 |    234240 |  0.00 |
-| CARRY8                  |    0 |     0 |          0 |     14640 |  0.00 |
-| F7 Muxes                |    0 |     0 |          0 |     58560 |  0.00 |
-| F8 Muxes                |    0 |     0 |          0 |     29280 |  0.00 |
-| F9 Muxes                |    0 |     0 |          0 |     14640 |  0.00 |
-| Unique Control Sets     |    9 |       |          0 |     29280 |  0.03 |
-+-------------------------+------+-------+------------+-----------+-------+
++-------------------------+-------+-------+------------+-----------+-------+
+|        Site Type        |  Used | Fixed | Prohibited | Available | Util% |
++-------------------------+-------+-------+------------+-----------+-------+
+| CLB LUTs*               | 14302 |     0 |          0 |    117120 | 12.21 |
+|   LUT as Logic          | 14302 |     0 |          0 |    117120 | 12.21 |
+|   LUT as Memory         |     0 |     0 |          0 |     57600 |  0.00 |
+| CLB Registers           |  2833 |     0 |          0 |    234240 |  1.21 |
+|   Register as Flip Flop |  2833 |     0 |          0 |    234240 |  1.21 |
+|   Register as Latch     |     0 |     0 |          0 |    234240 |  0.00 |
+| CARRY8                  |   971 |     0 |          0 |     14640 |  6.63 |
+| F7 Muxes                |  1286 |     0 |          0 |     58560 |  2.20 |
+| F8 Muxes                |    94 |     0 |          0 |     29280 |  0.32 |
+| F9 Muxes                |     0 |     0 |          0 |     14640 |  0.00 |
+| Unique Control Sets     |   305 |       |          0 |     29280 |  1.04 |
++-------------------------+-------+-------+------------+-----------+-------+
 * Warning! The Final LUT count, after physical optimizations and full implementation, is typically lower. Run opt_design after synthesis, if not already completed, for a more realistic count.
 Warning! LUT value is adjusted to account for LUT combining.
 Warning! For any ECO changes, please run place_design if there are unplaced instances
@@ -64,8 +64,8 @@ Warning! For any ECO changes, please run place_design if there are unplaced inst
 | 0     |          Yes |           - |            - |
 | 0     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
-| 33    |          Yes |         Set |            - |
-| 285   |          Yes |       Reset |            - |
+| 119   |          Yes |         Set |            - |
+| 2714  |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -86,11 +86,12 @@ Warning! For any ECO changes, please run place_design if there are unplaced inst
 3. ARITHMETIC
 -------------
 
-+-----------+------+-------+------------+-----------+-------+
-| Site Type | Used | Fixed | Prohibited | Available | Util% |
-+-----------+------+-------+------------+-----------+-------+
-| DSPs      |    0 |     0 |          0 |      1248 |  0.00 |
-+-----------+------+-------+------------+-----------+-------+
++----------------+------+-------+------------+-----------+-------+
+|    Site Type   | Used | Fixed | Prohibited | Available | Util% |
++----------------+------+-------+------------+-----------+-------+
+| DSPs           |  288 |     0 |          0 |      1248 | 23.08 |
+|   DSP48E2 only |  288 |       |            |           |       |
++----------------+------+-------+------------+-----------+-------+
 
 
 4. I/O
@@ -171,14 +172,18 @@ Warning! For any ECO changes, please run place_design if there are unplaced inst
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| FDRE     |  285 |            Register |
-| LUT6     |   39 |                 CLB |
-| LUT5     |   39 |                 CLB |
-| FDSE     |   33 |            Register |
-| LUT2     |   10 |                 CLB |
-| LUT3     |    7 |                 CLB |
-| LUT4     |    5 |                 CLB |
-| LUT1     |    2 |                 CLB |
+| LUT6     | 7743 |                 CLB |
+| LUT2     | 3739 |                 CLB |
+| FDRE     | 2714 |            Register |
+| LUT4     | 2425 |                 CLB |
+| LUT3     | 1952 |                 CLB |
+| LUT5     | 1920 |                 CLB |
+| MUXF7    | 1286 |                 CLB |
+| CARRY8   |  971 |                 CLB |
+| DSP48E2  |  288 |          Arithmetic |
+| LUT1     |  276 |                 CLB |
+| FDSE     |  119 |            Register |
+| MUXF8    |   94 |                 CLB |
 +----------+------+---------------------+
 
 
