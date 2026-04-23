@@ -41,13 +41,44 @@ Spec: REQ-LEARN-015, REQ-LEARN-016,
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
     from carnot.pipeline.extract import ConstraintExtractor
     from carnot.pipeline.fr11_event_bus import ViolationEvent
 
 _log = logging.getLogger(__name__)
+
+
+# ---------------------------------------------------------------------------
+# WeightState — per-constraint weight snapshot for convergence auditing
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class WeightState:
+    """Snapshot of a single constraint type's learned weight.
+
+    **Why these fields:**
+        ``weight`` is the current scalar amplifier applied to energy contributions
+        from this constraint type at inference time.  Starts at 1.0 and increments
+        by 0.01 on each un-throttled ViolationEvent (capped at 2.0).
+
+        ``update_count`` is the number of times the weight was actually changed
+        (i.e., un-throttled events only).  Throttled events (1-in-10 cadence) do
+        NOT increment this counter, so update_count reflects real learning steps.
+
+        ``last_updated_at`` is an ISO-8601 UTC timestamp string set whenever the
+        weight changes.  This lets auditors see recency: a weight that hasn't
+        been updated in hours may be stale.
+
+    Spec: REQ-FR11-007, REQ-FR11-007-2
+    """
+
+    weight: float
+    update_count: int
+    last_updated_at: Optional[str]
 
 
 # ---------------------------------------------------------------------------
@@ -233,10 +264,16 @@ class PerModelFPTracker:
 
         Spec: REQ-FR11-002, REQ-FR11-004
         """
+        import datetime
+
         if not hasattr(self, "_constraint_weights"):
             self._constraint_weights: dict[str, float] = {}
         if not hasattr(self, "_violation_call_count"):
             self._violation_call_count: int = 0
+        if not hasattr(self, "_weight_update_counts"):
+            self._weight_update_counts: dict[str, int] = {}
+        if not hasattr(self, "_weight_last_updated"):
+            self._weight_last_updated: dict[str, str] = {}
 
         self._violation_call_count += 1
         throttled = (self._violation_call_count % 10) != 0
@@ -246,6 +283,10 @@ class PerModelFPTracker:
             current = self._constraint_weights.get(ctype, 1.0)
             new_weight = min(current + 0.01, 2.0)
             self._constraint_weights[ctype] = new_weight
+            self._weight_update_counts[ctype] = self._weight_update_counts.get(ctype, 0) + 1
+            self._weight_last_updated[ctype] = datetime.datetime.now(datetime.timezone.utc).strftime(
+                "%Y-%m-%dT%H:%M:%SZ"
+            )
             _log.debug(
                 "FR11 weight update: constraint_type=%s new_weight=%.3f throttled=False",
                 ctype,
@@ -257,6 +298,42 @@ class PerModelFPTracker:
                 event.constraint_type,
                 self._violation_call_count,
             )
+
+    def get_weight_state(self) -> dict[str, WeightState]:
+        """Return current per-constraint weight state for convergence auditing.
+
+        **Detailed explanation for engineers:**
+            This is the audit surface for REQ-FR11-007.  It surfaces the current
+            learned weights and their update histories so an auditor (Exp 747) can
+            verify that the relay is actually discriminating between constraint types
+            rather than updating all weights uniformly.
+
+            Only constraint types that have received at least one un-throttled update
+            are returned (update_count > 0).  Types that were seen only in throttled
+            calls have no weight change and are excluded — they would show weight=1.0
+            (the initial default) which would falsely appear to have been "set" when
+            they were never actually updated.
+
+        Returns:
+            Dict mapping constraint_type string to WeightState(weight, update_count,
+            last_updated_at).  Empty dict when no un-throttled updates have occurred.
+
+        Spec: REQ-FR11-007, REQ-FR11-007-1, REQ-FR11-007-2, REQ-FR11-007-3
+        """
+        if not hasattr(self, "_constraint_weights"):
+            return {}
+        if not hasattr(self, "_weight_update_counts"):
+            return {}
+
+        result: dict[str, WeightState] = {}
+        for ctype, update_count in self._weight_update_counts.items():
+            if update_count > 0:
+                result[ctype] = WeightState(
+                    weight=self._constraint_weights.get(ctype, 1.0),
+                    update_count=update_count,
+                    last_updated_at=self._weight_last_updated.get(ctype),
+                )
+        return result
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> PerModelFPTracker:
@@ -455,4 +532,5 @@ __all__ = [
     "ModelAdaptiveThresholds",
     "PerModelFPTracker",
     "SelectiveConsolidation",
+    "WeightState",
 ]
