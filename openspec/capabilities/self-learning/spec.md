@@ -1032,3 +1032,47 @@ are ignored.  The pooling operation is element-wise max across the step dimensio
 | REQ-LEARN-043 | Implemented (python/carnot/samplers/jepa_v19.py) | Implemented (tests/python/test_experiment_770_jepa_v19_predictive.py) |
 | REQ-LEARN-044 | Implemented (scripts/experiment_770_jepa_v19_predictive.py) | Implemented (tests/python/test_experiment_770_jepa_v19_predictive.py) |
 | REQ-LEARN-045 | Implemented (python/carnot/samplers/jepa_v19.py) | Implemented (tests/python/test_experiment_770_jepa_v19_predictive.py) |
+
+---
+
+## REQ-EBRM-001: EBRM MUST Model Energy as E(response, reward) via 2-Layer MLP
+
+EBRM (arXiv 2504.13134) implementation MUST model energy as E(response, reward) using a
+2-layer MLP trained with margin loss (max(0, margin - (E_neg - E_pos))).
+MUST be compared to EORM on the same FoVer v2 test split.
+
+---
+
+## REQ-EBRM-002: EORM vs EBRM Comparison MUST Report AUC and Architectural Advantage
+
+The EORM vs EBRM comparison MUST report in-distribution AUC for both models.
+If EORM > EBRM on step-level tasks, log architectural_advantage=True.
+Honest verdict MUST be one of: eorm_outperforms_ebrm, ebrm_competitive,
+ebrm_outperforms_eorm, insufficient_data.
+
+---
+
+## SCENARIO-EBRM-001: EBRM Trains on FoVer Steps and Reports AUC
+
+**Given** 57 FoVer labeled CoT steps from results/fover_labeled_steps_live.json
+**When** EBRMEnergy is trained for 200 epochs on the 80% training split
+**Then** AUROC is computed on the 20% test split
+**And** the artifact contains ebrm_auc, eorm_auc, auroc_delta, architectural_advantage
+
+---
+
+## SCENARIO-EBRM-002: Architectural Advantage Logged When EORM Outperforms EBRM
+
+**Given** eorm_auc (from Exp 732) and ebrm_auc (computed on FoVer test split)
+**When** eorm_auc > ebrm_auc
+**Then** architectural_advantage MUST be True in the result artifact
+**And** honest_verdict MUST be eorm_outperforms_ebrm or ebrm_competitive
+
+---
+
+## Implementation Status (REQ-EBRM-001, REQ-EBRM-002)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-EBRM-001 | Implemented (python/carnot/pipeline/ebrm_baseline.py) | Implemented (tests/python/test_experiment_771_ebrm_comparison.py) |
+| REQ-EBRM-002 | Implemented (scripts/experiment_771_ebrm_comparison.py) | Implemented (tests/python/test_experiment_771_ebrm_comparison.py) |
