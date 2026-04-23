@@ -415,6 +415,47 @@ Sub-requirements:
 
 ---
 
+## REQ-PSV-013: PSV Relapse Root Cause MUST Be Identified Via Controlled Test of All Three Hypotheses Before Fix
+
+**Given** PSV self-play has relapsed (fp_rate_slope_new30 > 0) for a third consecutive milestone
+**When** three competing architectural hypotheses exist (memory contamination, coupling overwrite, curriculum collapse)
+**Then** a controlled diagnostic MUST be run that tests each hypothesis in isolation before applying any fix
+
+Sub-requirements:
+- REQ-PSV-013-1: test_hypothesis_a() MUST inject exactly 20% corrupted repairs into memory and run >= 30 self-play steps, measuring fp_rate_slope. Slope > 0 confirms.
+- REQ-PSV-013-2: test_hypothesis_b() MUST freeze the coupling matrix before self-play, run >= 30 steps, and measure fp_rate_slope. Slope <= 0 when frozen confirms that self-play overwrite is the cause.
+- REQ-PSV-013-3: test_hypothesis_c() MUST use a zero-diversity question set (10 unique questions repeated N times), run >= 30 steps, and measure fp_rate_slope. Slope > 0 confirms curriculum collapse.
+- REQ-PSV-013-4: honest_verdict MUST be one of: "hypothesis_a_confirmed", "hypothesis_b_confirmed", "hypothesis_c_confirmed", "multiple_hypotheses", or "diagnosis_inconclusive".
+- REQ-PSV-013-5: The artifact MUST record per-hypothesis slopes (hypothesis_a_slope, hypothesis_b_slope, hypothesis_c_slope) and primary_hypothesis for downstream fix selection.
+
+**Implementation Status:** Implemented (scripts/experiment_755_psv_relapse_diagnosis.py, Exp 755)
+
+---
+
+## SCENARIO-PSV-020: Exp 755 Diagnoses PSV Relapse Root Cause From Three Hypotheses
+
+**Given** PSV fp_rate_slope_new30=+0.00110 observed in retro (Exp 753, milestone .57)
+**When** PSVDiagnostic runs test_hypothesis_a/b/c on synthetic GSM8K-style data (100q, CPU-only)
+**Then**:
+  - hypothesis_a_slope > 0 (memory contamination causes deterioration)
+  - hypothesis_b_slope <= 0 when coupling frozen (coupling overwrite hypothesis supported)
+  - hypothesis_c_slope > 0 (curriculum collapse causes deterioration)
+  - primary_hypothesis is set to the single confirmed cause or "multiple_hypotheses"
+  - honest_verdict is NOT "diagnosis_inconclusive" unless all three slopes are flat
+
+**Spec traces:** REQ-PSV-013
+**Implementation Status:** Implemented (Exp 755)
+
+---
+
+## Implementation Status (PSV-013)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-PSV-013 | Implemented (python/carnot/pipeline/psv_diagnostic.py, scripts/experiment_755_psv_relapse_diagnosis.py) | tests/python/test_experiment_755_psv_diagnosis.py |
+
+---
+
 ## FR-11 Formal Closure — Implementation Status: OPERATIONAL
 
 **Status:** OPERATIONAL as of Milestone 2026.04.56 (2026-04-22).
