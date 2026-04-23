@@ -3,8 +3,8 @@
 # SW Build 6403652 on Thu Mar 19 13:47:00 MDT 2026
 # IP Build 6403511 on Thu Mar 19 12:41:45 MDT 2026
 # SharedData Build 6403650 on Thu Mar 19 14:02:13 MDT 2026
-# Start of session at: Wed Apr 22 19:23:50 2026
-# Process ID         : 2324974
+# Start of session at: Wed Apr 22 20:27:27 2026
+# Process ID         : 926063
 # Current directory  : /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/carnot_ising_bd_ising_sampler_0_0_synth_1
 # Command line       : vivado -log carnot_ising_bd_ising_sampler_0_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source carnot_ising_bd_ising_sampler_0_0.tcl
 # Log file           : /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/carnot_ising_bd_ising_sampler_0_0_synth_1/carnot_ising_bd_ising_sampler_0_0.vds
@@ -13,18 +13,15 @@
 # Platform           : cachyos
 # Operating System   : CachyOS
 # Processor Detail   : AMD Ryzen AI 9 HX 370 w/ Radeon 890M
-# CPU Frequency      : 605.264 MHz
+# CPU Frequency      : 2765.017 MHz
 # CPU Physical cores : 12
 # CPU Logical cores  : 24
 # Host memory        : 134305 MB
 # Swap memory        : 271743 MB
 # Total Virtual      : 406049 MB
-# Available Virtual  : 329712 MB
+# Available Virtual  : 364255 MB
 #-----------------------------------------------------------
 source carnot_ising_bd_ising_sampler_0_0.tcl -notrace
-INFO: [IP_Flow 19-234] Refreshing IP repositories
-INFO: [IP_Flow 19-1704] No user IP repositories specified
-INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/2025.2.1/data/ip'.
 Command: synth_design -top carnot_ising_bd_ising_sampler_0_0 -part xck26-sfvc784-2LV-c -incremental_mode off -mode out_of_context
 Starting synth_design
 Attempting to get a license for feature 'Synthesis' and/or device 'xck26'
@@ -32,107 +29,180 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xck26'
 INFO: [Device 21-403] Loading part xck26-sfvc784-2LV-c
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 2347675
+INFO: [Synth 8-7075] Helper process launched with PID 949030
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 2759.043 ; gain = 143.688 ; free physical = 51482 ; free virtual = 307355
+Starting RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 2759.191 ; gain = 143.688 ; free physical = 61229 ; free virtual = 339770
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-6157] synthesizing module 'carnot_ising_bd_ising_sampler_0_0' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/synth/carnot_ising_bd_ising_sampler_0_0.v:53]
-INFO: [Synth 8-6157] synthesizing module 'ising_sampler_128_sync' [/home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/minimal_axi_responder.v:36]
-	Parameter N_SPINS bound to: 32 - type: integer 
-	Parameter MAX_DEGREE bound to: 8 - type: integer 
-	Parameter Q88_BITS bound to: 16 - type: integer 
-	Parameter Q88_FRAC bound to: 8 - type: integer 
-	Parameter N_STEPS bound to: 1000 - type: integer 
+INFO: [Synth 8-638] synthesizing module 'carnot_ising_bd_ising_sampler_0_0' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/synth/carnot_ising_bd_ising_sampler_0_0.vhd:84]
+	Parameter C_FAMILY bound to: zynquplus - type: string 
+	Parameter C_S_AXI_ADDR_WIDTH bound to: 9 - type: integer 
 	Parameter C_S_AXI_DATA_WIDTH bound to: 32 - type: integer 
-	Parameter C_S_AXI_ADDR_WIDTH bound to: 17 - type: integer 
-INFO: [Synth 8-6155] done synthesizing module 'ising_sampler_128_sync' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/minimal_axi_responder.v:36]
-INFO: [Synth 8-6155] done synthesizing module 'carnot_ising_bd_ising_sampler_0_0' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/synth/carnot_ising_bd_ising_sampler_0_0.v:53]
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[16] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[15] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[14] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[13] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[12] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[11] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[10] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[9] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[8] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[7] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[6] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[5] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[4] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[3] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[2] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[1] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[0] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWPROT[2] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWPROT[1] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWPROT[0] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[31] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[30] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[29] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[28] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[27] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[26] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[25] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[24] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[23] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[22] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[21] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[20] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[19] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[18] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[17] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[16] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[15] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[14] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[13] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[12] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[11] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[10] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[9] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[8] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[7] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[6] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[5] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[4] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[3] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[2] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[1] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[0] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WSTRB[3] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WSTRB[2] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WSTRB[1] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WSTRB[0] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_ARPROT[2] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_ARPROT[1] in module ising_sampler_128_sync is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_ARPROT[0] in module ising_sampler_128_sync is either unconnected or has no load
+	Parameter C_GPIO_WIDTH bound to: 32 - type: integer 
+	Parameter C_GPIO2_WIDTH bound to: 32 - type: integer 
+	Parameter C_ALL_INPUTS bound to: 1 - type: integer 
+	Parameter C_ALL_INPUTS_2 bound to: 0 - type: integer 
+	Parameter C_ALL_OUTPUTS bound to: 0 - type: integer 
+	Parameter C_ALL_OUTPUTS_2 bound to: 0 - type: integer 
+	Parameter C_INTERRUPT_PRESENT bound to: 0 - type: integer 
+	Parameter C_DOUT_DEFAULT bound to: 32'b00000000000000000000000000000000 
+	Parameter C_TRI_DEFAULT bound to: 32'b11111111111111111111111111111111 
+	Parameter C_IS_DUAL bound to: 0 - type: integer 
+	Parameter C_DOUT_DEFAULT_2 bound to: 32'b00000000000000000000000000000000 
+	Parameter C_TRI_DEFAULT_2 bound to: 32'b11111111111111111111111111111111 
+INFO: [Synth 8-3491] module 'axi_gpio' declared at '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:1255' bound to instance 'U0' of component 'axi_gpio' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/synth/carnot_ising_bd_ising_sampler_0_0.vhd:174]
+INFO: [Synth 8-638] synthesizing module 'axi_gpio' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:1341]
+INFO: [Synth 8-638] synthesizing module 'axi_lite_ipif' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:2948]
+INFO: [Synth 8-638] synthesizing module 'slave_attachment' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:2341]
+INFO: [Synth 8-638] synthesizing module 'address_decoder' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:1775]
+INFO: [Synth 8-638] synthesizing module 'pselect_f' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:1534]
+INFO: [Synth 8-256] done synthesizing module 'pselect_f' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:1534]
+INFO: [Synth 8-638] synthesizing module 'pselect_f__parameterized0' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:1534]
+INFO: [Synth 8-256] done synthesizing module 'pselect_f__parameterized0' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:1534]
+INFO: [Synth 8-638] synthesizing module 'pselect_f__parameterized1' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:1534]
+INFO: [Synth 8-256] done synthesizing module 'pselect_f__parameterized1' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:1534]
+INFO: [Synth 8-638] synthesizing module 'pselect_f__parameterized2' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:1534]
+INFO: [Synth 8-256] done synthesizing module 'pselect_f__parameterized2' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:1534]
+INFO: [Synth 8-256] done synthesizing module 'address_decoder' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:1775]
+INFO: [Synth 8-226] default block is never used [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:2550]
+INFO: [Synth 8-256] done synthesizing module 'slave_attachment' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:2341]
+INFO: [Synth 8-256] done synthesizing module 'axi_lite_ipif' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/66ea/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd:2948]
+INFO: [Synth 8-638] synthesizing module 'GPIO_Core' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:182]
+INFO: [Synth 8-226] default block is never used [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:447]
+	Parameter DEST_SYNC_FF bound to: 4 - type: integer 
+	Parameter INIT_SYNC_FF bound to: 0 - type: integer 
+	Parameter SIM_ASSERT_CHK bound to: 0 - type: integer 
+	Parameter SRC_INPUT_REG bound to: 0 - type: integer 
+	Parameter WIDTH bound to: 32 - type: integer 
+INFO: [Synth 8-3491] module 'xpm_cdc_array_single' declared at '/tools/Xilinx/2025.2.1/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv:903' bound to instance 'INPUT_DOUBLE_REGS3' of component 'xpm_cdc_array_single' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:458]
+INFO: [Synth 8-6157] synthesizing module 'xpm_cdc_array_single' [/tools/Xilinx/2025.2.1/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv:903]
+INFO: [Synth 8-6155] done synthesizing module 'xpm_cdc_array_single' (0#1) [/tools/Xilinx/2025.2.1/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv:903]
+INFO: [Synth 8-256] done synthesizing module 'GPIO_Core' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:182]
+INFO: [Synth 8-256] done synthesizing module 'axi_gpio' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:1341]
+INFO: [Synth 8-256] done synthesizing module 'carnot_ising_bd_ising_sampler_0_0' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/synth/carnot_ising_bd_ising_sampler_0_0.vhd:84]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[4].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[5].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[6].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[7].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[8].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[9].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[10].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[11].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[12].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[13].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[14].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[15].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[16].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[17].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[18].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[19].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[20].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[21].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[22].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[23].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[24].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[25].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[26].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[27].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[28].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[29].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[30].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-6014] Unused sequential element Not_Dual.ALLIN1_ND.READ_REG_GEN[31].GPIO_DBus_i_reg was removed.  [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ipshared/0271/hdl/axi_gpio_v2_0_vh_rfs.vhd:355]
+INFO: [Synth 8-7129] Port src_clk in module xpm_cdc_array_single is either unconnected or has no load
+INFO: [Synth 8-7129] Port ABus_Reg[1] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port ABus_Reg[2] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port ABus_Reg[3] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port ABus_Reg[4] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port ABus_Reg[7] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port ABus_Reg[8] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port BE_Reg[0] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port BE_Reg[1] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port BE_Reg[2] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port BE_Reg[3] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[0] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[1] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[2] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[3] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[4] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[5] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[6] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[7] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[8] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[9] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[10] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[11] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[12] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[13] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[14] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[15] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[16] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[17] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[18] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[19] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[20] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[21] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[22] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[23] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[24] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[25] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[26] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[27] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[28] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[29] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[30] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port GPIO2_IO_I[31] in module GPIO_Core is either unconnected or has no load
+INFO: [Synth 8-7129] Port Address_In_Erly[0] in module address_decoder is either unconnected or has no load
+INFO: [Synth 8-7129] Port Address_In_Erly[1] in module address_decoder is either unconnected or has no load
+INFO: [Synth 8-7129] Port Address_In_Erly[2] in module address_decoder is either unconnected or has no load
+INFO: [Synth 8-7129] Port Address_In_Erly[3] in module address_decoder is either unconnected or has no load
+INFO: [Synth 8-7129] Port Address_In_Erly[4] in module address_decoder is either unconnected or has no load
+INFO: [Synth 8-7129] Port Address_In_Erly[7] in module address_decoder is either unconnected or has no load
+INFO: [Synth 8-7129] Port Address_In_Erly[8] in module address_decoder is either unconnected or has no load
+INFO: [Synth 8-7129] Port Bus_RNW in module address_decoder is either unconnected or has no load
+INFO: [Synth 8-7129] Port S_AXI_WSTRB[3] in module slave_attachment is either unconnected or has no load
+INFO: [Synth 8-7129] Port S_AXI_WSTRB[2] in module slave_attachment is either unconnected or has no load
+INFO: [Synth 8-7129] Port S_AXI_WSTRB[1] in module slave_attachment is either unconnected or has no load
+INFO: [Synth 8-7129] Port S_AXI_WSTRB[0] in module slave_attachment is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 2848.012 ; gain = 232.656 ; free physical = 51178 ; free virtual = 307051
+Finished RTL Elaboration : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 2853.160 ; gain = 237.656 ; free physical = 61103 ; free virtual = 339647
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2848.012 ; gain = 232.656 ; free physical = 51174 ; free virtual = 307048
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 2853.160 ; gain = 237.656 ; free physical = 61117 ; free virtual = 339660
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2848.012 ; gain = 232.656 ; free physical = 51174 ; free virtual = 307048
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 2853.160 ; gain = 237.656 ; free physical = 61117 ; free virtual = 339660
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2848.012 ; gain = 0.000 ; free physical = 51171 ; free virtual = 307045
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2853.160 ; gain = 0.000 ; free physical = 61116 ; free virtual = 339659
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
 Initializing timing engine
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/carnot_ising_bd_ising_sampler_0_0_ooc.xdc] for cell 'U0'
+create_clock: Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 2943.992 ; gain = 0.000 ; free physical = 60986 ; free virtual = 339533
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/carnot_ising_bd_ising_sampler_0_0_ooc.xdc] for cell 'U0'
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/carnot_ising_bd_ising_sampler_0_0_board.xdc] for cell 'U0'
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/carnot_ising_bd_ising_sampler_0_0_board.xdc] for cell 'U0'
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/carnot_ising_bd_ising_sampler_0_0_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/carnot_ising_bd_ising_sampler_0_0_synth_1/dont_touch.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/tools/Xilinx/2025.2.1/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_array_single.tcl]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/carnot_ising_bd_ising_sampler_0_0_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/carnot_ising_bd_ising_sampler_0_0_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+INFO: [Project 1-1714] 1 XPM XDC files have been applied to the design.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2895.664 ; gain = 0.000 ; free physical = 51109 ; free virtual = 306985
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2943.992 ; gain = 0.000 ; free physical = 60983 ; free virtual = 339529
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 2895.699 ; gain = 0.000 ; free physical = 51107 ; free virtual = 306983
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.02 . Memory (MB): peak = 2944.027 ; gain = 0.000 ; free physical = 60979 ; free virtual = 339525
 INFO: [Designutils 20-5008] Incremental synthesis strategy off
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 2895.699 ; gain = 280.344 ; free physical = 51168 ; free virtual = 307048
+Finished Constraint Validation : Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 2944.027 ; gain = 328.523 ; free physical = 60884 ; free virtual = 339431
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
@@ -140,28 +210,50 @@ Start Loading Part and Timing Information
 Loading part: xck26-sfvc784-2LV-c
 INFO: [Synth 8-6742] Reading net delay rules and data
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 2903.668 ; gain = 288.312 ; free physical = 51166 ; free virtual = 307045
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 2951.996 ; gain = 336.492 ; free physical = 60883 ; free virtual = 339431
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 2903.668 ; gain = 288.312 ; free physical = 51167 ; free virtual = 307047
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 2951.996 ; gain = 336.492 ; free physical = 60885 ; free virtual = 339432
 ---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'slave_attachment'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                 iSTATE2 |                             0001 |                               00
+                  iSTATE |                             0010 |                               01
+                 iSTATE0 |                             0100 |                               10
+                 iSTATE1 |                             1000 |                               11
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'one-hot' in module 'slave_attachment'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:20 ; elapsed = 00:00:20 . Memory (MB): peak = 2903.668 ; gain = 288.312 ; free physical = 51214 ; free virtual = 307095
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 2951.996 ; gain = 336.492 ; free physical = 61443 ; free virtual = 340000
 ---------------------------------------------------------------------------------
-No constraint files found.
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
 ---------------------------------------------------------------------------------
 Detailed RTL Component Info : 
++---Adders : 
+	   2 Input    4 Bit       Adders := 1     
 +---Registers : 
-	               32 Bit    Registers := 1     
-	                1 Bit    Registers := 4     
+	               32 Bit    Registers := 9     
+	                9 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+	                2 Bit    Registers := 3     
+	                1 Bit    Registers := 50    
 +---Muxes : 
 	   2 Input   32 Bit        Muxes := 2     
-	   2 Input    1 Bit        Muxes := 4     
+	   5 Input   32 Bit        Muxes := 1     
+	   2 Input    9 Bit        Muxes := 1     
+	   4 Input    4 Bit        Muxes := 1     
+	   2 Input    4 Bit        Muxes := 5     
+	   2 Input    2 Bit        Muxes := 3     
+	   3 Input    2 Bit        Muxes := 1     
+	   4 Input    2 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 11    
+	   4 Input    1 Bit        Muxes := 3     
 ---------------------------------------------------------------------------------
 Finished RTL Component Statistics 
 ---------------------------------------------------------------------------------
@@ -174,71 +266,66 @@ BRAMs: 288 (col length: RAMB18 96 RAMB36 48)
 ---------------------------------------------------------------------------------
 Finished Part Resource Summary
 ---------------------------------------------------------------------------------
-No constraint files found.
 ---------------------------------------------------------------------------------
 Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-3917] design carnot_ising_bd_ising_sampler_0_0 has port S_AXI_BRESP[1] driven by constant 0
-INFO: [Synth 8-3917] design carnot_ising_bd_ising_sampler_0_0 has port S_AXI_BRESP[0] driven by constant 0
-INFO: [Synth 8-3917] design carnot_ising_bd_ising_sampler_0_0 has port S_AXI_RRESP[1] driven by constant 0
-INFO: [Synth 8-3917] design carnot_ising_bd_ising_sampler_0_0 has port S_AXI_RRESP[0] driven by constant 0
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[16] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[15] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[14] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[13] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[12] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[11] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[10] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[9] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[8] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[7] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[6] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[5] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[4] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[3] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[2] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[1] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWADDR[0] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWPROT[2] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWPROT[1] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_AWPROT[0] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[31] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[30] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[29] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[28] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[27] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[26] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[25] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[24] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[23] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[22] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[21] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[20] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[19] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[18] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[17] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[16] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[15] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[14] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[13] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[12] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Synth 8-7129] Port S_AXI_WDATA[11] in module carnot_ising_bd_ising_sampler_0_0 is either unconnected or has no load
-INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Synth 8-7129] Port src_clk in module xpm_cdc_array_single is either unconnected or has no load
+INFO: [Synth 8-7129] Port s_axi_wstrb[3] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port s_axi_wstrb[2] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port s_axi_wstrb[1] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port s_axi_wstrb[0] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[31] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[30] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[29] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[28] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[27] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[26] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[25] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[24] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[23] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[22] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[21] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[20] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[19] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[18] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[17] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[16] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[15] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[14] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[13] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[12] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[11] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[10] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[9] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[8] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[7] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[6] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[5] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[4] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[3] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[2] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[1] in module axi_gpio is either unconnected or has no load
+INFO: [Synth 8-7129] Port gpio2_io_i[0] in module axi_gpio is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 2919.684 ; gain = 304.328 ; free physical = 51303 ; free virtual = 307184
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 2951.996 ; gain = 336.492 ; free physical = 61095 ; free virtual = 339653
 ---------------------------------------------------------------------------------
-No constraint files found.
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:40 ; elapsed = 00:00:41 . Memory (MB): peak = 3564.371 ; gain = 948.867 ; free physical = 59285 ; free virtual = 337846
+---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 2919.684 ; gain = 304.328 ; free physical = 51303 ; free virtual = 307184
+Finished Timing Optimization : Time (s): cpu = 00:00:41 ; elapsed = 00:00:41 . Memory (MB): peak = 3594.418 ; gain = 978.914 ; free physical = 59239 ; free virtual = 337799
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 2935.699 ; gain = 320.344 ; free physical = 51284 ; free virtual = 307165
+Finished Technology Mapping : Time (s): cpu = 00:00:41 ; elapsed = 00:00:41 . Memory (MB): peak = 3594.418 ; gain = 978.914 ; free physical = 58931 ; free virtual = 337492
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -256,37 +343,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3058.512 ; gain = 443.156 ; free physical = 51179 ; free virtual = 307060
+Finished IO Insertion : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 3769.230 ; gain = 1153.727 ; free physical = 57768 ; free virtual = 336329
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3058.512 ; gain = 443.156 ; free physical = 51178 ; free virtual = 307060
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 3769.230 ; gain = 1153.727 ; free physical = 57767 ; free virtual = 336327
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3058.512 ; gain = 443.156 ; free physical = 51179 ; free virtual = 307060
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 3769.230 ; gain = 1153.727 ; free physical = 57763 ; free virtual = 336323
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3058.512 ; gain = 443.156 ; free physical = 51179 ; free virtual = 307060
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 3769.230 ; gain = 1153.727 ; free physical = 57766 ; free virtual = 336326
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3058.512 ; gain = 443.156 ; free physical = 51179 ; free virtual = 307060
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 3769.230 ; gain = 1153.727 ; free physical = 57764 ; free virtual = 336324
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3058.512 ; gain = 443.156 ; free physical = 51179 ; free virtual = 307060
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 3769.230 ; gain = 1153.727 ; free physical = 57763 ; free virtual = 336323
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -302,36 +389,41 @@ Report Cell Usage:
 +------+-----+------+
 |      |Cell |Count |
 +------+-----+------+
-|1     |LUT1 |     1|
-|2     |LUT2 |     2|
-|3     |LUT3 |    24|
-|4     |LUT4 |     1|
-|5     |LUT5 |     1|
-|6     |FDRE |    11|
-|7     |FDSE |    12|
+|1     |LUT1 |     2|
+|2     |LUT2 |    10|
+|3     |LUT3 |     7|
+|4     |LUT4 |     5|
+|5     |LUT5 |    39|
+|6     |LUT6 |    39|
+|7     |FDRE |   285|
+|8     |FDSE |    33|
 +------+-----+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3058.512 ; gain = 443.156 ; free physical = 51179 ; free virtual = 307060
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 3769.230 ; gain = 1153.727 ; free physical = 57762 ; free virtual = 336323
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 3058.512 ; gain = 395.469 ; free physical = 51171 ; free virtual = 307052
-Synthesis Optimization Complete : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3058.520 ; gain = 443.156 ; free physical = 51171 ; free virtual = 307052
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:40 ; elapsed = 00:00:41 . Memory (MB): peak = 3769.230 ; gain = 1062.859 ; free physical = 57876 ; free virtual = 336437
+Synthesis Optimization Complete : Time (s): cpu = 00:00:48 ; elapsed = 00:00:49 . Memory (MB): peak = 3769.230 ; gain = 1153.727 ; free physical = 57876 ; free virtual = 336437
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3079.387 ; gain = 0.000 ; free physical = 51126 ; free virtual = 307009
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3769.230 ; gain = 0.000 ; free physical = 57864 ; free virtual = 336425
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3205.039 ; gain = 0.000 ; free physical = 51116 ; free virtual = 306999
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3769.230 ; gain = 0.000 ; free physical = 57957 ; free virtual = 336516
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Synth Design complete | Checksum: b8470540
+Synth Design complete | Checksum: 55ff2951
 INFO: [Common 17-83] Releasing license: Synthesis
-126 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+168 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:00:43 ; elapsed = 00:00:40 . Memory (MB): peak = 3205.074 ; gain = 1590.672 ; free physical = 51081 ; free virtual = 306964
-INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 2080.232; main = 2080.232; forked = 216.769
-INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 3915.887; main = 3205.043; forked = 1012.215
-Write ShapeDB Complete: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3229.051 ; gain = 0.000 ; free physical = 51079 ; free virtual = 306962
+synth_design: Time (s): cpu = 00:01:01 ; elapsed = 00:00:59 . Memory (MB): peak = 3769.230 ; gain = 2155.156 ; free physical = 59943 ; free virtual = 338504
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 2623.856; main = 2623.856; forked = 216.802
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 4528.594; main = 3750.090; forked = 1012.219
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3774.098 ; gain = 0.000 ; free physical = 60433 ; free virtual = 338994
+INFO: [Common 17-1381] The checkpoint '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/carnot_ising_bd_ising_sampler_0_0_synth_1/carnot_ising_bd_ising_sampler_0_0.dcp' has been generated.
+INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP carnot_ising_bd_ising_sampler_0_0, cache-ID = 7bf827bdf199bf16
+INFO: [Coretcl 2-1174] Renamed 8 cell refs.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3774.098 ; gain = 0.000 ; free physical = 60444 ; free virtual = 339003
 INFO: [Common 17-1381] The checkpoint '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/carnot_ising_bd_ising_sampler_0_0_synth_1/carnot_ising_bd_ising_sampler_0_0.dcp' has been generated.
 INFO: [Vivado 12-24828] Executing command : report_utilization -file carnot_ising_bd_ising_sampler_0_0_utilization_synth.rpt -pb carnot_ising_bd_ising_sampler_0_0_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Wed Apr 22 19:24:40 2026...
+INFO: [Common 17-206] Exiting Vivado at Wed Apr 22 20:28:38 2026...
