@@ -311,6 +311,70 @@ Spec: REQ-LEARN-021, SCENARIO-LEARN-021
 
 ---
 
+## REQ-SAMPLE-020: AdaptivePSVSampler Must Stop Early When Energy Variance Converges
+
+**Given** an AdaptivePSVSampler configured with K_min, K_max, and variance_threshold
+**When** sample_until_convergent(question) is called
+**Then** sampling stops as soon as energy_variance < variance_threshold across current samples
+**And** sampling MUST NOT stop before K_min samples have been collected
+**And** sampling MUST stop at K_max even if variance has not dropped below threshold
+
+### REQ-SAMPLE-020 Sub-requirements
+
+- REQ-SAMPLE-020-1: `AdaptiveSamplerConfig` SHALL accept `K_min=2`, `K_max=8`, and
+  `variance_threshold=0.05` as configurable parameters with these defaults.
+- REQ-SAMPLE-020-2: `AdaptivePSVSampler.sample_until_convergent` SHALL collect at least
+  `K_min` samples before evaluating the stopping criterion.
+- REQ-SAMPLE-020-3: The stopping criterion is `variance(energy_scores) < variance_threshold`
+  where variance is population variance of all energy scores collected so far.
+- REQ-SAMPLE-020-4: `AdaptiveSampleResult.k_used` SHALL equal the number of samples
+  actually collected (between K_min and K_max inclusive).
+
+---
+
+## REQ-SAMPLE-021: sample_reduction_fraction Must Be Computed as 1 - mean_samples / K_max
+
+**Given** N questions processed by AdaptivePSVSampler
+**When** sample_reduction_fraction is computed
+**Then** sample_reduction_fraction = 1 - mean(k_used_per_question) / K_max
+**And** the target efficiency gain is sample_reduction_fraction >= 0.30
+
+### REQ-SAMPLE-021 Sub-requirements
+
+- REQ-SAMPLE-021-1: mean_samples_used SHALL be the arithmetic mean of k_used across all questions.
+- REQ-SAMPLE-021-2: sample_reduction_fraction SHALL be in the range [0.0, 1.0].
+- REQ-SAMPLE-021-3: When all questions require K_max samples, sample_reduction_fraction == 0.0.
+- REQ-SAMPLE-021-4: When all questions stop at K_min, sample_reduction_fraction == 1 - K_min/K_max.
+
+---
+
+## SCENARIO-SAMPLE-030: Adaptive Sampler Stops Early When Variance Below Threshold
+
+**Given** a question where all K_min energy scores are nearly identical (variance < 0.01)
+**When** sample_until_convergent is called with variance_threshold=0.05
+**Then** k_used == K_min (stopped at minimum)
+**And** the returned energy_scores list has K_min entries
+
+---
+
+## SCENARIO-SAMPLE-031: Adaptive Sampler Uses All K_max Samples When Variance Stays High
+
+**Given** a question where energy scores vary widely across all K_max samples (variance > 0.10)
+**When** sample_until_convergent is called with variance_threshold=0.05
+**Then** k_used == K_max (no early stop)
+**And** the returned energy_scores list has K_max entries
+
+---
+
+## Implementation Status (SAMPLE)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-SAMPLE-020 | Implemented (adaptive_psv_sampler.py) | test_experiment_774_adaptive_bayesian_psv.py |
+| REQ-SAMPLE-021 | Implemented (adaptive_psv_sampler.py) | test_experiment_774_adaptive_bayesian_psv.py |
+
+---
+
 ## REQ-PSV-010: PSV Diagnosis Experiments Must Test At Least 2 Falsifiable Hypotheses
 
 **Given** PSV self-play has degraded for 2+ consecutive milestones
