@@ -129,6 +129,51 @@ over CPU on the same XDNA NPU hardware using the IRON approach.
 
 ---
 
+### REQ-HW-040
+
+**Title:** HLS Ising kernel energy computation MUST use Hamiltonian E = -sum(J_ij * s_i * s_j), negative sign required
+
+**Description:**
+The HLS C++ kernel function `compute_ising_energy` and any CPU/FPGA validation harness
+MUST implement the standard Ising Hamiltonian with a negative sign:
+
+    E = -sum_{i<j} J_ij * s_i * s_j - sum_i h_i * s_i
+
+The negative sign is critical: for a ferromagnetic system (J_ij > 0) with all spins
+aligned (+1), the ground state energy MUST be negative. A positive energy for the
+all-aligned ferromagnetic ground state is a sign-convention bug.
+
+CPU validation MUST confirm:
+1. For a fully connected N=4 ferromagnetic system (J[i][j]=1.0 for all i != j),
+   all spins = +1, the energy equals -N*(N-1)/2 = -6.0.
+2. `validate_ground_state()` returns True (energy of ground state is negative).
+3. Any deviation > 10% from the expected energy fails the check.
+
+This requirement was triggered by RETRO-HLS-ENERGY (Exp 750 CPU validation FAILED:
+got +3.0 instead of -3.0 for the ferromagnetic ground state test case).
+
+**Acceptance criteria:**
+- `compute_ising_energy` uses `energy -= J[i][j] * s[i] * s[j]` (negative accumulation), AND
+- Static energy test for N=4 ferromagnetic all-ones gives |E - (-6.0)| < 0.6, AND
+- `HLSEnergyValidator.validate_ground_state()` returns True for ferromagnetic system.
+
+**Implementation status:** Implemented (Exp 757)
+
+---
+
+### SCENARIO-HW-040 — HLS energy sign validated for ferromagnetic ground state
+
+**Given:** A fully connected N=4 ferromagnetic Ising system with J[i][j]=1.0 for all
+i != j and all spins = +1 (ground state).
+
+**When:** `HLSEnergyValidator.compute_energy(spins=[1,1,1,1])` is called.
+
+**Then:** The returned energy equals -6.0 (within tolerance 0.6), confirming that
+the negative sign in the Hamiltonian is correctly implemented and the ground state
+has negative energy.
+
+---
+
 ## Implementation Status
 
 | REQ | Status | Experiment |
@@ -136,3 +181,4 @@ over CPU on the same XDNA NPU hardware using the IRON approach.
 | REQ-HW-037 | Pending | Exp 701 |
 | REQ-HW-038 | Pending | Exp 701 |
 | REQ-HW-039 | Pending | Exp 714 |
+| REQ-HW-040 | Implemented | Exp 757 |
