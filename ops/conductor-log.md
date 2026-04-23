@@ -2649,3 +2649,4 @@ python/ |
 | 2026-04-23 16:13 UTC | Milestone 2026.04.59 activated | OK | 13 tasks queued |
 | 2026-04-23 16:40 UTC | Exp 767: Pre-flight v11 — Full Manifest Extension  | OK | 81 passed, 3 warnings in 8.38s |
 | 2026-04-23 16:59 UTC | Exp 768: Gemma4 Loader Fix v2 — RETRO-028 Root Cau | OK | 81 passed, 3 warnings in 4.49s |
+| 2026-04-23 18:05 UTC | Exp 769: SOTA GGUF 2-Round Code Repair — Qwen3.6-3 | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |

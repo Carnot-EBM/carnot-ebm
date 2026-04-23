@@ -743,6 +743,45 @@ Given that CARNOT_FORCE_LIVE is not set in the environment, when Exp 759 runs,
 then it writes a JSON artifact with honest_verdict="blocked_no_live_gpu" and exits
 without attempting GPU inference.
 
+### REQ-REPAIR-022: SOTA GGUF Model Required for Headline Code Repair Results
+
+The SOTA GGUF code repair experiment (Exp 769) MUST use unsloth/Qwen3.6-35B-A3B-GGUF or
+an equivalent model >= 7B parameters for all headline code repair results.
+Qwen3.5-0.8B MUST NOT be used as a headline code repair model (it is too small to
+generate valid Python code — Exp 759 confirmed pass@1=0.0 with this model).
+
+Rationale: arXiv 2604.10508 tested only models >= 7B. Qwen3.6-35B-A3B (MoE with
+~3B active params, Q4_K_M fits in 24GB VRAM) is the mandatory minimum for credible
+headline code repair numbers from Carnot.
+
+Spec: REQ-REPAIR-022, SCENARIO-REPAIR-042
+
+### REQ-REPAIR-023: signed_improvement Computed From Round1 vs Round2 Pass@1
+
+The signed_improvement metric in code repair experiments MUST be computed as:
+  signed_improvement = pass_at_1_round2 - pass_at_1_round1
+
+Where:
+- pass_at_1_round1: fraction of N problems passing in initial (round 1) generation.
+- pass_at_1_round2: cumulative fraction passing after at most one repair (round 2).
+- n_repaired: count of problems that fail round 1 but pass round 2.
+
+This definition must be consistent across Exp 759 and Exp 769 to allow direct comparison.
+
+Spec: REQ-REPAIR-023, SCENARIO-REPAIR-043
+
+### SCENARIO-REPAIR-042: SOTA GGUF Smoke Test Confirms Model Loads
+
+Given the Qwen3.6-35B-A3B-GGUF Q4_K_M file is available in the HuggingFace cache,
+when the experiment loads the model via llama-cpp-python, then a smoke test generation
+completes successfully and the model is used for all 50 HumanEval problems.
+
+### SCENARIO-REPAIR-043: n_repaired Count Matches pass@1 Delta
+
+Given N problems with known round1_pass and round2_pass values, when compute_repair_metrics()
+is called, then n_repaired == count(NOT round1_pass AND round2_pass), and
+signed_improvement == pass_at_1_round2 - pass_at_1_round1 to 4 decimal places.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -784,6 +823,8 @@ without attempting GPU inference.
 | REQ-CODE-032 | Implemented |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
+| REQ-REPAIR-022 | Implemented |
+| REQ-REPAIR-023 | Implemented |
 
 ### REQ-EXTRACT-035: ASTKnowledgeVerifier Must Parse Python Code to AST and Validate API Calls
 
