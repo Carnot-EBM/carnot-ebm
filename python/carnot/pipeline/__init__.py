@@ -545,6 +545,11 @@ from carnot.pipeline.halp_probe import (  # noqa: E402
     HALPProbe,
     HALPProbeResult,
 )
+from carnot.pipeline.gpu_zombie_killer import (  # noqa: E402
+    GPUZombieResult,
+    get_gpu_memory_pids,
+    kill_gpu_zombies,
+)
 
 __all__ = [
     "AgentStep",
@@ -900,4 +905,7 @@ __all__ = [
     "ReplaySession",
     "HALPProbe",
     "HALPProbeResult",
+    "GPUZombieResult",
+    "get_gpu_memory_pids",
+    "kill_gpu_zombies",
 ]

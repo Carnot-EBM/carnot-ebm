@@ -47,12 +47,12 @@ tasks:
           - vram_before_mb (float), vram_after_mb (float), vram_freed_mb (float),
           - kill_attempted (bool), honest_verdict (str)
        b. get_gpu_memory_pids(gpu_index: int) -> list[int]:
-          - Run: nvidia-smi --query-compute-apps=pid --format=csv,noheader,nounits -i {gpu_index}
+          - Run: nvidia-smi --query-compute-apps=pid --format=csv,noheader,nounits -i (gpu_index)
           - Parse output: list of integer PIDs.
           - Return [] if nvidia-smi unavailable or no processes.
        c. kill_gpu_zombies(gpu_index: int = 0, exclude_pids: list[int] | None = None) -> GPUZombieResult:
           - exclude_pids defaults to [os.getpid()] — never kill the calling process.
-          - Get vram_before_mb via: nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits -i {gpu_index}
+          - Get vram_before_mb via: nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits -i (gpu_index)
           - Get pids_found = get_gpu_memory_pids(gpu_index).
           - For each PID in pids_found that is NOT in exclude_pids:
             * Try: os.kill(pid, signal.SIGKILL). Record in pids_killed.
@@ -142,7 +142,7 @@ tasks:
        SCENARIO-LEARN-092/093 to openspec/capabilities/self_learning/spec.md.
     3. apply_env_autofix() FIRST. Then kill_gpu_zombies(gpu_index=0).
     4. If CARNOT_FORCE_LIVE not set: write artifact honest_verdict="blocked_no_live_gpu" and exit.
-    5. setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+    5. setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
     6. Load 100 GSM8K questions (seed=9999 to avoid overlap with Exps 439/742/781).
        Use LongRunBenchmarkExecutor (batch_size=10) for checkpoint-resume.
     7. For each batch of 10 questions:
@@ -724,7 +724,7 @@ tasks:
        SCENARIO-LEARN-100/101 to openspec/capabilities/self_learning/spec.md.
     3. Implement python/carnot/pipeline/constraint_generator.py:
        a. ErrorPattern(pattern_type: str, count: int, example_step: str):
-          pattern_type in {carry_error, sign_error, unit_error, comparison_error, overflow_error}
+          pattern_type in (carry_error, sign_error, unit_error, comparison_error, overflow_error)
        b. ConstraintGenerator(ising_model: IsingEBM, threshold: int = 3):
           synthesize_from_memory(error_patterns: list[ErrorPattern]) -> list[CouplingRow]:
             - For each error_pattern with count >= threshold:
