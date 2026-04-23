@@ -457,6 +457,35 @@ Where REQ-SAFE-011 (teacher-duration invariant) applies, the model card MUST cit
 
 **Spec traces:** REQ-PUBLISH-001
 
+### REQ-LOADER-010: Gemma4 Models MUST Use GemmaTransformersLoader
+
+All model loading for `google/gemma-4-*` HuggingFace model IDs MUST use
+`GemmaTransformersLoader`.  The llama.cpp backend MUST NOT be used for any
+`google/gemma-4-*` model until the tokenizer bug (llama.cpp issue #21516) is
+confirmed fixed upstream.  This requirement covers non-GGUF (FP16) model loading;
+GGUF-quantized variants loaded via `Gemma4QuantizedLoader` are excluded because
+the Q4_K_M GGUF format bypasses the problematic tokenizer path.
+
+**Rationale:** RETRO-028: llama.cpp's Gemma4 tokenizer emits infinite `<unused8>`
+tokens (token_id=14), causing 0% accuracy on all benchmarks.  This blocked Gemma4
+experiments in milestones .55, .56, .57, and .58.
+
+**Acceptance criteria:**
+- All call sites loading `google/gemma-4-E4B-it` (non-GGUF) use `GemmaTransformersLoader`.
+- Exp 768 loader_test_passed=True: `GemmaTransformersLoader.generate("Hello", max_new_tokens=5)` returns text with no `<unused>` tokens.
+- `GemmaTransformersLoader.is_valid_output(result)` returns True for the 5-token smoke test.
+
+**Implementation Status:** Planned (Exp 768)
+
+### SCENARIO-LOADER-010: GemmaTransformersLoader Smoke Test Passes
+
+**Given** `GemmaTransformersLoader("google/gemma-4-E4B-it", device="cuda:0")`
+**When** `.load()` then `.generate("Hello", max_new_tokens=5)` is called
+**Then** the returned string contains no `<unused8>` / `<unusedN>` tokens and `is_valid_output()` returns True
+
+**Spec traces:** REQ-LOADER-010
+**Implementation Status:** Planned (Exp 768)
+
 ---
 
 ## Implementation Status
@@ -481,3 +510,4 @@ Where REQ-SAFE-011 (teacher-duration invariant) applies, the model card MUST cit
 | REQ-INFRA-052 | Implemented | Exp 754 — pre-flight v10 confirms patch application via guard clause search |
 | REQ-INFRA-053 | Implemented | Exp 767 — pre-flight v11 confirms 100% dequeue-site manifest coverage |
 | REQ-INFRA-054 | Implemented | Exp 767 — Exps 425, 491, 603, 627 added to exclusion manifest (.58) |
+| REQ-LOADER-010 | Planned | Exp 768 — Gemma4 call site audit + GemmaTransformersLoader enforcement |

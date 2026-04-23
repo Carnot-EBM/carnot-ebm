@@ -14942,3 +14942,41 @@ Then: positive_threshold_found is True.
 
 **Spec traces:** REQ-VERIFY-169-4
 **Implementation Status:** Planned (Exp 760)
+
+## REQ-VERIFY-170: Gemma4 Loader Fix Verification + VR Threshold Grid (RETRO-028 Closure)
+
+Exp 768 MUST verify that RETRO-028 is closed by:
+1. Auditing all `google/gemma-4-*` call sites for llama.cpp usage and confirming
+   `GemmaTransformersLoader` is the sole loading path for non-GGUF Gemma4 models.
+2. Running a 5-threshold VR grid [0.10, 0.20, 0.30, 0.40, 0.50] on 50 GSM8K questions
+   (seed=42) to determine whether Gemma4 has a positive-improvement threshold.
+
+Sub-requirements:
+- REQ-VERIFY-170-1: loader_test_passed MUST be True: `GemmaTransformersLoader.generate("Hello", max_new_tokens=5)` returns valid text with no `<unusedN>` tokens.
+- REQ-VERIFY-170-2: per_threshold_results MUST have exactly 5 entries with threshold, signed_improvement, n_abstained.
+- REQ-VERIFY-170-3: best_threshold MUST be the threshold with highest signed_improvement.
+- REQ-VERIFY-170-4: positive_threshold_found MUST be True if any signed_improvement > 0.
+- REQ-VERIFY-170-5: honest_verdict MUST be "retro028_closed_positive_threshold_found" when loader_test_passed=True AND positive_threshold_found=True AND live GPU.
+- REQ-VERIFY-170-6: honest_verdict MUST be "retro028_closed_no_positive_threshold" when loader_test_passed=True AND positive_threshold_found=False AND live GPU.
+- REQ-VERIFY-170-7: honest_verdict MUST be "loader_still_broken" when loader_test_passed=False.
+- REQ-VERIFY-170-8: honest_verdict MUST be "blocked_no_live_gpu" when CARNOT_FORCE_LIVE is not set.
+
+**Implementation Status:** Planned (Exp 768)
+
+### SCENARIO-VERIFY-225: Exp 768 Loader Test Passes
+
+**Given** `GemmaTransformersLoader("google/gemma-4-E4B-it")` is loaded on CUDA
+**When** `.generate("Hello", max_new_tokens=5)` is called
+**Then** output contains no `<unusedN>` tokens and `loader_test_passed=True` in the artifact
+
+**Spec traces:** REQ-VERIFY-170-1
+**Implementation Status:** Planned (Exp 768)
+
+### SCENARIO-VERIFY-226: Exp 768 Positive Threshold Found
+
+**Given** Exp 768 runs the 5-threshold grid on 50 GSM8K questions with a working Gemma4 loader
+**When** per_threshold_results is evaluated
+**Then** positive_threshold_found correctly reflects whether any signed_improvement > 0
+
+**Spec traces:** REQ-VERIFY-170-4
+**Implementation Status:** Planned (Exp 768)
