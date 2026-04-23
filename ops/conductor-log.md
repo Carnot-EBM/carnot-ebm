@@ -2667,3 +2667,4 @@ python/ |
 | 2026-04-23 22:24 UTC | Exp 780: Pre-flight v12 — GPU Zombie Killer + Kill | OK | 81 passed, 3 warnings in 7.63s |
 | 2026-04-23 22:37 UTC | Exp 781: JEPA v20 Live Data Collection — 100q Qwen | OK | 81 passed, 3 warnings in 7.85s |
 | 2026-04-23 22:49 UTC | Exp 782: EDU-PRM Uncertainty Step Selection — Dive | OK | 81 passed, 3 warnings in 8.02s |
+| 2026-04-23 23:00 UTC | Exp 783: JEPA v20 Retrain — Pooled Real Data + EDU | OK | 81 passed, 3 warnings in 7.52s |
