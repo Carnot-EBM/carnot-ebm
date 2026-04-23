@@ -488,6 +488,51 @@ experiments in milestones .55, .56, .57, and .58.
 
 ---
 
+### REQ-PROBE-020: SemanticEnergyProbe Logit-Space Energy Computation
+
+`SemanticEnergyProbe` MUST compute energy as `E = -sum_i log p(t_i)` where `p(t_i)` is
+the token probability from logits (TF-IDF as proxy when logits unavailable).  It MUST
+group responses into semantic clusters via TF-IDF cosine similarity with threshold=0.9.
+`SemanticCluster.compute_cluster_energy(responses)` MUST return the mean of per-response
+energies computed as `-sum(log(tfidf_score(token) + eps))`.
+
+**Rationale:** arXiv 2508.14496 ("Semantic Energy", August 2025) shows logit-space energy
+outperforms entropy-based detection by retaining intensity information lost during softmax.
+The TF-IDF proxy is used for offline/text-only evaluation; real logits provide the full signal.
+
+**Acceptance criteria:**
+- `SemanticEnergyProbe().score(text)` returns a non-negative float for any string.
+- `SemanticCluster().compute_cluster_energy(responses)` returns the mean of negative log-score sums.
+- `SemanticCluster().group_by_semantics(responses)` partitions all responses into clusters.
+- Every test in `tests/python/test_experiment_772_semantic_energy_probe.py` passes.
+
+### REQ-PROBE-021: Tier 0g Advisory Flag
+
+`SemanticEnergyProbe` MUST report `semantic_energy_score` and `is_high_energy=True` when
+the score exceeds `energy_threshold`.  The probe is ADVISORY — it does NOT short-circuit
+the pipeline; Tiers 1-3 still run.  Wiring as Tier 0g requires `auc >= NUP v4 AUC - 0.05`.
+
+**Acceptance criteria:**
+- `is_high_energy(text)` returns True when `score(text) > energy_threshold`.
+- `is_high_energy(text)` returns False when `score(text) <= energy_threshold`.
+- Exp 772 records `tier0g_deployed` (bool) and `honest_verdict` in its artifact.
+
+### SCENARIO-PROBE-030: SemanticCluster Groups High-Similarity Responses
+
+**Given** two responses with cosine similarity >= 0.9
+**When** `SemanticCluster(threshold=0.9).group_by_semantics([r1, r2])` is called
+**Then** both responses appear in the same cluster (one cluster total)
+
+**Spec traces:** REQ-PROBE-020
+
+### SCENARIO-PROBE-031: is_high_energy Flags Above-Threshold Response
+
+**Given** a `SemanticEnergyProbe(energy_threshold=0.0)`
+**When** `is_high_energy("some non-empty response")` is called
+**Then** the method returns True (any non-empty text has energy > 0.0)
+
+**Spec traces:** REQ-PROBE-021
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -511,3 +556,5 @@ experiments in milestones .55, .56, .57, and .58.
 | REQ-INFRA-053 | Implemented | Exp 767 — pre-flight v11 confirms 100% dequeue-site manifest coverage |
 | REQ-INFRA-054 | Implemented | Exp 767 — Exps 425, 491, 603, 627 added to exclusion manifest (.58) |
 | REQ-LOADER-010 | Planned | Exp 768 — Gemma4 call site audit + GemmaTransformersLoader enforcement |
+| REQ-PROBE-020 | Implemented | Exp 772 — SemanticEnergyProbe + SemanticCluster in python/carnot/pipeline/semantic_energy_probe.py |
+| REQ-PROBE-021 | Implemented | Exp 772 — is_high_energy advisory flag; tier0g_deployed=False (AUC=0.46, below NUP v4 baseline) |
