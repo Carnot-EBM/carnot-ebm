@@ -65,6 +65,7 @@ from typing import Any
 
 from carnot.models.eorm import CoTEnergyInput, EORMModel
 from carnot.pipeline.adaptive_thresholds import PerModelFPTracker
+from carnot.pipeline.constraint_addition_engine import ConstraintAdditionEngine
 from carnot.pipeline.constraint_template_library import (
     CaseMemoryTemplateWiring,
     ConstraintTemplateLibrary,
@@ -264,6 +265,7 @@ class SelfLearningRelay:
         template_library: ConstraintTemplateLibrary,
         fp_tracker: PerModelFPTracker,
         eorm_model: EORMModel,
+        constraint_addition_engine: ConstraintAdditionEngine | None = None,
     ) -> None:
         self._pipeline = pipeline
         self._template_library = template_library
@@ -284,6 +286,14 @@ class SelfLearningRelay:
         # REQ-PSV-016 curriculum diversity: track the last 5 sampled question tokens
         # to enforce minimum Hamming distance between consecutive samples.
         self._recent_question_tokens: list[set[str]] = []
+
+        # REQ-LEARN-040: optional ConstraintAdditionEngine for Tier 1 wire-in.
+        # When provided, inject_into_pipeline is called after each batch to wire
+        # new constraints into the active constraint set for subsequent sessions.
+        self._constraint_addition_engine = constraint_addition_engine
+
+        # Cumulative count of constraints injected across all batches (for metrics).
+        self._cumulative_constraints_added: int = 0
 
     # ------------------------------------------------------------------
     # _freeze_stable_constraints (REQ-PSV-015)
@@ -521,6 +531,18 @@ class SelfLearningRelay:
             else 0.0
         )
 
+        # REQ-LEARN-040: after each batch, scan session memory for accumulated patterns
+        # and inject new constraints into the pipeline's active constraint set.
+        # This is the "wire-in" that closes the Tier 1 self-learning loop: patterns
+        # that have crossed the min_count threshold materialize as first-class
+        # constraints that future sessions will check.
+        constraints_added_this_batch = 0
+        if self._constraint_addition_engine is not None:
+            constraints_added_this_batch = (
+                self._constraint_addition_engine.inject_into_pipeline(self._pipeline)
+            )
+            self._cumulative_constraints_added += constraints_added_this_batch
+
         result = SelfLearningBatchResult(
             batch_id=batch_id,
             n_questions=n_questions,
@@ -536,6 +558,16 @@ class SelfLearningRelay:
     # ------------------------------------------------------------------
     # learning_trajectory
     # ------------------------------------------------------------------
+
+    @property
+    def cumulative_constraints_added(self) -> int:
+        """Total number of constraints injected by ConstraintAdditionEngine across all batches.
+
+        Zero when no ConstraintAdditionEngine was provided at construction time.
+
+        Spec: REQ-LEARN-040
+        """
+        return self._cumulative_constraints_added
 
     def learning_trajectory(self) -> list[SelfLearningBatchResult]:
         """Return all batch results accumulated so far (shallow copy).
