@@ -1188,3 +1188,51 @@ under-reporting is required when the target is not met.
 |-------------|--------|-------|
 | REQ-LEARN-048 | Implemented (scripts/experiment_781_jepa_v20_data_collection.py) | Implemented (tests/python/test_experiment_781_jepa_v20_data_collection.py) |
 | REQ-LEARN-049 | Implemented (scripts/experiment_781_jepa_v20_data_collection.py) | Implemented (tests/python/test_experiment_781_jepa_v20_data_collection.py) |
+
+---
+
+## REQ-LEARN-050: EDUPRMStepSelector MUST Compute Bootstrap Variance for Step Selection
+
+``EDUPRMStepSelector`` MUST compute prediction variance over ``N_BOOTSTRAP=10``
+bootstrap samples of a TF-IDF (128-dim) + LogisticRegression classifier.
+MUST select the top 30% of steps by variance (highest-uncertainty steps first).
+Bootstrap classifiers MUST be trained on resamples with replacement; predictions
+recorded on the FULL corpus.
+
+---
+
+## REQ-LEARN-051: EDUPRMStepSelector MUST Write Selected Corpus and Report Metrics
+
+The selected corpus MUST be written to ``results/fover_edu_prm_selected.json``
+in the same format as ``fover_labeled_steps_live.json``.
+The artifact MUST report ``uncertainty_selected_pct`` (fraction of corpus selected)
+and ``diversity_score`` (positive_fraction of selected labels).
+``diversity_delta=True`` MUST be reported when the selected set is more balanced
+(closer to 0.5) than uniform selection.
+
+---
+
+## SCENARIO-LEARN-094: EDU-PRM Selects Top 30% Highest-Variance Steps
+
+**Given** a pooled FoVer corpus of N labeled steps
+**When** ``EDUPRMStepSelector.select()`` is called
+**Then** exactly ``ceil(N * 0.30)`` steps MUST be returned
+**And** each returned index MUST have variance >= every non-returned index
+
+---
+
+## SCENARIO-LEARN-095: Diversity Score Near 0.5 Indicates Balanced Hard Examples
+
+**Given** a set of selected step labels
+**When** ``diversity_score(selected_labels)`` is computed
+**Then** it MUST equal ``sum(label==1) / len(labels)``
+**And** ``diversity_delta=True`` when ``|diversity_score - 0.5| < |uniform_diversity - 0.5|``
+
+---
+
+## Implementation Status (REQ-LEARN-050, REQ-LEARN-051)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-050 | Implemented (python/carnot/pipeline/edu_prm_selector.py) | Implemented (tests/python/test_experiment_782_edu_prm_step_selection.py) |
+| REQ-LEARN-051 | Implemented (scripts/experiment_782_edu_prm_step_selection.py) | Implemented (tests/python/test_experiment_782_edu_prm_step_selection.py) |
