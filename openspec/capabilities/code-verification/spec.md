@@ -708,6 +708,41 @@ Given 4 problems where 1 passes in round 0, 1 in round 1, 1 in round 2, and 1 ne
 when compute_pass_rates is called, then pass_round0=0.25, pass_round1=0.50, pass_round2=0.75
 and error_type_breakdown correctly attributes each failed round to its error type.
 
+### REQ-REPAIR-020: Iterative Repair Prompt Must Include Full Traceback and Test Case Inputs
+
+The iterative 2-round code repair experiment (Exp 759) shall build repair prompts that:
+- Include the FULL traceback string from the failing execution.
+- Include the failing test case call expression (input) explicitly.
+- Include the expected output for that test case.
+- Are structurally different from the original generation prompt (repair prompt adds error context).
+
+Rationale: arXiv 2604.10508 shows error message quality is the primary driver of
+self-repair gains. A repair prompt that omits the traceback or test input gives the
+model insufficient signal to fix the bug.
+
+Spec: REQ-REPAIR-020, SCENARIO-REPAIR-040
+
+### REQ-REPAIR-021: Live GPU Execution Required for Code Repair Experiments
+
+The code repair live experiment (Exp 759) shall:
+- Require CARNOT_FORCE_LIVE=1 to be set before running GPU inference.
+- Write a blocked artifact with honest_verdict="blocked_no_live_gpu" if CARNOT_FORCE_LIVE is not set.
+- Never simulate inference results when CARNOT_FORCE_LIVE=1 is absent.
+
+Spec: REQ-REPAIR-021, SCENARIO-REPAIR-041
+
+### SCENARIO-REPAIR-040: Repair Prompt Contains Traceback and Test Case Call
+
+Given a code execution that fails with an AssertionError, when build_repair_prompt_759() is called,
+then the returned prompt string contains the full traceback text AND the failing test case
+call expression (the exact function call that returned wrong output).
+
+### SCENARIO-REPAIR-041: Blocked Artifact Written When CARNOT_FORCE_LIVE Not Set
+
+Given that CARNOT_FORCE_LIVE is not set in the environment, when Exp 759 runs,
+then it writes a JSON artifact with honest_verdict="blocked_no_live_gpu" and exits
+without attempting GPU inference.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -747,3 +782,5 @@ and error_type_breakdown correctly attributes each failed round to its error typ
 | REQ-CODE-030 | Implemented |
 | REQ-CODE-031 | Implemented |
 | REQ-CODE-032 | Implemented |
+| REQ-REPAIR-020 | Implemented |
+| REQ-REPAIR-021 | Implemented |
