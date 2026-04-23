@@ -14875,3 +14875,26 @@ Sub-requirements:
 - REQ-VERIFY-152-3: Tier 0f SHALL NOT change the routing verdict — it is an advisory signal only.
 
 **Implementation Status:** Implemented (python/carnot/cascade/cascade_router.py, Exp 745)
+
+
+### REQ-HW-041: Yosys Open-Source FPGA Synthesis
+
+Yosys open-source synthesis MUST be attempted as a Vivado alternative for the Ising sampler RTL.
+The honest_verdict SHALL be "synthesis_successful" when LUT count and timing are reported without errors.
+
+Sub-requirements:
+- REQ-HW-041-1: The experiment SHALL attempt to install yowasp-yosys if native yosys is absent.
+- REQ-HW-041-2: The experiment SHALL synthesize ising_sampler_v2.v targeting a generic FPGA and report lut_count, wire_count, and cell_count.
+- REQ-HW-041-3: If nextpnr-ice40 is available, place-and-route SHALL be attempted and fmax_mhz reported.
+- REQ-HW-041-4: honest_verdict SHALL be one of: synthesis_successful, synthesis_with_warnings, synthesis_failed, yosys_not_installable, blocked_hls_fix_needed.
+
+**Implementation Status:** Planned (Exp 758)
+
+### SCENARIO-HW-041: Yosys Synthesis Reports LUT Count
+
+Given: yosys (or yowasp-yosys) is installed and ising_sampler_v2.v is present.
+When: The synthesis script is run with synth -top ising_sampler_v2 -flatten.
+Then: The output contains a LUT count, cell count, and wire count. honest_verdict="synthesis_successful".
+
+**Spec traces:** REQ-HW-041
+**Implementation Status:** Planned (Exp 758)
