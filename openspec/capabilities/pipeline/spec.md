@@ -533,6 +533,36 @@ the pipeline; Tiers 1-3 still run.  Wiring as Tier 0g requires `auc >= NUP v4 AU
 
 **Spec traces:** REQ-PROBE-021
 
+### REQ-PUBLISH-010: HuggingFace Upload Requires Authentication
+
+The HuggingFace upload MUST be executed via `huggingface-cli upload`.  Upload MUST NOT
+be attempted if `huggingface-cli whoami` returns a non-zero exit code (HF_TOKEN absent or
+login session expired).  The honest_verdict MUST be `blocked_hf_not_authenticated` when
+the authentication check fails.
+
+### REQ-PUBLISH-011: All Existing Carnot-EBM Model READMEs Must Include pip install carnot
+
+All 16 existing Carnot-EBM model READMEs MUST include a "## Production Use" section
+pointing users at `pip install carnot` and clarifying that the per-token activation EBMs
+are Phase 1 research artifacts (confidence detection, not correctness).  The update MUST
+be idempotent: re-running when the section already exists MUST succeed without re-uploading.
+
+### SCENARIO-PUBLISH-010: Blocked When HF_TOKEN Not Set
+
+**Given** `huggingface-cli whoami` returns exit code 1
+**When** `run_experiment(tmpl)` is called
+**Then** `honest_verdict == "blocked_hf_not_authenticated"` and no upload is attempted
+
+**Spec traces:** REQ-PUBLISH-010
+
+### SCENARIO-PUBLISH-011: README Updated With pip install carnot
+
+**Given** an existing Carnot-EBM model README without a "## Production Use" section
+**When** `update_readme_with_production_section(repo_id)` is called
+**Then** the README gains a section containing "pip install carnot" and the GitHub URL
+
+**Spec traces:** REQ-PUBLISH-011
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -558,3 +588,5 @@ the pipeline; Tiers 1-3 still run.  Wiring as Tier 0g requires `auc >= NUP v4 AU
 | REQ-LOADER-010 | Planned | Exp 768 — Gemma4 call site audit + GemmaTransformersLoader enforcement |
 | REQ-PROBE-020 | Implemented | Exp 772 — SemanticEnergyProbe + SemanticCluster in python/carnot/pipeline/semantic_energy_probe.py |
 | REQ-PROBE-021 | Implemented | Exp 772 — is_high_energy advisory flag; tier0g_deployed=False (AUC=0.46, below NUP v4 baseline) |
+| REQ-PUBLISH-010 | Implemented | Exp 777 — huggingface-cli upload executed; blocked cleanly when HF_TOKEN absent |
+| REQ-PUBLISH-011 | Implemented | Exp 777 — all existing Carnot-EBM model READMEs updated with pip install carnot pointer |
