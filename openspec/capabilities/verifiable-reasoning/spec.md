@@ -14899,6 +14899,30 @@ Then: The output contains a LUT count, cell count, and wire count. honest_verdic
 **Spec traces:** REQ-HW-041
 **Implementation Status:** Planned (Exp 758)
 
+### REQ-HW-042: nextpnr Place-and-Route on Yosys Netlist
+
+nextpnr place-and-route MUST be attempted on the Yosys netlist produced by Exp 758.
+honest_verdict MUST be "bitstream_generated_ice40" when nextpnr-ice40 produces a
+bitstream (.bin) without errors, targeting the iCE40 HX8K (7680 LUTs).
+
+Sub-requirements:
+- REQ-HW-042-1: The experiment SHALL check for nextpnr-ice40 (native or yowasp) and attempt pip install if absent.
+- REQ-HW-042-2: If Exp 758 synthesis_errors > 0 or result absent, honest_verdict SHALL be "blocked_yosys_synthesis_failed".
+- REQ-HW-042-3: The experiment SHALL re-synthesize targeting iCE40 LUT4 primitives (synth_ice40) before PnR.
+- REQ-HW-042-4: If nextpnr-ice40 succeeds, icepack SHALL be attempted to produce a .bin bitstream.
+- REQ-HW-042-5: honest_verdict SHALL be one of: bitstream_generated_ice40, pnr_successful_no_bitstream, pnr_failed_timing, nextpnr_not_installable, blocked_yosys_synthesis_failed.
+
+**Implementation Status:** Implemented (Exp 776)
+
+### SCENARIO-HW-042: nextpnr iCE40 Bitstream Generation
+
+Given: Exp 758 synthesis_errors=0, nextpnr-ice40 available (native or yowasp), iCE40 HX8K target.
+When: The experiment runs synth_ice40 + nextpnr-ice40 --hx8k + icepack.
+Then: A .bin bitstream is produced. honest_verdict="bitstream_generated_ice40". critical_path_ns is populated.
+
+**Spec traces:** REQ-HW-042
+**Implementation Status:** Implemented (Exp 776)
+
 ## REQ-VERIFY-169: Gemma4-E4B-it VR Threshold Grid Search
 
 Gemma4-E4B-it VR threshold grid MUST test >= 5 thresholds in [0.10, 0.50].
