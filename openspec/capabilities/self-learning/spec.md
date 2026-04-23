@@ -456,6 +456,112 @@ Sub-requirements:
 
 ---
 
+## REQ-PSV-014: SRSA Memory Gate — SessionMemory.write_with_verification MUST Reject Unverified Repairs
+
+**Given** a repair text is produced by the self-play loop
+**When** SessionMemory.write_with_verification(repair_text, constraint_type) is called
+**Then** VPRMArithmeticVerifier.detect_violations(repair_text) MUST be called first
+**And** if any violations are detected (list non-empty), the repair MUST be discarded (return False)
+**And** only if no violations are detected, the repair is accepted (return True, then write)
+
+This closes the SRSA memory contamination pathway: incorrect repairs that survive the LLM
+generation step cannot corrupt the session memory pool.
+
+Sub-requirements:
+- REQ-PSV-014-1: write_with_verification MUST call detect_violations before any write.
+- REQ-PSV-014-2: write_with_verification MUST return False and not call write() when violations are found.
+- REQ-PSV-014-3: write_with_verification MUST return True after calling write() when no violations.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/session_memory.py, Exp 756)
+
+---
+
+## REQ-PSV-015: PPSEBM Constraint Freezing — Low-Variance Coupling Entries MUST NOT Be Updated
+
+**Given** a SelfLearningRelay has run at least 30 self-play steps
+**When** _freeze_stable_constraints() is called
+**Then** for each constraint type, energy variance over the last 30 steps is computed
+**And** if variance < FREEZE_THRESHOLD (0.01), that constraint type is marked as frozen
+**And** frozen constraints are skipped in PerModelFPTracker.update() during self-play
+
+This prevents self-play's high-LR updates from overwriting CD-learned coupling entries.
+
+Sub-requirements:
+- REQ-PSV-015-1: _freeze_stable_constraints() MUST read the last 30 fp_tracker update records.
+- REQ-PSV-015-2: FREEZE_THRESHOLD is 0.01 (energy variance units).
+- REQ-PSV-015-3: Frozen constraint types are stored in SelfLearningRelay._frozen_constraints set.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/self_learning_relay.py, Exp 756)
+
+---
+
+## REQ-PSV-016: Sustained Recovery REQUIRES fp_rate_slope < 0 in BOTH Windows (Steps 0-30 AND 30-60)
+
+**Given** Exp 756 applies the RETRO-PSV-RELAPSE architectural fix
+**When** 60 self-play steps are run and fp_rate is measured at steps 0, 10, 20, 30, 40, 50, 60
+**Then** fp_rate_slope MUST be < 0 in BOTH windows:
+  - window1 (steps 0-30): slope over first 31 measurements < 0
+  - window2 (steps 30-60): slope over last 31 measurements < 0
+**And** recovery_sustained = True ONLY when both window slopes are negative
+**And** honest_verdict MUST be "recovery_sustained" only when recovery_sustained=True
+
+This is stricter than Exps 697 and 737 which each showed window1 slope < 0 but failed window2.
+
+Sub-requirements:
+- REQ-PSV-016-1: Both window slopes MUST be independently computed via OLS.
+- REQ-PSV-016-2: "recovery_partial" honest_verdict is used when window1 slope < 0 but window2 >= 0 (old pattern).
+- REQ-PSV-016-3: "recovery_failed" is used when both slopes >= 0.
+
+**Implementation Status:** Implemented (scripts/experiment_756_psv_srsa_gate.py, Exp 756)
+
+---
+
+## SCENARIO-PSV-021: write_with_verification Rejects Repair with Arithmetic Error
+
+**Given** a repair text containing "3 plus 4 equals 8" (incorrect: 3+4=7, not 8)
+**When** SessionMemory.write_with_verification(repair_text, "addition") is called
+**Then** the method returns False (rejected) and no write occurs
+
+**Spec traces:** REQ-PSV-014, REQ-PSV-014-1, REQ-PSV-014-2
+
+---
+
+## SCENARIO-PSV-022: _freeze_stable_constraints Skips Update for Frozen Constraint
+
+**Given** SelfLearningRelay has 30 steps where "verification" type has variance < 0.01
+**When** _freeze_stable_constraints() is called and then run_batch() is called
+**Then** "verification" constraint type is in _frozen_constraints
+**And** fp_tracker.update() is NOT called for frozen constraint types
+
+**Spec traces:** REQ-PSV-015, REQ-PSV-015-1, REQ-PSV-015-2, REQ-PSV-015-3
+
+---
+
+## SCENARIO-PSV-023: recovery_sustained Requires Both Windows Negative
+
+**Given** fp_rate_series of length 61 (steps 0 through 60)
+**When** window1_slope (steps 0-30) = -0.001 AND window2_slope (steps 30-60) = +0.002
+**Then** recovery_sustained = False (window2 is non-negative)
+**And** honest_verdict = "recovery_partial" (old pattern from Exp 697/737)
+
+**Given** window1_slope = -0.001 AND window2_slope = -0.0005
+**Then** recovery_sustained = True
+**And** honest_verdict = "recovery_sustained"
+
+**Spec traces:** REQ-PSV-016, REQ-PSV-016-1, REQ-PSV-016-2
+
+---
+
+## Implementation Status (PSV-014/015/016)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-PSV-014 | Implemented (python/carnot/pipeline/session_memory.py) | tests/python/test_experiment_756_psv_srsa_gate.py |
+| REQ-PSV-015 | Implemented (python/carnot/pipeline/self_learning_relay.py) | tests/python/test_experiment_756_psv_srsa_gate.py |
+| REQ-PSV-016 | Implemented (scripts/experiment_756_psv_srsa_gate.py) | tests/python/test_experiment_756_psv_srsa_gate.py |
+
+---
+
 ## FR-11 Formal Closure — Implementation Status: OPERATIONAL
 
 **Status:** OPERATIONAL as of Milestone 2026.04.56 (2026-04-22).

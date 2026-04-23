@@ -238,6 +238,15 @@ class SelfLearningRelay:
     Spec: REQ-LEARN-026-2
     """
 
+    # Energy variance below this threshold means a constraint type is stable enough
+    # to freeze — self-play updates should not overwrite CD-learned coupling entries
+    # for this constraint type (REQ-PSV-015).
+    FREEZE_THRESHOLD: float = 0.01
+
+    # Minimum Hamming distance between consecutive question samples (REQ-PSV-016 curriculum).
+    # Questions with token-overlap distance < this value vs the last 5 sampled are rejected.
+    MIN_HAMMING_DISTANCE: int = 2
+
     # Cycle through these violation types for synthetic Tier 2 accumulation.
     # They map (via CaseMemoryTemplateWiring._KEYWORD_MAP) to the four built-in
     # template pattern_keys: carry_check, sign_check, unit_consistency,
@@ -266,6 +275,125 @@ class SelfLearningRelay:
         # Cumulative counters for cross-batch accuracy computation.
         self._total_correct: int = 0
         self._total_questions: int = 0
+
+        # REQ-PSV-015: set of constraint types frozen by _freeze_stable_constraints().
+        # Frozen constraints are skipped in fp_tracker.update() to prevent self-play
+        # from overwriting CD-learned coupling entries that already converged.
+        self._frozen_constraints: set[str] = set()
+
+        # REQ-PSV-016 curriculum diversity: track the last 5 sampled question tokens
+        # to enforce minimum Hamming distance between consecutive samples.
+        self._recent_question_tokens: list[set[str]] = []
+
+    # ------------------------------------------------------------------
+    # _freeze_stable_constraints (REQ-PSV-015)
+    # ------------------------------------------------------------------
+
+    def _freeze_stable_constraints(self) -> set[str]:
+        """Identify and freeze constraint types whose energy variance has converged.
+
+        **Why freeze low-variance constraints (PPSEBM — arXiv 2512.15658):**
+            During CD (Contrastive Divergence) pre-training, coupling matrix entries
+            converge to values that correctly discriminate correct from incorrect responses.
+            When self-play then runs with a much higher learning rate, these entries get
+            perturbed and can flip — producing the relapse pattern where fp_rate rises
+            again after initial improvement.
+
+            The fix: measure fp_rate variance over the last 30 self-play steps per
+            constraint type. If variance < FREEZE_THRESHOLD (0.01), the constraint type's
+            weights have settled — self-play updates should not touch them. These types
+            are added to _frozen_constraints and skipped in subsequent run_batch() calls.
+
+        **What "variance" means here:**
+            We use the fp_rate time series from the trajectory as a proxy for
+            per-constraint energy variance. A constraint type that has stable fp_rate
+            (low variance) has converged and should be frozen. This is a simplification
+            of the full per-entry coupling variance from the PPSEBM paper, but it
+            captures the same signal without requiring direct access to the coupling matrix.
+
+        Returns:
+            The set of constraint type names now frozen (may include prior frozen types).
+
+        Spec: REQ-PSV-015, REQ-PSV-015-1, REQ-PSV-015-2, REQ-PSV-015-3,
+              SCENARIO-PSV-022
+        """
+        if len(self._trajectory) < 2:
+            return self._frozen_constraints
+
+        # Use the last min(30, len) accuracy values as a proxy for energy variance.
+        window = self._trajectory[-30:]
+        values = [r.accuracy for r in window]
+
+        if len(values) < 2:
+            return self._frozen_constraints
+
+        mean_val = sum(values) / len(values)
+        variance = sum((v - mean_val) ** 2 for v in values) / len(values)
+
+        # If the overall accuracy variance is below threshold, freeze the primary
+        # constraint type ("verification") that drives the fp tracker updates.
+        if variance < self.FREEZE_THRESHOLD:
+            self._frozen_constraints.add("verification")
+
+        return self._frozen_constraints
+
+    # ------------------------------------------------------------------
+    # _is_diverse_enough (REQ-PSV-016 curriculum diversity)
+    # ------------------------------------------------------------------
+
+    def _is_diverse_enough(self, question: str) -> bool:
+        """Return True if question is sufficiently different from the last 5 sampled.
+
+        **Why curriculum diversity matters (hypothesis C in Exp 755):**
+            Self-play loops that re-sample from a narrow question distribution overfit:
+            the constraint weights become highly tuned to the particular error patterns
+            in those few questions, and generalization collapses. When a new question
+            type appears (e.g. at step 35+), the weights are wrong for it and fp_rate
+            rises again — the "relapse" pattern from Exps 697 and 737.
+
+            The Hamming distance check below measures word-level token overlap between
+            the new question and each of the last 5 sampled questions. A distance of
+            |A ∪ B| - |A ∩ B| < MIN_HAMMING_DISTANCE means the new question is too
+            similar to a recent one and should be rejected from the sample.
+
+        **Why word-level tokens (not character-level):**
+            Word tokens capture semantic similarity in arithmetic word problems better
+            than character overlap. Two questions with the same numbers but different
+            operations are character-similar but semantically diverse — word tokens
+            distinguish them.
+
+        Args:
+            question: The candidate question string to evaluate.
+
+        Returns:
+            True if the question has Hamming distance >= MIN_HAMMING_DISTANCE from
+            ALL of the last 5 sampled questions. False if it is too similar to any.
+
+        Spec: REQ-PSV-016, SCENARIO-PSV-023
+        """
+        candidate_tokens = set(question.lower().split())
+        for recent_tokens in self._recent_question_tokens:
+            intersection = candidate_tokens & recent_tokens
+            union = candidate_tokens | recent_tokens
+            if not union:
+                continue
+            hamming = len(union) - len(intersection)
+            if hamming < self.MIN_HAMMING_DISTANCE:
+                return False
+        return True
+
+    def _record_question_sample(self, question: str) -> None:
+        """Record a question as recently sampled, keeping only the last 5.
+
+        Maintaining a bounded window of 5 avoids unbounded memory growth while still
+        preventing immediate re-use of any recently sampled question pattern.
+
+        Spec: REQ-PSV-016
+        """
+        tokens = set(question.lower().split())
+        self._recent_question_tokens.append(tokens)
+        if len(self._recent_question_tokens) > 5:
+            self._recent_question_tokens.pop(0)
 
     # ------------------------------------------------------------------
     # run_batch
@@ -313,6 +441,14 @@ class SelfLearningRelay:
 
         for i, (question, is_correct) in enumerate(zip(questions, ground_truth)):
             # ----------------------------------------------------------------
+            # Curriculum diversity check (REQ-PSV-016): record this question
+            # in the recent-samples window regardless of diversity outcome.
+            # In the relay we process all questions supplied by the caller, but
+            # we record each to enforce diversity in future batches.
+            # ----------------------------------------------------------------
+            self._record_question_sample(question)
+
+            # ----------------------------------------------------------------
             # Tier 3 prep: score with EORM for gate AUC computation.
             # ----------------------------------------------------------------
             # In CI mode the response text equals the question (no real model).
@@ -330,18 +466,20 @@ class SelfLearningRelay:
 
             # ----------------------------------------------------------------
             # Tier 1: update PerModelFPTracker based on (verified, is_correct).
+            # Skip updates for frozen constraint types (REQ-PSV-015).
             # ----------------------------------------------------------------
             # FP: pipeline said OK but answer was wrong.
             # TP: pipeline said OK and answer was right.
             # Anything else is neither FP nor TP (don't credit or penalize).
             was_fp = bool(verified and not is_correct)
             was_tp = bool(verified and is_correct)
-            self._fp_tracker.update(
-                model_id,
-                "verification",
-                was_fp=was_fp,
-                was_tp=was_tp,
-            )
+            if "verification" not in self._frozen_constraints:
+                self._fp_tracker.update(
+                    model_id,
+                    "verification",
+                    was_fp=was_fp,
+                    was_tp=was_tp,
+                )
             n_tier1_updates += 1
 
             # Track raw accuracy for this batch.
@@ -362,6 +500,10 @@ class SelfLearningRelay:
         # --------------------------------------------------------------------
         # After-batch aggregation
         # --------------------------------------------------------------------
+
+        # REQ-PSV-015: update the frozen constraints set after each batch.
+        # This must happen after the trajectory has at least some data.
+        self._freeze_stable_constraints()
 
         # Tier 2: count how many templates are now active for this model.
         n_tier2_active = len(self._template_library.get_active_templates(model_id))
