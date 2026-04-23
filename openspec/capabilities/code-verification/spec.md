@@ -674,6 +674,40 @@ when the final artifact is written, then it keeps completed traces plus resume
  checkpoint metadata, marks the run incomplete, and records the blocker without
  claiming missing cases ran successfully.
 
+### REQ-CODE-031: Two-Round Iterative Code Repair Pipeline
+
+The system shall implement a TwoRoundCodeRepairPipeline that:
+- Generates initial code from a problem prompt via an LLM caller.
+- Executes the generated code against test cases, capturing full tracebacks on failure.
+- Injects the full traceback, expected output, actual output, and original problem into a repair prompt.
+- Re-generates code for up to 2 repair rounds when failures occur.
+- Classifies each failure as one of: syntax_error, assertion_error, name_error, timeout, other.
+- Returns a TwoRoundResult with round0_pass, round1_pass, round2_pass, and error_types per round.
+
+### REQ-CODE-032: Per-Round Pass Rate Reporting
+
+The system shall report iterative code repair results with per-round pass@1 metrics:
+- pass_round0: fraction of problems passing before any repair.
+- pass_round1: fraction passing after at most 1 repair (cumulative).
+- pass_round2: fraction passing after at most 2 repairs (cumulative).
+- round1_improvement: pass_round1 - pass_round0.
+- round2_improvement: pass_round2 - pass_round1.
+- total_improvement: pass_round2 - pass_round0.
+- honest_verdict: "two_round_repair_confirmed" (>=0.02), "two_round_repair_marginal" (>0, <0.02),
+  or "two_round_repair_no_improvement" (<=0).
+
+### SCENARIO-CODE-029: Two-Round Repair Fixes a Bug in Round 1
+
+Given a problem where round 0 produces wrong output, when TwoRoundCodeRepairPipeline runs,
+then the repair prompt includes the full traceback, expected output, and actual output,
+and the round 1 code is re-executed with the repaired code, recording round1_pass=True.
+
+### SCENARIO-CODE-030: All Rounds Tracked in Pass Rate Computation
+
+Given 4 problems where 1 passes in round 0, 1 in round 1, 1 in round 2, and 1 never,
+when compute_pass_rates is called, then pass_round0=0.25, pass_round1=0.50, pass_round2=0.75
+and error_type_breakdown correctly attributes each failed round to its error type.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -711,3 +745,5 @@ when the final artifact is written, then it keeps completed traces plus resume
 | REQ-CODE-028 | Implemented |
 | REQ-CODE-029 | Implemented |
 | REQ-CODE-030 | Implemented |
+| REQ-CODE-031 | Implemented |
+| REQ-CODE-032 | Implemented |
