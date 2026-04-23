@@ -196,6 +196,28 @@ MUST achieve >= 1.5x speedup vs sequential.
 
 **Spec traces:** REQ-INFRA-049
 
+### REQ-INFRA-050: EORM+JEPA Joint Retrain MUST Use DualGPU When 2 GPUs Available
+
+EORM+JEPA joint retrain calls MUST use `DualGPURetrain.retrain_parallel()` via
+`ThreadPoolExecutor` when 2 or more CUDA GPUs are detected.  Sequential single-GPU
+retrain of the combined EORM+JEPA pair is deprecated for all Exp 383-class runs.
+
+**Rationale:** Exp 383 appeared in the slowest-5 for 11 consecutive milestones.  Exp 685
+validated 2.0175x speedup with GPU 1 idle the entire time.  Exp 746 cements this as a
+permanent infrastructure default: `retrain_parallel()` replaces any call site that ran
+EORM and JEPA sequentially on a host with >= 2 GPUs.
+
+**Spec traces:** REQ-INFRA-050 (Exp 685 validated 2.0175x; Exp 746 production rollout)
+
+### SCENARIO-INFRA-059: DualGPU EORM+JEPA Retrain Achieves >= 1.8x Speedup
+
+**Given** two CUDA GPUs are available (cuda:0, cuda:1)
+**When** `DualGPURetrain.retrain_parallel(eorm_fn, jepa_fn)` runs on FoVer v2 data
+**Then** the measured `speedup = wall_time_sequential / wall_time_parallel >= 1.8`
+  and both `eorm_loss_after` and `jepa_loss_after` are finite positive floats.
+
+**Spec traces:** REQ-INFRA-050
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -209,3 +231,4 @@ MUST achieve >= 1.5x speedup vs sequential.
 | REQ-INFRA-047b | Implemented | Exp 731 — GPU 1 zombie cleared, vram_after=4 MiB |
 | REQ-INFRA-048 | Implemented | Exp 740 — Exp 527 added to exclusion manifest |
 | REQ-INFRA-049 | Implemented | Exp 740 — DualGPURetrain in python/carnot/pipeline/dualgpu_retrain.py |
+| REQ-INFRA-050 | Implemented | Exp 746 — DualGPU retrain made default; sequential deprecated |
