@@ -2549,3 +2549,4 @@ python/ |
 | 2026-04-23 06:56 UTC | Exp 761: Tier 1 Real Constraint Addition from Memo | OK | 81 passed, 3 warnings in 6.03s |
 | 2026-04-23 07:07 UTC | Exp 762: PPSEBM Progressive Constraint Selection — | OK | 81 passed, 3 warnings in 4.68s |
 | 2026-04-23 07:20 UTC | Exp 763: Dual-Pathway Hallucination Probe — MoP Fu | OK | 81 passed, 3 warnings in 4.92s |
+| 2026-04-23 07:31 UTC | Exp 764: AST-Based Code Hallucination Detector — T | OK | 81 passed, 3 warnings in 4.49s |
