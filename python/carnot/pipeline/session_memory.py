@@ -357,6 +357,55 @@ class SessionMemory:
             return None
         return case_memory, template_library, fp_tracker
 
+    def write_with_verification(self, repair_text: str, constraint_type: str) -> bool:
+        """Accept a repair into memory only if VPRMArithmeticVerifier finds no violations.
+
+        **Why this gate is needed (SRSA memory contamination — arXiv 2603.21558):**
+            Without a correctness gate, incorrect repairs produced by the self-play loop
+            get written to session memory as positive training examples. Over ~30 steps
+            the memory pool accumulates enough corrupted entries to flip the constraint
+            weights, causing the fp_rate to trend upward again (the relapse pattern
+            observed in Exps 697, 737, and 749).
+
+            This gate applies VPRMArithmeticVerifier.detect_violations() deterministically
+            before accepting any repair. If even one arithmetic violation is found in the
+            repair text, the repair is discarded and False is returned. Only
+            violation-free repairs enter the memory pool.
+
+        **Why VPRM instead of Z3/VeriCoT:**
+            VPRM has zero LLM overhead (pure regex + arithmetic identity checks) and
+            runs in microseconds. Z3/VeriCoT adds ~100ms per call due to the LLM
+            premise-extraction step. For self-play loops running 60+ steps, VPRM
+            is the right gate: fast, deterministic, and impossible to reward-hack.
+
+        Args:
+            repair_text:     The full repair CoT text to verify before accepting.
+            constraint_type: The constraint type label for logging (e.g. "addition").
+
+        Returns:
+            True if the repair passed verification and was logged as accepted.
+            False if violations were found and the repair was discarded.
+
+        Spec: REQ-PSV-014, REQ-PSV-014-1, REQ-PSV-014-2, REQ-PSV-014-3,
+              SCENARIO-PSV-021
+        """
+        from carnot.extraction.vprm_verifier import VPRMArithmeticVerifier
+
+        verifier = VPRMArithmeticVerifier()
+        violations = verifier.detect_violations(repair_text)
+        if violations:
+            _log.debug(
+                "SRSA gate: discarded repair for constraint_type=%s (violations=%d)",
+                constraint_type,
+                len(violations),
+            )
+            return False
+        _log.debug(
+            "SRSA gate: accepted repair for constraint_type=%s",
+            constraint_type,
+        )
+        return True
+
     def exists(self) -> bool:
         """Return True if a state file exists on disk for this model.
 
