@@ -14980,3 +14980,43 @@ Sub-requirements:
 
 **Spec traces:** REQ-VERIFY-170-4
 **Implementation Status:** Planned (Exp 768)
+
+## Comparison Requirements (Carnot vs SETS)
+
+### REQ-COMPARE-001: SETS Baseline Implementation
+
+The system shall implement a SETS (Self-Evaluation-Then-Self-Correction) baseline that:
+- (a) Generates N=4 parallel candidate solutions using distinct prompt prefixes ("Solve step by step:", "Think carefully then solve:", "Let me work through this:", "Using arithmetic:").
+- (b) Applies zero-shot LLM self-verification for each candidate using the prompt "Question: {q}\nAnswer: {a}\nIs this correct? Answer Yes or No." and parsing the Yes/No response.
+- (c) Applies a self-correction prompt "Your solution may have errors. Correct it: {q}\nCurrent: {a}" on the best-selected candidate when no candidate passes verification.
+
+**Implementation Status:** Implemented (Exp 773)
+
+### REQ-COMPARE-002: Head-to-Head Comparison Metrics
+
+The system shall report the following metrics when comparing SETS and Carnot on an identical question set:
+- pass_rate: fraction of questions where the final answer is correct (0.0-1.0)
+- n_oracle_calls: number of LLM/energy-evaluator calls made per question
+- wall_time_s: wall-clock seconds to process each question
+
+Both systems must be evaluated on the same question set with the same ground-truth answers. The comparison artifact must include sets_pass_rate, carnot_pass_rate, pass_rate_delta, sets_oracle_calls_per_q, carnot_oracle_calls_per_q, oracle_call_ratio, llm_mode, and honest_verdict.
+
+**Implementation Status:** Implemented (Exp 773)
+
+### SCENARIO-COMPARE-001: SETS Candidate Generation
+
+**Given** a SETSBaseline instance with n_candidates=4
+**When** generate_candidates(question) is called
+**Then** exactly 4 candidate responses are returned, one per prompt prefix
+
+**Spec traces:** REQ-COMPARE-001
+**Implementation Status:** Implemented (Exp 773)
+
+### SCENARIO-COMPARE-002: Oracle Call Ratio Calculation
+
+**Given** SETS and Carnot have both run on an identical 30-question GSM8K set
+**When** oracle_call_ratio is computed as sets_oracle_calls_per_q / carnot_oracle_calls_per_q
+**Then** oracle_call_ratio is a positive finite float reported in the artifact
+
+**Spec traces:** REQ-COMPARE-002
+**Implementation Status:** Implemented (Exp 773)
