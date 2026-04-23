@@ -2529,3 +2529,4 @@ python/ |
 | 2026-04-23 00:46 UTC | Exp 744: Iterative 2-Round Code Repair — HumanEval | OK | 81 passed, 3 warnings in 5.05s |
 | 2026-04-23 01:01 UTC | Exp 745: CoCoA Inter-Layer Disagreement Detector — | OK | 81 passed, 3 warnings in 4.98s |
 | 2026-04-23 01:11 UTC | Exp 746: DualGPU Parallelized EORM+JEPA Retrain —  | OK | 81 passed, 3 warnings in 5.10s |
+| 2026-04-23 01:27 UTC | Exp 747: Tier 1 Weight Convergence Audit — FR-11 R | OK | 81 passed, 3 warnings in 4.63s |
