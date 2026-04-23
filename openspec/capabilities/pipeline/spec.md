@@ -218,6 +218,59 @@ EORM and JEPA sequentially on a host with >= 2 GPUs.
 
 **Spec traces:** REQ-INFRA-050
 
+### REQ-INFRA-051: Manifest Patch MUST Be Applied at Dispatch Site
+
+The guard clause calling `validate_manifest_at_dequeue(task_id)` MUST be present in
+`scripts/research_conductor.py` inside `research_step()`, immediately after the three
+`logger.info("RESEARCH STEP: ...")` lines and before the `if dry_run:` check.
+Enforcement via code change at the dispatch site, not retro text or manifest-only update.
+
+**Rationale:** Four consecutive milestones (.54-.57) closed with the patch unnapplied,
+wasting 1,264 minutes (21.1 hours) cumulative.  String IDs like "jepa_v15_cascade" bypass
+`_task_is_excluded`'s integer regex; only a dispatch-site guard closes this gap.
+
+**Acceptance criteria:**
+- `grep validate_manifest_at_dequeue scripts/research_conductor.py` returns at least one match.
+- The match appears inside the `research_step()` function body.
+- The patch from `results/manifest_fix_patch.txt` is fully applied (no diff).
+
+**Spec traces:** REQ-INFRA-051 (closes 4-milestone enforcement gap, Exp 754)
+
+### REQ-INFRA-052: Pre-flight v10 MUST Confirm Patch Application
+
+The pre-flight v10 artifact (`results/experiment_754_preflight_v10.json`) MUST include a
+`patch_applied` boolean field set by searching `scripts/research_conductor.py` for the
+guard clause pattern `validate_manifest_at_dequeue`.  Only a code-level search counts;
+inspecting the patch file alone is insufficient.
+
+**Acceptance criteria:**
+- `artifact["patch_applied"] == True` when guard clause is present in the file.
+- `artifact["patch_applied"] == False` when guard clause is absent.
+- `honest_verdict` is one of: "preflight_v10_patch_applied_gpu_clean",
+  "preflight_v10_patch_applied_gpu_dirty", "preflight_v10_patch_failed",
+  "preflight_v10_exp527_leak".
+
+**Spec traces:** REQ-INFRA-052 (Exp 754 pre-flight v10)
+
+### SCENARIO-INFRA-060: Dispatch Guard Blocks Excluded Task at Dequeue
+
+**Given** `conductor_exclusion_manifest.json` lists experiment_id=527
+**When** `research_step()` is called with task `{"id": "exp527-legacy", ...}`
+**Then** `validate_manifest_at_dequeue("exp527-legacy")` returns False, the task is
+  skipped without spawning an agent, and `research_step()` returns True.
+
+**Spec traces:** REQ-INFRA-051
+
+### SCENARIO-INFRA-061: Pre-flight v10 Records patch_applied=True After Patch Application
+
+**Given** `scripts/research_conductor.py` contains the guard clause calling
+  `validate_manifest_at_dequeue`
+**When** the pre-flight v10 check reads the file and searches for the guard clause
+**Then** `artifact["patch_applied"]` is True and `honest_verdict` is
+  "preflight_v10_patch_applied_gpu_clean" (assuming GPUs are clean and 527 is excluded).
+
+**Spec traces:** REQ-INFRA-052
+
 ### REQ-HW-010: Ising Sampler v4 HLS C++ Kernel
 
 The Ising sampler v4 MUST be expressed in Vitis HLS C++ with loop-pipelining
@@ -368,3 +421,5 @@ Where REQ-SAFE-011 (teacher-duration invariant) applies, the model card MUST cit
 | REQ-INFRA-049 | Implemented | Exp 740 — DualGPURetrain in python/carnot/pipeline/dualgpu_retrain.py |
 | REQ-PUBLISH-001 | Implemented | Exp 752 — model cards, safetensors exports, hf_upload_commands.sh |
 | REQ-INFRA-050 | Implemented | Exp 746 — DualGPU retrain made default; sequential deprecated |
+| REQ-INFRA-051 | Implemented | Exp 754 — manifest patch applied to research_conductor.py dispatch site |
+| REQ-INFRA-052 | Implemented | Exp 754 — pre-flight v10 confirms patch application via guard clause search |

@@ -328,7 +328,7 @@ tasks:
        a. Create hardware/kv260/validate_energy_sign.cpp (or Python equivalent):
           - Set up a small N=4 ferromagnetic Ising system: J[i][j]=1.0 for all i,j.
           - All spins = +1 (ground state).
-          - Expected energy: E = -sum_{i<j} J_ij * 1 * 1 = -N*(N-1)/2 = -6.0 for N=4.
+          - Expected energy: E = -sum_(i<j) J_ij * 1 * 1 = -N*(N-1)/2 = -6.0 for N=4.
           - Run the energy function from the HLS kernel.
           - Pass if |energy - (-6.0)| < 0.5.
     7. Alternatively, port the energy calculation to Python for CPU validation:
@@ -500,7 +500,7 @@ tasks:
        openspec/capabilities/verification/spec.md.
     3. GPU setup:
        a. apply_env_autofix() FIRST (before any GPU import).
-       b. setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+       b. setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
        c. If CARNOT_FORCE_LIVE not set and GPU not detected: write artifact with
           honest_verdict="blocked_no_live_gpu" and exit cleanly.
     4. Read the Exp 744 harness (scripts/experiment_744_iterative_2round_repair.py).
@@ -517,7 +517,7 @@ tasks:
             - Record: round1_pass (bool).
           Round 2 (only if round1_pass=False):
             - Build repair prompt: include FULL traceback, test case input, expected output.
-              Format: "Your code failed. Error: {traceback}. Test case: {input}. Expected: {expected}."
+              Format: "Your code failed. Error: (traceback). Test case: (input). Expected: (expected)."
             - Generate repaired code.
             - Execute repaired code against test cases.
             - Record: round2_pass (bool).
@@ -593,7 +593,7 @@ tasks:
        openspec/capabilities/verification/spec.md.
     3. GPU setup:
        a. apply_env_autofix() FIRST.
-       b. setup_gpu([{"name": "google/gemma-4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0}]).
+       b. setup_gpu([("name": "google/gemma-4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0)]).
        c. Use GemmaTransformersLoader for Gemma4 (RETRO-028 fix — llama.cpp has tokenizer bug).
        d. If CARNOT_FORCE_LIVE not set: write artifact with honest_verdict="blocked" and exit.
     4. Load 50 GSM8K questions (seed=0 to avoid overlap with Exp 742's seed=999).
@@ -617,7 +617,7 @@ tasks:
           - "gemma4_positive_found" if positive_threshold_found AND inference_mode="live_gpu"
           - "gemma4_no_positive_threshold" if NOT positive_threshold_found AND inference_mode="live_gpu"
           - "blocked" if CARNOT_FORCE_LIVE not set
-       d. artifact: per_threshold_results (list of {threshold, signed_improvement, n_abstained}),
+       d. artifact: per_threshold_results (list of (threshold, signed_improvement, n_abstained)),
           best_threshold, best_signed_improvement, positive_threshold_found,
           inference_mode, honest_verdict.
     8. Write tests/python/test_experiment_760_gemma4_threshold_grid.py with 100% coverage:
@@ -749,7 +749,7 @@ tasks:
     data from entering memory. The PPS freezing prevents good coupling weights from being
     overwritten by gradient updates. Together they address both failure modes.
 
-    The "energy variance" of a constraint coupling J_{ij} is: how much the contribution
+    The "energy variance" of a constraint coupling J_(ij) is: how much the contribution
     of that coupling to the energy fluctuates across the last N questions. Low variance =
     the coupling has settled; high variance = it is still learning.
 
@@ -956,7 +956,7 @@ tasks:
        a. KnowledgeBase:
           build_from_modules(module_names: list[str]) -> KnowledgeBase:
             For each module: import it, call dir(), inspect.getmembers().
-            Store: {module.attr: {"type", "signature", "exists": True}}.
+            Store: (module.attr: {"type", "signature", "exists": True)}.
           lookup(module: str, attr: str) -> bool:
             Return True if module.attr exists in KB.
        b. ASTKnowledgeViolation(node_text, module, attr, violation_type) dataclass.
@@ -1180,7 +1180,7 @@ tasks:
        - wall_time_delta, improvement (bool)
        - success_criteria_met (dict of criterion → bool)
        - retros_closed (list), retros_opened (list), retros_still_open (list)
-       - slowest_5 (list of {exp_id, duration_min})
+       - slowest_5 (list of (exp_id, duration_min))
        - headline_results (dict of criterion → result_value)
        - honest_verdict: one of:
          "wall_time_Nth_consecutive_improvement_..." (if improved)
