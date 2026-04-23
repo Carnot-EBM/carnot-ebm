@@ -255,10 +255,67 @@ and FPGA) allows local validation before remote synthesis.
 
 **Spec traces:** REQ-HW-010
 
+### REQ-SAMPLE-017: DWaveNealBackend Protocol Implementation
+
+``DWaveNealBackend`` MUST implement the ``SamplerBackend`` protocol by providing
+a ``sample()`` method.  It MUST convert an ``IsingEBM`` (``IsingModel``) coupling
+matrix and bias vector to a ``dimod.BinaryQuadraticModel`` via a ``to_bqm()``
+method before submitting to ``neal.SimulatedAnnealingSampler``.
+
+**Acceptance criteria:**
+- ``DWaveNealBackend().available`` is True when dwave-ocean-sdk is installed.
+- ``to_bqm(ising_ebm)`` returns a BQM with ``num_variables == ising_ebm.config.input_dim``.
+- Quadratic interactions in the BQM match non-zero entries of ``ising_ebm.coupling``.
+- Linear biases in the BQM match ``ising_ebm.bias``.
+
+**Spec:** REQ-SAMPLE-017
+
+---
+
+### REQ-SAMPLE-018: DWaveNealBackend Reports Energy and Wall Time
+
+``DWaveNealBackend.sample()`` MUST return a ``SampleResult`` with:
+- ``spins``: boolean array of shape ``(n_spins,)`` (the lowest-energy configuration
+  found across all ``num_reads`` SA runs).
+- ``energy``: float energy of ``spins`` under the IsingEBM Hamiltonian, computed in
+  the ``{0,1}`` convention (compatible with ``IsingModel.energy``).
+- ``wall_time_s``: float wall-clock seconds for the full call.
+
+**Acceptance criteria:**
+- ``result.energy`` is a float.
+- ``result.wall_time_s > 0``.
+- ``result.spins.shape == (n_spins,)`` and ``result.spins.dtype == bool``.
+
+**Spec:** REQ-SAMPLE-018
+
+---
+
+### SCENARIO-SAMPLE-030: Neal vs Gibbs Energy Comparison on Random Problems
+
+**Given** 20 synthetic IsingModel instances with n=50 spins and coupling sparsity=0.3
+**When** both DWaveNealBackend and CpuBackend (Gibbs) are run on each instance
+**Then** ``energy_improvement_pct`` is computed as
+  ``(mean_energy_gibbs - mean_energy_neal) / |mean_energy_gibbs| * 100``
+  and ``honest_verdict`` is one of
+  ``{"neal_better_energy", "neal_comparable_energy", "neal_worse_energy"}``.
+
+**Spec traces:** REQ-SAMPLE-017, REQ-SAMPLE-018
+
+### SCENARIO-SAMPLE-031: DWaveNealBackend Blocked on Dependency
+
+**Given** dwave-ocean-sdk is not installed (``neal`` import fails)
+**When** ``DWaveNealBackend().available`` is False
+**Then** ``sample()`` returns a ``SampleResult`` with ``energy == float('inf')``
+  and the experiment artifact records ``honest_verdict == "blocked_on_dependency"``.
+
+**Spec traces:** REQ-SAMPLE-017
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
 |-------------|--------|-------|
+| REQ-SAMPLE-017 | Implemented | Exp 751 — dwave_neal_backend.py + to_bqm() |
+| REQ-SAMPLE-018 | Implemented | Exp 751 — SampleResult with energy + wall_time_s |
 | REQ-HW-010 | Implemented | Exp 750 — ising_sampler_hls.cpp + synth_ising_hls.tcl |
 | REQ-INFRA-043 | Implemented | Exp 718 — tier2_jepa.py |
 | REQ-INFRA-044 | Implemented | Exp 718 smoke test |
