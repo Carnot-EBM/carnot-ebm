@@ -2666,3 +2666,4 @@ python/ |
 | 2026-04-23 22:09 UTC | Milestone 2026.04.60 activated | OK | 13 tasks queued |
 | 2026-04-23 22:24 UTC | Exp 780: Pre-flight v12 — GPU Zombie Killer + Kill | OK | 81 passed, 3 warnings in 7.63s |
 | 2026-04-23 22:37 UTC | Exp 781: JEPA v20 Live Data Collection — 100q Qwen | OK | 81 passed, 3 warnings in 7.85s |
+| 2026-04-23 22:49 UTC | Exp 782: EDU-PRM Uncertainty Step Selection — Dive | OK | 81 passed, 3 warnings in 8.02s |
