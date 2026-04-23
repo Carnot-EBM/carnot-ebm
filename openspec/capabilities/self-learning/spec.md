@@ -862,3 +862,53 @@ Sub-requirements:
 |-------------|--------|-------|
 | REQ-LEARN-040 | Pending | Pending |
 | REQ-LEARN-041 | Pending | Pending |
+
+---
+
+## REQ-LEARN-042: PPSConstraintSelector MUST Compute Energy Variance Per Coupling
+
+**Given** a self-play adaptation loop that updates coupling weights J_(ij) in the
+         VerifyRepairPipeline after each question
+**When** the PPSConstraintSelector is active
+**Then** ``CouplingVarianceTracker`` MUST compute the energy variance of each coupling's
+         contribution over a rolling window of W=30 questions
+**And** couplings with variance < FREEZE_THRESHOLD (0.01) MUST NOT be updated during
+        self-play adaptation (their gradient entries are zeroed before the weight update)
+
+### REQ-LEARN-042 Sub-requirements
+
+- REQ-LEARN-042-1: ``CouplingVarianceTracker.__init__`` SHALL accept ``n_couplings``
+  and ``window_size=30`` parameters.
+- REQ-LEARN-042-2: ``CouplingVarianceTracker.update(coupling_contributions)`` SHALL
+  record the energy contribution of each coupling for one question into a rolling
+  deque of length ``window_size``.
+- REQ-LEARN-042-3: ``CouplingVarianceTracker.get_variance()`` SHALL return a 1-D
+  float64 array of population variance per coupling over the current window.
+  Couplings with fewer than 2 observations SHALL return variance 0.0 (frozen by default).
+- REQ-LEARN-042-4: ``CouplingVarianceTracker.get_frozen_mask(freeze_threshold=0.01)``
+  SHALL return a boolean array where True = coupling is frozen (variance < threshold).
+- REQ-LEARN-042-5: ``PPSConstraintSelector.apply_mask(gradient)`` SHALL zero all
+  gradient entries corresponding to frozen couplings and return a new array (not
+  mutate the input).
+- REQ-LEARN-042-6: ``PPSConstraintSelector.frozen_count()`` SHALL return the integer
+  count of currently frozen couplings.
+
+---
+
+## SCENARIO-LEARN-082: PPS Freezing Prevents Gradient Updates on Settled Couplings
+
+**Given** a CouplingVarianceTracker with n_couplings=3 and window_size=30
+**And** 10 updates have been recorded where coupling 0 is always 1.0 (variance=0)
+        and coupling 1 alternates 0/1 (variance=0.25)
+**When** PPSConstraintSelector.apply_mask([5.0, 3.0, -2.0]) is called with threshold=0.01
+**Then** the returned gradient has 0.0 at index 0 (frozen: variance < 0.01)
+**And** the returned gradient has 3.0 at index 1 (not frozen: variance >= 0.01)
+**And** the input gradient array is not mutated
+
+---
+
+## Implementation Status (REQ-LEARN-042)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-042 | Implemented (python/carnot/pipeline/pps_constraint_selector.py) | Implemented (tests/python/test_experiment_762_ppsebm_constraint_select.py) |
