@@ -2533,3 +2533,4 @@ python/ |
 | 2026-04-23 01:39 UTC | Exp 748: Cross-Session Memory 10-Session Stress Te | OK | 81 passed, 3 warnings in 4.65s |
 | 2026-04-23 01:51 UTC | Exp 749: PSV Domain-Diverse Monitoring — 30 Additi | OK | 81 passed, 3 warnings in 4.82s |
 | 2026-04-23 02:03 UTC | Exp 750: Vitis HLS Ising Sampler v4 — HLS C++ Appr | OK | 81 passed, 3 warnings in 4.33s |
+| 2026-04-23 02:18 UTC | Exp 751: D-Wave Neal SamplerBackend Integration —  | OK | 81 passed, 3 warnings in 4.37s |
