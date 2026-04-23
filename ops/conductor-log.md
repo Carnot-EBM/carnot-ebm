@@ -2655,3 +2655,4 @@ python/ |
 | 2026-04-23 19:41 UTC | Exp 770: JEPA v19 Predictive Verification — Real A | OK | 81 passed, 3 warnings in 7.77s |
 | 2026-04-23 19:52 UTC | Exp 771: EBRM Validation — Energy-Based Reward Mod | OK | 81 passed, 3 warnings in 6.74s |
 | 2026-04-23 20:04 UTC | Exp 772: Semantic Energy Probe — Tier 0g Candidate | OK | 81 passed, 3 warnings in 6.38s |
+| 2026-04-23 20:16 UTC | Exp 773: Carnot vs SETS — Test-Time Scaling Compar | OK | 81 passed, 3 warnings in 7.15s |
