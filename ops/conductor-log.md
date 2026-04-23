@@ -2539,3 +2539,4 @@ python/ |
 | 2026-04-23 03:19 UTC | Plan milestone 2026.04.58 | OK | 13 tasks proposed |
 | 2026-04-23 03:24 UTC | Milestone 2026.04.58 activated | OK | 13 tasks queued |
 | 2026-04-23 03:38 UTC | Exp 754: Pre-flight v10 + Manifest Enforcement + G | OK | 81 passed, 3 warnings in 5.71s |
+| 2026-04-23 03:53 UTC | Exp 755: PSV Relapse Diagnosis — Architecture Root | OK | 81 passed, 3 warnings in 6.26s |
