@@ -3342,3 +3342,128 @@ thermodynamic computing Ising FPGA
   (convert IsingEBM couplings to BQM format). Compare solution quality (final energy)
   and speed vs ParallelIsingSampler. This is $0 cost and unlocks quantum backend path.
 - **When to incorporate:** Milestone 2026.04.57 — Phase 4 hardware frontier.
+
+## 2026-04-23 arxiv Scan (Milestone 2026.04.59 Planning)
+
+### EBRM — Energy-Based Reward Models for Robust LLM Alignment (arXiv 2504.13134) ⭐ CRITICAL
+- **Paper:** arXiv 2504.13134 (April 2025)
+- **What:** EBRM learns an energy function over rewards + embeddings, modeling the full
+  noisy signal distribution rather than a point estimate. Outperforms discriminative reward
+  models on chat-hard, safety, and reasoning benchmarks.
+- **Relevance to Carnot:** FOUNDATIONAL VALIDATION. Carnot's EORM is an energy-based reward
+  model for step-level verification. This paper is the closest prior work — it validates
+  the EORM architecture theoretically. Cite in all Carnot publications. Direct comparison:
+  does Carnot's step-level EORM outperform EBRM on verification tasks?
+- **Concrete experiment:** Implement EBRM baseline on FoVer labeled steps. Compare AUC
+  to EORM. If EORM outperforms on step-level tasks (different from EBRM's token-level
+  reward), this is publishable.
+- **When to incorporate:** Milestone 2026.04.59 — Phase 3 new research (Exp 771).
+
+### SETS — Self-Verification + Self-Correction for Test-Time Scaling (arXiv 2501.19306) ⭐
+- **Paper:** arXiv 2501.19306 (January 2026, updated December 2025)
+- **What:** SETS (Self-Enhanced Test-Time Scaling) unifies parallel BoN sampling with
+  sequential self-correction. The LLM first generates N candidates, uses zero-shot
+  self-verification to select the best, then applies self-correction if needed.
+  Outperforms pure BoN and pure self-refine without external verifier.
+- **Relevance to Carnot:** Carnot's energy-guided BoN + repair is the hardware-accelerated
+  version of SETS, with energy scores replacing zero-shot self-verification. Head-to-head
+  comparison on HumanEval/GSM8K will quantify Carnot's advantage over the SETS baseline.
+  If Carnot wins on efficiency (energy/token), this is a core publishable result.
+- **Concrete experiment:** Run SETS and Carnot on identical 50-problem HumanEval split.
+  Compare: pass rate, oracle calls, total inference time. Hypothesis: Carnot uses fewer
+  oracle calls to reach same or better pass rate (energy is cheaper than LLM self-verify).
+- **When to incorporate:** Milestone 2026.04.59 — Phase 3 new research (Exp 773).
+
+### Semantic Energy — EBM Hallucination Detection Beyond Entropy (arXiv 2508.14496) ⭐
+- **Paper:** arXiv 2508.14496 (August 2025, updated December 2025)
+- **What:** Logits carry stronger uncertainty signal than probabilities because they
+  retain intensity information lost during softmax normalization. Semantic energy
+  E = -log p(x) evaluated over semantic equivalence classes outperforms standard
+  semantic entropy for hallucination detection. Works on TriviaQA, NQ, SciQ.
+- **Relevance to Carnot:** Carnot's Tier 0 stack uses logit-based energy probes. Semantic
+  energy is the theoretically grounded formulation of what Carnot is already doing.
+  Implementing the semantic energy formula as a Tier 0g probe could improve AUC over
+  the current logprob heuristics and would provide theoretical grounding for publications.
+- **Concrete experiment:** Implement SemanticEnergyProbe using logit-space energy formula.
+  Evaluate AUC on FoVer v2 vs current NUP probe and SpilledEnergyDetector.
+  Target: AUC >= 0.97 (matching HalluField's synthetic result).
+- **When to incorporate:** Milestone 2026.04.59 — Phase 3 new research (Exp 772).
+
+### Adaptive Bayesian Hallucination Detection (arXiv 2603.22812)
+- **Paper:** arXiv 2603.22812 (March 2026)
+- **What:** Adaptive Bayesian framework for semantic entropy. Dynamically adjusts sampling
+  count using variance-based thresholds — stops early when variance drops below criterion.
+  Achieves 50% fewer samples at comparable detection quality vs fixed-budget sampling.
+- **Relevance to Carnot:** PSV sampling loop is currently fixed-budget (K parallel samples).
+  Adaptive variance-based stopping could reduce oracle calls in PSV by 30-50% without
+  hurting repair quality. Directly lowers the compute cost of the verify-repair pipeline.
+- **Concrete experiment:** Add AdaptiveSamplerConfig(variance_threshold=0.05) to PSV.
+  Measure: mean samples per question vs current fixed-K=4. Measure detection AUC at each
+  K level. Report: sample reduction fraction and AUC delta at threshold.
+- **When to incorporate:** Milestone 2026.04.59 — Phase 3 new research (Exp 774).
+
+### Jailbreak Detection via Latent Internal Representations (arXiv 2602.11495)
+- **Paper:** arXiv 2602.11495 (February 2026)
+- **What:** Lightweight linear classifiers trained on hidden state features from specific
+  transformer layers reliably distinguish jailbreak prompts from benign ones. Requires no
+  retraining of the base model. Works across Llama-3, Qwen-2.5, Mistral. Identifies
+  which layers carry the adversarial signal.
+- **Relevance to Carnot:** Carnot's EORM already analyzes hidden states at multiple layers.
+  Adding a jailbreak head to the EORM feature extractor costs nothing extra (shared
+  forward pass). Product roadmap Tier B: "Safety/Jailbreak Classifier — distill from
+  gpt-oss-safeguard into KAN (2000x smaller)." This is the implementation path.
+- **Concrete experiment:** Train KAN-based jailbreak classifier on EORM hidden state
+  features (layers 8-16 of Qwen3.5-0.8B). Dataset: 100 adversarial + 100 benign code
+  prompts. Target: AUC >= 0.90. If reached: file as Tier 0h (pre-generation safety gate).
+- **When to incorporate:** Milestone 2026.04.59 — Phase 3 new research (Exp 775).
+
+### LLM-JEPA — Large Language Models Meet JEPA (arXiv 2509.14252) ⭐ Phase 3
+- **Paper:** arXiv 2509.14252 (September 2025)
+- **What:** JEPA applied to LLMs: predicts future embeddings rather than next tokens.
+  Joint embedding predictive architecture for text outperforms next-token prediction
+  on both fine-tuning and pretraining tasks. Enables pre-generation trajectory prediction.
+- **Relevance to Carnot:** JEPA v19 (Exp 770) trains a multi-step predictor on real
+  violation data. LLM-JEPA extends this: instead of predicting "will this step be
+  violated?" from text embeddings, predict the trajectory of the solution embedding
+  and diverge early. This is the Phase 3 path to pre-generation guided decoding.
+  Cite as motivation for Tier 3 predictive verification research direction.
+- **When to incorporate:** Phase 3 foundation model research, after Tier 3 OOD AUC > 0.75.
+
+### ARM↔EBM Bijection — Autoregressive Models are Secretly EBMs (arXiv 2512.15605) ⭐ FOUNDATIONAL
+- **Paper:** arXiv 2512.15605 (December 2025)
+- **What:** Establishes exact theoretical bijection between autoregressive language models
+  and energy-based models. Every ARM implicitly defines an energy landscape; every EBM
+  can be viewed as an implicit ARM. Unlocks EBM theory for LLM analysis.
+- **Relevance to Carnot:** FOUNDATIONAL. This paper provides the theoretical basis for
+  Carnot's entire approach: we are applying EBM inference (energy minimization, constraint
+  satisfaction) to the implicit energy landscape of autoregressive LLMs. Every Carnot
+  result implicitly relies on this bijection. Must be cited in all Carnot publications
+  as the theoretical motivation for energy-guided decoding and constraint verification.
+  Already filed in architecture.md as ARM-EBM bijection (2512.15605).
+- **When to incorporate:** Already incorporated conceptually; cite explicitly in paper.
+
+### MetaJuLS — Adaptive Constraint Propagation via Meta-RL (arXiv 2601.00095)
+- **Paper:** arXiv 2601.00095 (January 2026)
+- **What:** MetaJuLS learns universal constraint propagation policies via graph attention
+  networks + meta-reinforcement learning, applicable across languages/tasks without
+  retraining. 1.5-2.0x speedup vs GPU-optimized baselines while maintaining accuracy.
+- **Relevance to Carnot:** Carnot's constraint memory is currently hand-tuned per task
+  (arith, code, logic). MetaJuLS's approach could auto-learn constraint propagation
+  policies that generalize across task types. Most relevant after Tier 2 memory is
+  validated (Exp 761 showed precision 0.52->1.0 in 10 sessions). Meta-RL policy would
+  accelerate constraint addition without requiring 3-session warm-up.
+- **When to incorporate:** Milestone 2026.04.60+ after Tier 2 memory is stable.
+
+### KV260 Open-Source Synthesis via nextpnr-xilinx
+- **Finding:** Exp 758 (Milestone 2026.04.58) confirmed Yosys synthesizes ising_sampler_v2.v
+  to 2821 LUTs, 2237 DFFs, 0 errors. The nextpnr-xilinx project provides open-source
+  place-and-route for Xilinx Series 7 FPGAs, compatible with the KV260's XCZU5EV device.
+  With Yosys+nextpnr, the full open-source synthesis flow is now potentially achievable
+  without installing the full 80GB Vivado IDE.
+- **Relevance to Carnot:** KV260 synthesis has been blocked for 6 consecutive milestones
+  (Vivado not installed). nextpnr-xilinx provides an alternative that is pip-installable
+  (python-prjtrellis or similar). After Yosys synthesis (Exp 758 confirmed), nextpnr is
+  the only remaining step to generate a bitstream.
+- **Concrete experiment:** Install nextpnr-xilinx (or prjtrellis-xilinx). Run P&R on the
+  Yosys netlist from Exp 758. If bitstream generated: flash to KV260 and test hardware.
+- **When to incorporate:** Milestone 2026.04.59 — Phase 4 hardware (Exp 776).
