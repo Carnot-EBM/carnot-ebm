@@ -2652,3 +2652,4 @@ python/ |
 | 2026-04-23 18:05 UTC | Exp 769: SOTA GGUF 2-Round Code Repair — Qwen3.6-3 | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
 | 2026-04-23 19:10 UTC | Exp 769: SOTA GGUF 2-Round Code Repair — Qwen3.6-3 | FAIL | Claude Code error: Wall-clock timeout after 3604s. Last output:  |
 | 2026-04-23 19:22 UTC | Exp 769: SOTA GGUF 2-Round Code Repair — Qwen3.6-3 | OK | 81 passed, 3 warnings in 7.07s |
+| 2026-04-23 19:41 UTC | Exp 770: JEPA v19 Predictive Verification — Real A | OK | 81 passed, 3 warnings in 7.77s |
