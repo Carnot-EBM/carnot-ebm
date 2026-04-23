@@ -1,336 +1,315 @@
-# Research Roadmap — Milestone 2026.04.57
+# Research Roadmap — Milestone 2026.04.58
 
-**Title:** FR-11 Formal Closure + CoCoA Tier 0f + Iterative 2-Round Code Repair + Tier 2 Memory Stress Test
+**Title:** PSV Architecture Repair + HLS Energy Fix + Live Code Repair + SRSA Memory Gate
 
-**CalVer:** 2026.04.57 (sequence increment from 2026.04.56)
+**CalVer:** 2026.04.58 (sequence increment from 2026.04.57)
 
-**Authored:** 2026-04-22
+**Authored:** 2026-04-23
 
-**Previous Milestone:** 2026.04.56 — "Tier 2.1 Production Deploy + FR-11 Relay + Privacy Safety Integration"
+**Previous Milestone:** 2026.04.57 — "FR-11 Formal Closure + CoCoA Tier 0f + Iterative 2-Round Code Repair + Tier 2 Memory Stress Test"
 
 ---
 
 ## Executive Summary
 
-Milestone .56 delivered five confirmed wins and one critical operational failure:
+Milestone .57 delivered five major wins and two critical open issues that require architecture-level fixes in .58:
 
-**Wins:**
-1. **FR-11 relay fully operational** (Exps 734+738) — Tier 2.1 violation → FR11EventBus →
-   PerModelFPTracker → SessionMemory → ConstraintTemplateLibrary. First time FR-11 has been
-   end-to-end operational in the project's history. Eligible for formal closure.
-2. **Tier 2.1 JEPAReasonerProbe validated** — 5-fold CV mean AUC=0.993 ± 0.005, latency
-   p50=0.020ms. Both gates far exceeded. Cascade deployed and operational.
-3. **KAN Tier 0b deployed** — FP rate=0.0% on GSM8K 1000q, AUROC=0.9078. First cascade
-   pre-filter shipping in production.
-4. **PSV recovery confirmed** — Domain-diverse training (Exp 737) reversed 3-milestone
-   degradation trend. fp_rate_slope negative (recovering).
-5. **Step-level probe + cross-session memory** (Exp 738) — StepLevelJEPAProbe implemented,
-   cross-session persist/reload working. Tier 2 memory operational.
+**Wins from .57:**
+1. **FR-11 formally closed** (Exp 741, probe_5fold_auc=0.993) — First PRD mandatory requirement formally closed in project history.
+2. **RETRO-033 definitively closed** (Exp 742, seed=999 signed_improvement=+0.00510) — Two independent 200q trials confirm VR pipeline produces positive results on Qwen3.5-0.8B.
+3. **Privacy Filter v2 AUROC=1.0** (Exp 743) — Teacher-free PII detection via regex + KAN achieves perfect AUROC.
+4. **DualGPU 1.8319x speedup validated** (Exp 746) — Parallel EORM+JEPA retrain working.
+5. **Iterative 2-round code repair harness built** (Exp 744) — Script ready; live GPU execution deferred.
 
-**Critical operational failure:**
-- **Manifest fix patch not applied** — Exps 425, 410, 383, 380-382 re-executed for the
-  THIRD consecutive cycle post-retirement. The patch file (results/manifest_fix_patch.txt)
-  was written by Exp 731 but not applied to scripts/research_conductor.py. 264 minutes
-  wasted on zero-value legacy experiments. **This is a human-action blocker.**
+**Critical open issues requiring architecture-level attention in .58:**
+1. **PSV RELAPSE** (RETRO-PSV-RELAPSE) — fp_rate_slope_new30=+0.00110 (positive = deteriorating). Three prior recovery experiments (Exps 697, 737) achieved temporary recovery that subsequently reversed. Architecture-level root cause review is mandatory before .58 experiments touch self-play.
+2. **RETRO-HLS-ENERGY** — Vitis HLS Ising Sampler v4 CPU validation failed: expected energy near -3.0, got +3.0 (delta=200%). Sign convention bug in HLS C++ energy function. Blocks KV260 FPGA synthesis validation.
+3. **Manifest patch NOT applied** (4th consecutive milestone) — Cumulative waste since writing results/manifest_fix_patch.txt: 1,264 min (21.1 hours). Exp 527 appeared for the 4th consecutive full milestone after mandatory retirement in .56.
 
-Milestone .57 capitalizes on FR-11 being operational (formal closure), introduces CoCoA
-inter-layer disagreement as Tier 0f (training-free, orthogonal signal), implements
-iterative 2-round code repair (arXiv 2604.10508 finding: +4.9-17.1pp HumanEval), and
-stresses the Tier 2 cross-session memory to 10 sessions to prove monotonic precision gain.
+Milestone .58 fixes all three open issues at the architecture level (not just symptom-patching), then advances live code repair (arXiv 2604.10508 live execution), Gemma4 threshold grid search, SRSA memory gating, dual-pathway probe (arXiv 2601.07422), and AST-based code hallucination detection (arXiv 2601.19106).
 
 ---
 
-## What Milestone .56 Proved
+## What Milestone .57 Proved
 
 | Experiment | Result | Implication |
 |------------|--------|-------------|
-| Exp 731 — Pre-flight v8 | GPU zombie killed, manifest patch written | Pre-flight working; patch still not applied |
-| Exp 732 — Probe 5-fold CV | mean_auc=0.993, std_auc=0.005 | Probe validated — not overfit |
-| Exp 733 — Tier 2.1 cascade | skip_rate=0.40+, fn_delta<0.05 | Tier 2.1 deployed in cascade |
-| Exp 734 — FR-11 relay | fr11_relay_operational=True | FR-11 first operational relay |
-| Exp 735 — KAN Tier 0b | fp_rate=0.0, latency<5ms | First cascade pre-filter live |
-| Exp 736 — PSV diagnosis | constraint_specialization confirmed | Root cause identified |
-| Exp 737 — PSV recovery | fp_rate_slope negative | Recovery confirmed |
-| Exp 738 — Step probe + memory | step_auc >= query_auc, cross-session templates firing | Tier 2 memory operational |
-| Exps 729-730 — Privacy filter | blocked_on_upstream_dependency (2nd cycle) | Redesign required |
+| Exp 740 — Pre-flight v9 | GPU zombie killed; Exp 527 retired | Manifest still not enforced at dequeue |
+| Exp 741 — FR-11 formal closure | docs_updated=True, cert written | FR-11 is history; docs now match reality |
+| Exp 742 — RETRO-033 confirmation | seed=999 signed_improvement=+0.00510 | VR pipeline credibly positive on Qwen3.5-0.8B |
+| Exp 743 — Privacy Filter v2 | AUROC=1.0, gate_passed=True | Teacher-free PII detection works |
+| Exp 744 — Iterative 2-round repair | harness built, live GPU pending | arXiv 2604.10508 path validated, execution needed |
+| Exp 746 — DualGPU 1.8319x | speedup=1.8319, gate passed | DualGPU is operational and delivers real speedup |
+| Exp 748 — 10-session memory stress | precision_s1=1.0, plateau at s2 | Cross-session memory saturates early — Tier 2.1 investigation needed |
+| Exp 750 — HLS Ising Sampler v4 | energy_delta_pct=200, sign bug | RETRO-HLS-ENERGY: sign convention wrong; blocks synthesis |
+| Exp 753 — Retro .57 | PSV relapse detected | RETRO-PSV-RELAPSE: architecture review mandatory |
 
 ---
 
 ## Three Biggest Gaps (PRD vs. Current State)
 
-### Gap 1: FR-11 Operational but Not Formally Closed in Documentation (HIGH PRIORITY)
+### Gap 1: PSV Self-Play Relapse — Architecture-Level Root Cause Unknown (CRITICAL)
 
-FR-11 (Autonomous Self-Learning Loop) is operational end-to-end as of .56 — the
-violation-to-weight-update-to-template-library relay fires correctly. However:
-- `_bmad/traceability.md` still shows FR-11 as "partial / blocked"
-- `openspec/capabilities/self_learning/spec.md` has no implementation status update
-- `ops/known-issues.md` still lists FR-11 as an open item
+The PSV (Proof Search Verifier) self-play loop has now degraded in three separate milestones
+after recovery was confirmed:
+- Exp 688 (.52): PSV improving (fp_rate_slope negative)
+- Exp 697 (.53): PSV reversed (fp_rate_slope positive)
+- Exp 736 (.56): PSV root cause identified as "constraint specialization"
+- Exp 737 (.56): PSV recovery confirmed (fp_rate_slope negative)
+- Exp .57 retro: PSV relapse detected (fp_rate_slope_new30=+0.00110, positive again)
 
-This creates a credibility gap: anyone reading the strategic docs sees FR-11 as
-unresolved when it is actually operational. Formal closure also unblocks RETRO-FR11
-(listed as "ELIGIBLE FOR FORMAL CLOSURE" in the .56 retro).
+Three recovery experiments, three relapses. This is not a hyperparameter problem — it is an
+architectural instability. The hypothesis from recent research:
+- **SRSA (arXiv 2603.21558):** Self-generated incorrect repairs enter session memory
+  without verification, corrupting the constraint signal. The fix: Z3/SymCodeVerifier
+  gate on memory writes — only verified-correct repairs enter the memory pool.
+- **PPSEBM (arXiv 2512.15658):** EBM identifies which constraint parameters have settled
+  and freezes them during adaptation, preventing overwriting of learned couplings.
+  The fix: progressive parameter freezing based on energy variance.
 
-**Resolution:** Exp 741 — FR-11 formal closure documentation update.
+**Resolution:** Exp 755 (diagnosis) → Exp 756 (SRSA memory gate + PPS freezing).
 
-### Gap 2: VR RETRO-033 Marginally Closed, Code Repair Untested with Iteration (MEDIUM PRIORITY)
+### Gap 2: FPGA Synthesis Blocked by HLS Energy Sign Bug (RETRO-HLS-ENERGY)
 
-RETRO-033 was "closed" by Exp 720's 0.51pp improvement on Qwen3.5-0.8B, but:
-- The improvement is within statistical noise for 200 questions
-- Gemma4-E4B-it: 0% improvement (verify-repair actively harmful in some conditions)
-- No second seed confirmation has been run
+The KV260 FPGA track has been blocked by toolchain issues across multiple milestones. In .57,
+Exp 750 made progress: the HLS C++ kernel compiles cleanly and the Tcl synthesis script is
+written. But CPU validation failed: energy near -3.0 expected, got +3.0 (200% divergence).
 
-The PRD requires verifiable improvement for the core product claim. One marginal result
-at 0.51pp is not enough to claim the pipeline works. A second 200q trial with a different
-random seed either confirms (closes definitively) or reopens the investigation.
+Root cause: The h_ema (exponential moving average field) initialization in the Metropolis
+acceptance criterion uses the wrong sign convention. In the Ising model, E = -J*s_i*s_j
+(coupling energy is negative for aligned spins). The HLS C++ likely computes +J*s_i*s_j.
 
-Separately, the code verification path (execution-based, not regex) has never been
-tested with iterative repair. arXiv 2604.10508 shows +4.9 to +17.1pp on HumanEval from
-2-round repair. This is the most promising untested capability.
+**Resolution:** Exp 757 (fix energy sign, CPU validate, re-attempt synthesis if Vivado
+available) → Exp 758 (yosys RTL synthesis as Vivado alternative).
 
-**Resolution:** Exp 742 (RETRO-033 confirmation) + Exp 744 (iterative 2-round code repair).
+### Gap 3: Gemma4-E4B-it VR Still Zero Improvement on Math Tasks (MEDIUM)
 
-### Gap 3: Privacy Filter and HuggingFace Publishing Both Blocked (MEDIUM PRIORITY)
+RETRO-033 is closed for Qwen3.5-0.8B but Gemma4-E4B-it still shows 0% VR improvement
+(and in some conditions, degradation). The constraint distortion effect (arXiv 2601.01490)
+explains this: stronger models satisfy formal constraints at the cost of semantic correctness.
+The adaptive threshold gating in Exp 708 suppressed 25 constraints with zero accuracy impact —
+showing the gate works but the threshold was wrong.
 
-Privacy filter has been blocked for 2 consecutive cycles on an upstream dependency
-(openai/privacy-filter model weights). The standard teacher-distillation pattern
-(used for prompt injection, successfully) cannot be replicated without the teacher model.
-Exps 729+730 are now at the 2-cycle governance threshold for redesign.
+A graduated threshold search across 5 settings should find the setting where Gemma4 benefits
+from constraint verification without being harmed by false positives.
 
-HuggingFace publishing: the last models published were the 16 initial activation EBMs.
-Tier 2.1 JEPAReasonerProbe (AUC=0.993, deployable) and KAN Tier 0b (AUROC=0.9078, deployed)
-are both publication-ready but no model cards have been written and no weights uploaded.
-
-**Resolution:** Exp 743 (privacy filter v2, no teacher) + Exp 752 (HF preparation).
-
----
-
-## New Research Incorporated (2026-04-22 arxiv Scan)
-
-### CoCoA — Inter-Layer Disagreement (arXiv 2602.09486)
-Training-free hallucination detector using inter-layer hidden state disagreement.
-Orthogonal to all existing Tier 0 probes (which use logit/energy/basin signals).
-Can share forward pass with Tier 2.1 probe. Zero training required. → **Exp 745**
-
-### Iterative Self-Repair in Code (arXiv 2604.10508)
-2-round repair captures 90%+ of total available improvement on HumanEval (+4.9-17.1pp).
-Most gains in first 2 rounds. Applicable directly to Carnot's code verification path. → **Exp 744**
-
-### Fully Parallel Ising Machine via Vitis HLS (arXiv 2604.17109)
-C++ HLS approach circumvents Vivado installation blocker. Vitis HLS is distributable
-separately from full Vivado. Opens the KV260 synthesis path blocked for 3 milestones. → **Exp 750**
-
-### D-Wave Neal Simulated Annealing (dwave-ocean-sdk)
-Pure pip-installable QUBO/Ising solver. Validates SamplerBackend abstraction with
-a fundamentally different algorithm (SA vs Gibbs). $0 cost, no hardware needed. → **Exp 751**
+**Resolution:** Exp 760 — live Gemma4 threshold grid search (5 thresholds, 50q each).
 
 ---
 
-## Architecture Diagram (After Milestone .57)
+## Architecture Diagram
 
 ```
-Query Input
-    │
-    ▼
-[Tier 0b] KAN Prompt-Injection Pre-filter   ← deployed .56 (AUROC=0.9078, FP=0.0%)
-    │ benign
-    ▼
-[Tier 0a] CarnotThinkProbe (ThinkPRM, arXiv 2504.16828)
-    │ uncertain
-    ▼
-[Tier 0c] NUP Probe v4 (contrastive energy probe, AUC=1.0)
-    │ low energy → early exit
-    ▼
-[Tier 0d] HallucinationBasinDetector (latent basin depth)
-    │ deep basin → early exit
-    ▼
-[Tier 0e] HalluField (thermodynamic instability, advisory)
-    │
-    ▼
-[Tier 0f] CoCoA Inter-Layer Disagreement    ← NEW in .57 (arXiv 2602.09486)
-    │ low disagreement → early exit
-    ▼
-[Tier 1] SinkProbe (attention sink concentration)
-    │
-    ▼
-[Tier 2] EORM (55M CoT energy reward model)
-    │
-    ▼
-[Tier 2.1] StepLevelJEPAProbe (step-pooled AUC=0.993)
-    │ likely violation          │ likely correct → skip 2.5-2.7
-    ├──→ FR11EventBus (FORMALLY CLOSED .57)
-    │    ├→ PerModelFPTracker (weight updates)
-    │    └→ SessionMemory (10-session stress-tested .57)
-    ▼
-[Tier 2.5] SymCodeVerifier (execution-based, AUC=0.804)
-[Tier 2.6] HermesVerifierAdapter
-[Tier 2.7] CausalReasoningVerifier
-    │
-    ▼
-[Tier 3] IsingEBM ←→ D-Wave Neal SamplerBackend  ← NEW backend validated .57
-    │
-    ▼ (code domain only)
-[2-Round Repair Loop]  ← NEW in .57 (arXiv 2604.10508)
-  round1: generate → CodeExtractor → execute → repair if fail
-  round2: re-execute → repair if still fail → report
+[User Query]
+     |
+     v
+[Tier 0: Fast Pre-filters]
+  ├── KAN Tier 0b (AUROC=0.9078, FP=0%)      ← Exp 735
+  ├── SymCodeVerifier (structured equation)    ← Exp 653
+  ├── ASTKnowledgeVerifier (NEW .58)          ← Exp 764
+  └── CoCoA inter-layer disagreement          ← .57
+     |
+     v (if pre-filter flags)
+[Tier 1: Ising Constraint Verification]
+  ├── ArithmeticExtractor / CoACEExtractor
+  ├── ConstraintAdditionEngine (NEW .58)      ← Exp 761
+  └── FPGA Ising Sampler (KV260, pending)    ← Exp 757/758
+     |
+     v (if Ising flags violation)
+[Tier 2: Learning + Memory]
+  ├── EORM step-level oracle
+  ├── JEPAReasonerProbe (AUC=0.993)          ← Exp 732
+  ├── SRSA Memory Gate (NEW .58)             ← Exp 756
+  └── SessionMemory (cross-session persist)  ← Exp 738
+     |
+     v (if Tier 2 confirms violation)
+[Tier 3: Repair]
+  ├── BoltzmannRepairBridge
+  ├── VerifyRepairPipeline (2-round, .58)    ← Exp 759
+  └── PSV Self-Play (SRSA-gated, .58)       ← Exp 756
+     |
+     v
+[FR-11 Relay: Violation → Memory Update]    ← FORMALLY CLOSED Exp 741
+
+[FPGA Hardware Path]
+  KV260 → Ising Sampler v3 RTL              ← Exp 757/758
+         (HLS energy fix required first)
 ```
 
 ---
 
 ## Phase Descriptions
 
-### Phase 0: Pre-flight + Governance (Mandatory First)
+### Phase 0: Operational Pre-Flight and Governance (Exp 754)
 
-**Exp 740** — Pre-flight v9 + Exp 527 Mandatory Retirement + DualGPU Fix
+**Mandatory first experiment.** Apply manifest_fix_patch.txt to scripts/research_conductor.py
+before any experiments dequeue. Confirm GPU health. Verify Exp 527 remains excluded. This is
+the fourth attempt to enforce manifest-based exclusion — this phase converts the patch from
+a text file to an actually applied code change.
 
-Critical governance debt from 11+ milestones:
-- Kill any zombie GPU processes
-- Add Exp 527 (live 100q precision) to exclusion manifest (mandatory per 3-consecutive governance)
-- Verify manifest patch was applied (check conductor-log.md for 'manifest_excluded' entries)
-- Implement DualGPU parallelization for Exp 383 class (EORM+JEPA ThreadPoolExecutor)
-- Confirm incremental test selection operational
+**Success criteria:** manifest_enforcement_applied=True AND gpu_clean AND exp527_excluded.
 
-### Phase 1: Formal Closure + Confirmation
+### Phase 1: PSV Relapse Architecture Diagnosis and Fix (Exps 755-756)
 
-**Exp 741** — FR-11 Formal Closure Documentation
+Two-experiment sequence:
+- **Exp 755 (Diagnosis):** Analyze the PSV coupling matrix across .57 session data. Measure
+  three hypotheses: (a) memory contamination from unverified repairs (SRSA hypothesis),
+  (b) constraint parameter overwriting during adaptation (PPSEBM hypothesis), (c) curriculum
+  collapse from exhausted question diversity. Report: which hypothesis explains fp_rate_slope
+  reversal? This determines which fix to apply.
+- **Exp 756 (Fix — SRSA Memory Gate):** Based on Exp 755 findings, implement SRSA memory gate
+  (Z3 verification before memory write) and/or PPS constraint freezing. Target: fp_rate_slope
+  < 0 after 30 self-play steps. Gate: fp_rate_slope_new30 < 0 confirms relapse resolved.
 
-Update all strategic docs to reflect FR-11 operational status. _bmad/traceability.md,
-self_learning/spec.md, known-issues.md. Write formal closure certificate.
+### Phase 2: FPGA HLS Energy Fix (Exps 757-758)
 
-**Exp 742** — RETRO-033 VR Confirmation 200q (Seed 999)
+Two-experiment sequence addressing RETRO-HLS-ENERGY:
+- **Exp 757 (Sign Fix):** Read hardware/kv260/ising_sampler_v4_kernel.cpp. Find the energy
+  accumulation loop. Fix sign convention: E += -J[i][j] * s[i] * s[j] (not +J). Validate:
+  CPU simulation energy near -3.0 for ferromagnetic ground state. honest_verdict=sign_fixed
+  when |energy_cpu - (-3.0)| < 0.5.
+- **Exp 758 (Yosys Synthesis):** Install yosys + nextpnr-ice40 as open-source Vivado
+  alternative. Attempt to synthesize ising_sampler_v3.v for iCE40. If synthesis succeeds,
+  produce a timing report. Even if iCE40 is too small for the full design, a partial synthesis
+  proves the RTL is synthesis-clean and gives resource estimates.
 
-Second 200q trial on Qwen3.5-0.8B with random seed 999 (different from seed 218 used
-in Exp 720). Definitively closes or reopens RETRO-033.
+### Phase 3: Live Code Repair + Gemma4 Threshold (Exps 759-760)
 
-**Exp 743** — Privacy Filter v2 Redesign (No Teacher Dependency)
+GPU REQUIRED experiments:
+- **Exp 759 (Iterative 2-Round Code Repair Live):** Execute the Exp 744 harness with
+  CARNOT_FORCE_LIVE=1. Run 50 HumanEval problems. Compare pass@1: single-round vs 2-round
+  repair. Include traceback + failed test case in repair prompt (arXiv 2604.10508 design).
+  Target: signed_improvement > 0 (any positive improvement counts as a win).
+- **Exp 760 (Gemma4 Threshold Grid):** Run 5 threshold settings [0.10, 0.20, 0.30, 0.40, 0.50]
+  on Gemma4-E4B-it, 50q per setting (250q total). Find the threshold where VR produces
+  signed_improvement > 0. Gate: at least one threshold achieves positive improvement.
 
-Remove openai/privacy-filter teacher dependency. Train KAN directly on regex PII
-features + Pile-of-Law PII public data. Target: AUROC >= 0.85, min_tp >= 1 per dataset.
+### Phase 4: Self-Learning and New Research (Exps 761-765)
 
-### Phase 2: New Capabilities (arXiv-Driven)
+Five CPU-eligible experiments advancing the research frontier:
+- **Exp 761 (Tier 1 Real Constraint Addition):** research-program.md priority — wire Tier 2
+  memory templates into ConstraintAdditionEngine. ADD constraints from memory patterns,
+  don't just reweight. Target: FP rate reduction on live data from Exp 759/760.
+- **Exp 762 (PPSEBM Progressive Constraint Selection):** arXiv 2512.15658 — EBM-guided
+  parameter freezing during PSV adaptation. Freeze constraints with low energy variance
+  (already calibrated); update only those with high variance. CPU-only synthetic test.
+- **Exp 763 (Dual-Pathway Hallucination Probe):** arXiv 2601.07422 — MixtureOfProbes(
+  question_probe, answer_probe, gate_network). Train on FoVer v2 pairs. Compare AUROC vs
+  single-pathway JEPAReasonerProbe (AUC=0.993). Filed for .57, now executing in .58.
+- **Exp 764 (AST-Based Code Hallucination Detector):** arXiv 2601.19106 — ASTKnowledgeVerifier
+  with library introspection Knowledge Base. 100% precision target. Integrate as Tier 0d
+  pre-filter for code tasks.
+- **Exp 765 (JEPA v19 — Tier 3 Predictive Verification):** Train on real violations from
+  Exps 742 + 759 + 760. JEPA v19 predicts violation probability from partial response.
+  Target: AUC > 0.75. This closes the self-learning loop from Tier 2 predictions to Tier 3
+  repair guidance — the missing link in the research-program.md Tier 3 architecture.
 
-**Exp 744** (GPU) — Iterative 2-Round Code Repair (arXiv 2604.10508)
+### Phase 5: Operational Retrospective (Exp 766)
 
-Implement TwoRoundCodeRepairPipeline. Benchmark on HumanEval with Qwen3.5-0.8B.
-Measure per-round improvement. Target: +4.9pp pass@1 (paper lower bound for small models).
-
-**Exp 745** (GPU) — CoCoA Inter-Layer Disagreement Tier 0f (arXiv 2602.09486)
-
-Implement CoCoADetector using Qwen3.5-0.8B middle layers (8-16). Compute ConMLDS per query.
-Evaluate AUC on FoVer v2. Wire as Tier 0f (advisory, after HalluField, before SinkProbe).
-
-**Exp 746** (GPU) — DualGPU Parallelized EORM+JEPA Retrain (Fix Exp 383 Class)
-
-Implement ThreadPoolExecutor parallel EORM+JEPA retrain. EORM on cuda:0, JEPA on cuda:1.
-Validate 2x speedup. Retire the sequential Exp 383 class from the slowest-5 permanently.
-
-### Phase 3: Self-Learning Advancement
-
-**Exp 747** (CPU) — Tier 1 Weight Convergence Audit
-
-Analyze PerModelFPTracker weight state after FR-11 relay operational since .56:
-are constraints converging? Which are most reliable? Any effectively disabled (weight ~0)?
-
-**Exp 748** (GPU) — Cross-Session Memory 10-Session Stress Test
-
-Extend Exp 738's 3-session test to 10 sessions (20q each, 200q total).
-Measure precision at sessions 1, 3, 5, 10. Confirm monotonic gain or plateau.
-This is the Tier 2 memory requirement from research-program.md.
-
-**Exp 749** (GPU) — PSV Domain-Diverse Monitoring (30 More Iterations)
-
-Continue domain-diverse PSV from Exp 737 with 30 additional iterations (total 60).
-Confirm fp_rate_slope remains negative. Monitor for reversal.
-
-### Phase 4: Research Frontier + Hardware
-
-**Exp 750** (CPU) — Vitis HLS Ising Sampler v4 (arXiv 2604.17109 Approach)
-
-Write ising_sampler_hls.cpp using the HLS C++ pattern from arXiv 2604.17109.
-Check if Vitis HLS available. If available: synthesize. If not: run as CPU simulation.
-
-**Exp 751** (CPU) — D-Wave Neal SamplerBackend Integration
-
-Install dwave-ocean-sdk. Implement DWaveNealBackend(SamplerBackend). Test on 20 real
-constraint problems from GSM8K violations. Compare vs ParallelIsingSampler.
-
-**Exp 752** (CPU) — HuggingFace Model Preparation
-
-Export StepLevelJEPAProbe and KAN Tier 0b weights. Write model cards. Prepare upload
-scripts. Actual push is operator action.
-
-**Exp 753** — Operational Retrospective
-
-Standard retrospective. Answer 6 key questions: FR-11 formal closure, RETRO-033 final
-status, privacy filter v2 result, CoCoA AUC, 2-round repair improvement, DualGPU impact.
+Milestone 2026.04.58 operational retrospective. Analyze wall time, experiment count,
+per-experiment average, slowest-5 composition, PSV relapse status, FPGA synthesis status,
+and open RETROs. Write results/operational_retro_2026_04_58.json.
 
 ---
 
 ## Dependency Graph
 
 ```
-Exp 740 (mandatory pre-flight)
-    │
-    ├── Exp 741 (FR-11 docs, CPU, no GPU dependency)
-    ├── Exp 742 (RETRO-033, GPU)
-    ├── Exp 743 (privacy filter v2, CPU)
-    ├── Exp 744 (2-round repair, GPU)
-    ├── Exp 745 (CoCoA Tier 0f, GPU for hidden states)
-    ├── Exp 746 (DualGPU retrain, GPU)
-    │       └── Exp 747 (weight audit, CPU — reads 746 weights)
-    ├── Exp 748 (10-session memory, GPU)
-    ├── Exp 749 (PSV monitoring, GPU)
-    ├── Exp 750 (Vitis HLS, CPU)
-    ├── Exp 751 (D-Wave Neal, CPU)
-    └── Exp 752 (HF prep, CPU)
-            └── Exp 753 (retrospective, reads all)
+Exp 754 (pre-flight, MANDATORY FIRST)
+  └── Exp 755 (PSV diagnosis)
+        └── Exp 756 (PSV fix — GATED on Exp 755 findings)
+  ├── Exp 757 (HLS sign fix)
+  │     └── Exp 758 (yosys synthesis — GATED on Exp 757 sign_fixed=True)
+  ├── Exp 759 (live code repair — GPU)
+  │     └── Exp 761 (Tier 1 constraint addition from Exp 759 violations)
+  │     └── Exp 765 (JEPA v19 on Exp 759+760 data)
+  ├── Exp 760 (Gemma4 threshold grid — GPU)
+  │     └── Exp 761 (Tier 1 constraint addition from Exp 760 violations)
+  │     └── Exp 765 (JEPA v19 on Exp 759+760 data)
+  ├── Exp 762 (PPSEBM constraint selection — CPU, no GPU dep)
+  ├── Exp 763 (dual-pathway probe — CPU)
+  ├── Exp 764 (AST code detector — CPU)
+  └── Exp 766 (retro — LAST, GATED on all others)
 ```
+
+---
+
+## Success Criteria
+
+| Criterion | Target | Gating Experiment |
+|-----------|--------|-------------------|
+| manifest_enforcement_applied | True | Exp 754 |
+| psv_relapse_root_cause_known | True | Exp 755 |
+| psv_fp_rate_slope_negative | fp_rate_slope_new30 < 0 | Exp 756 |
+| hls_energy_sign_fixed | |energy_cpu - (-3.0)| < 0.5 | Exp 757 |
+| live_code_repair_positive | signed_improvement > 0 | Exp 759 |
+| gemma4_positive_threshold_found | at least 1 of 5 thresholds > 0 | Exp 760 |
+| tier1_constraint_addition_works | fp_rate_delta < 0 | Exp 761 |
+| dual_pathway_probe_viable | AUROC ≥ 0.993 (or better than single-pathway) | Exp 763 |
+| ast_verifier_precision | precision = 1.0 | Exp 764 |
+| jepa_v19_auc | AUC > 0.75 | Exp 765 |
+
+---
+
+## Open RETROs Addressed in .58
+
+| RETRO | Status | Addressed By |
+|-------|--------|-------------|
+| RETRO-PSV-RELAPSE | CRITICAL (opened .57) | Exps 755-756 |
+| RETRO-HLS-ENERGY | CRITICAL (opened .57) | Exps 757-758 |
+| Manifest non-enforcement | 4th cycle | Exp 754 Phase 0 |
+| RETRO-031 (KAEM at n_vars>200) | LOW, carry | Deferred to .59 |
+| Cross-session memory plateau s2 | Opened .57 (Exp 748) | Exp 761 (Tier 1 addition) |
 
 ---
 
 ## Hardware Requirements
 
-| Experiment | GPU | VRAM | Notes |
+| Experiment | GPU | FPGA | Notes |
 |------------|-----|------|-------|
-| Exp 740 | No | — | Governance + DualGPU fix implementation |
-| Exp 741 | No | — | Docs only |
-| Exp 742 | Yes | 8GB | Qwen3.5-0.8B, 200q GSM8K |
-| Exp 743 | No | — | CPU KAN training on PII features |
-| Exp 744 | Yes | 8GB | Qwen3.5-0.8B HumanEval |
-| Exp 745 | Yes | 8GB | Qwen3.5-0.8B hidden state extraction |
-| Exp 746 | Yes | 16GB | DualGPU: EORM cuda:0, JEPA cuda:1 |
-| Exp 747 | No | — | CPU analysis of tracker weights |
-| Exp 748 | Yes | 8GB | 10-session cascade simulation |
-| Exp 749 | Yes | 8GB | PSV 30 iterations |
-| Exp 750 | No | — | Vitis HLS or CPU simulation |
-| Exp 751 | No | — | D-Wave Neal, CPU-only |
-| Exp 752 | No | — | Model card writing |
-| Exp 753 | No | — | Retrospective |
+| Exp 754 | Optional | No | GPU health check only |
+| Exp 755 | No | No | CPU analysis of session data |
+| Exp 756 | No | No | CPU self-play simulation |
+| Exp 757 | No | Optional | CPU validation; FPGA if Vivado installed |
+| Exp 758 | No | Yes (KV260) | Yosys + nextpnr; no Vivado needed |
+| Exp 759 | **YES** | No | CARNOT_FORCE_LIVE=1, RTX 3090 GPU 0 |
+| Exp 760 | **YES** | No | CARNOT_FORCE_LIVE=1, Gemma4 + RTX 3090 |
+| Exp 761 | Optional | No | Live GPU preferred; synthetic fallback OK |
+| Exp 762 | No | No | CPU synthetic |
+| Exp 763 | No | No | CPU (FoVer v2 training data) |
+| Exp 764 | No | No | CPU (AST parsing, no GPU needed) |
+| Exp 765 | No | No | CPU (JEPA v19 training on collected data) |
+| Exp 766 | No | No | Retrospective analysis only |
 
 ---
 
-## Success Criteria for Milestone .57
+## New Papers Incorporated
 
-| Goal | Success Condition | Experiment |
-|------|------------------|------------|
-| FR-11 formal closure | traceability.md updated, known-issues entry closed | Exp 741 |
-| RETRO-033 settled | positive confirmation OR hypothesis reopened | Exp 742 |
-| Privacy filter unblocked | AUROC >= 0.85, no upstream dependency | Exp 743 |
-| CoCoA Tier 0f wired | AUC >= 0.65 on FoVer v2, advisory signal in cascade | Exp 745 |
-| 2-round code repair | pass@1 improvement >= +2pp on HumanEval | Exp 744 |
-| DualGPU fix shipped | speedup >= 1.8x, Exp 383 class exits slowest-5 | Exp 746 |
-| Tier 2 memory 10-session | precision non-decreasing S1→S10 | Exp 748 |
-| Manifest enforcement | No legacy Exps 425/410/383 in conductor-log | Exp 740 |
+| Paper | Filed As | Experiment |
+|-------|----------|------------|
+| arXiv 2601.19106 (AST Code Hallucination) | Tier 0d candidate | Exp 764 |
+| arXiv 2504.16828 (PRMs That Think) | EORM verbalized head | Enhancement to Exp 759 |
+| arXiv 2512.15658 (PPSEBM: PPS + EBM) | PSV parameter freezing | Exp 762 |
+| arXiv 2603.21558 (SRSA Memory Gate) | PSV stability fix | Exp 756 |
+| arXiv 2512.03244 (Spark PRM) | PSV self-consistency weighting | Enhancement to Exp 756 |
+| arXiv 2601.07422 (Dual Pathway Probe) | MoP hallucination probe | Exp 763 |
 
 ---
 
-## Carry-Forward Open Items (Not Addressed in .57)
+## Experiment Summary
 
-- **KV260 FPGA synthesis** — Exp 750 investigates Vitis HLS but hardware synthesis
-  requires human install action. Do not queue another synthesis experiment without
-  confirmed tool available.
-- **AMD XDNA NPU** — 7th+ consecutive blocked cycle. Requires AMD GitHub Releases
-  wheel download (human action). Do not queue without confirmed install.
-- **VR Gemma4-E4B-it improvement** — still 0%. Requires LLM-as-extractor or model-
-  adaptive extraction. Targeting milestone 2026.04.58.
-- **Energy-guided best-of-N (SETS, arXiv 2501.19306)** — Depends on 2-round repair
-  being proven in .57. Target 2026.04.58.
+| ID | Title | Phase | GPU | Deliverable |
+|----|-------|-------|-----|-------------|
+| 754 | Pre-flight v10 + Manifest Enforcement | 0 | Optional | results/experiment_754_preflight_v10.json |
+| 755 | PSV Relapse Diagnosis | 1 | No | results/experiment_755_psv_relapse_diagnosis.json |
+| 756 | PSV Recovery v2 — SRSA Memory Gate | 1 | No | results/experiment_756_psv_srsa_gate.json |
+| 757 | HLS Energy Sign Fix | 2 | No | results/experiment_757_hls_energy_fix.json |
+| 758 | Yosys RTL Synthesis Attempt | 2 | No | results/experiment_758_yosys_synthesis.json |
+| 759 | Iterative 2-Round Code Repair Live | 3 | YES | results/experiment_759_iterative_code_repair_live.json |
+| 760 | Live Gemma4 Threshold Grid Search | 3 | YES | results/experiment_760_gemma4_threshold_grid.json |
+| 761 | Tier 1 Real Constraint Addition | 4 | Optional | results/experiment_761_tier1_constraint_addition.json |
+| 762 | PPSEBM Progressive Constraint Selection | 4 | No | results/experiment_762_ppsebm_constraint_select.json |
+| 763 | Dual-Pathway Hallucination Probe | 4 | No | results/experiment_763_dual_pathway_probe.json |
+| 764 | AST-Based Code Hallucination Detector | 4 | No | results/experiment_764_ast_knowledge_verifier.json |
+| 765 | JEPA v19 — Tier 3 Predictive Verification | 4 | No | results/experiment_765_jepa_v19_predictive.json |
+| 766 | Milestone 2026.04.58 Operational Retrospective | 5 | No | results/operational_retro_2026_04_58.json |
