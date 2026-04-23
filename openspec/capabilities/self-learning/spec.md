@@ -967,3 +967,48 @@ Sub-requirements:
 |-------------|--------|-------|
 | REQ-PROBE-010 | Implemented (python/carnot/pipeline/dual_pathway_probe.py) | Implemented (tests/python/test_experiment_763_dual_pathway_probe.py) |
 | REQ-PROBE-011 | Implemented (scripts/experiment_763_dual_pathway_probe.py) | Implemented (tests/python/test_experiment_763_dual_pathway_probe.py) |
+
+---
+
+## REQ-LEARN-043: JEPA v19 MUST Train Exclusively on Real Accumulated Violation Data
+
+JEPA v19 MUST be trained exclusively on real accumulated violation data from live GPU
+experiments (Exps 742, 759, 760, and fover_labeled_steps_live).  No synthetic data
+injection is permitted.  The experiment artifact MUST list data_sources and n_real_pairs.
+
+---
+
+## REQ-LEARN-044: JEPA v19 OOD AUC MUST Exceed 0.75 for Tier 3 Deployment
+
+**Given** JEPA v19 trained on real accumulated violation data
+**When** evaluated on OOD questions (GSM8K 800-999, never seen in training data)
+**Then** the OOD AUC MUST exceed 0.75 for Tier 3 deployment eligibility
+**Otherwise** a new RETRO-JEPA-OOD retrospective MUST be filed
+
+---
+
+## SCENARIO-LEARN-085: JEPA v19 Trains on Real Labeled Steps
+
+**Given** real labeled FoVer steps (step_text, label) from live GPU experiments
+**When** MultiStepJEPAv19.train(step_sequences, labels, n_epochs=200) is called
+**Then** training completes without error
+**And** the final training loss is a finite positive float
+
+---
+
+## SCENARIO-LEARN-086: JEPA v19 OOD AUC Reported in Artifact
+
+**Given** a trained MultiStepJEPAv19 and OOD evaluation set (GSM8K 800-999 range)
+**When** the experiment artifact is written
+**Then** it MUST contain ood_auc, in_dist_auc, n_real_pairs, data_sources, honest_verdict
+**And** honest_verdict MUST be one of: jepa_v19_ood_viable, jepa_v19_improving,
+  jepa_v19_still_below_random, jepa_v19_insufficient_data
+
+---
+
+## Implementation Status (REQ-LEARN-043, REQ-LEARN-044)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-043 | Planned (python/carnot/samplers/jepa_v19.py) | Planned (tests/python/test_experiment_765_jepa_v19_predictive.py) |
+| REQ-LEARN-044 | Planned (scripts/experiment_765_jepa_v19_predictive.py) | Planned (tests/python/test_experiment_765_jepa_v19_predictive.py) |

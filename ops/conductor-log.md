@@ -2550,3 +2550,5 @@ python/ |
 | 2026-04-23 07:07 UTC | Exp 762: PPSEBM Progressive Constraint Selection — | OK | 81 passed, 3 warnings in 4.68s |
 | 2026-04-23 07:20 UTC | Exp 763: Dual-Pathway Hallucination Probe — MoP Fu | OK | 81 passed, 3 warnings in 4.92s |
 | 2026-04-23 07:31 UTC | Exp 764: AST-Based Code Hallucination Detector — T | OK | 81 passed, 3 warnings in 4.49s |
+| 2026-04-23 07:38 UTC | Exp 765: JEPA v19 — Tier 3 Predictive Verification | FAIL | Claude Code error: You've hit your limit · resets 3pm (America/New_York)
+ |
