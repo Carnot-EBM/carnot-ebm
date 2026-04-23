@@ -2538,3 +2538,4 @@ python/ |
 | 2026-04-23 02:46 UTC | Exp 753: Milestone 2026.04.57 Operational Retrospe | OK | 81 passed, 3 warnings in 10.44s |
 | 2026-04-23 03:19 UTC | Plan milestone 2026.04.58 | OK | 13 tasks proposed |
 | 2026-04-23 03:24 UTC | Milestone 2026.04.58 activated | OK | 13 tasks queued |
+| 2026-04-23 03:38 UTC | Exp 754: Pre-flight v10 + Manifest Enforcement + G | OK | 81 passed, 3 warnings in 5.71s |
