@@ -1,0 +1,496 @@
+{
+  "experiment": 764,
+  "title": "AST Knowledge Verifier \u2014 Execution-Free Hallucination Detection (arXiv 2601.19106)",
+  "run_date": "20260423",
+  "started_at": "2026-04-23T07:29:28Z",
+  "finished_at": "2026-04-23T07:29:28Z",
+  "duration_s": 0.002,
+  "status": "success",
+  "cost_usd": 0.0,
+  "decision_class": "detect",
+  "n_correct_snippets": 25,
+  "n_hallucinated_snippets": 25,
+  "tp": 25,
+  "fp": 0,
+  "fn": 0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "violations_per_snippet": [
+    {
+      "code_preview": "import json data = json.loads(text)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import json s = json.dumps(obj)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import json with open(f) as fh:     data = json.load(fh)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import json with open(f, 'w') as fh:     json.dump(obj, fh)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import os result = os.path.join(a, b)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import os exists = os.path.exists(path)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import os os.makedirs(path, exist_ok=True)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import os files = os.listdir(path)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import sys args = sys.argv",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import sys sys.exit(0)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import re m = re.match(pattern, text)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import re matches = re.findall(pattern, text)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import re s = re.sub(pattern, repl, text)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import math result = math.sqrt(x)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import math result = math.floor(x)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import math result = math.log(x)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import random item = random.choice(lst)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import random random.shuffle(lst)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import random n = random.randint(1, 10)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "from collections import Counter c = Counter(lst)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "from collections import defaultdict d = defaultdict(list)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import itertools chain = itertools.chain(a, b)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import itertools product = list(itertools.product(a, b))",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import functools result = functools.reduce(fn, lst)",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import functools @functools.lru_cache(maxsize=128) def f(x):",
+      "label": "correct",
+      "violations": [],
+      "violation_detected": false
+    },
+    {
+      "code_preview": "import json data = json.parse(text)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "json",
+          "attr": "parse",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import json s = json.stringify(obj)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "json",
+          "attr": "stringify",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import json json.write_file(obj, path)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "json",
+          "attr": "write_file",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import json data = json.decode(text)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "json",
+          "attr": "decode",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import os data = os.read_file(path)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "os",
+          "attr": "read_file",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import os os.delete(path)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "os",
+          "attr": "delete",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import os os.copy_file(src, dst)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "os",
+          "attr": "copy_file",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import os files = os.walk_files(path)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "os",
+          "attr": "walk_files",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import sys sys.terminate(0)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "sys",
+          "attr": "terminate",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import sys path = sys.get_path()",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "sys",
+          "attr": "get_path",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import re matches = re.findall_named(pattern, text)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "re",
+          "attr": "findall_named",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import re m = re.search_all(pattern, text)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "re",
+          "attr": "search_all",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import re s = re.replace(pattern, repl, text)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "re",
+          "attr": "replace",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import math result = math.relu(x)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "math",
+          "attr": "relu",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import math result = math.sigmoid(x)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "math",
+          "attr": "sigmoid",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import math result = math.power(x, n)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "math",
+          "attr": "power",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import random item = random.choice_weighted(lst, weights)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "random",
+          "attr": "choice_weighted",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import random n = random.sample_one(lst)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "random",
+          "attr": "sample_one",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import random random.seed_from_entropy()",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "random",
+          "attr": "seed_from_entropy",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import collections c = collections.count(lst)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "collections",
+          "attr": "count",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import collections d = collections.sorted_dict()",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "collections",
+          "attr": "sorted_dict",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import itertools result = itertools.flatten(lst)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "itertools",
+          "attr": "flatten",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import itertools pairs = itertools.zip_longest_strict(a, b)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "itertools",
+          "attr": "zip_longest_strict",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import functools result = functools.compose(f, g)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "functools",
+          "attr": "compose",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    },
+    {
+      "code_preview": "import functools f2 = functools.memoize(f)",
+      "label": "hallucinated",
+      "violations": [
+        {
+          "module": "functools",
+          "attr": "memoize",
+          "violation_type": "missing_attr"
+        }
+      ],
+      "violation_detected": true
+    }
+  ],
+  "tier0d_deployed": true,
+  "honest_verdict": "tier0d_viable",
+  "schema": [
+    "cost_usd",
+    "decision_class",
+    "duration_s",
+    "experiment",
+    "f1",
+    "finished_at",
+    "fn",
+    "fp",
+    "honest_verdict",
+    "n_correct_snippets",
+    "n_hallucinated_snippets",
+    "precision",
+    "recall",
+    "run_date",
+    "started_at",
+    "status",
+    "tier0d_deployed",
+    "title",
+    "tp",
+    "violations_per_snippet"
+  ],
+  "invariant_violations": []
+}
