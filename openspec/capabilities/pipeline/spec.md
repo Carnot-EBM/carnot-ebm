@@ -310,6 +310,46 @@ method before submitting to ``neal.SimulatedAnnealingSampler``.
 
 **Spec traces:** REQ-SAMPLE-017
 
+---
+
+## REQ-PUBLISH-001: HuggingFace Model Card Requirements
+
+Every model published to the Carnot-EBM HuggingFace organisation MUST include a model card with:
+- Architecture description (what the model does and WHY the design choices were made)
+- Training data citation (dataset name, size, and collection methodology)
+- Evaluation metrics (AUC, AUROC, FP rate, latency as appropriate)
+- Usage example showing `pip install carnot` and inference code
+- Apache 2.0 license declaration
+- Explicit labeling of any simulated or synthetic evaluation results
+
+This requirement exists because novel model artifacts without model cards are invisible to the
+community. A discoverable, well-documented model card is the primary mechanism for directing
+users to `pip install carnot` and establishing the Carnot-EBM HuggingFace presence.
+
+Where REQ-SAFE-011 (teacher-duration invariant) applies, the model card MUST cite it.
+
+**Spec traces:** SCENARIO-PUBLISH-001
+
+---
+
+### SCENARIO-PUBLISH-001: HuggingFace Artifact Preparation
+
+**Given** two production-quality models exist (StepLevelJEPAProbe from Exp 738,
+  KAN Tier 0b from Exp 735) with validated weights and evaluation metrics
+**When** the operator runs `models/hf_upload_commands.sh` after `huggingface-cli login`
+**Then** both models are published to HuggingFace with complete model cards,
+  safetensors weights, and config JSON — all satisfying REQ-PUBLISH-001.
+
+**Acceptance criteria:**
+- Model cards have no emojis (professional presentation standard).
+- Config JSON contains all required fields (model_type, metrics, architecture, training_data).
+- Upload script references valid local file paths.
+- `honest_verdict` is one of `{"hf_artifacts_ready", "hf_artifacts_partial", "hf_jepa_weights_missing"}`.
+
+**Spec traces:** REQ-PUBLISH-001
+
+---
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -326,4 +366,5 @@ method before submitting to ``neal.SimulatedAnnealingSampler``.
 | REQ-INFRA-047b | Implemented | Exp 731 — GPU 1 zombie cleared, vram_after=4 MiB |
 | REQ-INFRA-048 | Implemented | Exp 740 — Exp 527 added to exclusion manifest |
 | REQ-INFRA-049 | Implemented | Exp 740 — DualGPURetrain in python/carnot/pipeline/dualgpu_retrain.py |
+| REQ-PUBLISH-001 | Implemented | Exp 752 — model cards, safetensors exports, hf_upload_commands.sh |
 | REQ-INFRA-050 | Implemented | Exp 746 — DualGPU retrain made default; sequential deprecated |
