@@ -2664,3 +2664,4 @@ python/ |
 | 2026-04-23 22:04 UTC | Plan milestone 2026.04.60 | OK | 13 tasks proposed |
 | 2026-04-23 22:09 UTC | Exp 779: Milestone 2026.04.59 Operational Retrospe | OK | Deliverable already exists in repo |
 | 2026-04-23 22:09 UTC | Milestone 2026.04.60 activated | OK | 13 tasks queued |
+| 2026-04-23 22:24 UTC | Exp 780: Pre-flight v12 — GPU Zombie Killer + Kill | OK | 81 passed, 3 warnings in 7.63s |
