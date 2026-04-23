@@ -542,3 +542,72 @@ Then:
 | REQ-FR11-006 | Implemented (scripts/experiment_738_step_probe_tier2_memory.py) | tests/python/test_experiment_738_step_probe_memory.py |
 | REQ-FR11-007 | Implemented (adaptive_thresholds.py) | tests/python/test_experiment_747_weight_audit.py |
 | REQ-FR11-008 | Implemented (scripts/experiment_747_tier1_weight_audit.py) | tests/python/test_experiment_747_weight_audit.py |
+
+---
+
+## REQ-FR11-009: 10-Session Memory Stress Test MUST Show Non-Decreasing Precision or Report Plateau
+
+**Given** a 10-session cross-session memory simulation with 20 questions per session (200q total)
+**When** each session Si loads persisted state from S(i-1) via SessionMemory.load_relay() and then
+  runs 20 questions through the cascade with FR-11 fully wired, then calls SessionMemory.persist()
+**Then** the precision series [precision_s1, ..., precision_s10] is monotonically non-decreasing
+  OR the first session where improvement plateaus (delta < 0.001) is reported as plateau_session
+  AND the system MUST NOT show regression (any session < prior session by > 0.01)
+
+Sub-requirements:
+- REQ-FR11-009-1: The experiment SHALL measure precision at sessions 1, 3, 5, 7, 10.
+- REQ-FR11-009-2: is_monotonically_non_decreasing SHALL be True when all(s[i] >= s[i-1]).
+- REQ-FR11-009-3: plateau_session SHALL be the first session index where delta < 0.001
+  (None when precision is still rising at S10).
+- REQ-FR11-009-4: honest_verdict SHALL be one of: "tier2_memory_monotonic_gain",
+  "tier2_memory_plateau_at_s{N}", or "tier2_memory_regression".
+
+**Implementation Status:** Implemented (scripts/experiment_748_cross_session_memory_10session.py, Exp 748)
+
+---
+
+## REQ-FR11-010: Templates Replayed Count MUST Be > 0 For Sessions S2 Through S10
+
+**Given** a multi-session simulation with cross-session memory active
+**When** each session Si (i >= 2) calls SessionMemory.load_relay() at session start
+**Then** templates_replayed_in_si > 0 for every session from S2 to S10
+  (at least one template from the prior session is immediately active)
+
+Sub-requirements:
+- REQ-FR11-010-1: The cumulative templates_replayed list SHALL have length 9 (one per S2..S10).
+- REQ-FR11-010-2: Each entry in templates_replayed_per_session SHALL be >= 1.
+- REQ-FR11-010-3: total_templates_at_s10 SHALL be the ConstraintTemplateLibrary total template count after S10.
+
+**Implementation Status:** Implemented (scripts/experiment_748_cross_session_memory_10session.py, Exp 748)
+
+---
+
+## SCENARIO-FR11-009: 10-Session Precision Is Non-Decreasing
+
+**Given** 10 sessions run with cross-session memory, 20q each, different question slices
+**When** precision is computed as fraction of truly-violated constraints detected correctly
+**Then** precision_s10 >= precision_s1 (overall improvement from start to end)
+**And** is_monotonically_non_decreasing is True OR plateau_session is reported (both are valid wins)
+
+**Spec traces:** REQ-FR11-009
+**Implementation Status:** Implemented (Exp 748)
+
+---
+
+## SCENARIO-FR11-010: Templates Replayed in Every Session S2-S10
+
+**Given** Session S1 accumulates at least 5 violations of one constraint type and calls persist()
+**When** Sessions S2 through S10 each call load_relay() at start
+**Then** templates_replayed > 0 in every subsequent session (pre-warmed constraint knowledge active)
+
+**Spec traces:** REQ-FR11-010
+**Implementation Status:** Implemented (Exp 748)
+
+---
+
+## Implementation Status (FR11-009/010)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-FR11-009 | Implemented (scripts/experiment_748_cross_session_memory_10session.py) | tests/python/test_experiment_748_10session_memory.py |
+| REQ-FR11-010 | Implemented (scripts/experiment_748_cross_session_memory_10session.py) | tests/python/test_experiment_748_10session_memory.py |
