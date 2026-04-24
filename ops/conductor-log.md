@@ -2670,3 +2670,4 @@ python/ |
 | 2026-04-23 23:00 UTC | Exp 783: JEPA v20 Retrain — Pooled Real Data + EDU | OK | 81 passed, 3 warnings in 7.52s |
 | 2026-04-23 23:07 UTC | Exp 784: JEPA v20 Cascade Deploy — Tier 3.5 Predic | OK | 81 passed, 3 warnings in 8.40s |
 | 2026-04-23 23:25 UTC | Exp 785: SOTA GGUF Code Repair v2 — 25 Problems, 9 | OK | 99 passed, 3 warnings in 17.40s |
+| 2026-04-24 00:47 UTC | Exp 786: Gemma4 OOM Fix v3 + VR Threshold Grid (GP | OK | 81 passed, 3 warnings in 31.25s |
