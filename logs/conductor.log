@@ -420,3 +420,20 @@ Done. All minimal updates complete:
 2026-04-24 07:52:49,026 [conductor] RESEARCH STEP: Exp 803: HuggingFace Publish v2 — SOPS Auth Spec (RETRO-HF-AUTH)
 2026-04-24 07:52:49,026 [conductor] ============================================================
 2026-04-24 07:52:49,044 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 07:52:49,100 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 07:52:49,100 [conductor] Running test suite (smart subset)...
+2026-04-24 07:52:54,712 [conductor] Pre-check: 81 passed, 3 warnings in 2.82s
+2026-04-24 07:52:54,832 [conductor] Injected 71 symbol signatures from 2 files (AST outlines)
+2026-04-24 07:52:54,832 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Deliverable is written and stable. All 10 tests pass. `honest_verdict=hf_models_published` — HF_TOKEN was present in the environment, `hf auth whoami` confirmed `ianblenke`, and the carnot-ising-sampler-v1 README was successfully updated.
+
+**Summary:** Created `scripts/experiment_803_hf_publish_v2.py` + `tests/python/test_experiment_803_hf_publish_v2.py` (10 tests passing), added REQ-PUBLISH-005/006 + SCENARIO-PUBLISH-009 to the pipeline spec, wrote `docs/sops-hf-token-setup.md`, and updated `models/hf_upload_commands.sh` with SOPS wiring. Deliverable `results/experiment_803_hf_publish_v2.json` written with `honest_verdict=hf_models_published`.
+2026-04-24 07:57:16,675 [conductor] Claude Code completed (exit 0)
+2026-04-24 07:57:16,689 [conductor] Changes:
+logs/conductor.log                     |  9 ++++
+ models/hf_upload_commands.sh           | 77 ++++++++++++++++++++++++++++++++--
+ openspec/capabilities/pipeline/spec.md | 44 +++++++++++++++++++
+ 3 files changed, 126 insertions(+), 4 deletions(-)
+2026-04-24 07:57:16,717 [conductor] DOGFOOD: Verification complete (total: 479 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 07:57:16,717 [conductor] Running test suite (smart subset)...
+2026-04-24 07:57:22,358 [conductor] Post-check: 81 passed, 3 warnings in 2.88s
