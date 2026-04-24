@@ -549,3 +549,48 @@ logs/conductor.log | 6 ++++++
 
 Done. Minimal honest docs applied.
 2026-04-24 09:13:49,822 [conductor] Claude Code completed (exit 0)
+2026-04-24 09:13:49,870 [conductor] Committed: [conductor] Update docs for Exp 805: Milestone 2026.04.61 Operational Retrospect
+2026-04-24 09:13:51,528 [conductor] Pushed to origin
+2026-04-24 09:13:51,528 [conductor] Documentation reconciliation committed
+2026-04-24 09:13:51,532 [conductor] Sleeping 30 minutes (chunked 60s ticks)...
+2026-04-24 09:18:51,533 [conductor] ...sleeping, 5/30 min elapsed
+2026-04-24 09:23:51,580 [conductor] ...sleeping, 10/30 min elapsed
+2026-04-24 09:28:51,666 [conductor] ...sleeping, 15/30 min elapsed
+2026-04-24 09:33:51,668 [conductor] ...sleeping, 20/30 min elapsed
+2026-04-24 09:38:51,672 [conductor] ...sleeping, 25/30 min elapsed
+2026-04-24 09:43:51,674 [conductor] Sleep complete — resuming
+2026-04-24 09:43:51,675 [conductor] --- Iteration 13 ---
+2026-04-24 09:43:51,813 [conductor] All 13 research tasks completed or exhausted. Nothing to do.
+2026-04-24 09:43:51,813 [conductor] All tasks in current milestone complete.
+2026-04-24 09:43:51,814 [conductor] Updating docs before planning next milestone...
+2026-04-24 09:43:51,815 [conductor] ============================================================
+2026-04-24 09:43:51,815 [conductor] UPDATING DOCS BEFORE PLANNING
+2026-04-24 09:43:51,815 [conductor] ============================================================
+2026-04-24 09:43:51,816 [conductor] Calling Claude Code (30 max turns, model: sonnet)...
+Error: Reached max turns (30)2026-04-24 09:48:27,647 [conductor] Claude Code failed (exit 1)
+2026-04-24 09:48:27,650 [conductor] No doc updates needed (or update failed)
+2026-04-24 09:48:27,650 [conductor] Running operational retrospective...
+2026-04-24 09:48:27,739 [conductor] ============================================================
+2026-04-24 09:48:27,739 [conductor] OPERATIONAL RETROSPECTIVE (milestone 2026.04.61)
+2026-04-24 09:48:27,739 [conductor] ============================================================
+2026-04-24 09:48:28,115 [conductor] Calling agent for operational retrospective...
+2026-04-24 09:48:28,115 [conductor] Calling Claude Code (15 max turns, model: sonnet)...
+Done. Here's what was written:
+
+**`results/operational_retro_2026_04_61.json`** — full-milestone augmented retro (schema v36, Exp 805). Key findings:
+
+1. **Slowest experiments**: All 5 are identical to .60 (Exp 786/527/491/627/603) — the first time in project history that zero composition change occurred across two consecutive milestones. Root causes documented per experiment (RETRO-028 4th attempt, Exp 527 8th post-retirement, paragraph batching still un-implemented, DualGPU still un-applied).
+
+2. **GPU utilization**: Sequential, with the thermal differential *widening* to 10°C (GPU 1 at 38°C vs GPU 0 at 48°C) — GPU 1 underutilization is increasing, not decreasing, despite 4 milestones of DualGPU recommendations.
+
+3. **No zombie processes**: GPU Zombie Killer (Exp 780) is working. Both GPUs clean at 4MB/0%.
+
+4. **Parallelization potential**: Exp 603 (training) and JEPA diagnostics (Exp 491) are clear DualGPU candidates. Conductor cycle itself (9.4 min / 12 experiments) demonstrates managed parallel roadmap works.
+
+5. **Pre-flight / doc reconciliation**: Conductor cycle is not the bottleneck (9.4 min). 99.7% of wall time is unguarded historical queue overhead.
+
+6. **Critical new finding — CPMI wiring miss**: Exp 798 generated augmentation_ratio=2.5 CPMI pairs; Exp 799 trained with ratio=1.0. JEPA v21 ood_auc=0.2444 is an all-time low from an implementation handoff error, not an algorithmic failure.
+
+7. **Estimated savings**: 25% structural potential; 8.3% near-term recoverable. The single highest-leverage fix remains applying manifest enforcement to all dequeue sites (52+ min/milestone, 30-60 min of engineering, already carrying 416 min of accrued waste).
+2026-04-24 09:53:20,879 [conductor] Claude Code completed (exit 0)
+2026-04-24 09:53:20,880 [conductor] Operational retrospective complete
