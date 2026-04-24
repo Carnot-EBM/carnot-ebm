@@ -515,3 +515,15 @@ Exp 804 documented as blocked on toolchain unavailability; deferred to native KV
 2026-04-24 09:03:54,006 [conductor] RESEARCH STEP: Exp 805: Milestone 2026.04.61 Operational Retrospective
 2026-04-24 09:03:54,006 [conductor] ============================================================
 2026-04-24 09:03:54,023 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 09:03:54,076 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 09:03:54,076 [conductor] Running test suite (smart subset)...
+2026-04-24 09:03:59,697 [conductor] Pre-check: 81 passed, 3 warnings in 2.83s
+2026-04-24 09:04:00,389 [conductor] Injected 56 symbol signatures from 2 files (AST outlines)
+2026-04-24 09:04:00,389 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-24 09:12:30,922 [conductor] Claude Code produced stable deliverable results/operational_retro_2026_04_61.json (8.5 min elapsed) — killing subagent early
+2026-04-24 09:12:30,964 [conductor] Changes:
+logs/conductor.log | 6 ++++++
+ 1 file changed, 6 insertions(+)
+2026-04-24 09:12:30,984 [conductor] DOGFOOD: Verification complete (total: 481 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 09:12:30,984 [conductor] Running test suite (smart subset)...
+2026-04-24 09:12:37,061 [conductor] Post-check: 81 passed, 3 warnings in 3.09s
