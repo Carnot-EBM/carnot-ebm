@@ -2392,6 +2392,9 @@ Spec: SCENARIO-LEARN-144
 | REQ-LEARN-092 | N/A | Implemented | Python (test_psv_parallel_chains.py) |
 | REQ-LEARN-093 | N/A | Implemented | Python (test_experiment_797_jepa_v21_data_collection.py) |
 | REQ-LEARN-094 | N/A | Implemented | Python (test_experiment_797_jepa_v21_data_collection.py) |
+| REQ-LEARN-095 | N/A | Implemented | Python (test_experiment_799_jepa_v21_retrain.py) |
+| REQ-LEARN-096 | N/A | Implemented | Python (test_experiment_799_jepa_v21_retrain.py) |
+| REQ-LEARN-097 | N/A | Implemented | Python (test_experiment_799_jepa_v21_retrain.py) |
 
 ## REQ-LEARN-052
 
@@ -2403,6 +2406,46 @@ in [0.15, 0.60]. In CI mode, CPMI score is approximated via cosine-similarity pr
 
 The augmented corpus MUST have augmentation_ratio >= 2.0 (triples / input pairs), ensuring
 the contrastive training set is at least twice the size of the original labeled set.
+
+## REQ-LEARN-095: JEPA v21 Multi-Source Training with CPMI Augmentation
+
+JEPA v21 MUST be trained on a multi-source corpus spanning >= 2 domains (GSM8K, MATH-500,
+HumanEval) with CPMI-augmented contrastive triples. augmentation_ratio >= 2.0 (triples /
+input labeled pairs). Sources are merged from fover_labeled_steps_v21_multi.json (primary)
+and experiment_798_cpmi_pairs_triples.json (CPMI triples).
+
+Spec: REQ-LEARN-095, SCENARIO-LEARN-096, SCENARIO-LEARN-097
+
+## REQ-LEARN-096: JEPA v21 PROGRS Outcome-Conditioned Centering
+
+JEPA v21 training MUST apply PROGRS outcome-conditioned centering: weight each step-pair
+loss by source_domain_accuracy for the pair's source domain. Domain accuracy values reflect
+live benchmark performance (gsm8k: 0.14, math500: 0.12, humaneval: 0.20). This corrects
+for domain difficulty — harder domains get lower weights so the model does not overfit to
+high-error domains.
+
+Spec: REQ-LEARN-096, SCENARIO-LEARN-096
+
+## REQ-LEARN-097: JEPA v21 OOD Deployment Gate
+
+JEPA v21 deployment gate: ood_auc >= 0.75 required to wire into ThreeTierPipeline as
+Tier 3.5. If gate passes, model saved to results/jepa_predictor_v21.safetensors and
+tier35_deployed=True. If gate fails, per-domain AUC failure analysis MUST be produced
+with recommendations for v22.
+
+Spec: REQ-LEARN-097, SCENARIO-LEARN-096, SCENARIO-LEARN-097
+
+## SCENARIO-LEARN-096: JEPA v21 Multi-Source Training Succeeds, OOD Gate Passes
+
+Given multi-source corpus (>= 2 domains, n_labeled_total >= 80) and CPMI triples from
+Exp 798, JEPA v21 trains with PROGRS outcome-conditioned weights; ood_auc >= 0.75;
+model saved; Tier 3.5 wired into ThreeTierPipeline; honest_verdict = "jepa_v21_tier35_deployed".
+
+## SCENARIO-LEARN-097: JEPA v21 OOD Below Gate, Failure Analysis Produced
+
+Given training completes but ood_auc < 0.75; per-domain AUC breakdown identifies which
+domain contributes most to OOD variance; recommendations for v22 produced;
+tier35_deployed = False; honest_verdict = "jepa_v21_below_gate".
 
 ## SCENARIO-LEARN-095
 

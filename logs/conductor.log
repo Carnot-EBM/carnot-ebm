@@ -229,3 +229,16 @@ Done. Updated ops/changelog.md with Exp 798 entry:
 2026-04-24 05:11:34,990 [conductor] RESEARCH STEP: Exp 799: JEPA v21 Retrain + Cascade Deploy Gate (FR-11 mandatory, GATED on Exp 797 n_labeled>=80)
 2026-04-24 05:11:34,990 [conductor] ============================================================
 2026-04-24 05:11:35,009 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 05:11:35,063 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 05:11:35,063 [conductor] Running test suite (smart subset)...
+2026-04-24 05:11:40,836 [conductor] Pre-check: 81 passed, 3 warnings in 2.93s
+2026-04-24 05:11:44,118 [conductor] Injected 37 symbol signatures from 2 files (AST outlines)
+2026-04-24 05:11:44,118 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-24 05:27:15,088 [conductor] Claude Code produced stable deliverable results/experiment_799_jepa_v21_retrain.json (15.5 min elapsed) — killing subagent early
+2026-04-24 05:27:15,132 [conductor] Changes:
+logs/conductor.log                         |  6 +++++
+ openspec/capabilities/autoresearch/spec.md | 43 ++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
+2026-04-24 05:27:15,160 [conductor] DOGFOOD: Verification complete (total: 475 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 05:27:15,160 [conductor] Running test suite (smart subset)...
+2026-04-24 05:27:21,194 [conductor] Post-check: 81 passed, 3 warnings in 3.15s
