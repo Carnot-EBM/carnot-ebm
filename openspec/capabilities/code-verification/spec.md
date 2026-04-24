@@ -911,9 +911,44 @@ when ASTKnowledgeVerifier.verify() is called and violations are non-empty, then
 the caller concludes violation_detected=True and skips Ising verification,
 because 100% precision guarantees this is a real error.
 
+## S* Energy Pre-Ranking Requirements (arXiv 2502.14382)
+
+### REQ-RANK-001: SStarEnergyRanker Candidate Energy Computation
+
+The SStarEnergyRanker MUST compute Carnot energy for each code candidate using
+static structural analysis (bag-of-tokens embedding). It MUST select the
+lowest-energy candidate as the predicted-best candidate before any execution
+tests are run. This implements the pre-filtering stage from the S* test-time
+scaling paper (arXiv 2502.14382), replacing expensive oracle execution with
+energy-based selection.
+
+### REQ-RANK-002: Energy Pre-Filtering Metrics
+
+The system MUST report the following metrics for energy pre-ranking experiments:
+- energy_correct_rank_pct: fraction of problems where the energy-selected
+  candidate (lowest energy) matches the correct candidate (passes execution test)
+- tests_saved_pct: estimated fraction of execution tests avoided by using energy
+  pre-filtering. Reported as (1 - 1/n_candidates) when energy_correct_rank_pct
+  >= 0.60; zero otherwise (energy must be reliable enough to justify skipping)
+
+### SCENARIO-RANK-001: Energy Rank Returns Sorted Candidate List
+
+Given a list of code candidates with different operator usage, when
+SStarEnergyRanker.rank_by_energy() is called, then the returned list MUST be
+sorted ascending by computed energy (lowest energy first), and all input
+candidates MUST appear in the output (no candidates dropped).
+
+### SCENARIO-RANK-002: Tests-Saved Threshold Gate
+
+Given energy_correct_rank_pct = 0.45 (below the 0.60 threshold), when
+tests_saved_pct is computed, then it MUST equal 0.0 — the energy signal is
+not reliable enough to skip execution tests at this accuracy level.
+
 ## Implementation Status
 
 | Requirement | Status |
 |-------------|--------|
 | REQ-EXTRACT-035 | Implemented |
 | REQ-EXTRACT-036 | Implemented |
+| REQ-RANK-001 | Implemented (Exp 787) |
+| REQ-RANK-002 | Implemented (Exp 787) |
