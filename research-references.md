@@ -3847,3 +3847,61 @@ thermodynamic computing Ising FPGA
   toy problem, we know our plumbing is not wildly off.
 - **When to incorporate:** Reference material only; link from
   `docs/usage-guide.md` and from onboarding material for new contributors.
+
+## 2026-04-24 arxiv Scan (Milestone 2026.04.63 Planning)
+
+### AgentAuditor: Multi-Agent LLM Reasoning Tree Auditing Outperforms Majority Vote
+- **Paper:** arXiv 2602.09341 (February 2026)
+- **What:** Audits reasoning trees produced by multiple LLM agents by searching for
+  divergence/agreement points across agent traces. Identifies "confabulation consensus" where
+  agents converge on a shared wrong rationale. Achieves +5% absolute improvement over majority
+  voting and LLM-as-Judge baselines on factual verification benchmarks.
+- **Relevance to Carnot:** Directly addresses RETRO-ARBITER-FLAT-ENERGY from Exp 817
+  (MultiAgentArbiter accuracy=0.33, all scores=0.0). Carnot's arbiter currently assigns
+  identical energy to all agent responses because IsingConstraintInjector has a sign error.
+  Once the energy sign is fixed (Exp 819), AgentAuditor's consensus detection logic can
+  supplement energy ranking: when all agents converge (low energy divergence), apply a
+  consensus penalty that rewards agents with distinct correct reasoning over shared wrong
+  reasoning.
+- **Concrete experiment:** Exp 822 — MultiAgentArbiterFixV2: incorporate AgentAuditor consensus
+  detection as a tie-breaking signal when all agent energies are within 0.01 of each other.
+  Test on 6 synthetic math debate scenarios + 6 adversarial scenarios where wrong answer
+  is the majority. Target: arbiter_accuracy >= 0.80.
+- **When to incorporate:** Milestone 2026.04.63 — Phase 1 arbiter fix (Exp 822).
+
+### From Mathematical Reasoning to Code: Generalization of Process Reward Models
+- **Paper:** arXiv 2506.00027 (May 2026)
+- **What:** Analyzes cross-domain generalization of process reward models: trains PRMs on
+  math (GSM8K, MATH-500) and evaluates on code generation (HumanEval). Shows PRMs transfer
+  with moderate degradation (~8% AUC drop), with MCTS being most effective for abundant
+  compute and Best-of-N for resource-limited scenarios.
+- **Relevance to Carnot:** Carnot's JEPA has been trained and evaluated exclusively on GSM8K
+  arithmetic. JEPA v22 (ood_auc=0.5 after RA-PRM) fails cross-domain because all training
+  data comes from one distribution. This paper quantifies the baseline cross-domain degradation
+  for PRMs, giving Carnot a comparison target. Also validates JEPA as a PRM-class model that
+  should transfer — if Carnot's JEPA is below the published transfer degradation baseline,
+  the data curation is the problem, not the architecture.
+- **Concrete experiment:** Exp 826 — PRMCrossDomainBenchmark: evaluate JEPA v23 on GSM8K
+  (in-distribution), HumanEval code steps (from Exp 820 results), and ARC-Challenge planning
+  steps. Compare against the ~8% AUC cross-domain degradation baseline from this paper.
+  CPU-only (uses stored CoT step results, no live GPU needed).
+- **When to incorporate:** Milestone 2026.04.63 — Phase 2 cross-domain benchmark (Exp 826).
+
+### Beyond Outcome Verification: Verifiable Process Reward Models for Structured Reasoning
+- **Paper:** arXiv 2601.17223 (January 2026)
+- **What:** Distinguishes verifiable outcome rewards (binary final answer check) from verifiable
+  process rewards (step-by-step formal verification). Demonstrates that process rewards enable
+  finer-grained error detection and improve PRM calibration on math + code tasks. The key
+  insight: formal verifiability at the step level creates interpretable certificates that
+  practitioners can audit, unlike scalar reward scores.
+- **Relevance to Carnot:** Carnot's IsingEBM already produces step-level energy scores, but
+  they lack formal verifiability certificates. This paper motivates adding a "step certificate"
+  field to VerificationResult: which step(s) had high energy, what constraint was violated,
+  and what Z3/SymCode verdict supports the violation claim. The certificate makes Carnot's
+  output auditable beyond the scalar energy score, directly addressing the credibility gap
+  for the enterprise market (Tier B: Compliance Checker).
+- **Concrete experiment:** Exp 826 (joint with above) — add certificate output to JEPA v23
+  evaluation: for each OOD step, emit a VerificationCertificate(step_id, energy_delta,
+  constraint_type, z3_verdict, confidence). Evaluate certificate precision on known Z3-verified
+  FoVer steps.
+- **When to incorporate:** Milestone 2026.04.63 — Phase 2 cross-domain benchmark (Exp 826).
