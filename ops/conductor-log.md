@@ -2707,3 +2707,5 @@ python/ |
 | 2026-04-24 20:25 UTC | Exp 814: FR-11 Tier 1 Live Relay — Capacity-Constr | OK | 81 passed, 3 warnings in 2.83s |
 | 2026-04-24 21:03 UTC | Exp 815: Variable Granularity Energy Scheduling (a | OK | 81 passed, 3 warnings in 2.75s |
 | 2026-04-24 21:39 UTC | Exp 816: KV260 Open-Source Synthesis v2 (GATED on  | OK | 81 passed, 3 warnings in 2.78s |
+| 2026-04-24 22:23 UTC | Exp 817: Multi-Agent Arbiter MCP Tool — Energy-Ran | FAIL | Post-tests failed: 1 failed, 123 passed, 3 warnings in 8.83s |
+| 2026-04-24 22:53 UTC | Exp 817: Multi-Agent Arbiter MCP Tool — Energy-Ran | OK | Deliverable already exists in repo |
