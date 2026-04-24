@@ -2578,3 +2578,39 @@ Given Exp 808 ood_auc=0.45 (< 0.75):
   - Evaluates and logs improved ood_auc
   - honest_verdict = "rapbm_ood_improved" if ood_auc > Exp 808 ood_auc
   - honest_verdict = "rapbm_no_gain" otherwise
+
+### REQ-LEARN-813-001: Constraint Addition Delta MUST Be Evaluated on Live GPU Inference
+
+Exp 813 evaluates constraint addition delta using inference_mode=live_gpu.
+Synthetic_cpu delta results (as seen in Exps 801/802) are labeled synthetic_only
+and do NOT count toward RETRO-CONSTRAINT-ZERO-DELTA closure.
+
+Before running live sessions, Exp 813 loads Exp 812's result and gates on
+honest_verdict == "injection_works".  If the gate fails, the experiment writes a
+blocked artifact with honest_verdict="injection_not_wired" and exits immediately.
+
+Spec: REQ-LEARN-813-001
+
+### REQ-LEARN-813-002: Closing RETRO-CONSTRAINT-ZERO-DELTA Requires delta_overall > 0 on Live GPU
+
+Closing RETRO-CONSTRAINT-ZERO-DELTA requires ALL of the following:
+  1. inference_mode = "live_gpu" (confirmed by LiveGPUGate.require_live_or_blocked)
+  2. IsingConstraintInjector wired to EmbeddingConstraintStore (Exp 812 gate passes)
+  3. delta_overall > 0 across 3 sessions × 10 questions = 30 questions total
+  4. honest_verdict = "constraint_addition_works_live"
+
+delta_overall is defined as the arithmetic mean of per-session delta values:
+  delta_session_i = inject_correct_i - baseline_correct_i
+
+Spec: REQ-LEARN-813-002
+
+### SCENARIO-LEARN-813-001: 30q x 3 Sessions Live GPU — Constraint Injection Active
+
+Given live GPU available AND Exp 812 honest_verdict == "injection_works":
+  - Exp 813 runs 3 sessions of 10 GSM8K questions each
+  - Each session compares baseline VerifyRepairPipeline vs embedding-injected pipeline
+  - Example target values: delta_s1=0.05, delta_s2=0.08, delta_s3=0.12
+  - delta_overall = mean([0.05, 0.08, 0.12]) = 0.0833
+  - retro_constraint_zero_delta_closed = True
+  - honest_verdict = "constraint_addition_works_live"
+  - store.update_from_session_violations() called after each session
