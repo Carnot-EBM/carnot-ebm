@@ -734,3 +734,16 @@ No new capability milestone row in ops/status.md (infrastructure deployment). FP
 2026-04-24 12:21:54,869 [conductor] RESEARCH STEP: Exp 808: JEPA v22 CPMI Corpus Rewire + Retrain (RETRO-JEPA-OOD attempt #10, FR-11 mandatory)
 2026-04-24 12:21:54,869 [conductor] ============================================================
 2026-04-24 12:21:54,887 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 12:21:54,942 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 12:21:54,942 [conductor] Running test suite (smart subset)...
+2026-04-24 12:22:00,577 [conductor] Pre-check: 81 passed, 3 warnings in 2.85s
+2026-04-24 12:22:00,714 [conductor] Injected 41 symbol signatures from 4 files (AST outlines)
+2026-04-24 12:22:00,714 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-24 12:38:01,671 [conductor] Claude Code produced stable deliverable results/experiment_808_jepa_v22_retrain.json (16.0 min elapsed) — killing subagent early
+2026-04-24 12:38:01,695 [conductor] Changes:
+logs/conductor.log                         |  6 ++++
+ openspec/capabilities/autoresearch/spec.md | 54 ++++++++++++++++++++++++++++++
+ 2 files changed, 60 insertions(+)
+2026-04-24 12:38:01,716 [conductor] DOGFOOD: Verification complete (total: 484 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 12:38:01,716 [conductor] Running test suite (smart subset)...
+2026-04-24 12:38:08,362 [conductor] Post-check: 81 passed, 3 warnings in 3.59s
