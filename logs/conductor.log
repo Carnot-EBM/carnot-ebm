@@ -1014,3 +1014,22 @@ All markings strict to honest_verdict=injection_negative_delta. Never "✅ Compl
 2026-04-24 15:44:34,668 [conductor] RESEARCH STEP: Exp 813: Constraint Addition Live Validation — Real GPU Delta (RETRO-CONSTRAINT-ZERO-DELTA, GPU Required)
 2026-04-24 15:44:34,668 [conductor] ============================================================
 2026-04-24 15:44:34,686 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 15:44:34,748 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 15:44:34,748 [conductor] Running test suite (smart subset)...
+2026-04-24 15:44:40,367 [conductor] Pre-check: 81 passed, 3 warnings in 2.86s
+2026-04-24 15:44:40,503 [conductor] Injected 91 symbol signatures from 4 files (AST outlines)
+2026-04-24 15:44:40,504 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 16 tests pass. Deliverables complete:
+
+- **`results/experiment_813_constraint_addition_live.json`** — blocked artifact (`honest_verdict=injection_not_wired`) because Exp 812 returned `injection_negative_delta`, not `injection_works`
+- **`scripts/experiment_813_constraint_addition_live.py`** — full implementation with both gates (Exp 812 gate + LiveGPUGate), 3-session runner, and `assert_deliverable_written()`
+- **`tests/python/test_experiment_813_constraint_addition_live.py`** — 16 tests covering gate blocking, delta_overall computation, and honest_verdict mapping; all pass
+- **`openspec/capabilities/autoresearch/spec.md`** — added REQ-LEARN-813-001, REQ-LEARN-813-002, and SCENARIO-LEARN-813-001
+2026-04-24 15:48:09,759 [conductor] Claude Code completed (exit 0)
+2026-04-24 15:48:09,772 [conductor] Changes:
+logs/conductor.log                         | 12 ++++++++++
+ openspec/capabilities/autoresearch/spec.md | 36 ++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+2026-04-24 15:48:09,801 [conductor] DOGFOOD: Verification complete (total: 489 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 15:48:09,801 [conductor] Running test suite (smart subset)...
+2026-04-24 15:48:15,403 [conductor] Post-check: 81 passed, 3 warnings in 2.83s
