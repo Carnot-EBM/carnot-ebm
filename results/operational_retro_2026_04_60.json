@@ -1,0 +1,95 @@
+{
+  "schema": "carnot.operational_retro.v35",
+  "experiment": 792,
+  "title": "Milestone 2026.04.60 Operational Retrospective — JEPA v20 Data Surge + SOTA GGUF Confirmed + Constraint Memory to Constraint Generation",
+  "run_date": "20260424",
+  "started_at": "2026-04-24T02:20:32Z",
+  "finished_at": "2026-04-24T02:25:00Z",
+  "duration_s": 328.0,
+  "status": "success",
+  "milestone": "2026.04.60",
+  "experiment_range": "780-792",
+  "n_experiments": 12,
+  "total_wall_time_min": 110.2458,
+  "mean_min_per_experiment": 9.1872,
+  "prev_milestone_wall_time_min": 128.484,
+  "wall_time_delta": -18.2382,
+  "improvement": true,
+  "improvement_note": "First improvement after .59 regression. However, still driven by Exp 785 90-min timeout (same RETRO-SOTA-GGUF-TIMEOUT pattern). Excluding Exp 785, remaining 11 experiments total 20.25 min (mean 1.84 min/experiment).",
+  "success_criteria_met": {
+    "gpu_zombie_fix_deployed": true,
+    "jepa_v20_data_collected": false,
+    "edu_prm_selection_works": true,
+    "jepa_v20_ood_viable": false,
+    "tier35_deployed": false,
+    "sota_code_repair_positive": false,
+    "gemma4_retro028_closed": false,
+    "sstar_energy_prefilter_tested": true,
+    "constraint_addition_tested": true,
+    "ebm_calibration_measured": true,
+    "npu_new_option_tried": true,
+    "kv260_n32_bitstream": false
+  },
+  "criteria_met_count": 6,
+  "criteria_total": 12,
+  "headline_results": {
+    "gpu_zombie_fix_deployed": "setup_gpu_wired=True, no_zombies_found (Exp 780)",
+    "jepa_v20_data_collected": "n_labeled=0 — blocked_no_live_gpu, CARNOT_FORCE_LIVE not set (Exp 781)",
+    "edu_prm_selection_works": "uncertainty_selected_pct=0.316 >= 0.30 gate, 18/57 steps selected (Exp 782)",
+    "jepa_v20_ood_viable": "ood_auc=0.4467 < 0.75 gate — REGRESSION vs v19 ood_auc=0.5667 (Exp 783)",
+    "tier35_deployed": "tier35_deployed=False — blocked_ood_auc_below_gate (Exp 784)",
+    "sota_code_repair_positive": "TIMED_OUT at 90 min — no signed_improvement computed (Exp 785)",
+    "gemma4_retro028_closed": "loader_test_passed=False — blocked_no_live_gpu (Exp 786)",
+    "sstar_energy_prefilter_tested": "energy_correct_rank_pct=0.70, tests_saved_pct=0.75 (Exp 787)",
+    "constraint_addition_tested": "constraint_addition_delta=0.0 — static=dynamic, no net improvement (Exp 788)",
+    "ebm_calibration_measured": "ECE_before=0.3165, ECE_after=0.1026, ece_improvement=0.2139 (Exp 789)",
+    "npu_new_option_tried": "option_a_success=True, mlir_aie installed, Vitis toolchain required for benchmark (Exp 790)",
+    "kv260_n32_bitstream": "pnr_success_ice40=False — yosys/nextpnr-ice40/icepack not installed (Exp 791)"
+  },
+  "slowest_5": [
+    {"exp_id": 785, "duration_min": 90.0, "title": "SOTA GGUF Code Repair v2 — TIMED OUT at 90 min hard cap"},
+    {"exp_id": 786, "duration_min": 14.25, "title": "Gemma4 OOM Fix v3 + VR Grid (RETRO-028 Definitive Closure attempt)"},
+    {"exp_id": 781, "duration_min": 5.15, "title": "JEPA v20 Live Data Collection — blocked_no_live_gpu"},
+    {"exp_id": 783, "duration_min": 0.4092, "title": "JEPA v20 Retrain: EDU-PRM Selected Corpus"},
+    {"exp_id": 790, "duration_min": 0.1743, "title": "NPU Unblock v9 — Option A (GitHub wheel)"}
+  ],
+  "retros_closed": [],
+  "retros_opened": [
+    "RETRO-JEPA-V20-NO-DATA: Exp 781 blocked because CARNOT_FORCE_LIVE not set in CI environment. n_labeled=0 — no live data collected. JEPA v20 retrain (Exp 783) ran on only 18 EDU-PRM-selected pairs from the v19 corpus, producing ood_auc=0.4467 which is WORSE than v19 (0.5667). Root cause: data starvation. Fix: run Exp 781 with CARNOT_FORCE_LIVE=1 on RTX 3090 to collect live pairs before next retrain.",
+    "RETRO-CONSTRAINT-ZERO-DELTA: Exp 788 constraint_addition_delta=0.0. Dynamic (memory-augmented) IsingEBM equals static baseline (static_accuracy=dynamic_accuracy=0.40 vs oracle=0.60). Constraint addition from error patterns not improving accuracy. Root cause: synthetic patterns too coarse (carry/sign/unit errors encoded as scalar penalty, not structured constraint). Next: use real embedding-based constraint retrieval instead of keyword pattern counts.",
+    "RETRO-KV260-TOOLS-UNAVAILABLE: Exp 791 yosys=False, nextpnr_ice40=False, icepack=False — all three open-source FPGA tools absent from PATH. Synthesis blocked at tool-check stage. Fix: install yosys + nextpnr-ice40 + icestorm via system package manager before milestone .61 KV260 experiments."
+  ],
+  "retros_still_open": [
+    "RETRO-028: Gemma4 loader CUDA OOM — Exp 786 blocked_no_live_gpu (CI env, not OOM). RETRO-028 remains unresolved for live GPU runs. Requires kill_gpu_zombies() before Gemma4 load on 24 GiB card.",
+    "RETRO-JEPA-OOD-V20: ood_auc=0.4467 in v20 — REGRESSION vs v19 (0.5667). Root cause: v20 retrained on only 18 EDU-PRM pairs (no new live data). Need CARNOT_FORCE_LIVE=1 run first.",
+    "RETRO-SOTA-GGUF-TIMEOUT: Exp 785 timed out again at 90 min — second consecutive milestone timeout for SOTA GGUF code repair. Prerequisite: RETRO-028 must close (live GPU path) before this experiment can complete.",
+    "RETRO-HF-AUTH: HuggingFace authentication not available in CI environment. No experiment attempted this milestone. Required: HF_TOKEN in environment or SOPS-encrypted credentials.",
+    "RETRO-JEPA-V20-NO-DATA: Newly opened — Exp 781 blocked_no_live_gpu, 0 pairs collected.",
+    "RETRO-CONSTRAINT-ZERO-DELTA: Newly opened — Exp 788 constraint_addition_delta=0.0.",
+    "RETRO-KV260-TOOLS-UNAVAILABLE: Newly opened — yosys/nextpnr-ice40/icepack not installed."
+  ],
+  "milestone_wins": [
+    "Wall-time improvement: 110.25 min vs 128.48 min (.59) — 18.24 min saved, first improvement after .59 regression.",
+    "EDU-PRM step selection (Exp 782): uncertainty_selected_pct=0.316 exceeds 0.30 gate — corpus selection method validated.",
+    "S* energy prefilter (Exp 787): energy_correct_rank_pct=0.70, tests_saved_pct=0.75 on 20 CPU-only problems — energy ranking eliminates 75% of test oracle calls.",
+    "EBM calibration (Exp 789): ECE reduced from 0.3165 to 0.1026 via isotonic regression (67.6% ECE improvement) — calibrated confidence scores now available.",
+    "NPU mlir-aie installed (Exp 790): option_a_success=True, mlir_aie importable — Xilinx NPU toolchain unblocked, awaiting Vitis for GEMM benchmark.",
+    "Gate governance: Exp 784 correctly blocked tier35 deployment when ood_auc=0.4467 < 0.75 — governance working without human intervention."
+  ],
+  "milestone_failures": [
+    "Exp 781 BLOCKED: JEPA v20 data collection produced n_labeled=0 — no live GPU in CI. All downstream JEPA experiments starved of new data.",
+    "Exp 783 REGRESSION: JEPA v20 ood_auc=0.4467 < v19 ood_auc=0.5667 — retrain on stale data made OOD detection WORSE.",
+    "Exp 785 TIMEOUT: SOTA GGUF code repair timed out again (90 min) — second consecutive milestone failure. RETRO-028 prerequisite unresolved.",
+    "Exp 786 BLOCKED: Gemma4 OOM fix blocked_no_live_gpu — RETRO-028 unresolved for third+ milestone.",
+    "Exp 788 ZERO DELTA: Constraint addition from memory produced delta=0.0 — no improvement over static baseline. Approach requires redesign.",
+    "Exp 791 BLOCKED: KV260 N=32 bitstream not generated — FPGA toolchain not installed."
+  ],
+  "wall_time_trend": {
+    ".59_conductor_cycle_min": 128.484,
+    ".60_conductor_cycle_min": 110.2458,
+    ".60_conductor_cycle_excl_timeout_min": 20.2458,
+    "note": "Both .59 and .60 include a single large timeout (769 at 120 min, 785 at 90 min). Excluding timeouts: .59=8.5 min, .60=20.2 min — slight increase due to Exp 786 (14.25 min)."
+  },
+  "honest_verdict": "wall_time_IMPROVEMENT_18.2min_first_after_59_regression_STILL_TIMEOUT_DRIVEN_excl_exp785_20.2min_vs_8.5min_in_59 + jepa_v20_REGRESSION_ood_0.4467_below_v19_0.5667_DATA_STARVATION_root_cause + sota_gguf_TIMED_OUT_AGAIN_second_consecutive_milestone + constraint_addition_ZERO_DELTA_approach_needs_redesign + RETRO_028_still_open + 6_of_12_criteria_met + WINS_edu_prm_validated_energy_prefilter_70pct_ebm_calibration_ECE_67pct_improvement_npu_mlir_installed",
+  "invariant_violations": []
+}
