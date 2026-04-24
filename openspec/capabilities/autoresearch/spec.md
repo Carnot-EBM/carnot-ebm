@@ -2392,3 +2392,20 @@ Spec: SCENARIO-LEARN-144
 | REQ-LEARN-092 | N/A | Implemented | Python (test_psv_parallel_chains.py) |
 | REQ-LEARN-093 | N/A | Implemented | Python (test_experiment_797_jepa_v21_data_collection.py) |
 | REQ-LEARN-094 | N/A | Implemented | Python (test_experiment_797_jepa_v21_data_collection.py) |
+
+## REQ-LEARN-052
+
+CPMIContrastivePairBuilder MUST produce (prefix, positive_step, hard_negative_step) triples
+where hard_negative is sampled from the model distribution at temperature=0.9 with CPMI score
+in [0.15, 0.60]. In CI mode, CPMI score is approximated via cosine-similarity proxy.
+
+## REQ-LEARN-053
+
+The augmented corpus MUST have augmentation_ratio >= 2.0 (triples / input pairs), ensuring
+the contrastive training set is at least twice the size of the original labeled set.
+
+## SCENARIO-LEARN-095
+
+Given 80 input pairs from the multi-source FOVER corpus, CPMIContrastivePairBuilder produces
+>= 160 contrastive triples with CPMI scores in the target range [0.15, 0.60];
+augmentation_ratio >= 2.0.

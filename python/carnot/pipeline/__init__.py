@@ -560,6 +560,12 @@ from carnot.pipeline.mars_margin_gate import (  # noqa: E402
     MARSMarginResult,
     compute_logit_margin,
 )
+from carnot.pipeline.cpmi_builder import (  # noqa: E402
+    CPMIContrastivePairBuilder,
+    CPMITriple,
+    compute_cpmi_score,
+    generate_hard_negative,
+)
 
 __all__ = [
     "AgentStep",
@@ -924,4 +930,8 @@ __all__ = [
     "MARSMarginGate",
     "MARSMarginResult",
     "compute_logit_margin",
+    "CPMIContrastivePairBuilder",
+    "CPMITriple",
+    "compute_cpmi_score",
+    "generate_hard_negative",
 ]
