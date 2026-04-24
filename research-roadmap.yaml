@@ -53,8 +53,8 @@ tasks:
     4. Build audit artifact:
        a. Read the manifest file (results/manifest_excluded_experiments.json or similar).
        b. For each dequeue site found, create a patch_site record:
-          {line_number, code_snippet, is_manifest_checked, patch_required,
-           recommended_patch_code}
+          (line_number, code_snippet, is_manifest_checked, patch_required,
+           recommended_patch_code)
        c. Count: n_dequeue_sites_total, n_dequeue_sites_unguarded, n_dequeue_sites_guarded
        d. estimated_waste_min_per_milestone: n_unguarded_sites * avg_retired_exp_duration_min
     5. Create scripts/experiment_793_manifest_audit.py:
@@ -63,7 +63,7 @@ tasks:
        c. Read scripts/research_conductor.py as a text string.
        d. Scan for patterns: task_queue, .pop(), .popleft(), next(iter(...)),
           random.choice, queue.get(), for task in tasks.
-       e. For each match, record {line_number, snippet, context_lines}.
+       e. For each match, record (line_number, snippet, context_lines).
        f. Check if "manifest" appears within 5 lines of the dequeue pattern.
        g. Build artifact with patch_sites list and summary fields.
        h. honest_verdict:
@@ -198,8 +198,8 @@ tasks:
          thermal headroom confirmed in artifact.
     3. Implement python/carnot/pipeline/gemma_isolation.py:
        a. VRAMEvictionResult dataclass:
-          {gpu_index, vram_before_mb, pids_killed, pkill_attempts, vram_after_mb,
-           vram_clear (bool: <500MB), honest_verdict}
+          (gpu_index, vram_before_mb, pids_killed, pkill_attempts, vram_after_mb,
+           vram_clear (bool: <500MB), honest_verdict)
        b. evict_gpu_vram(gpu_index: int = 1) -> VRAMEvictionResult:
           - Run kill_gpu_zombies(gpu_index) first
           - Run: nvidia-smi --query-compute-apps=pid --format=csv,noheader,nounits -i gpu_index
@@ -209,9 +209,9 @@ tasks:
           - vram_clear = (vram_after_mb < 500)
        c. load_gemma4_on_gpu1(model_id: str = "google/gemma-4-E4B-it") -> dict:
           - Call evict_gpu_vram(gpu_index=1)
-          - If not vram_clear: return {"loaded": False, "reason": "vram_not_cleared"}
-          - Load via GemmaTransformersLoader with device_map={"": "cuda:1"}
-          - Return {"loaded": True, "device": "cuda:1", "vram_after_mb": ...}
+          - If not vram_clear: return ("loaded": False, "reason": "vram_not_cleared")
+          - Load via GemmaTransformersLoader with device_map=("": "cuda:1")
+          - Return ("loaded": True, "device": "cuda:1", "vram_after_mb": ...)
        d. Export VRAMEvictionResult, evict_gpu_vram, load_gemma4_on_gpu1 from carnot.pipeline
     4. Create scripts/experiment_795_gemma4_oom_fix_v4.py:
        a. apply_env_autofix() FIRST.
@@ -288,7 +288,7 @@ tasks:
        - SCENARIO-BENCH-034: High-margin output skips oracle; oracle_calls_saved > 0.
     3. Implement MARSMarginGate in python/carnot/pipeline/mars_margin_gate.py:
        a. MARSMarginResult dataclass:
-          {logit_margin, margin_threshold, skip_oracle, honest_verdict}
+          (logit_margin, margin_threshold, skip_oracle, honest_verdict)
        b. compute_logit_margin(logits: list[float]) -> float:
           top2 = sorted(logits, reverse=True)[:2]
           return top2[0] - top2[1]  # margin = top1 - top2
@@ -304,7 +304,7 @@ tasks:
           If retro_028_closed != True → write blocked artifact, exit.
        e. kill_gpu_zombies(1) then evict_gpu_vram(1) per Exp 795 protocol.
        f. Load Qwen3.6-35B-A3B Q4_K_M GGUF from models/ cache via resolve_cached_gguf().
-          Use GPU 1 with explicit device_map={"": "cuda:1"}.
+          Use GPU 1 with explicit device_map=("": "cuda:1").
        g. Load 25 HumanEval problems (problems 0-24 from humaneval dataset).
        h. Batch into 5 batches of 5 problems each:
           For each batch:
@@ -448,7 +448,7 @@ tasks:
          in the target range; augmentation_ratio >= 2.0.
     3. Implement python/carnot/pipeline/cpmi_builder.py:
        a. CPMITriple dataclass:
-          {prefix_text, positive_step, negative_step, cpmi_score, source_domain}
+          (prefix_text, positive_step, negative_step, cpmi_score, source_domain)
        b. compute_cpmi_score(step_text: str, prefix: str, model_logprobs: dict) -> float:
           CPMI approximation (without full model): use text similarity as proxy in CI mode.
           In CI mode: cpmi_score = 1.0 - cosine_similarity(positive_embedding, negative_embedding)
@@ -544,7 +544,7 @@ tasks:
           with experiment_798_cpmi_pairs_triples.json (if present).
           Fallback: use fover_labeled_steps_live.json + synthetic CPMI augmentation.
        e. Compute outcome-conditioned weights per pair:
-          domain_accuracy = {gsm8k: 0.14, math500: 0.12, humaneval: 0.20}  # from live benchmarks
+          domain_accuracy = (gsm8k: 0.14, math500: 0.12, humaneval: 0.20)  # from live benchmarks
           weight_i = domain_accuracy[pair.source_domain]  # upweight harder-domain pairs
        f. Split corpus: 80% train, 20% OOD eval (use Exp 442 fover_labeled_steps_live.json as OOD).
        g. Retrain JEPA with LambdaRank listwise loss + outcome-conditioned weighting:
@@ -606,7 +606,7 @@ tasks:
     1. Read CLAUDE.md spec-first workflow.
     2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
        - REQ-LEARN-057: EmbeddingConstraintStore MUST encode constraints as SPO tuples
-         {subject: str, predicate: str, object: str} using sentence-transformer embeddings.
+         (subject: str, predicate: str, object: str) using sentence-transformer embeddings.
        - REQ-LEARN-058: EmbeddingConstraintStore MUST apply orthogonality regularization:
          when storing a new constraint embedding e_new, project out components along all
          existing constraint embeddings to reduce semantic interference.
@@ -616,8 +616,8 @@ tasks:
          retrieve by error context; retrieval_auc > 0.70 across all 5 types.
     3. Implement python/carnot/pipeline/embedding_constraint_store.py:
        a. ConstraintSPOTuple dataclass:
-          {subject: str, predicate: str, object: str, embedding: list[float] | None,
-           source_violation_type: str, timestamp: str}
+          (subject: str, predicate: str, object: str, embedding: list[float] | None,
+           source_violation_type: str, timestamp: str)
        b. EmbeddingConstraintStore:
           - __init__(model_name: str = "all-MiniLM-L6-v2"):
             Try to import sentence_transformers. If unavailable (CI), use hash-based
@@ -629,7 +629,7 @@ tasks:
               new_embedding -= projection * e_i
             Return L2-normalized result
           - store(spo: ConstraintSPOTuple):
-            Encode SPO text = f"{spo.subject} {spo.predicate} {spo.object}"
+            Encode SPO text = f"(spo.subject) (spo.predicate) (spo.object)"
             Apply _orthogonalize(embedding) before storing
             Append to self._store list
           - retrieve(query: str, top_k: int = 3) -> list[ConstraintSPOTuple]:
@@ -640,11 +640,11 @@ tasks:
             AUC = fraction of correct retrievals.
           - from_casememory_patterns(patterns: dict) -> None:
             Convert existing keyword patterns to SPO format:
-              carry → {subject:"arithmetic_carry", predicate:"violates", object:"carry_propagation"}
-              sign → {subject:"numeric_sign", predicate:"violates", object:"sign_preservation"}
-              unit → {subject:"unit_label", predicate:"violates", object:"unit_consistency"}
-              comparison → {subject:"comparison_direction", predicate:"violates", object:"inequality_direction"}
-              causal → {subject:"causal_entailment", predicate:"violates", object:"step_causality"}
+              carry → (subject:"arithmetic_carry", predicate:"violates", object:"carry_propagation")
+              sign → (subject:"numeric_sign", predicate:"violates", object:"sign_preservation")
+              unit → (subject:"unit_label", predicate:"violates", object:"unit_consistency")
+              comparison → (subject:"comparison_direction", predicate:"violates", object:"inequality_direction")
+              causal → (subject:"causal_entailment", predicate:"violates", object:"step_causality")
        c. Export ConstraintSPOTuple, EmbeddingConstraintStore from carnot.pipeline.__init__
     4. Create scripts/experiment_800_embedding_constraint_store.py:
        a. ExperimentTemplate(800) + ExperimentTimeoutWatchdog(800, timeout_minutes=45).
