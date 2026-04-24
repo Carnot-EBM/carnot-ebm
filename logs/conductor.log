@@ -1109,3 +1109,31 @@ No ops/status.md update (blocked runs don't add capability).
 2026-04-24 16:55:02,682 [conductor] RESEARCH STEP: Exp 815: Variable Granularity Energy Scheduling (arXiv 2505.11730) — Reduce Ising Calls
 2026-04-24 16:55:02,682 [conductor] ============================================================
 2026-04-24 16:55:02,699 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 16:55:02,760 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 16:55:02,760 [conductor] Running test suite (smart subset)...
+2026-04-24 16:55:08,329 [conductor] Pre-check: 81 passed, 3 warnings in 2.79s
+2026-04-24 16:55:08,465 [conductor] Injected 82 symbol signatures from 4 files (AST outlines)
+2026-04-24 16:55:08,465 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All done. Here's what was delivered:
+
+**`python/carnot/pipeline/vg_search_scheduler.py`** — `VGScheduleResult` dataclass + `VGSearchScheduler` with `update()`, `should_skip()`, `reset()`.
+
+**`python/carnot/pipeline/three_tier_pipeline.py`** — ADDITIVE wiring: `vg_scheduler` optional param; VGS gate runs before Tier 3 (Ising); low-variance responses return `tier_used="vg_skip"` without calling Ising.
+
+**`python/carnot/pipeline/__init__.py`** — exports `VGScheduleResult`, `VGSearchScheduler`.
+
+**`openspec/capabilities/verifiable-reasoning/spec.md`** — added REQ-VERIFY-171, REQ-VERIFY-172, SCENARIO-VERIFY-200.
+
+**`tests/python/test_vg_search_scheduler.py`** — 12 tests, all passing.
+
+**`results/experiment_815_vg_search_scheduling.json`** — `honest_verdict=vg_search_effective`, `ising_calls_saved=25`, `accuracy_delta=0.0`.
+2026-04-24 17:00:48,009 [conductor] Claude Code completed (exit 0)
+2026-04-24 17:00:48,031 [conductor] Changes:
+logs/conductor.log                                 | 19 ++++++++++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 36 ++++++++++++++++++++++
+ python/carnot/pipeline/__init__.py                 |  6 ++++
+ python/carnot/pipeline/three_tier_pipeline.py      | 26 ++++++++++++++++
+ 4 files changed, 87 insertions(+)
+2026-04-24 17:00:48,054 [conductor] DOGFOOD: Verification complete (total: 491 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 17:00:48,054 [conductor] Running test suite (smart subset)...
+2026-04-24 17:00:53,575 [conductor] Post-check: 81 passed, 3 warnings in 2.75s

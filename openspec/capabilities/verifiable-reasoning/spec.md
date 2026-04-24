@@ -15455,3 +15455,39 @@ without injection.
 
 **Spec traces:** REQ-VERIFY-095, REQ-VERIFY-096
 **Implementation Status:** Implemented (Exp 812)
+
+## REQ-VERIFY-171: VGSearchScheduler Rolling Energy Variance Gate
+
+VGSearchScheduler MUST track a rolling energy variance window (last N=3 checks per session).
+If variance < variance_threshold, the scheduler MUST skip the current tier's expensive
+computation and fast-path to the next tier or return early.
+
+- REQ-VERIFY-171-1: update(energy) MUST maintain a FIFO window of exactly window_size values.
+- REQ-VERIFY-171-2: should_skip() MUST return should_run_tier=True when history length < window_size (skip_reason="insufficient_history").
+- REQ-VERIFY-171-3: should_skip() MUST return should_run_tier=False when variance < variance_threshold (skip_reason="low_variance_skip").
+- REQ-VERIFY-171-4: should_skip() MUST return should_run_tier=True when variance >= variance_threshold (skip_reason="high_variance_run").
+- REQ-VERIFY-171-5: ThreeTierPipeline MUST accept vg_scheduler=VGSearchScheduler|None. When set, call should_skip() before Tier 3 (Ising). ADDITIVE — when None, behaviour is identical to the baseline pipeline.
+
+## REQ-VERIFY-172: VGSearchScheduler Reports Savings and Accuracy Delta
+
+VGSearchScheduler experiments MUST report ising_calls_saved (count of skipped Ising calls)
+and accuracy_delta (accuracy with vs without scheduling).
+
+- REQ-VERIFY-172-1: ising_calls_saved MUST count how many Ising calls were skipped due to low-variance gate.
+- REQ-VERIFY-172-2: accuracy_delta MUST be abs(accuracy_with_scheduler - accuracy_without_scheduler).
+- REQ-VERIFY-172-3: honest_verdict MUST be "vg_search_effective" if ising_calls_saved >= 20 AND accuracy_delta <= 0.01.
+- REQ-VERIFY-172-4: honest_verdict MUST be "vg_search_partial" if ising_calls_saved >= 10 AND accuracy_delta <= 0.02.
+- REQ-VERIFY-172-5: honest_verdict MUST be "vg_search_no_savings" if ising_calls_saved < 10.
+
+### SCENARIO-VERIFY-200: VGSearchScheduler Skips 35 of 50 Low-Variance Responses
+
+**Given** 50 synthetic responses: 25 high-variance (noisy energies) and 25 low-variance (stable energies)
+**And** a VGSearchScheduler(variance_threshold=0.05, window_size=3)
+**And** a ThreeTierPipeline wired with the scheduler
+**When** the pipeline verifies all 50 responses
+**Then** ising_calls_saved >= 20 (low-variance responses skip Ising)
+**And** accuracy_delta <= 0.01 (at most 1% accuracy drop)
+**And** honest_verdict == "vg_search_effective"
+
+**Spec traces:** REQ-VERIFY-171, REQ-VERIFY-172
+**Implementation Status:** Implemented (Exp 815)

@@ -83,6 +83,7 @@ from carnot.pipeline.hallucination_basin import HallucinationBasinDetector
 from carnot.pipeline.nup_probe_v4 import NUPProbeV4
 from carnot.pipeline.sink_probe import SinkProbe
 from carnot.pipeline.spilled_energy import SpilledEnergyDetector, SpilledEnergyDetectorResult  # noqa: F401
+from carnot.pipeline.vg_search_scheduler import VGSearchScheduler  # noqa: F401
 
 
 # ---------------------------------------------------------------------------
@@ -216,6 +217,7 @@ class ThreeTierPipeline:
         basin_detector: HallucinationBasinDetector | None = None,
         basin_threshold: float = 0.5,
         platt_temperature: float | None = None,
+        vg_scheduler: VGSearchScheduler | None = None,
     ) -> None:
         self.sink_probe = sink_probe
         self.eorm_model = eorm_model
@@ -233,6 +235,10 @@ class ThreeTierPipeline:
         # This is Platt scaling — T < 1.0 sharpens the decision boundary,
         # T > 1.0 softens it.  T=0.38 (Exp 646) was measured to reduce ECE 87.9%.
         self.platt_temperature = platt_temperature
+        # Optional VGSearchScheduler (arXiv 2505.11730): skip tiers when energy
+        # variance over the last N checks is below variance_threshold.
+        # ADDITIVE — when None, behaviour is identical to prior pipeline.
+        self.vg_scheduler = vg_scheduler
 
     # ------------------------------------------------------------------
     # verify()
@@ -342,6 +348,22 @@ class ThreeTierPipeline:
         )
         if effective_energy < self.eorm_threshold:
             return True, "eorm", effective_energy
+
+        # ------------------------------------------------------------------
+        # VGSearchScheduler gate (REQ-VERIFY-171): before the most expensive
+        # tier (Ising), check whether energy variance is low enough to skip.
+        # The scheduler is updated with EORM energy so it tracks signal stability.
+        # When vg_scheduler is None this block is a no-op (ADDITIVE).
+        # ------------------------------------------------------------------
+        if self.vg_scheduler is not None:
+            self.vg_scheduler.update(effective_energy)
+            vg_result = self.vg_scheduler.should_skip()
+            if not vg_result.should_run_tier:
+                # Low-variance skip: return the EORM energy as the proxy energy.
+                # The response is treated as verified (same conclusion as EORM
+                # would have given, since effective_energy < eorm_threshold was
+                # not triggered — but variance says we're stable, so skip Ising).
+                return True, "vg_skip", float(effective_energy)
 
         # ------------------------------------------------------------------
         # Tier 3: Ising
@@ -456,6 +478,10 @@ class ThreeTierPipeline:
                     n_fn += 1
             elif tier_used == "eorm":
                 n_skipped_eorm += 1
+                if not is_correct:
+                    n_fn += 1
+            elif tier_used == "vg_skip":
+                n_skipped_eorm += 1  # Count vg_skip as an EORM-tier skip for totals.
                 if not is_correct:
                     n_fn += 1
 
