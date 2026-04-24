@@ -72,6 +72,7 @@ from carnot.pipeline.typed_reasoning import extract_typed_reasoning as build_typ
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
     from carnot.pipeline.memory import ConstraintMemory
     from carnot.pipeline.semantic_grounding import SemanticGroundingResult
     from carnot.pipeline.semantic_verifier_v2 import SemanticVerifierV2Result
@@ -1016,6 +1017,7 @@ class VerifyRepairPipeline:
         jepa_threshold: float = 0.5,
         think_probe: Any = None,
         hallufield_detector: Any = None,
+        embedding_constraint_store: EmbeddingConstraintStore | None = None,
     ) -> VerificationResult:
         """Verify a response by extracting and checking constraints.
 
@@ -1064,6 +1066,12 @@ class VerifyRepairPipeline:
                 verification is skipped and a violation is returned immediately
                 (fast-path). For 'uncertain' or 'correct' verdicts, full
                 verification proceeds normally. Default None (no ThinkProbe).
+            embedding_constraint_store: Optional EmbeddingConstraintStore (Tier 2,
+                REQ-LEARN-060).  When set, retrieve(response, top_k=3) is called
+                and the top-3 SPO constraints are appended additively to the
+                active constraint list before _evaluate_constraints().  Static
+                constraints are never removed — this is purely additive.
+                Default None (no embedding injection, full backward compatibility).
 
         Returns:
             VerificationResult with constraint evaluation details.
@@ -1075,7 +1083,7 @@ class VerifyRepairPipeline:
             PipelineTimeoutError: If the call exceeds timeout_seconds.
 
         Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-LEARN-001,
-              REQ-JEPA-002, REQ-VERIFY-094, REQ-VERIFY-146
+              REQ-JEPA-002, REQ-VERIFY-094, REQ-VERIFY-146, REQ-LEARN-060, REQ-LEARN-061
         """
         typed_reasoning = self.extract_typed_reasoning(question, response)
         semantic_grounding = self.verify_semantic_grounding(question, response, typed_reasoning)
@@ -1261,6 +1269,32 @@ class VerifyRepairPipeline:
             # crossed the threshold during THIS session are active on the NEXT call.
             if self._constraint_memory is not None:
                 self._constraint_memory.check_and_add(self)
+
+            # Tier 2 embedding-constraint injection (REQ-LEARN-060, REQ-LEARN-061).
+            # When an EmbeddingConstraintStore is provided, retrieve the top-3
+            # constraints most similar to the current response and append them
+            # additively to the active constraint list.  Static constraints already
+            # in `constraints` are never removed — retrieved constraints supplement
+            # them from the store's semantically-distinct embedding subspaces.
+            if embedding_constraint_store is not None:
+                from carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore as _ECS  # noqa: PLC0415
+                retrieved_spо = embedding_constraint_store.retrieve(response, top_k=3)
+                for spo in retrieved_spо:
+                    injected = ConstraintResult(
+                        constraint_type=f"embedding_retrieved_{spo.source_violation_type}",
+                        description=(
+                            f"Retrieved embedding constraint: ({spo.subject}) "
+                            f"({spo.predicate}) ({spo.object})"
+                        ),
+                        metadata={
+                            "source": "embedding_constraint_store",
+                            "spo_subject": spo.subject,
+                            "spo_predicate": spo.predicate,
+                            "spo_object": spo.object,
+                            "source_violation_type": spo.source_violation_type,
+                        },
+                    )
+                    constraints.append(injected)
 
             self._check_deadline(deadline)
             result = self._evaluate_constraints(constraints)
