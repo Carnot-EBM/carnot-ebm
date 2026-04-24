@@ -33,6 +33,97 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-24 arxiv Scan (Milestone 2026.04.62 Planning)
+
+### Retrieval-Augmented Process Reward Model for OOD Generalization
+- **Paper:** arXiv 2502.14361 (February 2026)
+- **What:** Addresses OOD generalization in process reward models via retrieval augmentation.
+  Identifies two distinct failure modes: step-OOD (reasoning step type unseen in training) and
+  question-OOD (problem domain unseen). Retrieval-augmented PRM retrieves similar training steps
+  and uses their labels as soft supervision, achieving 6-8% OOD improvement on MATH-500 variants.
+- **Relevance to Carnot:** JEPA v21 OOD AUC=0.2444 (all-time low) was caused by a wiring miss
+  (not an algorithmic failure), but JEPA has also failed OOD in 8 prior retrains with correct
+  wiring. RA-PRM's retrieval augmentation directly addresses the OOD problem: for each training
+  step, retrieve K similar steps from the training corpus (via EmbeddingConstraintStore) and
+  include their FoVer labels as soft targets. This provides step-level distribution shift
+  correction without requiring more training data.
+- **Concrete experiment:** Exp 809 — if JEPA v22 CPMI-wired retrain still fails OOD after
+  the wiring fix, apply RA-PRM: use EmbeddingConstraintStore to retrieve 3 similar FoVer-labeled
+  steps per training example and average their labels as soft targets. Compare OOD AUC:
+  JEPA v22 (wiring fix only) vs JEPA v22 + RA-PRM (retrieval augmentation).
+- **When to incorporate:** Milestone 2026.04.62 — Phase 1 JEPA OOD enhancement (Exp 809).
+
+### Variable Granularity Search for Test-Time Compute Scheduling
+- **Paper:** arXiv 2505.11730 (May 2025)
+- **What:** Introduces Variable Granularity Search (VG-Search), showing that verification
+  frequency (how often to check a reasoning trace) trades off accuracy vs. compute cost.
+  Unifies beam search (per-token) and Best-of-N (end-only) as extremes on a granularity
+  spectrum. Optimal granularity depends on question difficulty; adaptive scheduling outperforms
+  fixed-frequency by 3-5% at equal compute budgets.
+- **Relevance to Carnot:** Carnot's cascade (Tier 0 → Tier 3) already schedules energy
+  computation adaptively, but the granularity decision is fixed (always full-response
+  verification at each tier). VG-Search provides a principled framework to decide WHEN to
+  invoke constraint checking during generation: high-uncertainty intermediate states get
+  frequent checks (more Ising calls), low-uncertainty states get MARS-style fast-path skip.
+  This is the next evolution beyond the static MARS margin gate implemented in Exp 796.
+- **Concrete experiment:** Exp 815 — VGSearchCarnot: implement variable-granularity energy
+  scheduling in ThreeTierPipeline. At each tier, track running uncertainty estimate
+  (energy variance across last 3 checks). If variance is low, extend interval before next
+  check. Measure: constraint_calls_reduced vs pass@1 degradation on 50 GSM8K questions.
+  Target: 30% fewer Ising calls at equal accuracy. CPU-only (no GPU needed for energy tiers).
+- **When to incorporate:** Milestone 2026.04.62 — Phase 4 compute efficiency (Exp 815).
+
+### Capacity-Constrained Continual Learning
+- **Paper:** arXiv 2507.21479 (July 2025)
+- **What:** Formalizes optimal resource allocation for continual learning under memory and
+  compute constraints. Derives closed-form solutions for which model components to update
+  given a fixed per-update budget. Key result: selective parameter update (targeting only
+  high-uncertainty parameters) outperforms full-parameter update by 7-12% under tight budgets.
+- **Relevance to Carnot:** Self-learning Tier 1 (online weight updates) currently updates ALL
+  constraint weights uniformly after each verification. This is wasteful when most constraints
+  are well-calibrated. Capacity-constrained optimization provides the rule: update only
+  constraints with high energy variance (poorly calibrated), freeze well-calibrated ones.
+  This maps directly to EmbeddingConstraintStore: when storing a new constraint vector,
+  only apply orthogonality update to constraints with retrieval uncertainty > threshold.
+- **Concrete experiment:** Enhancement to Exp 813 (FR-11 Tier 1 Live Relay) — apply
+  capacity-constrained update rule: compute energy variance per constraint type over the
+  last session; update only top-K highest-variance constraints. Compare: full update
+  vs capacity-constrained update — does selective update improve precision monotonicity?
+- **When to incorporate:** Milestone 2026.04.62 — augmentation to FR-11 relay experiment.
+
+### Jailbreaking Leaves a Trace: Detecting Jailbreaks via Internal Representations
+- **Paper:** arXiv 2602.11495 (February 2026)
+- **What:** Demonstrates that successful jailbreaks produce distinctive patterns in LLM
+  internal representations (activation space) that persist across model layers. A lightweight
+  linear probe trained on intermediate activations achieves 95.8% detection accuracy with
+  <1ms overhead per request. Detection works zero-shot on unseen jailbreak types.
+- **Relevance to Carnot:** JailbreakDetectionKAN (Tier 0h, Exp 775, AUC=1.0) was built as a
+  KAN-based safety gate. This paper suggests an alternative or complementary path: activation-
+  space probing is even lighter (linear probe vs KAN) and generalizes better zero-shot. The
+  activation probe maps to Carnot's SpilledEnergyDetector architecture — both use intermediate
+  representations as energy signals. Could replace or supplement Tier 0h.
+- **Concrete experiment:** Future milestone — ActivationJailbreakProbe: implement linear probe
+  on Qwen3.5-0.8B intermediate layers. Compare with JailbreakDetectionKAN on 50 jailbreak
+  prompts and 50 benign prompts. Report: AUC, latency, generalization to unseen attack types.
+- **When to incorporate:** Milestone 2026.04.63 — Safety products track.
+
+### OSS-CAD-Suite: Pre-Built Open-Source FPGA Toolchain
+- **Reference:** YosysHQ/oss-cad-suite-build (GitHub)
+- **What:** Pre-built binary distribution of yosys, nextpnr, icestorm, and related tools
+  for Linux (x86_64 and aarch64). No build required — download tarball, extract, set PATH.
+  Updated weekly with latest upstream versions. Includes yosys, nextpnr-ice40, nextpnr-ecp5,
+  nextpnr-xilinx, icepack, icetime, and 20+ supporting tools.
+- **Relevance to Carnot:** RETRO-KV260-TOOLS-UNAVAILABLE has failed for 3 consecutive
+  milestones (Exps 791, 794, 804) because `sudo pacman -S yosys nextpnr icestorm` does not
+  work in the conductor environment. OSS-CAD-Suite bypasses the package manager entirely:
+  download the release tarball from GitHub, extract to ~/tools/oss-cad-suite/, and prepend
+  ~/tools/oss-cad-suite/bin to PATH. No sudo required. This is the correct next attempt.
+- **Concrete experiment:** Exp 807 — OSSCADInstall: download oss-cad-suite-build release
+  tarball (latest release from GitHub API), extract to ~/tools/oss-cad-suite/, verify
+  `yosys --version`, `nextpnr-ice40 --version`, `icepack --help` all pass. Run minimal
+  2-spin Ising synthesis as proof-of-concept. Gates Exp 816 (KV260 synthesis v2).
+- **When to incorporate:** Milestone 2026.04.62 — Phase 0 FPGA unblock (Exp 807).
+
 ## 2026-04-24 arxiv Scan (Milestone 2026.04.61 Planning)
 
 ### Semantic Interference in Neural Memory: Orthogonality Constraint for Constraint Retrieval
