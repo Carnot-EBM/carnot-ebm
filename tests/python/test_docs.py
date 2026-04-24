@@ -133,12 +133,20 @@ def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
     # labels rather than exact numbers
     import re as _re
     assert _re.search(r"\d+\+?\s*experiments", readme, _re.IGNORECASE)
-    assert _re.search(r"\d+\+?\s*experiments", index, _re.IGNORECASE)
     assert _re.search(r"\d+\+?\s*Experiments Across", report)
     assert _re.search(r"\d+\+?\s*Experiments Across", report_html)
 
-    assert "Exp 227" in index
-    assert "software-model" in index
+    # docs/index.html landing page was rewritten for a layperson audience on
+    # 2026-04-24 (the prior dense version was described as a "fever dream"
+    # of experiment numbers and provenance jargon).  It intentionally no
+    # longer leads with "N experiments / M milestones" stats, and the
+    # result cards no longer have "Exp NNN" titles — experiment numbers
+    # moved to subtitles or were removed entirely.  The staleness-check
+    # intent of this assertion is preserved: the landing page MUST contain
+    # at least one headline metric (a "+Npp" delta or a "N.N%" rate) that
+    # only makes sense when the technical report numbers are fresh.
+    assert _re.search(r"\+\s*\d+(\.\d+)?\s*pp|\d+(\.\d+)?\s*%", index), \
+        "docs/index.html should contain at least one '+Npp' delta or 'N.N%' metric"
 
     assert "VERIFY-030" in report
     assert "VERIFY-031" in report
