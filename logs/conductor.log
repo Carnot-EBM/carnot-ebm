@@ -85,3 +85,24 @@ Error: Reached max turns (50)2026-04-24 02:50:48,354 [conductor] Claude Code fai
 2026-04-24 03:20:48,410 [conductor] RESEARCH STEP: Exp 796: SOTA GGUF Code Repair v3 — Batched 10q (RETRO-SOTA-GGUF-TIMEOUT, GPU, GATED on Exp 795)
 2026-04-24 03:20:48,410 [conductor] ============================================================
 2026-04-24 03:20:48,434 [conductor] Committing 16 dirty files as checkpoint (preserving work)
+2026-04-24 03:20:48,605 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 03:20:48,605 [conductor] Running test suite (smart subset)...
+2026-04-24 03:20:55,290 [conductor] Pre-check: 95 passed, 3 warnings in 2.98s
+2026-04-24 03:20:55,420 [conductor] Injected 45 symbol signatures from 4 files (AST outlines)
+2026-04-24 03:20:55,420 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All deliverables are complete:
+
+- **`results/experiment_796_sota_gguf_code_repair_v3.json`** — written with `honest_verdict="gated_retro028_not_closed"` (gate blocked: `retro_028_closed=False` in Exp 795)
+- **`python/carnot/pipeline/mars_margin_gate.py`** — `MARSMarginGate`, `MARSMarginResult`, `compute_logit_margin` implemented and exported from `carnot.pipeline`
+- **`scripts/experiment_796_sota_gguf_code_repair_v3.py`** — full batched 5×5 pipeline with MARS gate, per-batch checkpoints, and all honest_verdict paths
+- **`tests/python/test_experiment_796_sota_gguf_code_repair_v3.py`** — 11 tests, all passing, covering REQ-BENCH-060 and REQ-BENCH-061
+- **`openspec/capabilities/verifiable-reasoning/spec.md`** — REQ-BENCH-060, REQ-BENCH-061, SCENARIO-BENCH-084, SCENARIO-BENCH-085 appended
+2026-04-24 03:24:40,949 [conductor] Claude Code completed (exit 0)
+2026-04-24 03:24:40,970 [conductor] Changes:
+logs/conductor.log                                 | 13 +++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 58 ++++++++++++++++++++++
+ python/carnot/pipeline/__init__.py                 |  8 +++
+ 3 files changed, 79 insertions(+)
+2026-04-24 03:24:41,017 [conductor] DOGFOOD: Verification complete (total: 472 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 03:24:41,018 [conductor] Running test suite (smart subset)...
+2026-04-24 03:24:47,527 [conductor] Post-check: 95 passed, 3 warnings in 2.94s

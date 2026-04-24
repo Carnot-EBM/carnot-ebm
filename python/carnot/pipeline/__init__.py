@@ -555,6 +555,11 @@ from carnot.pipeline.gemma_isolation import (  # noqa: E402
     evict_gpu_vram,
     load_gemma4_on_gpu1,
 )
+from carnot.pipeline.mars_margin_gate import (  # noqa: E402
+    MARSMarginGate,
+    MARSMarginResult,
+    compute_logit_margin,
+)
 
 __all__ = [
     "AgentStep",
@@ -916,4 +921,7 @@ __all__ = [
     "VRAMEvictionResult",
     "evict_gpu_vram",
     "load_gemma4_on_gpu1",
+    "MARSMarginGate",
+    "MARSMarginResult",
+    "compute_logit_margin",
 ]
