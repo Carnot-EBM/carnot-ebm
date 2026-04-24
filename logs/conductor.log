@@ -1137,3 +1137,17 @@ logs/conductor.log                                 | 19 ++++++++++++
 2026-04-24 17:00:48,054 [conductor] DOGFOOD: Verification complete (total: 491 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 17:00:48,054 [conductor] Running test suite (smart subset)...
 2026-04-24 17:00:53,575 [conductor] Post-check: 81 passed, 3 warnings in 2.75s
+2026-04-24 17:00:53,603 [conductor] Committed: [conductor] Exp 815: Variable Granularity Energy Scheduling (arXiv 2505.11730) —
+2026-04-24 17:00:55,479 [conductor] Pushed to origin
+2026-04-24 17:00:55,479 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 17:00:55,479 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+Done! I've made minimal doc updates for Exp 815:
+
+**Changelog** (ops/changelog.md): Added entry with honest_verdict=vg_search_effective, metrics (25 Ising calls saved, 0.0 accuracy delta, 50% skip rate), capability impact.
+
+**Status** (ops/status.md): Added row with ✅ Complete status. VGSearchScheduler is a new capability enabling 50% Ising cost reduction via rolling-window energy variance gating.
+
+**Traceability** (_bmad/traceability.md): Added rows for REQ-VERIFY-171 (rolling variance gate, 5 sub-requirements), REQ-VERIFY-172 (savings reporting, 5 sub-requirements), and SCENARIO-VERIFY-200 (low-variance skipping). All marked **Implemented** because honest_verdict confirms unambiguous win (savings ≥ 20 + accuracy delta ≤ 0.01).
+
+**Key facts:** Honest_verdict="vg_search_effective" maps cleanly to ✅ Complete (all thresholds met). Zero accuracy regression on synthetic validation. Ready for live GPU testing.
+2026-04-24 17:03:07,879 [conductor] Claude Code completed (exit 0)
