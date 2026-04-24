@@ -695,6 +695,8 @@ be idempotent: re-running when the section already exists MUST succeed without r
 | REQ-INFRA-055 | Implemented | Exp 780 — kill_gpu_zombies() in gpu_zombie_killer.py; wired into ExperimentTemplate.setup_gpu() |
 | REQ-INFRA-056 | Implemented | Exp 780 — kill_gpu_zombies() is a no-op when no GPU zombies exist |
 | REQ-INFRA-057 | Implemented | Exp 790 — NPU unblock: Option A (GitHub wheel) first, Option B fallback, max 2 strategies |
+| REQ-INFRA-058 | Scaffolding | Exp 793 — manifest full-scope audit; patch spec written to results/experiment_793_manifest_full_scope_audit.json |
+| REQ-INFRA-059 | Scaffolding | Exp 793 — WARNING-level logging requirement documented; patch required in pick_next_task |
 | REQ-LOADER-010 | Planned | Exp 768 — Gemma4 call site audit + GemmaTransformersLoader enforcement |
 | REQ-LOADER-011 | Planned | Exp 786 — kill_gpu_zombies() mandatory before Gemma4 load; VRAM threshold guard |
 | REQ-PROBE-020 | Implemented | Exp 772 — SemanticEnergyProbe + SemanticCluster in python/carnot/pipeline/semantic_energy_probe.py |
@@ -749,3 +751,64 @@ ECE_before and ECE_after MUST be reported in the experiment artifact.
 **Then** ECE_after <= ECE_before (isotonic regression never worsens calibration on training data)
 
 **Spec traces:** REQ-CALIB-001, REQ-CALIB-002
+
+### REQ-INFRA-058: ExclusionManifest.check() MUST Be Called at ALL Dequeue Sites
+
+**Statement:** ExclusionManifest.check() (via _task_is_excluded()) MUST be called at EVERY
+location in the research conductor where a task_id is selected for execution from any queue
+or list data structure. A "dequeue site" is any line where a task moves from a data structure
+into the dispatch pipeline — including for-loops over RESEARCH_TASKS, .pop() calls,
+.popleft() calls, next(iter(...)), random.choice(), and queue.get() patterns. Placing the
+manifest check only in the primary dispatch path (pick_next_task) is insufficient if
+secondary code paths bypass pick_next_task and touch RESEARCH_TASKS directly.
+
+**Why this matters:**
+    Exp 527 appeared in the slowest-5 for 7+ consecutive milestones after being added to
+    the exclusion manifest, because the manifest check in pick_next_task was not adjacent
+    to the for-loop that iterates RESEARCH_TASKS. The five-line window heuristic used by
+    the audit scanner (Exp 793) confirmed the check is present but logically distant —
+    making it easy for future refactors to accidentally bypass. Placing the check immediately
+    at the point of dequeue (within 5 lines of the loop/pop/choice statement) is the
+    enforcement pattern that prevents recurrence. This requirement documents the FULL-SCOPE
+    enforcement goal — every dequeue site must independently guard against excluded tasks.
+
+**Spec traces:** Exp 793, RETRO-MANIFEST-FULL-SCOPE
+
+### REQ-INFRA-059: Excluded Tasks MUST Be Logged at WARNING Level Before Skip
+
+**Statement:** When _task_is_excluded(task) returns True (excluded), the conductor MUST
+emit a log.warning() that includes the task title, experiment ID, and the exclusion reason
+string before skipping the task. The warning MUST use logger.warning() not logger.info()
+so that exclusion events appear in stderr-level log aggregators even when INFO logging is
+suppressed. Silently skipping an excluded task without a WARNING-level log makes it
+impossible to audit whether the manifest check actually fired for a given run.
+
+**Why this matters:**
+    The RETRO-MANIFEST-FULL-SCOPE investigation required manually correlating seven
+    milestones of conductor logs to confirm Exp 527 ran despite being manifested.
+    If every exclusion emitted a WARNING with the experiment ID, any single conductor log
+    would have shown the absence of that WARNING — proving immediately that the guard
+    did not fire. This requirement transforms exclusion enforcement from implicit
+    (absence of evidence) to explicit (presence of WARNING).
+
+**Spec traces:** Exp 793, RETRO-MANIFEST-FULL-SCOPE, REQ-INFRA-058
+
+### SCENARIO-INFRA-067: Conductor Dequeues Exp 527 From Unmanaged Path; Manifest Guard Fires
+
+**Given** Exp 527 is listed in conductor_exclusion_manifest.json
+**And** a dequeue site calls _task_is_excluded() on any task with exp_id=527
+**When** _task_is_excluded() is evaluated
+**Then** is_excluded=True is returned
+**And** the conductor emits logger.warning with "EXCLUDED" in the message
+**And** the task is skipped without calling run_agent()
+
+**Spec traces:** REQ-INFRA-058, REQ-INFRA-059
+
+### SCENARIO-INFRA-068: Conductor Dequeues Exp 793 (Not in Manifest); Task Runs Normally
+
+**Given** Exp 793 is NOT listed in conductor_exclusion_manifest.json
+**When** the conductor evaluates _task_is_excluded() for a task with exp_id=793
+**Then** is_excluded=False is returned
+**And** the conductor proceeds to call run_agent() with the task prompt
+
+**Spec traces:** REQ-INFRA-058
