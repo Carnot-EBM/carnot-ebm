@@ -2452,3 +2452,33 @@ tier35_deployed = False; honest_verdict = "jepa_v21_below_gate".
 Given 80 input pairs from the multi-source FOVER corpus, CPMIContrastivePairBuilder produces
 >= 160 contrastive triples with CPMI scores in the target range [0.15, 0.60];
 augmentation_ratio >= 2.0.
+
+## REQ-LEARN-098: FR-11 Tier 1 Relay MUST Use EmbeddingConstraintStore
+
+The FR-11 Tier 1 relay experiment (Exp 802) MUST use EmbeddingConstraintStore as the primary
+constraint learning mechanism, replacing the scalar keyword-count encoding (CaseMemoryTemplateWiring)
+that produced zero delta in Exps 761 and 788.
+
+The relay MUST run for 10 sessions of 50 questions each.  After each session, violation events
+from that session MUST be used to update the EmbeddingConstraintStore (online learning loop).
+Precision MUST be non-decreasing across all 10 sessions.  Delta (precision[session5] - precision[session1])
+MUST be positive by session 5 for the relay to claim FR-11 Tier 1 is satisfied.
+
+Spec: REQ-LEARN-098, SCENARIO-LEARN-145
+
+## SCENARIO-LEARN-145: FR-11 Tier 1 Relay — Precision Non-Decreasing, Delta Positive by Session 5
+
+Given a 10-session Tier 1 relay using EmbeddingConstraintStore (bootstrapped from 5 canonical
+CaseMemory patterns) and 50 synthetic GSM8K-style questions per session:
+  - precision_per_session is a list of 10 float values in [0.0, 1.0]
+  - is_monotonically_non_decreasing = True (no session drops below the previous)
+  - delta_positive_by_s5 = True (precision[4] > precision[0])
+  - honest_verdict = "tier1_relay_works"
+  - tier1_relay_works = True
+
+When delta_positive_by_s5 = True but monotonic = False:
+  - honest_verdict = "tier1_partial_improvement"
+
+When precision[4] == precision[0] (EmbeddingConstraintStore did not move precision):
+  - honest_verdict = "tier1_plateau_persists"
+  - This reproduces the Exps 761/788 failure mode and triggers a research escalation.
