@@ -570,6 +570,10 @@ from carnot.pipeline.embedding_constraint_store import (  # noqa: E402
     ConstraintSPOTuple,
     EmbeddingConstraintStore,
 )
+from carnot.pipeline.jepa_wiring_guard import (  # noqa: E402
+    JepaWiringCheckResult,
+    check_cpmi_wiring,
+)
 
 __all__ = [
     "AgentStep",
@@ -940,4 +944,6 @@ __all__ = [
     "generate_hard_negative",
     "ConstraintSPOTuple",
     "EmbeddingConstraintStore",
+    "JepaWiringCheckResult",
+    "check_cpmi_wiring",
 ]

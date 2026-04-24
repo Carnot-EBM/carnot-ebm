@@ -856,3 +856,56 @@ impossible to audit whether the manifest check actually fired for a given run.
 **And** the conductor proceeds to call run_agent() with the task prompt
 
 **Spec traces:** REQ-INFRA-058
+
+### REQ-INFRA-060: MILESTONE_PREREQS.md MUST Exist and Gate Experiment Execution
+
+**Statement:** A MILESTONE_PREREQS.md file MUST exist at the project root listing all
+IMMEDIATE-class actions from the prior milestone retro. Each action MUST be marked as
+either verified_complete or escalated_retro before any milestone experiment runs.
+The file MUST contain a checklist that the conductor or operator verifies manually.
+Without this gate, the retro process generates documentation overhead with zero
+operational improvement, as observed across three consecutive milestones (.59, .60, .61).
+
+**Why this matters:**
+    The .61 retro identified that IMMEDIATE-class improvements were documented but never
+    applied, because there was no structural enforcement mechanism. The prereqs gate
+    converts the retro from a record-keeping exercise into an actionable pre-flight check.
+
+**Spec traces:** Exp 806, RETRO-.61-PREREQS-GATE
+
+### REQ-INFRA-061: JEPA Retrain Scripts MUST Assert augmentation_ratio > 1.0 at Startup
+
+**Statement:** All JEPA retrain experiment scripts MUST assert augmentation_ratio > 1.0
+before any model training begins. Failure raises AssertionError with message:
+"CPMI corpus not wired in — check training data loader merges all sources."
+This invariant catches the Exp 798→799 disconnect where JEPA trained without CPMI triples,
+producing the all-time low ood_auc=0.2444 due to missing data augmentation.
+
+**Why this matters:**
+    Exp 799 trained for 5+ minutes before the missing wiring was detected manually.
+    An assertion at startup would have caught this in under 1 second and preserved
+    the experiment slot for a corrected run. The ood_auc=0.2444 result was an
+    implementation error, not an algorithmic failure — this requirement prevents recurrence.
+
+**Spec traces:** Exp 806, RETRO-.61-JEPA-ASSERT
+
+### SCENARIO-INFRA-069: Prereqs Gate Reads MILESTONE_PREREQS.md; All IMMEDIATE Items Verified; Gate Passes
+
+**Given** MILESTONE_PREREQS.md exists at project root
+**And** all IMMEDIATE-class items are marked verified_complete or escalated_retro
+**When** the prereqs gate check runs
+**Then** prereqs_gate_ready is returned
+**And** experiment execution proceeds normally
+
+**Spec traces:** REQ-INFRA-060
+
+### SCENARIO-INFRA-070: JEPA Retrain Script Startup; augmentation_ratio=1.0 Detected; AssertionError Raised
+
+**Given** a JEPA retrain script is invoked
+**And** augmentation_ratio is computed as 1.0 (no CPMI triples augmenting input pairs)
+**When** check_cpmi_wiring() is called at startup
+**Then** AssertionError is raised with message "CPMI corpus not wired in — check training data loader merges all sources."
+**And** training does NOT begin
+**And** the experiment writes a blocked artifact
+
+**Spec traces:** REQ-INFRA-061
