@@ -634,3 +634,29 @@ Both output files are confirmed complete (348 lines / 17KB for v62.md, 1046 line
 2026-04-24 11:09:40,490 [conductor] RESEARCH STEP: Exp 806: MILESTONE_PREREQS.md Gate + JEPA Assertion Infrastructure
 2026-04-24 11:09:40,490 [conductor] ============================================================
 2026-04-24 11:09:40,507 [conductor] Committing 3 dirty files as checkpoint (preserving work)
+2026-04-24 11:09:40,563 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 11:09:40,564 [conductor] Running test suite (smart subset)...
+2026-04-24 11:09:52,293 [conductor] Pre-check: 81 passed, 3 warnings in 8.31s
+2026-04-24 11:09:52,420 [conductor] Injected 62 symbol signatures from 2 files (AST outlines)
+2026-04-24 11:09:52,420 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. Here's what was delivered:
+
+**Results:**
+- `results/experiment_806_milestone_prereqs_gate.json` — `honest_verdict: "prereqs_gate_ready"`, `augmentation_ratio: 2.5` (300 triples / 120 unique prefixes), all required schema fields present.
+- `MILESTONE_PREREQS.md` — gate checklist at project root; item c (CPMI wiring assertion) marked `verified_complete`, others `pending`.
+- `python/carnot/pipeline/jepa_wiring_guard.py` — `check_cpmi_wiring()` + `JepaWiringCheckResult`; asserts `augmentation_ratio >= 1.5` or raises `AssertionError: "CPMI corpus not wired in — check training data loader merges all sources."`.
+- `openspec/capabilities/pipeline/spec.md` — REQ-INFRA-060/061 and SCENARIO-INFRA-069/070 appended.
+- `tests/python/test_experiment_806_milestone_prereqs_gate.py` — 8 tests, all passing.
+2026-04-24 11:14:10,124 [conductor] Claude Code completed (exit 0)
+2026-04-24 11:14:10,135 [conductor] Changes:
+logs/conductor.log                     | 14 +++++++++
+ openspec/capabilities/pipeline/spec.md | 53 ++++++++++++++++++++++++++++++++++
+ python/carnot/pipeline/__init__.py     |  6 ++++
+ 3 files changed, 73 insertions(+)
+2026-04-24 11:14:10,152 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp808-jepa-v22-cpmi-rewire: '"gsm8k"' — auto-fixing
+2026-04-24 11:14:10,152 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp810-gemma4-oom-fix-v5: 'step2' — auto-fixing
+2026-04-24 11:14:10,152 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp811-sota-gguf-code-repair-v4: '""' — auto-fixing
+2026-04-24 11:14:10,152 [conductor] DOGFOOD: Auto-fixed brace escaping in research-roadmap.yaml
+2026-04-24 11:14:10,156 [conductor] DOGFOOD: Verification complete (total: 482 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 11:14:10,156 [conductor] Running test suite (smart subset)...
+2026-04-24 11:14:15,659 [conductor] Post-check: 81 passed, 3 warnings in 2.78s

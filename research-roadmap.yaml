@@ -223,7 +223,7 @@ tasks:
           Record: n_fover_pairs, n_cpmi_triples, total_training_items, augmentation_ratio.
        e. OOD eval set: fover_labeled_steps_live.json (57 Exp 442 steps — NOT in training set).
        f. Retrain JEPA with LambdaRank listwise loss + outcome-conditioned weighting:
-          domain_accuracy = {"gsm8k": 0.14, "math500": 0.12, "humaneval": 0.20}
+          domain_accuracy = ("gsm8k": 0.14, "math500": 0.12, "humaneval": 0.20)
           weight_i = domain_accuracy.get(pair.get("source_domain", "gsm8k"), 0.14)
           Train for 80 epochs (more than v21's 50 to allow CPMI negatives to contribute).
           Evaluate in-distribution AUC + OOD AUC after each 20 epochs.
@@ -385,7 +385,7 @@ tasks:
        d. Step 1: evict_vram_with_loop(gpu_index=1, max_retries=3, retry_sleep_s=10.0).
           - If not vram_cleared: write blocked_vram_stuck artifact with vram_mb_per_retry, exit.
        e. Step 2: load_gemma4_on_gpu1() (from Exp 795 gemma_isolation.py, GPU 1).
-          - Checkpoint: AtomicResultWriter({project_root}/results/exp810_ckpt.json).write({step2: ...})
+          - Checkpoint: AtomicResultWriter({project_root}/results/exp810_ckpt.json).write((step2: ...))
           - If load fails: write blocked_model_load_failed artifact.
        f. Step 3: Run 20 GSM8K questions with loaded Gemma4.
           - Record n_valid_responses (not empty, not all <unusedN> tokens).
@@ -457,7 +457,7 @@ tasks:
        d. GATE: load Exp 810 result. If retro_028_closed != True → write blocked artifact, exit.
        e. evict_vram_with_loop(gpu_index=1) — ensure GPU 1 is clean.
        f. Load Qwen3.6-35B-A3B Q4_K_M GGUF from models/ cache via resolve_cached_gguf().
-          device_map={"": "cuda:1"}.
+          device_map=("": "cuda:1").
        g. Load 50 HumanEval problems (p0-p49).
        h. Batch into 10 batches of 5 problems each:
           For each batch:
