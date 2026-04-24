@@ -1,0 +1,23 @@
+# synth_yosys_ice40_n32.ys — Yosys synthesis script for N=32 iCE40 HX8K target (Exp 791)
+#
+# Why N=32 instead of N=64:
+#   Exp 776 failed place-and-route timing on iCE40 HX8K with the N=64 design (~2821 LUTs).
+#   Halving to N=32 with MAX_DEGREE=8 halves the coupling matrix routing, directly reducing
+#   the critical path length.  N=32 is estimated at 600-800 LUTs (< 11% of HX8K's 7680 LUTs),
+#   leaving 90% LUT headroom for routing slack.
+#
+# Why chparam before synth_ice40:
+#   ising_sampler_v2.v is parametric.  chparam overrides the defaults at elaboration time
+#   so the synthesized netlist uses N_SPINS=32, MAX_DEGREE=8 without editing the RTL.
+#
+# Why synth_ice40 instead of synth:
+#   synth_ice40 maps the design to iCE40 LUT4 primitives required by nextpnr-ice40.
+#   The generic synth command produces vendor-neutral gates that nextpnr-ice40 cannot accept.
+#
+# Spec: REQ-HW-043
+
+read_verilog hardware/kv260/ising_sampler_v2.v
+chparam -set N_SPINS 32 -set MAX_DEGREE 8 ising_sampler_128_sync
+synth_ice40 -top ising_sampler_128_sync -flatten
+stat
+write_json hardware/kv260/ising_sampler_n32_ice40.json
