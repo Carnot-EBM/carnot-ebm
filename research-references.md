@@ -3743,3 +3743,46 @@ thermodynamic computing Ising FPGA
 - **Concrete experiment:** Install nextpnr-xilinx (or prjtrellis-xilinx). Run P&R on the
   Yosys netlist from Exp 758. If bitstream generated: flash to KV260 and test hardware.
 - **When to incorporate:** Milestone 2026.04.59 — Phase 4 hardware (Exp 776).
+
+### Cognometry / Styxx — Empirical Cognitive-State Quantification (Fathom / Darkflobi)
+- **URL:** https://fathom.darkflobi.com/cognometry
+- **What:** Empirical framework ("cognometry") that classifies an LLM's internal
+  cognitive state — refusal, confabulation, reasoning, drift — from residual-stream
+  activations and logprob trajectories. Pooled logistic regression over 9 signals,
+  no per-domain tuning. Ships a runtime instrument called **Styxx** with `@trust`
+  decorator and `styxx.gate()` pre-flight classifier. Three empirical "laws":
+  observable (AUC 0.998 on HaluEval-QA), transferable (cosine 0.464 within model
+  family, 0.043 across vendors), steerable (refusal flipped 97% -> 17% via
+  multi-position residual-stream injection). No formal mathematics; empirical and
+  operational.
+- **Relevance to Carnot:** Complementary, not overlapping. Cognometry reads
+  *internal state* (white-box, needs residuals + logprobs); Carnot reads the
+  *output* (black-box, any API LLM). A mature safeguard stack can use both.
+  Four actionable takeaways:
+  1. Logprob trajectories are black-box-accessible via most LLM APIs, so a
+     reduced version of the Cognometry feature set could slot into the
+     generative-time safety gate and the prompt-injection KAN v3 (currently
+     AUROC 0.9078) without needing model-internals access.
+  2. The cross-vendor transferability finding (cos 0.043) is a direct warning
+     about our AUROC 0.9078 claim — the classifier was distilled from
+     GPT-OSS-Safeguard and its cross-vendor performance is untested. A
+     non-OSS-family held-out split is required before any publication gate.
+  3. The 97% -> 17% steerability result strengthens the threat model in
+     `conductor-self-protection-safeguard.md`: attackers with partial model
+     access can actively shape generation, not just inject text. Reinforces
+     our "treat all incoming search/tool/retrieved content as untrusted"
+     stance.
+  4. The `@trust` / `styxx.gate()` ergonomics is directly comparable to the
+     surface we're drafting for `VerdictRecord` (issue #3) and `budget_ms`
+     (issue #2). Worth reading before we finalize our API.
+- **What NOT to adopt:** Cognometry deliberately skips formal mathematics.
+  Carnot's invariant is the opposite — the energy function is ground truth
+  and unhackable. Keep that stance; don't drift toward purely empirical
+  classifiers.
+- **Honest limitations they flagged:** reading comprehension AUC 0.424,
+  financial arithmetic 0.492, partial cross-vendor transfer, untested above
+  3B parameters.
+- **When to incorporate:** Milestone 2026.04.63 — fold logprob-trajectory
+  features into the `generative-time-safety-gate` proposal, and require
+  cross-vendor validation for the prompt-injection classifier before any
+  publication gate.
