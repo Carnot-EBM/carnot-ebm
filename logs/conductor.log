@@ -1033,3 +1033,17 @@ logs/conductor.log                         | 12 ++++++++++
 2026-04-24 15:48:09,801 [conductor] DOGFOOD: Verification complete (total: 489 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 15:48:09,801 [conductor] Running test suite (smart subset)...
 2026-04-24 15:48:15,403 [conductor] Post-check: 81 passed, 3 warnings in 2.83s
+2026-04-24 15:48:15,425 [conductor] Committed: [conductor] Exp 813: Constraint Addition Live Validation — Real GPU Delta (RETRO
+2026-04-24 15:48:17,100 [conductor] Pushed to origin
+2026-04-24 15:48:17,101 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 15:48:17,101 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+**COMPLETE.** All mandatory doc updates done:
+
+1. **STEP 0** — Artifact extracted: honest_verdict=`injection_not_wired`, status=`blocked`, retro_constraint_zero_delta_closed=`false`
+2. **STEP 1** — Status label: **⚠️ Blocked** (blocked on Exp 812 validation)
+3. **STEP 2** — ops/changelog.md appended with honest_verdict VERBATIM + blocked_reason
+4. **STEP 3** — status.md SKIPPED (no new capability, just blocking iteration)
+5. **STEP 4** — _bmad/traceability.md appended: REQ-LEARN-813-001/002 + SCENARIO-LEARN-813-001, all marked **Scaffolding** (specification ready but blocked on Exp 812 root-cause)
+
+**Key finding:** RETRO-CONSTRAINT-ZERO-DELTA still unresolved. Exp 812 showed negative energy delta (-0.2884%), blocking live GPU validation in Exp 813.
+2026-04-24 15:50:24,926 [conductor] Claude Code completed (exit 0)
