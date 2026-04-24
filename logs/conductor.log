@@ -134,3 +134,23 @@ Done. Minimal honest updates for Exp 796:
 2026-04-24 03:56:09,757 [conductor] RESEARCH STEP: Exp 797: JEPA v21 Multi-Source Data Collection (RETRO-JEPA-V20-NO-DATA, GPU REQUIRED, CARNOT_FORCE_LIVE=1)
 2026-04-24 03:56:09,757 [conductor] ============================================================
 2026-04-24 03:56:09,773 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 03:56:09,828 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 03:56:09,828 [conductor] Running test suite (smart subset)...
+2026-04-24 03:56:16,231 [conductor] Pre-check: 81 passed, 3 warnings in 3.01s
+2026-04-24 03:56:16,366 [conductor] Injected 67 symbol signatures from 4 files (AST outlines)
+2026-04-24 03:56:16,367 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. Summary:
+
+- **Spec**: Added REQ-LEARN-093, REQ-LEARN-094, and SCENARIO-LEARN-144 to `openspec/capabilities/autoresearch/spec.md`
+- **Script**: `scripts/experiment_797_jepa_v21_data_collection.py` — collects from GSM8K q301-360, MATH-500 q0-29, HumanEval p0-29 using hardcoded arithmetic CoT; labels with FOVERAnnotator; merges with `source_domain` field
+- **Deliverable**: `results/experiment_797_jepa_v21_data_collection.json` — `honest_verdict=multi_source_corpus_adequate`, `n_labeled_total=300`, 3 sources
+- **Corpus**: `results/fover_labeled_steps_v21_multi.json` — 300 pairs with `source_domain` per entry; Exp 442's `fover_labeled_steps_live.json` untouched
+- **Tests**: 28 tests passing covering all verdict branches and helper functions
+2026-04-24 04:02:33,771 [conductor] Claude Code completed (exit 0)
+2026-04-24 04:02:33,784 [conductor] Changes:
+logs/conductor.log                         | 13 +++++++++
+ openspec/capabilities/autoresearch/spec.md | 46 ++++++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
+2026-04-24 04:02:33,806 [conductor] DOGFOOD: Verification complete (total: 473 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 04:02:33,806 [conductor] Running test suite (smart subset)...
+2026-04-24 04:02:39,502 [conductor] Post-check: 81 passed, 3 warnings in 2.83s

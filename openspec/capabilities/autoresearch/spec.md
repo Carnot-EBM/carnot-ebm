@@ -2261,6 +2261,50 @@ Spec: REQ-LEARN-092, SCENARIO-LEARN-142
 **Then** honest_verdict = 'psv_real_blocked_no_gpu'
 **And** the artifact is written with status='blocked' and the experiment exits 0
 
+### REQ-LEARN-093: JEPA v21 Multi-Source Training Data — Domain Coverage
+
+JEPA v21 training data MUST span at least 2 distinct benchmark domains
+(GSM8K, MATH-500, HumanEval) to support OOD generalization. A single-source
+corpus (all from one domain) is insufficient evidence that the JEPA encoder has
+learned domain-invariant correctness signals.
+
+**Rationale:** Exps v13-v20 used only Qwen3.5-0.8B on GSM8K q1-300. All 57 pairs
+shared the same domain and question range, causing the JEPA OOD AUC to stay
+below 0.75 for 8 consecutive retrains. Diversity in benchmark domain — not model
+— is the key fix.
+
+**Acceptance criteria:**
+- Data collection produces labeled pairs from >= 2 of: GSM8K, MATH-500, HumanEval.
+- The merged corpus file contains a `source_domain` field per pair identifying its origin.
+- Total n_labeled >= 80 across all sources combined.
+
+Spec: SCENARIO-LEARN-144
+
+### REQ-LEARN-094: Multi-Source FOVER Corpus — Single Merged File with source_domain
+
+The multi-source FOVER annotation pipeline MUST write all labeled pairs from all
+benchmark domains into a single merged corpus file (`fover_labeled_steps_v21_multi.json`)
+with a `source_domain` field per pair. This merged file is distinct from the Exp 442
+corpus (`fover_labeled_steps_live.json`) and must NOT overwrite it.
+
+**Why a merged file:** Downstream JEPA v21 training needs a single unified corpus
+that the trainer can load without domain-specific logic. The `source_domain` field
+lets the trainer optionally stratify the corpus by domain for OOD evaluation.
+
+Spec: SCENARIO-LEARN-144
+
+### SCENARIO-LEARN-144: Multi-Domain FOVER Data Collection Completes with Adequate Corpus
+
+**Given** CARNOT_FORCE_LIVE=1 and GPU is available
+**And** Qwen3.5-0.8B is loaded on GPU 0
+**When** the experiment collects CoT responses from GSM8K q301-360, MATH-500 q0-29, and HumanEval p0-29
+**And** FOVERAnnotator.annotate_corpus() labels each step
+**Then** n_labeled_total >= 80
+**And** >= 2 source domains have at least 1 labeled pair
+**And** results/fover_labeled_steps_v21_multi.json is written with source_domain per pair
+**And** honest_verdict = 'multi_source_corpus_adequate'
+**And** results/fover_labeled_steps_live.json is NOT modified
+
 ---
 
 ## Implementation Status
@@ -2346,3 +2390,5 @@ Spec: REQ-LEARN-092, SCENARIO-LEARN-142
 | REQ-LEARN-090 | N/A | Implemented | Python (test_experiment_693_jepa_root_cause.py) |
 | REQ-LEARN-091 | N/A | Implemented | Python (test_psv_parallel_chains.py) |
 | REQ-LEARN-092 | N/A | Implemented | Python (test_psv_parallel_chains.py) |
+| REQ-LEARN-093 | N/A | Implemented | Python (test_experiment_797_jepa_v21_data_collection.py) |
+| REQ-LEARN-094 | N/A | Implemented | Python (test_experiment_797_jepa_v21_data_collection.py) |
