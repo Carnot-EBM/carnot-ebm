@@ -586,6 +586,11 @@ from carnot.pipeline.vg_search_scheduler import (  # noqa: E402
     VGScheduleResult,
     VGSearchScheduler,
 )
+from carnot.pipeline.multi_agent_arbiter import (  # noqa: E402
+    AgentScore,
+    ArbiterResult,
+    MultiAgentArbiter,
+)
 
 __all__ = [
     "AgentStep",
@@ -964,4 +969,7 @@ __all__ = [
     "evict_vram_with_loop",
     "VGScheduleResult",
     "VGSearchScheduler",
+    "AgentScore",
+    "ArbiterResult",
+    "MultiAgentArbiter",
 ]

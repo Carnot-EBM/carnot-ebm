@@ -1203,3 +1203,34 @@ Done. Minimal docs update complete: Exp 816 appended to changelog with honest_ve
 2026-04-24 18:09:06,786 [conductor] RESEARCH STEP: Exp 817: Multi-Agent Arbiter MCP Tool — Energy-Ranked Agent Output Selection (Tier B Product)
 2026-04-24 18:09:06,786 [conductor] ============================================================
 2026-04-24 18:09:06,803 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 18:09:06,864 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 18:09:06,864 [conductor] Running test suite (smart subset)...
+2026-04-24 18:09:12,549 [conductor] Pre-check: 81 passed, 3 warnings in 2.91s
+2026-04-24 18:09:12,684 [conductor] Injected 77 symbol signatures from 3 files (AST outlines)
+2026-04-24 18:09:12,684 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All required schema fields are present. Both conditions are met:
+- (a) `results/experiment_817_multi_agent_arbiter.json` is written with all required fields
+- (b) 11 tests pass (`tests/python/test_multi_agent_arbiter.py`)
+
+**Summary:**
+- Created `python/carnot/pipeline/multi_agent_arbiter.py` with `AgentScore`, `ArbiterResult`, `MultiAgentArbiter`
+- Added `score_agent_outputs` MCP tool to `python/carnot/mcp/server.py`
+- Added exports to `python/carnot/pipeline/__init__.py`
+- Added `REQ-AGENT-003`, `REQ-AGENT-004`, `SCENARIO-AGENT-004` to the spec
+- Created 11 passing tests in `tests/python/test_multi_agent_arbiter.py`
+- Wrote `results/experiment_817_multi_agent_arbiter.json` with `honest_verdict=arbiter_incorrect` (arbiter_accuracy=0.33) — the EBM returns energy 0.0 for all short arithmetic expressions in this response format, so it cannot yet discriminate between correct and incorrect responses
+2026-04-24 18:13:58,378 [conductor] Claude Code completed (exit 0)
+2026-04-24 18:13:58,398 [conductor] Changes:
+logs/conductor.log                                 | 17 +++++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 30 +++++++++++
+ python/carnot/mcp/server.py                        | 58 ++++++++++++++++++++++
+ python/carnot/pipeline/__init__.py                 |  8 +++
+ 4 files changed, 113 insertions(+)
+2026-04-24 18:13:58,419 [conductor] DOGFOOD: Verification complete (total: 493 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 18:13:58,419 [conductor] Running test suite (smart subset)...
+2026-04-24 18:14:10,617 [conductor] Tests FAILED (attempt 1/2): 1 failed, 123 passed, 3 warnings in 8.83s
+2026-04-24 18:14:10,617 [conductor] Asking Claude Code to fix test failures (tier 1, model=haiku, turns=30)...
+2026-04-24 18:14:10,617 [conductor] Calling Claude Code (30 max turns, model: haiku)...
+Error: Reached max turns (30)2026-04-24 18:23:30,269 [conductor] Claude Code failed (exit 1)
+2026-04-24 18:23:30,270 [conductor] Claude Code failed to fix tests (attempt 1)
+2026-04-24 18:23:30,270 [conductor] Tests still failing after 2 fix attempts — committing as broken checkpoint
