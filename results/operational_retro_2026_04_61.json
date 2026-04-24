@@ -1,0 +1,106 @@
+{
+  "experiment": 805,
+  "title": "Milestone 2026.04.61 Operational Retrospective",
+  "run_date": "20260424",
+  "started_at": "2026-04-24T13:10:00Z",
+  "finished_at": "2026-04-24T13:10:00Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "milestone": "2026.04.61",
+  "experiment_range": "793-804",
+  "n_experiments": 12,
+  "total_wall_time_min": 9.393,
+  "mean_min_per_experiment": 0.7828,
+  "prev_milestone_wall_time_min": 2.2,
+  "wall_time_delta": 7.193,
+  "improvement": false,
+  "success_criteria_met": {
+    "retro_028_closed": false,
+    "sota_code_repair_positive": false,
+    "jepa_v21_data_adequate": true,
+    "cpmi_augmentation_works": true,
+    "jepa_v21_ood_viable": false,
+    "embedding_retrieval_works": true,
+    "constraint_addition_positive": false,
+    "tier1_relay_works": false,
+    "fpga_tools_installed": false,
+    "kv260_synthesis_attempted": false
+  },
+  "criteria_met_count": 3,
+  "criteria_total": 10,
+  "retros_closed": [
+    "RETRO-JEPA-V20-NO-DATA (data collection aspect): Exp 797 n_labeled_total=300 >= 80. Live corpus collection resolved. OOD AUC gate still open (Exp 799 ood_auc=0.2444)."
+  ],
+  "retros_opened": [
+    {
+      "id": "RETRO-JEPA-V21-OOD-BELOW-GATE",
+      "reason": "Exp 799 ood_auc=0.2444 \u2014 far below the 0.75 gate. CPMI pairs were generated (Exp 798, ratio=2.5) but NOT applied during retrain (Exp 799 augmentation_ratio=1.0, indicating the CPMI corpus was not wired into the training data loader). The OOD AUC of 0.2444 is a new all-time low, worse even than the v20 regression (0.4467), suggesting the training corpus itself is inadequate.",
+      "resolution_path": "Wire the CPMI-augmented corpus (Exp 798 output) into the Exp 799 training data loader before retraining JEPA v22. Verify augmentation_ratio > 1.0 in the next retrain artifact. Also increase corpus diversity \u2014 the 300 labels from Exp 797 may still be insufficient for the embedding space coverage needed to achieve ood_auc >= 0.75."
+    },
+    {
+      "id": "RETRO-TIER1-PLATEAU",
+      "reason": "Exp 802 honest_verdict=tier1_plateau_persists. FR-11 Tier 1 relay with embedding constraints does not improve beyond the existing static baseline. The EmbeddingConstraintStore retrieves correctly (AUC=0.92) but constraint signal is not reaching the energy function \u2014 same root cause as RETRO-CONSTRAINT-ZERO-DELTA but at the relay layer.",
+      "resolution_path": "Replace the synthetic_cpu inference stub in the relay pipeline with a real IsingEBM.infer() call that accepts constraint embeddings as soft penalty inputs. The constraint feature vector (from EmbeddingConstraintStore) must be projected into the energy function's spin coupling matrix before sampling."
+    }
+  ],
+  "retros_still_open": [
+    "RETRO-028: Gemma4 OOM unresolved \u2014 Exp 795 verdict='partial_success'. Fourth+ consecutive milestone without full closure.",
+    "RETRO-CONSTRAINT-ZERO-DELTA: Exp 801 constraint_addition_delta_overall=0.0. Embedding store retrieval works (Exp 800 AUC=0.92) but delta does not propagate to accuracy. Root cause: synthetic inference mode \u2014 constraints retrieved but model output is deterministic placeholder.",
+    "RETRO-KV260-TOOLS-UNAVAILABLE: Exp 794 tools_installed=False. Exp 804 blocked (honest_verdict=tools_not_installed). yosys/nextpnr-ice40/icepack not in PATH on CachyOS host."
+  ],
+  "slowest_experiment": {
+    "exp_id": 799,
+    "duration_s": 325.376,
+    "title": "JEPA v21 Retrain: Multi-Source + CPMI + PROGRS Outcome-Conditioned Centering",
+    "honest_verdict": "jepa_v21_below_gate"
+  },
+  "fastest_experiment": {
+    "exp_id": 804,
+    "duration_s": 0.0,
+    "title": "KV260 N=32 Yosys Open-Source Synthesis Attempt (gates on Exp 794)",
+    "honest_verdict": "tools_not_installed"
+  },
+  "timeouts": [],
+  "improvements_suggested": [
+    "CRITICAL \u2014 Wire CPMI corpus into JEPA v22 training data loader: Exp 798 generated augmentation_ratio=2.5 CPMI pairs but Exp 799 trained with ratio=1.0. The CPMI output file path must be passed as the training corpus argument. Verify the next retrain artifact shows augmentation_ratio >= 2.0 before accepting the result. Estimated AUC gain: 0.15-0.30 (moving from 0.24 toward the 0.75 gate).",
+    "CRITICAL \u2014 Replace synthetic_cpu inference stub with real IsingEBM.infer() in constraint addition: Exps 801 and 802 both show zero delta because the inference mode is a deterministic placeholder. The EmbeddingConstraintStore retrieval is correct (AUC=0.92); the problem is downstream. Implementing real inference will simultaneously resolve RETRO-CONSTRAINT-ZERO-DELTA and RETRO-TIER1-PLATEAU. This is the highest-leverage single fix available.",
+    "IMMEDIATE \u2014 Install FPGA toolchain (yosys + nextpnr-ice40 + icestorm) on CachyOS host: pacman -S yosys nextpnr icestorm resolves RETRO-KV260-TOOLS-UNAVAILABLE. KV260 board arrived 2026-04-20. Two consecutive milestones blocked. Estimated time savings: 2+ experiments unblocked per milestone (Exps 794/804 class).",
+    "SHORT TERM \u2014 Complete RETRO-028 closure (Gemma4 OOM Fix v5): Exp 795 reached partial_success \u2014 the three-step isolation protocol (kill_gpu_zombies, pkill VRAM holders, verify <500MB before load, use GPU 1) was partially applied. v5 must enforce all three steps in sequence with nvidia-smi verification at each step. Until RETRO-028 closes, Exp 796 (SOTA GGUF code repair) remains gated.",
+    "SHORT TERM \u2014 Increase JEPA training corpus to 500+ labeled pairs from diverse sources: Exp 797 collected 300 labels from multi-source corpus. Exp 799 ood_auc=0.2444 suggests 300 labels is insufficient for embedding space coverage. Target 500+ pairs across at least 5 domain sources before v22 retrain.",
+    "PROCESS \u2014 Enforce CPMI-to-training handoff contract in experiment scripts: Add an assertion in JEPA retrain experiments: assert augmentation_ratio > 1.0, 'CPMI corpus was not wired in'. This invariant would have caught the Exp 798\u2192799 disconnect immediately at script startup rather than after 5+ minutes of training.",
+    "PROCESS \u2014 Implement recommendation closure tracking (carried from .60 retro): The .60 retro documented 9 improvements. None were applied before .61 experiments ran. Create a MILESTONE_PREREQS.md checklist: before ANY experiment in a new milestone, verify all prior-retro IMMEDIATE-class actions are complete. This prevents the document\u2192execute-without-applying pattern."
+  ],
+  "estimated_time_savings_pct": 22,
+  "honest_verdict": "wall_time_REGRESSION_7.2min_vs_.60_2.2min_baseline_CPMI_WIRING_MISS_jepa_v21_ood_auc_0.2444_ALL_TIME_LOW_cpmi_ratio_1pt0_not_2pt5_embedding_store_AUC_0pt92_RETRIEVAL_WORKS_constraint_delta_ZERO_inference_stub_not_wired_RETRO028_partial_progress_gemma4_oom_fix_v4_partial_success_FPGA_still_blocked_tools_not_installed_two_consecutive_milestones_hf_publish_SUCCESS_803_3_of_10_criteria_met_1_retros_partially_closed_2_new_retros_opened_3_still_open",
+  "schema": [
+    "criteria_met_count",
+    "criteria_total",
+    "duration_s",
+    "estimated_time_savings_pct",
+    "experiment",
+    "experiment_range",
+    "fastest_experiment",
+    "finished_at",
+    "honest_verdict",
+    "improvement",
+    "improvements_suggested",
+    "mean_min_per_experiment",
+    "milestone",
+    "n_experiments",
+    "prev_milestone_wall_time_min",
+    "retros_closed",
+    "retros_opened",
+    "retros_still_open",
+    "run_date",
+    "schema",
+    "slowest_experiment",
+    "started_at",
+    "status",
+    "success_criteria_met",
+    "timeouts",
+    "title",
+    "total_wall_time_min",
+    "wall_time_delta"
+  ],
+  "invariant_violations": []
+}
