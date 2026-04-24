@@ -2614,3 +2614,31 @@ Given live GPU available AND Exp 812 honest_verdict == "injection_works":
   - retro_constraint_zero_delta_closed = True
   - honest_verdict = "constraint_addition_works_live"
   - store.update_from_session_violations() called after each session
+
+### REQ-LEARN-814-001: FR-11 Tier 1 Live Relay MUST Use IsingConstraintInjector + EmbeddingConstraintStore with Capacity-Constrained Update
+
+Exp 814 evaluates whether precision increases monotonically across 5 relay sessions
+using live GPU inference.  Each session uses the full pipeline:
+    EmbeddingConstraintStore (SPO embeddings) + IsingConstraintInjector (coupling bias).
+
+After each session, compute retrieval variance per constraint type; update only
+top-K (K=3) highest-variance constraints; freeze the rest.  This prevents plateau
+by avoiding over-fitting to well-learned constraints (arXiv 2507.21479).
+
+Gate: Exp 813 delta_overall must be > 0.  If null or <= 0, write blocked artifact.
+
+Spec: REQ-LEARN-814-001
+
+### SCENARIO-LEARN-814-001: 5-Session Live Relay — Capacity-Constrained Update per Session
+
+Given live GPU available AND Exp 813 delta_overall > 0:
+  - Exp 814 runs 5 sessions of 10 GSM8K questions each (50 total)
+  - Each session uses VerifyRepairPipeline with EmbeddingConstraintStore + IsingConstraintInjector
+  - After each session, selective_update() updates only top-3 highest-variance constraint types
+  - precision is non-decreasing sessions 1-5 (monotonic non-decrease)
+  - delta_s1_to_s5 = precision[4] - precision[0] > 0
+  - honest_verdict = "tier1_relay_works_live" if monotonic AND delta_positive_by_s3
+  - honest_verdict = "tier1_partial_improvement_live" if delta_positive_by_s3 but not monotonic
+  - honest_verdict = "tier1_plateau_persists_live" if delta_s1_to_s5 <= 0
+  - honest_verdict = "blocked_no_delta" if Exp 813 gate blocks
+  - tier1_relay_works_live=True when honest_verdict == "tier1_relay_works_live"
