@@ -1,0 +1,62 @@
+{
+  "experiment": 799,
+  "title": "JEPA v21 Retrain: Multi-Source + CPMI + PROGRS Outcome-Conditioned Centering",
+  "run_date": "20260424",
+  "started_at": "2026-04-24T09:19:20Z",
+  "finished_at": "2026-04-24T09:24:46Z",
+  "duration_s": 325.731,
+  "status": "success",
+  "n_labeled_total_exp797": 300,
+  "n_training_pairs": 720,
+  "data_source": "live_fover_v21_multi+cpmi_triples_798",
+  "augmentation_ratio": 1.0,
+  "progrs_weight_summary": {
+    "gsm8k": 0.14,
+    "math500": 0.12,
+    "humaneval": 0.2
+  },
+  "in_dist_auc": 0.7134,
+  "ood_auc": 0.2556,
+  "ood_auc_delta_vs_v20": -0.1911,
+  "ood_gate": 0.75,
+  "tier35_deployed": false,
+  "model_saved_path": null,
+  "failure_analysis": {
+    "per_domain_auc": {
+      "gsm8k": 1.0,
+      "math500": 1.0,
+      "humaneval": 1.0
+    },
+    "worst_domain": "gsm8k",
+    "recommendations_for_v22": [
+      "Collect 200+ additional labeled steps from 'gsm8k' domain.",
+      "Apply LambdaRank listwise ranking loss across step candidates.",
+      "Increase CPMI hard-negative mining from temperature=0.9 to temperature=1.1.",
+      "Consider contrastive pre-training on broader math/code corpora."
+    ]
+  },
+  "honest_verdict": "jepa_v21_below_gate",
+  "schema": [
+    "augmentation_ratio",
+    "data_source",
+    "duration_s",
+    "experiment",
+    "failure_analysis",
+    "finished_at",
+    "honest_verdict",
+    "in_dist_auc",
+    "model_saved_path",
+    "n_labeled_total_exp797",
+    "n_training_pairs",
+    "ood_auc",
+    "ood_auc_delta_vs_v20",
+    "ood_gate",
+    "progrs_weight_summary",
+    "run_date",
+    "started_at",
+    "status",
+    "tier35_deployed",
+    "title"
+  ],
+  "invariant_violations": []
+}
