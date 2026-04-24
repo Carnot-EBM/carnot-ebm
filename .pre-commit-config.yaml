@@ -1,4 +1,20 @@
 repos:
+  # Secret scanning — gitleaks v8.x scans staged file diffs for high-
+  # confidence API-key / private-key / cloud-credential patterns before
+  # they get committed. Runs `gitleaks protect --staged` which only
+  # inspects the diff going into the commit (not full history), so the
+  # hook is fast (<1 s on typical commits).  Allowlist for
+  # tests/python/test_ebm_cot_calibrator_v*.py JAX-PRNG-key false
+  # positives lives in `.gitleaks.toml` at the repo root.
+  #
+  # A full-history scan across the 2542-commit record was run 2026-04-23
+  # and produced only those 3 allowlisted false positives — this hook
+  # exists to keep that clean-state invariant from drifting.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
   # Rust formatting
   - repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0

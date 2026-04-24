@@ -379,6 +379,32 @@ MUST be `"nvidia_smi_unavailable"`.
 
 **Spec traces:** REQ-INFRA-055, REQ-INFRA-056
 
+### REQ-INFRA-057: NPU Unblock Automated Install Strategy Limit
+
+**Statement:** NPU unblock experiments MUST attempt Option A (GitHub Releases wheel) first,
+MUST attempt Option B (Ryzen AI SDK installer) if and only if Option A fails, and MUST NOT
+attempt more than 2 automated install strategies per experiment run.
+
+**Why this matters:**
+    Eight consecutive milestones (Exps 292, 303, 314, 335, 435, 714) were blocked by the
+    same root cause — mlir-aie not on PyPI and VitisAI requiring a compiled-in onnxruntime.
+    Without a hard cap on strategy attempts, experiments can spiral into open-ended install
+    loops that consume 45+ minutes without producing a binary verdict.  The two-strategy
+    cap forces a clean "exhausted" verdict so the conductor can escalate rather than retry
+    forever.  Option A (GitHub Releases wheel) is tried first because it requires no auth
+    and targets the exact missing package; Option B (Ryzen AI SDK installer) requires AMD
+    account credentials and is therefore a fallback.
+
+**Spec traces:** Exp 790, RETRO-NPU-v9
+
+### SCENARIO-INFRA-066: NPU Unblock Option B Tried Only After Option A Failure
+
+**Given** Option A (GitHub Releases wheel) install fails (option_a_success=False)
+**When** the NPU unblock script proceeds to Option B
+**Then** option_b_attempted=True in the result artifact
+
+**Spec traces:** REQ-INFRA-057
+
 ### REQ-HW-010: Ising Sampler v4 HLS C++ Kernel
 
 The Ising sampler v4 MUST be expressed in Vitis HLS C++ with loop-pipelining
@@ -668,6 +694,7 @@ be idempotent: re-running when the section already exists MUST succeed without r
 | REQ-INFRA-054 | Implemented | Exp 767 — Exps 425, 491, 603, 627 added to exclusion manifest (.58) |
 | REQ-INFRA-055 | Implemented | Exp 780 — kill_gpu_zombies() in gpu_zombie_killer.py; wired into ExperimentTemplate.setup_gpu() |
 | REQ-INFRA-056 | Implemented | Exp 780 — kill_gpu_zombies() is a no-op when no GPU zombies exist |
+| REQ-INFRA-057 | Implemented | Exp 790 — NPU unblock: Option A (GitHub wheel) first, Option B fallback, max 2 strategies |
 | REQ-LOADER-010 | Planned | Exp 768 — Gemma4 call site audit + GemmaTransformersLoader enforcement |
 | REQ-LOADER-011 | Planned | Exp 786 — kill_gpu_zombies() mandatory before Gemma4 load; VRAM threshold guard |
 | REQ-PROBE-020 | Implemented | Exp 772 — SemanticEnergyProbe + SemanticCluster in python/carnot/pipeline/semantic_energy_probe.py |
