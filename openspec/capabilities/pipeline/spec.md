@@ -674,3 +674,51 @@ be idempotent: re-running when the section already exists MUST succeed without r
 | REQ-PROBE-021 | Implemented | Exp 772 — is_high_energy advisory flag; tier0g_deployed=False (AUC=0.46, below NUP v4 baseline) |
 | REQ-PUBLISH-010 | Implemented | Exp 777 — huggingface-cli upload executed; blocked cleanly when HF_TOKEN absent |
 | REQ-PUBLISH-011 | Implemented | Exp 777 — all existing Carnot-EBM model READMEs updated with pip install carnot pointer |
+
+## EBM Calibration Alignment (Exp 789)
+
+### REQ-CALIB-001
+
+**Statement:** EBMCalibrator MUST compute Expected Calibration Error (ECE) from energy-binned
+accuracy using 10 equal-frequency bins, and MUST apply isotonic regression to learn an
+energy -> P(correct) mapping.
+
+**Why this matters:**
+    arXiv 2603.06604 "Know When You're Wrong" shows SFT models have well-calibrated
+    confidence but RL-trained models are overconfident by 15-25pp.  Carnot energy is
+    currently a discriminative signal (violated/not-violated).  This requirement makes
+    energy a calibrated probabilistic signal: low energy = high P(correct).
+
+**Rationale:** ECE (Expected Calibration Error) measures the gap between predicted
+confidence and observed accuracy.  Equal-frequency binning ensures each bin has
+enough samples to estimate accuracy reliably.  Isotonic regression is the standard
+non-parametric post-hoc calibration method (Zadrozny & Elkan 2002).
+
+**Spec traces:** Exp 789, arXiv 2603.06604, arXiv 2602.11364
+
+### REQ-CALIB-002
+
+**Statement:** The calibration curve MUST be saved to results/ebm_calibration_curve.json.
+ECE_before and ECE_after MUST be reported in the experiment artifact.
+
+**Why this matters:**
+    Without persisting the calibration curve, downstream experiments cannot use the
+    fitted isotonic regression to convert raw energy scores to calibrated probabilities.
+
+**Spec traces:** Exp 789
+
+### SCENARIO-CALIB-001: Perfectly Calibrated Energies Yield ECE=0.0
+
+**Given** a set of energies where sigmoid(-energy) exactly equals label accuracy in each bin
+**When** compute_ece(energies, labels) is called
+**Then** ECE == 0.0
+
+**Spec traces:** REQ-CALIB-001
+
+### SCENARIO-CALIB-002: Isotonic Regression Reduces ECE
+
+**Given** a set of uncalibrated energies with ECE_before > 0
+**When** fit_isotonic(energies, labels) is applied and ECE_after is computed
+**Then** ECE_after <= ECE_before (isotonic regression never worsens calibration on training data)
+
+**Spec traces:** REQ-CALIB-001, REQ-CALIB-002
