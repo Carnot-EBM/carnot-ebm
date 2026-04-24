@@ -1287,3 +1287,55 @@ If OOD AUC <= 0.75, RETRO-JEPA-OOD-V20 MUST be filed.
 |-------------|--------|-------|
 | REQ-LEARN-052 | Implemented (python/carnot/samplers/jepa_v20.py, scripts/experiment_783_jepa_v20_retrain.py) | Implemented (tests/python/test_experiment_783_jepa_v20_retrain.py) |
 | REQ-LEARN-053 | Implemented (scripts/experiment_783_jepa_v20_retrain.py) | Implemented (tests/python/test_experiment_783_jepa_v20_retrain.py) |
+
+---
+
+## REQ-LEARN-056: IsingConstraintGenerator MUST Read Error Patterns and Synthesise Coupling Rows
+
+**Given** a list of ErrorPattern objects accumulated from session memory
+**When** IsingConstraintGenerator.synthesize_from_memory() is called
+**Then** it MUST return a CouplingRow for each pattern whose count >= PATTERN_THRESHOLD (3)
+**And**  it MUST return an empty list when all pattern counts < PATTERN_THRESHOLD
+**And**  patterns with unknown pattern_type MUST be silently skipped
+
+Supported pattern_types: carry_error, sign_error, unit_error, comparison_error, overflow_error.
+Each maps to a deterministic (var1, var2, J_value) coupling spec.
+
+---
+
+## REQ-LEARN-057: Dynamic Constraint Pipeline MUST Report n_constraints_added and constraint_addition_delta
+
+**Given** a 50-question experiment comparing a static-constraint baseline vs a dynamic-constraint pipeline
+**When** the dynamic pipeline uses IsingConstraintGenerator to inject couplings after each 10-question batch
+**Then** the artifact MUST include n_constraints_added, net_improvement_dynamic,
+         net_improvement_static, constraint_addition_delta, n_patterns_above_threshold,
+         and honest_verdict
+**And**  honest_verdict MUST be one of: constraint_addition_positive, constraint_addition_zero,
+         constraint_addition_negative, insufficient_patterns
+
+---
+
+## SCENARIO-LEARN-100: Carry Error Pattern Above Threshold Produces CouplingRow
+
+**Given** a single ErrorPattern(pattern_type="carry_error", count=3, example_step="...")
+**When** IsingConstraintGenerator(ising_model, threshold=3).synthesize_from_memory([pattern]) is called
+**Then** it returns a list of length 1
+**And**  the CouplingRow has J_value=-1.0 and both var indices within [0, input_dim)
+
+---
+
+## SCENARIO-LEARN-101: inject_couplings Extends J Matrix Without Replacing Existing Couplings
+
+**Given** an IsingModel with a pre-existing coupling matrix
+**When** IsingConstraintGenerator.inject_couplings([CouplingRow(var1=0, var2=1, J_value=-1.0)]) is called
+**Then** coupling[0, 1] MUST equal original_value + (-1.0)
+**And**  all other coupling cells MUST be unchanged
+
+---
+
+## Implementation Status (REQ-LEARN-056, REQ-LEARN-057)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-056 | Implemented (python/carnot/pipeline/constraint_generator.py, IsingConstraintGenerator) | Implemented (tests/python/test_experiment_788_constraint_addition_from_memory.py) |
+| REQ-LEARN-057 | Implemented (scripts/experiment_788_constraint_addition_from_memory.py) | Implemented (tests/python/test_experiment_788_constraint_addition_from_memory.py) |
