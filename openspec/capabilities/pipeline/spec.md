@@ -538,6 +538,35 @@ experiments in milestones .55, .56, .57, and .58.
 **Spec traces:** REQ-LOADER-010
 **Implementation Status:** Planned (Exp 768)
 
+### REQ-LOADER-011: kill_gpu_zombies() MUST Be Called Before Any Gemma4 Load Attempt
+
+A Gemma4 model load attempt MUST call `kill_gpu_zombies(gpu_index=0)` before any
+`GemmaTransformersLoader.load()` call.  The result's `vram_after_mb` MUST be recorded
+as `free_vram_mb_after_kill` in the artifact.  If `free_vram_mb_after_kill < 12000`,
+the experiment MUST NOT attempt the load and MUST write `honest_verdict="blocked_insufficient_vram"`.
+
+**Rationale:** RETRO-028 Exp 768 failed with CUDA OOM: 14.89 GiB allocation on a 24 GiB
+card with ~15 GiB occupied by zombie processes.  With the GPU cleared, 24 GiB - 14.89 GiB
+= 9.11 GiB free overhead — sufficient for the loader.
+
+**Acceptance criteria:**
+- `kill_gpu_zombies(gpu_index=0)` is called before any `GemmaTransformersLoader.load()`.
+- `free_vram_mb_after_kill` is recorded in every artifact, regardless of outcome.
+- If `free_vram_mb_after_kill < 12000`, artifact contains `honest_verdict="blocked_insufficient_vram"`.
+- If load succeeds, `loader_test_passed=True` is recorded.
+
+**Implementation Status:** Planned (Exp 786)
+
+### SCENARIO-LOADER-011: Insufficient VRAM After Zombie Kill Blocks Load
+
+**Given** `kill_gpu_zombies(gpu_index=0)` returns a result where `vram_after_mb` corresponds
+to less than 12000 MB free (i.e., total VRAM minus vram_after_mb < 12000 MB)
+**When** the experiment checks the VRAM threshold
+**Then** the artifact records `honest_verdict="blocked_insufficient_vram"` and `GemmaTransformersLoader.load()` is NOT called
+
+**Spec traces:** REQ-LOADER-011
+**Implementation Status:** Planned (Exp 786)
+
 ---
 
 ### REQ-PROBE-020: SemanticEnergyProbe Logit-Space Energy Computation
@@ -640,6 +669,7 @@ be idempotent: re-running when the section already exists MUST succeed without r
 | REQ-INFRA-055 | Implemented | Exp 780 — kill_gpu_zombies() in gpu_zombie_killer.py; wired into ExperimentTemplate.setup_gpu() |
 | REQ-INFRA-056 | Implemented | Exp 780 — kill_gpu_zombies() is a no-op when no GPU zombies exist |
 | REQ-LOADER-010 | Planned | Exp 768 — Gemma4 call site audit + GemmaTransformersLoader enforcement |
+| REQ-LOADER-011 | Planned | Exp 786 — kill_gpu_zombies() mandatory before Gemma4 load; VRAM threshold guard |
 | REQ-PROBE-020 | Implemented | Exp 772 — SemanticEnergyProbe + SemanticCluster in python/carnot/pipeline/semantic_energy_probe.py |
 | REQ-PROBE-021 | Implemented | Exp 772 — is_high_energy advisory flag; tier0g_deployed=False (AUC=0.46, below NUP v4 baseline) |
 | REQ-PUBLISH-010 | Implemented | Exp 777 — huggingface-cli upload executed; blocked cleanly when HF_TOKEN absent |
