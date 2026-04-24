@@ -2677,3 +2677,5 @@ python/ |
 | 2026-04-24 02:01 UTC | Exp 790: AMD XDNA NPU Unblock v9 — GitHub Releases | OK | 81 passed, 3 warnings in 15.86s |
 | 2026-04-24 02:14 UTC | Exp 791: KV260 N=32 Reduced Design — iCE40 Open-So | OK | 81 passed, 3 warnings in 14.16s |
 | 2026-04-24 02:28 UTC | Exp 792: Milestone 2026.04.60 Operational Retrospe | OK | 81 passed, 3 warnings in 14.92s |
+| 2026-04-24 03:03 UTC | Plan milestone 2026.04.61 | OK | 13 tasks proposed |
+| 2026-04-24 03:08 UTC | Milestone 2026.04.61 activated | OK | 13 tasks queued |
