@@ -293,3 +293,15 @@ logs/conductor.log                                 | 12 +++++++
 2026-04-24 06:07:01,405 [conductor] DOGFOOD: Verification complete (total: 476 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 06:07:01,405 [conductor] Running test suite (smart subset)...
 2026-04-24 06:07:07,048 [conductor] Post-check: 81 passed, 3 warnings in 2.86s
+2026-04-24 06:07:07,093 [conductor] Committed: [conductor] Exp 800: EmbeddingConstraintStore — SPO Format + Orthogonality (RETR
+2026-04-24 06:07:08,913 [conductor] Pushed to origin
+2026-04-24 06:07:08,913 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 06:07:08,913 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+Checking whether Exp 800 requires status.md or traceability.md updates:
+
+**Step 3 — ops/status.md:** The artifact shows **no new REQ-*/SCENARIO-*** introduced — only infrastructure validation of EmbeddingConstraintStore. → **Skip.**
+
+**Step 4 — _bmad/traceability.md:** No new spec entries in the artifact. → **Skip.**
+
+Done. Appended Exp 800 to changelog with honest_verdict verbatim. Status: ✅ Complete (unambiguous win: retrieval_auc_exceeds_target).
+2026-04-24 06:08:23,785 [conductor] Claude Code completed (exit 0)
