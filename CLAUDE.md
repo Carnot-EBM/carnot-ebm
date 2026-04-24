@@ -74,6 +74,10 @@ When updating `ops/status.md`, `_bmad/traceability.md`, or any ops/spec document
 
 E2E tests must exercise the full stack, not just unit tests. The test plan lives at `ops/e2e-test-plan.md` and results are documented at `ops/test-results.md`.
 
+### Tests Must Run and Assert (MANDATORY)
+
+Every test must have at least one assertion. Skipping tests (`pytest.mark.skip`, `pytest.mark.skipif`, `@unittest.skip`, or equivalent) is never allowed — skipped tests are invisible failures that accumulate silently and erode confidence in the suite. If a test depends on Docker/GPU/network, mock the dependency and test the logic. If a test genuinely cannot run in any environment, do not write it.
+
 ## Build / Test / Deploy
 
 ```bash
@@ -119,6 +123,35 @@ cargo tarpaulin --workspace --exclude carnot-python --out Html --fail-under 100
 | Rust linting | rustfmt, clippy |
 | Python linting | ruff, mypy (strict) |
 | Pre-commit | .pre-commit-config.yaml |
+
+## GPU Resources (two systems with distinct roles)
+
+1. **Local ROCm GPU (AMD Radeon 890M, gfx1150)** — for heavyweight ML workloads:
+   running local LLMs, EBT training, activation extraction, experiments. PyTorch
+   2.11.0+rocm7.2 with native gfx1150 support, 67 GB unified memory. Requires
+   `sg render -c '...'` for GPU group access and
+   `TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1` for flash attention. Use
+   `.cuda()` on model and inputs.
+2. **WebGPU gateway (`carnot-webgpu-gateway`)** — for Carnot's OWN energy
+   computations only (Ising batch eval, SAT constraints, repair). Distributes
+   WGSL compute shaders to browser GPUs over WebSocket. NOT a path for running
+   transformers or training.
+
+Do not confuse these: ROCm runs LLMs locally, fast; WebGPU distributes energy
+evaluations across many small GPUs in browsers.
+
+## SOTA Local Models (mandatory for new experiments)
+
+New experiments that need an LLM must include at least one of these three
+state-of-the-art GGUF-quantized local models in their `MODEL_SPECS`:
+
+1. `unsloth/Qwen3.6-35B-A3B-GGUF` — Qwen 3.6 35B MoE, ~3B active, flagship MoE
+2. `unsloth/gemma-4-31B-it-GGUF` — Gemma 4 31B dense, instruction-tuned, flagship dense
+3. `unsloth/gemma-4-26B-A4B-it-GGUF` — Gemma 4 26B MoE, ~4B active, middle MoE
+
+Use the llama.cpp loader path (already wired — Exp 450 closed the Gemma 4
+tokenizer bugs). Keep Qwen3.5-0.8B / Gemma4-E4B only for cheap CPU smoke-tests
+or reproduction runs; they are not acceptable as headline-result models.
 
 ## Model Tiers
 
