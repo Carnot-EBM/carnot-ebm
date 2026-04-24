@@ -15069,3 +15069,61 @@ Both systems must be evaluated on the same question set with the same ground-tru
 
 **Spec traces:** REQ-COMPARE-002
 **Implementation Status:** Implemented (Exp 773)
+
+---
+
+## Hardware Toolchain Requirements (Exp 794)
+
+### REQ-HW-032: Yosys PATH Availability
+
+Yosys MUST be installed and on PATH before any open-source RTL synthesis is
+attempted.  Synthesis without yosys produces no netlist and cannot be retried
+without human intervention — the tool must be confirmed present before running
+any synthesis step.
+
+- REQ-HW-032-1: A pre-synthesis check SHALL call `yosys --version` and confirm a
+  zero return-code before any synthesis command is issued.
+- REQ-HW-032-2: If yosys is absent, the experiment SHALL attempt installation via
+  the system package manager (pacman on CachyOS) before failing.
+- REQ-HW-032-3: Installation outcome (success/failure) SHALL be recorded in the
+  artifact as `install_attempted` and `install_success`.
+
+**Implementation Status:** Pending (Exp 794)
+
+### REQ-HW-033: nextpnr-ice40 PATH Availability
+
+nextpnr-ice40 MUST be installed and on PATH for iCE40 place-and-route.  Without
+it, synthesis can produce a netlist but no bitstream can be generated for actual
+hardware.
+
+- REQ-HW-033-1: A pre-PnR check SHALL call `nextpnr-ice40 --version` and confirm
+  a zero return-code before any place-and-route command is issued.
+- REQ-HW-033-2: If nextpnr-ice40 is absent, the experiment SHALL attempt
+  installation via the system package manager alongside yosys.
+
+**Implementation Status:** Pending (Exp 794)
+
+### REQ-HW-034: icepack PATH Availability
+
+icepack MUST be installed and on PATH for bitstream generation.  icepack converts
+a nextpnr routing result into the binary bitstream that a physical iCE40 FPGA can
+load — its absence makes the pipeline incomplete even when synthesis and PnR succeed.
+
+- REQ-HW-034-1: A pre-bitstream check SHALL call `icepack --help` (exit 0 or 1
+  are both treated as present; the tool always exits non-zero when invoked without
+  arguments but is still present).
+- REQ-HW-034-2: If icepack is absent, the experiment SHALL attempt installation
+  via the system package manager alongside yosys and nextpnr.
+
+**Implementation Status:** Pending (Exp 794)
+
+### SCENARIO-HW-032: Full Toolchain Present — Minimal Synthesis Succeeds
+
+**Given** yosys, nextpnr-ice40, and icepack are all present on PATH
+**When** Exp 794 synthesizes the 2-spin Ising test module with `synth_ice40`
+**Then** yosys exits with return-code 0, no error lines appear in stderr, and
+`tools_installed=True` is recorded in the artifact; `honest_verdict` is
+`tools_installed_synthesis_clean`.
+
+**Spec traces:** REQ-HW-032, REQ-HW-033, REQ-HW-034
+**Implementation Status:** Pending (Exp 794)

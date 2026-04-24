@@ -7,3 +7,21 @@
 2026-04-24 01:48:01,155 [conductor] RESEARCH STEP: Exp 794: FPGA Toolchain Install + Verify (RETRO-KV260-TOOLS-UNAVAILABLE)
 2026-04-24 01:48:01,156 [conductor] ============================================================
 2026-04-24 01:48:01,211 [conductor] Committing 6 dirty files as checkpoint (preserving work)
+2026-04-24 01:48:01,488 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 01:48:01,489 [conductor] Running test suite (smart subset)...
+2026-04-24 01:48:37,924 [conductor] Pre-check: 81 passed, 3 warnings in 18.13s
+2026-04-24 01:48:38,346 [conductor] Injected 31 symbol signatures from 1 files (AST outlines)
+2026-04-24 01:48:38,346 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-24 01:58:08,986 [conductor] Claude Code produced stable deliverable results/experiment_794_fpga_toolchain_install.json (9.5 min elapsed) — killing subagent early
+2026-04-24 01:58:09,251 [conductor] Changes:
+logs/conductor.log                                 |  6 +++
+ openspec/capabilities/verifiable-reasoning/spec.md | 58 ++++++++++++++++++++++
+ results/checkpoints/experiment_631/checkpoint.json |  2 +-
+ results/experiment_339_session_startup.json        |  4 +-
+ results/experiment_625_tier1_fr11_relay.json       |  6 +--
+ results/experiment_638_tier1_fr11_relay.json       |  4 +-
+ results/experiment_645_tier1_fr11_relay.json       |  6 +--
+ results/experiment_696_icalm_abstention.json       |  6 +
+2026-04-24 01:58:09,393 [conductor] DOGFOOD: Verification complete (total: 471 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 01:58:09,393 [conductor] Running test suite (smart subset)...
+2026-04-24 01:58:46,607 [conductor] Post-check: 81 passed, 3 warnings in 20.91s
