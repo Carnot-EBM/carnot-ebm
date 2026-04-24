@@ -15283,4 +15283,25 @@ Embedding constraint injection MUST be additive: retrieved constraints are appen
 **And** constraint_addition_delta_overall is reported with honest_verdict distinguishing "constraint_addition_works", "constraint_addition_partial", "constraint_addition_zero_delta".
 
 **Spec traces:** REQ-LEARN-060, REQ-LEARN-061
+
+## REQ-HW-035: Open-Source Synthesis of Ising Sampler via Yosys
+
+The synthesis pipeline MUST use yosys with the synth_ice40 target (iCE40 HX8K, ~7.7K LUTs) for open-source FPGA synthesis of ising_sampler_v3.v. N=32 is the minimum viable synthesis target.
+
+- REQ-HW-035-1: Synthesis SHALL use `synth_ice40` targeting iCE40 HX8K LUT4 primitives (SB_LUT4). The backend is iCE40 HX8K, not Xilinx XCK26, because the open-source toolchain (yosys + nextpnr-ice40) supports iCE40 natively while Vivado (Xilinx) is proprietary.
+- REQ-HW-035-2: LUT utilization SHALL be reported after synthesis as `lut_count_n32` (integer count of SB_LUT4 primitives).
+- REQ-HW-035-3: The experiment SHALL be gated on Exp 794's `honest_verdict`. If the verdict is not in `["tools_installed_synthesis_clean", "tools_installed_synthesis_failed"]`, a blocked artifact with `honest_verdict="tools_not_installed"` SHALL be written and the experiment SHALL exit immediately.
+- REQ-HW-035-4: If N=32 synthesizes cleanly with lut_count_n32 < 5000, the experiment SHALL attempt N=64. If lut_count_n64 > 6000, this SHALL be noted as `n64_over_budget=True`.
+- REQ-HW-035-5: `honest_verdict` SHALL be one of: `synthesis_clean_n32`, `synthesis_clean_n32_n64`, `synthesis_errors_n32`, `tools_not_installed`.
+
+### SCENARIO-HW-033: Yosys Synthesizes ising_sampler_v3.v at N=32 Within LUT Budget
+
+**Given** yosys with synth_ice40 is installed (Exp 794 gate passes)
+**And** hardware/kv260/ising_sampler_v3.v is the synthesis target
+**When** yosys synthesizes at N=32 with ring-topology coupling
+**Then** lut_count_n32 < 5000 (65% of iCE40 HX8K's 7680 LUTs)
+**And** no synthesis errors are reported
+**And** honest_verdict = "synthesis_clean_n32"
+
+**Spec traces:** REQ-HW-035
 **Implementation Status:** Implemented (Exp 801)
