@@ -853,3 +853,32 @@ Perfect! All three updates completed successfully:
 2026-04-24 13:50:46,060 [conductor] RESEARCH STEP: Exp 810: Gemma4 OOM Fix v5 — nvidia-smi Loop Gate (RETRO-028, GPU REQUIRED, CARNOT_FORCE_LIVE=1)
 2026-04-24 13:50:46,060 [conductor] ============================================================
 2026-04-24 13:50:46,076 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 13:50:46,136 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 13:50:46,136 [conductor] Running test suite (smart subset)...
+2026-04-24 13:50:51,833 [conductor] Pre-check: 81 passed, 3 warnings in 2.82s
+2026-04-24 13:50:51,963 [conductor] Injected 48 symbol signatures from 4 files (AST outlines)
+2026-04-24 13:50:51,963 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 11 tests pass. The deliverable is valid with `honest_verdict="retro_028_closed"` and `retro_028_closed=true` (18/20 valid responses).
+
+**Summary of what was delivered:**
+
+1. **`openspec/capabilities/verifiable-reasoning/spec.md`** — Added REQ-LOADER-014 (VRAM eviction loop with nvidia-smi verification), SCENARIO-LOADER-014 (stuck VRAM aborts), SCENARIO-LOADER-015 (clears on retry 2).
+
+2. **`python/carnot/pipeline/vram_loop_eviction.py`** — New module with `VRAMLoopEvictionResult` dataclass and `evict_vram_with_loop()` implementing the 3-retry nvidia-smi verification loop. Aborts with `max_retries_exceeded` if VRAM stays ≥500 MB.
+
+3. **`python/carnot/pipeline/__init__.py`** — Exports `VRAMLoopEvictionResult` and `evict_vram_with_loop`.
+
+4. **`scripts/experiment_810_gemma4_oom_fix_v5.py`** — Experiment script with the full Fix v5 protocol. Ran live and produced the deliverable with `retro_028_closed=true`.
+
+5. **`tests/python/test_experiment_810_gemma4_oom_fix_v5.py`** — 11 unit tests (all passing) covering the retry loop, blocked-vram-stuck path, and required artifact fields.
+
+6. **`results/experiment_810_gemma4_oom_fix_v5.json`** — Valid deliverable: 18/20 valid GSM8K responses, `honest_verdict="retro_028_closed"`, `retro_028_closed=true`.
+2026-04-24 13:59:39,164 [conductor] Claude Code completed (exit 0)
+2026-04-24 13:59:39,183 [conductor] Changes:
+logs/conductor.log                                 | 21 +++++++++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 42 ++++++++++++++++++++++
+ python/carnot/pipeline/__init__.py                 |  6 ++++
+ 3 files changed, 69 insertions(+)
+2026-04-24 13:59:39,210 [conductor] DOGFOOD: Verification complete (total: 486 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 13:59:39,210 [conductor] Running test suite (smart subset)...
+2026-04-24 13:59:44,981 [conductor] Post-check: 81 passed, 3 warnings in 2.97s

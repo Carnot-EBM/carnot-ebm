@@ -574,6 +574,10 @@ from carnot.pipeline.jepa_wiring_guard import (  # noqa: E402
     JepaWiringCheckResult,
     check_cpmi_wiring,
 )
+from carnot.pipeline.vram_loop_eviction import (  # noqa: E402
+    VRAMLoopEvictionResult,
+    evict_vram_with_loop,
+)
 
 __all__ = [
     "AgentStep",
@@ -946,4 +950,6 @@ __all__ = [
     "EmbeddingConstraintStore",
     "JepaWiringCheckResult",
     "check_cpmi_wiring",
+    "VRAMLoopEvictionResult",
+    "evict_vram_with_loop",
 ]
