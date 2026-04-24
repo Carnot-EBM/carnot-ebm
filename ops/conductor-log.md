@@ -2704,3 +2704,4 @@ python/ |
 | 2026-04-24 18:37 UTC | Exp 811: SOTA GGUF Code Repair v4 — 50q in 10 Batc | OK | 81 passed, 3 warnings in 2.92s |
 | 2026-04-24 19:14 UTC | Exp 812: IsingEBM Constraint Feature Injection — E | OK | 145 passed, 3 warnings in 3.17s |
 | 2026-04-24 19:50 UTC | Exp 813: Constraint Addition Live Validation — Rea | OK | 81 passed, 3 warnings in 2.83s |
+| 2026-04-24 20:25 UTC | Exp 814: FR-11 Tier 1 Live Relay — Capacity-Constr | OK | 81 passed, 3 warnings in 2.83s |
