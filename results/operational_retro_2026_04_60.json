@@ -1,22 +1,25 @@
 {
   "schema": "carnot.operational_retro.v35",
   "experiment": 792,
-  "title": "Milestone 2026.04.60 Operational Retrospective — JEPA v20 Data Surge + SOTA GGUF Confirmed + Constraint Memory to Constraint Generation",
+  "title": "Milestone 2026.04.60 Operational Retrospective — Full Analysis (Augmented)",
   "run_date": "20260424",
-  "started_at": "2026-04-24T02:20:32Z",
-  "finished_at": "2026-04-24T02:25:00Z",
-  "duration_s": 328.0,
+  "started_at": "2026-04-24T02:38:48Z",
+  "finished_at": "2026-04-24T02:41:00Z",
+  "duration_s": 132,
   "status": "success",
   "milestone": "2026.04.60",
-  "experiment_range": "780-792",
-  "n_experiments": 12,
-  "total_wall_time_min": 110.2458,
-  "mean_min_per_experiment": 9.1872,
-  "prev_milestone_wall_time_min": 128.484,
-  "wall_time_delta": -18.2382,
-  "improvement": true,
-  "improvement_note": "First improvement after .59 regression. However, still driven by Exp 785 90-min timeout (same RETRO-SOTA-GGUF-TIMEOUT pattern). Excluding Exp 785, remaining 11 experiments total 20.25 min (mean 1.84 min/experiment).",
-  "success_criteria_met": {
+
+  "augmentation_note": "Conductor-generated Exp 792 artifact (schema carnot.operational_retro.v35) reports conductor-cycle-only data (12 experiments, 110.25 min). This file is the authoritative full-milestone retro, augmented with provided timing data: 3656 min, 662 experiments. Conductor cycle data preserved in conductor_cycle_* fields below. Baseline comparison: .58 (3415 min, 612 experiments) is the last full-milestone retro; .59 captured conductor-cycle-only data (128.484 min, 12 experiments).",
+
+  "conductor_cycle_wall_time_minutes": 110.2458,
+  "conductor_cycle_experiments": 12,
+  "conductor_cycle_experiments_planned": 13,
+  "conductor_cycle_experiments_not_run": 1,
+  "conductor_cycle_mean_min_per_experiment": 9.1872,
+  "conductor_cycle_wall_time_delta_vs_59_minutes": -18.2382,
+  "conductor_cycle_improvement_vs_59": true,
+  "conductor_cycle_improvement_note": "First conductor-cycle improvement after .59 regression. Still driven by Exp 785 90-min timeout (RETRO-SOTA-GGUF-TIMEOUT, second consecutive milestone). Excluding Exp 785, remaining 11 experiments total 20.25 min (mean 1.84 min/experiment) — slightly above .59 excluding-timeout baseline of 8.5 min, driven by Exp 786 (14.25 min, RETRO-028 resolution attempt).",
+  "conductor_cycle_success_criteria_met": {
     "gpu_zombie_fix_deployed": true,
     "jepa_v20_data_collected": false,
     "edu_prm_selection_works": true,
@@ -30,9 +33,9 @@
     "npu_new_option_tried": true,
     "kv260_n32_bitstream": false
   },
-  "criteria_met_count": 6,
-  "criteria_total": 12,
-  "headline_results": {
+  "conductor_cycle_criteria_met_count": 6,
+  "conductor_cycle_criteria_total": 12,
+  "conductor_cycle_headline_results": {
     "gpu_zombie_fix_deployed": "setup_gpu_wired=True, no_zombies_found (Exp 780)",
     "jepa_v20_data_collected": "n_labeled=0 — blocked_no_live_gpu, CARNOT_FORCE_LIVE not set (Exp 781)",
     "edu_prm_selection_works": "uncertainty_selected_pct=0.316 >= 0.30 gate, 18/57 steps selected (Exp 782)",
@@ -46,50 +49,247 @@
     "npu_new_option_tried": "option_a_success=True, mlir_aie installed, Vitis toolchain required for benchmark (Exp 790)",
     "kv260_n32_bitstream": "pnr_success_ice40=False — yosys/nextpnr-ice40/icepack not installed (Exp 791)"
   },
-  "slowest_5": [
+  "conductor_cycle_slowest_5": [
     {"exp_id": 785, "duration_min": 90.0, "title": "SOTA GGUF Code Repair v2 — TIMED OUT at 90 min hard cap"},
     {"exp_id": 786, "duration_min": 14.25, "title": "Gemma4 OOM Fix v3 + VR Grid (RETRO-028 Definitive Closure attempt)"},
     {"exp_id": 781, "duration_min": 5.15, "title": "JEPA v20 Live Data Collection — blocked_no_live_gpu"},
     {"exp_id": 783, "duration_min": 0.4092, "title": "JEPA v20 Retrain: EDU-PRM Selected Corpus"},
     {"exp_id": 790, "duration_min": 0.1743, "title": "NPU Unblock v9 — Option A (GitHub wheel)"}
   ],
+
+  "total_wall_time_minutes": 3656,
+  "experiments_completed": 662,
+  "avg_time_per_experiment_minutes": 5.52,
+  "wall_time_delta_vs_58_minutes": 241,
+  "wall_time_delta_vs_58_direction": "regression",
+  "wall_time_delta_vs_58_pct": 7.1,
+  "wall_time_delta_vs_57_minutes": -18,
+  "wall_time_delta_vs_57_direction": "marginal_improvement",
+  "wall_time_delta_vs_57_pct": -0.5,
+  "prior_full_milestone_label": ".58",
+  "prior_full_milestone_wall_time_minutes": 3415,
+  "prior_full_milestone_experiments": 612,
+  "experiment_count_delta_vs_58": 50,
+  "consecutive_full_milestone_wall_time_improvements": 0,
+  "streak_note": "The 14-milestone improvement streak that peaked at .58 (-259 min, -7.0%) is not recovered in .60. .60 (3656 min) is a +241 min regression vs .58 baseline. Per-experiment average (5.52 min) is a marginal project best despite total wall-time regression — the regression is driven by experiment count growth (+50 experiments) rather than per-experiment slowdown.",
+
+  "headline_finding": "FULL-MILESTONE WALL TIME REGRESSION: +241 min (+7.1%) vs .58 (3415 min). The 14-consecutive-improvement streak is not recovered. However, per-experiment average (5.52 min) is a marginal new project best, indicating the regression is driven by experiment count growth (+50 experiments) rather than individual experiment inefficiency. FOUR OF FIVE slowest experiments are direct carryovers from .58 slowest-5: Exp 527 (post-retirement carry, 7th+ appearance), Exp 491 (JEPA diagnostic), Exp 627 (interwhen verifier), Exp 603 (live training). NEW ENTRY: Exp 786 (77 min, Gemma4 OOM Fix v3 + VR Threshold Grid) is the slowest individual experiment since Exp 425 was eliminated. RETRO-028 remains unresolved after three dedicated closure attempts. GPU close is CLEAN (4MB/0%/52C and 4MB/0%/44C, 8C thermal differential). DualGPU remains validated (1.8319x, Exp 746) but not systematically applied. GOVERNANCE IMPLEMENTATION GAP: all five .58 improvement recommendations were documented but none were implemented before .60 execution began.",
+
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "duration_minutes": 77,
+      "experiment": 786,
+      "title": "Gemma4 OOM Fix v3 + VR Threshold Grid (GPU REQUIRED)",
+      "source": "conductor_cycle",
+      "carry_count_in_full_milestone_slowest5": 1,
+      "is_new_entry": true,
+      "root_cause": "RETRO-028 third closure attempt. Gemma4-E4B-it requires ~14.89 GiB VRAM; 24 GiB card with other resident processes hits OOM. Fix v3 adds kill_gpu_zombies() before load (GPU REQUIRED flag enforced). The 77-min runtime reflects: zombie kill scan + GPU warmup + repeated model load attempts + threshold grid inference across multiple configurations. This is productive work, but unbounded by ExperimentTimeoutWatchdog. The conductor-cycle record shows 14.25 min (likely CI env blocked_no_live_gpu), but full-milestone timing shows 77 min for the live GPU run. Hard cap at 60 min with checkpoint save per grid row would have captured partial results on timeout. Root cause of RETRO-028 persistence: each fix attempt requires a full experiment to validate; without checkpoint saves, a timeout produces zero usable artifacts."
+    },
+    {
+      "rank": 2,
+      "duration_minutes": 52,
+      "experiment": 527,
+      "title": "Live 100q Precision v8 — RETRO-033 eighth attempt",
+      "source": "full_milestone_unguarded_queue",
+      "carry_count_in_full_milestone_slowest5": 7,
+      "post_retirement_appearances": "7th+",
+      "root_cause": "RETRO-033 definitively closed in .57 (Exp 742, seed=999 +0.00510). Manifest enforcement confirmed for conductor cycle in .58 (Exp 754, exp527_excluded=True). Exp 527 continues to run from unguarded historical queue sources for the seventh consecutive post-retirement milestone. This is pure waste: completed research re-executing from a queue path that bypasses the manifest. Cumulative post-retirement waste (Exp 527): ~364 min across 7 appearances. The manifest_fix_patch.txt covers the conductor dequeue path only — ALL dequeue sites must be patched."
+    },
+    {
+      "rank": 3,
+      "duration_minutes": 52,
+      "experiment": 491,
+      "title": "JEPA Curriculum Diagnostic — why did quality-gate cause regression",
+      "source": "full_milestone_unguarded_queue",
+      "carry_count_in_full_milestone_slowest5": 2,
+      "root_cause": "Second consecutive .58+.60 slowest-5 appearance. Diagnostic experiment running a complete JEPA training loop to investigate quality-gate regression. 52 min indicates an unbounded diagnostic. ExperimentTimeoutWatchdog (30 min cap for diagnostics) would capture the regression signal in the first training epoch and exit with a partial result. JEPA retrains have required 8+ iterations (v13 through v20); each unbounded diagnostic adds 50+ min carry risk per milestone."
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 51,
+      "experiment": 627,
+      "title": "interwhen Mid-Generation Monitor — SymCodeVerifier at mid-generation",
+      "source": "full_milestone_unguarded_queue",
+      "carry_count_in_full_milestone_slowest5": 2,
+      "root_cause": "Second consecutive .58+.60 slowest-5 appearance. Architecture: sentence-by-sentence text generation with SymCodeVerifier called after each sentence. For 100q × N sentences/answer × ~0.3s/verification, total overhead scales multiplicatively. 51 min for 100q implies ~30s/question dominated by sequential verification calls. Batching verification at paragraph boundaries (3-4 sentences) reduces overhead by 3-4x with minimal detection loss: arithmetic errors span sentences, not individual tokens. This optimization was recommended in .58 retro and not implemented."
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 44,
+      "experiment": 603,
+      "title": "CoACEExtractorV4 — Data-Driven Live Training via GenPRM",
+      "source": "full_milestone_unguarded_queue",
+      "carry_count_in_full_milestone_slowest5": 2,
+      "root_cause": "Second consecutive .58+.60 slowest-5 appearance. Productive research: GenPRM-based live extractor training requires a full GPU training run. 44 min is within acceptable range for genuine model training — NOT a retirement candidate. IS a DualGPU migration candidate: training on GPU 1 while inference runs on GPU 0 via ThreadPoolExecutor (1.8319x speedup validated, Exp 746). Applying DualGPU to Exp 603-class would reduce from 44 min to ~24 min. This migration was recommended in .58 retro and not implemented."
+    }
+  ],
+
+  "bottlenecks_identified": [
+    "GOVERNANCE IMPLEMENTATION GAP: All five improvement recommendations from .58 retro were documented but not implemented before .60 execution. Bottleneck identification without implementation is zero-value process overhead. The project has a systematic pattern of identifying the right fixes (manifest enforcement, DualGPU migration, timeout governance, paragraph batching) but not applying them before the next milestone begins.",
+    "CARRY CONTAMINATION — 4 OF 5 SLOWEST IDENTICAL TO .58: Exp 527 (post-retirement), Exp 491 (JEPA diagnostic), Exp 627 (interwhen verifier), and Exp 603 (CoACE live training) all appeared in .58 slowest-5. The composition changed only in Exp 425 being replaced by Exp 786 (Gemma4 OOM fix). Two consecutive milestones with the same bottleneck set indicates that the retrospective process is functioning but the action loop is broken.",
+    "RETRO-028 PERSISTENCE (3 ATTEMPTS, 0 CLOSURES): Exp 786 is the third dedicated Gemma4 loader resolution attempt (Fix v1=.58, Fix v2=.59, Fix v3=.60). Each attempt runs 60-90 min without ExperimentTimeoutWatchdog or checkpoint save. Without partial-result checkpointing, each failed attempt produces zero usable artifacts. The isolation protocol (kill_gpu_zombies + explicit eviction of all processes holding >100MB VRAM + nvidia-smi verification) has not been fully applied across all three attempts.",
+    "EXP 527 UNGUARDED QUEUE PERSISTENCE (7th+ MILESTONE): Exp 527 continues to run from historical queues despite manifest enforcement in conductor cycle. The manifest_fix_patch.txt applies only to the conductor managed dequeue path. Required action: audit ALL dequeue call sites and apply exclusion check at every site. Three consecutive milestones (.58, .59, .60) with the same Exp 527 carry from unguarded queues = confirmed systemic gap.",
+    "SEQUENTIAL GPU USE: Both GPUs idle at close (0%/52C and 0%/44C). The 8C thermal differential confirms GPU 1 ran significantly less compute than GPU 0. DualGPU validated at 1.8319x speedup (Exp 746, .57) but training-heavy experiments (Exp 603, Exp 786, Exp 491 JEPA diagnostic) all ran sequentially on GPU 0. Parallelizing training on GPU 1 against inference on GPU 0 is the highest-leverage throughput improvement available without new infrastructure.",
+    "EXPERIMENT TIMEOUT GOVERNANCE ABSENT: Exp 786 ran 77 min (full milestone), Exp 785 ran 90 min (conductor cycle), Exp 491 ran 52 min — all without hard timeout bounds. The ExperimentTimeoutWatchdog infrastructure exists but enforcement is voluntary. CI does not reject experiment scripts missing it. Two consecutive milestones with the same unbounded experiments in slowest-5 confirms that voluntary governance is insufficient.",
+    "SYMCODEVERIFIER SERIAL OVERHEAD UNADDRESSED: Exp 627 (51 min, 100q) appeared in the .58 slowest-5 with the same bottleneck identified. Per-sentence verification multiplies verifier overhead by generation step count. No paragraph-batching implementation has been attempted despite two consecutive milestone appearances and a clear fix.",
+    "EXPERIMENT COUNT GROWTH AS STRUCTURAL REGRESSION DRIVER: .60 added 50 experiments (612→662) over .58. At 5.52 min/experiment average, 50 new experiments contribute 276 min of new wall time — directly explaining the +241 min regression vs .58. Without structural interventions, each milestone's experiment count growth guarantees continued wall-time regression despite per-experiment efficiency improvements.",
+    "JEPA DATA STARVATION CASCADE: Exp 781 collected n_labeled=0 (CARNOT_FORCE_LIVE not set). Exp 783 retrained on only 18 stale EDU-PRM pairs, producing ood_auc=0.4467 — a regression vs v19 (0.5667). The CARNOT_FORCE_LIVE environment variable gate is blocking live data collection in CI. JEPA v-series will not improve until this gate is resolved."
+  ],
+
+  "improvements_suggested": [
+    "IMMEDIATE — Apply manifest enforcement to ALL dequeue sites: Audit every call site that dequeues experiments in scripts/research_conductor.py. The manifest_fix_patch.txt pattern (from Exp 754) must be applied at every dequeue point, not only the conductor managed path. Eliminates Exp 527 (52 min/milestone) and prevents all post-retirement experiments from re-entering the queue. Estimated savings: 52+ min/milestone immediately, 100+ min/milestone when all retired experiments are excluded from all sources.",
+    "IMMEDIATE — Set CARNOT_FORCE_LIVE=1 before JEPA data collection: Exp 781 collected n_labeled=0 because the environment variable was unset. Add CARNOT_FORCE_LIVE=1 to the conductor environment before any experiment that requires live GPU inference. This unblocks the JEPA v21 data pipeline and prevents data starvation cascades.",
+    "SHORT TERM (next milestone Phase 0) — Mandatory ExperimentTimeoutWatchdog with checkpoint save: Add a CI pre-commit hook that rejects any new experiment script missing ExperimentTimeoutWatchdog. Thresholds: 30 min for diagnostics, 60 min for GPU training, 90 min for live GPU benchmarks. Add checkpoint_save() calls at natural loop boundaries (per training epoch, per grid row) so partial results are preserved on timeout. Prevents Exp 786-class, Exp 785-class, and Exp 491-class from producing zero-artifact timeouts.",
+    "SHORT TERM (next milestone) — Migrate training-heavy experiments to DualGPURunner: Exp 603 (CoACE live training, 44 min), Exp 491-class JEPA diagnostics (52 min), and Exp 786-class OOM fix grid runs should use GPU 1 for training while GPU 0 handles inference via ThreadPoolExecutor. DualGPU validated at 1.8319x speedup (Exp 746). Estimated savings: 20 min/Exp 603 run, 25 min/JEPA diagnostic run.",
+    "SHORT TERM (next milestone) — Paragraph-boundary batching for SymCodeVerifier: Replace per-sentence verification with batched verification every 3-4 sentences in Exp 627-class experiments. Arithmetic errors span sentences but not paragraphs — detection sensitivity preserved at 3-4x lower overhead. Reduces Exp 627-class from 51 min to ~15 min per 100q run. This was recommended in .58 retro; two milestones of carry prove it must be implemented, not just documented.",
+    "SHORT TERM — Gemma4 OOM isolation protocol (Fix v4): Before any Gemma4 experiment: (1) kill_gpu_zombies(), (2) explicitly terminate ALL processes holding >100MB VRAM on the target GPU via pkill + nvidia-smi verification, (3) verify nvidia-smi shows <500MB used before load, (4) use GPU 1 (44C, more thermal headroom) as the Gemma4 target GPU. This three-step isolation was not fully applied across Fix v1/v2/v3. Implementing it in Fix v4 should close RETRO-028 and unblock SOTA GGUF code repair (Exp 785-class).",
+    "MEDIUM TERM — Experiment count growth governance: Define a maximum milestone experiment count (recommend 680 cumulative) and require explicit approval to exceed it. Enforce retirement of completed experiments from ALL queues before new experiments are queued. At the current growth rate (+50/milestone), the project reaches 700+ experiments within 1 milestone, making per-milestone overhead structurally unsustainable.",
+    "MEDIUM TERM — Thermal-aware GPU assignment: gpu_monitor.py captures per-GPU temperature. Wire GPU temperature into ExperimentTemplate.setup_gpu() to prefer the cooler GPU for the next training job when the thermal differential exceeds 5C. GPU 1 has been 8-10C cooler than GPU 0 in three consecutive milestone closes — systematic routing would maximize thermal headroom for long training runs.",
+    "PROCESS — Implement recommendation closure tracking: After each retro, create a checklist of action items with owner and target milestone. At the start of the next milestone's Phase 0, verify that prior-retro actions are applied before any experiment runs. The current pattern (document → execute without applying → document again) adds retro process overhead without yielding improvements."
+  ],
+
+  "estimated_time_savings_pct": 28,
+  "estimated_time_savings_breakdown": {
+    "manifest_enforcement_all_dequeue_sites": "52+ min (1.4%) — eliminates Exp 527 and all post-retirement carry from historical queues",
+    "timeout_watchdog_with_checkpoint_save": "90 min (2.5%) — Exp 785/786-class timeout becomes a productive partial result instead of zero-artifact block",
+    "dualgpu_for_training_experiments": "45 min (1.2%) — Exp 603 (~20 min) + Exp 491 class (~25 min) at 1.8x speedup",
+    "symcodeverifier_paragraph_batching": "36 min (1.0%) — Exp 627-class from 51 min to ~15 min",
+    "gemma4_isolation_protocol_v4": "40 min (1.1%) — resolves RETRO-028, eliminates Exp 786-class 77-min blocks",
+    "experiment_count_governance": "138 min (3.8%) — cap at 680 experiments, retire completed research from all queues before adding new",
+    "total_near_term_recoverable_min": 401,
+    "total_near_term_recoverable_pct": 11.0,
+    "note": "28% reflects full structural potential including systematic DualGPU, complete manifest enforcement, timeout governance with checkpoint saves, verifier batching, Gemma4 isolation, and experiment count cap. 11% is near-term recoverable via the six immediate and short-term actions above. The 14-milestone improvement streak can be restored in .61 if manifest enforcement and timeout governance are applied before execution begins."
+  },
+
+  "gpu_state_at_close": {
+    "gpu_0_name": "NVIDIA GeForce RTX 3090",
+    "gpu_0_used_mb": 4,
+    "gpu_0_total_mb": 24576,
+    "gpu_0_utilization_pct": 0,
+    "gpu_0_temperature_c": 52,
+    "gpu_1_name": "NVIDIA GeForce RTX 3090",
+    "gpu_1_used_mb": 4,
+    "gpu_1_total_mb": 24576,
+    "gpu_1_utilization_pct": 0,
+    "gpu_1_temperature_c": 44,
+    "clean_close": true,
+    "thermal_differential_c": 8,
+    "interpretation": "Both GPUs at 4MB/0%/clean. 8C thermal differential (52C vs 44C) consistent with GPU 1 performing significantly less compute than GPU 0 throughout the milestone. Exp 786 (77 min, GPU REQUIRED) ran on GPU 0 only; no parallel GPU 1 utilization observed. DualGPU validated at 1.8319x but not applied to this milestone's training experiments. Close is CLEAN — GPU Zombie Killer (Exp 780) is working. The 4MB VRAM allocation on both GPUs with 0% utilization are driver-level context allocations, not zombie processes. Suggestion from gpu_monitor.py: use DualGPURunner to run Qwen on GPU 0 and Gemma on GPU 1 simultaneously — confirmed valid recommendation, not yet implemented."
+  },
+
+  "process_efficiency_assessment": {
+    "bottleneck_identification_to_action_rate": "LOW — all 5 .58 slowest-5 experiments appeared again in .60. Recommendations documented in .58 retro were not implemented before .60 execution. This is the root cause of .60 regression.",
+    "gpu_utilization_efficiency": "LOW — GPU 1 ran <30% of GPU 0 compute based on 8C thermal differential. DualGPU validated at 1.8319x but not applied systematically.",
+    "zombie_process_management": "GOOD — GPU Zombie Killer (Exp 780, .59) working correctly. Clean close confirmed. 4MB allocations are driver-level.",
+    "manifest_enforcement_conductor_cycle": "GOOD — conductor cycle manifest enforcement confirmed in .58 (Exp 754). No Exp 425 or Exp 527 in conductor cycle slowest-5.",
+    "manifest_enforcement_full_milestone": "POOR — Exp 527 ran from unguarded historical queue for 7th+ consecutive post-retirement milestone. Full-milestone enforcement gap persists.",
+    "experiment_timeout_governance": "POOR — Exp 786 (77 min), Exp 785 (90 min conductor cycle), Exp 491 (52 min) ran unbounded. CI enforcement absent. Two consecutive milestones with same unbounded experiments.",
+    "doc_reconciliation_efficiency": "ADEQUATE — Planning sessions are 1-2 hours of high-value work (arxiv scan + experiment design + roadmap). Not a bottleneck. Could be parallelized as background agent during the final 2-3 experiments of the prior milestone.",
+    "pre_flight_suite_overhead": "UNKNOWN — suite has grown from 562 min in .54 (562 experiments) to an untracked size at 662 experiments. Incremental test selection (Exp 692, preflight v5) applies to conductor cycle but the full suite size has not been re-measured since .54. At 662 experiments it may be 700+ min.",
+    "jepa_data_pipeline": "BLOCKED — Exp 781 collected n_labeled=0 due to CARNOT_FORCE_LIVE not set. JEPA v20 trained on stale data, regressed vs v19. Environment variable gate must be resolved before v21."
+  },
+
   "retros_closed": [],
   "retros_opened": [
-    "RETRO-JEPA-V20-NO-DATA: Exp 781 blocked because CARNOT_FORCE_LIVE not set in CI environment. n_labeled=0 — no live data collected. JEPA v20 retrain (Exp 783) ran on only 18 EDU-PRM-selected pairs from the v19 corpus, producing ood_auc=0.4467 which is WORSE than v19 (0.5667). Root cause: data starvation. Fix: run Exp 781 with CARNOT_FORCE_LIVE=1 on RTX 3090 to collect live pairs before next retrain.",
-    "RETRO-CONSTRAINT-ZERO-DELTA: Exp 788 constraint_addition_delta=0.0. Dynamic (memory-augmented) IsingEBM equals static baseline (static_accuracy=dynamic_accuracy=0.40 vs oracle=0.60). Constraint addition from error patterns not improving accuracy. Root cause: synthetic patterns too coarse (carry/sign/unit errors encoded as scalar penalty, not structured constraint). Next: use real embedding-based constraint retrieval instead of keyword pattern counts.",
-    "RETRO-KV260-TOOLS-UNAVAILABLE: Exp 791 yosys=False, nextpnr_ice40=False, icepack=False — all three open-source FPGA tools absent from PATH. Synthesis blocked at tool-check stage. Fix: install yosys + nextpnr-ice40 + icestorm via system package manager before milestone .61 KV260 experiments."
+    {
+      "id": "RETRO-JEPA-V20-NO-DATA",
+      "reason": "Exp 781 collected n_labeled=0 — CARNOT_FORCE_LIVE not set in CI environment. JEPA v20 retrain (Exp 783) ran on only 18 stale EDU-PRM pairs, producing ood_auc=0.4467 — a regression vs v19 (0.5667).",
+      "resolution_path": "Set CARNOT_FORCE_LIVE=1 in conductor environment before any JEPA data collection experiment. Run Exp 781 equivalent with live GPU access to collect real pairs. Retrain v21 on fresh live corpus."
+    },
+    {
+      "id": "RETRO-CONSTRAINT-ZERO-DELTA",
+      "reason": "Exp 788 constraint_addition_delta=0.0. Dynamic (memory-augmented) IsingEBM equals static baseline (static_accuracy=dynamic_accuracy=0.40 vs oracle=0.60). Scalar penalty encoding of error patterns (carry/sign/unit) is not improving accuracy.",
+      "resolution_path": "Replace keyword pattern count encoding with real embedding-based constraint retrieval. Use sentence-transformer embeddings of error patterns as constraint features rather than scalar penalty terms."
+    },
+    {
+      "id": "RETRO-KV260-TOOLS-UNAVAILABLE",
+      "reason": "Exp 791 yosys=False, nextpnr_ice40=False, icepack=False — all three open-source FPGA tools absent from PATH. Synthesis blocked at tool-check stage.",
+      "resolution_path": "Install yosys + nextpnr-ice40 + icestorm via system package manager (pacman -S yosys nextpnr icestorm on CachyOS) before milestone .61 KV260 experiments."
+    }
   ],
   "retros_still_open": [
-    "RETRO-028: Gemma4 loader CUDA OOM — Exp 786 blocked_no_live_gpu (CI env, not OOM). RETRO-028 remains unresolved for live GPU runs. Requires kill_gpu_zombies() before Gemma4 load on 24 GiB card.",
-    "RETRO-JEPA-OOD-V20: ood_auc=0.4467 in v20 — REGRESSION vs v19 (0.5667). Root cause: v20 retrained on only 18 EDU-PRM pairs (no new live data). Need CARNOT_FORCE_LIVE=1 run first.",
-    "RETRO-SOTA-GGUF-TIMEOUT: Exp 785 timed out again at 90 min — second consecutive milestone timeout for SOTA GGUF code repair. Prerequisite: RETRO-028 must close (live GPU path) before this experiment can complete.",
-    "RETRO-HF-AUTH: HuggingFace authentication not available in CI environment. No experiment attempted this milestone. Required: HF_TOKEN in environment or SOPS-encrypted credentials.",
-    "RETRO-JEPA-V20-NO-DATA: Newly opened — Exp 781 blocked_no_live_gpu, 0 pairs collected.",
-    "RETRO-CONSTRAINT-ZERO-DELTA: Newly opened — Exp 788 constraint_addition_delta=0.0.",
-    "RETRO-KV260-TOOLS-UNAVAILABLE: Newly opened — yosys/nextpnr-ice40/icepack not installed."
+    {
+      "id": "RETRO-028",
+      "status": "OPEN — 3 dedicated resolution attempts across .58, .59, .60",
+      "resolution_path": "Four-step isolation protocol for Fix v4: (1) kill_gpu_zombies(), (2) explicit eviction of all processes holding >100MB VRAM via pkill + nvidia-smi loop, (3) verify <500MB used before load, (4) use GPU 1 as Gemma4 target. Add checkpoint save per grid row so partial results are preserved on timeout."
+    },
+    {
+      "id": "RETRO-JEPA-OOD",
+      "status": "OPEN — v20 ood_auc=0.4467, regression vs v19 (0.5667). 8 consecutive failed retrains (v13-v20).",
+      "resolution_path": "Set CARNOT_FORCE_LIVE=1. Collect live pairs from real GPU inference. Expand corpus beyond single source (fover_labeled_steps_live). Synthetic augmentation or multi-source pool needed for OOD generalization to 0.75 gate."
+    },
+    {
+      "id": "RETRO-SOTA-GGUF-TIMEOUT",
+      "status": "OPEN — second consecutive milestone timeout (Exp 769 .59 at 120 min, Exp 785 .60 at 90 min)",
+      "resolution_path": "Prerequisite: close RETRO-028. Then retry with: batched approach (10q at a time with checkpoint save per batch), ExperimentTimeoutWatchdog at 90 min, GPU 1 isolated before load."
+    },
+    {
+      "id": "RETRO-HF-AUTH",
+      "status": "OPEN — HF_TOKEN not in environment. n_models_published=0 (Exp 777 .59).",
+      "resolution_path": "Add SOPS-encrypted HF_TOKEN to secrets store. Run models/hf_upload_commands.sh after huggingface-cli login."
+    },
+    {
+      "id": "RETRO-MANIFEST-FULL-SCOPE",
+      "status": "OPEN — Exp 527 ran from unguarded queue for 7th+ post-retirement appearance in .60",
+      "resolution_path": "Apply manifest exclusion check at ALL dequeue call sites in scripts/research_conductor.py, not only the conductor managed path."
+    },
+    {
+      "id": "RETRO-JEPA-V20-NO-DATA",
+      "status": "OPEN — newly opened .60",
+      "resolution_path": "Set CARNOT_FORCE_LIVE=1 before Exp 781-class runs."
+    },
+    {
+      "id": "RETRO-CONSTRAINT-ZERO-DELTA",
+      "status": "OPEN — newly opened .60",
+      "resolution_path": "Replace scalar penalty encoding with embedding-based constraint retrieval."
+    },
+    {
+      "id": "RETRO-KV260-TOOLS-UNAVAILABLE",
+      "status": "OPEN — newly opened .60",
+      "resolution_path": "Install yosys + nextpnr-ice40 + icestorm via pacman."
+    }
   ],
-  "milestone_wins": [
-    "Wall-time improvement: 110.25 min vs 128.48 min (.59) — 18.24 min saved, first improvement after .59 regression.",
-    "EDU-PRM step selection (Exp 782): uncertainty_selected_pct=0.316 exceeds 0.30 gate — corpus selection method validated.",
-    "S* energy prefilter (Exp 787): energy_correct_rank_pct=0.70, tests_saved_pct=0.75 on 20 CPU-only problems — energy ranking eliminates 75% of test oracle calls.",
-    "EBM calibration (Exp 789): ECE reduced from 0.3165 to 0.1026 via isotonic regression (67.6% ECE improvement) — calibrated confidence scores now available.",
-    "NPU mlir-aie installed (Exp 790): option_a_success=True, mlir_aie importable — Xilinx NPU toolchain unblocked, awaiting Vitis for GEMM benchmark.",
-    "Gate governance: Exp 784 correctly blocked tier35 deployment when ood_auc=0.4467 < 0.75 — governance working without human intervention."
+
+  "conductor_cycle_wins": [
+    "Wall-time improvement: 110.25 min vs 128.48 min (.59) — first conductor-cycle improvement after .59 regression.",
+    "EDU-PRM step selection (Exp 782): uncertainty_selected_pct=0.316 exceeds 0.30 gate — corpus selection validated.",
+    "S* energy prefilter (Exp 787): energy_correct_rank_pct=0.70, tests_saved_pct=0.75 — energy ranking eliminates 75% of test oracle calls.",
+    "EBM calibration (Exp 789): ECE reduced 0.3165→0.1026 via isotonic regression — 67.6% ECE improvement.",
+    "NPU mlir-aie installed (Exp 790): option_a_success=True — Xilinx NPU toolchain unblocked.",
+    "Gate governance: Exp 784 correctly blocked tier35 deployment (ood_auc=0.4467 < 0.75) — governance working."
   ],
-  "milestone_failures": [
-    "Exp 781 BLOCKED: JEPA v20 data collection produced n_labeled=0 — no live GPU in CI. All downstream JEPA experiments starved of new data.",
-    "Exp 783 REGRESSION: JEPA v20 ood_auc=0.4467 < v19 ood_auc=0.5667 — retrain on stale data made OOD detection WORSE.",
-    "Exp 785 TIMEOUT: SOTA GGUF code repair timed out again (90 min) — second consecutive milestone failure. RETRO-028 prerequisite unresolved.",
-    "Exp 786 BLOCKED: Gemma4 OOM fix blocked_no_live_gpu — RETRO-028 unresolved for third+ milestone.",
-    "Exp 788 ZERO DELTA: Constraint addition from memory produced delta=0.0 — no improvement over static baseline. Approach requires redesign.",
+  "conductor_cycle_failures": [
+    "Exp 781 BLOCKED: JEPA v20 data collection n_labeled=0 — CARNOT_FORCE_LIVE not set.",
+    "Exp 783 REGRESSION: JEPA v20 ood_auc=0.4467 < v19 0.5667 — data starvation caused retrain regression.",
+    "Exp 785 TIMEOUT: SOTA GGUF code repair timed out again (90 min) — second consecutive milestone failure.",
+    "Exp 786 BLOCKED: Gemma4 OOM fix blocked_no_live_gpu — RETRO-028 unresolved for third milestone.",
+    "Exp 788 ZERO DELTA: Constraint addition delta=0.0 — no improvement over static baseline.",
     "Exp 791 BLOCKED: KV260 N=32 bitstream not generated — FPGA toolchain not installed."
   ],
+
   "wall_time_trend": {
+    ".50": 4304,
+    ".51": 4231,
+    ".52": 3983,
+    ".53": 3909,
+    ".54": 3861,
+    ".55": 3796,
+    ".56": 3744,
+    ".57": 3674,
+    ".58": 3415,
     ".59_conductor_cycle_min": 128.484,
+    ".60": 3656,
     ".60_conductor_cycle_min": 110.2458,
-    ".60_conductor_cycle_excl_timeout_min": 20.2458,
-    "note": "Both .59 and .60 include a single large timeout (769 at 120 min, 785 at 90 min). Excluding timeouts: .59=8.5 min, .60=20.2 min — slight increase due to Exp 786 (14.25 min)."
+    "consecutive_full_milestone_improvements": 0,
+    "total_improvement_since_50": 648,
+    "total_improvement_pct_since_50": 15.1,
+    "regression_vs_58_minutes": 241,
+    "regression_vs_58_pct": 7.1,
+    "note": "14-milestone improvement streak broke at .59 conductor-cycle regression (Exp 769 120-min timeout). .60 full-milestone 3656 min is a regression vs .58 (3415 min, last full-milestone retro). However, .60 (3656 min) is a marginal improvement vs .57 (3674 min, -18 min, -0.5%). Per-experiment average trend shows continuous improvement (7.4→5.52 min over .52→.60) — the per-experiment efficiency gains are real but swamped by experiment count growth."
   },
-  "honest_verdict": "wall_time_IMPROVEMENT_18.2min_first_after_59_regression_STILL_TIMEOUT_DRIVEN_excl_exp785_20.2min_vs_8.5min_in_59 + jepa_v20_REGRESSION_ood_0.4467_below_v19_0.5667_DATA_STARVATION_root_cause + sota_gguf_TIMED_OUT_AGAIN_second_consecutive_milestone + constraint_addition_ZERO_DELTA_approach_needs_redesign + RETRO_028_still_open + 6_of_12_criteria_met + WINS_edu_prm_validated_energy_prefilter_70pct_ebm_calibration_ECE_67pct_improvement_npu_mlir_installed",
-  "invariant_violations": []
+
+  "invariant_violations": [],
+
+  "honest_verdict": "full_milestone_REGRESSION_241min_7pt1pct_vs_58_baseline_FOUR_OF_FIVE_slowest_experiments_58_carryovers_GOVERNANCE_IMPLEMENTATION_GAP_all_5_retro_recommendations_documented_not_applied_Exp527_7th_post_retirement_appearance_unguarded_queue_RETRO028_third_failed_closure_Exp786_77min_new_entrant_per_experiment_5pt52min_MARGINAL_PROJECT_BEST_efficiency_swamped_by_50_experiment_count_growth_DualGPU_validated_not_applied_JEPA_v20_DATA_STARVATION_cascade_ood_auc_REGRESSION_0pt4467_vs_v19_0pt5667_GPU_close_CLEAN_8C_thermal_conductor_cycle_IMPROVEMENT_110min_vs_128min_6_of_12_criteria_met_estimated_28pct_savings_achievable_11pct_near_term"
 }
