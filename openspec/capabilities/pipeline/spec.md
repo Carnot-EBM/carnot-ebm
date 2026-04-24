@@ -670,6 +670,48 @@ be idempotent: re-running when the section already exists MUST succeed without r
 
 **Spec traces:** REQ-PUBLISH-011
 
+### REQ-PUBLISH-005: HuggingFace Authentication Token MUST Be Stored via SOPS Encryption
+
+**Statement:** The HuggingFace authentication token (HF_TOKEN) MUST be stored at rest using
+SOPS encryption (age or PGP key).  Plaintext HF_TOKEN values MUST NOT appear in any
+committed file.  The token MUST be decrypted at runtime via `sops -d secrets/hf_token.yaml`
+and injected into the conductor environment with `eval $(sops -d ... | grep HF_TOKEN)`.
+
+**Why this matters:**
+    Exp 777 (.59) revealed that HF_TOKEN was absent from the conductor environment,
+    blocking all model publishing.  The root cause was no standardised secret-injection
+    workflow.  SOPS with age keys provides at-rest encryption (keys never committed),
+    per-repo access control via .sops.yaml, and a single decryption command that works
+    in both interactive and automated (conductor) sessions without requiring a secrets
+    manager service.
+
+**Spec traces:** CLAUDE.md security requirements, RETRO-HF-AUTH, Exp 803
+
+### REQ-PUBLISH-006: models/hf_upload_commands.sh MUST Provide Authenticated Push Commands
+
+**Statement:** `models/hf_upload_commands.sh` MUST contain `huggingface-cli upload` commands
+for all three model tiers: Ising (carnot-ising-sampler-v1), KAN (carnot-kan-energy-tier),
+and EORM (carnot-eorm-55m).  The script MUST source HF_TOKEN from SOPS before calling
+huggingface-cli login.  The script MUST be executable and idempotent.
+
+**Why this matters:**
+    Without a single authoritative upload script, each publish attempt re-discovers the
+    correct repo IDs and file lists from scratch.  A versioned script with SOPS wiring
+    ensures the conductor can re-run publishes deterministically without manual token
+    injection each time.
+
+**Spec traces:** REQ-PUBLISH-005, Exp 803
+
+### SCENARIO-PUBLISH-009: HF_TOKEN Present; huggingface-cli Login Succeeds; README Updated
+
+**Given** HF_TOKEN is present in the environment (from SOPS decryption or env var)
+**And** `huggingface-cli whoami` returns exit code 0
+**When** `run_experiment(tmpl)` is called
+**Then** at least one model README is updated via `huggingface-cli upload`
+**And** `honest_verdict == "hf_models_published"`
+
+**Spec traces:** REQ-PUBLISH-005, REQ-PUBLISH-006
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -703,6 +745,8 @@ be idempotent: re-running when the section already exists MUST succeed without r
 | REQ-PROBE-021 | Implemented | Exp 772 — is_high_energy advisory flag; tier0g_deployed=False (AUC=0.46, below NUP v4 baseline) |
 | REQ-PUBLISH-010 | Implemented | Exp 777 — huggingface-cli upload executed; blocked cleanly when HF_TOKEN absent |
 | REQ-PUBLISH-011 | Implemented | Exp 777 — all existing Carnot-EBM model READMEs updated with pip install carnot pointer |
+| REQ-PUBLISH-005 | Implemented | Exp 803 — SOPS HF_TOKEN spec in docs/sops-hf-token-setup.md |
+| REQ-PUBLISH-006 | Implemented | Exp 803 — models/hf_upload_commands.sh with SOPS wiring for all 3 tiers |
 
 ## EBM Calibration Alignment (Exp 789)
 
