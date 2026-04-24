@@ -201,3 +201,16 @@ logs/conductor.log                         | 12 ++++++++++++
 2026-04-24 04:40:16,108 [conductor] DOGFOOD: Verification complete (total: 474 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 04:40:16,108 [conductor] Running test suite (smart subset)...
 2026-04-24 04:40:21,678 [conductor] Post-check: 81 passed, 3 warnings in 2.83s
+2026-04-24 04:40:21,705 [conductor] Committed: [conductor] Exp 798: CPMI Contrastive Pair Builder (arXiv 2604.10660) — Hard Neg
+2026-04-24 04:40:23,375 [conductor] Pushed to origin
+2026-04-24 04:40:23,376 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 04:40:23,376 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+Done. Updated ops/changelog.md with Exp 798 entry:
+
+**Summary:**
+- **Status:** ⚠️ Research Finding  
+- **honest_verdict:** cpmi_augmentation_adequate (VERBATIM)  
+- **Key metrics:** augmentation_ratio=2.5, n_output_triples=300, cpmi_score_mean=0.0582  
+- **Why:** "adequate" is not an unambiguous win—indicates the augmentation works but isn't exceptional  
+- **Skipped:** ops/status.md (no new capability) and traceability.md (no new REQ-*/SCENARIO-*)
+2026-04-24 04:41:33,291 [conductor] Claude Code completed (exit 0)
