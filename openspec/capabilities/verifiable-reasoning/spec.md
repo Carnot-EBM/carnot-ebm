@@ -15384,3 +15384,34 @@ a version string when invoked with `--version` or `--help`.
 
 **Spec traces:** REQ-HW-036, REQ-HW-037
 **Implementation Status:** Implemented (Exp 807)
+
+## REQ-BENCH-016: SOTA GGUF Code Repair v4 — 50 HumanEval Problems, Batched 10×5 (Exp 811)
+
+The SOTA GGUF code repair pipeline MUST run 50 HumanEval problems (p0-p49) in 10 batches
+of 5, using Qwen3.6-35B-A3B Q4_K_M GGUF on GPU 1 with a MARS margin gate.
+
+- REQ-BENCH-016-1: Exactly 50 HumanEval problems (p0-p49) MUST be evaluated in 10 batches
+  of 5 problems each.
+- REQ-BENCH-016-2: An AtomicResultWriter checkpoint MUST be written after each batch so that
+  partial progress survives a timeout or process interruption.
+- REQ-BENCH-016-3: An ExperimentTimeoutWatchdog at 90 min MUST be active for the full run.
+- REQ-BENCH-016-4: If Exp 810 prerequisite gate (retro_028_closed=True) is not met,
+  the script MUST write a blocked artifact with honest_verdict='gated_retro028_not_closed'.
+- REQ-BENCH-016-5: evict_vram_with_loop(gpu_index=1) MUST be called before model load to
+  guarantee VRAM is below threshold before attempting CUDA allocation.
+- REQ-BENCH-016-6: signed_improvement MUST be computed as mean(pass@1_repair) -
+  mean(pass@1_baseline), not clamped or normalised.
+
+### SCENARIO-BENCH-035: 50 Problems Completed in 10 Batches, Positive Repair
+
+**Given** Exp 810 artifact has retro_028_closed=True
+**And** GPU 1 is available and VRAM is cleared by evict_vram_with_loop
+**And** Qwen3.6-35B-A3B Q4_K_M GGUF is present in models/ cache
+**When** 50 HumanEval problems are evaluated in 10 batches of 5
+**Then** n_completed == 50
+**And** pass@1_repair > pass@1_baseline (signed_improvement > 0)
+**And** honest_verdict == "code_repair_positive"
+**And** n_oracle_calls_saved > 0 (MARS gate skipped at least one oracle call)
+
+**Spec traces:** REQ-BENCH-016
+**Implementation Status:** Implemented (Exp 811)
