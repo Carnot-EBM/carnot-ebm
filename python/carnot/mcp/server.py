@@ -820,6 +820,7 @@ def health_check() -> dict[str, Any]:
             "verify_code_with_pbt",
             "verify_llm_output",
             "verify_and_repair",
+            "score_agent_outputs",
             "list_domains",
             "health_check",
         ],
@@ -828,6 +829,63 @@ def health_check() -> dict[str, Any]:
             "execution_timeout_seconds": EXECUTION_TIMEOUT_SECONDS,
         },
     }
+
+
+# ---------------------------------------------------------------------------
+# Tool: score_agent_outputs
+# ---------------------------------------------------------------------------
+
+
+def _run_score_agent_outputs(question: str, responses: list[str]) -> dict[str, Any]:
+    """Score competing agent responses and return ranked arbitration result.
+
+    **Detailed explanation for engineers:**
+        Creates a fresh VerifyRepairPipeline (verify-only, no LLM loaded) and
+        a MultiAgentArbiter, then scores each response independently.  Responses
+        with fewer / smaller constraint violations receive lower energy and
+        therefore higher rank (rank 1 = winner).
+
+    Args:
+        question: The shared question all agents responded to.
+        responses: List of response strings, one per agent.
+
+    Returns:
+        Dict with winner_index, winner_energy, n_agents, and full rank list.
+
+    Spec: REQ-AGENT-003, REQ-AGENT-004, SCENARIO-AGENT-004
+    """
+    _validate_input(question, "question")
+    for i, r in enumerate(responses):
+        _validate_input(r, f"responses[{i}]")
+
+    from carnot.pipeline.multi_agent_arbiter import MultiAgentArbiter
+    from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
+    pipeline = VerifyRepairPipeline(model=None)
+    arbiter = MultiAgentArbiter(pipeline)
+    result = arbiter.rank_agents(question, responses)
+    return result.to_dict()
+
+
+@mcp_server.tool()
+def score_agent_outputs(question: str, responses: list[str]) -> dict[str, Any]:
+    """Score competing agent responses and return a ranked arbitration result.
+
+    Uses Carnot's EBM constraint pipeline to score each response independently.
+    The response with the lowest energy (fewest/smallest constraint violations)
+    is declared the winner.
+
+    Args:
+        question: The shared question all agents responded to.
+        responses: List of agent response strings (one per agent).
+
+    Returns:
+        Dict with winner_index, winner_response, winner_energy, n_agents,
+        and all_scores (full ranked list with per-agent energy values).
+
+    Spec: REQ-AGENT-003, REQ-AGENT-004, SCENARIO-AGENT-004
+    """
+    return _guarded_call(_run_score_agent_outputs, question, responses)
 
 
 # ---------------------------------------------------------------------------

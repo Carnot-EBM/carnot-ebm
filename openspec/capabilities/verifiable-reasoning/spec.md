@@ -6070,6 +6070,36 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 - `build_saver_artifact(steps, faithfulness)` serializes results with
   `schema="carnot.saver_verifier.v1"`
 
+### REQ-AGENT-003: score_agent_outputs MCP Tool
+
+The system shall expose a `score_agent_outputs(question, responses)` MCP tool where:
+- `responses` is a list of agent response strings
+- The tool returns a ranked list of agent responses sorted by ascending EBM energy
+  (lowest energy = most constraint-consistent = first in ranking)
+- The tool is exposed via the `carnot-verify` MCP server
+- Implemented in `MultiAgentArbiter.rank_agents()` via `VerifyRepairPipeline.verify()`
+
+### REQ-AGENT-004: Arbiter Result Schema
+
+The arbiter result MUST contain:
+- `winner_index`: index (0-based) of the winning agent in the original `responses` list
+- `winner_energy`: EBM energy of the winning agent's response
+- `winner_response`: text of the winning agent's response
+- `n_agents`: total number of agents scored
+- `all_scores`: list of `AgentScore` objects each containing `agent_index`, `response`,
+  `energy`, and `rank` (1-based, rank 1 = winner)
+
+### SCENARIO-AGENT-004: 3-Agent Math Debate
+
+Given question "What is 47 + 28?" and three agents:
+- Agent A: "47 + 28 = 75" (correct)
+- Agent B: "47 + 28 = 76" (off by 1)
+- Agent C: "47 + 28 = 70" (off by 5)
+
+The arbiter MUST return `winner_index=0` (Agent A) because Agent A's response
+satisfies the arithmetic constraint while Agents B and C violate it with
+increasingly large errors (energy_A <= energy_B <= energy_C).
+
 ---
 
 ## Implementation Status

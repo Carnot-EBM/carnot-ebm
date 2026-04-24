@@ -51,8 +51,9 @@ class TestHealthCheck:
         assert result["status"] == "ok"
         assert "version" in result
         assert "tools" in result
-        assert len(result["tools"]) == 7
+        assert len(result["tools"]) == 8
         assert "verify_code_with_pbt" in result["tools"]
+        assert "score_agent_outputs" in result["tools"]
 
     def test_reports_limits(self, server_module: Any) -> None:
         """REQ-CODE-001: health_check reports configured limits."""
