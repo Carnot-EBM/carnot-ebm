@@ -76,6 +76,19 @@ A dedicated `carnot-python` crate exposes Rust implementations to Python via PyO
 ### DD-05: Tier Separation
 Each tier (Boltzmann, Gibbs, Ising) is a separate crate/module to enable independent development, testing, and deployment. Users can depend on only the tier they need.
 
+### DD-06: Autoresearch Two-Phase Loop
+
+Self-improvement is structured as two phases running inside the research conductor:
+
+1. **JAX Prototype Phase.** An agent (currently a local Qwen 3 variant, orchestrated via the ZeroClaw / agntcy.org framework) proposes EBM improvements — architecture tweaks, noise schedules, activation functions — and runs them in an isolated Python/JAX sandbox. Evaluation is done against the energy landscape on a held-out validation split, so "success" is an objective energy delta, not a subjective judgment.
+2. **Rust Transpilation Phase.** Proven JAX improvements are translated to Rust, benchmarked for wall-clock performance, and auto-merged only if they pass both math equivalence (Rust vs. JAX produce equal energies bit-for-bit on the same seed) and performance baselines.
+
+**Safety guardrails baked into the loop:** immutable validation data (the held-out set cannot be overwritten by a run), hard wall-clock and memory timeouts per hypothesis (see `ExperimentTimeoutWatchdog`), and rollback energy thresholds that refuse to merge any change that worsens held-out energy.
+
+**Why this structure works for Carnot specifically:** the dual Rust + JAX layout is uniquely suited to this loop — JAX for fast math experimentation with `vmap`/`grad`/`jit`, Rust for production performance validation and deployability. Crucially, the EBM itself provides a mathematical ground truth for evaluating proposed improvements, so the loop does not need a human judge in the critical path. The IPC path between the Python orchestrator and the Rust EBM is still open (options: gRPC, shared memory, PyO3 direct) — the decision is deferred until the transpilation phase is exercised on a real improvement candidate.
+
+This design decision is what makes REQ-AUTO-* (autonomous self-learning) a first-class requirement rather than an afterthought. Phase 3 — the open-source EBM/EBT foundation model — depends on this loop compounding.
+
 ## Technology Stack
 
 | Layer | Technology |

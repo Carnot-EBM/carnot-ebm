@@ -3786,3 +3786,64 @@ thermodynamic computing Ising FPGA
   features into the `generative-time-safety-gate` proposal, and require
   cross-vendor validation for the prompt-injection classifier before any
   publication gate.
+
+### UvA Deep Energy Models tutorial
+- **Repo:** https://github.com/phlippe/uvadlc_notebooks (tutorial 8 — Deep Energy Models)
+- **What:** Classroom-style PyTorch notebook that walks through the full EBM
+  training cycle — contrastive divergence, Langevin sampling, mode coverage
+  diagnostics — on an image-generation toy task. The pedagogy is explicit:
+  every step of the CD-k update is derived in the markdown cells.
+- **Relevance to Carnot:** Useful reference for onboarding engineers who are
+  new to EBMs (the "verbose layman explanations" style we require in Carnot
+  code mirrors how this notebook teaches). It's also a cross-check:
+  our JAX training loop in `python/carnot/training/` should produce the
+  same loss trajectories on the same toy problem as this notebook's PyTorch
+  loop, which is a low-effort sanity check before chasing bugs elsewhere.
+- **When to incorporate:** Reference material only; link from
+  `docs/usage-guide.md` for readers coming from a PyTorch background.
+
+### Equilibrium Matching (EqM) — advanced EBM training
+- **Repo / page:** https://energy-based-model.github.io/
+- **What:** A training objective that avoids the high-variance gradients of
+  contrastive divergence by matching equilibrium distributions directly.
+  Claimed to train more stably than CD-k and produce sharper modes.
+- **Relevance to Carnot:** Carnot's Boltzmann and Gibbs tiers currently
+  train via CD-k / denoising score matching. EqM is a candidate third
+  training algorithm, particularly for the Boltzmann tier where CD-k's
+  variance has historically caused long runs to collapse. Worth a
+  side-by-side experiment before Phase 3 — if EqM converges more reliably
+  on held-out energy, it's a better foundation for the self-learning loop.
+- **When to incorporate:** Consider as a third training-algorithm option
+  alongside CD-k and DSM, scheduled as a dedicated experiment when the
+  Boltzmann tier's CD-k runs are next revisited.
+
+### Extropic XTR-0 / X0 chips — thermodynamic sampler hardware
+- **URL:** https://extropic.ai/writing/inside-x0-and-xtr-0
+- **What:** Extropic's first public hardware designs. X0 is an analog
+  probabilistic compute chip; XTR-0 is the development board that exposes
+  X0's sampling primitives via a host-compatible interface. Together they
+  implement p-bit-style Ising sampling at orders of magnitude lower energy
+  than a GPU implementation of the same sampler.
+- **Relevance to Carnot:** Direct Phase 2 hardware target. Our Ising tier
+  and `SamplerBackend` protocol were deliberately designed to accept a
+  thermodynamic backend alongside CPU and FPGA, and XTR-0 is the
+  reference-quality path. The KV260 FPGA work is a stepping stone;
+  XTR-0 is the production hardware Carnot aims to run on once Extropic
+  opens up the SDK.
+- **When to incorporate:** Monitor Extropic releases. When their SDK
+  stabilises and we have a concrete API surface, add an `XtrBackend`
+  implementation of `SamplerBackend` alongside `FpgaBackend`.
+
+### mini-ebm — minimal educational EBM implementation
+- **Repo:** https://github.com/yataobian/mini-ebm
+- **What:** A single-file PyTorch EBM that fits on a screen. Deliberately
+  stripped-down — no abstractions, no tiers, no MCMC options beyond basic
+  Langevin. Intended purely as a teaching artifact.
+- **Relevance to Carnot:** Best-in-class reference for the "what is an EBM
+  actually doing?" conversation. When onboarding contributors or explaining
+  the core loop to someone unfamiliar with energy-based modelling, this
+  is the link to send. It also makes a good sanity-check harness — if we
+  can reproduce its loss curve with Carnot's Ising tier on a matched
+  toy problem, we know our plumbing is not wildly off.
+- **When to incorporate:** Reference material only; link from
+  `docs/usage-guide.md` and from onboarding material for new contributors.
