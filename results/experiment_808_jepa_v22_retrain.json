@@ -1,0 +1,90 @@
+{
+  "experiment": 808,
+  "title": "JEPA v22 Retrain: CPMI Hard-Negative Augmentation Fix",
+  "run_date": "20260424",
+  "started_at": "2026-04-24T16:26:26Z",
+  "finished_at": "2026-04-24T16:36:00Z",
+  "duration_s": 574.447,
+  "status": "success",
+  "n_fover_pairs": 300,
+  "n_cpmi_triples": 300,
+  "total_training_items": 720,
+  "augmentation_ratio": 2.4,
+  "ood_gate": 0.75,
+  "in_dist_auc": 0.7219,
+  "ood_auc": 0.1778,
+  "ood_auc_delta_vs_v21": -0.0666,
+  "tier35_deployed": false,
+  "model_saved_path": null,
+  "epoch_checkpoints": [
+    {
+      "epoch": 20,
+      "in_dist_auc": 0.7219,
+      "ood_auc": 0.1778,
+      "final_loss": 0.082828
+    },
+    {
+      "epoch": 40,
+      "in_dist_auc": 0.7219,
+      "ood_auc": 0.1778,
+      "final_loss": 0.082828
+    },
+    {
+      "epoch": 60,
+      "in_dist_auc": 0.7219,
+      "ood_auc": 0.1778,
+      "final_loss": 0.082828
+    },
+    {
+      "epoch": 80,
+      "in_dist_auc": 0.7219,
+      "ood_auc": 0.1778,
+      "final_loss": 0.082828
+    }
+  ],
+  "progrs_weight_summary": {
+    "gsm8k": 0.14,
+    "math500": 0.12,
+    "humaneval": 0.2
+  },
+  "failure_analysis": {
+    "per_domain_auc": {
+      "gsm8k": 1.0,
+      "math500": 1.0,
+      "humaneval": 1.0
+    },
+    "worst_domain": "gsm8k",
+    "training_ood_gap_by_domain": {
+      "gsm8k": -0.2781,
+      "math500": -0.2781,
+      "humaneval": -0.2781
+    }
+  },
+  "honest_verdict": "jepa_v22_below_random",
+  "wiring_guard": "wired: 300 triples over 120 pairs (ratio=2.50 >= 1.50)",
+  "schema": [
+    "augmentation_ratio",
+    "duration_s",
+    "epoch_checkpoints",
+    "experiment",
+    "failure_analysis",
+    "finished_at",
+    "honest_verdict",
+    "in_dist_auc",
+    "model_saved_path",
+    "n_cpmi_triples",
+    "n_fover_pairs",
+    "ood_auc",
+    "ood_auc_delta_vs_v21",
+    "ood_gate",
+    "progrs_weight_summary",
+    "run_date",
+    "started_at",
+    "status",
+    "tier35_deployed",
+    "title",
+    "total_training_items",
+    "wiring_guard"
+  ],
+  "invariant_violations": []
+}

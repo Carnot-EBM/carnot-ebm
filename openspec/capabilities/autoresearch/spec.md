@@ -2482,3 +2482,57 @@ When delta_positive_by_s5 = True but monotonic = False:
 When precision[4] == precision[0] (EmbeddingConstraintStore did not move precision):
   - honest_verdict = "tier1_plateau_persists"
   - This reproduces the Exps 761/788 failure mode and triggers a research escalation.
+
+## REQ-LEARN-099: JEPA v22 Training Data MUST Merge Multi-Source FoVer Corpus with CPMI Triples
+
+JEPA v22 training scripts MUST load and merge both:
+  - fover_labeled_steps_v21_multi.json (multi-source FoVer corpus, 300 pairs)
+  - experiment_798_cpmi_pairs_triples.json (CPMI contrastive triples)
+
+augmentation_ratio = total_training_items / n_fover_pairs MUST be >= 1.5 before
+training begins.  augmentation_ratio = 1.0 (CPMI not merged) is the Exp 799 failure
+mode that produced ood_auc=0.2444, the all-time project low.
+
+CPMI triple expansion: each triple (prefix, positive_step, negative_step) produces two
+training pairs.  Negative pairs are weighted at CPMI_NEGATIVE_WEIGHT=0.7× to reduce
+overfitting to synthetic hard negatives.
+
+Spec: REQ-LEARN-099, SCENARIO-LEARN-146
+
+## REQ-LEARN-100: JEPA v22 Training Scripts MUST Call check_cpmi_wiring() as First Assertion
+
+Before any model initialisation or data loading, JEPA v22 training scripts MUST call:
+  check_cpmi_wiring(triples_path, min_augmentation_ratio=1.5)
+from python/carnot/pipeline/jepa_wiring_guard.py.
+
+If the guard raises AssertionError or FileNotFoundError, the experiment MUST:
+  1. Write a blocked artifact with honest_verdict="blocked_wiring_miss"
+  2. Set status="blocked"
+  3. Exit immediately without loading data or training
+
+This prevents the silent data-loader misconfiguration that caused Exp 799 to train
+for 5+ minutes producing ood_auc=0.2444 with no CPMI augmentation.
+
+Spec: REQ-LEARN-100, SCENARIO-LEARN-147
+
+## SCENARIO-LEARN-146: CPMI Triples Loaded; Training Proceeds; OOD AUC Evaluated
+
+Given CPMI triples loaded (n_cpmi_triples=300) and FoVer corpus (n_fover_pairs=300):
+  - augmentation_ratio = total_training_items / n_fover_pairs MUST be >= 1.5
+  - Training proceeds for 80 epochs with PROGRS outcome-conditioned weights
+  - OOD AUC evaluated on fover_labeled_steps_live.json (Exp 442 held-out set)
+  - tier35_deployed=True if ood_auc >= 0.75
+  - honest_verdict = "jepa_v22_tier35_deployed" if ood_auc >= 0.75
+  - honest_verdict = "jepa_v22_improvement_vs_v21" if 0.5 <= ood_auc < 0.75
+  - honest_verdict = "jepa_v22_below_random" if ood_auc < 0.5
+
+## SCENARIO-LEARN-147: Training Blocked When Wiring Guard Detects augmentation_ratio < 1.5
+
+Given training starts and check_cpmi_wiring() detects augmentation_ratio=1.0
+(or CPMI file missing):
+  - AssertionError is caught before any model initialisation
+  - Experiment writes artifact with status="blocked"
+  - honest_verdict = "blocked_wiring_miss"
+  - tier35_deployed = False
+  - Training does NOT proceed
+  - This prevents silent repetition of the Exp 799 failure (ood_auc=0.2444, aug_ratio=1.0)
