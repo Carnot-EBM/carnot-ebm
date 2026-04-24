@@ -984,3 +984,18 @@ logs/conductor.log                                 | 16 +++++++++
 2026-04-24 15:12:31,193 [conductor] DOGFOOD: Verification complete (total: 488 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 15:12:31,193 [conductor] Running test suite (smart subset)...
 2026-04-24 15:12:37,138 [conductor] Post-check: 145 passed, 3 warnings in 3.17s
+2026-04-24 15:12:37,173 [conductor] Committed: [conductor] Exp 812: IsingEBM Constraint Feature Injection — EmbeddingConstraint
+2026-04-24 15:12:38,996 [conductor] Pushed to origin
+2026-04-24 15:12:38,996 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 15:12:38,996 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+Done. Minimal, honest docs update for Exp 812 completed:
+
+**Summary:**
+- **Changelog**: Appended Exp 812 entry with `honest_verdict=injection_negative_delta` and key metrics (mean_energy_delta_pct=-0.2884, retro NOT closed)
+- **Traceability**: Added 5 new rows (REQ-VERIFY-095/095-1-3, REQ-VERIFY-096, SCENARIO-VERIFY-129) — all marked **Implemented-Partial** because:
+  - Code infrastructure: ✅ Complete (injection mechanism wired, syntax correct, runs without errors)
+  - Requirement satisfaction: ❌ Failed (energy delta NEGATIVE, not positive; violates REQ-VERIFY-096 acceptance criterion)
+- **Status & Architecture**: Skipped (no new capability, no architectural changes)
+
+All markings strict to honest_verdict=injection_negative_delta. Never "✅ Complete" — constraint injection approach showed negative impact on verification accuracy.
+2026-04-24 15:14:32,813 [conductor] Claude Code completed (exit 0)
