@@ -690,3 +690,20 @@ Done. Minimal doc updates for Exp 806 complete:
 2026-04-24 11:46:26,497 [conductor] RESEARCH STEP: Exp 807: OSS-CAD-Suite FPGA Toolchain Install (RETRO-KV260-TOOLS-UNAVAILABLE v3)
 2026-04-24 11:46:26,497 [conductor] ============================================================
 2026-04-24 11:46:26,513 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 11:46:26,565 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 11:46:26,565 [conductor] Running test suite (smart subset)...
+2026-04-24 11:46:32,305 [conductor] Pre-check: 81 passed, 3 warnings in 2.95s
+2026-04-24 11:46:32,415 [conductor] Injected 31 symbol signatures from 1 files (AST outlines)
+2026-04-24 11:46:32,415 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+The deliverable is written with `honest_verdict = "tools_installed_synthesis_clean"`. All 26 tests pass. Done.
+
+**Summary:** OSS-CAD-Suite was downloaded from YosysHQ GitHub releases, extracted to `~/tools/oss-cad-suite/`, and all three tools (yosys 0.64, nextpnr-ice40 0.10, icepack) verified present. Minimal 2-spin Ising synthesis ran clean (2 LUTs). `results/experiment_807_oss_cad_suite_install.json` written with `honest_verdict=tools_installed_synthesis_clean`. This unblocks Exp 816 (KV260 synthesis v2).
+2026-04-24 11:50:26,861 [conductor] Claude Code completed (exit 0)
+2026-04-24 11:50:26,893 [conductor] Changes:
+logs/conductor.log                                 |  9 ++++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 37 ++++++++++++++++++++++
+ research-hardware-wishlist.md                      |  7 ++++
+ 3 files changed, 53 insertions(+)
+2026-04-24 11:50:26,922 [conductor] DOGFOOD: Verification complete (total: 483 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 11:50:26,922 [conductor] Running test suite (smart subset)...
+2026-04-24 11:50:32,660 [conductor] Post-check: 81 passed, 3 warnings in 2.86s

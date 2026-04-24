@@ -341,3 +341,10 @@ that the binary Ising architecture cannot provide.
     - Implement v3 RTL from spec, synthesise with synth_ising_v2.tcl as template
     - Compare convergence sweep counts on hardware vs v2
   - Result file: `results/experiment_648_parallel_ising_inertia.json`
+
+### KV260 Synthesis Status (Exp 807 — 20260424) — OSS-CAD-Suite Install
+
+- **Exp 807 result:** `honest_verdict=tools_installed_synthesis_clean`
+  - OSS-CAD-Suite installed at `/home/ianblenke/tools/oss-cad-suite`
+  - Tool presence: yosys=present; nextpnr-ice40=present; icepack=present
+  - Gates Exp 816 (KV260 synthesis v2)

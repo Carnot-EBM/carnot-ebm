@@ -15305,3 +15305,40 @@ The synthesis pipeline MUST use yosys with the synth_ice40 target (iCE40 HX8K, ~
 
 **Spec traces:** REQ-HW-035
 **Implementation Status:** Implemented (Exp 801)
+
+## REQ-HW-036: OSS-CAD-Suite Installation (No-Sudo)
+
+OSS-CAD-Suite MUST be installed to `~/tools/oss-cad-suite/` from the YosysHQ/oss-cad-suite-build
+GitHub releases. No sudo, no system package manager is required — only `curl` and `tar`.
+PATH MUST include `~/tools/oss-cad-suite/bin` before any FPGA synthesis experiments.
+
+- REQ-HW-036-1: The installer SHALL fetch the latest release URL from the GitHub API
+  (`https://api.github.com/repos/YosysHQ/oss-cad-suite-build/releases/latest`), locate the
+  asset whose name contains "linux-x64" and ends with ".tgz", and download it with curl.
+- REQ-HW-036-2: The downloaded tarball SHALL be extracted to `~/tools/` so that the
+  `oss-cad-suite/` directory ends up at `~/tools/oss-cad-suite/`.
+- REQ-HW-036-3: If the tools are already present (all binaries exist in the bin/ directory),
+  the download and extraction SHALL be skipped and `honest_verdict` SHALL be "already_installed".
+
+## REQ-HW-037: OSS-CAD-Suite Tool Verification
+
+After OSS-CAD-Suite installation, `yosys`, `nextpnr-ice40`, and `icepack` MUST all report
+a version string when invoked with `--version` or `--help`.
+
+- REQ-HW-037-1: Each tool is probed with its preferred flag: yosys `--version`,
+  nextpnr-ice40 `--version`, icepack `--help` (icepack exits non-zero but prints usage).
+- REQ-HW-037-2: A tool is considered present if the subprocess does not raise
+  FileNotFoundError and produces non-empty combined stdout+stderr output.
+- REQ-HW-037-3: Tool version strings SHALL be recorded in the result artifact.
+
+### SCENARIO-HW-034: OSS-CAD-Suite Install + Minimal Synthesis
+
+**Given** no system FPGA toolchain is installed (pacman fails)
+**And** OSS-CAD-Suite linux-x64 tarball is downloaded from YosysHQ GitHub releases
+**When** the tarball is extracted to ~/tools/ and PATH includes ~/tools/oss-cad-suite/bin
+**Then** yosys, nextpnr-ice40, and icepack each respond to version/help invocations
+**And** minimal 2-spin Ising synthesis via `synth_ice40` completes without errors
+**And** honest_verdict = "tools_installed_synthesis_clean"
+
+**Spec traces:** REQ-HW-036, REQ-HW-037
+**Implementation Status:** Implemented (Exp 807)
