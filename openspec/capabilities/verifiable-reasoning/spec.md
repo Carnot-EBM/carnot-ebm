@@ -14923,6 +14923,31 @@ Then: A .bin bitstream is produced. honest_verdict="bitstream_generated_ice40". 
 **Spec traces:** REQ-HW-042
 **Implementation Status:** Implemented (Exp 776)
 
+### REQ-HW-043: N=32 Reduced-Spin iCE40 Synthesis and Place-and-Route
+
+N=32 Ising sampler synthesis for iCE40 HX8K MUST use Yosys synth_ice40 with N_SPINS=32
+and MAX_DEGREE=8 as synthesis parameters to halve routing congestion vs the N=64 baseline
+(Exp 776 honest_verdict="pnr_failed_timing").
+
+Sub-requirements:
+- REQ-HW-043-1: Synthesis SHALL use Yosys synth_ice40 targeting iCE40 LUT4 primitives with
+  chparam overrides N_SPINS=32 and MAX_DEGREE=8.
+- REQ-HW-043-2: LUT utilization SHALL be reported after synthesis (lut_count_n32).
+- REQ-HW-043-3: nextpnr-ice40 PNR timing result SHALL be reported (pnr_success_ice40, critical_path_ns).
+- REQ-HW-043-4: honest_verdict SHALL be one of: bitstream_generated_n32_ice40,
+  pnr_successful_no_bitstream, pnr_success_lut_fit, pnr_failed_timing_n32, tools_unavailable.
+
+**Implementation Status:** Implemented (Exp 791)
+
+### SCENARIO-HW-043: N=32 iCE40 Bitstream Generation
+
+Given: Yosys and nextpnr-ice40 available, ising_sampler_v2.v with N_SPINS=32, MAX_DEGREE=8 overrides.
+When: synth_ice40 + nextpnr-ice40 --hx8k at 8 MHz + icepack are run.
+Then: A .bin bitstream is produced. honest_verdict="bitstream_generated_n32_ice40". lut_count_n32 < 1000.
+
+**Spec traces:** REQ-HW-043
+**Implementation Status:** Implemented (Exp 791)
+
 ## REQ-VERIFY-169: Gemma4-E4B-it VR Threshold Grid Search
 
 Gemma4-E4B-it VR threshold grid MUST test >= 5 thresholds in [0.10, 0.50].
