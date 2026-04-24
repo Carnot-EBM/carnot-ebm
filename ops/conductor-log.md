@@ -2691,3 +2691,4 @@ python/ |
 | 2026-04-24 10:08 UTC | Exp 800: EmbeddingConstraintStore — SPO Format + O | OK | 81 passed, 3 warnings in 2.86s |
 | 2026-04-24 10:46 UTC | Exp 801: Embedding Constraint Addition Benchmark ( | OK | 145 passed, 3 warnings in 3.38s |
 | 2026-04-24 11:22 UTC | Exp 802: FR-11 Tier 1 Relay with Embedding Constra | OK | 81 passed, 3 warnings in 2.85s |
+| 2026-04-24 11:59 UTC | Exp 803: HuggingFace Publish v2 — SOPS Auth Spec ( | OK | 81 passed, 3 warnings in 2.88s |
