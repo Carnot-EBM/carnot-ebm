@@ -482,3 +482,21 @@ logs/conductor.log                                 |  9 +++++++++
 2026-04-24 08:32:51,895 [conductor] DOGFOOD: Verification complete (total: 480 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 08:32:51,895 [conductor] Running test suite (smart subset)...
 2026-04-24 08:32:57,463 [conductor] Post-check: 81 passed, 3 warnings in 2.78s
+2026-04-24 08:32:57,496 [conductor] Committed: [conductor] Exp 804: KV260 Open-Source RTL Synthesis (RETRO-KV260-TOOLS-UNAVAILA
+2026-04-24 08:32:59,317 [conductor] Pushed to origin
+2026-04-24 08:32:59,317 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 08:32:59,318 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+Done. Minimal doc update complete:
+
+**STEP 0:** Artifact analyzed — `honest_verdict=tools_not_installed`, `status=blocked`.
+
+**STEP 1:** Per mapping, "tools_not_installed" → **⚠️ Blocked**.
+
+**STEP 2:** ✅ Appended to ops/changelog.md (line 4139+) with honest_verdict verbatim.
+
+**STEP 3:** Skipped — Exp 804 is blocked, adds no new capability to ops/status.md.
+
+**STEP 4:** Skipped — No new REQ-*/SCENARIO-* in artifact.
+
+Exp 804 documented as blocked on toolchain unavailability; deferred to native KV260 hardware synthesis post-arrival.
+2026-04-24 08:33:52,350 [conductor] Claude Code completed (exit 0)
