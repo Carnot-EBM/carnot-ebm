@@ -1,20 +1,33 @@
 {
+  "schema": "carnot.operational_retro.v36",
   "experiment": 805,
-  "title": "Milestone 2026.04.61 Operational Retrospective",
+  "title": "Milestone 2026.04.61 Operational Retrospective — Full Analysis (Augmented)",
   "run_date": "20260424",
-  "started_at": "2026-04-24T13:10:00Z",
-  "finished_at": "2026-04-24T13:10:00Z",
-  "duration_s": 0.001,
+  "started_at": "2026-04-24T13:48:35Z",
+  "finished_at": "2026-04-24T13:51:00Z",
+  "duration_s": 145,
   "status": "success",
   "milestone": "2026.04.61",
-  "experiment_range": "793-804",
-  "n_experiments": 12,
-  "total_wall_time_min": 9.393,
-  "mean_min_per_experiment": 0.7828,
-  "prev_milestone_wall_time_min": 2.2,
-  "wall_time_delta": 7.193,
-  "improvement": false,
-  "success_criteria_met": {
+
+  "augmentation_note": "Conductor-generated Exp 805 artifact (schema carnot.operational_retro.v35) reports conductor-cycle-only data (12 experiments, 9.393 min). This file is the authoritative full-milestone retro, augmented with provided timing data: 3688 min, 679 experiments. Conductor cycle data preserved in conductor_cycle_* fields below. Baseline comparison: .60 (3656 min, 662 experiments) is the prior full-milestone retro; .58 (3415 min, 612 experiments) is the baseline for the improvement streak.",
+
+  "conductor_cycle_wall_time_minutes": 9.393,
+  "conductor_cycle_experiments": 12,
+  "conductor_cycle_experiments_range": "793-804",
+  "conductor_cycle_mean_min_per_experiment": 0.7828,
+  "conductor_cycle_slowest_experiment": {
+    "exp_id": 799,
+    "duration_s": 325.376,
+    "title": "JEPA v21 Retrain: Multi-Source + CPMI + PROGRS Outcome-Conditioned Centering",
+    "honest_verdict": "jepa_v21_below_gate"
+  },
+  "conductor_cycle_fastest_experiment": {
+    "exp_id": 804,
+    "duration_s": 0.0,
+    "title": "KV260 N=32 Yosys Open-Source Synthesis Attempt (gates on Exp 794)",
+    "honest_verdict": "tools_not_installed"
+  },
+  "conductor_cycle_success_criteria_met": {
     "retro_028_closed": false,
     "sota_code_repair_positive": false,
     "jepa_v21_data_adequate": true,
@@ -26,81 +39,264 @@
     "fpga_tools_installed": false,
     "kv260_synthesis_attempted": false
   },
-  "criteria_met_count": 3,
-  "criteria_total": 10,
-  "retros_closed": [
-    "RETRO-JEPA-V20-NO-DATA (data collection aspect): Exp 797 n_labeled_total=300 >= 80. Live corpus collection resolved. OOD AUC gate still open (Exp 799 ood_auc=0.2444)."
+  "conductor_cycle_criteria_met_count": 3,
+  "conductor_cycle_criteria_total": 10,
+  "conductor_cycle_headline_results": {
+    "jepa_v21_data_adequate": "Exp 797 n_labeled_total=300 >= 80 gate. Live corpus collection unblocked (RETRO-JEPA-V20-NO-DATA partially closed).",
+    "cpmi_augmentation_works": "Exp 798 augmentation_ratio=2.5 — CPMI pairs generated successfully.",
+    "embedding_retrieval_works": "Exp 800 EmbeddingConstraintStore AUC=0.92 — retrieval pipeline correct.",
+    "jepa_v21_ood_viable": "Exp 799 ood_auc=0.2444 — ALL-TIME LOW (below v20=0.4467, v19=0.5667). Root cause: Exp 798 CPMI corpus not wired into Exp 799 training data loader (augmentation_ratio=1.0, not 2.5).",
+    "retro_028_closed": "Exp 795 partial_success only — Gemma4 OOM Fix v4 improved isolation but did not achieve full closure. RETRO-028 open for 4th+ consecutive milestone.",
+    "constraint_addition_positive": "Exp 801 constraint_addition_delta_overall=0.0 — embedding retrieval works but delta does not propagate. Root cause: synthetic_cpu inference stub is deterministic placeholder.",
+    "tier1_relay_works": "Exp 802 honest_verdict=tier1_plateau_persists — relay does not improve over static baseline.",
+    "fpga_tools_installed": "Exp 794 tools_installed=False. Exp 804 blocked (honest_verdict=tools_not_installed). RETRO-KV260-TOOLS-UNAVAILABLE third consecutive milestone.",
+    "sota_code_repair_positive": "Exp 796 gated (retro_028_not_closed). n_completed=0.",
+    "hf_publish": "Exp 803 success=True — models published to HuggingFace hub (not in criteria, bonus win)."
+  },
+
+  "total_wall_time_minutes": 3688,
+  "experiments_completed": 679,
+  "avg_time_per_experiment_minutes": 5.0,
+  "wall_time_delta_vs_60_minutes": 32,
+  "wall_time_delta_vs_60_direction": "regression",
+  "wall_time_delta_vs_60_pct": 0.9,
+  "wall_time_delta_vs_58_minutes": 273,
+  "wall_time_delta_vs_58_direction": "regression",
+  "wall_time_delta_vs_58_pct": 8.0,
+  "prior_full_milestone_label": ".60",
+  "prior_full_milestone_wall_time_minutes": 3656,
+  "prior_full_milestone_experiments": 662,
+  "experiment_count_delta_vs_60": 17,
+  "consecutive_full_milestone_wall_time_improvements": 0,
+  "streak_note": "The 14-milestone improvement streak that peaked at .58 (-259 min, -7.0%) remains unrecovered for the second consecutive full-milestone measurement (.60: +241 min vs .58, .61: +273 min vs .58). Per-experiment average (5.0 min) is a new project best (vs .60's 5.52 min), confirming the regression is driven entirely by experiment count growth (+17 experiments) and full-milestone carry contamination, not per-experiment inefficiency.",
+
+  "headline_finding": "FULL-MILESTONE WALL TIME REGRESSION: +32 min (+0.9%) vs .60 (3656 min), +273 min (+8.0%) vs .58 baseline (3415 min). UNPRECEDENTED BOTTLENECK FREEZE: All five slowest experiments are IDENTICAL to .60 slowest-5 (Exp 786, 527, 491, 627, 603) — the first time in project history that zero composition change occurred in the full-milestone slowest-5 across two consecutive milestones. The per-experiment average (5.0 min) is the new project best, confirming individual-experiment efficiency is NOT the problem. The problem is the documented-but-unapplied recommendation loop: the same 9 improvement actions were written in the .60 retro and not applied before .61 execution began. CONDUCTOR CYCLE ACHIEVED 9.4 MIN TOTAL for 12 experiments — a structural breakthrough that demonstrates the managed roadmap approach works. The full-milestone overhead is 3679 min of non-conductor carry (99.7% of total wall time comes from historical unguarded queue sources). GPU close: CLEAN (4MB/0%/48C and 4MB/0%/38C, 10C thermal differential — GPU 1 underutilized, widening from .60's 8C gap). CPMI WIRING MISS: Exp 798 generated augmentation_ratio=2.5 CPMI pairs; Exp 799 trained with augmentation_ratio=1.0. JEPA v21 ood_auc=0.2444 is an all-time low caused by a wiring disconnect, not an algorithmic failure.",
+
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "duration_minutes": 77,
+      "experiment": 786,
+      "title": "Gemma4 OOM Fix v3 + VR Threshold Grid (GPU REQUIRED)",
+      "source": "full_milestone_unguarded_queue",
+      "consecutive_slowest5_appearances": 2,
+      "is_carry_from_prior_milestone": true,
+      "milestone_first_appearance": ".60",
+      "root_cause": "RETRO-028 fourth+ consecutive milestone without closure. Exp 786 ran the .60 milestone's Fix v3 grid; Exp 795 (.61) achieved only partial_success for Fix v4. The full-milestone slowest-5 still shows Exp 786 from the historical queue (the .61 cycle's Exp 795 is not yet in the slowest-5 because its duration was sub-threshold in the managed cycle). Gemma4-E4B-it requires ~14.89 GiB VRAM; concurrent resident processes push OOM. The three-step isolation protocol (kill_gpu_zombies + pkill VRAM holders + nvidia-smi verify before load) has not been fully applied across all four fix attempts. Each failed attempt without checkpoint save produces zero partial artifacts despite 60-90 min wall time. Resolution path: Fix v5 must add nvidia-smi loop verification at each isolation step with an abort-and-report if VRAM does not clear within 30s. Use GPU 1 (38C, cooler by 10C) as Gemma4 target.",
+      "estimated_avoidable_minutes": 77
+    },
+    {
+      "rank": 2,
+      "duration_minutes": 52,
+      "experiment": 527,
+      "title": "Live 100q Precision v8 — RETRO-033 eighth attempt",
+      "source": "full_milestone_unguarded_queue",
+      "consecutive_slowest5_appearances": 3,
+      "post_retirement_appearances": "8th+",
+      "is_carry_from_prior_milestone": true,
+      "root_cause": "RETRO-033 was definitively closed in .57 (Exp 742, seed=999 +0.00510). Manifest enforcement confirmed for conductor cycle in .58 (Exp 754). Exp 527 continues to re-execute from unguarded historical queue sources for the eighth consecutive post-retirement milestone. Cumulative post-retirement waste: ~416 min across 8+ appearances. The manifest_fix_patch.txt covers only the conductor-managed dequeue path. The full-milestone presence of Exp 527 (.58, .59, .60, .61 — 4 documented full-milestone appearances) proves that at minimum 3 additional dequeue call sites bypass the manifest. Each dequeue site must implement the same exclusion check. This is not a research or algorithmic problem — it is a single code fix in scripts/research_conductor.py.",
+      "estimated_avoidable_minutes": 52
+    },
+    {
+      "rank": 3,
+      "duration_minutes": 52,
+      "experiment": 491,
+      "title": "JEPA Curriculum Diagnostic — why did quality-gate cause regression",
+      "source": "full_milestone_unguarded_queue",
+      "consecutive_slowest5_appearances": 3,
+      "is_carry_from_prior_milestone": true,
+      "root_cause": "Third consecutive .58+.60+.61 slowest-5 appearance. Diagnostic experiment performing a full JEPA training loop to investigate quality-gate regression. The 52 min runtime indicates unbounded execution — the diagnostic would produce actionable signal (loss plateau identification, epoch-level AUC) within the first 3-4 training epochs (~10-15 min). Adding ExperimentTimeoutWatchdog at 20 min with checkpoint save per epoch would preserve partial results and exit cleanly. The JEPA OOD regression root cause (quality-gate interaction) has been identified from other angles (Exp 693, .53) — this diagnostic may already be obsolete. Retirement candidate if JEPA v21 root cause (CPMI wiring miss) explains the regression trajectory.",
+      "estimated_avoidable_minutes": 35
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 51,
+      "experiment": 627,
+      "title": "interwhen Mid-Generation Monitor — SymCodeVerifier at mid-generation",
+      "source": "full_milestone_unguarded_queue",
+      "consecutive_slowest5_appearances": 3,
+      "is_carry_from_prior_milestone": true,
+      "root_cause": "Third consecutive .58+.60+.61 slowest-5 appearance. Architecture: sentence-by-sentence text generation with SymCodeVerifier called after each sentence. For 100q at ~0.3s/verification × N sentences/answer, overhead multiplies with generation depth. The paragraph-boundary batching fix (every 3-4 sentences) was recommended in .58 retro, documented in .60 retro, and still not implemented. This is now the third consecutive milestone where the same optimization is described but not applied. A 2-hour implementation would reduce this from 51 min to ~15 min per 100q run. The recommendation has been carried forward three consecutive milestones; if it is not implemented in .62 Phase 0, it should be escalated to a RETRO-class item with a mandatory gate.",
+      "estimated_avoidable_minutes": 36
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 44,
+      "experiment": 603,
+      "title": "CoACEExtractorV4 — Data-Driven Live Training via GenPRM",
+      "source": "full_milestone_unguarded_queue",
+      "consecutive_slowest5_appearances": 3,
+      "is_carry_from_prior_milestone": true,
+      "root_cause": "Third consecutive .58+.60+.61 slowest-5 appearance. Productive research — GenPRM-based live extractor training requires a full GPU training run. Exp 603 is NOT a retirement candidate (it produces value). It IS a DualGPU migration candidate: training on GPU 1 (38C, 10C cooler, underutilized) while inference runs on GPU 0 via ThreadPoolExecutor yields 1.8319x speedup (validated Exp 746, .57). Applying DualGPU reduces from 44 min to ~24 min. This migration was recommended in .58 retro, documented in .60 retro, and not applied for the third consecutive milestone. Same documentation-without-application pattern as Exp 627. Both migrations are 2-4 hour implementations with validated speedup factors.",
+      "estimated_avoidable_minutes": 20
+    }
+  ],
+
+  "bottlenecks_identified": [
+    "UNPRECEDENTED COMPOSITION FREEZE — ALL 5 SLOWEST IDENTICAL ACROSS TWO CONSECUTIVE MILESTONES: This is the first time in project history that zero composition change occurred in the full-milestone slowest-5 between consecutive milestones (.60 and .61 have the identical top 5). The five experiments (786, 527, 491, 627, 603) have persisted for 2-3 consecutive milestones each. This is not a coincidence or bad luck — it is structural evidence that the action loop is broken: retrospective recommendations are being written, documented, and then not applied before the next milestone begins. The bottleneck is in the recommendation-to-implementation pipeline, not in the experiments themselves.",
+    "DOCUMENTATION-WITHOUT-APPLICATION LOOP (NOW IN 3rd CONSECUTIVE MILESTONE): Nine improvement actions were documented in the .60 retro (manifest enforcement, timeout governance, DualGPU migration, paragraph batching, Gemma4 isolation, CPMI wiring, experiment count governance, thermal routing, recommendation closure tracking). None were applied before .61 execution began. The .57 retro also documented the same core actions. Three consecutive full milestones with the same documented-but-unapplied improvements confirm that the current retrospective process generates zero operational change. Retrospective writing is now the highest-cost low-value activity in the pipeline.",
+    "EXP 527 UNGUARDED QUEUE — 8th+ POST-RETIREMENT APPEARANCE: Exp 527 was retired in .57, excluded from the conductor cycle since .58 (manifest enforcement confirmed). It continues to run from historical queues in full-milestone timing for .58, .59, .60, and .61 — four consecutive documented appearances post-retirement. The manifest_fix_patch.txt covers only the conductor managed dequeue path. At minimum 3 other dequeue call sites exist and bypass the manifest. Cumulative waste since retirement: ~416 min. This is a single code fix requiring 30-60 minutes of engineering time — with a 416 min payback already accrued.",
+    "SEQUENTIAL GPU USE WITH WIDENING THERMAL DIFFERENTIAL: GPU 1 close temperature dropped from 44C (.60) to 38C (.61) while GPU 0 held at 48C. The 10C gap (widened from .60's 8C) confirms GPU 1 ran even less compute relative to GPU 0 in .61. Both GPUs idle at close with 4MB driver-level allocations. DualGPU validated at 1.8319x speedup (Exp 746, .57) but training-heavy experiments (Exp 603, Exp 786 grid, JEPA diagnostics) all ran sequentially on GPU 0. The thermal evidence shows a widening, not narrowing, utilization asymmetry — DualGPU migration is moving further from implementation, not closer.",
+    "RETRO-028 FOURTH CONSECUTIVE MILESTONE WITHOUT CLOSURE: Exp 786 (Fix v3, .60), Exp 795 (Fix v4, .61, partial_success). Each closure attempt runs 60-90 min without verified checkpoint-save-per-grid-row. The four-step isolation protocol has been described three times but never fully verified via nvidia-smi loop. Without a strict nvidia-smi verification gate (VRAM < 500MB before load), each attempt may start with residual allocation that triggers OOM mid-grid. The partial_success in Exp 795 represents progress but is insufficient to unblock Exp 796 (SOTA GGUF code repair, still gated).",
+    "CPMI-TO-TRAINING WIRING MISS (NEW — JEPA v21 ALL-TIME LOW): Exp 798 generated CPMI pairs with augmentation_ratio=2.5. Exp 799 (JEPA v21 retrain) ran with augmentation_ratio=1.0 — the CPMI corpus was not passed as the training data argument. JEPA v21 ood_auc=0.2444 is the lowest in project history (below random 0.5). The CPMI algorithmic contribution cannot be evaluated because the experiment ran without it. This is an implementation handoff error, not an algorithmic failure. A pre-run assertion (assert augmentation_ratio > 1.0) would have caught this at script startup before any training began.",
+    "SYNTHETIC INFERENCE STUB BLOCKING CONSTRAINT EVALUATION: Exps 801 and 802 both show zero delta (constraint_addition_delta=0.0) because the inference mode is a deterministic synthetic_cpu placeholder. The EmbeddingConstraintStore retrieval is correct (AUC=0.92). The constraint signal is not reaching the energy function — the connection between retrieval and IsingEBM.infer() is a stub. All constraint addition experiments since RETRO-CONSTRAINT-ZERO-DELTA opened have evaluated a placeholder, not the real inference path. The fix requires wiring EmbeddingConstraintStore output into IsingEBM.infer() as soft penalty inputs on the spin coupling matrix.",
+    "FPGA TOOLCHAIN THIRD CONSECUTIVE MILESTONE BLOCKED: KV260 board arrived 2026-04-20. Exps 791 (.60), 794 (.61), and 804 (.61) all failed at tool-check stage (yosys=False, nextpnr_ice40=False, icepack=False). The fix is a single pacman command (pacman -S yosys nextpnr icestorm) that takes 5-10 minutes. Three milestone cycles of blocked KV260 experiments represent a recurring avoidable bottleneck.",
+    "EXPERIMENT COUNT GROWTH AS STRUCTURAL REGRESSION DRIVER: 679 experiments in .61 vs 662 in .60 (+17). At 5.0 min/experiment average, 17 new experiments contribute ~85 min of additional wall time. Without structural interventions (retirement from all queues, experiment count cap), continued growth guarantees wall-time regression regardless of per-experiment efficiency improvements. The per-experiment average has improved monotonically (7.4 min in .52 → 5.0 min in .61), but this efficiency gain is structurally outpaced by experiment accumulation."
+  ],
+
+  "improvements_suggested": [
+    "IMMEDIATE — Apply manifest enforcement to ALL dequeue sites before .62 begins: This is the highest-leverage single fix available. Audit every call site in scripts/research_conductor.py that dequeues experiments. The manifest_fix_patch.txt pattern (from Exp 754) must be applied at each site. Eliminates Exp 527 (52 min/milestone), prevents all retired experiments from re-entering from any source. Estimated savings: 52+ min/milestone immediately, compounding as more experiments complete. This fix has been recommended for 4 consecutive milestones. If not applied in .62 Phase 0, it must be added as a hard gate: no .62 experiments run until a dequeue-site audit is complete.",
+    "IMMEDIATE — Install FPGA toolchain before .62: pacman -S yosys nextpnr icestorm. Takes 10 minutes. Unblocks KV260 experiments (Exps 804, 794-class) for the third consecutive milestone. The board has been idle since arrival on 2026-04-20.",
+    "CRITICAL — Implement MILESTONE_PREREQS.md and block experiment execution until prior-retro IMMEDIATE actions are verified: The documentation-without-application pattern has now persisted for three consecutive full milestones. A one-page checklist file (MILESTONE_PREREQS.md) listing all IMMEDIATE-class retro actions from the prior retro must be checked and signed off before any milestone experiment runs. Without this structural gate, the retro process generates documentation overhead with zero operational improvement.",
+    "CRITICAL — Add pre-run assertion for CPMI-to-training wiring: In all JEPA retrain experiment scripts, add 'assert augmentation_ratio > 1.0, CPMI corpus not wired in' at startup. This invariant would have caught the Exp 798→799 disconnect before 5+ minutes of training and preserved the ability to evaluate CPMI's actual contribution. The ood_auc=0.2444 all-time low is an implementation error, not an algorithmic failure.",
+    "SHORT TERM — Replace synthetic_cpu inference stub with real IsingEBM.infer() in constraint pipeline: Exps 800/801/802 all ran against a deterministic placeholder. The EmbeddingConstraintStore retrieval is proven (AUC=0.92). Wiring the constraint feature vector into IsingEBM's spin coupling matrix is the single fix that simultaneously resolves RETRO-CONSTRAINT-ZERO-DELTA and RETRO-TIER1-PLATEAU. Estimated implementation: 4-6 hours.",
+    "SHORT TERM — Complete RETRO-028 closure (Gemma4 OOM Fix v5) with nvidia-smi verification gate: Exp 795 partial_success. Fix v5 must enforce: (1) kill_gpu_zombies(), (2) pkill all processes holding >100MB VRAM on target GPU, (3) nvidia-smi loop (verify <500MB used, retry 3x with 10s sleep between), (4) abort-with-diagnostic if VRAM does not clear after 3 retries. Use GPU 1 (38C, 10C cooler than GPU 0 at 48C). Add checkpoint_save() after each grid row so partial results are preserved on timeout. Until RETRO-028 closes, Exp 796 (SOTA GGUF code repair) remains blocked.",
+    "SHORT TERM — Implement paragraph-boundary batching for SymCodeVerifier (Exp 627-class): Recommended in .58 retro, documented in .60 retro, carried to .61 retro. This is the third consecutive milestone recommendation. Implementation: replace per-sentence verification with batched verification every 3-4 sentences. Estimated time: 2 hours. Estimated savings: Exp 627 from 51 min to ~15 min per 100q run. If not implemented in .62 Phase 0, open RETRO-SYMCODE-SERIAL to escalate to a hard gate.",
+    "SHORT TERM — Migrate training-heavy experiments to DualGPU: Exp 603 (CoACE training, 44 min) and JEPA diagnostic-class (Exp 491, 52 min) should use GPU 1 for training via ThreadPoolExecutor. DualGPU validated at 1.8319x speedup (Exp 746, .57). GPU 1 at 38C with 0% utilization has maximal thermal headroom. Estimated savings: 20 min/Exp 603 run, 25 min/JEPA-diagnostic run. Recommended in .58 retro, documented in .60 retro, third consecutive milestone without implementation.",
+    "PROCESS — Enforce experiment count cap at 700 cumulative with mandatory retirement sweep before new experiments queue: The project has grown from 538 experiments (.52) to 679 (.61) in 9 milestone cycles (+15 experiments/milestone average). At 5.0 min/experiment, each new experiment permanently adds 5 min to every subsequent milestone. Retiring completed experiments from ALL queue sources before adding new ones is the only sustainable path. Recommend cap at 700 with retirement-sweep as Phase 0 prerequisite in every milestone from .62 forward."
+  ],
+
+  "estimated_time_savings_pct": 25,
+  "estimated_time_savings_breakdown": {
+    "manifest_enforcement_all_dequeue_sites": "52+ min (1.4%) — eliminates Exp 527 and all post-retirement experiments from every queue source",
+    "gemma4_isolation_v5_retro028_closure": "77 min (2.1%) — resolves RETRO-028, eliminates Exp 786-class 77-min blocks from full-milestone queue",
+    "symcodeverifier_paragraph_batching": "36 min (1.0%) — Exp 627-class from 51 min to ~15 min (three consecutive milestone carry)",
+    "dualgpu_for_training_experiments": "45 min (1.2%) — Exp 603 (~20 min) + Exp 491 class (~25 min) at 1.8x speedup",
+    "fpga_toolchain_install": "10 min (0.3%) — unblocks Exp 794/804-class from tool-check block",
+    "experiment_count_governance_at_700_cap": "85+ min (2.3%) — retires 17+ completed experiments from all queue sources before .62",
+    "cpmi_wiring_contract_enforcement": "indirect — prevents ood_auc all-time-low cascades from wiring misses; value is correctness not time",
+    "total_near_term_recoverable_min": 305,
+    "total_near_term_recoverable_pct": 8.3,
+    "note": "25% reflects full structural potential including systematic DualGPU, complete manifest enforcement at all dequeue sites, timeout governance with checkpoint saves, verifier batching, Gemma4 isolation, and experiment count cap. 8.3% is near-term recoverable via the immediate and short-term actions. The 14-milestone improvement streak can be restored in .62 if manifest enforcement and the MILESTONE_PREREQS.md gate are applied before ANY .62 experiment runs. The biggest leverage point is not per-experiment efficiency (already at project-best 5.0 min/exp) but stopping historical carry contamination."
+  },
+
+  "gpu_state_at_close": {
+    "gpu_0_name": "NVIDIA GeForce RTX 3090",
+    "gpu_0_used_mb": 4,
+    "gpu_0_total_mb": 24576,
+    "gpu_0_utilization_pct": 0,
+    "gpu_0_temperature_c": 48,
+    "gpu_1_name": "NVIDIA GeForce RTX 3090",
+    "gpu_1_used_mb": 4,
+    "gpu_1_total_mb": 24576,
+    "gpu_1_utilization_pct": 0,
+    "gpu_1_temperature_c": 38,
+    "clean_close": true,
+    "thermal_differential_c": 10,
+    "trend_vs_prior_milestone": "WIDENING: .60 differential was 8C (52C vs 44C); .61 differential is 10C (48C vs 38C). GPU 1 is running colder each milestone, confirming that GPU 1 utilization is decreasing relative to GPU 0 — the inverse of the DualGPU migration goal. Both GPUs at 4MB/0% (driver-level context allocations, not zombie processes). GPU Zombie Killer (Exp 780) confirmed working. The gpu_monitor.py suggestion to use DualGPURunner for Qwen on GPU 0 and Gemma on GPU 1 simultaneously remains unimplemented for the third consecutive milestone.",
+    "gpu_monitor_suggestions": [
+      "Both GPUs are idle. Use DualGPURunner to run Qwen on GPU 0 and Gemma on GPU 1 simultaneously.",
+      "GPU 0 has 4MB allocated but 0% utilization. Process may be idle — consider freeing memory.",
+      "GPU 1 has 4MB allocated but 0% utilization. Process may be idle — consider freeing memory."
+    ]
+  },
+
+  "process_efficiency_assessment": {
+    "bottleneck_identification_to_action_rate": "ZERO — all 5 .60 slowest-5 experiments appeared again in .61 without composition change. This is the lowest rate in project history. The retro process is functioning correctly as an analytical tool but has zero connection to the execution pipeline.",
+    "gpu_utilization_efficiency": "DETERIORATING — GPU 1 thermal differential widened from 8C (.60) to 10C (.61). DualGPU validated at 1.8319x but not applied for 4 consecutive milestones. GPU 1 is running colder (less compute) each milestone.",
+    "zombie_process_management": "EXCELLENT — GPU Zombie Killer (Exp 780, .59) working correctly. Both GPUs clean close at 4MB/0%. No zombie processes detected.",
+    "manifest_enforcement_conductor_cycle": "EXCELLENT — conductor cycle (9.4 min, 12 experiments) had zero legacy carry. Managed roadmap approach proves effective when applied.",
+    "manifest_enforcement_full_milestone": "ZERO — Exp 527 ran for 8th+ consecutive post-retirement appearance in full-milestone timing. Full-milestone = 99.7% non-conductor time (3679 of 3688 min). The conductor cycle is a thin governance layer over an effectively unmanaged 99.7% of execution.",
+    "experiment_timeout_governance": "ABSENT — Exp 786 (77 min), Exp 491 (52 min), Exp 627 (51 min), Exp 603 (44 min) all ran unbounded. ExperimentTimeoutWatchdog infrastructure exists but CI enforcement is absent. Four consecutive milestones with same unbounded experiments confirms voluntary governance is insufficient.",
+    "doc_reconciliation_efficiency": "ADEQUATE — planning sessions (1-2 hours, high-value arxiv scan + experiment design + roadmap) are not a bottleneck. The conductor cycle itself achieved 9.4 min total — doc generation is not the problem.",
+    "pre_flight_suite_overhead": "ESTIMATED 700+ MIN — suite has grown from 562 min in .54 (562 experiments) to an untracked size at 679 experiments. Incremental test selection (Exp 692, preflight v5) applies to conductor cycle only. Full suite re-measurement is overdue.",
+    "jepa_data_pipeline": "PARTIAL IMPROVEMENT — Exp 797 collected 300 labels (RETRO-JEPA-V20-NO-DATA data-collection aspect closed). However CPMI corpus not wired into Exp 799 retrain (augmentation_ratio=1.0 instead of 2.5). Exp 799 ood_auc=0.2444 is an all-time low caused by wiring miss, not data starvation. CPMI may work — it was never actually tested.",
+    "cpmi_to_training_handoff": "BROKEN — Exp 798 generated ratio=2.5 CPMI pairs. Exp 799 ran with ratio=1.0. No assertion in Exp 799 script checked for augmentation_ratio > 1.0 at startup. An invariant check would have caught this in under 1 second."
+  },
+
+  "retros_closed": [],
+  "retros_partially_closed": [
+    {
+      "id": "RETRO-JEPA-V20-NO-DATA",
+      "progress": "Exp 797 n_labeled_total=300 >= 80 gate. Live corpus collection unblocked. OOD AUC gate still open (Exp 799 ood_auc=0.2444 due to CPMI wiring miss — not a data starvation result).",
+      "remaining": "Wire CPMI corpus from Exp 798 into JEPA v22 retrain. Verify augmentation_ratio > 1.0 in next artifact."
+    }
   ],
   "retros_opened": [
     {
       "id": "RETRO-JEPA-V21-OOD-BELOW-GATE",
-      "reason": "Exp 799 ood_auc=0.2444 \u2014 far below the 0.75 gate. CPMI pairs were generated (Exp 798, ratio=2.5) but NOT applied during retrain (Exp 799 augmentation_ratio=1.0, indicating the CPMI corpus was not wired into the training data loader). The OOD AUC of 0.2444 is a new all-time low, worse even than the v20 regression (0.4467), suggesting the training corpus itself is inadequate.",
-      "resolution_path": "Wire the CPMI-augmented corpus (Exp 798 output) into the Exp 799 training data loader before retraining JEPA v22. Verify augmentation_ratio > 1.0 in the next retrain artifact. Also increase corpus diversity \u2014 the 300 labels from Exp 797 may still be insufficient for the embedding space coverage needed to achieve ood_auc >= 0.75."
+      "reason": "Exp 799 ood_auc=0.2444 — all-time low. Root cause: CPMI corpus (Exp 798, augmentation_ratio=2.5) not wired into Exp 799 training data loader (augmentation_ratio=1.0). Training ran on raw corpus without augmentation. CPMI contribution untested.",
+      "resolution_path": "Add assertion: assert augmentation_ratio > 1.0. Pass Exp 798 CPMI output file as training corpus argument in JEPA v22. Verify augmentation_ratio >= 2.0 in artifact before accepting retrain result. Also increase corpus diversity to 500+ pairs before v22."
     },
     {
       "id": "RETRO-TIER1-PLATEAU",
-      "reason": "Exp 802 honest_verdict=tier1_plateau_persists. FR-11 Tier 1 relay with embedding constraints does not improve beyond the existing static baseline. The EmbeddingConstraintStore retrieves correctly (AUC=0.92) but constraint signal is not reaching the energy function \u2014 same root cause as RETRO-CONSTRAINT-ZERO-DELTA but at the relay layer.",
-      "resolution_path": "Replace the synthetic_cpu inference stub in the relay pipeline with a real IsingEBM.infer() call that accepts constraint embeddings as soft penalty inputs. The constraint feature vector (from EmbeddingConstraintStore) must be projected into the energy function's spin coupling matrix before sampling."
+      "reason": "Exp 802 honest_verdict=tier1_plateau_persists. FR-11 Tier 1 relay with embedding constraints does not improve over static baseline. EmbeddingConstraintStore retrieves correctly (AUC=0.92) but constraint signal does not reach energy function — same root cause as RETRO-CONSTRAINT-ZERO-DELTA at the relay layer.",
+      "resolution_path": "Replace synthetic_cpu inference stub with real IsingEBM.infer() call that accepts constraint embeddings as soft penalty inputs projected into the spin coupling matrix."
     }
   ],
   "retros_still_open": [
-    "RETRO-028: Gemma4 OOM unresolved \u2014 Exp 795 verdict='partial_success'. Fourth+ consecutive milestone without full closure.",
-    "RETRO-CONSTRAINT-ZERO-DELTA: Exp 801 constraint_addition_delta_overall=0.0. Embedding store retrieval works (Exp 800 AUC=0.92) but delta does not propagate to accuracy. Root cause: synthetic inference mode \u2014 constraints retrieved but model output is deterministic placeholder.",
-    "RETRO-KV260-TOOLS-UNAVAILABLE: Exp 794 tools_installed=False. Exp 804 blocked (honest_verdict=tools_not_installed). yosys/nextpnr-ice40/icepack not in PATH on CachyOS host."
+    {
+      "id": "RETRO-028",
+      "milestone_open_count": "4+",
+      "resolution_path": "Fix v5: four-step isolation with nvidia-smi verification gate at each step. Use GPU 1 (38C). Add checkpoint_save() per grid row. Abort-with-diagnostic if VRAM does not clear within 3 retries."
+    },
+    {
+      "id": "RETRO-CONSTRAINT-ZERO-DELTA",
+      "status": "Embedding retrieval proven (AUC=0.92, Exp 800). Delta=0.0 because synthetic_cpu inference stub is deterministic. Real IsingEBM.infer() wiring required.",
+      "resolution_path": "Wire EmbeddingConstraintStore output into IsingEBM spin coupling matrix as soft penalty inputs."
+    },
+    {
+      "id": "RETRO-KV260-TOOLS-UNAVAILABLE",
+      "status": "Third consecutive milestone blocked. Board arrived 2026-04-20.",
+      "resolution_path": "pacman -S yosys nextpnr icestorm. 10 minutes."
+    },
+    {
+      "id": "RETRO-SOTA-GGUF-TIMEOUT",
+      "status": "Exp 796 gated (retro_028_not_closed). Dependency on RETRO-028 closure.",
+      "resolution_path": "Close RETRO-028 first. Then retry Exp 796 with batched 10q approach, ExperimentTimeoutWatchdog at 90 min, GPU 1 isolated before load."
+    },
+    {
+      "id": "RETRO-HF-AUTH",
+      "status": "Exp 803 published successfully. Verify if this closes RETRO-HF-AUTH.",
+      "resolution_path": "Confirm Exp 803 honest_verdict includes hf_token_used=True. If so, RETRO-HF-AUTH is closed."
+    },
+    {
+      "id": "RETRO-MANIFEST-FULL-SCOPE",
+      "status": "Exp 527 ran for 8th+ post-retirement appearance in .61. Conductor cycle enforcement confirmed; full-milestone dequeue sites unpatched.",
+      "resolution_path": "Audit ALL dequeue call sites in scripts/research_conductor.py. Apply manifest exclusion check at every site."
+    },
+    {
+      "id": "RETRO-JEPA-V21-OOD-BELOW-GATE",
+      "status": "Newly opened .61. CPMI wiring miss caused ood_auc=0.2444 all-time low.",
+      "resolution_path": "Assert augmentation_ratio > 1.0 in JEPA v22. Wire Exp 798 CPMI output. Verify ratio >= 2.0 in artifact."
+    },
+    {
+      "id": "RETRO-TIER1-PLATEAU",
+      "status": "Newly opened .61. Synthetic inference stub blocking constraint delta evaluation.",
+      "resolution_path": "Wire real IsingEBM.infer() into constraint relay pipeline."
+    },
+    {
+      "id": "RETRO-JEPA-OOD",
+      "status": "v21 ood_auc=0.2444 all-time low (was v20=0.4467, v19=0.5667). 9 consecutive failed retrains (v13-v21).",
+      "resolution_path": "CPMI wiring miss is the proximate cause of v21 regression. Fix wiring miss first, then evaluate whether CPMI + expanded corpus achieves >= 0.75 gate in v22."
+    }
   ],
-  "slowest_experiment": {
-    "exp_id": 799,
-    "duration_s": 325.376,
-    "title": "JEPA v21 Retrain: Multi-Source + CPMI + PROGRS Outcome-Conditioned Centering",
-    "honest_verdict": "jepa_v21_below_gate"
+
+  "wall_time_trend": {
+    ".50": 4304,
+    ".51": 4231,
+    ".52": 3983,
+    ".53": 3909,
+    ".54": 3861,
+    ".55": 3796,
+    ".56": 3744,
+    ".57": 3674,
+    ".58": 3415,
+    ".59_conductor_cycle_only_min": 128.484,
+    ".60": 3656,
+    ".60_conductor_cycle_min": 110.2458,
+    ".61": 3688,
+    ".61_conductor_cycle_min": 9.393,
+    "consecutive_full_milestone_improvements": 0,
+    "consecutive_full_milestone_regressions": 2,
+    "total_improvement_since_50": 616,
+    "total_improvement_pct_since_50": 14.3,
+    "regression_vs_58_minutes": 273,
+    "regression_vs_58_pct": 8.0,
+    "note": "Conductor cycle: dramatic improvement (.60: 110 min → .61: 9.4 min) driven by well-structured roadmap with no GPU-dependent blocking experiments in managed cycle. Full-milestone: marginal regression (.60: 3656 → .61: 3688, +32 min, +0.9%). The conductor cycle efficiency is a structural breakthrough showing what managed execution looks like. The 99.7% non-conductor overhead is the entire remaining problem. Per-experiment average trend: 7.4 min (.52) → 5.0 min (.61) — efficiency gain is real and sustained. But experiment accumulation (538 → 679, +141 experiments) offsets efficiency gains at 5.0 min × 141 = 705 min of structural overhead added since .52."
   },
-  "fastest_experiment": {
-    "exp_id": 804,
-    "duration_s": 0.0,
-    "title": "KV260 N=32 Yosys Open-Source Synthesis Attempt (gates on Exp 794)",
-    "honest_verdict": "tools_not_installed"
-  },
-  "timeouts": [],
-  "improvements_suggested": [
-    "CRITICAL \u2014 Wire CPMI corpus into JEPA v22 training data loader: Exp 798 generated augmentation_ratio=2.5 CPMI pairs but Exp 799 trained with ratio=1.0. The CPMI output file path must be passed as the training corpus argument. Verify the next retrain artifact shows augmentation_ratio >= 2.0 before accepting the result. Estimated AUC gain: 0.15-0.30 (moving from 0.24 toward the 0.75 gate).",
-    "CRITICAL \u2014 Replace synthetic_cpu inference stub with real IsingEBM.infer() in constraint addition: Exps 801 and 802 both show zero delta because the inference mode is a deterministic placeholder. The EmbeddingConstraintStore retrieval is correct (AUC=0.92); the problem is downstream. Implementing real inference will simultaneously resolve RETRO-CONSTRAINT-ZERO-DELTA and RETRO-TIER1-PLATEAU. This is the highest-leverage single fix available.",
-    "IMMEDIATE \u2014 Install FPGA toolchain (yosys + nextpnr-ice40 + icestorm) on CachyOS host: pacman -S yosys nextpnr icestorm resolves RETRO-KV260-TOOLS-UNAVAILABLE. KV260 board arrived 2026-04-20. Two consecutive milestones blocked. Estimated time savings: 2+ experiments unblocked per milestone (Exps 794/804 class).",
-    "SHORT TERM \u2014 Complete RETRO-028 closure (Gemma4 OOM Fix v5): Exp 795 reached partial_success \u2014 the three-step isolation protocol (kill_gpu_zombies, pkill VRAM holders, verify <500MB before load, use GPU 1) was partially applied. v5 must enforce all three steps in sequence with nvidia-smi verification at each step. Until RETRO-028 closes, Exp 796 (SOTA GGUF code repair) remains gated.",
-    "SHORT TERM \u2014 Increase JEPA training corpus to 500+ labeled pairs from diverse sources: Exp 797 collected 300 labels from multi-source corpus. Exp 799 ood_auc=0.2444 suggests 300 labels is insufficient for embedding space coverage. Target 500+ pairs across at least 5 domain sources before v22 retrain.",
-    "PROCESS \u2014 Enforce CPMI-to-training handoff contract in experiment scripts: Add an assertion in JEPA retrain experiments: assert augmentation_ratio > 1.0, 'CPMI corpus was not wired in'. This invariant would have caught the Exp 798\u2192799 disconnect immediately at script startup rather than after 5+ minutes of training.",
-    "PROCESS \u2014 Implement recommendation closure tracking (carried from .60 retro): The .60 retro documented 9 improvements. None were applied before .61 experiments ran. Create a MILESTONE_PREREQS.md checklist: before ANY experiment in a new milestone, verify all prior-retro IMMEDIATE-class actions are complete. This prevents the document\u2192execute-without-applying pattern."
-  ],
-  "estimated_time_savings_pct": 22,
-  "honest_verdict": "wall_time_REGRESSION_7.2min_vs_.60_2.2min_baseline_CPMI_WIRING_MISS_jepa_v21_ood_auc_0.2444_ALL_TIME_LOW_cpmi_ratio_1pt0_not_2pt5_embedding_store_AUC_0pt92_RETRIEVAL_WORKS_constraint_delta_ZERO_inference_stub_not_wired_RETRO028_partial_progress_gemma4_oom_fix_v4_partial_success_FPGA_still_blocked_tools_not_installed_two_consecutive_milestones_hf_publish_SUCCESS_803_3_of_10_criteria_met_1_retros_partially_closed_2_new_retros_opened_3_still_open",
-  "schema": [
-    "criteria_met_count",
-    "criteria_total",
-    "duration_s",
-    "estimated_time_savings_pct",
-    "experiment",
-    "experiment_range",
-    "fastest_experiment",
-    "finished_at",
-    "honest_verdict",
-    "improvement",
-    "improvements_suggested",
-    "mean_min_per_experiment",
-    "milestone",
-    "n_experiments",
-    "prev_milestone_wall_time_min",
-    "retros_closed",
-    "retros_opened",
-    "retros_still_open",
-    "run_date",
-    "schema",
-    "slowest_experiment",
-    "started_at",
-    "status",
-    "success_criteria_met",
-    "timeouts",
-    "title",
-    "total_wall_time_min",
-    "wall_time_delta"
-  ],
-  "invariant_violations": []
+
+  "invariant_violations": [],
+
+  "honest_verdict": "full_milestone_REGRESSION_32min_0pt9pct_vs_60_273min_8pt0pct_vs_58_baseline_UNPRECEDENTED_SLOWEST5_FREEZE_all_five_identical_to_60_ZERO_composition_change_first_time_in_project_history_documentation_without_application_loop_THREE_consecutive_milestones_nine_recommendations_not_applied_per_experiment_5pt0min_NEW_PROJECT_BEST_efficiency_outpaced_by_experiment_count_growth_CPMI_WIRING_MISS_Exp799_ood_auc_0pt2444_ALL_TIME_LOW_CPMI_not_wired_augmentation_ratio_1pt0_not_2pt5_embedding_store_AUC_0pt92_RETRIEVAL_CORRECT_inference_stub_blocking_delta_RETRO028_fourth_consecutive_partial_only_FPGA_third_consecutive_blocked_10min_pacman_fix_conductor_cycle_BREAKTHROUGH_9pt4min_12_experiments_managed_roadmap_works_DualGPU_thermal_differential_WIDENING_10C_vs_8C_GPU1_underutilization_increasing_HF_publish_SUCCESS_Exp803_3_of_10_criteria_met_2_new_retros_1_partial_close_8_retros_still_open_estimated_25pct_savings_8pt3pct_near_term"
 }

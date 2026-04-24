@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 792 Experiments Across 47 Research Milestones
+## A Technical Report on 805 Experiments Across 48 Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-24
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **792
-experiments across 47 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **805
+experiments across 48 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -207,7 +207,7 @@ REQ-SAFE-011 teacher-inference-time invariant, and the `tp_count > 0`
 gate on safety-classifier claims are all direct outputs of audits from
 this phase.
 
-### Phase 6 — Retro closure and hardware on real silicon (Experiments 701-792, April 22-24 2026)
+### Phase 6 — Retro closure and hardware on real silicon (Experiments 701-805, April 22-24 2026)
 
 The final phase of the research-record-to-date was about closing things:
 
