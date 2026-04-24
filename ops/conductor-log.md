@@ -2674,3 +2674,4 @@ python/ |
 | 2026-04-24 01:03 UTC | Exp 787: S* Energy-Ranked Code Selection — Pre-fil | OK | 81 passed, 3 warnings in 15.53s |
 | 2026-04-24 01:20 UTC | Exp 788: Constraint Addition from Memory — Tier 2  | OK | 81 passed, 3 warnings in 23.95s |
 | 2026-04-24 01:34 UTC | Exp 789: EBM Calibration Alignment — Energy as Pro | OK | 81 passed, 3 warnings in 27.21s |
+| 2026-04-24 02:01 UTC | Exp 790: AMD XDNA NPU Unblock v9 — GitHub Releases | OK | 81 passed, 3 warnings in 15.86s |
