@@ -2682,3 +2682,5 @@ python/ |
 | 2026-04-24 03:25 UTC | Exp 793: Manifest Full-Scope Enforcement Audit (RE | OK | 81 passed, 3 warnings in 8.79s |
 | 2026-04-24 05:42 UTC | Exp 794: FPGA Toolchain Install + Verify (RETRO-KV | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 3 warnings in 4.05s |
 | 2026-04-24 06:00 UTC | Exp 794: FPGA Toolchain Install + Verify (RETRO-KV | OK | 81 passed, 3 warnings in 20.91s |
+| 2026-04-24 06:50 UTC | Exp 795: Gemma4 OOM Fix v4 — Four-Step GPU Isolati | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-24 07:20 UTC | Exp 795: Gemma4 OOM Fix v4 — Four-Step GPU Isolati | OK | Deliverable already exists in repo |

@@ -65,3 +65,23 @@ Note: This blocks downstream KV260 work but the board is now on-site (arrived 20
 2026-04-24 02:30:35,823 [conductor] RESEARCH STEP: Exp 795: Gemma4 OOM Fix v4 — Four-Step GPU Isolation (RETRO-028, GPU REQUIRED, CARNOT_FORCE_LIVE=1)
 2026-04-24 02:30:35,823 [conductor] ============================================================
 2026-04-24 02:30:36,158 [conductor] Committing 9 dirty files as checkpoint (preserving work)
+2026-04-24 02:30:36,604 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 02:30:36,604 [conductor] Running test suite (smart subset)...
+2026-04-24 02:31:42,196 [conductor] Pre-check: 81 passed, 3 warnings in 24.32s
+2026-04-24 02:31:46,186 [conductor] Injected 67 symbol signatures from 4 files (AST outlines)
+2026-04-24 02:31:46,197 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Error: Reached max turns (50)2026-04-24 02:50:48,354 [conductor] Claude Code failed (exit 1)
+2026-04-24 02:50:48,356 [conductor] Claude Code failed: Error: Reached max turns (50)
+2026-04-24 02:50:48,372 [conductor] Sleeping 30 minutes (chunked 60s ticks)...
+2026-04-24 02:55:48,374 [conductor] ...sleeping, 5/30 min elapsed
+2026-04-24 03:00:48,375 [conductor] ...sleeping, 10/30 min elapsed
+2026-04-24 03:05:48,376 [conductor] ...sleeping, 15/30 min elapsed
+2026-04-24 03:10:48,377 [conductor] ...sleeping, 20/30 min elapsed
+2026-04-24 03:15:48,378 [conductor] ...sleeping, 25/30 min elapsed
+2026-04-24 03:20:48,379 [conductor] Sleep complete — resuming
+2026-04-24 03:20:48,379 [conductor] --- Iteration 3 ---
+2026-04-24 03:20:48,407 [conductor] Task 'Exp 795: Gemma4 OOM Fix v4 — Four-Step GPU Isolati' deliverable exists — marking complete
+2026-04-24 03:20:48,409 [conductor] ============================================================
+2026-04-24 03:20:48,410 [conductor] RESEARCH STEP: Exp 796: SOTA GGUF Code Repair v3 — Batched 10q (RETRO-SOTA-GGUF-TIMEOUT, GPU, GATED on Exp 795)
+2026-04-24 03:20:48,410 [conductor] ============================================================
+2026-04-24 03:20:48,434 [conductor] Committing 16 dirty files as checkpoint (preserving work)
