@@ -466,3 +466,19 @@ Done! **Minimal doc updates complete** for Exp 803:
 2026-04-24 08:29:00,609 [conductor] RESEARCH STEP: Exp 804: KV260 Open-Source RTL Synthesis (RETRO-KV260-TOOLS-UNAVAILABLE, GATED on Exp 794)
 2026-04-24 08:29:00,609 [conductor] ============================================================
 2026-04-24 08:29:00,627 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 08:29:00,684 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 08:29:00,684 [conductor] Running test suite (smart subset)...
+2026-04-24 08:29:06,190 [conductor] Pre-check: 81 passed, 3 warnings in 2.76s
+2026-04-24 08:29:06,301 [conductor] Injected 31 symbol signatures from 1 files (AST outlines)
+2026-04-24 08:29:06,301 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 10 tests pass. The deliverable artifact is written and stable.
+
+**Summary:** Exp 804 correctly blocks (as expected) because Exp 794's `honest_verdict` is `tools_not_installed_install_attempted`, which is not in the gate-pass set. The artifact `results/experiment_804_kv260_synthesis_attempt.json` is written with `honest_verdict=tools_not_installed`, `gate_passed=false`, and all required schema fields. All 10 new tests pass.
+2026-04-24 08:32:51,852 [conductor] Claude Code completed (exit 0)
+2026-04-24 08:32:51,870 [conductor] Changes:
+logs/conductor.log                                 |  9 +++++++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 21 +++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+2026-04-24 08:32:51,895 [conductor] DOGFOOD: Verification complete (total: 480 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 08:32:51,895 [conductor] Running test suite (smart subset)...
+2026-04-24 08:32:57,463 [conductor] Post-check: 81 passed, 3 warnings in 2.78s
