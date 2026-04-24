@@ -6771,6 +6771,48 @@ record the GPU index, VRAM before/after eviction, and thermal state at load time
 **When** `load_gemma4_on_gpu1()` is called
 **Then** Gemma4-E4B-it loads on `cuda:1` and the artifact records thermal headroom
 
+### REQ-LOADER-014: VRAM Eviction Loop with nvidia-smi Verification (Exp 810, RETRO-028 Fix v5)
+
+VRAM eviction before Gemma4 load MUST use a retry loop with nvidia-smi verification.
+
+- REQ-LOADER-014-1: `evict_vram_with_loop()` SHALL call `kill_gpu_zombies(gpu_index)` first,
+  then enter a retry loop of up to `max_retries` (default 3) iterations.
+- REQ-LOADER-014-2: Each iteration SHALL: query nvidia-smi for compute PIDs with used_memory >
+  100 MB and SIGKILL them; sleep `retry_sleep_s` (default 10.0 s); query nvidia-smi for current
+  VRAM usage; if VRAM < `threshold_mb` (default 500 MB), return with `vram_cleared=True`.
+- REQ-LOADER-014-3: If VRAM does not drop below `threshold_mb` after `max_retries` iterations,
+  return with `vram_cleared=False` and `abort_reason="max_retries_exceeded"`.
+- REQ-LOADER-014-4: The model load MUST NOT proceed when `vram_cleared=False`. The experiment
+  MUST write a `blocked_vram_stuck` artifact and exit without attempting model load.
+- REQ-LOADER-014-5: `VRAMLoopEvictionResult` SHALL carry: `gpu_index`, `n_retries_attempted`,
+  `vram_mb_per_retry` (list[float]), `final_vram_mb`, `vram_cleared` (bool),
+  `abort_reason` (str | None), `honest_verdict` (str).
+
+**Implementation Status:** Implemented (Exp 810)
+
+### SCENARIO-LOADER-014: VRAM Stuck After 3 Retries — Experiment Aborts
+
+**Given** VRAM is stuck at 700 MB before the retry loop
+**And** 3 retries x 10s sleep do not drop VRAM below 500 MB (reads 600 MB on retry 3)
+**When** `evict_vram_with_loop()` is called with max_retries=3, threshold_mb=500
+**Then** `vram_cleared=False`, `abort_reason="max_retries_exceeded"`
+**And** the experiment writes a `blocked_vram_stuck` artifact
+**And** NO model load is attempted
+
+**Spec traces:** REQ-LOADER-014
+**Implementation Status:** Implemented (Exp 810)
+
+### SCENARIO-LOADER-015: VRAM Clears on Retry 2 — Model Load Proceeds
+
+**Given** VRAM is at 700 MB before loop, rises to 800 MB on retry 1, drops to 300 MB on retry 2
+**When** `evict_vram_with_loop()` is called with max_retries=3, threshold_mb=500
+**Then** `vram_cleared=True` after retry 2 (300 MB < 500 MB threshold)
+**And** model load proceeds on GPU 1
+**And** `n_valid_responses >= 8` and `retro_028_closed=True`
+
+**Spec traces:** REQ-LOADER-014
+**Implementation Status:** Implemented (Exp 810)
+
 ## VPRM Arithmetic Verifier Requirements (Exp 454)
 
 ### REQ-EXTRACT-027: VPRMArithmeticVerifier Implements Rule-Based Arithmetic Step Checks
