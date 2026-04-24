@@ -2687,3 +2687,4 @@ python/ |
 | 2026-04-24 07:26 UTC | Exp 796: SOTA GGUF Code Repair v3 — Batched 10q (R | OK | 95 passed, 3 warnings in 2.94s |
 | 2026-04-24 08:04 UTC | Exp 797: JEPA v21 Multi-Source Data Collection (RE | OK | 81 passed, 3 warnings in 2.83s |
 | 2026-04-24 08:41 UTC | Exp 798: CPMI Contrastive Pair Builder (arXiv 2604 | OK | 81 passed, 3 warnings in 2.83s |
+| 2026-04-24 09:30 UTC | Exp 799: JEPA v21 Retrain + Cascade Deploy Gate (F | OK | 81 passed, 3 warnings in 3.15s |
