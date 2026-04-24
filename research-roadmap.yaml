@@ -1,1138 +1,1024 @@
-milestone: 2026.04.60
-milestone_title: JEPA v20 Data Surge + SOTA GGUF Confirmed + Constraint Memory to Constraint Generation
+milestone: 2026.04.61
+milestone_title: JEPA v21 Multi-Source Real Data + Embedding Constraint Retrieval + Gemma4 Unblocked
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
-- id: exp780-preflight-v12-gpu-zombie-killer
-  milestone: 2026.04.60
-  deliverable: results/experiment_780_preflight_v12_gpu_zombie_killer.json
-  title: 'Exp 780: Pre-flight v12 — GPU Zombie Killer + Kill-Before-Load (MANDATORY FIRST)'
+- id: exp793-manifest-full-scope-audit
+  milestone: 2026.04.61
+  deliverable: results/experiment_793_manifest_full_scope_audit.json
+  title: 'Exp 793: Manifest Full-Scope Enforcement Audit (RETRO-MANIFEST-FULL-SCOPE)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: Milestone .59 retro confirmed two related open RETROs from OOM failures:
-    RETRO-028 (Gemma4 14.89 GiB allocation fails with 15 GiB already in use) and
-    RETRO-SOTA-GGUF-TIMEOUT (Exp 769 timed out — same GPU OOM root cause). Both blockers
-    share a common root cause: GPU memory occupied by zombie processes before model load.
-    The fix mirrors apply_env_autofix() (RETRO-022 workaround): a mandatory systemic function
-    kill_gpu_zombies() that ALL GPU experiments must call before any model load attempt.
-    This experiment implements kill_gpu_zombies() in ExperimentTemplate, validates it clears
-    GPU memory, updates the pre-flight manifest, and tests that the function works safely
-    on a clean GPU (no-op) and on a zombie-occupied GPU (kills zombies).
+    CONTEXT: Milestone .60 retro confirmed Exp 527 ran from unguarded queue for the 7th+
+    post-retirement appearance. RETRO-MANIFEST-FULL-SCOPE is OPEN: the manifest exclusion
+    check is only applied at the conductor managed path, not at ALL dequeue call sites in
+    scripts/research_conductor.py. This experiment audits the conductor for unguarded dequeue
+    sites and writes a structured patch spec as a JSON artifact so a human can apply the fix.
+    We CANNOT modify scripts/research_conductor.py in experiment code — the patch spec documents
+    exactly what must change and where.
 
     EXISTING CODE TO READ FIRST:
-    - scripts/research_conductor.py — confirm kill_gpu_zombies call site pattern (do NOT modify)
-    - python/carnot/pipeline/env_autofix.py — apply_env_autofix() pattern to follow exactly
-    - scripts/experiment_template.py — ExperimentTemplate.setup_gpu() — add kill_gpu_zombies() call
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog
-    - results/operational_retro_2026_04_59.json — RETRO-028 and RETRO-SOTA-GGUF-TIMEOUT details
-    - scripts/experiment_template.py — ExperimentTemplate class structure
+    - scripts/research_conductor.py — read (do NOT modify) to identify all dequeue call sites
+    - results/operational_retro_2026_04_60.json — RETRO-MANIFEST-FULL-SCOPE details
+    - results/manifest_fix_patch.txt — existing patch from Exp 731 (if present)
+    - openspec/capabilities/pipeline/spec.md — look for existing REQ-INFRA entries
 
-    TASK: Implement kill_gpu_zombies() in python/carnot/pipeline/gpu_zombie_killer.py.
-    Wire into ExperimentTemplate.setup_gpu() as mandatory call. Validate on current GPU state.
+    TASK: Audit all dequeue sites in scripts/research_conductor.py, write a structured
+    patch spec as results/experiment_793_manifest_full_scope_audit.json, and add spec
+    requirements for manifest enforcement.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-INFRA-054 (kill_gpu_zombies() MUST be called before any model load in
-       ExperimentTemplate.setup_gpu() when CARNOT_FORCE_LIVE=1; MUST use subprocess to
-       kill all PIDs holding GPU memory except the current process and system processes),
-       REQ-INFRA-055 (kill_gpu_zombies() MUST be a no-op when no GPU zombies exist;
-       MUST NOT kill the calling process itself),
-       SCENARIO-INFRA-063/064 to openspec/capabilities/pipeline/spec.md.
-    3. Implement python/carnot/pipeline/gpu_zombie_killer.py:
-       a. GPUZombieResult dataclass:
-          - gpu_index (int), pids_found (list[int]), pids_killed (list[int]),
-          - vram_before_mb (float), vram_after_mb (float), vram_freed_mb (float),
-          - kill_attempted (bool), honest_verdict (str)
-       b. get_gpu_memory_pids(gpu_index: int) -> list[int]:
-          - Run: nvidia-smi --query-compute-apps=pid --format=csv,noheader,nounits -i (gpu_index)
-          - Parse output: list of integer PIDs.
-          - Return [] if nvidia-smi unavailable or no processes.
-       c. kill_gpu_zombies(gpu_index: int = 0, exclude_pids: list[int] | None = None) -> GPUZombieResult:
-          - exclude_pids defaults to [os.getpid()] — never kill the calling process.
-          - Get vram_before_mb via: nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits -i (gpu_index)
-          - Get pids_found = get_gpu_memory_pids(gpu_index).
-          - For each PID in pids_found that is NOT in exclude_pids:
-            * Try: os.kill(pid, signal.SIGKILL). Record in pids_killed.
-            * Wait 2 seconds after all kills for GPU to release memory.
-          - Get vram_after_mb.
-          - honest_verdict:
-            * "zombies_killed_vram_freed" if pids_killed and vram_freed_mb > 100
-            * "zombies_killed_vram_unclear" if pids_killed and vram_freed_mb <= 100
-            * "no_zombies_found" if pids_found == []
-            * "nvidia_smi_unavailable" if nvidia-smi not found
-       d. Export kill_gpu_zombies / GPUZombieResult from carnot.pipeline.__init__
-    4. Wire kill_gpu_zombies() into ExperimentTemplate.setup_gpu():
-       a. In setup_gpu(), BEFORE any model load: if CARNOT_FORCE_LIVE is set:
-          result = kill_gpu_zombies(gpu_index=0)
-          log result.honest_verdict (INFO level)
-       b. Record result in setup_gpu() return dict: zombie_kill_result=result.honest_verdict
-    5. GPU state check for this experiment:
-       a. Run `nvidia-smi` to read current GPU state.
-       b. Record: gpu0_vram_used_mb, gpu0_pids (from nvidia-smi).
-       c. Call kill_gpu_zombies(0). Record result.
-       d. Read vram_used_mb after kill. Confirm no-op if no zombies, freed if zombies present.
-    6. Create scripts/experiment_780_preflight_v12_gpu_zombie_killer.py:
-       a. ExperimentTemplate(780) + ExperimentTimeoutWatchdog(780, timeout_minutes=30).
+    2. Read scripts/research_conductor.py in full. Identify every location where a task is
+       dequeued, popped, or selected for execution. For each site, note:
+       a. Line number
+       b. Code pattern (e.g., task_queue.pop(), next(tasks), random.choice(...))
+       c. Whether ExclusionManifest.check() is called before dequeue
+       d. Whether the dequeue is inside the managed conductor cycle or outside it
+    3. Add to openspec/capabilities/pipeline/spec.md:
+       - REQ-INFRA-057: ExclusionManifest.check() MUST be called at ALL dequeue sites
+         in the research conductor before any experiment task is dispatched. A dequeue
+         site is any location where a task_id is selected for execution from any queue
+         or list data structure.
+       - REQ-INFRA-058: When ExclusionManifest.check(task_id) returns True (excluded),
+         the task MUST be logged at WARNING level with the reason and skipped without
+         execution.
+       - SCENARIO-INFRA-066: Conductor dequeues Exp 527 from unmanaged queue; manifest
+         check fires; Exp 527 is skipped; conductor log shows EXCLUDED WARNING.
+       - SCENARIO-INFRA-067: Conductor dequeues Exp 793 (not in manifest); manifest
+         check passes; Exp 793 runs normally.
+    4. Build audit artifact:
+       a. Read the manifest file (results/manifest_excluded_experiments.json or similar).
+       b. For each dequeue site found, create a patch_site record:
+          {line_number, code_snippet, is_manifest_checked, patch_required,
+           recommended_patch_code}
+       c. Count: n_dequeue_sites_total, n_dequeue_sites_unguarded, n_dequeue_sites_guarded
+       d. estimated_waste_min_per_milestone: n_unguarded_sites * avg_retired_exp_duration_min
+    5. Create scripts/experiment_793_manifest_audit.py:
+       a. ExperimentTemplate(793) + ExperimentTimeoutWatchdog(793, timeout_minutes=30).
        b. apply_env_autofix() FIRST.
-       c. Implement steps 5 (GPU state check + kill test).
-       d. honest_verdict:
-          - "gpu_zombie_killer_deployed" if kill_gpu_zombies implemented AND wired in setup_gpu
-          - "no_zombies_on_this_run" if honest_verdict == "no_zombies_found" (clean GPU)
-          - "zombies_killed_successfully" if zombies found and killed
-          - "nvidia_smi_unavailable" if GPU tools not present
-       e. artifact: gpu0_vram_used_mb_before, gpu0_pids_before, zombie_kill_result,
-          gpu0_vram_used_mb_after, vram_freed_mb, setup_gpu_wired (bool), honest_verdict.
-    7. Write tests/python/test_experiment_780_preflight_v12_gpu_zombie_killer.py with 100% coverage:
-       - test kill_gpu_zombies() returns no_zombies_found on empty GPU (mock nvidia-smi → no PIDs).
-       - test kill_gpu_zombies() excludes calling process PID from kill list.
-       - test GPUZombieResult.vram_freed_mb = vram_before - vram_after.
-       - test honest_verdict maps correctly to pids_killed and vram_freed_mb.
-       Each test traces to REQ-INFRA-054/055.
-    8. Reconcile:
-       - ops/status.md: "Pre-flight v12 (GPU zombie killer): honest_verdict=X. zombie_kill
-         deployed in ExperimentTemplate.setup_gpu(). RETRO-028 root-cause addressed."
-       - ops/changelog.md: one-line with honest_verdict.
-    9. tmpl.assert_deliverable_written() as final line.
+       c. Read scripts/research_conductor.py as a text string.
+       d. Scan for patterns: task_queue, .pop(), .popleft(), next(iter(...)),
+          random.choice, queue.get(), for task in tasks.
+       e. For each match, record {line_number, snippet, context_lines}.
+       f. Check if "manifest" appears within 5 lines of the dequeue pattern.
+       g. Build artifact with patch_sites list and summary fields.
+       h. honest_verdict:
+          - "all_dequeue_sites_guarded" if n_unguarded == 0
+          - "N_unguarded_sites_found" where N = n_unguarded_sites
+          - "conductor_not_readable" if research_conductor.py missing
+    6. Write tests/python/test_experiment_793_manifest_audit.py with 100% coverage:
+       - test scan finds dequeue patterns in synthetic conductor text
+       - test guards detection correctly classifies guarded vs unguarded
+       - test artifact fields are all present and typed correctly
+       Each test traces to REQ-INFRA-057/058.
+    7. Reconcile:
+       - ops/changelog.md: one-line entry with honest_verdict.
+       - ops/status.md: "Exp 793: Manifest full-scope audit. N unguarded sites found.
+         Patch spec written to results/experiment_793_manifest_full_scope_audit.json."
+    8. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp781-jepa-v20-data-collection
-  milestone: 2026.04.60
-  deliverable: results/experiment_781_jepa_v20_data_collection.json
-  title: 'Exp 781: JEPA v20 Live Data Collection — 100q Qwen3.5-0.8B GSM8K (GPU REQUIRED)'
+- id: exp794-fpga-toolchain-install
+  milestone: 2026.04.61
+  deliverable: results/experiment_794_fpga_toolchain_install.json
+  title: 'Exp 794: FPGA Toolchain Install + Verify (RETRO-KV260-TOOLS-UNAVAILABLE)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: JEPA v19 (Exp 770) achieved ood_auc=0.5667 < 0.75 gate because only 57 real
-    labeled CoT steps were available (Exp 442). Research diagnosis: 57 pairs from a single
-    live run produce a training corpus that is not diverse enough to generalize OOD.
-    The fix: run a second live benchmark collecting 100 questions with Qwen3.5-0.8B
-    (known to work reliably on RTX 3090), extract CoT steps, apply FOVER Z3 annotation,
-    and write a second real labeled corpus. Combined with Exp 442's 57 pairs, this triples
-    the training data to ~137+ real pairs covering more diverse arithmetic step patterns.
+    CONTEXT: Milestone .60 Exp 791 failed because yosys=False, nextpnr_ice40=False,
+    icepack=False — all three open-source FPGA tools absent from PATH (RETRO-KV260-TOOLS-UNAVAILABLE).
+    Resolution path: install yosys + nextpnr-ice40 + icestorm via pacman on CachyOS.
+    This experiment installs the tools, verifies they are present, and if successful runs
+    a minimal proof-of-concept synthesis of a 2-spin Ising circuit as validation.
+    The result gates Exp 804 (KV260 synthesis attempt).
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/gpu_zombie_killer.py — kill_gpu_zombies() (Exp 780 output).
-    - python/carnot/pipeline/env_autofix.py — apply_env_autofix() pattern.
-    - python/carnot/pipeline/fover_live.py — LiveFOVERResult, build_live_fover_artifact().
-    - python/carnot/pipeline/fover_annotator.py — FOVERAnnotator.annotate_corpus().
-    - results/experiment_442_fover_live_annotation.json — 57-pair baseline to read.
-    - results/fover_labeled_steps_live.json — existing labeled steps (do NOT overwrite).
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline for inference.
-    - python/carnot/pipeline/long_run_executor.py — LongRunBenchmarkExecutor (checkpoint).
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - results/experiment_791_kv260_n32_reduced_synthesis.json — current failure details
+    - hardware/kv260/ising_sampler_v3.v — the target RTL file for synthesis
+    - results/operational_retro_2026_04_60.json — RETRO-KV260-TOOLS-UNAVAILABLE details
+    - openspec/capabilities/verifiable-reasoning/spec.md — check existing REQ-HW entries
 
-    TASK: Run 100 GSM8K questions live with Qwen3.5-0.8B. Extract CoT steps. Apply FOVER
-    Z3 annotation. Write results/fover_labeled_steps_live_v2.json (NEW file, do NOT modify
-    fover_labeled_steps_live.json). Target: n_labeled >= 80 new real pairs.
+    TASK: Install FPGA toolchain via pacman, verify installation, run minimal synthesis,
+    write results/experiment_794_fpga_toolchain_install.json.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-LEARN-048 (live data collection MUST use kill_gpu_zombies() before model load;
-       MUST write new labeled pairs to fover_labeled_steps_live_v2.json without modifying
-       fover_labeled_steps_live.json), REQ-LEARN-049 (n_labeled MUST be reported honestly;
-       labeling_rate = n_labeled / n_steps_found; target n_labeled >= 80),
-       SCENARIO-LEARN-092/093 to openspec/capabilities/self_learning/spec.md.
-    3. apply_env_autofix() FIRST. Then kill_gpu_zombies(gpu_index=0).
-    4. If CARNOT_FORCE_LIVE not set: write artifact honest_verdict="blocked_no_live_gpu" and exit.
-    5. setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
-    6. Load 100 GSM8K questions (seed=9999 to avoid overlap with Exps 439/742/781).
-       Use LongRunBenchmarkExecutor (batch_size=10) for checkpoint-resume.
-    7. For each batch of 10 questions:
-       a. Run VerifyRepairPipeline.verify_and_repair(question). Record: response, cot_text.
-       b. Checkpoint batch to results/exp781_ckpt.json.
-    8. After all 100 questions:
-       a. Pool all 100 responses. Run FOVERAnnotator.annotate_corpus(responses).
-       b. Extract: n_steps_found, n_labeled, n_correct, n_incorrect.
-       c. Write labeled pairs to results/fover_labeled_steps_live_v2.json
-          (SEPARATE from fover_labeled_steps_live.json — do NOT merge or overwrite).
-       d. labeling_rate = n_labeled / n_steps_found.
-    9. Create scripts/experiment_781_jepa_v20_data_collection.py:
-       a. ExperimentTemplate(781, requires_gpu=True) + ExperimentTimeoutWatchdog(781, 90min).
-       b. Implement steps 3-8.
-       c. honest_verdict:
-          - "real_data_collected_sufficient" if n_labeled >= 80 AND inference_mode="live_gpu"
-          - "real_data_collected_insufficient" if 20 <= n_labeled < 80 AND live_gpu
-          - "real_data_below_threshold" if n_labeled < 20 AND live_gpu
-          - "blocked_no_live_gpu" if CARNOT_FORCE_LIVE not set
-       d. artifact: n_questions, n_steps_found, n_labeled, n_correct, n_incorrect,
-          labeling_rate, labeled_file="fover_labeled_steps_live_v2.json",
-          inference_mode, honest_verdict.
-    10. Write tests/python/test_experiment_781_jepa_v20_data_collection.py with 100% coverage:
-        - test kill_gpu_zombies() is called before setup_gpu().
-        - test labeled pairs written to fover_labeled_steps_live_v2.json (separate file).
-        - test honest_verdict requires live_gpu AND n_labeled >= 80 for "sufficient".
-        Each test traces to REQ-LEARN-048/049.
-    11. Reconcile:
-        - ops/status.md: "JEPA v20 data collection: n_labeled=X (target>=80).
-          inference_mode=live_gpu. Corpus: fover_labeled_steps_live_v2.json."
-        - ops/changelog.md: one-line with honest_verdict.
-    12. tmpl.assert_deliverable_written() as final line.
+    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
+       - REQ-HW-032: yosys MUST be installed and on PATH before any open-source RTL synthesis.
+       - REQ-HW-033: nextpnr-ice40 MUST be installed and on PATH for iCE40 place-and-route.
+       - REQ-HW-034: icepack MUST be installed and on PATH for bitstream generation.
+       - SCENARIO-HW-032: All three tools present; synthesis of 2-spin Ising test circuit
+         completes without errors; tools_installed=True in artifact.
+    3. Create scripts/experiment_794_fpga_toolchain_install.py:
+       a. ExperimentTemplate(794) + ExperimentTimeoutWatchdog(794, timeout_minutes=30).
+       b. apply_env_autofix() FIRST.
+       c. Check tool availability:
+          - yosys_version = subprocess.run(["yosys", "--version"], capture_output=True).stdout
+          - nextpnr_version = subprocess.run(["nextpnr-ice40", "--version"], ...)
+          - icepack_version = subprocess.run(["icepack", "--help"], ...)
+          Record each as present/missing.
+       d. If any tool missing: attempt install via:
+          subprocess.run(["sudo", "pacman", "-S", "--noconfirm", "yosys",
+                          "nextpnr", "icestorm"], capture_output=True, timeout=300)
+          Re-check tool availability after install attempt.
+       e. If all tools present: run minimal synthesis:
+          Write a tiny 2-spin Ising Verilog test (in-memory string, /tmp/test_ising2.v):
+            module test_ising2(input clk, input signed [7:0] J, output reg [1:0] spin);
+              always @(posedge clk) spin <= (J[7]) ? 2'b10 : 2'b01;
+            endmodule
+          Run: yosys -p "synth_ice40; write_json /tmp/test_ising2.json" /tmp/test_ising2.v
+          Parse output for errors. Record lut_count from JSON if available.
+       f. honest_verdict:
+          - "tools_installed_synthesis_clean" if all 3 tools present AND synth no errors
+          - "tools_installed_synthesis_failed" if tools present but synth errors
+          - "tools_installed_synthesis_skipped" if tools present but synth not attempted
+          - "tools_not_installed_install_attempted" if install ran but tools still missing
+          - "tools_not_installed_install_skipped" if sudo not available
+    4. Write tests/python/test_experiment_794_fpga_toolchain_install.py with 100% coverage:
+       - test tool presence check returns correct verdict for mocked subprocess
+       - test install attempt path triggers when tools missing
+       - test synthesis result parsing handles yosys JSON output
+       Each test traces to REQ-HW-032/033/034.
+    5. Reconcile:
+       - ops/changelog.md: one-line entry with honest_verdict and tools_installed status.
+       - research-hardware-wishlist.md: update KV260 Synthesis Status section with install result.
+    6. tmpl.assert_deliverable_written() as final line.
 
-    GPU SETUP: RTX 3090 GPU 0. kill_gpu_zombies() BEFORE model load.
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp782-edu-prm-step-selection
-  milestone: 2026.04.60
-  deliverable: results/experiment_782_edu_prm_step_selection.json
-  title: 'Exp 782: EDU-PRM Uncertainty Step Selection — Diversified JEPA Training Corpus (arXiv 2503.22233)'
+- id: exp795-gemma4-oom-fix-v4
+  milestone: 2026.04.61
+  deliverable: results/experiment_795_gemma4_oom_fix_v4.json
+  title: 'Exp 795: Gemma4 OOM Fix v4 — Four-Step GPU Isolation (RETRO-028, GPU REQUIRED, CARNOT_FORCE_LIVE=1)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: arXiv 2503.22233 "EDU-PRM: Entropy-Driven Uncertainty for Process Reward Modeling"
-    (March 2025) shows entropy-based uncertainty selection achieves full-corpus performance with
-    only 1.5% of training data. The key insight: steps near the decision boundary (high model
-    prediction variance across bootstrap samples) contribute the most discriminative signal;
-    clear-cut correct/incorrect steps add little information. Applying this to Carnot's JEPA
-    training: select the 30% highest-variance steps from the pooled FoVer corpus to focus
-    JEPA v20 training on difficult examples.
-
-    JEPA v19 (Exp 770) failed OOD because it trained on all 57 steps uniformly, including
-    many trivially correct steps that added no discriminative information. EDU-PRM selection
-    should improve OOD generalization by concentrating training on the hard cases.
+    CONTEXT: RETRO-028 has failed to close across three dedicated attempts (.58, .59, .60).
+    Root cause: Gemma4-E4B-it (14.89 GiB allocation) fails with CUDA OOM because GPU memory
+    is occupied by zombie processes before model load. The .60 retro provides the four-step
+    isolation protocol:
+    (1) kill_gpu_zombies() — deployed in Exp 780
+    (2) Explicit VRAM eviction of ALL processes >100MB via pkill + nvidia-smi verification
+    (3) Verify <500MB used on target GPU before model load
+    (4) Use GPU 1 (cooler, 8-10C thermal headroom) as the Gemma4 target
+    This experiment implements Fix v4 with all four steps.
 
     EXISTING CODE TO READ FIRST:
-    - results/fover_labeled_steps_live.json — 57 original labeled steps (Exp 442).
-    - results/fover_labeled_steps_live_v2.json — new labeled steps from Exp 781 (load if exists).
-    - python/carnot/samplers/jepa_v19.py — MultiStepJEPAv19 architecture (reference).
-    - python/carnot/pipeline/fover_annotator.py — FOVERAnnotator step structure.
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - python/carnot/pipeline/gpu_zombie_killer.py — kill_gpu_zombies() (Exp 780)
+    - python/carnot/pipeline/gemma_loader.py — GemmaTransformersLoader (Exp 450)
+    - results/experiment_786_gemma4_oom_fix_v3_vr_grid.json — Fix v3 failure details
+    - results/operational_retro_2026_04_60.json — RETRO-028 resolution path
+    - scripts/experiment_template.py — ExperimentTemplate.setup_gpu()
+    - openspec/capabilities/verifiable-reasoning/spec.md — existing REQ-LOADER entries
 
-    TASK: Implement EDUPRMStepSelector. Pool all real FoVer labeled steps. Select top 30%
-    highest-variance steps. Write selected corpus to results/fover_edu_prm_selected.json.
+    TASK: Implement Fix v4 four-step isolation, load Gemma4 on GPU 1, run 10 GSM8K questions.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-LEARN-050 (EDUPRMStepSelector MUST compute prediction variance over N_BOOTSTRAP=10
-       bootstrap samples of a TF-IDF + logistic classifier; MUST select top 30% by variance),
-       REQ-LEARN-051 (selected corpus MUST be written to fover_edu_prm_selected.json; MUST
-       report uncertainty_selected_pct and diversity_score vs uniform selection),
-       SCENARIO-LEARN-094/095 to openspec/capabilities/self_learning/spec.md.
-    3. Implement python/carnot/pipeline/edu_prm_selector.py:
-       a. EDUPRMConfig(n_bootstrap=10, selection_pct=0.30).
-       b. EDUPRMStepSelector(config: EDUPRMConfig):
-          fit_bootstrap(step_texts: list[str], labels: list[int]) -> None:
-            - For each of N_BOOTSTRAP=10 bootstrap iterations:
-              * Resample training data with replacement (same size).
-              * Fit TF-IDF (128-dim) + LogisticRegression on bootstrap sample.
-              * Record predictions on FULL corpus.
-            - Compute variance of predictions across bootstrap models per step.
-          select(step_texts: list[str], labels: list[int]) -> list[int]:
-            - Fit bootstrap models.
-            - Compute variance per step (uncertainty score).
-            - Select indices with variance in top selection_pct fraction.
-            - Return selected indices.
-          diversity_score(selected_labels: list[int]) -> float:
-            - Returns positive_fraction (fraction of label=1) in selected set.
-            - Ideal: near 0.5 (balanced hard examples).
-    4. Pool labeled steps:
-       a. Load results/fover_labeled_steps_live.json (57 steps).
-       b. Load results/fover_labeled_steps_live_v2.json (Exp 781 steps, if exists).
-       c. Pool: step_texts, labels. Record: n_total_before_selection.
-    5. Apply EDUPRMStepSelector.select(step_texts, labels).
-       Record: selected_indices, n_selected, uncertainty_selected_pct.
-    6. Write results/fover_edu_prm_selected.json:
-       Selected (step_text, label) pairs in same format as fover_labeled_steps_live.json.
-       Record: diversity_score (positive_fraction of selected labels).
-    7. Compute diversity improvement:
-       uniform_diversity = positive_fraction(all labels)
-       selected_diversity = positive_fraction(selected labels)
-       diversity_delta = abs(selected_diversity - 0.5) < abs(uniform_diversity - 0.5)
-       (True = selection is more balanced than uniform, i.e., harder examples are more balanced)
-    8. Create scripts/experiment_782_edu_prm_step_selection.py:
-       a. ExperimentTemplate(782) + ExperimentTimeoutWatchdog(782, timeout_minutes=20).
-       b. Implement steps 4-7.
-       c. honest_verdict:
-          - "edu_prm_selected_diverse" if uncertainty_selected_pct >= 0.30 AND diversity_delta=True
-          - "edu_prm_selected_uniform" if uncertainty_selected_pct >= 0.30 AND diversity_delta=False
-          - "edu_prm_insufficient_data" if n_total_before_selection < 30
-          - "edu_prm_selection_failed" if any exception
-       d. artifact: n_total_before_selection, n_selected, uncertainty_selected_pct,
-          uniform_diversity, selected_diversity, diversity_delta (bool),
-          selected_corpus_path="fover_edu_prm_selected.json", honest_verdict.
-    9. Write tests/python/test_experiment_782_edu_prm_step_selection.py with 100% coverage:
-       - test EDUPRMStepSelector.select() returns top selection_pct fraction by variance.
-       - test diversity_score = positive_fraction of selected labels.
-       - test fit_bootstrap runs N_BOOTSTRAP=10 iterations and stores N_BOOTSTRAP predictions.
+    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
+       - REQ-LOADER-003: Before loading Gemma4-E4B-it, the system MUST evict all GPU processes
+         holding >100MB VRAM via kill_gpu_zombies() followed by explicit pkill + verification
+         that nvidia-smi reports <500MB used on the target GPU.
+       - REQ-LOADER-004: Gemma4-E4B-it MUST be loaded on GPU 1 (device index 1) when dual-GPU
+         configuration is present, to preserve GPU 0 thermal headroom.
+       - SCENARIO-LOADER-003: GPU has zombie processes; kill_gpu_zombies() kills them;
+         pkill sweep runs; nvidia-smi shows <500MB; Gemma4 loads successfully.
+       - SCENARIO-LOADER-004: GPU 1 is at 44C; GPU 0 is at 52C; Gemma4 loads on GPU 1;
+         thermal headroom confirmed in artifact.
+    3. Implement python/carnot/pipeline/gemma_isolation.py:
+       a. VRAMEvictionResult dataclass:
+          {gpu_index, vram_before_mb, pids_killed, pkill_attempts, vram_after_mb,
+           vram_clear (bool: <500MB), honest_verdict}
+       b. evict_gpu_vram(gpu_index: int = 1) -> VRAMEvictionResult:
+          - Run kill_gpu_zombies(gpu_index) first
+          - Run: nvidia-smi --query-compute-apps=pid --format=csv,noheader,nounits -i gpu_index
+          - For any PID > 0 holding >100MB VRAM: os.kill(pid, signal.SIGKILL)
+          - Wait 3 seconds
+          - Re-check VRAM: read nvidia-smi --query-gpu=memory.used --format=...
+          - vram_clear = (vram_after_mb < 500)
+       c. load_gemma4_on_gpu1(model_id: str = "google/gemma-4-E4B-it") -> dict:
+          - Call evict_gpu_vram(gpu_index=1)
+          - If not vram_clear: return {"loaded": False, "reason": "vram_not_cleared"}
+          - Load via GemmaTransformersLoader with device_map={"": "cuda:1"}
+          - Return {"loaded": True, "device": "cuda:1", "vram_after_mb": ...}
+       d. Export VRAMEvictionResult, evict_gpu_vram, load_gemma4_on_gpu1 from carnot.pipeline
+    4. Create scripts/experiment_795_gemma4_oom_fix_v4.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTemplate(795) + ExperimentTimeoutWatchdog(795, timeout_minutes=60).
+       c. LiveGPUGate.require_live_or_blocked() — hard gate, no simulated fallback.
+       d. Step 1: kill_gpu_zombies(1) — log result.
+       e. Step 2: evict_gpu_vram(1) — log vram_before_mb, pids_killed, vram_after_mb.
+       f. Step 3: verify vram_clear; if False → write blocked artifact, exit.
+       g. Step 4: load_gemma4_on_gpu1(). If not loaded → write blocked artifact, exit.
+       h. Run 10 GSM8K questions with loaded Gemma4. Count n_valid_responses
+          (not empty, not all <unusedN> tokens per GemmaTransformersLoader.is_valid_output).
+       i. honest_verdict:
+          - "retro_028_closed" if n_valid_responses >= 8
+          - "partial_success" if n_valid_responses in [4, 7]
+          - "model_loaded_no_valid_output" if model loaded but n_valid < 4
+          - "vram_not_cleared" if eviction failed
+          - "blocked_no_live_gpu" if LiveGPUGate blocks
+       j. Artifact fields: step1_zombies_killed, step2_vram_before_mb, step2_pids_killed,
+          step3_vram_after_mb, step3_vram_clear, step4_model_loaded, n_valid_responses,
+          honest_verdict, retro_028_closed (bool).
+    5. Write tests/python/test_experiment_795_gemma4_oom_fix_v4.py with 100% coverage:
+       - test evict_gpu_vram returns correct verdict on mocked nvidia-smi (mock subprocess)
+       - test load_gemma4_on_gpu1 skips load when vram_not_cleared
+       - test VRAMEvictionResult fields typed correctly
+       Each test traces to REQ-LOADER-003/004.
+    6. Reconcile:
+       - ops/changelog.md: one-line entry with honest_verdict.
+       - ops/status.md: "Exp 795: Gemma4 OOM Fix v4. retro_028_closed=<bool>."
+    7. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp796-sota-gguf-code-repair-v3
+  milestone: 2026.04.61
+  deliverable: results/experiment_796_sota_gguf_code_repair_v3.json
+  title: 'Exp 796: SOTA GGUF Code Repair v3 — Batched 10q (RETRO-SOTA-GGUF-TIMEOUT, GPU, GATED on Exp 795)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-SOTA-GGUF-TIMEOUT has failed twice — Exp 769 (120 min timeout) and
+    Exp 785 (90 min timeout, blocked_model_load_failed). Root causes: GPU OOM before model
+    load (fixed by Exp 795) and insufficient budget per question when all questions run serially.
+    Fix: batch 25 HumanEval problems into 5 batches of 5, checkpoint after each batch,
+    ExperimentTimeoutWatchdog at 90 min. Also add MARS margin gate (arXiv 2601.15498) to
+    skip test execution for high-margin outputs, reducing oracle call count.
+
+    PREREQUISITE: Check results/experiment_795_gemma4_oom_fix_v4.json. If retro_028_closed
+    is not True, write a blocked artifact and exit. GPU 1 must be isolated before this experiment.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_795_gemma4_oom_fix_v4.json — GATING: retro_028_closed must be True
+    - results/experiment_785_sota_gguf_code_repair_v2.json — Fix v2 failure details
+    - python/carnot/pipeline/long_run_executor.py — LongRunBenchmarkExecutor (Exp 437)
+    - python/carnot/pipeline/gpu_zombie_killer.py — kill_gpu_zombies() (Exp 780)
+    - python/carnot/pipeline/atomic_writer.py — AtomicResultWriter (Exp 452)
+    - scripts/experiment_template.py — ExperimentTemplate, setup_gpu()
+    - openspec/capabilities/verifiable-reasoning/spec.md — existing REQ-BENCH entries
+
+    TASK: Run 25 HumanEval problems in 5 batches of 5 with Qwen3.6-35B-A3B GGUF, apply
+    MARS margin gate, checkpoint per batch, target pass@1_repair > pass@1_baseline.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
+       - REQ-BENCH-014: SOTA GGUF code repair MUST use batched execution (max 5 problems/batch)
+         with AtomicResultWriter checkpoint after each batch to prevent total data loss on timeout.
+       - REQ-BENCH-015: MARS margin gate MUST be applied before test oracle execution —
+         if token_margin > margin_threshold, skip test execution and count as clean.
+       - SCENARIO-BENCH-033: 5-problem batch completes in <18 min, checkpoint written, next
+         batch starts; total wall time under 90 min for 25 problems.
+       - SCENARIO-BENCH-034: High-margin output skips oracle; oracle_calls_saved > 0.
+    3. Implement MARSMarginGate in python/carnot/pipeline/mars_margin_gate.py:
+       a. MARSMarginResult dataclass:
+          {logit_margin, margin_threshold, skip_oracle, honest_verdict}
+       b. compute_logit_margin(logits: list[float]) -> float:
+          top2 = sorted(logits, reverse=True)[:2]
+          return top2[0] - top2[1]  # margin = top1 - top2
+       c. MARSMarginGate(threshold: float = 2.0):
+          decide(logits) -> MARSMarginResult
+          If logits unavailable (CI mode): skip_oracle=False, verdict="ci_logits_unavailable"
+       d. Export from carnot.pipeline.__init__
+    4. Create scripts/experiment_796_sota_gguf_code_repair_v3.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTemplate(796) + ExperimentTimeoutWatchdog(796, timeout_minutes=90).
+       c. LiveGPUGate.require_live_or_blocked() — hard gate.
+       d. Check GATE: load results/experiment_795_gemma4_oom_fix_v4.json.
+          If retro_028_closed != True → write blocked artifact, exit.
+       e. kill_gpu_zombies(1) then evict_gpu_vram(1) per Exp 795 protocol.
+       f. Load Qwen3.6-35B-A3B Q4_K_M GGUF from models/ cache via resolve_cached_gguf().
+          Use GPU 1 with explicit device_map={"": "cuda:1"}.
+       g. Load 25 HumanEval problems (problems 0-24 from humaneval dataset).
+       h. Batch into 5 batches of 5 problems each:
+          For each batch:
+            - Run baseline (no repair): generate code, run tests, count pass@1_baseline_batch
+            - Run repair (with CodeExtractor + VerifyRepairPipeline):
+              Apply MARS margin gate on generation logits. If skip_oracle: record as "margin_skip".
+              Else: run test oracle, apply repair if violations found.
+            - Count pass@1_repair_batch, oracle_calls_saved_batch
+            - AtomicResultWriter checkpoint: write partial artifact
+       i. Aggregate: pass@1_baseline = avg, pass@1_repair = avg, signed_improvement = repair - baseline
+       j. honest_verdict:
+          - "code_repair_positive" if signed_improvement > 0 and inference_mode="live_gpu"
+          - "code_no_improvement" if signed_improvement <= 0 and live_gpu
+          - "partial_N_of_25" if timeout with N < 25 completed
+          - "gated_retro028_not_closed" if prerequisite gate fails
+          - "blocked_no_live_gpu" if LiveGPUGate blocks
+    5. Write tests/python/test_experiment_796_sota_gguf_code_repair_v3.py with 100% coverage:
+       - test MARSMarginGate.decide() returns skip_oracle=True when margin > threshold
+       - test MARSMarginGate.decide() returns ci_logits_unavailable in CI mode
+       - test compute_logit_margin returns top1 - top2
+       Each test traces to REQ-BENCH-014/015.
+    6. Reconcile:
+       - ops/changelog.md: one-line entry with honest_verdict.
+    7. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp797-jepa-v21-multi-source-data
+  milestone: 2026.04.61
+  deliverable: results/experiment_797_jepa_v21_data_collection.json
+  title: 'Exp 797: JEPA v21 Multi-Source Data Collection (RETRO-JEPA-V20-NO-DATA, GPU REQUIRED, CARNOT_FORCE_LIVE=1)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-JEPA-V20-NO-DATA: Exp 781 collected n_labeled=0 because CARNOT_FORCE_LIVE
+    was not set. RETRO-JEPA-OOD: 8 consecutive failed retrains (v13-v20, ood_auc < 0.75).
+    Root cause: all 57 real pairs come from a single source (Qwen3.5-0.8B, GSM8K q1-300).
+    Fix: collect from 3 diverse sources:
+      Source A: 60 GSM8K questions with Qwen3.5-0.8B (new range: q301-360)
+      Source B: 30 MATH-500 questions with Qwen3.5-0.8B (harder distribution)
+      Source C: 30 HumanEval problems with Qwen3.5-0.8B (code domain)
+    (Use Qwen3.5-0.8B for all sources to control model-level variance; diversity is in domain.)
+    FOVER Z3 annotator labels each step. Target: n_labeled >= 80 across >= 2 sources.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/fover_live.py — LiveFOVERResult, build_live_fover_artifact()
+    - python/carnot/pipeline/fover_annotator.py — FOVERAnnotator, parse_cot_into_steps()
+    - results/experiment_442_fover_live_annotation.json — 57 pairs from Exp 442 (baseline)
+    - results/fover_labeled_steps_live.json — existing pairs file (do NOT overwrite; append)
+    - scripts/experiment_template.py — ExperimentTemplate.setup_gpu()
+    - openspec/capabilities/autoresearch/spec.md — REQ-LEARN-048/049 from Exp 781
+
+    TASK: Collect real CoT steps from 3 domains with live GPU, label with FOVER Z3,
+    write multi-source corpus to results/fover_labeled_steps_v21_multi.json.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add to openspec/capabilities/autoresearch/spec.md:
+       - REQ-LEARN-050: JEPA v21 training data MUST span >= 2 distinct benchmark domains
+         (GSM8K, MATH-500, HumanEval) to support OOD generalization.
+       - REQ-LEARN-051: Multi-source FOVER annotation MUST write a single merged corpus file
+         (fover_labeled_steps_v21_multi.json) with source_domain field per pair.
+       - SCENARIO-LEARN-094: Data collection completes; n_labeled >= 80; source breakdown
+         shows >= 2 domains; corpus written to fover_labeled_steps_v21_multi.json.
+    3. Create scripts/experiment_797_jepa_v21_data_collection.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTemplate(797) + ExperimentTimeoutWatchdog(797, timeout_minutes=60).
+       c. LiveGPUGate.require_live_or_blocked() — HARD GATE. No simulated fallback.
+          If CARNOT_FORCE_LIVE not set or GPU unavailable: write blocked artifact, exit.
+       d. kill_gpu_zombies(0). Load Qwen3.5-0.8B on GPU 0.
+       e. Source A (GSM8K q301-360, 60 questions):
+          - Generate CoT responses for each question
+          - FOVERAnnotator.annotate_corpus(responses) → labeled steps
+          - Record: n_responses_a, n_labeled_a
+       f. Source B (MATH-500 q0-29, 30 questions):
+          - Load 30 MATH-500 problems (from datasets or hardcoded subset)
+          - Generate CoT responses
+          - FOVERAnnotator.annotate_corpus(responses) → labeled steps
+          - Record: n_responses_b, n_labeled_b
+       g. Source C (HumanEval p0-29, 30 problems):
+          - Load 30 HumanEval problems
+          - Generate code solutions with CoT
+          - FOVERAnnotator.annotate_corpus(responses) → labeled steps
+          - Record: n_responses_c, n_labeled_c
+       h. Merge all labeled steps into one corpus. Add source_domain field per pair.
+       i. Write to results/fover_labeled_steps_v21_multi.json (AtomicResultWriter).
+          Do NOT overwrite results/fover_labeled_steps_live.json (Exp 442 corpus is separate).
+       j. honest_verdict:
+          - "multi_source_corpus_adequate" if n_labeled_total >= 80 and sources_with_data >= 2
+          - "multi_source_insufficient" if n_labeled_total < 80 but > 0
+          - "single_source_only" if only 1 domain produced labeled pairs
+          - "blocked_no_live_gpu" if hard gate fires
+    4. Write tests/python/test_experiment_797_jepa_v21_data_collection.py with 100% coverage:
+       - test multi-source corpus merge adds source_domain field
+       - test honest_verdict logic for all branches
        Each test traces to REQ-LEARN-050/051.
-    10. Reconcile:
-        - ops/status.md: "EDU-PRM step selection (arXiv 2503.22233): n_selected=X from N=Y.
-          diversity_delta=Z. Selected corpus: fover_edu_prm_selected.json."
-        - ops/changelog.md: one-line with honest_verdict.
-    11. tmpl.assert_deliverable_written() as final line.
+    5. Reconcile:
+       - ops/changelog.md: one-line entry with n_labeled_total and sources breakdown.
+    6. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp783-jepa-v20-retrain
-  milestone: 2026.04.60
-  deliverable: results/experiment_783_jepa_v20_retrain.json
-  title: 'Exp 783: JEPA v20 Retrain — Pooled Real Data + EDU-PRM Selection (Target OOD AUC > 0.75)'
+- id: exp798-cpmi-contrastive-pair-builder
+  milestone: 2026.04.61
+  deliverable: results/experiment_798_cpmi_pairs.json
+  title: 'Exp 798: CPMI Contrastive Pair Builder (arXiv 2604.10660) — Hard Negative Mining for JEPA v21'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: JEPA v19 (Exp 770) ood_auc=0.5667 — below the 0.75 gate for Tier 3.5 deployment.
-    Root cause: 57 training pairs insufficient for OOD generalization (RETRO-JEPA-OOD-V19).
-    JEPA v20 addresses this with three improvements:
-    1. More data: Exp 781 collected 80+ new real labeled pairs (fover_labeled_steps_live_v2.json)
-    2. Better selection: Exp 782 applied EDU-PRM uncertainty selection to focus on hard examples
-    3. Same MultiStepJEPAv19 architecture (n_steps=3) but retrained on the expanded corpus
-
-    If ood_auc > 0.75: Exp 784 deploys JEPA v20 as Tier 3.5 (closing FR-11 Tier 3 loop).
-    If 0.60 < ood_auc <= 0.75: improvements noted, RETRO-JEPA-OOD-V19 stays open.
-    If ood_auc <= 0.60: regression from v19 — investigate training bug.
+    CONTEXT: JEPA v21 OOD failure is partly caused by insufficiently contrastive training pairs.
+    Standard correct/incorrect pairs from FOVER are "easy" — clearly-wrong vs clearly-right.
+    CPMI (Contrastive Pointwise Mutual Information, arXiv 2604.10660) provides hard negatives:
+    steps that are plausible-but-wrong (CPMI score 0.15-0.60 range). Hard negatives force the
+    JEPA predictor to learn finer-grained violation detection, improving OOD generalization.
+    This experiment builds CPMI-augmented triples from the Exp 797 corpus (fover_labeled_steps_v21_multi.json).
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/samplers/jepa_v19.py — MultiStepJEPAv19 architecture to reuse/extend.
-    - results/jepa_v19_model.npz — v19 model weights as baseline (load if exists).
-    - results/fover_labeled_steps_live.json — 57 original pairs (Exp 442).
-    - results/fover_labeled_steps_live_v2.json — new pairs from Exp 781 (load if exists).
-    - results/fover_edu_prm_selected.json — EDU-PRM selected corpus from Exp 782 (load if exists).
-    - results/experiment_770_jepa_v19_predictive.json — v19 baseline: ood_auc=0.5667.
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - results/experiment_797_jepa_v21_data_collection.json — check n_labeled_total
+    - results/fover_labeled_steps_v21_multi.json — input corpus (from Exp 797)
+    - results/fover_labeled_steps_live.json — fallback corpus from Exp 442 if v21 missing
+    - python/carnot/pipeline/fover_annotator.py — FOVERCoTStep structure
+    - openspec/capabilities/autoresearch/spec.md — REQ-LEARN entries
 
-    TASK: Train JEPA v20 on pooled EDU-PRM selected real data. Target OOD AUC > 0.75.
-    If OOD AUC > 0.75: save model to results/jepa_v20_model.npz. Gate Exp 784.
+    TASK: Implement CPMIContrastivePairBuilder, generate hard-negative triples from the
+    multi-source corpus, write to results/experiment_798_cpmi_pairs.json.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-LEARN-052 (JEPA v20 MUST be trained exclusively on real accumulated data from
-       live GPU experiments; EDU-PRM selected corpus MUST be preferred over uniform sampling;
-       synthetic injection NOT allowed), REQ-LEARN-053 (JEPA v20 OOD AUC MUST exceed 0.75
-       to gate Tier 3.5 deployment in Exp 784; if OOD AUC <= 0.75, file RETRO-JEPA-OOD-V20),
-       SCENARIO-LEARN-096/097 to openspec/capabilities/self_learning/spec.md.
-    3. Collect training data:
-       a. Load results/fover_edu_prm_selected.json — use if available (n_selected steps).
-       b. If not available: load both fover_labeled_steps_live.json AND fover_labeled_steps_live_v2.json,
-          pool all pairs as training data (fallback).
-       c. Record: n_training_pairs, data_source (edu_prm_selected / pooled_raw / single_file).
-    4. Create python/carnot/samplers/jepa_v20.py:
-       - MultiStepJEPAv20 inherits from MultiStepJEPAv19 (import from jepa_v19.py).
-       - Override: n_steps=3, n_epochs=300 (more training), lr=5e-4 (tuned for smaller datasets).
-       - Add: class-weight balancing (weight_positive = n_negative / n_positive in BCE loss).
-         Rationale: EDU-PRM selected corpus may be imbalanced; class weighting corrects for it.
-       - Keep same TF-IDF embedding + 2-layer MLP architecture.
-    5. Train MultiStepJEPAv20 on training data with class-weight balancing.
-    6. Evaluate:
-       a. In-distribution AUC: 80/20 split of training data.
-       b. OOD AUC: GSM8K questions 800-999 (same as Exp 770 OOD test set).
-          Generate synthetic step sequences from GSM8K text.
-          Label by FOVER annotation (Z3 arithmetic check).
-    7. Compare: ood_auc (v20) vs v19 baseline=0.5667. delta = v20 - v19.
-    8. Save model if ood_auc > 0.75: results/jepa_v20_model.npz
-    9. Create scripts/experiment_783_jepa_v20_retrain.py:
-       a. ExperimentTemplate(783) + ExperimentTimeoutWatchdog(783, timeout_minutes=45).
-       b. Implement steps 3-8.
-       c. honest_verdict:
-          - "jepa_v20_ood_viable" if ood_auc > 0.75 (Tier 3.5 gate unlocked)
-          - "jepa_v20_improving" if 0.60 < ood_auc <= 0.75 (above v19 baseline)
-          - "jepa_v20_below_v19" if ood_auc <= 0.5667 (regression — investigate)
-          - "jepa_v20_insufficient_data" if n_training_pairs < 30
-       d. artifact: n_training_pairs, data_source, in_dist_auc, ood_auc,
-          ood_auc_delta_vs_v19 (= ood_auc - 0.5667), model_saved_path (str or None),
-          class_weight_used (bool), honest_verdict.
-    10. Write tests/python/test_experiment_783_jepa_v20_retrain.py with 100% coverage:
-        - test MultiStepJEPAv20 applies class-weight balancing in BCE loss.
-        - test data_source is "edu_prm_selected" when fover_edu_prm_selected.json exists.
-        - test model saved to jepa_v20_model.npz when ood_auc > 0.75.
-        - test ood_auc_delta_vs_v19 = ood_auc - 0.5667.
-        Each test traces to REQ-LEARN-052/053.
-    11. Reconcile:
-        - ops/status.md: "JEPA v20 retrain: ood_auc=X (target > 0.75, v19=0.5667).
-          ood_auc_delta=Y. Tier 3.5: VIABLE/NOT YET. honest_verdict=X."
-          If ood_auc > 0.75: "RETRO-JEPA-OOD-V19 CLOSED. Run Exp 784 for cascade."
-        - ops/changelog.md: one-line with honest_verdict.
-    12. tmpl.assert_deliverable_written() as final line.
+    2. Add to openspec/capabilities/autoresearch/spec.md:
+       - REQ-LEARN-052: CPMIContrastivePairBuilder MUST produce (prefix, positive_step,
+         hard_negative_step) triples where hard_negative is sampled from the model distribution
+         at temperature=0.9 with CPMI score in [0.15, 0.60].
+       - REQ-LEARN-053: Augmented corpus MUST have augmentation_ratio >= 2.0 (triples / input pairs).
+       - SCENARIO-LEARN-095: 80 input pairs produce >= 160 contrastive triples with CPMI scores
+         in the target range; augmentation_ratio >= 2.0.
+    3. Implement python/carnot/pipeline/cpmi_builder.py:
+       a. CPMITriple dataclass:
+          {prefix_text, positive_step, negative_step, cpmi_score, source_domain}
+       b. compute_cpmi_score(step_text: str, prefix: str, model_logprobs: dict) -> float:
+          CPMI approximation (without full model): use text similarity as proxy in CI mode.
+          In CI mode: cpmi_score = 1.0 - cosine_similarity(positive_embedding, negative_embedding)
+          Record cpmi_mode: "ci_proxy" or "model_logprob".
+       c. generate_hard_negative(step_text: str, prefix: str, n_candidates: int = 5) -> str:
+          In CI mode: perturb step by replacing numbers (+1 or -1), swapping operators (+/-),
+          or inserting a plausible carry error. Return perturbed step as hard_negative.
+       d. CPMIContrastivePairBuilder:
+          build_triples(corpus: list[dict], n_candidates: int = 5) -> list[CPMITriple]:
+            For each (step, label=incorrect) pair in corpus:
+              Generate n_candidates negatives via generate_hard_negative
+              Compute CPMI proxy score for each
+              Select candidate with CPMI in [0.15, 0.60]; if none, use closest to 0.40
+              Add CPMITriple to list
+            Also add original (step, label=correct) pairs as positive triples (cpmi_score=0.0)
+            Return all triples
+       e. Export CPMIContrastivePairBuilder, CPMITriple from carnot.pipeline.__init__
+    4. Create scripts/experiment_798_cpmi_pairs.py:
+       a. ExperimentTemplate(798) + ExperimentTimeoutWatchdog(798, timeout_minutes=30).
+       b. apply_env_autofix() FIRST.
+       c. Load corpus: try fover_labeled_steps_v21_multi.json first, fallback to
+          fover_labeled_steps_live.json (Exp 442), fallback to 50 synthetic pairs.
+       d. CPMIContrastivePairBuilder().build_triples(corpus, n_candidates=5).
+       e. Write triples to results/experiment_798_cpmi_pairs_triples.json.
+       f. Artifact fields: n_input_pairs, n_output_triples, augmentation_ratio,
+          cpmi_score_mean, cpmi_score_std, cpmi_mode, corpus_source, honest_verdict.
+       g. honest_verdict:
+          - "cpmi_augmentation_adequate" if augmentation_ratio >= 2.0 and n_output >= 40
+          - "cpmi_augmentation_partial" if ratio >= 1.5 but < 2.0
+          - "cpmi_augmentation_insufficient" if ratio < 1.5
+    5. Write tests/python/test_experiment_798_cpmi_pairs.py with 100% coverage:
+       - test CPMITriple dataclass fields present
+       - test compute_cpmi_score CI proxy uses cosine similarity fallback
+       - test generate_hard_negative produces perturbed step different from input
+       - test build_triples augmentation_ratio >= 2.0 on 10-pair synthetic corpus
+       Each test traces to REQ-LEARN-052/053.
+    6. Reconcile:
+       - ops/changelog.md: one-line entry with augmentation_ratio.
+    7. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp784-jepa-v20-cascade-deploy
-  milestone: 2026.04.60
-  deliverable: results/experiment_784_jepa_v20_cascade_deploy.json
-  title: 'Exp 784: JEPA v20 Cascade Deploy — Tier 3.5 Predictive Verification (GATED on Exp 783 OOD AUC > 0.75)'
+- id: exp799-jepa-v21-retrain-cascade
+  milestone: 2026.04.61
+  deliverable: results/experiment_799_jepa_v21_retrain.json
+  title: 'Exp 799: JEPA v21 Retrain + Cascade Deploy Gate (FR-11 mandatory, GATED on Exp 797 n_labeled>=80)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: GATED on Exp 783 (JEPA v20 retrain). Read results/experiment_783_jepa_v20_retrain.json FIRST.
-    - If honest_verdict="jepa_v20_ood_viable" (OOD AUC > 0.75): proceed with cascade deployment.
-    - If any other verdict: write artifact honest_verdict="blocked_ood_auc_below_gate" and exit.
+    CONTEXT: JEPA has failed OOD in 8 consecutive retrains (v13-v20). This is the v21 retrain
+    attempt using: (1) multi-source corpus from Exp 797 (GSM8K + MATH + HumanEval), (2) CPMI
+    contrastive triples from Exp 798, (3) LambdaRank listwise loss (v18 breakthrough),
+    (4) PROGRS outcome-conditioned centering (arXiv 2604.02341): weight each step loss by
+    final answer correctness rate.
+    Gate: OOD AUC >= 0.75 required to deploy JEPA v21 as Tier 3.5 in ThreeTierPipeline.
 
-    This is a direct retry of Exp 778 (which was blocked because Exp 770 ood_auc=0.5667 < 0.75).
-    JEPA v20 with OOD AUC > 0.75 is the minimum viable Tier 3.5 predictor. Deploying it closes
-    FR-11 Tier 3 self-learning loop: "Train a model to predict constraint violations BEFORE the
-    LLM finishes. Input: partial response → predict which constraints will be violated."
+    PREREQUISITE: Load results/experiment_797_jepa_v21_data_collection.json.
+    If n_labeled_total < 80: write blocked artifact, exit.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_783_jepa_v20_retrain.json — PRIMARY INPUT: ood_auc, model_saved_path.
-    - python/carnot/samplers/jepa_v20.py — MultiStepJEPAv20 (Exp 783 output).
-    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline; add Tier 3.5.
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline; add fast-path.
-    - _bmad/architecture.md — update Verification Pipeline Tiers table.
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - results/experiment_797_jepa_v21_data_collection.json — GATING: n_labeled_total>=80
+    - results/experiment_798_cpmi_pairs_triples.json — CPMI triples input (if present)
+    - python/carnot/models/jepa_predictor.py (or similar) — existing JEPA model
+    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline, Tier 3.5 wire-in
+    - results/fover_labeled_steps_v21_multi.json — primary training corpus
+    - results/fover_labeled_steps_live.json — fallback Exp 442 corpus
+    - results/experiment_783_jepa_v20_retrain.json — v20 failure analysis
+    - openspec/capabilities/autoresearch/spec.md — FR-11, REQ-LEARN entries
 
-    TASK: Wire MultiStepJEPAv20 as Tier 3.5. Validate: fast-path skip rate and false-negative
-    rate. Deploy if false_negative_rate < 5%.
+    TASK: Retrain JEPA v21 with multi-source + CPMI corpus, evaluate OOD AUC, deploy if gate passes.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Read results/experiment_783_jepa_v20_retrain.json.
-       If OOD AUC <= 0.75: write artifact honest_verdict="blocked_ood_auc_below_gate" and exit.
-    3. Add REQ-LEARN-054 (JEPA v20 Tier 3.5 MUST load MultiStepJEPAv20 from model_saved_path;
-       MUST apply fast-path skip when predicted_violation_prob < 0.30),
-       REQ-LEARN-055 (false_negative_rate MUST be < 0.05 for deployment; if >= 0.05, lower
-       threshold to 0.20 and recheck),
-       SCENARIO-LEARN-098/099 to openspec/capabilities/self_learning/spec.md.
-    4. Load MultiStepJEPAv20 from model_saved_path.
-    5. Wire Tier 3.5 into ThreeTierPipeline (same logic as Exp 778):
-       a. After Tier 3 Ising check: compute JEPA v20 prediction on first 50 tokens.
-       b. If predicted_violation_prob < 0.30: skip_ising=True.
-       c. If predicted_violation_prob >= 0.30: run Tier 3 Ising.
-    6. Validate on 50 synthetic GSM8K-style questions:
-       a. Compute: fast_path_skip_rate, false_negative_rate.
-       b. If false_negative_rate >= 0.05: lower threshold to 0.20 and rerun.
-    7. Create scripts/experiment_784_jepa_v20_cascade_deploy.py:
-       a. ExperimentTemplate(784) + ExperimentTimeoutWatchdog(784, timeout_minutes=30).
-       b. Implement steps 4-6.
-       c. honest_verdict:
-          - "tier35_deployed" if false_negative_rate < 0.05 AND fast_path_skip_rate > 0.10
-          - "tier35_deployed_conservative" if deployed with threshold=0.20
-          - "tier35_too_many_fn" if false_negative_rate >= 0.05 even at threshold=0.20
-          - "blocked_ood_auc_below_gate" if Exp 783 OOD AUC <= 0.75
-       d. artifact: jepa_v20_ood_auc, skip_threshold, fast_path_skip_rate,
-          false_negative_rate, tier35_deployed (bool), honest_verdict.
-    8. If tier35_deployed=True: update _bmad/architecture.md:
-       a. Add Tier 3.5 row to Verification Pipeline Tiers table.
-       b. Note JEPA v20 source: "Exp 784, OOD AUC=X."
-       c. Update "Last Reconciled" date.
-    9. Write tests/python/test_experiment_784_jepa_v20_cascade_deploy.py with 100% coverage:
-       - test Tier 3.5 skips Ising when predicted_prob < threshold.
-       - test Tier 3.5 runs Ising when predicted_prob >= threshold.
-       - test false_negative_rate = n_skipped_violations / n_skipped.
-       Each test traces to REQ-LEARN-054/055.
-    10. Reconcile:
-        - ops/status.md: "JEPA v20 Tier 3.5: tier35_deployed=X. skip_rate=Y. fn_rate=Z.
-          FR-11 Tier 3: DEPLOYED/BLOCKED."
-          If deployed: "FR-11 Tier 3 self-learning loop CLOSED (JEPA v20)."
-        - ops/changelog.md: one-line with honest_verdict.
-    11. tmpl.assert_deliverable_written() as final line.
+    2. Add to openspec/capabilities/autoresearch/spec.md:
+       - REQ-LEARN-054: JEPA v21 MUST be trained on multi-source corpus (>= 2 domains) with
+         CPMI-augmented contrastive triples (augmentation_ratio >= 2.0).
+       - REQ-LEARN-055: JEPA v21 training MUST use PROGRS outcome-conditioned centering:
+         weight each step loss by source_domain_accuracy (fraction of questions in that domain
+         where the model's final answer was correct).
+       - REQ-LEARN-056: JEPA v21 deployment gate: ood_auc >= 0.75 required to wire into
+         ThreeTierPipeline as Tier 3.5. If gate fails, write detailed failure analysis.
+       - SCENARIO-LEARN-096: Multi-source training completes; ood_auc >= 0.75; Tier 3.5 wired.
+       - SCENARIO-LEARN-097: ood_auc < 0.75; failure analysis identifies which domain
+         contributed most to OOD variance; recommendations for v22.
+    3. Create scripts/experiment_799_jepa_v21_retrain.py:
+       a. ExperimentTemplate(799) + ExperimentTimeoutWatchdog(799, timeout_minutes=60).
+       b. apply_env_autofix() FIRST.
+       c. GATE: load Exp 797 artifact. If n_labeled_total < 80 → blocked artifact, exit.
+       d. Load training corpus: merge fover_labeled_steps_v21_multi.json (primary)
+          with experiment_798_cpmi_pairs_triples.json (if present).
+          Fallback: use fover_labeled_steps_live.json + synthetic CPMI augmentation.
+       e. Compute outcome-conditioned weights per pair:
+          domain_accuracy = {gsm8k: 0.14, math500: 0.12, humaneval: 0.20}  # from live benchmarks
+          weight_i = domain_accuracy[pair.source_domain]  # upweight harder-domain pairs
+       f. Split corpus: 80% train, 20% OOD eval (use Exp 442 fover_labeled_steps_live.json as OOD).
+       g. Retrain JEPA with LambdaRank listwise loss + outcome-conditioned weighting:
+          - Load or create JEPAPredictor model (same architecture as v20)
+          - Train for 50 epochs with weighted loss
+          - Evaluate in-distribution AUC after training
+          - Evaluate OOD AUC on held-out Exp 442 steps (NOT in training set)
+       h. If OOD AUC >= 0.75:
+          - Save model to results/jepa_predictor_v21.safetensors
+          - Wire into ThreeTierPipeline: update tier35_model_path config
+          - Set tier35_deployed = True
+       i. If OOD AUC < 0.75:
+          - Failure analysis: compute per-domain AUC, identify which domain hurts OOD
+          - Recommendations for v22 (more data from low-AUC domain)
+          - tier35_deployed = False
+       j. honest_verdict:
+          - "jepa_v21_tier35_deployed" if ood_auc >= 0.75 and tier35_deployed
+          - "jepa_v21_below_gate" if ood_auc < 0.75
+          - "jepa_v21_insufficient_data" if gate blocked (n_labeled < 80)
+    4. Write tests/python/test_experiment_799_jepa_v21_retrain.py with 100% coverage:
+       - test outcome-conditioned weight computation per domain
+       - test OOD gate correctly triggers deployment when ood_auc >= 0.75
+       - test failure analysis runs when ood_auc < 0.75
+       Each test traces to REQ-LEARN-054/055/056.
+    5. Reconcile:
+       - ops/changelog.md: one-line entry with ood_auc and honest_verdict.
+       - _bmad/architecture.md: if Tier 3.5 deployed, update the cascade table.
+    6. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp785-sota-gguf-code-repair-v2
-  milestone: 2026.04.60
-  deliverable: results/experiment_785_sota_gguf_code_repair_v2.json
-  title: 'Exp 785: SOTA GGUF Code Repair v2 — 25 Problems, 90-min Budget (GPU REQUIRED, RETRO-SOTA-GGUF-TIMEOUT)'
+- id: exp800-embedding-constraint-store
+  milestone: 2026.04.61
+  deliverable: results/experiment_800_embedding_constraint_store.json
+  title: 'Exp 800: EmbeddingConstraintStore — SPO Format + Orthogonality (RETRO-CONSTRAINT-ZERO-DELTA, arXiv 2601.15313)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: RETRO-SOTA-GGUF-TIMEOUT — Exp 769 timed out after 120 min with 50 HumanEval
-    problems and Qwen3.6-35B-A3B-GGUF. Root causes: (1) 15 GiB GPU occupied before model load
-    (Exp 780 fixes this with kill_gpu_zombies()); (2) 50 problems at 3-4 min/problem = 150-200 min,
-    exceeding 120-min budget. Fix: reduce to 25 problems with 90-min hard cap (3.6 min/problem
-    including load). Fallback: if Qwen3.6-35B-A3B Q4_K_M (~20 GiB) still doesn't fit after
-    zombie kill, use Qwen3.5-7B-Instruct-GGUF Q4_K_M (~4 GiB) — known to generate valid Python.
-    This experiment MUST produce a signed_improvement result with inference_mode="live_gpu".
+    CONTEXT: RETRO-CONSTRAINT-ZERO-DELTA: Exp 788 constraint_addition_delta=0.0. Root cause
+    identified via arXiv 2601.15313 (Semantic Interference): scalar keyword-count encoding of
+    carry/sign/unit error patterns causes embedding collapse — semantically similar constraints
+    become indistinguishable. Fix: encode constraints as SPO (Subject-Predicate-Object) tuples
+    using sentence-transformer embeddings, with orthogonality regularization to prevent
+    semantic interference. The sentence-transformer (all-MiniLM-L6-v2) runs on CPU.
 
     EXISTING CODE TO READ FIRST:
-    - scripts/experiment_769_sota_gguf_code_repair.py — Exp 769 harness to adapt (not rewrite).
-    - results/experiment_769_sota_gguf_code_repair.json — baseline: timed_out=True.
-    - python/carnot/pipeline/gpu_zombie_killer.py — kill_gpu_zombies() (Exp 780 output).
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline code repair path.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/casememory.py (or similar) — existing CaseMemoryTemplateWiring
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline constraint integration
+    - results/experiment_788_constraint_addition_from_memory.json — Exp 788 failure details
+    - openspec/capabilities/verifiable-reasoning/spec.md — REQ-LEARN entries
 
-    TASK: Run 2-round iterative code repair on 25 HumanEval problems with SOTA GGUF model.
-    GPU cleared by Exp 780. Target: signed_improvement > 0 AND inference_mode="live_gpu".
+    TASK: Implement EmbeddingConstraintStore with SPO format + orthogonality regularization,
+    test retrieval AUC on 5 constraint types, export from carnot.pipeline.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-REPAIR-024 (SOTA GGUF code repair v2 MUST use kill_gpu_zombies() before model
-       load; MUST limit to 25 HumanEval problems with per-problem timeout of 3 min),
-       REQ-REPAIR-025 (if Qwen3.6-35B-A3B Q4_K_M load fails due to OOM: fallback to
-       Qwen3.5-7B-Instruct Q4_K_M; both are acceptable headline models),
-       SCENARIO-REPAIR-044/045 to openspec/capabilities/verification/spec.md.
-    3. apply_env_autofix() FIRST. Then kill_gpu_zombies(gpu_index=0).
-    4. If CARNOT_FORCE_LIVE not set: write artifact honest_verdict="blocked_no_live_gpu", exit.
-    5. Check available VRAM after zombie kill:
-       a. Run nvidia-smi. Read free_vram_mb.
-       b. If free_vram_mb >= 20000: attempt Qwen3.6-35B-A3B Q4_K_M (~20 GiB).
-       c. If free_vram_mb < 20000: use Qwen3.5-7B-Instruct Q4_K_M (~4 GiB).
-       d. Record: model_used, free_vram_mb_after_kill.
-    6. Load selected model. Smoke test (5-token generation). If fails: write blocked artifact.
-    7. Load 25 HumanEval problems (first 25 problems, same as Exp 769 for comparability).
-    8. For each problem (with per-problem 3-min ExperimentTimeoutWatchdog sub-timer):
-       Round 1: generate code, execute against test cases, record round1_pass, round1_error.
-       Round 2 (if round1_pass=False): repair prompt + generate, execute, record round2_pass.
-       Checkpoint every 5 problems.
-    9. Compute: pass@1_round1, pass@1_round2, signed_improvement, n_repaired.
-    10. Create scripts/experiment_785_sota_gguf_code_repair_v2.py:
-        a. ExperimentTemplate(785, requires_gpu=True) + ExperimentTimeoutWatchdog(785, 90min).
-        b. Implement steps 3-9.
-        c. honest_verdict:
-           - "sota_code_repair_positive" if signed_improvement > 0 AND live_gpu
-           - "sota_code_repair_zero" if signed_improvement == 0 AND live_gpu
-           - "sota_code_repair_negative" if signed_improvement < 0 (unexpected)
-           - "blocked_model_load_failed" if model load fails after zombie kill
-           - "blocked_no_live_gpu" if CARNOT_FORCE_LIVE not set
-        d. artifact: model_used, free_vram_mb_after_kill, n_problems, pass_at_1_round1,
-           pass_at_1_round2, signed_improvement, n_repaired, inference_mode, honest_verdict.
-    11. Write tests/python/test_experiment_785_sota_gguf_code_repair_v2.py with 100% coverage:
-        - test kill_gpu_zombies() called before model load.
-        - test model fallback to 7B when free_vram_mb < 20000.
-        - test signed_improvement = pass_at_1_round2 - pass_at_1_round1.
-        Each test traces to REQ-REPAIR-024/025.
-    12. Reconcile:
-        - ops/status.md: "SOTA GGUF code repair v2 (model_used): pass@1 R1=X R2=Y.
-          signed_improvement=Z. RETRO-SOTA-GGUF-TIMEOUT: CLOSED/OPEN."
-        - ops/changelog.md: one-line with honest_verdict.
-    13. tmpl.assert_deliverable_written() as final line.
+    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
+       - REQ-LEARN-057: EmbeddingConstraintStore MUST encode constraints as SPO tuples
+         {subject: str, predicate: str, object: str} using sentence-transformer embeddings.
+       - REQ-LEARN-058: EmbeddingConstraintStore MUST apply orthogonality regularization:
+         when storing a new constraint embedding e_new, project out components along all
+         existing constraint embeddings to reduce semantic interference.
+       - REQ-LEARN-059: Retrieval MUST use cosine similarity on SPO embeddings, not keyword
+         matching. A query (error context string) retrieves top-K constraint SPO tuples.
+       - SCENARIO-LEARN-098: Store 5 constraint types (carry/sign/unit/comparison/causal);
+         retrieve by error context; retrieval_auc > 0.70 across all 5 types.
+    3. Implement python/carnot/pipeline/embedding_constraint_store.py:
+       a. ConstraintSPOTuple dataclass:
+          {subject: str, predicate: str, object: str, embedding: list[float] | None,
+           source_violation_type: str, timestamp: str}
+       b. EmbeddingConstraintStore:
+          - __init__(model_name: str = "all-MiniLM-L6-v2"):
+            Try to import sentence_transformers. If unavailable (CI), use hash-based
+            384-dim dummy embedding. Record embedding_mode: "sentence_transformer" | "ci_hash"
+          - _encode(text: str) -> list[float]: encode text as embedding
+          - _orthogonalize(new_embedding: list[float]) -> list[float]:
+            For each stored embedding e_i:
+              projection = dot(new_embedding, e_i) / dot(e_i, e_i)
+              new_embedding -= projection * e_i
+            Return L2-normalized result
+          - store(spo: ConstraintSPOTuple):
+            Encode SPO text = f"{spo.subject} {spo.predicate} {spo.object}"
+            Apply _orthogonalize(embedding) before storing
+            Append to self._store list
+          - retrieve(query: str, top_k: int = 3) -> list[ConstraintSPOTuple]:
+            Encode query, compute cosine similarity to all stored embeddings
+            Return top_k by similarity
+          - retrieval_auc(queries: list[str], labels: list[str]) -> float:
+            For each query, retrieve top-1. Match if top-1 source_violation_type == label.
+            AUC = fraction of correct retrievals.
+          - from_casememory_patterns(patterns: dict) -> None:
+            Convert existing keyword patterns to SPO format:
+              carry → {subject:"arithmetic_carry", predicate:"violates", object:"carry_propagation"}
+              sign → {subject:"numeric_sign", predicate:"violates", object:"sign_preservation"}
+              unit → {subject:"unit_label", predicate:"violates", object:"unit_consistency"}
+              comparison → {subject:"comparison_direction", predicate:"violates", object:"inequality_direction"}
+              causal → {subject:"causal_entailment", predicate:"violates", object:"step_causality"}
+       c. Export ConstraintSPOTuple, EmbeddingConstraintStore from carnot.pipeline.__init__
+    4. Create scripts/experiment_800_embedding_constraint_store.py:
+       a. ExperimentTemplate(800) + ExperimentTimeoutWatchdog(800, timeout_minutes=45).
+       b. apply_env_autofix() FIRST.
+       c. Initialize EmbeddingConstraintStore. Call from_casememory_patterns() to load 5 types.
+       d. Build test queries for each constraint type (10 queries each = 50 total).
+       e. Compute retrieval_auc(queries, labels).
+       f. Compare orthogonalized vs non-orthogonalized retrieval AUC (run both).
+       g. honest_verdict:
+          - "retrieval_auc_exceeds_target" if retrieval_auc > 0.70
+          - "retrieval_auc_partial" if retrieval_auc in [0.50, 0.70]
+          - "retrieval_auc_below_chance" if retrieval_auc < 0.50
+    5. Write tests/python/test_experiment_800_embedding_constraint_store.py with 100% coverage:
+       - test ConstraintSPOTuple fields present
+       - test _orthogonalize reduces dot product between stored embeddings
+       - test retrieve returns top-K by cosine similarity
+       - test from_casememory_patterns produces 5 SPO tuples
+       - test CI hash mode produces deterministic embedding without sentence_transformers
+       Each test traces to REQ-LEARN-057/058/059.
+    6. Reconcile:
+       - ops/changelog.md: one-line with retrieval_auc and embedding_mode.
+    7. tmpl.assert_deliverable_written() as final line.
 
-    GPU SETUP: RTX 3090 GPU 0. kill_gpu_zombies() BEFORE model load.
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp786-gemma4-oom-fix-v3-vr-grid
-  milestone: 2026.04.60
-  deliverable: results/experiment_786_gemma4_oom_fix_v3_vr_grid.json
-  title: 'Exp 786: Gemma4 OOM Fix v3 + VR Threshold Grid (GPU REQUIRED, RETRO-028 Final Attempt)'
+- id: exp801-embedding-constraint-addition-benchmark
+  milestone: 2026.04.61
+  deliverable: results/experiment_801_embedding_constraint_addition.json
+  title: 'Exp 801: Embedding Constraint Addition Benchmark (RETRO-CONSTRAINT-ZERO-DELTA follow-up)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: RETRO-028 has been open since milestone .33. Three prior attempts:
-    Exp 450 (loader fix implemented), Exp 768 (.59) (loader_test_passed=False — CUDA OOM:
-    14.89 GiB allocation on 24 GiB card with 15 GiB occupied). The root cause is now clear:
-    other GPU processes occupy ~15 GiB before Gemma4 tries to allocate its 14.89 GiB,
-    leaving insufficient free VRAM. The fix (Exp 780): kill_gpu_zombies() before load.
-    With GPU cleared, 24 GiB - 14.89 GiB = 9.11 GiB free — sufficient for loader.
-    This experiment is the definitive RETRO-028 closure attempt.
+    CONTEXT: Exp 800 implemented EmbeddingConstraintStore with SPO format and orthogonality
+    regularization. This experiment wires it into VerifyRepairPipeline and benchmarks
+    whether constraint_addition_delta > 0.0 (vs Exp 788 delta=0.0 with scalar encoding).
+    Run 200 GSM8K questions (synthetic_cpu mode) across 5 sessions.
+    Tier 1 self-learning criterion: precision must increase across sessions.
+
+    PREREQUISITE: results/experiment_800_embedding_constraint_store.json must exist.
+    If retrieval_auc <= 0.50: write blocked artifact, exit (retrieval not better than chance).
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/gemma_loader.py — GemmaTransformersLoader (the working loader).
-    - python/carnot/pipeline/gpu_zombie_killer.py — kill_gpu_zombies() (Exp 780 output).
-    - results/experiment_768_gemma4_loader_fix_v2.json — Exp 768 result: loader_test_passed=False.
-    - results/experiment_708_vr_attempt_19_gemma4.json — Exp 708: n_constraints_suppressed=25.
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - results/experiment_800_embedding_constraint_store.json — GATING: retrieval_auc > 0.50
+    - python/carnot/pipeline/embedding_constraint_store.py — EmbeddingConstraintStore (Exp 800)
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.verify()
+    - python/carnot/pipeline/casememory.py — existing CaseMemoryTemplateWiring pattern
+    - results/experiment_788_constraint_addition_from_memory.json — Exp 788 baseline (delta=0.0)
+    - openspec/capabilities/verifiable-reasoning/spec.md — REQ-LEARN entries
 
-    TASK: Kill GPU zombies, load Gemma4-E4B-it, confirm loader_test_passed=True (RETRO-028 CLOSED).
-    Then run 5-threshold VR grid on 50 GSM8K questions. Target: positive_threshold_found=True.
+    TASK: Wire EmbeddingConstraintStore into VerifyRepairPipeline, run 5-session benchmark,
+    measure constraint_addition_delta vs static baseline.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-LOADER-011 (Gemma4 load attempt MUST call kill_gpu_zombies() before any load;
-       MUST record free_vram_mb_after_kill; MUST NOT attempt load if free_vram_mb < 12000),
-       SCENARIO-LOADER-011 to openspec/capabilities/verification/spec.md.
-    3. apply_env_autofix() FIRST. Then kill_gpu_zombies(gpu_index=0).
-    4. Read free_vram_mb after zombie kill.
-       If free_vram_mb < 12000: write artifact honest_verdict="blocked_insufficient_vram" and exit.
-    5. If CARNOT_FORCE_LIVE not set: write artifact honest_verdict="blocked_no_live_gpu" and exit.
-    6. Attempt GemmaTransformersLoader load:
-       loader = GemmaTransformersLoader("google/gemma-4-E4B-it")
-       test_response = loader.generate("Hello", max_new_tokens=5)
-       loader_test_passed = loader.is_valid_output(test_response)
-       Record: loader_test_passed, free_vram_mb_after_kill.
-    7. If loader_test_passed=False: write artifact honest_verdict="loader_still_broken_post_fix".
-    8. Load 50 GSM8K questions (seed=42, same as Exp 768 for comparability).
-    9. Run VR at 5 thresholds [0.10, 0.20, 0.30, 0.40, 0.50]:
-       For each threshold t:
-         a. Run VerifyRepairPipeline with Gemma4-E4B-it, abstain below t.
-         b. Record: baseline_accuracy, vr_accuracy, signed_improvement, n_abstained.
-         c. Checkpoint after each threshold.
-    10. positive_threshold_found = any(signed_improvement > 0 for t in thresholds).
-        best_threshold = argmax(signed_improvement).
-    11. Create scripts/experiment_786_gemma4_oom_fix_v3_vr_grid.py:
-        a. ExperimentTemplate(786, requires_gpu=True) + ExperimentTimeoutWatchdog(786, 120min).
-        b. Implement steps 3-10.
-        c. honest_verdict:
-           - "retro028_closed_positive_threshold" if loader_test_passed AND positive_threshold_found
-           - "retro028_closed_no_improvement" if loader_test_passed AND NOT positive_threshold_found
-           - "loader_still_broken_post_fix" if loader_test_passed=False after zombie kill
-           - "blocked_insufficient_vram" if free_vram_mb < 12000 after zombie kill
-           - "blocked_no_live_gpu" if CARNOT_FORCE_LIVE not set
-        d. artifact: free_vram_mb_after_kill, loader_test_passed, per_threshold_results,
-           best_threshold, positive_threshold_found, inference_mode, honest_verdict.
-    12. Write tests/python/test_experiment_786_gemma4_oom_fix_v3_vr_grid.py with 100% coverage:
-        - test kill_gpu_zombies called before GemmaTransformersLoader.
-        - test blocked_insufficient_vram when free_vram_mb < 12000.
-        - test positive_threshold_found = any(signed_improvement > 0).
-        Each test traces to REQ-LOADER-011.
-    13. Reconcile:
-        - ops/status.md: "Gemma4 OOM fix v3 (RETRO-028): loader_test_passed=X.
-          free_vram_after_kill=Y MB. positive_threshold_found=Z. RETRO-028: CLOSED/OPEN."
-        - ops/changelog.md: one-line with honest_verdict.
-    14. tmpl.assert_deliverable_written() as final line.
+    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
+       - REQ-LEARN-060: VerifyRepairPipeline MUST accept an optional embedding_constraint_store
+         parameter. When set, the store is queried before each verification to inject retrieved
+         constraints into the active IsingEBM constraint set.
+       - REQ-LEARN-061: Embedding constraint injection MUST be additive: retrieved constraints
+         are appended to the existing constraint set without removing static constraints.
+       - SCENARIO-LEARN-099: 5-session benchmark; precision non-decreasing; delta > 0 by session 5.
+    3. Wire EmbeddingConstraintStore into VerifyRepairPipeline.verify():
+       - Add optional param: embedding_constraint_store: EmbeddingConstraintStore | None = None
+       - If set: query store with current response text, inject top-3 retrieved constraints
+         as additional ConstraintTerm objects in the active constraint set
+       - This is additive — static constraints remain; retrieved constraints supplement them
+       - ADDITIVE: no existing behaviour changes; only new optional path added
+    4. Create scripts/experiment_801_embedding_constraint_addition.py:
+       a. ExperimentTemplate(801) + ExperimentTimeoutWatchdog(801, timeout_minutes=45).
+       b. apply_env_autofix() FIRST.
+       c. GATE: load Exp 800 artifact. If retrieval_auc <= 0.50 → blocked artifact, exit.
+       d. Initialize EmbeddingConstraintStore.from_casememory_patterns().
+       e. Run 5 sessions, 40 questions each (200 total, synthetic_cpu GSM8K):
+          Session loop:
+            baseline_accuracy = run_session(pipeline=VerifyRepairPipeline(), n_q=40)
+            dynamic_accuracy = run_session(pipeline=VerifyRepairPipeline(embedding_constraint_store=store), n_q=40)
+            constraint_addition_delta = dynamic_accuracy - baseline_accuracy
+            Record per_session_delta[session_i] = constraint_addition_delta
+       f. constraint_addition_delta_overall = mean(per_session_delta)
+       g. is_monotonic = all sessions have non-decreasing dynamic_accuracy
+       h. honest_verdict:
+          - "constraint_addition_works" if delta_overall > 0.0 and is_monotonic
+          - "constraint_addition_partial" if delta_overall > 0.0 but not monotonic
+          - "constraint_addition_zero_delta" if delta_overall == 0.0 (confirms Exp 788 failure)
+          - "retrieval_below_chance_blocked" if GATE blocks (retrieval_auc <= 0.50)
+    5. Write tests/python/test_experiment_801_embedding_constraint_addition.py with 100% coverage:
+       - test VerifyRepairPipeline.verify() accepts embedding_constraint_store param
+       - test retrieved constraints are injected additively (static constraints unchanged)
+       - test delta computation across sessions
+       Each test traces to REQ-LEARN-060/061.
+    6. Reconcile:
+       - ops/changelog.md: one-line with constraint_addition_delta and honest_verdict.
+    7. tmpl.assert_deliverable_written() as final line.
 
-    GPU SETUP: RTX 3090 GPU 0 (24 GiB). kill_gpu_zombies() BEFORE load.
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp787-sstar-energy-ranked-code-selection
-  milestone: 2026.04.60
-  deliverable: results/experiment_787_sstar_energy_ranked_code_selection.json
-  title: 'Exp 787: S* Energy-Ranked Code Selection — Pre-filter Before Execution Tests (arXiv 2502.14382)'
+- id: exp802-fr11-embedding-relay
+  milestone: 2026.04.61
+  deliverable: results/experiment_802_fr11_embedding_relay.json
+  title: 'Exp 802: FR-11 Tier 1 Relay with Embedding Constraints — Self-Learning Mandatory'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: arXiv 2502.14382 "S*: Test Time Scaling for Code Generation" (February 2026)
-    introduces hybrid test-time scaling: generate N=4 candidates in parallel, then use
-    distinguishing inputs (test cases that differentiate candidates) for tournament selection.
-    S* achieves 3B models matching GPT-4o-mini on LiveCodeBench.
-
-    Exp 773 showed Carnot has oracle_call_ratio=6.0 vs SETS (6x fewer oracle calls).
-    S* uses execution tests as the selection oracle — expensive (run code + collect output).
-    Carnot's hypothesis: energy pre-ranking can pre-filter candidates BEFORE running tests,
-    reducing test executions by 30-50%. If energy correctly identifies the best candidate
-    60%+ of the time, we save 40-60% of test suite runs.
-
-    This is a CPU-only experiment using deterministic mock LLM and synthetic code problems.
-    The goal is to measure whether energy rank correlates with code correctness rank,
-    not to show production pass@1 improvement (that requires GPU — Exp 785).
+    CONTEXT: FR-11 Tier 1 requires precision to increase monotonically across sessions
+    via online constraint learning. Previous attempts (Exps 761, 788) showed plateau at
+    session 2 or zero delta. This experiment re-runs the 10-session Tier 1 relay using
+    EmbeddingConstraintStore (Exp 800) as the learning mechanism, replacing scalar keyword
+    counts with embedding-based retrieval. Target: precision non-decreasing and delta > 0
+    by session 5 (proving EmbeddingConstraintStore fixed the plateau).
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline; extract energy computation.
-    - python/carnot/pipeline/extract.py — CodeExtractor for code energy.
-    - results/experiment_773_carnot_vs_sets.json — SETS baseline for oracle call comparison.
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - python/carnot/pipeline/embedding_constraint_store.py — EmbeddingConstraintStore (Exp 800)
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline w/ embedding_constraint_store
+    - python/carnot/pipeline/self_learning_relay.py — SelfLearningRelay (Exp 361)
+    - results/experiment_761_tier1_constraint_addition.json — plateau at session 2
+    - results/experiment_801_embedding_constraint_addition.json — delta benchmark result
+    - openspec/capabilities/autoresearch/spec.md — FR-11, REQ-LEARN entries
 
-    TASK: Implement SStarEnergyRanker. Test energy-based pre-filtering on 20 synthetic Python
-    problems (4 candidates each). Measure: energy_correct_rank_pct, tests_saved_pct.
+    TASK: Run 10-session Tier 1 relay with EmbeddingConstraintStore, measure precision
+    trajectory, determine if FR-11 Tier 1 criterion is met.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-RANK-001 (SStarEnergyRanker MUST compute Carnot energy for each code candidate;
-       MUST select the lowest-energy candidate as predicted-best before running execution tests),
-       REQ-RANK-002 (energy_correct_rank_pct = fraction of problems where energy-selected
-       candidate passes execution test; tests_saved_pct reported vs pure execution selection),
-       SCENARIO-RANK-001/002 to openspec/capabilities/verification/spec.md.
-    3. Implement python/carnot/pipeline/sstar_energy_ranker.py:
-       a. SStarConfig(n_candidates=4, energy_top_k=1).
-       b. SStarEnergyRanker(pipeline: VerifyRepairPipeline, config: SStarConfig):
-          rank_by_energy(candidates: list[str], problem_context: str) -> list[str]:
-            - Compute energy for each candidate via pipeline.compute_energy(candidate).
-            - Sort by energy (ascending = more correct).
-            - Return reordered candidate list (lowest energy first).
-          select_top_k(candidates: list[str], problem_context: str, k: int = 1) -> list[str]:
-            - Return top k candidates by energy rank.
-    4. Build synthetic test corpus: 20 Python problems with N=4 candidates each:
-       a. Problem: "def add(a, b): return ???" with 4 candidates:
-          - Correct: "return a + b"
-          - Wrong-1: "return a - b"
-          - Wrong-2: "return a * b"
-          - Wrong-3: "return a + b + 1"
-       b. Build 20 such problems covering: addition, comparison, string ops, list ops, etc.
-       c. Label: candidate 0 is always the correct candidate (for test reproducibility).
-    5. For each problem:
-       a. Compute energy for all 4 candidates.
-       b. energy_selected_idx = argmin(energy) → which candidate has lowest energy?
-       c. execution_test_passes = [execute_code(c) for c in candidates] (0=pass, 1=fail).
-       d. energy_correct_rank = (energy_selected_idx == first_passing_idx).
-    6. Compute:
-       energy_correct_rank_pct = sum(energy_correct_rank) / 20
-       tests_saved_pct = 1 - (1 / n_candidates) if energy_correct_rank_pct >= 0.60 else 0
-       (Interpretation: if energy is right 60%+ of the time, skip 3/4 tests on 60% of problems)
-    7. Create scripts/experiment_787_sstar_energy_ranked_code_selection.py:
-       a. ExperimentTemplate(787) + ExperimentTimeoutWatchdog(787, timeout_minutes=20).
-       b. Implement steps 3-6.
-       c. honest_verdict:
-          - "energy_prefilter_efficient" if energy_correct_rank_pct >= 0.60 (30%+ test savings)
-          - "energy_prefilter_marginal" if 0.40 <= energy_correct_rank_pct < 0.60
-          - "energy_prefilter_random" if energy_correct_rank_pct < 0.40 (energy uncorrelated)
-       d. artifact: n_problems, n_candidates, energy_correct_rank_pct, tests_saved_pct,
-          honest_verdict.
-    8. Write tests/python/test_experiment_787_sstar_energy_ranked_code_selection.py with 100% coverage:
-       - test SStarEnergyRanker.rank_by_energy returns candidates sorted by energy.
-       - test energy_correct_rank_pct = sum(energy_selected == correct) / n_problems.
-       - test tests_saved_pct = 0 when energy_correct_rank_pct < 0.60.
-       Each test traces to REQ-RANK-001/002.
-    9. Reconcile:
-        - ops/status.md: "S* energy ranking (arXiv 2502.14382): energy_correct_rank_pct=X.
-          tests_saved_pct=Y. honest_verdict=Z."
-        - ops/changelog.md: one-line with honest_verdict.
-    10. tmpl.assert_deliverable_written() as final line.
+    2. Add to openspec/capabilities/autoresearch/spec.md:
+       - REQ-LEARN-062: FR-11 Tier 1 relay MUST use EmbeddingConstraintStore as the
+         primary constraint learning mechanism (replacing CaseMemoryTemplateWiring scalar encoding).
+       - SCENARIO-LEARN-100: 10-session relay; precision non-decreasing across all sessions;
+         delta > 0 by session 5; tier1_relay_works=True.
+    3. Create scripts/experiment_802_fr11_embedding_relay.py:
+       a. ExperimentTemplate(802) + ExperimentTimeoutWatchdog(802, timeout_minutes=30).
+       b. apply_env_autofix() FIRST.
+       c. Initialize EmbeddingConstraintStore.from_casememory_patterns().
+       d. Run 10 sessions, 50 synthetic GSM8K questions each:
+          precision_per_session = []
+          For session i in 1..10:
+            Run 50 questions with VerifyRepairPipeline(embedding_constraint_store=store)
+            Record tp, fp, precision = tp / (tp + fp) if (tp+fp)>0 else 1.0
+            precision_per_session.append(precision)
+            After each session: update store with violation events from this session
+       e. Compute:
+          is_monotonically_non_decreasing = all(precision_per_session[i] <= precision_per_session[i+1])
+          delta_s1_to_s10 = precision_per_session[9] - precision_per_session[0]
+          delta_positive_by_s5 = precision_per_session[4] > precision_per_session[0]
+       f. honest_verdict:
+          - "tier1_relay_works" if is_monotonically_non_decreasing AND delta_positive_by_s5
+          - "tier1_partial_improvement" if delta_positive_by_s5 but not monotonic
+          - "tier1_plateau_persists" if precision_per_session[4] == precision_per_session[0]
+    4. Write tests/python/test_experiment_802_fr11_embedding_relay.py with 100% coverage:
+       - test precision computation handles tp=fp=0 case (returns 1.0)
+       - test monotonic check correctly identifies non-decreasing sequence
+       - test honest_verdict logic for all branches
+       Each test traces to REQ-LEARN-062.
+    5. Reconcile:
+       - ops/changelog.md: one-line with honest_verdict and delta_s1_to_s10.
+       - _bmad/traceability.md: update FR-11 Tier 1 implementation status.
+    6. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp788-constraint-addition-from-memory
-  milestone: 2026.04.60
-  deliverable: results/experiment_788_constraint_addition_from_memory.json
-  title: 'Exp 788: Constraint Addition from Memory — Tier 2 Upgrade (research-program.md Priority #1)'
+- id: exp803-hf-publish-v2
+  milestone: 2026.04.61
+  deliverable: results/experiment_803_hf_publish_v2.json
+  title: 'Exp 803: HuggingFace Publish v2 — SOPS Auth Spec (RETRO-HF-AUTH)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: research-program.md Priority #1: "Rebuild constraint extraction for real models.
-    The fix: constraint ADDITION from memory patterns, not just weight changes. When memory
-    detects 'arithmetic carry errors are common,' ADD a carry-check constraint — don't just
-    upweight existing ones. Tier 2 memory (Exp 135) has the pattern data; wire it into
-    constraint generation, not just weight adjustment."
-
-    Exp 134 proved that precision-based REWEIGHTING shows 0% improvement: fixed=adaptive
-    across 500 questions. The reason: changing weights on existing constraints doesn't add
-    new detection capability when the constraint topology is wrong. The correct mechanism is
-    to generate NEW IsingEBM coupling rows from accumulated error patterns.
-
-    Research alignment: arXiv 2601.17223 (Beyond Outcome Verification) and arXiv 2604.14853
-    (Adaptive Test-Time Compute) both validate constraint-set adaptation as the correct approach.
+    CONTEXT: RETRO-HF-AUTH: HF_TOKEN not in conductor environment; n_models_published=0
+    in Exp 777 (.59). Resolution: add SOPS-encrypted HF_TOKEN to secrets store. This
+    experiment creates the SOPS configuration spec, writes models/hf_upload_commands.sh,
+    and if HF_TOKEN is available in the current environment, publishes 3 model READMEs.
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/self_learning_relay.py — SelfLearningRelay; session memory access.
-    - python/carnot/models/ising.py — IsingEBM; how to add new coupling rows.
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline; where new constraints apply.
-    - python/carnot/pipeline/extract.py — ArithmeticExtractor, constraint types defined.
-    - results/experiment_134_* (if present) — Exp 134 reweighting baseline (0% improvement).
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - results/experiment_330_hf_publish.json (or similar) — previous HF publish attempt
+    - python/carnot/pipeline/verify_repair.py — version constants
+    - openspec/capabilities/pipeline/spec.md — REQ-PUBLISH entries
 
-    TASK: Implement ConstraintGenerator that reads session memory error patterns and synthesizes
-    new IsingEBM coupling rows. Test: 50 GSM8K questions with dynamic vs static constraints.
+    TASK: Create SOPS-encrypted HF_TOKEN config spec, write hf_upload_commands.sh,
+    attempt authenticated publish if token available.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-LEARN-056 (ConstraintGenerator MUST read session_memory error_pattern_counts;
-       MUST synthesize new IsingEBM coupling rows for patterns with count >= PATTERN_THRESHOLD=3),
-       REQ-LEARN-057 (dynamic constraint pipeline MUST report n_constraints_added and compare
-       net_improvement vs static-constraint baseline on same 50-question set),
-       SCENARIO-LEARN-100/101 to openspec/capabilities/self_learning/spec.md.
-    3. Implement python/carnot/pipeline/constraint_generator.py:
-       a. ErrorPattern(pattern_type: str, count: int, example_step: str):
-          pattern_type in (carry_error, sign_error, unit_error, comparison_error, overflow_error)
-       b. ConstraintGenerator(ising_model: IsingEBM, threshold: int = 3):
-          synthesize_from_memory(error_patterns: list[ErrorPattern]) -> list[CouplingRow]:
-            - For each error_pattern with count >= threshold:
-              * "carry_error" → add coupling (carry_bit_var, result_bit_var, J=-1.0)
-              * "sign_error" → add coupling (sign_var, magnitude_var, J=-1.0)
-              * "unit_error" → add coupling (unit1_var, unit2_var, J=1.0)  [inconsistency]
-              * "comparison_error" → add coupling (lhs_var, rhs_var, J=-1.0)
-              * "overflow_error" → add coupling (overflow_var, capacity_var, J=1.0)
-            - Return list of CouplingRow(var1, var2, J_value) to inject into IsingEBM.
-          inject_couplings(coupling_rows: list[CouplingRow]) -> None:
-            - Add coupling_rows to IsingEBM's J matrix (extend, do not replace).
-    4. Run 50 GSM8K questions with TWO pipelines:
-       a. Static baseline: VerifyRepairPipeline with standard fixed IsingEBM.
-       b. Dynamic adaptive: VerifyRepairPipeline + ConstraintGenerator:
-          - After each batch of 10 questions: read session_memory error patterns.
-          - If any pattern count >= 3: synthesize new couplings, inject into IsingEBM.
-          - Continue with enriched IsingEBM.
-       c. For each pipeline: record baseline_accuracy, vr_accuracy, net_improvement.
-    5. Compute:
-       n_constraints_added (dynamic pipeline total)
-       net_improvement_dynamic = dynamic vr_accuracy - dynamic baseline_accuracy
-       net_improvement_static = static vr_accuracy - static baseline_accuracy
-       constraint_addition_delta = net_improvement_dynamic - net_improvement_static
-    6. Create scripts/experiment_788_constraint_addition_from_memory.py:
-       a. ExperimentTemplate(788) + ExperimentTimeoutWatchdog(788, timeout_minutes=45).
-       b. Implement steps 4-5 (use synthetic GSM8K-style questions if live GPU unavailable).
-       c. honest_verdict:
-          - "constraint_addition_positive" if constraint_addition_delta > 0
-          - "constraint_addition_zero" if constraint_addition_delta == 0
-          - "constraint_addition_negative" if constraint_addition_delta < 0 (regression)
-          - "insufficient_patterns" if no patterns reached threshold in 50 questions
-       d. artifact: n_constraints_added, net_improvement_dynamic, net_improvement_static,
-          constraint_addition_delta, n_patterns_above_threshold, honest_verdict.
-    7. Write tests/python/test_experiment_788_constraint_addition_from_memory.py with 100% coverage:
-       - test ConstraintGenerator.synthesize_from_memory returns coupling for carry_error count>=3.
-       - test ConstraintGenerator.synthesize_from_memory returns [] when all counts < threshold.
-       - test inject_couplings extends IsingEBM.J matrix without replacing existing couplings.
-       Each test traces to REQ-LEARN-056/057.
-    8. Reconcile:
-        - ops/status.md: "Constraint addition from memory (research-program.md #1):
-          n_constraints_added=X. constraint_addition_delta=Y. honest_verdict=Z."
-        - ops/changelog.md: one-line with honest_verdict.
-    9. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp789-ebm-calibration-alignment
-  milestone: 2026.04.60
-  deliverable: results/experiment_789_ebm_calibration_alignment.json
-  title: 'Exp 789: EBM Calibration Alignment — Energy as Probability Signal (arXiv 2603.06604 + 2602.11364)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Two arxiv papers motivate this experiment:
-    1. arXiv 2603.06604 "Know When You're Wrong" (March 2026): shows supervised fine-tuning
-       yields well-calibrated confidence; RL induces overconfidence. Key finding: probability
-       != correctness — calibration gap is 15-25pp across tasks. Carnot's energy should be
-       a calibration target: low energy = high P(correct).
-    2. arXiv 2602.11364 "Energy of Falsehood" (February 2026): diffusion model reconstruction
-       energy detects hallucinations with AUROC 0.725 on FEVER. The "reconstruction energy"
-       (how badly the diffusion model reconstructs a claim) is a proxy for correctness.
-
-    Current Carnot pipeline uses energy as a DISCRIMINATIVE signal (is this violated or not?).
-    But energy should also be a CALIBRATED signal: energy decile should predict accuracy decile.
-    If calibrated, energy enables probabilistic reasoning: "this response has 80% P(correct)."
-    If uncalibrated, energy is just a binary detector, not a reasoning tool.
-
-    This experiment measures calibration and applies isotonic regression to fix it.
-    Uses only CPU and pre-collected data (no GPU required).
-
-    EXISTING CODE TO READ FIRST:
-    - results/fover_labeled_steps_live.json — 57 real labeled CoT steps.
-    - results/fover_labeled_steps_live_v2.json — Exp 781 new pairs (load if exists).
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline; energy computation.
-    - python/carnot/models/ising.py — IsingEBM energy function.
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-
-    TASK: Compute Carnot energy on pooled FoVer labeled steps. Measure calibration (ECE).
-    Apply isotonic regression. Compare: ECE before/after calibration. Report calibration curve.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-CALIB-001 (EBMCalibrator MUST compute Expected Calibration Error (ECE) from
-       energy-binned accuracy; MUST use 10 equal-frequency bins; MUST apply isotonic regression
-       to learn energy → P(correct) mapping), REQ-CALIB-002 (calibration curve MUST be saved
-       to results/ebm_calibration_curve.json; ECE_before and ECE_after MUST be reported),
-       SCENARIO-CALIB-001/002 to openspec/capabilities/verification/spec.md.
-    3. Implement python/carnot/pipeline/ebm_calibrator.py:
-       a. CalibrationBin(energy_low, energy_high, accuracy, n_samples, bin_confidence):
-          - bin_confidence = mean(sigmoid(-energy)) for samples in bin
-       b. EBMCalibrator(n_bins=10):
-          compute_ece(energies: list[float], labels: list[int]) -> float:
-            - Sort by energy. Split into n_bins equal-frequency bins.
-            - For each bin: accuracy = mean(labels). confidence = mean(sigmoid(-energy)).
-            - ECE = sum(|accuracy - confidence| * bin_size) / total_samples.
-          fit_isotonic(energies: list[float], labels: list[int]) -> IsotonicRegression:
-            - Fit sklearn.isotonic.IsotonicRegression(y_min=0, y_max=1) on (-energy, label).
-            - Returns fitted calibrator.
-          save_curve(bins: list[CalibrationBin], path: str) -> None:
-            - Write JSON with calibration curve data (for plotting).
-    4. Load pooled labeled steps:
-       a. Load fover_labeled_steps_live.json (57 steps).
-       b. Load fover_labeled_steps_live_v2.json (Exp 781) if available.
-       c. Pool all (step_text, label) pairs.
-    5. Compute Carnot energy for each step:
-       - Use VerifyRepairPipeline or IsingEBM directly.
-       - If pipeline not available for text steps: use TF-IDF + IsingEBM energy proxy.
-       - Record energy values.
-    6. Compute ECE_before = EBMCalibrator.compute_ece(energies, labels).
-    7. Fit isotonic regression: iso_reg = calibrator.fit_isotonic(energies, labels).
-    8. Apply calibration: calibrated_probs = iso_reg.predict(-energies).
-    9. Compute ECE_after from calibrated_probs vs labels.
-       ece_improvement = ECE_before - ECE_after (positive = better after calibration).
-    10. Save calibration curve to results/ebm_calibration_curve.json.
-    11. Create scripts/experiment_789_ebm_calibration_alignment.py:
-        a. ExperimentTemplate(789) + ExperimentTimeoutWatchdog(789, timeout_minutes=20).
-        b. Implement steps 4-10.
-        c. honest_verdict:
-           - "energy_well_calibrated" if ECE_before <= 0.10 (good calibration already)
-           - "calibration_improved" if ece_improvement >= 0.05 (significant improvement)
-           - "calibration_marginal" if 0 < ece_improvement < 0.05 (minor improvement)
-           - "calibration_no_improvement" if ece_improvement <= 0 (isotonic doesn't help)
-           - "insufficient_data" if n_total_steps < 20
-        d. artifact: n_total_steps, ECE_before, ECE_after, ece_improvement,
-           calibration_curve_saved (bool), honest_verdict.
-    12. Write tests/python/test_experiment_789_ebm_calibration_alignment.py with 100% coverage:
-        - test EBMCalibrator.compute_ece returns 0.0 for perfectly calibrated energies.
-        - test calibration bins: equal-frequency binning produces n_bins equal-size bins.
-        - test ece_improvement = ECE_before - ECE_after.
-        Each test traces to REQ-CALIB-001/002.
-    13. Reconcile:
-        - ops/status.md: "EBM calibration alignment (arXiv 2603.06604): ECE_before=X,
-          ECE_after=Y, ece_improvement=Z. Calibration curve saved. honest_verdict=W."
-        - ops/changelog.md: one-line with honest_verdict.
-    14. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp790-npu-unblock-v9
-  milestone: 2026.04.60
-  deliverable: results/experiment_790_npu_unblock_v9.json
-  title: 'Exp 790: AMD XDNA NPU Unblock v9 — GitHub Releases mlir-aie Wheel (Option A from RETRO-NPU-v8)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: AMD XDNA NPU unblock has been attempted 8 consecutive milestones (Exps 292, 303,
-    314, 335, 435, 714). All attempts blocked by same root cause: mlir-aie not on PyPI AND
-    VitisAI requires compiled-in onnxruntime. RETRO-NPU-v8 (Exp 714) identified Option A:
-    download mlir-aie wheel from AMD GitHub Releases (not PyPI):
-    `pip install https://github.com/Xilinx/mlir-aie/releases/latest/download/mlir_aie-*.whl`
-    This experiment implements Option A. If it fails: tries Option B (Ryzen AI SDK installer
-    from ryzenai.docs.amd.com). Binary verdict: NPU GEMM benchmark runs or doesn't.
-    The NPU (AMD XDNA on Ryzen AI 9 HX 370) is the free hardware path to Tier 3 JEPA predictor
-    inference without occupying the RTX 3090.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_714_npu_iron_unblock.json — v8 baseline: npu_iron_install_failed.
-    - research-hardware-wishlist.md — NPU Status section with install options.
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-
-    TASK: Attempt Option A (GitHub Releases wheel), then Option B if A fails. Report install
-    verdict. If successful: run NPU GEMM benchmark vs CPU baseline.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-INFRA-056 (NPU unblock MUST attempt Option A first; MUST try Option B if
-       Option A fails; MUST NOT attempt more than 2 automated install strategies per experiment),
-       SCENARIO-INFRA-065 to openspec/capabilities/pipeline/spec.md.
-    3. Read results/experiment_714_npu_iron_unblock.json. Record v8_verdict.
-    4. Option A — GitHub Releases wheel:
-       a. Enumerate available releases:
-          `curl -s https://api.github.com/repos/Xilinx/mlir-aie/releases/latest`
-          Parse: release tag, wheel URLs.
-       b. If wheel URL found:
-          `pip install <wheel_url>` in .venv (subprocess, timeout=300s).
-          Try: `import mlir_aie; print("import OK")`.
-          Record: option_a_success (bool).
-       c. If no wheel URL found or pip fails: option_a_success=False.
-    5. If option_a_success=False — Option B — Ryzen AI Software:
-       a. Check if installer exists: `ls ~/Downloads/RyzenAI*.run` or similar.
-       b. Check if AMD account cookies available (automated install may not work without auth).
-       c. Record: option_b_attempted (bool), option_b_blocker (str or None).
-       d. option_b_success = False if not downloadable without auth.
-    6. Check VitisAI path (independent of options A/B):
-       a. Check if ninja is installed: `which ninja`.
-       b. Check if openblas is installed: `ldconfig -p | grep openblas`.
-       c. Record: ninja_found (bool), openblas_found (bool).
-       d. If BOTH found: attempt VitisAI source build (30-min timeout).
-    7. NPU GEMM benchmark (if any install succeeded):
-       a. Run 16x16 GEMM on NPU (use mlir-aie kernel or onnxruntime-vitisai).
-       b. Compare: npu_gemm_us vs cpu_gemm_us (from Exp 714: ~117 µs CPU).
-       c. Record: npu_gemm_runs (bool), npu_speedup_vs_cpu.
-    8. Create scripts/experiment_790_npu_unblock_v9.py:
-       a. ExperimentTemplate(790) + ExperimentTimeoutWatchdog(790, timeout_minutes=45).
-       b. Implement steps 4-7.
-       c. honest_verdict:
-          - "npu_gemm_running" if npu_gemm_runs=True (breakthrough!)
-          - "option_a_installed_no_benchmark" if mlir-aie installed but GEMM not tested
-          - "all_options_exhausted_ninja_missing" if options A/B failed AND ninja_found=False
-          - "all_options_exhausted_no_auth" if options A/B failed due to auth requirements
-          - "new_blocker_discovered" if new failure mode not in previous retros
-       d. artifact: v8_verdict, option_a_success, option_b_attempted, option_b_blocker,
-          ninja_found, openblas_found, npu_gemm_runs, npu_speedup_vs_cpu, honest_verdict.
-    9. Write tests/python/test_experiment_790_npu_unblock_v9.py with 100% coverage:
-       - test option_a_success=False propagates to option_b_attempted=True.
-       - test honest_verdict="npu_gemm_running" only when npu_gemm_runs=True.
-       - test ninja_found and openblas_found read from system subprocess correctly.
-       Each test traces to REQ-INFRA-056.
-    10. Reconcile:
-        - ops/status.md: "NPU unblock v9 (RETRO-NPU-v9): option_a_success=X,
-          option_b_attempted=Y. npu_gemm_runs=Z. honest_verdict=W."
-        - research-hardware-wishlist.md: update NPU Status section with v9 findings.
-        - ops/changelog.md: one-line with honest_verdict.
-    11. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp791-kv260-n32-reduced-synthesis
-  milestone: 2026.04.60
-  deliverable: results/experiment_791_kv260_n32_reduced_synthesis.json
-  title: 'Exp 791: KV260 N=32 Reduced Design — iCE40 Open-Source Synthesis (nextpnr-ice40)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exp 776 (.59) attempted iCE40 P&R on the existing ising_sampler_v2.v (N=64 default):
-    honest_verdict="pnr_failed_timing". The N=64 design uses ~2821 LUTs. iCE40 HX8K has 7680 LUTs.
-    The issue: after Yosys synth_ice40 (which re-maps for iCE40 LUTS), the design may have had
-    critical path timing violations at 12 MHz iCE40 default clock. Fix: reduce to N=32 spins with
-    MAX_DEGREE=8 — this halves the coupling matrix routing, directly reducing critical path length.
-    N=32 uses ~600-800 LUTs (estimated) leaving 90% LUT headroom on HX8K for routing slack.
-
-    Full Vivado flow (ops/status.md .59 session) showed N=64 fits at 48.5% LUT (115K/237K).
-    But that's for ZynqUltraScale+, not iCE40. iCE40 has simpler LUT primitives — the synth
-    maps less efficiently. N=32 with checkerboard partitioning should map cleanly.
-
-    EXISTING CODE TO READ FIRST:
-    - hardware/kv260/ising_sampler_v2.v — current RTL (N=64 default, parametric N_SPINS).
-    - hardware/kv260/synth_yosys_ice40.ys — Exp 776 synth script (may need modification).
-    - results/experiment_776_kv260_nextpnr_synthesis.json — Exp 776 baseline: pnr_failed_timing.
-    - results/experiment_758_yosys_synthesis.json — Exp 758 Yosys baseline: 2821 LUTs at N=64.
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-
-    TASK: Synthesize ising_sampler_v2.v with N_SPINS=32, MAX_DEGREE=8 for iCE40 HX8K via
-    Yosys + nextpnr-ice40. Target: pnr_success_ice40=True AND bitstream_generated=True.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-HW-043 (N=32 iCE40 synthesis MUST use Yosys synth_ice40 + nextpnr-ice40;
-       MUST override N_SPINS=32 and MAX_DEGREE=8 as synthesis parameters; MUST report
-       LUT utilization after synth and PNR timing result),
-       SCENARIO-HW-043 to openspec/capabilities/verifiable-reasoning/spec.md.
-    3. Read results/experiment_776_kv260_nextpnr_synthesis.json. If not found: proceed with N=32 design.
-    4. Check tools available:
-       a. `which nextpnr-ice40` — check if iCE40 P&R available.
-       b. `python -c "import yowasp_nextpnr_ice40"` — check Python wrapper.
-       c. `which yosys` — check Yosys.
-       d. `which icepack` — check bitstream packer.
-       Record: tools_available (dict).
-    5. Read hardware/kv260/ising_sampler_v2.v. Verify it supports parametric N_SPINS.
-       If not parametric: create hardware/kv260/ising_sampler_n32.v with N_SPINS=32 hardcoded.
-    6. Write hardware/kv260/synth_yosys_ice40_n32.ys:
-       read_verilog hardware/kv260/ising_sampler_v2.v
-       chparam -set N_SPINS 32 -set MAX_DEGREE 8 ising_sampler_v2
-       synth_ice40 -top ising_sampler_v2 -flatten
-       stat  (to get LUT count before PNR)
-       write_json hardware/kv260/ising_sampler_n32_ice40.json
-    7. Run Yosys synthesis:
-       `yosys hardware/kv260/synth_yosys_ice40_n32.ys`
-       Parse output: lut_count_n32, synthesis_ok (bool).
-    8. If synthesis_ok AND nextpnr_ice40_found:
-       Run nextpnr-ice40:
-       `nextpnr-ice40 --hx8k --json hardware/kv260/ising_sampler_n32_ice40.json
-         --pcf /dev/null --asc hardware/kv260/ising_sampler_n32.asc --freq 8`
-       (use 8 MHz clock — conservative for iCE40 routing with dense design)
-       Parse output: pnr_success_ice40 (bool), critical_path_ns, lut_utilization_pct.
-    9. If pnr_success_ice40:
-       Run icepack: `icepack hardware/kv260/ising_sampler_n32.asc hardware/kv260/ising_sampler_n32.bin`
-       Record: bitstream_generated (bool), bitstream_path.
-    10. Create scripts/experiment_791_kv260_n32_reduced_synthesis.py:
-        a. ExperimentTemplate(791) + ExperimentTimeoutWatchdog(791, timeout_minutes=45).
-        b. Implement steps 4-9.
-        c. honest_verdict:
-           - "bitstream_generated_n32_ice40" if bitstream_generated=True
-           - "pnr_successful_no_bitstream" if pnr_success_ice40 AND NOT bitstream_generated
-           - "pnr_success_lut_fit" if pnr_success_ice40=True AND lut_utilization_pct < 90
-           - "pnr_failed_timing_n32" if synthesis_ok AND pnr_success_ice40=False
-           - "tools_unavailable" if nextpnr-ice40 not found
-        d. artifact: lut_count_n32, synthesis_ok, pnr_success_ice40, critical_path_ns,
-           lut_utilization_pct, bitstream_generated, bitstream_path, honest_verdict.
-    11. Write tests/python/test_experiment_791_kv260_n32_reduced_synthesis.py with 100% coverage:
-        - test synth script sets N_SPINS=32, MAX_DEGREE=8 parameters.
-        - test honest_verdict="bitstream_generated_n32_ice40" when bitstream_generated=True.
-        - test tools_unavailable verdict when nextpnr-ice40 not found.
-        Each test traces to REQ-HW-043.
-    12. Reconcile:
-        - ops/status.md: "KV260 N=32 iCE40 synthesis: honest_verdict=X. lut_count=Y.
-          bitstream_generated=Z. FPGA path: COMPLETE/PARTIAL."
-        - research-hardware-wishlist.md: update KV260 Synthesis Status section.
-        - ops/changelog.md: one-line with honest_verdict.
-    13. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp792-milestone-retro
-  milestone: 2026.04.60
-  deliverable: results/operational_retro_2026_04_60.json
-  title: 'Exp 792: Milestone 2026.04.60 Operational Retrospective'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: All experiments in milestone 2026.04.60 (Exps 780-791) have run. This is
-    the final retrospective. Read ALL result files listed below, compute milestone metrics,
-    identify wins and failures, open/close RETROs, write the standard operational retro.
-
-    MILESTONE TITLE: JEPA v20 Data Surge + SOTA GGUF Confirmed + Constraint Memory to Constraint Generation
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_780_preflight_v12_gpu_zombie_killer.json
-    - results/experiment_781_jepa_v20_data_collection.json
-    - results/experiment_782_edu_prm_step_selection.json
-    - results/experiment_783_jepa_v20_retrain.json
-    - results/experiment_784_jepa_v20_cascade_deploy.json
-    - results/experiment_785_sota_gguf_code_repair_v2.json
-    - results/experiment_786_gemma4_oom_fix_v3_vr_grid.json
-    - results/experiment_787_sstar_energy_ranked_code_selection.json
-    - results/experiment_788_constraint_addition_from_memory.json
-    - results/experiment_789_ebm_calibration_alignment.json
-    - results/experiment_790_npu_unblock_v9.json
-    - results/experiment_791_kv260_n32_reduced_synthesis.json
-    - results/operational_retro_2026_04_59.json (previous milestone baseline)
-    - ops/metrics.md (wall time series)
-    - scripts/experiment_template.py — ExperimentTemplate.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-
-    TASK: Write milestone 2026.04.60 operational retrospective.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Load ALL result files listed above. For any missing result (not_run): note explicitly.
-    3. Compute milestone metrics:
-       a. n_experiments = count of Exps 780-791 that ran.
-       b. total_wall_time_min = sum of duration_s/60 across all experiments.
-       c. mean_min_per_experiment = total_wall_time_min / n_experiments.
-       d. Compare to .59 baseline (wall_time from operational_retro_2026_04_59.json).
-       e. wall_time_delta = total_wall_time_min - prev_milestone_wall_time_min.
-       f. improvement = (wall_time_delta < 0).
-    4. Evaluate success criteria:
-       - gpu_zombie_fix_deployed: from Exp 780 (setup_gpu_wired=True).
-       - jepa_v20_data_collected: from Exp 781 (n_labeled >= 80).
-       - edu_prm_selection_works: from Exp 782 (uncertainty_selected_pct >= 0.30).
-       - jepa_v20_ood_viable: from Exp 783 (ood_auc > 0.75).
-       - tier35_deployed: from Exp 784 (tier35_deployed=True or blocked_gate).
-       - sota_code_repair_positive: from Exp 785 (signed_improvement > 0 AND live_gpu).
-       - gemma4_retro028_closed: from Exp 786 (loader_test_passed=True).
-       - sstar_energy_prefilter_tested: from Exp 787 (energy_correct_rank_pct measured).
-       - constraint_addition_tested: from Exp 788 (constraint_addition_delta measured).
-       - ebm_calibration_measured: from Exp 789 (ECE_before and ECE_after reported).
-       - npu_new_option_tried: from Exp 790 (option_a_success or option_b_attempted).
-       - kv260_n32_bitstream: from Exp 791 (pnr_success_ice40=True).
-    5. Identify open and closed RETROs:
-       - RETRO-028: CLOSED if Exp 786 loader_test_passed=True. OPEN if still failing.
-       - RETRO-JEPA-OOD-V19: CLOSED if Exp 783 ood_auc > 0.75. OPEN otherwise (→ V20).
-       - RETRO-SOTA-GGUF-TIMEOUT: CLOSED if Exp 785 signed_improvement measured. OPEN if timeout.
-       - RETRO-HF-AUTH: stays OPEN (no HF auth experiment in this milestone — defer).
-       - Any new RETROs from experiments that failed their stated success criterion.
-    6. Write results/operational_retro_2026_04_60.json with schema=carnot.operational_retro.v35:
-       - experiment_range: "780-792"
-       - milestone: "2026.04.60"
-       - n_experiments, total_wall_time_min, mean_min_per_experiment
-       - wall_time_delta, improvement (bool)
-       - success_criteria_met (dict of criterion → bool)
-       - retros_closed (list), retros_opened (list), retros_still_open (list)
-       - slowest_5 (list of (exp_id, duration_min))
-       - headline_results (dict of criterion → result_value)
-       - honest_verdict: one of:
-         "wall_time_Nth_consecutive_improvement/regression + key_wins_summary"
-         Include: jepa_v20_status, sota_gguf_result, constraint_gen_result, retro_028_status.
-    7. Create scripts/experiment_792_milestone_retro_2026_04_60.py:
-       a. ExperimentTemplate(792) + ExperimentTimeoutWatchdog(792, timeout_minutes=30).
-       b. Implement steps 2-6.
-       c. tmpl.assert_deliverable_written() as final line.
-    8. Write tests/python/test_experiment_792_milestone_retro.py with 100% coverage:
-       - test all 12 success criteria are checked from loaded artifacts.
-       - test retros_closed includes RETRO-028 when Exp 786 loader_test_passed=True.
-       - test honest_verdict includes direction word (improvement or regression).
-       Each test traces to REQ-METRICS-010.
-    9. Reconcile:
-       - ops/status.md: FULL milestone status update.
-         Write new section "Session 2026-04-23 — Milestone 2026.04.60 COMPLETE" at top.
-         Summarize: what's working, what's next, open RETROs. DO NOT remove existing content.
+    2. Add to openspec/capabilities/pipeline/spec.md:
+       - REQ-PUBLISH-005: HuggingFace authentication token MUST be stored via SOPS encryption
+         (see CLAUDE.md security requirements: all secrets must use SOPS at rest).
+       - REQ-PUBLISH-006: models/hf_upload_commands.sh MUST provide authenticated push commands
+         for all three model tiers (Ising, KAN, EORM) with huggingface-cli.
+       - SCENARIO-PUBLISH-009: HF_TOKEN present; huggingface-cli login succeeds; model README
+         updated with current benchmark results.
+    3. Write docs/sops-hf-token-setup.md (instruction doc, not a secret file):
+       a. Step 1: Install sops (pacman -S sops)
+       b. Step 2: Create age key: age-keygen -o ~/.config/sops/age/keys.txt
+       c. Step 3: Create .sops.yaml in project root with age public key
+       d. Step 4: Create secrets/hf_token.yaml with HF_TOKEN value
+       e. Step 5: Encrypt: sops -e -i secrets/hf_token.yaml
+       f. Step 6: In conductor session: eval $(sops -d secrets/hf_token.yaml | grep HF_TOKEN)
+    4. Write models/hf_upload_commands.sh:
+       #!/bin/bash
+       # Source SOPS secrets before running
+       # eval $(sops -d secrets/hf_token.yaml | grep HF_TOKEN)
+       huggingface-cli login --token $HF_TOKEN
+       # Update Ising tier README
+       huggingface-cli upload Carnot-EBM/carnot-ising-sampler-v1 README.md
+       # Update KAN tier README
+       huggingface-cli upload Carnot-EBM/carnot-kan-energy-tier README.md
+       # Update EORM model card
+       huggingface-cli upload Carnot-EBM/carnot-eorm-55m README.md
+    5. Create scripts/experiment_803_hf_publish_v2.py:
+       a. ExperimentTemplate(803) + ExperimentTimeoutWatchdog(803, timeout_minutes=30).
+       b. apply_env_autofix() FIRST.
+       c. Check HF_TOKEN availability: os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
+       d. Check huggingface-cli installed: subprocess.run(["huggingface-cli", "--version"], ...)
+       e. If token available AND cli present: attempt auth check:
+          subprocess.run(["huggingface-cli", "whoami"], ..., timeout=30)
+       f. If authenticated: attempt to update 1 model README (Carnot-EBM/carnot-ising-sampler-v1)
+          with current experiment results summary.
+       g. honest_verdict:
+          - "hf_models_published" if authenticated AND at least 1 README updated
+          - "hf_auth_documented" if SOPS spec written but not authenticated
+          - "hf_cli_not_installed" if huggingface-cli missing
+    6. Write tests/python/test_experiment_803_hf_publish_v2.py with 100% coverage:
+       - test HF_TOKEN check reads both env var names
+       - test honest_verdict maps correctly to auth state
+       Each test traces to REQ-PUBLISH-005/006.
+    7. Reconcile:
        - ops/changelog.md: one-line with honest_verdict.
-       - _bmad/traceability.md: update any rows that changed status in .60.
-    10. tmpl.assert_deliverable_written() as final line.
+    8. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp804-kv260-open-source-synthesis
+  milestone: 2026.04.61
+  deliverable: results/experiment_804_kv260_synthesis_attempt.json
+  title: 'Exp 804: KV260 Open-Source RTL Synthesis (RETRO-KV260-TOOLS-UNAVAILABLE, GATED on Exp 794)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 791 failed: yosys/nextpnr-ice40/icepack not installed. Exp 794 installs
+    the toolchain. This experiment, gated on Exp 794, attempts RTL synthesis of the Ising
+    sampler using yosys (open-source) instead of Vivado (not installed). Target: synthesize
+    hardware/kv260/ising_sampler_v3.v at N=32 first, then N=64 if LUT budget allows.
+    This is the first open-source FPGA synthesis attempt in the project.
+
+    PREREQUISITE: Load results/experiment_794_fpga_toolchain_install.json.
+    If honest_verdict not in ["tools_installed_synthesis_clean", "tools_installed_synthesis_failed"]:
+    write blocked artifact, exit.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_794_fpga_toolchain_install.json — GATING: tools must be installed
+    - hardware/kv260/ising_sampler_v3.v — target RTL (v3 with EMA h_ema register)
+    - hardware/kv260/synth_ising.tcl — existing Vivado TCL (for reference, not for yosys)
+    - results/experiment_791_kv260_n32_reduced_synthesis.json — previous failure
+    - research-hardware-wishlist.md — KV260 synthesis status
+
+    TASK: Synthesize ising_sampler_v3.v at N=32 using yosys, report LUT utilization and
+    any synthesis errors, write results/experiment_804_kv260_synthesis_attempt.json.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
+       - REQ-HW-035: Open-source synthesis of Ising sampler MUST use yosys with synth_ice40
+         target (iCE40 HX8K, ~7.7K LUTs). N=32 is the minimum viable target.
+       - SCENARIO-HW-033: yosys synthesizes ising_sampler_v3.v at N=32; lut_count < 5000;
+         no synthesis errors; honest_verdict=synthesis_clean.
+    3. Create scripts/experiment_804_kv260_synthesis_attempt.py:
+       a. ExperimentTemplate(804) + ExperimentTimeoutWatchdog(804, timeout_minutes=45).
+       b. apply_env_autofix() FIRST.
+       c. GATE: load Exp 794 artifact. If tools_installed=False → blocked artifact, exit.
+       d. Prepare N=32 synthesis:
+          - Read hardware/kv260/ising_sampler_v3.v
+          - Create /tmp/ising_n32.v: copy with parameters overridden to N_SPINS=32, MAX_DEGREE=8
+          - Write yosys script /tmp/synth_n32.ys:
+              read_verilog /tmp/ising_n32.v
+              synth_ice40 -top ising_sampler_v3 -json /tmp/ising_n32.json
+              stat
+          - Run: yosys /tmp/synth_n32.ys (timeout=120s)
+          - Parse stdout for LUT count: grep "SB_LUT4" from yosys output
+          - Parse for errors
+       e. If N=32 clean, attempt N=64:
+          - Create /tmp/ising_n64.v with N_SPINS=64, MAX_DEGREE=16
+          - Run same yosys flow
+          - If LUT > 6000: note as over_budget
+       f. honest_verdict:
+          - "synthesis_clean_n32" if N=32 synthesizes without errors AND lut_count < 5000
+          - "synthesis_clean_n32_n64" if both clean
+          - "synthesis_errors_n32" if yosys reports errors on N=32
+          - "tools_not_installed" if GATE blocks
+       g. Update research-hardware-wishlist.md with synthesis result.
+    4. Write tests/python/test_experiment_804_kv260_synthesis_attempt.py with 100% coverage:
+       - test yosys output parsing extracts LUT count correctly
+       - test gate blocks when Exp 794 shows tools not installed
+       Each test traces to REQ-HW-035.
+    5. Reconcile:
+       - research-hardware-wishlist.md: update KV260 Synthesis Status section.
+       - ops/changelog.md: one-line with honest_verdict and lut_count.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp805-milestone-retro
+  milestone: 2026.04.61
+  deliverable: results/operational_retro_2026_04_61.json
+  title: 'Exp 805: Milestone 2026.04.61 Operational Retrospective'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Milestone 2026.04.61 targeted: RETRO-028 closure (Gemma4 OOM), SOTA GGUF code
+    repair positive result, JEPA v21 OOD AUC >= 0.75 with multi-source corpus + CPMI
+    augmentation, EmbeddingConstraintStore to fix constraint addition zero-delta, FR-11 Tier 1
+    relay with embedding constraints, FPGA toolchain install + synthesis attempt.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_793_manifest_full_scope_audit.json
+    - results/experiment_794_fpga_toolchain_install.json
+    - results/experiment_795_gemma4_oom_fix_v4.json
+    - results/experiment_796_sota_gguf_code_repair_v3.json
+    - results/experiment_797_jepa_v21_data_collection.json
+    - results/experiment_798_cpmi_pairs.json
+    - results/experiment_799_jepa_v21_retrain.json
+    - results/experiment_800_embedding_constraint_store.json
+    - results/experiment_801_embedding_constraint_addition.json
+    - results/experiment_802_fr11_embedding_relay.json
+    - results/experiment_803_hf_publish_v2.json
+    - results/experiment_804_kv260_synthesis_attempt.json
+    - results/operational_retro_2026_04_60.json
+    - scripts/experiment_template.py — ExperimentTemplate
+
+    TASK: Write milestone 2026.04.61 operational retrospective.
+
+    CONCRETE STEPS:
+    1. Load all 12 experiment result JSONs. For each: read honest_verdict and key metrics.
+    2. Evaluate success criteria:
+       - retro_028_closed: Exp 795 honest_verdict == "retro_028_closed"
+       - sota_code_repair_positive: Exp 796 honest_verdict == "code_repair_positive"
+       - jepa_v21_data_adequate: Exp 797 n_labeled_total >= 80
+       - cpmi_augmentation_works: Exp 798 augmentation_ratio >= 2.0
+       - jepa_v21_ood_viable: Exp 799 ood_auc >= 0.75
+       - embedding_retrieval_works: Exp 800 retrieval_auc > 0.70
+       - constraint_addition_positive: Exp 801 constraint_addition_delta > 0.0
+       - tier1_relay_works: Exp 802 honest_verdict == "tier1_relay_works"
+       - fpga_tools_installed: Exp 794 tools_installed == True
+       - kv260_synthesis_attempted: Exp 804 honest_verdict != "tools_not_installed"
+    3. Compute: criteria_met_count, criteria_total = 10.
+    4. Identify: slowest experiment, fastest experiment, any timeouts.
+    5. List new RETROs opened (any experiment with honest_verdict indicating a new block).
+    6. List RETROs closed from .60 that were resolved this milestone.
+    7. Write improvements_suggested list for .62.
+    8. Compute estimated_time_savings_pct from suggested improvements.
+    9. Create scripts/experiment_805_milestone_retro.py:
+       a. ExperimentTemplate(805) + ExperimentTimeoutWatchdog(805, timeout_minutes=30).
+       b. apply_env_autofix() FIRST.
+       c. Load all 12 result JSONs (graceful missing-file handling).
+       d. Build MilestoneRetro2026_04_61 dataclass with all fields.
+       e. Write results/operational_retro_2026_04_61.json with schema=carnot.operational_retro.v36.
+    10. Write tests with 100% coverage tracing to existing REQ-* entries.
+    11. Reconcile:
+        - ops/status.md: full milestone summary section.
+        - ops/changelog.md: one-line with criteria_met_count and key honest_verdicts.
+        - _bmad/traceability.md: update any FR implementation status changes.
+    12. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
