@@ -570,6 +570,10 @@ from carnot.pipeline.embedding_constraint_store import (  # noqa: E402
     ConstraintSPOTuple,
     EmbeddingConstraintStore,
 )
+from carnot.pipeline.ising_constraint_injector import (  # noqa: E402
+    ConstraintInjectionResult,
+    IsingConstraintInjector,
+)
 from carnot.pipeline.jepa_wiring_guard import (  # noqa: E402
     JepaWiringCheckResult,
     check_cpmi_wiring,
@@ -948,6 +952,8 @@ __all__ = [
     "generate_hard_negative",
     "ConstraintSPOTuple",
     "EmbeddingConstraintStore",
+    "ConstraintInjectionResult",
+    "IsingConstraintInjector",
     "JepaWiringCheckResult",
     "check_cpmi_wiring",
     "VRAMLoopEvictionResult",

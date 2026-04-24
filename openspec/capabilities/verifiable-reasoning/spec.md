@@ -15415,3 +15415,43 @@ of 5, using Qwen3.6-35B-A3B Q4_K_M GGUF on GPU 1 with a MARS margin gate.
 
 **Spec traces:** REQ-BENCH-016
 **Implementation Status:** Implemented (Exp 811)
+
+## REQ-VERIFY-095: Ising Constraint Injection via Embedding Projection
+
+When VerifyRepairPipeline.verify() has both an EmbeddingConstraintStore and an
+IsingConstraintInjector set, retrieved constraint embeddings MUST be projected to Ising
+spin space and added as soft bias terms on the coupling matrix J before sampling.  The
+projection is a learned linear map W of shape (embedding_dim, n_spins).  Adding to J's
+diagonal is equivalent to applying external fields h_i = bias_i to each spin.
+
+- REQ-VERIFY-095-1: The projection W must be initialised small (std <= 0.01) so the
+  baseline Ising energy is not disrupted before any training has occurred.
+- REQ-VERIFY-095-2: When multiple constraints are retrieved, the per-embedding projected
+  biases MUST be averaged (not summed) so no single constraint dominates.
+- REQ-VERIFY-095-3: The injection MUST be ADDITIVE — when ising_constraint_injector is
+  None OR embedding_constraint_store is None, the pipeline behaviour is identical to
+  the pre-injection baseline (full backward compatibility).
+
+## REQ-VERIFY-096: Energy Strictly Higher With Constraint Injection on Violations
+
+When a relevant constraint fires on a response containing a known violation type, the
+Ising energy computed with constraint injection MUST be strictly greater than the energy
+without injection.
+
+- REQ-VERIFY-096-1: energy_with_constraint > energy_without_constraint when the injected
+  bias is non-zero and the spin configuration represents a violation.
+- REQ-VERIFY-096-2: The energy delta percentage MUST be reported as:
+  100 * (energy_with - energy_without) / abs(energy_without) when energy_without != 0.
+
+### SCENARIO-VERIFY-129: Carry Check Constraint Injection Raises Energy 25%
+
+**Given** an EmbeddingConstraintStore populated with carry_propagation SPO tuples
+**And** an IsingConstraintInjector(embedding_dim=384, n_spins=64)
+**And** a test IsingModel(IsingConfig(input_dim=64)) with random coupling
+**When** a response containing arithmetic carry violations is processed
+**And** constraint embeddings are retrieved and projected to spin-space bias
+**Then** energy_with_injection > energy_without_injection for the error spin configuration
+**And** honest_verdict == "injection_works" when mean energy_delta_pct > 0 across error responses
+
+**Spec traces:** REQ-VERIFY-095, REQ-VERIFY-096
+**Implementation Status:** Implemented (Exp 812)

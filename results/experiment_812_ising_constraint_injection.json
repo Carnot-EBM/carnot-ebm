@@ -1,0 +1,123 @@
+{
+  "experiment": 812,
+  "title": "Ising Constraint Injection \u2014 wire EmbeddingConstraintStore into IsingEBM coupling matrix",
+  "run_date": "20260424",
+  "started_at": "2026-04-24T19:11:53Z",
+  "finished_at": "2026-04-24T19:11:56Z",
+  "duration_s": 2.371,
+  "status": "success",
+  "honest_verdict": "injection_negative_delta",
+  "embedding_dim": 384,
+  "n_spins": 64,
+  "n_stored_constraints": 5,
+  "n_error_responses": 5,
+  "n_clean_responses": 5,
+  "mean_energy_delta_pct_errors": -0.2884,
+  "mean_energy_delta_pct_clean": -0.2884,
+  "per_trial_error": [
+    {
+      "response_snippet": "The sum 255 + 1 = 255 because carry does not propagate beyon...",
+      "n_constraints_retrieved": 3,
+      "energy_without_injection": -9.957936,
+      "energy_with_injection": -9.986056,
+      "energy_delta_pct": -0.2824,
+      "honest_verdict": "injection_negative_delta"
+    },
+    {
+      "response_snippet": "Adding 127 + 1 gives 127 since there is no carry out from th...",
+      "n_constraints_retrieved": 3,
+      "energy_without_injection": -9.957936,
+      "energy_with_injection": -9.986056,
+      "energy_delta_pct": -0.2824,
+      "honest_verdict": "injection_negative_delta"
+    },
+    {
+      "response_snippet": "Result: 0xFF + 0x01 = 0xFF, carry is lost so the answer stay...",
+      "n_constraints_retrieved": 3,
+      "energy_without_injection": -9.957936,
+      "energy_with_injection": -9.986056,
+      "energy_delta_pct": -0.2824,
+      "honest_verdict": "injection_negative_delta"
+    },
+    {
+      "response_snippet": "Binary addition: 1111 + 0001 = 1111 because the carry is dro...",
+      "n_constraints_retrieved": 3,
+      "energy_without_injection": -9.957936,
+      "energy_with_injection": -9.98754,
+      "energy_delta_pct": -0.2973,
+      "honest_verdict": "injection_negative_delta"
+    },
+    {
+      "response_snippet": "Overflow: 11111111 + 00000001 = 11111111, carry propagation ...",
+      "n_constraints_retrieved": 3,
+      "energy_without_injection": -9.957936,
+      "energy_with_injection": -9.98754,
+      "energy_delta_pct": -0.2973,
+      "honest_verdict": "injection_negative_delta"
+    }
+  ],
+  "per_trial_clean": [
+    {
+      "response_snippet": "The sum 255 + 1 = 256, with carry propagating to the next hi...",
+      "n_constraints_retrieved": 3,
+      "energy_without_injection": -9.957936,
+      "energy_with_injection": -9.986056,
+      "energy_delta_pct": -0.2824,
+      "honest_verdict": "injection_negative_delta"
+    },
+    {
+      "response_snippet": "Adding 127 + 1 gives 128 because the carry flips bit 7 to 1 ...",
+      "n_constraints_retrieved": 3,
+      "energy_without_injection": -9.957936,
+      "energy_with_injection": -9.986056,
+      "energy_delta_pct": -0.2824,
+      "honest_verdict": "injection_negative_delta"
+    },
+    {
+      "response_snippet": "Binary: 1111 + 0001 = 10000, carry propagates correctly to p...",
+      "n_constraints_retrieved": 3,
+      "energy_without_injection": -9.957936,
+      "energy_with_injection": -9.98754,
+      "energy_delta_pct": -0.2973,
+      "honest_verdict": "injection_negative_delta"
+    },
+    {
+      "response_snippet": "0xFF + 0x01 = 0x100 (256 in decimal), carry out from bit 7.",
+      "n_constraints_retrieved": 3,
+      "energy_without_injection": -9.957936,
+      "energy_with_injection": -9.986056,
+      "energy_delta_pct": -0.2824,
+      "honest_verdict": "injection_negative_delta"
+    },
+    {
+      "response_snippet": "Correct arithmetic: 11111111 + 00000001 = 100000000 (carry f...",
+      "n_constraints_retrieved": 3,
+      "energy_without_injection": -9.957936,
+      "energy_with_injection": -9.98754,
+      "energy_delta_pct": -0.2973,
+      "honest_verdict": "injection_negative_delta"
+    }
+  ],
+  "retro_constraint_zero_delta_closed": false,
+  "schema": [
+    "duration_s",
+    "embedding_dim",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "mean_energy_delta_pct_clean",
+    "mean_energy_delta_pct_errors",
+    "n_clean_responses",
+    "n_error_responses",
+    "n_spins",
+    "n_stored_constraints",
+    "per_trial_clean",
+    "per_trial_error",
+    "retro_constraint_zero_delta_closed",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "invariant_violations": []
+}
