@@ -912,3 +912,22 @@ STEP 4: Artifact shows **"No new REQ-*/SCENARIO-*"** → skip _bmad/traceability
 2026-04-24 14:30:59,120 [conductor] RESEARCH STEP: Exp 811: SOTA GGUF Code Repair v4 — 50q in 10 Batches (GATED on Exp 810, GPU REQUIRED)
 2026-04-24 14:30:59,120 [conductor] ============================================================
 2026-04-24 14:30:59,138 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 14:30:59,195 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 14:30:59,195 [conductor] Running test suite (smart subset)...
+2026-04-24 14:31:04,943 [conductor] Pre-check: 81 passed, 3 warnings in 2.85s
+2026-04-24 14:31:05,045 [conductor] Injected 30 symbol signatures from 5 files (AST outlines)
+2026-04-24 14:31:05,046 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. Summary:
+
+- **REQ-BENCH-016** and **SCENARIO-BENCH-035** added to `openspec/capabilities/verifiable-reasoning/spec.md`
+- **`scripts/experiment_811_sota_gguf_code_repair_v4.py`** created — 50 HumanEval problems in 10 batches of 5, gates on Exp 810, uses `evict_vram_with_loop()`, MARS margin gate, atomic checkpoints
+- **`tests/python/test_experiment_811_sota_gguf_code_repair_v4.py`** created — 10 tests all passing, tracing to REQ-BENCH-016
+- **`results/experiment_811_sota_gguf_code_repair_v4.json`** written — `status=blocked`, `honest_verdict=blocked_model_load_failed` (GGUF cache module not installed; VRAM eviction and gate both passed)
+2026-04-24 14:35:08,783 [conductor] Claude Code completed (exit 0)
+2026-04-24 14:35:08,802 [conductor] Changes:
+logs/conductor.log                                 | 12 +++++++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 31 ++++++++++++++++++++++
+ 2 files changed, 43 insertions(+)
+2026-04-24 14:35:08,827 [conductor] DOGFOOD: Verification complete (total: 487 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 14:35:08,827 [conductor] Running test suite (smart subset)...
+2026-04-24 14:35:14,522 [conductor] Post-check: 81 passed, 3 warnings in 2.92s
