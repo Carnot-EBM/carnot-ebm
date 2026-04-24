@@ -2701,3 +2701,4 @@ python/ |
 | 2026-04-24 16:39 UTC | Exp 808: JEPA v22 CPMI Corpus Rewire + Retrain (RE | OK | 81 passed, 3 warnings in 3.59s |
 | 2026-04-24 17:20 UTC | Exp 809: JEPA v22 RA-PRM OOD Enhancement (arXiv 25 | OK | 81 passed, 3 warnings in 2.81s |
 | 2026-04-24 18:00 UTC | Exp 810: Gemma4 OOM Fix v5 — nvidia-smi Loop Gate  | OK | 81 passed, 3 warnings in 2.97s |
+| 2026-04-24 18:37 UTC | Exp 811: SOTA GGUF Code Repair v4 — 50q in 10 Batc | OK | 81 passed, 3 warnings in 2.92s |
