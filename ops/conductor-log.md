@@ -2680,3 +2680,4 @@ python/ |
 | 2026-04-24 03:03 UTC | Plan milestone 2026.04.61 | OK | 13 tasks proposed |
 | 2026-04-24 03:08 UTC | Milestone 2026.04.61 activated | OK | 13 tasks queued |
 | 2026-04-24 03:25 UTC | Exp 793: Manifest Full-Scope Enforcement Audit (RE | OK | 81 passed, 3 warnings in 8.79s |
+| 2026-04-24 05:42 UTC | Exp 794: FPGA Toolchain Install + Verify (RETRO-KV | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 3 warnings in 4.05s |
