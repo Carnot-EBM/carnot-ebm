@@ -181,3 +181,23 @@ logs/conductor.log                         | 13 +++++++++
 2026-04-24 04:34:45,928 [conductor] RESEARCH STEP: Exp 798: CPMI Contrastive Pair Builder (arXiv 2604.10660) — Hard Negative Mining for JEPA v21
 2026-04-24 04:34:45,928 [conductor] ============================================================
 2026-04-24 04:34:45,946 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 04:34:46,001 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 04:34:46,001 [conductor] Running test suite (smart subset)...
+2026-04-24 04:34:51,591 [conductor] Pre-check: 81 passed, 3 warnings in 2.83s
+2026-04-24 04:34:51,702 [conductor] Injected 40 symbol signatures from 2 files (AST outlines)
+2026-04-24 04:34:51,702 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Deliverable written and all 14 tests pass. Summary:
+
+- `python/carnot/pipeline/cpmi_builder.py` — `CPMITriple`, `compute_cpmi_score`, `generate_hard_negative`, `CPMIContrastivePairBuilder`
+- `scripts/experiment_798_cpmi_pairs.py` — experiment runner
+- `tests/python/test_experiment_798_cpmi_pairs.py` — 14 tests, all pass
+- `results/experiment_798_cpmi_pairs.json` — deliverable: 120 incorrect pairs → 300 triples, augmentation_ratio=2.5, honest_verdict=`cpmi_augmentation_adequate`
+2026-04-24 04:40:16,071 [conductor] Claude Code completed (exit 0)
+2026-04-24 04:40:16,082 [conductor] Changes:
+logs/conductor.log                         | 12 ++++++++++++
+ openspec/capabilities/autoresearch/spec.md | 17 +++++++++++++++++
+ python/carnot/pipeline/__init__.py         | 10 ++++++++++
+ 3 files changed, 39 insertions(+)
+2026-04-24 04:40:16,108 [conductor] DOGFOOD: Verification complete (total: 474 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 04:40:16,108 [conductor] Running test suite (smart subset)...
+2026-04-24 04:40:21,678 [conductor] Post-check: 81 passed, 3 warnings in 2.83s
