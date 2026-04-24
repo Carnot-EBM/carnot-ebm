@@ -320,3 +320,24 @@ Done. Appended Exp 800 to changelog with honest_verdict verbatim. Status: ✅ Co
 2026-04-24 06:38:25,487 [conductor] RESEARCH STEP: Exp 801: Embedding Constraint Addition Benchmark (RETRO-CONSTRAINT-ZERO-DELTA follow-up)
 2026-04-24 06:38:25,487 [conductor] ============================================================
 2026-04-24 06:38:25,504 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 06:38:25,565 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 06:38:25,565 [conductor] Running test suite (smart subset)...
+2026-04-24 06:38:31,231 [conductor] Pre-check: 81 passed, 3 warnings in 2.87s
+2026-04-24 06:38:31,379 [conductor] Injected 85 symbol signatures from 3 files (AST outlines)
+2026-04-24 06:38:31,379 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 11 tests pass. The deliverable is written and stable.
+
+**Summary:**
+- `results/experiment_801_embedding_constraint_addition.json` written with `honest_verdict="constraint_addition_zero_delta"` and all required schema fields
+- `python/carnot/pipeline/verify_repair.py` updated: `verify()` now accepts `embedding_constraint_store: EmbeddingConstraintStore | None = None` and additively injects top-3 retrieved SPO constraints
+- `openspec/capabilities/verifiable-reasoning/spec.md` extended with REQ-LEARN-060, REQ-LEARN-061, SCENARIO-LEARN-099
+- `tests/python/test_experiment_801_embedding_constraint_addition.py` — 11 tests all passing, tracing to REQ-LEARN-060/061
+2026-04-24 06:44:05,683 [conductor] Claude Code completed (exit 0)
+2026-04-24 06:44:05,703 [conductor] Changes:
+logs/conductor.log                                 | 13 ++++++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 28 +++++++++++++++++
+ python/carnot/pipeline/verify_repair.py            | 36 +++++++++++++++++++++-
+ 3 files changed, 76 insertions(+), 1 deletion(-)
+2026-04-24 06:44:05,730 [conductor] DOGFOOD: Verification complete (total: 477 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 06:44:05,730 [conductor] Running test suite (smart subset)...
+2026-04-24 06:44:11,906 [conductor] Post-check: 145 passed, 3 warnings in 3.38s

@@ -15256,3 +15256,31 @@ Retrieval MUST use cosine similarity on SPO embeddings, not keyword matching. A 
 
 **Spec traces:** REQ-LEARN-057, REQ-LEARN-058, REQ-LEARN-059
 **Implementation Status:** Implemented (Exp 800)
+
+## REQ-LEARN-060: EmbeddingConstraintStore Integration into VerifyRepairPipeline
+
+VerifyRepairPipeline.verify() MUST accept an optional `embedding_constraint_store` parameter. When set, the store is queried before constraint evaluation to inject retrieved constraints into the active constraint set.
+
+- REQ-LEARN-060-1: The parameter MUST be typed `EmbeddingConstraintStore | None` with default `None`.
+- REQ-LEARN-060-2: When set, `embedding_constraint_store.retrieve(response, top_k=3)` MUST be called with the current response text before `_evaluate_constraints()`.
+- REQ-LEARN-060-3: Each retrieved ConstraintSPOTuple MUST be converted to a ConstraintResult and appended to the active constraint list.
+- REQ-LEARN-060-4: When `embedding_constraint_store` is None, verify() behavior MUST be identical to prior versions (full backward compatibility).
+
+## REQ-LEARN-061: Additive Constraint Injection
+
+Embedding constraint injection MUST be additive: retrieved constraints are appended to the existing constraint set without removing static constraints.
+
+- REQ-LEARN-061-1: Retrieved constraints MUST be appended (not prepended) to preserve static constraint priority in `_evaluate_constraints()`.
+- REQ-LEARN-061-2: The `constraint_type` of injected ConstraintResult objects MUST be prefixed with `"embedding_retrieved_"` to distinguish them from statically extracted constraints.
+- REQ-LEARN-061-3: The metadata of each injected ConstraintResult MUST record `source`, `spo_subject`, `spo_predicate`, `spo_object`, and `source_violation_type` fields for traceability.
+
+### SCENARIO-LEARN-099: 5-Session Benchmark — Precision Non-Decreasing, Delta > 0 by Session 5
+
+**Given** an EmbeddingConstraintStore bootstrapped with 5 constraint types via from_casememory_patterns()
+**And** a VerifyRepairPipeline with embedding_constraint_store wired in
+**When** 5 sessions of 40 synthetic GSM8K questions each are run (200 total)
+**Then** dynamic_accuracy >= baseline_accuracy in at least one session (constraint_addition_delta >= 0)
+**And** constraint_addition_delta_overall is reported with honest_verdict distinguishing "constraint_addition_works", "constraint_addition_partial", "constraint_addition_zero_delta".
+
+**Spec traces:** REQ-LEARN-060, REQ-LEARN-061
+**Implementation Status:** Implemented (Exp 801)
