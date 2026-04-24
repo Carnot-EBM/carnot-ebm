@@ -15158,4 +15158,62 @@ load — its absence makes the pipeline incomplete even when synthesis and PnR s
 `tools_installed_synthesis_clean`.
 
 **Spec traces:** REQ-HW-032, REQ-HW-033, REQ-HW-034
+
+---
+
+## REQ-BENCH-060: Batched SOTA GGUF Code Repair with Per-Batch Checkpoints (Exp 796)
+
+SOTA GGUF code repair MUST use batched execution (max 5 problems per batch) with
+AtomicResultWriter checkpoint after each batch to prevent total data loss on timeout.
+
+Rationale: Exp 769 and Exp 785 both lost all data on timeout because they ran serially
+without intermediate checkpoints.  A 5-problem batch completes in under 18 min, well
+within a 90-min budget even on the slowest hardware configuration.
+
+- REQ-BENCH-060-1: Each batch of at most 5 problems MUST be checkpointed atomically
+  after completion via AtomicResultWriter before the next batch starts.
+- REQ-BENCH-060-2: An ExperimentTimeoutWatchdog at 90 min MUST be active for the full
+  run; any partial result accumulated before timeout is still surfaced with
+  `honest_verdict="partial_N_of_25"`.
+- REQ-BENCH-060-3: If the Exp 795 prerequisite gate (retro_028_closed=True) is not met,
+  the experiment MUST write a blocked artifact with `honest_verdict="gated_retro028_not_closed"`
+  and exit without loading any model.
+
+**Implementation Status:** Implemented (Exp 796)
+
+## REQ-BENCH-061: MARS Margin Gate Before Oracle Execution (Exp 796)
+
+The MARS margin gate (arXiv 2601.15498) MUST be applied before test oracle execution.
+If token_margin > margin_threshold, the oracle call is skipped and the output is counted
+as clean, reducing total oracle_calls.
+
+Rationale: Test oracle calls are expensive (subprocess spawn, untrusted code execution,
+timeout wait).  The MARS paper shows that high-margin outputs are correct with high
+probability, enabling safe oracle skipping without meaningful accuracy loss.
+
+- REQ-BENCH-061-1: compute_logit_margin MUST return top1_logit - top2_logit.
+- REQ-BENCH-061-2: When logits are unavailable (CI mode), skip_oracle MUST be False
+  and honest_verdict MUST be "ci_logits_unavailable".
+- REQ-BENCH-061-3: oracle_calls_saved MUST be recorded in every batch checkpoint and
+  the final artifact.
+
+**Implementation Status:** Implemented (Exp 796)
+
+### SCENARIO-BENCH-084: 5-Problem Batch Completes Under 18 Min with Checkpoint
+
+**Given** a batch of 5 HumanEval problems and a live Qwen3.6-35B GGUF on GPU 1
+**When** Exp 796 runs one batch through baseline + repair with MARS gate
+**Then** the batch completes in under 18 min, an atomic checkpoint is written,
+and the next batch starts immediately; total wall time for 25 problems is under 90 min.
+
+**Spec traces:** REQ-BENCH-060
+
+### SCENARIO-BENCH-085: High-Margin Output Skips Oracle, Saves Oracle Calls
+
+**Given** a generated code snippet whose logit margin exceeds the configured threshold
+**When** MARSMarginGate.decide(logits) is called
+**Then** skip_oracle=True, honest_verdict="margin_skip", and oracle_calls_saved increments
+by 1 for that batch; the output is counted as clean without subprocess execution.
+
+**Spec traces:** REQ-BENCH-061
 **Implementation Status:** Pending (Exp 794)
