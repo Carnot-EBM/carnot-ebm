@@ -204,16 +204,36 @@ scripts for human review. Without a review loop, the guards become
 silent suppressors that drop useful work; with one, they become actual
 defences with a falsification path.
 
+**Critical discipline: separate production incidents from adversarial
+scans.** The Garak red-team proposal
+([`garak-red-team-integration.md`](./garak-red-team-integration.md))
+generates synthetic adversarial prompts that will also trigger these guards.
+Mixing Garak-triggered incidents with real production incidents would inflate
+the incident corpus, bias threshold recalibration toward Garak's probe
+phrasing, and mislead us about how battle-tested the classifier actually is
+on real attacks. Every guard invocation MUST record
+`incident_origin ∈ {production, garak, unit_test, manual_probe}` and the
+default review-loop filter is `incident_origin == production`. Only
+production incidents are eligible as classifier-retrain corpus. Garak
+incidents are evaluation input only.
+
 **Acceptance gates:**
 
 1. The review script lists every logged incident with: timestamp,
    classifier that fired, energy at fire, first 200 chars of blocked
-   content, path to full raw content.
+   content, path to full raw content, and `incident_origin`.
 2. Incidents can be labelled `true_positive` / `false_positive` /
-   `uncertain`; labelled false-positives become training corpus for the
-   next KAN revision.
-3. A weekly retrospective JSON aggregates: `incidents_this_week`,
-   `tp_rate`, `fp_rate`, `novel_attack_classes_seen`.
+   `uncertain`. Labelled false-positives with `incident_origin==production`
+   become training corpus for the next KAN revision; Garak incidents
+   never do.
+3. A weekly retrospective JSON aggregates two separate columns:
+   `production_incidents_this_week` and `adversarial_incidents_this_week`,
+   with `tp_rate` / `fp_rate` / `novel_attack_classes_seen` computed only
+   over the production column.
+4. An invariant check (`check_no_adversarial_in_training_corpus` in
+   `python/carnot/invariants.py`) fails loud at
+   `assert_deliverable_written()` if any training-corpus builder has
+   ingested a Garak-origin incident.
 
 ## Why this should go ahead of the public safety gate
 
