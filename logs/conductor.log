@@ -527,3 +527,25 @@ logs/conductor.log | 6 ++++++
 2026-04-24 09:12:30,984 [conductor] DOGFOOD: Verification complete (total: 481 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 09:12:30,984 [conductor] Running test suite (smart subset)...
 2026-04-24 09:12:37,061 [conductor] Post-check: 81 passed, 3 warnings in 3.09s
+2026-04-24 09:12:37,084 [conductor] Committed: [conductor] Exp 805: Milestone 2026.04.61 Operational Retrospective
+2026-04-24 09:12:38,893 [conductor] Pushed to origin
+2026-04-24 09:12:38,893 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 09:12:38,893 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+**STEP 2 ✅ Complete** — Appended Exp 805 to ops/changelog.md with honest_verdict VERBATIM.
+
+**STEP 3 — Skip** — Exp 805 is a retrospective analysis, not a new capability. (ops/status.md not updated)
+
+**STEP 4 — Skip** — No new REQ-*/SCENARIO-* introduced by this experiment. (_bmad/traceability.md not updated)
+
+**Summary:**
+- Status label: **⚠️ Research Finding** (verdict contains "partial", regression on wall_time, cascade of unresolved RETROs, 3/10 criteria met)
+- Key findings logged:
+  - CPMI wiring miss (Exp 798→799 augmentation_ratio=1.0, not 2.5)
+  - JEPA v21 OOD AUC=0.2444 (all-time low, regression vs v20)
+  - Constraint delta=0 (synthetic stub, retrieval works at AUC=0.92)
+  - FPGA tools unavailable second consecutive milestone
+  - 7 actionable improvements (3 CRITICAL, 2 process)
+  - HF publish success (803)
+
+Done. Minimal honest docs applied.
+2026-04-24 09:13:49,822 [conductor] Claude Code completed (exit 0)
