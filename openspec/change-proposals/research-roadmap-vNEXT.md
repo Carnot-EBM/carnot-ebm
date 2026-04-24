@@ -1,83 +1,115 @@
-# Research Roadmap — Milestone 2026.04.61
+# Research Roadmap — Milestone 2026.04.63
 
-**Title:** JEPA v21 Multi-Source Real Data + Embedding Constraint Retrieval + Gemma4 Unblocked
+**Title:** Injection Field Fix + GGUF Unblock + JEPA LIMO Curation + AgentAuditor Arbiter
 
-**CalVer:** 2026.04.61 (sequence increment from 2026.04.60)
-**Planned Experiments:** Exps 793-805 (13 experiments)
+**CalVer:** 2026.04.63 (sequence increment from 2026.04.62)
+**Planned Experiments:** Exps 819-830 (12 experiments)
 **Date Designed:** 2026-04-24
-**Prerequisite:** Milestone 2026.04.60 retro complete (Exp 792)
+**Prerequisite:** Milestone 2026.04.62 retro complete (Exp 818)
 
 ---
 
-## What Milestone 2026.04.60 Proved
+## What Milestone 2026.04.62 Proved
 
-Milestone .60 (Exps 780-792) showed efficiency progress but failed on six of twelve success criteria:
+Milestone .62 (Exps 806-818) targeted 9 success criteria. Result: 4 met, 5 missed.
 
 **Wins:**
-- GPU Zombie Killer deployed (Exp 780): kill_gpu_zombies() now mandatory before every model load
-- EDU-PRM step selection validated (Exp 782): 31.6% uncertainty-selected steps exceed 0.30 gate
-- S* energy prefilter (Exp 787): 75% test oracle call reduction with energy ranking
-- EBM calibration (Exp 789): ECE reduced 67.6% via isotonic regression on Ising energy scores
-- NPU mlir-aie toolchain installed (Exp 790): Xilinx NPU path unblocked
+- MILESTONE_PREREQS.md gate implemented (Exp 806): CPMI wiring assertion deployed
+- OSS-CAD-Suite FPGA toolchain installed (Exp 807): yosys + nextpnr-ice40 + icepack verified
+- RETRO-028 CLOSED (Exp 810): Gemma4 OOM fixed via nvidia-smi retry loop; n_valid_responses >= 16
+- KV260 N=32 synthesis clean (Exp 816): iCE40 HX8K, 3952 LUTs, 0 synthesis errors
+- VG Search scheduling effective (Exp 815): 50% skip rate, 25 Ising calls saved, accuracy preserved
 
-**Failures (direct carry into .61):**
-- RETRO-JEPA-V20-NO-DATA: Exp 781 collected n_labeled=0 because CARNOT_FORCE_LIVE not set
-- RETRO-JEPA-OOD: JEPA v20 OOD AUC=0.4467 — regression vs v19 (0.5667), 8 consecutive failures
-- RETRO-028: Gemma4 OOM — RETRO-028 unresolved for 3rd milestone (4-step isolation not applied)
-- RETRO-SOTA-GGUF-TIMEOUT: SOTA GGUF code repair timed out again at 90 min (2nd consecutive)
-- RETRO-CONSTRAINT-ZERO-DELTA: Constraint addition delta=0.0 — scalar encoding doesn't work
-- RETRO-KV260-TOOLS-UNAVAILABLE: yosys/nextpnr-ice40/icepack absent from PATH
+**Failures (direct carry into .63):**
+- RETRO-ISING-INJECTION-NO-DISCRIMINATION (Exp 812): injection_negative_delta — energy DECREASES
+  when constraint fires. Root cause: coupling matrix diagonal injection is a constant shift,
+  not a discriminating signal. Blocks Exps 813 and 814.
+- RETRO-ARBITER-FLAT-ENERGY (Exp 817): arbiter_accuracy=0.33; all agent energies=0.0.
+  Root cause: downstream of Exp 812 injection failure.
+- RETRO-GGUF-CACHE-IMPORT: Exp 811 blocked_model_load_failed due to Python ImportError.
+  Gate shift: code repair now blocked by import error, not OOM (RETRO-028 closed).
+- RETRO-JEPA-V22-OOD-BELOW-GATE: JEPA v22 ood_auc=0.5 (RA-PRM improved from 0.2).
+  Still below 0.75 cascade gate. 11th consecutive failed retrain.
+- RETRO-CONSTRAINT-ZERO-DELTA: Exp 813 gated (injection_not_wired). Live constraint delta
+  still unmeasured on real GPU.
+- RETRO-TIER1-PLATEAU: Exp 814 gated (blocked_no_delta). FR-11 Tier 1 live relay not run.
 
 ---
 
 ## The 3 Biggest Gaps vs PRD Vision
 
-### Gap 1: FR-11 Tier 3 Self-Learning Still Not Deployed (8 Consecutive JEPA Failures)
+### Gap 1: IsingEBM Constraint Injection Has Wrong Sign (Blocks 4 Capabilities)
 
-JEPA OOD AUC has failed to reach 0.75 in 8 consecutive retrains (v13-v20). Three root causes
-identified:
+The RETRO-ISING-INJECTION-NO-DISCRIMINATION from Exp 812 is the single most damaging open
+issue. It cascaded to block 4 experiments in .62:
+- Exp 813 (constraint addition live validation) — injection_not_wired
+- Exp 814 (FR-11 Tier 1 live relay) — blocked_no_delta
+- Exp 817 (multi-agent arbiter) — all energies 0.0 (arbiter_incorrect)
 
-1. **Data starvation:** v20 trained on only 18 EDU-PRM selected pairs (n_labeled=0 from live GPU
-   because CARNOT_FORCE_LIVE was unset). Single-source (Qwen3.5-0.8B, GSM8K) data doesn't
-   generalize to different models or domains.
+**Root cause:** IsingConstraintInjector.inject_into_coupling_matrix() adds the constraint
+projection to the DIAGONAL of J. In standard Ising E = -0.5 * s^T J s, the diagonal terms
+are -0.5 * J[i,i] * s_i^2 = -0.5 * J[i,i] (constant, since s_i^2 = 1 for ±1 spins).
+Adding positive values to the diagonal uniformly lowers energy for ALL spin configurations —
+it does not discriminate between correct and violated responses.
 
-2. **Insufficiently contrastive training pairs:** Standard correct/incorrect FoVer pairs are too
-   easy — the predictor learns to distinguish clearly-right from clearly-wrong. It fails OOD
-   because it never sees subtly-wrong steps. CPMI (arXiv 2604.10660) provides hard negatives:
-   plausible-but-wrong steps with CPMI score in the 0.2-0.6 range.
+**Fix:** Replace diagonal injection with external field injection:
+E_total = -0.5 * s^T J s - h^T s
+Where h = project_to_spin_bias(constraint_embeddings) is a per-spin external field.
+When constraint fires: h[i] > 0 and spin s_i = +1 (violation encodes as +1)
+→ field_energy = -h[i] * s_i = -h[i] < 0 → TOTAL energy increases by -field_energy > 0.
+For correct responses: s_i = -1 → field_energy = -h[i] * (-1) = h[i] > 0 → energy decreases.
+Net: violations get HIGHER energy, correct responses get LOWER energy. Discriminating.
 
-3. **Single-distribution training data:** All 57 real pairs from Exp 442 come from GSM8K q1-300
-   with Qwen3.5-0.8B. OOD evaluation uses different questions and possibly different models.
-   Fix: multi-source corpus (GSM8K + MATH-500 + HumanEval) × 2 models (Qwen3.5-0.8B + Gemma4).
+**Cascade unlocks (all gated on this fix):**
+- Constraint addition live validation (Exp 821)
+- Multi-agent arbiter (Exp 822)
+- FR-11 Tier 1 live relay (Exp 823)
 
-**Fix plan:** Exp 797 collects 80+ real pairs from 3 diverse sources with CARNOT_FORCE_LIVE=1.
-Exp 798 augments with CPMI hard negatives. Exp 799 retrains JEPA v21 with LambdaRank +
-PROGRS outcome-conditioned centering.
+### Gap 2: JEPA OOD at 0.5 After 11 Consecutive Retrains (FR-11 Tier 3 Still Undeployed)
 
-### Gap 2: Constraint Addition Zero-Delta (RETRO-CONSTRAINT-ZERO-DELTA)
+JEPA has failed to reach OOD AUC >= 0.75 in every retrain since v13. RA-PRM (Exp 809)
+improved ood_auc 0.2 → 0.5 by adding retrieval-augmented soft supervision. This is progress,
+but insufficient. Root causes:
 
-Exp 788 showed dynamic (memory-augmented) IsingEBM equals static baseline (delta=0.0).
-Root cause: scalar keyword-count encoding of error patterns causes semantic interference
-(arXiv 2601.15313). When "carry_errors=3" and "sign_errors=2" are encoded as scalars, they
-cannot be meaningfully distinguished in the Ising coupling space.
+1. **Training corpus too large and noisy:** 300 FoVer pairs + 750 CPMI triples = 1050 items,
+   but the quality is uneven. LIMO (2024) showed 817 curated examples beat 100k random ones for
+   LLM training. The same principle applies to JEPA: 50 high-confidence Z3-verified pairs will
+   outperform 300 mixed-confidence pairs.
 
-**Fix plan:** Exp 800 implements EmbeddingConstraintStore using sentence-transformer embeddings
-in SPO (Subject-Predicate-Object) format: {subject: "arithmetic_step_N", predicate: "violates",
-object: "carry_propagation_rule"}. Orthogonality regularization prevents semantic collapse.
-Exp 801 benchmarks the delta improvement over static baseline.
+2. **Single-domain training:** All real FoVer pairs come from GSM8K × Qwen3.5-0.8B. OOD eval
+   tests different domains. Fix: add 10 Z3-verified HumanEval pairs + 10 SVAMP pairs to make
+   the training corpus domain-diverse before the OOD holdout matters less.
 
-### Gap 3: No SOTA Code Repair Headline (2 Consecutive Timeouts + Gemma4 OOM)
+3. **Model too small:** JEPAPredictor is a 2-layer MLP. For 11 consecutive failures, the
+   architecture may need a structural change: use a contrastive transformer encoder with
+   triplet loss rather than binary BCE.
 
-The strongest credible result Carnot can publish is code repair via execution verification
-(+3.0pp HumanEval from Exp 226). But SOTA GGUF code repair has timed out twice (Exp 769 at
-120 min, Exp 785 at 90 min) because:
-- GPU zombies occupy VRAM before model load (RETRO-028 root cause)
-- Qwen3.6-35B-A3B Q4_K_M requires ~20 GiB VRAM; GPU 0 had ~15 GiB occupied
-- 50 problems × 3.6 min budget each is too tight; batching at 10q allows per-batch checkpoints
+**Fix plan:** Exp 824 implements LIMO-style curation (top-50 pairs by Z3-confidence × CPMI
+score) + domain diversity + contrastive transformer architecture. Exp 825 evaluates and
+deploys if OOD >= 0.65 (lowered intermediate gate — full 0.75 gate is aspirational after
+11 failures; claim Tier 3 if we hit 0.65).
 
-**Fix plan:** Exp 795 applies the four-step GPU isolation protocol (kill_gpu_zombies + explicit
-VRAM eviction + <500MB verification + GPU 1 routing). Exp 796 runs SOTA code repair with 25
-problems (not 50) in 10q batches with per-batch checkpoint saves.
+### Gap 3: Code Repair Has Never Produced a Credible Live Positive Result
+
+The strongest Carnot result — code repair (+3.0pp HumanEval from Exp 226) — was from a
+simulation artifact (now invalidated). After 5 consecutive milestones attempting live GPU
+code repair, RETRO-GGUF-CACHE-IMPORT is the final reported blocker.
+
+RETRO-028 is now CLOSED (Exp 810). The gate shifted: Exp 811 got blocked_model_load_failed
+due to a Python ImportError when loading the GGUF loader. This is a 1-2 hour fix: diagnose
+the exact ImportError, install/repair the dependency, verify import succeeds, then run 20
+HumanEval problems. Even honest_verdict=code_no_improvement would be progress: we need a live
+GPU HumanEval result, even if zero improvement.
+
+---
+
+## New Research Incorporated
+
+| Paper | arXiv ID | Incorporation |
+|-------|----------|---------------|
+| AgentAuditor: Multi-Agent Reasoning Tree Auditing | 2602.09341 | Exp 822 — consensus tie-breaking |
+| From Mathematical Reasoning to Code: PRM Generalization | 2506.00027 | Exp 826 — cross-domain benchmark |
+| Beyond Outcome Verification: Verifiable PRM | 2601.17223 | Exp 826 — step certificate output |
 
 ---
 
@@ -87,7 +119,7 @@ problems (not 50) in 10q batches with per-batch checkpoint saves.
 Query
   |
   v
-[Tier 0a] CarnotThinkProbe (generative CoT verdict)
+[Tier 0a] CarnotThinkProbe (generative CoT verdict, ThinkPRM arXiv 2504.16828)
   |  fast-path on "incorrect" verdict
   v
 [Tier 0b] SpilledEnergyDetector (logit-discrepancy, arXiv 2602.18671)
@@ -103,6 +135,7 @@ Query
   |
   v
 [Tier 0h] JailbreakDetectionKAN (safety gate, AUC=1.0, Exp 775)
+  |  [NEW .63] Activation Jailbreak Probe (linear probe, arXiv 2602.11495) — Tier B product
   |  returns SAFETY_GATE if jailbreak detected
   v
 [Tier 1]  SinkProbe (attention sink concentration, arXiv 2604.10697)
@@ -124,153 +157,172 @@ Query
   |
   v
 [Tier 3]  IsingEBM (full constraint verification, 0.006 ms/check)
-  |        + EmbeddingConstraintStore (SPO memory → dynamic constraints) [NEW .61]
+  |        + EmbeddingConstraintStore (SPO memory → dynamic constraints)
+  |        + IsingConstraintInjector [FIXED .63: external field, not diagonal]
   v
-[Tier 3.5] JEPA v21 (OOD predictor, TARGET: AUC >= 0.75) [BLOCKED: v20 AUC=0.4467]
+[Tier 3.5] JEPA v23 (OOD predictor, TARGET: AUC >= 0.65) [BLOCKED: v22 AUC=0.5]
+  |
+  v
+MultiAgentArbiter (energy-ranked output selection) [FIXED .63: external field]
 
 Self-Learning Loop (FR-11):
-  Verification results → FOVER annotation → JEPA v21 training corpus
+  Verification results → FOVER annotation → JEPA v23 training corpus
   Repair outcomes → EmbeddingConstraintStore (session memory → active constraints)
-  EmbeddingConstraintStore → VerifyRepairPipeline (dynamic constraint injection)
+  EmbeddingConstraintStore → IsingConstraintInjector EXTERNAL FIELD → energy discrimination
+  FR-11 Tier 1: precision increase per session (live, gated on external field fix)
+  FR-11 Tier 3: JEPA v23 cascade deploy (gated on OOD AUC >= 0.65)
 ```
 
 ---
 
 ## Phase Descriptions
 
-### Phase 0: Governance (Exps 793-794) — CPU only
+### Phase 0: Root Cause Surgery (Exps 819-820) — CPU + GPU
 
-**Goal:** Address process failures from .60 before running any GPU experiments.
+**Goal:** Fix the two root-cause blockers that cascaded into .62 failures before any
+downstream experiments run. Both are self-contained fixes requiring under 2 hours each.
 
-**Exp 793 — Manifest Full-Scope Enforcement Audit**
-Verify and document all dequeue call sites in scripts/research_conductor.py that bypass manifest
-exclusion. Write a structured patch spec (not the patch itself — we cannot modify the conductor
-script) as a JSON artifact mapping each dequeue site to the required exclusion check.
-RETRO-MANIFEST-FULL-SCOPE: provides the precise action items for human enforcement.
+**Exp 819 — IsingEBM External Field Fix (RETRO-ISING-INJECTION-NO-DISCRIMINATION, CPU)**
+Diagnose why injection_negative_delta occurred in Exp 812. Implement external field energy:
+E_total = -0.5 * s^T J s - h^T s where h is the constraint projection.
+Add new method: `compute_energy_with_external_field(J, spins, constraint_embeddings)`.
+Keep diagonal injection as legacy (ADDITIVE). Test: 10 arithmetic error vs 10 correct responses.
+Gate criterion: energy(error) > energy(correct) for >= 8 of 10 pairs.
+honest_verdict=injection_field_fixed or injection_still_wrong.
 
-**Exp 794 — FPGA Toolchain Install + Verify**
-Install yosys + nextpnr-ice40 + icestorm via pacman (RETRO-KV260-TOOLS-UNAVAILABLE).
-Verify installation: `yosys --version`, `nextpnr-ice40 --version`, `icepack --version`.
-If installed, attempt minimal synthesis of a 4-spin Ising test circuit as proof-of-concept.
-This gates the KV260 synthesis in Phase 5 (Exp 804).
+**Exp 820 — GGUF Model Load Diagnostic + Code Repair v5 (RETRO-GGUF-CACHE-IMPORT, GPU)**
+Read Exp 811 result JSON to get exact blocked_model_load_failed traceback. Diagnose the
+Python ImportError: likely llama-cpp-python package version mismatch or missing CUDA binaries.
+Fix the import (pip install / reinstall as needed), verify `from llama_cpp import Llama` succeeds.
+Run 20 HumanEval problems. Even code_no_improvement is a valid result — we need a live number.
+honest_verdict=import_fixed_repair_positive or import_fixed_no_improvement or still_blocked.
 
-### Phase 1: GPU Unblock (Exps 795-796) — GPU required
+### Phase 1: Cascade Unblock (Exps 821-823) — GPU required, gated on Phase 0
 
-**Goal:** Close RETRO-028 and RETRO-SOTA-GGUF-TIMEOUT in sequence.
+**Goal:** Re-run the three experiments that were blocked by the injection sign error in .62.
+All are gated on Exp 819 injection_field_fixed.
 
-**Exp 795 — Gemma4 OOM Fix v4** (RETRO-028, CARNOT_FORCE_LIVE=1)
-Apply the four-step GPU isolation protocol from the .60 retro resolution path:
-1. kill_gpu_zombies() (deployed in Exp 780)
-2. Explicit VRAM eviction: pkill loop until nvidia-smi shows <500MB on target GPU
-3. Verify <500MB VRAM used before any model load attempt
-4. Load Gemma4-E4B-it on GPU 1 (cooler GPU, 8-10C thermal headroom)
-Run 10 GSM8K questions with live GPU inference to confirm model produces valid outputs.
-honest_verdict=retro_028_closed when n_valid_responses >= 8.
+**Exp 821 — Constraint Addition Live v2 (RETRO-CONSTRAINT-ZERO-DELTA, gated on Exp 819)**
+Re-run Exp 813 with external field IsingConstraintInjector.
+30 GSM8K questions × 3 sessions on live GPU. Update EmbeddingConstraintStore per session.
+Target: delta_overall > 0. If met: retro_constraint_zero_delta_closed=True.
+honest_verdict=constraint_addition_works_live or constraint_addition_no_delta_live.
 
-**Exp 796 — SOTA GGUF Code Repair v3** (RETRO-SOTA-GGUF-TIMEOUT, GATED on Exp 795)
-Batch 25 HumanEval problems into 5 batches of 5. ExperimentTimeoutWatchdog at 90 min.
-Checkpoint per batch (atomic JSON write). Use Qwen3.6-35B-A3B Q4_K_M GGUF.
-Apply MARS margin gate (arXiv 2601.15498): skip test execution for high-margin outputs.
-honest_verdict=code_repair_positive if pass@1_repair > pass@1_baseline on >=10 problems.
+**Exp 822 — Multi-Agent Arbiter Fix v2 + AgentAuditor Consensus (gated on Exp 819, CPU)**
+Re-run Exp 817 with external field energy. Incorporate arXiv 2602.09341 (AgentAuditor):
+when all agent energies are within 0.01 of each other (consensus), apply a consensus penalty
+that adds energy to agents sharing the majority response pattern.
+Test: 6 standard + 6 adversarial scenarios (wrong answer is majority).
+honest_verdict=arbiter_correct if accuracy >= 0.80 on all 12 scenarios.
 
-### Phase 2: JEPA v21 Real Data + Retrain (Exps 797-799) — GPU + CPU
+**Exp 823 — FR-11 Tier 1 Live Relay v2 (FR-11 mandatory, gated on Exp 821)**
+Re-run Exp 814 with external field injection + live GPU.
+5 sessions × 10 questions. Capacity-constrained update (arXiv 2507.21479):
+update only top-K=3 highest-variance constraint types per session.
+Target: precision non-decreasing sessions 1-5, delta_s1_to_s5 > 0.
+honest_verdict=tier1_relay_works_live or tier1_plateau_persists_live.
 
-**Goal:** Break the 8-consecutive-failure streak on JEPA OOD generalization.
+### Phase 2: JEPA Architecture Overhaul (Exps 824-826) — CPU only
 
-**Exp 797 — JEPA v21 Multi-Source Data Collection** (RETRO-JEPA-V20-NO-DATA, CARNOT_FORCE_LIVE=1 mandatory)
-Collect real CoT steps from 3 diverse sources:
-- Source A: 60 GSM8K questions with Qwen3.5-0.8B (existing model, new question range q301-360)
-- Source B: 30 MATH-500 questions with Qwen3.5-0.8B (different difficulty distribution)
-- Source C: 30 HumanEval problems with Gemma4-E4B-it (code domain, different model)
-FOVER Z3 annotator labels each step. Target: n_labeled >= 80 pairs across 3 sources.
-Write to results/fover_labeled_steps_v21_multi.json.
+**Goal:** Break the 11-consecutive-retrain failure streak with a fundamentally different
+approach: quality over quantity (LIMO principle), domain diversity, and cross-domain benchmark.
 
-**Exp 798 — CPMI Contrastive Pair Builder** (arXiv 2604.10660)
-For each positive (step, correct) pair from Exp 797, generate hard negative alternatives:
-- Sample 5 response variants for the same prefix using model temperature=0.9
-- Select the variant with CPMI score in [0.15, 0.6] range (plausible but wrong)
-- Write (prefix, positive_step, hard_negative_step) triples to training corpus
-CPU-only. Target: 3x corpus augmentation ratio (80 pairs → 240 triples).
+**Exp 824 — JEPA v23 LIMO Curated Corpus (RETRO-JEPA-OOD)**
+Apply LIMO curation principle: select TOP-50 highest-quality pairs from the full corpus
+(FoVer v21_multi + CPMI triples) by Z3 verification confidence × CPMI contrastive score.
+Add domain diversity: include 10 Z3-verified HumanEval pairs (from Exp 820 code results) +
+10 SVAMP reasoning pairs (synthetic, CPU-generated). Total: 70 curated pairs.
+Train JEPA v23 with contrastive triplet loss (not binary BCE): anchor=prefix, positive=correct
+step, negative=CPMI hard negative. 100 epochs.
+Evaluate: in-distribution AUC + OOD AUC on fover_labeled_steps_live.json.
+honest_verdict=jepa_v23_viable (ood_auc >= 0.65) or jepa_v23_improvement (ood_auc >= 0.5)
+or jepa_v23_below_random (ood_auc < 0.5).
 
-**Exp 799 — JEPA v21 Retrain + Cascade Deploy Gate** (FR-11 mandatory, GATED on Exp 797)
-Retrain on multi-source corpus (Exp 797) + CPMI triples (Exp 798).
-Loss: LambdaRank listwise (v18 approach) + PROGRS outcome-conditioned centering.
-Evaluate: in-distribution AUC + OOD AUC (Exp 442 held-out set).
-Gate: if OOD AUC >= 0.75 → wire into ThreeTierPipeline as Tier 3.5.
-If gate fails: write failure analysis (which sources contributed most to OOD variance).
+**Exp 825 — JEPA v23 Cross-Domain Eval + FR-11 Tier 3 Relay**
+Evaluate JEPA v23 on 3 domains: GSM8K (in-dist), HumanEval code steps, ARC-Challenge planning.
+For each domain: compute per-domain AUC. If overall AUC >= 0.65: wire into ThreeTierPipeline
+as Tier 3.5. Emit VerificationCertificate per step: (step_id, energy_delta, constraint_type,
+z3_verdict, confidence) — inspired by arXiv 2601.17223 verifiable PRM design.
+FR-11 Tier 3 mandatory closure: if tier35_deployed=True, update _bmad/traceability.md.
+honest_verdict=jepa_v23_tier35_deployed or jepa_v23_improvement_not_deployed.
 
-### Phase 3: Embedding Constraint Retrieval (Exps 800-801) — CPU only
+**Exp 826 — PRM Cross-Domain Benchmark (arXiv 2506.00027, 2601.17223)**
+Using Exp 824-825 results: compute cross-domain degradation vs in-distribution for JEPA v23.
+Compare against published PRM transfer baseline (~8% AUC degradation from arXiv 2506.00027).
+If Carnot's degradation is larger: diagnose which domain shows largest gap.
+Generate VerificationCertificate for 20 failed OOD steps: examine whether Z3/SymCode
+corroborates JEPA's high-energy prediction.
+honest_verdict=below_baseline or at_baseline or above_baseline.
+CPU-only; uses stored CoT step results from Exps 820 + 825.
 
-**Goal:** Fix RETRO-CONSTRAINT-ZERO-DELTA with embedding-based retrieval (arXiv 2601.15313).
+### Phase 3: Hardware + Safety (Exps 827-828)
 
-**Exp 800 — EmbeddingConstraintStore** (RETRO-CONSTRAINT-ZERO-DELTA, arXiv 2601.15313)
-Implement SPO-format constraint encoding:
-- Constraint as {subject: step_context, predicate: violation_type, object: rule_name}
-- Encode each constraint via sentence-transformer (all-MiniLM-L6-v2, CPU-native)
-- Orthogonality regularization during storage (project out components along existing constraint vectors)
-- Retrieval by cosine similarity (not keyword match)
-Test: retrieval AUC across 5 constraint types (carry/sign/unit/comparison/causal).
-Export: EmbeddingConstraintStore, ConstraintSPOTuple from carnot.pipeline.
+**Goal:** Advance the hardware path (KV260 bitstream from iCE40 synthesis) and ship the
+Tier B Safety/Jailbreak product.
 
-**Exp 801 — Embedding Constraint Addition Benchmark** (RETRO-CONSTRAINT-ZERO-DELTA follow-up)
-Wire EmbeddingConstraintStore into VerifyRepairPipeline as the Tier 1 self-learning mechanism.
-Run 200 GSM8K questions (synthetic_cpu mode) across 5 sessions.
-Compare: static Ising baseline vs embedding-retrieved constraint addition.
-Target: constraint_addition_delta > 0.0 (vs Exp 788 delta=0.0).
-Self-learning (FR-11 Tier 1) criterion: precision increases across sessions.
+**Exp 827 — KV260 nextpnr-xilinx Synthesis v3 (gated on Exp 816)**
+OSS-CAD-Suite includes nextpnr-xilinx (not just nextpnr-ice40). The KV260 uses Zynq
+UltraScale+ FPGA (xczu5eg), not iCE40. Attempt XC Zynq synthesis:
+1. Try nextpnr-xilinx --chipdb for xczu5eg. If not supported: fallback to iCE40 HX8K bitstream.
+2. For iCE40: run nextpnr-ice40 + icepack to generate actual .bin bitstream from the
+   N=32 synthesis JSON produced in Exp 816. Test: icepack produces valid bitstream header.
+3. Compare: can the bitstream be loaded on a software-emulated iCE40 via iceprog simulation?
+honest_verdict=xilinx_synthesis_clean or ice40_bitstream_generated or synthesis_blocked.
 
-### Phase 4: Self-Learning Relay + Publishing (Exps 802-803)
+**Exp 828 — Activation Jailbreak Probe (arXiv 2602.11495, Tier B Safety product, CPU)**
+Implement linear probe for jailbreak detection on Qwen3.5-0.8B intermediate layer activations.
+Load model in eval mode (CPU, no GPU needed). Extract activations at layers [4, 8, 12, 16].
+Train sklearn LogisticRegression on 50 JailbreakBench + 50 benign prompts.
+Compare: linear_probe_auc vs JailbreakDetectionKAN (Tier 0h, AUC=1.0 from Exp 775).
+Measure latency: probe inference must be < 1 ms per query (CPU).
+Target: linear_probe_auc >= 0.85, latency < 1 ms.
+honest_verdict=probe_viable (>= 0.85 AUC) or probe_partial or probe_not_viable.
 
-**Goal:** Close the FR-11 Tier 1 real data relay and resolve RETRO-HF-AUTH.
+### Phase 4: Publishing + Retrospective (Exps 829-830)
 
-**Exp 802 — FR-11 Tier 1 Real Relay with Embedding Constraints** (self-learning mandatory)
-Run 10-session test (50q each, synthetic_cpu) with EmbeddingConstraintStore active.
-Track: constraints_added_per_session, precision_improvement, constraint_recall.
-Tier 1 criterion (research-program.md): precision must increase monotonically across sessions.
-honest_verdict=tier1_relay_works if precision non-decreasing AND delta>0 by session 5.
+**Goal:** Publish validated artifacts to HuggingFace and close the milestone.
 
-**Exp 803 — HuggingFace Publish v2** (RETRO-HF-AUTH)
-Generate SOPS-encrypted HF_TOKEN configuration spec: SOPS key file + secrets structure.
-Write models/hf_upload_commands.sh (huggingface-cli login + push for each model card).
-If HF_TOKEN available: update 3 model READMEs (one per tier) with .60 results.
-honest_verdict=hf_auth_documented (if only docs) or hf_models_published (if authenticated).
+**Exp 829 — HuggingFace v3 Publish (Tier A product)**
+Publish to huggingface.co/Carnot-EBM:
+1. Update 16 existing activation EBM READMEs to clarify Phase 1 research artifact status.
+2. Publish JEPA v23 model (if OOD AUC >= 0.65 from Exp 825) with cross-domain benchmark results.
+3. Publish IsingConstraintInjector with external field fix as standalone artifact.
+4. Update pip install carnot landing README with honest performance summary.
+Use SOPS-encrypted HF token from .sops.yaml. Verify upload with huggingface_hub.list_models().
+honest_verdict=hf_publish_success or hf_publish_partial or hf_auth_blocked.
 
-### Phase 5: Hardware + Retro (Exps 804-805)
-
-**Exp 804 — KV260 Open-Source Synthesis Attempt** (RETRO-KV260-TOOLS-UNAVAILABLE, GATED on Exp 794)
-If Exp 794 confirmed yosys+nextpnr-ice40+icepack installed:
-Synthesize hardware/kv260/ising_sampler_v3.v using yosys (not Vivado).
-Timing: N=32 (fits iCE40 HX8K), then N=64 if LUT budget allows.
-Target: LUT utilization report + timing analysis.
-honest_verdict=synthesis_clean if yosys completes without errors.
-
-**Exp 805 — Milestone 2026.04.61 Operational Retrospective**
-Standard retro format. Success criteria: 8 RETRO closures, JEPA v21 OOD>=0.75,
-constraint_addition_delta>0, Gemma4 working, SOTA code repair positive, FPGA synthesis clean.
+**Exp 830 — Milestone 2026.04.63 Operational Retrospective**
+Evaluate all 11 prior experiments. Compute success criteria met/total.
+Identify new RETROs opened. Confirm RETROs closed.
+Write improvements_suggested for .64 with IMMEDIATE items for MILESTONE_PREREQS.md.
+Write results/operational_retro_2026_04_63.json with schema=carnot.operational_retro.v38.
 
 ---
 
 ## Dependency Graph
 
 ```
-Exp 793 (Governance)    → no dependency
-Exp 794 (FPGA Install)  → no dependency
-  ↓
-Exp 795 (Gemma4 Fix)    → requires CARNOT_FORCE_LIVE=1
-Exp 796 (SOTA Repair)   → GATED on Exp 795 honest_verdict=retro_028_closed
-  ↓
-Exp 797 (JEPA Data)     → requires CARNOT_FORCE_LIVE=1
-Exp 798 (CPMI Pairs)    → can run in parallel with Exp 797, feeds Exp 799
-Exp 799 (JEPA v21)      → GATED on Exp 797 n_labeled>=80
-  ↓
-Exp 800 (Emb Store)     → no dependency (CPU-only)
-Exp 801 (Emb Bench)     → GATED on Exp 800 retrieval_auc>0.7
-  ↓
-Exp 802 (FR-11 Relay)   → GATED on Exp 801 delta>0
-Exp 803 (HF Publish)    → no dependency
-  ↓
-Exp 804 (KV260 Synth)   → GATED on Exp 794 tools_installed
-Exp 805 (Retro)         → all experiments complete
+[Phase 0]
+  Exp 819 (injection field fix, CPU)  ──────────────┐
+  Exp 820 (GGUF import fix, GPU)      ─────┐         │
+                                           │         │
+[Phase 1, gated]                           │         │
+  Exp 821 (constraint live v2) ←────────── │ ────────┘
+  Exp 822 (arbiter fix v2)     ←────────────────────┘
+  Exp 823 (FR-11 relay v2)     ← gated on Exp 821
+                                           │
+[Phase 2, CPU independent]                 │
+  Exp 824 (JEPA v23 LIMO)     ─────────────┤
+  Exp 825 (JEPA v23 eval)     ← gated on 824
+  Exp 826 (cross-domain bench) ← uses 820 + 825
+
+[Phase 3, independent]
+  Exp 827 (KV260 xilinx, gated on 816)
+  Exp 828 (jailbreak probe, CPU independent)
+
+[Phase 4]
+  Exp 829 (HF publish, uses 825 model)
+  Exp 830 (retro, reads all prior results)
 ```
 
 ---
@@ -279,51 +331,42 @@ Exp 805 (Retro)         → all experiments complete
 
 | Criterion | Experiment | Target |
 |-----------|-----------|--------|
-| retro_028_closed | Exp 795 | honest_verdict=retro_028_closed (n_valid>=8) |
-| sota_code_repair_positive | Exp 796 | pass@1_repair > pass@1_baseline |
-| jepa_v21_data_adequate | Exp 797 | n_labeled >= 80 across >=2 sources |
-| cpmi_augmentation_works | Exp 798 | augmentation_ratio >= 2.0x |
-| jepa_v21_ood_viable | Exp 799 | ood_auc >= 0.75 (cascade deploy gate) |
-| embedding_retrieval_works | Exp 800 | retrieval_auc > 0.70 across 5 constraint types |
-| constraint_addition_positive | Exp 801 | constraint_addition_delta > 0.0 |
-| tier1_relay_works | Exp 802 | precision non-decreasing + delta > 0 by session 5 |
-| fpga_tools_installed | Exp 794 | yosys + nextpnr-ice40 + icepack on PATH |
-| kv260_synthesis_attempted | Exp 804 | honest_verdict != blocked (gated on Exp 794) |
+| injection_field_fixed | Exp 819 | energy(error) > energy(correct) >= 8/10 pairs |
+| gguf_import_fixed | Exp 820 | live HumanEval result (any honest_verdict) |
+| constraint_addition_works_live | Exp 821 | delta_overall > 0 on live GPU |
+| arbiter_correct | Exp 822 | accuracy >= 0.80 |
+| tier1_relay_works_live | Exp 823 | precision non-decreasing |
+| jepa_v23_viable | Exp 824-825 | OOD AUC >= 0.65 |
+| cross_domain_at_baseline | Exp 826 | degradation <= 8% AUC vs in-dist |
+| bitstream_or_synthesis_clean | Exp 827 | nextpnr-xilinx clean OR iCE40 bitstream |
+| probe_viable | Exp 828 | AUC >= 0.85, latency < 1ms |
+| hf_publish_success | Exp 829 | models published to HuggingFace |
+
+---
+
+## Open RETROs Addressed by This Milestone
+
+| RETRO | Status | Addressed By |
+|-------|--------|-------------|
+| RETRO-ISING-INJECTION-NO-DISCRIMINATION | OPEN | Exp 819 (external field fix) |
+| RETRO-ARBITER-FLAT-ENERGY | OPEN | Exp 822 (gated on Exp 819) |
+| RETRO-GGUF-CACHE-IMPORT | OPEN | Exp 820 (import diagnostic + fix) |
+| RETRO-CONSTRAINT-ZERO-DELTA | OPEN | Exp 821 (gated on Exp 819) |
+| RETRO-TIER1-PLATEAU | OPEN | Exp 823 (gated on Exp 821) |
+| RETRO-JEPA-OOD | OPEN | Exp 824 (LIMO curation) |
+| RETRO-KV260-XILINX | NEW | Exp 827 (nextpnr-xilinx attempt) |
 
 ---
 
 ## Hardware Requirements
 
-| Experiment | Hardware | Notes |
-|-----------|---------|-------|
-| Exps 795, 797 | GPU (CARNOT_FORCE_LIVE=1) | RTX 3090 preferred; GPU 1 for Gemma4 (thermal) |
-| Exp 796 | GPU (CARNOT_FORCE_LIVE=1) | Qwen3.6-35B requires ~20 GiB; GPU 1 isolated |
-| Exps 793, 794, 798-803, 805 | CPU only | JAX_PLATFORMS=cpu |
-| Exp 804 | CPU (yosys) | No GPU needed; uses open-source FPGA tools |
-
----
-
-## Open RETROs Addressed
-
-| RETRO | Addressed By | Expected Status |
-|-------|-------------|-----------------|
-| RETRO-028 | Exp 795 | CLOSED if n_valid >= 8 |
-| RETRO-JEPA-V20-NO-DATA | Exp 797 | CLOSED if n_labeled >= 80 |
-| RETRO-JEPA-OOD | Exp 799 | CLOSED if ood_auc >= 0.75 |
-| RETRO-SOTA-GGUF-TIMEOUT | Exp 796 | CLOSED if code_repair_positive |
-| RETRO-CONSTRAINT-ZERO-DELTA | Exp 800-801 | CLOSED if delta > 0 |
-| RETRO-KV260-TOOLS-UNAVAILABLE | Exp 794 | CLOSED if tools installed |
-| RETRO-HF-AUTH | Exp 803 | PARTIALLY: documented; CLOSED if authenticated |
-| RETRO-MANIFEST-FULL-SCOPE | Exp 793 | DOCUMENTED: patch spec written for human application |
-
----
-
-## New Papers to Incorporate
-
-| Paper | arXiv ID | Used In |
-|-------|---------|---------|
-| Semantic Interference / SPO constraint encoding | 2601.15313 | Exp 800 |
-| CPMI contrastive MI for process rewards | 2604.10660 | Exp 798 |
-| ExecVerify execution-trace code constraints | 2603.11226 | Exp 801 |
-| PROGRS outcome-conditioned centering | 2604.02341 | Exp 799 |
-| MARS margin-aware speculative verification | 2601.15498 | Exp 796 |
+| Phase | Hardware | Purpose |
+|-------|----------|---------|
+| Phase 0 Exp 819 | CPU | Energy function diagnostics |
+| Phase 0 Exp 820 | 2x RTX 3090 GPU, CARNOT_FORCE_LIVE=1 | GGUF inference (GPU 1) |
+| Phase 1 Exps 821, 823 | GPU, CARNOT_FORCE_LIVE=1 | Live constraint addition + FR-11 relay |
+| Phase 1 Exp 822 | CPU | Arbiter synthetic benchmark |
+| Phase 2 Exps 824-826 | CPU | JEPA training + evaluation |
+| Phase 3 Exp 827 | CPU | OSS-CAD-Suite synthesis tools |
+| Phase 3 Exp 828 | CPU (model in eval mode) | Activation probe |
+| Phase 4 Exp 829 | CPU + network | HuggingFace upload |
