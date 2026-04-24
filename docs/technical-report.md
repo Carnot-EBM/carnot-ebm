@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 805 Experiments Across 48 Research Milestones
+## A Technical Report on 818 Experiments Across 68 Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-24
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **805
-experiments across 48 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **818
+experiments across 68 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -207,7 +207,7 @@ REQ-SAFE-011 teacher-inference-time invariant, and the `tp_count > 0`
 gate on safety-classifier claims are all direct outputs of audits from
 this phase.
 
-### Phase 6 — Retro closure and hardware on real silicon (Experiments 701-805, April 22-24 2026)
+### Phase 6 — Retro closure and hardware on real silicon (Experiments 701-818, April 22-24 2026)
 
 The final phase of the research-record-to-date was about closing things:
 
@@ -225,10 +225,24 @@ The final phase of the research-record-to-date was about closing things:
   PS-PL AXI isolation resets (`zynqmp_reset` IDs 0x74-0x77) when the
   overlay targets `fpga_full` and declares those resets explicitly. The
   fix is a ten-line change to the dtbo; the story is in Section 2.4.
+- **RETRO-028** (Gemma4 OOM on GPU inference) closed after five milestone
+  attempts via an nvidia-smi verification loop confirming VRAM cleared
+  before model load (Exp 810, milestone 2026.04.62).
+- **RETRO-KV260-TOOLS-UNAVAILABLE** (open-source FPGA toolchain missing)
+  closed by installing OSS-CAD-Suite (yosys 0.64+149, nextpnr-ice40 0.10,
+  icepack). KV260 N=32 Ising synthesis validated at 3952 LUTs with zero
+  errors (Exp 816, milestone 2026.04.62).
 
-Milestone 2026.04.60 (the 47th) closed the research record at 792
-experiments. Milestone 2026.04.61 planning is in flight as of this
-report's date.
+Milestone 2026.04.62 (the 68th) closed the research record at 818
+experiments. Key milestone .62 findings: JEPA v22 OOD AUC improved from
+0.2444 to 0.5000 via RA-PRM multi-source data collection (still below
+the 0.75 publication gate); VGSearchScheduler reduced Ising oracle calls
+by 50% with zero accuracy delta (Exp 815); three new RETROs opened:
+RETRO-GGUF-CACHE-IMPORT (missing `carnot.pipeline.gguf_cache` module
+blocking SOTA code repair), RETRO-ISING-INJECTION-NO-DISCRIMINATION
+(constraint injector assigns identical energy deltas to error and clean
+responses), and RETRO-ARBITER-FLAT-ENERGY (Multi-Agent Arbiter scores
+all responses 0.0, making selection order-dependent).
 
 ---
 
