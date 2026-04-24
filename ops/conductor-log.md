@@ -2679,3 +2679,4 @@ python/ |
 | 2026-04-24 02:28 UTC | Exp 792: Milestone 2026.04.60 Operational Retrospe | OK | 81 passed, 3 warnings in 14.92s |
 | 2026-04-24 03:03 UTC | Plan milestone 2026.04.61 | OK | 13 tasks proposed |
 | 2026-04-24 03:08 UTC | Milestone 2026.04.61 activated | OK | 13 tasks queued |
+| 2026-04-24 03:25 UTC | Exp 793: Manifest Full-Scope Enforcement Audit (RE | OK | 81 passed, 3 warnings in 8.79s |
