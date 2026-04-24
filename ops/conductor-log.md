@@ -2699,3 +2699,4 @@ python/ |
 | 2026-04-24 15:16 UTC | Exp 806: MILESTONE_PREREQS.md Gate + JEPA Assertio | OK | 81 passed, 3 warnings in 2.78s |
 | 2026-04-24 15:51 UTC | Exp 807: OSS-CAD-Suite FPGA Toolchain Install (RET | OK | 81 passed, 3 warnings in 2.86s |
 | 2026-04-24 16:39 UTC | Exp 808: JEPA v22 CPMI Corpus Rewire + Retrain (RE | OK | 81 passed, 3 warnings in 3.59s |
+| 2026-04-24 17:20 UTC | Exp 809: JEPA v22 RA-PRM OOD Enhancement (arXiv 25 | OK | 81 passed, 3 warnings in 2.81s |
