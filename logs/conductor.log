@@ -371,3 +371,19 @@ All marked **`Implemented-Partial`** (not ✅ Complete) because honest_verdict="
 2026-04-24 07:16:23,825 [conductor] RESEARCH STEP: Exp 802: FR-11 Tier 1 Relay with Embedding Constraints — Self-Learning Mandatory
 2026-04-24 07:16:23,825 [conductor] ============================================================
 2026-04-24 07:16:23,842 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 07:16:23,902 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 07:16:23,902 [conductor] Running test suite (smart subset)...
+2026-04-24 07:16:29,534 [conductor] Pre-check: 81 passed, 3 warnings in 2.79s
+2026-04-24 07:16:29,679 [conductor] Injected 97 symbol signatures from 4 files (AST outlines)
+2026-04-24 07:16:29,679 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Deliverable is written and stable. Tests pass (21/21). Done.
+
+**Result:** `results/experiment_802_fr11_embedding_relay.json` written with `honest_verdict = "tier1_plateau_persists"` and `delta_s1_to_s10 = 0.0`. The IsingModel energy proxy never fires (energy above the -0.1 threshold in synthetic_cpu mode), so tp=fp=0 every session and precision stays at 1.0 flat — the same plateau as Exps 761/788. The EmbeddingConstraintStore wiring is exercised but cannot shift precision when the mock verify never accepts anything. 21 new tests cover all code branches (precision, monotonicity, verdict, session runner, store updater).
+2026-04-24 07:20:59,074 [conductor] Claude Code completed (exit 0)
+2026-04-24 07:20:59,087 [conductor] Changes:
+logs/conductor.log                         |  9 +++++++++
+ openspec/capabilities/autoresearch/spec.md | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
+2026-04-24 07:20:59,112 [conductor] DOGFOOD: Verification complete (total: 478 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 07:20:59,112 [conductor] Running test suite (smart subset)...
+2026-04-24 07:21:04,829 [conductor] Post-check: 81 passed, 3 warnings in 2.85s
