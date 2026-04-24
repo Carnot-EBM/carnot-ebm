@@ -33,6 +33,88 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-24 arxiv Scan (Milestone 2026.04.61 Planning)
+
+### Semantic Interference in Neural Memory: Orthogonality Constraint for Constraint Retrieval
+- **Paper:** arXiv 2601.15313 (January 2026)
+- **What:** Identifies Semantic Interference — as semantically similar facts accumulate in embedding-based
+  memory, embeddings collapse and retrieval accuracy degrades to near-random. Demonstrates that structured
+  SPO (Subject-Predicate-Object) format achieves 11x higher recall than unstructured text embeddings.
+  Proposes orthogonality regularization during encoding to maintain separation between concepts.
+- **Relevance to Carnot:** Directly explains RETRO-CONSTRAINT-ZERO-DELTA from Exp 788: scalar keyword-count
+  encoding of carry/sign/unit error patterns semantically interfere with each other, producing delta=0.0.
+  The fix is to encode constraints as SPO tuples (e.g., {subject: "arithmetic_step_3", predicate: "violates",
+  object: "carry_propagation"}) with sentence-transformer embeddings + orthogonality regularization.
+  This replaces keyword_count integers with discriminative constraint vectors that don't collapse.
+- **Concrete experiment:** Exp 800 — EmbeddingConstraintStore: implement SPO-format constraint
+  encoding using sentence-transformers + orthogonality regularization. Replace scalar keyword
+  counts in CaseMemoryTemplateWiring. Test: retrieval AUC on 5 constraint types. Target delta > 0.
+- **When to incorporate:** Milestone 2026.04.61 — Phase 3 embedding constraint retrieval (Exp 800).
+
+### CPMI: Contrastive Pointwise Mutual Information for Efficient Process Reward Modeling
+- **Paper:** arXiv 2604.10660 (April 2026)
+- **What:** Proposes Contrastive Pointwise Mutual Information (CPMI) as an automatic reward labeling
+  method. For each reasoning step, computes how much the step increases mutual information relative to
+  hard negative alternatives sampled from the model distribution. Provides step-level supervision without
+  human annotation. Used by Exp 576-class JEPA CPMI Pair Builder.
+- **Relevance to Carnot:** JEPA v20 (ood_auc=0.4467) fails OOD because training pairs are insufficiently
+  contrastive — easy correct/incorrect pairs don't teach generalization. CPMI hard negatives force the
+  predictor to distinguish subtly-wrong from subtly-right steps. Applied to JEPA v21: augment the
+  FoVer v2 corpus with CPMI-ranked contrastive pairs where the negative is a plausible wrong step,
+  not a random wrong step. This is the key change to break the 8-consecutive-retrain failure pattern.
+- **Concrete experiment:** Exp 798 — CPMIContrastivePairBuilder: compute CPMI scores for each FoVer
+  step pair, select top-K hard negatives (CPMI score in 0.2-0.6 range), augment training corpus.
+  Compare JEPA v21 OOD AUC: standard pairs vs CPMI-augmented. Target: OOD AUC >= 0.75.
+- **When to incorporate:** Milestone 2026.04.61 — Phase 2 JEPA retrain (Exp 798 → feeds Exp 799).
+
+### ExecVerify: White-Box RL with Verifiable Stepwise Rewards for Code Execution Reasoning
+- **Paper:** arXiv 2603.11226 (March 2026)
+- **What:** Incorporates verifiable white-box rewards from code execution traces, rewarding both
+  intermediate execution steps and final outputs. Enables RL training with ground-truth step-level
+  feedback. Achieves SOTA on LiveCodeBench with verified step rewards vs outcome-only training.
+- **Relevance to Carnot:** Code repair (SOTA GGUF code repair) relies on static energy verification.
+  ExecVerify shows execution traces give provable ground-truth constraint labels: "variable undefined
+  at step 3" is a hard constraint violation, not a probabilistic energy score. This maps to a new
+  code-specific constraint type: ExecutionTraceConstraint. Complementary to SymCodeVerifier (Tier 2.5).
+- **Concrete experiment:** Exp 801 — ExecVerifyCodeConstraintMiner: run test suite on LLM-generated
+  code, capture execution trace (variable bindings, exception sites, failed assertions), convert
+  each trace event to an IsingEBM constraint. Compare: CodeExtractor alone vs CodeExtractor + trace
+  constraints on HumanEval. Target: trace constraints catch errors static analysis misses.
+- **When to incorporate:** Milestone 2026.04.61 — Phase 4 code repair (Exp 801).
+
+### PROGRS: Outcome-Guided Process Rewards with Coherence-Based Weighting
+- **Paper:** arXiv 2604.02341 (April 2026)
+- **What:** Introduces PROGRS combining process reward models with outcome verification via
+  outcome-conditioned centering (rescale step rewards relative to final answer correctness)
+  and coherence-based weighting (upweight steps with high inter-rater agreement). Resolves
+  PRM-outcome misalignment. Outperforms standard PRMs by 2.8% on MATH-500.
+- **Relevance to Carnot:** Exp 789 (EBM calibration) achieved ECE reduction 67.6% via isotonic
+  regression but this is post-hoc. PROGRS's outcome-conditioned centering is a training-time
+  calibration technique: during EORM training, weight each step's loss by whether the final
+  response was correct. This makes EORM energy scores naturally correlate with correctness rates
+  without post-hoc recalibration.
+- **Concrete experiment:** Enhancement to EORM training — apply outcome-conditioned centering
+  during JEPA v21 retrain (Exp 799): weight loss for step i by correct_final_answer_probability.
+  Steps in correct responses get higher weight than steps in incorrect ones, even if the step
+  itself is correct.
+- **When to incorporate:** Milestone 2026.04.61 — integrated into JEPA v21 retrain (Exp 799).
+
+### MARS: Margin-Aware Speculative Verification for Efficient LLM Verification
+- **Paper:** arXiv 2601.15498 (January 2026)
+- **What:** Proposes Margin-Aware Speculative Verification (MARS), a training-free fast-path
+  verification strategy that uses target model logit margins as a confidence signal. When margin
+  is high (model is decisive), accept without expensive verification. When margin is low (model
+  is uncertain), run full verification. Achieves 2-3x speedup at acceptance rate 0.6-0.8.
+- **Relevance to Carnot:** Carnot's cascade already does something similar (Tier 0 → Tier 3),
+  but the decision to run expensive Ising verification is rule-based (tier thresholds). MARS
+  margin signal — directly derived from the LLM's own logit distribution — could replace or
+  augment the EORM energy threshold as a gating signal. High-margin LLM outputs rarely have
+  constraint violations; low-margin outputs are where verification adds value.
+- **Concrete experiment:** Enhance Exp 796 (SOTA GGUF code repair) — add MARS margin gate:
+  extract logit margin from generated code tokens, skip expensive test execution for high-margin
+  outputs. Measure oracle_calls_saved vs pass@1 degradation.
+- **When to incorporate:** Milestone 2026.04.61 — augmentation to code repair pipeline.
+
 ## 2026-04-23 arxiv Scan (Milestone 2026.04.60 Planning)
 
 ### The Energy of Falsehood: Detecting Hallucinations via Diffusion Model Likelihoods

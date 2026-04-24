@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-24 Milestone 2026.04.61 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-24T02:46:45Z | 2026-04-24T03:02:50Z | Planned milestone 2026.04.61 "JEPA v21 Multi-Source Real Data + Embedding Constraint Retrieval + Gemma4 Unblocked". Read 10 project files + .60 retro JSON. Arxiv scan (5 papers): arXiv 2601.15313 (Semantic Interference / Orthogonality) → explains RETRO-CONSTRAINT-ZERO-DELTA; arXiv 2604.10660 (CPMI hard negatives) → JEPA training; arXiv 2603.11226 (ExecVerify execution-trace) → code constraint mining; arXiv 2604.02341 (PROGRS outcome-conditioned centering) → JEPA calibration; arXiv 2601.15498 (MARS margin-aware speculative) → fast-path verification. Prepended 5 entries to research-references.md. Identified 3 biggest gaps: (1) JEPA OOD AUC still failing (8 consecutive retrains, 0.4467 latest) — fix with multi-source real data + CPMI hard negatives; (2) Constraint addition delta=0.0 (RETRO-CONSTRAINT-ZERO-DELTA) — scalar keyword-count encoding causes embedding collapse, fix with SPO + orthogonality; (3) Gemma4 OOM + SOTA GGUF timeout still blocking GPU experiments. Wrote openspec/change-proposals/research-roadmap-vNEXT.md (overwrite .60 content with .61: 13 experiments 793-805, 5 phases, 8 RETROs targeted). Created research-roadmap-next.yaml (13 experiments with full conductor prompts, gate patterns). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~95k |
+
+---
+
 ## Session: 2026-04-22 Milestone 2026.04.57 Planning
 
 ### Turn Log
