@@ -2536,3 +2536,45 @@ Given training starts and check_cpmi_wiring() detects augmentation_ratio=1.0
   - tier35_deployed = False
   - Training does NOT proceed
   - This prevents silent repetition of the Exp 799 failure (ood_auc=0.2444, aug_ratio=1.0)
+
+## REQ-LEARN-101: Held-Out Evaluation on Distinct Domain When JEPA v22 ood_auc >= 0.75
+
+If Exp 808 reports ood_auc >= 0.75, Exp 809 MUST evaluate JEPA v22 on a held-out benchmark
+(ARC, SVAMP, or StrategyQA) that was NOT present in the training corpus.  The held-out set
+MUST contain at least 20 reasoning problems.  The resulting held_out_auc MUST be logged in
+the deliverable.
+
+Spec: REQ-LEARN-101, SCENARIO-LEARN-148
+
+## REQ-LEARN-102: RA-PRM Retrieval-Augmented Soft Supervision When JEPA v22 ood_auc < 0.75
+
+If Exp 808 reports ood_auc < 0.75, Exp 809 MUST apply RA-PRM (Retrieval-Augmented PRM):
+  1. Populate EmbeddingConstraintStore with all FoVer-labeled steps from
+     fover_labeled_steps_v21_multi.json.
+  2. For each training example, retrieve K=3 similar steps via retrieve().
+  3. Compute augmented soft labels: ground_truth_label × 1.0 + retrieved_labels × 0.4.
+  4. Retrain JEPA v22-rapbm for 80 epochs on augmented pairs.
+  5. Evaluate in-distribution AUC and OOD AUC on fover_labeled_steps_live.json.
+  6. Save model to results/jepa_predictor_v22_rapbm.safetensors if ood_auc improves.
+
+Spec: REQ-LEARN-102, SCENARIO-LEARN-149
+
+## SCENARIO-LEARN-148: Path A — JEPA v22 OOD Confirmed on Held-Out Benchmark
+
+Given Exp 808 ood_auc=0.80 (>= 0.75):
+  - Exp 809 loads 20 ARC reasoning problems (hardcoded, CPU)
+  - Generates synthetic CoT via template, runs FoVer annotation
+  - Evaluates JEPA v22 on FoVer-labeled steps; held_out_auc=0.72
+  - honest_verdict = "v22_ood_confirmed" (held_out_auc >= 0.65)
+  - tier35 generalization validated on unseen domain
+
+## SCENARIO-LEARN-149: Path B — RA-PRM Applied When JEPA v22 OOD Below Threshold
+
+Given Exp 808 ood_auc=0.45 (< 0.75):
+  - Exp 809 populates EmbeddingConstraintStore with fover_labeled_steps_v21_multi.json
+  - Retrieves 3 similar steps per training example via EmbeddingConstraintStore.retrieve()
+  - Computes soft labels: ground_truth × 1.0 + retrieved × 0.4
+  - Retrains JEPA v22-rapbm for 80 epochs on augmented pairs
+  - Evaluates and logs improved ood_auc
+  - honest_verdict = "rapbm_ood_improved" if ood_auc > Exp 808 ood_auc
+  - honest_verdict = "rapbm_no_gain" otherwise
