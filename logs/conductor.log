@@ -1082,3 +1082,15 @@ logs/conductor.log                         | 13 +++++++++++++
 2026-04-24 16:23:54,010 [conductor] DOGFOOD: Verification complete (total: 490 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 16:23:54,010 [conductor] Running test suite (smart subset)...
 2026-04-24 16:23:59,620 [conductor] Post-check: 81 passed, 3 warnings in 2.83s
+2026-04-24 16:23:59,643 [conductor] Committed: [conductor] Exp 814: FR-11 Tier 1 Live Relay — Capacity-Constrained Update (FR-1
+2026-04-24 16:24:01,389 [conductor] Pushed to origin
+2026-04-24 16:24:01,389 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 16:24:01,389 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+**Done.** Exp 814 documentation updated:
+
+1. **Honest verdict**: `blocked_no_delta` → Status: **⚠️ Blocked**
+2. **ops/changelog.md**: Appended with blocked reason (Exp 813 gate not met)
+3. **_bmad/traceability.md**: Added REQ-LEARN-814-001 and SCENARIO-LEARN-814-001 with status "Blocked" (prerequisite failure on Exp 813 delta_overall ≤ 0)
+
+No ops/status.md update (blocked runs don't add capability).
+2026-04-24 16:25:00,740 [conductor] Claude Code completed (exit 0)
