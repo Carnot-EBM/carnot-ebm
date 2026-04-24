@@ -2703,3 +2703,4 @@ python/ |
 | 2026-04-24 18:00 UTC | Exp 810: Gemma4 OOM Fix v5 — nvidia-smi Loop Gate  | OK | 81 passed, 3 warnings in 2.97s |
 | 2026-04-24 18:37 UTC | Exp 811: SOTA GGUF Code Repair v4 — 50q in 10 Batc | OK | 81 passed, 3 warnings in 2.92s |
 | 2026-04-24 19:14 UTC | Exp 812: IsingEBM Constraint Feature Injection — E | OK | 145 passed, 3 warnings in 3.17s |
+| 2026-04-24 19:50 UTC | Exp 813: Constraint Addition Live Validation — Rea | OK | 81 passed, 3 warnings in 2.83s |
