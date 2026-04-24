@@ -582,6 +582,10 @@ from carnot.pipeline.vram_loop_eviction import (  # noqa: E402
     VRAMLoopEvictionResult,
     evict_vram_with_loop,
 )
+from carnot.pipeline.vg_search_scheduler import (  # noqa: E402
+    VGScheduleResult,
+    VGSearchScheduler,
+)
 
 __all__ = [
     "AgentStep",
@@ -958,4 +962,6 @@ __all__ = [
     "check_cpmi_wiring",
     "VRAMLoopEvictionResult",
     "evict_vram_with_loop",
+    "VGScheduleResult",
+    "VGSearchScheduler",
 ]
