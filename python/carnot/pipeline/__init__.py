@@ -550,6 +550,11 @@ from carnot.pipeline.gpu_zombie_killer import (  # noqa: E402
     get_gpu_memory_pids,
     kill_gpu_zombies,
 )
+from carnot.pipeline.gemma_isolation import (  # noqa: E402
+    VRAMEvictionResult,
+    evict_gpu_vram,
+    load_gemma4_on_gpu1,
+)
 
 __all__ = [
     "AgentStep",
@@ -908,4 +913,7 @@ __all__ = [
     "GPUZombieResult",
     "get_gpu_memory_pids",
     "kill_gpu_zombies",
+    "VRAMEvictionResult",
+    "evict_gpu_vram",
+    "load_gemma4_on_gpu1",
 ]

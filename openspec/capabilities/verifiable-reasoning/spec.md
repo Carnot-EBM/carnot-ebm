@@ -6739,6 +6739,38 @@ as a float in [0, 1].  A result >= 0.60 is accepted as passing quantization qual
 **When** `accuracy_check(n_questions=10)` is called
 **Then** the return value is a float in [0.0, 1.0]
 
+## Gemma4 VRAM Isolation Requirements (Exp 795, RETRO-028 Fix v4)
+
+### REQ-LOADER-012: Pre-Load VRAM Eviction via kill_gpu_zombies + pkill Sweep
+
+Before loading Gemma4-E4B-it, the system MUST evict all GPU processes holding >100MB
+VRAM on the target GPU by calling `kill_gpu_zombies()` followed by an explicit pkill sweep.
+After the sweep, `nvidia-smi` MUST be queried to verify that memory used on the target GPU
+is <500MB before any model allocation is attempted.
+
+**Implementation Status:** Done (Exp 795)
+
+### REQ-LOADER-013: Gemma4-E4B-it Loaded on GPU 1 in Dual-GPU Configuration
+
+When a dual-GPU configuration is present, Gemma4-E4B-it MUST be loaded on GPU 1
+(device index 1) to preserve GPU 0 thermal headroom. The experiment artifact MUST
+record the GPU index, VRAM before/after eviction, and thermal state at load time.
+
+**Implementation Status:** Done (Exp 795)
+
+### SCENARIO-LOADER-012: GPU Has Zombie Processes; Eviction Clears to <500MB
+
+**Given** GPU 1 has zombie processes consuming >15 GB VRAM
+**When** `evict_gpu_vram(gpu_index=1)` is called
+**Then** `kill_gpu_zombies()` kills all zombie PIDs, pkill sweep runs, and
+`nvidia-smi` reports <500MB used (vram_clear=True)
+
+### SCENARIO-LOADER-013: GPU 1 Cooler Than GPU 0; Gemma4 Loads on GPU 1
+
+**Given** GPU 1 is at 44C and GPU 0 is at 52C
+**When** `load_gemma4_on_gpu1()` is called
+**Then** Gemma4-E4B-it loads on `cuda:1` and the artifact records thermal headroom
+
 ## VPRM Arithmetic Verifier Requirements (Exp 454)
 
 ### REQ-EXTRACT-027: VPRMArithmeticVerifier Implements Rule-Based Arithmetic Step Checks
