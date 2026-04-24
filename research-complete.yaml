@@ -3815,3 +3815,61 @@ milestones:
     title: 'Exp 792: Milestone 2026.04.60 Operational Retrospective'
     deliverable: results/operational_retro_2026_04_60.json
     result: OK (conductor)
+- id: 2026.04.61
+  title: JEPA v21 Multi-Source Real Data + Embedding Constraint Retrieval + Gemma4 Unblocked
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-24'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp793-manifest-full-scope-audit
+    title: 'Exp 793: Manifest Full-Scope Enforcement Audit (RETRO-MANIFEST-FULL-SCOPE)'
+    deliverable: results/experiment_793_manifest_full_scope_audit.json
+    result: OK (conductor)
+  - id: exp794-fpga-toolchain-install
+    title: 'Exp 794: FPGA Toolchain Install + Verify (RETRO-KV260-TOOLS-UNAVAILABLE)'
+    deliverable: results/experiment_794_fpga_toolchain_install.json
+    result: OK (conductor)
+  - id: exp795-gemma4-oom-fix-v4
+    title: "Exp 795: Gemma4 OOM Fix v4 \u2014 Four-Step GPU Isolation (RETRO-028, GPU REQUIRED, CARNOT_FORCE_LIVE=1)"
+    deliverable: results/experiment_795_gemma4_oom_fix_v4.json
+    result: OK (conductor)
+  - id: exp796-sota-gguf-code-repair-v3
+    title: "Exp 796: SOTA GGUF Code Repair v3 \u2014 Batched 10q (RETRO-SOTA-GGUF-TIMEOUT, GPU, GATED on Exp 795)"
+    deliverable: results/experiment_796_sota_gguf_code_repair_v3.json
+    result: OK (conductor)
+  - id: exp797-jepa-v21-multi-source-data
+    title: 'Exp 797: JEPA v21 Multi-Source Data Collection (RETRO-JEPA-V20-NO-DATA, GPU REQUIRED, CARNOT_FORCE_LIVE=1)'
+    deliverable: results/experiment_797_jepa_v21_data_collection.json
+    result: OK (conductor)
+  - id: exp798-cpmi-contrastive-pair-builder
+    title: "Exp 798: CPMI Contrastive Pair Builder (arXiv 2604.10660) \u2014 Hard Negative Mining for JEPA v21"
+    deliverable: results/experiment_798_cpmi_pairs.json
+    result: OK (conductor)
+  - id: exp799-jepa-v21-retrain-cascade
+    title: 'Exp 799: JEPA v21 Retrain + Cascade Deploy Gate (FR-11 mandatory, GATED on Exp 797 n_labeled>=80)'
+    deliverable: results/experiment_799_jepa_v21_retrain.json
+    result: OK (conductor)
+  - id: exp800-embedding-constraint-store
+    title: "Exp 800: EmbeddingConstraintStore \u2014 SPO Format + Orthogonality (RETRO-CONSTRAINT-ZERO-DELTA, arXiv 2601.15313)"
+    deliverable: results/experiment_800_embedding_constraint_store.json
+    result: OK (conductor)
+  - id: exp801-embedding-constraint-addition-benchmark
+    title: 'Exp 801: Embedding Constraint Addition Benchmark (RETRO-CONSTRAINT-ZERO-DELTA follow-up)'
+    deliverable: results/experiment_801_embedding_constraint_addition.json
+    result: OK (conductor)
+  - id: exp802-fr11-embedding-relay
+    title: "Exp 802: FR-11 Tier 1 Relay with Embedding Constraints \u2014 Self-Learning Mandatory"
+    deliverable: results/experiment_802_fr11_embedding_relay.json
+    result: OK (conductor)
+  - id: exp803-hf-publish-v2
+    title: "Exp 803: HuggingFace Publish v2 \u2014 SOPS Auth Spec (RETRO-HF-AUTH)"
+    deliverable: results/experiment_803_hf_publish_v2.json
+    result: OK (conductor)
+  - id: exp804-kv260-open-source-synthesis
+    title: 'Exp 804: KV260 Open-Source RTL Synthesis (RETRO-KV260-TOOLS-UNAVAILABLE, GATED on Exp 794)'
+    deliverable: results/experiment_804_kv260_synthesis_attempt.json
+    result: OK (conductor)
+  - id: exp805-milestone-retro
+    title: 'Exp 805: Milestone 2026.04.61 Operational Retrospective'
+    deliverable: results/operational_retro_2026_04_61.json
+    result: OK (conductor)
