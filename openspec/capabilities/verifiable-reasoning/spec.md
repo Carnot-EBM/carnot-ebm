@@ -15491,3 +15491,44 @@ and accuracy_delta (accuracy with vs without scheduling).
 
 **Spec traces:** REQ-VERIFY-171, REQ-VERIFY-172
 **Implementation Status:** Implemented (Exp 815)
+
+## REQ-HW-038: OSS-CAD-Suite Yosys Path for KV260 Synthesis
+
+KV260 synthesis experiments MUST use the OSS-CAD-Suite yosys binary located at
+`~/tools/oss-cad-suite/bin/yosys` rather than any system-installed yosys or
+pacman-installed yosys.  The PATH MUST be set explicitly to this binary.
+
+**Why:** System yosys was absent or broken on the build host across Exps 791,
+794, and 804 (three consecutive failures).  OSS-CAD-Suite ships a self-contained
+yosys binary with all back-ends compiled in, independent of the host package
+manager.  Hardcoding the path eliminates PATH-order surprises.
+
+- REQ-HW-038-1: The synthesis script MUST construct `OSS_CAD_BIN = Path.home() /
+  "tools" / "oss-cad-suite" / "bin"` and pass `OSS_CAD_BIN / "yosys"` directly
+  to subprocess — never relying on `shutil.which("yosys")` or PATH lookup.
+- REQ-HW-038-2: If `(OSS_CAD_BIN / "yosys").exists()` is False, the experiment
+  SHALL write a blocked artifact with `honest_verdict="blocked_tools_not_at_expected_path"`
+  and exit immediately.
+- REQ-HW-038-3: The experiment SHALL be gated on Exp 807's `honest_verdict` being
+  in `["tools_installed_synthesis_clean", "already_installed"]`.  Any other value
+  produces `honest_verdict="gated_tools_not_installed"`.
+- REQ-HW-038-4: LUT utilization SHALL be reported as `lut_count_n32` (integer
+  count of SB_LUT4 primitives from `synth_ice40` stat output).
+- REQ-HW-038-5: If N=32 synthesizes cleanly with `lut_count_n32 < 3000`, the
+  experiment SHALL attempt N=64.  If `lut_count_n64 >= 6000`, record `n64_note="over_budget_n64"`.
+- REQ-HW-038-6: `honest_verdict` SHALL be one of:
+  `synthesis_clean_n32_n64`, `synthesis_clean_n32`, `synthesis_n32_over_budget`,
+  `synthesis_errors_n32`, `blocked_tools_not_at_expected_path`, `gated_tools_not_installed`.
+
+### SCENARIO-HW-035: OSS-CAD-Suite Yosys Synthesizes ising_sampler_v3.v at N=32
+
+**Given** Exp 807 artifact has `honest_verdict="tools_installed_synthesis_clean"`
+**And** `~/tools/oss-cad-suite/bin/yosys` exists
+**And** `hardware/kv260/ising_sampler_v3.v` is present
+**When** yosys runs `synth_ice40 -top ising_sampler_v3` on the N=32-patched source
+**Then** yosys exits 0 with no ERROR lines
+**And** `lut_count_n32 < 5000` (within iCE40 HX8K budget)
+**And** `honest_verdict` in `["synthesis_clean_n32", "synthesis_clean_n32_n64"]`
+
+**Spec traces:** REQ-HW-038
+**Implementation Status:** Implemented (Exp 816)

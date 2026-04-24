@@ -1166,3 +1166,19 @@ Done! I've made minimal doc updates for Exp 815:
 2026-04-24 17:33:10,036 [conductor] RESEARCH STEP: Exp 816: KV260 Open-Source Synthesis v2 (GATED on Exp 807 OSS-CAD-Suite)
 2026-04-24 17:33:10,036 [conductor] ============================================================
 2026-04-24 17:33:10,052 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 17:33:10,114 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 17:33:10,114 [conductor] Running test suite (smart subset)...
+2026-04-24 17:33:15,828 [conductor] Pre-check: 81 passed, 3 warnings in 2.84s
+2026-04-24 17:33:15,955 [conductor] Injected 31 symbol signatures from 1 files (AST outlines)
+2026-04-24 17:33:15,955 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Deliverable is written and valid. All 16 tests pass.
+
+**Summary:** `results/experiment_816_kv260_synthesis_v2.json` written with `honest_verdict=synthesis_clean_n32`, `lut_count_n32=3952` (52% of the 7680 HX8K budget, well under the 5000 limit). N=64 was not attempted because 3952 ≥ 3000 (the expand threshold). The key fix over prior attempts: using `~/tools/oss-cad-suite/bin/yosys` explicitly (REQ-HW-038), plus handling the yosys 0.64+ reversed stat format (`3952   SB_LUT4` vs old `SB_LUT4   612`).
+2026-04-24 17:37:49,381 [conductor] Claude Code completed (exit 0)
+2026-04-24 17:37:49,400 [conductor] Changes:
+logs/conductor.log                                 |  9 +++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 41 ++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
+2026-04-24 17:37:49,422 [conductor] DOGFOOD: Verification complete (total: 492 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 17:37:49,422 [conductor] Running test suite (smart subset)...
+2026-04-24 17:37:55,078 [conductor] Post-check: 81 passed, 3 warnings in 2.78s
