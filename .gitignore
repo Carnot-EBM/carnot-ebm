@@ -61,14 +61,33 @@ exports/**/model.safetensors
 # committed.  Target only the large re-downloadable / re-generable files.
 models/**/*.gguf
 models/**/*.mxfp4
+models/**/*.safetensors
+models/**/*.onnx
+models/**/*.onnx_data*
 models/gpt-oss-safeguard-20b/
 models/gpt-oss-safeguard-120b/
-# Vivado intermediate / future-build artifacts (project sub-dirs only —
-# the conductor-committed files under output/carnot_ising_bd/project/ from
-# prior runs stay tracked for history).
+models/openai_privacy_filter/
+# ^ Added 2026-04-23 after the conductor's auto-checkpoint committed
+#   17 GB of HuggingFace-downloaded model weights (model.safetensors,
+#   onnx/*.onnx_data*, original/) into this path.  GitHub's 100 MB
+#   per-file limit rejected the push; history was rewritten with
+#   git-filter-repo to purge models/openai_privacy_filter/** and the
+#   Vivado-generated BD netlists.  These patterns prevent the conductor
+#   from re-committing any HuggingFace model tree.  If a model directory
+#   must be tracked (e.g. a small hand-built artifact), add a negation
+#   with `!models/<dirname>/`.
+
+# Vivado intermediate / future-build artifacts.  The .gen/ subtree
+# contains >100 MB synthesized netlists (carnot_ising_bd_*_sim_netlist.v
+# and .vhdl) that GitHub also rejected.
 output/carnot_ising_bd/project/carnot_ising.runs/impl_*/
 output/carnot_ising_bd/project/carnot_ising.runs/synth_*/
 output/carnot_ising_bd/project/.Xil/
+output/carnot_ising_bd/project/carnot_ising.gen/
 output/carnot_ising_bd/vivado_*.backup.*
 output/carnot_ising_bd/*.jou
 output/carnot_ising_bd/.Xil/
+# Catch-all for Vivado sim netlists regardless of where they land.
+output/**/*sim_netlist*.v
+output/**/*sim_netlist*.vhdl
+output/**/*sim_netlist*.vhd
