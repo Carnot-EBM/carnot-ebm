@@ -15217,3 +15217,42 @@ by 1 for that batch; the output is counted as clean without subprocess execution
 
 **Spec traces:** REQ-BENCH-061
 **Implementation Status:** Pending (Exp 794)
+
+## REQ-LEARN-057: EmbeddingConstraintStore SPO Encoding
+
+EmbeddingConstraintStore MUST encode constraints as SPO tuples (subject: str, predicate: str, object: str) using sentence-transformer embeddings.
+
+**Motivation:** Exp 788 showed constraint_addition_delta=0.0 due to embedding collapse in scalar keyword-count encoding (arXiv 2601.15313, Semantic Interference). SPO encoding forces structural separation that prevents embedding collapse.
+
+- REQ-LEARN-057-1: Each constraint MUST be stored as a ConstraintSPOTuple with fields subject, predicate, object, embedding, source_violation_type, timestamp.
+- REQ-LEARN-057-2: The sentence-transformer model all-MiniLM-L6-v2 SHALL be used by default (384-dim, CPU).
+- REQ-LEARN-057-3: When sentence_transformers is unavailable (CI), a ci_hash deterministic 384-dim fallback SHALL be used instead.
+- REQ-LEARN-057-4: embedding_mode MUST be reported as 'sentence_transformer' or 'ci_hash'.
+
+## REQ-LEARN-058: Orthogonality Regularization
+
+EmbeddingConstraintStore MUST apply orthogonality regularization: when storing a new constraint embedding e_new, project out components along all existing constraint embeddings to reduce semantic interference.
+
+**Motivation:** Even good embeddings suffer from semantic interference when constraint types co-occur in training data. Gram-Schmidt orthogonalization ensures each constraint occupies a distinct subspace.
+
+- REQ-LEARN-058-1: For each stored embedding e_i, the projection scalar = dot(e_new, e_i) / dot(e_i, e_i) MUST be subtracted from e_new before storing.
+- REQ-LEARN-058-2: The result MUST be L2-normalized after orthogonalization.
+- REQ-LEARN-058-3: Orthogonalization MUST be applied before appending to the internal store.
+
+## REQ-LEARN-059: Cosine-Similarity Retrieval
+
+Retrieval MUST use cosine similarity on SPO embeddings, not keyword matching. A query (error context string) retrieves top-K constraint SPO tuples.
+
+- REQ-LEARN-059-1: retrieve(query, top_k) MUST encode the query with the same encoder used at store time.
+- REQ-LEARN-059-2: Cosine similarity MUST be computed between the query embedding and each stored embedding.
+- REQ-LEARN-059-3: Results MUST be sorted descending by cosine similarity and the top_k returned.
+- REQ-LEARN-059-4: retrieval_auc(queries, labels) MUST compute the fraction of queries where top-1 source_violation_type matches the label.
+
+### SCENARIO-LEARN-098: Five-Type Retrieval AUC > 0.70
+
+**Given** an EmbeddingConstraintStore bootstrapped with 5 constraint types (carry, sign, unit, comparison, causal) via from_casememory_patterns()
+**When** 10 error-context queries per type (50 total) are submitted via retrieval_auc()
+**Then** retrieval_auc > 0.70 when using sentence_transformer mode; ci_hash mode retrieval_auc is not required to exceed 0.70 (chance-level behavior is expected and documented).
+
+**Spec traces:** REQ-LEARN-057, REQ-LEARN-058, REQ-LEARN-059
+**Implementation Status:** Implemented (Exp 800)

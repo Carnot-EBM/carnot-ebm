@@ -566,6 +566,10 @@ from carnot.pipeline.cpmi_builder import (  # noqa: E402
     compute_cpmi_score,
     generate_hard_negative,
 )
+from carnot.pipeline.embedding_constraint_store import (  # noqa: E402
+    ConstraintSPOTuple,
+    EmbeddingConstraintStore,
+)
 
 __all__ = [
     "AgentStep",
@@ -934,4 +938,6 @@ __all__ = [
     "CPMITriple",
     "compute_cpmi_score",
     "generate_hard_negative",
+    "ConstraintSPOTuple",
+    "EmbeddingConstraintStore",
 ]
