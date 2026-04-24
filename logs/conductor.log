@@ -25,3 +25,28 @@ logs/conductor.log                                 |  6 +++
 2026-04-24 01:58:09,393 [conductor] DOGFOOD: Verification complete (total: 471 checks, 42 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 01:58:09,393 [conductor] Running test suite (smart subset)...
 2026-04-24 01:58:46,607 [conductor] Post-check: 81 passed, 3 warnings in 20.91s
+2026-04-24 01:58:46,872 [conductor] Committed: [conductor] Exp 794: FPGA Toolchain Install + Verify (RETRO-KV260-TOOLS-UNAVAILA
+2026-04-24 01:59:15,192 [conductor] Pushed to origin
+2026-04-24 01:59:15,193 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 01:59:15,193 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+============================================================
+  Carnot Research Conductor
+  Autonomous research via Claude Code
+============================================================
+  Agent: claude (claude)
+  Model: sonnet
+  Project: /home/ianblenke/github.com/ianblenke/carnot
+  CARNOT_FORCE_LIVE: 1
+  Mode: continuous (every 30 min)
+  Dogfood memory: 470 checks, 42 brace fixes, 0 code violations
+
+Done. Updated **ops/changelog.md** with Exp 794 entry.
+
+**Summary:**
+- **honest_verdict**: `tools_not_installed_install_attempted` → Status: ⚠️ Blocked
+- **Key fact**: FPGA toolchain (yosys, nextpnr-ice40, icepack) unavailable in CI; install attempt failed (pacman packages not found)
+- **Gates**: Exp 804 (KV260 N=32 synthesis)
+- **Skipped**: ops/status.md and _bmad/traceability.md (no new capabilities/REQ-*/SCENARIO-*)
+
+Note: This blocks downstream KV260 work but the board is now on-site (arrived 2026-04-20). Recommend native install on hardware or Vivado toolchain investigation.
+2026-04-24 02:00:33,127 [conductor] Claude Code completed (exit 0)
