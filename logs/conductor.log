@@ -798,3 +798,19 @@ Exp 808 explicitly states "No new REQ-*/SCENARIO-*" in the changelog entry I jus
 2026-04-24 13:09:42,402 [conductor] RESEARCH STEP: Exp 809: JEPA v22 RA-PRM OOD Enhancement (arXiv 2502.14361) — Fallback + Held-Out Eval
 2026-04-24 13:09:42,402 [conductor] ============================================================
 2026-04-24 13:09:42,417 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 13:09:42,471 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 13:09:42,471 [conductor] Running test suite (smart subset)...
+2026-04-24 13:09:48,169 [conductor] Pre-check: 81 passed, 3 warnings in 2.92s
+2026-04-24 13:09:48,291 [conductor] Injected 45 symbol signatures from 2 files (AST outlines)
+2026-04-24 13:09:48,291 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Deliverable is written and stable. All 6 tests pass. Done.
+
+**Summary:** Exp 808 ood_auc=0.2 triggered PATH B. RA-PRM populated 300 FoVer steps into EmbeddingConstraintStore, retrieved K=3 similar steps per training example, applied soft labels (gt×1.0 + retrieved×0.4), retrained JEPA v22-rapbm for 80 epochs. Result: ood_auc improved from 0.2 → 0.5 (+0.30 delta), `honest_verdict="rapbm_ood_improved"`, model saved to `results/jepa_predictor_v22_rapbm.npz`.
+2026-04-24 13:18:32,911 [conductor] Claude Code completed (exit 0)
+2026-04-24 13:18:32,924 [conductor] Changes:
+logs/conductor.log                         |  9 +++++++
+ openspec/capabilities/autoresearch/spec.md | 42 ++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
+2026-04-24 13:18:32,946 [conductor] DOGFOOD: Verification complete (total: 485 checks, 43 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 13:18:32,946 [conductor] Running test suite (smart subset)...
+2026-04-24 13:18:38,603 [conductor] Post-check: 81 passed, 3 warnings in 2.81s
