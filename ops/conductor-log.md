@@ -2689,3 +2689,4 @@ python/ |
 | 2026-04-24 08:41 UTC | Exp 798: CPMI Contrastive Pair Builder (arXiv 2604 | OK | 81 passed, 3 warnings in 2.83s |
 | 2026-04-24 09:30 UTC | Exp 799: JEPA v21 Retrain + Cascade Deploy Gate (F | OK | 81 passed, 3 warnings in 3.15s |
 | 2026-04-24 10:08 UTC | Exp 800: EmbeddingConstraintStore — SPO Format + O | OK | 81 passed, 3 warnings in 2.86s |
+| 2026-04-24 10:46 UTC | Exp 801: Embedding Constraint Addition Benchmark ( | OK | 145 passed, 3 warnings in 3.38s |
