@@ -1,0 +1,42 @@
+{
+  "experiment": 870,
+  "title": "SOTA code repair v7 — HumanEval live GPU (Qwen3.5-0.8B)",
+  "run_date": "20260425",
+  "started_at": "2026-04-25T18:26:20Z",
+  "finished_at": "2026-04-25T18:26:27Z",
+  "duration_s": 7,
+  "status": "blocked",
+  "honest_verdict": "blocked",
+  "blocked_by": "exp869_download_not_verified",
+  "blocked_reason": "Experiment 869 gate not met: download_verified=false (status='failed'). The Qwen/Qwen3.5-0.8B-GGUF repository was not found on HuggingFace (404 error). Cannot run live GPU inference without a verified model download. Root cause: incorrect HuggingFace repo ID in Exp 869 — the GGUF variant does not exist at that path. Resolution needed before Exp 870 can proceed: fix the repo ID or use a locally-cached non-GGUF model, then re-run Exp 869 to obtain download_verified=true.",
+  "gate_checks": {
+    "exp869_download_verified": false,
+    "exp855_live_env_fixed": true
+  },
+  "inference_mode": null,
+  "baseline_pass_rate": null,
+  "carnot_pass_rate": null,
+  "signed_improvement": null,
+  "n_problems": null,
+  "retro_tag": "RETRO-SOTA-MODEL-DOWNLOAD",
+  "schema": [
+    "blocked_by",
+    "blocked_reason",
+    "carnot_pass_rate",
+    "baseline_pass_rate",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "gate_checks",
+    "honest_verdict",
+    "inference_mode",
+    "n_problems",
+    "retro_tag",
+    "run_date",
+    "signed_improvement",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "invariant_violations": []
+}
