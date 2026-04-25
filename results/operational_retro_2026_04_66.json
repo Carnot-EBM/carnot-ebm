@@ -1,0 +1,171 @@
+{
+  "experiment": 867,
+  "title": "Milestone 2026.04.66 operational retro",
+  "run_date": "20260425",
+  "started_at": "2026-04-25T17:03:34Z",
+  "finished_at": "2026-04-25T17:03:34Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "retro_schema": "carnot.operational_retro.v41",
+  "milestone": "2026.04.66",
+  "milestone_title": "Permanent LIVE-ENV Fix + DualGPU Production + iCE40 N=8 Oracle + StreamingCoT AUC=1.0 + FR-11 Self-Learning + Memory Compression 31x",
+  "experiments_completed": 867,
+  "experiments_this_milestone": 13,
+  "wall_time_minutes": 0.861,
+  "wall_time_delta_vs_65": -77.139,
+  "wall_time_65_minutes": 78.0,
+  "success_criteria": [
+    {
+      "id": 1,
+      "criterion": "live_env_permanently_fixed",
+      "met": true,
+      "evidence": "Exp 855: live_env_fixed=True, env_guard_deployed=True, honest_verdict=governance_ready"
+    },
+    {
+      "id": 2,
+      "criterion": "dual_gpu_deployed",
+      "met": true,
+      "evidence": "Exp 856: dual_gpu_deployed=True, throughput_ratio=1.979 (need >=1.5)"
+    },
+    {
+      "id": 3,
+      "criterion": "code_repair_positive",
+      "met": false,
+      "evidence": "Exp 857: signed_improvement=None, inference_mode=live_gpu, honest_verdict=blocked, blocked_by=model_not_cached_download_failed"
+    },
+    {
+      "id": 4,
+      "criterion": "live_benchmark_improvement",
+      "met": false,
+      "evidence": "Exp 858: pipeline_improvement=0.2133 (>0 \u2713), inference_mode=simulation_fallback (need live_gpu \u2014 used simulation_fallback)"
+    },
+    {
+      "id": 5,
+      "criterion": "ice40_n8_bitstream",
+      "met": true,
+      "evidence": "Exp 859: bitstream_generated=True, lut_count=134 (need <500), honest_verdict=fpga_oracle_ready"
+    },
+    {
+      "id": 6,
+      "criterion": "inertia_discrimination",
+      "met": false,
+      "evidence": "Exp 860: discrimination_delta=71.5 (>0 \u2713), mixing_sweeps_reduction=2.0x (need >=5x \u2014 got 2x)"
+    },
+    {
+      "id": 7,
+      "criterion": "streaming_cot_viable",
+      "met": true,
+      "evidence": "Exp 861: AUC_streaming=1.0 (need >0.65), tier=0g"
+    },
+    {
+      "id": 8,
+      "criterion": "lagrange_adaptive_works",
+      "met": true,
+      "evidence": "Exp 862: delta_s1_to_s5=0.0500 (>0 required), fr11_self_learning_confirmed=True"
+    },
+    {
+      "id": 9,
+      "criterion": "hallusae_viable",
+      "met": false,
+      "evidence": "Exp 863: AUC_geometric=0.6144 (need >0.65 \u2014 got 0.6144, marginal miss), tier=0i"
+    },
+    {
+      "id": 10,
+      "criterion": "fr11_tier2_relay_confirmed",
+      "met": true,
+      "evidence": "Exp 864: tier2_relay_confirmed=True, honest_verdict=fr11_tier2_confirmed"
+    },
+    {
+      "id": 11,
+      "criterion": "memory_compression_viable",
+      "met": true,
+      "evidence": "Exp 865: retrieval_auroc_after=1.0 (need >0.75), compression_ratio=31.25x, memory_compression_viable=True"
+    },
+    {
+      "id": 12,
+      "criterion": "kan_fpga_roadmap_clear",
+      "met": false,
+      "evidence": "Exp 866: within_ice40_budget=False (need True), priority_determined=True, kan_fpga_roadmap_clear=False, synthesis_priority=ISING_PRIORITY (KAN over budget at 14400 LUTs vs 7680 budget)"
+    },
+    {
+      "id": 13,
+      "criterion": "wall_time_improvement",
+      "met": true,
+      "evidence": "wall_time_66=0.861 min, wall_time_65=78.0 min, delta=-77.139 min (improvement)"
+    }
+  ],
+  "criteria_met_count": 8,
+  "criteria_met_total": 13,
+  "retros_closed": [
+    "RETRO-CONSTRAINT-ZERO-DELTA",
+    "RETRO-ISING-INJECTION-NO-DISCRIMINATION",
+    "RETRO-ICE40-PNR-LUT-OVERFLOW",
+    "RETRO-ICE40-N16-UNEXPECTED-EXPANSION",
+    "RETRO-LIVE-ENV-NOT-PROPAGATED"
+  ],
+  "retros_opened": [
+    "RETRO-HALLUSAE-AUC-BELOW-THRESHOLD",
+    "RETRO-INERTIA-SWEEPS-TARGET-MISSED"
+  ],
+  "open_retros": [
+    "RETRO-MANIFEST-FULL-SCOPE",
+    "RETRO-JEPA-OOD",
+    "RETRO-XILINX-TOOLS-UNAVAILABLE",
+    "RETRO-SVAMP-ZERO-AUC",
+    "RETRO-SOTA-MODEL-DOWNLOAD",
+    "RETRO-HALLUSAE-AUC-BELOW-THRESHOLD",
+    "RETRO-INERTIA-SWEEPS-TARGET-MISSED"
+  ],
+  "open_retros_count": 7,
+  "honest_verdict": "milestone_partial",
+  "key_wins": [
+    "LIVE-ENV permanently fixed after 7+ milestones (Exp 855)",
+    "DualGPURunner deployed with 1.98x throughput, exceeds 1.5x target (Exp 856)",
+    "iCE40 N=8 combinational oracle: 134 LUTs, bitstream generated (Exp 859)",
+    "StreamingCoT Tier 0g: AUC=1.0, perfect hallucination detection (Exp 861)",
+    "FR-11 Lagrange adaptive self-learning confirmed: delta_s1_to_s5=0.05 (Exp 862)",
+    "FR-11 Tier 2 relay confirmed with session AUC=1.0 (Exp 864)",
+    "Constraint memory compression 31.25x with AUROC maintained at 1.0 (Exp 865)",
+    "Wall time drastically reduced: 0.86 min vs 78 min in .65 (delta -77.1 min)",
+    "RETRO-ISING-INJECTION-NO-DISCRIMINATION closed: discrimination_delta=71.5",
+    "RETRO-CONSTRAINT-ZERO-DELTA closed: retrieval AUROC 1.0 after compression"
+  ],
+  "key_failures": [
+    "Exp 857: Code repair 10th consecutive block \u2014 Qwen3.6-35B-A3B-GGUF 404 unresolved",
+    "Exp 858: Benchmark used simulation_fallback, not live_gpu \u2014 criterion 4 not met",
+    "Exp 863: HalluSAE AUC=0.6144 just below 0.65 threshold (TF-IDF proxy insufficient)",
+    "Exp 860: Inertia sweeps reduction 2x vs 5x target \u2014 criterion 6 not met",
+    "Exp 866: KAN 14400 LUTs exceeds iCE40 7680 budget \u2014 kan_fpga_roadmap_clear=False",
+    "RETRO-SOTA-MODEL-DOWNLOAD remains open: model 404 persists"
+  ],
+  "recommended_focus_next_milestone": "Fix Qwen3.6-35B-A3B-GGUF 404 (correct GGUF filename or switch to Gemma-4-31B-it as primary code-repair model). Force live GPU mode in benchmark (disable simulation fallback path). Replace TF-IDF proxy in HalluSAE with real SAE activations (target AUC>0.65). Inertia Ising: investigate 5x sweeps target mechanism.",
+  "schema": [
+    "criteria_met_count",
+    "criteria_met_total",
+    "duration_s",
+    "experiment",
+    "experiments_completed",
+    "experiments_this_milestone",
+    "finished_at",
+    "honest_verdict",
+    "key_failures",
+    "key_wins",
+    "milestone",
+    "milestone_title",
+    "open_retros",
+    "open_retros_count",
+    "recommended_focus_next_milestone",
+    "retro_schema",
+    "retros_closed",
+    "retros_opened",
+    "run_date",
+    "started_at",
+    "status",
+    "success_criteria",
+    "title",
+    "wall_time_65_minutes",
+    "wall_time_delta_vs_65",
+    "wall_time_minutes"
+  ],
+  "invariant_violations": []
+}

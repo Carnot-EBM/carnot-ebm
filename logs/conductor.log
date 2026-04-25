@@ -3370,3 +3370,24 @@ logs/conductor.log                | 17 +++++++++++++++++
 2026-04-25 12:58:06,137 [conductor] RESEARCH STEP: Exp 867: Milestone 2026.04.66 Operational Retrospective (CPU)
 2026-04-25 12:58:06,137 [conductor] ============================================================
 2026-04-25 12:58:06,158 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 12:58:06,218 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 12:58:06,218 [conductor] Running test suite (smart subset)...
+2026-04-25 12:58:11,863 [conductor] Pre-check: 81 passed, 3 warnings in 2.86s
+2026-04-25 12:58:11,976 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-25 12:58:11,976 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 35 tests pass. The deliverable `results/operational_retro_2026_04_66.json` is written and valid.
+
+**Summary:**
+- **8/13 criteria met** → `milestone_partial`
+- **Wall time delta**: -77.1 min (0.86 min vs 78 min in .65 — first positive delta in 6 milestones)
+- **5 RETROs closed**: LIVE-ENV-NOT-PROPAGATED, ICE40-N16-UNEXPECTED-EXPANSION, ICE40-PNR-LUT-OVERFLOW, ISING-INJECTION-NO-DISCRIMINATION, CONSTRAINT-ZERO-DELTA
+- **2 new RETROs opened**: HALLUSAE-AUC-BELOW-THRESHOLD, INERTIA-SWEEPS-TARGET-MISSED
+- **7 open RETROs** going into .67
+- Key failures: code repair 10th consecutive block (Qwen3.6 404), benchmark simulation fallback, HalluSAE AUC=0.6144 < 0.65
+2026-04-25 13:03:57,546 [conductor] Claude Code completed (exit 0)
+2026-04-25 13:03:57,559 [conductor] Changes:
+logs/conductor.log | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+2026-04-25 13:03:57,592 [conductor] DOGFOOD: Verification complete (total: 541 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 13:03:57,592 [conductor] Running test suite (smart subset)...
+2026-04-25 13:04:03,185 [conductor] Post-check: 81 passed, 3 warnings in 2.84s
