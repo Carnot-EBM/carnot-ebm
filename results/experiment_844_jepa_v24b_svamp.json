@@ -1,0 +1,111 @@
+{
+  "experiment": 844,
+  "title": "JEPA v24b: SVAMP Corpus Coverage Fix + DreamPRM Reweighting",
+  "run_date": "20260425",
+  "started_at": "2026-04-25T09:56:17Z",
+  "finished_at": "2026-04-25T09:56:25Z",
+  "duration_s": 7.769,
+  "status": "success",
+  "decision_class": "verify",
+  "phase_timings_s": [
+    {
+      "name": "svamp_triplet_generation",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "corpus_build",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "training",
+      "n_epochs": 250,
+      "n_pairs": 160,
+      "elapsed_s": 7.768
+    }
+  ],
+  "auc_gsm8k": 0.3125,
+  "auc_humaneval": 1.0,
+  "auc_arc": 0.5625,
+  "auc_svamp": 0.0,
+  "overall_ood_auc": 0.5208333333333334,
+  "min_domain_auc": 0.0,
+  "all_domains_coverage": true,
+  "honest_verdict": "jepa_v24b_svamp_still_collapsed",
+  "checkpoint_path": "results/jepa_v24b_checkpoint/",
+  "domain_weights_used": {
+    "gsm8k": 1.0,
+    "humaneval": 1.2,
+    "arc": 1.3,
+    "svamp": 2.0
+  },
+  "dream_prm_weights_used": {
+    "gsm8k": 1.0,
+    "humaneval": 1.2,
+    "arc": 1.3,
+    "svamp": 8.0
+  },
+  "corpus_composition": {
+    "gsm8k": {
+      "total": 40,
+      "correct": 20,
+      "incorrect": 20
+    },
+    "humaneval": {
+      "total": 40,
+      "correct": 20,
+      "incorrect": 20
+    },
+    "arc": {
+      "total": 40,
+      "correct": 20,
+      "incorrect": 20
+    },
+    "svamp": {
+      "total": 40,
+      "correct": 20,
+      "incorrect": 20
+    }
+  },
+  "n_training_pairs": 160,
+  "n_train": 128,
+  "n_val": 32,
+  "n_epochs": 250,
+  "final_train_loss": 1.4498363137245178,
+  "final_val_loss": 0.7779374718666077,
+  "auc_svamp_v24_baseline": 0.0,
+  "auc_arc_v24_baseline": 0.71875,
+  "svamp_triplets_file": "results/jepa_v24b_svamp_triplets.json",
+  "schema": [
+    "all_domains_coverage",
+    "auc_arc",
+    "auc_arc_v24_baseline",
+    "auc_gsm8k",
+    "auc_humaneval",
+    "auc_svamp",
+    "auc_svamp_v24_baseline",
+    "checkpoint_path",
+    "corpus_composition",
+    "decision_class",
+    "domain_weights_used",
+    "dream_prm_weights_used",
+    "duration_s",
+    "experiment",
+    "final_train_loss",
+    "final_val_loss",
+    "finished_at",
+    "honest_verdict",
+    "min_domain_auc",
+    "n_epochs",
+    "n_train",
+    "n_training_pairs",
+    "n_val",
+    "overall_ood_auc",
+    "phase_timings_s",
+    "run_date",
+    "started_at",
+    "status",
+    "svamp_triplets_file",
+    "title"
+  ],
+  "invariant_violations": []
+}

@@ -164,6 +164,22 @@ Constraint addition shall be gated by a soundness bound derived from arXiv 2603.
 - The 0.85 threshold ensures that generated constraints have high precision — they rarely
   flag correct answers — preserving the soundness of downstream verification.
 
+### REQ-LEARN-020: JEPA Training Domain Coverage Pre-flight
+
+JEPA training MUST assert that every target evaluation domain has at least 15 labeled
+training pairs before the first gradient step.  If any domain is below the threshold,
+training must raise AssertionError with a diagnostic message naming the domain and
+its actual pair count.
+
+Rationale: DreamPRM per-domain loss reweighting (arXiv 2505.20241) multiplies the
+loss for each sample by a domain scalar.  When a domain has zero training samples,
+the weight scalar is mathematically irrelevant — no gradient signal exists.  Exp 834
+demonstrated this failure mode: auc_svamp=0.0 despite SVAMP weight=1.5 because there
+were only 10+10 step texts (not triplets) with insufficient TF-IDF vocabulary coverage.
+
+Implementation: `assert_domain_coverage(n_gsm8k, n_humaneval, n_arc, n_svamp, min_pairs=15)`
+raises AssertionError for any domain below the threshold.
+
 ## Scenarios
 
 ### SCENARIO-AUTO-001: Successful Self-Improvement Cycle
@@ -289,6 +305,15 @@ Constraint addition shall be gated by a soundness bound derived from arXiv 2603.
 **And** "sign_error" yields constraint_id "learned:sign_error"
 **And** "magnitude_error" yields constraint_id "learned:magnitude_error"
 **And** each LearnedConstraint has a human-readable description of what it checks
+
+### SCENARIO-LEARN-020: Training with Zero Domain Pairs Fires Assertion with Diagnostic
+
+**Given** a JEPA v24b training run where the SVAMP corpus is empty (0 pairs)
+**When** `build_corpus_v24b(svamp_triplets=[])` is called
+**Then** `assert_domain_coverage(n_svamp=0)` is invoked internally
+**And** AssertionError is raised before any gradient step
+**And** the message contains "SVAMP coverage insufficient" and the actual count "0 pairs"
+**And** no model weights are written (fail-fast, no partial checkpoint)
 
 ### SCENARIO-LEARN-018: ConstraintGenerator Orchestrates and Logs All Outcomes
 
