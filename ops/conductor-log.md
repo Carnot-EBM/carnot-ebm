@@ -2762,3 +2762,4 @@ python/ |
 | 2026-04-25 14:27 UTC | Exp 857: SOTA GGUF Download + Code Repair v6 — Qwe | OK | 81 passed, 3 warnings in 2.92s |
 | 2026-04-25 14:47 UTC | Exp 858: Live Full Precision Benchmark v5 — DualGP | OK | 81 passed, 3 warnings in 2.92s |
 | 2026-04-25 15:03 UTC | Exp 859: iCE40 N=8 Combinational Energy Oracle — F | OK | 81 passed, 3 warnings in 2.84s |
+| 2026-04-25 15:18 UTC | Exp 860: Inertia Ising Sampler Benchmark — arXiv 2 | OK | 81 passed, 3 warnings in 2.82s |
