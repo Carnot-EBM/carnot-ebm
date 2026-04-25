@@ -4197,3 +4197,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 844: JEPA v24b SVAMP-Balanced Domain Training (RETRO-SVAMP-ZERO-AUC, CPU) (⚠️ Research Finding) — honest_verdict=jepa_v24b_svamp_still_collapsed; results/experiment_844_jepa_v24b_svamp.json
 - 2026-04-25: Exp 845: JEPA v24b Tier 3.5 Deployment (CPU, GATED on Exp 844) (⚠️ Research Finding) — honest_verdict=jepa_v24b_not_deployed_below_gate; results/experiment_845_jepa_v24b_tier35_deployment.json
 - 2026-04-25: Exp 846: Multi-Agent Arbiter Gibbs Warm-Start Fix v3 (RETRO-ARBITER-FLAT-ENERGY, CPU) (⚠️ Research Finding) — honest_verdict=arbiter_calibrated; results/experiment_846_arbiter_gibbs_warmstart.json
+- 2026-04-25: Exp 847: EmbeddingConstraintStore L2-Norm Retrieval Fix (RETRO-CONSTRAINT-ZERO-DELTA, CPU) (⚠️ Research Finding) — honest_verdict=retrieval_partial; results/experiment_847_constraint_retrieval_l2_fix.json
