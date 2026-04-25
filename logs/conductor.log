@@ -1419,3 +1419,21 @@ logs/conductor.log                                 |  18 ++++
 2026-04-24 20:51:01,301 [conductor] RESEARCH STEP: Exp 820: GGUF Import Fix + Code Repair v5 (RETRO-GGUF-CACHE-IMPORT, GPU)
 2026-04-24 20:51:01,301 [conductor] ============================================================
 2026-04-24 20:51:01,318 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 20:51:01,371 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 20:51:01,371 [conductor] Running test suite (smart subset)...
+2026-04-24 20:51:06,901 [conductor] Pre-check: 81 passed, 3 warnings in 2.76s
+2026-04-24 20:51:07,021 [conductor] Injected 56 symbol signatures from 2 files (AST outlines)
+2026-04-24 20:51:07,021 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 10 tests pass. The deliverable is written and valid.
+
+**Result:** `results/experiment_820_gguf_import_fix_code_repair_v5.json` is written with `honest_verdict="import_fixed_repair_positive"`, `repair_delta=14` (14 of 20 problems passed with LLM vs 0 at canonical baseline), `import_repair_attempted=false` (llama_cpp was already installed). The RETRO-GGUF-CACHE-IMPORT blocker is resolved.
+2026-04-24 20:57:40,184 [conductor] Claude Code completed (exit 0)
+2026-04-24 20:57:40,197 [conductor] Changes:
+logs/conductor.log                     |  9 ++++++++
+ openspec/capabilities/pipeline/spec.md | 39 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+2026-04-24 20:57:40,219 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp830-milestone-retro-2026-04-63: 'date)",\n     "experiments_evaluated"' — auto-fixing
+2026-04-24 20:57:40,220 [conductor] DOGFOOD: Auto-fixed brace escaping in research-roadmap.yaml
+2026-04-24 20:57:40,224 [conductor] DOGFOOD: Verification complete (total: 496 checks, 45 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 20:57:40,224 [conductor] Running test suite (smart subset)...
+2026-04-24 20:57:45,904 [conductor] Post-check: 81 passed, 3 warnings in 2.83s

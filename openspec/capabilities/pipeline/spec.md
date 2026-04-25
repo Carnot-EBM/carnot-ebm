@@ -909,3 +909,42 @@ producing the all-time low ood_auc=0.2444 due to missing data augmentation.
 **And** the experiment writes a blocked artifact
 
 **Spec traces:** REQ-INFRA-061
+
+### REQ-REPAIR-056: GGUF Loader Import Self-Diagnostic
+
+The GGUF model loader MUST succeed `from llama_cpp import Llama` before any inference
+experiment proceeds.  If `ImportError` is raised at load time, the experiment MUST
+diagnose the error, log the full error message, and attempt auto-repair via
+`pip install --upgrade llama-cpp-python`.  If the import still fails after auto-repair,
+the experiment writes a blocked artifact with `honest_verdict="still_blocked_import"`.
+
+**Rationale:** Exp 811 produced `honest_verdict="blocked_model_load_failed"` due to a
+Python `ImportError` on `carnot.pipeline.gguf_cache`, blocking every live code repair
+experiment since milestone .58.  RETRO-028 resolution shifted the gate from OOM to import
+error.  The auto-repair loop prevents the same single-package absence from blocking
+multiple consecutive milestones.
+
+**Acceptance criteria:**
+- When `from llama_cpp import Llama` raises `ImportError`, the error message is logged
+  and `import_repair_attempted` is set to `True` in the artifact.
+- When auto-repair via `pip install --upgrade llama-cpp-python` succeeds and the subsequent
+  import succeeds, `import_repair_succeeded` is set to `True`.
+- When auto-repair fails and the import still raises, the artifact sets
+  `honest_verdict="still_blocked_import"` and `import_repair_succeeded=False`.
+
+**Spec traces:** REQ-REPAIR-056 (RETRO-GGUF-CACHE-IMPORT, closes milestone .58 blocker)
+
+### SCENARIO-REPAIR-089: GGUF Loader Import Failure Triggers Auto-Repair
+
+**Given** `from llama_cpp import Llama` raises `ImportError` at experiment startup
+**When** the experiment's import diagnostic runs
+**Then**
+  1. The error message is logged with the full exception text.
+  2. `subprocess.run(["pip", "install", "--upgrade", "llama-cpp-python"])` is called.
+  3. The import is retried.
+  4. If the retry succeeds: the experiment proceeds to GPU setup and inference.
+  5. If the retry fails: the experiment writes a blocked artifact with
+     `honest_verdict="still_blocked_import"`, `import_repair_attempted=True`,
+     `import_repair_succeeded=False`.
+
+**Spec traces:** REQ-REPAIR-056
