@@ -4231,3 +4231,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 873: JEPA v25 OOD Evaluation + Cascade Deployment (CPU, GATED on 872 OOD AUC > 0.65) (⚠️ Blocked) — honest_verdict=blocked; results/experiment_873_jepa_v25_deploy.json
 - 2026-04-25: Exp 874: StreamingCoT Tier 0g Live Integration — Wire into VerifyRepairPipeline (CPU) (⚠️ Research Finding) — honest_verdict=streaming_cot_wired; skip_rate=0.0; results/experiment_874_streaming_cot_integration.json
 - 2026-04-25: Exp 875: FR-11 Tier 2 Complete Self-Learning Relay v6 — Compressed Memory + Lagrange (CPU) (✅ Complete) — honest_verdict=fr11_tier2_loop_closed; results/experiment_875_fr11_tier2_relay_v6.json
+- 2026-04-25: Exp 876: iCE40 Inertia Ising v2 — Sparse Adjacency + EMA (RETRO-INERTIA-SWEEPS-TARGET-MISSED) (CPU+FPGA) (⚠️ Research Finding) — honest_verdict=sweeps_improved_below_5x; lut_count=130; results/experiment_876_ice40_inertia_v2.json
