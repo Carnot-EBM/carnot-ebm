@@ -111,8 +111,8 @@ tasks:
        c. For ARC: if mean_score_correct ~= mean_score_incorrect (~0.5), model is uncertain.
           If mean_score_correct < mean_score_incorrect (inverted), ARC is anti-correlated.
        d. Compute feature vector norms per domain — are ARC features near-zero?
-    6. Build diagnosis_finding dict: {domain: {mean_score_correct, mean_score_incorrect,
-       variance, feature_norm, is_anti_correlated, is_uncertain, n_arc_training_pairs}}.
+    6. Build diagnosis_finding dict: (domain: {mean_score_correct, mean_score_incorrect,
+       variance, feature_norm, is_anti_correlated, is_uncertain, n_arc_training_pairs)}.
     7. Recommendation: "add N ARC training pairs in Exp 834" or "rebalance loss weights".
     8. Add to openspec/capabilities/autoresearch/spec.md:
        REQ-LEARN-047: JEPA training corpus MUST contain >= 10 samples per reasoning domain
@@ -190,9 +190,9 @@ tasks:
     8. Create scripts/experiment_833_constraint_delta_root_cause.py using ExperimentTemplate(833).
        ExperimentTimeoutWatchdog(833, timeout_minutes=30).
        Write results/experiment_833_constraint_delta_root_cause.json with:
-       {hypothesis_confirmed, n_store_write_calls, n_store_retrieve_calls,
+       (hypothesis_confirmed, n_store_write_calls, n_store_retrieve_calls,
        mean_retrieved_vector_norm, n_external_field_calls, n_legacy_energy_calls,
-       root_cause, fix_recommendation}
+       root_cause, fix_recommendation)
     9. honest_verdict:
        - "write_path_missing" if n_store_write_calls == 0
        - "retrieval_returns_zeros" if writes>0 but vector_norm < 0.01
@@ -253,7 +253,7 @@ tasks:
        - Add 4-class softmax domain classifier alongside binary correctness head
        - At training: jointly train correctness + domain labels
        - At inference: multiply correctness_score by domain_weight[predicted_domain]
-       - Domain weights initialized: {gsm8k: 1.0, humaneval: 1.5, arc: 3.0, svamp: 1.5}
+       - Domain weights initialized: (gsm8k: 1.0, humaneval: 1.5, arc: 3.0, svamp: 1.5)
          (ARC gets 3x because it has historically lowest AUC)
     5. DreamPRM per-domain loss weighting:
        - Compute per-domain validation loss from Exp 825: arc=highest loss, gsm8k=medium
@@ -274,7 +274,7 @@ tasks:
        SCENARIO-LEARN-061: JEPA v24 trained with DG-PRM; ARC AUC improves from 0.04 to > 0.55.
     10. Create scripts/experiment_834_jepa_v24_dg_prm.py using ExperimentTemplate(834).
         ExperimentTimeoutWatchdog(834, timeout_minutes=60).
-        Save checkpoint: tmpl.checkpoint_save({"model_state": ...}, step=100).
+        Save checkpoint: tmpl.checkpoint_save(("model_state": ...), step=100).
         Write results/experiment_834_jepa_v24_dg_prm.json with: auc_gsm8k, auc_humaneval,
         auc_arc, auc_svamp, overall_ood_auc, min_domain_auc, domain_weights_used,
         corpus_composition, retro_jepa_ood_improving (True if min_domain_auc > 0.55).
@@ -390,8 +390,8 @@ tasks:
     1. Read CLAUDE.md spec-first workflow.
     2. Read results/experiment_833_constraint_delta_root_cause.json.
        If honest_verdict in ["pipeline_wiring_correct", "diagnosis_inconclusive"]:
-         write blocked artifact: {blocked: True, gate: "exp833_no_root_cause",
-         honest_verdict: "blocked_no_diagnosis"}.
+         write blocked artifact: (blocked: True, gate: "exp833_no_root_cause",
+         honest_verdict: "blocked_no_diagnosis").
     3. Apply fix based on root_cause field:
        a. If write_path_missing: in VerifyRepairPipeline.verify(), after each detected violation,
           add: `if self.constraint_store: self.constraint_store.write(violation_type, embedding)`.
@@ -462,8 +462,8 @@ tasks:
     1. Read CLAUDE.md spec-first workflow.
     2. Gate check: read results/experiment_836_constraint_accumulation_fix_v3.json.
        If honest_verdict != "constraint_accumulation_fixed":
-         write blocked artifact: {blocked: True, gate: "exp836_delta_not_positive",
-         honest_verdict: "blocked_gate"}.
+         write blocked artifact: (blocked: True, gate: "exp836_delta_not_positive",
+         honest_verdict: "blocked_gate").
     3. Add to openspec/capabilities/autoresearch/spec.md:
        REQ-LEARN-051: FR-11 Tier 1 live relay MUST demonstrate precision_s5 >= precision_s1
        over 5 sessions of >= 15 GSM8K questions each on live GPU inference.
@@ -527,7 +527,7 @@ tasks:
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
     2. Gate check: read results/experiment_834_jepa_v24_dg_prm.json.
-       If min_domain_auc < 0.50: write blocked artifact {honest_verdict: "blocked_below_gate"}.
+       If min_domain_auc < 0.50: write blocked artifact (honest_verdict: "blocked_below_gate").
     3. Add to openspec/capabilities/autoresearch/spec.md:
        REQ-LEARN-052: JEPA v24 deployed as Tier 3.5 MUST emit VerificationCertificate per
        CoT step containing: step_id, domain_label, jepa_score, energy_delta, domain_weight,
@@ -599,7 +599,7 @@ tasks:
     2. Check gate: read results/experiment_816_kv260_synthesis_v2.json.
        Find the synthesis JSON output path (e.g., output/ising_synth_n32.json or similar).
        If synthesis JSON doesn't exist: write blocked artifact
-       {honest_verdict: "synthesis_artifact_missing"}.
+       (honest_verdict: "synthesis_artifact_missing").
     3. Add OSS-CAD-Suite to PATH:
        export PATH=~/tools/oss-cad-suite/bin:$PATH
        Verify: subprocess.run(["nextpnr-ice40", "--version"], capture_output=True)
@@ -685,7 +685,7 @@ tasks:
     6. Use LongRunBenchmarkExecutor(batch_size=10) for 5 batches.
     7. BASELINE condition (no pipeline): run all 50 questions with raw LLM output.
        Record: n_correct_baseline, accuracy_baseline = n_correct_baseline / 50.
-       Checkpoint after each batch: tmpl.checkpoint_save({"baseline_results": ...}).
+       Checkpoint after each batch: tmpl.checkpoint_save(("baseline_results": ...)).
     8. VR condition (VerifyRepairPipeline, no JEPA): run all 50 questions with VR.
        Record: n_correct_vr, accuracy_vr. Checkpoint per batch.
     9. FULL condition (VR + JEPA v24 Tier 3.5 if deployed):
