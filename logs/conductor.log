@@ -3712,3 +3712,29 @@ logs/conductor.log | 7 +++++++
 2026-04-25 15:24:44,057 [conductor] RESEARCH STEP: Exp 874: StreamingCoT Tier 0g Live Integration — Wire into VerifyRepairPipeline (CPU)
 2026-04-25 15:24:44,057 [conductor] ============================================================
 2026-04-25 15:24:44,079 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 15:24:44,139 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 15:24:44,139 [conductor] Running test suite (smart subset)...
+2026-04-25 15:24:49,922 [conductor] Pre-check: 81 passed, 3 warnings in 2.95s
+2026-04-25 15:24:50,037 [conductor] Injected 84 symbol signatures from 3 files (AST outlines)
+2026-04-25 15:24:50,037 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. All 18 tests pass, deliverable JSON is written with `honest_verdict=streaming_cot_wired`, `skip_rate=0.0` (Ising not skipped), and `streaming_cot_advisory_rate=1.0`.
+
+**Summary of changes:**
+- `python/carnot/pipeline/streaming_cot.py` — new: `StreamingCoTHalluDetector`, `StreamingCoTResult`, `extract_cot_steps()`
+- `python/carnot/pipeline/verify_repair.py` — added `STREAMING_COT_ENABLED` class attr, `streaming_cot_phas` field on `VerificationResult`, wired Tier 0g advisory block in `verify()`
+- `openspec/capabilities/pipeline/spec.md` — added REQ-VERIFY-140, SCENARIO-VERIFY-165, SCENARIO-VERIFY-166
+- `scripts/experiment_874_streaming_cot_integration.py` — experiment script producing the deliverable
+- `results/experiment_874_streaming_cot_integration.json` — deliverable
+- `tests/python/test_experiment_874_streaming_cot_integration.py` — 18 tests, all passing
+2026-04-25 15:31:04,964 [conductor] Claude Code completed (exit 0)
+2026-04-25 15:31:04,979 [conductor] Changes:
+logs/conductor.log                      | 15 +++++++++
+ openspec/capabilities/pipeline/spec.md  | 58 +++++++++++++++++++++++++++++++++
+ python/carnot/pipeline/verify_repair.py | 52 +++++++++++++++++++++++++++--
+ 3 files changed, 123 insertions(+), 2 deletions(-)
+2026-04-25 15:31:04,994 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp869-gguf-predownload: '"success"' — auto-fixing
+2026-04-25 15:31:04,994 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp870-sota-code-repair-v7: '"name"' — auto-fixing
+2026-04-25 15:31:04,994 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp871-live-benchmark-v6: '"name"' — auto-fixing
+2026-04-25 15:31:04,998 [conductor] DOGFOOD: Verification complete (total: 548 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 15:31:04,998 [conductor] Running test suite (smart subset)...
+2026-04-25 15:31:11,063 [conductor] Post-check: 145 passed, 3 warnings in 3.22s
