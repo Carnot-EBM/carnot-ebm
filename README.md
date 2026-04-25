@@ -125,7 +125,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  across 830+ experiments and 69+ milestones, structured as six phases with
+  across 841+ experiments and 70+ milestones, structured as six phases with
   a plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
