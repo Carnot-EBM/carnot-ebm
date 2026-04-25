@@ -2733,3 +2733,50 @@ Given FoVer + CPMI corpus available:
   - honest_verdict = "jepa_v23_viable" if ood_auc >= 0.65
   - honest_verdict = "jepa_v23_improvement" if 0.50 <= ood_auc < 0.65
   - honest_verdict = "jepa_v23_below_random" if ood_auc < 0.50
+
+### REQ-LEARN-051: JEPA v23 MUST Be Evaluated on 3 Domains Before Tier 3.5 Deployment
+
+After confirming jepa_v23_viable gate (Exp 824 honest_verdict in ["jepa_v23_viable",
+"jepa_v23_improvement"]), JEPA v23 MUST be evaluated on 3 domains:
+  - GSM8K (in-distribution): 20 CoT step sequences, auc_gsm8k computed.
+  - HumanEval code steps (OOD): 10 function implementations as step-level traces, auc_humaneval.
+  - ARC-Challenge planning (OOD): 10 multi-step reasoning problems, auc_arc.
+
+overall_ood_auc = mean(auc_humaneval, auc_arc).  GSM8K is treated as in-distribution
+because the JEPA v23 training corpus contained GSM8K pairs.
+
+If overall_ood_auc >= 0.65, JEPA v23 MUST be deployed as ThreeTierPipeline Tier 3.5
+by setting the `tier_35` attribute on the pipeline instance, satisfying FR-11 Tier 3
+requirement (Exp 825).
+
+Spec: REQ-LEARN-051
+
+### REQ-LEARN-052: VerificationCertificate MUST Be Emitted Per Step When Tier 3.5 Is Active
+
+When JEPA v23 Tier 3.5 is active, each step's verification result MUST include a
+VerificationCertificate namedtuple with fields:
+  (step_id, jepa_energy_delta, constraint_type, z3_verdict, confidence_score)
+
+Format based on arXiv 2601.17223 (Beyond Outcome Verification / Verifiable PRM design).
+At least 20 VerificationCertificates MUST be emitted and stored in the experiment artifact.
+
+  - step_id: str identifier for the evaluated step (domain + index)
+  - jepa_energy_delta: float cosine distance from JEPAv23Predictor.predict_energy()
+  - constraint_type: str category ("arithmetic", "code_logic", "planning")
+  - z3_verdict: str formal verdict ("sat", "unsat", "unknown")
+  - confidence_score: float in [0, 1] derived from energy_delta
+
+Spec: REQ-LEARN-052
+
+### SCENARIO-LEARN-061: 3-Domain Eval with Tier 3.5 Deployment and VerificationCertificates
+
+Given JEPA v23 model loaded from Exp 824 checkpoint:
+  - Evaluate on GSM8K (20 steps), HumanEval (10 steps), ARC-Challenge (10 steps)
+  - overall_ood_auc = mean(auc_humaneval, auc_arc) is computed
+  - If overall_ood_auc >= 0.65: Tier 3.5 deployed (ThreeTierPipeline.tier_35 set)
+  - 20 VerificationCertificates emitted (one per randomly selected evaluated step)
+  - honest_verdict = "jepa_v23_tier35_deployed" when tier35_deployed=True
+  - honest_verdict = "jepa_v23_improvement_not_deployed" when 0.50 <= overall_ood_auc < 0.65
+  - honest_verdict = "blocked_gate" when Exp 824 honest_verdict is jepa_v23_below_random
+
+Spec: SCENARIO-LEARN-061

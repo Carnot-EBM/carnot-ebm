@@ -1620,3 +1620,26 @@ All updates follow "append only" rule. No pruning. Done.
 2026-04-24 22:33:31,991 [conductor] RESEARCH STEP: Exp 825: JEPA v23 Cross-Domain Eval + FR-11 Tier 3 Relay (gated on Exp 824, CPU)
 2026-04-24 22:33:31,991 [conductor] ============================================================
 2026-04-24 22:33:32,007 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 22:33:32,062 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 22:33:32,062 [conductor] Running test suite (smart subset)...
+2026-04-24 22:33:37,562 [conductor] Pre-check: 81 passed, 3 warnings in 2.77s
+2026-04-24 22:33:37,674 [conductor] Injected 58 symbol signatures from 3 files (AST outlines)
+2026-04-24 22:33:37,674 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+The deliverable is written and all 21 tests pass. The artifact reports `honest_verdict = "jepa_v23_below_random_ood"` with `overall_ood_auc = 0.40` (auc_humaneval=0.76, auc_arc=0.04 → mean=0.40 < 0.65 threshold), so Tier 3.5 is not deployed. The JEPA v23 model from Exp 824 generalises well to HumanEval code steps but fails on ARC planning — an informative OOD finding.
+
+**Deliverables produced:**
+- `results/experiment_825_jepa_v23_eval_fr11_tier3.json` — valid artifact with all required fields, 20 VerificationCertificates
+- `python/carnot/pipeline/verification_certificate.py` — VerificationCertificate namedtuple + factory
+- `python/carnot/pipeline/three_tier_pipeline.py` — added `tier_35` attribute
+- `openspec/capabilities/autoresearch/spec.md` — REQ-LEARN-051/052 and SCENARIO-LEARN-061 added
+- `tests/python/test_experiment_825_jepa_v23_eval_fr11_tier3.py` — 21 tests, all passing
+2026-04-24 22:38:38,201 [conductor] Claude Code completed (exit 0)
+2026-04-24 22:38:38,217 [conductor] Changes:
+logs/conductor.log                            | 14 +++++
+ openspec/capabilities/autoresearch/spec.md    | 47 ++++++++++++++++
+ python/carnot/pipeline/three_tier_pipeline.py |  5 ++
+ scripts/experiment_template.py                | 81 +++++++++++++++++++++++++++
+ 4 files changed, 147 insertions(+)
+2026-04-24 22:38:38,240 [conductor] DOGFOOD: Verification complete (total: 501 checks, 45 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 22:38:38,240 [conductor] Running test suite (smart subset)...
+2026-04-24 22:38:44,015 [conductor] Post-check: 81 passed, 3 warnings in 2.88s

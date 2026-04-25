@@ -229,6 +229,11 @@ class ThreeTierPipeline:
         self.nup_probe_threshold = nup_probe_threshold
         self.basin_detector = basin_detector
         self.basin_threshold = basin_threshold
+        # Tier 3.5: JEPA v23 predictor deployed by Exp 825 when OOD AUC >= 0.65.
+        # When set, this attribute records the wired JEPAv23Predictor instance for
+        # step-level energy scoring between Ising (Tier 3) and the response level.
+        # None means Tier 3.5 is not active (pre-Exp 825 or gate failed).
+        self.tier_35: Any = None
         # Platt temperature from Exp 646 calibration (REQ-VERIFY-150-4).
         # When set, Tier 2 energy is divided by T before threshold comparison:
         #   effective_energy = raw_energy / T
