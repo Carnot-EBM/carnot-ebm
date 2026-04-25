@@ -3881,3 +3881,18 @@ logs/conductor.log                                 | 14 ++++++
 2026-04-25 16:41:27,654 [conductor] RESEARCH STEP: Exp 878: HalluSAE v2 — Temporal Feature Velocity (RETRO-HALLUSAE-AUC-BELOW-THRESHOLD) (CPU)
 2026-04-25 16:41:27,654 [conductor] ============================================================
 2026-04-25 16:41:27,674 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 16:41:27,733 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 16:41:27,733 [conductor] Running test suite (smart subset)...
+2026-04-25 16:41:33,301 [conductor] Pre-check: 81 passed, 3 warnings in 2.82s
+2026-04-25 16:41:33,408 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-25 16:41:33,409 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-25 16:48:33,823 [conductor] Claude Code produced stable deliverable results/experiment_878_hallusae_v2.json (7.0 min elapsed) — killing subagent early
+2026-04-25 16:48:33,871 [conductor] Changes:
+logs/conductor.log | 6 ++++++
+ 1 file changed, 6 insertions(+)
+2026-04-25 16:48:33,887 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp869-gguf-predownload: '"success"' — auto-fixing
+2026-04-25 16:48:33,887 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp870-sota-code-repair-v7: '"name"' — auto-fixing
+2026-04-25 16:48:33,887 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp871-live-benchmark-v6: '"name"' — auto-fixing
+2026-04-25 16:48:33,890 [conductor] DOGFOOD: Verification complete (total: 552 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 16:48:33,891 [conductor] Running test suite (smart subset)...
+2026-04-25 16:48:39,571 [conductor] Post-check: 81 passed, 3 warnings in 2.90s
