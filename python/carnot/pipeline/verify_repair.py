@@ -277,6 +277,7 @@ class VerifyRepairPipeline:
         constraint_memory: Any | None = None,
         nup_probe: Any | None = None,
         nup_probe_threshold: float = 0.5,
+        enable_constraint_accumulation: bool = False,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -344,6 +345,11 @@ class VerifyRepairPipeline:
         # response between Tier 0b and Tier 0d.  Low score = likely correct = fast-path.
         self._nup_probe = nup_probe
         self._nup_probe_threshold = nup_probe_threshold
+        # REQ-LEARN-048: gate the constraint write path.  When True, each violation
+        # detected in verify() is written to the passed EmbeddingConstraintStore so
+        # subsequent sessions can retrieve it.  Default False preserves existing
+        # behaviour for callers that do not pass a store.
+        self._enable_constraint_accumulation = enable_constraint_accumulation
 
         # Restore persisted learning state if session_memory was provided
         # and a prior session exists on disk.  Restoring here (before
@@ -1368,6 +1374,43 @@ class VerifyRepairPipeline:
             for violation in result.violations:
                 vtype = violation.constraint_type.split(":", 1)[0]
                 self._constraint_memory.observe(vtype, response)
+
+        # REQ-LEARN-048: write each violation into the EmbeddingConstraintStore so
+        # future sessions can retrieve prior error patterns as injected constraints.
+        # This is the missing write path confirmed by Exp 833 (root_cause=write_path_missing).
+        # Only fires when enable_constraint_accumulation=True was set at construction time,
+        # preserving full backward compatibility for callers that omit the flag.
+        if (
+            embedding_constraint_store is not None
+            and result.violations
+            and self._enable_constraint_accumulation
+        ):
+            from carnot.pipeline.embedding_constraint_store import (  # noqa: PLC0415
+                ConstraintSPOTuple as _ConstraintSPOTuple,
+            )
+            # Map canonical violation type prefixes to structured SPO roles.
+            # Unmapped types fall back to a generic triple using the raw type string.
+            _SPO_MAP = {
+                "carry": ("arithmetic_carry", "violates", "carry_propagation"),
+                "sign": ("numeric_sign", "violates", "sign_preservation"),
+                "unit": ("unit_label", "violates", "unit_consistency"),
+                "comparison": ("comparison_direction", "violates", "inequality_direction"),
+                "causal": ("causal_entailment", "violates", "step_causality"),
+            }
+            for violation in result.violations:
+                vtype = violation.constraint_type.split(":", 1)[0]
+                subj, pred, obj = _SPO_MAP.get(
+                    vtype, (vtype, "violates", violation.description[:64])
+                )
+                embedding_constraint_store.store(
+                    _ConstraintSPOTuple(
+                        subject=subj,
+                        predicate=pred,
+                        object=obj,
+                        embedding=None,
+                        source_violation_type=vtype,
+                    )
+                )
 
         return result
 

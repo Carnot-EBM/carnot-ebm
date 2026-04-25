@@ -2731,3 +2731,5 @@ python/ |
 | 2026-04-25 05:35 UTC | Exp 833: Constraint Accumulation Root Cause Diagno | OK | 81 passed, 3 warnings in 2.87s |
 | 2026-04-25 05:52 UTC | Exp 834: JEPA v24 DG-PRM Domain-Balanced Training  | OK | 81 passed, 3 warnings in 2.87s |
 | 2026-04-25 06:08 UTC | Exp 835: Multi-Agent Arbiter Energy Calibration Fi | OK | 81 passed, 3 warnings in 2.87s |
+| 2026-04-25 06:26 UTC | Exp 836: Constraint Accumulation Fix v3 (RETRO-CON | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-25 06:36 UTC | Exp 836: Constraint Accumulation Fix v3 (RETRO-CON | OK | Deliverable already exists in repo |

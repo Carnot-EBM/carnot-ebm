@@ -2852,3 +2852,22 @@ Then:
 Target: min_domain_auc > 0.55 → honest_verdict = "jepa_v24_domain_balanced"
 
 Spec: SCENARIO-LEARN-834-001
+
+### SCENARIO-LEARN-836-001: Constraint Accumulation Fix v3 — Write Path Validated
+
+Given a `VerifyRepairPipeline` constructed with `enable_constraint_accumulation=True`:
+  - Session 1: empty `EmbeddingConstraintStore`, 30 GSM8K questions verified
+    - `n_constraints_written_s1 >= 1` (at least one violation written to store)
+  - Session 2: store has entries from session 1, same 30 questions re-verified
+    - `n_constraints_written_s2 >= 0` (additional violations written)
+    - Retrieved constraints from session 1 are injected into verification
+  - Session 3: store has entries from sessions 1+2, same 30 questions re-verified
+  - `delta_overall = max(precision_s1, precision_s2, precision_s3) - precision_s1`
+  - `honest_verdict` in {"constraint_accumulation_fixed", "write_path_fixed_no_delta",
+    "still_delta_zero", "blocked_no_diagnosis"}
+
+Root cause confirmed by Exp 833: `write_path_missing` (H1).
+Fix: `VerifyRepairPipeline.verify()` now calls `embedding_constraint_store.store(spo)`
+for each violation when `enable_constraint_accumulation=True`.
+
+Spec: REQ-LEARN-048, REQ-LEARN-049, SCENARIO-LEARN-060, SCENARIO-LEARN-836-001
