@@ -15717,3 +15717,32 @@ do not set `CARNOT_DUAL_GPU=1` see identical single-GPU behaviour.
 **Then** `throughput_ratio = serial_time_s / parallel_time_s >= 1.5`
 
 **Spec traces:** REQ-GPU-010, Exp 856
+
+## REQ-PROBE-040: StreamingCoTHalluDetector (Tier 0g)
+
+**Status:** Implemented (Exp 861)
+
+StreamingCoTHalluDetector MUST compute a rolling PHaS (Predictive Hallucination
+Score) over CoT steps using EORM scores and emit an is_streaming_unstable flag
+in VerificationResult.
+
+- REQ-PROBE-040-1: PHaS MUST be computed as an EMA: phas_t = alpha * eorm_score_t + (1 - alpha) * phas_(t-1).
+- REQ-PROBE-040-2: For the first step, phas_t MUST be initialized to eorm_score (no prior history).
+- REQ-PROBE-040-3: is_streaming_unstable MUST return True when phas_t < threshold (default 0.35).
+- REQ-PROBE-040-4: VerificationResult MUST carry a streaming_cot_unstable: bool field.
+- REQ-PROBE-040-5: Tier 0g MUST be advisory — it SHALL NOT short-circuit or modify the verified flag.
+
+**Rationale:** arXiv 2601.02170 shows that hallucinations in long CoT are
+predictable from prefix-level EORM scores before the incorrect step occurs.
+Rolling PHaS provides a cheap streaming signal with no extra model cost.
+
+### SCENARIO-PROBE-050: StreamingCoTHalluDetector AUC on Synthetic CoT Pairs
+
+**Given** 50 synthetic CoT pairs (25 correct, 25 with injected errors)
+**And** a StreamingCoTHalluDetector with alpha=0.3, threshold=0.35
+**And** EORM mock: correct steps score 0.7, error steps score 0.2
+**When** the detector processes all steps for each pair
+**Then** AUC_streaming > 0.65 (tier_0g_viable)
+**And** VerificationResult.streaming_cot_unstable is set correctly for each pair
+
+**Spec traces:** REQ-PROBE-040, Exp 861
