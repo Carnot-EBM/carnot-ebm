@@ -4224,3 +4224,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 865: Constraint Memory Bank Compression — arXiv 2601.00756 K=32 Centroids (CPU) (✅ Complete) — honest_verdict=compression_viable; results/experiment_865_constraint_memory_compression.json
 - 2026-04-25: Exp 866: KAN Hardware Complexity Analysis — arXiv 2604.03345 LUT Estimates (CPU) (⚠️ Research Finding) — honest_verdict=kan_over_budget; results/experiment_866_kan_hardware_analysis.json
 - 2026-04-25: Exp 868: Pre-flight v16 — Manifest Enforcement Module + 7-RETRO Audit (CPU) (✅ Complete) — honest_verdict=governance_ready; results/experiment_868_preflight_v16.json
+- 2026-04-25: Exp 869: GGUFCacheResolver v2 — Prove Download Works on Qwen3.5-0.8B (CPU) (❌ Failed) — honest_verdict=download_failed; results/experiment_869_gguf_predownload.json
