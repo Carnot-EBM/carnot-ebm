@@ -4208,3 +4208,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 851: iCE40 N=16 Ising Bitstream (RETRO-ICE40-PNR-LUT-OVERFLOW, CPU) (❌ Failed) — honest_verdict=pnr_failed_n16; results/experiment_851_ice40_n16_bitstream.json
 - 2026-04-25: Exp 853: Live Full Precision Benchmark v4 (GPU, CARNOT_FORCE_LIVE=1) (⚠️ Research Finding) — honest_verdict=simulated_no_verdict; results/experiment_853_live_benchmark_v4.json
 - 2026-04-25: Exp 855: Pre-flight v15 — Permanent LIVE-ENV Fix + RETRO Audit (CPU) (✅ Complete) — honest_verdict=governance_ready; results/experiment_855_preflight_v15.json
+- 2026-04-25: Exp 856: DualGPURunner Production Deployment — Wire into VerifyRepair + ThreeTier (CPU+GPU) (⚠️ Research Finding) — honest_verdict=deployed; results/experiment_856_dualgpu_production.json
