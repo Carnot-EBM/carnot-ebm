@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 830 Experiments Across 69 Research Milestones
+## A Technical Report on 842 Experiments Across 70 Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-25
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **830
-experiments across 69 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **842
+experiments across 70 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -258,6 +258,29 @@ bitstream not yet generated (nextpnr-ice40 routing invocation incomplete).
 Two new RETROs: RETRO-JEPA-PLANNING-DOMAIN-COLLAPSE,
 RETRO-ICE40-BITSTREAM-FAILURE. Four of 10 success criteria met (honest
 verdict: retro_63_mixed).
+
+Milestone 2026.04.64 (the 70th) extended the record to 842 experiments
+across 3,971 managed wall-clock minutes. Key .64 findings:
+RETRO-SYMCODE-SERIAL closed — SymCodeVerifier paragraph batching
+achieves 1.710x speedup (Exp 841); RETRO-TIER1-PLATEAU closed.
+JEPA v24 multi-domain training deployed as Tier 3.5 via domain-balanced
+DG-PRM corpus, addressing the ARC planning domain collapse that caused
+OOD AUC=0.04 in v23 (Exps 834/838). Multi-Agent Arbiter energy
+calibration fixed (Exp 835, RETRO-ARBITER-FLAT-ENERGY) — previously all
+responses scored 0.0, making selection order-dependent. Constraint
+accumulation fix v3 (Exp 836, RETRO-CONSTRAINT-ZERO-DELTA) restores
+non-zero delta between error and clean constraint responses. Live full
+precision benchmark v3 ran on GPU (Exp 840). KV260 iCE40 bitstream
+generation attempted (Exp 839) — blocked by LUT overflow:
+nextpnr-ice40 reports the N=32 design requires more LUTs than the
+iCE40 device provides (RETRO-ICE40-PNR-LUT-OVERFLOW opened). Wall-time
+REGRESSION for fifth consecutive milestone (+67 min / +1.7% vs .63);
+per-experiment average crept to 5.29 min (first uptick from the 5.0 min
+floor in four milestones). UNPRECEDENTED: all five slowest experiments
+identical across five consecutive milestones (Exps 786/527/491/627/603).
+Two new RETROs: RETRO-SVAMP-ZERO-AUC, RETRO-ICE40-PNR-LUT-OVERFLOW.
+Nine retros total still open. Honest verdict: fifth-consecutive-regression,
+12.8% near-term savings recoverable via manifest enforcement.
 
 ---
 

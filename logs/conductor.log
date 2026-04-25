@@ -2841,3 +2841,54 @@ MILESTONE_PREREQS.md | 37 +++++++++++++++++++++++++++++++++++++
 2026-04-25 08:53:02,140 [conductor] Pushed to origin
 2026-04-25 08:53:02,140 [conductor] Running post-commit documentation reconciliation...
 2026-04-25 08:53:02,141 [conductor] In-process docs: changelog=False, status=False, traceability_rows=0, verdict='', label='', skipped=no artifact found for task id 'exp854-milestone-retro'
+2026-04-25 08:53:02,172 [conductor] Committed: [conductor] In-process docs for Exp 854: Milestone 2026.04.65 Operational Retros
+2026-04-25 08:53:03,607 [conductor] Pushed to origin
+2026-04-25 08:53:03,607 [conductor] Documentation reconciliation committed (in-process)
+2026-04-25 08:53:03,609 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-25 08:58:03,611 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-25 09:03:03,613 [conductor] Sleep complete — resuming
+2026-04-25 09:03:03,613 [conductor] --- Iteration 21 ---
+2026-04-25 09:03:03,616 [conductor] All 12 research tasks completed or exhausted. Nothing to do.
+2026-04-25 09:03:03,616 [conductor] All tasks in current milestone complete.
+2026-04-25 09:03:03,616 [conductor] Updating docs before planning next milestone...
+2026-04-25 09:03:03,616 [conductor] ============================================================
+2026-04-25 09:03:03,616 [conductor] UPDATING DOCS BEFORE PLANNING
+2026-04-25 09:03:03,616 [conductor] ============================================================
+2026-04-25 09:03:03,616 [conductor] Calling Claude Code (30 max turns, model: sonnet)...
+Error: Reached max turns (30)2026-04-25 09:08:34,389 [conductor] Claude Code failed (exit 1)
+2026-04-25 09:08:34,389 [conductor] No doc updates needed (or update failed)
+2026-04-25 09:08:34,389 [conductor] Running operational retrospective...
+2026-04-25 09:08:34,409 [conductor] ============================================================
+2026-04-25 09:08:34,409 [conductor] OPERATIONAL RETROSPECTIVE (milestone 2026.04.65)
+2026-04-25 09:08:34,410 [conductor] ============================================================
+2026-04-25 09:08:34,541 [conductor] Calling agent for operational retrospective...
+2026-04-25 09:08:34,541 [conductor] Calling Claude Code (15 max turns, model: sonnet)...
+Done. Here's what was produced:
+
+**`results/operational_retro_2026_04_65.json`** — full-milestone augmented retro (schema v40):
+
+| Metric | Value |
+|---|---|
+| Total wall time | 4049 min |
+| Experiments | 772 |
+| Avg per experiment | 5.24 min |
+| Delta vs .64 | +78 min (+2.0%) — **6th consecutive regression** |
+| Delta vs .58 baseline | +634 min (+18.6%) |
+
+**Key findings:**
+
+1. **UNPRECEDENTED x5**: Exps 786/527/491/627/603 are slowest-5 for the *sixth* consecutive milestone — the manifest patch has been sitting unapplied for **seven milestones** while burning ~224 min/milestone.
+
+2. **GPU utilization**: Both RTX 3090s at 0%/47C at close — clean, but DualGPURunner (1.96x validated) has never been deployed in production, leaving ~60 min/milestone on the table.
+
+3. **No zombie processes**: GPU Zombie Killer holding at 0C differential.
+
+4. **Parallelization gap**: 4 of 5 slowest experiments could be parallelized or eliminated by manifest enforcement alone.
+
+5. **Pre-flight and doc passes** are not bottlenecks — the conductor cycle ran 203 min for 12 experiments.
+
+**Near-term recoverable: ~385 min (9.5%)** via manifest enforcement + DualGPU deployment + experiment cap + timeout watchdog + env-var fix. **Structural ceiling: ~30%** if all improvements applied.
+
+`ops/changelog.md` updated with the full summary.
+2026-04-25 09:11:52,086 [conductor] Claude Code completed (exit 0)
+2026-04-25 09:11:52,086 [conductor] Operational retrospective complete
