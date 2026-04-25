@@ -33,6 +33,69 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-25 arxiv Scan (Milestone 2026.04.64 Planning)
+
+### Dynamic and Generalizable Process Reward Modeling (DG-PRM)
+- **Paper:** arXiv 2507.17849 (July 2025)
+- **What:** Proposes DG-PRM that dynamically selects relevant and effective rewards for each
+  domain at inference time. Achieves strong OOD generalization by learning a domain-reweighting
+  function that adapts PRM scores based on the input distribution shift. Standard PRMs show
+  significant OOD performance drops; DG-PRM recovers 5-8% AUC across held-out domains.
+- **Relevance to Carnot:** JEPA v23 collapsed to AUC=0.04 on ARC (Exp 825) despite AUC=0.81
+  on training eval. Root cause: no ARC training data AND no domain adaptation at inference.
+  DG-PRM's domain-reweighting approach directly addresses this: train a lightweight domain
+  classifier alongside JEPA, multiply JEPA output by domain weight at inference. Expected
+  to recover ARC from 0.04 to > 0.50 without adding domain-specific training data.
+- **Concrete experiment:** Exp 834 — JEPA v24 with DG-PRM domain reweighting. Balance corpus
+  20+20+20+10 (GSM8K/HumanEval/ARC/SVAMP). Add domain-reweighting head trained jointly.
+- **When to incorporate:** Milestone 2026.04.64 — Phase 2 JEPA fix.
+
+### DreamPRM: Domain-Reweighted Process Reward Model for Multimodal Reasoning
+- **Paper:** arXiv 2505.20241 (May 2025)
+- **What:** Addresses distribution shift in PRM training via per-domain importance weights.
+  Quality imbalance across reasoning domains is the root cause of OOD failure. DreamPRM
+  computes per-domain loss weights proportional to validation error, ensuring rare domains
+  (like planning/ARC) get upweighted during training even when underrepresented in corpus.
+- **Relevance to Carnot:** Complementary to DG-PRM. DreamPRM's per-domain loss weighting
+  during training directly addresses the GSM8K-vs-ARC imbalance problem (Exp 825: 0.36 vs 0.04).
+  Concrete fix: compute per-domain validation loss before training, set ARC weight = 5x,
+  GSM8K weight = 1x. Prevents the model from ignoring ARC examples during optimization.
+- **Concrete experiment:** Integrated into Exp 834 as augmentation to DG-PRM.
+- **When to incorporate:** Milestone 2026.04.64 — Phase 2 JEPA fix.
+
+### ΔEnergy: Energy Change for OOD Detection and Generalization
+- **Paper:** arXiv 2510.11296 (October 2025)
+- **What:** Uses energy score *changes* (delta between positive and negative samples) rather
+  than raw energy scores to distinguish in-distribution from out-of-distribution data.
+  Key insight: absolute energy is unreliable OOD; energy delta is distribution-invariant.
+  Achieves improvements in both OOD detection and OOD generalization in vision-language models.
+- **Relevance to Carnot:** JEPA is trained on raw energy scores; the delta approach would train
+  on (E_correct - E_incorrect) gaps instead. This is distribution-invariant: a model trained
+  on GSM8K energy deltas will generalize to ARC energy deltas because the relative gap
+  is preserved even when absolute scales differ. Maps to the triplet loss in Exp 824 —
+  enhance the loss to weight by energy-delta magnitude.
+- **Concrete experiment:** Exp 834 — add ΔEnergy loss weighting: triplets with larger
+  (E_negative - E_positive) gaps get higher loss weight, forcing the model to focus on
+  clearly discriminative examples. This complements DG-PRM domain reweighting.
+- **When to incorporate:** Milestone 2026.04.64 — Phase 2 JEPA fix (Exp 834).
+
+### Schema-Constrained Generation for Agent Memory
+- **Paper:** arXiv 2604.20117 (April 2026)
+- **What:** Uses constrained LLM decoding via Trie-based structure to ensure agents generate
+  valid memory retrieval keys. Mathematically precludes structural hallucinations in memory
+  access by constraining the generation beam to valid schema paths. Achieves 100% structural
+  correctness with minimal latency overhead.
+- **Relevance to Carnot:** EmbeddingConstraintStore delta=0 in Exp 821 despite injection fix.
+  Root cause hypothesis: constraints being stored have inconsistent schema (free-form strings
+  not aligned to violation taxonomy). Schema-Constrained approach: define a fixed schema for
+  constraint storage (violation_type, affected_step, constraint_expression), enforce at write
+  time. This would prevent schema drift that may explain why retrieved constraints don't
+  produce energy deltas.
+- **Concrete experiment:** Exp 836 — add schema validation to EmbeddingConstraintStore.write():
+  constraints must conform to (violation_type, step_id, expression) schema. Run diagnostic
+  experiment to see if schema enforcement increases retrieval precision.
+- **When to incorporate:** Milestone 2026.04.64 — Phase 2 constraint fix (Exp 836).
+
 ## 2026-04-24 arxiv Scan (Milestone 2026.04.62 Planning)
 
 ### Retrieval-Augmented Process Reward Model for OOD Generalization

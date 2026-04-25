@@ -1,0 +1,856 @@
+milestone: 2026.04.64
+milestone_title: JEPA Cross-Domain Fix + Arbiter Calibration + Constraint Accumulation Root Cause
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+
+- id: exp831-governance-preflight
+  milestone: 2026.04.64
+  deliverable: results/experiment_831_governance_preflight.json
+  title: 'Exp 831: Governance Pre-flight + RETRO Audit (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Milestone 2026.04.63 completed (Exps 819-830). Two RETROs were closed:
+    RETRO-ISING-INJECTION-NO-DISCRIMINATION (Exp 819: injection_field_fixed,
+    retro_injection_closed=true) and RETRO-GGUF-CACHE-IMPORT (Exp 820:
+    import_fixed_repair_positive). The retro artifact (Exp 830) listed both as still-open
+    due to a reporting lag. This experiment audits actual experiment results to confirm
+    closure, updates MILESTONE_PREREQS.md for .64, and tracks the experiment count against
+    the 700-experiment cap.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_819_injection_field_fix.json — retro_injection_closed field
+    - results/experiment_820_gguf_import_fix_code_repair_v5.json — import status
+    - results/operational_retro_2026_04_63.json — full .63 retro, open_retros list
+    - MILESTONE_PREREQS.md (if exists, create if not)
+    - openspec/change-proposals/research-roadmap-vNEXT.md — .64 design doc
+
+    TASK: Audit RETRO closure status, update MILESTONE_PREREQS.md, report governance status.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_819_injection_field_fix.json and confirm
+       retro_injection_closed == True. If True: RETRO-ISING-INJECTION-NO-DISCRIMINATION = CLOSED.
+    3. Read results/experiment_820_gguf_import_fix_code_repair_v5.json and confirm
+       honest_verdict == "import_fixed_repair_positive". If so: RETRO-GGUF-CACHE-IMPORT = CLOSED.
+    4. Read results/operational_retro_2026_04_63.json and extract the open_retros list.
+       Cross-reference with actual Exp results above to produce corrected_open_retros.
+    5. Read or create MILESTONE_PREREQS.md. Add section "## Milestone 2026.04.64 Pre-flight":
+       - List corrected_open_retros (with CLOSED ones marked explicitly)
+       - List key assertions for .64: domain coverage, energy path, write path, experiment cap
+       - List IMMEDIATE actions for .64: Exp 833 diagnosis before Exp 836 fix
+    6. Check experiment count: list results/experiment_8*.json (Exp 800-830) to estimate total.
+       Read results/operational_retro_2026_04_63.json experiments_completed field.
+       experiments_over_cap = experiments_completed - 700.
+    7. Create scripts/experiment_831_governance_preflight.py using ExperimentTemplate(831).
+       Apply apply_env_autofix() first.
+       ExperimentTimeoutWatchdog(831, timeout_minutes=20).
+       Run the audit logic. Collect: retros_confirmed_closed, retros_still_open,
+       experiments_completed, experiments_over_cap, prereqs_updated.
+       Build result artifact and write results/experiment_831_governance_preflight.json.
+    8. honest_verdict:
+       - "governance_ready" if retros_confirmed_closed >= 2 AND prereqs_updated == True
+       - "governance_partial" if prereqs updated but retro audit incomplete
+       - "governance_issues" if prereqs not updated
+    9. Write tests/python/test_experiment_831_governance_preflight.py with 100% coverage:
+       - test audit logic reads retro_injection_closed correctly
+       - test corrected_open_retros excludes confirmed-closed retros
+       - test MILESTONE_PREREQS.md content updated
+       Traces to new REQ-INFRA-060, SCENARIO-INFRA-070.
+    10. Add to openspec/capabilities/pipeline/spec.md:
+        REQ-INFRA-060: Governance pre-flight MUST audit RETRO closure status against actual
+        experiment result JSONs before any new milestone experiments begin.
+        SCENARIO-INFRA-070: Exp N+1 RETRO listed as open; Exp N result JSON shows closure field=True;
+        governance pre-flight corrects status to CLOSED in MILESTONE_PREREQS.md.
+    11. Reconcile:
+        - ops/changelog.md: one-line entry
+        - ops/status.md: "Exp 831: .64 governance ready. Retros corrected. open_retros=<n>."
+    12. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_831_governance_preflight.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp832-jepa-arc-collapse-diagnosis
+  milestone: 2026.04.64
+  deliverable: results/experiment_832_jepa_arc_collapse_diagnosis.json
+  title: 'Exp 832: JEPA v23 ARC Domain Collapse Diagnosis (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 825 showed JEPA v23 collapses on ARC-Challenge: auc_arc=0.04 (below random),
+    auc_humaneval=0.76, auc_gsm8k=0.36. This is surprising because Exp 824 showed training
+    eval OOD AUC=0.811. Root cause hypothesis: the LIMO corpus had zero ARC training examples,
+    causing the model to systematically misclassify all ARC planning steps.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_824_jepa_v23_limo_corpus.json — model checkpoint path, training corpus
+    - results/experiment_825_jepa_v23_eval_fr11_tier3.json — per-domain AUC breakdown
+    - python/carnot/pipeline/jepa_predictor.py or similar — JEPAPredictor class
+    - python/carnot/pipeline/eorm_model.py — EORMModel for feature extraction
+    - openspec/capabilities/autoresearch/spec.md — REQ-LEARN entries
+
+    TASK: Load JEPA v23 weights, extract feature statistics per domain, identify why ARC collapses.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Load JEPA v23 from checkpoint (results/experiment_824_jepa_v23_limo_corpus.json,
+       look for checkpoint_path or model_weights field).
+    3. Generate 10 synthetic test steps per domain (CPU, no GPU needed):
+       - GSM8K: arithmetic CoT steps (e.g., "Step 1: 47 + 28 = 75, carry 1" — label: correct)
+       - HumanEval: code steps (e.g., "def add(a, b): return a + b" — label: correct)
+       - ARC-Challenge: planning steps (e.g., "Since A implies B and B implies C, we conclude A
+         implies C" — label: correct) vs wrong planning steps (label: incorrect)
+    4. For each step: compute JEPA prediction score, EORM energy, and 8-dimensional feature vector.
+    5. Analysis:
+       a. Compute mean JEPA score per domain for correct steps and incorrect steps.
+       b. Compute variance of JEPA scores per domain.
+       c. For ARC: if mean_score_correct ~= mean_score_incorrect (~0.5), model is uncertain.
+          If mean_score_correct < mean_score_incorrect (inverted), ARC is anti-correlated.
+       d. Compute feature vector norms per domain — are ARC features near-zero?
+    6. Build diagnosis_finding dict: {domain: {mean_score_correct, mean_score_incorrect,
+       variance, feature_norm, is_anti_correlated, is_uncertain, n_arc_training_pairs}}.
+    7. Recommendation: "add N ARC training pairs in Exp 834" or "rebalance loss weights".
+    8. Add to openspec/capabilities/autoresearch/spec.md:
+       REQ-LEARN-047: JEPA training corpus MUST contain >= 10 samples per reasoning domain
+       (arithmetic, code, planning). Domain coverage failure causes systematic AUC collapse.
+       SCENARIO-LEARN-059: JEPA trained with 0 ARC samples; deployment AUC on ARC < 0.10.
+       Diagnosis: ARC feature vectors outside training distribution.
+    9. Create scripts/experiment_832_jepa_arc_diagnosis.py using ExperimentTemplate(832).
+       ExperimentTimeoutWatchdog(832, timeout_minutes=30).
+       Write results/experiment_832_jepa_arc_collapse_diagnosis.json.
+    10. honest_verdict:
+        - "arc_diagnosis_found" if ARC is_anti_correlated or feature_norm near-zero
+        - "arc_diagnosis_uncertain" if cannot determine root cause
+        - "arc_unexpected_viable" if ARC scores are actually reasonable (unexpected)
+    11. Write tests/python/test_experiment_832_jepa_arc_diagnosis.py with 100% coverage.
+        Traces to REQ-LEARN-047, SCENARIO-LEARN-059.
+    12. Reconcile ops/changelog.md and ops/status.md.
+    13. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_832_jepa_arc_diagnosis.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp833-constraint-delta-root-cause
+  milestone: 2026.04.64
+  deliverable: results/experiment_833_constraint_delta_root_cause.json
+  title: 'Exp 833: Constraint Accumulation Root Cause Diagnosis (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 821 ran constraint accumulation with the external field injection fix from
+    Exp 819. Result: delta_overall=0.0 across 3 sessions of 30 GSM8K questions.
+    Three hypotheses for why delta=0 despite injection fix:
+    H1: VerifyRepairPipeline detects violations but never calls EmbeddingConstraintStore.write().
+    H2: EmbeddingConstraintStore.write() is called but retrieval returns zero-vectors.
+    H3: compute_energy_with_external_field is never called; legacy energy() path used instead.
+    This experiment instruments the pipeline to find which hypothesis is correct.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_821_constraint_addition_live_v2.json — delta_overall=0.0
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.verify()
+    - python/carnot/pipeline/embedding_constraint_store.py — EmbeddingConstraintStore
+    - python/carnot/pipeline/ising_constraint_injector.py — compute_energy_with_external_field
+    - openspec/capabilities/autoresearch/spec.md — REQ-LEARN entries
+
+    TASK: Add instrumentation to identify which pipeline stage breaks constraint accumulation.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add instrumentation to VerifyRepairPipeline.verify() WITHOUT changing behavior:
+       - Before and after EmbeddingConstraintStore operations: log call counts
+       - Track: n_store_write_calls, n_store_retrieve_calls, mean_retrieved_vector_norm,
+         n_external_field_calls, n_legacy_energy_calls
+       - Use a simple in-memory counter dict passed as optional debug_counters param
+    3. Create test runner: 5 synthetic GSM8K questions with KNOWN violations
+       (e.g., "Step 1: 47 + 28 = 76 (correct)" [fake correct], "Step 2: sum = 76 + 15 = 90")
+       where ground_truth_correct = [False, True, True, False, True].
+    4. Run the test with debug_counters:
+       session = EmbeddingConstraintStore()
+       pipeline = VerifyRepairPipeline(constraint_store=session, debug_counters=counters)
+       results = [pipeline.verify(q, answer) for q, answer in test_cases]
+    5. Examine counters after run:
+       - If n_store_write_calls == 0: H1 confirmed (write never called)
+       - If n_store_write_calls > 0 AND mean_retrieved_vector_norm < 0.01: H2 confirmed
+       - If n_external_field_calls == 0 AND n_legacy_energy_calls > 0: H3 confirmed
+    6. Also check: does VerifyRepairPipeline.__init__ accept a constraint_store parameter?
+       If not, the store is never passed in — H1 structural issue.
+    7. Add to openspec/capabilities/autoresearch/spec.md:
+       REQ-LEARN-048: VerifyRepairPipeline MUST call EmbeddingConstraintStore.write() with
+       detected violations when enable_constraint_accumulation=True.
+       REQ-LEARN-049: VerifyRepairPipeline MUST route energy computation through
+       compute_energy_with_external_field when IsingConstraintInjector is provided.
+       SCENARIO-LEARN-060: Pipeline detects 2 violations; EmbeddingConstraintStore.write()
+       called exactly 2 times; n_store_write_calls == 2.
+    8. Create scripts/experiment_833_constraint_delta_root_cause.py using ExperimentTemplate(833).
+       ExperimentTimeoutWatchdog(833, timeout_minutes=30).
+       Write results/experiment_833_constraint_delta_root_cause.json with:
+       {hypothesis_confirmed, n_store_write_calls, n_store_retrieve_calls,
+       mean_retrieved_vector_norm, n_external_field_calls, n_legacy_energy_calls,
+       root_cause, fix_recommendation}
+    9. honest_verdict:
+       - "write_path_missing" if n_store_write_calls == 0
+       - "retrieval_returns_zeros" if writes>0 but vector_norm < 0.01
+       - "external_field_not_called" if legacy_energy_calls > 0 AND external_field_calls == 0
+       - "pipeline_wiring_correct" if write+retrieve+external_field all correct
+       - "diagnosis_inconclusive" if cannot determine
+    10. Write tests/python/test_experiment_833_constraint_root_cause.py with 100% coverage.
+        Traces to REQ-LEARN-048, REQ-LEARN-049, SCENARIO-LEARN-060.
+    11. Reconcile ops/changelog.md and ops/status.md.
+    12. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_833_constraint_root_cause.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp834-jepa-v24-dg-prm-domain-balanced
+  milestone: 2026.04.64
+  deliverable: results/experiment_834_jepa_v24_dg_prm.json
+  title: 'Exp 834: JEPA v24 DG-PRM Domain-Balanced Training (RETRO-JEPA-OOD, CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: JEPA v23 collapsed on ARC (AUC=0.04) because the LIMO corpus had zero ARC
+    training examples. Exp 832 diagnosed the root cause. This experiment builds JEPA v24 with:
+    1. Balanced corpus: 20 GSM8K + 20 HumanEval + 20 ARC + 10 SVAMP = 70 pairs
+    2. DG-PRM domain reweighting (arXiv 2507.17849): domain classifier head
+    3. DreamPRM per-domain loss weighting (arXiv 2505.20241): upweight rare domains
+    4. ΔEnergy triplet loss (arXiv 2510.11296): weight by energy-delta magnitude
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_832_jepa_arc_collapse_diagnosis.json — domain diagnosis, feature stats
+    - results/experiment_824_jepa_v23_limo_corpus.json — v23 architecture, training code
+    - python/carnot/pipeline/jepa_predictor.py or equivalent — JEPAPredictor class
+    - python/carnot/pipeline/eorm_model.py — EORMModel for feature extraction
+    - research-references.md — DG-PRM (2507.17849), DreamPRM (2505.20241), ΔEnergy (2510.11296)
+    - openspec/capabilities/autoresearch/spec.md — REQ-LEARN entries
+
+    TASK: Train JEPA v24 with domain-balanced corpus and domain reweighting. Target: all
+    per-domain AUCs > 0.55. Write results/experiment_834_jepa_v24_dg_prm.json.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Assert domain coverage in corpus builder: `assert n_arc_pairs >= 10` at start.
+    3. Build balanced corpus:
+       a. GSM8K (20 pairs): arithmetic CoT correct/incorrect steps. Use FoVer-labeled
+          results from prior sessions if available; otherwise generate synthetically with
+          Z3-verified arithmetic (correct: a+b=c where c==a+b; incorrect: c!=a+b).
+       b. HumanEval (20 pairs): code correct/incorrect steps from Exp 820 results
+          or synthetic (correct: return a+b; incorrect: return a-b).
+       c. ARC-Challenge (20 pairs): CRITICAL — planning steps.
+          Generate: correct = deductive syllogism step (If A→B and B→C, then A→C),
+          incorrect = invalid deduction (If A→B, then B→A). Use at least 5 different
+          syllogism patterns for variety.
+       d. SVAMP (10 pairs): word problem arithmetic steps similar to GSM8K but different
+          phrasing. Helps generalization.
+    4. Implement DG-PRM domain head in JEPAPredictor:
+       - Add 4-class softmax domain classifier alongside binary correctness head
+       - At training: jointly train correctness + domain labels
+       - At inference: multiply correctness_score by domain_weight[predicted_domain]
+       - Domain weights initialized: {gsm8k: 1.0, humaneval: 1.5, arc: 3.0, svamp: 1.5}
+         (ARC gets 3x because it has historically lowest AUC)
+    5. DreamPRM per-domain loss weighting:
+       - Compute per-domain validation loss from Exp 825: arc=highest loss, gsm8k=medium
+       - Set loss_weight per domain proportional to validation loss
+       - arc_weight = 5.0, humaneval_weight = 1.5, gsm8k_weight = 1.0, svamp_weight = 1.5
+    6. ΔEnergy triplet weighting:
+       - For each triplet (anchor, positive, negative): compute energy delta =
+         |EORM_energy(negative) - EORM_energy(positive)|
+       - Weight triplet loss by energy_delta (higher gap = clearer example = higher weight)
+       - Clamp weights to [0.5, 3.0] to prevent degenerate cases
+    7. Train 200 epochs with triplet loss + domain reweighting + delta weighting.
+    8. Evaluate: per-domain AUC on held-out set (20% of corpus).
+       Report: auc_gsm8k, auc_humaneval, auc_arc, auc_svamp, overall_ood_auc.
+       min_domain_auc = min(auc_gsm8k, auc_humaneval, auc_arc, auc_svamp).
+    9. Add to openspec/capabilities/autoresearch/spec.md:
+       REQ-LEARN-050: JEPA training MUST use domain-reweighted loss with ARC weight >= 3.0
+       when ARC is not represented in prior training data.
+       SCENARIO-LEARN-061: JEPA v24 trained with DG-PRM; ARC AUC improves from 0.04 to > 0.55.
+    10. Create scripts/experiment_834_jepa_v24_dg_prm.py using ExperimentTemplate(834).
+        ExperimentTimeoutWatchdog(834, timeout_minutes=60).
+        Save checkpoint: tmpl.checkpoint_save({"model_state": ...}, step=100).
+        Write results/experiment_834_jepa_v24_dg_prm.json with: auc_gsm8k, auc_humaneval,
+        auc_arc, auc_svamp, overall_ood_auc, min_domain_auc, domain_weights_used,
+        corpus_composition, retro_jepa_ood_improving (True if min_domain_auc > 0.55).
+    11. honest_verdict:
+        - "jepa_v24_domain_balanced" if min_domain_auc > 0.55
+        - "jepa_v24_improvement" if overall_ood_auc > 0.65 but min_domain_auc <= 0.55
+        - "jepa_v24_arc_improved" if auc_arc > 0.40 (progress even if below gate)
+        - "jepa_v24_still_unbalanced" if auc_arc <= 0.40
+    12. Write tests/python/test_experiment_834_jepa_v24_dg_prm.py with 100% coverage.
+        Traces to REQ-LEARN-047, REQ-LEARN-050, SCENARIO-LEARN-059, SCENARIO-LEARN-061.
+    13. Reconcile ops/changelog.md, ops/status.md, _bmad/traceability.md (FR-11 status).
+    14. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_834_jepa_v24_dg_prm.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp835-arbiter-calibration-fix-v2
+  milestone: 2026.04.64
+  deliverable: results/experiment_835_arbiter_calibration_fix_v2.json
+  title: 'Exp 835: Multi-Agent Arbiter Energy Calibration Fix v2 (RETRO-ARBITER-FLAT-ENERGY, CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 822 showed arbiter_still_wrong with accuracy_standard=0.17. Analysis:
+    energies ARE non-zero (range -0.07 to +0.23) but arbiter still picks wrong answers in
+    standard scenarios. Root cause: MultiAgentArbiter.score_agent_outputs() calls legacy
+    IsingEBM.energy() instead of compute_energy_with_external_field. Additionally, the
+    energy magnitudes are small and vary per-query, so the arbiter needs per-query normalization.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_822_arbiter_fix_v2_agent_auditor.json — scenario results, raw energies
+    - python/carnot/inference/multi_agent_arbiter.py — MultiAgentArbiter class
+    - python/carnot/pipeline/ising_constraint_injector.py — compute_energy_with_external_field
+    - python/carnot/verify/ising_ebm.py — IsingEBM.energy() (legacy)
+    - openspec/capabilities/pipeline/spec.md — REQ-VERIFY entries
+
+    TASK: Fix arbiter to use external field energy + per-query z-score normalization.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. In python/carnot/inference/multi_agent_arbiter.py:
+       a. Find the energy scoring call (likely `energy = self.ising_model.energy(response)`)
+       b. Replace with: `result = self.injector.compute_energy_with_external_field(J, spins, embeddings)`
+          where J is the IsingEBM coupling matrix and spins/embeddings are derived from the response.
+       c. Add `injector: Optional[IsingConstraintInjector] = None` parameter to __init__.
+          If injector is None: fall back to legacy IsingEBM.energy() (backward compat).
+       d. Add per-query z-score normalization: for N agent responses to same query,
+          compute mu = mean(energies), sigma = std(energies).
+          If sigma > 1e-6: normalized_energies = (energies - mu) / sigma.
+          If sigma <= 1e-6: normalized_energies = energies (all same = random tie-break).
+       e. Arbiter selects agent with LOWEST normalized energy (lowest = best = least violation).
+    3. Add sign convention validation: unit test that correct response has lower energy than
+       wrong response for a known arithmetic error case.
+    4. Add to openspec/capabilities/pipeline/spec.md:
+       REQ-VERIFY-143: MultiAgentArbiter MUST use IsingConstraintInjector.compute_energy_with_external_field
+       when injector is provided, not the legacy IsingEBM.energy() method.
+       REQ-VERIFY-144: MultiAgentArbiter MUST z-score normalize per-query energies before ranking.
+       SCENARIO-VERIFY-172: 3 agents, 2 wrong (high energy), 1 correct (low energy);
+       arbiter returns correct agent in >= 4/6 standard scenarios.
+    5. Create scripts/experiment_835_arbiter_calibration_fix_v2.py using ExperimentTemplate(835).
+       ExperimentTimeoutWatchdog(835, timeout_minutes=30).
+       Re-run the 12 scenarios from Exp 822 (6 standard + 6 adversarial) with fixed arbiter.
+       Report: accuracy_standard, accuracy_adversarial, accuracy_overall.
+       Record per-scenario: energies_raw, energies_normalized, arbiter_index, is_correct.
+       Write results/experiment_835_arbiter_calibration_fix_v2.json.
+    6. honest_verdict:
+       - "arbiter_calibrated" if accuracy_standard >= 0.67
+       - "arbiter_partial" if accuracy_standard in [0.50, 0.67)
+       - "arbiter_improvement" if accuracy_standard > 0.17 (Exp 822 baseline) but < 0.50
+       - "arbiter_still_wrong" if accuracy_standard <= 0.17
+    7. Write tests/python/test_experiment_835_arbiter_calibration_v2.py with 100% coverage.
+       Traces to REQ-VERIFY-143, REQ-VERIFY-144, SCENARIO-VERIFY-172.
+    8. Reconcile ops/changelog.md and ops/status.md.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_835_arbiter_calibration_v2.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp836-constraint-accumulation-fix-v3
+  milestone: 2026.04.64
+  deliverable: results/experiment_836_constraint_accumulation_fix_v3.json
+  title: 'Exp 836: Constraint Accumulation Fix v3 (RETRO-CONSTRAINT-ZERO-DELTA, GPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: This experiment is GATED on Exp 833 root_cause_found (any diagnosis other than
+    "pipeline_wiring_correct" or "diagnosis_inconclusive"). Read
+    results/experiment_833_constraint_delta_root_cause.json first. If honest_verdict is
+    "pipeline_wiring_correct", write a blocked artifact: the delta=0 issue is elsewhere.
+
+    The fix targets whatever root cause Exp 833 identified:
+    - "write_path_missing": add EmbeddingConstraintStore.write() call in VerifyRepairPipeline
+    - "retrieval_returns_zeros": fix sentence-transformer initialization in EmbeddingConstraintStore
+    - "external_field_not_called": wire compute_energy_with_external_field into verify() path
+
+    After fix: validate on live GPU with 30 GSM8K × 3 sessions.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_833_constraint_delta_root_cause.json — root_cause, fix_recommendation
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+    - python/carnot/pipeline/embedding_constraint_store.py — EmbeddingConstraintStore
+    - python/carnot/pipeline/ising_constraint_injector.py — compute_energy_with_external_field
+    - research-references.md — Schema-Constrained Memory (2604.20117)
+    - openspec/capabilities/autoresearch/spec.md — REQ-LEARN-048, REQ-LEARN-049
+
+    TASK: Apply root-cause fix, validate on live GPU (30 GSM8K × 3 sessions).
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_833_constraint_delta_root_cause.json.
+       If honest_verdict in ["pipeline_wiring_correct", "diagnosis_inconclusive"]:
+         write blocked artifact: {blocked: True, gate: "exp833_no_root_cause",
+         honest_verdict: "blocked_no_diagnosis"}.
+    3. Apply fix based on root_cause field:
+       a. If write_path_missing: in VerifyRepairPipeline.verify(), after each detected violation,
+          add: `if self.constraint_store: self.constraint_store.write(violation_type, embedding)`.
+          Add enable_constraint_accumulation=True parameter to VerifyRepairPipeline.__init__.
+       b. If retrieval_returns_zeros: fix EmbeddingConstraintStore to initialize with
+          sentence-transformers (`from sentence_transformers import SentenceTransformer`)
+          or use a lightweight embedding fallback (word frequency vector).
+          Add schema validation per arXiv 2604.20117: constraints must have fields
+          (violation_type, step_id, expression) — reject free-form strings.
+       c. If external_field_not_called: in VerifyRepairPipeline.verify(), route to
+          `injector.compute_energy_with_external_field(J, spins, embeddings)` when
+          injector is provided.
+    4. Add to openspec/capabilities/autoresearch/spec.md per fix applied:
+       SCENARIO-LEARN-062: VerifyRepairPipeline with enable_constraint_accumulation=True
+       detects 2 violations; n_constraints_written == 2; second session retrieves 2 constraints;
+       energy score increases by > 0.01 in session 2 vs session 1.
+    5. Create scripts/experiment_836_constraint_accumulation_fix_v3.py using ExperimentTemplate(836).
+       apply_env_autofix() FIRST.
+       ExperimentTimeoutWatchdog(836, timeout_minutes=60).
+       setup_gpu(MODEL_SPECS) for Qwen3.5-0.8B.
+       Run 30 GSM8K questions × 3 sessions (CARNOT_FORCE_LIVE=1):
+         - Session 1: empty EmbeddingConstraintStore
+         - Session 2: store has constraints from session 1
+         - Session 3: store has constraints from sessions 1+2
+       Measure: precision_s1, precision_s2, precision_s3,
+       n_constraints_written_s1, n_constraints_written_s2, n_constraints_written_s3,
+       delta_overall = max(precision_s1, precision_s2, precision_s3) - precision_s1.
+    6. honest_verdict:
+       - "constraint_accumulation_fixed" if delta_overall > 0
+       - "write_path_fixed_no_delta" if n_constraints_written > 0 but delta_overall <= 0
+       - "still_delta_zero" if n_constraints_written == 0 (fix incomplete)
+       - "blocked_no_diagnosis" if gated
+    7. Write tests/python/test_experiment_836_constraint_accumulation_fix_v3.py with 100% coverage.
+       Traces to REQ-LEARN-048, REQ-LEARN-049, SCENARIO-LEARN-060, SCENARIO-LEARN-062.
+    8. Reconcile ops/changelog.md and ops/status.md.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu python scripts/experiment_836_constraint_accumulation_fix_v3.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp837-fr11-tier1-live-relay-v3
+  milestone: 2026.04.64
+  deliverable: results/experiment_837_fr11_tier1_live_relay_v3.json
+  title: 'Exp 837: FR-11 Tier 1 Live Relay v3 (FR-11 mandatory, GPU, gated on Exp 836 delta>0)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: This experiment is GATED on Exp 836 honest_verdict="constraint_accumulation_fixed".
+    Read results/experiment_836_constraint_accumulation_fix_v3.json first. If honest_verdict
+    is NOT "constraint_accumulation_fixed", write blocked artifact and stop.
+
+    FR-11 (Autonomous Self-Learning Loop) requires the system to get smarter with each query.
+    Tier 1: Online constraint accumulation — precision non-decreasing across sessions.
+    This is the 3rd attempt at the live relay (v1=Exp 802, v2=Exp 823 blocked_gate).
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_836_constraint_accumulation_fix_v3.json — gate check; delta>0 required
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline with constraint accumulation
+    - python/carnot/pipeline/embedding_constraint_store.py — EmbeddingConstraintStore
+    - scripts/experiment_template.py — ExperimentTemplate, BatchedInferenceRunner
+    - research-references.md — Capacity-Constrained CL (arXiv 2507.21479)
+
+    TASK: 5-session live relay, 15 questions/session. Measure precision monotonicity.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Gate check: read results/experiment_836_constraint_accumulation_fix_v3.json.
+       If honest_verdict != "constraint_accumulation_fixed":
+         write blocked artifact: {blocked: True, gate: "exp836_delta_not_positive",
+         honest_verdict: "blocked_gate"}.
+    3. Add to openspec/capabilities/autoresearch/spec.md:
+       REQ-LEARN-051: FR-11 Tier 1 live relay MUST demonstrate precision_s5 >= precision_s1
+       over 5 sessions of >= 15 GSM8K questions each on live GPU inference.
+       SCENARIO-LEARN-063: Session 1: n_constraints=0; session 5: n_constraints >= 10;
+       precision_s5 >= precision_s1 (monotonic improvement).
+    4. Create scripts/experiment_837_fr11_tier1_live_relay_v3.py using ExperimentTemplate(837).
+       apply_env_autofix() FIRST.
+       ExperimentTimeoutWatchdog(837, timeout_minutes=90).
+       setup_gpu(MODEL_SPECS) for Qwen3.5-0.8B.
+    5. Run 5 sessions (CARNOT_FORCE_LIVE=1), 15 GSM8K questions per session:
+       persistent_store = EmbeddingConstraintStore(enable_schema_validation=True)
+       For session s in [1..5]:
+         a. Run 15 questions with VerifyRepairPipeline(constraint_store=persistent_store,
+            enable_constraint_accumulation=True).
+         b. Compute precision_s = TP / (TP + FP) using GSM8K ground truth.
+         c. Capacity-constrained update (arXiv 2507.21479): update only top-K=3 highest-variance
+            constraint types, freeze well-calibrated ones.
+         d. Record: precision_s, n_constraints_store, n_new_constraints_s.
+    6. Compute: is_monotonic = all(precision[i] <= precision[i+1] for i in range(4))
+       delta_s1_to_s5 = precision_5 - precision_1.
+    7. Write results/experiment_837_fr11_tier1_live_relay_v3.json with:
+       sessions, precision_trend, is_monotonic, delta_s1_to_s5, inference_mode, honest_verdict.
+    8. honest_verdict:
+       - "tier1_relay_works_live" if is_monotonic AND delta_s1_to_s5 > 0
+       - "tier1_monotonic_no_gain" if is_monotonic but delta_s1_to_s5 <= 0
+       - "tier1_plateau_persists_live" if NOT is_monotonic
+       - "blocked_gate" if gate fails
+    9. Write tests/python/test_experiment_837_fr11_tier1_live_relay_v3.py with 100% coverage.
+       Traces to REQ-LEARN-051, SCENARIO-LEARN-063.
+    10. Reconcile ops/changelog.md, ops/status.md, _bmad/traceability.md (FR-11 Tier 1 status).
+    11. tmpl.assert_deliverable_written() as final line.
+
+    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu python scripts/experiment_837_fr11_tier1_live_relay_v3.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp838-jepa-v24-tier35-deployment
+  milestone: 2026.04.64
+  deliverable: results/experiment_838_jepa_v24_tier35_deployment.json
+  title: 'Exp 838: JEPA v24 Multi-Domain Deployment as Tier 3.5 (CPU, gated on Exp 834)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: This experiment is GATED on Exp 834 honest_verdict containing "viable" or
+    "improvement" (min_domain_auc > 0.55 preferred). Read results/experiment_834_jepa_v24_dg_prm.json.
+    If min_domain_auc < 0.50: write blocked artifact and stop.
+
+    JEPA v24 has domain-reweighting capability. This experiment deploys it as Tier 3.5 in
+    ThreeTierPipeline, emitting VerificationCertificates per step with domain labels.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_834_jepa_v24_dg_prm.json — model checkpoint, per-domain AUC
+    - python/carnot/pipeline/three_tier_pipeline.py or similar — ThreeTierPipeline
+    - python/carnot/models/kaem_energy.py — KAEMEnergy for fast-path reference
+    - openspec/capabilities/autoresearch/spec.md — REQ-LEARN entries
+    - _bmad/traceability.md — FR-11 implementation status
+
+    TASK: Wire JEPA v24 into ThreeTierPipeline as Tier 3.5. Emit VerificationCertificates.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Gate check: read results/experiment_834_jepa_v24_dg_prm.json.
+       If min_domain_auc < 0.50: write blocked artifact {honest_verdict: "blocked_below_gate"}.
+    3. Add to openspec/capabilities/autoresearch/spec.md:
+       REQ-LEARN-052: JEPA v24 deployed as Tier 3.5 MUST emit VerificationCertificate per
+       CoT step containing: step_id, domain_label, jepa_score, energy_delta, domain_weight,
+       z3_verdict, confidence_score.
+       SCENARIO-LEARN-064: 30 test steps (10 per domain); Tier 3.5 deployed;
+       domain classifier accuracy >= 0.80 per domain.
+    4. Implement VerificationCertificate dataclass in python/carnot/pipeline/verify_repair.py:
+       @dataclass
+       class VerificationCertificate:
+           step_id: str
+           domain_label: str  # gsm8k|humaneval|arc|svamp
+           jepa_score: float
+           energy_delta: float
+           domain_weight: float
+           z3_verdict: str  # sat|unsat|unknown
+           confidence_score: float
+    5. Wire JEPA v24 into ThreeTierPipeline:
+       - Add jepa_predictor: Optional[JEPAPredictor] = None to __init__
+       - In verify(): if jepa_predictor and step_list: compute per-step VerificationCertificates
+       - Add certificate list to ThreeTierPipelineResult
+    6. Create scripts/experiment_838_jepa_v24_tier35_deployment.py using ExperimentTemplate(838).
+       ExperimentTimeoutWatchdog(838, timeout_minutes=40).
+       Generate 30 test steps (10 per domain, synthetic, CPU-only).
+       Run pipeline with JEPA v24 Tier 3.5 active.
+       Measure: domain_classifier_accuracy, n_certificates_emitted, tier35_deployed.
+    7. Write results/experiment_838_jepa_v24_tier35_deployment.json with:
+       tier35_deployed, domain_classifier_accuracy, n_certificates_emitted,
+       per_domain_accuracy, honest_verdict.
+    8. honest_verdict:
+       - "jepa_v24_tier35_deployed" if tier35_deployed AND domain_classifier_accuracy >= 0.80
+       - "jepa_v24_deployed_low_domain_accuracy" if deployed but domain_accuracy < 0.80
+       - "jepa_v24_not_deployed_below_gate" if min_domain_auc < 0.50
+    9. If tier35_deployed: update _bmad/traceability.md FR-11 Tier 3 status = DEPLOYED.
+    10. Write tests/python/test_experiment_838_jepa_v24_tier35_deployment.py with 100% coverage.
+        Traces to REQ-LEARN-052, SCENARIO-LEARN-064.
+    11. Reconcile ops/changelog.md, ops/status.md.
+    12. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_838_jepa_v24_tier35_deployment.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp839-kv260-ice40-bitstream
+  milestone: 2026.04.64
+  deliverable: results/experiment_839_kv260_ice40_bitstream.json
+  title: 'Exp 839: KV260 iCE40 Bitstream Generation (CPU, gated on Exp 816 synthesis)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 816 (milestone .62) synthesized ising_sampler_v3.v at N=32 for iCE40 HX8K
+    using OSS-CAD-Suite yosys: 3952 LUTs, 0 errors. The synthesis JSON artifact was generated.
+    Exp 827 (milestone .63) showed nextpnr-xilinx is not available for KV260 Zynq synthesis,
+    but the iCE40 target IS available via nextpnr-ice40.
+    This experiment: run nextpnr-ice40 place-and-route + icepack bitstream generation.
+    The bitstream won't run on KV260 hardware (wrong FPGA family) but validates the full
+    synthesis→bitstream pipeline end-to-end before Vivado installation.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_816_kv260_synthesis_v2.json — synthesis output JSON path, LUT count
+    - results/experiment_827_kv260_nextpnr_xilinx_v3.json — nextpnr-xilinx blocked result
+    - hardware/kv260/ising_sampler_v3.v — RTL source
+    - research-hardware-wishlist.md — KV260 synthesis status
+
+    TASK: Run nextpnr-ice40 PnR + icepack to generate .bin bitstream from N=32 synthesis.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Check gate: read results/experiment_816_kv260_synthesis_v2.json.
+       Find the synthesis JSON output path (e.g., output/ising_synth_n32.json or similar).
+       If synthesis JSON doesn't exist: write blocked artifact
+       {honest_verdict: "synthesis_artifact_missing"}.
+    3. Add OSS-CAD-Suite to PATH:
+       export PATH=~/tools/oss-cad-suite/bin:$PATH
+       Verify: subprocess.run(["nextpnr-ice40", "--version"], capture_output=True)
+    4. Run nextpnr-ice40 place-and-route:
+       nextpnr-ice40 --hx8k --package ct256 \
+         --json <synthesis_json_path> \
+         --asc output/carnot_ising_n32.asc \
+         --freq 25
+       Parse output for: routing_complete (bool), timing_met (bool), errors.
+    5. If routing_complete: run icepack to generate bitstream:
+       icepack output/carnot_ising_n32.asc output/carnot_ising_n32.bin
+       Verify bitstream header (first 4 bytes of .bin == iCE40 magic: 0xFF 0x00 or read
+       actual iCE40 format spec — check icepack man page for expected header bytes).
+    6. Test: os.path.getsize("output/carnot_ising_n32.bin") > 0 (non-empty file).
+    7. Update research-hardware-wishlist.md: add entry for iCE40 bitstream status.
+    8. Create scripts/experiment_839_kv260_ice40_bitstream.py using ExperimentTemplate(839).
+       ExperimentTimeoutWatchdog(839, timeout_minutes=30).
+       Write results/experiment_839_kv260_ice40_bitstream.json with:
+       nextpnr_available, pnr_complete, timing_met, bitstream_generated, bitstream_size_bytes,
+       bitstream_valid_header, output_path, honest_verdict.
+    9. honest_verdict:
+       - "bitstream_generated" if bitstream_generated AND bitstream_valid_header
+       - "bitstream_generated_invalid_header" if file exists but header wrong
+       - "pnr_failed" if nextpnr-ice40 errors
+       - "nextpnr_not_available" if tool not found
+       - "synthesis_artifact_missing" if Exp 816 JSON not found
+    10. Write tests/python/test_experiment_839_kv260_ice40_bitstream.py with 100% coverage.
+        - test nextpnr availability check
+        - test icepack subprocess call (mocked)
+        - test bitstream header validation
+        Traces to new REQ-HW-035, SCENARIO-HW-035.
+    11. Add to openspec/capabilities/verifiable-reasoning/spec.md:
+        REQ-HW-035: iCE40 bitstream generation MUST produce a valid .bin file from
+        N=32 Ising sampler synthesis JSON, with file size > 0 and valid iCE40 header.
+        SCENARIO-HW-035: yosys synthesis → nextpnr-ice40 PnR → icepack .bin; header valid.
+    12. Reconcile ops/changelog.md, ops/status.md, research-hardware-wishlist.md.
+    13. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_839_kv260_ice40_bitstream.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp840-live-precision-benchmark-v3
+  milestone: 2026.04.64
+  deliverable: results/experiment_840_live_precision_benchmark_v3.json
+  title: 'Exp 840: Live Full Precision Benchmark v3 (GPU, CARNOT_FORCE_LIVE=1)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 820 produced repair_delta=14 on HumanEval (n_baseline_pass=0, n_repair_pass=14).
+    That baseline=0 result is suspicious and needs validation on a proper benchmark.
+    This experiment runs a clean live precision benchmark on GSM8K with Qwen3.5-0.8B:
+    - 50 questions total (splits into 5 batches of 10 via LongRunBenchmarkExecutor)
+    - 3 conditions: BASELINE (no pipeline), VR (VerifyRepairPipeline), FULL (VR + JEPA v24)
+    - Atomic checkpoint per batch; partial results valid
+    - honest_verdict ONLY = "pipeline_improvement" if live GPU AND signed_improvement > 0
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_820_gguf_import_fix_code_repair_v5.json — baseline suspicious
+    - python/carnot/pipeline/long_run_executor.py — LongRunBenchmarkExecutor
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog
+    - scripts/experiment_template.py — ExperimentTemplate, BatchedInferenceRunner
+
+    TASK: Run 50 GSM8K questions × 3 conditions on live GPU. Report honest signed improvement.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add to openspec/capabilities/benchmarks/spec.md (create if needed):
+       REQ-BENCH-010: Live precision benchmark MUST run on live GPU (inference_mode=live_gpu).
+       Simulated fallback MUST write honest_verdict="simulated_no_verdict".
+       REQ-BENCH-011: Baseline condition MUST run first and its result MUST be used as
+       denominator for signed_improvement computation.
+       SCENARIO-BENCH-025: 50 GSM8K questions; 3 conditions; checkpoint per batch;
+       honest_verdict=pipeline_improvement only when inference_mode=live_gpu AND improvement>0.
+    3. Create scripts/experiment_840_live_precision_benchmark_v3.py using ExperimentTemplate(840).
+       apply_env_autofix() FIRST.
+       ExperimentTimeoutWatchdog(840, timeout_minutes=120).
+       setup_gpu(MODEL_SPECS) for Qwen3.5-0.8B on GPU 0.
+    4. If GPU not available: write blocked artifact with honest_verdict="simulated_no_verdict".
+    5. Load 50 GSM8K questions from local cache or datasets["gsm8k"] test split.
+    6. Use LongRunBenchmarkExecutor(batch_size=10) for 5 batches.
+    7. BASELINE condition (no pipeline): run all 50 questions with raw LLM output.
+       Record: n_correct_baseline, accuracy_baseline = n_correct_baseline / 50.
+       Checkpoint after each batch: tmpl.checkpoint_save({"baseline_results": ...}).
+    8. VR condition (VerifyRepairPipeline, no JEPA): run all 50 questions with VR.
+       Record: n_correct_vr, accuracy_vr. Checkpoint per batch.
+    9. FULL condition (VR + JEPA v24 Tier 3.5 if deployed):
+       Check results/experiment_838_jepa_v24_tier35_deployment.json.
+       If tier35_deployed=True: add JEPA to pipeline.
+       Else: FULL = VR only (log: jepa_not_deployed).
+       Record: n_correct_full, accuracy_full. Checkpoint per batch.
+    10. Compute:
+        signed_improvement_vr = accuracy_vr - accuracy_baseline
+        signed_improvement_full = accuracy_full - accuracy_baseline
+        signed_improvement = max(signed_improvement_vr, signed_improvement_full)
+    11. Write results/experiment_840_live_precision_benchmark_v3.json with:
+        accuracy_baseline, accuracy_vr, accuracy_full, signed_improvement_vr,
+        signed_improvement_full, signed_improvement, inference_mode, n_questions=50,
+        honest_verdict.
+    12. honest_verdict:
+        - "pipeline_improvement" if inference_mode=live_gpu AND signed_improvement > 0
+        - "pipeline_no_improvement" if inference_mode=live_gpu AND signed_improvement <= 0
+        - "simulated_no_verdict" if GPU unavailable (fallback)
+    13. Write tests/python/test_experiment_840_live_precision_benchmark_v3.py with 100% coverage.
+        Traces to REQ-BENCH-010, REQ-BENCH-011, SCENARIO-BENCH-025.
+    14. Reconcile ops/changelog.md, ops/status.md (this is the headline benchmark).
+    15. tmpl.assert_deliverable_written() as final line.
+
+    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu python scripts/experiment_840_live_precision_benchmark_v3.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp841-symcode-paragraph-batching
+  milestone: 2026.04.64
+  deliverable: results/experiment_841_symcode_paragraph_batching.json
+  title: 'Exp 841: SymCodeVerifier Paragraph Batching (RETRO-SYMCODE-SERIAL, CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-SYMCODE-SERIAL (opened milestone .63): SymCodeVerifier processes
+    multi-paragraph responses one paragraph at a time, each as a separate exec() call
+    (~50ms each). For Exp 627-style responses with 10+ paragraphs, this is 500ms+ total.
+    Batch processing: collect all arithmetic expressions from all paragraphs in one pass,
+    evaluate in a single exec() call with shared namespace. This eliminates redundant
+    module imports (math, re) and namespace initialization per paragraph.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier.verify() implementation
+    - openspec/capabilities/pipeline/spec.md — REQ-VERIFY entries
+    - tests/python/test_symcode_verifier.py — existing tests to maintain
+
+    TASK: Add SymCodeVerifier.batch_verify(paragraphs) method. Measure latency improvement.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. In python/carnot/pipeline/symcode_verifier.py, add:
+       def batch_verify(self, paragraphs: list[str]) -> SymCodeBatchResult:
+         '''Verify all paragraphs in a single exec() call. Faster than N serial verify() calls.'''
+         a. Collect all arithmetic expressions from all paragraphs with one regex scan.
+         b. Build a single exec_script with all expressions in one shared namespace.
+         c. Run once with exec() / eval() + timeout.
+         d. Map results back to per-paragraph violation flags.
+         e. Return SymCodeBatchResult(per_paragraph_results, total_violations, batch_latency_ms).
+    3. Add SymCodeBatchResult dataclass:
+       @dataclass
+       class SymCodeBatchResult:
+           per_paragraph_results: list[SymCodeResult]
+           total_violations: int
+           batch_latency_ms: float
+           n_paragraphs: int
+    4. Add to openspec/capabilities/pipeline/spec.md:
+       REQ-VERIFY-145: SymCodeVerifier.batch_verify() MUST process N paragraphs in a single
+       exec() call, avoiding N separate exec() invocations. Latency for 10 paragraphs MUST
+       be < 2× single paragraph latency (not N× single paragraph latency).
+       SCENARIO-VERIFY-173: 10-paragraph response; batch_verify latency < 2× single paragraph;
+       violations detected same as N separate verify() calls.
+    5. Create scripts/experiment_841_symcode_paragraph_batching.py using ExperimentTemplate(841).
+       ExperimentTimeoutWatchdog(841, timeout_minutes=20).
+       Benchmark:
+         a. 10 synthetic paragraphs with 1-2 arithmetic expressions each.
+         b. Measure latency_single: N serial verify() calls.
+         c. Measure latency_batch: single batch_verify() call.
+         d. Compute speedup = latency_single / latency_batch.
+         e. Verify: same violations detected in both modes.
+       Write results/experiment_841_symcode_paragraph_batching.json with:
+       latency_single_ms, latency_batch_ms, speedup, violations_match, n_paragraphs,
+       retro_symcode_serial_closed (True if speedup >= 1.5), honest_verdict.
+    6. honest_verdict:
+       - "batching_effective" if speedup >= 2.0 AND violations_match=True
+       - "batching_marginal" if 1.5 <= speedup < 2.0 AND violations_match=True
+       - "batching_no_gain" if speedup < 1.5
+       - "batching_incorrect" if violations_match=False (correctness regression)
+    7. Write tests/python/test_experiment_841_symcode_batching.py with 100% coverage.
+       Ensure existing SymCodeVerifier tests still pass.
+       Traces to REQ-VERIFY-145, SCENARIO-VERIFY-173.
+    8. Reconcile ops/changelog.md and ops/status.md.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_841_symcode_batching.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp842-milestone-retro
+  milestone: 2026.04.64
+  deliverable: results/operational_retro_2026_04_64.json
+  title: 'Exp 842: Milestone 2026.04.64 Operational Retrospective'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Milestone 2026.04.64 (Exps 831-842) has completed. Write the full operational
+    retrospective following the established schema=carnot.operational_retro.v39.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_831_governance_preflight.json
+    - results/experiment_832_jepa_arc_collapse_diagnosis.json
+    - results/experiment_833_constraint_delta_root_cause.json
+    - results/experiment_834_jepa_v24_dg_prm.json
+    - results/experiment_835_arbiter_calibration_fix_v2.json
+    - results/experiment_836_constraint_accumulation_fix_v3.json
+    - results/experiment_837_fr11_tier1_live_relay_v3.json
+    - results/experiment_838_jepa_v24_tier35_deployment.json
+    - results/experiment_839_kv260_ice40_bitstream.json
+    - results/experiment_840_live_precision_benchmark_v3.json
+    - results/experiment_841_symcode_paragraph_batching.json
+    - results/operational_retro_2026_04_63.json — prior retro for baseline comparison
+    - ops/conductor-log.md — per-experiment timing data
+
+    TASK: Analyze milestone efficiency, document outcomes, list open RETROs, write improvements.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Compute milestone metrics:
+       a. total_wall_time_minutes from conductor-log or experiment timestamps.
+       b. experiments_completed = 12 planned + any unplanned re-runs.
+       c. avg_time_per_experiment_minutes = total / count.
+       d. wall_time_delta_vs_63 = total - 3904 (prior .63 wall time).
+    3. Evaluate success criteria (from research-roadmap-vNEXT.md):
+       governance_ready, arc_diagnosis_found, constraint_root_cause_found,
+       jepa_v24_domain_balanced, arbiter_calibrated, constraint_delta_positive,
+       tier1_relay_works_live, jepa_v24_tier35_deployed, bitstream_generated,
+       pipeline_improvement, batching_effective.
+       Count: criteria_met / criteria_total.
+    4. Audit RETRO status:
+       a. RETRO-JEPA-OOD: open or closed? Check Exp 834 min_domain_auc.
+       b. RETRO-ARBITER-FLAT-ENERGY: open or closed? Check Exp 835 accuracy_standard.
+       c. RETRO-CONSTRAINT-ZERO-DELTA: open or closed? Check Exp 836 delta_overall.
+       d. RETRO-TIER1-PLATEAU: open or closed? Check Exp 837 is_monotonic.
+       e. RETRO-SYMCODE-SERIAL: open or closed? Check Exp 841 speedup.
+       f. RETRO-MANIFEST-FULL-SCOPE: STILL OPEN (requires conductor code change).
+       g. RETRO-XILINX-TOOLS-UNAVAILABLE: partial — iCE40 bitstream generated, KV260 synthesis
+          still needs Vivado.
+    5. Identify new RETROs opened (if any experiments failed unexpectedly).
+    6. Write improvements_suggested for .65:
+       a. IMMEDIATE: items for MILESTONE_PREREQS.md for .65.
+       b. GOVERNANCE: experiment cap enforcement (must not exceed 700 total).
+       c. TECHNICAL: any new root causes discovered.
+    7. Create scripts/experiment_842_milestone_retro.py using ExperimentTemplate(842).
+       ExperimentTimeoutWatchdog(842, timeout_minutes=30).
+       Write results/operational_retro_2026_04_64.json with schema=carnot.operational_retro.v39.
+    8. honest_verdict encoding (match prior retro format):
+       wall_time_delta_direction_RETRO_STATUS_criteria_met_open_retros_count
+    9. Write tests/python/test_experiment_842_milestone_retro.py with 100% coverage.
+    10. Reconcile:
+        - ops/changelog.md: full milestone summary entry.
+        - ops/status.md: new "Session 2026-04-XX — Milestone 2026.04.64 COMPLETE" section.
+        - _bmad/traceability.md: update FR-11 Tier 1 and Tier 3 status.
+    11. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_842_milestone_retro.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
