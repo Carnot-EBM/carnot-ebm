@@ -2818,3 +2818,37 @@ Given a `VerifyRepairPipeline` with `embedding_constraint_store` containing 0 en
   - Each stored entry MUST have a non-None `embedding` field
 
 Spec: SCENARIO-LEARN-060
+
+### REQ-LEARN-834-001: JEPA v24 Training MUST Use Domain-Balanced Corpus with ARC Coverage
+
+JEPA training MUST include at least 10 ARC-Challenge reasoning pairs when ARC was absent
+from prior training data.  A corpus assertion `assert n_arc_pairs >= 10` MUST be present
+in the corpus builder and MUST raise before any training begins if the constraint is violated.
+
+Domain weights for DG-PRM inference MUST set ARC weight >= 3.0 (three times the GSM8K
+baseline) when ARC is not represented in prior training data, to compensate for the
+model's historical under-scoring of ARC steps.
+
+Rationale: Exp 832 confirmed JEPA v23 AUC=0.04 on ARC was caused directly by zero ARC
+training examples in the LIMO corpus (Exp 824).  Without an assertion, the next corpus
+builder could repeat the omission silently.
+
+Spec: REQ-LEARN-834-001
+
+### SCENARIO-LEARN-834-001: JEPA v24 Trained with DG-PRM; ARC AUC Improves from 0.04
+
+Given:
+  - Balanced corpus: 20 GSM8K + 20 HumanEval + 20 ARC + 10 SVAMP = 70 pairs
+  - DG-PRM domain head with ARC weight = 3.0 at inference
+  - DreamPRM per-domain loss weight: arc=5.0, humaneval=1.5, gsm8k=1.0, svamp=1.5
+  - ΔEnergy triplet loss weighted by energy gap, clamped to [0.5, 3.0]
+  - 200 training epochs, Adam lr=1e-3
+Then:
+  - auc_arc > 0.04 (improvement over JEPA v23 baseline)
+  - honest_verdict in {"jepa_v24_domain_balanced", "jepa_v24_improvement",
+                       "jepa_v24_arc_improved", "jepa_v24_still_unbalanced"}
+  - Results written to results/experiment_834_jepa_v24_dg_prm.json
+
+Target: min_domain_auc > 0.55 → honest_verdict = "jepa_v24_domain_balanced"
+
+Spec: SCENARIO-LEARN-834-001

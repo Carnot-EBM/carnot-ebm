@@ -1,0 +1,101 @@
+{
+  "experiment": 834,
+  "title": "JEPA v24: DG-PRM Domain-Balanced Corpus with Domain Reweighting",
+  "run_date": "20260425",
+  "started_at": "2026-04-25T05:51:13Z",
+  "finished_at": "2026-04-25T05:51:20Z",
+  "duration_s": 7.559,
+  "status": "success",
+  "decision_class": "verify",
+  "phase_timings_s": [
+    {
+      "name": "corpus_build",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "training",
+      "n_epochs": 200,
+      "n_pairs": 140,
+      "elapsed_s": 7.558
+    }
+  ],
+  "auc_gsm8k": 0.25,
+  "auc_humaneval": 1.0,
+  "auc_arc": 0.71875,
+  "auc_svamp": 0.0,
+  "overall_ood_auc": 0.4921875,
+  "min_domain_auc": 0.0,
+  "retro_jepa_ood_improving": false,
+  "honest_verdict": "jepa_v24_arc_improved",
+  "domain_weights_used": {
+    "gsm8k": 1.0,
+    "humaneval": 1.5,
+    "arc": 3.0,
+    "svamp": 1.5
+  },
+  "dream_prm_weights_used": {
+    "gsm8k": 1.0,
+    "humaneval": 1.5,
+    "arc": 5.0,
+    "svamp": 1.5
+  },
+  "corpus_composition": {
+    "gsm8k": {
+      "total": 40,
+      "correct": 20,
+      "incorrect": 20
+    },
+    "humaneval": {
+      "total": 40,
+      "correct": 20,
+      "incorrect": 20
+    },
+    "arc": {
+      "total": 40,
+      "correct": 20,
+      "incorrect": 20
+    },
+    "svamp": {
+      "total": 20,
+      "correct": 10,
+      "incorrect": 10
+    }
+  },
+  "n_training_pairs": 140,
+  "n_train": 112,
+  "n_val": 28,
+  "n_epochs": 200,
+  "final_train_loss": 1.2350545078516006,
+  "final_val_loss": 0.7241864204406738,
+  "arc_auc_v23_baseline": 0.04,
+  "schema": [
+    "arc_auc_v23_baseline",
+    "auc_arc",
+    "auc_gsm8k",
+    "auc_humaneval",
+    "auc_svamp",
+    "corpus_composition",
+    "decision_class",
+    "domain_weights_used",
+    "dream_prm_weights_used",
+    "duration_s",
+    "experiment",
+    "final_train_loss",
+    "final_val_loss",
+    "finished_at",
+    "honest_verdict",
+    "min_domain_auc",
+    "n_epochs",
+    "n_train",
+    "n_training_pairs",
+    "n_val",
+    "overall_ood_auc",
+    "phase_timings_s",
+    "retro_jepa_ood_improving",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "invariant_violations": []
+}
