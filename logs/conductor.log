@@ -1478,3 +1478,22 @@ logs/conductor.log                         |  6 ++++
 2026-04-24 21:17:11,670 [conductor] DOGFOOD: Verification complete (total: 497 checks, 45 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 21:17:11,670 [conductor] Running test suite (smart subset)...
 2026-04-24 21:17:17,272 [conductor] Post-check: 81 passed, 3 warnings in 2.82s
+2026-04-24 21:17:17,298 [conductor] Committed: [conductor] Exp 821: Constraint Addition Live v2 (RETRO-CONSTRAINT-ZERO-DELTA, g
+2026-04-24 21:17:19,162 [conductor] Pushed to origin
+2026-04-24 21:17:19,163 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 21:17:19,163 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+Done. Updated docs with minimal, honest entries for Exp 821:
+
+**Exp 821 Verdict:** `constraint_addition_no_delta_live` → ⚠️ **Research Finding** (zero precision delta across 3 sessions, constraints accumulated but non-discriminative)
+
+**Changes made:**
+1. **ops/changelog.md** — appended 1-line entry with honest_verdict VERBATIM, delta_overall=0.0, and retro status (remains open)
+2. **_bmad/traceability.md** — appended 3 rows (REQ-LEARN-821-001/002, SCENARIO-LEARN-821-001), all marked **Implemented-Partial** (requirement infrastructure works, but acceptance criteria failed: zero improvement)
+3. **ops/status.md** — skipped (constraint addition is not a new capability, only validation of existing work)
+
+**Key facts recorded:**
+- All 3 sessions: precision=0.0 (no improvement vs baseline)
+- Constraints: 30→60→90 accumulated correctly
+- Retro: RETRO-CONSTRAINT-ZERO-DELTA NOT closed (retro_constraint_zero_delta_closed=false)
+- Status: Gated on Exp 819 ✓, but live validation returned zero delta
+2026-04-24 21:18:45,264 [conductor] Claude Code completed (exit 0)
