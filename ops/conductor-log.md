@@ -2768,3 +2768,4 @@ python/ |
 | 2026-04-25 16:02 UTC | Exp 863: HalluSAEGeometricProbe — Tier 0i SAE Feat | OK | 145 passed, 3 warnings in 3.28s |
 | 2026-04-25 16:18 UTC | Exp 864: FR-11 Tier 2 Integration v5 — Wire All Ne | OK | 81 passed, 3 warnings in 2.90s |
 | 2026-04-25 16:33 UTC | Exp 865: Constraint Memory Bank Compression — arXi | OK | 81 passed, 3 warnings in 2.84s |
+| 2026-04-25 16:48 UTC | Exp 866: KAN Hardware Complexity Analysis — arXiv  | OK | 81 passed, 3 warnings in 2.84s |
