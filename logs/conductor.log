@@ -1465,3 +1465,16 @@ RETRO-GGUF-CACHE-IMPORT closed. Import infrastructure operational end-to-end.
 2026-04-24 21:10:05,349 [conductor] RESEARCH STEP: Exp 821: Constraint Addition Live v2 (RETRO-CONSTRAINT-ZERO-DELTA, gated on Exp 819)
 2026-04-24 21:10:05,349 [conductor] ============================================================
 2026-04-24 21:10:05,367 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 21:10:05,421 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 21:10:05,421 [conductor] Running test suite (smart subset)...
+2026-04-24 21:10:11,052 [conductor] Pre-check: 81 passed, 3 warnings in 2.86s
+2026-04-24 21:10:11,169 [conductor] Injected 93 symbol signatures from 4 files (AST outlines)
+2026-04-24 21:10:11,169 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-24 21:17:11,604 [conductor] Claude Code produced stable deliverable results/experiment_821_constraint_addition_live_v2.json (7.0 min elapsed) — killing subagent early
+2026-04-24 21:17:11,649 [conductor] Changes:
+logs/conductor.log                         |  6 ++++
+ openspec/capabilities/autoresearch/spec.md | 44 ++++++++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
+2026-04-24 21:17:11,670 [conductor] DOGFOOD: Verification complete (total: 497 checks, 45 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 21:17:11,670 [conductor] Running test suite (smart subset)...
+2026-04-24 21:17:17,272 [conductor] Post-check: 81 passed, 3 warnings in 2.82s
