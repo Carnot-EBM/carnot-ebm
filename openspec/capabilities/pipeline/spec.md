@@ -1054,3 +1054,38 @@ examples vs. 100 in the paper) and the synthetic vs. real JailbreakBench distrib
   9. Artifact written to results/experiment_828_activation_jailbreak_probe.json.
 
 **Spec traces:** REQ-VERIFY-146, REQ-VERIFY-147
+
+### REQ-INFRA-062: HuggingFace Model Cards MUST Include Phase 1 Disclaimer
+
+**Statement:** All HuggingFace model cards published under the Carnot-EBM organisation
+MUST include a disclaimer section with the exact text: "Phase 1 research artifact.
+Trained on simulated data unless explicitly stated as live-GPU-validated. Do not use
+in production without independent validation."
+
+**Rationale:** Carnot-EBM's first 16 published models were trained on simulated data
+and have not been validated on live GPU runs.  Without an explicit disclaimer, downstream
+users may mistake these research artifacts for production-ready models, eroding trust
+in the project and violating the project's own honesty principle ("all headline results
+must have live GPU provenance").  This requirement ensures every model card is honest
+about its provenance.
+
+**Acceptance criteria:**
+- huggingface_hub.list_models(author="Carnot-EBM") returns >= 1 model after this update.
+- Each returned model's README contains the substring "Phase 1 research artifact".
+- The disclaimer appears before any usage section.
+
+**Spec traces:** Exp 829, CLAUDE.md honesty principle
+
+### SCENARIO-INFRA-070: Carnot-EBM Model Count >= 17 After Exp 829 Publish
+
+**Given** 16 existing Carnot-EBM models on HuggingFace (trained on simulated data)
+**And** at least one new model artifact (JEPA v23 or IsingConstraintInjector) is eligible for publish
+**When** experiment_829_huggingface_v3_publish.py runs with a valid HF_TOKEN
+**Then**
+  1. huggingface_hub.list_models(author="Carnot-EBM") returns >= 17 models.
+  2. Every model card in the list contains "Phase 1 research artifact".
+  3. n_cards_updated >= 1 (at least one existing README was updated).
+  4. honest_verdict in {"hf_publish_success", "hf_publish_partial", "hf_auth_blocked"}.
+  5. Artifact written to results/experiment_829_huggingface_v3_publish.json.
+
+**Spec traces:** REQ-INFRA-062, Exp 829
