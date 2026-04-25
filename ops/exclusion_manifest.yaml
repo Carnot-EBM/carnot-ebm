@@ -1,0 +1,55 @@
+# Exclusion manifest — experiments retired from the conductor queue.
+# This YAML file is the authoritative source for ExclusionManifestEnforcer.
+# The JSON version at scripts/conductor_exclusion_manifest.json is the
+# runtime source for the conductor itself; this YAML is the side-channel
+# read by manifest_enforcer.py to write gate sections to MILESTONE_PREREQS.md.
+#
+# Each entry: experiment_id (int), completed_milestone (str), reason (str).
+# Only integer experiment IDs are listed here; string cascade tokens live in
+# the conductor JSON only.
+#
+# Spec: REQ-INFRA-072
+
+retired:
+  - experiment_id: 260
+    completed_milestone: "2026.04.37"
+    reason: "slowest-5 seven consecutive milestones, sequential inference loop"
+  - experiment_id: 308
+    completed_milestone: "2026.04.37"
+    reason: "slowest-5 seven consecutive milestones, legacy checkpoint-failure state"
+  - experiment_id: 309
+    completed_milestone: "2026.04.37"
+    reason: "slowest-5 seven consecutive milestones, checkpoint-failure state"
+  - experiment_id: 346
+    completed_milestone: "2026.04.54"
+    reason: "slowest_5_retired: 55M-param EORM training, slowest-5 five consecutive milestones"
+  - experiment_id: 380
+    completed_milestone: "2026.04.54"
+    reason: "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed"
+  - experiment_id: 381
+    completed_milestone: "2026.04.54"
+    reason: "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed"
+  - experiment_id: 382
+    completed_milestone: "2026.04.54"
+    reason: "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed"
+  - experiment_id: 383
+    completed_milestone: "2026.04.54"
+    reason: "slowest_5_retired: superseded by Exp 685 DualGPU (2.0175x speedup), 8 consecutive milestones"
+  - experiment_id: 410
+    completed_milestone: "2026.04.54"
+    reason: "slowest_5_retired: EORM v3 retrain, 14 consecutive milestones, 716 min cumulative overhead"
+  - experiment_id: 425
+    completed_milestone: "2026.04.58"
+    reason: "all_dequeue_sites_extended: 22nd consecutive slowest-5 appearance, 1672 min cumulative overhead (27.9 hours zero-value compute)"
+  - experiment_id: 491
+    completed_milestone: "2026.04.58"
+    reason: "all_dequeue_sites_extended: JEPA curriculum diagnostic 12th slowest-5 appearance, findings incorporated in Exps 693/698/799/809"
+  - experiment_id: 527
+    completed_milestone: "2026.04.57"
+    reason: "3rd consecutive slowest-5 appearance; RETRO-033 resolved by Exp 720; no remaining research mandate"
+  - experiment_id: 603
+    completed_milestone: "2026.04.58"
+    reason: "all_dequeue_sites_extended: CoACEExtractorV4 repeated carry-over, superseded by DualGPU migration"
+  - experiment_id: 627
+    completed_milestone: "2026.04.58"
+    reason: "all_dequeue_sites_extended: interwhen mid-generation monitor, serial loop superseded by paragraph-boundary batching (Exp 841)"
