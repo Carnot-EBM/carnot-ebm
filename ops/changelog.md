@@ -4193,3 +4193,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 839: KV260 iCE40 Bitstream Generation (CPU, gated on Exp 816 synthesis) (❌ Failed) — honest_verdict=pnr_failed; results/experiment_839_kv260_ice40_bitstream.json
 - 2026-04-25: Exp 840: Live Full Precision Benchmark v3 (GPU, CARNOT_FORCE_LIVE=1) (⚠️ Research Finding) — honest_verdict=simulated_no_verdict; results/experiment_840_live_precision_benchmark_v3.json
 - 2026-04-25: Exp 841: SymCodeVerifier Paragraph Batching (RETRO-SYMCODE-SERIAL, CPU) (⚠️ Research Finding) — honest_verdict=batching_marginal; results/experiment_841_symcode_paragraph_batching.json
+- 2026-04-25: Exp 843: Pre-flight v14 — RETRO Audit + Experiment Retirement Plan (CPU) (✅ Complete) — honest_verdict=governance_ready; results/experiment_843_preflight_v14.json
