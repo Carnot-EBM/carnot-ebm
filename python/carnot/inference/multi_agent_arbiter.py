@@ -221,9 +221,12 @@ class MultiAgentArbiter:
 
         Pipeline:
             1. score_agents() — compute external field energy for each response.
-            2. detect_consensus() — check if all agents agree (near-zero variance).
-            3. If consensus detected: apply_consensus_penalty() to break the tie.
-            4. Return the index of the minimum-energy agent.
+            2. z-score normalize per-query (REQ-VERIFY-144): subtract mean, divide by
+               std so all queries share a common scale.  When sigma <= 1e-6 (all energies
+               equal), skip normalisation so the array is still usable for tie-breaking.
+            3. detect_consensus() on normalized energies — check if all agents agree.
+            4. If consensus detected: apply_consensus_penalty() to break the tie.
+            5. Return the index of the minimum-energy (normalized+adjusted) agent.
 
         Args:
             responses: Candidate agent response strings (at least 1 required).
@@ -233,27 +236,37 @@ class MultiAgentArbiter:
             Dict with keys:
                 arbiter_index: int — index of the selected agent in responses.
                 arbiter_response: str — the selected response text.
-                energies_raw: list[float] — energies before consensus adjustment.
-                energies_adjusted: list[float] — energies after adjustment (same as
-                    raw when consensus was not triggered).
+                energies_raw: list[float] — energies before normalisation.
+                energies_normalized: list[float] — z-score normalised energies.
+                energies_adjusted: list[float] — after optional consensus penalty.
                 used_consensus_penalty: bool — True if penalty was applied.
 
         Spec: REQ-VERIFY-143, REQ-VERIFY-144
         """
         energies_raw = self.score_agents(responses, constraint_embeddings)
-        used_penalty = False
 
-        if self.detect_consensus(energies_raw, responses=responses):
-            energies_adj = self.apply_consensus_penalty(energies_raw, responses)
+        # Per-query z-score normalization so energy scale is consistent across queries.
+        mu = float(np.mean(energies_raw))
+        sigma = float(np.std(energies_raw))
+        if sigma > 1e-6:
+            energies_norm = (energies_raw - mu) / sigma
+        else:
+            # All energies equal — normalisation would divide by zero; keep as-is.
+            energies_norm = energies_raw.copy()
+
+        used_penalty = False
+        if self.detect_consensus(energies_norm, responses=responses):
+            energies_adj = self.apply_consensus_penalty(energies_norm, responses)
             used_penalty = True
         else:
-            energies_adj = energies_raw.copy()
+            energies_adj = energies_norm.copy()
 
         best_idx = int(np.argmin(energies_adj))
         return {
             "arbiter_index": best_idx,
             "arbiter_response": responses[best_idx],
             "energies_raw": energies_raw.tolist(),
+            "energies_normalized": energies_norm.tolist(),
             "energies_adjusted": energies_adj.tolist(),
             "used_consensus_penalty": used_penalty,
         }

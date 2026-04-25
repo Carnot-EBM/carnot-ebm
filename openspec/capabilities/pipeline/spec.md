@@ -949,6 +949,54 @@ multiple consecutive milestones.
 
 **Spec traces:** REQ-REPAIR-056
 
+### REQ-VERIFY-143: MultiAgentArbiter Must Use External Field Energy
+
+**Statement:** MultiAgentArbiter MUST use IsingConstraintInjector.compute_energy_with_external_field
+when scoring agent responses, not the legacy IsingEBM.energy() method.
+
+**Rationale:** The legacy method adds a constant diagonal energy shift that is identical for all
+spin configurations (because s_i^2 = 1 for ±1 spins), making it impossible to discriminate between
+correct and incorrect agent responses.  The external field method changes sign based on spin
+orientation: violation spins (s_i=+1) receive +h[i] (energy increases) and correct spins
+(s_i=-1) receive -h[i] (energy decreases), producing discriminating per-response scores.
+
+**Spec traces:** REQ-VERIFY-143
+
+---
+
+### REQ-VERIFY-144: MultiAgentArbiter Must Z-Score Normalize Per-Query Energies
+
+**Statement:** MultiAgentArbiter MUST z-score normalize agent energies within each query before
+ranking.  For N agent responses to the same query: mu = mean(energies), sigma = std(energies).
+If sigma > 1e-6: normalized_energies = (energies - mu) / sigma.  If sigma <= 1e-6: use raw
+energies (all equal → random tie-break).  The arbiter selects the agent with the LOWEST
+normalized energy.
+
+**Rationale:** Raw energy magnitudes vary significantly across queries (due to different constraint
+embeddings and spin configurations).  Without per-query normalization, a query with large energy
+variance can dominate consensus detection thresholds calibrated for small-variance queries.
+Z-scoring puts all queries on a common scale (mean=0, std=1) so the consensus threshold of
+0.01 standard deviations is meaningful across all queries.
+
+**Spec traces:** REQ-VERIFY-144
+
+---
+
+### SCENARIO-VERIFY-172: Standard Arbiter Picks Correct Agent
+
+**Statement:** Given 3 agents where 2 are wrong (higher energy) and 1 is correct (lower energy),
+the arbiter MUST return the correct agent in >= 4/6 standard scenarios after z-score normalization
+and optional consensus penalty.
+
+**Given** a MultiAgentArbiter with external field scoring and z-score normalization
+**And** 6 standard scenarios each with 3 agents: 1 correct (lower energy), 2 wrong (higher energy)
+**When** arbitrate() is called on each scenario
+**Then** the arbiter selects the correct agent (lowest normalized energy) in at least 4 of 6 cases
+
+**Spec traces:** REQ-VERIFY-143, REQ-VERIFY-144
+
+---
+
 ### REQ-VERIFY-145: Cross-Domain PRM Degradation Reporting
 
 **Statement:** For cross-domain PRM evaluation, Carnot MUST compute and report
