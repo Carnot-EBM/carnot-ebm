@@ -4248,3 +4248,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 882: Live Cascade v7 — Gemma4-E4B-it + 50 GSM8K + Full Tier 0-3 (GPU) (⚠️ Research Finding) — honest_verdict=live_no_improvement; results/experiment_882_live_cascade_v7_gemma4.json
 - 2026-04-25: Exp 883: VJEPA v2 — Expanded Synthetic Corpus + 200 Epochs (RETRO-JEPA-OOD) (CPU) (⚠️ Research Finding) — honest_verdict=vjepa_ood_above_gate; ood_auc=0.664; results/experiment_883_vjepa_v2_expanded_corpus.json
 - 2026-04-25: Exp 884: VJEPA v2 Cascade Deploy — Replace Tier 2 JEPA (CPU, GATED on 883 ood_auc > 0.60) (✅ Complete) — honest_verdict=deployed_retro_closed; results/experiment_884_vjepa_cascade_deploy.json
+- 2026-04-25: Exp 885: SpectralAttentionProbe — Tier 0h Advisory (arXiv 2502.17598) (CPU) (✅ Complete) — honest_verdict=tier_0h_viable; results/experiment_885_spectral_attention_probe.json
