@@ -15746,3 +15746,34 @@ Rolling PHaS provides a cheap streaming signal with no extra model cost.
 **And** VerificationResult.streaming_cot_unstable is set correctly for each pair
 
 **Spec traces:** REQ-PROBE-040, Exp 861
+
+## REQ-PROBE-050: HalluSAEGeometricProbe (Tier 0i)
+
+**Status:** Implemented (Exp 863)
+
+HalluSAEGeometricProbe MUST compute mean L2 distance from grounded reasoning
+manifold centroid in SAE feature space (or TF-IDF proxy) and emit
+geometric_energy and hallusae_anomalous in VerificationResult.
+
+- REQ-PROBE-050-1: The probe MUST fit a TF-IDF bigram vectorizer on reference (grounded) steps to approximate SAE feature space.
+- REQ-PROBE-050-2: The grounded centroid MUST be the mean of all reference step feature vectors.
+- REQ-PROBE-050-3: geometric_energy MUST be the mean L2 distance of CoT steps from the grounded centroid.
+- REQ-PROBE-050-4: is_anomalous MUST return True when geometric_energy > threshold (default 0.8).
+- REQ-PROBE-050-5: VerificationResult MUST carry geometric_energy: float and hallusae_anomalous: bool fields.
+- REQ-PROBE-050-6: Tier 0i MUST be advisory — it SHALL NOT short-circuit or modify the verified flag.
+
+**Rationale:** arXiv 2604.16430 (HalluSAE) shows that hallucinated CoT steps
+occupy geometrically distant regions of SAE feature space relative to correct
+reasoning.  TF-IDF bigrams serve as a lightweight no-GPU proxy for SAE features,
+enabling the geometric energy signal without requiring a trained sparse autoencoder.
+
+### SCENARIO-PROBE-060: HalluSAEGeometricProbe AUC on Synthetic CoT Pairs
+
+**Given** 50 synthetic CoT pairs (25 correct, 25 with injected nonsense steps)
+**And** a HalluSAEGeometricProbe fitted on the 25 correct reference steps
+**And** threshold=0.8
+**When** the probe computes geometric_energy for each pair
+**Then** AUC_geometric > 0.65 (tier_0i_viable)
+**And** VerificationResult.geometric_energy and hallusae_anomalous are set correctly
+
+**Spec traces:** REQ-PROBE-050, Exp 863
