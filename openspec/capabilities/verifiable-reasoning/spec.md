@@ -15777,3 +15777,58 @@ enabling the geometric energy signal without requiring a trained sparse autoenco
 **And** VerificationResult.geometric_energy and hallusae_anomalous are set correctly
 
 **Spec traces:** REQ-PROBE-050, Exp 863
+
+
+## REQ-VERIFY-175: VariationalJEPAPredictor Interface (Exp 877)
+
+**Status:** Implemented (Exp 877)
+
+VariationalJEPAPredictor MUST expose a variational encoder + GRU prior + classifier
+that together predict violation probability from a CoT step feature vector.
+
+- REQ-VERIFY-175-1: VariationalEncoder(in_dim, latent_dim=32) MUST map x -> (z, mu, log_var) using reparameterisation z = mu + eps * exp(0.5 * log_var).
+- REQ-VERIFY-175-2: VariationalPrior(context_dim, latent_dim=32) MUST map context -> (prior_mu, prior_log_var) via a GRU cell.
+- REQ-VERIFY-175-3: VariationalJEPAPredictor.predict(x, context, key) MUST return a float in [0, 1].
+- REQ-VERIFY-175-4: VariationalJEPAPredictor.train(corpus, n_epochs=100) MUST return TrainMetrics with epoch_losses and kl_magnitudes.
+- REQ-VERIFY-175-5: Reparameterisation samples MUST differ across PRNGKeys for non-trivial log_var.
+
+**Rationale:** arXiv 2601.14354 (V-JEPA) shows that a variational encoder with
+posterior (mu, log_var) is required for uncertainty-aware prediction.
+
+### SCENARIO-VERIFY-229: VariationalJEPAPredictor Trains Without NaN
+
+**Given** a FoVer corpus of 57 labeled steps
+**And** a VariationalJEPAPredictor with in_dim=50, context_dim=50, latent_dim=32
+**When** trained for 100 epochs with Adam lr=1e-3
+**Then** final loss is finite
+**And** KL magnitudes are all positive and finite
+**And** gradients are finite throughout training
+
+**Spec traces:** REQ-VERIFY-175, Exp 877
+
+## REQ-VERIFY-176: KL Regularisation Prevents OOD Collapse (Exp 877)
+
+**Status:** Implemented (Exp 877)
+
+The KL term in vjepa_loss MUST remain > 0 after training to prevent posterior
+collapse to the prior (the root cause of JEPA v24 OOD AUC=0.49).
+
+- REQ-VERIFY-176-1: vjepa_loss(x, labels, context) MUST return (total_loss, kl_mean).
+- REQ-VERIFY-176-2: kl_mean MUST be the mean KL[q(z|x) || p(z|context)] over the batch.
+- REQ-VERIFY-176-3: KL formula: -0.5 * sum(1 + lv_q - lv_p - (mu_q-mu_p)^2/exp(lv_p) - exp(lv_q)/exp(lv_p)).
+- REQ-VERIFY-176-4: kl_magnitude (mean over last 10 epochs) MUST be > 0.01 for tier3_seed_viable verdict.
+- REQ-VERIFY-176-5: honest_verdict SHALL be "vjepa_collapsed" if kl_magnitude < 0.01.
+
+**Rationale:** The KL term is the core mechanism that prevents the predictor from
+outputting a constant (average training label) on OOD inputs.  Without KL > 0,
+the model's posterior equals the prior everywhere and provides no discriminative signal.
+
+### SCENARIO-VERIFY-230: KL Term Positive for Non-Trivial Distributions
+
+**Given** a freshly initialised VariationalJEPAPredictor
+**And** a non-zero input x and context c
+**When** vjepa_loss is evaluated
+**Then** kl_mean > 0.0
+**And** all gradients with respect to model parameters are finite (no NaN/Inf)
+
+**Spec traces:** REQ-VERIFY-176, Exp 877
