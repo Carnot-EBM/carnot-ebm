@@ -27,12 +27,14 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import json
 import logging
 import os
 import shutil
 import subprocess
 import sys
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -591,6 +593,99 @@ def git_commit_and_push(message: str, push: bool = True) -> bool:
         else:
             logger.warning("Push failed: %s", stderr[:200])
     return True
+
+
+###############################################################################
+# Async doc-reconciliation
+#
+# When --async-doc-recon is set, the post-experiment doc reconciliation (the
+# 1-2 min Haiku call, or a fall-through from a failed in-process attempt)
+# runs in a background thread instead of blocking the main iteration loop.
+# The conductor enters its inter-iteration sleep immediately after the
+# experiment commit, and the doc-recon completes during that sleep.
+#
+# Single-worker executor: doc-recons across iterations remain serialised so
+# we never have two threads racing to commit/push at once. If a prior
+# recon hasn't finished by the next iteration's start, _await_pending_recon
+# blocks on it before any git operations — preventing the "preserve
+# uncommitted work" sweep at iteration start from accidentally grabbing
+# the in-flight recon's diff.
+###############################################################################
+
+_recon_executor: concurrent.futures.ThreadPoolExecutor | None = None
+_pending_recon_future: concurrent.futures.Future | None = None
+_recon_state_lock = threading.Lock()
+
+
+def _ensure_recon_executor() -> concurrent.futures.ThreadPoolExecutor:
+    """Lazy-init a single-worker executor for async doc reconciliation."""
+    global _recon_executor
+    with _recon_state_lock:
+        if _recon_executor is None:
+            _recon_executor = concurrent.futures.ThreadPoolExecutor(
+                max_workers=1, thread_name_prefix="doc-recon",
+            )
+        return _recon_executor
+
+
+def _submit_async_recon(callable_fn) -> None:
+    """Submit a doc-reconciliation callable to the background executor.
+
+    If a previous recon is still pending, block on it first — this enforces
+    sequential git operations across iterations and prevents the
+    "preserve uncommitted work" sweep at the next iteration's start from
+    accidentally swallowing the in-flight recon's diff.
+    """
+    global _pending_recon_future
+    executor = _ensure_recon_executor()
+    # Wait for any previous recon to settle before submitting a new one,
+    # so the executor's queue depth never exceeds 1 in steady state.
+    _await_pending_recon()
+    with _recon_state_lock:
+        _pending_recon_future = executor.submit(callable_fn)
+    logger.info("Async doc-reconciliation submitted to background")
+
+
+def _await_pending_recon(timeout: float = 600.0) -> None:
+    """Wait for any in-flight async doc reconciliation to complete.
+
+    Called at the start of every research_step() *before* any git operation
+    so the next iteration's pre-flight reaper, smart-subset pre-check, and
+    "preserve uncommitted work" checkpoint don't race with a still-running
+    recon thread. Also called by _submit_async_recon to enforce sequential
+    git operations.
+
+    Failures or timeouts are logged but do not raise — the conductor
+    continues. The recon's commit, if any, has already been pushed
+    (or not) by the time we get here; the next iteration takes over.
+    """
+    global _pending_recon_future
+    with _recon_state_lock:
+        future = _pending_recon_future
+        _pending_recon_future = None
+    if future is None:
+        return
+    try:
+        future.result(timeout=timeout)
+        logger.info("Pending async doc-reconciliation completed")
+    except concurrent.futures.TimeoutError:
+        logger.warning(
+            "Pending async doc-reconciliation timed out after %.0fs; "
+            "the next iteration will proceed anyway", timeout,
+        )
+    except Exception:
+        logger.exception(
+            "Pending async doc-reconciliation raised; the next iteration will proceed anyway")
+
+
+def _shutdown_recon_executor(wait: bool = True, timeout: float = 600.0) -> None:
+    """Drain any pending recon and shut the executor down. Called from main()."""
+    global _recon_executor
+    _await_pending_recon(timeout=timeout)
+    with _recon_state_lock:
+        if _recon_executor is not None:
+            _recon_executor.shutdown(wait=wait)
+            _recon_executor = None
 
 
 def log_step(task: str, status: str, details: str = "") -> None:
@@ -1801,6 +1896,7 @@ def research_step(
     push: bool = True,
     dry_run: bool = False,
     in_process_docs: bool = False,
+    async_doc_recon: bool = False,
 ) -> bool:
     """Execute one research step. Returns True if progress was made.
 
@@ -1808,7 +1904,17 @@ def research_step(
     (scripts/in_process_doc_reconcile.py) in place of the Haiku doc
     reconciliation call. Saves ~1-2 min per iteration. Honest-verdict
     mapping is identical; freeform "research finding" prose is omitted.
+
+    async_doc_recon: when True, the post-experiment Haiku doc reconciliation
+    (or the in-process fallback when in-process raises) runs in a background
+    thread so the iteration completes the moment the experiment commit is
+    pushed. The next iteration's first action is to wait on any still-running
+    recon. Saves 1-2 min per iteration on the Haiku path.
     """
+    # CRITICAL: drain any prior async doc-reconciliation before touching git.
+    # The "preserve uncommitted work" sweep below would otherwise grab the
+    # in-flight recon's diff and attribute it to this iteration's checkpoint.
+    _await_pending_recon()
     timestamp = datetime.now(timezone.utc)
 
     # Read conductor log
@@ -2373,6 +2479,42 @@ def research_step(
                 "In-process doc reconciliation failed; falling back to Haiku")
             # Fall through to the Haiku path below.
 
+    if async_doc_recon:
+        # Submit the Haiku reconciliation to the background executor and
+        # return immediately. The next iteration's _await_pending_recon at
+        # the very top of research_step() blocks until this completes
+        # *before* any git operation, so the iteration-start "preserve
+        # uncommitted work" sweep can't grab the in-flight recon's diff.
+        _submit_async_recon(
+            lambda t=task, p=push, ts=timestamp: _run_haiku_doc_reconcile(t, p, ts)
+        )
+        log_step(task["title"], "OK", test_summary)
+        return True
+
+    _run_haiku_doc_reconcile(task, push, timestamp)
+    log_step(task["title"], "OK", test_summary)
+    return True
+
+
+def _run_haiku_doc_reconcile(task: dict, push: bool, timestamp: datetime) -> None:
+    """Spawn a Haiku Claude Code call to update ops/_bmad docs.
+
+    Pulled out of research_step() so it can run either synchronously
+    (default) or via the background executor for async doc-reconciliation.
+    The body is the historical Haiku-reconciliation logic verbatim — see
+    the long comment above the call site in research_step() for the
+    honest-verdict mapping rationale (RETRO-063 fix, 2026-04-20).
+
+    Side effects:
+      - Calls run_agent (spawns Claude Code with model=haiku, max_turns=40,
+        timeout=300s).
+      - Reads/writes ops/changelog.md, ops/status.md, _bmad/traceability.md.
+      - Issues a `git commit` and a `git push` if the agent produced a diff.
+
+    Errors are logged via the logger; nothing is raised. This matches the
+    original synchronous behaviour and keeps the background-thread variant
+    crash-resistant — a failed recon must not crash the conductor.
+    """
     reconcile_prompt = (
         f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
         f"A research experiment was just completed and committed:\n"
@@ -2423,22 +2565,15 @@ def research_step(
         f"  - Do NOT invent status labels.  The artifact's honest_verdict is the\n"
         f"    ONLY valid source of truth for your status claims.\n"
     )
-    # Use haiku for doc reconciliation — it's just appending table rows.
-    # Turn budget: 40, bumped from 25 (2026-04-20).  The new honest-verdict
-    # mapping prompt (c2d96d1) adds a mandatory Step 0 (read artifact JSON)
-    # on top of the pre-existing Steps 2-4 (changelog + status + traceability).
-    # At 25 turns, haiku max-turned out on Exps 540, 541, 576 — substantial
-    # commits with 30+ tests, multiple new source files, spec additions.  40
-    # turns gives headroom for "read artifact → read 3 doc tails → append to
-    # each" without being so loose that runaway turns become a cost concern.
-    # The reconciliation timeout is unchanged (300s wall-clock) so a genuinely
-    # stuck subagent still bails out quickly.
     recon_model = "haiku" if AGENT_TYPE == "claude" else None
-    recon_ok, recon_output = run_agent(
-        reconcile_prompt, max_turns=40, timeout=300, model_override=recon_model,
-    )
+    try:
+        recon_ok, _ = run_agent(
+            reconcile_prompt, max_turns=40, timeout=300, model_override=recon_model,
+        )
+    except Exception:
+        logger.exception("Haiku doc-reconciliation raised; skipping commit")
+        return
     if recon_ok and git_has_changes():
-        # Guard protected files
         for guarded in ["scripts/research_conductor.py", "research-roadmap.yaml"]:
             _, gdiff, _ = run_cmd(["git", "diff", "--name-only", "--", guarded])
             if gdiff.strip():
@@ -2450,9 +2585,6 @@ def research_step(
         logger.info("Documentation reconciliation committed")
     else:
         logger.info("No doc updates needed (or reconciliation skipped)")
-
-    log_step(task["title"], "OK", test_summary)
-    return True
 
 
 def main() -> int:
@@ -2469,6 +2601,14 @@ def main() -> int:
                              "(scripts/in_process_doc_reconcile.py) instead "
                              "of the Haiku Claude Code call. Saves ~1-2 min "
                              "per iteration; mechanical mapping only.")
+    parser.add_argument("--async-doc-recon", action="store_true",
+                        help="Run the post-experiment Haiku doc reconciliation "
+                             "in a background thread. The conductor enters its "
+                             "inter-iteration sleep immediately after the "
+                             "experiment commit; the recon completes during "
+                             "sleep. Saves ~1-2 min per iteration on the Haiku "
+                             "path. Has no effect when --in-process-docs is set "
+                             "(in-process is already <100ms).")
     args = parser.parse_args()
 
     os.chdir(str(PROJECT_ROOT))
@@ -2491,6 +2631,13 @@ def main() -> int:
             )
     except Exception as exc:
         logger.warning("env_autofix unavailable at startup: %s", exc)
+
+    # Register an atexit handler so any in-flight async doc-reconciliation
+    # gets a chance to finish (and push) before the conductor process exits.
+    # SIGTERM-on-quota or KeyboardInterrupt will still drop in-flight recons,
+    # but a normal exit path drains cleanly.
+    import atexit as _atexit
+    _atexit.register(_shutdown_recon_executor, wait=True, timeout=600.0)
 
     print("=" * 60)
     print("  Carnot Research Conductor")
@@ -2527,6 +2674,7 @@ def main() -> int:
                 push=not args.no_push,
                 dry_run=args.dry_run,
                 in_process_docs=args.in_process_docs,
+                async_doc_recon=args.async_doc_recon,
             )
         except Exception:
             logger.exception("Unexpected error in research step")
