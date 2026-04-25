@@ -4228,3 +4228,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 870: SOTA Code Repair v7 — Qwen3.5-0.8B Live HumanEval (GPU, GATED on 869) (⚠️ Blocked) — honest_verdict=blocked; results/experiment_870_sota_code_repair_v7.json
 - 2026-04-25: Exp 871: Live Benchmark v6 — DualGPU + Full Cascade on 50 GSM8K (GPU, GATED on 856) (⚠️ Research Finding) — honest_verdict=simulation_fallback; results/experiment_871_live_benchmark_v6.json
 - 2026-04-25: Exp 872: JEPA v25 — DG-PRM Domain Reweighting + SVAMP Corpus (RETRO-JEPA-OOD + RETRO-SVAMP-ZERO-AUC) (CPU) (⚠️ Blocked) — honest_verdict=jepa_v25_still_blocked; ood_auc=0.484375; results/experiment_872_jepa_v25_dg_prm.json
+- 2026-04-25: Exp 873: JEPA v25 OOD Evaluation + Cascade Deployment (CPU, GATED on 872 OOD AUC > 0.65) (⚠️ Blocked) — honest_verdict=blocked; results/experiment_873_jepa_v25_deploy.json
