@@ -2743,3 +2743,4 @@ python/ |
 | 2026-04-25 09:11 UTC | Plan milestone 2026.04.65 | OK | 12 tasks proposed |
 | 2026-04-25 09:21 UTC | Milestone 2026.04.65 activated | OK | 12 tasks queued |
 | 2026-04-25 09:40 UTC | Exp 843: Pre-flight v14 — RETRO Audit + Experiment | OK | 81 passed, 3 warnings in 2.87s |
+| 2026-04-25 09:58 UTC | Exp 844: JEPA v24b SVAMP-Balanced Domain Training  | OK | 81 passed, 3 warnings in 2.80s |
