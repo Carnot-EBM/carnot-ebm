@@ -1714,3 +1714,19 @@ No removed content. No invented status labels. Verdict used verbatim.
 2026-04-24 23:06:24,152 [conductor] RESEARCH STEP: Exp 827: KV260 nextpnr-xilinx Synthesis v3 (gated on Exp 816, CPU)
 2026-04-24 23:06:24,152 [conductor] ============================================================
 2026-04-24 23:06:24,170 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 23:06:24,225 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 23:06:24,225 [conductor] Running test suite (smart subset)...
+2026-04-24 23:06:29,950 [conductor] Pre-check: 81 passed, 3 warnings in 2.91s
+2026-04-24 23:06:30,061 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-24 23:06:30,061 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 12 tests pass. Deliverable is written at `results/experiment_827_kv260_nextpnr_xilinx_v3.json`.
+
+**Summary:** `honest_verdict=synthesis_blocked`. nextpnr-xilinx is not in this OSS-CAD-Suite build (no binary). The iCE40 fallback also blocked: nextpnr-ice40 placement fails because ising_sampler_v3 at N=32 needs 1187 SB_IO pins but iCE40 HX8K only has 206 (LUT utilization was fine at 68%). Both the spec addition (REQ-HW-039 + SCENARIO-HW-035) and 12 unit tests covering all verdict branches are in place.
+2026-04-24 23:15:01,412 [conductor] Claude Code completed (exit 0)
+2026-04-24 23:15:01,432 [conductor] Changes:
+logs/conductor.log                                 |  9 ++++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 33 ++++++++++++++++++++++
+ 2 files changed, 42 insertions(+)
+2026-04-24 23:15:01,454 [conductor] DOGFOOD: Verification complete (total: 503 checks, 45 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 23:15:01,454 [conductor] Running test suite (smart subset)...
+2026-04-24 23:15:07,037 [conductor] Post-check: 81 passed, 3 warnings in 2.83s

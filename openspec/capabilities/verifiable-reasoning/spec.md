@@ -15563,6 +15563,39 @@ manager.  Hardcoding the path eliminates PATH-order surprises.
 **Spec traces:** REQ-HW-038
 **Implementation Status:** Implemented (Exp 816)
 
+## REQ-HW-039: nextpnr-xilinx Attempt and iCE40 Bitstream Fallback
+
+**Statement:** When targeting the KV260 Zynq UltraScale+ (xczu5eg), Carnot MUST first
+attempt nextpnr-xilinx. If nextpnr-xilinx is unavailable or does not support xczu5eg,
+Carnot MUST fall back to generating a complete iCE40 HX8K bitstream (.bin) using icepack
+from the nextpnr-ice40 JSON produced in a prior synthesis run. The fallback bitstream MUST
+contain a valid iCE40 magic header (first 4 bytes: 0xFF 0x00 0x00 0xFF).
+
+- REQ-HW-039-1: The experiment SHALL probe `nextpnr-xilinx --help`; if the binary is
+  absent or exits non-zero, `xilinx_available` is False.
+- REQ-HW-039-2: If `xilinx_available` is True, the experiment SHALL run nextpnr-xilinx
+  targeting xczu5eg and record `xilinx_synthesis_clean` based on exit code.
+- REQ-HW-039-3: If nextpnr-xilinx is unavailable, the experiment SHALL re-run
+  nextpnr-ice40 on ising_sampler_v3.v to produce an ASC file, then run icepack to
+  convert it to a .bin bitstream.
+- REQ-HW-039-4: The generated bitstream MUST be validated by reading its first 4 bytes;
+  `valid_header` is True if bytes[0]==0xFF and bytes[1]==0x00.
+- REQ-HW-039-5: A valid bitstream SHALL be copied to `hardware/kv260/ising_n32.bin`.
+- REQ-HW-039-6: `honest_verdict` SHALL be one of:
+  `"xilinx_synthesis_clean"`, `"ice40_bitstream_generated"`,
+  `"bitstream_invalid_header"`, `"synthesis_blocked"`.
+
+### SCENARIO-HW-035: nextpnr-xilinx xczu5eg Attempt or iCE40 Bitstream Fallback
+
+**Given** Exp 816 confirmed `lut_count_n32=3952` with `honest_verdict="synthesis_clean_n32"`
+**And** OSS-CAD-Suite is installed at `~/tools/oss-cad-suite/bin/`
+**When** the experiment probes for nextpnr-xilinx
+**Then** EITHER nextpnr-xilinx is available and synthesizes xczu5eg cleanly (`xilinx_synthesis_clean`)
+**OR** icepack produces a .bin with a valid iCE40 magic header from the nextpnr-ice40 ASC (`ice40_bitstream_generated`)
+
+**Spec traces:** REQ-HW-039
+**Implementation Status:** Implemented (Exp 827)
+
 ## REQ-VERIFY-173: IsingConstraintInjector External Field Injection
 
 **Statement:** IsingConstraintInjector MUST support external field injection via
