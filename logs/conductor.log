@@ -2328,3 +2328,24 @@ logs/conductor.log | 6 ++++++
 2026-04-25 04:15:27,370 [conductor] RESEARCH STEP: Exp 841: SymCodeVerifier Paragraph Batching (RETRO-SYMCODE-SERIAL, CPU)
 2026-04-25 04:15:27,370 [conductor] ============================================================
 2026-04-25 04:15:27,390 [conductor] Committing 5 dirty files as checkpoint (preserving work)
+2026-04-25 04:15:27,463 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 04:15:27,463 [conductor] Running test suite (smart subset)...
+2026-04-25 04:15:33,092 [conductor] Pre-check: 81 passed, 3 warnings in 2.86s
+2026-04-25 04:15:33,210 [conductor] Injected 54 symbol signatures from 3 files (AST outlines)
+2026-04-25 04:15:33,211 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Deliverable written and all 22 tests pass. Summary:
+
+- **`python/carnot/pipeline/symcode_verifier.py`** — added `SymCodeBatchResult` dataclass and `batch_verify()` method that collects all arithmetic expressions in one pass and evaluates them in a single `exec()` call with shared namespace.
+- **`openspec/capabilities/pipeline/spec.md`** — added REQ-VERIFY-148 and SCENARIO-VERIFY-173.
+- **`scripts/experiment_841_symcode_paragraph_batching.py`** — benchmark script using `ExperimentTemplate(841)`.
+- **`tests/python/test_experiment_841_symcode_batching.py`** — 22 tests covering the new code; all pass.
+- **`results/experiment_841_symcode_paragraph_batching.json`** — deliverable with `speedup=1.71x`, `honest_verdict="batching_marginal"`, `violations_match=true`, `retro_symcode_serial_closed=true`.
+2026-04-25 04:18:44,872 [conductor] Claude Code completed (exit 0)
+2026-04-25 04:18:44,886 [conductor] Changes:
+logs/conductor.log                         |  13 +++
+ openspec/capabilities/pipeline/spec.md     |  36 +++++++
+ python/carnot/pipeline/symcode_verifier.py | 159 ++++++++++++++++++++++++++++-
+ 3 files changed, 205 insertions(+), 3 deletions(-)
+2026-04-25 04:18:44,904 [conductor] DOGFOOD: Verification complete (total: 516 checks, 47 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 04:18:44,904 [conductor] Running test suite (smart subset)...
+2026-04-25 04:18:50,497 [conductor] Post-check: 81 passed, 3 warnings in 2.82s
