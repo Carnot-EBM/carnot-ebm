@@ -2774,3 +2774,4 @@ python/ |
 | 2026-04-25 17:44 UTC | Milestone 2026.04.67 activated | OK | 12 tasks queued |
 | 2026-04-25 17:59 UTC | Exp 868: Pre-flight v16 — Manifest Enforcement Mod | OK | 81 passed, 3 warnings in 2.79s |
 | 2026-04-25 18:16 UTC | Exp 869: GGUFCacheResolver v2 — Prove Download Wor | OK | 81 passed, 3 warnings in 2.86s |
+| 2026-04-25 18:28 UTC | Exp 870: SOTA Code Repair v7 — Qwen3.5-0.8B Live H | OK | 81 passed, 3 warnings in 2.81s |
