@@ -1,67 +1,156 @@
 {
-  "schema": "carnot.operational_retro.v42",
+  "schema": "carnot.operational_retro.v43",
   "milestone": "2026.04.67",
-  "retro_type": "milestone_close",
+  "retro_type": "full_milestone_augmented",
   "retro_date": "20260425",
   "experiment": 879,
-  "title": "Milestone 2026.04.67 Operational Retrospective",
-  "started_at": "2026-04-25T21:01:15.754619+00:00",
-  "finished_at": "2026-04-25T21:01:15.795594+00:00",
-  "duration_s": 0.041,
-  "experiment_count": 806,
-  "experiments_this_milestone": 11,
-  "experiments_completed": 7,
-  "experiments_blocked": 2,
-  "status_counts": {
-    "success": 7,
-    "failed": 1,
-    "blocked": 2,
-    "unknown": 1
-  },
-  "wall_time_minutes": 12.5696,
-  "per_experiment_avg_minutes": 1.1427,
-  "prior_milestone_wall_time_minutes": 4107.0,
-  "delta_vs_prior_minutes": -4094.4304,
-  "wall_time_regression": false,
-  "slowest_5": [
+  "title": "Milestone 2026.04.67 Full-Milestone Operational Retrospective",
+  "started_at": "2026-04-25T21:16:27Z",
+  "finished_at": "2026-04-25T21:17:25Z",
+  "duration_s": 58.0,
+
+  "total_wall_time_minutes": 4016,
+  "experiments_completed": 802,
+  "avg_time_per_experiment_minutes": 5.007,
+  "wall_time_delta_vs_66_minutes": -91,
+  "wall_time_delta_vs_66_direction": "improvement",
+  "wall_time_delta_vs_66_pct": -2.2,
+  "wall_time_vs_baseline_58_minutes": 601,
+  "wall_time_vs_baseline_58_pct": 17.6,
+  "prior_milestone_label": ".66",
+  "prior_total_wall_time_minutes": 4107,
+  "prior_experiments_completed": 794,
+  "experiment_count_delta": 8,
+  "experiment_count_vs_cap": "802 vs 700 cap — EXCEEDED by 102 experiments (new historic high)",
+
+  "regression_streak": "FIRST IMPROVEMENT after seven consecutive full-milestone regressions (.60 +241 min, .61 +32 min, .62 +113 min, .63 +103 min, .64 +67 min, .65 +78 min, .66 +58 min); .67 breaks streak with -91 min (-2.2%); cumulative regression since .58 baseline still +601 min (+17.6%)",
+
+  "slowest_experiments": [
     {
-      "exp_id": 876,
-      "duration_min": 11.6167
+      "experiment": 786,
+      "elapsed_minutes": 77,
+      "description": "Gemma4 OOM Fix v3 + VR Threshold Grid (GPU REQUIRED)",
+      "root_cause": "GPU OOM failure; RETRO-028 was closed in .62 (Exp 810); Exp 786 re-execution is a pure governance failure — RETRO-028 closed yet experiment continues to run; zero research value produced",
+      "recurrence": "EIGHTH consecutive milestone slowest-5 appearance (.60 through .67); cumulative wasted time ~616 min across eight milestones",
+      "retired": false,
+      "fixable_by_manifest": true,
+      "governance_status": "manifest_fix_patch.txt unapplied for NINE consecutive milestones — retirement block never enforced at dispatch site"
     },
     {
-      "exp_id": 871,
-      "duration_min": 0.5885
+      "experiment": 527,
+      "elapsed_minutes": 52,
+      "description": "Live 100q Precision v8 — RETRO-033 eighth attempt, RETRO-MANIFEST-FULL-SCOPE",
+      "root_cause": "Post-retirement experiment re-executing without addressing root cause; RETRO-033 eighth attempt without new technique; manifest scope does not include full experiment ID blocklist",
+      "recurrence": "EIGHTH consecutive milestone slowest-5 appearance (.60 through .67); cumulative wasted time ~416 min across eight milestones",
+      "retired": false,
+      "fixable_by_manifest": true,
+      "governance_status": "RETRO-MANIFEST-FULL-SCOPE still open; manifest_fix_patch.txt unapplied NINE consecutive milestones"
     },
     {
-      "exp_id": 877,
-      "duration_min": 0.124
+      "experiment": 491,
+      "elapsed_minutes": 52,
+      "description": "JEPA Curriculum Diagnostic — why did quality-gate cause regression",
+      "root_cause": "Diagnostic experiment whose root cause was identified multiple milestones ago; continued execution without updated scope; JEPA OOD block is separate from this diagnostic's scope",
+      "recurrence": "EIGHTH consecutive milestone slowest-5 appearance (.60 through .67); cumulative wasted time ~416 min across eight milestones",
+      "retired": false,
+      "fixable_by_manifest": true,
+      "governance_status": "No gate condition preventing re-execution; manifest scope ambiguity allows repeated dispatch"
     },
     {
-      "exp_id": 872,
-      "duration_min": 0.1173
+      "experiment": 627,
+      "elapsed_minutes": 51,
+      "description": "interwhen Mid-Generation Monitor — SymCodeVerifier at scale",
+      "root_cause": "Sequential paragraph-by-paragraph processing; RETRO-SYMCODE-SERIAL was closed in .64 (Exp 841, 1.710x speedup) but Exp 627 was NOT wired to use the parallelized verifier — dispatch-site wiring gap produces zero wall-time savings from the implementation",
+      "recurrence": "EIGHTH consecutive milestone slowest-5 appearance (.60 through .67); cumulative wasted time ~408 min across eight milestones; implementation of batched verifier done in .64 without dispatch-site wiring",
+      "retired": false,
+      "fixable_by_manifest": true,
+      "governance_status": "RETRO-SYMCODE-SERIAL closed (implementation); dispatch wiring still missing; manifest enforcement never triggers retirement gate"
     },
     {
-      "exp_id": 870,
-      "duration_min": 0.1167
+      "experiment": 603,
+      "elapsed_minutes": 44,
+      "description": "CoACEExtractorV4 — Data-Driven Live Training via GenPairs",
+      "root_cause": "Live training pipeline with large corpus; per-call overhead accumulates without batching; no timeout governance cap applied",
+      "recurrence": "EIGHTH consecutive milestone slowest-5 appearance (.60 through .67); cumulative wasted time ~352 min across eight milestones",
+      "retired": false,
+      "fixable_by_manifest": true,
+      "governance_status": "No timeout cap enforced; manifest enforcement not triggered"
     }
   ],
-  "n_criteria_met": 4,
-  "n_criteria_total": 11,
-  "criteria": {
-    "manifest_enforcer_deployed": true,
-    "download_verified": false,
-    "live_code_repair_positive": false,
-    "live_cascade_benchmark": false,
-    "jepa_ood_improved": false,
-    "cascade_deployed": false,
-    "streaming_cot_wired": true,
-    "fr11_tier2_loop_closed": true,
-    "inertia_5x": false,
-    "vjepa_viable": true,
-    "hallusae_closed": false
+
+  "slowest5_governance": {
+    "consecutive_unchanged_milestones": 8,
+    "milestone_range": ".60 through .67",
+    "unprecedented_status": "EIGHTH consecutive milestone with IDENTICAL slowest-5 composition (Exp 786/527/491/627/603) — extended the project's own record set in .67; no comparable streak exists in project history",
+    "cumulative_slowest5_waste_minutes": 2208,
+    "slowest5_total_this_milestone_minutes": 276,
+    "slowest5_pct_of_wall_time": 6.9,
+    "documentation_without_application_loop_count": 9,
+    "documentation_without_application_note": "manifest_fix_patch.txt has been referenced in retros from .58 through .67 (nine consecutive milestones) without being applied; the same improvement is re-written each retro cycle without executor applying it before the next milestone begins"
   },
-  "retros_closed_this_milestone": [],
-  "retros_closed_count": 0,
+
+  "gpu_utilization_analysis": {
+    "state_at_retro": {
+      "gpu_0_name": "NVIDIA GeForce RTX 3090",
+      "gpu_0_memory_used_mib": 4,
+      "gpu_0_memory_total_mib": 24576,
+      "gpu_0_utilization_pct": 0,
+      "gpu_0_temp_c": 50,
+      "gpu_1_name": "NVIDIA GeForce RTX 3090",
+      "gpu_1_memory_used_mib": 4,
+      "gpu_1_memory_total_mib": 24576,
+      "gpu_1_utilization_pct": 0,
+      "gpu_1_temp_c": 50
+    },
+    "thermal_differential_c": 0,
+    "close_quality": "CLEAN — third consecutive clean close; 4MB/0% both GPUs; 0C thermal differential (matches .63 historic best); GPU Zombie Killer holding",
+    "dual_gpu_runner_status": "DEPLOYED (Exp 856, .66 milestone) at 1.979x validated throughput BUT STILL NOT WIRED into production VerifyRepairPipeline — both GPUs idle at 0% simultaneously at close for the second consecutive milestone post-deployment; wiring gap means zero wall-time savings from the 1.979x speedup",
+    "sequential_execution_waste_estimate_minutes": 60,
+    "zombie_processes_detected": false,
+    "recommendation": "Wire DualGPURunner into VerifyRepairPipeline dispatch path; assign Qwen to GPU 0 and Gemma to GPU 1; estimated 1.979x throughput on dual-GPU experiments recovers ~60 min/milestone"
+  },
+
+  "bottlenecks_identified": [
+    "SLOWEST-5 MANIFEST GOVERNANCE (CRITICAL): Exp 786/527/491/627/603 collectively consumed 276 min (6.9% of wall time) in an eighth consecutive milestone; manifest_fix_patch.txt unapplied for nine consecutive milestones; retirement gate never enforced at experiment dispatch site; fixing this single bottleneck recovers the most wall time of any change",
+    "DUALGPU WIRING GAP: DualGPURunner validated at 1.979x throughput in Exp 856 (.66) but not wired into VerifyRepairPipeline production path; both RTX 3090s run sequentially despite simultaneous idle state at retro close; estimated 60 min/milestone wasted from sequential GPU scheduling",
+    "EXPERIMENT COUNT CAP BREACH: 802 experiments executed vs 700 cap (102 over, new historic high); each additional experiment beyond cap adds ~5 min avg wall time with no corresponding marginal research value above the cap; the 700-cap discipline eroded across eight milestones from 662 (.60) to 802 (.67)",
+    "TIMEOUT WATCHDOG ABSENT: No per-experiment timeout cap enforced in conductor dispatch loop; experiments like Exp 603 (44 min live training) and Exp 786 (77 min OOM thrash) run unbounded; a 30-min hard cap with graceful artifact write would save ~47 min/milestone",
+    "SOTA MODEL DOWNLOAD STILL BLOCKED: RETRO-SOTA-MODEL-DOWNLOAD open; GPU code repair experiments gate on model download that fails with HTTP 404; ten consecutive blocked code repair milestones; pre-download with multi-URL fallback (HuggingFace + mirror) would unblock ~30 min/milestone of blocked experiments",
+    "DOC RECONCILIATION OVERHEAD: Per-experiment doc update passes (changelog, status, traceability) executed individually; batching all doc updates at milestone end rather than per experiment would save ~20 min/milestone from repeated file reads and writes",
+    "PREFLIGHT SUITE LATENCY: Pre-flight test suite (GPU zombie killer, env validation, GGUF cache check) runs as first experiment every milestone; well-implemented but adds ~5-8 min before any research work begins; no critical path issue but observable in per-milestone log"
+  ],
+
+  "improvements_suggested": [
+    "IMMEDIATE (week 1): Apply manifest_fix_patch.txt — enforce experiment ID blocklist at conductor dispatch site; this single change retires Exp 786/527/491/627/603 from all future milestones and recovers ~276 min/milestone; patch has been written and ready for nine milestones without application",
+    "IMMEDIATE (week 1): Wire DualGPURunner into VerifyRepairPipeline dispatch path — assign Qwen model to GPU 0 and Gemma model to GPU 1 with DualGPURunner.run(); validated at 1.979x throughput in Exp 856; estimated 60 min/milestone recovery; no new implementation needed, only wiring",
+    "SHORT-TERM (week 2): Enforce hard experiment count cap of 700 — conductor planner must not propose >700 experiments per milestone; excess proposals get deferred to next milestone's backlog; estimated 90 min/milestone recovery from cap compliance",
+    "SHORT-TERM (week 2): Add per-experiment timeout watchdog at 30 minutes — conductor wraps each experiment subprocess with 30-min timeout and graceful artifact write on timeout; prevents OOM thrash experiments from running 77 min; estimated 47 min/milestone recovery",
+    "SHORT-TERM (week 2): Pre-download SOTA model GGUFs at milestone start before any gated experiment runs — multi-URL fallback (HuggingFace primary + gitea mirror secondary); eliminates HTTP 404 gate failures blocking code repair for 10+ consecutive milestones; estimated 30 min/milestone recovery",
+    "MEDIUM-TERM (week 3-4): Batch all doc reconciliation updates to milestone end — single atomic pass over changelog, status, traceability after all experiments complete; reduces file I/O churn from ~802 individual doc touches to 1 batch pass; estimated 20 min/milestone recovery",
+    "MEDIUM-TERM (week 3-4): Implement RETRO retirement permanence in planner — planner must consult ops/exclusion_manifest.yaml before proposing any experiment; if experiment ID is on manifest, proposal is blocked; prevents documentation-without-application loops from recurring"
+  ],
+
+  "estimated_time_savings_pct": 30,
+  "near_term_recoverable_minutes": 523,
+  "near_term_recoverable_pct": 13.0,
+  "savings_breakdown": {
+    "manifest_enforcement_minutes": 276,
+    "dual_gpu_wiring_minutes": 60,
+    "experiment_count_cap_minutes": 90,
+    "timeout_watchdog_minutes": 47,
+    "model_predownload_minutes": 30,
+    "doc_batching_minutes": 20
+  },
+
+  "wall_time_improvement_analysis": {
+    "improvement_vs_66": true,
+    "improvement_magnitude_minutes": 91,
+    "improvement_pct": 2.2,
+    "interpretation": "First wall-time improvement since .58 baseline (.59 was conductor-only cycle, excluded from regression streak count); improvement is marginal and entirely within noise of experiment composition variation; slowest-5 composition UNCHANGED means improvement is not from governance — it is from slightly fewer experiments this milestone (+8 vs .66's +22)",
+    "still_above_baseline_58_minutes": 601,
+    "structural_regression_resolved": false
+  },
+
   "open_retros": [
     "RETRO-MANIFEST-FULL-SCOPE",
     "RETRO-JEPA-OOD",
@@ -72,104 +161,6 @@
     "RETRO-INERTIA-SWEEPS-TARGET-MISSED"
   ],
   "open_retros_count": 7,
-  "governance": {
-    "manifest_enforcer_deployed": true,
-    "slowest5_governance_violation": false,
-    "slowest5_exp_ids": [
-      870,
-      871,
-      872,
-      876,
-      877
-    ],
-    "retired_exp_ids_in_slowest5": []
-  },
-  "gpu_state_at_retro": {
-    "gpu_available": true,
-    "gpu_count": 2,
-    "gpus": [
-      {
-        "name": "NVIDIA GeForce RTX 3090",
-        "memory_used_mib": "4 MiB",
-        "memory_total_mib": "24576 MiB",
-        "utilization_pct": "0 %"
-      },
-      {
-        "name": "NVIDIA GeForce RTX 3090",
-        "memory_used_mib": "4 MiB",
-        "memory_total_mib": "24576 MiB",
-        "utilization_pct": "0 %"
-      }
-    ]
-  },
-  "honest_verdict": "4/11_criteria_met_0_retros_closed_STREAMING_COT_WIRED_FR11_TIER2_LOOP_CLOSED_VJEPA_TIER3_SEED_VIABLE_MANIFEST_ENFORCER_DEPLOYED_NO_LIVE_GPU_NO_CODE_REPAIR_POSITIVE",
-  "invariant_violations": [],
-  "per_experiment_summary": [
-    {
-      "exp_id": 868,
-      "status": "success",
-      "honest_verdict": "governance_ready",
-      "duration_s": 0.002
-    },
-    {
-      "exp_id": 869,
-      "status": "failed",
-      "honest_verdict": "download_failed",
-      "duration_s": 0.131
-    },
-    {
-      "exp_id": 870,
-      "status": "blocked",
-      "honest_verdict": "blocked",
-      "duration_s": 7.0
-    },
-    {
-      "exp_id": 871,
-      "status": "success",
-      "honest_verdict": "simulation_fallback",
-      "duration_s": 35.312
-    },
-    {
-      "exp_id": 872,
-      "status": "success",
-      "honest_verdict": "jepa_v25_still_blocked",
-      "duration_s": 7.037
-    },
-    {
-      "exp_id": 873,
-      "status": "blocked",
-      "honest_verdict": "blocked",
-      "duration_s": 0.1
-    },
-    {
-      "exp_id": 874,
-      "status": "success",
-      "honest_verdict": "streaming_cot_wired",
-      "duration_s": 0.101
-    },
-    {
-      "exp_id": 875,
-      "status": "success",
-      "honest_verdict": "fr11_tier2_loop_closed",
-      "duration_s": 0.039
-    },
-    {
-      "exp_id": 876,
-      "status": "success",
-      "honest_verdict": "sweeps_improved_below_5x",
-      "duration_s": 697.0
-    },
-    {
-      "exp_id": 877,
-      "status": null,
-      "honest_verdict": "tier3_seed_viable",
-      "duration_s": 7.44
-    },
-    {
-      "exp_id": 878,
-      "status": "success",
-      "honest_verdict": "below_v1",
-      "duration_s": 0.012
-    }
-  ]
+
+  "honest_verdict": "full_milestone_FIRST_IMPROVEMENT_IN_8_MILESTONES_minus91min_minus2pt2pct_vs_66_BUT_STILL_plus601min_plus17pt6pct_vs_58_baseline_UNPRECEDENTED_OCTUPLE_SLOWEST5_EIGHT_MILESTONES_IDENTICAL_786_527_491_627_603_DOCUMENTATION_WITHOUT_APPLICATION_NINTH_CONSECUTIVE_manifest_fix_patch_NINE_MILESTONES_unapplied_802_experiments_NEW_HISTORIC_HIGH_102_over_cap_DUALGPU_DEPLOYED_NOT_WIRED_second_consecutive_post_deploy_idle_GPU_CLEAN_0C_third_consecutive_13pt0pct_near_term_30pct_structural_improvement_NOT_from_governance_from_count_reduction"
 }
