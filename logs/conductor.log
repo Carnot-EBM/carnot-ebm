@@ -2482,3 +2482,22 @@ Both files are complete and correct. Here's a summary of what was created:
 2026-04-25 05:31:41,625 [conductor] RESEARCH STEP: Exp 843: Pre-flight v14 — RETRO Audit + Experiment Retirement Plan (CPU)
 2026-04-25 05:31:41,625 [conductor] ============================================================
 2026-04-25 05:31:41,640 [conductor] Committing 3 dirty files as checkpoint (preserving work)
+2026-04-25 05:31:41,698 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 05:31:41,699 [conductor] Running test suite (smart subset)...
+2026-04-25 05:31:47,252 [conductor] Pre-check: 81 passed, 3 warnings in 2.80s
+2026-04-25 05:31:47,389 [conductor] Injected 108 symbol signatures from 3 files (AST outlines)
+2026-04-25 05:31:47,389 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-25 05:40:17,916 [conductor] Claude Code produced stable deliverable results/experiment_843_preflight_v14.json (8.5 min elapsed) — killing subagent early
+2026-04-25 05:40:17,961 [conductor] Changes:
+MILESTONE_PREREQS.md | 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ logs/conductor.log   |  6 +++++
+ 2 files changed, 79 insertions(+)
+2026-04-25 05:40:17,977 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp844-jepa-v24b-svamp: 'n_svamp_pairs' — auto-fixing
+2026-04-25 05:40:17,977 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp845-jepa-v24b-tier35-deploy: 'min_domain_auc' — auto-fixing
+2026-04-25 05:40:17,977 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp848-fr11-tier1-relay-v4: 's' — auto-fixing
+2026-04-25 05:40:17,977 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp849-gguf-cache-module: 'org' — auto-fixing
+2026-04-25 05:40:17,977 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp853-live-benchmark-v4: '"name"' — auto-fixing
+2026-04-25 05:40:17,977 [conductor] DOGFOOD: Auto-fixed brace escaping in research-roadmap.yaml
+2026-04-25 05:40:17,981 [conductor] DOGFOOD: Verification complete (total: 518 checks, 48 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 05:40:17,981 [conductor] Running test suite (smart subset)...
+2026-04-25 05:40:23,678 [conductor] Post-check: 81 passed, 3 warnings in 2.87s

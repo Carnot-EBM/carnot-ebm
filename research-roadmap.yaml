@@ -146,10 +146,10 @@ tasks:
        a. Load existing GSM8K/HumanEval/ARC training pairs from Exp 834 corpus.
        b. Add the 20 SVAMP triplets from step 3.
        c. Assert ALL domains covered at startup:
-          assert n_svamp_pairs >= 15, f"SVAMP coverage insufficient: {n_svamp_pairs}"
-          assert n_arc_pairs >= 15, f"ARC coverage insufficient: {n_arc_pairs}"
-          assert n_humaneval_pairs >= 15, f"HumanEval coverage insufficient: {n_humaneval_pairs}"
-          assert n_gsm8k_pairs >= 15, f"GSM8K coverage insufficient: {n_gsm8k_pairs}"
+          assert n_svamp_pairs >= 15, f"SVAMP coverage insufficient: (n_svamp_pairs)"
+          assert n_arc_pairs >= 15, f"ARC coverage insufficient: (n_arc_pairs)"
+          assert n_humaneval_pairs >= 15, f"HumanEval coverage insufficient: (n_humaneval_pairs)"
+          assert n_gsm8k_pairs >= 15, f"GSM8K coverage insufficient: (n_gsm8k_pairs)"
     5. DreamPRM per-domain loss weighting (arXiv 2505.20241):
        - Compute weights from Exp 834 per-domain validation loss:
          SVAMP weight = 8.0 (auc=0.0, maximum deficit)
@@ -215,7 +215,7 @@ tasks:
     1. Read CLAUDE.md spec-first workflow.
     2. Read results/experiment_844_jepa_v24b_svamp.json.
        If min_domain_auc < 0.50: write blocked artifact immediately.
-         blocked_reason = f"min_domain_auc={min_domain_auc} < 0.50 deployment gate"
+         blocked_reason = f"min_domain_auc=(min_domain_auc) < 0.50 deployment gate"
          honest_verdict = "jepa_v24b_not_deployed_below_gate"
          Write results/experiment_845_jepa_v24b_tier35_deployment.json and exit.
     3. Load JEPA v24b checkpoint from results/experiment_844_jepa_v24b_svamp.json checkpoint_path.
@@ -451,7 +451,7 @@ tasks:
             with L2-normalized embedding. (Exp 836 write path active.)
          d. Capacity-constrained update: update only top-K=5 highest-variance constraint types.
             Freeze constraint types with rolling precision variance < 0.01.
-         e. Record: precision_s{s}, n_violations_found_s{s}, n_constraints_written_s{s}.
+         e. Record: precision_s(s), n_violations_found_s(s), n_constraints_written_s(s).
          f. Checkpoint: save session results to results/exp848_checkpoint.json.
     6. Compute: delta_s1_to_s5 = precision_s5 - precision_s1.
        is_monotonic = (precision_s2 >= precision_s1) AND (precision_s3 >= precision_s2)
@@ -520,7 +520,7 @@ tasks:
 
            Why this exists: llama.cpp requires a local file path to load a model.
            HuggingFace GGUF models follow a naming convention:
-             {org}/{name}-GGUF → {cache_dir}/{org}_{name}-{quantization}.gguf
+             (org)/(name)-GGUF → (cache_dir)/(org)_(name)-(quantization).gguf
            This resolver maps model IDs to expected file paths without downloading.
            It checks if the file exists and raises a clear error if not.
            """
@@ -869,7 +869,7 @@ tasks:
        If CARNOT_FORCE_LIVE is not set after autofix: abort with diagnostic artifact.
     3. ExperimentTimeoutWatchdog(853, timeout_minutes=60). Checkpoint every 10 questions.
     4. Setup GPU (GPU 0 for Qwen3.5-0.8B — smaller model, lower VRAM).
-       Use tmpl.setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+       Use tmpl.setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
        If not gpu_status["all_healthy"]: write blocked artifact and exit.
     5. Run 50 GSM8K questions (first 50 from the standard evaluation set).
        4 conditions (run all 50 questions for each condition):
