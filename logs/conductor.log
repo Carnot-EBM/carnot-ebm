@@ -2516,3 +2516,26 @@ MILESTONE_PREREQS.md | 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 2026-04-25 05:50:26,897 [conductor] RESEARCH STEP: Exp 844: JEPA v24b SVAMP-Balanced Domain Training (RETRO-SVAMP-ZERO-AUC, CPU)
 2026-04-25 05:50:26,897 [conductor] ============================================================
 2026-04-25 05:50:26,918 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 05:50:26,976 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 05:50:26,976 [conductor] Running test suite (smart subset)...
+2026-04-25 05:50:32,629 [conductor] Pre-check: 81 passed, 3 warnings in 2.87s
+2026-04-25 05:50:32,745 [conductor] Injected 49 symbol signatures from 2 files (AST outlines)
+2026-04-25 05:50:32,745 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+33 tests pass. Deliverable is written and stable.
+
+**Summary of what was produced:**
+
+- **`results/experiment_844_jepa_v24b_svamp.json`** — deliverable with `all_domains_coverage=true`, `honest_verdict="jepa_v24b_svamp_still_collapsed"` (auc_svamp=0.0 — the hash-projection embedding cannot discriminate short SVAMP arithmetic texts; the corpus coverage fix alone is not sufficient, but the data coverage and assertion infrastructure are now in place)
+- **`results/jepa_v24b_svamp_triplets.json`** — 20 symbolically-verified SVAMP triplets
+- **`results/jepa_v24b_checkpoint/params.npz`** — trained model weights
+- **`scripts/experiment_844_jepa_v24b_svamp.py`** — experiment script with `assert_domain_coverage`, SVAMP triplet generation, v24b training loop
+- **`tests/python/test_experiment_844_jepa_v24b_svamp.py`** — 33 tests, all passing
+- **`openspec/capabilities/autoresearch/spec.md`** — added REQ-LEARN-020 and SCENARIO-LEARN-020
+2026-04-25 05:58:06,810 [conductor] Claude Code completed (exit 0)
+2026-04-25 05:58:06,823 [conductor] Changes:
+logs/conductor.log                         | 16 ++++++++++++++++
+ openspec/capabilities/autoresearch/spec.md | 25 +++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+)
+2026-04-25 05:58:06,849 [conductor] DOGFOOD: Verification complete (total: 519 checks, 48 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 05:58:06,849 [conductor] Running test suite (smart subset)...
+2026-04-25 05:58:12,461 [conductor] Post-check: 81 passed, 3 warnings in 2.80s
