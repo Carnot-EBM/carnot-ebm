@@ -85,6 +85,9 @@ from carnot.pipeline.nup_probe_v4 import NUPProbeV4
 from carnot.pipeline.sink_probe import SinkProbe
 from carnot.pipeline.spilled_energy import SpilledEnergyDetector, SpilledEnergyDetectorResult  # noqa: F401
 from carnot.pipeline.vg_search_scheduler import VGSearchScheduler  # noqa: F401
+from carnot.probes.hallusae_geometric_probe import HalluSAEGeometricProbe
+from carnot.probes.streaming_cot_detector import StreamingCoTHalluDetector
+from carnot.samplers.lagrange_adaptive import LagrangeAdaptiveIsingConstraints
 
 
 # ---------------------------------------------------------------------------
@@ -254,6 +257,180 @@ class ThreeTierPipeline:
         # When set alongside DUAL_GPU_ENABLED=True, both tiers can dispatch to
         # two GPUs concurrently for ~2x throughput (validated in Exp 685).
         self._second_model_spec: dict[str, str] | None = second_model_spec
+        # Tier 0g: StreamingCoTHalluDetector — optional rolling PHaS probe.
+        # When set, verify_extended() calls process_step() per CoT step and records
+        # streaming_cot_unstable in the extended result dict.  Advisory only.
+        self.streaming_cot_detector: StreamingCoTHalluDetector | None = None
+        # Tier 0i: HalluSAEGeometricProbe — optional TF-IDF geometry probe.
+        # When set, verify_extended() measures geometric_energy and hallusae_anomalous.
+        self.hallusae_probe: HalluSAEGeometricProbe | None = None
+        # Tier 3 (Lagrange): LagrangeAdaptiveIsingConstraints — optional adaptive
+        # Ising sampler whose lambda weights update across sessions (FR-11 loop).
+        # When set, run_lagrange_session() delegates to this instance after each
+        # session of the multi-session relay.
+        self.lagrange_adaptive: LagrangeAdaptiveIsingConstraints | None = None
+
+    def wire_tier_0g(self, detector: StreamingCoTHalluDetector) -> None:
+        """Attach a StreamingCoTHalluDetector so verify_extended() runs Tier 0g.
+
+        **For engineers:**
+            After wiring, verify_extended() will split the response into lines
+            (proxy for CoT steps), feed each to detector.process_step(), and
+            record streaming_cot_unstable in the returned dict.  The detector is
+            reset before each call so prior response history does not bleed across.
+
+        Args:
+            detector: Configured StreamingCoTHalluDetector instance.
+
+        Spec: REQ-FR11-030
+        """
+        self.streaming_cot_detector = detector
+
+    def wire_tier_0i(self, probe: HalluSAEGeometricProbe) -> None:
+        """Attach a HalluSAEGeometricProbe so verify_extended() runs Tier 0i.
+
+        **For engineers:**
+            After wiring, verify_extended() will call probe.geometric_energy() and
+            probe.is_anomalous() on the CoT steps and record geometric_energy and
+            hallusae_anomalous in the extended result dict.  Advisory only.
+
+        Args:
+            probe: Configured HalluSAEGeometricProbe instance.
+
+        Spec: REQ-FR11-030
+        """
+        self.hallusae_probe = probe
+
+    def wire_lagrange(self, adaptive: LagrangeAdaptiveIsingConstraints) -> None:
+        """Attach a LagrangeAdaptiveIsingConstraints for the FR-11 multi-session relay.
+
+        **For engineers:**
+            After wiring, run_lagrange_session() will delegate to this instance's
+            run_session() method, which updates lambdas based on violation rates.
+            This is the Tier 3 Lagrange self-learning loop.
+
+        Args:
+            adaptive: Configured LagrangeAdaptiveIsingConstraints instance.
+
+        Spec: REQ-FR11-030
+        """
+        self.lagrange_adaptive = adaptive
+
+    @staticmethod
+    def _split_cot_steps(response: str) -> list[str]:
+        """Split a response string into CoT steps for probe evaluation.
+
+        **For engineers:**
+            Each non-empty line is treated as one CoT step.  This is a simple
+            heuristic; in production you would parse explicit step markers.
+            Returns a list with at least one element (the full response) so the
+            probes never receive an empty list.
+
+        Args:
+            response: Full response text.
+
+        Returns:
+            List of non-empty line strings, or [response] if no newlines.
+        """
+        steps = [s.strip() for s in response.splitlines() if s.strip()]
+        return steps if steps else [response]
+
+    def verify_extended(
+        self,
+        response: str,
+        *,
+        attention_matrix: Any | None = None,
+        question: str = "",
+        hidden_states: Any | None = None,
+    ) -> dict[str, Any]:
+        """Verify a response and run advisory Tier 0g/0i probes; return extended dict.
+
+        **For engineers:**
+            Wraps verify() and appends probe outputs:
+                streaming_cot_unstable — bool from Tier 0g (StreamingCoTHalluDetector).
+                geometric_energy       — float from Tier 0i (HalluSAEGeometricProbe).
+                hallusae_anomalous     — bool from Tier 0i.
+
+            When a probe is not wired (None), its fields default to False/0.0.
+            The base verify() fields (verified, tier_used, energy) are always present.
+
+        Args:
+            response: LLM response text.
+            attention_matrix: Attention matrix or None (same as verify()).
+            question: Question text.
+            hidden_states: Hidden states or None (same as verify()).
+
+        Returns:
+            dict with keys: verified, tier_used, energy, streaming_cot_unstable,
+            geometric_energy, hallusae_anomalous.
+
+        Spec: REQ-FR11-030
+        """
+        verified, tier_used, energy = self.verify(
+            response,
+            attention_matrix=attention_matrix,
+            question=question,
+            hidden_states=hidden_states,
+        )
+
+        cot_steps = self._split_cot_steps(response)
+
+        # Tier 0g: rolling PHaS streaming detector.
+        streaming_cot_unstable = False
+        if self.streaming_cot_detector is not None:
+            self.streaming_cot_detector.reset()
+            for step in cot_steps:
+                self.streaming_cot_detector.process_step(step)
+            streaming_cot_unstable = self.streaming_cot_detector.is_streaming_unstable()
+
+        # Tier 0i: TF-IDF geometric energy probe.
+        geometric_energy = 0.0
+        hallusae_anomalous = False
+        if self.hallusae_probe is not None:
+            geometric_energy = self.hallusae_probe.geometric_energy(cot_steps)
+            hallusae_anomalous = self.hallusae_probe.is_anomalous(cot_steps)
+
+        return {
+            "verified": verified,
+            "tier_used": tier_used,
+            "energy": energy,
+            "streaming_cot_unstable": streaming_cot_unstable,
+            "geometric_energy": geometric_energy,
+            "hallusae_anomalous": hallusae_anomalous,
+        }
+
+    def run_lagrange_session(
+        self,
+        constraints: list[dict],
+        n_sweeps: int = 100,
+        n_samples: int = 10,
+    ) -> dict:
+        """Run one Lagrange adaptive session and update lambda weights (FR-11 loop).
+
+        **For engineers:**
+            Delegates to self.lagrange_adaptive.run_session() when a
+            LagrangeAdaptiveIsingConstraints instance is wired.  After this call,
+            the adaptive instance's lambdas have been updated based on violation rates
+            from the current session — the next session will use steeper coupling for
+            frequently violated constraints.
+
+            Returns an empty dict when no lagrange_adaptive is wired (graceful no-op).
+
+        Args:
+            constraints: List of constraint dicts (spins, sign, penalty).
+            n_sweeps: Gibbs sweeps per sample.
+            n_samples: Number of spin samples per constraint check.
+
+        Returns:
+            dict from LagrangeAdaptiveIsingConstraints.run_session(), or {} if not wired.
+
+        Spec: REQ-FR11-030
+        """
+        if self.lagrange_adaptive is None:
+            return {}
+        return self.lagrange_adaptive.run_session(
+            constraints, n_sweeps=n_sweeps, n_samples=n_samples
+        )
 
     def has_second_model(self) -> bool:
         """True if a second model config is registered for DualGPURunner parallel inference.
