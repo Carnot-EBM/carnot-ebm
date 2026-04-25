@@ -1893,3 +1893,50 @@ Perfect! Done with minimal updates:
 
 **Summary**: The milestone .63 retrospective closed 2 retros (injection discrimination, GGUF import) but opened 2 new ones (JEPA planning domain gap, FPGA bitstream routing). 4/10 criteria met—mixed results, honestly recorded.
 2026-04-25 00:08:14,815 [conductor] Claude Code completed (exit 0)
+2026-04-25 00:08:14,862 [conductor] Committed: [conductor] Update docs for Exp 830: Milestone 2026.04.63 Operational Retrospect
+2026-04-25 00:08:16,464 [conductor] Pushed to origin
+2026-04-25 00:08:16,465 [conductor] Documentation reconciliation committed
+2026-04-25 00:08:16,468 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-25 00:13:16,471 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-25 00:18:16,473 [conductor] Sleep complete — resuming
+2026-04-25 00:18:16,473 [conductor] --- Iteration 13 ---
+2026-04-25 00:18:16,475 [conductor] All 12 research tasks completed or exhausted. Nothing to do.
+2026-04-25 00:18:16,475 [conductor] All tasks in current milestone complete.
+2026-04-25 00:18:16,475 [conductor] Updating docs before planning next milestone...
+2026-04-25 00:18:16,475 [conductor] ============================================================
+2026-04-25 00:18:16,475 [conductor] UPDATING DOCS BEFORE PLANNING
+2026-04-25 00:18:16,475 [conductor] ============================================================
+2026-04-25 00:18:16,475 [conductor] Calling Claude Code (30 max turns, model: sonnet)...
+Error: Reached max turns (30)2026-04-25 00:21:41,256 [conductor] Claude Code failed (exit 1)
+2026-04-25 00:21:41,256 [conductor] No doc updates needed (or update failed)
+2026-04-25 00:21:41,256 [conductor] Running operational retrospective...
+2026-04-25 00:21:41,270 [conductor] ============================================================
+2026-04-25 00:21:41,270 [conductor] OPERATIONAL RETROSPECTIVE (milestone 2026.04.63)
+2026-04-25 00:21:41,270 [conductor] ============================================================
+2026-04-25 00:21:41,396 [conductor] Calling agent for operational retrospective...
+2026-04-25 00:21:41,396 [conductor] Calling Claude Code (15 max turns, model: sonnet)...
+Done. Here's a summary of what was written:
+
+**`results/operational_retro_2026_04_63.json`** (schema v38):
+
+| Field | Value |
+|-------|-------|
+| `total_wall_time_minutes` | 3904 |
+| `experiments_completed` | 728 |
+| `wall_time_delta_vs_62` | +103 min (+2.7%) — 4th consecutive regression |
+| `wall_time_delta_vs_58` | +489 min (+14.3%) |
+| `estimated_time_savings_pct` | 30% structural / 9.5% near-term |
+
+**Key findings:**
+
+1. **UNPRECEDENTED^3**: Slowest-5 identical across `.60`, `.61`, `.62`, `.63` — four-peat never seen before. All five are unguarded-queue carryovers, not research-duration outliers.
+
+2. **Exp 786 is now zero-value**: RETRO-028 closed in `.62` means Exp 786 rerunning for 77 min/milestone is pure manifest enforcement failure, no residual research justification.
+
+3. **Documentation-without-application loop**: 5th consecutive milestone. The fix is structural — `MILESTONE_PREREQS.md` must become a hard-blocking gate, not a suggestion.
+
+4. **GPU thermal balance at historic best**: 0C differential (48C/48C) vs `.62`'s 9C — RETRO-028 closure enabled more balanced GPU 1 usage.
+
+5. **RETRO-SYMCODE-SERIAL newly opened**: escalates Exp 627 paragraph-batching from 5th-consecutive-recommendation to a formal blocking gate for `.64`.
+2026-04-25 00:26:36,311 [conductor] Claude Code completed (exit 0)
+2026-04-25 00:26:36,311 [conductor] Operational retrospective complete
