@@ -2712,3 +2712,4 @@ python/ |
 | 2026-04-24 23:02 UTC | Exp 818: Milestone 2026.04.62 Operational Retrospe | OK | 81 passed, 3 warnings in 2.86s |
 | 2026-04-24 23:59 UTC | Plan milestone 2026.04.63 | OK | 12 tasks proposed |
 | 2026-04-25 00:29 UTC | Milestone 2026.04.63 activated | OK | 12 tasks queued |
+| 2026-04-25 00:41 UTC | Exp 819: IsingEBM External Field Fix (RETRO-ISING- | OK | 81 passed, 3 warnings in 2.85s |
