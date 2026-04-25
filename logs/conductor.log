@@ -4254,3 +4254,16 @@ logs/conductor.log                      | 12 +++++++++
 2026-04-25 19:36:51,116 [conductor] RESEARCH STEP: Exp 886: ConstrainedDecodingPreFilter — AST-Guided Token Masking for Code (arXiv 2508.15866) (CPU)
 2026-04-25 19:36:51,116 [conductor] ============================================================
 2026-04-25 19:36:51,135 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 19:36:51,191 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 19:36:51,191 [conductor] Running test suite (smart subset)...
+2026-04-25 19:36:57,159 [conductor] Pre-check: 81 passed, 3 warnings in 3.07s
+2026-04-25 19:36:57,285 [conductor] Injected 119 symbol signatures from 3 files (AST outlines)
+2026-04-25 19:36:57,285 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-25 19:45:57,823 [conductor] Claude Code produced stable deliverable results/experiment_886_constrained_decoding_prefilter.json (9.0 min elapsed) — killing subagent early
+2026-04-25 19:45:57,877 [conductor] Changes:
+logs/conductor.log                                 |  6 +++
+ openspec/capabilities/verifiable-reasoning/spec.md | 46 ++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+2026-04-25 19:45:57,904 [conductor] DOGFOOD: Verification complete (total: 560 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 19:45:57,904 [conductor] Running test suite (smart subset)...
+2026-04-25 19:46:03,718 [conductor] Post-check: 81 passed, 3 warnings in 2.97s
