@@ -123,11 +123,101 @@ sovereignty at Phase 3; it has to be a continuous, conscious choice
 from Phase 1 onward. Naming it explicitly here makes the choice
 auditable.
 
+## Failed-Experiment Rerun Discipline (MANDATORY)
+
+If an experiment fails to complete, times out, blocks on a gate, or
+produces a `partial` / `not_viable` / `still_*` honest verdict, **the
+same experiment must not be re-proposed in a subsequent milestone
+without an explicit plan to address the suspected underlying cause.**
+
+This rule directly answers the .60–.65 retros' "slow-5 carryover"
+finding: Exps 786/527/491/627/603 ran unguarded for six consecutive
+milestones, burning ~224 min/milestone of wall time without
+progress, because the planner kept proposing them and the conductor
+kept running them. That pattern must not recur.
+
+**Definitions.**
+
+A task is "failed" for the purposes of this rule when its
+honest_verdict maps to ⚠️ Blocked, ⚠️ Research Finding (any token in
+`partial / inverted / insufficient / no_improvement / still_wrong /
+no_delta / below / regression / negative / flat / plateau /
+collapsed`), or ❌ Failed in the in-process reconciler's mapping
+table (`scripts/in_process_doc_reconcile.py:_PARTIAL_TOKENS`,
+`_BLOCKED_TOKENS`, `_FAILED_TOKENS`).
+
+A "rerun" is any new task whose substantive scope (the experiment
+script's behaviour, the deliverable shape, the underlying technique)
+matches a previously-failed task. Trivial relabeling does not
+qualify as a different experiment.
+
+"Addressing the suspected underlying cause" means the new task's
+specification explicitly:
+
+1. **Names the prior failure** — by experiment ID and verdict.
+2. **Names the diagnosed root cause** — what specifically failed.
+   "We don't know" is a valid honest answer, in which case the rerun
+   is rejected because root-cause-unknown does not improve the
+   prior odds.
+3. **Names what is different** — the technique, the corpus, the
+   parameters, the gate condition, or the upstream prerequisite that
+   has changed since the prior failure. If nothing has changed, the
+   rerun is rejected.
+4. **States a falsifiable acceptance gate** — if the new attempt
+   produces the same verdict as before, the experiment is *retired*
+   from future milestones (added to a permanent exclusion list)
+   rather than re-proposed yet again.
+
+**Planner responsibility.** When the planner generates a new
+milestone roadmap (`research-roadmap-next.yaml`), it must consult
+the project's failure record (`research-complete.yaml`,
+`results/operational_retro_*.json`, `ops/changelog.md`) before
+proposing any task. For any task whose scope matches a prior failed
+attempt, the YAML must include an optional `prior_failures:` field
+with structure:
+
+```yaml
+prior_failures:
+  - experiment_id: exp850-sota-code-repair-v5
+    verdict: model_not_cached
+    addressed_by: "Exp 849 shipped GGUFCacheResolver; Exp 855 LIVE-ENV
+                   permanent fix; this attempt explicitly downloads the
+                   model from HuggingFace before invoking the cache."
+    retire_if_same_verdict: true
+```
+
+**Conductor responsibility.** Before launching an experiment, the
+conductor consults the failure record. If the task's scope matches a
+prior failure and the YAML has no `prior_failures:` entry that
+satisfies the four definitions above, the conductor refuses to
+launch — writes a `blocked_doomed_rerun_no_root_cause` artifact and
+moves on.
+
+**Retirement.** When a `retire_if_same_verdict: true` task fails
+again with the same verdict, the experiment ID is added to the
+permanent exclusion manifest (`ops/exclusion_manifest.yaml` —
+mechanism already exists per `_ensure_exclusion_manifest_loaded` in
+`scripts/research_conductor.py`). Future planners cannot propose it
+without explicit human override.
+
+**Why this is in CLAUDE.md, not just a code change.** The rule
+governs what the *planner* does, and the planner reads CLAUDE.md as
+required reading. Mechanical enforcement at the conductor layer is
+the safety net; the planner respecting the rule at design time is
+the primary discipline.
+
+**Pending mechanical enforcement.** A failure ledger module +
+conductor pre-launch check are scoped at
+`openspec/change-proposals/failed-experiment-rerun-enforcement.md`
+(separate proposal). Until that ships, this rule is enforced by
+honest discipline at the planner layer alone.
+
 ## Operational Principles
 
 - **Meta-reflection:** After milestones, evaluate HOW work was executed, not just WHAT was produced. Feed operational improvements back into the process.
 - **Continuous improvement:** Domain (verification accuracy), process (experiment speed), and strategy (research direction) all improve together as a unified self-learning system.
 - **The energy function is ground truth.** It cannot be gamed. This is the invariant across all three phases.
+- **No-doomed-rerun discipline:** see "Failed-Experiment Rerun Discipline" above.
 
 ## Development Workflow (MANDATORY)
 
