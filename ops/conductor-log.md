@@ -2747,3 +2747,4 @@ python/ |
 | 2026-04-25 10:10 UTC | Exp 845: JEPA v24b Tier 3.5 Deployment (CPU, GATED | OK | 81 passed, 3 warnings in 2.84s |
 | 2026-04-25 10:36 UTC | Exp 846: Multi-Agent Arbiter Gibbs Warm-Start Fix  | OK | 81 passed, 3 warnings in 4.30s |
 | 2026-04-25 10:54 UTC | Exp 847: EmbeddingConstraintStore L2-Norm Retrieva | OK | 81 passed, 3 warnings in 2.90s |
+| 2026-04-25 11:08 UTC | Exp 848: FR-11 Tier 1 Live Relay v4 (FR-11 mandato | OK | 81 passed, 3 warnings in 2.82s |
