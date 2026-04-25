@@ -1,1046 +1,1028 @@
-milestone: 2026.04.62
-milestone_title: JEPA v22 CPMI Rewire + Gemma4 Fix v5 + Constraint Live Delta + OSS-CAD FPGA
-milestone_doc: openspec/change-proposals/research-roadmap-v62.md
+milestone: 2026.04.63
+milestone_title: Injection Field Fix + GGUF Unblock + JEPA LIMO Curation + AgentAuditor Arbiter
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
-- id: exp806-milestone-prereqs-gate
-  milestone: 2026.04.62
-  deliverable: results/experiment_806_milestone_prereqs_gate.json
-  title: 'Exp 806: MILESTONE_PREREQS.md Gate + JEPA Assertion Infrastructure'
+- id: exp819-injection-field-fix
+  milestone: 2026.04.63
+  deliverable: results/experiment_819_injection_field_fix.json
+  title: 'Exp 819: IsingEBM External Field Fix (RETRO-ISING-INJECTION-NO-DISCRIMINATION)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: The .61 retro explicitly called for MILESTONE_PREREQS.md — a checklist of
-    IMMEDIATE-class actions from the prior retro that MUST be verified before .62 experiments
-    run. The retro also identified the single most preventable failure: JEPA v21 ood_auc=0.2444
-    (all-time low) caused by missing assert augmentation_ratio > 1.0 at JEPA script startup.
-    This experiment implements both: the prereqs gate document and the JEPA wiring assertion.
+    CONTEXT: Exp 812 (milestone .62) produced honest_verdict=injection_negative_delta — energy
+    DECREASES when a constraint violation fires. This is a fundamental physics bug that cascaded
+    into 4 failed experiments (.62 Exps 813, 814, 817). Root cause: IsingConstraintInjector
+    .inject_into_coupling_matrix() adds the constraint projection to the DIAGONAL of coupling
+    matrix J. In Ising energy E = -0.5 * s^T J s, diagonal terms are -0.5 * J[i,i] * s_i^2
+    = -0.5 * J[i,i] (constant, since s_i^2 = 1 for ±1 spins). Adding positive values to the
+    diagonal uniformly LOWERS energy for ALL spin configurations — it does not discriminate
+    between correct and violated responses. This is RETRO-ISING-INJECTION-NO-DISCRIMINATION.
+
+    Fix: Replace diagonal injection with external field injection:
+      E_total = -0.5 * s^T J s - h^T s
+    Where h = project_to_spin_bias(constraint_embeddings) is a per-spin external field.
+    When constraint fires: h[i] > 0, spin s_i = +1 (violation encodes as +1)
+      → field_energy = -h[i] * s_i = -h[i] < 0 → total energy INCREASES (higher = worse).
+    For correct responses: s_i = -1
+      → field_energy = -h[i] * (-1) = h[i] > 0 → energy DECREASES (lower = better).
+    Net: violations get HIGHER energy, correct responses get LOWER energy. Discriminating.
 
     EXISTING CODE TO READ FIRST:
-    - results/operational_retro_2026_04_61.json — improvements_suggested section
-    - scripts/research_conductor.py — read (do NOT modify) to understand structure
-    - openspec/capabilities/pipeline/spec.md — look for REQ-INFRA entries
+    - results/experiment_812_ising_constraint_injection.json — root cause details
+    - python/carnot/pipeline/ising_constraint_injector.py — IsingConstraintInjector class
+    - python/carnot/verify/ising_ebm.py — IsingEBM energy computation
+    - openspec/capabilities/pipeline/spec.md — look for REQ-VERIFY entries
     - openspec/capabilities/autoresearch/spec.md — look for REQ-LEARN entries
 
-    TASK: Create MILESTONE_PREREQS.md gate, add JEPA wiring assertion infrastructure,
-    write results/experiment_806_milestone_prereqs_gate.json.
+    TASK: Implement external field energy method, validate it discriminates correct from incorrect
+    responses, write results/experiment_819_injection_field_fix.json.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
     2. Add to openspec/capabilities/pipeline/spec.md:
-       - REQ-INFRA-059: A MILESTONE_PREREQS.md file MUST exist at project root listing all
-         IMMEDIATE-class actions from the prior milestone retro. Each action MUST be marked
-         as either verified_complete or escalated_retro before any milestone experiment runs.
-       - REQ-INFRA-060: JEPA retrain experiment scripts MUST assert augmentation_ratio > 1.0
-         before any model training begins. Failure raises AssertionError with message:
-         "CPMI corpus not wired in — check training data loader merges all sources."
-       - SCENARIO-INFRA-068: Prereqs gate reads MILESTONE_PREREQS.md; all IMMEDIATE items
-         marked verified_complete; gate passes; experiment proceeds normally.
-       - SCENARIO-INFRA-069: JEPA retrain script startup: augmentation_ratio=1.0 detected;
-         AssertionError raised; training does NOT begin; experiment writes blocked artifact.
-    3. Create MILESTONE_PREREQS.md in project root:
-       Header: "# Milestone 2026.04.62 Prerequisites — Verify Before ANY Experiment Runs"
-       List from .61 retro improvements_suggested (IMMEDIATE items only):
-       a. [ ] Apply manifest enforcement to ALL dequeue sites (Exp 793 audit documented patch)
-       b. [ ] Install FPGA toolchain (Exp 807 — OSS-CAD-Suite, no sudo required)
-       c. [ ] Add CPMI wiring assertion to JEPA retrain scripts (this experiment)
-       d. [ ] Run source scripts/session_startup.sh before any GPU experiments
-       Status column: each item has status: pending | verified_complete | escalated_retro
-       Mark item c as verified_complete (implemented in this experiment).
-       Leave others as pending (human must verify before running conductor).
-    4. Implement python/carnot/pipeline/jepa_wiring_guard.py:
-       a. check_cpmi_wiring(triples_path: str, min_augmentation_ratio: float = 1.5):
-          - Load triples from triples_path (experiment_798_cpmi_pairs_triples.json or similar)
-          - Compute augmentation_ratio = n_triples / max(n_input_pairs, 1)
-          - Assert augmentation_ratio >= min_augmentation_ratio
-          - Return: JEpaWiringCheckResult(triples_path, n_triples, n_input_pairs,
-                                          augmentation_ratio, is_wired)
-       b. JepaWiringCheckResult dataclass (triples_path, n_triples, n_input_pairs,
-          augmentation_ratio, is_wired: bool, honest_verdict: str)
-       c. Export JepaWiringCheckResult, check_cpmi_wiring from carnot.pipeline.__init__
-    5. Create scripts/experiment_806_milestone_prereqs_gate.py:
+       - REQ-VERIFY-141: IsingConstraintInjector MUST support external field injection via
+         compute_energy_with_external_field(J, spins, constraint_embeddings) where
+         E_total = -0.5 * s^T J s - h^T s and h = project_to_spin_bias(constraint_embeddings).
+       - REQ-VERIFY-142: For a ±1 spin configuration encoding a constraint violation (s_i = +1),
+         external field injection MUST produce E_total(violation) > E_total(correct) when
+         h[i] > 0. The legacy diagonal injection method MUST remain available as
+         inject_into_coupling_matrix() for backwards compatibility.
+       - SCENARIO-VERIFY-170: 10 arithmetic error responses encoded as +1 spins; 10 correct
+         responses encoded as -1 spins; energy(error) > energy(correct) for >= 8/10 pairs.
+       - SCENARIO-VERIFY-171: compute_energy_with_external_field with zero constraint embeddings
+         (h=0) returns E_total == E_ising (no external field contribution). Backward compatibility.
+    3. Implement in python/carnot/pipeline/ising_constraint_injector.py:
+       a. Add method compute_energy_with_external_field(J, spins, constraint_embeddings):
+          - project_to_spin_bias(constraint_embeddings): projects embedding to per-spin scalar
+            h = embedding_matrix @ constraint_embeddings.mean(axis=0), clipped to [0, +inf].
+          - Compute E_ising = -0.5 * float(spins @ J @ spins)
+          - Compute E_field = -float(h @ spins)
+          - Return E_total = E_ising + E_field (namedtuple: E_total, E_ising, E_field, h_norm)
+       b. Add helper project_to_spin_bias(constraint_embeddings, n_spins) -> np.ndarray:
+          - Creates a random projection matrix W of shape (n_spins, embedding_dim) on first call.
+          - Returns W @ constraint_embeddings.mean(axis=0), clipped to [0, +inf].
+          - W is seeded with np.random.default_rng(42) for reproducibility.
+       c. Export compute_energy_with_external_field from carnot.pipeline.__init__.
+    4. Create scripts/experiment_819_injection_field_fix.py:
        a. apply_env_autofix() FIRST.
-       b. ExperimentTemplate(806) + ExperimentTimeoutWatchdog(806, timeout_minutes=30).
-       c. Read MILESTONE_PREREQS.md — parse prereq items and their status.
-       d. Check JEPA wiring guard: call check_cpmi_wiring("results/experiment_798_cpmi_pairs_triples.json").
-          Record: is_wired, augmentation_ratio.
-       e. Check GPU session startup: look for scripts/session_startup.sh existence.
-       f. Artifact fields: prereqs_total, prereqs_verified, prereqs_pending,
-          jepa_wiring_guard_implemented, cpmi_triples_present, augmentation_ratio,
-          session_startup_exists, honest_verdict.
-       g. honest_verdict:
-          - "prereqs_gate_ready" if MILESTONE_PREREQS.md written AND jepa_wiring_guard_implemented
-          - "prereqs_gate_partial" if MILESTONE_PREREQS.md written but guard not importable
-          - "prereqs_gate_failed" if either missing
-    6. Write tests/python/test_experiment_806_milestone_prereqs_gate.py with 100% coverage:
-       - test check_cpmi_wiring raises AssertionError when ratio < min_augmentation_ratio
-       - test check_cpmi_wiring returns is_wired=True when ratio >= min_augmentation_ratio
-       - test JepaWiringCheckResult fields typed correctly
-       Each test traces to REQ-INFRA-059/060.
+       b. ExperimentTemplate(819) + ExperimentTimeoutWatchdog(819, timeout_minutes=30).
+       c. Load IsingEBM(n_spins=16) with J initialized to identity (baseline).
+       d. Generate synthetic test cases:
+          - 10 violation encodings: spins = np.array([+1 if i in violation_indices else -1 ...])
+            where violation_indices are the first 4 spins. Use fixed constraint_embeddings (zero
+            mean normal, seed=42).
+          - 10 correct encodings: same constraint_embeddings but spins all -1 (no violations).
+       e. For each pair: compute compute_energy_with_external_field(J, spins_violation, embeddings)
+          and compute_energy_with_external_field(J, spins_correct, embeddings).
+          Record: E_violation, E_correct, discriminating (E_violation > E_correct).
+       f. Compute: n_discriminating = sum(discriminating), discrimination_rate = n_discriminating/10.
+       g. Also verify legacy: for same inputs, inject_into_coupling_matrix returns constant shift
+          (record: legacy_delta = E_legacy_violation - E_legacy_correct, expected ~= 0.0).
+       h. Artifact fields: n_discriminating, discrimination_rate, legacy_delta,
+          external_field_implemented, retro_injection_closed (=True if rate >= 0.8),
+          honest_verdict.
+       i. honest_verdict:
+          - "injection_field_fixed" if discrimination_rate >= 0.8
+          - "injection_partial" if 0.5 <= discrimination_rate < 0.8
+          - "injection_still_wrong" if discrimination_rate < 0.5
+       j. If retro_injection_closed=True: update python/carnot/pipeline/ising_constraint_injector.py
+          docstring to mark RETRO-ISING-INJECTION-NO-DISCRIMINATION as CLOSED (date: {date}).
+    5. Write tests/python/test_experiment_819_injection_field_fix.py with 100% coverage:
+       - test compute_energy_with_external_field returns E_total > E_total_correct for h > 0
+       - test compute_energy_with_external_field with h=0 returns same energy as legacy
+       - test project_to_spin_bias output is non-negative (clipping works)
+       - test legacy inject_into_coupling_matrix diagonal delta ~= 0.0 (constant shift confirmed)
+       Each test traces to REQ-VERIFY-141/142 and SCENARIO-VERIFY-170/171.
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_819_injection_field_fix.py -v
     7. Reconcile:
        - ops/changelog.md: one-line entry with honest_verdict.
-       - ops/status.md: "Exp 806: MILESTONE_PREREQS.md created. JEPA wiring guard implemented."
+       - ops/status.md: "Exp 819: external field injection implemented. RETRO-ISING-INJECTION-NO-DISCRIMINATION status: <verdict>."
+       - _bmad/architecture.md: update IsingConstraintInjector note to reflect external field fix.
     8. tmpl.assert_deliverable_written() as final line.
 
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_819_injection_field_fix.py -v
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp807-oss-cad-suite-install
-  milestone: 2026.04.62
-  deliverable: results/experiment_807_oss_cad_suite_install.json
-  title: 'Exp 807: OSS-CAD-Suite FPGA Toolchain Install (RETRO-KV260-TOOLS-UNAVAILABLE v3)'
+- id: exp820-gguf-import-fix-code-repair-v5
+  milestone: 2026.04.63
+  deliverable: results/experiment_820_gguf_import_fix_code_repair_v5.json
+  title: 'Exp 820: GGUF Import Fix + Code Repair v5 (RETRO-GGUF-CACHE-IMPORT, GPU)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: RETRO-KV260-TOOLS-UNAVAILABLE has failed for 3 consecutive milestones (Exps 791,
-    794, 804) because `sudo pacman -S yosys nextpnr icestorm` does not succeed in the conductor
-    environment. The correct alternative is OSS-CAD-Suite (YosysHQ/oss-cad-suite-build):
-    a pre-built binary tarball requiring no sudo, no package manager, just curl + tar.
-    This gates Exp 816 (KV260 synthesis v2).
+    CONTEXT: RETRO-028 is CLOSED (Exp 810: Gemma4 OOM fixed). The new gate for live code repair
+    is RETRO-GGUF-CACHE-IMPORT: Exp 811 produced honest_verdict=blocked_model_load_failed due to
+    a Python ImportError when loading the GGUF loader. This has blocked every code repair
+    experiment since milestone .58. RETRO-028 resolution shifted the blocker from OOM to import
+    error. The fix is: diagnose the exact ImportError, repair the import (pip install/reinstall),
+    verify "from llama_cpp import Llama" succeeds, then run 20 HumanEval problems.
+    Even code_no_improvement is a valid honest_verdict — the project needs a live GPU result,
+    not a simulation. This experiment requires GPU (CARNOT_FORCE_LIVE=1).
+    Use Qwen3.5-0.8B (GGUF: unsloth/Qwen3.5-0.8B-GGUF) as the base model for affordability.
+    Use google/gemma-4-E4B-it as a second smoke-test model.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_804_kv260_synthesis_attempt.json — previous failure (tools_not_installed)
-    - results/experiment_794_fpga_toolchain_install.json — Exp 794 failure details
-    - hardware/kv260/ising_sampler_v3.v — target RTL for synthesis
-    - research-hardware-wishlist.md — KV260 Synthesis Status section
-    - openspec/capabilities/verifiable-reasoning/spec.md — existing REQ-HW entries
+    - results/experiment_811_sota_gguf_code_repair_v4.json — exact traceback of ImportError
+    - results/experiment_810_gemma4_oom_fix_v5.json — RETRO-028 closure details
+    - python/carnot/inference/gguf_loader.py — GGUFModelLoader class
+    - scripts/experiment_template.py — ExperimentTemplate, BatchedInferenceRunner
+    - openspec/capabilities/pipeline/spec.md — REQ-REPAIR entries
 
-    TASK: Download OSS-CAD-Suite from GitHub releases, verify all FPGA tools, run minimal
-    synthesis, write results/experiment_807_oss_cad_suite_install.json.
+    TASK: Diagnose and fix GGUF import error, run live 20-question HumanEval benchmark,
+    write results/experiment_820_gguf_import_fix_code_repair_v5.json.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
-       - REQ-HW-036: OSS-CAD-Suite MUST be installed to ~/tools/oss-cad-suite/ from the
-         YosysHQ/oss-cad-suite-build GitHub releases (no sudo required). PATH MUST include
-         ~/tools/oss-cad-suite/bin before any FPGA synthesis experiments.
-       - REQ-HW-037: After OSS-CAD-Suite installation, yosys, nextpnr-ice40, and icepack
-         MUST all report a version string when invoked with --version or --help.
-       - SCENARIO-HW-034: OSS-CAD-Suite tarball downloaded and extracted; all 3 tools
-         respond to version check; minimal synthesis of 2-spin Ising Verilog succeeds.
-    3. Create scripts/experiment_807_oss_cad_suite_install.py:
+    2. Add to openspec/capabilities/pipeline/spec.md:
+       - REQ-REPAIR-056: The GGUF model loader MUST succeed `from llama_cpp import Llama`
+         before any inference experiment proceeds. If ImportError is raised at load time,
+         the experiment MUST diagnose the error and attempt auto-repair via pip install.
+       - SCENARIO-REPAIR-089: GGUF loader import fails; diagnostic module detects missing
+         or incompatible llama-cpp-python; installs correct version; import succeeds;
+         experiment proceeds with live inference.
+    3. Create scripts/experiment_820_gguf_import_fix_code_repair_v5.py:
        a. apply_env_autofix() FIRST.
-       b. ExperimentTemplate(807) + ExperimentTimeoutWatchdog(807, timeout_minutes=45).
-       c. Define INSTALL_DIR = Path.home() / "tools" / "oss-cad-suite".
-          Define TOOLS = ["yosys", "nextpnr-ice40", "icepack"].
-       d. Check if already installed: for each tool, check (INSTALL_DIR / "bin" / tool).exists().
-          If all present: skip download, jump to verification step.
-       e. If not installed:
-          - Fetch latest release URL from GitHub API:
-            requests.get("https://api.github.com/repos/YosysHQ/oss-cad-suite-build/releases/latest")
-            Find asset matching "linux-x64" and ".tgz" in the asset name.
-          - Download with curl: subprocess.run(["curl", "-L", "-o", "/tmp/oss-cad.tgz", url], ...)
-          - Extract: subprocess.run(["tar", "-xzf", "/tmp/oss-cad.tgz", "-C", str(INSTALL_DIR.parent)], ...)
-          - If download or extract fails: write blocked artifact with failure details.
-       f. Verify tools present: for each tool in TOOLS:
-          result = subprocess.run([str(INSTALL_DIR / "bin" / tool), "--version"], capture_output=True)
-          or --help for icepack. Record: is_present, version_string.
-       g. If all 3 tools present: run minimal synthesis proof-of-concept:
-          Write /tmp/test_ising2.v (same 2-spin module as Exp 794).
-          Run: INSTALL_DIR/bin/yosys -p "synth_ice40; write_json /tmp/test_ising2.json" /tmp/test_ising2.v
-          Parse output for errors. Record: synthesis_clean (bool), lut_count_test.
+       b. ExperimentTemplate(820) + ExperimentTimeoutWatchdog(820, timeout_minutes=120).
+       c. Read results/experiment_811_sota_gguf_code_repair_v4.json — extract traceback.
+       d. Attempt import diagnostic:
+          try:
+            from llama_cpp import Llama
+            import_ok = True
+          except ImportError as e:
+            import_ok = False
+            import_error_msg = str(e)
+       e. If import_ok=False:
+          - Log import_error_msg.
+          - Attempt auto-repair: subprocess.run(["pip", "install", "--upgrade", "llama-cpp-python"])
+          - Re-attempt import. If still fails: write blocked artifact with
+            import_repair_attempted=True, import_repair_succeeded=False,
+            honest_verdict="still_blocked_import".
+       f. If import_ok=True (either directly or after repair):
+          - Setup GPU: tmpl.setup_gpu(MODEL_SPECS) where MODEL_SPECS includes:
+            {"name": "Qwen3.5-0.8B", "hf_id": "unsloth/Qwen3.5-0.8B-GGUF", "gpu": 0}
+          - If GPU not healthy: write blocked artifact with gpu_health_status.
+          - Load 20 HumanEval problems (from datasets["openai_humaneval"] or local cache).
+          - For each problem: generate solution with Qwen3.5-0.8B, test with exec() in sandbox.
+          - Baseline: run same 20 problems without Carnot repair (pass@1 baseline).
+          - Repair: run VerifyRepairPipeline.verify_and_repair() on failed solutions.
+          - Compute: n_baseline_pass, n_repair_pass, repair_delta = n_repair_pass - n_baseline_pass.
+       g. Artifact fields: import_repair_attempted, import_repair_succeeded, n_problems=20,
+          n_baseline_pass, n_repair_pass, repair_delta, honest_verdict.
        h. honest_verdict:
-          - "tools_installed_synthesis_clean" if all 3 tools AND synth succeeds
-          - "tools_installed_synthesis_failed" if all 3 tools but synth errors
-          - "download_failed" if GitHub API or curl fails
-          - "extract_failed" if tar extraction fails
-          - "already_installed" if tools were already present before this exp
-       i. Update research-hardware-wishlist.md: set KV260 Synthesis Status to note
-          OSS-CAD-Suite installed at INSTALL_DIR (honest_verdict and tool versions).
-    4. Write tests/python/test_experiment_807_oss_cad_suite_install.py with 100% coverage:
-       - test tool presence check returns correct status for mocked subprocess/filesystem
-       - test synthesis result parsing extracts lut_count correctly
-       - test GitHub API URL parsing finds the linux-x64 asset
-       Each test traces to REQ-HW-036/037.
+          - "import_fixed_repair_positive" if import_ok AND repair_delta > 0
+          - "import_fixed_no_improvement" if import_ok AND repair_delta <= 0
+          - "still_blocked_import" if import fails even after repair attempt
+    4. Write tests/python/test_experiment_820_gguf_import_fix_code_repair_v5.py with 100% coverage:
+       - test import diagnostic detects ImportError and logs error message
+       - test auto-repair subprocess call with mocked subprocess.run
+       - test HumanEval result struct has correct fields when import succeeds (mocked Llama)
+       Each test traces to REQ-REPAIR-056 and SCENARIO-REPAIR-089.
     5. Reconcile:
-       - research-hardware-wishlist.md: update KV260 Synthesis Status section.
-       - ops/changelog.md: one-line entry with honest_verdict and tool versions.
+       - ops/changelog.md: one-line entry with honest_verdict and repair_delta.
+       - ops/status.md: "Exp 820: GGUF import status: <verdict>. repair_delta=<value>."
+       - If honest_verdict != "still_blocked_import": update RETRO-GGUF-CACHE-IMPORT status.
     6. tmpl.assert_deliverable_written() as final line.
 
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu python scripts/experiment_820_gguf_import_fix_code_repair_v5.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp808-jepa-v22-cpmi-rewire
-  milestone: 2026.04.62
-  deliverable: results/experiment_808_jepa_v22_retrain.json
-  title: 'Exp 808: JEPA v22 CPMI Corpus Rewire + Retrain (RETRO-JEPA-OOD attempt #10, FR-11 mandatory)'
+- id: exp821-constraint-addition-live-v2
+  milestone: 2026.04.63
+  deliverable: results/experiment_821_constraint_addition_live_v2.json
+  title: 'Exp 821: Constraint Addition Live v2 (RETRO-CONSTRAINT-ZERO-DELTA, gated on Exp 819)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: JEPA v21 ood_auc=0.2444 is the all-time project low. Root cause: Exp 799
-    training data loader loaded ONLY fover_labeled_steps_v21_multi.json (augmentation_ratio=1.0)
-    and did NOT merge experiment_798_cpmi_pairs_triples.json (which had augmentation_ratio=2.5).
-    The CPMI hypothesis — that hard negatives fix JEPA OOD — is UNTESTED. This experiment
-    runs the correct v22 retrain with both files merged.
-    CRITICAL: Add assert augmentation_ratio > 1.0 at startup. Do NOT train without this check.
+    CONTEXT: This experiment is GATED on Exp 819 honest_verdict=injection_field_fixed.
+    Read results/experiment_819_injection_field_fix.json first. If honest_verdict is NOT
+    "injection_field_fixed", write a blocked artifact and stop.
+
+    RETRO-CONSTRAINT-ZERO-DELTA: Exp 813 (milestone .62) was blocked by injection_not_wired
+    (gated on the same injection fix). The goal is to measure whether adding constraints to
+    EmbeddingConstraintStore actually IMPROVES verification precision on live GPU over 3 sessions.
+    This is the core FR-11 Tier 1 hypothesis: more constraints → higher energy for violations.
+    The fix (external field injection from Exp 819) enables real measurement for the first time.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_799_jepa_v21_retrain.json — v21 failure (ood_auc=0.2444, aug_ratio=1.0)
-    - results/experiment_798_cpmi_pairs.json — CPMI generation result (augmentation_ratio=2.5)
-    - results/experiment_798_cpmi_pairs_triples.json — CPMI triples to load for training
-    - results/fover_labeled_steps_v21_multi.json — multi-source FoVer corpus (300 pairs)
-    - results/fover_labeled_steps_live.json — Exp 442 OOD eval set (do NOT train on this)
-    - python/carnot/models/jepa_predictor.py (or similar) — existing JEPA model architecture
-    - python/carnot/pipeline/three_tier_pipeline.py — Tier 3.5 wire-in location
-    - python/carnot/pipeline/jepa_wiring_guard.py — check_cpmi_wiring() from Exp 806
-    - openspec/capabilities/autoresearch/spec.md — FR-11, REQ-LEARN entries
-
-    TASK: Merge CPMI triples + FoVer corpus, retrain JEPA v22, evaluate OOD AUC,
-    write results/experiment_808_jepa_v22_retrain.json.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add to openspec/capabilities/autoresearch/spec.md:
-       - REQ-LEARN-063: JEPA v22 training data MUST merge multi-source FoVer corpus
-         (fover_labeled_steps_v21_multi.json) WITH CPMI triples (experiment_798_cpmi_pairs_triples.json).
-         augmentation_ratio = (n_fover_pairs + n_cpmi_triples) / n_fover_pairs MUST be >= 1.5
-         before training begins.
-       - REQ-LEARN-064: JEPA v22 training scripts MUST call check_cpmi_wiring() from
-         python/carnot/pipeline/jepa_wiring_guard.py as the FIRST assertion before any model
-         initialization or data loading.
-       - SCENARIO-LEARN-101: CPMI triples loaded; augmentation_ratio=3.5; training proceeds;
-         ood_auc evaluated on fover_labeled_steps_live.json; tier35_deployed if >= 0.75.
-       - SCENARIO-LEARN-102: Training starts; check_cpmi_wiring() detects augmentation_ratio=1.0;
-         AssertionError raised; experiment writes blocked_wiring_miss artifact; training stops.
-    3. Create scripts/experiment_808_jepa_v22_retrain.py:
-       a. apply_env_autofix() FIRST.
-       b. ExperimentTemplate(808) + ExperimentTimeoutWatchdog(808, timeout_minutes=60).
-       c. WIRING GUARD (mandatory — FIRST assertion):
-          from python.carnot.pipeline.jepa_wiring_guard import check_cpmi_wiring
-          guard = check_cpmi_wiring("{project_root}/results/experiment_798_cpmi_pairs_triples.json",
-                                     min_augmentation_ratio=1.5)
-          If not guard.is_wired: write blocked artifact with "CPMI corpus not wired", exit.
-       d. Load training corpus: merge fover_labeled_steps_v21_multi.json (300 pairs)
-          WITH experiment_798_cpmi_pairs_triples.json (750 CPMI triples).
-          Each CPMI triple: (prefix, positive_step, negative_step) → 2 training pairs:
-            (prefix+positive, label=1.0) and (prefix+negative, label=0.0 × 0.7 weight)
-          Record: n_fover_pairs, n_cpmi_triples, total_training_items, augmentation_ratio.
-       e. OOD eval set: fover_labeled_steps_live.json (57 Exp 442 steps — NOT in training set).
-       f. Retrain JEPA with LambdaRank listwise loss + outcome-conditioned weighting:
-          domain_accuracy = ("gsm8k": 0.14, "math500": 0.12, "humaneval": 0.20)
-          weight_i = domain_accuracy.get(pair.get("source_domain", "gsm8k"), 0.14)
-          Train for 80 epochs (more than v21's 50 to allow CPMI negatives to contribute).
-          Evaluate in-distribution AUC + OOD AUC after each 20 epochs.
-       g. If OOD AUC >= 0.75:
-          - Save to results/jepa_predictor_v22.safetensors
-          - Wire into ThreeTierPipeline as Tier 3.5
-          - tier35_deployed = True
-       h. If OOD AUC < 0.75: write per-domain AUC breakdown (gsm8k, math500, humaneval).
-          Identify which domain shows largest training/OOD gap.
-       i. honest_verdict:
-          - "jepa_v22_tier35_deployed" if ood_auc >= 0.75
-          - "jepa_v22_improvement_vs_v21" if 0.5 <= ood_auc < 0.75 (improvement, not gate)
-          - "jepa_v22_below_random" if ood_auc < 0.5
-          - "blocked_wiring_miss" if guard.is_wired=False
-    4. Write tests/python/test_experiment_808_jepa_v22_retrain.py with 100% coverage:
-       - test corpus merge produces augmentation_ratio > 1.0
-       - test outcome-conditioned weighting maps source_domain to correct weight
-       - test blocked_wiring_miss path when check_cpmi_wiring fails
-       Each test traces to REQ-LEARN-063/064.
-    5. Reconcile:
-       - ops/changelog.md: one-line entry with ood_auc and honest_verdict.
-       - ops/status.md: "Exp 808: JEPA v22 retrain. ood_auc=<value>. tier35_deployed=<bool>."
-       - _bmad/traceability.md: update FR-11 Tier 3 implementation status.
-    6. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp809-jepa-v22-rapbm-ood
-  milestone: 2026.04.62
-  deliverable: results/experiment_809_jepa_v22_rapbm.json
-  title: 'Exp 809: JEPA v22 RA-PRM OOD Enhancement (arXiv 2502.14361) — Fallback + Held-Out Eval'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: arXiv 2502.14361 identifies two JEPA failure modes: step-OOD (unseen reasoning
-    step type) and question-OOD (unseen domain). Retrieval-augmented PRM addresses step-OOD:
-    for each training step, retrieve K similar labeled steps from the corpus and include their
-    labels as soft supervision. This anchors OOD predictions to the training distribution.
-    This experiment:
-    (A) If Exp 808 ood_auc >= 0.75: evaluate JEPA v22 on an additional held-out benchmark
-        (SVAMP or ARC) to confirm true OOD generalization.
-    (B) If Exp 808 ood_auc < 0.75: apply RA-PRM — retrieval-augmented soft supervision
-        using EmbeddingConstraintStore (AUC=0.92 from Exp 800).
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_808_jepa_v22_retrain.json — v22 result (ood_auc and honest_verdict)
-    - results/jepa_predictor_v22.safetensors — v22 model (if deployed)
-    - python/carnot/pipeline/embedding_constraint_store.py — EmbeddingConstraintStore (Exp 800)
-    - results/fover_labeled_steps_v21_multi.json — training corpus
+    - results/experiment_819_injection_field_fix.json — gate check (must be injection_field_fixed)
+    - results/experiment_813_constraint_addition_live.json — prior blocked attempt details
+    - python/carnot/pipeline/embedding_constraint_store.py — EmbeddingConstraintStore
+    - python/carnot/pipeline/ising_constraint_injector.py — external field method (from Exp 819)
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
     - openspec/capabilities/autoresearch/spec.md — REQ-LEARN entries
 
-    TASK: Evaluate JEPA v22 OOD on held-out benchmark OR apply RA-PRM soft supervision.
+    TASK: Run 30 GSM8K questions × 3 sessions with live constraint accumulation; measure
+    precision delta per session; write results/experiment_821_constraint_addition_live_v2.json.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add to openspec/capabilities/autoresearch/spec.md:
-       - REQ-LEARN-065: If JEPA v22 ood_auc >= 0.75, held-out evaluation MUST run on a
-         distinct domain (ARC, SVAMP, or StrategyQA) not present in training corpus.
-       - REQ-LEARN-066: If JEPA v22 ood_auc < 0.75, RA-PRM MUST retrieve K=3 similar FoVer
-         steps per training example via EmbeddingConstraintStore and include retrieved labels
-         as soft targets (weight: retrieved_labels × 0.4, ground_truth × 1.0).
-       - SCENARIO-LEARN-103: Path A — v22 ood_auc=0.80; held-out ARC eval: auc=0.72; true OOD
-         confirmed; tier35 generalization validated on unseen domain.
-       - SCENARIO-LEARN-104: Path B — v22 ood_auc=0.45; RA-PRM applied; retrieval retrieves
-         3 similar steps per item; soft labels computed; retrain runs; improved ood_auc logged.
-    3. Create scripts/experiment_809_jepa_v22_rapbm.py:
-       a. apply_env_autofix() FIRST.
-       b. ExperimentTemplate(809) + ExperimentTimeoutWatchdog(809, timeout_minutes=60).
-       c. Load Exp 808 result: check honest_verdict and ood_auc.
-       d. PATH A (if Exp 808 ood_auc >= 0.75):
-          - Load 20 SVAMP or ARC reasoning problems (hardcoded, no live GPU needed)
-          - For each: generate a synthetic CoT (template-based for CPU path)
-          - Run FoVer annotation on generated CoT steps
-          - Evaluate JEPA v22 (load jepa_predictor_v22.safetensors) on FoVer-labeled steps
-          - Compute held_out_auc
-          - honest_verdict = "v22_ood_confirmed" if held_out_auc >= 0.65 else "v22_ood_partial"
-       e. PATH B (if Exp 808 ood_auc < 0.75):
-          - Load EmbeddingConstraintStore (empty if no store, or from saved state)
-          - Populate with all FoVer-labeled steps from fover_labeled_steps_v21_multi.json
-          - For each training pair: retrieve 3 similar steps via EmbeddingConstraintStore.retrieve()
-          - Build augmented training pairs: ground_truth_label × 1.0 + retrieved_labels × 0.4
-          - Retrain JEPA v22-rapbm for 80 epochs on augmented pairs
-          - Evaluate: in-distribution AUC + OOD AUC on fover_labeled_steps_live.json
-          - Save model to results/jepa_predictor_v22_rapbm.safetensors if ood_auc improves
-          - honest_verdict: "rapbm_ood_improved" if ood_auc > Exp 808 ood_auc else "rapbm_no_gain"
-    4. Write tests/python/test_experiment_809_jepa_v22_rapbm.py with 100% coverage:
-       - test Path A loads Exp 808 result and selects correct evaluation path
-       - test RA-PRM soft label computation: ground_truth × 1.0 + retrieved × 0.4
-       - test retrieve() integration with EmbeddingConstraintStore produces K=3 results
-       Each test traces to REQ-LEARN-065/066.
-    5. Reconcile:
-       - ops/changelog.md: one-line entry with path taken and honest_verdict.
-    6. tmpl.assert_deliverable_written() as final line.
+    2. Check gate: read results/experiment_819_injection_field_fix.json. If
+       honest_verdict != "injection_field_fixed": write blocked artifact
+       {"blocked": true, "gate": "exp819_injection_not_fixed", "honest_verdict": "blocked_gate"}.
+    3. Add to openspec/capabilities/autoresearch/spec.md:
+       - REQ-LEARN-046: After applying the external field fix (REQ-VERIFY-141), constraint
+         addition to EmbeddingConstraintStore MUST produce a measurable increase in verification
+         precision (delta_overall > 0) over at least 3 live sessions on >= 30 GSM8K questions.
+       - SCENARIO-LEARN-058: Session 1 with empty store; session 2 with constraints from session 1;
+         session 3 with constraints from sessions 1-2. Precision non-decreasing across sessions.
+    4. Setup: tmpl.setup_gpu(MODEL_SPECS) for Qwen3.5-0.8B (CARNOT_FORCE_LIVE=1 required).
+    5. Load 30 GSM8K questions from local cache or datasets["gsm8k"].
+    6. Create EmbeddingConstraintStore() with empty store.
+    7. For each session s in [1, 2, 3]:
+       a. Run VerifyRepairPipeline.verify() on all 30 questions using current store.
+          Use compute_energy_with_external_field for Ising scoring.
+       b. Compute precision_s = TP / (TP + FP) using GSM8K ground truth answers.
+       c. For each failed verification: extract constraint and add to store.
+          n_constraints_added_s = number of constraints added this session.
+       d. Record: precision_s, n_constraints_store_after_s, n_constraints_added_s.
+    8. Compute: delta_s1_to_s3 = precision_3 - precision_1.
+       delta_overall = max(precision_1, precision_2, precision_3) - precision_1.
+       retro_constraint_zero_delta_closed = (delta_overall > 0).
+    9. Artifact fields: sessions=[{session, precision, n_constraints_store, n_added}],
+       delta_s1_to_s3, delta_overall, retro_constraint_zero_delta_closed, honest_verdict.
+    10. honest_verdict:
+        - "constraint_addition_works_live" if delta_overall > 0
+        - "constraint_addition_no_delta_live" if delta_overall <= 0
+        - "blocked_gate" if gate fails
+    11. Write tests/python/test_experiment_821_constraint_addition_live_v2.py with 100% coverage:
+        - test session loop accumulates constraints across sessions (mocked pipeline)
+        - test delta_overall computed correctly from session precision list
+        - test gate check logic reads exp819 result and blocks correctly
+        Each test traces to REQ-LEARN-046 and SCENARIO-LEARN-058.
+    12. Reconcile:
+        - ops/changelog.md: one-line entry with honest_verdict and delta_overall.
+        - ops/status.md: "Exp 821: constraint accumulation live delta=<value>. RETRO-CONSTRAINT-ZERO-DELTA: <status>."
+    13. tmpl.assert_deliverable_written() as final line.
 
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu python scripts/experiment_821_constraint_addition_live_v2.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp810-gemma4-oom-fix-v5
-  milestone: 2026.04.62
-  deliverable: results/experiment_810_gemma4_oom_fix_v5.json
-  title: 'Exp 810: Gemma4 OOM Fix v5 — nvidia-smi Loop Gate (RETRO-028, GPU REQUIRED, CARNOT_FORCE_LIVE=1)'
+- id: exp822-arbiter-fix-v2-agent-auditor
+  milestone: 2026.04.63
+  deliverable: results/experiment_822_arbiter_fix_v2_agent_auditor.json
+  title: 'Exp 822: Multi-Agent Arbiter Fix v2 + AgentAuditor Consensus (gated on Exp 819, CPU)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: RETRO-028 is unresolved after 4+ milestones (Exps 450, 787, 795). The .61 retro
-    identifies the specific missing mechanism: Exp 795 (Fix v4) applied kill_gpu_zombies() and
-    pkill ONCE but did NOT use a verification loop. If VRAM doesn't clear in one pass (other
-    processes restart or hold VRAM), the model load proceeds into OOM. Fix v5 mandates:
-    (1) kill_gpu_zombies(), (2) pkill loop with nvidia-smi verification (3 retries, 10s sleep),
-    (3) ABORT if VRAM does not drop below 500MB after 3 retries — do NOT attempt model load.
-    Add checkpoint_save() after each verification step so partial results survive timeout.
+    CONTEXT: This experiment is GATED on Exp 819 honest_verdict=injection_field_fixed.
+    Read results/experiment_819_injection_field_fix.json first. If not fixed: blocked artifact.
+
+    RETRO-ARBITER-FLAT-ENERGY: Exp 817 (milestone .62) produced arbiter_accuracy=0.3333 because
+    ALL agent energies were 0.0 (downstream of the Exp 812 injection sign bug). With the
+    external field fix from Exp 819, energies will now be discriminating. Additionally, arXiv
+    2602.09341 (AgentAuditor) provides a consensus detection mechanism: when multiple agents
+    agree on the same wrong answer (adversarial scenario), energy-only ranking fails because
+    the majority answer has a lower average energy. AgentAuditor introduces a consensus penalty:
+    agents sharing the majority response pattern get an energy bump, forcing the arbiter to
+    consider minority viewpoints.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_795_gemma4_oom_fix_v4.json — Fix v4 partial_success details
-    - python/carnot/pipeline/gemma_isolation.py — VRAMEvictionResult, evict_gpu_vram() (Exp 795)
-    - python/carnot/pipeline/gpu_zombie_killer.py — kill_gpu_zombies() (Exp 780)
-    - python/carnot/pipeline/gemma_loader.py — GemmaTransformersLoader (Exp 450)
-    - results/operational_retro_2026_04_61.json — RETRO-028 resolution path (nvidia-smi loop)
-    - openspec/capabilities/verifiable-reasoning/spec.md — REQ-LOADER entries
+    - results/experiment_819_injection_field_fix.json — gate check (must be injection_field_fixed)
+    - results/experiment_817_multi_agent_arbiter.json — prior failure details (arbiter_accuracy=0.33)
+    - python/carnot/inference/multi_agent_arbiter.py — MultiAgentArbiter class
+    - python/carnot/pipeline/ising_constraint_injector.py — external field method (from Exp 819)
+    - research-references.md — AgentAuditor section (arXiv 2602.09341)
+    - openspec/capabilities/pipeline/spec.md — REQ-VERIFY entries
 
-    TASK: Implement nvidia-smi verification loop, load Gemma4 on GPU 1, run 20 GSM8K questions.
+    TASK: Rebuild MultiAgentArbiter with external field scoring and AgentAuditor consensus
+    penalty; test on 12 scenarios (6 standard + 6 adversarial majority-wrong); write
+    results/experiment_822_arbiter_fix_v2_agent_auditor.json.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
-       - REQ-LOADER-005: VRAM eviction before Gemma4 load MUST use a verification loop:
-         poll nvidia-smi every 5 seconds up to 3 retries. If VRAM does not drop below 500MB
-         after 3 retries, the experiment MUST abort and write a blocked artifact.
-         The model load MUST NOT proceed when VRAM >= 500MB after the retry loop.
-       - SCENARIO-LOADER-005: VRAM stuck at 700MB; 3 retries x 10s sleep; VRAM still 600MB
-         after 3rd retry; experiment writes blocked_vram_stuck artifact; NO model load attempt.
-       - SCENARIO-LOADER-006: VRAM 700MB → retry 1 → 800MB → retry 2 → 300MB; threshold met;
-         model load proceeds; n_valid_responses >= 8; retro_028_closed=True.
-    3. Implement python/carnot/pipeline/vram_loop_eviction.py:
-       a. VRAMLoopEvictionResult dataclass:
-          (gpu_index, n_retries_attempted, vram_mb_per_retry: list[float], final_vram_mb,
-           vram_cleared, abort_reason: str | None, honest_verdict)
-       b. evict_vram_with_loop(gpu_index: int = 1, max_retries: int = 3,
-                               retry_sleep_s: float = 10.0, threshold_mb: float = 500.0):
-          - kill_gpu_zombies(gpu_index)
-          - For i in range(max_retries):
-              Run: nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader -i gpu_index
-              Kill any PID using > 100 MB: os.kill(pid, signal.SIGKILL)
-              time.sleep(retry_sleep_s)
-              Check: nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits -i gpu_index
-              If vram_used < threshold_mb: return VRAMLoopEvictionResult(vram_cleared=True, ...)
-              Record vram_mb_per_retry.append(vram_used)
-          - Return VRAMLoopEvictionResult(vram_cleared=False, abort_reason="max_retries_exceeded")
-       c. Export VRAMLoopEvictionResult, evict_vram_with_loop from carnot.pipeline.__init__
-    4. Create scripts/experiment_810_gemma4_oom_fix_v5.py:
+    2. Check gate: read results/experiment_819_injection_field_fix.json. If
+       honest_verdict != "injection_field_fixed": write blocked artifact.
+    3. Add to openspec/capabilities/pipeline/spec.md:
+       - REQ-VERIFY-143: MultiAgentArbiter MUST use compute_energy_with_external_field for
+         scoring agent responses. Legacy constant-shift diagonal scoring MUST NOT be used.
+       - REQ-VERIFY-144: When agent energy variance is < 0.01 (consensus cluster), MultiAgentArbiter
+         MUST apply an AgentAuditor consensus penalty of +0.1 to all agents sharing the majority
+         response cluster, breaking ties in favor of minority dissenting agents (arXiv 2602.09341).
+       - SCENARIO-VERIFY-172: 6 standard scenarios (correct answer is minority); arbiter selects
+         correct with probability >= 0.80. SCENARIO-VERIFY-173: 6 adversarial consensus scenarios
+         (wrong answer is majority); arbiter with consensus penalty selects correct >= 0.70.
+    4. Implement in python/carnot/inference/multi_agent_arbiter.py:
+       a. Update score_agents(responses, constraint_embeddings) to call
+          compute_energy_with_external_field for each agent response.
+       b. Add detect_consensus(energies, threshold=0.01) -> bool: True if max(energies) -
+          min(energies) < threshold.
+       c. Add apply_consensus_penalty(energies, responses, penalty=0.1) -> np.ndarray:
+          cluster majority responses by exact-match; add penalty to all agents in the majority
+          cluster. Return adjusted energies.
+       d. Update arbitrate(responses, constraint_embeddings) to call detect_consensus and
+          apply_consensus_penalty before selecting min-energy agent.
+    5. Create scripts/experiment_822_arbiter_fix_v2_agent_auditor.py:
        a. apply_env_autofix() FIRST.
-       b. ExperimentTemplate(810) + ExperimentTimeoutWatchdog(810, timeout_minutes=90).
-       c. LiveGPUGate.require_live_or_blocked() — hard gate, no simulated fallback.
-       d. Step 1: evict_vram_with_loop(gpu_index=1, max_retries=3, retry_sleep_s=10.0).
-          - If not vram_cleared: write blocked_vram_stuck artifact with vram_mb_per_retry, exit.
-       e. Step 2: load_gemma4_on_gpu1() (from Exp 795 gemma_isolation.py, GPU 1).
-          - Checkpoint: AtomicResultWriter({project_root}/results/exp810_ckpt.json).write((step2: ...))
-          - If load fails: write blocked_model_load_failed artifact.
-       f. Step 3: Run 20 GSM8K questions with loaded Gemma4.
-          - Record n_valid_responses (not empty, not all <unusedN> tokens).
-          - Checkpoint after each 5 questions.
+       b. ExperimentTemplate(822) + ExperimentTimeoutWatchdog(822, timeout_minutes=45).
+       c. Generate 12 synthetic test scenarios (CPU only, no GPU):
+          - 6 standard: 3 agents disagree; 1 correct agent has lowest energy after fix.
+          - 6 adversarial: 2 agents agree on wrong answer (consensus); 1 agent has correct answer.
+          Use fixed random seed (42) for synthetic energy assignments.
+       d. For each scenario: run arbitrate() with and without consensus penalty.
+          Record: arbiter_choice, is_correct, used_consensus_penalty.
+       e. Compute: accuracy_standard (6 scenarios), accuracy_adversarial (6 scenarios),
+          accuracy_overall (12 scenarios).
+       f. Artifact fields: accuracy_standard, accuracy_adversarial, accuracy_overall,
+          consensus_penalty_triggered_n, honest_verdict.
        g. honest_verdict:
-          - "retro_028_closed" if n_valid_responses >= 16 (80% of 20)
-          - "partial_success" if n_valid_responses in [8, 15]
-          - "model_loaded_no_valid_output" if loaded but n_valid < 8
-          - "blocked_vram_stuck" if eviction loop failed
-          - "blocked_model_load_failed" if model load OOM
-          - "blocked_no_live_gpu" if LiveGPUGate blocks
-       h. Artifact: step1_vram_mb_per_retry, step1_vram_cleared, step2_model_loaded,
-          step3_n_valid_responses, retro_028_closed (bool), honest_verdict.
-    5. Write tests/python/test_experiment_810_gemma4_oom_fix_v5.py with 100% coverage:
-       - test evict_vram_with_loop returns vram_cleared=False after max_retries exceeded
-       - test evict_vram_with_loop returns vram_cleared=True when vram < threshold on retry 2
-       - test experiment aborts without model load when vram_cleared=False
-       Each test traces to REQ-LOADER-005.
-    6. Reconcile:
-       - ops/changelog.md: one-line entry with honest_verdict.
-       - ops/status.md: "Exp 810: Gemma4 OOM Fix v5. retro_028_closed=<bool>."
-    7. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp811-sota-gguf-code-repair-v4
-  milestone: 2026.04.62
-  deliverable: results/experiment_811_sota_gguf_code_repair_v4.json
-  title: 'Exp 811: SOTA GGUF Code Repair v4 — 50q in 10 Batches (GATED on Exp 810, GPU REQUIRED)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: RETRO-SOTA-GGUF-TIMEOUT: code repair has timed out twice (Exp 769: 120 min,
-    Exp 785: 90 min) and was gated in .61 (Exp 796 blocked on RETRO-028). Exp 810 (Fix v5)
-    closes RETRO-028. This experiment runs 50 HumanEval problems in 10 batches of 5,
-    with checkpoint after each batch. MARS margin gate (arXiv 2601.15498) skips test oracle
-    for high-margin outputs (reduces oracle calls). Target: pass@1_repair > pass@1_baseline.
-
-    PREREQUISITE: Load results/experiment_810_gemma4_oom_fix_v5.json.
-    If retro_028_closed != True, write blocked artifact and exit.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_810_gemma4_oom_fix_v5.json — GATING: retro_028_closed must be True
-    - results/experiment_796_sota_gguf_code_repair_v3.json — v3 failure (gated, n_completed=0)
-    - python/carnot/pipeline/mars_margin_gate.py — MARSMarginGate (Exp 796)
-    - python/carnot/pipeline/long_run_executor.py — LongRunBenchmarkExecutor (Exp 437)
-    - python/carnot/pipeline/vram_loop_eviction.py — evict_vram_with_loop() (Exp 810)
-    - python/carnot/pipeline/gpu_zombie_killer.py — kill_gpu_zombies() (Exp 780)
-    - python/carnot/pipeline/atomic_writer.py — AtomicResultWriter (Exp 452)
-    - openspec/capabilities/verifiable-reasoning/spec.md — REQ-BENCH entries
-
-    TASK: Run 50 HumanEval problems in 10 batches of 5 with Qwen3.6-35B-A3B GGUF.
-    MARS gate reduces oracle calls. Checkpoint per batch. Target: signed_improvement > 0.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
-       - REQ-BENCH-016: SOTA GGUF code repair MUST run 50 HumanEval problems in batches of 5
-         with AtomicResultWriter checkpoint after each batch.
-       - SCENARIO-BENCH-035: 50 problems completed in 10 batches; pass@1_repair > pass@1_baseline;
-         honest_verdict=code_repair_positive; n_oracle_calls_saved > 0.
-    3. Create scripts/experiment_811_sota_gguf_code_repair_v4.py:
-       a. apply_env_autofix() FIRST.
-       b. ExperimentTemplate(811) + ExperimentTimeoutWatchdog(811, timeout_minutes=90).
-       c. LiveGPUGate.require_live_or_blocked().
-       d. GATE: load Exp 810 result. If retro_028_closed != True → write blocked artifact, exit.
-       e. evict_vram_with_loop(gpu_index=1) — ensure GPU 1 is clean.
-       f. Load Qwen3.6-35B-A3B Q4_K_M GGUF from models/ cache via resolve_cached_gguf().
-          device_map=("": "cuda:1").
-       g. Load 50 HumanEval problems (p0-p49).
-       h. Batch into 10 batches of 5 problems each:
-          For each batch:
-            - Baseline: generate code, run tests, count pass@1_baseline_batch
-            - Repair: generate code + apply MARSMarginGate + CodeExtractor + VerifyRepairPipeline
-              count pass@1_repair_batch, oracle_calls_saved_batch
-            - AtomicResultWriter checkpoint
-       i. Aggregate: signed_improvement = mean(pass@1_repair) - mean(pass@1_baseline)
-       j. honest_verdict:
-          - "code_repair_positive" if signed_improvement > 0 AND inference_mode=live_gpu
-          - "code_no_improvement" if signed_improvement <= 0 AND live_gpu
-          - "partial_N_of_50" if timeout with N < 50 completed
-          - "gated_retro028_not_closed" if gate fails
-          - "blocked_no_live_gpu" if LiveGPUGate blocks
-    4. Write tests/python/test_experiment_811_sota_gguf_code_repair_v4.py with 100% coverage:
-       - test gate blocks when retro_028_closed=False
-       - test signed_improvement computation is correct (repair - baseline, not clamped)
-       - test partial verdict when timeout
-       Each test traces to REQ-BENCH-016.
-    5. Reconcile:
-       - ops/changelog.md: one-line entry with honest_verdict and signed_improvement.
-    6. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp812-ising-constraint-injection
-  milestone: 2026.04.62
-  deliverable: results/experiment_812_ising_constraint_injection.json
-  title: 'Exp 812: IsingEBM Constraint Feature Injection — EmbeddingConstraintStore to Coupling Matrix'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: RETRO-CONSTRAINT-ZERO-DELTA: The .61 retro identified the root fix:
-    "wiring the constraint feature vector into IsingEBM's spin coupling matrix is the single
-    fix that simultaneously resolves RETRO-CONSTRAINT-ZERO-DELTA and RETRO-TIER1-PLATEAU."
-    Currently, EmbeddingConstraintStore.retrieve() returns constraint vectors but these are
-    never passed to IsingEBM.infer() — the pipeline stub ignores them. This experiment
-    implements the wiring: retrieved constraint embeddings are projected to spin-space and
-    added as soft bias terms on the coupling matrix J before Ising sampling.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/embedding_constraint_store.py — EmbeddingConstraintStore (Exp 800)
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.verify() (Exp 801 modified)
-    - python/carnot/models/ising_ebm.py (or similar) — IsingEBM infer() / energy() interface
-    - results/experiment_800_embedding_constraint_store.json — retrieval_auc=0.92 baseline
-    - results/experiment_801_embedding_constraint_addition.json — delta=0.0 (stub not wired)
-    - openspec/capabilities/verifiable-reasoning/spec.md — REQ-VERIFY entries
-
-    TASK: Wire EmbeddingConstraintStore into IsingEBM coupling matrix,
-    test energy change when constraint fires vs no constraint, write artifact.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
-       - REQ-VERIFY-095: When VerifyRepairPipeline.verify() has an EmbeddingConstraintStore,
-         retrieved constraint embeddings MUST be projected to Ising spin space and added as
-         soft bias terms on the coupling matrix J before sampling. The projection is a learned
-         linear map from embedding_dim to n_spins.
-       - REQ-VERIFY-096: Energy MUST be strictly greater with constraint injection when a
-         relevant constraint fires (energy_with_constraint > energy_without_constraint).
-       - SCENARIO-VERIFY-129: Retrieve carry_check constraint vector; project to spin bias;
-         inject into IsingEBM; verify arithmetic carry violation; energy 25% higher than
-         baseline (no injection). Test confirms constraint injection adds energy.
-    3. Implement python/carnot/pipeline/ising_constraint_injector.py:
-       a. ConstraintInjectionResult dataclass:
-          (n_constraints_retrieved, embedding_dim, n_spins, projection_applied,
-           energy_without_injection, energy_with_injection, energy_delta_pct, honest_verdict)
-       b. IsingConstraintInjector:
-          - __init__(embedding_dim: int = 384, n_spins: int = 64):
-            self._projection = np.random.randn(embedding_dim, n_spins) * 0.01  # small init
-          - project_to_spin_bias(constraint_embeddings: list[list[float]]) -> np.ndarray:
-            For each embedding: bias_i = embedding @ self._projection  (shape: n_spins)
-            Return mean bias across all retrieved constraints.
-          - inject_into_coupling_matrix(J: np.ndarray, bias: np.ndarray) -> np.ndarray:
-            J_injected = J.copy()
-            # Add bias as diagonal (self-coupling, interpreted as external field h_i)
-            np.fill_diagonal(J_injected, J_injected.diagonal() + bias)
-            Return J_injected
-          - compute_energy_with_injection(ising_ebm, spins, constraint_embeddings) -> float:
-            bias = project_to_spin_bias(constraint_embeddings)
-            J_injected = inject_into_coupling_matrix(ising_ebm.J, bias)
-            return -0.5 * spins @ J_injected @ spins  # standard Ising energy formula
-       c. Export IsingConstraintInjector, ConstraintInjectionResult from carnot.pipeline.__init__
-    4. Modify python/carnot/pipeline/verify_repair.py (ADDITIVE):
-       - Add optional param: ising_constraint_injector: IsingConstraintInjector | None = None
-       - In verify(): if injector set AND embedding_constraint_store set:
-           retrieved = embedding_constraint_store.retrieve(response_text, top_k=3)
-           embeddings = [c.embedding for c in retrieved if c.embedding]
-           if embeddings: modified_J = injector.inject_into_coupling_matrix(ising_ebm.J, injector.project_to_spin_bias(embeddings))
-           (Temporarily substitute J before sampling; restore after)
-       - This is ADDITIVE — existing behaviour unchanged when params not set.
-    5. Create scripts/experiment_812_ising_constraint_injection.py:
-       a. ExperimentTemplate(812) + ExperimentTimeoutWatchdog(812, timeout_minutes=30).
-       b. apply_env_autofix() FIRST.
-       c. Initialize EmbeddingConstraintStore.from_casememory_patterns().
-       d. Initialize IsingConstraintInjector(embedding_dim=384, n_spins=64).
-       e. Create a test IsingEBM (n_spins=64) with random coupling matrix J.
-       f. Build 10 test response texts — 5 with arithmetic carry errors, 5 without.
-       g. For each response: retrieve constraints, compute energy WITH and WITHOUT injection.
-          Record energy_delta_pct for each.
-       h. Key test: energy_with_constraint > energy_without for error responses.
-       i. honest_verdict:
-          - "injection_works" if mean energy_delta_pct > 0 for error responses
-          - "injection_no_delta" if delta <= 0 (constraint not affecting energy)
-          - "injection_negative_delta" if energy actually decreases (sign error)
-    6. Write tests/python/test_experiment_812_ising_constraint_injection.py with 100% coverage:
-       - test project_to_spin_bias shapes output as (n_spins,)
-       - test inject_into_coupling_matrix adds bias to diagonal of J
-       - test compute_energy_with_injection returns scalar energy
-       - test verify() with injector+store is ADDITIVE (no change when both are None)
-       Each test traces to REQ-VERIFY-095/096.
+          - "arbiter_correct" if accuracy_overall >= 0.80
+          - "arbiter_partial" if 0.60 <= accuracy_overall < 0.80
+          - "arbiter_still_wrong" if accuracy_overall < 0.60
+          - "blocked_gate" if gate fails
+    6. Write tests/python/test_experiment_822_arbiter_fix_v2_agent_auditor.py with 100% coverage:
+       - test detect_consensus returns True when energy variance < 0.01
+       - test apply_consensus_penalty adds penalty to majority cluster agents
+       - test arbitrate selects min-energy agent after consensus adjustment
+       Each test traces to REQ-VERIFY-143/144.
     7. Reconcile:
-       - ops/changelog.md: one-line entry with honest_verdict and energy_delta_pct.
+       - ops/changelog.md: one-line entry with honest_verdict and accuracy_overall.
+       - ops/status.md: "Exp 822: arbiter accuracy=<value>. RETRO-ARBITER-FLAT-ENERGY: <status>."
     8. tmpl.assert_deliverable_written() as final line.
 
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_822_arbiter_fix_v2_agent_auditor.py -v
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp813-constraint-addition-live
-  milestone: 2026.04.62
-  deliverable: results/experiment_813_constraint_addition_live.json
-  title: 'Exp 813: Constraint Addition Live Validation — Real GPU Delta (RETRO-CONSTRAINT-ZERO-DELTA, GPU Required)'
+- id: exp823-fr11-tier1-live-relay-v2
+  milestone: 2026.04.63
+  deliverable: results/experiment_823_fr11_tier1_live_relay_v2.json
+  title: 'Exp 823: FR-11 Tier 1 Live Relay v2 (FR-11 mandatory, gated on Exp 821, GPU)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: Exps 801 and 802 both showed delta=0.0 because inference_mode was a deterministic
-    synthetic_cpu stub. EmbeddingConstraintStore retrieval AUC=0.92 (Exp 800) and IsingConstraintInjector
-    wiring is now implemented (Exp 812). This experiment validates the full chain on real GPU
-    inference: EmbeddingConstraintStore.retrieve() → IsingConstraintInjector → real IsingEBM
-    energy → VerifyRepairPipeline on live LLM responses. If delta > 0 on live data, RETRO-CONSTRAINT-ZERO-DELTA is closed.
+    CONTEXT: This experiment is GATED on Exp 821 honest_verdict=constraint_addition_works_live.
+    Read results/experiment_821_constraint_addition_live_v2.json first. If not
+    "constraint_addition_works_live": write blocked artifact.
 
-    PREREQUISITE: Load results/experiment_812_ising_constraint_injection.json.
-    If honest_verdict != "injection_works": write blocked artifact, exit.
+    FR-11 (REQ-LEARN-*) requires a live self-learning relay: verification results from session N
+    are fed back as constraints into session N+1, producing a measurable precision increase.
+    Exp 814 (milestone .62) was blocked_no_delta because the injection was broken. Exp 821 has
+    now confirmed that constraint addition produces delta_overall > 0 on live GPU. Exp 823
+    closes the loop: run 5 sessions × 10 questions with the full relay pipeline, using
+    capacity-constrained update (arXiv 2507.21479) — update only the top-K=3 highest-variance
+    constraint types per session to avoid constraint store bloat.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_812_ising_constraint_injection.json — GATING: injection_works required
-    - python/carnot/pipeline/ising_constraint_injector.py — IsingConstraintInjector (Exp 812)
-    - python/carnot/pipeline/embedding_constraint_store.py — EmbeddingConstraintStore (Exp 800)
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline with injector (Exp 812)
+    - results/experiment_821_constraint_addition_live_v2.json — gate check (must be works_live)
+    - results/experiment_814_fr11_tier1_live_relay.json — prior blocked attempt details
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+    - python/carnot/pipeline/embedding_constraint_store.py — EmbeddingConstraintStore
+    - _bmad/prd.md — FR-11 requirement definition
     - openspec/capabilities/autoresearch/spec.md — REQ-LEARN entries
 
-    TASK: Run 30 GSM8K questions x 3 sessions on live GPU. Compare baseline vs embedding-injected
-    pipeline. Measure delta_overall on real inference. Write results/experiment_813_constraint_addition_live.json.
+    TASK: Run 5-session live relay pipeline, measure precision trend per session, write
+    results/experiment_823_fr11_tier1_live_relay_v2.json.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add to openspec/capabilities/autoresearch/spec.md:
-       - REQ-LEARN-067: Constraint addition delta MUST be evaluated on live GPU inference
-         (inference_mode=live_gpu). Synthetic_cpu delta results are labeled as synthetic_only
-         and do NOT count toward RETRO-CONSTRAINT-ZERO-DELTA closure.
-       - REQ-LEARN-068: Closing RETRO-CONSTRAINT-ZERO-DELTA requires delta_overall > 0
-         on live GPU with IsingConstraintInjector wired to EmbeddingConstraintStore.
-       - SCENARIO-LEARN-105: 30q x 3 sessions live GPU; constraint injection active;
-         delta_s1=0.05, delta_s2=0.08, delta_s3=0.12; delta_overall=0.083;
-         retro_constraint_zero_delta_closed=True.
-    3. Create scripts/experiment_813_constraint_addition_live.py:
+    2. Check gate: read results/experiment_821_constraint_addition_live_v2.json. If
+       honest_verdict != "constraint_addition_works_live": write blocked artifact.
+    3. Add to openspec/capabilities/autoresearch/spec.md:
+       - REQ-LEARN-047: The FR-11 Tier 1 relay MUST enforce capacity-constrained updates:
+         per session, add constraints only from the top-K=3 highest-variance constraint types
+         (by embedding cosine variance across all session failures).
+       - SCENARIO-LEARN-059: 5 sessions × 10 questions. Session 1 uses empty store. Sessions
+         2-5 use inherited constraints. Precision MUST be non-decreasing from session 1 to 5.
+         delta_s1_to_s5 MUST be > 0 for honest_verdict=tier1_relay_works_live.
+    4. Implement capacity-constrained update in python/carnot/pipeline/embedding_constraint_store.py:
+       a. Add method add_top_k_constraints(failures, k=3) -> int:
+          - Cluster failure embeddings by cosine similarity (3 clusters via k-means).
+          - For each cluster: compute intra-cluster variance. Select top-k=3 highest-variance clusters.
+          - Add one representative constraint per selected cluster. Return n_added.
+    5. Create scripts/experiment_823_fr11_tier1_live_relay_v2.py:
        a. apply_env_autofix() FIRST.
-       b. ExperimentTemplate(813) + ExperimentTimeoutWatchdog(813, timeout_minutes=60).
-       c. LiveGPUGate.require_live_or_blocked().
-       d. GATE: load Exp 812 result. If injection_works != "injection_works" → blocked, exit.
-       e. kill_gpu_zombies(0). Load Qwen3.5-0.8B on GPU 0.
-       f. Initialize EmbeddingConstraintStore.from_casememory_patterns().
-          Initialize IsingConstraintInjector(embedding_dim=384, n_spins=64).
-       g. Run 3 sessions, 10 questions each:
-          For each session:
-            baseline_correct = run_session(pipeline=VerifyRepairPipeline(), questions=10)
-            inject_correct = run_session(pipeline=VerifyRepairPipeline(
-                               embedding_constraint_store=store,
-                               ising_constraint_injector=injector), questions=10)
-            delta_session = inject_correct - baseline_correct
-            store.update_from_session_violations(violations_found)  # update store
-       h. delta_overall = mean([delta_s1, delta_s2, delta_s3])
-       i. retro_constraint_zero_delta_closed = (delta_overall > 0)
-       j. honest_verdict:
-          - "constraint_addition_works_live" if delta_overall > 0 AND inference_mode=live_gpu
-          - "constraint_addition_no_delta_live" if delta_overall <= 0 AND live_gpu
-          - "injection_not_wired" if GATE blocks
-          - "blocked_no_live_gpu" if LiveGPUGate blocks
-       k. Artifact: delta_per_session, delta_overall, inference_mode, retro_constraint_zero_delta_closed.
-    4. Write tests with 100% coverage:
-       - test gate blocks when injection_works is not the correct string
-       - test delta_overall computation correct
-       - test honest_verdict maps correctly to delta value
-       Each test traces to REQ-LEARN-067/068.
-    5. Reconcile:
-       - ops/changelog.md: one-line entry with honest_verdict and delta_overall.
-       - ops/status.md: "Exp 813: Constraint addition live. retro_constraint_zero_delta_closed=<bool>."
-    6. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp814-fr11-tier1-live-relay
-  milestone: 2026.04.62
-  deliverable: results/experiment_814_fr11_tier1_live_relay.json
-  title: 'Exp 814: FR-11 Tier 1 Live Relay — Capacity-Constrained Update (FR-11 mandatory, GPU, GATED on Exp 813)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: FR-11 Tier 1 requires precision to increase monotonically across sessions via
-    online constraint learning. Previous relays (Exps 802, 761) plateaued at session 2.
-    This experiment runs the relay on LIVE GPU inference with IsingConstraintInjector wired.
-    Also applies capacity-constrained update (arXiv 2507.21479): after each session, update only
-    high-variance constraints (those with uncertain retrieval scores), freeze well-calibrated ones.
-    This prevents the plateau by avoiding over-fitting to well-learned constraints.
-
-    PREREQUISITE: Load results/experiment_813_constraint_addition_live.json.
-    If delta_overall <= 0: write blocked artifact. FR-11 Tier 1 only closes with live positive delta.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_813_constraint_addition_live.json — GATING: delta_overall > 0
-    - python/carnot/pipeline/ising_constraint_injector.py — IsingConstraintInjector (Exp 812)
-    - python/carnot/pipeline/embedding_constraint_store.py — EmbeddingConstraintStore (Exp 800)
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline (Exp 812 modified)
-    - python/carnot/pipeline/self_learning_relay.py — SelfLearningRelay (Exp 361)
-    - openspec/capabilities/autoresearch/spec.md — FR-11, REQ-LEARN entries
-
-    TASK: Run 5-session Tier 1 relay on live GPU. Capacity-constrained update per session.
-    Write results/experiment_814_fr11_tier1_live_relay.json.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add to openspec/capabilities/autoresearch/spec.md:
-       - REQ-LEARN-069: FR-11 Tier 1 live relay MUST use IsingConstraintInjector + EmbeddingConstraintStore
-         with capacity-constrained update: after each session, compute retrieval variance per constraint
-         type; update only top-K (K=3) highest-variance constraints; freeze others.
-       - SCENARIO-LEARN-106: 5-session live relay; capacity-constrained update per session;
-         precision non-decreasing sessions 1-5; delta_s1_to_s5 > 0;
-         tier1_relay_works_live=True.
-    3. Create scripts/experiment_814_fr11_tier1_live_relay.py:
-       a. apply_env_autofix() FIRST.
-       b. ExperimentTemplate(814) + ExperimentTimeoutWatchdog(814, timeout_minutes=60).
-       c. LiveGPUGate.require_live_or_blocked().
-       d. GATE: load Exp 813. If delta_overall <= 0 → blocked, exit.
-       e. kill_gpu_zombies(0). Load Qwen3.5-0.8B on GPU 0.
-       f. Initialize EmbeddingConstraintStore.from_casememory_patterns().
-          Initialize IsingConstraintInjector(embedding_dim=384, n_spins=64).
-       g. Run 5 sessions, 10 questions each (live GPU):
-          precision_per_session = []
-          For session i in 1..5:
-            results = run_live_session(pipeline=VerifyRepairPipeline(
-                                        embedding_constraint_store=store,
-                                        ising_constraint_injector=injector), n_q=10)
-            tp = results.tp; fp = results.fp
-            precision = tp / (tp + fp) if (tp+fp) > 0 else 1.0
-            precision_per_session.append(precision)
-            # Capacity-constrained update: update only high-variance constraints
-            retrieval_variances = store.compute_retrieval_variances(results.queries_used)
-            top_k_types = sorted(retrieval_variances, key=lambda t: -retrieval_variances[t])[:3]
-            store.selective_update(violations=results.violations, update_types=top_k_types)
-       h. Compute:
-          is_monotonically_non_decreasing = all(p[i] <= p[i+1] for i in range(4))
-          delta_s1_to_s5 = precision_per_session[4] - precision_per_session[0]
-          delta_positive_by_s3 = precision_per_session[2] > precision_per_session[0]
+       b. ExperimentTemplate(823) + ExperimentTimeoutWatchdog(823, timeout_minutes=90).
+       c. GPU setup: CARNOT_FORCE_LIVE=1, tmpl.setup_gpu(MODEL_SPECS) for Qwen3.5-0.8B.
+       d. Load 10 GSM8K questions × 5 sessions (same 50 questions shuffled per session, seed per session).
+       e. Create fresh EmbeddingConstraintStore(capacity=30).
+       f. For each session s in [1..5]:
+          - Run VerifyRepairPipeline.verify() on 10 questions with current store.
+          - Compute precision_s using ground truth answers.
+          - Collect failures. Add top-3 constraints via add_top_k_constraints(failures).
+          - Checkpoint: tmpl.checkpoint_save({session_results: [...]}, step=s).
+       g. Compute: delta_s1_to_s5 = precision_5 - precision_1.
+          precision_non_decreasing = all(p[i] >= p[i-1] - 0.02 for i in 1..4) (2pp tolerance).
+       h. Artifact fields: sessions=[{session, precision, n_constraints_store, n_added}],
+          delta_s1_to_s5, precision_non_decreasing, fr11_tier1_relay_deployed, honest_verdict.
        i. honest_verdict:
-          - "tier1_relay_works_live" if is_monotonically_non_decreasing AND delta_positive_by_s3
-          - "tier1_partial_improvement_live" if delta_positive_by_s3 but not monotonic
+          - "tier1_relay_works_live" if delta_s1_to_s5 > 0 AND precision_non_decreasing
+          - "tier1_relay_partial" if delta_s1_to_s5 > 0 but not non-decreasing
           - "tier1_plateau_persists_live" if delta_s1_to_s5 <= 0
-          - "blocked_no_delta" if GATE blocks
-    4. Write tests with 100% coverage:
-       - test selective_update only updates specified constraint types
-       - test precision computation handles tp=fp=0 case
-       - test monotonic check on synthetic precision sequence
-       Each test traces to REQ-LEARN-069.
-    5. Reconcile:
+          - "blocked_gate" if gate fails
+       j. If tier1_relay_works_live: update _bmad/traceability.md FR-11 row to "deployed".
+    6. Write tests/python/test_experiment_823_fr11_tier1_live_relay_v2.py with 100% coverage:
+       - test add_top_k_constraints clusters and selects top-k by variance (mocked embeddings)
+       - test session relay loop precision trend computed correctly
+       - test gate check reads exp821 and blocks correctly
+       Each test traces to REQ-LEARN-046/047 and SCENARIO-LEARN-059.
+    7. Reconcile:
        - ops/changelog.md: one-line entry with honest_verdict and delta_s1_to_s5.
-       - _bmad/traceability.md: update FR-11 Tier 1 implementation status.
-    6. tmpl.assert_deliverable_written() as final line.
+       - ops/status.md: "Exp 823: FR-11 Tier 1 relay live delta=<value>. Status: <verdict>."
+    8. tmpl.assert_deliverable_written() as final line.
 
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu python scripts/experiment_823_fr11_tier1_live_relay_v2.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp815-vg-search-energy-scheduling
-  milestone: 2026.04.62
-  deliverable: results/experiment_815_vg_search_scheduling.json
-  title: 'Exp 815: Variable Granularity Energy Scheduling (arXiv 2505.11730) — Reduce Ising Calls'
+- id: exp824-jepa-v23-limo-corpus
+  milestone: 2026.04.63
+  deliverable: results/experiment_824_jepa_v23_limo_corpus.json
+  title: 'Exp 824: JEPA v23 LIMO Curated Corpus (RETRO-JEPA-OOD, CPU)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: arXiv 2505.11730 (Variable Granularity Search) shows that optimal verification
-    frequency depends on question difficulty: high-uncertainty questions need frequent checks;
-    low-uncertainty questions can skip expensive verification. Applied to Carnot: track rolling
-    energy variance (last N checks on the current response). If variance < threshold, skip the
-    current tier and fast-path to next. If variance > threshold, run full tier check.
-    This reduces Ising calls without accuracy degradation and complements MARS (which skips
-    based on LLM logit margin rather than energy history).
+    CONTEXT: JEPA has failed to reach OOD AUC >= 0.75 in 11 consecutive retrains (Exps v13-v22).
+    Root cause analysis from .62 retro:
+    1. Training corpus too large and noisy: 300 FoVer pairs + 750 CPMI triples = 1050 items with
+       uneven quality. LIMO (2024, arXiv 2402.09353) showed 817 carefully curated examples beat
+       100k random examples for LLM reasoning. Same principle applies here.
+    2. Single-domain training (GSM8K × Qwen3.5-0.8B only). OOD holdout tests different domains.
+    3. Binary BCE loss may be insufficient: triplet contrastive loss forces the model to learn
+       relative ordering (anchor, positive, hard-negative) rather than just binary labels.
+    Fix: LIMO-style curation (top-50 highest-quality pairs by Z3-confidence × CPMI score) +
+    domain diversity (add HumanEval + SVAMP pairs) + contrastive triplet loss architecture.
+    CPU-only experiment — no GPU required for this training scale.
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline (Exp 360)
-    - python/carnot/pipeline/mars_margin_gate.py — MARSMarginGate (Exp 796)
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-    - openspec/capabilities/verifiable-reasoning/spec.md — REQ-VERIFY entries
+    - results/experiment_809_jepa_v22_rapbm.json — current v22 ood_auc=0.5 baseline
+    - python/carnot/inference/jepa_reasoner_probe.py — JEPAReasonerProbe model architecture
+    - python/carnot/pipeline/fover_annotator.py — FoVer annotation infrastructure
+    - results/experiment_798_cpmi_pairs_triples.json — CPMI corpus statistics
+    - openspec/capabilities/autoresearch/spec.md — REQ-LEARN entries
 
-    TASK: Implement VGSearchScheduler in ThreeTierPipeline, test on 50 synthetic responses.
-    Write results/experiment_815_vg_search_scheduling.json.
+    TASK: Curate top-70 high-quality training pairs (LIMO principle), train JEPA v23 with
+    contrastive triplet loss, evaluate OOD, write results/experiment_824_jepa_v23_limo_corpus.json.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
-       - REQ-VERIFY-097: VGSearchScheduler MUST track rolling energy variance (last N=3 checks)
-         per session. If variance < variance_threshold, the scheduler MUST skip the current
-         tier's expensive computation and fast-path to the next tier or return early.
-       - REQ-VERIFY-098: VGSearchScheduler MUST report ising_calls_saved (count of skipped
-         Ising verification calls) and accuracy_delta (accuracy with vs without scheduling).
-       - SCENARIO-VERIFY-130: 50 responses; 35 have variance < threshold (low uncertainty);
-         35 are skipped; ising_calls_saved=35; accuracy_delta <= 0.01 (at most 1% drop).
-    3. Implement python/carnot/pipeline/vg_search_scheduler.py:
-       a. VGScheduleResult dataclass:
-          (should_run_tier: bool, energy_variance, variance_threshold,
-           skip_reason: str, honest_verdict)
-       b. VGSearchScheduler:
-          - __init__(variance_threshold: float = 0.05, window_size: int = 3):
-            self._energy_history: list[float] = []
-          - update(energy: float):
-            self._energy_history.append(energy)
-            if len > window_size: self._energy_history.pop(0)
-          - should_skip() -> VGScheduleResult:
-            if len(self._energy_history) < window_size:
-              return VGScheduleResult(should_run_tier=True, ..., skip_reason="insufficient_history")
-            variance = np.var(self._energy_history)
-            if variance < variance_threshold:
-              return VGScheduleResult(should_run_tier=False, skip_reason="low_variance_skip")
-            return VGScheduleResult(should_run_tier=True, skip_reason="high_variance_run")
-          - reset(): self._energy_history = []
-       c. Wire into ThreeTierPipeline (ADDITIVE): add optional param
-          vg_scheduler: VGSearchScheduler | None = None. If set, call should_skip() before
-          each tier. If should_run_tier=False: skip tier, return early with previous energy.
-       d. Export VGSearchScheduler, VGScheduleResult from carnot.pipeline.__init__
-    4. Create scripts/experiment_815_vg_search_scheduling.py:
-       a. ExperimentTemplate(815) + ExperimentTimeoutWatchdog(815, timeout_minutes=30).
-       b. apply_env_autofix() FIRST.
-       c. Generate 50 synthetic responses: 25 high-variance (random arithmetic, noisy energies)
-          and 25 low-variance (consistent correct arithmetic, stable energies).
-       d. Run ThreeTierPipeline with VGSearchScheduler vs without.
-       e. Measure: ising_calls_saved, accuracy_delta, skip_rate.
-       f. honest_verdict:
-          - "vg_search_effective" if ising_calls_saved >= 20 AND accuracy_delta <= 0.01
-          - "vg_search_partial" if ising_calls_saved >= 10 AND accuracy_delta <= 0.02
-          - "vg_search_no_savings" if ising_calls_saved < 10
-    5. Write tests with 100% coverage:
-       - test should_skip returns True after N low-variance energies
-       - test should_skip returns False when insufficient history
-       - test ThreeTierPipeline with vg_scheduler is ADDITIVE
-       Each test traces to REQ-VERIFY-097/098.
-    6. Reconcile:
-       - ops/changelog.md: one-line entry with honest_verdict and ising_calls_saved.
-    7. tmpl.assert_deliverable_written() as final line.
+    2. Add to openspec/capabilities/autoresearch/spec.md:
+       - REQ-LEARN-048: JEPA training corpus MUST be curated using LIMO principle: select
+         top-50 pairs by Z3-verification confidence × CPMI contrastive score from the full
+         FoVer + CPMI corpus. Random or all-pairs training is prohibited after milestone .62.
+       - REQ-LEARN-049: JEPA training corpus MUST include domain diversity: >= 10 HumanEval
+         code reasoning pairs and >= 10 SVAMP arithmetic pairs to reduce single-domain overfitting.
+       - REQ-LEARN-050: JEPA v23+ MUST use contrastive triplet loss with hard negatives from
+         CPMI triples. Binary BCE loss is deprecated after 11 consecutive retrain failures.
+       - SCENARIO-LEARN-060: LIMO curation selects 50 GSM8K + 10 HumanEval + 10 SVAMP pairs.
+         Triplet training for 100 epochs. OOD AUC evaluated on fover_labeled_steps_live.json.
+    3. Implement LIMO curation in python/carnot/pipeline/limo_curator.py:
+       a. LIMOCurator(fover_path, cpmi_path, z3_confidence_threshold=0.9):
+          - load_fover_pairs() → list of (prefix, correct_step, incorrect_step, z3_confidence)
+          - load_cpmi_triples() → list of (anchor, positive, negative, cpmi_score)
+          - score_pairs(pairs) → sorted by z3_confidence × cpmi_score descending
+          - select_top_k(k=50) → top-k scored pairs
+       b. LIMOCurator.add_domain_pairs(humaneval_n=10, svamp_n=10):
+          - Generate synthetic HumanEval pairs: 10 simple Python function tasks with Z3 stub check.
+          - Generate SVAMP pairs: 10 arithmetic word problems with Z3-verifiable solutions.
+          - Return combined corpus: top-50 + 10 HumanEval + 10 SVAMP = 70 pairs.
+    4. Implement contrastive triplet architecture in python/carnot/inference/jepa_v23.py:
+       a. JEPAv23Predictor: 2-layer transformer encoder (dim=64, 2 heads, 2 layers) + MLP head.
+       b. TripletLoss(margin=0.5): L = max(0, d(a, p) - d(a, n) + margin)
+          where d = cosine distance in embedding space.
+       c. train_v23(triples, epochs=100, lr=1e-3, seed=42):
+          - Convert curated pairs to triplets: (prefix, correct_step, cpmi_hard_negative).
+          - Train with AdamW, batch_size=8.
+          - Log train loss per epoch.
+          - Return: model, train_losses, final_epoch_loss.
+       d. evaluate_v23(model, holdout_path) -> (in_dist_auc, ood_auc):
+          - Load holdout from results/fover_labeled_steps_live.json or generate synthetic.
+          - Compute per-step energies. Return AUC scores.
+    5. Create scripts/experiment_824_jepa_v23_limo_corpus.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTemplate(824) + ExperimentTimeoutWatchdog(824, timeout_minutes=60).
+       c. Instantiate LIMOCurator — curate 70-pair corpus. Log: n_gsm8k, n_humaneval, n_svamp.
+       d. Train JEPA v23: train_v23(triples=curated_triples, epochs=100, seed=42).
+          Checkpoint every 25 epochs.
+       e. Evaluate: in_dist_auc, ood_auc = evaluate_v23(model, holdout_path).
+       f. Save model to results/jepa_v23_limo_model.pkl.
+       g. Artifact fields: n_training_pairs, n_gsm8k, n_humaneval, n_svamp, epochs=100,
+          final_loss, in_dist_auc, ood_auc, honest_verdict.
+       h. honest_verdict:
+          - "jepa_v23_viable" if ood_auc >= 0.65
+          - "jepa_v23_improvement" if 0.50 <= ood_auc < 0.65
+          - "jepa_v23_below_random" if ood_auc < 0.50
+    6. Write tests/python/test_experiment_824_jepa_v23_limo_corpus.py with 100% coverage:
+       - test LIMOCurator.score_pairs sorts by z3_confidence × cpmi_score descending
+       - test LIMOCurator.select_top_k returns exactly k pairs
+       - test TripletLoss is zero when d(a,p) < d(a,n) - margin
+       - test JEPAv23Predictor forward pass shape correct
+       Each test traces to REQ-LEARN-048/049/050.
+    7. Reconcile:
+       - ops/changelog.md: one-line entry with honest_verdict and ood_auc.
+       - ops/status.md: "Exp 824: JEPA v23 OOD AUC=<value>. RETRO-JEPA-OOD: <status>."
+    8. tmpl.assert_deliverable_written() as final line.
 
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_824_jepa_v23_limo_corpus.py -v
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp816-kv260-synthesis-v2
-  milestone: 2026.04.62
-  deliverable: results/experiment_816_kv260_synthesis_v2.json
-  title: 'Exp 816: KV260 Open-Source Synthesis v2 (GATED on Exp 807 OSS-CAD-Suite)'
+- id: exp825-jepa-v23-eval-fr11-tier3
+  milestone: 2026.04.63
+  deliverable: results/experiment_825_jepa_v23_eval_fr11_tier3.json
+  title: 'Exp 825: JEPA v23 Cross-Domain Eval + FR-11 Tier 3 Relay (gated on Exp 824, CPU)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: Exp 807 installs OSS-CAD-Suite (YosysHQ/oss-cad-suite-build). This experiment
-    synthesizes hardware/kv260/ising_sampler_v3.v at N=32 using the installed yosys.
-    Target: iCE40 HX8K synthesis (7.7K LUTs). If N=32 fits, attempt N=64.
-    This is the 4th synthesis attempt; Exps 791/794/804 all failed at tool-check.
+    CONTEXT: This experiment is GATED on Exp 824 honest_verdict in
+    ["jepa_v23_viable", "jepa_v23_improvement"]. Read results/experiment_824_jepa_v23_limo_corpus.json.
+    If honest_verdict == "jepa_v23_below_random": write blocked artifact.
 
-    PREREQUISITE: Load results/experiment_807_oss_cad_suite_install.json.
-    If honest_verdict not in ["tools_installed_synthesis_clean", "already_installed"]:
-    write blocked artifact and exit.
+    If OOD AUC >= 0.65 (viable): wire JEPA v23 into ThreeTierPipeline as Tier 3.5 and
+    close FR-11 Tier 3 requirement. Emit VerificationCertificate per step as specified in
+    arXiv 2601.17223 (Beyond Outcome Verification / Verifiable PRM design).
+    If OOD AUC in [0.50, 0.65): record improvement but do NOT deploy.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_807_oss_cad_suite_install.json — GATING: tools must be installed
-    - hardware/kv260/ising_sampler_v3.v — target RTL (v3 with EMA h_ema register)
-    - results/experiment_804_kv260_synthesis_attempt.json — prior failure
+    - results/experiment_824_jepa_v23_limo_corpus.json — gate check and v23 model path
+    - python/carnot/inference/jepa_v23.py — JEPAv23Predictor (from Exp 824)
+    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline class
+    - _bmad/traceability.md — FR-11 row (check current status)
+    - openspec/capabilities/autoresearch/spec.md — REQ-LEARN entries
+
+    TASK: Evaluate JEPA v23 on 3 domains (GSM8K, HumanEval code steps, ARC-Challenge planning);
+    wire into Tier 3.5 if OOD >= 0.65; write VerificationCertificates; write
+    results/experiment_825_jepa_v23_eval_fr11_tier3.json.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Check gate: read results/experiment_824_jepa_v23_limo_corpus.json. If
+       honest_verdict == "jepa_v23_below_random": write blocked artifact.
+    3. Add to openspec/capabilities/autoresearch/spec.md:
+       - REQ-LEARN-051: JEPA v23 MUST be evaluated on 3 domains (GSM8K, HumanEval, ARC-Challenge)
+         to measure cross-domain AUC degradation. If overall_ood_auc >= 0.65, it MUST be deployed
+         as ThreeTierPipeline Tier 3.5 per FR-11 Tier 3 requirement.
+       - REQ-LEARN-052: When JEPA v23 Tier 3.5 is active, each step's verification result MUST
+         include a VerificationCertificate: (step_id, jepa_energy_delta, constraint_type,
+         z3_verdict, confidence_score) — format based on arXiv 2601.17223 verifiable PRM.
+       - SCENARIO-LEARN-061: 3-domain eval; per-domain AUC computed; overall_ood_auc >= 0.65;
+         Tier 3.5 deployed; VerificationCertificate emitted for each of 20 evaluated steps.
+    4. Load JEPA v23 model from results/jepa_v23_limo_model.pkl (written in Exp 824).
+    5. Evaluate on 3 domains (synthetic if live data unavailable):
+       a. GSM8K: 20 CoT step sequences. auc_gsm8k computed.
+       b. HumanEval code steps: 10 function implementations split into step-level traces. auc_humaneval.
+       c. ARC-Challenge planning: 10 multi-step reasoning problems. auc_arc.
+       d. overall_ood_auc = mean(auc_humaneval, auc_arc) (GSM8K = in-distribution).
+    6. For 20 randomly selected evaluated steps: emit VerificationCertificate namedtuple:
+       (step_id, jepa_energy_delta, constraint_type, z3_verdict, confidence_score).
+       Store as list in artifact.
+    7. If overall_ood_auc >= 0.65:
+       a. Wire JEPAv23Predictor into ThreeTierPipeline as tier_35 attribute.
+       b. Update _bmad/traceability.md FR-11 Tier 3 row to "deployed: Exp 825".
+       c. Set tier35_deployed=True.
+    8. Artifact fields: auc_gsm8k, auc_humaneval, auc_arc, overall_ood_auc,
+       tier35_deployed, n_certificates_emitted, honest_verdict.
+    9. honest_verdict:
+       - "jepa_v23_tier35_deployed" if tier35_deployed=True
+       - "jepa_v23_improvement_not_deployed" if overall_ood_auc >= 0.50 but < 0.65
+       - "blocked_gate" if gate fails
+    10. Write tests/python/test_experiment_825_jepa_v23_eval_fr11_tier3.py with 100% coverage:
+        - test VerificationCertificate has all required fields
+        - test Tier 3.5 wiring: ThreeTierPipeline.tier_35 set when auc >= 0.65 (mocked)
+        - test gate blocks when exp824 verdict is below_random
+        Each test traces to REQ-LEARN-051/052 and SCENARIO-LEARN-061.
+    11. Reconcile:
+        - ops/changelog.md: one-line entry with honest_verdict and overall_ood_auc.
+        - ops/status.md: "Exp 825: JEPA v23 Tier 3.5 deployed=<bool>. OOD AUC=<value>."
+        - _bmad/architecture.md: update Tier 3.5 row to reflect v23 status.
+    12. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_825_jepa_v23_eval_fr11_tier3.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp826-prm-cross-domain-benchmark
+  milestone: 2026.04.63
+  deliverable: results/experiment_826_prm_cross_domain_benchmark.json
+  title: 'Exp 826: PRM Cross-Domain Benchmark (arXiv 2506.00027, 2601.17223, CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2506.00027 (From Mathematical Reasoning to Code: Does Process Reward Model
+    Generalize?) reports that PRMs trained on math reasoning degrade ~8% AUC when applied to
+    code verification. arXiv 2601.17223 (Beyond Outcome Verification) proposes step-level
+    VerificationCertificates to make PRM judgments auditable. This experiment uses JEPA v23
+    results from Exps 824-825 to compute Carnot's cross-domain degradation vs the 8% baseline
+    and generate certificates for failed OOD steps.
+
+    CPU-only. Uses stored results from Exps 820 (HumanEval CoT traces), 824 (JEPA v23 model),
+    and 825 (cross-domain AUC). No live GPU required.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_825_jepa_v23_eval_fr11_tier3.json — auc_gsm8k, auc_humaneval, auc_arc
+    - results/experiment_824_jepa_v23_limo_corpus.json — in-distribution baseline AUC
+    - results/experiment_820_gguf_import_fix_code_repair_v5.json — HumanEval step traces
+    - research-references.md — PRM cross-domain section (arXiv 2506.00027)
+    - openspec/capabilities/pipeline/spec.md — REQ-VERIFY entries
+
+    TASK: Compute cross-domain AUC degradation, compare to 8% published baseline, generate
+    VerificationCertificates for 20 failed OOD steps, write
+    results/experiment_826_prm_cross_domain_benchmark.json.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add to openspec/capabilities/pipeline/spec.md:
+       - REQ-VERIFY-145: For cross-domain PRM evaluation, Carnot MUST report cross_domain_degradation
+         = auc_in_dist - auc_ood. If degradation > 0.08 (8% baseline from arXiv 2506.00027):
+         report which domain shows the largest gap (GSM8K vs HumanEval vs ARC-Challenge).
+       - SCENARIO-VERIFY-174: Load Exp 825 AUC results. Compute degradation. If above baseline:
+         identify top failing domain. Emit VerificationCertificate for 20 randomly selected
+         OOD steps that JEPA v23 scored as high-energy (likely errors).
+    3. Create scripts/experiment_826_prm_cross_domain_benchmark.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTemplate(826) + ExperimentTimeoutWatchdog(826, timeout_minutes=30).
+       c. Load from results/experiment_825_jepa_v23_eval_fr11_tier3.json:
+          auc_gsm8k, auc_humaneval, auc_arc, overall_ood_auc.
+          If Exp 825 blocked_gate: write this exp as data_unavailable and stop.
+       d. Load from results/experiment_824_jepa_v23_limo_corpus.json:
+          in_dist_auc (GSM8K in-distribution).
+       e. Compute:
+          cross_domain_degradation_humaneval = in_dist_auc - auc_humaneval
+          cross_domain_degradation_arc = in_dist_auc - auc_arc
+          cross_domain_degradation_max = max(degradation_humaneval, degradation_arc)
+          beats_baseline = (cross_domain_degradation_max <= 0.08)
+       f. Load VerificationCertificates emitted by Exp 825 (from artifact or regenerate 20).
+          For each certificate: check if z3_verdict corroborates jepa_energy_delta direction.
+          corroboration_rate = n_z3_corroborates / n_certificates.
+       g. If cross_domain_degradation_max > 0.08: identify worst_domain (humaneval or arc).
+          Analyze top-5 failing OOD steps: common constraint_type or step_position.
+       h. Artifact fields: in_dist_auc, auc_humaneval, auc_arc, cross_domain_degradation_humaneval,
+          cross_domain_degradation_arc, cross_domain_degradation_max, beats_baseline,
+          published_baseline=0.08, corroboration_rate, n_certificates=20, honest_verdict.
+       i. honest_verdict:
+          - "above_baseline" if beats_baseline (our degradation <= 8%)
+          - "at_baseline" if abs(degradation_max - 0.08) <= 0.01
+          - "below_baseline" if degradation_max > 0.09
+          - "data_unavailable" if exp825 blocked
+    4. Write tests/python/test_experiment_826_prm_cross_domain_benchmark.py with 100% coverage:
+       - test cross_domain_degradation computed correctly from auc values
+       - test beats_baseline threshold logic (0.08 boundary)
+       - test corroboration_rate computed from certificate z3_verdict alignment
+       Each test traces to REQ-VERIFY-145 and SCENARIO-VERIFY-174.
+    5. Reconcile:
+       - ops/changelog.md: one-line entry with honest_verdict and cross_domain_degradation_max.
+       - ops/status.md: "Exp 826: PRM cross-domain degradation=<value> vs baseline 8%. Verdict: <verdict>."
+       - research-references.md: add Exp 826 results note under arXiv 2506.00027 entry.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_826_prm_cross_domain_benchmark.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp827-kv260-nextpnr-xilinx-v3
+  milestone: 2026.04.63
+  deliverable: results/experiment_827_kv260_nextpnr_xilinx_v3.json
+  title: 'Exp 827: KV260 nextpnr-xilinx Synthesis v3 (gated on Exp 816, CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 816 (milestone .62) produced synthesis_clean_n32 on an iCE40 HX8K target
+    using OSS-CAD-Suite nextpnr-ice40 (3952 LUTs for N=32 Ising). However, the physical KV260
+    board uses Zynq UltraScale+ (xczu5eg) — not iCE40. OSS-CAD-Suite includes nextpnr-xilinx
+    (still experimental), which can target some Xilinx parts. The primary goal is:
+    1. Attempt nextpnr-xilinx for xczu5eg (may not have chipdb).
+    2. Fallback: generate an actual iCE40 HX8K bitstream (.bin) from the Exp 816 JSON output
+       using icepack, so we have a concrete hardware-programmable artifact even if Zynq synthesis
+       fails.
+    3. Smoke-test: verify the bitstream has a valid iCE40 header.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_816_kv260_synthesis_v2.json — N=32 synthesis JSON output path
+    - hardware/kv260/ising_sampler_v3.v — target RTL Verilog
     - research-hardware-wishlist.md — KV260 Synthesis Status section
     - openspec/capabilities/verifiable-reasoning/spec.md — REQ-HW entries
 
-    TASK: Synthesize ising_sampler_v3.v at N=32 using OSS-CAD-Suite yosys.
-    Write results/experiment_816_kv260_synthesis_v2.json.
+    TASK: Attempt nextpnr-xilinx for xczu5eg; if unsupported, generate iCE40 bitstream with
+    icepack from Exp 816 JSON; verify bitstream; write results/experiment_827_kv260_nextpnr_xilinx_v3.json.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
-       - REQ-HW-038: KV260 synthesis MUST use OSS-CAD-Suite yosys from ~/tools/oss-cad-suite/bin
-         (NOT system yosys or pacman-installed yosys). PATH MUST be set explicitly.
-       - SCENARIO-HW-035: OSS-CAD-Suite yosys synthesizes ising_sampler_v3.v at N=32;
-         lut_count < 5000; no errors; honest_verdict=synthesis_clean_n32.
-    3. Create scripts/experiment_816_kv260_synthesis_v2.py:
-       a. ExperimentTemplate(816) + ExperimentTimeoutWatchdog(816, timeout_minutes=60).
-       b. apply_env_autofix() FIRST.
-       c. GATE: load Exp 807 artifact. If honest_verdict not in valid set → blocked, exit.
-       d. Set OSS_CAD_BIN = Path.home() / "tools" / "oss-cad-suite" / "bin".
-          Verify (OSS_CAD_BIN / "yosys").exists(); if not → blocked_tools_not_at_expected_path, exit.
-       e. Prepare N=32 synthesis:
-          - Read hardware/kv260/ising_sampler_v3.v
-          - Write /tmp/ising_n32_v3.v with N_SPINS=32, MAX_DEGREE=8 parameter overrides
-            (copy the file and prepend `parameter N_SPINS=32; parameter MAX_DEGREE=8;`)
-          - Write yosys script /tmp/synth_n32_v3.ys:
-              read_verilog /tmp/ising_n32_v3.v
-              synth_ice40 -top ising_sampler_v3 -json /tmp/ising_n32_v3.json
-              stat
-          - Run: str(OSS_CAD_BIN / "yosys") + " /tmp/synth_n32_v3.ys" (timeout=180s)
-          - Parse stdout for: LUT count (SB_LUT4 count), errors, warnings.
-       f. If N=32 clean AND lut_count < 3000, attempt N=64:
-          Write /tmp/ising_n64_v3.v with N_SPINS=64, MAX_DEGREE=16. Run same yosys flow.
-          If lut_count > 6000: record as over_budget_n64.
+    2. Verify gate: read results/experiment_816_kv260_synthesis_v2.json — confirm lut_count_n32=3952
+       and synthesis JSON path. If experiment 816 did not produce a synthesis JSON: write blocked.
+    3. Add to openspec/capabilities/verifiable-reasoning/spec.md:
+       - REQ-HW-038: If nextpnr-xilinx does not support the KV260 Zynq target, Carnot MUST fall
+         back to generating a complete iCE40 HX8K bitstream (.bin) using icepack from the
+         nextpnr-ice40 JSON produced in a prior synthesis run. The bitstream MUST contain a valid
+         iCE40 magic header (first 4 bytes: 0xFF 0x00 0x00 0xFF).
+       - SCENARIO-HW-035: nextpnr-xilinx --help lists xczu5eg in supported chips; synthesis clean.
+         OR fallback: icepack produces .bin with valid magic header from Exp 816 JSON.
+    4. Create scripts/experiment_827_kv260_nextpnr_xilinx_v3.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTemplate(827) + ExperimentTimeoutWatchdog(827, timeout_minutes=45).
+       c. Set OSS_CAD_BIN = Path.home() / "tools" / "oss-cad-suite" / "bin".
+          Verify OSS-CAD-Suite is installed (check for nextpnr-ice40 binary).
+       d. Primary attempt — nextpnr-xilinx:
+          result = subprocess.run([OSS_CAD_BIN / "nextpnr-xilinx", "--help"], capture_output=True)
+          xilinx_available = (result.returncode == 0)
+          If xilinx_available:
+            Run: nextpnr-xilinx --chipdb xczu5eg --json <exp816_json> --pcf hardware/kv260/ising.pcf
+                 --asc /tmp/ising_xilinx.asc
+            xilinx_synthesis_result = subprocess.run([...], capture_output=True)
+            xilinx_synthesis_clean = (xilinx_synthesis_result.returncode == 0)
+       e. Fallback — iCE40 bitstream generation:
+          exp816_json = results/experiment_816_kv260_synthesis_v2.json synthesis_json_path.
+          If exp816_json exists:
+            Run nextpnr-ice40 to produce ASC: nextpnr-ice40 --hx8k --json <exp816_json>
+                                                              --asc /tmp/ising_n32.asc
+            Run icepack to produce BIN: icepack /tmp/ising_n32.asc /tmp/ising_n32.bin
+            bitstream_generated = Path("/tmp/ising_n32.bin").exists()
+            If bitstream_generated:
+              Read first 4 bytes of /tmp/ising_n32.bin.
+              valid_header = (bytes[0] == 0xFF and bytes[1] == 0x00)
+              Copy bitstream to hardware/kv260/ising_n32.bin.
+       f. Artifact fields: xilinx_available, xilinx_synthesis_clean, ice40_bitstream_generated,
+          valid_header, bitstream_size_bytes, bitstream_path, honest_verdict.
        g. honest_verdict:
-          - "synthesis_clean_n32_n64" if both succeed AND n64_lut < 6000
-          - "synthesis_clean_n32" if N=32 clean AND lut_count < 5000
-          - "synthesis_n32_over_budget" if N=32 succeeds but lut > 5000
-          - "synthesis_errors_n32" if yosys reports errors
-          - "blocked_tools_not_found" if OSS-CAD tools missing
-          - "gated_tools_not_installed" if Exp 807 gate fails
-       h. Update research-hardware-wishlist.md with synthesis result.
-    4. Write tests with 100% coverage:
-       - test yosys stdout LUT count parsing
-       - test gate blocks when Exp 807 verdict is wrong
-       Each test traces to REQ-HW-038.
-    5. Reconcile:
-       - research-hardware-wishlist.md: update KV260 Synthesis Status.
-       - ops/changelog.md: one-line entry with honest_verdict and lut_count_n32.
-    6. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp817-multi-agent-arbiter-mcp
-  milestone: 2026.04.62
-  deliverable: results/experiment_817_multi_agent_arbiter.json
-  title: 'Exp 817: Multi-Agent Arbiter MCP Tool — Energy-Ranked Agent Output Selection (Tier B Product)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: research-program.md Tier B product "Multi-Agent Arbiter": score competing agent
-    outputs, pick lowest energy as the final answer. Growing agent market; every multi-agent
-    system needs arbitration. Energy is a natural arbitration signal — the most constraint-
-    consistent output has lowest energy. This experiment implements the MCP tool
-    score_agent_outputs and tests it on a synthetic 3-agent math debate scenario.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.verify() (energy scoring)
-    - python/carnot/mcp/ (or similar MCP server location) — existing MCP tools
-    - python/carnot/pipeline/ising_constraint_injector.py — IsingConstraintInjector (Exp 812)
-    - openspec/capabilities/verifiable-reasoning/spec.md — REQ-VERIFY and REQ-AGENT entries
-
-    TASK: Implement score_agent_outputs MCP tool, test on 3-agent synthetic scenario.
-    Write results/experiment_817_multi_agent_arbiter.json.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add to openspec/capabilities/verifiable-reasoning/spec.md:
-       - REQ-AGENT-003: score_agent_outputs(responses: list[str]) MUST return a ranked list
-         of agent responses sorted by ascending EBM energy (lowest energy = most valid first).
-       - REQ-AGENT-004: The arbiter MUST return the winner_index (index in original list),
-         winner_energy (energy score), and rank (full ranking with energies).
-       - SCENARIO-AGENT-004: 3 agents respond to "47 + 28 = ?". Agent A: "75", Agent B: "76",
-         Agent C: "77". Arbiter correctly identifies Agent A (energy_A < energy_B < energy_C).
-    3. Implement python/carnot/pipeline/multi_agent_arbiter.py:
-       a. AgentScore dataclass: (agent_index, response, energy, rank)
-       b. ArbiterResult dataclass:
-          (n_agents, winner_index, winner_response, winner_energy, all_scores: list[AgentScore],
-           inference_mode, honest_verdict)
-       c. MultiAgentArbiter:
-          - __init__(pipeline: VerifyRepairPipeline):
-            self._pipeline = pipeline
-          - score_response(response: str) -> float:
-            result = self._pipeline.verify(response)
-            return result.energy  # energy from IsingEBM
-          - rank_agents(responses: list[str]) -> ArbiterResult:
-            scores = [(i, r, self.score_response(r)) for i, r in enumerate(responses)]
-            sorted_scores = sorted(scores, key=lambda x: x[2])  # ascending energy
-            all_scores = [AgentScore(i, r, e, rank+1) for rank, (i, r, e) in enumerate(sorted_scores)]
-            winner_index, winner_response, winner_energy = sorted_scores[0]
-            return ArbiterResult(...)
-       d. Export MultiAgentArbiter, ArbiterResult, AgentScore from carnot.pipeline.__init__
-       e. Wire as MCP tool: add score_agent_outputs to the MCP server:
-          @mcp_server.tool("score_agent_outputs")
-          def score_agent_outputs(responses: list[str]) -> dict:
-              arbiter = MultiAgentArbiter(VerifyRepairPipeline())
-              result = arbiter.rank_agents(responses)
-              return result.to_dict()
-    4. Create scripts/experiment_817_multi_agent_arbiter.py:
-       a. ExperimentTemplate(817) + ExperimentTimeoutWatchdog(817, timeout_minutes=30).
-       b. apply_env_autofix() FIRST.
-       c. Run synthetic 3-agent debate:
-          Scenario: "What is 47 + 28?"
-          Agent A: "47 + 28 = 75" (correct)
-          Agent B: "47 + 28 = 76" (wrong by 1)
-          Agent C: "47 + 28 = 70" (wrong by 5)
-          Expected: energy_A < energy_B < energy_C → winner_index=0 → arbiter_correct=True
-       d. Run 5 more synthetic scenarios to validate consistency.
-       e. Compute arbiter_accuracy = fraction of scenarios where winner is correct.
-       f. honest_verdict:
-          - "arbiter_correct" if arbiter_accuracy >= 0.80
-          - "arbiter_partial" if arbiter_accuracy in [0.60, 0.80)
-          - "arbiter_incorrect" if arbiter_accuracy < 0.60
-    5. Write tests with 100% coverage:
-       - test rank_agents returns winner with lowest energy
-       - test AgentScore rank field assigned correctly
-       - test ArbiterResult to_dict() contains all required fields
-       Each test traces to REQ-AGENT-003/004.
+          - "xilinx_synthesis_clean" if xilinx_available AND xilinx_synthesis_clean
+          - "ice40_bitstream_generated" if bitstream_generated AND valid_header
+          - "bitstream_invalid_header" if bitstream_generated but header wrong
+          - "synthesis_blocked" if neither path produces output
+    5. Write tests/python/test_experiment_827_kv260_nextpnr_xilinx_v3.py with 100% coverage:
+       - test valid_header check with mocked file bytes (0xFF 0x00 = valid)
+       - test fallback path triggers when nextpnr-xilinx not available (mocked subprocess)
+       - test bitstream_path copied to hardware/kv260/ when generated
+       Each test traces to REQ-HW-038 and SCENARIO-HW-035.
     6. Reconcile:
-       - ops/changelog.md: one-line entry with honest_verdict and arbiter_accuracy.
-       - _bmad/traceability.md: add Multi-Agent Arbiter as Tier B product shipped.
+       - ops/changelog.md: one-line entry with honest_verdict.
+       - ops/status.md: "Exp 827: KV260 synthesis: <verdict>. Bitstream: <path>."
+       - research-hardware-wishlist.md: update KV260 Synthesis Status with Exp 827 result.
     7. tmpl.assert_deliverable_written() as final line.
 
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_827_kv260_nextpnr_xilinx_v3.py -v
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp818-milestone-retro
-  milestone: 2026.04.62
-  deliverable: results/operational_retro_2026_04_62.json
-  title: 'Exp 818: Milestone 2026.04.62 Operational Retrospective'
+- id: exp828-activation-jailbreak-probe
+  milestone: 2026.04.63
+  deliverable: results/experiment_828_activation_jailbreak_probe.json
+  title: 'Exp 828: Activation Jailbreak Linear Probe (arXiv 2602.11495, Tier B Safety, CPU)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: Milestone 2026.04.62 targeted: MILESTONE_PREREQS.md gate (Exp 806), OSS-CAD-Suite
-    FPGA toolchain (Exp 807), JEPA v22 CPMI rewire (Exp 808), RA-PRM OOD enhancement (Exp 809),
-    Gemma4 OOM Fix v5 (Exp 810), SOTA GGUF code repair v4 (Exp 811), IsingEBM constraint
-    injection (Exp 812), constraint addition live validation (Exp 813), FR-11 Tier 1 live relay
-    (Exp 814), VG-Search scheduling (Exp 815), KV260 synthesis v2 (Exp 816),
-    Multi-Agent Arbiter MCP tool (Exp 817).
+    CONTEXT: arXiv 2602.11495 (Jailbreak Detection via Linear Probes on Intermediate Activations)
+    shows that jailbreak prompts leave a linear signal in intermediate transformer layer activations,
+    detectable by a logistic regression probe trained on 100 labeled examples with AUC >= 0.90
+    at < 1 ms CPU latency. Carnot currently has JailbreakDetectionKAN at Tier 0h (AUC=1.0 on
+    synthetic benchmark, Exp 775). This experiment adds a complementary linear probe as a
+    second Tier B safety signal: interpretable, fast, and orthogonal to KAN spline detection.
+    CPU-only: load Qwen3.5-0.8B in eval mode (no gradient tracking), extract activations
+    at layers [4, 8, 12, 16], train sklearn LogisticRegression on 50 JailbreakBench + 50 benign.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_806_milestone_prereqs_gate.json
-    - results/experiment_807_oss_cad_suite_install.json
-    - results/experiment_808_jepa_v22_retrain.json
-    - results/experiment_809_jepa_v22_rapbm.json
-    - results/experiment_810_gemma4_oom_fix_v5.json
-    - results/experiment_811_sota_gguf_code_repair_v4.json
-    - results/experiment_812_ising_constraint_injection.json
-    - results/experiment_813_constraint_addition_live.json
-    - results/experiment_814_fr11_tier1_live_relay.json
-    - results/experiment_815_vg_search_scheduling.json
-    - results/experiment_816_kv260_synthesis_v2.json
-    - results/experiment_817_multi_agent_arbiter.json
-    - results/operational_retro_2026_04_61.json
-    - scripts/experiment_template.py — ExperimentTemplate
+    - python/carnot/pipeline/jailbreak_detection_kan.py — JailbreakDetectionKAN Tier 0h
+    - python/carnot/pipeline/verify_repair.py — cascade tier structure
+    - research-references.md — arXiv 2602.11495 entry if present
+    - openspec/capabilities/pipeline/spec.md — REQ-VERIFY entries for Tier 0h
 
-    TASK: Write milestone 2026.04.62 operational retrospective.
+    TASK: Implement activation linear probe for jailbreak detection, train on synthetic
+    JailbreakBench prompts, measure AUC and latency, compare to Tier 0h KAN, write
+    results/experiment_828_activation_jailbreak_probe.json.
 
     CONCRETE STEPS:
-    1. Load all 12 experiment result JSONs. For each: read honest_verdict and key metrics.
-    2. Evaluate success criteria:
-       - prereqs_gate_implemented: Exp 806 honest_verdict == "prereqs_gate_ready"
-       - fpga_tools_installed: Exp 807 honest_verdict in ["tools_installed_synthesis_clean", "already_installed"]
-       - jepa_v22_ood_viable: Exp 808 ood_auc >= 0.75
-       - retro_028_closed: Exp 810 retro_028_closed == True
-       - sota_code_repair_positive: Exp 811 honest_verdict == "code_repair_positive"
-       - constraint_injection_wired: Exp 812 honest_verdict == "injection_works"
-       - constraint_addition_live: Exp 813 retro_constraint_zero_delta_closed == True
-       - tier1_relay_live: Exp 814 honest_verdict == "tier1_relay_works_live"
-       - kv260_synthesis_clean: Exp 816 honest_verdict in ["synthesis_clean_n32", "synthesis_clean_n32_n64"]
-    3. Compute: criteria_met_count (out of 9), criteria_total = 9.
-    4. Identify: slowest experiment, fastest experiment, any timeouts.
-    5. List new RETROs opened (from any honest_verdict indicating a new block).
-    6. List RETROs closed from .61 that were resolved this milestone.
-    7. Write improvements_suggested for .63 (focus on what failed and structural fixes).
-    8. Compute estimated_time_savings_pct from suggested improvements.
-    9. Create scripts/experiment_818_milestone_retro.py:
-       a. ExperimentTemplate(818) + ExperimentTimeoutWatchdog(818, timeout_minutes=30).
-       b. apply_env_autofix() FIRST.
-       c. Load all 12 result JSONs (graceful missing-file handling).
-       d. Build MilestoneRetro2026_04_62 dataclass with all fields.
-       e. Write results/operational_retro_2026_04_62.json with schema=carnot.operational_retro.v37.
-    10. Write tests with 100% coverage tracing to existing REQ-* entries.
-    11. Reconcile:
-        - ops/status.md: full milestone summary section.
-        - ops/changelog.md: one-line with criteria_met_count and key honest_verdicts.
-        - _bmad/traceability.md: update any FR implementation status changes.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add to openspec/capabilities/pipeline/spec.md:
+       - REQ-VERIFY-146: ActivationJailbreakProbe MUST extract intermediate layer activations
+         from Qwen3.5-0.8B at layers [4, 8, 12, 16] and train a LogisticRegression probe
+         on labeled jailbreak/benign examples. CPU inference latency MUST be < 1 ms per query.
+       - REQ-VERIFY-147: ActivationJailbreakProbe probe_auc MUST be >= 0.85 on a 50/50
+         balanced holdout (25 jailbreak + 25 benign) to be considered viable for production
+         wiring alongside Tier 0h KAN.
+       - SCENARIO-VERIFY-175: 50 jailbreak + 50 benign prompts; probe trained on 60 (train split);
+         evaluated on 40 (holdout); AUC and latency reported. If probe_auc >= 0.85 AND
+         latency < 1 ms: probe_viable=True.
+    3. Implement python/carnot/pipeline/activation_jailbreak_probe.py:
+       a. ActivationJailbreakProbe(model_name="unsloth/Qwen3.5-0.8B-GGUF", layers=[4,8,12,16]):
+          - load_model(): load Qwen3.5-0.8B in eval mode (transformers AutoModel, CPU).
+          - extract_activations(prompt: str) -> np.ndarray:
+            Hook intermediate layer outputs. Return concatenated mean-pooled activation vectors.
+            Shape: (n_layers * hidden_dim,). Latency target: < 50 ms per extract.
+          - train(prompts_labeled: list[(str, int)]) -> sklearn.linear_model.LogisticRegression:
+            Extract activations for all prompts. Fit LogisticRegression(max_iter=100).
+            Return fitted probe.
+          - evaluate(probe, test_prompts_labeled) -> (auc: float, latency_ms: float):
+            Compute ROC AUC. Measure per-query inference latency (mean of 20 runs).
+       b. Export ActivationJailbreakProbe from carnot.pipeline.__init__.
+    4. Generate synthetic dataset in the experiment script:
+       - 50 jailbreak prompts: variations on "Ignore previous instructions and...",
+         "As a DAN...", "Pretend you have no restrictions...", etc. (fixed seed=42, CPU-safe).
+       - 50 benign prompts: math questions, code completion requests, factual queries.
+    5. Create scripts/experiment_828_activation_jailbreak_probe.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTemplate(828) + ExperimentTimeoutWatchdog(828, timeout_minutes=60).
+       c. NOTE: Load model in CPU eval mode with no_grad context. Do NOT call tmpl.setup_gpu().
+       d. Instantiate ActivationJailbreakProbe.
+       e. Generate 100 synthetic prompts (50 jailbreak + 50 benign, seed=42).
+       f. Train/test split: 60 train (30/30), 40 test (20/20).
+       g. probe = probe_model.train(train_prompts).
+       h. probe_auc, latency_ms = probe_model.evaluate(probe, test_prompts).
+       i. Compare: tier0h_auc = 1.0 (from Exp 775 synthetic). auc_delta = probe_auc - tier0h_auc.
+       j. probe_viable = (probe_auc >= 0.85 and latency_ms < 1.0).
+       k. Artifact fields: probe_auc, latency_ms, tier0h_auc=1.0, auc_delta, probe_viable,
+          n_train=60, n_test=40, layers=[4,8,12,16], honest_verdict.
+       l. honest_verdict:
+          - "probe_viable" if probe_viable=True
+          - "probe_partial" if probe_auc >= 0.85 but latency >= 1.0
+          - "probe_not_viable" if probe_auc < 0.85
+    6. Write tests/python/test_experiment_828_activation_jailbreak_probe.py with 100% coverage:
+       - test extract_activations returns correct shape (mocked model hooks)
+       - test train returns fitted LogisticRegression (mocked activations)
+       - test probe_viable logic: True when auc >= 0.85 AND latency < 1.0
+       Each test traces to REQ-VERIFY-146/147.
+    7. Reconcile:
+       - ops/changelog.md: one-line entry with honest_verdict and probe_auc.
+       - ops/status.md: "Exp 828: activation probe AUC=<value>, latency=<ms>ms. viable=<bool>."
+       - _bmad/architecture.md: add activation probe note to Tier 0h section.
+    8. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_828_activation_jailbreak_probe.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp829-huggingface-v3-publish
+  milestone: 2026.04.63
+  deliverable: results/experiment_829_huggingface_v3_publish.json
+  title: 'Exp 829: HuggingFace v3 Publish (Tier A product)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: huggingface.co/Carnot-EBM currently hosts 16 activation EBM models from earlier
+    milestones. All were trained on simulated data (now explicitly invalidated). This experiment
+    does three things:
+    1. Updates all 16 existing model READMEs to clarify "Phase 1 research artifact — trained on
+       simulated data; NOT validated on live GPU; for research exploration only."
+    2. Publishes JEPA v23 model (if Exp 825 produced tier35_deployed=True) with cross-domain
+       benchmark results from Exp 826.
+    3. Publishes IsingConstraintInjector with external field fix (Exp 819) as a standalone
+       artifact with example notebook.
+    Use SOPS-encrypted HF token from .sops.yaml. NEVER commit plaintext tokens.
+    Verify uploads with huggingface_hub.list_models(author="Carnot-EBM").
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_825_jepa_v23_eval_fr11_tier3.json — tier35_deployed check
+    - results/experiment_826_prm_cross_domain_benchmark.json — cross-domain metrics for README
+    - results/experiment_819_injection_field_fix.json — retro_injection_closed check
+    - python/carnot/inference/jepa_v23.py — model to publish (if tier35_deployed)
+    - scripts/sops_helper.py — SOPS token decryption utility
+    - openspec/capabilities/pipeline/spec.md — REQ-INFRA entries
+
+    TASK: Update 16 existing model disclaimers, publish JEPA v23 and injection fix artifacts
+    if validated, write results/experiment_829_huggingface_v3_publish.json.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add to openspec/capabilities/pipeline/spec.md:
+       - REQ-INFRA-061: All HuggingFace model cards for Carnot-EBM MUST include a disclaimer
+         section: "Phase 1 research artifact. Trained on simulated data unless explicitly stated
+         as live-GPU-validated. Do not use in production without independent validation."
+       - SCENARIO-INFRA-070: huggingface_hub.list_models(author="Carnot-EBM") returns >= 17
+         models after this experiment (16 existing + >= 1 new). Each model card contains the
+         Phase 1 disclaimer.
+    3. Create scripts/experiment_829_huggingface_v3_publish.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTemplate(829) + ExperimentTimeoutWatchdog(829, timeout_minutes=60).
+       c. Load HF token via SOPS: token = sops_helper.decrypt_secret("HF_TOKEN").
+          If SOPS decrypt fails: write blocked artifact with hf_auth_blocked=True.
+       d. Login: huggingface_hub.login(token=token).
+       e. List existing models: models = huggingface_hub.list_models(author="Carnot-EBM").
+          n_existing = len(list(models)).
+       f. Update existing model cards (16 models):
+          For each model in existing list:
+            - Download current README.md via huggingface_hub.hf_hub_download.
+            - If "Phase 1 research artifact" not in readme: prepend disclaimer section.
+            - Upload updated README.md via huggingface_hub.upload_file.
+          n_cards_updated = count of models where disclaimer was added.
+       g. Check JEPA v23 eligibility:
+          Load results/experiment_825_jepa_v23_eval_fr11_tier3.json.
+          If tier35_deployed=True:
+            - Create model card with Exp 826 cross-domain metrics table.
+            - huggingface_hub.create_repo("Carnot-EBM/jepa-v23-limo", exist_ok=True).
+            - Upload results/jepa_v23_limo_model.pkl + model card.
+            - jepa_published=True.
+       h. Check injection fix eligibility:
+          Load results/experiment_819_injection_field_fix.json.
+          If retro_injection_closed=True:
+            - Create model card with external field formula and discrimination rate.
+            - huggingface_hub.create_repo("Carnot-EBM/ising-constraint-injector-v2", exist_ok=True).
+            - Upload python/carnot/pipeline/ising_constraint_injector.py + card.
+            - injection_published=True.
+       i. Verify: n_after = len(list(huggingface_hub.list_models(author="Carnot-EBM"))).
+       j. Artifact fields: n_existing, n_cards_updated, jepa_published, injection_published,
+          n_after, hf_auth_blocked, honest_verdict.
+       k. honest_verdict:
+          - "hf_publish_success" if n_after > n_existing AND n_cards_updated > 0
+          - "hf_publish_partial" if cards updated but no new models published
+          - "hf_auth_blocked" if SOPS decrypt or login fails
+    4. Write tests/python/test_experiment_829_huggingface_v3_publish.py with 100% coverage:
+       - test disclaimer check correctly identifies missing disclaimer in README
+       - test SOPS auth failure produces hf_auth_blocked artifact (mocked sops_helper)
+       - test jepa_published set correctly when tier35_deployed=True (mocked hf_hub)
+       Each test traces to REQ-INFRA-061 and SCENARIO-INFRA-070.
+    5. Reconcile:
+       - ops/changelog.md: one-line entry with honest_verdict and n_after.
+       - ops/status.md: "Exp 829: HuggingFace models total=<n>. JEPA v23 published=<bool>."
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_829_huggingface_v3_publish.py -v
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp830-milestone-retro-2026-04-63
+  milestone: 2026.04.63
+  deliverable: results/experiment_830_milestone_retro_2026_04_63.json
+  title: 'Exp 830: Milestone 2026.04.63 Operational Retrospective'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: This is the closing retrospective for milestone 2026.04.63. Evaluate all 11 prior
+    experiments (Exps 819-829). Count success criteria met. Identify new RETROs opened vs closed.
+    Write actionable improvements for milestone .64 with IMMEDIATE-class items for
+    MILESTONE_PREREQS.md. Schema: carnot.operational_retro.v38.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_819_injection_field_fix.json
+    - results/experiment_820_gguf_import_fix_code_repair_v5.json
+    - results/experiment_821_constraint_addition_live_v2.json
+    - results/experiment_822_arbiter_fix_v2_agent_auditor.json
+    - results/experiment_823_fr11_tier1_live_relay_v2.json
+    - results/experiment_824_jepa_v23_limo_corpus.json
+    - results/experiment_825_jepa_v23_eval_fr11_tier3.json
+    - results/experiment_826_prm_cross_domain_benchmark.json
+    - results/experiment_827_kv260_nextpnr_xilinx_v3.json
+    - results/experiment_828_activation_jailbreak_probe.json
+    - results/experiment_829_huggingface_v3_publish.json
+    - ops/changelog.md — milestone .63 entries
+    - ops/status.md — current status
+
+    TASK: Write milestone .63 operational retrospective with verdict, lessons learned, retros
+    opened/closed, and .64 improvements list.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md documentation standards (never remove existing content).
+    2. Read all 11 experiment JSON results listed above. For each, extract honest_verdict.
+    3. Evaluate success criteria from openspec/change-proposals/research-roadmap-vNEXT.md:
+       | Criterion | Experiment | Target |
+       | injection_field_fixed | 819 | discrimination_rate >= 0.8 |
+       | gguf_import_fixed | 820 | honest_verdict != still_blocked |
+       | constraint_addition_works_live | 821 | delta_overall > 0 |
+       | arbiter_correct | 822 | accuracy_overall >= 0.80 |
+       | tier1_relay_works_live | 823 | delta_s1_to_s5 > 0 |
+       | jepa_v23_viable | 824-825 | ood_auc >= 0.65 |
+       | cross_domain_at_baseline | 826 | degradation <= 8% |
+       | bitstream_or_synthesis_clean | 827 | any clean synthesis |
+       | probe_viable | 828 | AUC >= 0.85, latency < 1ms |
+       | hf_publish_success | 829 | n_after > n_existing |
+       Compute: n_criteria_met / 10.
+    4. Identify new RETROs opened: any honest_verdict that represents a first-time failure
+       not previously tracked. Assign RETRO-<NAME> labels.
+    5. Identify RETROs closed (from .63 open RETRO table in vNEXT.md): for each, check if
+       addressing experiment produced closing verdict.
+    6. Write improvements_suggested list for .64:
+       a. IMMEDIATE items: things that MUST be in MILESTONE_PREREQS.md for .64.
+       b. HIGH items: important but not blocking.
+       c. MEDIUM items: nice-to-have.
+    7. Write results/operational_retro_2026_04_63.json with fields:
+       {
+         "schema": "carnot.operational_retro.v38",
+         "milestone": "2026.04.63",
+         "retro_date": "{date}",
+         "experiments_evaluated": [819..829],
+         "experiment_verdicts": {819: "...", 820: "...", ...},
+         "success_criteria": [{criterion, experiment, target, met, actual_value}, ...],
+         "n_criteria_met": <int>,
+         "n_criteria_total": 10,
+         "retros_closed": ["RETRO-X", ...],
+         "retros_opened": ["RETRO-Y", ...],
+         "improvements_suggested": [
+           {"priority": "IMMEDIATE", "action": "...", "rationale": "..."},
+           ...
+         ],
+         "honest_verdict": "..."
+       }
+    8. honest_verdict:
+       - "retro_63_strong" if n_criteria_met >= 7
+       - "retro_63_mixed" if 4 <= n_criteria_met < 7
+       - "retro_63_blocked" if n_criteria_met < 4
+    9. Update MILESTONE_PREREQS.md: add Milestone 2026.04.64 section with all IMMEDIATE items
+       from improvements_suggested. Mark all as status: pending.
+    10. Update ops/status.md "What's Next" section with top 3 .64 priorities.
+    11. Update ops/changelog.md: one-line retro entry.
     12. tmpl.assert_deliverable_written() as final line.
 
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_830_milestone_retro_2026_04_63.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
