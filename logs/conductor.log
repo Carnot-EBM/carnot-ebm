@@ -3638,3 +3638,31 @@ logs/conductor.log | 12 ++++++++++++
 2026-04-25 14:54:52,841 [conductor] RESEARCH STEP: Exp 872: JEPA v25 — DG-PRM Domain Reweighting + SVAMP Corpus (RETRO-JEPA-OOD + RETRO-SVAMP-ZERO-AUC) (CPU)
 2026-04-25 14:54:52,841 [conductor] ============================================================
 2026-04-25 14:54:52,862 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 14:54:52,921 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 14:54:52,921 [conductor] Running test suite (smart subset)...
+2026-04-25 14:54:58,570 [conductor] Pre-check: 81 passed, 3 warnings in 2.84s
+2026-04-25 14:54:58,681 [conductor] Injected 45 symbol signatures from 2 files (AST outlines)
+2026-04-25 14:54:58,681 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+**Done.** Deliverable `results/experiment_872_jepa_v25_dg_prm.json` is written. All 65 new tests pass.
+
+**Results summary:**
+- `ood_auc`: 0.484 (below 0.65 gate → Exp 873 stays GATED)
+- `svamp_auc`: 0.125 (below 0.50)
+- `honest_verdict`: `jepa_v25_still_blocked` — triggers `retire_if_same_verdict`
+
+**What was delivered:**
+1. `python/carnot/models/jepa_predictor.py` — `DomainReweightedLoss` class with `compute_domain_weights()` (inverse-frequency weights, normalised to sum=1) and `weighted_loss()` (per-sample BCE × domain weight)
+2. `scripts/experiment_872_jepa_v25_dg_prm.py` — JEPA v25 with 20+20 SVAMP pairs (doubled from v24's 10+10) and DomainReweightedLoss replacing hand-tuned DREAM_PRM weights
+3. `tests/python/test_experiment_872_jepa_v25_dg_prm.py` — 65 tests covering `DomainReweightedLoss`, corpus structure, model architecture, verdict logic, training convergence, and deliverable schema
+
+The hash-based embedding cannot distinguish SVAMP correct/incorrect steps reliably (vocabulary overlap too high between `8+5=13` vs `8−5=3`). The `jepa_v25_still_blocked` verdict means this experiment line should be retired per the `retire_if_same_verdict` contract.
+2026-04-25 15:03:08,280 [conductor] Claude Code completed (exit 0)
+2026-04-25 15:03:08,293 [conductor] Changes:
+logs/conductor.log | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+2026-04-25 15:03:08,309 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp869-gguf-predownload: '"success"' — auto-fixing
+2026-04-25 15:03:08,309 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp870-sota-code-repair-v7: '"name"' — auto-fixing
+2026-04-25 15:03:08,309 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp871-live-benchmark-v6: '"name"' — auto-fixing
+2026-04-25 15:03:08,313 [conductor] DOGFOOD: Verification complete (total: 546 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 15:03:08,313 [conductor] Running test suite (smart subset)...
+2026-04-25 15:03:13,954 [conductor] Post-check: 81 passed, 3 warnings in 2.83s
