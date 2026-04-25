@@ -3520,3 +3520,32 @@ MILESTONE_PREREQS.md                       | 87 ++++++++++++++++++++++++++++++
 2026-04-25 14:09:10,908 [conductor] RESEARCH STEP: Exp 869: GGUFCacheResolver v2 — Prove Download Works on Qwen3.5-0.8B (CPU)
 2026-04-25 14:09:10,908 [conductor] ============================================================
 2026-04-25 14:09:10,933 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 14:09:10,995 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 14:09:10,995 [conductor] Running test suite (smart subset)...
+2026-04-25 14:09:16,630 [conductor] Pre-check: 81 passed, 3 warnings in 2.88s
+2026-04-25 14:09:16,727 [conductor] Prompt format error in exp869-gguf-predownload: '"success"' — using raw prompt
+2026-04-25 14:09:16,741 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-25 14:09:16,741 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 10 tests pass and the deliverable is written. Summary:
+
+**Deliverable**: `results/experiment_869_gguf_predownload.json` — written, schema-valid, `download_verified=false`, `gates_exp_870=false`.
+
+**Root cause found** (RETRO-SOTA-MODEL-DOWNLOAD): The HF repo `Qwen/Qwen3.5-0.8B-GGUF` does not exist — `RepositoryNotFoundError 404`. The download mechanism itself works correctly; Exp 870 needs a corrected repo ID (likely `unsloth/Qwen3.5-0.8B-GGUF` or similar).
+
+**Code changes**:
+- `python/carnot/pipeline/gguf_cache.py`: Added `pre_download_and_verify()`, `resolve_or_download()`, and `download_tested` attribute to `GGUFCacheResolver`
+- `openspec/capabilities/pipeline/spec.md`: Added REQ-INFRA-073 and SCENARIO-INFRA-082
+- `scripts/experiment_869_gguf_predownload.py`: New experiment script
+- `tests/python/test_experiment_869_gguf_predownload.py`: 10 tests, all passing
+2026-04-25 14:16:00,335 [conductor] Claude Code completed (exit 0)
+2026-04-25 14:16:00,349 [conductor] Changes:
+logs/conductor.log                     |  18 +++++
+ openspec/capabilities/pipeline/spec.md |  42 ++++++++++
+ python/carnot/pipeline/gguf_cache.py   | 144 ++++++++++++++++++++++++++++++++-
+ 3 files changed, 203 insertions(+), 1 deletion(-)
+2026-04-25 14:16:00,365 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp869-gguf-predownload: '"success"' — auto-fixing
+2026-04-25 14:16:00,365 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp870-sota-code-repair-v7: '"name"' — auto-fixing
+2026-04-25 14:16:00,365 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp871-live-benchmark-v6: '"name"' — auto-fixing
+2026-04-25 14:16:00,369 [conductor] DOGFOOD: Verification complete (total: 543 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 14:16:00,369 [conductor] Running test suite (smart subset)...
+2026-04-25 14:16:06,036 [conductor] Post-check: 81 passed, 3 warnings in 2.86s

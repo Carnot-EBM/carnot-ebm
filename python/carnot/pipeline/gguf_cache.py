@@ -23,7 +23,12 @@
     locations), which caused ImportError chains across 8 consecutive milestones
     (RETRO-GGUF-CACHE-IMPORT).  A single authoritative resolver stops the rot.
 
-Spec: REQ-PIPELINE-030, SCENARIO-PIPELINE-040
+    v2 (Exp 869): Added ``pre_download_and_verify()`` and ``resolve_or_download()``
+    to diagnose the RETRO-SOTA-MODEL-DOWNLOAD failure.  Exp 857's download() call
+    failed silently at runtime; the new pre_download_and_verify() surfaces the
+    exact error so the root cause is known before burning GPU time on large models.
+
+Spec: REQ-PIPELINE-030, SCENARIO-PIPELINE-040, REQ-INFRA-073, SCENARIO-INFRA-082
 """
 
 from __future__ import annotations
@@ -105,6 +110,10 @@ class GGUFCacheResolver:
 
     def __init__(self, config: GGUFCacheConfig | None = None) -> None:
         self.config = config or GGUFCacheConfig()
+        # Set to True after the first successful pre_download_and_verify() call.
+        # Experiments gate on this to confirm the download mechanism works
+        # before trusting it for 20GB+ models (RETRO-SOTA-MODEL-DOWNLOAD).
+        self.download_tested: bool = False
 
     def _build_path(self, model_id: str, quantization: str) -> str:
         """Build the expected .gguf file path for a model ID and quantization.
@@ -199,6 +208,139 @@ class GGUFCacheResolver:
                     details={"expected_path": path, "model_id": model_id, "filename": filename},
                 ) from exc
         return path
+
+    def pre_download_and_verify(
+        self, hf_repo: str, filename: str, dest_dir: str
+    ) -> dict:
+        """Download a single GGUF file and verify it landed on disk correctly.
+
+        **Researcher summary:**
+            Call this BEFORE an experiment to confirm the download mechanism
+            actually works.  Returns a dict with ``success``, ``path``,
+            ``size_mb``, and ``error`` so the experiment can gate on
+            ``download_verified=True`` before spending GPU time.
+
+        **Detailed explanation for engineers:**
+            Exp 857's download() silently failed at runtime — the file was
+            not present but no error was surfaced to the result artifact.
+            This method makes the failure *explicit and diagnosable*:
+
+            1. Calls ``huggingface_hub.hf_hub_download`` with
+               ``force_download=False`` so already-cached files are reused.
+            2. Verifies the returned path exists on disk (the hub can return
+               a symlink path even after a network failure in some versions).
+            3. Verifies size > 0 bytes (guards against empty placeholder files).
+            4. Returns a dict rather than raising, so callers can write an
+               honest ``download_verified=False`` artifact instead of crashing.
+
+        Args:
+            hf_repo: HuggingFace repo ID, e.g. ``Qwen/Qwen3.5-0.8B-GGUF``.
+            filename: Exact filename in the repo, e.g.
+                ``qwen3.5-0.8b-q4_k_m.gguf``.
+            dest_dir: Local directory to save the downloaded file.
+
+        Returns:
+            ``{"success": bool, "path": str | None, "size_mb": float | None,
+               "error": str | None}``
+
+        Spec: REQ-INFRA-073, SCENARIO-INFRA-082
+        """
+        try:
+            from huggingface_hub import hf_hub_download  # lazy import — optional dep
+        except ImportError as exc:
+            return {
+                "success": False,
+                "path": None,
+                "size_mb": None,
+                "error": f"huggingface_hub not installed: {exc}",
+            }
+
+        os.makedirs(dest_dir, exist_ok=True)
+        try:
+            local_path_str = hf_hub_download(
+                repo_id=hf_repo,
+                filename=filename,
+                local_dir=dest_dir,
+                force_download=False,
+            )
+        except Exception as exc:
+            return {
+                "success": False,
+                "path": None,
+                "size_mb": None,
+                "error": f"hf_hub_download raised {type(exc).__name__}: {exc}",
+            }
+
+        local_path = Path(local_path_str)
+        if not local_path.exists():
+            return {
+                "success": False,
+                "path": str(local_path),
+                "size_mb": None,
+                "error": f"hf_hub_download returned path {local_path!r} but file does not exist",
+            }
+
+        size_bytes = local_path.stat().st_size
+        if size_bytes == 0:
+            return {
+                "success": False,
+                "path": str(local_path),
+                "size_mb": 0.0,
+                "error": f"Downloaded file is 0 bytes: {local_path!r}",
+            }
+
+        self.download_tested = True
+        return {
+            "success": True,
+            "path": str(local_path),
+            "size_mb": round(size_bytes / (1024 * 1024), 2),
+            "error": None,
+        }
+
+    def resolve_or_download(
+        self, hf_repo: str, filename: str, dest_dir: str
+    ) -> Path:
+        """Return local path to a GGUF file, downloading from HF Hub if absent.
+
+        **Detailed explanation for engineers:**
+            First checks whether the file is already present in any of the
+            standard cache directories via ``is_cached()`` / ``_build_path()``.
+            If not found, calls ``pre_download_and_verify()`` which surfaces
+            the exact download error if it fails.  Raises ``FileNotFoundError``
+            (not ``GGUFModelNotFoundError``) so callers that don't import the
+            custom error class still get a clean, descriptive exception.
+
+        Args:
+            hf_repo: HuggingFace repo ID.
+            filename: Exact GGUF filename in the repo.
+            dest_dir: Directory to download into when not already cached.
+
+        Returns:
+            ``Path`` to the ``.gguf`` file.
+
+        Raises:
+            FileNotFoundError: If the file is absent and download failed.
+
+        Spec: REQ-INFRA-073
+        """
+        # Check the resolver's configured cache_dir first (no-download, just existence).
+        if self.is_cached(hf_repo):
+            cached_path = self._build_path(hf_repo, self.config.default_quantization)
+            return Path(cached_path)
+
+        # Also check dest_dir directly for the exact filename.
+        dest_path = Path(dest_dir) / filename
+        if dest_path.exists() and dest_path.stat().st_size > 0:
+            return dest_path
+
+        result = self.pre_download_and_verify(hf_repo, filename, dest_dir)
+        if result["success"]:
+            return Path(result["path"])
+
+        raise FileNotFoundError(
+            f"GGUF file {filename!r} from {hf_repo!r} not in cache and download failed: "
+            f"{result['error']}"
+        )
 
     def is_cached(self, model_id: str, quantization: str | None = None) -> bool:
         """Return True if the resolved path exists on disk, False otherwise.

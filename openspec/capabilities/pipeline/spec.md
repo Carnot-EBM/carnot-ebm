@@ -1376,3 +1376,45 @@ via ``apply_env_autofix()``
   3. ``assert_live_env_if_gpu()`` does NOT raise ``RuntimeError``.
 
 **Spec traces:** REQ-INFRA-070, Exp 855, RETRO-LIVE-ENV-NOT-PROPAGATED
+
+
+### REQ-INFRA-073: GGUFCacheResolver MUST Support pre_download_and_verify()
+
+**Requirement:** ``GGUFCacheResolver`` MUST expose a ``pre_download_and_verify(hf_repo,
+filename, dest_dir)`` method that attempts to download a single GGUF file from
+HuggingFace Hub and returns a result dict ``{"success": bool, "path": str|None,
+"size_mb": float|None, "error": str|None}`` without raising.
+
+**Rationale (RETRO-SOTA-MODEL-DOWNLOAD):** Exp 857's ``download()`` call failed at
+runtime with an unknown error — the experiment artifact showed ``blocked_by`` with no
+diagnostic.  The new method makes failure explicit and diagnosable: callers receive
+the exact error string and can write an honest ``download_verified=False`` artifact
+instead of hitting an unhandled exception.  Exp 869 uses a small model (Qwen3.5-0.8B
+GGUF, ~500MB) to prove the mechanism end-to-end before Exp 870 trusts it for 20GB+ files.
+
+**Acceptance criteria:**
+- ``pre_download_and_verify()`` on a valid HF repo returns ``success=True`` and ``size_mb > 0``.
+- ``pre_download_and_verify()`` when ``huggingface_hub`` is absent returns ``success=False``
+  with a descriptive ``error`` string.
+- ``pre_download_and_verify()`` when ``hf_hub_download`` raises returns ``success=False``
+  with the exception message in ``error``.
+- After a successful call, ``resolver.download_tested`` is ``True``.
+- ``resolve_or_download()`` falls back to ``pre_download_and_verify()`` when the file
+  is not in the configured ``cache_dir``.
+
+**Spec traces:** REQ-INFRA-073, Exp 869, RETRO-SOTA-MODEL-DOWNLOAD
+
+
+### SCENARIO-INFRA-082: pre_download_and_verify() on Valid HF Repo Returns Success
+
+**Given** a ``GGUFCacheResolver`` with a writable ``dest_dir``
+**When** ``pre_download_and_verify("Qwen/Qwen3.5-0.8B-GGUF", "<filename>", dest_dir)``
+  is called with ``huggingface_hub.hf_hub_download`` returning a valid non-empty file
+**Then**
+  1. The return dict has ``success=True``.
+  2. ``size_mb`` is greater than 0.
+  3. ``path`` points to an existing file.
+  4. ``error`` is ``None``.
+  5. ``resolver.download_tested`` is ``True``.
+
+**Spec traces:** REQ-INFRA-073, Exp 869, RETRO-SOTA-MODEL-DOWNLOAD
