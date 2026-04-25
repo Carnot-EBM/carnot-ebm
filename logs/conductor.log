@@ -3331,3 +3331,27 @@ logs/conductor.log | 13 +++++++++++++
 2026-04-25 12:43:10,863 [conductor] RESEARCH STEP: Exp 866: KAN Hardware Complexity Analysis — arXiv 2604.03345 LUT Estimates (CPU)
 2026-04-25 12:43:10,863 [conductor] ============================================================
 2026-04-25 12:43:10,884 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 12:43:10,942 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 12:43:10,942 [conductor] Running test suite (smart subset)...
+2026-04-25 12:43:16,564 [conductor] Pre-check: 81 passed, 3 warnings in 2.84s
+2026-04-25 12:43:16,690 [conductor] Injected 84 symbol signatures from 3 files (AST outlines)
+2026-04-25 12:43:16,690 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All done. Summary:
+
+- **20/20 tests pass**, `python/carnot/analysis/kan_hw_analysis.py` has 100% coverage
+- **Deliverable written**: `results/experiment_866_kan_hardware_analysis.json`
+- **Key findings**:
+  - KAN N=8 MLP upper-bound: **14,400 LUTs** (over iCE40 HX8K 7,680 budget)
+  - Ising N=8 actual (Exp 859): **134 LUTs**
+  - `synthesis_priority = ISING_PRIORITY`
+  - `honest_verdict = kan_over_budget`
+  - Important caveat: actual KAEMEnergy uses sparse edges (density=0.1), so the real cost is ~1,440 LUTs — potentially within budget. The MLP formula is a conservative upper bound.
+- **REQ-KAN-020** added to `openspec/capabilities/kan/spec.md` with SCENARIO-KAN-030
+2026-04-25 12:47:57,068 [conductor] Claude Code completed (exit 0)
+2026-04-25 12:47:57,081 [conductor] Changes:
+logs/conductor.log                | 17 +++++++++++++++++
+ openspec/capabilities/kan/spec.md | 38 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+)
+2026-04-25 12:47:57,115 [conductor] DOGFOOD: Verification complete (total: 540 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 12:47:57,115 [conductor] Running test suite (smart subset)...
+2026-04-25 12:48:02,764 [conductor] Post-check: 81 passed, 3 warnings in 2.84s

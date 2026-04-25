@@ -1,0 +1,57 @@
+{
+  "experiment": 866,
+  "title": "KAN hardware complexity analysis \u2014 arXiv 2604.03345 LUT estimates",
+  "run_date": "20260425",
+  "started_at": "2026-04-25T16:47:26Z",
+  "finished_at": "2026-04-25T16:47:26Z",
+  "duration_s": 0.0,
+  "status": "success",
+  "kan_lut_estimate_n8": 14400,
+  "ising_lut_count": 134,
+  "synthesis_priority": "ISING_PRIORITY",
+  "within_ice40_budget": false,
+  "kan_fpga_roadmap_clear": false,
+  "priority_determined": true,
+  "sensitivity": {
+    "n4": 8000,
+    "n8": 14400,
+    "n16": 27200
+  },
+  "lut_detail": {
+    "layer1_luts": 12800,
+    "layer2_luts": 1600,
+    "total_luts": 14400,
+    "ice40_hx8k_budget": 7680,
+    "within_budget": false
+  },
+  "config": {
+    "n_inputs": 8,
+    "n_hidden": 16,
+    "n_knots": 10,
+    "luts_per_segment": 10,
+    "architecture_note": "2-layer MLP upper bound; actual KAEMEnergy is sparse graph-based with edge_density=0.1, so real LUT cost is ~10% of this estimate"
+  },
+  "honest_verdict": "kan_over_budget",
+  "analysis_complete": true,
+  "schema": [
+    "analysis_complete",
+    "config",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "ising_lut_count",
+    "kan_fpga_roadmap_clear",
+    "kan_lut_estimate_n8",
+    "lut_detail",
+    "priority_determined",
+    "run_date",
+    "sensitivity",
+    "started_at",
+    "status",
+    "synthesis_priority",
+    "title",
+    "within_ice40_budget"
+  ],
+  "invariant_violations": []
+}
