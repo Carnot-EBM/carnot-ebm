@@ -1,0 +1,175 @@
+{
+  "schema": "carnot.operational_retro.v42",
+  "milestone": "2026.04.67",
+  "retro_type": "milestone_close",
+  "retro_date": "20260425",
+  "experiment": 879,
+  "title": "Milestone 2026.04.67 Operational Retrospective",
+  "started_at": "2026-04-25T21:01:15.754619+00:00",
+  "finished_at": "2026-04-25T21:01:15.795594+00:00",
+  "duration_s": 0.041,
+  "experiment_count": 806,
+  "experiments_this_milestone": 11,
+  "experiments_completed": 7,
+  "experiments_blocked": 2,
+  "status_counts": {
+    "success": 7,
+    "failed": 1,
+    "blocked": 2,
+    "unknown": 1
+  },
+  "wall_time_minutes": 12.5696,
+  "per_experiment_avg_minutes": 1.1427,
+  "prior_milestone_wall_time_minutes": 4107.0,
+  "delta_vs_prior_minutes": -4094.4304,
+  "wall_time_regression": false,
+  "slowest_5": [
+    {
+      "exp_id": 876,
+      "duration_min": 11.6167
+    },
+    {
+      "exp_id": 871,
+      "duration_min": 0.5885
+    },
+    {
+      "exp_id": 877,
+      "duration_min": 0.124
+    },
+    {
+      "exp_id": 872,
+      "duration_min": 0.1173
+    },
+    {
+      "exp_id": 870,
+      "duration_min": 0.1167
+    }
+  ],
+  "n_criteria_met": 4,
+  "n_criteria_total": 11,
+  "criteria": {
+    "manifest_enforcer_deployed": true,
+    "download_verified": false,
+    "live_code_repair_positive": false,
+    "live_cascade_benchmark": false,
+    "jepa_ood_improved": false,
+    "cascade_deployed": false,
+    "streaming_cot_wired": true,
+    "fr11_tier2_loop_closed": true,
+    "inertia_5x": false,
+    "vjepa_viable": true,
+    "hallusae_closed": false
+  },
+  "retros_closed_this_milestone": [],
+  "retros_closed_count": 0,
+  "open_retros": [
+    "RETRO-MANIFEST-FULL-SCOPE",
+    "RETRO-JEPA-OOD",
+    "RETRO-SVAMP-ZERO-AUC",
+    "RETRO-XILINX-TOOLS-UNAVAILABLE",
+    "RETRO-SOTA-MODEL-DOWNLOAD",
+    "RETRO-HALLUSAE-AUC-BELOW-THRESHOLD",
+    "RETRO-INERTIA-SWEEPS-TARGET-MISSED"
+  ],
+  "open_retros_count": 7,
+  "governance": {
+    "manifest_enforcer_deployed": true,
+    "slowest5_governance_violation": false,
+    "slowest5_exp_ids": [
+      870,
+      871,
+      872,
+      876,
+      877
+    ],
+    "retired_exp_ids_in_slowest5": []
+  },
+  "gpu_state_at_retro": {
+    "gpu_available": true,
+    "gpu_count": 2,
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_used_mib": "4 MiB",
+        "memory_total_mib": "24576 MiB",
+        "utilization_pct": "0 %"
+      },
+      {
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_used_mib": "4 MiB",
+        "memory_total_mib": "24576 MiB",
+        "utilization_pct": "0 %"
+      }
+    ]
+  },
+  "honest_verdict": "4/11_criteria_met_0_retros_closed_STREAMING_COT_WIRED_FR11_TIER2_LOOP_CLOSED_VJEPA_TIER3_SEED_VIABLE_MANIFEST_ENFORCER_DEPLOYED_NO_LIVE_GPU_NO_CODE_REPAIR_POSITIVE",
+  "invariant_violations": [],
+  "per_experiment_summary": [
+    {
+      "exp_id": 868,
+      "status": "success",
+      "honest_verdict": "governance_ready",
+      "duration_s": 0.002
+    },
+    {
+      "exp_id": 869,
+      "status": "failed",
+      "honest_verdict": "download_failed",
+      "duration_s": 0.131
+    },
+    {
+      "exp_id": 870,
+      "status": "blocked",
+      "honest_verdict": "blocked",
+      "duration_s": 7.0
+    },
+    {
+      "exp_id": 871,
+      "status": "success",
+      "honest_verdict": "simulation_fallback",
+      "duration_s": 35.312
+    },
+    {
+      "exp_id": 872,
+      "status": "success",
+      "honest_verdict": "jepa_v25_still_blocked",
+      "duration_s": 7.037
+    },
+    {
+      "exp_id": 873,
+      "status": "blocked",
+      "honest_verdict": "blocked",
+      "duration_s": 0.1
+    },
+    {
+      "exp_id": 874,
+      "status": "success",
+      "honest_verdict": "streaming_cot_wired",
+      "duration_s": 0.101
+    },
+    {
+      "exp_id": 875,
+      "status": "success",
+      "honest_verdict": "fr11_tier2_loop_closed",
+      "duration_s": 0.039
+    },
+    {
+      "exp_id": 876,
+      "status": "success",
+      "honest_verdict": "sweeps_improved_below_5x",
+      "duration_s": 697.0
+    },
+    {
+      "exp_id": 877,
+      "status": null,
+      "honest_verdict": "tier3_seed_viable",
+      "duration_s": 7.44
+    },
+    {
+      "exp_id": 878,
+      "status": "success",
+      "honest_verdict": "below_v1",
+      "duration_s": 0.012
+    }
+  ]
+}
