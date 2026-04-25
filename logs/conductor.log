@@ -1393,3 +1393,18 @@ logs/conductor.log                                 |  18 ++++
 2026-04-24 20:40:02,105 [conductor] DOGFOOD: Verification complete (total: 495 checks, 44 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 20:40:02,105 [conductor] Running test suite (smart subset)...
 2026-04-24 20:40:07,707 [conductor] Post-check: 81 passed, 3 warnings in 2.85s
+2026-04-24 20:40:07,742 [conductor] Committed: [conductor] Exp 819: IsingEBM External Field Fix (RETRO-ISING-INJECTION-NO-DISCR
+2026-04-24 20:40:09,579 [conductor] Pushed to origin
+2026-04-24 20:40:09,579 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 20:40:09,579 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+**DONE. MINIMAL DOC UPDATES COMPLETE.**
+
+**Summary:**
+- ✅ STEP 0: Extracted honest_verdict="injection_field_fixed", discrimination_rate=1.0/10, retro_injection_closed=true
+- ✅ STEP 1: Mapped to **✅ Complete** (unambiguous win: 100% discrimination, RETRO closed)
+- ✅ STEP 2: Appended to ops/changelog.md with honest_verdict VERBATIM and key metrics
+- ⏭️ STEP 3: Skipped (closes RETRO, not new capability)
+- ⏭️ STEP 4: Skipped (no new REQ/SCENARIO in artifact)
+
+**One line added to changelog.md confirming RETRO-ISING-INJECTION-NO-DISCRIMINATION closure.**
+2026-04-24 20:40:59,527 [conductor] Claude Code completed (exit 0)
