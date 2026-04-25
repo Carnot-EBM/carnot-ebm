@@ -1872,6 +1872,58 @@ def research_step(
         ))
         return True
 
+    # Pre-gate check (cheap, ~50ms): if the task declares `gated_on:` in
+    # the roadmap YAML and any prerequisite experiment's artifact fails
+    # the gate condition, write a blocked artifact directly and skip the
+    # 5-9 min Sonnet call entirely. Tasks without `gated_on` pass
+    # vacuously, so the existing roadmap continues working unchanged.
+    try:
+        sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+        from conductor_gates import (  # type: ignore[import-not-found]
+            evaluate_gates as _eval_gates,
+            write_blocked_artifact as _write_blocked,
+        )
+        gate_check = _eval_gates(task, results_dir=PROJECT_ROOT / "results")
+        if not gate_check.passed:
+            logger.warning(
+                "Pre-gate check FAILED: %s — writing blocked artifact and skipping Sonnet",
+                gate_check.summary,
+            )
+            blocked_path = _write_blocked(
+                task, gate_check, results_dir=PROJECT_ROOT / "results",
+            )
+            if blocked_path is not None:
+                logger.info("Blocked artifact written: %s", blocked_path.name)
+                # Commit the blocked artifact so the in-process reconciler
+                # (or the Haiku doc-recon path) can pick it up downstream.
+                if git_has_changes():
+                    for guarded in [
+                        "scripts/research_conductor.py", "research-roadmap.yaml",
+                    ]:
+                        _, gdiff, _ = run_cmd(
+                            ["git", "diff", "--name-only", "--", guarded],
+                        )
+                        if gdiff.strip():
+                            run_cmd(["git", "checkout", "--", guarded])
+                    git_commit_and_push(
+                        f"[conductor] Pre-gate block: {task['title']}\n\n"
+                        f"{gate_check.summary}\n",
+                        push=push,
+                    )
+                log_step(task["title"], "GATE_BLOCK", gate_check.summary)
+                return True
+            # write_blocked returned None — task id wasn't parseable; fall
+            # through to the Sonnet path so the experiment script's own
+            # gate logic still runs.
+            logger.warning(
+                "Pre-gate detected failure but could not write blocked "
+                "artifact; falling through to Sonnet"
+            )
+    except Exception:
+        logger.exception(
+            "Pre-gate check raised; falling through to Sonnet (defensive)"
+        )
+
     # Preserve any dirty state from previous interrupted runs by committing it.
     # Previous behavior (git checkout -- .) destroyed uncommitted experiment
     # deliverables when claude -p was killed mid-run. Now we commit everything
@@ -2121,7 +2173,16 @@ def research_step(
     # Phase 3 / infrastructure work, Sonnet for routine scaffolding. Absence of
     # the field falls through to AGENT_MODEL (default Sonnet).
     task_model = task.get("model")
-    success, output = run_agent(prompt, max_turns=50, timeout=1200,
+    # Per-experiment max_turns hint via YAML "max_turns:" field. Default 50
+    # mirrors the historical hard-coded value; simple experiments (CPU-only
+    # retros, doc passes, configuration changes) can opt into a smaller budget
+    # to free quota and shave wall time. Bounds-checked in select_max_turns.
+    try:
+        from conductor_gates import select_max_turns as _select_max_turns  # type: ignore[import-not-found]
+        task_max_turns = _select_max_turns(task)
+    except ImportError:
+        task_max_turns = 50
+    success, output = run_agent(prompt, max_turns=task_max_turns, timeout=1200,
                                  model_override=task_model,
                                  deliverable_path=task.get("deliverable"))
 
