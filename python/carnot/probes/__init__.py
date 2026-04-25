@@ -6,6 +6,7 @@
     Tier 0a–0f probes predated this module; Tier 0g onwards live here.
 """
 
+from carnot.probes.hallusae_geometric_probe import HalluSAEGeometricProbe
 from carnot.probes.streaming_cot_detector import StreamingCoTHalluDetector
 
-__all__ = ["StreamingCoTHalluDetector"]
+__all__ = ["HalluSAEGeometricProbe", "StreamingCoTHalluDetector"]

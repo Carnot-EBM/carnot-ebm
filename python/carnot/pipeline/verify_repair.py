@@ -183,6 +183,17 @@ class VerificationResult:
     Set by the caller after running StreamingCoTHalluDetector.is_streaming_unstable().
     Advisory only — does not affect the verified flag or repair logic.
     Spec: REQ-PROBE-040"""
+    geometric_energy: float = 0.0
+    """Mean L2 distance of CoT steps from the grounded manifold centroid in TF-IDF
+    (SAE proxy) feature space.  Computed by HalluSAEGeometricProbe (Tier 0i).
+    Higher values indicate the trajectory visited geometrically distant regions
+    relative to the reference correct-reasoning set.  Advisory only.
+    Spec: REQ-PROBE-050"""
+    hallusae_anomalous: bool = False
+    """True when Tier 0i HalluSAEGeometricProbe.geometric_energy exceeds its threshold.
+    Set by the caller after running HalluSAEGeometricProbe.is_anomalous().
+    Advisory only — does not affect the verified flag or repair logic.
+    Spec: REQ-PROBE-050"""
 
 
 @dataclass

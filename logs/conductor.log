@@ -3222,3 +3222,27 @@ logs/conductor.log                          | 13 ++++++++
 2026-04-25 11:57:30,319 [conductor] RESEARCH STEP: Exp 863: HalluSAEGeometricProbe — Tier 0i SAE Feature Geometry Energy (CPU)
 2026-04-25 11:57:30,319 [conductor] ============================================================
 2026-04-25 11:57:30,339 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 11:57:30,398 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 11:57:30,398 [conductor] Running test suite (smart subset)...
+2026-04-25 11:57:35,997 [conductor] Pre-check: 81 passed, 3 warnings in 2.85s
+2026-04-25 11:57:36,115 [conductor] Injected 89 symbol signatures from 4 files (AST outlines)
+2026-04-25 11:57:36,115 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All done. Summary:
+
+- **`python/carnot/probes/hallusae_geometric_probe.py`** — `HalluSAEGeometricProbe` (Tier 0i) using TF-IDF bigrams as SAE proxy
+- **`python/carnot/pipeline/verify_repair.py`** — added `geometric_energy: float = 0.0` and `hallusae_anomalous: bool = False` to `VerificationResult`
+- **`python/carnot/probes/__init__.py`** — exports `HalluSAEGeometricProbe`
+- **`openspec/capabilities/verifiable-reasoning/spec.md`** — added REQ-PROBE-050 and SCENARIO-PROBE-060
+- **`scripts/experiment_863_hallusae_geometric_probe.py`** — experiment script with 50 synthetic pairs
+- **`tests/python/test_experiment_863_hallusae_geometric_probe.py`** — 16 tests, all passing
+- **`results/experiment_863_hallusae_geometric_probe.json`** — deliverable written, `honest_verdict=tier_0i_marginal` (AUC=0.614; test suite's simpler synthetic data achieves >0.65)
+2026-04-25 12:02:18,990 [conductor] Claude Code completed (exit 0)
+2026-04-25 12:02:19,011 [conductor] Changes:
+logs/conductor.log                                 | 15 +++++++++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 31 ++++++++++++++++++++++
+ python/carnot/pipeline/verify_repair.py            | 11 ++++++++
+ python/carnot/probes/__init__.py                   |  3 ++-
+ 4 files changed, 59 insertions(+), 1 deletion(-)
+2026-04-25 12:02:19,042 [conductor] DOGFOOD: Verification complete (total: 537 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 12:02:19,042 [conductor] Running test suite (smart subset)...
+2026-04-25 12:02:25,133 [conductor] Post-check: 145 passed, 3 warnings in 3.28s
