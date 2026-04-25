@@ -2766,3 +2766,4 @@ python/ |
 | 2026-04-25 15:33 UTC | Exp 861: StreamingCoTHalluDetector — Tier 0g PHaS  | OK | 145 passed, 3 warnings in 3.27s |
 | 2026-04-25 15:47 UTC | Exp 862: LagrangeAdaptiveIsingConstraints — FR-11  | OK | 81 passed, 3 warnings in 2.88s |
 | 2026-04-25 16:02 UTC | Exp 863: HalluSAEGeometricProbe — Tier 0i SAE Feat | OK | 145 passed, 3 warnings in 3.28s |
+| 2026-04-25 16:18 UTC | Exp 864: FR-11 Tier 2 Integration v5 — Wire All Ne | OK | 81 passed, 3 warnings in 2.90s |
