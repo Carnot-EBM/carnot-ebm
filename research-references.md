@@ -4290,3 +4290,80 @@ thermodynamic computing Ising FPGA
   but adversarial accuracy remains inconsistent, apply CHARM calibration using HumanEval
   ground truth as preference anchors.
 - **When to incorporate:** After Exp 846 confirms warm-start works. Target .66.
+
+## 2026-04-25 arxiv Scan (Milestone 2026.04.68 Planning)
+
+### Hallucination Detection in LLMs Using Spectral Features of Attention Maps
+- **Paper:** arXiv 2502.17598 (February 2025)
+- **What:** Uses eigenvalues of the graph Laplacian of attention maps to predict hallucinations.
+  The intuition: attention maps in hallucinating passages have flatter eigenvalue spectra
+  (more diffuse attention) than factually correct ones. Computes spectral energy as
+  E_spectral = sum_i lambda_i * log(lambda_i + epsilon) and trains a lightweight linear probe.
+  Achieves F1 > 0.82 at less than 0.5ms overhead per token on Llama/Qwen families.
+- **Relevance to Carnot:** The cascade currently lacks a spectral-geometry tier. All existing
+  Tier 0 probes operate on token probabilities (Tier 0b, 0e) or CoT step boundaries
+  (Tier 0c, 0g). A spectral attention probe is geometrically orthogonal to all existing tiers
+  — it measures the spatial distribution of attention weight, not its magnitude. The 0.5ms
+  overhead makes it feasible as Tier 0h advisory. Specifically: compute spectral energy over
+  each CoT step's attention map, flag is_spectrally_diffuse in VerificationCertificate.
+  The bigram proxy (as used in NUP Probe v4 and HalluSAE) can approximate the Laplacian
+  without requiring actual attention map access — makes it CPU-only.
+- **Concrete experiment:** Exp 885 — SpectralAttentionProbe (Tier 0h): implement a bigram-proxy
+  Laplacian energy probe over CoT text (token co-occurrence as adjacency). Compute spectral
+  entropy E = -sum lambda_i * log(lambda_i). Train linear probe on 50 synthetic CoT pairs.
+  Target: AUC > 0.70 as advisory Tier 0h. CPU-only implementation.
+- **When to incorporate:** Milestone 2026.04.68 — Phase 3 new probes (Exp 885).
+
+### Constrained Decoding for Code Generation via AST Token Masking
+- **Paper:** arXiv 2508.15866 (August 2025)
+- **What:** Implements a context-sensitive AST parser that constraints LLM token generation
+  at each step. For each partial code generation, a parser computes the set of valid next
+  tokens given the current AST state, masking the logit vector to prevent syntactically
+  invalid tokens from ever being sampled. Achieves 100% syntactic correctness on Python
+  output with less than 5% latency overhead.
+- **Relevance to Carnot:** Code repair currently runs post-hoc: Carnot waits for the LLM to
+  generate a syntactically invalid or semantically wrong response, then tries to fix it.
+  Constrained decoding is preventive: violations never enter the response because they are
+  masked out at generation time. Combined with Carnot's energy-based post-hoc verification,
+  this creates a two-layer defense: prevent syntactic violations (constrained decoding) then
+  catch semantic violations (Carnot). Expected effect: CodeExtractor false-positive rate
+  drops significantly because generated code is always syntactically valid, narrowing the
+  search space for semantic errors.
+- **Concrete experiment:** Exp 886 — ConstrainedDecodingPreFilter: implement a lightweight
+  Python AST validator that masks clearly-invalid next tokens during generation (e.g., reject
+  tokens that would produce syntax errors in a partial AST). Apply as a pre-filter before
+  VerifyRepairPipeline on HumanEval. Measure: FP rate reduction, pass@1 delta.
+- **When to incorporate:** Milestone 2026.04.68 — Phase 3 new capabilities (Exp 886).
+
+### Process Reward Models Meet Planning: Automatic Step-Level Reward Data Generation
+- **Paper:** arXiv 2604.17957 (April 2026)
+- **What:** Automatically generates step-level reward data for PRMs by running a planning
+  model (MCTS-style) and recording which intermediate steps lead to correct vs incorrect
+  final answers. This provides dense supervision at every reasoning step without human
+  annotation. Reduces data requirements for PRM training by 10x vs. human-annotated datasets.
+- **Relevance to Carnot:** JEPA's training corpus has only 57 real FoVer-labeled pairs
+  (from live GPU runs). That is far too few for OOD generalization. This paper's automatic
+  data generation approach could expand the corpus to 500+ pairs without additional human
+  effort: run Qwen3.5-0.8B on 200 GSM8K questions, use the ground-truth answer to label
+  each intermediate step as correct/incorrect, then use those labels as JEPA training targets.
+  This synthetic corpus would give VJEPA v2 enough data to generalize OOD.
+- **Concrete experiment:** Applies directly to Exp 883 (VJEPA v2 training) — generate
+  synthetic step-level labels from Qwen3.5-0.8B + GSM8K ground truth. Augments FoVer corpus.
+- **When to incorporate:** Milestone 2026.04.68 — Phase 2 VJEPA training (Exp 883).
+
+### Efficient Probabilistic Ising Machines with Full Parallel Updates (PIMI)
+- **Paper:** arXiv 2604.17109 — already referenced in .66 scan. Key detail missed:
+  The 15-25x sweep reduction is achieved ONLY with truly parallel spin updates (all spins
+  update simultaneously, not checkerboard). The inertia EMA (Exp 860 / Exp 876) is a
+  necessary but not sufficient condition — it prevents oscillations so that parallel updates
+  are stable. Without full parallelism, EMA alone gives only 2-3x reduction. Exp 876's
+  failure (2x achieved, 5x missed) was precisely because it used checkerboard updates with
+  EMA, not fully parallel updates with EMA. The v3 experiment must implement synchronous
+  full-parallel update as the primary change.
+- **Relevance to Carnot:** RETRO-INERTIA-SWEEPS-TARGET-MISSED root cause now diagnosed.
+  The fix is architectural (parallel update scheduling), not parameter-based (alpha tuning).
+- **Concrete experiment:** Exp 889 — iCE40 PIMI v3: implement truly parallel spin update
+  (ALL spins flip in same clock cycle based on h_ema from PREVIOUS cycle — no checkerboard).
+  EMA update uses h_ema_prev as input, h_ema_new as output in separate pipeline stages.
+  Python simulation first: compare parallel vs checkerboard at same alpha. Then Verilog.
+- **When to incorporate:** Milestone 2026.04.68 — Phase 5 hardware (Exp 889).
