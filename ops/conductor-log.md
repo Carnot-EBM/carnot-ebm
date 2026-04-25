@@ -2737,3 +2737,4 @@ python/ |
 | 2026-04-25 07:13 UTC | Exp 837: FR-11 Tier 1 Live Relay v3 (FR-11 mandato | OK | 81 passed, 3 warnings in 2.86s |
 | 2026-04-25 07:24 UTC | Exp 838: JEPA v24 Multi-Domain Deployment as Tier  | OK | 81 passed, 3 warnings in 2.82s |
 | 2026-04-25 07:41 UTC | Exp 839: KV260 iCE40 Bitstream Generation (CPU, ga | OK | 81 passed, 3 warnings in 2.96s |
+| 2026-04-25 08:05 UTC | Exp 840: Live Full Precision Benchmark v3 (GPU, CA | OK | 81 passed, 3 warnings in 5.77s |
