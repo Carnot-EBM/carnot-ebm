@@ -4223,3 +4223,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 864: FR-11 Tier 2 Integration v5 — Wire All New Probes + 5-Session Relay (CPU) (✅ Complete) — honest_verdict=fr11_tier2_confirmed; results/experiment_864_fr11_tier2_integration_v5.json
 - 2026-04-25: Exp 865: Constraint Memory Bank Compression — arXiv 2601.00756 K=32 Centroids (CPU) (✅ Complete) — honest_verdict=compression_viable; results/experiment_865_constraint_memory_compression.json
 - 2026-04-25: Exp 866: KAN Hardware Complexity Analysis — arXiv 2604.03345 LUT Estimates (CPU) (⚠️ Research Finding) — honest_verdict=kan_over_budget; results/experiment_866_kan_hardware_analysis.json
+- 2026-04-25: Exp 868: Pre-flight v16 — Manifest Enforcement Module + 7-RETRO Audit (CPU) (✅ Complete) — honest_verdict=governance_ready; results/experiment_868_preflight_v16.json
