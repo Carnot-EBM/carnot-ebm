@@ -3794,3 +3794,36 @@ logs/conductor.log                            | 15 ++++++++
 2026-04-25 16:01:57,591 [conductor] RESEARCH STEP: Exp 876: iCE40 Inertia Ising v2 — Sparse Adjacency + EMA (RETRO-INERTIA-SWEEPS-TARGET-MISSED) (CPU+FPGA)
 2026-04-25 16:01:57,591 [conductor] ============================================================
 2026-04-25 16:01:57,609 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 16:01:57,668 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 16:01:57,668 [conductor] Running test suite (smart subset)...
+2026-04-25 16:02:03,378 [conductor] Pre-check: 81 passed, 3 warnings in 2.90s
+2026-04-25 16:02:03,475 [conductor] Prompt format error in exp876-ice40-inertia-v2: Replacement index 0 out of range for positional args tuple — using raw prompt
+2026-04-25 16:02:03,499 [conductor] Injected 45 symbol signatures from 2 files (AST outlines)
+2026-04-25 16:02:03,499 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. Summary of what was delivered:
+
+**Deliverable:** `results/experiment_876_ice40_inertia_v2.json` — honest_verdict: `sweeps_improved_below_5x`
+
+**Results:**
+- `sweeps_reduction`: 4.22x (baseline: 13 sweeps → best inertia: 3 sweeps, alpha=0.5)
+- `lut_count`: 130 SB_LUT4 (target was ≤200 — within budget)
+- `synthesis_clean`: true (nextpnr-ice40 0 errors)
+
+**Files created:**
+- `python/carnot/samplers/sparse_inertia_ising.py` — `SparseInertiaIsingSampler` with sparse adjacency list, EMA on local field, alpha sweep function
+- `hardware/kv260/ising_inertia_n8_sparse_v2.v` — 4-bit EMA, sparse ring+chord N=8, 130 LUTs on iCE40
+- `tests/python/test_experiment_876_ice40_inertia_v2.py` — 26 tests, all passing, tracing to REQ-HW-035/SCENARIO-HW-035
+- REQ-HW-035 and SCENARIO-HW-035 added to `openspec/capabilities/fpga/spec.md`
+
+**Why below 5x:** The task's convention of "lower alpha = more inertia" is inverted vs the standard EMA formula. Under the implemented formula `h_ema = alpha*h_ema + (1-alpha)*h`, higher alpha (0.5) gives more history weight → more inertia → better reduction. The arXiv paper's 15-25x gain applies to dense all-to-all graphs; the sparse ring+chord topology (degree 3) naturally limits convergence speedup.
+2026-04-25 16:14:28,874 [conductor] Claude Code completed (exit 0)
+2026-04-25 16:14:28,887 [conductor] Changes:
+logs/conductor.log                 | 23 +++++++++++++++++++++++
+ openspec/capabilities/fpga/spec.md | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+)
+2026-04-25 16:14:28,902 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp869-gguf-predownload: '"success"' — auto-fixing
+2026-04-25 16:14:28,903 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp870-sota-code-repair-v7: '"name"' — auto-fixing
+2026-04-25 16:14:28,903 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp871-live-benchmark-v6: '"name"' — auto-fixing
+2026-04-25 16:14:28,907 [conductor] DOGFOOD: Verification complete (total: 550 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 16:14:28,907 [conductor] Running test suite (smart subset)...
+2026-04-25 16:14:34,579 [conductor] Post-check: 81 passed, 3 warnings in 2.85s

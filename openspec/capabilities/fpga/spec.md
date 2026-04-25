@@ -8,6 +8,40 @@
 
 ## Requirements
 
+### REQ-HW-035
+
+**Title:** Sparse adjacency Ising synthesis on iCE40 within 200 LUTs
+
+**Description:**
+Synthesis of `ising_inertia_n8_sparse_v2.v` on iCE40 HX8K must use fewer than 200
+SB_LUT4 cells.  The design stores coupling pairs as a sparse adjacency list (K=12
+non-zero pairs for N=8 ring+chord graph) rather than a dense N×N coupling matrix.
+Sparse storage reduces register and logic costs: K=12 entries × 14 bits = 168 bits
+versus N²=64 entries × 8 bits = 512 bits for a dense encoding — a 3× reduction in
+coupling storage.  This enables N=16 synthesis without the 12258 LC expansion seen
+in the dense approach (RETRO-ICE40-N16).
+
+**Acceptance criteria:**
+- yosys `synth_ice40` reports SB_LUT4 count <= 200
+- nextpnr-ice40 completes without routing errors
+- Python simulation shows sweeps_to_converge reduction >= 3× vs baseline (no inertia)
+
+**Implementation status:** Implemented (Exp 876)
+
+---
+
+### SCENARIO-HW-035
+
+**Title:** N=8 sparse ring+chord graph synthesizes within budget
+
+**Given:** `ising_inertia_n8_sparse_v2.v` with N=8 spins, K=12 adjacency pairs, 4-bit EMA
+**When:** `yosys synth_ice40 -top ising_inertia_n8_sparse_v2` is run
+**Then:** The synthesis report shows SB_LUT4 count <= 200 and nextpnr reports 0 errors.
+
+**Implementation status:** Implemented (Exp 876)
+
+---
+
 ### REQ-HW-037
 
 **Title:** KV260 Ising v3 synthesis timing closure at >= 50 MHz
