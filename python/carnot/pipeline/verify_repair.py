@@ -178,6 +178,11 @@ class VerificationResult:
     use_lowrank_kaem: bool = False
     """True when the KAN fast-path tier used LowRankKAEMEnergy (n_vars <= 100, k=2).
     False for full-rank KAEMEnergy (n_vars > 100) or when KAN path was not taken."""
+    streaming_cot_unstable: bool = False
+    """True when Tier 0g StreamingCoTHalluDetector flagged the CoT as streaming-unstable.
+    Set by the caller after running StreamingCoTHalluDetector.is_streaming_unstable().
+    Advisory only — does not affect the verified flag or repair logic.
+    Spec: REQ-PROBE-040"""
 
 
 @dataclass

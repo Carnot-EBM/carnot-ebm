@@ -3147,3 +3147,28 @@ logs/conductor.log | 15 +++++++++++++++
 2026-04-25 11:28:58,684 [conductor] RESEARCH STEP: Exp 861: StreamingCoTHalluDetector — Tier 0g PHaS Prefix Signal (CPU)
 2026-04-25 11:28:58,684 [conductor] ============================================================
 2026-04-25 11:28:58,704 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 11:28:58,764 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 11:28:58,764 [conductor] Running test suite (smart subset)...
+2026-04-25 11:29:04,450 [conductor] Pre-check: 81 passed, 3 warnings in 2.80s
+2026-04-25 11:29:04,582 [conductor] Injected 128 symbol signatures from 4 files (AST outlines)
+2026-04-25 11:29:04,582 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+12/12 tests pass, deliverable JSON is stable. Done.
+
+**Summary:** Implemented StreamingCoTHalluDetector (Tier 0g) per arXiv 2601.02170:
+
+- `python/carnot/probes/streaming_cot_detector.py` — EMA-based PHaS rolling detector
+- `python/carnot/probes/__init__.py` — module init
+- `VerificationResult.streaming_cot_unstable: bool = False` added to `verify_repair.py`
+- `openspec/capabilities/verifiable-reasoning/spec.md` — REQ-PROBE-040 + SCENARIO-PROBE-050 appended
+- `scripts/experiment_861_streaming_cot_detector.py` — experiment script
+- `tests/python/test_experiment_861_streaming_cot_detector.py` — 12 tests, all passing
+- `results/experiment_861_streaming_cot_detector.json` — AUC_streaming=1.0, verdict=tier_0g_viable
+2026-04-25 11:33:27,459 [conductor] Claude Code completed (exit 0)
+2026-04-25 11:33:27,481 [conductor] Changes:
+logs/conductor.log                                 | 17 +++++++++++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 29 ++++++++++++++++++++++
+ python/carnot/pipeline/verify_repair.py            |  5 ++++
+ 3 files changed, 51 insertions(+)
+2026-04-25 11:33:27,506 [conductor] DOGFOOD: Verification complete (total: 535 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 11:33:27,506 [conductor] Running test suite (smart subset)...
+2026-04-25 11:33:33,650 [conductor] Post-check: 145 passed, 3 warnings in 3.27s
