@@ -3017,3 +3017,27 @@ logs/conductor.log                                 | 14 +++++++++++++
 2026-04-25 10:20:27,279 [conductor] RESEARCH STEP: Exp 857: SOTA GGUF Download + Code Repair v6 — Qwen3.6-35B Live (GPU, GATED on 855+856)
 2026-04-25 10:20:27,279 [conductor] ============================================================
 2026-04-25 10:20:27,300 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 10:20:27,359 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 10:20:27,359 [conductor] Running test suite (smart subset)...
+2026-04-25 10:20:32,905 [conductor] Pre-check: 81 passed, 3 warnings in 2.78s
+2026-04-25 10:20:33,024 [conductor] Injected 77 symbol signatures from 2 files (AST outlines)
+2026-04-25 10:20:33,024 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. Summary:
+
+**Deliverable**: `results/experiment_857_sota_code_repair_v6.json` — written and stable.
+
+**Tests**: 24/24 passing (`tests/python/test_experiment_857_sota_code_repair_v6.py`).
+
+**Code changes**:
+- `python/carnot/pipeline/gguf_cache.py`: Added `can_download: bool = True` class attribute, `download(hf_repo, filename, cache_dir) -> Path` method, and extended `resolve()` to auto-download when file absent, wrapping any download exception in `GGUFModelNotFoundError`.
+- `scripts/experiment_857_sota_code_repair_v6.py`: New experiment script with gates on Exp 855/856, EnvPropagationGuard integration, GGUFCacheResolver-with-download, and full verify-repair pipeline wiring.
+
+**Artifact verdict**: `blocked` / `inference_mode=live_gpu` — CARNOT_FORCE_LIVE propagated correctly (Exp 855 fix confirmed working), but the HF filename convention `unsloth_Qwen3.6-35B-A3B-GGUF-Q4_K_M.gguf` doesn't match the actual file in the repo (new RETRO for next run).
+2026-04-25 10:27:41,269 [conductor] Claude Code completed (exit 0)
+2026-04-25 10:27:41,282 [conductor] Changes:
+logs/conductor.log                   | 17 +++++++
+ python/carnot/pipeline/gguf_cache.py | 88 ++++++++++++++++++++++++++++++------
+ 2 files changed, 91 insertions(+), 14 deletions(-)
+2026-04-25 10:27:41,314 [conductor] DOGFOOD: Verification complete (total: 531 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 10:27:41,315 [conductor] Running test suite (smart subset)...
+2026-04-25 10:27:47,051 [conductor] Post-check: 81 passed, 3 warnings in 2.92s
