@@ -2206,3 +2206,27 @@ Error: Reached max turns (50)2026-04-25 02:26:48,508 [conductor] Claude Code fai
 2026-04-25 03:12:51,826 [conductor] RESEARCH STEP: Exp 837: FR-11 Tier 1 Live Relay v3 (FR-11 mandatory, GPU, gated on Exp 836 delta>0)
 2026-04-25 03:12:51,826 [conductor] ============================================================
 2026-04-25 03:12:51,840 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 03:12:51,893 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 03:12:51,893 [conductor] Running test suite (smart subset)...
+2026-04-25 03:12:57,536 [conductor] Pre-check: 81 passed, 3 warnings in 2.90s
+2026-04-25 03:12:57,662 [conductor] Injected 116 symbol signatures from 4 files (AST outlines)
+2026-04-25 03:12:57,662 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+============================================================
+  Carnot Research Conductor
+  Autonomous research via Claude Code
+============================================================
+  Agent: claude (claude)
+  Model: sonnet
+  Project: /home/ianblenke/github.com/ianblenke/carnot
+  CARNOT_FORCE_LIVE: 1
+  Mode: continuous (every 10 min)
+  Dogfood memory: 511 checks, 47 brace fixes, 0 code violations
+
+Blocked artifact written. Exp 836 `honest_verdict` is `"write_path_fixed_no_delta"` — the gate requires `"constraint_accumulation_fixed"` (delta > 0), which Exp 836 did not achieve (delta_overall = 0.0). Exp 837 is blocked; no further work performed.
+2026-04-25 03:13:27,285 [conductor] Claude Code completed (exit 0)
+2026-04-25 03:13:27,297 [conductor] Changes:
+logs/conductor.log | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+2026-04-25 03:13:27,315 [conductor] DOGFOOD: Verification complete (total: 512 checks, 47 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 03:13:27,315 [conductor] Running test suite (smart subset)...
+2026-04-25 03:13:32,968 [conductor] Post-check: 81 passed, 3 warnings in 2.86s
