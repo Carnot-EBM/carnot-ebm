@@ -30,6 +30,99 @@ Spawn an adversarial sub-agent to review non-trivial changes before reporting co
 
 The verify-repair pipeline is Phase 1, not the endgame. Every architectural decision should ask: "does this move us toward the foundation model?"
 
+## Decentralization-Respecting Design Constraints (MANDATORY)
+
+Every architectural decision must also ask: **"does this preserve users'
+ability to run Carnot without depending on a closed-source vendor we do
+not control?"** If the honest answer is no, the decision is wrong.
+
+**The threat model**: closed-source frontier models can be deprecated,
+re-priced, withdrawn, or geofenced at any time. APIs change. Vendors
+fail or capture markets. Cloud providers raise prices once switching
+costs are high enough. Distribution channels (model hubs, package
+registries, container registries) become gatekeepers. Carnot's value
+proposition — second-pair-of-eyes verification grounded in objective
+energy — must survive any of these failures.
+
+**The non-negotiable rules**:
+
+1. **Local-first using open models, always.** Every Carnot capability
+   must work end-to-end with locally-hosted open-weight models
+   (Qwen / Gemma / Llama / equivalents). The `cached_sota_pair()`
+   helper in `scripts/experiment_template.py` is the canonical
+   pattern; experiments that depend on a closed-weight model with no
+   local fallback are not acceptable.
+
+2. **Closed frontier-model integration is optional, never required.**
+   Carnot may be more *useful* when paired with Claude / GPT / Gemini
+   for capabilities those models uniquely provide (broad world
+   knowledge, long-context recall). It must never be *broken* without
+   them. If a feature only works with a closed-weight upstream, it
+   ships behind an opt-in flag with a clearly-labelled
+   "decentralization-degraded" tier in the docs.
+
+3. **Distribution mirroring for any published artifact.** Trained
+   weights, model cards, datasets, and Python packages must be
+   published through at least two independent channels (e.g.
+   HuggingFace + IPFS, or HF + a Carnot-controlled gitea/git mirror).
+   The conductor's multi-URL git remote (gitea + github) is the
+   precedent — apply the same pattern to model weights and any other
+   downstream-consumed artifact. Single-point distribution failure
+   is unacceptable.
+
+4. **Multiple integration surfaces in parallel.** Carnot exposes its
+   capabilities via Python API, CLI, MCP server, and HTTP REST. None
+   of these is allowed to become the *only* well-trodden path. If
+   one integration surface drifts ahead in features and the others
+   atrophy, the project becomes implicitly locked into that surface.
+   Treat this as a review gate on any change touching public API
+   surfaces.
+
+5. **Hardware portability as a political requirement, not just an
+   engineering one.** Already encoded in REQ-KONA-006 and the
+   `SamplerBackend` protocol. The political dimension: nation-states,
+   institutions, and individuals subject to compute-resource
+   sanctions or supply-chain constraints must still be able to run
+   Carnot. The KV260 / ECP5 / Nexus open-FPGA tracks and the future
+   Extropic XTR-0 path are *sovereignty infrastructure*, not just
+   accelerators.
+
+6. **Per-call data minimization on closed-weight LLM integrations.**
+   Any closed-weight call must declare a `data_handling_class`
+   (`minimize` / `summarize` / `redact` / `pass_through`) with
+   `minimize` as the default. Customer prompts, internal reasoning
+   traces, and verification artifacts must not flow through
+   closed-weight providers without an explicit, logged decision.
+
+7. **No vendor-specific abstractions in the core.** The core
+   verifier stack (`python/carnot/verify/`, `python/carnot/pipeline/`)
+   must not import from vendor-specific SDKs. Vendor adapters live
+   in clearly-named submodules (`closed_weight/`, `proprietary/`)
+   that the core depends on through abstract protocols
+   (`SamplerBackend`, `LLMComponent`, etc.) — never directly.
+
+**How to apply this rule:**
+
+- When drafting a new change proposal, add a one-line "Decentralization
+  implications" subsection answering whether the proposal preserves
+  rules 1–7.
+- When reviewing code, refuse changes that add closed-weight
+  dependencies to the core or that remove a local fallback path.
+- When publishing weights or papers, ensure mirroring (rule 3) is in
+  place *before* the announcement, not after.
+- When the conductor or planner generates work, the proposals it
+  drafts must respect these rules. The planner prompt at
+  `scripts/research_conductor.py:_plan_next_milestone()` should be
+  updated to include this section as required reading.
+
+**Why this is in the Project Vision, not a Risks section.** Phase 3's
+endgame is an open-source foundation model. Every decision before then
+either compounds toward sovereignty or compounds toward enclosure.
+There is no neutral middle position that will accidentally land on
+sovereignty at Phase 3; it has to be a continuous, conscious choice
+from Phase 1 onward. Naming it explicitly here makes the choice
+auditable.
+
 ## Operational Principles
 
 - **Meta-reflection:** After milestones, evaluate HOW work was executed, not just WHAT was produced. Feed operational improvements back into the process.
