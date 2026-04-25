@@ -199,6 +199,17 @@ class VerificationResult:
     Set by the caller after running HalluSAEGeometricProbe.is_anomalous().
     Advisory only — does not affect the verified flag or repair logic.
     Spec: REQ-PROBE-050"""
+    spectral_diffuse: bool = False
+    """True when Tier 0h SpectralAttentionProbe flagged the CoT as spectrally diffuse.
+    Populated by VerifyRepairPipeline.verify() when CARNOT_SPECTRAL_PROBE=1.
+    Advisory only — does not affect the verified flag or repair logic.
+    Spec: REQ-VERIFY-146, SCENARIO-VERIFY-173"""
+    spectral_entropy_mean: float = 0.0
+    """Mean per-step spectral entropy from SpectralAttentionProbe.
+    Range [0, log(k)] where k = number of eigenvalues used (default 10).
+    Higher = more diffuse attention spectrum = higher hallucination risk.
+    Populated alongside spectral_diffuse when CARNOT_SPECTRAL_PROBE=1.
+    Spec: REQ-VERIFY-146, SCENARIO-VERIFY-174"""
 
 
 @dataclass
@@ -293,6 +304,12 @@ class VerifyRepairPipeline:
     # Advisory only — does not affect the verified flag or short-circuit Ising.
     # Spec: REQ-VERIFY-140
     STREAMING_COT_ENABLED: bool = os.getenv("CARNOT_STREAMING_COT", "0") == "1"
+
+    # When CARNOT_SPECTRAL_PROBE=1, run SpectralAttentionProbe (Tier 0h) in
+    # verify() and populate result.spectral_diffuse + result.spectral_entropy_mean.
+    # Advisory only — does not affect the verified flag or short-circuit Ising.
+    # Spec: REQ-VERIFY-146
+    SPECTRAL_PROBE_ENABLED: bool = os.getenv("CARNOT_SPECTRAL_PROBE", "0") == "1"
 
     def __init__(
         self,
@@ -1453,6 +1470,32 @@ class VerifyRepairPipeline:
                 "final_phas": _streaming_cot_result.final_phas,
                 "n_steps": _streaming_cot_result.n_steps,
             }
+
+        # Tier 0h SpectralAttentionProbe advisory (REQ-VERIFY-146).
+        # When CARNOT_SPECTRAL_PROBE=1, extract CoT steps from the response and run
+        # the bigram Laplacian spectral entropy probe.
+        # is_spectrally_diffuse=True means the attention spectrum is flat → hallucination risk.
+        # Advisory only — does NOT short-circuit the cascade or affect verified flag.
+        # WHY re-read env at call time: mirrors Tier 0g rationale — class attribute is
+        # evaluated at import time so in-process test/experiment env overrides are ignored.
+        _spectral_probe_enabled = self.SPECTRAL_PROBE_ENABLED or (
+            os.getenv("CARNOT_SPECTRAL_PROBE", "0") == "1"
+        )
+        if _spectral_probe_enabled:
+            from carnot.verify.spectral_attention_probe import SpectralAttentionProbe  # noqa: PLC0415
+            from carnot.pipeline.streaming_cot import extract_cot_steps  # noqa: PLC0415
+
+            _spectral_steps = extract_cot_steps(response)
+            if _spectral_steps:
+                _spectral_probe = SpectralAttentionProbe()
+                _spectral_result = _spectral_probe.predict(_spectral_steps)
+                result.spectral_diffuse = _spectral_result["is_spectrally_diffuse"]
+                result.spectral_entropy_mean = _spectral_result["spectral_entropy_mean"]
+                result.certificate["tier_0h_spectral"] = {
+                    "is_spectrally_diffuse": _spectral_result["is_spectrally_diffuse"],
+                    "spectral_entropy_mean": _spectral_result["spectral_entropy_mean"],
+                    "n_steps": len(_spectral_steps),
+                }
 
         if tracker is not None:
             self._update_tracker(tracker, result)
