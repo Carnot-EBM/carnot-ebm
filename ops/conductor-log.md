@@ -2720,3 +2720,4 @@ python/ |
 | 2026-04-25 02:23 UTC | Exp 824: JEPA v23 LIMO Curated Corpus (RETRO-JEPA- | OK | 121 passed, 3 warnings in 2.96s |
 | 2026-04-25 02:39 UTC | Exp 825: JEPA v23 Cross-Domain Eval + FR-11 Tier 3 | OK | 81 passed, 3 warnings in 2.88s |
 | 2026-04-25 02:56 UTC | Exp 826: PRM Cross-Domain Benchmark (arXiv 2506.00 | OK | 91 passed, 3 warnings in 3.19s |
+| 2026-04-25 03:16 UTC | Exp 827: KV260 nextpnr-xilinx Synthesis v3 (gated  | OK | 81 passed, 3 warnings in 2.83s |
