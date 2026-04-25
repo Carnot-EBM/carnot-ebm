@@ -1,0 +1,165 @@
+{
+  "schema": "carnot.operational_retro.v38",
+  "milestone": "2026.04.63",
+  "retro_date": "20260425",
+  "experiment": 830,
+  "title": "Milestone 2026.04.63 Operational Retrospective",
+  "started_at": "2026-04-25T04:06:42.641619Z",
+  "finished_at": "2026-04-25T04:06:42.641643Z",
+  "experiments_evaluated": [
+    819,
+    820,
+    821,
+    822,
+    823,
+    824,
+    825,
+    826,
+    827,
+    828,
+    829
+  ],
+  "experiment_verdicts": {
+    "819": "injection_field_fixed",
+    "820": "import_fixed_repair_positive",
+    "821": "constraint_addition_no_delta_live",
+    "822": "arbiter_still_wrong",
+    "823": "blocked_gate",
+    "824": "jepa_v23_viable",
+    "825": "jepa_v23_below_random_ood",
+    "826": "below_baseline",
+    "827": "synthesis_blocked",
+    "828": "probe_viable",
+    "829": "hf_publish_success"
+  },
+  "success_criteria": [
+    {
+      "criterion": "injection_field_fixed",
+      "experiment": 819,
+      "target": "discrimination_rate >= 0.8",
+      "met": true,
+      "actual_value": 1.0
+    },
+    {
+      "criterion": "gguf_import_fixed",
+      "experiment": 820,
+      "target": "honest_verdict != still_blocked",
+      "met": true,
+      "actual_value": "import_fixed_repair_positive"
+    },
+    {
+      "criterion": "constraint_addition_works_live",
+      "experiment": 821,
+      "target": "delta_overall > 0",
+      "met": false,
+      "actual_value": 0.0
+    },
+    {
+      "criterion": "arbiter_correct",
+      "experiment": 822,
+      "target": "accuracy_overall >= 0.80",
+      "met": false,
+      "actual_value": 0.5
+    },
+    {
+      "criterion": "tier1_relay_works_live",
+      "experiment": 823,
+      "target": "delta_s1_to_s5 > 0",
+      "met": false,
+      "actual_value": null
+    },
+    {
+      "criterion": "jepa_v23_viable",
+      "experiment": "824+825",
+      "target": "ood_auc >= 0.65 (cross-domain, Exp 825)",
+      "met": false,
+      "actual_value": 0.4
+    },
+    {
+      "criterion": "cross_domain_at_baseline",
+      "experiment": 826,
+      "target": "degradation <= 0.08 (8%)",
+      "met": false,
+      "actual_value": 0.8305357142857143
+    },
+    {
+      "criterion": "bitstream_or_synthesis_clean",
+      "experiment": 827,
+      "target": "any clean synthesis (iCE40 bitstream or Xilinx clean)",
+      "met": false,
+      "actual_value": {
+        "ice40_bitstream_generated": false,
+        "xilinx_synthesis_clean": false
+      }
+    },
+    {
+      "criterion": "probe_viable",
+      "experiment": 828,
+      "target": "AUC >= 0.85 AND latency < 1ms",
+      "met": true,
+      "actual_value": {
+        "probe_auc": 1.0,
+        "latency_ms": 0.061234
+      }
+    },
+    {
+      "criterion": "hf_publish_success",
+      "experiment": 829,
+      "target": "n_after > n_existing",
+      "met": true,
+      "actual_value": {
+        "n_existing": 26,
+        "n_after": 27
+      }
+    }
+  ],
+  "n_criteria_met": 4,
+  "n_criteria_total": 10,
+  "retros_closed": [
+    "RETRO-ISING-INJECTION-NO-DISCRIMINATION",
+    "RETRO-GGUF-CACHE-IMPORT"
+  ],
+  "retros_opened": [
+    "RETRO-JEPA-PLANNING-DOMAIN-COLLAPSE",
+    "RETRO-ICE40-BITSTREAM-FAILURE"
+  ],
+  "improvements_suggested": [
+    {
+      "priority": "IMMEDIATE",
+      "action": "Fix EmbeddingConstraintStore precision: precision=0.0 across all 3 sessions in Exp 821.  Root cause: constraint retrieval is returning random-walk scores rather than semantic matches.  Inspect ConstraintRetriever.retrieve() \u2014 likely cosine threshold too permissive or embedding normalization missing.  Gate: precision > 0.1 in at least 1 of 3 sessions before Exp 821-v3 runs.",
+      "rationale": "RETRO-CONSTRAINT-ZERO-DELTA blocks Exp 821, 822 (arbiter), and 823 (Tier 1 relay). It is the deepest blocker in the pipeline \u2014 arbiter accuracy is only 0.5 because it selects by energy which is 0 everywhere.  Nothing downstream can improve until precision > 0."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Add IsingEBM MCMC sampling warm-start to MultiAgentArbiter: the arbiter standard scenario accuracy is only 0.17.  Diagnosis: the Gibbs sampler is initialising from a random spin configuration each call, which means energy estimates have O(N) variance for N=16 spins.  Fix: start from the external-field h-aligned configuration (s_i = sign(h_i)) and run 500 burn-in steps before reading energy. Gate: accuracy_overall >= 0.70 on 12 standard+adversarial scenarios.",
+      "rationale": "RETRO-ARBITER-FLAT-ENERGY: accuracy_overall=0.5 in Exp 822 despite external field fix from Exp 819.  Standard scenarios are being selected wrong (1/6 correct).  The external field is wired correctly but the energy estimate is noisy without proper MCMC convergence."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Run nextpnr-ice40 routing with --hx8k --package ct256 --pcf constraints.pcf on the ising_sampler_v3_n32 netlist from Exp 816.  Capture the full nextpnr log, including any routing failure messages.  If routing fails due to resource exhaustion (3952 LUTs exceeds HX8K capacity after P&R reserve), reduce N to 16 and retry.  Gate: ice40_bitstream_generated=True and valid_header=True.",
+      "rationale": "RETRO-ICE40-BITSTREAM-FAILURE: KV260 FPGA board arrived 2026-04-20 and has been idle since.  We have yosys synthesis working (Exp 816) but no bitstream.  This blocks the hardware acceleration roadmap.  The fix is a simple invocation of nextpnr-ice40 that Exp 827 omitted from the script."
+    },
+    {
+      "priority": "HIGH",
+      "action": "Retrain JEPA v23 with planning domain corpus: add 20 ARC-Challenge pairs to the triplet training set.  ARC OOD AUC=0.04 (Exp 825) means the model actively misclassifies planning errors.  Add ARC pairs with Z3-planning constraints (not arithmetic).  Gate: auc_arc >= 0.45 on ARC holdout.",
+      "rationale": "RETRO-JEPA-PLANNING-DOMAIN-COLLAPSE: JEPA v23 trained on GSM8K+HumanEval only. ARC domain collapse is expected \u2014 the model has never seen a planning-domain training example.  This is a data coverage gap, not an architecture failure."
+    },
+    {
+      "priority": "HIGH",
+      "action": "Publish JEPA v23 checkpoint to HuggingFace after domain fix: Exp 829 published the injection fix (n_after=27) but jepa_published=False.  Once JEPA v23 meets the ARC fix gate, publish the checkpoint with the standard card format.",
+      "rationale": "HuggingFace v3 publish sequence is confirmed working (Exp 829).  JEPA v23 was intentionally not published because it failed the cross-domain eval.  Publish after the planning fix."
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Switch code repair experiments to SOTA GGUF models: Exp 820 used unsloth/Qwen3.5-0.8B-GGUF and showed repair_delta=+14 on 20 problems.  Re-run with unsloth/Qwen3.6-35B-A3B-GGUF to establish a headline-quality live code repair result.  The small model result is encouraging but not publishable as a headline claim.",
+      "rationale": "CLAUDE.md mandates SOTA models for headline results.  Exp 820 used a tiny model for an initial unblock.  The repair pipeline is now confirmed working; upgrade to SOTA for the authoritative benchmark."
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Add cross-domain degradation monitoring to the conductor's milestone gate: if any domain's OOD AUC drops below 0.3 (far below random), block deployment and flag RETRO automatically.  Exp 826 discovered the ARC collapse post-hoc; the conductor should have caught this before Tier 3.5 was attempted.",
+      "rationale": "The ARC domain collapse (AUC=0.04) in Exp 825 was not caught by any gate.  The Tier 3.5 deployment in Exp 825 was attempted (tier35_deployed=False only because of the overall_ood_auc gate).  A per-domain floor would have triggered earlier."
+    }
+  ],
+  "honest_verdict": "retro_63_mixed",
+  "invariant_violations": []
+}
