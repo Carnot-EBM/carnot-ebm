@@ -4226,3 +4226,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 868: Pre-flight v16 — Manifest Enforcement Module + 7-RETRO Audit (CPU) (✅ Complete) — honest_verdict=governance_ready; results/experiment_868_preflight_v16.json
 - 2026-04-25: Exp 869: GGUFCacheResolver v2 — Prove Download Works on Qwen3.5-0.8B (CPU) (❌ Failed) — honest_verdict=download_failed; results/experiment_869_gguf_predownload.json
 - 2026-04-25: Exp 870: SOTA Code Repair v7 — Qwen3.5-0.8B Live HumanEval (GPU, GATED on 869) (⚠️ Blocked) — honest_verdict=blocked; results/experiment_870_sota_code_repair_v7.json
+- 2026-04-25: Exp 871: Live Benchmark v6 — DualGPU + Full Cascade on 50 GSM8K (GPU, GATED on 856) (⚠️ Research Finding) — honest_verdict=simulation_fallback; results/experiment_871_live_benchmark_v6.json
