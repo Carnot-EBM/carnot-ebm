@@ -1254,3 +1254,37 @@ constraint types
   4. `retrieval_l2_normalized == True` on the store instance.
 
 **Spec traces:** REQ-VERIFY-150, Exp 847
+
+
+### REQ-PIPELINE-030: GGUFCacheResolver Export
+
+`carnot.pipeline` MUST export `GGUFCacheResolver` for resolving GGUF model file paths
+from HuggingFace model IDs without requiring downloads.  The module MUST also export
+`GGUFCacheConfig`, `GGUFModelNotFoundError`, and the `resolve_gguf_path` convenience
+function.
+
+**Rationale (RETRO-GGUF-CACHE-IMPORT):** Eight consecutive milestones of SOTA code-repair
+experiments failed with ImportError because no authoritative resolver existed.  Ad-hoc
+path-guessing logic was scattered across experiment scripts with no shared contract.
+
+**Acceptance criteria:**
+- `from carnot.pipeline import GGUFCacheResolver` MUST NOT raise ImportError.
+- `GGUFCacheResolver.resolve(model_id)` MUST raise `GGUFModelNotFoundError` (not FileNotFoundError)
+  with `details["expected_path"]` populated when the file is absent.
+- `GGUFCacheResolver.is_cached(model_id)` MUST return bool without raising.
+- `resolve_gguf_path(model_id, cache_dir=...)` MUST return the same path as `resolver.resolve()`.
+
+**Spec traces:** Exp 849, RETRO-GGUF-CACHE-IMPORT
+
+### SCENARIO-PIPELINE-040: GGUFModelNotFoundError on Missing File
+
+**Given** `model_id = "unsloth/Qwen3.6-35B-A3B-GGUF"`, `cache_dir = "models/"`,
+and the file `models/unsloth_Qwen3.6-35B-A3B-GGUF-Q4_K_M.gguf` is not present on disk
+**When** `GGUFCacheResolver(GGUFCacheConfig(cache_dir="models/")).resolve(model_id)` is called
+**Then**
+  1. `GGUFModelNotFoundError` is raised (not FileNotFoundError or KeyError).
+  2. `exc.details["expected_path"]` contains the expected path string.
+  3. `exc.details["model_id"]` equals `"unsloth/Qwen3.6-35B-A3B-GGUF"`.
+  4. The error message mentions the expected path so a user can act on it.
+
+**Spec traces:** REQ-PIPELINE-030, Exp 849, RETRO-GGUF-CACHE-IMPORT
