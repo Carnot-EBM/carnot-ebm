@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-25 Milestone 2026.04.67 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-25T21:16:27Z | 2026-04-25T21:18:32Z | Milestone 2026.04.67 operational process retrospective. Read ops/metrics.md, ops/changelog.md, scripts/gpu_monitor.py, results/operational_retro_2026_04_67.json (conductor-generated), results/operational_retro_2026_04_66.json (schema reference). Analyzed 4016 min / 802 experiments. Key findings: first wall-time improvement in 8 milestones (-91 min, -2.2%); slowest-5 UNCHANGED eighth consecutive milestone (unprecedented octuple, Exp 786/527/491/627/603); documentation-without-application loop ninth consecutive; DualGPU wiring gap second consecutive post-deploy; 802 experiments new historic high (102 over cap). Wrote results/operational_retro_2026_04_67.json (schema=carnot.operational_retro.v43, full_milestone_augmented, 523 min near-term recoverable). Appended changelog entry. Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~18k |
+
+---
+
 ## Session: 2026-04-25 Milestone 2026.04.66 Planning
 
 ### Turn Log
