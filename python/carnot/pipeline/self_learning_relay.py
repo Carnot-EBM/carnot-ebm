@@ -61,7 +61,7 @@ Spec: REQ-LEARN-026, REQ-LEARN-027,
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from carnot.models.eorm import CoTEnergyInput, EORMModel
 from carnot.pipeline.adaptive_thresholds import PerModelFPTracker
@@ -71,6 +71,10 @@ from carnot.pipeline.constraint_template_library import (
     ConstraintTemplateLibrary,
 )
 from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
+
+if TYPE_CHECKING:
+    from carnot.pipeline.memory_compression import CompressedMemoryBank
+    from carnot.verify.lagrange_ising import LagrangeAdaptiveIsing
 
 
 # ---------------------------------------------------------------------------
@@ -266,6 +270,8 @@ class SelfLearningRelay:
         fp_tracker: PerModelFPTracker,
         eorm_model: EORMModel,
         constraint_addition_engine: ConstraintAdditionEngine | None = None,
+        lagrange_ising: "LagrangeAdaptiveIsing | None" = None,
+        compressed_memory: "CompressedMemoryBank | None" = None,
     ) -> None:
         self._pipeline = pipeline
         self._template_library = template_library
@@ -294,6 +300,14 @@ class SelfLearningRelay:
 
         # Cumulative count of constraints injected across all batches (for metrics).
         self._cumulative_constraints_added: int = 0
+
+        # REQ-LEARN-058: optional Lagrange adaptive Ising for per-constraint
+        # lambda weight updates after each verification decision.
+        self._lagrange_ising = lagrange_ising
+
+        # REQ-LEARN-058: optional CompressedMemoryBank for preventing memory
+        # saturation across sessions via K-medoid compression.
+        self._compressed_memory = compressed_memory
 
     # ------------------------------------------------------------------
     # _freeze_stable_constraints (REQ-PSV-015)
@@ -448,6 +462,8 @@ class SelfLearningRelay:
         n_tier1_updates = 0
         eorm_energies: list[float] = []
         violation_idx = 0  # cycles through _SYNTHETIC_VIOLATION_TYPES
+        # Collect per-question violation metadata for CompressedMemoryBank.
+        session_violations: list[dict] = []
 
         for i, (question, is_correct) in enumerate(zip(questions, ground_truth)):
             # ----------------------------------------------------------------
@@ -492,6 +508,14 @@ class SelfLearningRelay:
                 )
             n_tier1_updates += 1
 
+            # REQ-LEARN-058: update Lagrange lambda for this question's constraint.
+            # constraint_id cycles over n_constraints so each question maps to a
+            # constraint slot — a simple assignment for relay experiments where the
+            # actual constraint topology is synthetic.
+            if self._lagrange_ising is not None:
+                constraint_id = i % self._lagrange_ising.n_constraints
+                self._lagrange_ising.update(constraint_id, violated=not is_correct)
+
             # Track raw accuracy for this batch.
             if is_correct:
                 n_correct += 1
@@ -506,6 +530,16 @@ class SelfLearningRelay:
                 ]
                 self._wiring.on_violation_recorded(violation_type, model_id)
                 violation_idx += 1
+
+            # Collect violation record for CompressedMemoryBank (even for correct
+            # answers so the bank reflects all questions, not just errors).
+            session_violations.append(
+                {
+                    "constraint_type": "verification",
+                    "question_idx": i,
+                    "violated": not is_correct,
+                }
+            )
 
         # --------------------------------------------------------------------
         # After-batch aggregation
@@ -530,6 +564,12 @@ class SelfLearningRelay:
             if self._total_questions > 0
             else 0.0
         )
+
+        # REQ-LEARN-058: compress the session's violation records into the memory bank.
+        # This prevents memory saturation across sessions: as violations accumulate,
+        # the bank stays bounded at k centroids rather than growing without limit.
+        if self._compressed_memory is not None:
+            self._compressed_memory.compress_session(session_violations)
 
         # REQ-LEARN-040: after each batch, scan session memory for accumulated patterns
         # and inject new constraints into the pipeline's active constraint set.
