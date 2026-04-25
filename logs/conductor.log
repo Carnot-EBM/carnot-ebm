@@ -2682,3 +2682,18 @@ logs/conductor.log | 12 ++++++++++++
 2026-04-25 07:18:24,680 [conductor] RESEARCH STEP: Exp 849: GGUF Cache Module — GGUFCacheResolver (RETRO-GGUF-CACHE-IMPORT, CPU)
 2026-04-25 07:18:24,680 [conductor] ============================================================
 2026-04-25 07:18:24,700 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 07:18:24,757 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 07:18:24,758 [conductor] Running test suite (smart subset)...
+2026-04-25 07:18:30,446 [conductor] Pre-check: 81 passed, 3 warnings in 2.93s
+2026-04-25 07:18:30,572 [conductor] Injected 76 symbol signatures from 2 files (AST outlines)
+2026-04-25 07:18:30,573 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 7 tests pass, `gguf_cache.py` has 100% coverage, the module is exported from `carnot.pipeline`, spec entries `REQ-PIPELINE-030` and `SCENARIO-PIPELINE-040` are added, and the deliverable JSON is written. RETRO-GGUF-CACHE-IMPORT is closed.
+2026-04-25 07:20:54,234 [conductor] Claude Code completed (exit 0)
+2026-04-25 07:20:54,246 [conductor] Changes:
+logs/conductor.log                     |  7 +++++++
+ openspec/capabilities/pipeline/spec.md | 34 ++++++++++++++++++++++++++++++++++
+ python/carnot/pipeline/__init__.py     | 10 ++++++++++
+ 3 files changed, 51 insertions(+)
+2026-04-25 07:20:54,273 [conductor] DOGFOOD: Verification complete (total: 524 checks, 48 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 07:20:54,273 [conductor] Running test suite (smart subset)...
+2026-04-25 07:20:59,962 [conductor] Post-check: 81 passed, 3 warnings in 2.91s

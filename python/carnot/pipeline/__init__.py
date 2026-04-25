@@ -596,6 +596,12 @@ from carnot.pipeline.activation_jailbreak_probe import (  # noqa: E402
     ActivationJailbreakProbe,
     ProbeMetadata,
 )
+from carnot.pipeline.gguf_cache import (  # noqa: E402
+    GGUFCacheConfig,
+    GGUFCacheResolver,
+    GGUFModelNotFoundError,
+    resolve_gguf_path,
+)
 
 __all__ = [
     "AgentStep",
@@ -980,4 +986,8 @@ __all__ = [
     "MultiAgentArbiter",
     "ActivationJailbreakProbe",
     "ProbeMetadata",
+    "GGUFCacheConfig",
+    "GGUFCacheResolver",
+    "GGUFModelNotFoundError",
+    "resolve_gguf_path",
 ]
