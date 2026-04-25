@@ -4216,3 +4216,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 861: StreamingCoTHalluDetector — Tier 0g PHaS Prefix Signal (CPU) (✅ Complete) — honest_verdict=tier_0g_viable; results/experiment_861_streaming_cot_detector.json
 - 2026-04-25: Exp 862: LagrangeAdaptiveIsingConstraints — FR-11 Self-Learning Tier 1 (CPU) (✅ Complete) — honest_verdict=fr11_self_learning_confirmed; results/experiment_862_lagrange_adaptive_ising.json
 - 2026-04-25: Exp 863: HalluSAEGeometricProbe — Tier 0i SAE Feature Geometry Energy (CPU) (⚠️ Research Finding) — honest_verdict=tier_0i_marginal; results/experiment_863_hallusae_geometric_probe.json
+- 2026-04-25: Exp 864: FR-11 Tier 2 Integration v5 — Wire All New Probes + 5-Session Relay (CPU) (✅ Complete) — honest_verdict=fr11_tier2_confirmed; results/experiment_864_fr11_tier2_integration_v5.json
