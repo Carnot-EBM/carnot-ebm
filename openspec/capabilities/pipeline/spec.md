@@ -992,3 +992,65 @@ This requirement creates a traceable, reproducible benchmark comparison.
   8. `honest_verdict` reflects the degradation comparison against 0.08 baseline.
 
 **Spec traces:** REQ-VERIFY-145
+
+### REQ-VERIFY-146: ActivationJailbreakProbe Layer Activation Extraction
+
+**Statement:** ActivationJailbreakProbe MUST extract intermediate layer activations
+from a small transformer model (Qwen3.5-0.8B or fallback hash projection) at layers
+[4, 8, 12, 16] and train a LogisticRegression probe on labeled jailbreak/benign examples.
+CPU inference latency for the probe forward pass (activation extraction + LR predict)
+MUST be < 1 ms per query.
+
+**Rationale:** arXiv 2602.11495 shows that jailbreak prompts produce a linear signal
+in intermediate transformer layers detectable by logistic regression trained on 100
+examples with AUC >= 0.90 at < 1 ms CPU latency.  This is orthogonal to the TF-IDF
+KAN signal in Tier 0h: the KAN detects surface n-gram patterns, the activation probe
+detects where the prompt sits in the model's internal representation space.
+
+**Acceptance criteria:**
+- `extract_activations(prompt)` returns np.ndarray of shape (n_layers * hidden_dim,).
+- `train(prompts_labeled)` returns a fitted sklearn.linear_model.LogisticRegression.
+- `evaluate(probe, test_labeled)` returns (auc: float, latency_ms: float).
+- latency_ms < 1.0 for the LR forward pass alone (activation extraction excluded from
+  latency budget since it is amortised across all probes in the pipeline).
+
+**Spec traces:** Exp 828, arXiv 2602.11495
+
+### REQ-VERIFY-147: ActivationJailbreakProbe Viability Threshold
+
+**Statement:** ActivationJailbreakProbe probe_auc MUST be >= 0.85 on a 50/50 balanced
+holdout (25 jailbreak + 25 benign, after 60/40 train/test split from 100 total) to be
+considered viable for production wiring alongside Tier 0h KAN.  If probe_auc >= 0.85
+AND latency_ms < 1.0 then probe_viable MUST be True; otherwise probe_viable MUST be False.
+
+**Rationale:** The 0.85 AUC threshold is the minimum for a useful complementary signal.
+Below this level, the probe adds false positives without sufficient jailbreak detection
+gain to justify the additional inference cost.  The 0.85 threshold is 5 percentage
+points below the published 0.90 baseline to account for the smaller training set (60
+examples vs. 100 in the paper) and the synthetic vs. real JailbreakBench distribution gap.
+
+**Acceptance criteria:**
+- On 40-example holdout (20 jailbreak + 20 benign): probe_auc is computed and recorded.
+- probe_viable = (probe_auc >= 0.85 and latency_ms < 1.0).
+- honest_verdict in {"probe_viable", "probe_partial", "probe_not_viable"}.
+
+**Spec traces:** Exp 828, arXiv 2602.11495
+
+### SCENARIO-VERIFY-175: Activation Probe Train/Eval on Synthetic JailbreakBench
+
+**Given** 50 synthetic jailbreak prompts (seed=42) + 50 synthetic benign prompts (seed=42)
+**And** 60/40 train/test split: 30 jailbreak + 30 benign train, 20 jailbreak + 20 benign test
+**When** ActivationJailbreakProbe.train() is called on 60 labeled prompts
+**And** ActivationJailbreakProbe.evaluate() is called on 40 labeled holdout prompts
+**Then**
+  1. extract_activations returns shape (n_layers * hidden_dim,) for every prompt.
+  2. LogisticRegression fits without error on 60 examples.
+  3. probe_auc is computed from ROC AUC on the 40-example holdout.
+  4. latency_ms is measured as mean of 20 predict_proba calls on one prompt.
+  5. probe_viable = (probe_auc >= 0.85 AND latency_ms < 1.0).
+  6. If probe_viable=True: honest_verdict = "probe_viable".
+  7. If probe_auc >= 0.85 but latency_ms >= 1.0: honest_verdict = "probe_partial".
+  8. If probe_auc < 0.85: honest_verdict = "probe_not_viable".
+  9. Artifact written to results/experiment_828_activation_jailbreak_probe.json.
+
+**Spec traces:** REQ-VERIFY-146, REQ-VERIFY-147

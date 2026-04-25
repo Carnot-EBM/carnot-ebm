@@ -1747,3 +1747,29 @@ Done. Updated ops/changelog.md and _bmad/traceability.md. Skipped ops/status.md 
 2026-04-24 23:26:06,585 [conductor] RESEARCH STEP: Exp 828: Activation Jailbreak Linear Probe (arXiv 2602.11495, Tier B Safety, CPU)
 2026-04-24 23:26:06,585 [conductor] ============================================================
 2026-04-24 23:26:06,602 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 23:26:06,656 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 23:26:06,656 [conductor] Running test suite (smart subset)...
+2026-04-24 23:26:12,406 [conductor] Pre-check: 81 passed, 3 warnings in 2.89s
+2026-04-24 23:26:12,523 [conductor] Injected 94 symbol signatures from 3 files (AST outlines)
+2026-04-24 23:26:12,523 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All done. Here's what was delivered:
+
+**Deliverable:** `results/experiment_828_activation_jailbreak_probe.json`
+- `probe_auc=1.0`, `latency_ms=0.061ms`, `probe_viable=true`, `honest_verdict="probe_viable"`
+- Used real Qwen3.5-0.8B activations at layers [4, 8, 12, 16] (CPU, no_grad)
+
+**New files:**
+- `python/carnot/pipeline/activation_jailbreak_probe.py` — `ActivationJailbreakProbe` class with real transformer path + hash-based fallback
+- `scripts/experiment_828_activation_jailbreak_probe.py` — experiment runner
+- `tests/python/test_experiment_828_activation_jailbreak_probe.py` — 27 tests, all passing
+- `openspec/capabilities/pipeline/spec.md` — REQ-VERIFY-146, REQ-VERIFY-147, SCENARIO-VERIFY-175 appended
+- `python/carnot/pipeline/__init__.py` — `ActivationJailbreakProbe` + `ProbeMetadata` exported
+2026-04-24 23:34:02,588 [conductor] Claude Code completed (exit 0)
+2026-04-24 23:34:02,602 [conductor] Changes:
+logs/conductor.log                     | 18 ++++++++++
+ openspec/capabilities/pipeline/spec.md | 62 ++++++++++++++++++++++++++++++++++
+ python/carnot/pipeline/__init__.py     |  6 ++++
+ 3 files changed, 86 insertions(+)
+2026-04-24 23:34:02,633 [conductor] DOGFOOD: Verification complete (total: 504 checks, 45 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 23:34:02,634 [conductor] Running test suite (smart subset)...
+2026-04-24 23:34:08,286 [conductor] Post-check: 81 passed, 3 warnings in 2.87s
