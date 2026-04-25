@@ -2760,3 +2760,4 @@ python/ |
 | 2026-04-25 13:53 UTC | Exp 855: Pre-flight v15 — Permanent LIVE-ENV Fix + | OK | 81 passed, 3 warnings in 2.77s |
 | 2026-04-25 14:10 UTC | Exp 856: DualGPURunner Production Deployment — Wir | OK | 145 passed, 3 warnings in 3.21s |
 | 2026-04-25 14:27 UTC | Exp 857: SOTA GGUF Download + Code Repair v6 — Qwe | OK | 81 passed, 3 warnings in 2.92s |
+| 2026-04-25 14:47 UTC | Exp 858: Live Full Precision Benchmark v5 — DualGP | OK | 81 passed, 3 warnings in 2.92s |
