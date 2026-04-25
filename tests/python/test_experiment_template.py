@@ -653,3 +653,97 @@ class TestRequiredResultFields:
     def test_required_fields_includes_status(self) -> None:
         """REQUIRED_RESULT_FIELDS includes 'status'.  REQ-VERIFY-083"""
         assert "status" in REQUIRED_RESULT_FIELDS
+
+
+class TestPhaseTimings:
+    """phase() context manager records named-phase wall-time into the artifact.
+
+    Lets the retrospective rank phases by total time so future speedups
+    (model-load cache, training-loop batching) can be aimed precisely
+    instead of guessed.
+    """
+
+    def test_phase_records_elapsed_time(self, tmp_path: Path) -> None:
+        """A phase() block records its elapsed time in seconds."""
+        t = ExperimentTemplate(900, "Phase test", "results/out.json", repo_root=tmp_path)
+        with t.phase("model_load"):
+            time.sleep(0.01)
+        assert len(t._phase_timings) == 1
+        entry = t._phase_timings[0]
+        assert entry["name"] == "model_load"
+        # Sleep was 10ms; allow generous tolerance for CI variability
+        assert 0.005 <= entry["elapsed_s"] <= 1.0
+
+    def test_phase_records_metadata(self, tmp_path: Path) -> None:
+        """Keyword args become per-phase metadata for slicing in the retro."""
+        t = ExperimentTemplate(901, "T", "results/out.json", repo_root=tmp_path)
+        with t.phase("training", n_pairs=70, epochs=100):
+            pass
+        entry = t._phase_timings[0]
+        assert entry["n_pairs"] == 70
+        assert entry["epochs"] == 100
+
+    def test_phase_records_even_when_block_raises(self, tmp_path: Path) -> None:
+        """An exception inside the phase still gets the elapsed time logged.
+
+        Important for diagnostics — a phase that crashed at 90% completion
+        is exactly the kind of thing the retro needs to see.
+        """
+        t = ExperimentTemplate(902, "T", "results/out.json", repo_root=tmp_path)
+        with pytest.raises(ValueError):
+            with t.phase("training"):
+                time.sleep(0.005)
+                raise ValueError("simulated training failure")
+        assert len(t._phase_timings) == 1
+        assert t._phase_timings[0]["name"] == "training"
+        assert t._phase_timings[0]["elapsed_s"] >= 0.0
+
+    def test_phase_yields_dict_for_in_block_mutation(self, tmp_path: Path) -> None:
+        """The yielded dict can be mutated inside the block (e.g. add count fields)."""
+        t = ExperimentTemplate(903, "T", "results/out.json", repo_root=tmp_path)
+        with t.phase("inference") as timings:
+            timings["n_samples"] = 500
+            timings["batch_size"] = 16
+        entry = t._phase_timings[0]
+        assert entry["n_samples"] == 500
+        assert entry["batch_size"] == 16
+
+    def test_phase_timings_appear_in_artifact(self, tmp_path: Path) -> None:
+        """build_result() auto-includes phase_timings_s when any phase was recorded."""
+        t = ExperimentTemplate(904, "T", "results/out.json", repo_root=tmp_path)
+        with t.phase("model_load"):
+            pass
+        with t.phase("training", n_pairs=70):
+            pass
+        artifact = t.build_result({}, status="success")
+        assert "phase_timings_s" in artifact
+        assert len(artifact["phase_timings_s"]) == 2
+        names = [p["name"] for p in artifact["phase_timings_s"]]
+        assert names == ["model_load", "training"]
+        # Schema field includes the new key for downstream parsers
+        assert "phase_timings_s" in artifact["schema"]
+
+    def test_phase_timings_omitted_when_unused(self, tmp_path: Path) -> None:
+        """If no phase() blocks ran, the artifact has no phase_timings_s key.
+
+        Backwards-compatible: existing experiment scripts that haven't
+        adopted phase() see no change in their artifact shape.
+        """
+        t = ExperimentTemplate(905, "T", "results/out.json", repo_root=tmp_path)
+        artifact = t.build_result({}, status="success")
+        assert "phase_timings_s" not in artifact
+
+    def test_phase_caller_can_override_phase_timings_in_data(self, tmp_path: Path) -> None:
+        """A caller can replace phase_timings_s via data= if they want to summarise.
+
+        Mirrors the existing 'data takes precedence over auto-populated
+        fields' rule in build_result.
+        """
+        t = ExperimentTemplate(906, "T", "results/out.json", repo_root=tmp_path)
+        with t.phase("model_load"):
+            pass
+        artifact = t.build_result(
+            {"phase_timings_s": [{"name": "summary", "elapsed_s": 0.0}]},
+            status="success",
+        )
+        assert artifact["phase_timings_s"] == [{"name": "summary", "elapsed_s": 0.0}]
