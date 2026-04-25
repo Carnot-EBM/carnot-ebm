@@ -2728,3 +2728,4 @@ python/ |
 | 2026-04-25 04:51 UTC | Milestone 2026.04.64 activated | OK | 12 tasks queued |
 | 2026-04-25 05:03 UTC | Exp 831: Governance Pre-flight + RETRO Audit (CPU) | OK | 81 passed, 3 warnings in 2.91s |
 | 2026-04-25 05:19 UTC | Exp 832: JEPA v23 ARC Domain Collapse Diagnosis (C | OK | 81 passed, 3 warnings in 2.86s |
+| 2026-04-25 05:35 UTC | Exp 833: Constraint Accumulation Root Cause Diagno | OK | 81 passed, 3 warnings in 2.87s |
