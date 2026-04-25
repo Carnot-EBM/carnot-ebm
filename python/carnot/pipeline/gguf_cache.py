@@ -3,7 +3,8 @@
 **Researcher summary:**
     Resolves a HuggingFace GGUF model ID (e.g. ``unsloth/Qwen3.6-35B-A3B-GGUF``)
     to a concrete local ``.gguf`` file path that llama-cpp-python can open.
-    No download logic — resolution only.
+    When the file is absent and ``can_download=True``, it pulls it from
+    HuggingFace Hub via ``huggingface_hub.hf_hub_download``.
 
 **Detailed explanation for engineers:**
     llama.cpp (and its Python wrapper llama-cpp-python) requires a local file path
@@ -29,6 +30,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from carnot.pipeline.errors import CarnotError
 
@@ -73,7 +75,9 @@ class GGUFCacheResolver:
 
     **Researcher summary:**
         Maps ``unsloth/Qwen3.6-35B-A3B-GGUF`` → ``models/unsloth_Qwen3.6-35B-A3B-Q4_K_M.gguf``
-        and checks that the file exists before returning the path.
+        and checks that the file exists before returning the path.  If
+        ``can_download=True`` (the default) and the file is missing, it pulls
+        the file from HuggingFace Hub before returning the path.
 
     **Detailed explanation for engineers:**
         llama.cpp requires a local file path to load a model.  HuggingFace
@@ -89,8 +93,15 @@ class GGUFCacheResolver:
         the result is ``<cache_dir>/<name>-<quantization>.gguf`` — no leading
         underscore.
 
+        ``can_download=True`` means: if the resolved path is absent, call
+        ``self.download()`` which uses ``huggingface_hub.hf_hub_download``
+        to pull only the specific ``.gguf`` file (not the whole repo).
+        Set ``can_download=False`` in offline environments or tests.
+
     Spec: REQ-PIPELINE-030, SCENARIO-PIPELINE-040
     """
+
+    can_download: bool = True
 
     def __init__(self, config: GGUFCacheConfig | None = None) -> None:
         self.config = config or GGUFCacheConfig()
@@ -106,15 +117,52 @@ class GGUFCacheResolver:
         filename = f"{flat_name}-{quant}.gguf"
         return os.path.join(self.config.cache_dir, filename)
 
+    def download(self, hf_repo: str, filename: str, cache_dir: str) -> Path:
+        """Pull a single GGUF file from HuggingFace Hub into ``cache_dir``.
+
+        **Detailed explanation for engineers:**
+            Uses ``huggingface_hub.hf_hub_download`` to fetch exactly one
+            file (the ``.gguf`` quantisation shard) rather than cloning the
+            whole repository.  The file is written into ``cache_dir`` and
+            the absolute path is returned so that callers can pass it
+            straight to llama-cpp-python without a second lookup.
+
+            ``local_dir`` is passed rather than ``cache_dir`` so that the
+            file lands at a predictable flat path instead of inside
+            huggingface_hub's deeply-nested blob cache.  This matches the
+            flat-file convention used by ``_build_path``.
+
+        Args:
+            hf_repo: HuggingFace repo ID, e.g. ``unsloth/Qwen3.6-35B-A3B-GGUF``.
+            filename: Exact filename inside the repo, e.g.
+                ``unsloth_Qwen3.6-35B-A3B-Q4_K_M.gguf``.
+            cache_dir: Local directory to save the file.
+
+        Returns:
+            ``Path`` to the downloaded file.
+
+        Spec: REQ-PIPELINE-030, SCENARIO-PIPELINE-040
+        """
+        from huggingface_hub import hf_hub_download  # lazy import — optional dep
+
+        os.makedirs(cache_dir, exist_ok=True)
+        local_path = hf_hub_download(
+            repo_id=hf_repo,
+            filename=filename,
+            local_dir=cache_dir,
+        )
+        return Path(local_path)
+
     def resolve(self, model_id: str, quantization: str | None = None) -> str:
-        """Resolve model_id to a local GGUF file path.
+        """Resolve model_id to a local GGUF file path, downloading if needed.
 
         **Detailed explanation for engineers:**
             Converts the HuggingFace-style ``org/name`` model ID to a flat
             filename and checks that the file exists in ``config.cache_dir``.
-            Raises ``GGUFModelNotFoundError`` with the expected path in
-            ``details`` if the file is absent, so the user knows exactly
-            what to download.
+            If the file is absent and ``can_download=True``, calls
+            ``self.download()`` to fetch it from HuggingFace Hub before
+            returning the path.  Raises ``GGUFModelNotFoundError`` only when
+            ``can_download=False`` or the download itself fails.
 
         Args:
             model_id: HuggingFace-style ``org/model-name`` or just
@@ -126,18 +174,30 @@ class GGUFCacheResolver:
             Absolute (or cache_dir-relative) path to the ``.gguf`` file.
 
         Raises:
-            GGUFModelNotFoundError: If the resolved path does not exist.
+            GGUFModelNotFoundError: If the file does not exist and either
+                ``can_download=False`` or the download attempt fails.
 
         Spec: REQ-PIPELINE-030, SCENARIO-PIPELINE-040
         """
-        path = self._build_path(model_id, quantization or self.config.default_quantization)
+        quant = quantization or self.config.default_quantization
+        path = self._build_path(model_id, quant)
         if not os.path.exists(path):
-            raise GGUFModelNotFoundError(
-                f"GGUF model not found: {path!r}. "
-                f"Download the model and place it at the expected path, "
-                f"or set a different cache_dir in GGUFCacheConfig.",
-                details={"expected_path": path, "model_id": model_id},
-            )
+            if not self.can_download:
+                raise GGUFModelNotFoundError(
+                    f"GGUF model not found: {path!r}. "
+                    f"can_download=False — set can_download=True or place the file at the expected path.",
+                    details={"expected_path": path, "model_id": model_id},
+                )
+            flat_name = model_id.replace("/", "_")
+            filename = f"{flat_name}-{quant}.gguf"
+            try:
+                downloaded = self.download(model_id, filename, self.config.cache_dir)
+                path = str(downloaded)
+            except Exception as exc:
+                raise GGUFModelNotFoundError(
+                    f"Auto-download failed for {model_id!r} (filename={filename!r}): {exc}",
+                    details={"expected_path": path, "model_id": model_id, "filename": filename},
+                ) from exc
         return path
 
     def is_cached(self, model_id: str, quantization: str | None = None) -> bool:
