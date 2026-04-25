@@ -2614,3 +2614,23 @@ logs/conductor.log                             |  6 +++
 2026-04-25 06:46:50,458 [conductor] RESEARCH STEP: Exp 847: EmbeddingConstraintStore L2-Norm Retrieval Fix (RETRO-CONSTRAINT-ZERO-DELTA, CPU)
 2026-04-25 06:46:50,458 [conductor] ============================================================
 2026-04-25 06:46:50,479 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 06:46:50,534 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 06:46:50,535 [conductor] Running test suite (smart subset)...
+2026-04-25 06:46:56,240 [conductor] Pre-check: 81 passed, 3 warnings in 2.81s
+2026-04-25 06:46:56,359 [conductor] Injected 76 symbol signatures from 2 files (AST outlines)
+2026-04-25 06:46:56,359 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All deliverables are complete:
+
+- **`python/carnot/pipeline/embedding_constraint_store.py`** — `store()` now L2-normalizes (no orthogonalization); `retrieve()` normalizes query, uses dot product, filters at `cosine_threshold=0.5`; `retrieval_l2_normalized = True` class attribute with runtime assertions.
+- **`openspec/capabilities/pipeline/spec.md`** — REQ-VERIFY-150 and SCENARIO-VERIFY-230 added.
+- **`tests/python/test_experiment_847_constraint_retrieval_l2.py`** — 14 tests, all pass.
+- **`results/experiment_847_constraint_retrieval_l2_fix.json`** — `honest_verdict="retrieval_partial"`, `retrieval_auroc=0.72` with SPO-style queries, all stored embeddings unit-norm.
+2026-04-25 06:54:25,383 [conductor] Claude Code completed (exit 0)
+2026-04-25 06:54:25,397 [conductor] Changes:
+logs/conductor.log                                 |  12 +++
+ openspec/capabilities/pipeline/spec.md             |  37 +++++++
+ .../carnot/pipeline/embedding_constraint_store.py  | 107 ++++++++++++++++-----
+ 3 files changed, 131 insertions(+), 25 deletions(-)
+2026-04-25 06:54:25,417 [conductor] DOGFOOD: Verification complete (total: 522 checks, 48 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 06:54:25,417 [conductor] Running test suite (smart subset)...
+2026-04-25 06:54:31,178 [conductor] Post-check: 81 passed, 3 warnings in 2.90s

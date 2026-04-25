@@ -1217,3 +1217,40 @@ overhead from O(N) to O(1).
   4. `n_paragraphs == 10`.
 
 **Spec traces:** REQ-VERIFY-148, RETRO-SYMCODE-SERIAL, Exp 841
+
+### REQ-VERIFY-150: EmbeddingConstraintStore MUST L2-Normalize Embeddings
+
+`EmbeddingConstraintStore` MUST L2-normalize every embedding before storage and every
+query vector before similarity computation.
+
+**Rationale (Exp 847):** Sentence-transformer embeddings have L2 norm ~0.9-1.1, not
+exactly 1.0.  Prior code applied Gram-Schmidt orthogonalization which deflected stored
+embeddings away from their original semantic directions, causing cosine similarity between
+query and stored constraint to be near-zero even for matching constraint types.  This made
+`retrieve()` return empty lists, so IsingEBM received zero-magnitude external field input
+and `delta_overall` remained 0.0 despite 15 constraints being written to the store.
+
+**Acceptance criteria:**
+- `store()` MUST normalize each embedding to unit L2 norm before appending to `_store`.
+- `retrieve()` MUST normalize the query embedding to unit L2 norm before similarity computation.
+- The class attribute `retrieval_l2_normalized = True` is always set.
+- An assertion in `store()` and `retrieve()` verifies the invariant at runtime.
+- Default `cosine_threshold` in `retrieve()` MUST be <= 0.5 (prior default 0.7 was too high
+  for constraint-type variations that typically score 0.5-0.7 in sentence-transformer space).
+
+**Spec traces:** Exp 847, RETRO-RETRIEVAL-NEAR-ZERO-COSINE
+
+### SCENARIO-VERIFY-230: L2-Normalized Store Produces High Cosine Similarity for Matching Constraints
+
+**Given** an `EmbeddingConstraintStore` containing 5 stored constraints (one per violation
+type: carry, sign, unit, comparison, causal)
+**When** `retrieve(query)` is called with a query semantically similar to one of the stored
+constraint types
+**Then**
+  1. `cosine_similarity(normalize(query_embedding), stored_embedding) >= 0.5`
+     (not ~0.1 as produced by orthogonalized embeddings).
+  2. The correct violation type is ranked first in the results.
+  3. `retrieval_auroc > 0.80` over 25 (query, correct_type) pairs across 5 types × 5 variants.
+  4. `retrieval_l2_normalized == True` on the store instance.
+
+**Spec traces:** REQ-VERIFY-150, Exp 847
