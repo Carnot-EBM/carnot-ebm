@@ -3083,3 +3083,16 @@ logs/conductor.log | 6 ++++++
 2026-04-25 10:57:36,048 [conductor] RESEARCH STEP: Exp 859: iCE40 N=8 Combinational Energy Oracle — Fix Register Expansion (CPU + iCE40 tools)
 2026-04-25 10:57:36,048 [conductor] ============================================================
 2026-04-25 10:57:36,068 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 10:57:36,129 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 10:57:36,129 [conductor] Running test suite (smart subset)...
+2026-04-25 10:57:41,726 [conductor] Pre-check: 81 passed, 3 warnings in 2.81s
+2026-04-25 10:57:41,836 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-25 10:57:41,836 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-25 11:03:12,175 [conductor] Claude Code produced stable deliverable results/experiment_859_ice40_n8_combinational.json (5.5 min elapsed) — killing subagent early
+2026-04-25 11:03:12,219 [conductor] Changes:
+logs/conductor.log                 |  6 +++++
+ openspec/capabilities/fpga/spec.md | 45 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
+2026-04-25 11:03:12,244 [conductor] DOGFOOD: Verification complete (total: 533 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 11:03:12,244 [conductor] Running test suite (smart subset)...
+2026-04-25 11:03:17,862 [conductor] Post-check: 81 passed, 3 warnings in 2.84s

@@ -174,6 +174,50 @@ has negative energy.
 
 ---
 
+---
+
+### REQ-FPGA-030
+
+**Title:** FpgaBackend energy oracle MUST be pure combinational (no sequential spin state)
+
+**Description:**
+The iCE40 HX8K energy oracle must be implemented as a pure combinational circuit.
+Spin configuration is an external input; energy is a combinational output.  No clock
+pin, no flip-flops, and no Gibbs sweep inside the FPGA are permitted.
+
+**Why combinational only:**
+    Exp 851 demonstrated that adding even minimal sequential logic (a clocked spin_state
+    register) to N=16 Verilog caused nextpnr-ice40 to infer 2077 DFFs + 9918 LUT4 cells
+    = 12258 LCs total — 159% of the iCE40 HX8K 7680-LC budget.  The fundamental reason
+    is that a Gibbs sweep requires N^2 MAC operations per clock; at N=16 this saturates
+    the device.  Moving the Gibbs sampling to Python and using the FPGA only for
+    combinational energy evaluation keeps LUT count within budget.
+
+**Target:** N=8 spins, iCE40 HX8K (7680 LUTs), OSS-CAD-Suite tool flow.
+
+**Acceptance criteria:**
+- yosys synth_ice40 produces zero SB_DFF instances, AND
+- nextpnr-ice40 reports ICESTORM_LC count < 500 (well below 7680 budget), AND
+- icepack generates a valid .bin bitstream file.
+
+**Implementation status:** Implemented (Exp 859, lut_count=134, bitstream_generated=True)
+
+---
+
+### SCENARIO-FPGA-040 — iCE40 N=8 pure combinational synthesis
+
+**Given:** ising_energy_n8_comb.v is available and OSS-CAD-Suite is installed.
+**When:** `yosys synth_ice40` + `nextpnr-ice40 --hx8k` + `icepack` are run.
+**Then:**
+- SB_DFF count = 0 in yosys output (no flip-flops inferred),
+- ICESTORM_LC count < 500 in nextpnr utilisation report,
+- .bin bitstream file is generated without error,
+- honest_verdict = "fpga_oracle_ready".
+
+**Result (Exp 859):** SB_LUT4=132, ICESTORM_LC=134 (1%), bitstream=135100 bytes.
+
+---
+
 ## Implementation Status
 
 | REQ | Status | Experiment |
@@ -182,3 +226,4 @@ has negative energy.
 | REQ-HW-038 | Pending | Exp 701 |
 | REQ-HW-039 | Pending | Exp 714 |
 | REQ-HW-040 | Implemented | Exp 757 |
+| REQ-FPGA-030 | Implemented | Exp 859 |
