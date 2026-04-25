@@ -2791,3 +2791,4 @@ python/ |
 | 2026-04-25 22:32 UTC | Exp 882: Live Cascade v7 — Gemma4-E4B-it + 50 GSM8 | OK | 113 passed, 3 warnings in 2.94s |
 | 2026-04-25 22:50 UTC | Exp 883: VJEPA v2 — Expanded Synthetic Corpus + 20 | OK | 81 passed, 3 warnings in 2.85s |
 | 2026-04-25 23:10 UTC | Exp 884: VJEPA v2 Cascade Deploy — Replace Tier 2  | OK | 81 passed, 3 warnings in 2.82s |
+| 2026-04-25 23:26 UTC | Exp 885: SpectralAttentionProbe — Tier 0h Advisory | OK | 145 passed, 3 warnings in 3.36s |
