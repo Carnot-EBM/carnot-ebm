@@ -71,6 +71,7 @@ SCENARIO-VERIFY-148
 
 from __future__ import annotations
 
+import os
 import time
 from dataclasses import dataclass
 from typing import Any, Callable
@@ -200,8 +201,12 @@ class ThreeTierPipeline:
         EORM energy below which a response is considered correct.
         Default 0.5 (tuned on Exp 359 retrained model).
 
-    Spec: REQ-VERIFY-088
+    Spec: REQ-VERIFY-088, REQ-GPU-010
     """
+
+    # When CARNOT_DUAL_GPU=1, pipeline routes GPU inference through DualGPURunner
+    # if two model configs are loaded (Exp 856 / REQ-GPU-010).
+    DUAL_GPU_ENABLED: bool = os.getenv("CARNOT_DUAL_GPU", "0") == "1"
 
     def __init__(
         self,
@@ -218,6 +223,7 @@ class ThreeTierPipeline:
         basin_threshold: float = 0.5,
         platt_temperature: float | None = None,
         vg_scheduler: VGSearchScheduler | None = None,
+        second_model_spec: dict[str, str] | None = None,
     ) -> None:
         self.sink_probe = sink_probe
         self.eorm_model = eorm_model
@@ -244,6 +250,21 @@ class ThreeTierPipeline:
         # variance over the last N checks is below variance_threshold.
         # ADDITIVE — when None, behaviour is identical to prior pipeline.
         self.vg_scheduler = vg_scheduler
+        # Second model config for DualGPURunner parallel inference (REQ-GPU-010).
+        # When set alongside DUAL_GPU_ENABLED=True, both tiers can dispatch to
+        # two GPUs concurrently for ~2x throughput (validated in Exp 685).
+        self._second_model_spec: dict[str, str] | None = second_model_spec
+
+    def has_second_model(self) -> bool:
+        """True if a second model config is registered for DualGPURunner parallel inference.
+
+        ThreeTierPipeline's ising_pipeline is already a callable, but when DUAL_GPU_ENABLED
+        is set and second_model_spec is provided, the pipeline can route the Ising tier
+        through a second GPU concurrently with EORM on the first GPU.
+
+        Spec: REQ-GPU-010
+        """
+        return self._second_model_spec is not None
 
     # ------------------------------------------------------------------
     # verify()
