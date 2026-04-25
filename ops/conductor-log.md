@@ -2729,3 +2729,4 @@ python/ |
 | 2026-04-25 05:03 UTC | Exp 831: Governance Pre-flight + RETRO Audit (CPU) | OK | 81 passed, 3 warnings in 2.91s |
 | 2026-04-25 05:19 UTC | Exp 832: JEPA v23 ARC Domain Collapse Diagnosis (C | OK | 81 passed, 3 warnings in 2.86s |
 | 2026-04-25 05:35 UTC | Exp 833: Constraint Accumulation Root Cause Diagno | OK | 81 passed, 3 warnings in 2.87s |
+| 2026-04-25 05:52 UTC | Exp 834: JEPA v24 DG-PRM Domain-Balanced Training  | OK | 81 passed, 3 warnings in 2.87s |
