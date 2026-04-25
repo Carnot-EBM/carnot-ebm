@@ -111,8 +111,8 @@ tasks:
        c. For ARC: if mean_score_correct ~= mean_score_incorrect (~0.5), model is uncertain.
           If mean_score_correct < mean_score_incorrect (inverted), ARC is anti-correlated.
        d. Compute feature vector norms per domain — are ARC features near-zero?
-    6. Build diagnosis_finding dict: (domain: {mean_score_correct, mean_score_incorrect,
-       variance, feature_norm, is_anti_correlated, is_uncertain, n_arc_training_pairs)}.
+    6. Build diagnosis_finding dict: (domain: (mean_score_correct, mean_score_incorrect,
+       variance, feature_norm, is_anti_correlated, is_uncertain, n_arc_training_pairs)).
     7. Recommendation: "add N ARC training pairs in Exp 834" or "rebalance loss weights".
     8. Add to openspec/capabilities/autoresearch/spec.md:
        REQ-LEARN-047: JEPA training corpus MUST contain >= 10 samples per reasoning domain

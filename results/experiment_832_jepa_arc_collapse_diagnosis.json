@@ -1,0 +1,165 @@
+{
+  "experiment": 832,
+  "title": "JEPA v23 ARC-Challenge Collapse Diagnosis",
+  "run_date": "20260425",
+  "started_at": "2026-04-25T05:17:18Z",
+  "finished_at": "2026-04-25T05:17:19Z",
+  "duration_s": 0.291,
+  "status": "success",
+  "decision_class": "detect",
+  "phase_timings_s": [
+    {
+      "name": "load_model",
+      "elapsed_s": 0.001
+    },
+    {
+      "name": "diagnose_domains",
+      "elapsed_s": 0.289
+    },
+    {
+      "name": "build_verdict",
+      "elapsed_s": 0.0
+    }
+  ],
+  "diagnosis_finding": {
+    "gsm8k": {
+      "mean_score_correct": 0.825814,
+      "mean_score_incorrect": 0.80894,
+      "score_delta": -0.016874,
+      "variance": 0.005522,
+      "mean_feature_norm": 1.0,
+      "mean_vocab_coverage": 0.848247,
+      "is_anti_correlated": false,
+      "is_uncertain": true,
+      "is_working": false,
+      "n_arc_training_pairs": null,
+      "correct_scores": [
+        0.789051,
+        0.767554,
+        0.950343,
+        0.651669,
+        0.790611,
+        0.924224,
+        0.778602,
+        0.850751,
+        0.878214,
+        0.877122
+      ],
+      "incorrect_scores": [
+        0.839642,
+        0.802082,
+        0.881328,
+        0.746123,
+        0.752577,
+        0.891604,
+        0.752017,
+        0.707879,
+        0.837969,
+        0.878176
+      ]
+    },
+    "humaneval": {
+      "mean_score_correct": 0.521586,
+      "mean_score_incorrect": 0.573598,
+      "score_delta": 0.052013,
+      "variance": 0.010395,
+      "mean_feature_norm": 0.85,
+      "mean_vocab_coverage": 0.379524,
+      "is_anti_correlated": false,
+      "is_uncertain": false,
+      "is_working": true,
+      "n_arc_training_pairs": null,
+      "correct_scores": [
+        0.388035,
+        0.542956,
+        0.630129,
+        0.575601,
+        0.474158,
+        0.493423,
+        0.460398,
+        0.677895,
+        0.486631,
+        0.486631
+      ],
+      "incorrect_scores": [
+        0.388035,
+        0.604588,
+        0.560575,
+        0.575601,
+        0.474158,
+        0.493423,
+        0.780198,
+        0.677895,
+        0.694878,
+        0.486631
+      ]
+    },
+    "arc": {
+      "mean_score_correct": 0.650386,
+      "mean_score_incorrect": 0.654315,
+      "score_delta": 0.003929,
+      "variance": 0.006977,
+      "mean_feature_norm": 1.0,
+      "mean_vocab_coverage": 0.417687,
+      "is_anti_correlated": false,
+      "is_uncertain": true,
+      "is_working": false,
+      "n_arc_training_pairs": 0,
+      "correct_scores": [
+        0.551623,
+        0.679783,
+        0.765892,
+        0.498793,
+        0.675456,
+        0.735673,
+        0.60605,
+        0.71226,
+        0.578413,
+        0.699914
+      ],
+      "incorrect_scores": [
+        0.675389,
+        0.679783,
+        0.765892,
+        0.498793,
+        0.618972,
+        0.723895,
+        0.60605,
+        0.744709,
+        0.531885,
+        0.697782
+      ]
+    }
+  },
+  "recommendation": "ARC scores are near-random (|mean_correct - mean_incorrect| < 0.02): model has no signal on planning steps. Add >= 30 ARC training pairs in Exp 834 to introduce planning signal.",
+  "honest_verdict": "arc_diagnosis_found",
+  "n_domains": 3,
+  "n_steps_per_domain": 20,
+  "model_path": "results/jepa_v23_limo_model.pkl",
+  "exp_824_n_arc_training_pairs": 0,
+  "exp_824_auc_arc": 0.04,
+  "exp_824_auc_humaneval": 0.76,
+  "exp_824_auc_gsm8k": 0.36,
+  "schema": [
+    "decision_class",
+    "diagnosis_finding",
+    "duration_s",
+    "exp_824_auc_arc",
+    "exp_824_auc_gsm8k",
+    "exp_824_auc_humaneval",
+    "exp_824_n_arc_training_pairs",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "model_path",
+    "n_domains",
+    "n_steps_per_domain",
+    "phase_timings_s",
+    "recommendation",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "invariant_violations": []
+}
