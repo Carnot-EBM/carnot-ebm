@@ -1181,3 +1181,39 @@ honest_verdict="import_fixed_repair_positive"
   5. Artifact written to results/experiment_831_governance_preflight.json.
 
 **Spec traces:** REQ-INFRA-063, Exp 831
+
+---
+
+### REQ-VERIFY-148: SymCodeVerifier.batch_verify() Single exec() Batching
+
+`SymCodeVerifier.batch_verify(paragraphs)` MUST process N paragraphs in a single
+`exec()` call, avoiding N separate `exec()` invocations.  Latency for 10 paragraphs
+MUST be < 2× single paragraph latency (not N× single paragraph latency).
+
+**Rationale (RETRO-SYMCODE-SERIAL):** verify_response() processes multi-paragraph
+responses one paragraph at a time (~50ms each).  For Exp 627-style responses with
+10+ paragraphs this is 500ms+ total.  Batching collects all arithmetic expressions
+in one regex pass and evaluates them in a single shared exec() namespace, reducing
+overhead from O(N) to O(1).
+
+**Acceptance criteria:**
+- `batch_verify(paragraphs)` returns `SymCodeBatchResult` with `per_paragraph_results`,
+  `total_violations`, `batch_latency_ms`, and `n_paragraphs`.
+- `n_paragraphs == len(paragraphs)`.
+- Violations detected by `batch_verify()` match violations from N serial `verify_step()` calls.
+- Latency for 10 paragraphs < 2× single paragraph latency.
+
+**Spec traces:** RETRO-SYMCODE-SERIAL, Exp 841
+
+### SCENARIO-VERIFY-173: 10-Paragraph Batch Verification Speed and Correctness
+
+**Given** 10 synthetic paragraphs each containing 1-2 arithmetic expressions
+**When** `batch_verify(paragraphs)` is called once
+**And** 10 serial `verify_step()` calls are made for comparison
+**Then**
+  1. `batch_latency_ms` < 2× the latency of a single `verify_step()` call.
+  2. `total_violations` equals the count of violations from serial calls.
+  3. Each `per_paragraph_results[i].violation_detected` matches `verify_step(paragraphs[i])`.
+  4. `n_paragraphs == 10`.
+
+**Spec traces:** REQ-VERIFY-148, RETRO-SYMCODE-SERIAL, Exp 841

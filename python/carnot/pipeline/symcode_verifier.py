@@ -18,14 +18,24 @@
     The verifier is correct-by-construction: if the code says 47+28 and the model
     wrote "75", the verification passes; if the model wrote "65", it fails.
 
-Spec: REQ-VERIFY-122, REQ-VERIFY-123,
-      SCENARIO-VERIFY-160, SCENARIO-VERIFY-161, SCENARIO-VERIFY-162
+**RETRO-SYMCODE-SERIAL fix (batch_verify):**
+
+    verify_response() processes each paragraph as a separate verify_step() call.
+    For 10+ paragraph responses (Exp 627 style) this creates N separate exec()
+    invocations, each paying the module-import and namespace-init cost (~50 ms each).
+    batch_verify() collects all expressions in one pass and evaluates them in a single
+    shared exec() namespace, reducing total latency from ~N×50ms to ~1×50ms.
+
+Spec: REQ-VERIFY-122, REQ-VERIFY-123, REQ-VERIFY-148,
+      SCENARIO-VERIFY-160, SCENARIO-VERIFY-161, SCENARIO-VERIFY-162,
+      SCENARIO-VERIFY-173
 """
 
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+import time
+from dataclasses import dataclass, field
 from typing import Callable, Optional
 
 from carnot.extraction.llm_extractor_v1 import safe_eval
@@ -84,6 +94,40 @@ class CoTStep:
     executed_result: Optional[float]
     stated_result: Optional[float]
     violation_detected: bool
+
+
+# ---------------------------------------------------------------------------
+# SymCodeBatchResult — aggregate result for batch_verify()
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class SymCodeBatchResult:
+    """Aggregate result from a single-exec() batch verification of N paragraphs.
+
+    **Why this exists (RETRO-SYMCODE-SERIAL):**
+        Processing 10+ paragraphs one at a time with verify_step() pays ~50ms of
+        module-import and namespace-init overhead per paragraph.  batch_verify()
+        collects all arithmetic expressions in one regex pass, then evaluates them
+        in a single shared exec() namespace, bringing total overhead back to ~1×50ms.
+
+    Fields:
+        per_paragraph_results — one CoTStep per input paragraph (same order as input).
+        total_violations      — count of paragraphs where violation_detected=True.
+        batch_latency_ms      — wall-clock time for the entire batch_verify() call.
+        n_paragraphs          — number of paragraphs that were processed.
+
+    Spec: REQ-VERIFY-148, SCENARIO-VERIFY-173
+    """
+
+    per_paragraph_results: list[CoTStep]
+    total_violations: int
+    batch_latency_ms: float
+    n_paragraphs: int = field(init=False)
+
+    def __post_init__(self) -> None:
+        # n_paragraphs is always derived from per_paragraph_results, never set by caller.
+        self.n_paragraphs = len(self.per_paragraph_results)
 
 
 # ---------------------------------------------------------------------------
@@ -284,6 +328,115 @@ class SymCodeVerifier:
         """
         steps = self.segment_steps(response)
         return [self.verify_step(s, idx) for idx, s in enumerate(steps)]
+
+    # ------------------------------------------------------------------
+    # Batch verification (RETRO-SYMCODE-SERIAL)
+    # ------------------------------------------------------------------
+
+    def batch_verify(self, paragraphs: list[str]) -> SymCodeBatchResult:
+        """Verify all paragraphs in a single exec() call.  Faster than N serial verify() calls.
+
+        **Why batching helps:**
+            verify_step() calls safe_eval() once per paragraph.  safe_eval() (and any
+            exec()-backed evaluator) pays a namespace-creation cost every invocation.
+            For 10 paragraphs this is ~10× that cost.  batch_verify() builds one shared
+            namespace dict, stuffs all expressions into it as '_expr_N = <expr>', then
+            calls exec() once.  The per-paragraph overhead is then O(1) not O(N).
+
+        **Algorithm:**
+            1. For each paragraph, extract the code expression (same logic as verify_step).
+            2. Collect all non-None expressions into a single exec script:
+                   _expr_0 = 47+28
+                   _expr_1 = 3*4
+                   ...
+            3. exec() the script once in a shared namespace.
+            4. Read back _expr_N values from the namespace.
+            5. For each paragraph, compare the namespace result to the stated value
+               (extracted by _extract_stated_result) and set violation_detected.
+
+        **Spec:** REQ-VERIFY-148, SCENARIO-VERIFY-173
+
+        Args:
+            paragraphs: List of paragraph strings to verify in one batch.
+
+        Returns:
+            SymCodeBatchResult with per-paragraph CoTStep results, violation count,
+            and wall-clock latency for the full batch call.
+        """
+        t_start = time.perf_counter()
+
+        # Step 1: extract code expressions for all paragraphs.
+        # We use the same extract_code_for_step logic; None means no arithmetic.
+        codes: list[Optional[str]] = [
+            self.extract_code_for_step(p) for p in paragraphs
+        ]
+
+        # Step 2: build a single exec script with all non-None expressions.
+        # Variable names are _expr_0, _expr_1, … so they never clash.
+        script_lines: list[str] = []
+        for idx, code in enumerate(codes):
+            if code is not None and code.strip().lower() != "none":
+                script_lines.append(f"_expr_{idx} = {code}")
+
+        # Step 3: exec once into a shared namespace if there is anything to run.
+        namespace: dict = {}
+        if script_lines:
+            script = "\n".join(script_lines)
+            try:
+                exec(script, {"__builtins__": {}}, namespace)  # noqa: S102
+            except Exception:  # noqa: BLE001 — eval errors are non-fatal; results stay None
+                pass
+
+        # Step 4 & 5: build per-paragraph CoTStep results using namespace values.
+        results: list[CoTStep] = []
+        for idx, (paragraph, code) in enumerate(zip(paragraphs, codes)):
+            if code is None or code.strip().lower() == "none":
+                results.append(
+                    CoTStep(
+                        text=paragraph,
+                        step_index=idx,
+                        generated_code=None,
+                        executed_result=None,
+                        stated_result=None,
+                        violation_detected=False,
+                    )
+                )
+                continue
+
+            # Retrieve the evaluated result from the shared namespace.
+            raw_result = namespace.get(f"_expr_{idx}")
+            try:
+                executed: Optional[float] = float(raw_result) if raw_result is not None else None
+            except (TypeError, ValueError):
+                executed = None
+
+            stated = self._extract_stated_result(paragraph)
+            violation = (
+                executed is not None
+                and stated is not None
+                and abs(executed - stated) > 1e-6
+            )
+
+            results.append(
+                CoTStep(
+                    text=paragraph,
+                    step_index=idx,
+                    generated_code=code,
+                    executed_result=executed,
+                    stated_result=stated,
+                    violation_detected=violation,
+                )
+            )
+
+        t_end = time.perf_counter()
+        batch_latency_ms = (t_end - t_start) * 1000.0
+        total_violations = sum(1 for r in results if r.violation_detected)
+
+        return SymCodeBatchResult(
+            per_paragraph_results=results,
+            total_violations=total_violations,
+            batch_latency_ms=batch_latency_ms,
+        )
 
     def detection_score(self, response: str) -> float:
         """Return the fraction of steps with a detected violation.
