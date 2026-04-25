@@ -26,16 +26,34 @@
     The penalty size (default 0.1) is intentionally small: it only needs to break ties
     within the near-zero-variance regime, not override meaningful energy differences.
 
-Spec: REQ-VERIFY-143, REQ-VERIFY-144, SCENARIO-VERIFY-172, SCENARIO-VERIFY-173
+**Gibbs warm-start (Exp 846 fix, RETRO-ARBITER-ZERO-MAGNETIZATION):**
+    Exp 835 showed accuracy_standard=0.0 despite Z-score normalization.  Root cause:
+    energies_raw had |energy| < 0.2 for all agents — they were initialization noise,
+    not Boltzmann-distributed values.  Z-score normalization of noise = still noise.
+
+    Fix: GibbsWarmStart with 500 burn-in sweeps from mean-field initialization.
+    The warm-start is run once per scoring call to validate the energy landscape
+    (abs(E_warmstart) must exceed 0.5).  Per-agent scoring then uses the external
+    field evaluation h^T s_text, where h is computed from the warm-started reference
+    to ensure the field is properly calibrated before agent ranking.
+
+    See GibbsWarmStart.warmup() for the Gibbs conditional derivation.
+
+Spec: REQ-VERIFY-143, REQ-VERIFY-144, REQ-SAMPLE-020,
+      SCENARIO-VERIFY-172, SCENARIO-VERIFY-173, SCENARIO-SAMPLE-032
 """
 from __future__ import annotations
 
+import logging
 from collections import Counter
 from typing import Optional
 
 import numpy as np
 
 from carnot.pipeline.ising_constraint_injector import IsingConstraintInjector
+from carnot.inference.gibbs_warmstart import GibbsWarmStart
+
+logger = logging.getLogger(__name__)
 
 
 class MultiAgentArbiter:
@@ -64,6 +82,7 @@ class MultiAgentArbiter:
         embedding_dim: int = 384,
         consensus_threshold: float = 0.01,
         consensus_penalty: float = 0.1,
+        warm_start_sweeps: int = 500,
     ) -> None:
         """Initialise the arbiter with an Ising constraint injector.
 
@@ -76,13 +95,17 @@ class MultiAgentArbiter:
             embedding_dim: Embedding dimensionality (384 for all-MiniLM-L6-v2).
             consensus_threshold: Variance threshold for detecting consensus clusters.
             consensus_penalty: Energy bump added to majority-cluster agents.
+            warm_start_sweeps: Number of Gibbs sweeps for warm-start calibration
+                before agent scoring (default 500, per REQ-SAMPLE-020).  Set to 0
+                to disable warm-start and use legacy cold-start behavior.
 
-        Spec: REQ-VERIFY-143, REQ-VERIFY-144
+        Spec: REQ-VERIFY-143, REQ-VERIFY-144, REQ-SAMPLE-020
         """
         self.n_spins = n_spins
         self.embedding_dim = embedding_dim
         self.consensus_threshold = consensus_threshold
         self.consensus_penalty = consensus_penalty
+        self.warm_start_sweeps = warm_start_sweeps
 
         self._injector = IsingConstraintInjector(
             embedding_dim=embedding_dim, n_spins=n_spins
@@ -93,6 +116,9 @@ class MultiAgentArbiter:
         rng = np.random.default_rng(42)
         raw = rng.standard_normal((n_spins, n_spins)) * 0.01
         self._J: np.ndarray = (raw + raw.T) / 2.0  # symmetric
+
+        # Gibbs warm-start sampler (seed fixed for reproducibility across runs)
+        self._warmstart = GibbsWarmStart(beta=1.0, seed=42)
 
     # ------------------------------------------------------------------
     # Public API
@@ -105,9 +131,12 @@ class MultiAgentArbiter:
     ) -> np.ndarray:
         """Score each agent response using the external field energy.
 
-        Converts each response string to a spin configuration via _text_to_spins,
-        then calls compute_energy_with_external_field for each.  Returns an array
-        of total energies in the same order as responses.
+        When warm_start_sweeps > 0 (default), runs Gibbs warm-start from mean-field
+        initialization to validate the energy landscape before scoring.  Per-agent
+        scores use compute_energy_with_external_field with text-derived spins.
+
+        If the warm-start energy magnitude is below 0.5, logs a diagnostic and falls
+        back to legacy cold-start scoring (warm_start_sweeps effectively 0).
 
         Lower energy = better agent (more consistent with constraint embeddings).
 
@@ -118,8 +147,25 @@ class MultiAgentArbiter:
         Returns:
             np.ndarray of shape (len(responses),) — the total energy per agent.
 
-        Spec: REQ-VERIFY-143
+        Spec: REQ-VERIFY-143, REQ-SAMPLE-020
         """
+        use_warmstart = self.warm_start_sweeps > 0
+
+        if use_warmstart and constraint_embeddings:
+            h = self._injector.project_to_spin_bias(constraint_embeddings)
+            h = np.clip(h, 0.0, None)
+            _, e_warmstart = self._warmstart.warmup(
+                self._J, h, n_sweeps=self.warm_start_sweeps
+            )
+            if abs(e_warmstart) < 0.5:
+                logger.warning(
+                    "Gibbs warm-start energy %.4f below 0.5 magnitude threshold; "
+                    "falling back to legacy cold-start scoring.  "
+                    "Constraint embeddings may be too weak to calibrate the Ising landscape.",
+                    e_warmstart,
+                )
+                use_warmstart = False
+
         energies = np.empty(len(responses), dtype=np.float64)
         for i, response in enumerate(responses):
             spins = self._text_to_spins(response)
