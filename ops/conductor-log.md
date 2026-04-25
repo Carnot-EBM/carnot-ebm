@@ -2777,3 +2777,4 @@ python/ |
 | 2026-04-25 18:28 UTC | Exp 870: SOTA Code Repair v7 — Qwen3.5-0.8B Live H | OK | 81 passed, 3 warnings in 2.81s |
 | 2026-04-25 18:44 UTC | Exp 871: Live Benchmark v6 — DualGPU + Full Cascad | OK | 81 passed, 3 warnings in 2.89s |
 | 2026-04-25 19:03 UTC | Exp 872: JEPA v25 — DG-PRM Domain Reweighting + SV | OK | 81 passed, 3 warnings in 2.83s |
+| 2026-04-25 19:14 UTC | Exp 873: JEPA v25 OOD Evaluation + Cascade Deploym | OK | 81 passed, 3 warnings in 2.80s |
