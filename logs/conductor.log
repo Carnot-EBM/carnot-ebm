@@ -3990,3 +3990,32 @@ The -91 min improvement is **not from governance** — it came from slower exper
 Near-term recoverable: **~523 min (13.0%)** via manifest enforcement (276), DualGPU wiring (60), experiment cap (90), timeout watchdog (47), model pre-download (30), doc batching (20). Structural maximum: **30%**.
 2026-04-25 17:18:54,585 [conductor] Claude Code completed (exit 0)
 2026-04-25 17:18:54,586 [conductor] Operational retrospective complete
+2026-04-25 17:18:54,631 [conductor] Committed: [conductor] Operational retrospective for milestone 2026.04.67
+2026-04-25 17:18:56,443 [conductor] Pushed to origin
+2026-04-25 17:18:56,444 [conductor] No research-roadmap-next.yaml — launching planning agent
+2026-04-25 17:18:56,457 [conductor] ============================================================
+2026-04-25 17:18:56,457 [conductor] PLANNING NEXT MILESTONE (current: 2026.04.67)
+2026-04-25 17:18:56,457 [conductor] ============================================================
+2026-04-25 17:18:56,457 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. Here's what was produced:
+
+**Three files written:**
+
+1. **`research-references.md`** — 4 new papers appended under "2026-04-25 arxiv Scan (Milestone 2026.04.68 Planning)": Spectral Attention (2502.17598), Constrained Decoding (2508.15866), PRM Planning (2604.17957), PIMI parallel root cause (2604.17109 clarification).
+
+2. **`openspec/change-proposals/research-roadmap-v68.md`** — Full milestone design doc: what .67 proved, architecture diagram, 6-phase plan with dependency graph, success criteria, hardware requirements, and failed-experiment rerun compliance table.
+
+3. **`research-roadmap-next.yaml`** — 12 experiments (Exp 880–891) with complete conductor prompts.
+
+**Key strategic decisions for .68:**
+
+| Decision | Rationale |
+|----------|-----------|
+| **RETIRE HalluSAE** | Exp 878 "below_v1" (0.45 < 0.61) with `retire_if_same_verdict=true` triggered |
+| **Gemma4 via transformers** for code repair | 11 GGUF downloads failed; Gemma4-E4B-it already cached, loads via `transformers` |
+| **VJEPA scale-up** not discriminative JEPA | VJEPA (Exp 877) OOD viable; 10 discriminative retrains all failed — final attempt via encoder pretraining, then retire |
+| **SpectralAttentionProbe** (Tier 0h) | Bigram Laplacian proxy from 2502.17598; geometrically orthogonal to all existing tiers |
+| **ConstrainedDecodingPreFilter** | AST token masking reduces CodeExtractor FP rate before verification |
+| **iCE40 PIMI v3 fully parallel** | Root cause of 2x vs 5x confirmed: checkerboard ≠ synchronous parallel; the paper's 15-25x requires all spins updating simultaneously |
+2026-04-25 17:31:27,188 [conductor] Claude Code completed (exit 0)
+2026-04-25 17:31:27,206 [conductor] Planning agent created milestone 2026.04.68 with 12 tasks
