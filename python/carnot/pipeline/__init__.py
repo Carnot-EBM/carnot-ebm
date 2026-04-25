@@ -602,6 +602,7 @@ from carnot.pipeline.gguf_cache import (  # noqa: E402
     GGUFModelNotFoundError,
     resolve_gguf_path,
 )
+from carnot.pipeline.manifest_enforcer import ExclusionManifestEnforcer  # noqa: E402
 
 __all__ = [
     "AgentStep",
@@ -990,4 +991,5 @@ __all__ = [
     "GGUFCacheResolver",
     "GGUFModelNotFoundError",
     "resolve_gguf_path",
+    "ExclusionManifestEnforcer",
 ]

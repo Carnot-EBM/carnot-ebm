@@ -2896,3 +2896,32 @@ Fix: `VerifyRepairPipeline.verify()` now calls `embedding_constraint_store.store
 for each violation when `enable_constraint_accumulation=True`.
 
 Spec: REQ-LEARN-048, REQ-LEARN-049, SCENARIO-LEARN-060, SCENARIO-LEARN-836-001
+
+
+---
+
+## REQ-INFRA-072: ExclusionManifestEnforcer
+
+**REQ-INFRA-072**: ExclusionManifestEnforcer MUST prevent retired experiments from
+re-entering the conductor queue by writing gate entries to MILESTONE_PREREQS.md.
+The enforcer reads ops/exclusion_manifest.yaml (YAML authority) and writes a
+dated "## Exclusion Manifest Gate" section.  The conductor reads MILESTONE_PREREQS.md
+at pre-flight; any experiment ID listed in the gate section MUST NOT be launched.
+
+This is the side-channel enforcement path that satisfies RETRO-MANIFEST-FULL-SCOPE
+without modifying scripts/research_conductor.py (CLAUDE.md constraint).
+
+Implementation: python/carnot/pipeline/manifest_enforcer.py — ExclusionManifestEnforcer
+
+### SCENARIO-INFRA-081: write_prereqs_section appends Exclusion Manifest Gate
+
+Given ops/exclusion_manifest.yaml with retired experiment IDs (e.g. 527, 491, 603):
+  - ExclusionManifestEnforcer().load_manifest("ops/exclusion_manifest.yaml") succeeds
+  - write_prereqs_section("MILESTONE_PREREQS.md") appends a section containing
+    "## Exclusion Manifest Gate" with a table of all retired IDs
+  - is_retired(527) returns True
+  - is_retired(999) returns False
+  - check_queue([527, 999]) returns [527]
+  - manifest_enforcer_deployed: true appears in the appended section
+
+Spec: REQ-INFRA-072, SCENARIO-INFRA-081 (Exp 868)

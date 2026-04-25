@@ -3479,3 +3479,29 @@ To activate: point the conductor at `research-roadmap-next.yaml` and run milesto
 2026-04-25 13:54:27,116 [conductor] RESEARCH STEP: Exp 868: Pre-flight v16 — Manifest Enforcement Module + 7-RETRO Audit (CPU)
 2026-04-25 13:54:27,116 [conductor] ============================================================
 2026-04-25 13:54:27,135 [conductor] Committing 3 dirty files as checkpoint (preserving work)
+2026-04-25 13:54:27,197 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 13:54:27,197 [conductor] Running test suite (smart subset)...
+2026-04-25 13:54:32,792 [conductor] Pre-check: 81 passed, 3 warnings in 2.82s
+2026-04-25 13:54:32,915 [conductor] Injected 84 symbol signatures from 3 files (AST outlines)
+2026-04-25 13:54:32,915 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 27 tests pass. The deliverable `results/experiment_868_preflight_v16.json` is written with `honest_verdict=governance_ready`, `manifest_enforcer_deployed=True`, and `prereqs_updated=True`. Key files created:
+
+- `python/carnot/pipeline/manifest_enforcer.py` — `ExclusionManifestEnforcer` class
+- `ops/exclusion_manifest.yaml` — YAML authority for retired IDs (260, 308, 309, 346, 380–383, 410, 425, 491, 527, 603, 627)
+- `MILESTONE_PREREQS.md` — appended .67 section + Exclusion Manifest Gate
+- `openspec/capabilities/autoresearch/spec.md` — REQ-INFRA-072, SCENARIO-INFRA-081
+- `scripts/experiment_868_preflight_v16.py` — preflight runner
+- `tests/python/test_experiment_868_preflight_v16.py` — 27 tests all passing
+2026-04-25 13:59:01,684 [conductor] Claude Code completed (exit 0)
+2026-04-25 13:59:01,699 [conductor] Changes:
+MILESTONE_PREREQS.md                       | 87 ++++++++++++++++++++++++++++++
+ logs/conductor.log                         | 14 +++++
+ openspec/capabilities/autoresearch/spec.md | 29 ++++++++++
+ python/carnot/pipeline/__init__.py         |  2 +
+ 4 files changed, 132 insertions(+)
+2026-04-25 13:59:01,715 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp869-gguf-predownload: '"success"' — auto-fixing
+2026-04-25 13:59:01,716 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp870-sota-code-repair-v7: '"name"' — auto-fixing
+2026-04-25 13:59:01,716 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp871-live-benchmark-v6: '"name"' — auto-fixing
+2026-04-25 13:59:01,720 [conductor] DOGFOOD: Verification complete (total: 542 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 13:59:01,720 [conductor] Running test suite (smart subset)...
+2026-04-25 13:59:07,271 [conductor] Post-check: 81 passed, 3 warnings in 2.79s
