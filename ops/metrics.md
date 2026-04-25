@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-25 Milestone 2026.04.66 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-25T13:12:01Z | 2026-04-25T13:29:07Z | Planned milestone 2026.04.66 "Permanent LIVE-ENV Fix + DualGPU Production + Inertia Ising + Streaming CoT + iCE40 N=8". Read 10 project files + .65 retro. Arxiv scan (8 papers): arXiv 2604.16430 (HalluSAE Geometric Energy) → Tier 0i; arXiv 2604.17109 (Inertia Ising) → Exp 860; arXiv 2501.04971 (Self-Adaptive Lagrange Ising) → FR-11 Exp 862; arXiv 2601.02170 (Streaming CoT PHaS) → Tier 0g Exp 861; arXiv 2601.00756 (Memory Bank Compression) → Exp 865; arXiv 2604.03345 (KAN Hardware Complexity) → Exp 866; arXiv 2603.24183 (Mpemba Init) → Exp 860 enhancement; arXiv 2601.17467 (ARS Trajectory) → reference. Prepended 8 entries to research-references.md. Identified 3 biggest gaps: (1) LIVE-ENV never permanently fixed (6 recurrences) — fix with EnvPropagationGuard; (2) DualGPURunner validated but never deployed — wire into VerifyRepairPipeline; (3) iCE40 N=16 register expansion — pure combinational N=8 energy oracle. Wrote openspec/change-proposals/research-roadmap-vNEXT.md (.66 design: 13 experiments 855-867, 5 phases, 10 RETROs targeted, 13 success criteria). Wrote research-roadmap-next.yaml (13 experiments with full conductor prompts). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~110k |
+
+---
+
 ## Session: 2026-04-24 Milestone 2026.04.61 Planning
 
 ### Turn Log

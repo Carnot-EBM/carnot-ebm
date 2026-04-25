@@ -1,93 +1,111 @@
-# Research Roadmap — Milestone 2026.04.65
+# Research Roadmap — Milestone 2026.04.66
 
-**Title:** JEPA v24b SVAMP Fix + Arbiter Warm-Start + Constraint Retrieval + GGUF Cache + iCE40 N=16
+**Title:** Permanent LIVE-ENV Fix + DualGPU Production + Inertia Ising + Streaming CoT + iCE40 N=16
 
-**CalVer:** 2026.04.65 (sequence increment from 2026.04.64)
-**Planned Experiments:** Exps 843-854 (12 experiments)
+**CalVer:** 2026.04.66 (sequence increment from 2026.04.65)
+**Planned Experiments:** Exps 855-867 (13 experiments)
 **Date Designed:** 2026-04-25
-**Prerequisite:** Milestone 2026.04.64 retro complete (Exp 842)
+**Prerequisite:** Milestone 2026.04.65 retro complete (Exp 854)
 
 ---
 
-## What Milestone 2026.04.64 Proved
+## What Milestone 2026.04.65 Proved
 
-Milestone .64 (Exps 831-842) targeted 11 success criteria. Result: 4 met, 7 missed.
+Milestone .65 (Exps 843-854) targeted 12 success criteria. Results from Exp 854 retro:
 
 **Wins:**
-- Exp 831: governance_ready — RETRO audit complete; RETRO-ISING-INJECTION and RETRO-GGUF-CACHE confirmed closed
-- Exp 832: arc_diagnosis_found — JEPA v23 ARC collapse diagnosed: embedding features for ARC steps fall out of training distribution; systematic anti-ARC bias confirmed
-- Exp 833: write_path_missing — EmbeddingConstraintStore.write() was never called during live verification; root cause identified precisely
-- Exp 836: write_path_fixed — write path wired; 15 constraints stored across 3 sessions (partial: retrieval still broken)
-- Exp 841: batching_marginal — SymCodeVerifier paragraph batching implemented; speedup=1.710x; RETRO-SYMCODE-SERIAL CLOSED
+- Exp 843: governance_ready — RETRO audit + retirement plan written; manifest_enforcement_patch.txt provided
+- Exp 846: arbiter_calibrated — Gibbs warm-start fixed accuracy_standard from 0.0 → 1.0; RETRO-ARBITER-FLAT-ENERGY CLOSED
+- Exp 849: gguf_cache_implemented — GGUFCacheResolver implemented; RETRO-GGUF-CACHE-IMPORT CLOSED
+- Exp 852: SemanticEnergyProbe Tier 0f deployed (AUC_synthetic result in artifact)
 
 **Failures and new diagnostics:**
-- Exp 834: jepa_v24_arc_improved_svamp_collapsed — DG-PRM lifted ARC from 0.04 to 0.72 but SVAMP=0.0 (zero training coverage). min_domain_auc=0.0 blocked deployment. Pattern: every domain fix creates a new domain collapse because corpus is not balanced across ALL domains simultaneously.
-- Exp 835: arbiter_still_wrong — Z-score normalization did not fix accuracy_standard=0.0. Root cause: Gibbs sampler not warm-started, energies from unconverged MCMC are near-zero magnitude regardless of normalization. Three consecutive milestones non-functional.
-- Exp 836: write_path_fixed_no_delta — write fixed (15 constraints stored) but delta_overall=0.0. Retrieval path broken independently: cosine similarity returns near-zero because embeddings are not L2-normalized before storage.
-- Exp 837: blocked_gate — gated on Exp 836 delta>0, which failed; FR-11 Tier 1 live relay could not run
-- Exp 838: jepa_v24_not_deployed_below_gate — min_domain_auc=0.0 (SVAMP) blocked Tier 3.5 deployment
-- Exp 839: pnr_failed — N=32 (3952 LUTs) exceeds iCE40 HX8K P&R budget; synthesis was clean but place-and-route exhausted resources
-- Exp 840: simulated_no_verdict — live GPU inference fell back to simulation; no credible benchmark
-- Exp 842 retro finding: FIFTH CONSECUTIVE full-milestone wall-time regression (3971 min, +67 vs .63). Slowest-5 identical five consecutive milestones (Exps 786, 527, 491, 627, 603). Experiment count 750 — 50 over the 700 cap. Manifest enforcement still not applied to all dequeue sites.
+- Exp 853: RETRO-LIVE-ENV-NOT-PROPAGATED OPENED — CARNOT_FORCE_LIVE not propagated (RETRO-015 recurrence); live benchmark v4 fell back to simulation for ninth consecutive code repair block
+- Exp 851: RETRO-ICE40-N16-UNEXPECTED-EXPANSION — N=16 expanded from 2 LCs at synthesis to 12258 LCs at P&R; flip-flop register proliferation root cause (synchronous spin state regs inferred by nextpnr from sequential Verilog)
+- Exp 850: RETRO-SOTA-MODEL-DOWNLOAD — model file absent despite GGUFCacheResolver; download path not implemented in Exp 849 (resolve() only checks existence, doesn't download)
+- Exp 854 retro: Wall time REGRESSION SIXTH CONSECUTIVE (+78 min, +2.0% vs .64). manifest_fix_patch.txt unapplied SEVEN consecutive milestones. DualGPURunner validated (1.96x throughput, Exp 685) but NEVER deployed in production path. Experiment count 772 — new historic high, 72 over 700 cap. GPU close clean (47C/47C, 0C differential). 10 open RETROs.
 
-**9 RETROs open going into .65:**
-- RETRO-MANIFEST-FULL-SCOPE — requires human code change (outside experiment scope); provide audit + patch in Exp 843
-- RETRO-JEPA-OOD — SVAMP collapse (auc_svamp=0.0); v24b with SVAMP triplets needed
-- RETRO-ARBITER-FLAT-ENERGY — Gibbs not warm-started; accuracy_standard=0.0 three milestones
-- RETRO-CONSTRAINT-ZERO-DELTA — write fixed; retrieval broken (missing L2-norm)
-- RETRO-GGUF-CACHE-IMPORT — carnot/pipeline/gguf_cache.py still missing; 8 consecutive milestone blockade
-- RETRO-SVAMP-ZERO-AUC — new .64 RETRO; zero SVAMP coverage in JEPA training corpus
-- RETRO-ICE40-PNR-LUT-OVERFLOW — new .64 RETRO; N=32 too large; must reduce to N=16
-- RETRO-XILINX-TOOLS-UNAVAILABLE — Vivado not installed; KV260 native synthesis deferred
-- RETRO-ISING-INJECTION-NO-DISCRIMINATION — governance audit shows this may still affect the retrieval path; re-validate after Exp 847 fix
+**10 RETROs open going into .66:**
+- RETRO-MANIFEST-FULL-SCOPE — manifest_fix_patch.txt provided in Exp 843 but not applied (human action needed)
+- RETRO-JEPA-OOD — result of Exp 844 (if min_domain_auc < 0.50, still open)
+- RETRO-CONSTRAINT-ZERO-DELTA — result of Exps 847/848 (if retrieval still broken)
+- RETRO-XILINX-TOOLS-UNAVAILABLE — Vivado not installed; KV260 native synthesis blocked
+- RETRO-ISING-INJECTION-NO-DISCRIMINATION — energy delta identical for error/clean code
+- RETRO-SVAMP-ZERO-AUC — result of Exp 844 (if auc_svamp < 0.40)
+- RETRO-ICE40-PNR-LUT-OVERFLOW — N=16 LUT overflow (resolved by .66 Exp 859 if combinational fix works)
+- RETRO-SOTA-MODEL-DOWNLOAD — model absent despite resolver; download needed
+- RETRO-ICE40-N16-UNEXPECTED-EXPANSION — 12258 LCs from registered spin state registers
+- RETRO-LIVE-ENV-NOT-PROPAGATED — permanent fix needed, not just workaround
 
 ---
 
 ## The 3 Biggest Gaps vs PRD Vision
 
-### Gap 1: JEPA Domain Coverage Collapse — SVAMP=0.0 After DG-PRM Fixed ARC
+### Gap 1: LIVE-ENV Never Permanently Fixed — Code Repair Blocked 9 Consecutive Milestones
 
-Exp 834 proved DG-PRM reweighting works: ARC AUC improved from 0.04 to 0.72. But SVAMP collapsed to 0.0 because the SVAMP domain had zero training examples. The pattern is clear: every targeted domain fix causes another domain to collapse unless ALL domains are covered simultaneously.
+The RETRO-015 pattern (CARNOT_FORCE_LIVE not propagating to subprocesses) has now recurred
+SIX times across different implementation attempts. The apply_env_autofix() approach is not
+sufficient: it sets the env var in the current process but does not ensure subprocess inheritance
+in all execution paths. Every GPU experiment that depends on this is silently falling back to
+simulation.
 
-**Root cause:** The JEPA v24 corpus included 0 SVAMP triplets. DreamPRM per-domain reweighting cannot help a domain with zero training signal — it amplifies the existing gradient, not a missing one.
+**Root cause (to confirm in Exp 855):** Python subprocess.Popen() with `env=None` inherits the
+calling process's environment. But the conductor launches experiments via `claude -p` which
+creates a NEW process tree that does not inherit the outer shell's environment. The fix:
+(1) Make apply_env_autofix() write the env var to a session file that is sourced at experiment
+startup, AND (2) add a hard assert that blocks the experiment if CARNOT_FORCE_LIVE is not set
+AND GPU is detected.
 
-**Fix for .65 (Exp 844 — JEPA v24b):**
-1. Add 20 SVAMP triplets to training corpus alongside existing GSM8K/HumanEval/ARC triplets.
-2. Assert ALL domains have >= 10 training pairs at script startup before any training begins.
-3. Apply DreamPRM per-domain loss weighting (arXiv 2505.20241): compute per-domain validation loss from Exp 834 results; SVAMP weight = 8.0 (worst domain), ARC weight = 1.3 (improved), HumanEval weight = 1.2, GSM8K weight = 1.0.
-4. Deploy as Tier 3.5 if min_domain_auc >= 0.50 AND overall_ood >= 0.65.
+**Fix for .66 (Exp 855):**
+1. Implement `EnvPropagationGuard` that writes CARNOT_FORCE_LIVE=1 to `~/.carnot_session_env`
+   at the start of any experiment that needs live GPU.
+2. All subsequent experiments source `~/.carnot_session_env` at startup (one-line addition to
+   ExperimentTemplate.__init__).
+3. Exp 857 (code repair) and Exp 858 (benchmark) are gated on Exp 855's `live_env_fixed=True`.
+4. Add this to ExperimentTemplate.apply_env_autofix() permanently.
 
-This is the 11th consecutive JEPA retrain attempt. The pattern of domain-specific failure is now well-understood. The fix is purely a data coverage issue.
+### Gap 2: DualGPURunner Validated But Never Deployed — 60 min/milestone Lost
 
-### Gap 2: Constraint Retrieval Missing L2-Normalization — Delta=0 Despite Write Path Fix
+Exp 685 validated DualGPURunner at 1.96x throughput. Every milestone since .57 has noted
+"DualGPURunner NEVER deployed in production path" in the retro. This is the single highest-
+impact unimplemented improvement: deploying it would eliminate the need to serialize GPU inference
+across experiments, potentially recovering 60+ min/milestone.
 
-Exp 836 fixed the write path (15 constraints stored). But delta_overall=0.0 persists because the retrieval path is broken: cosine similarity is computed on un-normalized vectors, producing near-random rankings. The top-retrieved constraint for any query has cosine similarity ~0.1, far too low to produce meaningful energy injection.
+**Fix for .66 (Exp 856):**
+1. Wire DualGPURunner into VerifyRepairPipeline.verify() for dual-model experiments.
+2. Wire into ThreeTierPipeline for benchmarks that run both models simultaneously.
+3. Validate with 25 synthetic questions: throughput_ratio > 1.5x vs serial execution.
+4. Gate Exps 857/858 on dual_gpu_deployed=True.
 
-**Root cause analysis (to validate in Exp 847):**
-1. EmbeddingConstraintStore.write() stores raw sentence-transformer embeddings (L2 norm ~1.0, not exactly 1.0 due to float precision).
-2. EmbeddingConstraintStore.retrieve() computes cosine similarity without normalizing the query vector.
-3. The cosine similarity threshold (0.7 default) is never crossed, so retrieve() always returns an empty list or near-zero results.
-4. IsingEBM external field receives zero-magnitude penalty inputs → energy delta = 0.
+### Gap 3: iCE40 N=16 Register Expansion — 12258 LCs from Sequential Verilog
 
-**Fix:** L2-normalize all vectors on write AND on query. Verify with retrieval AUROC > 0.80 before running live sessions.
+N=16 synthesis was clean (2 LUTs) but P&R expanded to 12258 LCs because the spin state
+registers were inferred as flip-flops (sequential logic). This is a fundamental mismatch
+between the synchronous Verilog design and the combinational FPGA synthesis target.
 
-### Gap 3: Arbiter Gibbs Not Warm-Started — Unconverged MCMC Produces Near-Zero Energies
+**Root cause:** The spin state `s[15:0]` is declared as `reg` updated in an `always @(posedge clk)`
+block. Nextpnr-ice40 correctly infers 16 flip-flops for 16 spin bits, plus the combinational logic
+for the Gibbs conditional energy computation. But the combinational logic for a 16x16 coupling
+matrix expands dramatically: each spin update requires `sum_j J_ij * s_j`, which is 16 multiply-
+accumulate operations. In fixed-point arithmetic, each MAC is ~50 LUTs. Total: 16 spins × 16 MACs
+× 50 LUTs ≈ 12,800 LUTs. That IS the expansion.
 
-MultiAgentArbiter accuracy_standard=0.0 across three consecutive milestones (.62, .63, .64). Exp 835 applied Z-score normalization and got the same result. The diagnostics show energies_raw in the range [-0.07, +0.14] — tiny magnitudes consistent with an MCMC chain that hasn't mixed.
-
-**Root cause:** IsingEBM Gibbs sampler initializes all spins to zero. At beta=1.0 (the Carnot default), a cold-start from zero takes hundreds of sweeps to reach the energy minimum. The arbiter measures energy after N_sweeps=10 (the default), which is insufficient for convergence. The measured "energy" is mostly initialization noise, not the true Boltzmann distribution.
-
-**Fix (Exp 846 — Gibbs Warm-Start v3):**
-Warm-start from the mean-field approximation: `s_i = sign(sum_j J_ij * 0 + h_i) = sign(h_i)`. Run 500 burn-in sweeps before measurement. This is the standard practice in Gibbs sampling (arXiv 2304.06993: warm-start convergence theory) — initialization at the MF fixed point dramatically reduces mixing time. After 500 sweeps from the MF fixed point, energies are at the Boltzmann-distributed equilibrium.
-
-Expected result: energy magnitudes increase from [-0.07, +0.14] range to [-3.0, +3.0] range, making arbitration discriminative. Target: accuracy_standard >= 0.67.
+**Fix for .66 (Exp 859):**
+Reduce N to 8 (N=8 design) with combinational energy readout only:
+- Remove the sequential Gibbs sweep logic entirely (too expensive for iCE40)
+- Implement ONLY the energy computation: E = -sum_i sum_j J_ij * s_i * s_j + sum_i h_i * s_i
+- Input: spin configuration as external input (not internally updated)
+- Output: energy value for that configuration
+- Expected LUT count: N^2 multipliers + N adder tree = 64 * 2 + 8 * 2 = 144 LUTs (within budget)
+- This is an "energy oracle" not a full sampler — but it validates the FPGA path and enables
+  the PYNQ overlay dispatch for Carnot's FpgaBackend
 
 ---
 
 ## Architecture Diagram
 
 ```
-Query
+Query (live LLM response)
   |
   v
 [Tier 0a] CarnotThinkProbe (generative CoT verdict, ThinkPRM arXiv 2504.16828)
@@ -99,448 +117,211 @@ Query
 [Tier 0c] NUP Probe v4 (contrastive energy, AUC=1.0, Exp 523)
   |
   v
-[Tier 0d] HallucinationBasinDetector (latent basin depth, arXiv 2604.04743)
+[Tier 0d] HallucinationBasinDetector (latent-space basin depth, arXiv 2604.04743)
   |
   v
-[Tier 0e] HalluField (thermodynamic instability, advisory, arXiv 2509.10753)
+[Tier 0e] HalluField (token-path thermodynamic instability, arXiv 2509.10753) [advisory]
   |
   v
-[Tier 0f] SemanticEnergyProbe (semantic clustering + Boltzmann, arXiv 2508.14496) [NEW .65]
-  |  advisory signal; AUC target > 0.70
-  v
-[Tier 0h] JailbreakDetectionKAN + ActivationJailbreakProbe (Exp 828, AUC >= 0.85)
-  |  SAFETY_GATE on jailbreak
-  v
-[Tier 1]  SinkProbe (attention sink concentration, arXiv 2604.10697)
+[Tier 0f] SemanticEnergyProbe (pairwise Boltzmann semantic energy, Exp 852) [advisory]
   |
   v
-[Tier 2]  EORM (CoT energy reward model, 55M params)
+[Tier 0g] *** NEW: StreamingCoTHalluDetector (prefix-level cumulative PHaS, arXiv 2601.02170) [advisory]
   |
   v
-[Tier 2.1] JEPAReasonerProbe (latent-space reasoning, AUC=0.993, Exp 726)
+[Tier 0h] JailbreakDetectionKAN (AUC=1.0, Exp 775)
   |
   v
-[Tier 2.5] SymCodeVerifier (executable arithmetic, AUC=0.804 live)
-  |         [.64 FIXED: paragraph batching, speedup=1.710x, RETRO-SYMCODE-SERIAL CLOSED]
-  v
-[Tier 2.6] HermesVerifierAdapter (step-boundary feedback loop)
+[Tier 0i] *** NEW: HalluSAEGeometricProbe (SAE feature geometry energy, arXiv 2604.16430) [advisory]
   |
   v
-[Tier 2.7] CausalReasoningVerifier (causal entailment across steps)
+[Tier 1] SinkProbe (attention sink concentration, arXiv 2604.10697)
   |
   v
-[Tier 3]  IsingEBM (full constraint verification, 0.006 ms/check)
-  |        + compute_energy_with_external_field [FIXED .63]
-  |        + EmbeddingConstraintStore [write path FIXED .64, retrieval L2-norm .65 FIX]
+[Tier 2] EORM (CoT energy reward model, 55M params)
   |
   v
-[Tier 3.5] JEPA v24b (domain-balanced OOD predictor) [.65 FIX: SVAMP triplets added]
-  |         TARGET: min_domain_auc >= 0.50, overall_ood >= 0.65
+[Tier 2.5] SymCodeVerifier (executable Python arithmetic, Exp 619)
+  |
+  v
+[Tier 2.6] HermesVerifierAdapter (step-boundary feedback, arXiv 2511.18760)
+  |
+  v
+[Tier 2.7] CausalReasoningVerifier (causal entailment, arXiv 2601.21210)
+  |
+  v
+[Tier 3] IsingEBM via InertiaIsingSampler (arXiv 2604.17109, Exp 860) ***NEW***
+       + LagrangeAdaptiveConstraints (arXiv 2501.04971, Exp 862) ***NEW***
+  |
+  v
+[Tier 3.5] JEPA v24b Predictive Verifier (Exp 845, if deployed)
 
-MultiAgentArbiter [.65 FIX: Gibbs warm-start 500 sweeps from sign(h_i)]
-  + L2-normalized energy input from EmbeddingConstraintStore
-  + Z-score normalization preserved post warm-start
-  TARGET: accuracy_standard >= 0.67
+[DualGPURunner] *** NEW DEPLOYMENT (Exp 856): parallelizes GPU inference across tiers ***
 
-Self-Learning Loop (FR-11):
-  Tier 1: EmbeddingConstraintStore write + L2-norm retrieval [.65 FIX] → IsingEBM external field
-  Tier 3: JEPA v24b Tier 3.5 [.65 target if min_domain_auc >= 0.50]
-
-Hardware Path:
-  iCE40 N=16 Ising bitstream [.65: reduce from N=32 → N=16 to fit HX8K P&R budget]
-  KV260 native synthesis deferred (Vivado not installed)
-
-GGUF Code Repair Path [.65 UNBLOCK: carnot/pipeline/gguf_cache.py]:
-  GGUFCacheResolver → Qwen3.6-35B-A3B-GGUF → SOTA code repair
+[FPGA Energy Oracle] *** iCE40 N=8 combinational (Exp 859, gates KV260 deploy) ***
 ```
 
 ---
 
 ## Phase Descriptions
 
-### Phase 0: Governance Pre-flight (Exp 843)
+### Phase 0: Governance Fixes (Exps 855-856, CPU)
 
-**Goal:** Update MILESTONE_PREREQS.md with .64 lessons, audit RETRO status, produce retirement plan for 50+ over-cap experiments, provide manifest enforcement patch for human review.
+Break the six-milestone LIVE-ENV and DualGPU loops with permanent implementations.
 
-**Exp 843 — Pre-flight v14: RETRO Audit + Experiment Retirement Plan (CPU)**
-Read results/operational_retro_2026_04_64.json. Identify the 9 open RETROs.
-Cross-reference with actual experiment result fields (Exp 836, 839, 841, 842).
-Confirm RETRO-SYMCODE-SERIAL is CLOSED (Exp 841 speedup=1.710).
-Identify 50+ over-cap experiments (750 actual vs 700 cap).
-Produce a retirement_plan.md: list which experiment IDs to retire, sorted by:
-  (a) zero residual research value (RETRO closed + experiment re-ran post-closure),
-  (b) superseded by newer version (Exp 786 → superseded by Exp 810 outcome),
-  (c) hypothesis resolved (diagnostic experiments with confirmed findings).
-Provide manifest_enforcement_patch.txt: the exact code changes needed in the dequeue
-logic to apply the exclusion manifest at all call sites. This patch is for human review
-and application — the experiment does NOT modify research_conductor.py.
-MILESTONE_PREREQS.md invariants for .65:
-  - assert n_svamp_pairs >= 15 before any JEPA training
-  - assert gibbs_warm_start == True before any arbiter energy measurement
-  - assert retrieval_l2_normalized == True before any constraint retrieval
-  - experiment count: .65 cycle MUST NOT exceed 12 new experiments
-honest_verdict: governance_ready if prereqs_updated=True and retirement_plan written.
+**Exp 855: Pre-flight v15 — Permanent LIVE-ENV Fix**
+- Implement `EnvPropagationGuard` (writes to `~/.carnot_session_env`, sourced at ExperimentTemplate.__init__)
+- Audit all 10 open RETROs, update MILESTONE_PREREQS.md
+- Gate: live_env_fixed=True before GPU experiments can run
 
-### Phase 1: JEPA v24b SVAMP-Balanced Training (Exps 844-845)
+**Exp 856: DualGPURunner Production Deployment**
+- Wire DualGPURunner into VerifyRepairPipeline and ThreeTierPipeline
+- Validate: throughput_ratio >= 1.5x on 25 synthetic questions
+- Gate: dual_gpu_deployed=True for benchmark experiments
 
-**Goal:** Fix the SVAMP domain collapse by adding 20 SVAMP triplets to the corpus and retraining with DreamPRM per-domain weighting across all 4 domains simultaneously.
+### Phase 1: GPU Critical Path (Exps 857-858, GPU)
 
-**Exp 844 — JEPA v24b SVAMP-Balanced Domain Training (RETRO-SVAMP-ZERO-AUC + RETRO-JEPA-OOD, CPU)**
-Read: results/experiment_834_jepa_v24_dg_prm.json (training checkpoint, corpus paths).
-Read: results/experiment_825_jepa_v23_eval_fr11_tier3.json (per-domain AUC baseline).
-Read: python/carnot/pipeline/jepa_predictor.py (JEPAPredictor class).
+First positive live code repair result (GGUF cache + SOTA model now possible).
 
-Build corpus v24b:
-  - Load existing GSM8K/HumanEval/ARC triplets from Exp 834 corpus.
-  - Generate 20 SVAMP triplets: for each SVAMP question, produce a correct reasoning step
-    ("The total is X because Y, so the answer is Z.") and an incorrect step
-    ("The total is X+1 because Y, so the answer is Z+1.") with symbolic verification
-    where the incorrect step fails a numeric equality check.
-  - Assert n_svamp_pairs >= 15, n_arc_pairs >= 15, n_humaneval_pairs >= 15, n_gsm8k_pairs >= 15.
+**Exp 857: SOTA GGUF Model Download + Code Repair v6**
+- Extend GGUFCacheResolver with download capability (huggingface-hub pull)
+- Run 25 HumanEval problems with Qwen3.6-35B-A3B-GGUF
+- Gated on Exp 855 live_env_fixed=True + Exp 856 dual_gpu_deployed=True
 
-DreamPRM reweighting (arXiv 2505.20241):
-  - Compute per-domain validation loss from Exp 834 results.
-  - SVAMP weight = 8.0 (auc_svamp=0.0 in v24, highest deficit).
-  - ARC weight = 1.3 (auc_arc=0.72 in v24, moderate).
-  - HumanEval weight = 1.2 (auc_humaneval=0.76 in v24).
-  - GSM8K weight = 1.0 (baseline domain).
+**Exp 858: Live Full Precision Benchmark v5 — DualGPU + All Cascade Tiers**
+- DualGPURunner active (Exp 856)
+- All cascade tiers: Tier 0a through 3.5 (if deployed)
+- 50 GSM8K + 25 HumanEval
+- Gated on Exp 856 dual_gpu_deployed=True
 
-Train 250 epochs with triplet loss + per-domain weights.
-Evaluate: per-domain AUC (gsm8k, humaneval, arc, svamp) + overall OOD AUC.
-Target: auc_svamp >= 0.40, min_domain_auc >= 0.50, overall_ood >= 0.65.
-honest_verdict:
-  - "jepa_v24b_all_domains_viable" if min_domain_auc >= 0.50 AND overall >= 0.65
-  - "jepa_v24b_svamp_fixed" if auc_svamp >= 0.40 but min_domain_auc still < 0.50
-  - "jepa_v24b_svamp_still_collapsed" if auc_svamp < 0.40
+### Phase 2: FPGA Hardware (Exps 859-860, CPU + iCE40 tools)
 
-**Exp 845 — JEPA v24b Tier 3.5 Multi-Domain Deployment (CPU, GATED on Exp 844 min_domain_auc >= 0.50)**
-Read: results/experiment_844_jepa_v24b_svamp.json.
-If min_domain_auc < 0.50: write blocked artifact, document which domain is failing.
-If viable: wire JEPA v24b into ThreeTierPipeline as Tier 3.5 (replace JEPA v23 if present).
-Emit VerificationCertificate for each prediction: (step_id, domain_label, jepa_score,
-  energy_delta, domain_weight, confidence_score, svamp_coverage_flag).
-Test: 40 held-out steps (10 per domain: GSM8K/HumanEval/ARC/SVAMP).
-Verify: (1) domain_label accuracy >= 0.75, (2) tier35_deployed=True in pipeline state.
-Update _bmad/traceability.md: FR-11 Tier 3 status.
-honest_verdict: jepa_v24b_tier35_deployed or blocked_below_gate.
+Fix the N=16 register expansion and benchmark the inertia sampler.
 
-### Phase 2: Arbiter Gibbs Warm-Start Fix (Exp 846)
+**Exp 859: iCE40 N=8 Combinational Energy Oracle**
+- Pure combinational Verilog: energy computation only (no sequential spin state)
+- Expected LUT count: ~144 (vs 12258 for sequential N=16)
+- Generates .bin bitstream for PYNQ overlay dispatch
+- Closes RETRO-ICE40-N16-UNEXPECTED-EXPANSION and RETRO-ICE40-PNR-LUT-OVERFLOW
 
-**Goal:** Fix the MCMC convergence issue causing accuracy_standard=0.0 by warm-starting the Gibbs sampler from the mean-field approximation.
+**Exp 860: Inertia Ising Sampler Benchmark**
+- arXiv 2604.17109: EMA per-spin inertia term (alpha=0.5)
+- Benchmark: discrimination_delta between correct/incorrect constraint configs
+- Mpemba initialization (arXiv 2603.24183): spectral-optimal starting magnetization
+- Targets: inertia reduces mixing sweeps by 5x+; improves energy discrimination
 
-**Exp 846 — Multi-Agent Arbiter Gibbs Warm-Start v3 (RETRO-ARBITER-FLAT-ENERGY, CPU)**
-Read: results/experiment_835_arbiter_calibration_fix_v2.json (energies_raw, accuracy breakdown).
-Read: python/carnot/models/ising.py or equivalent IsingEBM implementation.
-Read: python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline IsingEBM usage).
+### Phase 3: New Detection Probes + Self-Learning (Exps 861-864, CPU)
 
-Root cause confirmed: Gibbs sampler initializes s_i = 0. At beta=1.0 with N_sweeps=10 (default),
-energy measurement is from an unconverged chain — readings are initialization noise.
+Wire new probe tiers and advance FR-11 self-learning.
 
-Fix: implement GibbsWarmStart protocol in IsingEBM:
-  1. Mean-field initialization: s_i = sign(sum_j J_ij * 0 + h_i) = sign(h_i) for each spin i.
-     (When bias terms h_i are present, this is the one-step MF approximation.)
-     If h_i = 0 for all i (no external bias), fall back to random ±1 initialization.
-  2. Burn-in sweep: run 500 Gibbs sweeps after initialization before any energy measurement.
-  3. Expose as warm_start_sweeps parameter (default=500, 0=legacy cold-start behavior).
+**Exp 861: StreamingCoTHalluDetector (Tier 0i)**
+- arXiv 2601.02170: prefix-level cumulative PHaS signal
+- Per-step EORM scores → running state estimate phas_t = alpha * score_t + (1-alpha) * phas_{t-1}
+- Advisory: is_streaming_unstable flag in VerificationCertificate
 
-Apply to MultiAgentArbiter.score_agent_outputs():
-  - For each agent response, call IsingEBM with warm_start_sweeps=500.
-  - Z-score normalize energies per call (preserved from Exp 835).
-  - Return energies in [−10, +10] range (instead of [−0.07, +0.14]).
+**Exp 862: LagrangeAdaptiveIsingConstraints (FR-11 Tier 1, Self-Learning)**
+- arXiv 2501.04971: iterative Lagrange relaxation of constraint weights
+- Violation-driven coupling weight increase (adaptive self-learning)
+- 5-session relay: compare delta_s1_to_s5 vs non-adaptive baseline
+- Mandatory FR-11 experiment for this milestone
 
-Test: 12 scenarios from Exp 822 (6 standard + 6 adversarial).
-Target: accuracy_standard >= 0.67 (4/6 correct on standard scenarios).
-Verify: energy magnitude check — abs(mean_energy) > 1.0 across all scenarios.
-Spec: add to openspec/capabilities/pipeline/spec.md:
-  REQ-SAMPLE-020: GibbsWarmStart MUST initialize from sign(h_i) with burn_in >= 500 sweeps.
-  SCENARIO-SAMPLE-030: Arbiter energy measurement; warm-start initialization; energy magnitudes
-    in [-10,+10] range (not [-0.07,+0.14]); accuracy_standard >= 0.67.
-honest_verdict: arbiter_calibrated if accuracy_standard >= 0.67 or arbiter_partial or arbiter_still_wrong.
+**Exp 863: HalluSAEGeometricProbe (Tier 0j)**
+- arXiv 2604.16430: SAE feature geometry energy over CoT trajectory
+- Lightweight bigram SAE dictionary (no GPU training needed)
+- AUC on 50 synthetic CoT pairs; advisory tier deployment
 
-### Phase 3: Constraint Retrieval Fix + FR-11 Live Relay (Exps 847-848)
+**Exp 864: FR-11 Tier 2 Integration v5 — Wire All New Probes**
+- Integrate Exp 861 (streaming PHaS) + Exp 862 (Lagrange adaptive) + Exp 863 (SAE geometry)
+- Full 5-session self-learning relay on live or synthetic data
+- FR-11 mandatory relay experiment; report tier1_relay_works status
 
-**Goal:** Fix the L2-normalization bug in EmbeddingConstraintStore and validate FR-11 Tier 1 self-learning on live GPU.
+### Phase 4: Infrastructure (Exps 865-866, CPU)
 
-**Exp 847 — EmbeddingConstraintStore L2-Norm Retrieval Fix (RETRO-CONSTRAINT-ZERO-DELTA, CPU)**
-Read: results/experiment_836_constraint_accumulation_fix_v3.json (n_constraints_written=15, delta=0.0).
-Read: python/carnot/pipeline/verify_repair.py or the EmbeddingConstraintStore implementation.
-Read: python/carnot/verify/ directory for ConstraintRetriever.
+Compress constraint memory and analyze KAN hardware suitability.
 
-Diagnosis:
-  - Print cosine similarities of known stored constraints against known query vectors.
-  - Confirm: raw cosine similarities are near 0.0-0.1 without normalization.
-  - Confirm: after L2-normalization, same pairs have cosine similarity > 0.7.
+**Exp 865: Constraint Memory Bank Compression**
+- arXiv 2601.00756: online kmeans clustering of EmbeddingConstraintStore
+- K=32 centroid embeddings; compress 10-session accumulated constraints
+- Compare retrieval AUROC before/after compression
 
-Fix:
-  1. EmbeddingConstraintStore.write(): L2-normalize embedding before storing.
-     embedding = embedding / (np.linalg.norm(embedding) + 1e-8)
-  2. EmbeddingConstraintStore.retrieve(): L2-normalize query before computing similarity.
-     query = query / (np.linalg.norm(query) + 1e-8)
-  3. Lower default cosine threshold from 0.7 to 0.5 (sentence-transformer vectors have
-     lower similarity for constraint-type variations than document retrieval).
-  4. Add retrieval_l2_normalized=True flag to EmbeddingConstraintStore.__init__.
+**Exp 866: KAN Hardware Complexity Analysis**
+- arXiv 2604.03345: per-knot LUT estimates for KAEMEnergy
+- 8 knots, piecewise-linear; simulate iCE40 LUT budget
+- Determine KAN vs Ising synthesis priority for KV260
 
-Validate retrieval quality on held-out constraint pairs:
-  - 5 stored constraint types (arithmetic, code, logic, nl, auto).
-  - 5 query variations per type.
-  - Compute AUROC of retrieval (does the correct type rank highest?).
-  - Target: retrieval_auroc > 0.80.
-Spec: REQ-VERIFY-150, SCENARIO-VERIFY-175.
-honest_verdict: retrieval_fixed if retrieval_auroc > 0.80 or retrieval_partial or retrieval_still_broken.
+### Phase 5: Retrospective (Exp 867)
 
-**Exp 848 — FR-11 Tier 1 Live Relay v4 (FR-11 mandatory, GPU, GATED on Exp 847 retrieval_auroc > 0.70)**
-Read: results/experiment_847_constraint_retrieval_l2_fix.json.
-If retrieval_auroc <= 0.70: write blocked artifact with diagnostic details.
-
-Run 5-session self-learning relay on live GPU (CARNOT_FORCE_LIVE=1, CARNOT_GPU=1).
-Session length: 15 questions per session (Qwen3.5-0.8B, GSM8K).
-After each session:
-  - EmbeddingConstraintStore.write() with L2-normalized embeddings for each detected violation.
-  - Update IsingEBM external field with retrieved constraints for next session.
-Track per-session precision: precision_s1, precision_s2, ..., precision_s5.
-Capacity-constrained update: update only top-K=5 highest-variance constraint types.
-Measure: delta_s1_to_s5 = precision_s5 - precision_s1.
-honest_verdict: tier1_relay_works_live if precision non-decreasing AND delta > 0 OR
-  tier1_plateau_persists if delta <= 0 OR blocked_gate.
-Update _bmad/traceability.md: FR-11 Tier 1 status.
-
-### Phase 4: GGUF Cache Module + SOTA Code Repair (Exps 849-850)
-
-**Goal:** Finally create carnot/pipeline/gguf_cache.py (8th consecutive milestone blockade) and run SOTA code repair with Qwen3.6-35B-A3B-GGUF.
-
-**Exp 849 — GGUF Cache Module Implementation (RETRO-GGUF-CACHE-IMPORT, CPU)**
-Read: python/carnot/pipeline/__init__.py — check what is currently exported.
-Read: any existing gguf or cache references in the codebase.
-Read: openspec/capabilities/pipeline/spec.md — find REQ-PIPELINE-* for caching.
-
-This is a 1-2 hour implementation that has been on the IMMEDIATE list for 8 consecutive milestones.
-
-Implement python/carnot/pipeline/gguf_cache.py:
-  - GGUFCacheResolver: resolves a GGUF model path from a model ID.
-    Input: model_id (str), quantization (str, default "Q4_K_M"), cache_dir (str, default "models/").
-    Output: resolved local path (str) or raises GGUFModelNotFoundError.
-  - GGUFModelNotFoundError: raised when model file not found in cache.
-  - resolve_gguf_path(model_id, quantization) → str: convenience function.
-  - is_gguf_cached(model_id, quantization) → bool: check without resolving.
-  - GGUFCacheConfig: dataclass for cache_dir, default_quantization, timeout_s.
-
-Export GGUFCacheResolver and resolve_gguf_path from carnot.pipeline.
-Spec: add REQ-PIPELINE-030, SCENARIO-PIPELINE-040 to openspec/capabilities/pipeline/spec.md.
-Tests: 100% coverage. Tests use a temp directory as cache_dir to avoid real model downloads.
-honest_verdict: gguf_cache_implemented if GGUFCacheResolver exports correctly and tests pass.
-
-**Exp 850 — SOTA GGUF Code Repair v5 (GPU, CARNOT_FORCE_LIVE=1, GATED on Exp 849 gguf_cache_implemented)**
-Read: results/experiment_849_gguf_cache_module.json.
-Read: any prior SOTA code repair results (Exps 796, 811) for baseline.
-Use GGUFCacheResolver to locate Qwen3.6-35B-A3B-GGUF (Q4_K_M) in models/ directory.
-If model not cached: write artifact with honest_verdict="model_not_cached", list download command.
-If cached:
-  25 HumanEval problems in 5 batches of 5. ExperimentTimeoutWatchdog at 60 min.
-  Checkpoint per batch. Use llama.cpp loader path (Exp 450 pattern).
-  Apply MARS margin gate (arXiv 2601.15498): skip repair for high-margin outputs.
-  Baseline: generate once, measure pass@1.
-  With repair: generate, verify with CodeExtractor, repair if violations found, re-verify.
-  Compute signed_improvement = accuracy_repair - accuracy_baseline.
-  honest_verdict: code_repair_positive if signed_improvement > 0 AND n_live >= 15
-    or code_repair_negative or model_not_cached.
-
-### Phase 5: Hardware + New Capability (Exps 851-852)
-
-**Goal:** Generate first working iCE40 FPGA bitstream at N=16 and add Semantic Energy as new advisory tier.
-
-**Exp 851 — iCE40 N=16 Ising Bitstream Generation (RETRO-ICE40-PNR-LUT-OVERFLOW, CPU)**
-Read: results/experiment_839_kv260_ice40_bitstream.json — P&R failure details, LUT budget.
-Read: hardware/kv260/ising_sampler_v3.v or equivalent Verilog.
-
-The N=32 design (3952 LUTs) exceeded the iCE40 HX8K P&R budget (~3500-4000 effective LUTs).
-Reducing to N=16 should require approximately N^2/2 = 128 coupling registers + 16 bias registers
-= ~140 flipflops, well within HX8K budget.
-
-Steps:
-  1. Generate hardware/kv260/ising_sampler_n16.v: parameterize existing Verilog for N=16.
-     OR: write a new N=16 Ising sampler using a compact cellular architecture
-     (checkerboard Gibbs sweep, 2-spin-per-cycle update, one LUT per conditional).
-  2. Synthesize with yosys: use ~/tools/oss-cad-suite/bin/yosys.
-     Target: synth_ice40 -top ising_sampler -json output/ising_n16_synth.json
-     Expected LUT count: < 1500 (comfortably within HX8K budget of ~7680 total, ~4000 P&R effective).
-  3. Place-and-route with nextpnr-ice40:
-     nextpnr-ice40 --hx8k --package ct256 --json output/ising_n16_synth.json \
-       --asc output/ising_n16.asc
-  4. Pack to bitstream: icepack output/ising_n16.asc output/carnot_ising_n16.bin
-  5. Verify: first 4 bytes of .bin are iCE40 magic header (0x7EAA997E or implementation-specific).
-     If header valid: bitstream_generated=True.
-  6. Record: lut_count, fmax_mhz (from timing report), bitstream_size_bytes.
-Spec: REQ-FPGA-005 (N=16 bitstream), SCENARIO-FPGA-006.
-honest_verdict: bitstream_generated or pnr_failed_n16 (should not happen at N=16) or synthesis_failed.
-
-**Exp 852 — Semantic Energy Probe Tier 0f (arXiv 2508.14496, CPU)**
-Read: python/carnot/pipeline/verify_repair.py (cascade tier structure).
-Read: python/carnot/models/ising.py or KAN energy scorer.
-Reference: arXiv 2508.14496 — "Semantic Energy: Detecting LLM Hallucination Beyond Entropy."
-
-Implement SemanticEnergyProbe as Tier 0f candidate:
-  - Input: LLM response text (str), reference_answer (str, optional).
-  - Step 1: Extract semantic clusters — split response into declarative sentences.
-  - Step 2: Embed each sentence with a lightweight sentence-transformer (or TF-IDF fallback).
-  - Step 3: Compute semantic energy: E = -sum_ij exp(-||e_i - e_j||^2 / sigma^2) * coherence_ij
-    where coherence_ij = 1 if sentences are semantically consistent, -1 if contradictory.
-    (Boltzmann-inspired pairwise energy over sentence cluster.)
-  - Step 4: Normalize E by sentence count. High E = sentences diverge (hallucination risk).
-    Low E = sentences form a coherent semantic cluster (likely factual).
-  - Return: SemanticEnergyResult(energy=float, is_unstable=bool, sentence_count=int, cluster_entropy=float).
-
-Wire as advisory Tier 0f in VerifyRepairPipeline: record is_unstable in VerificationCertificate.
-Do NOT short-circuit on Tier 0f (advisory signal only, like HalluField).
-Benchmark on 50 synthetic (response, hallucinated/correct) pairs.
-Target: AUC_synthetic > 0.70.
-Spec: REQ-VERIFY-155 (SemanticEnergyProbe), SCENARIO-VERIFY-180/181.
-honest_verdict: probe_viable if AUC > 0.70 or probe_below_threshold.
-
-### Phase 6: Live Benchmark + Retrospective (Exps 853-854)
-
-**Exp 853 — Live Full Precision Benchmark v4 (GPU, CARNOT_FORCE_LIVE=1)**
-After all fixes deployed in phases 1-5: run a credible live benchmark.
-50 GSM8K questions with live Qwen3.5-0.8B on GPU (CARNOT_FORCE_LIVE=1, CARNOT_GPU=0).
-4 conditions:
-  (a) baseline: no VR pipeline.
-  (b) VR-only: VerifyRepairPipeline with L2-norm retrieval fix.
-  (c) VR+JEPA-v24b: with Tier 3.5 if deployed.
-  (d) VR+JEPA-v24b+SemanticEnergy: with Tier 0f advisory.
-Compute: accuracy_baseline, accuracy_vr, accuracy_full.
-signed_improvement = accuracy_full - accuracy_baseline.
-Apply apply_env_autofix() to catch CARNOT_FORCE_LIVE=0 at runtime.
-ExperimentTimeoutWatchdog(853, timeout_minutes=60). Checkpoint per 10 questions.
-If inference falls to simulation: write artifact with honest_verdict="simulated_no_verdict".
-honest_verdict: pipeline_improvement if signed_improvement > 0 AND inference_mode="live_gpu"
-  or pipeline_no_improvement or pipeline_degradation or simulated_no_verdict.
-
-**Exp 854 — Milestone 2026.04.65 Operational Retrospective**
-Standard retro format (schema=carnot.operational_retro.v40).
-Read all Exp 843-853 result JSONs.
-Compute: total_wall_time_minutes, experiments_completed, avg_time_per_experiment.
-Evaluate 11 success criteria (governance_ready, svamp_fixed, jepa_deployed, arbiter_calibrated,
-  retrieval_fixed, tier1_relay_works, gguf_cache, code_repair, bitstream_generated,
-  semantic_probe, benchmark_improvement).
-RETRO audit: update RETRO-SVAMP-ZERO-AUC, RETRO-JEPA-OOD, RETRO-ARBITER-FLAT-ENERGY,
-  RETRO-CONSTRAINT-ZERO-DELTA, RETRO-GGUF-CACHE-IMPORT, RETRO-ICE40-PNR-LUT-OVERFLOW status.
-Write improvements_suggested for .66 IMMEDIATE items to MILESTONE_PREREQS.md.
-Evaluate wall-time trend vs .64 (3971 min).
-Write results/operational_retro_2026_04_65.json (schema=carnot.operational_retro.v40).
+**Exp 867: Milestone 2026.04.66 Operational Retrospective**
+- Standard retro format (schema=carnot.operational_retro.v41)
+- 13 success criteria
+- RETRO audit: close those resolved, open any new
 
 ---
 
 ## Dependency Graph
 
 ```
-[Phase 0]
-  Exp 843 (pre-flight v14, CPU)            — no dependency
+Exp 855 (LIVE-ENV fix) ──┐
+                          ├── Exp 857 (SOTA code repair, GPU)
+Exp 856 (DualGPU) ───────┤
+                          └── Exp 858 (live benchmark, GPU)
 
-[Phase 1, JEPA v24b]
-  Exp 844 (JEPA v24b SVAMP train, CPU)     — uses Exp 834 checkpoint + Exp 825 domain AUCs
-  Exp 845 (JEPA v24b Tier 3.5 deploy)      ← GATED on Exp 844 min_domain_auc >= 0.50
+Exp 859 (iCE40 N=8) ── independent (CPU, iCE40 tools)
+Exp 860 (Inertia Ising) ── independent (CPU)
 
-[Phase 2, arbiter]
-  Exp 846 (arbiter warm-start v3, CPU)     — fixes IsingEBM in-place; no upstream gate
+Exp 861 (Streaming CoT) ──┐
+Exp 862 (Lagrange Ising) ──┼── Exp 864 (FR-11 Tier 2 relay)
+Exp 863 (HalluSAE) ───────┘
 
-[Phase 3, constraint retrieval + FR-11]
-  Exp 847 (L2-norm retrieval fix, CPU)     — fixes EmbeddingConstraintStore
-  Exp 848 (FR-11 Tier 1 relay v4, GPU)    ← GATED on Exp 847 retrieval_auroc > 0.70
+Exp 865 (Memory compression) ── independent (CPU)
+Exp 866 (KAN hardware) ── independent (CPU)
 
-[Phase 4, GGUF cache]
-  Exp 849 (gguf_cache.py, CPU)             — no dependency
-  Exp 850 (SOTA code repair v5, GPU)      ← GATED on Exp 849 gguf_cache_implemented
-
-[Phase 5, hardware + new capability]
-  Exp 851 (iCE40 N=16 bitstream, CPU)     — uses ~/tools/oss-cad-suite; no upstream gate
-  Exp 852 (Semantic Energy Tier 0f, CPU)   — no dependency
-
-[Phase 6, measurement + ops]
-  Exp 853 (live benchmark v4, GPU)         — uses JEPA v24b if deployed; L2-norm fix active
-  Exp 854 (retro)                          — reads all prior results
+All Exps 855-866 ── Exp 867 (retrospective)
 ```
-
----
-
-## Success Criteria
-
-| Criterion | Experiment | Target |
-|-----------|-----------|--------|
-| governance_ready | Exp 843 | MILESTONE_PREREQS.md updated; retirement_plan.md written; manifest_patch provided |
-| svamp_corpus_balanced | Exp 844 | n_svamp_pairs >= 15 AND auc_svamp >= 0.40 |
-| jepa_v24b_all_domains_viable | Exp 844 | min_domain_auc >= 0.50 AND overall_ood >= 0.65 |
-| jepa_v24b_tier35_deployed | Exp 845 | ThreeTierPipeline Tier 3.5 updated; tier35_deployed=True |
-| arbiter_calibrated | Exp 846 | accuracy_standard >= 0.67 |
-| retrieval_fixed | Exp 847 | retrieval_auroc > 0.80 after L2-norm fix |
-| tier1_relay_works_live | Exp 848 | precision non-decreasing AND delta_s1_to_s5 > 0 |
-| gguf_cache_implemented | Exp 849 | GGUFCacheResolver exported; tests pass 100% |
-| code_repair_positive | Exp 850 | signed_improvement > 0 on live GPU |
-| bitstream_generated | Exp 851 | output/carnot_ising_n16.bin valid header |
-| semantic_probe_viable | Exp 852 | AUC_synthetic > 0.70 |
-| pipeline_improvement | Exp 853 | signed_improvement > 0 on live GSM8K |
-
----
-
-## Open RETROs Addressed
-
-| RETRO | Status | Addressed By |
-|-------|--------|-------------|
-| RETRO-SVAMP-ZERO-AUC | OPEN | Exp 844 (SVAMP triplets + DreamPRM) |
-| RETRO-JEPA-OOD | OPEN | Exp 844 (SVAMP fix) + Exp 845 (deployment gate) |
-| RETRO-ARBITER-FLAT-ENERGY | OPEN | Exp 846 (Gibbs warm-start v3) |
-| RETRO-CONSTRAINT-ZERO-DELTA | OPEN (partial) | Exp 847 (L2-norm retrieval) + Exp 848 (live relay) |
-| RETRO-GGUF-CACHE-IMPORT | OPEN | Exp 849 (implement gguf_cache.py) |
-| RETRO-ICE40-PNR-LUT-OVERFLOW | OPEN | Exp 851 (N=16 design) |
-| RETRO-MANIFEST-FULL-SCOPE | OPEN | Exp 843 provides patch for HUMAN ACTION |
-| RETRO-XILINX-TOOLS-UNAVAILABLE | OPEN | Deferred: Vivado not installed; iCE40 path pursued |
-| RETRO-ISING-INJECTION-NO-DISCRIMINATION | Audit in Exp 843 | Confirm closed or reopen |
-
----
-
-## New Research Papers Incorporated
-
-| Paper | ArXiv | Incorporated In |
-|-------|-------|----------------|
-| Semantic Energy: LLM Hallucination Beyond Entropy | 2508.14496 | Exp 852 (Tier 0f SemanticEnergyProbe) |
-| Gibbs Warm-Start Convergence Theory | 2304.06993 | Exp 846 (arbiter warm-start 500 sweeps) |
-| DreamPRM: Domain-Reweighted PRM | 2505.20241 | Exp 844 (SVAMP domain reweighting) |
-| KANELÉ: KAN for FPGA LUT Evaluation | 2512.12850 | Exp 851 (FPGA synthesis reference) |
-| Rethinking Reward Models Multi-Domain | 2510.00492 | Exp 844 (multi-domain evaluation protocol) |
-| CHARM: Calibrating Reward Models | 2504.10045 | Exp 846 (post-hoc arbiter calibration) |
-| Decomposing Ising Problems on FPGAs | 2602.15985 | Exp 851 (N=16 resource estimation) |
 
 ---
 
 ## Hardware Requirements
 
 | Experiment | Hardware | Notes |
-|-----------|---------|-------|
-| Exps 843-847, 849, 851-852 | CPU only | JAX_PLATFORMS=cpu |
-| Exp 848 | GPU 1, CARNOT_FORCE_LIVE=1 | FR-11 relay; GPU 1 thermal advantage |
-| Exp 850 | GPU 0, CARNOT_FORCE_LIVE=1 | GGUF inference; Qwen3.6-35B requires ~20GB VRAM |
-| Exp 853 | GPU 0, CARNOT_FORCE_LIVE=1 | Live benchmark; Qwen3.5-0.8B |
-| Exp 851 | CPU + OSS-CAD-Suite | ~/tools/oss-cad-suite/bin |
+|------------|----------|-------|
+| Exp 855-856 | CPU only | Governance + wiring |
+| Exp 857 | 2x RTX 3090, 48GB VRAM | Qwen3.6-35B needs ~20GB; GPU 1 for model |
+| Exp 858 | 2x RTX 3090 via DualGPURunner | Both GPUs active |
+| Exp 859 | CPU + iCE40 tools | OSS-CAD-Suite at ~/tools/oss-cad-suite |
+| Exp 860 | CPU | Pure Python simulation |
+| Exps 861-864 | CPU | No GPU needed |
+| Exp 865-866 | CPU | Analysis experiments |
+| Exp 867 | CPU | Retrospective |
 
 ---
 
-## Key Invariants for .65 Experiments
+## Success Criteria for Milestone 2026.04.66
 
-1. **SVAMP corpus assertion:** Every JEPA training script MUST have `assert n_svamp_pairs >= 15`
-   AND `assert n_arc_pairs >= 15` AND `assert n_humaneval_pairs >= 15` at startup before training.
-   This prevents the domain-collapse pattern (ARC fixed → SVAMP collapses) by requiring all
-   domains to have representation before training proceeds.
+| # | Criterion | Target Experiment |
+|---|-----------|------------------|
+| 1 | live_env_permanently_fixed | Exp 855: live_env_fixed=True AND EnvPropagationGuard deployed |
+| 2 | dual_gpu_deployed | Exp 856: throughput_ratio >= 1.5x in production path |
+| 3 | code_repair_positive | Exp 857: signed_improvement > 0 AND inference_mode=live_gpu |
+| 4 | live_benchmark_improvement | Exp 858: pipeline_improvement AND inference_mode=live_gpu |
+| 5 | ice40_n8_bitstream | Exp 859: bitstream_generated=True AND lut_count < 500 |
+| 6 | inertia_discrimination | Exp 860: discrimination_delta > 0 AND mixing_sweeps_reduction >= 5x |
+| 7 | streaming_cot_viable | Exp 861: AUC_streaming > 0.65 on synthetic CoT |
+| 8 | lagrange_adaptive_works | Exp 862: delta_s1_to_s5 > 0 (FR-11 Tier 1 mandatory) |
+| 9 | hallusae_viable | Exp 863: AUC_geometric > 0.65 on synthetic CoT |
+| 10 | fr11_tier2_relay_confirmed | Exp 864: tier2_relay_confirmed=True |
+| 11 | memory_compression_viable | Exp 865: retrieval_auroc post-compression > 0.75 |
+| 12 | kan_fpga_roadmap_clear | Exp 866: KAN synthesis LUT estimate < 2000 AND priority_determined |
+| 13 | wall_time_improvement | Exp 867: wall_time_delta_vs_65 < 0 (first positive delta in 6 milestones) |
 
-2. **Gibbs warm-start assertion:** Every arbiter energy measurement MUST use warm_start_sweeps >= 500.
-   No cold-start from zero. Gate: `assert gibbs.warm_start_sweeps >= 500`.
-   Rationale: cold-start MCMC at N_sweeps=10 produces initialization noise, not Boltzmann energies.
+---
 
-3. **L2-normalization assertion:** EmbeddingConstraintStore MUST L2-normalize vectors.
-   Gate: `assert retrieval_l2_normalized == True` in EmbeddingConstraintStore.__init__.
-   This prevents the cosine similarity = ~0 failure mode that kept delta_overall = 0.0.
+## Key References
 
-4. **Experiment count cap:** The .65 planned cycle MUST not exceed 12 new experiments.
-   Report experiments_over_cap in Exp 854 retro. Retirement plan from Exp 843 is the path
-   to returning below the 700-experiment cap.
-
-5. **Live inference assertion:** Experiments 848, 850, 853 MUST set CARNOT_FORCE_LIVE=1.
-   If inference_mode="synthetic_cpu" is detected: abort with diagnostic artifact.
-   Use apply_env_autofix() first in ExperimentTemplate setup.
+- arXiv 2604.17109 — Fully Parallel Inertia Ising Machine (FPGA, Exp 860)
+- arXiv 2501.04971 — Self-Adaptive Ising for Constrained Optimization (Lagrange, Exp 862)
+- arXiv 2601.02170 — Streaming Hallucination Detection in Long CoT (Exp 861)
+- arXiv 2604.16430 — HalluSAE Geometric Energy (SAE geometry, Exp 863)
+- arXiv 2601.00756 — Memory Bank Compression for Continual Adaptation (Exp 865)
+- arXiv 2604.03345 — Hardware-Oriented KAN Inference Complexity (Exp 866)
+- arXiv 2603.24183 — Mpemba Initialization for Fast Thermodynamic Computing (Exp 860)
