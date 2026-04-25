@@ -1543,3 +1543,16 @@ Done. Minimal honest docs updated:
 2026-04-24 21:49:56,656 [conductor] RESEARCH STEP: Exp 823: FR-11 Tier 1 Live Relay v2 (FR-11 mandatory, gated on Exp 821, GPU)
 2026-04-24 21:49:56,656 [conductor] ============================================================
 2026-04-24 21:49:56,674 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 21:49:56,731 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 21:49:56,731 [conductor] Running test suite (smart subset)...
+2026-04-24 21:50:02,423 [conductor] Pre-check: 81 passed, 3 warnings in 2.89s
+2026-04-24 21:50:02,600 [conductor] Injected 99 symbol signatures from 4 files (AST outlines)
+2026-04-24 21:50:02,600 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Blocked artifact written. Exp 821 shows `honest_verdict="constraint_addition_no_delta_live"` with `delta_overall=0.0` and all sessions at `precision=0.0` — the gate condition `"constraint_addition_works_live"` is not met. Exp 823 cannot run until Exp 821 (or a successor) demonstrates a positive precision delta from constraint addition on live GPU.
+2026-04-24 21:50:23,599 [conductor] Claude Code completed (exit 0)
+2026-04-24 21:50:23,610 [conductor] Changes:
+logs/conductor.log | 7 +++++++
+ 1 file changed, 7 insertions(+)
+2026-04-24 21:50:23,630 [conductor] DOGFOOD: Verification complete (total: 499 checks, 45 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 21:50:23,630 [conductor] Running test suite (smart subset)...
+2026-04-24 21:50:29,315 [conductor] Post-check: 81 passed, 3 warnings in 2.84s
