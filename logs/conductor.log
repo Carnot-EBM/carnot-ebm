@@ -4220,3 +4220,22 @@ _bmad/architecture.md                         |   4 +-
 2026-04-25 19:20:14,766 [conductor] RESEARCH STEP: Exp 885: SpectralAttentionProbe — Tier 0h Advisory (arXiv 2502.17598) (CPU)
 2026-04-25 19:20:14,766 [conductor] ============================================================
 2026-04-25 19:20:14,786 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 19:20:14,845 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 19:20:14,845 [conductor] Running test suite (smart subset)...
+2026-04-25 19:20:20,617 [conductor] Pre-check: 81 passed, 3 warnings in 2.80s
+2026-04-25 19:20:20,723 [conductor] Injected 49 symbol signatures from 3 files (AST outlines)
+2026-04-25 19:20:20,723 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All done. Summary:
+
+- **`python/carnot/verify/spectral_attention_probe.py`** — `SpectralAttentionProbe` class: bigram co-occurrence matrix → Laplacian → spectral entropy → trajectory → logistic regression AUC probe. `probe_auc=1.0` on synthetic eval.
+- **`python/carnot/pipeline/verify_repair.py`** — Added `spectral_diffuse` / `spectral_entropy_mean` fields to `VerificationResult`, `SPECTRAL_PROBE_ENABLED` class attribute, and Tier 0h advisory wiring after Tier 0g.
+- **`scripts/experiment_885_spectral_attention_probe.py`** — Full experiment: trains on 40 synthetic chains, evaluates on 10, runs 30 advisory checks, writes deliverable (`honest_verdict=tier_0h_viable`, `probe_auc=1.0`).
+- **`tests/python/test_experiment_885_spectral_attention_probe.py`** — 31 tests, all passing.
+2026-04-25 19:26:41,489 [conductor] Claude Code completed (exit 0)
+2026-04-25 19:26:41,504 [conductor] Changes:
+logs/conductor.log                      | 12 +++++++++
+ python/carnot/pipeline/verify_repair.py | 43 +++++++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+)
+2026-04-25 19:26:41,523 [conductor] DOGFOOD: Verification complete (total: 559 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 19:26:41,523 [conductor] Running test suite (smart subset)...
+2026-04-25 19:26:47,703 [conductor] Post-check: 145 passed, 3 warnings in 3.36s
