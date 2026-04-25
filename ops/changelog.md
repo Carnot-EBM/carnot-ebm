@@ -4200,3 +4200,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 847: EmbeddingConstraintStore L2-Norm Retrieval Fix (RETRO-CONSTRAINT-ZERO-DELTA, CPU) (⚠️ Research Finding) — honest_verdict=retrieval_partial; results/experiment_847_constraint_retrieval_l2_fix.json
 - 2026-04-25: Exp 848: FR-11 Tier 1 Live Relay v4 (FR-11 mandatory, GPU, GATED on Exp 847) (⚠️ Research Finding) — honest_verdict=tier1_relay_works_live; results/experiment_848_fr11_tier1_live_relay_v4.json
 - 2026-04-25: Exp 849: GGUF Cache Module — GGUFCacheResolver (RETRO-GGUF-CACHE-IMPORT, CPU) (⚠️ Research Finding) — honest_verdict=gguf_cache_implemented; results/experiment_849_gguf_cache_module.json
+- 2026-04-25: Exp 850: SOTA GGUF Code Repair v5 — Qwen3.6-35B (GPU, GATED on Exp 849) (⚠️ Research Finding) — honest_verdict=model_not_cached; results/experiment_850_sota_code_repair_v5.json
