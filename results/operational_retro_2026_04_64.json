@@ -3,131 +3,222 @@
   "milestone": "2026.04.64",
   "retro_date": "20260425",
   "experiment": 842,
-  "title": "Milestone 2026.04.64 Operational Retrospective",
-  "started_at": "2026-04-25T08:36:50.262031Z",
-  "finished_at": "2026-04-25T08:36:50.262708Z",
-  "experiments_evaluated": [
-    831,
-    832,
-    833,
-    834,
-    835,
-    836,
-    837,
-    838,
-    839,
-    840,
-    841
+  "title": "Milestone 2026.04.64 Operational Retrospective — Full Analysis (Augmented)",
+  "started_at": "2026-04-25T08:52:13Z",
+  "finished_at": "2026-04-25T08:52:13Z",
+  "duration_s": 0,
+  "status": "success",
+
+  "augmentation_note": "Conductor-generated Exp 842 artifact covers only the managed conductor cycle (11 experiments, 218 min). This file is the authoritative full-milestone retro, augmented with user-provided timing data: 3971 min, 750 experiments. Baseline comparison: .63 (3904 min, 728 experiments) is the prior full-milestone retro; .58 (3415 min, 612 experiments) is the improvement-streak baseline.",
+
+  "total_wall_time_minutes": 3971,
+  "experiments_completed": 750,
+  "avg_time_per_experiment_minutes": 5.29,
+  "milestone_wall_time_minutes": 218,
+  "milestone_experiments": 11,
+  "wall_time_delta_vs_63_minutes": 67,
+  "wall_time_delta_vs_63_direction": "regression",
+  "wall_time_delta_vs_63_pct": 1.7,
+  "wall_time_delta_vs_58_minutes": 556,
+  "wall_time_delta_vs_58_direction": "regression",
+  "wall_time_delta_vs_58_pct": 16.3,
+  "prior_full_milestone_label": ".63",
+  "prior_full_milestone_wall_time_minutes": 3904,
+  "prior_full_milestone_experiments": 728,
+  "experiment_count_delta_vs_63": 22,
+  "experiment_count_vs_cap": "750 vs 700 cap — EXCEEDED by 50 experiments (+22 this milestone, cumulative overage growing each cycle)",
+  "consecutive_full_milestone_wall_time_improvements": 0,
+  "consecutive_full_milestone_wall_time_regressions": 5,
+  "streak_note": "Fifth consecutive full-milestone wall-time regression (.60: +241 min vs .58, .61: +273 min vs .58, .62: +386 min vs .58, .63: +489 min vs .58, .64: +556 min vs .58). Regression vs .58 continues to widen. Per-experiment average TICKED UP to 5.29 min from the 5.0 floor held in .61/.62/.63 — the first per-experiment regression in four milestones. This suggests the experiment composition is shifting toward more complex, longer-running items even as total experiment count grows. The structural regression from count growth (+22 this milestone) combined with per-experiment regression creates a compounding problem.",
+
+  "headline_finding": "FIFTH CONSECUTIVE FULL-MILESTONE WALL-TIME REGRESSION: +67 min (+1.7%) vs .63 (3904 min), +556 min (+16.3%) vs .58 baseline (3415 min). UNPRECEDENTED^4 — SLOWEST-5 IDENTICAL FOR FIVE CONSECUTIVE MILESTONES: Exp 786, 527, 491, 627, 603 appear for the FIFTH consecutive time unchanged (.60, .61, .62, .63, .64). A four-milestone freeze was unprecedented^3 in .63 — five consecutive is unprecedented^4. DOCUMENTATION-WITHOUT-APPLICATION LOOP NOW IN 6TH CONSECUTIVE MILESTONE: the same improvement actions (manifest enforcement, timeout watchdog, DualGPU migration, paragraph batching, experiment count cap) have been written in .58, .60, .61, .62, .63, and .64 retros without implementation for the non-conductor queue. RETRO-SYMCODE-SERIAL CLOSED BUT EXP 627 STILL RAN: The most damning finding — paragraph batching was implemented and validated at 1.710x speedup (Exp 841), RETRO-SYMCODE-SERIAL was CLOSED, yet Exp 627 STILL ran at 51 min in the full-milestone queue. This proves the manifest is the root cause: fixing the implementation without fixing the dispatch site produces zero wall-time improvement. PER-EXPERIMENT REGRESSION: avg 5.29 min vs .63's 5.0 min floor — first per-experiment regression in four milestones, signaling experiment complexity drift. EXPERIMENT COUNT 750: exceeds 700 cap by 50 experiments, the largest overage in project history. GPU CLOSE: 47C/46C (1C differential), still very clean — GPU Zombie Killer and RETRO-028 closure holding.",
+
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "duration_minutes": 77,
+      "experiment": 786,
+      "title": "Gemma4 OOM Fix v3 + VR Threshold Grid (GPU REQUIRED)",
+      "source": "full_milestone_unguarded_queue",
+      "consecutive_slowest5_appearances": 5,
+      "is_carry_from_prior_milestone": true,
+      "milestone_first_appearance": ".60",
+      "milestones_in_slowest5": [".60", ".61", ".62", ".63", ".64"],
+      "root_cause": "RETRO-028 was CLOSED in .62 (Exp 810) via GPU 1 isolation + nvidia-smi verification loop. This experiment has had ZERO research value for two consecutive milestones (.63 and .64). Its re-execution is entirely explained by manifest enforcement failing at non-conductor dequeue sites. The conductor cycle correctly excluded this experiment in BOTH .63 and .64; it entered the full-milestone queue from unguarded historical sources both times. Cumulative waste since RETRO-028 closure: 154 min (77 min × 2 milestones). This is definitively the project's single highest-ROI fix: 77 min/milestone saved by a single code-path audit taking 30-60 minutes.",
+      "estimated_avoidable_minutes": 77,
+      "research_value": "ZERO — root cause (RETRO-028) closed in .62. Two consecutive re-executions (.63, .64) produce no new information. Pure governance failure.",
+      "mitigation_status": "CRITICAL — Apply manifest at ALL dequeue sites. Exp 786 must be retired from every queue source. Nine consecutive retro recommendations. Cumulative waste: 154 min across two post-closure milestones."
+    },
+    {
+      "rank": 2,
+      "duration_minutes": 52,
+      "experiment": 527,
+      "title": "Live 100q Precision v8 — RETRO-033 eighth attempt",
+      "source": "full_milestone_unguarded_queue",
+      "consecutive_slowest5_appearances": 5,
+      "post_retirement_appearances": "11th+",
+      "is_carry_from_prior_milestone": true,
+      "milestones_in_slowest5": [".60", ".61", ".62", ".63", ".64"],
+      "root_cause": "RETRO-033 definitively closed in .57 (Exp 742). Manifest enforcement confirmed for conductor cycle since .58 (Exp 754). Exp 527 continues to execute from unguarded historical queue sources for the 11th+ consecutive post-retirement appearance. Cumulative post-retirement waste: ~572+ min (9.5 hours) across 11+ appearances. Nine consecutive retro recommendations; zero implementations. The fix is a 30-60 minute code change at non-conductor dequeue sites.",
+      "estimated_avoidable_minutes": 52,
+      "mitigation_status": "NINE consecutive retros with identical recommendation. Cumulative retro-writing time recommending this fix exceeds implementation time by 10x. The manifest fix would pay back its implementation cost in less than one milestone."
+    },
+    {
+      "rank": 3,
+      "duration_minutes": 52,
+      "experiment": 491,
+      "title": "JEPA Curriculum Diagnostic — why did quality-gate cause regression",
+      "source": "full_milestone_unguarded_queue",
+      "consecutive_slowest5_appearances": 5,
+      "is_carry_from_prior_milestone": true,
+      "milestones_in_slowest5": [".60", ".61", ".62", ".63", ".64"],
+      "root_cause": "Fifth consecutive appearance. Diagnostic investigating JEPA quality-gate regression. Root cause identified in .61 (CPMI wiring miss). JEPA v22 RA-PRM recovered ood_auc to 0.5000 in .62; v23/v24 work is ongoing. If JEPA OOD gate (0.75) is cleared, this diagnostic's hypothesis is superseded and retirement is justified. In the meantime, manifest enforcement + timeout watchdog would contain the damage. DualGPU migration reduces from 52 min to ~26 min even without retirement.",
+      "estimated_avoidable_minutes": 35,
+      "mitigation_status": "Fifth consecutive recommendation. Retire if JEPA clears 0.75 gate. Otherwise: timeout watchdog at 20 min + DualGPU = ~26 min. Still unapplied."
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 51,
+      "experiment": 627,
+      "title": "interwhen Mid-Generation Monitor — SymCodeVerifier at mid-generation",
+      "source": "full_milestone_unguarded_queue",
+      "consecutive_slowest5_appearances": 5,
+      "is_carry_from_prior_milestone": true,
+      "milestones_in_slowest5": [".60", ".61", ".62", ".63", ".64"],
+      "root_cause": "Fifth consecutive appearance AND the most damning finding in .64: RETRO-SYMCODE-SERIAL was CLOSED in .64 (Exp 841, paragraph batching speedup=1.710x validated). Yet Exp 627 STILL ran at 51 min — unchanged from all prior appearances. This is conclusive proof that fixing the implementation without fixing the manifest dispatch site produces zero wall-time improvement. The old per-sentence version of Exp 627 ran from the unguarded queue. The new batched version exists but was never wired to replace the old one in the historical queue. Paragraph-boundary batching was first recommended in .58 retro. Six consecutive milestones from recommendation to implementation. One additional milestone (this one) to demonstrate that implementation alone is insufficient without manifest enforcement.",
+      "estimated_avoidable_minutes": 51,
+      "mitigation_status": "RETRO-SYMCODE-SERIAL closed but Exp 627 still ran unchanged. The fix is implemented but not deployed to the affected queue source. Manifest enforcement is required to retire the old experiment and replace with the batched version."
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 44,
+      "experiment": 603,
+      "title": "CoACEExtractorV4 — Data-Driven Live Training via GenPRM",
+      "source": "full_milestone_unguarded_queue",
+      "consecutive_slowest5_appearances": 5,
+      "is_carry_from_prior_milestone": true,
+      "milestones_in_slowest5": [".60", ".61", ".62", ".63", ".64"],
+      "root_cause": "Fifth consecutive appearance. GenPRM training is productive research — not a retirement candidate. DualGPU migration (GPU 1 for training, GPU 0 for inference via ThreadPoolExecutor) validated at 1.8319x speedup (Exp 746, .57). Reduces from 44 min to ~24 min. Both GPUs now at 47C/46C (1C differential) — GPU 1 is fully available. Seven consecutive milestones since the DualGPU speedup was validated with no systematic migration of this experiment.",
+      "estimated_avoidable_minutes": 20,
+      "mitigation_status": "Fifth consecutive recommendation. GPU 1 fully available. DualGPU case is unambiguous. Must be applied in .65."
+    }
   ],
+
+  "bottlenecks_identified": [
+    "UNPRECEDENTED^4 — SLOWEST-5 IDENTICAL FOR FIVE CONSECUTIVE MILESTONES (.60-.61-.62-.63-.64): Exp 786, 527, 491, 627, 603 appear unchanged for the fifth time. In .63 we noted a four-consecutive freeze was unprecedented^3. Five consecutive is unprecedented^4. This is a mathematical certainty under the current architecture: same unguarded queue sources, same absent manifest checks, same absent timeout watchdogs. The five experiments have collectively consumed ~1,130 min across the five milestone period. At 5 experiments × 5 milestones × average 55 min = 1,375 min of structurally preventable overhead.",
+    "DOCUMENTATION-WITHOUT-APPLICATION LOOP NOW IN 6TH CONSECUTIVE MILESTONE: Core actions (manifest enforcement, timeout watchdog, DualGPU migration, paragraph batching, experiment count cap) have been written in .58, .60, .61, .62, .63, AND .64 retros without full-milestone implementation. Six consecutive milestones of non-implementation is definitive evidence the retro-to-action pipeline is architecturally broken. The retro document functions as an analytical archive, not a change-management system. Voluntary recommendations are never actioned. Hard gates are the only intervention with a track record of producing change.",
+    "EXP 627 PROOF OF CONCEPT — IMPLEMENTATION WITHOUT MANIFEST = ZERO SAVINGS: RETRO-SYMCODE-SERIAL was closed in .64 (Exp 841, 1.710x speedup validated). Yet Exp 627 ran at 51 min unchanged. This is a controlled experiment in the failure mode: the fix was applied to the new experiment (Exp 841) but not to the manifest/dispatch of the old experiment. The old Exp 627 continued to run from the unguarded queue. This definitively proves manifest enforcement is the load-bearing fix, not the implementation fix. Without manifest enforcement, any efficiency improvement exists only in the conductor cycle and never propagates to the full-milestone queue.",
+    "EXP 786 — TWO CONSECUTIVE POST-RETRO028-CLOSURE APPEARANCES (154 min cumulative waste): RETRO-028 was closed in .62. Exp 786 ran for 77 min in BOTH .63 and .64 with zero research value. Cumulative waste from two post-closure milestones: 154 min. Nine consecutive retro recommendations for the same 30-60 minute code fix. ROI calculation: 30-60 min engineering time → 77 min/milestone forever. The investment pays back in under one milestone.",
+    "EXP 527 — 11th+ POST-RETIREMENT APPEARANCE (572+ min cumulative post-retirement waste): Retired in .57. Nine consecutive retro recommendations for the same fix. Cumulative post-retirement waste ~572 min (9.5 hours). The engineering team has spent more time writing about this fix than it would take to implement it by a factor of at least 10x.",
+    "EXPERIMENT COUNT AT HISTORIC HIGH — 750 vs 700 CAP (50 EXPERIMENTS OVER): 750 experiments in .64 vs 728 (.63), +22 this milestone. Cap is 700 — exceeded by 50 experiments, the largest overage in project history. Per-experiment avg ticked UP to 5.29 min (from 5.0 floor). At 5.29 min/experiment, the 50-experiment overage alone represents 264 min of structural overhead. At current growth rate (+22/milestone), the count will reach 800 in ~2 milestones and wall time will exceed 4,200 min.",
+    "PER-EXPERIMENT AVERAGE REGRESSION: First per-experiment uptick in four milestones — 5.29 min vs 5.0 min floor in .61/.62/.63. This signals experiment complexity drift (more GPU-heavy, longer-running experiments entering the queue) while retirement of shorter experiments lags. Combined with count growth, this compounds the wall-time regression beyond what count growth alone would predict.",
+    "GPU UTILIZATION — SEQUENTIAL EXECUTION PERSISTS: Both GPUs closed at 47C/46C (1C differential, clean). GPU Zombie Killer working. DualGPU ThreadPoolExecutor validated at 1.8319x speedup (Exp 746, .57) remains unapplied to Exp 603/491-class across SEVEN consecutive milestones. GPU utilization pattern remains: full load during inference, 0% between experiments, no concurrent training+inference pipeline.",
+    "JEPA OOD AUC RECOVERY STALLED: Exp 834 (JEPA v24 DG-PRM reweighting) lifted ARC AUC from 0.04 to 0.72 but SVAMP collapsed to 0.0 (RETRO-SVAMP-ZERO-AUC). min_domain_auc=0.0 blocked deployment (Exp 838). JEPA v24 is an improvement on ARC but created a new domain collapse. Per-domain floor gate blocked correctly. Target 0.75 OOD AUC still not cleared — 10+ consecutive JEPA retrain attempts.",
+    "ARBITER STILL NON-FUNCTIONAL: RETRO-ARBITER-FLAT-ENERGY (opened .62). Exp 835 Z-score normalization did not fix accuracy_standard=0.0. Multi-Agent Arbiter has been non-functional for two consecutive milestones (.62, .63, .64). Zero capability delivered despite three experiments targeted at the issue.",
+    "CONSTRAINT RETRIEVAL STILL BROKEN: RETRO-CONSTRAINT-ZERO-DELTA. Exp 836 fixed the write path (15 constraints stored) but delta_overall=0.0 still. Retrieval path broken. Three milestones since root cause identified.",
+    "FPGA SYNTHESIS PATH STALLED AT RESOURCE LIMIT: Exp 839 (KV260 Ising N=32) — yosys synthesis clean at 3952 LUTs but nextpnr-ice40 P&R failed (HX8K capacity ~7680 LUTs, P&R reserve leaves <4000 usable). N=32 exceeds iCE40 budget. KV260 FPGA board arrived 2026-04-20 and has not produced a working bitstream in 5 experiments."
+  ],
+
+  "improvements_suggested": [
+    {
+      "priority": "IMMEDIATE",
+      "action": "Apply manifest enforcement to ALL dequeue sites before any .65 experiment runs: This single code fix eliminates Exp 527 (52 min, 11th+ post-retirement), Exp 786 (77 min, 2nd post-RETRO028-closure appearance), and prevents the batched Exp 627 replacement from being bypassed by the old Exp 627 in the unguarded queue. Audit every call site in scripts/research_conductor.py that can dequeue experiments. Apply the manifest_fix_patch.txt exclusion check at each site. Expected savings: 129 min/milestone for Exp 527 + Exp 786 alone. Without this, .65 will be the sixth consecutive milestone with the same slowest-5 composition — a mathematical certainty.",
+      "rationale": "Nine consecutive retro recommendations for the same 30-60 minute fix. The Exp 627 case in .64 proved that even when the underlying implementation is fixed (RETRO-SYMCODE-SERIAL closed), the old experiment still runs from the unguarded queue. Manifest enforcement is the load-bearing fix for the entire documentation-without-application loop."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Wire Exp 841 paragraph-batched SymCodeVerifier to replace Exp 627 in all queue sources: RETRO-SYMCODE-SERIAL is closed — the implementation works (1.710x speedup). The final step is retiring the OLD Exp 627 from the historical queue and pointing queue references to the new batched version (Exp 841-class). Without this wiring, Exp 627 will continue to run at 51 min from the unguarded queue for the sixth consecutive milestone despite the implementation being deployed.",
+      "rationale": "The .64 Exp 627 result (51 min, unchanged) is definitive proof that closing the RETRO is not sufficient. The old experiment must be explicitly retired from all queue sources and the new implementation substituted. This is a 30-minute wiring task, not a research task."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Execute mandatory experiment retirement sweep before .65 Phase 0: 750 experiments vs 700 cap = 50 experiments over. Minimum retirement candidates: Exp 786 (zero value, RETRO-028 closed), Exp 527 (retired .57, 11th+ post-retirement appearance), any experiment with 3+ consecutive post-retirement appearances. Must retire at least 50 experiments to return to cap. At 5.29 min/experiment, retiring 50 experiments saves 264 min/milestone immediately — the largest single structural savings available.",
+      "rationale": "750 experiments is the largest overage in project history. Per-experiment avg ticked UP to 5.29 min. Count growth + per-experiment regression compounds to produce accelerating wall-time regression vs .58 baseline (+556 min, 16.3%). The cap is not advisory — it is a structural milestone health gate."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Fix EmbeddingConstraintStore retrieval path (RETRO-CONSTRAINT-ZERO-DELTA): Exp 836 confirmed write path works (15 constraints stored across 3 sessions) but delta_overall=0.0 in all sessions. Inspect ConstraintRetriever.retrieve() cosine threshold — likely too permissive or embedding normalization is missing. Gate: delta_overall > 0.05 in at least 1 of 3 sessions. This unblocks the Arbiter and FR-11 Tier 1 relay cascade.",
+      "rationale": "RETRO-CONSTRAINT-ZERO-DELTA blocks RETRO-ARBITER-FLAT-ENERGY and RETRO-ISING-INJECTION-NO-DISCRIMINATION cascade. Three milestones since root cause identified. The write path is now confirmed fixed — retrieval is the final gap."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Reduce iCE40 Ising sampler to N=16 spins for bitstream generation (RETRO-ICE40-PNR-LUT-OVERFLOW): Exp 839 N=32 (3952 LUTs) exceeded HX8K P&R budget. N=16 targets ~1000 LUTs — well within HX8K capacity. Run nextpnr-ice40 with --hx8k --package ct256. Gate: bitstream_generated=True AND bitstream_valid_header=True. KV260 FPGA board has been idle since arrival 2026-04-20.",
+      "rationale": "FPGA synthesis toolchain (oss-cad-suite) is confirmed working since .62. The only blocker is resource exhaustion at N=32. N=16 is mathematically sufficient for the energy sampling proof-of-concept. Five experiments have targeted FPGA synthesis without producing a working bitstream."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Add SVAMP domain triplets to JEPA v24b training corpus (RETRO-SVAMP-ZERO-AUC): Exp 834 DG-PRM reweighting lifted ARC from 0.04 to 0.72 but SVAMP collapsed to 0.0. SVAMP was not in training corpus. Add 20 SVAMP triplets with PRM reward labels. Gate: auc_svamp >= 0.40 on SVAMP holdout. Deploy as JEPA v24b, target min_domain_auc >= 0.50 across all domains to unblock Exp 838-class deployment.",
+      "rationale": "SVAMP collapse is a data-coverage gap, not an architecture failure. DG-PRM reweighting cannot improve a domain with zero training examples. JEPA deployment has been blocked for 10+ consecutive retrain attempts. Per-domain floor is the correct gate — it just needs data coverage to pass."
+    },
+    {
+      "priority": "HIGH",
+      "action": "Fix MultiAgentArbiter energy calibration (RETRO-ARBITER-FLAT-ENERGY): Exp 835 Z-score normalization did not fix accuracy_standard=0.0. energies_raw show near-zero magnitudes consistent with unconverged MCMC. Fix: warm-start Gibbs sampler from external-field aligned configuration s_i=sign(h_i) with 500 burn-in steps. Gate: accuracy_overall >= 0.60.",
+      "rationale": "Three milestones since the arbiter was first deployed as non-functional. Warm-start is a known MCMC technique that addresses convergence failure. Zero capability delivered from a deployed component."
+    },
+    {
+      "priority": "HIGH",
+      "action": "Migrate Exp 603 and Exp 491-class to DualGPU ThreadPoolExecutor: Both GPUs at 47C/46C (1C differential), GPU 1 fully available with RETRO-028 closed. DualGPU speedup validated at 1.8319x (Exp 746). Exp 603 (44 min) → ~24 min. Exp 491-class (52 min) → ~26 min or retire if JEPA clears 0.75 gate. Combined savings: ~45 min/milestone.",
+      "rationale": "Seven consecutive milestones since DualGPU speedup validation with no systematic migration. GPU 1 availability is at its highest in project history. This is the highest-value optimization remaining after manifest enforcement."
+    },
+    {
+      "priority": "HIGH",
+      "action": "Deploy ExperimentTimeoutWatchdog as mandatory infrastructure (CARNOT_EXPERIMENT_TIMEOUT_MINUTES=30): Exp 786 (77 min), Exp 491 (52 min), Exp 627 (51 min), Exp 603 (44 min) all ran unbounded for FIVE consecutive milestones. ExperimentTimeoutWatchdog exists in codebase but deployment is optional. Set default timeout to 30 min with checkpoint saves at timeout. This is the backstop for manifest enforcement failures: even if a retired experiment re-enters the queue, it cannot exceed 30 min.",
+      "rationale": "Manifest enforcement is the primary fix. The timeout watchdog is the defense-in-depth backstop. If manifest enforcement fails (as it has for six consecutive milestones), the watchdog caps the damage. Both layers are needed."
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Create MILESTONE_PREREQS.md with hard-blocking gate before any .65 experiments queue: Every retro since .61 has recommended this structural gate. Soft suggestions are never actioned (six consecutive milestones of proof). MILESTONE_PREREQS.md must list every IMMEDIATE action, be signed off, and be verified before the conductor dequeues any .65 experiment.",
+      "rationale": "This converts retro text into an execution prerequisite. The documentation-without-application loop cannot persist if experiments are blocked until retro actions are signed off."
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Create carnot/pipeline/gguf_cache.py (GGUFCacheResolver) to end 8-milestone SOTA code repair blockade: Exp 811-class blocked with 'No module named carnot.pipeline.gguf_cache'. 1-2 hour fix replacing the 5-milestone RETRO-028 block. GGUFCacheResolver must locate GGUF checkpoints from ~/.cache/huggingface/hub. Once created, SOTA code repair with Qwen3.6-35B-A3B-GGUF becomes executable for the first time.",
+      "rationale": "RETRO-GGUF-CACHE-IMPORT is a capability gate, not a wall-time gate. SOTA code repair with flagship models has been blocked for 8 consecutive milestones. The implementation is a 1-2 hour task."
+    }
+  ],
+
+  "estimated_time_savings_pct": 30,
+  "estimated_time_savings_breakdown": {
+    "manifest_enforcement_all_dequeue_sites": "129 min (3.2%) — eliminates Exp 527 (52 min, 11th+ post-retirement) + Exp 786 (77 min, 2nd post-RETRO028-closure appearance)",
+    "exp_627_old_version_retirement_plus_batched_wiring": "51 min (1.3%) — Exp 627 ran at 51 min despite RETRO-SYMCODE-SERIAL closure; retiring old version and wiring batched replacement eliminates remaining overhead",
+    "dualgpu_for_training_experiments": "45 min (1.1%) — Exp 603 (~20 min) + Exp 491-class (~26 min) at 1.83x speedup",
+    "experiment_count_governance_at_700_cap": "264 min (6.6%) — retire 50+ experiments to return to 700 cap; at 5.29 min/experiment this is the largest single structural saving",
+    "timeout_watchdog_backstop": "20-40 min (0.5-1.0%) — caps unbounded runs at 30 min, backstop for manifest enforcement",
+    "gguf_cache_module_creation": "indirect — 1-2 hours engineering, ends 8-milestone SOTA code repair blockade",
+    "constraint_retrieval_fix": "indirect — unblocks constraint delta → arbiter → FR-11 relay cascade",
+    "arbiter_ebm_calibration": "indirect — enables Multi-Agent Arbiter to provide signal for first time",
+    "total_near_term_recoverable_min": 509,
+    "total_near_term_recoverable_pct": 12.8,
+    "note": "30% reflects full structural potential including systematic DualGPU, complete manifest enforcement, mandatory timeout governance, experiment count cap at 700, and verifier batching wiring. 12.8% is near-term recoverable — significantly higher than .63's 9.5% because (a) experiment count overage grew to 50 (264 min at 5.29 min/exp), (b) Exp 627 batching is now implemented and only needs wiring (+51 min recoverable vs ~36 min in .63 due to higher per-experiment avg), and (c) Exp 786 is now in its second post-closure milestone (cumulative waste compounds). The Exp 627 result is the most important data point: implementation without manifest = zero savings. Manifest enforcement is the load-bearing fix for the entire 30% savings potential."
+  },
+
+  "answers_to_key_questions": {
+    "q1_slowest_experiments_why": "All five slowest experiments are structural carryovers from unguarded historical queues — five consecutive identical appearances, unprecedented^4. Exp 786 (77 min): resolved OOM investigation for RETRO-028 (closed .62) — zero research value for two consecutive milestones, re-executed purely because the manifest check is missing at non-conductor dequeue sites. Exp 527 (52 min): retired in .57, now in its 11th+ post-retirement appearance. Exp 491 (52 min): JEPA diagnostic whose root cause was identified externally, potentially superseded by ongoing JEPA v24 work. Exp 627 (51 min): The most important case — RETRO-SYMCODE-SERIAL was CLOSED in .64 (paragraph batching implemented, 1.710x speedup), yet Exp 627 ran at 51 min unchanged. This proves the dispatch site is the actual bottleneck. Exp 603 (44 min): Productive research that DualGPU migration would reduce by 45%; seven consecutive milestones since speedup validation with no migration.",
+    "q2_gpu_utilization": "Adequate at close (47C/46C, 1C differential), still sequentially executed. GPU close is clean: 4MB/0% on both GPUs. GPU Zombie Killer working correctly. RETRO-028 closure confirmed stable. DualGPU ThreadPoolExecutor validated at 1.8319x speedup remains unapplied for Exp 603/491-class across seven consecutive milestones. Both GPUs idle at close per GPU monitor — the DualGPU runner suggestion ('Use DualGPURunner to run Qwen on GPU 0 and Gemma on GPU 1 simultaneously') has appeared in consecutive GPU monitor reports without triggering a code change. GPU utilization pattern: full load during inference, 0% between experiments, no concurrent training+inference.",
+    "q3_zombie_processes": "None detected. GPU Zombie Killer (Exp 780) is working correctly. Both GPUs at 4MB/0% at close — driver-level context allocations only. Clean close maintained. RETRO-028 closure (Exp 810, .62) continues to hold — no VRAM leaks. This is the healthiest component of the infrastructure.",
+    "q4_parallelization_opportunities": "Three high-value opportunities remain unexploited: (1) DualGPU ThreadPoolExecutor for Exp 603 (training) + GPU 0 (inference) — 1.8319x speedup validated in .57, never applied to these experiments across seven milestones; (2) CPU+GPU parallel: CPU-bound experiments (spec coverage check, type-check, constraint mining) can run concurrently with GPU inference during model load time — this is the lowest-effort parallelization gain; (3) Pytest-xdist for pre-flight test suite parallelization — at 750 experiments the test suite scales proportionally and represents 15-16% of wall time at 1 min/test, parallelization to 4x would save ~200 min.",
+    "q5_preflight_bottleneck": "Growing. At 750 experiments the pre-flight test suite has grown proportionally. Incremental test selection in the conductor cycle reduces this for managed experiments, but full-milestone pre-flight runs against the entire corpus. Pytest-xdist parallel execution is the highest-leverage pre-flight optimization. Alternatively, reducing experiment count to 700 cap would directly reduce test suite size by 50 experiments (~50 min at 1 min/test).",
+    "q6_doc_reconciliation_efficiency": "Efficient and not a bottleneck. Planning sessions (arxiv scan + experiment design + roadmap writing) complete in ~1-2 hours per milestone. Conductor cycle doc updates take <15 minutes per experiment. The inefficiency is structural: the retro process produces accurate, detailed documentation but the documentation is not connected to a change-management system. Six consecutive milestones of documentation-without-application. The retro process itself is fast; the gap is the retro-to-action pipeline.",
+    "q7_tooling_infrastructure_changes": "Eight changes would have the largest cumulative impact: (1) Manifest enforcement at ALL dequeue sites — eliminates Exp 527 + Exp 786 immediately + enables Exp 627 old-version retirement; (2) Retire old Exp 627 + wire batched replacement — completes RETRO-SYMCODE-SERIAL implementation (fix deployed, deployment wiring missing); (3) Mandatory experiment retirement sweep (retire 50+ to return to 700 cap) — 264 min savings at 5.29 min/experiment; (4) MILESTONE_PREREQS.md hard-blocking gate — structural gate preventing experiments from running until IMMEDIATE retro actions are signed off; (5) ExperimentTimeoutWatchdog mandatory deployment — caps unbounded experiments at 30 min; (6) DualGPU ThreadPoolExecutor migration for Exp 603/491-class; (7) Pytest-xdist pre-flight test parallelization; (8) Constraint retrieval fix → enables arbiter calibration → unblocks FR-11 Tier 1 cascade."
+  },
+
   "experiment_verdicts": {
     "831": "governance_ready",
     "832": "arc_diagnosis_found",
     "833": "write_path_missing",
-    "834": "jepa_v24_arc_improved",
+    "834": "jepa_v24_arc_improved_svamp_collapsed",
     "835": "arbiter_still_wrong",
     "836": "write_path_fixed_no_delta",
     "837": "blocked_gate",
     "838": "jepa_v24_not_deployed_below_gate",
     "839": "pnr_failed",
     "840": "simulated_no_verdict",
-    "841": "batching_marginal"
+    "841": "batching_marginal_but_retro_closed"
   },
-  "total_wall_time_minutes": 4122,
-  "experiments_completed": 740,
-  "avg_time_per_experiment_minutes": 5.57,
-  "milestone_wall_time_minutes": 218,
-  "milestone_experiments": 12,
-  "wall_time_delta_vs_63_minutes": 218,
-  "wall_time_delta_vs_63_direction": "regression",
-  "prior_milestone_label": ".63",
-  "prior_milestone_wall_time_minutes": 3904,
-  "prior_milestone_experiments": 728,
-  "experiment_count_delta_vs_63": 12,
-  "experiment_count_vs_cap": "740 vs 700 cap \u2014 EXCEEDED by 40 experiments",
-  "success_criteria": [
-    {
-      "criterion": "governance_ready",
-      "experiment": 831,
-      "target": "honest_verdict == 'governance_ready'",
-      "met": true,
-      "actual_value": "governance_ready"
-    },
-    {
-      "criterion": "arc_diagnosis_found",
-      "experiment": 832,
-      "target": "exp_824_auc_arc <= 0.10 (confirms collapse)",
-      "met": true,
-      "actual_value": 0.04
-    },
-    {
-      "criterion": "constraint_root_cause_found",
-      "experiment": 833,
-      "target": "hypothesis_confirmed == 'H1'",
-      "met": true,
-      "actual_value": "H1"
-    },
-    {
-      "criterion": "jepa_v24_domain_balanced",
-      "experiment": 834,
-      "target": "min_domain_auc >= 0.50",
-      "met": false,
-      "actual_value": 0.0
-    },
-    {
-      "criterion": "arbiter_calibrated",
-      "experiment": 835,
-      "target": "accuracy_standard >= 0.70",
-      "met": false,
-      "actual_value": 0.0
-    },
-    {
-      "criterion": "constraint_delta_positive",
-      "experiment": 836,
-      "target": "delta_overall > 0",
-      "met": false,
-      "actual_value": 0.0
-    },
-    {
-      "criterion": "tier1_relay_works_live",
-      "experiment": 837,
-      "target": "honest_verdict != 'blocked_gate'",
-      "met": false,
-      "actual_value": "blocked_gate"
-    },
-    {
-      "criterion": "jepa_v24_tier35_deployed",
-      "experiment": 838,
-      "target": "tier35_deployed == True",
-      "met": false,
-      "actual_value": false
-    },
-    {
-      "criterion": "bitstream_generated",
-      "experiment": 839,
-      "target": "bitstream_generated == True",
-      "met": false,
-      "actual_value": false
-    },
-    {
-      "criterion": "pipeline_improvement",
-      "experiment": 840,
-      "target": "honest_verdict != 'simulated_no_verdict'",
-      "met": false,
-      "actual_value": "simulated_no_verdict"
-    },
-    {
-      "criterion": "batching_effective",
-      "experiment": 841,
-      "target": "speedup > 1.0 AND retro_symcode_serial_closed == True",
-      "met": true,
-      "actual_value": {
-        "speedup": 1.709641263771632,
-        "retro_symcode_serial_closed": true
-      }
-    }
-  ],
+
   "n_criteria_met": 4,
   "n_criteria_total": 11,
+
   "retros_closed": [
     "RETRO-SYMCODE-SERIAL",
     "RETRO-TIER1-PLATEAU"
@@ -137,92 +228,169 @@
     "RETRO-ICE40-PNR-LUT-OVERFLOW"
   ],
   "retros_still_open": [
+    "RETRO-MANIFEST-FULL-SCOPE",
     "RETRO-JEPA-OOD",
     "RETRO-ARBITER-FLAT-ENERGY",
     "RETRO-CONSTRAINT-ZERO-DELTA",
-    "RETRO-MANIFEST-FULL-SCOPE",
-    "RETRO-XILINX-TOOLS-UNAVAILABLE"
+    "RETRO-XILINX-TOOLS-UNAVAILABLE",
+    "RETRO-GGUF-CACHE-IMPORT",
+    "RETRO-ISING-INJECTION-NO-DISCRIMINATION",
+    "RETRO-SVAMP-ZERO-AUC",
+    "RETRO-ICE40-PNR-LUT-OVERFLOW"
   ],
   "retro_audit": {
+    "RETRO-MANIFEST-FULL-SCOPE": {
+      "status": "open",
+      "consecutive_retro_appearances": 9,
+      "evidence": "Exp 527 ran 11th+ post-retirement appearance. Exp 786 ran 2nd post-RETRO028-closure appearance (zero research value). Even after RETRO-SYMCODE-SERIAL implementation (Exp 841), old Exp 627 ran unchanged from unguarded queue — proving manifest enforcement is the load-bearing fix. Nine consecutive retro recommendations without implementation.",
+      "resolution_path": "Audit ALL dequeue call sites in scripts/research_conductor.py. Apply manifest exclusion check at every site. First line of MILESTONE_PREREQS.md."
+    },
     "RETRO-JEPA-OOD": {
       "status": "open",
-      "evidence": "Exp 834 min_domain_auc=0.0 (SVAMP=0.0); not resolved"
+      "evidence": "Exp 834 min_domain_auc=0.0 (SVAMP=0.0); DG-PRM lifted ARC from 0.04 to 0.72 but SVAMP collapsed. JEPA v24b with SVAMP triplets needed. 10+ consecutive retrain attempts below 0.75 OOD gate.",
+      "resolution_path": "Add 20 SVAMP triplets to training corpus. Retrain as JEPA v24b. Gate: auc_svamp >= 0.40 AND min_domain_auc >= 0.50."
     },
     "RETRO-ARBITER-FLAT-ENERGY": {
       "status": "open",
-      "evidence": "Exp 835 accuracy_standard=0.0; still 0.0 after Z-score normalization"
+      "evidence": "Exp 835 Z-score normalization did not fix accuracy_standard=0.0. energies_raw show near-zero magnitudes consistent with unconverged MCMC. Three milestones since opened.",
+      "resolution_path": "Warm-start Gibbs sampler from s_i=sign(h_i) with 500 burn-in steps. Gate: accuracy_overall >= 0.60."
     },
     "RETRO-CONSTRAINT-ZERO-DELTA": {
       "status": "partially_mitigated",
-      "evidence": "Exp 836 write path fixed (15 constraints stored) but delta_overall=0.0; retrieval still broken"
+      "evidence": "Exp 836 write path fixed (15 constraints stored across 3 sessions). Retrieval path still broken (delta_overall=0.0). Three milestones since root cause identified.",
+      "resolution_path": "Fix ConstraintRetriever.retrieve() cosine threshold or embedding normalization. Gate: delta_overall > 0.05 in 1 of 3 sessions."
     },
-    "RETRO-TIER1-PLATEAU": {
-      "status": "closed_per_governance",
-      "evidence": "Exp 831 governance confirmed closure from .63 (Exps 819/823); Exp 837 blocked at gate \u2014 cannot re-validate live"
-    },
-    "RETRO-SYMCODE-SERIAL": {
-      "status": "closed",
-      "evidence": "Exp 841 speedup=1.710; retro_symcode_serial_closed=True"
-    },
-    "RETRO-MANIFEST-FULL-SCOPE": {
+    "RETRO-ISING-INJECTION-NO-DISCRIMINATION": {
       "status": "open",
-      "evidence": "Requires conductor code change to research_conductor.py; not attempted in .64"
+      "evidence": "Opened .62. Polarity inverted in IsingConstraintInjector — energy delta identical for error/clean responses. Two milestones without resolution. Cascades to block Exp 813/814.",
+      "resolution_path": "Invert penalty sign for error projection in coupling matrix delta. Validate error_energy > clean_energy for all test pairs."
     },
     "RETRO-XILINX-TOOLS-UNAVAILABLE": {
       "status": "open",
-      "evidence": "Exp 839 pnr_failed; N=32 LUT count (3952) exceeds iCE40 HX8K capacity; KV260 synthesis still needs Vivado"
-    },
-    "RETRO-SVAMP-ZERO-AUC": {
-      "status": "open",
-      "evidence": "New .64 RETRO: Exp 834 auc_svamp=0.0; SVAMP not in training corpus"
+      "evidence": "Exp 839 pnr_failed; N=32 (3952 LUTs) exceeds HX8K P&R budget. KV260 board has been idle since arrival 2026-04-20.",
+      "resolution_path": "Reduce to N=16 (~1000 LUTs) for iCE40 target. Gate: bitstream_generated=True. Alternatively: install Xilinx Vivado 2024.2 for KV260 native synthesis."
     },
     "RETRO-ICE40-PNR-LUT-OVERFLOW": {
       "status": "open",
-      "evidence": "New .64 RETRO: Exp 839 pnr_failed; N=32 ising_sampler_v3 exceeds HX8K LUT budget"
+      "evidence": "New .64 RETRO: Exp 839 yosys synthesis clean at N=32 (3952 LUTs) but nextpnr-ice40 P&R failed — HX8K usable LUT budget ~<4000.",
+      "resolution_path": "Reduce Ising sampler to N=16 spins (~1000 LUTs). Run nextpnr-ice40 --hx8k --package ct256."
+    },
+    "RETRO-SVAMP-ZERO-AUC": {
+      "status": "open",
+      "evidence": "New .64 RETRO: Exp 834 auc_svamp=0.0; SVAMP not in training corpus. DG-PRM reweighting cannot improve zero-coverage domain.",
+      "resolution_path": "Add 20 SVAMP triplets to JEPA v24b training corpus. Gate: auc_svamp >= 0.40."
+    },
+    "RETRO-GGUF-CACHE-IMPORT": {
+      "status": "open",
+      "evidence": "Opened .62. carnot/pipeline/gguf_cache.py still does not exist. 8 consecutive milestones of SOTA code repair blockade. Gate shifted from RETRO-028 (OOM) to this ImportError in .62; still unresolved.",
+      "resolution_path": "Create carnot/pipeline/gguf_cache.py with GGUFCacheResolver. 1-2 hours. Unblocks SOTA code repair with Qwen3.6-35B-A3B-GGUF."
+    },
+    "RETRO-SYMCODE-SERIAL": {
+      "status": "closed_implementation_not_wired",
+      "evidence": "Exp 841 speedup=1.710; retro_symcode_serial_closed=True (conductor). However Exp 627 still ran at 51 min in full-milestone queue from unguarded source — the implementation is deployed but old Exp 627 was not retired from the dispatch queue. RETRO closed per conductor mandate but wiring is incomplete.",
+      "resolution_path": "Retire old Exp 627 from all queue sources. Wire batched Exp 841-class replacement. Manifest enforcement prevents re-entry."
+    },
+    "RETRO-TIER1-PLATEAU": {
+      "status": "closed_per_governance",
+      "evidence": "Exp 831 governance confirmed closure from .63 (Exps 819/823). Exp 837 blocked at gate — cannot re-validate live. Closed per governance process.",
+      "resolution_path": "Remains closed. Re-validation pending RETRO-CONSTRAINT-ZERO-DELTA fix."
     }
   },
-  "improvements_suggested": [
-    {
-      "priority": "IMMEDIATE",
-      "action": "Fix EmbeddingConstraintStore retrieval: Exp 836 confirmed the write path works (15 constraints stored across 3 sessions) but delta_overall=0.0 in all sessions.  The write path is fixed; the retrieval path is still broken.  Inspect ConstraintRetriever.retrieve() cosine threshold \u2014 likely too permissive or embedding normalization is missing, returning random-walk scores.  Gate: delta_overall > 0.05 in at least 1 of 3 sessions in Exp 836-v4.",
-      "rationale": "RETRO-CONSTRAINT-ZERO-DELTA: write path confirmed fixed (n_constraints_written>0), but delta is still 0.0.  Arbiter (RETRO-ARBITER-FLAT-ENERGY) and Tier 1 relay (RETRO-TIER1-PLATEAU closure validation) are both gated on positive delta.  This is the deepest active blocker."
-    },
-    {
-      "priority": "IMMEDIATE",
-      "action": "Reduce iCE40 Ising sampler to N=16 spins for bitstream generation: Exp 839 ran yosys SYNTH_ICE40 successfully on N=32 (3952 LUTs) but nextpnr-ice40 failed place-and-route because HX8K has only 7680 LUTs and P&R reserve leaves <4000 usable.  Reduce to N=16 (~1000 LUTs) and run nextpnr-ice40 with --hx8k --package ct256.  Gate: bitstream_generated=True AND bitstream_valid_header=True.",
-      "rationale": "RETRO-ICE40-PNR-LUT-OVERFLOW: KV260 FPGA board has been idle since 2026-04-20 arrival.  The synthesis tool chain (oss-cad-suite) is confirmed working.  The only blocker is resource exhaustion at N=32.  N=16 is mathematically sufficient for the energy sampling proof-of-concept."
-    },
-    {
-      "priority": "IMMEDIATE",
-      "action": "Add SVAMP domain triplets to JEPA v24 training corpus: Exp 834 DG-PRM reweighting lifted ARC from 0.04 to 0.72 but SVAMP collapsed to 0.0.  SVAMP was not in the .63 or .64 training corpora.  Add 20 SVAMP triplets (word problem \u2192 correct step chain \u2192 incorrect step) with PRM reward labels.  Gate: auc_svamp >= 0.40 on SVAMP holdout.  Run as JEPA v24b.",
-      "rationale": "RETRO-SVAMP-ZERO-AUC: SVAMP domain collapse is a data-coverage gap, not an architecture failure.  DG-PRM reweighting cannot improve a domain with zero training examples.  Adding SVAMP triplets is the minimal fix."
-    },
-    {
-      "priority": "IMMEDIATE",
-      "action": "Fix MultiAgentArbiter energy calibration: Exp 835 Z-score normalization did not fix accuracy_standard=0.0 (0/6 correct on standard scenarios).  The energies_raw values in the artifact show near-zero magnitudes (-0.09 to +0.19) consistent with an MCMC sampler not converged.  Fix: warm-start Gibbs sampler from the external-field aligned configuration s_i=sign(h_i) with 500 burn-in steps.  Gate: accuracy_overall >= 0.60.",
-      "rationale": "RETRO-ARBITER-FLAT-ENERGY: accuracy_standard=0.0 in Exp 835 means standard scenarios are being arbitrated at random.  The adversarial path (accuracy=0.5) uses consensus_penalty which introduces enough variance to sometimes pick the right answer.  The standard path has no such structure and is pure noise."
-    },
-    {
-      "priority": "HIGH",
-      "action": "Unblock Exp 840 live GPU benchmark: status=blocked due to model_load_failed.  Exp 840 shows 35s in gpu_setup phase and 1.5s in model_load phase before blocking.  The GPU reaper or VRAM allocation is failing silently.  Run preflight_gpu_reap() before model load and add explicit nvidia-smi VRAM check gate.  Gate: inference_mode='live_gpu' AND n_questions=50.",
-      "rationale": "All headline provenance claims require live GPU results.  CARNOT_FORCE_LIVE=1 was set but the model load failed silently.  The benchmark must run on the AMD ROCm GPU (890M, gfx1150) to produce publishable result artifacts."
-    },
-    {
-      "priority": "HIGH",
-      "action": "Implement RETRO-MANIFEST-FULL-SCOPE conductor code change: Exp 793 and Exp 831 both confirmed the manifest scope is incomplete.  The conductor exclusion manifest does not enumerate all experiments executed under alternative task IDs.  Add a post-run manifest reconciler that reads conductor-log.md and verifies every completed experiment ID is present in the manifest.  Gate: _task_is_excluded() returns (False, '') for 0 experiments that are already in the log.",
-      "rationale": "RETRO-MANIFEST-FULL-SCOPE has been open since .61 and blocks accurate cap enforcement.  The experiment cap (700) is meaningless if the manifest misses experiments.  Exp 831 confirmed 728 completed experiments at .63 close, which is 28 over cap \u2014 the overage cannot be meaningfully governed until manifest is complete."
-    },
-    {
-      "priority": "MEDIUM",
-      "action": "Add per-domain AUC floor to JEPA deployment gate: Exp 834 showed that the overall_ood_auc gate (0.49 > 0 threshold) was insufficient to prevent SVAMP collapse.  Exp 838 correctly blocked on min_domain_auc < 0.50, but the gate threshold should be added to the conductor's pre-flight check so it fires before the deployment experiment rather than inside it.",
-      "rationale": "Two consecutive milestones (.63 ARC collapse, .64 SVAMP collapse) were caught only inside the deployment experiment.  A per-domain floor gate in the conductor pre-flight would have surfaced this two experiments earlier, saving ~40 minutes per milestone."
-    },
-    {
-      "priority": "MEDIUM",
-      "action": "Add JEPA v24b SVAMP training \u2192 Tier 3.5 deployment chain to .65 milestone plan: once SVAMP triplets are added (IMMEDIATE gate above), the deployment path is: JEPA v24b retrain \u2192 Exp 838-v2 deployment \u2192 Exp 837-v4 live relay.  Plan this as three explicitly linked tasks in research-roadmap-vNEXT.md with explicit gate fields referencing each predecessor's honest_verdict.",
-      "rationale": "Exps 837 and 838 were both blocked by cascading gates in .64.  Planning the full repair \u2192 retrain \u2192 deploy \u2192 relay chain upfront prevents the same cascade from repeating in .65."
-    }
+
+  "gpu_state_at_close": {
+    "gpu_0_name": "NVIDIA GeForce RTX 3090",
+    "gpu_0_used_mb": 4,
+    "gpu_0_total_mb": 24576,
+    "gpu_0_utilization_pct": 0,
+    "gpu_0_temperature_c": 47,
+    "gpu_1_name": "NVIDIA GeForce RTX 3090",
+    "gpu_1_used_mb": 4,
+    "gpu_1_total_mb": 24576,
+    "gpu_1_utilization_pct": 0,
+    "gpu_1_temperature_c": 46,
+    "clean_close": true,
+    "thermal_differential_c": 1,
+    "trend_vs_prior_milestone": "Still very clean: 1C differential (47C/46C) vs .63's 0C. Both GPUs slightly cooler than .63 (48C/48C). GPU Zombie Killer working correctly. RETRO-028 closure stable for second consecutive milestone.",
+    "gpu_monitor_suggestions": [
+      "Both GPUs are idle. Use DualGPURunner to run Qwen on GPU 0 and Gemma on GPU 1 simultaneously.",
+      "GPU 0 has 4MB allocated but 0% utilization. Process may be idle — consider freeing memory.",
+      "GPU 1 has 4MB allocated but 0% utilization. Process may be idle — consider freeing memory."
+    ]
+  },
+
+  "wins_summary": [
+    "RETRO-SYMCODE-SERIAL CLOSED: Exp 841 paragraph batching validated at 1.710x speedup — implementation complete and correct",
+    "RETRO-TIER1-PLATEAU closed per governance (Exp 831 confirmation)",
+    "ARC diagnosis confirmed (Exp 832, auc_arc=0.04 confirms embedding collapse)",
+    "EmbeddingConstraintStore write path fixed (Exp 836, 15 constraints stored across 3 sessions)",
+    "GPU close clean: 47C/46C (1C differential), 4MB/0% on both GPUs, RETRO-028 closure stable for 2nd consecutive milestone",
+    "GPU Zombie Killer continuing to work — no zombie processes at close",
+    "Conductor cycle governance: 4/11 criteria met, no legacy carry in managed experiments",
+    "KV260 yosys synthesis clean at N=32 (3952 LUTs) — synthesis toolchain confirmed working, only P&R resource limit remains"
   ],
-  "honest_verdict": "regression_partial_close_4of11_5open",
-  "invariant_violations": []
+
+  "wall_time_trend": {
+    ".50": 4304,
+    ".51": 4231,
+    ".52": 3983,
+    ".53": 3909,
+    ".54": 3861,
+    ".55": 3796,
+    ".56": 3744,
+    ".57": 3674,
+    ".58": 3415,
+    ".59_conductor_cycle_only_min": 128.484,
+    ".60": 3656,
+    ".60_conductor_cycle_min": 110.2458,
+    ".61": 3688,
+    ".61_conductor_cycle_min": 9.393,
+    ".62": 3801,
+    ".62_conductor_cycle_min": 16.4388,
+    ".63": 3904,
+    ".63_conductor_cycle_min": 25.0,
+    ".64": 3971,
+    ".64_conductor_cycle_min": 218.0,
+    "consecutive_full_milestone_improvements": 0,
+    "consecutive_full_milestone_regressions": 5,
+    "total_improvement_since_50": 333,
+    "total_improvement_pct_since_50": 7.7,
+    "regression_vs_58_minutes": 556,
+    "regression_vs_58_pct": 16.3,
+    "regression_acceleration_note": "Regression vs .58 continues: .60: +241 min, .61: +273 min, .62: +386 min, .63: +489 min, .64: +556 min. Increment this milestone: +67 min (decelerated from .62's +113 and .63's +103). Regression rate is moderating slightly but has not reversed. Total improvement since .50 has eroded from 9.3% (.63) to 7.7% (.64). Five consecutive regressions vs .58 baseline.",
+    "per_experiment_avg_trend": {
+      ".52": 7.4,
+      ".53": 6.9,
+      ".54": 6.9,
+      ".55": 6.58,
+      ".56": 6.0,
+      ".57": 6.1,
+      ".58": 5.6,
+      ".60": 5.52,
+      ".61": 5.0,
+      ".62": 5.0,
+      ".63": 5.0,
+      ".64": 5.29,
+      "note": "Per-experiment average ticked UP to 5.29 min in .64 — first regression from the 5.0 min floor since .60. The 5.0 floor was held for three consecutive milestones (.61/.62/.63). The .64 uptick to 5.29 indicates experiment complexity drift: more GPU-heavy, longer-running experiments are entering the queue while shorter experiments are not being retired. Combined with count growth (+22 experiments), the compounding effect is: 750 experiments × 5.29 min = 3968 min (close to the 3971 min actual). Both the count and per-experiment axes are now contributing to regression simultaneously for the first time."
+    }
+  },
+
+  "process_efficiency_assessment": {
+    "bottleneck_identification_to_action_rate": "ZERO for full-milestone queue — six consecutive milestones with identical slowest-5 composition. The .64 Exp 627 result (51 min despite RETRO-SYMCODE-SERIAL closure) provides definitive proof: the retro-to-action pipeline is broken specifically at the dispatch/manifest layer. Implementation fixes work; they just never reach the full-milestone queue without manifest enforcement.",
+    "gpu_utilization_efficiency": "CLEAN CLOSE, SEQUENTIAL EXECUTION — 1C differential (47C/46C), GPU Zombie Killer working. DualGPU ThreadPoolExecutor still not applied to Exp 603/491-class across seven milestones. Both GPUs idle at close per monitor.",
+    "zombie_process_management": "EXCELLENT — GPU Zombie Killer working. Clean close 4MB/0%. RETRO-028 closure stable for 2nd consecutive milestone.",
+    "manifest_enforcement_conductor_cycle": "EXCELLENT — conductor cycle had zero legacy carry.",
+    "manifest_enforcement_full_milestone": "ZERO — Exp 527, Exp 786, and old Exp 627 all ran from unguarded historical queues. RETRO-SYMCODE-SERIAL implementation deployed but old Exp 627 not retired from queue. Full-milestone = ~3753 min of non-conductor time (94.5% of total wall time).",
+    "experiment_timeout_governance": "ABSENT — Exp 786 (77 min), Exp 491 (52 min), Exp 627 (51 min), Exp 603 (44 min) all ran unbounded for FIVE consecutive milestones.",
+    "doc_reconciliation_efficiency": "ADEQUATE — not a bottleneck.",
+    "jepa_data_pipeline": "PARTIAL PROGRESS — DG-PRM reweighting (Exp 834) lifted ARC from 0.04 to 0.72, proving the technique works. SVAMP collapse (auc=0.0) is a data-coverage gap. v24b with SVAMP triplets is the clear next step.",
+    "gguf_code_repair_pipeline": "GATED — 8th consecutive milestone of SOTA code repair blockade. carnot/pipeline/gguf_cache.py still missing.",
+    "constraint_injection_pipeline": "WRITE_PATH_FIXED — Exp 836 confirmed write path (15 constraints stored). Retrieval path still broken (delta=0.0). Partially unblocked.",
+    "symcodeverifier_batching": "IMPLEMENTED_NOT_WIRED — Exp 841 validated 1.710x speedup, RETRO-SYMCODE-SERIAL closed. Old Exp 627 still runs from unguarded queue at 51 min. Wiring incomplete.",
+    "multi_agent_arbiter": "NON-FUNCTIONAL — Three milestones since deployed as non-functional.",
+    "fpga_synthesis": "SYNTHESIS_CLEAN_PNR_FAILED — OSS-CAD-Suite operational, N=32 yosys synthesis clean at 3952 LUTs. nextpnr-ice40 P&R failed at N=32 (resource exhaustion). N=16 path clear."
+  },
+
+  "invariant_violations": [],
+
+  "honest_verdict": "full_milestone_REGRESSION_FIFTH_CONSECUTIVE_67min_1pt7pct_vs_63_556min_16pt3pct_vs_58_baseline_UNPRECEDENTED_QUAD_SLOWEST5_IDENTICAL_FIVE_CONSECUTIVE_MILESTONES_60_61_62_63_64_DOCUMENTATION_WITHOUT_APPLICATION_SIXTH_CONSECUTIVE_MILESTONE_PER_EXPERIMENT_REGRESSION_5pt29min_vs_5pt0_FLOOR_experiment_count_750_HISTORIC_HIGH_50_over_cap_RETRO_SYMCODE_SERIAL_CLOSED_BUT_EXP627_STILL_RAN_51min_PROOF_MANIFEST_IS_LOADBEARING_FIX_RETRO_TIER1_PLATEAU_CLOSED_ARC_DIAGNOSIS_CONFIRMED_WRITE_PATH_FIXED_GPU_CLEAN_47C_46C_1C_differential_zombie_killer_working_RETRO028_stable_2nd_milestone_SVAMP_ZERO_AUC_ICE40_PNR_LUT_OVERFLOW_newly_opened_9_retros_still_open_estimated_30pct_savings_12pt8pct_near_term"
 }

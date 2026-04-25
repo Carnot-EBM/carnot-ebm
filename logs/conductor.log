@@ -2389,3 +2389,40 @@ logs/conductor.log | 15 +++++++++++++++
 2026-04-25 04:37:32,307 [conductor] Pushed to origin
 2026-04-25 04:37:32,308 [conductor] Running post-commit documentation reconciliation...
 2026-04-25 04:37:32,309 [conductor] In-process docs: changelog=False, status=False, traceability_rows=0, verdict='', label='', skipped=no artifact found for task id 'exp842-milestone-retro'
+2026-04-25 04:37:32,337 [conductor] Committed: [conductor] In-process docs for Exp 842: Milestone 2026.04.64 Operational Retros
+2026-04-25 04:37:33,792 [conductor] Pushed to origin
+2026-04-25 04:37:33,792 [conductor] Documentation reconciliation committed (in-process)
+2026-04-25 04:37:33,796 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-25 04:42:33,797 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-25 04:47:33,800 [conductor] Sleep complete — resuming
+2026-04-25 04:47:33,800 [conductor] --- Iteration 7 ---
+2026-04-25 04:47:33,802 [conductor] All 12 research tasks completed or exhausted. Nothing to do.
+2026-04-25 04:47:33,802 [conductor] All tasks in current milestone complete.
+2026-04-25 04:47:33,802 [conductor] Updating docs before planning next milestone...
+2026-04-25 04:47:33,802 [conductor] ============================================================
+2026-04-25 04:47:33,802 [conductor] UPDATING DOCS BEFORE PLANNING
+2026-04-25 04:47:33,802 [conductor] ============================================================
+2026-04-25 04:47:33,802 [conductor] Calling Claude Code (30 max turns, model: sonnet)...
+Error: Reached max turns (30)2026-04-25 04:50:49,317 [conductor] Claude Code failed (exit 1)
+2026-04-25 04:50:49,317 [conductor] No doc updates needed (or update failed)
+2026-04-25 04:50:49,317 [conductor] Running operational retrospective...
+2026-04-25 04:50:49,336 [conductor] ============================================================
+2026-04-25 04:50:49,337 [conductor] OPERATIONAL RETROSPECTIVE (milestone 2026.04.64)
+2026-04-25 04:50:49,337 [conductor] ============================================================
+2026-04-25 04:50:49,468 [conductor] Calling agent for operational retrospective...
+2026-04-25 04:50:49,469 [conductor] Calling Claude Code (15 max turns, model: sonnet)...
+Done. Here's what was produced:
+
+**`results/operational_retro_2026_04_64.json`** — Full augmented retro (schema v39) with:
+- `total_wall_time_minutes`: 3971
+- `experiments_completed`: 750
+- `slowest_experiments`: all 5 carryovers (Exp 786/527/491/627/603) — unprecedented^4, five consecutive milestones
+- `bottlenecks_identified`: 12 items including the critical new finding
+- `improvements_suggested`: 10 prioritized actions
+- `estimated_time_savings_pct`: 30% (12.8% near-term recoverable)
+
+**`ops/changelog.md`** — Prepended .64 retro entry.
+
+**Key finding this milestone:** RETRO-SYMCODE-SERIAL was *closed* (Exp 841, 1.710x speedup validated) yet Exp 627 still ran at 51 min unchanged from the unguarded queue. This is definitive proof that manifest enforcement is the load-bearing fix — implementation without dispatch-site wiring produces zero wall-time improvement. The per-experiment average also ticked back up to 5.29 min (from the 5.0 floor), the first complexity-drift signal in four milestones.
+2026-04-25 04:56:30,192 [conductor] Claude Code completed (exit 0)
+2026-04-25 04:56:30,192 [conductor] Operational retrospective complete
