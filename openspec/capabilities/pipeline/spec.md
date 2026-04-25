@@ -948,3 +948,47 @@ multiple consecutive milestones.
      `import_repair_succeeded=False`.
 
 **Spec traces:** REQ-REPAIR-056
+
+### REQ-VERIFY-145: Cross-Domain PRM Degradation Reporting
+
+**Statement:** For cross-domain PRM evaluation, Carnot MUST compute and report
+`cross_domain_degradation = auc_in_dist - auc_ood` for each OOD domain (HumanEval,
+ARC-Challenge).  If the maximum degradation across domains exceeds 0.08 (the 8% baseline
+published in arXiv 2506.00027), the experiment MUST identify which domain shows the
+largest gap.  The artifact MUST include `beats_baseline` (bool), `published_baseline=0.08`,
+and `honest_verdict` drawn from {"above_baseline", "at_baseline", "below_baseline",
+"data_unavailable"}.
+
+**Rationale:** arXiv 2506.00027 reports that PRMs trained on math reasoning degrade ~8%
+AUC when applied to code verification.  Without a concrete cross-domain metric, Carnot
+cannot claim its JEPA-based verifier generalises better than the published baseline.
+This requirement creates a traceable, reproducible benchmark comparison.
+
+**Acceptance criteria:**
+- `cross_domain_degradation_humaneval` and `cross_domain_degradation_arc` are computed
+  as `in_dist_auc - auc_domain` and recorded in the artifact.
+- `beats_baseline` is True iff `cross_domain_degradation_max <= 0.08`.
+- `honest_verdict` is "above_baseline" when beats_baseline is True, "at_baseline" when
+  abs(degradation_max - 0.08) <= 0.01, "below_baseline" when degradation_max > 0.09.
+- `corroboration_rate` = fraction of 20 VerificationCertificates where z3_verdict
+  direction agrees with jepa_energy_delta direction (unsat ↔ high energy).
+
+**Spec traces:** Exp 826, arXiv 2506.00027, arXiv 2601.17223
+
+### SCENARIO-VERIFY-174: Load Exp 825 AUC; Compute Degradation; Emit Certificates for Failed OOD Steps
+
+**Given** Exp 825 results file exists with `auc_gsm8k`, `auc_humaneval`, `auc_arc`,
+  `overall_ood_auc`, and 20 `verification_certificates`
+**And** Exp 824 results file exists with `in_dist_auc`
+**When** Exp 826 runs cross-domain PRM benchmark
+**Then**
+  1. `cross_domain_degradation_humaneval = in_dist_auc - auc_humaneval` is computed.
+  2. `cross_domain_degradation_arc = in_dist_auc - auc_arc` is computed.
+  3. `cross_domain_degradation_max = max(degradation_humaneval, degradation_arc)`.
+  4. `beats_baseline = (cross_domain_degradation_max <= 0.08)`.
+  5. `corroboration_rate` is computed from Exp 825 certificates (unsat ↔ energy_delta > 0).
+  6. If degradation_max > 0.08: `worst_domain` is identified as the higher-degradation domain.
+  7. Artifact is written with all required fields per REQ-VERIFY-145.
+  8. `honest_verdict` reflects the degradation comparison against 0.08 baseline.
+
+**Spec traces:** REQ-VERIFY-145
