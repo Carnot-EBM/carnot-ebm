@@ -3681,3 +3681,19 @@ logs/conductor.log | 19 +++++++++++++++++++
 2026-04-25 15:13:17,421 [conductor] RESEARCH STEP: Exp 873: JEPA v25 OOD Evaluation + Cascade Deployment (CPU, GATED on 872 OOD AUC > 0.65)
 2026-04-25 15:13:17,421 [conductor] ============================================================
 2026-04-25 15:13:17,443 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 15:13:17,503 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 15:13:17,503 [conductor] Running test suite (smart subset)...
+2026-04-25 15:13:23,262 [conductor] Pre-check: 81 passed, 3 warnings in 3.02s
+2026-04-25 15:13:23,376 [conductor] Injected 39 symbol signatures from 2 files (AST outlines)
+2026-04-25 15:13:23,376 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 10 tests pass. Gate check: Exp 872 `ood_auc = 0.484375 <= 0.65`, so Exp 873 is blocked. Deliverable written to `results/experiment_873_jepa_v25_deploy.json` with `status="blocked"`, `cascade_deployed=false`, `blocked_by="exp872_ood_auc_below_0.65"`. Tests pass in 59 seconds.
+2026-04-25 15:14:35,024 [conductor] Claude Code completed (exit 0)
+2026-04-25 15:14:35,038 [conductor] Changes:
+logs/conductor.log | 7 +++++++
+ 1 file changed, 7 insertions(+)
+2026-04-25 15:14:35,053 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp869-gguf-predownload: '"success"' — auto-fixing
+2026-04-25 15:14:35,053 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp870-sota-code-repair-v7: '"name"' — auto-fixing
+2026-04-25 15:14:35,053 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp871-live-benchmark-v6: '"name"' — auto-fixing
+2026-04-25 15:14:35,057 [conductor] DOGFOOD: Verification complete (total: 547 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 15:14:35,057 [conductor] Running test suite (smart subset)...
+2026-04-25 15:14:40,610 [conductor] Post-check: 81 passed, 3 warnings in 2.80s
