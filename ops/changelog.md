@@ -4184,3 +4184,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 833: Constraint Accumulation Root Cause Diagnosis (CPU) (⚠️ Research Finding) — honest_verdict=write_path_missing; results/experiment_833_constraint_delta_root_cause.json
 - 2026-04-25: Exp 834: JEPA v24 DG-PRM Domain-Balanced Training (RETRO-JEPA-OOD, CPU) (✅ Complete) — honest_verdict=jepa_v24_arc_improved; results/experiment_834_jepa_v24_dg_prm.json
 - 2026-04-25: Exp 835: Multi-Agent Arbiter Energy Calibration Fix v2 (RETRO-ARBITER-FLAT-ENERGY, CPU) (⚠️ Research Finding) — honest_verdict=arbiter_still_wrong; results/experiment_835_arbiter_calibration_fix_v2.json
+- 2026-04-25: Exp 837: FR-11 Tier 1 Live Relay v3 (FR-11 mandatory, GPU, gated on Exp 836 delta>0) (⚠️ Blocked) — honest_verdict=blocked_gate; results/experiment_837_fr11_tier1_live_relay_v3.json
