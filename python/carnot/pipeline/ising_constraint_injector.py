@@ -21,11 +21,25 @@
     This is the simplest well-motivated injection that preserves the quadratic energy
     structure while changing the energy for constraint-violating configurations.
 
-Spec: REQ-VERIFY-095, REQ-VERIFY-096, SCENARIO-VERIFY-129
+**RETRO-ISING-INJECTION-NO-DISCRIMINATION (CLOSED 20260425):**
+    Exp 812 revealed that diagonal injection adds a CONSTANT energy shift -0.5*sum(bias)
+    that is identical for ALL spin configurations because s_i^2 = 1 for ±1 spins.
+    This means it cannot distinguish violations from correct responses.
+
+    Fix: external field injection via compute_energy_with_external_field().
+    E_total = -0.5 * s^T J s + h^T s, where h = clip(W @ emb_mean, 0, inf).
+    When s_i = +1 (violation): field term = +h[i] > 0, total energy INCREASES.
+    When s_i = -1 (correct):   field term = -h[i] < 0, total energy DECREASES.
+    Note: uses +h^T s (not -h^T s as in standard Ising) to penalise violation spins.
+    Net: violations are penalised, correct responses are rewarded. Discriminating.
+
+Spec: REQ-VERIFY-095, REQ-VERIFY-096, REQ-VERIFY-173, REQ-VERIFY-174,
+      SCENARIO-VERIFY-129, SCENARIO-VERIFY-227, SCENARIO-VERIFY-228
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import NamedTuple
 
 import numpy as np
 
@@ -193,3 +207,93 @@ class IsingConstraintInjector:
         J = np.array(ising_ebm.coupling, dtype=np.float64)
         J_injected = self.inject_into_coupling_matrix(J, bias)
         return float(-0.5 * spins @ J_injected @ spins)
+
+    def compute_energy_with_external_field(
+        self,
+        J: np.ndarray,
+        spins: np.ndarray,
+        constraint_embeddings: list[list[float]],
+    ) -> "ExternalFieldEnergyResult":
+        """Compute Ising energy with an external field derived from constraint embeddings.
+
+        Unlike inject_into_coupling_matrix (which adds a constant to the diagonal and
+        therefore shifts energy identically for ALL spin configs), external field injection
+        changes sign depending on spin orientation:
+            - Violation spin s_i = +1: field term = +h[i] > 0 → total energy INCREASES.
+            - Correct spin   s_i = -1: field term = -h[i] < 0 → total energy DECREASES.
+
+        Note on sign convention: the standard Ising Hamiltonian uses -h^T s which
+        FAVORS s=+1 (lower energy for aligned spins). We use +h^T s to PENALISE s=+1
+        (violation encoding), which is the opposite convention but physically correct
+        for our use case.
+
+        The external field h is derived from constraint_embeddings via project_to_spin_bias,
+        then clipped to [0, +inf] so constraint penalties only ever raise energy for
+        violations, never accidentally lower it for correct configurations.
+
+        Formula:
+            E_total = E_ising + E_field
+            E_ising = -0.5 * s^T J s
+            h       = clip(W @ mean(embeddings), 0, inf)
+            E_field = +h^T s  (positive sign — penalises violation spins s_i=+1)
+
+        Args:
+            J: Square coupling matrix of shape (n_spins, n_spins).
+            spins: numpy array of shape (n_spins,) with values in {-1, +1}.
+            constraint_embeddings: List of float lists, each of length embedding_dim.
+                An empty list produces h=0 (no external field, backwards compatible).
+
+        Returns:
+            ExternalFieldEnergyResult namedtuple with fields:
+                E_total: scalar energy E_ising + E_field.
+                E_ising: coupling-only energy -0.5 * s^T J s.
+                E_field: external field contribution -h^T s.
+                h_norm: L2 norm of the external field vector h (0 when embeddings empty).
+
+        Spec: REQ-VERIFY-173, REQ-VERIFY-174, SCENARIO-VERIFY-227, SCENARIO-VERIFY-228
+        """
+        spins_f = np.array(spins, dtype=np.float64)
+        J_f = np.array(J, dtype=np.float64)
+
+        # Coupling energy — standard Ising formula.
+        E_ising = float(-0.5 * spins_f @ J_f @ spins_f)
+
+        # External field: project embeddings to spin space, clip negative to zero so
+        # the field can only penalise violations (never reward them by accident).
+        if constraint_embeddings:
+            emb_array = np.array(constraint_embeddings, dtype=np.float64)
+            h_raw = emb_array @ self._projection  # (n_constraints, n_spins)
+            h = np.clip(h_raw.mean(axis=0), 0.0, None)  # (n_spins,), non-negative
+        else:
+            h = np.zeros(self.n_spins, dtype=np.float64)
+
+        # Positive sign: h^T s with h >= 0 penalises violation spins (s_i = +1 → +h[i])
+        # and rewards correct spins (s_i = -1 → -h[i]).  The standard Ising external
+        # field convention -h^T s favors +1 spins, which is the OPPOSITE of what we
+        # want (see RETRO-ISING-INJECTION-NO-DISCRIMINATION for the sign analysis).
+        E_field = float(h @ spins_f)
+        E_total = E_ising + E_field
+        h_norm = float(np.linalg.norm(h))
+
+        return ExternalFieldEnergyResult(
+            E_total=E_total,
+            E_ising=E_ising,
+            E_field=E_field,
+            h_norm=h_norm,
+        )
+
+
+class ExternalFieldEnergyResult(NamedTuple):
+    """Result of compute_energy_with_external_field.
+
+    Attributes:
+        E_total: Total energy E_ising + E_field.
+        E_ising: Coupling-only energy -0.5 * s^T J s.
+        E_field: External field contribution -h^T s.
+        h_norm: L2 norm of the external field vector h.
+    """
+
+    E_total: float
+    E_ising: float
+    E_field: float
+    h_norm: float
