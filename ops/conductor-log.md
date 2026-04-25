@@ -2735,3 +2735,4 @@ python/ |
 | 2026-04-25 06:36 UTC | Exp 836: Constraint Accumulation Fix v3 (RETRO-CON | OK | Deliverable already exists in repo |
 | 2026-04-25 07:08 UTC | Exp 837: FR-11 Tier 1 Live Relay v3 (FR-11 mandato | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-04-25 07:13 UTC | Exp 837: FR-11 Tier 1 Live Relay v3 (FR-11 mandato | OK | 81 passed, 3 warnings in 2.86s |
+| 2026-04-25 07:24 UTC | Exp 838: JEPA v24 Multi-Domain Deployment as Tier  | OK | 81 passed, 3 warnings in 2.82s |
