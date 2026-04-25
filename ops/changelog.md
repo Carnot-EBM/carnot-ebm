@@ -4211,3 +4211,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 856: DualGPURunner Production Deployment — Wire into VerifyRepair + ThreeTier (CPU+GPU) (⚠️ Research Finding) — honest_verdict=deployed; results/experiment_856_dualgpu_production.json
 - 2026-04-25: Exp 857: SOTA GGUF Download + Code Repair v6 — Qwen3.6-35B Live (GPU, GATED on 855+856) (⚠️ Blocked) — honest_verdict=blocked; results/experiment_857_sota_code_repair_v6.json
 - 2026-04-25: Exp 858: Live Full Precision Benchmark v5 — DualGPU + All Cascade Tiers (GPU, GATED on 856) (⚠️ Research Finding) — honest_verdict=simulation_fallback; results/experiment_858_live_benchmark_v5.json
+- 2026-04-25: Exp 859: iCE40 N=8 Combinational Energy Oracle — Fix Register Expansion (CPU + iCE40 tools) (✅ Complete) — honest_verdict=fpga_oracle_ready; lut_count=134; results/experiment_859_ice40_n8_combinational.json
