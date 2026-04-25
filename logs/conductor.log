@@ -2712,3 +2712,20 @@ logs/conductor.log                     |  7 +++++++
 2026-04-25 07:31:03,201 [conductor] RESEARCH STEP: Exp 850: SOTA GGUF Code Repair v5 — Qwen3.6-35B (GPU, GATED on Exp 849)
 2026-04-25 07:31:03,201 [conductor] ============================================================
 2026-04-25 07:31:03,221 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 07:31:03,280 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 07:31:03,280 [conductor] Running test suite (smart subset)...
+2026-04-25 07:31:08,878 [conductor] Pre-check: 81 passed, 3 warnings in 2.85s
+2026-04-25 07:31:08,997 [conductor] Injected 112 symbol signatures from 4 files (AST outlines)
+2026-04-25 07:31:08,997 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. Summary:
+
+- **`scripts/experiment_850_sota_code_repair_v5.py`** — New experiment script with `check_exp849_gate`, `apply_mars_margin_gate`, `compute_signed_improvement`, `classify_verdict`, `run_problem_baseline`, `run_problem_with_repair`, and 25 inline HumanEval problems.
+- **`tests/python/test_experiment_850_sota_code_repair_v5.py`** — 28 tests, all passing; covers blocked gate, model_not_cached, MARS threshold, signed improvement math, repair attempted/skipped, LLM exception fallback, and canonical solution correctness.
+- **`results/experiment_850_sota_code_repair_v5.json`** — Deliverable written with `honest_verdict: "model_not_cached"` (Qwen3.6-35B-A3B-GGUF not present on this host; expected path recorded for download).
+2026-04-25 07:39:04,460 [conductor] Claude Code completed (exit 0)
+2026-04-25 07:39:04,472 [conductor] Changes:
+logs/conductor.log | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+2026-04-25 07:39:04,498 [conductor] DOGFOOD: Verification complete (total: 525 checks, 48 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 07:39:04,498 [conductor] Running test suite (smart subset)...
+2026-04-25 07:39:10,210 [conductor] Post-check: 81 passed, 3 warnings in 2.91s
