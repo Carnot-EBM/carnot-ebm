@@ -2642,3 +2642,47 @@ Given live GPU available AND Exp 813 delta_overall > 0:
   - honest_verdict = "tier1_plateau_persists_live" if delta_s1_to_s5 <= 0
   - honest_verdict = "blocked_no_delta" if Exp 813 gate blocks
   - tier1_relay_works_live=True when honest_verdict == "tier1_relay_works_live"
+
+### REQ-LEARN-821-001: Exp 819 Gate — External Field Fix Required Before Live Measurement
+
+Exp 821 MUST gate on Exp 819 honest_verdict == "injection_field_fixed" before running
+any live session.  If the gate fails, the experiment writes a blocked artifact with
+honest_verdict="blocked_gate" and exits immediately.
+
+Rationale: compute_energy_with_external_field() was validated in Exp 819 to discriminate
+violations from correct responses (discrimination_rate=1.0).  Without that validation,
+the precision delta measured in Exp 821 could be entirely due to the coupling matrix
+rather than the constraint injection signal.
+
+Spec: REQ-LEARN-821-001
+
+### REQ-LEARN-821-002: Constraint Addition MUST Produce Measurable Precision Delta Over 3 Sessions
+
+After applying the external field fix (Exp 819), constraint addition to EmbeddingConstraintStore
+MUST produce a measurable increase in verification precision (delta_overall > 0) over at least
+3 live sessions on >= 30 GSM8K questions.
+
+Definition:
+  - precision_s = fraction of violation/correct pairs where E_viol > E_corr using external field
+  - delta_s1_to_s3 = precision[2] - precision[0]
+  - delta_overall = max(precision[0..2]) - precision[0]
+  - retro_constraint_zero_delta_closed = (delta_overall > 0)
+
+This is the core FR-11 Tier 1 hypothesis: more constraints → higher energy for violations.
+The external field fix (Exp 819) enables real measurement for the first time.
+
+Spec: REQ-LEARN-821-002
+
+### SCENARIO-LEARN-821-001: 30q x 3 Sessions — External Field Constraint Accumulation
+
+Given Exp 819 honest_verdict == "injection_field_fixed":
+  - Exp 821 creates an empty EmbeddingConstraintStore
+  - Session 1: store is empty; external field h≈0; precision is coupling-only baseline
+  - After session 1: SPO constraints added for each failed question (n_added_1 > 0)
+  - Session 2: store has n_added_1 constraints; h>0 for related questions; precision >= session 1
+  - After session 2: SPO constraints added for remaining failures (n_added_2 >= 0)
+  - Session 3: store has n_added_1 + n_added_2 constraints; precision >= session 2
+  - delta_overall = max(precision_1..3) - precision_1 >= 0
+  - honest_verdict = "constraint_addition_works_live" if delta_overall > 0
+  - honest_verdict = "constraint_addition_no_delta_live" if delta_overall <= 0
+  - honest_verdict = "blocked_gate" if Exp 819 gate fails
