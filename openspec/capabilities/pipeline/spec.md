@@ -1476,3 +1476,47 @@ full backward compatibility.
   4. `StreamingCoTHalluDetector` is never imported during the call.
 
 **Spec traces:** REQ-VERIFY-140, SCENARIO-VERIFY-166, Exp 874
+
+
+### REQ-VERIFY-160: VJEPA v2 Expanded Corpus Training
+
+**Status:** Implemented (Exp 883)
+
+The VJEPA predictor MUST be trainable on an expanded corpus of 200+ step-label
+pairs combining real FoVer pairs with synthetic GSM8K/ARC/SVAMP-style pairs,
+using DomainReweightedLoss to balance signal across domain sizes.
+
+**Acceptance criteria:**
+- Synthetic pair generator produces exactly one incorrect step per problem.
+- DomainReweightedLoss weights sum to 1.0 across all domains present.
+- Train/eval split by question_id is reproducible (same seed → same split).
+- OOD AUC after 200 epochs with 207+ training pairs exceeds Exp 877 baseline (0.5833).
+- KL magnitude remains > 0.01 (no posterior collapse).
+
+**Spec traces:** REQ-VERIFY-160, Exp 883
+
+
+### SCENARIO-VERIFY-231: Synthetic Pair Generator Produces Correct Step Labels
+
+**Given** `generate_gsm8k_synthetic(n_steps=100, seed=42)` is called
+**When** the returned pairs are grouped by question_id
+**Then**
+  1. Each question_id group has exactly one step labelled "incorrect".
+  2. All other steps in each group are labelled "correct".
+  3. All steps have domain "gsm8k_synthetic".
+  4. Calling twice with the same seed produces identical output.
+
+**Spec traces:** REQ-VERIFY-160, SCENARIO-VERIFY-231, Exp 883
+
+
+### SCENARIO-VERIFY-232: DomainReweightedLoss Balances 4-Domain Corpus
+
+**Given** a corpus with 4 domains of sizes [10, 30, 20, 40]
+**When** `DomainReweightedLoss.compute_domain_weights()` is called
+**Then**
+  1. All four domain keys appear in the returned weight dict.
+  2. Weights sum to 1.0 (within 1e-5 tolerance).
+  3. The smallest domain (10 samples) has a strictly higher weight than the largest (40 samples).
+  4. `weighted_loss()` returns a positive scalar for non-trivial logits/labels.
+
+**Spec traces:** REQ-VERIFY-160, SCENARIO-VERIFY-232, Exp 883
