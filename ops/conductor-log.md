@@ -2723,3 +2723,4 @@ python/ |
 | 2026-04-25 03:16 UTC | Exp 827: KV260 nextpnr-xilinx Synthesis v3 (gated  | OK | 81 passed, 3 warnings in 2.83s |
 | 2026-04-25 03:35 UTC | Exp 828: Activation Jailbreak Linear Probe (arXiv  | OK | 81 passed, 3 warnings in 2.87s |
 | 2026-04-25 03:53 UTC | Exp 829: HuggingFace v3 Publish (Tier A product) | OK | 81 passed, 3 warnings in 2.77s |
+| 2026-04-25 04:08 UTC | Exp 830: Milestone 2026.04.63 Operational Retrospe | OK | 81 passed, 3 warnings in 2.84s |

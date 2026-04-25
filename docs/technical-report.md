@@ -1,9 +1,9 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 818 Experiments Across 68 Research Milestones
+## A Technical Report on 830 Experiments Across 69 Research Milestones
 
 **Author:** Ian Blenke
-**Date:** 2026-04-24
+**Date:** 2026-04-25
 **Repository:** github.com/Carnot-EBM/carnot-ebm
 **License:** Apache 2.0
 
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **818
-experiments across 68 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **830
+experiments across 69 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -243,6 +243,21 @@ blocking SOTA code repair), RETRO-ISING-INJECTION-NO-DISCRIMINATION
 (constraint injector assigns identical energy deltas to error and clean
 responses), and RETRO-ARBITER-FLAT-ENERGY (Multi-Agent Arbiter scores
 all responses 0.0, making selection order-dependent).
+
+Milestone 2026.04.63 (the 69th) extended the record to 830 experiments.
+Key .63 findings: RETRO-ISING-INJECTION-NO-DISCRIMINATION closed — Ising
+constraint injection now achieves 100% discrimination rate between error
+and clean responses (Exp 819); RETRO-GGUF-CACHE-IMPORT closed — GGUF
+module import fixed, enabling SOTA code repair with +14 repairs on 20
+problems using Qwen3.5-0.8B (Exp 820); jailbreak/activation probe
+achieved AUC=1.0 at 0.06 ms inference latency (Exp 828); HuggingFace
+v3 publish confirmed working with 27 model cards (Exp 829). Blockers
+remaining: JEPA v23 ARC domain collapse (OOD AUC=0.04 on planning
+domain — data coverage gap, not architecture failure); FPGA iCE40
+bitstream not yet generated (nextpnr-ice40 routing invocation incomplete).
+Two new RETROs: RETRO-JEPA-PLANNING-DOMAIN-COLLAPSE,
+RETRO-ICE40-BITSTREAM-FAILURE. Four of 10 success criteria met (honest
+verdict: retro_63_mixed).
 
 ---
 
