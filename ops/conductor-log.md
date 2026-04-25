@@ -2772,3 +2772,4 @@ python/ |
 | 2026-04-25 17:04 UTC | Exp 867: Milestone 2026.04.66 Operational Retrospe | OK | 81 passed, 3 warnings in 2.84s |
 | 2026-04-25 17:34 UTC | Plan milestone 2026.04.67 | OK | 12 tasks proposed |
 | 2026-04-25 17:44 UTC | Milestone 2026.04.67 activated | OK | 12 tasks queued |
+| 2026-04-25 17:59 UTC | Exp 868: Pre-flight v16 — Manifest Enforcement Mod | OK | 81 passed, 3 warnings in 2.79s |
