@@ -1,0 +1,312 @@
+"""Pre-gate check for the research conductor.
+
+Before spawning the 50-turn Sonnet research-step call, evaluate any
+gates declared on the task. If a gate fails (a prerequisite experiment's
+artifact doesn't satisfy the declared condition), write a blocked
+artifact directly and skip the Sonnet call entirely.
+
+The Sonnet call is the most expensive part of an iteration (5-9 min on
+typical experiments). When the experiment is going to write a blocked
+artifact anyway because its prerequisite failed, those 5-9 min are pure
+waste. The pre-gate check moves the gate evaluation up to the conductor,
+where it costs ~50ms instead of a full LLM round-trip.
+
+The gate format is declarative and lives in research-roadmap.yaml:
+
+    - id: exp823-fr11-tier1-live-relay-v2
+      title: Exp 823: FR-11 Tier 1 Live Relay v2 ...
+      gated_on:
+        - upstream: exp821-constraint-addition-live-v2
+          artifact_field: delta_overall
+          op: ">"
+          value: 0.0
+        - upstream: exp819-injection-field-fix
+          artifact_field: honest_verdict
+          op: "in"
+          value: ["injection_field_fixed", "discrimination_above_baseline"]
+
+All gates in the list must pass for the task to proceed. Absence of a
+`gated_on` field means the task is ungated — the pre-gate check is a
+no-op and the conductor proceeds to the Sonnet call as before. This is
+the backwards-compatible default; any existing roadmap YAML keeps
+working unchanged.
+
+Supported `op` values (intentionally small):
+  ==, !=, >, >=, <, <=, in, not_in, contains, not_contains
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+# Reuse the artifact-finding logic from the in-process doc reconciler.
+# Both modules need to map a task id like "exp819-something" to its
+# results/experiment_819_*.json file, and there's no reason to duplicate.
+
+
+def _find_artifact_by_task_id(task_id: str, results_dir: Path) -> Path | None:
+    """Locate an experiment's artifact JSON by its YAML task id.
+
+    Mirrors the implementation in scripts/in_process_doc_reconcile.py.
+    Kept as a private helper here to avoid an inter-module import cycle
+    if the conductor imports both modules — the conductor adds scripts/
+    to sys.path before either import, but a duplicate is safer than a
+    cycle.
+    """
+    match = re.match(r"exp(\d+)", task_id.lower())
+    if not match:
+        return None
+    exp_num = match.group(1)
+    candidates = sorted(results_dir.glob(f"experiment_{exp_num}_*.json"))
+    if not candidates:
+        return None
+    return max(candidates, key=lambda p: p.stat().st_mtime)
+
+
+@dataclass
+class GateResult:
+    """Outcome of evaluating a single gate predicate."""
+
+    upstream: str
+    artifact_field: str
+    op: str
+    expected: Any
+    actual: Any
+    passed: bool
+    reason: str = ""
+
+
+@dataclass
+class GateCheckResult:
+    """Outcome of evaluating all gates on a task."""
+
+    passed: bool
+    gates_evaluated: list[GateResult] = field(default_factory=list)
+    summary: str = ""
+
+
+def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
+    """Apply a single comparison operator. Returns (passed, reason).
+
+    The `reason` string is human-readable and goes straight into the
+    blocked artifact when the gate fails. Designed so a reader can
+    diagnose the block from the artifact alone, without re-running.
+    """
+    if op == "==":
+        return actual == expected, f"actual={actual!r} == expected={expected!r}"
+    if op == "!=":
+        return actual != expected, f"actual={actual!r} != expected={expected!r}"
+    if op in (">", ">=", "<", "<=") and (actual is None or expected is None):
+        return False, f"numeric comparison rejected because one side is None (actual={actual!r}, expected={expected!r})"
+    if op == ">":
+        return actual > expected, f"actual={actual} > expected={expected}"
+    if op == ">=":
+        return actual >= expected, f"actual={actual} >= expected={expected}"
+    if op == "<":
+        return actual < expected, f"actual={actual} < expected={expected}"
+    if op == "<=":
+        return actual <= expected, f"actual={actual} <= expected={expected}"
+    if op == "in":
+        if not isinstance(expected, (list, tuple, set)):
+            return False, f"'in' op requires a list/tuple/set on the right (got {type(expected).__name__})"
+        return actual in expected, f"actual={actual!r} in expected={list(expected)!r}"
+    if op == "not_in":
+        if not isinstance(expected, (list, tuple, set)):
+            return False, f"'not_in' op requires a list/tuple/set on the right (got {type(expected).__name__})"
+        return actual not in expected, f"actual={actual!r} not in expected={list(expected)!r}"
+    if op == "contains":
+        if actual is None:
+            return False, f"actual is None, cannot contain {expected!r}"
+        return expected in actual, f"actual={actual!r} contains expected={expected!r}"
+    if op == "not_contains":
+        if actual is None:
+            return True, f"actual is None, vacuously does not contain {expected!r}"
+        return expected not in actual, f"actual={actual!r} does not contain expected={expected!r}"
+    return False, f"unknown op {op!r}"
+
+
+def evaluate_gates(
+    task: dict,
+    results_dir: Path | None = None,
+) -> GateCheckResult:
+    """Evaluate all gates declared on a task. Returns a GateCheckResult.
+
+    A task with no `gated_on` field passes vacuously. A task whose every
+    gate evaluates to True passes. A task with at least one failing gate
+    fails, and the failure reason captures *which* gate and *why*.
+
+    The function never raises; any internal error (missing file, malformed
+    YAML, JSON decode error) is surfaced through GateResult.passed=False
+    with a descriptive reason. The conductor treats both "real failure"
+    and "internal error" the same way — write a blocked artifact and
+    skip the Sonnet call. Defensive: better to wastefully block one
+    runnable experiment than to silently bypass a real gate.
+    """
+    if results_dir is None:
+        results_dir = PROJECT_ROOT / "results"
+
+    gates = task.get("gated_on") or []
+    if not gates:
+        return GateCheckResult(passed=True, summary="no gates declared")
+
+    results: list[GateResult] = []
+    all_passed = True
+    for gate_spec in gates:
+        upstream = gate_spec.get("upstream", "")
+        artifact_field = gate_spec.get("artifact_field", "")
+        op = gate_spec.get("op", "==")
+        expected = gate_spec.get("value")
+
+        artifact_path = _find_artifact_by_task_id(upstream, results_dir)
+        if artifact_path is None:
+            results.append(GateResult(
+                upstream=upstream,
+                artifact_field=artifact_field,
+                op=op,
+                expected=expected,
+                actual=None,
+                passed=False,
+                reason=f"upstream artifact not found for task id {upstream!r}",
+            ))
+            all_passed = False
+            continue
+
+        try:
+            data = json.loads(artifact_path.read_text())
+        except (json.JSONDecodeError, OSError) as exc:
+            results.append(GateResult(
+                upstream=upstream,
+                artifact_field=artifact_field,
+                op=op,
+                expected=expected,
+                actual=None,
+                passed=False,
+                reason=f"upstream artifact unreadable: {exc}",
+            ))
+            all_passed = False
+            continue
+
+        actual = data.get(artifact_field)
+        passed, op_reason = _eval_op(actual, op, expected)
+        results.append(GateResult(
+            upstream=upstream,
+            artifact_field=artifact_field,
+            op=op,
+            expected=expected,
+            actual=actual,
+            passed=passed,
+            reason=op_reason,
+        ))
+        if not passed:
+            all_passed = False
+
+    if all_passed:
+        summary = f"{len(results)} gate(s) satisfied"
+    else:
+        failing = [g for g in results if not g.passed]
+        first = failing[0]
+        summary = (
+            f"{len(failing)} of {len(results)} gate(s) failed; "
+            f"first failure: {first.upstream}.{first.artifact_field} ({first.reason})"
+        )
+
+    return GateCheckResult(passed=all_passed, gates_evaluated=results, summary=summary)
+
+
+def write_blocked_artifact(
+    task: dict,
+    gate_check: GateCheckResult,
+    results_dir: Path | None = None,
+) -> Path | None:
+    """Write a minimal blocked artifact when the pre-gate check fails.
+
+    The artifact contains every field required by REQUIRED_RESULT_FIELDS
+    in scripts/experiment_template.py so the in-process doc reconciler
+    and downstream tooling can parse it like any other experiment
+    artifact. The honest_verdict is "blocked_gate_check_failed", which
+    the reconciler maps to "⚠️ Blocked" via the standard mapping table.
+
+    Returns the path of the written file, or None if the task id can't
+    be parsed into an experiment number (in which case the conductor
+    should fall through to the Sonnet path — defensive).
+    """
+    if results_dir is None:
+        results_dir = PROJECT_ROOT / "results"
+
+    task_id = task.get("id", "")
+    match = re.match(r"exp(\d+)-(.+)$", task_id.lower())
+    if not match:
+        return None
+    exp_num = match.group(1)
+    slug = match.group(2).replace("-", "_")
+    target = results_dir / f"experiment_{exp_num}_{slug}.json"
+
+    now = datetime.now(timezone.utc)
+    iso_now = now.isoformat()
+
+    artifact = {
+        # REQUIRED_RESULT_FIELDS — keep aligned with scripts/experiment_template.py:153
+        "experiment": int(exp_num),
+        "schema": "blocked_gate_check_v1",
+        "run_date": now.strftime("%Y-%m-%d"),
+        "started_at": iso_now,
+        "finished_at": iso_now,
+        "duration_s": 0.0,
+        "status": "blocked",
+        "title": task.get("title", f"Exp {exp_num}: (untitled)"),
+        # Domain-specific fields
+        "honest_verdict": "blocked_gate_check_failed",
+        "gate_check_summary": gate_check.summary,
+        "gates_evaluated": [
+            {
+                "upstream": g.upstream,
+                "artifact_field": g.artifact_field,
+                "op": g.op,
+                "expected": g.expected,
+                "actual": g.actual,
+                "passed": g.passed,
+                "reason": g.reason,
+            }
+            for g in gate_check.gates_evaluated
+        ],
+        # Marker so downstream tooling can recognise pre-gate-blocked
+        # artifacts vs Sonnet-written blocked artifacts.
+        "blocked_at_layer": "conductor_pre_gate",
+    }
+
+    results_dir.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(artifact, indent=2) + "\n")
+    return target
+
+
+def select_max_turns(task: dict, default: int = 50) -> int:
+    """Pick the per-task max_turns value with a sensible default.
+
+    Per-experiment override lives in research-roadmap.yaml as a top-level
+    `max_turns:` field on the task. Simple experiments (CPU-only retros,
+    documentation passes, configuration changes) can opt into a smaller
+    budget, freeing API quota and shaving wall time on the Sonnet call.
+
+    The default of 50 mirrors the historical hard-coded value at
+    scripts/research_conductor.py:2124 — keeping ungaged tasks behaving
+    exactly as they did before this hint was introduced.
+    """
+    val = task.get("max_turns", default)
+    if not isinstance(val, int):
+        # Reject malformed YAML rather than silently picking a wrong number.
+        # The conductor will see an explicit log entry and fall back to default.
+        return default
+    if val < 1 or val > 100:
+        # Bounds sanity. 100 is well above any seen budget; 1 means the
+        # agent gets one turn which is essentially useless. Out-of-bounds
+        # values fall back to the default.
+        return default
+    return val
