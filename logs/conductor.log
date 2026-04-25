@@ -2924,3 +2924,41 @@ Done. Here's what was produced:
 2026-04-25 09:49:36,736 [conductor] RESEARCH STEP: Exp 855: Pre-flight v15 — Permanent LIVE-ENV Fix + RETRO Audit (CPU)
 2026-04-25 09:49:36,736 [conductor] ============================================================
 2026-04-25 09:49:36,754 [conductor] Committing 3 dirty files as checkpoint (preserving work)
+2026-04-25 09:49:36,815 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 09:49:36,815 [conductor] Running test suite (smart subset)...
+2026-04-25 09:49:42,660 [conductor] Pre-check: 81 passed, 3 warnings in 2.87s
+2026-04-25 09:49:42,757 [conductor] Prompt format error in exp855-preflight-v15: '"CARNOT_FORCE_LIVE"' — using raw prompt
+2026-04-25 09:49:42,770 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-25 09:49:42,770 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All done. Summary:
+
+- **`EnvPropagationGuard`** added to `scripts/experiment_template.py` with `write_session_env()` and `load_session_env()` methods that persist/restore env vars via `~/.carnot_session_env`.
+- **`ExperimentTemplate.__init__`** now calls `load_session_env()` as its first action (RETRO-LIVE-ENV-NOT-PROPAGATED fix).
+- **`apply_env_autofix()`** and **`assert_live_env_if_gpu()`** added; `setup()` calls the assert before GPU work.
+- **`REQ-INFRA-070` / `SCENARIO-INFRA-080`** added to `openspec/capabilities/pipeline/spec.md`.
+- **`MILESTONE_PREREQS.md`** updated with .66 pre-flight section (10 open RETROs, governance gate table).
+- **14 tests** pass; deliverable `results/experiment_855_preflight_v15.json` written with `honest_verdict: governance_ready`.
+2026-04-25 09:53:44,254 [conductor] Claude Code completed (exit 0)
+2026-04-25 09:53:44,269 [conductor] Changes:
+MILESTONE_PREREQS.md                   |  53 ++++++++++++
+ logs/conductor.log                     |  15 ++++
+ openspec/capabilities/pipeline/spec.md |  37 ++++++++
+ scripts/experiment_template.py         | 154 +++++++++++++++++++++++++++++++++
+ 4 files changed, 259 insertions(+)
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp855-preflight-v15: '"CARNOT_FORCE_LIVE"' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp856-dualgpu-production: 'result' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp857-sota-code-repair-v6: '"name"' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp858-live-benchmark-v5: '"name"' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp859-ice40-n8-combinational: 'result' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp860-inertia-ising-benchmark: 'result' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp861-streaming-cot-detector: 't-1' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp862-lagrange-adaptive-ising: '"spins"' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp863-hallusae-geometric-probe: 'result' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp864-fr11-tier2-integration-v5: 'result' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp865-constraint-memory-compression: 'result' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp866-kan-hardware-analysis: '\n         "layer1_luts"' — auto-fixing
+2026-04-25 09:53:44,289 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp867-milestone-retro: '\n       "schema"' — auto-fixing
+2026-04-25 09:53:44,290 [conductor] DOGFOOD: Auto-fixed brace escaping in research-roadmap.yaml
+2026-04-25 09:53:44,293 [conductor] DOGFOOD: Verification complete (total: 529 checks, 49 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 09:53:44,293 [conductor] Running test suite (smart subset)...
+2026-04-25 09:53:49,807 [conductor] Post-check: 81 passed, 3 warnings in 2.77s

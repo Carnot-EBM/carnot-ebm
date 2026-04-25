@@ -235,3 +235,56 @@ an operational gate.
 - Source: results/operational_retro_2026_04_65.json (improvements_suggested, IMMEDIATE items)
 - Gate implemented: Exp 854 (2026-04-25)
 - Next update: Before milestone 2026.04.66 planning
+
+
+## Milestone 2026.04.66 Pre-flight
+
+### Open RETROs (10 going into .66)
+
+| RETRO ID | Description | Status |
+|----------|-------------|--------|
+| RETRO-MANIFEST-FULL-SCOPE | manifest_fix_patch.txt unapplied (7 consecutive milestones) | open |
+| RETRO-JEPA-OOD | JEPA out-of-distribution — n_svamp_pairs < 15 | open |
+| RETRO-CONSTRAINT-ZERO-DELTA | EmbeddingConstraintStore AUROC 0.72 (target >0.80) | open |
+| RETRO-XILINX-TOOLS-UNAVAILABLE | Vivado/Yosys toolchain not in PATH | open |
+| RETRO-ISING-INJECTION-NO-DISCRIMINATION | Ising injection: no discrimination between correct/incorrect | open |
+| RETRO-SVAMP-ZERO-AUC | SVAMP AUC floor; domain-specific head or feature engineering required | open |
+| RETRO-ICE40-PNR-LUT-OVERFLOW | iCE40 P&R LUT overflow — N=16 Ising design too large | open |
+| RETRO-SOTA-MODEL-DOWNLOAD | GGUFCacheResolver exists but download not implemented | open |
+| RETRO-ICE40-N16-UNEXPECTED-EXPANSION | 12258 LCs at P&R vs 2 at synthesis — register expansion root cause | open |
+| RETRO-LIVE-ENV-NOT-PROPAGATED | CARNOT_FORCE_LIVE not propagated across claude -p boundary — FIXED in Exp 855 | pending_verify |
+
+### Closed in .65
+
+| RETRO ID | Closed By | Evidence |
+|----------|-----------|----------|
+| RETRO-ARBITER-FLAT-ENERGY | Exp 846 | accuracy_standard=1.0 |
+| RETRO-GGUF-CACHE-IMPORT | Exp 849 | GGUFCacheResolver implemented |
+
+### Key Assertions for .66 Experiments
+
+- `EnvPropagationGuard.load_session_env()` called at `ExperimentTemplate.__init__` (Exp 855 fix, REQ-INFRA-070)
+- `assert CARNOT_FORCE_LIVE in os.environ` — GPU experiments only (Exp 857, 858)
+- `assert gguf_cache_resolver.can_download == True` — Exp 857
+- `assert n_svamp_pairs >= 15` — JEPA training experiments
+
+### IMMEDIATE Human Actions Before .66 Experiments Run
+
+1. **Apply manifest_fix_patch.txt** to `scripts/research_conductor.py` — SEVENTH consecutive request.
+2. **Retire Exps 786, 527, 627-old** per retirement_plan.md.
+3. **Download Qwen3.6-35B-A3B-GGUF-Q4_K_M.gguf**: `huggingface-cli download unsloth/Qwen3.6-35B-A3B-GGUF Q4_K_M`
+4. **Verify EnvPropagationGuard** is active: run Exp 855 preflight and confirm `live_env_fixed=True`.
+
+### Experiment Cap
+
+Milestone 2026.04.66 cycle = **13 new experiments only** (Exps 855–867).
+Wall-time regression streak is 6 consecutive; cap is non-negotiable.
+
+### Governance Gate
+
+| Assertion | Status |
+|-----------|--------|
+| EnvPropagationGuard wired into ExperimentTemplate.__init__ | verified_complete (Exp 855) |
+| CARNOT_FORCE_LIVE propagates across claude -p | verified_complete (Exp 855) |
+| manifest_fix_patch.txt applied | pending (human action required) |
+| SOTA models downloaded | pending (human action required) |

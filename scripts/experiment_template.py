@@ -239,6 +239,95 @@ def _get_repo_root() -> Path:
 
 
 # ---------------------------------------------------------------------------
+# EnvPropagationGuard  (REQ-INFRA-070)
+# ---------------------------------------------------------------------------
+
+_SESSION_ENV_PATH = Path.home() / ".carnot_session_env"
+"""Path where EnvPropagationGuard persists env vars across subprocess boundaries.
+
+Why a file and not a shell export:
+    ``claude -p`` creates a NEW process tree that does not inherit the outer
+    shell's environment.  Writing CARNOT_FORCE_LIVE=1 with ``os.environ``
+    only patches the current process; the next ``claude -p`` invocation
+    spawns a fresh interpreter with a bare env and silently falls back to
+    non-live mode.  This file is a simple, language-agnostic escape hatch:
+    any subprocess that calls ``EnvPropagationGuard.load_session_env()`` at
+    startup (ExperimentTemplate.__init__ does this automatically) will pick
+    up the persisted vars before any other code runs.
+"""
+
+
+class EnvPropagationGuard:
+    """Cross-process environment propagation for Carnot experiment sessions.
+
+    Problem it solves (RETRO-LIVE-ENV-NOT-PROPAGATED, 6th consecutive recurrence):
+        ``apply_env_autofix()`` correctly sets ``os.environ["CARNOT_FORCE_LIVE"]``
+        inside the running process, but the conductor forks ``claude -p`` to run
+        experiments.  Each ``claude -p`` is a brand-new process tree; it does NOT
+        inherit the patched environment.  The fix is to persist the override to
+        ``~/.carnot_session_env`` and have every ``ExperimentTemplate.__init__``
+        source that file before doing anything else.
+
+    Format of ~/.carnot_session_env:
+        Plain-text KEY=VALUE lines, one per line.  Lines starting with ``#``
+        are comments and are ignored.  Values must not contain newlines.
+    """
+
+    _path: Path = _SESSION_ENV_PATH
+
+    @classmethod
+    def write_session_env(cls, vars: dict[str, str]) -> None:
+        """Append or update KEY=VALUE entries in ~/.carnot_session_env.
+
+        Existing keys are overwritten; other lines are preserved.
+        Creates the file if it does not exist.
+
+        Parameters
+        ----------
+        vars:
+            Mapping of env-var names to string values to persist.
+        """
+        existing: dict[str, str] = {}
+        if cls._path.exists():
+            for raw_line in cls._path.read_text().splitlines():
+                line = raw_line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" in line:
+                    k, _, v = line.partition("=")
+                    existing[k.strip()] = v.strip()
+        existing.update(vars)
+        lines = [f"{k}={v}" for k, v in sorted(existing.items())]
+        cls._path.write_text("\n".join(lines) + "\n")
+
+    @classmethod
+    def load_session_env(cls) -> dict[str, str]:
+        """Read ~/.carnot_session_env and apply each KEY=VALUE to os.environ.
+
+        Only sets vars that are NOT already present in os.environ, so an
+        explicit shell export always takes precedence over the session file.
+
+        Returns the mapping of vars that were applied (empty dict if the file
+        does not exist or every key was already set).
+        """
+        if not cls._path.exists():
+            return {}
+        applied: dict[str, str] = {}
+        for raw_line in cls._path.read_text().splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" in line:
+                k, _, v = line.partition("=")
+                key = k.strip()
+                val = v.strip()
+                if key not in os.environ:
+                    os.environ[key] = val
+                    applied[key] = val
+        return applied
+
+
+# ---------------------------------------------------------------------------
 # InferenceResult
 # ---------------------------------------------------------------------------
 
@@ -302,6 +391,13 @@ class ExperimentTemplate:
         requires_gpu: bool = False,
         repo_root: Path | None = None,
     ) -> None:
+        # REQ-INFRA-070: source the session-env file FIRST so that vars written
+        # by a prior apply_env_autofix() call (in a different process/invocation)
+        # are present before any GPU or live-env checks run.  This is the fix for
+        # RETRO-LIVE-ENV-NOT-PROPAGATED (6th consecutive recurrence): ``claude -p``
+        # spawns a fresh process tree that does not inherit the outer shell env.
+        EnvPropagationGuard.load_session_env()
+
         self.exp_id = exp_id
         self.title = title
         self.deliverable = deliverable
@@ -655,6 +751,60 @@ class ExperimentTemplate:
     # setup()
     # ------------------------------------------------------------------
 
+    # ------------------------------------------------------------------
+    # apply_env_autofix() — REQ-INFRA-070
+    # ------------------------------------------------------------------
+
+    def apply_env_autofix(self) -> None:
+        """Set CARNOT_FORCE_LIVE=1 in the current process AND persist it to disk.
+
+        Why persisting matters (RETRO-LIVE-ENV-NOT-PROPAGATED root cause):
+            Setting only ``os.environ["CARNOT_FORCE_LIVE"] = "1"`` fixes the
+            current process but NOT future ``claude -p`` subprocesses spawned by
+            the conductor.  Each ``claude -p`` starts a fresh Python interpreter
+            whose environment comes from the OS-level process fork — not from
+            this process's patched ``os.environ``.
+
+            The fix: write to ``~/.carnot_session_env`` via
+            ``EnvPropagationGuard.write_session_env()``.  Every subsequent
+            ``ExperimentTemplate.__init__`` calls
+            ``EnvPropagationGuard.load_session_env()`` as its very first action
+            and inherits the override regardless of how the process was launched.
+
+        Spec: REQ-INFRA-070, SCENARIO-INFRA-080
+        """
+        os.environ["CARNOT_FORCE_LIVE"] = "1"
+        EnvPropagationGuard.write_session_env({"CARNOT_FORCE_LIVE": "1"})
+        _log.info("apply_env_autofix: CARNOT_FORCE_LIVE=1 set in process env and written to %s", EnvPropagationGuard._path)
+
+    # ------------------------------------------------------------------
+    # assert_live_env_if_gpu() — REQ-INFRA-070
+    # ------------------------------------------------------------------
+
+    def assert_live_env_if_gpu(self) -> None:
+        """Raise RuntimeError if this is a GPU experiment and CARNOT_FORCE_LIVE is absent.
+
+        Why this guard is necessary:
+            Without it, a GPU experiment silently runs in non-live mode when
+            CARNOT_FORCE_LIVE is missing, producing cached/stale inference results
+            that are indistinguishable from live results until the retrospective.
+            A hard assert here converts a silent data-quality failure into a loud,
+            immediately-observable process failure — fail fast, fail early.
+
+        This method is a no-op for CPU-only experiments (``requires_gpu=False``).
+
+        Spec: REQ-INFRA-070, SCENARIO-INFRA-080
+        """
+        if self.requires_gpu and os.environ.get("CARNOT_FORCE_LIVE") != "1":
+            raise RuntimeError(
+                f"LIVE-ENV not propagated for GPU experiment {self.exp_id}: "
+                "EnvPropagationGuard failed to load CARNOT_FORCE_LIVE=1. "
+                "Run: python - <<'EOF'\n"
+                "from scripts.experiment_template import ExperimentTemplate\n"
+                "ExperimentTemplate(0,'fix','',requires_gpu=False).apply_env_autofix()\n"
+                "EOF"
+            )
+
     def setup(self) -> None:
         """Create output directories and load any existing checkpoint.
 
@@ -665,6 +815,10 @@ class ExperimentTemplate:
         - Creates ``results/`` and ``results/checkpoints/experiment_<id>/`` dirs.
         - Populates ``self.checkpoint`` if a checkpoint file is present.
         """
+        # REQ-INFRA-070: assert CARNOT_FORCE_LIVE is set for GPU experiments
+        # BEFORE kill_gpu_zombies() or any GPU work starts.
+        self.assert_live_env_if_gpu()
+
         # REQ-INFRA-074: kill GPU zombies FIRST — before any model loading.
         # Zombie processes from prior experiments may hold VRAM that would cause
         # GPUVRAMGateV2 to defer this experiment before it even starts.

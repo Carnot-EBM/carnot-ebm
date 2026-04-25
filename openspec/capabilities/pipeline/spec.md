@@ -1339,3 +1339,40 @@ and the file `models/unsloth_Qwen3.6-35B-A3B-GGUF-Q4_K_M.gguf` is not present on
   4. The error message mentions the expected path so a user can act on it.
 
 **Spec traces:** REQ-PIPELINE-030, Exp 849, RETRO-GGUF-CACHE-IMPORT
+
+
+### REQ-INFRA-070: ExperimentTemplate MUST Load Session Env at Init
+
+``ExperimentTemplate.__init__`` MUST call ``EnvPropagationGuard.load_session_env()``
+as its FIRST action to propagate ``CARNOT_FORCE_LIVE`` across ``claude -p`` subprocess
+boundaries.
+
+**Rationale (RETRO-LIVE-ENV-NOT-PROPAGATED, 6th consecutive recurrence):** Setting
+``os.environ["CARNOT_FORCE_LIVE"]`` in one process does not propagate to ``claude -p``
+subprocesses spawned by the conductor.  Writing to ``~/.carnot_session_env`` and loading
+it in every ``__init__`` is the only cross-process propagation path that survives fresh
+interpreter invocations.
+
+**Acceptance criteria:**
+- ``EnvPropagationGuard.write_session_env({"CARNOT_FORCE_LIVE": "1"})`` creates or
+  updates ``~/.carnot_session_env`` with the entry.
+- ``EnvPropagationGuard.load_session_env()`` reads ``~/.carnot_session_env`` and sets
+  each key in ``os.environ`` when not already present.
+- ``ExperimentTemplate.__init__`` calls ``load_session_env()`` before any other logic.
+- ``apply_env_autofix()`` calls both ``os.environ[...]`` AND ``write_session_env()``.
+
+**Spec traces:** Exp 855, RETRO-LIVE-ENV-NOT-PROPAGATED
+
+
+### SCENARIO-INFRA-080: GPU Experiment Sources CARNOT_FORCE_LIVE via Session File
+
+**Given** a prior invocation wrote ``CARNOT_FORCE_LIVE=1`` to ``~/.carnot_session_env``
+via ``apply_env_autofix()``
+**When** a GPU experiment is launched via ``claude -p`` (fresh process, bare env)
+  and ``ExperimentTemplate(exp_id, ..., requires_gpu=True)`` is constructed
+**Then**
+  1. ``EnvPropagationGuard.load_session_env()`` is called in ``__init__``.
+  2. ``os.environ["CARNOT_FORCE_LIVE"]`` equals ``"1"`` after construction.
+  3. ``assert_live_env_if_gpu()`` does NOT raise ``RuntimeError``.
+
+**Spec traces:** REQ-INFRA-070, Exp 855, RETRO-LIVE-ENV-NOT-PROPAGATED
