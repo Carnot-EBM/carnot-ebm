@@ -2273,3 +2273,16 @@ logs/conductor.log | 7 +++++++
 2026-04-25 03:34:20,353 [conductor] RESEARCH STEP: Exp 839: KV260 iCE40 Bitstream Generation (CPU, gated on Exp 816 synthesis)
 2026-04-25 03:34:20,353 [conductor] ============================================================
 2026-04-25 03:34:20,374 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 03:34:20,429 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 03:34:20,429 [conductor] Running test suite (smart subset)...
+2026-04-25 03:34:26,109 [conductor] Pre-check: 81 passed, 3 warnings in 2.88s
+2026-04-25 03:34:26,219 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-25 03:34:26,219 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-25 03:40:56,623 [conductor] Claude Code produced stable deliverable results/experiment_839_kv260_ice40_bitstream.json (6.5 min elapsed) — killing subagent early
+2026-04-25 03:40:56,675 [conductor] Changes:
+logs/conductor.log                                 |  6 ++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 40 ++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+2026-04-25 03:40:56,695 [conductor] DOGFOOD: Verification complete (total: 514 checks, 47 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 03:40:56,695 [conductor] Running test suite (smart subset)...
+2026-04-25 03:41:02,449 [conductor] Post-check: 81 passed, 3 warnings in 2.96s

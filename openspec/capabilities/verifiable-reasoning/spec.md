@@ -15596,6 +15596,46 @@ contain a valid iCE40 magic header (first 4 bytes: 0xFF 0x00 0x00 0xFF).
 **Spec traces:** REQ-HW-039
 **Implementation Status:** Implemented (Exp 827)
 
+## REQ-HW-040: iCE40 HX8K Place-and-Route and Bitstream Generation
+
+**Statement:** The iCE40 PnR experiment MUST run yosys synth_ice40 → nextpnr-ice40
+→ icepack for the N=32 Ising sampler, gated on Exp 816 synthesis_clean_n32, and
+report whether a valid .bin bitstream was produced with a correct iCE40 magic header.
+
+**Rationale:** Exp 827 confirmed nextpnr-xilinx is unavailable for xczu5eg. The iCE40
+HX8K path via nextpnr-ice40 is the only OSS-CAD-Suite PnR path available. Running
+PnR validates whether the RTL can be fully placed and routed, or whether design
+constraints (e.g. I/O utilization) block the pipeline. This is a prerequisite for
+hardware-programmable artifact generation before Vivado is installed for KV260.
+
+- REQ-HW-040-1: The experiment SHALL be gated on Exp 816 honest_verdict=synthesis_clean_n32
+  and lut_count_n32=3952; a missing or non-matching artifact MUST yield honest_verdict
+  "synthesis_artifact_missing".
+- REQ-HW-040-2: The experiment SHALL patch the RTL to N=32 (same technique as Exp 816)
+  before re-running yosys synth_ice40 to produce a fresh JSON netlist.
+- REQ-HW-040-3: The experiment SHALL verify that both nextpnr-ice40 AND icepack exist
+  in OSS_CAD_BIN; if either is absent, honest_verdict SHALL be "nextpnr_not_available".
+- REQ-HW-040-4: nextpnr-ice40 SHALL be invoked with --hx8k --package ct256 --freq 25;
+  a non-zero exit code SHALL yield pnr_complete=False and honest_verdict "pnr_failed".
+- REQ-HW-040-5: If nextpnr-ice40 succeeds, icepack SHALL be run to produce a .bin file;
+  the bitstream MUST be validated by checking bytes[0]==0xFF and bytes[1]==0x00 (iCE40
+  magic header). A valid bitstream SHALL be copied to hardware/kv260/.
+- REQ-HW-040-6: honest_verdict SHALL be one of:
+  "bitstream_generated" | "bitstream_generated_invalid_header" |
+  "pnr_failed" | "nextpnr_not_available" | "synthesis_artifact_missing".
+
+### SCENARIO-HW-044: iCE40 HX8K PnR and Bitstream Pipeline
+
+**Given** Exp 816 confirmed lut_count_n32=3952 with honest_verdict="synthesis_clean_n32"
+**And** OSS-CAD-Suite nextpnr-ice40 and icepack are present at ~/tools/oss-cad-suite/bin/
+**When** the experiment runs yosys synth_ice40 → nextpnr-ice40 → icepack
+**Then** EITHER a valid .bin file is produced with iCE40 magic header 0xFF 0x00 (bitstream_generated)
+**OR** nextpnr-ice40 exits non-zero due to design constraints (pnr_failed, e.g. I/O overutilization)
+**And** the honest_verdict field accurately reflects the outcome in all cases
+
+**Spec traces:** REQ-HW-040
+**Implementation Status:** Implemented (Exp 839) — pnr_failed (I/O overutilization: 1187 ports vs 206 available on CT256)
+
 ## REQ-VERIFY-173: IsingConstraintInjector External Field Injection
 
 **Statement:** IsingConstraintInjector MUST support external field injection via
