@@ -1797,8 +1797,18 @@ def _dogfood_verify_generated_code() -> None:
         logger.debug("DOGFOOD: Skipped due to error: %s", e)
 
 
-def research_step(push: bool = True, dry_run: bool = False) -> bool:
-    """Execute one research step. Returns True if progress was made."""
+def research_step(
+    push: bool = True,
+    dry_run: bool = False,
+    in_process_docs: bool = False,
+) -> bool:
+    """Execute one research step. Returns True if progress was made.
+
+    in_process_docs: when True, run the mechanical Python reconciler
+    (scripts/in_process_doc_reconcile.py) in place of the Haiku doc
+    reconciliation call. Saves ~1-2 min per iteration. Honest-verdict
+    mapping is identical; freeform "research finding" prose is omitted.
+    """
     timestamp = datetime.now(timezone.utc)
 
     # Read conductor log
@@ -2264,6 +2274,44 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     # the `honest_verdict` field, and map it via the whitelist below.  No
     # interpretation — the artifact is the source of truth.
     logger.info("Running post-commit documentation reconciliation...")
+
+    # In-process path: skip the Haiku call entirely and run the mechanical
+    # Python reconciler. Saves ~1-2 min per iteration. The reconciler reads
+    # the artifact, maps honest_verdict -> status label using the same
+    # whitelist the Haiku prompt uses, and appends to ops/changelog.md
+    # (always), _bmad/traceability.md (when new REQ-*/SCENARIO-* in
+    # commit), and ops/status.md (only on a clear win with new REQ-*).
+    if in_process_docs:
+        try:
+            sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+            from in_process_doc_reconcile import reconcile  # type: ignore[import-not-found]
+            recon = reconcile(task)
+            logger.info(
+                "In-process docs: changelog=%s, status=%s, traceability_rows=%d, "
+                "verdict=%r, label=%r%s",
+                recon.changelog_appended, recon.status_appended,
+                recon.traceability_rows_added, recon.verdict, recon.status_label,
+                f", skipped={recon.skipped_reason}" if recon.skipped_reason else "",
+            )
+            if git_has_changes():
+                for guarded in ["scripts/research_conductor.py", "research-roadmap.yaml"]:
+                    _, gdiff, _ = run_cmd(["git", "diff", "--name-only", "--", guarded])
+                    if gdiff.strip():
+                        run_cmd(["git", "checkout", "--", guarded])
+                git_commit_and_push(
+                    f"[conductor] In-process docs for {task['title']}\n\n",
+                    push=push,
+                )
+                logger.info("Documentation reconciliation committed (in-process)")
+            else:
+                logger.info("No doc changes from in-process reconciler")
+            log_step(task["title"], "OK", test_summary)
+            return True
+        except Exception:
+            logger.exception(
+                "In-process doc reconciliation failed; falling back to Haiku")
+            # Fall through to the Haiku path below.
+
     reconcile_prompt = (
         f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
         f"A research experiment was just completed and committed:\n"
@@ -2355,6 +2403,11 @@ def main() -> int:
                         help="Show what would be done")
     parser.add_argument("--no-push", action="store_true",
                         help="Don't git push (just commit locally)")
+    parser.add_argument("--in-process-docs", action="store_true",
+                        help="Use the in-process Python doc reconciler "
+                             "(scripts/in_process_doc_reconcile.py) instead "
+                             "of the Haiku Claude Code call. Saves ~1-2 min "
+                             "per iteration; mechanical mapping only.")
     args = parser.parse_args()
 
     os.chdir(str(PROJECT_ROOT))
@@ -2412,6 +2465,7 @@ def main() -> int:
             progress = research_step(
                 push=not args.no_push,
                 dry_run=args.dry_run,
+                in_process_docs=args.in_process_docs,
             )
         except Exception:
             logger.exception("Unexpected error in research step")
