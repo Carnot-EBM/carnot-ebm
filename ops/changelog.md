@@ -4182,3 +4182,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 831: Governance Pre-flight + RETRO Audit (CPU) (✅ Complete) — honest_verdict=governance_ready; results/experiment_831_governance_preflight.json
 - 2026-04-25: Exp 832: JEPA v23 ARC Domain Collapse Diagnosis (CPU) (⚠️ Research Finding) — honest_verdict=arc_diagnosis_found; results/experiment_832_jepa_arc_collapse_diagnosis.json
 - 2026-04-25: Exp 833: Constraint Accumulation Root Cause Diagnosis (CPU) (⚠️ Research Finding) — honest_verdict=write_path_missing; results/experiment_833_constraint_delta_root_cause.json
+- 2026-04-25: Exp 834: JEPA v24 DG-PRM Domain-Balanced Training (RETRO-JEPA-OOD, CPU) (✅ Complete) — honest_verdict=jepa_v24_arc_improved; results/experiment_834_jepa_v24_dg_prm.json
