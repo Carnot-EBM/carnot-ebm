@@ -2714,3 +2714,4 @@ python/ |
 | 2026-04-25 00:29 UTC | Milestone 2026.04.63 activated | OK | 12 tasks queued |
 | 2026-04-25 00:41 UTC | Exp 819: IsingEBM External Field Fix (RETRO-ISING- | OK | 81 passed, 3 warnings in 2.85s |
 | 2026-04-25 01:00 UTC | Exp 820: GGUF Import Fix + Code Repair v5 (RETRO-G | OK | 81 passed, 3 warnings in 2.83s |
+| 2026-04-25 01:18 UTC | Exp 821: Constraint Addition Live v2 (RETRO-CONSTR | OK | 81 passed, 3 warnings in 2.82s |
