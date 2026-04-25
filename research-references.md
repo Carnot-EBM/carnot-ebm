@@ -3848,6 +3848,31 @@ thermodynamic computing Ising FPGA
 - **When to incorporate:** Reference material only; link from
   `docs/usage-guide.md` and from onboarding material for new contributors.
 
+### Recursive Language Models (RLMs) — long-context via recursive self-call
+- **Paper:** arXiv 2512.24601 (December 2025) — Zhang, Kraska, Khattab
+- **What:** Lets an LLM treat a long prompt as an environment and
+  programmatically examine, decompose, and recursively call itself over
+  snippets. Authors post-train **RLM-Qwen3-8B**. Headline numbers: process
+  inputs up to **100x beyond model context windows**, +28.3% average over
+  base Qwen3-8B on long-context benchmarks, approaching GPT-5 quality at
+  comparable cost.
+- **Relevance to Carnot:** Two scaling bottlenecks line up with the RLM
+  pattern. (1) `LLMConstraintExtractor` truncates or silently drops claims
+  when a reasoning chain exceeds the extracting model's window — recursive
+  decomposition along reasoning-step boundaries lets us recover the
+  dropped claims at the cost of more LLM calls. (2) `verify_stream` (issue
+  #7) was drafted with implicit consumer-side decomposition; RLM makes
+  the decomposition primitives explicit on the producer side. The two
+  designs need to be reconciled before `verify_stream` ships. Energy-
+  as-ground-truth is preserved — each recursive snippet's claims still
+  go through the same Z3/Hypothesis/EBM verifier stack.
+- **NOT for:** the generative-time safety gate (RLM recursion multiplies
+  LLM cost, incompatible with the hard latency budgets in issue #2
+  `budget_ms`); hallucination detection as such (RLM is a scale technique,
+  not a truthfulness signal).
+- **When to incorporate:** Milestone 2026.04.64 — full design checked in
+  at `openspec/change-proposals/recursive-extractor-and-verify-stream-alignment.md`.
+
 ## 2026-04-24 arxiv Scan (Milestone 2026.04.63 Planning)
 
 ### AgentAuditor: Multi-Agent LLM Reasoning Tree Auditing Outperforms Majority Vote
