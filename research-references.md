@@ -33,6 +33,134 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-25 arxiv Scan (Milestone 2026.04.66 Planning)
+
+### HalluSAE: Detecting Hallucinations via Sparse Auto-Encoder Geometry
+- **Paper:** arXiv 2604.16430 (April 2026)
+- **What:** Uses Sparse Auto-Encoders (SAE) applied to LLM residual stream activations to extract
+  interpretable features. Tracks temporal evolution of SAE feature geometry across reasoning steps —
+  hallucinated reasoning shows systematically different feature dynamics (higher dimensional "energy"
+  in SAE feature space) compared to correct reasoning. First work using dynamic SAE geometry for
+  general factual hallucination detection. Requires no labels at inference time.
+- **Relevance to Carnot:** The "geometric potential energy" framing maps directly onto Carnot's
+  energy tier cascade. SAE features are already activations; the geometric energy is a natural
+  Tier 0j advisory signal alongside HalluField (Tier 0e) and SemanticEnergyProbe (Tier 0f).
+  Key advantage: SAE geometry is orthogonal to all existing tiers (it operates on feature
+  geometry, not logit distributions or sentence semantics). No GPU needed at inference time
+  if SAE dictionary is pre-computed — just a dot-product in sparse feature space.
+- **Concrete experiment:** Exp 863 — HalluSAEGeometricProbe: implement a lightweight SAE geometry
+  energy using pre-computed bigram feature dictionary (like NUP Probe v4 in Exp 523). Compute
+  temporal feature-energy trajectory across CoT steps. Compare AUC on 50 synthetic CoT pairs.
+- **When to incorporate:** Milestone 2026.04.66 — Phase 3 new probes (Exp 863).
+
+### Fully Parallel Densely Connected Probabilistic Ising Machine with Inertia
+- **Paper:** arXiv 2604.17109 (April 2026)
+- **What:** Implements a fully parallel, synchronous-update probabilistic Ising machine (PIMI) on
+  FPGA with an inertia term that modifies spin dynamics: each spin tracks an exponential moving
+  average (EMA) of its local field, damping oscillations and reducing sweep count by 15-25x vs
+  standard Gibbs. Hardware-software co-design achieves real-time constraint satisfaction with
+  much fewer iterations. The inertia term enables fully parallel (non-checkerboard) updates.
+- **Relevance to Carnot:** This is directly relevant to two open RETROs: RETRO-ISING-INJECTION-NO-
+  DISCRIMINATION (energy delta identical for error/clean code — insufficient mixing) and
+  RETRO-ICE40-N16-UNEXPECTED-EXPANSION (N=16 expanded from 2 LUTs to 12258 LCs at P&R, likely
+  from registered spin state). The inertia approach (EMA tracking per-spin) is lighter hardware
+  than registered spin states: EMA can be implemented with only multipliers + adders, reducing
+  LUT count substantially vs full flip-flop registers. Additionally, inertia significantly
+  improves discrimination between close-energy configurations (exactly the injection problem).
+- **Concrete experiment:** Exp 860 — InertiaIsingSamplerBenchmark: implement Python simulation of
+  PIMI with inertia (EMA alpha=0.5) vs standard checkerboard Gibbs. Compare: discrimination_delta
+  (energy gap between correct/incorrect constraint configurations) and mixing_sweeps_to_converge.
+  Target: inertia reduces mixing sweeps by 5x+ and improves discrimination. CPU simulation.
+- **When to incorporate:** Milestone 2026.04.66 — Phase 2 (Exp 860).
+
+### Self-Adaptive Ising Machines for Constrained Optimization
+- **Paper:** arXiv 2501.04971 (January 2026)
+- **What:** Introduces self-adaptive Ising machines that iteratively reshape their energy landscape
+  using Lagrange relaxation of constraints. When a constraint is violated, the Lagrange penalty is
+  automatically increased, making the energy landscape "steeper" around the constraint boundary.
+  This eliminates the need for manual tuning of constraint weights and enables the Ising machine
+  to self-organize around the active constraint boundary.
+- **Relevance to Carnot:** EmbeddingConstraintStore retrieval produces zero energy delta even
+  after L2-normalization fix (RETRO-CONSTRAINT-ZERO-DELTA may persist in .66 if Exp 847 partial).
+  Self-adaptive Lagrange Ising directly addresses this: instead of static constraint injection,
+  adaptively increase the Lagrange weight for constraints that are repeatedly violated. This is
+  the missing link between Tier 1 online tracking (which detects violations) and IsingEBM energy
+  computation (which currently uses fixed coupling weights). The adaptation loop IS the self-
+  learning Tier 1 mechanism designed in research-program.md.
+- **Concrete experiment:** Exp 862 — LagrangeAdaptiveIsingConstraints: implement Lagrange-adaptive
+  coupling update in IsingEBM. When EmbeddingConstraintStore retrieves a constraint and violation
+  is detected, increase the coupling weight for that constraint type by factor(1 + lr * violation_count).
+  Run 5-session relay. Compare delta_s1_to_s5 vs non-adaptive baseline.
+- **When to incorporate:** Milestone 2026.04.66 — Phase 3 self-learning (Exp 862).
+
+### Streaming Hallucination Detection in Long Chain-of-Thought Reasoning
+- **Paper:** arXiv 2601.02170 (January 2026)
+- **What:** Treats hallucination in long CoT as an evolving latent state, not a static binary label.
+  Introduces prefix-level cumulative hallucination signal (PHaS) that tracks global evolution over
+  the entire trajectory — step-level judgments are local observations fed into a running state
+  estimate. Streaming detector significantly outperforms end-of-response or per-step detection
+  because it exploits trajectory dynamics (hallucination tends to compound once it starts).
+- **Relevance to Carnot:** All Carnot cascade tiers currently evaluate the FINAL response, not
+  the reasoning trajectory. For Gemma4 and Qwen3 with chain-of-thought reasoning, the hallucination
+  may start at step 3 and compound through step 7. A streaming detector that tracks PHaS across
+  CoT steps would catch compounding errors earlier and integrate naturally with Tier 3.5 (JEPA
+  predictive verification). Maps to Tier 0i as a new advisory signal.
+- **Concrete experiment:** Exp 861 — StreamingCoTHalluDetector (Tier 0i): implement prefix-level
+  cumulative hallucination signal from per-step EORM scores. At each CoT step, update running state
+  estimate: phas_t = alpha * eorm_score_t + (1-alpha) * phas_{t-1}. Flag is_streaming_unstable
+  if phas exceeds threshold at any step. Add to VerificationCertificate as advisory.
+- **When to incorporate:** Milestone 2026.04.66 — Phase 3 new probes (Exp 861).
+
+### Memory Bank Compression for Continual Adaptation of Large Language Models
+- **Paper:** arXiv 2601.00756 (January 2026)
+- **What:** Compresses information from new data into a memory bank, aggregating document memories
+  to answer queries while keeping LLM parameters frozen. Key technique: memory compression via
+  learned attention over stored embeddings. Prevents catastrophic forgetting while enabling
+  online adaptation at inference time.
+- **Relevance to Carnot:** EmbeddingConstraintStore grows unboundedly as sessions accumulate.
+  Exp 748 showed a plateau at session 2 (templates added in S1, then replay-only). Memory bank
+  compression addresses this: compress the accumulated constraint embeddings into a smaller bank
+  that retains the most discriminative constraint patterns. This is the missing infrastructure
+  for sustained Tier 2 learning across many sessions.
+- **Concrete experiment:** Exp 865 — ConstraintMemoryBankCompression: implement compressed
+  memory bank (K=32 centroid embeddings) using kmeans-style online clustering of EmbeddingConstraintStore.
+  Each new constraint is assigned to the closest centroid or starts a new cluster if distance > threshold.
+  Compare: retrieval AUROC with raw store vs compressed bank after 10 sessions.
+- **When to incorporate:** Milestone 2026.04.66 — Phase 4 (Exp 865).
+
+### Hardware-Oriented Inference Complexity of Kolmogorov-Arnold Networks
+- **Paper:** arXiv 2604.03345 (April 2026)
+- **What:** Analyzes the hardware inference complexity of KANs systematically: spline evaluation cost,
+  activation memory footprint, parallelism opportunities. Shows that KANs with piecewise-linear splines
+  (linear interpolation between knots) are highly FPGA-efficient: each spline evaluation requires
+  only 2 multiplications and 1 addition, with no non-linear functions (no exp/tanh hardware needed).
+  Provides LUT count estimates for KAN layers on Xilinx and Lattice FPGAs.
+- **Relevance to Carnot:** Carnot's KAN energy tier (carnot-kan) is the candidate for FPGA acceleration
+  after the Ising sampler. The paper's LUT estimates show that a KAN with 8 knots per spline and
+  64 hidden units would require ~2,000 LUTs on iCE40 HX8K (within budget). This directly informs
+  the KV260 synthesis roadmap: implement Ising first (current work), then KAN energy tier (next hardware
+  target). The piecewise-linear variant is compatible with Carnot's KAEMEnergy model.
+- **Concrete experiment:** Exp 866 — KANHardwareComplexityAnalysis: measure per-knot LUT estimates
+  for Carnot's UnivariateKAEMLayer (8 knots, piecewise-linear). Simulate the iCE40 synthesis LUT count.
+  Compare vs Ising N=16 (Exp 859). Determine which tier to synthesize for KV260 next.
+- **When to incorporate:** Milestone 2026.04.66 — Phase 4 (Exp 866).
+
+### Digitally Optimized Initializations for Fast Thermodynamic Computing
+- **Paper:** arXiv 2603.24183 (March 2026)
+- **What:** Proposes Mpemba-optimized initializations computed digitally, then encoded into
+  thermodynamic hardware to suppress slow relaxation modes. Key insight: certain initialization
+  states can dramatically reduce the thermalization time by exploiting the spectral gap of the
+  Ising Hamiltonian. Digital precomputation + thermodynamic relaxation is hybrid — the digital
+  precomputation selects the initialization, then hardware relaxes from it rapidly.
+- **Relevance to Carnot:** The Gibbs warm-start fix (Exp 846, warm_start_sweeps=500) worked but
+  is expensive. Mpemba initialization could reduce burn-in from 500 to ~50 sweeps by computing
+  an optimal starting state from the bias vector h_i alone (pure CPU precomputation). This
+  directly improves the arbiter (faster energy measurement) and the Ising injection pipeline.
+- **Concrete experiment:** Enhancement to Exp 860 (InertiaIsingSampler) — add Mpemba initialization:
+  compute optimal starting magnetization from spectral properties of J+h, use as initial spin state
+  instead of random ±1. Compare burn-in sweeps to convergence.
+- **When to incorporate:** Milestone 2026.04.66 — integrated into Exp 860 inertia benchmark.
+
 ## 2026-04-25 arxiv Scan (Milestone 2026.04.64 Planning)
 
 ### Dynamic and Generalizable Process Reward Modeling (DG-PRM)
