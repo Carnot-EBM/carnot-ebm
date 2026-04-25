@@ -2181,3 +2181,19 @@ logs/conductor.log                             | 19 ++++++++++
 2026-04-25 02:18:54,146 [conductor] RESEARCH STEP: Exp 836: Constraint Accumulation Fix v3 (RETRO-CONSTRAINT-ZERO-DELTA, GPU)
 2026-04-25 02:18:54,146 [conductor] ============================================================
 2026-04-25 02:18:54,165 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 02:18:54,218 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 02:18:54,218 [conductor] Running test suite (smart subset)...
+2026-04-25 02:18:59,901 [conductor] Pre-check: 81 passed, 3 warnings in 2.88s
+2026-04-25 02:19:00,023 [conductor] Injected 98 symbol signatures from 4 files (AST outlines)
+2026-04-25 02:19:00,024 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Error: Reached max turns (50)2026-04-25 02:26:48,508 [conductor] Claude Code failed (exit 1)
+2026-04-25 02:26:48,508 [conductor] Claude Code failed: Error: Reached max turns (50)
+2026-04-25 02:26:48,510 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-25 02:31:48,513 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-25 02:36:48,515 [conductor] Sleep complete — resuming
+2026-04-25 02:36:48,515 [conductor] --- Iteration 7 ---
+2026-04-25 02:36:48,517 [conductor] Task 'Exp 836: Constraint Accumulation Fix v3 (RETRO-CON' deliverable exists — marking complete
+2026-04-25 02:36:48,517 [conductor] ============================================================
+2026-04-25 02:36:48,517 [conductor] RESEARCH STEP: Exp 837: FR-11 Tier 1 Live Relay v3 (FR-11 mandatory, GPU, gated on Exp 836 delta>0)
+2026-04-25 02:36:48,517 [conductor] ============================================================
+2026-04-25 02:36:48,534 [conductor] Committing 7 dirty files as checkpoint (preserving work)
