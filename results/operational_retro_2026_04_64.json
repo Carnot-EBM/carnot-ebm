@@ -1,0 +1,228 @@
+{
+  "schema": "carnot.operational_retro.v39",
+  "milestone": "2026.04.64",
+  "retro_date": "20260425",
+  "experiment": 842,
+  "title": "Milestone 2026.04.64 Operational Retrospective",
+  "started_at": "2026-04-25T08:36:50.262031Z",
+  "finished_at": "2026-04-25T08:36:50.262708Z",
+  "experiments_evaluated": [
+    831,
+    832,
+    833,
+    834,
+    835,
+    836,
+    837,
+    838,
+    839,
+    840,
+    841
+  ],
+  "experiment_verdicts": {
+    "831": "governance_ready",
+    "832": "arc_diagnosis_found",
+    "833": "write_path_missing",
+    "834": "jepa_v24_arc_improved",
+    "835": "arbiter_still_wrong",
+    "836": "write_path_fixed_no_delta",
+    "837": "blocked_gate",
+    "838": "jepa_v24_not_deployed_below_gate",
+    "839": "pnr_failed",
+    "840": "simulated_no_verdict",
+    "841": "batching_marginal"
+  },
+  "total_wall_time_minutes": 4122,
+  "experiments_completed": 740,
+  "avg_time_per_experiment_minutes": 5.57,
+  "milestone_wall_time_minutes": 218,
+  "milestone_experiments": 12,
+  "wall_time_delta_vs_63_minutes": 218,
+  "wall_time_delta_vs_63_direction": "regression",
+  "prior_milestone_label": ".63",
+  "prior_milestone_wall_time_minutes": 3904,
+  "prior_milestone_experiments": 728,
+  "experiment_count_delta_vs_63": 12,
+  "experiment_count_vs_cap": "740 vs 700 cap \u2014 EXCEEDED by 40 experiments",
+  "success_criteria": [
+    {
+      "criterion": "governance_ready",
+      "experiment": 831,
+      "target": "honest_verdict == 'governance_ready'",
+      "met": true,
+      "actual_value": "governance_ready"
+    },
+    {
+      "criterion": "arc_diagnosis_found",
+      "experiment": 832,
+      "target": "exp_824_auc_arc <= 0.10 (confirms collapse)",
+      "met": true,
+      "actual_value": 0.04
+    },
+    {
+      "criterion": "constraint_root_cause_found",
+      "experiment": 833,
+      "target": "hypothesis_confirmed == 'H1'",
+      "met": true,
+      "actual_value": "H1"
+    },
+    {
+      "criterion": "jepa_v24_domain_balanced",
+      "experiment": 834,
+      "target": "min_domain_auc >= 0.50",
+      "met": false,
+      "actual_value": 0.0
+    },
+    {
+      "criterion": "arbiter_calibrated",
+      "experiment": 835,
+      "target": "accuracy_standard >= 0.70",
+      "met": false,
+      "actual_value": 0.0
+    },
+    {
+      "criterion": "constraint_delta_positive",
+      "experiment": 836,
+      "target": "delta_overall > 0",
+      "met": false,
+      "actual_value": 0.0
+    },
+    {
+      "criterion": "tier1_relay_works_live",
+      "experiment": 837,
+      "target": "honest_verdict != 'blocked_gate'",
+      "met": false,
+      "actual_value": "blocked_gate"
+    },
+    {
+      "criterion": "jepa_v24_tier35_deployed",
+      "experiment": 838,
+      "target": "tier35_deployed == True",
+      "met": false,
+      "actual_value": false
+    },
+    {
+      "criterion": "bitstream_generated",
+      "experiment": 839,
+      "target": "bitstream_generated == True",
+      "met": false,
+      "actual_value": false
+    },
+    {
+      "criterion": "pipeline_improvement",
+      "experiment": 840,
+      "target": "honest_verdict != 'simulated_no_verdict'",
+      "met": false,
+      "actual_value": "simulated_no_verdict"
+    },
+    {
+      "criterion": "batching_effective",
+      "experiment": 841,
+      "target": "speedup > 1.0 AND retro_symcode_serial_closed == True",
+      "met": true,
+      "actual_value": {
+        "speedup": 1.709641263771632,
+        "retro_symcode_serial_closed": true
+      }
+    }
+  ],
+  "n_criteria_met": 4,
+  "n_criteria_total": 11,
+  "retros_closed": [
+    "RETRO-SYMCODE-SERIAL",
+    "RETRO-TIER1-PLATEAU"
+  ],
+  "retros_opened": [
+    "RETRO-SVAMP-ZERO-AUC",
+    "RETRO-ICE40-PNR-LUT-OVERFLOW"
+  ],
+  "retros_still_open": [
+    "RETRO-JEPA-OOD",
+    "RETRO-ARBITER-FLAT-ENERGY",
+    "RETRO-CONSTRAINT-ZERO-DELTA",
+    "RETRO-MANIFEST-FULL-SCOPE",
+    "RETRO-XILINX-TOOLS-UNAVAILABLE"
+  ],
+  "retro_audit": {
+    "RETRO-JEPA-OOD": {
+      "status": "open",
+      "evidence": "Exp 834 min_domain_auc=0.0 (SVAMP=0.0); not resolved"
+    },
+    "RETRO-ARBITER-FLAT-ENERGY": {
+      "status": "open",
+      "evidence": "Exp 835 accuracy_standard=0.0; still 0.0 after Z-score normalization"
+    },
+    "RETRO-CONSTRAINT-ZERO-DELTA": {
+      "status": "partially_mitigated",
+      "evidence": "Exp 836 write path fixed (15 constraints stored) but delta_overall=0.0; retrieval still broken"
+    },
+    "RETRO-TIER1-PLATEAU": {
+      "status": "closed_per_governance",
+      "evidence": "Exp 831 governance confirmed closure from .63 (Exps 819/823); Exp 837 blocked at gate \u2014 cannot re-validate live"
+    },
+    "RETRO-SYMCODE-SERIAL": {
+      "status": "closed",
+      "evidence": "Exp 841 speedup=1.710; retro_symcode_serial_closed=True"
+    },
+    "RETRO-MANIFEST-FULL-SCOPE": {
+      "status": "open",
+      "evidence": "Requires conductor code change to research_conductor.py; not attempted in .64"
+    },
+    "RETRO-XILINX-TOOLS-UNAVAILABLE": {
+      "status": "open",
+      "evidence": "Exp 839 pnr_failed; N=32 LUT count (3952) exceeds iCE40 HX8K capacity; KV260 synthesis still needs Vivado"
+    },
+    "RETRO-SVAMP-ZERO-AUC": {
+      "status": "open",
+      "evidence": "New .64 RETRO: Exp 834 auc_svamp=0.0; SVAMP not in training corpus"
+    },
+    "RETRO-ICE40-PNR-LUT-OVERFLOW": {
+      "status": "open",
+      "evidence": "New .64 RETRO: Exp 839 pnr_failed; N=32 ising_sampler_v3 exceeds HX8K LUT budget"
+    }
+  },
+  "improvements_suggested": [
+    {
+      "priority": "IMMEDIATE",
+      "action": "Fix EmbeddingConstraintStore retrieval: Exp 836 confirmed the write path works (15 constraints stored across 3 sessions) but delta_overall=0.0 in all sessions.  The write path is fixed; the retrieval path is still broken.  Inspect ConstraintRetriever.retrieve() cosine threshold \u2014 likely too permissive or embedding normalization is missing, returning random-walk scores.  Gate: delta_overall > 0.05 in at least 1 of 3 sessions in Exp 836-v4.",
+      "rationale": "RETRO-CONSTRAINT-ZERO-DELTA: write path confirmed fixed (n_constraints_written>0), but delta is still 0.0.  Arbiter (RETRO-ARBITER-FLAT-ENERGY) and Tier 1 relay (RETRO-TIER1-PLATEAU closure validation) are both gated on positive delta.  This is the deepest active blocker."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Reduce iCE40 Ising sampler to N=16 spins for bitstream generation: Exp 839 ran yosys SYNTH_ICE40 successfully on N=32 (3952 LUTs) but nextpnr-ice40 failed place-and-route because HX8K has only 7680 LUTs and P&R reserve leaves <4000 usable.  Reduce to N=16 (~1000 LUTs) and run nextpnr-ice40 with --hx8k --package ct256.  Gate: bitstream_generated=True AND bitstream_valid_header=True.",
+      "rationale": "RETRO-ICE40-PNR-LUT-OVERFLOW: KV260 FPGA board has been idle since 2026-04-20 arrival.  The synthesis tool chain (oss-cad-suite) is confirmed working.  The only blocker is resource exhaustion at N=32.  N=16 is mathematically sufficient for the energy sampling proof-of-concept."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Add SVAMP domain triplets to JEPA v24 training corpus: Exp 834 DG-PRM reweighting lifted ARC from 0.04 to 0.72 but SVAMP collapsed to 0.0.  SVAMP was not in the .63 or .64 training corpora.  Add 20 SVAMP triplets (word problem \u2192 correct step chain \u2192 incorrect step) with PRM reward labels.  Gate: auc_svamp >= 0.40 on SVAMP holdout.  Run as JEPA v24b.",
+      "rationale": "RETRO-SVAMP-ZERO-AUC: SVAMP domain collapse is a data-coverage gap, not an architecture failure.  DG-PRM reweighting cannot improve a domain with zero training examples.  Adding SVAMP triplets is the minimal fix."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Fix MultiAgentArbiter energy calibration: Exp 835 Z-score normalization did not fix accuracy_standard=0.0 (0/6 correct on standard scenarios).  The energies_raw values in the artifact show near-zero magnitudes (-0.09 to +0.19) consistent with an MCMC sampler not converged.  Fix: warm-start Gibbs sampler from the external-field aligned configuration s_i=sign(h_i) with 500 burn-in steps.  Gate: accuracy_overall >= 0.60.",
+      "rationale": "RETRO-ARBITER-FLAT-ENERGY: accuracy_standard=0.0 in Exp 835 means standard scenarios are being arbitrated at random.  The adversarial path (accuracy=0.5) uses consensus_penalty which introduces enough variance to sometimes pick the right answer.  The standard path has no such structure and is pure noise."
+    },
+    {
+      "priority": "HIGH",
+      "action": "Unblock Exp 840 live GPU benchmark: status=blocked due to model_load_failed.  Exp 840 shows 35s in gpu_setup phase and 1.5s in model_load phase before blocking.  The GPU reaper or VRAM allocation is failing silently.  Run preflight_gpu_reap() before model load and add explicit nvidia-smi VRAM check gate.  Gate: inference_mode='live_gpu' AND n_questions=50.",
+      "rationale": "All headline provenance claims require live GPU results.  CARNOT_FORCE_LIVE=1 was set but the model load failed silently.  The benchmark must run on the AMD ROCm GPU (890M, gfx1150) to produce publishable result artifacts."
+    },
+    {
+      "priority": "HIGH",
+      "action": "Implement RETRO-MANIFEST-FULL-SCOPE conductor code change: Exp 793 and Exp 831 both confirmed the manifest scope is incomplete.  The conductor exclusion manifest does not enumerate all experiments executed under alternative task IDs.  Add a post-run manifest reconciler that reads conductor-log.md and verifies every completed experiment ID is present in the manifest.  Gate: _task_is_excluded() returns (False, '') for 0 experiments that are already in the log.",
+      "rationale": "RETRO-MANIFEST-FULL-SCOPE has been open since .61 and blocks accurate cap enforcement.  The experiment cap (700) is meaningless if the manifest misses experiments.  Exp 831 confirmed 728 completed experiments at .63 close, which is 28 over cap \u2014 the overage cannot be meaningfully governed until manifest is complete."
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Add per-domain AUC floor to JEPA deployment gate: Exp 834 showed that the overall_ood_auc gate (0.49 > 0 threshold) was insufficient to prevent SVAMP collapse.  Exp 838 correctly blocked on min_domain_auc < 0.50, but the gate threshold should be added to the conductor's pre-flight check so it fires before the deployment experiment rather than inside it.",
+      "rationale": "Two consecutive milestones (.63 ARC collapse, .64 SVAMP collapse) were caught only inside the deployment experiment.  A per-domain floor gate in the conductor pre-flight would have surfaced this two experiments earlier, saving ~40 minutes per milestone."
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Add JEPA v24b SVAMP training \u2192 Tier 3.5 deployment chain to .65 milestone plan: once SVAMP triplets are added (IMMEDIATE gate above), the deployment path is: JEPA v24b retrain \u2192 Exp 838-v2 deployment \u2192 Exp 837-v4 live relay.  Plan this as three explicitly linked tasks in research-roadmap-vNEXT.md with explicit gate fields referencing each predecessor's honest_verdict.",
+      "rationale": "Exps 837 and 838 were both blocked by cascading gates in .64.  Planning the full repair \u2192 retrain \u2192 deploy \u2192 relay chain upfront prevents the same cascade from repeating in .65."
+    }
+  ],
+  "honest_verdict": "regression_partial_close_4of11_5open",
+  "invariant_violations": []
+}
