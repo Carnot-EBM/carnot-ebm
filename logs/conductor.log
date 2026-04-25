@@ -1573,3 +1573,23 @@ logs/conductor.log | 7 +++++++
 2026-04-24 22:01:23,542 [conductor] RESEARCH STEP: Exp 824: JEPA v23 LIMO Curated Corpus (RETRO-JEPA-OOD, CPU)
 2026-04-24 22:01:23,542 [conductor] ============================================================
 2026-04-24 22:01:23,558 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 22:01:23,613 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 22:01:23,613 [conductor] Running test suite (smart subset)...
+2026-04-24 22:01:29,243 [conductor] Pre-check: 81 passed, 3 warnings in 2.85s
+2026-04-24 22:01:29,358 [conductor] Injected 40 symbol signatures from 2 files (AST outlines)
+2026-04-24 22:01:29,358 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Deliverable is written and valid. All done:
+
+- **`results/experiment_824_jepa_v23_limo_corpus.json`**: `ood_auc=0.8111`, `honest_verdict=jepa_v23_viable` (beats the 0.65 gate and the 0.50 v22 baseline)
+- **60 tests pass**, 100% coverage on both new modules (`limo_curator.py`, `jepa_v23.py`)
+- Spec updated with REQ-LEARN-824-001/002/003 and SCENARIO-LEARN-824-001
+
+Key numbers: 70 curated pairs (32 GSM8K + 18 HumanEval + 10 SVAMP), 100 epochs, OOD AUC 0.81 vs 0.50 baseline — the LIMO curation + triplet loss approach broke the 11-consecutive-failure streak.
+2026-04-24 22:20:33,621 [conductor] Claude Code completed (exit 0)
+2026-04-24 22:20:33,633 [conductor] Changes:
+logs/conductor.log                         | 13 +++++++++
+ openspec/capabilities/autoresearch/spec.md | 47 ++++++++++++++++++++++++++++++
+ 2 files changed, 60 insertions(+)
+2026-04-24 22:20:33,660 [conductor] DOGFOOD: Verification complete (total: 500 checks, 45 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 22:20:33,660 [conductor] Running test suite (smart subset)...
+2026-04-24 22:20:39,483 [conductor] Post-check: 121 passed, 3 warnings in 2.96s
