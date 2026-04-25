@@ -15832,3 +15832,49 @@ the model's posterior equals the prior everywhere and provides no discriminative
 **And** all gradients with respect to model parameters are finite (no NaN/Inf)
 
 **Spec traces:** REQ-VERIFY-176, Exp 877
+
+
+## REQ-VERIFY-147: ConstrainedDecodingPreFilter Reduces CodeExtractor False-Positive Rate (Exp 886)
+
+**Status:** Implemented (Exp 886)
+
+The ConstrainedDecodingPreFilter SHALL reduce the CodeExtractor false-positive rate
+by at least 0.20 (20 percentage points) on a benchmark of 30 synthetic code
+generation outputs when compared to unfiltered extraction.
+
+- REQ-VERIFY-147-1: ASTValidator.is_recoverable_partial(code) SHALL return True for
+  syntactically valid Python and for incomplete-but-not-broken partial parses.
+- REQ-VERIFY-147-2: ASTValidator.is_recoverable_partial(code) SHALL return False for
+  code with irrecoverable syntax errors (wrong indentation, invalid keyword, etc.).
+- REQ-VERIFY-147-3: ASTValidator.filter_invalid_tokens(partial, tokens) SHALL return
+  only tokens whose concatenation with partial_code produces a recoverable partial.
+- REQ-VERIFY-147-4: ConstrainedDecodingPreFilter.apply() SHALL return the original
+  unfiltered logits as a safety fallback if all candidate tokens are filtered out.
+- REQ-VERIFY-147-5: honest_verdict SHALL be "fp_reduction_achieved" if fp_rate_delta >= 0.20,
+  "partial_fp_reduction" if fp_rate_delta in (0.05, 0.20), "no_fp_reduction" otherwise.
+
+**Rationale:** Post-hoc extraction (CodeExtractor) produces false positives when fed
+syntactically broken code — the extractor silently returns empty results for valid
+functions, masking semantic errors. Pre-filtering with ASTValidator ensures only
+syntactically valid tokens are generated, so CodeExtractor only needs to handle
+semantic errors.
+
+### SCENARIO-VERIFY-175: Recoverable Partial Parse Classification
+
+**Given** a partial Python code string that is syntactically incomplete
+**But** not yet broken (e.g., "def foo(" or "x = 1 +")
+**When** ASTValidator.is_recoverable_partial is called
+**Then** the result is True
+**And** ASTValidator.would_be_valid returns True for tokens that complete the expression
+
+**Spec traces:** REQ-VERIFY-147, Exp 886
+
+### SCENARIO-VERIFY-176: Irrecoverable Syntax Error Classification
+
+**Given** a Python code string with a structural syntax error in the middle
+**Such as** wrong indentation, unknown keyword, or mismatched bracket in mid-string
+**When** ASTValidator.is_recoverable_partial is called
+**Then** the result is False
+**And** filter_invalid_tokens removes all tokens that would continue the broken parse
+
+**Spec traces:** REQ-VERIFY-147, Exp 886
