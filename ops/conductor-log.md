@@ -2751,3 +2751,5 @@ python/ |
 | 2026-04-25 11:21 UTC | Exp 849: GGUF Cache Module — GGUFCacheResolver (RE | OK | 81 passed, 3 warnings in 2.91s |
 | 2026-04-25 11:39 UTC | Exp 850: SOTA GGUF Code Repair v5 — Qwen3.6-35B (G | OK | 81 passed, 3 warnings in 2.91s |
 | 2026-04-25 11:55 UTC | Exp 851: iCE40 N=16 Ising Bitstream (RETRO-ICE40-P | OK | 81 passed, 3 warnings in 2.86s |
+| 2026-04-25 12:17 UTC | Exp 852: Semantic Energy Probe Tier 0f (arXiv 2508 | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-25 12:27 UTC | Exp 852: Semantic Energy Probe Tier 0f (arXiv 2508 | OK | Deliverable already exists in repo |

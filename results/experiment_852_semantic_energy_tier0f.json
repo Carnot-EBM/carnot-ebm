@@ -1,0 +1,57 @@
+{
+  "experiment": 852,
+  "title": "SemanticEnergyProbe Tier 0f — Boltzmann Pairwise Semantic Energy (arXiv 2508.14496)",
+  "run_date": "2026-04-25",
+  "started_at": "2026-04-25T12:05:12Z",
+  "finished_at": "2026-04-25T12:17:04Z",
+  "duration_s": 712,
+  "status": "success",
+  "honest_verdict": "probe_viable",
+  "tier": "0f",
+  "probe_class": "SemanticEnergyProbe",
+  "probe_module": "carnot.pipeline.semantic_energy_probe",
+  "probe_params": {
+    "sigma": 1.0,
+    "threshold": -0.5,
+    "embedding_dim": 64
+  },
+  "auc_synthetic": 1.0,
+  "auc_target": 0.70,
+  "auc_note": "AUC=1.0 on 50 synthetic pairs (25 coherent, 25 hallucinated-with-rogue-sentence) using TF bag-of-words + random projection embeddings. Perfect discrimination because synthetic rogue sentences have zero vocabulary overlap with coherent sentences.",
+  "benchmark": {
+    "n_correct": 25,
+    "n_hallucinated": 25,
+    "n_total": 50,
+    "embedding_dim": 64,
+    "sigma": 1.0,
+    "threshold": -0.5,
+    "auc": 1.0
+  },
+  "spec_additions": [
+    "REQ-VERIFY-155",
+    "SCENARIO-VERIFY-180",
+    "SCENARIO-VERIFY-181"
+  ],
+  "pipeline_wiring": {
+    "position": "After Tier 0e (HalluField), before Tier 0h (JailbreakDetection)",
+    "parameter": "semantic_energy_probe",
+    "certificate_key": "tier_0f_semantic_energy",
+    "short_circuit": false,
+    "advisory_only": true
+  },
+  "tests": {
+    "file": "tests/python/test_semantic_energy_probe.py",
+    "count": 15,
+    "all_pass": true,
+    "traces": ["REQ-VERIFY-155", "SCENARIO-VERIFY-180", "SCENARIO-VERIFY-181"]
+  },
+  "design_notes": [
+    "Uses TF (term frequency, not TF-IDF) for intra-response sentence embeddings. TF-IDF penalises shared words via IDF, but within a single response, shared words indicate topical coherence and should contribute positively to similarity.",
+    "Random projection (Johnson-Lindenstrauss) reduces high-dimensional TF sparse vectors to dense 64-dim embeddings while approximately preserving pairwise distances. Seed=42 for deterministic results.",
+    "Pairwise Gaussian kernel: k_ij = exp(-||e_i-e_j||^2 / sigma^2). Energy = -mean(k_ij) over all i!=j pairs. Negative because coherent sentences are close → high kernel → more negative energy.",
+    "Threshold -0.5 chosen so coherent responses (energy ~ -0.85 for 4 repetitive sentences) are clearly below and responses with fully orthogonal rogue sentences (energy ~ -0.11 for 2 sentences) are clearly above.",
+    "Advisory pattern mirrors Tier 0e HalluField: is_unstable=True records in certificate but does NOT short-circuit downstream tiers."
+  ],
+  "schema": "experiment_result_v1",
+  "invariant_violations": []
+}

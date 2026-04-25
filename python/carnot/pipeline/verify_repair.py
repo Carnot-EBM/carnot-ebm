@@ -1024,6 +1024,7 @@ class VerifyRepairPipeline:
         jepa_threshold: float = 0.5,
         think_probe: Any = None,
         hallufield_detector: Any = None,
+        semantic_energy_probe: Any = None,
         embedding_constraint_store: EmbeddingConstraintStore | None = None,
         ising_constraint_injector: IsingConstraintInjector | None = None,
     ) -> VerificationResult:
@@ -1144,6 +1145,14 @@ class VerifyRepairPipeline:
         _hallufield_result = None
         if hallufield_detector is not None:
             _hallufield_result = hallufield_detector.score(None)
+
+        # Tier 0f SemanticEnergyProbe advisory (REQ-VERIFY-155).
+        # Scores pairwise Boltzmann semantic energy over sentence clusters.
+        # is_unstable=True means sentences are semantically incoherent (hallucination risk).
+        # Advisory only — no short-circuit; result stored in certificate for downstream tiers.
+        _semantic_energy_result = None
+        if semantic_energy_probe is not None:
+            _semantic_energy_result = semantic_energy_probe.score(response)
 
         # Tier 0 ThinkProbe fast-path (optional, REQ-VERIFY-094).
         # If a CarnotThinkProbe instance is provided and it classifies the response
@@ -1349,6 +1358,16 @@ class VerifyRepairPipeline:
         result.semantic_verifier_v2 = semantic_verifier_v2
         if semantic_verifier_v2 is not None:
             result.certificate["semantic_verifier_v2"] = semantic_verifier_v2.to_dict()
+
+        # Record Tier 0f SemanticEnergyProbe advisory result in certificate.
+        if _semantic_energy_result is not None:
+            result.certificate["tier_0f_semantic_energy"] = {
+                "energy": _semantic_energy_result.energy,
+                "is_unstable": _semantic_energy_result.is_unstable,
+                "sentence_count": _semantic_energy_result.sentence_count,
+                "cluster_entropy": _semantic_energy_result.cluster_entropy,
+                "threshold": _semantic_energy_result.threshold,
+            }
 
         if tracker is not None:
             self._update_tracker(tracker, result)

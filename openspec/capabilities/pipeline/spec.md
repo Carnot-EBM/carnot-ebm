@@ -1256,6 +1256,57 @@ constraint types
 **Spec traces:** REQ-VERIFY-150, Exp 847
 
 
+### REQ-VERIFY-155: SemanticEnergyProbe Tier 0f Pairwise Boltzmann Energy
+
+`SemanticEnergyProbe` MUST compute pairwise Boltzmann-inspired semantic energy over sentence
+clusters extracted from the response text.  High energy (> threshold) MUST set
+`is_unstable=True` in the returned `SemanticEnergyResult` and MUST be recorded in the
+`VerificationCertificate` under key `tier_0f_semantic_energy`.  The probe MUST be advisory
+only (no short-circuit of downstream tiers).
+
+**Rationale (Exp 852):** Hallucinated responses tend to contain semantically incoherent
+sentences — one or more sentences that contradict or are semantically distant from the rest.
+Pairwise Boltzmann energy (E = -mean k_ij where k_ij = exp(-||e_i-e_j||^2/sigma^2))
+captures this incoherence without requiring logits or GPU access.  The probe is orthogonal
+to all existing tiers (logit-based: 0b; latent-space: 0c, 0d; thermodynamic: 0e;
+symbolic: 2.5, 2.7) and adds a diverse advisory signal.
+
+**Acceptance criteria:**
+- `SemanticEnergyProbe(sigma, threshold, embedding_dim).score(response)` returns a
+  `SemanticEnergyResult` with fields: energy, is_unstable, sentence_count, cluster_entropy, threshold.
+- Energy is near zero for incoherent (hallucinated) responses and negative for coherent ones.
+- `is_unstable = (energy > threshold)` where default threshold is -0.5.
+- When `semantic_energy_probe` is passed to `verify()`, `result.certificate["tier_0f_semantic_energy"]`
+  is populated.  No tier short-circuit occurs.
+- AUC on 50 synthetic pairs (25 correct, 25 hallucinated) MUST be reported in results JSON.
+
+**Spec traces:** Exp 852
+
+
+### SCENARIO-VERIFY-180: Coherent Response Has Low Semantic Energy
+
+**Given** a factually correct, internally consistent response with 4+ sentences on one topic
+**When** `SemanticEnergyProbe().score(response)` is called
+**Then**
+  1. `result.energy < result.threshold` (coherent cluster → low / negative energy)
+  2. `result.is_unstable == False`
+  3. `result.sentence_count >= 4`
+
+**Spec traces:** REQ-VERIFY-155, Exp 852
+
+
+### SCENARIO-VERIFY-181: Hallucinated Response Has High Semantic Energy
+
+**Given** a response that inserts one sentence contradicting the others (rogue-sentence pattern)
+**When** `SemanticEnergyProbe().score(response)` is called
+**Then**
+  1. `result.energy > result.threshold` (incoherent sentences → energy near zero)
+  2. `result.is_unstable == True`
+  3. `result.cluster_entropy > 0` (non-trivial entropy due to spread embeddings)
+
+**Spec traces:** REQ-VERIFY-155, Exp 852
+
+
 ### REQ-PIPELINE-030: GGUFCacheResolver Export
 
 `carnot.pipeline` MUST export `GGUFCacheResolver` for resolving GGUF model file paths
