@@ -1,0 +1,303 @@
+{
+  "schema": "carnot.operational_retro.v40",
+  "milestone": "2026.04.65",
+  "retro_date": "20260425",
+  "experiment": 854,
+  "title": "Milestone 2026.04.65 Operational Retrospective",
+  "started_at": "2026-04-25T12:52:13.457916Z",
+  "finished_at": "2026-04-25T12:52:13.458310Z",
+  "duration_s": 0.0,
+  "experiments_evaluated": [
+    843,
+    844,
+    845,
+    846,
+    847,
+    848,
+    849,
+    850,
+    851,
+    852,
+    853
+  ],
+  "experiment_verdicts": {
+    "843": "governance_ready",
+    "844": "jepa_v24b_svamp_still_collapsed",
+    "845": "jepa_v24b_not_deployed_below_gate",
+    "846": "arbiter_calibrated",
+    "847": "retrieval_partial",
+    "848": "tier1_relay_works_live",
+    "849": "gguf_cache_implemented",
+    "850": "model_not_cached",
+    "851": "pnr_failed_n16",
+    "852": "probe_viable",
+    "853": "simulated_no_verdict"
+  },
+  "total_wall_time_minutes": 4174,
+  "experiments_completed": 762,
+  "avg_time_per_experiment_minutes": 5.48,
+  "milestone_wall_time_minutes": 203,
+  "milestone_experiments": 12,
+  "wall_time_delta_vs_64_minutes": -15,
+  "wall_time_delta_vs_64_direction": "improvement",
+  "prior_milestone_label": ".64",
+  "prior_milestone_wall_time_minutes": 218,
+  "prior_total_wall_time_minutes": 3971,
+  "prior_experiments_completed": 750,
+  "experiment_count_delta_vs_64": 12,
+  "experiment_count_vs_cap": "762 vs 700 cap \u2014 EXCEEDED by 62 experiments",
+  "success_criteria": [
+    {
+      "criterion": "governance_ready",
+      "experiment": 843,
+      "target": "honest_verdict == 'governance_ready'",
+      "met": true,
+      "actual_value": "governance_ready"
+    },
+    {
+      "criterion": "svamp_corpus_balanced",
+      "experiment": 844,
+      "target": "corpus_composition.svamp.correct >= 20 AND incorrect >= 20",
+      "met": true,
+      "actual_value": {
+        "correct": 20,
+        "incorrect": 20
+      }
+    },
+    {
+      "criterion": "jepa_v24b_all_domains",
+      "experiment": 844,
+      "target": "all_domains_coverage == True",
+      "met": true,
+      "actual_value": true
+    },
+    {
+      "criterion": "jepa_v24b_tier35_deployed",
+      "experiment": 845,
+      "target": "tier35_deployed == True",
+      "met": false,
+      "actual_value": false
+    },
+    {
+      "criterion": "arbiter_calibrated",
+      "experiment": 846,
+      "target": "accuracy_standard >= 0.67",
+      "met": true,
+      "actual_value": 1.0
+    },
+    {
+      "criterion": "retrieval_fixed",
+      "experiment": 847,
+      "target": "retrieval_auroc > 0.80",
+      "met": false,
+      "actual_value": 0.72
+    },
+    {
+      "criterion": "tier1_relay_works_live",
+      "experiment": 848,
+      "target": "honest_verdict == 'tier1_relay_works_live'",
+      "met": true,
+      "actual_value": "tier1_relay_works_live"
+    },
+    {
+      "criterion": "gguf_cache_implemented",
+      "experiment": 849,
+      "target": "honest_verdict == 'gguf_cache_implemented'",
+      "met": true,
+      "actual_value": "gguf_cache_implemented"
+    },
+    {
+      "criterion": "code_repair_positive",
+      "experiment": 850,
+      "target": "signed_improvement == True (n_repair_pass > n_baseline_pass)",
+      "met": false,
+      "actual_value": {
+        "n_baseline_pass": 0,
+        "n_repair_pass": 0,
+        "signed_improvement": null
+      }
+    },
+    {
+      "criterion": "bitstream_generated",
+      "experiment": 851,
+      "target": "bitstream_generated == True",
+      "met": false,
+      "actual_value": false
+    },
+    {
+      "criterion": "semantic_probe_viable",
+      "experiment": 852,
+      "target": "honest_verdict == 'probe_viable'",
+      "met": true,
+      "actual_value": "probe_viable"
+    },
+    {
+      "criterion": "pipeline_improvement",
+      "experiment": 853,
+      "target": "honest_verdict != 'simulated_no_verdict'",
+      "met": false,
+      "actual_value": "simulated_no_verdict"
+    }
+  ],
+  "n_criteria_met": 7,
+  "n_criteria_total": 12,
+  "retros_closed": [
+    "RETRO-ARBITER-FLAT-ENERGY",
+    "RETRO-GGUF-CACHE-IMPORT"
+  ],
+  "retros_opened": [
+    "RETRO-SOTA-MODEL-DOWNLOAD",
+    "RETRO-ICE40-N16-UNEXPECTED-EXPANSION",
+    "RETRO-LIVE-ENV-NOT-PROPAGATED"
+  ],
+  "retros_still_open": [
+    "RETRO-MANIFEST-FULL-SCOPE",
+    "RETRO-JEPA-OOD",
+    "RETRO-CONSTRAINT-ZERO-DELTA",
+    "RETRO-XILINX-TOOLS-UNAVAILABLE",
+    "RETRO-ISING-INJECTION-NO-DISCRIMINATION",
+    "RETRO-SVAMP-ZERO-AUC",
+    "RETRO-ICE40-PNR-LUT-OVERFLOW",
+    "RETRO-SOTA-MODEL-DOWNLOAD",
+    "RETRO-ICE40-N16-UNEXPECTED-EXPANSION",
+    "RETRO-LIVE-ENV-NOT-PROPAGATED"
+  ],
+  "retro_audit": {
+    "RETRO-SVAMP-ZERO-AUC": {
+      "status": "open",
+      "gate": "auc_svamp >= 0.40",
+      "evidence": "Exp 844 auc_svamp=0.0; 8x PRM weight boost failed to move SVAMP AUC from 0.0; corpus balanced (40 triplets, 20 correct + 20 incorrect); architecture limitation suspected"
+    },
+    "RETRO-JEPA-OOD": {
+      "status": "open",
+      "gate": "min_domain_auc >= 0.50",
+      "evidence": "Exp 844 min_domain_auc=0.0; Exp 845 tier35_deployed=False; deployment blocked by SVAMP floor"
+    },
+    "RETRO-ARBITER-FLAT-ENERGY": {
+      "status": "closed",
+      "gate": "accuracy_standard >= 0.67",
+      "evidence": "Exp 846 accuracy_standard=1.0; warm-start Gibbs (500 sweeps, sign(h_i) init) drove accuracy to 1.0; consensus_penalty working on adversarial scenarios"
+    },
+    "RETRO-CONSTRAINT-ZERO-DELTA": {
+      "status": "partially_mitigated",
+      "gate": "retrieval_auroc > 0.80 AND tier1_relay_works_live",
+      "evidence": "Exp 847 retrieval_auroc=0.72 (gate=0.80, short by 0.08); Exp 848 honest_verdict='tier1_relay_works_live'; relay now works but retrieval AUROC gate not yet met"
+    },
+    "RETRO-GGUF-CACHE-IMPORT": {
+      "status": "closed",
+      "gate": "gguf_cache_implemented == True",
+      "evidence": "Exp 849 honest_verdict='gguf_cache_implemented'; GGUFCacheResolver implemented in python/carnot/pipeline/gguf_cache.py; 7 tests pass, 100% coverage"
+    },
+    "RETRO-ICE40-PNR-LUT-OVERFLOW": {
+      "status": "open",
+      "gate": "bitstream_generated == True",
+      "evidence": "Exp 851 bitstream_generated=False; lut_count_n16=2 (synthesis) but P&R used 12258 LCs (159% of HX8K); new root cause: register-array expansion (lf_comb replaced with regs)"
+    },
+    "RETRO-MANIFEST-FULL-SCOPE": {
+      "status": "open",
+      "gate": "human action required (manifest_patch applied to conductor)",
+      "evidence": "Exp 843 preflight confirmed patch written but not yet applied; sixth consecutive milestone without application"
+    },
+    "RETRO-XILINX-TOOLS-UNAVAILABLE": {
+      "status": "open",
+      "gate": "Vivado installed",
+      "evidence": "Not addressed in .65; KV260 Xilinx synthesis path requires Vivado"
+    },
+    "RETRO-ISING-INJECTION-NO-DISCRIMINATION": {
+      "status": "open",
+      "gate": "Not evaluated in .65",
+      "evidence": "Not addressed in .65 milestone experiments"
+    },
+    "RETRO-SOTA-MODEL-DOWNLOAD": {
+      "status": "open",
+      "gate": "Qwen3.6-35B-A3B-GGUF-Q4_K_M.gguf present on disk",
+      "evidence": "Exp 850 status=blocked; honest_verdict='model_not_cached'; new RETRO opened in .65; GGUFCacheResolver exists but model file absent"
+    },
+    "RETRO-ICE40-N16-UNEXPECTED-EXPANSION": {
+      "status": "open",
+      "gate": "bitstream_generated == True with pipelined Verilog",
+      "evidence": "Exp 851 lc_count_pnr=12258 (expected ~1000); lut_count_n16=2 (synthesis); synthesis under-counts because memory array expands at P&R; new RETRO opened in .65; requires SB_RAM40_4K primitives or N=8"
+    },
+    "RETRO-LIVE-ENV-NOT-PROPAGATED": {
+      "status": "open",
+      "gate": "inference_mode == 'live_gpu' (Exp 853-v5)",
+      "evidence": "Exp 853 carnot_force_live_env='0'; autofix attempted but CARNOT_FORCE_LIVE remained 0; recurrence of RETRO-015 pattern via different code path; new RETRO opened in .65"
+    }
+  },
+  "slowest_5_experiments": [
+    {
+      "experiment": 845,
+      "elapsed_minutes": 26,
+      "status": "blocked",
+      "note": "JEPA deployment gate; blocked on min_domain_auc=0.0"
+    },
+    {
+      "experiment": 851,
+      "elapsed_minutes": 22,
+      "status": "partial",
+      "note": "iCE40 N=16 synthesis + P&R; P&R failed after 22 min"
+    },
+    {
+      "experiment": 843,
+      "elapsed_minutes": 18,
+      "status": "success",
+      "note": "governance preflight; Claude Code startup overhead"
+    },
+    {
+      "experiment": 846,
+      "elapsed_minutes": 18,
+      "status": "success",
+      "note": "arbiter warm-start; 500 Gibbs sweeps per scenario"
+    },
+    {
+      "experiment": 849,
+      "elapsed_minutes": 18,
+      "status": "success",
+      "note": "GGUF cache module implementation"
+    }
+  ],
+  "improvements_suggested": [
+    {
+      "priority": "IMMEDIATE",
+      "action": "Add GGUF model download pre-flight to MILESTONE_PREREQS.md: RETRO-SOTA-MODEL-DOWNLOAD is a trivial operator task \u2014 huggingface-cli download or wget \u2014 but it has now blocked code repair for 9 consecutive milestones.  Add an explicit pre-flight check in MILESTONE_PREREQS.md: 'verify Qwen3.6-35B-A3B-GGUF-Q4_K_M.gguf present at models/ or HF_HOME cache'.  Gate: Exp 850-v6 runs live and signed_improvement != None.",
+      "rationale": "RETRO-SOTA-MODEL-DOWNLOAD: GGUFCacheResolver now exists (Exp 849) but the model file itself is not present.  This is an operator gap, not a code gap.  Writing it into MILESTONE_PREREQS.md converts it from a silent blocker into a hard gate."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Rewrite iCE40 Ising Verilog with pipelined register-file architecture (N=8): Exp 851 N=16 used 12258 LCs (159% of HX8K budget) because lf_comb memory was synthesized as individual flip-flops rather than block RAM.  Use SB_RAM40_4K primitives for J and h storage to avoid register explosion.  Alternatively reduce to N=8 as a proof-of-concept (estimated ~600 LUTs).  Gate: bitstream_generated=True AND bitstream_valid_header=True AND fmax_mhz > 1.0.",
+      "rationale": "RETRO-ICE40-N16-UNEXPECTED-EXPANSION + RETRO-ICE40-PNR-LUT-OVERFLOW: Five milestones of FPGA synthesis without a working bitstream.  The KV260 board has been idle since 2026-04-20.  The root cause is now diagnosed (register expansion) and the fix is architectural, not parametric."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Fix CARNOT_FORCE_LIVE=1 environment propagation (RETRO-LIVE-ENV-NOT-PROPAGATED): Exp 853 shows carnot_force_live_env='0' after the env_autofix heuristic ran.  The autofix path is overwriting the env var rather than setting it.  Add an assertion in LiveGPUGate.require_live_or_blocked() that os.environ['CARNOT_FORCE_LIVE'] == '1' before returning live status, not just after attempting to set it.  Gate: Exp 853-v5 returns inference_mode='live_gpu' on first attempt without autofix.",
+      "rationale": "RETRO-LIVE-ENV-NOT-PROPAGATED is a recurrence of RETRO-015, which was marked closed in .63 but re-emerging via a different code path (env_autofix).  Four consecutive milestones of live benchmark attempts blocked by the same env var. The autofix heuristic is masking the real propagation gap."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Fix SVAMP AUC floor collapse \u2014 switch from PRM weight boost to architecture fix: Exp 844 applied an 8x PRM weight boost to SVAMP (largest domain weight applied in the project) and still produced auc_svamp=0.0.  Data reweighting cannot fix a model that has no representational capacity for SVAMP error patterns.  Next step: add a domain-specific head or feature engineering for word-problem arithmetic. Gate: auc_svamp >= 0.40 on SVAMP holdout.  JEPA deployment remains blocked until this threshold is met.",
+      "rationale": "RETRO-SVAMP-ZERO-AUC: Two milestones of data reweighting failed to move SVAMP AUC from 0.0.  The corpus is now balanced (40 SVAMP pairs, 8x PRM weight) but the model produces random predictions on SVAMP.  This is an architecture limitation, not a data coverage gap.  Continuing to add SVAMP weight without architecture change is wasted effort."
+    },
+    {
+      "priority": "IMMEDIATE",
+      "action": "Fix EmbeddingConstraintStore retrieval AUROC to exceed 0.80 gate: Exp 847 achieved retrieval_auroc=0.72 (vs 0.80 gate) using L2-normalized embeddings with cosine threshold=0.5.  The RETRO-CONSTRAINT-ZERO-DELTA relay gate requires AUROC > 0.80 AND tier1_relay_works_live.  Tier 1 relay now works (Exp 848 honest_verdict='tier1_relay_works_live'), so the only remaining gap is retrieval quality.  Try fine-tuning threshold or using a better sentence-transformer checkpoint.  Gate: retrieval_auroc > 0.80 in Exp 847-v2.",
+      "rationale": "RETRO-CONSTRAINT-ZERO-DELTA: relay is now wired and working (Exp 848 confirmed), but the full RETRO closure requires both conditions.  The retrieval AUROC gap (0.72 vs 0.80) is the only remaining blocker for the RETRO closure."
+    },
+    {
+      "priority": "HIGH",
+      "action": "Implement manifest enforcement at ALL conductor dequeue sites before .66 experiments: RETRO-MANIFEST-FULL-SCOPE has been open since .61 \u2014 six consecutive milestones.  The manifest_fix_patch.txt exists in the repo and the audit of call sites was done in Exp 843 (preflight v14).  Apply the exclusion check to every dequeue site in scripts/research_conductor.py.  Gate: _task_is_excluded() returns (False, '') for 0 experiments already in the log.",
+      "rationale": "Without manifest enforcement, retired experiments re-enter the queue and inflate wall time by 129+ min/milestone.  This is the longest-lived unresolved IMMEDIATE recommendation in project history (6 milestones).  Exp 843 confirmed the patch is written; deployment is the only remaining step."
+    },
+    {
+      "priority": "HIGH",
+      "action": "Deploy ExperimentTimeoutWatchdog with 30-min cap as default infrastructure: The .65 slowest experiments ran 26 min (Exp 845), 22 min (Exp 851), and 18 min (Exps 843, 846, 849) \u2014 all below 30 min.  The watchdog would not have cut any .65 experiment short.  But it remains essential defense-in-depth for the manifest enforcement gap: if a retired experiment re-enters the queue, 30 min is the worst-case exposure.  Add ExperimentTimeoutWatchdog(exp_id, timeout_minutes=30) to experiment_template.py as a required component.",
+      "rationale": "Seven consecutive milestones of recommendation without deployment.  The .65 experiments did not require the watchdog, but this is because no retired experiments ran in .65 (manifest enforcement coincidentally worked this milestone). The watchdog is cheap insurance."
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Add per-domain AUC floor assertion to conductor pre-flight before JEPA deployment experiments: Exps 834, 844 both showed per-domain collapse (ARC in .63, SVAMP in .64 and .65) that was only caught inside the deployment experiment.  Moving the min_domain_auc >= 0.50 gate into the conductor's pre-flight sequence would have saved the deployment experiment slot in .64 and .65.",
+      "rationale": "The deployment gate is already correct (Exp 845 correctly blocked).  The issue is where the gate fires \u2014 inside a deployment experiment consumes a milestone slot and masks the diagnostic step.  Pre-flight gate = same result, no slot consumed."
+    }
+  ],
+  "honest_verdict": "milestone_improvement_15min_vs_64_7of12_criteria_RETRO_ARBITER_CLOSED_RETRO_GGUF_CLOSED_3NEW_RETROS_OPENED_10_open_SVAMP_floor_0pt0_two_milestones_PRM_boost_failed_architecture_fix_required_ICE40_N16_overflows_12258LC_register_expansion_root_cause_LIVE_ENV_broken_autofix_path_RETRO015_recurrence_CODE_REPAIR_still_blocked_model_not_on_disk",
+  "invariant_violations": []
+}
