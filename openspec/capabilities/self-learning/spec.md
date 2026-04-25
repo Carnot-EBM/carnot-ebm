@@ -1290,6 +1290,58 @@ If OOD AUC <= 0.75, RETRO-JEPA-OOD-V20 MUST be filed.
 
 ---
 
+## REQ-FR11-020: LagrangeAdaptiveIsingConstraints MUST Implement Violation-Driven Lambda Weight Updates
+
+**Given** a set of binary Ising constraints (spin pairs with required alignment)
+**When** LagrangeAdaptiveIsingConstraints.run_session() is called
+**Then** for each constraint k with non-zero violation rate, lambda_k MUST increase by
+         lambda_lr * avg_violation_rate_k
+**And** the updated lambdas are used in the NEXT session's build_J() call, so violated
+        constraints receive stronger coupling weights and the energy landscape shifts
+        toward constraint satisfaction over multiple sessions
+
+### REQ-FR11-020 Sub-requirements
+
+- REQ-FR11-020-1: `LagrangeAdaptiveIsingConstraints.__init__` SHALL accept `n_spins`,
+  `n_constraints`, `lambda_init=1.0`, and `lambda_lr=0.1` parameters.
+- REQ-FR11-020-2: `build_J(constraints)` SHALL construct the coupling matrix as
+  J_base + sum_k lambda_k * sign_k * penalty_k * delta(i_k, j_k) for each constraint k.
+- REQ-FR11-020-3: `run_session(constraints)` SHALL call InertiaIsingSampler, compute
+  per-constraint violation rates, update lambdas, and return violation_rate and lambdas.
+- REQ-FR11-020-4: `_constraint_violation(samples, constraint)` SHALL return a float in
+  [0, 1] representing the fraction of samples that violate the given constraint.
+
+**Implementation Status:** Implemented (python/carnot/samplers/lagrange_adaptive.py, Exp 862)
+
+---
+
+## SCENARIO-FR11-030: 5-Session Relay on Synthetic Constraints Shows delta_s1_to_s5 > 0
+
+**Given** 10 synthetic binary constraints on 10 spins with adversarial J_base
+         (first 5 constraints have negative base coupling biased against satisfaction)
+**When** LagrangeAdaptiveIsingConstraints runs 5 sessions with lambda_lr=0.2
+**Then** delta_s1_to_s5 = violation_rate[session_1] - violation_rate[session_5] > 0
+         (violation rate decreases from session 1 to session 5)
+**And** fr11_self_learning_confirmed = True
+
+**Experimental result (Exp 862):**
+  - violation_rates: [0.42, 0.54, 0.50, 0.39, 0.37]
+  - delta_s1_to_s5: 0.05 (positive — self-learning confirmed)
+  - honest_verdict: fr11_self_learning_confirmed
+
+**Spec traces:** REQ-FR11-020
+**Implementation Status:** Implemented (scripts/experiment_862_lagrange_adaptive_ising.py, Exp 862)
+
+---
+
+## Implementation Status (FR11-020)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-FR11-020 | Implemented (python/carnot/samplers/lagrange_adaptive.py) | tests/python/test_experiment_862_lagrange_adaptive_ising.py |
+
+---
+
 ## REQ-LEARN-056: IsingConstraintGenerator MUST Read Error Patterns and Synthesise Coupling Rows
 
 **Given** a list of ErrorPattern objects accumulated from session memory
