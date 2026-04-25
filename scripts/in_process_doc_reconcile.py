@@ -81,6 +81,15 @@ _WIN_TOKENS = (
     "complete", "confirmed", "viable", "closed", "resolved", "done",
     "fixed", "effective", "ships", "improved", "lossless", "positive",
     "ready", "adequate", "operational", "published", "exceeds_target",
+    # Added 2026-04-25 — verdicts observed in .65/.66/.67/.68 that
+    # were genuine wins but defaulted to ⚠️ Research Finding because
+    # the relevant token wasn't in this list:
+    #   .65 Exp 848  "tier1_relay_works_live"      → "works"
+    #   .65 Exp 849  "gguf_cache_implemented"      → "implemented"
+    #   .66 Exp 856  "deployed"                     → "deployed"
+    #   .66 Exp 875  "fr11_tier2_loop_closed"      (already had "closed")
+    #   .67 Exp 874  "streaming_cot_wired"          → "wired"
+    "wired", "implemented", "works", "deployed", "viable_tier",
 )
 
 # Artifact fields that, if present, are pulled into the changelog line as
@@ -146,6 +155,52 @@ def map_status_label(verdict: str) -> str:
     if any(tok in v for tok in _WIN_TOKENS):
         return "✅ Complete"
     return "⚠️ Research Finding"
+
+
+def classify_artifact(artifact: dict) -> str:
+    """Map a full artifact dict to a status label.
+
+    Wraps `map_status_label(verdict)` with two artifact-level upgrades:
+
+    1. **`retro_*_closed` upgrade**: any artifact field whose key starts
+       with `retro_` and ends with `_closed` and whose value is a
+       truthy string (non-empty, not "false") promotes the verdict to
+       "✅ Complete" *unless* the verdict already maps to ❌ Failed
+       (a closed retro on top of a failure is contradictory and the
+       failure verdict wins to keep the discipline strict).
+
+       Example: .68 Exp 880 `retro_closed: RETRO-HALLUSAE-AUC-BELOW-THRESHOLD`
+       — the experiment retired HalluSAE; the verdict text was
+       "hallusae_retired_governance_ready" which already mapped to ✅,
+       but the rule is general: if `retro_*_closed` is populated, the
+       experiment closed something concrete and deserves the win label
+       even when the verdict text doesn't carry a win-token.
+
+    2. **Backwards-compat**: when the artifact has no special fields,
+       behaviour is identical to `map_status_label(artifact.get('honest_verdict',''))`.
+
+    Use this from reconcile(); leave `map_status_label` unchanged for
+    callers that only have the verdict string (tests, external tools).
+    """
+    verdict = artifact.get("honest_verdict", "")
+    base = map_status_label(verdict)
+    # Strict-failure-wins: a closed retro on top of a failure is a
+    # contradictory shape, prefer the failure for honest-record
+    # discipline. Same reasoning as the in-process reconciler's
+    # default-to-Research-Finding bias on unrecognised verdicts.
+    if base == "❌ Failed":
+        return base
+    # Promote on retro_*_closed = truthy
+    for key, value in artifact.items():
+        if not key.startswith("retro_"):
+            continue
+        if not key.endswith("_closed"):
+            continue
+        if value in (True, 1):
+            return "✅ Complete"
+        if isinstance(value, str) and value.strip() and value.strip().lower() != "false":
+            return "✅ Complete"
+    return base
 
 
 def find_artifact(task_id: str, results_dir: Path) -> Path | None:
@@ -328,7 +383,11 @@ def reconcile(
         )
 
     verdict = artifact.get("honest_verdict", "")
-    status_label = map_status_label(verdict)
+    # Use classify_artifact (not just map_status_label) so retro_*_closed
+    # fields can promote a verdict that didn't carry a win-token in its
+    # text. Without this, .65 Exp 849 (gguf_cache_implemented +
+    # retro_closed=RETRO-GGUF-CACHE-IMPORT) would still be undercounted.
+    status_label = classify_artifact(artifact)
     artifact_rel = str(artifact_path.relative_to(repo_root))
 
     # 1. Always append to ops/changelog.md.
