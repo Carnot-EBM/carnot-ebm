@@ -4215,3 +4215,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 860: Inertia Ising Sampler Benchmark — arXiv 2604.17109 + Mpemba Init (CPU) (⚠️ Research Finding) — honest_verdict=partial_improvement; results/experiment_860_inertia_ising_benchmark.json
 - 2026-04-25: Exp 861: StreamingCoTHalluDetector — Tier 0g PHaS Prefix Signal (CPU) (✅ Complete) — honest_verdict=tier_0g_viable; results/experiment_861_streaming_cot_detector.json
 - 2026-04-25: Exp 862: LagrangeAdaptiveIsingConstraints — FR-11 Self-Learning Tier 1 (CPU) (✅ Complete) — honest_verdict=fr11_self_learning_confirmed; results/experiment_862_lagrange_adaptive_ising.json
+- 2026-04-25: Exp 863: HalluSAEGeometricProbe — Tier 0i SAE Feature Geometry Energy (CPU) (⚠️ Research Finding) — honest_verdict=tier_0i_marginal; results/experiment_863_hallusae_geometric_probe.json
