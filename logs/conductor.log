@@ -3056,3 +3056,15 @@ logs/conductor.log                   | 17 +++++++
 2026-04-25 10:37:50,363 [conductor] RESEARCH STEP: Exp 858: Live Full Precision Benchmark v5 — DualGPU + All Cascade Tiers (GPU, GATED on 856)
 2026-04-25 10:37:50,363 [conductor] ============================================================
 2026-04-25 10:37:50,379 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 10:37:50,435 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 10:37:50,436 [conductor] Running test suite (smart subset)...
+2026-04-25 10:37:56,091 [conductor] Pre-check: 81 passed, 3 warnings in 2.90s
+2026-04-25 10:37:56,200 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-25 10:37:56,200 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-25 10:47:26,778 [conductor] Claude Code produced stable deliverable results/experiment_858_live_benchmark_v5.json (9.5 min elapsed) — killing subagent early
+2026-04-25 10:47:26,823 [conductor] Changes:
+logs/conductor.log | 6 ++++++
+ 1 file changed, 6 insertions(+)
+2026-04-25 10:47:26,857 [conductor] DOGFOOD: Verification complete (total: 532 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 10:47:26,857 [conductor] Running test suite (smart subset)...
+2026-04-25 10:47:32,585 [conductor] Post-check: 81 passed, 3 warnings in 2.92s

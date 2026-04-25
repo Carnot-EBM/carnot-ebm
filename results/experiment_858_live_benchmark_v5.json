@@ -1,0 +1,120 @@
+{
+  "experiment": 858,
+  "title": "Live Benchmark v5: Full Cascade Pipeline with DualGPURunner",
+  "run_date": "20260425",
+  "started_at": "2026-04-25T14:44:09Z",
+  "finished_at": "2026-04-25T14:44:58Z",
+  "duration_s": 48.392,
+  "status": "success",
+  "decision_class": "verify",
+  "honest_verdict": "simulation_fallback",
+  "inference_mode": "simulation_fallback",
+  "dual_gpu_active": true,
+  "tiers_deployed": [
+    "tier_0a_think_probe",
+    "tier_0b_spilled_energy",
+    "tier_0c_nup_probe_v4",
+    "tier_0d_hallucination",
+    "tier_0f_semantic_energy",
+    "tier_1_sink_probe",
+    "tier_2_eorm",
+    "tier_2_5_symcode",
+    "tier_3_ising"
+  ],
+  "tier_manifest": {
+    "tier_0a_think_probe": true,
+    "tier_0b_spilled_energy": true,
+    "tier_0c_nup_probe_v4": true,
+    "tier_0d_hallucination": true,
+    "tier_0f_semantic_energy": true,
+    "tier_1_sink_probe": true,
+    "tier_2_eorm": true,
+    "tier_2_5_symcode": true,
+    "tier_3_ising": true
+  },
+  "per_tier_latency_ms": {},
+  "n_total": 75,
+  "n_gsm8k": 50,
+  "n_humaneval": 25,
+  "baseline_accuracy": 0.68,
+  "pipeline_accuracy": 0.8933,
+  "pipeline_improvement": 0.2133,
+  "models_used": [
+    "Qwen/Qwen3.5-0.8B",
+    "google/gemma-4-E4B-it"
+  ],
+  "expected_cot_structure": false,
+  "gpu_status": {
+    "all_healthy": true,
+    "models": [
+      {
+        "name": "Qwen3.5-0.8B",
+        "gpu_id": 0,
+        "health_ok": true,
+        "load_time_s": 2.3994727230019635,
+        "stall_root_cause": null
+      },
+      {
+        "name": "Gemma4-E4B-it",
+        "gpu_id": 1,
+        "health_ok": true,
+        "load_time_s": 9.352513353005634,
+        "stall_root_cause": null
+      }
+    ],
+    "prewarm_time_s": 12.779,
+    "dual_gpu_auto_assigned": true,
+    "model_server_active": true,
+    "gpu_runner_active": true,
+    "cpu_fallback": false,
+    "zombie_kill_result": "no_zombies_found",
+    "gpu_monitor_results": {
+      "n_gpus_detected": 2,
+      "n_zombies": 0,
+      "idle_gpus": [
+        0,
+        1
+      ],
+      "all_healthy": false
+    },
+    "dual_gpu_health": {
+      "gpu0_util_pct": 0.0,
+      "gpu1_util_pct": 94.0,
+      "gpu0_temp_c": 55.0,
+      "gpu1_temp_c": 59.0,
+      "gpu0_vram_mb": 2325.0,
+      "gpu1_vram_mb": 16061.0,
+      "gpu1_is_zombie": false,
+      "temperature_warning": false,
+      "recommended_batch_size_factor": 1.0
+    }
+  },
+  "live_env_fixed_confirmed": true,
+  "schema": [
+    "baseline_accuracy",
+    "decision_class",
+    "dual_gpu_active",
+    "duration_s",
+    "expected_cot_structure",
+    "experiment",
+    "finished_at",
+    "gpu_status",
+    "honest_verdict",
+    "inference_mode",
+    "live_env_fixed_confirmed",
+    "models_used",
+    "n_gsm8k",
+    "n_humaneval",
+    "n_total",
+    "per_tier_latency_ms",
+    "pipeline_accuracy",
+    "pipeline_improvement",
+    "run_date",
+    "started_at",
+    "status",
+    "tier_manifest",
+    "tiers_deployed",
+    "title"
+  ],
+  "invariant_violations": []
+}
