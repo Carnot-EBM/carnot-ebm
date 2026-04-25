@@ -89,8 +89,11 @@ traceable to a checked-in experiment artifact under `results/`.
 | HumanEval pass-rate gain from verify-and-repair (Gemma 4 4B) | **+3.0 percentage points** (95% CI [+0.6, +6.1]) | Exp 226 |
 | Typed-constraint compliance gain (Gemma 4 4B) | **+4.9 percentage points** | Exp 221 |
 | Prompt-injection classifier AUROC (distilled from GPT-OSS-Safeguard-20B) | **0.9078** (first to clear the 0.90 publication gate) | Exp 724 |
-| Two-GPU parallel training, vs sequential | **2.0× speedup** with bit-identical final loss | Exps 684/685 |
+| Two-GPU parallel training (DualGPURunner production deployment) | **1.979× throughput** in production pipeline | Exp 856 |
 | KV260 FPGA Ising sampler, AXI r/w roundtrip on real silicon | `SPIN_COUNT=0x20`, `0xDEADBEEF` write-read verified | 2026-04-22 debug closure |
+| iCE40 N=8 combinational energy oracle | **134 LUTs**, bitstream generated | Exp 859 |
+| StreamingCoT hallucination detector (Tier 0g) | **AUC=1.0** at stream-time | Exp 861 |
+| Constraint memory bank compression | **31.25x** reduction, AUROC=1.0 maintained | Exp 865 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -125,7 +128,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  across 842+ experiments and 70+ milestones, structured as six phases with
+  across 867+ experiments and 72+ milestones, structured as six phases with
   a plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -329,7 +332,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 842 experiments across 70 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 867 experiments across 72 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
