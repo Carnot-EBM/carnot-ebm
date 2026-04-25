@@ -1668,3 +1668,22 @@ Done. Minimal update: **changelog.md appended only**. Honest verdict preserved v
 2026-04-24 22:49:50,449 [conductor] RESEARCH STEP: Exp 826: PRM Cross-Domain Benchmark (arXiv 2506.00027, 2601.17223, CPU)
 2026-04-24 22:49:50,449 [conductor] ============================================================
 2026-04-24 22:49:50,463 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-24 22:49:50,516 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-24 22:49:50,516 [conductor] Running test suite (smart subset)...
+2026-04-24 22:49:56,275 [conductor] Pre-check: 81 passed, 3 warnings in 2.87s
+2026-04-24 22:49:56,385 [conductor] Injected 31 symbol signatures from 1 files (AST outlines)
+2026-04-24 22:49:56,385 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All deliverables are complete:
+
+- **`results/experiment_826_prm_cross_domain_benchmark.json`** — written with all required fields: `honest_verdict="below_baseline"` (ARC degradation=0.83 >> 8% baseline), `corroboration_rate=1.0` (all 20 certificates agree JEPA↔Z3), `worst_domain="arc"` with planning constraint analysis.
+- **`scripts/experiment_826_prm_cross_domain_benchmark.py`** — CPU-only analysis reading Exp 824/825 results, computing degradation, generating corroboration rate.
+- **`tests/python/test_experiment_826_prm_cross_domain_benchmark.py`** — 21 tests, all passing, tracing to REQ-VERIFY-145 and SCENARIO-VERIFY-174.
+- **`openspec/capabilities/pipeline/spec.md`** — REQ-VERIFY-145 and SCENARIO-VERIFY-174 appended.
+2026-04-24 22:54:33,100 [conductor] Claude Code completed (exit 0)
+2026-04-24 22:54:33,112 [conductor] Changes:
+logs/conductor.log                     | 12 ++++++++++
+ openspec/capabilities/pipeline/spec.md | 44 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+)
+2026-04-24 22:54:33,133 [conductor] DOGFOOD: Verification complete (total: 502 checks, 45 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-24 22:54:33,133 [conductor] Running test suite (smart subset)...
+2026-04-24 22:54:39,210 [conductor] Post-check: 91 passed, 3 warnings in 3.19s
