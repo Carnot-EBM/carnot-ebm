@@ -1418,3 +1418,61 @@ GGUF, ~500MB) to prove the mechanism end-to-end before Exp 870 trusts it for 20G
   5. ``resolver.download_tested`` is ``True``.
 
 **Spec traces:** REQ-INFRA-073, Exp 869, RETRO-SOTA-MODEL-DOWNLOAD
+
+
+### REQ-VERIFY-140: StreamingCoTHalluDetector Tier 0g Advisory Wiring
+
+**Status:** Implemented (Exp 874)
+
+The pipeline MUST expose a `STREAMING_COT_ENABLED` class attribute on
+`VerifyRepairPipeline`, set from the `CARNOT_STREAMING_COT` environment variable
+(default `"0"`).  When `STREAMING_COT_ENABLED` is True, `verify()` MUST:
+
+1. Call `extract_cot_steps(response)` to split the response into CoT steps.
+2. Instantiate `StreamingCoTHalluDetector(alpha=0.3, threshold=0.35)` and call
+   `detect(steps)`.
+3. Set `result.streaming_cot_unstable = streaming_result.is_streaming_unstable`.
+4. Set `result.streaming_cot_phas = streaming_result.final_phas`.
+5. Record `result.certificate["tier_0g_streaming_cot"]` with `is_streaming_unstable`,
+   `final_phas`, and `n_steps`.
+6. NOT short-circuit the Ising cascade based on this signal (advisory only).
+
+When `STREAMING_COT_ENABLED` is False (default), `verify()` MUST NOT import or
+instantiate `StreamingCoTHalluDetector` — the flag must be opt-in to preserve
+full backward compatibility.
+
+**Acceptance criteria:**
+- `VerifyRepairPipeline.STREAMING_COT_ENABLED` reflects the env var at import time.
+- When enabled, `result.streaming_cot_unstable` and `result.streaming_cot_phas` are
+  populated after a `verify()` call on any non-empty response.
+- The Ising/constraint path still runs to completion (no early return from streaming signal).
+- When disabled (default), `result.streaming_cot_unstable` is `False` and
+  `result.streaming_cot_phas` is `0.0`.
+
+**Spec traces:** REQ-VERIFY-140, Exp 861, Exp 874
+
+
+### SCENARIO-VERIFY-165: STREAMING_COT_ENABLED Populates Certificate on Unstable CoT
+
+**Given** `CARNOT_STREAMING_COT=1` is set and `VerifyRepairPipeline.STREAMING_COT_ENABLED` is True
+**When** `verify()` is called with a response containing compounding-error CoT steps
+**Then**
+  1. `result.streaming_cot_unstable` is `True`.
+  2. `result.streaming_cot_phas` is greater than `0.35`.
+  3. `result.certificate["tier_0g_streaming_cot"]["n_steps"]` equals the number of steps extracted.
+  4. `result.verified` reflects the Ising verdict, NOT the streaming signal.
+
+**Spec traces:** REQ-VERIFY-140, SCENARIO-VERIFY-165, Exp 874
+
+
+### SCENARIO-VERIFY-166: STREAMING_COT_ENABLED Disabled by Default
+
+**Given** `CARNOT_STREAMING_COT` is not set (default `"0"`)
+**When** `verify()` is called on any response
+**Then**
+  1. `result.streaming_cot_unstable` is `False`.
+  2. `result.streaming_cot_phas` is `0.0`.
+  3. `"tier_0g_streaming_cot"` is NOT a key in `result.certificate`.
+  4. `StreamingCoTHalluDetector` is never imported during the call.
+
+**Spec traces:** REQ-VERIFY-140, SCENARIO-VERIFY-166, Exp 874

@@ -180,9 +180,14 @@ class VerificationResult:
     False for full-rank KAEMEnergy (n_vars > 100) or when KAN path was not taken."""
     streaming_cot_unstable: bool = False
     """True when Tier 0g StreamingCoTHalluDetector flagged the CoT as streaming-unstable.
-    Set by the caller after running StreamingCoTHalluDetector.is_streaming_unstable().
+    Populated by VerifyRepairPipeline.verify() when CARNOT_STREAMING_COT=1.
     Advisory only — does not affect the verified flag or repair logic.
-    Spec: REQ-PROBE-040"""
+    Spec: REQ-VERIFY-140, SCENARIO-VERIFY-165"""
+    streaming_cot_phas: float = 0.0
+    """Final EMA prefix hallucination score (PHaS) from StreamingCoTHalluDetector.
+    Range [0, 1]; higher = more streaming-unstable trajectory.
+    Populated alongside streaming_cot_unstable when CARNOT_STREAMING_COT=1.
+    Spec: REQ-VERIFY-140, SCENARIO-VERIFY-166"""
     geometric_energy: float = 0.0
     """Mean L2 distance of CoT steps from the grounded manifold centroid in TF-IDF
     (SAE proxy) feature space.  Computed by HalluSAEGeometricProbe (Tier 0i).
@@ -282,6 +287,12 @@ class VerifyRepairPipeline:
     # When CARNOT_DUAL_GPU=1, pipeline routes GPU inference through DualGPURunner
     # if two model configs are loaded (Exp 856 / REQ-GPU-010).
     DUAL_GPU_ENABLED: bool = os.getenv("CARNOT_DUAL_GPU", "0") == "1"
+
+    # When CARNOT_STREAMING_COT=1, run StreamingCoTHalluDetector (Tier 0g) in
+    # verify() and populate result.streaming_cot_unstable + result.streaming_cot_phas.
+    # Advisory only — does not affect the verified flag or short-circuit Ising.
+    # Spec: REQ-VERIFY-140
+    STREAMING_COT_ENABLED: bool = os.getenv("CARNOT_STREAMING_COT", "0") == "1"
 
     def __init__(
         self,
@@ -1191,6 +1202,30 @@ class VerifyRepairPipeline:
         if semantic_energy_probe is not None:
             _semantic_energy_result = semantic_energy_probe.score(response)
 
+        # Tier 0g StreamingCoT advisory (REQ-VERIFY-140).
+        # When CARNOT_STREAMING_COT=1, extract CoT steps from the response and run
+        # the PHaS (Prefix Hallucination Score) trajectory detector.
+        # is_streaming_unstable=True means sustained reasoning drift was detected.
+        # Advisory only — does NOT short-circuit the cascade or affect verified flag.
+        # Mirrors how HalluField (Tier 0e) is handled above.
+        # WHY re-read env at call time: the class attribute is evaluated at import time,
+        # so tests or experiment scripts that set CARNOT_STREAMING_COT=1 after import
+        # would be silently ignored.  Checking at call time makes the flag usable in
+        # in-process test and experiment contexts without reloading the module.
+        _streaming_cot_enabled = self.STREAMING_COT_ENABLED or (
+            os.getenv("CARNOT_STREAMING_COT", "0") == "1"
+        )
+        _streaming_cot_result = None
+        if _streaming_cot_enabled:
+            from carnot.pipeline.streaming_cot import (  # noqa: PLC0415
+                StreamingCoTHalluDetector,
+                extract_cot_steps,
+            )
+            _cot_steps = extract_cot_steps(response)
+            if _cot_steps:
+                _streaming_detector = StreamingCoTHalluDetector(alpha=0.3, threshold=0.35)
+                _streaming_cot_result = _streaming_detector.detect(_cot_steps)
+
         # Tier 0 ThinkProbe fast-path (optional, REQ-VERIFY-094).
         # If a CarnotThinkProbe instance is provided and it classifies the response
         # as 'incorrect', skip Ising entirely and return a violation immediately.
@@ -1404,6 +1439,19 @@ class VerifyRepairPipeline:
                 "sentence_count": _semantic_energy_result.sentence_count,
                 "cluster_entropy": _semantic_energy_result.cluster_entropy,
                 "threshold": _semantic_energy_result.threshold,
+            }
+
+        # Record Tier 0g StreamingCoT advisory result in result fields and certificate.
+        # is_streaming_unstable and streaming_cot_phas are set directly on result so
+        # callers can inspect them without parsing the certificate dict.
+        # Spec: REQ-VERIFY-140, SCENARIO-VERIFY-165, SCENARIO-VERIFY-166
+        if _streaming_cot_result is not None:
+            result.streaming_cot_unstable = _streaming_cot_result.is_streaming_unstable
+            result.streaming_cot_phas = _streaming_cot_result.final_phas
+            result.certificate["tier_0g_streaming_cot"] = {
+                "is_streaming_unstable": _streaming_cot_result.is_streaming_unstable,
+                "final_phas": _streaming_cot_result.final_phas,
+                "n_steps": _streaming_cot_result.n_steps,
             }
 
         if tracker is not None:
