@@ -4187,3 +4187,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 837: FR-11 Tier 1 Live Relay v3 (FR-11 mandatory, GPU, gated on Exp 836 delta>0) (⚠️ Blocked) — honest_verdict=blocked_gate; results/experiment_837_fr11_tier1_live_relay_v3.json
 - 2026-04-25: Exp 838: JEPA v24 Multi-Domain Deployment as Tier 3.5 (CPU, gated on Exp 834) (⚠️ Research Finding) — honest_verdict=jepa_v24_not_deployed_below_gate; results/experiment_838_jepa_v24_tier35_deployment.json
 - 2026-04-25: Exp 839: KV260 iCE40 Bitstream Generation (CPU, gated on Exp 816 synthesis) (❌ Failed) — honest_verdict=pnr_failed; results/experiment_839_kv260_ice40_bitstream.json
+- 2026-04-25: Exp 840: Live Full Precision Benchmark v3 (GPU, CARNOT_FORCE_LIVE=1) (⚠️ Research Finding) — honest_verdict=simulated_no_verdict; results/experiment_840_live_precision_benchmark_v3.json
