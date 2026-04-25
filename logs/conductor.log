@@ -2744,3 +2744,15 @@ logs/conductor.log | 11 +++++++++++
 2026-04-25 07:49:13,488 [conductor] RESEARCH STEP: Exp 851: iCE40 N=16 Ising Bitstream (RETRO-ICE40-PNR-LUT-OVERFLOW, CPU)
 2026-04-25 07:49:13,488 [conductor] ============================================================
 2026-04-25 07:49:13,508 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 07:49:13,568 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 07:49:13,568 [conductor] Running test suite (smart subset)...
+2026-04-25 07:49:19,218 [conductor] Pre-check: 81 passed, 3 warnings in 2.87s
+2026-04-25 07:49:19,331 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-25 07:49:19,331 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-25 07:54:49,684 [conductor] Claude Code produced stable deliverable results/experiment_851_ice40_n16_bitstream.json (5.5 min elapsed) — killing subagent early
+2026-04-25 07:54:49,729 [conductor] Changes:
+logs/conductor.log | 6 ++++++
+ 1 file changed, 6 insertions(+)
+2026-04-25 07:54:49,749 [conductor] DOGFOOD: Verification complete (total: 526 checks, 48 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 07:54:49,749 [conductor] Running test suite (smart subset)...
+2026-04-25 07:54:55,405 [conductor] Post-check: 81 passed, 3 warnings in 2.86s
