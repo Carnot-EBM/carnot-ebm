@@ -1089,3 +1089,47 @@ about its provenance.
   5. Artifact written to results/experiment_829_huggingface_v3_publish.json.
 
 **Spec traces:** REQ-INFRA-062, Exp 829
+
+### REQ-INFRA-063: Governance Pre-flight MUST Audit RETRO Closure Against Experiment Result JSONs
+
+**Statement:** Before any new milestone experiments begin, a governance pre-flight check
+MUST read the authoritative experiment result JSONs (not the operational retrospective
+narrative) to determine which RETROs are genuinely still open.  If a RETRO is listed as
+open in the retrospective but the referenced experiment result JSON shows a closure field
+set to True (or an honest_verdict that confirms resolution), the pre-flight MUST mark
+that RETRO as CLOSED in MILESTONE_PREREQS.md and remove it from the corrected_open_retros
+list fed to the conductor gate.
+
+**Why this matters:**
+    The Exp 830 operational retrospective was written before Exps 819 and 820 completed,
+    creating a reporting-lag error where two already-closed RETROs appeared as still-open.
+    If MILESTONE_PREREQS.md carries these stale statuses, the .64 experiment gate will
+    block legitimate work on a factually incorrect basis.  The experiment result JSON is
+    the authoritative source of truth; the retrospective narrative is a summary that can
+    fall out of sync.
+
+**Acceptance criteria:**
+- Given Exp N result JSON contains retro_injection_closed=True or honest_verdict that
+  confirms closure, the governance pre-flight produces corrected_open_retros excluding
+  that RETRO ID.
+- MILESTONE_PREREQS.md updated section shows the RETRO as CLOSED with explicit label.
+- Pre-existing content in MILESTONE_PREREQS.md is never removed.
+
+**Spec traces:** Exp 831, RETRO-ISING-INJECTION-NO-DISCRIMINATION, RETRO-GGUF-CACHE-IMPORT
+
+### SCENARIO-INFRA-071: Reporting-Lag RETRO Corrected From CLOSED in Exp Result JSON
+
+**Given** the Exp 830 operational retrospective lists RETRO-ISING-INJECTION-NO-DISCRIMINATION
+and RETRO-GGUF-CACHE-IMPORT as still-open (reporting-lag error)
+**And** results/experiment_819_injection_field_fix.json contains retro_injection_closed=True
+**And** results/experiment_820_gguf_import_fix_code_repair_v5.json contains
+honest_verdict="import_fixed_repair_positive"
+**When** the governance pre-flight (Exp 831) runs
+**Then**
+  1. audit_retro_closures() returns retros_confirmed_closed containing both RETRO IDs.
+  2. corrected_open_retros does NOT contain either RETRO ID.
+  3. MILESTONE_PREREQS.md updated section marks both RETROs as CLOSED.
+  4. honest_verdict = "governance_ready".
+  5. Artifact written to results/experiment_831_governance_preflight.json.
+
+**Spec traces:** REQ-INFRA-063, Exp 831
