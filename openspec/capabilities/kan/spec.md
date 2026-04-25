@@ -78,3 +78,41 @@ Then the result is 5016 (= 8 * 32 * 19 + 8 * 19).
 |-------------|--------|-------|
 | REQ-KAN-003 | Proposed | Exp 724 target: 3000-example balanced dataset |
 | REQ-KAN-004 | Proposed | Exp 724 target: 16 knots/spline in v3 KAN |
+| REQ-KAN-020 | Implemented | Exp 866: LUT analysis complete. N=8 MLP-bound=14400 > 7680 (over budget). ISING_PRIORITY. |
+
+## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
+
+KAEMEnergy MUST be analyzable for FPGA LUT budget using arXiv 2604.03345
+per-knot estimates. Target: N=8, within iCE40 HX8K 7680 LUT budget.
+
+**Rationale:**
+    The iCE40 HX8K has 7,680 LUTs.  Before committing synthesis effort, a
+    conservative LUT estimate is required.  arXiv 2604.03345
+    (Hardware-Oriented KAN Inference Complexity) provides the formula:
+        LUTs = fan_in * fan_out * n_knots * luts_per_segment
+    where luts_per_segment = 8–12 (we use 10 as conservative midpoint).
+
+    Exp 866 result (2026-04-25):
+      - KAN N=8 MLP upper bound: 14,400 LUTs (over 7,680 budget)
+      - Ising N=8 actual (Exp 859): 134 LUTs
+      - Synthesis priority: ISING_PRIORITY
+      - Note: actual KAEMEnergy is sparse graph-based (edge_density=0.1),
+        so the real LUT cost is ~10% of the MLP estimate (~1,440 LUTs),
+        which would fit within budget.  A sparse-aware analysis is needed
+        to confirm feasibility definitively.
+
+**Acceptance criteria:**
+    - `KANHardwareAnalyzer` in `python/carnot/analysis/kan_hw_analysis.py`
+      implements `lut_estimate_layer()`, `total_lut_estimate()`,
+      `synthesis_priority()`, and `sensitivity_analysis()`.
+    - `total_lut_estimate()` returns dict with keys:
+      layer1_luts, layer2_luts, total_luts, ice40_hx8k_budget, within_budget.
+    - `synthesis_priority()` correctly returns one of:
+      KAN_PRIORITY / ISING_PRIORITY / BOTH_FEASIBLE.
+
+### SCENARIO-KAN-030: LUT estimate for N=8 KAEMEnergy on iCE40 HX8K
+
+Given KANHardwareAnalyzer(n_inputs=8, n_hidden=16, n_knots=10, luts_per_segment=10),
+When total_lut_estimate() is called,
+Then layer1_luts=12800, layer2_luts=1600, total_luts=14400,
+     within_budget=False (14400 > 7680).
