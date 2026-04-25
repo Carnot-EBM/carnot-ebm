@@ -4195,3 +4195,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 841: SymCodeVerifier Paragraph Batching (RETRO-SYMCODE-SERIAL, CPU) (⚠️ Research Finding) — honest_verdict=batching_marginal; results/experiment_841_symcode_paragraph_batching.json
 - 2026-04-25: Exp 843: Pre-flight v14 — RETRO Audit + Experiment Retirement Plan (CPU) (✅ Complete) — honest_verdict=governance_ready; results/experiment_843_preflight_v14.json
 - 2026-04-25: Exp 844: JEPA v24b SVAMP-Balanced Domain Training (RETRO-SVAMP-ZERO-AUC, CPU) (⚠️ Research Finding) — honest_verdict=jepa_v24b_svamp_still_collapsed; results/experiment_844_jepa_v24b_svamp.json
+- 2026-04-25: Exp 845: JEPA v24b Tier 3.5 Deployment (CPU, GATED on Exp 844) (⚠️ Research Finding) — honest_verdict=jepa_v24b_not_deployed_below_gate; results/experiment_845_jepa_v24b_tier35_deployment.json
