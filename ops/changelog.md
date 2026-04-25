@@ -4246,3 +4246,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 880: Pre-flight v17 — Retire HalluSAE + 7-RETRO Audit (CPU) (✅ Complete) — honest_verdict=hallusae_retired_governance_ready; results/experiment_880_preflight_v17.json
 - 2026-04-25: Exp 881: Code Repair v8 — Gemma4-E4B-it Live HumanEval (GPU, transformers loader) (⚠️ Research Finding) — honest_verdict=zero_constraints; results/experiment_881_code_repair_v8_gemma4.json
 - 2026-04-25: Exp 882: Live Cascade v7 — Gemma4-E4B-it + 50 GSM8K + Full Tier 0-3 (GPU) (⚠️ Research Finding) — honest_verdict=live_no_improvement; results/experiment_882_live_cascade_v7_gemma4.json
+- 2026-04-25: Exp 883: VJEPA v2 — Expanded Synthetic Corpus + 200 Epochs (RETRO-JEPA-OOD) (CPU) (⚠️ Research Finding) — honest_verdict=vjepa_ood_above_gate; ood_auc=0.664; results/experiment_883_vjepa_v2_expanded_corpus.json
