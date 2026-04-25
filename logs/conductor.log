@@ -4041,3 +4041,24 @@ Done. Here's what was produced:
 2026-04-25 17:51:30,924 [conductor] RESEARCH STEP: Exp 880: Pre-flight v17 — Retire HalluSAE + 7-RETRO Audit (CPU)
 2026-04-25 17:51:30,924 [conductor] ============================================================
 2026-04-25 17:51:30,941 [conductor] Committing 3 dirty files as checkpoint (preserving work)
+2026-04-25 17:51:31,005 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 17:51:31,005 [conductor] Running test suite (smart subset)...
+2026-04-25 17:51:37,064 [conductor] Pre-check: 81 passed, 3 warnings in 3.08s
+2026-04-25 17:51:37,175 [conductor] Injected 44 symbol signatures from 2 files (AST outlines)
+2026-04-25 17:51:37,175 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All tasks complete:
+
+- **`ops/exclusion_manifest.yaml`** — `retired_experiments` section added with HalluSAE scope entry (`retire_if_same_verdict: true`, reason, milestone)
+- **`MILESTONE_PREREQS.md`** — `.68 Pre-flight` section appended with 6 open RETROs, gate conditions, experiment cap (806), and updated Exclusion Manifest Gate table
+- **`scripts/experiment_880_preflight_v17.py`** — experiment script written and executed successfully
+- **`results/experiment_880_preflight_v17.json`** — artifact written: `honest_verdict=hallusae_retired_governance_ready`, `hallusae_retired=true`, `open_retros_count=6`, `prereqs_updated=true`
+- **`tests/python/test_experiment_880_preflight_v17.py`** — 15 tests, all passing (traces to REQ-INFRA-072, SCENARIO-INFRA-081)
+2026-04-25 17:55:21,097 [conductor] Claude Code completed (exit 0)
+2026-04-25 17:55:21,111 [conductor] Changes:
+MILESTONE_PREREQS.md        | 133 ++++++++++++++++++++++++++++++++++++++++++++
+ logs/conductor.log          |  13 +++++
+ ops/exclusion_manifest.yaml |   6 ++
+ 3 files changed, 152 insertions(+)
+2026-04-25 17:55:21,129 [conductor] DOGFOOD: Verification complete (total: 554 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 17:55:21,129 [conductor] Running test suite (smart subset)...
+2026-04-25 17:55:26,768 [conductor] Post-check: 81 passed, 3 warnings in 2.86s

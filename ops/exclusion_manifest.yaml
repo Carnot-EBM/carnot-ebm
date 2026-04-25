@@ -53,3 +53,9 @@ retired:
   - experiment_id: 627
     completed_milestone: "2026.04.58"
     reason: "all_dequeue_sites_extended: interwhen mid-generation monitor, serial loop superseded by paragraph-boundary batching (Exp 841)"
+
+retired_experiments:
+  - experiment_scope: "HalluSAEGeometricProbe (python/carnot/verify/hallusae_probe.py)"
+    reason: "retire_if_same_verdict triggered by Exp 878: auc_v2=0.45 < v1=0.61 (below_v1 verdict). SAE geometry approach does not discriminate hallucinations reliably after two attempts."
+    retired_milestone: "2026.04.67"
+    retire_if_same_verdict: true
