@@ -4202,3 +4202,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 849: GGUF Cache Module — GGUFCacheResolver (RETRO-GGUF-CACHE-IMPORT, CPU) (⚠️ Research Finding) — honest_verdict=gguf_cache_implemented; results/experiment_849_gguf_cache_module.json
 - 2026-04-25: Exp 850: SOTA GGUF Code Repair v5 — Qwen3.6-35B (GPU, GATED on Exp 849) (⚠️ Research Finding) — honest_verdict=model_not_cached; results/experiment_850_sota_code_repair_v5.json
 - 2026-04-25: Exp 851: iCE40 N=16 Ising Bitstream (RETRO-ICE40-PNR-LUT-OVERFLOW, CPU) (❌ Failed) — honest_verdict=pnr_failed_n16; results/experiment_851_ice40_n16_bitstream.json
+- 2026-04-25: Exp 853: Live Full Precision Benchmark v4 (GPU, CARNOT_FORCE_LIVE=1) (⚠️ Research Finding) — honest_verdict=simulated_no_verdict; results/experiment_853_live_benchmark_v4.json
