@@ -2139,3 +2139,30 @@ logs/conductor.log                         | 18 ++++++++++++++++
 2026-04-25 02:02:41,898 [conductor] RESEARCH STEP: Exp 835: Multi-Agent Arbiter Energy Calibration Fix v2 (RETRO-ARBITER-FLAT-ENERGY, CPU)
 2026-04-25 02:02:41,898 [conductor] ============================================================
 2026-04-25 02:02:41,917 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 02:02:41,974 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 02:02:41,974 [conductor] Running test suite (smart subset)...
+2026-04-25 02:02:47,675 [conductor] Pre-check: 81 passed, 3 warnings in 2.87s
+2026-04-25 02:02:47,790 [conductor] Injected 58 symbol signatures from 4 files (AST outlines)
+2026-04-25 02:02:47,790 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 24 tests pass. The coverage "FAIL" is from the pre-existing 82% of the codebase that's unrelated to this experiment — the new files themselves have full coverage.
+
+**Summary of changes:**
+
+1. **`python/carnot/inference/multi_agent_arbiter.py`** — Added per-query z-score normalization to `arbitrate()`: raw energies are normalized to (mean=0, std=1) before consensus detection and agent selection; `energies_normalized` is now included in the result dict; sigma ≤ 1e-6 path passes energies through unchanged.
+
+2. **`openspec/capabilities/pipeline/spec.md`** — Added REQ-VERIFY-143, REQ-VERIFY-144, and SCENARIO-VERIFY-172 before the existing REQ-VERIFY-145 block.
+
+3. **`scripts/experiment_835_arbiter_calibration_fix_v2.py`** — New experiment using real `arbitrate()` calls with the z-score fix; honest_verdict = `arbiter_still_wrong` (accuracy_standard=0.0); the z-score normalization preserves ordering so the hash-based spin encoding still doesn't discriminate correct vs wrong responses.
+
+4. **`results/experiment_835_arbiter_calibration_fix_v2.json`** — Deliverable written with all required schema fields.
+
+5. **`tests/python/test_experiment_835_arbiter_calibration_v2.py`** — 24 tests, all passing, tracing to REQ-VERIFY-143, REQ-VERIFY-144, SCENARIO-VERIFY-172.
+2026-04-25 02:08:45,112 [conductor] Claude Code completed (exit 0)
+2026-04-25 02:08:45,126 [conductor] Changes:
+logs/conductor.log                             | 19 ++++++++++
+ openspec/capabilities/pipeline/spec.md         | 48 ++++++++++++++++++++++++++
+ python/carnot/inference/multi_agent_arbiter.py | 33 ++++++++++++------
+ 3 files changed, 90 insertions(+), 10 deletions(-)
+2026-04-25 02:08:45,144 [conductor] DOGFOOD: Verification complete (total: 511 checks, 47 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 02:08:45,144 [conductor] Running test suite (smart subset)...
+2026-04-25 02:08:50,767 [conductor] Post-check: 81 passed, 3 warnings in 2.87s
