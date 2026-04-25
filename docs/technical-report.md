@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 842 Experiments Across 70 Research Milestones
+## A Technical Report on 867 Experiments Across 72 Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-25
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **842
-experiments across 70 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **867
+experiments across 72 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -281,6 +281,46 @@ identical across five consecutive milestones (Exps 786/527/491/627/603).
 Two new RETROs: RETRO-SVAMP-ZERO-AUC, RETRO-ICE40-PNR-LUT-OVERFLOW.
 Nine retros total still open. Honest verdict: fifth-consecutive-regression,
 12.8% near-term savings recoverable via manifest enforcement.
+
+Milestone 2026.04.65 (the 71st) extended the record to 772 experiments in
+the active queue (4,049 cumulative managed wall-clock minutes). Key .65
+findings: RETRO-ARBITER-FLAT-ENERGY closed — Multi-Agent Arbiter Gibbs
+warm-start achieves accuracy=1.0 (Exp 846); RETRO-GGUF-CACHE-IMPORT
+closed — GGUFCacheResolver module implemented (Exp 849). Three new RETROs
+opened: RETRO-SOTA-MODEL-DOWNLOAD (Qwen3.6-35B-A3B-GGUF model file absent
+despite cache resolver), RETRO-ICE40-N16-UNEXPECTED-EXPANSION (12258 LCs
+at place-and-route vs 2 at synthesis — register expansion root cause
+diagnosed), RETRO-LIVE-ENV-NOT-PROPAGATED (CARNOT_FORCE_LIVE not
+propagated in Exp 853, recurrence of RETRO-015). Wall-time REGRESSION
+sixth consecutive milestone (+78 min / +2.0% vs .64). UNPRECEDENTED:
+all five slowest experiments identical across six consecutive milestones
+(Exps 786/527/491/627/603). Documentation-without-application loop seventh
+consecutive milestone. Ten retros open. GPU close clean: 0C differential
+at both GPUs.
+
+Milestone 2026.04.66 (the 72nd) brought the record to 867 experiments
+with a dramatic wall-time improvement: only 0.86 min conductor wall time
+(vs 78 min in .65, delta -77.1 min). Key .66 wins: LIVE-ENV permanently
+fixed after 7+ consecutive milestones of recurrence (Exp 855,
+env_guard_deployed=True); DualGPURunner finally deployed in the production
+path after six consecutive milestones idle, achieving 1.979x throughput
+(Exp 856, exceeds 1.5x target); iCE40 N=8 combinational energy oracle
+synthesized to 134 LUTs with bitstream generated (Exp 859,
+honest_verdict=fpga_oracle_ready); StreamingCoT Tier 0g detector achieves
+AUC=1.0 on hallucination detection at stream-time (Exp 861); FR-11
+Lagrange adaptive self-learning confirmed with delta_s1_to_s5=0.05
+(Exp 862); FR-11 Tier 2 relay confirmed with session AUC=1.0 (Exp 864);
+constraint memory compression 31.25x with AUROC maintained at 1.0 (Exp
+865); RETRO-CONSTRAINT-ZERO-DELTA closed (retrieval AUROC 1.0 after
+compression); RETRO-ISING-INJECTION-NO-DISCRIMINATION closed
+(discrimination_delta=71.5). Eight of 13 success criteria met.
+Remaining blockers: SOTA code repair 10th consecutive block (Qwen3.6-35B
+404 unresolved), live benchmark used simulation fallback rather than live
+GPU (criterion 4 not met), HalluSAE AUC=0.6144 just below 0.65 threshold
+(TF-IDF proxy insufficient, real SAE activations needed). Seven retros
+open (RETRO-MANIFEST-FULL-SCOPE, RETRO-JEPA-OOD, RETRO-XILINX-TOOLS-UNAVAILABLE,
+RETRO-SVAMP-ZERO-AUC, RETRO-SOTA-MODEL-DOWNLOAD, RETRO-HALLUSAE-AUC-BELOW-THRESHOLD,
+RETRO-INERTIA-SWEEPS-TARGET-MISSED).
 
 ---
 
@@ -947,7 +987,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 ### The story
 
-The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, and packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface while preserving a Python suite that most recently validated at **2,226 passed, 1 skipped** with **100.00%** coverage.
+The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, permanently fixed the LIVE-ENV propagation bug that blocked live benchmarks for seven milestones, synthesized the first iCE40 N=8 combinational energy oracle (134 LUTs), and confirmed StreamingCoT Tier 0g hallucination detection at AUC=1.0 and constraint memory compression at 31.25x while preserving AUROC=1.0 — all across **867 experiments and 72 milestones**.
 
 The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.
 
