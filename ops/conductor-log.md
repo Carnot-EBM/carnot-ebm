@@ -2717,3 +2717,4 @@ python/ |
 | 2026-04-25 01:18 UTC | Exp 821: Constraint Addition Live v2 (RETRO-CONSTR | OK | 81 passed, 3 warnings in 2.82s |
 | 2026-04-25 01:39 UTC | Exp 822: Multi-Agent Arbiter Fix v2 + AgentAuditor | OK | 81 passed, 3 warnings in 2.83s |
 | 2026-04-25 01:51 UTC | Exp 823: FR-11 Tier 1 Live Relay v2 (FR-11 mandato | OK | 81 passed, 3 warnings in 2.84s |
+| 2026-04-25 02:23 UTC | Exp 824: JEPA v23 LIMO Curated Corpus (RETRO-JEPA- | OK | 121 passed, 3 warnings in 2.96s |
