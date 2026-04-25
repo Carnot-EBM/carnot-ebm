@@ -2686,3 +2686,50 @@ Given Exp 819 honest_verdict == "injection_field_fixed":
   - honest_verdict = "constraint_addition_works_live" if delta_overall > 0
   - honest_verdict = "constraint_addition_no_delta_live" if delta_overall <= 0
   - honest_verdict = "blocked_gate" if Exp 819 gate fails
+
+### REQ-LEARN-824-001: JEPA Training Corpus MUST Use LIMO-Style Curation
+
+After 11 consecutive JEPA OOD AUC failures (Exps v13-v22), random or all-pairs training
+is prohibited.  The training corpus MUST be curated using the LIMO principle
+(arXiv 2402.09353): select top-50 pairs by z3_confidence × cpmi_score from the full
+FoVer + CPMI corpus.  Low-quality pairs with z3_confidence < 0.9 or cpmi_score < 0.0
+are excluded to reduce noise.
+
+Rationale: LIMO showed 817 curated examples beat 100k random examples for LLM reasoning.
+The same principle applies to EBM training data: quality beats quantity.
+
+Spec: REQ-LEARN-824-001
+
+### REQ-LEARN-824-002: JEPA Training Corpus MUST Include Domain Diversity
+
+Single-domain training (GSM8K only) causes systematic OOD failures because the model
+overfits to GSM8K surface patterns that do not generalise.  The corpus MUST include
+>= 10 HumanEval code reasoning pairs and >= 10 SVAMP arithmetic pairs.
+
+Target composition: top-50 GSM8K + 10 HumanEval + 10 SVAMP = 70 pairs minimum.
+
+Spec: REQ-LEARN-824-002
+
+### REQ-LEARN-824-003: JEPA v23+ MUST Use Contrastive Triplet Loss
+
+Binary BCE loss is deprecated after 11 consecutive retrain failures (Exps v13-v22).
+JEPA v23 MUST use contrastive triplet loss with margin=0.5:
+  L = max(0, d(anchor, positive) - d(anchor, negative) + margin)
+where d is cosine distance in embedding space.
+
+Hard negatives come from CPMI triples where cpmi_score is high (the hardest cases
+for the model to distinguish).
+
+Spec: REQ-LEARN-824-003
+
+### SCENARIO-LEARN-824-001: LIMO Curation + Triplet Loss + Domain Diversity
+
+Given FoVer + CPMI corpus available:
+  - LIMOCurator selects top-50 GSM8K pairs + 10 HumanEval + 10 SVAMP = 70 total
+  - JEPAv23 trains for 100 epochs with triplet margin loss (margin=0.5)
+  - OOD evaluated on fover_labeled_steps_live.json (57 held-out steps)
+  - Target: ood_auc >= 0.65 (jepa_v23_viable)
+  - Baseline: ood_auc = 0.50 (v22 ceiling)
+  - honest_verdict = "jepa_v23_viable" if ood_auc >= 0.65
+  - honest_verdict = "jepa_v23_improvement" if 0.50 <= ood_auc < 0.65
+  - honest_verdict = "jepa_v23_below_random" if ood_auc < 0.50
