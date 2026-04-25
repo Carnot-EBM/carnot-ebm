@@ -198,3 +198,40 @@ begin until the retirement sweep reduces the active count toward the 700 cap.
 prereqs_updated: true
 open_retros_count: 9
 retros_confirmed_closed_in_64: ["RETRO-SYMCODE-SERIAL", "RETRO-TIER1-PLATEAU"]
+
+
+---
+
+## Milestone 2026.04.66 Prerequisites — Verify Before ANY Experiment Runs
+
+All IMMEDIATE-class actions from the .65 retro (results/operational_retro_2026_04_65.json)
+must be verified before the research conductor runs any .66 experiments.
+
+Source retro honest_verdict: see operational_retro_2026_04_65.json
+n_criteria_met: 7/12
+
+Mark each item as one of:
+- `pending` — not yet verified; conductor MUST NOT run experiments until resolved
+- `verified_complete` — confirmed implemented and working
+- `escalated_retro` — cannot be completed; carried to .67 retro with documented reason
+
+| # | Action | Status | Notes |
+|---|--------|--------|-------|
+| 1 | Download Qwen3.6-35B-A3B-GGUF-Q4_K_M.gguf to models/ or HF_HOME cache (RETRO-SOTA-MODEL-DOWNLOAD) | pending | huggingface-cli download unsloth/Qwen3.6-35B-A3B-GGUF Q4_K_M; verify with GGUFCacheResolver |
+| 2 | Rewrite iCE40 Ising Verilog with SB_RAM40_4K block RAM or reduce to N=8 (RETRO-ICE40-N16-UNEXPECTED-EXPANSION) | pending | Register expansion root cause diagnosed; need pipelined arch |
+| 3 | Fix CARNOT_FORCE_LIVE=1 propagation via env_autofix code path (RETRO-LIVE-ENV-NOT-PROPAGATED) | pending | Add assertion in LiveGPUGate.require_live_or_blocked() |
+| 4 | Fix SVAMP AUC floor: add domain-specific head or feature engineering (RETRO-SVAMP-ZERO-AUC) | pending | 8x PRM boost failed; architecture change required |
+| 5 | Fix EmbeddingConstraintStore retrieval AUROC from 0.72 to >0.80 (RETRO-CONSTRAINT-ZERO-DELTA) | pending | Tier 1 relay works (Exp 848); retrieval is the only remaining gap |
+
+## How the Gate Works
+
+The research conductor (scripts/research_conductor.py) MUST check this file in its
+pre-flight sequence.  If ANY item is `pending`, the conductor logs a WARNING and halts
+before calling run_agent().  This converts the retro from a documentation exercise into
+an operational gate.
+
+## Retro Source
+
+- Source: results/operational_retro_2026_04_65.json (improvements_suggested, IMMEDIATE items)
+- Gate implemented: Exp 854 (2026-04-25)
+- Next update: Before milestone 2026.04.66 planning

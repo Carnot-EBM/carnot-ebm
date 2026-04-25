@@ -2814,3 +2814,26 @@ logs/conductor.log | 6 ++++++
 2026-04-25 08:44:15,754 [conductor] RESEARCH STEP: Exp 854: Milestone 2026.04.65 Operational Retrospective
 2026-04-25 08:44:15,754 [conductor] ============================================================
 2026-04-25 08:44:15,767 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 08:44:15,824 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 08:44:15,825 [conductor] Running test suite (smart subset)...
+2026-04-25 08:44:21,674 [conductor] Pre-check: 81 passed, 3 warnings in 2.86s
+2026-04-25 08:44:21,780 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-25 08:44:21,780 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Deliverable is valid and all 60 tests pass. Done.
+
+**`results/operational_retro_2026_04_65.json`** written with `schema=carnot.operational_retro.v40`. Key results:
+
+- **7/12 criteria met**: governance, SVAMP corpus balanced, all-domains coverage, arbiter calibrated, tier1 relay live, GGUF cache, semantic probe — but JEPA not deployed, retrieval short of gate, code repair blocked, ICE40 no bitstream, live benchmark broken
+- **2 RETROs closed**: `RETRO-ARBITER-FLAT-ENERGY` (warm-start Gibbs → 100% accuracy), `RETRO-GGUF-CACHE-IMPORT` (GGUFCacheResolver implemented)
+- **3 new RETROs opened**: `RETRO-SOTA-MODEL-DOWNLOAD`, `RETRO-ICE40-N16-UNEXPECTED-EXPANSION`, `RETRO-LIVE-ENV-NOT-PROPAGATED`
+- **10 total open retros** at .65 close
+- **Milestone wall time: 203 min** (vs 218 min for .64 = 15 min improvement)
+- `MILESTONE_PREREQS.md` updated with 5 IMMEDIATE gates for .66
+2026-04-25 08:52:54,505 [conductor] Claude Code completed (exit 0)
+2026-04-25 08:52:54,515 [conductor] Changes:
+MILESTONE_PREREQS.md | 37 +++++++++++++++++++++++++++++++++++++
+ logs/conductor.log   | 16 ++++++++++++++++
+ 2 files changed, 53 insertions(+)
+2026-04-25 08:52:54,533 [conductor] DOGFOOD: Verification complete (total: 528 checks, 48 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 08:52:54,533 [conductor] Running test suite (smart subset)...
+2026-04-25 08:53:00,529 [conductor] Post-check: 81 passed, 3 warnings in 3.01s
