@@ -2067,6 +2067,82 @@ def research_step(
             "Pre-gate check raised; falling through to Sonnet (defensive)"
         )
 
+    # Failed-experiment rerun-discipline check (cheap, ~100ms): scans
+    # results/ for prior failures whose scope matches this task's scope.
+    # Per CLAUDE.md "Failed-Experiment Rerun Discipline": a rerun must
+    # carry a `prior_failures:` field with experiment_id + verdict +
+    # addressed_by + retire_if_same_verdict populated. Without it, refuse
+    # to launch and write blocked_doomed_rerun_no_root_cause.
+    try:
+        sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+        from failure_ledger import (  # type: ignore[import-not-found]
+            FailureLedger as _FailureLedger,
+        )
+        ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+        rerun_check = ledger.is_doomed_rerun(task)
+        if rerun_check.blocked:
+            logger.warning(
+                "Failed-experiment rerun-discipline check FAILED: %s",
+                rerun_check.reason,
+            )
+            # Reuse the conductor_gates write_blocked_artifact helper —
+            # produces a properly-formed artifact with all required
+            # fields. We synthesize a GateCheckResult-like object since
+            # both check types end in the same downstream path.
+            from conductor_gates import (  # type: ignore[import-not-found]
+                GateCheckResult as _GateCheckResult,
+                GateResult as _GateResult,
+                write_blocked_artifact as _write_blocked,
+            )
+            synthetic_gate_check = _GateCheckResult(
+                passed=False,
+                gates_evaluated=[
+                    _GateResult(
+                        upstream=p.experiment_id,
+                        artifact_field="rerun_discipline",
+                        op="prior_failures_required",
+                        expected="non-empty entry naming this prior",
+                        actual=task.get("prior_failures"),
+                        passed=False,
+                        reason=f"{p.status_label}: {p.verdict[:80]}",
+                    )
+                    for p in rerun_check.matched_priors
+                ],
+                summary=rerun_check.reason,
+            )
+            blocked_path = _write_blocked(
+                task, synthetic_gate_check, results_dir=PROJECT_ROOT / "results",
+            )
+            if blocked_path is not None:
+                logger.info(
+                    "Doomed-rerun blocked artifact written: %s", blocked_path.name,
+                )
+                if git_has_changes():
+                    for guarded in [
+                        "scripts/research_conductor.py", "research-roadmap.yaml",
+                    ]:
+                        _, gdiff, _ = run_cmd(
+                            ["git", "diff", "--name-only", "--", guarded],
+                        )
+                        if gdiff.strip():
+                            run_cmd(["git", "checkout", "--", guarded])
+                    git_commit_and_push(
+                        f"[conductor] Doomed-rerun block: {task['title']}\n\n"
+                        f"{rerun_check.reason}\n",
+                        push=push,
+                    )
+                log_step(task["title"], "DOOMED_RERUN_BLOCK", rerun_check.reason)
+                return True
+            logger.warning(
+                "Doomed-rerun detected but could not write blocked artifact; "
+                "falling through to Sonnet"
+            )
+    except Exception:
+        logger.exception(
+            "Failed-experiment rerun-discipline check raised; "
+            "falling through to Sonnet (defensive)"
+        )
+
     # Preserve any dirty state from previous interrupted runs by committing it.
     # Previous behavior (git checkout -- .) destroyed uncommitted experiment
     # deliverables when claude -p was killed mid-run. Now we commit everything
