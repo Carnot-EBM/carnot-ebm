@@ -2789,3 +2789,4 @@ python/ |
 | 2026-04-25 21:55 UTC | Exp 880: Pre-flight v17 — Retire HalluSAE + 7-RETR | OK | 81 passed, 3 warnings in 2.86s |
 | 2026-04-25 22:11 UTC | Exp 881: Code Repair v8 — Gemma4-E4B-it Live Human | OK | 81 passed, 3 warnings in 2.88s |
 | 2026-04-25 22:32 UTC | Exp 882: Live Cascade v7 — Gemma4-E4B-it + 50 GSM8 | OK | 113 passed, 3 warnings in 2.94s |
+| 2026-04-25 22:50 UTC | Exp 883: VJEPA v2 — Expanded Synthetic Corpus + 20 | OK | 81 passed, 3 warnings in 2.85s |
