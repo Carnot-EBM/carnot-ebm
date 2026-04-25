@@ -259,8 +259,13 @@ class VerifyRepairPipeline:
         - ``extract_constraints(text, domain)``: Convenience method to just
           extract constraints without verification.
 
-    Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-004
+    Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-004,
+    REQ-GPU-010
     """
+
+    # When CARNOT_DUAL_GPU=1, pipeline routes GPU inference through DualGPURunner
+    # if two model configs are loaded (Exp 856 / REQ-GPU-010).
+    DUAL_GPU_ENABLED: bool = os.getenv("CARNOT_DUAL_GPU", "0") == "1"
 
     def __init__(
         self,
@@ -278,6 +283,7 @@ class VerifyRepairPipeline:
         nup_probe: Any | None = None,
         nup_probe_threshold: float = 0.5,
         enable_constraint_accumulation: bool = False,
+        second_model_spec: dict[str, str] | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -377,9 +383,24 @@ class VerifyRepairPipeline:
         self._tokenizer: Any = None
         self._device: str = "cpu"
         self._model_name: str | None = model
+        # Second model config for DualGPURunner parallel inference (REQ-GPU-010).
+        # When set alongside DUAL_GPU_ENABLED=True, verify_and_repair operations
+        # can dispatch to both GPUs concurrently for ~2x throughput.
+        self._second_model_spec: dict[str, str] | None = second_model_spec
 
         if model is not None:
             self._load_model(model)
+
+    def has_second_model(self) -> bool:
+        """True if a second model config is loaded for DualGPURunner parallel inference.
+
+        Returns True only when both a primary model AND a second_model_spec were
+        supplied at construction.  DualGPURunner requires exactly two specs, so
+        both must be present before DUAL_GPU_ENABLED can take effect.
+
+        Spec: REQ-GPU-010
+        """
+        return self._model_name is not None and self._second_model_spec is not None
 
     @property
     def has_model(self) -> bool:

@@ -15693,3 +15693,27 @@ directional guarantee that violations are penalised with higher energy.
 **And** E_total == E_ising (no external field contribution)
 
 **Spec traces:** REQ-VERIFY-174-2
+
+## REQ-GPU-010: VerifyRepairPipeline Dual-GPU Routing
+
+**Status:** Implemented (Exp 856)
+
+VerifyRepairPipeline MUST support `CARNOT_DUAL_GPU=1` to route GPU inference
+through DualGPURunner when two model configs are loaded.
+
+- REQ-GPU-010-1: VerifyRepairPipeline MUST expose a class attribute `DUAL_GPU_ENABLED` that reads `os.getenv("CARNOT_DUAL_GPU", "0") == "1"`.
+- REQ-GPU-010-2: VerifyRepairPipeline MUST accept a `second_model_spec: dict[str, str] | None` constructor parameter.
+- REQ-GPU-010-3: VerifyRepairPipeline MUST expose `has_second_model() -> bool` returning True when both a primary model name and second_model_spec are set.
+- REQ-GPU-010-4: ThreeTierPipeline MUST expose the same `DUAL_GPU_ENABLED` class attribute and `has_second_model()` method under the same contract.
+
+**Rationale:** DualGPURunner was validated at 1.96x throughput in Exp 685.
+The flag ensures parallel GPU inference is opt-in and additive — callers that
+do not set `CARNOT_DUAL_GPU=1` see identical single-GPU behaviour.
+
+### SCENARIO-GPU-020: Dual-GPU Pipeline Achieves >= 1.5x Throughput
+
+**Given** `CARNOT_DUAL_GPU=1` and two CUDA devices with two model configs loaded
+**When** 25 synthetic verification questions are dispatched via DualGPURunner
+**Then** `throughput_ratio = serial_time_s / parallel_time_s >= 1.5`
+
+**Spec traces:** REQ-GPU-010, Exp 856

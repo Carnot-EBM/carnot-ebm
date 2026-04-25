@@ -1383,7 +1383,7 @@ tasks:
            "experiments_this_milestone": 13,
            "wall_time_minutes": <computed>,
            "wall_time_delta_vs_65": <computed>,
-           "success_criteria": [{"id": 1, "criterion": ..., "met": bool, "evidence": ...), ...],
+           "success_criteria": [("id": 1, "criterion": ..., "met": bool, "evidence": ...), ...],
            "criteria_met_count": int,
            "criteria_met_total": 13,
            "retros_closed": [...],
@@ -1394,7 +1394,7 @@ tasks:
            "key_wins": [...],
            "key_failures": [...],
            "recommended_focus_next_milestone": "..."
-         }
+         )
        honest_verdict logic:
          - "milestone_success" if criteria_met_count >= 10 (>=75%)
          - "milestone_partial" if 6 <= criteria_met_count < 10
