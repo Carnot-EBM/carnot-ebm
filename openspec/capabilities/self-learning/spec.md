@@ -1385,6 +1385,40 @@ Each maps to a deterministic (var1, var2, J_value) coupling spec.
 
 ---
 
+## REQ-FR11-030: ThreeTierPipeline Multi-Session Relay
+
+**Given** a ThreeTierPipeline instance with StreamingCoTHalluDetector (Tier 0g),
+         HalluSAEGeometricProbe (Tier 0i), and LagrangeAdaptiveIsingConstraints (Tier 3)
+         wired via the wire_tier_0g(), wire_tier_0i(), and wire_lagrange() methods
+**When** the pipeline runs a 5-session relay on 50 synthetic CoT problems per session
+**Then** measurable improvement is observed in either AUC (delta_auc_s1_to_s5 > 0)
+         OR Lagrange violation rate reduction (delta_violations_s1_to_s5 > 0)
+**And** tier2_relay_confirmed is True when either condition is met
+
+### REQ-FR11-030 Sub-requirements
+
+- REQ-FR11-030-1: ThreeTierPipeline.wire_tier_0g(detector) SHALL attach a
+  StreamingCoTHalluDetector so verify_extended() runs rolling PHaS scoring per CoT step.
+- REQ-FR11-030-2: ThreeTierPipeline.wire_tier_0i(probe) SHALL attach a
+  HalluSAEGeometricProbe so verify_extended() returns geometric_energy and hallusae_anomalous.
+- REQ-FR11-030-3: ThreeTierPipeline.wire_lagrange(adaptive) SHALL attach a
+  LagrangeAdaptiveIsingConstraints so run_lagrange_session() updates lambda weights
+  after each session.
+- REQ-FR11-030-4: ThreeTierPipeline.verify_extended() SHALL return a dict with keys:
+  verified, tier_used, energy, streaming_cot_unstable, geometric_energy, hallusae_anomalous.
+- REQ-FR11-030-5: When no probe is wired, verify_extended() SHALL default
+  streaming_cot_unstable=False, geometric_energy=0.0, hallusae_anomalous=False.
+
+### SCENARIO-FR11-040: 5-Session Relay Confirms FR-11 Self-Learning
+
+**Given** a ThreeTierPipeline with all three tiers wired
+**When** run_relay() executes 5 sessions of 50 synthetic CoT problems each
+**Then** session_aucs is a list of 5 floats
+**And** session_violation_rates is a list of 5 floats
+**And** tier2_relay_confirmed reflects delta_auc_s1_to_s5 > 0 OR delta_violations_s1_to_s5 > 0
+
+---
+
 ## Implementation Status (REQ-LEARN-056, REQ-LEARN-057)
 
 | Requirement  | Python | Tests |
