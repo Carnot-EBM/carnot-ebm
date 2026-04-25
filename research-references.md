@@ -33,6 +33,87 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-25 arxiv Scan (Milestone 2026.04.67 Planning)
+
+### VJEPA: Variational Joint Embedding Predictive Architecture as Probabilistic World Model
+- **Paper:** arXiv 2601.14354 (January 2026)
+- **What:** Extends JEPA with a variational objective: learns predictive distributions over future
+  latent states via L = E[log p(z_t | c_{t-1})] - KL[q(z_t | x_t) || p(z_t | c_{t-1})].
+  Provides collapse-avoidance guarantees via KL regularization. Outperforms standard JEPA on
+  multi-step prediction tasks by modeling uncertainty explicitly.
+- **Relevance to Carnot:** Carnot's JEPA predictor (Tier 3) currently collapses to AUC<0.5 under
+  OOD conditions because it makes point predictions without uncertainty estimates. VJEPA's
+  variational objective directly addresses this: the KL term prevents representation collapse,
+  and uncertainty estimates indicate when the predictor should defer to full Ising verification
+  (high uncertainty = run Tier 3, low uncertainty = skip). This is Tier 3's key missing piece.
+- **Concrete experiment:** Exp 877 — VariationalJEPAPredictor: replace JEPA's deterministic
+  predictor with a variational one (encoder q, prior p, reparameterization trick). Train on
+  FoVer corpus. Compare OOD AUC: JEPA v25 (deterministic) vs VJEPA (variational).
+  Target: OOD AUC > 0.65. Hardware path: variational encoder is a small MLP — NPU-compatible.
+- **When to incorporate:** Milestone 2026.04.67 — Phase 4 (Exp 877).
+
+### Efficient Optimization Accelerator Framework for Multistate Ising Problems on FPGA
+- **Paper:** arXiv 2505.20250 (May 2025)
+- **What:** Implements 1,024-neuron all-to-all connected probabilistic Ising machine on Xilinx
+  FPGA. Achieves 10,000x speedup vs GPU for Ising constraint satisfaction. Key technique:
+  vectorized p-bit update with compressed adjacency (sparse storage + BRAM lookup). Reduces
+  physical neurons 1.5-4x via variable elimination before synthesis.
+- **Relevance to Carnot:** iCE40 N=8 synthesis fits at 134 LUTs (Exp 859). The variable
+  elimination technique could allow N=16 to fit where direct synthesis overflows (12258 LCs
+  in Exp 851). Sparse adjacency storage is directly applicable to Carnot's constraint graphs,
+  which are typically sparse (2-3 constraints per variable). The 10,000x speedup validates
+  the FPGA path for Tier 1-4 hardware acceleration.
+- **Concrete experiment:** Enhancement to Exp 876 (iCE40 inertia v2) — add sparse adjacency
+  storage: instead of full N×N coupling matrix, store (i, j, J_ij) triples in BRAM. This
+  enables N=16 synthesis without the register expansion that caused RETRO-ICE40-N16.
+- **When to incorporate:** Milestone 2026.04.67 — Phase 4 (Exp 876), also gates N=16 retry.
+
+### Correctness-Guaranteed Code Generation via Constrained Decoding
+- **Paper:** arXiv 2508.15866 (August 2025)
+- **What:** Uses a context-sensitive parser to constrain LLM token generation via dynamic regex
+  trees. At each generation step, the parser computes the set of valid next tokens given the
+  partial AST, then masks invalid tokens in the LLM's logit vector. Achieves 100% syntactic
+  correctness on Python output at minimal (<5%) latency overhead.
+- **Relevance to Carnot:** Carnot's CodeExtractor + VerifyRepairPipeline corrects code AFTER
+  generation. This paper provides a complementary approach: constrain DURING generation so
+  violations never appear. Combining both — constrained generation + energy-based post-hoc
+  verification — is stronger than either alone. The constrained decoder could reduce
+  ArithmeticExtractor FP rate by preventing clearly-invalid intermediate steps from
+  appearing in the CoT.
+- **Concrete experiment:** Future milestone — ConstrainedDecodingIntegration: wire the
+  paper's constrained decoding approach as a pre-filter before VerifyRepairPipeline for
+  HumanEval code generation. Measure: FP rate reduction + pass@1 vs unconstrained.
+- **When to incorporate:** Milestone 2026.04.68 (after Exp 870 gives live code repair baseline).
+
+### Neural Probe-Based Hallucination Detection for LLMs
+- **Paper:** arXiv 2512.20949 (December 2025)
+- **What:** Lightweight MLP probes on frozen LLM hidden states identify hallucinated tokens
+  at inference time. Probes are 2-layer MLPs trained on (hidden_state, hallucination_label)
+  pairs. Achieves F1 > 0.85 with <0.1ms overhead per token on Qwen-family models.
+- **Relevance to Carnot:** NUP Probe v4 (Exp 523, AUC=1.0) uses bigram contrastive probes —
+  this paper validates that small MLP probes on actual hidden states are competitive. The
+  0.1ms latency makes it feasible as a Tier 0 pre-filter on the verification cascade.
+  Critically, 2-layer MLPs are NPU-native (GEMM + ReLU), which means the AMD XDNA NPU
+  could run this probe while the CPU runs Ising verification in parallel.
+- **Concrete experiment:** Future milestone — HiddenStateHalluProbe: train 2-layer MLP probe
+  on Qwen3.5-0.8B final-layer hidden states labeled by FoVer. Compare with NUP Probe v4.
+  If AUC is competitive, replace or augment Tier 0c with MLP probe. Target: AUC > 0.90.
+- **When to incorporate:** Milestone 2026.04.68 or later (needs labeled hidden state corpus).
+
+### Process Reward Models That Think (ThinkPRM)
+- **Paper:** arXiv 2504.16828 (April 2026)
+- **What:** Generative process reward model that produces chain-of-thought verification before
+  scoring. "Think first, then judge" approach. Outperforms discriminative PRMs by 8% on
+  GPQA-physics OOD. The generative prior provides regularization that prevents overfitting
+  to in-distribution scoring patterns.
+- **Relevance to Carnot:** ThinkPRM is already in Carnot's Tier 0a (CarnotThinkProbe, Exp 444).
+  Key finding: the THINKING step is the source of OOD generalization, not just the final score.
+  Applying this to JEPA v25: add a reasoning step ("why is this CoT step wrong?") before
+  the energy score. This is the variational analog — the reasoning IS the prior p(z_t | c_{t-1}).
+  Direct connection to VJEPA: the "thought" is the predicted latent.
+- **When to incorporate:** Incorporated into VJEPA experiment design (Exp 877) as theoretical
+  basis for the prior distribution.
+
 ## 2026-04-25 arxiv Scan (Milestone 2026.04.66 Planning)
 
 ### HalluSAE: Detecting Hallucinations via Sparse Auto-Encoder Geometry
