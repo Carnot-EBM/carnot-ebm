@@ -15562,3 +15562,61 @@ manager.  Hardcoding the path eliminates PATH-order surprises.
 
 **Spec traces:** REQ-HW-038
 **Implementation Status:** Implemented (Exp 816)
+
+## REQ-VERIFY-173: IsingConstraintInjector External Field Injection
+
+**Statement:** IsingConstraintInjector MUST support external field injection via
+`compute_energy_with_external_field(J, spins, constraint_embeddings)` where
+E_total = -0.5 * s^T J s - h^T s and h = project_to_spin_bias(constraint_embeddings),
+clipped to [0, +inf] so that constraint violations only raise energy, never lower it.
+
+**Rationale:** Diagonal injection (inject_into_coupling_matrix) adds a constant energy
+shift -0.5 * sum(bias) that is identical for ALL spin configurations because s_i^2 = 1.
+It cannot discriminate between violations and correct responses. External field injection
+h^T s changes sign depending on spin orientation: violation spins (+1) get -h[i] (energy
+increases) while correct spins (-1) get +h[i] (energy decreases). This is the fix for
+RETRO-ISING-INJECTION-NO-DISCRIMINATION.
+
+- REQ-VERIFY-173-1: compute_energy_with_external_field(J, spins, constraint_embeddings) MUST return a namedtuple with fields E_total, E_ising, E_field, h_norm.
+- REQ-VERIFY-173-2: E_ising MUST equal -0.5 * float(spins @ J @ spins).
+- REQ-VERIFY-173-3: E_field MUST equal -float(h @ spins) where h = project_to_spin_bias(constraint_embeddings) clipped to [0, inf].
+- REQ-VERIFY-173-4: E_total MUST equal E_ising + E_field.
+- REQ-VERIFY-173-5: The legacy inject_into_coupling_matrix() MUST remain available for backwards compatibility.
+
+**Spec traces:** Exp 819, RETRO-ISING-INJECTION-NO-DISCRIMINATION
+
+## REQ-VERIFY-174: External Field Injection Discriminates Violations from Correct Responses
+
+**Statement:** For a ±1 spin configuration encoding a constraint violation (s_i = +1),
+external field injection MUST produce E_total(violation) > E_total(correct) when h[i] > 0.
+
+**Rationale:** The whole purpose of constraint injection is to distinguish bad responses
+from good ones. REQ-VERIFY-173 provides the mechanism; REQ-VERIFY-174 asserts the
+directional guarantee that violations are penalised with higher energy.
+
+- REQ-VERIFY-174-1: For any spins_violation where violation spins are +1 and h > 0: E_total(violation) > E_total(correct) where spins_correct has the same positions as -1.
+- REQ-VERIFY-174-2: With zero constraint_embeddings (h=0), E_total MUST equal E_ising (no external field contribution). Backward compatibility.
+
+**Spec traces:** Exp 819, RETRO-ISING-INJECTION-NO-DISCRIMINATION
+
+### SCENARIO-VERIFY-227: External Field Discriminates 10 Arithmetic Error Encodings
+
+**Given** IsingConstraintInjector with n_spins=16
+**And** 10 violation encodings with first 4 spins = +1 and rest = -1
+**And** 10 correct encodings with all spins = -1
+**And** fixed constraint_embeddings (zero-mean normal, seed=42)
+**When** compute_energy_with_external_field is called for each pair
+**Then** E_total(violation) > E_total(correct) for >= 8 of 10 pairs
+**And** discrimination_rate >= 0.80
+
+**Spec traces:** REQ-VERIFY-173, REQ-VERIFY-174
+
+### SCENARIO-VERIFY-228: External Field Is Zero When Constraint Embeddings Are Zero
+
+**Given** IsingConstraintInjector with n_spins=16
+**And** constraint_embeddings = [[0.0] * embedding_dim]
+**When** compute_energy_with_external_field is called
+**Then** h_norm == 0.0 (h = 0 after clip)
+**And** E_total == E_ising (no external field contribution)
+
+**Spec traces:** REQ-VERIFY-174-2

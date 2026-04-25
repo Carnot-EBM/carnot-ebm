@@ -572,6 +572,7 @@ from carnot.pipeline.embedding_constraint_store import (  # noqa: E402
 )
 from carnot.pipeline.ising_constraint_injector import (  # noqa: E402
     ConstraintInjectionResult,
+    ExternalFieldEnergyResult,
     IsingConstraintInjector,
 )
 from carnot.pipeline.jepa_wiring_guard import (  # noqa: E402
@@ -962,6 +963,7 @@ __all__ = [
     "ConstraintSPOTuple",
     "EmbeddingConstraintStore",
     "ConstraintInjectionResult",
+    "ExternalFieldEnergyResult",
     "IsingConstraintInjector",
     "JepaWiringCheckResult",
     "check_cpmi_wiring",

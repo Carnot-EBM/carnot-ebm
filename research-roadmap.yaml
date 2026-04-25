@@ -164,7 +164,7 @@ tasks:
             honest_verdict="still_blocked_import".
        f. If import_ok=True (either directly or after repair):
           - Setup GPU: tmpl.setup_gpu(MODEL_SPECS) where MODEL_SPECS includes:
-            {"name": "Qwen3.5-0.8B", "hf_id": "unsloth/Qwen3.5-0.8B-GGUF", "gpu": 0}
+            ("name": "Qwen3.5-0.8B", "hf_id": "unsloth/Qwen3.5-0.8B-GGUF", "gpu": 0)
           - If GPU not healthy: write blocked artifact with gpu_health_status.
           - Load 20 HumanEval problems (from datasets["openai_humaneval"] or local cache).
           - For each problem: generate solution with Qwen3.5-0.8B, test with exec() in sandbox.
@@ -225,7 +225,7 @@ tasks:
     1. Read CLAUDE.md spec-first workflow.
     2. Check gate: read results/experiment_819_injection_field_fix.json. If
        honest_verdict != "injection_field_fixed": write blocked artifact
-       {"blocked": true, "gate": "exp819_injection_not_fixed", "honest_verdict": "blocked_gate"}.
+       ("blocked": true, "gate": "exp819_injection_not_fixed", "honest_verdict": "blocked_gate").
     3. Add to openspec/capabilities/autoresearch/spec.md:
        - REQ-LEARN-046: After applying the external field fix (REQ-VERIFY-141), constraint
          addition to EmbeddingConstraintStore MUST produce a measurable increase in verification
@@ -245,7 +245,7 @@ tasks:
     8. Compute: delta_s1_to_s3 = precision_3 - precision_1.
        delta_overall = max(precision_1, precision_2, precision_3) - precision_1.
        retro_constraint_zero_delta_closed = (delta_overall > 0).
-    9. Artifact fields: sessions=[{session, precision, n_constraints_store, n_added}],
+    9. Artifact fields: sessions=[(session, precision, n_constraints_store, n_added)],
        delta_s1_to_s3, delta_overall, retro_constraint_zero_delta_closed, honest_verdict.
     10. honest_verdict:
         - "constraint_addition_works_live" if delta_overall > 0
@@ -409,10 +409,10 @@ tasks:
           - Run VerifyRepairPipeline.verify() on 10 questions with current store.
           - Compute precision_s using ground truth answers.
           - Collect failures. Add top-3 constraints via add_top_k_constraints(failures).
-          - Checkpoint: tmpl.checkpoint_save({session_results: [...]}, step=s).
+          - Checkpoint: tmpl.checkpoint_save((session_results: [...]), step=s).
        g. Compute: delta_s1_to_s5 = precision_5 - precision_1.
           precision_non_decreasing = all(p[i] >= p[i-1] - 0.02 for i in 1..4) (2pp tolerance).
-       h. Artifact fields: sessions=[{session, precision, n_constraints_store, n_added}],
+       h. Artifact fields: sessions=[(session, precision, n_constraints_store, n_added)],
           delta_s1_to_s5, precision_non_decreasing, fr11_tier1_relay_deployed, honest_verdict.
        i. honest_verdict:
           - "tier1_relay_works_live" if delta_s1_to_s5 > 0 AND precision_non_decreasing
@@ -997,19 +997,19 @@ tasks:
        b. HIGH items: important but not blocking.
        c. MEDIUM items: nice-to-have.
     7. Write results/operational_retro_2026_04_63.json with fields:
-       {
+       (
          "schema": "carnot.operational_retro.v38",
          "milestone": "2026.04.63",
-         "retro_date": "{date}",
+         "retro_date": "{date)",
          "experiments_evaluated": [819..829],
-         "experiment_verdicts": {819: "...", 820: "...", ...},
-         "success_criteria": [{criterion, experiment, target, met, actual_value}, ...],
+         "experiment_verdicts": (819: "...", 820: "...", ...),
+         "success_criteria": [(criterion, experiment, target, met, actual_value), ...],
          "n_criteria_met": <int>,
          "n_criteria_total": 10,
          "retros_closed": ["RETRO-X", ...],
          "retros_opened": ["RETRO-Y", ...],
          "improvements_suggested": [
-           {"priority": "IMMEDIATE", "action": "...", "rationale": "..."},
+           ("priority": "IMMEDIATE", "action": "...", "rationale": "..."),
            ...
          ],
          "honest_verdict": "..."
