@@ -3993,3 +3993,91 @@ thermodynamic computing Ising FPGA
   constraint_type, z3_verdict, confidence). Evaluate certificate precision on known Z3-verified
   FoVer steps.
 - **When to incorporate:** Milestone 2026.04.63 — Phase 2 cross-domain benchmark (Exp 826).
+
+### Semantic Energy: Detecting LLM Hallucination Beyond Entropy
+- **Paper:** arXiv 2508.14496 (August 2025)
+- **What:** Combines semantic sentence clustering with a Boltzmann-inspired pairwise energy
+  distribution. Coherent responses form tight semantic clusters (low energy); hallucinated
+  responses with contradictory sentences produce near-zero pairwise kernel values (high energy).
+  Outperforms entropy-based hallucination detection methods.
+- **Relevance to Carnot:** Provides a new orthogonal verification signal — semantic coherence
+  energy — that is independent of all existing tiers (logit-based, latent-space, thermodynamic,
+  symbolic). Adds breadth to the cascade architecture at negligible cost (TF-IDF embeddings,
+  no GPU required). Forms the basis for Tier 0f SemanticEnergyProbe.
+- **Concrete experiment:** Exp 852 — SemanticEnergyProbe Tier 0f: implement pairwise Boltzmann
+  semantic energy over sentence clusters as advisory signal. Wire in VerifyRepairPipeline
+  between Tier 0e (HalluField) and Tier 0h (Jailbreak). Target: AUC_synthetic > 0.70.
+- **When to incorporate:** Milestone 2026.04.65 — Phase 5 new capability (Exp 852).
+
+### Gibbs Warm-Start Convergence Theory for Bayesian Models
+- **Paper:** arXiv 2304.06993 (Dimension-free Mixing Times for Gibbs Samplers via Warm-Start)
+- **What:** Proves that Gibbs samplers initialized from the limiting distribution (or a good
+  approximation thereof) achieve dramatically faster mixing than cold-start initializations.
+  The mean-field fixed point s_i = sign(h_i) is a tractable one-step approximation for the
+  limiting distribution when biases dominate couplings.
+- **Relevance to Carnot:** Carnot's MultiAgentArbiter has been non-functional (accuracy_standard
+  = 0.0) for three consecutive milestones because the Gibbs sampler is cold-started from zero
+  with only N_sweeps=10. The measured "energies" are initialization noise. Warm-start from
+  sign(h_i) + 500 burn-in sweeps is the theoretically-grounded fix.
+- **Concrete experiment:** Exp 846 — Arbiter Gibbs Warm-Start v3: implement GibbsWarmStart
+  protocol (sign(h_i) init + 500 burn-in), apply to MultiAgentArbiter. Target:
+  accuracy_standard >= 0.67, energy magnitudes in [-10, +10] range (vs current [-0.07, +0.14]).
+- **When to incorporate:** Milestone 2026.04.65 — Phase 2 arbiter fix (Exp 846).
+
+### KANELÉ: Kolmogorov-Arnold Networks for FPGA LUT Evaluation
+- **Paper:** arXiv 2512.12850 (December 2025)
+- **What:** First systematic KAN-to-FPGA synthesis flow with quantization and pruning
+  co-optimization. Achieves compact, high-throughput KAN architectures on FPGA fabric.
+  Uses LUT-based spline approximation for efficient on-chip KAN evaluation.
+- **Relevance to Carnot:** Carnot's KAN energy tier (KAEMEnergy, Exp 447) is a natural
+  candidate for FPGA acceleration. KANELÉ provides the synthesis methodology to take
+  a JAX-trained KAN model and map it to iCE40/KV260 fabric. This is a concrete path
+  to hardware-accelerated constraint checking (Tier 1 self-learning hardware path).
+  Phase 3 foundation model will need KAN-on-FPGA for real-time energy evaluation.
+- **Concrete experiment:** Future milestone — KAN FPGA synthesis: use KANELÉ flow to
+  synthesize the KAEMEnergy model (Exp 447) onto KV260 fabric alongside the Ising sampler.
+  Joint deployment: Ising samples from FPGA, KAN energy is evaluated on FPGA.
+- **When to incorporate:** After iCE40 N=16 bitstream confirmed (Exp 851). Target .66 or .67.
+
+### Rethinking Reward Models for Multi-Domain Test-Time Scaling
+- **Paper:** arXiv 2510.00492 (October 2025)
+- **What:** First unified evaluation of reward models across 14 domains. Finds that
+  discriminative outcome reward models (DisORM) are competitive with process reward models
+  (DisPRM) when aggregated across diverse domains. Domain-specific calibration matters more
+  than model architecture for multi-domain deployment.
+- **Relevance to Carnot:** Establishes the multi-domain evaluation baseline that Carnot's
+  JEPA needs to beat. The 14-domain evaluation protocol provides a rigorous test harness.
+  Carnot's current 4-domain evaluation (GSM8K, HumanEval, ARC, SVAMP) is a subset.
+  The finding about calibration-vs-architecture suggests that DreamPRM domain reweighting
+  (what Exp 844 uses) is the right intervention — calibration over architecture changes.
+- **Concrete experiment:** Exp 844 (JEPA v24b) implicitly tests this claim: if domain
+  reweighting (DreamPRM) fixes the SVAMP collapse, it confirms that calibration is the
+  critical variable for JEPA multi-domain performance.
+- **When to incorporate:** Milestone 2026.04.65 — Exp 844 evaluation protocol.
+
+### Decomposing Large-Scale Ising Problems on FPGAs
+- **Paper:** arXiv 2602.15985 (February 2026)
+- **What:** Edge-class FPGA (XC7A35T, ~33K LUTs): 87% LUT utilization, 80% BRAM at 100 MHz,
+  0.73W. Hybrid decomposition approach for large-scale Ising problems. Shows practical FPGA
+  resource budgets for small-N Ising designs (N=16 < 1000 LUTs, well within XC7A35T/HX8K).
+- **Relevance to Carnot:** Direct reference for iCE40 N=16 Ising synthesis (Exp 851).
+  The paper's resource estimates for XC7A35T are comparable to iCE40 HX8K (both ~7K LUTs
+  effective). Confirms N=16 at ~1000 LUTs is feasible. The hybrid decomposition approach
+  could extend Carnot's N=16 prototype to N=64 without exceeding FPGA budget.
+- **Concrete experiment:** Exp 851 — iCE40 N=16 Ising bitstream. The paper's LUT estimates
+  validate the design hypothesis: N=16 should synthesize at ~1000 LUTs vs N=32's 3952 LUTs.
+- **When to incorporate:** Milestone 2026.04.65 — Phase 5 FPGA experiment (Exp 851).
+
+### CHARM: Calibrating Reward Models With Chatbot Arena Scores
+- **Paper:** arXiv 2504.10045 (April 2025)
+- **What:** Post-hoc reward model calibration using Elo-score comparisons. Addresses model
+  preference bias — RMs that systematically overvalue certain output styles. Calibration via
+  a learned scalar transformation of RM scores anchored to human preference data.
+- **Relevance to Carnot:** MultiAgentArbiter's energy scores need calibration beyond just
+  L2-normalization and Z-scoring. Once Gibbs warm-start (Exp 846) produces meaningful energy
+  magnitudes, CHARM-style calibration could further improve arbitration accuracy by anchoring
+  energy rankings to known-correct human preference data (the MATH or HumanEval ground truth).
+- **Concrete experiment:** Future milestone — post Exp 846: if accuracy_standard reaches 0.67+
+  but adversarial accuracy remains inconsistent, apply CHARM calibration using HumanEval
+  ground truth as preference anchors.
+- **When to incorporate:** After Exp 846 confirms warm-start works. Target .66.
