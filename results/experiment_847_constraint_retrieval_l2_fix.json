@@ -1,0 +1,43 @@
+{
+  "experiment": 847,
+  "title": "EmbeddingConstraintStore L2-Normalization Fix",
+  "run_date": "2026-04-25T10:53:46.754837+00:00",
+  "schema": "exp847_v1",
+  "duration_s": 1.85,
+  "status": "success",
+  "embedding_mode": "sentence_transformer",
+  "retrieval_l2_normalized": true,
+  "stored_embedding_norms": {
+    "carry": 1.0,
+    "sign": 1.0,
+    "unit": 1.0,
+    "comparison": 1.0,
+    "causal": 1.0
+  },
+  "all_stored_embeddings_unit_norm": true,
+  "avg_cosine_sim_per_type": {
+    "carry": 0.5811,
+    "sign": 0.6199,
+    "unit": 0.4808,
+    "comparison": 0.7266,
+    "causal": 0.6561
+  },
+  "cosine_threshold_default": 0.5,
+  "cosine_threshold_prior": 0.7,
+  "n_query_label_pairs": 25,
+  "query_format": "spo_style_5_variants_per_type",
+  "query_format_note": "Queries are realistic SPO-style error context strings (5 variants per type). In the actual pipeline, the full response text is used as query. Single-word queries ('carry', 'sign') produce sims 0.37-0.53, often below threshold. Full-context queries produce sims 0.82-0.90, always above threshold.",
+  "retrieval_auroc": 0.72,
+  "s1_precision": 0.7,
+  "s2_precision": 0.6,
+  "s3_precision": 1.0,
+  "delta_simulated": 0.3,
+  "honest_verdict": "retrieval_partial",
+  "root_cause": "Gram-Schmidt orthogonalization deflected stored embeddings away from original semantic directions, causing near-zero cosine similarity between queries and matching stored constraints. Fix: store plain L2-normalized embeddings; normalize queries before retrieval; lower cosine threshold from 0.7 to 0.5.",
+  "spec_refs": [
+    "REQ-VERIFY-150",
+    "SCENARIO-VERIFY-230"
+  ],
+  "tests": "tests/python/test_experiment_847_constraint_retrieval_l2.py",
+  "n_tests": 14
+}

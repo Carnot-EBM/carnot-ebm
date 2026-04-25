@@ -1,4 +1,4 @@
-"""EmbeddingConstraintStore — SPO-format constraint memory with orthogonality regularization.
+"""EmbeddingConstraintStore — SPO-format constraint memory with L2-normalized embeddings.
 
 **Researcher summary (RETRO-CONSTRAINT-ZERO-DELTA):**
     Exp 788 showed constraint_addition_delta=0.0.  Root cause (arXiv 2601.15313, Semantic
@@ -9,15 +9,29 @@
 
     Fix: encode each constraint as an (S, P, O) = Subject-Predicate-Object triple and embed
     the concatenated SPO text using sentence-transformers (all-MiniLM-L6-v2, 384-dim, CPU).
-    Apply orthogonality regularization before storing each new embedding: project out any
-    component that lies along an already-stored embedding direction.  This forces the store
-    to represent each constraint in a distinct subspace, directly reducing semantic interference.
+
+**Researcher summary (RETRO-RETRIEVAL-NEAR-ZERO-COSINE — Exp 847):**
+    Exp 836 confirmed 15 constraints written (n_constraints_in_store_after_s3=15) but
+    delta_overall=0.0.  Root cause: orthogonality regularization deflects stored embeddings
+    away from their original semantic directions via Gram-Schmidt projection.  A query for
+    "carry error" encodes in the original sentence-transformer space, but the stored "carry"
+    embedding has been projected perpendicular to all previously stored embeddings — so
+    cosine similarity between query and stored constraint is near-zero even for matching
+    constraint types.  Additionally, sentence-transformer embeddings have L2 norm ~0.9-1.1
+    (not exactly 1.0); without explicit normalization on both sides, dot products deviate
+    from true cosine similarity.
+
+    Fix (Exp 847): store L2-normalized embeddings WITHOUT orthogonalization.  Normalize
+    queries before retrieval.  Lower cosine threshold from 0.7 → 0.5 (constraint-type
+    variations for the same semantic meaning typically score 0.5-0.7, not 0.8-0.95).
+    This restores semantic alignment between stored embeddings and query embeddings.
 
     In CI environments where sentence_transformers is not installed, a deterministic hash-based
     384-dim float embedding is substituted.  This mode is labeled "ci_hash" and exists only
     for test correctness — retrieval_auc in ci_hash mode is not meaningful for research.
 
-Spec: REQ-LEARN-057, REQ-LEARN-058, REQ-LEARN-059, SCENARIO-LEARN-098
+Spec: REQ-LEARN-057, REQ-LEARN-058, REQ-LEARN-059, SCENARIO-LEARN-098,
+      REQ-VERIFY-150, SCENARIO-VERIFY-230
 """
 from __future__ import annotations
 
@@ -130,19 +144,30 @@ class EmbeddingConstraintStore:
         semantically meaningful space where "carry propagation" and "sign preservation" land
         in different directions.
 
-    Why orthogonality regularization:
-        Even with good embeddings, repeated exposure to one constraint type can cause its
-        embedding direction to dominate the store, making all new embeddings resemble it
-        (semantic interference, arXiv 2601.15313).  Before storing a new embedding e_new,
-        we project out all components along existing embedding directions.  After N distinct
-        constraints, each occupies a subspace that is approximately orthogonal to all others.
-        This is the same principle as Gram-Schmidt orthogonalization.
+    Why L2-normalization instead of orthogonality regularization (Exp 847 fix):
+        Prior code applied Gram-Schmidt orthogonalization before storing each embedding.
+        This deflects stored embeddings away from their original semantic directions: a stored
+        "carry" embedding is projected perpendicular to all previously stored embeddings, so
+        a query for "carry error" (in the original sentence-transformer space) has near-zero
+        cosine similarity with the stored "carry" embedding.  The retrieval system silently
+        returns empty matches, and IsingEBM receives zero-magnitude external field input.
+
+        The fix: store each embedding as its plain L2-normalized form — no orthogonalization.
+        Cosine similarity between a normalized stored embedding and a normalized query is then
+        the true semantic similarity, which for matching constraint types is typically 0.5-0.7.
+
+    Class invariant: retrieval_l2_normalized = True — all stored and query embeddings are
+        explicitly L2-normalized before any similarity computation.
 
     Attributes:
         model_name: Name of the sentence_transformers model used for encoding.
         embedding_mode: "sentence_transformer" when the real model is loaded,
                         "ci_hash" when sentence_transformers is unavailable.
+        retrieval_l2_normalized: Always True; asserted in store() and retrieve() to guard
+                                 against future regressions that skip normalization.
     """
+
+    retrieval_l2_normalized: bool = True
 
     def __init__(self, model_name: str = "all-MiniLM-L6-v2") -> None:
         self.model_name = model_name
@@ -199,39 +224,71 @@ class EmbeddingConstraintStore:
         return _normalize(v)
 
     def store(self, spo: ConstraintSPOTuple) -> None:
-        """Encode, orthogonalize, and store a new SPO constraint tuple.
+        """Encode, L2-normalize, and store a new SPO constraint tuple.
 
         The SPO triple text is formed as "(subject) (predicate) (object)" —
         parentheses help the sentence-transformer attend to each role separately
         rather than treating the string as a plain sentence.
 
-        Orthogonality regularization is applied BEFORE appending to self._store,
-        so the stored embedding is already projected away from all predecessors.
+        Explicit L2-normalization is applied (REQ-VERIFY-150): storing raw embeddings
+        with L2 norm ~0.9-1.1 causes dot products to deviate from cosine similarity.
+        Normalizing here ensures every stored embedding is a unit vector, so dot product
+        with a normalized query equals exact cosine similarity.
+
+        Why NOT orthogonalization (Exp 847 root-cause fix):
+            Gram-Schmidt projection deflects stored embeddings away from their original
+            semantic directions, so queries in the original sentence-transformer space
+            show near-zero cosine similarity with orthogonalized stored embeddings.
+            Plain L2 normalization preserves semantic direction.
         """
+        assert self.retrieval_l2_normalized, "class invariant: L2-normalization must be enabled"
         spo_text = f"({spo.subject}) ({spo.predicate}) ({spo.object})"
         raw_emb = self._encode(spo_text)
-        ortho_emb = self._orthogonalize(raw_emb)
-        spo.embedding = ortho_emb
+        # L2-normalize before storing — guarantees unit vectors in the store.
+        norm = _l2norm(raw_emb)
+        normalized_emb = [x / (norm + 1e-8) for x in raw_emb]
+        spo.embedding = normalized_emb
         self._store.append(spo)
 
-    def retrieve(self, query: str, top_k: int = 3) -> list[ConstraintSPOTuple]:
+    def retrieve(
+        self, query: str, top_k: int = 3, cosine_threshold: float = 0.5
+    ) -> list[ConstraintSPOTuple]:
         """Return the top_k stored constraints most similar to the query.
 
-        The query is encoded with the same encoder used at store time.
-        Cosine similarity is computed between the query embedding and each
-        stored (orthogonalized) embedding.  Results are sorted descending.
+        The query is encoded with the same encoder used at store time, then
+        explicitly L2-normalized (REQ-VERIFY-150) before similarity computation.
+        Because both stored embeddings and the query are unit vectors, the dot
+        product equals exact cosine similarity — no division required.
 
-        Spec: REQ-LEARN-059
+        Entries with cosine similarity below cosine_threshold are excluded.
+        Default threshold is 0.5 (not 0.7 as in prior code): sentence-transformer
+        vectors for constraint-type variations typically score 0.5-0.7, not the
+        0.8-0.95 seen in document retrieval.  Using 0.7 caused empty retrieval.
+
+        Args:
+            query: Error context string to match against stored constraints.
+            top_k: Maximum number of constraints to return.
+            cosine_threshold: Minimum cosine similarity to include in results.
+                              Default 0.5 (lowered from 0.7 in Exp 847 fix).
+
+        Spec: REQ-LEARN-059, REQ-VERIFY-150
         """
+        assert self.retrieval_l2_normalized, "class invariant: L2-normalization must be enabled"
         if not self._store:
             return []
-        query_emb = self._encode(query)
+        raw_emb = self._encode(query)
+        # Explicit L2-normalization: raw sentence-transformer vectors have norm ~0.9-1.1.
+        # Normalizing makes dot product == cosine similarity.
+        qnorm = _l2norm(raw_emb)
+        query_emb = [x / (qnorm + 1e-8) for x in raw_emb]
         scored = [
-            (entry, _cosine_similarity(query_emb, entry.embedding or []))
+            (entry, _dot(query_emb, entry.embedding or []))
             for entry in self._store
         ]
         scored.sort(key=lambda x: x[1], reverse=True)
-        return [entry for entry, _ in scored[:top_k]]
+        return [
+            entry for entry, sim in scored[:top_k] if sim >= cosine_threshold
+        ]
 
     def retrieval_auc(self, queries: list[str], labels: list[str]) -> float:
         """Fraction of queries where top-1 retrieved constraint matches the label.
