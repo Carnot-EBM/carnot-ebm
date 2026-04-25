@@ -592,6 +592,10 @@ from carnot.pipeline.multi_agent_arbiter import (  # noqa: E402
     ArbiterResult,
     MultiAgentArbiter,
 )
+from carnot.pipeline.activation_jailbreak_probe import (  # noqa: E402
+    ActivationJailbreakProbe,
+    ProbeMetadata,
+)
 
 __all__ = [
     "AgentStep",
@@ -974,4 +978,6 @@ __all__ = [
     "AgentScore",
     "ArbiterResult",
     "MultiAgentArbiter",
+    "ActivationJailbreakProbe",
+    "ProbeMetadata",
 ]
