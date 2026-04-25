@@ -1,0 +1,98 @@
+{
+  "experiment": 872,
+  "title": "JEPA v25: DomainReweightedLoss + 40-pair SVAMP corpus",
+  "run_date": "20260425",
+  "started_at": "2026-04-25T19:01:29Z",
+  "finished_at": "2026-04-25T19:01:36Z",
+  "duration_s": 7.037,
+  "status": "success",
+  "decision_class": "verify",
+  "phase_timings_s": [
+    {
+      "name": "corpus_build",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "training",
+      "n_epochs": 50,
+      "n_pairs": 160,
+      "elapsed_s": 7.037
+    }
+  ],
+  "in_dist_auc": 0.3125,
+  "ood_auc": 0.484375,
+  "svamp_auc": 0.125,
+  "auc_gsm8k": 0.3125,
+  "auc_humaneval": 1.0,
+  "auc_arc": 0.84375,
+  "auc_svamp": 0.125,
+  "honest_verdict": "jepa_v25_still_blocked",
+  "domain_weights": {
+    "gsm8k": 0.25,
+    "humaneval": 0.25,
+    "arc": 0.25,
+    "svamp": 0.25
+  },
+  "n_training_pairs": 160,
+  "n_train": 128,
+  "n_val": 32,
+  "n_epochs": 50,
+  "final_train_loss": 0.15645433589816093,
+  "final_val_loss": 0.19354666769504547,
+  "model_path": "results/jepa_predictor_v25.safetensors",
+  "corpus_composition": {
+    "gsm8k": {
+      "total": 40,
+      "correct": 20,
+      "incorrect": 20
+    },
+    "humaneval": {
+      "total": 40,
+      "correct": 20,
+      "incorrect": 20
+    },
+    "arc": {
+      "total": 40,
+      "correct": 20,
+      "incorrect": 20
+    },
+    "svamp": {
+      "total": 40,
+      "correct": 20,
+      "incorrect": 20
+    }
+  },
+  "svamp_v24_baseline_auc": 0.0,
+  "ood_v24_baseline_auc": 0.4921875,
+  "schema": [
+    "auc_arc",
+    "auc_gsm8k",
+    "auc_humaneval",
+    "auc_svamp",
+    "corpus_composition",
+    "decision_class",
+    "domain_weights",
+    "duration_s",
+    "experiment",
+    "final_train_loss",
+    "final_val_loss",
+    "finished_at",
+    "honest_verdict",
+    "in_dist_auc",
+    "model_path",
+    "n_epochs",
+    "n_train",
+    "n_training_pairs",
+    "n_val",
+    "ood_auc",
+    "ood_v24_baseline_auc",
+    "phase_timings_s",
+    "run_date",
+    "started_at",
+    "status",
+    "svamp_auc",
+    "svamp_v24_baseline_auc",
+    "title"
+  ],
+  "invariant_violations": []
+}
