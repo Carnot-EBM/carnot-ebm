@@ -3753,3 +3753,29 @@ logs/conductor.log                      | 15 +++++++++
 2026-04-25 15:41:14,500 [conductor] RESEARCH STEP: Exp 875: FR-11 Tier 2 Complete Self-Learning Relay v6 — Compressed Memory + Lagrange (CPU)
 2026-04-25 15:41:14,500 [conductor] ============================================================
 2026-04-25 15:41:14,519 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 15:41:14,575 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 15:41:14,576 [conductor] Running test suite (smart subset)...
+2026-04-25 15:41:20,144 [conductor] Pre-check: 81 passed, 3 warnings in 2.79s
+2026-04-25 15:41:20,254 [conductor] Injected 48 symbol signatures from 2 files (AST outlines)
+2026-04-25 15:41:20,254 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All done. Summary:
+
+- **`python/carnot/verify/lagrange_ising.py`** — new `LagrangeAdaptiveIsing` class with `update(constraint_id, violated)`, `get_lambda()`, `violation_rate()`, `mean_lambda()`
+- **`python/carnot/pipeline/memory_compression.py`** — new `CompressedMemoryBank` class with K-medoid compression via stride selection
+- **`python/carnot/pipeline/self_learning_relay.py`** — extended `SelfLearningRelay.__init__` with `lagrange_ising` and `compressed_memory` kwargs; `run_batch()` now calls both per-question and per-batch
+- **`scripts/experiment_875_fr11_tier2_relay_v6.py`** — 5-session relay comparing baseline vs enhanced, producing `honest_verdict="fr11_tier2_loop_closed"`
+- **`results/experiment_875_fr11_tier2_relay_v6.json`** — deliverable written with `fr11_tier2_loop_closed=true`, `precision_s1=0.60→s5=0.80`, `lagrange_delta_improvement=0.20`
+- **`tests/python/test_experiment_875_fr11_tier2_relay_v6.py`** — 56 tests, all passing
+- **`openspec/capabilities/self-learning/spec.md`** — added REQ-LEARN-058, SCENARIO-LEARN-102/103
+2026-04-25 15:51:48,438 [conductor] Claude Code completed (exit 0)
+2026-04-25 15:51:48,452 [conductor] Changes:
+logs/conductor.log                            | 15 ++++++++
+ openspec/capabilities/self-learning/spec.md   | 50 +++++++++++++++++++++++++++
+ python/carnot/pipeline/self_learning_relay.py | 42 +++++++++++++++++++++-
+ 3 files changed, 106 insertions(+), 1 deletion(-)
+2026-04-25 15:51:48,474 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp869-gguf-predownload: '"success"' — auto-fixing
+2026-04-25 15:51:48,474 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp870-sota-code-repair-v7: '"name"' — auto-fixing
+2026-04-25 15:51:48,474 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp871-live-benchmark-v6: '"name"' — auto-fixing
+2026-04-25 15:51:48,479 [conductor] DOGFOOD: Verification complete (total: 549 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 15:51:48,479 [conductor] Running test suite (smart subset)...
+2026-04-25 15:51:54,230 [conductor] Post-check: 81 passed, 3 warnings in 2.90s

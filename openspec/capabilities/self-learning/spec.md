@@ -1425,3 +1425,53 @@ Each maps to a deterministic (var1, var2, J_value) coupling spec.
 |-------------|--------|-------|
 | REQ-LEARN-056 | Implemented (python/carnot/pipeline/constraint_generator.py, IsingConstraintGenerator) | Implemented (tests/python/test_experiment_788_constraint_addition_from_memory.py) |
 | REQ-LEARN-057 | Implemented (scripts/experiment_788_constraint_addition_from_memory.py) | Implemented (tests/python/test_experiment_788_constraint_addition_from_memory.py) |
+
+---
+
+## REQ-LEARN-058: Lagrange + CompressedMemory Relay MUST Demonstrate Sustained Precision Improvement
+
+**Given** a SelfLearningRelay wired with LagrangeAdaptiveIsing and CompressedMemoryBank
+**When** the relay runs 5 sessions of 20 synthetic GSM8K-style questions each
+**Then** the enhanced relay MUST show is_monotonically_non_decreasing=True for session precisions
+**And**  precision_s5 > precision_s1 (sustained improvement, not plateau)
+**And**  lagrange_delta_improvement > 0 (Lagrange provides improvement over baseline)
+**And**  honest_verdict MUST be one of: fr11_tier2_loop_closed, tier2_monotone_no_improvement,
+         tier2_plateau_at_s2, below_baseline
+
+### REQ-LEARN-058 Sub-requirements
+
+- REQ-LEARN-058-1: LagrangeAdaptiveIsing.update(constraint_id, violated) SHALL increase
+  lambda by lambda_lr when violated=True and decrease by 0.1 * lambda_lr when violated=False,
+  floored at lambda_init.
+- REQ-LEARN-058-2: CompressedMemoryBank.compress_session(session_violations) SHALL maintain
+  at most k centroid representatives and record latency for compression_overhead_ms.
+- REQ-LEARN-058-3: SelfLearningRelay SHALL accept optional lagrange_ising and compressed_memory
+  kwargs and call lagrange_ising.update() per question and compressed_memory.compress_session()
+  per batch when these are provided.
+
+---
+
+## SCENARIO-LEARN-102: Enhanced Relay Precision Schedule is Monotonically Non-Decreasing
+
+**Given** a 5-session relay with LagrangeAdaptiveIsing + CompressedMemoryBank
+**When** enhanced_session_precisions = [0.60, 0.65, 0.70, 0.75, 0.80]
+**Then** is_monotonically_non_decreasing is True
+**And**  precision_s5 = 0.80 > precision_s1 = 0.60
+**And**  honest_verdict = fr11_tier2_loop_closed
+
+---
+
+## SCENARIO-LEARN-103: Flat Precision Sequence Returns tier2_monotone_no_improvement
+
+**Given** a relay where enhanced_session_precisions = [0.60, 0.60, 0.60, 0.60, 0.60]
+**When** compute_honest_verdict() is called
+**Then** honest_verdict = tier2_monotone_no_improvement
+**And**  fr11_tier2_loop_closed = False
+
+---
+
+## Implementation Status (REQ-LEARN-058)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-058 | Implemented (python/carnot/verify/lagrange_ising.py, python/carnot/pipeline/memory_compression.py, python/carnot/pipeline/self_learning_relay.py, scripts/experiment_875_fr11_tier2_relay_v6.py) | Implemented (tests/python/test_experiment_875_fr11_tier2_relay_v6.py) |
