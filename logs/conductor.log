@@ -1773,3 +1773,24 @@ logs/conductor.log                     | 18 ++++++++++
 2026-04-24 23:34:02,633 [conductor] DOGFOOD: Verification complete (total: 504 checks, 45 brace fixes, 0 code/0 z3/0 llm violations)
 2026-04-24 23:34:02,634 [conductor] Running test suite (smart subset)...
 2026-04-24 23:34:08,286 [conductor] Post-check: 81 passed, 3 warnings in 2.87s
+2026-04-24 23:34:08,309 [conductor] Committed: [conductor] Exp 828: Activation Jailbreak Linear Probe (arXiv 2602.11495, Tier B
+2026-04-24 23:34:09,991 [conductor] Pushed to origin
+2026-04-24 23:34:09,991 [conductor] Running post-commit documentation reconciliation...
+2026-04-24 23:34:09,991 [conductor] Calling Claude Code (40 max turns, model: haiku)...
+Perfect! All doc updates are complete. Here's what was recorded:
+
+**STEP 0 Summary:**
+- **honest_verdict**: "probe_viable" (VERBATIM)
+- **status**: success
+- **Key metrics**: probe_auc=1.0, tier0h_auc=1.0, **auc_delta=0.0** (zero improvement)
+
+**STEP 1 Verdict Mapping:**
+honest_verdict "probe_viable" + auc_delta=0.0 (no improvement) → **⚠️ Research Finding** (not ✅ Complete)
+
+**Updates Applied:**
+1. ✅ **ops/changelog.md** — Appended Exp 828 entry with honest_verdict verbatim, key numbers, and research findings
+2. ✅ **ops/status.md** — Added experiment row with ⚠️ Research Finding status and detailed findings  
+3. ✅ **_bmad/traceability.md** — Added 3 rows (REQ-VERIFY-146/147, SCENARIO-VERIFY-175) marked **Scaffolding** (infrastructure valid, effectiveness unresolved due to zero delta)
+
+**Honesty Call:** Probe mechanism works (viable, extracts activations correctly) but provides **zero improvement** over baseline layer-0 features. Marked truthfully as research finding, not closure.
+2026-04-24 23:35:46,536 [conductor] Claude Code completed (exit 0)
