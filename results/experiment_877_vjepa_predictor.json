@@ -1,0 +1,25 @@
+{
+  "experiment": 877,
+  "schema": "carnot-experiment-v1",
+  "run_date": "2026-04-25T20:30:29Z",
+  "honest_verdict": "tier3_seed_viable",
+  "in_dist_auc": 1.0,
+  "ood_auc": 0.5833,
+  "kl_magnitude": 1.247587,
+  "uncertainty_calibration": 0.0736,
+  "model_path": "/home/ianblenke/github.com/ianblenke/carnot/results/vjepa_predictor_877.npz",
+  "n_training_steps": 100,
+  "duration_s": 7.44,
+  "spec": [
+    "REQ-VERIFY-175",
+    "REQ-VERIFY-176",
+    "SCENARIO-VERIFY-229",
+    "SCENARIO-VERIFY-230"
+  ],
+  "architecture": {
+    "encoder": "MLP in_dim->128->64->(mu:32,logvar:32)",
+    "prior": "GRU context_dim->64->(mu:32,logvar:32)",
+    "classifier": "Linear 32->1 sigmoid",
+    "kl_weight": 0.1
+  }
+}
