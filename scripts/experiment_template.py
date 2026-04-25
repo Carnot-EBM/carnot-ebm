@@ -111,6 +111,7 @@ from __future__ import annotations
 import ast
 import atexit
 import concurrent.futures
+import contextlib
 import datetime
 import gc
 import json
@@ -309,6 +310,14 @@ class ExperimentTemplate:
         self.checkpoint: dict[str, Any] | None = None
         self._started_at: str = _utc_now()
         self._t0: float = time.perf_counter()
+
+        # Phase timing instrumentation. Populated by the `phase()` context
+        # manager below; auto-included in build_result()'s artifact under
+        # the `phase_timings_s` key when non-empty. Lets researchers profile
+        # where the 5-9 min Sonnet research-step actually goes (model loads,
+        # training loops, inference, internal pytest re-runs) without writing
+        # bespoke timing code in every script. Compounds across milestones.
+        self._phase_timings: list[dict[str, Any]] = []
 
         # Set by setup_gpu() — warm inference server and dual-GPU runner.
         # None until setup_gpu() is called or when running in CPU fallback mode.
@@ -1290,6 +1299,71 @@ class ExperimentTemplate:
             return None
 
     # ------------------------------------------------------------------
+    # phase() — lightweight profiling context manager
+    # ------------------------------------------------------------------
+
+    @contextlib.contextmanager
+    def phase(self, name: str, **metadata: Any):
+        """Record wall-clock time spent in a named experiment phase.
+
+        Use as a context manager around any phase whose timing you want to
+        capture in the artifact:
+
+            with tmpl.phase("model_load", model="qwen3.6-35b-a3b"):
+                model = load_gguf_model(...)
+            with tmpl.phase("training", n_pairs=70, epochs=100):
+                for epoch in range(100):
+                    train_one_epoch(...)
+            with tmpl.phase("evaluation", split="ood"):
+                ood_auc = evaluate(model, held_out)
+
+        On exit, appends ``{"name", "elapsed_s", **metadata}`` to the
+        template's phase log. ``build_result()`` automatically includes
+        the full log in the artifact under ``phase_timings_s`` when any
+        phase has been recorded.
+
+        Why this exists
+        ---------------
+        The conductor's per-iteration budget is dominated by the 5-9 min
+        Sonnet research-step. Internally that's the experiment script
+        doing real work — model loads, training, inference, sometimes
+        nested pytest re-runs. Without instrumentation, optimisation
+        targets (model-load cache, training-loop batch sizes, etc.) are
+        guesses. With ``phase()`` recorded in every artifact, the
+        retrospective can rank phases by total time and aim future
+        speedups precisely.
+
+        Cost: a single ``time.perf_counter()`` call at entry and exit;
+        sub-microsecond overhead. Safe to wrap small phases.
+
+        Parameters
+        ----------
+        name : str
+            Short identifier for the phase ("model_load", "training", "eval").
+            Goes into the artifact verbatim.
+        **metadata
+            Optional context that the retrospective can use to slice
+            timings (model name, batch size, dataset split, etc.).
+            Stored alongside ``elapsed_s`` in the same dict.
+
+        Yields
+        ------
+        dict
+            The metadata dict; callers may add fields to it inside the
+            context (e.g. ``timings["n_samples"] = len(samples)`` after
+            the phase has computed it). The dict is appended to
+            ``self._phase_timings`` on context exit, regardless of
+            whether the wrapped block raised.
+        """
+        entry: dict[str, Any] = {"name": name, **metadata}
+        t_start = time.perf_counter()
+        try:
+            yield entry
+        finally:
+            entry["elapsed_s"] = round(time.perf_counter() - t_start, 3)
+            self._phase_timings.append(entry)
+
+    # ------------------------------------------------------------------
     # build_result()
     # ------------------------------------------------------------------
 
@@ -1365,6 +1439,13 @@ class ExperimentTemplate:
             # Normalise to a single canonical form: list if multi, str if single.
             classes = [decision_class] if isinstance(decision_class, str) else list(decision_class)
             result["decision_class"] = classes[0] if len(classes) == 1 else classes
+
+        # Auto-include phase timings if any were recorded via tmpl.phase().
+        # Inserted before extra_fields / data merges so a caller can still
+        # override (e.g. to add a derived `phase_timings_summary` alongside
+        # the raw list) without losing the raw data.
+        if self._phase_timings:
+            result["phase_timings_s"] = list(self._phase_timings)
 
         # Merge extra_fields first (lower priority), then data (higher priority)
         result.update(extra_fields)
