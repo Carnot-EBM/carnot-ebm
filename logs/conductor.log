@@ -2070,3 +2070,17 @@ logs/conductor.log | 7 +++++++
 2026-04-25 01:29:28,777 [conductor] RESEARCH STEP: Exp 833: Constraint Accumulation Root Cause Diagnosis (CPU)
 2026-04-25 01:29:28,777 [conductor] ============================================================
 2026-04-25 01:29:28,796 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 01:29:28,849 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 01:29:28,849 [conductor] Running test suite (smart subset)...
+2026-04-25 01:29:35,104 [conductor] Pre-check: 81 passed, 3 warnings in 2.91s
+2026-04-25 01:29:35,236 [conductor] Injected 98 symbol signatures from 4 files (AST outlines)
+2026-04-25 01:29:35,237 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 34 tests pass and the deliverable JSON is written with all required schema fields. Diagnosis confirmed: **H1 — `write_path_missing`**. `VerifyRepairPipeline.verify()` calls `retrieve()` (10 times across 5 test cases, 2 per call) but never calls `store()` (0 write calls). The constraint store is always empty so retrieval always returns zero results, explaining delta_overall=0.0 in Exp 821.
+2026-04-25 01:34:56,853 [conductor] Claude Code completed (exit 0)
+2026-04-25 01:34:56,867 [conductor] Changes:
+logs/conductor.log                         |  7 ++++++
+ openspec/capabilities/autoresearch/spec.md | 38 ++++++++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+2026-04-25 01:34:56,885 [conductor] DOGFOOD: Verification complete (total: 509 checks, 47 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 01:34:56,885 [conductor] Running test suite (smart subset)...
+2026-04-25 01:35:02,529 [conductor] Post-check: 81 passed, 3 warnings in 2.87s

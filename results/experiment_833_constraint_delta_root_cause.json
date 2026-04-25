@@ -1,0 +1,81 @@
+{
+  "experiment": 833,
+  "title": "Constraint-Delta Root-Cause Diagnosis",
+  "run_date": "20260425",
+  "started_at": "2026-04-25T05:34:30Z",
+  "finished_at": "2026-04-25T05:34:32Z",
+  "duration_s": 1.518,
+  "status": "success",
+  "decision_class": "verify",
+  "hypothesis_confirmed": "H1",
+  "n_store_write_calls": 0,
+  "n_store_retrieve_calls": 10,
+  "mean_retrieved_vector_norm": 0.0,
+  "n_external_field_calls": 0,
+  "n_legacy_energy_calls": 0,
+  "root_cause": "write_path_missing",
+  "fix_recommendation": "Add a call to embedding_constraint_store.store(violation_spo) for each violation in result.violations inside VerifyRepairPipeline.verify() (python/carnot/pipeline/verify_repair.py, ~line 1360, after the existing self._memory.record_pattern() block).",
+  "honest_verdict": "write_path_missing",
+  "verify_results": [
+    {
+      "question": "What is 47 + 28?",
+      "response": "Step 1: 47 + 28 = 76. The answer is 76.",
+      "verified": false,
+      "n_violations": 1,
+      "violation_types": [
+        "arithmetic"
+      ]
+    },
+    {
+      "question": "What is 100 - 37?",
+      "response": "Step 1: 100 - 37 = 63. The answer is 63.",
+      "verified": true,
+      "n_violations": 0,
+      "violation_types": []
+    },
+    {
+      "question": "What is 6 * 9?",
+      "response": "Step 1: 6 * 9 = 42. The answer is 42.",
+      "verified": true,
+      "n_violations": 0,
+      "violation_types": []
+    },
+    {
+      "question": "What is 15% of 200?",
+      "response": "Step 1: 15% of 200 = 0.15 * 200 = 30. The answer is 30.",
+      "verified": true,
+      "n_violations": 0,
+      "violation_types": []
+    },
+    {
+      "question": "What is 3^3?",
+      "response": "Step 1: 3^3 = 3 * 3 * 3 = 27. The answer is 27.",
+      "verified": true,
+      "n_violations": 0,
+      "violation_types": []
+    }
+  ],
+  "embedding_mode": "sentence_transformer",
+  "schema": [
+    "decision_class",
+    "duration_s",
+    "embedding_mode",
+    "experiment",
+    "finished_at",
+    "fix_recommendation",
+    "honest_verdict",
+    "hypothesis_confirmed",
+    "mean_retrieved_vector_norm",
+    "n_external_field_calls",
+    "n_legacy_energy_calls",
+    "n_store_retrieve_calls",
+    "n_store_write_calls",
+    "root_cause",
+    "run_date",
+    "started_at",
+    "status",
+    "title",
+    "verify_results"
+  ],
+  "invariant_violations": []
+}

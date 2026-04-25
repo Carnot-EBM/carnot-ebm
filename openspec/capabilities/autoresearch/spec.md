@@ -2780,3 +2780,41 @@ Given JEPA v23 model loaded from Exp 824 checkpoint:
   - honest_verdict = "blocked_gate" when Exp 824 honest_verdict is jepa_v23_below_random
 
 Spec: SCENARIO-LEARN-061
+
+### REQ-LEARN-048: VerifyRepairPipeline MUST Call EmbeddingConstraintStore.store() on Violations
+
+When `enable_constraint_accumulation=True` (or when `embedding_constraint_store` is provided
+to `verify()`), `VerifyRepairPipeline.verify()` MUST call `EmbeddingConstraintStore.store()`
+with a `ConstraintSPOTuple` encoding each detected violation.
+
+Rationale: Exp 821 showed delta_overall=0.0 across 3 sessions of 30 GSM8K questions despite
+the external field injection fix from Exp 819.  Root-cause diagnosis (Exp 833) confirmed that
+`verify()` calls `retrieve()` but NEVER calls `store()` — so the constraint store is always
+empty and retrieval always returns zero constraints.  The write path is structurally absent.
+
+Spec: REQ-LEARN-048
+
+### REQ-LEARN-049: VerifyRepairPipeline MUST Route Energy Computation Through compute_energy_with_external_field
+
+When an `IsingConstraintInjector` is provided to `verify()`, energy computation MUST be
+routed through `IsingConstraintInjector.compute_energy_with_external_field()` rather than
+the legacy `compute_energy_with_injection()` path.
+
+Rationale: Exp 833 confirmed that even when `ising_constraint_injector` is provided,
+`compute_energy_with_external_field` is never called.  Only `project_to_spin_bias()` is
+called for logging — the bias is computed but never applied to the actual energy.  The
+legacy diagonal injection path (which adds a constant shift indistinguishable across
+all spin configs) was already diagnosed as non-discriminating in RETRO-ISING-INJECTION-
+NO-DISCRIMINATION (Exp 812).
+
+Spec: REQ-LEARN-049
+
+### SCENARIO-LEARN-060: Pipeline Write Path — 2 Violations Trigger 2 Store Writes
+
+Given a `VerifyRepairPipeline` with `embedding_constraint_store` containing 0 entries:
+  - Run `verify()` on a response with 2 known violations
+  - After the call, `EmbeddingConstraintStore._store` MUST have length == 2
+  - `n_store_write_calls` counter MUST equal 2
+  - Each stored entry MUST have a non-None `embedding` field
+
+Spec: SCENARIO-LEARN-060
