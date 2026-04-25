@@ -399,3 +399,100 @@ def test_reconcile_skips_when_artifact_unreadable(tmp_path):
     assert result.changelog_appended is False
     assert result.skipped_reason is not None
     assert "unreadable" in result.skipped_reason
+
+
+# ---------------------------------------------------------------------------
+# Newly added (.68) — win-token additions and classify_artifact
+# ---------------------------------------------------------------------------
+
+
+from in_process_doc_reconcile import classify_artifact  # noqa: E402
+
+
+@pytest.mark.parametrize("verdict", [
+    "tier1_relay_works_live",     # .65 Exp 848
+    "gguf_cache_implemented",     # .65 Exp 849
+    "deployed",                   # .66 Exp 856
+    "streaming_cot_wired",        # .67 Exp 874
+    "fr11_self_learning_confirmed",  # .66 Exp 862 (was already a win — sanity)
+])
+def test_added_win_tokens_now_classify_as_complete(verdict):
+    """Verdicts that were under-counted in .65/.66/.67 now map to ✅ Complete.
+
+    These are the specific historical cases where the in-process reconciler
+    labeled real wins as ⚠️ Research Finding because the relevant token
+    was missing from `_WIN_TOKENS`. The fix added `wired`, `implemented`,
+    `works`, `deployed` to the list. This test pins those classifications.
+    """
+    assert map_status_label(verdict) == "✅ Complete"
+
+
+def test_classify_artifact_promotes_on_retro_closed_field():
+    """An artifact with retro_*_closed populated is promoted to ✅ Complete
+    even when the verdict text alone wouldn't carry a win-token.
+
+    This is the classify_artifact extension over plain map_status_label —
+    a closed retro is a concrete deliverable; the experiment is not just
+    a "research finding" if it actually closed something.
+    """
+    artifact = {
+        "honest_verdict": "some_neutral_phrase_with_no_tokens",
+        "retro_constraint_zero_delta_closed": True,
+    }
+    assert classify_artifact(artifact) == "✅ Complete"
+
+
+def test_classify_artifact_does_not_promote_on_failed_verdict():
+    """A failed verdict beats any retro_*_closed signal.
+
+    Failed-with-also-some-retro-closed is a contradictory shape —
+    discipline-conservative interpretation: the failure wins.
+    """
+    artifact = {
+        "honest_verdict": "timed_out",
+        "retro_some_thing_closed": "RETRO-CLAIMED-CLOSURE",
+    }
+    assert classify_artifact(artifact) == "❌ Failed"
+
+
+def test_classify_artifact_does_not_promote_when_retro_value_is_falsy():
+    """retro_*_closed: False / "" / "false" should not trigger a promotion."""
+    for falsy in (False, "", "false", 0, None):
+        artifact = {
+            "honest_verdict": "neutral_text",
+            "retro_x_closed": falsy,
+        }
+        assert classify_artifact(artifact) == "⚠️ Research Finding"
+
+
+def test_classify_artifact_promotes_on_retro_value_with_retro_tag_string():
+    """A value like 'RETRO-GGUF-CACHE-IMPORT' counts as a real closure.
+
+    Mirrors the .65 Exp 849 artifact where retro_closed had a string
+    naming the retro that was closed. Common pattern.
+    """
+    artifact = {
+        "honest_verdict": "gguf_cache_implemented",
+        "retro_closed": "RETRO-GGUF-CACHE-IMPORT",
+    }
+    assert classify_artifact(artifact) == "✅ Complete"
+
+
+def test_classify_artifact_unchanged_when_no_retro_field():
+    """Without any retro_*_closed field, behaviour matches map_status_label."""
+    artifact = {"honest_verdict": "some_neutral_phrase"}
+    assert classify_artifact(artifact) == "⚠️ Research Finding"
+    artifact = {"honest_verdict": "complete"}
+    assert classify_artifact(artifact) == "✅ Complete"
+
+
+def test_classify_artifact_ignores_non_retro_closed_fields():
+    """A field like 'gate_closed' or 'window_closed' should not trigger
+    the promotion — only `retro_*_closed` is the structural signal.
+    """
+    artifact = {
+        "honest_verdict": "neutral_phrase",
+        "gate_closed": True,           # not a retro
+        "window_closed": "yes",        # not a retro
+    }
+    assert classify_artifact(artifact) == "⚠️ Research Finding"
