@@ -57,7 +57,7 @@ tasks:
        c. In ExperimentTemplate.__init__, call EnvPropagationGuard.load_session_env()
           as the FIRST action (before any other setup).
        d. In apply_env_autofix(), after setting os.environ["CARNOT_FORCE_LIVE"]="1",
-          also call EnvPropagationGuard.write_session_env({"CARNOT_FORCE_LIVE": "1"}).
+          also call EnvPropagationGuard.write_session_env(("CARNOT_FORCE_LIVE": "1")).
        e. Add method ExperimentTemplate.assert_live_env_if_gpu() that:
           - Checks if requires_gpu=True for this experiment
           - If GPU required AND CARNOT_FORCE_LIVE not in os.environ:
@@ -196,7 +196,7 @@ tasks:
     10. Reconcile:
         - ops/changelog.md: one-line entry
         - ops/status.md: "Exp 856: DualGPURunner wired into VerifyRepairPipeline and
-          ThreeTierPipeline. CARNOT_DUAL_GPU=1 flag live. throughput_ratio={result}."
+          ThreeTierPipeline. CARNOT_DUAL_GPU=1 flag live. throughput_ratio=(result)."
     11. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_856_dualgpu_production.py -v
@@ -252,8 +252,8 @@ tasks:
           resolve() should: check cache → if missing, download → return path.
        c. Add attribute can_download: bool = True.
     5. Instantiate ExperimentTemplate(857, requires_gpu=True).
-       Call tmpl.setup() then tmpl.setup_gpu([{"name": "Qwen3.6-35B-A3B", "gpu": 1,
-         "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"}]).
+       Call tmpl.setup() then tmpl.setup_gpu([("name": "Qwen3.6-35B-A3B", "gpu": 1,
+         "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF")]).
        If not gpu_status["all_healthy"]: write blocked artifact.
     6. Apply EnvPropagationGuard.load_session_env() (should already run in __init__).
        Assert CARNOT_FORCE_LIVE in os.environ — raise if missing (prevents simulation fallback).
@@ -278,8 +278,8 @@ tasks:
         Traces to REQ-VR-020 (verify-repair), SCENARIO-VR-030 (HumanEval live).
     13. Reconcile:
         - ops/changelog.md: one-line entry
-        - ops/status.md: "Exp 857: Code repair v6. inference_mode={result}.
-          signed_improvement={result}. GGUFCacheResolver now downloads."
+        - ops/status.md: "Exp 857: Code repair v6. inference_mode=(result).
+          signed_improvement=(result). GGUFCacheResolver now downloads."
     14. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_857_sota_code_repair_v6.py -v
@@ -337,8 +337,8 @@ tasks:
     5. Instantiate ExperimentTemplate(858, requires_gpu=True).
        tmpl.setup()
        gpu_status = tmpl.setup_gpu([
-         {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0},
-         {"name": "gemma-4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 1}
+         ("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0),
+         ("name": "gemma-4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 1)
        ])
        If not gpu_status["all_healthy"]: write blocked artifact.
     6. Load 50 GSM8K problems and 25 HumanEval problems.
@@ -371,8 +371,8 @@ tasks:
         Traces to REQ-VR-040 (benchmark), SCENARIO-VR-050 (live full precision).
     13. Reconcile:
         - ops/changelog.md: one-line entry
-        - ops/status.md: "Exp 858: Live benchmark v5. inference_mode={result}.
-          pipeline_improvement={result}. tiers_deployed={count}."
+        - ops/status.md: "Exp 858: Live benchmark v5. inference_mode=(result).
+          pipeline_improvement=(result). tiers_deployed=(count)."
     14. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_858_live_benchmark_v5.py -v
@@ -489,8 +489,8 @@ tasks:
         Traces to REQ-FPGA-030 (new), SCENARIO-FPGA-040 (iCE40 N=8 synthesis).
     12. Reconcile:
         - ops/changelog.md: one-line entry
-        - ops/status.md: "Exp 859: iCE40 N=8 combinational oracle. lut_count={result}.
-          bitstream_generated={result}. Closes RETRO-ICE40-N16-UNEXPECTED-EXPANSION
+        - ops/status.md: "Exp 859: iCE40 N=8 combinational oracle. lut_count=(result).
+          bitstream_generated=(result). Closes RETRO-ICE40-N16-UNEXPECTED-EXPANSION
           and RETRO-ICE40-PNR-LUT-OVERFLOW if lut_count < 500."
     13. tmpl.assert_deliverable_written() as final line.
 
@@ -612,8 +612,8 @@ tasks:
        Traces to REQ-ISING-020 (new), SCENARIO-ISING-030 (discrimination).
     8. Reconcile:
        - ops/changelog.md: one-line entry
-       - ops/status.md: "Exp 860: InertiaIsingSampler benchmarked. discrimination_delta={result}.
-         mixing_sweeps_reduction={result}x. Mpemba init used."
+       - ops/status.md: "Exp 860: InertiaIsingSampler benchmarked. discrimination_delta=(result).
+         mixing_sweeps_reduction=(result)x. Mpemba init used."
     9. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_860_inertia_ising_benchmark.py -v
@@ -633,7 +633,7 @@ tasks:
     cumulative PHaS (Predictive Hallucination Score) signal. The key insight: hallucinations
     in long CoT are predictable from prefix-level EORM (energy reward model) scores before
     the incorrect step occurs. The signal accumulates as:
-      phas_t = alpha * eorm_score_t + (1-alpha) * phas_{t-1}
+      phas_t = alpha * eorm_score_t + (1-alpha) * phas_(t-1)
     When phas_t drops below a threshold (e.g., 0.3), flag is_streaming_unstable=True.
     This is advisory (does not block repair) and targets Tier 0g in the cascade.
 
@@ -671,7 +671,7 @@ tasks:
              phas_t = score
            self.phas_history.append(phas_t)
            is_unstable = phas_t < self.threshold
-           return {"phas_t": phas_t, "eorm_score": score, "is_unstable": is_unstable}
+           return ("phas_t": phas_t, "eorm_score": score, "is_unstable": is_unstable)
 
          def is_streaming_unstable(self) -> bool:
            if not self.phas_history:
@@ -721,7 +721,7 @@ tasks:
        Traces to REQ-PROBE-040 (new), SCENARIO-PROBE-050 (Tier 0g AUC).
     10. Reconcile:
         - ops/changelog.md: one-line entry
-        - ops/status.md: "Exp 861: StreamingCoTHalluDetector Tier 0g. AUC_streaming={result}.
+        - ops/status.md: "Exp 861: StreamingCoTHalluDetector Tier 0g. AUC_streaming=(result).
           VerificationCertificate.streaming_cot_unstable added."
     11. tmpl.assert_deliverable_written() as final line.
 
@@ -783,7 +783,7 @@ tasks:
 
          def build_J(self, constraints: list[dict]) -> np.ndarray:
            # Build J from constraints, weighted by current lambdas.
-           # constraint format: {"spins": [i, j], "sign": +1/-1, "penalty": float}
+           # constraint format: ("spins": [i, j], "sign": +1/-1, "penalty": float)
            J = self.J_base.copy()
            for k, c in enumerate(constraints):
              i, j = c["spins"]
@@ -802,7 +802,7 @@ tasks:
            for k, c in enumerate(constraints):
              avg_violation = self._constraint_violation(samples, c)
              self.lambdas[k] += self.lambda_lr * avg_violation
-           return {"violation_rate": float(violation_rate), "lambdas": self.lambdas.tolist()}
+           return ("violation_rate": float(violation_rate), "lambdas": self.lambdas.tolist())
 
          def _count_violations(self, samples, constraints) -> np.ndarray: ...
          def _constraint_violation(self, samples, constraint) -> float: ...
@@ -839,8 +839,8 @@ tasks:
        Traces to REQ-FR11-020 (new), SCENARIO-FR11-030 (new).
     9. Reconcile:
        - ops/changelog.md: one-line entry
-       - ops/status.md: "Exp 862: LagrangeAdaptive Ising FR-11. delta_s1_to_s5={result}.
-         fr11_self_learning_confirmed={result}."
+       - ops/status.md: "Exp 862: LagrangeAdaptive Ising FR-11. delta_s1_to_s5=(result).
+         fr11_self_learning_confirmed=(result)."
     10. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_862_lagrange_adaptive_ising.py -v
@@ -951,7 +951,7 @@ tasks:
         Traces to REQ-PROBE-050 (new), SCENARIO-PROBE-060 (Tier 0i AUC).
     11. Reconcile:
         - ops/changelog.md: one-line entry
-        - ops/status.md: "Exp 863: HalluSAEGeometricProbe Tier 0i. AUC_geometric={result}."
+        - ops/status.md: "Exp 863: HalluSAEGeometricProbe Tier 0i. AUC_geometric=(result)."
     12. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_863_hallusae_geometric_probe.py -v
@@ -1051,8 +1051,8 @@ tasks:
         Traces to REQ-FR11-030 (new), SCENARIO-FR11-040 (5-session relay).
     11. Reconcile:
         - ops/changelog.md: one-line entry
-        - ops/status.md: "Exp 864: FR-11 Tier 2 relay. tier2_relay_confirmed={result}.
-          delta_auc_s1_to_s5={result}. Tiers 0g, 0i, 3_lagrange integrated."
+        - ops/status.md: "Exp 864: FR-11 Tier 2 relay. tier2_relay_confirmed=(result).
+          delta_auc_s1_to_s5=(result). Tiers 0g, 0i, 3_lagrange integrated."
     12. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_864_fr11_tier2_integration_v5.py -v
@@ -1168,8 +1168,8 @@ tasks:
         after 10+ sessions of accumulation, preserving retrieval AUROC > 0.75."
     11. Reconcile:
         - ops/changelog.md: one-line entry
-        - ops/status.md: "Exp 865: Memory compression K=32. retrieval_auroc_before={result},
-          after={result}. compression_ratio={result}x."
+        - ops/status.md: "Exp 865: Memory compression K=32. retrieval_auroc_before=(result),
+          after=(result). compression_ratio=(result)x."
     12. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_865_constraint_memory_compression.py -v
@@ -1233,13 +1233,13 @@ tasks:
            layer1 = self.lut_estimate_layer(self.n_inputs, self.n_hidden)
            layer2 = self.lut_estimate_layer(self.n_hidden, 1)
            total = layer1 + layer2
-           return {
+           return (
              "layer1_luts": layer1,
              "layer2_luts": layer2,
              "total_luts": total,
              "ice40_hx8k_budget": 7680,
              "within_budget": total < 7680
-           }
+           )
 
          def synthesis_priority(self, ising_lut_count: int) -> str:
            kan_luts = self.total_lut_estimate()["total_luts"]
@@ -1268,7 +1268,7 @@ tasks:
          - within_ice40_budget: bool
          - kan_fpga_roadmap_clear: True if within_ice40_budget=True AND priority_determined
          - priority_determined: True
-         - sensitivity: {n4: int, n8: int, n16: int}
+         - sensitivity: (n4: int, n8: int, n16: int)
        honest_verdict:
          - "kan_fpga_roadmap_clear" if within_ice40_budget=True
          - "kan_over_budget" if within_ice40_budget=False
@@ -1284,8 +1284,8 @@ tasks:
         Traces to REQ-KAN-020 (new), SCENARIO-KAN-030 (LUT estimate).
     11. Reconcile:
         - ops/changelog.md: one-line entry
-        - ops/status.md: "Exp 866: KAN hardware analysis. kan_lut_estimate_n8={result}.
-          synthesis_priority={result}. within_budget={result}."
+        - ops/status.md: "Exp 866: KAN hardware analysis. kan_lut_estimate_n8=(result).
+          synthesis_priority=(result). within_budget=(result)."
     12. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_866_kan_hardware_analysis.py -v
@@ -1375,7 +1375,7 @@ tasks:
                                   requires_gpu=False)
        tmpl.setup()
        Build retro artifact with schema=carnot.operational_retro.v41:
-         {
+         (
            "schema": "carnot.operational_retro.v41",
            "milestone": "2026.04.66",
            "milestone_title": "Permanent LIVE-ENV Fix + DualGPU Production + ...",
@@ -1383,7 +1383,7 @@ tasks:
            "experiments_this_milestone": 13,
            "wall_time_minutes": <computed>,
            "wall_time_delta_vs_65": <computed>,
-           "success_criteria": [{"id": 1, "criterion": ..., "met": bool, "evidence": ...}, ...],
+           "success_criteria": [{"id": 1, "criterion": ..., "met": bool, "evidence": ...), ...],
            "criteria_met_count": int,
            "criteria_met_total": 13,
            "retros_closed": [...],
@@ -1403,8 +1403,8 @@ tasks:
     9. Update ops/status.md: full .66 summary — wins, failures, wall_time_delta, open RETROs,
        next steps. NEVER remove existing content. Add "## Milestone 2026.04.66" section.
     10. Update ops/changelog.md: add entry:
-        "2026-{date}: Milestone 2026.04.66 retro — {criteria_met_count}/13 criteria met.
-        wall_time_delta={result}. RETROs closed: [...]. RETROs opened: [...]."
+        "2026-{date}: Milestone 2026.04.66 retro — (criteria_met_count)/13 criteria met.
+        wall_time_delta=(result). RETROs closed: [...]. RETROs opened: [...]."
     11. Update MILESTONE_PREREQS.md: add section "## Milestone 2026.04.67 Pre-flight".
         List open RETROs, immediate human actions needed, experiment cap.
     12. tmpl.assert_deliverable_written() as final line.
