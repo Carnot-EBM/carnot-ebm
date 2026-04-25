@@ -2426,3 +2426,37 @@ Done. Here's what was produced:
 **Key finding this milestone:** RETRO-SYMCODE-SERIAL was *closed* (Exp 841, 1.710x speedup validated) yet Exp 627 still ran at 51 min unchanged from the unguarded queue. This is definitive proof that manifest enforcement is the load-bearing fix — implementation without dispatch-site wiring produces zero wall-time improvement. The per-experiment average also ticked back up to 5.29 min (from the 5.0 floor), the first complexity-drift signal in four milestones.
 2026-04-25 04:56:30,192 [conductor] Claude Code completed (exit 0)
 2026-04-25 04:56:30,192 [conductor] Operational retrospective complete
+2026-04-25 04:56:30,242 [conductor] Committed: [conductor] Operational retrospective for milestone 2026.04.64
+2026-04-25 04:56:31,961 [conductor] Pushed to origin
+2026-04-25 04:56:31,961 [conductor] No research-roadmap-next.yaml — launching planning agent
+2026-04-25 04:56:31,973 [conductor] ============================================================
+2026-04-25 04:56:31,973 [conductor] PLANNING NEXT MILESTONE (current: 2026.04.64)
+2026-04-25 04:56:31,973 [conductor] ============================================================
+2026-04-25 04:56:31,973 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Both files are complete and correct. Here's a summary of what was created:
+
+---
+
+## Milestone 2026.04.65 Designed
+
+**Two files written:**
+
+**`openspec/change-proposals/research-roadmap-vNEXT.md`** — Full design doc for milestone 2026.04.65: *JEPA v24b SVAMP Fix + Arbiter Warm-Start + Constraint Retrieval + GGUF Cache + iCE40 N=16*
+
+**`research-roadmap-next.yaml`** — 12-experiment YAML in conductor execution format (Exps 843-854)
+
+---
+
+**The 3 biggest gaps identified and targeted:**
+
+1. **JEPA SVAMP collapse** (Gap 1) — Exp 834 fixed ARC but SVAMP=0.0. Fix: add 20 SVAMP triplets + assert all domains covered at startup (Exps 844-845)
+
+2. **Arbiter non-functional 3 milestones** (Gap 2) — Root cause: Gibbs cold-start, only 10 sweeps. Fix: warm-start from `sign(h_i)` + 500 burn-in sweeps, based on arXiv 2304.06993 (Exps 846)
+
+3. **Constraint retrieval delta=0** despite write path fixed (Gap 3) — Root cause: missing L2-normalization on embeddings. Fix: normalize on write and retrieve, lower threshold 0.7→0.5 (Exps 847-848)
+
+**Plus:** GGUF cache module finally (8-milestone blockade, Exp 849), iCE40 N=16 bitstream (reduce from N=32, Exp 851), new Semantic Energy Tier 0f probe from arXiv 2508.14496 (Exp 852), and live benchmark v4 (Exp 853).
+
+**7 new papers filed** to `research-references.md`.
+2026-04-25 05:11:37,997 [conductor] Claude Code completed (exit 0)
+2026-04-25 05:11:38,010 [conductor] Planning agent created milestone 2026.04.65 with 12 tasks
