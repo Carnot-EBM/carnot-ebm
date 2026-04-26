@@ -4696,3 +4696,23 @@ thermodynamic computing Ising FPGA
   EMA update uses h_ema_prev as input, h_ema_new as output in separate pipeline stages.
   Python simulation first: compare parallel vs checkerboard at same alpha. Then Verilog.
 - **When to incorporate:** Milestone 2026.04.68 — Phase 5 hardware (Exp 889).
+
+
+## Symbolic-KAN (arXiv 2603.23854, April 2026)
+
+- **Title:** Symbolic-KAN: Augmenting Kolmogorov-Arnold Networks with Discrete Symbolic Node Labels
+- **arXiv:** 2603.23854
+- **Key idea:** Each KAN node is assigned a discrete symbolic label from a predefined vocabulary
+  (ADD, MUL, CMP, EQ). The node's forward pass combines the symbolic function's output with a small
+  learnable residual spline correction. Symbolic labels are updated via discrete search (argmin over
+  vocabulary) every N gradient steps, making the learned constraint function fully interpretable.
+- **Four node types:**
+  - ADD: f(x,y) = x+y — checks additive relationships
+  - MUL: f(x,y) = x*y — checks multiplicative relationships
+  - CMP: f(x,y) = sign(x-y) — checks comparison direction
+  - EQ:  f(x,y) = |x-y| — checks equality (low = equal)
+- **Relevance to Carnot:** Exp 937 applied Symbolic-KAN to arithmetic constraint verification.
+  AUC = 0.9344 vs standard KAN baseline 0.2208 (delta = +0.7136). Verdict: symbolic_kan_viable.
+  Interpretability is the primary gain: each node announces its semantic constraint role.
+- **Implementation:** python/carnot/models/symbolic_kan.py (REQ-MODEL-030, SCENARIO-MODEL-015).
+- **When incorporated:** Exp 937 — Milestone 2026.04.26.

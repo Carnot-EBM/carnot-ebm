@@ -1,0 +1,97 @@
+{
+  "experiment": 937,
+  "title": "Symbolic-KAN Arithmetic Constraint Verifier",
+  "run_date": "20260426",
+  "started_at": "2026-04-26T15:47:49Z",
+  "finished_at": "2026-04-26T15:48:00Z",
+  "duration_s": 11.114,
+  "status": "success",
+  "phase_timings_s": [
+    {
+      "name": "data_generation",
+      "elapsed_s": 0.001
+    },
+    {
+      "name": "training",
+      "elapsed_s": 11.113
+    },
+    {
+      "name": "evaluation",
+      "elapsed_s": 0.001
+    }
+  ],
+  "auc_standard": 0.2208,
+  "auc_symbolic": 0.9344,
+  "delta_auc": 0.7136,
+  "honest_verdict": "symbolic_kan_viable",
+  "top_symbolic_labels": [
+    "ADD",
+    "MUL",
+    "CMP",
+    "EQ"
+  ],
+  "label_counts": {
+    "ADD": 8,
+    "MUL": 0,
+    "CMP": 0,
+    "EQ": 0
+  },
+  "interpretability_examples": [
+    {
+      "node": 0,
+      "label": "ADD",
+      "description": "Node 0 [ADD]: checks whether features[13] + features[13] is consistent",
+      "correct_sample": {
+        "feat_i1": -0.550000011920929,
+        "feat_i2": -0.550000011920929,
+        "symbolic_output": -1.100000023841858
+      },
+      "incorrect_sample": {
+        "feat_i1": -0.550000011920929,
+        "feat_i2": -0.550000011920929,
+        "symbolic_output": -1.100000023841858
+      }
+    }
+  ],
+  "final_train_loss": 0.0,
+  "n_train_pairs": 160,
+  "n_eval_pairs": 40,
+  "n_epochs": 60,
+  "symbolic_kan_config": {
+    "input_dim": 16,
+    "n_nodes": 8,
+    "label_update_interval": 10,
+    "residual_amp": 0.05,
+    "lr": 0.02
+  },
+  "baseline_exp": 910,
+  "models_used": [
+    "synthetic_embeddings_cpu_only"
+  ],
+  "tier": "FR-11 Tier 4",
+  "schema": [
+    "auc_standard",
+    "auc_symbolic",
+    "baseline_exp",
+    "delta_auc",
+    "duration_s",
+    "experiment",
+    "final_train_loss",
+    "finished_at",
+    "honest_verdict",
+    "interpretability_examples",
+    "label_counts",
+    "models_used",
+    "n_epochs",
+    "n_eval_pairs",
+    "n_train_pairs",
+    "phase_timings_s",
+    "run_date",
+    "started_at",
+    "status",
+    "symbolic_kan_config",
+    "tier",
+    "title",
+    "top_symbolic_labels"
+  ]
+}
