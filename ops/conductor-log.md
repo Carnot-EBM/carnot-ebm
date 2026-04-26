@@ -2796,3 +2796,4 @@ python/ |
 | 2026-04-26 00:00 UTC | Exp 887: JEPA OOD Final Surgery — VJEPA Encoder Pr | OK | 81 passed, 3 warnings in 2.84s |
 | 2026-04-26 00:16 UTC | Exp 888: FR-11 Tier 3 Relay — VJEPA-Guided Constra | OK | 81 passed, 3 warnings in 2.87s |
 | 2026-04-26 00:36 UTC | Exp 889: iCE40 PIMI v3 — Full Parallel Spin Update | OK | 81 passed, 3 warnings in 2.81s |
+| 2026-04-26 00:49 UTC | Exp 890: GGUF Download v3 — HuggingFace CLI Approa | OK | 81 passed, 3 warnings in 2.88s |
