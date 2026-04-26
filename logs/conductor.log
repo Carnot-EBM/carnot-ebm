@@ -5142,3 +5142,33 @@ Traceback (most recent call last):
         ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'dict' object has no attribute 'lower'
 2026-04-26 01:07:16,370 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 01:07:16,426 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 01:07:16,427 [conductor] Running test suite (smart subset)...
+2026-04-26 01:07:21,939 [conductor] Pre-check: 81 passed, 3 warnings in 2.84s
+2026-04-26 01:07:22,036 [conductor] Prompt format error in exp901-pimi-sparse-adjacency-v4: 'honest_verdict' — using raw prompt
+2026-04-26 01:07:22,051 [conductor] Injected 46 symbol signatures from 2 files (AST outlines)
+2026-04-26 01:07:22,051 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 27 tests pass. Deliverable is written and stable.
+
+**Summary:**
+
+- `python/carnot/samplers/sparse_pimi.py` — `SparsePIMISampler` with `_sparsify` (top-k by |J| magnitude)
+- `hardware/kv260/ising_pimi_n8_sparse_v4.v` — Sparse k=3 Verilog (identical topology to v3 for ring+chord)
+- `tests/python/test_experiment_901_pimi_sparse_adjacency_v4.py` — 27 tests, all passing
+- `results/experiment_901_pimi_sparse_adjacency_v4.json` — `honest_verdict="pimi_improved_below_5x"`, `sweeps_reduction=4.33`, `lut_count=126`
+- `ops/exclusion_manifest.yaml` — iCE40 PIMI retired (4 experiments, all below 5x)
+- `openspec/capabilities/fpga/spec.md` — REQ-HW-041 + SCENARIO-HW-041 added
+
+**Key finding:** The ring+chord graph has max degree=3, so k=3,4,5 sparse all equal dense — no spurious couplings to remove. iCE40 PIMI is now formally retired after four attempts across all structural and update-strategy hypotheses.
+2026-04-26 01:14:09,863 [conductor] Claude Code completed (exit 0)
+2026-04-26 01:14:09,877 [conductor] Changes:
+logs/conductor.log                 | 19 ++++++++++++++++
+ openspec/capabilities/fpga/spec.md | 46 ++++++++++++++++++++++++++++++++++++++
+ ops/exclusion_manifest.yaml        | 11 +++++++++
+ 3 files changed, 76 insertions(+)
+2026-04-26 01:14:09,894 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp892-preflight-v18: '"pimi_retired", "pimi_retired_upstream"' — auto-fixing
+2026-04-26 01:14:09,894 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp893-svamp-root-cause: '\n     mean_cot_depth_svamp' — auto-fixing
+2026-04-26 01:14:09,894 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp896-svamp-estimation-verifier: '"more", "total", "sum", "combined", "together"' — auto-fixing
+2026-04-26 01:14:09,912 [conductor] DOGFOOD: Verification complete (total: 574 checks, 52 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 01:14:09,912 [conductor] Running test suite (smart subset)...
+2026-04-26 01:14:15,505 [conductor] Post-check: 81 passed, 3 warnings in 2.82s

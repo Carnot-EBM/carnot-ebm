@@ -88,3 +88,14 @@ retired_experiments:
 - id: GGUF-model-download-for-code-repair
   reason: |
     CLI approach also failed; 12 total attempts (Exps 857-890). Code repair via GGUF models is retired — use transformers loader (Exp 881) instead.
+
+# Added by Exp 901 — retire_if_same_verdict triggered (same pimi_improved_below_5x as Exp 889)
+- id: iCE40-PIMI-sparse-adjacency
+  reason: |
+    Three structural strategies + parallel update strategy all failed to reach 5x sweep reduction
+    on the N=8 ring+chord ferromagnetic graph. Exps 860 (2x), 876 (2-4x), 889 (4.33x), 901 (4.33x).
+    Retired after Exp 901 (FINAL attempt per research-roadmap-v69.md).
+    Root finding: ring+chord graph has degree=3 already; sparse k=3,4,5 == dense for this graph.
+    The 15-25x speedup in arXiv 2604.17109 requires harder, larger, denser constraint problems.
+  experiment_ids: [860, 876, 889, 901]
+  milestone: "2026.04.69"

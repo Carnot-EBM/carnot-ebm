@@ -283,6 +283,51 @@ lut_count=126, synthesis_clean=True, honest_verdict="pimi_improved_below_5x".
 
 ---
 
+### REQ-HW-041
+
+**Title:** SparsePIMISampler copy-node sparsification reduces convergence sweeps vs dense PIMI
+
+**Description:**
+SparsePIMISampler (python/carnot/samplers/sparse_pimi.py) implements PIMI sampling with
+copy-node sparsification from arXiv 2503.01177: for each spin i, only the top-k couplings
+by |J[i,j]| magnitude are retained; all others are zeroed out.  This converts O(N^2) dense
+edges to O(N*k) sparse edges.
+
+Hypothesis tested in Exp 901 (FINAL PIMI attempt): dense coupling creates spurious local
+minima independent of update strategy.  If true, sparse adjacency should beat synchronous
+PIMI (Exp 889) by further reducing convergence sweeps.
+
+**Finding (Exp 901):** For the N=8 ring+chord ferromagnetic graph, every spin already has
+degree exactly 3.  With k=3,4,5, J_sparse == J_dense (no edges removed).  SparsePIMISampler
+is structurally equivalent to SynchronousPIMISampler for this graph.  Sweeps reduction =
+4.33x (same as Exp 889), below the 5x target.  iCE40 PIMI retired after this final attempt.
+
+**Acceptance criteria (Exp 901 gate):**
+- k-sparsification keeps exactly top-k couplings per spin (verified by unit test)
+- Synthesis on iCE40 HX8K: SB_LUT4 <= 250
+- sweeps_reduction >= 5.0 for verdict "pimi_5x_retro_closed" (NOT achieved)
+
+**Implementation status:** Implemented and retired (Exp 901)
+
+---
+
+### SCENARIO-HW-041
+
+**Scenario:** SparsePIMISampler k-sparsification benchmark on N=8 ring+chord graph.
+
+**Given:** SparsePIMISampler with J_dense = make_n8_coupling_matrix(), k ∈ {3,4,5}.
+**When:** 100 independent trials, target_energy=-3.0, max_sweeps=400.
+**Then:**
+- J_sparse has exactly min(k, degree_i) nonzero entries per row
+- sweeps_reduction is reported honestly
+- honest_verdict is one of the defined outcome strings
+
+**Result (Exp 901):** k=3,4,5 all give sparse_sweeps=3 (same as dense, since ring+chord
+degree=3 <= k for all tested k).  sweeps_reduction=4.33x, lut_count=126, synthesis_clean=True,
+honest_verdict="pimi_improved_below_5x".  iCE40 PIMI retired to exclusion_manifest.yaml.
+
+---
+
 ## Implementation Status
 
 | REQ | Status | Experiment |
@@ -292,4 +337,5 @@ lut_count=126, synthesis_clean=True, honest_verdict="pimi_improved_below_5x".
 | REQ-HW-038 | Pending | Exp 701 |
 | REQ-HW-039 | Pending | Exp 714 |
 | REQ-HW-040 | Implemented | Exp 757 |
+| REQ-HW-041 | Implemented (retired) | Exp 901 |
 | REQ-FPGA-030 | Implemented | Exp 859 |
