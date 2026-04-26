@@ -47,6 +47,8 @@ import math
 from dataclasses import dataclass, field
 from typing import Any
 
+import numpy as np
+
 
 @dataclass
 class ConstraintRecord:
@@ -353,6 +355,42 @@ class LagrangeAdaptiveUpdater:
     def total_expired(self) -> int:
         """Total number of constraints that have been expired by the forgetting curve."""
         return self._total_expired
+
+    @property
+    def weight_entropy(self) -> float:
+        """Shannon entropy of the current Lagrange weight distribution.
+
+        **Why entropy matters here:**
+            High entropy means weights are spread across many constraints — the
+            penalty landscape is diverse and no single constraint dominates.  Low
+            entropy (collapse toward 0) means a few constraints have accumulated
+            almost all the weight, crowding out others; Tier 3 rejection rate rises
+            because a small set of stale high-weight constraints makes the energy
+            function insensitive to the actually-violated constraints.
+
+            An exponential forgetting curve (non-zero forgetting_lambda) prevents
+            weight collapse by decaying stale weights.  Tracking entropy over time
+            shows whether the forgetting curve is doing its job.
+
+        **Computation:**
+            Treat normalized weights as a probability distribution and compute
+            Shannon entropy H = -sum(p * log(p)).  The 1e-10 guard prevents
+            log(0) when a weight is exactly zero.
+
+        Returns:
+            float: Shannon entropy in nats.  0.0 when there are no active
+            constraints or all weight is on a single constraint.
+
+        Spec: REQ-SELF-007
+        """
+        weights = np.array(list(self.constraint_weights.values()), dtype=float)
+        if len(weights) == 0:
+            return 0.0
+        total = weights.sum()
+        if total <= 0.0:
+            return 0.0
+        p = weights / total
+        return float(-np.sum(p * np.log(p + 1e-10)))
 
     def summary(self) -> dict[str, Any]:
         """Return a serialisable summary of the updater state for artifact writing."""

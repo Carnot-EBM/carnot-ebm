@@ -1613,6 +1613,47 @@ new knot count so the model fine-tunes from a meaningful initialisation.
 
 ---
 
+---
+
+## REQ-SELF-007: Lagrange Forgetting Curve Reduces Weight Staleness via Entropy Preservation
+
+**Given** a LagrangeAdaptiveUpdater processing a 100-step violation sequence
+         where violation rate drops from 0.7 (steps 1-50) to 0.1 (steps 51-100)
+**When** the updater uses forgetting_lambda > 0 (exponential weight decay)
+**Then** weight_entropy at step 100 is higher than the no-decay baseline
+**And** the signed entropy improvement exceeds 0.5 nats
+
+### REQ-SELF-007 Sub-requirements
+
+- REQ-SELF-007-1: `LagrangeAdaptiveUpdater.weight_entropy` SHALL return Shannon
+  entropy H = -sum(p * log(p)) of the normalized weight distribution.
+- REQ-SELF-007-2: `weight_entropy` SHALL return 0.0 when no constraints are active.
+- REQ-SELF-007-3: With forgetting_lambda=0 (baseline), entropy SHALL collapse
+  below the forgetting variant at step 100 of the high-to-low violation simulation.
+- REQ-SELF-007-4: The forgetting variant SHALL achieve `weight_entropy` > 0.5
+  at step 100, confirming weight diversity is preserved.
+
+**Acceptance criteria (Exp 909):**
+- `weight_entropy` property added to LagrangeAdaptiveUpdater.
+- 100-step synthetic simulation confirms signed_entropy_improvement > 0 for
+  forgetting_lambda=0.05 vs baseline.
+- honest_verdict is "forgetting_curve_improves_entropy" if improvement > 0.5.
+
+**Spec traces:** Exp 909, FR-11 Tier 1
+
+---
+
+## SCENARIO-SELF-007: Weight Entropy Stays Above Floor After 100 Update Steps
+
+**Given** 100 constraint update steps divided into a high-violation phase (steps 1-50,
+         violation_prob=0.7) followed by a low-violation phase (steps 51-100,
+         violation_prob=0.1)
+**When** LagrangeAdaptiveUpdater with forgetting_lambda=0.05 is used
+**Then** weight_entropy at step 100 is at least 0.5 nats
+**And** weight_entropy at step 100 (with decay) > weight_entropy at step 100 (no decay)
+
+---
+
 ## SCENARIO-FR11-008: Restructured KAN Has Lower Energy Loss Than Original
 
 **Given** a KANModel trained for 100 epochs on 50 FoVer pairs
