@@ -1520,3 +1520,45 @@ using DomainReweightedLoss to balance signal across domain sizes.
   4. `weighted_loss()` returns a positive scalar for non-trivial logits/labels.
 
 **Spec traces:** REQ-VERIFY-160, SCENARIO-VERIFY-232, Exp 883
+
+
+### REQ-TIER0-005: DRIFTProbe Multi-Layer Hallucination Detection (Tier 0i)
+
+**Status:** Implemented (Exp 911)
+
+`python/carnot/verify/drift_probe.py` implements `DRIFTProbe`, a Tier 0i advisory
+probe that detects hallucination by measuring cosine distance drift between consecutive
+transformer layer hidden-state representations.  Inspired by arXiv 2604.13386
+(Multi-Layer Probe Ensembling): probing layer N+1 vs N captures drift signal invisible
+to single-layer probes.
+
+**Acceptance criteria:**
+- REQ-TIER0-005-1: `extract_drift_signature(hidden_states)` returns a float32 array of
+  shape `(n_drift_pairs,)` with values clamped to `[0, 2]`.
+- REQ-TIER0-005-2: `fit(correct_examples, hallucinated_examples)` trains a
+  `LogisticRegression` probe on `(drift_signature, label)` pairs with label 0=correct,
+  1=hallucinated.
+- REQ-TIER0-005-3: `predict_violation_prob(hidden_states)` returns a float in `[0, 1]`;
+  returns 0.5 when probe has not been fitted yet.
+- REQ-TIER0-005-4: Default `layers` resolves to last `n_drift_pairs+1` layer indices
+  `[-(n_drift_pairs+1), ..., -1]`.
+- REQ-TIER0-005-5: Missing or absent layer keys in `hidden_states` produce zero drift
+  for that pair (no crash, no inflation).
+
+**Spec traces:** REQ-TIER0-005, Exp 911
+
+
+### SCENARIO-TIER0-005: DRIFTProbe AUC > 0.65 on GSM8K Hallucination Pairs
+
+**Given** 100 GSM8K (question, correct_response, hallucinated_response) triples
+where hallucinated responses inject a wrong numerical answer while preserving the
+reasoning style,
+**When** hidden states are extracted at the last 4 transformer layers and
+`DRIFTProbe.fit()` is called on 80 training examples followed by
+`roc_auc_score` on 20 held-out examples,
+**Then**
+  1. `ood_auc_drift` > 0.65 → honest_verdict = "tier0i_viable"
+  2. `ood_auc_drift` > 0.55 → honest_verdict = "tier0i_marginal"
+  3. Otherwise → honest_verdict = "tier0i_not_viable"
+
+**Spec traces:** REQ-TIER0-005, SCENARIO-TIER0-005, Exp 911
