@@ -4396,3 +4396,30 @@ logs/conductor.log                 | 17 +++++++++++++++++
 2026-04-25 20:46:05,095 [conductor] RESEARCH STEP: Exp 890: GGUF Download v3 — HuggingFace CLI Approach (RETRO-SOTA-MODEL-DOWNLOAD) (CPU)
 2026-04-25 20:46:05,095 [conductor] ============================================================
 2026-04-25 20:46:05,115 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 20:46:05,176 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 20:46:05,176 [conductor] Running test suite (smart subset)...
+2026-04-25 20:46:10,755 [conductor] Pre-check: 81 passed, 3 warnings in 2.80s
+2026-04-25 20:46:10,852 [conductor] Prompt format error in exp890-gguf-download-v3-cli: '"success"' — using raw prompt
+2026-04-25 20:46:10,866 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-25 20:46:10,866 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+The deliverable is written and all 16 tests pass. Here's the summary:
+
+**Exp 890 result: `download_failed_retire`**
+
+The `hf` CLI binary is present on PATH but returned the same "Repository Not Found" error as the Python API — the repo `Qwen/Qwen3.5-0.8B-GGUF` does not exist on HuggingFace (it was likely renamed or never existed under that path). This is the 12th consecutive failure. The `retire_if_same_verdict: true` trigger fired and the exclusion item was appended to `ops/exclusion_manifest.yaml`.
+
+**What was delivered:**
+- `python/carnot/resolvers/gguf_cache.py` — `GGUFCacheResolver` with `cli_download()` and `resolve_with_cli_fallback()`
+- `scripts/experiment_890_gguf_download_v3_cli.py` — experiment script
+- `tests/python/test_experiment_890_gguf_download_v3_cli.py` — 16 tests, all passing
+- `results/experiment_890_gguf_download_v3_cli.json` — deliverable with `honest_verdict: "download_failed_retire"`
+- Spec entries REQ-INFRA-074 + SCENARIO-INFRA-083 appended to `openspec/capabilities/autoresearch/spec.md`
+2026-04-25 20:49:31,559 [conductor] Claude Code completed (exit 0)
+2026-04-25 20:49:31,575 [conductor] Changes:
+logs/conductor.log                         | 19 +++++++++++++++
+ openspec/capabilities/autoresearch/spec.md | 39 ++++++++++++++++++++++++++++++
+ ops/exclusion_manifest.yaml                |  5 ++++
+ 3 files changed, 63 insertions(+)
+2026-04-25 20:49:31,594 [conductor] DOGFOOD: Verification complete (total: 564 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 20:49:31,594 [conductor] Running test suite (smart subset)...
+2026-04-25 20:49:37,270 [conductor] Post-check: 81 passed, 3 warnings in 2.88s

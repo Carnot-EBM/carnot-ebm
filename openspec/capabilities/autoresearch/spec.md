@@ -2925,3 +2925,42 @@ Given ops/exclusion_manifest.yaml with retired experiment IDs (e.g. 527, 491, 60
   - manifest_enforcer_deployed: true appears in the appended section
 
 Spec: REQ-INFRA-072, SCENARIO-INFRA-081 (Exp 868)
+
+
+---
+
+## REQ-INFRA-074: GGUFCacheResolver CLI Download Fallback
+
+**REQ-INFRA-074**: GGUFCacheResolver MUST provide a ``cli_download()`` method that
+invokes the ``hf`` or ``huggingface-cli`` binary via subprocess as an alternative to
+the Python API.  This path is required because hf_hub_download() raised
+RepositoryNotFoundError on 11 consecutive attempts (Exps 857–869) despite the repo
+existing.  The CLI method MUST:
+
+1. Detect ``hf`` or ``huggingface-cli`` on PATH; return ``{"success": False, "error":
+   "hf CLI not found: ..."}`` if absent rather than raising.
+2. Run ``[hf_cmd, "download", hf_repo, filename, "--local-dir", dest_dir]`` with
+   a configurable ``timeout_s`` (default 300 s).
+3. Verify the downloaded file exists on disk and return
+   ``{"success": True, "path": str, "size_mb": float}`` on success.
+4. Return ``{"success": False, "error": str}`` on non-zero returncode or timeout
+   (never raise from this method — callers need to distinguish outcomes).
+
+A companion method ``resolve_with_cli_fallback()`` MUST try the local HF cache
+first and only invoke ``cli_download()`` on a cache miss.
+
+Implementation: ``python/carnot/resolvers/gguf_cache.py`` — GGUFCacheResolver
+
+### SCENARIO-INFRA-083: CLI Download on Valid Repo Returns success=True
+
+Given a ``GGUFCacheResolver`` instance and a valid HuggingFace repo with a known
+GGUF file:
+  - ``cli_download(hf_repo, filename, dest_dir, timeout_s=300)`` returns a dict
+    where ``success == True``, ``"path"`` key exists, and ``"size_mb" > 0``
+  - The returned ``path`` points to a real file on disk
+  - ``resolve_with_cli_fallback()`` on the same inputs returns a ``pathlib.Path``
+    that ``exists()``
+  - When the ``hf`` binary is absent from PATH, ``cli_download()`` returns
+    ``{"success": False, "error": ...}`` rather than raising
+
+Spec: REQ-INFRA-074, SCENARIO-INFRA-083 (Exp 890)
