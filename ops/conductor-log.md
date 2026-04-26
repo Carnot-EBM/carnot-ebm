@@ -2818,3 +2818,4 @@ python/ |
 | 2026-04-26 06:08 UTC | Exp 904: Pre-flight v19 — .69 Zero-Run Audit + RET | OK | 81 passed, 3 warnings in 2.84s |
 | 2026-04-26 06:36 UTC | Exp 905: IterativeSelfRepair v1 — Execute-Feedback | OK | 81 passed, 3 warnings in 2.88s |
 | 2026-04-26 07:20 UTC | Exp 906: Code Repair 50q Scale-Up — IterativeSelfR | OK | 81 passed, 3 warnings in 2.84s |
+| 2026-04-26 07:34 UTC | Exp 907: SVAMP Root Cause v2 — Confirm FoVer Label | OK | 81 passed, 3 warnings in 2.88s |

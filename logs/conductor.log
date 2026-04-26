@@ -5469,3 +5469,25 @@ logs/conductor.log | 11 +++++++++++
 2026-04-26 03:34:31,733 [conductor] Pushed to origin
 2026-04-26 03:34:31,733 [conductor] Running post-commit documentation reconciliation...
 2026-04-26 03:34:31,743 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='mismatch_confirmed_gate_open', label='✅ Complete'
+2026-04-26 03:34:31,788 [conductor] Committed: [conductor] In-process docs for Exp 907: SVAMP Root Cause v2 — Confirm FoVer Lab
+2026-04-26 03:34:33,405 [conductor] Pushed to origin
+2026-04-26 03:34:33,405 [conductor] Documentation reconciliation committed (in-process)
+2026-04-26 03:34:33,409 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 03:39:33,412 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 03:44:33,415 [conductor] Sleep complete — resuming
+2026-04-26 03:44:33,415 [conductor] --- Iteration 22 ---
+2026-04-26 03:44:33,418 [conductor] ============================================================
+2026-04-26 03:44:33,418 [conductor] RESEARCH STEP: Exp 908: EstimationVerifier — Range-Based Word Problem Checking (CPU)
+2026-04-26 03:44:33,418 [conductor] ============================================================
+2026-04-26 03:44:34,129 [conductor] Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2081, in research_step
+    ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/failure_ledger.py", line 231, in load_from_artifacts
+    verdict = data.get("honest_verdict", "")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/in_process_doc_reconcile.py", line 142, in map_status_label
+    v = (verdict or "").lower()
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2026-04-26 03:44:34,149 [conductor] Committing 2 dirty files as checkpoint (preserving work)
