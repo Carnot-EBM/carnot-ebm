@@ -777,6 +777,41 @@ def _ensure_tasks_loaded():
 MAX_FAILURES_PER_TASK = 3  # Skip task after this many consecutive failures
 
 
+def compute_adaptive_sleep_min(iter_duration_s: float, interval_min: int) -> tuple[int, str]:
+    """Pick an inter-iteration sleep duration based on how much work the
+    iteration actually did.
+
+    Three tiers:
+      - **short (block/skip)** — iter_duration < 30 s. The iteration was a
+        doomed-rerun block, a deliverable-already-exists skip, or another
+        sub-second decision. No real Sonnet work, no GPU contention, no
+        downstream service to settle. Sleep ~10 % of the configured
+        interval (floor 1 min) so the loop stays responsive.
+      - **medium (CPU experiment)** — 30 s ≤ iter_duration < 5 min. A real
+        but lightweight experiment: CPU-only, fast Sonnet, pre-flight,
+        retros. The 5-min cutoff matches the upstream LLM's prompt-cache
+        TTL — sleeping past 5 min costs a cache miss, so anything below
+        gets a proportionally shorter sleep. Sleep ~50 % of the interval
+        (floor 2 min).
+      - **long (GPU/planner)** — iter_duration ≥ 5 min. A heavyweight
+        experiment (GPU inference, training, planner Sonnet 50-turn).
+        Real downstream load on git remotes, GPU memory, model caches.
+        Sleep the full configured interval — the safety margin is real.
+
+    Returns ``(sleep_min, tier_label)``. ``sleep_min`` is always ≥ 1.
+
+    Tuned against the .71 operational retro finding: ~80 min of the .71
+    milestone's 110 sleep-minutes were spent on doomed-rerun blocks that
+    finished in < 1 sec each. Adaptive sleep would have recovered most
+    of that time without changing the cache or pacing characteristics
+    of real experiments.
+    """
+    if iter_duration_s < 30:
+        return max(1, interval_min // 10), "short (block/skip)"
+    if iter_duration_s < 300:
+        return max(2, interval_min // 2), "medium (CPU experiment)"
+    return interval_min, "long (GPU/planner)"
+
 
 def _deliverable_exists(task: dict) -> bool:
     """Check if a task's deliverable file already exists in the repo.
@@ -2732,6 +2767,17 @@ def main() -> int:
                              "sleep. Saves ~1-2 min per iteration on the Haiku "
                              "path. Has no effect when --in-process-docs is set "
                              "(in-process is already <100ms).")
+    parser.add_argument("--adaptive-interval", action="store_true",
+                        help="Scale inter-iteration sleep to the iteration's "
+                             "actual duration. Short iterations (e.g. doomed-"
+                             "rerun blocks completing in <30 s) get a short "
+                             "sleep; mid-length iterations (CPU experiments "
+                             "in <5 min) get a medium sleep; long iterations "
+                             "(GPU experiments, planner runs) get the full "
+                             "--interval sleep. Saves ~30-40 min on milestones "
+                             "where blocks dominate (.71 retro flagged this). "
+                             "Off by default — fixed cadence is the safer "
+                             "baseline for stable autoresearch.")
     args = parser.parse_args()
 
     os.chdir(str(PROJECT_ROOT))
@@ -2792,6 +2838,7 @@ def main() -> int:
         iteration += 1
         logger.info("--- Iteration %d ---", iteration)
 
+        iter_start = time.time()
         try:
             progress = research_step(
                 push=not args.no_push,
@@ -2802,17 +2849,31 @@ def main() -> int:
         except Exception:
             logger.exception("Unexpected error in research step")
             progress = False
+        iter_duration = time.time() - iter_start
 
         if not args.loop:
             return 0 if progress else 1
+
+        # Decide sleep duration. The default is `args.interval` minutes — a
+        # fixed cadence. With --adaptive-interval the sleep scales to how
+        # much real work the iteration did, measured by iter_duration. See
+        # `compute_adaptive_sleep_min` for the tier definitions and rationale.
+        if args.adaptive_interval:
+            sleep_min, tier = compute_adaptive_sleep_min(iter_duration, args.interval)
+            logger.info(
+                "Adaptive sleep: %d min (%s) — iteration ran %.1fs",
+                sleep_min, tier, iter_duration,
+            )
+        else:
+            sleep_min = args.interval
 
         # Chunked sleep: survive background-harness hibernation. A single
         # time.sleep(1800) gets suspended by some schedulers and never resumes,
         # losing hours of wall clock. Chunking into 60s tick bursts lets the
         # OS scheduler re-page us promptly and lets us log progress so a stuck
         # sleep is visible from the output file.
-        total_seconds = args.interval * 60
-        logger.info("Sleeping %d minutes (chunked 60s ticks)...", args.interval)
+        total_seconds = sleep_min * 60
+        logger.info("Sleeping %d minutes (chunked 60s ticks)...", sleep_min)
         slept = 0
         while slept < total_seconds:
             chunk = min(60, total_seconds - slept)
@@ -2820,7 +2881,7 @@ def main() -> int:
             slept += chunk
             if slept % 300 == 0 and slept < total_seconds:
                 logger.info("...sleeping, %d/%d min elapsed",
-                            slept // 60, args.interval)
+                            slept // 60, sleep_min)
         logger.info("Sleep complete — resuming")
 
     return 0

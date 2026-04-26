@@ -2859,3 +2859,4 @@ python/ |
 | 2026-04-26 14:32 UTC | Exp 931: Combined Math+Estimation Pipeline — Wire | OK | Deliverable already exists in repo |
 | 2026-04-26 14:36 UTC | Exp 932: DualGPU Throughput Benchmark — Confirm 1. | OK | 81 passed, 3 warnings in 2.87s |
 | 2026-04-26 14:49 UTC | Exp 933: HuggingFace Publish v4 — SOPS Auth Inject | OK | 81 passed, 3 warnings in 2.86s |
+| 2026-04-26 15:03 UTC | Exp 934: IPFS Mirror — Establish Distribution Mirr | OK | 81 passed, 3 warnings in 2.99s |
