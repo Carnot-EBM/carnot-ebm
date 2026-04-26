@@ -140,3 +140,7 @@ Status: TARGETED — .72 must use learned weights (logistic regression on valida
 
 Exp 922 HF publish blocked by SOPS credential injection unresolved.
 Status: HUMAN_REQUIRED — resolve SOPS credential injection before scheduling HF publish.
+
+### IPFS Mirror CLOSED (Exp 934, 2026-04-26)
+VJEPA v2 IPFS CID: `QmTkGjpN5fYNnC3g8Gx8sPWHZJKkw8oGVDKwWT6sZbVaGN`
+Mirror registry: results/ipfs_mirrors.json
