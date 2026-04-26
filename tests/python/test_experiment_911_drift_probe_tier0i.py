@@ -11,13 +11,14 @@ model_runner that returns pre-built numpy arrays, so the full probe logic
 without downloading model weights.
 
 Spec traces: REQ-TIER0-005, SCENARIO-TIER0-005
+Spec: REQ-AUTO-011
 """
 
 from __future__ import annotations
 
-import os
-import json
 import importlib.util
+import json
+import os
 import sys
 
 os.environ.setdefault("JAX_PLATFORMS", "cpu")
@@ -25,10 +26,10 @@ os.environ.setdefault("JAX_PLATFORMS", "cpu")
 import numpy as np
 import pytest
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _synthetic_runner(layers: list[int], hidden_dim: int = 16):
     """Return a synthetic model_runner with controllable drift level.
@@ -47,10 +48,7 @@ def _synthetic_runner(layers: list[int], hidden_dim: int = 16):
 
     def runner(text: str) -> dict[int, np.ndarray]:
         # Each layer gets independent random vectors → high cosine distance.
-        return {
-            layer: rng.standard_normal((8, hidden_dim)).astype(np.float32)
-            for layer in layers
-        }
+        return {layer: rng.standard_normal((8, hidden_dim)).astype(np.float32) for layer in layers}
 
     return runner
 
@@ -63,11 +61,11 @@ def _low_drift_runner(layers: list[int], hidden_dim: int = 16):
 
     Spec: REQ-TIER0-005-1
     """
+
     def runner(text: str) -> dict[int, np.ndarray]:
         base = np.ones((8, hidden_dim), dtype=np.float32)
         return {
-            layer: base + 0.001 * np.eye(hidden_dim, 8).T.astype(np.float32)
-            for layer in layers
+            layer: base + 0.001 * np.eye(hidden_dim, 8).T.astype(np.float32) for layer in layers
         }
 
     return runner
@@ -119,8 +117,7 @@ class TestExtractDriftSignature:
         from carnot.verify.drift_probe import DRIFTProbe
 
         probe = DRIFTProbe(model_runner=None, layers=[-2, -1])
-        hs = {-2: np.ones((4, 8), dtype=np.float32),
-              -1: np.ones((4, 8), dtype=np.float32)}
+        hs = {-2: np.ones((4, 8), dtype=np.float32), -1: np.ones((4, 8), dtype=np.float32)}
         sig = probe.extract_drift_signature(hs)
         assert sig.dtype == np.float32
 
@@ -167,8 +164,7 @@ class TestExtractDriftSignature:
 
         probe = DRIFTProbe(model_runner=None, layers=[-4, -3, -2, -1])
         # Only provide two of the four required layers.
-        hs = {-2: np.ones((4, 8), dtype=np.float32),
-              -1: np.ones((4, 8), dtype=np.float32)}
+        hs = {-2: np.ones((4, 8), dtype=np.float32), -1: np.ones((4, 8), dtype=np.float32)}
         sig = probe.extract_drift_signature(hs)
         assert sig.shape == (3,)
         # First two pairs missing → zero; last pair present.
@@ -230,8 +226,7 @@ class TestPredictViolationProb:
         from carnot.verify.drift_probe import DRIFTProbe
 
         probe = DRIFTProbe(model_runner=None, layers=[-2, -1])
-        hs = {-2: np.ones((4, 8), dtype=np.float32),
-              -1: np.ones((4, 8), dtype=np.float32)}
+        hs = {-2: np.ones((4, 8), dtype=np.float32), -1: np.ones((4, 8), dtype=np.float32)}
         assert probe.predict_violation_prob(hs) == 0.5
 
     def test_range_after_fit(self) -> None:
@@ -248,8 +243,7 @@ class TestPredictViolationProb:
         halluc_sigs = rng.uniform(0.9, 1.0, (20, 1)).astype(np.float32)
         probe.fit_from_signatures(correct_sigs, halluc_sigs)
 
-        hs_low = {-2: np.ones((4, 8), dtype=np.float32),
-                  -1: np.ones((4, 8), dtype=np.float32)}
+        hs_low = {-2: np.ones((4, 8), dtype=np.float32), -1: np.ones((4, 8), dtype=np.float32)}
         p = probe.predict_violation_prob(hs_low)
         assert isinstance(p, float)
         assert 0.0 <= p <= 1.0
@@ -280,9 +274,9 @@ class TestPredictViolationProb:
         hs_orthogonal = {-2: b, -1: c}
         p_halluc = probe.predict_violation_prob(hs_orthogonal)
 
-        assert p_halluc > p_correct, (
-            f"Hallucinated score {p_halluc:.3f} should exceed correct score {p_correct:.3f}"
-        )
+        assert (
+            p_halluc > p_correct
+        ), f"Hallucinated score {p_halluc:.3f} should exceed correct score {p_correct:.3f}"
 
 
 # ---------------------------------------------------------------------------
@@ -323,9 +317,10 @@ class TestFitFromSignatures:
             rng.random((15, 3)).astype(np.float32),
             rng.random((15, 3)).astype(np.float32),
         )
-        assert probe._probe.coef_.shape == (1, 3), (
-            f"Expected coef shape (1, 3), got {probe._probe.coef_.shape}"
-        )
+        assert probe._probe.coef_.shape == (
+            1,
+            3,
+        ), f"Expected coef shape (1, 3), got {probe._probe.coef_.shape}"
 
 
 # ---------------------------------------------------------------------------
@@ -386,9 +381,7 @@ class TestGSM8KTripleGeneration:
     @pytest.fixture(autouse=True)
     def _load_exp_module(self):
         """Dynamically load the experiment module (not imported at module level)."""
-        repo_root = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..")
-        )
+        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
         scripts_dir = os.path.join(repo_root, "scripts")
         sys.path.insert(0, scripts_dir)
 
@@ -397,7 +390,6 @@ class TestGSM8KTripleGeneration:
         self.mod = importlib.util.module_from_spec(spec)
         # Don't exec — just extract the functions we need via partial exec.
         # Safer: import only the specific functions.
-        import types
         src = open(script_path).read()
         globs = {"__name__": "exp911"}
         # Execute only the non-main portion to get the helper functions.
@@ -434,9 +426,9 @@ class TestGSM8KTripleGeneration:
         """
         triples = self.generate_gsm8k_triples(n=25, seed=42)
         for t in triples:
-            assert t["correct"] != t["hallucinated"], (
-                f"correct and hallucinated are identical for: {t['question']}"
-            )
+            assert (
+                t["correct"] != t["hallucinated"]
+            ), f"correct and hallucinated are identical for: {t['question']}"
 
     def test_reproducible_with_same_seed(self) -> None:
         """generate_gsm8k_triples with the same seed produces identical output.
@@ -445,7 +437,7 @@ class TestGSM8KTripleGeneration:
         """
         t1 = self.generate_gsm8k_triples(n=10, seed=77)
         t2 = self.generate_gsm8k_triples(n=10, seed=77)
-        for a, b in zip(t1, t2):
+        for a, b in zip(t1, t2, strict=False):
             assert a["correct"] == b["correct"]
             assert a["hallucinated"] == b["hallucinated"]
 
@@ -456,7 +448,9 @@ class TestGSM8KTripleGeneration:
         """
         t1 = self.generate_gsm8k_triples(n=10, seed=1)
         t2 = self.generate_gsm8k_triples(n=10, seed=2)
-        diffs = sum(1 for a, b in zip(t1, t2) if a["hallucinated"] != b["hallucinated"])
+        diffs = sum(
+            1 for a, b in zip(t1, t2, strict=False) if a["hallucinated"] != b["hallucinated"]
+        )
         assert diffs > 0
 
 
@@ -476,9 +470,7 @@ class TestExperiment911Deliverable:
 
         Spec: REQ-TIER0-005
         """
-        repo_root = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..")
-        )
+        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
         scripts_dir = os.path.join(repo_root, "scripts")
         sys.path.insert(0, scripts_dir)
 
@@ -493,16 +485,23 @@ class TestExperiment911Deliverable:
         finally:
             os.chdir(orig_dir)
 
-        deliverable = os.path.join(repo_root, "results",
-                                   "experiment_911_drift_probe_tier0i.json")
+        deliverable = os.path.join(repo_root, "results", "experiment_911_drift_probe_tier0i.json")
         assert os.path.exists(deliverable), "Deliverable JSON must exist after main()"
 
         with open(deliverable) as f:
             data = json.load(f)
 
         # Required base schema fields.
-        for field in ["experiment", "schema", "run_date", "started_at",
-                      "finished_at", "duration_s", "status", "title"]:
+        for field in [
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ]:
             assert field in data, f"Required field '{field}' missing"
 
         assert data["experiment"] == 911
@@ -511,9 +510,7 @@ class TestExperiment911Deliverable:
         # Experiment-specific fields.
         assert "ood_auc_drift" in data
         assert "honest_verdict" in data
-        assert data["honest_verdict"] in (
-            "tier0i_viable", "tier0i_marginal", "tier0i_not_viable"
-        )
+        assert data["honest_verdict"] in ("tier0i_viable", "tier0i_marginal", "tier0i_not_viable")
         assert 0.0 <= data["ood_auc_drift"] <= 1.0
         assert "inference_mode" in data
         assert "probe_layers" in data

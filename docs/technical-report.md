@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 928 Experiments Across 77 Research Milestones
+## A Technical Report on 940 Experiments Across 78 Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-26
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **928
-experiments across 77 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **940
+experiments across 78 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -422,6 +422,33 @@ with prior failure history and must include a well-formed `prior_failures:`
 entry in the YAML or the conductor will block the experiment before any work
 runs.
 
+Milestone 2026.04.72 (the 78th) extended the record to **940 experiments**
+and met 10 of 12 success criteria. The strongest new result is the
+**Symbolic-KAN constraint verifier** (Exp 937): AUC=0.9344 on arithmetic
+constraint verification (threshold 0.70), a delta of +0.7136 over the
+standard KAN baseline, using human-readable symbolic labels (ADD, MUL, CMP,
+EQ) — the first Carnot verifier to combine EBM energy scoring with
+interpretable symbolic structure. **DualGPU throughput confirmed** at
+realistic workload: Exp 932 measured 1.96x speedup on 50 GSM8K questions,
+improving on the Exp 913 structural-wiring baseline of 1.40x — the dual-GPU
+path is now production-ready at realistic scale. **HuggingFace + IPFS
+dual-distribution** established: VJEPA v2 and EstimationVerifier published to
+the Carnot-EBM org (Exp 933) and pinned to IPFS (Exp 934, CIDs checked in),
+satisfying CLAUDE.md rule 3 (distribution mirroring). **FR-11 Tier 2
+code-domain memory** confirmed working end-to-end: 17 patterns loaded from
+Exp 905, 3 templates added, cross-session persistence verified, 10/10 replay
+problems matched at 100% constraint match rate (Exp 935). **DraftConditioned
+Tier 2.8** wired into ThreeTierPipeline between Tier 2.7 and Tier 3 — 20/20
+synthetic questions activated tier28 (Exp 938), architecture integration
+complete. Two criteria not met: math iterative self-repair (Exp 930) showed
+zero improvement — gemma-4-E4B-it hits a capability ceiling on GSM8K at 12%
+baseline and 12% repair; a SOTA model (Gemma4-31B or Qwen3.6-35B-A3B) is
+required. SC-Energy set consistency (Exp 939) blocked by gate-discipline
+failure — planner YAML lacked `prior_failures:` for 7 prior SC-energy
+experiments. Entering .73 with 5 open retros, 3 of which require human
+intervention (RETRO-MANIFEST-FULL-SCOPE, RETRO-XILINX-TOOLS-UNAVAILABLE,
+RETRO-RERUN-DISCIPLINE-GATE-CASCADE).
+
 ---
 
 ## What this report is (and isn't)
@@ -459,6 +486,8 @@ All primary benchmark rows below are from live GPU inference. The replay and tra
 | SpectralAttentionProbe Tier 0h hallucination detector | — | AUC **1.0** | Bigram Laplacian spectral entropy; 23.3% advisory signal rate | Exp 885 |
 | IterativeSelfRepair code repair (HumanEval 50, Gemma-4-E4B-it) | 8.0% | 80.0% | **+72pp** execute-feedback-retry loop; cross-model energy selection accuracy 1.0 | Exp 905/906 |
 | EstimationVerifier SVAMP AUC | 0.125 (FoVer baseline) | **0.90** | +0.775 signed improvement; RETRO-SVAMP-ZERO-AUC closed | Exp 908 |
+| Symbolic-KAN arithmetic constraint verifier | — | AUC **0.9344** | +0.7136 over standard KAN; interpretable symbolic labels (ADD, MUL, CMP, EQ) | Exp 937 |
+| DualGPU pipeline throughput (realistic 50q workload) | 1.40x (Exp 913 baseline) | **1.96x** | Confirmed production-ready at realistic scale; bit-identical results | Exp 932 |
 
 ### Pending Validation (Not Yet Headline)
 

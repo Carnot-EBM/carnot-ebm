@@ -1,6 +1,7 @@
 """Tests for Experiment 898: FR-11 Tier 4 KAN Adaptive Structure Seed.
 
 Spec: REQ-FR11-008, SCENARIO-FR11-008
+Spec: REQ-AUTO-011
 """
 
 from __future__ import annotations
@@ -11,9 +12,7 @@ from pathlib import Path
 import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
-import pytest
-
-from carnot.models.kan import BSpline, KANConfig, KANEnergyFunction, KANModel
+from carnot.models.kan import KANConfig, KANEnergyFunction, KANModel
 from carnot.models.kan_adaptive_structure import (
     KANAdaptiveStructure,
     _classify_density,
@@ -135,8 +134,11 @@ def test_analyze_result_has_required_keys():
     for spline_id, info in analysis.items():
         assert "density" in info, f"Missing 'density' in {spline_id}"
         assert "knot_count" in info, f"Missing 'knot_count' in {spline_id}"
-        assert info["density"] in ("high", "low", "neutral"), \
-            f"Invalid density class: {info['density']}"
+        assert info["density"] in (
+            "high",
+            "low",
+            "neutral",
+        ), f"Invalid density class: {info['density']}"
 
 
 def test_analyze_high_density_detected():
@@ -167,7 +169,7 @@ def test_restructure_doubles_knots_for_high_density():
     i, j = edge_key
     analysis = {f"edge_{i}_{j}": {"density": "high", "knot_count": 6}}
     # Add remaining splines as neutral
-    for (a, b) in kan.energy_fn.edge_splines:
+    for a, b in kan.energy_fn.edge_splines:
         if (a, b) != edge_key:
             analysis[f"edge_{a}_{b}"] = {"density": "neutral", "knot_count": 6}
     for idx in range(len(kan.energy_fn.bias_splines)):
@@ -185,7 +187,7 @@ def test_restructure_halves_knots_for_low_density():
     edge_key = list(kan.energy_fn.edge_splines.keys())[0]
     i, j = edge_key
     analysis: dict = {f"edge_{i}_{j}": {"density": "low", "knot_count": 8}}
-    for (a, b) in kan.energy_fn.edge_splines:
+    for a, b in kan.energy_fn.edge_splines:
         if (a, b) != edge_key:
             analysis[f"edge_{a}_{b}"] = {"density": "neutral", "knot_count": 8}
     for idx in range(len(kan.energy_fn.bias_splines)):
@@ -205,15 +207,16 @@ def test_restructure_does_not_mutate_original():
     original_knots = kan.energy_fn.edge_splines[edge_key].num_knots
 
     analysis: dict = {f"edge_{i}_{j}": {"density": "high", "knot_count": original_knots}}
-    for (a, b) in kan.energy_fn.edge_splines:
+    for a, b in kan.energy_fn.edge_splines:
         if (a, b) != edge_key:
             analysis[f"edge_{a}_{b}"] = {"density": "neutral", "knot_count": original_knots}
     for idx in range(len(kan.energy_fn.bias_splines)):
         analysis[f"bias_{idx}"] = {"density": "neutral", "knot_count": original_knots}
 
     _new_kan = KANAdaptiveStructure.restructure(kan, analysis)
-    assert kan.energy_fn.edge_splines[edge_key].num_knots == original_knots, \
-        "Original KAN was mutated by restructure()"
+    assert (
+        kan.energy_fn.edge_splines[edge_key].num_knots == original_knots
+    ), "Original KAN was mutated by restructure()"
 
 
 # ---------------------------------------------------------------------------
@@ -228,8 +231,14 @@ def test_evaluate_benefit_returns_required_keys():
     kan_b = KANModel(config, key=jrandom.PRNGKey(10))
     inputs = [jnp.array([0.5, -0.5, 0.2, 0.8])]
     result = KANAdaptiveStructure.evaluate_benefit(kan_a, kan_b, inputs)
-    for key in ("energy_loss_before", "energy_loss_after", "delta",
-                "knot_count_before", "knot_count_after", "knot_count_change_pct"):
+    for key in (
+        "energy_loss_before",
+        "energy_loss_after",
+        "delta",
+        "knot_count_before",
+        "knot_count_after",
+        "knot_count_change_pct",
+    ):
         assert key in result, f"Missing key: {key}"
 
 
@@ -294,15 +303,31 @@ def test_deliverable_json_exists_and_valid():
         data = json.load(f)
 
     required = [
-        "experiment", "title", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "energy_loss_before", "energy_loss_after",
-        "energy_loss_delta", "knot_count_before", "knot_count_after",
-        "knot_count_change_pct", "tier4_viable", "honest_verdict", "spec",
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "energy_loss_before",
+        "energy_loss_after",
+        "energy_loss_delta",
+        "knot_count_before",
+        "knot_count_after",
+        "knot_count_change_pct",
+        "tier4_viable",
+        "honest_verdict",
+        "spec",
     ]
     for field in required:
         assert field in data, f"Missing required field in deliverable: {field}"
 
     assert data["experiment"] == 898
-    assert data["honest_verdict"] in ("tier4_viable_seed", "tier4_neutral", "tier4_restructuring_hurts")
+    assert data["honest_verdict"] in (
+        "tier4_viable_seed",
+        "tier4_neutral",
+        "tier4_restructuring_hurts",
+    )
     assert "REQ-FR11-008" in data["spec"]
     assert isinstance(data["tier4_viable"], bool)

@@ -55,9 +55,24 @@ repos:
   # Python type checking
   - repo: local
     hooks:
+      # Hook entries below use .venv/bin/<tool> rather than bare names so
+      # they work without the operator activating the venv before each
+      # commit. Pre-commit's `language: system` doesn't activate the venv
+      # by itself; bare `mypy`/`pytest` require those binaries on $PATH,
+      # which is fragile across operator clones and the conductor's
+      # automated commit pipeline. Activated 2026-04-26 after the audit
+      # found these hooks were silently broken on this clone.
       - id: mypy
         name: mypy
-        entry: mypy python/carnot
+        # --ignore-missing-imports: many runtime deps (optax, z3, sklearn,
+        #   pynvml, mlir_aie, etc.) lack PEP-561 type-stub markers; mypy's
+        #   default behaviour is to error on each. We don't gain much from
+        #   stub-installing every transitive — strict typing inside our
+        #   own modules is what matters.
+        # --explicit-package-bases: avoids "Source file found twice" when
+        #   mypy walks both `python/carnot/` (the package source) and any
+        #   accidentally-discovered alternate import path.
+        entry: .venv/bin/mypy --ignore-missing-imports --explicit-package-bases python/carnot
         language: system
         types: [python]
         pass_filenames: false
@@ -65,7 +80,7 @@ repos:
       # Python test coverage enforcement
       - id: pytest-coverage
         name: pytest (100% coverage)
-        entry: pytest tests/python --cov=python/carnot --cov-report=term-missing --cov-fail-under=100
+        entry: .venv/bin/pytest tests/python --cov=python/carnot --cov-report=term-missing --cov-fail-under=100
         language: system
         types: [python]
         pass_filenames: false
@@ -73,7 +88,7 @@ repos:
       # Spec coverage: every test must reference a REQ-* or SCENARIO-*
       - id: spec-coverage
         name: spec coverage check
-        entry: python scripts/check_spec_coverage.py
+        entry: .venv/bin/python scripts/check_spec_coverage.py
         language: system
         types_or: [python, rust]
         pass_filenames: false
@@ -83,7 +98,7 @@ repos:
       # violations; this hook makes enforcement automatic at commit time.
       - id: batching-check
         name: Batching enforcement (BatchedInferenceRunner required)
-        entry: python scripts/batching_precommit_check.py
+        entry: .venv/bin/python scripts/batching_precommit_check.py
         language: system
         types: [python]
         pass_filenames: false

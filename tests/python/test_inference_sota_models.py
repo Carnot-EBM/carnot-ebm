@@ -5,12 +5,12 @@ return the expected models), and REQ-INFER-SOTA-003 (every entry has the
 fields downstream code needs to drive llama.cpp loading).
 
 Target: 100% line coverage per CLAUDE.md.
+Spec: REQ-INFRA-073
 """
 
 from __future__ import annotations
 
 import pytest
-
 from carnot.inference.sota_models import (
     SOTA_GGUF_MODELS,
     SotaModelSpec,
@@ -34,8 +34,13 @@ def test_registry_contains_three_mandated_models() -> None:
 # SCENARIO-INFER-SOTA-002: every record has the fields experiments read.
 def test_every_record_has_required_fields() -> None:
     required = {
-        "name", "hf_id", "role", "active_params_b",
-        "total_params_b", "quantization", "min_vram_gb",
+        "name",
+        "hf_id",
+        "role",
+        "active_params_b",
+        "total_params_b",
+        "quantization",
+        "min_vram_gb",
     }
     for record in SOTA_GGUF_MODELS:
         assert required <= set(record.keys())

@@ -36,7 +36,7 @@ import subprocess
 import sys
 import threading
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
@@ -128,9 +128,12 @@ def _build_agent_command(
     if AGENT_TYPE == "gemini":
         return (
             [
-                AGENT_BIN, "-p", prompt,
+                AGENT_BIN,
+                "-p",
+                prompt,
                 "--yolo",
-                "--model", model,
+                "--model",
+                model,
             ],
             None,
             f"Calling {AGENT_DISPLAY} (model: {model})...",
@@ -139,10 +142,13 @@ def _build_agent_command(
     if AGENT_TYPE == "opencode":
         return (
             [
-                AGENT_BIN, "run",
+                AGENT_BIN,
+                "run",
                 "--dangerously-skip-permissions",
-                "--model", model,
-                "--dir", str(PROJECT_ROOT),
+                "--model",
+                model,
+                "--dir",
+                str(PROJECT_ROOT),
                 prompt,
             ],
             None,
@@ -152,14 +158,20 @@ def _build_agent_command(
     if AGENT_TYPE == "codex":
         return (
             [
-                AGENT_BIN, "exec",
+                AGENT_BIN,
+                "exec",
                 "--dangerously-bypass-approvals-and-sandbox",
-                "--color", "never",
-                "--model", model,
-                "--cd", str(PROJECT_ROOT),
+                "--color",
+                "never",
+                "--model",
+                model,
+                "--cd",
+                str(PROJECT_ROOT),
                 "--ephemeral",  # Prevent session file accumulation (stall fix #3)
-                "-c", "agents.job_max_runtime_seconds=1200",  # 20 min cap (stall fix #2)
-                "-c", "model_providers.openai.stream_idle_timeout_ms=120000",  # 2 min idle (stall fix #2)
+                "-c",
+                "agents.job_max_runtime_seconds=1200",  # 20 min cap (stall fix #2)
+                "-c",
+                "model_providers.openai.stream_idle_timeout_ms=120000",  # 2 min idle (stall fix #2)
                 "-",
             ],
             prompt,
@@ -168,11 +180,14 @@ def _build_agent_command(
 
     return (
         [
-            AGENT_BIN, "-p",
+            AGENT_BIN,
+            "-p",
             "--dangerously-skip-permissions",
             "--verbose",
-            "--max-turns", str(max_turns),
-            "--model", model,
+            "--max-turns",
+            str(max_turns),
+            "--model",
+            model,
         ],
         prompt,
         f"Calling {AGENT_DISPLAY} ({max_turns} max turns, model: {model})...",
@@ -243,6 +258,7 @@ def run_agent(
         # Claude legitimately thinks for longer periods, so use a higher threshold.
         import select
         import signal
+
         # Stall detection: only for Codex (which has a known infinite-hang bug).
         # Claude doesn't stall — it either completes or hits the turn limit.
         # Setting to 0 disables the stall detector.
@@ -263,8 +279,11 @@ def run_agent(
                 pgid = os.getpgid(proc.pid)
                 os.killpg(pgid, signal.SIGKILL)
             except (ProcessLookupError, PermissionError) as exc:
-                logger.warning("Process group kill for %s failed (%s) — "
-                               "falling back to proc.kill()", reason, exc)
+                logger.warning(
+                    "Process group kill for %s failed (%s) — " "falling back to proc.kill()",
+                    reason,
+                    exc,
+                )
                 proc.kill()
 
         # Wall-clock timeout: the Exp 425 ExperimentTimeoutWatchdog guards
@@ -277,8 +296,7 @@ def run_agent(
         # require >60 min of inference should be split: subagent writes the
         # script (under 60 min), a separate long-running executor runs it.
         # Configurable via CARNOT_CONDUCTOR_TIMEOUT_MINUTES.
-        WALL_CLOCK_TIMEOUT = int(os.environ.get(
-            "CARNOT_CONDUCTOR_TIMEOUT_MINUTES", "60")) * 60
+        WALL_CLOCK_TIMEOUT = int(os.environ.get("CARNOT_CONDUCTOR_TIMEOUT_MINUTES", "60")) * 60
         start_time = time.time()
 
         output_lines = []
@@ -321,12 +339,16 @@ def run_agent(
                 if STALL_TIMEOUT > 0 and elapsed_silence > STALL_TIMEOUT:
                     logger.warning(
                         "%s stalled — no output for %ds, killing process group",
-                        AGENT_DISPLAY, int(elapsed_silence),
+                        AGENT_DISPLAY,
+                        int(elapsed_silence),
                     )
                     _kill_subagent_group("stall")
                     proc.wait(timeout=10)
                     full_output = "".join(output_lines)
-                    return False, f"Stalled after {int(elapsed_silence)}s silence. Last output: {full_output[-300:]}"
+                    return (
+                        False,
+                        f"Stalled after {int(elapsed_silence)}s silence. Last output: {full_output[-300:]}",
+                    )
 
             # Deliverable-watch: if the experiment has produced its expected
             # result file and it has been stable for DELIVERABLE_STABLE_SECS,
@@ -334,8 +356,10 @@ def run_agent(
             # turns are usually doc polishing or extra tests that the
             # conductor's own post-run reconciliation step will redo anyway.
             now = time.time()
-            if (deliverable_file is not None
-                    and now - deliverable_last_check >= DELIVERABLE_POLL_SECS):
+            if (
+                deliverable_file is not None
+                and now - deliverable_last_check >= DELIVERABLE_POLL_SECS
+            ):
                 deliverable_last_check = now
                 try:
                     st = deliverable_file.stat()
@@ -352,7 +376,8 @@ def run_agent(
                             logger.info(
                                 "%s produced stable deliverable %s "
                                 "(%.1f min elapsed) — killing subagent early",
-                                AGENT_DISPLAY, deliverable_path,
+                                AGENT_DISPLAY,
+                                deliverable_path,
                                 (now - start_time) / 60,
                             )
                             _kill_subagent_group("deliverable-stable")
@@ -373,7 +398,8 @@ def run_agent(
             if WALL_CLOCK_TIMEOUT > 0 and elapsed_total > WALL_CLOCK_TIMEOUT:
                 logger.warning(
                     "%s exceeded wall-clock timeout (%d min), killing process group",
-                    AGENT_DISPLAY, WALL_CLOCK_TIMEOUT // 60,
+                    AGENT_DISPLAY,
+                    WALL_CLOCK_TIMEOUT // 60,
                 )
                 _kill_subagent_group("wall-clock")
                 try:
@@ -403,6 +429,7 @@ def run_agent(
     except subprocess.TimeoutExpired:
         try:
             import signal as _sig  # noqa: PLC0415
+
             pgid = os.getpgid(proc.pid)
             os.killpg(pgid, _sig.SIGKILL)
         except (ProcessLookupError, PermissionError, OSError):
@@ -445,8 +472,12 @@ def preflight_gpu_reap() -> dict:
     """
     mode = os.environ.get("CARNOT_CONDUCTOR_REAPER", "live").lower()
     if mode in ("0", "off", "disabled", "no", "false"):
-        return {"honest_verdict": "reaper_disabled", "killed": [],
-                "total_vram_freed_mb": 0, "skipped_reason": "env_disabled"}
+        return {
+            "honest_verdict": "reaper_disabled",
+            "killed": [],
+            "total_vram_freed_mb": 0,
+            "skipped_reason": "env_disabled",
+        }
 
     try:
         sys.path.insert(0, str(PROJECT_ROOT / "python"))
@@ -456,8 +487,12 @@ def preflight_gpu_reap() -> dict:
         )
     except ImportError as exc:
         logger.warning("GPU reaper import failed (%s) — skipping pre-flight reap", exc)
-        return {"honest_verdict": "reaper_import_failed", "killed": [],
-                "total_vram_freed_mb": 0, "skipped_reason": str(exc)}
+        return {
+            "honest_verdict": "reaper_import_failed",
+            "killed": [],
+            "total_vram_freed_mb": 0,
+            "skipped_reason": str(exc),
+        }
 
     dry = mode in ("dry_run", "dry-run", "audit")
     try:
@@ -469,21 +504,29 @@ def preflight_gpu_reap() -> dict:
         result = ExpandedGPUReaper(cfg).reap()
     except Exception as exc:  # noqa: BLE001  — never block the loop on reaper errors
         logger.warning("GPU reaper failed (%s) — continuing without reap", exc)
-        return {"honest_verdict": "reaper_exception", "killed": [],
-                "total_vram_freed_mb": 0, "skipped_reason": str(exc)}
+        return {
+            "honest_verdict": "reaper_exception",
+            "killed": [],
+            "total_vram_freed_mb": 0,
+            "skipped_reason": str(exc),
+        }
 
     if result.killed:
         logger.warning(
             "Pre-flight reaper killed %d stale GPU process(es), freed %d MiB",
-            len(result.killed), result.total_vram_freed_mb,
+            len(result.killed),
+            result.total_vram_freed_mb,
         )
         for entry in result.killed:
-            logger.warning("  reaped pid=%s vram=%dMiB age=%ds name=%s",
-                           entry.get("pid"), entry.get("used_memory_mb", 0),
-                           entry.get("age_s", 0), entry.get("process_name", "?"))
+            logger.warning(
+                "  reaped pid=%s vram=%dMiB age=%ds name=%s",
+                entry.get("pid"),
+                entry.get("used_memory_mb", 0),
+                entry.get("age_s", 0),
+                entry.get("process_name", "?"),
+            )
     else:
-        logger.info("Pre-flight reaper: nothing to kill (verdict=%s)",
-                    result.honest_verdict)
+        logger.info("Pre-flight reaper: nothing to kill (verdict=%s)", result.honest_verdict)
 
     return {
         "honest_verdict": result.honest_verdict,
@@ -506,8 +549,17 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
     if full:
         # Full suite — used after successful experiment commit
         rc, stdout, stderr = run_cmd(
-            [venv_pytest, "tests/python", "-q", "--no-header", "-n", "0",
-             "--no-cov", "-o", "addopts="],
+            [
+                venv_pytest,
+                "tests/python",
+                "-q",
+                "--no-header",
+                "-n",
+                "0",
+                "--no-cov",
+                "-o",
+                "addopts=",
+            ],
             timeout=600,
         )
     else:
@@ -550,8 +602,9 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
         # inside test fixtures). Bumping to 300s avoids spurious pre-flight
         # failures that trigger the 30-turn self-heal cycle for no reason.
         rc, stdout, stderr = run_cmd(
-            [venv_pytest] + existing + ["-q", "--no-header", "-n", "0",
-             "--no-cov", "-o", "addopts="],
+            [venv_pytest]
+            + existing
+            + ["-q", "--no-header", "-n", "0", "--no-cov", "-o", "addopts="],
             timeout=300,
         )
 
@@ -623,7 +676,8 @@ def _ensure_recon_executor() -> concurrent.futures.ThreadPoolExecutor:
     with _recon_state_lock:
         if _recon_executor is None:
             _recon_executor = concurrent.futures.ThreadPoolExecutor(
-                max_workers=1, thread_name_prefix="doc-recon",
+                max_workers=1,
+                thread_name_prefix="doc-recon",
             )
         return _recon_executor
 
@@ -671,11 +725,13 @@ def _await_pending_recon(timeout: float = 600.0) -> None:
     except concurrent.futures.TimeoutError:
         logger.warning(
             "Pending async doc-reconciliation timed out after %.0fs; "
-            "the next iteration will proceed anyway", timeout,
+            "the next iteration will proceed anyway",
+            timeout,
         )
     except Exception:
         logger.exception(
-            "Pending async doc-reconciliation raised; the next iteration will proceed anyway")
+            "Pending async doc-reconciliation raised; the next iteration will proceed anyway"
+        )
 
 
 def _shutdown_recon_executor(wait: bool = True, timeout: float = 600.0) -> None:
@@ -690,7 +746,7 @@ def _shutdown_recon_executor(wait: bool = True, timeout: float = 600.0) -> None:
 
 def log_step(task: str, status: str, details: str = "") -> None:
     """Append to conductor log."""
-    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
     entry = f"| {timestamp} | {task[:50]} | {status} | {details[:80]} |\n"
 
     if not CONDUCTOR_LOG.exists():
@@ -863,13 +919,15 @@ def _ensure_exclusion_manifest_loaded() -> None:
     try:
         sys.path.insert(0, str(PROJECT_ROOT / "python"))
         from carnot.pipeline.exclusion_manifest import ExclusionManifest
+
         em = ExclusionManifest(str(manifest_path))
         em.load()
         _EXCLUSION_MANIFEST = em
         _EXCLUSION_MANIFEST_MTIME = current_mtime
     except Exception as exc:  # noqa: BLE001  — never block the loop on manifest errors
         logger.warning(
-            "Exclusion manifest load failed (%s) — proceeding without exclusions", exc,
+            "Exclusion manifest load failed (%s) — proceeding without exclusions",
+            exc,
         )
         _EXCLUSION_MANIFEST = None
 
@@ -962,7 +1020,9 @@ def pick_next_task(completed_log: str) -> dict | None:
 
         # Signal 4: too many failures
         if fail_counts.get(title_prefix, 0) >= MAX_FAILURES_PER_TASK:
-            logger.warning("Skipping '%s' — failed %d times", title_prefix, fail_counts[title_prefix])
+            logger.warning(
+                "Skipping '%s' — failed %d times", title_prefix, fail_counts[title_prefix]
+            )
             continue
 
         return task
@@ -1017,7 +1077,7 @@ def _archive_current_milestone(push: bool = True) -> bool:
         "id": milestone,
         "title": title,
         "doc": roadmap.get("milestone_doc", ""),
-        "completed": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "completed": datetime.now(UTC).strftime("%Y-%m-%d"),
         "finding": "See conductor log for per-experiment results.",
         "tasks": [
             {
@@ -1079,7 +1139,8 @@ def _activate_next_roadmap(push: bool = True) -> bool:
         next_milestone = next_data.get("milestone", "unknown")
         logger.info(
             "Activating next roadmap: milestone %s (%d tasks)",
-            next_milestone, len(next_tasks),
+            next_milestone,
+            len(next_tasks),
         )
 
         # Swap: next -> active, delete next
@@ -1164,7 +1225,6 @@ def _update_docs_before_planning(push: bool = True) -> bool:
     return False
 
 
-
 def _run_operational_retrospective(push: bool = True) -> bool:
     """Run an operational retrospective at milestone boundary.
 
@@ -1187,11 +1247,15 @@ def _run_operational_retrospective(push: bool = True) -> bool:
 
     # Gather timing data from git log
     try:
-        _, git_log, _ = run_cmd([
-            "git", "log", "--format=%H %ai %s",
-            "--grep=\\[conductor\\]",
-            "--since=7 days ago",
-        ])
+        _, git_log, _ = run_cmd(
+            [
+                "git",
+                "log",
+                "--format=%H %ai %s",
+                "--grep=\\[conductor\\]",
+                "--since=7 days ago",
+            ]
+        )
         experiment_times: list[dict] = []
         commits = git_log.strip().splitlines()
         prev_time = None
@@ -1203,14 +1267,17 @@ def _run_operational_retrospective(push: bool = True) -> bool:
             try:
                 ts_str = f"{parts[1]} {parts[2]}"
                 from datetime import datetime as _dt
+
                 ts = _dt.strptime(ts_str, "%Y-%m-%d %H:%M:%S")
                 msg = parts[3] if len(parts) > 3 else ""
                 if prev_time and "Exp " in msg:
                     duration_min = (ts - prev_time).total_seconds() / 60
-                    experiment_times.append({
-                        "experiment": msg[:80],
-                        "duration_min": round(duration_min, 1),
-                    })
+                    experiment_times.append(
+                        {
+                            "experiment": msg[:80],
+                            "duration_min": round(duration_min, 1),
+                        }
+                    )
                 prev_time = ts
             except (ValueError, IndexError):
                 continue
@@ -1221,7 +1288,8 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     # Gather GPU utilization data
     gpu_report_text = ""
     try:
-        from gpu_monitor import generate_report, format_report
+        from gpu_monitor import format_report, generate_report
+
         gpu_report = generate_report()
         gpu_report_text = format_report(gpu_report)
     except Exception:
@@ -1270,22 +1338,26 @@ def _run_operational_retrospective(push: bool = True) -> bool:
         f"   - improvements_suggested (list of strings)\n"
         f"   - estimated_time_savings_pct (how much faster next milestone could be)\n"
         f"2. Append a brief summary to ops/changelog.md\n"
-        f"3. Do NOT modify scripts/research_conductor.py or research-roadmap.yaml.\n"
+        f"3. Append ONE row to the 'Completed Milestones' table in docs/roadmap.md\n"
+        f"   for milestone {current}. Format: | {current} | <one-line theme> | <exp range> | <key breakthrough> |\n"
+        f"   Do NOT delete or rewrite existing rows. Do NOT touch the 'Current Milestone' block\n"
+        f"   (that updates at activation, not retro). If docs/roadmap.md does not exist or the\n"
+        f"   table heading is missing, skip silently — do not create the file structure from scratch.\n"
+        f"4. Do NOT modify scripts/research_conductor.py or research-roadmap.yaml.\n"
     )
 
     logger.info("Calling agent for operational retrospective...")
     # Retrospective benefits from Opus-class honest self-evaluation (anti-
     # sycophancy + anti-scheming training makes it less likely to paper over
     # failures). Set AGENT_MODEL_RETRO=opus to enable; defaults to Sonnet.
-    success, output = run_agent(retro_prompt, max_turns=15,
-                                 model_override=AGENT_MODEL_RETRO)
+    success, output = run_agent(retro_prompt, max_turns=15, model_override=AGENT_MODEL_RETRO)
 
     if success:
         logger.info("Operational retrospective complete")
         if git_has_changes():
             git_commit_and_push(
-                f"[conductor] Operational retrospective for milestone {current}",
-                push=push)
+                f"[conductor] Operational retrospective for milestone {current}", push=push
+            )
         return True
     else:
         logger.warning("Operational retrospective failed — continuing")
@@ -1406,8 +1478,9 @@ IMPORTANT:
 
     # Planner benefits from Opus-class synthesis (big-context design of 12-13
     # coherent experiments). Set AGENT_MODEL_PLANNER=opus to enable; defaults to Sonnet.
-    success, output = run_agent(planning_prompt, max_turns=50, timeout=1200,
-                                 model_override=AGENT_MODEL_PLANNER)
+    success, output = run_agent(
+        planning_prompt, max_turns=50, timeout=1200, model_override=AGENT_MODEL_PLANNER
+    )
 
     if not success:
         logger.error("Planning agent failed: %s", output[:200])
@@ -1428,7 +1501,8 @@ IMPORTANT:
         next_milestone = next_data.get("milestone", "unknown")
         logger.info(
             "Planning agent created milestone %s with %d tasks",
-            next_milestone, len(next_tasks),
+            next_milestone,
+            len(next_tasks),
         )
     except Exception as e:
         logger.error("Planning agent produced invalid YAML: %s", e)
@@ -1501,7 +1575,7 @@ def _archive_current_milestone(push: bool = True) -> bool:
         "id": milestone,
         "title": title,
         "doc": roadmap.get("milestone_doc", ""),
-        "completed": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "completed": datetime.now(UTC).strftime("%Y-%m-%d"),
         "finding": "See conductor log for per-experiment results.",
         "tasks": [
             {
@@ -1561,7 +1635,8 @@ def _activate_next_roadmap(push: bool = True) -> bool:
         next_milestone = next_data.get("milestone", "unknown")
         logger.info(
             "Activating next roadmap: milestone %s (%d tasks)",
-            next_milestone, len(next_tasks),
+            next_milestone,
+            len(next_tasks),
         )
 
         shutil.copy2(NEXT_ROADMAP_FILE, ROADMAP_FILE)
@@ -1716,8 +1791,9 @@ def _plan_next_milestone(push: bool = True) -> bool:
 
     # Planner benefits from Opus-class synthesis (big-context design of 12-13
     # coherent experiments). Set AGENT_MODEL_PLANNER=opus to enable; defaults to Sonnet.
-    success, output = run_agent(planning_prompt, max_turns=50, timeout=1200,
-                                 model_override=AGENT_MODEL_PLANNER)
+    success, output = run_agent(
+        planning_prompt, max_turns=50, timeout=1200, model_override=AGENT_MODEL_PLANNER
+    )
 
     if not success:
         logger.error("Planning agent failed: %s", output[:200])
@@ -1736,7 +1812,8 @@ def _plan_next_milestone(push: bool = True) -> bool:
         next_milestone = next_data.get("milestone", "unknown")
         logger.info(
             "Planning agent created milestone %s with %d tasks",
-            next_milestone, len(next_tasks),
+            next_milestone,
+            len(next_tasks),
         )
     except Exception as e:
         logger.error("Planning agent produced invalid YAML: %s", e)
@@ -1773,7 +1850,12 @@ def _load_dogfood_memory() -> dict:
         try:
             return json.loads(DOGFOOD_MEMORY_FILE.read_text())
         except Exception:
-            return {"patterns": {}, "brace_fixes": 0, "code_violations": 0, "experiments_checked": 0}
+            return {
+                "patterns": {},
+                "brace_fixes": 0,
+                "code_violations": 0,
+                "experiments_checked": 0,
+            }
     return {"patterns": {}, "brace_fixes": 0, "code_violations": 0, "experiments_checked": 0}
 
 
@@ -1809,6 +1891,7 @@ def _dogfood_verify_generated_code() -> None:
                 continue
             try:
                 import yaml as _yaml
+
                 with open(yaml_path) as f:
                     data = _yaml.safe_load(f)
                 for t in data.get("tasks", []):
@@ -1818,27 +1901,33 @@ def _dogfood_verify_generated_code() -> None:
                     except (KeyError, ValueError) as e:
                         logger.warning(
                             "DOGFOOD: Brace error in %s task %s: %s — auto-fixing",
-                            yaml_file, t.get("id", "?"), e,
+                            yaml_file,
+                            t.get("id", "?"),
+                            e,
                         )
                         # Auto-fix: replace non-template braces
                         import re
+
                         fixed = prompt
                         fixed = re.sub(
-                            r'\{([^}]+)\}',
-                            lambda m: m.group(0) if m.group(1) in ('project_root', 'date')
-                            else '(' + m.group(1) + ')',
+                            r"\{([^}]+)\}",
+                            lambda m: m.group(0)
+                            if m.group(1) in ("project_root", "date")
+                            else "(" + m.group(1) + ")",
                             fixed,
                         )
                         t["prompt"] = fixed
                 # Rewrite using string replacement to preserve comments
                 raw = yaml_path.read_text()
                 import re as _re
+
                 def _fix_braces(m):
                     inner = m.group(1)
-                    if inner in ('project_root', 'date'):
+                    if inner in ("project_root", "date"):
                         return m.group(0)
-                    return '(' + inner + ')'
-                fixed_raw = _re.sub(r'\{([^}]+)\}', _fix_braces, raw)
+                    return "(" + inner + ")"
+
+                fixed_raw = _re.sub(r"\{([^}]+)\}", _fix_braces, raw)
                 if fixed_raw != raw:
                     yaml_path.write_text(fixed_raw)
                     logger.info("DOGFOOD: Auto-fixed brace escaping in %s", yaml_file)
@@ -1847,11 +1936,15 @@ def _dogfood_verify_generated_code() -> None:
 
         # 2. Run CodeExtractor on new Python files
         _, new_files, _ = run_cmd(["git", "diff", "--name-only", "--diff-filter=A"])
-        py_files = [f.strip() for f in new_files.splitlines()
-                    if f.strip().endswith(".py") and "test" not in f.lower()]
+        py_files = [
+            f.strip()
+            for f in new_files.splitlines()
+            if f.strip().endswith(".py") and "test" not in f.lower()
+        ]
         if py_files:
             try:
                 from carnot.pipeline.extract import CodeExtractor
+
                 extractor = CodeExtractor()
                 for py_file in py_files[:5]:  # Limit to 5 files
                     path = PROJECT_ROOT / py_file
@@ -1859,12 +1952,12 @@ def _dogfood_verify_generated_code() -> None:
                         continue
                     code = path.read_text()
                     constraints = extractor.extract(code, domain="code")
-                    violations = [c for c in constraints
-                                  if c.metadata.get("satisfied") is False]
+                    violations = [c for c in constraints if c.metadata.get("satisfied") is False]
                     if violations:
                         logger.info(
                             "DOGFOOD: CodeExtractor found %d violations in %s",
-                            len(violations), py_file,
+                            len(violations),
+                            py_file,
                         )
                         for v in violations[:3]:
                             logger.info("  - %s", v.description[:100])
@@ -1878,6 +1971,7 @@ def _dogfood_verify_generated_code() -> None:
         if py_files:
             try:
                 from carnot.pipeline.z3_extractor import Z3ArithmeticExtractor
+
                 z3_ext = Z3ArithmeticExtractor()
                 for py_file in py_files[:5]:
                     path = PROJECT_ROOT / py_file
@@ -1885,13 +1979,13 @@ def _dogfood_verify_generated_code() -> None:
                         continue
                     code = path.read_text()
                     z3_results = z3_ext.extract(code)
-                    z3_bad = [r for r in z3_results
-                              if r.metadata.get("satisfied") is False]
+                    z3_bad = [r for r in z3_results if r.metadata.get("satisfied") is False]
                     if z3_bad:
                         z3_violations += len(z3_bad)
                         logger.info(
                             "DOGFOOD: Z3 found %d violations in %s",
-                            len(z3_bad), py_file,
+                            len(z3_bad),
+                            py_file,
                         )
                         for v in z3_bad[:3]:
                             logger.info("  - Z3: %s", v.description[:100])
@@ -1905,6 +1999,7 @@ def _dogfood_verify_generated_code() -> None:
         if py_files:
             try:
                 from carnot.pipeline.llm_extractor import LLMConstraintExtractor
+
                 llm_ext = LLMConstraintExtractor()
                 for py_file in py_files[:3]:  # Limit to 3 (LLM calls are slower)
                     path = PROJECT_ROOT / py_file
@@ -1913,6 +2008,7 @@ def _dogfood_verify_generated_code() -> None:
                     code = path.read_text()
                     # Extract docstrings only to avoid false positives on code
                     import ast
+
                     try:
                         tree = ast.parse(code)
                         docstrings = []
@@ -1924,13 +2020,15 @@ def _dogfood_verify_generated_code() -> None:
                         if docstrings:
                             combined = "\n".join(docstrings)
                             llm_results = llm_ext.extract(combined)
-                            llm_bad = [r for r in llm_results
-                                       if r.metadata.get("satisfied") is False]
+                            llm_bad = [
+                                r for r in llm_results if r.metadata.get("satisfied") is False
+                            ]
                             if llm_bad:
                                 llm_violations += len(llm_bad)
                                 logger.info(
                                     "DOGFOOD: LLM extractor found %d violations in %s",
-                                    len(llm_bad), py_file,
+                                    len(llm_bad),
+                                    py_file,
                                 )
                     except SyntaxError:
                         pass  # Skip files that don't parse
@@ -1944,18 +2042,25 @@ def _dogfood_verify_generated_code() -> None:
         memory["experiments_checked"] = memory.get("experiments_checked", 0) + 1
 
         # Record brace fix pattern
-        if 'fixed_raw' in dir() and fixed_raw != raw:
+        if "fixed_raw" in dir() and fixed_raw != raw:
             memory["brace_fixes"] = memory.get("brace_fixes", 0) + 1
             # Track which tasks had braces
             brace_tasks = memory.get("brace_fix_tasks", [])
-            brace_tasks.append(yaml_file if 'yaml_file' in dir() else "unknown")
+            brace_tasks.append(yaml_file if "yaml_file" in dir() else "unknown")
             memory["brace_fix_tasks"] = brace_tasks[-50:]  # Keep last 50
 
         # Record code violations (all extractors combined)
-        code_v = len(
-            [c for c in (constraints if 'constraints' in dir() else [])
-             if c.metadata.get("satisfied") is False]
-        ) if py_files else 0
+        code_v = (
+            len(
+                [
+                    c
+                    for c in (constraints if "constraints" in dir() else [])
+                    if c.metadata.get("satisfied") is False
+                ]
+            )
+            if py_files
+            else 0
+        )
         total_violations = code_v + z3_violations + llm_violations
         memory["code_violations"] = memory.get("code_violations", 0) + total_violations
         memory["z3_violations"] = memory.get("z3_violations", 0) + z3_violations
@@ -1965,8 +2070,11 @@ def _dogfood_verify_generated_code() -> None:
         logger.info(
             "DOGFOOD: Verification complete (total: %d checks, %d brace fixes, "
             "%d code/%d z3/%d llm violations)",
-            memory["experiments_checked"], memory.get("brace_fixes", 0),
-            code_v, z3_violations, llm_violations,
+            memory["experiments_checked"],
+            memory.get("brace_fixes", 0),
+            code_v,
+            z3_violations,
+            llm_violations,
         )
 
     except Exception as e:
@@ -1997,7 +2105,7 @@ def research_step(
     # The "preserve uncommitted work" sweep below would otherwise grab the
     # in-flight recon's diff and attribute it to this iteration's checkpoint.
     _await_pending_recon()
-    timestamp = datetime.now(timezone.utc)
+    timestamp = datetime.now(UTC)
 
     # Read conductor log
     log_content = ""
@@ -2054,10 +2162,13 @@ def research_step(
 
     if dry_run:
         logger.info("[DRY RUN] Would run %s with prompt:", AGENT_DISPLAY)
-        logger.info("  %s", task["prompt"][:200].format(
-            project_root=PROJECT_ROOT,
-            date=timestamp.strftime("%Y%m%d"),
-        ))
+        logger.info(
+            "  %s",
+            task["prompt"][:200].format(
+                project_root=PROJECT_ROOT,
+                date=timestamp.strftime("%Y%m%d"),
+            ),
+        )
         return True
 
     # Pre-gate check (cheap, ~50ms): if the task declares `gated_on:` in
@@ -2069,8 +2180,11 @@ def research_step(
         sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
         from conductor_gates import (  # type: ignore[import-not-found]
             evaluate_gates as _eval_gates,
+        )
+        from conductor_gates import (
             write_blocked_artifact as _write_blocked,
         )
+
         gate_check = _eval_gates(task, results_dir=PROJECT_ROOT / "results")
         if not gate_check.passed:
             logger.warning(
@@ -2078,7 +2192,9 @@ def research_step(
                 gate_check.summary,
             )
             blocked_path = _write_blocked(
-                task, gate_check, results_dir=PROJECT_ROOT / "results",
+                task,
+                gate_check,
+                results_dir=PROJECT_ROOT / "results",
             )
             if blocked_path is not None:
                 logger.info("Blocked artifact written: %s", blocked_path.name)
@@ -2086,7 +2202,8 @@ def research_step(
                 # (or the Haiku doc-recon path) can pick it up downstream.
                 if git_has_changes():
                     for guarded in [
-                        "scripts/research_conductor.py", "research-roadmap.yaml",
+                        "scripts/research_conductor.py",
+                        "research-roadmap.yaml",
                     ]:
                         _, gdiff, _ = run_cmd(
                             ["git", "diff", "--name-only", "--", guarded],
@@ -2108,9 +2225,7 @@ def research_step(
                 "artifact; falling through to Sonnet"
             )
     except Exception:
-        logger.exception(
-            "Pre-gate check raised; falling through to Sonnet (defensive)"
-        )
+        logger.exception("Pre-gate check raised; falling through to Sonnet (defensive)")
 
     # Failed-experiment rerun-discipline check (cheap, ~100ms): scans
     # results/ for prior failures whose scope matches this task's scope.
@@ -2123,6 +2238,7 @@ def research_step(
         from failure_ledger import (  # type: ignore[import-not-found]
             FailureLedger as _FailureLedger,
         )
+
         ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
         rerun_check = ledger.is_doomed_rerun(task)
         if rerun_check.blocked:
@@ -2136,9 +2252,14 @@ def research_step(
             # both check types end in the same downstream path.
             from conductor_gates import (  # type: ignore[import-not-found]
                 GateCheckResult as _GateCheckResult,
+            )
+            from conductor_gates import (
                 GateResult as _GateResult,
+            )
+            from conductor_gates import (
                 write_blocked_artifact as _write_blocked,
             )
+
             synthetic_gate_check = _GateCheckResult(
                 passed=False,
                 gates_evaluated=[
@@ -2156,15 +2277,19 @@ def research_step(
                 summary=rerun_check.reason,
             )
             blocked_path = _write_blocked(
-                task, synthetic_gate_check, results_dir=PROJECT_ROOT / "results",
+                task,
+                synthetic_gate_check,
+                results_dir=PROJECT_ROOT / "results",
             )
             if blocked_path is not None:
                 logger.info(
-                    "Doomed-rerun blocked artifact written: %s", blocked_path.name,
+                    "Doomed-rerun blocked artifact written: %s",
+                    blocked_path.name,
                 )
                 if git_has_changes():
                     for guarded in [
-                        "scripts/research_conductor.py", "research-roadmap.yaml",
+                        "scripts/research_conductor.py",
+                        "research-roadmap.yaml",
                     ]:
                         _, gdiff, _ = run_cmd(
                             ["git", "diff", "--name-only", "--", guarded],
@@ -2204,7 +2329,9 @@ def research_step(
         committable = [f for f in all_dirty if not any(f.startswith(s) for s in skip)]
 
         if committable:
-            logger.info("Committing %d dirty files as checkpoint (preserving work)", len(committable))
+            logger.info(
+                "Committing %d dirty files as checkpoint (preserving work)", len(committable)
+            )
             for f in committable:
                 run_cmd(["git", "add", "--", f])
             msg = with_agent_signature(
@@ -2276,7 +2403,9 @@ def research_step(
                 healed = True
                 break
             else:
-                logger.warning("Self-heal attempt %d failed: %s", heal_attempt + 1, test_summary[:200])
+                logger.warning(
+                    "Self-heal attempt %d failed: %s", heal_attempt + 1, test_summary[:200]
+                )
                 # Update the prompt with new failure info for next attempt
                 heal_prompt = (
                     f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
@@ -2299,7 +2428,8 @@ def research_step(
 
     # GPU resource check — detect zombies and log suggestions
     try:
-        from gpu_monitor import generate_report, kill_zombies, format_report
+        from gpu_monitor import generate_report, kill_zombies
+
         gpu_report = generate_report()
         if gpu_report.warnings:
             for w in gpu_report.warnings:
@@ -2325,7 +2455,9 @@ def research_step(
         )
     except (KeyError, IndexError) as e:
         logger.warning("Prompt format error in %s: %s — using raw prompt", task.get("id", "?"), e)
-        prompt = raw_prompt.replace("{project_root}", str(PROJECT_ROOT)).replace("{date}", timestamp.strftime("%Y%m%d"))
+        prompt = raw_prompt.replace("{project_root}", str(PROJECT_ROOT)).replace(
+            "{date}", timestamp.strftime("%Y%m%d")
+        )
 
     # Inject focused AST context to save tokens.
     # Instead of the agent reading entire files, we extract class/function
@@ -2334,9 +2466,10 @@ def research_step(
     try:
         import ast as _ast
         import re as _re2
+
         # Find file paths mentioned in the prompt
         file_refs = _re2.findall(
-            r'(?:python/carnot/[^\s]+\.py|scripts/[^\s]+\.py)',
+            r"(?:python/carnot/[^\s]+\.py|scripts/[^\s]+\.py)",
             prompt,
         )
         if file_refs:
@@ -2351,10 +2484,14 @@ def research_step(
                     sigs: list[str] = []
                     for node in _ast.walk(tree):
                         if isinstance(node, _ast.ClassDef):
-                            bases = ", ".join(
-                                _ast.dump(b) if not hasattr(b, 'id') else b.id
-                                for b in node.bases
-                            ) if node.bases else ""
+                            bases = (
+                                ", ".join(
+                                    _ast.dump(b) if not hasattr(b, "id") else b.id
+                                    for b in node.bases
+                                )
+                                if node.bases
+                                else ""
+                            )
                             ds = _ast.get_docstring(node) or ""
                             first_line = ds.split("\n")[0][:100] if ds else ""
                             sigs.append(f"class {node.name}({bases}):  # {first_line}")
@@ -2378,8 +2515,11 @@ def research_step(
                     + "\n\n".join(outlines)
                 )
                 prompt = prompt + context_block
-                logger.info("Injected %d symbol signatures from %d files (AST outlines)",
-                            total_symbols, len(outlines))
+                logger.info(
+                    "Injected %d symbol signatures from %d files (AST outlines)",
+                    total_symbols,
+                    len(outlines),
+                )
     except Exception as e:
         logger.debug("AST context injection skipped: %s", e)
 
@@ -2442,13 +2582,20 @@ def research_step(
     # retros, doc passes, configuration changes) can opt into a smaller budget
     # to free quota and shave wall time. Bounds-checked in select_max_turns.
     try:
-        from conductor_gates import select_max_turns as _select_max_turns  # type: ignore[import-not-found]
+        from conductor_gates import (
+            select_max_turns as _select_max_turns,  # type: ignore[import-not-found]
+        )
+
         task_max_turns = _select_max_turns(task)
     except ImportError:
         task_max_turns = 50
-    success, output = run_agent(prompt, max_turns=task_max_turns, timeout=1200,
-                                 model_override=task_model,
-                                 deliverable_path=task.get("deliverable"))
+    success, output = run_agent(
+        prompt,
+        max_turns=task_max_turns,
+        timeout=1200,
+        model_override=task_model,
+        deliverable_path=task.get("deliverable"),
+    )
 
     if not success:
         logger.error("%s failed: %s", AGENT_DISPLAY, output[:200])
@@ -2466,7 +2613,9 @@ def research_step(
     logger.info("Changes:\n%s", diff[:500])
 
     # Guard: never let the agent modify the conductor itself
-    _, conductor_diff, _ = run_cmd(["git", "diff", "--name-only", "--", "scripts/research_conductor.py"])
+    _, conductor_diff, _ = run_cmd(
+        ["git", "diff", "--name-only", "--", "scripts/research_conductor.py"]
+    )
     if conductor_diff.strip():
         logger.warning("%s modified research_conductor.py — reverting that file", AGENT_DISPLAY)
         run_cmd(["git", "checkout", "--", "scripts/research_conductor.py"])
@@ -2501,7 +2650,12 @@ def research_step(
     for fix_attempt in range(MAX_FIX_ATTEMPTS):
         if tests_ok:
             break
-        logger.warning("Tests FAILED (attempt %d/%d): %s", fix_attempt + 1, MAX_FIX_ATTEMPTS, test_summary[:200])
+        logger.warning(
+            "Tests FAILED (attempt %d/%d): %s",
+            fix_attempt + 1,
+            MAX_FIX_ATTEMPTS,
+            test_summary[:200],
+        )
 
         # Feed the test failure back to the configured agent to fix
         fix_prompt = (
@@ -2531,17 +2685,29 @@ def research_step(
             if not prev_fix_ok:
                 fix_model = "opus"
                 fix_max_turns = 30
-                logger.info("Opus fix tier armed (prior Sonnet attempt exited "
-                            "via max-turns — capacity-bound, not logic-bound)")
+                logger.info(
+                    "Opus fix tier armed (prior Sonnet attempt exited "
+                    "via max-turns — capacity-bound, not logic-bound)"
+                )
             else:
-                logger.info("Skipping Opus fix tier: prior attempt exited "
-                            "cleanly but still produced failing tests, so "
-                            "the problem is code quality not reasoning depth")
+                logger.info(
+                    "Skipping Opus fix tier: prior attempt exited "
+                    "cleanly but still produced failing tests, so "
+                    "the problem is code quality not reasoning depth"
+                )
                 break
-        logger.info("Asking %s to fix test failures (tier %d, model=%s, turns=%d)...",
-                    AGENT_DISPLAY, fix_attempt + 1, fix_model or "default", fix_max_turns)
+        logger.info(
+            "Asking %s to fix test failures (tier %d, model=%s, turns=%d)...",
+            AGENT_DISPLAY,
+            fix_attempt + 1,
+            fix_model or "default",
+            fix_max_turns,
+        )
         fix_ok, fix_output = run_agent(
-            fix_prompt, max_turns=fix_max_turns, timeout=600, model_override=fix_model,
+            fix_prompt,
+            max_turns=fix_max_turns,
+            timeout=600,
+            model_override=fix_model,
         )
         prev_fix_ok = fix_ok
         if not fix_ok:
@@ -2557,17 +2723,20 @@ def research_step(
             # gets its turn.  The model-selection block above uses prev_fix_ok
             # to decide whether Opus is actually warranted.
             continue
-        tests_ok, test_summary = run_tests(full=False)  # Use smart subset — full suite hangs serially
+        tests_ok, test_summary = run_tests(
+            full=False
+        )  # Use smart subset — full suite hangs serially
 
     if not tests_ok:
-        logger.error("Tests still failing after %d fix attempts — committing as broken checkpoint", MAX_FIX_ATTEMPTS)
+        logger.error(
+            "Tests still failing after %d fix attempts — committing as broken checkpoint",
+            MAX_FIX_ATTEMPTS,
+        )
         # Commit the broken state as a checkpoint instead of reverting.
         # This preserves experiment deliverables even when tests fail.
         if git_has_changes():
             run_cmd(["git", "add", "-A"])
-            msg = with_agent_signature(
-                f"[conductor] Checkpoint (tests failing): {task['title']}"
-            )
+            msg = with_agent_signature(f"[conductor] Checkpoint (tests failing): {task['title']}")
             run_cmd(["git", "commit", "-m", msg])
         log_step(task["title"], "FAIL", f"Post-tests failed: {test_summary}")
         return False
@@ -2610,12 +2779,16 @@ def research_step(
         try:
             sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
             from in_process_doc_reconcile import reconcile  # type: ignore[import-not-found]
+
             recon = reconcile(task)
             logger.info(
                 "In-process docs: changelog=%s, status=%s, traceability_rows=%d, "
                 "verdict=%r, label=%r%s",
-                recon.changelog_appended, recon.status_appended,
-                recon.traceability_rows_added, recon.verdict, recon.status_label,
+                recon.changelog_appended,
+                recon.status_appended,
+                recon.traceability_rows_added,
+                recon.verdict,
+                recon.status_label,
                 f", skipped={recon.skipped_reason}" if recon.skipped_reason else "",
             )
             if git_has_changes():
@@ -2633,8 +2806,7 @@ def research_step(
             log_step(task["title"], "OK", test_summary)
             return True
         except Exception:
-            logger.exception(
-                "In-process doc reconciliation failed; falling back to Haiku")
+            logger.exception("In-process doc reconciliation failed; falling back to Haiku")
             # Fall through to the Haiku path below.
 
     if async_doc_recon:
@@ -2643,9 +2815,7 @@ def research_step(
         # the very top of research_step() blocks until this completes
         # *before* any git operation, so the iteration-start "preserve
         # uncommitted work" sweep can't grab the in-flight recon's diff.
-        _submit_async_recon(
-            lambda t=task, p=push, ts=timestamp: _run_haiku_doc_reconcile(t, p, ts)
-        )
+        _submit_async_recon(lambda t=task, p=push, ts=timestamp: _run_haiku_doc_reconcile(t, p, ts))
         log_step(task["title"], "OK", test_summary)
         return True
 
@@ -2726,7 +2896,10 @@ def _run_haiku_doc_reconcile(task: dict, push: bool, timestamp: datetime) -> Non
     recon_model = "haiku" if AGENT_TYPE == "claude" else None
     try:
         recon_ok, _ = run_agent(
-            reconcile_prompt, max_turns=40, timeout=300, model_override=recon_model,
+            reconcile_prompt,
+            max_turns=40,
+            timeout=300,
+            model_override=recon_model,
         )
     except Exception:
         logger.exception("Haiku doc-reconciliation raised; skipping commit")
@@ -2748,36 +2921,46 @@ def _run_haiku_doc_reconcile(task: dict, push: bool, timestamp: datetime) -> Non
 def main() -> int:
     parser = argparse.ArgumentParser(description="Carnot Research Conductor")
     parser.add_argument("--loop", action="store_true", help="Run continuously")
-    parser.add_argument("--interval", type=int, default=30,
-                        help="Minutes between steps (default: 30)")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Show what would be done")
-    parser.add_argument("--no-push", action="store_true",
-                        help="Don't git push (just commit locally)")
-    parser.add_argument("--in-process-docs", action="store_true",
-                        help="Use the in-process Python doc reconciler "
-                             "(scripts/in_process_doc_reconcile.py) instead "
-                             "of the Haiku Claude Code call. Saves ~1-2 min "
-                             "per iteration; mechanical mapping only.")
-    parser.add_argument("--async-doc-recon", action="store_true",
-                        help="Run the post-experiment Haiku doc reconciliation "
-                             "in a background thread. The conductor enters its "
-                             "inter-iteration sleep immediately after the "
-                             "experiment commit; the recon completes during "
-                             "sleep. Saves ~1-2 min per iteration on the Haiku "
-                             "path. Has no effect when --in-process-docs is set "
-                             "(in-process is already <100ms).")
-    parser.add_argument("--adaptive-interval", action="store_true",
-                        help="Scale inter-iteration sleep to the iteration's "
-                             "actual duration. Short iterations (e.g. doomed-"
-                             "rerun blocks completing in <30 s) get a short "
-                             "sleep; mid-length iterations (CPU experiments "
-                             "in <5 min) get a medium sleep; long iterations "
-                             "(GPU experiments, planner runs) get the full "
-                             "--interval sleep. Saves ~30-40 min on milestones "
-                             "where blocks dominate (.71 retro flagged this). "
-                             "Off by default — fixed cadence is the safer "
-                             "baseline for stable autoresearch.")
+    parser.add_argument(
+        "--interval", type=int, default=30, help="Minutes between steps (default: 30)"
+    )
+    parser.add_argument("--dry-run", action="store_true", help="Show what would be done")
+    parser.add_argument(
+        "--no-push", action="store_true", help="Don't git push (just commit locally)"
+    )
+    parser.add_argument(
+        "--in-process-docs",
+        action="store_true",
+        help="Use the in-process Python doc reconciler "
+        "(scripts/in_process_doc_reconcile.py) instead "
+        "of the Haiku Claude Code call. Saves ~1-2 min "
+        "per iteration; mechanical mapping only.",
+    )
+    parser.add_argument(
+        "--async-doc-recon",
+        action="store_true",
+        help="Run the post-experiment Haiku doc reconciliation "
+        "in a background thread. The conductor enters its "
+        "inter-iteration sleep immediately after the "
+        "experiment commit; the recon completes during "
+        "sleep. Saves ~1-2 min per iteration on the Haiku "
+        "path. Has no effect when --in-process-docs is set "
+        "(in-process is already <100ms).",
+    )
+    parser.add_argument(
+        "--adaptive-interval",
+        action="store_true",
+        help="Scale inter-iteration sleep to the iteration's "
+        "actual duration. Short iterations (e.g. doomed-"
+        "rerun blocks completing in <30 s) get a short "
+        "sleep; mid-length iterations (CPU experiments "
+        "in <5 min) get a medium sleep; long iterations "
+        "(GPU experiments, planner runs) get the full "
+        "--interval sleep. Saves ~30-40 min on milestones "
+        "where blocks dominate (.71 retro flagged this). "
+        "Off by default — fixed cadence is the safer "
+        "baseline for stable autoresearch.",
+    )
     args = parser.parse_args()
 
     os.chdir(str(PROJECT_ROOT))
@@ -2791,12 +2974,14 @@ def main() -> int:
     try:
         sys.path.insert(0, str(PROJECT_ROOT / "python"))
         from carnot.pipeline.env_autofix import apply_env_autofix
+
         autofix = apply_env_autofix()
         if autofix.auto_fix_applied:
             logger.warning(
                 "CARNOT_FORCE_LIVE auto-injected at conductor startup "
                 "(gpu_detected=%s, final_env_value=%s)",
-                autofix.gpu_detected, autofix.final_env_value,
+                autofix.gpu_detected,
+                autofix.final_env_value,
             )
     except Exception as exc:
         logger.warning("env_autofix unavailable at startup: %s", exc)
@@ -2806,6 +2991,7 @@ def main() -> int:
     # SIGTERM-on-quota or KeyboardInterrupt will still drop in-flight recons,
     # but a normal exit path drains cleanly.
     import atexit as _atexit
+
     _atexit.register(_shutdown_recon_executor, wait=True, timeout=600.0)
 
     print("=" * 60)
@@ -2828,9 +3014,11 @@ def main() -> int:
     # Load and display persistent dogfood memory
     memory = _load_dogfood_memory()
     if memory.get("experiments_checked", 0) > 0:
-        print(f"  Dogfood memory: {memory['experiments_checked']} checks, "
-              f"{memory.get('brace_fixes', 0)} brace fixes, "
-              f"{memory.get('code_violations', 0)} code violations")
+        print(
+            f"  Dogfood memory: {memory['experiments_checked']} checks, "
+            f"{memory.get('brace_fixes', 0)} brace fixes, "
+            f"{memory.get('code_violations', 0)} code violations"
+        )
     print()
 
     iteration = 0
@@ -2862,7 +3050,9 @@ def main() -> int:
             sleep_min, tier = compute_adaptive_sleep_min(iter_duration, args.interval)
             logger.info(
                 "Adaptive sleep: %d min (%s) — iteration ran %.1fs",
-                sleep_min, tier, iter_duration,
+                sleep_min,
+                tier,
+                iter_duration,
             )
         else:
             sleep_min = args.interval
@@ -2880,8 +3070,7 @@ def main() -> int:
             time.sleep(chunk)
             slept += chunk
             if slept % 300 == 0 and slept < total_seconds:
-                logger.info("...sleeping, %d/%d min elapsed",
-                            slept // 60, sleep_min)
+                logger.info("...sleeping, %d/%d min elapsed", slept // 60, sleep_min)
         logger.info("Sleep complete — resuming")
 
     return 0

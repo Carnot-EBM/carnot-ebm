@@ -4,13 +4,14 @@ All external dependencies (EORM, SinkProbe, Ising sampler) are mocked so the
 test suite runs on CPU in CI without GPU or SOTA GGUFs.
 
 Traces to: REQ-FR11-030, SCENARIO-FR11-040
+Spec: REQ-AUTO-011
 """
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
@@ -18,21 +19,19 @@ import pytest
 # ---------------------------------------------------------------------------
 # Import targets
 # ---------------------------------------------------------------------------
-
 from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
 from carnot.probes.hallusae_geometric_probe import HalluSAEGeometricProbe
 from carnot.probes.streaming_cot_detector import StreamingCoTHalluDetector
 from carnot.samplers.lagrange_adaptive import LagrangeAdaptiveIsingConstraints
 
 from scripts.experiment_864_fr11_tier2_integration_v5 import (
-    _REFERENCE_STEPS,
     _DEFAULT_CONSTRAINTS,
-    _MockEORMModel,
+    _REFERENCE_STEPS,
     _build_pipeline,
     _make_session_problems,
+    _MockEORMModel,
     run_relay,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helper fixtures
@@ -173,7 +172,10 @@ class TestWireLagrange:
     def test_run_lagrange_session_delegates_to_adaptive(self, base_pipeline):
         """run_lagrange_session() delegates to lagrange_adaptive.run_session()."""
         adaptive = MagicMock(spec=LagrangeAdaptiveIsingConstraints)
-        adaptive.run_session.return_value = {"violation_rate": 0.25, "lambdas": [1.1, 1.0, 1.0, 1.0]}
+        adaptive.run_session.return_value = {
+            "violation_rate": 0.25,
+            "lambdas": [1.1, 1.0, 1.0, 1.0],
+        }
         base_pipeline.wire_lagrange(adaptive)
         result = base_pipeline.run_lagrange_session(_DEFAULT_CONSTRAINTS, n_sweeps=20, n_samples=3)
         adaptive.run_session.assert_called_once_with(_DEFAULT_CONSTRAINTS, n_sweeps=20, n_samples=3)
@@ -210,14 +212,14 @@ class TestVerifyExtendedShape:
     def test_all_keys_present_unwired(self, base_pipeline):
         """All six keys present even when no probes are wired."""
         result = base_pipeline.verify_extended("Test response. Verified.")
-        assert self.REQUIRED_KEYS == set(result.keys())
+        assert set(result.keys()) == self.REQUIRED_KEYS
 
     def test_all_keys_present_wired(self, full_pipeline):
         """All six keys present when all three tiers are wired."""
         result = full_pipeline.verify_extended(
             "Let n = 5. Then 2n = 10. Subtracting 3 gives 7. Verified."
         )
-        assert self.REQUIRED_KEYS == set(result.keys())
+        assert set(result.keys()) == self.REQUIRED_KEYS
 
     def test_correct_response_verified_true(self, full_pipeline):
         """A correct-pattern response produces verified=True via EORM fast path."""

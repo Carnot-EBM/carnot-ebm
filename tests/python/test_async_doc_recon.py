@@ -17,6 +17,7 @@ What the helpers must guarantee:
   4. Exceptions in the background callable do not crash the main thread.
   5. _shutdown_recon_executor drains pending work and tears the executor
      down cleanly — needed for atexit safety.
+Spec: REQ-INFRA-067
 """
 
 from __future__ import annotations
@@ -43,6 +44,7 @@ def conductor_async_module(monkeypatch):
     tests so they don't bleed.
     """
     import research_conductor as rc
+
     # Clear state between tests: shut any leftover executor down, null out
     # the future slot. Avoid surprise behaviour if a test failed mid-flight.
     rc._shutdown_recon_executor(wait=False, timeout=1.0)
@@ -126,6 +128,7 @@ def test_submit_serialises_overlapping_recons(conductor_async_module):
 def test_exception_in_background_does_not_crash_main(conductor_async_module, caplog):
     """A raise inside the background callable is logged, not propagated."""
     import logging
+
     rc = conductor_async_module
     rc._submit_async_recon(lambda: (_ for _ in ()).throw(RuntimeError("boom")))
     # Awaiting must NOT raise — the helper logs and continues so the
@@ -137,7 +140,8 @@ def test_exception_in_background_does_not_crash_main(conductor_async_module, cap
     error_records = [r for r in caplog.records if r.levelno >= logging.ERROR]
     assert error_records, "expected at least one ERROR log record"
     found_boom = any(
-        "raised" in r.message or "RuntimeError" in str(r.exc_info or "")
+        "raised" in r.message
+        or "RuntimeError" in str(r.exc_info or "")
         or "boom" in str(r.exc_info or "")
         for r in error_records
     )

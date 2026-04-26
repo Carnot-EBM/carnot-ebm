@@ -7,6 +7,7 @@ Covers:
 - 10-session relay shows forgetting improves or matches constraint precision vs baseline
 
 Spec: REQ-FR11-007, SCENARIO-FR11-007
+Spec: REQ-AUTO-011
 """
 
 from __future__ import annotations
@@ -16,9 +17,7 @@ import math
 from pathlib import Path
 
 import pytest
-
-from carnot.pipeline.lagrange_updater import ConstraintRecord, LagrangeAdaptiveUpdater
-
+from carnot.pipeline.lagrange_updater import LagrangeAdaptiveUpdater
 
 # ---------------------------------------------------------------------------
 # REQ-FR11-007: tick() applies exponential decay
@@ -292,12 +291,10 @@ class TestForgettingRelay:
         baseline = self._run_relay(forgetting_lambda=0.0)
         with_forgetting = self._run_relay(forgetting_lambda=0.05)
 
-        precision_delta = (
-            with_forgetting["constraint_precision"] - baseline["constraint_precision"]
-        )
-        assert precision_delta >= -0.02, (
-            f"Forgetting hurt precision by more than 0.02: delta={precision_delta:.4f}"
-        )
+        precision_delta = with_forgetting["constraint_precision"] - baseline["constraint_precision"]
+        assert (
+            precision_delta >= -0.02
+        ), f"Forgetting hurt precision by more than 0.02: delta={precision_delta:.4f}"
 
     def test_deliverable_json_exists(self) -> None:
         """The experiment deliverable JSON must exist and contain required fields."""

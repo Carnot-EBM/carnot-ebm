@@ -196,9 +196,7 @@ class TestConfidenceVerifier:
 
     def test_returns_list(self) -> None:
         """verify_with_confidence always returns a list."""
-        results = self.verifier.verify_with_confidence(
-            "The answer is 2 + 2 = 4.", self.extractor
-        )
+        results = self.verifier.verify_with_confidence("The answer is 2 + 2 = 4.", self.extractor)
         assert isinstance(results, list)
 
     def test_correct_response_returns_empty(self) -> None:
@@ -219,9 +217,7 @@ class TestConfidenceVerifier:
     def test_high_confidence_on_large_error(self) -> None:
         """SCENARIO-VERIFY-105: Large arithmetic error → HIGH confidence."""
         # 1 + 1 = 99 is an extreme error
-        results = self.verifier.verify_with_confidence(
-            "So 1 + 1 = 99.", self.extractor
-        )
+        results = self.verifier.verify_with_confidence("So 1 + 1 = 99.", self.extractor)
         assert len(results) == 1
         assert results[0].confidence_class == ViolationConfidence.HIGH
         assert results[0].repair_recommended is True
@@ -238,9 +234,7 @@ class TestConfidenceVerifier:
     def test_custom_threshold_raises_bar(self) -> None:
         """Higher threshold means fewer repairs recommended."""
         response = "The answer is 47 + 28 = 76."
-        results_low = self.verifier.verify_with_confidence(
-            response, self.extractor, threshold=0.1
-        )
+        results_low = self.verifier.verify_with_confidence(response, self.extractor, threshold=0.1)
         results_high = self.verifier.verify_with_confidence(
             response, self.extractor, threshold=0.999
         )
@@ -265,9 +259,7 @@ class TestConfidenceVerifier:
 
     def test_no_arithmetic_in_text_empty(self) -> None:
         """Text without arithmetic yields empty list."""
-        results = self.verifier.verify_with_confidence(
-            "The sky is blue.", self.extractor
-        )
+        results = self.verifier.verify_with_confidence("The sky is blue.", self.extractor)
         assert results == []
 
     def test_low_confidence_scenario(self) -> None:
@@ -275,15 +267,19 @@ class TestConfidenceVerifier:
         # Mock extractor that returns a violation with tiny energy
         mock_extractor = MagicMock()
         mock_constraint = MagicMock()
-        mock_constraint.metadata = {"satisfied": False, "a": 1, "b": 1, "claimed_result": 2, "correct_result": 2}
+        mock_constraint.metadata = {
+            "satisfied": False,
+            "a": 1,
+            "b": 1,
+            "claimed_result": 2,
+            "correct_result": 2,
+        }
         mock_constraint.description = "mock low-energy constraint"
         mock_constraint.energy_term = MagicMock()
-        mock_constraint.energy_term.energy.return_value = float(0.001)
+        mock_constraint.energy_term.energy.return_value = 0.001
         mock_extractor.extract.return_value = [mock_constraint]
 
-        results = self.verifier.verify_with_confidence(
-            "dummy", mock_extractor, threshold=0.8
-        )
+        results = self.verifier.verify_with_confidence("dummy", mock_extractor, threshold=0.8)
         # With energy_delta=0.001, sigmoid(0.001) ≈ 0.5002 → MEDIUM
         # repair_recommended depends on score vs 0.8
         for r in results:
@@ -302,6 +298,7 @@ class TestVerifyAndRepairConfident:
 
     def setup_method(self) -> None:
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         self.pipeline = VerifyRepairPipeline()
 
     def test_method_exists(self) -> None:
@@ -333,6 +330,7 @@ class TestVerifyAndRepairConfident:
         # Use a threshold so high that even real violations are below it
         # Mock the confidence verifier to force all low-confidence
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         pipeline = VerifyRepairPipeline()
         result = pipeline.verify_and_repair_confident(
             question="What is 47 + 28?",
@@ -345,6 +343,7 @@ class TestVerifyAndRepairConfident:
     def test_returns_repair_result_type(self) -> None:
         """verify_and_repair_confident returns a RepairResult."""
         from carnot.pipeline.verify_repair import RepairResult
+
         result = self.pipeline.verify_and_repair_confident(
             question="What is 3 + 3?",
             response="3 + 3 = 6.",
@@ -363,6 +362,7 @@ class TestVerifyAndRepairConfident:
     def test_additive_does_not_break_verify_and_repair(self) -> None:
         """REQ-VERIFY-082: verify_and_repair() behavior unchanged."""
         from carnot.pipeline.verify_repair import RepairResult
+
         result = self.pipeline.verify_and_repair(
             question="What is 2 + 2?",
             response="2 + 2 = 4.",

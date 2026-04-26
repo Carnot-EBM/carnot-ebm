@@ -12,6 +12,7 @@ Coverage targets (REQ-FR11-001/002/003/004):
 - test_throttle_prevents_update_except_every_10: only every 10th call updates weight
   (REQ-FR11-004)
 - test_bus_latency_under_200ms: latency for 2 no-op subscribers < 200ms (REQ-FR11-001)
+Spec: REQ-AUTO-011
 """
 
 from __future__ import annotations
@@ -20,8 +21,6 @@ import json
 import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
-
-import pytest
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -32,7 +31,7 @@ def _make_violation_event(
     constraint_type: str = "carry_check",
     question_domain: str = "arithmetic",
     query_id: str = "q_test",
-) -> "object":
+) -> object:
     """Build a ViolationEvent for testing without requiring a real model."""
     from carnot.pipeline.fr11_event_bus import ViolationEvent
 
@@ -258,7 +257,6 @@ def test_gated_blocked_path(tmp_path):
     if str(scripts_dir) not in sys.path:
         sys.path.insert(0, str(scripts_dir))
 
-    import importlib
     import experiment_734_fr11_tier21_relay as exp734
 
     with (

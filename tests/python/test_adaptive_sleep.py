@@ -6,6 +6,7 @@ scales the sleep to how much real work the iteration did.
 
 Tier definitions are documented in the function docstring; these tests pin
 the boundary behaviour so future tuning has to make a deliberate decision.
+Spec: REQ-INFRA-067
 """
 
 from __future__ import annotations
@@ -16,7 +17,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent / "scripts"))
 
 from research_conductor import compute_adaptive_sleep_min  # noqa: E402
-
 
 # ---------------------------------------------------------------------------
 # Short tier: blocks and skips (iter_duration < 30 s)
@@ -135,8 +135,9 @@ def test_71_retro_savings_estimate():
     block_iters = [0.5] * 8
     cpu_iters = [120.0, 200.0]
     gpu_iters = [1500.0, 900.0]
-    sleeps = [compute_adaptive_sleep_min(d, interval)[0]
-              for d in block_iters + cpu_iters + gpu_iters]
+    sleeps = [
+        compute_adaptive_sleep_min(d, interval)[0] for d in block_iters + cpu_iters + gpu_iters
+    ]
     adaptive_total = sum(sleeps)
     fixed_total = interval * len(sleeps)
     assert adaptive_total == 38

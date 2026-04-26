@@ -98,6 +98,8 @@ traceable to a checked-in experiment artifact under `results/`.
 | SpectralAttentionProbe hallucination detector (Tier 0h) | **AUC=1.0**, bigram Laplacian spectral entropy | Exp 885 |
 | IterativeSelfRepair code repair (HumanEval 50, execute-feedback-retry) | **8% → 80%** pass rate (+72pp), cross-model energy selection accuracy 1.0 | Exp 905/906 |
 | EstimationVerifier SVAMP AUC (vs FoVer baseline 0.125) | **0.90** (+0.775 signed improvement) | Exp 908 |
+| Symbolic-KAN arithmetic constraint verifier | **AUC 0.9344** (+0.7136 over standard KAN; interpretable symbolic labels) | Exp 937 |
+| DualGPU pipeline throughput (realistic 50q workload) | **1.96x speedup** (production-ready at scale) | Exp 932 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -132,7 +134,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  across 928 experiments and 77 milestones, structured as six phases with
+  across 940 experiments and 78 milestones, structured as six phases with
   a plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.

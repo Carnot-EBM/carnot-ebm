@@ -22,6 +22,7 @@ Covers:
 - condition_and_verify: energy field matches verify_with_draft energy
 
 Spec: REQ-TIER28-001, SCENARIO-TIER28-001
+Spec: REQ-VERIFY-001
 """
 
 from __future__ import annotations
@@ -34,7 +35,6 @@ from python.carnot.pipeline.draft_conditioned_verifier import (
     DraftConditionedVerifier,
     VerificationResult,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers

@@ -4716,3 +4716,91 @@ thermodynamic computing Ising FPGA
   Interpretability is the primary gain: each node announces its semantic constraint role.
 - **Implementation:** python/carnot/models/symbolic_kan.py (REQ-MODEL-030, SCENARIO-MODEL-015).
 - **When incorporated:** Exp 937 — Milestone 2026.04.26.
+
+## 2026-04-26 arxiv Scan (Milestone 2026.04.73 Planning)
+
+### ThinkPRM: Process Reward Models That Think
+- **Paper:** arXiv 2504.16828 (April 2026)
+- **What:** Generative process reward model that verifies each reasoning step by producing a
+  verification chain-of-thought rather than a discriminative binary score. Trained with only
+  1% of the process labels required by discriminative PRMs. Achieves 8% improvement over
+  discriminative verifiers on GPQA-Diamond and 4.5% on LiveCodeBench. Outperforms LLM-as-a-Judge
+  by 7.2% under equivalent token budgets. Demonstrated on ProcessBench, MATH-500, AIME '24.
+- **Key insight:** Having the model explain WHY a step is correct/incorrect before scoring
+  provides a much stronger gradient signal than binary labels. The verification CoT forces the
+  model to internalize mathematical reasoning rather than learning pattern matching. Only 8K
+  process labels needed (vs 800K in PRM800K).
+- **Relevance to Carnot — RETRO-HEURISTIC-RPRM-FLAT-SIGNAL fix:**
+  Exp 924 (R-PRM Tier 2.9) produced AUC delta=0 in heuristic mode — the "explain then score"
+  pipeline used rule-based explanations instead of model-generated reasoning. ThinkPRM shows
+  the explanations must come from the model itself, not rules. Implementing ThinkPRM for Carnot:
+  pass each reasoning step to the LLM with the prompt "Verify this step: [step]. Generate
+  a chain-of-thought explaining whether this step is correct, then output CORRECT or INCORRECT."
+  Use the resulting token probabilities (P(CORRECT)) as the step score. Feed into Ising EBM
+  as a learned prior on constraint satisfaction probability.
+- **Decentralization note:** Works with any LLM, including local GGUF models. Does not require
+  proprietary annotation (unlike PRM800K). Open approach — aligns with CLAUDE.md rule 1.
+- **Concrete experiment:** Exp 945 — ThinkPRM Tier 2.9: implement generative CoT step verifier
+  using Gemma4-E4B-it locally. Compare AUC vs Exp 924 heuristic baseline.
+- **When to incorporate:** Milestone 2026.04.73 — Phase 3.
+
+### E-MVL: Sparsified Ising Machine via Extraction-Type Majority Voting Logic
+- **Paper:** arXiv 2604.04606 (April 2026)
+- **What:** Quantum-inspired Ising machine algorithm implemented in digital FPGA logic.
+  Sparsifies spin connectivity by an extraction-type majority voting logic (E-MVL), which
+  mimics thermal spin dynamics while using primarily integer additions and logic operations.
+  Handles up to 1600 spins (4x more than simulated annealing at 400). Achieves ~6x faster
+  solution speed than simulated annealing on FPGA. Outperforms all competitors on
+  Sherrington-Kirkpatrick model benchmarks.
+- **Key insight:** Sparse connectivity (not dense coupling) is the key to FPGA efficiency.
+  Rather than computing E_i = sum_j(J_ij * s_j) for all j, E-MVL computes only the majority
+  vote over a subset of neighbors. This reduces logic operations from O(N^2) to O(N log N)
+  and maps directly to FPGA LUT structures.
+- **Relevance to Carnot — KV260 RTL path:**
+  The current hardware/kv260/ising_sampler_v1.v (v2 also) uses dense connectivity, contributing
+  to the N=128 LUT overflow (RETRO-072). E-MVL sparsification would reduce the LUT count from
+  290K (overflow) to within budget for N=64-128 spins. E-MVL also enables larger spin counts on
+  the KV260's 117K LUT budget. Should be applied to ising_sampler_v3_spec.md (already has
+  inertia dynamics; add sparse connectivity on top).
+- **Concrete experiment:** Exp 950 — E-MVL Sparsified Ising: implement sparse connectivity
+  pattern in Python (CPU simulation), compare AUC and convergence speed vs dense Ising, then
+  write the RTL spec update for v4 (sparse + inertia).
+- **When to incorporate:** Milestone 2026.04.73 — Phase 5.
+
+### IIPC: Iteratively Improved Program Construction for Math
+- **Paper:** arXiv 2602.03950 (February 2026)
+- **What:** Execution-driven math reasoning that converts word problems to Python programs,
+  executes them, and feeds back execution errors (tracebacks) to the LLM for iterative repair.
+  Combines programmatic chain-of-thought with execution feedback. Bridges code repair techniques
+  to mathematical reasoning.
+- **Key insight:** Unlike direct text-based math repair, IIPC provides EXTERNAL feedback
+  (Python execution results and errors) that re-enters the model at the input layer. This
+  sidesteps the topological problem identified in arXiv 2604.17121 — mathematical state
+  computed in one forward pass cannot be retrieved in the next without external grounding.
+  Programs provide that external grounding.
+- **Relevance to Carnot — RETRO-MATH-REPAIR-MODEL-CEILING context:**
+  Exp 930 failed because gemma-4-E4B-it has a 12% GSM8K baseline — no margin for repair.
+  IIPC provides a parallel approach: instead of re-prompting the model to "think again," generate
+  a Python program that computes the answer, execute it, check the result. The program execution
+  provides a deterministic oracle that is independent of model capability. Even a small model
+  that can't reliably compute 47+28 in text can often generate `print(47+28)` correctly.
+- **Concrete experiment:** Consider for Milestone 2026.04.74 after SOTA math repair results
+  are established. IIPC may outperform text-based repair for small models while text-based
+  repair may work better for large models where mathematical reasoning is strong.
+- **When to incorporate:** Milestone 2026.04.74 (deferred — see Exp 942-943 first).
+
+### AdaDec: Uncertainty-Guided Adaptive Decoding
+- **Paper:** arXiv 2506.08980 (June 2025)
+- **What:** Pause-then-rerank mechanism for LLM decoding that triggers when Shannon entropy at
+  a token position exceeds a learned model-specific threshold. At high-uncertainty positions,
+  generates multiple candidate continuations and reranks them via lookahead scoring. Achieves
+  consistent improvement on code generation benchmarks (+4.2pp HumanEval). Learns per-model
+  uncertainty thresholds from a small calibration set (100 examples).
+- **Relevance to Carnot:** Carnot's ThinkProbe (Exp 444) uses a fixed confidence threshold.
+  AdaDec's per-model learned threshold is more accurate. Integration path: use Carnot's
+  IsingEBM energy as the reranking score (instead of lookahead) — when the LLM's token entropy
+  exceeds the threshold, generate K candidates and select the lowest-energy one. This combines
+  AdaDec's pause-trigger with Carnot's energy-based selection.
+- **Concrete experiment:** Consider for future milestone — energy-guided adaptive decoding
+  combining AdaDec trigger with Carnot IsingEBM reranker.
+- **When to incorporate:** Future milestone after ThinkPRM Tier 2.9 is established.
