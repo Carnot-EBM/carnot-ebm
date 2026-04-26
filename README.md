@@ -96,6 +96,8 @@ traceable to a checked-in experiment artifact under `results/`.
 | Constraint memory bank compression | **31.25x** reduction, AUROC=1.0 maintained | Exp 865 |
 | V-JEPA Tier 3 reasoning discriminator (VJEPA v2, deployed) | **OOD AUC=0.9211** (above 0.90 publication gate) | Exp 883/884 |
 | SpectralAttentionProbe hallucination detector (Tier 0h) | **AUC=1.0**, bigram Laplacian spectral entropy | Exp 885 |
+| IterativeSelfRepair code repair (HumanEval 50, execute-feedback-retry) | **8% → 80%** pass rate (+72pp), cross-model energy selection accuracy 1.0 | Exp 905/906 |
+| EstimationVerifier SVAMP AUC (vs FoVer baseline 0.125) | **0.90** (+0.775 signed improvement) | Exp 908 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -130,7 +132,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  across 891 experiments and 75+ milestones, structured as six phases with
+  across 916 experiments and 76+ milestones, structured as six phases with
   a plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
