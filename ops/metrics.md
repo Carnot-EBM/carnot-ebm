@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-26 Milestone 2026.04.69 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 (continued) | 2026-04-26T01:22:44Z | 2026-04-26T01:45:23Z | Planned milestone 2026.04.69 "VJEPA Streaming + SVAMP Root Cause + Self-Learning Tier 4 Seed" (continued from prior context). Resumed after compaction: read v68 change proposal + roadmap YAML for format reference. Wrote openspec/change-proposals/research-roadmap-v69.md (12 experiments 892-903, 5 phases: governance/SVAMP root cause/VJEPA streaming/new capabilities/hardware, RETRO tracking table, dependency graph, success criteria). Wrote research-roadmap-next.yaml (12 experiments with full conductor prompts: EstimationVerifier, VJEPA streaming LogitsProcessor, KAN adaptive spline Tier 4, DRIFTProbe Tier 0i, DraftConditionedVerifier Tier 2.8, PIMI sparse adjacency FINAL, HF publish v3). research-references.md arxiv scan was completed in prior context (7 new papers). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~85k |
+
+---
+
 ## Session: 2026-04-25 Milestone 2026.04.67 Operational Retrospective
 
 ### Turn Log

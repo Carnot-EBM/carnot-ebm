@@ -4351,6 +4351,126 @@ thermodynamic computing Ising FPGA
   synthetic step-level labels from Qwen3.5-0.8B + GSM8K ground truth. Augments FoVer corpus.
 - **When to incorporate:** Milestone 2026.04.68 — Phase 2 VJEPA training (Exp 883).
 
+## 2026-04-26 arxiv Scan (Milestone 2026.04.69 Planning)
+
+### Latent Veracity Inference for Identifying Errors in Stepwise Reasoning
+- **Paper:** arXiv 2505.11824 (May 2025)
+- **What:** Assigns latent correctness variables to each reasoning step and proposes amortized
+  veracity inference for zero-shot error detection. Treats step-level verification as Bayesian
+  posterior estimation over latent truth states: P(correct | partial_chain) updated at each step.
+  Achieves strong zero-shot error detection without task-specific labels.
+- **Relevance to Carnot:** VJEPA v2 (Exp 883, ood_auc=0.9211) predicts violation probability but
+  treats each step as independent. Latent Veracity Inference would make the predictor causal:
+  P(step_i correct | step_1..step_{i-1}). This is the theoretical grounding for the VJEPA Live
+  Streaming Filter (Exp 894) — posterior updates propagate across CoT steps, catching compounding
+  errors earlier than step-independent prediction.
+- **Concrete experiment:** Enhancement to Exp 894 (VJEPA Live Streaming Filter): add running
+  posterior update across CoT steps. P(violation | step_i) = VJEPA(step_i) * P(violation | step_{i-1}).
+  Compare streaming posterior vs independent step-by-step VJEPA predictions.
+- **When to incorporate:** Milestone 2026.04.69 — Phase 1 GPU (Exp 894).
+
+### Controlled LLM Decoding via Discrete Autoregressive Biasing
+- **Paper:** arXiv 2502.03685 (February 2026)
+- **What:** Energy-based decoding defines target distributions through energy functions combining
+  multiple constraints during token generation. At each generation step, candidate tokens are
+  scored by an energy function and logits are biased toward low-energy continuations. Achieves
+  constrained generation without fine-tuning via discrete Langevin-style perturbation.
+- **Relevance to Carnot:** Carnot currently verifies AFTER generation (post-hoc). This paper
+  enables verification DURING generation — the energy function guides token selection away from
+  constraint violations before they appear. Directly applicable to VJEPA Live Streaming (Exp 894):
+  instead of flagging violations after each step, bias the LLM's next-token probabilities using
+  VJEPA's violation energy as a soft constraint on the generation beam.
+- **Concrete experiment:** Extension of Exp 894: after VJEPA predicts violation_prob > 0.5 at
+  step i, bias logits for the next generation step using -violation_prob as a negative energy
+  bonus on "repair" tokens (numbers, recalculations). Measure: does energy-biased generation
+  produce fewer violations than flag-and-repair?
+- **When to incorporate:** Milestone 2026.04.69 — Phase 1 GPU (Exp 894).
+
+### Estimation Verification for Math Word Problems (SVAMPClean)
+- **Paper:** arXiv 2509.18565 (September 2025)
+- **What:** Two-stage verification for math word problems: (1) LLM generates an equation from
+  the decomposed problem, (2) LLM independently estimates the answer. Equation and estimate are
+  compared via symbolic solver. If they disagree: iterative rectification. Achieves SOTA on SVAMP
+  and introduces SVAMPClean (50 corrected ambiguous SVAMP questions). Does not require multi-step
+  CoT — works on single-step word problem solutions.
+- **Relevance to Carnot:** SVAMP AUC=0.125 (Exp 872) is near-random. Root cause hypothesis:
+  SVAMP questions are single-step word problems ("how many more?") that don't have labeled
+  multi-step CoT chains — FoVer labeling and VJEPA both require step sequences. The estimation
+  verification approach from this paper bypasses step-labeling entirely: extract equation from
+  answer, verify against independent estimate. This could bring SVAMP AUC from 0.125 to > 0.60
+  without requiring any multi-step CoT structure.
+- **Concrete experiment:** Exp 896 — SVAMPEstimationVerifier: implement equation extraction +
+  estimation comparison for SVAMP format. Use as training signal for VJEPA v3 SVAMP corpus.
+  Also file SVAMPClean as the standard evaluation split.
+- **When to incorporate:** Milestone 2026.04.69 — Phase 2 SVAMP fix (Exp 896).
+
+### FOREVER: Forgetting Curve-Inspired Memory Replay for LLM Continual Learning
+- **Paper:** arXiv 2601.03938 (January 2026)
+- **What:** Aligns memory replay schedules with a "model-centric notion of time" using the
+  magnitude of optimizer updates. Rather than fixed-interval replay, FOREVER replays past data
+  most intensively when the model is changing fastest (large gradient steps). The forgetting
+  curve decays memory importance proportionally to elapsed model-update magnitude.
+- **Relevance to Carnot:** Tier 1 Lagrange adaptive weights (Exp 862, fr11_self_learning_confirmed)
+  update at each verification step. Constraints that haven't fired in many queries accumulate
+  positive Lagrange weight indefinitely. FOREVER-inspired weight decay: λ_i decays when VJEPA
+  violation signals don't involve constraint i for N queries. This prevents stale constraints
+  from biasing the energy function and enables automatic pruning of domain-specific constraints
+  when the query distribution shifts.
+- **Concrete experiment:** Exp 897 — ForgettingCurveScheduler: λ_i *= exp(-decay_rate *
+  (t - last_fired_i)) where last_fired_i is the last query index where constraint i fired.
+  decay_rate tuned so constraints not fired in 100 queries drop to 50% weight. 10-session relay.
+- **When to incorporate:** Milestone 2026.04.69 — Phase 2 self-learning (Exp 897).
+
+### DRIFT: Detecting Representational Inconsistencies for Factual Truthfulness
+- **Paper:** arXiv 2601.14210 (January 2026). Accepted to ACL 2026.
+- **What:** Lightweight linear probe trained on pre-generation activations of frozen LLM detects
+  factual truthfulness without any model modification. Tracks "representational drift" — the
+  difference between activation patterns when the model "knows" a fact vs. when it generates an
+  incorrect claim. Uses token patching to identify which attention layers encode truthfulness.
+- **Relevance to Carnot:** HiddenStateHalluProbe (planned for .68, deferred) uses MLP on final-
+  layer hidden states. DRIFT provides a stronger prior: early layers (e.g., layers 4-8) may
+  encode truthfulness better than final layers. Multi-layer linear probe ensemble (consistent
+  with arXiv 2604.13386 which shows +29-78% AUROC from ensembling) could improve Carnot's probe
+  AUC to > 0.90. Frozen probe — no fine-tuning, NPU-deployable.
+- **Concrete experiment:** Exp 899 — DRIFTProbe: train 3-layer linear probe on Qwen3.5-0.8B
+  residual stream activations at layers 4, 8, 12. Train on 57 real FoVer pairs + 150 synthetic.
+  Compare: single-layer vs multi-layer ensemble. Target: AUC > 0.90.
+- **When to incorporate:** Milestone 2026.04.69 — Phase 3 research (Exp 899).
+
+### Draft-Conditioned Constrained Decoding for Structured Generation
+- **Paper:** arXiv 2603.03305 (March 2026)
+- **What:** Two-step, training-free approach: generate an unconstrained draft first, then apply
+  constrained decoding conditioned on the draft. The draft functions as semantic planning before
+  structural enforcement. Improves structured accuracy by up to 24 percentage points by reducing
+  cases where the constraint mask finds no valid continuations.
+- **Relevance to Carnot:** ConstrainedDecodingPreFilter (Exp 886) applies AST-based token masking
+  post-hoc. Draft-conditioned approach would work differently: before full generation, generate a
+  1-sentence "draft answer" with the expected structure (e.g., "approximately 15 items"). Use this
+  draft to constrain what the full response should say, catching structural violations before the
+  full reasoning chain is generated. Reduces CodeExtractor FP rate by ensuring the code "scaffold"
+  is valid before adding logic.
+- **Concrete experiment:** Exp 900 — DraftConditionedVerifier: generate 1-sentence draft estimate
+  before full CoT. Extract numerical/structural constraints from draft. Use as soft priors in the
+  cascade (expected_answer_range feeds into ArithmeticExtractor threshold). Test on 50 synthetic
+  GSM8K questions. Measure: constraint extraction rate vs without draft conditioning.
+- **When to incorporate:** Milestone 2026.04.69 — Phase 3 research (Exp 900).
+
+### Scalable Connectivity for Ising Machines: Dense to Sparse
+- **Paper:** arXiv 2503.01177 (March 2025)
+- **What:** Proposes systematic sparsification of dense Ising graphs by introducing copy nodes
+  to limit the number of neighbors per spin to K_max (typically K_max=4 or 8). For N=64 spins
+  with all-to-all coupling (N^2 edges), copy-node sparsification reduces to K_max*N edges with
+  minimal quality loss. Provides theoretical quality bounds as a function of K_max.
+- **Relevance to Carnot:** RETRO-INERTIA-SWEEPS-TARGET-MISSED: PIMI v3 parallel (Exp 889) may
+  still miss 5x because N=8 has dense coupling (K=7 per spin). Copy-node sparsification would
+  reduce effective K from 7 to K_max=4, improving per-sweep efficiency. Also directly relevant
+  to the RETRO-ICE40-N16 issue (register expansion): sparse adjacency dramatically reduces
+  BRAM/LUT usage for larger N.
+- **Concrete experiment:** Exp 901 — PIMI Sparse v4: implement copy-node sparsification for N=8
+  (K_max=4). Compare: dense N=8 PIMI vs sparse-N=8 PIMI. If sparse >= 5x sweep reduction: close
+  RETRO-INERTIA. If still < 5x: retire PIMI approach to exclusion manifest.
+- **When to incorporate:** Milestone 2026.04.69 — Phase 3 hardware (Exp 901).
+
 ### Efficient Probabilistic Ising Machines with Full Parallel Updates (PIMI)
 - **Paper:** arXiv 2604.17109 — already referenced in .66 scan. Key detail missed:
   The 15-25x sweep reduction is achieved ONLY with truly parallel spin updates (all spins
