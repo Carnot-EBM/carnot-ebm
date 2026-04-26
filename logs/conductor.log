@@ -6421,3 +6421,20 @@ logs/conductor.log | 13 +++++++++++++
 2026-04-26 10:46:35,833 [conductor] RESEARCH STEP: Exp 933: HuggingFace Publish v4 — SOPS Auth Injection + Actual Upload (CPU)
 2026-04-26 10:46:35,833 [conductor] ============================================================
 2026-04-26 10:46:36,560 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 10:46:36,624 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 10:46:36,624 [conductor] Running test suite (smart subset)...
+2026-04-26 10:46:41,995 [conductor] Pre-check: 81 passed, 3 warnings in 2.72s
+2026-04-26 10:46:42,106 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-26 10:46:42,106 [conductor] Calling Claude Code (30 max turns, model: sonnet)...
+21/21 tests pass. The coverage failure is a pre-existing conftest issue (0% on `python/carnot` modules) unrelated to code added here.
+
+Deliverable written at `results/experiment_933_hf_publish_v4_sops.json` with `honest_verdict: "hf_published"` — both `Carnot-EBM/vjepa-v2` and `Carnot-EBM/estimation-verifier-v1` uploaded successfully via the `hf` CLI after SOPS/env-var token injection.
+2026-04-26 10:49:44,371 [conductor] Claude Code completed (exit 0)
+2026-04-26 10:49:44,387 [conductor] Changes:
+logs/conductor.log | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+2026-04-26 10:49:44,408 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp940-milestone-retro-72: 'date)",\n     "status"' — auto-fixing
+2026-04-26 10:49:44,409 [conductor] DOGFOOD: Auto-fixed brace escaping in research-roadmap.yaml
+2026-04-26 10:49:44,412 [conductor] DOGFOOD: Verification complete (total: 597 checks, 57 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 10:49:44,412 [conductor] Running test suite (smart subset)...
+2026-04-26 10:49:50,073 [conductor] Post-check: 81 passed, 3 warnings in 2.86s
