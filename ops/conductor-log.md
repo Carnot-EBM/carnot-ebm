@@ -2863,3 +2863,4 @@ python/ |
 | 2026-04-26 15:18 UTC | Exp 935: FR-11 Tier 2 Code Domain Memory — CaseMem | OK | 95 passed, 3 warnings in 2.94s |
 | 2026-04-26 15:32 UTC | Exp 936: KAN Tier 4 Real Data — AutoKnots Adaptive | OK | 81 passed, 3 warnings in 2.98s |
 | 2026-04-26 15:48 UTC | Exp 937: Symbolic-KAN Constraint Verifier — Discre | OK | 81 passed, 3 warnings in 2.82s |
+| 2026-04-26 16:04 UTC | Exp 938: DraftConditioned Tier 2.8 Pipeline Integr | OK | 81 passed, 3 warnings in 2.91s |
