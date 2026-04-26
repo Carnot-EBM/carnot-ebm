@@ -5229,3 +5229,25 @@ _bmad/architecture.md |  3 ++-
 2026-04-26 01:26:43,106 [conductor] Pushed to origin
 2026-04-26 01:26:43,106 [conductor] Running post-commit documentation reconciliation...
 2026-04-26 01:26:43,115 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='published_no_ipfs_mirror', label='✅ Complete'
+2026-04-26 01:26:43,171 [conductor] Committed: [conductor] In-process docs for Exp 902: HuggingFace Publish v3 — VJEPA v2 Weigh
+2026-04-26 01:26:44,755 [conductor] Pushed to origin
+2026-04-26 01:26:44,756 [conductor] Documentation reconciliation committed (in-process)
+2026-04-26 01:26:44,759 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 01:31:44,761 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 01:36:44,763 [conductor] Sleep complete — resuming
+2026-04-26 01:36:44,764 [conductor] --- Iteration 16 ---
+2026-04-26 01:36:44,767 [conductor] ============================================================
+2026-04-26 01:36:44,767 [conductor] RESEARCH STEP: Exp 903: Milestone 2026.04.69 Operational Retrospective (CPU)
+2026-04-26 01:36:44,767 [conductor] ============================================================
+2026-04-26 01:36:45,435 [conductor] Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2081, in research_step
+    ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/failure_ledger.py", line 231, in load_from_artifacts
+    verdict = data.get("honest_verdict", "")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/in_process_doc_reconcile.py", line 142, in map_status_label
+    v = (verdict or "").lower()
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2026-04-26 01:36:45,452 [conductor] Committing 2 dirty files as checkpoint (preserving work)
