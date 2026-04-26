@@ -2840,3 +2840,5 @@ python/ |
 | 2026-04-26 11:27 UTC | Exp 920: Combined EstimationVerifier + MathIterati | OK | Deliverable already exists in repo |
 | 2026-04-26 11:27 UTC | Exp 921: DualGPU Throughput Benchmark — Confirm 1. | DOOMED_RERUN_BLOCK | 15 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-04-26 11:37 UTC | Exp 921: DualGPU Throughput Benchmark — Confirm 1. | OK | Deliverable already exists in repo |
+| 2026-04-26 11:37 UTC | Exp 922: HuggingFace Publish v4 — SOPS Auth Inject | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-26 11:47 UTC | Exp 922: HuggingFace Publish v4 — SOPS Auth Inject | OK | Deliverable already exists in repo |
