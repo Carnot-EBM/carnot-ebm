@@ -4286,3 +4286,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 907: SVAMP Root Cause v2 — Confirm FoVer Labeling Mismatch (CPU) (✅ Complete) — honest_verdict=mismatch_confirmed_gate_open; results/experiment_907_svamp_root_cause_v2.json
 - 2026-04-26: Exp 908: EstimationVerifier — Range-Based Word Problem Checking (CPU) (✅ Complete) — honest_verdict=svamp_auc_improved; results/experiment_908_estimation_verifier.json
 - 2026-04-26: Exp 909: Lagrange Forgetting Curve — FR-11 Tier 1 Adaptive Weight Decay (CPU) (⚠️ Research Finding) — honest_verdict=no_improvement; results/experiment_909_lagrange_forgetting_curve.json
+- 2026-04-26: Exp 910: KAN Tier 4 Seed — AutoKnots Adaptive Spline Grid Refinement (CPU) (✅ Complete) — honest_verdict=tier4_seed_viable; results/experiment_910_kan_tier4_seed.json
