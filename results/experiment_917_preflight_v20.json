@@ -1,0 +1,60 @@
+{
+  "experiment": 917,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-26",
+  "started_at": "2026-04-26T10:40:22.622255+00:00",
+  "finished_at": "2026-04-26T10:40:22.622255+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 917: Pre-flight v20 \u2014 .70 Audit + RETRO-LAGRANGE-ENTROPY-DEGENERATE Triage (CPU)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "5 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp404-preflight-v2",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: env_not_propagating"
+    },
+    {
+      "upstream": "exp731-zombie-kill-preflight-v8",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: preflight_v8_clean"
+    },
+    {
+      "upstream": "exp740-preflight-v9",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: preflight_v9_clean_manifest_pending"
+    },
+    {
+      "upstream": "exp754-preflight-v10",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: preflight_v10_patch_applied_gpu_clean"
+    },
+    {
+      "upstream": "exp767-preflight-v11",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: full_manifest_coverage_achieved"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
