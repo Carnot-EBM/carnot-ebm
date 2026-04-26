@@ -2838,3 +2838,5 @@ python/ |
 | 2026-04-26 11:04 UTC | Exp 920: Combined EstimationVerifier + MathIterati | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp919-math-iterative-self-repair.signed_i |
 | 2026-04-26 11:17 UTC | Exp 918: Lagrange Forgetting Multi-Constraint — RE | OK | 81 passed, 3 warnings in 2.82s |
 | 2026-04-26 11:27 UTC | Exp 920: Combined EstimationVerifier + MathIterati | OK | Deliverable already exists in repo |
+| 2026-04-26 11:27 UTC | Exp 921: DualGPU Throughput Benchmark — Confirm 1. | DOOMED_RERUN_BLOCK | 15 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-04-26 11:37 UTC | Exp 921: DualGPU Throughput Benchmark — Confirm 1. | OK | Deliverable already exists in repo |
