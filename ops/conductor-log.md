@@ -2830,3 +2830,5 @@ python/ |
 | 2026-04-26 10:03 UTC | Exp 916: Milestone 2026.04.70 Operational Retrospe | OK | 81 passed, 3 warnings in 2.84s |
 | 2026-04-26 10:32 UTC | Plan milestone 2026.04.71 | OK | 12 tasks proposed |
 | 2026-04-26 10:39 UTC | Milestone 2026.04.71 activated | OK | 12 tasks queued |
+| 2026-04-26 10:40 UTC | Exp 917: Pre-flight v20 — .70 Audit + RETRO-LAGRAN | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-26 10:50 UTC | Exp 917: Pre-flight v20 — .70 Audit + RETRO-LAGRAN | OK | Deliverable already exists in repo |
