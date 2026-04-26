@@ -65,7 +65,7 @@ tasks:
          Exp 920 (Combined pipeline): GATED on Exp 919 signed_improvement > 0
          Exp 921 (DualGPU throughput): GATED on Exp 913 honest_verdict contains "dualgpu_wired"
     7. Build artifact:
-       {
+       (
          "milestone": "2026.04.71",
          "preflight_version": 20,
          "predecessor_criteria_met": 11,
@@ -80,7 +80,7 @@ tasks:
            "RETRO-MANIFEST-FULL-SCOPE": "HUMAN_REQUIRED",
            "RETRO-XILINX-TOOLS-UNAVAILABLE": "HUMAN_REQUIRED",
            "RETRO-LAGRANGE-ENTROPY-DEGENERATE": "TARGETED_EXP918"
-         },
+         ),
          "escalation_written": true,
          "honest_verdict": "preflight_complete"
        }
@@ -146,15 +146,15 @@ tasks:
                                      requires_gpu=False)
        b. tmpl.setup()
        c. Define 8 constraint types with different violation probabilities:
-          constraints = {
-            "arithmetic_carry":     {"high_viol_prob": 0.80, "low_viol_prob": 0.05},
-            "sign_check":           {"high_viol_prob": 0.70, "low_viol_prob": 0.10},
-            "unit_consistency":     {"high_viol_prob": 0.60, "low_viol_prob": 0.15},
-            "comparison_direction": {"high_viol_prob": 0.50, "low_viol_prob": 0.20},
-            "equality_check":       {"high_viol_prob": 0.40, "low_viol_prob": 0.25},
-            "range_check":          {"high_viol_prob": 0.30, "low_viol_prob": 0.30},
-            "step_coherence":       {"high_viol_prob": 0.20, "low_viol_prob": 0.50},
-            "modular_arithmetic":   {"high_viol_prob": 0.10, "low_viol_prob": 0.70},
+          constraints = (
+            "arithmetic_carry":     {"high_viol_prob": 0.80, "low_viol_prob": 0.05),
+            "sign_check":           ("high_viol_prob": 0.70, "low_viol_prob": 0.10),
+            "unit_consistency":     ("high_viol_prob": 0.60, "low_viol_prob": 0.15),
+            "comparison_direction": ("high_viol_prob": 0.50, "low_viol_prob": 0.20),
+            "equality_check":       ("high_viol_prob": 0.40, "low_viol_prob": 0.25),
+            "range_check":          ("high_viol_prob": 0.30, "low_viol_prob": 0.30),
+            "step_coherence":       ("high_viol_prob": 0.20, "low_viol_prob": 0.50),
+            "modular_arithmetic":   ("high_viol_prob": 0.10, "low_viol_prob": 0.70),
           }
        d. 200-step simulation (not 100 — longer for clearer signal):
           Steps 1-100: each constraint fires at high_viol_prob.
@@ -221,7 +221,7 @@ tasks:
     baseline (first-attempt accuracy).
 
     MODEL_SPECS = [
-      {"name": "Qwen3.6-35B-A3B-GGUF", "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "gpu": 0}
+      ("name": "Qwen3.6-35B-A3B-GGUF", "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "gpu": 0)
     ]
 
     CONCRETE STEPS:
@@ -253,10 +253,10 @@ tasks:
 
          build_correction_prompt(self, question: str, response: str,
                                   error_steps: list[MathStep]) -> str:
-           Format: "The following reasoning has arithmetic errors:\n{response}\n\n"
+           Format: "The following reasoning has arithmetic errors:\n(response)\n\n"
                    "Detected errors:\n"
-                   For each error: "  Step '{step.step_text}': {step.python_expr} = "
-                                   "{step.eval_value:.2f}, but you wrote {step.stated_value}\n"
+                   For each error: "  Step '(step.step_text)': (step.python_expr) = "
+                                   "(step.eval_value:.2f), but you wrote (step.stated_value)\n"
                    "Please correct the calculation and provide the right final answer."
 
          repair(self, question: str, correct_answer: float,
@@ -270,13 +270,13 @@ tasks:
              final_num = self._extract_final_number(response)
              correct = (final_num is not None and
                         abs(final_num - correct_answer) < 0.01)
-             attempts.append({
+             attempts.append((
                "attempt": i,
                "response": response,
                "n_errors_found": len(error_steps),
                "correct": correct,
                "energy_score": score
-             })
+             ))
              if correct or not error_steps:
                break
              if i < self.max_retries:
@@ -414,7 +414,7 @@ tasks:
        a. tmpl = ExperimentTemplate(920, ..., requires_gpu=False). tmpl.setup().
        b. Load 25 GSM8K + 20 SVAMP questions with correct answers.
        c. Use Qwen3.5-0.8B (llama.cpp, CPU) for generation (fast for combined pipeline).
-          MODEL_SPECS = [{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]
+          MODEL_SPECS = [("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]
           (CPU fallback acceptable for this experiment)
        d. Baseline: no repair (raw LLM accuracy on both datasets).
        e. Repair-all: MathIterativeSelfRepair on all questions (upper bound).
@@ -480,8 +480,8 @@ tasks:
                                   requires_gpu=True)
     4. tmpl.setup()
     5. MODEL_SPECS = [
-         {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0},
-         {"name": "Qwen3.5-0.8B-gpu1", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 1}
+         ("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0),
+         ("name": "Qwen3.5-0.8B-gpu1", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 1)
        ]
        gpu_status = tmpl.setup_gpu(MODEL_SPECS). If not all_healthy: write blocked artifact.
     6. Load 50 GSM8K questions.
@@ -622,7 +622,7 @@ tasks:
     TASK: Extend DRIFTProbe to use per-layer ensemble with learned weights.
     Target: ood_auc_drift > 0.65 for tier0i_viable verdict.
 
-    MODEL_SPECS = [{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]
+    MODEL_SPECS = [("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
@@ -726,9 +726,9 @@ tasks:
              return StepReasoningResult(step, reasoning, score, "heuristic")
            # LLM mode: generate reasoning then score
            reasoning_prompt = (
-             f"Context: {context}\n"
-             f"Step: {step}\n"
-             f"Is this step correct? Explain briefly in {self.n_tokens} tokens max.\n"
+             f"Context: (context)\n"
+             f"Step: (step)\n"
+             f"Is this step correct? Explain briefly in (self.n_tokens) tokens max.\n"
              f"End with: VERDICT: [correct|suspicious|wrong]"
            )
            reasoning_text = self.llm.generate(reasoning_prompt,
@@ -885,7 +885,7 @@ tasks:
     1. Read CLAUDE.md spec-first workflow.
     2. Read results/experiment_905_iterative_self_repair_v1.json and
        results/experiment_906_code_repair_50q_scaleup.json. Extract from each:
-       - all_attempts: list of {attempt, exec_error, exec_passed, energy_score}
+       - all_attempts: list of (attempt, exec_error, exec_passed, energy_score)
        - For each failed attempt: classify error type:
          * "syntax_error" if "SyntaxError" in exec_error
          * "name_error" if "NameError" in exec_error
@@ -1091,11 +1091,11 @@ tasks:
        - "What's Working" section: add all confirmed capabilities from .71
        - "What's Next" section: update with .72 priorities
     8. Build artifact:
-       {
+       (
          "milestone": "2026.04.71",
          "n_criteria_met": int,
          "n_criteria_total": 12,
-         "criteria_results": {dict},
+         "criteria_results": {dict),
          "wall_time_minutes": float,
          "open_retros_entering_72": [list],
          "closed_retros_this_milestone": [list],

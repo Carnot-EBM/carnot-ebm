@@ -5986,3 +5986,44 @@ Both mandatory ops files are updated. The planning session for milestone 2026.04
 2026-04-26 07:14:37,567 [conductor] RESEARCH STEP: Exp 918: Lagrange Forgetting Multi-Constraint — RETRO-LAGRANGE-ENTROPY-DEGENERATE Fix (CPU)
 2026-04-26 07:14:37,567 [conductor] ============================================================
 2026-04-26 07:14:38,247 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 07:14:38,306 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 07:14:38,306 [conductor] Running test suite (smart subset)...
+2026-04-26 07:14:43,840 [conductor] Pre-check: 81 passed, 3 warnings in 2.86s
+2026-04-26 07:14:43,937 [conductor] Prompt format error in exp918-lagrange-forgetting-multi-constraint: '\n        "arithmetic_carry"' — using raw prompt
+2026-04-26 07:14:43,954 [conductor] Injected 64 symbol signatures from 3 files (AST outlines)
+2026-04-26 07:14:43,954 [conductor] Calling Claude Code (30 max turns, model: sonnet)...
+============================================================
+  Carnot Research Conductor
+  Autonomous research via Claude Code
+============================================================
+  Agent: claude (claude)
+  Model: sonnet
+  Project: /home/ianblenke/github.com/ianblenke/carnot
+  CARNOT_FORCE_LIVE: 1
+  Mode: continuous (every 10 min)
+  Dogfood memory: 589 checks, 52 brace fixes, 0 code violations
+
+All 11 tests pass. The deliverable is written and stable.
+
+**Summary:**
+- `results/experiment_918_lagrange_forgetting_multi_constraint.json` written with `honest_verdict=marginal_improvement`
+- Corpus is non-degenerate: entropy at step 20 = 2.025 nats (>> 0.1 guard; Exp 909 root cause fixed)
+- `signed_entropy_improvement = 0.018` (> 0, so RETRO-LAGRANGE-ENTROPY-DEGENERATE qualifies as CLOSED)
+- 11 tests all pass covering the new script and `LagrangeAdaptiveUpdater` behaviour
+2026-04-26 07:17:43,596 [conductor] Claude Code completed (exit 0)
+2026-04-26 07:17:43,611 [conductor] Changes:
+logs/conductor.log | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+2026-04-26 07:17:43,628 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp917-preflight-v20: '\n     "milestone"' — auto-fixing
+2026-04-26 07:17:43,628 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp918-lagrange-forgetting-multi-constraint: '\n        "arithmetic_carry"' — auto-fixing
+2026-04-26 07:17:43,628 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp919-math-iterative-self-repair: '"name"' — auto-fixing
+2026-04-26 07:17:43,628 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp920-combined-estimation-math-repair: '"name"' — auto-fixing
+2026-04-26 07:17:43,628 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp921-dualgpu-throughput-benchmark: '"name"' — auto-fixing
+2026-04-26 07:17:43,628 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp923-drift-probe-ensemble: '"name"' — auto-fixing
+2026-04-26 07:17:43,628 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp924-rppm-tier29-step-reward: 'context' — auto-fixing
+2026-04-26 07:17:43,628 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp926-fr11-tier2-code-domain: 'attempt, exec_error, exec_passed, energy_score' — auto-fixing
+2026-04-26 07:17:43,628 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp928-milestone-retro-71: '\n     "milestone"' — auto-fixing
+2026-04-26 07:17:43,629 [conductor] DOGFOOD: Auto-fixed brace escaping in research-roadmap.yaml
+2026-04-26 07:17:43,632 [conductor] DOGFOOD: Verification complete (total: 590 checks, 53 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 07:17:43,632 [conductor] Running test suite (smart subset)...
+2026-04-26 07:17:49,203 [conductor] Post-check: 81 passed, 3 warnings in 2.82s
