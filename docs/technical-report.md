@@ -282,8 +282,8 @@ Two new RETROs: RETRO-SVAMP-ZERO-AUC, RETRO-ICE40-PNR-LUT-OVERFLOW.
 Nine retros total still open. Honest verdict: fifth-consecutive-regression,
 12.8% near-term savings recoverable via manifest enforcement.
 
-Milestone 2026.04.65 (the 71st) extended the record to 772 experiments in
-the active queue (4,049 cumulative managed wall-clock minutes). Key .65
+Milestone 2026.04.65 (the 71st) extended the record to 854 experiments
+(4,049 cumulative managed wall-clock minutes). Key .65
 findings: RETRO-ARBITER-FLAT-ENERGY closed — Multi-Agent Arbiter Gibbs
 warm-start achieves accuracy=1.0 (Exp 846); RETRO-GGUF-CACHE-IMPORT
 closed — GGUFCacheResolver module implemented (Exp 849). Three new RETROs
@@ -298,7 +298,7 @@ all five slowest experiments identical across six consecutive milestones
 consecutive milestone. Ten retros open. GPU close clean: 0C differential
 at both GPUs.
 
-Milestone 2026.04.66 (the 72nd) brought the record to 794 experiments
+Milestone 2026.04.66 (the 72nd) brought the record to 867 experiments
 with a dramatic wall-time improvement: only 0.86 min conductor wall time
 (vs 78 min in .65, delta -77.1 min). Key .66 wins: LIVE-ENV permanently
 fixed after 7+ consecutive milestones of recurrence (Exp 855,
@@ -322,7 +322,7 @@ open (RETRO-MANIFEST-FULL-SCOPE, RETRO-JEPA-OOD, RETRO-XILINX-TOOLS-UNAVAILABLE,
 RETRO-SVAMP-ZERO-AUC, RETRO-SOTA-MODEL-DOWNLOAD, RETRO-HALLUSAE-AUC-BELOW-THRESHOLD,
 RETRO-INERTIA-SWEEPS-TARGET-MISSED).
 
-Milestone 2026.04.67 (the 73rd) advanced the record to 806 experiments
+Milestone 2026.04.67 (the 73rd) advanced the record to 879 experiments
 across 12.6 cumulative managed minutes (a conductor-cycle-only run with
 no full-milestone timing). Four of 11 success criteria met. Key .67 wins:
 manifest enforcer deployed as a first-class infrastructure component (Exp
@@ -339,7 +339,7 @@ threshold, synthesis clean). Blockers: SOTA code repair 11th consecutive
 block; live benchmark fell back to simulation; JEPA v25 still gated; zero
 retros closed (7 still open).
 
-Milestone 2026.04.68 (the 74th) brought the record to 818 experiments
+Milestone 2026.04.68 (the 74th) brought the record to 891 experiments
 with 8 of 11 success criteria met and 3 retros closed in a single
 conductor cycle. Key .68 wins: **V-JEPA Tier 3 deployed** — VJEPA v2
 trained on an expanded 146-pair corpus (up from 57 pairs in v1) achieved
