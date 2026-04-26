@@ -4276,3 +4276,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 897: Constraint Memory Forgetting — FOREVER-Inspired Lagrange Weight Decay (CPU) (⚠️ Research Finding) — honest_verdict=forgetting_improves_precision; results/experiment_897_lagrange_forgetting_curve.json
 - 2026-04-26: Exp 898: FR-11 Tier 4 Seed — Adaptive KAN Spline Restructuring (CPU) (✅ Complete) — honest_verdict=tier4_viable_seed; results/experiment_898_fr11_tier4_kan_seed.json
 - 2026-04-26: Exp 899: DRIFT Hidden-State HalluProbe — Tier 0i Multi-layer Linear Probe (CPU) (⚠️ Research Finding) — honest_verdict=drift_probe_not_viable; ood_auc=0.5; results/experiment_899_drift_hidden_state_probe.json
+- 2026-04-26: Exp 900: Draft-Conditioned Verifier — Tier 2.8 (CPU) (✅ Complete) — honest_verdict=draft_verifier_viable; results/experiment_900_draft_conditioned_verifier.json
