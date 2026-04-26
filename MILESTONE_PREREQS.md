@@ -568,3 +568,26 @@ Gates:
     labeling_mismatch_confirmed == True
   Exp 914 (PIMI sparse final): ABORTS if ops/exclusion_manifest.yaml contains
     experiment_scope matching "iCE40 PIMI research"
+
+## Milestone 2026.04.72 Pre-flight
+
+.71 criteria met: 2/12
+.71 root_cause: gate_check_discipline_failure (7 experiments blocked by missing prior_failures)
+
+Open RETROs entering .72:
+  - RETRO-MANIFEST-FULL-SCOPE: HUMAN_REQUIRED (14 consecutive milestones)
+  - RETRO-XILINX-TOOLS-UNAVAILABLE: HUMAN_REQUIRED (Vivado install needed)
+  - RETRO-RERUN-DISCIPLINE-GATE-CASCADE: HUMAN_REQUIRED (planner training needed)
+  - RETRO-HEURISTIC-RPRM-FLAT-SIGNAL: TARGETED (Exp 930+ needs live model)
+  - RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS: TARGETED (Exp 931+ needs learned weights)
+  - RETRO-HF-SOPS-CREDENTIAL-INJECTION: HUMAN_REQUIRED (SOPS credential injection)
+  - ~~RETRO-LAGRANGE-ENTROPY-DEGENERATE~~: CLOSED by Exp 918 (signed_entropy_improvement=0.018)
+
+Gates:
+  Exp 931 (combined pipeline): GATED on Exp 930 signed_improvement > 0
+  Exp 934 (IPFS mirror): runs after Exp 933 regardless of HF publish verdict
+
+Preflight artifact: results/experiment_929_preflight_v21.json
+prereqs_updated: true
+open_retros_count: 6
+retros_confirmed_closed_in_71: ["RETRO-LAGRANGE-ENTROPY-DEGENERATE"]

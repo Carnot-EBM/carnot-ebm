@@ -90,3 +90,53 @@ scripts/research_conductor.py' constraint. Action required: grant human permissi
 to modify scripts/research_conductor.py for this single wiring change.
 enforcement_wired: false
 escalation_milestone: "2026.04.70"
+
+
+## RETRO-LAGRANGE-ENTROPY-DEGENERATE: CLOSED (Exp 918, 2026-04-26)
+
+Root cause: Single-constraint corpus had entropy = 0 by construction (p = 1.0).
+Fix: 8-constraint heterogeneous corpus. Exp 918 result: signed_entropy_improvement=0.018.
+Algorithm confirmed working. RETRO closed.
+
+## GATE-CHECK DISCIPLINE: prior_failures Required for All Domain-Overlapping Tasks
+
+Exps 917, 919, 920, 921, 922, 925, 926, 927 all blocked in .71 by missing prior_failures.
+
+Rule: Any YAML task touching a domain with ANY prior experiment history MUST include
+prior_failures entries with: experiment_id, verdict, addressed_by, retire_if_same_verdict.
+The conductor gate-checker scans the FULL research history. If prior_failures is absent
+and matching prior experiments exist → immediate block.
+
+This is a planner-layer discipline failure, not a code bug. The planner that generated
+research-roadmap-v71.yaml did not populate prior_failures for any of the 8 tasks with
+prior failure history. Fix: consult research-complete.yaml before generating any task YAML.
+
+## RETRO-MANIFEST-FULL-SCOPE: CRITICAL — Human Intervention Required (Milestone .71)
+
+14 consecutive milestones without mechanical manifest enforcement.
+enforcement_wired: false
+escalation_milestone: "2026.04.71"
+Action required: grant human permission to modify scripts/research_conductor.py.
+
+## RETRO-RERUN-DISCIPLINE-GATE-CASCADE (opened .71)
+
+9 of 12 experiments in .71 were blocked by the conductor pre-gate due to missing
+prior_failures fields in the roadmap YAML. This is a cascade of the same root cause.
+Status: HUMAN_REQUIRED — planner must be trained on the rule before .72 executes.
+
+## RETRO-HEURISTIC-RPRM-FLAT-SIGNAL (opened .71)
+
+Exp 924 R-PRM Tier 2.9 heuristic mode: AUC delta = 0.0. Heuristic inference cannot
+produce step-level signal. Real model inference (Qwen3.5-0.8B minimum) required.
+Status: TARGETED — .72 must use live model, not heuristics.
+
+## RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS (opened .71)
+
+Exp 923 DriftProbe ensemble (3 layers, uniform weights): OOD AUC 0.5625 vs 0.565 baseline.
+Uniform weighting HURTS — two zero-coefficient probes dilute one informative probe.
+Status: TARGETED — .72 must use learned weights (logistic regression on validation set).
+
+## RETRO-HF-SOPS-CREDENTIAL-INJECTION (opened .71)
+
+Exp 922 HF publish blocked by SOPS credential injection unresolved.
+Status: HUMAN_REQUIRED — resolve SOPS credential injection before scheduling HF publish.
