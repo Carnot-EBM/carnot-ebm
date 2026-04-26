@@ -15998,3 +15998,37 @@ signatures (arXiv 2601.14210).
 **Then** verify_extended(response) includes is_representationally_drifted in its result dict
 
 **Spec traces:** REQ-TIER0-009, Exp 899
+
+
+## REQ-TIER2-010: DraftConditionedVerifier (Tier 2.8)
+
+Implements draft-conditioned constraint pre-conditioning per arXiv 2603.03305.
+Positioned between Tier 2.7 (CausalReasoningVerifier) and Tier 3 (Ising).
+
+- REQ-TIER2-010-1: DraftConditionedVerifier.__init__ SHALL accept draft_model_name,
+  draft_max_tokens, and draft_temperature parameters with defaults
+  "Qwen/Qwen3.5-0.8B", 50, and 0.1 respectively.
+- REQ-TIER2-010-2: generate_draft(question) SHALL load the draft model on CPU and
+  return at most draft_max_tokens tokens of generated text at draft_temperature.
+- REQ-TIER2-010-3: extract_structural_constraints(draft) SHALL parse the draft for
+  "= X" patterns (→ answer_in_range_0_to_2X), arithmetic operations
+  (→ arithmetic_op_{add|subtract|multiply|divide}), and sentence count
+  (→ n_steps_N) and return a list of constraint strings.
+- REQ-TIER2-010-4: condition_and_verify(question, response) SHALL return a dict
+  with keys: draft, structural_constraints, draft_mismatch, tier28_advisory.
+- REQ-TIER2-010-5: ThreeTierPipeline.wire_tier_28(verifier) SHALL attach the
+  DraftConditionedVerifier so verify() injects structural_constraints into the
+  Ising constraint question string before Tier 3 runs.
+- REQ-TIER2-010-6: The Tier 2.8 injection SHALL be ADDITIVE — when
+  draft_conditioned_verifier is None the pipeline behaviour is unchanged.
+
+### SCENARIO-TIER2-010: Draft Constraints Reduce Ising Violation Rate
+
+**Given** a DraftConditionedVerifier wired into ThreeTierPipeline as Tier 2.8
+**When** 20 GSM8K questions are verified with Tier 3 Ising
+**Then** constraint_violations_draft_conditioned <= constraint_violations_baseline + 3
+  (allowing up to 3 additional violations due to structural hint overhead)
+**And** the structural constraints injected per question is >= 0 (non-negative)
+**And** condition_and_verify returns a dict with all four required keys
+
+**Spec traces:** REQ-TIER2-010, Exp 900

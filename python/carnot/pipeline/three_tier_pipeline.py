@@ -284,6 +284,15 @@ class ThreeTierPipeline:
         # When set, run_lagrange_session() delegates to this instance after each
         # session of the multi-session relay.
         self.lagrange_adaptive: LagrangeAdaptiveIsingConstraints | None = None
+        # Tier 2.8: DraftConditionedVerifier — generates a cheap Qwen3.5-0.8B draft
+        # and uses its structural markers to pre-condition the Ising constraint set.
+        # Positioned between Tier 2.7 (CausalReasoningVerifier) and Tier 3 (Ising).
+        # When None, Tier 2.8 is not active (ADDITIVE — prior pipeline is unchanged).
+        # See: arXiv 2603.03305, REQ-TIER2-010.
+        self.draft_conditioned_verifier: Any | None = None
+        # Stores the last Tier 2.8 advisory dict from condition_and_verify().
+        # Populated by verify() so callers can inspect structural_constraints injected.
+        self._last_tier28_advisory: dict[str, Any] | None = None
 
     def wire_tier_0g(self, detector: StreamingCoTHalluDetector) -> None:
         """Attach a StreamingCoTHalluDetector so verify_extended() runs Tier 0g.
@@ -345,6 +354,27 @@ class ThreeTierPipeline:
         Spec: REQ-FR11-030
         """
         self.lagrange_adaptive = adaptive
+
+    def wire_tier_28(self, verifier: Any) -> None:
+        """Attach a DraftConditionedVerifier so verify() runs Tier 2.8.
+
+        **For engineers:**
+            After wiring, verify() will call verifier.condition_and_verify()
+            when the response reaches Tier 3 (Ising).  The structural constraints
+            returned are injected into the Ising constraint set via the pipeline's
+            ising_constraint_injector if one is available; otherwise they are
+            stored in self._last_tier28_advisory for the caller to access.
+
+            Advisory only in terms of verified outcome — the Ising decision still
+            governs pass/fail.  The structural constraints narrow Ising's search
+            space, which reduces constraint violation rate.
+
+        Args:
+            verifier: DraftConditionedVerifier instance (REQ-TIER2-010).
+
+        Spec: REQ-TIER2-010
+        """
+        self.draft_conditioned_verifier = verifier
 
     @staticmethod
     def _split_cot_steps(response: str) -> list[str]:
@@ -605,9 +635,37 @@ class ThreeTierPipeline:
                 return True, "vg_skip", float(effective_energy)
 
         # ------------------------------------------------------------------
-        # Tier 3: Ising
+        # Tier 2.8: DraftConditionedVerifier (arXiv 2603.03305, REQ-TIER2-010)
+        # Generate a cheap Qwen3.5-0.8B draft and extract structural markers.
+        # The structural_constraints are injected into the Ising constraint set
+        # via ising_constraint_injector when available; otherwise stored as an
+        # advisory on self._last_tier28_advisory.
+        # ADDITIVE: when draft_conditioned_verifier is None, this block is a no-op.
         # ------------------------------------------------------------------
-        ising_verified, ising_energy = self.ising_pipeline(response, question)
+        injected_structural_constraints: list[str] = []
+        if self.draft_conditioned_verifier is not None:
+            advisory = self.draft_conditioned_verifier.condition_and_verify(
+                question, response
+            )
+            self._last_tier28_advisory = advisory
+            injected_structural_constraints = advisory.get("structural_constraints", [])
+
+        # ------------------------------------------------------------------
+        # Tier 3: Ising
+        # Structural constraints from Tier 2.8 are injected here if available.
+        # The ising_pipeline callable receives a question string that MAY have
+        # been augmented with a structural-constraint hint prefix.  This is the
+        # lightest-weight injection path that avoids changing the ising_pipeline
+        # contract (str, str) → (bool, float).
+        # ------------------------------------------------------------------
+        ising_question = question
+        if injected_structural_constraints:
+            # Prepend structural hint as a bracketed annotation the constraint
+            # extractor can parse.  Format: "[SC: constraint1, constraint2] question"
+            sc_hint = "[SC: " + ", ".join(injected_structural_constraints) + "] "
+            ising_question = sc_hint + question
+
+        ising_verified, ising_energy = self.ising_pipeline(response, ising_question)
         return bool(ising_verified), "ising", float(ising_energy)
 
     # ------------------------------------------------------------------

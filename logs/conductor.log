@@ -5095,3 +5095,24 @@ Traceback (most recent call last):
         ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'dict' object has no attribute 'lower'
 2026-04-26 00:50:25,779 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 00:50:25,838 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 00:50:25,838 [conductor] Running test suite (smart subset)...
+2026-04-26 00:50:31,289 [conductor] Pre-check: 81 passed, 3 warnings in 2.72s
+2026-04-26 00:50:31,385 [conductor] Prompt format error in exp900-draft-conditioned-verifier: '\n         "draft"' — using raw prompt
+2026-04-26 00:50:31,473 [conductor] Injected 72 symbol signatures from 3 files (AST outlines)
+2026-04-26 00:50:31,473 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 21 tests pass and the deliverable JSON is written. Done.
+
+**Summary:** Implemented `DraftConditionedVerifier` as Tier 2.8 in `python/carnot/verify/draft_conditioned_verifier.py`, wired it into `ThreeTierPipeline` via `wire_tier_28()`, added spec entries REQ-TIER2-010 / SCENARIO-TIER2-010, wrote 21 passing tests, ran the experiment producing `results/experiment_900_draft_conditioned_verifier.json` with `honest_verdict=draft_verifier_viable` (3 baseline violations → 0 with draft conditioning on 20 GSM8K questions).
+2026-04-26 00:57:06,452 [conductor] Claude Code completed (exit 0)
+2026-04-26 00:57:06,472 [conductor] Changes:
+logs/conductor.log                                 | 10 ++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 34 ++++++++++++
+ python/carnot/pipeline/three_tier_pipeline.py      | 60 +++++++++++++++++++++-
+ 3 files changed, 103 insertions(+), 1 deletion(-)
+2026-04-26 00:57:06,489 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp892-preflight-v18: '"pimi_retired", "pimi_retired_upstream"' — auto-fixing
+2026-04-26 00:57:06,489 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp893-svamp-root-cause: '\n     mean_cot_depth_svamp' — auto-fixing
+2026-04-26 00:57:06,489 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp896-svamp-estimation-verifier: '"more", "total", "sum", "combined", "together"' — auto-fixing
+2026-04-26 00:57:06,505 [conductor] DOGFOOD: Verification complete (total: 573 checks, 52 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 00:57:06,505 [conductor] Running test suite (smart subset)...
+2026-04-26 00:57:12,180 [conductor] Post-check: 81 passed, 3 warnings in 2.84s
