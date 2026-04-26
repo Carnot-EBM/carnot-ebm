@@ -2793,3 +2793,4 @@ python/ |
 | 2026-04-25 23:10 UTC | Exp 884: VJEPA v2 Cascade Deploy — Replace Tier 2  | OK | 81 passed, 3 warnings in 2.82s |
 | 2026-04-25 23:26 UTC | Exp 885: SpectralAttentionProbe — Tier 0h Advisory | OK | 145 passed, 3 warnings in 3.36s |
 | 2026-04-25 23:46 UTC | Exp 886: ConstrainedDecodingPreFilter — AST-Guided | OK | 81 passed, 3 warnings in 2.97s |
+| 2026-04-26 00:00 UTC | Exp 887: JEPA OOD Final Surgery — VJEPA Encoder Pr | OK | 81 passed, 3 warnings in 2.84s |
