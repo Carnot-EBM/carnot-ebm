@@ -219,6 +219,9 @@ class FailureLedger:
                 data = json.loads(artifact_path.read_text())
             except (json.JSONDecodeError, OSError):
                 continue
+            # Some early artifacts are top-level lists, not dicts. Skip them.
+            if not isinstance(data, dict):
+                continue
             # Pull the experiment id and title — be tolerant of
             # different artifact shapes
             exp_num = None
@@ -226,7 +229,14 @@ class FailureLedger:
             if m:
                 exp_num = m.group(1)
             verdict = data.get("honest_verdict", "")
-            if not verdict:
+            # Some early artifacts (Exps 256/257/259/292/293/304/317) have a
+            # dict-shaped honest_verdict like {"status": "complete",
+            # "explanation": "..."}. Coerce via the inner `status` field when
+            # present; otherwise skip — a non-string verdict we can't reduce
+            # to a label is not a reliable failure signal.
+            if isinstance(verdict, dict):
+                verdict = verdict.get("status") or ""
+            if not isinstance(verdict, str) or not verdict:
                 continue
             label = map_status_label(verdict)
             if label == "✅ Complete":

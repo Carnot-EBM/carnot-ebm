@@ -168,6 +168,50 @@ def test_load_returns_empty_ledger_when_no_results_dir(tmp_path):
     assert ledger.entries == []
 
 
+def test_load_skips_top_level_list_artifacts(tmp_path):
+    """Some early artifacts (e.g., experiment_798_cpmi_pairs_triples.json) are
+    top-level JSON lists. The ledger must skip these without crashing."""
+    results = tmp_path / "results"
+    results.mkdir()
+    (results / "experiment_798_pairs.json").write_text(json.dumps([{"x": 1}, {"x": 2}]))
+    _write_artifact(results, 850, "valid_failure", "model_not_cached")
+    ledger = FailureLedger.load_from_artifacts(tmp_path)
+    assert len(ledger.entries) == 1
+    assert ledger.entries[0].experiment_id == "exp850-valid-failure"
+
+
+def test_load_coerces_dict_verdict_via_status_field(tmp_path):
+    """Early artifacts (Exps 256/257/259/292/293/304/317) have a dict-shaped
+    honest_verdict like {"status": "blocked", "explanation": "..."}.
+    The ledger must coerce via the inner `status` field, not crash."""
+    results = tmp_path / "results"
+    results.mkdir()
+    target = results / "experiment_293_legacy_dict.json"
+    target.write_text(json.dumps({
+        "experiment": 293,
+        "title": "Exp 293: legacy dict verdict",
+        "honest_verdict": {"status": "blocked", "explanation": "no creds"},
+    }))
+    ledger = FailureLedger.load_from_artifacts(tmp_path)
+    assert len(ledger.entries) == 1
+    assert ledger.entries[0].verdict == "blocked"
+    assert ledger.entries[0].status_label == "⚠️ Blocked"
+
+
+def test_load_skips_dict_verdict_with_no_status(tmp_path):
+    """A dict-shaped honest_verdict with no `status` key has no failure
+    signal we can reduce to a label — skip rather than guess."""
+    results = tmp_path / "results"
+    results.mkdir()
+    target = results / "experiment_999_no_status.json"
+    target.write_text(json.dumps({
+        "experiment": 999,
+        "honest_verdict": {"explanation": "structured but no status"},
+    }))
+    ledger = FailureLedger.load_from_artifacts(tmp_path)
+    assert ledger.entries == []
+
+
 # ---------------------------------------------------------------------------
 # matching_priors
 # ---------------------------------------------------------------------------
