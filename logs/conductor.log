@@ -4598,3 +4598,31 @@ Done. Here's the summary:
 **Critical warning**: The improvement streak (91 → 61 → 10 min) is **decelerating toward zero**. Without manifest enforcement and DualGPU wiring applied *before* the next milestone, the streak will stall or reverse the moment experiment count growth resumes.
 2026-04-25 22:04:20,885 [conductor] Claude Code completed (exit 0)
 2026-04-25 22:04:20,886 [conductor] Operational retrospective complete
+2026-04-25 22:04:20,937 [conductor] Committed: [conductor] Operational retrospective for milestone 2026.04.69
+2026-04-25 22:04:22,670 [conductor] Pushed to origin
+2026-04-25 22:04:22,670 [conductor] No research-roadmap-next.yaml — launching planning agent
+2026-04-25 22:04:22,685 [conductor] ============================================================
+2026-04-25 22:04:22,685 [conductor] PLANNING NEXT MILESTONE (current: 2026.04.69)
+2026-04-25 22:04:22,685 [conductor] ============================================================
+2026-04-25 22:04:22,685 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Both deliverables are complete:
+
+**FILE 1** — `openspec/change-proposals/research-roadmap-v70.md` (written earlier, 13 experiments across 6 phases)
+
+**FILE 2** — `research-roadmap-next.yaml` (just written, 1380+ lines, 13 tasks: exp904–exp916)
+
+Key design decisions encoded in the YAML:
+- **Exp 904**: Pre-flight v19 audits .69 zero-run, formally escalates RETRO-MANIFEST-FULL-SCOPE as requiring human intervention (12th consecutive milestone)
+- **Exp 905**: IterativeSelfRepair — execute→error→retry (arXiv 2604.10508), bypasses broken ArithmeticExtractor entirely; `prior_failures` entry naming exp881
+- **Exp 906**: 50q scale-up gated on Exp 905 `signed_improvement > 0`
+- **Exp 907+908**: SVAMP root cause confirmation then EstimationVerifier fix, gated chain; closes RETRO-SVAMP-ZERO-AUC
+- **Exp 909**: Lagrange forgetting curve (exponential weight decay for Tier 1)
+- **Exp 910**: KAN Tier 4 seed via AutoKnots adaptive spline grid refinement (arXiv 2412.13423) — first FR-11 Tier 4 work
+- **Exp 911**: DRIFTProbe Tier 0i (multi-layer hidden-state hallucination detection)
+- **Exp 912**: DraftConditioned Tier 2.8 — structural constraint injection from cheap draft
+- **Exp 913**: DualGPU production wiring — explicit task to finally wire the 1.979x validated speedup
+- **Exp 914**: PIMI sparse adjacency final with `retire_if_same_verdict: true` — closes RETRO-INERTIA-SWEEPS-TARGET-MISSED one way or the other
+- **Exp 915**: HuggingFace publish v3 (VJEPA v2 model card)
+- **Exp 916**: Milestone retro with 12 success criteria
+2026-04-25 22:19:41,993 [conductor] Claude Code completed (exit 0)
+2026-04-25 22:19:42,007 [conductor] Planning agent created milestone 2026.04.70 with 13 tasks
