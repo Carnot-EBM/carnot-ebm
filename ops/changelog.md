@@ -4253,3 +4253,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 887: JEPA OOD Final Surgery — VJEPA Encoder Pretraining (RETRO-JEPA-OOD, FINAL ATTEMPT) (CPU) (⚠️ Research Finding) — honest_verdict=jepa_discriminative_retired; ood_auc=0.56; results/experiment_887_jepa_ood_final_surgery.json
 - 2026-04-26: Exp 888: FR-11 Tier 3 Relay — VJEPA-Guided Constraint Addition (CPU, GATED on 884) (✅ Complete) — honest_verdict=fr11_tier3_loop_closed; results/experiment_888_fr11_tier3_relay.json
 - 2026-04-26: Exp 889: iCE40 PIMI v3 — Full Parallel Spin Updates (RETRO-INERTIA-SWEEPS-TARGET-MISSED) (CPU+FPGA) (⚠️ Research Finding) — honest_verdict=pimi_improved_below_5x; lut_count=126; results/experiment_889_ice40_pimi_v3_parallel.json
+- 2026-04-26: Exp 890: GGUF Download v3 — HuggingFace CLI Approach (RETRO-SOTA-MODEL-DOWNLOAD) (CPU) (❌ Failed) — honest_verdict=download_failed_retire; results/experiment_890_gguf_download_v3_cli.json
