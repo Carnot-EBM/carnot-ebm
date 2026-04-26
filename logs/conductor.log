@@ -6243,3 +6243,28 @@ Done. Key findings for milestone 2026.04.71:
 3. Enforce 700-experiment count cap at conductor pre-launch — prevents volume accumulation
 2026-04-26 09:07:05,476 [conductor] Claude Code completed (exit 0)
 2026-04-26 09:07:05,477 [conductor] Operational retrospective complete
+2026-04-26 09:07:05,535 [conductor] Committed: [conductor] Operational retrospective for milestone 2026.04.71
+2026-04-26 09:07:07,268 [conductor] Pushed to origin
+2026-04-26 09:07:07,269 [conductor] No research-roadmap-next.yaml — launching planning agent
+2026-04-26 09:07:07,284 [conductor] ============================================================
+2026-04-26 09:07:07,284 [conductor] PLANNING NEXT MILESTONE (current: 2026.04.71)
+2026-04-26 09:07:07,284 [conductor] ============================================================
+2026-04-26 09:07:07,284 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Both files are created and valid. Here's a summary of what was produced:
+
+---
+
+**Milestone 2026.04.72 planned:** "Gate-Check Recovery + Math Repair + Symbolic-KAN + SC-Energy" (Exps 929-940, 12 experiments).
+
+**Root cause of .71 failure (2/12 criteria):** 7 experiments immediately blocked because the YAML lacked `prior_failures` fields. The conductor's gate-checker enforces no-doomed-rerun discipline across the entire research history. Every task in .72 now includes proper `prior_failures` entries (total: 30 entries across 12 tasks).
+
+**Key .72 experiments:**
+- **Exp 929** (pre-flight v21): audits .71, closes RETRO-LAGRANGE-ENTROPY-DEGENERATE, documents gate-check discipline lesson
+- **Exp 930** (math repair, GPU): extends Exp 905's code repair success (+68pp HumanEval) to GSM8K math — the primary unfinished business from .71
+- **Exps 932-934** (DualGPU + HF publish + IPFS): infrastructure carry-forwards blocked in .71
+- **Exp 935** (FR-11 Tier 2 code domain): mandatory self-learning experiment per research-program.md
+- **Exps 937/939** (Symbolic-KAN + SC-Energy): new research from arxiv 2603.23854 and 2503.10695
+
+**5 new arxiv papers** added to `research-references.md`.
+2026-04-26 09:20:30,968 [conductor] Claude Code completed (exit 0)
+2026-04-26 09:20:30,992 [conductor] Planning agent created milestone 2026.04.72 with 12 tasks
