@@ -50,3 +50,18 @@ Root cause: VR pipeline does not improve accuracy at current model scale (Qwen3.
 Resolution: VR removed from active roadmap. Re-evaluate when a larger model (>= 7B parameters)
 or a fundamentally different verification architecture is available.
 Spec: REQ-VER-030-6, SCENARIO-VER-037
+
+
+## RETRO-MANIFEST-FULL-SCOPE: Human Intervention Required (Milestone .69)
+
+ExclusionManifestEnforcer pre_launch_check() cannot be wired to the conductor loop
+without modifying scripts/research_conductor.py, which is forbidden per CLAUDE.md
+in the Exp 892 task specification.
+
+11 consecutive milestones open. Action required: either
+  (a) grant human permission to modify scripts/research_conductor.py for this one change, or
+  (b) accept that manifest enforcement operates at the planning layer only
+      (CLAUDE.md rule is the primary enforcement; code enforcement is secondary).
+
+Documented by Exp 892 pre-flight v18 on 2026-04-26T02:52:17Z.
+enforcement_wired: false
