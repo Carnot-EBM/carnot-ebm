@@ -15906,3 +15906,53 @@ guidance.
 **And** applied_count increments by 1
 
 **Spec traces:** REQ-VERIFY-177, Exp 894
+
+
+## REQ-VER-085: EstimationVerifier for Single-Step Arithmetic Word Problems (Exp 896)
+
+**Status:** Implemented (Exp 896)
+
+The system SHALL provide an ``EstimationVerifier`` class that labels single-step
+arithmetic word-problem responses by checking whether the extracted answer falls
+within a plausible arithmetic range — NOT by step-by-step CoT labeling.
+
+This requirement exists because FoVer's CoT step-labeling strategy is inapplicable
+to SVAMP-style problems (mean CoT depth < 2 per Exp 893), where there are no
+intermediate steps to label. EstimationVerifier is the correct labeling mechanism
+for this domain.
+
+- REQ-VER-085-1: ``EstimationVerifier.verify(question, response)`` SHALL extract all
+  numbers from the question text using the regex ``\d+\.?\d*``.
+- REQ-VER-085-2: ``verify()`` SHALL identify the operation type as one of "add",
+  "subtract", "multiply", "divide", or "unknown" based on keyword signals in the
+  question text.
+- REQ-VER-085-3: ``verify()`` SHALL compute a plausible answer range:
+  add → [min(numbers), sum*2]; subtract → [0, max]; multiply → [min, max²]; divide → [0, max].
+- REQ-VER-085-4: ``verify()`` SHALL extract a numerical answer from the response
+  using patterns: "answer is X", "result is X", "= X" (line-end), or trailing number.
+- REQ-VER-085-5: ``verify()`` SHALL return ``confidence=1.0`` when an answer is
+  extracted and ``confidence=0.5`` when the answer cannot be found.
+- REQ-VER-085-6: ``EstimationVerifier.label_pair(question, response, ground_truth)``
+  SHALL return 1 when ground_truth is provided and ``|extracted_answer - ground_truth| < 0.01``,
+  0 when ground_truth is provided but the answer is wrong or missing.
+- REQ-VER-085-7: When ground_truth is None, ``label_pair()`` SHALL return 1 if
+  ``in_range`` is True, else 0.
+
+### SCENARIO-VER-085: EstimationVerifier Correctly Labels Addition Word Problem
+
+**Given** an EstimationVerifier instance
+**And** the question "Tom has 5 apples and buys 3 more. How many total?"
+**When** verify() is called with a response containing "8"
+**Then** operation_type is "add"
+**And** plausible_range is [3.0, 16.0] (min=3, sum*2=16)
+**And** extracted_answer is 8.0
+**And** in_range is True
+**And** confidence is 1.0
+
+**And** when label_pair() is called with ground_truth=8.0
+**Then** the label is 1
+
+**And** when label_pair() is called with ground_truth=8.0 but response has wrong answer 99
+**Then** the label is 0
+
+**Spec traces:** REQ-VER-085, Exp 896
