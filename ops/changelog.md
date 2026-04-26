@@ -4278,3 +4278,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 899: DRIFT Hidden-State HalluProbe — Tier 0i Multi-layer Linear Probe (CPU) (⚠️ Research Finding) — honest_verdict=drift_probe_not_viable; ood_auc=0.5; results/experiment_899_drift_hidden_state_probe.json
 - 2026-04-26: Exp 900: Draft-Conditioned Verifier — Tier 2.8 (CPU) (✅ Complete) — honest_verdict=draft_verifier_viable; results/experiment_900_draft_conditioned_verifier.json
 - 2026-04-26: Exp 901: PIMI Sparse Adjacency v4 — Copy-Node Sparsification (CPU + iCE40, FINAL) (⚠️ Research Finding) — honest_verdict=pimi_improved_below_5x; lut_count=126; results/experiment_901_pimi_sparse_adjacency_v4.json
+- 2026-04-26: Exp 902: HuggingFace Publish v3 — VJEPA v2 Weights + Architecture Update (CPU) (✅ Complete) — honest_verdict=published_no_ipfs_mirror; results/experiment_902_huggingface_publish_v3.json
