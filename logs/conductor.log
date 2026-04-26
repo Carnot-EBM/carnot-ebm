@@ -5198,3 +5198,30 @@ Traceback (most recent call last):
         ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'dict' object has no attribute 'lower'
 2026-04-26 01:24:19,675 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 01:24:19,737 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 01:24:19,737 [conductor] Running test suite (smart subset)...
+2026-04-26 01:24:25,119 [conductor] Pre-check: 81 passed, 3 warnings in 2.76s
+2026-04-26 01:24:25,215 [conductor] Prompt format error in exp902-huggingface-publish-v3: '\n      publish_confirmed' — using raw prompt
+2026-04-26 01:24:25,230 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-26 01:24:25,230 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Experiment 902 complete.
+
+**Results:**
+- `honest_verdict: published_no_ipfs_mirror`
+- VJEPA v2 weights (182 KB) + model card published to `huggingface.co/Carnot-EBM/carnot-vjepa-v2`
+- `vjepa_ood_auc: 0.9211` in artifact
+- IPFS not installed — gap logged to `ops/known-issues.md`
+- `architecture_reconciled: false` (architecture.md didn't contain a "Last Reconciled" date in the regex-matched format)
+- Deliverable: `results/experiment_902_huggingface_publish_v3.json`
+2026-04-26 01:26:35,736 [conductor] Claude Code completed (exit 0)
+2026-04-26 01:26:35,751 [conductor] Changes:
+_bmad/architecture.md |  3 ++-
+ logs/conductor.log    | 16 ++++++++++++++++
+ ops/known-issues.md   | 14 ++++++++++++++
+ 3 files changed, 32 insertions(+), 1 deletion(-)
+2026-04-26 01:26:35,772 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp892-preflight-v18: '"pimi_retired", "pimi_retired_upstream"' — auto-fixing
+2026-04-26 01:26:35,772 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp893-svamp-root-cause: '\n     mean_cot_depth_svamp' — auto-fixing
+2026-04-26 01:26:35,772 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp896-svamp-estimation-verifier: '"more", "total", "sum", "combined", "together"' — auto-fixing
+2026-04-26 01:26:35,790 [conductor] DOGFOOD: Verification complete (total: 575 checks, 52 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 01:26:35,790 [conductor] Running test suite (smart subset)...
+2026-04-26 01:26:41,422 [conductor] Post-check: 81 passed, 3 warnings in 2.83s

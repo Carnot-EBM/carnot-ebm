@@ -65,3 +65,17 @@ in the Exp 892 task specification.
 
 Documented by Exp 892 pre-flight v18 on 2026-04-26T02:52:17Z.
 enforcement_wired: false
+
+## IPFS not installed — VJEPA v2 weights have no IPFS mirror
+
+Added: 2026-04-26 (Exp 902)
+
+CLAUDE.md rule 3 requires all published weights to have an IPFS mirror.
+The `ipfs` command was not found at publish time.  Install IPFS and
+re-run Exp 902 to establish the mirror.
+
+Install: `apt install ipfs` or use the ipfs.io installer:
+https://docs.ipfs.tech/install/
+
+Then run: `ipfs add -r /tmp/carnot-vjepa-v2-card/ && ipfs pin add <CID>`
+

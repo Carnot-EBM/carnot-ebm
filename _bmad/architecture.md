@@ -1,6 +1,6 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-04-18
+**Last Reconciled:** 2026-04-26
 
 ## Overview
 
@@ -137,6 +137,7 @@ The LLM output verification pipeline uses a cascade architecture where cheaper t
 | 0e | HalluField | `HalluFieldDetector` | ~1 ms (CPU) | Token-path ensemble partition-function variance (arXiv 2509.10753); thermodynamic instability signal orthogonal to Tiers 0b/0d | Advisory signal: `is_unstable` recorded in certificate; no short-circuit (Exp 571, AUC=0.97 synthetic) |
 | 1 | SinkProbe | `SinkProbe` | ~0 ms (attention reuse) | Attention sink concentration (arXiv 2604.10697) | `mean_sink_score >= sink_threshold` |
 | 2 | VJEPA v2 | `VariationalJEPAPredictor` | ~10 ms | CoT violation prediction (variational, KL-regularised, OOD AUC=0.9211, Exp 883/884, deployed 2026-04-25) | `energy < vjepa_threshold` |
+<!-- Tier 2 updated: VJEPA v2 ood_auc=0.9211 (Exp 884, milestone .68, 2026-04-26) -->
 | 2.5 | SymCodeVerifier | `SymCodeVerifier` | ~1-5 ms/step (regex) / ~100-500 ms/step (LLM) | Executable Python verification of CoT arithmetic; distribution-invariant (Exp 619, AUC=0.804 live) | `detection_score == 0.0` (no arithmetic violations) |
 | 2.6 | HermesVerifierAdapter (candidate) | `HermesVerifierAdapter` | ~1-5 ms/step (CI regex) / ~100-500 ms/step (LLM) | HERMES step-boundary feedback loop (arXiv 2511.18760): LLMAsExtractorV1 translator + SymCodeVerifier prover + correction hint injection before next step (Exp 633, CPU prototype) | `prover_verdict == 'correct'` for all steps |
 | 2.7 | CausalReasoningVerifier | `CausalReasoningVerifier` | ~1 ms/step-pair (regex) | Causal entailment checking across CoT step boundaries (arXiv 2601.21210): orthogonal to Tier 2.5 arithmetic checking. Detects "correct arithmetic, wrong carry-forward" errors. (Exp 642, causal_recall=0.36 > baseline=0.12) | `any_violation(response) == False` |
