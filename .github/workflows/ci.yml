@@ -164,3 +164,31 @@ jobs:
 
       - name: Check all tests trace to specs
         run: python3 scripts/check_spec_coverage.py
+
+  tech-report-sync:
+    # Catches the case where docs/technical-report.md was edited but the
+    # corresponding docs/technical-report.html (served by GitHub Pages at
+    # carnot-ebm.org) was not regenerated.  The pre-commit hook
+    # tech-report-html-sync handles this locally, but the hook is per-clone
+    # state and gets bypassed by fresh clones, --no-verify commits, and
+    # the conductor's automated commits.  This CI job is the durable gate.
+    #
+    # If this job fails on a PR, run locally:
+    #   python scripts/build_technical_report.py
+    #   git add docs/technical-report.html
+    #   git commit --amend  (or new commit)
+    name: Technical Report HTML in sync with MD
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install markdown renderer
+        run: pip install markdown
+
+      - name: Verify docs/technical-report.html is up-to-date
+        run: python3 scripts/build_technical_report.py --check
