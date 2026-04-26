@@ -5802,3 +5802,23 @@ Traceback (most recent call last):
         ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'dict' object has no attribute 'lower'
 2026-04-26 05:46:38,849 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 05:46:38,906 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 05:46:38,906 [conductor] Running test suite (smart subset)...
+2026-04-26 05:46:44,486 [conductor] Pre-check: 81 passed, 3 warnings in 2.80s
+2026-04-26 05:46:44,594 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-26 05:46:44,594 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. Summary:
+
+- **`results/experiment_915_hf_publish_v3.json`** written with `honest_verdict: publish_ready_pending_auth`
+- **`docs/model_card_vjepa_v2.md`** — full model card for VJEPA v2 (OOD AUC=0.9211), no emojis
+- **`docs/model_card_estimation_verifier.md`** — model card for EstimationVerifier (SVAMP AUC=0.90), no emojis
+- Gitea mirror confirmed (`gitea.noblehunt.org` remote exists)
+- HF CLI not authenticated — artifact includes `manual_publish_commands` with exact commands to run after `huggingface-cli login`
+- Both models queued for publish: `Carnot-EBM/vjepa-v2` and `Carnot-EBM/estimation-verifier-v1`
+2026-04-26 05:49:15,248 [conductor] Claude Code completed (exit 0)
+2026-04-26 05:49:15,263 [conductor] Changes:
+logs/conductor.log | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+2026-04-26 05:49:15,282 [conductor] DOGFOOD: Verification complete (total: 588 checks, 52 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 05:49:15,282 [conductor] Running test suite (smart subset)...
+2026-04-26 05:49:20,805 [conductor] Post-check: 81 passed, 3 warnings in 2.78s
