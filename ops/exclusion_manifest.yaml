@@ -99,3 +99,17 @@ retired_experiments:
     The 15-25x speedup in arXiv 2604.17109 requires harder, larger, denser constraint problems.
   experiment_ids: [860, 876, 889, 901]
   milestone: "2026.04.69"
+
+# Added by Exp 914 — retire_if_same_verdict triggered (pimi_no_improvement at N=64)
+# Maximum achieved sweeps_reduction across all strategies: 0.99x
+- experiment_scope: "iCE40 PIMI research N=64 (hardware/kv260/ising_pimi_*.v + python/carnot/samplers/*pimi*.py)"
+  reason: |
+    retire_if_same_verdict triggered by Exp 914: all four strategies
+    (EMA checkerboard, EMA alpha sweep, synchronous parallel, sparse adjacency)
+    failed to reach 5x sweep reduction. Max achieved: 0.99x at N=64.
+    Exp 901 already retired N=8 scope; Exp 914 closes N=64.
+    The 15-25x paper speedup (arXiv 2604.17109) requires harder frustrated
+    spin-glass problems at larger scale with more frustrated constraints.
+    KV260 FPGA track remains viable but PIMI specifically is retired.
+  retired_milestone: "2026.04.70"
+  experiment_ids: [860, 876, 889, 901, 914]
