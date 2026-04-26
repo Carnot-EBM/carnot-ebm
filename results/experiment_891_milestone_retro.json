@@ -1,0 +1,93 @@
+{
+  "schema": "carnot.operational_retro.v44",
+  "milestone": "2026.04.68",
+  "retro_type": "milestone_close",
+  "retro_date": "20260426",
+  "experiment": 891,
+  "title": "Milestone 2026.04.68 Operational Retrospective",
+  "started_at": "2026-04-26T01:02:23.137133+00:00",
+  "finished_at": "2026-04-26T01:02:23.139911+00:00",
+  "duration_s": 0.003,
+  "experiment_count": 818,
+  "experiments_this_milestone": 12,
+  "experiments_completed": 7,
+  "experiments_blocked": 0,
+  "status_counts": {
+    "success": 7,
+    "failed": 1,
+    "blocked": 0,
+    "unknown": 3
+  },
+  "wall_time_minutes": 11.6676,
+  "per_experiment_avg_minutes": 1.0607,
+  "prior_milestone_wall_time_minutes": 12.5696,
+  "delta_vs_prior_minutes": -0.902,
+  "wall_time_regression": false,
+  "slowest_5": [
+    {
+      "exp_id": 889,
+      "duration_min": 7.1667
+    },
+    {
+      "exp_id": 882,
+      "duration_min": 2.5406
+    },
+    {
+      "exp_id": 881,
+      "duration_min": 1.581
+    },
+    {
+      "exp_id": 883,
+      "duration_min": 0.1657
+    },
+    {
+      "exp_id": 884,
+      "duration_min": 0.1605
+    }
+  ],
+  "n_criteria_met": 8,
+  "n_criteria_total": 11,
+  "criteria": {
+    "hallusae_retired": true,
+    "live_code_repair_positive": false,
+    "live_cascade_benchmark": true,
+    "vjepa_ood_improved": true,
+    "vjepa_deployed": true,
+    "spectral_probe_viable": true,
+    "constrained_decoding_fp_reduction": false,
+    "jepa_ood_resolved": true,
+    "fr11_tier3_relay": true,
+    "pimi_resolved": false,
+    "gguf_resolved": true
+  },
+  "retros_closed_this_milestone": [
+    "RETRO-HALLUSAE-AUC-BELOW-THRESHOLD",
+    "RETRO-JEPA-OOD",
+    "RETRO-SOTA-MODEL-DOWNLOAD"
+  ],
+  "retros_closed_count": 3,
+  "open_retros": [
+    "RETRO-INERTIA-SWEEPS-TARGET-MISSED"
+  ],
+  "governance": {
+    "slowest5_governance_violation": false,
+    "slowest5_violation_ids": [],
+    "exclusion_manifest_entries_checked": 0
+  },
+  "gpu_state": "2x GPU: memory.used=4 MiB, utilization=0%, temp=50C (idle)",
+  "key_results": {
+    "exp880_hallusae_retired": true,
+    "exp881_signed_improvement": 0.0,
+    "exp882_inference_mode": "live_gpu",
+    "exp883_ood_auc": 0.664,
+    "exp884_cascade_deployed": true,
+    "exp884_final_ood_auc": 0.9211,
+    "exp885_probe_auc": 1.0,
+    "exp886_fp_rate_delta": 0.0,
+    "exp887_honest_verdict": "jepa_discriminative_retired",
+    "exp888_fr11_tier3_loop_closed": true,
+    "exp889_sweeps_reduction": 4.33,
+    "exp890_honest_verdict": "download_failed_retire"
+  },
+  "honest_verdict": "8/11_criteria_met retros_closed=3 live_gpu_confirmed vjepa_deployed_ood_auc=0.9211 pimi_improved_below_5x_sweeps=4.33 jepa_discriminative_retired spectral_probe_auc=1.00"
+}
