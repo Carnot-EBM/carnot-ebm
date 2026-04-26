@@ -4935,3 +4935,29 @@ Traceback (most recent call last):
         ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'dict' object has no attribute 'lower'
 2026-04-26 00:02:39,343 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 00:02:39,399 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 00:02:39,399 [conductor] Running test suite (smart subset)...
+2026-04-26 00:02:44,831 [conductor] Pre-check: 81 passed, 3 warnings in 2.75s
+2026-04-26 00:02:44,925 [conductor] Prompt format error in exp897-lagrange-forgetting-curve: Replacement index 0 out of range for positional args tuple — using raw prompt
+2026-04-26 00:02:44,942 [conductor] Injected 53 symbol signatures from 2 files (AST outlines)
+2026-04-26 00:02:44,943 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All 16 tests pass. The coverage failure is from pre-existing code unrelated to this experiment.
+
+**Summary:** 
+
+- Created `python/carnot/pipeline/lagrange_updater.py` with `LagrangeAdaptiveUpdater` — exponential forgetting curve (`tick()`), FOREVER-style replay (`get_replay_candidates()`/`apply_replay()`), and `constraint_precision` metric.
+- Added REQ-FR11-007 and SCENARIO-FR11-007 to `openspec/capabilities/self-learning/spec.md`.
+- Created 16 passing tests in `tests/python/test_experiment_897_lagrange_forgetting_curve.py`.
+- Ran 10-session relay benchmark: forgetting (best λ=0.2) improved constraint precision from 0.291 → 0.832, reducing memory from 392 → 137 constraints. Verdict: `forgetting_improves_precision`.
+- Wrote `results/experiment_897_lagrange_forgetting_curve.json` with all required fields.
+2026-04-26 00:06:39,591 [conductor] Claude Code completed (exit 0)
+2026-04-26 00:06:39,606 [conductor] Changes:
+logs/conductor.log                          | 16 ++++++++++
+ openspec/capabilities/self-learning/spec.md | 48 +++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
+2026-04-26 00:06:39,623 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp892-preflight-v18: '"pimi_retired", "pimi_retired_upstream"' — auto-fixing
+2026-04-26 00:06:39,623 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp893-svamp-root-cause: '\n     mean_cot_depth_svamp' — auto-fixing
+2026-04-26 00:06:39,623 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp896-svamp-estimation-verifier: '"more", "total", "sum", "combined", "together"' — auto-fixing
+2026-04-26 00:06:39,640 [conductor] DOGFOOD: Verification complete (total: 570 checks, 52 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 00:06:39,640 [conductor] Running test suite (smart subset)...
+2026-04-26 00:06:45,343 [conductor] Post-check: 81 passed, 3 warnings in 2.84s

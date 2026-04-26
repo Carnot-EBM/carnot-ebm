@@ -1,0 +1,77 @@
+{
+  "experiment": "exp897",
+  "title": "Lagrange Forgetting Curve for Constraint Memory Lifecycle",
+  "run_date": "2026-04-26T04:06:12.471768Z",
+  "schema": "carnot-result-v1",
+  "status": "success",
+  "n_sessions": 10,
+  "n_questions_per_session": 20,
+  "constraint_precision_no_forget": 0.290816,
+  "constraint_precision_with_forget": 0.832117,
+  "memory_size_no_forget": 392,
+  "memory_size_with_forget": 137,
+  "forgetting_rate_best_lambda": 0.2,
+  "replay_events": 556,
+  "precision_delta": 0.5413,
+  "lambda_sweep": {
+    "0.01": {
+      "precision": 0.290816,
+      "constraint_count": 392,
+      "total_expired": 0,
+      "total_replay_events": 0
+    },
+    "0.05": {
+      "precision": 0.309783,
+      "constraint_count": 368,
+      "total_expired": 24,
+      "total_replay_events": 100
+    },
+    "0.1": {
+      "precision": 0.525346,
+      "constraint_count": 217,
+      "total_expired": 175,
+      "total_replay_events": 251
+    },
+    "0.2": {
+      "precision": 0.832117,
+      "constraint_count": 137,
+      "total_expired": 255,
+      "total_replay_events": 556
+    }
+  },
+  "baseline_session_precisions": [
+    0.189189,
+    0.126761,
+    0.118182,
+    0.15894,
+    0.170103,
+    0.17094,
+    0.175824,
+    0.170886,
+    0.242938,
+    0.290816
+  ],
+  "best_lambda_session_precisions": [
+    0.189189,
+    0.126761,
+    0.144444,
+    0.25,
+    0.305556,
+    0.350877,
+    0.393443,
+    0.409091,
+    0.627737,
+    0.832117
+  ],
+  "honest_verdict": "forgetting_improves_precision",
+  "spec": [
+    "REQ-FR11-007",
+    "SCENARIO-FR11-007"
+  ],
+  "prior_confirmations": [
+    "Exp 862 (LagrangeAdaptiveIsing)",
+    "Exp 866 (.66 Lagrange updater)",
+    "Exp 888 (FR11 Tier 3 relay)"
+  ],
+  "module": "python/carnot/pipeline/lagrange_updater.py"
+}
