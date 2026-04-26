@@ -2825,3 +2825,4 @@ python/ |
 | 2026-04-26 08:44 UTC | Exp 911: DRIFTProbe Tier 0i — Multi-Layer Hidden-S | OK | 81 passed, 3 warnings in 2.82s |
 | 2026-04-26 09:02 UTC | Exp 912: DraftConditioned Verifier Tier 2.8 — Stru | OK | 81 passed, 3 warnings in 2.93s |
 | 2026-04-26 09:18 UTC | Exp 913: DualGPU Production Wiring — Wire 1.979x V | OK | 81 passed, 3 warnings in 2.86s |
+| 2026-04-26 09:36 UTC | Exp 914: PIMI Sparse Adjacency Final — 5x Sweep Re | OK | 81 passed, 3 warnings in 3.01s |
