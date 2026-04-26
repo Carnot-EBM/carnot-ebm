@@ -5448,3 +5448,20 @@ Traceback (most recent call last):
         ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'dict' object has no attribute 'lower'
 2026-04-26 03:30:52,441 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 03:30:52,508 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 03:30:52,508 [conductor] Running test suite (smart subset)...
+2026-04-26 03:30:57,894 [conductor] Pre-check: 81 passed, 3 warnings in 2.71s
+2026-04-26 03:30:58,003 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-26 03:30:58,003 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. Results:
+
+- `results/experiment_907_svamp_root_cause_v2.json` written with `honest_verdict: mismatch_confirmed_gate_open` and `labeling_mismatch_confirmed: true`
+- All three gate conditions confirmed: `mean_cot_depth_svamp=1.0 < 2.0`, `mean_cot_depth_gsm8k=5.55 > 4.0`, `labeling_failure_rate_svamp=1.0 > 0.5`
+- 18 tests pass in `tests/python/test_experiment_907_svamp_root_cause_v2.py`
+2026-04-26 03:34:24,331 [conductor] Claude Code completed (exit 0)
+2026-04-26 03:34:24,344 [conductor] Changes:
+logs/conductor.log | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+2026-04-26 03:34:24,371 [conductor] DOGFOOD: Verification complete (total: 580 checks, 52 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 03:34:24,371 [conductor] Running test suite (smart subset)...
+2026-04-26 03:34:30,086 [conductor] Post-check: 81 passed, 3 warnings in 2.88s
