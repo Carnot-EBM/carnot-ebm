@@ -15878,3 +15878,31 @@ semantic errors.
 **And** filter_invalid_tokens removes all tokens that would continue the broken parse
 
 **Spec traces:** REQ-VERIFY-147, Exp 886
+
+
+## REQ-VERIFY-177: VJEPA Streaming Logit Guidance (Exp 894)
+
+**Status:** Implemented (Exp 894)
+
+VJEPAStreamingLogitsProcessor SHALL apply soft logit penalties during LLM
+generation when VJEPA's violation probability exceeds a configurable threshold,
+moving constraint-violation detection from post-hoc filtering to generation-time
+guidance.
+
+- REQ-VERIFY-177-1: VJEPAStreamingLogitsProcessor.__call__(input_ids, scores) SHALL
+  return scores unchanged when violation_probability(prefix) <= violation_threshold.
+- REQ-VERIFY-177-2: VJEPAStreamingLogitsProcessor.__call__(input_ids, scores) SHALL
+  divide scores by penalty_scale when violation_probability(prefix) > violation_threshold.
+- REQ-VERIFY-177-3: applied_count SHALL increment by exactly 1 each time the penalty fires.
+- REQ-VERIFY-177-4: The processor SHALL be constructable with only vjepa and tokenizer
+  arguments (violation_threshold=0.75, penalty_scale=2.0 as defaults).
+
+### SCENARIO-VERIFY-177: Streaming Processor Reduces Constraint Violations in Generation
+
+**Given** a VJEPAStreamingLogitsProcessor wired to a VariationalJEPAPredictor
+**And** a generation prefix that produces violation_probability > 0.75
+**When** __call__ is invoked
+**Then** scores are divided by penalty_scale (2.0)
+**And** applied_count increments by 1
+
+**Spec traces:** REQ-VERIFY-177, Exp 894

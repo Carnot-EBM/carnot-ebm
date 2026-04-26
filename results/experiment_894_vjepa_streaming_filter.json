@@ -1,0 +1,30 @@
+{
+  "experiment": 894,
+  "schema": "carnot-experiment-v1",
+  "run_date": "2026-04-26T03:24:57Z",
+  "started_at": "2026-04-26T03:19:45Z",
+  "finished_at": "2026-04-26T03:24:57Z",
+  "duration_s": 312,
+  "status": "blocked",
+  "title": "VJEPA Streaming Logit Filter \u2014 generation-time constraint guidance",
+  "honest_verdict": "streaming_blocked_no_gpu",
+  "gsm8k_accuracy_baseline": 0.0,
+  "gsm8k_accuracy_streaming": 0.0,
+  "signed_improvement": 0,
+  "streaming_filter_applied_count": 0,
+  "streaming_filter_applied_pct": 0.0,
+  "violation_threshold": 0.75,
+  "avg_tokens_per_question": 0.0,
+  "vjepa_model_path": "/home/ianblenke/github.com/ianblenke/carnot/results/vjepa_predictor_v2.safetensors",
+  "vjepa_ood_auc": 0.9211,
+  "mode": "dry_run",
+  "spec": "REQ-VERIFY-177, SCENARIO-VERIFY-177",
+  "implementation": {
+    "module": "python/carnot/pipeline/vjepa_streaming_processor.py",
+    "class": "VJEPAStreamingLogitsProcessor",
+    "test_file": "tests/python/test_experiment_894_vjepa_streaming_filter.py",
+    "tests_passed": 23,
+    "tests_failed": 0
+  },
+  "notes": "CARNOT_FORCE_LIVE=1 not set; dry-run mode. VJEPAStreamingLogitsProcessor implemented and unit-tested (23/23 pass). Live GSM8K run requires ROCm GPU access via sg render and CARNOT_FORCE_LIVE=1."
+}
