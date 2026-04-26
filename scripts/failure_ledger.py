@@ -80,6 +80,30 @@ from in_process_doc_reconcile import map_status_label  # type: ignore[import-not
 _SCOPE_OVERLAP_MIN = 8
 
 
+# Structurally-recurring per-milestone scaffolding scopes.  Every milestone
+# has a preflight and a milestone retro by design — they are not "reruns"
+# of failed experiments, they are scheduled audit tasks.  The .71 first-fire
+# of the failure-ledger blocked Exp 917 (preflight v20) because it
+# scope-matched 6 prior preflights (404, 740, 754, 767, 731 zombie-kill, plus
+# 917 itself).  The matched verdicts (`preflight_v9_clean_manifest_pending`,
+# `preflight_v10_patch_applied_gpu_clean`, etc.) are not failures — they are
+# clean-but-found-issues preflight reports that the reconciler classified as
+# ⚠ Research Finding due to verdict-token rules.  A second-order reconciler
+# fix is in scope but not part of this discipline; for now, the failure-
+# ledger short-circuits these scaffolding scopes so the discipline does not
+# block legitimate every-milestone audit tasks.
+#
+# Adding a new scope here is intentional and auditable: it must be a task
+# that exists *by design* in every milestone, not just one that has happened
+# to ship a few times.
+_RECURRING_SCAFFOLDING_SCOPES: frozenset[str] = frozenset({
+    "preflight",
+    "milestone-retro",
+    "milestone-retrospective",
+    "zombie-kill-preflight",
+})
+
+
 @dataclass
 class LedgerEntry:
     """One historical task that ended in a failure verdict."""
@@ -264,10 +288,23 @@ class FailureLedger:
 
         Excludes any entry whose experiment_id matches the task's own
         id (an experiment cannot be its own prior failure).
+
+        Short-circuits to an empty list when the target scope is one of
+        the structurally-recurring per-milestone scaffolding scopes
+        (preflight, milestone retro, etc.).  Those tasks are scheduled
+        audit work, not reruns of failed experiments.
         """
         task_id = (task.get("id") or "").lower()
         title = task.get("title") or ""
         target_scope = _scope_signature(task_id) or _scope_signature(title)
+        # Prefix match: "milestone-retro-71" starts with "milestone-retro"
+        # (the trailing -71 milestone number is not a -vN suffix and
+        # survives _scope_signature stripping). Same for "preflight-v20"
+        # vs "preflight" — although in that case the suffix-strip already
+        # collapses to "preflight", the prefix check is the durable fix.
+        if any(target_scope == s or target_scope.startswith(s + "-")
+               for s in _RECURRING_SCAFFOLDING_SCOPES):
+            return []
         matches: list[LedgerEntry] = []
         for e in self.entries:
             if e.experiment_id.lower() == task_id:
