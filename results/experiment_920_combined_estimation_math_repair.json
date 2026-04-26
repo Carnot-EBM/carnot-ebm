@@ -1,0 +1,24 @@
+{
+  "experiment": 920,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-26",
+  "started_at": "2026-04-26T11:04:35.810187+00:00",
+  "finished_at": "2026-04-26T11:04:35.810187+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 920: Combined EstimationVerifier + MathIterativeSelfRepair Pipeline (CPU, GATED on Exp 919)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp919-math-iterative-self-repair.signed_improvement (numeric comparison rejected because one side is None (actual=None, expected=0.0))",
+  "gates_evaluated": [
+    {
+      "upstream": "exp919-math-iterative-self-repair",
+      "artifact_field": "signed_improvement",
+      "op": ">",
+      "expected": 0.0,
+      "actual": null,
+      "passed": false,
+      "reason": "numeric comparison rejected because one side is None (actual=None, expected=0.0)"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
