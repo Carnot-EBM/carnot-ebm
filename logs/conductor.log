@@ -5073,3 +5073,25 @@ logs/conductor.log                                 | 17 +++++++++
 2026-04-26 00:40:23,413 [conductor] Pushed to origin
 2026-04-26 00:40:23,413 [conductor] Running post-commit documentation reconciliation...
 2026-04-26 00:40:23,431 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='drift_probe_not_viable', label='⚠️ Research Finding'
+2026-04-26 00:40:23,488 [conductor] Committed: [conductor] In-process docs for Exp 899: DRIFT Hidden-State HalluProbe — Tier 0i
+2026-04-26 00:40:25,044 [conductor] Pushed to origin
+2026-04-26 00:40:25,045 [conductor] Documentation reconciliation committed (in-process)
+2026-04-26 00:40:25,049 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 00:45:25,052 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 00:50:25,055 [conductor] Sleep complete — resuming
+2026-04-26 00:50:25,055 [conductor] --- Iteration 13 ---
+2026-04-26 00:50:25,058 [conductor] ============================================================
+2026-04-26 00:50:25,058 [conductor] RESEARCH STEP: Exp 900: Draft-Conditioned Verifier — Tier 2.8 (CPU)
+2026-04-26 00:50:25,058 [conductor] ============================================================
+2026-04-26 00:50:25,760 [conductor] Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2081, in research_step
+    ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/failure_ledger.py", line 231, in load_from_artifacts
+    verdict = data.get("honest_verdict", "")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/in_process_doc_reconcile.py", line 142, in map_status_label
+    v = (verdict or "").lower()
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2026-04-26 00:50:25,779 [conductor] Committing 2 dirty files as checkpoint (preserving work)
