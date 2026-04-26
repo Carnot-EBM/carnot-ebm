@@ -301,6 +301,58 @@ class ConstraintAdditionEngine:
             return None
         return cls()
 
+    def add_from_violation(self, violation_type: str, step_id: int) -> bool:
+        """Directly record a VJEPA-confirmed violation to session memory.
+
+        **Why a direct-inject path:**
+            ``inject_into_pipeline`` scans accumulated session memory counts and
+            materialises constraints once a count threshold is reached.  That path
+            requires at least ``min_count`` events before a constraint appears.
+            VJEPA has already done the probabilistic filtering upstream (threshold
+            0.70) so we trust its confirmation and immediately increment the counter
+            — one well-confirmed violation is worth propagating without waiting for
+            the threshold.
+
+        This is the Tier 3 → Tier 1 relay wire: VJEPA prediction confidence flows
+        directly into the session memory accumulator, accelerating constraint
+        materialisation for patterns VJEPA and Ising both confirm.
+
+        Args:
+            violation_type: Canonical violation type string (e.g. "carry_error").
+                            Must be one of the keys in ``_CONSTRAINT_CLASS_MAP``
+                            to eventually produce a new constraint; unknown types
+                            are recorded but will be skipped at inject time.
+            step_id:        Index of the CoT step where the violation was detected.
+                            Stored for audit purposes only; does not affect counting.
+
+        Returns:
+            True if the session memory counter was successfully incremented.
+            False if session memory does not support ``_violations_by_type``.
+
+        Spec: REQ-LEARN-059
+        """
+        violations: dict | None = getattr(
+            self._session_memory, "_violations_by_type", None
+        )
+        if violations is None:
+            _log.warning(
+                "ConstraintAdditionEngine.add_from_violation: "
+                "session_memory has no _violations_by_type — cannot record "
+                "violation_type=%r step_id=%d",
+                violation_type,
+                step_id,
+            )
+            return False
+        violations[violation_type] = violations.get(violation_type, 0) + 1
+        _log.debug(
+            "ConstraintAdditionEngine.add_from_violation: "
+            "violation_type=%r step_id=%d count_now=%d",
+            violation_type,
+            step_id,
+            violations[violation_type],
+        )
+        return True
+
     def inject_into_pipeline(self, pipeline: Any) -> int:
         """Scan patterns and inject new constraints into pipeline.active_constraints.
 
