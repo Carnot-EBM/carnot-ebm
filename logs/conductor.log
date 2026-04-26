@@ -5508,3 +5508,25 @@ logs/conductor.log                                 |  6 ++++++
 2026-04-26 03:52:47,912 [conductor] Pushed to origin
 2026-04-26 03:52:47,912 [conductor] Running post-commit documentation reconciliation...
 2026-04-26 03:52:47,930 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='svamp_auc_improved', label='✅ Complete'
+2026-04-26 03:52:47,982 [conductor] Committed: [conductor] In-process docs for Exp 908: EstimationVerifier — Range-Based Word P
+2026-04-26 03:52:49,580 [conductor] Pushed to origin
+2026-04-26 03:52:49,581 [conductor] Documentation reconciliation committed (in-process)
+2026-04-26 03:52:49,585 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 03:57:49,587 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 04:02:49,589 [conductor] Sleep complete — resuming
+2026-04-26 04:02:49,590 [conductor] --- Iteration 23 ---
+2026-04-26 04:02:49,592 [conductor] ============================================================
+2026-04-26 04:02:49,592 [conductor] RESEARCH STEP: Exp 909: Lagrange Forgetting Curve — FR-11 Tier 1 Adaptive Weight Decay (CPU)
+2026-04-26 04:02:49,592 [conductor] ============================================================
+2026-04-26 04:02:50,287 [conductor] Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2081, in research_step
+    ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/failure_ledger.py", line 231, in load_from_artifacts
+    verdict = data.get("honest_verdict", "")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/in_process_doc_reconcile.py", line 142, in map_status_label
+    v = (verdict or "").lower()
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2026-04-26 04:02:50,305 [conductor] Committing 2 dirty files as checkpoint (preserving work)
