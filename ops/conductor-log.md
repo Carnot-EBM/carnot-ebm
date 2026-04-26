@@ -2850,3 +2850,4 @@ python/ |
 | 2026-04-26 12:38 UTC | Exp 926: FR-11 Tier 2 Code Domain Memory — CaseMem | OK | Deliverable already exists in repo |
 | 2026-04-26 12:38 UTC | Exp 927: DraftConditioned Tier 2.8 Pipeline Integr | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-04-26 12:48 UTC | Exp 927: DraftConditioned Tier 2.8 Pipeline Integr | OK | Deliverable already exists in repo |
+| 2026-04-26 12:51 UTC | Exp 928: Milestone 2026.04.71 Operational Retrospe | OK | 81 passed, 3 warnings in 2.78s |

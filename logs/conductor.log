@@ -6207,3 +6207,39 @@ logs/conductor.log | 16 ++++++++++++++++
 2026-04-26 08:51:05,633 [conductor] Pushed to origin
 2026-04-26 08:51:05,633 [conductor] Running post-commit documentation reconciliation...
 2026-04-26 08:51:05,643 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='milestone_complete', label='✅ Complete'
+2026-04-26 08:51:05,698 [conductor] Committed: [conductor] In-process docs for Exp 928: Milestone 2026.04.71 Operational Retros
+2026-04-26 08:51:07,341 [conductor] Pushed to origin
+2026-04-26 08:51:07,341 [conductor] Documentation reconciliation committed (in-process)
+2026-04-26 08:51:07,346 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 08:56:07,349 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 09:01:07,351 [conductor] Sleep complete — resuming
+2026-04-26 09:01:07,351 [conductor] --- Iteration 12 ---
+2026-04-26 09:01:07,353 [conductor] All 12 research tasks completed or exhausted. Nothing to do.
+2026-04-26 09:01:07,353 [conductor] All tasks in current milestone complete.
+2026-04-26 09:01:07,353 [conductor] Updating docs before planning next milestone...
+2026-04-26 09:01:07,353 [conductor] ============================================================
+2026-04-26 09:01:07,353 [conductor] UPDATING DOCS BEFORE PLANNING
+2026-04-26 09:01:07,353 [conductor] ============================================================
+2026-04-26 09:01:07,353 [conductor] Calling Claude Code (30 max turns, model: sonnet)...
+Error: Reached max turns (30)2026-04-26 09:04:31,852 [conductor] Claude Code failed (exit 1)
+2026-04-26 09:04:31,852 [conductor] No doc updates needed (or update failed)
+2026-04-26 09:04:31,852 [conductor] Running operational retrospective...
+2026-04-26 09:04:31,868 [conductor] ============================================================
+2026-04-26 09:04:31,868 [conductor] OPERATIONAL RETROSPECTIVE (milestone 2026.04.71)
+2026-04-26 09:04:31,868 [conductor] ============================================================
+2026-04-26 09:04:31,995 [conductor] Calling agent for operational retrospective...
+2026-04-26 09:04:31,995 [conductor] Calling Claude Code (15 max turns, model: sonnet)...
+Done. Key findings for milestone 2026.04.71:
+
+**Wall time: 3902 min (+57 min, +1.48% regression)** — the four-consecutive-improvement streak (.67–.70) is broken. Driver: experiment count rose 800 → 809, adding ~45 min of pure volume. The streak was never structural.
+
+**Slowest-5 identical to .70** — four legacy carryovers (Exp 786/527/627/603) hit their **12th consecutive milestone** without retirement. Exp 641 has a second consecutive appearance without a diagnosed root cause, following the pattern that created the four legacy carryovers.
+
+**DualGPURunner still not wired** — sixth consecutive idle milestone post-deployment; GPU monitor at close explicitly recommended it; ~360 min cumulative foregone savings.
+
+**Top 3 actions to reverse the regression:**
+1. Add Exp 786/527/627/603 to `exclusion_manifest.yaml` — zero engineering, saves ~224 min immediately
+2. Wire DualGPURunner into VerifyRepairPipeline — ~4 hours, saves ~60 min/milestone
+3. Enforce 700-experiment count cap at conductor pre-launch — prevents volume accumulation
+2026-04-26 09:07:05,476 [conductor] Claude Code completed (exit 0)
+2026-04-26 09:07:05,477 [conductor] Operational retrospective complete
