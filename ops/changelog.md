@@ -4319,3 +4319,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 933: HuggingFace Publish v4 — SOPS Auth Injection + Actual Upload (CPU) (✅ Complete) — honest_verdict=hf_published; results/experiment_933_hf_publish_v4_sops.json
 - 2026-04-26: Exp 934: IPFS Mirror — Establish Distribution Mirror for Published Weights (CPU) (⚠️ Research Finding) — honest_verdict=ipfs_mirror_established; results/experiment_934_ipfs_mirror_establishment.json
 - 2026-04-26: Exp 935: FR-11 Tier 2 Code Domain Memory — CaseMemory for Code Repair Patterns (CPU) (✅ Complete) — honest_verdict=tier2_code_memory_works; results/experiment_935_fr11_tier2_code_domain.json
+- 2026-04-26: Exp 936: KAN Tier 4 Real Data — AutoKnots Adaptive Refinement on FoVer Corpus (CPU) (⚠️ Research Finding) — honest_verdict=real_data_improves_over_synthetic; results/experiment_936_kan_tier4_real_data.json
