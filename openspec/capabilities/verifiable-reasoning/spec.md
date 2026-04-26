@@ -16079,3 +16079,47 @@ Tier 2.9 step-level process reward model based on arXiv 2503.21295 (R-PRM).
 **And** n_flagged SHALL count exactly the steps with step_score > 0.5
 
 **Spec traces:** REQ-VERIFY-148, Exp 924
+
+
+---
+
+## REQ-VER-MATH-001: Math Iterative Self-Repair via Execute-Feedback-Retry
+
+Carnot SHALL support iterative self-repair for arithmetic word problems (GSM8K) using
+the execute-feedback-retry pattern: generate answer → parse numeric result → compare to
+ground truth → if wrong, feed correction prompt → retry up to N times → select best
+attempt by Ising energy.
+
+- REQ-VER-MATH-001-1: extract_numeric_answer SHALL parse the final numeric answer
+  from an LLM response using the "#### N", "the answer is N", and trailing-number
+  fallback patterns.
+- REQ-VER-MATH-001-2: answers_match SHALL return True when round(extracted) equals
+  ground_truth within ±0.5 tolerance (handles float drift like "72.0" vs 72).
+- REQ-VER-MATH-001-3: The repair prompt SHALL reveal the model's previous wrong
+  answer so the model can use it as a negative signal to avoid repeating the failure.
+- REQ-VER-MATH-001-4: The repair loop SHALL stop early on the first correct answer
+  (no further rounds needed once ground truth is matched).
+- REQ-VER-MATH-001-5: The Ising EBM energy scorer SHALL be used to rank all attempts;
+  the attempt with lowest energy SHALL be selected as the final answer.
+
+## REQ-VER-MATH-002: Math Repair Honest-Verdict Mapping
+
+The signed_improvement (repair_accuracy - baseline_accuracy) SHALL be mapped to an
+honest_verdict as follows:
+  - signed_improvement > 0.10  → "math_repair_significant"
+  - 0 < signed_improvement ≤ 0.10 → "math_repair_marginal"
+  - signed_improvement == 0   → "math_repair_zero"
+  - signed_improvement < 0    → "math_repair_negative"
+
+### SCENARIO-VER-MATH-001: GSM8K Execute-Feedback Loop Improves Accuracy
+
+**Given** a GemmaTransformersLoader-backed runner on 25 GSM8K questions
+**When** _run_problem is called with max_retries=3
+**Then** the baseline round (round 0) is measured before any repair
+**And** up to 3 repair rounds are attempted for each wrong baseline answer
+**And** the repair prompt contains the model's previous wrong answer
+**And** the Ising EBM scores each attempt and selects the lowest-energy result
+**And** signed_improvement = repair_accuracy - baseline_accuracy is computed
+**And** the artifact is written with inference_mode='live_gpu' and signed_improvement field
+
+**Spec traces:** REQ-VER-MATH-001, REQ-VER-MATH-002, Exp 930
