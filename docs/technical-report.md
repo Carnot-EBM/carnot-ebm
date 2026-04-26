@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 891 Experiments Across 75 Research Milestones
+## A Technical Report on 916 Experiments Across 76 Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-26
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **891
-experiments across 75 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **916
+experiments across 76 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -50,6 +50,10 @@ retrospective artifacts checked into `results/operational_retro_*.json`.
 - **Two-GPU parallel training** achieves 2.0x wall-clock speedup with
   bit-identical final losses versus sequential (Exps 684/685, RETRO-071
   closed).
+- **IterativeSelfRepair (execute-feedback-retry)** raises HumanEval code
+  repair pass rate from **8% to 80%** (+72pp) on 50 problems using
+  execute-and-retry rather than LLM rewriting alone (Exps 905/906,
+  cross-model energy selection accuracy 1.0).
 
 **Claims that did not survive audit** are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -361,6 +365,39 @@ remains open). Live GPU confirmed in Exp 882 (live_gpu inference mode).
 Discriminative JEPA architecture formally retired (Exp 887,
 honest_verdict=jepa_discriminative_retired); VJEPA replaces it as Tier 3.
 
+Milestone 2026.04.69 (the 75th) was a zero-run milestone — a YAML key
+error (`title` instead of `id`) in research-roadmap.yaml caused the
+conductor to skip all 12 experiments (Exps 892-903) without executing any.
+The retrospective confirmed the root cause and produced a YAML fix that
+seeded the .70 planning session. Wall time: 3945 min / 802 experiments
+(net -10 min vs .68, third consecutive improvement — but driven entirely
+by slower experiment count growth, not governance fixes). GPU close clean,
+DualGPU still not wired into production (fourth consecutive post-deployment
+idle milestone). UNPRECEDENTED DECUPLE: all five slowest experiments
+identical to .60 through .68 (Exps 786/527/491/627/603) — ten consecutive
+milestones with zero slowest-5 composition change.
+
+Milestone 2026.04.70 (the 76th) brought the record to **916 experiments**
+and met 11 of 12 success criteria in 36.9 wall minutes across 13 experiments
+(Exps 904-916). Headline wins: **IterativeSelfRepair** (arXiv 2604.10508)
+deployed as the primary code repair strategy — execute-feedback-retry
+raised HumanEval code repair pass rate from **8% to 80%** (+72pp) on 50
+problems using Gemma-4-E4B-it (Exps 905/906, cross-model energy selection
+accuracy=1.0); **EstimationVerifier** raised SVAMP AUC from 0.125 (FoVer
+baseline) to **0.90** (+0.775 signed improvement), closing
+RETRO-SVAMP-ZERO-AUC (Exp 908); **DualGPU production wiring** confirmed
+(Exp 913, structural wiring complete — measured throughput gate deferred to
+.71); **KAN Tier 4** seeded via AutoKnots adaptive grid refinement (Exp
+910, tier4_seed_viable); **DraftConditionedVerifier Tier 2.8** viable
+(Exp 912, draft-scaffolded Ising constraints); **DRIFTProbe Tier 0i**
+(multi-layer hidden-state drift) marginal but viable (Exp 911). Lagrange
+forgetting failed its criterion because the toy single-constraint corpus
+produces entropy=0 regardless of decay — deferred to .71 with multi-constraint
+corpus (RETRO-LAGRANGE-ENTROPY-DEGENERATE). RETRO-INERTIA-SWEEPS-TARGET-MISSED
+closed via retirement (PIMI sparse adjacency final no-improvement, retire
+verdict). RETRO-MANIFEST-FULL-SCOPE formally escalated to human intervention
+required (11th consecutive milestone unapplied). Three retros open entering .71.
+
 ---
 
 ## What this report is (and isn't)
@@ -396,6 +433,8 @@ All primary benchmark rows below are from live GPU inference. The replay and tra
 | Extractor comparison (100 GSM8K) | — | Regex 5, Z3 3, LLM 1 FP | LLM best | Exp 206-207 |
 | V-JEPA Tier 3 reasoning discriminator (SVAMP + GSM8K OOD) | — | OOD AUC **0.9211** | Above 0.90 publication gate; deployed to Tier 3 cascade | Exp 883/884 |
 | SpectralAttentionProbe Tier 0h hallucination detector | — | AUC **1.0** | Bigram Laplacian spectral entropy; 23.3% advisory signal rate | Exp 885 |
+| IterativeSelfRepair code repair (HumanEval 50, Gemma-4-E4B-it) | 8.0% | 80.0% | **+72pp** execute-feedback-retry loop; cross-model energy selection accuracy 1.0 | Exp 905/906 |
+| EstimationVerifier SVAMP AUC | 0.125 (FoVer baseline) | **0.90** | +0.775 signed improvement; RETRO-SVAMP-ZERO-AUC closed | Exp 908 |
 
 ### Pending Validation (Not Yet Headline)
 
