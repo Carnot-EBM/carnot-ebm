@@ -5716,3 +5716,23 @@ Traceback (most recent call last):
         ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'dict' object has no attribute 'lower'
 2026-04-26 05:12:48,675 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 05:12:48,733 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 05:12:48,733 [conductor] Running test suite (smart subset)...
+2026-04-26 05:12:54,189 [conductor] Pre-check: 81 passed, 3 warnings in 2.77s
+2026-04-26 05:12:54,296 [conductor] Injected 52 symbol signatures from 3 files (AST outlines)
+2026-04-26 05:12:54,296 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. All deliverables are complete:
+
+- **`results/experiment_913_dualgpu_production_wiring.json`** — valid artifact with all required schema fields, `honest_verdict=dualgpu_wired_partial_speedup` (1.396x speedup on CPU via threading)
+- **`python/carnot/pipeline/three_tier_pipeline.py`** — `wire_dual_gpu_runner()` added, `_dual_gpu_runner` attribute, `benchmark()` splits batch across `ThreadPoolExecutor(max_workers=2)` when `CARNOT_DUAL_GPU=1` and runner is wired
+- **`tests/python/test_dualgpu_pipeline_wiring.py`** — 8 tests, all passing, traced to `REQ-PERF-004`
+- **`openspec/capabilities/pipeline/spec.md`** — `REQ-PERF-004` and `SCENARIO-PERF-004` appended
+2026-04-26 05:18:42,743 [conductor] Claude Code completed (exit 0)
+2026-04-26 05:18:42,759 [conductor] Changes:
+logs/conductor.log                            |  12 ++
+ openspec/capabilities/pipeline/spec.md        |  38 ++++++
+ python/carnot/pipeline/three_tier_pipeline.py | 168 ++++++++++++++++++++------
+ 3 files changed, 180 insertions(+), 38 deletions(-)
+2026-04-26 05:18:42,778 [conductor] DOGFOOD: Verification complete (total: 586 checks, 52 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 05:18:42,778 [conductor] Running test suite (smart subset)...
+2026-04-26 05:18:48,500 [conductor] Post-check: 81 passed, 3 warnings in 2.86s
