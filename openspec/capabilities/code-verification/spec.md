@@ -820,6 +820,30 @@ Given free VRAM after zombie kill is < 20000 MB, when Exp 785 selects a model,
 then it uses Qwen3.5-7B-Instruct-GGUF Q4_K_M and records model_used="Qwen3.5-7B-Instruct-GGUF"
 in the artifact. The signed_improvement calculation is identical regardless of which model runs.
 
+### REQ-CODE-033: IterativeSelfRepair Pipeline — Execution-Feedback-Driven Code Repair
+
+The system shall implement an IterativeSelfRepair pipeline that bypasses
+ArithmeticExtractor and uses execution tracebacks as the correction signal:
+- Generates initial code from a problem prompt via an LLM runner (attempt 0).
+- Executes the generated code in a subprocess sandbox with a configurable timeout.
+- On execution failure, feeds the full traceback back to the LLM inside a
+  correction prompt that includes the original problem, the failing code, and
+  the error text (arXiv 2604.10508 pattern).
+- Retries up to max_retries times (default 3).
+- After all attempts, selects the best attempt using the Carnot energy scorer:
+  passing attempts are preferred over failing ones; among passing (or failing)
+  attempts, the lowest-energy attempt is selected.
+- Returns a RepairResult with the best attempt, all attempts, n_retries, and
+  a boolean recording whether the energy scorer selected a passing attempt.
+- Supports optional gVisor sandbox isolation via CARNOT_USE_SANDBOX=1.
+
+### SCENARIO-CODE-031: Iterative Repair Retries With Execution Feedback Until Passing Or Budget
+
+Given a problem where the first attempt fails, when IterativeSelfRepair.repair() runs,
+then the correction prompt includes the original code, the full traceback, and the
+problem description, and subsequent attempts use the repaired code, continuing until
+a passing attempt is found or max_retries is exhausted.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -859,6 +883,7 @@ in the artifact. The signed_improvement calculation is identical regardless of w
 | REQ-CODE-030 | Implemented |
 | REQ-CODE-031 | Implemented |
 | REQ-CODE-032 | Implemented |
+| REQ-CODE-033 | Implemented |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
 | REQ-REPAIR-022 | Implemented |
