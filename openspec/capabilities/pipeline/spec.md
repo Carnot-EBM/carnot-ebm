@@ -1562,3 +1562,45 @@ reasoning style,
   3. Otherwise → honest_verdict = "tier0i_not_viable"
 
 **Spec traces:** REQ-TIER0-005, SCENARIO-TIER0-005, Exp 911
+
+
+
+### REQ-TIER28-001: DraftConditionedVerifier Tier 2.8 — Structural Constraint Injection
+
+**Status:** Implemented (Exp 912)
+
+`python/carnot/pipeline/draft_conditioned_verifier.py` implements `DraftConditionedVerifier`,
+a Tier 2.8 stage positioned between Tier 2 (EORM/JEPA) and Tier 3 (Ising).  Inspired by
+arXiv 2603.03305 (Draft-Conditioned Constrained Decoding).
+
+Mechanism: generates a cheap 50-token draft from a small model, extracts four structural
+markers (has_equals_sign, has_numeric_answer, has_reasoning_steps, final_number) using
+deterministic regex — NOT ArithmeticExtractor — then injects those as soft constraints
+into the Ising energy scoring.
+
+**Acceptance criteria:**
+- REQ-TIER28-001-1: `extract_structural_constraints(draft_text)` returns a list of exactly
+  four dicts, each with keys "type" (str) and "value" (bool | int | None).
+- REQ-TIER28-001-2: `verify_with_draft(question, full_response)` returns a `VerificationResult`
+  dataclass with fields energy (float), draft_used (bool), n_constraints (int),
+  draft_text (str), constraints (list).
+- REQ-TIER28-001-3: When draft_runner raises an exception, draft_used=False and n_constraints=0.
+- REQ-TIER28-001-4: When ising_sampler is None, score_with_constraints() returns a synthetic
+  energy in range [0.0, 1.5] computed from structural signals.
+- REQ-TIER28-001-5: `condition_and_verify(question, response)` returns a plain dict with
+  the same fields (interface for ThreeTierPipeline.wire_tier_28()).
+
+**Spec traces:** REQ-TIER28-001, Exp 912
+
+
+### SCENARIO-TIER28-001: Draft-Conditioned Constraints Improve Ising Solve Quality on GSM8K
+
+**Given** 25 GSM8K-style (question, correct_response, hallucinated_response) pairs,
+**When** DraftConditionedVerifier is run with a Qwen3.5-0.8B draft runner and constraints
+are injected before the Ising energy scoring,
+**Then**
+  1. auc_with_draft > auc_baseline → honest_verdict = "tier28_viable"
+  2. auc_with_draft <= auc_baseline → honest_verdict = "tier28_no_improvement"
+  3. mean_constraints_injected is recorded per question.
+
+**Spec traces:** REQ-TIER28-001, SCENARIO-TIER28-001, Exp 912
