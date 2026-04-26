@@ -4273,3 +4273,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 894: VJEPA Live Streaming Filter — Generation-Time Logit Masking (GPU) (⚠️ Blocked) — honest_verdict=streaming_blocked_no_gpu; results/experiment_894_vjepa_streaming_filter.json
 - 2026-04-26: Exp 895: Code Repair 50-Question Scale-Up — Gemma4 Live HumanEval (GPU) (⚠️ Blocked) — honest_verdict=blocked_gate_881_not_met; results/experiment_895_code_repair_50q_scaleup.json
 - 2026-04-26: Exp 896: SVAMP EstimationVerifier + VJEPA v3 SVAMP Retrain (GPU) (✅ Complete) — honest_verdict=svamp_retro_closed; results/experiment_896_svamp_estimation_verifier.json
+- 2026-04-26: Exp 897: Constraint Memory Forgetting — FOREVER-Inspired Lagrange Weight Decay (CPU) (⚠️ Research Finding) — honest_verdict=forgetting_improves_precision; results/experiment_897_lagrange_forgetting_curve.json
