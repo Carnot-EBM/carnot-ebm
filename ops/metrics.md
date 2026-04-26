@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-26 Milestone 2026.04.72 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-26T13:07:12Z | 2026-04-26T13:19:07Z | Planned milestone 2026.04.72 "Gate-Check Recovery + Math Repair + Symbolic-KAN + SC-Energy". Read 10 project files + all 12 .71 experiment result JSONs. Root cause of .71 failure: 7/12 experiments blocked by missing prior_failures fields in YAML. Identified: math repair (Exp 919 blocked, Exp 905 succeeded for code), DualGPU (Exp 921 blocked, Exp 913 wired), HF publish (Exp 922 blocked, Exp 915 ready), KAN Tier 4 (Exp 925 blocked), FR-11 Tier 2 code (Exp 926 blocked), DraftConditioned (Exp 927 blocked). Arxiv scan: 5 new papers added to research-references.md (arXiv 2603.23854 Symbolic-KAN, 2503.10695 SC-Energy, 2604.20659 GRPO-VPS, 2505.14999 EORM, 2604.19305 DebugRepair). Wrote openspec/change-proposals/research-roadmap-v72.md and research-roadmap-next.yaml (12 experiments Exps 929-940, all with proper prior_failures entries). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~120k |
+
+---
+
 ## Session: 2026-04-26 Milestone 2026.04.71 Planning
 
 ### Turn Log

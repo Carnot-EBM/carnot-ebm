@@ -33,6 +33,69 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-26 arxiv Scan (Milestone 2026.04.72 Planning)
+
+### Symbolic-KAN: Discrete Symbolic Structure for KAN Interpretability
+- **Paper:** arXiv 2603.23854 (April 2026)
+- **What:** Augments KAN splines with discrete symbolic node labels (ADD, MUL, CMP, EQ) drawn from
+  a predefined vocabulary. Each activation function is constrained to follow its symbolic label's
+  behavior, making the learned constraint function interpretable: "node 3 checks addition, node 7
+  checks comparison direction." Achieves 94% symbolic accuracy on arithmetic benchmark tasks.
+- **Relevance to Carnot:** Carnot's KAN tier uses pure splines without symbolic structure. Symbolic
+  labels would make the energy function interpretable and potentially more accurate on structured
+  arithmetic constraints where the constraint types are known a priori.
+- **Concrete experiment:** Exp 937 — Symbolic-KAN Constraint Verifier (Milestone 2026.04.72, Phase 4).
+- **When to incorporate:** Milestone 2026.04.72 — Phase 4.
+
+### SC-Energy: Set Consistency Energy Networks
+- **Paper:** arXiv 2503.10695 (March 2026)
+- **What:** Energy function that scores whether a SET of statements {s1,...,sn} is internally
+  consistent. Contrastive training: E(coherent_set) << E(contradictory_set). Achieves AUROC=0.89
+  on multi-statement consistency detection benchmarks. Permutation-invariant pooling enables
+  variable-length statement sets.
+- **Relevance to Carnot:** Carnot's global consistency checker (Exp 172, 100% detection) uses
+  explicit logical rules. SC-Energy provides a learned alternative that generalizes across domains
+  without hand-crafted rules. Complementary to per-step verification — catches contradictions
+  spanning multiple statements.
+- **Concrete experiment:** Exp 939 — SC-Energy Set Consistency Verifier (Milestone 2026.04.72, Phase 4).
+- **When to incorporate:** Milestone 2026.04.72 — Phase 4.
+
+### GRPO-VPS: Verifiable Process Supervision for Reasoning
+- **Paper:** arXiv 2604.20659 (April 2026)
+- **What:** Combines GRPO training with verifiable process supervision signals at the step level.
+  Each reasoning step is scored for process quality, not just outcome correctness. Shows +4.2pp
+  on GSM8K and +3.8pp on MATH over standard GRPO with outcome-only rewards.
+- **Relevance to Carnot:** Carnot's R-PRM Tier 2.9 (Exp 924) found zero improvement in heuristic
+  mode. GRPO-VPS suggests that step-level process supervision requires live model inference (not
+  heuristics) to generate meaningful gradient signals. Use as reference for R-PRM redesign in .73.
+- **When to incorporate:** Future milestone — R-PRM Tier 2.9 redesign with live model inference.
+
+### EORM: Energy Outcome Reward Model for Lightweight Post-Hoc Verification
+- **Paper:** arXiv 2505.14999 (May 2025)
+- **What:** Uses a lightweight post-hoc energy function as an outcome reward model (ORM). The
+  energy function is trained to assign low energy to correct chain-of-thought solutions and high
+  energy to incorrect ones. Achieves 0.88 AUROC on GSM8K outcome verification with 8x fewer
+  parameters than discriminative ORM baselines.
+- **Relevance to Carnot:** Directly validates Carnot's energy-based verification approach. EORM's
+  architecture is essentially Carnot's Ising/KAN stack applied as an ORM. The paper provides
+  external validation of the approach and suggests that outcome-level energy scoring (not just
+  step-level) is commercially viable. Reference for positioning Carnot vs standard ORM systems.
+- **When to incorporate:** Background reference; no new experiment needed (already implemented).
+
+### DebugRepair: Self-Directed Debugging for Program Repair
+- **Paper:** arXiv 2604.19305 (April 2026)
+- **What:** LLM-guided debugging where the model first generates a hypothesis about what is wrong,
+  then applies a targeted repair based on the hypothesis. Achieves +8.2pp on HumanEval vs standard
+  self-repair (arXiv 2604.10508 baseline). Hypothesis generation is the key: models that explain
+  WHY the code is wrong repair it more effectively than models that directly retry.
+- **Relevance to Carnot:** Exp 905 implemented basic iterative self-repair (execute-feedback-retry).
+  DebugRepair suggests adding a "hypothesis about why wrong" step before retrying. For Carnot:
+  after energy scoring identifies the worst attempt, generate "hypothesis: this response is wrong
+  because [energy components indicate constraint violation]." Then use the hypothesis as a repair
+  prompt. Expected: fewer retries needed per repair.
+- **Concrete experiment:** Future milestone — DebugRepair integration with Carnot energy diagnosis.
+- **When to incorporate:** Milestone 2026.04.73 — after Exp 930 establishes math repair baseline.
+
 ## 2026-04-26 arxiv Scan (Milestone 2026.04.71 Planning)
 
 ### R-PRM: Reasoning-Driven Process Reward Modeling
