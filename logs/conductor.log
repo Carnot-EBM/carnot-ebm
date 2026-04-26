@@ -6635,3 +6635,104 @@ logs/conductor.log                     | 12 ++++++++++
 2026-04-26 14:52:35,267 [conductor] RESEARCH STEP: Exp 941: Pre-flight v22 — .72 Audit + SOTA Model Download + SC-Energy Audit + New Papers (CPU)
 2026-04-26 14:52:35,269 [conductor] ============================================================
 2026-04-26 14:52:41,584 [conductor] Committing 6 dirty files as checkpoint (preserving work)
+2026-04-26 14:52:43,978 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 14:52:43,978 [conductor] Running test suite (smart subset)...
+2026-04-26 14:53:17,823 [conductor] Pre-check: 81 passed, 3 warnings in 14.05s
+2026-04-26 14:53:18,464 [conductor] Injected 37 symbol signatures from 1 files (AST outlines)
+2026-04-26 14:53:18,464 [conductor] Calling Claude Code (20 max turns, model: sonnet)...
+============================================================
+  Carnot Research Conductor
+  Autonomous research via Claude Code
+============================================================
+  Agent: claude (claude)
+  Model: sonnet
+  Project: /home/ianblenke/github.com/ianblenke/carnot
+  CARNOT_FORCE_LIVE: 1
+  Mode: continuous (every 10 min)
+  Dogfood memory: 603 checks, 57 brace fixes, 0 code violations
+
+Deliverable is valid. Done.
+
+**Summary:** `results/experiment_941_preflight_v22.json` written with `honest_verdict=preflight_complete`, `status=success`. Key findings: all three SOTA GGUFs already in HF cache (`gemma-4-26B-A4B-it-UD-Q4_K_M.gguf` confirmed), SC-energy audit complete (8 prior experiments documented), 7 open RETROs entering .73, Exp 943 gated on Exp 942 signed_improvement > 0. `MILESTONE_PREREQS.md` and `ops/known-issues.md` updated with .73 gates and SC-energy prior-failures reference table.
+2026-04-26 14:56:08,195 [conductor] Claude Code completed (exit 0)
+2026-04-26 14:56:08,255 [conductor] Changes:
+MILESTONE_PREREQS.md                         | 33 +++++++++++++++++++++++++
+ logs/conductor.log                           | 20 ++++++++++++++++
+ ops/known-issues.md                          | 36 ++++++++++++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json |  6 ++---
+ results/experiment_638_tier1_fr11_relay.json |  6 ++---
+ results/experiment_645_tier1_fr11_relay.json |  6 ++---
+ 6 files changed, 98 insertions(+), 9 deletions(-)
+2026-04-26 14:56:08,351 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp944-sc-energy-set-consistency-v2: 's1,' — auto-fixing
+2026-04-26 14:56:08,352 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp950-emvl-sparsified-ising: 'j in neighbors(i)' — auto-fixing
+2026-04-26 14:56:08,352 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp951-milestone-retro-73: '\n     "experiment"' — auto-fixing
+2026-04-26 14:56:08,353 [conductor] DOGFOOD: Auto-fixed brace escaping in research-roadmap.yaml
+2026-04-26 14:56:08,409 [conductor] DOGFOOD: Brace error in research-roadmap-next.yaml task exp944-sc-energy-set-consistency-v2: 's1,' — auto-fixing
+2026-04-26 14:56:08,410 [conductor] DOGFOOD: Brace error in research-roadmap-next.yaml task exp950-emvl-sparsified-ising: 'j in neighbors(i)' — auto-fixing
+2026-04-26 14:56:08,410 [conductor] DOGFOOD: Brace error in research-roadmap-next.yaml task exp951-milestone-retro-73: '\n     "experiment"' — auto-fixing
+2026-04-26 14:56:08,413 [conductor] DOGFOOD: Auto-fixed brace escaping in research-roadmap-next.yaml
+2026-04-26 14:56:08,427 [conductor] DOGFOOD: Verification complete (total: 604 checks, 58 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 14:56:08,427 [conductor] Running test suite (smart subset)...
+2026-04-26 14:57:25,734 [conductor] Post-check: 81 passed, 3 warnings in 36.42s
+2026-04-26 15:07:26,328 [conductor] Commit failed: Command timed out
+2026-04-26 15:07:26,329 [conductor] Running post-commit documentation reconciliation...
+2026-04-26 15:07:27,457 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='preflight_complete', label='✅ Complete'
+2026-04-26 15:17:27,812 [conductor] Commit failed: Command timed out
+2026-04-26 15:17:27,812 [conductor] Documentation reconciliation committed (in-process)
+2026-04-26 15:17:28,679 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 15:22:28,692 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 15:27:28,698 [conductor] Sleep complete — resuming
+2026-04-26 15:27:28,698 [conductor] --- Iteration 2 ---
+2026-04-26 15:27:29,478 [conductor] ============================================================
+2026-04-26 15:27:29,478 [conductor] RESEARCH STEP: Exp 942: Math Iterative Self-Repair v2 — SOTA GGUF Model (Qwen3.6-35B or Gemma4-31B), 25 GSM8K (GPU, CARNOT_FORCE_LIVE=1)
+2026-04-26 15:27:29,478 [conductor] ============================================================
+2026-04-26 15:27:42,083 [conductor] Committing 8 dirty files as checkpoint (preserving work)
+2026-04-26 15:37:43,333 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 15:37:43,409 [conductor] Running test suite (smart subset)...
+2026-04-26 15:38:57,913 [conductor] Pre-check: 81 passed, 3 warnings in 35.25s
+2026-04-26 15:39:01,199 [conductor] Injected 76 symbol signatures from 5 files (AST outlines)
+2026-04-26 15:39:01,232 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-26 16:39:05,517 [conductor] Claude Code exceeded wall-clock timeout (60 min), killing process group
+2026-04-26 16:39:06,316 [conductor] Claude Code failed: Wall-clock timeout after 3604s. Last output: 
+2026-04-26 16:39:07,412 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 16:44:07,551 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 16:49:07,558 [conductor] Sleep complete — resuming
+2026-04-26 16:49:07,562 [conductor] --- Iteration 3 ---
+2026-04-26 16:49:08,826 [conductor] ============================================================
+2026-04-26 16:49:08,826 [conductor] RESEARCH STEP: Exp 942: Math Iterative Self-Repair v2 — SOTA GGUF Model (Qwen3.6-35B or Gemma4-31B), 25 GSM8K (GPU, CARNOT_FORCE_LIVE=1)
+2026-04-26 16:49:08,829 [conductor] ============================================================
+2026-04-26 16:52:06,133 [conductor] Committing 14 dirty files as checkpoint (preserving work)
+2026-04-26 17:02:09,492 [conductor] REAPED pid=1572513 name='/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python3' vram=1866 MiB age=7460 s
+2026-04-26 17:02:09,494 [conductor] Pre-flight reaper killed 1 stale GPU process(es), freed 1866 MiB
+2026-04-26 17:02:09,494 [conductor]   reaped pid=1572513 vram=1866MiB age=7460s name=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python3
+2026-04-26 17:02:09,494 [conductor] Running test suite (smart subset)...
+2026-04-26 17:03:41,592 [conductor] Pre-check: 107 passed, 3 warnings in 50.40s
+2026-04-26 17:03:43,010 [conductor] Injected 92 symbol signatures from 6 files (AST outlines)
+2026-04-26 17:03:43,011 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-26 18:03:47,311 [conductor] Claude Code exceeded wall-clock timeout (60 min), killing process group
+2026-04-26 18:03:48,167 [conductor] Claude Code failed: Wall-clock timeout after 3603s. Last output: 
+2026-04-26 18:03:49,695 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 18:08:49,760 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 18:13:49,767 [conductor] Sleep complete — resuming
+2026-04-26 18:13:49,773 [conductor] --- Iteration 4 ---
+2026-04-26 18:13:50,758 [conductor] ============================================================
+2026-04-26 18:13:50,758 [conductor] RESEARCH STEP: Exp 942: Math Iterative Self-Repair v2 — SOTA GGUF Model (Qwen3.6-35B or Gemma4-31B), 25 GSM8K (GPU, CARNOT_FORCE_LIVE=1)
+2026-04-26 18:13:50,758 [conductor] ============================================================
+2026-04-26 18:14:12,527 [conductor] Committing 13 dirty files as checkpoint (preserving work)
+2026-04-26 18:24:13,622 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 18:24:13,626 [conductor] Running test suite (smart subset)...
+2026-04-26 18:25:41,385 [conductor] Pre-check: 107 passed, 3 warnings in 42.87s
+2026-04-26 18:25:44,088 [conductor] Injected 92 symbol signatures from 6 files (AST outlines)
+2026-04-26 18:25:44,101 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-26 19:25:48,644 [conductor] Claude Code exceeded wall-clock timeout (60 min), killing process group
+2026-04-26 19:25:51,444 [conductor] Claude Code failed: Wall-clock timeout after 3603s. Last output: 
+2026-04-26 19:26:38,209 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 19:31:38,240 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 19:36:38,351 [conductor] Sleep complete — resuming
+2026-04-26 19:36:38,568 [conductor] --- Iteration 5 ---
+2026-04-26 19:36:40,491 [conductor] Skipping 'Exp 942: Math Iterative Self-Repair v2 — SOTA GGUF' — failed 3 times
+2026-04-26 19:36:40,507 [conductor] ============================================================
+2026-04-26 19:36:40,507 [conductor] RESEARCH STEP: Exp 943: Math Repair + External Scratchpad — Re-feed Prior Errors as Input (CPU/GPU, GATED on Exp 942 signed_improvement > 0)
+2026-04-26 19:36:40,508 [conductor] ============================================================
+2026-04-26 19:36:41,195 [conductor] Pre-gate check FAILED: 1 of 1 gate(s) failed; first failure: exp942-math-repair-sota-v2.signed_improvement (upstream artifact not found for task id 'exp942-math-repair-sota-v2') — writing blocked artifact and skipping Sonnet
+2026-04-26 19:36:41,423 [conductor] Blocked artifact written: experiment_943_math_repair_external_scratchpad.json

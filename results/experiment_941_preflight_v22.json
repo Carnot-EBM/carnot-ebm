@@ -1,0 +1,122 @@
+{
+  "experiment": 941,
+  "title": "Milestone 2026.04.73 Pre-flight v22",
+  "milestone": "2026.04.73",
+  "preflight_version": 22,
+  "run_date": "20260426",
+  "started_at": "2026-04-26T18:55:55Z",
+  "predecessor_milestone": "2026.04.72",
+  "predecessor_criteria_met": 10,
+  "predecessor_criteria_total": 12,
+  "predecessor_root_cause_of_failures": [
+    "RETRO-MATH-REPAIR-MODEL-CEILING",
+    "RETRO-SC-ENERGY-GATE-DISCIPLINE"
+  ],
+  "predecessor_root_cause_detail": "RETRO-MATH-REPAIR-MODEL-CEILING: gemma-4-E4B-it produced 12% baseline and 12% repair on GSM8K (signed_improvement=0.0). Model capability ceiling \u2014 E4B too small for GSM8K. Algorithm is correct; model is wrong. SOTA model required for .73 rerun (Exp 942). RETRO-SC-ENERGY-GATE-DISCIPLINE: Exp 939 YAML lacked prior_failures for 7 prior SC-energy experiments. Identical planning error to Exp 917 in .71. Exp 944 MUST include all 8 prior_failures (see sc_energy_prior_experiments).",
+  "sota_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "sota_model_downloaded": false,
+  "sota_model_available": true,
+  "sc_energy_audit_complete": true,
+  "sc_energy_prior_experiment_count": 8,
+  "sc_energy_prior_experiments": [
+    {
+      "experiment_id": "exp506-semantic-energy-tier0d",
+      "experiment_number": 506,
+      "verdict": "semantic_energy_no_improvement",
+      "domain": "Semantic Energy Tier 0d"
+    },
+    {
+      "experiment_id": "exp509-ppsebm-energy-magnitude-replay",
+      "experiment_number": 509,
+      "verdict": "energy_magnitude_wins",
+      "domain": "PPSEBM Energy Magnitude Replay (adjacent domain)"
+    },
+    {
+      "experiment_id": "exp533-cold-decoding-energy-guidance",
+      "experiment_number": 533,
+      "verdict": "no_violation_reduction",
+      "domain": "COLD Decoding Energy Guidance (adjacent domain)"
+    },
+    {
+      "experiment_id": "exp711-sc-energy-set-consistency",
+      "experiment_number": 711,
+      "verdict": "tier_29_below_threshold",
+      "domain": "SC-Energy SetConsistencyVerifier Tier 2.9"
+    },
+    {
+      "experiment_id": "exp725-sc-energy-v2",
+      "experiment_number": 725,
+      "verdict": "sc_energy_v2_below_threshold",
+      "domain": "SC-Energy v2 FoVer v2 Dual Labels"
+    },
+    {
+      "experiment_id": "exp772-semantic-energy-probe",
+      "experiment_number": 772,
+      "verdict": "semantic_energy_below_baseline",
+      "domain": "SemanticEnergyProbe Tier 0g"
+    },
+    {
+      "experiment_id": "exp787-sstar-energy-ranked-code-selection",
+      "experiment_number": 787,
+      "verdict": "energy_prefilter_efficient",
+      "domain": "S* Energy Pre-Ranking (adjacent domain)"
+    },
+    {
+      "experiment_id": "exp939-sc-energy-set-consistency-networks",
+      "experiment_number": 939,
+      "verdict": "blocked_gate_check_failed",
+      "domain": "SC-Energy Set Consistency Networks (Contrastive Coherence)"
+    }
+  ],
+  "open_retros": [
+    "RETRO-MANIFEST-FULL-SCOPE",
+    "RETRO-XILINX-TOOLS-UNAVAILABLE",
+    "RETRO-RERUN-DISCIPLINE-GATE-CASCADE",
+    "RETRO-HEURISTIC-RPRM-FLAT-SIGNAL",
+    "RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS",
+    "RETRO-MATH-REPAIR-MODEL-CEILING",
+    "RETRO-SC-ENERGY-GATE-DISCIPLINE"
+  ],
+  "retro_statuses": {
+    "RETRO-MANIFEST-FULL-SCOPE": "HUMAN_REQUIRED",
+    "RETRO-XILINX-TOOLS-UNAVAILABLE": "HUMAN_REQUIRED",
+    "RETRO-RERUN-DISCIPLINE-GATE-CASCADE": "HUMAN_REQUIRED",
+    "RETRO-HEURISTIC-RPRM-FLAT-SIGNAL": "TARGETED",
+    "RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS": "TARGETED",
+    "RETRO-MATH-REPAIR-MODEL-CEILING": "NEW",
+    "RETRO-SC-ENERGY-GATE-DISCIPLINE": "NEW",
+    "RETRO-HF-SOPS-CREDENTIAL-INJECTION": "CLOSED_BY_EXP933"
+  },
+  "milestone_73_gates": {
+    "exp_943_scratchpad": "GATED on Exp 942 signed_improvement > 0 (math repair must show positive result with SOTA model before scratchpad variant is attempted)",
+    "exp_944_sc_energy": "GATED on prior_failures containing all 8 SC-energy experiments (exp506, exp509, exp533, exp711, exp725, exp772, exp787, exp939)"
+  },
+  "honest_verdict": "preflight_complete",
+  "status": "success",
+  "finished_at": "2026-04-26T18:55:55Z",
+  "schema": [
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "milestone",
+    "milestone_73_gates",
+    "open_retros",
+    "predecessor_criteria_met",
+    "predecessor_criteria_total",
+    "predecessor_milestone",
+    "predecessor_root_cause_detail",
+    "predecessor_root_cause_of_failures",
+    "preflight_version",
+    "retro_statuses",
+    "run_date",
+    "sc_energy_audit_complete",
+    "sc_energy_prior_experiment_count",
+    "sc_energy_prior_experiments",
+    "sota_model_available",
+    "sota_model_downloaded",
+    "sota_model_path",
+    "started_at",
+    "status",
+    "title"
+  ]
+}
