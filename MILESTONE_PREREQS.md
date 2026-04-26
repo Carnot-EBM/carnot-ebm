@@ -307,7 +307,7 @@ governance gates before any .67 experiment runs.*
 | RETRO-XILINX-TOOLS-UNAVAILABLE | Vivado/Yosys toolchain not in PATH on build host | open |
 | RETRO-SOTA-MODEL-DOWNLOAD | GGUFCacheResolver exists but Qwen3.6-35B-A3B-GGUF 404 (10th block) | open |
 | RETRO-HALLUSAE-AUC-BELOW-THRESHOLD | HalluSAE AUC=0.6144 < 0.65 threshold; TF-IDF proxy insufficient | open |
-| RETRO-INERTIA-SWEEPS-TARGET-MISSED | Inertia Ising 2x achieved vs 5x target | open |
+| ~~RETRO-INERTIA-SWEEPS-TARGET-MISSED~~ RETIRED by Exp 914 (pimi_no_improvement) | Inertia Ising 2x achieved vs 5x target | open |
 
 ### Closed in .66
 
@@ -392,7 +392,7 @@ retired_count: 14
 | RETRO-SVAMP-ZERO-AUC | open — SVAMP AUC=0.125 (Exp 872); architecture change required |
 | RETRO-XILINX-TOOLS-UNAVAILABLE | open — KV260 synthesis blocked; OSS-CAD-Suite not installed |
 | RETRO-SOTA-MODEL-DOWNLOAD | open — 11 code repair attempts failed; new path: Gemma4 transformers |
-| RETRO-INERTIA-SWEEPS-TARGET-MISSED | open — 2x achieved vs 5x target; root cause: parallel updates needed |
+| ~~RETRO-INERTIA-SWEEPS-TARGET-MISSED~~ RETIRED by Exp 914 (pimi_no_improvement) | open — 2x achieved vs 5x target; root cause: parallel updates needed |
 
 ### Retired This Milestone
 
@@ -524,7 +524,7 @@ governance gates before any .69 experiment runs.*
 | RETRO-MANIFEST-FULL-SCOPE | enforcement_wired=false — see ops/known-issues.md (11 consecutive milestones) |
 | RETRO-SVAMP-ZERO-AUC | open — Exp 893+896 will attempt estimation verifier approach |
 | RETRO-XILINX-TOOLS-UNAVAILABLE | open — requires human Vivado install; no .69 action |
-| RETRO-INERTIA-SWEEPS-TARGET-MISSED | OPEN (sweeps_reduction=4.33, target=5x; Exp 901 PIMI v4 will attempt) |
+| ~~RETRO-INERTIA-SWEEPS-TARGET-MISSED~~ RETIRED by Exp 914 (pimi_no_improvement) | OPEN (sweeps_reduction=4.33, target=5x; Exp 901 PIMI v4 will attempt) |
 
 ### Closed in .68
 
@@ -559,7 +559,7 @@ Open RETROs entering .70:
   - RETRO-MANIFEST-FULL-SCOPE: HUMAN_REQUIRED
   - RETRO-SVAMP-ZERO-AUC: TARGETED (Exp 907+908)
   - RETRO-XILINX-TOOLS-UNAVAILABLE: HUMAN_REQUIRED
-  - RETRO-INERTIA-SWEEPS-TARGET-MISSED: TARGETED (Exp 914)
+  - ~~RETRO-INERTIA-SWEEPS-TARGET-MISSED~~ RETIRED by Exp 914 (pimi_no_improvement): TARGETED (Exp 914)
 
 Gates:
   Exp 906 (code repair 50q): GATED on results/experiment_905_iterative_self_repair_v1.json

@@ -5762,3 +5762,17 @@ Traceback (most recent call last):
         ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'dict' object has no attribute 'lower'
 2026-04-26 05:28:52,820 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 05:28:52,884 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 05:28:52,884 [conductor] Running test suite (smart subset)...
+2026-04-26 05:28:58,263 [conductor] Pre-check: 81 passed, 3 warnings in 2.74s
+2026-04-26 05:28:58,370 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-26 05:28:58,370 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+2026-04-26 05:36:28,821 [conductor] Claude Code produced stable deliverable results/experiment_914_pimi_sparse_adjacency_final.json (7.5 min elapsed) — killing subagent early
+2026-04-26 05:36:28,867 [conductor] Changes:
+MILESTONE_PREREQS.md        |  8 ++++----
+ logs/conductor.log          |  6 ++++++
+ ops/exclusion_manifest.yaml | 14 ++++++++++++++
+ 3 files changed, 24 insertions(+), 4 deletions(-)
+2026-04-26 05:36:28,894 [conductor] DOGFOOD: Verification complete (total: 587 checks, 52 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 05:36:28,894 [conductor] Running test suite (smart subset)...
+2026-04-26 05:36:34,777 [conductor] Post-check: 81 passed, 3 warnings in 3.01s
