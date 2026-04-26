@@ -1,0 +1,70 @@
+{
+  "experiment": 923,
+  "title": "DRIFTProbeEnsemble \u2014 Per-Layer Ensemble Drift Probe (GSM8K)",
+  "run_date": "20260426",
+  "started_at": "2026-04-26T11:52:18Z",
+  "finished_at": "2026-04-26T11:53:07Z",
+  "duration_s": 48.927,
+  "status": "success",
+  "ood_auc_drift_ensemble": 0.5625,
+  "ood_auc_drift_baseline": 0.565,
+  "honest_verdict": "tier0i_no_improvement",
+  "inference_mode": "real_model",
+  "model_name": "Qwen/Qwen3.5-0.8B",
+  "probe_layers": [
+    -4,
+    -3,
+    -2,
+    -1
+  ],
+  "n_layer_pairs": 3,
+  "n_train_correct": 80,
+  "n_train_halluc": 80,
+  "n_eval_pairs": 20,
+  "ensemble_weights": [
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+  ],
+  "per_probe_coefs": [
+    [
+      [
+        0.0
+      ]
+    ],
+    [
+      [
+        0.0
+      ]
+    ],
+    [
+      [
+        0.034819853411396415
+      ]
+    ]
+  ],
+  "decision_class": "detect",
+  "schema": [
+    "decision_class",
+    "duration_s",
+    "ensemble_weights",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "inference_mode",
+    "model_name",
+    "n_eval_pairs",
+    "n_layer_pairs",
+    "n_train_correct",
+    "n_train_halluc",
+    "ood_auc_drift_baseline",
+    "ood_auc_drift_ensemble",
+    "per_probe_coefs",
+    "probe_layers",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "invariant_violations": []
+}
