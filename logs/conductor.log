@@ -5388,3 +5388,25 @@ logs/conductor.log                              | 15 +++++++++++++++
 2026-04-26 02:36:02,654 [conductor] Pushed to origin
 2026-04-26 02:36:02,655 [conductor] Running post-commit documentation reconciliation...
 2026-04-26 02:36:02,667 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='improvement_significant_gate_open', label='⚠️ Research Finding'
+2026-04-26 02:36:02,721 [conductor] Committed: [conductor] In-process docs for Exp 905: IterativeSelfRepair v1 — Execute-Feedba
+2026-04-26 02:36:04,274 [conductor] Pushed to origin
+2026-04-26 02:36:04,274 [conductor] Documentation reconciliation committed (in-process)
+2026-04-26 02:36:04,276 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 02:41:04,278 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 02:46:04,280 [conductor] Sleep complete — resuming
+2026-04-26 02:46:04,280 [conductor] --- Iteration 20 ---
+2026-04-26 02:46:04,283 [conductor] ============================================================
+2026-04-26 02:46:04,283 [conductor] RESEARCH STEP: Exp 906: Code Repair 50q Scale-Up — IterativeSelfRepair with Gemma4 (GPU)
+2026-04-26 02:46:04,283 [conductor] ============================================================
+2026-04-26 02:46:05,065 [conductor] Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2081, in research_step
+    ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/failure_ledger.py", line 231, in load_from_artifacts
+    verdict = data.get("honest_verdict", "")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/in_process_doc_reconcile.py", line 142, in map_status_label
+    v = (verdict or "").lower()
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2026-04-26 02:46:05,084 [conductor] Committing 2 dirty files as checkpoint (preserving work)
