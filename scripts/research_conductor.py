@@ -719,8 +719,14 @@ def load_research_tasks() -> list[dict]:
     """Load pending research tasks from research-roadmap.yaml.
 
     Falls back to an empty list if the file is missing or malformed.
-    Each YAML task is converted to the dict format the conductor expects:
-      {"id": str, "deliverable": str, "title": str, "prompt": str}
+    Each YAML task is preserved as-is so downstream consumers see every
+    field the planner emitted — `prior_failures` (failure-ledger
+    discipline), `gated_on` (deliverable-gating), `max_turns`
+    (per-task budget override), `depends_on` (cross-task ordering), and
+    `milestone` (archive scope) all need to flow through. The
+    historical cherry-pick that kept only id/deliverable/title/prompt
+    silently disabled the failure-ledger pre-launch check (which
+    queries `task["prior_failures"]`) — fixed 2026-04-26.
     """
     if not ROADMAP_FILE.exists():
         logger.warning("research-roadmap.yaml not found — no tasks to run")
@@ -729,15 +735,19 @@ def load_research_tasks() -> list[dict]:
         with open(ROADMAP_FILE) as f:
             data = yaml.safe_load(f)
         tasks = data.get("tasks", [])
-        return [
-            {
-                "id": t["id"],
-                "deliverable": t.get("deliverable", ""),
-                "title": t["title"],
-                "prompt": t["prompt"],
-            }
-            for t in tasks
-        ]
+        # Pass every YAML field through. The conductor's required fields
+        # (id, title, prompt) are still validated up-front via the bare
+        # lookups in pick_next_task / research_step.
+        result: list[dict] = []
+        for t in tasks:
+            if "id" not in t or "title" not in t or "prompt" not in t:
+                logger.warning(
+                    "Skipping malformed task (missing id/title/prompt): %s",
+                    t.get("id") or t.get("title") or "<unknown>",
+                )
+                continue
+            result.append(dict(t))  # shallow copy preserves all fields
+        return result
     except Exception as e:
         logger.error("Failed to load research-roadmap.yaml: %s", e)
         return []
