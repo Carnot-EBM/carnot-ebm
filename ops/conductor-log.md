@@ -2823,3 +2823,4 @@ python/ |
 | 2026-04-26 08:07 UTC | Exp 909: Lagrange Forgetting Curve — FR-11 Tier 1  | OK | 81 passed, 3 warnings in 2.86s |
 | 2026-04-26 08:23 UTC | Exp 910: KAN Tier 4 Seed — AutoKnots Adaptive Spli | OK | 81 passed, 3 warnings in 2.89s |
 | 2026-04-26 08:44 UTC | Exp 911: DRIFTProbe Tier 0i — Multi-Layer Hidden-S | OK | 81 passed, 3 warnings in 2.82s |
+| 2026-04-26 09:02 UTC | Exp 912: DraftConditioned Verifier Tier 2.8 — Stru | OK | 81 passed, 3 warnings in 2.93s |
