@@ -5426,3 +5426,25 @@ logs/conductor.log | 6 ++++++
 2026-04-26 03:20:50,143 [conductor] Pushed to origin
 2026-04-26 03:20:50,143 [conductor] Running post-commit documentation reconciliation...
 2026-04-26 03:20:50,153 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='strong_improvement_code_repair_milestone_achieved', label='⚠️ Research Finding'
+2026-04-26 03:20:50,210 [conductor] Committed: [conductor] In-process docs for Exp 906: Code Repair 50q Scale-Up — IterativeSel
+2026-04-26 03:20:51,814 [conductor] Pushed to origin
+2026-04-26 03:20:51,814 [conductor] Documentation reconciliation committed (in-process)
+2026-04-26 03:20:51,818 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 03:25:51,820 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 03:30:51,823 [conductor] Sleep complete — resuming
+2026-04-26 03:30:51,823 [conductor] --- Iteration 21 ---
+2026-04-26 03:30:51,825 [conductor] ============================================================
+2026-04-26 03:30:51,825 [conductor] RESEARCH STEP: Exp 907: SVAMP Root Cause v2 — Confirm FoVer Labeling Mismatch (CPU)
+2026-04-26 03:30:51,825 [conductor] ============================================================
+2026-04-26 03:30:52,423 [conductor] Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2081, in research_step
+    ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/failure_ledger.py", line 231, in load_from_artifacts
+    verdict = data.get("honest_verdict", "")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/in_process_doc_reconcile.py", line 142, in map_status_label
+    v = (verdict or "").lower()
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2026-04-26 03:30:52,441 [conductor] Committing 2 dirty files as checkpoint (preserving work)
