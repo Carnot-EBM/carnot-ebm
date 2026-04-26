@@ -2870,3 +2870,4 @@ python/ |
 | 2026-04-26 16:40 UTC | Exp 940: Milestone 2026.04.72 Retrospective (CPU) | OK | Deliverable already exists in repo |
 | 2026-04-26 17:05 UTC | Plan milestone 2026.04.73 | OK | 11 tasks proposed |
 | 2026-04-26 17:25 UTC | Milestone 2026.04.73 activated | OK | 11 tasks queued |
+| 2026-04-26 18:48 UTC | Exp 941: Pre-flight v22 — .72 Audit + SOTA Model D | SKIP | Pre-tests failing, self-heal failed:  |
