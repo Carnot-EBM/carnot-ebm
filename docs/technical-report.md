@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 916 Experiments Across 76 Research Milestones
+## A Technical Report on 928 Experiments Across 77 Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-26
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **916
-experiments across 76 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **928
+experiments across 77 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -397,6 +397,30 @@ corpus (RETRO-LAGRANGE-ENTROPY-DEGENERATE). RETRO-INERTIA-SWEEPS-TARGET-MISSED
 closed via retirement (PIMI sparse adjacency final no-improvement, retire
 verdict). RETRO-MANIFEST-FULL-SCOPE formally escalated to human intervention
 required (11th consecutive milestone unapplied). Three retros open entering .71.
+
+Milestone 2026.04.71 (the 77th) extended the record to **928 experiments**,
+but met only 2 of 12 success criteria in 0.82 wall minutes. The dominant
+failure mode was the conductor's rerun-discipline gate rejecting 9 of 11
+substantive experiments because the planner-generated roadmap YAML lacked
+`prior_failures:` entries for tasks with prior failure history. This is the
+same gate-discipline the project mandated to prevent doomed reruns — it
+worked correctly; the planner did not populate the required fields. Two
+substantive experiments ran: **Exp 918** (Lagrange multi-constraint corpus)
+confirmed the RETRO-LAGRANGE-ENTROPY-DEGENERATE root cause — the
+single-constraint toy data was the failure cause, not the algorithm; the
+eight-constraint heterogeneous corpus produced non-degenerate entropy
+(improvement=0.018 > 0, verdict: `marginal_improvement`). **Exp 923**
+(DRIFTProbe ensemble, three uniformly-weighted probes) performed worse than
+the single-probe baseline (AUC 0.5625 vs 0.565) — uniform weighting diluted
+the two zero-coefficient probes and the one informative probe equally;
+learned ensemble weights are required. **Exp 924** (R-PRM Tier 2.9 step
+reward via heuristic inference) produced 0.0 AUC delta — heuristic step
+scoring cannot distinguish correct from incorrect reasoning steps; real-model
+inference is required for genuine step-level signal. Primary process finding:
+the planner must consult `research-complete.yaml` before generating any task
+with prior failure history and must include a well-formed `prior_failures:`
+entry in the YAML or the conductor will block the experiment before any work
+runs.
 
 ---
 
