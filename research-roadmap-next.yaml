@@ -72,13 +72,13 @@ tasks:
          Exp 914 (PIMI sparse final): ABORTS if ops/exclusion_manifest.yaml contains
            experiment_scope matching "iCE40 PIMI research"
     7. Build artifact:
-       {
+       (
          milestone: "2026.04.70",
          preflight_version: 19,
          zero_run_root_cause: "yaml_key_error_title",
          n_exps_run_in_69: 0,
          open_retros: [list],
-         retro_statuses: {dict},
+         retro_statuses: {dict),
          enforcement_wired: false,
          escalation_written: true,
          honest_verdict: "preflight_complete"
@@ -150,16 +150,16 @@ tasks:
            for i in range(self.max_retries + 1):
              exec_result = self._sandbox_exec(response, test_cases)
              score = self.energy.score(response)
-             attempts.append({"attempt": i, "response": response,
+             attempts.append(("attempt": i, "response": response,
                                "exec_passed": exec_result.passed,
                                "exec_error": exec_result.error,
-                               "energy_score": score})
+                               "energy_score": score))
              if exec_result.passed:
                break
              if i < self.max_retries:
                correction_prompt = (
-                 f"The following code had an error:\n{response}\n\n"
-                 f"Error traceback:\n{exec_result.error}\n\n"
+                 f"The following code had an error:\n(response)\n\n"
+                 f"Error traceback:\n(exec_result.error)\n\n"
                  f"Fix the code to pass the tests.")
                response = self.llm.generate(correction_prompt)
            best = min(attempts, key=lambda a: a["energy_score"])
@@ -176,8 +176,8 @@ tasks:
                                      "results/experiment_905_iterative_self_repair_v1.json",
                                      requires_gpu=True)
        b. tmpl.setup()
-       c. MODEL_SPECS = [{"name": "Qwen3.6-35B-A3B-GGUF",
-                           "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "gpu": 0}]
+       c. MODEL_SPECS = [("name": "Qwen3.6-35B-A3B-GGUF",
+                           "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "gpu": 0)]
        d. gpu_status = tmpl.setup_gpu(MODEL_SPECS)
        e. Load 25 HumanEval questions from datasets or construct representative ones
           covering: basic functions, string manipulation, list operations, arithmetic.
@@ -237,8 +237,8 @@ tasks:
        If signed_improvement <= 0: skip (write artifact with gate_blocked=True).
     3. tmpl = ExperimentTemplate(906, ..., requires_gpu=True). tmpl.setup().
     4. MODEL_SPECS = [
-         {"name": "Qwen3.6-35B-A3B-GGUF", "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "gpu": 0},
-         {"name": "gemma-4-31B-it-GGUF",   "hf_id": "unsloth/gemma-4-31B-it-GGUF",   "gpu": 0}
+         ("name": "Qwen3.6-35B-A3B-GGUF", "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "gpu": 0),
+         ("name": "gemma-4-31B-it-GGUF",   "hf_id": "unsloth/gemma-4-31B-it-GGUF",   "gpu": 0)
        ]
     5. Load 50 HumanEval questions.
     6. Run IterativeSelfRepair(max_retries=3) for both models.
@@ -555,7 +555,7 @@ tasks:
          __init__(self, model_runner, layers: list[int] = None, n_drift_pairs: int = 3):
            layers default to last 4 layers of model
          extract_drift_signature(self, hidden_states: dict[int, np.ndarray]) -> np.ndarray:
-           For each adjacent layer pair (L, L+1): compute cosine drift = 1 - cosine_sim(h_L, h_{L+1})
+           For each adjacent layer pair (L, L+1): compute cosine drift = 1 - cosine_sim(h_L, h_(L+1))
            Concatenate: drift vector of shape [n_drift_pairs]
            Return drift_signature
          fit(self, correct_examples, hallucinated_examples) -> None:
@@ -567,7 +567,7 @@ tasks:
        SCENARIO-TIER0-005 (drift probe AUC > 0.65 on GSM8K hallucination pairs).
     4. Create scripts/experiment_911_drift_probe_tier0i.py:
        a. tmpl = ExperimentTemplate(911, ..., requires_gpu=True). tmpl.setup().
-       b. MODEL_SPECS = [{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]
+       b. MODEL_SPECS = [("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]
           (small model for hidden state extraction; full SOTA for expensive experiments)
        c. Generate 100 GSM8K (question, correct_response, hallucinated_response) triples.
           Hallucinated: inject wrong numerical answer while preserving reasoning style.
@@ -628,7 +628,7 @@ tasks:
            - "has_numeric_answer": re.search(r'\b\d+\b', draft_text[-100:]) is not None
            - "has_reasoning_steps": len(draft_text.split('\n')) > 3
            - "final_number": int(re.findall(r'\b\d+\b', draft_text)[-1]) if digits else None
-           Return: [{"type": constraint_type, "value": value}, ...]
+           Return: [("type": constraint_type, "value": value), ...]
          verify_with_draft(self, question: str, full_response: str) -> VerificationResult:
            1. Generate draft: draft_text = draft_runner.generate(question, max_tokens=50)
            2. constraints = extract_structural_constraints(draft_text)
@@ -638,7 +638,7 @@ tasks:
        SCENARIO-TIER28-001 (draft structural constraints improve Ising solve quality).
     4. Create scripts/experiment_912_draft_conditioned_tier28.py:
        a. tmpl = ExperimentTemplate(912, ..., requires_gpu=True). tmpl.setup().
-       b. MODEL_SPECS = [{"name": "Qwen3.5-0.8B", ..., "gpu": 0}] (draft model)
+       b. MODEL_SPECS = [("name": "Qwen3.5-0.8B", ..., "gpu": 0)] (draft model)
        c. Load 25 GSM8K questions. Generate full responses with Qwen3.5-0.8B.
        d. Baseline: score each response with Ising (no draft constraints).
        e. Tier 2.8: score each response with DraftConditionedVerifier.
@@ -793,7 +793,7 @@ tasks:
           "pimi_improved_below_5x" if sweeps_reduction > 4.33 (incremental improvement)
           "pimi_no_improvement" if sweeps_reduction <= 4.33 (retire scope)
     5. RETIREMENT LOGIC (MANDATORY):
-       If honest_verdict in {"pimi_improved_below_5x", "pimi_no_improvement"}
+       If honest_verdict in ("pimi_improved_below_5x", "pimi_no_improvement")
        AND retire_if_same_verdict triggered:
          a. Add to ops/exclusion_manifest.yaml:
             - experiment_scope: "iCE40 PIMI research (hardware/kv260/ising_pimi_*.v + python/carnot/samplers/*pimi*.py)"
@@ -848,7 +848,7 @@ tasks:
        If svamp_auc > 0.5: prepare EstimationVerifier model card too.
     5. Confirm gitea mirror is configured (check git remote -v for gitea URL).
     6. Simulate HF publish (write artifact describing what would be published):
-       {
+       (
          models_to_publish: ["vjepa-v2", ...],
          vjepa_ood_auc: 0.9211,
          estimation_verifier_published: bool,
@@ -856,7 +856,7 @@ tasks:
          gitea_mirror_confirmed: bool,
          model_cards_written: list,
          honest_verdict: str
-       }
+       )
        NOTE: If HF CLI not authenticated, set honest_verdict="publish_ready_pending_auth"
        and document what commands to run manually.
     7. Update ops/status.md published models section with new entries.
@@ -889,11 +889,11 @@ tasks:
     4. svamp_retro_closed: results/experiment_908_*.json honest_verdict == "svamp_auc_improved"
     5. lagrange_forgetting_works: results/experiment_909_*.json signed_entropy_improvement > 0
     6. kan_tier4_seeded: results/experiment_910_*.json honest_verdict == "tier4_seed_viable"
-    7. drift_probe_viable: results/experiment_911_*.json honest_verdict in {"tier0i_viable", "tier0i_marginal"}
+    7. drift_probe_viable: results/experiment_911_*.json honest_verdict in ("tier0i_viable", "tier0i_marginal")
     8. tier28_viable: results/experiment_912_*.json honest_verdict == "tier28_viable"
     9. dualgpu_wired: results/experiment_913_*.json honest_verdict contains "dualgpu_wired"
     10. pimi_retro_resolved: results/experiment_914_*.json honest_verdict in
-        {"pimi_target_met", "pimi_no_improvement"} (either outcome resolves retro)
+        ("pimi_target_met", "pimi_no_improvement") (either outcome resolves retro)
     11. hf_published: results/experiment_915_*.json honest_verdict not "skipped"
     12. manifest_escalated: results/experiment_904_*.json escalation_written == True
 
@@ -928,11 +928,11 @@ tasks:
        - "What's Working" section: add all confirmed capabilities from .70
        - "What's Next" section: update with .71 priorities
     8. Build artifact:
-       {
+       (
          milestone: "2026.04.70",
          n_criteria_met: int,
          n_criteria_total: 12,
-         criteria_results: {dict of criterion_name: bool},
+         criteria_results: {dict of criterion_name: bool),
          wall_time_minutes: float,
          open_retros_entering_71: list,
          closed_retros_this_milestone: list,

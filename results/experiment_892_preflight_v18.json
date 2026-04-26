@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.preflight.v18",
+  "experiment": 892,
+  "title": "Milestone 2026.04.69 Pre-flight v18",
+  "milestone": "2026.04.69",
+  "preflight_version": 18,
+  "run_date": "20260426",
+  "started_at": "2026-04-26T02:52:25.662002+00:00",
+  "finished_at": "2026-04-26T02:52:25.662464+00:00",
+  "duration_s": 0.0,
+  "status": "success",
+  "pimi_retired": false,
+  "pimi_verdict": "pimi_improved_below_5x",
+  "pimi_sweeps_reduction": 4.33,
+  "gguf_retro_status": "closed_download_failed_retire",
+  "enforcement_wired": false,
+  "enforcement_note": "ExclusionManifestEnforcer has no pre_launch_check() method. Conductor uses carnot.pipeline.exclusion_manifest (JSON) not the YAML enforcer. No .claude/hooks/ directory. MILESTONE_PREREQS.md not parsed as a runtime gate. Cannot wire without modifying scripts/research_conductor.py.",
+  "open_retros": [
+    "RETRO-MANIFEST-FULL-SCOPE",
+    "RETRO-SVAMP-ZERO-AUC",
+    "RETRO-XILINX-TOOLS-UNAVAILABLE",
+    "RETRO-INERTIA-SWEEPS-TARGET-MISSED"
+  ],
+  "retired_retros": [
+    "RETRO-HALLUSAE-AUC-BELOW-THRESHOLD",
+    "RETRO-JEPA-OOD",
+    "RETRO-SOTA-MODEL-DOWNLOAD"
+  ],
+  "open_retros_count": 4,
+  "retros_closed_in_68": [
+    "RETRO-HALLUSAE-AUC-BELOW-THRESHOLD",
+    "RETRO-JEPA-OOD",
+    "RETRO-SOTA-MODEL-DOWNLOAD"
+  ],
+  "retros_closed_count_in_68": 3,
+  "gates": {
+    "exp895_code_repair_50q": {
+      "gate_file": "results/experiment_881_code_repair_v8_gemma4_live.json",
+      "gate_condition": "signed_improvement > 0"
+    },
+    "exp896_svamp_estimator": {
+      "gate_file": "results/experiment_893_svamp_root_cause.json",
+      "gate_condition": "labeling_mismatch_confirmed=True"
+    },
+    "exp901_pimi_v4": {
+      "gate_file": "results/experiment_889_ice40_pimi_v3_parallel.json",
+      "gate_condition": "honest_verdict != pimi_retired",
+      "abort_if": "honest_verdict == pimi_retired",
+      "current_status": "OPEN \u2014 4.33x reduction achieved, target 5x; Exp 901 may proceed"
+    }
+  },
+  "exp891_n_criteria_met": 8,
+  "exp891_wall_time_minutes": 11.6676,
+  "honest_verdict": "preflight_complete",
+  "notes": "PIMI not retired (4.33x < 5x target; pimi_improved_below_5x verdict). RETRO-INERTIA-SWEEPS-TARGET-MISSED remains open for Exp 901 v4 attempt. RETRO-MANIFEST-FULL-SCOPE enforcement cannot be wired without modifying scripts/research_conductor.py; documented in ops/known-issues.md. 4 retros open entering .69 (Exp 891 JSON underreported \u2014 showed 1, correct count is 4)."
+}
