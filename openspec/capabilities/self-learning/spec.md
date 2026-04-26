@@ -1664,3 +1664,53 @@ new knot count so the model fine-tunes from a meaningful initialisation.
 **And** the honest_verdict is "tier4_viable_seed"
 
 **Spec traces:** REQ-FR11-008
+
+---
+
+## REQ-SELF-008: KAN AutoKnots Structural Adaptation via Activation Magnitude
+
+**Given** a trained KANModel and a batch of input activations
+**When** AutoKnotsRefiner.refine_once() is called
+**Then** splines with mean activation magnitude > high_threshold gain one knot
+         (if below max_knots_per_spline)
+**And** splines with mean activation magnitude < low_threshold lose one knot
+         (if above min_knots_per_spline)
+**And** control points are linearly resampled onto the new knot count so the
+         model can fine-tune from a meaningful initialisation
+
+### REQ-SELF-008 Sub-requirements
+
+- REQ-SELF-008-1: `AutoKnotsRefiner.__init__` SHALL accept `kan_model`,
+  `high_activation_threshold` (default 0.8), `low_activation_threshold`
+  (default 0.1), `max_knots_per_spline` (default 32),
+  `min_knots_per_spline` (default 4).
+- REQ-SELF-008-2: `AutoKnotsRefiner.refine_once(activation_batch)` SHALL
+  iterate over all edge splines and bias splines, mutate the model in-place,
+  and return a `RefinementResult(n_added, n_removed, splines_modified)`.
+- REQ-SELF-008-3: `AutoKnotsRefiner.multi_round_refine(activation_batch,
+  rounds=3)` SHALL return a list of `RefinementResult`, one per round.
+- REQ-SELF-008-4: After refinement, `BSpline.num_knots` MUST remain within
+  [min_knots_per_spline, max_knots_per_spline].
+- REQ-SELF-008-5: Resized control points MUST be linearly interpolated from
+  the original control points (no random reinitialisation).
+
+**Acceptance criteria (Exp 910):**
+- AutoKnotsRefiner on 50 synthetic GSM8K embeddings modifies at least one spline.
+- honest_verdict is "tier4_seed_viable" if post_refinement_auc > baseline_auc,
+  "tier4_seed_no_improvement" otherwise.
+
+**Spec traces:** Exp 910, FR-11 Tier 4
+
+---
+
+## SCENARIO-SELF-008: AutoKnots Adds Knots to High-Activation, Removes from Dormant
+
+**Given** a KANModel with num_knots=8 and an activation batch
+**When** AutoKnotsRefiner.refine_once() is called with high_activation_threshold=0.5
+         and low_activation_threshold=0.05
+**Then** at least one spline with mean |activation| > 0.5 gains a knot
+**And** at least one spline with mean |activation| < 0.05 loses a knot (if any exist
+         above min_knots)
+**And** the total knot count change equals (n_added - n_removed)
+
+**Spec traces:** REQ-SELF-008
