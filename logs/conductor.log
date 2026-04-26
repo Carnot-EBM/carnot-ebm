@@ -6488,3 +6488,24 @@ logs/conductor.log  | 13 +++++++++++++
 2026-04-26 11:13:40,770 [conductor] RESEARCH STEP: Exp 935: FR-11 Tier 2 Code Domain Memory — CaseMemory for Code Repair Patterns (CPU)
 2026-04-26 11:13:40,770 [conductor] ============================================================
 2026-04-26 11:13:41,448 [conductor] Committing 4 dirty files as checkpoint (preserving work)
+2026-04-26 11:13:41,529 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 11:13:41,529 [conductor] Running test suite (smart subset)...
+2026-04-26 11:13:47,407 [conductor] Pre-check: 95 passed, 3 warnings in 2.95s
+2026-04-26 11:13:47,583 [conductor] Injected 139 symbol signatures from 4 files (AST outlines)
+2026-04-26 11:13:47,583 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+33/33 tests pass. The coverage failure is project-wide (pre-existing code not covered by any test), not from our new code.
+
+**Summary:** Exp 935 delivered:
+
+- **`scripts/experiment_935_fr11_tier2_code_domain.py`** — loads 17 repaired-problem error patterns from Exp 905, populates `ConstraintTemplateLibrary` with 3 code-domain templates (easy/medium/hard_fix), persists to disk, reloads cross-session, and replays on HumanEval/25-34
+- **`results/experiment_935_fr11_tier2_code_domain.json`** — `honest_verdict = tier2_code_memory_works`, 3 templates added, 10/10 replay matches, persistence verified
+- **`tests/python/test_experiment_935_fr11_tier2_code_domain.py`** — 33 tests, all green, every test traces to REQ-LEARN-060 or SCENARIO-LEARN-104
+- **`openspec/capabilities/self-learning/spec.md`** — REQ-LEARN-060 and SCENARIO-LEARN-104 appended
+2026-04-26 11:18:50,060 [conductor] Claude Code completed (exit 0)
+2026-04-26 11:18:50,076 [conductor] Changes:
+logs/conductor.log                          | 14 +++++++
+ openspec/capabilities/self-learning/spec.md | 59 +++++++++++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
+2026-04-26 11:18:50,100 [conductor] DOGFOOD: Verification complete (total: 599 checks, 57 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 11:18:50,101 [conductor] Running test suite (smart subset)...
+2026-04-26 11:18:55,889 [conductor] Post-check: 95 passed, 3 warnings in 2.94s

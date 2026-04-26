@@ -1714,3 +1714,62 @@ new knot count so the model fine-tunes from a meaningful initialisation.
 **And** the total knot count change equals (n_added - n_removed)
 
 **Spec traces:** REQ-SELF-008
+
+---
+
+## REQ-LEARN-060: Tier 2 Code Domain CaseMemory MUST Accumulate Repair Patterns and Replay Cross-Session
+
+**Given** Exp 905 produced 17 repaired HumanEval problems with n_retries and
+         energy_score_best per problem
+**When** Session 1 loads those outcomes into ConstraintTemplateLibrary via
+         load_exp905_patterns() and session1_populate_library()
+**Then** at least 3 distinct code repair templates are added (one per retry-difficulty
+         category: easy_fix, medium_fix, hard_fix)
+**And** every added template is active for the source model immediately after Session 1
+**And** the library can be serialized to disk and reloaded with observation counts intact
+**And** Session 2 can replay active templates on at least 1 new problem (HumanEval/25-34)
+**And** honest_verdict is 'tier2_code_memory_works' when templates_replayed_in_s2 >= 1
+         and replay_improvement > 0
+
+### REQ-LEARN-060 Sub-requirements
+
+- REQ-LEARN-060-1: `load_exp905_patterns(source_path)` SHALL return only problems
+  where baseline_passed=False and repair_passed=True from the Exp 905 JSON.
+- REQ-LEARN-060-2: `session1_populate_library(patterns)` SHALL register exactly one
+  ConstraintTemplate per distinct error_category and observe_pattern() once per
+  problem of that category.
+- REQ-LEARN-060-3: After session1_populate_library(), `library.get_active_templates(model_id)`
+  SHALL return a non-empty list for the source model.
+- REQ-LEARN-060-4: `library.to_dict()` / `ConstraintTemplateLibrary.from_dict()` round-trip
+  SHALL preserve all observation counts.
+- REQ-LEARN-060-5: `session2_replay_templates(library_dict, problem_ids)` SHALL return
+  templates_replayed_in_s2 >= 1 and replay_improvement > 0 when active templates exist.
+
+**Acceptance criteria (Exp 935):**
+- n_templates_added >= 3.
+- cross_session_persistence_verified = True.
+- templates_replayed_in_s2 >= 1.
+- honest_verdict is 'tier2_code_memory_works'.
+
+**Spec traces:** Exp 935, FR-11 Tier 2
+
+---
+
+## SCENARIO-LEARN-104: Code Repair Template Accumulation and Cross-Session Replay
+
+**Given** Exp 905 results containing 17 failed-then-repaired HumanEval problems
+**When** Session 1 of Exp 935 runs session1_populate_library() on those patterns
+**Then** three ConstraintTemplates are registered (easy_fix, medium_fix, hard_fix)
+**And** each template is immediately active for 'google/gemma-4-E4B-it'
+**And** library.to_dict() produces a dict with 3 observation entries
+
+**When** the dict is serialized to disk and reloaded via from_dict()
+**Then** the reloaded library has the same observation counts
+
+**When** Session 2 calls session2_replay_templates() on HumanEval/25-34
+**Then** templates_replayed_in_s2 equals len(REPLAY_PROBLEMS) because all templates
+         are active and code repair templates are advisory (always emit a hint)
+**And** replay_improvement > 0
+**And** honest_verdict is 'tier2_code_memory_works'
+
+**Spec traces:** REQ-LEARN-060

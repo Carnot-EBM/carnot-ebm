@@ -1,0 +1,199 @@
+{
+  "experiment": 935,
+  "title": "FR-11 Tier 2 Code Domain \u2014 Error Pattern Accumulation and Cross-Session Replay",
+  "run_date": "20260426",
+  "started_at": "2026-04-26T15:18:21Z",
+  "finished_at": "2026-04-26T15:18:21Z",
+  "duration_s": 0.0,
+  "status": "success",
+  "phase_timings_s": [
+    {
+      "name": "load_exp905_patterns",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "session1_populate",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "cross_session_persistence",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "session2_replay",
+      "elapsed_s": 0.0
+    }
+  ],
+  "n_patterns_loaded_from_exp905": 17,
+  "n_templates_added": 3,
+  "n_active_templates_session1": 3,
+  "cross_session_persistence_verified": true,
+  "session1": {
+    "library_observations": {
+      "observations": [
+        {
+          "pattern_key": "code_repair_easy_fix",
+          "model_id": "google/gemma-4-E4B-it",
+          "count": 7
+        },
+        {
+          "pattern_key": "code_repair_medium_fix",
+          "model_id": "google/gemma-4-E4B-it",
+          "count": 9
+        },
+        {
+          "pattern_key": "code_repair_hard_fix",
+          "model_id": "google/gemma-4-E4B-it",
+          "count": 1
+        }
+      ]
+    },
+    "categories_learned": [
+      "hard_fix",
+      "easy_fix",
+      "medium_fix"
+    ]
+  },
+  "session2": {
+    "templates_replayed_in_s2": 10,
+    "template_match_rate": 1.0,
+    "replay_improvement": 1.0,
+    "problem_results": [
+      {
+        "task_id": "HumanEval/25",
+        "template_matched": true,
+        "n_constraints_emitted": 3,
+        "constraint_types": [
+          "code_repair_easy_fix",
+          "code_repair_medium_fix",
+          "code_repair_hard_fix"
+        ]
+      },
+      {
+        "task_id": "HumanEval/26",
+        "template_matched": true,
+        "n_constraints_emitted": 3,
+        "constraint_types": [
+          "code_repair_easy_fix",
+          "code_repair_medium_fix",
+          "code_repair_hard_fix"
+        ]
+      },
+      {
+        "task_id": "HumanEval/27",
+        "template_matched": true,
+        "n_constraints_emitted": 3,
+        "constraint_types": [
+          "code_repair_easy_fix",
+          "code_repair_medium_fix",
+          "code_repair_hard_fix"
+        ]
+      },
+      {
+        "task_id": "HumanEval/28",
+        "template_matched": true,
+        "n_constraints_emitted": 3,
+        "constraint_types": [
+          "code_repair_easy_fix",
+          "code_repair_medium_fix",
+          "code_repair_hard_fix"
+        ]
+      },
+      {
+        "task_id": "HumanEval/29",
+        "template_matched": true,
+        "n_constraints_emitted": 3,
+        "constraint_types": [
+          "code_repair_easy_fix",
+          "code_repair_medium_fix",
+          "code_repair_hard_fix"
+        ]
+      },
+      {
+        "task_id": "HumanEval/30",
+        "template_matched": true,
+        "n_constraints_emitted": 3,
+        "constraint_types": [
+          "code_repair_easy_fix",
+          "code_repair_medium_fix",
+          "code_repair_hard_fix"
+        ]
+      },
+      {
+        "task_id": "HumanEval/31",
+        "template_matched": true,
+        "n_constraints_emitted": 3,
+        "constraint_types": [
+          "code_repair_easy_fix",
+          "code_repair_medium_fix",
+          "code_repair_hard_fix"
+        ]
+      },
+      {
+        "task_id": "HumanEval/32",
+        "template_matched": true,
+        "n_constraints_emitted": 3,
+        "constraint_types": [
+          "code_repair_easy_fix",
+          "code_repair_medium_fix",
+          "code_repair_hard_fix"
+        ]
+      },
+      {
+        "task_id": "HumanEval/33",
+        "template_matched": true,
+        "n_constraints_emitted": 3,
+        "constraint_types": [
+          "code_repair_easy_fix",
+          "code_repair_medium_fix",
+          "code_repair_hard_fix"
+        ]
+      },
+      {
+        "task_id": "HumanEval/34",
+        "template_matched": true,
+        "n_constraints_emitted": 3,
+        "constraint_types": [
+          "code_repair_easy_fix",
+          "code_repair_medium_fix",
+          "code_repair_hard_fix"
+        ]
+      }
+    ]
+  },
+  "honest_verdict": "tier2_code_memory_works",
+  "source_experiment": 905,
+  "source_model_id": "google/gemma-4-E4B-it",
+  "replay_problem_ids": [
+    "HumanEval/25",
+    "HumanEval/26",
+    "HumanEval/27",
+    "HumanEval/28",
+    "HumanEval/29",
+    "HumanEval/30",
+    "HumanEval/31",
+    "HumanEval/32",
+    "HumanEval/33",
+    "HumanEval/34"
+  ],
+  "schema": [
+    "cross_session_persistence_verified",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "n_active_templates_session1",
+    "n_patterns_loaded_from_exp905",
+    "n_templates_added",
+    "phase_timings_s",
+    "replay_problem_ids",
+    "run_date",
+    "session1",
+    "session2",
+    "source_experiment",
+    "source_model_id",
+    "started_at",
+    "status",
+    "title"
+  ]
+}
