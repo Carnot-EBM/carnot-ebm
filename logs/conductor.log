@@ -5286,3 +5286,36 @@ logs/conductor.log                        |  21 +++
 2026-04-26 01:43:21,266 [conductor] Pushed to origin
 2026-04-26 01:43:21,266 [conductor] Running post-commit documentation reconciliation...
 2026-04-26 01:43:21,276 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='7/11_criteria_met_retros_closed=3_RETROS_CLOSED=RETRO-MANIFEST-FULL-SCOPE_RETRO-SVAMP-ZERO-AUC_RETRO-INERTIA-SWEEPS-TARGET-MISSED_RETROS_OPEN=RETRO-XILINX-TOOLS-UNAVAILABLE_svamp_estimation_auc=1.0000_RETRO_SVAMP_CLOSED_drift_probe_not_viable_auc=0.50_kan_tier4_viable_loss_delta=-0.5554_lagrange_forgetting_precision_delta=0.5413_pimi_retired=True_sweeps_reduction=4.33x_RETRO_INERTIA_CLOSED_hf_published_confirmed=True_ipfs_mirror=absent_draft_conditioned_verifier_violations_eliminated=3_vjepa_streaming_BLOCKED_gpu_required_code_repair_50q_BLOCKED_gate_881_not_met_MANIFEST_ENFORCEMENT_ESCALATED_to_known-issues_conductor_wiring_deferred', label='⚠️ Blocked'
+2026-04-26 01:43:21,333 [conductor] Committed: [conductor] In-process docs for Exp 903: Milestone 2026.04.69 Operational Retros
+2026-04-26 01:43:23,090 [conductor] Pushed to origin
+2026-04-26 01:43:23,090 [conductor] Documentation reconciliation committed (in-process)
+2026-04-26 01:43:23,095 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 01:48:23,097 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 01:53:23,100 [conductor] Sleep complete — resuming
+2026-04-26 01:53:23,100 [conductor] --- Iteration 17 ---
+2026-04-26 01:53:23,102 [conductor] All 12 research tasks completed or exhausted. Nothing to do.
+2026-04-26 01:53:23,102 [conductor] All tasks in current milestone complete.
+2026-04-26 01:53:23,102 [conductor] Found research-roadmap-next.yaml — transitioning milestones
+2026-04-26 01:53:23,117 [conductor] Archiving milestone 2026.04.69 (VJEPA Streaming + SVAMP Root Cause + Self-Learning Tier 4 Seed) — 12 tasks
+2026-04-26 01:53:23,418 [conductor] Archived 12 tasks to research-complete.yaml
+2026-04-26 01:53:23,432 [conductor] Activating next roadmap: milestone 2026.04.70 (13 tasks)
+2026-04-26 01:53:24,928 [conductor] New milestone activated — will pick up tasks next iteration
+2026-04-26 01:53:24,928 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 01:58:24,930 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 02:03:24,932 [conductor] Sleep complete — resuming
+2026-04-26 02:03:24,933 [conductor] --- Iteration 18 ---
+2026-04-26 02:03:24,948 [conductor] ============================================================
+2026-04-26 02:03:24,948 [conductor] RESEARCH STEP: Exp 904: Pre-flight v19 — .69 Zero-Run Audit + RETRO Triage (CPU)
+2026-04-26 02:03:24,948 [conductor] ============================================================
+2026-04-26 02:03:25,647 [conductor] Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2081, in research_step
+    ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/failure_ledger.py", line 231, in load_from_artifacts
+    verdict = data.get("honest_verdict", "")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/in_process_doc_reconcile.py", line 142, in map_status_label
+    v = (verdict or "").lower()
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2026-04-26 02:03:25,663 [conductor] Committing 3 dirty files as checkpoint (preserving work)
