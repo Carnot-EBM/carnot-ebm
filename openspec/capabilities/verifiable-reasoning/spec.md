@@ -15957,6 +15957,19 @@ for this domain.
 
 **Spec traces:** REQ-VER-085, Exp 896
 
+### SCENARIO-VER-085a: EstimationVerifier Correctly Ranges 20 SVAMP Questions (Exp 908)
+
+**Given** an EstimationVerifier instance
+**And** 20 SVAMP single-step arithmetic word problems with known correct answers
+**And** a mixed response corpus: 15 correct responses, 5 wrong responses (orders-of-magnitude errors)
+**When** EstimationVerifier.verify() is called on all 20 (question, response) pairs
+**Then** violation_prob (0.0 if in_range else 1.0) discriminates correct from wrong responses
+**And** svamp_auc computed from (is_correct, 1-violation_prob) exceeds 0.5
+**And** signed_improvement vs FoVer baseline (0.125) is positive
+**And** honest_verdict is "svamp_auc_improved" when svamp_auc > 0.5
+
+**Spec traces:** REQ-VER-085, Exp 908
+
 
 ## REQ-TIER0-009: DRIFTProbe Hidden-State Representational Drift (Exp 899)
 

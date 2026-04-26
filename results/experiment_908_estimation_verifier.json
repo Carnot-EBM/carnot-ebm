@@ -1,0 +1,298 @@
+{
+  "experiment": 908,
+  "schema": "carnot-experiment-v1",
+  "title": "EstimationVerifier SVAMP AUC vs FoVer baseline",
+  "run_date": "2026-04-26T07:50:22.071674Z",
+  "started_at": "2026-04-26T07:50:22.071674Z",
+  "finished_at": "2026-04-26T07:50:22.547817Z",
+  "status": "success",
+  "spec": [
+    "REQ-VER-085",
+    "SCENARIO-VER-085a"
+  ],
+  "prior_failures": [
+    {
+      "experiment_id": "exp872",
+      "verdict": "vjepa_ood_collapsed",
+      "addressed_by": "EstimationVerifier replaces FoVer for single-step SVAMP; no CoT labeling required."
+    },
+    {
+      "experiment_id": "exp893",
+      "verdict": "never_ran_zero_run_milestone",
+      "addressed_by": "Exp 907 confirmed gate; Exp 908 runs the EstimationVerifier fix."
+    }
+  ],
+  "labeling_mismatch_confirmed": true,
+  "svamp_auc_fover_baseline": 0.125,
+  "svamp_auc_estimation": 0.9,
+  "signed_improvement": 0.775,
+  "honest_verdict": "svamp_auc_improved",
+  "n_questions": 20,
+  "n_correct_responses": 15,
+  "n_wrong_responses": 5,
+  "n_in_range": 12,
+  "n_out_of_range": 8,
+  "per_pair_results": [
+    {
+      "question": "A farmer has 15 chickens. He sells 6. How many remain?",
+      "response": "There are 9 chickens remaining.",
+      "operation_type": "unknown",
+      "plausible_range": [
+        0.0,
+        42.0
+      ],
+      "extracted_answer": 9.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "Maria has 8 oranges. She buys 5 more. How many does she have?",
+      "response": "Maria has 13 oranges.",
+      "operation_type": "add",
+      "plausible_range": [
+        5.0,
+        26.0
+      ],
+      "extracted_answer": 13.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "A box holds 24 crayons. Tom takes 9. How many are left?",
+      "response": "There are 15 crayons left in the box.",
+      "operation_type": "subtract",
+      "plausible_range": [
+        0.0,
+        24.0
+      ],
+      "extracted_answer": 15.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "There are 30 students. 12 go home early. How many stay?",
+      "response": "18 students stay.",
+      "operation_type": "unknown",
+      "plausible_range": [
+        0.0,
+        84.0
+      ],
+      "extracted_answer": 18.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "Jake earns $7 per hour. He works 4 hours. How much does he earn?",
+      "response": "Jake earns $28.",
+      "operation_type": "multiply",
+      "plausible_range": [
+        4.0,
+        49.0
+      ],
+      "extracted_answer": 28.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "A bag has 18 marbles. 6 are red. How many are not red?",
+      "response": "There are 12 marbles that are not red.",
+      "operation_type": "unknown",
+      "plausible_range": [
+        0.0,
+        48.0
+      ],
+      "extracted_answer": 12.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "Sara bakes 5 dozen cookies. She eats 4. How many remain?",
+      "response": "Sara has 56 cookies remaining.",
+      "operation_type": "unknown",
+      "plausible_range": [
+        0.0,
+        18.0
+      ],
+      "extracted_answer": 56.0,
+      "in_range": false,
+      "violation_prob": 1.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "A jar has 40 candies. Each child gets 8. How many children can be served?",
+      "response": "5 children can be served.",
+      "operation_type": "multiply",
+      "plausible_range": [
+        8.0,
+        1600.0
+      ],
+      "extracted_answer": 5.0,
+      "in_range": false,
+      "violation_prob": 1.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "Tim runs 3 miles each day. How far does he run in 5 days?",
+      "response": "Tim runs 15 miles in 5 days.",
+      "operation_type": "multiply",
+      "plausible_range": [
+        3.0,
+        25.0
+      ],
+      "extracted_answer": 5.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "A shelf has 22 books. 7 are borrowed. How many are left?",
+      "response": "There are 15 books left on the shelf.",
+      "operation_type": "subtract",
+      "plausible_range": [
+        0.0,
+        22.0
+      ],
+      "extracted_answer": 15.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "Lucy picks 14 apples. She gives away 5. How many does she keep?",
+      "response": "Lucy keeps 9 apples.",
+      "operation_type": "unknown",
+      "plausible_range": [
+        0.0,
+        38.0
+      ],
+      "extracted_answer": 9.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "There are 60 minutes in an hour. Half have passed. How many remain?",
+      "response": "30 minutes remain.",
+      "operation_type": "unknown",
+      "plausible_range": [
+        0.0,
+        120.0
+      ],
+      "extracted_answer": 30.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "A store has 50 shirts. 20 are sold. How many are in stock?",
+      "response": "There are 30 shirts still in stock.",
+      "operation_type": "unknown",
+      "plausible_range": [
+        0.0,
+        140.0
+      ],
+      "extracted_answer": 30.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "David has 36 stickers. He shares equally among 9 friends. How many each?",
+      "response": "Each friend gets 4 stickers.",
+      "operation_type": "multiply",
+      "plausible_range": [
+        9.0,
+        1296.0
+      ],
+      "extracted_answer": 4.0,
+      "in_range": false,
+      "violation_prob": 1.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "A tank holds 100 liters. 35 are used. How many remain?",
+      "response": "65 liters remain in the tank.",
+      "operation_type": "unknown",
+      "plausible_range": [
+        0.0,
+        270.0
+      ],
+      "extracted_answer": 65.0,
+      "in_range": true,
+      "violation_prob": 0.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "Emma has 12 pencils. She loses 3. How many does she have?",
+      "response": "Emma has 129 pencils.",
+      "operation_type": "unknown",
+      "plausible_range": [
+        0.0,
+        30.0
+      ],
+      "extracted_answer": 129.0,
+      "in_range": false,
+      "violation_prob": 1.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "A class has 25 pupils. 10 are absent. How many attend?",
+      "response": "150 pupils attend class.",
+      "operation_type": "unknown",
+      "plausible_range": [
+        0.0,
+        70.0
+      ],
+      "extracted_answer": 150.0,
+      "in_range": false,
+      "violation_prob": 1.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "A recipe needs 4 cups of flour. How much for triple the recipe?",
+      "response": "The recipe needs 1200 cups of flour.",
+      "operation_type": "unknown",
+      "plausible_range": [
+        0.0,
+        8.0
+      ],
+      "extracted_answer": 1200.0,
+      "in_range": false,
+      "violation_prob": 1.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "Ben has 9 dimes. Each is worth 10 cents. What is the total value in cents?",
+      "response": "The total value is 9000 cents.",
+      "operation_type": "add",
+      "plausible_range": [
+        9.0,
+        38.0
+      ],
+      "extracted_answer": 9000.0,
+      "in_range": false,
+      "violation_prob": 1.0,
+      "confidence": 1.0
+    },
+    {
+      "question": "A garden has 48 flowers in 6 equal rows. How many per row?",
+      "response": "There are 4800 flowers per row.",
+      "operation_type": "multiply",
+      "plausible_range": [
+        6.0,
+        2304.0
+      ],
+      "extracted_answer": 4800.0,
+      "in_range": false,
+      "violation_prob": 1.0,
+      "confidence": 1.0
+    }
+  ],
+  "duration_s": 0.476
+}
