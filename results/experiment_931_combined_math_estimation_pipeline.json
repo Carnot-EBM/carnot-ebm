@@ -1,0 +1,24 @@
+{
+  "experiment": 931,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-26",
+  "started_at": "2026-04-26T14:22:08.319236+00:00",
+  "finished_at": "2026-04-26T14:22:08.319236+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 931: Combined Math+Estimation Pipeline \u2014 Wire EstimationVerifier with Math Repair (CPU, GATED on Exp 930 signed_improvement > 0)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp930-math-iterative-self-repair-v1.signed_improvement (actual=0.0 > expected=0.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp930-math-iterative-self-repair-v1",
+      "artifact_field": "signed_improvement",
+      "op": ">",
+      "expected": 0.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 > expected=0.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
