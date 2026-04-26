@@ -2805,3 +2805,4 @@ python/ |
 | 2026-04-26 03:09 UTC | Exp 893: SVAMP Root Cause Deep Diagnosis (CPU) | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-26 03:19 UTC | Exp 893: SVAMP Root Cause Deep Diagnosis (CPU) | OK | Deliverable already exists in repo |
 | 2026-04-26 03:25 UTC | Exp 894: VJEPA Live Streaming Filter — Generation- | OK | 81 passed, 3 warnings in 2.84s |
+| 2026-04-26 03:37 UTC | Exp 895: Code Repair 50-Question Scale-Up — Gemma4 | OK | 81 passed, 3 warnings in 2.75s |

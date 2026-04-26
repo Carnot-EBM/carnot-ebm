@@ -4862,3 +4862,25 @@ logs/conductor.log | 13 +++++++++++++
 2026-04-25 23:37:43,880 [conductor] Pushed to origin
 2026-04-25 23:37:43,880 [conductor] Running post-commit documentation reconciliation...
 2026-04-25 23:37:43,889 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='blocked_gate_881_not_met', label='⚠️ Blocked'
+2026-04-25 23:37:43,941 [conductor] Committed: [conductor] In-process docs for Exp 895: Code Repair 50-Question Scale-Up — Gemm
+2026-04-25 23:37:45,499 [conductor] Pushed to origin
+2026-04-25 23:37:45,499 [conductor] Documentation reconciliation committed (in-process)
+2026-04-25 23:37:45,503 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-25 23:42:45,505 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-25 23:47:45,507 [conductor] Sleep complete — resuming
+2026-04-25 23:47:45,507 [conductor] --- Iteration 9 ---
+2026-04-25 23:47:45,510 [conductor] ============================================================
+2026-04-25 23:47:45,510 [conductor] RESEARCH STEP: Exp 896: SVAMP EstimationVerifier + VJEPA v3 SVAMP Retrain (GPU)
+2026-04-25 23:47:45,510 [conductor] ============================================================
+2026-04-25 23:47:46,232 [conductor] Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2081, in research_step
+    ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/failure_ledger.py", line 231, in load_from_artifacts
+    verdict = data.get("honest_verdict", "")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/in_process_doc_reconcile.py", line 142, in map_status_label
+    v = (verdict or "").lower()
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2026-04-25 23:47:46,252 [conductor] Committing 2 dirty files as checkpoint (preserving work)
