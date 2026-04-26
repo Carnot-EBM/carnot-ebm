@@ -4290,3 +4290,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 911: DRIFTProbe Tier 0i — Multi-Layer Hidden-State Hallucination Probe (GPU) (⚠️ Research Finding) — honest_verdict=tier0i_marginal; results/experiment_911_drift_probe_tier0i.json
 - 2026-04-26: Exp 912: DraftConditioned Verifier Tier 2.8 — Structural Constraint Injection (GPU) (✅ Complete) — honest_verdict=tier28_viable; results/experiment_912_draft_conditioned_tier28.json
 - 2026-04-26: Exp 913: DualGPU Production Wiring — Wire 1.979x Validated Speedup to Pipeline (GPU) (⚠️ Research Finding) — honest_verdict=dualgpu_wired_partial_speedup; results/experiment_913_dualgpu_production_wiring.json
+- 2026-04-26: Exp 914: PIMI Sparse Adjacency Final — 5x Sweep Reduction Target (CPU/FPGA-Sim) (⚠️ Research Finding) — honest_verdict=pimi_no_improvement; results/experiment_914_pimi_sparse_adjacency_final.json
