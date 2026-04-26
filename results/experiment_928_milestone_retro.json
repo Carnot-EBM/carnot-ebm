@@ -1,0 +1,175 @@
+{
+  "experiment": 928,
+  "title": "Milestone 2026.04.71 Retrospective",
+  "run_date": "20260426",
+  "started_at": "2026-04-26T12:48:53Z",
+  "finished_at": "2026-04-26T12:49:51Z",
+  "duration_s": 58.0,
+  "status": "success",
+  "milestone": "2026.04.71",
+  "n_criteria_met": 2,
+  "n_criteria_total": 12,
+  "criteria_results": {
+    "lagrange_entropy_validated": true,
+    "math_repair_working": false,
+    "combined_pipeline_viable": false,
+    "dualgpu_throughput_confirmed": false,
+    "hf_published": false,
+    "drift_probe_viable": false,
+    "rppm_tier29_viable": false,
+    "kan_tier4_real_data": false,
+    "tier2_code_memory_works": false,
+    "tier28_wired": false,
+    "manifest_escalated": false,
+    "retro_complete": true
+  },
+  "criteria_details": {
+    "lagrange_entropy_validated": {
+      "experiment": 918,
+      "verdict": "marginal_improvement",
+      "measured_value": "signed_entropy_improvement=0.01799",
+      "threshold": "> 0",
+      "passed": true,
+      "note": "Multi-constraint corpus fixed the degenerate p=1.0 case from .70. Marginal but real improvement confirmed."
+    },
+    "math_repair_working": {
+      "experiment": 919,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": null,
+      "threshold": "signed_improvement > 0",
+      "passed": false,
+      "note": "Blocked by conductor pre-gate: rerun-discipline check failed. Prior failures not declared in roadmap YAML."
+    },
+    "combined_pipeline_viable": {
+      "experiment": 920,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": null,
+      "threshold": "combined_accuracy > baseline_accuracy",
+      "passed": false,
+      "note": "Blocked by conductor pre-gate. Depends on Exp 919 which was itself blocked."
+    },
+    "dualgpu_throughput_confirmed": {
+      "experiment": 921,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": null,
+      "threshold": "honest_verdict contains 'confirmed'",
+      "passed": false,
+      "note": "Blocked by conductor pre-gate. DualGPU throughput benchmark did not run."
+    },
+    "hf_published": {
+      "experiment": 922,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": null,
+      "threshold": "honest_verdict != 'skipped'",
+      "passed": false,
+      "note": "Blocked by conductor pre-gate. HF publish did not execute. SOPS credential injection still unresolved."
+    },
+    "drift_probe_viable": {
+      "experiment": 923,
+      "verdict": "tier0i_no_improvement",
+      "measured_value": "ood_auc_drift_ensemble=0.5625 vs baseline=0.565",
+      "threshold": "honest_verdict in ('tier0i_viable', 'tier0i_improved_marginal')",
+      "passed": false,
+      "note": "Ensemble probe (3 layers) performed marginally WORSE than single-probe baseline. Uniform weighting not optimal; needs learned weights or layer selection."
+    },
+    "rppm_tier29_viable": {
+      "experiment": 924,
+      "verdict": "rppm_tier29_no_improvement",
+      "measured_value": "rprm_auc=0.85 vs baseline_auc=0.85, delta=0.0",
+      "threshold": "honest_verdict == 'rppm_tier29_viable'",
+      "passed": false,
+      "note": "Heuristic inference mode produced zero AUC delta. Step reward signal flat. Real model inference required to observe meaningful step-level signal."
+    },
+    "kan_tier4_real_data": {
+      "experiment": 925,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": null,
+      "threshold": "honest_verdict in ('real_data_improves_over_synthetic', 'real_data_comparable', 'real_data_insufficient_synthetic_fallback')",
+      "passed": false,
+      "note": "Blocked by conductor pre-gate."
+    },
+    "tier2_code_memory_works": {
+      "experiment": 926,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": null,
+      "threshold": "honest_verdict in ('tier2_code_memory_works', 'tier2_code_memory_partial')",
+      "passed": false,
+      "note": "Blocked by conductor pre-gate."
+    },
+    "tier28_wired": {
+      "experiment": 927,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": null,
+      "threshold": "honest_verdict contains 'tier28_wired'",
+      "passed": false,
+      "note": "Blocked by conductor pre-gate."
+    },
+    "manifest_escalated": {
+      "experiment": 917,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": "escalation_written=absent",
+      "threshold": "escalation_written == True",
+      "passed": false,
+      "note": "Preflight v20 itself was blocked by rerun-discipline gate. 5 prior preflight failures (Exps 404, 731, 740, 754, 767) were not declared in the roadmap YAML prior_failures field."
+    },
+    "retro_complete": {
+      "experiment": 928,
+      "verdict": "milestone_complete",
+      "measured_value": null,
+      "threshold": "honest_verdict == 'milestone_complete'",
+      "passed": true,
+      "note": "This experiment."
+    }
+  },
+  "wall_time_minutes": 0.8155,
+  "per_experiment_durations_s": {
+    "917": 0.0,
+    "918": 0.001,
+    "919": 0.0,
+    "920": 0.0,
+    "921": 0.0,
+    "922": 0.0,
+    "923": 48.927,
+    "924": 0.004,
+    "925": 0.0,
+    "926": 0.0,
+    "927": 0.0
+  },
+  "experiments_evaluated": [917, 918, 919, 920, 921, 922, 923, 924, 925, 926, 927],
+  "open_retros_entering_72": [
+    "RETRO-MANIFEST-FULL-SCOPE",
+    "RETRO-XILINX-TOOLS-UNAVAILABLE",
+    "RETRO-RERUN-DISCIPLINE-GATE-CASCADE",
+    "RETRO-HEURISTIC-RPRM-FLAT-SIGNAL",
+    "RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS",
+    "RETRO-HF-SOPS-CREDENTIAL-INJECTION"
+  ],
+  "closed_retros_this_milestone": [
+    "RETRO-LAGRANGE-ENTROPY-DEGENERATE"
+  ],
+  "meta_reflection": "Milestone 2026.04.71 met only 2/12 criteria in 0.82 wall minutes. The vast majority of experiments (9 of 11 substantive) were blocked by the conductor pre-gate before any real computation ran.\n\nROOT CAUSE — RERUN-DISCIPLINE CASCADE FAILURE:\nThe dominant failure mode was the conductor's rerun-discipline gate rejecting Exps 917, 919, 920, 921, 922, 925, 926, 927 because their roadmap YAML entries lacked a valid prior_failures: field. This is the exact discipline the CLAUDE.md mandates, but the planner that generated research-roadmap-v71.yaml did not populate those fields for any of the 8 tasks with prior failure history. The gate did its job correctly — the planner did not. For .72: the planner MUST consult research-complete.yaml and ops/changelog.md before generating any task with a prior failure lineage, and MUST include a prior_failures: entry with (1) named prior experiment ID, (2) diagnosed root cause, (3) what changed, (4) retire_if_same_verdict flag.\n\nTWO SUBSTANTIVE EXPERIMENTS THAT RAN:\n- Exp 918 (Lagrange multi-constraint): CLOSED RETRO-LAGRANGE-ENTROPY-DEGENERATE. The multi-constraint corpus produced non-degenerate entropy (improvement = 0.018 > 0). This vindicates .70's diagnosis that the single-constraint toy data was the failure cause, not the algorithm. The improvement is marginal; .72 should test with a larger corpus to confirm stability.\n- Exp 923 (DRIFTProbe ensemble): Ensemble of 3 uniformly-weighted probes performed WORSE than single-probe baseline (AUC 0.5625 vs 0.565). The expected 3-8% improvement from arXiv 2604.13386 did not materialize. Likely cause: uniform weighting means the two zero-coefficient probes (layers -4, -3) dilute the one informative probe (layer -1). Learned ensemble weights or layer selection required.\n\nEXPERIMENT 924 (R-PRM Tier 2.9):\nHeuristic inference mode produced 0.0 AUC delta. This was predictable: heuristic step scoring cannot distinguish correct from incorrect reasoning steps. Criterion required real-model inference. The planner should not have allowed a heuristic-mode experiment to gate a criterion requiring genuine step-level signal.\n\nPLANNER SIGNALS FOR .72:\n1. MANDATORY: Populate prior_failures: in YAML for ALL tasks with prior failure history before the conductor sees the roadmap. Check research-complete.yaml first.\n2. RETRO-RERUN-DISCIPLINE-GATE-CASCADE: 9 tasks blocked by the same gate failure. This is a planner process failure, not a code bug. Fix at the planning layer.\n3. Math repair (Exp 919 lineage): address prior_failures properly citing Exp 906 success (code repair +72pp) as the prior art and explaining why math domain is a different scope.\n4. DRIFTProbe ensemble: rerun with learned weights (logistic regression on validation set) rather than uniform. Cite tier0i_no_improvement from Exp 923 as prior failure.\n5. R-PRM Tier 2.9: rerun with real model inference (Qwen3.5-0.8B minimum). Cite rppm_tier29_no_improvement from Exp 924 with diagnosis: heuristic mode cannot produce step-level signal.\n6. HF publish: resolve SOPS credential injection before scheduling Exp 922 lineage. Gate on credential availability.\n7. DualGPU throughput: requires quantitative gate (measured 1.9x, not structural wiring). Cite exp921 blockage.\n8. Lagrange marginal improvement: widen test corpus before declaring full closure. 0.018 improvement is above zero but narrow.",
+  "improvement_minutes_saved": 0.0,
+  "honest_verdict": "milestone_complete",
+  "schema": [
+    "closed_retros_this_milestone",
+    "criteria_details",
+    "criteria_results",
+    "duration_s",
+    "experiment",
+    "experiments_evaluated",
+    "finished_at",
+    "honest_verdict",
+    "improvement_minutes_saved",
+    "meta_reflection",
+    "milestone",
+    "n_criteria_met",
+    "n_criteria_total",
+    "open_retros_entering_72",
+    "per_experiment_durations_s",
+    "run_date",
+    "started_at",
+    "status",
+    "title",
+    "wall_time_minutes"
+  ]
+}
