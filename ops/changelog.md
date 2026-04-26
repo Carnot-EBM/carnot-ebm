@@ -4269,3 +4269,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 891: Milestone 2026.04.68 Operational Retrospective (CPU) (⚠️ Research Finding) — honest_verdict=8/11_criteria_met retros_closed=3 live_gpu_confirmed vjepa_deployed_ood_auc=0.9211 pimi_improved_below_5x_sweeps=4.33 jepa_discriminative_retired spectral_probe_auc=1.00; results/experiment_891_milestone_retro.json
 
 - **Exp 892 (2026-04-26)**: Pre-flight v18 for milestone 2026.04.69 — PIMI not retired (4.33x<5x), GGUF retro closed (download_failed_retire), enforcement_wired=false documented in known-issues, 4 retros open, MILESTONE_PREREQS.md .69 section written. [Exp 892]
+- 2026-04-26: Exp 892: Pre-flight v18 — PIMI Retirement Check + Manifest Audit (CPU) (✅ Complete) — honest_verdict=preflight_complete; results/experiment_892_preflight_v18.json
