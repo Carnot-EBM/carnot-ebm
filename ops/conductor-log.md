@@ -2808,3 +2808,4 @@ python/ |
 | 2026-04-26 03:37 UTC | Exp 895: Code Repair 50-Question Scale-Up — Gemma4 | OK | 81 passed, 3 warnings in 2.75s |
 | 2026-04-26 03:52 UTC | Exp 896: SVAMP EstimationVerifier + VJEPA v3 SVAMP | OK | 81 passed, 3 warnings in 2.91s |
 | 2026-04-26 04:06 UTC | Exp 897: Constraint Memory Forgetting — FOREVER-In | OK | 81 passed, 3 warnings in 2.84s |
+| 2026-04-26 04:23 UTC | Exp 898: FR-11 Tier 4 Seed — Adaptive KAN Spline R | OK | 81 passed, 3 warnings in 2.84s |
