@@ -1604,3 +1604,41 @@ are injected before the Ising energy scoring,
   3. mean_constraints_injected is recorded per question.
 
 **Spec traces:** REQ-TIER28-001, SCENARIO-TIER28-001, Exp 912
+
+
+### REQ-PERF-004: DualGPURunner Wired to ThreeTierPipeline Batch Dispatch
+
+When `CARNOT_DUAL_GPU=1` and a `DualGPURunner`-compatible runner is attached via
+`ThreeTierPipeline.wire_dual_gpu_runner()`, the pipeline's `benchmark()` method
+MUST dispatch verification tasks across two concurrent worker threads, one per GPU
+partition.  When `CARNOT_DUAL_GPU=0` (or the runner is None), the pipeline MUST
+fall back to sequential single-GPU processing with no performance regression.
+
+**Rationale:** DualGPURunner was validated at 1.979x throughput improvement in Exp 856
+but was never connected to ThreeTierPipeline.  Wiring it closes the gap between the
+validated component and the production pipeline.
+
+**Acceptance criteria:**
+- `pipeline.wire_dual_gpu_runner(runner)` stores the runner and does not raise.
+- With `CARNOT_DUAL_GPU=1` and runner wired, `benchmark()` uses two threads.
+- With `CARNOT_DUAL_GPU=0`, `benchmark()` runs sequentially (no regression).
+- Observed throughput with CARNOT_DUAL_GPU=1 is >= 1.0x baseline on any hardware.
+
+**Spec traces:** REQ-PERF-004, Exp 913
+
+
+### SCENARIO-PERF-004: CARNOT_DUAL_GPU=1 Enables Parallel Batch Verification
+
+**Given** 20 synthetic GSM8K-style (question, response) pairs and a
+ThreeTierPipeline with stub EORM and Ising,
+**When** `CARNOT_DUAL_GPU=0` (baseline) and `CARNOT_DUAL_GPU=1` (dual-GPU) are
+each used to run `benchmark()`,
+**Then**
+  1. observed_speedup = baseline_wall_time / dualgpu_wall_time is measured.
+  2. honest_verdict = "dualgpu_wired_speedup_confirmed" if observed_speedup > 1.7
+  3. honest_verdict = "dualgpu_wired_partial_speedup" if 1.0 < observed_speedup <= 1.7
+  4. honest_verdict = "dualgpu_wired_no_speedup" if observed_speedup <= 1.0
+  5. Falling back to CARNOT_DUAL_GPU=0 does NOT raise and does NOT regress
+     sequential throughput by more than 5%.
+
+**Spec traces:** REQ-PERF-004, SCENARIO-PERF-004, Exp 913
