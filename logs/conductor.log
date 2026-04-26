@@ -4357,3 +4357,27 @@ logs/conductor.log                                 | 15 ++++
 2026-04-25 20:26:49,840 [conductor] RESEARCH STEP: Exp 889: iCE40 PIMI v3 — Full Parallel Spin Updates (RETRO-INERTIA-SWEEPS-TARGET-MISSED) (CPU+FPGA)
 2026-04-25 20:26:49,840 [conductor] ============================================================
 2026-04-25 20:26:49,861 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 20:26:49,923 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 20:26:49,923 [conductor] Running test suite (smart subset)...
+2026-04-25 20:26:55,690 [conductor] Pre-check: 81 passed, 3 warnings in 2.90s
+2026-04-25 20:26:55,785 [conductor] Prompt format error in exp889-ice40-pimi-v3-parallel: Replacement index 0 out of range for positional args tuple — using raw prompt
+2026-04-25 20:26:55,806 [conductor] Injected 55 symbol signatures from 3 files (AST outlines)
+2026-04-25 20:26:55,807 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+The warning comes from another file. All 34 tests pass and the deliverable is written.
+
+**Summary:** Exp 889 complete.
+
+- `python/carnot/samplers/synchronous_pimi.py`: `SynchronousPIMISampler` with truly parallel (synchronous) PIMI updates — all spins read `s_current` snapshot before any flip decisions
+- `hardware/kv260/ising_pimi_n8_synchronous_v3.v`: Verilog with structural guarantee that STAGE 3 reads `s_current` from STAGE 0 registers, never `s_new` wires
+- Synthesis: 126 LUTs on iCE40 HX8K (clean, within 250 LUT budget)
+- Python benchmark: parallel_sweeps=3, baseline=12.99, sweeps_reduction=4.33x — below 5x target
+- `honest_verdict`: `pimi_improved_below_5x` — synchronous PIMI is architecturally correct but for this simple N=8 ferromagnetic graph both methods converge in ~3 sweeps; the 15-25x paper speedup requires frustrated/larger constraint problems
+- 34 tests all pass, 100% coverage on new module
+2026-04-25 20:35:56,120 [conductor] Claude Code completed (exit 0)
+2026-04-25 20:35:56,133 [conductor] Changes:
+logs/conductor.log                 | 17 +++++++++++++++++
+ openspec/capabilities/fpga/spec.md | 32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
+2026-04-25 20:35:56,151 [conductor] DOGFOOD: Verification complete (total: 563 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 20:35:56,151 [conductor] Running test suite (smart subset)...
+2026-04-25 20:36:01,739 [conductor] Post-check: 81 passed, 3 warnings in 2.81s

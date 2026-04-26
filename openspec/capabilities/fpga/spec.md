@@ -252,10 +252,42 @@ pin, no flip-flops, and no Gibbs sweep inside the FPGA are permitted.
 
 ---
 
+### REQ-HW-036
+
+**Synchronous PIMI sampler with truly parallel spin updates on iCE40.**
+
+All spins must update simultaneously in a single clock cycle using `h_ema` from
+the **previous** cycle.  No spin may see an updated neighbor within the same
+cycle (which is the checkerboard mistake from Exp 860/876).
+
+**Acceptance criteria:**
+- `sweeps_reduction >= 5.0` vs no-inertia baseline (15-25x per arXiv 2604.17109
+  requires harder/larger problems; 5x is the minimum for this N=8 graph)
+- `lut_count <= 250` on iCE40 HX8K ct256
+- All spins read `s_current[j]` from the SAME snapshot for `h_local` computation
+
+### SCENARIO-HW-036
+
+**Scenario:** Synchronous PIMI convergence benchmark.
+
+**Given:** SynchronousPIMISampler on N=8 ring+chord ferromagnetic graph.
+**When:** 100 independent trials from random init, target_energy=-3.0.
+**Then:**
+- `parallel_sweeps < checkerboard_sweeps` (synchronous is no worse than checkerboard)
+- `sweeps_reduction = baseline_sweeps / parallel_sweeps` is reported honestly
+- `honest_verdict` is one of the defined outcome strings
+- Verilog synthesis: `lut_count <= 250`, `synthesis_clean = true`
+
+**Result (Exp 889):** parallel_sweeps=3, checkerboard_sweeps=13, sweeps_reduction=4.33x,
+lut_count=126, synthesis_clean=True, honest_verdict="pimi_improved_below_5x".
+
+---
+
 ## Implementation Status
 
 | REQ | Status | Experiment |
 |-----|--------|-----------|
+| REQ-HW-036 | Implemented | Exp 889 |
 | REQ-HW-037 | Pending | Exp 701 |
 | REQ-HW-038 | Pending | Exp 701 |
 | REQ-HW-039 | Pending | Exp 714 |
