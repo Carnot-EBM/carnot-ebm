@@ -2861,3 +2861,4 @@ python/ |
 | 2026-04-26 14:49 UTC | Exp 933: HuggingFace Publish v4 — SOPS Auth Inject | OK | 81 passed, 3 warnings in 2.86s |
 | 2026-04-26 15:03 UTC | Exp 934: IPFS Mirror — Establish Distribution Mirr | OK | 81 passed, 3 warnings in 2.99s |
 | 2026-04-26 15:18 UTC | Exp 935: FR-11 Tier 2 Code Domain Memory — CaseMem | OK | 95 passed, 3 warnings in 2.94s |
+| 2026-04-26 15:32 UTC | Exp 936: KAN Tier 4 Real Data — AutoKnots Adaptive | OK | 81 passed, 3 warnings in 2.98s |
