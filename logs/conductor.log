@@ -4318,3 +4318,27 @@ logs/conductor.log          | 14 ++++++++++++++
 2026-04-25 20:10:04,465 [conductor] RESEARCH STEP: Exp 888: FR-11 Tier 3 Relay — VJEPA-Guided Constraint Addition (CPU, GATED on 884)
 2026-04-25 20:10:04,465 [conductor] ============================================================
 2026-04-25 20:10:04,486 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-25 20:10:04,546 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-25 20:10:04,546 [conductor] Running test suite (smart subset)...
+2026-04-25 20:10:10,160 [conductor] Pre-check: 81 passed, 3 warnings in 2.87s
+2026-04-25 20:10:10,278 [conductor] Injected 87 symbol signatures from 5 files (AST outlines)
+2026-04-25 20:10:10,278 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All done. Summary:
+
+- **Gate check**: `cascade_deployed=True` confirmed in Exp 884 artifact.
+- **`ConstraintAdditionEngine.add_from_violation()`** added — directly increments session memory's `_violations_by_type` counter for VJEPA-confirmed violations.
+- **`SelfLearningRelay`** extended with `vjepa_predictor` kwarg, VJEPA trigger logic (fires when Ising detects violation AND VJEPA prob > 0.70), and two new read-only properties `n_vjepa_triggered_additions` / `tier3_to_tier1_fired`.
+- **`scripts/experiment_888_fr11_tier3_relay.py`** written — 5-session relay, baseline vs. VJEPA-enhanced.
+- **43/43 tests pass** in `tests/python/test_experiment_888_fr11_tier3_relay.py`.
+- **`results/experiment_888_fr11_tier3_relay.json`** written with `honest_verdict: fr11_tier3_loop_closed`, `tier3_to_tier1_fired: True`, `n_vjepa_triggered_additions: 26`.
+- **Spec**: `REQ-LEARN-059`, `SCENARIO-LEARN-099/100` added to `openspec/capabilities/self-learning/spec.md`.
+2026-04-25 20:16:40,766 [conductor] Claude Code completed (exit 0)
+2026-04-25 20:16:40,780 [conductor] Changes:
+logs/conductor.log                                 | 15 ++++
+ openspec/capabilities/self-learning/spec.md        | 52 ++++++++++++++
+ .../carnot/pipeline/constraint_addition_engine.py  | 52 ++++++++++++++
+ python/carnot/pipeline/self_learning_relay.py      | 79 +++++++++++++++++++++-
+ 4 files changed, 197 insertions(+), 1 deletion(-)
+2026-04-25 20:16:40,804 [conductor] DOGFOOD: Verification complete (total: 562 checks, 50 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-25 20:16:40,805 [conductor] Running test suite (smart subset)...
+2026-04-25 20:16:46,442 [conductor] Post-check: 81 passed, 3 warnings in 2.87s

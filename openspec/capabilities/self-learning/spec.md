@@ -1475,3 +1475,55 @@ Each maps to a deterministic (var1, var2, J_value) coupling spec.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-058 | Implemented (python/carnot/verify/lagrange_ising.py, python/carnot/pipeline/memory_compression.py, python/carnot/pipeline/self_learning_relay.py, scripts/experiment_875_fr11_tier2_relay_v6.py) | Implemented (tests/python/test_experiment_875_fr11_tier2_relay_v6.py) |
+
+---
+
+## REQ-LEARN-059: Tier 3 VJEPA to Tier 1 Constraint Addition Relay
+
+**Given** a SelfLearningRelay instantiated with a VariationalJEPAPredictor AND a
+         ConstraintAdditionEngine
+**When** Ising detects a violation on a question (ground_truth=False)
+**And**  VJEPA.predict() returns violation_probability > 0.70 for that question
+**Then** ConstraintAdditionEngine.add_from_violation(violation_type, step_id) is called
+**And**  SelfLearningRelay.tier3_to_tier1_fired is set to True
+**And**  SelfLearningRelay.n_vjepa_triggered_additions is incremented
+
+### REQ-LEARN-059 Sub-requirements
+
+- REQ-LEARN-059-1: ConstraintAdditionEngine.add_from_violation(violation_type, step_id)
+  SHALL increment session_memory._violations_by_type[violation_type] by 1 and return True.
+  Returns False if session_memory has no _violations_by_type attribute.
+- REQ-LEARN-059-2: SelfLearningRelay.__init__ SHALL accept an optional
+  vjepa_predictor: VariationalJEPAPredictor | None parameter (default None).
+- REQ-LEARN-059-3: SelfLearningRelay.run_batch() SHALL check ising_violation_detected
+  (ground_truth=False) AND vjepa_predictor is not None AND constraint_addition_engine
+  is not None before calling VJEPA.predict().
+- REQ-LEARN-059-4: SelfLearningRelay.n_vjepa_triggered_additions SHALL be a read-only
+  property returning the cumulative count of VJEPA-triggered additions.
+- REQ-LEARN-059-5: SelfLearningRelay.tier3_to_tier1_fired SHALL be a read-only
+  property that is False before any VJEPA trigger fires and True thereafter.
+
+## SCENARIO-LEARN-099: Tier 3 Loop Closed
+
+**Given** a 5-session relay with VJEPA always-trigger stub (prob=0.80 for all violations)
+**And**  ENHANCED_PRECISIONS schedule [0.60, 0.70, 0.75, 0.80, 0.85]
+**When** run_experiment() completes
+**Then** honest_verdict = fr11_tier3_loop_closed
+**And**  tier3_to_tier1_fired = True
+**And**  n_vjepa_triggered_additions > 0
+**And**  tier3_to_tier1_relay_confirmed = True (enhanced_s5 > baseline_s5)
+
+## SCENARIO-LEARN-100: Tier 3 Never Fires Without VJEPA
+
+**Given** a 5-session relay with NO vjepa_predictor wired in
+**When** run_relay(use_vjepa=False) completes
+**Then** n_vjepa_triggered_additions == 0
+**And**  tier3_to_tier1_fired = False
+
+---
+
+## Implementation Status (REQ-LEARN-059)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-059 | Implemented (python/carnot/pipeline/constraint_addition_engine.py, python/carnot/pipeline/self_learning_relay.py, scripts/experiment_888_fr11_tier3_relay.py) | Implemented (tests/python/test_experiment_888_fr11_tier3_relay.py) |

@@ -73,6 +73,7 @@ from carnot.pipeline.constraint_template_library import (
 from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
 
 if TYPE_CHECKING:
+    from carnot.models.vjepa_predictor import VariationalJEPAPredictor
     from carnot.pipeline.memory_compression import CompressedMemoryBank
     from carnot.verify.lagrange_ising import LagrangeAdaptiveIsing
 
@@ -263,6 +264,11 @@ class SelfLearningRelay:
         "comparison_error",
     ]
 
+    # VJEPA violation probability threshold for triggering Tier 3 → Tier 1 relay.
+    # When VJEPA reports prob > this value AND Ising also detects a violation,
+    # we immediately add the violation type to the constraint addition engine.
+    VJEPA_TRIGGER_THRESHOLD: float = 0.70
+
     def __init__(
         self,
         pipeline: ThreeTierPipeline,
@@ -272,6 +278,7 @@ class SelfLearningRelay:
         constraint_addition_engine: ConstraintAdditionEngine | None = None,
         lagrange_ising: "LagrangeAdaptiveIsing | None" = None,
         compressed_memory: "CompressedMemoryBank | None" = None,
+        vjepa_predictor: "VariationalJEPAPredictor | None" = None,
     ) -> None:
         self._pipeline = pipeline
         self._template_library = template_library
@@ -308,6 +315,20 @@ class SelfLearningRelay:
         # REQ-LEARN-058: optional CompressedMemoryBank for preventing memory
         # saturation across sessions via K-medoid compression.
         self._compressed_memory = compressed_memory
+
+        # REQ-LEARN-059 (Tier 3 → Tier 1 relay): optional VJEPA predictor.
+        # When provided, VJEPA violation probability is computed after each Ising
+        # violation detection.  If VJEPA prob > VJEPA_TRIGGER_THRESHOLD, the
+        # violation type is immediately pushed into the constraint addition engine —
+        # closing the Tier 3 → Tier 1 loop without waiting for the min_count
+        # threshold to fill naturally.
+        self._vjepa_predictor = vjepa_predictor
+
+        # Count of VJEPA-triggered constraint additions across all batches.
+        self._n_vjepa_triggered_additions: int = 0
+
+        # True once at least one VJEPA-triggered addition fires.
+        self._tier3_to_tier1_fired: bool = False
 
     # ------------------------------------------------------------------
     # _freeze_stable_constraints (REQ-PSV-015)
@@ -512,9 +533,47 @@ class SelfLearningRelay:
             # constraint_id cycles over n_constraints so each question maps to a
             # constraint slot — a simple assignment for relay experiments where the
             # actual constraint topology is synthetic.
+            ising_violation_detected = not is_correct
             if self._lagrange_ising is not None:
                 constraint_id = i % self._lagrange_ising.n_constraints
-                self._lagrange_ising.update(constraint_id, violated=not is_correct)
+                self._lagrange_ising.update(constraint_id, violated=ising_violation_detected)
+
+            # REQ-LEARN-059 (Tier 3 → Tier 1 relay): if VJEPA predictor is present
+            # AND Ising also detected a violation, ask VJEPA to confirm.
+            # When VJEPA probability exceeds VJEPA_TRIGGER_THRESHOLD (0.70), push
+            # the violation type directly into the constraint addition engine.
+            # This accelerates constraint materialisation for high-confidence violations
+            # without waiting for the natural min_count threshold to fill.
+            if (
+                self._vjepa_predictor is not None
+                and self._constraint_addition_engine is not None
+                and ising_violation_detected
+            ):
+                import jax
+                import jax.numpy as jnp
+
+                # Build a minimal feature vector from the question text.
+                # We use a bag-of-words hash over the question tokens so no vocab
+                # is needed — the VJEPA predictor's in_dim determines the size.
+                in_dim = self._vjepa_predictor.in_dim
+                context_dim = self._vjepa_predictor.context_dim
+                tokens = question.lower().split()
+                feat = [0.0] * in_dim
+                for tok in tokens:
+                    feat[hash(tok) % in_dim] += 1.0 / max(len(tokens), 1)
+                ctx = [0.0] * context_dim
+                x_arr = jnp.array(feat, dtype=jnp.float32)
+                ctx_arr = jnp.array(ctx, dtype=jnp.float32)
+                key = jax.random.PRNGKey(batch_id * 1000 + i)
+                vjepa_prob = self._vjepa_predictor.predict(x_arr, ctx_arr, key)
+                if vjepa_prob > self.VJEPA_TRIGGER_THRESHOLD:
+                    # Pick a synthetic violation type from the cycling sequence.
+                    vtype = self._SYNTHETIC_VIOLATION_TYPES[
+                        violation_idx % len(self._SYNTHETIC_VIOLATION_TYPES)
+                    ]
+                    self._constraint_addition_engine.add_from_violation(vtype, i)
+                    self._n_vjepa_triggered_additions += 1
+                    self._tier3_to_tier1_fired = True
 
             # Track raw accuracy for this batch.
             if is_correct:
@@ -608,6 +667,24 @@ class SelfLearningRelay:
         Spec: REQ-LEARN-040
         """
         return self._cumulative_constraints_added
+
+    @property
+    def n_vjepa_triggered_additions(self) -> int:
+        """Count of VJEPA-triggered constraint additions across all batches.
+
+        Zero when no vjepa_predictor was provided or none fired above the threshold.
+
+        Spec: REQ-LEARN-059
+        """
+        return self._n_vjepa_triggered_additions
+
+    @property
+    def tier3_to_tier1_fired(self) -> bool:
+        """True if at least one VJEPA-triggered addition fired during this relay run.
+
+        Spec: REQ-LEARN-059
+        """
+        return self._tier3_to_tier1_fired
 
     def learning_trajectory(self) -> list[SelfLearningBatchResult]:
         """Return all batch results accumulated so far (shallow copy).
