@@ -212,6 +212,69 @@ def test_load_skips_dict_verdict_with_no_status(tmp_path):
     assert ledger.entries == []
 
 
+def test_matching_priors_shortcircuits_on_preflight_scope():
+    """Preflight is a structurally-recurring per-milestone scaffolding task.
+    Even when the ledger has 5 prior preflight entries with non-✅ verdicts,
+    a new preflight is NOT a doomed rerun — it is scheduled audit work.
+
+    Regression test for the .71 first-fire false-positive on Exp 917
+    (preflight v20) which blocked legitimate audit work because it scope-
+    matched prior preflights with `preflight_v*_clean_manifest_pending`-
+    style verdicts.
+    """
+    from failure_ledger import LedgerEntry, FailureLedger
+    ledger = FailureLedger()
+    for i, slug in enumerate(["preflight-v2", "preflight-v9", "preflight-v10",
+                              "preflight-v11", "zombie-kill-preflight-v8"]):
+        ledger.entries.append(LedgerEntry(
+            experiment_id=f"exp{400 + i}-{slug}",
+            title=f"Exp {400 + i}: {slug}",
+            verdict="env_not_propagating",  # any non-✅ verdict
+            status_label="⚠️ Research Finding",
+            scope="preflight" if "zombie" not in slug else "zombie-kill-preflight",
+        ))
+    new_task = {"id": "exp917-preflight-v20", "title": "Exp 917: Pre-flight v20"}
+    assert ledger.matching_priors(new_task) == []
+    check = ledger.is_doomed_rerun(new_task)
+    assert not check.blocked
+    assert "no scope-matching priors" in check.reason
+
+
+def test_matching_priors_shortcircuits_on_milestone_retro_scope():
+    """Milestone retros are also structurally-recurring scaffolding."""
+    from failure_ledger import LedgerEntry, FailureLedger
+    ledger = FailureLedger()
+    ledger.entries.append(LedgerEntry(
+        experiment_id="exp891-milestone-retro",
+        title="Exp 891: Milestone Retro",
+        verdict="research_finding",
+        status_label="⚠️ Research Finding",
+        scope="milestone-retro",
+    ))
+    new_task = {"id": "exp928-milestone-retro-71", "title": "Exp 928: Milestone Retro 71"}
+    assert ledger.matching_priors(new_task) == []
+
+
+def test_recurring_scaffolding_does_not_break_legitimate_match():
+    """The scaffolding short-circuit only applies when the *target* task is
+    scaffolding. A non-scaffolding task should still match prior failures
+    normally."""
+    from failure_ledger import LedgerEntry, FailureLedger
+    ledger = FailureLedger()
+    ledger.entries.append(LedgerEntry(
+        experiment_id="exp881-code-repair-v8",
+        title="Exp 881: Code Repair v8",
+        verdict="zero_constraints",
+        status_label="❌ Failed",
+        scope="code-repair",
+    ))
+    new_task = {"id": "exp895-code-repair-50q-scaleup",
+                "title": "Exp 895: Code Repair 50q"}
+    matches = ledger.matching_priors(new_task)
+    assert len(matches) == 1
+    assert matches[0].experiment_id == "exp881-code-repair-v8"
+
+
 # ---------------------------------------------------------------------------
 # matching_priors
 # ---------------------------------------------------------------------------
