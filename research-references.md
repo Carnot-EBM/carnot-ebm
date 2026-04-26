@@ -33,6 +33,34 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-26 arxiv Scan (Milestone 2026.04.71 Planning)
+
+### R-PRM: Reasoning-Driven Process Reward Modeling
+- **Paper:** arXiv 2503.21295 (March 2026)
+- **What:** Improves process reward models by having the model reason over intermediate reasoning
+  steps before producing a reward signal. Achieves +11.9 F1 points on ProcessBench and +8.5 on
+  PRMBench vs discriminative PRM baselines. Key insight: reasoning over WHY a step is wrong
+  provides stronger gradient signal than binary correct/incorrect labels.
+- **Relevance to Carnot:** Carnot's SymCodeVerifier (Tier 2.5) and CausalReasoningVerifier
+  (Tier 2.7) currently detect violations without explaining them. R-PRM's reasoning step can be
+  adapted as Tier 2.9: a lightweight "why-wrong" reasoning probe between Tier 2.7 (causal) and
+  Tier 3 (Ising). The reasoning output also provides repair hints for IterativeSelfRepair.
+- **Concrete experiment:** Exp 924 — R-PRM Step Reward Tier 2.9: implement a reasoning-augmented
+  step verifier that generates a brief "why" explanation before scoring. Measure AUC improvement
+  vs direct scoring on GSM8K step labeling. Expected: AUC improvement from reasoning context.
+- **When to incorporate:** Milestone 2026.04.71 — Phase 4 (Exp 924).
+
+### Hierarchical Reward Models for Enhanced Reasoning
+- **Paper:** arXiv 2503.13551 (March 2026)
+- **What:** Hierarchical Reward Models (HRM) evaluate reasoning at two levels: (a) individual step
+  quality and (b) consecutive step coherence. Outperforms flat PRMs on benchmarks where cascading
+  errors (correct individual steps but wrong carry-forward) are common.
+- **Relevance to Carnot:** HRM's two-level evaluation mirrors Carnot's cascade architecture.
+  CausalReasoningVerifier (Tier 2.7) handles the carry-forward case. HRM validates that
+  hierarchical evaluation is worth the architectural complexity. The "step coherence" metric
+  aligns with Carnot's global consistency checker approach.
+- **When to incorporate:** Reference for Tier 2.7 enhancement and Tier 2.9 design decisions.
+
 ## 2026-04-26 arxiv Scan (Milestone 2026.04.70 Planning)
 
 ### Iterative Self-Repair in LLM Code Generation

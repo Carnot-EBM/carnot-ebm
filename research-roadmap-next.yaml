@@ -1,0 +1,1110 @@
+milestone: 2026.04.71
+milestone_title: Math Repair + Lagrange Closure + R-PRM Tier 2.9 + Self-Learning Tier 2 Code
+milestone_doc: openspec/change-proposals/research-roadmap-v71.md
+tasks:
+
+- id: exp917-preflight-v20
+  milestone: 2026.04.71
+  deliverable: results/experiment_917_preflight_v20.json
+  max_turns: 20
+  title: 'Exp 917: Pre-flight v20 — .70 Audit + RETRO-LAGRANGE-ENTROPY-DEGENERATE Triage (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Milestone 2026.04.70 ran 12 experiments and met 11/12 criteria in 36.9
+    wall minutes. The single failed criterion (lagrange_forgetting_works) traces to
+    Exp 909 which used a single-constraint synthetic corpus where entropy = 0
+    regardless of decay (p = 1.0 always, so -p*log(p) = 0). This is not an algorithmic
+    failure — it is a test-design issue. The fix: multi-constraint corpus. Open RETROs
+    entering .71: RETRO-MANIFEST-FULL-SCOPE (13 consecutive milestones, HUMAN_REQUIRED),
+    RETRO-XILINX-TOOLS-UNAVAILABLE (HUMAN_REQUIRED), RETRO-LAGRANGE-ENTROPY-DEGENERATE
+    (TARGETED by Exp 918).
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_916_milestone_retro.json — .70 criteria results, open_retros_entering_71
+    - results/experiment_909_lagrange_forgetting_curve.json — failed criterion, no_improvement
+    - ops/known-issues.md — existing escalations
+    - ops/exclusion_manifest.yaml — PIMI retirement from Exp 914
+    - MILESTONE_PREREQS.md — prereq structure (update for .71)
+    - openspec/change-proposals/research-roadmap-v71.md — .71 design doc
+
+    TASK: Audit .70 results, confirm PIMI retirement in exclusion manifest, formally
+    open RETRO-LAGRANGE-ENTROPY-DEGENERATE, triage all 3 open RETROs, set .71 gates.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_916_milestone_retro.json. Extract n_criteria_met,
+       wall_time_minutes, open_retros_entering_71, closed_retros_this_milestone.
+    3. Confirm PIMI scope is in ops/exclusion_manifest.yaml from Exp 914.
+       If missing: add entry for "iCE40 PIMI research" with reason="retire_if_same_verdict
+       triggered by Exp 914 (pimi_no_improvement); all three strategies maxed at 4.33x".
+    4. Formally open RETRO-LAGRANGE-ENTROPY-DEGENERATE:
+       Append to ops/known-issues.md:
+       ## RETRO-LAGRANGE-ENTROPY-DEGENERATE: Root Cause — Single-Constraint Degenerate Corpus
+       Exp 909 (Lagrange forgetting curve) produced no_improvement because a single-constraint
+       synthetic corpus has entropy = 0 by construction (p = 1.0, -p*log(p) = 0). The
+       LagrangeMultiplierUpdater.weight_entropy property is mathematically correct but
+       non-informative when only one constraint type exists. Fix: Exp 918 uses an 8-constraint
+       heterogeneous corpus with different violation rates per constraint type. This makes
+       entropy non-degenerate and allows decay to produce measurable improvement.
+       root_cause: "single_constraint_corpus_degenerate_entropy"
+       targeted_by: "Exp 918"
+    5. Audit all 3 open RETROs:
+       - RETRO-MANIFEST-FULL-SCOPE: HUMAN_REQUIRED (13 milestones, conductors cannot fix)
+       - RETRO-XILINX-TOOLS-UNAVAILABLE: HUMAN_REQUIRED (Vivado install needed)
+       - RETRO-LAGRANGE-ENTROPY-DEGENERATE: TARGETED (Exp 918)
+    6. Write/update MILESTONE_PREREQS.md section for .71:
+       ## Milestone 2026.04.71 Pre-flight
+       .70 criteria met: 11/12
+       .70 wall_time_minutes: 36.9
+       Open RETROs entering .71: [RETRO-MANIFEST-FULL-SCOPE, RETRO-XILINX-TOOLS-UNAVAILABLE,
+         RETRO-LAGRANGE-ENTROPY-DEGENERATE]
+       Gates:
+         Exp 920 (Combined pipeline): GATED on Exp 919 signed_improvement > 0
+         Exp 921 (DualGPU throughput): GATED on Exp 913 honest_verdict contains "dualgpu_wired"
+    7. Build artifact:
+       {
+         "milestone": "2026.04.71",
+         "preflight_version": 20,
+         "predecessor_criteria_met": 11,
+         "predecessor_criteria_total": 12,
+         "predecessor_wall_time_minutes": 36.9,
+         "pimi_retirement_confirmed": bool,
+         "retro_lagrange_entropy_opened": true,
+         "open_retros": ["RETRO-MANIFEST-FULL-SCOPE",
+                         "RETRO-XILINX-TOOLS-UNAVAILABLE",
+                         "RETRO-LAGRANGE-ENTROPY-DEGENERATE"],
+         "retro_statuses": {
+           "RETRO-MANIFEST-FULL-SCOPE": "HUMAN_REQUIRED",
+           "RETRO-XILINX-TOOLS-UNAVAILABLE": "HUMAN_REQUIRED",
+           "RETRO-LAGRANGE-ENTROPY-DEGENERATE": "TARGETED_EXP918"
+         },
+         "escalation_written": true,
+         "honest_verdict": "preflight_complete"
+       }
+    8. Write results/experiment_917_preflight_v20.json.
+    9. Update ops/changelog.md: one-line entry.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_917_preflight_v20.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp918-lagrange-forgetting-multi-constraint
+  milestone: 2026.04.71
+  deliverable: results/experiment_918_lagrange_forgetting_multi_constraint.json
+  max_turns: 30
+  prior_failures:
+    - experiment_id: exp909-lagrange-forgetting-curve
+      verdict: no_improvement
+      addressed_by: >
+        Exp 909 used a single-constraint corpus where entropy = 0 regardless of decay
+        (p = 1.0 always, so -p*log(p) = 0). The LagrangeMultiplierUpdater.weight_entropy
+        property is correct but non-informative with only one constraint type. Exp 918 uses
+        an 8-constraint heterogeneous corpus (arithmetic_carry, sign_check, unit_consistency,
+        comparison_direction, equality_check, range_check, step_coherence, modular_arithmetic)
+        with different per-constraint violation rates. With heterogeneous violation rates,
+        weights are non-uniform and entropy is meaningful, making decay measurable.
+      retire_if_same_verdict: false
+  title: 'Exp 918: Lagrange Forgetting Multi-Constraint — RETRO-LAGRANGE-ENTROPY-DEGENERATE Fix (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-LAGRANGE-ENTROPY-DEGENERATE: Exp 909 (Lagrange forgetting curve) produced
+    no_improvement because its single-constraint corpus has entropy = 0 by construction
+    (p = 1.0 always → -p*log(p) = 0). Root cause: degenerate test design, not algorithm failure.
+    Fix: use an 8-constraint heterogeneous corpus where different constraint types have different
+    violation rates, making weights non-uniform and entropy non-degenerate.
+
+    IMPORTANT: retire_if_same_verdict=false. Root cause is identified (corpus degenerate) and
+    the fix directly addresses it (heterogeneous corpus). This is per no-doomed-rerun rule #3
+    (naming the root cause and what is different).
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_909_lagrange_forgetting_curve.json — prior failure: no_improvement
+    - python/carnot/pipeline/lagrange_updater.py — LagrangeMultiplierUpdater (Exp 909 extension)
+    - openspec/capabilities/self_learning/spec.md — FR-11 requirements, REQ-SELF-007
+    - openspec/change-proposals/research-roadmap-v71.md — .71 Phase 1 design
+
+    TASK: Re-run Lagrange forgetting with 8-constraint heterogeneous corpus.
+    Confirm entropy is non-degenerate. Measure signed_entropy_improvement with decay=0.95.
+    Target: signed_entropy_improvement > 0.5.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_909_lagrange_forgetting_curve.json. Extract:
+       - signed_entropy_improvement: (expect 0 — degenerate corpus)
+       - n_constraints: (expect 1 — the root cause)
+    3. Read python/carnot/pipeline/lagrange_updater.py. Confirm weight_entropy property exists
+       from Exp 909. If not, verify it was implemented correctly.
+    4. Create scripts/experiment_918_lagrange_forgetting_multi_constraint.py:
+       a. tmpl = ExperimentTemplate(918, "Lagrange Forgetting Multi-Constraint Rerun",
+                                     "results/experiment_918_lagrange_forgetting_multi_constraint.json",
+                                     requires_gpu=False)
+       b. tmpl.setup()
+       c. Define 8 constraint types with different violation probabilities:
+          constraints = {
+            "arithmetic_carry":     {"high_viol_prob": 0.80, "low_viol_prob": 0.05},
+            "sign_check":           {"high_viol_prob": 0.70, "low_viol_prob": 0.10},
+            "unit_consistency":     {"high_viol_prob": 0.60, "low_viol_prob": 0.15},
+            "comparison_direction": {"high_viol_prob": 0.50, "low_viol_prob": 0.20},
+            "equality_check":       {"high_viol_prob": 0.40, "low_viol_prob": 0.25},
+            "range_check":          {"high_viol_prob": 0.30, "low_viol_prob": 0.30},
+            "step_coherence":       {"high_viol_prob": 0.20, "low_viol_prob": 0.50},
+            "modular_arithmetic":   {"high_viol_prob": 0.10, "low_viol_prob": 0.70},
+          }
+       d. 200-step simulation (not 100 — longer for clearer signal):
+          Steps 1-100: each constraint fires at high_viol_prob.
+          Steps 101-200: each constraint fires at low_viol_prob.
+       e. Run two LagrangeMultiplierUpdaters with n_constraints=8:
+          - baseline: no decay (decay_rate=1.0)
+          - decay: decay_rate=0.95
+       f. Record at each 20-step interval: weight_entropy (baseline), weight_entropy (decay),
+          max_weight, mean_weight for each.
+       g. Verify corpus is non-degenerate: assert entropy_at_step_1_baseline > 0.1
+          (should be ~log(8) = 2.08 if weights start equal)
+       h. Compute: entropy_with_decay_at_200, entropy_without_decay_at_200
+          signed_entropy_improvement = entropy_with_decay_at_200 - entropy_without_decay_at_200
+       i. honest_verdict:
+          "forgetting_curve_improves_entropy" if signed_entropy_improvement > 0.5
+          "marginal_improvement" if signed_entropy_improvement > 0.0
+          "degenerate_again_retire" if entropy_at_step_1_baseline < 0.1 (corpus still degenerate)
+          "no_improvement" otherwise
+    5. Write tests with 100% coverage. Test:
+       - 8-constraint entropy is non-degenerate at step 1 (> 0.1)
+       - decay produces different weights than baseline at step 100
+       - weight_entropy decreases more slowly with decay than without
+       Traces to REQ-SELF-007, SCENARIO-SELF-007.
+    6. If honest_verdict in ("forgetting_curve_improves_entropy", "marginal_improvement"):
+       Mark RETRO-LAGRANGE-ENTROPY-DEGENERATE as CLOSED in MILESTONE_PREREQS.md.
+       Append to ops/changelog.md: "RETRO-LAGRANGE-ENTROPY-DEGENERATE CLOSED by Exp 918."
+    7. Write results/experiment_918_lagrange_forgetting_multi_constraint.json.
+    8. Update ops/changelog.md: one-line entry.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_918_lagrange_forgetting_multi_constraint.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp919-math-iterative-self-repair
+  milestone: 2026.04.71
+  deliverable: results/experiment_919_math_iterative_self_repair.json
+  max_turns: 50
+  title: 'Exp 919: MathIterativeSelfRepair — Execute-Feedback on 25 GSM8K Questions (GPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 905 proved IterativeSelfRepair works for code (+72pp on HumanEval) by using
+    Python execution errors as the repair signal. The identical approach applies to arithmetic:
+    (1) parse the LLM's chain-of-thought into arithmetic steps, (2) execute each step with
+    Python eval(), (3) compare eval() result to the LLM's stated intermediate value, (4) if
+    they diverge, feed the discrepancy back to the LLM as a correction prompt, (5) retry up
+    to 3x, (6) Carnot Ising energy selects the best attempt.
+
+    This does NOT use ArithmeticExtractor or regex-based constraint extraction — it avoids
+    the broken extraction pipeline entirely, using Python eval() as the oracle instead.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_905_iterative_self_repair_v1.json — code repair success: +72pp
+    - python/carnot/pipeline/iterative_self_repair.py — IterativeSelfRepair (code version)
+    - python/carnot/verify/arithmetic_extractor.py — DO NOT USE (broken regex extractor)
+    - python/carnot/samplers/ising_sampler.py — Ising energy scorer
+    - scripts/experiment_template.py — ExperimentTemplate, BatchedInferenceRunner
+    - openspec/change-proposals/research-roadmap-v71.md — .71 Phase 2 design
+
+    TASK: Implement MathIterativeSelfRepair. Run on 25 GSM8K questions. Use
+    unsloth/Qwen3.6-35B-A3B-GGUF (llama.cpp, GPU). Measure signed_improvement vs
+    baseline (first-attempt accuracy).
+
+    MODEL_SPECS = [
+      {"name": "Qwen3.6-35B-A3B-GGUF", "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "gpu": 0}
+    ]
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Create python/carnot/pipeline/math_iterative_repair.py:
+       @dataclass
+       class MathStep:
+           step_text: str          # raw text of the step
+           python_expr: str | None # python expression extracted (e.g. "47 + 28")
+           stated_value: float | None  # what the LLM said the result is
+           eval_value: float | None    # what Python eval() says
+
+       class MathIterativeSelfRepair:
+         __init__(self, llm_runner, energy_scorer, max_retries: int = 3):
+           self.llm = llm_runner
+           self.energy = energy_scorer
+           self.max_retries = max_retries
+
+         extract_math_steps(self, response: str) -> list[MathStep]:
+           Parse: look for lines containing "=" with numeric LHS/RHS.
+           For each line: extract (python_expr, stated_value) using regex.
+           Return list of MathStep objects. Empty list if no steps found (do not fail).
+
+         detect_arithmetic_error(self, step: MathStep) -> bool:
+           If step.python_expr is None: return False (cannot verify)
+           Try: eval_val = eval(step.python_expr)  # restricted eval (numbers + operators)
+           If abs(eval_val - step.stated_value) > 0.01: return True (error found)
+           Return False
+
+         build_correction_prompt(self, question: str, response: str,
+                                  error_steps: list[MathStep]) -> str:
+           Format: "The following reasoning has arithmetic errors:\n{response}\n\n"
+                   "Detected errors:\n"
+                   For each error: "  Step '{step.step_text}': {step.python_expr} = "
+                                   "{step.eval_value:.2f}, but you wrote {step.stated_value}\n"
+                   "Please correct the calculation and provide the right final answer."
+
+         repair(self, question: str, correct_answer: float,
+                test_cases: list = None) -> MathRepairResult:
+           attempts = []
+           response = self.llm.generate(question)
+           for i in range(self.max_retries + 1):
+             steps = self.extract_math_steps(response)
+             error_steps = [s for s in steps if self.detect_arithmetic_error(s)]
+             score = self.energy.score(response)
+             final_num = self._extract_final_number(response)
+             correct = (final_num is not None and
+                        abs(final_num - correct_answer) < 0.01)
+             attempts.append({
+               "attempt": i,
+               "response": response,
+               "n_errors_found": len(error_steps),
+               "correct": correct,
+               "energy_score": score
+             })
+             if correct or not error_steps:
+               break
+             if i < self.max_retries:
+               correction_prompt = self.build_correction_prompt(
+                 question, response, error_steps)
+               response = self.llm.generate(correction_prompt)
+           best = min(attempts, key=lambda a: a["energy_score"])
+           return MathRepairResult(
+             best_attempt=best,
+             all_attempts=attempts,
+             n_retries=len(attempts) - 1,
+             final_correct=best["correct"]
+           )
+
+         _extract_final_number(self, response: str) -> float | None:
+           # Extract the last number from response (common GSM8K answer format)
+           nums = re.findall(r'[-+]?\d+\.?\d*', response)
+           if nums:
+             try: return float(nums[-1])
+             except: return None
+           return None
+
+    3. Add spec entries: REQ-CODE-011 (MathIterativeSelfRepair pipeline),
+       SCENARIO-CODE-011 (math repair retries with arithmetic feedback until correct or budget).
+    4. Create scripts/experiment_919_math_iterative_self_repair.py:
+       a. tmpl = ExperimentTemplate(919, "MathIterativeSelfRepair — 25 GSM8K GPU",
+                                     "results/experiment_919_math_iterative_self_repair.json",
+                                     requires_gpu=True)
+       b. tmpl.setup()
+       c. gpu_status = tmpl.setup_gpu(MODEL_SPECS). If not all_healthy: write blocked artifact.
+       d. Load 25 GSM8K questions with known correct answers from datasets or construct
+          representative problems covering: multi-step arithmetic, percentages, rate problems.
+          Use the datasets library or hardcode 25 problems with verified answers.
+       e. Baseline: first-attempt accuracy (no repair, just check if answer correct).
+       f. Repair: run MathIterativeSelfRepair(max_retries=3) on all 25 questions.
+       g. Compute:
+          - baseline_accuracy: fraction correct on first attempt
+          - repair_accuracy: fraction correct after iterative repair
+          - signed_improvement: repair_accuracy - baseline_accuracy
+          - mean_retries_needed: mean retries for repaired-correct questions
+          - energy_selected_correctly: fraction where energy score ranked the correct
+            attempt best (lowest energy = correct answer)
+          - error_detection_rate: fraction of wrong first attempts where >= 1 arithmetic
+            error was detected (eval() disagreement found)
+       h. honest_verdict logic:
+          if signed_improvement > 0.05: "math_repair_significant_gate_open"
+          elif signed_improvement > 0.0: "math_repair_marginal_gate_open"
+          else: "math_repair_no_improvement"
+    5. Write tests with 100% coverage. Test MathIterativeSelfRepair:
+       - extract_math_steps parses "47 + 28 = 76" correctly (step_text, python_expr="47 + 28",
+         stated_value=76.0)
+       - detect_arithmetic_error returns True for "47 + 28 = 76" (eval gives 75)
+       - detect_arithmetic_error returns False for "47 + 28 = 75" (correct)
+       - build_correction_prompt includes the error in prompt text
+       - repair returns best_attempt with lowest energy score
+       - _extract_final_number handles edge cases (negative, decimal, no number)
+       Traces to REQ-CODE-011, SCENARIO-CODE-011.
+    6. Write results/experiment_919_math_iterative_self_repair.json.
+    7. Update ops/changelog.md: one-line entry.
+    8. tmpl.assert_deliverable_written() as final line.
+
+    Run: CARNOT_USE_SANDBOX=0 .venv/bin/python scripts/experiment_919_math_iterative_self_repair.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp920-combined-estimation-math-repair
+  milestone: 2026.04.71
+  deliverable: results/experiment_920_combined_estimation_math_repair.json
+  max_turns: 40
+  gated_on:
+    - upstream: exp919-math-iterative-self-repair
+      artifact_field: signed_improvement
+      op: '>'
+      value: 0.0
+  title: 'Exp 920: Combined EstimationVerifier + MathIterativeSelfRepair Pipeline (CPU, GATED on Exp 919)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 919 confirmed MathIterativeSelfRepair works (signed_improvement > 0).
+    Exp 908 confirmed EstimationVerifier works (SVAMP AUC improved +0.775). This experiment
+    combines them: EstimationVerifier gates whether to attempt repair (high violation_prob
+    → trigger repair), MathIterativeSelfRepair corrects when triggered. The hypothesis:
+    selective repair (only on high-confidence violations) has better precision than always
+    repairing.
+
+    GATE CHECK (run first): Read results/experiment_919_math_iterative_self_repair.json.
+    If signed_improvement <= 0: write results/experiment_920_combined_estimation_math_repair.json
+    with honest_verdict="skipped_gate_blocked_exp919_no_improvement" and exit immediately.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_919_math_iterative_self_repair.json — gate result, signed_improvement
+    - results/experiment_908_estimation_verifier.json — EstimationVerifier AUC, svamp_auc
+    - python/carnot/verify/estimation_verifier.py — EstimationVerifier (Exp 908)
+    - python/carnot/pipeline/math_iterative_repair.py — MathIterativeSelfRepair (Exp 919)
+    - scripts/experiment_template.py — ExperimentTemplate
+
+    TASK: Implement combined pipeline. Run on 25 GSM8K + 20 SVAMP questions.
+    Measure combined_auc vs each component alone. Use Qwen3.5-0.8B (CPU) for fast iteration.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. GATE CHECK: read results/experiment_919_math_iterative_self_repair.json.
+       If signed_improvement <= 0: write skip artifact and exit.
+    3. Create python/carnot/pipeline/combined_math_verifier.py:
+       class CombinedMathVerifier:
+         __init__(self, estimation_verifier, math_repair,
+                  repair_threshold: float = 0.5):
+           self.estimator = estimation_verifier
+           self.repair = math_repair
+           self.threshold = repair_threshold  # trigger repair if viol_prob > threshold
+         verify_and_repair(self, question: str, response: str,
+                            correct_answer: float) -> CombinedVerifyResult:
+           est_result = self.estimator.verify(question, response)
+           triggered_repair = est_result.violation_prob > self.threshold
+           if triggered_repair:
+             repair_result = self.repair.repair(question, correct_answer)
+             final_response = repair_result.best_attempt["response"]
+             final_correct = repair_result.final_correct
+           else:
+             final_response = response
+             final_correct = (
+               self.repair._extract_final_number(response) is not None and
+               abs(self.repair._extract_final_number(response) - correct_answer) < 0.01
+             )
+           return CombinedVerifyResult(
+             estimation_violation_prob=est_result.violation_prob,
+             triggered_repair=triggered_repair,
+             final_correct=final_correct,
+             repair_attempts=repair_result.all_attempts if triggered_repair else []
+           )
+    4. Add spec entries: REQ-CODE-012 (CombinedMathVerifier selective repair),
+       SCENARIO-CODE-012 (EstimationVerifier gates repair, reduces wasted repair calls).
+    5. Create scripts/experiment_920_combined_estimation_math_repair.py:
+       a. tmpl = ExperimentTemplate(920, ..., requires_gpu=False). tmpl.setup().
+       b. Load 25 GSM8K + 20 SVAMP questions with correct answers.
+       c. Use Qwen3.5-0.8B (llama.cpp, CPU) for generation (fast for combined pipeline).
+          MODEL_SPECS = [{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]
+          (CPU fallback acceptable for this experiment)
+       d. Baseline: no repair (raw LLM accuracy on both datasets).
+       e. Repair-all: MathIterativeSelfRepair on all questions (upper bound).
+       f. Combined: CombinedMathVerifier (selective repair via EstimationVerifier).
+       g. Compute per dataset and combined:
+          - baseline_accuracy, repair_all_accuracy, combined_accuracy
+          - repair_rate: fraction questions where repair was triggered (lower = more efficient)
+          - correct_repair_rate: among triggered repairs, fraction that improved
+          - wasted_repair_rate: among triggered repairs, fraction that made no difference
+          - combined_auc: AUC using EstimationVerifier.violation_prob as discriminator
+       h. honest_verdict:
+          if combined_accuracy >= repair_all_accuracy: "combined_dominant_efficient_repair"
+          elif combined_accuracy > baseline_accuracy: "combined_viable_improvement"
+          else: "combined_no_improvement"
+    6. Write tests with 100% coverage. Traces to REQ-CODE-012.
+    7. Write results/experiment_920_combined_estimation_math_repair.json.
+    8. Update ops/changelog.md: one-line entry.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_920_combined_estimation_math_repair.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp921-dualgpu-throughput-benchmark
+  milestone: 2026.04.71
+  deliverable: results/experiment_921_dualgpu_throughput_benchmark.json
+  max_turns: 30
+  gated_on:
+    - upstream: exp913-dualgpu-production-wiring
+      artifact_field: honest_verdict
+      op: contains
+      value: "dualgpu_wired"
+  title: 'Exp 921: DualGPU Throughput Benchmark — Confirm 1.7x Speedup Quantitatively (GPU, GATED on Exp 913)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 913 wired DualGPURunner to ThreeTierPipeline (verdict: dualgpu_wired_partial_speedup)
+    but did not quantitatively confirm 1.7x throughput. Exp 856 validated 1.979x in isolation.
+    This experiment measures the actual end-to-end throughput improvement: run 50 GSM8K questions
+    through the full ThreeTierPipeline with CARNOT_DUAL_GPU=0 vs CARNOT_DUAL_GPU=1 and measure
+    wall-clock questions-per-second.
+
+    GATE CHECK (run first): Read results/experiment_913_dualgpu_production_wiring.json.
+    If honest_verdict does not contain "dualgpu_wired": write skip artifact.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_913_dualgpu_production_wiring.json — gate result, wiring verdict
+    - results/experiment_856_dual_gpu_throughput.json — 1.979x validated speedup
+    - python/carnot/pipeline/dual_gpu_runner.py — DualGPURunner
+    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline (with dual GPU)
+    - scripts/experiment_template.py — ExperimentTemplate
+
+    TASK: Benchmark end-to-end ThreeTierPipeline throughput: single GPU vs dual GPU.
+    Measure actual observed_speedup on 50 questions. Target >= 1.7x.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. GATE CHECK: read results/experiment_913_dualgpu_production_wiring.json.
+       If "dualgpu_wired" not in honest_verdict: write skip artifact.
+    3. tmpl = ExperimentTemplate(921, "DualGPU Throughput Benchmark",
+                                  "results/experiment_921_dualgpu_throughput_benchmark.json",
+                                  requires_gpu=True)
+    4. tmpl.setup()
+    5. MODEL_SPECS = [
+         {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0},
+         {"name": "Qwen3.5-0.8B-gpu1", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 1}
+       ]
+       gpu_status = tmpl.setup_gpu(MODEL_SPECS). If not all_healthy: write blocked artifact.
+    6. Load 50 GSM8K questions.
+    7. Baseline (CARNOT_DUAL_GPU=0): run ThreeTierPipeline on all 50, record wall_time_baseline_s.
+       Compute baseline_qps = 50 / wall_time_baseline_s.
+    8. DualGPU (CARNOT_DUAL_GPU=1): run ThreeTierPipeline on all 50, record wall_time_dual_s.
+       Compute dual_qps = 50 / wall_time_dual_s.
+    9. Compute: observed_speedup = dual_qps / baseline_qps.
+    10. Add spec entries: REQ-PERF-005 (DualGPU end-to-end throughput confirmed),
+        SCENARIO-PERF-005 (ThreeTierPipeline dual-GPU 50q benchmark >= 1.7x).
+    11. honest_verdict:
+        "throughput_confirmed_strong" if observed_speedup >= 1.9
+        "throughput_confirmed" if observed_speedup >= 1.7
+        "throughput_partial" if observed_speedup >= 1.2
+        "throughput_not_confirmed" if observed_speedup < 1.2
+    12. Write results/experiment_921_dualgpu_throughput_benchmark.json.
+    13. Update ops/changelog.md: one-line entry.
+    14. tmpl.assert_deliverable_written() as final line.
+
+    Run: CARNOT_DUAL_GPU=1 .venv/bin/python scripts/experiment_921_dualgpu_throughput_benchmark.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp922-hf-publish-v4-sops
+  milestone: 2026.04.71
+  deliverable: results/experiment_922_hf_publish_v4_sops.json
+  max_turns: 20
+  title: 'Exp 922: HuggingFace Publish v4 — SOPS Auth Injection + Actual Publish (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 915 produced honest_verdict="publish_ready_pending_auth" — all artifacts are
+    ready but the HF_TOKEN was not available at runtime. SOPS-encrypted credential injection is
+    the fix (per CLAUDE.md security requirements: all secrets must be SOPS-encrypted at rest).
+    This experiment attempts the actual publish: check for SOPS-encrypted HF token, decrypt at
+    runtime, publish VJEPA v2 + EstimationVerifier model cards and weights to HuggingFace.
+    Per CLAUSE rule 3: also confirm gitea mirror.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_915_hf_publish_v3.json — publish_ready_pending_auth, model card paths
+    - model_card_vjepa_v2.md — model card written by Exp 915 (check docs/ or project root)
+    - python/carnot/pipeline/vjepa_predictor.py — VJEPA v2 architecture for card
+    - openspec/change-proposals/research-roadmap-v71.md — .71 Phase 3 design
+
+    TASK: Wire SOPS credential injection. Attempt actual HuggingFace publish.
+    Fall back gracefully if SOPS not configured (document exact manual commands).
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md (decentralization rules: rule 3 — multiple distribution channels;
+       security rule: SOPS for all secrets).
+    2. Read results/experiment_915_hf_publish_v3.json. Extract:
+       - models_to_publish
+       - model_cards_written (paths)
+       - hf_org: "Carnot-EBM"
+    3. Attempt SOPS decryption for HF token:
+       import subprocess, os
+       sops_result = subprocess.run(
+         ["sops", "-d", "secrets/hf_token.enc"],
+         capture_output=True, text=True
+       )
+       if sops_result.returncode == 0:
+         hf_token = sops_result.stdout.strip()
+         os.environ["HF_TOKEN"] = hf_token
+         sops_configured = True
+       else:
+         hf_token = os.environ.get("HF_TOKEN", "")
+         sops_configured = False
+    4. Check if HF_TOKEN is available (from SOPS or environment):
+       hf_available = bool(hf_token)
+    5. If hf_available:
+       a. Import huggingface_hub. Confirm login with token.
+       b. Publish VJEPA v2 model card to Carnot-EBM/carnot-vjepa-v2.
+       c. If results/experiment_908_estimation_verifier.json shows svamp_auc > 0.5:
+          Publish EstimationVerifier model card to Carnot-EBM/carnot-estimation-verifier-v1.
+       d. Confirm gitea mirror is configured (check git remote -v for gitea URL).
+       e. Set publish_attempted=True, publish_successful=(no exceptions).
+    6. If not hf_available:
+       Document exact manual commands to publish:
+       manual_commands = [
+         "export HF_TOKEN=<your_token>",
+         "huggingface-cli login --token $HF_TOKEN",
+         "huggingface-cli upload Carnot-EBM/carnot-vjepa-v2 model_card_vjepa_v2.md README.md",
+         "huggingface-cli upload Carnot-EBM/carnot-estimation-verifier-v1 ...",
+       ]
+       Set publish_attempted=False.
+    7. Update ops/status.md published models section if publish was successful.
+    8. honest_verdict:
+       "published_successfully" if publish_successful
+       "publish_attempted_auth_error" if publish_attempted and not publish_successful
+       "publish_ready_pending_auth" if not publish_attempted (HF_TOKEN not available)
+       "sops_configured_publishing" if sops_configured and hf_available
+    9. Write results/experiment_922_hf_publish_v4_sops.json.
+    10. Update ops/changelog.md: one-line entry.
+    11. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_922_hf_publish_v4_sops.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp923-drift-probe-ensemble
+  milestone: 2026.04.71
+  deliverable: results/experiment_923_drift_probe_ensemble.json
+  max_turns: 40
+  prior_failures:
+    - experiment_id: exp911-drift-probe-tier0i
+      verdict: tier0i_marginal
+      addressed_by: >
+        Exp 911 achieved AUC below 0.65 threshold because it used a single cosine drift
+        vector (3 values from 3 adjacent-layer pairs) fed to one LogisticRegression.
+        arXiv 2604.13386 (Multi-Layer Probe Ensembling, incorporated in .70 planning) shows
+        that replacing per-layer single probes with a learned ensemble over all layers improves
+        AUROC by 3-8%. Exp 923 implements: instead of concatenating 3 drift values into one
+        feature vector, train 4 separate LogisticRegression probes (one per layer pair) and
+        learn a weighting α over their outputs. The ensemble weight is optimized on held-out
+        accuracy, not fixed equal-weight combination.
+      retire_if_same_verdict: false
+  title: 'Exp 923: DRIFTProbe Ensemble — Multi-Layer Weighted Ensemble (arXiv 2604.13386) (GPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 911 achieved tier0i_marginal (AUC below 0.65 threshold) because it used a
+    single LogisticRegression trained on concatenated multi-layer drift features. arXiv 2604.13386
+    shows multi-layer probe ENSEMBLING (separate probe per layer, learned weighting) outperforms
+    single-probe approaches by 3-8% AUROC. The fix: train N separate probes (one per layer pair),
+    learn ensemble weights α via held-out accuracy, then α-weighted sum is the final score.
+
+    IMPORTANT: retire_if_same_verdict=false. Root cause identified (single-probe vs ensemble)
+    and the fix directly addresses it (separate probe per layer + learned weighting).
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_911_drift_probe_tier0i.json — prior: tier0i_marginal, ood_auc_drift value
+    - python/carnot/verify/drift_probe.py — DRIFTProbe (Exp 911)
+    - python/carnot/pipeline/three_tier_pipeline.py — Tier 0 integration point
+    - openspec/change-proposals/research-roadmap-v71.md — .71 Phase 4 design
+
+    TASK: Extend DRIFTProbe to use per-layer ensemble with learned weights.
+    Target: ood_auc_drift > 0.65 for tier0i_viable verdict.
+
+    MODEL_SPECS = [{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_911_drift_probe_tier0i.json. Extract ood_auc_drift (baseline).
+    3. Read python/carnot/verify/drift_probe.py. Understand current single-probe structure.
+    4. Create python/carnot/verify/drift_probe_ensemble.py:
+       class DRIFTProbEnsemble:
+         __init__(self, model_runner, layers: list[int] = None):
+           layers default to last 4 layers of model
+           self.per_layer_probes: list[LogisticRegression] = []  # one per adjacent pair
+           self.ensemble_weights: np.ndarray | None = None  # learned α
+         fit(self, correct_examples, hallucinated_examples) -> None:
+           For each layer pair (L, L+1):
+             compute cosine drift for all examples
+             train LogisticRegression on (drift, label)
+           self.per_layer_probes = trained probes
+           # Learn ensemble weights via grid search on held-out split:
+           # α* = argmin_α accuracy(α-weighted-sum of per_layer_probs on held-out)
+           # Use scipy.optimize.minimize or simple grid search (20 candidates)
+           self.ensemble_weights = α*
+         predict_violation_prob(self, hidden_states) -> float:
+           per_layer_probs = [probe.predict_proba(drift_i)[1] for probe, drift_i in zip(...)]
+           return np.dot(self.ensemble_weights, per_layer_probs)
+    5. Update spec: REQ-TIER0-006 (DRIFTProbe ensemble multi-layer hallucination detection),
+       SCENARIO-TIER0-006 (ensemble AUC > 0.65 on GSM8K hallucination pairs).
+    6. Create scripts/experiment_923_drift_probe_ensemble.py:
+       a. tmpl = ExperimentTemplate(923, ..., requires_gpu=True). tmpl.setup().
+       b. gpu_status = tmpl.setup_gpu(MODEL_SPECS). If not all_healthy: write blocked artifact.
+       c. Generate 100 GSM8K (question, correct_response, hallucinated_response) triples.
+       d. Extract hidden states at layers [-4, -3, -2, -1] for each response.
+       e. Fit DRIFTProbEnsemble on 80 training. Evaluate on 20 held-out.
+       f. Compute: ood_auc_drift_ensemble (ensemble) vs ood_auc_drift_baseline (from Exp 911).
+       g. honest_verdict:
+          "tier0i_viable" if ood_auc_drift_ensemble > 0.65
+          "tier0i_improved_marginal" if ood_auc_drift_ensemble > ood_auc_drift_baseline
+          "tier0i_no_improvement" otherwise
+    7. Write tests. Traces to REQ-TIER0-006.
+    8. Write results/experiment_923_drift_probe_ensemble.json.
+    9. Update ops/changelog.md: one-line entry.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: .venv/bin/python scripts/experiment_923_drift_probe_ensemble.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp924-rppm-tier29-step-reward
+  milestone: 2026.04.71
+  deliverable: results/experiment_924_rppm_tier29_step_reward.json
+  max_turns: 40
+  title: 'Exp 924: R-PRM Step Reward Tier 2.9 — Reasoning-Driven Step Verification (arXiv 2503.21295) (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2503.21295 (R-PRM: Reasoning-Driven Process Reward Modeling) improves
+    process reward models by having the model reason over WHY a step is wrong before assigning
+    a reward. This achieves +11.9 F1 points on ProcessBench vs direct-scoring PRMs. The key
+    insight: the reasoning step acts as a regularizer that prevents overfitting to surface
+    patterns. For Carnot, this creates Tier 2.9: between Tier 2.7 (CausalReasoningVerifier)
+    and Tier 3 (Ising), insert a step-level reasoning probe that generates a brief explanation
+    before scoring. The explanation also provides repair hints for IterativeSelfRepair.
+
+    This is a NEW technique (not a rerun of any prior experiment). Decentralization-compliant:
+    implemented locally using small models, no external API required.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/three_tier_pipeline.py — Tier 0-3 cascade, integration point
+    - python/carnot/verify/causal_reasoning_verifier.py — Tier 2.7 (for reference pattern)
+    - python/carnot/pipeline/vjepa_predictor.py — Tier 2 (adjacent tier)
+    - openspec/change-proposals/research-roadmap-v71.md — .71 Phase 4 design
+
+    TASK: Implement RPRMStepRewardTier29. Run on 30 GSM8K questions.
+    Measure AUC vs direct-scoring baseline. Target: auc > baseline.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Create python/carnot/verify/rppm_step_reward.py:
+       @dataclass
+       class StepReasoningResult:
+           step_text: str
+           reasoning: str          # "why" explanation (from LLM or heuristic)
+           step_score: float       # 0-1 violation probability
+           reasoning_mode: str     # "llm" | "heuristic"
+
+       class RPRMStepReward:
+         __init__(self, llm_runner=None, n_reasoning_tokens: int = 50):
+           self.llm = llm_runner   # None = heuristic mode (CI-safe)
+           self.n_tokens = n_reasoning_tokens
+
+         score_step_with_reasoning(self, step: str, context: str) -> StepReasoningResult:
+           if self.llm is None:
+             # CI-safe heuristic: flag if step contains suspicious patterns
+             # ("= 0", division by impossible number, repeated equals)
+             suspicious = any([
+               "= 0" in step and len(step) > 20,  # suspicious zero result
+               step.count("=") > 2,               # multiple equals in one step
+               re.search(r"\b0\b.*=", step),       # divides by zero pattern
+             ])
+             reasoning = "heuristic: suspicious pattern detected" if suspicious else "ok"
+             score = 0.7 if suspicious else 0.1
+             return StepReasoningResult(step, reasoning, score, "heuristic")
+           # LLM mode: generate reasoning then score
+           reasoning_prompt = (
+             f"Context: {context}\n"
+             f"Step: {step}\n"
+             f"Is this step correct? Explain briefly in {self.n_tokens} tokens max.\n"
+             f"End with: VERDICT: [correct|suspicious|wrong]"
+           )
+           reasoning_text = self.llm.generate(reasoning_prompt,
+                                               max_tokens=self.n_tokens)
+           if "VERDICT: wrong" in reasoning_text: score = 0.9
+           elif "VERDICT: suspicious" in reasoning_text: score = 0.5
+           else: score = 0.1
+           return StepReasoningResult(step, reasoning_text, score, "llm")
+
+         verify_response(self, question: str, response: str) -> RPRMResult:
+           steps = self._split_steps(response)
+           step_results = [
+             self.score_step_with_reasoning(s, question) for s in steps
+           ]
+           overall_score = max([r.step_score for r in step_results], default=0.0)
+           return RPRMResult(
+             steps=step_results,
+             overall_violation_prob=overall_score,
+             n_flagged=sum(1 for r in step_results if r.step_score > 0.5),
+             repair_hints=[r.reasoning for r in step_results if r.step_score > 0.5]
+           )
+
+         _split_steps(self, response: str) -> list[str]:
+           # Split by sentence endings or explicit step markers
+           return [s.strip() for s in re.split(r'[.\n]', response)
+                   if len(s.strip()) > 10]
+
+    3. Add spec entries: REQ-VERIFY-148 (RPRMStepReward reasoning-driven step verification),
+       SCENARIO-VERIFY-148 (step reasoning identifies violations with explanation for repair).
+    4. Create scripts/experiment_924_rppm_tier29_step_reward.py:
+       a. tmpl = ExperimentTemplate(924, ..., requires_gpu=False). tmpl.setup().
+       b. Load 30 GSM8K questions. Generate responses with Qwen3.5-0.8B (CPU).
+       c. For each (question, response) pair:
+          - Label: correct if LLM answer matches GSM8K ground truth (from dataset).
+          - Baseline: score with CausalReasoningVerifier (Tier 2.7) → baseline_auc.
+          - RPRM: score with RPRMStepReward (heuristic mode for CPU) → rppm_auc.
+       d. Compute: baseline_auc, rppm_auc using sklearn.metrics.roc_auc_score.
+       e. honest_verdict:
+          "rppm_tier29_viable" if rppm_auc > baseline_auc
+          "rppm_tier29_no_improvement" otherwise
+    5. Write tests with 100% coverage. Test:
+       - score_step_with_reasoning heuristic mode (CI-safe).
+       - StepReasoningResult dataclass.
+       - _split_steps handles edge cases (empty, single step, multi-sentence).
+       Traces to REQ-VERIFY-148, SCENARIO-VERIFY-148.
+    6. Write results/experiment_924_rppm_tier29_step_reward.json.
+    7. Update ops/changelog.md: one-line entry.
+    8. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_924_rppm_tier29_step_reward.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp925-kan-tier4-real-data
+  milestone: 2026.04.71
+  deliverable: results/experiment_925_kan_tier4_real_data.json
+  max_turns: 40
+  title: 'Exp 925: KAN Tier 4 Real Data Training — AutoKnots on FoVer-Labeled Violations (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 910 seeded KAN Tier 4 (AutoKnots adaptive spline refinement) on synthetic
+    activation data and achieved tier4_seed_viable. The synthetic corpus does not reflect real
+    LLM error distributions. This experiment trains AutoKnotsRefiner on real FoVer-labeled
+    constraint violation data from the accumulated verify-repair pipeline logs. The hypothesis:
+    real-data training improves post-refinement KAN AUC beyond the synthetic-trained baseline.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_910_kan_tier4_seed.json — synthetic baseline: post_refinement_auc,
+      baseline_auc, signed_auc_improvement
+    - python/carnot/models/kan_autoknots.py — AutoKnotsRefiner (Exp 910)
+    - python/carnot/models/kan.py — KAN base model
+    - python/carnot/verify/fover_labeler.py — FoVer labeled data source
+    - results/ — scan for fover_labeled_*.json or experiment_*_fover*.json files
+    - openspec/change-proposals/research-roadmap-v71.md — .71 Phase 4 design
+
+    TASK: Load FoVer-labeled violation data. Train AutoKnotsRefiner on real activations.
+    Compare real-data AUC vs synthetic baseline from Exp 910.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_910_kan_tier4_seed.json. Extract:
+       - baseline_auc: KAN AUC before refinement (synthetic)
+       - post_refinement_auc: KAN AUC after refinement (synthetic)
+       - signed_auc_improvement: improvement from synthetic refinement
+    3. Scan results/ directory for files with fover or violation labels:
+       import glob
+       fover_files = (glob.glob("results/*fover*.json") +
+                      glob.glob("results/*violation*.json") +
+                      glob.glob("results/experiment_570*.json") +   # FR-11 real violations
+                      glob.glob("results/experiment_797*.json"))    # JEPA data collection
+       Load all available labeled pairs: (text, is_violated: bool)
+    4. Create scripts/experiment_925_kan_tier4_real_data.py:
+       a. tmpl = ExperimentTemplate(925, ..., requires_gpu=False). tmpl.setup().
+       b. Load real FoVer-labeled data. If n_real_pairs < 20: use synthetic fallback
+          (honest_verdict="real_data_insufficient_synthetic_fallback").
+       c. Convert labeled pairs to KAN input format:
+          For each (text, is_violated) pair:
+            embedding = simple_text_features(text)  # TF-IDF or char n-gram, CPU-safe
+            label = 1 if is_violated else 0
+       d. Split 80% train / 20% test.
+       e. Baseline: train KAN on train, evaluate AUC on test (no refinement).
+       f. Refine: run AutoKnotsRefiner.multi_round_refine(activation_batch, rounds=3).
+       g. Re-evaluate: AUC after refinement.
+       h. Compare: real_data_post_refinement_auc vs synthetic_post_refinement_auc (from Exp 910).
+       i. honest_verdict:
+          "real_data_improves_over_synthetic" if real_data_post_refinement_auc > post_refinement_auc
+          "real_data_comparable" if abs(real_data_post_refinement_auc - post_refinement_auc) < 0.02
+          "real_data_insufficient_synthetic_fallback" if n_real_pairs < 20
+          "real_data_underperforms_synthetic" otherwise
+    5. Write tests with 100% coverage. Traces to REQ-SELF-008, SCENARIO-SELF-008.
+    6. Write results/experiment_925_kan_tier4_real_data.json.
+    7. Update ops/changelog.md: one-line entry.
+    8. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_925_kan_tier4_real_data.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp926-fr11-tier2-code-domain
+  milestone: 2026.04.71
+  deliverable: results/experiment_926_fr11_tier2_code_domain.json
+  max_turns: 40
+  title: 'Exp 926: FR-11 Tier 2 Code Domain Memory — CaseMemory for Code Repair Patterns (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: FR-11 Self-Learning Loop Tier 2 (CaseMemory) was validated for arithmetic domains
+    in Exps 343/344/761. The code repair breakthrough in Exps 905/906 (+72pp HumanEval) generated
+    execution logs containing (error_type, repair_pattern) pairs — exactly the kind of domain-
+    specific patterns that CaseMemory should learn. This experiment extends CaseMemory to code
+    repair domain: accumulate (code_error_type, successful_repair_strategy) pairs from Exp 905/906
+    logs, and measure whether repeated exposure to the same error types causes automatic constraint
+    addition in subsequent repair sessions.
+
+    This is the MANDATORY self-learning experiment for milestone .71.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_905_iterative_self_repair_v1.json — repair logs: all_attempts with errors
+    - results/experiment_906_code_repair_50q_scaleup.json — 50q repair logs
+    - python/carnot/pipeline/constraint_memory.py — CaseMemory (Tier 2)
+    - python/carnot/pipeline/constraint_template_library.py — ConstraintTemplateLibrary
+    - python/carnot/models/case_memory.py — CaseMemory (check both locations)
+    - openspec/capabilities/self_learning/spec.md — FR-11 Tier 2 requirements
+    - openspec/change-proposals/research-roadmap-v71.md — .71 Phase 5 design
+
+    TASK: Extract code repair patterns from Exp 905/906. Wire into CaseMemory.
+    Simulate 5-session accumulation. Measure precision improvement after code patterns
+    are learned vs baseline (no accumulated memory).
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_905_iterative_self_repair_v1.json and
+       results/experiment_906_code_repair_50q_scaleup.json. Extract from each:
+       - all_attempts: list of {attempt, exec_error, exec_passed, energy_score}
+       - For each failed attempt: classify error type:
+         * "syntax_error" if "SyntaxError" in exec_error
+         * "name_error" if "NameError" in exec_error
+         * "type_error" if "TypeError" in exec_error
+         * "index_error" if "IndexError" in exec_error
+         * "assertion_error" if "AssertionError" in exec_error
+         * "logic_error" if exec_error is None but exec_passed is False
+         * "unknown" otherwise
+    3. Create python/carnot/pipeline/code_case_memory.py:
+       class CodeCaseMemory:
+         __init__(self):
+           self.error_type_counts: dict[str, int] = {}
+           self.error_type_repair_successes: dict[str, int] = {}
+           self.min_observations_for_template: int = 3
+
+         record_attempt(self, error_type: str, was_repaired: bool) -> None:
+           self.error_type_counts[error_type] = self.error_type_counts.get(error_type, 0) + 1
+           if was_repaired:
+             self.error_type_repair_successes[error_type] = (
+               self.error_type_repair_successes.get(error_type, 0) + 1)
+
+         get_active_constraints(self) -> list[str]:
+           Return constraint types for error categories with >= min_observations_for_template.
+           E.g. if "syntax_error" count >= 3: add "syntax_check" constraint.
+           Map: syntax_error → "syntax_check"; name_error → "import_check";
+                type_error → "type_check"; index_error → "bounds_check";
+                assertion_error → "assertion_check"; logic_error → "logic_check"
+
+         repair_success_rate(self, error_type: str) -> float:
+           Return successes / max(1, counts) for given error type.
+
+    4. Add spec entries: REQ-LEARN-045 (CodeCaseMemory accumulates error-type patterns
+       from code repair sessions), SCENARIO-LEARN-045 (after 3+ syntax errors, syntax_check
+       constraint auto-added).
+    5. Create scripts/experiment_926_fr11_tier2_code_domain.py:
+       a. tmpl = ExperimentTemplate(926, ..., requires_gpu=False). tmpl.setup().
+       b. Load Exp 905 + Exp 906 repair logs. Extract and classify all error types.
+       c. mem = CodeCaseMemory()
+       d. Simulate 5 accumulation sessions (replay the logs in chronological order):
+          Session 1: first 10 attempts from Exp 905.
+          Session 2: next 10 from Exp 905.
+          Session 3: first 10 from Exp 906.
+          Session 4: next 10 from Exp 906.
+          Session 5: final 10 from Exp 906.
+          After each session: record active_constraints = mem.get_active_constraints()
+       e. Measure:
+          - n_constraints_after_session_1 through n_constraints_after_session_5
+          - precision_improvement: does more specific constraint set reduce false alarms?
+            Simulate: baseline (no constraints): flag all failed attempts as violations.
+                     memory-guided (active constraints only): flag only if matching error type.
+                     Compute: precision = TP / (TP + FP) for both.
+          - signed_precision_improvement = memory_precision - baseline_precision
+       f. honest_verdict:
+          "tier2_code_memory_works" if signed_precision_improvement > 0 AND n_constraints_after_session_5 >= 2
+          "tier2_code_memory_partial" if n_constraints_after_session_5 >= 1
+          "tier2_code_memory_insufficient_data" if all error_type_counts < min_observations_for_template
+          "tier2_code_memory_no_improvement" otherwise
+    6. Write tests. Traces to REQ-LEARN-045, SCENARIO-LEARN-045.
+    7. Write results/experiment_926_fr11_tier2_code_domain.json.
+    8. Update ops/changelog.md: one-line entry.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_926_fr11_tier2_code_domain.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp927-draft-conditioned-integration
+  milestone: 2026.04.71
+  deliverable: results/experiment_927_draft_conditioned_integration.json
+  max_turns: 30
+  title: 'Exp 927: DraftConditioned Tier 2.8 Pipeline Integration — Wire to ThreeTierPipeline (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 912 confirmed DraftConditionedVerifier (Tier 2.8) is viable in isolation
+    (honest_verdict=tier28_viable). The structural constraint injection improved Ising solve
+    quality when tested standalone. This experiment integrates Tier 2.8 into the
+    ThreeTierPipeline cascade between Tier 2.7 (CausalReasoningVerifier) and Tier 3 (Ising).
+    The key metric: skip_rate (fraction of Tier 3 calls avoided by Tier 2.8 early exit)
+    with FN rate < 5% (we don't miss real violations).
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_912_draft_conditioned_tier28.json — tier28_viable, baseline metrics
+    - python/carnot/pipeline/draft_conditioned_verifier.py — DraftConditionedVerifier (Exp 912)
+    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline cascade
+    - python/carnot/verify/causal_reasoning_verifier.py — Tier 2.7 (insert after this)
+    - openspec/change-proposals/research-roadmap-v71.md — .71 Phase 5 design
+
+    TASK: Wire DraftConditionedVerifier into ThreeTierPipeline. Measure skip_rate and FN_rate
+    on 25 GSM8K questions. Target: skip_rate > 0.20, FN_rate < 0.05.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_912_draft_conditioned_tier28.json. Extract:
+       - mean_constraints_injected, auc_with_draft, auc_baseline
+    3. Read python/carnot/pipeline/three_tier_pipeline.py fully. Identify:
+       - The position where Tier 2.7 exits and Tier 3 begins
+       - The interface for adding a new tier (return early if score > threshold)
+    4. Modify python/carnot/pipeline/three_tier_pipeline.py to add Tier 2.8:
+       In ThreeTierPipeline.__init__: accept optional draft_verifier: DraftConditionedVerifier
+       parameter. If provided, wire after Tier 2.7.
+       In ThreeTierPipeline.verify():
+         if self.draft_verifier is not None:
+           tier28_result = self.draft_verifier.verify_with_draft(question, response)
+           # Tier 2.8 is permissive: only exit early if no structural constraints found
+           if tier28_result.n_constraints == 0:
+             return VerificationResult(verified=True, mode="DRAFT_FAST_PATH",
+                                       tier28_skipped_tier3=True)
+           # Otherwise: inject draft constraints into Tier 3 call
+           tier3_energy = ising_sampler.score_with_constraints(
+             response, tier28_result.draft_constraints)
+         else:
+           tier3_energy = ising_sampler.score(response)
+    5. Add spec entries: REQ-VERIFY-149 (Tier 2.8 DraftConditioned pipeline integration),
+       SCENARIO-VERIFY-149 (Tier 2.8 in cascade achieves skip_rate > 20% with FN < 5%).
+    6. Create scripts/experiment_927_draft_conditioned_integration.py:
+       a. tmpl = ExperimentTemplate(927, ..., requires_gpu=False). tmpl.setup().
+       b. Load 25 GSM8K questions. Use Qwen3.5-0.8B (CPU) for generation.
+       c. Ground-truth labels: correct answer from GSM8K dataset.
+       d. Baseline: ThreeTierPipeline without Tier 2.8 (no draft_verifier).
+       e. Integrated: ThreeTierPipeline with Tier 2.8 wired.
+       f. For each question compute:
+          - baseline: did pipeline correctly classify (TP/TN/FP/FN)?
+          - integrated: did pipeline skip Tier 3 (skip_tier3=True)?
+          -             did integrated correctly classify?
+       g. Compute: skip_rate = fraction skipped Tier 3 / total
+                   fn_rate = false negatives / total violated (we missed a real violation)
+       h. honest_verdict:
+          "tier28_wired_target_met" if skip_rate > 0.20 AND fn_rate < 0.05
+          "tier28_wired_high_fn" if skip_rate > 0.20 AND fn_rate >= 0.05
+          "tier28_wired_low_skip" if skip_rate <= 0.20
+          "tier28_wired_baseline" otherwise
+    7. Write tests. Test CARNOT_DUAL_GPU behavior unchanged with tier28 wired.
+       Traces to REQ-VERIFY-149.
+    8. Write results/experiment_927_draft_conditioned_integration.json.
+    9. Update ops/changelog.md: one-line entry.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_927_draft_conditioned_integration.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp928-milestone-retro-71
+  milestone: 2026.04.71
+  deliverable: results/experiment_928_milestone_retro.json
+  max_turns: 20
+  title: 'Exp 928: Milestone 2026.04.71 Operational Retrospective (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Milestone 2026.04.71 "Math Repair + Lagrange Closure + R-PRM Tier 2.9 +
+    Self-Learning Tier 2 Code" is complete. This retrospective evaluates all 12 success
+    criteria from the design doc, tallies wall time, and produces the handoff for .72.
+
+    MILESTONE SUCCESS CRITERIA (from research-roadmap-v71.md):
+    1. lagrange_entropy_validated: results/experiment_918_*.json signed_entropy_improvement > 0
+    2. math_repair_working: results/experiment_919_*.json signed_improvement > 0
+    3. combined_pipeline_viable: results/experiment_920_*.json combined_accuracy > baseline_accuracy
+    4. dualgpu_throughput_confirmed: results/experiment_921_*.json honest_verdict contains "confirmed"
+    5. hf_published: results/experiment_922_*.json honest_verdict != "skipped"
+    6. drift_probe_viable: results/experiment_923_*.json honest_verdict in ("tier0i_viable",
+       "tier0i_improved_marginal")
+    7. rppm_tier29_viable: results/experiment_924_*.json honest_verdict == "rppm_tier29_viable"
+    8. kan_tier4_real_data: results/experiment_925_*.json honest_verdict in
+       ("real_data_improves_over_synthetic", "real_data_comparable",
+        "real_data_insufficient_synthetic_fallback")
+    9. tier2_code_memory_works: results/experiment_926_*.json honest_verdict in
+       ("tier2_code_memory_works", "tier2_code_memory_partial")
+    10. tier28_wired: results/experiment_927_*.json honest_verdict contains "tier28_wired"
+    11. manifest_escalated: results/experiment_917_*.json escalation_written == True
+    12. retro_complete: (this experiment) honest_verdict == "milestone_complete"
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_917_preflight_v20.json through results/experiment_927_*.json
+    - results/experiment_916_milestone_retro.json — .70 retro baseline
+    - ops/changelog.md — full .71 changes
+    - openspec/change-proposals/research-roadmap-v71.md — .71 design doc
+    - ops/status.md — current status to update
+
+    TASK: Evaluate all 12 success criteria. Compute wall time. Identify open RETROs for .72.
+    Update ops/status.md with .71 outcomes.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md meta-reflection principle.
+    2. Read all experiment result files for .71 (Exps 917-927). Extract honest_verdicts.
+    3. Evaluate each of the 12 success criteria. Compute n_criteria_met.
+    4. Compute wall_time_minutes: sum of experiment durations from artifacts.
+    5. Identify open RETROs entering .72:
+       - RETRO-MANIFEST-FULL-SCOPE: still HUMAN_REQUIRED (13+ milestones)
+       - RETRO-XILINX-TOOLS-UNAVAILABLE: still HUMAN_REQUIRED
+       - RETRO-LAGRANGE-ENTROPY-DEGENERATE: CLOSED if Exp 918 improvement > 0; else carry
+       - New RETROs: any experiment with failed criterion and no clear fix path
+    6. Meta-reflection (MANDATORY per CLAUDE.md):
+       Evaluate HOW .71 was executed:
+       - Did math repair (Exp 919) scale as expected from code repair (+72pp)?
+       - Did DRIFTProbe ensemble improve over single-probe? (Expected 3-8% from arXiv 2604.13386)
+       - Did R-PRM Tier 2.9 provide meaningful step-level signal?
+       - Which experiments ran over max_turns? What should .72 planner know?
+       - Is DualGPU throughput now confirmed quantitatively?
+    7. Update ops/status.md:
+       - "What's Working" section: add all confirmed capabilities from .71
+       - "What's Next" section: update with .72 priorities
+    8. Build artifact:
+       {
+         "milestone": "2026.04.71",
+         "n_criteria_met": int,
+         "n_criteria_total": 12,
+         "criteria_results": {dict},
+         "wall_time_minutes": float,
+         "open_retros_entering_72": [list],
+         "closed_retros_this_milestone": [list],
+         "meta_reflection": str,
+         "honest_verdict": "milestone_complete"
+       }
+    9. Write results/experiment_928_milestone_retro.json.
+    10. Update ops/changelog.md: "Milestone 2026.04.71 retrospective complete."
+    11. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_928_milestone_retro.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.

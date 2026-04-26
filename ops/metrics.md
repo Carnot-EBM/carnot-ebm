@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-26 Milestone 2026.04.71 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-26T10:19:51Z | 2026-04-26T10:32:12Z | Planned milestone 2026.04.71 "Math Repair + Lagrange Closure + R-PRM Tier 2.9 + Self-Learning Tier 2 Code". Read 10 project files + .70 retro JSON (11/12 criteria met, 36.9 min). Arxiv scan: added R-PRM (arXiv 2503.21295, +11.9 F1 ProcessBench) and HRM (arXiv 2503.13551) to research-references.md. Identified 3 biggest gaps: (1) math repair not tested (IterativeSelfRepair only validated for code); (2) Lagrange forgetting degenerate corpus (single-constraint → entropy=0); (3) new tiers 2.8/2.9 not integrated. Wrote openspec/change-proposals/research-roadmap-v71.md and research-roadmap-next.yaml (12 experiments Exps 917-928). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~90k |
+
+---
+
 ## Session: 2026-04-26 Milestone 2026.04.69 Planning
 
 ### Turn Log
