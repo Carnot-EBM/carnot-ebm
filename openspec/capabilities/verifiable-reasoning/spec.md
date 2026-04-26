@@ -16123,3 +16123,33 @@ honest_verdict as follows:
 **And** the artifact is written with inference_mode='live_gpu' and signed_improvement field
 
 **Spec traces:** REQ-VER-MATH-001, REQ-VER-MATH-002, Exp 930
+
+## REQ-VER-030: SOTA Math Repair — GSM8K with GGUF Model
+
+Carnot SHALL re-run GSM8K math iterative self-repair using a SOTA GGUF model
+(unsloth/gemma-4-26B-A4B-it-GGUF, unsloth/gemma-4-31B-it-GGUF, or
+unsloth/Qwen3.6-35B-A3B-GGUF) to overcome the model capability ceiling proven in
+Exp 930 (gemma-4-E4B-it produced 12% baseline, leaving no room for repair improvement).
+
+- REQ-VER-030-1: The experiment SHALL load the SOTA model path from the Exp 941
+  preflight JSON (sota_model_path field) as the first priority, then fall back to
+  resolve_cached_gguf() for the three mandated SOTA GGUFs in priority order.
+- REQ-VER-030-2: If no SOTA GGUF is found, the artifact SHALL have
+  honest_verdict='sota_model_not_found' and SHALL NOT fall back to gemma-4-E4B-it.
+- REQ-VER-030-3: The GGUF SHALL be loaded via llama.cpp with n_gpu_layers=-1 to
+  offload all transformer layers to the GPU.
+- REQ-VER-030-4: The artifact SHALL include inference_mode, model_id, baseline_accuracy,
+  repair_accuracy, final_accuracy, and signed_improvement fields.
+- REQ-VER-030-5: The honest_verdict SHALL follow the REQ-VER-MATH-002 mapping.
+
+### SCENARIO-VER-030: GSM8K SOTA Repair Loop
+
+**Given** a SOTA GGUF model loaded via llama.cpp on 25 GSM8K questions
+**When** the repair loop runs with max_retries=3
+**Then** the baseline_accuracy reflects round-0 answers before any repair
+**And** the repair loop shows improvement over the E4B baseline (signed_improvement > 0)
+**And** the artifact contains inference_mode='live_gpu', model_id, and signed_improvement
+**And** the honest_verdict is one of math_repair_significant, math_repair_marginal,
+  math_repair_zero, math_repair_negative, or sota_model_not_found
+
+**Spec traces:** REQ-VER-030, REQ-VER-MATH-001, REQ-VER-MATH-002, Exp 942

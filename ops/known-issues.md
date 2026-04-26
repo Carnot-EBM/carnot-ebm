@@ -144,3 +144,39 @@ Status: HUMAN_REQUIRED — resolve SOPS credential injection before scheduling H
 ### IPFS Mirror CLOSED (Exp 934, 2026-04-26)
 VJEPA v2 IPFS CID: `QmTkGjpN5fYNnC3g8Gx8sPWHZJKkw8oGVDKwWT6sZbVaGN`
 Mirror registry: results/ipfs_mirrors.json
+
+## RETRO-MATH-REPAIR-MODEL-CEILING (opened .72, Exp 930)
+
+Exp 930 iterative self-repair on GSM8K: gemma-4-E4B-it baseline=12%, repair=12%,
+signed_improvement=0.0. Model capability ceiling — E4B is too small for GSM8K
+math reasoning. The repair algorithm is structurally correct; the model is wrong.
+
+Resolution path: Exp 942 in .73 must use Gemma4-31B or Qwen3.6-35B-A3B (SOTA tier).
+SOTA GGUF already downloaded — gemma-4-26B-A4B-it-UD-Q4_K_M.gguf confirmed in HF cache.
+Status: TARGETED (Exp 942)
+
+## RETRO-SC-ENERGY-GATE-DISCIPLINE (opened .72, Exp 939)
+
+Exp 939 SC-Energy Set Consistency Networks blocked by conductor pre-gate: task YAML
+lacked prior_failures entries for 7 prior SC-energy / contrastive-energy experiments.
+Identical planning error to Exp 917 in milestone .71 — planner did not consult
+research-complete.yaml before writing the task YAML.
+
+## SC-ENERGY PRIOR EXPERIMENTS (for Exp 944 prior_failures reference)
+
+Exp 944 MUST include all 8 entries below in its prior_failures field:
+
+| Exp | Verdict | Domain |
+|-----|---------|--------|
+| 506 | semantic_energy_no_improvement | Semantic Energy Tier 0d |
+| 509 | energy_magnitude_wins | PPSEBM Energy Magnitude Replay (adjacent) |
+| 533 | no_violation_reduction | COLD Decoding Energy Guidance (adjacent) |
+| 711 | tier_29_below_threshold | SC-Energy SetConsistencyVerifier Tier 2.9 |
+| 725 | sc_energy_v2_below_threshold | SC-Energy v2 FoVer v2 Dual Labels |
+| 772 | semantic_energy_below_baseline | SemanticEnergyProbe Tier 0g |
+| 787 | energy_prefilter_efficient | S* Energy Pre-Ranking (adjacent) |
+| 939 | blocked_gate_check_failed | SC-Energy Set Consistency Networks |
+
+The "addressed_by" field for each must explain what is substantively different in
+Exp 944 (new architecture, new corpus, new technique — not relabeling).
+Status: HUMAN_REQUIRED at planner layer — conductor will block again if omitted.

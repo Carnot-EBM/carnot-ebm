@@ -306,7 +306,7 @@ tasks:
     Today's date: {date}.
 
     CONTEXT: arXiv 2503.10695 (SC-Energy) proposes energy functions that score whether a SET
-    of statements {s1,...,sn} is internally consistent. Contrastive loss:
+    of statements (s1,...,sn) is internally consistent. Contrastive loss:
     E(coherent_set) << E(contradictory_set). Achieves AUROC=0.89 on multi-statement consistency
     benchmarks. Exp 939 was blocked for the SECOND consecutive milestone by gate-discipline
     failure — YAML lacked prior_failures for 7 prior SC-energy experiments. This version
@@ -768,10 +768,10 @@ tasks:
             of shape (n_vars, n_neighbors) — each spin connected to K neighbors only
           - _build_sparse_neighbors(self, n_vars, n_neighbors): random K-regular graph
             (each spin has exactly K neighbors, symmetric)
-          - energy(self, spins): compute E = -sum_i(sum_{j in neighbors(i)} J_ij * s_i * s_j) / 2
+          - energy(self, spins): compute E = -sum_i(sum_(j in neighbors(i)) J_ij * s_i * s_j) / 2
           - sample_gibbs(self, n_steps): Gibbs sampling using only K-neighbor sum
           - compare_with_dense(self, n_trials=10): benchmark sparse vs dense convergence
-       b. E-MVL majority vote rule: for each spin i, new_s_i = sign(sum_{j in neighbors(i)} J_ij * s_j)
+       b. E-MVL majority vote rule: for each spin i, new_s_i = sign(sum_(j in neighbors(i)) J_ij * s_j)
           (majority vote over K neighbors instead of Gibbs probability)
        c. Add spec entries: REQ-SAMPLE-020 (SparseIsingEBM K-regular graph),
           SCENARIO-SAMPLE-035 (sparse vs dense convergence comparison).
@@ -851,14 +851,14 @@ tasks:
            (papers were filed in planning step, not pre-flight)
        12. retro_complete: always True
     3. Build artifact:
-       {
+       (
          "experiment": 951,
          "milestone": "2026.04.73",
          "title": "Milestone 2026.04.73 Retrospective",
          "n_criteria_met": <count>,
          "n_criteria_total": 12,
-         "criteria_results": {<criterion: bool>},
-         "criteria_details": {<criterion: {experiment, verdict, measured_value, threshold, passed, note}>},
+         "criteria_results": {<criterion: bool>),
+         "criteria_details": (<criterion: {experiment, verdict, measured_value, threshold, passed, note)>},
          "open_retros_entering_74": [...],
          "headline_findings": [...],
          "honest_verdict": "milestone_complete",
