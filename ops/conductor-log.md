@@ -2855,3 +2855,5 @@ python/ |
 | 2026-04-26 13:30 UTC | Milestone 2026.04.72 activated | OK | 12 tasks queued |
 | 2026-04-26 13:43 UTC | Exp 929: Pre-flight v21 — .71 Audit + Gate-Check D | OK | 81 passed, 3 warnings in 2.79s |
 | 2026-04-26 14:12 UTC | Exp 930: Math Iterative Self-Repair v1 — Execute-F | OK | 81 passed, 3 warnings in 2.87s |
+| 2026-04-26 14:22 UTC | Exp 931: Combined Math+Estimation Pipeline — Wire  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp930-math-iterative-self-repair-v1.signe |
+| 2026-04-26 14:32 UTC | Exp 931: Combined Math+Estimation Pipeline — Wire | OK | Deliverable already exists in repo |
