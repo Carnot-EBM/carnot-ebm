@@ -4626,3 +4626,70 @@ Key design decisions encoded in the YAML:
 - **Exp 916**: Milestone retro with 12 success criteria
 2026-04-25 22:19:41,993 [conductor] Claude Code completed (exit 0)
 2026-04-25 22:19:42,007 [conductor] Planning agent created milestone 2026.04.70 with 13 tasks
+2026-04-25 22:19:42,075 [conductor] Committed: [conductor] Plan next milestone: 2026.04.70
+2026-04-25 22:19:43,953 [conductor] Pushed to origin
+2026-04-25 22:19:43,954 [conductor] Planning complete — will activate next iteration
+2026-04-25 22:19:43,954 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-25 22:24:43,956 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-25 22:29:43,960 [conductor] Sleep complete — resuming
+2026-04-25 22:29:43,960 [conductor] --- Iteration 3 ---
+2026-04-25 22:29:43,962 [conductor] All 0 research tasks completed or exhausted. Nothing to do.
+2026-04-25 22:29:43,962 [conductor] All tasks in current milestone complete.
+2026-04-25 22:29:43,962 [conductor] Found research-roadmap-next.yaml — transitioning milestones
+2026-04-25 22:29:43,977 [conductor] Archiving milestone 2026.04.69 (VJEPA Streaming + SVAMP Root Cause + Self-Learning Tier 4 Seed) — 12 tasks
+2026-04-25 22:29:43,977 [conductor] Unexpected error in research step
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2786, in main
+    progress = research_step(
+        push=not args.no_push,
+    ...<2 lines>...
+        async_doc_recon=args.async_doc_recon,
+    )
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 1972, in research_step
+    _archive_current_milestone(push=push)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 1464, in _archive_current_milestone
+    "title": t["title"],
+             ~^^^^^^^^^
+KeyError: 'title'
+2026-04-25 22:29:43,977 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-25 22:34:43,980 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-25 22:39:43,983 [conductor] Sleep complete — resuming
+2026-04-25 22:39:43,983 [conductor] --- Iteration 4 ---
+2026-04-25 22:39:43,986 [conductor] All 0 research tasks completed or exhausted. Nothing to do.
+2026-04-25 22:39:43,986 [conductor] All tasks in current milestone complete.
+2026-04-25 22:39:43,986 [conductor] Found research-roadmap-next.yaml — transitioning milestones
+2026-04-25 22:39:44,000 [conductor] Archiving milestone 2026.04.69 (VJEPA Streaming + SVAMP Root Cause + Self-Learning Tier 4 Seed) — 12 tasks
+2026-04-25 22:39:44,000 [conductor] Unexpected error in research step
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2786, in main
+    progress = research_step(
+        push=not args.no_push,
+    ...<2 lines>...
+        async_doc_recon=args.async_doc_recon,
+    )
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 1972, in research_step
+    _archive_current_milestone(push=push)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 1464, in _archive_current_milestone
+    "title": t["title"],
+             ~^^^^^^^^^
+KeyError: 'title'
+2026-04-25 22:39:44,001 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-25 22:44:44,004 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-25 22:49:44,006 [conductor] Sleep complete — resuming
+2026-04-25 22:49:44,007 [conductor] --- Iteration 5 ---
+2026-04-25 22:49:44,023 [conductor] ============================================================
+2026-04-25 22:49:44,023 [conductor] RESEARCH STEP: Exp 892: Pre-flight v18 — PIMI Retirement Check + Manifest Audit (CPU)
+2026-04-25 22:49:44,023 [conductor] ============================================================
+2026-04-25 22:49:44,723 [conductor] Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2081, in research_step
+    ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/failure_ledger.py", line 231, in load_from_artifacts
+    label = map_status_label(verdict)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/in_process_doc_reconcile.py", line 142, in map_status_label
+    v = (verdict or "").lower()
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2026-04-25 22:49:44,739 [conductor] Committing 3 dirty files as checkpoint (preserving work)
