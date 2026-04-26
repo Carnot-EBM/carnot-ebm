@@ -8,6 +8,7 @@ Validates that the per-layer ensemble probe correctly:
   - Handles missing layer keys gracefully.
 
 Spec: REQ-TIER0-006, SCENARIO-TIER0-006
+Spec: REQ-VERIFY-001
 """
 
 from __future__ import annotations
@@ -20,7 +21,6 @@ from python.carnot.verify.drift_probe_ensemble import (
     _cosine_sim,
     _drift_for_pair,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures

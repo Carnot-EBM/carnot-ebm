@@ -16,6 +16,7 @@ Spec: REQ-INFRA-047, REQ-INFRA-048,
 
 from __future__ import annotations
 
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -44,16 +45,12 @@ class TestExtractExpId:
 
     def test_standard_path(self):
         # Normal experiment script: extracts the number between 'experiment_' and '_'
-        result = exp518.extract_exp_id(
-            "/repo/scripts/experiment_123_some_title.py"
-        )
+        result = exp518.extract_exp_id("/repo/scripts/experiment_123_some_title.py")
         assert result == 123
 
     def test_non_experiment_script(self):
         # generate_qa_dataset.py has no 'experiment_NNN_' pattern → returns None
-        result = exp518.extract_exp_id(
-            "/repo/scripts/generate_qa_dataset.py"
-        )
+        result = exp518.extract_exp_id("/repo/scripts/generate_qa_dataset.py")
         assert result is None
 
     def test_high_number(self):
@@ -233,9 +230,7 @@ class TestFindSimpleLoop:
 
     def test_different_var_names(self):
         content = (
-            "for prob in problems:\n"
-            "    result = run_model(prob)\n"
-            "    output.append(result)\n"
+            "for prob in problems:\n" "    result = run_model(prob)\n" "    output.append(result)\n"
         )
         m = exp518.find_simple_loop(content)
         assert m is not None
@@ -257,11 +252,7 @@ class TestBuildBirReplacement:
         return m
 
     def test_replacement_contains_bir(self):
-        content = (
-            "for q in questions:\n"
-            "    r = infer(q)\n"
-            "    res.append(r)\n"
-        )
+        content = "for q in questions:\n" "    r = infer(q)\n" "    res.append(r)\n"
         m = self._make_match(content)
         rep = exp518.build_bir_replacement(m)
         assert "BatchedInferenceRunner" in rep
@@ -271,11 +262,7 @@ class TestBuildBirReplacement:
         assert "res" in rep
 
     def test_replacement_three_lines(self):
-        content = (
-            "for q in questions:\n"
-            "    r = fn(q)\n"
-            "    out.append(r)\n"
-        )
+        content = "for q in questions:\n" "    r = fn(q)\n" "    out.append(r)\n"
         m = self._make_match(content)
         rep = exp518.build_bir_replacement(m)
         # The replacement is exactly 3 lines
@@ -283,11 +270,7 @@ class TestBuildBirReplacement:
         assert len(lines) == 3
 
     def test_indentation_preserved(self):
-        content = (
-            "    for q in questions:\n"
-            "        r = fn(q)\n"
-            "        out.append(r)\n"
-        )
+        content = "    for q in questions:\n" "        r = fn(q)\n" "        out.append(r)\n"
         m = self._make_match(content)
         rep = exp518.build_bir_replacement(m)
         # Each replacement line should start with the same 4-space indent
@@ -304,20 +287,14 @@ class TestEnsureBirImport:
     """ensure_bir_import injects the import exactly once."""
 
     def test_already_imported_noop(self):
-        content = (
-            "from experiment_template import BatchedInferenceRunner\n"
-            "x = 1\n"
-        )
+        content = "from experiment_template import BatchedInferenceRunner\n" "x = 1\n"
         result = exp518.ensure_bir_import(content)
         # Should be unchanged when BatchedInferenceRunner is already present
         assert result == content
         assert result.count("BatchedInferenceRunner") == 1
 
     def test_inserts_after_experiment_template_import(self):
-        content = (
-            "from experiment_template import ExperimentTemplate\n"
-            "x = 1\n"
-        )
+        content = "from experiment_template import ExperimentTemplate\n" "x = 1\n"
         result = exp518.ensure_bir_import(content)
         # BatchedInferenceRunner import should appear right after the existing import
         lines = result.splitlines()

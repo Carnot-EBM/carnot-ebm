@@ -24,6 +24,7 @@ from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pytest
+from datetime import UTC
 
 
 # ---------------------------------------------------------------------------
@@ -180,7 +181,7 @@ def test_session_memory_persist_writes_correct_schema():
                 probe_confidence=0.8,
                 constraint_type="carry_check",
                 question_domain="arithmetic",
-                timestamp=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                timestamp=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
             )
             mem.on_violation(ev, lib)
 
@@ -227,7 +228,7 @@ def test_session_memory_load_replays_templates():
                 probe_confidence=0.8,
                 constraint_type="carry_check",
                 question_domain="arithmetic",
-                timestamp=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                timestamp=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
             )
             mem_s1.on_violation(ev, lib_s1)
         mem_s1.persist(persist_path)
@@ -283,9 +284,9 @@ def test_replay_template_activates_in_library():
 
     # carry_check has min_frequency=5; verify it's not active before replay.
     active_before = lib.get_active_templates("my-model")
-    assert all(t.pattern_key != "carry_check" for t in active_before), (
-        "carry_check should not be active before any replay"
-    )
+    assert all(
+        t.pattern_key != "carry_check" for t in active_before
+    ), "carry_check should not be active before any replay"
 
     lib.replay_template("carry_check", "my-model")
     active_after = lib.get_active_templates("my-model")

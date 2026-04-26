@@ -1,0 +1,202 @@
+{
+  "schema": "carnot.operational_retro.v48",
+  "milestone": "2026.04.72",
+  "retro_type": "full_milestone_augmented",
+  "title": "Milestone 2026.04.72 Operational Retrospective (CPU)",
+  "generated_at": "2026-04-26T16:47:08Z",
+  "total_wall_time_minutes": 3878,
+  "total_wall_time_hours": 64.6,
+  "experiments_completed": 806,
+  "per_experiment_avg_minutes": 5.0,
+  "prior_milestone_wall_time_minutes": 3902,
+  "wall_time_delta_minutes": -24,
+  "wall_time_delta_pct": -0.62,
+  "baseline_milestone": "2026.04.58",
+  "baseline_wall_time_minutes": 3415,
+  "delta_from_baseline_minutes": 463,
+  "delta_from_baseline_pct": 13.6,
+  "consecutive_improvement_streak": 1,
+  "improvement_magnitude_trend": [-91, -61, -10, -100, 57, -24],
+  "improvement_trend_note": "Single-milestone improvement after the .71 regression. -24 min (-0.62%) vs .71 (3902 min). Experiment count declined slightly (809 → 806, -3 experiments = ~15 min volume reduction), suggesting the improvement is again count-driven rather than structural. The four legacy carryovers (Exp 786/527/627/603) remain in the slowest-5 with 13 consecutive milestone appearances — manifest enforcement has still not been applied. Without governance fixes, the streak could reverse with any count uptick.",
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment_id": "Exp 786",
+      "description": "Gemma4 OOM Fix v3 + VR Threshold Grid",
+      "elapsed_minutes": 77,
+      "consecutive_milestone_appearances": 13,
+      "governance_status": "CRITICAL VIOLATION — 13 consecutive milestone appearances; Gemma4 OOM root cause remains unresolved; cumulative waste ~1,001 min (16.7 hours) across 13 milestones. Rerun without documented root-cause fix and explicit human override violates CLAUDE.md failed-experiment-rerun discipline.",
+      "action_required": "Add to ops/exclusion_manifest.yaml immediately. Human override required to reintroduce. Root cause (GPU VRAM exhaustion during Gemma4 model loading) must be diagnosed and confirmed resolved before any re-execution."
+    },
+    {
+      "rank": 2,
+      "experiment_id": "Exp 527",
+      "description": "Live 100q Precision v8 — RETRO-033 eighth attempt",
+      "elapsed_minutes": 52,
+      "consecutive_milestone_appearances": 13,
+      "governance_status": "CRITICAL VIOLATION — 13 consecutive milestone appearances post-retirement recommendation; cumulative waste ~676 min (11.3 hours); first retirement recommendation appeared in .59 retro; experiment continues running uncapped without conductor pre-launch gate.",
+      "action_required": "Add to ops/exclusion_manifest.yaml. Block at conductor pre-launch check. Human override required to reintroduce with documented root-cause plan for the precision regression."
+    },
+    {
+      "rank": 3,
+      "experiment_id": "Exp 627",
+      "description": "interwhen Mid-Generation Monitor — SymCodeVerifier sequential paragraph processing",
+      "elapsed_minutes": 51,
+      "consecutive_milestone_appearances": 13,
+      "governance_status": "CRITICAL VIOLATION — paragraph batching fix documented in eight consecutive retros and confirmed implemented (RETRO-SYMCODE-SERIAL closed in .64), yet dispatch-site wiring never applied; runs serially at 51 min when batching would cut to ~15 min. This is a one-line fix at the dispatch site.",
+      "action_required": "Wire SymCodeVerifier paragraph batching at dispatch site (one-line fix confirmed correct). Retire from unguarded queue until wiring is deployed. This fix has been recommended for nine consecutive milestones."
+    },
+    {
+      "rank": 4,
+      "experiment_id": "Exp 603",
+      "description": "CoACEExtractorV4 — Data-Driven Live Training via GenP",
+      "elapsed_minutes": 44,
+      "consecutive_milestone_appearances": 13,
+      "governance_status": "CRITICAL VIOLATION — hard 30-min timeout cap recommended in nine consecutive retros; experiment runs uncapped every milestone; cumulative overrun waste ~182 min across appearances (each run ~14 min over 30-min cap).",
+      "action_required": "Apply CARNOT_EXPERIMENT_TIMEOUT_MINUTES=30 governor to ExperimentTemplate. Retire from unguarded queue. Re-propose only after root cause of live-training loop overrun is diagnosed and documented."
+    },
+    {
+      "rank": 5,
+      "experiment_id": "Exp 641",
+      "description": "HermesVerifierAdapter v2 — LIVE Step-by-Step Generation",
+      "elapsed_minutes": 42,
+      "consecutive_milestone_appearances": 3,
+      "governance_status": "THIRD CONSECUTIVE SLOW APPEARANCE — entered slowest-5 in .70; root cause still undiagnosed in .71 and .72; three consecutive slow appearances without a documented root cause formally promotes this to a legacy carryover pattern and triggers CLAUDE.md no-doomed-rerun discipline.",
+      "action_required": "Diagnose root cause by reading results/experiment_641_hermes_verifier_adapter_v2.json. Apply timeout cap or batching fix before .73. If root cause remains unresolvable, add to exclusion_manifest.yaml before .73 begins — this is now a mandatory gate."
+    }
+  ],
+  "slowest5_governance": {
+    "composition_changed_this_milestone": false,
+    "composition_same_as_prior_milestone": true,
+    "carryover_count": 5,
+    "carryover_experiments": ["Exp 786", "Exp 527", "Exp 627", "Exp 603", "Exp 641"],
+    "four_legacy_carryover_consecutive_milestones": 13,
+    "exp_641_consecutive_appearances": 3,
+    "note": "Slowest-5 composition IDENTICAL to .71 — third consecutive milestone with no change from the .70 composition. The four legacy carryovers (786/527/627/603) now have 13 consecutive milestone appearances. Exp 641 has graduated from 'new entrant' to 'emerging legacy carryover' with 3 consecutive slow appearances and no diagnosed root cause. Combined cumulative waste across all five experiments: ~2,715 min (45.3 hours) across their respective appearance runs."
+  },
+  "gpu_state_at_close": {
+    "gpu_0": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_used_mb": 4,
+      "memory_total_mb": 24576,
+      "utilization_pct": 0,
+      "temperature_c": 51
+    },
+    "gpu_1": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_used_mb": 4,
+      "memory_total_mb": 24576,
+      "utilization_pct": 0,
+      "temperature_c": 51
+    },
+    "thermal_differential_c": 0,
+    "both_idle": true,
+    "clean_close": true,
+    "consecutive_clean_closes": 8,
+    "temperature_status": "GOOD — 0C differential (eighth consecutive clean close at 51C/51C), 0% utilization on both GPUs at milestone end"
+  },
+  "dualgpu_status": {
+    "deployed": true,
+    "benchmark_confirmed": true,
+    "benchmark_speedup": 1.95823,
+    "benchmark_experiment": "Exp 932",
+    "benchmark_workload": "50 GSM8K questions",
+    "wired_into_pipeline": false,
+    "consecutive_idle_milestones_post_deploy": 7,
+    "cumulative_foregone_savings_min": 420,
+    "note": "DualGPU throughput benchmark confirmed at 1.96x (Exp 932, 50 GSM8K questions) — this is an improvement over the Exp 913 baseline of 1.40x and confirms production-readiness at realistic workload. However, both RTX 3090s closed at 0% utilization / 51C / 4MB — the DualGPURunner remains unconnected to the VerifyRepairPipeline for the SEVENTH consecutive milestone post-deployment. The benchmark result in Exp 932 is a valuable data point but does not constitute 'wired into production.' GPU monitor at close explicitly flags both GPUs idle and recommends DualGPURunner. Cumulative foregone savings since deployment: ~420 min (7 milestones × ~60 min/milestone)."
+  },
+  "experiment_count_analysis": {
+    "current_count": 806,
+    "cap": 700,
+    "over_cap": 106,
+    "trend": [662, 679, 704, 728, 750, 772, 794, 805, 802, 800, 809, 806],
+    "trend_milestones": [".60", ".61", ".62", ".63", ".64", ".65", ".66", ".68", ".69", ".70", ".71", ".72"],
+    "note": "Count declined from 809 (.71) to 806 (.72) — a modest 3-experiment reduction. Still 106 experiments over the 700 cap; each over-cap experiment adds ~5 min to milestone wall time (~30 min of pure volume overhead from the over-cap portion). The -24 min wall-time improvement aligns with a 3-experiment count reduction (~15 min) plus minor composition efficiency gains. Without enforcing the 700-experiment hard ceiling, count will continue fluctuating above the cap."
+  },
+  "research_quality_analysis": {
+    "criteria_met": 10,
+    "criteria_total": 12,
+    "prior_milestone_criteria_met": 2,
+    "criteria_improvement": 8,
+    "note": "Milestone .72 achieved 10/12 criteria — a dramatic improvement over .71 (2/12). The primary driver of .71 failure was missing prior_failures fields in the YAML causing 7/12 experiments to block. .72 addressed this for most tasks but not all (Exp 939 SC-Energy repeated the identical planning error for the second consecutive milestone). Gate discipline is improving but not yet systematic. The two failures were both plannable-in-advance: (1) Exp 930 math repair used an undersized model (E4B) — SOTA model selection required for .73; (2) Exp 939 SC-energy lacked prior_failures again — a checklist failure."
+  },
+  "bottlenecks_identified": [
+    "GOVERNANCE_FAILURE_FOUR_LEGACY_CARRYOVERS_13_MILESTONES: Exp 786 (77 min), Exp 527 (52 min), Exp 627 (51 min), Exp 603 (44 min) have appeared in every milestone since .59 despite 9–13 consecutive retirement recommendations. Cumulative waste across these four: ~2,473 min (41.2 hours). The exclusion manifest exists but manifest_fix_patch.txt has been unapplied for 13 consecutive milestones. Zero engineering required — this is a pure governance failure.",
+    "EXP641_THIRD_CONSECUTIVE_SLOW_APPEARANCE_ROOT_CAUSE_UNKNOWN: Exp 641 (HermesVerifierAdapter v2, 42 min) is now at three consecutive slow appearances without a documented root cause. Three appearances without diagnosis formally triggers CLAUDE.md no-doomed-rerun discipline. Must be diagnosed and contained before .73.",
+    "DUALGPU_NOT_WIRED_SEVENTH_CONSECUTIVE: Both RTX 3090s closed at 0%/51C/4MB. DualGPURunner is confirmed at 1.96x throughput (Exp 932, realistic workload) but still not connected to VerifyRepairPipeline. Cumulative foregone savings since deployment: ~420 min. The benchmark is done — what remains is a ~4-hour engineering task to wire the runner.",
+    "SC_ENERGY_GATE_DISCIPLINE_FAILURE_SECOND_CONSECUTIVE: Exp 939 was blocked because the YAML task lacked prior_failures fields for 7 prior SC-energy experiments. This is the identical planning error as Exp 917 in milestone .71. Two consecutive planning failures on the same domain indicate a systematic gap in the planner's pre-flight audit process.",
+    "MATH_REPAIR_MODEL_CEILING: Exp 930 used gemma-4-E4B-it (tiny model, 12% GSM8K baseline) — repair produced zero improvement. Algorithm is correct; model is wrong. SOTA models (Gemma4-31B or Qwen3.6-35B-A3B) are mandatory for .73 math repair. This was a plannable-in-advance failure.",
+    "EXPERIMENT_COUNT_STILL_106_OVER_CAP: Count 806 remains 106 over the 700 cap, contributing ~30 min/milestone of pure volume overhead. The modest -3 count reduction is insufficient; systematic cap enforcement is required.",
+    "NO_TIMEOUT_GOVERNOR: Exp 603 (44 min), Exp 641 (42 min), and other live-inference experiments have no hard wall-time cap. Uncapped experiments can silently run 2–4x their intended budget without triggering conductor intervention.",
+    "SEQUENTIAL_PARAGRAPH_PROCESSING_SYMCODEVERIFIER: Exp 627 SymCodeVerifier processes paragraphs serially at 51 min. The dispatch-site batching wiring is a confirmed one-line fix that has been outstanding for nine consecutive milestones. Implementation (RETRO-SYMCODE-SERIAL) was confirmed complete in .64; only the wiring is missing.",
+    "MODEL_PREDOWNLOAD_ABSENT: SOTA GGUF models (Qwen3.6-35B-A3B-GGUF, Gemma-4-31B-it-GGUF) are not pre-cached before milestone start. Math repair in .73 will need SOTA models; if not pre-downloaded, 15–30 min download overhead will be paid inside the timed experiment window.",
+    "DOC_RECONCILIATION_SERIAL: In-process changelog and JSON artifact writes run synchronously after each experiment. Across 806 experiments, serial I/O adds ~16–20 min to the milestone critical path. Background async writes would eliminate this overhead with no correctness risk."
+  ],
+  "improvements_suggested": [
+    "IMMEDIATE — RETIRE EXP 786/527/627/603 TO EXCLUSION MANIFEST: Add all four to ops/exclusion_manifest.yaml NOW. Zero engineering required. These four experiments alone waste ~224 min/milestone (5.8% of total). 13 consecutive milestone appearances without action is a systemic governance failure. This is the single highest-ROI action available — effort under 5 minutes, savings immediate and permanent.",
+    "IMMEDIATE — DIAGNOSE AND CONTAIN EXP 641: Read results/experiment_641_hermes_verifier_adapter_v2.json and diagnose root cause before .73 begins. Three consecutive slow appearances without a diagnosis is the formal threshold for CLAUDE.md no-doomed-rerun discipline. Apply timeout cap, batching fix, or retire to exclusion manifest. Not diagnosing this before .73 guarantees a fourth consecutive slow appearance.",
+    "IMMEDIATE — SC-ENERGY PRE-FLIGHT AUDIT FOR .73: Before proposing any SC-energy / semantic-energy / contrastive-energy task in .73, the planner MUST read research-complete.yaml and identify all prior SC-energy experiments. Two consecutive planning failures (Exp 917 in .71, Exp 939 in .72) on the same domain indicate the planner is not consulting the failure record. This is a mandatory pre-flight gate.",
+    "HIGH — WIRE DUALGPURUNNER INTO VERIFYPREPAIRPIPELINE: Benchmark confirmed 1.96x throughput at realistic load (Exp 932). The engineering work is ~4 hours. Enables Qwen on GPU 0 + Gemma on GPU 1 simultaneously for all GPU-bound experiments. Expected savings ~60 min/milestone; cumulative foregone savings already at 420 min (7 milestones idle post-deployment). The benchmark phase is complete — only wiring remains.",
+    "HIGH — USE SOTA MODEL FOR MATH REPAIR IN .73: Exp 930 confirmed the algorithm is correct but gemma-4-E4B-it is too small (12% baseline on GSM8K). .73 math repair MUST use Gemma4-31B-it-GGUF or Qwen3.6-35B-A3B-GGUF. Pre-download the SOTA GGUF before the milestone starts to avoid paying download overhead inside the timed experiment window.",
+    "HIGH — APPLY HARD TIMEOUT GOVERNOR VIA CARNOT_EXPERIMENT_TIMEOUT_MINUTES: Add per-experiment wall-time cap to ExperimentTemplate (default 30 min). Any experiment exceeding the cap writes status=timeout and honest_verdict=wall_time_cap_exceeded; conductor moves on. Prevents Exp 603 (44 min), Exp 641 (42 min), and future live-inference experiments from silently overrunning their intended budget.",
+    "HIGH — ENFORCE EXPERIMENT COUNT CAP AT 700: Count remains at 806, still 106 over cap. The conductor must enforce a hard ceiling; each new experiment proposed requires retiring an existing one. Without this, count will fluctuate above 700 indefinitely and the 'improvement streak' will remain dependent on count noise rather than structural governance.",
+    "MEDIUM — WIRE SYMCODEVERIFIER PARAGRAPH BATCHING AT DISPATCH SITE: Nine consecutive milestones with this recommendation outstanding. RETRO-SYMCODE-SERIAL implementation confirmed complete in .64. The dispatch-site wiring is a one-line change that cuts Exp 627 from 51 min to ~15 min — a 36-min saving per milestone appearance. This fix pays back in the first milestone it is applied.",
+    "MEDIUM — PRE-DOWNLOAD SOTA GGUFS AS MILESTONE PRE-FLIGHT: Add a milestone pre-flight step that downloads and validates Qwen3.6-35B-A3B-GGUF, Gemma-4-31B-it-GGUF, and Gemma-4-26B-A4B-it-GGUF before any timed inference begins. .73 math repair will fail again without this if the SOTA GGUF is absent at experiment time.",
+    "LOW — BACKGROUND DOC RECONCILIATION: Move changelog and JSON artifact writes to an async background writer with a flush-and-verify at experiment end. Eliminates ~16–20 min of synchronous I/O from the critical path per milestone with no correctness risk.",
+    "LOW — TRACK STRUCTURAL VS NOISE IMPROVEMENT: .72 wall-time improvement (-24 min) is attributable to a 3-experiment count reduction, not governance fixes. Introduce a metric tracking 'pct of wall-time savings attributable to manifest enforcement vs count fluctuation.' Without this signal, improvements and regressions are indistinguishable from noise."
+  ],
+  "estimated_time_savings_pct": 30,
+  "near_term_recoverable_pct": 11.1,
+  "near_term_recoverable_minutes": 431,
+  "near_term_savings_breakdown": {
+    "retire_four_legacy_carryover_exps": 224,
+    "dualgpu_wiring": 60,
+    "experiment_count_cap_enforcement": 50,
+    "timeout_watchdog": 47,
+    "model_predownload_sota_gguf": 30,
+    "doc_write_background": 20
+  },
+  "improvement_analysis": {
+    "consecutive_improvement_streak": 1,
+    "streak_start_milestone": "2026.04.72",
+    "regression_in_prior_milestone": true,
+    "prior_milestone": "2026.04.71",
+    "prior_regression_driver": "experiment_count_uptick_800_to_809",
+    "this_improvement_driver": "experiment_count_reduction_809_to_806",
+    "improvement_is_structural": false,
+    "note": "The -24 min improvement in .72 is primarily attributable to a 3-experiment count reduction (809 → 806), contributing ~15 min. The remaining ~9 min difference may reflect composition efficiency (e.g., Exp 939 blocked early saved GPU time vs running to failure). This is NOT structural improvement from governance fixes — the four legacy carryovers still ran, DualGPU is still unconnected, and no timeout governor was applied. The improvement trend (-91, -61, -10, -100, +57, -24) shows high volatility driven by count fluctuations rather than stable governance-driven gains."
+  },
+  "questions_answered": {
+    "which_experiments_took_longest_and_why": "Exp 786 (77 min): Gemma4 OOM — GPU VRAM exhausted during model loading; retries until wall-time exceeded; root cause unresolved across 13 consecutive milestone appearances. Exp 527 (52 min): post-retirement live-100q precision running uncapped live inference without an experiment-level timeout; recommended for retirement for 13 consecutive milestones. Exp 627 (51 min): SymCodeVerifier processes paragraphs serially; batch fix is implemented and confirmed (RETRO-SYMCODE-SERIAL closed .64) but dispatch-site wiring never applied across 9 consecutive retro cycles. Exp 603 (44 min): CoACEExtractor live GenP training loop runs uncapped; exceeds 30-min target by ~14 min every milestone. Exp 641 (42 min): HermesVerifierAdapter v2 step-by-step generation; root cause still unknown after three consecutive slow appearances.",
+    "was_gpu_utilization_efficient": "No. Both RTX 3090s closed at 0% utilization / 51C / 4MB — seventh consecutive idle close post-DualGPU deployment. DualGPURunner was benchmarked at 1.96x throughput in Exp 932 (realistic workload), confirming production-readiness, but the runner is still not wired into VerifyRepairPipeline. GPU monitor at close explicitly recommended DualGPURunner. Cumulative foregone savings since deployment: ~420 min (7 milestones). The benchmark phase is complete; only pipeline wiring remains.",
+    "were_there_zombie_processes_wasting_resources": "No zombie processes at close. GPU Zombie Killer (Exp 780, REQ-INFRA-055) remains active. Clean close at 4MB/0%/51C on both GPUs — eighth consecutive clean close, 0C thermal differential. Zombie containment is fully stable and is no longer a bottleneck.",
+    "could_any_experiments_have_been_parallelized": "Yes. All GPU-bound experiments loading Qwen3.6-35B or Gemma4-31B are parallelizable via DualGPURunner (one model per GPU). The 1.96x speedup is confirmed at realistic load; estimated parallelizable fraction ~30% of milestone wall time. Additionally: (1) SymCodeVerifier paragraph processing within Exp 627 is inherently parallelizable — one-line dispatch-site wiring is the only missing piece; (2) doc reconciliation I/O can be backgrounded without correctness impact.",
+    "was_the_preflight_test_suite_a_bottleneck": "No. Pre-flight (Exp 929) completed correctly and closed RETRO-LAGRANGE-ENTROPY-DEGENERATE. The structural bottleneck is the unguarded historical experiment queue allowing retired and carryover experiments to re-run without manifest enforcement. The SC-Energy gate-discipline failure (Exp 939) is a planner pre-flight failure, not a test-suite bottleneck.",
+    "were_doc_reconciliation_passes_efficient": "Partially. In-process reconciliation runs synchronously, adding ~16–20 min per milestone across 806 experiments. Background async writes remain unimplemented despite nine consecutive milestone recommendations. Impact is secondary compared to manifest governance (224 min) and DualGPU wiring (60 min) but remains a non-trivial low-effort improvement.",
+    "what_tooling_changes_would_speed_up_next_milestone": "Ranked by effort-to-savings ratio: (1) Add Exp 786/527/627/603 to exclusion_manifest.yaml — zero engineering, saves ~224 min immediately; (2) Wire DualGPURunner into VerifyRepairPipeline — ~4 hours engineering, saves ~60 min/milestone indefinitely, benchmark confirmed at 1.96x; (3) Add CARNOT_EXPERIMENT_TIMEOUT_MINUTES governor to ExperimentTemplate — caps Exp 603 and Exp 641 overruns; (4) Enforce 700-experiment count cap at conductor pre-launch; (5) Pre-download SOTA GGUFs before .73 to unblock math repair without paying download overhead inside the experiment window."
+  },
+  "new_retros_this_milestone": [
+    {
+      "retro_id": "RETRO-MATH-REPAIR-MODEL-CEILING",
+      "opened_by_experiment": 930,
+      "description": "Math iterative self-repair produced zero improvement (baseline 12%, repair 12%, signed_improvement=0.0) using gemma-4-E4B-it on GSM8K. Algorithm is correct; model is too small. SOTA model (Gemma4-31B or Qwen3.6-35B-A3B) required for .73 rerun.",
+      "status": "TARGETED"
+    },
+    {
+      "retro_id": "RETRO-SC-ENERGY-GATE-DISCIPLINE",
+      "opened_by_experiment": 939,
+      "description": "Exp 939 blocked by conductor pre-gate: YAML task lacked prior_failures for 7 prior SC-energy experiments (Exps 506, 509, 533, 711, 725, 772, 787). Identical planning error to Exp 917 in milestone .71. Two consecutive identical failures on the same domain indicate a systematic gap in planner pre-flight audit.",
+      "status": "NEW — requires systematic fix"
+    }
+  ],
+  "milestone_wins": [
+    "Symbolic-KAN AUC 0.9344 (Exp 937) — threshold 0.70, delta +0.7136 over standard KAN; strongest verified result of milestone",
+    "DualGPU throughput confirmed 1.96x at realistic load (Exp 932, 50 GSM8K questions); exceeds Exp 913 baseline of 1.40x",
+    "HuggingFace + IPFS dual-distribution established (Exps 933/934) — CLAUDE.md rule 3 satisfied; decentralization milestone achieved",
+    "FR-11 Tier 2 code-domain memory works (Exp 935) — 17 patterns loaded, 3 templates added, 10/10 replay at 100% match rate",
+    "Tier 2.8 DraftConditionedVerifier wired into ThreeTierPipeline (Exp 938) — 20/20 synthetic questions activated tier28, AUC 1.0",
+    "10/12 criteria met (vs 2/12 in .71) — confirms gate-check discipline recovery absorbed by most planner tasks this cycle"
+  ],
+  "honest_verdict": "full_milestone_MODEST_IMPROVEMENT_minus24min_minus0pt62pct_NOT_STRUCTURAL_COUNT_REDUCTION_809_to_806_SLOWEST5_IDENTICAL_TO_71_THIRD_CONSECUTIVE_NO_CHANGE_FOUR_LEGACY_CARRYOVERS_13TH_CONSECUTIVE_786_527_627_603_EXP641_THIRD_CONSECUTIVE_APPEARANCE_NOW_LEGACY_PATTERN_DUALGPU_BENCHMARKED_1pt96x_CONFIRMED_BUT_STILL_NOT_WIRED_SEVENTH_consecutive_post_deploy_idle_420min_cumulative_foregone_RESEARCH_QUALITY_10_of_12_CRITERIA_MAJOR_IMPROVEMENT_OVER_71_SC_ENERGY_PLANNER_FAILURE_SECOND_CONSECUTIVE_MATH_REPAIR_MODEL_CEILING_SYMBOLIC_KAN_AUC_0pt9344_HF_IPFS_DUAL_DISTRIBUTION_ESTABLISHED_COUNT_806_106_over_cap_GPU_CLEAN_0C_EIGHTH_consecutive_51C_11pt1pct_near_term_recoverable_431min_30pct_structural"
+}

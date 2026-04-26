@@ -22,6 +22,7 @@ Coverage targets:
 
 - test_honest_verdict_no_data: zero events yield honest_verdict=="tier1_weights_no_data".
   (REQ-FR11-008-1)
+Spec: REQ-AUTO-011
 """
 
 from __future__ import annotations
@@ -37,16 +38,17 @@ if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
 from carnot.pipeline.adaptive_thresholds import PerModelFPTracker, WeightState
-from carnot.pipeline.fr11_event_bus import FR11EventBus, ViolationEvent
-from experiment_747_tier1_weight_audit import run_audit, _make_event, _SYNTHETIC_COUNTS
-
+from carnot.pipeline.fr11_event_bus import FR11EventBus
+from experiment_747_tier1_weight_audit import _SYNTHETIC_COUNTS, _make_event, run_audit
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 
-def _inject_events(tracker: PerModelFPTracker, bus: FR11EventBus, counts: list[tuple[str, int]]) -> None:
+def _inject_events(
+    tracker: PerModelFPTracker, bus: FR11EventBus, counts: list[tuple[str, int]]
+) -> None:
     """Inject (constraint_type, count) pairs through the bus into the tracker."""
     bus.subscribe(tracker.on_violation)
     q_index = 0
@@ -133,9 +135,9 @@ def test_weight_ratio_computed_correctly():
     max_w = result["max_weight"]
     min_w = result["min_weight"]
     expected_ratio = round(max_w / min_w, 4)
-    assert result["weight_ratio"] == pytest.approx(expected_ratio, abs=1e-6), (
-        f"weight_ratio {result['weight_ratio']} != max/min {expected_ratio}"
-    )
+    assert result["weight_ratio"] == pytest.approx(
+        expected_ratio, abs=1e-6
+    ), f"weight_ratio {result['weight_ratio']} != max/min {expected_ratio}"
 
 
 # ---------------------------------------------------------------------------
@@ -161,9 +163,9 @@ def test_disabled_constraints_includes_near_zero():
 
     result = run_audit(tracker, FR11EventBus())
 
-    assert "arithmetic" in result["disabled_constraints"], (
-        "arithmetic with weight 0.01 should appear in disabled_constraints"
-    )
+    assert (
+        "arithmetic" in result["disabled_constraints"]
+    ), "arithmetic with weight 0.01 should appear in disabled_constraints"
 
 
 # ---------------------------------------------------------------------------
@@ -186,16 +188,16 @@ def test_honest_verdict_converging():
 
     result = run_audit(tracker, FR11EventBus())
 
-    assert result["expected_ordering_correct"] is True, (
-        "arithmetic_weight should exceed logical_weight"
-    )
+    assert (
+        result["expected_ordering_correct"] is True
+    ), "arithmetic_weight should exceed logical_weight"
     assert result["update_count_ratio"] is not None
-    assert result["update_count_ratio"] >= 2.0, (
-        f"update_count_ratio {result['update_count_ratio']} should be >= 2.0"
-    )
-    assert result["honest_verdict"] == "tier1_weights_converging", (
-        f"unexpected verdict: {result['honest_verdict']}"
-    )
+    assert (
+        result["update_count_ratio"] >= 2.0
+    ), f"update_count_ratio {result['update_count_ratio']} should be >= 2.0"
+    assert (
+        result["honest_verdict"] == "tier1_weights_converging"
+    ), f"unexpected verdict: {result['honest_verdict']}"
     assert result["simulated"] is False, "tracker had data; simulation should not have run"
 
 
@@ -221,14 +223,15 @@ def test_honest_verdict_uniform():
 
     # With equal event counts each type should have the same weight.
     assert result["weight_ratio"] is not None
-    assert result["honest_verdict"] in ("tier1_weights_uniform", "tier1_weights_converging"), (
-        f"expected uniform or converging with equal counts, got: {result['honest_verdict']}"
-    )
+    assert result["honest_verdict"] in (
+        "tier1_weights_uniform",
+        "tier1_weights_converging",
+    ), f"expected uniform or converging with equal counts, got: {result['honest_verdict']}"
     # With equal counts the update_count_ratio is 1.0 < 2.0 → uniform.
     assert result["update_count_ratio"] is not None
-    assert result["update_count_ratio"] < 2.0, (
-        f"equal event counts should produce update_count_ratio < 2.0, got {result['update_count_ratio']}"
-    )
+    assert (
+        result["update_count_ratio"] < 2.0
+    ), f"equal event counts should produce update_count_ratio < 2.0, got {result['update_count_ratio']}"
     assert result["honest_verdict"] == "tier1_weights_uniform"
 
 
@@ -256,6 +259,6 @@ def test_honest_verdict_no_data():
     assert result["simulated"] is True, "fresh tracker should trigger simulation"
     assert result["n_events_injected"] == sum(c for _, c in _SYNTHETIC_COUNTS)
     # After simulation with canonical distribution, should converge.
-    assert result["honest_verdict"] == "tier1_weights_converging", (
-        f"after simulation with canonical distribution, expected converging, got: {result['honest_verdict']}"
-    )
+    assert (
+        result["honest_verdict"] == "tier1_weights_converging"
+    ), f"after simulation with canonical distribution, expected converging, got: {result['honest_verdict']}"

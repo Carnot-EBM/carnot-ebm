@@ -6,14 +6,12 @@ Coverage requirement: 100% of the new code in that script.
 WHY these tests exist: RETRO-033 requires every experiment to have a
 corresponding test suite so the gate logic can be verified independently of
 running against a live GPU.
+Spec: REQ-AUTO-011
 """
 
 import json
 import sys
 from pathlib import Path
-from unittest import mock
-
-import pytest
 
 # Make the scripts/ directory importable without installing the package.
 REPO_ROOT = Path(__file__).parent.parent.parent.resolve()

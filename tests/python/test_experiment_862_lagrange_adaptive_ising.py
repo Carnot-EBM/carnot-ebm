@@ -1,15 +1,14 @@
 """Tests for Exp 862: LagrangeAdaptive Ising FR-11 self-learning.
 
 Spec traces: REQ-FR11-020, SCENARIO-FR11-030
+Spec: REQ-AUTO-011
 """
 
 from __future__ import annotations
 
 import numpy as np
 import pytest
-
 from carnot.samplers.lagrange_adaptive import LagrangeAdaptiveIsingConstraints
-
 
 # ---------------------------------------------------------------------------
 # REQ-FR11-020: build_J weights constraints by lambdas
@@ -99,7 +98,10 @@ def test_run_session_lambdas_increase_when_violated() -> None:
     Spec: REQ-FR11-020
     """
     solver = LagrangeAdaptiveIsingConstraints(
-        n_spins=4, n_constraints=2, lambda_init=1.0, lambda_lr=1.0  # large LR for measurable effect
+        n_spins=4,
+        n_constraints=2,
+        lambda_init=1.0,
+        lambda_lr=1.0,  # large LR for measurable effect
     )
     # Force s0 and s1 to ANTI-align (violating the sign=+1 "agree" constraint)
     solver.J_base[0, 1] = -50.0

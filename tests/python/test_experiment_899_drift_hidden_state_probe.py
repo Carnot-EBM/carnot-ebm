@@ -9,13 +9,13 @@ shape.  The probe logic (linear classifier) is tested with synthetic drift signa
 injected directly rather than going through the full forward pass.
 
 Spec traces: REQ-TIER0-009, SCENARIO-TIER0-009
+Spec: REQ-AUTO-011
 """
 
 from __future__ import annotations
 
 import numpy as np
 import pytest
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -255,7 +255,6 @@ def test_verify_extended_includes_drift_field_when_probe_wired():
 
     Spec: REQ-TIER0-009-5, SCENARIO-TIER0-009
     """
-    import jax.numpy as jnp
     from unittest.mock import MagicMock
 
     from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline

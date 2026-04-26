@@ -21,16 +21,13 @@ Coverage targets (REQ-FR11-009, REQ-FR11-010):
   (REQ-FR11-010)
 - test_templates_replayed_s2_through_s10_gt_zero: after S1 persist, all subsequent
   sessions have templates_replayed > 0.  (REQ-FR11-010-2)
+Spec: REQ-AUTO-011
 """
 
 from __future__ import annotations
 
 import pathlib
 import sys
-import tempfile
-from unittest.mock import patch
-
-import pytest
 
 # Ensure repo root is on the path so we can import the experiment module
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -38,12 +35,10 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from scripts.experiment_748_cross_session_memory_10session import (
-    run_10_session_simulation,
     _BASE_QUESTIONS,
     N_SESSIONS,
-    N_QUESTIONS_PER_SESSION,
+    run_10_session_simulation,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -69,9 +64,9 @@ def test_10_session_loop_produces_10_precision_values(tmp_path):
     Spec: REQ-FR11-009-1, SCENARIO-FR11-009
     """
     result = _run_sim(tmp_path)
-    assert len(result["precision_series"]) == N_SESSIONS, (
-        f"Expected {N_SESSIONS} precision values, got {len(result['precision_series'])}"
-    )
+    assert (
+        len(result["precision_series"]) == N_SESSIONS
+    ), f"Expected {N_SESSIONS} precision values, got {len(result['precision_series'])}"
 
 
 # ---------------------------------------------------------------------------
@@ -103,8 +98,10 @@ def test_monotonically_non_decreasing_false_when_regression():
     """
     # Inject a series with a drop at position 5
     regressing_series = [0.5, 0.55, 0.6, 0.65, 0.70, 0.60, 0.65, 0.70, 0.72, 0.74]
-    flag = all(regressing_series[i] >= regressing_series[i - 1] - 1e-9
-               for i in range(1, len(regressing_series)))
+    flag = all(
+        regressing_series[i] >= regressing_series[i - 1] - 1e-9
+        for i in range(1, len(regressing_series))
+    )
     assert flag is False, "Expected False when series has a drop"
 
 
@@ -129,9 +126,7 @@ def test_plateau_detection_triggers_at_correct_session():
             break
 
     # First delta < 0.001 is at index 3 (0.6001 - 0.60 = 0.0001 < 0.001)
-    assert plateau_session == 4, (
-        f"Expected plateau_session=4 (S4), got {plateau_session}"
-    )
+    assert plateau_session == 4, f"Expected plateau_session=4 (S4), got {plateau_session}"
 
 
 def test_no_plateau_when_always_improving():
@@ -148,9 +143,7 @@ def test_no_plateau_when_always_improving():
             plateau_session = i + 1
             break
 
-    assert plateau_session is None, (
-        f"Expected None (always improving), got {plateau_session}"
-    )
+    assert plateau_session is None, f"Expected None (always improving), got {plateau_session}"
 
 
 # ---------------------------------------------------------------------------
@@ -167,9 +160,9 @@ def test_honest_verdict_monotonic_gain(tmp_path):
     # The synthetic simulation is designed so that precision rises with session index.
     # If it is monotonically non-decreasing and no plateau, the verdict should match.
     if result["is_monotonically_non_decreasing"] and result["plateau_session"] is None:
-        assert result["honest_verdict"] == "tier2_memory_monotonic_gain", (
-            f"Expected 'tier2_memory_monotonic_gain', got '{result['honest_verdict']}'"
-        )
+        assert (
+            result["honest_verdict"] == "tier2_memory_monotonic_gain"
+        ), f"Expected 'tier2_memory_monotonic_gain', got '{result['honest_verdict']}'"
     else:
         # Plateau or regression cases are also valid outcomes
         assert result["honest_verdict"] in (
@@ -210,9 +203,9 @@ def test_honest_verdict_plateau():
     else:
         verdict = "tier2_memory_monotonic_gain"
 
-    assert verdict == "tier2_memory_plateau_at_s4", (
-        f"Expected 'tier2_memory_plateau_at_s4', got '{verdict}'"
-    )
+    assert (
+        verdict == "tier2_memory_plateau_at_s4"
+    ), f"Expected 'tier2_memory_plateau_at_s4', got '{verdict}'"
 
 
 def test_honest_verdict_regression():
@@ -247,9 +240,9 @@ def test_honest_verdict_regression():
     else:
         verdict = "tier2_memory_monotonic_gain"
 
-    assert verdict == "tier2_memory_regression", (
-        f"Expected 'tier2_memory_regression', got '{verdict}'"
-    )
+    assert (
+        verdict == "tier2_memory_regression"
+    ), f"Expected 'tier2_memory_regression', got '{verdict}'"
 
 
 # ---------------------------------------------------------------------------

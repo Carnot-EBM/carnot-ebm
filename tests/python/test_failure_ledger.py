@@ -18,6 +18,7 @@ Tests cover:
   - Validation of `prior_failures:` field (four-part discipline)
   - End-to-end is_doomed_rerun on synthetic seed data that mirrors
     .65–.68 patterns
+Spec: REQ-INFRA-067
 """
 
 from __future__ import annotations
@@ -33,30 +34,30 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 
 from failure_ledger import (  # noqa: E402
     FailureLedger,
-    LedgerCheck,
     LedgerEntry,
-    ValidationResult,
     _scope_signature,
     _scopes_overlap,
     validate_prior_failures,
 )
-
 
 # ---------------------------------------------------------------------------
 # Scope signature extraction
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("task_id, expected", [
-    # Bare slug — version stripped
-    ("exp870-sota-code-repair-v7", "sota-code-repair"),
-    ("exp881-code-repair-v8-gemma4", "code-repair-v8-gemma4"),  # mid-version stripped
-    ("exp857-sota-code-repair-v6", "sota-code-repair"),
-    # No version suffix
-    ("exp819-injection-field-fix", "injection-field-fix"),
-    # Version with trailing tokens
-    ("exp872-jepa-v25-dg-prm", "jepa-v25-dg-prm"),  # not a clean v\d+$ at end
-])
+@pytest.mark.parametrize(
+    "task_id, expected",
+    [
+        # Bare slug — version stripped
+        ("exp870-sota-code-repair-v7", "sota-code-repair"),
+        ("exp881-code-repair-v8-gemma4", "code-repair-v8-gemma4"),  # mid-version stripped
+        ("exp857-sota-code-repair-v6", "sota-code-repair"),
+        # No version suffix
+        ("exp819-injection-field-fix", "injection-field-fix"),
+        # Version with trailing tokens
+        ("exp872-jepa-v25-dg-prm", "jepa-v25-dg-prm"),  # not a clean v\d+$ at end
+    ],
+)
 def test_scope_signature_extraction(task_id, expected):
     """Scope signatures strip trailing version suffixes for stable comparison."""
     assert _scope_signature(task_id) == expected
@@ -103,8 +104,9 @@ def test_scopes_overlap_handles_empty_inputs():
 # ---------------------------------------------------------------------------
 
 
-def _write_artifact(results_dir: Path, exp_num: int, slug: str, verdict: str,
-                    extra: dict | None = None) -> Path:
+def _write_artifact(
+    results_dir: Path, exp_num: int, slug: str, verdict: str, extra: dict | None = None
+) -> Path:
     """Helper: write a minimal artifact file and return its path."""
     results_dir.mkdir(parents=True, exist_ok=True)
     target = results_dir / f"experiment_{exp_num}_{slug}.json"
@@ -138,9 +140,13 @@ def test_load_includes_failed_blocked_partial_verdicts(tmp_path):
     ⚠️ Research Finding. Fixed by using `blocked_model_load_failed`
     here (matches `blocked` in the blocked-tokens list).
     """
-    _write_artifact(tmp_path / "results", 850, "code_repair_v5", "blocked_model_load_failed")  # ⚠ Blocked
-    _write_artifact(tmp_path / "results", 858, "live_benchmark_v5", "simulation_fallback")    # ⚠ Research Finding (default)
-    _write_artifact(tmp_path / "results", 869, "gguf_predownload", "download_failed")          # ❌ Failed
+    _write_artifact(
+        tmp_path / "results", 850, "code_repair_v5", "blocked_model_load_failed"
+    )  # ⚠ Blocked
+    _write_artifact(
+        tmp_path / "results", 858, "live_benchmark_v5", "simulation_fallback"
+    )  # ⚠ Research Finding (default)
+    _write_artifact(tmp_path / "results", 869, "gguf_predownload", "download_failed")  # ❌ Failed
     ledger = FailureLedger.load_from_artifacts(tmp_path)
     assert len(ledger.entries) == 3
     labels = sorted(e.status_label for e in ledger.entries)
@@ -187,11 +193,15 @@ def test_load_coerces_dict_verdict_via_status_field(tmp_path):
     results = tmp_path / "results"
     results.mkdir()
     target = results / "experiment_293_legacy_dict.json"
-    target.write_text(json.dumps({
-        "experiment": 293,
-        "title": "Exp 293: legacy dict verdict",
-        "honest_verdict": {"status": "blocked", "explanation": "no creds"},
-    }))
+    target.write_text(
+        json.dumps(
+            {
+                "experiment": 293,
+                "title": "Exp 293: legacy dict verdict",
+                "honest_verdict": {"status": "blocked", "explanation": "no creds"},
+            }
+        )
+    )
     ledger = FailureLedger.load_from_artifacts(tmp_path)
     assert len(ledger.entries) == 1
     assert ledger.entries[0].verdict == "blocked"
@@ -204,10 +214,14 @@ def test_load_skips_dict_verdict_with_no_status(tmp_path):
     results = tmp_path / "results"
     results.mkdir()
     target = results / "experiment_999_no_status.json"
-    target.write_text(json.dumps({
-        "experiment": 999,
-        "honest_verdict": {"explanation": "structured but no status"},
-    }))
+    target.write_text(
+        json.dumps(
+            {
+                "experiment": 999,
+                "honest_verdict": {"explanation": "structured but no status"},
+            }
+        )
+    )
     ledger = FailureLedger.load_from_artifacts(tmp_path)
     assert ledger.entries == []
 
@@ -222,17 +236,27 @@ def test_matching_priors_shortcircuits_on_preflight_scope():
     matched prior preflights with `preflight_v*_clean_manifest_pending`-
     style verdicts.
     """
-    from failure_ledger import LedgerEntry, FailureLedger
+    from failure_ledger import FailureLedger, LedgerEntry
+
     ledger = FailureLedger()
-    for i, slug in enumerate(["preflight-v2", "preflight-v9", "preflight-v10",
-                              "preflight-v11", "zombie-kill-preflight-v8"]):
-        ledger.entries.append(LedgerEntry(
-            experiment_id=f"exp{400 + i}-{slug}",
-            title=f"Exp {400 + i}: {slug}",
-            verdict="env_not_propagating",  # any non-✅ verdict
-            status_label="⚠️ Research Finding",
-            scope="preflight" if "zombie" not in slug else "zombie-kill-preflight",
-        ))
+    for i, slug in enumerate(
+        [
+            "preflight-v2",
+            "preflight-v9",
+            "preflight-v10",
+            "preflight-v11",
+            "zombie-kill-preflight-v8",
+        ]
+    ):
+        ledger.entries.append(
+            LedgerEntry(
+                experiment_id=f"exp{400 + i}-{slug}",
+                title=f"Exp {400 + i}: {slug}",
+                verdict="env_not_propagating",  # any non-✅ verdict
+                status_label="⚠️ Research Finding",
+                scope="preflight" if "zombie" not in slug else "zombie-kill-preflight",
+            )
+        )
     new_task = {"id": "exp917-preflight-v20", "title": "Exp 917: Pre-flight v20"}
     assert ledger.matching_priors(new_task) == []
     check = ledger.is_doomed_rerun(new_task)
@@ -242,15 +266,18 @@ def test_matching_priors_shortcircuits_on_preflight_scope():
 
 def test_matching_priors_shortcircuits_on_milestone_retro_scope():
     """Milestone retros are also structurally-recurring scaffolding."""
-    from failure_ledger import LedgerEntry, FailureLedger
+    from failure_ledger import FailureLedger, LedgerEntry
+
     ledger = FailureLedger()
-    ledger.entries.append(LedgerEntry(
-        experiment_id="exp891-milestone-retro",
-        title="Exp 891: Milestone Retro",
-        verdict="research_finding",
-        status_label="⚠️ Research Finding",
-        scope="milestone-retro",
-    ))
+    ledger.entries.append(
+        LedgerEntry(
+            experiment_id="exp891-milestone-retro",
+            title="Exp 891: Milestone Retro",
+            verdict="research_finding",
+            status_label="⚠️ Research Finding",
+            scope="milestone-retro",
+        )
+    )
     new_task = {"id": "exp928-milestone-retro-71", "title": "Exp 928: Milestone Retro 71"}
     assert ledger.matching_priors(new_task) == []
 
@@ -259,17 +286,19 @@ def test_recurring_scaffolding_does_not_break_legitimate_match():
     """The scaffolding short-circuit only applies when the *target* task is
     scaffolding. A non-scaffolding task should still match prior failures
     normally."""
-    from failure_ledger import LedgerEntry, FailureLedger
+    from failure_ledger import FailureLedger, LedgerEntry
+
     ledger = FailureLedger()
-    ledger.entries.append(LedgerEntry(
-        experiment_id="exp881-code-repair-v8",
-        title="Exp 881: Code Repair v8",
-        verdict="zero_constraints",
-        status_label="❌ Failed",
-        scope="code-repair",
-    ))
-    new_task = {"id": "exp895-code-repair-50q-scaleup",
-                "title": "Exp 895: Code Repair 50q"}
+    ledger.entries.append(
+        LedgerEntry(
+            experiment_id="exp881-code-repair-v8",
+            title="Exp 881: Code Repair v8",
+            verdict="zero_constraints",
+            status_label="❌ Failed",
+            scope="code-repair",
+        )
+    )
+    new_task = {"id": "exp895-code-repair-50q-scaleup", "title": "Exp 895: Code Repair 50q"}
     matches = ledger.matching_priors(new_task)
     assert len(matches) == 1
     assert matches[0].experiment_id == "exp881-code-repair-v8"
@@ -358,22 +387,30 @@ def test_validate_empty_list_rejects():
 
 def test_validate_complete_entry_accepts():
     """All four required fields populated → valid."""
-    result = validate_prior_failures({
-        "prior_failures": [
-            {
-                "experiment_id": "exp870-sota-code-repair-v7",
-                "verdict": "blocked",
-                "addressed_by": "Pivot to transformers loader (Exp 881)",
-                "retire_if_same_verdict": True,
-            }
-        ]
-    })
+    result = validate_prior_failures(
+        {
+            "prior_failures": [
+                {
+                    "experiment_id": "exp870-sota-code-repair-v7",
+                    "verdict": "blocked",
+                    "addressed_by": "Pivot to transformers loader (Exp 881)",
+                    "retire_if_same_verdict": True,
+                }
+            ]
+        }
+    )
     assert result.valid is True
 
 
-@pytest.mark.parametrize("missing", [
-    "experiment_id", "verdict", "addressed_by", "retire_if_same_verdict",
-])
+@pytest.mark.parametrize(
+    "missing",
+    [
+        "experiment_id",
+        "verdict",
+        "addressed_by",
+        "retire_if_same_verdict",
+    ],
+)
 def test_validate_rejects_each_missing_required_field(missing):
     """Each of the four required fields is independently required."""
     entry = {
@@ -390,16 +427,18 @@ def test_validate_rejects_each_missing_required_field(missing):
 
 def test_validate_rejects_empty_string_field():
     """An empty string in any required field is treated as missing."""
-    result = validate_prior_failures({
-        "prior_failures": [
-            {
-                "experiment_id": "expXXX",
-                "verdict": "",  # empty
-                "addressed_by": "fix",
-                "retire_if_same_verdict": True,
-            }
-        ]
-    })
+    result = validate_prior_failures(
+        {
+            "prior_failures": [
+                {
+                    "experiment_id": "expXXX",
+                    "verdict": "",  # empty
+                    "addressed_by": "fix",
+                    "retire_if_same_verdict": True,
+                }
+            ]
+        }
+    )
     assert result.valid is False
     assert "verdict" in result.missing_fields
 

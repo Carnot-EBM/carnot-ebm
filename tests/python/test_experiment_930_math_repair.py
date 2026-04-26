@@ -10,6 +10,7 @@ All GPU-side calls are mocked so the suite runs on any CI host.
 
 Spec: REQ-VER-MATH-001, REQ-VER-MATH-002,
       SCENARIO-VER-MATH-001
+Spec: REQ-AUTO-011
 """
 
 from __future__ import annotations
@@ -17,8 +18,6 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
-
-import pytest
 
 # ---------------------------------------------------------------------------
 # Make the scripts/ directory importable without the full project install.
@@ -28,10 +27,10 @@ sys.path.insert(0, str(_REPO_ROOT))
 
 import scripts.experiment_930_math_iterative_self_repair_v1 as _mod  # noqa: E402
 
-
 # ---------------------------------------------------------------------------
 # (a) Answer extraction regex
 # ---------------------------------------------------------------------------
+
 
 class TestExtractNumericAnswer:
     """Verify that extract_numeric_answer handles common GSM8K output formats."""
@@ -86,6 +85,7 @@ class TestAnswersMatch:
 # (b) Repair loop termination
 # ---------------------------------------------------------------------------
 
+
 class TestRunProblem:
     """Verify _run_problem stops early on correct answer and respects max_retries."""
 
@@ -111,11 +111,13 @@ class TestRunProblem:
 
     def test_retries_on_wrong_baseline(self):
         """When baseline is wrong the loop retries up to max_retries times."""
-        runner = self._make_runner([
-            "#### 10",  # wrong
-            "#### 10",  # wrong
-            "#### 72",  # correct on round 2
-        ])
+        runner = self._make_runner(
+            [
+                "#### 10",  # wrong
+                "#### 10",  # wrong
+                "#### 72",  # correct on round 2
+            ]
+        )
         scorer = self._make_scorer([1.0, 1.0, 0.5])
         result = _mod._run_problem("question", 72, runner, scorer, max_retries=3)
         assert result["baseline_passed"] is False
@@ -153,6 +155,7 @@ class TestRunProblem:
 # (c) Energy scorer instantiation
 # ---------------------------------------------------------------------------
 
+
 class TestBuildEnergyScorer:
     """Verify _build_energy_scorer returns a working scorer in both code paths."""
 
@@ -182,6 +185,7 @@ class TestBuildEnergyScorer:
 # ---------------------------------------------------------------------------
 # (d) Honest-verdict assignment (tested directly via the module's logic)
 # ---------------------------------------------------------------------------
+
 
 class TestHonestVerdict:
     """Verify the signed_improvement → honest_verdict mapping.

@@ -34,9 +34,7 @@ if str(_SCRIPTS_DIR) not in sys.path:
 
 def _load_exp344():
     """Import experiment_344 module, inserting scripts/ into sys.path first."""
-    return importlib.import_module(
-        "experiment_344_constraint_addition_benchmark"
-    )
+    return importlib.import_module("experiment_344_constraint_addition_benchmark")
 
 
 # ---------------------------------------------------------------------------
@@ -78,8 +76,14 @@ class TestGenerateSimulatedQuestions:
         """Each question dict has all required keys."""
         mod = _load_exp344()
         qs = mod.generate_simulated_questions(5, seed=42)
-        required = {"question", "response", "has_carry_error", "has_sign_error",
-                    "has_unit_error", "has_any_error"}
+        required = {
+            "question",
+            "response",
+            "has_carry_error",
+            "has_sign_error",
+            "has_unit_error",
+            "has_any_error",
+        }
         for q in qs:
             assert required.issubset(q.keys())
 
@@ -193,8 +197,11 @@ class TestRunTreatmentCondition:
         qs = mod.generate_simulated_questions(50, seed=42)
         result = mod.run_treatment_condition(qs)
         required = {
-            "n_detected", "n_total_errors", "accuracy",
-            "n_templates_activated", "n_new_constraints_generated",
+            "n_detected",
+            "n_total_errors",
+            "accuracy",
+            "n_templates_activated",
+            "n_new_constraints_generated",
             "activated_template_keys",
         }
         assert required.issubset(result.keys())
@@ -307,7 +314,9 @@ class TestBuildAdditionBenchmarkArtifact:
     def _make_mock_tmpl(self, mod):
         """Build a minimal mock ExperimentTemplate for testing."""
         from experiment_template import ExperimentTemplate
-        import tempfile, os
+        import tempfile
+        import os
+
         tmp = tempfile.mkdtemp()
         tmpl = ExperimentTemplate(
             344,
@@ -358,10 +367,18 @@ class TestBuildAdditionBenchmarkArtifact:
             self._make_control_result(), self._make_treatment_result(), tmpl
         )
         required = {
-            "experiment", "title", "run_date", "started_at", "finished_at",
-            "duration_s", "status",
-            "control_accuracy", "treatment_accuracy", "improvement_delta",
-            "n_templates_activated", "n_new_constraints_generated",
+            "experiment",
+            "title",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "control_accuracy",
+            "treatment_accuracy",
+            "improvement_delta",
+            "n_templates_activated",
+            "n_new_constraints_generated",
             "comparison_to_exp134",
         }
         assert required.issubset(artifact.keys())

@@ -2864,3 +2864,7 @@ python/ |
 | 2026-04-26 15:32 UTC | Exp 936: KAN Tier 4 Real Data — AutoKnots Adaptive | OK | 81 passed, 3 warnings in 2.98s |
 | 2026-04-26 15:48 UTC | Exp 937: Symbolic-KAN Constraint Verifier — Discre | OK | 81 passed, 3 warnings in 2.82s |
 | 2026-04-26 16:04 UTC | Exp 938: DraftConditioned Tier 2.8 Pipeline Integr | OK | 81 passed, 3 warnings in 2.91s |
+| 2026-04-26 16:14 UTC | Exp 939: SC-Energy Set Consistency Networks — Cont | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-26 16:24 UTC | Exp 939: SC-Energy Set Consistency Networks — Cont | OK | Deliverable already exists in repo |
+| 2026-04-26 16:30 UTC | Exp 940: Milestone 2026.04.72 Retrospective (CPU) | FAIL | Post-tests failed: 2 failed, 422 passed, 3 warnings in 56.56s |
+| 2026-04-26 16:40 UTC | Exp 940: Milestone 2026.04.72 Retrospective (CPU) | OK | Deliverable already exists in repo |

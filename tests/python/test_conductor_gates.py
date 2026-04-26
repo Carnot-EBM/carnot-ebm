@@ -10,6 +10,7 @@ that would have written a blocked artifact anyway.
 The max_turns hint reads an optional `max_turns:` field from the task
 YAML and clamps it to a safe range so a malformed entry can't trigger
 runaway agent costs.
+Spec: REQ-INFRA-072
 """
 
 from __future__ import annotations
@@ -17,8 +18,6 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-
-import pytest
 
 SCRIPTS_DIR = Path(__file__).resolve().parent.parent.parent / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
@@ -30,7 +29,6 @@ from conductor_gates import (  # noqa: E402
     select_max_turns,
     write_blocked_artifact,
 )
-
 
 # ---------------------------------------------------------------------------
 # evaluate_gates — operator coverage
@@ -60,8 +58,12 @@ def test_single_gate_passes_with_gt_operator(tmp_path):
         "id": "exp900-demo",
         "title": "Exp 900",
         "gated_on": [
-            {"upstream": "exp819-field-fix", "artifact_field": "discrimination_rate",
-             "op": ">", "value": 0.5},
+            {
+                "upstream": "exp819-field-fix",
+                "artifact_field": "discrimination_rate",
+                "op": ">",
+                "value": 0.5,
+            },
         ],
     }
     result = evaluate_gates(task, results_dir=tmp_path)
@@ -77,8 +79,12 @@ def test_single_gate_fails_with_eq_zero(tmp_path):
         "id": "exp823-relay",
         "title": "Exp 823",
         "gated_on": [
-            {"upstream": "exp821-constraint-v2", "artifact_field": "delta_overall",
-             "op": ">", "value": 0.0},
+            {
+                "upstream": "exp821-constraint-v2",
+                "artifact_field": "delta_overall",
+                "op": ">",
+                "value": 0.0,
+            },
         ],
     }
     result = evaluate_gates(task, results_dir=tmp_path)
@@ -94,8 +100,12 @@ def test_in_operator_against_verdict_list(tmp_path):
         "id": "exp900-demo",
         "title": "Exp 900",
         "gated_on": [
-            {"upstream": "exp819-field-fix", "artifact_field": "honest_verdict",
-             "op": "in", "value": ["injection_field_fixed", "discrimination_above_baseline"]},
+            {
+                "upstream": "exp819-field-fix",
+                "artifact_field": "honest_verdict",
+                "op": "in",
+                "value": ["injection_field_fixed", "discrimination_above_baseline"],
+            },
         ],
     }
     result = evaluate_gates(task, results_dir=tmp_path)
@@ -109,8 +119,12 @@ def test_in_operator_rejects_when_expected_not_a_list(tmp_path):
         "id": "exp900-demo",
         "title": "Exp 900",
         "gated_on": [
-            {"upstream": "exp819-field-fix", "artifact_field": "honest_verdict",
-             "op": "in", "value": "ok"},  # string, not a list — malformed
+            {
+                "upstream": "exp819-field-fix",
+                "artifact_field": "honest_verdict",
+                "op": "in",
+                "value": "ok",
+            },  # string, not a list — malformed
         ],
     }
     result = evaluate_gates(task, results_dir=tmp_path)
@@ -125,8 +139,12 @@ def test_contains_operator(tmp_path):
         "id": "exp900-demo",
         "title": "Exp 900",
         "gated_on": [
-            {"upstream": "exp819-field-fix", "artifact_field": "honest_verdict",
-             "op": "contains", "value": "closed"},
+            {
+                "upstream": "exp819-field-fix",
+                "artifact_field": "honest_verdict",
+                "op": "contains",
+                "value": "closed",
+            },
         ],
     }
     result = evaluate_gates(task, results_dir=tmp_path)
@@ -140,8 +158,12 @@ def test_numeric_op_with_none_actual_fails(tmp_path):
         "id": "exp900-demo",
         "title": "Exp 900",
         "gated_on": [
-            {"upstream": "exp819-field-fix", "artifact_field": "discrimination_rate",
-             "op": ">", "value": 0.5},
+            {
+                "upstream": "exp819-field-fix",
+                "artifact_field": "discrimination_rate",
+                "op": ">",
+                "value": 0.5,
+            },
         ],
     }
     result = evaluate_gates(task, results_dir=tmp_path)
@@ -156,8 +178,7 @@ def test_unknown_op_fails_safely(tmp_path):
         "id": "exp900-demo",
         "title": "Exp 900",
         "gated_on": [
-            {"upstream": "exp819-field-fix", "artifact_field": "x",
-             "op": "<<<", "value": 1},
+            {"upstream": "exp819-field-fix", "artifact_field": "x", "op": "<<<", "value": 1},
         ],
     }
     result = evaluate_gates(task, results_dir=tmp_path)
@@ -178,10 +199,8 @@ def test_all_gates_must_pass(tmp_path):
         "id": "exp900-demo",
         "title": "Exp 900",
         "gated_on": [
-            {"upstream": "exp819-fix-a", "artifact_field": "verdict",
-             "op": "==", "value": "ok"},
-            {"upstream": "exp820-fix-b", "artifact_field": "verdict",
-             "op": "==", "value": "ok"},
+            {"upstream": "exp819-fix-a", "artifact_field": "verdict", "op": "==", "value": "ok"},
+            {"upstream": "exp820-fix-b", "artifact_field": "verdict", "op": "==", "value": "ok"},
         ],
     }
     result = evaluate_gates(task, results_dir=tmp_path)
@@ -199,8 +218,7 @@ def test_missing_upstream_artifact_fails_safely(tmp_path):
         "id": "exp900-demo",
         "title": "Exp 900",
         "gated_on": [
-            {"upstream": "exp819-not-yet-run", "artifact_field": "x",
-             "op": "==", "value": 1},
+            {"upstream": "exp819-not-yet-run", "artifact_field": "x", "op": "==", "value": 1},
         ],
     }
     result = evaluate_gates(task, results_dir=tmp_path)
@@ -215,8 +233,7 @@ def test_corrupt_upstream_artifact_fails_safely(tmp_path):
         "id": "exp900-demo",
         "title": "Exp 900",
         "gated_on": [
-            {"upstream": "exp819-corrupt", "artifact_field": "x",
-             "op": "==", "value": 1},
+            {"upstream": "exp819-corrupt", "artifact_field": "x", "op": "==", "value": 1},
         ],
     }
     result = evaluate_gates(task, results_dir=tmp_path)
@@ -239,18 +256,31 @@ def test_write_blocked_artifact_satisfies_required_fields(tmp_path):
     task = {"id": "exp900-some-task", "title": "Exp 900: Some Task"}
     gate_check = GateCheckResult(
         passed=False,
-        gates_evaluated=[GateResult(
-            upstream="exp819-fix", artifact_field="x", op=">",
-            expected=0.5, actual=0.0, passed=False, reason="0.0 not > 0.5",
-        )],
+        gates_evaluated=[
+            GateResult(
+                upstream="exp819-fix",
+                artifact_field="x",
+                op=">",
+                expected=0.5,
+                actual=0.0,
+                passed=False,
+                reason="0.0 not > 0.5",
+            )
+        ],
         summary="1 of 1 gate(s) failed",
     )
     path = write_blocked_artifact(task, gate_check, results_dir=tmp_path)
     assert path is not None
     data = json.loads(path.read_text())
     for field in (
-        "experiment", "schema", "run_date", "started_at",
-        "finished_at", "duration_s", "status", "title",
+        "experiment",
+        "schema",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "title",
     ):
         assert field in data, f"missing required field {field!r}"
     assert data["status"] == "blocked"
@@ -327,15 +357,25 @@ def test_real_shape_82x_cascade(tmp_path):
     in ~50ms.
     """
     # Exp 819 closed cleanly
-    _seed_artifact(tmp_path, 819, "field_fix", {
-        "honest_verdict": "injection_field_fixed",
-        "discrimination_rate": 1.0,
-    })
+    _seed_artifact(
+        tmp_path,
+        819,
+        "field_fix",
+        {
+            "honest_verdict": "injection_field_fixed",
+            "discrimination_rate": 1.0,
+        },
+    )
     # Exp 821 ran but exposed the Layer-2 problem (zero delta)
-    _seed_artifact(tmp_path, 821, "constraint_v2", {
-        "honest_verdict": "constraint_addition_no_delta_live",
-        "delta_overall": 0.0,
-    })
+    _seed_artifact(
+        tmp_path,
+        821,
+        "constraint_v2",
+        {
+            "honest_verdict": "constraint_addition_no_delta_live",
+            "delta_overall": 0.0,
+        },
+    )
 
     # Exp 823 declares two gates: 819 must show discrimination_rate > 0.5,
     # AND 821 must show delta_overall > 0.0
@@ -343,10 +383,18 @@ def test_real_shape_82x_cascade(tmp_path):
         "id": "exp823-fr11-tier1-relay-v2",
         "title": "Exp 823: FR-11 Tier 1 Relay v2",
         "gated_on": [
-            {"upstream": "exp819-field-fix", "artifact_field": "discrimination_rate",
-             "op": ">", "value": 0.5},
-            {"upstream": "exp821-constraint-v2", "artifact_field": "delta_overall",
-             "op": ">", "value": 0.0},
+            {
+                "upstream": "exp819-field-fix",
+                "artifact_field": "discrimination_rate",
+                "op": ">",
+                "value": 0.5,
+            },
+            {
+                "upstream": "exp821-constraint-v2",
+                "artifact_field": "delta_overall",
+                "op": ">",
+                "value": 0.0,
+            },
         ],
     }
     result = evaluate_gates(task_823, results_dir=tmp_path)

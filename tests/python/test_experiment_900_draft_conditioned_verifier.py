@@ -2,21 +2,18 @@
 
 Spec: REQ-TIER2-010
 SCENARIO-TIER2-010
+Spec: REQ-AUTO-011
 """
 
 from __future__ import annotations
 
-import sys
 from typing import Any
 from unittest.mock import MagicMock, patch
-
-import pytest
 
 from carnot.verify.draft_conditioned_verifier import (
     DraftConditionedVerifier,
     draft_differs_from_response,
 )
-
 
 # ---------------------------------------------------------------------------
 # extract_structural_constraints tests — REQ-TIER2-010-3
@@ -220,8 +217,8 @@ class TestThreeTierPipelineTier28Wiring:
 
     def _make_pipeline(self) -> Any:
         """Build a minimal ThreeTierPipeline with stub dependencies."""
-        from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
         from carnot.pipeline.sink_probe import SinkProbe
+        from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
 
         sink_probe = SinkProbe()
 
