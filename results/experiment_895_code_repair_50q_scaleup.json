@@ -1,0 +1,37 @@
+{
+  "experiment": 895,
+  "title": "Code Repair 50Q Scale-Up with ConstrainedDecodingPreFilter",
+  "schema": "carnot-experiment-v1",
+  "run_date": "2026-04-26",
+  "started_at": "2026-04-26T03:35:41Z",
+  "finished_at": "2026-04-26T03:36:31.815578Z",
+  "duration_s": 34,
+  "status": "blocked",
+  "honest_verdict": "blocked_gate_881_not_met",
+  "gate_check": {
+    "gate": "exp_881_signed_improvement_gt_0",
+    "required": "signed_improvement > 0",
+    "actual": 0.0,
+    "source_file": "results/experiment_881_code_repair_v8_gemma4.json",
+    "note": "Gate specified results/experiment_881_code_repair_v8_gemma4_live.json but only results/experiment_881_code_repair_v8_gemma4.json exists. That file has signed_improvement=0.0 and honest_verdict=zero_constraints, which fails the gate condition (> 0). Exp 895 cannot run until Exp 881 demonstrates positive signed_improvement on live GPU."
+  },
+  "exp_881_signed_improvement": 0.0,
+  "exp_881_honest_verdict": "zero_constraints",
+  "exp_886_fp_rate_delta": 0.0,
+  "exp_886_honest_verdict": "no_fp_reduction",
+  "pass_at_1_baseline_50": null,
+  "pass_at_1_carnot_50": null,
+  "signed_improvement": null,
+  "repair_success_rate": null,
+  "fp_rate_with_constrained": null,
+  "n_problems": 0,
+  "model_id": "google/gemma-4-E4B-it",
+  "prior_failures": [
+    {
+      "experiment_id": "exp881_code_repair_v8_gemma4",
+      "verdict": "zero_constraints",
+      "addressed_by": "NONE \u2014 signed_improvement=0.0 means the repair pipeline produced no improvement on 25 HumanEval problems. The 50-question scale-up (Exp 895) is gated on positive signed_improvement from Exp 881. Without that baseline, running 50 problems would only compound the failure without diagnosing the root cause.",
+      "retire_if_same_verdict": false
+    }
+  ]
+}
