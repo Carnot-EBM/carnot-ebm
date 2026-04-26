@@ -6558,3 +6558,28 @@ logs/conductor.log | 13 +++++++++++++
 2026-04-26 11:42:35,048 [conductor] RESEARCH STEP: Exp 937: Symbolic-KAN Constraint Verifier — Discrete Symbolic Structure for Interpretability (CPU)
 2026-04-26 11:42:35,048 [conductor] ============================================================
 2026-04-26 11:42:35,862 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 11:42:35,927 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 11:42:35,927 [conductor] Running test suite (smart subset)...
+2026-04-26 11:42:41,366 [conductor] Pre-check: 81 passed, 3 warnings in 2.74s
+2026-04-26 11:42:41,469 [conductor] Injected 56 symbol signatures from 2 files (AST outlines)
+2026-04-26 11:42:41,469 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. Here's the summary:
+
+**Deliverable written:** `results/experiment_937_symbolic_kan_constraint_verifier.json`
+- `auc_symbolic = 0.9344` vs baseline `0.2208` (+0.7136 delta)
+- `honest_verdict = "symbolic_kan_viable"` (target was > 0.70)
+- 31 tests pass (`tests/python/test_symbolic_kan.py`)
+
+**Files created:**
+- `python/carnot/models/symbolic_kan.py` — SymbolicKAN with ADD/MUL/CMP/EQ vocabulary, residual splines, discrete label search (REQ-MODEL-030, SCENARIO-MODEL-015)
+- `scripts/experiment_937_symbolic_kan_constraint_verifier.py` — CPU experiment with synthetic data
+- `tests/python/test_symbolic_kan.py` — 31 tests covering all public methods
+- `research-references.md` — appended arXiv 2603.23854 entry
+2026-04-26 11:48:33,667 [conductor] Claude Code completed (exit 0)
+2026-04-26 11:48:33,684 [conductor] Changes:
+logs/conductor.log     | 18 ++++++++++++++++++
+ research-references.md | 20 ++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+2026-04-26 11:48:33,718 [conductor] DOGFOOD: Verification complete (total: 601 checks, 57 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 11:48:33,718 [conductor] Running test suite (smart subset)...
+2026-04-26 11:48:39,274 [conductor] Post-check: 81 passed, 3 warnings in 2.82s
