@@ -2826,3 +2826,4 @@ python/ |
 | 2026-04-26 09:02 UTC | Exp 912: DraftConditioned Verifier Tier 2.8 — Stru | OK | 81 passed, 3 warnings in 2.93s |
 | 2026-04-26 09:18 UTC | Exp 913: DualGPU Production Wiring — Wire 1.979x V | OK | 81 passed, 3 warnings in 2.86s |
 | 2026-04-26 09:36 UTC | Exp 914: PIMI Sparse Adjacency Final — 5x Sweep Re | OK | 81 passed, 3 warnings in 3.01s |
+| 2026-04-26 09:49 UTC | Exp 915: HuggingFace Publish v3 — VJEPA v2 + Estim | OK | 81 passed, 3 warnings in 2.78s |
