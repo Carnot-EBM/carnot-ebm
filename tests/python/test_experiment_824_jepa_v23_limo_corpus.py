@@ -68,7 +68,12 @@ def _fover_json(tmp_path: Path) -> Path:
         {"question_id": "1", "step_text": "2 + 3 = 6", "label": "incorrect", "confidence": 1.0},
         {"question_id": "2", "step_text": "4 * 5 = 20", "label": "correct", "confidence": 0.95},
         {"question_id": "2", "step_text": "4 * 5 = 19", "label": "incorrect", "confidence": 0.95},
-        {"question_id": "3", "step_text": "no equation here", "label": "correct", "confidence": 0.5},
+        {
+            "question_id": "3",
+            "step_text": "no equation here",
+            "label": "correct",
+            "confidence": 0.5,
+        },
     ]
     p = tmp_path / "fover.json"
     p.write_text(json.dumps(data))
@@ -109,9 +114,9 @@ class TestLIMOCuratorScorePairs:
     def test_score_pairs_descending(self) -> None:
         """Pairs are returned in descending order by quality_score."""
         pairs = [
-            _make_pair(z3_conf=0.5, cpmi=0.5),   # quality = 0.25
-            _make_pair(z3_conf=1.0, cpmi=0.9),   # quality = 0.90
-            _make_pair(z3_conf=0.8, cpmi=0.7),   # quality = 0.56
+            _make_pair(z3_conf=0.5, cpmi=0.5),  # quality = 0.25
+            _make_pair(z3_conf=1.0, cpmi=0.9),  # quality = 0.90
+            _make_pair(z3_conf=0.8, cpmi=0.7),  # quality = 0.56
         ]
         curator = LIMOCurator.__new__(LIMOCurator)
         ranked = curator.score_pairs(pairs)
@@ -237,7 +242,12 @@ class TestLIMOCuratorLoadFoverPairs:
     def test_load_fover_pairs_no_correct_step_skipped(self, tmp_path: Path) -> None:
         """Questions with no correct steps produce no pairs."""
         data = [
-            {"question_id": "99", "step_text": "wrong step", "label": "incorrect", "confidence": 1.0},
+            {
+                "question_id": "99",
+                "step_text": "wrong step",
+                "label": "incorrect",
+                "confidence": 1.0,
+            },
         ]
         p = tmp_path / "fover_no_correct.json"
         p.write_text(json.dumps(data))
@@ -271,7 +281,9 @@ class TestLIMOCuratorLoadFoverPairs:
         curator = LIMOCurator(fover_path=p, cpmi_path=tmp_path / "none.json")
         pairs = curator.load_fover_pairs()
         assert len(pairs) == 1
-        assert "INCORRECT" in pairs[0].negative_step or "incorrect" in pairs[0].negative_step.lower()
+        assert (
+            "INCORRECT" in pairs[0].negative_step or "incorrect" in pairs[0].negative_step.lower()
+        )
 
 
 class TestMakeDomainPairs:
@@ -321,8 +333,8 @@ class TestTripletLoss:
         # Anchor and negative are orthogonal → d(a,n) = 1.0.
         # margin=0.5 → 0.0 - 1.0 + 0.5 = -0.5 → max(0, -0.5) = 0.0
         anchor = [1.0, 0.0]
-        positive = [1.0, 0.0]    # same as anchor: d=0
-        negative = [0.0, 1.0]    # orthogonal: d=1
+        positive = [1.0, 0.0]  # same as anchor: d=0
+        negative = [0.0, 1.0]  # orthogonal: d=1
 
         loss_fn = TripletLoss(margin=0.5)
         loss = loss_fn(anchor, positive, negative)
@@ -331,8 +343,8 @@ class TestTripletLoss:
     def test_loss_positive_when_negative_closer_than_positive(self) -> None:
         """Loss > 0 when negative is closer to anchor than positive."""
         anchor = [1.0, 0.0]
-        positive = [0.0, 1.0]    # orthogonal to anchor: d=1.0
-        negative = [1.0, 0.0]    # same as anchor: d=0.0
+        positive = [0.0, 1.0]  # orthogonal to anchor: d=1.0
+        negative = [1.0, 0.0]  # same as anchor: d=0.0
 
         loss_fn = TripletLoss(margin=0.5)
         loss = loss_fn(anchor, positive, negative)
@@ -344,7 +356,7 @@ class TestTripletLoss:
         """Loss is 0 when d(a,p) - d(a,n) == -margin exactly."""
         # d(a,p) - d(a,n) + margin = 0 → boundary case.
         anchor = [1.0, 0.0]
-        positive = [0.0, 1.0]   # d(a,p) = 1.0
+        positive = [0.0, 1.0]  # d(a,p) = 1.0
         # Need d(a,n) such that 1.0 - d(a,n) + 0.5 = 0 → d(a,n) = 1.5
         # But cosine distance max is 2.0. We can pick negative = -anchor.
         negative = [-1.0, 0.0]  # d(a,n) = 1 - (-1) = 2.0
@@ -368,8 +380,8 @@ class TestTripletLoss:
     def test_gradient_nonzero_when_loss_positive(self) -> None:
         """Gradients are non-zero when loss > 0."""
         anchor = [1.0, 0.0]
-        positive = [0.0, 1.0]   # far from anchor
-        negative = [1.0, 0.0]   # close to anchor
+        positive = [0.0, 1.0]  # far from anchor
+        negative = [1.0, 0.0]  # close to anchor
 
         loss_fn = TripletLoss(margin=0.5)
         grad_a, grad_p, grad_n = loss_fn.gradient(anchor, positive, negative)
@@ -535,7 +547,11 @@ class TestEvaluateV23:
     def test_evaluate_v23_with_real_holdout(self, tmp_path: Path) -> None:
         """evaluate_v23 works with a real holdout file."""
         data = [
-            {"question_id": str(i), "step_text": f"step {i}", "label": "correct" if i % 2 == 0 else "incorrect"}
+            {
+                "question_id": str(i),
+                "step_text": f"step {i}",
+                "label": "correct" if i % 2 == 0 else "incorrect",
+            }
             for i in range(10)
         ]
         p = tmp_path / "holdout.json"
@@ -729,7 +745,7 @@ class TestEdgeCases:
             CuratedPair(
                 prefix_text="alpha beta gamma",
                 positive_step="alpha beta gamma",  # identical to anchor
-                negative_step="xyz uvw rst",        # completely disjoint
+                negative_step="xyz uvw rst",  # completely disjoint
                 z3_confidence=1.0,
                 cpmi_score=1.0,
                 source_domain="gsm8k",

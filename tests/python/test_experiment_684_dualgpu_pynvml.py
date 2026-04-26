@@ -57,11 +57,13 @@ def test_valid_verdicts_set() -> None:
     against a fixed enum.  Misspelling or adding a value silently breaks the reconciler
     without raising an assertion in the experiment itself.
     """
-    assert VALID_VERDICTS == frozenset({
-        "dualgpu_confirmed",
-        "dualgpu_partial_no_pynvml",
-        "dualgpu_blocked",
-    })
+    assert VALID_VERDICTS == frozenset(
+        {
+            "dualgpu_confirmed",
+            "dualgpu_partial_no_pynvml",
+            "dualgpu_blocked",
+        }
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -304,7 +306,13 @@ def test_run_inference_batch_returns_required_fields() -> None:
         )
 
     assert isinstance(result, dict)
-    for key in ("gpu_id", "total_latency_s", "n_questions", "output_tokens_total", "response_previews"):
+    for key in (
+        "gpu_id",
+        "total_latency_s",
+        "n_questions",
+        "output_tokens_total",
+        "response_previews",
+    ):
         assert key in result, f"missing key: {key}"
 
     assert result["gpu_id"] == 1

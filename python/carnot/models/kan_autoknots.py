@@ -136,9 +136,7 @@ class AutoKnotsRefiner:
         self.max_knots = max_knots_per_spline
         self.min_knots = min_knots_per_spline
 
-    def _activation_magnitude(
-        self, activation_batch: np.ndarray, spline_id: str
-    ) -> float:
+    def _activation_magnitude(self, activation_batch: np.ndarray, spline_id: str) -> float:
         """Compute mean absolute activation for a single spline.
 
         For edge splines ("edge_i_j"): activation is x[:, i] * x[:, j].

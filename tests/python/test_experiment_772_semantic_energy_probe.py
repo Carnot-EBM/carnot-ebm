@@ -255,7 +255,9 @@ def test_is_high_energy_boundary():
     score = probe.score("test boundary")
     # At exactly the score value, result depends on strict comparison
     probe_exact = SemanticEnergyProbe(energy_threshold=score)
-    assert probe_exact.is_high_energy("test boundary") is False  # score > threshold is False when equal
+    assert (
+        probe_exact.is_high_energy("test boundary") is False
+    )  # score > threshold is False when equal
 
 
 def test_is_high_energy_empty_string():

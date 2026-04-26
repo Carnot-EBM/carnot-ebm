@@ -202,10 +202,14 @@ assert len(_QUESTIONS) == 100, f"Expected 100 questions, got {len(_QUESTIONS)}"
 # Batch 3 (25 Q): 18 correct → accuracy = 0.72
 # This gives batch4 > batch1 so improved=True in synthetic mode.
 _SYNTHETIC_GROUND_TRUTH: list[bool] = (
-    [True] * 15 + [False] * 10   # batch 0
-    + [True] * 16 + [False] * 9  # batch 1
-    + [True] * 17 + [False] * 8  # batch 2
-    + [True] * 18 + [False] * 7  # batch 3
+    [True] * 15
+    + [False] * 10  # batch 0
+    + [True] * 16
+    + [False] * 9  # batch 1
+    + [True] * 17
+    + [False] * 8  # batch 2
+    + [True] * 18
+    + [False] * 7  # batch 3
 )
 assert len(_SYNTHETIC_GROUND_TRUTH) == 100
 
@@ -215,7 +219,9 @@ assert len(_SYNTHETIC_GROUND_TRUTH) == 100
 # ---------------------------------------------------------------------------
 
 
-def _build_components(seed: int = 42) -> tuple[ThreeTierPipeline, ConstraintTemplateLibrary, PerModelFPTracker, EORMModel]:
+def _build_components(
+    seed: int = 42,
+) -> tuple[ThreeTierPipeline, ConstraintTemplateLibrary, PerModelFPTracker, EORMModel]:
     """Build all relay components with sensible defaults.
 
     **Detailed explanation for engineers:**
@@ -258,7 +264,11 @@ def _build_components(seed: int = 42) -> tuple[ThreeTierPipeline, ConstraintTemp
 
     # Relay EORM (separate from pipeline EORM — scores responses for Tier 3 AUC)
     relay_eorm = EORMModel(
-        embed_dim=64, n_heads=4, n_layers=2, max_seq_len=128, vocab_size=512,
+        embed_dim=64,
+        n_heads=4,
+        n_layers=2,
+        max_seq_len=128,
+        vocab_size=512,
         key=jr.PRNGKey(seed + 1),
     )
 
@@ -313,7 +323,9 @@ def main() -> None:
     # In live mode, setup_gpu() would load the model.  For now we always
     # proceed with CPU components to keep the experiment runnable in CI.
     if force_live:
-        print(f"[Exp 361] Live mode requested (model={model_id}); GPU setup skipped — relay uses CPU EORM.")
+        print(
+            f"[Exp 361] Live mode requested (model={model_id}); GPU setup skipped — relay uses CPU EORM."
+        )
 
     # Build relay components.
     pipeline, library, tracker, relay_eorm = _build_components(seed=361)
@@ -360,7 +372,8 @@ def main() -> None:
 
     # Tier 2 template activation summary.
     tier2_activated = [
-        key for key, tmpl_obj in library._templates.items()
+        key
+        for key, tmpl_obj in library._templates.items()
         if library._observations.get((key, model_id), 0) >= tmpl_obj.min_frequency
     ]
     print(f"[Exp 361] Tier 2 templates activated for {model_id}: {tier2_activated}")
@@ -388,10 +401,14 @@ def main() -> None:
     # Persist relay state to session memory dir.
     state_path = session_dir / f"relay_state_{model_id.replace('/', '__')}.json"
     with open(state_path, "w") as f:
-        json.dump({
-            "fp_tracker": tracker.to_dict(),
-            "template_library": library.to_dict(),
-        }, f, indent=2)
+        json.dump(
+            {
+                "fp_tracker": tracker.to_dict(),
+                "template_library": library.to_dict(),
+            },
+            f,
+            indent=2,
+        )
     print(f"[Exp 361] Relay state saved: {state_path}")
 
 

@@ -257,7 +257,7 @@ class PIMMISparseAdjacency:
         # effective_sweep_cost = fraction of N^2 entries that are non-zero.
         # For sparsity=0.2, this is approximately 0.2 (20% of dense cost per sweep).
         nnz = J_sparse.nnz
-        effective_sweep_cost = nnz / (self.n ** 2)
+        effective_sweep_cost = nnz / (self.n**2)
 
         self._rng = np.random.default_rng(seed)
         self._reset_ema()
@@ -318,7 +318,7 @@ class PIMMISparseAdjacency:
         J_sparse = self.build_sparse_J(J_full)
         h_arr = np.asarray(h, dtype=np.float64)
         nnz = J_sparse.nnz
-        effective_sweep_cost = nnz / (self.n ** 2)
+        effective_sweep_cost = nnz / (self.n**2)
 
         trial_sweeps: list[int] = []
 

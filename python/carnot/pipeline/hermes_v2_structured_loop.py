@@ -31,11 +31,13 @@ Spec: REQ-VERIFY-147, REQ-VERIFY-148,
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Callable, Optional
+from typing import TYPE_CHECKING
 
-from carnot.pipeline.structured_equation_forcer import StructuredEquationForcer
-from carnot.pipeline.symcode_verifier import SymCodeVerifier
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
+    from carnot.pipeline.structured_equation_forcer import StructuredEquationForcer
+    from carnot.pipeline.symcode_verifier import SymCodeVerifier
 
 # ---------------------------------------------------------------------------
 # HermesV2StructuredResult — result for one question in the structured loop
@@ -122,7 +124,7 @@ class HermesV2StructuredLoop:
 
     def __init__(
         self,
-        llm_caller: Optional[Callable[[str, str], str]],
+        llm_caller: Callable[[str, str], str] | None,
         verifier: SymCodeVerifier,
         forcer: StructuredEquationForcer,
         max_sentences: int = 12,

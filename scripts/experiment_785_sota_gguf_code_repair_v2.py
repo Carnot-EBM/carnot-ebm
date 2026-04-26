@@ -33,6 +33,7 @@
 Spec: REQ-REPAIR-024, REQ-REPAIR-025, SCENARIO-REPAIR-044, SCENARIO-REPAIR-045,
       REQ-REPAIR-022, REQ-REPAIR-023, REQ-CODE-031, REQ-CODE-032
 """
+
 from __future__ import annotations
 
 import json
@@ -282,7 +283,6 @@ def main() -> None:
     tmpl.check_exclusion_manifest()
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=90, result_path=DELIVERABLE):
-
         # Guard: CARNOT_FORCE_LIVE=1 required — REQ-REPAIR-024
         force_live_now = os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
         if not force_live_now:
@@ -321,7 +321,9 @@ def main() -> None:
 
             smi = subprocess.run(
                 ["nvidia-smi", "--query-gpu=memory.free", "--format=csv,noheader,nounits"],
-                capture_output=True, text=True, timeout=10,
+                capture_output=True,
+                text=True,
+                timeout=10,
             )
             if smi.returncode == 0:
                 free_vram_mb_after_kill = float(smi.stdout.strip().splitlines()[0].strip())
@@ -419,14 +421,22 @@ def main() -> None:
                 if result is None:
                     # Timed out — treat as double-fail.
                     result = TwoRoundResult(
-                        round0_pass=False, round1_pass=False, round2_pass=False,
-                        round0_code="", round1_code="", round2_code="",
+                        round0_pass=False,
+                        round1_pass=False,
+                        round2_pass=False,
+                        round0_code="",
+                        round1_code="",
+                        round2_code="",
                         error_types=["timeout"],
                     )
             except Exception:
                 result = TwoRoundResult(
-                    round0_pass=False, round1_pass=False, round2_pass=False,
-                    round0_code="", round1_code="", round2_code="",
+                    round0_pass=False,
+                    round1_pass=False,
+                    round2_pass=False,
+                    round0_code="",
+                    round1_code="",
+                    round2_code="",
                     error_types=["other"],
                 )
             elapsed = round(time.perf_counter() - t0, 3)

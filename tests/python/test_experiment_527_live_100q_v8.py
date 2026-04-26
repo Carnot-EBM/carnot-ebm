@@ -108,10 +108,19 @@ class TestBuildPrecisionV8Artifact:
 
     def test_all_required_schema_keys_present(self):
         required = {
-            "schema", "inference_mode", "n_questions", "baseline_accuracy",
-            "pipeline_accuracy", "signed_improvement", "wilson_95ci_lower",
-            "wilson_95ci_upper", "is_positive", "retro_033_closed",
-            "cot_pairs_written", "env_autofix_applied", "honest_verdict",
+            "schema",
+            "inference_mode",
+            "n_questions",
+            "baseline_accuracy",
+            "pipeline_accuracy",
+            "signed_improvement",
+            "wilson_95ci_lower",
+            "wilson_95ci_upper",
+            "is_positive",
+            "retro_033_closed",
+            "cot_pairs_written",
+            "env_autofix_applied",
+            "honest_verdict",
         }
         art = build_precision_v8_artifact(self._make_results(), "live_gpu", "some/path.json")
         assert required <= set(art.keys())
@@ -163,7 +172,12 @@ class TestLoadJitGatedModelV8:
 class TestWriteCotPairsV8:
     def test_fover_format_preserved(self, tmp_path):
         pairs = [
-            {"question": "Q1", "cot_text": "step by step", "correct": True, "model_id": "Gemma4-INT4"},
+            {
+                "question": "Q1",
+                "cot_text": "step by step",
+                "correct": True,
+                "model_id": "Gemma4-INT4",
+            },
         ]
         out = str(tmp_path / "cot.json")
         n = write_cot_pairs(pairs, out)
@@ -233,12 +247,14 @@ class TestExperiment527Script:
     def test_deliverable_path_constant(self):
         """DELIVERABLE constant references experiment 527."""
         import scripts.experiment_527_live_100q_precision_v8 as exp527
+
         assert "527" in exp527.DELIVERABLE
         assert exp527.DELIVERABLE.endswith(".json")
 
     def test_cot_pairs_path_constant(self):
         """COT_PAIRS_PATH constant references experiment 527."""
         import scripts.experiment_527_live_100q_precision_v8 as exp527
+
         assert "527" in exp527.COT_PAIRS_PATH
         assert exp527.COT_PAIRS_PATH.endswith(".json")
 

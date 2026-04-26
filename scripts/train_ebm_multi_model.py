@@ -55,8 +55,9 @@ MODEL_REGISTRY = {
 }
 
 
-def check_truthfulqa_answer(response: str, correct_answers: list[str],
-                            incorrect_answers: list[str], best_answer: str = "") -> bool:
+def check_truthfulqa_answer(
+    response: str, correct_answers: list[str], incorrect_answers: list[str], best_answer: str = ""
+) -> bool:
     """Check if response matches any correct answer."""
     response_lower = response.lower().strip()
     for correct in correct_answers:
@@ -66,7 +67,7 @@ def check_truthfulqa_answer(response: str, correct_answers: list[str],
         words = best_answer.lower().split()
         if len(words) >= 3:
             for i in range(len(words) - 2):
-                phrase = " ".join(words[i:i+3])
+                phrase = " ".join(words[i : i + 3])
                 if phrase in response_lower:
                     return True
     for incorrect in incorrect_answers:
@@ -94,7 +95,8 @@ def collect_activations(
     print(f"  Loading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         torch_dtype="auto" if device == "cuda" else None,
     )
@@ -104,11 +106,8 @@ def collect_activations(
 
     # Get hidden dim from config
     config = model.config
-    if hasattr(config, 'get_text_config'):
-        tc = config.get_text_config()
-    else:
-        tc = config
-    hidden_dim = getattr(tc, 'hidden_size', getattr(tc, 'd_model', 1024))
+    tc = config.get_text_config() if hasattr(config, "get_text_config") else config
+    hidden_dim = getattr(tc, "hidden_size", getattr(tc, "d_model", 1024))
     print(f"  Hidden dim: {hidden_dim}, Device: {device}")
 
     ds = load_dataset("truthful_qa", "generation")
@@ -133,7 +132,10 @@ def collect_activations(
             if has_thinking:
                 kwargs["enable_thinking"] = False  # Disable thinking for cleaner activations
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True, **kwargs,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+                **kwargs,
             )
         else:
             text = prompt
@@ -146,7 +148,9 @@ def collect_activations(
         try:
             with torch.no_grad():
                 outputs = model.generate(
-                    **inputs, max_new_tokens=80, do_sample=False,
+                    **inputs,
+                    max_new_tokens=80,
+                    do_sample=False,
                     pad_token_id=tokenizer.eos_token_id,
                 )
 
@@ -155,7 +159,9 @@ def collect_activations(
             if "</think>" in response:
                 response = response.split("</think>")[-1].strip()
 
-            is_correct = check_truthfulqa_answer(response, correct_answers, incorrect_answers, best_answer)
+            is_correct = check_truthfulqa_answer(
+                response, correct_answers, incorrect_answers, best_answer
+            )
             if is_correct:
                 n_correct += 1
             else:
@@ -178,8 +184,10 @@ def collect_activations(
             continue
 
         if (qi + 1) % 50 == 0:
-            print(f"    [{qi+1:3d}/{n_questions}] tokens={len(all_activations)} "
-                  f"correct={n_correct} wrong={n_wrong} ({n_correct/(qi+1)*100:.0f}%)")
+            print(
+                f"    [{qi + 1:3d}/{n_questions}] tokens={len(all_activations)} "
+                f"correct={n_correct} wrong={n_wrong} ({n_correct / (qi + 1) * 100:.0f}%)"
+            )
 
     # Free GPU memory
     del model, tokenizer
@@ -198,7 +206,6 @@ def train_ebm(activations: np.ndarray, labels: np.ndarray, hidden_dim: int) -> t
     import jax
     import jax.numpy as jnp
     import jax.random as jrandom
-
     from carnot.models.gibbs import GibbsConfig, GibbsModel
     from carnot.training.nce import nce_loss
 
@@ -232,8 +239,11 @@ def train_ebm(activations: np.ndarray, labels: np.ndarray, hidden_dim: int) -> t
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -249,7 +259,7 @@ def train_ebm(activations: np.ndarray, labels: np.ndarray, hidden_dim: int) -> t
         set_p(ebm, old)
         return r
 
-    for ep in range(300):
+    for _ep in range(300):
         grads = jax.grad(loss_fn)(params)
         params = jax.tree.map(lambda p, g: p - 0.005 * g, params, grads)
     set_p(ebm, params)
@@ -268,8 +278,15 @@ def train_ebm(activations: np.ndarray, labels: np.ndarray, hidden_dim: int) -> t
 
 
 def export_model(
-    ebm, short_id: str, model_name: str, hidden_dim: int,
-    test_acc: float, gap: float, n_tokens: int, n_correct: int, n_wrong: int,
+    ebm,
+    short_id: str,
+    model_name: str,
+    hidden_dim: int,
+    test_acc: float,
+    gap: float,
+    n_tokens: int,
+    n_correct: int,
+    n_wrong: int,
 ):
     """Save trained EBM to exports/ directory."""
     from safetensors.numpy import save_file
@@ -334,7 +351,7 @@ Per-token hallucination detection EBM for {model_name}.
 | Energy gap | {gap:.4f} |
 | Source model | {model_name} |
 | Hidden dim | {hidden_dim} |
-| Architecture | Gibbs [{hidden_dim} → {' → '.join(str(h) for h in hdims)} → 1], SiLU |
+| Architecture | Gibbs [{hidden_dim} → {" → ".join(str(h) for h in hdims)} → 1], SiLU |
 | Training tokens | {n_tokens:,} |
 | Thinking | disabled |
 
@@ -360,8 +377,12 @@ Trained with [Carnot](https://github.com/Carnot-EBM/carnot-ebm).
 def main() -> int:
     parser = argparse.ArgumentParser(description="Train EBMs across multiple LLMs")
     parser.add_argument("--only", help="Train only this model (short ID)")
-    parser.add_argument("--n-questions", type=int, default=200, help="TruthfulQA questions per model")
-    parser.add_argument("--upload", action="store_true", help="Upload to HuggingFace after training")
+    parser.add_argument(
+        "--n-questions", type=int, default=200, help="TruthfulQA questions per model"
+    )
+    parser.add_argument(
+        "--upload", action="store_true", help="Upload to HuggingFace after training"
+    )
     parser.add_argument("--org", default="Carnot-EBM", help="HuggingFace org")
     args = parser.parse_args()
 
@@ -389,7 +410,11 @@ def main() -> int:
         # Collect activations
         try:
             activations, labels, hidden_dim, n_correct, n_wrong = collect_activations(
-                hf_name, short_id, has_chat, has_thinking, args.n_questions,
+                hf_name,
+                short_id,
+                has_chat,
+                has_thinking,
+                args.n_questions,
             )
         except Exception as e:
             print(f"  FAILED to collect activations: {e}")
@@ -401,11 +426,15 @@ def main() -> int:
 
         # Save activations
         from safetensors.numpy import save_file
+
         acts_file = os.path.join(DATA_DIR, f"token_activations_{short_id}_nothink.safetensors")
-        save_file({
-            "activations": activations,
-            "labels": labels,
-        }, acts_file)
+        save_file(
+            {
+                "activations": activations,
+                "labels": labels,
+            },
+            acts_file,
+        )
         print(f"  Saved activations: {acts_file}")
 
         # Train EBM
@@ -413,7 +442,7 @@ def main() -> int:
         ebm, test_acc, gap = train_ebm(activations, labels, hidden_dim)
 
         if ebm is None:
-            print(f"  SKIPPED: insufficient data")
+            print("  SKIPPED: insufficient data")
             results[short_id] = {"status": "SKIPPED", "n_tokens": n_tokens}
             continue
 
@@ -421,8 +450,15 @@ def main() -> int:
 
         # Export
         export_name = export_model(
-            ebm, short_id, hf_name, hidden_dim,
-            test_acc, gap, n_tokens, n_correct, n_wrong,
+            ebm,
+            short_id,
+            hf_name,
+            hidden_dim,
+            test_acc,
+            gap,
+            n_tokens,
+            n_correct,
+            n_wrong,
         )
 
         elapsed = time.time() - start
@@ -442,6 +478,7 @@ def main() -> int:
         if args.upload:
             try:
                 from huggingface_hub import HfApi
+
                 api = HfApi()
                 repo_id = f"{args.org}/{export_name}"
                 local_dir = os.path.join(EXPORT_DIR, export_name)
@@ -457,12 +494,16 @@ def main() -> int:
     print(f"\n{sep}")
     print(f"MULTI-MODEL EBM TRAINING COMPLETE ({total_time:.0f}s)")
     print(sep)
-    print(f"{'Model':20s} {'Status':8s} {'Tokens':>8s} {'Hidden':>8s} {'EBM Acc':>8s} {'Gap':>8s} {'Time':>8s}")
+    print(
+        f"{'Model':20s} {'Status':8s} {'Tokens':>8s} {'Hidden':>8s} {'EBM Acc':>8s} {'Gap':>8s} {'Time':>8s}"
+    )
     print("-" * 80)
     for short_id, r in results.items():
         if r["status"] == "OK":
-            print(f"{short_id:20s} {'OK':8s} {r['n_tokens']:>8d} {r['hidden_dim']:>8d} "
-                  f"{r['test_acc']:>8s} {r['gap']:>8s} {r['time']:>8s}")
+            print(
+                f"{short_id:20s} {'OK':8s} {r['n_tokens']:>8d} {r['hidden_dim']:>8d} "
+                f"{r['test_acc']:>8s} {r['gap']:>8s} {r['time']:>8s}"
+            )
         else:
             print(f"{short_id:20s} {r['status']:8s}")
     print(sep)
@@ -471,6 +512,7 @@ def main() -> int:
     if args.upload:
         print("\n--- Uploading to HuggingFace ---")
         from huggingface_hub import HfApi
+
         api = HfApi()
         for short_id, r in results.items():
             if r["status"] != "OK":

@@ -152,7 +152,10 @@ def test_classify_verdict_positive_found_live() -> None:
 
     REQ-VERIFY-169-5.
     """
-    assert classify_verdict(positive_threshold_found=True, inference_mode="live_gpu") == "gemma4_positive_found"
+    assert (
+        classify_verdict(positive_threshold_found=True, inference_mode="live_gpu")
+        == "gemma4_positive_found"
+    )
 
 
 def test_classify_verdict_no_positive_live() -> None:
@@ -160,7 +163,10 @@ def test_classify_verdict_no_positive_live() -> None:
 
     REQ-VERIFY-169-6.
     """
-    assert classify_verdict(positive_threshold_found=False, inference_mode="live_gpu") == "gemma4_no_positive_threshold"
+    assert (
+        classify_verdict(positive_threshold_found=False, inference_mode="live_gpu")
+        == "gemma4_no_positive_threshold"
+    )
 
 
 def test_classify_verdict_blocked_when_not_live() -> None:
@@ -169,7 +175,10 @@ def test_classify_verdict_blocked_when_not_live() -> None:
     REQ-VERIFY-169-7.
     """
     assert classify_verdict(positive_threshold_found=True, inference_mode="blocked") == "blocked"
-    assert classify_verdict(positive_threshold_found=False, inference_mode="blocked_no_gpu") == "blocked"
+    assert (
+        classify_verdict(positive_threshold_found=False, inference_mode="blocked_no_gpu")
+        == "blocked"
+    )
 
 
 # ---------------------------------------------------------------------------

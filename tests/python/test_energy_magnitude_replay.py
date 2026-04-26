@@ -47,10 +47,10 @@ class TestEnergyMagnitudeBuffer:
         v2 = {"id": 2}
         v3 = {"id": 3}
         v4 = {"id": 4}
-        buf.add(v1, 1.0)   # mean after: 1.0,  dev: 0.0
-        buf.add(v2, 5.0)   # mean after: 3.0,  dev: 2.0
-        buf.add(v3, 2.0)   # mean after: 2.67, dev: 0.67
-        buf.add(v4, 4.0)   # mean after: 3.0,  dev: 1.0
+        buf.add(v1, 1.0)  # mean after: 1.0,  dev: 0.0
+        buf.add(v2, 5.0)  # mean after: 3.0,  dev: 2.0
+        buf.add(v3, 2.0)  # mean after: 2.67, dev: 0.67
+        buf.add(v4, 4.0)  # mean after: 3.0,  dev: 1.0
 
         result = buf.top_k(2)
         assert len(result) == 2
@@ -77,8 +77,8 @@ class TestEnergyMagnitudeBuffer:
         v_hard = {"id": "hard"}
         v_harder = {"id": "harder"}
 
-        buf.add(v_easy, 1.0)   # mean=1.0, dev=0.0
-        buf.add(v_hard, 3.0)   # mean=2.0, dev=1.0 (hard)
+        buf.add(v_easy, 1.0)  # mean=1.0, dev=0.0
+        buf.add(v_hard, 3.0)  # mean=2.0, dev=1.0 (hard)
         # Buffer now has v_easy (dev=?) and v_hard (dev=1.0) - both in
         # Now add a harder item that should evict the easiest:
         buf.add(v_harder, 10.0)  # mean ~4.67, dev large
@@ -193,9 +193,7 @@ class TestEnergyMagnitudeReplay:
 
     def test_three_domains(self):
         """Multi-domain replay handles three domains correctly."""
-        emr = EnergyMagnitudeReplay(
-            domains=["arithmetic", "code", "logical"], k=10
-        )
+        emr = EnergyMagnitudeReplay(domains=["arithmetic", "code", "logical"], k=10)
         for i in range(20):
             emr.add_violation("arithmetic", {"arith": i}, float(i))
             emr.add_violation("code", {"code": i}, float(i * 1.5))

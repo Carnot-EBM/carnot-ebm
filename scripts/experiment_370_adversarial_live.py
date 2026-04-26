@@ -291,9 +291,7 @@ def main() -> None:
             # Use the same Qwen model for extraction regardless of which primary
             # model we are benchmarking.  This isolates the extraction quality
             # from the primary model quality.
-            llm_extractor = LLMConstraintExtractor(
-                model_name="Qwen/Qwen2.5-0.8B-Instruct"
-            )
+            llm_extractor = LLMConstraintExtractor(model_name="Qwen/Qwen2.5-0.8B-Instruct")
         except Exception as exc:
             _log.warning(
                 "LLMConstraintExtractor unavailable (%s); repair condition will "
@@ -309,9 +307,7 @@ def main() -> None:
             inference_mode=inference_mode,
         )
 
-        per_model_results.append(
-            _build_per_model_result(spec["name"], result, n_actual)
-        )
+        per_model_results.append(_build_per_model_result(spec["name"], result, n_actual))
 
         # Checkpoint after each model
         tmpl.checkpoint_save(
@@ -324,12 +320,10 @@ def main() -> None:
     # ---------------------------------------------------------------------------
     honest_verdict = _compute_top_level_verdict(per_model_results, inference_mode)
 
-    avg_accuracy_drop = sum(m["accuracy_drop"] for m in per_model_results) / len(
+    avg_accuracy_drop = sum(m["accuracy_drop"] for m in per_model_results) / len(per_model_results)
+    avg_repair_improvement = sum(m["repair_improvement"] for m in per_model_results) / len(
         per_model_results
     )
-    avg_repair_improvement = sum(
-        m["repair_improvement"] for m in per_model_results
-    ) / len(per_model_results)
 
     # Robustness invariant (SCENARIO-BENCH-022): adversarial drop <= 5 pp
     _ROBUSTNESS_TOLERANCE = 0.05
@@ -359,9 +353,7 @@ def main() -> None:
             "honest_verdict": honest_verdict,
             "standard_accuracy": sum(m["standard_accuracy"] for m in per_model_results)
             / len(per_model_results),
-            "adversarial_accuracy": sum(
-                m["adversarial_accuracy"] for m in per_model_results
-            )
+            "adversarial_accuracy": sum(m["adversarial_accuracy"] for m in per_model_results)
             / len(per_model_results),
             "accuracy_drop": round(avg_accuracy_drop, 4),
             "repaired_adversarial_accuracy": sum(
@@ -383,8 +375,7 @@ def main() -> None:
     _write_artifact(tmpl, artifact)
     _log.info("honest_verdict: %s", honest_verdict)
     _log.info(
-        "avg_accuracy_drop=%.4f  avg_repair_improvement=%.4f  "
-        "robustness_invariant_holds=%s",
+        "avg_accuracy_drop=%.4f  avg_repair_improvement=%.4f  robustness_invariant_holds=%s",
         avg_accuracy_drop,
         avg_repair_improvement,
         robustness_invariant_holds,
@@ -402,6 +393,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

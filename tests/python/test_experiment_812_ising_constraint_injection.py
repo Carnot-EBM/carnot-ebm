@@ -2,6 +2,7 @@
 
 Spec: REQ-VERIFY-095, REQ-VERIFY-096, SCENARIO-VERIFY-129
 """
+
 from __future__ import annotations
 
 import numpy as np

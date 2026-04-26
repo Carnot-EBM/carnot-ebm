@@ -48,10 +48,13 @@ from __future__ import annotations
 
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass, field
-from typing import Callable, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from carnot.pipeline.jitrl_memory import JitRLConstraintMemory
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from carnot.pipeline.jitrl_memory import JitRLConstraintMemory
 
 # Fixed proxy energy used when PSV produces only a binary label, not a raw energy.
 # 0.6 is above the default base_threshold (0.5), ensuring that true positives
@@ -138,7 +141,7 @@ class PSVSelfPlayLoop:
 
     def run_iteration(
         self,
-        questions: List[str],
+        questions: list[str],
         inference_fn: Callable[[str], str],
         verify_fn: Callable[[str], bool],
         *,
@@ -170,11 +173,11 @@ class PSVSelfPlayLoop:
         responses = [inference_fn(q) for q in questions]
         labels = [verify_fn(r) for r in responses]
 
-        violations: List[Tuple[str, str]] = [
-            (q, r) for q, r, lbl in zip(questions, responses, labels) if not lbl
+        violations: list[tuple[str, str]] = [
+            (q, r) for q, r, lbl in zip(questions, responses, labels, strict=False) if not lbl
         ]
-        correct: List[Tuple[str, str]] = [
-            (q, r) for q, r, lbl in zip(questions, responses, labels) if lbl
+        correct: list[tuple[str, str]] = [
+            (q, r) for q, r, lbl in zip(questions, responses, labels, strict=False) if lbl
         ]
 
         thresholds_before = dict(self._memory._thresholds)
@@ -198,8 +201,8 @@ class PSVSelfPlayLoop:
 
     def _update_from_pairs(
         self,
-        violations: List[Tuple[str, str]],
-        correct: List[Tuple[str, str]],
+        violations: list[tuple[str, str]],
+        correct: list[tuple[str, str]],
     ) -> None:
         """Record violation and correct pairs into the constraint memory.
 
@@ -258,8 +261,8 @@ class _ChainResult:
     """
 
     chain_id: int
-    iterations: List[PSVIteration]
-    fp_rates: List[float]
+    iterations: list[PSVIteration]
+    fp_rates: list[float]
     wall_time_s: float
     n_constraint_updates: int
 
@@ -310,7 +313,7 @@ class PSVParallelChains:
 
     def run_parallel(
         self,
-        question_pool: List[str],
+        question_pool: list[str],
         inference_fn: Callable[[str], str],
         verify_fn: Callable[[str], bool],
     ) -> dict:
@@ -346,9 +349,9 @@ class PSVParallelChains:
         """
         # Split question_pool into n_chains disjoint subsets.
         # Each subset is used round-robin across n_iterations within the chain.
-        subsets: List[List[str]] = self._split_pool(question_pool)
+        subsets: list[list[str]] = self._split_pool(question_pool)
 
-        chain_results: List[_ChainResult] = [None] * self.n_chains  # type: ignore[list-item]
+        chain_results: list[_ChainResult] = [None] * self.n_chains  # type: ignore[list-item]
 
         def _run_chain(chain_id: int) -> _ChainResult:
             """Execute one chain's n_iterations PSV loop and return statistics.
@@ -369,7 +372,7 @@ class PSVParallelChains:
             )
             subset = subsets[chain_id] if subsets[chain_id] else question_pool
             n_updates_before = len(self._memory.history)
-            fp_rates: List[float] = []
+            fp_rates: list[float] = []
             t0 = time.monotonic()
             for it in range(self.n_iterations):
                 # Cycle through the subset if it is smaller than n_questions_per_iter.
@@ -426,7 +429,7 @@ class PSVParallelChains:
     # Private helpers
     # ------------------------------------------------------------------
 
-    def _split_pool(self, question_pool: List[str]) -> List[List[str]]:
+    def _split_pool(self, question_pool: list[str]) -> list[list[str]]:
         """Partition question_pool into n_chains disjoint subsets.
 
         Questions are assigned in round-robin order to each chain so that the
@@ -440,7 +443,7 @@ class PSVParallelChains:
         Returns a list of n_chains lists.  If question_pool is empty, each chain
         gets an empty list (caller handles the degenerate case).
         """
-        subsets: List[List[str]] = [[] for _ in range(self.n_chains)]
+        subsets: list[list[str]] = [[] for _ in range(self.n_chains)]
         for idx, q in enumerate(question_pool):
             subsets[idx % self.n_chains].append(q)
         return subsets

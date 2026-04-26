@@ -292,9 +292,9 @@ class TestForgettingRelay:
         with_forgetting = self._run_relay(forgetting_lambda=0.05)
 
         precision_delta = with_forgetting["constraint_precision"] - baseline["constraint_precision"]
-        assert (
-            precision_delta >= -0.02
-        ), f"Forgetting hurt precision by more than 0.02: delta={precision_delta:.4f}"
+        assert precision_delta >= -0.02, (
+            f"Forgetting hurt precision by more than 0.02: delta={precision_delta:.4f}"
+        )
 
     def test_deliverable_json_exists(self) -> None:
         """The experiment deliverable JSON must exist and contain required fields."""

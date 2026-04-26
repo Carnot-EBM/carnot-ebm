@@ -182,8 +182,12 @@ class TestPrecisionStackResult:
 # ---------------------------------------------------------------------------
 
 
-def _make_result(model_id: str, variant: PipelineVariant, signed_improvement: float,
-                 inference_mode: str = "simulated") -> PrecisionStackResult:
+def _make_result(
+    model_id: str,
+    variant: PipelineVariant,
+    signed_improvement: float,
+    inference_mode: str = "simulated",
+) -> PrecisionStackResult:
     return PrecisionStackResult(
         model_id=model_id,
         n_questions=200,
@@ -200,57 +204,71 @@ class TestBuildPrecisionBenchmarkArtifact:
 
     def test_schema_field(self):
         """SCENARIO-BENCH-008: artifact precision_schema is 'carnot.precision_benchmark.v1'."""
-        artifact = build_precision_benchmark_artifact([
-            _make_result("Gemma4-E4B-it", PipelineVariant.FULL_STACK, 0.08),
-        ])
+        artifact = build_precision_benchmark_artifact(
+            [
+                _make_result("Gemma4-E4B-it", PipelineVariant.FULL_STACK, 0.08),
+            ]
+        )
         assert artifact["precision_schema"] == "carnot.precision_benchmark.v1"
 
     def test_headline_result_positive_improvement(self):
         """SCENARIO-BENCH-008: positive signed_improvement → headline_label set."""
-        artifact = build_precision_benchmark_artifact([
-            _make_result("Gemma4-E4B-it", PipelineVariant.FULL_STACK, 0.08),
-        ])
+        artifact = build_precision_benchmark_artifact(
+            [
+                _make_result("Gemma4-E4B-it", PipelineVariant.FULL_STACK, 0.08),
+            ]
+        )
         hr = artifact["headline_result"]
         assert hr["signed_improvement"] == pytest.approx(0.08)
         assert hr["headline_label"] == "first_positive_live_it_result"
 
     def test_headline_result_negative_no_label(self):
         """SCENARIO-BENCH-008: negative signed_improvement → no headline_label."""
-        artifact = build_precision_benchmark_artifact([
-            _make_result("Gemma4-E4B-it", PipelineVariant.FULL_STACK, -0.03),
-        ])
+        artifact = build_precision_benchmark_artifact(
+            [
+                _make_result("Gemma4-E4B-it", PipelineVariant.FULL_STACK, -0.03),
+            ]
+        )
         hr = artifact["headline_result"]
         assert hr["signed_improvement"] == pytest.approx(-0.03)
         assert "headline_label" not in hr
 
     def test_headline_result_zero_no_label(self):
         """Zero signed_improvement → no headline_label (must be strictly positive)."""
-        artifact = build_precision_benchmark_artifact([
-            _make_result("Gemma4-E4B-it", PipelineVariant.FULL_STACK, 0.0),
-        ])
+        artifact = build_precision_benchmark_artifact(
+            [
+                _make_result("Gemma4-E4B-it", PipelineVariant.FULL_STACK, 0.0),
+            ]
+        )
         assert "headline_label" not in artifact["headline_result"]
 
     def test_headline_result_model_id_field(self):
         """headline_result carries model_id and pipeline_variant as string."""
-        artifact = build_precision_benchmark_artifact([
-            _make_result("Gemma4-E4B-it", PipelineVariant.FULL_STACK, 0.05),
-        ])
+        artifact = build_precision_benchmark_artifact(
+            [
+                _make_result("Gemma4-E4B-it", PipelineVariant.FULL_STACK, 0.05),
+            ]
+        )
         hr = artifact["headline_result"]
         assert hr["model_id"] == "Gemma4-E4B-it"
         assert hr["pipeline_variant"] == "full_stack"
 
     def test_non_headline_model_does_not_set_headline(self):
         """FULL_STACK result for non-Gemma4 model does not become headline."""
-        artifact = build_precision_benchmark_artifact([
-            _make_result("Qwen3.5-0.8B", PipelineVariant.FULL_STACK, 0.10),
-        ])
+        artifact = build_precision_benchmark_artifact(
+            [
+                _make_result("Qwen3.5-0.8B", PipelineVariant.FULL_STACK, 0.10),
+            ]
+        )
         assert artifact["headline_result"] == {}
 
     def test_baseline_variant_not_headline(self):
         """BASELINE variant for Gemma4-E4B-it is not the headline result."""
-        artifact = build_precision_benchmark_artifact([
-            _make_result("Gemma4-E4B-it", PipelineVariant.BASELINE, 0.10),
-        ])
+        artifact = build_precision_benchmark_artifact(
+            [
+                _make_result("Gemma4-E4B-it", PipelineVariant.BASELINE, 0.10),
+            ]
+        )
         assert artifact["headline_result"] == {}
 
     def test_empty_results_list(self):

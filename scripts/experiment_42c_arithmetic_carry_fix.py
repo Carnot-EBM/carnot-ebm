@@ -125,25 +125,31 @@ def qubo_energy_per_bit(a: int, b: int, claimed: int, n_bits: int) -> list[dict]
             xor_penalty = (ai + bi + c_in - 2 * u - si) ** 2
             carry = expected_c
 
-        reports.append({
-            "bit": i,
-            "a": ai, "b": bi, "c_in": c_in if i > 0 else 0,
-            "expected_s": expected_s,
-            "claimed_s": si,
-            "xor_penalty": xor_penalty,
-            "correct": si == expected_s,
-        })
+        reports.append(
+            {
+                "bit": i,
+                "a": ai,
+                "b": bi,
+                "c_in": c_in if i > 0 else 0,
+                "expected_s": expected_s,
+                "claimed_s": si,
+                "xor_penalty": xor_penalty,
+                "correct": si == expected_s,
+            }
+        )
 
     # Overflow bit.
     overflow_claimed = claimed_bits[n_bits]
     overflow_expected = carry
-    reports.append({
-        "bit": n_bits,
-        "overflow": True,
-        "expected": overflow_expected,
-        "claimed": overflow_claimed,
-        "correct": overflow_claimed == overflow_expected,
-    })
+    reports.append(
+        {
+            "bit": n_bits,
+            "overflow": True,
+            "expected": overflow_expected,
+            "claimed": overflow_claimed,
+            "correct": overflow_claimed == overflow_expected,
+        }
+    )
 
     return reports
 
@@ -233,9 +239,11 @@ def main() -> int:
         elif not r["claim_correct"]:
             error_info = " (claim wrong, ising found correct)"
 
-        print(f"  [{claim_icon}] {a} + {b} = {claimed} (correct={r['correct']}) "
-              f"found={r['ising_found']} [{found_icon}] "
-              f"penalty={r['total_penalty']}{error_info} — {desc}")
+        print(
+            f"  [{claim_icon}] {a} + {b} = {claimed} (correct={r['correct']}) "
+            f"found={r['ising_found']} [{found_icon}] "
+            f"penalty={r['total_penalty']}{error_info} — {desc}"
+        )
         results.append(r)
 
     # Summary.
@@ -249,10 +257,8 @@ def main() -> int:
     n_claims_correct = sum(1 for r in results if r["claim_correct"])
     n_ising_correct = sum(1 for r in results if r["ising_correct"])
     n_wrong_claims = n_total - n_claims_correct
-    n_wrong_detected = sum(1 for r in results
-                           if not r["claim_correct"] and r["total_penalty"] > 0)
-    n_wrong_fixed = sum(1 for r in results
-                        if not r["claim_correct"] and r["ising_correct"])
+    n_wrong_detected = sum(1 for r in results if not r["claim_correct"] and r["total_penalty"] > 0)
+    n_wrong_fixed = sum(1 for r in results if not r["claim_correct"] and r["ising_correct"])
 
     print(f"  Total test cases:         {n_total}")
     print(f"  Ising found correct:      {n_ising_correct}/{n_total}")
@@ -271,12 +277,16 @@ def main() -> int:
     wrong_cases = [r for r in results if not r["claim_correct"]]
     if wrong_cases:
         example = wrong_cases[0]
-        print(f"\n  Error localization example: {example['a']} + {example['b']} = {example['claimed']}")
+        print(
+            f"\n  Error localization example: {example['a']} + {example['b']} = {example['claimed']}"
+        )
         print(f"  Correct answer: {example['correct']}")
         for bit_report in example["per_bit"]:
             if "xor_penalty" in bit_report and not bit_report["correct"]:
-                print(f"    Bit {bit_report['bit']}: expected {bit_report['expected_s']}, "
-                      f"got {bit_report['claimed_s']} (penalty={bit_report['xor_penalty']})")
+                print(
+                    f"    Bit {bit_report['bit']}: expected {bit_report['expected_s']}, "
+                    f"got {bit_report['claimed_s']} (penalty={bit_report['xor_penalty']})"
+                )
 
     print(sep)
     return 0

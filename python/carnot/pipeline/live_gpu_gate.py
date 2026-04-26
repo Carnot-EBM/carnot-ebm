@@ -46,14 +46,12 @@ from __future__ import annotations
 
 import os
 import subprocess
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from carnot.pipeline.live_gpu_diagnostic import diagnose_live_gpu
 
 if TYPE_CHECKING:
-    pass
-
+    from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Module-level helpers

@@ -189,9 +189,7 @@ def _write_ice40_synth_script(repo_root: Path, top_module: str) -> None:
     rtl_abs = repo_root / RTL_FILE
     out_json = repo_root / ICE40_JSON
     content = (
-        f"read_verilog {rtl_abs}\n"
-        f"synth_ice40 -top {top_module} -flatten\n"
-        f"write_json {out_json}\n"
+        f"read_verilog {rtl_abs}\nsynth_ice40 -top {top_module} -flatten\nwrite_json {out_json}\n"
     )
     script_path.write_text(content)
 
@@ -230,8 +228,10 @@ def _run_nextpnr_ice40(
 
     cmd = nextpnr_cmd.split() + [
         "--hx8k",
-        "--json", str(json_in),
-        "--asc", str(asc_out),
+        "--json",
+        str(json_in),
+        "--asc",
+        str(asc_out),
     ]
     rc, stdout, stderr = _run(cmd, timeout=300)
     combined = stdout + "\n" + stderr
@@ -248,6 +248,7 @@ def _run_nextpnr_ice40(
         if "max frequency" in ll and "mhz" in ll:
             # e.g. "Max frequency for clock '$glbnet$clk': 38.21 MHz (PASS at 12.00 MHz)"
             import re
+
             m = re.search(r"([\d.]+)\s*MHz", line, re.IGNORECASE)
             if m:
                 fmax_mhz = float(m.group(1))
@@ -255,6 +256,7 @@ def _run_nextpnr_ice40(
         if "lut4" in ll or "logic cells" in ll:
             # e.g. "  ICESTORM_LC:  2983/ 7680    38%"
             import re
+
             m = re.search(r"(\d+)/\s*(\d+)\s+(\d+)%", line)
             if m:
                 used = int(m.group(1))
@@ -319,8 +321,8 @@ def run_experiment(tmpl: ExperimentTemplate) -> dict:
 
         if ice40_synth_ok:
             # --- Place-and-route ---
-            pnr_success_ice40, critical_path_ns, lut_utilization_pct, _pnr_log = (
-                _run_nextpnr_ice40(repo_root, nextpnr_ice40_cmd)
+            pnr_success_ice40, critical_path_ns, lut_utilization_pct, _pnr_log = _run_nextpnr_ice40(
+                repo_root, nextpnr_ice40_cmd
             )
 
             # --- Bitstream generation ---
@@ -346,8 +348,10 @@ def run_experiment(tmpl: ExperimentTemplate) -> dict:
         if xilinx_json.exists():
             cmd_x = [
                 "nextpnr-xilinx",
-                "--chipdb", "xc7k325t",
-                "--json", str(xilinx_json),
+                "--chipdb",
+                "xc7k325t",
+                "--json",
+                str(xilinx_json),
             ]
             rc_x, _, _ = _run(cmd_x, timeout=300)
             pnr_success_xilinx = rc_x == 0

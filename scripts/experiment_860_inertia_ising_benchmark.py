@@ -180,7 +180,9 @@ def main() -> None:
     J_error, h_error = build_constraint_matrix(n, correct=False, seed=42)
 
     # Run inertia sampler on correct configuration
-    inertia_sampler_correct = InertiaIsingSampler(J_correct, h_correct, alpha=alpha, use_mpemba=True)
+    inertia_sampler_correct = InertiaIsingSampler(
+        J_correct, h_correct, alpha=alpha, use_mpemba=True
+    )
     samples_correct = inertia_sampler_correct.sample(n_sweeps=n_sweeps, n_samples=1)
     energy_correct = inertia_sampler_correct.energy(samples_correct[0])
     inertia_mixing = inertia_sampler_correct.sweeps_to_convergence()

@@ -45,8 +45,11 @@ repos:
         pass_filenames: false
 
   # Python formatting and linting
+  # Pinned to match the .venv ruff (0.15.9) — the older pre-commit pin
+  # (v0.8.6) didn't recognize newer rule codes like UP045 added in our
+  # per-file ignores, causing TOML parse errors at hook time.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.6
+    rev: v0.15.9
     hooks:
       - id: ruff
         args: ["--fix"]

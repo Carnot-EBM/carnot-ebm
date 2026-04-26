@@ -57,9 +57,11 @@ class TestSyntheticConstraintCheck:
 
     def test_returns_dict_with_required_keys(self):
         mod = _load_exp425()
-        result = mod._run_synthetic_constraint_check.__wrapped__(0) if hasattr(
-            mod._run_synthetic_constraint_check, "__wrapped__"
-        ) else None
+        result = (
+            mod._run_synthetic_constraint_check.__wrapped__(0)
+            if hasattr(mod._run_synthetic_constraint_check, "__wrapped__")
+            else None
+        )
 
         # Call directly with a patched sleep so tests are fast
         with patch("time.sleep"):
@@ -122,6 +124,7 @@ class TestMain:
                 )
                 self.checkpoint = None
                 import time as _t
+
                 self._t0 = _t.perf_counter()
 
         monkeypatch.setattr(mod, "ExperimentTemplate", FastTemplate)
@@ -160,6 +163,7 @@ class TestMain:
                 )
                 self.checkpoint = None
                 import time as _t
+
                 self._t0 = _t.perf_counter()
 
         monkeypatch.setattr(mod, "ExperimentTemplate", FastTemplate)
@@ -190,6 +194,7 @@ class TestMain:
                 )
                 self.checkpoint = None
                 import time as _t
+
                 self._t0 = _t.perf_counter()
 
         monkeypatch.setattr(mod, "ExperimentTemplate", FastTemplate)

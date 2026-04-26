@@ -56,12 +56,15 @@ from python.carnot.models.vjepa_predictor import (
 # SCENARIO-VERIFY-231: Synthetic pair generator produces correct labels
 # ---------------------------------------------------------------------------
 
+
 class TestGenerateGsm8kSynthetic:
     """REQ-VERIFY-160 — GSM8K synthetic generator correctness."""
 
     def test_count(self):
         pairs = generate_gsm8k_synthetic(n_steps=100, seed=42)
-        assert 100 <= len(pairs) <= 107  # complete problems, may overshoot by up to 1 problem (7 steps)
+        assert (
+            100 <= len(pairs) <= 107
+        )  # complete problems, may overshoot by up to 1 problem (7 steps)
 
     def test_each_problem_has_exactly_one_incorrect_step(self):
         pairs = generate_gsm8k_synthetic(n_steps=100, seed=42)
@@ -70,9 +73,7 @@ class TestGenerateGsm8kSynthetic:
             by_qid.setdefault(p["question_id"], []).append(p["label"])
         for qid, labels in by_qid.items():
             n_incorrect = labels.count("incorrect")
-            assert n_incorrect == 1, (
-                f"Problem {qid} has {n_incorrect} incorrect steps (expected 1)"
-            )
+            assert n_incorrect == 1, f"Problem {qid} has {n_incorrect} incorrect steps (expected 1)"
 
     def test_labels_are_correct_or_incorrect(self):
         pairs = generate_gsm8k_synthetic(n_steps=30, seed=42)
@@ -152,6 +153,7 @@ class TestGenerateSvampSynthetic:
 # SCENARIO-VERIFY-232: Train/eval split is reproducible and leakage-free
 # ---------------------------------------------------------------------------
 
+
 class TestSplitByQuestionId:
     """REQ-VERIFY-160 — Reproducible train/eval split."""
 
@@ -200,6 +202,7 @@ class TestSplitByQuestionId:
 # DomainReweightedLoss: 4-domain case
 # ---------------------------------------------------------------------------
 
+
 class TestDomainReweightedLossFourDomains:
     """SCENARIO-VERIFY-232 — DomainReweightedLoss with 4 distinct domains."""
 
@@ -242,9 +245,7 @@ class TestDomainReweightedLossFourDomains:
         weights_dict = loss_fn.compute_domain_weights(corpus)
         weight_vec = _make_domain_weight_vector(weights_dict, domain_names)
         domain_to_idx = {d: i for i, d in enumerate(domain_names)}
-        domain_ids = jnp.array(
-            [domain_to_idx[s["domain"]] for s in corpus], dtype=jnp.int32
-        )
+        domain_ids = jnp.array([domain_to_idx[s["domain"]] for s in corpus], dtype=jnp.int32)
         logits = jnp.zeros(len(corpus))
         labels = jnp.array([float(s["label"]) for s in corpus])
         result = loss_fn.weighted_loss(logits, labels, domain_ids, weight_vec)
@@ -261,6 +262,7 @@ class TestDomainReweightedLossFourDomains:
 # ---------------------------------------------------------------------------
 # Assign honest verdict
 # ---------------------------------------------------------------------------
+
 
 class TestAssignHonestVerdict:
     """REQ-VERIFY-160 — All five verdict branches are reachable."""
@@ -292,6 +294,7 @@ class TestAssignHonestVerdict:
 # Edge cases: empty corpus returns safe defaults
 # ---------------------------------------------------------------------------
 
+
 class TestEdgeCases:
     """REQ-VERIFY-160 — Safe degradation on empty/degenerate inputs."""
 
@@ -320,6 +323,7 @@ class TestEdgeCases:
 # Smoke test: train for 2 epochs on tiny corpus (fast, no GPU)
 # ---------------------------------------------------------------------------
 
+
 class TestTrainDomainWeightedSmoke:
     """REQ-VERIFY-160 — Training smoke test with minimal corpus."""
 
@@ -341,13 +345,21 @@ class TestTrainDomainWeightedSmoke:
         _, tok2idx = build_tfidf_features(all_texts, vocab_size=20)
 
         raw_a = [
-            {"question_id": "q0", "step_text": t, "label": "incorrect" if "error" in t else "correct",
-             "domain": "domain_a"}
+            {
+                "question_id": "q0",
+                "step_text": t,
+                "label": "incorrect" if "error" in t else "correct",
+                "domain": "domain_a",
+            }
             for t in texts_a
         ]
         raw_b = [
-            {"question_id": "q1", "step_text": t, "label": "incorrect" if "error" in t else "correct",
-             "domain": "domain_b"}
+            {
+                "question_id": "q1",
+                "step_text": t,
+                "label": "incorrect" if "error" in t else "correct",
+                "domain": "domain_b",
+            }
             for t in texts_b
         ]
         raw = raw_a + raw_b
@@ -360,8 +372,7 @@ class TestTrainDomainWeightedSmoke:
         corpus = self._make_tiny_corpus()
         model = VariationalJEPAPredictor(in_dim=20, context_dim=20, latent_dim=8)
         losses, kls = train_vjepa_domain_weighted(
-            model, corpus, ["domain_a", "domain_b"],
-            n_epochs=2, lr=1e-3, seed=0
+            model, corpus, ["domain_a", "domain_b"], n_epochs=2, lr=1e-3, seed=0
         )
         assert len(losses) == 2
         assert len(kls) == 2
@@ -372,8 +383,7 @@ class TestTrainDomainWeightedSmoke:
         corpus = self._make_tiny_corpus()
         model = VariationalJEPAPredictor(in_dim=20, context_dim=20, latent_dim=8)
         _, kls = train_vjepa_domain_weighted(
-            model, corpus, ["domain_a", "domain_b"],
-            n_epochs=3, lr=1e-3, seed=0
+            model, corpus, ["domain_a", "domain_b"], n_epochs=3, lr=1e-3, seed=0
         )
         # KL should be non-negative (absolute value)
         assert all(k >= 0.0 for k in kls)

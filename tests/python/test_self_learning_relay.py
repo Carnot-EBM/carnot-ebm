@@ -634,8 +634,13 @@ class TestBuildRelayArtifact:
         improvement = compute_learning_improvement(traj)
         artifact = build_relay_artifact(traj, improvement)
         required = {
-            "schema", "trajectory", "batch1_accuracy", "batch4_accuracy",
-            "improved", "inference_mode", "honest_verdict",
+            "schema",
+            "trajectory",
+            "batch1_accuracy",
+            "batch4_accuracy",
+            "improved",
+            "inference_mode",
+            "honest_verdict",
         }
         assert required.issubset(artifact.keys())
 
@@ -676,8 +681,13 @@ class TestBuildRelayArtifact:
         assert isinstance(artifact["trajectory"], list)
         assert len(artifact["trajectory"]) == 4
         required_keys = {
-            "batch_id", "n_questions", "accuracy", "n_tier1_updates",
-            "n_tier2_templates_active", "tier3_gate_auc", "cumulative_accuracy",
+            "batch_id",
+            "n_questions",
+            "accuracy",
+            "n_tier1_updates",
+            "n_tier2_templates_active",
+            "tier3_gate_auc",
+            "cumulative_accuracy",
         }
         for item in artifact["trajectory"]:
             assert required_keys.issubset(item.keys())

@@ -174,8 +174,9 @@ class TestCLAPFeaturesToFeatureVector:
 class TestNUPProbeV3:
     """REQ-VERIFY-106, SCENARIO-VERIFY-138, SCENARIO-VERIFY-139"""
 
-    def _make_pairs(self, n: int, n_layers: int = 4, n_tokens: int = 10,
-                    hidden_dim: int = 64, seed: int = 0):
+    def _make_pairs(
+        self, n: int, n_layers: int = 4, n_tokens: int = 10, hidden_dim: int = 64, seed: int = 0
+    ):
         """Generate n synthetic (activations, label) pairs."""
         rng = np.random.default_rng(seed)
         pairs = []

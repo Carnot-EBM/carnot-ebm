@@ -234,7 +234,9 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
             exp419_mode,
         )
         tmpl = ExperimentTemplate(
-            exp_id=EXP_ID, title=EXP_TITLE, deliverable=DELIVERABLE,
+            exp_id=EXP_ID,
+            title=EXP_TITLE,
+            deliverable=DELIVERABLE,
             requires_gpu=False,
         )
         tmpl.setup()
@@ -281,7 +283,9 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
             sorted(_ALLOWED_VERDICTS),
         )
         tmpl = ExperimentTemplate(
-            exp_id=EXP_ID, title=EXP_TITLE, deliverable=DELIVERABLE,
+            exp_id=EXP_ID,
+            title=EXP_TITLE,
+            deliverable=DELIVERABLE,
             requires_gpu=True,
         )
         tmpl.setup()
@@ -309,7 +313,9 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
     # Step 3: ExperimentTemplate setup
     # ------------------------------------------------------------------
     tmpl = ExperimentTemplate(
-        exp_id=EXP_ID, title=EXP_TITLE, deliverable=DELIVERABLE,
+        exp_id=EXP_ID,
+        title=EXP_TITLE,
+        deliverable=DELIVERABLE,
         requires_gpu=True,
     )
     tmpl.setup()
@@ -344,8 +350,7 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
         )
     if gpu_health.temperature_warning:
         _log.warning(
-            "Temperature warning: one or more GPUs exceed 80C. "
-            "Batch size factor=%.2f",
+            "Temperature warning: one or more GPUs exceed 80C. Batch size factor=%.2f",
             gpu_health.recommended_batch_size_factor,
         )
 
@@ -378,9 +383,7 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
     for spec in MODEL_SPECS:
         try:
             _log.info("Loading %s on GPU %d ...", spec["name"], spec["gpu"])
-            model_objects[spec["name"]] = _load_model_pipeline(
-                spec["hf_id"], spec["gpu"], "auto"
-            )
+            model_objects[spec["name"]] = _load_model_pipeline(spec["hf_id"], spec["gpu"], "auto")
             _log.info("Loaded %s OK", spec["name"])
         except Exception as exc:
             _log.error("Failed to load %s: %s — blocked", spec["name"], exc)
@@ -418,9 +421,7 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
             )
             _log.info("LLMConstraintExtractor wired as fallback (Qwen3.5-0.8B)")
         except Exception as exc:
-            _log.warning(
-                "LLMConstraintExtractor unavailable: %s — CRANE-only mode", exc
-            )
+            _log.warning("LLMConstraintExtractor unavailable: %s — CRANE-only mode", exc)
 
     # ------------------------------------------------------------------
     # Step 9: Load GSM8K questions
@@ -435,7 +436,8 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
     crane_hits: list[bool] = []  # per-question CRANE detection for FULL_STACK
 
     with ExperimentTimeoutWatchdog(
-        EXP_ID, timeout_minutes=WATCHDOG_TIMEOUT_MINUTES,
+        EXP_ID,
+        timeout_minutes=WATCHDOG_TIMEOUT_MINUTES,
         result_path=str(_REPO_ROOT / DELIVERABLE),
     ):
         from scripts.experiment_template import BatchedInferenceRunner  # noqa: PLC0415
@@ -451,9 +453,7 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
                 baseline_correct = _count_baseline_correct(questions, model_obj)
                 baseline_acc = baseline_correct / max(len(questions), 1)
 
-                def _inference_fn(
-                    q_text: str, _model_obj: object = model_obj
-                ) -> str:
+                def _inference_fn(q_text: str, _model_obj: object = model_obj) -> str:
                     return _call_model(_model_obj, q_text)
 
                 from scripts.experiment_template import BatchedInferenceRunner  # noqa: PLC0415
@@ -602,6 +602,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

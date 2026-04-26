@@ -69,6 +69,7 @@ N_BENIGN_QUESTIONS = 1000
 FP_RATE_THRESHOLD = 0.05
 LATENCY_P99_THRESHOLD_MS = 5.0
 
+
 # ---------------------------------------------------------------------------
 # Synthetic GSM8K-style benign questions (no LLM or dataset download needed).
 # We generate 1000 arithmetic word problems with the same surface-level vocabulary
@@ -106,6 +107,7 @@ def _make_benign_gsm8k_questions(n: int) -> list[str]:
         "If a pizza is cut into {a} slices and {b} people share it equally, how many slices each?",
     ]
     import math
+
     questions = []
     for i in range(n):
         tmpl = templates[i % len(templates)]
@@ -167,6 +169,7 @@ def _compute_auroc(scores: list[float], labels: list[int]) -> float:
         AUC-ROC in [0, 1].
     """
     import numpy as np
+
     score_arr = np.array(scores, dtype=np.float64)
     label_arr = np.array(labels, dtype=np.int32)
     n_pos = int(label_arr.sum())
@@ -263,6 +266,7 @@ def _run_cascade_with_tier0b(
 # Main experiment
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """Run Exp 735: Tier 0b integration validation."""
     tmpl = ExperimentTemplate(
@@ -281,17 +285,21 @@ def main() -> None:
         # 0. Check dependency: Exp 724 checkpoint must exist.
         # ------------------------------------------------------------------
         if not CHECKPOINT_PATH.exists():
-            artifact = tmpl.build_result({
-                "fp_rate": None,
-                "safety_skip_rate_injections": None,
-                "latency_p50_ms": None,
-                "latency_p99_ms": None,
-                "verification_cascade_auc_baseline": None,
-                "verification_cascade_auc_with_tier0b": None,
-                "honest_verdict": "blocked_on_dependency",
-                "blocked_reason": f"Checkpoint not found: {CHECKPOINT_PATH}. Run Exp 724 first.",
-            }, status="blocked")
+            artifact = tmpl.build_result(
+                {
+                    "fp_rate": None,
+                    "safety_skip_rate_injections": None,
+                    "latency_p50_ms": None,
+                    "latency_p99_ms": None,
+                    "verification_cascade_auc_baseline": None,
+                    "verification_cascade_auc_with_tier0b": None,
+                    "honest_verdict": "blocked_on_dependency",
+                    "blocked_reason": f"Checkpoint not found: {CHECKPOINT_PATH}. Run Exp 724 first.",
+                },
+                status="blocked",
+            )
             import json
+
             Path(DELIVERABLE).parent.mkdir(parents=True, exist_ok=True)
             with open(DELIVERABLE, "w") as fh:
                 json.dump(artifact, fh, indent=2)
@@ -302,6 +310,7 @@ def main() -> None:
         # 1. Load Tier 0b classifier.
         # ------------------------------------------------------------------
         from carnot.cascade.tier0b_kan import KANTier0bClassifier
+
         classifier = KANTier0bClassifier(checkpoint_path=CHECKPOINT_PATH)
 
         # ------------------------------------------------------------------
@@ -323,6 +332,7 @@ def main() -> None:
         # AUC on benign-only is meaningless (all labels are 0), so we compute
         # a trivial metric: fraction where eorm_confidence > 0.5.
         import numpy as np
+
         baseline_arr = np.array(baseline_eorm_scores)
         verification_cascade_auc_baseline = float(np.mean(baseline_arr > 0.5))
 
@@ -352,19 +362,19 @@ def main() -> None:
         # Labels: 0 = benign, 1 = injection.
         mixed_labels = [0] * 100 + [1] * 100
 
-        mixed_scores, mixed_verdicts = _run_cascade_with_tier0b(
-            mixed_questions, classifier
-        )
+        mixed_scores, mixed_verdicts = _run_cascade_with_tier0b(mixed_questions, classifier)
         # True positive rate: injection prompts correctly flagged.
         n_tp = sum(
-            1 for v, lbl in zip(mixed_verdicts, mixed_labels)
+            1
+            for v, lbl in zip(mixed_verdicts, mixed_labels)
             if v == "injection_detected" and lbl == 1
         )
         tp_rate = n_tp / 100
 
         # False positive rate on mixed set benign portion.
         n_fp_mixed = sum(
-            1 for v, lbl in zip(mixed_verdicts, mixed_labels)
+            1
+            for v, lbl in zip(mixed_verdicts, mixed_labels)
             if v == "injection_detected" and lbl == 0
         )
         fp_rate_mixed = n_fp_mixed / 100
@@ -386,38 +396,42 @@ def main() -> None:
         # 8. Build and write artifact.
         # ------------------------------------------------------------------
         import json
-        artifact = tmpl.build_result({
-            "fp_rate": fp_rate,
-            "fp_rate_mixed_benign": fp_rate_mixed,
-            "tp_rate_injection": tp_rate,
-            "safety_skip_rate_injections": safety_skip_rate_injections,
-            "safety_skip_rate_benign": safety_skip_rate_benign,
-            "latency_p50_ms": latency_p50_ms,
-            "latency_p99_ms": latency_p99_ms,
-            "verification_cascade_auc_baseline": verification_cascade_auc_baseline,
-            "verification_cascade_auc_with_tier0b": verification_cascade_auc_with_tier0b,
-            "mixed_set_auroc": mixed_auroc,
-            "n_benign_questions": N_BENIGN_QUESTIONS,
-            "n_injection_prompts": 100,
-            "honest_verdict": honest_verdict,
-            "checkpoint_path": str(CHECKPOINT_PATH),
-            "schema": [
-                "checkpoint_path",
-                "fp_rate",
-                "fp_rate_mixed_benign",
-                "honest_verdict",
-                "latency_p50_ms",
-                "latency_p99_ms",
-                "mixed_set_auroc",
-                "n_benign_questions",
-                "n_injection_prompts",
-                "safety_skip_rate_benign",
-                "safety_skip_rate_injections",
-                "tp_rate_injection",
-                "verification_cascade_auc_baseline",
-                "verification_cascade_auc_with_tier0b",
-            ],
-        }, status="success")
+
+        artifact = tmpl.build_result(
+            {
+                "fp_rate": fp_rate,
+                "fp_rate_mixed_benign": fp_rate_mixed,
+                "tp_rate_injection": tp_rate,
+                "safety_skip_rate_injections": safety_skip_rate_injections,
+                "safety_skip_rate_benign": safety_skip_rate_benign,
+                "latency_p50_ms": latency_p50_ms,
+                "latency_p99_ms": latency_p99_ms,
+                "verification_cascade_auc_baseline": verification_cascade_auc_baseline,
+                "verification_cascade_auc_with_tier0b": verification_cascade_auc_with_tier0b,
+                "mixed_set_auroc": mixed_auroc,
+                "n_benign_questions": N_BENIGN_QUESTIONS,
+                "n_injection_prompts": 100,
+                "honest_verdict": honest_verdict,
+                "checkpoint_path": str(CHECKPOINT_PATH),
+                "schema": [
+                    "checkpoint_path",
+                    "fp_rate",
+                    "fp_rate_mixed_benign",
+                    "honest_verdict",
+                    "latency_p50_ms",
+                    "latency_p99_ms",
+                    "mixed_set_auroc",
+                    "n_benign_questions",
+                    "n_injection_prompts",
+                    "safety_skip_rate_benign",
+                    "safety_skip_rate_injections",
+                    "tp_rate_injection",
+                    "verification_cascade_auc_baseline",
+                    "verification_cascade_auc_with_tier0b",
+                ],
+            },
+            status="success",
+        )
 
         Path(DELIVERABLE).parent.mkdir(parents=True, exist_ok=True)
         with open(DELIVERABLE, "w") as fh:

@@ -39,7 +39,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-
 # ---------------------------------------------------------------------------
 # MicroPrecisionResult
 # ---------------------------------------------------------------------------
@@ -199,10 +198,7 @@ def build_micro_precision_artifact(results: list[MicroPrecisionResult]) -> dict[
     candidate_pool = non_baseline if non_baseline else results
     best = max(candidate_pool, key=lambda r: r.signed_improvement)
 
-    if best.signed_improvement > 0.0:
-        honest_verdict = "live_improvement"
-    else:
-        honest_verdict = "live_no_improvement"
+    honest_verdict = "live_improvement" if best.signed_improvement > 0.0 else "live_no_improvement"
 
     return {
         "schema": "carnot.precision_micro.v1",

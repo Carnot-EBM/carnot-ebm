@@ -74,8 +74,18 @@ class TestLoadLabeledResponses:
     def test_loads_from_exp538_cot_pairs(self, tmp_path):
         # Primary fallback: exp538_cot_pairs.json with cot_text/correct keys
         cot_pairs = [
-            {"cot_text": "We compute 5 + 3 = 8.", "correct": True, "question": "q1", "model_id": "m1"},
-            {"cot_text": "We compute 5 + 3 = 9.", "correct": False, "question": "q2", "model_id": "m1"},
+            {
+                "cot_text": "We compute 5 + 3 = 8.",
+                "correct": True,
+                "question": "q1",
+                "model_id": "m1",
+            },
+            {
+                "cot_text": "We compute 5 + 3 = 9.",
+                "correct": False,
+                "question": "q2",
+                "model_id": "m1",
+            },
         ]
         pairs_dir = tmp_path / "results"
         pairs_dir.mkdir()
@@ -157,7 +167,10 @@ class TestRunExperimentUpstreamMissing:
         mock_writer = MagicMock()
         # Use MagicMock with explicit non-assert method to avoid Python mock safety check
         mock_tmpl = MagicMock()
-        mock_tmpl.build_result.return_value = {"honest_verdict": "upstream_missing", "status": "blocked"}
+        mock_tmpl.build_result.return_value = {
+            "honest_verdict": "upstream_missing",
+            "status": "blocked",
+        }
         deliverable_called = []
         mock_tmpl.assert_deliverable_written = lambda: deliverable_called.append(True)
 
@@ -188,7 +201,12 @@ class TestRunExperimentSuccess:
     def _minimal_labeled(self):
         """Two responses: one correct (no arithmetic), one incorrect (wrong equation)."""
         return [
-            {"response": "The answer is 5 apples.", "is_correct": True, "question": "", "model_id": "m"},
+            {
+                "response": "The answer is 5 apples.",
+                "is_correct": True,
+                "question": "",
+                "model_id": "m",
+            },
             {"response": "5 + 3 = 9", "is_correct": False, "question": "", "model_id": "m"},
         ]
 
@@ -196,6 +214,7 @@ class TestRunExperimentSuccess:
         # SCENARIO-EXTRACT-065: CoACE should flag the incorrect response
         adapter = exp565._CoACEAdapter()
         from carnot.extraction import run_extractor_diagnostic
+
         result = run_extractor_diagnostic(adapter, "CoACEExtractor", _minimal_labeled)
         # The '5 + 3 = 9' response should be a TP (is_correct=False, violation_found=True)
         assert result.tp_rate > 0.0
@@ -203,6 +222,7 @@ class TestRunExperimentSuccess:
     def test_coace_improvement_over_vericot_non_negative(self, _minimal_labeled):
         # SCENARIO-EXTRACT-067: improvement = coace_tp - vericot_tp, should be >= 0
         from carnot.extraction import VeriCoTStepValidator, run_extractor_diagnostic
+
         coace = exp565._CoACEAdapter()
         vericot = VeriCoTStepValidator(use_mock=True)
         coace_r = run_extractor_diagnostic(coace, "CoACEExtractor", _minimal_labeled)

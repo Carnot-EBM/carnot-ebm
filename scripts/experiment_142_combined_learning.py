@@ -117,15 +117,15 @@ DOMAIN_SPLIT = {"arithmetic": 0.60, "logic": 0.40}
 
 # Among WRONG arithmetic questions, distribution of error types.
 ARITHMETIC_ERROR_DISTRIBUTION = {
-    "arithmetic_carry": 0.60,     # multi-carry addition errors
+    "arithmetic_carry": 0.60,  # multi-carry addition errors
     "comparison_boundary": 0.25,  # numeric inequality violations
-    "negation_scope": 0.15,       # "X is not Y" contradictions
+    "negation_scope": 0.15,  # "X is not Y" contradictions
 }
 
 # Among WRONG logic questions, distribution of error types.
 LOGIC_ERROR_DISTRIBUTION = {
-    "implication": 0.60,    # "if A then B" violated
-    "negation_scope": 0.40, # negation errors also appear in logic domain
+    "implication": 0.60,  # "if A then B" violated
+    "negation_scope": 0.40,  # negation errors also appear in logic domain
 }
 
 # How often to apply Tier 1 weight updates (in questions, rolling window).
@@ -313,13 +313,15 @@ def generate_questions(n: int, rng: random.Random) -> list[SimQuestion]:
         else:  # negation_scope
             q, r = _make_negation_question(is_correct, rng, "arithmetic")
 
-        questions.append(SimQuestion(
-            question=q,
-            response=r,
-            is_correct=is_correct,
-            domain="arithmetic",
-            error_type="" if is_correct else etype,
-        ))
+        questions.append(
+            SimQuestion(
+                question=q,
+                response=r,
+                is_correct=is_correct,
+                domain="arithmetic",
+                error_type="" if is_correct else etype,
+            )
+        )
 
     # Generate logic questions.
     logic_etypes = list(LOGIC_ERROR_DISTRIBUTION.keys())
@@ -333,13 +335,15 @@ def generate_questions(n: int, rng: random.Random) -> list[SimQuestion]:
         else:  # negation_scope
             q, r = _make_negation_question(is_correct, rng, "logic")
 
-        questions.append(SimQuestion(
-            question=q,
-            response=r,
-            is_correct=is_correct,
-            domain="logic",
-            error_type="" if is_correct else etype,
-        ))
+        questions.append(
+            SimQuestion(
+                question=q,
+                response=r,
+                is_correct=is_correct,
+                domain="logic",
+                error_type="" if is_correct else etype,
+            )
+        )
 
     # Shuffle so domain types are interleaved (as in a real workload).
     rng.shuffle(questions)
@@ -684,8 +688,10 @@ def run_experiment() -> dict[str, Any]:
     n_arith_eval = sum(1 for q in eval_qs if q.domain == "arithmetic")
     n_logic_eval = sum(1 for q in eval_qs if q.domain == "logic")
     n_wrong_warmup = sum(1 for q in warmup_qs if not q.is_correct)
-    print(f"  warmup: {WARMUP_SIZE} ({n_arith_warmup} arith, {n_logic_warmup} logic, "
-          f"{n_wrong_warmup} wrong)")
+    print(
+        f"  warmup: {WARMUP_SIZE} ({n_arith_warmup} arith, {n_logic_warmup} logic, "
+        f"{n_wrong_warmup} wrong)"
+    )
     print(f"  eval:   {EVAL_SIZE} ({n_arith_eval} arith, {n_logic_eval} logic)")
     print()
 
@@ -769,43 +775,55 @@ def run_experiment() -> dict[str, Any]:
     for i, q in enumerate(eval_qs):
         # Baseline: static extraction, fixed weights, no learning.
         b_correct, b_nc, _ = check_baseline(q)
-        baseline_results.append({
-            "verdict_correct": b_correct,
-            "n_constraints": b_nc,
-            "memory_added_new": False,
-        })
+        baseline_results.append(
+            {
+                "verdict_correct": b_correct,
+                "n_constraints": b_nc,
+                "memory_added_new": False,
+            }
+        )
 
         # Tier 1: adaptive weights (pipeline.verify with tracker), no new constraints.
         t1_correct, t1_nc, _ = check_tier1(q, tier1_pipeline, tier1_tracker)
-        tier1_results.append({
-            "verdict_correct": t1_correct,
-            "n_constraints": t1_nc,
-            "memory_added_new": False,
-        })
+        tier1_results.append(
+            {
+                "verdict_correct": t1_correct,
+                "n_constraints": t1_nc,
+                "memory_added_new": False,
+            }
+        )
 
         # Tier 2: memory-driven constraint ADDITION via AutoExtractor(memory=).
         t2_correct, t2_nc, t2_new = check_tier2(q, tier2_memory)
-        tier2_results.append({
-            "verdict_correct": t2_correct,
-            "n_constraints": t2_nc,
-            "memory_added_new": t2_new,
-        })
+        tier2_results.append(
+            {
+                "verdict_correct": t2_correct,
+                "n_constraints": t2_nc,
+                "memory_added_new": t2_new,
+            }
+        )
 
         # Combined: Tier 1 adaptive weights + Tier 2 constraint addition.
-        cb_correct, cb_nc, cb_new = check_combined(q, combined_pipeline, combined_tracker, combined_memory)
-        combined_results.append({
-            "verdict_correct": cb_correct,
-            "n_constraints": cb_nc,
-            "memory_added_new": cb_new,
-        })
+        cb_correct, cb_nc, cb_new = check_combined(
+            q, combined_pipeline, combined_tracker, combined_memory
+        )
+        combined_results.append(
+            {
+                "verdict_correct": cb_correct,
+                "n_constraints": cb_nc,
+                "memory_added_new": cb_new,
+            }
+        )
 
         if (i + 1) % 100 == 0:
             b_acc = sum(r["verdict_correct"] for r in baseline_results) / len(baseline_results)
             t1_acc = sum(r["verdict_correct"] for r in tier1_results) / len(tier1_results)
             t2_acc = sum(r["verdict_correct"] for r in tier2_results) / len(tier2_results)
             cb_acc = sum(r["verdict_correct"] for r in combined_results) / len(combined_results)
-            print(f"  q{WARMUP_SIZE + i + 1:4d}: baseline={b_acc:.3f}, "
-                  f"tier1={t1_acc:.3f}, tier2={t2_acc:.3f}, combined={cb_acc:.3f}")
+            print(
+                f"  q{WARMUP_SIZE + i + 1:4d}: baseline={b_acc:.3f}, "
+                f"tier1={t1_acc:.3f}, tier2={t2_acc:.3f}, combined={cb_acc:.3f}"
+            )
 
     eval_elapsed = time.perf_counter() - eval_start
 
@@ -833,12 +851,14 @@ def run_experiment() -> dict[str, Any]:
     # was correct but Baseline was wrong also had memory-added new constraints?
     # This measures how much of Tier 2's gain came from NEW constraint types.
     tier2_gained = [
-        (t2r, br) for t2r, br in zip(tier2_results, baseline_results)
+        (t2r, br)
+        for t2r, br in zip(tier2_results, baseline_results)
         if t2r["verdict_correct"] and not br["verdict_correct"]
     ]
     pct_tier2_from_new = (
         sum(1 for t2r, _ in tier2_gained if t2r["memory_added_new"]) / len(tier2_gained)
-        if tier2_gained else 0.0
+        if tier2_gained
+        else 0.0
     )
 
     # Per-domain breakdowns.
@@ -859,23 +879,34 @@ def run_experiment() -> dict[str, Any]:
     print("=" * 60)
     print("RESULTS SUMMARY")
     print("=" * 60)
-    print(f"  Baseline  accuracy: {baseline_acc:.4f}  "
-          f"avg_constraints: {_avg_constraints(baseline_results):.2f}")
-    print(f"  Tier1     accuracy: {tier1_acc:.4f}  "
-          f"avg_constraints: {_avg_constraints(tier1_results):.2f}")
-    print(f"  Tier2     accuracy: {tier2_acc:.4f}  "
-          f"avg_constraints: {_avg_constraints(tier2_results):.2f}  "
-          f"memory_new: {_pct_memory_new(tier2_results):.2%}")
-    print(f"  Combined  accuracy: {combined_acc:.4f}  "
-          f"avg_constraints: {_avg_constraints(combined_results):.2f}  "
-          f"memory_new: {_pct_memory_new(combined_results):.2%}")
+    print(
+        f"  Baseline  accuracy: {baseline_acc:.4f}  "
+        f"avg_constraints: {_avg_constraints(baseline_results):.2f}"
+    )
+    print(
+        f"  Tier1     accuracy: {tier1_acc:.4f}  "
+        f"avg_constraints: {_avg_constraints(tier1_results):.2f}"
+    )
+    print(
+        f"  Tier2     accuracy: {tier2_acc:.4f}  "
+        f"avg_constraints: {_avg_constraints(tier2_results):.2f}  "
+        f"memory_new: {_pct_memory_new(tier2_results):.2%}"
+    )
+    print(
+        f"  Combined  accuracy: {combined_acc:.4f}  "
+        f"avg_constraints: {_avg_constraints(combined_results):.2f}  "
+        f"memory_new: {_pct_memory_new(combined_results):.2%}"
+    )
     print()
     print(f"  Hypothesis 1 — Tier2 beats Tier1: {'YES' if tier2_beats_tier1 else 'NO'}")
-    print(f"    Tier2={tier2_acc:.4f} vs Tier1={tier1_acc:.4f} "
-          f"(delta={tier2_acc - tier1_acc:+.4f})")
+    print(
+        f"    Tier2={tier2_acc:.4f} vs Tier1={tier1_acc:.4f} (delta={tier2_acc - tier1_acc:+.4f})"
+    )
     print(f"  Hypothesis 2 — Combined beats both: {'YES' if combined_beats_both else 'NO'}")
-    print(f"    Combined={combined_acc:.4f} vs max(Tier1,Tier2)={max(tier1_acc, tier2_acc):.4f} "
-          f"(delta={combined_acc - max(tier1_acc, tier2_acc):+.4f})")
+    print(
+        f"    Combined={combined_acc:.4f} vs max(Tier1,Tier2)={max(tier1_acc, tier2_acc):.4f} "
+        f"(delta={combined_acc - max(tier1_acc, tier2_acc):+.4f})"
+    )
     print(f"  Hypothesis 3 — Tier2 gains from NEW constraints: {pct_tier2_from_new:.2%}")
     print(f"    ({len(tier2_gained)} questions where Tier2 correct but Baseline wrong)")
     print()
@@ -889,9 +920,11 @@ def run_experiment() -> dict[str, Any]:
             ("combined", combined_domain),
         ]:
             info = dom_results.get(domain, {})
-            print(f"    {name:10s}: acc={info.get('accuracy', 0):.4f}  "
-                  f"avg_c={info.get('avg_constraints', 0):.2f}  "
-                  f"mem_new={info.get('pct_memory_added_new', 0):.2%}")
+            print(
+                f"    {name:10s}: acc={info.get('accuracy', 0):.4f}  "
+                f"avg_c={info.get('avg_constraints', 0):.2f}  "
+                f"mem_new={info.get('pct_memory_added_new', 0):.2%}"
+            )
 
     # ------------------------------------------------------------------
     # Assemble results dict.
@@ -962,9 +995,7 @@ def run_experiment() -> dict[str, Any]:
             "tier2_beats_tier1": tier2_beats_tier1,
             "tier2_delta_vs_tier1": round(tier2_acc - tier1_acc, 4),
             "combined_beats_both": combined_beats_both,
-            "combined_delta_vs_best": round(
-                combined_acc - max(tier1_acc, tier2_acc), 4
-            ),
+            "combined_delta_vs_best": round(combined_acc - max(tier1_acc, tier2_acc), 4),
             "pct_tier2_gains_from_new_constraints": round(pct_tier2_from_new, 4),
             "n_tier2_gained_questions": len(tier2_gained),
         },
@@ -974,7 +1005,7 @@ def run_experiment() -> dict[str, Any]:
             "adaptive_overall_accuracy": 0.97,
             "overall_delta": 0.294,
             "note": "Exp 134 used synthetic data with 60% correct, 40% heuristic noise; "
-                    "direct comparison is approximate.",
+            "direct comparison is approximate.",
         },
         "eval_elapsed_s": round(eval_elapsed, 3),
     }

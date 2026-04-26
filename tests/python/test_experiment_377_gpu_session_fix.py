@@ -70,10 +70,7 @@ def _make_repo(
                 'echo "[session_startup] CARNOT_FORCE_LIVE=1 exported"\n'
             )
         else:
-            content = (
-                "#!/usr/bin/env bash\n"
-                "export CARNOT_FORCE_LIVE=1\n"
-            )
+            content = "#!/usr/bin/env bash\nexport CARNOT_FORCE_LIVE=1\n"
         (tmp_path / "scripts" / "session_startup.sh").write_text(content)
 
     return tmp_path
@@ -133,8 +130,15 @@ class TestArtifactSchema:
     def test_required_result_fields_present(self, tmp_path: Path) -> None:
         """All REQUIRED_RESULT_FIELDS must be in the artifact."""
         artifact = _run_with_subprocess_mock(tmp_path)
-        for field in ("experiment", "run_date", "started_at",
-                      "finished_at", "duration_s", "status", "title"):
+        for field in (
+            "experiment",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ):
             assert field in artifact, f"Missing field: {field}"
 
     def test_schema_is_gpu_session_fix_v1(self, tmp_path: Path) -> None:

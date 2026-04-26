@@ -209,6 +209,7 @@ class TestLLMErrorHandling:
 
     def test_llm_exception_returns_empty(self):
         """If llm_caller raises, _generate_step returns empty string."""
+
         def _failing_caller(prompt: str) -> str:
             raise RuntimeError("GPU OOM")
 
@@ -219,6 +220,7 @@ class TestLLMErrorHandling:
 
     def test_llm_empty_response_terminates_loop(self):
         """If llm_caller returns empty string, loop terminates immediately."""
+
         def _empty_caller(prompt: str) -> str:
             return ""
 
@@ -229,6 +231,7 @@ class TestLLMErrorHandling:
 
     def test_llm_whitespace_only_terminates_loop(self):
         """If llm_caller returns whitespace-only string, loop terminates."""
+
         def _whitespace_caller(prompt: str) -> str:
             return "   \n  "
 
@@ -247,6 +250,7 @@ class TestSentenceExtraction:
 
     def test_first_sentence_extracted(self):
         """_generate_step extracts the first sentence from a multi-sentence response."""
+
         def _multi_sentence(prompt: str) -> str:
             return "First sentence. Second sentence. Third."
 
@@ -258,6 +262,7 @@ class TestSentenceExtraction:
 
     def test_newline_split(self):
         """_generate_step handles newline-separated lines."""
+
         def _newline_response(prompt: str) -> str:
             return "Line one\nLine two"
 
@@ -337,6 +342,7 @@ class TestPipelineExport:
             HermesV2LiveLoop,
             HermesV2StepResult,
         )
+
         assert HermesV2LiveLoop is not None
         assert HermesV2GenerationResult is not None
         assert HermesV2StepResult is not None

@@ -53,14 +53,48 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 # ---------------------------------------------------------------------------
 
 _SUBJECTS = [
-    "cats", "dogs", "birds", "fish", "trees", "rocks", "stars", "clouds",
-    "rivers", "mountains", "students", "teachers", "engineers", "doctors",
-    "planets", "atoms", "cells", "waves", "crystals", "robots",
+    "cats",
+    "dogs",
+    "birds",
+    "fish",
+    "trees",
+    "rocks",
+    "stars",
+    "clouds",
+    "rivers",
+    "mountains",
+    "students",
+    "teachers",
+    "engineers",
+    "doctors",
+    "planets",
+    "atoms",
+    "cells",
+    "waves",
+    "crystals",
+    "robots",
 ]
 _PREDICATES = [
-    "mortal", "alive", "visible", "heavy", "bright", "fast", "old",
-    "complex", "natural", "rare", "symmetric", "stable", "dense", "warm",
-    "soluble", "magnetic", "elastic", "transparent", "finite", "periodic",
+    "mortal",
+    "alive",
+    "visible",
+    "heavy",
+    "bright",
+    "fast",
+    "old",
+    "complex",
+    "natural",
+    "rare",
+    "symmetric",
+    "stable",
+    "dense",
+    "warm",
+    "soluble",
+    "magnetic",
+    "elastic",
+    "transparent",
+    "finite",
+    "periodic",
 ]
 
 
@@ -170,7 +204,9 @@ def generate_logic_triples(n: int, rng: np.random.Generator) -> list[tuple[str, 
     for _ in range(per_type):
         s, p, s2, p2 = pick_pair(rng)
         question = f"If all {s} are {p}, and {s2} are {p}, are {s2} necessarily {s}?"
-        correct = f"No. {s2} being {p} does not mean {s2} are {s}. This is affirming the consequent."
+        correct = (
+            f"No. {s2} being {p} does not mean {s2} are {s}. This is affirming the consequent."
+        )
         wrong = f"Yes. Since all {s} are {p} and {s2} are {p}, {s2} must be {s}."
         triples.append((question, correct, wrong))
 
@@ -208,12 +244,17 @@ def generate_code_triples(n: int, rng: np.random.Generator) -> list[tuple[str, s
 
     def is_even(param, rng):
         question = f"Write a function that returns True if {param} is even."
-        correct = f"def is_even(n):\n    return n % 2 == 0\n# is_even({param}) returns {param % 2 == 0}"
-        wrong = f"def is_even(n):\n    return n % 2 == 1\n# is_even({param}) returns {param % 2 == 1}"
+        correct = (
+            f"def is_even(n):\n    return n % 2 == 0\n# is_even({param}) returns {param % 2 == 0}"
+        )
+        wrong = (
+            f"def is_even(n):\n    return n % 2 == 1\n# is_even({param}) returns {param % 2 == 1}"
+        )
         return question, correct, wrong
 
     def factorial(param, rng):
         import math
+
         nd = min(param, 12)
         question = f"Write a function that computes the factorial of {nd}."
         correct = (
@@ -228,8 +269,12 @@ def generate_code_triples(n: int, rng: np.random.Generator) -> list[tuple[str, s
 
     def reverse_string(param, rng):
         question = "Write a function that reverses a string."
-        correct = "def reverse_string(s):\n    return s[::-1]\n# reverse_string('hello') returns 'olleh'"
-        wrong = "def reverse_string(s):\n    return s[::1]\n# reverse_string('hello') returns 'hello'"
+        correct = (
+            "def reverse_string(s):\n    return s[::-1]\n# reverse_string('hello') returns 'olleh'"
+        )
+        wrong = (
+            "def reverse_string(s):\n    return s[::1]\n# reverse_string('hello') returns 'hello'"
+        )
         return question, correct, wrong
 
     def count_vowels(param, rng):
@@ -240,11 +285,13 @@ def generate_code_triples(n: int, rng: np.random.Generator) -> list[tuple[str, s
 
     def fibonacci(param, rng):
         nd = min(param, 15)
+
         def fib(k):
             a, b = 0, 1
             for _ in range(k):
                 a, b = b, a + b
             return a
+
         question = f"Write a function that returns the {nd}th Fibonacci number (0-indexed)."
         correct = (
             f"def fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n"
@@ -276,7 +323,9 @@ def generate_code_triples(n: int, rng: np.random.Generator) -> list[tuple[str, s
 
     def is_palindrome(param, rng):
         question = "Write a function that checks if a string is a palindrome."
-        correct = "def is_palindrome(s):\n    s = s.lower().replace(' ', '')\n    return s == s[::-1]"
+        correct = (
+            "def is_palindrome(s):\n    s = s.lower().replace(' ', '')\n    return s == s[::-1]"
+        )
         wrong = "def is_palindrome(s):\n    s = s.lower().replace(' ', '')\n    return s == ''.join(sorted(s))"
         return question, correct, wrong
 
@@ -294,8 +343,18 @@ def generate_code_triples(n: int, rng: np.random.Generator) -> list[tuple[str, s
         )
         return question, correct, wrong
 
-    templates = [sum_range, find_max, is_even, factorial, reverse_string,
-                 count_vowels, fibonacci, binary_search, is_palindrome, flatten_list]
+    templates = [
+        sum_range,
+        find_max,
+        is_even,
+        factorial,
+        reverse_string,
+        count_vowels,
+        fibonacci,
+        binary_search,
+        is_palindrome,
+        flatten_list,
+    ]
 
     triples = []
     for i in range(n):
@@ -309,6 +368,7 @@ def generate_code_triples(n: int, rng: np.random.Generator) -> list[tuple[str, s
 # Feature encoding (inline from Exp 62 — 200 binary features)
 # ---------------------------------------------------------------------------
 
+
 def encode_answer(question: str, answer: str) -> np.ndarray:
     """Encode (question, answer) pair as 200-dim binary feature vector.
 
@@ -317,9 +377,9 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     """
     features = []
 
-    q_numbers = [int(x) for x in re.findall(r'\d+', question)]
-    a_numbers = [int(x) for x in re.findall(r'\d+', answer)]
-    a_digits = re.findall(r'\d', answer)
+    q_numbers = [int(x) for x in re.findall(r"\d+", question)]
+    a_numbers = [int(x) for x in re.findall(r"\d+", answer)]
+    a_digits = re.findall(r"\d", answer)
 
     features.append(1 if a_numbers else 0)
     n_nums = len(a_numbers)
@@ -352,7 +412,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     assert len(features) == 20
 
     words = answer.split()
-    sentences = [s.strip() for s in re.split(r'[.!?]+', answer) if s.strip()]
+    sentences = [s.strip() for s in re.split(r"[.!?]+", answer) if s.strip()]
     n_words = len(words)
     n_sentences = len(sentences)
     wc_bounds = [2, 5, 10, 15, 20, 30, 50, 100]
@@ -453,13 +513,31 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features.append(1 if "guaranteed" in lower_answer else 0)
     features.append(1 if "invalid" in lower_answer else 0)
     features.append(1 if "valid" in lower_answer and "invalid" not in lower_answer else 0)
-    bigrams = [f"{words[i]} {words[i+1]}" for i in range(len(words) - 1)] if len(words) > 1 else []
+    bigrams = (
+        [f"{words[i]} {words[i + 1]}" for i in range(len(words) - 1)] if len(words) > 1 else []
+    )
     bigram_lower = [b.lower() for b in bigrams]
     target_bigrams = [
-        "the answer", "answer is", "is not", "not the", "does not",
-        "this follows", "follows by", "by modus", "n +", "+ 1",
-        "return total", "return result", "for i", "in range", "if not",
-        "not lst", "lst 0", "== 0", "== 1", "def ",
+        "the answer",
+        "answer is",
+        "is not",
+        "not the",
+        "does not",
+        "this follows",
+        "follows by",
+        "by modus",
+        "n +",
+        "+ 1",
+        "return total",
+        "return result",
+        "for i",
+        "in range",
+        "if not",
+        "not lst",
+        "lst 0",
+        "== 0",
+        "== 1",
+        "def ",
     ]
     for tb in target_bigrams:
         features.append(1 if any(tb in b for b in bigram_lower) else 0)
@@ -513,7 +591,20 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features.append(1 if "all" in lower_answer and "all" in lower_question else 0)
     q_words_set = set(lower_question.split())
     a_words_set = set(lower_answer.split())
-    shared_content_words = q_words_set & a_words_set - {"a", "an", "the", "is", "are", "what", "if", "and", "or", "in", "of", "to"}
+    shared_content_words = q_words_set & a_words_set - {
+        "a",
+        "an",
+        "the",
+        "is",
+        "are",
+        "what",
+        "if",
+        "and",
+        "or",
+        "in",
+        "of",
+        "to",
+    }
     features.append(1 if len(shared_content_words) > 2 else 0)
     features.append(1 if len(shared_content_words) > 5 else 0)
     features.append(1 if "affirming" in lower_answer else 0)
@@ -522,12 +613,25 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features.append(1 if "ponens" in lower_answer else 0)
     features.append(1 if "disjunctive" in lower_answer else 0)
     features.append(1 if "eliminate" in lower_answer or "eliminated" in lower_answer else 0)
-    features.append(1 if "the answer is" in lower_answer and ("+" in question or "*" in question or "mod" in question) else 0)
-    features.append(1 if ("follows" in lower_answer or "cannot" in lower_answer) and ("if " in lower_question) else 0)
+    features.append(
+        1
+        if "the answer is" in lower_answer
+        and ("+" in question or "*" in question or "mod" in question)
+        else 0
+    )
+    features.append(
+        1
+        if ("follows" in lower_answer or "cannot" in lower_answer) and ("if " in lower_question)
+        else 0
+    )
     features.append(1 if "def " in answer and "return" in answer and ":\n" in answer else 0)
     features.append(1 if "write" in lower_question and "def " in answer else 0)
     features.append(1 if "what is" in lower_question and any(c.isdigit() for c in answer) else 0)
-    features.append(1 if "what follows" in lower_question and ("follows" in lower_answer or "not" in lower_answer) else 0)
+    features.append(
+        1
+        if "what follows" in lower_question and ("follows" in lower_answer or "not" in lower_answer)
+        else 0
+    )
     features.append(1 if n_words > 3 else 0)
     features.append(1 if not answer.endswith(" ") else 0)
     features.append(1 if answer == answer.strip() else 0)
@@ -541,7 +645,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features.append(1 if a_q_ratio > 2.0 else 0)
     features.append(1 if a_q_ratio < 0.5 else 0)
     features.append(1 if "^" in answer or "**" in answer else 0)
-    features.append(1 if re.search(r'\[.*\]', answer) else 0)
+    features.append(1 if re.search(r"\[.*\]", answer) else 0)
     first_word = words[0].lower() if words else ""
     features.append(1 if first_word in ("def", "the", "all", "no", "yes", "some") else 0)
     features.append(1 if ">=" in answer or "<=" in answer or "!=" in answer else 0)
@@ -570,6 +674,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
 # ---------------------------------------------------------------------------
 # Ising training (discriminative CD, from Exp 62)
 # ---------------------------------------------------------------------------
+
 
 def compute_energies_ising(vectors: np.ndarray, biases: np.ndarray, J: np.ndarray) -> np.ndarray:
     """Ising energy for each sample: E(s) = -(b^T s + s^T J s), s in {-1,+1}."""
@@ -658,7 +763,7 @@ def auroc_from_energies(e_correct: np.ndarray, e_wrong: np.ndarray) -> float:
     tied = 0
     chunk = 500
     for i in range(0, n_c, chunk):
-        ec = e_correct[i:i + chunk]
+        ec = e_correct[i : i + chunk]
         diff = e_wrong[None, :] - ec[:, None]
         concordant += int(np.sum(diff > 0))
         tied += int(np.sum(diff == 0))
@@ -680,6 +785,7 @@ def compute_auroc_ising(
 # ---------------------------------------------------------------------------
 # Gibbs MLP training (discriminative CD with gradient-tape style)
 # ---------------------------------------------------------------------------
+
 
 def _sigmoid(x: np.ndarray) -> np.ndarray:
     """Numerically stable sigmoid: clips inputs to prevent overflow."""
@@ -876,7 +982,7 @@ class GibbsMLPTrainer:
             epoch_gaps = []
 
             for batch_start in range(0, n, batch_size):
-                batch_idx = perm[batch_start:batch_start + batch_size]
+                batch_idx = perm[batch_start : batch_start + batch_size]
                 b_correct = correct_vectors[batch_idx]
                 b_wrong = wrong_vectors[batch_idx]
 
@@ -892,7 +998,7 @@ class GibbsMLPTrainer:
 
                     ec, pre_c, post_c = self.forward(xc)
                     ew, pre_w, post_w = self.forward(xw)
-                    gap_sum += (ew - ec)
+                    gap_sum += ew - ec
 
                     # Decrease E(correct): sign = -1.
                     lc, dwoc, dboc = self.backward(xc, pre_c, post_c, sign=-1.0)
@@ -950,6 +1056,7 @@ class GibbsMLPTrainer:
 # ---------------------------------------------------------------------------
 # KAN trainer (discriminative CD with spline gradient updates)
 # ---------------------------------------------------------------------------
+
 
 class KANTrainer:
     """Discriminative CD trainer for a KAN energy function.
@@ -1127,7 +1234,7 @@ class KANTrainer:
             epoch_gaps = []
 
             for batch_start in range(0, n, batch_size):
-                batch_idx = perm[batch_start:batch_start + batch_size]
+                batch_idx = perm[batch_start : batch_start + batch_size]
                 b_correct = correct_vectors[batch_idx]
                 b_wrong = wrong_vectors[batch_idx]
                 bs = len(batch_idx)
@@ -1149,7 +1256,7 @@ class KANTrainer:
 
                     ec = self.energy_single(xc)
                     ew = self.energy_single(xw)
-                    gap_sum += (ew - ec)
+                    gap_sum += ew - ec
 
                     # Edge spline gradients.
                     # To DECREASE E(correct): update = -lr * dE_correct/d(ctrl_k)
@@ -1158,35 +1265,33 @@ class KANTrainer:
                     #   = +lr * basis_k(uw)  =>  accumulate -basis_k(uw) then subtract.
                     # Combined accumulator: grad_acc += basis_k(uc) - basis_k(uw)
                     # Applied as: ctrl -= lr * (grad_acc / bs) gives correct direction.
-                    for (i, j) in self.edges:
+                    for i, j in self.edges:
                         uc = float(sc[i] * sc[j])  # input to edge spline for correct
                         uw = float(sw[i] * sw[j])  # input to edge spline for wrong
                         for k in range(n_ctrl):
                             # Positive gradient for correct (to push ctrl down = lower E_correct).
                             # Negative gradient for wrong (to push ctrl up = higher E_wrong).
-                            edge_grad_acc[(i, j)][k] += (
-                                self._basis_k(uc, k, n_ctrl) - self._basis_k(uw, k, n_ctrl)
-                            )
+                            edge_grad_acc[(i, j)][k] += self._basis_k(
+                                uc, k, n_ctrl
+                            ) - self._basis_k(uw, k, n_ctrl)
 
                     # Bias spline gradients (same logic as edge gradients).
                     for i in range(self.input_dim):
                         uc_i = float(sc[i])
                         uw_i = float(sw[i])
                         for k in range(n_ctrl):
-                            bias_grad_acc[i][k] += (
-                                self._basis_k(uc_i, k, n_ctrl) - self._basis_k(uw_i, k, n_ctrl)
+                            bias_grad_acc[i][k] += self._basis_k(uc_i, k, n_ctrl) - self._basis_k(
+                                uw_i, k, n_ctrl
                             )
 
                 # Apply gradient update with weight decay.
-                for (i, j) in self.edges:
+                for i, j in self.edges:
                     self.edge_control_pts[(i, j)] -= lr * (
-                        edge_grad_acc[(i, j)] / bs
-                        + weight_decay * self.edge_control_pts[(i, j)]
+                        edge_grad_acc[(i, j)] / bs + weight_decay * self.edge_control_pts[(i, j)]
                     )
                 for i in range(self.input_dim):
                     self.bias_control_pts[i] -= lr * (
-                        bias_grad_acc[i] / bs
-                        + weight_decay * self.bias_control_pts[i]
+                        bias_grad_acc[i] / bs + weight_decay * self.bias_control_pts[i]
                     )
 
                 epoch_gaps.append(gap_sum / bs)
@@ -1211,7 +1316,7 @@ class KANTrainer:
             biases: Ising bias vector, shape (n_features,).
             J: Ising coupling matrix, shape (n_features, n_features).
         """
-        for (i, j) in self.edges:
+        for i, j in self.edges:
             j_val = float(J[i, j])
             self.edge_control_pts[(i, j)][:] = j_val
         for i in range(self.input_dim):
@@ -1227,6 +1332,7 @@ class KANTrainer:
 # ---------------------------------------------------------------------------
 # Bootstrap confidence intervals
 # ---------------------------------------------------------------------------
+
 
 def bootstrap_auroc_ci(
     e_correct: np.ndarray,
@@ -1271,6 +1377,7 @@ def bootstrap_auroc_ci(
 # Feature selection: top-K most discriminative features (by Ising J variance)
 # ---------------------------------------------------------------------------
 
+
 def select_top_features(
     biases: np.ndarray,
     J: np.ndarray,
@@ -1296,6 +1403,7 @@ def select_top_features(
 # ---------------------------------------------------------------------------
 # Main experiment
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     """Run Exp 109: KAN vs Ising vs Gibbs comparison on domain constraint data."""
@@ -1334,9 +1442,11 @@ def main() -> int:
     t0 = time.time()
 
     domains_data: dict[str, tuple[np.ndarray, np.ndarray]] = {}
-    for domain_name, triples in [("arithmetic", arith_triples),
-                                  ("logic", logic_triples),
-                                  ("code", code_triples)]:
+    for domain_name, triples in [
+        ("arithmetic", arith_triples),
+        ("logic", logic_triples),
+        ("code", code_triples),
+    ]:
         correct_feats = np.array([encode_answer(q, c) for q, c, w in triples])
         wrong_feats = np.array([encode_answer(q, w) for q, c, w in triples])
         domains_data[domain_name] = (correct_feats, wrong_feats)
@@ -1361,8 +1471,8 @@ def main() -> int:
         perm = rng.permutation(n)
 
         train_idx = perm[:N_TRAIN]
-        val_idx = perm[N_TRAIN:N_TRAIN + N_VAL]
-        test_idx = perm[N_TRAIN + N_VAL:N_TRAIN + N_VAL + N_TEST]
+        val_idx = perm[N_TRAIN : N_TRAIN + N_VAL]
+        test_idx = perm[N_TRAIN + N_VAL : N_TRAIN + N_VAL + N_TEST]
 
         splits[domain_name] = {
             "correct_train": correct_feats[train_idx],
@@ -1396,23 +1506,33 @@ def main() -> int:
         biases, J, losses = train_ising_discriminative_cd(
             splits[domain_name]["correct_train"],
             splits[domain_name]["wrong_train"],
-            n_epochs=200, lr=0.05, beta=1.0, l1_lambda=0.001,
-            weight_decay=0.005, verbose=False,
+            n_epochs=200,
+            lr=0.05,
+            beta=1.0,
+            l1_lambda=0.001,
+            weight_decay=0.005,
+            verbose=False,
         )
         ising_models[domain_name] = (biases, J)
         val_auroc = compute_auroc_ising(
             splits[domain_name]["correct_val"],
             splits[domain_name]["wrong_val"],
-            biases, J,
+            biases,
+            J,
         )
         print(f"    Done in {time.time() - t0:.1f}s | val_auroc={val_auroc:.4f}")
 
     print(f"\n  Training Ising [combined]...")
     t0 = time.time()
     biases_comb, J_comb, losses_comb = train_ising_discriminative_cd(
-        combined_correct_train, combined_wrong_train,
-        n_epochs=200, lr=0.05, beta=1.0, l1_lambda=0.001,
-        weight_decay=0.005, verbose=False,
+        combined_correct_train,
+        combined_wrong_train,
+        n_epochs=200,
+        lr=0.05,
+        beta=1.0,
+        l1_lambda=0.001,
+        weight_decay=0.005,
+        verbose=False,
     )
     ising_models["combined"] = (biases_comb, J_comb)
     val_auroc_comb = compute_auroc_ising(
@@ -1463,8 +1583,11 @@ def main() -> int:
         losses_k = kan.train_discriminative_cd(
             proj_splits[domain_name]["correct_train"],
             proj_splits[domain_name]["wrong_train"],
-            n_epochs=100, lr=0.01, weight_decay=0.001,
-            batch_size=32, verbose=False,
+            n_epochs=100,
+            lr=0.01,
+            weight_decay=0.001,
+            batch_size=32,
+            verbose=False,
         )
         kan_trainers[domain_name] = kan
         kan_losses[domain_name] = losses_k
@@ -1477,8 +1600,13 @@ def main() -> int:
     t0 = time.time()
     kan_comb = KANTrainer(input_dim=TOP_K, edges=all_edges, num_knots=8, degree=3, seed=42)
     losses_k_comb = kan_comb.train_discriminative_cd(
-        proj_comb_correct_train, proj_comb_wrong_train,
-        n_epochs=100, lr=0.01, weight_decay=0.001, batch_size=32, verbose=False,
+        proj_comb_correct_train,
+        proj_comb_wrong_train,
+        n_epochs=100,
+        lr=0.01,
+        weight_decay=0.001,
+        batch_size=32,
+        verbose=False,
     )
     kan_trainers["combined"] = kan_comb
     kan_losses["combined"] = losses_k_comb
@@ -1502,8 +1630,11 @@ def main() -> int:
         losses_g = gibbs.train_discriminative_cd(
             proj_splits[domain_name]["correct_train"],
             proj_splits[domain_name]["wrong_train"],
-            n_epochs=100, lr=0.001, weight_decay=0.005,
-            batch_size=32, verbose=False,
+            n_epochs=100,
+            lr=0.001,
+            weight_decay=0.005,
+            batch_size=32,
+            verbose=False,
         )
         gibbs_trainers[domain_name] = gibbs
         gibbs_losses[domain_name] = losses_g
@@ -1516,8 +1647,13 @@ def main() -> int:
     t0 = time.time()
     gibbs_comb = GibbsMLPTrainer(input_dim=TOP_K, hidden_dims=[32, 16], seed=42)
     losses_g_comb = gibbs_comb.train_discriminative_cd(
-        proj_comb_correct_train, proj_comb_wrong_train,
-        n_epochs=100, lr=0.001, weight_decay=0.005, batch_size=32, verbose=False,
+        proj_comb_correct_train,
+        proj_comb_wrong_train,
+        n_epochs=100,
+        lr=0.001,
+        weight_decay=0.005,
+        batch_size=32,
+        verbose=False,
     )
     gibbs_trainers["combined"] = gibbs_comb
     gibbs_losses["combined"] = losses_g_comb
@@ -1559,8 +1695,13 @@ def main() -> int:
         lo, hi = bootstrap_auroc_ci(ec, ew, n_bootstrap=200, seed=0)
         return {"auroc": auroc, "ci_lo": lo, "ci_hi": hi}
 
-    results: dict[str, Any] = {"per_domain": {}, "combined": {}, "param_counts": {},
-                                "interpretability": {}, "ablation_warm_start": {}}
+    results: dict[str, Any] = {
+        "per_domain": {},
+        "combined": {},
+        "param_counts": {},
+        "interpretability": {},
+        "ablation_warm_start": {},
+    }
 
     print(f"\n  {'Domain':<15} {'Model':<20} {'AUROC':>8} {'95% CI':>18}")
     print("  " + "-" * 65)
@@ -1571,38 +1712,50 @@ def main() -> int:
         # Ising (per-domain model on per-domain test set).
         ising_r = eval_ising_domain(eval_domain, eval_domain)
         results["per_domain"][eval_domain]["ising_per_domain"] = ising_r
-        print(f"  {eval_domain:<15} {'Ising (per-domain)':<20} {ising_r['auroc']:>8.4f} "
-              f"  [{ising_r['ci_lo']:.4f}, {ising_r['ci_hi']:.4f}]")
+        print(
+            f"  {eval_domain:<15} {'Ising (per-domain)':<20} {ising_r['auroc']:>8.4f} "
+            f"  [{ising_r['ci_lo']:.4f}, {ising_r['ci_hi']:.4f}]"
+        )
 
         # KAN (per-domain model on per-domain test set).
         kan_r = eval_kan_domain(eval_domain, eval_domain)
         results["per_domain"][eval_domain]["kan_per_domain"] = kan_r
-        print(f"  {eval_domain:<15} {'KAN (per-domain)':<20} {kan_r['auroc']:>8.4f} "
-              f"  [{kan_r['ci_lo']:.4f}, {kan_r['ci_hi']:.4f}]")
+        print(
+            f"  {eval_domain:<15} {'KAN (per-domain)':<20} {kan_r['auroc']:>8.4f} "
+            f"  [{kan_r['ci_lo']:.4f}, {kan_r['ci_hi']:.4f}]"
+        )
 
         # Gibbs (per-domain model on per-domain test set).
         gibbs_r = eval_gibbs_domain(eval_domain, eval_domain)
         results["per_domain"][eval_domain]["gibbs_per_domain"] = gibbs_r
-        print(f"  {eval_domain:<15} {'Gibbs MLP (per-dom)':<20} {gibbs_r['auroc']:>8.4f} "
-              f"  [{gibbs_r['ci_lo']:.4f}, {gibbs_r['ci_hi']:.4f}]")
+        print(
+            f"  {eval_domain:<15} {'Gibbs MLP (per-dom)':<20} {gibbs_r['auroc']:>8.4f} "
+            f"  [{gibbs_r['ci_lo']:.4f}, {gibbs_r['ci_hi']:.4f}]"
+        )
 
         # Ising combined model on per-domain test.
         ising_comb_r = eval_ising_domain("combined", eval_domain)
         results["per_domain"][eval_domain]["ising_combined"] = ising_comb_r
-        print(f"  {eval_domain:<15} {'Ising (combined)':<20} {ising_comb_r['auroc']:>8.4f} "
-              f"  [{ising_comb_r['ci_lo']:.4f}, {ising_comb_r['ci_hi']:.4f}]")
+        print(
+            f"  {eval_domain:<15} {'Ising (combined)':<20} {ising_comb_r['auroc']:>8.4f} "
+            f"  [{ising_comb_r['ci_lo']:.4f}, {ising_comb_r['ci_hi']:.4f}]"
+        )
 
         # KAN combined model on per-domain test.
         kan_comb_r = eval_kan_domain("combined", eval_domain)
         results["per_domain"][eval_domain]["kan_combined"] = kan_comb_r
-        print(f"  {eval_domain:<15} {'KAN (combined)':<20} {kan_comb_r['auroc']:>8.4f} "
-              f"  [{kan_comb_r['ci_lo']:.4f}, {kan_comb_r['ci_hi']:.4f}]")
+        print(
+            f"  {eval_domain:<15} {'KAN (combined)':<20} {kan_comb_r['auroc']:>8.4f} "
+            f"  [{kan_comb_r['ci_lo']:.4f}, {kan_comb_r['ci_hi']:.4f}]"
+        )
 
         # Gibbs combined model on per-domain test.
         gibbs_comb_r = eval_gibbs_domain("combined", eval_domain)
         results["per_domain"][eval_domain]["gibbs_combined"] = gibbs_comb_r
-        print(f"  {eval_domain:<15} {'Gibbs (combined)':<20} {gibbs_comb_r['auroc']:>8.4f} "
-              f"  [{gibbs_comb_r['ci_lo']:.4f}, {gibbs_comb_r['ci_hi']:.4f}]")
+        print(
+            f"  {eval_domain:<15} {'Gibbs (combined)':<20} {gibbs_comb_r['auroc']:>8.4f} "
+            f"  [{gibbs_comb_r['ci_lo']:.4f}, {gibbs_comb_r['ci_hi']:.4f}]"
+        )
         print()
 
     # Combined overall.
@@ -1639,8 +1792,7 @@ def main() -> int:
     results["combined"]["gibbs"] = r_gc
 
     for name, r in [("Ising combined", r_ic), ("KAN combined", r_kc), ("Gibbs combined", r_gc)]:
-        print(f"  {'all':<15} {name:<20} {r['auroc']:>8.4f} "
-              f"  [{r['ci_lo']:.4f}, {r['ci_hi']:.4f}]")
+        print(f"  {'all':<15} {name:<20} {r['auroc']:>8.4f}   [{r['ci_lo']:.4f}, {r['ci_hi']:.4f}]")
 
     # -----------------------------------------------------------------------
     # Step 6: Parameter counts
@@ -1659,9 +1811,9 @@ def main() -> int:
     kan_total = kan_edge_params + kan_node_params
 
     # Gibbs on TOP_K features: hidden dims [32, 16].
-    gibbs_layer1 = TOP_K * 32 + 32   # W1 + b1
-    gibbs_layer2 = 32 * 16 + 16      # W2 + b2
-    gibbs_out = 16 + 1               # w_out + b_out
+    gibbs_layer1 = TOP_K * 32 + 32  # W1 + b1
+    gibbs_layer2 = 32 * 16 + 16  # W2 + b2
+    gibbs_out = 16 + 1  # w_out + b_out
     gibbs_total = gibbs_layer1 + gibbs_layer2 + gibbs_out
 
     # Also store actual param count from trainers.
@@ -1674,7 +1826,7 @@ def main() -> int:
             "bias_params": int(ising_bias_params),
             "total": int(ising_total),
             "input_dim": N_FEATURES,
-            "note": "Full 200-feature Ising (upper-triangle couplings + biases)"
+            "note": "Full 200-feature Ising (upper-triangle couplings + biases)",
         },
         "kan": {
             "edge_params": int(kan_edge_params),
@@ -1685,7 +1837,7 @@ def main() -> int:
             "num_knots": 8,
             "degree": 3,
             "n_edges": n_edges,
-            "note": f"KAN on top-{TOP_K} features, {n_edges} edges, 11 ctrl pts each"
+            "note": f"KAN on top-{TOP_K} features, {n_edges} edges, 11 ctrl pts each",
         },
         "gibbs": {
             "layer1_params": int(gibbs_layer1),
@@ -1695,18 +1847,21 @@ def main() -> int:
             "actual_from_trainer": int(gibbs_actual),
             "input_dim": TOP_K,
             "hidden_dims": [32, 16],
-            "note": f"Gibbs MLP on top-{TOP_K} features, hidden=[32,16]"
-        }
+            "note": f"Gibbs MLP on top-{TOP_K} features, hidden=[32,16]",
+        },
     }
 
-    print(f"  Ising  ({N_FEATURES}-dim): {ising_total:>8,} params  "
-          f"({ising_coupling_params:,} coupling + {ising_bias_params:,} bias)")
-    print(f"  KAN    ({TOP_K}-dim):  {kan_total:>8,} params  "
-          f"({n_edges} edges × {n_ctrl_per_spline} + {TOP_K} nodes × {n_ctrl_per_spline})")
-    print(f"  Gibbs  ({TOP_K}-dim):  {gibbs_total:>8,} params  "
-          f"(hidden=[32,16], SiLU)")
-    print(f"\n  KAN/Gibbs ratio: {kan_total/gibbs_total:.2f}x")
-    print(f"  KAN/Ising ratio: {kan_total/ising_total:.4f}x (KAN operates on {TOP_K}-dim subset)")
+    print(
+        f"  Ising  ({N_FEATURES}-dim): {ising_total:>8,} params  "
+        f"({ising_coupling_params:,} coupling + {ising_bias_params:,} bias)"
+    )
+    print(
+        f"  KAN    ({TOP_K}-dim):  {kan_total:>8,} params  "
+        f"({n_edges} edges × {n_ctrl_per_spline} + {TOP_K} nodes × {n_ctrl_per_spline})"
+    )
+    print(f"  Gibbs  ({TOP_K}-dim):  {gibbs_total:>8,} params  (hidden=[32,16], SiLU)")
+    print(f"\n  KAN/Gibbs ratio: {kan_total / gibbs_total:.2f}x")
+    print(f"  KAN/Ising ratio: {kan_total / ising_total:.4f}x (KAN operates on {TOP_K}-dim subset)")
 
     # -----------------------------------------------------------------------
     # Step 7: Interpretability analysis — KAN arithmetic splines
@@ -1726,7 +1881,9 @@ def main() -> int:
     top5_edges = sorted(edge_importances.items(), key=lambda kv: kv[1], reverse=True)[:5]
 
     print(f"\n  Top-5 most important KAN arithmetic edge splines:")
-    print(f"  {'Edge (i,j)':<15} {'Feat i':>7} {'Feat j':>7} {'Variance':>12} {'Min CP':>10} {'Max CP':>10}")
+    print(
+        f"  {'Edge (i,j)':<15} {'Feat i':>7} {'Feat j':>7} {'Variance':>12} {'Min CP':>10} {'Max CP':>10}"
+    )
     print("  " + "-" * 65)
 
     interpretability_data = []
@@ -1734,28 +1891,34 @@ def main() -> int:
         ctrl = kan_arith.edge_control_pts[(i, j)]
         fi = top_features[i]
         fj = top_features[j]
-        print(f"  ({i:2d},{j:2d})  [f{fi:3d},f{fj:3d}]   {fi:>7}  {fj:>7}  "
-              f"{var:>12.6f}  {float(ctrl.min()):>10.4f}  {float(ctrl.max()):>10.4f}")
+        print(
+            f"  ({i:2d},{j:2d})  [f{fi:3d},f{fj:3d}]   {fi:>7}  {fj:>7}  "
+            f"{var:>12.6f}  {float(ctrl.min()):>10.4f}  {float(ctrl.max()):>10.4f}"
+        )
 
         # Evaluate the spline at 20 evenly spaced points in [-1, 1].
         xs_eval = np.linspace(-1.0, 1.0, 20)
         ys_eval = [kan_arith._eval_spline(xv, ctrl) for xv in xs_eval]
 
-        interpretability_data.append({
-            "edge": [int(i), int(j)],
-            "feature_indices": [int(fi), int(fj)],
-            "variance": float(var),
-            "ctrl_pts_min": float(ctrl.min()),
-            "ctrl_pts_max": float(ctrl.max()),
-            "ctrl_pts_range": float(ctrl.max() - ctrl.min()),
-            "spline_xs": [float(v) for v in xs_eval],
-            "spline_ys": [float(v) for v in ys_eval],
-        })
+        interpretability_data.append(
+            {
+                "edge": [int(i), int(j)],
+                "feature_indices": [int(fi), int(fj)],
+                "variance": float(var),
+                "ctrl_pts_min": float(ctrl.min()),
+                "ctrl_pts_max": float(ctrl.max()),
+                "ctrl_pts_range": float(ctrl.max() - ctrl.min()),
+                "spline_xs": [float(v) for v in xs_eval],
+                "spline_ys": [float(v) for v in ys_eval],
+            }
+        )
 
     results["interpretability"]["top5_edges"] = interpretability_data
 
     # Bias splines — top-5 by variance.
-    bias_importances = [(i, float(np.var(ctrl))) for i, ctrl in enumerate(kan_arith.bias_control_pts)]
+    bias_importances = [
+        (i, float(np.var(ctrl))) for i, ctrl in enumerate(kan_arith.bias_control_pts)
+    ]
     top5_bias = sorted(bias_importances, key=lambda kv: kv[1], reverse=True)[:5]
     print(f"\n  Top-5 most important bias splines (node biases):")
     print(f"  {'Node i':<10} {'Feature':>8} {'Variance':>12}")
@@ -1767,15 +1930,17 @@ def main() -> int:
         ctrl = kan_arith.bias_control_pts[i]
         xs_eval = np.linspace(-1.0, 1.0, 20)
         ys_eval = [kan_arith._eval_spline(xv, ctrl) for xv in xs_eval]
-        bias_spline_data.append({
-            "node": int(i),
-            "feature_index": int(fi),
-            "variance": float(var),
-            "ctrl_pts_min": float(ctrl.min()),
-            "ctrl_pts_max": float(ctrl.max()),
-            "spline_xs": [float(v) for v in xs_eval],
-            "spline_ys": [float(v) for v in ys_eval],
-        })
+        bias_spline_data.append(
+            {
+                "node": int(i),
+                "feature_index": int(fi),
+                "variance": float(var),
+                "ctrl_pts_min": float(ctrl.min()),
+                "ctrl_pts_max": float(ctrl.max()),
+                "spline_xs": [float(v) for v in xs_eval],
+                "spline_ys": [float(v) for v in ys_eval],
+            }
+        )
     results["interpretability"]["top5_bias_splines"] = bias_spline_data
 
     # Measure nonlinearity: compare variance of trained splines vs randomly
@@ -1789,10 +1954,12 @@ def main() -> int:
         "trained_vs_cold_ratio": float(
             np.mean(trained_edge_vars) / max(np.mean(cold_edge_vars), 1e-10)
         ),
-        "note": "Ratio > 1 means training increased spline nonlinearity"
+        "note": "Ratio > 1 means training increased spline nonlinearity",
     }
-    print(f"\n  Spline nonlinearity ratio (trained/cold): "
-          f"{results['interpretability']['nonlinearity']['trained_vs_cold_ratio']:.2f}x")
+    print(
+        f"\n  Spline nonlinearity ratio (trained/cold): "
+        f"{results['interpretability']['nonlinearity']['trained_vs_cold_ratio']:.2f}x"
+    )
 
     # -----------------------------------------------------------------------
     # Step 8: Ablation — warm-start KAN from Ising
@@ -1844,12 +2011,18 @@ def main() -> int:
         kan_warm.train_discriminative_cd(
             proj_splits["arithmetic"]["correct_train"],
             proj_splits["arithmetic"]["wrong_train"],
-            n_epochs=n_more, lr=0.01, weight_decay=0.001, batch_size=32,
+            n_epochs=n_more,
+            lr=0.01,
+            weight_decay=0.001,
+            batch_size=32,
         )
         kan_cold_abl.train_discriminative_cd(
             proj_splits["arithmetic"]["correct_train"],
             proj_splits["arithmetic"]["wrong_train"],
-            n_epochs=n_more, lr=0.01, weight_decay=0.001, batch_size=32,
+            n_epochs=n_more,
+            lr=0.01,
+            weight_decay=0.001,
+            batch_size=32,
         )
 
         # Evaluate on test set.
@@ -1903,7 +2076,7 @@ def main() -> int:
             "Warm-start from Ising gives KAN a better initialisation point "
             "and typically converges faster because the linear Ising parameters "
             "already encode discriminative structure before spline fine-tuning."
-        )
+        ),
     }
 
     # -----------------------------------------------------------------------

@@ -35,6 +35,7 @@ sys.path.insert(0, str(_PROJECT_ROOT))
 
 # Step 1: apply env autofix FIRST (before any GPU-related imports)
 from python.carnot.pipeline.env_autofix import apply_env_autofix  # noqa: E402
+
 _env_fix = apply_env_autofix()
 
 import logging  # noqa: E402
@@ -68,6 +69,7 @@ STEP_SIZE = 0.01
 # Data loading helpers
 # ---------------------------------------------------------------------------
 
+
 def _load_exp443_data(exp443_path: str) -> dict:
     """Load Exp 443 result JSON for EORM model path and AUC reference."""
     with open(exp443_path) as f:
@@ -88,17 +90,21 @@ def _build_synthetic_pairs(n: int = 57) -> list[dict]:
     """
     pairs = []
     for i in range(n // 2):
-        pairs.append({
-            "question_text": f"What is {i + 1} plus {i + 1}?",
-            "response_text": f"The answer is {2 * (i + 1)} because {i + 1} + {i + 1} = {2 * (i + 1)}.",
-            "label": 1,
-        })
+        pairs.append(
+            {
+                "question_text": f"What is {i + 1} plus {i + 1}?",
+                "response_text": f"The answer is {2 * (i + 1)} because {i + 1} + {i + 1} = {2 * (i + 1)}.",
+                "label": 1,
+            }
+        )
     for i in range(n - n // 2):
-        pairs.append({
-            "question_text": f"What is {i + 1} plus {i + 1}?",
-            "response_text": f"The answer is {2 * (i + 1) + 1} because I miscounted.",
-            "label": 0,
-        })
+        pairs.append(
+            {
+                "question_text": f"What is {i + 1} plus {i + 1}?",
+                "response_text": f"The answer is {2 * (i + 1) + 1} because I miscounted.",
+                "label": 0,
+            }
+        )
     return pairs
 
 
@@ -143,6 +149,7 @@ def _compute_baseline_auc(eorm: EORMModel, examples: list[dict]) -> float:
 # Main experiment
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """Run Exp 458: EBM-CoT Latent Calibration."""
 
@@ -163,8 +170,11 @@ def main() -> None:
         exp443_data = {"after_auc": 0.457143, "n_real_pairs": 57, "eorm_model_path": None}
     else:
         exp443_data = _load_exp443_data(str(exp443_path))
-        _log.info("Loaded Exp 443 data: after_auc=%.4f, n_real_pairs=%d",
-                  exp443_data.get("after_auc", 0.0), exp443_data.get("n_real_pairs", 0))
+        _log.info(
+            "Loaded Exp 443 data: after_auc=%.4f, n_real_pairs=%d",
+            exp443_data.get("after_auc", 0.0),
+            exp443_data.get("n_real_pairs", 0),
+        )
 
     # Step 4: Load or create EORM model
     eorm_path_str = exp443_data.get("eorm_model_path") or str(_PROJECT_ROOT / EORM_443_PATH)
@@ -189,8 +199,11 @@ def main() -> None:
     _log.info("Baseline AUC (uncalibrated): %.4f", baseline_auc)
 
     # Step 7: Instantiate EBMCoTCalibrator and compute calibrated AUC
-    _log.info("Instantiating EBMCoTCalibrator(n_langevin_steps=%d, step_size=%g)...",
-              N_LANGEVIN_STEPS, STEP_SIZE)
+    _log.info(
+        "Instantiating EBMCoTCalibrator(n_langevin_steps=%d, step_size=%g)...",
+        N_LANGEVIN_STEPS,
+        STEP_SIZE,
+    )
     calibrator = EBMCoTCalibrator(eorm, n_langevin_steps=N_LANGEVIN_STEPS, step_size=STEP_SIZE)
 
     _log.info("Computing calibrated AUC (Langevin calibration, %d steps)...", N_LANGEVIN_STEPS)
@@ -237,9 +250,14 @@ def main() -> None:
         json.dump(artifact, f, indent=2)
 
     _log.info("Artifact written to %s", deliverable_path)
-    _log.info("=== Exp 458 complete: baseline_auc=%.4f, calibrated_auc=%.4f, "
-              "improvement=%.4f, target_met=%s ===",
-              baseline_auc, calibrated, auc_improvement, target_met)
+    _log.info(
+        "=== Exp 458 complete: baseline_auc=%.4f, calibrated_auc=%.4f, "
+        "improvement=%.4f, target_met=%s ===",
+        baseline_auc,
+        calibrated,
+        auc_improvement,
+        target_met,
+    )
 
 
 if __name__ == "__main__":

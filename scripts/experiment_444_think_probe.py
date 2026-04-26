@@ -109,6 +109,7 @@ def _build_corpus(n_correct: int = 50, n_wrong: int = 50) -> tuple[list[str], li
 # LLM caller factory (GPU path)
 # ---------------------------------------------------------------------------
 
+
 def _build_gpu_caller():
     """Try to build a real Qwen3.5-0.8B LLM caller for GPU environments.
 
@@ -141,7 +142,7 @@ def _build_gpu_caller():
                     do_sample=False,
                     pad_token_id=tokenizer.eos_token_id,
                 )
-            generated = outputs[0][inputs["input_ids"].shape[1]:]
+            generated = outputs[0][inputs["input_ids"].shape[1] :]
             return tokenizer.decode(generated, skip_special_tokens=True)
 
         return caller
@@ -154,13 +155,17 @@ def _build_gpu_caller():
 # Main experiment
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     RESULT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     import datetime
+
     started_at = datetime.datetime.utcnow().isoformat() + "Z"
 
-    with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=TIMEOUT_MINUTES, result_path=str(RESULT_PATH)):
+    with ExperimentTimeoutWatchdog(
+        EXP_ID, timeout_minutes=TIMEOUT_MINUTES, result_path=str(RESULT_PATH)
+    ):
         _log.info("Exp %d: Building synthetic corpus...", EXP_ID)
         responses, ground_truth = _build_corpus(n_correct=50, n_wrong=50)
 

@@ -64,10 +64,14 @@ def _check_exp527_batched() -> bool:
         return False
     try:
         import json
+
         data = json.loads(result_path.read_text())
         duration_min = data.get("duration_minutes", data.get("duration_s", 0) / 60)
         if duration_min > 45:
-            _log.info("Exp 527 duration_minutes=%.1f > 45 — BatchedInferenceRunner wrapping needed", duration_min)
+            _log.info(
+                "Exp 527 duration_minutes=%.1f > 45 — BatchedInferenceRunner wrapping needed",
+                duration_min,
+            )
             return True
     except Exception:
         pass
@@ -149,6 +153,7 @@ def main() -> None:
 
         # Write the deliverable
         import json
+
         tmpl._output_path.parent.mkdir(parents=True, exist_ok=True)
         tmpl._output_path.write_text(json.dumps(artifact, indent=2))
 

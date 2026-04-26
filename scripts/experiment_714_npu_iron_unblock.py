@@ -141,7 +141,10 @@ def cpu_gemm_benchmark(size: int, iterations: int) -> float:
         b = [[1.0] * size for _ in range(size)]
         t0 = time.perf_counter()
         for _ in range(iterations):
-            [[sum(a[i][k] * b[k][j] for k in range(size)) for j in range(size)] for i in range(size)]
+            [
+                [sum(a[i][k] * b[k][j] for k in range(size)) for j in range(size)]
+                for i in range(size)
+            ]
         return time.perf_counter() - t0
 
 

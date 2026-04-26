@@ -219,9 +219,7 @@ def compute_retro() -> dict:
     # retro_067 (ExclusionManifest wiring) has partial progress via Exp 589, but the
     # conductor is not fully wired — not closed.
     n_closed_this_milestone = 0
-    retro_closure_rate = round(
-        n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3
-    )
+    retro_closure_rate = round(n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3)
     # +2 new RETROs opening this milestone (RETRO-068, RETRO-069)
     open_retro_count = len(_RETROS_OPEN_AT_MILESTONE_START) - n_closed_this_milestone + 2
 

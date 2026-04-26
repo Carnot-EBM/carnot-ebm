@@ -6,6 +6,7 @@ These tests mock subprocess.run so no network I/O occurs.  Every test has at
 least one assertion.  100% coverage of the code added in
 python/carnot/resolvers/gguf_cache.py.
 """
+
 from __future__ import annotations
 
 import os
@@ -79,9 +80,7 @@ class TestResolve:
 class TestCliDownloadSuccess:
     """Spec: SCENARIO-INFRA-083 — CLI download returns success=True on valid repo."""
 
-    def test_success_path_returns_dict_with_path_and_size(
-        self, tmp_path: Path
-    ) -> None:
+    def test_success_path_returns_dict_with_path_and_size(self, tmp_path: Path) -> None:
         """cli_download() returns success=True with path and size_mb when CLI exits 0."""
         dest = tmp_path / "dest"
         dest.mkdir()
@@ -95,8 +94,9 @@ class TestCliDownloadSuccess:
 
         resolver = GGUFCacheResolver()
 
-        with patch("shutil.which", return_value="/usr/bin/hf"), patch(
-            "subprocess.run", return_value=mock_result
+        with (
+            patch("shutil.which", return_value="/usr/bin/hf"),
+            patch("subprocess.run", return_value=mock_result),
         ):
             result = resolver.cli_download(
                 "Qwen/Qwen3.5-0.8B-GGUF",
@@ -121,9 +121,10 @@ class TestCliDownloadSuccess:
 
         resolver = GGUFCacheResolver()
 
-        with patch("shutil.which", return_value="/usr/bin/hf") as mock_which, patch(
-            "subprocess.run", return_value=mock_result
-        ) as mock_run:
+        with (
+            patch("shutil.which", return_value="/usr/bin/hf") as mock_which,
+            patch("subprocess.run", return_value=mock_result) as mock_run,
+        ):
             resolver.cli_download("MyOrg/MyRepo", "model.gguf", str(dest))
 
         mock_run.assert_called_once()
@@ -150,9 +151,10 @@ class TestCliDownloadSuccess:
         def _which(name: str) -> str | None:
             return None if name == "hf" else "/usr/bin/huggingface-cli"
 
-        with patch("shutil.which", side_effect=_which), patch(
-            "subprocess.run", return_value=mock_result
-        ) as mock_run:
+        with (
+            patch("shutil.which", side_effect=_which),
+            patch("subprocess.run", return_value=mock_result) as mock_run,
+        ):
             result = resolver.cli_download("MyOrg/MyRepo", "model.gguf", str(dest))
 
         cmd = mock_run.call_args[0][0]
@@ -186,8 +188,9 @@ class TestCliDownloadFailure:
         mock_result.stdout = ""
 
         resolver = GGUFCacheResolver()
-        with patch("shutil.which", return_value="/usr/bin/hf"), patch(
-            "subprocess.run", return_value=mock_result
+        with (
+            patch("shutil.which", return_value="/usr/bin/hf"),
+            patch("subprocess.run", return_value=mock_result),
         ):
             result = resolver.cli_download("Bad/Repo", "model.gguf", str(tmp_path))
 
@@ -197,8 +200,9 @@ class TestCliDownloadFailure:
     def test_timeout_returns_error_dict(self, tmp_path: Path) -> None:
         """cli_download() returns success=False when subprocess times out."""
         resolver = GGUFCacheResolver()
-        with patch("shutil.which", return_value="/usr/bin/hf"), patch(
-            "subprocess.run", side_effect=subprocess.TimeoutExpired(cmd=[], timeout=5)
+        with (
+            patch("shutil.which", return_value="/usr/bin/hf"),
+            patch("subprocess.run", side_effect=subprocess.TimeoutExpired(cmd=[], timeout=5)),
         ):
             result = resolver.cli_download("Org/Repo", "model.gguf", str(tmp_path), timeout_s=5)
 
@@ -213,8 +217,9 @@ class TestCliDownloadFailure:
         mock_result.stdout = ""
 
         resolver = GGUFCacheResolver()
-        with patch("shutil.which", return_value="/usr/bin/hf"), patch(
-            "subprocess.run", return_value=mock_result
+        with (
+            patch("shutil.which", return_value="/usr/bin/hf"),
+            patch("subprocess.run", return_value=mock_result),
         ):
             result = resolver.cli_download("Org/Repo", "phantom.gguf", str(tmp_path))
 
@@ -232,8 +237,9 @@ class TestCliDownloadFailure:
         mock_result.stderr = ""
 
         resolver = GGUFCacheResolver()
-        with patch("shutil.which", return_value="/usr/bin/hf"), patch(
-            "subprocess.run", return_value=mock_result
+        with (
+            patch("shutil.which", return_value="/usr/bin/hf"),
+            patch("subprocess.run", return_value=mock_result),
         ):
             result = resolver.cli_download("Org/Repo", "model.gguf", str(dest))
 
@@ -262,9 +268,7 @@ class TestResolveWithCliFallback:
         mock_cli.assert_not_called()
         assert result == fake
 
-    def test_calls_cli_on_cache_miss(
-        self, resolver: GGUFCacheResolver, tmp_path: Path
-    ) -> None:
+    def test_calls_cli_on_cache_miss(self, resolver: GGUFCacheResolver, tmp_path: Path) -> None:
         """resolve_with_cli_fallback() invokes cli_download() when cache misses."""
         dest = tmp_path / "dest"
         dest.mkdir()
@@ -276,9 +280,7 @@ class TestResolveWithCliFallback:
             "cli_download",
             return_value={"success": True, "path": str(fake_file), "size_mb": 0.01},
         ) as mock_cli:
-            result = resolver.resolve_with_cli_fallback(
-                "Org/Repo", "model.gguf", str(dest)
-            )
+            result = resolver.resolve_with_cli_fallback("Org/Repo", "model.gguf", str(dest))
 
         mock_cli.assert_called_once()
         assert result == fake_file

@@ -107,9 +107,7 @@ class TestMainGPUNotLive:
     """SCENARIO-INFRA-024: cloud GPU script generated when GPU not live."""
 
     def test_artifact_written_to_disk(self, tmp_path: Path) -> None:
-        preflight_mock = _make_preflight_result(
-            "gpu_hardware_not_live", is_live_capable=False
-        )
+        preflight_mock = _make_preflight_result("gpu_hardware_not_live", is_live_capable=False)
         _run_main_with_patches(tmp_path, preflight_mock, _all_missing_audit())
         out = tmp_path / "results" / "experiment_404_preflight_v2.json"
         assert out.exists(), "artifact file must be written"
@@ -117,18 +115,14 @@ class TestMainGPUNotLive:
         assert saved["honest_verdict"] == "gpu_hardware_not_live"
 
     def test_cloud_gpu_script_generated(self, tmp_path: Path) -> None:
-        preflight_mock = _make_preflight_result(
-            "gpu_hardware_not_live", is_live_capable=False
-        )
+        preflight_mock = _make_preflight_result("gpu_hardware_not_live", is_live_capable=False)
         artifact = _run_main_with_patches(tmp_path, preflight_mock, _all_missing_audit())
         assert artifact["cloud_gpu_script_generated"] is True
         script_path = tmp_path / "scripts" / "setup_cloud_gpu.sh"
         assert script_path.exists(), "setup_cloud_gpu.sh must be created"
 
     def test_artifact_has_required_fields(self, tmp_path: Path) -> None:
-        preflight_mock = _make_preflight_result(
-            "gpu_hardware_not_live", is_live_capable=False
-        )
+        preflight_mock = _make_preflight_result("gpu_hardware_not_live", is_live_capable=False)
         artifact = _run_main_with_patches(tmp_path, preflight_mock, _all_missing_audit())
         required = {
             "experiment",
@@ -149,24 +143,18 @@ class TestMainGPUNotLive:
             assert key in artifact, f"missing required artifact key: {key}"
 
     def test_retro_022_not_resolved_when_not_live(self, tmp_path: Path) -> None:
-        preflight_mock = _make_preflight_result(
-            "gpu_hardware_not_live", is_live_capable=False
-        )
+        preflight_mock = _make_preflight_result("gpu_hardware_not_live", is_live_capable=False)
         artifact = _run_main_with_patches(tmp_path, preflight_mock, _all_missing_audit())
         assert artifact["retro_022_resolved"] is False
 
     def test_retro_023_always_fixed(self, tmp_path: Path) -> None:
-        preflight_mock = _make_preflight_result(
-            "gpu_hardware_not_live", is_live_capable=False
-        )
+        preflight_mock = _make_preflight_result("gpu_hardware_not_live", is_live_capable=False)
         artifact = _run_main_with_patches(tmp_path, preflight_mock, _all_missing_audit())
         assert artifact["retro_023_root_cause_fixed"] is True
 
     def test_corrupt_files_listed_in_artifact(self, tmp_path: Path) -> None:
         corrupt_path = "python/carnot/models/cikan_energy.py"
-        preflight_mock = _make_preflight_result(
-            "gpu_hardware_not_live", is_live_capable=False
-        )
+        preflight_mock = _make_preflight_result("gpu_hardware_not_live", is_live_capable=False)
         audit = {
             corrupt_path: "corrupt_json",
             "python/carnot/pipeline/jitrl_memory.py": "missing",
@@ -181,18 +169,14 @@ class TestMainGPUNotLive:
     def test_action_required_printed_when_not_live(
         self, tmp_path: Path, capsys: pytest.CaptureFixture
     ) -> None:
-        preflight_mock = _make_preflight_result(
-            "gpu_hardware_not_live", is_live_capable=False
-        )
+        preflight_mock = _make_preflight_result("gpu_hardware_not_live", is_live_capable=False)
         _run_main_with_patches(tmp_path, preflight_mock, _all_missing_audit())
         captured = capsys.readouterr()
         assert "ACTION REQUIRED" in captured.out
         assert "gpu_hardware_not_live" in captured.out
 
     def test_status_success_in_artifact(self, tmp_path: Path) -> None:
-        preflight_mock = _make_preflight_result(
-            "gpu_hardware_not_live", is_live_capable=False
-        )
+        preflight_mock = _make_preflight_result("gpu_hardware_not_live", is_live_capable=False)
         artifact = _run_main_with_patches(tmp_path, preflight_mock, _all_missing_audit())
         assert artifact["status"] == "success"
         assert artifact["experiment"] == 404
@@ -224,9 +208,7 @@ class TestMainGPULive:
     def test_no_action_required_output_when_live(
         self, tmp_path: Path, capsys: pytest.CaptureFixture
     ) -> None:
-        _run_main_with_patches(
-            tmp_path, _make_live_preflight_result(), _all_valid_audit()
-        )
+        _run_main_with_patches(tmp_path, _make_live_preflight_result(), _all_valid_audit())
         captured = capsys.readouterr()
         assert "ACTION REQUIRED" not in captured.out
 
@@ -260,9 +242,7 @@ class TestMainOtherVerdicts:
         assert artifact["cloud_gpu_script_generated"] is True
 
     def test_env_not_propagating_generates_cloud_script(self, tmp_path: Path) -> None:
-        preflight_mock = _make_preflight_result(
-            "env_not_propagating", is_live_capable=False
-        )
+        preflight_mock = _make_preflight_result("env_not_propagating", is_live_capable=False)
         artifact = _run_main_with_patches(tmp_path, preflight_mock, _all_missing_audit())
         assert artifact["honest_verdict"] == "env_not_propagating"
         assert artifact["cloud_gpu_script_generated"] is True

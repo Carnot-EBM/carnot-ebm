@@ -55,10 +55,14 @@ class TestFetchDownloadUrl:
     def test_finds_linux_x64_tgz_asset(self):
         """Correct linux-x64 .tgz asset URL is extracted from release payload (REQ-HW-036-1)."""
         assets = [
-            {"name": "oss-cad-suite-linux-x64-20260424.tgz",
-             "browser_download_url": "https://example.com/linux-x64.tgz"},
-            {"name": "oss-cad-suite-darwin-arm64-20260424.tgz",
-             "browser_download_url": "https://example.com/darwin.tgz"},
+            {
+                "name": "oss-cad-suite-linux-x64-20260424.tgz",
+                "browser_download_url": "https://example.com/linux-x64.tgz",
+            },
+            {
+                "name": "oss-cad-suite-darwin-arm64-20260424.tgz",
+                "browser_download_url": "https://example.com/darwin.tgz",
+            },
         ]
         with patch("urllib.request.urlopen", return_value=self._make_response(assets)):
             url = fetch_download_url()
@@ -66,8 +70,12 @@ class TestFetchDownloadUrl:
 
     def test_returns_none_when_no_matching_asset(self):
         """Returns None when release has no linux-x64 .tgz asset."""
-        assets = [{"name": "oss-cad-suite-windows-x64-20260424.zip",
-                   "browser_download_url": "https://example.com/win.zip"}]
+        assets = [
+            {
+                "name": "oss-cad-suite-windows-x64-20260424.zip",
+                "browser_download_url": "https://example.com/win.zip",
+            }
+        ]
         with patch("urllib.request.urlopen", return_value=self._make_response(assets)):
             url = fetch_download_url()
         assert url is None
@@ -80,8 +88,12 @@ class TestFetchDownloadUrl:
 
     def test_skips_non_tgz_linux_x64_asset(self):
         """linux-x64 .zip asset is ignored — only .tgz matches (REQ-HW-036-1)."""
-        assets = [{"name": "oss-cad-suite-linux-x64-20260424.zip",
-                   "browser_download_url": "https://example.com/linux.zip"}]
+        assets = [
+            {
+                "name": "oss-cad-suite-linux-x64-20260424.zip",
+                "browser_download_url": "https://example.com/linux.zip",
+            }
+        ]
         with patch("urllib.request.urlopen", return_value=self._make_response(assets)):
             url = fetch_download_url()
         assert url is None
@@ -188,8 +200,7 @@ class TestDownloadTarball:
 
     def test_curl_timeout(self):
         """curl timeout → (False, message)."""
-        with patch("subprocess.run",
-                   side_effect=subprocess.TimeoutExpired(["curl"], 600)):
+        with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["curl"], 600)):
             success, msg = download_tarball("https://example.com/oss.tgz")
         assert success is False
         assert "timed out" in msg
@@ -220,8 +231,7 @@ class TestExtractTarball:
 
     def test_tar_timeout(self, tmp_path):
         """tar timeout → (False, message)."""
-        with patch("subprocess.run",
-                   side_effect=subprocess.TimeoutExpired(["tar"], 300)):
+        with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["tar"], 300)):
             success, msg = extract_tarball("/tmp/oss-cad.tgz", str(tmp_path))
         assert success is False
         assert "timed out" in msg
@@ -306,9 +316,7 @@ class TestRunSynthesis:
 
     def test_synthesis_error_in_stderr(self):
         """ERROR in stderr + nonzero exit → success=False (SCENARIO-HW-034)."""
-        mock_result = MagicMock(
-            returncode=1, stdout="", stderr="ERROR: syntax error"
-        )
+        mock_result = MagicMock(returncode=1, stdout="", stderr="ERROR: syntax error")
         with patch("subprocess.run", return_value=mock_result):
             result = run_synthesis()
         assert result["success"] is False
@@ -323,8 +331,7 @@ class TestRunSynthesis:
 
     def test_synthesis_timeout(self):
         """Timeout → success=False, stderr_snippet mentions timeout."""
-        with patch("subprocess.run",
-                   side_effect=subprocess.TimeoutExpired(["yosys"], 120)):
+        with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["yosys"], 120)):
             result = run_synthesis()
         assert result["success"] is False
         assert "timed out" in result["stderr_snippet"]

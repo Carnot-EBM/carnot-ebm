@@ -12,7 +12,6 @@ Usage:
 """
 
 import os
-import sys
 
 import numpy as np
 from safetensors.numpy import load_file, save_file
@@ -35,8 +34,10 @@ def main():
     combined = load_file(TQA_FILE)
     tqa_mask = combined["question_ids"] >= 10000
     tqa_n = int(tqa_mask.sum())
-    print(f"  TruthfulQA: {tqa_n} tokens, correct={combined['labels'][tqa_mask].sum()}, "
-          f"wrong={tqa_n - combined['labels'][tqa_mask].sum()}")
+    print(
+        f"  TruthfulQA: {tqa_n} tokens, correct={combined['labels'][tqa_mask].sum()}, "
+        f"wrong={tqa_n - combined['labels'][tqa_mask].sum()}"
+    )
 
     # Merge
     merged = {

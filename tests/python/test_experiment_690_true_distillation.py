@@ -22,14 +22,16 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 _DELIVERABLE = _REPO_ROOT / "results/experiment_690_prompt_injection_kan_true_distillation.json"
 
 # Allowed honest_verdict values: REQ-SAFE-009 enum plus the new REQ-SAFE-011 invariant value.
-HONEST_VERDICT_ENUM = frozenset({
-    "distillation_corpus_built_classifier_trained_auroc_met",
-    "distillation_corpus_built_classifier_trained_auroc_below_threshold",
-    "distillation_corpus_built_classifier_not_trained",
-    "distillation_corpus_not_built",
-    "blocked_on_dependency",
-    "distillation_invariant_violated_source_labels_used",  # REQ-SAFE-011
-})
+HONEST_VERDICT_ENUM = frozenset(
+    {
+        "distillation_corpus_built_classifier_trained_auroc_met",
+        "distillation_corpus_built_classifier_trained_auroc_below_threshold",
+        "distillation_corpus_built_classifier_not_trained",
+        "distillation_corpus_not_built",
+        "blocked_on_dependency",
+        "distillation_invariant_violated_source_labels_used",  # REQ-SAFE-011
+    }
+)
 
 # Fields that MUST be present when teacher inference ran (honest_verdict starts with "distillation_").
 DISTILLATION_REQUIRED_FIELDS = {
@@ -45,6 +47,7 @@ DISTILLATION_REQUIRED_FIELDS = {
 # Unit tests for _parse_teacher_output (REQ-SAFE-011: label parsing must work)
 # ---------------------------------------------------------------------------
 
+
 class TestParseTeacherOutput:
     """_parse_teacher_output correctly converts model responses to binary labels.
 
@@ -56,11 +59,13 @@ class TestParseTeacherOutput:
     def _parse(self, raw: str) -> tuple[int, str]:
         """Import and call the parser from the experiment module."""
         import sys
+
         sys.path.insert(0, str(_REPO_ROOT))
         sys.path.insert(0, str(_REPO_ROOT / "python"))
         from scripts.experiment_690_prompt_injection_kan_true_distillation import (
             _parse_teacher_output,
         )
+
         return _parse_teacher_output(raw)
 
     def test_final_channel_safe(self) -> None:
@@ -106,12 +111,14 @@ class TestParseTeacherOutput:
 # Unit tests for _latency_check (REQ-SAFE-007: CPU inference < 5 ms)
 # ---------------------------------------------------------------------------
 
+
 class TestLatencyCheck:
     """_latency_check returns (median_ms, flag) with a trained checker. REQ-SAFE-007."""
 
     def test_latency_check_returns_float_and_flag(self) -> None:
         """_latency_check returns (float, str) from a real checker. REQ-SAFE-007."""
         import sys
+
         sys.path.insert(0, str(_REPO_ROOT))
         sys.path.insert(0, str(_REPO_ROOT / "python"))
         from scripts.experiment_690_prompt_injection_kan_true_distillation import _latency_check
@@ -137,16 +144,19 @@ class TestLatencyCheck:
 # Unit tests for REQ-SAFE-011 invariant logic
 # ---------------------------------------------------------------------------
 
+
 class TestDistillationInvariant:
     """REQ-SAFE-011: invariant check prevents distillation_* verdicts when teacher didn't run."""
 
     def test_invariant_threshold_formula(self) -> None:
         """Invariant threshold = len(corpus) * 0.5. REQ-SAFE-011."""
         import sys
+
         sys.path.insert(0, str(_REPO_ROOT))
         from scripts.experiment_690_prompt_injection_kan_true_distillation import (
             _MIN_SECONDS_PER_PROMPT,
         )
+
         # For 1000 prompts, minimum duration is 500 s.
         assert _MIN_SECONDS_PER_PROMPT == 0.5
         corpus_size = 1000
@@ -156,10 +166,12 @@ class TestDistillationInvariant:
     def test_invariant_violated_verdict_contains_invariant_violated(self) -> None:
         """_VERDICT_INVARIANT_VIOLATED must contain 'invariant_violated'. REQ-SAFE-011."""
         import sys
+
         sys.path.insert(0, str(_REPO_ROOT))
         from scripts.experiment_690_prompt_injection_kan_true_distillation import (
             _VERDICT_INVARIANT_VIOLATED,
         )
+
         # The verdict string explicitly identifies the violation for post-hoc analysis.
         # It contains 'invariant_violated' to distinguish it from genuine distillation verdicts.
         assert "invariant_violated" in _VERDICT_INVARIANT_VIOLATED, (
@@ -170,16 +182,19 @@ class TestDistillationInvariant:
     def test_invariant_violated_verdict_in_allowed_enum(self) -> None:
         """_VERDICT_INVARIANT_VIOLATED is in HONEST_VERDICT_ENUM (test-level). REQ-SAFE-011."""
         import sys
+
         sys.path.insert(0, str(_REPO_ROOT))
         from scripts.experiment_690_prompt_injection_kan_true_distillation import (
             _VERDICT_INVARIANT_VIOLATED,
         )
+
         assert _VERDICT_INVARIANT_VIOLATED in HONEST_VERDICT_ENUM
 
 
 # ---------------------------------------------------------------------------
 # Deliverable tests (run after experiment_690 produces its result)
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.skipif(
     not _DELIVERABLE.exists(),

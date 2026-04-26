@@ -209,9 +209,7 @@ class GGUFCacheResolver:
                 ) from exc
         return path
 
-    def pre_download_and_verify(
-        self, hf_repo: str, filename: str, dest_dir: str
-    ) -> dict:
+    def pre_download_and_verify(self, hf_repo: str, filename: str, dest_dir: str) -> dict:
         """Download a single GGUF file and verify it landed on disk correctly.
 
         **Researcher summary:**
@@ -297,9 +295,7 @@ class GGUFCacheResolver:
             "error": None,
         }
 
-    def resolve_or_download(
-        self, hf_repo: str, filename: str, dest_dir: str
-    ) -> Path:
+    def resolve_or_download(self, hf_repo: str, filename: str, dest_dir: str) -> Path:
         """Return local path to a GGUF file, downloading from HF Hub if absent.
 
         **Detailed explanation for engineers:**

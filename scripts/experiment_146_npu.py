@@ -81,9 +81,7 @@ def _detect_npu_device() -> dict[str, Any]:
 
     # PCI enumeration
     try:
-        lspci_out = subprocess.check_output(
-            ["lspci"], text=True, stderr=subprocess.DEVNULL
-        )
+        lspci_out = subprocess.check_output(["lspci"], text=True, stderr=subprocess.DEVNULL)
         xdna_lines = [l for l in lspci_out.splitlines() if "xdna" in l.lower()]
         info["lspci_xdna"] = xdna_lines
     except Exception as e:
@@ -95,9 +93,7 @@ def _detect_npu_device() -> dict[str, Any]:
 
     # Kernel module
     try:
-        lsmod_out = subprocess.check_output(
-            ["lsmod"], text=True, stderr=subprocess.DEVNULL
-        )
+        lsmod_out = subprocess.check_output(["lsmod"], text=True, stderr=subprocess.DEVNULL)
         xdna_mod = [l for l in lsmod_out.splitlines() if "amdxdna" in l]
         info["amdxdna_loaded"] = bool(xdna_mod)
         info["amdxdna_module_lines"] = xdna_mod
@@ -212,37 +208,49 @@ def _export_to_onnx(weights_path: Path, onnx_path: Path) -> str:
 
     # Load trained weights
     raw = load_file(str(weights_path))
-    w1 = raw["w1"].astype(np.float32)   # (256, 64)
-    b1 = raw["b1"].astype(np.float32)   # (64,)
-    w2 = raw["w2"].astype(np.float32)   # (64, 32)
-    b2 = raw["b2"].astype(np.float32)   # (32,)
-    w3 = raw["w3"].astype(np.float32)   # (32, 3)
-    b3 = raw["b3"].astype(np.float32)   # (3,)
+    w1 = raw["w1"].astype(np.float32)  # (256, 64)
+    b1 = raw["b1"].astype(np.float32)  # (64,)
+    w2 = raw["w2"].astype(np.float32)  # (64, 32)
+    b2 = raw["b2"].astype(np.float32)  # (32,)
+    w3 = raw["w3"].astype(np.float32)  # (32, 3)
+    b3 = raw["b3"].astype(np.float32)  # (3,)
 
     # Build ONNX graph nodes
     # Gemm: Y = alpha * A * B + beta * C
     # With transB=1: Y = X @ W^T + b (standard linear layer convention)
     node_gemm1 = oh.make_node(
-        "Gemm", inputs=["input", "w1", "b1"], outputs=["gemm1"],
-        transB=1, alpha=1.0, beta=1.0,
-        name="Gemm1"
+        "Gemm",
+        inputs=["input", "w1", "b1"],
+        outputs=["gemm1"],
+        transB=1,
+        alpha=1.0,
+        beta=1.0,
+        name="Gemm1",
     )
     node_relu1 = oh.make_node("Relu", inputs=["gemm1"], outputs=["relu1"], name="Relu1")
     node_gemm2 = oh.make_node(
-        "Gemm", inputs=["relu1", "w2", "b2"], outputs=["gemm2"],
-        transB=1, alpha=1.0, beta=1.0,
-        name="Gemm2"
+        "Gemm",
+        inputs=["relu1", "w2", "b2"],
+        outputs=["gemm2"],
+        transB=1,
+        alpha=1.0,
+        beta=1.0,
+        name="Gemm2",
     )
     node_relu2 = oh.make_node("Relu", inputs=["gemm2"], outputs=["relu2"], name="Relu2")
     node_gemm3 = oh.make_node(
-        "Gemm", inputs=["relu2", "w3", "b3"], outputs=["logits"],
-        transB=1, alpha=1.0, beta=1.0,
-        name="Gemm3"
+        "Gemm",
+        inputs=["relu2", "w3", "b3"],
+        outputs=["logits"],
+        transB=1,
+        alpha=1.0,
+        beta=1.0,
+        name="Gemm3",
     )
     node_sigmoid = oh.make_node("Sigmoid", inputs=["logits"], outputs=["probs"], name="Sigmoid1")
 
     # Initializers (weight tensors embedded in the model)
-    init_w1 = onh.from_array(w1.T, name="w1")   # Gemm expects (out, in) for transB=1
+    init_w1 = onh.from_array(w1.T, name="w1")  # Gemm expects (out, in) for transB=1
     init_b1 = onh.from_array(b1, name="b1")
     init_w2 = onh.from_array(w2.T, name="w2")
     init_b2 = onh.from_array(b2, name="b2")
@@ -251,8 +259,12 @@ def _export_to_onnx(weights_path: Path, onnx_path: Path) -> str:
 
     # Graph I/O
     # Batch dimension is dynamic (None → marked as "batch_size" string)
-    input_tensor = oh.make_tensor_value_info("input", onnx.TensorProto.FLOAT, ["batch_size", EMBED_DIM])
-    output_tensor = oh.make_tensor_value_info("probs", onnx.TensorProto.FLOAT, ["batch_size", N_DOMAINS])
+    input_tensor = oh.make_tensor_value_info(
+        "input", onnx.TensorProto.FLOAT, ["batch_size", EMBED_DIM]
+    )
+    output_tensor = oh.make_tensor_value_info(
+        "probs", onnx.TensorProto.FLOAT, ["batch_size", N_DOMAINS]
+    )
 
     graph = oh.make_graph(
         nodes=[node_gemm1, node_relu1, node_gemm2, node_relu2, node_gemm3, node_sigmoid],
@@ -407,9 +419,11 @@ def main() -> None:
         providers=["CPUExecutionProvider"],
     )
     cpu_stats = _run_benchmark(cpu_session, n_warmup=100, n_trials=1000)
-    print(f"  CPU p50={cpu_stats['p50_ms']:.3f}ms  "
-          f"p95={cpu_stats['p95_ms']:.3f}ms  "
-          f"p99={cpu_stats['p99_ms']:.3f}ms")
+    print(
+        f"  CPU p50={cpu_stats['p50_ms']:.3f}ms  "
+        f"p95={cpu_stats['p95_ms']:.3f}ms  "
+        f"p99={cpu_stats['p99_ms']:.3f}ms"
+    )
 
     # ---- Step 4: NPU benchmark (conditional) ----
     npu_stats: dict[str, Any] = {}
@@ -423,9 +437,11 @@ def main() -> None:
         )
         npu_stats = _run_benchmark(npu_session, n_warmup=100, n_trials=1000)
         speedup = cpu_stats["p50_ms"] / npu_stats["p50_ms"] if npu_stats["p50_ms"] > 0 else None
-        print(f"  NPU p50={npu_stats['p50_ms']:.3f}ms  "
-              f"p95={npu_stats['p95_ms']:.3f}ms  "
-              f"p99={npu_stats['p99_ms']:.3f}ms")
+        print(
+            f"  NPU p50={npu_stats['p50_ms']:.3f}ms  "
+            f"p95={npu_stats['p95_ms']:.3f}ms  "
+            f"p99={npu_stats['p99_ms']:.3f}ms"
+        )
         print(f"  Speedup (p50): {speedup:.2f}x" if speedup else "  Speedup: N/A")
         npu_p99_target_met = npu_stats["p99_ms"] < 1.0
         print(f"  Target (<1ms p99): {'PASS' if npu_p99_target_met else 'FAIL'}")

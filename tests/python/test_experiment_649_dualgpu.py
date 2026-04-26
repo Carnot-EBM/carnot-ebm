@@ -86,11 +86,15 @@ class TestCheckHfCache:
             cache_dir.mkdir(parents=True)
             (cache_dir / "model.safetensors").write_bytes(b"\x00")
         with patch.object(exp649, "_hf_home", return_value=str(tmp_path)):
-            result = exp649.check_hf_cache(["Qwen/Qwen2.5-7B-Instruct", "Qwen/Qwen2.5-14B-Instruct"])
+            result = exp649.check_hf_cache(
+                ["Qwen/Qwen2.5-7B-Instruct", "Qwen/Qwen2.5-14B-Instruct"]
+            )
         assert result[0] == "Qwen/Qwen2.5-7B-Instruct"
         assert len(result) == 2
 
-    def test_hf_home_env_var_respected(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_hf_home_env_var_respected(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         # HF_HOME env var overrides ~/.cache/huggingface.
         monkeypatch.setenv("HF_HOME", str(tmp_path))
         cache_dir = tmp_path / "hub" / "models--Qwen--Qwen2.5-7B-Instruct"
@@ -135,7 +139,7 @@ class TestDetectGpus:
         torch_mock.cuda.is_available.return_value = True
         torch_mock.cuda.device_count.return_value = 2
         props = MagicMock()
-        props.total_memory = 24 * (1024 ** 3)
+        props.total_memory = 24 * (1024**3)
         torch_mock.cuda.get_device_properties.return_value = props
         with patch.dict(sys.modules, {"torch": torch_mock}):
             n, v0, v1 = exp649.detect_gpus()
@@ -148,7 +152,7 @@ class TestDetectGpus:
         torch_mock.cuda.is_available.return_value = True
         torch_mock.cuda.device_count.return_value = 1
         props = MagicMock()
-        props.total_memory = 24 * (1024 ** 3)
+        props.total_memory = 24 * (1024**3)
         torch_mock.cuda.get_device_properties.return_value = props
         with patch.dict(sys.modules, {"torch": torch_mock}):
             n, v0, v1 = exp649.detect_gpus()
@@ -426,10 +430,16 @@ class TestRunExperiment:
         with patch.object(exp649, "detect_gpus", return_value=(0, 0.0, 0.0)):
             result = exp649.run_experiment()
         required = [
-            "n_gpus", "vram_0_gb", "vram_1_gb",
-            "model_loaded", "model_name",
-            "peak_gpu1_util", "sustained_gpu1_fraction",
-            "dualgpu_proven", "retro_071_resolved", "honest_verdict",
+            "n_gpus",
+            "vram_0_gb",
+            "vram_1_gb",
+            "model_loaded",
+            "model_name",
+            "peak_gpu1_util",
+            "sustained_gpu1_fraction",
+            "dualgpu_proven",
+            "retro_071_resolved",
+            "honest_verdict",
         ]
         for field in required:
             assert field in result, f"Missing required field: {field}"

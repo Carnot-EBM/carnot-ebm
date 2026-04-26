@@ -189,9 +189,7 @@ def test_retro_061_resolved_from_result_flag(
     assert retro["retro_061_resolved"] is True
 
 
-def test_retro_061_not_resolved(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_061_not_resolved(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_061_resolved is False when the Exp 565 flag is False."""
     _write_fake_results(tmp_path, retro_061_resolved=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -209,9 +207,7 @@ def test_retro_060_not_resolved_when_auc_below_half(
     assert retro["retro_060_resolved"] is False
 
 
-def test_retro_060_resolved_when_flag_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_060_resolved_when_flag_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_060_resolved is True when Exp 567 sets the flag."""
     _write_fake_results(tmp_path, retro_060_resolved=True, v10_auc=0.75)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -269,9 +265,7 @@ def test_live_vr_positive_true_when_positive(
     assert retro["live_vr_positive"] is True
 
 
-def test_fr11_real_violations_from_exp570(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fr11_real_violations_from_exp570(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """fr11_real_violations reflects the confirmed flag from Exp 570."""
     _write_fake_results(tmp_path, fr11_confirmed=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -284,9 +278,7 @@ def test_fr11_real_violations_from_exp570(
 # ---------------------------------------------------------------------------
 
 
-def test_honest_verdict_partial_fix(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_honest_verdict_partial_fix(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """honest_verdict='partial_fix' when only retro_061 is resolved."""
     _write_fake_results(tmp_path, retro_061_resolved=True, retro_060_resolved=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -294,9 +286,7 @@ def test_honest_verdict_partial_fix(
     assert retro["honest_verdict"] == "partial_fix"
 
 
-def test_honest_verdict_both_still_blocked(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_honest_verdict_both_still_blocked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """honest_verdict='both_still_blocked' when neither RETRO is resolved."""
     _write_fake_results(tmp_path, retro_061_resolved=False, retro_060_resolved=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -304,9 +294,7 @@ def test_honest_verdict_both_still_blocked(
     assert retro["honest_verdict"] == "both_still_blocked"
 
 
-def test_honest_verdict_root_cause_fixed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_honest_verdict_root_cause_fixed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """honest_verdict='root_cause_fixed' when both RETRO-060 and RETRO-061 are resolved."""
     _write_fake_results(tmp_path, retro_061_resolved=True, retro_060_resolved=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -329,9 +317,7 @@ def test_honest_verdict_partial_fix_when_only_060_resolved(
 # ---------------------------------------------------------------------------
 
 
-def test_closure_rate_one_of_nine(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_closure_rate_one_of_nine(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Closure rate = 1/9 when only RETRO-061 is closed."""
     _write_fake_results(tmp_path, retro_061_resolved=True, retro_060_resolved=False, n_pairs_563=0)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -355,9 +341,7 @@ def test_closure_rate_zero_when_nothing_resolved(
 # ---------------------------------------------------------------------------
 
 
-def test_n_experiments_is_twelve(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_n_experiments_is_twelve(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_experiments = 12 (11 upstream + this retro)."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -365,15 +349,15 @@ def test_n_experiments_is_twelve(
     assert retro["n_experiments"] == 12
 
 
-def test_wall_time_sums_upstream_durations(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_wall_time_sums_upstream_durations(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """total_wall_time_minutes reflects the sum of upstream duration_s values."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
     retro = compute_retro()
     # Sum from fake data: 0+0.005+0.005+13.03+14.528+3.865+69.583+0.002+3.354+0.001+25.56
-    expected_seconds = 0.0 + 0.005 + 0.005 + 13.03 + 14.528 + 3.865 + 69.583 + 0.002 + 3.354 + 0.001 + 25.56
+    expected_seconds = (
+        0.0 + 0.005 + 0.005 + 13.03 + 14.528 + 3.865 + 69.583 + 0.002 + 3.354 + 0.001 + 25.56
+    )
     expected_minutes = round(expected_seconds / 60.0, 3)
     assert retro["total_wall_time_minutes"] == pytest.approx(expected_minutes, abs=0.01)
 
@@ -394,9 +378,7 @@ def test_mean_time_min_is_wall_time_over_n_experiments(
 # ---------------------------------------------------------------------------
 
 
-def test_new_retro_items_structure(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_new_retro_items_structure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Each new_retro_item has id, title, carry_count, description, priority fields."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -409,9 +391,7 @@ def test_new_retro_items_structure(
         assert "priority" in item
 
 
-def test_new_retro_items_ids(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_new_retro_items_ids(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """New retro items open in .43 are RETRO-063, RETRO-064, RETRO-065."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -432,9 +412,7 @@ def test_top_priorities_for_44_has_three_entries(
     assert len(retro["top_priorities_for_44"]) == 3
 
 
-def test_schema_and_milestone_fields(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_schema_and_milestone_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Schema and milestone fields are set to the expected v18 values."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -465,9 +443,7 @@ def test_missing_experiment_increments_n_missing(
 # ---------------------------------------------------------------------------
 
 
-def test_main_writes_deliverable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_writes_deliverable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """main() writes a valid JSON artifact at DELIVERABLE path with all required fields."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -484,12 +460,25 @@ def test_main_writes_deliverable(
     artifact = json.loads(deliverable.read_text())
 
     required_fields = [
-        "experiment", "title", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "schema",
-        "retro_062_resolved", "retro_061_resolved", "retro_060_resolved",
-        "fpga_alive", "live_vr_positive", "fr11_real_violations",
-        "retro_closure_rate", "new_retro_items", "top_priorities_for_44",
-        "honest_verdict", "env_autofix",
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "schema",
+        "retro_062_resolved",
+        "retro_061_resolved",
+        "retro_060_resolved",
+        "fpga_alive",
+        "live_vr_positive",
+        "fr11_real_violations",
+        "retro_closure_rate",
+        "new_retro_items",
+        "top_priorities_for_44",
+        "honest_verdict",
+        "env_autofix",
     ]
     for field in required_fields:
         assert field in artifact, f"Missing required field: {field}"

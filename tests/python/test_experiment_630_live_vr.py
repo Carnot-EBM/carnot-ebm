@@ -27,9 +27,7 @@ ARTIFACT_PATH = pathlib.Path("results/experiment_630_live_vr_attempt_16.json")
 
 def _load_script() -> types.ModuleType:
     """Import the script module without running main()."""
-    spec = importlib.util.spec_from_file_location(
-        "experiment_630_live_vr_attempt_16", SCRIPT_PATH
-    )
+    spec = importlib.util.spec_from_file_location("experiment_630_live_vr_attempt_16", SCRIPT_PATH)
     assert spec is not None
     mod = importlib.util.module_from_spec(spec)
     # Execute module-level code but NOT __main__ block (guarded by if __name__ == '__main__').
@@ -146,7 +144,9 @@ class TestScriptModule:
         mod = _load_script()
         assert str(mod.OUTPUT_PATH) == "results/experiment_630_live_vr_attempt_16.json"
 
-    def test_main_rewrites_artifact(self, tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_main_rewrites_artifact(
+        self, tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() must produce a valid blocked artifact even if called a second time."""
         mod = _load_script()
         # Redirect output to tmp_path so we don't clobber the real result.

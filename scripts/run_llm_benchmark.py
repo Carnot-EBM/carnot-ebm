@@ -22,7 +22,6 @@ import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
-import jax.numpy as jnp
 
 from carnot.inference.benchmark import generate_random_graph, generate_random_sat
 from carnot.inference.llm_solver import (
@@ -30,7 +29,6 @@ from carnot.inference.llm_solver import (
     run_llm_coloring_experiment,
     run_llm_sat_experiment,
 )
-from carnot.verify.sat import SATClause, build_sat_energy
 
 logging.basicConfig(
     level=logging.INFO,
@@ -46,24 +44,27 @@ def run_sat_benchmark(
     n_clauses: int = 20,
 ) -> dict:
     """Run SAT benchmark against real LLM."""
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"SAT BENCHMARK: {n_instances} instances, {n_vars} vars, {n_clauses} clauses")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     results = []
     for i in range(n_instances):
         clauses = generate_random_sat(n_vars, n_clauses, clause_size=3, seed=i)
-        print(f"\n--- Instance {i+1}/{n_instances} ---")
+        print(f"\n--- Instance {i + 1}/{n_instances} ---")
 
         try:
             vr = run_llm_sat_experiment(
-                config, clauses, n_vars,
-                repair_step_size=0.1, repair_max_steps=100,
+                config,
+                clauses,
+                n_vars,
+                repair_step_size=0.1,
+                repair_max_steps=100,
                 n_starts=5,
             )
 
             if vr.initial_verification is None:
-                print(f"  LLM call failed or parse error")
+                print("  LLM call failed or parse error")
                 results.append({"status": "error"})
                 continue
 
@@ -79,18 +80,24 @@ def run_sat_benchmark(
                 round_energy = float(vr.rounded_verification.total_energy)
                 round_failing = len(vr.rounded_verification.verdict.failing)
 
-            print(f"  LLM: verified={init_verified}, energy={init_energy:.4f}, failing={init_failing}")
-            print(f"  Repaired: verified={round_verified}, energy={round_energy:.4f}, failing={round_failing}")
+            print(
+                f"  LLM: verified={init_verified}, energy={init_energy:.4f}, failing={init_failing}"
+            )
+            print(
+                f"  Repaired: verified={round_verified}, energy={round_energy:.4f}, failing={round_failing}"
+            )
 
-            results.append({
-                "status": "ok",
-                "llm_verified": init_verified,
-                "llm_energy": init_energy,
-                "llm_failing": init_failing,
-                "repaired_verified": round_verified,
-                "repaired_energy": round_energy,
-                "repaired_failing": round_failing,
-            })
+            results.append(
+                {
+                    "status": "ok",
+                    "llm_verified": init_verified,
+                    "llm_energy": init_energy,
+                    "llm_failing": init_failing,
+                    "repaired_verified": round_verified,
+                    "repaired_energy": round_energy,
+                    "repaired_failing": round_failing,
+                }
+            )
 
         except Exception as e:
             print(f"  Error: {e}")
@@ -118,9 +125,9 @@ def run_sat_benchmark(
         "improvement": (repaired_correct - llm_correct) / max(len(ok_results), 1),
     }
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"SAT RESULTS ({len(ok_results)}/{n_instances} instances)")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  LLM accuracy:     {summary['llm_accuracy']:.0%}")
     print(f"  Repaired accuracy: {summary['repaired_accuracy']:.0%}")
     print(f"  Improvement:       +{summary['improvement']:.0%}")
@@ -137,9 +144,9 @@ def run_coloring_benchmark(
     n_colors: int = 3,
 ) -> dict:
     """Run graph coloring benchmark against real LLM."""
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"COLORING BENCHMARK: {n_instances} instances, {n_nodes} nodes, {n_colors} colors")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     results = []
     for i in range(n_instances):
@@ -147,16 +154,20 @@ def run_coloring_benchmark(
         if not edges:
             continue
 
-        print(f"\n--- Instance {i+1}/{n_instances} ({len(edges)} edges) ---")
+        print(f"\n--- Instance {i + 1}/{n_instances} ({len(edges)} edges) ---")
 
         try:
             vr = run_llm_coloring_experiment(
-                config, edges, n_nodes, n_colors,
-                repair_step_size=0.1, repair_max_steps=100,
+                config,
+                edges,
+                n_nodes,
+                n_colors,
+                repair_step_size=0.1,
+                repair_max_steps=100,
             )
 
             if vr.initial_verification is None:
-                print(f"  LLM call failed or parse error")
+                print("  LLM call failed or parse error")
                 results.append({"status": "error"})
                 continue
 
@@ -172,13 +183,15 @@ def run_coloring_benchmark(
             print(f"  LLM: verified={init_verified}, energy={init_energy:.4f}")
             print(f"  Repaired: verified={round_verified}, energy={round_energy:.4f}")
 
-            results.append({
-                "status": "ok",
-                "llm_verified": init_verified,
-                "llm_energy": init_energy,
-                "repaired_verified": round_verified,
-                "repaired_energy": round_energy,
-            })
+            results.append(
+                {
+                    "status": "ok",
+                    "llm_verified": init_verified,
+                    "llm_energy": init_energy,
+                    "repaired_verified": round_verified,
+                    "repaired_energy": round_energy,
+                }
+            )
 
         except Exception as e:
             print(f"  Error: {e}")
@@ -201,9 +214,9 @@ def run_coloring_benchmark(
         "improvement": (repaired_correct - llm_correct) / max(len(ok_results), 1),
     }
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"COLORING RESULTS ({len(ok_results)}/{n_instances} instances)")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  LLM accuracy:     {summary['llm_accuracy']:.0%}")
     print(f"  Repaired accuracy: {summary['repaired_accuracy']:.0%}")
     print(f"  Improvement:       +{summary['improvement']:.0%}")
@@ -239,14 +252,21 @@ def main() -> int:
 
     start = time.time()
 
-    sat_summary = run_sat_benchmark(config, n_instances=args.n_sat, n_vars=args.sat_vars, n_clauses=args.sat_clauses)
-    coloring_summary = run_coloring_benchmark(config, n_instances=args.n_coloring, n_nodes=args.coloring_nodes, n_colors=args.coloring_colors)
+    sat_summary = run_sat_benchmark(
+        config, n_instances=args.n_sat, n_vars=args.sat_vars, n_clauses=args.sat_clauses
+    )
+    coloring_summary = run_coloring_benchmark(
+        config,
+        n_instances=args.n_coloring,
+        n_nodes=args.coloring_nodes,
+        n_colors=args.coloring_colors,
+    )
 
     elapsed = time.time() - start
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"OVERALL SUMMARY (elapsed: {elapsed:.0f}s)")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     for s in [sat_summary, coloring_summary]:
         if s.get("n_ok", 0) > 0:
@@ -255,10 +275,10 @@ def main() -> int:
             print(f"    Repaired accuracy: {s['repaired_accuracy']:.0%}")
             print(f"    EBM improvement:   +{s['improvement']:.0%}")
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("CONCLUSION: The EBM verify-and-repair pipeline catches and fixes")
     print("what the LLM gets wrong. Energy is the objective judge.")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     return 0
 

@@ -346,13 +346,16 @@ class TestComputeHonestVerdict:
 class TestBuildFixRecommendation:
     """build_fix_recommendation returns non-empty strings for all five verdicts."""
 
-    @pytest.mark.parametrize("verdict", [
-        "write_path_missing",
-        "retrieval_returns_zeros",
-        "external_field_not_called",
-        "pipeline_wiring_correct",
-        "diagnosis_inconclusive",
-    ])
+    @pytest.mark.parametrize(
+        "verdict",
+        [
+            "write_path_missing",
+            "retrieval_returns_zeros",
+            "external_field_not_called",
+            "pipeline_wiring_correct",
+            "diagnosis_inconclusive",
+        ],
+    )
     def test_non_empty_for_all_verdicts(self, verdict: str) -> None:
         """build_fix_recommendation returns a non-empty string for every known verdict.
 

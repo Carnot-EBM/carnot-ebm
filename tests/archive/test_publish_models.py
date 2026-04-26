@@ -18,9 +18,8 @@ import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
 import pytest
-from safetensors.numpy import load_file, save_file
-
 from carnot.models.kan import BSplineParams, KANConfig, KANEnergyFunction
+from safetensors.numpy import load_file, save_file
 
 # Add scripts directory to path so we can import helpers from publish script
 _SCRIPTS_DIR = Path(__file__).parent.parent.parent / "scripts"
@@ -28,7 +27,6 @@ sys.path.insert(0, str(_SCRIPTS_DIR))
 
 from publish_v12_models import (  # noqa: E402
     KAN_CONFIG,
-    OUTPUT_DIR,
     build_kan_model,
     extract_kan_parameters,
     write_config,
@@ -126,9 +124,7 @@ class TestKANSafetensorsRoundtrip:
         """REQ-CORE-004: Extracted params are numpy arrays (safetensors requirement)."""
         params = extract_kan_parameters(small_kan_model)
         for key, arr in params.items():
-            assert isinstance(arr, np.ndarray), (
-                f"Key {key!r}: expected np.ndarray, got {type(arr)}"
-            )
+            assert isinstance(arr, np.ndarray), f"Key {key!r}: expected np.ndarray, got {type(arr)}"
 
     def test_kan_params_finite(self, small_kan_model: KANEnergyFunction) -> None:
         """REQ-CORE-001: All extracted parameters are finite (no NaN/Inf)."""
@@ -185,16 +181,12 @@ class TestKANSafetensorsRoundtrip:
 
         # Reconstruct model_b with same config, then restore weights
         model_b = KANEnergyFunction(small_kan_config, key=jrandom.PRNGKey(99))
-        for idx, (edge, spline) in enumerate(model_b.edge_splines.items()):
+        for idx, (_edge, spline) in enumerate(model_b.edge_splines.items()):
             cp_key = f"edge_{idx}_cp"
-            spline.params = BSplineParams(
-                control_points=jnp.array(loaded_params[cp_key])
-            )
+            spline.params = BSplineParams(control_points=jnp.array(loaded_params[cp_key]))
         for idx, spline in enumerate(model_b.bias_splines):
             cp_key = f"bias_{idx}_cp"
-            spline.params = BSplineParams(
-                control_points=jnp.array(loaded_params[cp_key])
-            )
+            spline.params = BSplineParams(control_points=jnp.array(loaded_params[cp_key]))
 
         energy_after = float(model_b.energy(x_test))
         assert abs(energy_before - energy_after) < 1e-5, (
@@ -276,7 +268,6 @@ def _load_adapter_module() -> Any:
         Loaded module object with EnergyGuidedSampler and GuidedDecodingResult.
     """
     import importlib.util
-    from types import ModuleType
 
     module_name = "guided_decoding_adapter"
     # Reuse cached module if already loaded (avoids re-exec across tests)
@@ -450,6 +441,4 @@ class TestBuildKANModel:
         x = jnp.array([0.1] * KAN_CONFIG.input_dim)
         e_a = float(model_a.energy(x))
         e_b = float(model_b.energy(x))
-        assert abs(e_a - e_b) < 1e-6, (
-            f"Same seed should give same energy: {e_a:.6f} vs {e_b:.6f}"
-        )
+        assert abs(e_a - e_b) < 1e-6, f"Same seed should give same energy: {e_a:.6f} vs {e_b:.6f}"

@@ -8,6 +8,7 @@ Covers:
 
 Spec: REQ-SAMPLE-020, SCENARIO-SAMPLE-032
 """
+
 from __future__ import annotations
 
 import sys
@@ -79,8 +80,9 @@ def test_mf_initialization_nonzero_spins(ws: GibbsWarmStart) -> None:
 
     Spec: REQ-SAMPLE-020
     """
-    h = np.array([1.5, -0.3, 0.8, -2.1, 0.0, 0.7, -0.5, 1.2,
-                  -0.9, 0.4, -1.1, 0.6, -0.2, 1.0, -0.7, 0.3])
+    h = np.array(
+        [1.5, -0.3, 0.8, -2.1, 0.0, 0.7, -0.5, 1.2, -0.9, 0.4, -1.1, 0.6, -0.2, 1.0, -0.7, 0.3]
+    )
     spins = ws.mf_init(h)
 
     assert spins.shape == (N_SPINS,)

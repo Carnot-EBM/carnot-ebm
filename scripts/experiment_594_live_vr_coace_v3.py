@@ -133,7 +133,7 @@ def _write_json(repo_root: Path, rel_path: str, data: dict) -> None:
     os.replace(str(tmp), str(out))
 
 
-def _load_gate(repo_root: Path) -> Optional[dict]:
+def _load_gate(repo_root: Path) -> dict | None:
     """Load Exp 591 gate result.  Returns None if file is missing or unreadable.
 
     Why a dedicated loader: gate_open is the ONLY reason this experiment is
@@ -166,7 +166,9 @@ def _load_gsm8k_questions(start: int, end: int) -> list[dict]:
         indices = list(range(start, end + 1))
         return [{"question": ds[i]["question"], "answer": ds[i]["answer"]} for i in indices]
     except Exception as exc:
-        _log.warning("_load_gsm8k_questions: dataset load failed (%s) -- using synthetic fallback", exc)
+        _log.warning(
+            "_load_gsm8k_questions: dataset load failed (%s) -- using synthetic fallback", exc
+        )
         result = []
         for i in range(start, end + 1):
             idx = i - start
@@ -174,7 +176,9 @@ def _load_gsm8k_questions(start: int, end: int) -> list[dict]:
                 answer_text = f"#### {idx + 1}\n3 + 3 = 7, so the answer is {idx + 1}"
             else:
                 answer_text = f"#### {idx * 2}"
-            result.append({"question": f"Synthetic question {i}: What is {i} + {i}?", "answer": answer_text})
+            result.append(
+                {"question": f"Synthetic question {i}: What is {i} + {i}?", "answer": answer_text}
+            )
         return result
 
 
@@ -193,7 +197,7 @@ def _qwen_generate(pipeline: Any, prompt: str) -> str:
         return f"[qwen_error: {exc}]"
 
 
-def _load_qwen_pipeline(device: str) -> Optional[Any]:
+def _load_qwen_pipeline(device: str) -> Any | None:
     """Load Qwen3.5-0.8B as a HuggingFace text-generation pipeline.
 
     Returns None if transformers is unavailable or the model fails to load
@@ -291,17 +295,22 @@ def _run_per_question(
         baseline_correct_total += int(bc)
         pipeline_correct_total += int(pc)
 
-        per_question.append({
-            "baseline_correct": bc,
-            "pipeline_correct": pc,
-            "violation_found": violation_found,
-            "repair_attempted": repair_attempted,
-            "n_violations": coace_result.n_violations if coace_result else 0,
-        })
+        per_question.append(
+            {
+                "baseline_correct": bc,
+                "pipeline_correct": pc,
+                "violation_found": violation_found,
+                "repair_attempted": repair_attempted,
+                "n_violations": coace_result.n_violations if coace_result else 0,
+            }
+        )
 
         _log.info(
             "q_done: baseline=%s pipeline=%s violation=%s repair=%s",
-            bc, pc, violation_found, repair_attempted,
+            bc,
+            pc,
+            violation_found,
+            repair_attempted,
         )
 
     n = len(questions)
@@ -319,9 +328,9 @@ def _build_artifact(
     tmpl: ExperimentTemplate,
     stats: dict,
     inference_mode: str,
-    v3_recall_at_gate: Optional[float] = None,
+    v3_recall_at_gate: float | None = None,
     status: str = "success",
-    reason: Optional[str] = None,
+    reason: str | None = None,
 ) -> dict:
     """Assemble the standardised v3 artifact for this experiment.
 
@@ -369,7 +378,7 @@ def _build_artifact(
 # ---------------------------------------------------------------------------
 
 
-def run_experiment(repo_root: Optional[Path] = None) -> dict:
+def run_experiment(repo_root: Path | None = None) -> dict:
     """Run Exp 594: 50-question live verify-repair with CoACEExtractorV3.
 
     All exit paths write the deliverable JSON before returning.
@@ -403,7 +412,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     # GPU time is wasted on an extractor with recall < 30%.
     # -----------------------------------------------------------------------
     gate_data = _load_gate(repo_root)
-    v3_recall_at_gate: Optional[float] = None
+    v3_recall_at_gate: float | None = None
     if gate_data is not None:
         v3_recall_at_gate = gate_data.get("v3_recall")
 
@@ -455,7 +464,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
             v3_recall_at_gate=v3_recall_at_gate,
             status="gpu_vram_insufficient",
         )
-        blocked["vram_block_reason"] = f"gemma4_insufficient: {gemma4_gate.available_gb:.1f} GB free"
+        blocked["vram_block_reason"] = (
+            f"gemma4_insufficient: {gemma4_gate.available_gb:.1f} GB free"
+        )
         return _write_and_return(blocked)
 
     qwen_vram = JITVRAMCheck(device_id=1)
@@ -481,7 +492,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         Path.home() / ".cache" / "huggingface" / "hub" / "models--google--gemma-4-e4b-it" / "blobs",
         Path("/data/models/gemma4"),
     ]
-    gemma4_gguf_path: Optional[str] = None
+    gemma4_gguf_path: str | None = None
     for candidate in gemma4_path_candidates:
         if candidate.exists():
             gguf_files = list(candidate.glob("*.gguf"))
@@ -489,7 +500,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
                 gemma4_gguf_path = str(gguf_files[0])
                 break
 
-    gemma4_loader: Optional[Gemma4QuantizedLoader] = None
+    gemma4_loader: Gemma4QuantizedLoader | None = None
     if gemma4_gguf_path:
         try:
             gemma4_loader = Gemma4QuantizedLoader(
@@ -504,10 +515,13 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
             _log.warning("Gemma4QuantizedLoader load failed: %s", exc)
             gemma4_loader = None
 
-    qwen_pipe: Optional[Any] = None
+    qwen_pipe: Any | None = None
     try:
         import torch
-        qwen_device = "cuda:1" if torch.cuda.is_available() and torch.cuda.device_count() > 1 else "cuda:0"
+
+        qwen_device = (
+            "cuda:1" if torch.cuda.is_available() and torch.cuda.device_count() > 1 else "cuda:0"
+        )
         qwen_pipe = _load_qwen_pipeline(qwen_device)
         if qwen_pipe:
             _log.info("Qwen pipeline loaded on %s", qwen_device)
@@ -534,7 +548,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
 
     # Load 50 GSM8K questions (indices 300-349)
     questions = _load_gsm8k_questions(QUESTION_START, QUESTION_END)
-    _log.info("Loaded %d GSM8K questions (indices %d-%d)", len(questions), QUESTION_START, QUESTION_END)
+    _log.info(
+        "Loaded %d GSM8K questions (indices %d-%d)", len(questions), QUESTION_START, QUESTION_END
+    )
 
     # Per-question verify-repair loop with CoACEExtractorV3
     extractor = CoACEExtractorV3(tolerance=1e-6, min_confidence=0.5)
@@ -582,9 +598,12 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         "baseline=%.4f pipeline=%.4f delta=%.4f violations=%d repairs_attempted=%d succeeded=%d",
         artifact.get("honest_verdict"),
         artifact.get("retro_033_resolved"),
-        baseline_acc, pipeline_acc,
+        baseline_acc,
+        pipeline_acc,
         pipeline_acc - baseline_acc,
-        agg_n_violations, agg_n_repairs_attempted, agg_n_repairs_succeeded,
+        agg_n_violations,
+        agg_n_repairs_attempted,
+        agg_n_repairs_succeeded,
     )
 
     # FINAL LINE
@@ -609,7 +628,9 @@ def main() -> None:
     verdict = artifact.get("honest_verdict", "unknown")
     _log.info(
         "Exp %d complete: honest_verdict=%s status=%s",
-        EXP_ID, verdict, artifact.get("status", "unknown"),
+        EXP_ID,
+        verdict,
+        artifact.get("status", "unknown"),
     )
 
 

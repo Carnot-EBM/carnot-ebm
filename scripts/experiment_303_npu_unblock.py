@@ -76,9 +76,7 @@ _WISHLIST_MD = _REPO_ROOT / "research-hardware-wishlist.md"
 
 # RyzenAI-SW paths
 _RYZEN_AI_SW = Path.home() / "github.com" / "amd" / "RyzenAI-SW"
-_VITISAI_SO_DIR = (
-    _RYZEN_AI_SW / "Ryzen-AI-CVML-Library" / "linux" / "onnx" / "ryzen14"
-)
+_VITISAI_SO_DIR = _RYZEN_AI_SW / "Ryzen-AI-CVML-Library" / "linux" / "onnx" / "ryzen14"
 _VAIP_CONFIG = _VITISAI_SO_DIR / "vaip_config_npu_2_3.json"
 
 # ONNX model selection
@@ -214,13 +212,10 @@ def _collect_prereq_check() -> dict[str, Any]:
         )
     if not cmake_ok:
         if cmake_ver is None:
-            result["cmake_install_command"] = (
-                "sudo pacman -S cmake  OR  sudo apt install cmake"
-            )
+            result["cmake_install_command"] = "sudo pacman -S cmake  OR  sudo apt install cmake"
         else:
             result["cmake_note"] = (
-                f"cmake {cmake_str} is too old — need >= 3.26. "
-                "Upgrade via package manager."
+                f"cmake {cmake_str} is too old — need >= 3.26. Upgrade via package manager."
             )
 
     return result
@@ -268,9 +263,12 @@ def _attempt_source_build() -> dict[str, Any]:
         print(f"  Cloning onnxruntime {ORT_GIT_TAG} to {_BUILD_DIR} ...")
         clone_result = subprocess.run(
             [
-                "git", "clone",
-                "--depth", "1",
-                "--branch", ORT_GIT_TAG,
+                "git",
+                "clone",
+                "--depth",
+                "1",
+                "--branch",
+                ORT_GIT_TAG,
                 ORT_GIT_URL,
                 str(_BUILD_DIR),
             ],
@@ -305,7 +303,8 @@ def _attempt_source_build() -> dict[str, Any]:
     cmake_cmd = [
         "cmake",
         str(_BUILD_DIR),
-        "-G", "Ninja",
+        "-G",
+        "Ninja",
         "-DCMAKE_BUILD_TYPE=Release",
         "-DONNXRUNTIME_USE_VITISAI=ON",
         f"-DONNXRUNTIME_VITISAI_EP_LIBRARY_PATH={vitisai_ep_lib}",
@@ -336,7 +335,7 @@ def _attempt_source_build() -> dict[str, Any]:
             "success": False,
             "duration_seconds": round(elapsed, 1),
             "error_summary": f"cmake configure failed (rc={configure_result.returncode}): "
-                             f"{err[:300]}",
+            f"{err[:300]}",
             "build_log_tail": tail if tail else [err[:300]],
             "timeout_exceeded": False,
             "whl_path": None,
@@ -376,7 +375,7 @@ def _attempt_source_build() -> dict[str, Any]:
                 "success": False,
                 "duration_seconds": round(elapsed, 1),
                 "error_summary": f"cmake --build failed (rc={build_result.returncode}): "
-                                 f"{err[:300]}",
+                f"{err[:300]}",
                 "build_log_tail": tail if tail else [err[:300]],
                 "timeout_exceeded": False,
                 "whl_path": None,
@@ -561,9 +560,7 @@ print(json.dumps(result))
     # Set LD_LIBRARY_PATH for subprocess
     env = os.environ.copy()
     existing_ld = env.get("LD_LIBRARY_PATH", "")
-    env["LD_LIBRARY_PATH"] = (
-        str(_VITISAI_SO_DIR) + (":" + existing_ld if existing_ld else "")
-    )
+    env["LD_LIBRARY_PATH"] = str(_VITISAI_SO_DIR) + (":" + existing_ld if existing_ld else "")
 
     try:
         result = subprocess.run(
@@ -599,8 +596,10 @@ print(json.dumps(result))
     # Check if VitisAI was actually used
     if "VitisAI" not in str(provider_used) or npu_latency_us is None:
         # VitisAI EP not available — ABI block
-        return f"blocked_abi: VitisAI EP not in available providers after build. " \
-               f"Available: {available}. provider_used: {provider_used!r}"
+        return (
+            f"blocked_abi: VitisAI EP not in available providers after build. "
+            f"Available: {available}. provider_used: {provider_used!r}"
+        )
 
     speedup = round(cpu_latency_us / npu_latency_us, 3) if npu_latency_us else None
 
@@ -652,14 +651,10 @@ def _update_hardware_wishlist(honest_verdict: str, details: dict[str, Any]) -> N
             )
         if not cmake_ok:
             missing_items.append(f"`cmake`: {pc.get('cmake_note', 'insufficient version')}")
-        lines.append(
-            "    - Still blocked by missing prerequisites:"
-        )
+        lines.append("    - Still blocked by missing prerequisites:")
         for item in missing_items:
             lines.append(f"      - {item}")
-        lines.append(
-            "    - **Status:** BLOCKED — install prerequisites, then re-run Exp 303."
-        )
+        lines.append("    - **Status:** BLOCKED — install prerequisites, then re-run Exp 303.")
     elif honest_verdict == "blocked_build":
         bo = details.get("build_outcome", {})
         err = bo.get("error_summary", "unknown build error")
@@ -671,24 +666,16 @@ def _update_hardware_wishlist(honest_verdict: str, details: dict[str, Any]) -> N
             "    - **Next:** inspect build_log_tail in experiment_303_npu_results.json for fix."
         )
     elif honest_verdict == "blocked_abi":
-        lines.append(
-            "    - Source build succeeded but VitisAI EP not available after install."
-        )
-        lines.append(
-            "    - **ABI mismatch** — ORT wheel built without VitisAI EP being linked."
-        )
-        lines.append(
-            "    - **Next:** verify cmake -DONNXRUNTIME_USE_VITISAI=ON was respected."
-        )
+        lines.append("    - Source build succeeded but VitisAI EP not available after install.")
+        lines.append("    - **ABI mismatch** — ORT wheel built without VitisAI EP being linked.")
+        lines.append("    - **Next:** verify cmake -DONNXRUNTIME_USE_VITISAI=ON was respected.")
     elif honest_verdict == "npu_working":
         ir = details.get("inference_result", {})
         npu_us = ir.get("npu_latency_us", "?")
         cpu_us = ir.get("cpu_latency_us", "?")
         speedup = ir.get("speedup_factor", "?")
         lines.append(f"    - **NPU WORKING!** npu={npu_us}µs, cpu={cpu_us}µs, speedup={speedup}x")
-        lines.append(
-            "    - **Status:** UNBLOCKED — VitisAI EP operational via source build."
-        )
+        lines.append("    - **Status:** UNBLOCKED — VitisAI EP operational via source build.")
 
     findings_block = "\n".join(lines)
 
@@ -742,7 +729,9 @@ def main() -> None:
 
     print(f"      ninja: {'OK' if ninja_ok else 'MISSING'}")
     print(f"      openblas: {'OK' if openblas_ok else 'MISSING'}")
-    print(f"      cmake: {prereq_check['cmake_version']} ({'OK' if cmake_ok else 'TOO OLD/MISSING'})")
+    print(
+        f"      cmake: {prereq_check['cmake_version']} ({'OK' if cmake_ok else 'TOO OLD/MISSING'})"
+    )
     print(f"      RyzenAI-SW: {'present' if ryzen_ok else 'MISSING'}")
     print(f"      libonnxruntime_providers_vitisai.so: {'present' if vitisai_ok else 'MISSING'}")
 
@@ -751,9 +740,7 @@ def main() -> None:
         onnx_model = _select_onnx_model()
         result = {
             "experiment": EXPERIMENT,
-            "description": (
-                "AMD XDNA NPU unblock — blocked: source build prerequisites missing"
-            ),
+            "description": ("AMD XDNA NPU unblock — blocked: source build prerequisites missing"),
             "run_date": RUN_DATE,
             "execution_path": "blocked_prereq",
             "prereq_check": prereq_check,
@@ -773,16 +760,15 @@ def main() -> None:
     # ------------------------------------------------------------------
     print("\n[2/4] Attempting ORT 1.20.1 source build with VitisAI EP ...")
     build_outcome = _attempt_source_build()
-    print(f"      success: {build_outcome['success']}, "
-          f"duration: {build_outcome['duration_seconds']}s")
+    print(
+        f"      success: {build_outcome['success']}, duration: {build_outcome['duration_seconds']}s"
+    )
 
     if not build_outcome["success"]:
         onnx_model = _select_onnx_model()
         result = {
             "experiment": EXPERIMENT,
-            "description": (
-                "AMD XDNA NPU unblock — blocked: ORT source build failed"
-            ),
+            "description": ("AMD XDNA NPU unblock — blocked: ORT source build failed"),
             "run_date": RUN_DATE,
             "execution_path": "blocked_build",
             "prereq_check": prereq_check,
@@ -931,7 +917,9 @@ def _build_next_steps(prereq_check: dict[str, Any]) -> list[str]:
         cmd = prereq_check.get("openblas_install_command", "install openblas")
         steps.append(f"Install openblas: {cmd}")
     if not prereq_check.get("cmake_sufficient"):
-        note = prereq_check.get("cmake_note") or prereq_check.get("cmake_install_command", "upgrade cmake to >= 3.26")
+        note = prereq_check.get("cmake_note") or prereq_check.get(
+            "cmake_install_command", "upgrade cmake to >= 3.26"
+        )
         steps.append(f"Fix cmake: {note}")
     if steps:
         steps.append(

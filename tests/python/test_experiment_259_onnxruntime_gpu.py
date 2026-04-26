@@ -33,11 +33,14 @@ _FORCE_LIVE = os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
 def _make_vp():
     """Return a default PredictiveVerifier for test use."""
     import sys
+
     _repo = Path(__file__).resolve().parent.parent.parent / "python"
     if str(_repo) not in sys.path:
         import sys as _sys
+
         _sys.path.insert(0, str(_repo))
     from carnot.pipeline.predictive_verifier import PredictiveVerifier
+
     return PredictiveVerifier()
 
 
@@ -71,6 +74,7 @@ class TestCudaEpDetection:
         SCENARIO-EXP259-A
         """
         import onnxruntime as ort
+
         providers = ort.get_available_providers()
         assert isinstance(providers, list)
         assert len(providers) > 0
@@ -82,6 +86,7 @@ class TestCudaEpDetection:
         SCENARIO-EXP259-A
         """
         import onnxruntime as ort
+
         assert "CPUExecutionProvider" in ort.get_available_providers()
 
     @pytest.mark.skipif(not _FORCE_LIVE, reason="Requires real GPU (CARNOT_FORCE_LIVE=1)")
@@ -92,6 +97,7 @@ class TestCudaEpDetection:
         SCENARIO-EXP259-A
         """
         import onnxruntime as ort
+
         assert "CUDAExecutionProvider" in ort.get_available_providers()
 
     def test_cuda_ep_detection_mock(self):
@@ -107,6 +113,7 @@ class TestCudaEpDetection:
         fake_providers = ["CPUExecutionProvider"]
         with patch("onnxruntime.get_available_providers", return_value=fake_providers):
             import onnxruntime as ort
+
             assert "CUDAExecutionProvider" not in ort.get_available_providers()
             # Record what a blocker artifact should look like.
             blocker = {
@@ -328,9 +335,7 @@ class TestArtifactSchema:
         assert isinstance(data["hardware_paths"], list)
         assert len(data["hardware_paths"]) >= 1
 
-        cuda_records = [
-            r for r in data["hardware_paths"] if r.get("hardware_path") == "onnx_cuda"
-        ]
+        cuda_records = [r for r in data["hardware_paths"] if r.get("hardware_path") == "onnx_cuda"]
         assert len(cuda_records) == 1, "Exactly one onnx_cuda record expected"
         cuda = cuda_records[0]
         assert cuda.get("status") in ("ok", "blocker")

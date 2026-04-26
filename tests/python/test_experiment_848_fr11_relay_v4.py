@@ -8,6 +8,7 @@ responses via controlled random seeds or direct function calls.
 Spec: FR-11, REQ-LEARN-057, REQ-LEARN-058, REQ-LEARN-059,
       REQ-VERIFY-150, SCENARIO-VERIFY-230
 """
+
 from __future__ import annotations
 
 import json
@@ -43,6 +44,7 @@ from python.carnot.pipeline.embedding_constraint_store import (  # noqa: E402
 # ---------------------------------------------------------------------------
 # test_gate_blocks_if_retrieval_below_threshold
 # ---------------------------------------------------------------------------
+
 
 class TestGateCheck:
     """Gate check: relay must be blocked when retrieval_auroc <= 0.70.
@@ -86,6 +88,7 @@ class TestGateCheck:
 # test_constraint_write_after_session
 # ---------------------------------------------------------------------------
 
+
 class TestConstraintWriteAfterSession:
     """After a session with violations, SPO constraints must be written to the store.
 
@@ -114,6 +117,7 @@ class TestConstraintWriteAfterSession:
         Spec: REQ-VERIFY-150
         """
         import math
+
         store = EmbeddingConstraintStore()
         spo = ConstraintSPOTuple(
             subject="numeric_sign",
@@ -141,14 +145,14 @@ class TestConstraintWriteAfterSession:
             result = run_relay(n_sessions=3, n_questions=5, seed=42)
         total_written = sum(result["session_constraints_written"])
         assert total_written >= 3, (
-            f"Expected at least 3 total constraints written across 3 sessions, "
-            f"got {total_written}"
+            f"Expected at least 3 total constraints written across 3 sessions, got {total_written}"
         )
 
 
 # ---------------------------------------------------------------------------
 # test_monotonicity_check
 # ---------------------------------------------------------------------------
+
 
 class TestMonotonicityCheck:
     """is_monotonic must be True iff each session's precision >= the previous.
@@ -159,17 +163,13 @@ class TestMonotonicityCheck:
     def test_strictly_increasing_is_monotonic(self, tmp_path: Path) -> None:
         """Strictly increasing precisions must yield is_monotonic=True."""
         precisions = [0.30, 0.35, 0.40, 0.45, 0.50]
-        is_monotonic = all(
-            precisions[i] >= precisions[i - 1] for i in range(1, len(precisions))
-        )
+        is_monotonic = all(precisions[i] >= precisions[i - 1] for i in range(1, len(precisions)))
         assert is_monotonic is True
 
     def test_dip_breaks_monotonicity(self) -> None:
         """Any precision drop must yield is_monotonic=False."""
         precisions = [0.30, 0.38, 0.35, 0.42, 0.50]  # dip at s3
-        is_monotonic = all(
-            precisions[i] >= precisions[i - 1] for i in range(1, len(precisions))
-        )
+        is_monotonic = all(precisions[i] >= precisions[i - 1] for i in range(1, len(precisions)))
         assert is_monotonic is False
 
     def test_relay_returns_is_monotonic_field(self, tmp_path: Path) -> None:
@@ -187,6 +187,7 @@ class TestMonotonicityCheck:
 # ---------------------------------------------------------------------------
 # test_delta_computation
 # ---------------------------------------------------------------------------
+
 
 class TestDeltaComputation:
     """delta_s1_to_s5 = precision_s5 - precision_s1.
@@ -231,8 +232,7 @@ class TestDeltaComputation:
         ):
             (tmp_path / "results").mkdir(parents=True, exist_ok=True)
             result = run_relay(n_sessions=5, n_questions=5, seed=1)
-        for key in ("precision_s1", "precision_s2", "precision_s3",
-                    "precision_s4", "precision_s5"):
+        for key in ("precision_s1", "precision_s2", "precision_s3", "precision_s4", "precision_s5"):
             assert key in result, f"Missing field: {key}"
             assert result[key] is not None
 
@@ -240,6 +240,7 @@ class TestDeltaComputation:
 # ---------------------------------------------------------------------------
 # test_capacity_constrained_update
 # ---------------------------------------------------------------------------
+
 
 class TestCapacityConstrainedUpdate:
     """Only top-K types by variance are written each session.
@@ -249,7 +250,9 @@ class TestCapacityConstrainedUpdate:
 
     def test_select_updatable_returns_at_most_top_k(self) -> None:
         """_select_updatable_types must return at most TOP_K_CONSTRAINT_UPDATE items."""
-        history = {t: [0.3, 0.4, 0.5, 0.6] for t in ["carry", "sign", "unit", "comparison", "causal"]}
+        history = {
+            t: [0.3, 0.4, 0.5, 0.6] for t in ["carry", "sign", "unit", "comparison", "causal"]
+        }
         selected = _select_updatable_types(history)
         assert len(selected) <= TOP_K_CONSTRAINT_UPDATE
 
@@ -257,8 +260,8 @@ class TestCapacityConstrainedUpdate:
         """Types with variance < VARIANCE_FREEZE_THRESHOLD must be excluded."""
         # One type with constant precision (variance=0) should be frozen
         history = {
-            "carry": [0.5, 0.5, 0.5, 0.5],   # variance=0 → frozen
-            "sign":  [0.2, 0.4, 0.6, 0.8],    # high variance → active
+            "carry": [0.5, 0.5, 0.5, 0.5],  # variance=0 → frozen
+            "sign": [0.2, 0.4, 0.6, 0.8],  # high variance → active
         }
         variances = _compute_type_variances(history)
         assert variances["carry"] < VARIANCE_FREEZE_THRESHOLD
@@ -278,6 +281,7 @@ class TestCapacityConstrainedUpdate:
 # ---------------------------------------------------------------------------
 # test_checkpoint_written
 # ---------------------------------------------------------------------------
+
 
 class TestCheckpointWritten:
     """Checkpoint must be written after each session.
@@ -303,6 +307,7 @@ class TestCheckpointWritten:
 # ---------------------------------------------------------------------------
 # test_honest_verdict_mapping
 # ---------------------------------------------------------------------------
+
 
 class TestHonestVerdictMapping:
     """honest_verdict must map correctly from delta and monotonicity.

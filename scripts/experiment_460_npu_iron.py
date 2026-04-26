@@ -49,7 +49,11 @@ _log = logging.getLogger("exp460")
 from carnot.pipeline.env_autofix import apply_env_autofix  # noqa: E402
 
 _autofix = apply_env_autofix()
-_log.info("env_autofix: gpu_detected=%s, auto_fix_applied=%s", _autofix.gpu_detected, _autofix.auto_fix_applied)
+_log.info(
+    "env_autofix: gpu_detected=%s, auto_fix_applied=%s",
+    _autofix.gpu_detected,
+    _autofix.auto_fix_applied,
+)
 
 # ---------------------------------------------------------------------------
 # Step 2: ExperimentTemplate setup
@@ -90,7 +94,9 @@ if JEPA_ONNX.exists():
     onnx_path = str(JEPA_ONNX)
     _log.info("Using JEPA ONNX model: %s", onnx_path)
 else:
-    _log.warning("JEPA ONNX model not found at %s; creating synthetic model for baseline", JEPA_ONNX)
+    _log.warning(
+        "JEPA ONNX model not found at %s; creating synthetic model for baseline", JEPA_ONNX
+    )
     using_synthetic = True
     import tempfile
     import onnx
@@ -116,6 +122,7 @@ runner = IRONRunner(onnx_path)
 
 # Determine input shape from the ONNX model
 import onnxruntime as ort  # noqa: E402
+
 _sess_probe = ort.InferenceSession(onnx_path, providers=["CPUExecutionProvider"])
 _input_meta = _sess_probe.get_inputs()[0]
 _shape = [d if isinstance(d, int) and d > 0 else 1 for d in _input_meta.shape]
@@ -155,10 +162,16 @@ else:
         _log.info("NPU executed! Measuring CPU baseline for speedup ratio...")
         cpu_runner = IRONRunner(onnx_path)
         from unittest.mock import patch
+
         with patch.object(NPUEnvironment, "iron_available", return_value=False):
             with patch.object(NPUEnvironment, "npu_device_present", return_value=False):
                 cpu_ms = cpu_runner.benchmark(inputs, n_runs=N_RUNS)
-        _log.info("NPU: %.3f ms  CPU: %.3f ms  speedup=%.2fx", npu_ms, cpu_ms, cpu_ms / npu_ms if npu_ms else 0)
+        _log.info(
+            "NPU: %.3f ms  CPU: %.3f ms  speedup=%.2fx",
+            npu_ms,
+            cpu_ms,
+            cpu_ms / npu_ms if npu_ms else 0,
+        )
         honest_verdict = "npu_executed"
     else:
         cpu_ms = result_ms
@@ -172,8 +185,13 @@ if npu_ms is not None and cpu_ms is not None and npu_ms > 0:
 _log.info(
     "honest_verdict=%s iron_installed=%s npu_present=%s npu_executed=%s "
     "npu_ms=%s cpu_ms=%s speedup=%s",
-    honest_verdict, iron_installed, npu_present, npu_executed,
-    npu_ms, cpu_ms, speedup,
+    honest_verdict,
+    iron_installed,
+    npu_present,
+    npu_executed,
+    npu_ms,
+    cpu_ms,
+    speedup,
 )
 
 # ---------------------------------------------------------------------------

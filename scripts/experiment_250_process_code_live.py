@@ -588,9 +588,7 @@ def _build_process_corpus_row(
     n_pbt_failures: int = int(evaluation["pbt"]["n_failures"])
     n_spec_violations: int = int(evaluation["explicit_specs"]["n_violations"])
 
-    verifier_verdict = (
-        "violated" if (not pbt_verified or n_spec_violations > 0) else "abstain"
-    )
+    verifier_verdict = "violated" if (not pbt_verified or n_spec_violations > 0) else "abstain"
     # max_premise_support: 1.0 when PBT passes, reduced when counterexamples found.
     # Cap the reduction at 0.1 floor so the field remains informative.
     if pbt_verified:
@@ -633,8 +631,7 @@ def _run_process_check(
     result_dict = result.to_dict()
     # Surface the right-for-wrong-reasons flag at the top level for easy counting.
     result_dict["right_for_wrong_reasons"] = any(
-        d.get("kind") == OUTCOME_CORRECT_PROCESS_INVALID
-        for d in result_dict.get("defects", [])
+        d.get("kind") == OUTCOME_CORRECT_PROCESS_INVALID for d in result_dict.get("defects", [])
     )
     return result_dict
 
@@ -1215,12 +1212,8 @@ def build_comparison_summary(
     if not isinstance(gemma_results, list) or not isinstance(qwen_results, list):
         return _zero_comparison_summary(repair_budget)
 
-    gemma_lookup = {
-        str(case["case_id"]): case for case in gemma_results if isinstance(case, dict)
-    }
-    qwen_lookup = {
-        str(case["case_id"]): case for case in qwen_results if isinstance(case, dict)
-    }
+    gemma_lookup = {str(case["case_id"]): case for case in gemma_results if isinstance(case, dict)}
+    qwen_lookup = {str(case["case_id"]): case for case in qwen_results if isinstance(case, dict)}
     paired_case_ids = [case_id for case_id in qwen_lookup if case_id in gemma_lookup]
     if not paired_case_ids:
         return _zero_comparison_summary(repair_budget)
@@ -1247,24 +1240,14 @@ def build_comparison_summary(
         )
         stage_outcomes[stage] = {
             "gemma_only": sum(
-                1
-                for g, q in zip(gemma_flags, qwen_flags, strict=True)
-                if g and not q
+                1 for g, q in zip(gemma_flags, qwen_flags, strict=True) if g and not q
             ),
             "qwen_only": sum(
-                1
-                for g, q in zip(gemma_flags, qwen_flags, strict=True)
-                if q and not g
+                1 for g, q in zip(gemma_flags, qwen_flags, strict=True) if q and not g
             ),
-            "both": sum(
-                1
-                for g, q in zip(gemma_flags, qwen_flags, strict=True)
-                if g and q
-            ),
+            "both": sum(1 for g, q in zip(gemma_flags, qwen_flags, strict=True) if g and q),
             "neither": sum(
-                1
-                for g, q in zip(gemma_flags, qwen_flags, strict=True)
-                if not g and not q
+                1 for g, q in zip(gemma_flags, qwen_flags, strict=True) if not g and not q
             ),
         }
 
@@ -1460,8 +1443,10 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
         repair_budget=args.max_repairs,
     )
     statuses = {str(run.get("run_status", "")) for run in model_runs.values()}
-    run_status = "complete" if statuses == {"complete"} else (
-        "blocked" if statuses <= {"blocked"} else "partial"
+    run_status = (
+        "complete"
+        if statuses == {"complete"}
+        else ("blocked" if statuses <= {"blocked"} else "partial")
     )
     return build_artifact_payload(
         output_path=args.output,
@@ -1508,6 +1493,7 @@ if __name__ == "__main__":  # pragma: no cover
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

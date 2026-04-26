@@ -37,7 +37,9 @@ class TestBuildLiveDataArtifact:
     """REQ-DATA-001: artifact must have all required fields on every exit path."""
 
     def test_schema_field(self):
-        art = exp578._build_live_data_artifact("live_gpu", 50, 50, "results/live_pairs_578.json", [1.0] * 50)
+        art = exp578._build_live_data_artifact(
+            "live_gpu", 50, 50, "results/live_pairs_578.json", [1.0] * 50
+        )
         assert art["schema"] == "carnot.live_data_collection.v1"
 
     def test_honest_verdict_retro_062_resolved_at_40(self):
@@ -87,7 +89,9 @@ class TestBuildLiveDataArtifact:
         assert art["mean_latency_s"] == 0.0
 
     def test_live_pairs_file_field(self):
-        art = exp578._build_live_data_artifact("live_gpu", 50, 50, "results/live_pairs_578.json", [])
+        art = exp578._build_live_data_artifact(
+            "live_gpu", 50, 50, "results/live_pairs_578.json", []
+        )
         assert art["live_pairs_file"] == "results/live_pairs_578.json"
 
     def test_n_questions_field(self):
@@ -202,6 +206,7 @@ class TestAnnotateResponse:
 
     def test_returns_cot_steps_and_labels(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp578._annotate_response(annotator, "1. 2 + 2 = 4", "q0")
         assert "cot_steps" in result
@@ -209,6 +214,7 @@ class TestAnnotateResponse:
 
     def test_cot_steps_have_required_keys(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp578._annotate_response(annotator, "1. 2 + 2 = 4", "q0")
         for step in result["cot_steps"]:
@@ -217,6 +223,7 @@ class TestAnnotateResponse:
 
     def test_fover_labels_parallel_to_cot_steps(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp578._annotate_response(annotator, "1. Step A\n2. Step B", "q1")
         assert len(result["cot_steps"]) == len(result["fover_labels"])

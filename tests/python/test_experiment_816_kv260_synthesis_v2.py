@@ -296,9 +296,7 @@ def test_load_gate_artifact_handles_corrupt_json(tmp_path: Path) -> None:
     """
     results_dir = tmp_path / "results"
     results_dir.mkdir()
-    (results_dir / "experiment_807_oss_cad_suite_install.json").write_text(
-        "{ not valid json }"
-    )
+    (results_dir / "experiment_807_oss_cad_suite_install.json").write_text("{ not valid json }")
     assert exp816.load_gate_artifact(tmp_path) == {}
 
 

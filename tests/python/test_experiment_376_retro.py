@@ -174,9 +174,7 @@ class TestLoadMilestoneResults:
         assert result["365"]["status"] == "success"
 
     def test_missing_file_returns_none(self, tmp_path: Path) -> None:
-        result = load_milestone_results(
-            tmp_path, {"999": "results/experiment_999_missing.json"}
-        )
+        result = load_milestone_results(tmp_path, {"999": "results/experiment_999_missing.json"})
         assert result["999"] is None
 
     def test_none_path_returns_none(self, tmp_path: Path) -> None:
@@ -258,9 +256,7 @@ class TestComputeTimingStats:
 class TestComputeRetro:
     """Test compute_retro_2026_04_27 against fixture result files."""
 
-    def _repo_with_results(
-        self, tmp_path: Path, results: dict[str, dict[str, Any]]
-    ) -> Path:
+    def _repo_with_results(self, tmp_path: Path, results: dict[str, dict[str, Any]]) -> Path:
         """Write result files into a fake repo structure."""
         for filename, data in results.items():
             _write_json(tmp_path / "results" / filename, data)
@@ -466,9 +462,7 @@ class TestComputeRetro:
     def test_cikan_true_when_valid_python_with_class(self, tmp_path: Path) -> None:
         models_dir = tmp_path / "python" / "carnot" / "models"
         models_dir.mkdir(parents=True)
-        (models_dir / "cikan_energy.py").write_text(
-            "class CIKANEnergy:\n    pass\n"
-        )
+        (models_dir / "cikan_energy.py").write_text("class CIKANEnergy:\n    pass\n")
         # Also need a result JSON
         _write_json(
             tmp_path / "results" / "experiment_375_cikan_energy.json",
@@ -495,6 +489,7 @@ class TestComputeRetro:
     def test_all_jsons_present_when_all_provided(self, tmp_path: Path) -> None:
         # Write ALL required result files (based on MILESTONE_EXPERIMENTS that have result_file)
         from scripts.experiment_376_retro_2026_04_27 import MILESTONE_EXPERIMENTS as EXPS
+
         for exp in EXPS:
             rf = exp.get("result_file")
             if rf:

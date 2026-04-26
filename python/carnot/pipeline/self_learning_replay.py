@@ -1528,7 +1528,7 @@ def build_self_learning_replay_v2_payload(
 
 def train_tier1_weights(
     cases: list[ReplayCase],
-) -> tuple["ConstraintTracker", dict[str, "_ObservedTypeStats"]]:
+) -> tuple[ConstraintTracker, dict[str, _ObservedTypeStats]]:
     """Train a ConstraintTracker on the non-held-out (learning) live cases.
 
     **Researcher summary:**
@@ -1585,8 +1585,8 @@ def train_tier1_weights(
 
 def evaluate_tier1_on_held_out(
     cases: list[ReplayCase],
-    tracker: "ConstraintTracker",
-    observed_types: dict[str, "_ObservedTypeStats"],
+    tracker: ConstraintTracker,
+    observed_types: dict[str, _ObservedTypeStats],
     *,
     tracker_min_support: int = TRACKER_MIN_SUPPORT,
     tracker_min_precision: float = TRACKER_MIN_PRECISION,
@@ -1701,7 +1701,7 @@ def build_tier1_live_retrain_payload(
     holdout_fraction: float = HOLDOUT_FRACTION,
     tracker_min_support: int = TRACKER_MIN_SUPPORT,
     tracker_min_precision: float = TRACKER_MIN_PRECISION,
-) -> tuple[dict[str, Any], "ConstraintTracker"]:
+) -> tuple[dict[str, Any], ConstraintTracker]:
     """Build the Exp 224 payload: live-only Tier 1 retrain with held-out evaluation.
 
     **Researcher summary:**
@@ -1754,9 +1754,7 @@ def build_tier1_live_retrain_payload(
 
     # Step 3: Build comparison to Exp 223 tracker_only baseline.
     exp223_tracker_overall = (
-        exp223_reference.get("strategies", {})
-        .get("tracker_only", {})
-        .get("overall", {})
+        exp223_reference.get("strategies", {}).get("tracker_only", {}).get("overall", {})
     )
     live_overall = eval_results["strategies"]["tracker_only_live"]["overall"]
     comparison = {
@@ -1771,8 +1769,7 @@ def build_tier1_live_retrain_payload(
         "exp223_success_rate": exp223_tracker_overall.get("success_rate", 0.0),
         "exp224_success_rate": live_overall.get("success_rate", 0.0),
         "success_rate_delta": (
-            live_overall.get("success_rate", 0.0)
-            - exp223_tracker_overall.get("success_rate", 0.0)
+            live_overall.get("success_rate", 0.0) - exp223_tracker_overall.get("success_rate", 0.0)
         ),
         "exp223_false_positives": exp223_tracker_overall.get("false_positives", 0),
         "exp224_false_positives": live_overall.get("false_positives", 0),
@@ -1832,9 +1829,7 @@ def build_tier1_live_retrain_payload(
         "held_out_summary": {
             "held_out_cases": eval_results["held_out_cases"],
             "strategies": eval_results["strategies"],
-            "false_positive_regression_budget": eval_results[
-                "false_positive_regression_budget"
-            ],
+            "false_positive_regression_budget": eval_results["false_positive_regression_budget"],
         },
         "comparison_to_exp223": comparison,
         "held_out_decisions": eval_results["held_out_decisions"],

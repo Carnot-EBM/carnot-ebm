@@ -62,31 +62,106 @@ _DELIVERABLE = "results/experiment_930_math_iterative_self_repair_v1.json"
 # ---------------------------------------------------------------------------
 
 _GSM8K_PROBLEMS: list[dict[str, Any]] = [
-    {"question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?", "answer": 72},
-    {"question": "Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?", "answer": 10},
-    {"question": "Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?", "answer": 5},
-    {"question": "Julie is reading a 120-page book. Yesterday, she was able to read 12 pages and today, she read twice as many pages as yesterday. If she wants to read half of the remaining pages tomorrow, how many pages should she read tomorrow?", "answer": 42},
-    {"question": "James writes a 3-page letter to 2 different friends twice a week. How many pages does he write a year?", "answer": 624},
-    {"question": "Mark has a garden with flowers. He planted plants of three different colors in it. Ten of them are yellow, and there are 80% more of those in purple. There are only 25% as many green flowers as there are yellow and purple flowers. How many flowers does Mark have in his garden?", "answer": 35},
-    {"question": "Albert is wondering how much pizza he can eat in one day. He buys 2 large pizzas and 2 small pizzas. A large pizza has 16 slices and a small pizza has 8 slices. If he eats it all, how many pieces does he eat that day?", "answer": 48},
-    {"question": "Ken created a care package to send to his brother, who was away at boarding school. Ken placed a box on a scale, and then he added enough jelly beans to bring the weight to 2 pounds. Then, he added brownies to bring the weight to 7 pounds. Next, he added another 2 pounds of jelly beans. And finally, he added enough gummy worms to bring the weight to 9 pounds. How many pounds of jelly beans did he have in the box?", "answer": 4},
-    {"question": "Alexis is applying for a new job and bought a new set of business clothes to wear to the interview. She went to a department store with a budget of $200 and spent $30 on a button-up shirt, $46 on suit pants, $38 on a suit coat, $11 on socks, and $18 on a belt. She also bought a pair of shoes, but lost the receipt for them. She has $16 left from her budget. How much did Alexis pay for the shoes?", "answer": 41},
-    {"question": "Tina makes $18 per hour. If she works more than 8 hours per shift, she is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly wage. If she works 10 hours every day for 5 days, how much money does she make?", "answer": 990},
-    {"question": "A deep-sea monster rises from the waters once every 100 years to feast on a ship and sate its hunger. Over three hundred years, it has consumed 847 people. Ships have been built larger over time, so each new ship has twice as many people as the last ship. How many people were on the ship the monster ate in the first hundred years?", "answer": 121},
-    {"question": "Tobias is buying a new pair of shoes that costs $95. He has been saving up his money each month for the past three months. He gets a $5 allowance a month. He also mows lawns and shovels driveways. He charges $15 to mow a lawn and $7 to shovel. After buying the shoes, he has $15 left over. If he mowed 4 lawns, how many driveways did he shovel?", "answer": 5},
-    {"question": "Randy has 60 mango trees on his farm. He also has 5 less than half as many coconut trees as mango trees. How many trees does Randy have in all?", "answer": 85},
-    {"question": "Jasper will serve chili for a large party. He made a recipe that serves 2 people. He needs to double the recipe 4 times to make enough chili to serve all his guests. Each recipe calls for 1.5 cups of beans. How many cups of beans does he need in all?", "answer": 24},
-    {"question": "Sam is hired for a 20-day period. On days that he works, he earns $60. For each day that he does not work, $30 is subtracted from his earnings. At the end of the 20-day period, he received $840. How many days did he not work?", "answer": 6},
-    {"question": "In a truck, there are 26 pink hard hats, 15 green hard hats, and 24 yellow hard hats. If Carl takes away 4 pink hard hats, and John takes away 6 pink hard hats and twice as many green hard hats as the number of pink hard hats that he removed, then calculate the total number of hard hats that remained in the truck.", "answer": 43},
-    {"question": "Mia is a student. In her first year of college, she spent $600 on college supplies. In her second year, she spent 50 percent more than she spent in her first year, and in her third year, she spent 25 percent less than she spent in her second year. How much did Mia spend on college supplies in her third year?", "answer": 675},
-    {"question": "Farmer Brown has 20 animals on his farm, all either chickens or cows. They have a total of 70 legs. How many chickens does the farmer have?", "answer": 5},
-    {"question": "Kylar went to the store to buy glasses for his new apartment. One glass costs $5, but every second glass costs only 60% of the price. Kylar wants to buy 16 glasses. How much does he need to pay for them?", "answer": 64},
-    {"question": "There are 290 liters of oil in 24 cans. If 10 of the cans are holding 8 liters each, how much oil is each of the remaining cans holding?", "answer": 15},
-    {"question": "Joey wants to buy the latest released pair of designer High Jump basketball sneakers. He plans to mow 3 neighbors' lawns for $8 a lawn, sell 2 collectible figures to his friends for $9 each, and work an after-school job for 10 hours at $5 per hour. If his earnings just cover the price of the sneekers, how much do the sneakers cost?", "answer": 92},
-    {"question": "A farmer is growing corn. For every 4 seeds he plants, 1 fails to sprout. Of the seeds that sprout, 2/3 are consumed by insects. 5/8 of the seeds that survive insects are eaten by animals. If the farmer plants 96 seeds, how many survive?", "answer": 9},
-    {"question": "There are 28 students in a class. Two-sevenths of them were absent last Monday. How many students were present last Monday?", "answer": 20},
-    {"question": "Nancy earns $28 for each project she completes. If she completes 4 projects every week, how much does she earn in a month?", "answer": 448},
-    {"question": "Lola baked 13 mini cupcakes, 10 pop tarts, and 8 blueberry muffins. Meanwhile, her friend Lulu baked 16 mini cupcakes, 12 pop tarts, and 14 blueberry muffins. How many baked goods did Lola and Lulu bake altogether?", "answer": 73},
+    {
+        "question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?",
+        "answer": 72,
+    },
+    {
+        "question": "Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?",
+        "answer": 10,
+    },
+    {
+        "question": "Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?",
+        "answer": 5,
+    },
+    {
+        "question": "Julie is reading a 120-page book. Yesterday, she was able to read 12 pages and today, she read twice as many pages as yesterday. If she wants to read half of the remaining pages tomorrow, how many pages should she read tomorrow?",
+        "answer": 42,
+    },
+    {
+        "question": "James writes a 3-page letter to 2 different friends twice a week. How many pages does he write a year?",
+        "answer": 624,
+    },
+    {
+        "question": "Mark has a garden with flowers. He planted plants of three different colors in it. Ten of them are yellow, and there are 80% more of those in purple. There are only 25% as many green flowers as there are yellow and purple flowers. How many flowers does Mark have in his garden?",
+        "answer": 35,
+    },
+    {
+        "question": "Albert is wondering how much pizza he can eat in one day. He buys 2 large pizzas and 2 small pizzas. A large pizza has 16 slices and a small pizza has 8 slices. If he eats it all, how many pieces does he eat that day?",
+        "answer": 48,
+    },
+    {
+        "question": "Ken created a care package to send to his brother, who was away at boarding school. Ken placed a box on a scale, and then he added enough jelly beans to bring the weight to 2 pounds. Then, he added brownies to bring the weight to 7 pounds. Next, he added another 2 pounds of jelly beans. And finally, he added enough gummy worms to bring the weight to 9 pounds. How many pounds of jelly beans did he have in the box?",
+        "answer": 4,
+    },
+    {
+        "question": "Alexis is applying for a new job and bought a new set of business clothes to wear to the interview. She went to a department store with a budget of $200 and spent $30 on a button-up shirt, $46 on suit pants, $38 on a suit coat, $11 on socks, and $18 on a belt. She also bought a pair of shoes, but lost the receipt for them. She has $16 left from her budget. How much did Alexis pay for the shoes?",
+        "answer": 41,
+    },
+    {
+        "question": "Tina makes $18 per hour. If she works more than 8 hours per shift, she is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly wage. If she works 10 hours every day for 5 days, how much money does she make?",
+        "answer": 990,
+    },
+    {
+        "question": "A deep-sea monster rises from the waters once every 100 years to feast on a ship and sate its hunger. Over three hundred years, it has consumed 847 people. Ships have been built larger over time, so each new ship has twice as many people as the last ship. How many people were on the ship the monster ate in the first hundred years?",
+        "answer": 121,
+    },
+    {
+        "question": "Tobias is buying a new pair of shoes that costs $95. He has been saving up his money each month for the past three months. He gets a $5 allowance a month. He also mows lawns and shovels driveways. He charges $15 to mow a lawn and $7 to shovel. After buying the shoes, he has $15 left over. If he mowed 4 lawns, how many driveways did he shovel?",
+        "answer": 5,
+    },
+    {
+        "question": "Randy has 60 mango trees on his farm. He also has 5 less than half as many coconut trees as mango trees. How many trees does Randy have in all?",
+        "answer": 85,
+    },
+    {
+        "question": "Jasper will serve chili for a large party. He made a recipe that serves 2 people. He needs to double the recipe 4 times to make enough chili to serve all his guests. Each recipe calls for 1.5 cups of beans. How many cups of beans does he need in all?",
+        "answer": 24,
+    },
+    {
+        "question": "Sam is hired for a 20-day period. On days that he works, he earns $60. For each day that he does not work, $30 is subtracted from his earnings. At the end of the 20-day period, he received $840. How many days did he not work?",
+        "answer": 6,
+    },
+    {
+        "question": "In a truck, there are 26 pink hard hats, 15 green hard hats, and 24 yellow hard hats. If Carl takes away 4 pink hard hats, and John takes away 6 pink hard hats and twice as many green hard hats as the number of pink hard hats that he removed, then calculate the total number of hard hats that remained in the truck.",
+        "answer": 43,
+    },
+    {
+        "question": "Mia is a student. In her first year of college, she spent $600 on college supplies. In her second year, she spent 50 percent more than she spent in her first year, and in her third year, she spent 25 percent less than she spent in her second year. How much did Mia spend on college supplies in her third year?",
+        "answer": 675,
+    },
+    {
+        "question": "Farmer Brown has 20 animals on his farm, all either chickens or cows. They have a total of 70 legs. How many chickens does the farmer have?",
+        "answer": 5,
+    },
+    {
+        "question": "Kylar went to the store to buy glasses for his new apartment. One glass costs $5, but every second glass costs only 60% of the price. Kylar wants to buy 16 glasses. How much does he need to pay for them?",
+        "answer": 64,
+    },
+    {
+        "question": "There are 290 liters of oil in 24 cans. If 10 of the cans are holding 8 liters each, how much oil is each of the remaining cans holding?",
+        "answer": 15,
+    },
+    {
+        "question": "Joey wants to buy the latest released pair of designer High Jump basketball sneakers. He plans to mow 3 neighbors' lawns for $8 a lawn, sell 2 collectible figures to his friends for $9 each, and work an after-school job for 10 hours at $5 per hour. If his earnings just cover the price of the sneekers, how much do the sneakers cost?",
+        "answer": 92,
+    },
+    {
+        "question": "A farmer is growing corn. For every 4 seeds he plants, 1 fails to sprout. Of the seeds that sprout, 2/3 are consumed by insects. 5/8 of the seeds that survive insects are eaten by animals. If the farmer plants 96 seeds, how many survive?",
+        "answer": 9,
+    },
+    {
+        "question": "There are 28 students in a class. Two-sevenths of them were absent last Monday. How many students were present last Monday?",
+        "answer": 20,
+    },
+    {
+        "question": "Nancy earns $28 for each project she completes. If she completes 4 projects every week, how much does she earn in a month?",
+        "answer": 448,
+    },
+    {
+        "question": "Lola baked 13 mini cupcakes, 10 pop tarts, and 8 blueberry muffins. Meanwhile, her friend Lulu baked 16 mini cupcakes, 12 pop tarts, and 14 blueberry muffins. How many baked goods did Lola and Lulu bake altogether?",
+        "answer": 73,
+    },
 ]
 
 
@@ -167,6 +242,7 @@ def answers_match(extracted: float | None, ground_truth: int) -> bool:
 # Energy scorer
 # ---------------------------------------------------------------------------
 
+
 def _build_energy_scorer() -> tuple[Any, str]:
     """Load Ising energy scorer; fall back to token-length heuristic.
 
@@ -200,6 +276,7 @@ def _build_energy_scorer() -> tuple[Any, str]:
 
         return _IsingScorer(model), "ising_model"
     except Exception:
+
         class _LenScorer:
             """Fallback: shorter responses get lower energy (smaller = simpler)."""
 
@@ -212,6 +289,7 @@ def _build_energy_scorer() -> tuple[Any, str]:
 # ---------------------------------------------------------------------------
 # Prompt builders
 # ---------------------------------------------------------------------------
+
 
 def _initial_prompt(question: str) -> str:
     """Build the zero-shot math prompt for GSM8K.
@@ -250,6 +328,7 @@ def _repair_prompt(question: str, prev_answer: float | None) -> str:
 # ---------------------------------------------------------------------------
 # Per-problem repair loop
 # ---------------------------------------------------------------------------
+
 
 def _run_problem(
     question: str,
@@ -294,13 +373,15 @@ def _run_problem(
         passed = answers_match(extracted, ground_truth)
         energy = energy_scorer.score(response)
 
-        attempts.append({
-            "round": round_idx,
-            "response": response[:500],  # truncate for artifact size
-            "extracted_answer": extracted,
-            "passed": passed,
-            "energy": energy,
-        })
+        attempts.append(
+            {
+                "round": round_idx,
+                "response": response[:500],  # truncate for artifact size
+                "extracted_answer": extracted,
+                "passed": passed,
+                "energy": energy,
+            }
+        )
 
         # Stop retrying as soon as we get the right answer — we already have
         # a passing attempt and further rounds would not help.
@@ -337,6 +418,7 @@ def _run_problem(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Orchestrate Exp 930 math iterative self-repair and write the deliverable."""
@@ -385,7 +467,10 @@ def main() -> None:
         print(f"[exp930] Model loaded: {model_id}", flush=True)
     except Exception as exc:
         # Try the transformers fallback path directly (same as Exp 905).
-        print(f"[exp930] GemmaTransformersLoader failed: {exc} — trying direct transformers", flush=True)
+        print(
+            f"[exp930] GemmaTransformersLoader failed: {exc} — trying direct transformers",
+            flush=True,
+        )
         try:
             import torch  # noqa: PLC0415
             from transformers import AutoModelForCausalLM, AutoTokenizer  # noqa: PLC0415
@@ -414,7 +499,7 @@ def main() -> None:
                             do_sample=False,
                             pad_token_id=self._tok.eos_token_id,
                         )
-                    new_toks = out[0][inputs["input_ids"].shape[1]:]
+                    new_toks = out[0][inputs["input_ids"].shape[1] :]
                     return self._tok.decode(new_toks, skip_special_tokens=True).strip()
 
             runner = _TFRunner(model_obj, tokenizer)

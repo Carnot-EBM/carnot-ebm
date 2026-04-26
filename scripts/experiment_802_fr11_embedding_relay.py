@@ -27,6 +27,7 @@
 
 Spec: REQ-LEARN-098, SCENARIO-LEARN-145
 """
+
 from __future__ import annotations
 
 import json
@@ -106,15 +107,27 @@ _ERROR_TEMPLATES: list[tuple[str, str]] = [
     ("unit", "5 litres + 500 ml = 5.5 ml without converting litres to millilitres"),
     # comparison errors — inequality direction reversed
     ("comparison", "8 > 10 because the comparison direction was reversed"),
-    ("comparison", "0.1 > 0.09 is False because decimal comparison was done character-by-character"),
+    (
+        "comparison",
+        "0.1 > 0.09 is False because decimal comparison was done character-by-character",
+    ),
     ("comparison", "-3 > -1 because the number line direction was ignored"),
     ("comparison", "1/3 > 1/2 because numerators alone were compared without the denominators"),
     ("comparison", "sqrt(4) > sqrt(9) because the square root operation was not evaluated"),
     # causal errors — causal chain broken
     ("causal", "The conclusion does not follow from step 2 because the causal chain was broken"),
-    ("causal", "Step 3 is invalid because step 2 assumed a result that was not established in step 1"),
-    ("causal", "The final answer is wrong because an intermediate subtraction result was used without verification"),
-    ("causal", "The derivation fails at step 4 because it requires a lemma that contradicts step 2"),
+    (
+        "causal",
+        "Step 3 is invalid because step 2 assumed a result that was not established in step 1",
+    ),
+    (
+        "causal",
+        "The final answer is wrong because an intermediate subtraction result was used without verification",
+    ),
+    (
+        "causal",
+        "The derivation fails at step 4 because it requires a lemma that contradicts step 2",
+    ),
     ("causal", "The proof is circular: step 5 reuses step 1 as if it were independently derived"),
 ]
 
@@ -402,7 +415,9 @@ def main() -> None:
         monotonic = is_monotonically_non_decreasing(precision_per_session)
         delta_s1_to_s10 = precision_per_session[9] - precision_per_session[0]
         delta_positive_by_s5 = precision_per_session[4] > precision_per_session[0]
-        honest_verdict = compute_honest_verdict(precision_per_session, monotonic, delta_positive_by_s5)
+        honest_verdict = compute_honest_verdict(
+            precision_per_session, monotonic, delta_positive_by_s5
+        )
 
         print(f"  precision trajectory: {[f'{p:.4f}' for p in precision_per_session]}")
         print(f"  is_monotonically_non_decreasing = {monotonic}")

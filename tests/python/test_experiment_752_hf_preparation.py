@@ -25,6 +25,7 @@ _MODELS = _REPO / "models"
 # Import helper functions from the experiment script so they are covered.
 # Importing them here ensures pytest-cov measures their execution.
 import sys as _sys
+
 _sys.path.insert(0, str(_REPO / "scripts"))
 from experiment_752_hf_model_preparation import (  # noqa: E402
     _verify_model_card_no_emojis,
@@ -44,11 +45,7 @@ def _has_emoji(text: str) -> bool:
     """
     for char in text:
         cp = ord(char)
-        if (
-            0x1F300 <= cp <= 0x1FFFF
-            or 0x2600 <= cp <= 0x27BF
-            or 0xFE00 <= cp <= 0xFE0F
-        ):
+        if 0x1F300 <= cp <= 0x1FFFF or 0x2600 <= cp <= 0x27BF or 0xFE00 <= cp <= 0xFE0F:
             return True
     return False
 

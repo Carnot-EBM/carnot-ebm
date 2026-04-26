@@ -2,6 +2,7 @@
 
 Spec: REQ-REPAIR-024, REQ-REPAIR-025, SCENARIO-REPAIR-044, SCENARIO-REPAIR-045
 """
+
 from __future__ import annotations
 
 import sys
@@ -204,9 +205,7 @@ class TestKillGpuZombiesCalledBeforeModelLoad:
             patch(
                 "scripts.experiment_785_sota_gguf_code_repair_v2.ExperimentTimeoutWatchdog"
             ) as MockWatchdog,
-            patch(
-                "scripts.experiment_785_sota_gguf_code_repair_v2.apply_env_autofix"
-            ),
+            patch("scripts.experiment_785_sota_gguf_code_repair_v2.apply_env_autofix"),
             patch("subprocess.run") as mock_smi,
         ):
             # Make the watchdog a no-op context manager.
@@ -227,6 +226,7 @@ class TestKillGpuZombiesCalledBeforeModelLoad:
             mock_smi.return_value = MagicMock(returncode=0, stdout="22000\n")
 
             from scripts.experiment_785_sota_gguf_code_repair_v2 import main  # noqa: PLC0415
+
             main()
 
         # kill_gpu_zombies must appear before build_gguf_caller in the call order.
@@ -290,6 +290,7 @@ class TestKillGpuZombiesCalledBeforeModelLoad:
             mock_smi.return_value = MagicMock(returncode=0, stdout="8000\n")
 
             from scripts.experiment_785_sota_gguf_code_repair_v2 import main  # noqa: PLC0415
+
             main()
 
         assert len(selected_models) == 1, "Expected exactly one model load attempt"

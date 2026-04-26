@@ -23,7 +23,7 @@ import json
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -102,7 +102,7 @@ def _hf_upload_commands(model_id: str, local_dir: Path, card_path: Path) -> list
 
 
 def main() -> None:
-    start = datetime.now(timezone.utc)
+    start = datetime.now(UTC)
 
     # ------------------------------------------------------------------
     # Step 1: Load Exp 884 (VJEPA v2) result
@@ -159,12 +159,8 @@ def main() -> None:
     # ------------------------------------------------------------------
     manual_commands: dict[str, list[str]] = {}
     if not hf_authenticated:
-        manual_commands["authenticate"] = [
-            "huggingface-cli login --token <YOUR_HF_WRITE_TOKEN>"
-        ]
-    manual_commands["vjepa-v2"] = _hf_upload_commands(
-        "vjepa-v2", RESULTS_DIR, VJEPA_CARD
-    )
+        manual_commands["authenticate"] = ["huggingface-cli login --token <YOUR_HF_WRITE_TOKEN>"]
+    manual_commands["vjepa-v2"] = _hf_upload_commands("vjepa-v2", RESULTS_DIR, VJEPA_CARD)
     if estimation_verifier_published:
         # EstimationVerifier has no separate weights file — it is pure Python.
         # The model card and the source module are the publishable artifacts.
@@ -192,7 +188,7 @@ def main() -> None:
     # ------------------------------------------------------------------
     # Step 9: Write artifact
     # ------------------------------------------------------------------
-    end = datetime.now(timezone.utc)
+    end = datetime.now(UTC)
     duration_s = (end - start).total_seconds()
 
     artifact = {

@@ -678,7 +678,10 @@ class TestCaseMemoryTemplateWiring:
         """Any type containing 'comparison' maps to 'comparison_direction'."""
         lib = ConstraintTemplateLibrary()
         wiring = CaseMemoryTemplateWiring(lib)
-        assert wiring.violation_type_to_pattern_key("numeric_comparison_error") == "comparison_direction"
+        assert (
+            wiring.violation_type_to_pattern_key("numeric_comparison_error")
+            == "comparison_direction"
+        )
 
     def test_unknown_type_passes_through(self):
         """An unrecognized violation_type is returned unchanged (pass-through).
@@ -844,20 +847,25 @@ class TestVerifyRepairPipelineIntegration:
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
 
         lib = ConstraintTemplateLibrary()
+
         # Register a dummy template that always returns one violated constraint
         def always_violated(response: str) -> list[ConstraintResult]:
-            return [ConstraintResult(
-                constraint_type="carry_check",
-                description="carry error injected by template",
-                metadata={"satisfied": False},
-            )]
+            return [
+                ConstraintResult(
+                    constraint_type="carry_check",
+                    description="carry error injected by template",
+                    metadata={"satisfied": False},
+                )
+            ]
 
-        lib.add_template(ConstraintTemplate(
-            pattern_key="carry_check",
-            description="Carry check",
-            min_frequency=1,
-            template_fn=always_violated,
-        ))
+        lib.add_template(
+            ConstraintTemplate(
+                pattern_key="carry_check",
+                description="Carry check",
+                min_frequency=1,
+                template_fn=always_violated,
+            )
+        )
         # Observe the pattern 5 times to trigger activation
         lib.observe_pattern("carry_check", "test-model", count=5)
 
@@ -875,9 +883,7 @@ class TestVerifyRepairPipelineIntegration:
             response="24 × 3 = 62",
         )
         # The template constraint (carry error) should appear in the result
-        template_constraints = [
-            c for c in result.constraints if c.constraint_type == "carry_check"
-        ]
+        template_constraints = [c for c in result.constraints if c.constraint_type == "carry_check"]
         assert len(template_constraints) >= 1
 
 
@@ -986,7 +992,7 @@ class TestViolationPatternLibrary:
 
         responses = [
             "The total is 80 items.",  # matches
-            "The answer is 18.",       # no match
+            "The answer is 18.",  # no match
         ]
         rate = lib.get_fp_rate(responses)
         assert rate == pytest.approx(0.5)

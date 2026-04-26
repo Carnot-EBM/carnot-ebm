@@ -66,7 +66,7 @@ class TestDetectGpus:
         torch_mock.cuda.is_available.return_value = True
         torch_mock.cuda.device_count.return_value = 1
         props = MagicMock()
-        props.total_memory = 24 * (1024 ** 3)
+        props.total_memory = 24 * (1024**3)
         torch_mock.cuda.get_device_properties.return_value = props
         with patch.dict(sys.modules, {"torch": torch_mock}):
             n, v0, v1 = exp632.detect_gpus()
@@ -79,7 +79,7 @@ class TestDetectGpus:
         torch_mock.cuda.is_available.return_value = True
         torch_mock.cuda.device_count.return_value = 2
         props = MagicMock()
-        props.total_memory = 24 * (1024 ** 3)
+        props.total_memory = 24 * (1024**3)
         torch_mock.cuda.get_device_properties.return_value = props
         with patch.dict(sys.modules, {"torch": torch_mock}):
             n, v0, v1 = exp632.detect_gpus()
@@ -293,7 +293,9 @@ class TestLoadModel:
         # Path("/tmp").glob return empty lists without touching PosixPath slots.
         with (
             patch.object(exp632, "_try_transformers_auto", return_value=(None, "auto_fail")),
-            patch.object(exp632, "_try_transformers_explicit", return_value=(None, "explicit_fail")),
+            patch.object(
+                exp632, "_try_transformers_explicit", return_value=(None, "explicit_fail")
+            ),
             patch("pathlib.Path.glob", return_value=iter([])),
         ):
             model, name, size, blocked = exp632.load_model(50.0)
@@ -345,7 +347,16 @@ class TestRunExperiment:
         # 2 GPUs but all model loading options fail.
         with (
             patch.object(exp632, "detect_gpus", return_value=(2, 24.0, 24.0)),
-            patch.object(exp632, "load_model", return_value=(None, "", None, ["auto_fail", "explicit_fail", "llama_cpp_no_gguf_found"])),
+            patch.object(
+                exp632,
+                "load_model",
+                return_value=(
+                    None,
+                    "",
+                    None,
+                    ["auto_fail", "explicit_fail", "llama_cpp_no_gguf_found"],
+                ),
+            ),
         ):
             result = exp632.run_experiment()
 
@@ -360,7 +371,9 @@ class TestRunExperiment:
 
         with (
             patch.object(exp632, "detect_gpus", return_value=(2, 24.0, 24.0)),
-            patch.object(exp632, "load_model", return_value=(fake_model, "Qwen/Qwen2.5-7B-Instruct", 7, [])),
+            patch.object(
+                exp632, "load_model", return_value=(fake_model, "Qwen/Qwen2.5-7B-Instruct", 7, [])
+            ),
             patch.object(exp632, "sample_utilization", return_value=75.0),
             patch.object(exp632, "run_forward_passes", return_value=([80.0] * 10, [75.0] * 10)),
         ):
@@ -379,7 +392,9 @@ class TestRunExperiment:
 
         with (
             patch.object(exp632, "detect_gpus", return_value=(2, 24.0, 24.0)),
-            patch.object(exp632, "load_model", return_value=(fake_model, "Qwen/Qwen2.5-7B-Instruct", 7, [])),
+            patch.object(
+                exp632, "load_model", return_value=(fake_model, "Qwen/Qwen2.5-7B-Instruct", 7, [])
+            ),
             patch.object(exp632, "sample_utilization", return_value=0.0),
             patch.object(exp632, "run_forward_passes", return_value=([30.0] * 10, [5.0] * 10)),
         ):
@@ -399,7 +414,9 @@ class TestRunExperiment:
             patch.object(exp632, "detect_gpus", return_value=(2, 24.0, 24.0)),
             patch.object(exp632, "load_model", return_value=(fake_model, "local.gguf", None, [])),
             patch.object(exp632, "sample_utilization", return_value=0.0),
-            patch.object(exp632, "_llama_cpp_forward_passes", return_value=([60.0] * 10, [80.0] * 10)),
+            patch.object(
+                exp632, "_llama_cpp_forward_passes", return_value=([60.0] * 10, [80.0] * 10)
+            ),
         ):
             result = exp632.run_experiment()
 
@@ -416,7 +433,9 @@ class TestRunExperiment:
 
         with (
             patch.object(exp632, "detect_gpus", return_value=(2, 24.0, 24.0)),
-            patch.object(exp632, "load_model", return_value=(fake_model, "Qwen/Qwen2.5-7B-Instruct", 7, [])),
+            patch.object(
+                exp632, "load_model", return_value=(fake_model, "Qwen/Qwen2.5-7B-Instruct", 7, [])
+            ),
             patch.object(exp632, "sample_utilization", return_value=0.0),
             patch.object(exp632, "run_forward_passes", return_value=([50.0] * 10, util_1)),
         ):
@@ -431,11 +450,18 @@ class TestRunExperiment:
             result = exp632.run_experiment()
 
         required = [
-            "n_gpus", "vram_0_gb", "vram_1_gb",
-            "model_loaded", "model_name", "model_size_B",
-            "peak_gpu0_util", "peak_gpu1_util",
-            "sustained_gpu1_fraction", "dualgpu_proven",
-            "retro_071_resolved", "honest_verdict",
+            "n_gpus",
+            "vram_0_gb",
+            "vram_1_gb",
+            "model_loaded",
+            "model_name",
+            "model_size_B",
+            "peak_gpu0_util",
+            "peak_gpu1_util",
+            "sustained_gpu1_fraction",
+            "dualgpu_proven",
+            "retro_071_resolved",
+            "honest_verdict",
         ]
         for field in required:
             assert field in result, f"Missing required field: {field}"
@@ -449,7 +475,9 @@ class TestRunExperiment:
 
         with (
             patch.object(exp632, "detect_gpus", return_value=(2, 24.0, 24.0)),
-            patch.object(exp632, "load_model", return_value=(fake_model, "Qwen/Qwen2.5-7B-Instruct", 7, [])),
+            patch.object(
+                exp632, "load_model", return_value=(fake_model, "Qwen/Qwen2.5-7B-Instruct", 7, [])
+            ),
             patch.object(exp632, "sample_utilization", return_value=0.0),
             patch.object(exp632, "run_forward_passes", return_value=([0.0] * 10, [0.0] * 10)),
             patch.dict(sys.modules, {"torch": torch_mock}),

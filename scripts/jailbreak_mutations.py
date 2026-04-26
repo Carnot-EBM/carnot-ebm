@@ -28,8 +28,6 @@ from __future__ import annotations
 
 import hashlib
 import random
-from typing import Iterator
-
 
 # ---------------------------------------------------------------------------
 # OWASP LLM-01 category seed templates

@@ -93,9 +93,7 @@ class TestRegisterMapCoverage:
         self.sim.axi_write(REG_BETA_FINAL, q88)
         val = self.sim.axi_read(REG_BETA_FINAL)
         decoded = q88_to_float(val & 0xFFFF)
-        assert abs(decoded - beta) < 0.005, (
-            f"BETA_FINAL round-trip error: {decoded:.4f} != {beta}"
-        )
+        assert abs(decoded - beta) < 0.005, f"BETA_FINAL round-trip error: {decoded:.4f} != {beta}"
 
     def test_bias_ram_all_128_spins(self) -> None:
         """All 128 bias RAM entries are addressable and survive write-read.
@@ -163,8 +161,7 @@ class TestRegisterMapCoverage:
             expected_bit = 1 if spins[bit] == 1 else 0
             got_bit = (word >> bit) & 1
             assert got_bit == expected_bit, (
-                f"spin_out bit {bit}: expected {expected_bit} got {got_bit} "
-                f"(spin={spins[bit]})"
+                f"spin_out bit {bit}: expected {expected_bit} got {got_bit} (spin={spins[bit]})"
             )
 
     def test_status_done_after_run(self) -> None:
@@ -195,15 +192,19 @@ class TestSpinUpdateSingleStep:
 
     def _make_4spin_ring(self) -> IsingSimulator:
         """Build a 4-spin antiferromagnetic ring: J=−1.0 on each edge."""
-        sim = IsingSimulator(n_spins=4, max_degree=4, n_steps=1,
-                              beta_min=5.0, beta_max=5.0, lfsr_seed=0xACE1)
+        sim = IsingSimulator(
+            n_spins=4, max_degree=4, n_steps=1, beta_min=5.0, beta_max=5.0, lfsr_seed=0xACE1
+        )
         # Ring: 0-1-2-3-0, antiferromagnetic
-        j = np.array([
-            [0.0, -1.0, 0.0, -1.0],
-            [-1.0, 0.0, -1.0, 0.0],
-            [0.0, -1.0, 0.0, -1.0],
-            [-1.0, 0.0, -1.0, 0.0],
-        ], dtype=np.float32)
+        j = np.array(
+            [
+                [0.0, -1.0, 0.0, -1.0],
+                [-1.0, 0.0, -1.0, 0.0],
+                [0.0, -1.0, 0.0, -1.0],
+                [-1.0, 0.0, -1.0, 0.0],
+            ],
+            dtype=np.float32,
+        )
         h = np.zeros(4, dtype=np.float32)
         sim.load_problem(j, h)
         return sim
@@ -217,12 +218,15 @@ class TestSpinUpdateSingleStep:
         # Initial state: all +1
         # For spin 0: h_eff = J[0,1]*s[1] + J[0,3]*s[3] = (-1)*1 + (-1)*1 = -2.0
         # For spin 1: h_eff = J[1,0]*s[0] + J[1,2]*s[2] = (-1)*1 + (-1)*1 = -2.0
-        j_float = np.array([
-            [0.0, -1.0, 0.0, -1.0],
-            [-1.0, 0.0, -1.0, 0.0],
-            [0.0, -1.0, 0.0, -1.0],
-            [-1.0, 0.0, -1.0, 0.0],
-        ], dtype=np.float32)
+        j_float = np.array(
+            [
+                [0.0, -1.0, 0.0, -1.0],
+                [-1.0, 0.0, -1.0, 0.0],
+                [0.0, -1.0, 0.0, -1.0],
+                [-1.0, 0.0, -1.0, 0.0],
+            ],
+            dtype=np.float32,
+        )
         spins = sim.spins.copy()
         for i in range(4):
             h_eff_python = float(np.dot(j_float[i], spins))
@@ -238,12 +242,15 @@ class TestSpinUpdateSingleStep:
         SCENARIO-SAMPLE-024: energy computation correctness.
         """
         sim = IsingSimulator(n_spins=4, max_degree=4, n_steps=1)
-        j = np.array([
-            [0.0, 1.0, 0.0, 1.0],
-            [1.0, 0.0, 1.0, 0.0],
-            [0.0, 1.0, 0.0, 1.0],
-            [1.0, 0.0, 1.0, 0.0],
-        ], dtype=np.float32)
+        j = np.array(
+            [
+                [0.0, 1.0, 0.0, 1.0],
+                [1.0, 0.0, 1.0, 0.0],
+                [0.0, 1.0, 0.0, 1.0],
+                [1.0, 0.0, 1.0, 0.0],
+            ],
+            dtype=np.float32,
+        )
         h = np.array([0.5, -0.5, 0.5, -0.5], dtype=np.float32)
         sim.load_problem(j, h)
         # Set fixed spin state for deterministic reference
@@ -287,12 +294,15 @@ class TestEnergyComputation:
         (counting directed edges).
         """
         sim = IsingSimulator(n_spins=4, max_degree=4, n_steps=1)
-        j = np.array([
-            [0.0, 1.0, 0.0, 1.0],
-            [1.0, 0.0, 1.0, 0.0],
-            [0.0, 1.0, 0.0, 1.0],
-            [1.0, 0.0, 1.0, 0.0],
-        ], dtype=np.float32)
+        j = np.array(
+            [
+                [0.0, 1.0, 0.0, 1.0],
+                [1.0, 0.0, 1.0, 0.0],
+                [0.0, 1.0, 0.0, 1.0],
+                [1.0, 0.0, 1.0, 0.0],
+            ],
+            dtype=np.float32,
+        )
         h = np.zeros(4, dtype=np.float32)
         sim.load_problem(j, h)
         sim.spins[:] = 1  # Force ground state
@@ -310,12 +320,15 @@ class TestEnergyComputation:
         Spec: REQ-SAMPLE-011 — energy computation correctness.
         """
         sim = IsingSimulator(n_spins=4, max_degree=4, n_steps=1)
-        j = np.array([
-            [0.0, 1.0, 0.0, 1.0],
-            [1.0, 0.0, 1.0, 0.0],
-            [0.0, 1.0, 0.0, 1.0],
-            [1.0, 0.0, 1.0, 0.0],
-        ], dtype=np.float32)
+        j = np.array(
+            [
+                [0.0, 1.0, 0.0, 1.0],
+                [1.0, 0.0, 1.0, 0.0],
+                [0.0, 1.0, 0.0, 1.0],
+                [1.0, 0.0, 1.0, 0.0],
+            ],
+            dtype=np.float32,
+        )
         h = np.zeros(4, dtype=np.float32)
         sim.load_problem(j, h)
         sim.spins[:] = 1
@@ -323,8 +336,7 @@ class TestEnergyComputation:
         sim.spins[0] = -1  # Flip one spin (excited state)
         e_excited = sim.compute_energy()
         assert e_excited > e_ground, (
-            f"Excited state energy ({e_excited:.4f}) must exceed "
-            f"ground state ({e_ground:.4f})"
+            f"Excited state energy ({e_excited:.4f}) must exceed ground state ({e_ground:.4f})"
         )
 
 
@@ -355,9 +367,7 @@ class TestAnnealingSchedule:
         sched = compute_beta_schedule(100, 0.1, 5.0, mpemba_fraction=0.1)
         n_hot = max(1, int(100 * 0.1))
         for t in range(n_hot):
-            assert sched[t] == 0.0, (
-                f"Step {t} should be β=0 (Mpemba hot-start); got {sched[t]}"
-            )
+            assert sched[t] == 0.0, f"Step {t} should be β=0 (Mpemba hot-start); got {sched[t]}"
 
     def test_ramp_is_log_linear(self) -> None:
         """Ramp phase increases log-linearly from β_min to β_max.
@@ -370,23 +380,15 @@ class TestAnnealingSchedule:
         n_hot = max(1, int(n_steps * 0.1))
         ramp = sched[n_hot:]
         # First ramp entry ≈ beta_min, last ≈ beta_max
-        assert abs(ramp[0] - beta_min) < 0.01, (
-            f"Ramp start: {ramp[0]:.4f} vs beta_min={beta_min}"
-        )
-        assert abs(ramp[-1] - beta_max) < 0.01, (
-            f"Ramp end: {ramp[-1]:.4f} vs beta_max={beta_max}"
-        )
+        assert abs(ramp[0] - beta_min) < 0.01, f"Ramp start: {ramp[0]:.4f} vs beta_min={beta_min}"
+        assert abs(ramp[-1] - beta_max) < 0.01, f"Ramp end: {ramp[-1]:.4f} vs beta_max={beta_max}"
         # Verify log-linear: ratio of consecutive β values is constant
         n_r = len(ramp)
         if n_r > 2:
-            log_ratios = [
-                math.log(ramp[t + 1] / ramp[t]) for t in range(n_r - 1) if ramp[t] > 0
-            ]
+            log_ratios = [math.log(ramp[t + 1] / ramp[t]) for t in range(n_r - 1) if ramp[t] > 0]
             mean_ratio = sum(log_ratios) / len(log_ratios)
             for lr in log_ratios:
-                assert abs(lr - mean_ratio) < 1e-6, (
-                    "β ramp is not log-linear: log-ratios vary"
-                )
+                assert abs(lr - mean_ratio) < 1e-6, "β ramp is not log-linear: log-ratios vary"
 
     def test_schedule_monotone_increasing_in_ramp(self) -> None:
         """β is monotone non-decreasing throughout the ramp phase.
@@ -398,7 +400,7 @@ class TestAnnealingSchedule:
         ramp = sched[n_hot:]
         for t in range(len(ramp) - 1):
             assert ramp[t] <= ramp[t + 1], (
-                f"Schedule not monotone at step {t}: {ramp[t]:.4f} > {ramp[t+1]:.4f}"
+                f"Schedule not monotone at step {t}: {ramp[t]:.4f} > {ramp[t + 1]:.4f}"
             )
 
 
@@ -422,8 +424,7 @@ class TestMpembaInit:
         distribution should be approximately 50/50 ±1.
         """
         sim = IsingSimulator(
-            n_spins=128, max_degree=32, n_steps=20,
-            beta_min=0.1, beta_max=0.1, lfsr_seed=0x1234
+            n_spins=128, max_degree=32, n_steps=20, beta_min=0.1, beta_max=0.1, lfsr_seed=0x1234
         )
         j, h = _build_ring_problem(128)
         sim.load_problem(j, h)
@@ -450,20 +451,27 @@ class TestMpembaInit:
         is stuck in a high-energy state; Mpemba hot-start escapes it.
         """
         n = 4  # Small frustrated ring for determinism
-        j_af = np.array([
-            [0.0, -1.0, 0.0, -1.0],
-            [-1.0, 0.0, -1.0, 0.0],
-            [0.0, -1.0, 0.0, -1.0],
-            [-1.0, 0.0, -1.0, 0.0],
-        ], dtype=np.float32)
+        j_af = np.array(
+            [
+                [0.0, -1.0, 0.0, -1.0],
+                [-1.0, 0.0, -1.0, 0.0],
+                [0.0, -1.0, 0.0, -1.0],
+                [-1.0, 0.0, -1.0, 0.0],
+            ],
+            dtype=np.float32,
+        )
         h = np.zeros(4, dtype=np.float32)
 
         # Cold-start: no Mpemba (mpemba_fraction=0 → minimal hot steps)
         # We simulate "cold start" by running with very short hot phase
         # and many ramp steps at high β (should stay near initial all-up)
         sim_cold = IsingSimulator(
-            n_spins=n, max_degree=4, n_steps=100,
-            beta_min=4.0, beta_max=5.0, lfsr_seed=0xBEEF,
+            n_spins=n,
+            max_degree=4,
+            n_steps=100,
+            beta_min=4.0,
+            beta_max=5.0,
+            lfsr_seed=0xBEEF,
             mpemba_fraction=0.0,  # No hot phase
         )
         sim_cold.load_problem(j_af, h)
@@ -473,8 +481,12 @@ class TestMpembaInit:
 
         # Hot-start: 10% Mpemba phase (β=0) then ramp
         sim_hot = IsingSimulator(
-            n_spins=n, max_degree=4, n_steps=100,
-            beta_min=0.01, beta_max=5.0, lfsr_seed=0xBEEF,
+            n_spins=n,
+            max_degree=4,
+            n_steps=100,
+            beta_min=0.01,
+            beta_max=5.0,
+            lfsr_seed=0xBEEF,
             mpemba_fraction=0.1,
         )
         sim_hot.load_problem(j_af, h)
@@ -545,8 +557,7 @@ class TestHaltCondition:
             expected_bit = 1 if spins[bit] == 1 else 0
             got_bit = (word >> bit) & 1
             assert got_bit == expected_bit, (
-                f"spin_out bit {bit}: expected {expected_bit} got {got_bit} "
-                f"(spin={spins[bit]})"
+                f"spin_out bit {bit}: expected {expected_bit} got {got_bit} (spin={spins[bit]})"
             )
 
 
@@ -680,8 +691,7 @@ class TestFullConvergence:
         We accept any energy below -200 as convergence.
         """
         sim = IsingSimulator(
-            n_spins=128, max_degree=32, n_steps=500,
-            beta_min=0.1, beta_max=8.0, lfsr_seed=0xACE1
+            n_spins=128, max_degree=32, n_steps=500, beta_min=0.1, beta_max=8.0, lfsr_seed=0xACE1
         )
         j, h = _build_ring_problem(128)
         sim.load_problem(j, h)

@@ -31,11 +31,11 @@ Spec: REQ-VERIFY-136, SCENARIO-VERIFY-178, SCENARIO-VERIFY-179
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import TYPE_CHECKING
 
-from carnot.extraction.llm_extractor_v1 import ArithmeticClaim, LLMAsExtractorV1
-from carnot.pipeline.symcode_verifier import SymCodeVerifier
-
+if TYPE_CHECKING:
+    from carnot.extraction.llm_extractor_v1 import ArithmeticClaim, LLMAsExtractorV1
+    from carnot.pipeline.symcode_verifier import SymCodeVerifier
 
 # ---------------------------------------------------------------------------
 # HermesVerificationStep — result for one step in the HERMES loop
@@ -72,7 +72,7 @@ class HermesVerificationStep:
     translated_claims: list[ArithmeticClaim]
     prover_verdict: str  # 'correct' | 'violated' | 'unknown'
     feedback_injected: bool
-    feedback_text: Optional[str]
+    feedback_text: str | None
 
 
 # ---------------------------------------------------------------------------
@@ -177,9 +177,7 @@ class HermesVerifierAdapter:
             A non-empty correction hint string if feedback should be injected.
             Empty string if no feedback is needed (all claims look plausible).
         """
-        violated_claims = [
-            c for c in claims if c.confidence < 0.5 or c.lhs_expr is None
-        ]
+        violated_claims = [c for c in claims if c.confidence < 0.5 or c.lhs_expr is None]
         if not violated_claims:
             return ""
         return f"Re-check the calculation: {violated_claims[0].claim_text}"

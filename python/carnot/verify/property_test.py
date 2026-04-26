@@ -34,7 +34,6 @@ from __future__ import annotations
 
 import random
 import time
-from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -43,7 +42,6 @@ import jax.numpy as jnp
 
 from carnot.verify.constraint import BaseConstraint
 from carnot.verify.python_types import safe_exec_function
-
 
 # ---------------------------------------------------------------------------
 # Input generators

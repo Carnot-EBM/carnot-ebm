@@ -56,11 +56,10 @@ Spec: REQ-LEARN-003, REQ-LEARN-004, SCENARIO-LEARN-003
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from carnot.pipeline.extract import ConstraintResult
 from carnot.pipeline.memory import PATTERN_THRESHOLD, ConstraintMemory
-
 
 # ---------------------------------------------------------------------------
 # Pattern → error_type constants
@@ -348,8 +347,7 @@ class CarryChainConstraint:
                 ConstraintResult(
                     constraint_type=PATTERN_ARITHMETIC_CARRY,
                     description=(
-                        f"borrow chain {borrow_count}x: {a} - {b} = {claimed}"
-                        + desc_suffix
+                        f"borrow chain {borrow_count}x: {a} - {b} = {claimed}" + desc_suffix
                     ),
                     metadata={
                         "a": a,
@@ -583,7 +581,11 @@ class NegationConstraint:
                 seen.add(desc)
                 text_outside = text[: m.start()] + text[m.end() :]
                 positive_re = re.compile(
-                    r"\b" + re.escape(subject) + r"\s+(?:are|is|has)\s+" + re.escape(predicate) + r"\b",
+                    r"\b"
+                    + re.escape(subject)
+                    + r"\s+(?:are|is|has)\s+"
+                    + re.escape(predicate)
+                    + r"\b",
                     re.IGNORECASE,
                 )
                 violated = bool(positive_re.search(text_outside))
@@ -698,7 +700,7 @@ class ConstraintGenerator:
         self._memory = memory
 
     @classmethod
-    def from_memory(cls, memory: ConstraintMemory) -> "ConstraintGenerator":
+    def from_memory(cls, memory: ConstraintMemory) -> ConstraintGenerator:
         """Construct a ConstraintGenerator from an existing ConstraintMemory.
 
         **Detailed explanation for engineers:**

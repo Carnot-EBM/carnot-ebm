@@ -39,6 +39,7 @@ import torch
 
 class NumpyEncoder(json.JSONEncoder):
     """Handle numpy/torch types in JSON serialization."""
+
     def default(self, obj):
         if isinstance(obj, (np.integer,)):
             return int(obj)
@@ -47,6 +48,7 @@ class NumpyEncoder(json.JSONEncoder):
         if isinstance(obj, np.ndarray):
             return obj.tolist()
         return super().default(obj)
+
 
 # Use GPU for all linear algebra if available
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -75,9 +77,7 @@ def compute_spectral_gap(sv: torch.Tensor) -> float:
     return float(sv[0] / sv[1])
 
 
-def profile_weight_matrix(
-    name: str, weight: torch.Tensor, max_sv_dim: int = 4096
-) -> dict:
+def profile_weight_matrix(name: str, weight: torch.Tensor, max_sv_dim: int = 4096) -> dict:
     """Compute structural features for a weight matrix using GPU-accelerated SVD.
 
     Args:
@@ -339,9 +339,7 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
     result = {
         "model_name": model_name,
         "is_moe": is_moe,
-        "num_parameters_total": int(sum(
-            np.prod(v["shape"]) for v in all_params.values()
-        )),
+        "num_parameters_total": int(sum(np.prod(v["shape"]) for v in all_params.values())),
         "num_tensors": len(all_params),
         "layer_profiles": [],
     }
@@ -363,7 +361,7 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
         # Check if this shard is already profiled
         shard_checkpoint = checkpoint_dir / f"shard_{shard_idx:03d}.json"
         if shard_checkpoint.exists():
-            print(f"  [{shard_idx+1}/{len(st_files)}] {sf.name} — cached, loading...")
+            print(f"  [{shard_idx + 1}/{len(st_files)}] {sf.name} — cached, loading...")
             with open(shard_checkpoint) as cf:
                 shard_data = json.load(cf)
             result["layer_profiles"].extend(shard_data.get("profiles", []))
@@ -371,7 +369,7 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
             continue
 
         shard_profiles = []
-        print(f"  [{shard_idx+1}/{len(st_files)}] {sf.name}...")
+        print(f"  [{shard_idx + 1}/{len(st_files)}] {sf.name}...")
         with safe_open(str(sf), framework="pt") as f:
             for key in f.keys():
                 tensor = f.get_tensor(key).float().to(DEVICE)
@@ -448,9 +446,7 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
             for p in profiles
             if "condition_number" in p and p["condition_number"] < 1e10
         ]
-        dead_fracs = [
-            p["neuron_norms"]["dead_fraction"] for p in profiles if "neuron_norms" in p
-        ]
+        dead_fracs = [p["neuron_norms"]["dead_fraction"] for p in profiles if "neuron_norms" in p]
 
         result["summary"] = {
             "num_profiled_matrices": len(profiles),
@@ -482,9 +478,9 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
     print(f"\nProfile saved to {json_path}")
 
     # Print summary.
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"WEIGHT PROFILE SUMMARY: {model_name}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  Type: {'MoE' if is_moe else 'Dense'}")
     print(f"  Parameters: {result['num_parameters_total']:,}")
     print(f"  Tensors: {result['num_tensors']}")
@@ -503,15 +499,13 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
                 print(f"  {layer_key} channel alignment: {moe['mean_channel_alignment']:.3f}")
             if "expert_overlap" in moe:
                 print(f"  {layer_key} expert overlap: {moe['expert_overlap']['mean']:.3f}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     return result
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Experiment 32: Weight Structure Profiling"
-    )
+    parser = argparse.ArgumentParser(description="Experiment 32: Weight Structure Profiling")
     parser.add_argument(
         "--model",
         type=str,

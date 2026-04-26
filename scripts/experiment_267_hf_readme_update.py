@@ -403,7 +403,9 @@ def main() -> int:
     RESULTS_PATH.write_text(json.dumps(artifact, indent=2) + "\n", encoding="utf-8")
 
     summary = artifact["summary"]
-    print(f"\nDone. {summary['success']} updated, {summary['skipped_already_current']} skipped, {summary['failed']} failed.")
+    print(
+        f"\nDone. {summary['success']} updated, {summary['skipped_already_current']} skipped, {summary['failed']} failed."
+    )
     print(f"Results: {RESULTS_PATH}")
     return 0
 

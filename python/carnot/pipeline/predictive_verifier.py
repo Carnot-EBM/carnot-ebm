@@ -155,11 +155,11 @@ class PredictiveFeatures:
         return np.array(
             [
                 min(self.token_count / 100.0, 1.0),  # scaled to ~[0,1]
-                min(self.char_count / 500.0, 1.0),   # scaled to ~[0,1]
+                min(self.char_count / 500.0, 1.0),  # scaled to ~[0,1]
                 self.numeric_density,
                 self.operator_density,
                 self.json_parseable,
-                min(self.n_claims / 10.0, 1.0),      # scaled to ~[0,1]
+                min(self.n_claims / 10.0, 1.0),  # scaled to ~[0,1]
                 self.has_final_answer,
                 self.domain_code,
                 self.prior_confidence,
@@ -241,10 +241,7 @@ def extract_features(
             pass
 
     # Domain encoding: 0.0 = "reasoning" (default), 1.0 = anything else.
-    if domain is None or domain == "reasoning":
-        domain_code = 0.0
-    else:
-        domain_code = 1.0
+    domain_code = 0.0 if domain is None or domain == "reasoning" else 1.0
 
     return PredictiveFeatures(
         token_count=token_count,
@@ -321,9 +318,7 @@ class GateDecision:
         raw: dict[str, Any] = {
             "confidence": self.confidence,
             "domain_probs": {k: self.domain_probs[k] for k in sorted(self.domain_probs)},
-            "feature_summary": {
-                k: self.feature_summary[k] for k in sorted(self.feature_summary)
-            },
+            "feature_summary": {k: self.feature_summary[k] for k in sorted(self.feature_summary)},
             "route": self.route,
             "run_date": self.run_date,
             "should_skip": self.should_skip,
@@ -351,15 +346,15 @@ class GateDecision:
 # See _DEFAULT_W comments for each feature's intended contribution.
 _DEFAULT_W = np.array(
     [
-        0.3,   # token_count (scaled): more tokens → slightly more content to check
-        0.1,   # char_count (scaled): weakly correlated with numeric density
-        1.2,   # numeric_density: strong positive signal for arithmetic violations
-        0.8,   # operator_density: arithmetic operators → high risk
-        0.5,   # json_parseable: structured output is usually monitorable → mild risk
-        0.4,   # n_claims (scaled): more claims → more to verify
-        0.3,   # has_final_answer: explicit answer declaration → more checkable
-        0.2,   # domain_code: code domain slightly higher risk than reasoning
-        0.6,   # prior_confidence: caller hint dominates when strong
+        0.3,  # token_count (scaled): more tokens → slightly more content to check
+        0.1,  # char_count (scaled): weakly correlated with numeric density
+        1.2,  # numeric_density: strong positive signal for arithmetic violations
+        0.8,  # operator_density: arithmetic operators → high risk
+        0.5,  # json_parseable: structured output is usually monitorable → mild risk
+        0.4,  # n_claims (scaled): more claims → more to verify
+        0.3,  # has_final_answer: explicit answer declaration → more checkable
+        0.2,  # domain_code: code domain slightly higher risk than reasoning
+        0.6,  # prior_confidence: caller hint dominates when strong
     ],
     dtype=np.float32,
 )
@@ -496,19 +491,19 @@ class PredictiveVerifier:
         # violations.  Code and logic are scaled down conservatively.
         domain_probs: dict[str, float] = {
             "arithmetic": float(np.clip(confidence * 1.0, 0.0, 1.0)),
-            "logic":      float(np.clip(confidence * 0.7, 0.0, 1.0)),
-            "code":       float(np.clip(confidence * 0.6, 0.0, 1.0)),
+            "logic": float(np.clip(confidence * 0.7, 0.0, 1.0)),
+            "code": float(np.clip(confidence * 0.6, 0.0, 1.0)),
         }
 
         feature_summary: dict[str, Any] = {
-            "token_count":      features.token_count,
-            "char_count":       features.char_count,
-            "numeric_density":  round(features.numeric_density, 4),
+            "token_count": features.token_count,
+            "char_count": features.char_count,
+            "numeric_density": round(features.numeric_density, 4),
             "operator_density": round(features.operator_density, 4),
-            "json_parseable":   features.json_parseable,
-            "n_claims":         features.n_claims,
+            "json_parseable": features.json_parseable,
+            "n_claims": features.n_claims,
             "has_final_answer": features.has_final_answer,
-            "domain_code":      features.domain_code,
+            "domain_code": features.domain_code,
             "prior_confidence": round(features.prior_confidence, 4),
         }
 
@@ -547,8 +542,9 @@ class PredictiveVerifier:
 
         Spec: REQ-PRED-002
         """
-        feats = self.extract_features_for(partial_response, domain=domain,
-                                          prior_confidence=prior_confidence)
+        feats = self.extract_features_for(
+            partial_response, domain=domain, prior_confidence=prior_confidence
+        )
         return self.predict(feats, threshold=threshold)
 
     # ------------------------------------------------------------------
@@ -588,8 +584,8 @@ class PredictiveVerifier:
         raw_confidence = float(_sigmoid(norm - 0.5))
         return {
             "arithmetic": float(np.clip(raw_confidence * 1.0, 0.0, 1.0)),
-            "logic":      float(np.clip(raw_confidence * 0.7, 0.0, 1.0)),
-            "code":       float(np.clip(raw_confidence * 0.6, 0.0, 1.0)),
+            "logic": float(np.clip(raw_confidence * 0.7, 0.0, 1.0)),
+            "code": float(np.clip(raw_confidence * 0.6, 0.0, 1.0)),
         }
 
     # Alias so the existing jepa_predictor call-site in verify_repair.py works
@@ -644,19 +640,19 @@ class PredictiveVerifier:
 
         domain_probs: dict[str, float] = {
             "arithmetic": float(np.clip(confidence * 1.0, 0.0, 1.0)),
-            "logic":      float(np.clip(confidence * 0.7, 0.0, 1.0)),
-            "code":       float(np.clip(confidence * 0.6, 0.0, 1.0)),
+            "logic": float(np.clip(confidence * 0.7, 0.0, 1.0)),
+            "code": float(np.clip(confidence * 0.6, 0.0, 1.0)),
         }
 
         feature_summary: dict[str, Any] = {
-            "token_count":      features.token_count,
-            "char_count":       features.char_count,
-            "numeric_density":  round(features.numeric_density, 4),
+            "token_count": features.token_count,
+            "char_count": features.char_count,
+            "numeric_density": round(features.numeric_density, 4),
             "operator_density": round(features.operator_density, 4),
-            "json_parseable":   features.json_parseable,
-            "n_claims":         features.n_claims,
+            "json_parseable": features.json_parseable,
+            "n_claims": features.n_claims,
             "has_final_answer": features.has_final_answer,
-            "domain_code":      features.domain_code,
+            "domain_code": features.domain_code,
             "prior_confidence": round(features.prior_confidence, 4),
         }
 
@@ -834,8 +830,7 @@ class PredictiveVerifier:
             from onnx import TensorProto, helper, numpy_helper
         except (ImportError, TypeError) as exc:
             raise ImportError(
-                "The 'onnx' package is required for ONNX export. "
-                "Install it with: pip install onnx"
+                "The 'onnx' package is required for ONNX export. Install it with: pip install onnx"
             ) from exc
 
         # Initialiser tensors (constant weights embedded in the graph).
@@ -864,12 +859,8 @@ class PredictiveVerifier:
         )
 
         # Graph I/O shapes: input (1, FEATURE_DIM) → output (1,)
-        input_info = helper.make_tensor_value_info(
-            "input", TensorProto.FLOAT, [1, FEATURE_DIM]
-        )
-        output_info = helper.make_tensor_value_info(
-            "output", TensorProto.FLOAT, [1]
-        )
+        input_info = helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, FEATURE_DIM])
+        output_info = helper.make_tensor_value_info("output", TensorProto.FLOAT, [1])
 
         graph = helper.make_graph(
             nodes=[matmul_node, add_node, sigmoid_node],

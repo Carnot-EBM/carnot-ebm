@@ -115,7 +115,7 @@ class TestLambdaRankLossPositiveForInvertedRanking:
         """
         # Arrange: 2 steps — incorrect step has higher score (model is wrong)
         scores = np.array([-5.0, 5.0], dtype=np.float32)  # correct has low score
-        labels = np.array([1.0, 0.0], dtype=np.float32)    # but label says correct is 1
+        labels = np.array([1.0, 0.0], dtype=np.float32)  # but label says correct is 1
 
         # Act
         loss, lambdas = lambda_rank_loss(scores, labels)
@@ -237,7 +237,7 @@ class TestActPRMUncertaintyWeighting:
         scores = np.array([-2.0, 2.0], dtype=np.float32)  # inverted ranking
         labels = np.array([1.0, 0.0], dtype=np.float32)
 
-        low_weights = np.array([0.1, 0.1], dtype=np.float32)   # high agreement
+        low_weights = np.array([0.1, 0.1], dtype=np.float32)  # high agreement
         high_weights = np.array([1.1, 1.1], dtype=np.float32)  # high uncertainty
 
         loss_low, lambdas_low = lambda_rank_loss(scores, labels, low_weights)
@@ -343,25 +343,45 @@ class TestJEPALambdaRankV18Integration:
         # gradient flow in a small number of epochs.
         train_groups = []
         for i in range(20):
-            train_groups.append({
-                "steps": [
-                    {"text": f"correct arithmetic step {i}: result equals {i+1}",
-                     "label": 1, "z3_label": True, "pddl_label": True},
-                    {"text": f"wrong incorrect step {i}: result equals {i+99}",
-                     "label": 0, "z3_label": False, "pddl_label": None},
-                ]
-            })
+            train_groups.append(
+                {
+                    "steps": [
+                        {
+                            "text": f"correct arithmetic step {i}: result equals {i + 1}",
+                            "label": 1,
+                            "z3_label": True,
+                            "pddl_label": True,
+                        },
+                        {
+                            "text": f"wrong incorrect step {i}: result equals {i + 99}",
+                            "label": 0,
+                            "z3_label": False,
+                            "pddl_label": None,
+                        },
+                    ]
+                }
+            )
 
         eval_groups = []
         for i in range(10):
-            eval_groups.append({
-                "steps": [
-                    {"text": f"correct step eval {i}: answer is {i+5}",
-                     "label": 1, "z3_label": None, "pddl_label": None},
-                    {"text": f"wrong step eval {i}: answer is {i+55}",
-                     "label": 0, "z3_label": None, "pddl_label": None},
-                ]
-            })
+            eval_groups.append(
+                {
+                    "steps": [
+                        {
+                            "text": f"correct step eval {i}: answer is {i + 5}",
+                            "label": 1,
+                            "z3_label": None,
+                            "pddl_label": None,
+                        },
+                        {
+                            "text": f"wrong step eval {i}: answer is {i + 55}",
+                            "label": 0,
+                            "z3_label": None,
+                            "pddl_label": None,
+                        },
+                    ]
+                }
+            )
 
         model = JEPALambdaRankV18(hidden_dim=32)
 
@@ -423,12 +443,17 @@ class TestJEPALambdaRankV18Integration:
         """
         model = JEPALambdaRankV18()
         groups = [
-            {"steps": [
-                {"text": "correct: 5 * 3 = 15", "label": 1,
-                 "z3_label": True, "pddl_label": True},
-                {"text": "wrong: 5 * 3 = 20", "label": 0,
-                 "z3_label": None, "pddl_label": None},
-            ]}
+            {
+                "steps": [
+                    {
+                        "text": "correct: 5 * 3 = 15",
+                        "label": 1,
+                        "z3_label": True,
+                        "pddl_label": True,
+                    },
+                    {"text": "wrong: 5 * 3 = 20", "label": 0, "z3_label": None, "pddl_label": None},
+                ]
+            }
         ]
         history = model.train(groups, n_epochs=5, lr=1e-3)
         assert len(history) == 5, f"Expected 5 loss values, got {len(history)}"

@@ -28,6 +28,7 @@
 
 Spec: REQ-CALIB-001, REQ-CALIB-002, SCENARIO-CALIB-001, SCENARIO-CALIB-002
 """
+
 from __future__ import annotations
 
 import json

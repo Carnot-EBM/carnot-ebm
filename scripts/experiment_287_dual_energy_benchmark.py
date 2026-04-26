@@ -47,7 +47,7 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from typing import Any
 
@@ -79,7 +79,7 @@ TEMPERATURE: float = 1.0
 """Logit temperature for semantic energy computation."""
 
 # Exp 219 accuracy distribution — used to calibrate synthetic logit generator.
-EXP219_QWEN_ACCURACY: float = 0.215   # Qwen3.5-0.8B baseline accuracy
+EXP219_QWEN_ACCURACY: float = 0.215  # Qwen3.5-0.8B baseline accuracy
 EXP219_GEMMA_ACCURACY: float = 0.375  # Gemma4-E4B-it baseline accuracy
 EXP219_MEAN_ACCURACY: float = (EXP219_QWEN_ACCURACY + EXP219_GEMMA_ACCURACY) / 2.0
 """Average baseline accuracy from Exp 219 (~0.295).  Used as calibration 'correct' rate."""
@@ -288,11 +288,7 @@ def threshold_sweep(
 
         precision = tp / (tp + fp) if (tp + fp) > 0 else 1.0
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-        f1 = (
-            2.0 * precision * recall / (precision + recall)
-            if (precision + recall) > 0.0
-            else 0.0
-        )
+        f1 = 2.0 * precision * recall / (precision + recall) if (precision + recall) > 0.0 else 0.0
         records.append(
             {
                 "threshold": float(thr),
@@ -356,8 +352,7 @@ def per_variant_breakdown(
 
         # Compute fractions relative to total rows so "none" dominates non-fired rows.
         signal_fractions = {
-            sig: count / total if total > 0 else 0.0
-            for sig, count in signal_counts.items()
+            sig: count / total if total > 0 else 0.0 for sig, count in signal_counts.items()
         }
 
         result[vtype] = {
@@ -513,7 +508,7 @@ def run_benchmark(
         compute_spilled_energy,
     )
 
-    started_at = datetime.now(timezone.utc).isoformat()
+    started_at = datetime.now(UTC).isoformat()
     rng = np.random.default_rng(seed)
 
     # ------------------------------------------------------------------
@@ -583,8 +578,8 @@ def run_benchmark(
     bench_rng = np.random.default_rng(seed + 2)
 
     # Assign variant types: equal split.
-    n_ns = n_benchmark // 2        # number_swap examples
-    n_is = n_benchmark - n_ns      # irrelevant_sentence examples
+    n_ns = n_benchmark // 2  # number_swap examples
+    n_is = n_benchmark - n_ns  # irrelevant_sentence examples
 
     # Within each variant, decide correct vs. wrong by ADVERSARIAL_ACCURACY.
     def _make_is_error_array(n: int, accuracy: float, r: np.random.Generator) -> list[bool]:
@@ -612,14 +607,16 @@ def run_benchmark(
         spilled = extractor.extract_from_array(logits, threshold=SPILLED_THRESHOLD)
         semantic = sem_extractor.extract(logits)
         dual = gate.fire(spilled, semantic)
-        rows.append({
-            "variant_type": "number_swap",
-            "is_error": is_error_ns[i],
-            "gate_fired": dual.gate_fired,
-            "trigger_signal": dual.trigger_signal,
-            "mean_spilled": spilled.mean_spilled,
-            "semantic_energy": semantic.semantic_energy,
-        })
+        rows.append(
+            {
+                "variant_type": "number_swap",
+                "is_error": is_error_ns[i],
+                "gate_fired": dual.gate_fired,
+                "trigger_signal": dual.trigger_signal,
+                "mean_spilled": spilled.mean_spilled,
+                "semantic_energy": semantic.semantic_energy,
+            }
+        )
 
     for i in range(n_is):
         label = "wrong" if is_error_is[i] else "correct"
@@ -627,14 +624,16 @@ def run_benchmark(
         spilled = extractor.extract_from_array(logits, threshold=SPILLED_THRESHOLD)
         semantic = sem_extractor.extract(logits)
         dual = gate.fire(spilled, semantic)
-        rows.append({
-            "variant_type": "irrelevant_sentence",
-            "is_error": is_error_is[i],
-            "gate_fired": dual.gate_fired,
-            "trigger_signal": dual.trigger_signal,
-            "mean_spilled": spilled.mean_spilled,
-            "semantic_energy": semantic.semantic_energy,
-        })
+        rows.append(
+            {
+                "variant_type": "irrelevant_sentence",
+                "is_error": is_error_is[i],
+                "gate_fired": dual.gate_fired,
+                "trigger_signal": dual.trigger_signal,
+                "mean_spilled": spilled.mean_spilled,
+                "semantic_energy": semantic.semantic_energy,
+            }
+        )
 
     # ------------------------------------------------------------------
     # Step 6 — AUROC computation
@@ -649,9 +648,7 @@ def run_benchmark(
     #   - wrong_is (energy > baseline)  → clamped to 0 (confused, not overconfident)
     # This avoids the calibrated_threshold fallback pathology where the median of wrong
     # energies collapses to the wrong_is energy level and fires on correct responses.
-    sem_scores = [
-        max(0.0, baseline_semantic_mean - r["semantic_energy"]) for r in rows
-    ]
+    sem_scores = [max(0.0, baseline_semantic_mean - r["semantic_energy"]) for r in rows]
 
     # Combined score: spilled + semantic_overconfident.
     # - wrong_ns gets high combined via semantic component
@@ -691,7 +688,7 @@ def run_benchmark(
     n_errors = sum(1 for e in is_error_all if e)
     n_total = len(rows)
 
-    finished_at = datetime.now(timezone.utc).isoformat()
+    finished_at = datetime.now(UTC).isoformat()
 
     return {
         "experiment": EXPERIMENT,
@@ -724,12 +721,13 @@ def run_benchmark(
         "gap_filler": gap_filler,
         # Comparison references (from spec)
         "comparison": {
-            "semantic_grounding_stale_recall": 1.0,   # Exp 279: 100% stale detection
+            "semantic_grounding_stale_recall": 1.0,  # Exp 279: 100% stale detection
             "semantic_grounding_fresh_wrong_recall": 0.0,  # Exp 279: 0% fresh-wrong caught
             "fcv_arithmetic_route_coverage": 706 / 2545,  # Exp 244: 706 arithmetic of 2545
         },
         "analysis_notes": [
-            "Synthetic logits generated — no logits_282_*.npy files found." if using_synthetic
+            "Synthetic logits generated — no logits_282_*.npy files found."
+            if using_synthetic
             else "Real GPU logits loaded from data/research/logits_282_*.npy.",
             f"Primary criterion (combined AUROC ≥ 0.65): {'MET' if primary_criterion_met else 'NOT MET'}",
             f"Combined AUROC={auroc_combined:.4f} vs spilled={auroc_spilled:.4f} / semantic={auroc_semantic:.4f}",

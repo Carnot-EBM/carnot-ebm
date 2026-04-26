@@ -237,9 +237,7 @@ class TestPersistence:
 
     def test_load_invalid_version_raises(self) -> None:
         """REQ-LEARN-003: load() raises ValueError for bad file version."""
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump({"version": 99, "patterns": {}}, f)
             path = f.name
         try:
@@ -250,9 +248,7 @@ class TestPersistence:
 
     def test_load_missing_version_raises(self) -> None:
         """REQ-LEARN-003: load() raises ValueError when version key is absent."""
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump({"patterns": {}}, f)
             path = f.name
         try:
@@ -405,10 +401,7 @@ class TestPipelineIntegration:
         # The pattern for 'arithmetic' domain should have an example.
         arith_patterns = mem._patterns.get("arithmetic", {})
         assert len(arith_patterns) > 0
-        any_example = any(
-            len(rec.constraint_examples) > 0
-            for rec in arith_patterns.values()
-        )
+        any_example = any(len(rec.constraint_examples) > 0 for rec in arith_patterns.values())
         assert any_example
 
 

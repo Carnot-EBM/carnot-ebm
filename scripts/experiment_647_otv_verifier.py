@@ -146,6 +146,7 @@ head = trainer.train(train_pairs, n_epochs=50)
 # Step 4: Evaluate AUC-ROC on test set.
 # ---------------------------------------------------------------------------
 
+
 def _compute_auc(trained_head: OTVVerificationHead, eval_pairs: list[dict]) -> float:
     """Compute AUC-ROC manually (no sklearn dependency required).
 
@@ -194,6 +195,7 @@ otv_auc = _compute_auc(head, test_pairs)
 # Step 5: Load EORM AUC baseline from prior results.
 # ---------------------------------------------------------------------------
 
+
 def _load_eorm_baseline() -> float:
     """Extract the best EORM/JEPA AUC from Exps 556, 559, 383, 631.
 
@@ -205,7 +207,10 @@ def _load_eorm_baseline() -> float:
     """
     candidates: list[float] = []
     search_paths = [
-        ("results/experiment_631_jepa_v14_oracle.json", ["v14_ood_auc", "v14_in_dist_auc", "v13_ood_auc"]),
+        (
+            "results/experiment_631_jepa_v14_oracle.json",
+            ["v14_ood_auc", "v14_in_dist_auc", "v13_ood_auc"],
+        ),
         ("results/experiment_556_eorm_grpo_retrain.json", ["after_auc", "before_auc", "auc"]),
         ("results/experiment_559_lowrank_kaem_calibration.json", ["auc", "test_auc", "eorm_auc"]),
         ("results/experiment_383_models_retrain.json", ["auc", "test_auc", "eorm_auc"]),
@@ -249,12 +254,8 @@ speedup_ratio = eorm_latency_ms / max(otv_latency_ms, 1e-6)
 auc_gap = float(eorm_auc_baseline - otv_auc)
 otv_viable = bool(otv_auc >= eorm_auc_baseline - 0.05)
 
-recommendation = (
-    "OTV as Tier 2 default" if otv_viable else "Keep EORM as Tier 2"
-)
-honest_verdict = (
-    "otv_viable_replace_eorm" if otv_viable else "otv_not_viable_keep_eorm"
-)
+recommendation = "OTV as Tier 2 default" if otv_viable else "Keep EORM as Tier 2"
+honest_verdict = "otv_viable_replace_eorm" if otv_viable else "otv_not_viable_keep_eorm"
 
 artifact = tmpl.build_result(
     {

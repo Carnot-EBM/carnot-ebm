@@ -116,6 +116,7 @@ class TestEBRMTrainer:
         for text, label in zip(texts, labels):
             feats = model.vectorizer.transform([text]).toarray()[0].astype(np.float32)
             from python.carnot.pipeline.ebrm_baseline import _resize_vector as rv
+
             feats = rv(feats, model.feature_dim)
             reward = 1.0 if label == 1 else 0.0
             e = model.energy(feats, reward)

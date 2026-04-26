@@ -132,9 +132,7 @@ def build_arithmetic_constraint_couplings(n_vars: int, key: jax.Array) -> tuple:
 # ---------------------------------------------------------------------------
 
 
-def build_training_data(
-    n_pairs: int, spin_dim: int, embed_dim: int, seed: int
-) -> tuple:
+def build_training_data(n_pairs: int, spin_dim: int, embed_dim: int, seed: int) -> tuple:
     """Build synthetic (spin_config, target_embedding) training pairs.
 
     **What this simulates:**
@@ -176,9 +174,7 @@ def build_training_data(
 # ---------------------------------------------------------------------------
 
 
-def evaluate_random_baseline(
-    ising_model: IsingModel, n_samples: int, seed: int
-) -> dict:
+def evaluate_random_baseline(ising_model: IsingModel, n_samples: int, seed: int) -> dict:
     """Measure energy reduction for RANDOM repair (no energy guidance).
 
     **What this computes:**

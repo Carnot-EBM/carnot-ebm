@@ -76,9 +76,9 @@ CORPUS_FILE = "results/fover_corpus_v2.json"
 
 SOURCES = [
     "results/fover_labeled_steps_live.json",  # Exp 442: 57 step-level pairs
-    "results/exp538_cot_pairs.json",           # Exp 538: 25 CoT pairs (indirect)
-    "results/live_pairs_551.json",             # Exp 551: 50 entry-level pairs (may not exist)
-    "results/live_pairs_552.json",             # Exp 552: 100 entry-level pairs
+    "results/exp538_cot_pairs.json",  # Exp 538: 25 CoT pairs (indirect)
+    "results/live_pairs_551.json",  # Exp 551: 50 entry-level pairs (may not exist)
+    "results/live_pairs_552.json",  # Exp 552: 100 entry-level pairs
 ]
 
 

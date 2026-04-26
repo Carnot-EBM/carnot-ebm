@@ -87,6 +87,7 @@ GATE_RESULT_PATH: str = "results/experiment_584_kv260_synthesis.json"
 # Gate check helper — testable standalone
 # ---------------------------------------------------------------------------
 
+
 def load_gate_result(repo_root: Path) -> dict[str, Any]:
     """Load Exp 584 synthesis result and return the parsed dict.
 
@@ -277,6 +278,7 @@ def choose_verdict(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Entrypoint for Exp 585."""

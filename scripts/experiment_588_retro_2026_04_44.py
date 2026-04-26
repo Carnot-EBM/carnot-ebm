@@ -205,9 +205,8 @@ def compute_retro() -> dict:
 
     # FPGA progress: Exp 584 bitfile_built=True OR vivado_available=True.
     # Result: both False — Vivado is not installed on this machine.
-    fpga_progress: bool = (
-        bool(results["584"].get("bitfile_built", False))
-        or bool(results["584"].get("vivado_available", False))
+    fpga_progress: bool = bool(results["584"].get("bitfile_built", False)) or bool(
+        results["584"].get("vivado_available", False)
     )
 
     # Symbolic-KAN viable: Exp 586 formula_interpretable=True.
@@ -223,14 +222,14 @@ def compute_retro() -> dict:
     #   RETRO-056: manifest built (retro_056_resolved=True)
     #   RETRO-062: live pairs collected (retro_062_resolved=True)
     #   RETRO-063: JEPA v11 AUC > 0.5 (retro_063_resolved=True)
-    n_closed_this_milestone = sum([
-        retro_056_resolved,  # RETRO-056 closed
-        retro_062_resolved,  # RETRO-062 closed
-        retro_063_resolved,  # RETRO-063 closed
-    ])
-    retro_closure_rate = round(
-        n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3
+    n_closed_this_milestone = sum(
+        [
+            retro_056_resolved,  # RETRO-056 closed
+            retro_062_resolved,  # RETRO-062 closed
+            retro_063_resolved,  # RETRO-063 closed
+        ]
     )
+    retro_closure_rate = round(n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3)
     open_retro_count = len(_RETROS_OPEN_AT_MILESTONE_START) - n_closed_this_milestone + 2  # +2 new
 
     # --- Honest verdict ------------------------------------------------------

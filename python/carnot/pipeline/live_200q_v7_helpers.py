@@ -20,7 +20,6 @@ Spec: REQ-BENCH-019, SCENARIO-BENCH-041, SCENARIO-BENCH-042
 from __future__ import annotations
 
 import logging
-from typing import Dict, Optional, Tuple
 
 from carnot.pipeline.live_100q_v7_helpers import (  # noqa: F401
     PrecisionBenchmarkResult,
@@ -49,7 +48,7 @@ def compute_wilson_ci(
     n_successes: int,
     n_total: int,
     confidence: float = 0.95,
-) -> Tuple[float, float]:
+) -> tuple[float, float]:
     """Compute the Wilson score confidence interval for a proportion.
 
     This is the authoritative CI computation for the RETRO-038 publishable-claim
@@ -82,7 +81,6 @@ def compute_wilson_ci(
     # Map the confidence level to the z-score.
     # We only support 0.95 exactly in this helper — anything else falls back to scipy.
     # The 1.96 value is the standard 95% z-score used throughout the Carnot benchmarks.
-    import math
 
     if n_total == 0:
         return 0.0, 0.0
@@ -93,6 +91,7 @@ def compute_wilson_ci(
         # scipy is an optional dependency; fall back gracefully when absent.
         try:
             from scipy import stats as _stats  # type: ignore[import]
+
             z = float(_stats.norm.ppf(0.5 + confidence / 2))
         except Exception:
             z = 1.96  # safe fallback — caller should use 0.95
@@ -101,10 +100,10 @@ def compute_wilson_ci(
 
 
 def build_200q_v7_artifact(
-    results: Dict,
+    results: dict,
     inference_mode: str,
-    cot_pairs_path: Optional[str],
-) -> Dict:
+    cot_pairs_path: str | None,
+) -> dict:
     """Build the v7 artifact dict for the 200q benchmark from aggregated results.
 
     Schema is 'carnot.live_200q.v7'.  The primary new field over v8 is

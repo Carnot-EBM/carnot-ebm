@@ -45,6 +45,7 @@ from scripts.experiment_template import REQUIRED_RESULT_FIELDS  # noqa: E402
 # Shared helpers
 # ---------------------------------------------------------------------------
 
+
 def _write_gate_artifact(results_dir: Path, *, dual_gpu_deployed: bool) -> None:
     """Write a minimal Exp 856 gate artifact into results_dir."""
     p = results_dir / "experiment_856_dualgpu_production.json"
@@ -59,6 +60,7 @@ def _mock_tmpl_factory(tmp_path: Path, deliverable_name: str) -> MagicMock:
     assertion helpers, raising AttributeError if the call signature doesn't match.
     Setting the attribute explicitly as a plain MagicMock bypasses that interception.
     """
+
     def _build_result(payload: dict, **kwargs: Any) -> dict:
         base = {
             "status": kwargs.get("status", "success"),
@@ -87,6 +89,7 @@ def _mock_tmpl_factory(tmp_path: Path, deliverable_name: str) -> MagicMock:
 # Gate check — missing file
 # ---------------------------------------------------------------------------
 
+
 class TestGateCheckMissingFile:
     """REQ-BENCH-015: gate must block when Exp 856 artifact is absent."""
 
@@ -99,8 +102,10 @@ class TestGateCheckMissingFile:
 
         with (
             patch.object(exp871, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
         ):
             exp871.main()
 
@@ -113,6 +118,7 @@ class TestGateCheckMissingFile:
 # ---------------------------------------------------------------------------
 # Gate check — dual_gpu_deployed False
 # ---------------------------------------------------------------------------
+
 
 class TestGateCheckFlagFalse:
     """REQ-BENCH-015: gate must block when dual_gpu_deployed is False."""
@@ -127,8 +133,10 @@ class TestGateCheckFlagFalse:
 
         with (
             patch.object(exp871, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
         ):
             exp871.main()
 
@@ -141,6 +149,7 @@ class TestGateCheckFlagFalse:
 # GPU unhealthy path
 # ---------------------------------------------------------------------------
 
+
 class TestGPUUnhealthyBlocked:
     """SCENARIO-BENCH-034: GPU unhealthy must yield blocked artifact."""
 
@@ -152,13 +161,18 @@ class TestGPUUnhealthyBlocked:
 
         mock_tmpl = _mock_tmpl_factory(tmp_path, "experiment_871_live_benchmark_v6.json")
         mock_tmpl.setup_gpu.return_value = {
-            "all_healthy": False, "models": [], "cpu_fallback": True, "error": "no GPU"
+            "all_healthy": False,
+            "models": [],
+            "cpu_fallback": True,
+            "error": "no GPU",
         }
 
         with (
             patch.object(exp871, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
             patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "1", "CARNOT_DUAL_GPU": "1"}),
         ):
             exp871.main()
@@ -172,6 +186,7 @@ class TestGPUUnhealthyBlocked:
 # ---------------------------------------------------------------------------
 # _baseline_answer
 # ---------------------------------------------------------------------------
+
 
 class TestBaselineAnswer:
     """_baseline_answer() must be deterministic."""
@@ -201,6 +216,7 @@ class TestBaselineAnswer:
 # _run_cascade — simulation path
 # ---------------------------------------------------------------------------
 
+
 class TestRunCascadeSimulation:
     """_run_cascade() simulation path (inference_mode != live_gpu)."""
 
@@ -208,8 +224,14 @@ class TestRunCascadeSimulation:
         """SCENARIO-BENCH-034: result must contain all documented keys."""
         p = {"id": "gsm8k_5", "question": "Q", "answer": "40"}
         result = exp871._run_cascade(p, None, None, "simulation_fallback")
-        for key in ("id", "tier_exited_at", "was_correct_baseline",
-                    "was_correct_repaired", "repaired", "latency_ms"):
+        for key in (
+            "id",
+            "tier_exited_at",
+            "was_correct_baseline",
+            "was_correct_repaired",
+            "repaired",
+            "latency_ms",
+        ):
             assert key in result, f"Missing key: {key}"
 
     def test_no_crash_on_none_pipelines(self) -> None:
@@ -227,6 +249,7 @@ class TestRunCascadeSimulation:
 # ---------------------------------------------------------------------------
 # _run_cascade — live GPU path with mocked ThreeTierPipeline
 # ---------------------------------------------------------------------------
+
 
 class TestRunCascadeLiveGPU:
     """SCENARIO-BENCH-034: live_gpu path with mocked pipelines."""
@@ -297,6 +320,7 @@ class TestRunCascadeLiveGPU:
 # _compute_metrics — signed_improvement and honest_verdict
 # ---------------------------------------------------------------------------
 
+
 class TestComputeMetrics:
     """REQ-BENCH-015: metrics must be computed from per_question results correctly."""
 
@@ -358,14 +382,10 @@ class TestComputeMetrics:
     def test_honest_verdict_cascade_running_when_4_tiers(self) -> None:
         """SCENARIO-BENCH-034: cascade_tiers_active >= 4 → cascade_running."""
         rows = [
-            self._make_row(baseline_correct=True, repaired_correct=True,
-                           tier_exited_at=0),
-            self._make_row(baseline_correct=True, repaired_correct=True,
-                           tier_exited_at=1),
-            self._make_row(baseline_correct=True, repaired_correct=True,
-                           tier_exited_at=2),
-            self._make_row(baseline_correct=False, repaired_correct=True,
-                           repaired=True),  # Tier 3
+            self._make_row(baseline_correct=True, repaired_correct=True, tier_exited_at=0),
+            self._make_row(baseline_correct=True, repaired_correct=True, tier_exited_at=1),
+            self._make_row(baseline_correct=True, repaired_correct=True, tier_exited_at=2),
+            self._make_row(baseline_correct=False, repaired_correct=True, repaired=True),  # Tier 3
         ]
         metrics = exp871._compute_metrics(rows, "live_gpu")
         assert metrics["cascade_tiers_active"] == 4
@@ -374,12 +394,11 @@ class TestComputeMetrics:
     def test_cascade_skip_rate(self) -> None:
         """Fraction with tier_exited_at not None = cascade_skip_rate."""
         rows = [
-            self._make_row(baseline_correct=True, repaired_correct=True,
-                           tier_exited_at=0),
-            self._make_row(baseline_correct=True, repaired_correct=True,
-                           tier_exited_at=1),
-            self._make_row(baseline_correct=False, repaired_correct=True,
-                           repaired=True),  # Tier 3: tier_exited_at is None
+            self._make_row(baseline_correct=True, repaired_correct=True, tier_exited_at=0),
+            self._make_row(baseline_correct=True, repaired_correct=True, tier_exited_at=1),
+            self._make_row(
+                baseline_correct=False, repaired_correct=True, repaired=True
+            ),  # Tier 3: tier_exited_at is None
             self._make_row(baseline_correct=False, repaired_correct=False),
         ]
         metrics = exp871._compute_metrics(rows, "simulation_fallback")
@@ -395,6 +414,7 @@ class TestComputeMetrics:
 # ---------------------------------------------------------------------------
 # Problem corpus
 # ---------------------------------------------------------------------------
+
 
 class TestProblemCorpus:
     """Problem list must meet schema and count requirements."""
@@ -420,6 +440,7 @@ class TestProblemCorpus:
 # Happy-path main() with mocked GPU
 # ---------------------------------------------------------------------------
 
+
 class TestMainHappyPath:
     """SCENARIO-BENCH-034: successful run writes artifact with all required fields."""
 
@@ -433,8 +454,10 @@ class TestMainHappyPath:
 
         with (
             patch.object(exp871, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
             patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0", "CARNOT_DUAL_GPU": "1"}),
         ):
             exp871.main()
@@ -454,16 +477,21 @@ class TestMainHappyPath:
 
         with (
             patch.object(exp871, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
             patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0", "CARNOT_DUAL_GPU": "1"}),
         ):
             exp871.main()
 
         data = json.loads(deliverable.read_text())
         valid_verdicts = {
-            "positive_improvement", "live_no_improvement", "cascade_running",
-            "simulation_fallback", "blocked",
+            "positive_improvement",
+            "live_no_improvement",
+            "cascade_running",
+            "simulation_fallback",
+            "blocked",
         }
         assert data.get("honest_verdict") in valid_verdicts, (
             f"unexpected verdict: {data.get('honest_verdict')}"
@@ -479,8 +507,10 @@ class TestMainHappyPath:
 
         with (
             patch.object(exp871, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
             patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0", "CARNOT_DUAL_GPU": "1"}),
         ):
             exp871.main()
@@ -498,22 +528,30 @@ class TestMainHappyPath:
 
         with (
             patch.object(exp871, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_871_live_benchmark_v6.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
             patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0", "CARNOT_DUAL_GPU": "1"}),
         ):
             exp871.main()
 
         data = json.loads(deliverable.read_text())
-        for field in ("cascade_skip_rate", "cascade_tiers_active",
-                      "signed_improvement", "baseline_accuracy", "carnot_accuracy",
-                      "inference_mode"):
+        for field in (
+            "cascade_skip_rate",
+            "cascade_tiers_active",
+            "signed_improvement",
+            "baseline_accuracy",
+            "carnot_accuracy",
+            "inference_mode",
+        ):
             assert field in data, f"Missing cascade field: {field}"
 
 
 # ---------------------------------------------------------------------------
 # Existing deliverable schema check
 # ---------------------------------------------------------------------------
+
 
 class TestExistingDeliverable:
     """If the deliverable exists on disk, it must pass schema validation."""
@@ -533,6 +571,11 @@ class TestExistingDeliverable:
         if not deliverable.exists():
             pytest.skip("Deliverable not yet written")
         data = json.loads(deliverable.read_text())
-        valid = {"positive_improvement", "live_no_improvement", "cascade_running",
-                 "simulation_fallback", "blocked"}
+        valid = {
+            "positive_improvement",
+            "live_no_improvement",
+            "cascade_running",
+            "simulation_fallback",
+            "blocked",
+        }
         assert data.get("honest_verdict") in valid

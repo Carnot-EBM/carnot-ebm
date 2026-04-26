@@ -70,15 +70,15 @@ from carnot.embeddings.layer_navigator import (
     find_best_layers,
     score_layer_steerability,
 )
-from carnot.embeddings.model_embeddings import (
-    ModelEmbeddingConfig,
-    extract_embedding,
-)
 from carnot.embeddings.layer_probing import (
     LayerProbeResult,
     MultiLayerProbeResults,
     probe_all_layers,
     train_layer_probe,
+)
+from carnot.embeddings.model_embeddings import (
+    ModelEmbeddingConfig,
+    extract_embedding,
 )
 from carnot.embeddings.weight_steering import (
     apply_cws,

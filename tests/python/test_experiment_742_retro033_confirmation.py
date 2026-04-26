@@ -86,7 +86,9 @@ def _run_blocked_main(tmp_path: Path) -> dict[str, Any]:
     with (
         patch("experiment_742_retro033_confirmation.ExperimentTemplate", return_value=fake_tmpl),
         patch("experiment_742_retro033_confirmation.ExperimentTimeoutWatchdog") as mock_wd,
-        patch("experiment_742_retro033_confirmation.cached_sota_pair", return_value=None, create=True),
+        patch(
+            "experiment_742_retro033_confirmation.cached_sota_pair", return_value=None, create=True
+        ),
     ):
         mock_wd.return_value.__enter__ = lambda s: s
         mock_wd.return_value.__exit__ = MagicMock(return_value=False)
@@ -233,7 +235,7 @@ class TestComputeSignedImprovement:
         Spec: REQ-VERIFY-150.
         """
         baseline = [True] * 100 + [False] * 100  # 100/200 = 0.500
-        vr = [True] * 101 + [False] * 99          # 101/200 = 0.505
+        vr = [True] * 101 + [False] * 99  # 101/200 = 0.505
         si = exp742.compute_signed_improvement(baseline, vr)
         assert abs(si - 0.005) < 1e-9, f"Expected 0.005, got {si}"
 
@@ -289,9 +291,7 @@ class TestShuffleQuestions:
         """
         questions = exp742._QUESTIONS
         shuffled = exp742.shuffle_questions(questions, seed=999)
-        assert len(shuffled) == len(questions), (
-            "shuffle must not drop or duplicate questions"
-        )
+        assert len(shuffled) == len(questions), "shuffle must not drop or duplicate questions"
         original_qs = {q["question"] for q in questions}
         shuffled_qs = {q["question"] for q in shuffled}
         assert original_qs == shuffled_qs, "shuffle must preserve all question texts"
@@ -451,9 +451,7 @@ class TestOnDiskDeliverable:
 
         artifact = json.loads(_DELIVERABLE.read_text())
         for field in self._REQUIRED_FIELDS:
-            assert field in artifact, (
-                f"Field '{field}' missing from on-disk deliverable"
-            )
+            assert field in artifact, f"Field '{field}' missing from on-disk deliverable"
 
     def test_on_disk_deliverable_seed_is_999(self) -> None:
         """On-disk deliverable must record seed=999.
@@ -480,7 +478,11 @@ class TestOnDiskDeliverable:
         if artifact.get("inference_mode") == "blocked_no_gpu":
             pytest.skip("Blocked run — honest_verdict is 'blocked_no_gpu', not a RETRO-033 verdict")
 
-        valid_verdicts = {"retro033_confirmed_closed", "retro033_marginal_inconclusive", "retro033_reopened"}
+        valid_verdicts = {
+            "retro033_confirmed_closed",
+            "retro033_marginal_inconclusive",
+            "retro033_reopened",
+        }
         assert artifact.get("honest_verdict") in valid_verdicts, (
             f"honest_verdict '{artifact.get('honest_verdict')}' is not a valid RETRO-033 verdict — "
             f"must be one of {valid_verdicts} (REQ-VERIFY-150-3)"

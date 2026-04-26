@@ -60,10 +60,7 @@ def _false_negative_rate(skipped_mask: list[bool], violation_mask: list[bool]) -
     n_skipped = sum(skipped_mask)
     if n_skipped == 0:
         return 0.0
-    n_fn = sum(
-        1 for skipped, violated in zip(skipped_mask, violation_mask)
-        if skipped and violated
-    )
+    n_fn = sum(1 for skipped, violated in zip(skipped_mask, violation_mask) if skipped and violated)
     return n_fn / n_skipped
 
 
@@ -152,6 +149,7 @@ class TestDeliverableContent(unittest.TestCase):
     def test_artifact_has_blocked_verdict(self):
         """The artifact written for Exp 778 must record blocked_ood_auc_below_gate."""
         import os
+
         repo_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         path = os.path.join(repo_root, "results", "experiment_778_jepa_v19_cascade_deploy.json")
         with open(path) as f:
@@ -166,15 +164,26 @@ class TestDeliverableContent(unittest.TestCase):
     def test_artifact_schema_fields_present(self):
         """All declared schema fields must exist in the artifact."""
         import os
+
         repo_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         path = os.path.join(repo_root, "results", "experiment_778_jepa_v19_cascade_deploy.json")
         with open(path) as f:
             artifact = json.load(f)
         required = [
-            "experiment", "title", "run_date", "started_at", "finished_at",
-            "duration_s", "status", "jepa_v19_ood_auc", "ood_auc_gate",
-            "skip_threshold", "fast_path_skip_rate", "false_negative_rate",
-            "tier35_deployed", "honest_verdict",
+            "experiment",
+            "title",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "jepa_v19_ood_auc",
+            "ood_auc_gate",
+            "skip_threshold",
+            "fast_path_skip_rate",
+            "false_negative_rate",
+            "tier35_deployed",
+            "honest_verdict",
         ]
         for field in required:
             self.assertIn(field, artifact, f"Missing required field: {field}")

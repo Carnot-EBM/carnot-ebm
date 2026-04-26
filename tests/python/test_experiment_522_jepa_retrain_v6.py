@@ -38,7 +38,12 @@ def fover_json(tmp_path: Path) -> Path:
     """Write a minimal FOVER-style JSON file and return its path."""
     data = [
         {"step_text": "Step 1: 2+2=4", "label": "correct", "question_id": "q1", "confidence": 1.0},
-        {"step_text": "Step 2: 2+2=5", "label": "incorrect", "question_id": "q2", "confidence": 0.9},
+        {
+            "step_text": "Step 2: 2+2=5",
+            "label": "incorrect",
+            "question_id": "q2",
+            "confidence": 0.9,
+        },
         {"step_text": "Step 3: 3*3=9", "label": "correct", "question_id": "q3", "confidence": 1.0},
     ]
     path = tmp_path / "fover_test.json"
@@ -50,8 +55,18 @@ def fover_json(tmp_path: Path) -> Path:
 def response_json(tmp_path: Path) -> Path:
     """Write a response-style JSON file and return its path."""
     data = [
-        {"response": "The answer is 4.", "correct": True, "question_id": "r1", "model_id": "test_model"},
-        {"response": "The answer is 5.", "correct": False, "question_id": "r2", "model_id": "test_model"},
+        {
+            "response": "The answer is 4.",
+            "correct": True,
+            "question_id": "r1",
+            "model_id": "test_model",
+        },
+        {
+            "response": "The answer is 5.",
+            "correct": False,
+            "question_id": "r2",
+            "model_id": "test_model",
+        },
     ]
     path = tmp_path / "response_test.json"
     path.write_text(json.dumps(data))
@@ -62,8 +77,18 @@ def response_json(tmp_path: Path) -> Path:
 def violation_pair_json(tmp_path: Path) -> Path:
     """Write a ViolationPair-style JSON file and return its path."""
     data = [
-        {"partial_response": "Step A", "full_response": "Step A full", "has_violation": False, "question_id": "vp1"},
-        {"partial_response": "Step B", "full_response": "Step B full", "has_violation": True, "question_id": "vp2"},
+        {
+            "partial_response": "Step A",
+            "full_response": "Step A full",
+            "has_violation": False,
+            "question_id": "vp1",
+        },
+        {
+            "partial_response": "Step B",
+            "full_response": "Step B full",
+            "has_violation": True,
+            "question_id": "vp2",
+        },
     ]
     path = tmp_path / "vp_test.json"
     path.write_text(json.dumps(data))
@@ -211,12 +236,16 @@ class TestLoadPairsFromFile:
 
     def test_skips_invalid_entries(self, tmp_path: Path):
         mixed = tmp_path / "mixed.json"
-        mixed.write_text(json.dumps([
-            {"step_text": "good", "label": "correct"},
-            "not a dict",
-            {"unrelated": "data"},
-            {"step_text": "", "label": "correct"},  # empty text
-        ]))
+        mixed.write_text(
+            json.dumps(
+                [
+                    {"step_text": "good", "label": "correct"},
+                    "not a dict",
+                    {"unrelated": "data"},
+                    {"step_text": "", "label": "correct"},  # empty text
+                ]
+            )
+        )
         pairs = _load_pairs_from_file(mixed)
         assert len(pairs) == 1  # only the first valid entry
 
@@ -229,6 +258,7 @@ class TestLoadPairsFromFile:
 class TestGetRepoRoot:
     def test_returns_path_with_cargo_toml(self):
         from carnot.models.jepa_retrain_v6 import _get_repo_root
+
         root = _get_repo_root()
         assert isinstance(root, Path)
         assert root.exists()
@@ -262,13 +292,18 @@ class TestLoadCotPairsFromExperiments:
     def test_uses_exp_file_when_present(self, tmp_path: Path, fover_json: Path, monkeypatch):
         # Create a fake exp{id}_cot_pairs.json in results/
         from carnot.models import jepa_retrain_v6
+
         fake_results = tmp_path / "results"
         fake_results.mkdir()
         exp_file = fake_results / "exp9001_cot_pairs.json"
-        exp_file.write_text(json.dumps([
-            {"step_text": "A", "label": "correct"},
-            {"step_text": "B", "label": "incorrect"},
-        ]))
+        exp_file.write_text(
+            json.dumps(
+                [
+                    {"step_text": "A", "label": "correct"},
+                    {"step_text": "B", "label": "incorrect"},
+                ]
+            )
+        )
         # Patch _get_repo_root to return tmp_path
         monkeypatch.setattr(jepa_retrain_v6, "_get_repo_root", lambda: tmp_path)
         pairs = load_cot_pairs_from_experiments([9001], str(fover_json))
@@ -277,6 +312,7 @@ class TestLoadCotPairsFromExperiments:
     def test_fallback_relative_path(self, tmp_path: Path, fover_json: Path, monkeypatch):
         """Line 146: relative fallback_path is resolved relative to repo root."""
         from carnot.models import jepa_retrain_v6
+
         # Patch _get_repo_root to return tmp_path so relative path resolves there
         fake_results = tmp_path / "results"
         fake_results.mkdir()
@@ -289,13 +325,18 @@ class TestLoadCotPairsFromExperiments:
 
     def test_accumulates_multiple_exp_files(self, tmp_path: Path, fover_json: Path, monkeypatch):
         from carnot.models import jepa_retrain_v6
+
         fake_results = tmp_path / "results"
         fake_results.mkdir()
         for exp_id in [9001, 9002]:
             exp_file = fake_results / f"exp{exp_id}_cot_pairs.json"
-            exp_file.write_text(json.dumps([
-                {"step_text": f"text_{exp_id}", "label": "correct"},
-            ]))
+            exp_file.write_text(
+                json.dumps(
+                    [
+                        {"step_text": f"text_{exp_id}", "label": "correct"},
+                    ]
+                )
+            )
         monkeypatch.setattr(jepa_retrain_v6, "_get_repo_root", lambda: tmp_path)
         pairs = load_cot_pairs_from_experiments([9001, 9002], str(fover_json))
         assert len(pairs) == 2
@@ -303,6 +344,7 @@ class TestLoadCotPairsFromExperiments:
     def test_fallback_returns_nonempty_from_real_fover(self):
         # Smoke test against the real fover file in the repo
         from carnot.models.jepa_retrain_v6 import _get_repo_root
+
         repo_root = _get_repo_root()
         fover_path = repo_root / "results" / "fover_labeled_steps_live.json"
         if not fover_path.exists():

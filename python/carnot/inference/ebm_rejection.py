@@ -272,17 +272,23 @@ def ebm_rejection_sample(  # pragma: no cover
         # -logprob because higher logprob = better, but we want lower = better
         composite = config.ebm_weight * mean_ebm - config.logprob_weight * mean_logprob
 
-        candidates.append(EBMCandidateScore(
-            response=response,
-            mean_logprob=mean_logprob,
-            mean_ebm_energy=mean_ebm,
-            composite_energy=composite,
-            n_tokens=len(activations),
-        ))
+        candidates.append(
+            EBMCandidateScore(
+                response=response,
+                mean_logprob=mean_logprob,
+                mean_ebm_energy=mean_ebm,
+                composite_energy=composite,
+                n_tokens=len(activations),
+            )
+        )
 
         logger.debug(
             "Candidate %d: logprob=%.3f, ebm=%.3f, composite=%.3f, tokens=%d",
-            i, mean_logprob, mean_ebm, composite, len(activations),
+            i,
+            mean_logprob,
+            mean_ebm,
+            composite,
+            len(activations),
         )
 
     # Sort by composite energy ascending (lowest = best)

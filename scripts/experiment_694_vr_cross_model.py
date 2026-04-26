@@ -172,6 +172,7 @@ def _load_gsm8k_questions(n: int) -> list[str]:
     """
     try:
         from datasets import load_dataset  # noqa: PLC0415
+
         ds = load_dataset("openai/gsm8k", "main", split="test")
         total = len(ds)
         # Need at least proxy_end=650 questions.  If fewer, load what we can.
@@ -203,6 +204,7 @@ def _check_answer_correct(response: str, question: str) -> bool:
         True if the response appears to contain a numeric final answer.
     """
     import re  # noqa: PLC0415
+
     # A response is considered "correct" in our heuristic if it contains
     # a number that looks like a final answer (e.g., "The answer is 42" or "= 42").
     # WHY not ground-truth: we do not have GT labels for indices 600-649 without
@@ -226,10 +228,12 @@ def main() -> None:
     """
     # Step 0: env autofix BEFORE heavy imports (RETRO-022, RETRO-053)
     from carnot.pipeline.env_autofix import apply_env_autofix  # noqa: PLC0415
+
     apply_env_autofix()
 
     # Step 1: watchdog — 120-minute hard cap
     from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: PLC0415
+
     _watchdog = ExperimentTimeoutWatchdog(
         EXP_ID,
         timeout_minutes=120,
@@ -342,6 +346,7 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
         _write_and_exit(artifact)
 
     import torch as _torch_check  # noqa: PLC0415
+
     if not _torch_check.cuda.is_available():
         artifact = {
             "experiment": EXP_ID,
@@ -402,7 +407,7 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
                 do_sample=False,
                 pad_token_id=_hf_tokenizer.eos_token_id,
             )
-        new_ids = output_ids[0][inputs["input_ids"].shape[1]:]
+        new_ids = output_ids[0][inputs["input_ids"].shape[1] :]
         return _hf_tokenizer.decode(new_ids, skip_special_tokens=True)
 
     # ------------------------------------------------------------------

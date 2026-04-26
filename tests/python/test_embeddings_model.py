@@ -169,9 +169,7 @@ class TestExtractEmbeddingWithMockModel:
 
     def test_embedding_shape(self) -> None:
         """SCENARIO-EMBED-003: Embedding has correct dimensionality."""
-        mock_torch, mock_transformers, hidden_dim = self._build_mocks(
-            hidden_dim=768, seq_len=5
-        )
+        mock_torch, mock_transformers, hidden_dim = self._build_mocks(hidden_dim=768, seq_len=5)
 
         with patch.dict(
             "sys.modules",
@@ -186,9 +184,7 @@ class TestExtractEmbeddingWithMockModel:
         """SCENARIO-EMBED-003: Mean pooling produces correct values for uniform input."""
         # With all-ones hidden states and all-ones attention mask,
         # mean pooling should produce all-ones output.
-        mock_torch, mock_transformers, hidden_dim = self._build_mocks(
-            hidden_dim=4, seq_len=3
-        )
+        mock_torch, mock_transformers, hidden_dim = self._build_mocks(hidden_dim=4, seq_len=3)
 
         with patch.dict(
             "sys.modules",
@@ -227,12 +223,8 @@ class TestExtractEmbeddingWithMockModel:
         ):
             result = extract_embedding("code", config=config)
 
-        mock_transformers.AutoTokenizer.from_pretrained.assert_called_once_with(
-            "custom/model"
-        )
-        mock_transformers.AutoModel.from_pretrained.assert_called_once_with(
-            "custom/model"
-        )
+        mock_transformers.AutoTokenizer.from_pretrained.assert_called_once_with("custom/model")
+        mock_transformers.AutoModel.from_pretrained.assert_called_once_with("custom/model")
         assert result is not None
 
 

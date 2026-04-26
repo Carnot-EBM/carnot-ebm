@@ -87,11 +87,11 @@ DELIVERABLE = "results/experiment_558_internal_probe_real.json"
 CORPUS_PATH = _REPO_ROOT / "results" / "fover_corpus_v2.json"
 EXP_556_PATH = _REPO_ROOT / "results" / "experiment_556_eorm_grpo_retrain.json"
 
-MIN_LABELED = 100          # gate: require at least 100 real corpus entries
-HIDDEN_SIZE = 1024         # hidden-state dimension (matches Exp 545)
-PROBE_LAYER = -4           # 4th-from-last layer (arXiv 2511.06209 §3)
-SPLIT_SEED = 42            # deterministic seed matching Exp 556
-TRAIN_FRAC = 0.80          # 80% train, 20% test
+MIN_LABELED = 100  # gate: require at least 100 real corpus entries
+HIDDEN_SIZE = 1024  # hidden-state dimension (matches Exp 545)
+PROBE_LAYER = -4  # 4th-from-last layer (arXiv 2511.06209 §3)
+SPLIT_SEED = 42  # deterministic seed matching Exp 556
+TRAIN_FRAC = 0.80  # 80% train, 20% test
 EORM_PARAM_COUNT = 55_000_000  # EORM baseline params
 PAPER_RATIO = round(1.0 / 810, 8)  # arXiv 2511.06209 headline figure: 1/810
 
@@ -181,7 +181,6 @@ def main() -> None:
 
     # Step 2: hard timeout guard
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=30):
-
         # Step 3: ExperimentTemplate scaffolding
         tmpl = ExperimentTemplate(
             exp_id=EXP_ID,

@@ -101,11 +101,7 @@ class KANConstraintModel:
 
         if edges is None:
             # Fully connected graph: all (i < j) pairs.
-            edges = [
-                (i, j)
-                for i in range(input_dim)
-                for j in range(i + 1, input_dim)
-            ]
+            edges = [(i, j) for i in range(input_dim) for j in range(i + 1, input_dim)]
         self.edges: list[tuple[int, int]] = edges
 
         # Small random init: control points drawn from U(-0.05, 0.05).
@@ -269,9 +265,11 @@ class KANConstraintModel:
                 pts = np.linspace(-0.9, 0.9, n_sample)
             d2f = [
                 abs(
-                    (self._eval_spline(x + h, ctrl)
-                     - 2.0 * self._eval_spline(x, ctrl)
-                     + self._eval_spline(x - h, ctrl))
+                    (
+                        self._eval_spline(x + h, ctrl)
+                        - 2.0 * self._eval_spline(x, ctrl)
+                        + self._eval_spline(x - h, ctrl)
+                    )
                     / (h * h)
                 )
                 for x in pts
@@ -313,11 +311,13 @@ class KANConstraintModel:
         new_val = float(ctrl[left] * (1.0 - t) + ctrl[right] * t)
 
         # Insert between ctrl[left] and ctrl[left+1].
-        new_ctrl = np.concatenate([
-            ctrl[:left + 1],
-            np.array([new_val], dtype=np.float32),
-            ctrl[left + 1:],
-        ])
+        new_ctrl = np.concatenate(
+            [
+                ctrl[: left + 1],
+                np.array([new_val], dtype=np.float32),
+                ctrl[left + 1 :],
+            ]
+        )
         self.edge_control_pts[edge] = new_ctrl
         self._edge_n_ctrl[edge] = len(new_ctrl)
 
@@ -348,11 +348,13 @@ class KANConstraintModel:
 
         # Merge into average of the two, drop the right one.
         merged_val = (ctrl[merge_idx] + ctrl[merge_idx + 1]) / 2.0
-        new_ctrl = np.concatenate([
-            ctrl[:merge_idx],
-            np.array([merged_val], dtype=np.float32),
-            ctrl[merge_idx + 2:],
-        ])
+        new_ctrl = np.concatenate(
+            [
+                ctrl[:merge_idx],
+                np.array([merged_val], dtype=np.float32),
+                ctrl[merge_idx + 2 :],
+            ]
+        )
         self.edge_control_pts[edge] = new_ctrl
         self._edge_n_ctrl[edge] = len(new_ctrl)
         return True
@@ -385,9 +387,11 @@ class KANConstraintModel:
         for edge, ctrl in self.edge_control_pts.items():
             d2f = [
                 abs(
-                    (self._eval_spline(x + h, ctrl)
-                     - 2.0 * self._eval_spline(x, ctrl)
-                     + self._eval_spline(x - h, ctrl))
+                    (
+                        self._eval_spline(x + h, ctrl)
+                        - 2.0 * self._eval_spline(x, ctrl)
+                        + self._eval_spline(x - h, ctrl)
+                    )
                     / (h * h)
                 )
                 for x in x_pts
@@ -398,9 +402,7 @@ class KANConstraintModel:
         all_curvatures = list(edge_curvatures.values())
         mean_curvature = float(np.mean(all_curvatures))
         high_threshold = threshold_multiplier * mean_curvature
-        low_threshold = (
-            mean_curvature / threshold_multiplier if threshold_multiplier > 1 else 0.0
-        )
+        low_threshold = mean_curvature / threshold_multiplier if threshold_multiplier > 1 else 0.0
 
         logger.debug(
             "Curvature stats: mean=%.6f high_thresh=%.6f low_thresh=%.6f",
@@ -476,7 +478,7 @@ class KANConstraintModel:
             epoch_gaps: list[float] = []
 
             for batch_start in range(0, n, batch_size):
-                batch_idx = perm[batch_start:batch_start + batch_size]
+                batch_idx = perm[batch_start : batch_start + batch_size]
                 b_correct = correct_vectors[batch_idx]
                 b_wrong = wrong_vectors[batch_idx]
                 bs = len(batch_idx)
@@ -503,16 +505,15 @@ class KANConstraintModel:
                     gap_sum += ew - ec
 
                     # Edge gradients: accumulate (basis_k(z_correct) - basis_k(z_wrong)).
-                    for (i, j) in self.edges:
+                    for i, j in self.edges:
                         ctrl = self.edge_control_pts[(i, j)]
                         n_ctrl_e = len(ctrl)
                         z_c = float(sc[i] * sc[j])
                         z_w = float(sw[i] * sw[j])
                         for k in range(n_ctrl_e):
-                            edge_grad_acc[(i, j)][k] += (
-                                self._basis_k(z_c, k, n_ctrl_e)
-                                - self._basis_k(z_w, k, n_ctrl_e)
-                            )
+                            edge_grad_acc[(i, j)][k] += self._basis_k(
+                                z_c, k, n_ctrl_e
+                            ) - self._basis_k(z_w, k, n_ctrl_e)
 
                     # Bias gradients.
                     for i in range(self.input_dim):
@@ -521,21 +522,18 @@ class KANConstraintModel:
                         z_c_i = float(sc[i])
                         z_w_i = float(sw[i])
                         for k in range(n_ctrl_b):
-                            bias_grad_acc[i][k] += (
-                                self._basis_k(z_c_i, k, n_ctrl_b)
-                                - self._basis_k(z_w_i, k, n_ctrl_b)
-                            )
+                            bias_grad_acc[i][k] += self._basis_k(
+                                z_c_i, k, n_ctrl_b
+                            ) - self._basis_k(z_w_i, k, n_ctrl_b)
 
                 # Apply gradient step with weight decay.
-                for (i, j) in self.edges:
+                for i, j in self.edges:
                     self.edge_control_pts[(i, j)] -= lr * (
-                        edge_grad_acc[(i, j)] / bs
-                        + weight_decay * self.edge_control_pts[(i, j)]
+                        edge_grad_acc[(i, j)] / bs + weight_decay * self.edge_control_pts[(i, j)]
                     )
                 for i in range(self.input_dim):
                     self.bias_control_pts[i] -= lr * (
-                        bias_grad_acc[i] / bs
-                        + weight_decay * self.bias_control_pts[i]
+                        bias_grad_acc[i] / bs + weight_decay * self.bias_control_pts[i]
                     )
 
                 epoch_gaps.append(gap_sum / bs)
@@ -602,9 +600,7 @@ class AdaptiveKAN(KANConstraintModel):
         self._recent_inputs: list[np.ndarray] = []
         self._curvature_history: list[dict[str, Any]] = []
 
-    def verify_and_maybe_restructure(
-        self, x: np.ndarray
-    ) -> tuple[float, bool]:
+    def verify_and_maybe_restructure(self, x: np.ndarray) -> tuple[float, bool]:
         """Compute energy for x, accumulate for AMR, trigger restructure if due.
 
         This is the main integration point for live verification pipelines.
@@ -650,11 +646,10 @@ class AdaptiveKAN(KANConstraintModel):
         # Build per-edge sample points from recent inputs (spin products s_i * s_j).
         sample_pts: dict[tuple[int, int], np.ndarray] | None = None
         if self._recent_inputs:
-            xs = np.stack(self._recent_inputs)          # (n_recent, input_dim)
-            spins = 2.0 * xs - 1.0                     # {0,1} → {-1,+1}
+            xs = np.stack(self._recent_inputs)  # (n_recent, input_dim)
+            spins = 2.0 * xs - 1.0  # {0,1} → {-1,+1}
             sample_pts = {
-                (i, j): np.clip(spins[:, i] * spins[:, j], -0.9, 0.9)
-                for (i, j) in self.edges
+                (i, j): np.clip(spins[:, i] * spins[:, j], -0.9, 0.9) for (i, j) in self.edges
             }
 
         curvatures = self.compute_edge_curvature(sample_pts=sample_pts)
@@ -727,7 +722,7 @@ class AdaptiveKAN(KANConstraintModel):
         logger.info("Checkpoint saved: %s", path)
 
     @classmethod
-    def from_checkpoint(cls, path: str) -> "AdaptiveKAN":
+    def from_checkpoint(cls, path: str) -> AdaptiveKAN:
         """Load AdaptiveKAN from a checkpoint written by checkpoint().
 
         Restores topology, control points, verification count, and
@@ -756,7 +751,7 @@ class AdaptiveKAN(KANConstraintModel):
 
         tensors = load_file(path)
 
-        for (i, j) in model.edges:
+        for i, j in model.edges:
             key = f"edge_{i}_{j}"
             model.edge_control_pts[(i, j)] = tensors[key]
             model._edge_n_ctrl[(i, j)] = len(tensors[key])

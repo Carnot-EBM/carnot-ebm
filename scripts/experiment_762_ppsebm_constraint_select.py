@@ -55,10 +55,10 @@ from scripts.experiment_template import ExperimentTemplate  # noqa: E402
 
 N_STEPS = 60
 MEASUREMENT_STEPS = [0, 10, 20, 30, 40, 50, 60]
-N_COUPLINGS = 20        # small synthetic coupling vector for speed
+N_COUPLINGS = 20  # small synthetic coupling vector for speed
 WINDOW_SIZE = 30
 FREEZE_THRESHOLD = 0.01
-LEARNING_RATE = 0.05    # self-play gradient step size
+LEARNING_RATE = 0.05  # self-play gradient step size
 
 DELIVERABLE = "results/experiment_762_ppsebm_constraint_select.json"
 
@@ -211,7 +211,6 @@ def main() -> None:
     tmpl.setup()
 
     with ExperimentTimeoutWatchdog(762, timeout_minutes=45, result_path=DELIVERABLE):
-
         # Run both conditions.
         fp_without, _ = run_condition(use_pps=False, seed=42)
         fp_with, n_frozen = run_condition(use_pps=True, seed=42)
@@ -219,8 +218,8 @@ def main() -> None:
         # Compute slopes for window 1 (steps 0-30, indices 0-3) and
         # window 2 (steps 30-60, indices 3-6).
         # MEASUREMENT_STEPS = [0, 10, 20, 30, 40, 50, 60] → 7 values (indices 0-6).
-        w1_without = fp_without[:4]   # steps 0-30
-        w2_without = fp_without[3:]   # steps 30-60
+        w1_without = fp_without[:4]  # steps 0-30
+        w2_without = fp_without[3:]  # steps 30-60
         w1_with = fp_with[:4]
         w2_with = fp_with[3:]
 
@@ -262,6 +261,7 @@ def main() -> None:
         )
 
     import json
+
     out = Path(DELIVERABLE)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(artifact, indent=2))

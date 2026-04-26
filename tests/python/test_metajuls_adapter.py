@@ -135,9 +135,7 @@ class TestUpdateFromBatchLowPrecision:
 
     def test_threshold_ceiling_respected(self):
         # Threshold must not exceed 0.9.
-        adapter = MetaJuLSAdapter(
-            initial_policy=ExtractorPolicy(claim_confidence_threshold=0.9)
-        )
+        adapter = MetaJuLSAdapter(initial_policy=ExtractorPolicy(claim_confidence_threshold=0.9))
         adapter.update_from_batch(self._low_precision_batch())
         assert adapter.policy.claim_confidence_threshold <= 0.9
 
@@ -175,7 +173,7 @@ class TestUpdateFromBatchHighPrecision:
             {"response": f"r{i}", "violation_detected": True, "true_label": "incorrect"}
             for i in range(5)
         ] + [
-            {"response": f"r{i+5}", "violation_detected": False, "true_label": "correct"}
+            {"response": f"r{i + 5}", "violation_detected": False, "true_label": "correct"}
             for i in range(3)
         ]
 
@@ -201,9 +199,7 @@ class TestUpdateFromBatchHighPrecision:
 
     def test_threshold_floor_respected(self):
         # Threshold must not go below 0.3.
-        adapter = MetaJuLSAdapter(
-            initial_policy=ExtractorPolicy(claim_confidence_threshold=0.3)
-        )
+        adapter = MetaJuLSAdapter(initial_policy=ExtractorPolicy(claim_confidence_threshold=0.3))
         adapter.update_from_batch(self._high_precision_batch())
         assert adapter.policy.claim_confidence_threshold >= 0.3
 
@@ -222,7 +218,7 @@ class TestUpdateFromBatchNeutralPrecision:
             {"response": f"r{i}", "violation_detected": True, "true_label": "incorrect"}
             for i in range(3)
         ] + [
-            {"response": f"r{i+3}", "violation_detected": True, "true_label": "correct"}
+            {"response": f"r{i + 3}", "violation_detected": True, "true_label": "correct"}
             for i in range(2)
         ]
 
@@ -338,9 +334,7 @@ class TestPrecisionTrend:
     def test_batch_id_increments_per_batch(self):
         # Batch IDs must be sequential: 0, 1, 2, ...
         adapter = MetaJuLSAdapter()
-        batch = [
-            {"response": "x", "violation_detected": False, "true_label": "correct"}
-        ]
+        batch = [{"response": "x", "violation_detected": False, "true_label": "correct"}]
         adapter.update_from_batch(batch)
         adapter.update_from_batch(batch)
         adapter.update_from_batch(batch)

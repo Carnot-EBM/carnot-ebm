@@ -69,6 +69,7 @@ tmpl = ExperimentTemplate(
 #   - candidates: list of 4 code strings; index 0 is always the correct one
 # ---------------------------------------------------------------------------
 
+
 def _make_candidates(func_name: str, correct_body: str, wrong_bodies: list[str]) -> list[str]:
     """Build 4 candidate function strings from a function name + body variants."""
     assert len(wrong_bodies) == 3, "Must provide exactly 3 wrong candidates"  # noqa: S101
@@ -341,22 +342,23 @@ def run() -> None:
 
         # Run execution tests to find the first passing candidate.
         passing_indices = [
-            i for i, c in enumerate(candidates)
-            if _execute_candidate(c, func_name, test_cases)
+            i for i, c in enumerate(candidates) if _execute_candidate(c, func_name, test_cases)
         ]
         first_passing_idx = passing_indices[0] if passing_indices else -1
 
         # Did energy select the correct candidate?
-        energy_correct = (energy_selected_idx == first_passing_idx)
+        energy_correct = energy_selected_idx == first_passing_idx
         energy_correct_rank_results.append(energy_correct)
 
-        per_problem_results.append({
-            "func_name": func_name,
-            "energies": energies,
-            "energy_selected_idx": energy_selected_idx,
-            "first_passing_idx": first_passing_idx,
-            "energy_correct": energy_correct,
-        })
+        per_problem_results.append(
+            {
+                "func_name": func_name,
+                "energies": energies,
+                "energy_selected_idx": energy_selected_idx,
+                "first_passing_idx": first_passing_idx,
+                "energy_correct": energy_correct,
+            }
+        )
 
     # Compute aggregate metrics.
     energy_correct_rank_pct = sum(energy_correct_rank_results) / n_problems

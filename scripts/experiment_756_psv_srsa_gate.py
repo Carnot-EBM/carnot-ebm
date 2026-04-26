@@ -173,8 +173,20 @@ def run_layered_fix_simulation(
     # Generate a diverse pool of synthetic questions with distinct word tokens.
     # Each question uses a unique verb + number combination to ensure diversity.
     verbs = [
-        "add", "subtract", "multiply", "divide", "compute", "calculate", "find",
-        "determine", "evaluate", "estimate", "solve", "count", "total", "sum",
+        "add",
+        "subtract",
+        "multiply",
+        "divide",
+        "compute",
+        "calculate",
+        "find",
+        "determine",
+        "evaluate",
+        "estimate",
+        "solve",
+        "count",
+        "total",
+        "sum",
         "measure",
     ]
     question_pool = [
@@ -311,10 +323,7 @@ def main() -> None:
             honest_verdict = "recovery_failed"
 
         # Sample fp_rate at the key measurement checkpoints.
-        fp_at_step = {
-            f"fp_at_step_{s}": fp_rate_series[s]
-            for s in [0, 10, 20, 30, 40, 50, 60]
-        }
+        fp_at_step = {f"fp_at_step_{s}": fp_rate_series[s] for s in [0, 10, 20, 30, 40, 50, 60]}
 
         artifact = tmpl.build_result(
             {
@@ -337,6 +346,7 @@ def main() -> None:
         )
 
         import json
+
         out = _REPO / DELIVERABLE
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(artifact, indent=2))

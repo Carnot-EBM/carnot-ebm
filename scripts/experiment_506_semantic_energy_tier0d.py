@@ -195,9 +195,7 @@ def main() -> None:
         semantic_energy_better: bool = auroc > spilled_energy_baseline
 
         honest_verdict = (
-            "semantic_energy_viable"
-            if semantic_energy_better
-            else "semantic_energy_no_improvement"
+            "semantic_energy_viable" if semantic_energy_better else "semantic_energy_no_improvement"
         )
 
         # ------------------------------------------------------------------
@@ -228,8 +226,10 @@ def main() -> None:
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(artifact, indent=2))
 
-        print(f"Exp 506 complete: auroc={auroc:.4f}, baseline={spilled_energy_baseline:.4f}, "
-              f"verdict={honest_verdict}")
+        print(
+            f"Exp 506 complete: auroc={auroc:.4f}, baseline={spilled_energy_baseline:.4f}, "
+            f"verdict={honest_verdict}"
+        )
 
         # ------------------------------------------------------------------
         # Update _bmad/architecture.md Tier 0d entry

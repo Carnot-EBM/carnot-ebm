@@ -255,9 +255,7 @@ def build_sudoku_energy(clues: list[list[int]]) -> ComposedEnergy:
                 for c in range(3):
                     # Map (box_row, box_col, r, c) to flat index
                     indices.append((box_row * 3 + r) * 9 + (box_col * 3 + c))
-            composed.add_constraint(
-                UniquenessConstraint(f"box_{box_row}_{box_col}", indices), 1.0
-            )
+            composed.add_constraint(UniquenessConstraint(f"box_{box_row}_{box_col}", indices), 1.0)
 
     # --- Clue constraints: given digits must not change ---
     for row in range(9):

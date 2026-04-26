@@ -123,7 +123,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 390,
         "title": "GPU node preflight — RETRO-019 action",
         "result_file": "results/experiment_390_gpu_preflight.json",
-        "wall_time_min": 9,    # 07:44 → 08:21 batch / 4 experiments
+        "wall_time_min": 9,  # 07:44 → 08:21 batch / 4 experiments
         "status": "completed",
         "note": (
             "status='complete' but finding='GPU preflight script created.' — NOT "
@@ -168,7 +168,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 394,
         "title": "Live precision pipeline — 200 GSM8K, 5 variants, 2 models",
         "result_file": "results/experiment_394_precision_live.json",
-        "wall_time_min": 7,    # 08:21 → 09:22 batch / 9 experiments ≈ 7 min each
+        "wall_time_min": 7,  # 08:21 → 09:22 batch / 9 experiments ≈ 7 min each
         "status": "partial",
         "note": (
             "status='partial'. GPU preflight gate blocked. No honest_verdict. "
@@ -233,7 +233,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 401,
         "title": "Semantic Energy hallucination scorer — logit-lens AUROC benchmark",
         "result_file": "results/experiment_401_semantic_energy.json",
-        "wall_time_min": 0,    # No result JSON found; session may have not written it
+        "wall_time_min": 0,  # No result JSON found; session may have not written it
         "status": "missing",
         "note": "No result JSON found. auroc cannot be evaluated.",
     },
@@ -421,7 +421,7 @@ NEW_RETRO_ITEMS: list[dict[str, Any]] = [
             "Exp 391 (this milestone's attempt to close RETRO-020) ran in "
             "'deliverable already exists' fast-path mode. cikan_energy.py on disk still "
             "contains the corrupt JSON artifact from Exp 375: "
-            "{\"experiment\": 375, \"status\": \"partial\", ...}. "
+            '{"experiment": 375, "status": "partial", ...}. '
             "No valid Python class CIKANEnergy exists anywhere in the codebase. "
             "This is the THIRD consecutive milestone where CIKAN was targeted (Exp 375 "
             "in 2026.04.27, Exp 378 in 2026.04.28, Exp 391 in 2026.04.29) and not delivered. "
@@ -548,9 +548,7 @@ def compute_timing_stats(experiments: list[dict[str, Any]]) -> dict[str, Any]:
             "fastest": None,
         }
 
-    n_blocked = sum(
-        1 for e in experiments if e.get("status") in ("blocked", "missing")
-    )
+    n_blocked = sum(1 for e in experiments if e.get("status") in ("blocked", "missing"))
     total = sum(e["wall_time_min"] for e in experiments)
     mean = round(total / len(experiments), 1) if experiments else 0.0
 
@@ -647,10 +645,7 @@ def _check_cikan_implemented(repo_root: Path, results: dict[str, Any | None]) ->
     exp391 = results.get("391")
     if exp391 is None:
         return False
-    if exp391.get("status") != "success":
-        return False
-
-    return True
+    return exp391.get("status") == "success"
 
 
 # ---------------------------------------------------------------------------
@@ -680,6 +675,7 @@ def compute_retro_2026_04_29(
     MilestoneRetro2026_04_29
         Populated dataclass with all criteria evaluated.
     """
+
     def get(key: str) -> dict[str, Any]:
         return result_files.get(key) or {}
 
@@ -692,8 +688,7 @@ def compute_retro_2026_04_29(
 
     # --- live_gpu_confirmed: ANY experiment reported live_gpu mode ---
     live_gpu_confirmed = any(
-        (v or {}).get("inference_mode") == "live_gpu"
-        for v in result_files.values()
+        (v or {}).get("inference_mode") == "live_gpu" for v in result_files.values()
     )
 
     # --- precision_result_credible ---
@@ -749,8 +744,7 @@ def compute_retro_2026_04_29(
     # --- saver_live_verified ---
     p400 = get("400")
     saver_live_verified = (
-        p400.get("inference_mode") == "live_gpu"
-        and p400.get("live_verification_active") is True
+        p400.get("inference_mode") == "live_gpu" and p400.get("live_verification_active") is True
     )
 
     # --- semantic_energy_viable ---
@@ -866,10 +860,7 @@ def build_retro_artifact(retro: MilestoneRetro2026_04_29) -> dict[str, Any]:
     # Build new retro items filtered to what was actually opened
     opened_ids = set(retro.retro_items_opened)
     # Include all RETRO items that were conditionally opened (not RETRO-016_CLOSE which is a close)
-    new_retro_items_for_artifact = [
-        item for item in NEW_RETRO_ITEMS
-        if item["id"] in opened_ids
-    ]
+    new_retro_items_for_artifact = [item for item in NEW_RETRO_ITEMS if item["id"] in opened_ids]
 
     # Closed RETRO items
     retro_items_closed: list[str] = []
@@ -919,9 +910,9 @@ def build_retro_artifact(retro: MilestoneRetro2026_04_29) -> dict[str, Any]:
         "retro_items_closed": retro_items_closed,
         "new_retro_items": new_retro_items_for_artifact,
         "estimated_savings_next_pct": sum(
-            item.get("estimated_savings_pct", 0)
-            for item in new_retro_items_for_artifact
-        ) or 10,
+            item.get("estimated_savings_pct", 0) for item in new_retro_items_for_artifact
+        )
+        or 10,
         "key_findings": [
             (
                 "SIX consecutive milestones without live GPU inference. "
@@ -970,15 +961,11 @@ def build_retro_artifact(retro: MilestoneRetro2026_04_29) -> dict[str, Any]:
             "jitrl_memory_works": (
                 "Exp 392 has no result JSON. threshold_modulation_works cannot be read."
             ),
-            "safety_kan_works": (
-                "Exp 393 has no result JSON. test_auroc cannot be read."
-            ),
+            "safety_kan_works": ("Exp 393 has no result JSON. test_auroc cannot be read."),
             "saver_live_verified": (
                 "Exp 400 returned status='partial'. live_verification_active not set."
             ),
-            "semantic_energy_viable": (
-                "Exp 401 has no result JSON. auroc cannot be read."
-            ),
+            "semantic_energy_viable": ("Exp 401 has no result JSON. auroc cannot be read."),
             "crane_extraction_improved": (
                 "Exp 402 has no result JSON. crane_beats_arithmetic cannot be read."
             ),

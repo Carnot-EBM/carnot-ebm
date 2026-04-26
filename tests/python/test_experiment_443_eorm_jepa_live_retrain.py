@@ -56,9 +56,13 @@ _mod = _load_script()
 
 def _vp(q: str, has_violation: bool, text: str = "text") -> Any:
     from carnot.embeddings.jepa_retrain import ViolationPair
+
     return ViolationPair(
-        partial_response=text, full_response=text,
-        has_violation=has_violation, model_id="m", question_id=q,
+        partial_response=text,
+        full_response=text,
+        has_violation=has_violation,
+        model_id="m",
+        question_id=q,
     )
 
 
@@ -66,19 +70,23 @@ def _make_fover_file(tmp_path: Path, n_correct: int = 30, n_incorrect: int = 27)
     """Write a fover_labeled_steps_live.json with real-looking pairs."""
     pairs = []
     for i in range(n_correct):
-        pairs.append({
-            "question_id": str(i),
-            "step_text": f"correct step {i}",
-            "label": "correct",
-            "confidence": 1.0,
-        })
+        pairs.append(
+            {
+                "question_id": str(i),
+                "step_text": f"correct step {i}",
+                "label": "correct",
+                "confidence": 1.0,
+            }
+        )
     for i in range(n_incorrect):
-        pairs.append({
-            "question_id": str(i),  # same question_id allows contrastive matching
-            "step_text": f"incorrect step {i}",
-            "label": "incorrect",
-            "confidence": 1.0,
-        })
+        pairs.append(
+            {
+                "question_id": str(i),  # same question_id allows contrastive matching
+                "step_text": f"incorrect step {i}",
+                "label": "incorrect",
+                "confidence": 1.0,
+            }
+        )
     results_dir = tmp_path / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
     p = results_dir / "fover_labeled_steps_live.json"
@@ -188,6 +196,7 @@ class TestSaveJepaModel:
 
     def test_creates_safetensors_file(self, tmp_path: Path) -> None:
         from carnot.embeddings.jepa_energy import ContextPredictionEnergy, JEPAEnergyConfig
+
         config = JEPAEnergyConfig(embed_dim=4, hidden_dims=[4])
         model = ContextPredictionEnergy(config=config)
         path = str(tmp_path / "jepa_443.safetensors")
@@ -196,6 +205,7 @@ class TestSaveJepaModel:
 
     def test_creates_parent_dirs(self, tmp_path: Path) -> None:
         from carnot.embeddings.jepa_energy import ContextPredictionEnergy, JEPAEnergyConfig
+
         config = JEPAEnergyConfig(embed_dim=4, hidden_dims=[4])
         model = ContextPredictionEnergy(config=config)
         nested = tmp_path / "a" / "b" / "jepa.safetensors"
@@ -213,6 +223,7 @@ class TestLoadOrBuildEormModel:
 
     def test_builds_fresh_when_no_saved(self, tmp_path: Path) -> None:
         from carnot.models.eorm import EORMModel
+
         model = _mod._load_or_build_eorm_model(tmp_path)
         assert isinstance(model, EORMModel)
 
@@ -314,7 +325,8 @@ class TestBuildEormTriples:
     def test_round_robin_when_unequal(self) -> None:
         """When n_correct != n_incorrect, round-robin produces max(n, m) triples."""
         vps = [
-            _vp("q1", False, "c1"), _vp("q1", False, "c2"),
+            _vp("q1", False, "c1"),
+            _vp("q1", False, "c2"),
             _vp("q1", True, "i1"),
         ]
         triples = _mod._build_eorm_triples(vps)
@@ -344,7 +356,9 @@ class TestRunExperiment:
             "real_data_no_improvement",
         }
         assert isinstance(artifact["retro_024_closed"], bool)
-        assert artifact["retro_024_closed"] == (artifact["honest_verdict"] == "real_data_improvement")
+        assert artifact["retro_024_closed"] == (
+            artifact["honest_verdict"] == "real_data_improvement"
+        )
 
     def test_synthetic_fallback_when_pairs_insufficient(self, tmp_path: Path) -> None:
         """With <20 pairs, honest_verdict='real_data_insufficient'."""
@@ -383,6 +397,7 @@ class TestRunExperiment:
     def test_artifact_has_required_fields(self, tmp_path: Path) -> None:
         """All required artifact fields are present."""
         from scripts.experiment_template import REQUIRED_RESULT_FIELDS
+
         _make_ann_file(tmp_path, source="synthetic", n_labeled=0)
 
         artifact = _mod.run_experiment(repo_root=tmp_path)
@@ -437,7 +452,11 @@ class TestMain:
         with (
             patch.object(_mod, "_REPO_ROOT", tmp_path),
             patch.object(_mod, "DELIVERABLE", str(deliverable.relative_to(tmp_path))),
-            patch.object(_mod, "run_experiment", return_value={"honest_verdict": "synthetic_only", "retro_024_closed": False}),
+            patch.object(
+                _mod,
+                "run_experiment",
+                return_value={"honest_verdict": "synthetic_only", "retro_024_closed": False},
+            ),
         ):
             _mod.main()
 
@@ -462,7 +481,11 @@ class TestMain:
         with (
             patch("carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog", FakeWatchdog),
             patch.object(_mod, "ExperimentTimeoutWatchdog", FakeWatchdog),
-            patch.object(_mod, "run_experiment", return_value={"honest_verdict": "synthetic_only", "retro_024_closed": False}),
+            patch.object(
+                _mod,
+                "run_experiment",
+                return_value={"honest_verdict": "synthetic_only", "retro_024_closed": False},
+            ),
             patch("builtins.open", MagicMock()),
             patch("json.dump"),
         ):

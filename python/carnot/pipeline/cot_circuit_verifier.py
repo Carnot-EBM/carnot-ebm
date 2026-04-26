@@ -63,7 +63,7 @@ from carnot.pipeline.extract import ConstraintResult
 _STEP_BOUNDARY_RE = re.compile(
     r"(?im)"
     r"(?:^step\s*\d+[\s.:)\-]+)"  # "Step 1:", "step 2."
-    r"|(?:^\d+[.)]\s+)"            # "1. ", "2) "
+    r"|(?:^\d+[.)]\s+)"  # "1. ", "2) "
     r"|(?:^(?:first|then|next|finally)[,:\s]+)",  # discourse markers
 )
 
@@ -205,7 +205,7 @@ def extract_cot_steps(response: str) -> list[CoTStep]:
         # Remove the leading marker from the segment text to get clean content.
         # The marker is the first match within the segment.
         marker_match = _STEP_BOUNDARY_RE.match(seg)
-        text = seg[marker_match.end():].strip() if marker_match else seg
+        text = seg[marker_match.end() :].strip() if marker_match else seg
 
         # Extract back-references (convert 1-based step numbers to 0-based IDs).
         refs: list[int] = []
@@ -357,11 +357,7 @@ def build_circuit(steps: list[CoTStep], tolerance: float = 0.01) -> CoTCircuit:
     Spec: REQ-EXTRACT-016, SCENARIO-EXTRACT-034
     """
     # Cycle detection: any step that references a step_id >= its own step_id.
-    has_cycle = any(
-        ref >= step.step_id
-        for step in steps
-        for ref in step.input_refs
-    )
+    has_cycle = any(ref >= step.step_id for step in steps for ref in step.input_refs)
 
     broken_links = find_broken_links(steps, tolerance=tolerance)
     return CoTCircuit(steps=steps, has_cycle=has_cycle, broken_links=broken_links)

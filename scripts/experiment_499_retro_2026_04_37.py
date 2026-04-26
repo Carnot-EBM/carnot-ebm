@@ -136,11 +136,14 @@ def _count_deferred_to_gpu(results: dict[int, dict]) -> tuple[int, list[int]]:
         verdict = d.get("honest_verdict", "")
         status = d.get("status", "")
         blocked_reason = str(d.get("blocked_reason", ""))
-        if verdict in _GPU_DEFERRED_VERDICTS:
-            deferred_ids.append(eid)
-        elif status in _GPU_DEFERRED_STATUSES and (
-            "CUDA" in blocked_reason or "out of memory" in blocked_reason
-            or "gpu_required" in verdict
+        if (
+            verdict in _GPU_DEFERRED_VERDICTS
+            or status in _GPU_DEFERRED_STATUSES
+            and (
+                "CUDA" in blocked_reason
+                or "out of memory" in blocked_reason
+                or "gpu_required" in verdict
+            )
         ):
             deferred_ids.append(eid)
     deferred_ids = sorted(set(deferred_ids))
@@ -153,6 +156,7 @@ def _assess_retro_closures(results: dict[int, dict]) -> dict[str, bool]:
     Each RETRO item was expected to be closed by a specific experiment.
     Missing experiments are treated as unclosed (False).
     """
+
     def _get(exp_id: int, key: str, default: bool = False) -> bool:
         d = results.get(exp_id, {})
         val = d.get(key, default)
@@ -183,19 +187,13 @@ def _compute_adoption_rate(results: dict[int, dict]) -> tuple[float, dict]:
     scores: dict[str, bool] = {}
 
     # 1. Batching pre-commit hook (Exp 493, RETRO-045)
-    scores["batching_hook"] = bool(
-        results.get(493, {}).get("retro_045_closed", False)
-    )
+    scores["batching_hook"] = bool(results.get(493, {}).get("retro_045_closed", False))
 
     # 2. GPU thermal gate (Exp 494, RETRO-046)
-    scores["thermal_gate"] = bool(
-        results.get(494, {}).get("retro_046_closed", False)
-    )
+    scores["thermal_gate"] = bool(results.get(494, {}).get("retro_046_closed", False))
 
     # 3. DualGPU harness patch (Exp 495) — honest_verdict == 'all_patched'
-    scores["harness_patch"] = (
-        results.get(495, {}).get("honest_verdict", "") == "all_patched"
-    )
+    scores["harness_patch"] = results.get(495, {}).get("honest_verdict", "") == "all_patched"
 
     n_installed = sum(1 for v in scores.values() if v)
     rate = n_installed / len(scores) if scores else 0.0
@@ -217,90 +215,102 @@ def _build_new_retro_items(
     # GPUVRAMGateV2 kills zombies but the active conductor process (8.96 GiB)
     # is not a zombie — it is unkillable by the gate.  The fix is quantization.
     if n_deferred > 0:
-        items.append({
-            "id": "RETRO-048",
-            "description": (
-                "Gemma4 CUDA OOM persists after GPUVRAMGateV2: active conductor "
-                "process holds 8.96 GiB (unkillable by zombie-kill logic), leaving "
-                "only ~5.37 GiB free vs 14.89 GiB required.  Fix: use quantized "
-                "Gemma4 INT4/GGUF (~8-10 GiB) so the model fits alongside the "
-                "conductor process.  Blocks RETRO-033, RETRO-038, RETRO-039."
-            ),
-            "priority": "CRITICAL",
-            "target_milestone": "2026.04.38",
-            "blocked_retro_items": ["RETRO-033", "RETRO-038", "RETRO-039"],
-        })
+        items.append(
+            {
+                "id": "RETRO-048",
+                "description": (
+                    "Gemma4 CUDA OOM persists after GPUVRAMGateV2: active conductor "
+                    "process holds 8.96 GiB (unkillable by zombie-kill logic), leaving "
+                    "only ~5.37 GiB free vs 14.89 GiB required.  Fix: use quantized "
+                    "Gemma4 INT4/GGUF (~8-10 GiB) so the model fits alongside the "
+                    "conductor process.  Blocks RETRO-033, RETRO-038, RETRO-039."
+                ),
+                "priority": "CRITICAL",
+                "target_milestone": "2026.04.38",
+                "blocked_retro_items": ["RETRO-033", "RETRO-038", "RETRO-039"],
+            }
+        )
 
     # RETRO-033 carry-forward (FIFTH miss — escalate priority)
     if not closures.get("retro_033_closed", False):
-        items.append({
-            "id": "RETRO-033",
-            "description": (
-                "Live 100q verify-repair positive result — FIFTH consecutive milestone "
-                "miss.  Blocked by Gemma4 OOM (RETRO-048).  Must be first experiment "
-                "scheduled after quantized model is available."
-            ),
-            "priority": "CRITICAL",
-            "target_milestone": "2026.04.38",
-            "miss_count": 5,
-        })
+        items.append(
+            {
+                "id": "RETRO-033",
+                "description": (
+                    "Live 100q verify-repair positive result — FIFTH consecutive milestone "
+                    "miss.  Blocked by Gemma4 OOM (RETRO-048).  Must be first experiment "
+                    "scheduled after quantized model is available."
+                ),
+                "priority": "CRITICAL",
+                "target_milestone": "2026.04.38",
+                "miss_count": 5,
+            }
+        )
 
     # RETRO-038 carry-forward
     if not closures.get("retro_038_closed", False):
-        items.append({
-            "id": "RETRO-038",
-            "description": (
-                "Live 200q VeriCoT+VPRM statistically significant result not confirmed.  "
-                "Blocked by Gemma4 OOM (RETRO-048).  Schedule after RETRO-048 resolved."
-            ),
-            "priority": "HIGH",
-            "target_milestone": "2026.04.38",
-        })
+        items.append(
+            {
+                "id": "RETRO-038",
+                "description": (
+                    "Live 200q VeriCoT+VPRM statistically significant result not confirmed.  "
+                    "Blocked by Gemma4 OOM (RETRO-048).  Schedule after RETRO-048 resolved."
+                ),
+                "priority": "HIGH",
+                "target_milestone": "2026.04.38",
+            }
+        )
 
     # RETRO-039 carry-forward
     if not closures.get("retro_039_closed", False):
-        items.append({
-            "id": "RETRO-039",
-            "description": (
-                "GSM-Symbolic adversarial thesis unconfirmed.  Exp 490 returned "
-                "gpu_required — model prewarm failed due to Gemma4 OOM (RETRO-048).  "
-                "Schedule after quantized model available."
-            ),
-            "priority": "HIGH",
-            "target_milestone": "2026.04.38",
-        })
+        items.append(
+            {
+                "id": "RETRO-039",
+                "description": (
+                    "GSM-Symbolic adversarial thesis unconfirmed.  Exp 490 returned "
+                    "gpu_required — model prewarm failed due to Gemma4 OOM (RETRO-048).  "
+                    "Schedule after quantized model available."
+                ),
+                "priority": "HIGH",
+                "target_milestone": "2026.04.38",
+            }
+        )
 
     # RETRO-049: NUP Probe v2 AUC still below Tier 0c threshold
     if not closures.get("retro_047_closed", False):
         auc_v2 = results.get(496, {}).get("auc_v2", 0.0)
-        items.append({
-            "id": "RETRO-049",
-            "description": (
-                f"NUP Probe v2 AUC = {auc_v2:.3f} (threshold 0.700).  Bayesian semantic "
-                "entropy approach produced no improvement over v1 (delta ~1e-16).  "
-                "Next step: add per-token entropy, top-k probability spread, and "
-                "attention pattern features.  Do not promote to Tier 0c until AUC > 0.700."
-            ),
-            "priority": "MEDIUM",
-            "target_milestone": "2026.04.38",
-        })
+        items.append(
+            {
+                "id": "RETRO-049",
+                "description": (
+                    f"NUP Probe v2 AUC = {auc_v2:.3f} (threshold 0.700).  Bayesian semantic "
+                    "entropy approach produced no improvement over v1 (delta ~1e-16).  "
+                    "Next step: add per-token entropy, top-k probability spread, and "
+                    "attention pattern features.  Do not promote to Tier 0c until AUC > 0.700."
+                ),
+                "priority": "MEDIUM",
+                "target_milestone": "2026.04.38",
+            }
+        )
 
     # RETRO-050: SuRe replay does not improve PPSEBM isolation
     sure_better = results.get(497, {}).get("sure_better", False)
     if not sure_better:
         isolation_delta = results.get(497, {}).get("isolation_improvement", 0.0)
-        items.append({
-            "id": "RETRO-050",
-            "description": (
-                f"SuRe surprise replay shows no PPSEBM isolation improvement "
-                f"(isolation_improvement={isolation_delta:.4f}, sure_better=False).  "
-                "FR-11 Tier 2 self-learning strategy needs a different approach.  "
-                "Candidate: gradient-weighted replay using EBM energy magnitude as "
-                "priority signal instead of LLM surprise."
-            ),
-            "priority": "MEDIUM",
-            "target_milestone": "2026.04.38",
-        })
+        items.append(
+            {
+                "id": "RETRO-050",
+                "description": (
+                    f"SuRe surprise replay shows no PPSEBM isolation improvement "
+                    f"(isolation_improvement={isolation_delta:.4f}, sure_better=False).  "
+                    "FR-11 Tier 2 self-learning strategy needs a different approach.  "
+                    "Candidate: gradient-weighted replay using EBM energy magnitude as "
+                    "priority signal instead of LLM surprise."
+                ),
+                "priority": "MEDIUM",
+                "target_milestone": "2026.04.38",
+            }
+        )
 
     return items
 
@@ -338,7 +348,7 @@ def _build_meta_reflection(
 
     # Adoption trend
     adoption_trend = (
-        f"Adoption rate: 0% (.33) → 50% (.35) → 60% (.36) → {adoption_rate*100:.0f}% (.37).  "
+        f"Adoption rate: 0% (.33) → 50% (.35) → 60% (.36) → {adoption_rate * 100:.0f}% (.37).  "
         "First time all three scheduled enforcement items were installed in a single milestone.  "
         "The pattern from prior milestones (infrastructure items adopted, enforcement items not) "
         "reversed in .37: all three enforcement items (batching hook, thermal gate, harness patch) "
@@ -350,7 +360,7 @@ def _build_meta_reflection(
         jepa_trajectory = (
             f"JEPA AUC: 0.667 (.33) → 0.400 (.35) → 0.281 (.36) → {jepa_auc:.3f} (.37).  "
             f"Curriculum training reversed the three-milestone regression (before={jepa_before:.3f} "
-            f"→ after={jepa_auc:.3f}, improvement={jepa_auc-jepa_before:.3f}).  "
+            f"→ after={jepa_auc:.3f}, improvement={jepa_auc - jepa_before:.3f}).  "
             "FR-11 Tier 3 is recovered.  The synthetic-augmentation strategy from Exp 491 "
             "diagnostic (augment_with_synthetic_pairs) was the key lever."
         )
@@ -401,7 +411,8 @@ def main() -> None:
         n_deferred, deferred_ids = _count_deferred_to_gpu(results)
         _log.info(
             "n_deferred_to_gpu=%d (target: 0); deferred_exp_ids=%s",
-            n_deferred, deferred_ids,
+            n_deferred,
+            deferred_ids,
         )
         if n_deferred > 0:
             _log.warning(
@@ -419,21 +430,16 @@ def main() -> None:
         adoption_rate, adoption_detail = _compute_adoption_rate(results)
         _log.info(
             "Retro improvement adoption rate: %.1f%% — %s",
-            adoption_rate * 100, adoption_detail,
+            adoption_rate * 100,
+            adoption_detail,
         )
 
         # --- Step 5: Extract specific metric fields ---
         jepa_auc_final = results.get(492, {}).get("after_auc", None)
         thesis_confirmed = bool(results.get(490, {}).get("retro_039_closed", False))
-        live_200q_statistically_positive = bool(
-            results.get(489, {}).get("retro_038_closed", False)
-        )
-        nup_probe_v2_viable = bool(
-            results.get(496, {}).get("is_viable_tier_0c", False)
-        )
-        sure_replay_improves = bool(
-            results.get(497, {}).get("sure_better", False)
-        )
+        live_200q_statistically_positive = bool(results.get(489, {}).get("retro_038_closed", False))
+        nup_probe_v2_viable = bool(results.get(496, {}).get("is_viable_tier_0c", False))
+        sure_replay_improves = bool(results.get(497, {}).get("sure_better", False))
 
         # --- Step 6: New RETRO items for .38 ---
         new_retro_items = _build_new_retro_items(n_deferred, closures, results)
@@ -453,9 +459,7 @@ def main() -> None:
             credibility_gap_status = "STILL_OPEN"
 
         # --- Step 8: Meta-reflection ---
-        meta_reflection = _build_meta_reflection(
-            n_deferred, adoption_rate, closures, results
-        )
+        meta_reflection = _build_meta_reflection(n_deferred, adoption_rate, closures, results)
 
         # --- Step 9: Experiments completed count ---
         experiments_completed = len(results)

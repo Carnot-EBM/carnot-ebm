@@ -108,7 +108,9 @@ class TestBuild200qV7Artifact:
 
     def test_all_required_keys_present_live(self):
         # SCENARIO-BENCH-041: live path must include every field
-        art = build_200q_v7_artifact(self._live_results(), "live_gpu", "results/exp528_cot_pairs.json")
+        art = build_200q_v7_artifact(
+            self._live_results(), "live_gpu", "results/exp528_cot_pairs.json"
+        )
         for key in self._REQUIRED_KEYS:
             assert key in art, f"missing key: {key}"
 
@@ -153,7 +155,9 @@ class TestBuild200qV7Artifact:
         assert art["is_statistically_positive"] is True
 
     def test_cot_pairs_written_captured(self):
-        art = build_200q_v7_artifact(self._live_results(ci_lower=0.01), "live_gpu", "results/exp528_cot_pairs.json")
+        art = build_200q_v7_artifact(
+            self._live_results(ci_lower=0.01), "live_gpu", "results/exp528_cot_pairs.json"
+        )
         assert art["cot_pairs_written"] == "results/exp528_cot_pairs.json"
 
     def test_n_questions_captured(self):

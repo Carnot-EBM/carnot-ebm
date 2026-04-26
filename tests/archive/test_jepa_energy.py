@@ -10,7 +10,6 @@ import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
 import pytest
-
 from carnot.embeddings.jepa_energy import (
     ContextPredictionEnergy,
     JEPAEnergyConfig,
@@ -20,7 +19,6 @@ from carnot.embeddings.jepa_energy import (
     nearest_code_match,
     train_jepa_energy,
 )
-
 
 # --- Sample code snippets for training data generation ---
 # These are real Python functions with enough structure for meaningful
@@ -198,7 +196,7 @@ class TestContextPredictionEnergy:
         """SCENARIO-JEPA-002: Default key=None gives reproducible initialization."""
         m1 = ContextPredictionEnergy(JEPAEnergyConfig(embed_dim=8, hidden_dims=[8]))
         m2 = ContextPredictionEnergy(JEPAEnergyConfig(embed_dim=8, hidden_dims=[8]))
-        for (w1, b1), (w2, b2) in zip(m1.layers, m2.layers):
+        for (w1, b1), (w2, b2) in zip(m1.layers, m2.layers, strict=False):
             np.testing.assert_array_equal(np.array(w1), np.array(w2))
             np.testing.assert_array_equal(np.array(b1), np.array(b2))
 
@@ -277,26 +275,20 @@ class TestGenerateJEPATrainingData:
 
     def test_output_shapes(self) -> None:
         """SCENARIO-JEPA-004: Correct output shapes for data and noise pairs."""
-        data_pairs, noise_pairs = generate_jepa_training_data(
-            SAMPLE_SNIPPETS, embed_dim=32
-        )
+        data_pairs, noise_pairs = generate_jepa_training_data(SAMPLE_SNIPPETS, embed_dim=32)
         n = len(SAMPLE_SNIPPETS)
         assert data_pairs.shape == (n, 64)  # 2 * embed_dim
         assert noise_pairs.shape == (n, 64)
 
     def test_data_pairs_differ_from_noise(self) -> None:
         """SCENARIO-JEPA-004: Data pairs and noise pairs are different."""
-        data_pairs, noise_pairs = generate_jepa_training_data(
-            SAMPLE_SNIPPETS, embed_dim=32
-        )
+        data_pairs, noise_pairs = generate_jepa_training_data(SAMPLE_SNIPPETS, embed_dim=32)
         # The second halves should be shuffled in noise, so pairs differ
         assert not np.allclose(np.array(data_pairs), np.array(noise_pairs))
 
     def test_context_halves_same(self) -> None:
         """SCENARIO-JEPA-004: Context halves are the same in data and noise pairs."""
-        data_pairs, noise_pairs = generate_jepa_training_data(
-            SAMPLE_SNIPPETS, embed_dim=32
-        )
+        data_pairs, noise_pairs = generate_jepa_training_data(SAMPLE_SNIPPETS, embed_dim=32)
         # First embed_dim columns are context — should be identical
         np.testing.assert_array_equal(
             np.array(data_pairs[:, :32]),
@@ -305,9 +297,7 @@ class TestGenerateJEPATrainingData:
 
     def test_prediction_halves_shuffled(self) -> None:
         """SCENARIO-JEPA-004: Prediction halves are shuffled in noise pairs."""
-        data_pairs, noise_pairs = generate_jepa_training_data(
-            SAMPLE_SNIPPETS, embed_dim=32
-        )
+        data_pairs, noise_pairs = generate_jepa_training_data(SAMPLE_SNIPPETS, embed_dim=32)
         # Second embed_dim columns are prediction — should differ due to shuffle
         data_preds = np.array(data_pairs[:, 32:])
         noise_preds = np.array(noise_pairs[:, 32:])
@@ -340,17 +330,18 @@ class TestTrainJEPAEnergy:
 
     def test_training_reduces_loss(self) -> None:
         """SCENARIO-JEPA-005: NCE loss decreases over training steps."""
-        data_pairs, noise_pairs = generate_jepa_training_data(
-            SAMPLE_SNIPPETS, embed_dim=16
-        )
+        data_pairs, noise_pairs = generate_jepa_training_data(SAMPLE_SNIPPETS, embed_dim=16)
         model = ContextPredictionEnergy(
             JEPAEnergyConfig(embed_dim=16, hidden_dims=[16, 8]),
             key=jrandom.PRNGKey(0),
         )
 
         loss_history = train_jepa_energy(
-            model, data_pairs, noise_pairs,
-            learning_rate=0.05, n_steps=50,
+            model,
+            data_pairs,
+            noise_pairs,
+            learning_rate=0.05,
+            n_steps=50,
         )
 
         # Loss should decrease: final loss < initial loss
@@ -360,17 +351,18 @@ class TestTrainJEPAEnergy:
 
     def test_correct_pairs_lower_energy_than_noise(self) -> None:
         """SCENARIO-JEPA-005: After training, correct pairs get lower energy than noise."""
-        data_pairs, noise_pairs = generate_jepa_training_data(
-            SAMPLE_SNIPPETS, embed_dim=16
-        )
+        data_pairs, noise_pairs = generate_jepa_training_data(SAMPLE_SNIPPETS, embed_dim=16)
         model = ContextPredictionEnergy(
             JEPAEnergyConfig(embed_dim=16, hidden_dims=[16, 8]),
             key=jrandom.PRNGKey(0),
         )
 
         train_jepa_energy(
-            model, data_pairs, noise_pairs,
-            learning_rate=0.05, n_steps=200,
+            model,
+            data_pairs,
+            noise_pairs,
+            learning_rate=0.05,
+            n_steps=200,
         )
 
         data_energies = model.energy_batch(data_pairs)
@@ -386,45 +378,27 @@ class TestTrainJEPAEnergy:
 
     def test_loss_history_length(self) -> None:
         """SCENARIO-JEPA-005: Loss history has one entry per training step."""
-        data_pairs, noise_pairs = generate_jepa_training_data(
-            SAMPLE_SNIPPETS[:3], embed_dim=8
-        )
-        model = ContextPredictionEnergy(
-            JEPAEnergyConfig(embed_dim=8, hidden_dims=[8])
-        )
-        history = train_jepa_energy(
-            model, data_pairs, noise_pairs, n_steps=10
-        )
+        data_pairs, noise_pairs = generate_jepa_training_data(SAMPLE_SNIPPETS[:3], embed_dim=8)
+        model = ContextPredictionEnergy(JEPAEnergyConfig(embed_dim=8, hidden_dims=[8]))
+        history = train_jepa_energy(model, data_pairs, noise_pairs, n_steps=10)
         assert len(history) == 10
 
     def test_loss_history_all_finite(self) -> None:
         """SCENARIO-JEPA-005: All loss values are finite (no NaN/Inf)."""
-        data_pairs, noise_pairs = generate_jepa_training_data(
-            SAMPLE_SNIPPETS[:3], embed_dim=8
-        )
-        model = ContextPredictionEnergy(
-            JEPAEnergyConfig(embed_dim=8, hidden_dims=[8])
-        )
-        history = train_jepa_energy(
-            model, data_pairs, noise_pairs, n_steps=20
-        )
+        data_pairs, noise_pairs = generate_jepa_training_data(SAMPLE_SNIPPETS[:3], embed_dim=8)
+        model = ContextPredictionEnergy(JEPAEnergyConfig(embed_dim=8, hidden_dims=[8]))
+        history = train_jepa_energy(model, data_pairs, noise_pairs, n_steps=20)
         assert all(np.isfinite(v) for v in history)
 
     def test_model_parameters_change_after_training(self) -> None:
         """SCENARIO-JEPA-005: Training modifies model parameters."""
-        data_pairs, noise_pairs = generate_jepa_training_data(
-            SAMPLE_SNIPPETS[:3], embed_dim=8
-        )
-        model = ContextPredictionEnergy(
-            JEPAEnergyConfig(embed_dim=8, hidden_dims=[8])
-        )
+        data_pairs, noise_pairs = generate_jepa_training_data(SAMPLE_SNIPPETS[:3], embed_dim=8)
+        model = ContextPredictionEnergy(JEPAEnergyConfig(embed_dim=8, hidden_dims=[8]))
 
         # Record initial output weight (starts at zeros)
         ow_before = np.array(model.output_weight).copy()
 
-        train_jepa_energy(
-            model, data_pairs, noise_pairs, n_steps=10, learning_rate=0.05
-        )
+        train_jepa_energy(model, data_pairs, noise_pairs, n_steps=10, learning_rate=0.05)
 
         ow_after = np.array(model.output_weight)
         assert not np.allclose(ow_before, ow_after), "Output weight should change"
@@ -441,16 +415,17 @@ class TestEmbeddingRepair:
             assigns lower energy to correct pairs than noise pairs. Returns the
             model and training data so tests can construct ctx/pred embeddings.
         """
-        data_pairs, noise_pairs = generate_jepa_training_data(
-            SAMPLE_SNIPPETS, embed_dim=16
-        )
+        data_pairs, noise_pairs = generate_jepa_training_data(SAMPLE_SNIPPETS, embed_dim=16)
         model = ContextPredictionEnergy(
             JEPAEnergyConfig(embed_dim=16, hidden_dims=[16, 8]),
             key=jrandom.PRNGKey(0),
         )
         train_jepa_energy(
-            model, data_pairs, noise_pairs,
-            learning_rate=0.05, n_steps=200,
+            model,
+            data_pairs,
+            noise_pairs,
+            learning_rate=0.05,
+            n_steps=200,
         )
         return model, data_pairs, noise_pairs
 
@@ -465,9 +440,7 @@ class TestEmbeddingRepair:
 
         energy_before = float(model.energy_pair(ctx_emb, bad_pred))
 
-        repaired = embedding_repair(
-            ctx_emb, bad_pred, model, steps=100, step_size=0.05
-        )
+        repaired = embedding_repair(ctx_emb, bad_pred, model, steps=100, step_size=0.05)
 
         energy_after = float(model.energy_pair(ctx_emb, repaired))
 
@@ -512,9 +485,7 @@ class TestEmbeddingRepair:
         e10 = float(model.energy_pair(ctx_emb, repaired_10))
         e100 = float(model.energy_pair(ctx_emb, repaired_100))
 
-        assert e100 <= e10, (
-            f"100 steps ({e100:.4f}) should be <= 10 steps ({e10:.4f})"
-        )
+        assert e100 <= e10, f"100 steps ({e100:.4f}) should be <= 10 steps ({e10:.4f})"
 
 
 class TestNearestCodeMatch:
@@ -522,11 +493,13 @@ class TestNearestCodeMatch:
 
     def test_exact_match(self) -> None:
         """SCENARIO-JEPA-007: An embedding that matches a codebook entry exactly is found."""
-        codebook_embs = jnp.array([
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.0, 1.0],
-        ])
+        codebook_embs = jnp.array(
+            [
+                [1.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 0.0, 1.0],
+            ]
+        )
         codebook_texts = ["code_x", "code_y", "code_z"]
 
         # Query is exactly the second entry
@@ -535,11 +508,13 @@ class TestNearestCodeMatch:
 
     def test_closest_by_cosine(self) -> None:
         """SCENARIO-JEPA-007: Query closest to one entry by cosine similarity returns it."""
-        codebook_embs = jnp.array([
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.0, 1.0],
-        ])
+        codebook_embs = jnp.array(
+            [
+                [1.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 0.0, 1.0],
+            ]
+        )
         codebook_texts = ["code_x", "code_y", "code_z"]
 
         # Mostly in the z-direction, should match "code_z"
@@ -549,10 +524,12 @@ class TestNearestCodeMatch:
 
     def test_magnitude_invariant(self) -> None:
         """SCENARIO-JEPA-007: Cosine similarity is invariant to embedding magnitude."""
-        codebook_embs = jnp.array([
-            [1.0, 0.0],
-            [0.0, 1.0],
-        ])
+        codebook_embs = jnp.array(
+            [
+                [1.0, 0.0],
+                [0.0, 1.0],
+            ]
+        )
         codebook_texts = ["horizontal", "vertical"]
 
         # Large-magnitude vector pointing in x-direction
@@ -569,10 +546,12 @@ class TestNearestCodeMatch:
 
     def test_near_zero_embedding_handled(self) -> None:
         """SCENARIO-JEPA-007: Near-zero query doesn't crash (epsilon prevents div-by-zero)."""
-        codebook_embs = jnp.array([
-            [1.0, 0.0],
-            [0.0, 1.0],
-        ])
+        codebook_embs = jnp.array(
+            [
+                [1.0, 0.0],
+                [0.0, 1.0],
+            ]
+        )
         codebook_texts = ["a", "b"]
 
         # Near-zero query — should not raise, just return some result
@@ -587,11 +566,23 @@ class TestPackageExports:
         """SCENARIO-JEPA-001: JEPA symbols are accessible from carnot.embeddings."""
         from carnot.embeddings import (
             ContextPredictionEnergy as PkgModel,
+        )
+        from carnot.embeddings import (
             JEPAEnergyConfig as PkgConfig,
+        )
+        from carnot.embeddings import (
             embedding_repair as pkg_repair,
+        )
+        from carnot.embeddings import (
             generate_jepa_training_data as pkg_gen,
+        )
+        from carnot.embeddings import (
             nce_loss as pkg_nce,
+        )
+        from carnot.embeddings import (
             nearest_code_match as pkg_nearest,
+        )
+        from carnot.embeddings import (
             train_jepa_energy as pkg_train,
         )
 

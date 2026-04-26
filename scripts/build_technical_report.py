@@ -94,8 +94,7 @@ def extract_subtitle(md_text: str) -> str:
     return "Technical Report"
 
 
-def regenerate_html(md_path: Path = MD_PATH,
-                    html_path: Path = HTML_PATH) -> str:
+def regenerate_html(md_path: Path = MD_PATH, html_path: Path = HTML_PATH) -> str:
     """Build the new HTML content and return it as a string.
 
     Does not write to disk -- callers decide whether to write or compare.
@@ -131,8 +130,8 @@ def regenerate_html(md_path: Path = MD_PATH,
     escaped_subtitle = html_stdlib.escape(subtitle, quote=True)
     meta_description = (
         f'<meta name="description" content="Carnot technical report: '
-        f'{escaped_subtitle}. Live GPU benchmarks with statistical confidence '
-        f'intervals, honest negative results, and a public experiment history '
+        f"{escaped_subtitle}. Live GPU benchmarks with statistical confidence "
+        f"intervals, honest negative results, and a public experiment history "
         f'with provenance labels for every headline claim.">'
     )
     new_html, n_meta = re.subn(
@@ -146,7 +145,7 @@ def regenerate_html(md_path: Path = MD_PATH,
     )
     if n_meta != 1:
         raise RuntimeError(
-            f"Expected exactly one <meta name=\"description\"> tag in "
+            f'Expected exactly one <meta name="description"> tag in '
             f"{html_path}, found {n_meta}. Template is malformed."
         )
 
@@ -154,25 +153,31 @@ def regenerate_html(md_path: Path = MD_PATH,
     #    the current subtitle instead of a stale one.
     new_title = f"<title>Technical Report - {escaped_subtitle}</title>"
     new_html, n_title = re.subn(
-        r"<title>[^<]*</title>", lambda _m: new_title, new_html, count=1,
+        r"<title>[^<]*</title>",
+        lambda _m: new_title,
+        new_html,
+        count=1,
     )
     if n_title != 1:
-        raise RuntimeError(
-            f"Expected exactly one <title> tag in {html_path}, found {n_title}."
-        )
+        raise RuntimeError(f"Expected exactly one <title> tag in {html_path}, found {n_title}.")
 
     return new_html
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--check", action="store_true",
-                        help="Exit non-zero if the HTML on disk does not match "
-                             "what regenerate_html() would produce. Useful for "
-                             "pre-commit and CI.")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Print the regenerated HTML to stdout instead of "
-                             "writing docs/technical-report.html.")
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Exit non-zero if the HTML on disk does not match "
+        "what regenerate_html() would produce. Useful for "
+        "pre-commit and CI.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print the regenerated HTML to stdout instead of writing docs/technical-report.html.",
+    )
     args = parser.parse_args()
 
     new_html = regenerate_html()

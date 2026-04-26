@@ -85,6 +85,7 @@ _watchdog = ExperimentTimeoutWatchdog(
 # Step 1: Load FoVer v2 and build training groups with synthetic negatives
 # ---------------------------------------------------------------------------
 
+
 def _load_fover_v2() -> list[dict]:
     """Load the FoVer v2 combined corpus from disk.
 
@@ -125,10 +126,11 @@ def _corrupt_step(step_text: str, question_idx: int) -> str:
         A corrupted version of the step (e.g. "First, 3.0 + 5.0 = 11.0.").
     """
     import re
+
     # Find the last number in the step and replace it with a wrong value.
     # Using question_idx as a deterministic perturbation so different questions
     # get different wrong answers (avoids the model learning a single "wrong" token).
-    numbers = re.findall(r'\d+\.?\d*', step_text)
+    numbers = re.findall(r"\d+\.?\d*", step_text)
     if not numbers:
         return step_text + " (error)"
     last_num = numbers[-1]
@@ -139,7 +141,7 @@ def _corrupt_step(step_text: str, question_idx: int) -> str:
     # Perturb by a deterministic offset (never 0, never the original value)
     offset = float((question_idx % 7) + 2)
     wrong_val = val + offset if (question_idx % 2 == 0) else val - offset - 1.0
-    wrong_str = f"{wrong_val:.1f}" if '.' in last_num else str(int(wrong_val))
+    wrong_str = f"{wrong_val:.1f}" if "." in last_num else str(int(wrong_val))
     return step_text.replace(last_num, wrong_str, 1)
 
 
@@ -178,20 +180,24 @@ def _build_training_groups(pairs: list[dict]) -> list[dict]:
             text = pair.get("step_text") or pair.get("step", "")
             labeler = pair.get("labeler", "unknown")
             # Correct step — labeler tells us which verifier confirmed it
-            steps.append({
-                "text": text,
-                "label": 1,
-                "z3_label": True if labeler == "z3" else None,
-                "pddl_label": True if labeler == "pddl" else None,
-            })
+            steps.append(
+                {
+                    "text": text,
+                    "label": 1,
+                    "z3_label": True if labeler == "z3" else None,
+                    "pddl_label": True if labeler == "pddl" else None,
+                }
+            )
             # Synthetic incorrect step — high uncertainty weight since label is heuristic
             wrong_text = _corrupt_step(text, q_idx)
-            steps.append({
-                "text": wrong_text,
-                "label": 0,
-                "z3_label": None,   # no formal verification for synthetic negatives
-                "pddl_label": None,
-            })
+            steps.append(
+                {
+                    "text": wrong_text,
+                    "label": 0,
+                    "z3_label": None,  # no formal verification for synthetic negatives
+                    "pddl_label": None,
+                }
+            )
         if len(steps) >= 2:
             groups.append({"question": question, "steps": steps})
 
@@ -201,6 +207,7 @@ def _build_training_groups(pairs: list[dict]) -> list[dict]:
 # ---------------------------------------------------------------------------
 # Step 2: Build OOD evaluation groups (GSM8K questions 500-699)
 # ---------------------------------------------------------------------------
+
 
 def _build_ood_eval_groups() -> list[dict]:
     """Build OOD evaluation groups for GSM8K questions 500-699.
@@ -231,8 +238,8 @@ def _build_ood_eval_groups() -> list[dict]:
         c = float(2 + (i * 3) % 10)
 
         # Two-step computation: (a + b) * c
-        step1_correct = f"{a:.1f} + {b:.1f} = {a+b:.1f}"
-        step2_correct = f"{a+b:.1f} * {c:.1f} = {(a+b)*c:.1f}"
+        step1_correct = f"{a:.1f} + {b:.1f} = {a + b:.1f}"
+        step2_correct = f"{a + b:.1f} * {c:.1f} = {(a + b) * c:.1f}"
 
         question = (
             f"A class has {a:.0f} boys and {b:.0f} girls. "
@@ -243,14 +250,20 @@ def _build_ood_eval_groups() -> list[dict]:
         wrong2 = _corrupt_step(step2_correct, i + 200)
 
         steps = [
-            {"text": f"{prefixes[0]}, {step1_correct}.",
-             "label": 1, "z3_label": None, "pddl_label": None},
-            {"text": f"{prefixes[0]}, {wrong1}.",
-             "label": 0, "z3_label": None, "pddl_label": None},
-            {"text": f"{prefixes[1]}, {step2_correct}.",
-             "label": 1, "z3_label": None, "pddl_label": None},
-            {"text": f"{prefixes[1]}, {wrong2}.",
-             "label": 0, "z3_label": None, "pddl_label": None},
+            {
+                "text": f"{prefixes[0]}, {step1_correct}.",
+                "label": 1,
+                "z3_label": None,
+                "pddl_label": None,
+            },
+            {"text": f"{prefixes[0]}, {wrong1}.", "label": 0, "z3_label": None, "pddl_label": None},
+            {
+                "text": f"{prefixes[1]}, {step2_correct}.",
+                "label": 1,
+                "z3_label": None,
+                "pddl_label": None,
+            },
+            {"text": f"{prefixes[1]}, {wrong2}.", "label": 0, "z3_label": None, "pddl_label": None},
         ]
         groups.append({"question": question, "steps": steps})
 
@@ -261,13 +274,16 @@ def _build_ood_eval_groups() -> list[dict]:
 # Main training and evaluation loop
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """Train JEPALambdaRankV18 on FoVer v2 and evaluate OOD AUC on GSM8K 500-699."""
     with _watchdog:
         # 1. Load FoVer v2 corpus
         pairs = _load_fover_v2()
         training_groups = _build_training_groups(pairs)
-        _log.info("Built %d training groups from %d FoVer v2 pairs", len(training_groups), len(pairs))
+        _log.info(
+            "Built %d training groups from %d FoVer v2 pairs", len(training_groups), len(pairs)
+        )
 
         # 2. Build OOD evaluation groups
         eval_groups = _build_ood_eval_groups()

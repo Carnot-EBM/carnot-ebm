@@ -588,9 +588,13 @@ class TestMain:
         }
 
         with (
-            patch("scripts.experiment_438_gpu1_zombie_fix.run_experiment", return_value=mock_artifact),
+            patch(
+                "scripts.experiment_438_gpu1_zombie_fix.run_experiment", return_value=mock_artifact
+            ),
             patch("scripts.experiment_438_gpu1_zombie_fix.get_timeout_minutes", return_value=1),
-            patch("scripts.experiment_438_gpu1_zombie_fix.ExperimentTimeoutWatchdog") as mock_watchdog,
+            patch(
+                "scripts.experiment_438_gpu1_zombie_fix.ExperimentTimeoutWatchdog"
+            ) as mock_watchdog,
         ):
             mock_watchdog.return_value.__enter__ = lambda s: s
             mock_watchdog.return_value.__exit__ = MagicMock(return_value=False)
@@ -619,7 +623,9 @@ class TestMain:
                 return_value=mock_artifact,
             ) as mock_run,
             patch("scripts.experiment_438_gpu1_zombie_fix.get_timeout_minutes", return_value=1),
-            patch("scripts.experiment_438_gpu1_zombie_fix.ExperimentTimeoutWatchdog") as mock_watchdog,
+            patch(
+                "scripts.experiment_438_gpu1_zombie_fix.ExperimentTimeoutWatchdog"
+            ) as mock_watchdog,
         ):
             mock_watchdog.return_value.__enter__ = lambda s: s
             mock_watchdog.return_value.__exit__ = MagicMock(return_value=False)

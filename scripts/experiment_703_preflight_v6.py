@@ -125,8 +125,12 @@ def _run_pre_flight(manifest_path: Path) -> tuple[bool, str]:
     code.  The conductor invokes it as a shell command, so that is what we test.
     """
     result = subprocess.run(
-        [sys.executable, str(_REPO_ROOT / "scripts" / "conductor_pre_flight.py"),
-         "--manifest", str(manifest_path)],
+        [
+            sys.executable,
+            str(_REPO_ROOT / "scripts" / "conductor_pre_flight.py"),
+            "--manifest",
+            str(manifest_path),
+        ],
         capture_output=True,
         text=True,
         timeout=30,
@@ -146,9 +150,9 @@ def main() -> None:
     )
     tmpl.setup()
 
-    with ExperimentTimeoutWatchdog(703, timeout_minutes=20,
-                                   result_path=str(_REPO_ROOT / DELIVERABLE)):
-
+    with ExperimentTimeoutWatchdog(
+        703, timeout_minutes=20, result_path=str(_REPO_ROOT / DELIVERABLE)
+    ):
         manifest = _load_manifest()
 
         # Check retirement files on disk.
@@ -197,6 +201,7 @@ def main() -> None:
         )
 
     import json as _json
+
     (tmpl._repo_root / DELIVERABLE).write_text(_json.dumps(artifact, indent=2) + "\n")
     tmpl.assert_deliverable_written()
 

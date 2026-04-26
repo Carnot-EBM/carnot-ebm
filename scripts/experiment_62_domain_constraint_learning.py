@@ -66,8 +66,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 # Domain 1: Arithmetic triples
 # ---------------------------------------------------------------------------
 
+
 def generate_arithmetic_triples(
-    n: int, rng: np.random.Generator,
+    n: int,
+    rng: np.random.Generator,
 ) -> list[tuple[str, str, str]]:
     """Generate (question, correct_answer, wrong_answer) for arithmetic.
 
@@ -159,20 +161,55 @@ def generate_arithmetic_triples(
 
 # Template subjects and predicates for syllogism generation.
 _SUBJECTS = [
-    "cats", "dogs", "birds", "fish", "trees", "rocks", "stars", "clouds",
-    "rivers", "mountains", "students", "teachers", "engineers", "doctors",
-    "planets", "atoms", "cells", "waves", "crystals", "robots",
+    "cats",
+    "dogs",
+    "birds",
+    "fish",
+    "trees",
+    "rocks",
+    "stars",
+    "clouds",
+    "rivers",
+    "mountains",
+    "students",
+    "teachers",
+    "engineers",
+    "doctors",
+    "planets",
+    "atoms",
+    "cells",
+    "waves",
+    "crystals",
+    "robots",
 ]
 
 _PREDICATES = [
-    "mortal", "alive", "visible", "heavy", "bright", "fast", "old",
-    "complex", "natural", "rare", "symmetric", "stable", "dense", "warm",
-    "soluble", "magnetic", "elastic", "transparent", "finite", "periodic",
+    "mortal",
+    "alive",
+    "visible",
+    "heavy",
+    "bright",
+    "fast",
+    "old",
+    "complex",
+    "natural",
+    "rare",
+    "symmetric",
+    "stable",
+    "dense",
+    "warm",
+    "soluble",
+    "magnetic",
+    "elastic",
+    "transparent",
+    "finite",
+    "periodic",
 ]
 
 
 def generate_logic_triples(
-    n: int, rng: np.random.Generator,
+    n: int,
+    rng: np.random.Generator,
 ) -> list[tuple[str, str, str]]:
     """Generate (question, correct_answer, wrong_answer) for logic syllogisms.
 
@@ -243,7 +280,9 @@ def generate_logic_triples(
     for _ in range(per_type):
         s, p, s2, p2 = pick_pair(rng)
         question = f"If all {s} are {p}, and {s2} are {p}, are {s2} necessarily {s}?"
-        correct = f"No. {s2} being {p} does not mean {s2} are {s}. This is affirming the consequent."
+        correct = (
+            f"No. {s2} being {p} does not mean {s2} are {s}. This is affirming the consequent."
+        )
         wrong = f"Yes. Since all {s} are {p} and {s2} are {p}, {s2} must be {s}."
         triples.append((question, correct, wrong))
 
@@ -254,8 +293,10 @@ def generate_logic_triples(
 # Domain 3: Code triples
 # ---------------------------------------------------------------------------
 
+
 def generate_code_triples(
-    n: int, rng: np.random.Generator,
+    n: int,
+    rng: np.random.Generator,
 ) -> list[tuple[str, str, str]]:
     """Generate (question, correct_answer, wrong_answer) for code snippets.
 
@@ -354,14 +395,10 @@ def _code_templates() -> list:
         """Check even: correct uses == 0, wrong uses == 1."""
         question = f"Write a function that returns True if {param} is even."
         correct = (
-            f"def is_even(n):\n"
-            f"    return n % 2 == 0\n"
-            f"# is_even({param}) returns {param % 2 == 0}"
+            f"def is_even(n):\n    return n % 2 == 0\n# is_even({param}) returns {param % 2 == 0}"
         )
         wrong = (
-            f"def is_even(n):\n"
-            f"    return n % 2 == 1\n"
-            f"# is_even({param}) returns {param % 2 == 1}"
+            f"def is_even(n):\n    return n % 2 == 1\n# is_even({param}) returns {param % 2 == 1}"
         )
         return question, correct, wrong
 
@@ -369,6 +406,7 @@ def _code_templates() -> list:
         """Factorial: correct handles base case, wrong recurses past 0."""
         n = min(param, 12)
         import math
+
         question = f"Write a function that computes the factorial of {n}."
         correct = (
             f"def factorial(n):\n"
@@ -390,14 +428,10 @@ def _code_templates() -> list:
         """Reverse string: correct uses [::-1], wrong uses [::1]."""
         question = "Write a function that reverses a string."
         correct = (
-            "def reverse_string(s):\n"
-            "    return s[::-1]\n"
-            "# reverse_string('hello') returns 'olleh'"
+            "def reverse_string(s):\n    return s[::-1]\n# reverse_string('hello') returns 'olleh'"
         )
         wrong = (
-            "def reverse_string(s):\n"
-            "    return s[::1]\n"
-            "# reverse_string('hello') returns 'hello'"
+            "def reverse_string(s):\n    return s[::1]\n# reverse_string('hello') returns 'hello'"
         )
         return question, correct, wrong
 
@@ -420,12 +454,14 @@ def _code_templates() -> list:
         """Fibonacci: correct starts with 0,1; wrong starts with 1,1."""
         n = min(param, 15)
         question = f"Write a function that returns the {n}th Fibonacci number (0-indexed)."
+
         # Correct: F(0)=0, F(1)=1, F(2)=1, ...
         def fib(k):
             a, b = 0, 1
             for _ in range(k):
                 a, b = b, a + b
             return a
+
         correct = (
             f"def fibonacci(n):\n"
             f"    a, b = 0, 1\n"
@@ -479,9 +515,7 @@ def _code_templates() -> list:
         """Palindrome check: correct compares reversed, wrong compares sorted."""
         question = "Write a function that checks if a string is a palindrome."
         correct = (
-            "def is_palindrome(s):\n"
-            "    s = s.lower().replace(' ', '')\n"
-            "    return s == s[::-1]"
+            "def is_palindrome(s):\n    s = s.lower().replace(' ', '')\n    return s == s[::-1]"
         )
         wrong = (
             "def is_palindrome(s):\n"
@@ -516,14 +550,23 @@ def _code_templates() -> list:
         return question, correct, wrong
 
     return [
-        sum_range, find_max, is_even, factorial, reverse_string,
-        count_vowels, fibonacci, binary_search, is_palindrome, flatten_list,
+        sum_range,
+        find_max,
+        is_even,
+        factorial,
+        reverse_string,
+        count_vowels,
+        fibonacci,
+        binary_search,
+        is_palindrome,
+        flatten_list,
     ]
 
 
 # ---------------------------------------------------------------------------
 # Binary feature encoding (200+ features per answer)
 # ---------------------------------------------------------------------------
+
 
 def encode_answer(question: str, answer: str) -> np.ndarray:
     """Encode a (question, answer) pair as a binary feature vector.
@@ -556,9 +599,9 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features = []
 
     # ===== Numeric features (20) =====
-    q_numbers = [int(x) for x in re.findall(r'\d+', question)]
-    a_numbers = [int(x) for x in re.findall(r'\d+', answer)]
-    a_digits = re.findall(r'\d', answer)
+    q_numbers = [int(x) for x in re.findall(r"\d+", question)]
+    a_numbers = [int(x) for x in re.findall(r"\d+", answer)]
+    a_digits = re.findall(r"\d", answer)
 
     # f0: answer contains any number
     features.append(1 if a_numbers else 0)
@@ -604,7 +647,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
 
     # ===== Structural features (40) =====
     words = answer.split()
-    sentences = [s.strip() for s in re.split(r'[.!?]+', answer) if s.strip()]
+    sentences = [s.strip() for s in re.split(r"[.!?]+", answer) if s.strip()]
     n_words = len(words)
     n_sentences = len(sentences)
 
@@ -733,13 +776,31 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features.append(1 if "valid" in lower_answer and "invalid" not in lower_answer else 0)
 
     # f120-f139: bigram features (word pairs)
-    bigrams = [f"{words[i]} {words[i+1]}" for i in range(len(words) - 1)] if len(words) > 1 else []
+    bigrams = (
+        [f"{words[i]} {words[i + 1]}" for i in range(len(words) - 1)] if len(words) > 1 else []
+    )
     bigram_lower = [b.lower() for b in bigrams]
     target_bigrams = [
-        "the answer", "answer is", "is not", "not the", "does not",
-        "this follows", "follows by", "by modus", "n +", "+ 1",
-        "return total", "return result", "for i", "in range", "if not",
-        "not lst", "lst 0", "== 0", "== 1", "def ",
+        "the answer",
+        "answer is",
+        "is not",
+        "not the",
+        "does not",
+        "this follows",
+        "follows by",
+        "by modus",
+        "n +",
+        "+ 1",
+        "return total",
+        "return result",
+        "for i",
+        "in range",
+        "if not",
+        "not lst",
+        "lst 0",
+        "== 0",
+        "== 1",
+        "def ",
     ]
     for tb in target_bigrams:
         features.append(1 if any(tb in b for b in bigram_lower) else 0)
@@ -770,9 +831,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     lines = answer.split("\n")
     indented = [l for l in lines if l and l[0] == " "]
     if indented:
-        consistent = all(
-            (len(l) - len(l.lstrip())) in (4, 8) for l in indented
-        )
+        consistent = all((len(l) - len(l.lstrip())) in (4, 8) for l in indented)
         features.append(1 if consistent else 0)
     else:
         features.append(0)
@@ -812,7 +871,20 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     # Subject from question appears in answer
     q_words_set = set(lower_question.split())
     a_words_set = set(lower_answer.split())
-    shared_content_words = q_words_set & a_words_set - {"a", "an", "the", "is", "are", "what", "if", "and", "or", "in", "of", "to"}
+    shared_content_words = q_words_set & a_words_set - {
+        "a",
+        "an",
+        "the",
+        "is",
+        "are",
+        "what",
+        "if",
+        "and",
+        "or",
+        "in",
+        "of",
+        "to",
+    }
     features.append(1 if len(shared_content_words) > 2 else 0)
     features.append(1 if len(shared_content_words) > 5 else 0)
     features.append(1 if "affirming" in lower_answer else 0)
@@ -824,15 +896,28 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
 
     # f180-f189: cross-domain consistency
     # Arithmetic answer mentions "the answer is" (expected format)
-    features.append(1 if "the answer is" in lower_answer and ("+" in question or "*" in question or "mod" in question) else 0)
+    features.append(
+        1
+        if "the answer is" in lower_answer
+        and ("+" in question or "*" in question or "mod" in question)
+        else 0
+    )
     # Logic answer mentions reasoning type
-    features.append(1 if ("follows" in lower_answer or "cannot" in lower_answer) and ("if " in lower_question) else 0)
+    features.append(
+        1
+        if ("follows" in lower_answer or "cannot" in lower_answer) and ("if " in lower_question)
+        else 0
+    )
     # Code answer has proper structure
     features.append(1 if "def " in answer and "return" in answer and ":\n" in answer else 0)
     # Answer type matches question type
     features.append(1 if "write" in lower_question and "def " in answer else 0)
     features.append(1 if "what is" in lower_question and any(c.isdigit() for c in answer) else 0)
-    features.append(1 if "what follows" in lower_question and ("follows" in lower_answer or "not" in lower_answer) else 0)
+    features.append(
+        1
+        if "what follows" in lower_question and ("follows" in lower_answer or "not" in lower_answer)
+        else 0
+    )
     # Generic quality signals
     features.append(1 if n_words > 3 else 0)
     features.append(1 if not answer.endswith(" ") else 0)
@@ -855,7 +940,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     # Has mathematical notation
     features.append(1 if "^" in answer or "**" in answer else 0)
     # Has list/tuple literal
-    features.append(1 if re.search(r'\[.*\]', answer) else 0)
+    features.append(1 if re.search(r"\[.*\]", answer) else 0)
     # Starts with keyword
     first_word = words[0].lower() if words else ""
     features.append(1 if first_word in ("def", "the", "all", "no", "yes", "some") else 0)
@@ -898,6 +983,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
 # ---------------------------------------------------------------------------
 # Discriminative CD training (from Exp 51, scaled with L1 from Exp 60)
 # ---------------------------------------------------------------------------
+
 
 def train_discriminative_cd_l1(
     correct_vectors: np.ndarray,
@@ -956,13 +1042,9 @@ def train_discriminative_cd_l1(
     wrong_spins = 2.0 * wrong_vectors - 1.0
 
     pos_bias_moments = np.mean(correct_spins, axis=0)
-    pos_weight_moments = np.mean(
-        np.einsum("bi,bj->bij", correct_spins, correct_spins), axis=0
-    )
+    pos_weight_moments = np.mean(np.einsum("bi,bj->bij", correct_spins, correct_spins), axis=0)
     neg_bias_moments = np.mean(wrong_spins, axis=0)
-    neg_weight_moments = np.mean(
-        np.einsum("bi,bj->bij", wrong_spins, wrong_spins), axis=0
-    )
+    neg_weight_moments = np.mean(np.einsum("bi,bj->bij", wrong_spins, wrong_spins), axis=0)
 
     # Constant discriminative gradient.
     grad_b = -beta * (pos_bias_moments - neg_bias_moments)
@@ -989,8 +1071,10 @@ def train_discriminative_cd_l1(
         if verbose and (epoch % 100 == 0 or epoch == n_epochs - 1):
             sparsity = np.mean(np.abs(J) < 0.001) * 100
             acc = classification_accuracy(correct_vectors, wrong_vectors, biases, J)
-            print(f"    Epoch {epoch:3d}: gap={mean_gap:+.4f}  acc={acc:.1%}  "
-                  f"sparsity={sparsity:.0f}%")
+            print(
+                f"    Epoch {epoch:3d}: gap={mean_gap:+.4f}  acc={acc:.1%}  "
+                f"sparsity={sparsity:.0f}%"
+            )
 
     return biases, J, losses
 
@@ -1061,7 +1145,7 @@ def compute_auroc(
     total = n_correct * n_wrong
 
     for i in range(0, n_correct, chunk_size):
-        ec_chunk = e_correct[i:i + chunk_size]
+        ec_chunk = e_correct[i : i + chunk_size]
         diff = e_wrong[None, :] - ec_chunk[:, None]  # (chunk, n_wrong)
         concordant += int(np.sum(diff > 0))
         tied += int(np.sum(diff == 0))
@@ -1073,6 +1157,7 @@ def compute_auroc(
 # ---------------------------------------------------------------------------
 # Baselines
 # ---------------------------------------------------------------------------
+
 
 def hand_coded_score(question: str, answer: str) -> float:
     """Hand-coded rule-based scoring for answer correctness.
@@ -1092,7 +1177,7 @@ def hand_coded_score(question: str, answer: str) -> float:
     lower_a = answer.lower()
     score = 0.0
 
-    q_numbers = [int(x) for x in re.findall(r'\d+', question)]
+    q_numbers = [int(x) for x in re.findall(r"\d+", question)]
 
     # Arithmetic rules.
     if "+" in question and len(q_numbers) >= 2:
@@ -1150,6 +1235,7 @@ def logprob_baseline_score(features: np.ndarray) -> float:
 # Main experiment
 # ---------------------------------------------------------------------------
 
+
 def main() -> int:
     print("=" * 70)
     print("EXPERIMENT 62: Domain Constraint Learning from 10K Triples")
@@ -1181,7 +1267,11 @@ def main() -> int:
     print(f"  Total:      {len(all_triples)} triples ({time.time() - t0:.1f}s)")
 
     # Show examples.
-    for domain, triples_list in [("Arithmetic", arith_triples), ("Logic", logic_triples), ("Code", code_triples)]:
+    for domain, triples_list in [
+        ("Arithmetic", arith_triples),
+        ("Logic", logic_triples),
+        ("Code", code_triples),
+    ]:
         print(f"\n  {domain} example:")
         q, c, w = triples_list[0]
         print(f"    Q: {q[:80]}")
@@ -1239,18 +1329,26 @@ def main() -> int:
 
         print(f"\n  Training {domain} model ({d_correct.shape[0]} pairs)...")
         biases, J, losses = train_discriminative_cd_l1(
-            d_correct, d_wrong,
-            n_epochs=300, lr=0.05, beta=1.0,
-            l1_lambda=0.001, weight_decay=0.005,
+            d_correct,
+            d_wrong,
+            n_epochs=300,
+            lr=0.05,
+            beta=1.0,
+            l1_lambda=0.001,
+            weight_decay=0.005,
         )
         models[domain] = (biases, J, losses)
 
     # Combined model (all domains).
     print(f"\n  Training combined model ({correct_train.shape[0]} pairs)...")
     biases_comb, J_comb, losses_comb = train_discriminative_cd_l1(
-        correct_train, wrong_train,
-        n_epochs=300, lr=0.05, beta=1.0,
-        l1_lambda=0.001, weight_decay=0.005,
+        correct_train,
+        wrong_train,
+        n_epochs=300,
+        lr=0.05,
+        beta=1.0,
+        l1_lambda=0.001,
+        weight_decay=0.005,
     )
     models["combined"] = (biases_comb, J_comb, losses_comb)
 
@@ -1303,8 +1401,18 @@ def main() -> int:
         results[eval_domain]["hand_coded"] = {"auroc": hc_auroc, "acc": hc_acc}
 
         # --- Logprob baseline ---
-        lp_correct_scores = np.array([logprob_baseline_score(correct_all[i]) for i in test_idx[d_test_mask[np.arange(len(test_idx))]]])
-        lp_wrong_scores = np.array([logprob_baseline_score(wrong_all[i]) for i in test_idx[d_test_mask[np.arange(len(test_idx))]]])
+        lp_correct_scores = np.array(
+            [
+                logprob_baseline_score(correct_all[i])
+                for i in test_idx[d_test_mask[np.arange(len(test_idx))]]
+            ]
+        )
+        lp_wrong_scores = np.array(
+            [
+                logprob_baseline_score(wrong_all[i])
+                for i in test_idx[d_test_mask[np.arange(len(test_idx))]]
+            ]
+        )
         n_lp = len(lp_correct_scores)
         if n_lp > 0:
             lp_concordant = np.sum(lp_correct_scores > lp_wrong_scores)
@@ -1332,7 +1440,7 @@ def main() -> int:
     print(f"\n  Top 20 most important features (combined model):")
     for rank, fi in enumerate(top_features):
         name = feature_names[fi] if fi < len(feature_names) else f"f{fi}"
-        print(f"    {rank+1:2d}. f{fi:3d} ({name:40s}) importance={feature_importance[fi]:.4f}")
+        print(f"    {rank + 1:2d}. f{fi:3d} ({name:40s}) importance={feature_importance[fi]:.4f}")
 
     # --- Step 7: Print AUROC table ---
     elapsed = time.time() - start
@@ -1342,55 +1450,68 @@ def main() -> int:
     print(sep)
 
     print(f"\n  AUROC Table (per-domain x model-type):")
-    print(f"  {'Domain':>12s} | {'Ising(domain)':>14s} | {'Ising(combined)':>16s} | "
-          f"{'Hand-coded':>11s} | {'Logprob':>8s} | {'N_test':>6s}")
+    print(
+        f"  {'Domain':>12s} | {'Ising(domain)':>14s} | {'Ising(combined)':>16s} | "
+        f"{'Hand-coded':>11s} | {'Logprob':>8s} | {'N_test':>6s}"
+    )
     print(f"  {'-' * 80}")
 
     for domain in domains:
         r = results[domain]
-        print(f"  {domain:>12s} | "
-              f"{r['ising_domain']['auroc']:>14.3f} | "
-              f"{r['ising_combined']['auroc']:>16.3f} | "
-              f"{r['hand_coded']['auroc']:>11.3f} | "
-              f"{r['logprob']['auroc']:>8.3f} | "
-              f"{r['n_test']:>6d}")
+        print(
+            f"  {domain:>12s} | "
+            f"{r['ising_domain']['auroc']:>14.3f} | "
+            f"{r['ising_combined']['auroc']:>16.3f} | "
+            f"{r['hand_coded']['auroc']:>11.3f} | "
+            f"{r['logprob']['auroc']:>8.3f} | "
+            f"{r['n_test']:>6d}"
+        )
 
     print(f"  {'-' * 80}")
-    print(f"  {'OVERALL':>12s} | {'---':>14s} | {overall_auroc:>16.3f} | "
-          f"{'---':>11s} | {'---':>8s} | {len(test_idx):>6d}")
+    print(
+        f"  {'OVERALL':>12s} | {'---':>14s} | {overall_auroc:>16.3f} | "
+        f"{'---':>11s} | {'---':>8s} | {len(test_idx):>6d}"
+    )
 
     print(f"\n  Accuracy Table (E_correct < E_wrong):")
-    print(f"  {'Domain':>12s} | {'Ising(domain)':>14s} | {'Ising(combined)':>16s} | "
-          f"{'Hand-coded':>11s} | {'Logprob':>8s}")
+    print(
+        f"  {'Domain':>12s} | {'Ising(domain)':>14s} | {'Ising(combined)':>16s} | "
+        f"{'Hand-coded':>11s} | {'Logprob':>8s}"
+    )
     print(f"  {'-' * 70}")
 
     for domain in domains:
         r = results[domain]
-        print(f"  {domain:>12s} | "
-              f"{r['ising_domain']['acc']:>13.1%} | "
-              f"{r['ising_combined']['acc']:>15.1%} | "
-              f"{r['hand_coded']['acc']:>10.1%} | "
-              f"{r['logprob']['acc']:>7.1%}")
+        print(
+            f"  {domain:>12s} | "
+            f"{r['ising_domain']['acc']:>13.1%} | "
+            f"{r['ising_combined']['acc']:>15.1%} | "
+            f"{r['hand_coded']['acc']:>10.1%} | "
+            f"{r['logprob']['acc']:>7.1%}"
+        )
 
     print(f"  {'-' * 70}")
-    print(f"  {'OVERALL':>12s} | {'---':>14s} | {overall_acc:>15.1%} | "
-          f"{'---':>11s} | {'---':>8s}")
+    print(f"  {'OVERALL':>12s} | {'---':>14s} | {overall_acc:>15.1%} | {'---':>11s} | {'---':>8s}")
 
     # --- Verdict ---
     print(f"\n  Model statistics:")
     for name, (b, J_m, losses) in models.items():
         sparsity = np.mean(np.abs(J_m) < 0.001) * 100
         n_nonzero = np.sum(np.abs(J_m) >= 0.001)
-        print(f"    {name:12s}: {n_nonzero:5d} non-zero couplings ({sparsity:.0f}% sparse), "
-              f"final gap={losses[-1]:+.4f}")
+        print(
+            f"    {name:12s}: {n_nonzero:5d} non-zero couplings ({sparsity:.0f}% sparse), "
+            f"final gap={losses[-1]:+.4f}"
+        )
 
     # Verdict logic.
     mean_domain_auroc = np.mean([results[d]["ising_domain"]["auroc"] for d in domains])
     mean_hc_auroc = np.mean([results[d]["hand_coded"]["auroc"] for d in domains])
     mean_lp_auroc = np.mean([results[d]["logprob"]["auroc"] for d in domains])
 
-    print(f"\n  Mean AUROC: Ising(domain)={mean_domain_auroc:.3f}, "
-          f"Hand-coded={mean_hc_auroc:.3f}, Logprob={mean_lp_auroc:.3f}")
+    print(
+        f"\n  Mean AUROC: Ising(domain)={mean_domain_auroc:.3f}, "
+        f"Hand-coded={mean_hc_auroc:.3f}, Logprob={mean_lp_auroc:.3f}"
+    )
 
     if mean_domain_auroc > 0.8:
         print(f"\n  VERDICT: Strong domain-specific constraint learning (AUROC > 0.8)")
@@ -1402,18 +1523,26 @@ def main() -> int:
         print(f"\n  VERDICT: Ising model does not learn meaningful constraints")
 
     if mean_domain_auroc > mean_hc_auroc:
-        print(f"  vs Hand-coded: Learned model BEATS hand-coded rules "
-              f"({mean_domain_auroc:.3f} vs {mean_hc_auroc:.3f})")
+        print(
+            f"  vs Hand-coded: Learned model BEATS hand-coded rules "
+            f"({mean_domain_auroc:.3f} vs {mean_hc_auroc:.3f})"
+        )
     else:
-        print(f"  vs Hand-coded: Hand-coded rules still better "
-              f"({mean_hc_auroc:.3f} vs {mean_domain_auroc:.3f})")
+        print(
+            f"  vs Hand-coded: Hand-coded rules still better "
+            f"({mean_hc_auroc:.3f} vs {mean_domain_auroc:.3f})"
+        )
 
     if overall_auroc > mean_domain_auroc:
-        print(f"  Combined vs per-domain: Combined model wins "
-              f"({overall_auroc:.3f} vs {mean_domain_auroc:.3f})")
+        print(
+            f"  Combined vs per-domain: Combined model wins "
+            f"({overall_auroc:.3f} vs {mean_domain_auroc:.3f})"
+        )
     else:
-        print(f"  Combined vs per-domain: Per-domain specialists win "
-              f"({mean_domain_auroc:.3f} vs {overall_auroc:.3f})")
+        print(
+            f"  Combined vs per-domain: Per-domain specialists win "
+            f"({mean_domain_auroc:.3f} vs {overall_auroc:.3f})"
+        )
 
     print(sep)
     return 0
@@ -1540,10 +1669,26 @@ def _feature_names() -> list[str]:
     names.append("a_valid")
     # Bigram features (120-139)
     target_bigrams = [
-        "the_answer", "answer_is", "is_not", "not_the", "does_not",
-        "this_follows", "follows_by", "by_modus", "n_+", "+_1",
-        "return_total", "return_result", "for_i", "in_range", "if_not",
-        "not_lst", "lst_0", "==_0", "==_1", "def_",
+        "the_answer",
+        "answer_is",
+        "is_not",
+        "not_the",
+        "does_not",
+        "this_follows",
+        "follows_by",
+        "by_modus",
+        "n_+",
+        "+_1",
+        "return_total",
+        "return_result",
+        "for_i",
+        "in_range",
+        "if_not",
+        "not_lst",
+        "lst_0",
+        "==_0",
+        "==_1",
+        "def_",
     ]
     for tb in target_bigrams:
         names.append(f"bigram:{tb}")

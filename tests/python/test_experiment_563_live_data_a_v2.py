@@ -32,7 +32,9 @@ class TestBuildLiveDataArtifact:
     """REQ-DATA-001: artifact must have all required fields."""
 
     def test_schema_field(self):
-        art = exp563._build_live_data_artifact("live_gpu", 50, 50, "results/live_pairs_563.json", [1.0] * 50)
+        art = exp563._build_live_data_artifact(
+            "live_gpu", 50, 50, "results/live_pairs_563.json", [1.0] * 50
+        )
         assert art["schema"] == "carnot.live_data_collection.v1"
 
     def test_honest_verdict_live_data_collected_at_40(self):
@@ -82,7 +84,9 @@ class TestBuildLiveDataArtifact:
         assert art["mean_latency_s"] == 0.0
 
     def test_live_pairs_file_field(self):
-        art = exp563._build_live_data_artifact("live_gpu", 50, 50, "results/live_pairs_563.json", [])
+        art = exp563._build_live_data_artifact(
+            "live_gpu", 50, 50, "results/live_pairs_563.json", []
+        )
         assert art["live_pairs_file"] == "results/live_pairs_563.json"
 
     def test_n_questions_field(self):
@@ -192,6 +196,7 @@ class TestAnnotateResponse:
 
     def test_returns_cot_steps_and_labels(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp563._annotate_response(annotator, "1. 2 + 2 = 4", "q0")
         assert "cot_steps" in result
@@ -199,6 +204,7 @@ class TestAnnotateResponse:
 
     def test_cot_steps_have_required_keys(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp563._annotate_response(annotator, "1. 2 + 2 = 4", "q0")
         for step in result["cot_steps"]:
@@ -207,6 +213,7 @@ class TestAnnotateResponse:
 
     def test_fover_labels_parallel_to_cot_steps(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp563._annotate_response(annotator, "1. Step A\n2. Step B", "q1")
         assert len(result["cot_steps"]) == len(result["fover_labels"])
@@ -263,7 +270,9 @@ class TestRunExperimentPreflight:
             env.pop("CARNOT_FORCE_LIVE", None)
             # kill_gpu_zombies and watchdog must not raise
             with patch.object(exp563.ExperimentTemplate, "kill_gpu_zombies"):
-                with patch("scripts.experiment_563_live_data_a_v2.ExperimentTimeoutWatchdog") as mock_wd:
+                with patch(
+                    "scripts.experiment_563_live_data_a_v2.ExperimentTimeoutWatchdog"
+                ) as mock_wd:
                     mock_wd.return_value.start = MagicMock()
                     mock_wd.return_value.stop = MagicMock()
                     with pytest.raises(SystemExit) as exc_info:
@@ -277,7 +286,9 @@ class TestRunExperimentPreflight:
         with patch.dict(os.environ, {}, clear=False) as env:
             env.pop("CARNOT_FORCE_LIVE", None)
             with patch.object(exp563.ExperimentTemplate, "kill_gpu_zombies"):
-                with patch("scripts.experiment_563_live_data_a_v2.ExperimentTimeoutWatchdog") as mock_wd:
+                with patch(
+                    "scripts.experiment_563_live_data_a_v2.ExperimentTimeoutWatchdog"
+                ) as mock_wd:
                     mock_wd.return_value.start = MagicMock()
                     mock_wd.return_value.stop = MagicMock()
                     with pytest.raises(SystemExit):

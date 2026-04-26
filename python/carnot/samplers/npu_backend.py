@@ -64,7 +64,6 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any
 
 import numpy as np
 
@@ -185,11 +184,13 @@ class NpuJEPAPredictor:
         if prefer_npu and "VitisAIExecutionProvider" in available_providers:
             _cache_dir = model_path.parent / "npu_cache"
             _cache_dir.mkdir(exist_ok=True)
-            _provider_options = [{
-                "config_file": str(vaip_config_path),
-                "cacheDir": str(_cache_dir),
-                "cacheKey": "jepa_predictor_npu",
-            }]
+            _provider_options = [
+                {
+                    "config_file": str(vaip_config_path),
+                    "cacheDir": str(_cache_dir),
+                    "cacheKey": "jepa_predictor_npu",
+                }
+            ]
             try:
                 self._session = ort.InferenceSession(
                     str(model_path),
@@ -202,8 +203,7 @@ class NpuJEPAPredictor:
                 # NPU provider present but session creation failed (e.g. device
                 # busy, driver error). Fall back gracefully.
                 logger.warning(
-                    "NpuJEPAPredictor: NPU session creation failed (%s). "
-                    "Falling back to CPU.",
+                    "NpuJEPAPredictor: NPU session creation failed (%s). Falling back to CPU.",
                     exc,
                 )
                 self._session = ort.InferenceSession(

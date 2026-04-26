@@ -56,14 +56,18 @@ def test_schema() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_load_gate_returns_empty_when_missing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_load_gate_returns_empty_when_missing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Missing gate file returns empty dict (treated as gate_open=False).  Spec: REQ-VERIFY-149"""
     monkeypatch.setattr(mod, "GATE_PATH", tmp_path / "nonexistent.json")
     result = _load_gate()
     assert result == {}
 
 
-def test_load_gate_returns_empty_on_bad_json(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_load_gate_returns_empty_on_bad_json(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Malformed gate file returns empty dict.  Spec: REQ-VERIFY-149"""
     bad = tmp_path / "gate.json"
     bad.write_text("{not json}")
@@ -82,7 +86,9 @@ def test_load_gate_returns_dict_when_valid(tmp_path: Path, monkeypatch: pytest.M
     assert result["gate_open"] is True
 
 
-def test_gate_check_blocks_when_gate_open_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_gate_check_blocks_when_gate_open_false(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """When gate_open=False, main() writes a blocked artifact.  Spec: REQ-VERIFY-149, SCENARIO-VERIFY-196"""
     # Write a gate file with gate_open=False
     gate_data = {"gate_open": False, "gate_version": "v4"}
@@ -105,16 +111,23 @@ def test_gate_check_blocks_when_gate_open_false(tmp_path: Path, monkeypatch: pyt
     class _FakeTemplate:
         def setup(self) -> None:
             pass
+
         def assert_deliverable_written(self) -> None:
             pass
+
         def build_result(self, *a, **kw):
             return {}
 
     with (
-        patch("carnot.pipeline.env_autofix.apply_env_autofix", return_value=EnvironmentAutoFix(
-            gpu_detected=False, carnot_force_live_was_set=False,
-            auto_fix_applied=False, final_env_value=None
-        )),
+        patch(
+            "carnot.pipeline.env_autofix.apply_env_autofix",
+            return_value=EnvironmentAutoFix(
+                gpu_detected=False,
+                carnot_force_live_was_set=False,
+                auto_fix_applied=False,
+                final_env_value=None,
+            ),
+        ),
         patch("carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog") as mock_wd,
         patch("scripts.experiment_template.ExperimentTemplate", return_value=_FakeTemplate()),
         patch("carnot.pipeline.atomic_writer.AtomicResultWriter", return_value=_FakeWriter()),

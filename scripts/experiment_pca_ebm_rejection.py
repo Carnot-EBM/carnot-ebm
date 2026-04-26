@@ -47,7 +47,9 @@ def extract_gen_activations(model, tokenizer, question, do_sample=False, tempera
     with torch.no_grad():
         outputs = model.generate(**inputs, **gen_kwargs)
 
-    response = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+    response = tokenizer.decode(
+        outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+    )
 
     prompt_len = inputs["input_ids"].shape[1]
     full_seq = outputs[0].unsqueeze(0)
@@ -56,15 +58,22 @@ def extract_gen_activations(model, tokenizer, question, do_sample=False, tempera
         hs = hidden_out.hidden_states
 
     gen_last = hs[-1][0, prompt_len:, :].mean(dim=0).float().numpy()
-    gen_mid = hs[len(hs)//2][0, prompt_len:, :].mean(dim=0).float().numpy()
+    gen_mid = hs[len(hs) // 2][0, prompt_len:, :].mean(dim=0).float().numpy()
     act = jnp.concatenate([jnp.array(gen_last), jnp.array(gen_mid)])
 
     return response, act
 
 
 def train_and_evaluate(
-    correct_acts, hallucinated_acts, test_acts, test_labels, greedy_results,
-    llm, tokenizer, pca_dim, test_qa,
+    correct_acts,
+    hallucinated_acts,
+    test_acts,
+    test_labels,
+    greedy_results,
+    llm,
+    tokenizer,
+    pca_dim,
+    test_qa,
 ):
     """Train PCA + Gibbs EBM and evaluate rejection sampling."""
     import jax
@@ -103,8 +112,11 @@ def train_and_evaluate(
     ebm = GibbsModel(gibbs_config, key=key)
 
     def get_params(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_params(m, p):
         m.layers = list(p["layers"])
@@ -127,8 +139,8 @@ def train_and_evaluate(
     # Calibration accuracy
     cal_c_e = [float(ebm.energy(project(a))) for a in correct_acts[:min_n]]
     cal_h_e = [float(ebm.energy(project(a))) for a in hallucinated_acts[:min_n]]
-    gap = sum(cal_h_e)/len(cal_h_e) - sum(cal_c_e)/len(cal_c_e)
-    threshold = (sum(cal_c_e)/len(cal_c_e) + sum(cal_h_e)/len(cal_h_e)) / 2
+    gap = sum(cal_h_e) / len(cal_h_e) - sum(cal_c_e) / len(cal_c_e)
+    threshold = (sum(cal_c_e) / len(cal_c_e) + sum(cal_h_e) / len(cal_h_e)) / 2
     cal_tp = sum(1 for e in cal_h_e if e > threshold)
     cal_tn = sum(1 for e in cal_c_e if e <= threshold)
     cal_acc = (cal_tp + cal_tn) / (len(cal_c_e) + len(cal_h_e))
@@ -139,7 +151,11 @@ def train_and_evaluate(
         candidates = []
         for c in range(N_CANDIDATES):
             response, act = extract_gen_activations(
-                llm, tokenizer, q, do_sample=True, temperature=0.8,
+                llm,
+                tokenizer,
+                q,
+                do_sample=True,
+                temperature=0.8,
             )
             energy = float(ebm.energy(project(act)))
             candidates.append((response, energy, check_answer(response, expected)))
@@ -175,7 +191,9 @@ def main() -> int:
     print(f"\nLoading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     llm = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True, output_hidden_states=True,
+        model_name,
+        trust_remote_code=True,
+        output_hidden_states=True,
     )
     llm.eval()
 
@@ -189,8 +207,8 @@ def main() -> int:
             correct_acts.append(act)
         else:
             hallucinated_acts.append(act)
-        if (i+1) % 20 == 0:
-            print(f"  {i+1}/{len(CALIBRATION_QA)}")
+        if (i + 1) % 20 == 0:
+            print(f"  {i + 1}/{len(CALIBRATION_QA)}")
 
     print(f"Collected: {len(correct_acts)} correct, {len(hallucinated_acts)} hallucinated")
 
@@ -215,28 +233,41 @@ def main() -> int:
     for pca_dim in PCA_DIMS:
         print(f"\n  PCA dim={pca_dim}:")
         r = train_and_evaluate(
-            correct_acts, hallucinated_acts, test_acts, test_labels,
-            greedy_results, llm, tokenizer, pca_dim, TEST_QA,
+            correct_acts,
+            hallucinated_acts,
+            test_acts,
+            test_labels,
+            greedy_results,
+            llm,
+            tokenizer,
+            pca_dim,
+            TEST_QA,
         )
         results.append(r)
         imp = r["rej_acc"] - r["greedy_acc"]
         print(f"    Cal acc: {r['cal_acc']:.0%}, Gap: {r['gap']:.2f}")
-        print(f"    Test: {r['rej_acc']:.0%} ({'+' if imp>=0 else ''}{imp:.0%})")
-        print(f"    Fixes: {r['fixes']}, Regressions: {r['regressions']}, Net: {r['fixes']-r['regressions']}")
+        print(f"    Test: {r['rej_acc']:.0%} ({'+' if imp >= 0 else ''}{imp:.0%})")
+        print(
+            f"    Fixes: {r['fixes']}, Regressions: {r['regressions']}, Net: {r['fixes'] - r['regressions']}"
+        )
 
     # Summary table
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("RESULTS SUMMARY")
-    print(f"{'='*60}")
-    print(f"{'PCA':>4} | {'Cal%':>5} | {'Gap':>6} | {'Greedy':>6} | {'EBM':>6} | {'Δ':>5} | {'Fix':>3} | {'Reg':>3} | {'Net':>4}")
+    print(f"{'=' * 60}")
+    print(
+        f"{'PCA':>4} | {'Cal%':>5} | {'Gap':>6} | {'Greedy':>6} | {'EBM':>6} | {'Δ':>5} | {'Fix':>3} | {'Reg':>3} | {'Net':>4}"
+    )
     print("-" * 60)
     for r in results:
         imp = r["rej_acc"] - r["greedy_acc"]
-        print(f"{r['pca_dim']:>4} | {r['cal_acc']:>4.0%} | {r['gap']:>6.2f} | "
-              f"{r['greedy_acc']:>5.0%} | {r['rej_acc']:>5.0%} | "
-              f"{'+' if imp>=0 else ''}{imp:>4.0%} | {r['fixes']:>3} | "
-              f"{r['regressions']:>3} | {'+' if r['fixes']>=r['regressions'] else ''}{r['fixes']-r['regressions']:>3}")
-    print(f"{'='*60}")
+        print(
+            f"{r['pca_dim']:>4} | {r['cal_acc']:>4.0%} | {r['gap']:>6.2f} | "
+            f"{r['greedy_acc']:>5.0%} | {r['rej_acc']:>5.0%} | "
+            f"{'+' if imp >= 0 else ''}{imp:>4.0%} | {r['fixes']:>3} | "
+            f"{r['regressions']:>3} | {'+' if r['fixes'] >= r['regressions'] else ''}{r['fixes'] - r['regressions']:>3}"
+        )
+    print(f"{'=' * 60}")
 
     best = max(results, key=lambda r: r["rej_acc"] - r["greedy_acc"])
     best_imp = best["rej_acc"] - best["greedy_acc"]

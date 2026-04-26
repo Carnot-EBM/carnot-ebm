@@ -137,9 +137,9 @@ class TestBuildAdversarialV5Artifact:
         """
         results = {
             "baseline_standard_accuracy": 0.80,
-            "baseline_adversarial_accuracy": 0.75,   # baseline barely drops
+            "baseline_adversarial_accuracy": 0.75,  # baseline barely drops
             "pipeline_standard_accuracy": 0.80,
-            "pipeline_adversarial_accuracy": 0.60,   # pipeline drops more
+            "pipeline_adversarial_accuracy": 0.60,  # pipeline drops more
         }
         artifact = build_adversarial_v5_artifact(results, "live_gpu")
         assert artifact["honest_verdict"] == "thesis_rejected"

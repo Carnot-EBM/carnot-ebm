@@ -44,9 +44,7 @@ def load_module() -> Any:
     if _MODULE_NAME in sys.modules:
         return sys.modules[_MODULE_NAME]
     repo_root = Path(__file__).resolve().parents[2]
-    module_path = (
-        repo_root / "scripts" / "experiment_276_gsm8k_modern_extractors.py"
-    )
+    module_path = repo_root / "scripts" / "experiment_276_gsm8k_modern_extractors.py"
     spec = importlib.util.spec_from_file_location(_MODULE_NAME, module_path)
     assert spec is not None and spec.loader is not None
     mod = importlib.util.module_from_spec(spec)
@@ -285,9 +283,7 @@ class TestRunSemanticExtractor:
 class TestRunCase:
     """REQ-VERIFY-001: Full triple-extractor run on individual cases."""
 
-    def _make_case(
-        self, case_id: str, question: str, ground_truth: int
-    ) -> dict[str, Any]:
+    def _make_case(self, case_id: str, question: str, ground_truth: int) -> dict[str, Any]:
         return {
             "case_id": case_id,
             "question": question,
@@ -341,7 +337,7 @@ class TestRunCase:
             llm_generate_fn=MOD._ci_generate_fn,
         )
         assert result.correct is False
-        assert result.z3.flagged is False   # no arithmetic to check
+        assert result.z3.flagged is False  # no arithmetic to check
         assert result.llm.flagged is False  # no CLAIM lines found
 
     def test_case_result_has_correct_case_id(self) -> None:
@@ -422,7 +418,7 @@ class TestComputeStatistics:
     def test_fp_counted_in_fp_rate(self) -> None:
         """REQ-VERIFY-009: False positive is counted in fp_rate."""
         results = [
-            self._make_result(correct=True, z3_flagged=True),   # FP
+            self._make_result(correct=True, z3_flagged=True),  # FP
             self._make_result(correct=True, z3_flagged=False),
             self._make_result(correct=False, z3_flagged=True),  # TP
         ]
@@ -637,9 +633,7 @@ class TestFullCIBenchmark:
     def test_results_json_exists_and_has_correct_experiment_number(self) -> None:
         """REQ-VERIFY-001: The checked-in results JSON has experiment=276."""
         results_path = (
-            Path(__file__).resolve().parents[2]
-            / "results"
-            / "experiment_276_results.json"
+            Path(__file__).resolve().parents[2] / "results" / "experiment_276_results.json"
         )
         payload = json.loads(results_path.read_text(encoding="utf-8"))
         assert payload["experiment"] == 276

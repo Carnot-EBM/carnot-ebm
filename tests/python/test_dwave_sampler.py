@@ -170,7 +170,7 @@ class TestIsingToBqm:
         J[0, 2] = J[2, 0] = -0.3
         bqm = _ising_to_bqm(b, J)
         np.testing.assert_allclose(bqm.quadratic[(0, 1)], -1.0)  # -2 * 0.5
-        np.testing.assert_allclose(bqm.quadratic[(0, 2)], 0.6)   # -2 * -0.3
+        np.testing.assert_allclose(bqm.quadratic[(0, 2)], 0.6)  # -2 * -0.3
 
     def test_zero_couplings_not_in_quadratic(self):
         """SCENARIO-SAMPLE-007: Zero couplings are omitted from quadratic dict."""
@@ -293,7 +293,9 @@ class TestMinimizeEnergy:
         """SCENARIO-SAMPLE-007: Neal minimize_energy returns (n_samples, n_spins) bool array."""
         b, J = _ferro(8)
         ss = _make_sample_set([{i: 1 for i in range(8)}] * 5)
-        with patch("carnot.samplers.dwave_sampler._build_neal_sampler", return_value=_mock_neal(ss)):
+        with patch(
+            "carnot.samplers.dwave_sampler._build_neal_sampler", return_value=_mock_neal(ss)
+        ):
             sampler = DWaveSampler(mode="neal")
         result = sampler.minimize_energy(b, J, n_samples=5, n_steps=200, beta=10.0)
         assert result.shape == (5, 8)
@@ -316,7 +318,9 @@ class TestMinimizeEnergy:
         """SCENARIO-SAMPLE-007: Tabu minimize_energy returns (n_samples, n_spins) bool array."""
         b, J = _ferro(6)
         ss = _make_sample_set([{i: 1 for i in range(6)}] * 4)
-        with patch("carnot.samplers.dwave_sampler._build_tabu_sampler", return_value=_mock_tabu(ss)):
+        with patch(
+            "carnot.samplers.dwave_sampler._build_tabu_sampler", return_value=_mock_tabu(ss)
+        ):
             sampler = DWaveSampler(mode="tabu")
         result = sampler.minimize_energy(b, J, n_samples=4, n_steps=500, beta=8.0)
         assert result.shape == (4, 6)
@@ -393,7 +397,9 @@ class TestSample:
         """SCENARIO-SAMPLE-007: Neal sample returns (n_samples, n_spins) bool array."""
         b, J = _ferro(6)
         ss = _make_sample_set([{i: 1 for i in range(6)}] * 4)
-        with patch("carnot.samplers.dwave_sampler._build_neal_sampler", return_value=_mock_neal(ss)):
+        with patch(
+            "carnot.samplers.dwave_sampler._build_neal_sampler", return_value=_mock_neal(ss)
+        ):
             sampler = DWaveSampler(mode="neal")
         result = sampler.sample(b, J, n_samples=4, config={"beta": 10.0})
         assert result.shape == (4, 6)
@@ -427,7 +433,9 @@ class TestSample:
         """SCENARIO-SAMPLE-007: Tabu sample returns correct shape."""
         b, J = _ferro(5)
         ss = _make_sample_set([{i: 1 for i in range(5)}] * 3)
-        with patch("carnot.samplers.dwave_sampler._build_tabu_sampler", return_value=_mock_tabu(ss)):
+        with patch(
+            "carnot.samplers.dwave_sampler._build_tabu_sampler", return_value=_mock_tabu(ss)
+        ):
             sampler = DWaveSampler(mode="tabu")
         result = sampler.sample(b, J, n_samples=3, config={"beta": 5.0})
         assert result.shape == (3, 5)
@@ -587,7 +595,9 @@ class TestBenchmarkDwaveVsCpu:
         """SCENARIO-SAMPLE-007: Benchmark result contains all expected keys."""
         b, J = _ferro(8)
         ss = _make_sample_set([{i: 1 for i in range(8)}] * 10)
-        with patch("carnot.samplers.dwave_sampler._build_neal_sampler", return_value=_mock_neal(ss)):
+        with patch(
+            "carnot.samplers.dwave_sampler._build_neal_sampler", return_value=_mock_neal(ss)
+        ):
             result = benchmark_dwave_vs_cpu(b, J, n_samples=10, n_steps=50, beta=5.0)
         assert "dwave_neal_seconds" in result
         assert "cpu_seconds" in result

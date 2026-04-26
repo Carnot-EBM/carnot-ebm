@@ -39,7 +39,7 @@ def _gsm8k_result(n: int = 5) -> dict:
             {
                 "question_id": f"q{i:03d}",
                 "model_id": "test_model",
-                "response": f"The answer is {i}. Because {i}+{i}={i*2}.",
+                "response": f"The answer is {i}. Because {i}+{i}={i * 2}.",
                 "correct": i % 2 == 0,
             }
             for i in range(n)
@@ -156,7 +156,9 @@ class TestLoadRealCotPairs:
     def test_missing_generated_code_skipped(self, tmp_path: Path) -> None:
         """HumanEval entries without generated_code are skipped."""
         f = tmp_path / "exp341.json"
-        _write_json(f, {"per_problem_results": [{"problem_id": "HumanEval/0", "passed_tests": True}]})
+        _write_json(
+            f, {"per_problem_results": [{"problem_id": "HumanEval/0", "passed_tests": True}]}
+        )
         pairs = load_real_cot_pairs([str(f)])
         assert pairs == []
 

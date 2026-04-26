@@ -2,6 +2,7 @@
 
 Spec: REQ-REPAIR-020, REQ-REPAIR-021, SCENARIO-REPAIR-040, SCENARIO-REPAIR-041
 """
+
 from __future__ import annotations
 
 import sys

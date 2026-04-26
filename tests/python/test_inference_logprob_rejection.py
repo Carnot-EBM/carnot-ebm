@@ -153,18 +153,14 @@ class TestGenerateWithLogprobs:
 
     def test_returns_response_and_logprob(self) -> None:
         """REQ-INFER-008: returns decoded text and mean logprob."""
-        model, tokenizer = _make_mock_model_and_tokenizer(
-            [("Paris", [-0.5, -0.3])]
-        )
+        model, tokenizer = _make_mock_model_and_tokenizer([("Paris", [-0.5, -0.3])])
         response, mean_lp = _generate_with_logprobs(model, tokenizer, "What is the capital?")
         assert response == "Paris"
         assert abs(mean_lp - (-0.4)) < 0.01  # mean of -0.5 and -0.3
 
     def test_greedy_by_default(self) -> None:
         """REQ-INFER-008: do_sample=False by default (greedy)."""
-        model, tokenizer = _make_mock_model_and_tokenizer(
-            [("42", [-1.0])]
-        )
+        model, tokenizer = _make_mock_model_and_tokenizer([("42", [-1.0])])
         _generate_with_logprobs(model, tokenizer, "prompt")
         call_kwargs = model.generate.call_args
         # Should NOT have do_sample in kwargs
@@ -172,9 +168,7 @@ class TestGenerateWithLogprobs:
 
     def test_sampling_mode(self) -> None:
         """REQ-INFER-008: do_sample=True passes temperature."""
-        model, tokenizer = _make_mock_model_and_tokenizer(
-            [("answer", [-2.0, -1.0])]
-        )
+        model, tokenizer = _make_mock_model_and_tokenizer([("answer", [-2.0, -1.0])])
         _generate_with_logprobs(model, tokenizer, "prompt", do_sample=True, temperature=0.7)
         call_kwargs = model.generate.call_args.kwargs
         assert call_kwargs["do_sample"] is True
@@ -189,10 +183,12 @@ class TestGenerateWithLogprobs:
             "input_ids": torch.zeros(1, prompt_len, dtype=torch.long),
         }
         # Only 2 generated tokens but 5 score entries (extra scores)
-        gen_ids = torch.cat([
-            torch.zeros(prompt_len, dtype=torch.long),
-            torch.arange(1, 3, dtype=torch.long),  # 2 generated tokens
-        ]).unsqueeze(0)
+        gen_ids = torch.cat(
+            [
+                torch.zeros(prompt_len, dtype=torch.long),
+                torch.arange(1, 3, dtype=torch.long),  # 2 generated tokens
+            ]
+        ).unsqueeze(0)
 
         scores = []
         for i in range(5):  # 5 scores for 2 tokens — triggers break at step_idx >= 2
@@ -200,9 +196,7 @@ class TestGenerateWithLogprobs:
             logits[0, min(i + 1, 9)] = 0.0
             scores.append(logits)
 
-        model.generate = MagicMock(
-            return_value=SimpleNamespace(sequences=gen_ids, scores=scores)
-        )
+        model.generate = MagicMock(return_value=SimpleNamespace(sequences=gen_ids, scores=scores))
         tokenizer.decode = MagicMock(return_value="short")
 
         response, mean_lp = _generate_with_logprobs(model, tokenizer, "test")
@@ -217,13 +211,13 @@ class TestGenerateWithLogprobs:
         tokenizer.return_value = {
             "input_ids": torch.zeros(1, prompt_len, dtype=torch.long),
         }
-        gen_ids = torch.cat([
-            torch.zeros(prompt_len, dtype=torch.long),
-            torch.ones(2, dtype=torch.long),
-        ]).unsqueeze(0)
-        model.generate = MagicMock(
-            return_value=SimpleNamespace(sequences=gen_ids, scores=[])
-        )
+        gen_ids = torch.cat(
+            [
+                torch.zeros(prompt_len, dtype=torch.long),
+                torch.ones(2, dtype=torch.long),
+            ]
+        ).unsqueeze(0)
+        model.generate = MagicMock(return_value=SimpleNamespace(sequences=gen_ids, scores=[]))
         tokenizer.decode = MagicMock(return_value="hello")
 
         _, mean_lp = _generate_with_logprobs(model, tokenizer, "test")
@@ -242,9 +236,9 @@ class TestLogprobRejectionSample:
         """REQ-INFER-008: picks the candidate with highest mean logprob."""
         # Build fresh mocks inside the test to avoid parallel worker interference
         responses = [
-            ("bad answer", [-3.0, -4.0]),    # mean = -3.5
-            ("good answer", [-0.2, -0.3]),   # mean = -0.25
-            ("mid answer", [-1.0, -1.5]),    # mean = -1.25
+            ("bad answer", [-3.0, -4.0]),  # mean = -3.5
+            ("good answer", [-0.2, -0.3]),  # mean = -0.25
+            ("mid answer", [-1.0, -1.5]),  # mean = -1.25
         ]
         model, tokenizer = _make_mock_model_and_tokenizer(responses)
 
@@ -265,9 +259,11 @@ class TestLogprobRejectionSample:
 
     def test_single_candidate_degrades_gracefully(self) -> None:
         """REQ-INFER-008: n_candidates=1 degrades to single generation."""
-        model, tokenizer = _make_mock_model_and_tokenizer([
-            ("only answer", [-1.0, -2.0]),  # mean = -1.5
-        ])
+        model, tokenizer = _make_mock_model_and_tokenizer(
+            [
+                ("only answer", [-1.0, -2.0]),  # mean = -1.5
+            ]
+        )
 
         result = logprob_rejection_sample(
             _make_config(),
@@ -285,13 +281,15 @@ class TestLogprobRejectionSample:
 
     def test_all_candidates_populated(self) -> None:
         """REQ-INFER-008: all_candidates contains all N responses."""
-        model, tokenizer = _make_mock_model_and_tokenizer([
-            ("a", [-1.0]),
-            ("b", [-2.0]),
-            ("c", [-0.5]),
-            ("d", [-3.0]),
-            ("e", [-1.5]),
-        ])
+        model, tokenizer = _make_mock_model_and_tokenizer(
+            [
+                ("a", [-1.0]),
+                ("b", [-2.0]),
+                ("c", [-0.5]),
+                ("d", [-3.0]),
+                ("e", [-1.5]),
+            ]
+        )
 
         result = logprob_rejection_sample(
             _make_config(),
@@ -342,10 +340,12 @@ class TestLogprobRejectionSample:
 
     def test_custom_temperature_and_max_tokens(self) -> None:
         """REQ-INFER-008: custom temperature and max_new_tokens are passed through."""
-        model, tokenizer = _make_mock_model_and_tokenizer([
-            ("resp1", [-1.0]),
-            ("resp2", [-0.5]),
-        ])
+        model, tokenizer = _make_mock_model_and_tokenizer(
+            [
+                ("resp1", [-1.0]),
+                ("resp2", [-0.5]),
+            ]
+        )
 
         logprob_rejection_sample(
             _make_config(),
@@ -363,10 +363,12 @@ class TestLogprobRejectionSample:
 
     def test_two_candidates_selects_better(self) -> None:
         """REQ-INFER-008: with 2 candidates, selects the better one."""
-        model, tokenizer = _make_mock_model_and_tokenizer([
-            ("wrong", [-5.0, -5.0, -5.0]),   # mean = -5.0 (low confidence)
-            ("right", [-0.1, -0.1, -0.1]),   # mean = -0.1 (high confidence)
-        ])
+        model, tokenizer = _make_mock_model_and_tokenizer(
+            [
+                ("wrong", [-5.0, -5.0, -5.0]),  # mean = -5.0 (low confidence)
+                ("right", [-0.1, -0.1, -0.1]),  # mean = -0.1 (high confidence)
+            ]
+        )
 
         result = logprob_rejection_sample(
             _make_config(),

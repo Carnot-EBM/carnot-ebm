@@ -75,18 +75,16 @@ class TestIsZombieRule:
     @pytest.mark.parametrize(
         "vram_mb,util,expected",
         [
-            (600, 0, True),    # large VRAM, zero util → zombie
-            (101, 0, True),    # just above threshold
-            (100, 0, False),   # exactly at boundary → not zombie (>100 required)
-            (50, 0, False),    # small VRAM, zero util → not zombie
-            (600, 1, False),   # large VRAM, non-zero util → not zombie
-            (600, 100, False), # large VRAM, full util → not zombie
-            (0, 0, False),     # zero VRAM → not zombie
+            (600, 0, True),  # large VRAM, zero util → zombie
+            (101, 0, True),  # just above threshold
+            (100, 0, False),  # exactly at boundary → not zombie (>100 required)
+            (50, 0, False),  # small VRAM, zero util → not zombie
+            (600, 1, False),  # large VRAM, non-zero util → not zombie
+            (600, 100, False),  # large VRAM, full util → not zombie
+            (0, 0, False),  # zero VRAM → not zombie
         ],
     )
-    def test_zombie_classification(
-        self, vram_mb: int, util: int, expected: bool
-    ) -> None:
+    def test_zombie_classification(self, vram_mb: int, util: int, expected: bool) -> None:
         """SCENARIO-INFRA-004: zombie rule applied by DualGPUMonitor._is_zombie()."""
         monitor = DualGPUMonitor()
         assert monitor._is_zombie(vram_mb=vram_mb, utilization_pct=util) is expected
@@ -97,11 +95,7 @@ class TestIsZombieRule:
 # ---------------------------------------------------------------------------
 
 
-_NVIDIA_SMI_COMPUTE_APPS_OUTPUT = (
-    "2592400, 0, 600 MiB\n"
-    "2595103, 0, 450 MiB\n"
-    "1234567, 1, 50 MiB\n"
-)
+_NVIDIA_SMI_COMPUTE_APPS_OUTPUT = "2592400, 0, 600 MiB\n2595103, 0, 450 MiB\n1234567, 1, 50 MiB\n"
 
 _NVIDIA_SMI_GPU_UTIL_OUTPUT = "0 %\n15 %\n"
 
@@ -110,7 +104,8 @@ class TestListGpuProcesses:
     """REQ-INFRA-003: list_gpu_processes() parses nvidia-smi output."""
 
     def _make_run(
-        self, compute_out: str = _NVIDIA_SMI_COMPUTE_APPS_OUTPUT,
+        self,
+        compute_out: str = _NVIDIA_SMI_COMPUTE_APPS_OUTPUT,
         util_out: str = _NVIDIA_SMI_GPU_UTIL_OUTPUT,
     ):
         """Return a fake subprocess.run that mimics nvidia-smi CSV responses.
@@ -119,6 +114,7 @@ class TestListGpuProcesses:
         the actual commands contain full flag strings like
         ``--query-compute-apps=pid,gpu_index,used_memory``.
         """
+
         def fake_run(cmd: list[str], **kwargs: Any) -> SimpleNamespace:
             cmd_str = " ".join(cmd)
             if "query-compute-apps" in cmd_str:
@@ -239,10 +235,16 @@ class TestCheckDualGpuHealth:
 
     def test_healthy_two_gpu_config(self) -> None:
         """SCENARIO-INFRA-005: two GPUs, active processes, no zombies → all_healthy=True."""
-        monitor = self._monitor_with_procs([
-            GPUProcessInfo(pid=1, gpu_index=0, vram_mb=400, utilization_pct=70, is_zombie=False),
-            GPUProcessInfo(pid=2, gpu_index=1, vram_mb=400, utilization_pct=65, is_zombie=False),
-        ])
+        monitor = self._monitor_with_procs(
+            [
+                GPUProcessInfo(
+                    pid=1, gpu_index=0, vram_mb=400, utilization_pct=70, is_zombie=False
+                ),
+                GPUProcessInfo(
+                    pid=2, gpu_index=1, vram_mb=400, utilization_pct=65, is_zombie=False
+                ),
+            ]
+        )
         with patch.object(monitor, "_get_gpu_count", return_value=2):
             health = monitor.check_dual_gpu_health()
 
@@ -253,10 +255,14 @@ class TestCheckDualGpuHealth:
 
     def test_unhealthy_when_zombie_present(self) -> None:
         """REQ-INFRA-003: zombie on GPU 0 makes all_healthy=False."""
-        monitor = self._monitor_with_procs([
-            GPUProcessInfo(pid=1, gpu_index=0, vram_mb=600, utilization_pct=0, is_zombie=True),
-            GPUProcessInfo(pid=2, gpu_index=1, vram_mb=400, utilization_pct=65, is_zombie=False),
-        ])
+        monitor = self._monitor_with_procs(
+            [
+                GPUProcessInfo(pid=1, gpu_index=0, vram_mb=600, utilization_pct=0, is_zombie=True),
+                GPUProcessInfo(
+                    pid=2, gpu_index=1, vram_mb=400, utilization_pct=65, is_zombie=False
+                ),
+            ]
+        )
         with patch.object(monitor, "_get_gpu_count", return_value=2):
             health = monitor.check_dual_gpu_health()
 
@@ -265,9 +271,13 @@ class TestCheckDualGpuHealth:
 
     def test_unhealthy_when_only_one_gpu_detected(self) -> None:
         """REQ-INFRA-004: fewer than 2 GPUs → all_healthy=False."""
-        monitor = self._monitor_with_procs([
-            GPUProcessInfo(pid=1, gpu_index=0, vram_mb=400, utilization_pct=70, is_zombie=False),
-        ])
+        monitor = self._monitor_with_procs(
+            [
+                GPUProcessInfo(
+                    pid=1, gpu_index=0, vram_mb=400, utilization_pct=70, is_zombie=False
+                ),
+            ]
+        )
         with patch.object(monitor, "_get_gpu_count", return_value=1):
             health = monitor.check_dual_gpu_health()
 
@@ -276,9 +286,13 @@ class TestCheckDualGpuHealth:
 
     def test_unhealthy_when_idle_gpu_detected(self) -> None:
         """REQ-INFRA-004: GPU 1 idle (no processes) → idle_gpus=[1], all_healthy=False."""
-        monitor = self._monitor_with_procs([
-            GPUProcessInfo(pid=1, gpu_index=0, vram_mb=400, utilization_pct=70, is_zombie=False),
-        ])
+        monitor = self._monitor_with_procs(
+            [
+                GPUProcessInfo(
+                    pid=1, gpu_index=0, vram_mb=400, utilization_pct=70, is_zombie=False
+                ),
+            ]
+        )
         # Simulate GPU 1 existing but having no processes
         with patch.object(monitor, "_get_gpu_count", return_value=2):
             health = monitor.check_dual_gpu_health()
@@ -321,8 +335,10 @@ class TestToDictSerialization:
         fake_procs = [
             GPUProcessInfo(pid=1, gpu_index=0, vram_mb=400, utilization_pct=70, is_zombie=False),
         ]
-        with patch.object(monitor, "list_gpu_processes", return_value=fake_procs), \
-             patch.object(monitor, "_get_gpu_count", return_value=1):
+        with (
+            patch.object(monitor, "list_gpu_processes", return_value=fake_procs),
+            patch.object(monitor, "_get_gpu_count", return_value=1),
+        ):
             d = monitor.to_dict()
 
         assert "health" in d
@@ -335,8 +351,10 @@ class TestToDictSerialization:
         import json
 
         monitor = DualGPUMonitor()
-        with patch.object(monitor, "list_gpu_processes", return_value=[]), \
-             patch.object(monitor, "_get_gpu_count", return_value=0):
+        with (
+            patch.object(monitor, "list_gpu_processes", return_value=[]),
+            patch.object(monitor, "_get_gpu_count", return_value=0),
+        ):
             d = monitor.to_dict()
 
         # Should not raise
@@ -369,9 +387,9 @@ class TestSetupGpuIntegration:
 
         tmpl = self._make_template(tmp_path)
 
-        fake_prewarm = MagicMock(return_value=SimpleNamespace(
-            health_ok=True, load_time_s=1.0, stall_root_cause=None
-        ))
+        fake_prewarm = MagicMock(
+            return_value=SimpleNamespace(health_ok=True, load_time_s=1.0, stall_root_cause=None)
+        )
 
         result = tmpl.setup_gpu(
             [{"name": "TestModel", "hf_id": "org/test", "gpu": 0}],
@@ -386,9 +404,9 @@ class TestSetupGpuIntegration:
 
         tmpl = self._make_template(tmp_path)
 
-        fake_prewarm = MagicMock(return_value=SimpleNamespace(
-            health_ok=True, load_time_s=0.5, stall_root_cause=None
-        ))
+        fake_prewarm = MagicMock(
+            return_value=SimpleNamespace(health_ok=True, load_time_s=0.5, stall_root_cause=None)
+        )
 
         result = tmpl.setup_gpu(
             [{"name": "TestModel", "hf_id": "org/test", "gpu": 0}],
@@ -404,9 +422,9 @@ class TestSetupGpuIntegration:
 
         tmpl = self._make_template(tmp_path)
 
-        fake_prewarm = MagicMock(return_value=SimpleNamespace(
-            health_ok=True, load_time_s=0.5, stall_root_cause=None
-        ))
+        fake_prewarm = MagicMock(
+            return_value=SimpleNamespace(health_ok=True, load_time_s=0.5, stall_root_cause=None)
+        )
 
         result = tmpl.setup_gpu(
             [{"name": "TestModel", "hf_id": "org/test", "gpu": 0}],
@@ -429,9 +447,9 @@ class TestSetupGpuIntegration:
 
         tmpl = self._make_template(tmp_path)
 
-        fake_prewarm = MagicMock(return_value=SimpleNamespace(
-            health_ok=True, load_time_s=0.5, stall_root_cause=None
-        ))
+        fake_prewarm = MagicMock(
+            return_value=SimpleNamespace(health_ok=True, load_time_s=0.5, stall_root_cause=None)
+        )
 
         # Force an unhealthy monitor result
         unhealthy = {

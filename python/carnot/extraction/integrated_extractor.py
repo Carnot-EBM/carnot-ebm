@@ -27,11 +27,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
-from carnot.extraction.vericot_validator import StepVerdict, VeriCoTStepValidator
-from carnot.extraction.vprm_verifier import RuleVerdict, VPRMArithmeticVerifier
-
 if TYPE_CHECKING:
-    from carnot.pipeline.verify_repair import ArithmeticExtractor
+    from carnot.extraction.vericot_validator import StepVerdict, VeriCoTStepValidator
+    from carnot.extraction.vprm_verifier import RuleVerdict, VPRMArithmeticVerifier
 
 # ---------------------------------------------------------------------------
 # Violation — unified violation type for the integrated extractor
@@ -200,9 +198,5 @@ class IntegratedExtractor:
         """
         if not test_samples:
             return 0.0
-        detected = sum(
-            1
-            for s in test_samples
-            if s.get("cot_text") and self.extract(s["cot_text"])
-        )
+        detected = sum(1 for s in test_samples if s.get("cot_text") and self.extract(s["cot_text"]))
         return detected / len(test_samples)

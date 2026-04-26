@@ -54,7 +54,7 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from carnot.pipeline.jit_vram_check import JITVRAMCheck
@@ -69,16 +69,46 @@ __all__ = ["Gemma4QuantizedLoader"]
 # ---------------------------------------------------------------------------
 
 _GSM8K_SAMPLES = [
-    ("Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?", "72"),
-    ("Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?", "10"),
-    ("Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?", "5"),
-    ("Julie is reading a 120-page book. Yesterday, she was able to read 12 pages and today, she read twice as many pages as yesterday. If she wants to read half of the remaining pages tomorrow, how many pages should she read tomorrow?", "42"),
-    ("James writes a 3-page letter to 2 different friends twice a week. How many pages does he write a year?", "624"),
-    ("Mark has a garden with flowers. He planted plants of three different colors in it. Ten of them are yellow, and there are 80% more of those in purple. There are only 25% as many green flowers as there are yellow and purple flowers. How many flowers does Mark have?", "35"),
-    ("Albert is wondering how much pizza he can eat in one day. He buys 2 large pizzas and 2 small pizzas. A large pizza has 16 slices and a small pizza has 8 slices. If he eats it all, how many pieces does he eat that day?", "48"),
-    ("Ken created a care package to send to his brother, who was away at boarding school.  Ken placed a box on a scale, and then he added enough jelly beans to bring the weight to 2 pounds.  Then, he added brownies until the scale read 7 pounds.  Next, he added another 2 pounds of jelly beans.  And finally, he added enough gummy worms to double the weight once more.  What was the final weight of the box of goodies, in pounds?", "18"),
-    ("Alexis is applying for a new job and bought a new set of business clothes to wear to the interview. She went to a department store with a budget of $200 and spent $30 on a button-up shirt, $46 on suit pants, $38 on a suit coat, $11 on socks, and $18 on a belt. She also purchased a pair of shoes, but lost the receipt for them. She has $16 left from her budget. How much did Alexis pay for the shoes?", "41"),
-    ("Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly wage.  If she works 10 hours how much money does she make?", "198"),
+    (
+        "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?",
+        "72",
+    ),
+    (
+        "Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?",
+        "10",
+    ),
+    (
+        "Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?",
+        "5",
+    ),
+    (
+        "Julie is reading a 120-page book. Yesterday, she was able to read 12 pages and today, she read twice as many pages as yesterday. If she wants to read half of the remaining pages tomorrow, how many pages should she read tomorrow?",
+        "42",
+    ),
+    (
+        "James writes a 3-page letter to 2 different friends twice a week. How many pages does he write a year?",
+        "624",
+    ),
+    (
+        "Mark has a garden with flowers. He planted plants of three different colors in it. Ten of them are yellow, and there are 80% more of those in purple. There are only 25% as many green flowers as there are yellow and purple flowers. How many flowers does Mark have?",
+        "35",
+    ),
+    (
+        "Albert is wondering how much pizza he can eat in one day. He buys 2 large pizzas and 2 small pizzas. A large pizza has 16 slices and a small pizza has 8 slices. If he eats it all, how many pieces does he eat that day?",
+        "48",
+    ),
+    (
+        "Ken created a care package to send to his brother, who was away at boarding school.  Ken placed a box on a scale, and then he added enough jelly beans to bring the weight to 2 pounds.  Then, he added brownies until the scale read 7 pounds.  Next, he added another 2 pounds of jelly beans.  And finally, he added enough gummy worms to double the weight once more.  What was the final weight of the box of goodies, in pounds?",
+        "18",
+    ),
+    (
+        "Alexis is applying for a new job and bought a new set of business clothes to wear to the interview. She went to a department store with a budget of $200 and spent $30 on a button-up shirt, $46 on suit pants, $38 on a suit coat, $11 on socks, and $18 on a belt. She also purchased a pair of shoes, but lost the receipt for them. She has $16 left from her budget. How much did Alexis pay for the shoes?",
+        "41",
+    ),
+    (
+        "Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly wage.  If she works 10 hours how much money does she make?",
+        "198",
+    ),
 ]
 
 # Simple numeric answer extraction — find the last number in the model response
@@ -87,7 +117,7 @@ import re as _re
 _NUMBER_RE = _re.compile(r"-?\d+(?:,\d{3})*(?:\.\d+)?")
 
 
-def _extract_number(text: str) -> Optional[str]:
+def _extract_number(text: str) -> str | None:
     """Extract the last number from model output for GSM8K answer comparison.
 
     GSM8K answers are always integers.  The model typically ends with a statement
@@ -143,13 +173,13 @@ class Gemma4QuantizedLoader:
         model_path: str,
         n_gpu_layers: int = -1,
         max_tokens: int = 512,
-        jit_vram_check: Optional["JITVRAMCheck"] = None,
+        jit_vram_check: JITVRAMCheck | None = None,
     ) -> None:
         self.model_path = model_path
         self.n_gpu_layers = n_gpu_layers
         self.max_tokens = max_tokens
         self.jit_vram_check = jit_vram_check
-        self._llm: Optional[object] = None
+        self._llm: object | None = None
         self._stub_mode: bool = False
         # Stable model ID used for JIT VRAM logging (derived from the file path or a
         # constant sentinel for stub mode).
@@ -173,9 +203,7 @@ class Gemma4QuantizedLoader:
         # required_gb=10.0 is the Q4_K_M model size upper bound.  If not cleared,
         # abort rather than crash with CUDA OOM (RETRO-051 fix).
         if self.jit_vram_check is not None:
-            vram_result = self.jit_vram_check.gate_model_load(
-                self.model_id, required_gb=10.0
-            )
+            vram_result = self.jit_vram_check.gate_model_load(self.model_id, required_gb=10.0)
             if not vram_result.is_cleared:
                 _log.warning(
                     "Gemma4QuantizedLoader.load(): JIT VRAM check failed — "
@@ -232,9 +260,7 @@ class Gemma4QuantizedLoader:
             return "The answer is 42."
 
         if self._llm is None:
-            raise RuntimeError(
-                "Model not loaded. Call Gemma4QuantizedLoader.load() first."
-            )
+            raise RuntimeError("Model not loaded. Call Gemma4QuantizedLoader.load() first.")
 
         result = self._llm(  # type: ignore[operator]
             prompt,
@@ -268,7 +294,7 @@ class Gemma4QuantizedLoader:
             handle = pynvml.nvmlDeviceGetHandleByIndex(0)
             info = pynvml.nvmlDeviceGetMemoryInfo(handle)
             used_bytes = info.used
-            used_gb = used_bytes / (1024 ** 3)
+            used_gb = used_bytes / (1024**3)
             return round(used_gb, 2)
         except Exception as exc:
             _log.warning("Gemma4QuantizedLoader.vram_usage_gb: pynvml error: %s", exc)
@@ -309,14 +335,14 @@ class Gemma4QuantizedLoader:
             return 0.70
 
         if self._llm is None:
-            raise RuntimeError(
-                "Model not loaded. Call Gemma4QuantizedLoader.load() first."
-            )
+            raise RuntimeError("Model not loaded. Call Gemma4QuantizedLoader.load() first.")
 
         questions = _GSM8K_SAMPLES[:n_questions]
         correct = 0
         for question, expected_answer in questions:
-            prompt = f"Solve step by step and give a numeric answer.\n\nQuestion: {question}\nAnswer:"
+            prompt = (
+                f"Solve step by step and give a numeric answer.\n\nQuestion: {question}\nAnswer:"
+            )
             try:
                 response = self.generate(prompt)
                 predicted = _extract_number(response)

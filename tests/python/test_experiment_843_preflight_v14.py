@@ -35,6 +35,7 @@ from scripts.experiment_843_preflight_v14 import (
 # Tests for OPEN_RETROS / RETROS_CONFIRMED_CLOSED constants
 # ---------------------------------------------------------------------------
 
+
 class TestRetroConstants:
     """REQ-INFRA-060: constants must reflect the authoritative .64 retro state."""
 
@@ -90,6 +91,7 @@ class TestRetroConstants:
 # Tests for extract_audit_data()
 # ---------------------------------------------------------------------------
 
+
 class TestExtractAuditData:
     """REQ-INFRA-060: extract_audit_data must correctly derive counts from retro dict."""
 
@@ -139,6 +141,7 @@ class TestExtractAuditData:
 # Tests for compute_honest_verdict()
 # ---------------------------------------------------------------------------
 
+
 class TestComputeHonestVerdict:
     """SCENARIO-INFRA-070: honest_verdict must follow the encoding contract."""
 
@@ -166,6 +169,7 @@ class TestComputeHonestVerdict:
 # ---------------------------------------------------------------------------
 # Tests for write_retirement_plan()
 # ---------------------------------------------------------------------------
+
 
 class TestWriteRetirementPlan:
     """REQ-INFRA-060: retirement_plan.md must be written with required content."""
@@ -213,6 +217,7 @@ class TestWriteRetirementPlan:
 # Tests for write_manifest_patch()
 # ---------------------------------------------------------------------------
 
+
 class TestWriteManifestPatch:
     """REQ-INFRA-060: manifest_enforcement_patch.txt must be written with required content."""
 
@@ -259,6 +264,7 @@ class TestWriteManifestPatch:
 # Tests for update_milestone_prereqs()
 # ---------------------------------------------------------------------------
 
+
 class TestUpdateMilestonePrereqs:
     """REQ-INFRA-060: MILESTONE_PREREQS.md must gain a .65 section without losing .64 content."""
 
@@ -273,8 +279,9 @@ class TestUpdateMilestonePrereqs:
     def test_appends_section_without_removing_existing_content(self, tmp_path):
         """update_milestone_prereqs must NOT remove prior milestone sections."""
         path = tmp_path / "MILESTONE_PREREQS.md"
-        path.write_text("## Milestone 2026.04.64 Pre-flight\n\nExisting content.\n",
-                        encoding="utf-8")
+        path.write_text(
+            "## Milestone 2026.04.64 Pre-flight\n\nExisting content.\n", encoding="utf-8"
+        )
         update_milestone_prereqs(path)
         content = path.read_text(encoding="utf-8")
         assert "Milestone 2026.04.64 Pre-flight" in content
@@ -284,8 +291,9 @@ class TestUpdateMilestonePrereqs:
     def test_idempotent_when_section_already_present(self, tmp_path):
         """update_milestone_prereqs must return True without re-writing if section exists."""
         path = tmp_path / "MILESTONE_PREREQS.md"
-        path.write_text("## Milestone 2026.04.65 Pre-flight\n\nAlready written.\n",
-                        encoding="utf-8")
+        path.write_text(
+            "## Milestone 2026.04.65 Pre-flight\n\nAlready written.\n", encoding="utf-8"
+        )
         result = update_milestone_prereqs(path)
         assert result is True
         # Content must not be duplicated.
@@ -321,6 +329,7 @@ class TestUpdateMilestonePrereqs:
 # ---------------------------------------------------------------------------
 # Integration test: run_audit() end-to-end against real results/ directory
 # ---------------------------------------------------------------------------
+
 
 class TestRunAudit:
     """Integration test: run_audit() against the real .64 retro JSON."""
@@ -394,6 +403,7 @@ class TestRunAudit:
 # ---------------------------------------------------------------------------
 # Tests for the written deliverable JSON
 # ---------------------------------------------------------------------------
+
 
 class TestDeliverableJson:
     """Verify the experiment deliverable JSON has all required fields."""

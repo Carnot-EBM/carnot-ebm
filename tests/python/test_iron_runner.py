@@ -37,6 +37,7 @@ class TestNPUEnvironmentIronAvailable:
     def test_iron_available_false_when_import_fails(self):
         # Simulate mlir_aie not installed by patching builtins.__import__
         import builtins
+
         real_import = builtins.__import__
 
         def fake_import(name, *args, **kwargs):
@@ -63,6 +64,7 @@ class TestNPUEnvironmentIronAvailable:
         with patch.dict(sys.modules, {"mlir_aie": mock_module}):
             # Force re-evaluation by calling directly
             import builtins
+
             real_import = builtins.__import__
 
             def fake_import(name, *args, **kwargs):
@@ -225,6 +227,7 @@ class TestIRONRunnerCPUFallback:
     def test_compile_onnx_raises_when_iron_absent(self, runner):
         """compile_onnx raises ImportError when mlir_aie is not installed."""
         import builtins
+
         real_import = builtins.__import__
 
         def fake_import(name, *args, **kwargs):
@@ -265,6 +268,7 @@ class TestIRONRunnerNPUPath:
         runner = IRONRunner(tiny_model)
 
         import builtins
+
         real_import = builtins.__import__
 
         def fake_import(name, *args, **kwargs):

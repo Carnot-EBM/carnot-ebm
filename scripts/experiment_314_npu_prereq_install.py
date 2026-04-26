@@ -140,13 +140,9 @@ def _compute_prereq_changes(
 
     # We only report changes for packages that were blocked in the prior run.
     # ninja: was False in Exp 303
-    ninja_change = (
-        "now_available" if current_check["ninja_installed"] else "still_missing"
-    )
+    ninja_change = "now_available" if current_check["ninja_installed"] else "still_missing"
     # openblas: was False in Exp 303
-    openblas_change = (
-        "now_available" if current_check["openblas_installed"] else "still_missing"
-    )
+    openblas_change = "now_available" if current_check["openblas_installed"] else "still_missing"
 
     return {"ninja": ninja_change, "openblas": openblas_change}
 
@@ -259,8 +255,7 @@ def _attempt_source_build_314() -> dict[str, Any]:
             "success": False,
             "duration_seconds": round(elapsed, 1),
             "error_summary": (
-                f"cmake configure failed (rc={configure_result.returncode}): "
-                f"{err[:300]}"
+                f"cmake configure failed (rc={configure_result.returncode}): {err[:300]}"
             ),
             "build_log_tail": tail if tail else [err[:300]],
             "timeout_exceeded": False,
@@ -301,8 +296,7 @@ def _attempt_source_build_314() -> dict[str, Any]:
                 "success": False,
                 "duration_seconds": round(elapsed, 1),
                 "error_summary": (
-                    f"cmake --build failed (rc={build_result.returncode}): "
-                    f"{err[:300]}"
+                    f"cmake --build failed (rc={build_result.returncode}): {err[:300]}"
                 ),
                 "build_log_tail": tail if tail else [err[:300]],
                 "timeout_exceeded": False,
@@ -316,9 +310,7 @@ def _attempt_source_build_314() -> dict[str, Any]:
             "success": False,
             "duration_seconds": round(elapsed, 1),
             "error_summary": f"cmake --build timed out after {BUILD_TIMEOUT_SECONDS}s",
-            "build_log_tail": (
-                tail if tail else [f"timeout after {BUILD_TIMEOUT_SECONDS}s"]
-            ),
+            "build_log_tail": (tail if tail else [f"timeout after {BUILD_TIMEOUT_SECONDS}s"]),
             "timeout_exceeded": True,
             "whl_path": None,
         }
@@ -342,9 +334,7 @@ def _attempt_source_build_314() -> dict[str, Any]:
     return {
         "success": False,
         "duration_seconds": round(elapsed, 1),
-        "error_summary": (
-            "cmake --build succeeded but no .whl found in build directory"
-        ),
+        "error_summary": ("cmake --build succeeded but no .whl found in build directory"),
         "build_log_tail": [line for line in build_log_lines[-50:] if line],
         "timeout_exceeded": False,
         "whl_path": None,
@@ -395,9 +385,7 @@ def _build_next_steps(
             "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_314_npu_prereq_install.py"
         )
     elif honest_verdict == "blocked_build":
-        steps.append(
-            "cmake --build failed — check build_outcome.build_log_tail for compile errors"
-        )
+        steps.append("cmake --build failed — check build_outcome.build_log_tail for compile errors")
         steps.append(
             "Re-run after fixing build errors: "
             "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_314_npu_prereq_install.py"
@@ -448,9 +436,7 @@ def _update_hardware_wishlist(
     if honest_verdict == "blocked_prereq":
         ninja_status = prereq_changes.get("ninja", "still_missing")
         openblas_status = prereq_changes.get("openblas", "still_missing")
-        lines.append(
-            f"- **Exp 314 result:** `honest_verdict=blocked_prereq`"
-        )
+        lines.append(f"- **Exp 314 result:** `honest_verdict=blocked_prereq`")
         lines.append(f"  - ninja: {ninja_status}")
         lines.append(f"  - openblas: {openblas_status}")
         lines.append(
@@ -471,15 +457,9 @@ def _update_hardware_wishlist(
 
     elif honest_verdict == "timeout":
         lines.append("- **Exp 314 result:** `honest_verdict=timeout`")
-        lines.append(
-            "  - Prereqs are now installed (ninja + openblas both available)"
-        )
-        lines.append(
-            "  - ORT source build started but hit the 45-minute timeout"
-        )
-        lines.append(
-            "  - Try: `export MAKEFLAGS=-j$(nproc)` before re-running"
-        )
+        lines.append("  - Prereqs are now installed (ninja + openblas both available)")
+        lines.append("  - ORT source build started but hit the 45-minute timeout")
+        lines.append("  - Try: `export MAKEFLAGS=-j$(nproc)` before re-running")
 
     elif honest_verdict == "blocked_build":
         lines.append("- **Exp 314 result:** `honest_verdict=blocked_build`")
@@ -548,8 +528,7 @@ def main() -> None:
         artifact: dict[str, Any] = {
             "experiment": EXPERIMENT,
             "description": (
-                "AMD XDNA NPU prereq retry — blocked: "
-                "source build prerequisites still missing"
+                "AMD XDNA NPU prereq retry — blocked: source build prerequisites still missing"
             ),
             "run_date": RUN_DATE,
             "execution_path": "blocked_prereq",
@@ -576,14 +555,10 @@ def main() -> None:
     if not build_outcome["success"]:
         if build_outcome.get("timeout_exceeded"):
             honest_verdict = "timeout"
-            description = (
-                "AMD XDNA NPU prereq retry — prereqs available but source build timed out"
-            )
+            description = "AMD XDNA NPU prereq retry — prereqs available but source build timed out"
         else:
             honest_verdict = "blocked_build"
-            description = (
-                "AMD XDNA NPU prereq retry — prereqs available but source build failed"
-            )
+            description = "AMD XDNA NPU prereq retry — prereqs available but source build failed"
         print(f"\n  => Build failed. honest_verdict={honest_verdict}")
         next_steps = _build_next_steps(prereq_check, prereq_changes, honest_verdict)
         artifact = {
@@ -669,7 +644,9 @@ def main() -> None:
             description = "AMD XDNA NPU prereq retry — build succeeded but VitisAI EP not available (ABI mismatch)"
         else:
             honest_verdict = "blocked_build"
-            description = f"AMD XDNA NPU prereq retry — inference benchmark failed: {benchmark_result[:100]}"
+            description = (
+                f"AMD XDNA NPU prereq retry — inference benchmark failed: {benchmark_result[:100]}"
+            )
 
         print(f"\n  => Benchmark failed. honest_verdict={honest_verdict}")
         print(f"     Error: {benchmark_result[:200]}")

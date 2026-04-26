@@ -349,7 +349,6 @@ def main() -> None:
     started_at = __import__("datetime").datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=30, result_path=DELIVERABLE):
-
         # --- Gate 1: check weights exist ---
         weights_path = repo_root / WEIGHTS_PATH
         if not weights_path.exists():

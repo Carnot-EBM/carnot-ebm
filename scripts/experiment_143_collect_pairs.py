@@ -399,11 +399,14 @@ def generate_synthetic_arithmetic(n: int, rng: random.Random) -> list[dict[str, 
             try:
                 vr = pipeline.verify(question=f"What is {a} {op} {b}?", response=response)
                 # Categorise violations by domain.
-                arith_viol = any(
-                    c.constraint_type == "arithmetic" for c in vr.violations
+                arith_viol = any(c.constraint_type == "arithmetic" for c in vr.violations)
+                code_viol = any(
+                    c.constraint_type in ("type_check", "bound", "return_type")
+                    for c in vr.violations
                 )
-                code_viol = any(c.constraint_type in ("type_check", "bound", "return_type") for c in vr.violations)
-                logic_viol = any(c.constraint_type in ("implication", "equivalence") for c in vr.violations)
+                logic_viol = any(
+                    c.constraint_type in ("implication", "equivalence") for c in vr.violations
+                )
                 any_viol = not vr.verified
             except Exception:
                 # Fallback: use structural heuristic if pipeline raises.
@@ -561,14 +564,18 @@ def main() -> None:
     # ------------------------------------------------------------------
     # Step 3: Build embedder.
     # ------------------------------------------------------------------
-    print(f"\n[Step 3] Building RandomProjectionEmbedding(embed_dim={EMBED_DIM}, seed={EMBED_SEED})...")
+    print(
+        f"\n[Step 3] Building RandomProjectionEmbedding(embed_dim={EMBED_DIM}, seed={EMBED_SEED})..."
+    )
     embedder = RandomProjectionEmbedding(embed_dim=EMBED_DIM, seed=EMBED_SEED)
     print(f"  Embedder ready. embed_dim={embedder.embed_dim}")
 
     # ------------------------------------------------------------------
     # Step 4: Generate prefix embeddings.
     # ------------------------------------------------------------------
-    print(f"\n[Step 4] Generating prefix pairs ({len(PREFIX_RATIOS)} ratios × {len(raw_pairs)} raw pairs)...")
+    print(
+        f"\n[Step 4] Generating prefix pairs ({len(PREFIX_RATIOS)} ratios × {len(raw_pairs)} raw pairs)..."
+    )
     final_pairs = build_prefix_pairs(raw_pairs, embedder, PREFIX_RATIOS)
     print(f"  Built {len(final_pairs)} final pairs.")
 

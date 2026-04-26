@@ -80,21 +80,64 @@ from carnot.training.nce import nce_loss
 # (satisfied) or False (violated).
 
 CONSTRAINT_NAMES = [
-    "contains_number",       # Answer includes at least one digit
-    "complete_sentence",     # Ends with period/question mark/exclamation
-    "not_empty",             # Non-trivial length (>5 chars)
-    "no_contradiction",      # Does not contain "not" and "is" in close proximity (heuristic)
-    "has_explanation",        # Contains explanatory words (because, since, therefore, so)
-    "reasonable_length",      # Between 10 and 500 characters
-    "no_repetition",         # No repeated 3-word sequences
-    "topic_relevant",        # Shares at least one non-stopword with the question
+    "contains_number",  # Answer includes at least one digit
+    "complete_sentence",  # Ends with period/question mark/exclamation
+    "not_empty",  # Non-trivial length (>5 chars)
+    "no_contradiction",  # Does not contain "not" and "is" in close proximity (heuristic)
+    "has_explanation",  # Contains explanatory words (because, since, therefore, so)
+    "reasonable_length",  # Between 10 and 500 characters
+    "no_repetition",  # No repeated 3-word sequences
+    "topic_relevant",  # Shares at least one non-stopword with the question
 ]
 
 # Common English stopwords used for topic-relevance checking.
 _STOPWORDS = frozenset(
-    "a an the is are was were be been being have has had do does did "
-    "will would shall should may might can could of in to for on with "
-    "at by from it its this that these those and but or not no".split()
+    [
+        "a",
+        "an",
+        "the",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "being",
+        "have",
+        "has",
+        "had",
+        "do",
+        "does",
+        "did",
+        "will",
+        "would",
+        "shall",
+        "should",
+        "may",
+        "might",
+        "can",
+        "could",
+        "of",
+        "in",
+        "to",
+        "for",
+        "on",
+        "with",
+        "at",
+        "by",
+        "from",
+        "it",
+        "its",
+        "this",
+        "that",
+        "these",
+        "those",
+        "and",
+        "but",
+        "or",
+        "not",
+        "no",
+    ]
 )
 
 
@@ -136,7 +179,7 @@ def _check_constraints(question: str, answer: str) -> list[bool]:
     has_contradiction = False
     for i, w in enumerate(words):
         if w == "not":
-            window = words[max(0, i - 3): i + 4]
+            window = words[max(0, i - 3) : i + 4]
             if any(v in window for v in ("is", "are", "was", "were")):
                 has_contradiction = True
                 break
@@ -198,8 +241,14 @@ def _generate_qa_dataset(
         ("Is {a} greater than {b}?", "{yn}. Because {a} is {cmp} {b}, so the answer is {yn}."),
         ("What is {a} - {b}?", "The answer is {r}. Therefore {a} minus {b} equals {r}."),
         ("What is {a} divided by {b}?", "The result is {r}. Since {a} divided by {b} is {r}."),
-        ("If x = {a}, what is x + {b}?", "x + {b} = {r}. Because substituting x = {a} gives {a} + {b} = {r}."),
-        ("What is the remainder of {a} divided by {b}?", "The remainder is {r}. Since {a} mod {b} equals {r}."),
+        (
+            "If x = {a}, what is x + {b}?",
+            "x + {b} = {r}. Because substituting x = {a} gives {a} + {b} = {r}.",
+        ),
+        (
+            "What is the remainder of {a} divided by {b}?",
+            "The remainder is {r}. Since {a} mod {b} equals {r}.",
+        ),
         ("Which is larger, {a} or {b}?", "{bigger} is larger. Because {bigger} > {smaller}."),
     ]
 
@@ -251,11 +300,11 @@ def _generate_qa_dataset(
 
     # --- Wrong answers: plausible but incorrect ---
     wrong_strategies = [
-        "wrong_number",    # Correct format but wrong numerical answer
-        "off_topic",       # Answer about something unrelated
-        "truncated",       # Answer cut short (incomplete sentence)
+        "wrong_number",  # Correct format but wrong numerical answer
+        "off_topic",  # Answer about something unrelated
+        "truncated",  # Answer cut short (incomplete sentence)
         "no_explanation",  # Just a bare number, no reasoning
-        "contradictory",   # Contains self-contradiction
+        "contradictory",  # Contains self-contradiction
     ]
 
     for i in range(n_each):
@@ -484,14 +533,13 @@ def _compute_auroc(
     """
     from sklearn.metrics import roc_auc_score
 
-    correct_energies = np.array([float(model.energy(correct_data[i]))
-                                 for i in range(len(correct_data))])
-    wrong_energies = np.array([float(model.energy(wrong_data[i]))
-                               for i in range(len(wrong_data))])
+    correct_energies = np.array(
+        [float(model.energy(correct_data[i])) for i in range(len(correct_data))]
+    )
+    wrong_energies = np.array([float(model.energy(wrong_data[i])) for i in range(len(wrong_data))])
 
     # Labels: 0=correct, 1=wrong. Scores: energy (higher = more likely wrong).
-    labels = np.concatenate([np.zeros(len(correct_energies)),
-                             np.ones(len(wrong_energies))])
+    labels = np.concatenate([np.zeros(len(correct_energies)), np.ones(len(wrong_energies))])
     scores = np.concatenate([correct_energies, wrong_energies])
 
     return float(roc_auc_score(labels, scores))
@@ -626,7 +674,7 @@ def main() -> int:
     correct_mask = np.array(is_correct, dtype=bool)
     print("\n  Constraint satisfaction rates:")
     print(f"  {'Constraint':<25s} {'Correct':>8s} {'Wrong':>8s} {'Delta':>8s}")
-    print(f"  {'-'*25} {'-'*8} {'-'*8} {'-'*8}")
+    print(f"  {'-' * 25} {'-' * 8} {'-' * 8} {'-' * 8}")
     for j, cname in enumerate(CONSTRAINT_NAMES):
         rate_c = constraint_vectors[correct_mask, j].mean()
         rate_w = constraint_vectors[~correct_mask, j].mean()
@@ -641,7 +689,9 @@ def main() -> int:
     # Joint: [embedding; constraint_vector] (384 + N dim)
     joint_vectors = np.concatenate([embeddings, constraint_vectors], axis=1).astype(np.float32)
     joint_dim = joint_vectors.shape[1]
-    print(f"  Joint vectors: shape {joint_vectors.shape} ({embed_dim} + {n_constraints} = {joint_dim})")
+    print(
+        f"  Joint vectors: shape {joint_vectors.shape} ({embed_dim} + {n_constraints} = {joint_dim})"
+    )
 
     # Split into correct/wrong
     correct_indices = np.where(correct_mask)[0]
@@ -682,9 +732,14 @@ def main() -> int:
     joint_test_w = jnp.array(joint_vectors[test_w_idx])
 
     model_joint = _train_ebm(
-        joint_train_c, joint_train_w,
-        input_dim=joint_dim, hidden_dims=hidden_dims,
-        n_epochs=n_epochs, lr=lr, key=k1, label="Joint",
+        joint_train_c,
+        joint_train_w,
+        input_dim=joint_dim,
+        hidden_dims=hidden_dims,
+        n_epochs=n_epochs,
+        lr=lr,
+        key=k1,
+        label="Joint",
     )
 
     # --- Model B: Embedding-only ---
@@ -695,9 +750,14 @@ def main() -> int:
     emb_test_w = jnp.array(embeddings[test_w_idx])
 
     model_emb = _train_ebm(
-        emb_train_c, emb_train_w,
-        input_dim=embed_dim, hidden_dims=hidden_dims,
-        n_epochs=n_epochs, lr=lr, key=k2, label="Embed",
+        emb_train_c,
+        emb_train_w,
+        input_dim=embed_dim,
+        hidden_dims=hidden_dims,
+        n_epochs=n_epochs,
+        lr=lr,
+        key=k2,
+        label="Embed",
     )
 
     # --- Model C: Constraint-only ---
@@ -708,9 +768,14 @@ def main() -> int:
     con_test_w = jnp.array(constraint_vectors[test_w_idx])
 
     model_con = _train_ebm(
-        con_train_c, con_train_w,
-        input_dim=n_constraints, hidden_dims=[32],
-        n_epochs=n_epochs, lr=lr, key=k3, label="Constraint",
+        con_train_c,
+        con_train_w,
+        input_dim=n_constraints,
+        hidden_dims=[32],
+        n_epochs=n_epochs,
+        lr=lr,
+        key=k3,
+        label="Constraint",
     )
 
     # -----------------------------------------------------------------------
@@ -723,7 +788,7 @@ def main() -> int:
     auroc_con = _compute_auroc(model_con, con_test_c, con_test_w)
 
     print(f"\n  {'Model':<20s} {'AUROC':>8s}")
-    print(f"  {'-'*20} {'-'*8}")
+    print(f"  {'-' * 20} {'-' * 8}")
     print(f"  {'Joint (emb+con)':<20s} {auroc_joint:>8.4f}")
     print(f"  {'Embedding-only':<20s} {auroc_emb:>8.4f}")
     print(f"  {'Constraint-only':<20s} {auroc_con:>8.4f}")
@@ -793,9 +858,13 @@ def main() -> int:
 
         # Repair via normalized gradient descent with manifold regularization
         repaired = _repair_in_joint_space(
-            wrong_joint_vec, model_joint, embed_dim,
+            wrong_joint_vec,
+            model_joint,
+            embed_dim,
             correct_emb_mean=correct_emb_mean,
-            n_steps=200, step_size=0.05, noise_scale=0.001,
+            n_steps=200,
+            step_size=0.05,
+            noise_scale=0.001,
             manifold_weight=0.1,
         )
 
@@ -832,9 +901,11 @@ def main() -> int:
             a_text = answers[w_idx][:40]
             print(f"    [{i}] Q: {q_text}...")
             print(f"         A: {a_text}...")
-            print(f"         energy: {energy_before:.3f} → {energy_after:.3f} "
-                  f"sim: {orig_best_sim:.3f} → {repaired_best_sim:.3f} "
-                  f"{'✓' if improved_sim else '✗'}")
+            print(
+                f"         energy: {energy_before:.3f} → {energy_after:.3f} "
+                f"sim: {orig_best_sim:.3f} → {repaired_best_sim:.3f} "
+                f"{'✓' if improved_sim else '✗'}"
+            )
 
     repair_rate = repair_successes / n_repair
     energy_rate = energy_improved / n_repair
@@ -854,7 +925,7 @@ def main() -> int:
 
     print(f"\n  AUROC Comparison:")
     print(f"  {'Model':<20s} {'AUROC':>8s}")
-    print(f"  {'-'*20} {'-'*8}")
+    print(f"  {'-' * 20} {'-' * 8}")
     print(f"  {'Joint (emb+con)':<20s} {auroc_joint:>8.4f}")
     print(f"  {'Embedding-only':<20s} {auroc_emb:>8.4f}")
     print(f"  {'Constraint-only':<20s} {auroc_con:>8.4f}")

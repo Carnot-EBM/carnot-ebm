@@ -25,15 +25,20 @@ import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
-from safetensors.numpy import load_file
-
 from carnot.models.gibbs import GibbsConfig, GibbsModel
 from carnot.training.nce import nce_loss
+from safetensors.numpy import load_file
 
 # Data files
-MERGED_QWEN35 = os.path.join(os.path.dirname(__file__), "..", "data", "token_activations_qwen35_merged.safetensors")
-COMBINED = os.path.join(os.path.dirname(__file__), "..", "data", "token_activations_combined.safetensors")
-QA_ONLY = os.path.join(os.path.dirname(__file__), "..", "data", "token_activations_large.safetensors")
+MERGED_QWEN35 = os.path.join(
+    os.path.dirname(__file__), "..", "data", "token_activations_qwen35_merged.safetensors"
+)
+COMBINED = os.path.join(
+    os.path.dirname(__file__), "..", "data", "token_activations_combined.safetensors"
+)
+QA_ONLY = os.path.join(
+    os.path.dirname(__file__), "..", "data", "token_activations_large.safetensors"
+)
 
 
 def evaluate(ebm, correct, wrong, label=""):
@@ -104,8 +109,12 @@ def load_data(source="tqa"):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--source", choices=["qa", "tqa", "both", "merged"], default="merged",
-                        help="Data source: qa (Qwen3-0.6B), tqa (Qwen3.5-0.8B), both (mixed models), merged (QA+TQA from Qwen3.5-0.8B)")
+    parser.add_argument(
+        "--source",
+        choices=["qa", "tqa", "both", "merged"],
+        default="merged",
+        help="Data source: qa (Qwen3-0.6B), tqa (Qwen3.5-0.8B), both (mixed models), merged (QA+TQA from Qwen3.5-0.8B)",
+    )
     args = parser.parse_args()
 
     activations, labels = load_data(args.source)
@@ -137,8 +146,11 @@ def main():
     ebm = GibbsModel(config, key=key)
 
     def get_params(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_params(m, p):
         m.layers = list(p["layers"])
@@ -179,11 +191,11 @@ def main():
 
     sep = "=" * 60
     print(f"\n{sep}")
-    print(f"RESULTS: Per-Token EBM on Combined Dataset")
+    print("RESULTS: Per-Token EBM on Combined Dataset")
     print(sep)
-    print(f"  Previous results:")
-    print(f"    1,860 tokens:   cal=87.8%, test=71.8%")
-    print(f"    26,800 tokens:  cal=~90%, test=84.1%")
+    print("  Previous results:")
+    print("    1,860 tokens:   cal=87.8%, test=71.8%")
+    print("    26,800 tokens:  cal=~90%, test=84.1%")
     print(f"  This run ({activations.shape[0]} tokens):")
     print(f"    Train accuracy: {train_acc:.1%}")
     print(f"    Test accuracy:  {test_acc:.1%}")

@@ -54,52 +54,124 @@ THRESHOLDS = [0.10, 0.20, 0.30, 0.40, 0.50]
 
 # 50 GSM8K-style arithmetic word problems (seed=0 — distinct from Exp 742 seed=999).
 _QUESTIONS: list[dict[str, Any]] = [
-    {"question": "Janet has 3 apples. She buys 5 more. How many apples does Janet have now?", "answer": 8},
+    {
+        "question": "Janet has 3 apples. She buys 5 more. How many apples does Janet have now?",
+        "answer": 8,
+    },
     {"question": "A store sells 12 items per hour. How many items in 3 hours?", "answer": 36},
     {"question": "Tom has $20 and spends $7. How much does Tom have left?", "answer": 13},
     {"question": "A rectangle is 6 cm wide and 4 cm tall. What is the area?", "answer": 24},
     {"question": "Sarah runs 2 miles each day for 5 days. How many miles total?", "answer": 10},
-    {"question": "15 students share 60 candies equally. How many does each student get?", "answer": 4},
+    {
+        "question": "15 students share 60 candies equally. How many does each student get?",
+        "answer": 4,
+    },
     {"question": "A bag has 8 red and 5 blue marbles. How many marbles in total?", "answer": 13},
-    {"question": "John earns $9 per hour and works 8 hours. How much does John earn?", "answer": 72},
+    {
+        "question": "John earns $9 per hour and works 8 hours. How much does John earn?",
+        "answer": 72,
+    },
     {"question": "A class has 30 students. 12 are absent. How many are present?", "answer": 18},
     {"question": "Maria bakes 4 batches of 6 cookies each. How many cookies total?", "answer": 24},
     {"question": "A train travels 60 km/h for 2 hours. How far does it travel?", "answer": 120},
-    {"question": "Pedro has 50 stickers and gives away 15. How many does Pedro have left?", "answer": 35},
-    {"question": "A tank holds 100 liters. It is 40% full. How many liters are in the tank?", "answer": 40},
+    {
+        "question": "Pedro has 50 stickers and gives away 15. How many does Pedro have left?",
+        "answer": 35,
+    },
+    {
+        "question": "A tank holds 100 liters. It is 40% full. How many liters are in the tank?",
+        "answer": 40,
+    },
     {"question": "Lucy reads 25 pages per day. How many pages in 4 days?", "answer": 100},
     {"question": "There are 7 shelves with 9 books each. How many books total?", "answer": 63},
-    {"question": "A shirt costs $15. A pair of pants costs $25. What is the total cost?", "answer": 40},
+    {
+        "question": "A shirt costs $15. A pair of pants costs $25. What is the total cost?",
+        "answer": 40,
+    },
     {"question": "A garden is 8 m long and 3 m wide. What is the perimeter?", "answer": 22},
     {"question": "David saves $12 per week for 6 weeks. How much does David save?", "answer": 72},
     {"question": "A box contains 48 eggs. 16 eggs are used. How many remain?", "answer": 32},
-    {"question": "Five friends share a $35 dinner bill equally. How much does each pay?", "answer": 7},
-    {"question": "A pool holds 200 gallons. It leaks 5 gallons per hour. After 10 hours, how much remains?", "answer": 150},
+    {
+        "question": "Five friends share a $35 dinner bill equally. How much does each pay?",
+        "answer": 7,
+    },
+    {
+        "question": "A pool holds 200 gallons. It leaks 5 gallons per hour. After 10 hours, how much remains?",
+        "answer": 150,
+    },
     {"question": "Anna types 40 words per minute. How many words in 3 minutes?", "answer": 120},
-    {"question": "A farmer has 5 cows and each gives 8 liters of milk daily. Total daily milk?", "answer": 40},
-    {"question": "A movie is 90 minutes long. It has a 15-minute intermission. Total runtime?", "answer": 105},
+    {
+        "question": "A farmer has 5 cows and each gives 8 liters of milk daily. Total daily milk?",
+        "answer": 40,
+    },
+    {
+        "question": "A movie is 90 minutes long. It has a 15-minute intermission. Total runtime?",
+        "answer": 105,
+    },
     {"question": "Carlos has 3 dozen eggs. He uses 7. How many eggs remain?", "answer": 29},
     {"question": "A car travels 55 mph for 4 hours. How far does it go?", "answer": 220},
     {"question": "Mike has 100 baseball cards. He trades away 37. How many remain?", "answer": 63},
-    {"question": "A recipe needs 3 cups of flour per batch. For 4 batches, how much flour?", "answer": 12},
-    {"question": "A store opens at 9 AM and closes at 6 PM. How many hours is it open?", "answer": 9},
+    {
+        "question": "A recipe needs 3 cups of flour per batch. For 4 batches, how much flour?",
+        "answer": 12,
+    },
+    {
+        "question": "A store opens at 9 AM and closes at 6 PM. How many hours is it open?",
+        "answer": 9,
+    },
     {"question": "Emma has $150. She spends $47 on shoes. How much money remains?", "answer": 103},
-    {"question": "A team scores 3 points per goal. They scored 8 goals. Total points?", "answer": 24},
-    {"question": "A fish tank is 2 feet long, 1 foot wide, and 1.5 feet tall. What is the volume?", "answer": 3},
-    {"question": "There are 4 packs of gum with 12 sticks each. How many sticks total?", "answer": 48},
-    {"question": "Ben runs 3 km on Monday, 5 km on Wednesday, 4 km on Friday. Total km?", "answer": 12},
-    {"question": "A candle burns 2 cm per hour. After 7 hours, how many cm has it burned?", "answer": 14},
-    {"question": "A bus holds 40 passengers. After 3 stops, 15 board and 8 exit. How many passengers?", "answer": 47},
-    {"question": "A baker makes 5 loaves per hour for 6 hours. How many loaves total?", "answer": 30},
+    {
+        "question": "A team scores 3 points per goal. They scored 8 goals. Total points?",
+        "answer": 24,
+    },
+    {
+        "question": "A fish tank is 2 feet long, 1 foot wide, and 1.5 feet tall. What is the volume?",
+        "answer": 3,
+    },
+    {
+        "question": "There are 4 packs of gum with 12 sticks each. How many sticks total?",
+        "answer": 48,
+    },
+    {
+        "question": "Ben runs 3 km on Monday, 5 km on Wednesday, 4 km on Friday. Total km?",
+        "answer": 12,
+    },
+    {
+        "question": "A candle burns 2 cm per hour. After 7 hours, how many cm has it burned?",
+        "answer": 14,
+    },
+    {
+        "question": "A bus holds 40 passengers. After 3 stops, 15 board and 8 exit. How many passengers?",
+        "answer": 47,
+    },
+    {
+        "question": "A baker makes 5 loaves per hour for 6 hours. How many loaves total?",
+        "answer": 30,
+    },
     {"question": "A triangle has base 10 cm and height 6 cm. What is the area?", "answer": 30},
-    {"question": "Ana has 24 stickers. She gives 6 to each of 3 friends. How many remain?", "answer": 6},
-    {"question": "A library has 320 books. 80 are checked out. How many remain on shelves?", "answer": 240},
-    {"question": "Jake earns $14/hour. He works 35 hours/week. What is his weekly pay?", "answer": 490},
+    {
+        "question": "Ana has 24 stickers. She gives 6 to each of 3 friends. How many remain?",
+        "answer": 6,
+    },
+    {
+        "question": "A library has 320 books. 80 are checked out. How many remain on shelves?",
+        "answer": 240,
+    },
+    {
+        "question": "Jake earns $14/hour. He works 35 hours/week. What is his weekly pay?",
+        "answer": 490,
+    },
     {"question": "A box has 6 rows of 8 chocolates. How many chocolates in the box?", "answer": 48},
     {"question": "A pitcher holds 2 liters. How many 250 ml glasses can it fill?", "answer": 8},
     {"question": "Sam has 45 toy cars and donates 18 to charity. How many remain?", "answer": 27},
-    {"question": "A wall is 15 m long and 3 m tall. What is the wall's area in sq meters?", "answer": 45},
-    {"question": "A plane flies 800 km in 2 hours. What is the average speed in km/h?", "answer": 400},
+    {
+        "question": "A wall is 15 m long and 3 m tall. What is the wall's area in sq meters?",
+        "answer": 45,
+    },
+    {
+        "question": "A plane flies 800 km in 2 hours. What is the average speed in km/h?",
+        "answer": 400,
+    },
     {"question": "Nina buys 6 notebooks at $2.50 each. How much does she spend?", "answer": 15},
     {"question": "A square field has sides of 25 m. What is the perimeter?", "answer": 100},
     {"question": "A store sold 150 items in 5 days equally. How many per day?", "answer": 30},
@@ -272,7 +344,9 @@ def evaluate_threshold(
         "n_questions": n_total,
     }
 
-    tmpl.checkpoint_save({"threshold_index": threshold_index, "result": result}, step=threshold_index + 1)
+    tmpl.checkpoint_save(
+        {"threshold_index": threshold_index, "result": result}, step=threshold_index + 1
+    )
 
     return result
 
@@ -310,7 +384,6 @@ def main() -> None:
     tmpl.setup()
 
     with ExperimentTimeoutWatchdog(760, timeout_minutes=120, result_path=_DELIVERABLE):
-
         # ------------------------------------------------------------------
         # Step 1: Environment setup + CARNOT_FORCE_LIVE guard.
         # ------------------------------------------------------------------
@@ -344,12 +417,16 @@ def main() -> None:
         # ------------------------------------------------------------------
         from carnot.pipeline.gemma_loader import GemmaTransformersLoader  # noqa: PLC0415
 
-        loader = GemmaTransformersLoader(model_id=GEMMA4_MODEL_ID, device="cuda:0", jit_vram_check=None)
+        loader = GemmaTransformersLoader(
+            model_id=GEMMA4_MODEL_ID, device="cuda:0", jit_vram_check=None
+        )
         try:
             loader.load()
             _log.info("GemmaTransformersLoader loaded %s on cuda:0", GEMMA4_MODEL_ID)
         except Exception as exc:
-            _log.error("GemmaTransformersLoader.load() failed: %s — emitting blocked artifact.", exc)
+            _log.error(
+                "GemmaTransformersLoader.load() failed: %s — emitting blocked artifact.", exc
+            )
             artifact = tmpl.build_result(
                 {
                     "per_threshold_results": [],

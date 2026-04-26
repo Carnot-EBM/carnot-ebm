@@ -118,33 +118,43 @@ def test_ood_gate_deploys_when_auc_above_threshold(tmp_path: Path) -> None:
         "corpus_path": str(results_dir / "multi.json"),
         "status": "success",
     }
-    (results_dir / "experiment_797_jepa_v21_data_collection.json").write_text(
-        json.dumps(exp797)
-    )
+    (results_dir / "experiment_797_jepa_v21_data_collection.json").write_text(json.dumps(exp797))
 
     # Build a simple multi-source corpus: enough balanced pairs so AUC can reach 0.75+
     multi_corpus = []
     for i in range(40):
-        multi_corpus.append({
-            "question_id": f"q{i}",
-            "step_text": f"correct step number {i} with right computation",
-            "label": "correct",
-            "source_domain": "gsm8k",
-        })
-        multi_corpus.append({
-            "question_id": f"q{i}_wrong",
-            "step_text": f"wrong step {i}: divide by zero then multiply",
-            "label": "incorrect",
-            "source_domain": "gsm8k",
-        })
-    (results_dir / "fover_labeled_steps_v21_multi.json").write_text(
-        json.dumps(multi_corpus)
-    )
+        multi_corpus.append(
+            {
+                "question_id": f"q{i}",
+                "step_text": f"correct step number {i} with right computation",
+                "label": "correct",
+                "source_domain": "gsm8k",
+            }
+        )
+        multi_corpus.append(
+            {
+                "question_id": f"q{i}_wrong",
+                "step_text": f"wrong step {i}: divide by zero then multiply",
+                "label": "incorrect",
+                "source_domain": "gsm8k",
+            }
+        )
+    (results_dir / "fover_labeled_steps_v21_multi.json").write_text(json.dumps(multi_corpus))
 
     # Build minimal OOD set (Exp 442 format)
     ood_corpus = [
-        {"question_id": "ood1", "step_text": "correct ood step", "label": "correct", "confidence": 1.0},
-        {"question_id": "ood2", "step_text": "wrong ood step divide by zero", "label": "incorrect", "confidence": 1.0},
+        {
+            "question_id": "ood1",
+            "step_text": "correct ood step",
+            "label": "correct",
+            "confidence": 1.0,
+        },
+        {
+            "question_id": "ood2",
+            "step_text": "wrong ood step divide by zero",
+            "label": "incorrect",
+            "confidence": 1.0,
+        },
     ]
     (results_dir / "fover_labeled_steps_live.json").write_text(json.dumps(ood_corpus))
 
@@ -178,18 +188,24 @@ def test_failure_analysis_produced_when_auc_below_gate(tmp_path: Path) -> None:
     results_dir.mkdir()
 
     exp797 = {"n_labeled_total": 300, "status": "success"}
-    (results_dir / "experiment_797_jepa_v21_data_collection.json").write_text(
-        json.dumps(exp797)
-    )
+    (results_dir / "experiment_797_jepa_v21_data_collection.json").write_text(json.dumps(exp797))
 
     # Minimal corpus
     multi_corpus = [
-        {"question_id": "q1", "step_text": "step one correct", "label": "correct", "source_domain": "gsm8k"},
-        {"question_id": "q2", "step_text": "step two wrong", "label": "incorrect", "source_domain": "math500"},
+        {
+            "question_id": "q1",
+            "step_text": "step one correct",
+            "label": "correct",
+            "source_domain": "gsm8k",
+        },
+        {
+            "question_id": "q2",
+            "step_text": "step two wrong",
+            "label": "incorrect",
+            "source_domain": "math500",
+        },
     ]
-    (results_dir / "fover_labeled_steps_v21_multi.json").write_text(
-        json.dumps(multi_corpus)
-    )
+    (results_dir / "fover_labeled_steps_v21_multi.json").write_text(json.dumps(multi_corpus))
 
     (results_dir / "fover_labeled_steps_live.json").write_text(
         json.dumps([])
@@ -227,9 +243,7 @@ def test_gate_blocks_when_n_labeled_below_80(tmp_path: Path) -> None:
     results_dir = tmp_path / "results"
     results_dir.mkdir()
     exp797 = {"n_labeled_total": 50, "status": "success"}
-    (results_dir / "experiment_797_jepa_v21_data_collection.json").write_text(
-        json.dumps(exp797)
-    )
+    (results_dir / "experiment_797_jepa_v21_data_collection.json").write_text(json.dumps(exp797))
 
     with (
         patch.object(exp799, "REPO_ROOT", tmp_path),
@@ -270,7 +284,12 @@ def test_cpmi_triples_augment_corpus(tmp_path: Path) -> None:
     Spec: REQ-LEARN-095 — augmentation_ratio >= 2.0 checked at artifact level
     """
     primary = [
-        {"question_id": f"q{i}", "step_text": f"step {i}", "label": "correct", "source_domain": "gsm8k"}
+        {
+            "question_id": f"q{i}",
+            "step_text": f"step {i}",
+            "label": "correct",
+            "source_domain": "gsm8k",
+        }
         for i in range(10)
     ]
     multi_path = tmp_path / "fover_labeled_steps_v21_multi.json"
@@ -292,6 +311,7 @@ def test_cpmi_triples_augment_corpus(tmp_path: Path) -> None:
     live_path.write_text(json.dumps([]))
 
     from experiment_799_jepa_v21_retrain import _load_multi_source_corpus  # noqa: PLC0415
+
     _, _, _, data_source, n_total = _load_multi_source_corpus(
         multi_path,
         cpmi_path,
@@ -299,9 +319,7 @@ def test_cpmi_triples_augment_corpus(tmp_path: Path) -> None:
     )
 
     # 10 primary + up to 40 from CPMI (20 positive + 20 negative)
-    assert n_total > 10, (
-        "CPMI augmentation must increase corpus size beyond primary labeled set"
-    )
+    assert n_total > 10, "CPMI augmentation must increase corpus size beyond primary labeled set"
     assert "cpmi_triples_798" in data_source, (
         "data_source must indicate CPMI augmentation was applied"
     )

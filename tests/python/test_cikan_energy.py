@@ -28,8 +28,9 @@ from carnot.models.kaem_energy import UnivariateKAEMLayer
 
 
 def _layer(n_vars: int = 2, n_knots_base: int = 8, boundary_k: int = 4) -> CIKANLayer:
-    return CIKANLayer(n_vars=n_vars, n_knots_base=n_knots_base, boundary_k=boundary_k,
-                      key=jrandom.PRNGKey(0))
+    return CIKANLayer(
+        n_vars=n_vars, n_knots_base=n_knots_base, boundary_k=boundary_k, key=jrandom.PRNGKey(0)
+    )
 
 
 def _model(n_vars: int = 2, n_hidden: int = 8) -> CIKANEnergy:
@@ -216,6 +217,7 @@ class TestCIKANEnergyInit:
     def test_inherits_from_kaem_energy(self) -> None:
         """CIKANEnergy is a subclass of KAEMEnergy."""
         from carnot.models.kaem_energy import KAEMEnergy
+
         model = _model()
         assert isinstance(model, KAEMEnergy)
 
@@ -332,6 +334,7 @@ class TestFitWithConstraints:
 def test_exports_from_models_init() -> None:
     """CIKANEnergy, CIKANLayer, ConstraintBoundary are exported from carnot.models."""
     from carnot.models import CIKANEnergy as CE, CIKANLayer as CL, ConstraintBoundary as CB
+
     assert CE is CIKANEnergy
     assert CL is CIKANLayer
     assert CB is ConstraintBoundary

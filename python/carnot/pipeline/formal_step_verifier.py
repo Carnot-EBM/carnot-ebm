@@ -38,7 +38,6 @@ Spec: REQ-VERIFY-165, REQ-VERIFY-166,
 from __future__ import annotations
 
 import re
-from typing import Optional
 
 from carnot.training.fover_z3_labeler import Z3StepVerifier
 
@@ -49,9 +48,7 @@ from carnot.training.fover_z3_labeler import Z3StepVerifier
 # Match "word = number" assignments in a step, e.g. "total = 75" or "x = 12.5".
 # We capture the variable name (word) and the numeric value (integer or decimal).
 # Why word chars only: CoT steps use short identifiers or plain nouns as variable names.
-_ASSIGN_RE = re.compile(
-    r"\b([A-Za-z_][A-Za-z0-9_]*)\s*=\s*\$?([\d]+(?:\.[\d]+)?)"
-)
+_ASSIGN_RE = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*=\s*\$?([\d]+(?:\.[\d]+)?)")
 
 # Match "there are N items" or "N items remain" style quantity statements.
 # E.g. "there are 5 apples" -> variable "apples" = 5.
@@ -111,17 +108,13 @@ class FormalStepVerifier:
         for i, step in enumerate(steps):
             if i == 0:
                 # No prior context — cannot violate anything.
-                results.append(
-                    {"step_idx": i, "verdict": "correct", "entailment": True}
-                )
+                results.append({"step_idx": i, "verdict": "correct", "entailment": True})
                 continue
 
             prior_steps = steps[:i]
             verdict = self._z3.verify_step_z3(prior_steps, step)
             entailment = verdict != "violation"
-            results.append(
-                {"step_idx": i, "verdict": verdict, "entailment": entailment}
-            )
+            results.append({"step_idx": i, "verdict": verdict, "entailment": entailment})
 
         return results
 

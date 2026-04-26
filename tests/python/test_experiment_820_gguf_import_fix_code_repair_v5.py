@@ -14,6 +14,7 @@ Covers:
 
 Spec: REQ-REPAIR-056, SCENARIO-REPAIR-089
 """
+
 from __future__ import annotations
 
 import json
@@ -114,7 +115,7 @@ def test_baseline_returns_true_for_correct_canonical_solution() -> None:
     Spec: REQ-REPAIR-056
     """
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "canonical_solution": "    return a + b\n",
         "test": "assert add(1, 2) == 3\n",
     }
@@ -127,7 +128,7 @@ def test_baseline_returns_false_for_broken_canonical_solution() -> None:
     Spec: REQ-REPAIR-056
     """
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "canonical_solution": "    return a - b\n",  # deliberately wrong
         "test": "assert add(1, 2) == 3\n",
     }
@@ -148,13 +149,11 @@ def test_llm_returns_true_when_generated_code_passes() -> None:
     Spec: REQ-REPAIR-056
     """
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "test": "assert add(1, 2) == 3\n",
     }
     mock_llm = MagicMock()
-    mock_llm.return_value = {
-        "choices": [{"text": "    return a + b\n"}]
-    }
+    mock_llm.return_value = {"choices": [{"text": "    return a + b\n"}]}
     assert run_problem_with_llm(problem, mock_llm) is True
 
 
@@ -164,7 +163,7 @@ def test_llm_returns_false_when_generated_code_fails() -> None:
     Spec: REQ-REPAIR-056
     """
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "test": "assert add(1, 2) == 3\n",
     }
     mock_llm = MagicMock()

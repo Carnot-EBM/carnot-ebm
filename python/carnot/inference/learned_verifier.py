@@ -35,10 +35,9 @@ Spec: REQ-INFER-007, SCENARIO-INFER-008
 
 from __future__ import annotations
 
-from typing import Any
-
 import logging
 from dataclasses import dataclass, field
+from typing import Any
 
 import jax
 import jax.numpy as jnp

@@ -64,8 +64,11 @@ def train_and_eval(activations, labels, input_dim, label):
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -121,8 +124,11 @@ def train_on_eval_on(train_acts, train_labels, eval_acts, eval_labels, input_dim
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -215,9 +221,9 @@ def main() -> int:
         print(f"    {name}: {int(mask.sum())} tokens ({int(labels[mask].sum())} correct)")
 
     # --- Part 1: Same-domain with different normalizations ---
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print("PART 1: Same-domain accuracy under normalization")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     tqa_mask = source_ids == 3
     tqa_acts = acts[tqa_mask]
@@ -236,32 +242,38 @@ def main() -> int:
     train_and_eval(tqa_w, tqa_labels, 256, "PCA whitened (256-dim)")
 
     # --- Part 2: Cross-domain transfer with normalization ---
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print("PART 2: Cross-domain transfer (train MMLU → test TruthfulQA)")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     mmlu_mask = source_ids == 1
     mmlu_acts = acts[mmlu_mask]
     mmlu_labels = labels[mmlu_mask]
 
     print("\n  Raw:")
-    train_on_eval_on(mmlu_acts, mmlu_labels, tqa_acts, tqa_labels, hidden_dim, "MMLU → TruthfulQA (raw)")
+    train_on_eval_on(
+        mmlu_acts, mmlu_labels, tqa_acts, tqa_labels, hidden_dim, "MMLU → TruthfulQA (raw)"
+    )
 
     print("  Z-score (fit on combined, transform separately):")
     all_z, mean_all, std_all = normalize_zscore(acts)
     mmlu_z = (mmlu_acts - mean_all) / (std_all + 1e-8)
     tqa_z2 = (tqa_acts - mean_all) / (std_all + 1e-8)
-    train_on_eval_on(mmlu_z, mmlu_labels, tqa_z2, tqa_labels, hidden_dim, "MMLU → TruthfulQA (z-score)")
+    train_on_eval_on(
+        mmlu_z, mmlu_labels, tqa_z2, tqa_labels, hidden_dim, "MMLU → TruthfulQA (z-score)"
+    )
 
     print("  L2:")
     mmlu_l2 = normalize_l2(mmlu_acts)
     tqa_l2_2 = normalize_l2(tqa_acts)
-    train_on_eval_on(mmlu_l2, mmlu_labels, tqa_l2_2, tqa_labels, hidden_dim, "MMLU → TruthfulQA (L2)")
+    train_on_eval_on(
+        mmlu_l2, mmlu_labels, tqa_l2_2, tqa_labels, hidden_dim, "MMLU → TruthfulQA (L2)"
+    )
 
     # --- Part 3: Cross-model transfer with normalization ---
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print("PART 3: Cross-model transfer (same hidden dim, different models)")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     # Load two 1024-dim models
     qwen_file = os.path.join(DATA_DIR, "token_activations_qwen35_nothink.safetensors")
@@ -272,9 +284,14 @@ def main() -> int:
         lfm = load_file(lfm_file)
 
         print("\n  Raw:")
-        train_on_eval_on(qwen["activations"], qwen["labels"],
-                         lfm["activations"], lfm["labels"], 1024,
-                         "Qwen3.5 → LFM2.5 (raw)")
+        train_on_eval_on(
+            qwen["activations"],
+            qwen["labels"],
+            lfm["activations"],
+            lfm["labels"],
+            1024,
+            "Qwen3.5 → LFM2.5 (raw)",
+        )
 
         print("  Z-score (fit on combined):")
         combined = np.concatenate([qwen["activations"], lfm["activations"]])
@@ -282,21 +299,23 @@ def main() -> int:
         std_c = combined.std(axis=0) + 1e-8
         qwen_z = (qwen["activations"] - mean_c) / std_c
         lfm_z = (lfm["activations"] - mean_c) / std_c
-        train_on_eval_on(qwen_z, qwen["labels"], lfm_z, lfm["labels"], 1024,
-                         "Qwen3.5 → LFM2.5 (z-score)")
+        train_on_eval_on(
+            qwen_z, qwen["labels"], lfm_z, lfm["labels"], 1024, "Qwen3.5 → LFM2.5 (z-score)"
+        )
 
         print("  L2:")
         qwen_l2 = normalize_l2(qwen["activations"])
         lfm_l2 = normalize_l2(lfm["activations"])
-        train_on_eval_on(qwen_l2, qwen["labels"], lfm_l2, lfm["labels"], 1024,
-                         "Qwen3.5 → LFM2.5 (L2)")
+        train_on_eval_on(
+            qwen_l2, qwen["labels"], lfm_l2, lfm["labels"], 1024, "Qwen3.5 → LFM2.5 (L2)"
+        )
     else:
         print("  SKIP — need both Qwen3.5 and LFM2.5 nothink data")
 
     elapsed = time.time() - start
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"EXPERIMENT 35 COMPLETE ({elapsed:.0f}s)")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     return 0
 

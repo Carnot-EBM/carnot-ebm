@@ -284,9 +284,7 @@ def main() -> None:
     # Only Gemma4-E4B-it is used for code generation; Qwen is loaded via
     # setup_gpu above as the repair assistant (GPU1).
     # -----------------------------------------------------------------------
-    tokenizer, model, device, ok = _load_model_pipeline(
-        hf_id=_MODEL_IDS[0], device=0
-    )
+    tokenizer, model, device, ok = _load_model_pipeline(hf_id=_MODEL_IDS[0], device=0)
     if not ok:
         _log.error("Gate 4 (_load_model_pipeline) failed — writing blocked artifact.")
         artifact = tmpl.build_result(
@@ -392,6 +390,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

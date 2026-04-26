@@ -106,9 +106,7 @@ class TestNceLoss:
         noise_far = jnp.array([[100.0, 100.0]])
 
         energy_val = model.energy(noise_far[0])
-        assert energy_val > 1000.0, (
-            f"Far noise should have high energy, got {energy_val}"
-        )
+        assert energy_val > 1000.0, f"Far noise should have high energy, got {energy_val}"
 
     def test_well_separated_loss_near_ln2(self) -> None:
         """REQ-TRAIN-003: When data energy ~ 0 and noise energy >> 0,
@@ -119,9 +117,7 @@ class TestNceLoss:
 
         loss = nce_loss(model, data_origin, noise_far)
         expected = jnp.log(2.0)
-        assert jnp.abs(loss - expected) < 0.01, (
-            f"Loss should be ≈ ln(2) = {expected}, got {loss}"
-        )
+        assert jnp.abs(loss - expected) < 0.01, f"Loss should be ≈ ln(2) = {expected}, got {loss}"
 
     def test_callable_energy_fn(self) -> None:
         """REQ-TRAIN-003: nce_loss accepts a raw callable for energy."""

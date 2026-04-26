@@ -63,6 +63,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 # 1. extract_hypothesis_claims — parse code + output into verifiable claims
 # ---------------------------------------------------------------------------
 
+
 def extract_numeric_claims(text: str) -> list[dict[str, Any]]:
     """Extract numeric claims from hypothesis output text.
 
@@ -93,15 +94,17 @@ def extract_numeric_claims(text: str) -> list[dict[str, Any]]:
         text_lower,
     ):
         metric, magnitude = m.group(1), float(m.group(2))
-        claims.append({
-            "claim_type": "numeric_improvement",
-            "claim_text": m.group(0),
-            "constraint": {
-                "kind": "improvement",
-                "metric": metric,
-                "magnitude": magnitude,
-            },
-        })
+        claims.append(
+            {
+                "claim_type": "numeric_improvement",
+                "claim_text": m.group(0),
+                "constraint": {
+                    "kind": "improvement",
+                    "metric": metric,
+                    "magnitude": magnitude,
+                },
+            }
+        )
 
     # Pattern 2: "X% improvement/speedup"
     for m in re.finditer(
@@ -109,28 +112,32 @@ def extract_numeric_claims(text: str) -> list[dict[str, Any]]:
         text_lower,
     ):
         magnitude = float(m.group(1))
-        claims.append({
-            "claim_type": "numeric_improvement",
-            "claim_text": m.group(0),
-            "constraint": {
-                "kind": "improvement",
-                "metric": "general",
-                "magnitude": magnitude,
-            },
-        })
+        claims.append(
+            {
+                "claim_type": "numeric_improvement",
+                "claim_text": m.group(0),
+                "constraint": {
+                    "kind": "improvement",
+                    "metric": "general",
+                    "magnitude": magnitude,
+                },
+            }
+        )
 
     # Pattern 3: "Xx speedup" (e.g., "2.5x speedup")
     for m in re.finditer(r"([\d.]+)\s*x\s*(?:speedup|faster)", text_lower):
         magnitude = float(m.group(1))
-        claims.append({
-            "claim_type": "numeric_improvement",
-            "claim_text": m.group(0),
-            "constraint": {
-                "kind": "speedup",
-                "metric": "time",
-                "factor": magnitude,
-            },
-        })
+        claims.append(
+            {
+                "claim_type": "numeric_improvement",
+                "claim_text": m.group(0),
+                "constraint": {
+                    "kind": "speedup",
+                    "metric": "time",
+                    "factor": magnitude,
+                },
+            }
+        )
 
     # Pattern 4: "loss/energy = X" or "final loss: X"
     for m in re.finditer(
@@ -139,15 +146,17 @@ def extract_numeric_claims(text: str) -> list[dict[str, Any]]:
     ):
         metric, value = m.group(1), float(m.group(2))
         if metric in ("loss", "energy", "error", "mse", "rmse", "mae"):
-            claims.append({
-                "claim_type": "numeric_value",
-                "claim_text": m.group(0),
-                "constraint": {
-                    "kind": "value",
-                    "metric": metric,
-                    "value": value,
-                },
-            })
+            claims.append(
+                {
+                    "claim_type": "numeric_value",
+                    "claim_text": m.group(0),
+                    "constraint": {
+                        "kind": "value",
+                        "metric": metric,
+                        "value": value,
+                    },
+                }
+            )
 
     # Pattern 5: "metric < threshold" or "metric > threshold"
     for m in re.finditer(
@@ -156,23 +165,23 @@ def extract_numeric_claims(text: str) -> list[dict[str, Any]]:
     ):
         metric, op, threshold = m.group(1), m.group(2), float(m.group(3))
         if metric in ("loss", "energy", "error", "accuracy", "score"):
-            claims.append({
-                "claim_type": "numeric_bound",
-                "claim_text": m.group(0),
-                "constraint": {
-                    "kind": "bound",
-                    "metric": metric,
-                    "operator": op,
-                    "threshold": threshold,
-                },
-            })
+            claims.append(
+                {
+                    "claim_type": "numeric_bound",
+                    "claim_text": m.group(0),
+                    "constraint": {
+                        "kind": "bound",
+                        "metric": metric,
+                        "operator": op,
+                        "threshold": threshold,
+                    },
+                }
+            )
 
     return claims
 
 
-def extract_hypothesis_claims(
-    code: str, output: str
-) -> list[dict[str, Any]]:
+def extract_hypothesis_claims(code: str, output: str) -> list[dict[str, Any]]:
     """Parse hypothesis code and output text into verifiable claims.
 
     **Detailed explanation for engineers:**
@@ -213,29 +222,35 @@ def extract_hypothesis_claims(
     try:
         code_constraints = code_to_constraints(code)
         for c in code_constraints:
-            claims.append({
-                "claim_type": f"code_{c['kind']}",
-                "claim_text": c["description"],
-                "constraint": c,
-            })
+            claims.append(
+                {
+                    "claim_type": f"code_{c['kind']}",
+                    "claim_text": c["description"],
+                    "constraint": c,
+                }
+            )
     except SyntaxError:
         # If the hypothesis code doesn't parse, that's itself a violation.
-        claims.append({
-            "claim_type": "code_syntax_error",
-            "claim_text": "Hypothesis code failed to parse",
-            "constraint": {"kind": "syntax", "satisfied": False},
-        })
+        claims.append(
+            {
+                "claim_type": "code_syntax_error",
+                "claim_text": "Hypothesis code failed to parse",
+                "constraint": {"kind": "syntax", "satisfied": False},
+            }
+        )
 
     # --- Strategy 2: NL extraction (from Exp 49) ---
     from experiment_49_nl_constraints import extract_claims as nl_extract
 
     nl_claims = nl_extract(output)
     for c in nl_claims:
-        claims.append({
-            "claim_type": f"nl_{c['claim_type']}",
-            "claim_text": c.get("raw", str(c)),
-            "constraint": c,
-        })
+        claims.append(
+            {
+                "claim_type": f"nl_{c['claim_type']}",
+                "claim_text": c.get("raw", str(c)),
+                "constraint": c,
+            }
+        )
 
     # --- Strategy 3: Numeric extraction (new for Exp 72) ---
     numeric_claims = extract_numeric_claims(output)
@@ -247,6 +262,7 @@ def extract_hypothesis_claims(
 # ---------------------------------------------------------------------------
 # 2. verify_hypothesis — build ComposedEnergy and verify via Ising
 # ---------------------------------------------------------------------------
+
 
 class ClaimConstraint:
     """Wraps a single claim as a ConstraintTerm for ComposedEnergy.
@@ -299,6 +315,7 @@ class ClaimConstraint:
         not continuous configurations.
         """
         import jax.numpy as jnp
+
         if self._satisfied is True:
             return jnp.float32(0.0)
         elif self._satisfied is False:
@@ -313,6 +330,7 @@ class ClaimConstraint:
         not continuous. The gradient is zero everywhere.
         """
         import jax.numpy as jnp
+
         return jnp.zeros_like(x)
 
     def is_satisfied(self, x: Any) -> bool:
@@ -466,9 +484,7 @@ def _verify_nl_claims_via_ising(claims: list[dict[str, Any]]) -> dict[int, bool]
     import jax.numpy as jnp
     import jax.random as jrandom
 
-    nl_indices = [
-        i for i, c in enumerate(claims) if c["claim_type"].startswith("nl_")
-    ]
+    nl_indices = [i for i, c in enumerate(claims) if c["claim_type"].startswith("nl_")]
     if not nl_indices:
         return {}
 
@@ -654,12 +670,14 @@ def verify_hypothesis(
 
     details = []
     for i, t in enumerate(claim_terms):
-        details.append({
-            "index": i,
-            "claim_type": claims[i]["claim_type"],
-            "claim_text": claims[i]["claim_text"],
-            "satisfied": t._satisfied,
-        })
+        details.append(
+            {
+                "index": i,
+                "claim_type": claims[i]["claim_type"],
+                "claim_text": claims[i]["claim_text"],
+                "satisfied": t._satisfied,
+            }
+        )
 
     return {
         "verified": n_verified,
@@ -676,6 +694,7 @@ def verify_hypothesis(
 # ---------------------------------------------------------------------------
 # 3. Mock hypothesis outputs — 10 correct, 10 bogus
 # ---------------------------------------------------------------------------
+
 
 def get_mock_hypotheses() -> list[dict[str, Any]]:
     """Create 20 mock hypothesis outputs for testing the fourth gate.
@@ -711,164 +730,183 @@ def get_mock_hypotheses() -> list[dict[str, Any]]:
 
     # ===== 10 CORRECT HYPOTHESES =====
 
-    hypotheses.append({
-        "name": "Correct #1: Learning rate tuning",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Correct #1: Learning rate tuning",
+            "code": """
 def train_step(params: dict, lr: float, data: list) -> float:
     loss = 0.0
     for i in range(len(data)):
         loss += (params.get("w", 0.0) * data[i]) ** 2
     return loss / len(data)
-''',
-        "output": "Energy decreased by 12%. Final loss: 0.034. loss < 0.05.",
-        "is_correct": True,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.0386, "energy_after": 0.034, "loss": 0.034},
-    })
+""",
+            "output": "Energy decreased by 12%. Final loss: 0.034. loss < 0.05.",
+            "is_correct": True,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.0386, "energy_after": 0.034, "loss": 0.034},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Correct #2: Batch size increase",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Correct #2: Batch size increase",
+            "code": """
 def process_batch(data: list, batch_size: int) -> float:
     total = 0.0
     for i in range(0, len(data), batch_size):
         chunk = data[i:i + batch_size]
         total += sum(chunk)
     return total
-''',
-        "output": "Energy decreased by 8%. 1.5x speedup. Final loss: 0.041.",
-        "is_correct": True,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.0446, "energy_after": 0.041, "loss": 0.041},
-    })
+""",
+            "output": "Energy decreased by 8%. 1.5x speedup. Final loss: 0.041.",
+            "is_correct": True,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.0446, "energy_after": 0.041, "loss": 0.041},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Correct #3: Regularization added",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Correct #3: Regularization added",
+            "code": """
 def compute_loss(weights: list, data: list, reg_lambda: float) -> float:
     mse = 0.0
     for i in range(len(data)):
         mse += (weights[0] * data[i] - data[i]) ** 2
     reg = reg_lambda * sum(w ** 2 for w in weights)
     return mse + reg
-''',
-        "output": "Energy decreased by 5%. Regularization stabilized training. loss = 0.028.",
-        "is_correct": True,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.0295, "energy_after": 0.028, "loss": 0.028},
-    })
+""",
+            "output": "Energy decreased by 5%. Regularization stabilized training. loss = 0.028.",
+            "is_correct": True,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.0295, "energy_after": 0.028, "loss": 0.028},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Correct #4: Gradient clipping",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Correct #4: Gradient clipping",
+            "code": """
 def clip_gradient(grad: float, max_norm: float) -> float:
     norm = abs(grad)
     if norm > max_norm:
         return grad * (max_norm / norm)
     return grad
-''',
-        "output": "Energy decreased by 3%. Gradient clipping prevented explosion. loss = 0.052.",
-        "is_correct": True,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.0536, "energy_after": 0.052, "loss": 0.052},
-    })
+""",
+            "output": "Energy decreased by 3%. Gradient clipping prevented explosion. loss = 0.052.",
+            "is_correct": True,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.0536, "energy_after": 0.052, "loss": 0.052},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Correct #5: Data augmentation",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Correct #5: Data augmentation",
+            "code": """
 def augment(data: list, noise_scale: float) -> list:
     augmented = []
     for i in range(len(data)):
         augmented.append(data[i] + noise_scale * 0.1)
     return augmented
-''',
-        "output": "Energy decreased by 7%. Data augmentation improved generalization. loss = 0.039.",
-        "is_correct": True,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.0419, "energy_after": 0.039, "loss": 0.039},
-    })
+""",
+            "output": "Energy decreased by 7%. Data augmentation improved generalization. loss = 0.039.",
+            "is_correct": True,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.0419, "energy_after": 0.039, "loss": 0.039},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Correct #6: Weight initialization",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Correct #6: Weight initialization",
+            "code": """
 def init_weights(n_dims: int, scale: float) -> list:
     weights = []
     for i in range(n_dims):
         weights.append(scale / n_dims)
     return weights
-''',
-        "output": "Energy decreased by 15%. Better initialization converges faster. loss = 0.022.",
-        "is_correct": True,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.0259, "energy_after": 0.022, "loss": 0.022},
-    })
+""",
+            "output": "Energy decreased by 15%. Better initialization converges faster. loss = 0.022.",
+            "is_correct": True,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.0259, "energy_after": 0.022, "loss": 0.022},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Correct #7: Early stopping",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Correct #7: Early stopping",
+            "code": """
 def should_stop(losses: list, patience: int) -> bool:
     if len(losses) < patience:
         return False
     recent = losses[-patience:]
     return all(recent[i] >= recent[i - 1] for i in range(1, len(recent)))
-''',
-        "output": "Energy decreased by 2%. Early stopping prevented overfitting. loss = 0.045.",
-        "is_correct": True,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.0459, "energy_after": 0.045, "loss": 0.045},
-    })
+""",
+            "output": "Energy decreased by 2%. Early stopping prevented overfitting. loss = 0.045.",
+            "is_correct": True,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.0459, "energy_after": 0.045, "loss": 0.045},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Correct #8: Momentum optimizer",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Correct #8: Momentum optimizer",
+            "code": """
 def momentum_update(param: float, grad: float, velocity: float, lr: float, beta: float) -> tuple:
     new_velocity = beta * velocity + grad
     new_param = param - lr * new_velocity
     return new_param, new_velocity
-''',
-        "output": "Energy decreased by 10%. Momentum smoothed convergence. loss = 0.031.",
-        "is_correct": True,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.0344, "energy_after": 0.031, "loss": 0.031},
-    })
+""",
+            "output": "Energy decreased by 10%. Momentum smoothed convergence. loss = 0.031.",
+            "is_correct": True,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.0344, "energy_after": 0.031, "loss": 0.031},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Correct #9: Feature normalization",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Correct #9: Feature normalization",
+            "code": """
 def normalize(data: list) -> list:
     mean_val = sum(data) / len(data)
     std_val = (sum((x - mean_val) ** 2 for x in data) / len(data)) ** 0.5
     if std_val == 0:
         return [0.0 for _ in data]
     return [(x - mean_val) / std_val for x in data]
-''',
-        "output": "Energy decreased by 18%. Normalization improved convergence. loss = 0.019.",
-        "is_correct": True,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.0232, "energy_after": 0.019, "loss": 0.019},
-    })
+""",
+            "output": "Energy decreased by 18%. Normalization improved convergence. loss = 0.019.",
+            "is_correct": True,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.0232, "energy_after": 0.019, "loss": 0.019},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Correct #10: Dropout regularization",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Correct #10: Dropout regularization",
+            "code": """
 def apply_dropout(activations: list, drop_rate: float, training: bool) -> list:
     if not training:
         return activations
@@ -877,95 +915,107 @@ def apply_dropout(activations: list, drop_rate: float, training: bool) -> list:
         keep = 1.0 if (hash(i) % 100) >= (drop_rate * 100) else 0.0
         result.append(activations[i] * keep / (1.0 - drop_rate))
     return result
-''',
-        "output": "Energy decreased by 6%. Dropout reduced overfitting. loss = 0.037.",
-        "is_correct": True,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.0394, "energy_after": 0.037, "loss": 0.037},
-    })
+""",
+            "output": "Energy decreased by 6%. Dropout reduced overfitting. loss = 0.037.",
+            "is_correct": True,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.0394, "energy_after": 0.037, "loss": 0.037},
+        }
+    )
 
     # ===== 10 BOGUS HYPOTHESES =====
 
-    hypotheses.append({
-        "name": "Bogus #1: Hard-coded result",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Bogus #1: Hard-coded result",
+            "code": """
 def train_step(params: dict, lr: float, data: list) -> float:
     return 0.001
-''',
-        "output": "Energy decreased by 95%. Final loss: 0.001. Massive improvement achieved.",
-        "is_correct": False,
-        "gate_energy": True,  # Energy metric looks great!
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.05, "energy_after": 0.05, "loss": 0.05},
-    })
+""",
+            "output": "Energy decreased by 95%. Final loss: 0.001. Massive improvement achieved.",
+            "is_correct": False,
+            "gate_energy": True,  # Energy metric looks great!
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.05, "energy_after": 0.05, "loss": 0.05},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Bogus #2: Wrong metric measured",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Bogus #2: Wrong metric measured",
+            "code": """
 def evaluate(model: dict, test_data: list) -> float:
     train_loss = model.get("train_loss", 0.0)
     return train_loss
-''',
-        "output": "Energy decreased by 40%. loss = 0.012. Test performance improved.",
-        "is_correct": False,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.05, "energy_after": 0.048, "loss": 0.048},
-    })
+""",
+            "output": "Energy decreased by 40%. loss = 0.012. Test performance improved.",
+            "is_correct": False,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.05, "energy_after": 0.048, "loss": 0.048},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Bogus #3: Inflated improvement claim",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Bogus #3: Inflated improvement claim",
+            "code": """
 def compute_loss(data: list, weights: list) -> float:
     total = 0.0
     for i in range(len(data)):
         total += (data[i] - weights[0]) ** 2
     return total / len(data)
-''',
-        "output": "Energy decreased by 200%. loss = 0.01. Breakthrough result.",
-        "is_correct": False,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.05, "energy_after": 0.045, "loss": 0.045},
-    })
+""",
+            "output": "Energy decreased by 200%. loss = 0.01. Breakthrough result.",
+            "is_correct": False,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.05, "energy_after": 0.045, "loss": 0.045},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Bogus #4: Return type mismatch",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Bogus #4: Return type mismatch",
+            "code": """
 def compute_energy(state: list) -> int:
     return "not_a_number"
-''',
-        "output": "Energy decreased by 10%. Energy is now lower. loss = 0.03.",
-        "is_correct": False,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"loss": 0.05},
-    })
+""",
+            "output": "Energy decreased by 10%. Energy is now lower. loss = 0.03.",
+            "is_correct": False,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"loss": 0.05},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Bogus #5: Uninitialized variable",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Bogus #5: Uninitialized variable",
+            "code": """
 def train(data: list, lr: float) -> float:
     loss = sum(d ** 2 for d in data) + regularizer
     return loss
-''',
-        "output": "Energy decreased by 15%. Regularization helped. loss = 0.025.",
-        "is_correct": False,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.05, "energy_after": 0.045, "loss": 0.045},
-    })
+""",
+            "output": "Energy decreased by 15%. Regularization helped. loss = 0.025.",
+            "is_correct": False,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.05, "energy_after": 0.045, "loss": 0.045},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Bogus #6: Division by zero hiding",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Bogus #6: Division by zero hiding",
+            "code": """
 def safe_divide(a: float, b: float) -> float:
     if b == 0:
         return 0.0
@@ -976,70 +1026,79 @@ def compute_metric(data: list) -> float:
     for i in range(len(data)):
         total += safe_divide(data[i], 0)
     return total
-''',
-        "output": "Energy decreased by 50%. All metrics zero. loss = 0.0.",
-        "is_correct": False,
-        "gate_energy": True,  # Zero energy looks like perfection!
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.05, "energy_after": 0.05, "loss": 0.05},
-    })
+""",
+            "output": "Energy decreased by 50%. All metrics zero. loss = 0.0.",
+            "is_correct": False,
+            "gate_energy": True,  # Zero energy looks like perfection!
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.05, "energy_after": 0.05, "loss": 0.05},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Bogus #7: Contradictory output claims",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Bogus #7: Contradictory output claims",
+            "code": """
 def train_step(x: float, lr: float) -> float:
     return x - lr * x
-''',
-        "output": "Energy decreased by 20%. Energy increased slightly. loss = 0.04. The model diverged but converged.",
-        "is_correct": False,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"loss": 0.05},
-    })
+""",
+            "output": "Energy decreased by 20%. Energy increased slightly. loss = 0.04. The model diverged but converged.",
+            "is_correct": False,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"loss": 0.05},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Bogus #8: Negative loss claimed",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Bogus #8: Negative loss claimed",
+            "code": """
 def compute_loss(data: list) -> float:
     return -sum(d ** 2 for d in data)
-''',
-        "output": "Energy decreased by 30%. loss = -0.05. Achieved negative loss.",
-        "is_correct": False,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"loss": 0.05},
-    })
+""",
+            "output": "Energy decreased by 30%. loss = -0.05. Achieved negative loss.",
+            "is_correct": False,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"loss": 0.05},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Bogus #9: Impossible speedup",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Bogus #9: Impossible speedup",
+            "code": """
 def fast_train(data: list) -> float:
     return 0.0
-''',
-        "output": "Energy decreased by 10%. 100x speedup. loss = 0.01.",
-        "is_correct": False,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.05, "energy_after": 0.048, "loss": 0.048},
-    })
+""",
+            "output": "Energy decreased by 10%. 100x speedup. loss = 0.01.",
+            "is_correct": False,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.05, "energy_after": 0.048, "loss": 0.048},
+        }
+    )
 
-    hypotheses.append({
-        "name": "Bogus #10: Syntax error in code",
-        "code": '''
+    hypotheses.append(
+        {
+            "name": "Bogus #10: Syntax error in code",
+            "code": """
 def train(data list) -> float:
     return sum(data
-''',
-        "output": "Energy decreased by 5%. Training completed. loss = 0.04.",
-        "is_correct": False,
-        "gate_energy": True,
-        "gate_time": True,
-        "gate_memory": True,
-        "ground_truth": {"energy_before": 0.05, "energy_after": 0.048, "loss": 0.048},
-    })
+""",
+            "output": "Energy decreased by 5%. Training completed. loss = 0.04.",
+            "is_correct": False,
+            "gate_energy": True,
+            "gate_time": True,
+            "gate_memory": True,
+            "ground_truth": {"energy_before": 0.05, "energy_after": 0.048, "loss": 0.048},
+        }
+    )
 
     return hypotheses
 
@@ -1047,6 +1106,7 @@ def train(data list) -> float:
 # ---------------------------------------------------------------------------
 # 4. Gate evaluation — compare 3-gate vs 4-gate
 # ---------------------------------------------------------------------------
+
 
 def evaluate_gates(hypotheses: list[dict[str, Any]]) -> dict[str, Any]:
     """Run verification pipeline on all hypotheses and evaluate gate combinations.
@@ -1086,21 +1146,23 @@ def evaluate_gates(hypotheses: list[dict[str, Any]]) -> dict[str, Any]:
         # 4-gate decision.
         four_gate = three_gate and ising_pass
 
-        results.append({
-            "name": hyp["name"],
-            "is_correct": hyp["is_correct"],
-            "gate_energy": hyp["gate_energy"],
-            "gate_time": hyp["gate_time"],
-            "gate_memory": hyp["gate_memory"],
-            "gate_ising": ising_pass,
-            "three_gate_accept": three_gate,
-            "four_gate_accept": four_gate,
-            "n_claims": len(claims),
-            "verified": verification["verified"],
-            "violated": verification["violated"],
-            "uncovered": verification["uncovered"],
-            "certificate": verification["certificate"],
-        })
+        results.append(
+            {
+                "name": hyp["name"],
+                "is_correct": hyp["is_correct"],
+                "gate_energy": hyp["gate_energy"],
+                "gate_time": hyp["gate_time"],
+                "gate_memory": hyp["gate_memory"],
+                "gate_ising": ising_pass,
+                "three_gate_accept": three_gate,
+                "four_gate_accept": four_gate,
+                "n_claims": len(claims),
+                "verified": verification["verified"],
+                "violated": verification["violated"],
+                "uncovered": verification["uncovered"],
+                "certificate": verification["certificate"],
+            }
+        )
 
     return {"results": results}
 
@@ -1131,7 +1193,9 @@ def print_confusion_matrix(results: list[dict[str, Any]]) -> None:
     print("\n" + "=" * 78)
     print("CONFUSION MATRIX: Gate Combination × Accept/Reject × Correct/Bogus")
     print("=" * 78)
-    print(f"  {'Gate Combination':<22s}  {'TP':>4s}  {'FP':>4s}  {'TN':>4s}  {'FN':>4s}  {'FAR':>6s}  {'FRR':>6s}")
+    print(
+        f"  {'Gate Combination':<22s}  {'TP':>4s}  {'FP':>4s}  {'TN':>4s}  {'FN':>4s}  {'FAR':>6s}  {'FRR':>6s}"
+    )
     print("-" * 78)
 
     for name, gate_fn in gate_combos.items():
@@ -1158,6 +1222,7 @@ def print_confusion_matrix(results: list[dict[str, Any]]) -> None:
 # 5. Main
 # ---------------------------------------------------------------------------
 
+
 def main() -> int:
     """Run the autoresearch self-verification experiment."""
     print("=" * 78)
@@ -1169,9 +1234,11 @@ def main() -> int:
 
     # Step 1: Generate mock hypotheses.
     hypotheses = get_mock_hypotheses()
-    print(f"\n  Generated {len(hypotheses)} mock hypotheses "
-          f"({sum(1 for h in hypotheses if h['is_correct'])} correct, "
-          f"{sum(1 for h in hypotheses if not h['is_correct'])} bogus)")
+    print(
+        f"\n  Generated {len(hypotheses)} mock hypotheses "
+        f"({sum(1 for h in hypotheses if h['is_correct'])} correct, "
+        f"{sum(1 for h in hypotheses if not h['is_correct'])} bogus)"
+    )
 
     # Step 2: Run the verification pipeline on each.
     print("\n  Running verification pipeline...")
@@ -1191,16 +1258,20 @@ def main() -> int:
         verdict = r["certificate"]["verdict"]
 
         # Did the 4-gate make the right call?
-        four_gate_correct = (r["four_gate_accept"] == r["is_correct"])
+        four_gate_correct = r["four_gate_accept"] == r["is_correct"]
         call_str = "✓" if four_gate_correct else "✗"
 
         print(f"  [{correct_str}] {r['name']:<45s}")
-        print(f"    Claims: {r['n_claims']} "
-              f"(verified={r['verified']}, violated={r['violated']}, "
-              f"uncovered={r['uncovered']})")
-        print(f"    3-gate: {three_str}  Ising: {ising_str}  "
-              f"4-gate: {four_str}  Verdict: {verdict}  "
-              f"Correct call: {call_str}")
+        print(
+            f"    Claims: {r['n_claims']} "
+            f"(verified={r['verified']}, violated={r['violated']}, "
+            f"uncovered={r['uncovered']})"
+        )
+        print(
+            f"    3-gate: {three_str}  Ising: {ising_str}  "
+            f"4-gate: {four_str}  Verdict: {verdict}  "
+            f"Correct call: {call_str}"
+        )
 
         # Show violated claims for bogus hypotheses.
         if r["violated"] > 0:
@@ -1218,20 +1289,19 @@ def main() -> int:
     three_gate_far = sum(
         1 for r in results if not r["is_correct"] and r["three_gate_accept"]
     ) / max(n_bogus, 1)
-    four_gate_far = sum(
-        1 for r in results if not r["is_correct"] and r["four_gate_accept"]
-    ) / max(n_bogus, 1)
+    four_gate_far = sum(1 for r in results if not r["is_correct"] and r["four_gate_accept"]) / max(
+        n_bogus, 1
+    )
 
     three_gate_frr = sum(
         1 for r in results if r["is_correct"] and not r["three_gate_accept"]
     ) / max(n_correct, 1)
-    four_gate_frr = sum(
-        1 for r in results if r["is_correct"] and not r["four_gate_accept"]
-    ) / max(n_correct, 1)
+    four_gate_frr = sum(1 for r in results if r["is_correct"] and not r["four_gate_accept"]) / max(
+        n_correct, 1
+    )
 
     ising_catches = sum(
-        1 for r in results
-        if not r["is_correct"] and r["three_gate_accept"] and not r["gate_ising"]
+        1 for r in results if not r["is_correct"] and r["three_gate_accept"] and not r["gate_ising"]
     )
 
     elapsed = time.time() - start
@@ -1249,8 +1319,7 @@ def main() -> int:
     print(f"    False acceptance rate (FAR): {four_gate_far:.1%}")
     print(f"    False rejection rate (FRR):  {four_gate_frr:.1%}")
     print(f"")
-    print(f"  Ising gate catches {ising_catches}/{n_bogus} bogus hypotheses "
-          f"that 3-gate missed")
+    print(f"  Ising gate catches {ising_catches}/{n_bogus} bogus hypotheses that 3-gate missed")
     print(f"  FAR reduction: {three_gate_far:.1%} → {four_gate_far:.1%}")
 
     if four_gate_far < three_gate_far:

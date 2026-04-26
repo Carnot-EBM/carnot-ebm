@@ -108,9 +108,7 @@ def _load_live_pairs(n: int) -> list[dict]:
         return []
     if not isinstance(data, list):
         return []
-    return [
-        e for e in data if isinstance(e, dict) and "question" in e and "response" in e
-    ][:n]
+    return [e for e in data if isinstance(e, dict) and "question" in e and "response" in e][:n]
 
 
 # ---------------------------------------------------------------------------
@@ -151,10 +149,7 @@ def main() -> None:
             gate_open=False,
             retro_033_attempt=18,
             honest_verdict="vr18_blocked_gate_closed",
-            reason=(
-                "Ensemble gate v3 closed. "
-                "hermes_v2_structured_recall below threshold."
-            ),
+            reason=("Ensemble gate v3 closed. hermes_v2_structured_recall below threshold."),
         )
         with open(os.path.join(_REPO_ROOT, DELIVERABLE), "w") as fh:
             json.dump(artifact, fh, indent=2)

@@ -290,18 +290,14 @@ class TestTypedReasoningIR:
 
         step = ReasoningStep(step_id="s1", kind="arithmetic", text="2 + 2 = 4")
         step_id_ref = "s1" if grounded else None
-        claim = AtomicClaim(
-            claim_id="c1", kind="arithmetic", text="sum is 4", step_id=step_id_ref
-        )
+        claim = AtomicClaim(claim_id="c1", kind="arithmetic", text="sum is 4", step_id=step_id_ref)
         answer = FinalAnswer(
             text="4",
             normalized=4,
             answer_type="number",
             source_step_id="s1",
         )
-        constraint = UserConstraint(
-            constraint_id="uc1", kind="numeric", text="add two numbers"
-        )
+        constraint = UserConstraint(constraint_id="uc1", kind="numeric", text="add two numbers")
         provenance = ExtractionProvenance(
             extraction_method="fallback_text",
             source_format="text",

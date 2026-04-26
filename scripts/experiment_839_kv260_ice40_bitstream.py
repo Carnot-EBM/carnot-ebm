@@ -197,10 +197,14 @@ def run_pnr_and_pack(
     pnr_cmd = [
         nextpnr_bin,
         "--hx8k",
-        "--package", ICE40_PACKAGE,
-        "--json", str(json_netlist),
-        "--asc", str(asc_out),
-        "--freq", str(ICE40_FREQ_MHZ),
+        "--package",
+        ICE40_PACKAGE,
+        "--json",
+        str(json_netlist),
+        "--asc",
+        str(asc_out),
+        "--freq",
+        str(ICE40_FREQ_MHZ),
     ]
     rc_pnr, out_pnr, err_pnr = _run(pnr_cmd, timeout=600)
     combined_pnr = out_pnr + "\n" + err_pnr
@@ -219,9 +223,7 @@ def run_pnr_and_pack(
     )
     combined_pack = out_pack + "\n" + err_pack
     full_log = (
-        f"[yosys]\n{combined_yosys}\n"
-        f"[nextpnr-ice40]\n{combined_pnr}\n"
-        f"[icepack]\n{combined_pack}"
+        f"[yosys]\n{combined_yosys}\n[nextpnr-ice40]\n{combined_pnr}\n[icepack]\n{combined_pack}"
     )
 
     if not bin_out.exists():

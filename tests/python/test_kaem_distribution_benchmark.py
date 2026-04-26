@@ -223,9 +223,15 @@ class TestBestFamily:
     def test_best_family_returns_largest_advantage(self):
         """best_family returns family with largest kaem_advantage, not first win."""
         results = [
-            DistributionFamilyResult("gaussian_mixture", kaem_mean_l2=0.3, mcmc_mean_l2=0.5),  # advantage=0.2
-            DistributionFamilyResult("student_t", kaem_mean_l2=0.1, mcmc_mean_l2=0.8),          # advantage=0.7
-            DistributionFamilyResult("piecewise_uniform", kaem_mean_l2=0.6, mcmc_mean_l2=0.4),  # advantage=-0.2
+            DistributionFamilyResult(
+                "gaussian_mixture", kaem_mean_l2=0.3, mcmc_mean_l2=0.5
+            ),  # advantage=0.2
+            DistributionFamilyResult(
+                "student_t", kaem_mean_l2=0.1, mcmc_mean_l2=0.8
+            ),  # advantage=0.7
+            DistributionFamilyResult(
+                "piecewise_uniform", kaem_mean_l2=0.6, mcmc_mean_l2=0.4
+            ),  # advantage=-0.2
         ]
         bench = KAEMDistributionBenchmark(n_vars=2, n_samples=20)
         assert bench.best_family(results=results) == "student_t"

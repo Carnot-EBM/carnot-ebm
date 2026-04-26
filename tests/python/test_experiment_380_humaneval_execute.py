@@ -206,9 +206,7 @@ class TestMain:
                 },
             }
 
-        monkeypatch.setattr(
-            _mod.ExperimentTemplate, "setup_gpu", _fake_setup_gpu
-        )
+        monkeypatch.setattr(_mod.ExperimentTemplate, "setup_gpu", _fake_setup_gpu)
 
         # ---- _load_model_pipeline ----
         monkeypatch.setattr(
@@ -221,7 +219,7 @@ class TestMain:
         monkeypatch.setattr(
             _mod,
             "_load_problems",
-            lambda: (problems_override if problems_override is not None else _MINI_PROBLEMS),
+            lambda: problems_override if problems_override is not None else _MINI_PROBLEMS,
         )
 
         # ---- _process_problem ----
@@ -264,9 +262,7 @@ class TestMain:
     def test_unhealthy_gpu_produces_blocked(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        artifact = self._run_main(
-            tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=False)
         assert artifact["inference_mode"] == "blocked"
         assert artifact["honest_verdict"] == "blocked"
         assert artifact["status"] == "blocked"
@@ -274,9 +270,7 @@ class TestMain:
     def test_unhealthy_gpu_failure_reason_present(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        artifact = self._run_main(
-            tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=False)
         assert "failure_reason" in artifact
 
     # -- Gate 3: model load failure --
@@ -309,17 +303,13 @@ class TestMain:
         )
         assert artifact["inference_mode"] == "live_gpu"
 
-    def test_success_status_success(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_success_status_success(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         artifact = self._run_main(
             tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=True, model_ok=True
         )
         assert artifact["status"] == "success"
 
-    def test_success_schema_v2(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_success_schema_v2(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         artifact = self._run_main(
             tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=True, model_ok=True
         )
@@ -378,9 +368,7 @@ class TestMain:
         from experiment_369_humaneval_live import HumanEvalResult369
 
         # Patch _process_problem to return a failing-then-repaired result
-        def _failing_then_repaired(
-            p: Any, tok: Any, mod: Any, dev: Any
-        ) -> HumanEvalResult369:
+        def _failing_then_repaired(p: Any, tok: Any, mod: Any, dev: Any) -> HumanEvalResult369:
             return HumanEvalResult369(
                 problem_id=p["task_id"],
                 generated_code="def f(): return 0",
@@ -477,9 +465,7 @@ class TestMain:
             checkpoint_calls.append(step)
             original_checkpoint_save(self_obj, partial, step=step)
 
-        monkeypatch.setattr(
-            _mod.ExperimentTemplate, "checkpoint_save", _tracking_checkpoint
-        )
+        monkeypatch.setattr(_mod.ExperimentTemplate, "checkpoint_save", _tracking_checkpoint)
 
         self._run_main(
             tmp_path,

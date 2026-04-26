@@ -206,6 +206,7 @@ def main() -> None:
 
     # Write deliverable JSON to disk before asserting it exists
     import json
+
     tmpl._output_path.parent.mkdir(parents=True, exist_ok=True)
     tmpl._output_path.write_text(json.dumps(artifact, indent=2))
 

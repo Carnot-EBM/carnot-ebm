@@ -138,9 +138,9 @@ class TestExtractConstraintIrFeatures:
         assert features[7] == 1.0  # no semantic violations
         assert features[8] == 0.0  # not verify_only
         assert features[9] == 1.0  # verify_repair mode
-        assert features[10] == 1.0 # code_only style
-        assert features[11] == 0.0 # not text_prose style
-        assert features[12] == 0.0 # not gemma
+        assert features[10] == 1.0  # code_only style
+        assert features[11] == 0.0  # not text_prose style
+        assert features[12] == 0.0  # not gemma
 
     def test_coverage_boundary_75(self) -> None:
         """Coverage exactly at 0.75 is not > 0.75."""

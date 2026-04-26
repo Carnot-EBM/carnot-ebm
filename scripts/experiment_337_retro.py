@@ -36,7 +36,7 @@ Usage:
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -301,8 +301,8 @@ def build_retro_resolved_flags() -> dict[str, bool]:
     return {
         "RETRO-001": True,  # 45-min timeout shipped in Exp 325
         "RETRO-002": True,  # DualGPUMonitor shipped in Exp 326
-        "NEW-001": True,    # test-first stubs shipped in Exp 325
-        "NEW-002": True,    # dependency audit shipped in Exp 327
+        "NEW-001": True,  # test-first stubs shipped in Exp 325
+        "NEW-002": True,  # dependency audit shipped in Exp 327
     }
 
 
@@ -408,9 +408,7 @@ def build_bottlenecks(wall_times: dict[int, float]) -> list[dict]:
                 "pct_total": pct,
                 "root_cause": root.get("root_cause", "root cause not documented"),
                 "category": root.get("category", "unknown"),
-                "fix_implemented_this_milestone": root.get(
-                    "fix_implemented_this_milestone", False
-                ),
+                "fix_implemented_this_milestone": root.get("fix_implemented_this_milestone", False),
             }
         )
     return bottlenecks
@@ -538,15 +536,15 @@ def append_conductor_log_entry(artifact_path: Path, speedup_pct: float) -> None:
     total = sum(wall_times.values())
     n = len(wall_times)
     slowest_id = max(wall_times, key=lambda k: wall_times[k])
-    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
     entry = (
         f"| {timestamp} | Exp 337: Operational retrospective for milestone "
         f"2026.04.24 | OK | {artifact_path.name} written; "
         f"n={n} experiments, total={round(total)} min, "
-        f"mean={round(total/n, 1)} min/exp, "
+        f"mean={round(total / n, 1)} min/exp, "
         f"top bottleneck=Exp {slowest_id} ({wall_times[slowest_id]} min); "
         f"all 4 RETRO items resolved; NEW-003/004 added; "
-        f"actual speedup ~{round(((_PRIOR_MILESTONE_MEAN_MIN - total/n) / _PRIOR_MILESTONE_MEAN_MIN) * 100, 1)}%; "
+        f"actual speedup ~{round(((_PRIOR_MILESTONE_MEAN_MIN - total / n) / _PRIOR_MILESTONE_MEAN_MIN) * 100, 1)}%; "
         f"estimated next speedup ~{speedup_pct}% |\n"
     )
     with CONDUCTOR_LOG.open("a") as f:
@@ -560,7 +558,7 @@ def append_conductor_log_entry(artifact_path: Path, speedup_pct: float) -> None:
 
 def main() -> None:
     """Generate the operational retrospective for milestone 2026.04.24."""
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     wall_times = load_wall_times()
     n_experiments = len(wall_times)
@@ -635,7 +633,9 @@ def main() -> None:
     print(f"Mean per experiment   : {mean_min:.1f} min")
     print(f"Prior milestone mean  : {_PRIOR_MILESTONE_MEAN_MIN:.1f} min/exp")
     print(f"Actual speedup        : {actual_speedup:.1f}%")
-    print(f"Top bottleneck        : {bottlenecks[0]['name']} ({bottlenecks[0]['duration_min']} min)")
+    print(
+        f"Top bottleneck        : {bottlenecks[0]['name']} ({bottlenecks[0]['duration_min']} min)"
+    )
     print(f"RETRO-001 resolved    : {resolved['RETRO-001']}")
     print(f"RETRO-002 resolved    : {resolved['RETRO-002']}")
     print(f"Max-turns failures    : {output['max_turns_failures']}")

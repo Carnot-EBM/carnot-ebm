@@ -148,13 +148,17 @@ def _load_gsm8k_questions_stratified(n_easy: int, n_hard: int) -> list[dict]:
             result = easy + hard
             _log.info(
                 "Loaded %d GSM8K questions (stratified: %d easy + %d hard)",
-                len(result), n_easy, n_hard,
+                len(result),
+                n_easy,
+                n_hard,
             )
             return result
         # Not enough questions — return all we have
         _log.warning(
             "GSM8K has only %d questions; wanted %d + %d. Using all.",
-            len(all_items), n_easy, n_hard,
+            len(all_items),
+            n_easy,
+            n_hard,
         )
         return all_items
     except Exception as exc:
@@ -165,14 +169,15 @@ def _load_gsm8k_questions_stratified(n_easy: int, n_hard: int) -> list[dict]:
     for i in range(1, n_total + 1):
         a, b = i * 3, i * 2
         c = a + b
-        synthetic.append({
-            "question": (
-                f"Janet has {a} apples and receives {b} more.  "
-                f"How many apples does she have?"
-            ),
-            "answer": f"She starts with {a} and gets {b} more, so {a} plus {b} gives {c}.  #### {c}",
-            "source": "synthetic",
-        })
+        synthetic.append(
+            {
+                "question": (
+                    f"Janet has {a} apples and receives {b} more.  How many apples does she have?"
+                ),
+                "answer": f"She starts with {a} and gets {b} more, so {a} plus {b} gives {c}.  #### {c}",
+                "source": "synthetic",
+            }
+        )
     _log.info("Using %d synthetic GSM8K questions (real dataset unavailable)", len(synthetic))
     return synthetic
 
@@ -258,7 +263,10 @@ def _run_model_benchmark(
     pre_accuracy = n_correct_baseline / max(len(questions), 1)
     _log.info(
         "  [%s] BASELINE: %d/%d correct (%.4f)",
-        model_name, n_correct_baseline, len(questions), pre_accuracy,
+        model_name,
+        n_correct_baseline,
+        len(questions),
+        pre_accuracy,
     )
 
     # ---- Pass 2: PIPELINE (IntegratedExtractor + one-shot repair) ----
@@ -283,19 +291,25 @@ def _run_model_benchmark(
             n_correct_pipeline += 1
 
         # Collect CoT pair for Exp 472 JEPA retrain
-        cot_pairs.append({
-            "model": model_name,
-            "question": q_dict["question"],
-            "cot_text": response,
-            "correct": correct,
-        })
+        cot_pairs.append(
+            {
+                "model": model_name,
+                "question": q_dict["question"],
+                "cot_text": response,
+                "correct": correct,
+            }
+        )
 
     post_accuracy = n_correct_pipeline / max(len(questions), 1)
     extractor_used = extractor.extractor_names_used(all_violations_seen)
     _log.info(
         "  [%s] PIPELINE: %d/%d correct (%.4f) delta=%.4f extractor_used=%s",
-        model_name, n_correct_pipeline, len(questions), post_accuracy,
-        post_accuracy - pre_accuracy, extractor_used,
+        model_name,
+        n_correct_pipeline,
+        len(questions),
+        post_accuracy,
+        post_accuracy - pre_accuracy,
+        extractor_used,
     )
 
     return Precision100qResult(
@@ -383,6 +397,7 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
     # Apply DualGPUAssigner before passing to setup_gpu
     try:
         import torch
+
         n_gpus = torch.cuda.device_count()
     except Exception:
         n_gpus = 0
@@ -500,15 +515,11 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
         return _run_qwen_inference(qwen_pipe, prompt)
 
     _log.info("=== Running Gemma4-E4B-it benchmark (100q) ===")
-    gemma4_result = _run_model_benchmark(
-        "Gemma4-E4B-it", gemma_fn, extractor, questions, cot_pairs
-    )
+    gemma4_result = _run_model_benchmark("Gemma4-E4B-it", gemma_fn, extractor, questions, cot_pairs)
     tmpl.checkpoint_save(gemma4_result.to_dict(), step=1)
 
     _log.info("=== Running Qwen3.5-0.8B benchmark (100q) ===")
-    qwen_result = _run_model_benchmark(
-        "Qwen3.5-0.8B", qwen_fn, extractor, questions, cot_pairs
-    )
+    qwen_result = _run_model_benchmark("Qwen3.5-0.8B", qwen_fn, extractor, questions, cot_pairs)
     tmpl.checkpoint_save(qwen_result.to_dict(), step=2)
 
     # ------------------------------------------------------------------
@@ -521,9 +532,7 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
     # Build artifact
     # ------------------------------------------------------------------
     any_positive = gemma4_result.is_positive or qwen_result.is_positive
-    honest_verdict = (
-        "retro_033_closed_positive" if any_positive else "retro_033_closed_negative"
-    )
+    honest_verdict = "retro_033_closed_positive" if any_positive else "retro_033_closed_negative"
 
     artifact = tmpl.build_result(
         {

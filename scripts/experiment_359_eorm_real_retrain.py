@@ -68,8 +68,8 @@ REAL_DATA_THRESHOLD = 50
 
 # Training hyperparameters
 TRAIN_SPLIT = 0.8
-N_EPOCHS_CI = 50       # CPU / CI mode (fast)
-N_EPOCHS_LIVE = 200    # when CARNOT_FORCE_LIVE=1 (more thorough)
+N_EPOCHS_CI = 50  # CPU / CI mode (fast)
+N_EPOCHS_LIVE = 200  # when CARNOT_FORCE_LIVE=1 (more thorough)
 BATCH_SIZE = 16
 LR = 1e-4
 MARGIN = 1.0
@@ -325,13 +325,19 @@ def run_experiment(
 
     # ---- 3. Build corpus (real first, synthetic fill) ----
     synthetic_pairs = make_synthetic_eorm_pairs(n=MAX_SYNTHETIC + 20, seed=359)
-    corpus = merge_cot_corpora(real_pairs, synthetic_pairs, max_real=MAX_REAL, max_synthetic=MAX_SYNTHETIC)
-    _log.info("Corpus: %d total pairs (%d real, %d synthetic)", len(corpus), n_real, len(corpus) - n_real)
+    corpus = merge_cot_corpora(
+        real_pairs, synthetic_pairs, max_real=MAX_REAL, max_synthetic=MAX_SYNTHETIC
+    )
+    _log.info(
+        "Corpus: %d total pairs (%d real, %d synthetic)", len(corpus), n_real, len(corpus) - n_real
+    )
 
     # ---- 4. Train / test split (80/20, no shuffle for reproducibility) ----
     n_train = max(1, int(len(corpus) * TRAIN_SPLIT))
     train_pairs = corpus[:n_train]
-    test_pairs = corpus[n_train:] if len(corpus) > n_train else corpus  # fallback: use full corpus as test
+    test_pairs = (
+        corpus[n_train:] if len(corpus) > n_train else corpus
+    )  # fallback: use full corpus as test
 
     # ---- 5. Load / build baseline EORM model ----
     baseline_path = _root / "results" / "eorm_model_346.safetensors"
@@ -346,7 +352,9 @@ def run_experiment(
     n_epochs = N_EPOCHS_LIVE if force_live else N_EPOCHS_CI
     _log.info(
         "Training for %d epochs on %d contrastive triples (from %d pairs)",
-        n_epochs, len(triples), len(train_pairs),
+        n_epochs,
+        len(triples),
+        len(train_pairs),
     )
 
     trainer = EORMTrainer(model, lr=LR, margin=MARGIN)
@@ -418,6 +426,7 @@ def main() -> None:
     deliverable = _REPO_ROOT / DELIVERABLE
     deliverable.parent.mkdir(parents=True, exist_ok=True)
     import json
+
     with open(deliverable, "w") as f:
         json.dump(artifact, f, indent=2)
 

@@ -248,6 +248,7 @@ class TestNL2Z3ExtractorLiveMode:
     def _make_extractor_with_mock_generate(self, llm_output: str) -> NL2Z3Extractor:
         """Build NL2Z3Extractor with a mocked generate function."""
         import os
+
         os.environ["CARNOT_FORCE_LIVE"] = "1"
 
         mock_generate_fn: Any = MagicMock(return_value=llm_output)
@@ -256,6 +257,7 @@ class TestNL2Z3ExtractorLiveMode:
 
     def teardown_method(self) -> None:
         import os
+
         os.environ.pop("CARNOT_FORCE_LIVE", None)
 
     def test_unsat_z3_code_returns_violation(self) -> None:
@@ -307,6 +309,7 @@ class TestNL2Z3ExtractorLiveMode:
     def test_generate_fn_called_once(self) -> None:
         """LLM generate function is called exactly once per extract call."""
         import os
+
         os.environ["CARNOT_FORCE_LIVE"] = "1"
         mock_fn: Any = MagicMock(return_value="no code block")
         ext = NL2Z3Extractor(generate_fn=mock_fn)
@@ -316,6 +319,7 @@ class TestNL2Z3ExtractorLiveMode:
     def test_generate_fn_raises_falls_back_to_unknown(self) -> None:
         """If generate_fn raises, extractor returns [] with sat_status='unknown'."""
         import os
+
         os.environ["CARNOT_FORCE_LIVE"] = "1"
         mock_fn: Any = MagicMock(side_effect=RuntimeError("model unavailable"))
         ext = NL2Z3Extractor(generate_fn=mock_fn)
@@ -353,6 +357,7 @@ class TestVerifyRepairPipelineZ3Integration:
     def test_verify_with_z3_ci_mode_returns_z3result(self) -> None:
         """Pipeline.verify_with_z3 returns Z3Result in CI mode."""
         import os
+
         os.environ.pop("CARNOT_FORCE_LIVE", None)
 
         pipeline = VerifyRepairPipeline(model=None, domains=["reasoning"])
@@ -363,6 +368,7 @@ class TestVerifyRepairPipelineZ3Integration:
     def test_verify_with_z3_accepts_timeout_param(self) -> None:
         """verify_with_z3 accepts a timeout_s parameter without error."""
         import os
+
         os.environ.pop("CARNOT_FORCE_LIVE", None)
 
         pipeline = VerifyRepairPipeline(model=None, domains=["reasoning"])
@@ -372,6 +378,7 @@ class TestVerifyRepairPipelineZ3Integration:
     def test_verify_with_z3_live_mock_unsat(self) -> None:
         """Pipeline.verify_with_z3 with mock LLM returns unsat Z3Result."""
         import os
+
         os.environ["CARNOT_FORCE_LIVE"] = "1"
 
         unsat_code = (

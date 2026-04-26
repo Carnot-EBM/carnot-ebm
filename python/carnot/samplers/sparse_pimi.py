@@ -200,9 +200,7 @@ class SparsePIMISampler:
         s_new[flip_mask] = -s_current[flip_mask]
         return s_new
 
-    def sample_once_seeded(
-        self, s_current: np.ndarray, rng: np.random.Generator
-    ) -> np.ndarray:
+    def sample_once_seeded(self, s_current: np.ndarray, rng: np.random.Generator) -> np.ndarray:
         """One sparse PIMI cycle with caller-supplied RNG (for reproducible benchmarks).
 
         Args:

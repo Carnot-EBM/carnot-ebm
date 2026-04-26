@@ -265,16 +265,10 @@ def classify_failure_mode(
     # Repair regression rate: repaired response was originally correct but became wrong.
     # In verify-only mode (no LLM) repair_applied is always False, so this rate
     # is derived from the proxy: extractor fired AND was_correct (would trigger repair).
-    repaired_originally_correct = [
-        r for r in records_correct if r["extractor_fired"]
-    ]
-    regression_count = sum(
-        1 for r in repaired_originally_correct if not r["final_correct"]
-    )
+    repaired_originally_correct = [r for r in records_correct if r["extractor_fired"]]
+    regression_count = sum(1 for r in repaired_originally_correct if not r["final_correct"])
     repair_regression_rate = (
-        regression_count / len(repaired_originally_correct)
-        if repaired_originally_correct
-        else 0.0
+        regression_count / len(repaired_originally_correct) if repaired_originally_correct else 0.0
     )
 
     # Threshold miss rate: extractor did NOT fire on an actually-incorrect response.
@@ -351,10 +345,7 @@ def _generate_synthetic_responses(
         else:
             # Write a wrong answer to simulate Gemma's incorrect responses.
             wrong_ans = correct_ans + 3 if isinstance(correct_ans, int) else correct_ans + 3.0
-            responses.append(
-                f"Let me calculate this.\n"
-                f"The answer is {wrong_ans}."
-            )
+            responses.append(f"Let me calculate this.\nThe answer is {wrong_ans}.")
     return responses
 
 
@@ -400,10 +391,8 @@ def _generate_live_responses(
         prompt = f"Solve step by step: {item['question']}"
         inputs = tokenizer(prompt, return_tensors="pt").to(device)
         with torch.no_grad():
-            out = model.generate(
-                **inputs, max_new_tokens=200, do_sample=False, temperature=1.0
-            )
-        text = tokenizer.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+            out = model.generate(**inputs, max_new_tokens=200, do_sample=False, temperature=1.0)
+        text = tokenizer.decode(out[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True)
         responses.append(text.strip())
         _log.info("Generated response for: %s... → %s...", item["question"][:40], text[:60])
 

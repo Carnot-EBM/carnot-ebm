@@ -37,6 +37,7 @@ TEST_BINARY = Path("/tmp/ising_hls_test_750")
 # REQ-HW-010: HLS C++ file exists
 # ---------------------------------------------------------------------------
 
+
 class TestHlsCppExists(unittest.TestCase):
     """Verify ising_sampler_hls.cpp is present after experiment.
     Spec traces: REQ-HW-010
@@ -88,6 +89,7 @@ class TestHlsCppExists(unittest.TestCase):
 # REQ-HW-010: TCL synthesis script has correct part number
 # ---------------------------------------------------------------------------
 
+
 class TestSynthTclPartNumber(unittest.TestCase):
     """Verify synth_ising_hls.tcl references the correct KV260 part.
     Spec traces: REQ-HW-010
@@ -123,6 +125,7 @@ class TestSynthTclPartNumber(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # REQ-HW-010 / SCENARIO-HW-010: C++ compiles and passes CPU simulation
 # ---------------------------------------------------------------------------
+
 
 class TestCppCompileAndRun(unittest.TestCase):
     """Verify the HLS C++ kernel compiles with g++ and passes the built-in test.
@@ -167,7 +170,9 @@ class TestCppCompileAndRun(unittest.TestCase):
         if cpp_energy is None:
             self.skipTest("Could not parse energy from simulation output")
         delta_pct = exp750.compute_energy_delta_pct(cpp_energy)
-        tol_pct = exp750.ENERGY_TOLERANCE_FRACTION * 100.0 + (0.1 / abs(exp750.PYTHON_REFERENCE_ENERGY) * 100)
+        tol_pct = exp750.ENERGY_TOLERANCE_FRACTION * 100.0 + (
+            0.1 / abs(exp750.PYTHON_REFERENCE_ENERGY) * 100
+        )
         self.assertLessEqual(
             delta_pct,
             tol_pct + 5.0,  # +5% absolute margin for test stability
@@ -178,6 +183,7 @@ class TestCppCompileAndRun(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # honest_verdict assignment logic
 # ---------------------------------------------------------------------------
+
 
 class TestHonestVerdictLogic(unittest.TestCase):
     """Verify honest_verdict is assigned correctly in all three cases.
@@ -198,14 +204,22 @@ class TestHonestVerdictLogic(unittest.TestCase):
         with (
             patch.object(exp750.HLS_CPP_PATH, "exists", return_value=hls_cpp_exists),
             patch.object(exp750.TCL_PATH, "exists", return_value=True),
-            patch("scripts.experiment_750_vitis_hls_ising_v4.check_vitis_hls",
-                  return_value=(vitis_available, "v2024.2" if vitis_available else "not found")),
-            patch("scripts.experiment_750_vitis_hls_ising_v4.compile_hls_cpp",
-                  return_value=(cpp_compiles, "ok" if cpp_compiles else "error")),
-            patch("scripts.experiment_750_vitis_hls_ising_v4.run_cpu_simulation",
-                  return_value=(True, -3.0, "PASS")),
-            patch("scripts.experiment_750_vitis_hls_ising_v4.attempt_hls_synthesis",
-                  return_value=(synthesis_ok, "done" if synthesis_ok else "failed")),
+            patch(
+                "scripts.experiment_750_vitis_hls_ising_v4.check_vitis_hls",
+                return_value=(vitis_available, "v2024.2" if vitis_available else "not found"),
+            ),
+            patch(
+                "scripts.experiment_750_vitis_hls_ising_v4.compile_hls_cpp",
+                return_value=(cpp_compiles, "ok" if cpp_compiles else "error"),
+            ),
+            patch(
+                "scripts.experiment_750_vitis_hls_ising_v4.run_cpu_simulation",
+                return_value=(True, -3.0, "PASS"),
+            ),
+            patch(
+                "scripts.experiment_750_vitis_hls_ising_v4.attempt_hls_synthesis",
+                return_value=(synthesis_ok, "done" if synthesis_ok else "failed"),
+            ),
         ):
             result = exp750.run_experiment(tmpl)
         return result["honest_verdict"]
@@ -275,6 +289,7 @@ class TestHonestVerdictLogic(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # Deliverable JSON schema check
 # ---------------------------------------------------------------------------
+
 
 class TestDeliverableSchema(unittest.TestCase):
     """Verify the deliverable JSON has all required fields.

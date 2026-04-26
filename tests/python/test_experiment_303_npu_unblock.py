@@ -92,9 +92,7 @@ BLOCKED_EXECUTION_PATHS = {
 @pytest.fixture(scope="module")
 def results_json() -> dict[str, Any]:
     """Load the Exp 303 results JSON artifact."""
-    path = (
-        Path(__file__).parent.parent.parent / "results" / "experiment_303_npu_results.json"
-    )
+    path = Path(__file__).parent.parent.parent / "results" / "experiment_303_npu_results.json"
     if not path.exists():
         pytest.skip(f"Results artifact not yet generated: {path}")
     return json.loads(path.read_text())
@@ -133,9 +131,7 @@ class TestExp303Schema:
         """
         run_date = results_json["run_date"]
         assert isinstance(run_date, str), "run_date must be a string"
-        assert re.fullmatch(r"\d{8}", run_date), (
-            f"run_date must be YYYYMMDD, got: {run_date!r}"
-        )
+        assert re.fullmatch(r"\d{8}", run_date), f"run_date must be YYYYMMDD, got: {run_date!r}"
 
     def test_execution_path_is_valid(self, results_json: dict[str, Any]) -> None:
         """execution_path must be one of the four honest verdict values.
@@ -147,9 +143,7 @@ class TestExp303Schema:
             f"execution_path must be one of {VALID_EXECUTION_PATHS}, got: {path!r}"
         )
 
-    def test_execution_path_matches_honest_verdict(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_execution_path_matches_honest_verdict(self, results_json: dict[str, Any]) -> None:
         """execution_path must equal honest_verdict (they are the same classification).
 
         Spec: REQ-PRED-003 — single source of truth for outcome label.
@@ -164,9 +158,7 @@ class TestExp303Schema:
 
         Spec: SCENARIO-EXP303-A
         """
-        assert isinstance(results_json["prereq_check"], dict), (
-            "prereq_check must be a dict"
-        )
+        assert isinstance(results_json["prereq_check"], dict), "prereq_check must be a dict"
 
     def test_inference_result_type(self, results_json: dict[str, Any]) -> None:
         """inference_result must be None or a dict.
@@ -200,9 +192,7 @@ class TestPrereqCheck:
     Spec: SCENARIO-EXP303-A
     """
 
-    def test_prereq_check_has_required_keys(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_prereq_check_has_required_keys(self, results_json: dict[str, Any]) -> None:
         """prereq_check must contain all required detection fields.
 
         Spec: SCENARIO-EXP303-A
@@ -241,9 +231,7 @@ class TestPrereqCheck:
             f"cmake_sufficient must be bool, got: {type(pc['cmake_sufficient'])}"
         )
 
-    def test_install_command_present_when_ninja_missing(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_install_command_present_when_ninja_missing(self, results_json: dict[str, Any]) -> None:
         """When ninja_installed is False, ninja_install_command must be present.
 
         Spec: SCENARIO-EXP303-A — blocked artifact names install command.
@@ -269,9 +257,7 @@ class TestPrereqCheck:
                 "openblas_install_command must be non-empty string when openblas missing"
             )
 
-    def test_blocked_prereq_when_prereqs_missing(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_blocked_prereq_when_prereqs_missing(self, results_json: dict[str, Any]) -> None:
         """When ninja or openblas is False, execution_path must be blocked_prereq.
 
         Spec: SCENARIO-EXP303-A — prereq failure determines path immediately.
@@ -279,8 +265,7 @@ class TestPrereqCheck:
         pc = results_json["prereq_check"]
         if not pc["ninja_installed"] or not pc["openblas_installed"]:
             assert results_json["execution_path"] == "blocked_prereq", (
-                f"Missing prereq must yield blocked_prereq, "
-                f"got: {results_json['execution_path']!r}"
+                f"Missing prereq must yield blocked_prereq, got: {results_json['execution_path']!r}"
             )
 
 
@@ -301,9 +286,7 @@ class TestBuildOutcome:
         if results_json["build_outcome"] is None:
             pytest.skip("build_outcome is None — build was not attempted")
 
-    def test_build_outcome_has_required_keys(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_build_outcome_has_required_keys(self, results_json: dict[str, Any]) -> None:
         """build_outcome must have success and duration_seconds.
 
         Spec: SCENARIO-EXP303-B
@@ -322,9 +305,7 @@ class TestBuildOutcome:
             f"build_outcome.success must be bool, got: {type(bo['success'])}"
         )
 
-    def test_duration_seconds_is_non_negative(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_duration_seconds_is_non_negative(self, results_json: dict[str, Any]) -> None:
         """build_outcome.duration_seconds must be a non-negative number.
 
         Spec: SCENARIO-EXP303-B
@@ -335,9 +316,7 @@ class TestBuildOutcome:
             f"build_outcome.duration_seconds must be >= 0, got: {dur}"
         )
 
-    def test_error_summary_present_on_failure(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_error_summary_present_on_failure(self, results_json: dict[str, Any]) -> None:
         """When build failed, error_summary must be a non-empty string.
 
         Spec: SCENARIO-EXP303-B — exact failure reason required for diagnosis.
@@ -361,9 +340,7 @@ class TestBuildOutcome:
                 f"build_log_tail must be a list of 1-50 lines, got: {len(tail)}"
             )
             for line in tail:
-                assert isinstance(line, str), (
-                    "Each build_log_tail entry must be a string"
-                )
+                assert isinstance(line, str), "Each build_log_tail entry must be a string"
 
     def test_timeout_flag_when_timed_out(self, results_json: dict[str, Any]) -> None:
         """When build timed out, build_outcome.timeout_exceeded must be True.
@@ -372,13 +349,9 @@ class TestBuildOutcome:
         """
         bo = results_json["build_outcome"]
         if bo.get("timeout_exceeded"):
-            assert bo["timeout_exceeded"] is True, (
-                "timeout_exceeded must be boolean True"
-            )
+            assert bo["timeout_exceeded"] is True, "timeout_exceeded must be boolean True"
 
-    def test_blocked_build_when_build_failed(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_blocked_build_when_build_failed(self, results_json: dict[str, Any]) -> None:
         """When build_outcome.success is False, execution_path must be blocked_build.
 
         Spec: SCENARIO-EXP303-B
@@ -417,9 +390,7 @@ class TestInferenceResult:
             "inference_result must be a dict when execution_path='npu_working'"
         )
 
-    def test_inference_result_has_required_keys(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_inference_result_has_required_keys(self, results_json: dict[str, Any]) -> None:
         """inference_result must have all required benchmark fields.
 
         Spec: SCENARIO-EXP303-C
@@ -434,9 +405,7 @@ class TestInferenceResult:
         Spec: SCENARIO-EXP303-C — no fabricated latency.
         """
         lat = results_json["inference_result"]["npu_latency_us"]
-        assert isinstance(lat, (int, float)) and lat > 0, (
-            f"npu_latency_us must be > 0, got: {lat}"
-        )
+        assert isinstance(lat, (int, float)) and lat > 0, f"npu_latency_us must be > 0, got: {lat}"
 
     def test_cpu_latency_us_is_positive(self, results_json: dict[str, Any]) -> None:
         """cpu_latency_us must be a positive float (measured in same run).
@@ -444,9 +413,7 @@ class TestInferenceResult:
         Spec: SCENARIO-EXP303-C — CPU baseline measured alongside NPU.
         """
         lat = results_json["inference_result"]["cpu_latency_us"]
-        assert isinstance(lat, (int, float)) and lat > 0, (
-            f"cpu_latency_us must be > 0, got: {lat}"
-        )
+        assert isinstance(lat, (int, float)) and lat > 0, f"cpu_latency_us must be > 0, got: {lat}"
 
     def test_speedup_factor_consistent(self, results_json: dict[str, Any]) -> None:
         """speedup_factor must equal cpu_latency_us / npu_latency_us.
@@ -459,8 +426,7 @@ class TestInferenceResult:
         reported = ir["speedup_factor"]
         expected = cpu_us / npu_us
         assert abs(reported - expected) < 0.05, (
-            f"speedup_factor {reported:.4f} inconsistent with "
-            f"{cpu_us}/{npu_us} = {expected:.4f}"
+            f"speedup_factor {reported:.4f} inconsistent with {cpu_us}/{npu_us} = {expected:.4f}"
         )
 
     def test_timed_calls_at_least_100(self, results_json: dict[str, Any]) -> None:
@@ -469,9 +435,7 @@ class TestInferenceResult:
         Spec: SCENARIO-EXP303-C
         """
         timed = results_json["inference_result"]["timed_calls"]
-        assert isinstance(timed, int) and timed >= 100, (
-            f"timed_calls must be >= 100, got: {timed}"
-        )
+        assert isinstance(timed, int) and timed >= 100, f"timed_calls must be >= 100, got: {timed}"
 
     def test_provider_used_contains_vitisai(self, results_json: dict[str, Any]) -> None:
         """provider_used must reference VitisAI when NPU is working.
@@ -496,9 +460,7 @@ class TestNoFabricatedLatency:
         if results_json.get("execution_path") not in BLOCKED_EXECUTION_PATHS:
             pytest.skip("execution_path is not a blocked path")
 
-    def test_inference_result_is_none_on_blocked_path(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_inference_result_is_none_on_blocked_path(self, results_json: dict[str, Any]) -> None:
         """inference_result must be None on any blocked execution path.
 
         Spec: REQ-PRED-003 (honest labeling invariant), SCENARIO-EXP303-D

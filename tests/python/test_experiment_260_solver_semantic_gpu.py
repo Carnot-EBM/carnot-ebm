@@ -60,6 +60,7 @@ RUN_DATE = _mod.RUN_DATE
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_case(case_id: str, **kw: Any) -> dict[str, Any]:
     base: dict[str, Any] = {
         "case_id": case_id,
@@ -72,9 +73,15 @@ def _make_case(case_id: str, **kw: Any) -> dict[str, Any]:
     return base
 
 
-def _make_run(case_id: str, correct: bool = True, flagged: bool = False,
-              repaired: bool = False, n_repairs: int = 0, formal_claims: list | None = None,
-              accepted_correct: bool | None = None) -> dict[str, Any]:
+def _make_run(
+    case_id: str,
+    correct: bool = True,
+    flagged: bool = False,
+    repaired: bool = False,
+    n_repairs: int = 0,
+    formal_claims: list | None = None,
+    accepted_correct: bool | None = None,
+) -> dict[str, Any]:
     resolved_ac = accepted_correct if accepted_correct is not None else (correct and not flagged)
     return {
         "case_id": case_id,
@@ -131,13 +138,16 @@ class TestCheckpointResume:
         """SCENARIO-VERIFY-036: completed cases are not re-executed."""
         path = tmp_path / "cell.json"
         case_ids = ["c1", "c2"]
-        save_checkpoint(path, {
-            "benchmark": "gsm8k_semantic",
-            "model_name": "Qwen3.5-0.8B",
-            "mode": "baseline",
-            "case_ids": case_ids,
-            "results_by_case": {"c1": {"correct": True}},
-        })
+        save_checkpoint(
+            path,
+            {
+                "benchmark": "gsm8k_semantic",
+                "model_name": "Qwen3.5-0.8B",
+                "mode": "baseline",
+                "case_ids": case_ids,
+                "results_by_case": {"c1": {"correct": True}},
+            },
+        )
         result = load_checkpoint(path, case_ids)
         assert "c1" in result["results_by_case"]
         assert "c2" not in result["results_by_case"]
@@ -145,10 +155,13 @@ class TestCheckpointResume:
     def test_mismatched_case_ids_discards_checkpoint(self, tmp_path: Path) -> None:
         """Stale checkpoint (different cohort) returns empty state."""
         path = tmp_path / "cell.json"
-        save_checkpoint(path, {
-            "case_ids": ["old1", "old2"],
-            "results_by_case": {"old1": {"correct": True}},
-        })
+        save_checkpoint(
+            path,
+            {
+                "case_ids": ["old1", "old2"],
+                "results_by_case": {"old1": {"correct": True}},
+            },
+        )
         result = load_checkpoint(path, ["new1", "new2"])
         assert result["results_by_case"] == {}
 
@@ -161,8 +174,9 @@ class TestCheckpointResume:
 
     def test_checkpoint_path_matches_exp246_format(self, tmp_path: Path) -> None:
         """Checkpoint filenames must match the Exp 246 pattern so runs resume."""
-        path = checkpoint_path_fn(tmp_path, benchmark="gsm8k_semantic",
-                                  model_name="Qwen3.5-0.8B", mode="baseline")
+        path = checkpoint_path_fn(
+            tmp_path, benchmark="gsm8k_semantic", model_name="Qwen3.5-0.8B", mode="baseline"
+        )
         assert path.name == "gsm8k_semantic__qwen3_5-0_8b__baseline.json"
 
     def test_resume_from_exp246_checkpoint_dir(self, tmp_path: Path) -> None:
@@ -175,8 +189,9 @@ class TestCheckpointResume:
             "case_ids": case_ids,
             "results_by_case": {"gsm8k-1": {"correct": False}, "gsm8k-2": {"correct": True}},
         }
-        ckpt = checkpoint_path_fn(tmp_path, benchmark="gsm8k_semantic",
-                                  model_name="Qwen3.5-0.8B", mode="baseline")
+        ckpt = checkpoint_path_fn(
+            tmp_path, benchmark="gsm8k_semantic", model_name="Qwen3.5-0.8B", mode="baseline"
+        )
         save_checkpoint(ckpt, payload)
         loaded = load_checkpoint(ckpt, case_ids)
         assert len(loaded["results_by_case"]) == 2
@@ -223,8 +238,12 @@ class TestRouteSummary:
     def test_collect_claims_from_runs(self) -> None:
         runs = [
             {"formal_claims": [{"route": "arithmetic", "verdict": "supported"}]},
-            {"formal_claims": [{"route": "cardinality", "verdict": "abstain"},
-                               {"route": "set_membership", "verdict": "violated"}]},
+            {
+                "formal_claims": [
+                    {"route": "cardinality", "verdict": "abstain"},
+                    {"route": "set_membership", "verdict": "violated"},
+                ]
+            },
             {"formal_claims": []},
         ]
         claims = collect_all_claims_from_runs(runs)
@@ -240,9 +259,7 @@ class TestSummarizeBenchmarkRuns:
     """Stats aggregation produces correct values for paired-run analysis."""
 
     def test_empty_runs(self) -> None:
-        s = summarize_benchmark_runs(
-            baseline_runs=[], verify_only_runs=[], verify_repair_runs=[]
-        )
+        s = summarize_benchmark_runs(baseline_runs=[], verify_only_runs=[], verify_repair_runs=[])
         assert s["baseline"]["n_cases"] == 0
         assert s["baseline"]["accuracy"] == 0.0
 
@@ -291,11 +308,19 @@ class TestArtifactSchema:
         payload = build_artifact_payload(
             output_path=tmp_path / "out.json",
             gsm8k_cohort=[],
-            gsm8k_cohort_meta={"source_artifact": "a", "source_experiment": 235,
-                               "sample_seed": 218, "case_count": 0},
+            gsm8k_cohort_meta={
+                "source_artifact": "a",
+                "source_experiment": 235,
+                "sample_seed": 218,
+                "case_count": 0,
+            },
             constraint_ir_cohort=[],
-            constraint_ir_cohort_meta={"source_artifact": "b", "source_experiment": 221,
-                                       "sample_seed": 218, "case_count": 0},
+            constraint_ir_cohort_meta={
+                "source_artifact": "b",
+                "source_experiment": 221,
+                "sample_seed": 218,
+                "case_count": 0,
+            },
             gsm8k_paired_runs=[],
             constraint_ir_paired_runs=[],
             gsm8k_route_summary=build_route_summary([]),
@@ -313,8 +338,13 @@ class TestArtifactSchema:
             comparison_block={},
         )
         required_keys = [
-            "experiment", "title", "run_date", "schema", "metadata",
-            "benchmarks", "comparison",
+            "experiment",
+            "title",
+            "run_date",
+            "schema",
+            "metadata",
+            "benchmarks",
+            "comparison",
         ]
         for key in required_keys:
             assert key in payload, f"Missing key: {key}"
@@ -322,18 +352,32 @@ class TestArtifactSchema:
     def test_experiment_number(self, tmp_path: Path) -> None:
         payload = build_artifact_payload(
             output_path=tmp_path / "out.json",
-            gsm8k_cohort=[], gsm8k_cohort_meta={"source_artifact": "a",
-                "source_experiment": 235, "sample_seed": 218, "case_count": 0},
-            constraint_ir_cohort=[], constraint_ir_cohort_meta={"source_artifact": "b",
-                "source_experiment": 221, "sample_seed": 218, "case_count": 0},
-            gsm8k_paired_runs=[], constraint_ir_paired_runs=[],
+            gsm8k_cohort=[],
+            gsm8k_cohort_meta={
+                "source_artifact": "a",
+                "source_experiment": 235,
+                "sample_seed": 218,
+                "case_count": 0,
+            },
+            constraint_ir_cohort=[],
+            constraint_ir_cohort_meta={
+                "source_artifact": "b",
+                "source_experiment": 221,
+                "sample_seed": 218,
+                "case_count": 0,
+            },
+            gsm8k_paired_runs=[],
+            constraint_ir_paired_runs=[],
             gsm8k_route_summary=build_route_summary([]),
             constraint_ir_route_summary=build_route_summary([]),
             gsm8k_statistics=self._empty_stats(),
             constraint_ir_statistics=self._empty_stats(),
-            started_at="2026-04-13T00:00:00Z", finished_at="2026-04-13T01:00:00Z",
-            runtime_seconds=0.0, checkpoint_dir=tmp_path / "ckpts",
-            max_repairs=3, inference_mode="simulated",
+            started_at="2026-04-13T00:00:00Z",
+            finished_at="2026-04-13T01:00:00Z",
+            runtime_seconds=0.0,
+            checkpoint_dir=tmp_path / "ckpts",
+            max_repairs=3,
+            inference_mode="simulated",
             gpu_fallback=False,
             throughput_report={"target_seconds_per_case": 3.0, "per_model": {}},
             comparison_block={},
@@ -344,18 +388,32 @@ class TestArtifactSchema:
     def test_metadata_has_gpu_fallback_flag(self, tmp_path: Path) -> None:
         payload = build_artifact_payload(
             output_path=tmp_path / "out.json",
-            gsm8k_cohort=[], gsm8k_cohort_meta={"source_artifact": "a",
-                "source_experiment": 235, "sample_seed": 218, "case_count": 0},
-            constraint_ir_cohort=[], constraint_ir_cohort_meta={"source_artifact": "b",
-                "source_experiment": 221, "sample_seed": 218, "case_count": 0},
-            gsm8k_paired_runs=[], constraint_ir_paired_runs=[],
+            gsm8k_cohort=[],
+            gsm8k_cohort_meta={
+                "source_artifact": "a",
+                "source_experiment": 235,
+                "sample_seed": 218,
+                "case_count": 0,
+            },
+            constraint_ir_cohort=[],
+            constraint_ir_cohort_meta={
+                "source_artifact": "b",
+                "source_experiment": 221,
+                "sample_seed": 218,
+                "case_count": 0,
+            },
+            gsm8k_paired_runs=[],
+            constraint_ir_paired_runs=[],
             gsm8k_route_summary=build_route_summary([]),
             constraint_ir_route_summary=build_route_summary([]),
             gsm8k_statistics=self._empty_stats(),
             constraint_ir_statistics=self._empty_stats(),
-            started_at="2026-04-13T00:00:00Z", finished_at="2026-04-13T01:00:00Z",
-            runtime_seconds=0.0, checkpoint_dir=tmp_path / "ckpts",
-            max_repairs=3, inference_mode="live_cpu",
+            started_at="2026-04-13T00:00:00Z",
+            finished_at="2026-04-13T01:00:00Z",
+            runtime_seconds=0.0,
+            checkpoint_dir=tmp_path / "ckpts",
+            max_repairs=3,
+            inference_mode="live_cpu",
             gpu_fallback=True,
             throughput_report={"target_seconds_per_case": 3.0, "per_model": {}},
             comparison_block={},
@@ -454,15 +512,19 @@ class TestGPUHarnessIntegration:
         )
 
         cases = [{"case_id": "a"}, {"case_id": "b"}, {"case_id": "c"}]
-        ckpt = checkpoint_path_fn(tmp_path, benchmark="gsm8k_semantic",
-                                  model_name="TestModel", mode="baseline")
-        save_checkpoint(ckpt, {
-            "benchmark": "gsm8k_semantic",
-            "model_name": "TestModel",
-            "mode": "baseline",
-            "case_ids": ["a", "b", "c"],
-            "results_by_case": {"a": {"correct": True}},
-        })
+        ckpt = checkpoint_path_fn(
+            tmp_path, benchmark="gsm8k_semantic", model_name="TestModel", mode="baseline"
+        )
+        save_checkpoint(
+            ckpt,
+            {
+                "benchmark": "gsm8k_semantic",
+                "model_name": "TestModel",
+                "mode": "baseline",
+                "case_ids": ["a", "b", "c"],
+                "results_by_case": {"a": {"correct": True}},
+            },
+        )
 
         executed: list[str] = []
 

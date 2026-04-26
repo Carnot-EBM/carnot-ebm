@@ -60,9 +60,9 @@ system.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable
-
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # Result types
@@ -134,9 +134,14 @@ def check_distillation_has_real_teacher_time(artifact: dict[str, Any]) -> Invari
     # Only applies to verdicts that claim distillation happened.
     if "distillation_" not in verdict:
         return InvariantResult(passed=True, invariant_name=name)
-    if any(marker in verdict for marker in (
-        "blocked_on", "invariant_violated", "corpus_not_built",
-    )):
+    if any(
+        marker in verdict
+        for marker in (
+            "blocked_on",
+            "invariant_violated",
+            "corpus_not_built",
+        )
+    ):
         return InvariantResult(passed=True, invariant_name=name)
 
     corpus_size = _resolve_corpus_size(artifact)
@@ -145,20 +150,23 @@ def check_distillation_has_real_teacher_time(artifact: dict[str, Any]) -> Invari
 
     if teacher_s is None:
         return InvariantResult(
-            passed=False, invariant_name=name,
+            passed=False,
+            invariant_name=name,
             reason=(
                 "Verdict claims distillation but 'teacher_inference_duration_s' "
                 "is missing from the artifact.  Every real distillation run must "
                 "record how long the teacher model actually ran."
             ),
             suggested_verdict=_with_invariant_violation(
-                verdict, "distillation_invariant_violated_no_teacher_time_field",
+                verdict,
+                "distillation_invariant_violated_no_teacher_time_field",
             ),
             evidence={"corpus_size": corpus_size, "floor_s": floor_s},
         )
     if teacher_s < floor_s:
         return InvariantResult(
-            passed=False, invariant_name=name,
+            passed=False,
+            invariant_name=name,
             reason=(
                 f"Verdict claims distillation but teacher_inference_duration_s="
                 f"{teacher_s:.1f}s is below the physical-plausibility floor of "
@@ -167,7 +175,8 @@ def check_distillation_has_real_teacher_time(artifact: dict[str, Any]) -> Invari
                 f"labels almost certainly came from a non-teacher source."
             ),
             suggested_verdict=_with_invariant_violation(
-                verdict, "distillation_invariant_violated_teacher_too_fast",
+                verdict,
+                "distillation_invariant_violated_teacher_too_fast",
             ),
             evidence={
                 "teacher_inference_duration_s": teacher_s,
@@ -198,22 +207,28 @@ def check_publishable_has_nonzero_tp(artifact: dict[str, Any]) -> InvariantResul
     verdict = str(artifact.get("honest_verdict", ""))
     if "verified_publishable" not in verdict:
         return InvariantResult(passed=True, invariant_name=name)
-    if any(marker in verdict for marker in (
-        "blocked_on", "invariant_violated",
-    )):
+    if any(
+        marker in verdict
+        for marker in (
+            "blocked_on",
+            "invariant_violated",
+        )
+    ):
         return InvariantResult(passed=True, invariant_name=name)
 
     per_ds_cm = artifact.get("per_dataset_cm")
     if per_ds_cm is None:
         return InvariantResult(
-            passed=False, invariant_name=name,
+            passed=False,
+            invariant_name=name,
             reason=(
                 "Verdict claims publishable but per_dataset_cm (confusion "
                 "matrices) is missing.  Publishing a classifier requires "
                 "evidence it actually fires at its threshold."
             ),
             suggested_verdict=_with_invariant_violation(
-                verdict, "publishable_invariant_violated_no_confusion_matrix",
+                verdict,
+                "publishable_invariant_violated_no_confusion_matrix",
             ),
         )
 
@@ -225,7 +240,8 @@ def check_publishable_has_nonzero_tp(artifact: dict[str, Any]) -> InvariantResul
         total_tp += tp
     if total_tp == 0:
         return InvariantResult(
-            passed=False, invariant_name=name,
+            passed=False,
+            invariant_name=name,
             reason=(
                 f"Verdict claims publishable but classifier has zero true "
                 f"positives across all datasets: {per_ds_tp}.  At the decision "
@@ -234,7 +250,8 @@ def check_publishable_has_nonzero_tp(artifact: dict[str, Any]) -> InvariantResul
                 f"without threshold calibration."
             ),
             suggested_verdict=_with_invariant_violation(
-                verdict, "publishable_invariant_violated_zero_true_positives",
+                verdict,
+                "publishable_invariant_violated_zero_true_positives",
             ),
             evidence={"per_dataset_tp": per_ds_tp, "total_tp": total_tp},
         )
@@ -266,10 +283,7 @@ def check_ood_not_dramatically_better_than_indist(
     """
     name = "ood_not_dramatically_better_than_indist"
     indist = artifact.get("training_distribution_auroc")
-    ood = (
-        artifact.get("mean_cross_dataset_auroc")
-        or artifact.get("mean_auroc")
-    )
+    ood = artifact.get("mean_cross_dataset_auroc") or artifact.get("mean_auroc")
     if indist is None or ood is None:
         # Invariant does not apply when either field is missing.
         return InvariantResult(passed=True, invariant_name=name)
@@ -278,7 +292,8 @@ def check_ood_not_dramatically_better_than_indist(
     if excess > _OOD_EXCESS_TOLERANCE:
         verdict = str(artifact.get("honest_verdict", ""))
         return InvariantResult(
-            passed=False, invariant_name=name,
+            passed=False,
+            invariant_name=name,
             reason=(
                 f"Cross-dataset AUROC ({ood:.4f}) exceeds training-distribution "
                 f"AUROC ({indist:.4f}) by {excess:+.4f}, which is "
@@ -288,7 +303,8 @@ def check_ood_not_dramatically_better_than_indist(
                 f"model latched onto."
             ),
             suggested_verdict=_with_invariant_violation(
-                verdict, "generalization_invariant_violated_ood_exceeds_indist",
+                verdict,
+                "generalization_invariant_violated_ood_exceeds_indist",
             ),
             evidence={
                 "training_distribution_auroc": indist,
@@ -332,9 +348,13 @@ def check_vr_positive_has_plausible_baseline(
     asserts_positive = any(t in verdict for t in triggers)
     if not (is_vr_verdict and asserts_positive):
         return InvariantResult(passed=True, invariant_name=name)
-    if any(marker in verdict for marker in (
-        "blocked_on", "invariant_violated",
-    )):
+    if any(
+        marker in verdict
+        for marker in (
+            "blocked_on",
+            "invariant_violated",
+        )
+    ):
         return InvariantResult(passed=True, invariant_name=name)
 
     baseline = artifact.get("baseline_accuracy")
@@ -346,18 +366,20 @@ def check_vr_positive_has_plausible_baseline(
     if baseline < _VR_BASELINE_FLOOR:
         n_questions = artifact.get("n_questions") or artifact.get("n_test")
         return InvariantResult(
-            passed=False, invariant_name=name,
+            passed=False,
+            invariant_name=name,
             reason=(
                 f"VR-positive verdict with baseline_accuracy={baseline:.3f} "
                 f"is implausible — modern LLMs score at least "
-                f"{_VR_BASELINE_FLOOR*100:.0f}% on GSM8K-class tasks without "
+                f"{_VR_BASELINE_FLOOR * 100:.0f}% on GSM8K-class tasks without "
                 f"special prompting.  A near-zero baseline indicates the "
                 f"baseline code path is broken (wrong prompt template, "
                 f"grader regex mismatch, or silent short-circuit), not "
                 f"that the repair improved reasoning."
             ),
             suggested_verdict=_with_invariant_violation(
-                verdict, "vr_invariant_violated_baseline_implausibly_low",
+                verdict,
+                "vr_invariant_violated_baseline_implausibly_low",
             ),
             evidence={
                 "baseline_accuracy": baseline,
@@ -385,9 +407,9 @@ _LABELER_AGREEMENT_FLOOR = 0.05
 # label_origin_A, label_origin_B).  Add more patterns as experiments
 # introduce new labeler combinations.
 _AGREEMENT_FIELDS = [
-    ("pddl_z3_agreement_rate",     "PDDL", "Z3"),
+    ("pddl_z3_agreement_rate", "PDDL", "Z3"),
     ("teacher_vs_source_agreement_rate", "teacher", "source"),
-    ("labeler_agreement_rate",     "labeler_A", "labeler_B"),
+    ("labeler_agreement_rate", "labeler_A", "labeler_B"),
 ]
 
 
@@ -421,13 +443,20 @@ def check_labeler_agreement_nonzero(artifact: dict[str, Any]) -> InvariantResult
         if rate_f < _LABELER_AGREEMENT_FLOOR:
             verdict = str(artifact.get("honest_verdict", ""))
             # Skip if already flagged as a known-negative verdict.
-            if any(marker in verdict for marker in (
-                "blocked_on", "invariant_violated", "below_threshold",
-                "no_improvement", "still_below",
-            )):
+            if any(
+                marker in verdict
+                for marker in (
+                    "blocked_on",
+                    "invariant_violated",
+                    "below_threshold",
+                    "no_improvement",
+                    "still_below",
+                )
+            ):
                 return InvariantResult(passed=True, invariant_name=name)
             return InvariantResult(
-                passed=False, invariant_name=name,
+                passed=False,
+                invariant_name=name,
                 reason=(
                     f"Artifact reports {field}={rate_f:.3f} between '{origin_a}' "
                     f"and '{origin_b}' labelers, below the floor {_LABELER_AGREEMENT_FLOOR}.  "
@@ -436,7 +465,8 @@ def check_labeler_agreement_nonzero(artifact: dict[str, Any]) -> InvariantResult
                     f"corpus learns from pure noise."
                 ),
                 suggested_verdict=_with_invariant_violation(
-                    verdict, "labeler_agreement_invariant_violated_corpus_is_noise",
+                    verdict,
+                    "labeler_agreement_invariant_violated_corpus_is_noise",
                 ),
                 evidence={
                     "agreement_rate": rate_f,

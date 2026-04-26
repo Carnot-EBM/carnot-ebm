@@ -150,11 +150,13 @@ def _make_number_checker(expected: int | float) -> Any:
         each expected value. The checker extracts the last number from the
         response text and compares it to the expected value.
     """
+
     def checker(ans: str) -> bool:
         extracted = _extract_number(ans)
         if extracted is None:
             return False
         return int(extracted) == int(expected)
+
     return checker
 
 
@@ -165,9 +167,11 @@ def _make_keyword_checker(keywords: list[str]) -> Any:
         Factual and logic answers are checked by case-insensitive substring match.
         Multiple keywords allow for alternate spellings or formats.
     """
+
     def checker(ans: str) -> bool:
         ans_lower = ans.lower()
         return any(kw.lower() in ans_lower for kw in keywords)
+
     return checker
 
 
@@ -179,11 +183,13 @@ def _make_code_checker(keywords: list[str]) -> Any:
         A code answer is "correct" if it contains 'def ' (a function definition)
         AND at least one of the expected keywords. This is a heuristic proxy.
     """
+
     def checker(ans: str) -> bool:
         if "def " not in ans:
             return False
         ans_lower = ans.lower()
         return any(kw.lower() in ans_lower for kw in keywords)
+
     return checker
 
 
@@ -210,12 +216,14 @@ def generate_arithmetic_questions(n: int = 50, seed: int = 93) -> list[dict[str,
         else:
             a, b = rng.randint(10, 999), rng.randint(10, 999)
         answer = op_fn(a, b)
-        questions.append({
-            "domain": "arithmetic",
-            "question": f"What is {a} {op_sym} {b}?",
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": f"What is {a} {op_sym} {b}?",
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+            }
+        )
 
     # --- 15 multi-step expressions ---
     for i in range(15):
@@ -230,22 +238,30 @@ def generate_arithmetic_questions(n: int = 50, seed: int = 93) -> list[dict[str,
         else:
             q = f"What is {a} + {b} - {c}?"
             answer = a + b - c
-        questions.append({
-            "domain": "arithmetic",
-            "question": q,
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": q,
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+            }
+        )
 
     # --- 15 word problems ---
     templates = [
-        ("A store has {a} items. They sell {b} and receive {c}. How many items remain?",
-         lambda a, b, c: a - b + c),
-        ("A classroom has {a} students. {b} leave and {c} arrive. How many now?",
-         lambda a, b, c: a - b + c),
-        ("A baker makes {a} loaves in the morning and {b} in the afternoon. "
-         "If {c} are sold, how many remain?",
-         lambda a, b, c: a + b - c),
+        (
+            "A store has {a} items. They sell {b} and receive {c}. How many items remain?",
+            lambda a, b, c: a - b + c,
+        ),
+        (
+            "A classroom has {a} students. {b} leave and {c} arrive. How many now?",
+            lambda a, b, c: a - b + c,
+        ),
+        (
+            "A baker makes {a} loaves in the morning and {b} in the afternoon. "
+            "If {c} are sold, how many remain?",
+            lambda a, b, c: a + b - c,
+        ),
     ]
     for i in range(15):
         tmpl, fn = templates[i % len(templates)]
@@ -253,12 +269,14 @@ def generate_arithmetic_questions(n: int = 50, seed: int = 93) -> list[dict[str,
         b = rng.randint(1, a // 2)
         c = rng.randint(1, a // 2)
         answer = fn(a, b, c)
-        questions.append({
-            "domain": "arithmetic",
-            "question": tmpl.format(a=a, b=b, c=c),
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": tmpl.format(a=a, b=b, c=c),
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+            }
+        )
 
     return questions[:n]
 
@@ -331,13 +349,15 @@ def generate_code_questions(n: int = 50, seed: int = 93) -> list[dict[str, Any]]
 
     questions: list[dict[str, Any]] = []
     for desc, keywords in selected:
-        questions.append({
-            "domain": "code",
-            "question": f"Write a Python function to {desc}.",
-            "ground_truth": f"def {desc.split()[0]}",
-            "keywords": keywords,
-            "check_answer": _make_code_checker(keywords),
-        })
+        questions.append(
+            {
+                "domain": "code",
+                "question": f"Write a Python function to {desc}.",
+                "ground_truth": f"def {desc.split()[0]}",
+                "keywords": keywords,
+                "check_answer": _make_code_checker(keywords),
+            }
+        )
     return questions[:n]
 
 
@@ -353,39 +373,61 @@ def generate_logic_questions(n: int = 50, seed: int = 93) -> list[dict[str, Any]
     questions: list[dict[str, Any]] = []
 
     categories = [
-        ("mammals", "animals"), ("dogs", "mammals"), ("birds", "animals"),
-        ("roses", "flowers"), ("oaks", "trees"), ("salmon", "fish"),
-        ("apples", "fruits"), ("cars", "vehicles"), ("novels", "books"),
-        ("triangles", "shapes"), ("violins", "instruments"), ("gold", "metals"),
+        ("mammals", "animals"),
+        ("dogs", "mammals"),
+        ("birds", "animals"),
+        ("roses", "flowers"),
+        ("oaks", "trees"),
+        ("salmon", "fish"),
+        ("apples", "fruits"),
+        ("cars", "vehicles"),
+        ("novels", "books"),
+        ("triangles", "shapes"),
+        ("violins", "instruments"),
+        ("gold", "metals"),
     ]
     instances = [
-        ("Rex", "dogs"), ("Tweety", "birds"), ("Nemo", "salmon"),
-        ("Bessie", "mammals"), ("Fido", "dogs"), ("Polly", "birds"),
+        ("Rex", "dogs"),
+        ("Tweety", "birds"),
+        ("Nemo", "salmon"),
+        ("Bessie", "mammals"),
+        ("Fido", "dogs"),
+        ("Polly", "birds"),
     ]
 
     # --- 18 valid syllogisms (answer: yes) ---
     for i in range(18):
         cat, supercat = categories[i % len(categories)]
         inst_name = instances[i % len(instances)][0]
-        q = (f"All {cat} are {supercat}. {inst_name} is a {cat}. "
-             f"Is {inst_name} a {supercat}? Answer yes or no.")
-        questions.append({
-            "domain": "logic", "question": q,
-            "ground_truth": "yes",
-            "check_answer": lambda ans: "yes" in ans.lower(),
-        })
+        q = (
+            f"All {cat} are {supercat}. {inst_name} is a {cat}. "
+            f"Is {inst_name} a {supercat}? Answer yes or no."
+        )
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "ground_truth": "yes",
+                "check_answer": lambda ans: "yes" in ans.lower(),
+            }
+        )
 
     # --- 12 invalid syllogisms (answer: no) ---
     for i in range(12):
         cat, supercat = categories[i % len(categories)]
         inst_name = instances[i % len(instances)][0]
-        q = (f"All {cat} are {supercat}. {inst_name} is a {supercat}. "
-             f"Is {inst_name} necessarily a {cat}? Answer yes or no.")
-        questions.append({
-            "domain": "logic", "question": q,
-            "ground_truth": "no",
-            "check_answer": lambda ans: "no" in ans.lower(),
-        })
+        q = (
+            f"All {cat} are {supercat}. {inst_name} is a {supercat}. "
+            f"Is {inst_name} necessarily a {cat}? Answer yes or no."
+        )
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "ground_truth": "no",
+                "check_answer": lambda ans: "no" in ans.lower(),
+            }
+        )
 
     # --- 10 modus ponens / tollens ---
     propositions = [
@@ -398,37 +440,47 @@ def generate_logic_questions(n: int = 50, seed: int = 93) -> list[dict[str, Any]
     for i in range(10):
         p, q = propositions[i % len(propositions)]
         if i % 2 == 0:
-            q_text = (f"If {p}, then {q}. {p.capitalize()}. "
-                      f"Does {q}? Answer yes or no.")
+            q_text = f"If {p}, then {q}. {p.capitalize()}. Does {q}? Answer yes or no."
             expected = "yes"
         else:
-            q_text = (f"If {p}, then {q}. {q.capitalize()} did NOT happen. "
-                      f"Did {p}? Answer yes or no.")
+            q_text = (
+                f"If {p}, then {q}. {q.capitalize()} did NOT happen. Did {p}? Answer yes or no."
+            )
             expected = "no"
-        questions.append({
-            "domain": "logic", "question": q_text,
-            "ground_truth": expected,
-            "check_answer": _make_keyword_checker([expected]),
-        })
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q_text,
+                "ground_truth": expected,
+                "check_answer": _make_keyword_checker([expected]),
+            }
+        )
 
     # --- 10 contradiction detection ---
     for i in range(10):
         cat, supercat = categories[i % len(categories)]
         if i % 2 == 0:
-            q_text = (f"Statement A: 'All {cat} are {supercat}.' "
-                      f"Statement B: 'Some {cat} are not {supercat}.' "
-                      f"Are these statements consistent? Answer yes or no.")
+            q_text = (
+                f"Statement A: 'All {cat} are {supercat}.' "
+                f"Statement B: 'Some {cat} are not {supercat}.' "
+                f"Are these statements consistent? Answer yes or no."
+            )
             expected = "no"
         else:
-            q_text = (f"Statement A: 'Some {cat} are {supercat}.' "
-                      f"Statement B: 'Some {cat} are not {supercat}.' "
-                      f"Are these statements consistent? Answer yes or no.")
+            q_text = (
+                f"Statement A: 'Some {cat} are {supercat}.' "
+                f"Statement B: 'Some {cat} are not {supercat}.' "
+                f"Are these statements consistent? Answer yes or no."
+            )
             expected = "yes"
-        questions.append({
-            "domain": "logic", "question": q_text,
-            "ground_truth": expected,
-            "check_answer": _make_keyword_checker([expected]),
-        })
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q_text,
+                "ground_truth": expected,
+                "check_answer": _make_keyword_checker([expected]),
+            }
+        )
 
     rng.shuffle(questions)
     return questions[:n]
@@ -501,17 +553,21 @@ def generate_factual_questions(n: int = 50, seed: int = 93) -> list[dict[str, An
 
     questions: list[dict[str, Any]] = []
     for q_text, gt, kws in selected:
-        questions.append({
-            "domain": "factual",
-            "question": q_text,
-            "ground_truth": gt,
-            "check_answer": _make_keyword_checker(kws),
-        })
+        questions.append(
+            {
+                "domain": "factual",
+                "question": q_text,
+                "ground_truth": gt,
+                "check_answer": _make_keyword_checker(kws),
+            }
+        )
     return questions[:n]
 
 
 def _compute_depth(
-    node: int, adj: dict[int, list[int]], depth: dict[int, int],
+    node: int,
+    adj: dict[int, list[int]],
+    depth: dict[int, int],
 ) -> int:
     """Compute the depth (longest path from node to any leaf) in a DAG.
 
@@ -561,14 +617,19 @@ def generate_scheduling_questions(n: int = 50, seed: int = 93) -> list[dict[str,
         conflict_str = "; ".join(
             f"Meeting {a} and Meeting {b} cannot overlap" for a, b in conflicts
         )
-        q = (f"You have {n_meetings} meetings to schedule in {n_slots} time slots. "
-             f"Constraints: {conflict_str}. "
-             f"Can all meetings be scheduled without conflicts? Answer yes or no.")
-        questions.append({
-            "domain": "scheduling", "question": q,
-            "ground_truth": answer,
-            "check_answer": _make_keyword_checker([answer]),
-        })
+        q = (
+            f"You have {n_meetings} meetings to schedule in {n_slots} time slots. "
+            f"Constraints: {conflict_str}. "
+            f"Can all meetings be scheduled without conflicts? Answer yes or no."
+        )
+        questions.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "ground_truth": answer,
+                "check_answer": _make_keyword_checker([answer]),
+            }
+        )
 
     # --- 15 task dependency ordering ---
     for i in range(15):
@@ -578,9 +639,11 @@ def generate_scheduling_questions(n: int = 50, seed: int = 93) -> list[dict[str,
             dep = rng.randint(1, t - 1)
             deps.append((dep, t))
         dep_str = ", ".join(f"Task {a} must come before Task {b}" for a, b in deps)
-        q = (f"You have {n_tasks} tasks with these dependencies: {dep_str}. "
-             f"What is the minimum number of rounds needed if independent tasks "
-             f"can run in parallel?")
+        q = (
+            f"You have {n_tasks} tasks with these dependencies: {dep_str}. "
+            f"What is the minimum number of rounds needed if independent tasks "
+            f"can run in parallel?"
+        )
         adj: dict[int, list[int]] = {t: [] for t in range(1, n_tasks + 1)}
         for a, b in deps:
             adj[a].append(b)
@@ -589,11 +652,14 @@ def generate_scheduling_questions(n: int = 50, seed: int = 93) -> list[dict[str,
             if t not in depth:
                 _compute_depth(t, adj, depth)
         longest = max(depth.values()) if depth else 1
-        questions.append({
-            "domain": "scheduling", "question": q,
-            "ground_truth": str(longest),
-            "check_answer": _make_number_checker(longest),
-        })
+        questions.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "ground_truth": str(longest),
+                "check_answer": _make_number_checker(longest),
+            }
+        )
 
     # --- 15 resource allocation ---
     for i in range(15):
@@ -603,17 +669,20 @@ def generate_scheduling_questions(n: int = 50, seed: int = 93) -> list[dict[str,
         total_demand = sum(demands)
         fits = total_demand <= capacity
         answer = "yes" if fits else "no"
-        demand_str = ", ".join(
-            f"Task {j + 1} needs {d} units" for j, d in enumerate(demands)
+        demand_str = ", ".join(f"Task {j + 1} needs {d} units" for j, d in enumerate(demands))
+        q = (
+            f"A server has {capacity} units of capacity. "
+            f"Tasks: {demand_str}. "
+            f"Can all tasks run simultaneously? Answer yes or no."
         )
-        q = (f"A server has {capacity} units of capacity. "
-             f"Tasks: {demand_str}. "
-             f"Can all tasks run simultaneously? Answer yes or no.")
-        questions.append({
-            "domain": "scheduling", "question": q,
-            "ground_truth": answer,
-            "check_answer": _make_keyword_checker([answer]),
-        })
+        questions.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "ground_truth": answer,
+                "check_answer": _make_keyword_checker([answer]),
+            }
+        )
 
     rng.shuffle(questions)
     return questions[:n]
@@ -647,10 +716,12 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
             try:
                 print(f"    Loading {model_name} on {device}...")
                 tokenizer = AutoTokenizer.from_pretrained(
-                    model_name, trust_remote_code=config.get("trust_remote_code", True),
+                    model_name,
+                    trust_remote_code=config.get("trust_remote_code", True),
                 )
                 model = AutoModelForCausalLM.from_pretrained(
-                    model_name, trust_remote_code=config.get("trust_remote_code", True),
+                    model_name,
+                    trust_remote_code=config.get("trust_remote_code", True),
                     torch_dtype=torch.float16 if device == "cuda" else None,
                 )
                 if device == "cuda":
@@ -674,7 +745,9 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
                 try:
                     result = subprocess.run(
                         [sys.executable, "-c", smoke_script],
-                        timeout=60, capture_output=True, text=True,
+                        timeout=60,
+                        capture_output=True,
+                        text=True,
                     )
                     if "OK" in result.stdout:
                         print(f"    Smoke test passed. {config['name']} ready.")
@@ -702,7 +775,10 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
 
 
 def generate_with_llm(
-    prompt: str, tokenizer: Any, model: Any, device: str,
+    prompt: str,
+    tokenizer: Any,
+    model: Any,
+    device: str,
     max_new_tokens: int = 256,
 ) -> str:
     """Generate a response from a loaded HuggingFace model.
@@ -717,13 +793,17 @@ def generate_with_llm(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             text = prompt
@@ -734,12 +814,15 @@ def generate_with_llm(
 
     with torch.no_grad():
         outputs = model.generate(
-            **inputs, max_new_tokens=max_new_tokens, do_sample=False,
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            do_sample=False,
             pad_token_id=tokenizer.eos_token_id,
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:], skip_special_tokens=True,
+        outputs[0, inputs["input_ids"].shape[1] :],
+        skip_special_tokens=True,
     )
 
     if "</think>" in response:
@@ -772,7 +855,7 @@ def simulate_response(
     base_error = error_rates.get(domain, 0.2)
 
     # On repair iterations, reduce error rate (simulate constraint feedback helping).
-    effective_error = base_error * (0.4 ** iteration)
+    effective_error = base_error * (0.4**iteration)
     is_correct = rng.random() > effective_error
 
     if domain == "arithmetic":
@@ -791,9 +874,11 @@ def simulate_response(
         if is_correct:
             keywords = question.get("keywords", [])
             kw = keywords[0] if keywords else "pass"
-            return (f"```python\ndef {func_name}(x):\n"
-                    f"    # Implementation using {kw}\n"
-                    f"    return {kw}(x) if callable({kw}) else x\n```")
+            return (
+                f"```python\ndef {func_name}(x):\n"
+                f"    # Implementation using {kw}\n"
+                f"    return {kw}(x) if callable({kw}) else x\n```"
+            )
         else:
             return "The function would iterate over the input and return the result."
 
@@ -838,24 +923,29 @@ def build_prompt(question: str, domain: str) -> str:
         models (0.6-0.8B parameters).
     """
     if domain == "arithmetic":
-        return (f"Question: {question}\n"
-                f"Think step by step. Give the answer as a number.\n"
-                f"Format:\nAnswer: <number>")
+        return (
+            f"Question: {question}\n"
+            f"Think step by step. Give the answer as a number.\n"
+            f"Format:\nAnswer: <number>"
+        )
     elif domain == "code":
-        return (f"Question: {question}\n"
-                f"Write ONLY the Python function. No explanation.")
+        return f"Question: {question}\nWrite ONLY the Python function. No explanation."
     elif domain == "logic":
-        return (f"Question: {question}\n"
-                f"Think step by step. Give a clear answer.\n"
-                f"Format:\nAnswer: <your answer>")
+        return (
+            f"Question: {question}\n"
+            f"Think step by step. Give a clear answer.\n"
+            f"Format:\nAnswer: <your answer>"
+        )
     elif domain == "scheduling":
-        return (f"Question: {question}\n"
-                f"Think step by step about the constraints. Give a clear answer.\n"
-                f"Format:\nAnswer: <your answer>")
+        return (
+            f"Question: {question}\n"
+            f"Think step by step about the constraints. Give a clear answer.\n"
+            f"Format:\nAnswer: <your answer>"
+        )
     else:  # factual
-        return (f"Question: {question}\n"
-                f"Give a short, direct factual answer.\n"
-                f"Format:\nAnswer: <answer>")
+        return (
+            f"Question: {question}\nGive a short, direct factual answer.\nFormat:\nAnswer: <answer>"
+        )
 
 
 def extract_constraints(response: str, question: str, domain: str) -> list[dict]:
@@ -874,6 +964,7 @@ def extract_constraints(response: str, question: str, domain: str) -> list[dict]
             extract_code_constraints,
             extract_factual_constraints,
         )
+
         if domain == "arithmetic":
             return extract_arithmetic_constraints(response, question)
         elif domain == "logic":
@@ -903,30 +994,42 @@ def _extract_scheduling_constraints(response: str, question: str) -> list[dict]:
     constraints = []
     resp_lower = response.lower()
 
-    has_answer = ("yes" in resp_lower or "no" in resp_lower or
-                  bool(re.search(r"\d+", response)))
-    constraints.append({
-        "type": "scheduling_format",
-        "description": "Response contains a clear answer",
-        "satisfied": has_answer,
-    })
+    has_answer = "yes" in resp_lower or "no" in resp_lower or bool(re.search(r"\d+", response))
+    constraints.append(
+        {
+            "type": "scheduling_format",
+            "description": "Response contains a clear answer",
+            "satisfied": has_answer,
+        }
+    )
 
-    has_reasoning = any(kw in resp_lower for kw in [
-        "conflict", "constraint", "overlap", "capacity", "depend",
-        "before", "after", "parallel", "sequential", "slot",
-    ])
-    constraints.append({
-        "type": "scheduling_reasoning",
-        "description": "Response shows constraint reasoning",
-        "satisfied": has_reasoning,
-    })
+    has_reasoning = any(
+        kw in resp_lower
+        for kw in [
+            "conflict",
+            "constraint",
+            "overlap",
+            "capacity",
+            "depend",
+            "before",
+            "after",
+            "parallel",
+            "sequential",
+            "slot",
+        ]
+    )
+    constraints.append(
+        {
+            "type": "scheduling_reasoning",
+            "description": "Response shows constraint reasoning",
+            "satisfied": has_reasoning,
+        }
+    )
 
     return constraints
 
 
-def _extract_fallback_constraints(
-    response: str, question: str, domain: str
-) -> list[dict]:
+def _extract_fallback_constraints(response: str, question: str, domain: str) -> list[dict]:
     """Lightweight fallback constraint extraction when Exp 56 extractors unavailable.
 
     **Detailed explanation for engineers:**
@@ -940,52 +1043,70 @@ def _extract_fallback_constraints(
     if domain == "arithmetic":
         # Check: does the response contain a number?
         has_number = bool(re.search(r"-?\d+\.?\d*", response))
-        constraints.append({
-            "type": "arithmetic_format",
-            "description": "Response contains a numeric answer",
-            "satisfied": has_number,
-        })
+        constraints.append(
+            {
+                "type": "arithmetic_format",
+                "description": "Response contains a numeric answer",
+                "satisfied": has_number,
+            }
+        )
         # Check: arithmetic expressions in question vs response.
         q_numbers = re.findall(r"\d+", question)
         if len(q_numbers) >= 2:
-            constraints.append({
-                "type": "arithmetic_computation",
-                "description": "Arithmetic computation check",
-                "satisfied": has_number,  # Basic: just check format here.
-            })
+            constraints.append(
+                {
+                    "type": "arithmetic_computation",
+                    "description": "Arithmetic computation check",
+                    "satisfied": has_number,  # Basic: just check format here.
+                }
+            )
 
     elif domain == "code":
         has_def = "def " in response
-        constraints.append({
-            "type": "code_structure",
-            "description": "Response contains a function definition",
-            "satisfied": has_def,
-        })
+        constraints.append(
+            {
+                "type": "code_structure",
+                "description": "Response contains a function definition",
+                "satisfied": has_def,
+            }
+        )
         has_return = "return " in response
-        constraints.append({
-            "type": "code_return",
-            "description": "Function includes a return statement",
-            "satisfied": has_return,
-        })
+        constraints.append(
+            {
+                "type": "code_return",
+                "description": "Function includes a return statement",
+                "satisfied": has_return,
+            }
+        )
 
     elif domain == "logic":
         has_answer = "yes" in resp_lower or "no" in resp_lower
-        constraints.append({
-            "type": "logic_answer",
-            "description": "Response contains a yes/no answer",
-            "satisfied": has_answer,
-        })
+        constraints.append(
+            {
+                "type": "logic_answer",
+                "description": "Response contains a yes/no answer",
+                "satisfied": has_answer,
+            }
+        )
 
     elif domain == "factual":
         # Check: response is not a refusal/hedge.
-        is_hedge = any(phrase in resp_lower for phrase in [
-            "i'm not sure", "i don't know", "might be", "i think",
-        ])
-        constraints.append({
-            "type": "factual_confidence",
-            "description": "Response is confident (not hedging)",
-            "satisfied": not is_hedge,
-        })
+        is_hedge = any(
+            phrase in resp_lower
+            for phrase in [
+                "i'm not sure",
+                "i don't know",
+                "might be",
+                "i think",
+            ]
+        )
+        constraints.append(
+            {
+                "type": "factual_confidence",
+                "description": "Response is confident (not hedging)",
+                "satisfied": not is_hedge,
+            }
+        )
 
     elif domain == "scheduling":
         return _extract_scheduling_constraints(response, question)
@@ -1149,17 +1270,22 @@ def run_verify_repair(
             feedback = format_violations(constraints, domain)
             if not feedback:
                 break
-            prompt = (f"Question: {q_text}\n\n"
-                      f"Your previous answer was:\n{response}\n\n"
-                      f"However, verification found problems:\n{feedback}\n\n"
-                      f"Please provide a corrected answer.\n"
-                      f"Format:\nAnswer: <your corrected answer>")
+            prompt = (
+                f"Question: {q_text}\n\n"
+                f"Your previous answer was:\n{response}\n\n"
+                f"However, verification found problems:\n{feedback}\n\n"
+                f"Please provide a corrected answer.\n"
+                f"Format:\nAnswer: <your corrected answer>"
+            )
 
         if use_live_llm:
             response = generate_with_llm(prompt, tokenizer, model, device)
         else:
             response = simulate_response(
-                question, model_config, iteration=iteration, rng=sim_rng,
+                question,
+                model_config,
+                iteration=iteration,
+                rng=sim_rng,
             )
 
         if iteration == 0:
@@ -1226,6 +1352,7 @@ def paired_t_test(x: list[float], y: list[float]) -> tuple[float, float]:
     # Try scipy for exact p-value; fall back to normal approximation.
     try:
         from scipy import stats
+
         p_value = stats.t.sf(abs(t_stat), df=n - 1) * 2
     except ImportError:
         # Normal approximation for large-ish n.
@@ -1286,9 +1413,7 @@ def main() -> int:
             rate_str = ", ".join(f"{d}={r:.0%}" for d, r in rates.items())
             print(f"  Simulated error rates: {rate_str}")
 
-        results: dict[str, dict[str, list[dict]]] = {
-            d: {m: [] for m in modes} for d in domains
-        }
+        results: dict[str, dict[str, list[dict]]] = {d: {m: [] for m in modes} for d in domains}
 
         for domain in domains:
             questions = all_questions[domain]
@@ -1303,20 +1428,36 @@ def main() -> int:
                 sim_rng_c = random.Random(93_000 + qi + model_offset)
 
                 r_a = run_baseline(
-                    q, mc, tokenizer=tokenizer, model=model, device=device,
-                    use_live_llm=use_live_llm, sim_rng=sim_rng_a,
+                    q,
+                    mc,
+                    tokenizer=tokenizer,
+                    model=model,
+                    device=device,
+                    use_live_llm=use_live_llm,
+                    sim_rng=sim_rng_a,
                 )
                 results[domain]["baseline"].append(r_a)
 
                 r_b = run_verify_only(
-                    q, mc, tokenizer=tokenizer, model=model, device=device,
-                    use_live_llm=use_live_llm, sim_rng=sim_rng_b,
+                    q,
+                    mc,
+                    tokenizer=tokenizer,
+                    model=model,
+                    device=device,
+                    use_live_llm=use_live_llm,
+                    sim_rng=sim_rng_b,
                 )
                 results[domain]["verify_only"].append(r_b)
 
                 r_c = run_verify_repair(
-                    q, mc, tokenizer=tokenizer, model=model, device=device,
-                    use_live_llm=use_live_llm, sim_rng=sim_rng_c, max_iters=3,
+                    q,
+                    mc,
+                    tokenizer=tokenizer,
+                    model=model,
+                    device=device,
+                    use_live_llm=use_live_llm,
+                    sim_rng=sim_rng_c,
+                    max_iters=3,
                 )
                 results[domain]["verify_repair"].append(r_c)
 
@@ -1327,6 +1468,7 @@ def main() -> int:
         if use_live_llm:
             del model, tokenizer
             import torch
+
             if device == "cuda":
                 torch.cuda.empty_cache()
             gc.collect()
@@ -1355,8 +1497,10 @@ def main() -> int:
         results = all_results[model_name]
 
         print(f"\n  --- {model_name} ---")
-        print(f"  {'Domain':<12s} {'Mode':<16s} {'Acc':>7s} {'Halluc%':>8s} "
-              f"{'Repair':>8s} {'AvgConstr':>10s} {'Time(s)':>8s}")
+        print(
+            f"  {'Domain':<12s} {'Mode':<16s} {'Acc':>7s} {'Halluc%':>8s} "
+            f"{'Repair':>8s} {'AvgConstr':>10s} {'Time(s)':>8s}"
+        )
         print(f"  {'-' * 72}")
 
         for domain in domains:
@@ -1380,25 +1524,29 @@ def main() -> int:
                     repair_str = "n/a"
                     repair_rate = 0.0
 
-                print(f"  {domain:<12s} {mode_labels[mode]:<16s} "
-                      f"{n_correct}/{n_total:>3} {halluc_rate:>7.1%} "
-                      f"{repair_str:>8s} {avg_constraints:>10.1f} {total_time:>8.2f}")
+                print(
+                    f"  {domain:<12s} {mode_labels[mode]:<16s} "
+                    f"{n_correct}/{n_total:>3} {halluc_rate:>7.1%} "
+                    f"{repair_str:>8s} {avg_constraints:>10.1f} {total_time:>8.2f}"
+                )
 
-                metrics_table.append({
-                    "model": model_name,
-                    "domain": domain,
-                    "mode": mode,
-                    "n_total": n_total,
-                    "n_correct": n_correct,
-                    "accuracy": round(accuracy, 4),
-                    "hallucination_rate": round(halluc_rate, 4),
-                    "repair_success_rate": round(repair_rate, 4),
-                    "avg_constraints": round(float(avg_constraints), 2),
-                    "total_time_s": round(total_time, 3),
-                    "avg_time_s": round(total_time / n_total, 4) if n_total else 0,
-                    "repairs_attempted": n_rep_attempted,
-                    "repairs_successful": n_rep_ok,
-                })
+                metrics_table.append(
+                    {
+                        "model": model_name,
+                        "domain": domain,
+                        "mode": mode,
+                        "n_total": n_total,
+                        "n_correct": n_correct,
+                        "accuracy": round(accuracy, 4),
+                        "hallucination_rate": round(halluc_rate, 4),
+                        "repair_success_rate": round(repair_rate, 4),
+                        "avg_constraints": round(float(avg_constraints), 2),
+                        "total_time_s": round(total_time, 3),
+                        "avg_time_s": round(total_time / n_total, 4) if n_total else 0,
+                        "repairs_attempted": n_rep_attempted,
+                        "repairs_successful": n_rep_ok,
+                    }
+                )
 
         print(f"  {'-' * 72}")
 
@@ -1475,7 +1623,15 @@ def main() -> int:
                 repair_scores.append(1.0 if r["correct"] else 0.0)
 
         t_stat, p_value = paired_t_test(repair_scores, baseline_scores)
-        sig = "***" if p_value < 0.001 else "**" if p_value < 0.01 else "*" if p_value < 0.05 else "ns"
+        sig = (
+            "***"
+            if p_value < 0.001
+            else "**"
+            if p_value < 0.01
+            else "*"
+            if p_value < 0.05
+            else "ns"
+        )
         print(f"    {model_name}: t={t_stat:.3f}, p={p_value:.4f} {sig}")
 
     # --- Identify best/worst domains ---
@@ -1518,12 +1674,10 @@ def main() -> int:
         "metrics_table": metrics_table,
         "cross_model_comparison": {
             "domain_improvements": {
-                domain: {model: round(delta, 4)
-                         for model, delta in imps.items()}
+                domain: {model: round(delta, 4) for model, delta in imps.items()}
                 for domain, imps in domain_improvements.items()
             },
-            "overall_deltas": {model: round(delta, 4)
-                               for model, delta in overall_deltas.items()},
+            "overall_deltas": {model: round(delta, 4) for model, delta in overall_deltas.items()},
             "avg_improvement": round(float(avg_overall_delta), 4),
             "best_helped_model": best_model,
             "most_improved_domain": sorted_domains[0][0],
@@ -1579,19 +1733,20 @@ def main() -> int:
                 f"{repair_acc:.1%} | {sign}{delta:.1%} |"
             )
 
-    md_lines.extend([
-        "",
-        "## Overall Improvement",
-        "",
-        "| Model | Baseline Acc | Verify+Repair Acc | Δ Accuracy |",
-        "|-------|-------------|-------------------|------------|",
-    ])
+    md_lines.extend(
+        [
+            "",
+            "## Overall Improvement",
+            "",
+            "| Model | Baseline Acc | Verify+Repair Acc | Δ Accuracy |",
+            "|-------|-------------|-------------------|------------|",
+        ]
+    )
 
     for mc in MODEL_CONFIGS:
         model_name = mc["name"]
         base_total = sum(
-            sum(1 for r in all_results[model_name][d]["baseline"] if r["correct"])
-            for d in domains
+            sum(1 for r in all_results[model_name][d]["baseline"] if r["correct"]) for d in domains
         )
         repair_total = sum(
             sum(1 for r in all_results[model_name][d]["verify_repair"] if r["correct"])
@@ -1601,30 +1756,32 @@ def main() -> int:
         repair_acc = repair_total / total_questions
         delta = repair_acc - base_acc
         sign = "+" if delta >= 0 else ""
-        md_lines.append(
-            f"| {model_name} | {base_acc:.1%} | {repair_acc:.1%} | {sign}{delta:.1%} |"
-        )
+        md_lines.append(f"| {model_name} | {base_acc:.1%} | {repair_acc:.1%} | {sign}{delta:.1%} |")
 
-    md_lines.extend([
-        "",
-        "## Key Finding",
-        "",
-        f"> {results_json['key_finding']}",
-        "",
-        "## Domain Impact (avg across models)",
-        "",
-        "| Domain | Avg Improvement |",
-        "|--------|----------------|",
-    ])
+    md_lines.extend(
+        [
+            "",
+            "## Key Finding",
+            "",
+            f"> {results_json['key_finding']}",
+            "",
+            "## Domain Impact (avg across models)",
+            "",
+            "| Domain | Avg Improvement |",
+            "|--------|----------------|",
+        ]
+    )
     for domain, imp in sorted_domains:
         sign = "+" if imp >= 0 else ""
         md_lines.append(f"| {domain} | {sign}{imp:.1%} |")
 
-    md_lines.extend([
-        "",
-        "## Statistical Significance",
-        "",
-    ])
+    md_lines.extend(
+        [
+            "",
+            "## Statistical Significance",
+            "",
+        ]
+    )
     for mc in MODEL_CONFIGS:
         model_name = mc["name"]
         baseline_scores = []
@@ -1635,15 +1792,25 @@ def main() -> int:
             for r in all_results[model_name][domain]["verify_repair"]:
                 repair_scores.append(1.0 if r["correct"] else 0.0)
         t_stat, p_value = paired_t_test(repair_scores, baseline_scores)
-        sig = "***" if p_value < 0.001 else "**" if p_value < 0.01 else "*" if p_value < 0.05 else "ns"
+        sig = (
+            "***"
+            if p_value < 0.001
+            else "**"
+            if p_value < 0.01
+            else "*"
+            if p_value < 0.05
+            else "ns"
+        )
         md_lines.append(f"- **{model_name}**: t={t_stat:.3f}, p={p_value:.4f} {sig}")
 
-    md_lines.extend([
-        "",
-        "---",
-        f"*Generated by Experiment 93 | {time.strftime('%Y-%m-%d', time.gmtime())}*",
-        "",
-    ])
+    md_lines.extend(
+        [
+            "",
+            "---",
+            f"*Generated by Experiment 93 | {time.strftime('%Y-%m-%d', time.gmtime())}*",
+            "",
+        ]
+    )
 
     md_path = REPO_ROOT / "ops" / "multi-model-comparison.md"
     with open(md_path, "w") as f:

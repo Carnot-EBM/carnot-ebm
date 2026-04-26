@@ -63,7 +63,7 @@ class KAEMCrossoverResult:
 
         self._n_vars_tested = list(n_vars_tested)
         self._speedups = list(speedups)
-        self._speedup_map: dict[int, float] = dict(zip(n_vars_tested, speedups))
+        self._speedup_map: dict[int, float] = dict(zip(n_vars_tested, speedups, strict=False))
 
     # ------------------------------------------------------------------
     # crossover_n_vars
@@ -79,7 +79,7 @@ class KAEMCrossoverResult:
 
         Spec: REQ-SAMPLE-019
         """
-        for n, s in zip(self._n_vars_tested, self._speedups):
+        for n, s in zip(self._n_vars_tested, self._speedups, strict=False):
             if s >= self.VIABILITY_THRESHOLD:
                 return n
         return None
@@ -143,7 +143,5 @@ class KAEMCrossoverResult:
         Spec: REQ-SAMPLE-019, SCENARIO-SAMPLE-032
         """
         if n_vars not in self._speedup_map:
-            raise KeyError(
-                f"n_vars={n_vars} was not in the tested list {self._n_vars_tested}"
-            )
+            raise KeyError(f"n_vars={n_vars} was not in the tested list {self._n_vars_tested}")
         return self._speedup_map[n_vars]

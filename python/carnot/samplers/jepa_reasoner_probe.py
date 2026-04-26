@@ -36,13 +36,9 @@ Spec: REQ-VER-033, REQ-VER-034, SCENARIO-VER-040, SCENARIO-VER-041
 from __future__ import annotations
 
 import time
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import numpy as np
-
-if TYPE_CHECKING:
-    pass
-
 
 # ---------------------------------------------------------------------------
 # MLP Probe — pure NumPy, no PyTorch dependency at inference time
@@ -95,8 +91,8 @@ class _MLPProbe:
             Probability in [0, 1] that the coming generation violates a constraint.
         """
         h = x.reshape(1, -1) @ self.w1.T + self.b1  # (1, 256)
-        h = np.maximum(h, 0.0)                        # ReLU
-        logit = h @ self.w2.T + self.b2              # (1, 1)
+        h = np.maximum(h, 0.0)  # ReLU
+        logit = h @ self.w2.T + self.b2  # (1, 1)
         # Numerically stable sigmoid
         logit_val = float(logit[0, 0])
         if logit_val >= 0:
@@ -170,9 +166,7 @@ class JEPAReasonerProbe:
         import torch  # noqa: PLC0415
         from transformers import AutoModelForCausalLM, AutoTokenizer  # noqa: PLC0415
 
-        self._tokenizer = AutoTokenizer.from_pretrained(
-            self.model_name, trust_remote_code=False
-        )
+        self._tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=False)
         self._model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             output_hidden_states=True,
@@ -234,9 +228,7 @@ class JEPAReasonerProbe:
         )
         return last_token_hs
 
-    def extract_hidden_states_batch(
-        self, questions: list[str], batch_size: int = 32
-    ) -> np.ndarray:
+    def extract_hidden_states_batch(self, questions: list[str], batch_size: int = 32) -> np.ndarray:
         """Extract hidden states for a list of questions in GPU batches.
 
         Returns a float32 array of shape (n_questions, hidden_dim).
@@ -296,7 +288,7 @@ class JEPAReasonerProbe:
         fc1 = nn.Linear(self.HIDDEN_DIM, 256)
         fc2 = nn.Linear(256, 1)
 
-        def forward_torch(x: "torch.Tensor") -> "torch.Tensor":
+        def forward_torch(x: torch.Tensor) -> torch.Tensor:
             h = torch.relu(fc1(x))
             return torch.sigmoid(fc2(h))
 
@@ -384,9 +376,7 @@ class JEPAReasonerProbe:
     # Step-level hidden-state extraction  (REQ-VER-038)
     # ------------------------------------------------------------------
 
-    def extract_step_states(
-        self, text: str, layer: int = 16
-    ) -> list[np.ndarray]:
+    def extract_step_states(self, text: str, layer: int = 16) -> list[np.ndarray]:
         """Extract one hidden state per CoT step boundary in *text*.
 
         WHY step-level extraction (arXiv 2511.06209):
@@ -421,7 +411,7 @@ class JEPAReasonerProbe:
 
         # Split on ". " (period + space) or newlines as step boundaries.
         # re.split keeps a non-empty list even when the delimiters are rare.
-        parts = re.split(r'\.\s+|\n+', text)
+        parts = re.split(r"\.\s+|\n+", text)
         # Filter truly empty segments produced by leading/trailing delimiters.
         segments = [s.strip() for s in parts if s.strip()]
 
@@ -468,7 +458,7 @@ class JEPAReasonerProbe:
         if not states:
             raise ValueError("pool_states requires at least one state tensor.")
         matrix = np.stack(states, axis=0)  # (n_steps, hidden_dim)
-        return matrix.max(axis=0)           # (hidden_dim,)
+        return matrix.max(axis=0)  # (hidden_dim,)
 
     # ------------------------------------------------------------------
     # AUC evaluation

@@ -456,7 +456,7 @@ class LNNConstraintModel(AutoGradMixin):
         losses: list[float] = []
         n_samples = data.shape[0]
 
-        for epoch in range(n_epochs):
+        for _epoch in range(n_epochs):
             epoch_loss = 0.0
 
             # --- Positive phase: compute hidden states from data ---
@@ -503,12 +503,8 @@ class LNNConstraintModel(AutoGradMixin):
             # --- Compute loss for monitoring ---
             # CD loss = mean positive energy - mean negative energy.
             # For convergence: this should decrease (or stabilize near 0).
-            pos_energies = jnp.array([
-                self.energy(data[i]) for i in range(min(n_samples, 8))
-            ])
-            neg_energies = jnp.array([
-                self.energy(neg_data[i]) for i in range(min(n_samples, 8))
-            ])
+            pos_energies = jnp.array([self.energy(data[i]) for i in range(min(n_samples, 8))])
+            neg_energies = jnp.array([self.energy(neg_data[i]) for i in range(min(n_samples, 8))])
             loss = float(jnp.mean(pos_energies) - jnp.mean(neg_energies))
             epoch_loss = loss
             losses.append(epoch_loss)

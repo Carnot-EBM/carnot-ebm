@@ -10,16 +10,13 @@ Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-004
 from __future__ import annotations
 
 import pytest
-
-from carnot.pipeline.errors import PipelineTimeoutError
-from carnot.pipeline.extract import AutoExtractor, ConstraintResult
+from carnot.pipeline.extract import ConstraintResult
 from carnot.pipeline.verify_repair import (
     RepairResult,
     VerificationResult,
     VerifyRepairPipeline,
 )
 from carnot.pipeline.z3_extractor import Z3ArithmeticExtractor
-
 
 # ---------------------------------------------------------------------------
 # Verify-only pipeline (no LLM model loaded)

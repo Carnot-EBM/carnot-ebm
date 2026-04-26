@@ -33,7 +33,6 @@ import signal
 import subprocess
 import time
 from dataclasses import dataclass, field
-from typing import Optional
 
 from carnot.pipeline.gemma_loader import GemmaTransformersLoader
 from carnot.pipeline.gpu_zombie_killer import GPUZombieResult, kill_gpu_zombies
@@ -107,7 +106,7 @@ class VRAMEvictionResult:
 # ---------------------------------------------------------------------------
 
 
-def _query_nvidia_smi(args: list[str]) -> Optional[str]:
+def _query_nvidia_smi(args: list[str]) -> str | None:
     """Run nvidia-smi with *args*; return stdout string or None if unavailable.
 
     Mirrors the helper in gpu_zombie_killer.py — duplicated here so this module
@@ -242,13 +241,9 @@ def evict_gpu_vram(gpu_index: int = 1) -> VRAMEvictionResult:
             result.pkill_attempts += 1
             if pid not in result.pids_killed:
                 result.pids_killed.append(pid)
-            _log.warning(
-                "evict_gpu_vram: pkill sweep SIGKILL PID %d on gpu=%d", pid, gpu_index
-            )
+            _log.warning("evict_gpu_vram: pkill sweep SIGKILL PID %d on gpu=%d", pid, gpu_index)
         except OSError as exc:
-            _log.warning(
-                "evict_gpu_vram: could not pkill PID %d — %s", pid, exc
-            )
+            _log.warning("evict_gpu_vram: could not pkill PID %d — %s", pid, exc)
 
     # Step 4: wait for GPU driver to drain, then re-read VRAM.
     if result.pids_killed:

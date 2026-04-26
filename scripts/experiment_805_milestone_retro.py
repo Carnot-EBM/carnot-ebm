@@ -167,7 +167,12 @@ def evaluate_success_criteria(artifacts: dict[int, dict[str, Any]]) -> dict[str,
             (a[800].get("retrieval_auc_plain") or a[800].get("retrieval_auc") or 0.0) > 0.70
         ),
         "constraint_addition_positive": (
-            (a[801].get("constraint_addition_delta_overall") or a[801].get("constraint_addition_delta") or 0.0) > 0.0
+            (
+                a[801].get("constraint_addition_delta_overall")
+                or a[801].get("constraint_addition_delta")
+                or 0.0
+            )
+            > 0.0
         ),
         "tier1_relay_works": a[802].get("honest_verdict") == "tier1_relay_works",
         "fpga_tools_installed": bool(a[794].get("tools_installed")),
@@ -211,6 +216,7 @@ def rank_experiments_by_duration(artifacts: dict[int, dict[str, Any]]) -> list[d
 
     Useful for identifying the slowest (index 0) and fastest (index -1) experiments.
     """
+
     def dur(item: tuple[int, dict]) -> float:
         exp_id, art = item
         if art.get("timed_out"):
@@ -255,7 +261,9 @@ def classify_retros(artifacts: dict[int, dict[str, Any]]) -> dict[str, list[Any]
 
     # RETRO-028 (Gemma4 OOM)
     if artifacts[795].get("honest_verdict") == "retro_028_closed":
-        retros_closed.append("RETRO-028: Gemma4 OOM resolved — Exp 795 honest_verdict=retro_028_closed.")
+        retros_closed.append(
+            "RETRO-028: Gemma4 OOM resolved — Exp 795 honest_verdict=retro_028_closed."
+        )
     else:
         retros_still_open.append(
             "RETRO-028: Gemma4 OOM unresolved — Exp 795 verdict='partial_success'. "
@@ -282,7 +290,9 @@ def classify_retros(artifacts: dict[int, dict[str, Any]]) -> dict[str, list[Any]
         or 0.0
     )
     if delta > 0.0:
-        retros_closed.append(f"RETRO-CONSTRAINT-ZERO-DELTA: Exp 801 delta={delta} > 0. Constraint addition improves accuracy.")
+        retros_closed.append(
+            f"RETRO-CONSTRAINT-ZERO-DELTA: Exp 801 delta={delta} > 0. Constraint addition improves accuracy."
+        )
     else:
         retros_still_open.append(
             f"RETRO-CONSTRAINT-ZERO-DELTA: Exp 801 constraint_addition_delta_overall={delta}. "
@@ -292,7 +302,9 @@ def classify_retros(artifacts: dict[int, dict[str, Any]]) -> dict[str, list[Any]
 
     # RETRO-KV260-TOOLS-UNAVAILABLE
     if artifacts[794].get("tools_installed"):
-        retros_closed.append("RETRO-KV260-TOOLS-UNAVAILABLE: Exp 794 tools_installed=True. Tools ready.")
+        retros_closed.append(
+            "RETRO-KV260-TOOLS-UNAVAILABLE: Exp 794 tools_installed=True. Tools ready."
+        )
     else:
         retros_still_open.append(
             "RETRO-KV260-TOOLS-UNAVAILABLE: Exp 794 tools_installed=False. "
@@ -304,41 +316,45 @@ def classify_retros(artifacts: dict[int, dict[str, Any]]) -> dict[str, list[Any]
     # JEPA v21 OOD AUC far below gate
     ood_auc = artifacts[799].get("ood_auc") or 0.0
     if ood_auc < 0.75 and artifacts[799]:
-        retros_opened.append({
-            "id": "RETRO-JEPA-V21-OOD-BELOW-GATE",
-            "reason": (
-                f"Exp 799 ood_auc={ood_auc:.4f} — far below the 0.75 gate. "
-                "CPMI pairs were generated (Exp 798, ratio=2.5) but NOT applied during retrain "
-                "(Exp 799 augmentation_ratio=1.0, indicating the CPMI corpus was not wired into the "
-                "training data loader). The OOD AUC of 0.2444 is a new all-time low, worse even than "
-                "the v20 regression (0.4467), suggesting the training corpus itself is inadequate."
-            ),
-            "resolution_path": (
-                "Wire the CPMI-augmented corpus (Exp 798 output) into the Exp 799 training data loader "
-                "before retraining JEPA v22. Verify augmentation_ratio > 1.0 in the next retrain artifact. "
-                "Also increase corpus diversity — the 300 labels from Exp 797 may still be insufficient for "
-                "the embedding space coverage needed to achieve ood_auc >= 0.75."
-            ),
-        })
+        retros_opened.append(
+            {
+                "id": "RETRO-JEPA-V21-OOD-BELOW-GATE",
+                "reason": (
+                    f"Exp 799 ood_auc={ood_auc:.4f} — far below the 0.75 gate. "
+                    "CPMI pairs were generated (Exp 798, ratio=2.5) but NOT applied during retrain "
+                    "(Exp 799 augmentation_ratio=1.0, indicating the CPMI corpus was not wired into the "
+                    "training data loader). The OOD AUC of 0.2444 is a new all-time low, worse even than "
+                    "the v20 regression (0.4467), suggesting the training corpus itself is inadequate."
+                ),
+                "resolution_path": (
+                    "Wire the CPMI-augmented corpus (Exp 798 output) into the Exp 799 training data loader "
+                    "before retraining JEPA v22. Verify augmentation_ratio > 1.0 in the next retrain artifact. "
+                    "Also increase corpus diversity — the 300 labels from Exp 797 may still be insufficient for "
+                    "the embedding space coverage needed to achieve ood_auc >= 0.75."
+                ),
+            }
+        )
 
     # Tier 1 relay plateau persists
     if artifacts[802].get("honest_verdict") == "tier1_plateau_persists":
-        retros_opened.append({
-            "id": "RETRO-TIER1-PLATEAU",
-            "reason": (
-                "Exp 802 honest_verdict=tier1_plateau_persists. "
-                "FR-11 Tier 1 relay with embedding constraints does not improve beyond the existing "
-                "static baseline. The EmbeddingConstraintStore retrieves correctly (AUC=0.92) but "
-                "constraint signal is not reaching the energy function — same root cause as "
-                "RETRO-CONSTRAINT-ZERO-DELTA but at the relay layer."
-            ),
-            "resolution_path": (
-                "Replace the synthetic_cpu inference stub in the relay pipeline with a real "
-                "IsingEBM.infer() call that accepts constraint embeddings as soft penalty inputs. "
-                "The constraint feature vector (from EmbeddingConstraintStore) must be projected "
-                "into the energy function's spin coupling matrix before sampling."
-            ),
-        })
+        retros_opened.append(
+            {
+                "id": "RETRO-TIER1-PLATEAU",
+                "reason": (
+                    "Exp 802 honest_verdict=tier1_plateau_persists. "
+                    "FR-11 Tier 1 relay with embedding constraints does not improve beyond the existing "
+                    "static baseline. The EmbeddingConstraintStore retrieves correctly (AUC=0.92) but "
+                    "constraint signal is not reaching the energy function — same root cause as "
+                    "RETRO-CONSTRAINT-ZERO-DELTA but at the relay layer."
+                ),
+                "resolution_path": (
+                    "Replace the synthetic_cpu inference stub in the relay pipeline with a real "
+                    "IsingEBM.infer() call that accepts constraint embeddings as soft penalty inputs. "
+                    "The constraint feature vector (from EmbeddingConstraintStore) must be projected "
+                    "into the energy function's spin coupling matrix before sampling."
+                ),
+            }
+        )
 
     return {
         "retros_closed": retros_closed,
@@ -358,35 +374,29 @@ _IMPROVEMENTS_62: list[str] = [
     "The CPMI output file path must be passed as the training corpus argument. "
     "Verify the next retrain artifact shows augmentation_ratio >= 2.0 before accepting the result. "
     "Estimated AUC gain: 0.15-0.30 (moving from 0.24 toward the 0.75 gate).",
-
     "CRITICAL — Replace synthetic_cpu inference stub with real IsingEBM.infer() in constraint addition: "
     "Exps 801 and 802 both show zero delta because the inference mode is a deterministic placeholder. "
     "The EmbeddingConstraintStore retrieval is correct (AUC=0.92); the problem is downstream. "
     "Implementing real inference will simultaneously resolve RETRO-CONSTRAINT-ZERO-DELTA and "
     "RETRO-TIER1-PLATEAU. This is the highest-leverage single fix available.",
-
     "IMMEDIATE — Install FPGA toolchain (yosys + nextpnr-ice40 + icestorm) on CachyOS host: "
     "pacman -S yosys nextpnr icestorm resolves RETRO-KV260-TOOLS-UNAVAILABLE. "
     "KV260 board arrived 2026-04-20. Two consecutive milestones blocked. "
     "Estimated time savings: 2+ experiments unblocked per milestone (Exps 794/804 class).",
-
     "SHORT TERM — Complete RETRO-028 closure (Gemma4 OOM Fix v5): "
     "Exp 795 reached partial_success — the three-step isolation protocol (kill_gpu_zombies, "
     "pkill VRAM holders, verify <500MB before load, use GPU 1) was partially applied. "
     "v5 must enforce all three steps in sequence with nvidia-smi verification at each step. "
     "Until RETRO-028 closes, Exp 796 (SOTA GGUF code repair) remains gated.",
-
     "SHORT TERM — Increase JEPA training corpus to 500+ labeled pairs from diverse sources: "
     "Exp 797 collected 300 labels from multi-source corpus. "
     "Exp 799 ood_auc=0.2444 suggests 300 labels is insufficient for embedding space coverage. "
     "Target 500+ pairs across at least 5 domain sources before v22 retrain.",
-
     "PROCESS — Enforce CPMI-to-training handoff contract in experiment scripts: "
     "Add an assertion in JEPA retrain experiments: assert augmentation_ratio > 1.0, "
     "'CPMI corpus was not wired in'. "
     "This invariant would have caught the Exp 798→799 disconnect immediately at script startup "
     "rather than after 5+ minutes of training.",
-
     "PROCESS — Implement recommendation closure tracking (carried from .60 retro): "
     "The .60 retro documented 9 improvements. None were applied before .61 experiments ran. "
     "Create a MILESTONE_PREREQS.md checklist: before ANY experiment in a new milestone, verify "
@@ -506,10 +516,7 @@ def run(deliverable: Path = _DELIVERABLE, results_dir: Path | None = None) -> di
         retros = classify_retros(artifacts)
         ranked = rank_experiments_by_duration(artifacts)
 
-        timeouts = [
-            r["exp_id"] for r in ranked
-            if artifacts[r["exp_id"]].get("timed_out")
-        ]
+        timeouts = [r["exp_id"] for r in ranked if artifacts[r["exp_id"]].get("timed_out")]
 
         retro = MilestoneRetro2026_04_61(
             milestone="2026.04.61",

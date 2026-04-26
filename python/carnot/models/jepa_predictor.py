@@ -54,9 +54,7 @@ class DomainReweightedLoss:
         loss = loss_fn.weighted_loss(logits, labels, domain_ids, weights)
     """
 
-    def compute_domain_weights(
-        self, corpus: list[dict[str, Any]]
-    ) -> dict[str, float]:
+    def compute_domain_weights(self, corpus: list[dict[str, Any]]) -> dict[str, float]:
         """Compute per-domain training loss weights from corpus domain frequencies.
 
         **Algorithm:**

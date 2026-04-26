@@ -68,17 +68,58 @@ CARRY_THRESHOLD = 5
 # ---------------------------------------------------------------------------
 
 _CARRY_QUESTIONS = [
-    f"What is {a} + {b}?" for a, b in [
-        (47, 28), (89, 56), (73, 48), (65, 37), (94, 76),
-        (38, 85), (67, 54), (29, 83), (91, 47), (58, 66),
-        (84, 37), (72, 49), (63, 58), (46, 75), (87, 34),
-        (53, 68), (79, 43), (96, 25), (41, 69), (82, 38),
-        (55, 76), (68, 47), (34, 89), (77, 56), (43, 78),
-        (61, 59), (88, 43), (26, 97), (74, 36), (49, 73),
-        (83, 48), (57, 64), (92, 39), (36, 75), (71, 58),
-        (48, 83), (65, 46), (37, 74), (93, 28), (56, 67),
-        (44, 87), (78, 33), (62, 59), (95, 47), (39, 82),
-        (76, 55), (51, 68), (84, 39), (27, 96), (73, 48),
+    f"What is {a} + {b}?"
+    for a, b in [
+        (47, 28),
+        (89, 56),
+        (73, 48),
+        (65, 37),
+        (94, 76),
+        (38, 85),
+        (67, 54),
+        (29, 83),
+        (91, 47),
+        (58, 66),
+        (84, 37),
+        (72, 49),
+        (63, 58),
+        (46, 75),
+        (87, 34),
+        (53, 68),
+        (79, 43),
+        (96, 25),
+        (41, 69),
+        (82, 38),
+        (55, 76),
+        (68, 47),
+        (34, 89),
+        (77, 56),
+        (43, 78),
+        (61, 59),
+        (88, 43),
+        (26, 97),
+        (74, 36),
+        (49, 73),
+        (83, 48),
+        (57, 64),
+        (92, 39),
+        (36, 75),
+        (71, 58),
+        (48, 83),
+        (65, 46),
+        (37, 74),
+        (93, 28),
+        (56, 67),
+        (44, 87),
+        (78, 33),
+        (62, 59),
+        (95, 47),
+        (39, 82),
+        (76, 55),
+        (51, 68),
+        (84, 39),
+        (27, 96),
+        (73, 48),
     ]
 ]
 
@@ -174,12 +215,14 @@ def run_session(
         error_missed = not detected
         if error_missed:
             missed += 1
-        details.append({
-            "question": q,
-            "response": response,
-            "carry_error_detected": detected,
-            "carry_error_missed": error_missed,
-        })
+        details.append(
+            {
+                "question": q,
+                "response": response,
+                "carry_error_detected": detected,
+                "carry_error_missed": error_missed,
+            }
+        )
     fp_rate = missed / len(questions) if questions else 0.0
     return fp_rate, details
 
@@ -263,8 +306,7 @@ def main() -> None:
         out_path.write_text(json.dumps(artifact, indent=2) + "\n")
 
         _log.info(
-            "Exp 456 complete — session1_fp_rate=%.3f session2_fp_rate=%.3f "
-            "delta=%.3f verdict=%s",
+            "Exp 456 complete — session1_fp_rate=%.3f session2_fp_rate=%.3f delta=%.3f verdict=%s",
             session1_fp_rate,
             session2_fp_rate,
             fp_rate_delta,

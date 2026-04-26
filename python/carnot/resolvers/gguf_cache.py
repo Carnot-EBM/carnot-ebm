@@ -24,7 +24,6 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 
 class GGUFCacheResolver:
@@ -44,7 +43,7 @@ class GGUFCacheResolver:
         its own retry + redirect logic and handles GGUF blobs correctly in practice.
     """
 
-    def __init__(self, cache_dir: Optional[str] = None) -> None:
+    def __init__(self, cache_dir: str | None = None) -> None:
         """Initialise the resolver, optionally pointing at a custom cache directory.
 
         Args:
@@ -54,11 +53,11 @@ class GGUFCacheResolver:
         if cache_dir is not None:
             self.cache_dir = Path(cache_dir)
         else:
-            self.cache_dir = Path(
-                os.environ.get("HF_HOME", Path.home() / ".cache" / "huggingface")
-            ) / "hub"
+            self.cache_dir = (
+                Path(os.environ.get("HF_HOME", Path.home() / ".cache" / "huggingface")) / "hub"
+            )
 
-    def resolve(self, hf_repo: str, filename: str) -> Optional[Path]:
+    def resolve(self, hf_repo: str, filename: str) -> Path | None:
         """Return the cached path for ``filename`` in ``hf_repo``, or None.
 
         **What it does:**

@@ -190,7 +190,9 @@ class KANTier0bClassifier:
         self._n_knots: int = data["n_knots"]
         self._degree: int = data["degree"]
 
-        self._edge_ctrl = jnp.array(data["edge_ctrl"], dtype=jnp.float32)    # (n_hidden, n_features, n_ctrl)
+        self._edge_ctrl = jnp.array(
+            data["edge_ctrl"], dtype=jnp.float32
+        )  # (n_hidden, n_features, n_ctrl)
         self._output_ctrl = jnp.array(data["output_ctrl"], dtype=jnp.float32)  # (n_hidden, n_ctrl)
 
         # JIT-compile the energy function once at load time so that scoring is fast.

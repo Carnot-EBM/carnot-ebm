@@ -180,7 +180,7 @@ _INLINE_PROBLEMS: list[dict[str, Any]] = [
         "prompt": (
             "from typing import List\n\n"
             "def intersperse(numbers: List[int], delimeter: int) -> List[int]:\n"
-            '    """ Insert a number \'delimeter\' between every two consecutive elements of input list `numbers\'\n'
+            "    \"\"\" Insert a number 'delimeter' between every two consecutive elements of input list `numbers'\n"
             "    >>> intersperse([], 4)\n"
             "    []\n"
             "    >>> intersperse([1, 2, 3], 4)\n"
@@ -450,7 +450,7 @@ _INLINE_PROBLEMS: list[dict[str, Any]] = [
         "prompt": (
             "from typing import List\n\n"
             "def sort_numbers(numbers: str) -> str:\n"
-            '    """ Input is a space-delimited string of numberals from \'zero\' to \'nine\'.\n'
+            "    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n"
             "    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n"
             "    Return the string with numbers sorted from smallest to largest\n"
             "    >>> sort_numbers('three one five')\n"
@@ -559,6 +559,7 @@ _INLINE_PROBLEMS: list[dict[str, Any]] = [
 # Simple energy scorer (token-length heuristic when Ising is unavailable)
 # ---------------------------------------------------------------------------
 
+
 class _TokenLengthEnergyScorer:
     """Fallback energy scorer: shorter responses get lower energy.
 
@@ -602,6 +603,7 @@ def _build_energy_scorer() -> Any:
             def score(self, text: str) -> float:
                 # Encode text as a simple bag-of-chars spin vector (±1).
                 import jax.numpy as jnp  # noqa: PLC0415
+
                 chars = [ord(c) % 2 * 2 - 1 for c in text[:64]]
                 # Pad or truncate to 64.
                 chars = chars[:64] + [1] * max(0, 64 - len(chars))
@@ -616,6 +618,7 @@ def _build_energy_scorer() -> Any:
 # ---------------------------------------------------------------------------
 # LLM runner wrappers
 # ---------------------------------------------------------------------------
+
 
 class _LlamaCppRunner:
     """LLM runner backed by llama-cpp-python.
@@ -660,13 +663,14 @@ class _TransformersRunner:
                 do_sample=False,
                 pad_token_id=self._tokenizer.eos_token_id,
             )
-        new_tokens = output_ids[0][inputs["input_ids"].shape[1]:]
+        new_tokens = output_ids[0][inputs["input_ids"].shape[1] :]
         return self._tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
 
 
 # ---------------------------------------------------------------------------
 # Model loading
 # ---------------------------------------------------------------------------
+
 
 def _load_model(tmpl: ExperimentTemplate) -> tuple[Any, str]:
     """Try to load Qwen3.6-35B-A3B-GGUF, then fall back to Gemma4-E4B-it transformers.
@@ -684,7 +688,9 @@ def _load_model(tmpl: ExperimentTemplate) -> tuple[Any, str]:
                 if "Qwen3.6-35B" in spec.get("hf_id", ""):
                     model_path = spec.get("model_path")
                     if model_path and Path(model_path).exists():
-                        print(f"[exp905] Loading GGUF from {model_path} via llama.cpp …", flush=True)
+                        print(
+                            f"[exp905] Loading GGUF from {model_path} via llama.cpp …", flush=True
+                        )
                         llm = Llama(
                             model_path=str(model_path),
                             n_gpu_layers=-1,
@@ -718,6 +724,7 @@ def _load_model(tmpl: ExperimentTemplate) -> tuple[Any, str]:
 # Generation prompt builder
 # ---------------------------------------------------------------------------
 
+
 def _build_generation_prompt(problem: dict[str, Any]) -> str:
     """Build the initial generation prompt for a HumanEval problem.
 
@@ -727,14 +734,14 @@ def _build_generation_prompt(problem: dict[str, Any]) -> str:
     """
     return (
         "Complete the following Python function. "
-        "Output ONLY the function body code (no imports, no prose):\n\n"
-        + problem["prompt"]
+        "Output ONLY the function body code (no imports, no prose):\n\n" + problem["prompt"]
     )
 
 
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Orchestrate Exp 905 iterative self-repair and write the deliverable."""
@@ -796,7 +803,10 @@ def main() -> None:
         print(f"[exp905] Using human_eval package for {len(problems)} problems.", flush=True)
     except ImportError:
         problems = _INLINE_PROBLEMS
-        print(f"[exp905] human_eval not installed — using inline problems ({len(problems)}).", flush=True)
+        print(
+            f"[exp905] human_eval not installed — using inline problems ({len(problems)}).",
+            flush=True,
+        )
 
     # -- Run pipeline -------------------------------------------------------
     results_per_problem: list[dict[str, Any]] = []
@@ -810,21 +820,23 @@ def main() -> None:
         prompt = _build_generation_prompt(prob)
         test_cases = [line for line in prob["test"].strip().splitlines() if line.strip()]
 
-        print(f"[exp905] {idx+1}/{len(problems)}: {task_id} …", flush=True)
+        print(f"[exp905] {idx + 1}/{len(problems)}: {task_id} …", flush=True)
         t0 = time.perf_counter()
 
         try:
             result = pipeline.repair(prompt, test_cases)
         except Exception as exc:
             print(f"[exp905]   ERROR: {exc}", flush=True)
-            results_per_problem.append({
-                "task_id": task_id,
-                "error": str(exc),
-                "baseline_passed": False,
-                "repair_passed": False,
-                "n_retries": 0,
-                "energy_selected_passing": False,
-            })
+            results_per_problem.append(
+                {
+                    "task_id": task_id,
+                    "error": str(exc),
+                    "baseline_passed": False,
+                    "repair_passed": False,
+                    "n_retries": 0,
+                    "energy_selected_passing": False,
+                }
+            )
             continue
 
         baseline_passed = result.all_attempts[0].exec_passed if result.all_attempts else False
@@ -846,16 +858,18 @@ def main() -> None:
             flush=True,
         )
 
-        results_per_problem.append({
-            "task_id": task_id,
-            "baseline_passed": baseline_passed,
-            "repair_passed": repair_passed,
-            "n_retries": result.n_retries,
-            "energy_score_best": result.best_attempt.energy_score,
-            "energy_selected_passing": result.energy_selected_passing,
-            "n_attempts": len(result.all_attempts),
-            "elapsed_s": elapsed,
-        })
+        results_per_problem.append(
+            {
+                "task_id": task_id,
+                "baseline_passed": baseline_passed,
+                "repair_passed": repair_passed,
+                "n_retries": result.n_retries,
+                "energy_score_best": result.best_attempt.energy_score,
+                "energy_selected_passing": result.energy_selected_passing,
+                "n_attempts": len(result.all_attempts),
+                "elapsed_s": elapsed,
+            }
+        )
 
         # Checkpoint every 5 problems.
         if (idx + 1) % 5 == 0:

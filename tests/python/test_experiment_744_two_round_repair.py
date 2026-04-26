@@ -358,10 +358,12 @@ class TestTwoRoundRun:
         """
         pipeline = TwoRoundCodeRepairPipeline()
         # Round 0: wrong code; round 1: correct code
-        llm = _make_llm([
-            "def add(a, b):\n    return a - b",   # round 0: wrong
-            "def add(a, b):\n    return a + b",   # round 1: correct
-        ])
+        llm = _make_llm(
+            [
+                "def add(a, b):\n    return a - b",  # round 0: wrong
+                "def add(a, b):\n    return a + b",  # round 1: correct
+            ]
+        )
         result = pipeline.run(
             problem="def add(a, b): ...",
             test_cases=[{"call": "add(1, 2)", "expected": 3}],
@@ -378,11 +380,13 @@ class TestTwoRoundRun:
         Spec: REQ-CODE-031, REQ-CODE-032 — two repair rounds are the target.
         """
         pipeline = TwoRoundCodeRepairPipeline()
-        llm = _make_llm([
-            "def add(a, b):\n    return a - b",  # round 0: wrong
-            "def add(a, b):\n    return a * b",  # round 1: still wrong
-            "def add(a, b):\n    return a + b",  # round 2: correct
-        ])
+        llm = _make_llm(
+            [
+                "def add(a, b):\n    return a - b",  # round 0: wrong
+                "def add(a, b):\n    return a * b",  # round 1: still wrong
+                "def add(a, b):\n    return a + b",  # round 2: correct
+            ]
+        )
         result = pipeline.run(
             problem="def add(a, b): ...",
             test_cases=[{"call": "add(1, 2)", "expected": 3}],
@@ -442,15 +446,15 @@ class TestComputePassRates:
         Spec: REQ-CODE-032 — a problem that passes round 1 also counts in round 2.
         """
         results = [
-            TwoRoundResult(round0_pass=True, round1_pass=False, round2_pass=False),   # passed r0
-            TwoRoundResult(round0_pass=False, round1_pass=True, round2_pass=False),   # passed r1
-            TwoRoundResult(round0_pass=False, round1_pass=False, round2_pass=True),   # passed r2
+            TwoRoundResult(round0_pass=True, round1_pass=False, round2_pass=False),  # passed r0
+            TwoRoundResult(round0_pass=False, round1_pass=True, round2_pass=False),  # passed r1
+            TwoRoundResult(round0_pass=False, round1_pass=False, round2_pass=True),  # passed r2
             TwoRoundResult(round0_pass=False, round1_pass=False, round2_pass=False),  # never passed
         ]
         rates = exp744.compute_pass_rates(results)
-        assert rates["pass_round0"] == 0.25       # 1/4
-        assert rates["pass_round1"] == 0.5        # 2/4
-        assert rates["pass_round2"] == 0.75       # 3/4
+        assert rates["pass_round0"] == 0.25  # 1/4
+        assert rates["pass_round1"] == 0.5  # 2/4
+        assert rates["pass_round2"] == 0.75  # 3/4
 
     def test_empty_list_returns_zeros(self):
         """compute_pass_rates MUST return zeros for empty input.
@@ -530,7 +534,9 @@ class TestComputeErrorTypeBreakdown:
         """
         results = [
             TwoRoundResult(
-                round0_pass=False, round1_pass=True, round2_pass=False,
+                round0_pass=False,
+                round1_pass=True,
+                round2_pass=False,
                 error_types=["syntax_error"],
             ),
         ]
@@ -546,7 +552,9 @@ class TestComputeErrorTypeBreakdown:
         """
         results = [
             TwoRoundResult(
-                round0_pass=False, round1_pass=False, round2_pass=True,
+                round0_pass=False,
+                round1_pass=False,
+                round2_pass=True,
                 error_types=["assertion_error", "assertion_error"],
             ),
         ]
@@ -560,7 +568,9 @@ class TestComputeErrorTypeBreakdown:
         """
         results = [
             TwoRoundResult(
-                round0_pass=False, round1_pass=False, round2_pass=False,
+                round0_pass=False,
+                round1_pass=False,
+                round2_pass=False,
                 error_types=["name_error"],
             ),
         ]
@@ -584,8 +594,12 @@ class TestComputeErrorTypeBreakdown:
         Spec: REQ-CODE-032
         """
         results = [
-            TwoRoundResult(round0_pass=False, round1_pass=True, round2_pass=False, error_types=["other"]),
-            TwoRoundResult(round0_pass=False, round1_pass=False, round2_pass=False, error_types=["other"]),
+            TwoRoundResult(
+                round0_pass=False, round1_pass=True, round2_pass=False, error_types=["other"]
+            ),
+            TwoRoundResult(
+                round0_pass=False, round1_pass=False, round2_pass=False, error_types=["other"]
+            ),
         ]
         breakdown = exp744.compute_error_type_breakdown(results)
         assert breakdown["other"]["repaired_round1"] == 1

@@ -106,6 +106,7 @@ RNG_SEED = 42
 # Helper: measure ParallelIsingSampler SAMPLE GENERATION latency
 # ---------------------------------------------------------------------------
 
+
 def _measure_ising_sample_ms(n_vars: int, n_samples: int) -> float:
     """Measure ParallelIsingSampler sample-generation latency (MCMC baseline).
 
@@ -148,9 +149,11 @@ rng = np.random.default_rng(RNG_SEED)
 # Calibration set: binary Ising spins in {-1, +1}^N_VARS
 data_cal = rng.choice([-1.0, 1.0], size=(N_SAMPLES_CAL, N_VARS)).astype(np.float32)
 # Evaluation set (held-out, different seed)
-data_eval = np.random.default_rng(RNG_SEED + 1).choice(
-    [-1.0, 1.0], size=(N_SAMPLES_EVAL, N_VARS)
-).astype(np.float32)
+data_eval = (
+    np.random.default_rng(RNG_SEED + 1)
+    .choice([-1.0, 1.0], size=(N_SAMPLES_EVAL, N_VARS))
+    .astype(np.float32)
+)
 
 data_cal_jax = jnp.array(data_cal)
 data_eval_jax = jnp.array(data_eval)
@@ -203,9 +206,7 @@ for k in RANK_SWEEP:
         [float(cal_model.energy(data_eval_jax[i])) for i in range(N_SAMPLES_EVAL)],
         dtype=np.float64,
     )
-    energy_mad_after = float(
-        np.mean(np.abs(E_calibrated_eval - E_full_eval)) / E_full_std
-    )
+    energy_mad_after = float(np.mean(np.abs(E_calibrated_eval - E_full_eval)) / E_full_std)
 
     # --- Speedup: sample generation (not energy evaluation) ---
     # The speedup claim (RETRO-057) is about drawing samples, not energy() calls.
@@ -269,6 +270,7 @@ artifact = tmpl.build_result(
 )
 
 import json as _json
+
 tmpl._output_path.parent.mkdir(parents=True, exist_ok=True)
 tmpl._output_path.write_text(_json.dumps(artifact, indent=2))
 

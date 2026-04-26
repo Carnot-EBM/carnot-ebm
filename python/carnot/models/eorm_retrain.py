@@ -39,7 +39,6 @@ from pathlib import Path
 
 from carnot.embeddings.jepa_retrain import ViolationPair, _make_synthetic_pairs
 
-
 # ---------------------------------------------------------------------------
 # load_real_cot_pairs
 # ---------------------------------------------------------------------------
@@ -338,7 +337,7 @@ def make_synthetic_eorm_pairs(n: int = 100, seed: int = 359) -> list[ViolationPa
 # ---------------------------------------------------------------------------
 
 
-def load_fover_corpus_v2(path: str | Path) -> "list":
+def load_fover_corpus_v2(path: str | Path) -> list:
     """Load GRPOContrastivePairs from fover_corpus_v2.json (Exp 553 output).
 
     **For engineers:**
@@ -371,8 +370,8 @@ def load_fover_corpus_v2(path: str | Path) -> "list":
 
     Spec: REQ-LEARN-060, SCENARIO-LEARN-093, SCENARIO-LEARN-094
     """
+
     from carnot.models.grpo_eorm_retrain import GRPOContrastivePair
-    from collections import defaultdict
 
     pairs: list[GRPOContrastivePair] = []
 
@@ -406,10 +405,12 @@ def load_fover_corpus_v2(path: str | Path) -> "list":
 
     # Build one pair per question that has both polarities.
     for question in sorted(set(correct_by_q) & set(incorrect_by_q)):
-        pairs.append(GRPOContrastivePair(
-            question_id=question[:120],  # truncate for readability in logs
-            correct_response=correct_by_q[question],
-            incorrect_response=incorrect_by_q[question],
-        ))
+        pairs.append(
+            GRPOContrastivePair(
+                question_id=question[:120],  # truncate for readability in logs
+                correct_response=correct_by_q[question],
+                incorrect_response=incorrect_by_q[question],
+            )
+        )
 
     return pairs

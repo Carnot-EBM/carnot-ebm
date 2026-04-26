@@ -244,8 +244,7 @@ class TestPartialResultHandoffInstall:
         handoff = PartialResultHandoff(results_dir=str(tmp_path))
         tmpl = _make_template(308, tmp_path)
 
-        with patch.object(atexit_mod, "register") as mock_reg, \
-             patch("signal.signal"):
+        with patch.object(atexit_mod, "register") as mock_reg, patch("signal.signal"):
             handoff.install(tmpl)
             mock_reg.assert_called_once_with(handoff._atexit_handler)
 
@@ -253,8 +252,7 @@ class TestPartialResultHandoffInstall:
         handoff = PartialResultHandoff(results_dir=str(tmp_path))
         tmpl = _make_template(308, tmp_path)
 
-        with patch("atexit.register"), \
-             patch("signal.signal") as mock_sig:
+        with patch("atexit.register"), patch("signal.signal") as mock_sig:
             handoff.install(tmpl)
             mock_sig.assert_called_once_with(signal.SIGTERM, handoff._sigterm_handler)
 

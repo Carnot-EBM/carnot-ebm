@@ -25,15 +25,15 @@ Spec: REQ-AUTO-001 through REQ-AUTO-014
 """
 
 from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics
+from carnot.autoresearch.consolidator import ConsolidatorConfig, consolidate_lessons
 from carnot.autoresearch.constitution import (
-    ActionCategory,
     ALLOWED_ACTIONS,
-    ConstitutionChecker,
-    ConstitutionVerdict,
     FORBIDDEN_ACTIONS,
     REQUIRES_APPROVAL_ACTIONS,
+    ActionCategory,
+    ConstitutionChecker,
+    ConstitutionVerdict,
 )
-from carnot.autoresearch.consolidator import ConsolidatorConfig, consolidate_lessons
 from carnot.autoresearch.evaluator import EvalResult, evaluate_hypothesis
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog
 from carnot.autoresearch.orchestrator import (

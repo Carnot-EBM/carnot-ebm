@@ -43,6 +43,7 @@ from scripts.experiment_template import ExperimentTemplate
 # We assign domain based on content heuristics: presence of code keywords → 'code',
 # presence of logical connectives → 'logical', else 'arithmetic'.
 
+
 def assign_domain(step: dict) -> str:
     """Heuristically assign a constraint domain to a CoT step.
 
@@ -55,11 +56,35 @@ def assign_domain(step: dict) -> str:
         'code', 'logical', or 'arithmetic'
     """
     text = step.get("step_text", "").lower()
-    code_keywords = ["def ", "class ", "import ", "print(", "function", "algorithm",
-                     "variable", "loop", "array", "list", "dict", "string", "integer"]
-    logical_keywords = ["if and only if", "therefore", "implies", "contrapositive",
-                        "contradiction", "premise", "conclusion", "infer", "hence",
-                        "thus we can conclude", "logical", "proposition"]
+    code_keywords = [
+        "def ",
+        "class ",
+        "import ",
+        "print(",
+        "function",
+        "algorithm",
+        "variable",
+        "loop",
+        "array",
+        "list",
+        "dict",
+        "string",
+        "integer",
+    ]
+    logical_keywords = [
+        "if and only if",
+        "therefore",
+        "implies",
+        "contrapositive",
+        "contradiction",
+        "premise",
+        "conclusion",
+        "infer",
+        "hence",
+        "thus we can conclude",
+        "logical",
+        "proposition",
+    ]
 
     if any(kw in text for kw in code_keywords):
         return "code"
@@ -87,6 +112,7 @@ def make_violation_string(step: dict) -> str:
 # ---------------------------------------------------------------------------
 # Run PPSConstraintLearner with a given replay strategy
 # ---------------------------------------------------------------------------
+
 
 def run_with_replay_strategy(
     steps: list[dict],
@@ -174,6 +200,7 @@ def run_with_replay_strategy(
 # main()
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     apply_env_autofix()
 
@@ -231,9 +258,7 @@ def main() -> None:
         )
 
         fr11_tier2_status = "improved" if result.sure_better else "no_improvement"
-        honest_verdict = (
-            "sure_improves_isolation" if result.sure_better else "no_improvement"
-        )
+        honest_verdict = "sure_improves_isolation" if result.sure_better else "no_improvement"
 
         artifact = tmpl.build_result(
             {

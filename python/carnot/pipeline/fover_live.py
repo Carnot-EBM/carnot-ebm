@@ -32,7 +32,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-
 # ---------------------------------------------------------------------------
 # LiveFOVERResult dataclass
 # ---------------------------------------------------------------------------
@@ -121,10 +120,7 @@ def build_live_fover_artifact(result: LiveFOVERResult) -> dict:
     Spec: REQ-LEARN-035, SCENARIO-LEARN-062, SCENARIO-LEARN-063
     """
     if result.source == "live":
-        if result.n_labeled >= 20:
-            verdict = "real_data_labeled"
-        else:
-            verdict = "real_data_insufficient"
+        verdict = "real_data_labeled" if result.n_labeled >= 20 else "real_data_insufficient"
     else:
         verdict = "synthetic_fallback"
 

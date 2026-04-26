@@ -151,9 +151,7 @@ class TestThinkProbeV2RunPartial:
             return "answer"
 
         # budget_minutes = 0.001 → 0.06 s; slow_inference takes 0.5 s per question
-        probe = ThinkProbeV2(
-            budget_minutes=0.001, checkpoint_interval=10, checkpoint_dir=tmp_path
-        )
+        probe = ThinkProbeV2(budget_minutes=0.001, checkpoint_interval=10, checkpoint_dir=tmp_path)
         questions = [f"q{i}" for i in range(10)]
         result = probe.run(questions, slow_inference)
 
@@ -172,9 +170,7 @@ class TestThinkProbeV2RunPartial:
             return "ans"
 
         # Give enough budget for the fast mock but set n_total to 100
-        probe = ThinkProbeV2(
-            budget_minutes=60, checkpoint_interval=10, checkpoint_dir=tmp_path
-        )
+        probe = ThinkProbeV2(budget_minutes=60, checkpoint_interval=10, checkpoint_dir=tmp_path)
 
         # Simulate partial by exhausting budget at the loop level
         # We monkeypatch time.monotonic to expire budget after 3 questions
@@ -279,9 +275,7 @@ class TestThinkProbeV2Checkpoint:
 
     def test_checkpoint_creates_directory_if_missing(self, tmp_path):
         nested = tmp_path / "deep" / "nested" / "dir"
-        probe = ThinkProbeV2(
-            budget_minutes=60, checkpoint_interval=5, checkpoint_dir=nested
-        )
+        probe = ThinkProbeV2(budget_minutes=60, checkpoint_interval=5, checkpoint_dir=nested)
         probe.run([f"q{i}" for i in range(10)], lambda q: "ans")
 
         assert (nested / "checkpoint.json").exists()

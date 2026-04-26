@@ -135,7 +135,9 @@ class TestKillGpuZombiesNvidiaSmi:
             return result
 
         with patch.dict(sys.modules, {"pynvml": None}):
-            with patch("scripts.experiment_template.subprocess.run", side_effect=fake_subprocess_run):
+            with patch(
+                "scripts.experiment_template.subprocess.run", side_effect=fake_subprocess_run
+            ):
                 result = ExperimentTemplate.kill_gpu_zombies(
                     vram_threshold_mb=1000,
                     util_threshold_pct=5.0,
@@ -167,7 +169,9 @@ class TestKillGpuZombiesNvidiaSmi:
             return result
 
         with patch.dict(sys.modules, {"pynvml": None}):
-            with patch("scripts.experiment_template.subprocess.run", side_effect=fake_subprocess_run):
+            with patch(
+                "scripts.experiment_template.subprocess.run", side_effect=fake_subprocess_run
+            ):
                 with patch("scripts.experiment_template.os.kill") as mock_kill:
                     result = ExperimentTemplate.kill_gpu_zombies(
                         vram_threshold_mb=1000,
@@ -213,7 +217,9 @@ class TestKillGpuZombiesNvidiaSmi:
             return result
 
         with patch.dict(sys.modules, {"pynvml": None}):
-            with patch("scripts.experiment_template.subprocess.run", side_effect=fake_subprocess_run):
+            with patch(
+                "scripts.experiment_template.subprocess.run", side_effect=fake_subprocess_run
+            ):
                 with patch("scripts.experiment_template.os.kill") as mock_kill:
                     result = ExperimentTemplate.kill_gpu_zombies(
                         vram_threshold_mb=1000,
@@ -242,7 +248,9 @@ class TestKillGpuZombiesNvidiaSmi:
             return result
 
         with patch.dict(sys.modules, {"pynvml": None}):
-            with patch("scripts.experiment_template.subprocess.run", side_effect=fake_subprocess_run):
+            with patch(
+                "scripts.experiment_template.subprocess.run", side_effect=fake_subprocess_run
+            ):
                 with patch("scripts.experiment_template.os.kill") as mock_kill:
                     result = ExperimentTemplate.kill_gpu_zombies(
                         vram_threshold_mb=1000,
@@ -290,9 +298,18 @@ class TestExclusionManifestClass:
         manifest_file = tmp_path / "manifest.json"
         entries = build_default_manifest()
         manifest_file.write_text(
-            json.dumps({"excluded": [{"experiment_id": e.experiment_id,
-                                      "completed_milestone": e.completed_milestone,
-                                      "reason": e.reason} for e in entries]})
+            json.dumps(
+                {
+                    "excluded": [
+                        {
+                            "experiment_id": e.experiment_id,
+                            "completed_milestone": e.completed_milestone,
+                            "reason": e.reason,
+                        }
+                        for e in entries
+                    ]
+                }
+            )
         )
         manifest = ExclusionManifest(str(manifest_file))
         manifest.load()
@@ -310,9 +327,18 @@ class TestExclusionManifestClass:
         manifest_file = tmp_path / "manifest.json"
         entries = build_default_manifest()
         manifest_file.write_text(
-            json.dumps({"excluded": [{"experiment_id": e.experiment_id,
-                                      "completed_milestone": e.completed_milestone,
-                                      "reason": e.reason} for e in entries]})
+            json.dumps(
+                {
+                    "excluded": [
+                        {
+                            "experiment_id": e.experiment_id,
+                            "completed_milestone": e.completed_milestone,
+                            "reason": e.reason,
+                        }
+                        for e in entries
+                    ]
+                }
+            )
         )
         manifest = ExclusionManifest(str(manifest_file))
         manifest.load()
@@ -372,9 +398,19 @@ class TestModuleLevelAPI:
         from carnot.pipeline.exclusion_manifest import ExclusionManifest, load_manifest
 
         manifest_file = tmp_path / "manifest.json"
-        manifest_file.write_text(json.dumps({"excluded": [
-            {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "stuck"}
-        ]}))
+        manifest_file.write_text(
+            json.dumps(
+                {
+                    "excluded": [
+                        {
+                            "experiment_id": 308,
+                            "completed_milestone": "2026.04.37",
+                            "reason": "stuck",
+                        }
+                    ]
+                }
+            )
+        )
         result = load_manifest(str(manifest_file))
         assert isinstance(result, ExclusionManifest)
 
@@ -390,9 +426,19 @@ class TestModuleLevelAPI:
         from carnot.pipeline.exclusion_manifest import is_excluded, load_manifest
 
         manifest_file = tmp_path / "manifest.json"
-        manifest_file.write_text(json.dumps({"excluded": [
-            {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "stuck"}
-        ]}))
+        manifest_file.write_text(
+            json.dumps(
+                {
+                    "excluded": [
+                        {
+                            "experiment_id": 308,
+                            "completed_milestone": "2026.04.37",
+                            "reason": "stuck",
+                        }
+                    ]
+                }
+            )
+        )
         manifest = load_manifest(str(manifest_file))
         assert is_excluded(manifest, 308) is True
 
@@ -402,9 +448,19 @@ class TestModuleLevelAPI:
         from carnot.pipeline.exclusion_manifest import is_excluded, load_manifest
 
         manifest_file = tmp_path / "manifest.json"
-        manifest_file.write_text(json.dumps({"excluded": [
-            {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "stuck"}
-        ]}))
+        manifest_file.write_text(
+            json.dumps(
+                {
+                    "excluded": [
+                        {
+                            "experiment_id": 308,
+                            "completed_milestone": "2026.04.37",
+                            "reason": "stuck",
+                        }
+                    ]
+                }
+            )
+        )
         manifest = load_manifest(str(manifest_file))
         assert is_excluded(manifest, 999) is False
 
@@ -417,10 +473,24 @@ class TestModuleLevelAPI:
         from carnot.pipeline.exclusion_manifest import build_manifest_check_result, load_manifest
 
         manifest_file = tmp_path / "manifest.json"
-        manifest_file.write_text(json.dumps({"excluded": [
-            {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "stuck"},
-            {"experiment_id": 260, "completed_milestone": "2026.04.37", "reason": "loop"},
-        ]}))
+        manifest_file.write_text(
+            json.dumps(
+                {
+                    "excluded": [
+                        {
+                            "experiment_id": 308,
+                            "completed_milestone": "2026.04.37",
+                            "reason": "stuck",
+                        },
+                        {
+                            "experiment_id": 260,
+                            "completed_milestone": "2026.04.37",
+                            "reason": "loop",
+                        },
+                    ]
+                }
+            )
+        )
         manifest = load_manifest(str(manifest_file))
         result = build_manifest_check_result(manifest, [308, 260])
 
@@ -438,9 +508,19 @@ class TestModuleLevelAPI:
         from carnot.pipeline.exclusion_manifest import build_manifest_check_result, load_manifest
 
         manifest_file = tmp_path / "manifest.json"
-        manifest_file.write_text(json.dumps({"excluded": [
-            {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "stuck"},
-        ]}))
+        manifest_file.write_text(
+            json.dumps(
+                {
+                    "excluded": [
+                        {
+                            "experiment_id": 308,
+                            "completed_milestone": "2026.04.37",
+                            "reason": "stuck",
+                        },
+                    ]
+                }
+            )
+        )
         manifest = load_manifest(str(manifest_file))
         result = build_manifest_check_result(manifest, [308, 999])
 

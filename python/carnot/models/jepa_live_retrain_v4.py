@@ -35,10 +35,8 @@ Spec: REQ-LEARN-039, REQ-LEARN-040, REQ-LEARN-041,
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
 from typing import Any
-
 
 # ---------------------------------------------------------------------------
 # QuasimetricRegularizer

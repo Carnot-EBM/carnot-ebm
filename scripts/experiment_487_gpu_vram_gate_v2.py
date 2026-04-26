@@ -96,7 +96,7 @@ def _run_tests() -> dict[str, Any]:
     with patch("carnot.pipeline.gpu_vram_gate_v2.time.sleep"):
         gate.ensure_vram_available(0)
 
-    kill_before_check = (call_order[0] == "kill" and call_order[1] == "check")
+    kill_before_check = call_order[0] == "kill" and call_order[1] == "check"
     results["test_kill_first_order"] = {
         "passed": kill_before_check,
         "call_order": call_order,
@@ -125,7 +125,7 @@ def _run_tests() -> dict[str, Any]:
     gate2.kill_zombies = _mock_kill_t2
 
     gate2.ensure_vram_available(0)
-    check_before_kill = (call_order2[0] == "check" and "kill" not in call_order2)
+    check_before_kill = call_order2[0] == "check" and "kill" not in call_order2
     results["test_kill_first_false_backward_compat"] = {
         "passed": check_before_kill,
         "call_order": call_order2,
@@ -162,7 +162,7 @@ def _run_tests() -> dict[str, Any]:
         gate4.ensure_vram_available(0)
         sleep_calls = [c.args[0] for c in mock_sleep.call_args_list]
 
-    drain_sleep_correct = (sleep_calls == [15])
+    drain_sleep_correct = sleep_calls == [15]
     results["test_drain_sleep_seconds"] = {
         "passed": drain_sleep_correct,
         "sleep_calls": sleep_calls,

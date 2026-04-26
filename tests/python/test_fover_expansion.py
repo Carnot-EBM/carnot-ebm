@@ -67,8 +67,12 @@ class TestMergeFoverCorpora:
 
     def test_prior_copy_wins_over_new_on_dedup(self):
         # When step_text collides, the prior version is kept (prior inserted first).
-        prior = [{"step_text": "10 + 5 = 15", "label": "correct", "confidence": 1.0, "source": "prior"}]
-        new = [{"step_text": "10 + 5 = 15", "label": "incorrect", "confidence": 0.5, "source": "new"}]
+        prior = [
+            {"step_text": "10 + 5 = 15", "label": "correct", "confidence": 1.0, "source": "prior"}
+        ]
+        new = [
+            {"step_text": "10 + 5 = 15", "label": "incorrect", "confidence": 0.5, "source": "new"}
+        ]
         result = merge_fover_corpora(prior, new)
         assert len(result) == 1
         assert result[0].get("source") == "prior"
@@ -102,8 +106,13 @@ class TestMergeFoverCorpora:
 
     def test_large_merge_count(self):
         # Merge 60 prior + 50 new unique pairs → 110 total.
-        prior = [{"step_text": f"prior_step_{i}", "label": "correct", "confidence": 1.0} for i in range(60)]
-        new = [{"step_text": f"new_step_{i}", "label": "correct", "confidence": 1.0} for i in range(50)]
+        prior = [
+            {"step_text": f"prior_step_{i}", "label": "correct", "confidence": 1.0}
+            for i in range(60)
+        ]
+        new = [
+            {"step_text": f"new_step_{i}", "label": "correct", "confidence": 1.0} for i in range(50)
+        ]
         result = merge_fover_corpora(prior, new)
         assert len(result) == 110
 
@@ -132,7 +141,12 @@ class TestExp542MainIntegration:
 
     def _make_prior_pairs(self, n: int) -> list[dict]:
         return [
-            {"step_text": f"prior step {i}", "label": "correct", "confidence": 1.0, "question_id": str(i)}
+            {
+                "step_text": f"prior step {i}",
+                "label": "correct",
+                "confidence": 1.0,
+                "question_id": str(i),
+            }
             for i in range(n)
         ]
 
@@ -160,7 +174,9 @@ class TestExp542MainIntegration:
         with (
             patch("scripts.experiment_542_fover_expansion._REPO_ROOT", tmp_path),
             patch("scripts.experiment_542_fover_expansion.apply_env_autofix"),
-            patch("scripts.experiment_542_fover_expansion.ExperimentTimeoutWatchdog") as mock_watchdog,
+            patch(
+                "scripts.experiment_542_fover_expansion.ExperimentTimeoutWatchdog"
+            ) as mock_watchdog,
             patch("scripts.experiment_542_fover_expansion.ExperimentTemplate") as mock_tmpl_cls,
         ):
             # Make the watchdog context manager a no-op.
@@ -170,10 +186,15 @@ class TestExp542MainIntegration:
             # Mock template so setup() and assert_deliverable_written() are no-ops.
             mock_tmpl = MagicMock()
             mock_tmpl.build_result.side_effect = lambda data, **kwargs: {
-                "experiment": 542, "status": kwargs.get("status", "success"), **data,
+                "experiment": 542,
+                "status": kwargs.get("status", "success"),
+                **data,
                 "schema": sorted({"experiment", "status", *data.keys()}),
-                "run_date": "20260420", "started_at": "T", "finished_at": "T",
-                "duration_s": 0.1, "title": "t",
+                "run_date": "20260420",
+                "started_at": "T",
+                "finished_at": "T",
+                "duration_s": 0.1,
+                "title": "t",
             }
             mock_tmpl_cls.return_value = mock_tmpl
 
@@ -210,15 +231,21 @@ class TestExp542MainIntegration:
 
         # Synthesise 50 new unique training pairs (simulating FOVERAnnotator output).
         new_pairs_for_mock = [
-            {"step_text": f"unique new step text {i}: 2 + 2 = 4", "label": "correct",
-             "confidence": 1.0, "question_id": f"exp538_{i}"}
+            {
+                "step_text": f"unique new step text {i}: 2 + 2 = 4",
+                "label": "correct",
+                "confidence": 1.0,
+                "question_id": f"exp538_{i}",
+            }
             for i in range(50)
         ]
 
         with (
             patch("scripts.experiment_542_fover_expansion._REPO_ROOT", tmp_path),
             patch("scripts.experiment_542_fover_expansion.apply_env_autofix"),
-            patch("scripts.experiment_542_fover_expansion.ExperimentTimeoutWatchdog") as mock_watchdog,
+            patch(
+                "scripts.experiment_542_fover_expansion.ExperimentTimeoutWatchdog"
+            ) as mock_watchdog,
             patch("scripts.experiment_542_fover_expansion.ExperimentTemplate") as mock_tmpl_cls,
         ):
             mock_watchdog.return_value.__enter__ = MagicMock(return_value=None)
@@ -226,10 +253,15 @@ class TestExp542MainIntegration:
 
             mock_tmpl = MagicMock()
             mock_tmpl.build_result.side_effect = lambda data, **kwargs: {
-                "experiment": 542, "status": kwargs.get("status", "success"), **data,
+                "experiment": 542,
+                "status": kwargs.get("status", "success"),
+                **data,
                 "schema": sorted({"experiment", "status", *data.keys()}),
-                "run_date": "20260420", "started_at": "T", "finished_at": "T",
-                "duration_s": 0.1, "title": "t",
+                "run_date": "20260420",
+                "started_at": "T",
+                "finished_at": "T",
+                "duration_s": 0.1,
+                "title": "t",
             }
             mock_tmpl_cls.return_value = mock_tmpl
 
@@ -241,6 +273,7 @@ class TestExp542MainIntegration:
 
                 from scripts import experiment_542_fover_expansion  # noqa: PLC0415
                 import importlib  # noqa: PLC0415
+
                 importlib.reload(experiment_542_fover_expansion)
                 experiment_542_fover_expansion.main()
 
@@ -262,15 +295,21 @@ class TestExp542MainIntegration:
 
         # Only 5 new unique pairs → total 62 < 100
         new_pairs_for_mock = [
-            {"step_text": f"unique new step text {i}: 2 + 2 = 4", "label": "correct",
-             "confidence": 1.0, "question_id": f"exp538_{i}"}
+            {
+                "step_text": f"unique new step text {i}: 2 + 2 = 4",
+                "label": "correct",
+                "confidence": 1.0,
+                "question_id": f"exp538_{i}",
+            }
             for i in range(5)
         ]
 
         with (
             patch("scripts.experiment_542_fover_expansion._REPO_ROOT", tmp_path),
             patch("scripts.experiment_542_fover_expansion.apply_env_autofix"),
-            patch("scripts.experiment_542_fover_expansion.ExperimentTimeoutWatchdog") as mock_watchdog,
+            patch(
+                "scripts.experiment_542_fover_expansion.ExperimentTimeoutWatchdog"
+            ) as mock_watchdog,
             patch("scripts.experiment_542_fover_expansion.ExperimentTemplate") as mock_tmpl_cls,
         ):
             mock_watchdog.return_value.__enter__ = MagicMock(return_value=None)
@@ -278,10 +317,15 @@ class TestExp542MainIntegration:
 
             mock_tmpl = MagicMock()
             mock_tmpl.build_result.side_effect = lambda data, **kwargs: {
-                "experiment": 542, "status": kwargs.get("status", "success"), **data,
+                "experiment": 542,
+                "status": kwargs.get("status", "success"),
+                **data,
                 "schema": sorted({"experiment", "status", *data.keys()}),
-                "run_date": "20260420", "started_at": "T", "finished_at": "T",
-                "duration_s": 0.1, "title": "t",
+                "run_date": "20260420",
+                "started_at": "T",
+                "finished_at": "T",
+                "duration_s": 0.1,
+                "title": "t",
             }
             mock_tmpl_cls.return_value = mock_tmpl
 
@@ -293,6 +337,7 @@ class TestExp542MainIntegration:
 
                 from scripts import experiment_542_fover_expansion as mod  # noqa: PLC0415
                 import importlib  # noqa: PLC0415
+
                 importlib.reload(mod)
                 mod.main()
 

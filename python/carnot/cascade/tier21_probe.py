@@ -35,14 +35,17 @@ Spec: REQ-VER-035, REQ-VER-036, REQ-VER-037,
 
 from __future__ import annotations
 
-import time
-from typing import Any, Callable, Optional
+from datetime import UTC
+from typing import TYPE_CHECKING, Any
 
-import numpy as np
-
-from carnot.samplers.jepa_reasoner_probe import JEPAReasonerProbe
 from carnot.pipeline.fr11_event_bus import FR11EventBus, ViolationEvent
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    import numpy as np
+
+    from carnot.samplers.jepa_reasoner_probe import JEPAReasonerProbe
 
 # ---------------------------------------------------------------------------
 # ViolationEvent stub — minimal record emitted when probe flags a violation
@@ -121,9 +124,9 @@ class Tier21ProbeWrapper:
         self,
         probe: JEPAReasonerProbe,
         threshold: float,
-        event_bus: Optional[Callable[[ViolationEventStub], None]] = None,
-        violation_log: Optional[list[ViolationEventStub]] = None,
-        fr11_bus: Optional[FR11EventBus] = None,
+        event_bus: Callable[[ViolationEventStub], None] | None = None,
+        violation_log: list[ViolationEventStub] | None = None,
+        fr11_bus: FR11EventBus | None = None,
     ) -> None:
         self._probe = probe
         self.threshold = threshold
@@ -168,10 +171,7 @@ class Tier21ProbeWrapper:
         probe_score: float = self._probe.predict(hidden_state)
         # Score <= threshold means the step is below the violation band → likely correct.
         # Score > threshold means the step enters the violation band → route to Tier 2.5+.
-        if probe_score <= self.threshold:
-            verdict = "likely_correct"
-        else:
-            verdict = "likely_violation"
+        verdict = "likely_correct" if probe_score <= self.threshold else "likely_violation"
         return probe_score, verdict
 
     def emit_violation_stub(
@@ -207,9 +207,9 @@ class Tier21ProbeWrapper:
 
         Spec: REQ-VER-037-1, REQ-VER-037-3, REQ-FR11-001
         """
-        from datetime import datetime, timezone  # noqa: PLC0415
+        from datetime import datetime  # noqa: PLC0415
 
-        ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        ts = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
         if self._fr11_bus is not None:
             # Real FR11EventBus path — full ViolationEvent with all fields.

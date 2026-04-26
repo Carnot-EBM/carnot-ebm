@@ -101,12 +101,14 @@ def _make_synthetic_pairs(n: int = 100, seed: int = 0) -> list[dict]:
         emb = rng.randn(256).astype(np.float32)
         # Inject a small class-correlated signal so AUC > 0.5 is achievable.
         emb[0] += (1.0 if label else -1.0) * 0.5
-        pairs.append({
-            "embedding": emb.tolist(),
-            "violated_arithmetic": label,
-            "violated_code": label,
-            "violated_logic": label,
-        })
+        pairs.append(
+            {
+                "embedding": emb.tolist(),
+                "violated_arithmetic": label,
+                "violated_code": label,
+                "violated_logic": label,
+            }
+        )
     return pairs
 
 
@@ -137,7 +139,10 @@ def _compute_auc_for_predictor(predictor: JEPAViolationPredictor, pairs: list[di
     aucs = []
     for domain, label_key in domains.items():
         y_true = [float(p[label_key]) for p in pairs]
-        y_score = [predictor.predict(np.asarray(p["embedding"], dtype=np.float32)).get(domain, 0.5) for p in pairs]
+        y_score = [
+            predictor.predict(np.asarray(p["embedding"], dtype=np.float32)).get(domain, 0.5)
+            for p in pairs
+        ]
         if len(set(y_true)) < 2:
             aucs.append(0.5)
         else:
@@ -180,7 +185,9 @@ for run_i in range(3):
     # Use the AUC from the trainer's evaluate_auc (which calls the underlying predictor)
     auc = result["final_auc"]
     leworldmodel_aucs.append(float(auc))
-    print(f"  LW run {run_i}: AUC={auc:.4f}, epochs={result['epochs_trained']}, converged={result['converged']}")
+    print(
+        f"  LW run {run_i}: AUC={auc:.4f}, epochs={result['epochs_trained']}, converged={result['converged']}"
+    )
 
 leworldmodel_variance = float(np.var(leworldmodel_aucs))
 print(f"  LW variance={leworldmodel_variance:.6f}")

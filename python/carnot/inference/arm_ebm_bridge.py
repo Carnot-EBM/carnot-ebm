@@ -128,7 +128,7 @@ def extract_token_rewards(
         raise ValueError(msg)
 
     rewards: list[float] = []
-    for t, (logit_vec, token_id) in enumerate(zip(logits, token_ids)):
+    for _t, (logit_vec, token_id) in enumerate(zip(logits, token_ids, strict=False)):
         logit_array = jnp.array(logit_vec)
         # The bijection: r(s,y) = logit(y) - logsumexp(logits)
         # This equals log P(y|s), the log-probability of the chosen token.

@@ -39,6 +39,7 @@ if str(_REPO_ROOT) not in sys.path:
 from carnot.pipeline.exclusion_manifest import ExclusionManifest, ExclusionEntry  # noqa: E402
 from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: E402
 from scripts.experiment_template import ExperimentTemplate  # noqa: E402
+import contextlib
 
 _DELIVERABLE = "results/experiment_740_preflight_v9.json"
 _MANIFEST_PATH = _REPO_ROOT / "scripts" / "conductor_exclusion_manifest.json"
@@ -47,6 +48,7 @@ _MANIFEST_PATH = _REPO_ROOT / "scripts" / "conductor_exclusion_manifest.json"
 # ---------------------------------------------------------------------------
 # Step 3: GPU health check
 # ---------------------------------------------------------------------------
+
 
 def _check_gpu_health() -> dict:
     """Query nvidia-smi for current VRAM and utilisation on both GPUs.
@@ -99,6 +101,7 @@ def _check_gpu_health() -> dict:
 # Step 4: Add Exp 527 to exclusion manifest
 # ---------------------------------------------------------------------------
 
+
 def _add_exp527_to_manifest() -> bool:
     """Add Exp 527 to the exclusion manifest if not already present.
 
@@ -124,6 +127,7 @@ def _add_exp527_to_manifest() -> bool:
 # Step 5: DualGPU benchmark
 # ---------------------------------------------------------------------------
 
+
 def _dualgpu_speedup_benchmark() -> float:
     """Run a minimal DualGPU vs sequential benchmark and return the speedup ratio.
 
@@ -134,7 +138,11 @@ def _dualgpu_speedup_benchmark() -> float:
 
     Returns speedup >= 1.5 on 2-GPU hosts, ~1.0 on CPU-only.
     """
-    from carnot.pipeline.dualgpu_retrain import DualGPURetrain, DualGPURetrainConfig, _count_cuda_gpus  # noqa: E402
+    from carnot.pipeline.dualgpu_retrain import (
+        DualGPURetrain,
+        DualGPURetrainConfig,
+        _count_cuda_gpus,
+    )  # noqa: E402
 
     retrain = DualGPURetrain(DualGPURetrainConfig(eorm_device="cuda:0", jepa_device="cuda:1"))
 
@@ -161,14 +169,17 @@ def _dualgpu_speedup_benchmark() -> float:
     parallel_s = result["wall_time_s"]
 
     speedup = round(sequential_s / max(parallel_s, 0.001), 4)
-    print(f"[Exp 740] DualGPU benchmark: sequential={sequential_s:.3f}s "
-          f"parallel={parallel_s:.3f}s speedup={speedup:.4f}x n_gpus={n_gpus}")
+    print(
+        f"[Exp 740] DualGPU benchmark: sequential={sequential_s:.3f}s "
+        f"parallel={parallel_s:.3f}s speedup={speedup:.4f}x n_gpus={n_gpus}"
+    )
     return speedup
 
 
 # ---------------------------------------------------------------------------
 # Step 6: Incremental test selection
 # ---------------------------------------------------------------------------
+
 
 def _incremental_test_selection() -> dict:
     """Run the conductor pre-flight incremental selector and return stats.
@@ -177,6 +188,7 @@ def _incremental_test_selection() -> dict:
     """
     try:
         import subprocess as sp
+
         result = sp.run(
             [sys.executable, str(_REPO_ROOT / "scripts" / "conductor_pre_flight.py")],
             capture_output=True,
@@ -190,10 +202,8 @@ def _incremental_test_selection() -> dict:
         incremental_mode = False
         for line in output.splitlines():
             if "tests_selected" in line.lower():
-                try:
+                with contextlib.suppress(Exception):
                     tests_selected = int(line.split("=")[-1].strip().split()[0])
-                except Exception:
-                    pass
             if "incremental_mode" in line.lower():
                 incremental_mode = "true" in line.lower()
         return {"incremental_mode": incremental_mode, "tests_selected": tests_selected}
@@ -204,6 +214,7 @@ def _incremental_test_selection() -> dict:
 # ---------------------------------------------------------------------------
 # Step 7: Manifest enforcement check
 # ---------------------------------------------------------------------------
+
 
 def _check_manifest_enforcement() -> bool:
     """Return True if the manifest fix patch has been applied to research_conductor.py.
@@ -226,6 +237,7 @@ def _check_manifest_enforcement() -> bool:
 # Main
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     tmpl = ExperimentTemplate(
         740,
@@ -244,8 +256,10 @@ def main() -> None:
         gpu0_vram_mb = gpu_health["gpu0_vram_mb"]
         gpu1_vram_mb = gpu_health["gpu1_vram_mb"]
         gpu_clean = gpu0_vram_mb < 100 and gpu1_vram_mb < 100
-        print(f"[Exp 740] GPU health: gpu0={gpu0_vram_mb} MB, gpu1={gpu1_vram_mb} MB, "
-              f"clean={gpu_clean}")
+        print(
+            f"[Exp 740] GPU health: gpu0={gpu0_vram_mb} MB, gpu1={gpu1_vram_mb} MB, "
+            f"clean={gpu_clean}"
+        )
 
         # --- Step 4: Exp 527 retirement ---
         exp527_retired = _add_exp527_to_manifest()
@@ -293,7 +307,9 @@ def main() -> None:
                 "note_manifest_fix": (
                     "Apply results/manifest_fix_patch.txt to research_conductor.py "
                     "to complete manifest enforcement (human action required)."
-                ) if not manifest_enforcement_applied else "manifest_enforced",
+                )
+                if not manifest_enforcement_applied
+                else "manifest_enforced",
             },
             status="success",
         )

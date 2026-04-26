@@ -33,8 +33,11 @@ Spec: REQ-VERIFY-113, REQ-VERIFY-114, SCENARIO-VERIFY-149, SCENARIO-VERIFY-150
 from __future__ import annotations
 
 import random
-from dataclasses import dataclass, field
-from typing import Callable, List
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 @dataclass
@@ -104,7 +107,7 @@ class EnergyGuidedDecoder:
         self.energy_fn = energy_fn
         self.config = config if config is not None else EnergyGuidedConfig()
 
-    def score_candidates(self, prefix: str, candidates: List[str]) -> List[float]:
+    def score_candidates(self, prefix: str, candidates: list[str]) -> list[float]:
         """Score each candidate by computing energy_fn(prefix + candidate).
 
         **Why prefix + candidate (not just candidate):**
@@ -129,7 +132,7 @@ class EnergyGuidedDecoder:
         """
         return [float(self.energy_fn(prefix + candidate)) for candidate in candidates]
 
-    def select_next(self, prefix: str, candidates: List[str]) -> str:
+    def select_next(self, prefix: str, candidates: list[str]) -> str:
         """Return the candidate with the lowest energy continuation.
 
         When ``energy_weight == 0.0`` the EBM score is ignored entirely and a
@@ -163,7 +166,7 @@ class EnergyGuidedDecoder:
     def generate(
         self,
         prompt: str,
-        vocab: List[str],
+        vocab: list[str],
         max_steps: int = 20,
     ) -> str:
         """Greedily generate a sequence of ``max_steps`` words from ``vocab``.

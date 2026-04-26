@@ -155,19 +155,23 @@ def extract_jepa_violations(exp705_path: Path) -> list[ViolationEntry]:
         constraint_type = v.get("constraint_type", "jepa_ood")
         pattern = v.get("step_text_fragment", "").strip()
         if pattern:
-            entries.append(ViolationEntry(
-                constraint_type=constraint_type,
-                pattern=pattern,
-                source_label="jepa_v17_cascade",
-            ))
+            entries.append(
+                ViolationEntry(
+                    constraint_type=constraint_type,
+                    pattern=pattern,
+                    source_label="jepa_v17_cascade",
+                )
+            )
     # If no violations are stored in the artifact (e.g. cascade never ran),
     # synthesize a sentinel pattern confirming the gate opened.
     if not entries:
-        entries.append(ViolationEntry(
-            constraint_type="jepa_ood",
-            pattern="JEPA_OOD_VIOLATION: jepa_v17_cascade step mismatch detected",
-            source_label="jepa_v17_cascade_sentinel",
-        ))
+        entries.append(
+            ViolationEntry(
+                constraint_type="jepa_ood",
+                pattern="JEPA_OOD_VIOLATION: jepa_v17_cascade step mismatch detected",
+                source_label="jepa_v17_cascade_sentinel",
+            )
+        )
     return entries
 
 
@@ -206,11 +210,13 @@ def extract_exp694_fallback_violations(exp694_path: Path) -> list[ViolationEntry
 
     entries: list[ViolationEntry] = []
     for i in range(n_confirmed):
-        entries.append(ViolationEntry(
-            constraint_type="arithmetic",
-            pattern=f"COMPUTE: exp694_qwen_hard_q{i:03d} synthetic_agg_pattern",
-            source_label="exp694_qwen_fallback",
-        ))
+        entries.append(
+            ViolationEntry(
+                constraint_type="arithmetic",
+                pattern=f"COMPUTE: exp694_qwen_hard_q{i:03d} synthetic_agg_pattern",
+                source_label="exp694_qwen_fallback",
+            )
+        )
     return entries
 
 

@@ -152,9 +152,7 @@ def _build_training_data(
     """
     adversarial = [_ADVERSARIAL_PREFIX + q for q in questions]
     texts = list(questions) + adversarial
-    labels = np.array(
-        [0.0] * len(questions) + [1.0] * len(adversarial), dtype=np.float32
-    )
+    labels = np.array([0.0] * len(questions) + [1.0] * len(adversarial), dtype=np.float32)
     return texts, labels
 
 
@@ -180,7 +178,9 @@ def _extract_states_with_model(
         for text in batch:
             hs = probe.extract_hidden_state(text)
             states.append(hs)
-        _log.info("Extracted hidden states for %d/%d texts", min(i + batch_size, len(texts)), len(texts))
+        _log.info(
+            "Extracted hidden states for %d/%d texts", min(i + batch_size, len(texts)), len(texts)
+        )
     return np.stack(states, axis=0)
 
 
@@ -261,6 +261,7 @@ def main() -> None:
     # Determine device: use CUDA if available, else CPU.
     try:
         import torch  # noqa: PLC0415
+
         device = "cuda:0" if torch.cuda.is_available() else "cpu"
     except ImportError:
         device = "cpu"

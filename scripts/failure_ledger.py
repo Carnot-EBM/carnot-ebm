@@ -62,16 +62,15 @@ import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 # Reuse the reconciler's verdict-to-label mapping. A failure is anything
 # that doesn't classify as ✅ Complete in that mapping.
 import sys as _sys
+
 _sys.path.insert(0, str(Path(__file__).resolve().parent))
 from in_process_doc_reconcile import map_status_label  # type: ignore[import-not-found]
-
 
 # How many characters of slug overlap to declare two scopes the same.
 # A short overlap like "v" or "ising" produces too many false positives;
@@ -96,12 +95,14 @@ _SCOPE_OVERLAP_MIN = 8
 # Adding a new scope here is intentional and auditable: it must be a task
 # that exists *by design* in every milestone, not just one that has happened
 # to ship a few times.
-_RECURRING_SCAFFOLDING_SCOPES: frozenset[str] = frozenset({
-    "preflight",
-    "milestone-retro",
-    "milestone-retrospective",
-    "zombie-kill-preflight",
-})
+_RECURRING_SCAFFOLDING_SCOPES: frozenset[str] = frozenset(
+    {
+        "preflight",
+        "milestone-retro",
+        "milestone-retrospective",
+        "zombie-kill-preflight",
+    }
+)
 
 
 @dataclass
@@ -111,8 +112,8 @@ class LedgerEntry:
     experiment_id: str  # canonicalized (lowercased)
     title: str
     verdict: str
-    status_label: str   # ⚠ Blocked / ⚠ Research Finding / ❌ Failed
-    scope: str          # extracted slug, version-stripped
+    status_label: str  # ⚠ Blocked / ⚠ Research Finding / ❌ Failed
+    scope: str  # extracted slug, version-stripped
     artifact_path: Path | None = None
 
 
@@ -248,10 +249,9 @@ class FailureLedger:
                 continue
             # Pull the experiment id and title — be tolerant of
             # different artifact shapes
-            exp_num = None
             m = re.match(r"experiment_(\d+)_", artifact_path.stem)
             if m:
-                exp_num = m.group(1)
+                m.group(1)
             verdict = data.get("honest_verdict", "")
             # Some early artifacts (Exps 256/257/259/292/293/304/317) have a
             # dict-shaped honest_verdict like {"status": "complete",
@@ -302,8 +302,10 @@ class FailureLedger:
         # survives _scope_signature stripping). Same for "preflight-v20"
         # vs "preflight" — although in that case the suffix-strip already
         # collapses to "preflight", the prefix check is the durable fix.
-        if any(target_scope == s or target_scope.startswith(s + "-")
-               for s in _RECURRING_SCAFFOLDING_SCOPES):
+        if any(
+            target_scope == s or target_scope.startswith(s + "-")
+            for s in _RECURRING_SCAFFOLDING_SCOPES
+        ):
             return []
         matches: list[LedgerEntry] = []
         for e in self.entries:

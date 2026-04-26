@@ -122,10 +122,9 @@ class TestGRPOContrastivePairer:
 
     def test_cross_product_for_multiple_responses(self):
         """2 correct + 3 incorrect for same question yields 6 pairs (Cartesian)."""
-        entries = (
-            [_make_entry(0, True, f"c{j}") for j in range(2)]
-            + [_make_entry(0, False, f"i{j}") for j in range(3)]
-        )
+        entries = [_make_entry(0, True, f"c{j}") for j in range(2)] + [
+            _make_entry(0, False, f"i{j}") for j in range(3)
+        ]
         pairs = self.pairer.pairs(entries)
         assert len(pairs) == 6
 
@@ -218,12 +217,11 @@ class TestNUPProbeV5:
     def test_trained_probe_separates_clear_cases(self):
         """After training on well-separated texts, AUC should exceed 0.5."""
         # Use very distinct texts so the probe has signal to learn from
-        correct_texts = [f"correct arithmetic result {i} equals {i*2}" for i in range(20)]
+        correct_texts = [f"correct arithmetic result {i} equals {i * 2}" for i in range(20)]
         incorrect_texts = [f"hallucinated junk xyz abc def {i}" for i in range(20)]
-        entries = (
-            [_make_entry(j, True, correct_texts[j]) for j in range(20)]
-            + [_make_entry(j, False, incorrect_texts[j]) for j in range(20)]
-        )
+        entries = [_make_entry(j, True, correct_texts[j]) for j in range(20)] + [
+            _make_entry(j, False, incorrect_texts[j]) for j in range(20)
+        ]
         probe = NUPProbeV5(energy_dim=32, margin=1.0, learning_rate=0.05, random_seed=7)
         probe.train_from_pairs(entries, n_epochs=50)
         auc = probe.evaluate_auc(entries)

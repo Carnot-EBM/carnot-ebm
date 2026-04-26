@@ -142,7 +142,7 @@ class _RuntimeCheckInserter(ast.NodeTransformer):
                 var_name=arg.arg,
                 type_expr=isinstance_types,
                 msg=f"RUNTIME_TYPE_CHECK: {node.name}() param '{arg.arg}' "
-                    f"expected {type_name}, got {{type({arg.arg}).__name__}}",
+                f"expected {type_name}, got {{type({arg.arg}).__name__}}",
             )
             type_checks.append(check)
 
@@ -167,9 +167,7 @@ class _RuntimeCheckInserter(ast.NodeTransformer):
         self.generic_visit(node)
         return node
 
-    def _transform_returns(
-        self, node: ast.FunctionDef, return_type_name: str
-    ) -> ast.FunctionDef:
+    def _transform_returns(self, node: ast.FunctionDef, return_type_name: str) -> ast.FunctionDef:
         """Replace ``return expr`` with type-checked version.
 
         Transforms each ``return expr`` into::
@@ -200,7 +198,7 @@ class _RuntimeCheckInserter(ast.NodeTransformer):
                     var_name="__rt_val__",
                     type_expr=isinstance_types,
                     msg=f"RUNTIME_RETURN_CHECK: {node.name}() should return "
-                        f"{return_type_name}, got {{type(__rt_val__).__name__}}",
+                    f"{return_type_name}, got {{type(__rt_val__).__name__}}",
                 )
                 # return __rt_val__
                 new_ret = ast.Return(
@@ -227,9 +225,7 @@ class _RuntimeCheckInserter(ast.NodeTransformer):
         node.body = new_body
         return node
 
-    def _insert_loop_bound_checks(
-        self, node: ast.FunctionDef
-    ) -> ast.FunctionDef:
+    def _insert_loop_bound_checks(self, node: ast.FunctionDef) -> ast.FunctionDef:
         """Insert bound-check assertions at the top of for-range loops.
 
         For ``for i in range(n)``, inserts:
@@ -238,15 +234,18 @@ class _RuntimeCheckInserter(ast.NodeTransformer):
         For ``for i in range(lo, hi)``, inserts:
             ``assert lo <= i < hi, "RUNTIME_BOUND_CHECK: ..."``
         """
+
         class _LoopBounder(ast.NodeTransformer):
             def visit_For(self, for_node: ast.For) -> ast.For:
                 self.generic_visit(for_node)  # recurse first
 
                 if not isinstance(for_node.target, ast.Name):
                     return for_node
-                if not (isinstance(for_node.iter, ast.Call)
-                        and isinstance(for_node.iter.func, ast.Name)
-                        and for_node.iter.func.id == "range"):
+                if not (
+                    isinstance(for_node.iter, ast.Call)
+                    and isinstance(for_node.iter.func, ast.Name)
+                    and for_node.iter.func.id == "range"
+                ):
                     return for_node
 
                 loop_var = for_node.target.id
@@ -261,9 +260,7 @@ class _RuntimeCheckInserter(ast.NodeTransformer):
                     )
                     # We need to store the bound value before the assertion
                     # to avoid re-evaluating complex expressions.
-                    bound_assign = ast.parse(
-                        f"__bound__ = {ast.unparse(bound_expr)}"
-                    ).body[0]
+                    bound_assign = ast.parse(f"__bound__ = {ast.unparse(bound_expr)}").body[0]
                     check = ast.parse(check_code).body[0]
                     for_node.body = [bound_assign, check] + for_node.body
                 elif len(args) >= 2:
@@ -284,9 +281,7 @@ class _RuntimeCheckInserter(ast.NodeTransformer):
         return node
 
 
-def _make_isinstance_assert(
-    var_name: str, type_expr: str, msg: str
-) -> ast.Assert:
+def _make_isinstance_assert(var_name: str, type_expr: str, msg: str) -> ast.Assert:
     """Build an ``assert isinstance(var, type), f"msg"`` AST node.
 
     The message is an f-string so it can include ``{type(var).__name__}``
@@ -341,6 +336,7 @@ def instrument_code(code: str) -> str:
 # 2. execute_instrumented — run instrumented code in a restricted namespace
 # ---------------------------------------------------------------------------
 
+
 def execute_instrumented(
     code: str,
     test_inputs: list[dict[str, Any]],
@@ -376,19 +372,39 @@ def execute_instrumented(
         - ``"violations"``: list of violation descriptions
     """
     # --- Build restricted namespace ---
-    safe_builtins = {
-        k: v for k, v in __builtins__.__dict__.items()
-        if k not in {
-            "open", "exec", "eval", "__import__", "compile",
-            "breakpoint", "exit", "quit",
+    safe_builtins = (
+        {
+            k: v
+            for k, v in __builtins__.__dict__.items()
+            if k
+            not in {
+                "open",
+                "exec",
+                "eval",
+                "__import__",
+                "compile",
+                "breakpoint",
+                "exit",
+                "quit",
+            }
         }
-    } if isinstance(__builtins__, type(sys)) else {
-        k: v for k, v in __builtins__.items()
-        if k not in {
-            "open", "exec", "eval", "__import__", "compile",
-            "breakpoint", "exit", "quit",
+        if isinstance(__builtins__, type(sys))
+        else {
+            k: v
+            for k, v in __builtins__.items()
+            if k
+            not in {
+                "open",
+                "exec",
+                "eval",
+                "__import__",
+                "compile",
+                "breakpoint",
+                "exit",
+                "quit",
+            }
         }
-    }
+    )
 
     namespace: dict[str, Any] = {"__builtins__": safe_builtins, "math": math}
 
@@ -430,46 +446,60 @@ def execute_instrumented(
     for i, inputs in enumerate(test_inputs):
         try:
             result_val = func(**inputs)
-            results.append({
-                "input_idx": i,
-                "inputs": inputs,
-                "result": result_val,
-                "passed": True,
-            })
+            results.append(
+                {
+                    "input_idx": i,
+                    "inputs": inputs,
+                    "result": result_val,
+                    "passed": True,
+                }
+            )
             n_pass += 1
         except AssertionError as e:
             msg = str(e)
             violations.append(msg)
-            results.append({
-                "input_idx": i,
-                "inputs": inputs,
-                "error": msg,
-                "error_type": "AssertionError",
-                "passed": False,
-            })
+            results.append(
+                {
+                    "input_idx": i,
+                    "inputs": inputs,
+                    "error": msg,
+                    "error_type": "AssertionError",
+                    "passed": False,
+                }
+            )
             n_fail += 1
-        except (ZeroDivisionError, IndexError, TypeError, NameError,
-                OverflowError, ValueError) as e:
+        except (
+            ZeroDivisionError,
+            IndexError,
+            TypeError,
+            NameError,
+            OverflowError,
+            ValueError,
+        ) as e:
             msg = f"{type(e).__name__}: {e}"
             violations.append(msg)
-            results.append({
-                "input_idx": i,
-                "inputs": inputs,
-                "error": msg,
-                "error_type": type(e).__name__,
-                "passed": False,
-            })
+            results.append(
+                {
+                    "input_idx": i,
+                    "inputs": inputs,
+                    "error": msg,
+                    "error_type": type(e).__name__,
+                    "passed": False,
+                }
+            )
             n_fail += 1
         except Exception as e:
             msg = f"Unexpected {type(e).__name__}: {e}"
             violations.append(msg)
-            results.append({
-                "input_idx": i,
-                "inputs": inputs,
-                "error": msg,
-                "error_type": type(e).__name__,
-                "passed": False,
-            })
+            results.append(
+                {
+                    "input_idx": i,
+                    "inputs": inputs,
+                    "error": msg,
+                    "error_type": type(e).__name__,
+                    "passed": False,
+                }
+            )
             n_fail += 1
 
     return {
@@ -483,6 +513,7 @@ def execute_instrumented(
 # ---------------------------------------------------------------------------
 # 3. Test scenarios — static vs dynamic comparison
 # ---------------------------------------------------------------------------
+
 
 def get_comparison_scenarios() -> list[dict[str, Any]]:
     """Return 12 scenarios comparing static vs dynamic constraint detection.
@@ -536,11 +567,9 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
             "expected_static": True,
             "expected_dynamic": True,
             "explanation": (
-                "Static: detects 'undefined_var' never assigned. "
-                "Dynamic: NameError at runtime."
+                "Static: detects 'undefined_var' never assigned. Dynamic: NameError at runtime."
             ),
         },
-
         # =====================================================================
         # Category 2: DYNAMIC catches, STATIC does not
         # =====================================================================
@@ -554,8 +583,8 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
                     return total / len(nums)
             """),
             "test_inputs": [
-                {"nums": [1, 2, 3]},     # passes
-                {"nums": []},             # division by zero!
+                {"nums": [1, 2, 3]},  # passes
+                {"nums": []},  # division by zero!
             ],
             "target_func": "average",
             "bug_type": "division_by_zero_edge",
@@ -574,7 +603,7 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
                     return arr[idx]
             """),
             "test_inputs": [
-                {"arr": [10, 20, 30]},   # IndexError: index 3
+                {"arr": [10, 20, 30]},  # IndexError: index 3
             ],
             "target_func": "last_element",
             "bug_type": "off_by_one",
@@ -595,9 +624,9 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
                     return result
             """),
             "test_inputs": [
-                {"n": 5},      # 120, fine
-                {"n": 1000},   # huge number, still int in Python
-                {"n": -1},     # edge case: range(1, 0) is empty, returns 1
+                {"n": 5},  # 120, fine
+                {"n": 1000},  # huge number, still int in Python
+                {"n": -1},  # edge case: range(1, 0) is empty, returns 1
             ],
             "target_func": "factorial",
             "bug_type": "large_input_behavior",
@@ -617,8 +646,8 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
                     return x * 2
             """),
             "test_inputs": [
-                {"x": 5},          # passes
-                {"x": "hello"},    # TypeError from isinstance check
+                {"x": 5},  # passes
+                {"x": "hello"},  # TypeError from isinstance check
             ],
             "target_func": "double",
             "bug_type": "wrong_arg_type",
@@ -638,8 +667,8 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
                     return s
             """),
             "test_inputs": [
-                {"s": "42"},       # returns int, ok
-                {"s": "hello"},    # returns str, violates -> int
+                {"s": "42"},  # returns int, ok
+                {"s": "hello"},  # returns str, violates -> int
             ],
             "target_func": "parse_value",
             "bug_type": "conditional_type_violation",
@@ -651,7 +680,6 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
                 "can't type-check it. Dynamic: isinstance catches str return."
             ),
         },
-
         # =====================================================================
         # Category 3: BOTH static and dynamic catch
         # =====================================================================
@@ -667,8 +695,7 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
             "expected_static": True,
             "expected_dynamic": True,
             "explanation": (
-                "Static: literal 3.14 is float, not str. "
-                "Dynamic: isinstance(3.14, str) fails."
+                "Static: literal 3.14 is float, not str. Dynamic: isinstance(3.14, str) fails."
             ),
         },
         {
@@ -684,11 +711,9 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
             "expected_static": True,
             "expected_dynamic": True,
             "explanation": (
-                "Static: 'b' and 'c' never assigned. "
-                "Dynamic: NameError on first use of 'b'."
+                "Static: 'b' and 'c' never assigned. Dynamic: NameError on first use of 'b'."
             ),
         },
-
         # =====================================================================
         # Category 4: NEITHER catches (limitations)
         # =====================================================================
@@ -724,8 +749,8 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
                     return total
             """),
             "test_inputs": [
-                {"n": 5},   # returns 10 (0+1+2+3+4), not 15 (1+2+3+4+5)
-                {"n": 1},   # returns 0, arguably wrong if expecting 1
+                {"n": 5},  # returns 10 (0+1+2+3+4), not 15 (1+2+3+4+5)
+                {"n": 1},  # returns 0, arguably wrong if expecting 1
             ],
             "target_func": "sum_first_n",
             "bug_type": "semantic_off_by_one",
@@ -745,8 +770,8 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
                     return n % 2 == 1
             """),
             "test_inputs": [
-                {"n": 4},   # returns False (correct by accident? no, wrong)
-                {"n": 3},   # returns True (wrong — 3 is odd)
+                {"n": 4},  # returns False (correct by accident? no, wrong)
+                {"n": 3},  # returns True (wrong — 3 is odd)
             ],
             "target_func": "is_even",
             "bug_type": "semantic_logic_error",
@@ -764,6 +789,7 @@ def get_comparison_scenarios() -> list[dict[str, Any]]:
 # ---------------------------------------------------------------------------
 # 4. Run static analysis (from Experiment 48)
 # ---------------------------------------------------------------------------
+
 
 def run_static_analysis(code: str) -> dict[str, Any]:
     """Run Experiment 48's static constraint extraction on code.
@@ -784,6 +810,7 @@ def run_static_analysis(code: str) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # 5. Run dynamic analysis
 # ---------------------------------------------------------------------------
+
 
 def run_dynamic_analysis(
     code: str,
@@ -808,6 +835,7 @@ def run_dynamic_analysis(
 # 6. Main — run comparison and print results table
 # ---------------------------------------------------------------------------
 
+
 def main() -> int:
     """Run all comparison scenarios and print static vs dynamic table."""
     print("=" * 78)
@@ -819,8 +847,7 @@ def main() -> int:
     scenarios = get_comparison_scenarios()
 
     # Column headers for comparison table.
-    print(f"\n{'#':<3} {'Scenario':<45} {'Static':<8} {'Dynamic':<8} "
-          f"{'Match?':<7} {'Bug Type'}")
+    print(f"\n{'#':<3} {'Scenario':<45} {'Static':<8} {'Dynamic':<8} {'Match?':<7} {'Bug Type'}")
     print("-" * 120)
 
     n_correct_static = 0
@@ -833,9 +860,7 @@ def main() -> int:
 
         # Run both analyses.
         static = run_static_analysis(code)
-        dynamic = run_dynamic_analysis(
-            code, scenario["test_inputs"], scenario["target_func"]
-        )
+        dynamic = run_dynamic_analysis(code, scenario["test_inputs"], scenario["target_func"])
 
         # Compare against expectations.
         static_correct = static["detected"] == scenario["expected_static"]
@@ -852,7 +877,7 @@ def main() -> int:
         match_d = "✓" if dynamic_correct else "✗"
 
         print(
-            f"{i+1:<3} {name:<45} "
+            f"{i + 1:<3} {name:<45} "
             f"{static_icon}({match_s})  "
             f"{dynamic_icon}({match_d})  "
             f"{'OK' if static_correct and dynamic_correct else 'MISS':<7} "
@@ -864,16 +889,18 @@ def main() -> int:
             for v in dynamic["violations"][:2]:  # show first 2
                 print(f"    └─ {v[:90]}")
 
-        results.append({
-            "name": name,
-            "static_detected": static["detected"],
-            "dynamic_detected": dynamic["detected"],
-            "expected_static": scenario["expected_static"],
-            "expected_dynamic": scenario["expected_dynamic"],
-            "static_correct": static_correct,
-            "dynamic_correct": dynamic_correct,
-            "bug_type": scenario["bug_type"],
-        })
+        results.append(
+            {
+                "name": name,
+                "static_detected": static["detected"],
+                "dynamic_detected": dynamic["detected"],
+                "expected_static": scenario["expected_static"],
+                "expected_dynamic": scenario["expected_dynamic"],
+                "static_correct": static_correct,
+                "dynamic_correct": dynamic_correct,
+                "bug_type": scenario["bug_type"],
+            }
+        )
 
     # --- Summary statistics ---
     elapsed = time.time() - start
@@ -889,15 +916,9 @@ def main() -> int:
     print(f"  Dynamic analysis accuracy:  {n_correct_dynamic}/{n_total}")
 
     # Breakdown by category.
-    static_only = sum(
-        1 for r in results if r["expected_static"] and not r["expected_dynamic"]
-    )
-    dynamic_only = sum(
-        1 for r in results if r["expected_dynamic"] and not r["expected_static"]
-    )
-    both_catch = sum(
-        1 for r in results if r["expected_static"] and r["expected_dynamic"]
-    )
+    static_only = sum(1 for r in results if r["expected_static"] and not r["expected_dynamic"])
+    dynamic_only = sum(1 for r in results if r["expected_dynamic"] and not r["expected_static"])
+    both_catch = sum(1 for r in results if r["expected_static"] and r["expected_dynamic"])
     neither_catch = sum(
         1 for r in results if not r["expected_static"] and not r["expected_dynamic"]
     )
@@ -909,9 +930,7 @@ def main() -> int:
     print(f"    Neither catches:          {neither_catch}")
 
     # Overall verdict.
-    all_correct = all(
-        r["static_correct"] and r["dynamic_correct"] for r in results
-    )
+    all_correct = all(r["static_correct"] and r["dynamic_correct"] for r in results)
     mostly_correct = (n_correct_static + n_correct_dynamic) >= 2 * n_total * 0.8
 
     print(f"\n  Instrumentation demo:")
@@ -921,25 +940,27 @@ def main() -> int:
         print(f"      {line}")
 
     if all_correct:
-        print(f"\n  VERDICT: ✅ All predictions match — static + dynamic "
-              f"are complementary!")
+        print(f"\n  VERDICT: ✅ All predictions match — static + dynamic are complementary!")
     elif mostly_correct:
-        print(f"\n  VERDICT: ✅ Pipeline mostly works "
-              f"({n_correct_static + n_correct_dynamic}/{2 * n_total} correct)")
+        print(
+            f"\n  VERDICT: ✅ Pipeline mostly works "
+            f"({n_correct_static + n_correct_dynamic}/{2 * n_total} correct)"
+        )
     else:
-        print(f"\n  VERDICT: ❌ Pipeline needs work "
-              f"({n_correct_static + n_correct_dynamic}/{2 * n_total})")
+        print(
+            f"\n  VERDICT: ❌ Pipeline needs work "
+            f"({n_correct_static + n_correct_dynamic}/{2 * n_total})"
+        )
 
     # Key insight.
-    print(f"\n  KEY INSIGHT: Static analysis catches {static_only} bug classes "
-          f"that don't need runtime")
+    print(
+        f"\n  KEY INSIGHT: Static analysis catches {static_only} bug classes "
+        f"that don't need runtime"
+    )
     print(f"  (literal type mismatches, uninitialized vars). Dynamic analysis")
-    print(f"  catches {dynamic_only} additional classes that require actual "
-          f"execution (edge-case")
-    print(f"  inputs, conditional paths). {neither_catch} scenarios have "
-          f"semantic bugs that")
-    print(f"  neither approach detects — these require specification-level "
-          f"verification")
+    print(f"  catches {dynamic_only} additional classes that require actual execution (edge-case")
+    print(f"  inputs, conditional paths). {neither_catch} scenarios have semantic bugs that")
+    print(f"  neither approach detects — these require specification-level verification")
     print(f"  (the domain of Experiments 42b-47's Ising-based claim checking).")
 
     print(sep)

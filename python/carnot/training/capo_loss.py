@@ -167,16 +167,16 @@ def capo_loss(
     labels_float = labels.astype(jnp.float32)
     # correct_w[i] = 1.0 if label[i]=0 (correct), 0.0 otherwise.
     # incorrect_w[j] = 1.0 if label[j]=1 (incorrect), 0.0 otherwise.
-    correct_w = 1.0 - labels_float        # shape (N,)
-    incorrect_w = labels_float            # shape (N,)
+    correct_w = 1.0 - labels_float  # shape (N,)
+    incorrect_w = labels_float  # shape (N,)
 
     # --- Contrastive margin loss (hinge over all correct/incorrect pairs) ----
     # Vectorised outer product to avoid dynamic boolean indexing (which would
     # create dynamic shapes — disallowed inside jax.jit/jax.grad).
     # gaps[i, j] = energy_scores[j] - energy_scores[i]
     #   where i=correct, j=incorrect is weighted by pair_w[i, j].
-    gaps = energy_scores[None, :] - energy_scores[:, None]      # (N, N)
-    pair_w = correct_w[:, None] * incorrect_w[None, :]          # (N, N)
+    gaps = energy_scores[None, :] - energy_scores[:, None]  # (N, N)
+    pair_w = correct_w[:, None] * incorrect_w[None, :]  # (N, N)
     pair_losses = jnp.maximum(jnp.array(0.0), margin - gaps) * pair_w
     n_pairs = jnp.sum(pair_w)
     l_contrastive = jnp.where(n_pairs > 0, jnp.sum(pair_losses) / n_pairs, 0.0)

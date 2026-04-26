@@ -295,13 +295,15 @@ def _write_gated_blocked(repo_root: Path) -> dict:
 def _utc_now() -> str:
     """Return the current UTC timestamp in ISO-8601 format."""
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _get_run_date() -> str:
     """Return today's date as an 8-digit string."""
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
+
+    return datetime.datetime.now(datetime.UTC).strftime("%Y%m%d")
 
 
 # ---------------------------------------------------------------------------
@@ -361,9 +363,9 @@ def run_experiment(repo_root: Path | None = None) -> dict:
     # ------------------------------------------------------------------
     rng = random.Random(737)  # deterministic seed for reproducibility
 
-    gsm8k_pool = _make_gsm8k_questions(0, 30)        # 30 GSM8K questions to sample from
-    algebra_pool = _make_math_algebra_questions(15)   # 15 algebra questions to sample from
-    arc_pool = _make_arc_challenge_questions(15)       # 15 ARC questions to sample from
+    gsm8k_pool = _make_gsm8k_questions(0, 30)  # 30 GSM8K questions to sample from
+    algebra_pool = _make_math_algebra_questions(15)  # 15 algebra questions to sample from
+    arc_pool = _make_arc_challenge_questions(15)  # 15 ARC questions to sample from
 
     inf_fn, ver_fn = _make_domain_diverse_fns(gsm8k_pool, algebra_pool, arc_pool)
 

@@ -167,7 +167,7 @@ class TestVramUsageGb:
         mock_pynvml = MagicMock()
         mock_info = MagicMock()
         # 9.5 GiB in bytes
-        mock_info.used = int(9.5 * 1024 ** 3)
+        mock_info.used = int(9.5 * 1024**3)
         mock_pynvml.nvmlDeviceGetMemoryInfo.return_value = mock_info
 
         with patch.dict("sys.modules", {"pynvml": mock_pynvml}):

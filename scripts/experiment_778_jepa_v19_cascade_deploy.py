@@ -60,21 +60,23 @@ def main() -> None:
         ood_auc = exp770.get("ood_auc", 0.0)
 
         if ood_auc <= OOD_AUC_GATE:
-            artifact = tmpl.build_result({
-                "jepa_v19_ood_auc": ood_auc,
-                "ood_auc_gate": OOD_AUC_GATE,
-                "skip_threshold": None,
-                "fast_path_skip_rate": None,
-                "false_negative_rate": None,
-                "tier35_deployed": False,
-                "honest_verdict": "blocked_ood_auc_below_gate",
-                "block_reason": (
-                    f"Exp 770 OOD AUC={ood_auc:.4f} < gate {OOD_AUC_GATE}. "
-                    "JEPA v19 cannot reliably predict violations on out-of-distribution "
-                    "data. Tier 3.5 cascade deployment requires OOD AUC > 0.75 before "
-                    "wiring into the pipeline."
-                ),
-            })
+            artifact = tmpl.build_result(
+                {
+                    "jepa_v19_ood_auc": ood_auc,
+                    "ood_auc_gate": OOD_AUC_GATE,
+                    "skip_threshold": None,
+                    "fast_path_skip_rate": None,
+                    "false_negative_rate": None,
+                    "tier35_deployed": False,
+                    "honest_verdict": "blocked_ood_auc_below_gate",
+                    "block_reason": (
+                        f"Exp 770 OOD AUC={ood_auc:.4f} < gate {OOD_AUC_GATE}. "
+                        "JEPA v19 cannot reliably predict violations on out-of-distribution "
+                        "data. Tier 3.5 cascade deployment requires OOD AUC > 0.75 before "
+                        "wiring into the pipeline."
+                    ),
+                }
+            )
             out_path = REPO_ROOT / DELIVERABLE
             out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True))
             tmpl.assert_deliverable_written()
@@ -83,16 +85,18 @@ def main() -> None:
         # Gate passed — proceed with deployment (not reached in current run).
         # Load MultiStepJEPAv19 and run validation steps.
         # (Implementation deferred until Exp 770 achieves OOD AUC > 0.75.)
-        artifact = tmpl.build_result({
-            "jepa_v19_ood_auc": ood_auc,
-            "ood_auc_gate": OOD_AUC_GATE,
-            "skip_threshold": None,
-            "fast_path_skip_rate": None,
-            "false_negative_rate": None,
-            "tier35_deployed": False,
-            "honest_verdict": "blocked_ood_auc_below_gate",
-            "block_reason": "Unexpected: gate passed but deployment path not yet wired.",
-        })
+        artifact = tmpl.build_result(
+            {
+                "jepa_v19_ood_auc": ood_auc,
+                "ood_auc_gate": OOD_AUC_GATE,
+                "skip_threshold": None,
+                "fast_path_skip_rate": None,
+                "false_negative_rate": None,
+                "tier35_deployed": False,
+                "honest_verdict": "blocked_ood_auc_below_gate",
+                "block_reason": "Unexpected: gate passed but deployment path not yet wired.",
+            }
+        )
         out_path = REPO_ROOT / DELIVERABLE
         out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True))
         tmpl.assert_deliverable_written()

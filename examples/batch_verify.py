@@ -27,7 +27,6 @@ from __future__ import annotations
 import json
 import sys
 
-
 # Built-in sample data so the example runs without any files.
 SAMPLE_DATA = [
     {
@@ -48,7 +47,7 @@ SAMPLE_DATA = [
     },
     {
         "question": "Write a Python function to double a number",
-        "response": '```python\ndef double(x: int) -> int:\n    return x * 2\n```',
+        "response": "```python\ndef double(x: int) -> int:\n    return x * 2\n```",
     },
     {
         "question": "What is 50 + 50?",
@@ -108,12 +107,14 @@ def main() -> int:
         else:
             n_failed += 1
             for v in result.violations:
-                all_violations.append({
-                    "index": i,
-                    "question": entry["question"][:50],
-                    "violation": v.description,
-                    "type": v.constraint_type,
-                })
+                all_violations.append(
+                    {
+                        "index": i,
+                        "question": entry["question"][:50],
+                        "violation": v.description,
+                        "type": v.constraint_type,
+                    }
+                )
 
         question_short = entry["question"][:40]
         if len(entry["question"]) > 40:

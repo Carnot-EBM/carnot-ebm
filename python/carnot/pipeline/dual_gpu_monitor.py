@@ -221,9 +221,7 @@ class DualGPUMonitor:
         active_gpu_indices = {p.gpu_index for p in processes}
 
         # Idle GPUs: indices in [0, n_gpus) that have no active processes
-        idle_gpus: list[int] = [
-            i for i in range(n_gpus) if i not in active_gpu_indices
-        ]
+        idle_gpus: list[int] = [i for i in range(n_gpus) if i not in active_gpu_indices]
 
         all_healthy = (n_gpus >= 2) and (n_zombies == 0) and (len(idle_gpus) == 0)
 

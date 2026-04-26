@@ -27,6 +27,7 @@
 
 Spec: REQ-LEARN-813-001, REQ-LEARN-813-002, SCENARIO-LEARN-813-001
 """
+
 from __future__ import annotations
 
 import json
@@ -169,11 +170,13 @@ def _run_session(
         inject_correct += 1 if energy_inject < energy_baseline else 0
 
         if energy_inject < energy_baseline:
-            violations_found.append({
-                "question": q[:60],
-                "energy_baseline": round(energy_baseline, 6),
-                "energy_inject": round(energy_inject, 6),
-            })
+            violations_found.append(
+                {
+                    "question": q[:60],
+                    "energy_baseline": round(energy_baseline, 6),
+                    "energy_inject": round(energy_inject, 6),
+                }
+            )
 
     return {
         "session_id": session_id,
@@ -264,9 +267,7 @@ def main() -> None:
     ExperimentTemplate.kill_gpu_zombies(gpu_index=0)
 
     store = EmbeddingConstraintStore()
-    store.from_casememory_patterns(
-        {"carry": 4, "sign": 2, "unit": 1, "comparison": 1, "causal": 1}
-    )
+    store.from_casememory_patterns({"carry": 4, "sign": 2, "unit": 1, "comparison": 1, "causal": 1})
     injector = IsingConstraintInjector(embedding_dim=384, n_spins=64)
 
     # --- Run 3 sessions x 10 questions ---

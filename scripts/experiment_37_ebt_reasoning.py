@@ -105,8 +105,11 @@ def main() -> int:
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -160,13 +163,13 @@ def main() -> int:
 
     # Test repair on wrong answers from the test set
     # Get original question/answer pairs for the test wrong answers
-    test_wrong_indices = rng.permutation(len(wrong_embs))[split:split + min(50, min_n - split)]
+    test_wrong_indices = rng.permutation(len(wrong_embs))[split : split + min(50, min_n - split)]
     wrong_qa_test = wrong_embs[test_wrong_indices - split + split]  # test portion
 
     # We need the original question embeddings separate from the answer embeddings
     # Reconstruct from the concatenated embeddings
     test_q_embs = wrong_qa_test[:, :embed_dim]  # first 384 dims = question
-    test_a_embs = wrong_qa_test[:, embed_dim:]   # last 384 dims = answer
+    test_a_embs = wrong_qa_test[:, embed_dim:]  # last 384 dims = answer
 
     n_repair = min(50, len(test_q_embs))
     repair_results = []
@@ -214,19 +217,23 @@ def main() -> int:
         )
         orig_best_sim = float(orig_sims.max())
 
-        repair_results.append({
-            "energy_before": energy_before,
-            "energy_after": energy_after,
-            "energy_improved": energy_after < energy_before,
-            "sim_before": orig_best_sim,
-            "sim_after": best_sim,
-            "sim_improved": best_sim > orig_best_sim,
-            "decoded_answer": best_text[:60],
-        })
+        repair_results.append(
+            {
+                "energy_before": energy_before,
+                "energy_after": energy_after,
+                "energy_improved": energy_after < energy_before,
+                "sim_before": orig_best_sim,
+                "sim_after": best_sim,
+                "sim_improved": best_sim > orig_best_sim,
+                "decoded_answer": best_text[:60],
+            }
+        )
 
         if i < 5:
-            print(f"    [{i}] energy: {energy_before:.3f} → {energy_after:.3f} "
-                  f"sim: {orig_best_sim:.3f} → {best_sim:.3f} → \"{best_text[:50]}\"")
+            print(
+                f"    [{i}] energy: {energy_before:.3f} → {energy_after:.3f} "
+                f'sim: {orig_best_sim:.3f} → {best_sim:.3f} → "{best_text[:50]}"'
+            )
 
     # --- Results ---
     elapsed = time.time() - start
@@ -243,7 +250,9 @@ def main() -> int:
     print(f"  EBM discrimination (test set): {disc_acc:.1%} (gap={gap:.4f})")
     print(f"")
     print(f"  Repair results ({n_repair} wrong answers):")
-    print(f"    Energy improved: {n_energy_improved}/{n_repair} ({n_energy_improved / n_repair:.0%})")
+    print(
+        f"    Energy improved: {n_energy_improved}/{n_repair} ({n_energy_improved / n_repair:.0%})"
+    )
     print(f"    Similarity improved: {n_sim_improved}/{n_repair} ({n_sim_improved / n_repair:.0%})")
     print(f"    Mean energy change: {mean_energy_drop:+.4f}")
     print(f"    Mean similarity gain: {mean_sim_gain:+.4f}")
@@ -253,7 +262,9 @@ def main() -> int:
         print(f"  Gradient descent moves wrong answers toward correct regions.")
     elif n_energy_improved / n_repair > 0.5:
         print(f"\n  VERDICT: ⚠️ Energy decreases but similarity doesn't always improve")
-        print(f"  The EBM learns a useful landscape but it doesn't perfectly align with correctness.")
+        print(
+            f"  The EBM learns a useful landscape but it doesn't perfectly align with correctness."
+        )
     else:
         print(f"\n  VERDICT: ❌ Repair doesn't work — energy landscape not useful")
 

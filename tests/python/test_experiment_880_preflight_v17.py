@@ -237,8 +237,14 @@ def test_result_artifact_required_fields() -> None:
     artifact_path = _REPO_ROOT / "results" / "experiment_880_preflight_v17.json"
     artifact = _load_json(artifact_path)
     required = [
-        "experiment", "schema", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "title",
+        "experiment",
+        "schema",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "title",
     ]
     for field in required:
         assert field in artifact, f"Required field '{field}' missing from artifact"

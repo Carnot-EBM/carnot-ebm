@@ -31,7 +31,7 @@ import os
 import sys
 import time
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from typing import Optional
 
@@ -103,17 +103,17 @@ class MilestoneRetro2026_04_33:
     retro_025_resolved: bool = False  # Exp 438: GPU1 zombie fix applied (fix_applied=True)
 
     # Live benchmark results — FIRST LIVE GPU RUNS SINCE EXP 411
-    live_precision_result: str = "not_run"    # Exp 439 honest_verdict
-    live_humaneval_result: str = "not_run"    # Exp 440 honest_verdict
+    live_precision_result: str = "not_run"  # Exp 439 honest_verdict
+    live_humaneval_result: str = "not_run"  # Exp 440 honest_verdict
     live_adversarial_result: str = "not_run"  # Exp 441 honest_verdict
 
     # FR-11 / FR-12 progress
     fr11_relay_confirmed: bool = False  # Exp 443 retro_024_closed
 
     # New capabilities
-    think_probe_viable: bool = False     # Exp 444 (timed out → False)
-    continuous_improved: bool = False    # Exp 446 L2 < 0.5 (missing → False)
-    kaem_faster: bool = False            # Exp 447 mean_speedup > 5
+    think_probe_viable: bool = False  # Exp 444 (timed out → False)
+    continuous_improved: bool = False  # Exp 446 L2 < 0.5 (missing → False)
+    kaem_faster: bool = False  # Exp 447 mean_speedup > 5
     cross_session_improvement: bool = False  # Exp 448 honest_verdict
 
     headline_results: dict = field(default_factory=dict)
@@ -126,7 +126,7 @@ class MilestoneRetro2026_04_33:
 # ---------------------------------------------------------------------------
 
 
-def load_result(exp_key: str) -> Optional[dict]:
+def load_result(exp_key: str) -> dict | None:
     """Load a result JSON; return None (with a log warning) if absent.
 
     WHY return None instead of raising: missing results are an expected state
@@ -146,7 +146,7 @@ def load_result(exp_key: str) -> Optional[dict]:
 # ---------------------------------------------------------------------------
 
 
-def _retro_026_from_results(r437: Optional[dict]) -> bool:
+def _retro_026_from_results(r437: dict | None) -> bool:
     """RETRO-026 resolved when Exp 437 retro_026_resolved=True.
 
     RETRO-026 tracked that benchmark-class experiments (Exps 427/428/429) were
@@ -159,7 +159,7 @@ def _retro_026_from_results(r437: Optional[dict]) -> bool:
     return bool(r437.get("retro_026_resolved", False))
 
 
-def _retro_025_from_results(r438: Optional[dict]) -> bool:
+def _retro_025_from_results(r438: dict | None) -> bool:
     """RETRO-025 resolved when Exp 438 fix_applied=True.
 
     RETRO-025 tracked that GPU 1 was a persistent zombie — holding VRAM but
@@ -178,7 +178,7 @@ def _retro_025_from_results(r438: Optional[dict]) -> bool:
     return bool(r438.get("fix_applied", False))
 
 
-def _live_result_verdict(r: Optional[dict], label: str) -> str:
+def _live_result_verdict(r: dict | None, label: str) -> str:
     """Extract honest_verdict from a live benchmark result, or 'not_run' if absent.
 
     WHY 'not_run' instead of None: downstream retro logic compares string
@@ -192,7 +192,7 @@ def _live_result_verdict(r: Optional[dict], label: str) -> str:
     return str(verdict)
 
 
-def _fr11_relay_from_results(r443: Optional[dict]) -> bool:
+def _fr11_relay_from_results(r443: dict | None) -> bool:
     """FR-11 relay confirmed when Exp 443 retro_024_closed=True.
 
     RETRO-024 tracked that EORM and JEPA were trained on synthetic data only.
@@ -205,7 +205,7 @@ def _fr11_relay_from_results(r443: Optional[dict]) -> bool:
     return bool(r443.get("retro_024_closed", False))
 
 
-def _think_probe_viable_from_results(r444: Optional[dict]) -> bool:
+def _think_probe_viable_from_results(r444: dict | None) -> bool:
     """think_probe_viable is False when Exp 444 timed out before completing.
 
     Exp 444 hit the 20-minute watchdog and produced only a partial timeout
@@ -219,7 +219,7 @@ def _think_probe_viable_from_results(r444: Optional[dict]) -> bool:
     return bool(r444.get("think_probe_viable", False))
 
 
-def _continuous_improved_from_results(r446: Optional[dict]) -> bool:
+def _continuous_improved_from_results(r446: dict | None) -> bool:
     """continuous_improved=True when Exp 446 shows L2 < 0.5.
 
     WHY L2 < 0.5 as the threshold: that is the original spec threshold in
@@ -238,7 +238,7 @@ def _continuous_improved_from_results(r446: Optional[dict]) -> bool:
     return False
 
 
-def _kaem_faster_from_results(r447: Optional[dict]) -> bool:
+def _kaem_faster_from_results(r447: dict | None) -> bool:
     """kaem_faster=True when Exp 447 mean_speedup > 5.
 
     WHY > 5 as threshold: KAEM exact sampling is only worth the added
@@ -255,7 +255,7 @@ def _kaem_faster_from_results(r447: Optional[dict]) -> bool:
     return float(speedup) > 5.0
 
 
-def _cross_session_improvement_from_results(r448: Optional[dict]) -> bool:
+def _cross_session_improvement_from_results(r448: dict | None) -> bool:
     """cross_session_improvement=True when Exp 448 honest_verdict indicates improvement.
 
     Exp 448 honest_verdict='no_improvement' (fp_rate did not decrease across
@@ -271,9 +271,9 @@ def _cross_session_improvement_from_results(r448: Optional[dict]) -> bool:
 
 
 def _build_headline_results(
-    r439: Optional[dict],
-    r440: Optional[dict],
-    r441: Optional[dict],
+    r439: dict | None,
+    r440: dict | None,
+    r441: dict | None,
 ) -> dict:
     """Collect live precision/humaneval/adversarial verdicts and key metrics.
 
@@ -284,7 +284,8 @@ def _build_headline_results(
 
     Returns structured dicts that can be cited in ops reports.
     """
-    def _extract(r: Optional[dict], label: str) -> dict:
+
+    def _extract(r: dict | None, label: str) -> dict:
         if r is None:
             return {"status": "result_missing", "provenance": label}
         status = r.get("status", "unknown")
@@ -311,7 +312,7 @@ def _build_headline_results(
     }
 
 
-def _duration_minutes(r: Optional[dict]) -> Optional[float]:
+def _duration_minutes(r: dict | None) -> float | None:
     """Extract duration in minutes from a result, if available."""
     if r is None:
         return None
@@ -326,7 +327,7 @@ def _duration_minutes(r: Optional[dict]) -> Optional[float]:
     return None
 
 
-def _compute_timing(results: dict[str, Optional[dict]]) -> tuple[int, float]:
+def _compute_timing(results: dict[str, dict | None]) -> tuple[int, float]:
     """Return (n_experiments, mean_minutes_per_exp) for this milestone.
 
     Experiments that hit the watchdog timeout are credited at their actual
@@ -361,13 +362,13 @@ def _compute_timing(results: dict[str, Optional[dict]]) -> tuple[int, float]:
 
 
 def _new_retro_items(
-    r439: Optional[dict],
-    r440: Optional[dict],
-    r441: Optional[dict],
-    r444: Optional[dict],
-    r446: Optional[dict],
-    r447: Optional[dict],
-    r448: Optional[dict],
+    r439: dict | None,
+    r440: dict | None,
+    r441: dict | None,
+    r444: dict | None,
+    r446: dict | None,
+    r447: dict | None,
+    r448: dict | None,
 ) -> list[dict]:
     """Identify new RETRO items surfaced in this milestone."""
     items: list[dict] = []
@@ -385,86 +386,94 @@ def _new_retro_items(
                     if baseline_acc is not None and float(baseline_acc) == 0.0:
                         gemma_zero = True
     if gemma_zero:
-        items.append({
-            "id": "RETRO-028",
-            "severity": "high",
-            "description": (
-                "Gemma4-E4B-it returned 0.0 accuracy on GSM8K (Exp 439) and 0.0 pass@1 on "
-                "HumanEval (Exp 440) across all pipeline variants. The repair pipeline cannot "
-                "improve a model that gets nothing correct in the first place — there is no "
-                "baseline signal to improve upon. Root cause likely: model loading issue, "
-                "tokenizer mismatch, or incorrect HuggingFace model ID for Gemma4."
-            ),
-            "milestones_carried": 1,
-            "new_this_milestone": True,
-            "action_required": (
-                "Diagnose Gemma4-E4B-it zero-accuracy: verify model ID, tokenizer, and "
-                "inference configuration. Run a single question manually before any batch. "
-                "If the model loads correctly but still scores 0, replace with a model "
-                "that achieves >10% baseline (e.g., Qwen2.5-7B or Llama-3-8B)."
-            ),
-        })
+        items.append(
+            {
+                "id": "RETRO-028",
+                "severity": "high",
+                "description": (
+                    "Gemma4-E4B-it returned 0.0 accuracy on GSM8K (Exp 439) and 0.0 pass@1 on "
+                    "HumanEval (Exp 440) across all pipeline variants. The repair pipeline cannot "
+                    "improve a model that gets nothing correct in the first place — there is no "
+                    "baseline signal to improve upon. Root cause likely: model loading issue, "
+                    "tokenizer mismatch, or incorrect HuggingFace model ID for Gemma4."
+                ),
+                "milestones_carried": 1,
+                "new_this_milestone": True,
+                "action_required": (
+                    "Diagnose Gemma4-E4B-it zero-accuracy: verify model ID, tokenizer, and "
+                    "inference configuration. Run a single question manually before any batch. "
+                    "If the model loads correctly but still scores 0, replace with a model "
+                    "that achieves >10% baseline (e.g., Qwen2.5-7B or Llama-3-8B)."
+                ),
+            }
+        )
 
     # RETRO-029: think_probe timed out without a complete result.
     if r444 is not None and r444.get("timed_out"):
-        items.append({
-            "id": "RETRO-029",
-            "severity": "medium",
-            "description": (
-                "Exp 444 (think_probe viability check) hit the 20-minute watchdog timeout "
-                "before completing. The probe viability question is unanswered. This is the "
-                "second consecutive milestone where this experiment class timed out."
-            ),
-            "milestones_carried": 1,
-            "new_this_milestone": True,
-            "action_required": (
-                "Re-run Exp 444 with a larger timeout budget (60 minutes) or reduce the "
-                "probe evaluation scope. Alternatively, refactor the probe to produce a "
-                "partial viability verdict every N samples rather than all-or-nothing."
-            ),
-        })
+        items.append(
+            {
+                "id": "RETRO-029",
+                "severity": "medium",
+                "description": (
+                    "Exp 444 (think_probe viability check) hit the 20-minute watchdog timeout "
+                    "before completing. The probe viability question is unanswered. This is the "
+                    "second consecutive milestone where this experiment class timed out."
+                ),
+                "milestones_carried": 1,
+                "new_this_milestone": True,
+                "action_required": (
+                    "Re-run Exp 444 with a larger timeout budget (60 minutes) or reduce the "
+                    "probe evaluation scope. Alternatively, refactor the probe to produce a "
+                    "partial viability verdict every N samples rather than all-or-nothing."
+                ),
+            }
+        )
 
     # RETRO-030: Exp 446 (energy matching) missing entirely.
     if r446 is None:
-        items.append({
-            "id": "RETRO-030",
-            "severity": "medium",
-            "description": (
-                "Exp 446 (energy matching continuous improvement) has no result JSON. "
-                "The experiment script exists and tests pass, but no execution artifact "
-                "was written. This is a silent drop — the conductor scheduled the experiment "
-                "but it produced no output, partial or complete."
-            ),
-            "milestones_carried": 1,
-            "new_this_milestone": True,
-            "action_required": (
-                "Run: JAX_PLATFORMS=cpu python scripts/experiment_446_energy_matching.py. "
-                "Inspect for import errors or missing dependencies before the conductor "
-                "timeout fires. Add a not_run sentinel artifact to the conductor's "
-                "post-experiment check."
-            ),
-        })
+        items.append(
+            {
+                "id": "RETRO-030",
+                "severity": "medium",
+                "description": (
+                    "Exp 446 (energy matching continuous improvement) has no result JSON. "
+                    "The experiment script exists and tests pass, but no execution artifact "
+                    "was written. This is a silent drop — the conductor scheduled the experiment "
+                    "but it produced no output, partial or complete."
+                ),
+                "milestones_carried": 1,
+                "new_this_milestone": True,
+                "action_required": (
+                    "Run: JAX_PLATFORMS=cpu python scripts/experiment_446_energy_matching.py. "
+                    "Inspect for import errors or missing dependencies before the conductor "
+                    "timeout fires. Add a not_run sentinel artifact to the conductor's "
+                    "post-experiment check."
+                ),
+            }
+        )
 
     # RETRO-031: KAEM no speedup vs IsingEBM MCMC baseline.
     if r447 is not None and r447.get("honest_verdict") == "no_speedup":
-        items.append({
-            "id": "RETRO-031",
-            "severity": "low",
-            "description": (
-                f"Exp 447 measured KAEM mean_speedup={r447.get('mean_speedup', 'unknown'):.2f}x "
-                "vs IsingEBM MCMC. The 5x threshold for practical significance was not met. "
-                "KAEM was slower than MCMC at n_vars=10 (0.75x). Speedup only emerged at "
-                "n_vars≥25, peaking at 1.68x. Exact sampling overhead dominates at small sizes."
-            ),
-            "milestones_carried": 1,
-            "new_this_milestone": True,
-            "action_required": (
-                "Profile KAEM at larger n_vars (200, 500, 1000) where exact enumeration is "
-                "infeasible and MCMC mixing time grows. The 5x threshold may be achievable "
-                "at production-scale variable counts. Alternatively, investigate sparse KAEM "
-                "approximations that trade exactness for throughput."
-            ),
-        })
+        items.append(
+            {
+                "id": "RETRO-031",
+                "severity": "low",
+                "description": (
+                    f"Exp 447 measured KAEM mean_speedup={r447.get('mean_speedup', 'unknown'):.2f}x "
+                    "vs IsingEBM MCMC. The 5x threshold for practical significance was not met. "
+                    "KAEM was slower than MCMC at n_vars=10 (0.75x). Speedup only emerged at "
+                    "n_vars≥25, peaking at 1.68x. Exact sampling overhead dominates at small sizes."
+                ),
+                "milestones_carried": 1,
+                "new_this_milestone": True,
+                "action_required": (
+                    "Profile KAEM at larger n_vars (200, 500, 1000) where exact enumeration is "
+                    "infeasible and MCMC mixing time grows. The 5x threshold may be achievable "
+                    "at production-scale variable counts. Alternatively, investigate sparse KAEM "
+                    "approximations that trade exactness for throughput."
+                ),
+            }
+        )
 
     return items
 
@@ -553,25 +562,33 @@ def run_retro() -> dict:
 def _print_success_table(retro: MilestoneRetro2026_04_33) -> None:
     """Print a human-readable success criteria table to stdout."""
     rows = [
-        ("retro_026_resolved",       retro.retro_026_resolved,       "Exp 437 retro_026_resolved"),
-        ("retro_025_resolved",       retro.retro_025_resolved,        "Exp 438 fix_applied"),
-        ("live_precision_result",    retro.live_precision_result,     "Exp 439 honest_verdict"),
-        ("live_humaneval_result",    retro.live_humaneval_result,     "Exp 440 honest_verdict"),
-        ("live_adversarial_result",  retro.live_adversarial_result,   "Exp 441 honest_verdict"),
-        ("fr11_relay_confirmed",     retro.fr11_relay_confirmed,      "Exp 443 retro_024_closed"),
-        ("think_probe_viable",       retro.think_probe_viable,        "Exp 444 (timed out)"),
-        ("continuous_improved",      retro.continuous_improved,       "Exp 446 (missing)"),
-        ("kaem_faster",              retro.kaem_faster,               "Exp 447 mean_speedup>5"),
+        ("retro_026_resolved", retro.retro_026_resolved, "Exp 437 retro_026_resolved"),
+        ("retro_025_resolved", retro.retro_025_resolved, "Exp 438 fix_applied"),
+        ("live_precision_result", retro.live_precision_result, "Exp 439 honest_verdict"),
+        ("live_humaneval_result", retro.live_humaneval_result, "Exp 440 honest_verdict"),
+        ("live_adversarial_result", retro.live_adversarial_result, "Exp 441 honest_verdict"),
+        ("fr11_relay_confirmed", retro.fr11_relay_confirmed, "Exp 443 retro_024_closed"),
+        ("think_probe_viable", retro.think_probe_viable, "Exp 444 (timed out)"),
+        ("continuous_improved", retro.continuous_improved, "Exp 446 (missing)"),
+        ("kaem_faster", retro.kaem_faster, "Exp 447 mean_speedup>5"),
         ("cross_session_improvement", retro.cross_session_improvement, "Exp 448 honest_verdict"),
     ]
     print("\n=== Milestone 2026.04.33 Success Criteria ===")
-    print("Headline: Did we FINALLY get live benchmark numbers after 7 consecutive scaffolding-only milestones?")
+    print(
+        "Headline: Did we FINALLY get live benchmark numbers after 7 consecutive scaffolding-only milestones?"
+    )
     # Determine headline answer from live results.
     live_ran = any(
         v not in ("not_run", "timed_out")
-        for v in [retro.live_precision_result, retro.live_humaneval_result, retro.live_adversarial_result]
+        for v in [
+            retro.live_precision_result,
+            retro.live_humaneval_result,
+            retro.live_adversarial_result,
+        ]
     )
-    print(f"Answer: {'YES — live GPU benchmarks obtained (honest negatives)' if live_ran else 'NO — still scaffolding-only'}")
+    print(
+        f"Answer: {'YES — live GPU benchmarks obtained (honest negatives)' if live_ran else 'NO — still scaffolding-only'}"
+    )
     print(f"\n{'Criterion':<32} {'Result':<30} {'Notes'}")
     print("-" * 95)
     for criterion, result, notes in rows:
@@ -595,7 +612,7 @@ def _build_artifact(retro: MilestoneRetro2026_04_33) -> dict:
     """Build the serializable JSON artifact."""
     data = asdict(retro)
     data["schema"] = "carnot.operational_retro.v7"
-    data["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    data["generated_at"] = datetime.now(UTC).isoformat(timespec="seconds")
     data["status"] = "complete"
     return data
 

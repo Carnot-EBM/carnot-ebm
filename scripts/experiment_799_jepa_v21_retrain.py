@@ -82,6 +82,7 @@ tmpl = ExperimentTemplate(
 # because the training corpus is fover_labeled_steps_v21_multi.json.
 # ---------------------------------------------------------------------------
 
+
 def _load_ood_proxy(live_fallback_path: Path) -> tuple[list[list[str]], list[float]]:
     """Load Exp 442 fover_labeled_steps_live.json as OOD evaluation set.
 
@@ -130,6 +131,7 @@ def _load_ood_proxy(live_fallback_path: Path) -> tuple[list[list[str]], list[flo
 # ---------------------------------------------------------------------------
 # Training corpus loading
 # ---------------------------------------------------------------------------
+
 
 def _load_multi_source_corpus(
     multi_path: Path,
@@ -242,6 +244,7 @@ def _load_multi_source_corpus(
 # Outcome-conditioned weight computation (REQ-LEARN-096)
 # ---------------------------------------------------------------------------
 
+
 def compute_outcome_conditioned_weights(
     labels: list[float],
     base_weights: list[float],
@@ -280,6 +283,7 @@ def compute_outcome_conditioned_weights(
 # ---------------------------------------------------------------------------
 # Per-domain OOD AUC (failure analysis — REQ-LEARN-097)
 # ---------------------------------------------------------------------------
+
 
 def _compute_per_domain_auc(
     probe: MultiStepJEPAv20,
@@ -328,6 +332,7 @@ def _compute_per_domain_auc(
 # Main experiment
 # ---------------------------------------------------------------------------
 
+
 def run_experiment() -> dict:
     """Train JEPA v21 with multi-source + CPMI corpus and PROGRS weighting.
 
@@ -375,8 +380,8 @@ def run_experiment() -> dict:
     cpmi_path = REPO_ROOT / "results/experiment_798_cpmi_pairs_triples.json"
     live_fallback_path = REPO_ROOT / "results/fover_labeled_steps_live.json"
 
-    step_seqs, labels, base_weights, data_source, n_training_pairs = (
-        _load_multi_source_corpus(multi_path, cpmi_path, live_fallback_path)
+    step_seqs, labels, base_weights, data_source, n_training_pairs = _load_multi_source_corpus(
+        multi_path, cpmi_path, live_fallback_path
     )
     print(f"[799] Total corpus: {n_training_pairs} pairs, source={data_source}")
 
@@ -434,6 +439,7 @@ def run_experiment() -> dict:
         # Save model (REQ-LEARN-097: deployed path)
         try:
             import numpy as np  # noqa: PLC0415
+
             save_path = REPO_ROOT / "results/jepa_predictor_v21.safetensors"
             # safetensors requires numpy arrays; save via npz as json-serialisable fallback
             save_path_npz = REPO_ROOT / "results/jepa_predictor_v21.npz"
@@ -454,11 +460,7 @@ def run_experiment() -> dict:
     else:
         # Failure analysis (REQ-LEARN-097: below gate path)
         per_domain_auc = _compute_per_domain_auc(probe, multi_path)
-        worst_domain = (
-            min(per_domain_auc, key=per_domain_auc.get)
-            if per_domain_auc
-            else "unknown"
-        )
+        worst_domain = min(per_domain_auc, key=per_domain_auc.get) if per_domain_auc else "unknown"
         failure_analysis = {
             "per_domain_auc": per_domain_auc,
             "worst_domain": worst_domain,
@@ -473,14 +475,13 @@ def run_experiment() -> dict:
         print(f"[799] Gate FAILED. Worst domain: {worst_domain}. Failure analysis attached.")
 
     # PROGRS weight summary for audit trail
-    progrs_weight_summary = {
-        domain: round(acc, 4) for domain, acc in DOMAIN_ACCURACY.items()
-    }
+    progrs_weight_summary = {domain: round(acc, 4) for domain, acc in DOMAIN_ACCURACY.items()}
 
     # Augmentation ratio (REQ-LEARN-095)
     cpmi_n = 0
     if cpmi_path.exists():
         import json as _json  # noqa: PLC0415
+
         with open(cpmi_path) as f:
             cpmi_raw_check = _json.load(f)
         cpmi_n = len(cpmi_raw_check)

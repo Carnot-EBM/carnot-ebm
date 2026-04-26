@@ -30,8 +30,10 @@ def _make_constant_energy_fn(value: float):
     Used to produce zero-variance distributions (all samples identical) so the
     adaptive sampler stops at K_min.
     """
+
     def compute_energy(question: str, candidate: str) -> float:  # noqa: ARG001
         return value
+
     return compute_energy
 
 
@@ -155,9 +157,7 @@ def test_sampler_never_stops_before_k_min():
     result = sampler.sample_until_convergent("What is 5 * 6?")
 
     # Variance == 0.0 < 0.99 threshold, but K_min=3 so must collect at least 3.
-    assert result.k_used >= cfg.K_min, (
-        f"k_used={result.k_used} is below K_min={cfg.K_min}"
-    )
+    assert result.k_used >= cfg.K_min, f"k_used={result.k_used} is below K_min={cfg.K_min}"
 
 
 def test_sampler_uses_k_max_when_variance_stays_high():
@@ -302,6 +302,7 @@ def test_experiment_helpers_produce_consistent_questions():
     """_make_questions produces N questions with alternating labels."""
     import sys
     from pathlib import Path
+
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.experiment_774_adaptive_bayesian_psv import _make_questions
 

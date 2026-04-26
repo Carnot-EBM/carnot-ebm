@@ -116,7 +116,9 @@ RESULTS_PATH = Path(__file__).parent.parent / "results" / "experiment_290_result
 # ---------------------------------------------------------------------------
 
 
-def make_random_ising(n: int, seed: int = 0, sparsity: float = 0.3) -> tuple[np.ndarray, np.ndarray]:
+def make_random_ising(
+    n: int, seed: int = 0, sparsity: float = 0.3
+) -> tuple[np.ndarray, np.ndarray]:
     """Generate a random sparse symmetric Ising problem.
 
     **Detailed explanation for engineers:**
@@ -433,7 +435,9 @@ def schedule_comparison(
         n_warmup=n_steps,
         n_samples=N_SAMPLES,
         steps_per_sample=20,
-        schedule=AnnealingSchedule(beta_init=BETA_MIN, beta_final=BETA_MAX, schedule_type="geometric"),
+        schedule=AnnealingSchedule(
+            beta_init=BETA_MIN, beta_final=BETA_MAX, schedule_type="geometric"
+        ),
         use_checkerboard=True,
     )
     samples_geo = np.asarray(sampler_geo.sample(jrandom.PRNGKey(1), b, J, beta=BETA_MAX))
@@ -738,7 +742,9 @@ def main() -> int:
         "Execution mode: %s",
         "hardware" if os.environ.get("CARNOT_KV260_BITFILE") else "software_model (CPU fallback)",
     )
-    logger.info("Comparing arXiv 2604.04606 (exp 228 Exp 289 results): cpu_seconds=0.288s vs fpga_sim=0.825s for n=128.")
+    logger.info(
+        "Comparing arXiv 2604.04606 (exp 228 Exp 289 results): cpu_seconds=0.288s vs fpga_sim=0.825s for n=128."
+    )
 
     results = []
     for idx, n_spins in enumerate(PROBLEM_SIZES):

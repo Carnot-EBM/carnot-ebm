@@ -146,9 +146,7 @@ def logic_feature_vector(text: str) -> np.ndarray:
     features[2] = float(any(w in tokens for w in ("some", "many", "most")))
 
     # 3: has_quantifier_no — negative quantifiers
-    features[3] = float(
-        "no " in text_lower or "none" in tokens or "neither" in tokens
-    )
+    features[3] = float("no " in text_lower or "none" in tokens or "neither" in tokens)
 
     # 4: has_therefore — conclusion markers (valid arguments use these)
     features[4] = float(
@@ -167,9 +165,7 @@ def logic_feature_vector(text: str) -> np.ndarray:
     features[7] = min(text_lower.count("if "), 3) / 3.0
 
     # 8: clause_density — richer clause structure in valid arguments
-    features[8] = (
-        text.count(",") + text.count(";") + text.count(".")
-    ) / n_tokens
+    features[8] = (text.count(",") + text.count(";") + text.count(".")) / n_tokens
 
     # 9: conclusion_ratio — well-formed arguments have shorter conclusions
     sentences = [s.strip() for s in re.split(r"[.!?]", text) if s.strip()]
@@ -177,21 +173,19 @@ def logic_feature_vector(text: str) -> np.ndarray:
     features[9] = len(last_sent) / max(len(text), 1)
 
     # 10: negation_after_quantifier — scope errors ("all...not", "no...all")
-    features[10] = float(
-        bool(re.search(r"\ball\b.*\bnot\b|\bno\b.*\ball\b", text_lower))
-    )
+    features[10] = float(bool(re.search(r"\ball\b.*\bnot\b|\bno\b.*\ball\b", text_lower)))
 
     # 11: double_negation — "not...not" within text
     features[11] = float(bool(re.search(r"\bnot\b.*\bnot\b", text_lower)))
 
     # 12–19: Pairwise interactions for linear probe
-    features[12] = features[0] * features[1]   # negation × all-quantifier
-    features[13] = features[0] * features[2]   # negation × some-quantifier
-    features[14] = features[4] * features[5]   # therefore × if-then
-    features[15] = features[5] * features[1]   # if-then × all-quantifier
-    features[16] = features[4] * features[1]   # therefore × all-quantifier
-    features[17] = features[8] * features[9]   # clause density × conclusion ratio
-    features[18] = min(float(n_tokens) / 50.0, 1.0)   # normalized text length
+    features[12] = features[0] * features[1]  # negation × all-quantifier
+    features[13] = features[0] * features[2]  # negation × some-quantifier
+    features[14] = features[4] * features[5]  # therefore × if-then
+    features[15] = features[5] * features[1]  # if-then × all-quantifier
+    features[16] = features[4] * features[1]  # therefore × all-quantifier
+    features[17] = features[8] * features[9]  # clause density × conclusion ratio
+    features[18] = min(float(n_tokens) / 50.0, 1.0)  # normalized text length
     features[19] = min(float(len(sentences)) / 5.0, 1.0)  # sentence count
 
     # Pad to EMBED_DIM (256) — must match JEPA predictor input size
@@ -359,11 +353,7 @@ def generate_code_qa(rng: random.Random) -> list[dict]:
         tmpl = templates[i % len(templates)]
         n = rng.randint(3, 12)
         is_correct = rng.random() < 0.60
-        code = (
-            tmpl["correct"].format(n=n)
-            if is_correct
-            else tmpl["wrong"].format(n=n)
-        )
+        code = tmpl["correct"].format(n=n) if is_correct else tmpl["wrong"].format(n=n)
         pairs.append(
             {
                 "question": tmpl["question"].format(n=n),
@@ -395,16 +385,52 @@ def generate_logic_qa(rng: random.Random) -> list[dict]:
         List of Q&A dicts for logic domain.
     """
     syllogisms = [
-        ("All mammals are warm-blooded. Dogs are mammals.", "Dogs are warm-blooded.", "Dogs are not warm-blooded."),
-        ("All birds have feathers. Eagles are birds.", "Eagles have feathers.", "Eagles do not have feathers."),
-        ("If it rains, the ground gets wet. It is raining.", "The ground is wet.", "The ground is not wet."),
-        ("All squares are rectangles. ABCD is a square.", "ABCD is a rectangle.", "ABCD is not a rectangle."),
+        (
+            "All mammals are warm-blooded. Dogs are mammals.",
+            "Dogs are warm-blooded.",
+            "Dogs are not warm-blooded.",
+        ),
+        (
+            "All birds have feathers. Eagles are birds.",
+            "Eagles have feathers.",
+            "Eagles do not have feathers.",
+        ),
+        (
+            "If it rains, the ground gets wet. It is raining.",
+            "The ground is wet.",
+            "The ground is not wet.",
+        ),
+        (
+            "All squares are rectangles. ABCD is a square.",
+            "ABCD is a rectangle.",
+            "ABCD is not a rectangle.",
+        ),
         ("If P then Q. P is true.", "Q is true.", "Q is false."),
-        ("All prime numbers greater than 2 are odd. 7 is prime and greater than 2.", "7 is odd.", "7 is even."),
-        ("All cats are felines. Whiskers is a cat.", "Whiskers is a feline.", "Whiskers is not a feline."),
-        ("If the battery is charged, the device works. The battery is charged.", "The device works.", "The device does not work."),
-        ("All integers divisible by 4 are divisible by 2. 12 is divisible by 4.", "12 is divisible by 2.", "12 is not divisible by 2."),
-        ("All roses are flowers. Some flowers fade quickly. Some roses are red.", "Roses are a type of flower.", "Roses are not flowers."),
+        (
+            "All prime numbers greater than 2 are odd. 7 is prime and greater than 2.",
+            "7 is odd.",
+            "7 is even.",
+        ),
+        (
+            "All cats are felines. Whiskers is a cat.",
+            "Whiskers is a feline.",
+            "Whiskers is not a feline.",
+        ),
+        (
+            "If the battery is charged, the device works. The battery is charged.",
+            "The device works.",
+            "The device does not work.",
+        ),
+        (
+            "All integers divisible by 4 are divisible by 2. 12 is divisible by 4.",
+            "12 is divisible by 2.",
+            "12 is not divisible by 2.",
+        ),
+        (
+            "All roses are flowers. Some flowers fade quickly. Some roses are red.",
+            "Roses are a type of flower.",
+            "Roses are not flowers.",
+        ),
     ]
 
     pairs = []
@@ -783,7 +809,7 @@ def main() -> None:
     n_correct = sum(1 for p in all_pairs if p["ground_truth_correct"])
     print(
         f"  {N_ARITHMETIC} arithmetic, {N_CODE} code, {N_LOGIC} logic  "
-        f"({n_correct}/{N_TOTAL} = {100*n_correct/N_TOTAL:.1f}% ground-truth correct)"
+        f"({n_correct}/{N_TOTAL} = {100 * n_correct / N_TOTAL:.1f}% ground-truth correct)"
     )
 
     pipeline = VerifyRepairPipeline(timeout_seconds=10.0)
@@ -813,12 +839,13 @@ def main() -> None:
 
     n_baseline_verified = sum(baseline_decisions)
     baseline_gt_match = sum(
-        1 for i, qa in enumerate(all_pairs)
-        if (baseline_decisions[i] == qa["ground_truth_correct"])
+        1 for i, qa in enumerate(all_pairs) if (baseline_decisions[i] == qa["ground_truth_correct"])
     )
     print(f"  Total time: {baseline_result.total_wall_time_s:.3f}s")
-    print(f"  Verified: {n_baseline_verified}/{N_TOTAL} = {100*n_baseline_verified/N_TOTAL:.1f}%")
-    print(f"  Accuracy vs ground truth: {100*baseline_gt_match/N_TOTAL:.1f}%")
+    print(
+        f"  Verified: {n_baseline_verified}/{N_TOTAL} = {100 * n_baseline_verified / N_TOTAL:.1f}%"
+    )
+    print(f"  Accuracy vs ground truth: {100 * baseline_gt_match / N_TOTAL:.1f}%")
 
     # =========================================================================
     # Mode 2: v3 predictor with domain-appropriate embeddings at thresholds 0.3, 0.5, 0.7
@@ -838,7 +865,7 @@ def main() -> None:
             threshold=threshold,
             mode_name=mode_name_v3,
             baseline_decisions=baseline_decisions,
-            use_domain_embeddings=True,   # KEY: symbolic for logic, RP for arith/code
+            use_domain_embeddings=True,  # KEY: symbolic for logic, RP for arith/code
         )
         v3_results_by_threshold.append(v3_mode)
 
@@ -849,25 +876,33 @@ def main() -> None:
         status = "PASS" if (fp_ok and deg_ok) else "MISS"
 
         print(f"  Time: {v3_mode.total_wall_time_s:.3f}s  (speedup: {speedup_v3:.2f}x)")
-        print(f"  Fast-path rate: {100*v3_mode.fast_path_rate:.1f}%  (target >= {100*TARGET_FASTPATH_RATE:.0f}%)")
-        print(f"  Fast-path accuracy: {100*v3_mode.fast_path_accuracy:.1f}%")
-        print(f"  Overall accuracy: {100*v3_mode.overall_accuracy:.1f}%")
-        print(f"  Accuracy degradation: {100*degradation_v3:.2f}%  (target < {100*TARGET_MAX_DEGRADATION:.0f}%)")
-        print(f"  Target [{TARGET_FASTPATH_RATE*100:.0f}% fast-path, <{TARGET_MAX_DEGRADATION*100:.0f}% degradation]: {status}")
+        print(
+            f"  Fast-path rate: {100 * v3_mode.fast_path_rate:.1f}%  (target >= {100 * TARGET_FASTPATH_RATE:.0f}%)"
+        )
+        print(f"  Fast-path accuracy: {100 * v3_mode.fast_path_accuracy:.1f}%")
+        print(f"  Overall accuracy: {100 * v3_mode.overall_accuracy:.1f}%")
+        print(
+            f"  Accuracy degradation: {100 * degradation_v3:.2f}%  (target < {100 * TARGET_MAX_DEGRADATION:.0f}%)"
+        )
+        print(
+            f"  Target [{TARGET_FASTPATH_RATE * 100:.0f}% fast-path, <{TARGET_MAX_DEGRADATION * 100:.0f}% degradation]: {status}"
+        )
 
         domain_acc = v3_mode.per_domain_fast_path_accuracy()
         print(f"  Per-domain fast-path accuracy:")
         for domain, acc in domain_acc.items():
             n_fast = v3_mode.per_domain_fast[domain]
             if n_fast > 0:
-                print(f"    {domain:12s}: {100*acc:.1f}%  ({n_fast} fast-path questions)")
+                print(f"    {domain:12s}: {100 * acc:.1f}%  ({n_fast} fast-path questions)")
             else:
                 print(f"    {domain:12s}: -- (no fast-path questions)")
 
         # --- v2 live comparison at same threshold (using RandomProjection for all) ---
         if predictor_v2 is not None:
             mode_name_v2 = f"v2_threshold={threshold}"
-            print(f"\n  [Comparison] JEPA v2 at threshold={threshold} (RandomProjection all domains)...")
+            print(
+                f"\n  [Comparison] JEPA v2 at threshold={threshold} (RandomProjection all domains)..."
+            )
             v2_mode = run_benchmark_v3(
                 qa_pairs=all_pairs,
                 pipeline=pipeline,
@@ -880,15 +915,15 @@ def main() -> None:
             v2_live_by_threshold.append(v2_mode)
             degradation_v2 = 1.0 - v2_mode.overall_accuracy
             print(
-                f"  v2: fast_path={100*v2_mode.fast_path_rate:.1f}%  "
-                f"degradation={100*degradation_v2:.2f}%  "
-                f"accuracy={100*v2_mode.overall_accuracy:.1f}%"
+                f"  v2: fast_path={100 * v2_mode.fast_path_rate:.1f}%  "
+                f"degradation={100 * degradation_v2:.2f}%  "
+                f"accuracy={100 * v2_mode.overall_accuracy:.1f}%"
             )
             fp_delta = v3_mode.fast_path_rate - v2_mode.fast_path_rate
             deg_delta = degradation_v3 - degradation_v2
             print(
-                f"  v3 vs v2 delta: fast_path d={100*fp_delta:+.1f}%  "
-                f"degradation d={100*deg_delta:+.2f}%"
+                f"  v3 vs v2 delta: fast_path d={100 * fp_delta:+.1f}%  "
+                f"degradation d={100 * deg_delta:+.2f}%"
             )
 
         # --- v1 live comparison ---
@@ -907,8 +942,8 @@ def main() -> None:
             v1_live_by_threshold.append(v1_mode)
             degradation_v1 = 1.0 - v1_mode.overall_accuracy
             print(
-                f"  v1: fast_path={100*v1_mode.fast_path_rate:.1f}%  "
-                f"degradation={100*degradation_v1:.2f}%"
+                f"  v1: fast_path={100 * v1_mode.fast_path_rate:.1f}%  "
+                f"degradation={100 * degradation_v1:.2f}%"
             )
 
     # =========================================================================
@@ -931,12 +966,12 @@ def main() -> None:
         optimal_degradation = 1.0 - optimal_mode.overall_accuracy
         print(
             f"  Optimal threshold: {optimal_threshold}  "
-            f"(fast_path={100*optimal_mode.fast_path_rate:.1f}%  "
-            f"degradation={100*optimal_degradation:.2f}%)"
+            f"(fast_path={100 * optimal_mode.fast_path_rate:.1f}%  "
+            f"degradation={100 * optimal_degradation:.2f}%)"
         )
         target_met = optimal_mode.fast_path_rate >= TARGET_FASTPATH_RATE
         print(
-            f"  Fast-path target (>={100*TARGET_FASTPATH_RATE:.0f}%): "
+            f"  Fast-path target (>={100 * TARGET_FASTPATH_RATE:.0f}%): "
             f"{'MET' if target_met else 'NOT MET'}"
         )
     else:
@@ -964,9 +999,11 @@ def main() -> None:
             code_errors = analysis["domain_counts"].get("code", 0)
             total_errors = analysis["n_errors"]
             if total_errors > 0:
-                print(f"    Logic error fraction: {100*logic_errors/total_errors:.1f}%  "
-                      f"(v2 Exp156: code dominated at all thresholds)")
-                print(f"    Code error fraction: {100*code_errors/total_errors:.1f}%")
+                print(
+                    f"    Logic error fraction: {100 * logic_errors / total_errors:.1f}%  "
+                    f"(v2 Exp156: code dominated at all thresholds)"
+                )
+                print(f"    Code error fraction: {100 * code_errors / total_errors:.1f}%")
 
     # =========================================================================
     # Root cause analysis if target not met
@@ -977,7 +1014,9 @@ def main() -> None:
             degradation = 1.0 - mode.overall_accuracy
             domain_acc = mode.per_domain_fast_path_accuracy()
             print(f"\n  {mode.name}:")
-            print(f"    fast_path_rate={100*mode.fast_path_rate:.1f}%  degradation={100*degradation:.2f}%")
+            print(
+                f"    fast_path_rate={100 * mode.fast_path_rate:.1f}%  degradation={100 * degradation:.2f}%"
+            )
             for domain in ("arithmetic", "code", "logic"):
                 n_fast = mode.per_domain_fast[domain]
                 if n_fast > 0:
@@ -986,10 +1025,10 @@ def main() -> None:
                     if acc < 0.98:
                         print(
                             f"    [{domain}] {n_errors} fast-path errors / {n_fast} fast-path = "
-                            f"{100*(1-acc):.1f}% error rate — DOMINANT FAILURE DOMAIN"
+                            f"{100 * (1 - acc):.1f}% error rate — DOMINANT FAILURE DOMAIN"
                         )
                     else:
-                        print(f"    [{domain}] acc={100*acc:.1f}% ({n_fast} fast-path) — OK")
+                        print(f"    [{domain}] acc={100 * acc:.1f}% ({n_fast} fast-path) — OK")
         print("\n  Root cause summary:")
         # Find which domain contributes most errors at t=0.3
         if v3_results_by_threshold:
@@ -1002,9 +1041,13 @@ def main() -> None:
                 if worst_domain == "logic":
                     print("    v3 symbolic features DID improve logic detection but errors remain.")
                 elif worst_domain == "code":
-                    print("    Code domain still dominates — v3 code AUROC still ~0.776, unchanged.")
+                    print(
+                        "    Code domain still dominates — v3 code AUROC still ~0.776, unchanged."
+                    )
                     print("    Recommendation: train v4 with code-specific symbolic features")
-                    print("    (AST parse features: syntax error presence, variable scope, loop invariant)")
+                    print(
+                        "    (AST parse features: syntax error presence, variable scope, loop invariant)"
+                    )
 
     # =========================================================================
     # v1/v2/v3 comparison table
@@ -1030,8 +1073,8 @@ def main() -> None:
         status_v3 = "PASS" if (fp_ok_v3 and deg_ok_v3) else "MISS"
         print(
             f"  v3 threshold={t:<5}          "
-            f"{100*v3_mode.fast_path_rate:>8.1f}%  "
-            f"{100*deg_v3:>10.2f}%  {status_v3:>6}"
+            f"{100 * v3_mode.fast_path_rate:>8.1f}%  "
+            f"{100 * deg_v3:>10.2f}%  {status_v3:>6}"
         )
 
         # v2 reference
@@ -1039,8 +1082,8 @@ def main() -> None:
         if v2_entry:
             print(
                 f"  v2 threshold={t:<5} (Exp156) "
-                f"{100*v2_entry.get('fast_path_rate',0):>8.1f}%  "
-                f"{100*v2_entry.get('accuracy_degradation',0):>10.2f}%"
+                f"{100 * v2_entry.get('fast_path_rate', 0):>8.1f}%  "
+                f"{100 * v2_entry.get('accuracy_degradation', 0):>10.2f}%"
             )
 
         # v1 reference
@@ -1048,8 +1091,8 @@ def main() -> None:
         if v1_entry:
             print(
                 f"  v1 threshold={t:<5} (Exp145) "
-                f"{100*v1_entry.get('fast_path_rate',0):>8.1f}%  "
-                f"{100*v1_entry.get('accuracy_degradation',0):>10.2f}%"
+                f"{100 * v1_entry.get('fast_path_rate', 0):>8.1f}%  "
+                f"{100 * v1_entry.get('accuracy_degradation', 0):>10.2f}%"
             )
         print()
 
@@ -1058,13 +1101,13 @@ def main() -> None:
         if target_met:
             print(f"  OVERALL: TARGET MET at threshold={optimal_threshold}")
             print(
-                f"  fast_path_rate={100*optimal_mode.fast_path_rate:.1f}%  "
-                f"degradation={100*optimal_degradation:.2f}%"
+                f"  fast_path_rate={100 * optimal_mode.fast_path_rate:.1f}%  "
+                f"degradation={100 * optimal_degradation:.2f}%"
             )
         else:
             print(
                 f"  OVERALL: Degradation target met at threshold={optimal_threshold} "
-                f"but fast_path_rate={100*optimal_mode.fast_path_rate:.1f}% < {100*TARGET_FASTPATH_RATE:.0f}%"
+                f"but fast_path_rate={100 * optimal_mode.fast_path_rate:.1f}% < {100 * TARGET_FASTPATH_RATE:.0f}%"
             )
     else:
         print("  OVERALL: TARGET NOT MET (no threshold achieved <2% degradation)")
@@ -1074,9 +1117,13 @@ def main() -> None:
     # If target met: update VerifyRepairPipeline to load v3 by default
     # =========================================================================
     if target_met:
-        print(f"\n>>> TARGET MET — updating VerifyRepairPipeline to load v3 predictor by default...")
+        print(
+            f"\n>>> TARGET MET — updating VerifyRepairPipeline to load v3 predictor by default..."
+        )
         _update_pipeline_default_predictor()
-        print("    VerifyRepairPipeline updated. See comment: # Exp 168: Tier 3 self-learning complete")
+        print(
+            "    VerifyRepairPipeline updated. See comment: # Exp 168: Tier 3 self-learning complete"
+        )
 
     # =========================================================================
     # Save results
@@ -1084,13 +1131,9 @@ def main() -> None:
 
     # Build per-threshold v2/v1 lookup from prior JSON (fallback)
     v2_json_by_threshold: dict = {
-        entry["threshold"]: entry.get("v2", {})
-        for entry in v2_results.get("thresholds", [])
+        entry["threshold"]: entry.get("v2", {}) for entry in v2_results.get("thresholds", [])
     }
-    v1_json_by_threshold: dict = {
-        mode["threshold"]: mode
-        for mode in v1_results.get("modes", [])
-    }
+    v1_json_by_threshold: dict = {mode["threshold"]: mode for mode in v1_results.get("modes", [])}
 
     thresholds_output: list[dict] = []
     for i, (threshold, v3_mode) in enumerate(zip(THRESHOLDS, v3_results_by_threshold)):
@@ -1101,10 +1144,26 @@ def main() -> None:
         v2_live = v2_live_by_threshold[i] if i < len(v2_live_by_threshold) else None
         v1_live = v1_live_by_threshold[i] if i < len(v1_live_by_threshold) else None
 
-        v2_fp = v2_live.fast_path_rate if v2_live else v2_json_by_threshold.get(threshold, {}).get("fast_path_rate")
-        v2_deg = (1.0 - v2_live.overall_accuracy) if v2_live else v2_json_by_threshold.get(threshold, {}).get("accuracy_degradation")
-        v1_fp = v1_live.fast_path_rate if v1_live else v1_json_by_threshold.get(threshold, {}).get("fast_path_rate")
-        v1_deg = (1.0 - v1_live.overall_accuracy) if v1_live else v1_json_by_threshold.get(threshold, {}).get("accuracy_degradation")
+        v2_fp = (
+            v2_live.fast_path_rate
+            if v2_live
+            else v2_json_by_threshold.get(threshold, {}).get("fast_path_rate")
+        )
+        v2_deg = (
+            (1.0 - v2_live.overall_accuracy)
+            if v2_live
+            else v2_json_by_threshold.get(threshold, {}).get("accuracy_degradation")
+        )
+        v1_fp = (
+            v1_live.fast_path_rate
+            if v1_live
+            else v1_json_by_threshold.get(threshold, {}).get("fast_path_rate")
+        )
+        v1_deg = (
+            (1.0 - v1_live.overall_accuracy)
+            if v1_live
+            else v1_json_by_threshold.get(threshold, {}).get("accuracy_degradation")
+        )
 
         domain_acc_v3 = v3_mode.per_domain_fast_path_accuracy()
 
@@ -1134,14 +1193,18 @@ def main() -> None:
                 "v2_comparison": {
                     "fast_path_rate": v2_fp,
                     "accuracy_degradation": v2_deg,
-                    "fast_path_rate_delta": (v3_mode.fast_path_rate - v2_fp) if v2_fp is not None else None,
+                    "fast_path_rate_delta": (v3_mode.fast_path_rate - v2_fp)
+                    if v2_fp is not None
+                    else None,
                     "degradation_delta": (degradation_v3 - v2_deg) if v2_deg is not None else None,
                     "source": "live_run" if v2_live else "exp_156_json",
                 },
                 "v1_comparison": {
                     "fast_path_rate": v1_fp,
                     "accuracy_degradation": v1_deg,
-                    "fast_path_rate_delta": (v3_mode.fast_path_rate - v1_fp) if v1_fp is not None else None,
+                    "fast_path_rate_delta": (v3_mode.fast_path_rate - v1_fp)
+                    if v1_fp is not None
+                    else None,
                     "degradation_delta": (degradation_v3 - v1_deg) if v1_deg is not None else None,
                     "source": "live_run" if v1_live else "exp_145_json",
                 },
@@ -1239,7 +1302,7 @@ def _update_pipeline_default_predictor() -> None:
 
     # Find the end of the module-level imports/constants block just before
     # the VerifyRepairPipeline class definition, and inject a constant.
-    inject_constant = '''
+    inject_constant = """
 # Exp 168: Tier 3 self-learning complete
 # Default JEPA v3 predictor path — loaded automatically when present.
 # Set CARNOT_JEPA_PREDICTOR="" to disable; override with a custom path.
@@ -1249,7 +1312,7 @@ _DEFAULT_JEPA_PATH: str = _os_jepa.environ.get(
     str(Path(__file__).parent.parent.parent.parent / "results" / "jepa_predictor_v3.safetensors"),
 )
 
-'''
+"""
 
     # Insert before the class definition
     class_marker = "\nclass VerifyRepairPipeline:"
@@ -1263,7 +1326,7 @@ _DEFAULT_JEPA_PATH: str = _os_jepa.environ.get(
     # model loading block, by finding the Raises docstring section end in __init__.
     # We look for the last line before the first non-init method.
     # Strategy: inject after the line "self._load_model(model)" block end.
-    init_injection = '''
+    init_injection = """
         # Exp 168: Tier 3 self-learning complete — auto-load v3 JEPA predictor.
         # When results/jepa_predictor_v3.safetensors exists, fast-path gating
         # is applied automatically (verified >= 40% fast-path, < 2% degradation).
@@ -1280,10 +1343,10 @@ _DEFAULT_JEPA_PATH: str = _os_jepa.environ.get(
                 )
             except Exception as _e:
                 logger.debug("Could not load default JEPA predictor: %s", _e)
-'''
+"""
 
     # Inject after the line that sets up self._tokenizer
-    tokenizer_marker = "        self._device: str = \"cpu\"\n"
+    tokenizer_marker = '        self._device: str = "cpu"\n'
     if tokenizer_marker in content:
         content = content.replace(
             tokenizer_marker,

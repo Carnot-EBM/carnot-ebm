@@ -65,7 +65,6 @@ tmpl.setup()
 # ---------------------------------------------------------------------------
 
 with ExperimentTimeoutWatchdog(745, timeout_minutes=60, result_path=DELIVERABLE):
-
     # --- Load FoVer v2 corpus with is_correct labels ---
     fover_path = _REPO_ROOT / "results" / "fover_corpus_v2.json"
     with open(fover_path) as f:
@@ -147,7 +146,9 @@ with ExperimentTimeoutWatchdog(745, timeout_minutes=60, result_path=DELIVERABLE)
     threshold = mean_correct + 1.0 * std_correct
     detector.threshold = threshold
 
-    print(f"  mean_conmlds_correct={mean_correct:.4f}, std={std_correct:.4f}, threshold={threshold:.4f}")
+    print(
+        f"  mean_conmlds_correct={mean_correct:.4f}, std={std_correct:.4f}, threshold={threshold:.4f}"
+    )
 
     # --- Step 2: Score all entries ---
     print("Scoring all FoVer v2 entries...")
@@ -164,8 +165,12 @@ with ExperimentTimeoutWatchdog(745, timeout_minutes=60, result_path=DELIVERABLE)
     labels_arr = np.array(labels, dtype=np.float32)
 
     # Mean ConMLDS for correct vs incorrect
-    mean_conmlds_correct = float(scores_arr[labels_arr == 0].mean()) if (labels_arr == 0).any() else 0.0
-    mean_conmlds_incorrect = float(scores_arr[labels_arr == 1].mean()) if (labels_arr == 1).any() else 0.0
+    mean_conmlds_correct = (
+        float(scores_arr[labels_arr == 0].mean()) if (labels_arr == 0).any() else 0.0
+    )
+    mean_conmlds_incorrect = (
+        float(scores_arr[labels_arr == 1].mean()) if (labels_arr == 1).any() else 0.0
+    )
 
     print(f"  mean_conmlds_correct={mean_conmlds_correct:.4f}")
     print(f"  mean_conmlds_incorrect={mean_conmlds_incorrect:.4f}")
@@ -178,7 +183,11 @@ with ExperimentTimeoutWatchdog(745, timeout_minutes=60, result_path=DELIVERABLE)
     concordant = 0.0
     for p in pos_scores:
         concordant += float(np.sum(p > neg_scores)) + 0.5 * float(np.sum(p == neg_scores))
-    auc = concordant / (len(pos_scores) * len(neg_scores)) if (len(pos_scores) > 0 and len(neg_scores) > 0) else 0.5
+    auc = (
+        concordant / (len(pos_scores) * len(neg_scores))
+        if (len(pos_scores) > 0 and len(neg_scores) > 0)
+        else 0.5
+    )
 
     print(f"  AUC={auc:.4f}")
 
@@ -210,12 +219,15 @@ with ExperimentTimeoutWatchdog(745, timeout_minutes=60, result_path=DELIVERABLE)
     print(f"  honest_verdict={honest_verdict}")
 
     # --- Step 6: Save checkpoint and build artifact ---
-    tmpl.checkpoint_save({
-        "auc": auc,
-        "effective_auc": effective_auc,
-        "threshold": threshold,
-        "honest_verdict": honest_verdict,
-    }, step=1)
+    tmpl.checkpoint_save(
+        {
+            "auc": auc,
+            "effective_auc": effective_auc,
+            "threshold": threshold,
+            "honest_verdict": honest_verdict,
+        },
+        step=1,
+    )
 
     artifact = tmpl.build_result(
         {

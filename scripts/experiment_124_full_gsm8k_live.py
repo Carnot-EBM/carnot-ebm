@@ -163,17 +163,21 @@ def load_gsm8k_questions(seed: int = 124) -> list[dict[str, Any]]:
             n_steps = _estimate_steps(answer_text)
             difficulty = "easy" if n_steps <= 3 else ("medium" if n_steps <= 6 else "hard")
 
-            questions.append({
-                "question": q_text,
-                "ground_truth": gt,
-                "answer_text": answer_text,
-                "source": "gsm8k",
-                "n_steps": n_steps,
-                "difficulty": difficulty,
-            })
+            questions.append(
+                {
+                    "question": q_text,
+                    "ground_truth": gt,
+                    "answer_text": answer_text,
+                    "source": "gsm8k",
+                    "n_steps": n_steps,
+                    "difficulty": difficulty,
+                }
+            )
 
-        print(f"  Extracted {len(questions)} questions with valid numeric answers "
-              f"({skipped} skipped, no valid answer).")
+        print(
+            f"  Extracted {len(questions)} questions with valid numeric answers "
+            f"({skipped} skipped, no valid answer)."
+        )
         return questions
 
     except ImportError:
@@ -240,10 +244,21 @@ def _generate_synthetic_gsm8k(n: int, seed: int = 124) -> list[dict[str, Any]]:
     questions: list[dict[str, Any]] = []
 
     templates = [
-        _tmpl_shopping, _tmpl_cooking, _tmpl_travel, _tmpl_savings,
-        _tmpl_classroom, _tmpl_garden, _tmpl_bakery, _tmpl_library,
-        _tmpl_sports, _tmpl_construction, _tmpl_fundraiser, _tmpl_farm,
-        _tmpl_factory, _tmpl_restaurant, _tmpl_warehouse,
+        _tmpl_shopping,
+        _tmpl_cooking,
+        _tmpl_travel,
+        _tmpl_savings,
+        _tmpl_classroom,
+        _tmpl_garden,
+        _tmpl_bakery,
+        _tmpl_library,
+        _tmpl_sports,
+        _tmpl_construction,
+        _tmpl_fundraiser,
+        _tmpl_farm,
+        _tmpl_factory,
+        _tmpl_restaurant,
+        _tmpl_warehouse,
     ]
 
     for i in range(n):
@@ -252,19 +267,22 @@ def _generate_synthetic_gsm8k(n: int, seed: int = 124) -> list[dict[str, Any]]:
         q_text, answer = tmpl(local_rng)
         n_steps = rng.randint(2, 6)
         difficulty = "easy" if n_steps <= 3 else ("medium" if n_steps <= 6 else "hard")
-        questions.append({
-            "question": q_text,
-            "ground_truth": answer,
-            "answer_text": "",
-            "source": "synthetic",
-            "n_steps": n_steps,
-            "difficulty": difficulty,
-        })
+        questions.append(
+            {
+                "question": q_text,
+                "ground_truth": answer,
+                "answer_text": "",
+                "source": "synthetic",
+                "n_steps": n_steps,
+                "difficulty": difficulty,
+            }
+        )
 
     return questions
 
 
 # --- Synthetic question templates (copied from Exp 91, unchanged) ---
+
 
 def _tmpl_shopping(rng: random.Random) -> tuple[str, int]:
     """Shopping: buy items, apply discount, compute change."""
@@ -410,8 +428,7 @@ def _tmpl_construction(rng: random.Random) -> tuple[str, int]:
     d = rng.randint(3, 7)
     r = rng.randint(15, 40)
     return (
-        f"{w} workers work {h} hours/day for {d} days, each laying "
-        f"{r} bricks/hour. Total bricks?",
+        f"{w} workers work {h} hours/day for {d} days, each laying {r} bricks/hour. Total bricks?",
         w * h * d * r,
     )
 
@@ -456,8 +473,7 @@ def _tmpl_factory(rng: random.Random) -> tuple[str, int]:
     dp = rng.choice([5, 10, 15, 20])
     total = m * upm * h
     return (
-        f"{m} machines producing {upm} units/hour for {h} hours. "
-        f"{dp}% defective. Good units?",
+        f"{m} machines producing {upm} units/hour for {h} hours. {dp}% defective. Good units?",
         total - total * dp // 100,
     )
 
@@ -650,6 +666,7 @@ def load_model_robust(config: dict[str, Any]) -> tuple[Any, Any, str, str, bool]
             print(f"    Running smoke test on {candidate}...")
             try:
                 import torch
+
                 test_input = tokenizer("Hi", return_tensors="pt")
                 device_str = str(next(model.parameters()).device)
                 with torch.no_grad():
@@ -685,6 +702,7 @@ def unload_model(model: Any, tokenizer: Any) -> None:
     del model, tokenizer
     try:
         import torch
+
         torch.cuda.empty_cache()
     except (ImportError, RuntimeError):
         pass
@@ -728,6 +746,7 @@ def generate_response_live(
         RuntimeError: If model or tokenizer is None.
     """
     from carnot.inference.model_loader import generate
+
     return generate(model, tokenizer, prompt, max_new_tokens=max_new_tokens)
 
 
@@ -754,7 +773,7 @@ def simulate_response(
 
     gt = question["ground_truth"]
     base_error = 0.30 if "qwen" in model_name.lower() else 0.25
-    error_rate = base_error * (0.50 ** iteration)
+    error_rate = base_error * (0.50**iteration)
     is_correct = rng.random() > error_rate
 
     if is_correct:
@@ -840,20 +859,24 @@ def extract_arithmetic_steps(response: str) -> list[dict[str, Any]]:
             a_int, b_int = int(a), int(b)
             correct_int = int(round(correct))
             satisfied = abs(int(claimed) - correct_int) < 1
-            steps.append({
-                "expression": f"{a_int} {op} {b_int}",
-                "claimed": int(claimed),
-                "correct": correct_int,
-                "satisfied": satisfied,
-            })
+            steps.append(
+                {
+                    "expression": f"{a_int} {op} {b_int}",
+                    "claimed": int(claimed),
+                    "correct": correct_int,
+                    "satisfied": satisfied,
+                }
+            )
         else:
             satisfied = abs(claimed - correct) < 0.01
-            steps.append({
-                "expression": f"{a} {op} {b}",
-                "claimed": claimed,
-                "correct": correct,
-                "satisfied": satisfied,
-            })
+            steps.append(
+                {
+                    "expression": f"{a} {op} {b}",
+                    "claimed": claimed,
+                    "correct": correct,
+                    "satisfied": satisfied,
+                }
+            )
 
     return steps
 
@@ -885,9 +908,7 @@ def format_violations(arith_steps: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def verify_with_pipeline(
-    question: str, response: str
-) -> dict[str, Any]:
+def verify_with_pipeline(question: str, response: str) -> dict[str, Any]:
     """Run Carnot VerifyRepairPipeline.verify() on a response.
 
     **Detailed explanation for engineers:**
@@ -1071,8 +1092,11 @@ def run_verify_only(
     error_type = None
     if not correct:
         error_type = categorize_error(
-            question["question"], response, question["ground_truth"],
-            extracted, arith_steps,
+            question["question"],
+            response,
+            question["ground_truth"],
+            extracted,
+            arith_steps,
         )
 
     return {
@@ -1280,8 +1304,7 @@ def save_results_json(
         compact[model_name] = {}
         for mode_name, entries in modes.items():
             compact[model_name][mode_name] = [
-                {k: v for k, v in e.items() if k != "response"}
-                for e in entries
+                {k: v for k, v in e.items() if k != "response"} for e in entries
             ]
 
     output = {
@@ -1330,8 +1353,10 @@ def save_summary_markdown(
         f"{metadata['n_synthetic']} synthetic)"
     )
     lines.append(f"**Total questions:** {n_questions}")
-    lines.append(f"**Wall-clock time:** {metadata['total_time_s']:.1f}s "
-                 f"({metadata['total_time_s']/60:.1f} min)")
+    lines.append(
+        f"**Wall-clock time:** {metadata['total_time_s']:.1f}s "
+        f"({metadata['total_time_s'] / 60:.1f} min)"
+    )
     lines.append("")
     lines.append("**Note:** Accuracy format = `point estimate [95% Wilson CI]`")
     lines.append("")
@@ -1380,9 +1405,11 @@ def save_summary_markdown(
             lines.append("")
 
         improvement = n_rep - n_base
-        lines.append(f"**Δ accuracy (Repair vs Baseline):** "
-                     f"{'+' if improvement >= 0 else ''}{improvement} questions "
-                     f"({'+' if improvement >= 0 else ''}{improvement/n_questions:.1%})")
+        lines.append(
+            f"**Δ accuracy (Repair vs Baseline):** "
+            f"{'+' if improvement >= 0 else ''}{improvement} questions "
+            f"({'+' if improvement >= 0 else ''}{improvement / n_questions:.1%})"
+        )
         lines.append("")
 
         # Per-difficulty breakdown.
@@ -1412,9 +1439,11 @@ def save_summary_markdown(
         q_with_constraints = sum(1 for r in verify if r.get("n_arith_constraints", 0) > 0)
         lines.append("### Constraint Coverage")
         lines.append("")
-        lines.append(f"- Questions with extractable arithmetic steps: "
-                     f"{q_with_constraints}/{n_questions} "
-                     f"({q_with_constraints/n_questions:.1%})")
+        lines.append(
+            f"- Questions with extractable arithmetic steps: "
+            f"{q_with_constraints}/{n_questions} "
+            f"({q_with_constraints / n_questions:.1%})"
+        )
         lines.append(f"- Total arithmetic steps found: {total_arith} (ad-hoc extractor)")
         lines.append(f"- Total EBM constraints found: {total_pipeline} (pipeline)")
         lines.append("")
@@ -1474,8 +1503,9 @@ def save_summary_markdown(
 
         lines.append("### Timing")
         lines.append("")
-        lines.append(f"- Total wall-clock for this model: {model_time_s:.1f}s "
-                     f"({model_time_s/60:.1f} min)")
+        lines.append(
+            f"- Total wall-clock for this model: {model_time_s:.1f}s ({model_time_s / 60:.1f} min)"
+        )
         lines.append(f"- Baseline: {np.mean(base_times):.3f}s avg per question")
         lines.append(f"- Verify-only: {np.mean(verify_times):.3f}s avg per question")
         lines.append(f"- Verify+Repair: {np.mean(repair_times):.3f}s avg per question")
@@ -1496,11 +1526,11 @@ def save_summary_markdown(
             delta = nr - nb
             lines.append(
                 f"| {model_name}{tag} "
-                f"| {nb/n_questions:.1%} "
-                f"| {nv/n_questions:.1%} "
-                f"| {nr/n_questions:.1%} "
+                f"| {nb / n_questions:.1%} "
+                f"| {nv / n_questions:.1%} "
+                f"| {nr / n_questions:.1%} "
                 f"| {'+' if delta >= 0 else ''}{delta} "
-                f"({'+' if delta >= 0 else ''}{delta/n_questions:.1%}) |"
+                f"({'+' if delta >= 0 else ''}{delta / n_questions:.1%}) |"
             )
         lines.append("")
 
@@ -1542,15 +1572,17 @@ def main() -> int:
         d = q.get("difficulty", "unknown")
         diff_counts[d] = diff_counts.get(d, 0) + 1
 
-    print(f"  Questions: {n_questions} "
-          f"({n_real} real GSM8K, {n_synth} synthetic)")
-    print(f"  Difficulty split: "
-          + ", ".join(f"{d}={diff_counts.get(d, 0)}" for d in ["easy", "medium", "hard"]))
+    print(f"  Questions: {n_questions} ({n_real} real GSM8K, {n_synth} synthetic)")
+    print(
+        f"  Difficulty split: "
+        + ", ".join(f"{d}={diff_counts.get(d, 0)}" for d in ["easy", "medium", "hard"])
+    )
 
     is_publishable = n_real >= 1000
     if not is_publishable:
-        print("  *** WARNING: fewer than 1000 real GSM8K questions — "
-              "results are NOT publishable ***")
+        print(
+            "  *** WARNING: fewer than 1000 real GSM8K questions — results are NOT publishable ***"
+        )
 
     # --- Step 2: Run per-model benchmark ---
     all_results: dict[str, dict[str, list[dict[str, Any]]]] = {}
@@ -1566,11 +1598,14 @@ def main() -> int:
         if not use_live:
             force_live = os.environ.get("CARNOT_FORCE_LIVE", "") == "1"
             if force_live:
-                print(f"  CARNOT_FORCE_LIVE=1 but model failed to load. "
-                      f"Aborting — do not produce fake publishable numbers.")
+                print(
+                    f"  CARNOT_FORCE_LIVE=1 but model failed to load. "
+                    f"Aborting — do not produce fake publishable numbers."
+                )
                 return 1
-            print(f"  *** FALLBACK: Simulated outputs for {model_name}. "
-                  f"Results NOT publishable. ***")
+            print(
+                f"  *** FALLBACK: Simulated outputs for {model_name}. Results NOT publishable. ***"
+            )
 
         model_metadata[model_name] = {
             "live": use_live,
@@ -1592,8 +1627,10 @@ def main() -> int:
 
             # Mode 1: Baseline.
             r_base = run_baseline(
-                q, model_name,
-                model=model, tokenizer=tokenizer,
+                q,
+                model_name,
+                model=model,
+                tokenizer=tokenizer,
                 use_live=use_live,
                 sim_rng=random.Random(seed_base),
             )
@@ -1601,8 +1638,10 @@ def main() -> int:
 
             # Mode 2: Verify-only.
             r_verify = run_verify_only(
-                q, model_name,
-                model=model, tokenizer=tokenizer,
+                q,
+                model_name,
+                model=model,
+                tokenizer=tokenizer,
                 use_live=use_live,
                 sim_rng=random.Random(seed_base),
             )
@@ -1610,8 +1649,10 @@ def main() -> int:
 
             # Mode 3: Verify+Repair.
             r_repair = run_verify_repair(
-                q, model_name,
-                model=model, tokenizer=tokenizer,
+                q,
+                model_name,
+                model=model,
+                tokenizer=tokenizer,
                 use_live=use_live,
                 sim_rng=random.Random(seed_base),
                 max_repairs=3,
@@ -1625,10 +1666,12 @@ def main() -> int:
                 elapsed_so_far = time.time() - model_start
                 rate = (qi + 1) / elapsed_so_far
                 eta = (n_questions - qi - 1) / rate if rate > 0 else 0
-                print(f"    {qi + 1}/{n_questions} — "
-                      f"baseline {n_b}/{qi + 1} ({n_b/(qi + 1):.1%}), "
-                      f"repair {n_r}/{qi + 1} ({n_r/(qi + 1):.1%}) — "
-                      f"ETA {eta/60:.1f}min")
+                print(
+                    f"    {qi + 1}/{n_questions} — "
+                    f"baseline {n_b}/{qi + 1} ({n_b / (qi + 1):.1%}), "
+                    f"repair {n_r}/{qi + 1} ({n_r / (qi + 1):.1%}) — "
+                    f"ETA {eta / 60:.1f}min"
+                )
 
         model_elapsed = time.time() - model_start
         model_metadata[model_name]["time_s"] = model_elapsed
@@ -1640,19 +1683,23 @@ def main() -> int:
         n_ver = sum(1 for r in modes_results["verify_only"] if r["correct"])
         n_rep = sum(1 for r in modes_results["verify_repair"] if r["correct"])
 
-        print(f"\n  {model_name} summary ({model_elapsed:.1f}s = {model_elapsed/60:.1f}min):")
+        print(f"\n  {model_name} summary ({model_elapsed:.1f}s = {model_elapsed / 60:.1f}min):")
         print(f"    Baseline:      {format_ci(n_base, n_questions)}")
         print(f"    Verify-only:   {format_ci(n_ver, n_questions)}")
         print(f"    Verify+Repair: {format_ci(n_rep, n_questions)}")
-        print(f"    Δ (repair vs base): {'+' if n_rep >= n_base else ''}{n_rep - n_base} "
-              f"({'+' if n_rep >= n_base else ''}{(n_rep - n_base)/n_questions:.1%})")
+        print(
+            f"    Δ (repair vs base): {'+' if n_rep >= n_base else ''}{n_rep - n_base} "
+            f"({'+' if n_rep >= n_base else ''}{(n_rep - n_base) / n_questions:.1%})"
+        )
 
         # Published baseline comparison.
         pub = PUBLISHED_BASELINES.get(model_name)
         if pub and use_live:
             delta = n_base / n_questions - pub["gsm8k_accuracy"]
-            print(f"    vs. published baseline ({pub['source']}): "
-                  f"{pub['gsm8k_accuracy']:.1%} → delta {delta:+.1%}")
+            print(
+                f"    vs. published baseline ({pub['source']}): "
+                f"{pub['gsm8k_accuracy']:.1%} → delta {delta:+.1%}"
+            )
 
         # Free memory before next model.
         if use_live:
@@ -1672,9 +1719,7 @@ def main() -> int:
         "n_synthetic": n_synth,
         "dataset_source": "GSM8K test (openai/gsm8k)" if n_real >= 1000 else "synthetic",
         "total_time_s": total_elapsed,
-        "is_publishable": is_publishable and any(
-            m["live"] for m in model_metadata.values()
-        ),
+        "is_publishable": is_publishable and any(m["live"] for m in model_metadata.values()),
         "difficulty_counts": diff_counts,
         "models": model_metadata,
         "published_baselines": PUBLISHED_BASELINES,
@@ -1685,7 +1730,7 @@ def main() -> int:
 
     # --- Final report ---
     print(f"\n{sep}")
-    print(f"EXPERIMENT 124 FINAL RESULTS ({total_elapsed:.1f}s = {total_elapsed/60:.1f}min)")
+    print(f"EXPERIMENT 124 FINAL RESULTS ({total_elapsed:.1f}s = {total_elapsed / 60:.1f}min)")
     print(sep)
 
     header = f"  {'Model':<22s} {'Baseline':>20s} {'Verify':>20s} {'Repair':>20s} {'Δ':>6s}"
@@ -1707,8 +1752,10 @@ def main() -> int:
             f"{'+' if delta >= 0 else ''}{delta:>4d}"
         )
 
-    print(f"\n  Dataset: {'REAL GSM8K ✓' if n_real >= 1000 else 'Synthetic (not publishable)'} "
-          f"({n_real}/{n_questions} real questions)")
+    print(
+        f"\n  Dataset: {'REAL GSM8K ✓' if n_real >= 1000 else 'Synthetic (not publishable)'} "
+        f"({n_real}/{n_questions} real questions)"
+    )
 
     any_live = any(m["live"] for m in model_metadata.values())
     if any_live and is_publishable:

@@ -154,10 +154,12 @@ def _energy_tolerance(
 
     Returns (normalized_mad, within_5pct) where within_5pct = normalized_mad < 0.05.
     """
-    full_energies = np.array([float(full_model.energy(test_points[i]))
-                               for i in range(test_points.shape[0])])
-    lr_energies = np.array([float(lr_model.energy(test_points[i]))
-                             for i in range(test_points.shape[0])])
+    full_energies = np.array(
+        [float(full_model.energy(test_points[i])) for i in range(test_points.shape[0])]
+    )
+    lr_energies = np.array(
+        [float(lr_model.energy(test_points[i])) for i in range(test_points.shape[0])]
+    )
 
     scale = float(np.mean(np.abs(full_energies))) + 1e-9
     mad_normalized = float(np.mean(np.abs(full_energies - lr_energies))) / scale
@@ -209,7 +211,12 @@ def _benchmark_one(n_vars: int, key: jax.Array) -> dict:
 
     _log.info(
         "n_vars=%d: full_ms=%.4f, lr_ms=%.4f, speedup=%.2fx, mad=%.4f, within_5pct=%s",
-        n_vars, full_ms, lr_ms, speedup, mad_normalized, within_5pct,
+        n_vars,
+        full_ms,
+        lr_ms,
+        speedup,
+        mad_normalized,
+        within_5pct,
     )
 
     return {

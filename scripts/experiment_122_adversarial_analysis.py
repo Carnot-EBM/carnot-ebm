@@ -128,6 +128,7 @@ KEYWORD_TRIGGERS: list[re.Pattern[str]] = [
 # sequences and error classification logic. This avoids any drift between
 # the two experiments' definitions of "arithmetic_error" etc.
 
+
 def _import_exp121() -> Any:
     """Import the experiment_121 module for shared simulation functions.
 
@@ -146,6 +147,7 @@ def _import_exp121() -> Any:
     """
     try:
         import importlib.util
+
         spec = importlib.util.spec_from_file_location(
             "experiment_121",
             REPO_ROOT / "scripts" / "experiment_121_adversarial_verify_repair.py",
@@ -174,6 +176,7 @@ def _get(fn_name: str, fallback: Any) -> Any:
 # Local fallback implementations (used if Exp 121 import fails)
 # These MUST be kept in sync with Exp 121's implementations.
 # ---------------------------------------------------------------------------
+
 
 def _extract_final_number(text: str) -> int | None:
     """Extract final numeric answer from an LLM response text."""
@@ -204,7 +207,7 @@ def _categorize_error(item: dict, response: str, extracted: int | None, variant_
     if variant_key in ("irrelevant_injected", "combined") and extracted is not None:
         orig = set(re.findall(r"\d+", item.get("original_problem", "")))
         pert = set(re.findall(r"\d+", item["perturbed_problem"]))
-        for n_str in (pert - orig):
+        for n_str in pert - orig:
             try:
                 n = int(n_str)
                 if n > 0 and abs(extracted - n) <= 5:
@@ -229,11 +232,16 @@ def _categorize_error(item: dict, response: str, extracted: int | None, variant_
         except ValueError:
             continue
         try:
-            if op == "+": cv = a + b
-            elif op == "-": cv = a - b
-            elif op == "*": cv = a * b
-            elif op == "/" and b != 0: cv = a / b
-            else: continue
+            if op == "+":
+                cv = a + b
+            elif op == "-":
+                cv = a - b
+            elif op == "*":
+                cv = a * b
+            elif op == "/" and b != 0:
+                cv = a / b
+            else:
+                continue
         except ZeroDivisionError:
             continue
         if abs(claimed - cv) > 0.01:
@@ -251,8 +259,11 @@ def _check_arithmetic_constraints(question: str, response: str, pipeline: Any) -
                 "n_constraints": len(vr.constraints),
                 "n_violations": len(vr.violations),
                 "violations_detail": [
-                    {"type": v.constraint_type, "description": v.description,
-                     "metadata": v.metadata}
+                    {
+                        "type": v.constraint_type,
+                        "description": v.description,
+                        "metadata": v.metadata,
+                    }
                     for v in vr.violations
                 ],
                 "energy": vr.energy,
@@ -273,15 +284,26 @@ def _check_arithmetic_constraints(question: str, response: str, pipeline: Any) -
         except ValueError:
             continue
         try:
-            if op == "+": cv = a + b
-            elif op == "-": cv = a - b
-            elif op == "*": cv = a * b
-            elif op == "/" and b != 0: cv = a / b
-            else: continue
+            if op == "+":
+                cv = a + b
+            elif op == "-":
+                cv = a - b
+            elif op == "*":
+                cv = a * b
+            elif op == "/" and b != 0:
+                cv = a / b
+            else:
+                continue
         except ZeroDivisionError:
             continue
-        steps.append({"expression": f"{a} {op} {b}", "claimed": claimed,
-                       "correct": cv, "satisfied": abs(claimed - cv) < 0.01})
+        steps.append(
+            {
+                "expression": f"{a} {op} {b}",
+                "claimed": claimed,
+                "correct": cv,
+                "satisfied": abs(claimed - cv) < 0.01,
+            }
+        )
     violations = [s for s in steps if not s["satisfied"]]
     return {
         "verified": len(violations) == 0,
@@ -297,7 +319,12 @@ def _simulate_response(item: dict, model_name: str, variant_key: str, rng: rando
     """Simulate LLM baseline response (identical logic to Exp 121/120)."""
     gt = item["correct_answer"]
     base_error = 0.30 if "qwen" in model_name.lower() else 0.25
-    multipliers = {"control": 1.0, "number_swapped": 1.8, "irrelevant_injected": 1.5, "combined": 2.2}
+    multipliers = {
+        "control": 1.0,
+        "number_swapped": 1.8,
+        "irrelevant_injected": 1.5,
+        "combined": 2.2,
+    }
     error_rate = min(0.90, base_error * multipliers.get(variant_key, 1.0))
     is_correct = rng.random() > error_rate
     if is_correct:
@@ -322,8 +349,10 @@ def _simulate_response(item: dict, model_name: str, variant_key: str, rng: rando
         step1 = rng.randint(1, max(1, abs(gt) // 2 + 1))
         step2 = gt - step1
         wrong_step = step1 + step2 + rng.choice([-3, -2, -1, 1, 2, 3])
-        return (f"Let me solve step by step.\nFirst: {step1}\nThen: {step1} + {step2} = {wrong_step}\n"
-                f"Answer: {wrong_step}")
+        return (
+            f"Let me solve step by step.\nFirst: {step1}\nThen: {step1} + {step2} = {wrong_step}\n"
+            f"Answer: {wrong_step}"
+        )
     elif error_type == "logic":
         wrong = gt + rng.choice([-20, -10, -5, 5, 10, 20])
         return f"Let me work through this.\nThe result is {wrong}.\nAnswer: {wrong}"
@@ -332,8 +361,9 @@ def _simulate_response(item: dict, model_name: str, variant_key: str, rng: rando
         return f"I think the answer is {wrong}.\nAnswer: {wrong}"
 
 
-def _simulate_repair(item: dict, original_response: str, error_type: str,
-                     iteration: int, rng: random.Random) -> str:
+def _simulate_repair(
+    item: dict, original_response: str, error_type: str, iteration: int, rng: random.Random
+) -> str:
     """Simulate a repair attempt after Ising feedback (identical to Exp 121)."""
     gt = item["correct_answer"]
     if error_type != "arithmetic_error":
@@ -343,8 +373,10 @@ def _simulate_repair(item: dict, original_response: str, error_type: str,
     if rng.random() < 0.70:
         step1 = rng.randint(1, max(1, abs(gt) // 2 + 1))
         step2 = gt - step1
-        return (f"I see the error. Let me recalculate.\nStep 1: {step1}\n"
-                f"Step 2: {step1} + {step2} = {gt}\nThe corrected answer is: {gt}")
+        return (
+            f"I see the error. Let me recalculate.\nStep 1: {step1}\n"
+            f"Step 2: {step1} + {step2} = {gt}\nThe corrected answer is: {gt}"
+        )
     step1 = rng.randint(1, max(1, abs(gt) // 2 + 1))
     step2 = gt - step1
     new_wrong = step1 + step2 + rng.choice([-4, -3, -2, 2, 3, 4])
@@ -364,6 +396,7 @@ load_adversarial_data = _get("load_adversarial_data", None)
 # ---------------------------------------------------------------------------
 # Data loading
 # ---------------------------------------------------------------------------
+
 
 def load_data() -> dict[str, list[dict]]:
     """Load adversarial dataset variants.
@@ -389,6 +422,7 @@ def load_data() -> dict[str, list[dict]]:
 # ---------------------------------------------------------------------------
 # Extended error taxonomy: keyword_triggered detection
 # ---------------------------------------------------------------------------
+
 
 def detect_keyword_triggered(problem: str, error_type: str) -> bool:
     """Detect whether a logic error may have been triggered by comparative language.
@@ -425,10 +459,7 @@ def detect_keyword_triggered(problem: str, error_type: str) -> bool:
     """
     if error_type != "logic_error":
         return False
-    for pattern in KEYWORD_TRIGGERS:
-        if pattern.search(problem):
-            return True
-    return False
+    return any(pattern.search(problem) for pattern in KEYWORD_TRIGGERS)
 
 
 def extended_categorize_error(
@@ -469,6 +500,7 @@ def extended_categorize_error(
 # ---------------------------------------------------------------------------
 # Per-item simulation with full data capture
 # ---------------------------------------------------------------------------
+
 
 def run_item_full(
     item: dict,
@@ -511,7 +543,9 @@ def run_item_full(
     response = simulate_response(item, model_name, variant_key, rng_baseline)
     extracted = extract_final_number(response)
     correct = extracted is not None and extracted == gt
-    error_type = extended_categorize_error(item, response, extracted, variant_key) if not correct else None
+    error_type = (
+        extended_categorize_error(item, response, extracted, variant_key) if not correct else None
+    )
 
     # ---- Ising verification (Mode B) ----
     vr = check_arithmetic_constraints(item["perturbed_problem"], response, pipeline)
@@ -527,9 +561,7 @@ def run_item_full(
             try:
                 n = int(n_str)
                 # Check if n appears in any extracted arithmetic step in the response.
-                step_pattern = re.compile(
-                    rf"\b{re.escape(n_str)}\b.*?=|=.*?\b{re.escape(n_str)}\b"
-                )
+                step_pattern = re.compile(rf"\b{re.escape(n_str)}\b.*?=|=.*?\b{re.escape(n_str)}\b")
                 if step_pattern.search(response):
                     injected_number_extracted = True
                     break
@@ -548,8 +580,11 @@ def run_item_full(
         for iteration in range(1, 4):
             n_repair_iterations = iteration
             repair_response = simulate_repair_response(
-                item, repair_response, repair_error_type or "arithmetic_error",
-                iteration, rng_repair
+                item,
+                repair_response,
+                repair_error_type or "arithmetic_error",
+                iteration,
+                rng_repair,
             )
             re_vr = check_arithmetic_constraints(
                 item["perturbed_problem"], repair_response, pipeline
@@ -593,6 +628,7 @@ def run_item_full(
 # Analysis 1: Error taxonomy breakdown
 # ---------------------------------------------------------------------------
 
+
 def analysis_error_taxonomy(
     all_items: list[dict],
 ) -> dict:
@@ -618,8 +654,11 @@ def analysis_error_taxonomy(
         Dict mapping variant_key → taxonomy breakdown.
     """
     error_types_all = [
-        "arithmetic_error", "irrelevant_number_error",
-        "logic_error", "keyword_triggered", "reading_comprehension_error",
+        "arithmetic_error",
+        "irrelevant_number_error",
+        "logic_error",
+        "keyword_triggered",
+        "reading_comprehension_error",
     ]
 
     taxonomy: dict[str, Any] = {}
@@ -666,6 +705,7 @@ def analysis_error_taxonomy(
 # Analysis 2: Carnot detection rates per error type
 # ---------------------------------------------------------------------------
 
+
 def analysis_carnot_detection(all_items: list[dict]) -> dict:
     """Compute per-error-type detection and repair rates.
 
@@ -701,8 +741,11 @@ def analysis_carnot_detection(all_items: list[dict]) -> dict:
         Dict mapping error_type → detection/repair stats.
     """
     error_types = [
-        "arithmetic_error", "irrelevant_number_error",
-        "logic_error", "keyword_triggered", "reading_comprehension_error",
+        "arithmetic_error",
+        "irrelevant_number_error",
+        "logic_error",
+        "keyword_triggered",
+        "reading_comprehension_error",
     ]
 
     detection: dict[str, Any] = {}
@@ -747,7 +790,8 @@ def analysis_carnot_detection(all_items: list[dict]) -> dict:
             "avg_n_constraints_extracted": round(avg_constraints, 3),
             "is_catchable_by_ising": detection_rate > 0.5,
             "structural_ceiling": (
-                "catchable" if detection_rate > 0.5
+                "catchable"
+                if detection_rate > 0.5
                 else "uncatchable — Ising correctly scoped to arithmetic only"
             ),
         }
@@ -755,14 +799,14 @@ def analysis_carnot_detection(all_items: list[dict]) -> dict:
     # Overall uncatchable fraction.
     all_errors = [it for it in all_items if not it["baseline_correct"]]
     n_all_errors = len(all_errors)
-    uncatchable_types = {"irrelevant_number_error", "logic_error",
-                          "keyword_triggered", "reading_comprehension_error"}
-    n_uncatchable = sum(
-        1 for it in all_errors if it.get("error_type") in uncatchable_types
-    )
-    n_catchable = sum(
-        1 for it in all_errors if it.get("error_type") == "arithmetic_error"
-    )
+    uncatchable_types = {
+        "irrelevant_number_error",
+        "logic_error",
+        "keyword_triggered",
+        "reading_comprehension_error",
+    }
+    n_uncatchable = sum(1 for it in all_errors if it.get("error_type") in uncatchable_types)
+    n_catchable = sum(1 for it in all_errors if it.get("error_type") == "arithmetic_error")
 
     detection["_summary"] = {
         "n_total_errors": n_all_errors,
@@ -784,6 +828,7 @@ def analysis_carnot_detection(all_items: list[dict]) -> dict:
 # ---------------------------------------------------------------------------
 # Analysis 3: Energy as predictor of LLM failure (ROC curve)
 # ---------------------------------------------------------------------------
+
 
 def _compute_roc(energies: list[float], labels: list[int]) -> dict:
     """Compute ROC curve data and AUC for energy as a failure predictor.
@@ -821,7 +866,7 @@ def _compute_roc(energies: list[float], labels: list[int]) -> dict:
     assert len(energies) == len(labels), "energies and labels must be same length"
     n = len(energies)
     n_pos = sum(labels)  # total wrong answers
-    n_neg = n - n_pos    # total correct answers
+    n_neg = n - n_pos  # total correct answers
 
     if n_pos == 0 or n_neg == 0:
         return {"auc": None, "note": "all items have same label — cannot compute ROC"}
@@ -870,15 +915,12 @@ def _compute_roc(energies: list[float], labels: list[int]) -> dict:
     precision_opt = round(tp_opt / max(1, tp_opt + fp_opt), 4)
     recall_opt = round(tp_opt / max(1, tp_opt + fn_opt), 4)
 
-    interpretation = (
-        f"AUC={auc:.3f}: "
-        + (
-            "energy is a strong predictor of LLM failure (high confidence triage signal)"
-            if auc >= 0.80
-            else "energy is a moderate predictor of failure (useful but imperfect triage)"
-            if auc >= 0.65
-            else "energy is a weak predictor — catches arithmetic errors but misses logic errors"
-        )
+    interpretation = f"AUC={auc:.3f}: " + (
+        "energy is a strong predictor of LLM failure (high confidence triage signal)"
+        if auc >= 0.80
+        else "energy is a moderate predictor of failure (useful but imperfect triage)"
+        if auc >= 0.65
+        else "energy is a weak predictor — catches arithmetic errors but misses logic errors"
     )
 
     return {
@@ -968,7 +1010,7 @@ def analysis_energy_prediction(all_items: list[dict]) -> dict:
                 "Continuous energy adds predictive power beyond binary flag."
                 if auc_b > auc_a + 0.01
                 else "Continuous energy does not add discriminative power beyond binary flag — "
-                     "the binary violated/not-violated signal is the key Ising output."
+                "the binary violated/not-violated signal is the key Ising output."
             )
         ),
     }
@@ -1009,8 +1051,8 @@ def analysis_energy_prediction(all_items: list[dict]) -> dict:
         "interpretation": (
             f"Flagging answers where Ising found violations catches "
             f"{round(n_flagged_wrong / max(1, n_all_wrong) * 100, 1)}% "
-            f"of wrong answers (recall={round(n_flagged_wrong/max(1,n_all_wrong),3)}) "
-            f"with precision={round(n_flagged_wrong/max(1,n_flagged),3)}. "
+            f"of wrong answers (recall={round(n_flagged_wrong / max(1, n_all_wrong), 3)}) "
+            f"with precision={round(n_flagged_wrong / max(1, n_flagged), 3)}. "
             f"Total flag rate: {round(n_flagged / max(1, n_total) * 100, 1)}% of all answers."
         ),
     }
@@ -1021,6 +1063,7 @@ def analysis_energy_prediction(all_items: list[dict]) -> dict:
 # ---------------------------------------------------------------------------
 # Analysis 4: Irrelevant-sentence extraction robustness
 # ---------------------------------------------------------------------------
+
 
 def analysis_irrelevant_extraction(all_items: list[dict]) -> dict:
     """Analyze how robustly ArithmeticExtractor ignores injected irrelevant numbers.
@@ -1077,19 +1120,16 @@ def analysis_irrelevant_extraction(all_items: list[dict]) -> dict:
 
     # Correct items: did any use the injected number in their response?
     correct_with_injected = sum(
-        1 for it in inj_items
-        if it["baseline_correct"] and it["injected_number_in_response"]
+        1 for it in inj_items if it["baseline_correct"] and it["injected_number_in_response"]
     )
     # Wrong items: which used the injected number?
     wrong_with_injected = sum(
-        1 for it in inj_items
-        if not it["baseline_correct"] and it["injected_number_in_response"]
+        1 for it in inj_items if not it["baseline_correct"] and it["injected_number_in_response"]
     )
 
     # Among wrong items that used injected number: was Ising correctly silent?
     irrelevant_errors = [
-        it for it in inj_items
-        if it.get("error_type") == "irrelevant_number_error"
+        it for it in inj_items if it.get("error_type") == "irrelevant_number_error"
     ]
     n_irr = len(irrelevant_errors)
     n_irr_ising_silent = sum(1 for it in irrelevant_errors if it["ising_verified"])
@@ -1112,13 +1152,24 @@ def analysis_irrelevant_extraction(all_items: list[dict]) -> dict:
                 1 for it in items_v if it.get("error_type") == "irrelevant_number_error"
             ),
             "n_irrelevant_errors_ising_silent": sum(
-                1 for it in items_v
+                1
+                for it in items_v
                 if it.get("error_type") == "irrelevant_number_error" and it["ising_verified"]
             ),
-            "avg_energy_on_irrelevant_errors": round(float(np.mean([
-                it["ising_energy"] for it in items_v
-                if it.get("error_type") == "irrelevant_number_error"
-            ])) if any(it.get("error_type") == "irrelevant_number_error" for it in items_v) else 0.0, 3),
+            "avg_energy_on_irrelevant_errors": round(
+                float(
+                    np.mean(
+                        [
+                            it["ising_energy"]
+                            for it in items_v
+                            if it.get("error_type") == "irrelevant_number_error"
+                        ]
+                    )
+                )
+                if any(it.get("error_type") == "irrelevant_number_error" for it in items_v)
+                else 0.0,
+                3,
+            ),
         }
 
     return {
@@ -1147,6 +1198,7 @@ def analysis_irrelevant_extraction(all_items: list[dict]) -> dict:
 # ---------------------------------------------------------------------------
 # Main experiment runner
 # ---------------------------------------------------------------------------
+
 
 def run_experiment() -> dict:
     """Run the full Experiment 122 adversarial error analysis.
@@ -1211,9 +1263,13 @@ def run_experiment() -> dict:
                 count += 1
 
             elapsed = time.time() - t0
-            n_correct = sum(1 for it in model_items if it["variant"] == vk and it["baseline_correct"])
+            n_correct = sum(
+                1 for it in model_items if it["variant"] == vk and it["baseline_correct"]
+            )
             n_v = len(items_v)
-            print(f"    {vlabel}: {n_correct}/{n_v} correct ({round(n_correct/n_v*100,1)}%)  [{elapsed:.1f}s]")
+            print(
+                f"    {vlabel}: {n_correct}/{n_v} correct ({round(n_correct / n_v * 100, 1)}%)  [{elapsed:.1f}s]"
+            )
 
         model_summary[model_name] = {
             "n_items": len(model_items),
@@ -1243,27 +1299,36 @@ def run_experiment() -> dict:
     print("\n" + "=" * 80)
     print("ANALYSIS 1: ERROR TAXONOMY")
     print("=" * 80)
-    print(f"{'Variant':<25} {'Acc%':>6} {'Arith%':>8} {'Irr%':>6} {'Logic%':>8} {'KwTrig%':>9} {'ReadComp%':>10}")
+    print(
+        f"{'Variant':<25} {'Acc%':>6} {'Arith%':>8} {'Irr%':>6} {'Logic%':>8} {'KwTrig%':>9} {'ReadComp%':>10}"
+    )
     print("-" * 80)
     for vk, _ in VARIANTS:
         t = tax[vk]
         ef = t["error_fractions"]
         print(
             f"  {t['variant_label']:<23} {t['accuracy_pct']:>5.1f}%"
-            f" {ef['arithmetic_error']*100:>7.1f}%"
-            f" {ef['irrelevant_number_error']*100:>5.1f}%"
-            f" {ef['logic_error']*100:>7.1f}%"
-            f" {ef['keyword_triggered']*100:>8.1f}%"
-            f" {ef['reading_comprehension_error']*100:>9.1f}%"
+            f" {ef['arithmetic_error'] * 100:>7.1f}%"
+            f" {ef['irrelevant_number_error'] * 100:>5.1f}%"
+            f" {ef['logic_error'] * 100:>7.1f}%"
+            f" {ef['keyword_triggered'] * 100:>8.1f}%"
+            f" {ef['reading_comprehension_error'] * 100:>9.1f}%"
         )
 
     print("\n" + "=" * 80)
     print("ANALYSIS 2: CARNOT DETECTION RATES")
     print("=" * 80)
-    print(f"{'Error Type':<30} {'N':>6} {'Detected%':>10} {'Repair%':>10} {'Fix Rate%':>10} {'Catchable':>10}")
+    print(
+        f"{'Error Type':<30} {'N':>6} {'Detected%':>10} {'Repair%':>10} {'Fix Rate%':>10} {'Catchable':>10}"
+    )
     print("-" * 80)
-    for et in ["arithmetic_error", "irrelevant_number_error", "logic_error",
-               "keyword_triggered", "reading_comprehension_error"]:
+    for et in [
+        "arithmetic_error",
+        "irrelevant_number_error",
+        "logic_error",
+        "keyword_triggered",
+        "reading_comprehension_error",
+    ]:
         d = detection.get(et, {})
         if not d or d.get("n") == 0:
             continue
@@ -1288,11 +1353,13 @@ def run_experiment() -> dict:
     print(f"  {ov.get('interpretation', 'N/A')}")
     roc_nv = ov.get("roc_n_violations", {})
     if roc_nv:
-        print(f"  n_violations ROC: AUC={roc_nv.get('auc')}"
-              f"  optimal_threshold={roc_nv.get('optimal_threshold')}"
-              f"  TPR={roc_nv.get('optimal_tpr', 0)*100:.1f}%"
-              f"  FPR={roc_nv.get('optimal_fpr', 0)*100:.1f}%"
-              f"  Precision={roc_nv.get('optimal_precision', 0)*100:.1f}%")
+        print(
+            f"  n_violations ROC: AUC={roc_nv.get('auc')}"
+            f"  optimal_threshold={roc_nv.get('optimal_threshold')}"
+            f"  TPR={roc_nv.get('optimal_tpr', 0) * 100:.1f}%"
+            f"  FPR={roc_nv.get('optimal_fpr', 0) * 100:.1f}%"
+            f"  Precision={roc_nv.get('optimal_precision', 0) * 100:.1f}%"
+        )
     print(f"\n  Per-variant AUC (n_violations predictor):")
     for vk, vinfo in energy_roc.get("per_variant", {}).items():
         print(f"    {vinfo.get('variant_label', vk):<28} AUC={vinfo.get('auc', 'N/A')}")
@@ -1304,10 +1371,14 @@ def run_experiment() -> dict:
     print("ANALYSIS 4: IRRELEVANT-SENTENCE EXTRACTION ROBUSTNESS")
     print("=" * 80)
     print(f"  {irr_extraction.get('interpretation', 'N/A')}")
-    print(f"  Ising silence rate on irrelevant_number errors: "
-          f"{round(irr_extraction.get('ising_silence_rate_on_irrelevant_errors', 0) * 100, 1)}%")
-    print(f"  Constraint coverage on injected variants: "
-          f"{irr_extraction.get('constraint_coverage_pct', 0)}%")
+    print(
+        f"  Ising silence rate on irrelevant_number errors: "
+        f"{round(irr_extraction.get('ising_silence_rate_on_irrelevant_errors', 0) * 100, 1)}%"
+    )
+    print(
+        f"  Constraint coverage on injected variants: "
+        f"{irr_extraction.get('constraint_coverage_pct', 0)}%"
+    )
     for vk, vinfo in irr_extraction.get("per_variant", {}).items():
         print(f"\n  {vk}:")
         print(f"    irrelevant_number_errors: {vinfo['n_irrelevant_number_errors']}")
@@ -1339,6 +1410,7 @@ def run_experiment() -> dict:
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Main entry point for Experiment 122."""

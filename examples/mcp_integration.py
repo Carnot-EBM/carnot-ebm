@@ -42,9 +42,7 @@ def main() -> int:
             "carnot-verify": {
                 "command": python_path,
                 "args": ["-m", "carnot.mcp"],
-                "env": {
-                    "JAX_PLATFORMS": "cpu"
-                }
+                "env": {"JAX_PLATFORMS": "cpu"},
             }
         }
     }
@@ -108,7 +106,9 @@ def main() -> int:
     repair_result = {
         "verified": result.verified,
         "energy": float(result.energy),
-        "repair_feedback": "\n".join(violations_feedback) if violations_feedback else "No violations found.",
+        "repair_feedback": "\n".join(violations_feedback)
+        if violations_feedback
+        else "No violations found.",
         "n_violations": len(result.violations),
     }
     print(f"  Tool input:  question={question!r}, response={response!r}")

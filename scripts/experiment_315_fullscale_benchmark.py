@@ -87,7 +87,7 @@ MODEL_SPECS: list[dict[str, Any]] = [
 
 # Published baselines from model cards — the targets we must beat or match
 PUBLISHED_BASELINES: dict[str, float] = {
-    "Qwen3.5-0.8B": 0.25,   # ~25% GSM8K main, model card
+    "Qwen3.5-0.8B": 0.25,  # ~25% GSM8K main, model card
     "Gemma4-E4B-it": 0.80,  # ~80% GSM8K main, model card
 }
 
@@ -237,13 +237,17 @@ def _load_adversarial_corpus(path: Path, n: int, seed: int) -> list[dict[str, An
             if not line:
                 continue
             obj = json.loads(line)
-            rows.append({
-                "question_id": obj.get("question_id", f"adv_{len(rows)}"),
-                "question": obj.get("variant_question", obj.get("original_question", "")),
-                "correct_answer": str(obj.get("variant_answer", obj.get("original_answer", ""))),
-                "variant_type": obj.get("variant_type", "standard"),
-                "corpus": "adversarial",
-            })
+            rows.append(
+                {
+                    "question_id": obj.get("question_id", f"adv_{len(rows)}"),
+                    "question": obj.get("variant_question", obj.get("original_question", "")),
+                    "correct_answer": str(
+                        obj.get("variant_answer", obj.get("original_answer", ""))
+                    ),
+                    "variant_type": obj.get("variant_type", "standard"),
+                    "corpus": "adversarial",
+                }
+            )
 
     if len(rows) > n:
         rng = random.Random(seed)
@@ -273,6 +277,7 @@ def _load_hf_gsm8k(n: int, seed: int) -> list[dict[str, Any]]:
     Spec: REQ-BENCH-001
     """
     from datasets import load_dataset  # type: ignore[import-untyped]
+
     ds = load_dataset("gsm8k", "main", split="test")
     rows_raw = list(ds)
     rng = random.Random(seed)
@@ -283,13 +288,15 @@ def _load_hf_gsm8k(n: int, seed: int) -> list[dict[str, Any]]:
         answer_text = str(row.get("answer", ""))
         match = re.search(r"####\s*(-?\d+)", answer_text)
         correct = match.group(1) if match else answer_text.strip().split()[-1]
-        normalised.append({
-            "question_id": f"gsm8k_hf_{i:04d}",
-            "question": row.get("question", ""),
-            "correct_answer": correct,
-            "variant_type": "standard",
-            "corpus": "hf_gsm8k",
-        })
+        normalised.append(
+            {
+                "question_id": f"gsm8k_hf_{i:04d}",
+                "question": row.get("question", ""),
+                "correct_answer": correct,
+                "variant_type": "standard",
+                "corpus": "hf_gsm8k",
+            }
+        )
     return normalised
 
 
@@ -316,16 +323,17 @@ def _synthetic_gsm8k(n: int, seed: int) -> list[dict[str, Any]]:
     """
     rng = random.Random(seed)
     templates = [
-        ("If Alice has {a} apples and Bob gives her {b} more, how many does she have?",
-         lambda a, b: a + b),
-        ("A store sells {a} items at ${b} each. What is the total revenue?",
-         lambda a, b: a * b),
-        ("Sarah had {a} coins and spent {b}. How many does she have left?",
-         lambda a, b: a - b),
-        ("Jake ran {a} miles Monday and {b} Tuesday. How many miles total?",
-         lambda a, b: a + b),
-        ("A class of {a} students is split into groups of {b}. How many groups?",
-         lambda a, b: a // b),
+        (
+            "If Alice has {a} apples and Bob gives her {b} more, how many does she have?",
+            lambda a, b: a + b,
+        ),
+        ("A store sells {a} items at ${b} each. What is the total revenue?", lambda a, b: a * b),
+        ("Sarah had {a} coins and spent {b}. How many does she have left?", lambda a, b: a - b),
+        ("Jake ran {a} miles Monday and {b} Tuesday. How many miles total?", lambda a, b: a + b),
+        (
+            "A class of {a} students is split into groups of {b}. How many groups?",
+            lambda a, b: a // b,
+        ),
     ]
     questions = []
     for i in range(n):
@@ -333,13 +341,15 @@ def _synthetic_gsm8k(n: int, seed: int) -> list[dict[str, Any]]:
         a = rng.randint(10, 99)
         b = rng.randint(2, 9)
         correct = fn(a, b)
-        questions.append({
-            "question_id": f"synth_{i:04d}",
-            "question": q_text.format(a=a, b=b),
-            "correct_answer": str(correct),
-            "variant_type": "standard",
-            "corpus": "synthetic",
-        })
+        questions.append(
+            {
+                "question_id": f"synth_{i:04d}",
+                "question": q_text.format(a=a, b=b),
+                "correct_answer": str(correct),
+                "variant_type": "standard",
+                "corpus": "synthetic",
+            }
+        )
     return questions
 
 
@@ -364,7 +374,9 @@ def load_gsm8k_corpus(n_total: int, seed: int) -> list[dict[str, Any]]:
         try:
             adv = _load_adversarial_corpus(ADVERSARIAL_CORPUS_PATH, n_total, seed)
             corpus.extend(adv)
-            print(f"[Exp 315] Loaded {len(adv)} adversarial questions from {ADVERSARIAL_CORPUS_PATH.name}")
+            print(
+                f"[Exp 315] Loaded {len(adv)} adversarial questions from {ADVERSARIAL_CORPUS_PATH.name}"
+            )
         except Exception as exc:
             print(f"[Exp 315] WARNING: adversarial corpus load failed: {exc}")
 
@@ -413,6 +425,7 @@ def _load_hf_humaneval(n: int, seed: int) -> list[dict[str, Any]]:
     Spec: REQ-BENCH-001
     """
     from datasets import load_dataset  # type: ignore[import-untyped]
+
     ds = load_dataset("openai_humaneval", split="test")
     rows = list(ds)
     rng = random.Random(seed)
@@ -443,19 +456,19 @@ def _synthetic_humaneval(n: int, seed: int) -> list[dict[str, Any]]:
     """
     templates = [
         {
-            "prompt": "def add(a: int, b: int) -> int:\n    \"\"\"Return the sum of a and b.\"\"\"\n",
+            "prompt": 'def add(a: int, b: int) -> int:\n    """Return the sum of a and b."""\n',
             "entry_point": "add",
             "test": "assert add(1, 2) == 3\nassert add(0, 0) == 0\n",
             "canonical_solution": "    return a + b\n",
         },
         {
-            "prompt": "def strlen(s: str) -> int:\n    \"\"\"Return the length of string s.\"\"\"\n",
+            "prompt": 'def strlen(s: str) -> int:\n    """Return the length of string s."""\n',
             "entry_point": "strlen",
             "test": "assert strlen('') == 0\nassert strlen('hello') == 5\n",
             "canonical_solution": "    return len(s)\n",
         },
         {
-            "prompt": "def negate(x: int) -> int:\n    \"\"\"Return the negation of x.\"\"\"\n",
+            "prompt": 'def negate(x: int) -> int:\n    """Return the negation of x."""\n',
             "entry_point": "negate",
             "test": "assert negate(1) == -1\nassert negate(0) == 0\n",
             "canonical_solution": "    return -x\n",
@@ -465,14 +478,16 @@ def _synthetic_humaneval(n: int, seed: int) -> list[dict[str, Any]]:
     problems = []
     for i in range(n):
         tmpl = rng.choice(templates)
-        problems.append({
-            "question_id": f"synth_he_{i:03d}",
-            "prompt": tmpl["prompt"],
-            "entry_point": tmpl["entry_point"],
-            "test": tmpl["test"],
-            "canonical_solution": tmpl["canonical_solution"],
-            "corpus": "synthetic_humaneval",
-        })
+        problems.append(
+            {
+                "question_id": f"synth_he_{i:03d}",
+                "prompt": tmpl["prompt"],
+                "entry_point": tmpl["entry_point"],
+                "test": tmpl["test"],
+                "canonical_solution": tmpl["canonical_solution"],
+                "corpus": "synthetic_humaneval",
+            }
+        )
     return problems
 
 
@@ -637,10 +652,7 @@ def _simulated_gsm8k_response(question: str, correct_answer: str, rng: random.Ra
             answer_val = expected + rng.randint(1, 10)
 
     # Format as a brief chain-of-thought response with a final answer
-    return (
-        f"Let me work through this step by step. "
-        f"The answer is {answer_val:.0f}."
-    )
+    return f"Let me work through this step by step. The answer is {answer_val:.0f}."
 
 
 def _simulated_humaneval_response(problem: dict[str, Any], rng: random.Random) -> str:
@@ -705,7 +717,9 @@ def _run_baseline(
             pass
     # Simulated fallback
     if corpus_type == "humaneval":
-        return _simulated_humaneval_response({"prompt": question, "canonical_solution": problem_or_answer}, rng)
+        return _simulated_humaneval_response(
+            {"prompt": question, "canonical_solution": problem_or_answer}, rng
+        )
     return _simulated_gsm8k_response(question, problem_or_answer, rng)
 
 
@@ -730,10 +744,7 @@ def _run_verify_only(
         return response, 0
     try:
         constraints = extractor.extract(response, "arithmetic")
-        violated = sum(
-            1 for c in constraints
-            if not (c.metadata or {}).get("satisfied", True)
-        )
+        violated = sum(1 for c in constraints if not (c.metadata or {}).get("satisfied", True))
         return response, violated
     except Exception:
         return response, 0
@@ -832,9 +843,11 @@ def _try_build_pipeline(model_name: str, hf_id: str) -> tuple[Any | None, str]:
     """
     try:
         import torch  # type: ignore[import-untyped]
+
         if not torch.cuda.is_available():
             return None, "simulated"
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         pipeline = VerifyRepairPipeline(
             model=hf_id,
             domains=["arithmetic"],
@@ -852,6 +865,7 @@ def _try_build_extractor() -> Any | None:
     """
     try:
         from carnot.pipeline.extract import AutoExtractor
+
         return AutoExtractor()
     except Exception:
         return None
@@ -868,6 +882,7 @@ def _try_build_z3_gated(ising_pipeline: Any | None) -> Any | None:
     try:
         from carnot.pipeline.nl2z3_extractor import NL2Z3Extractor
         from carnot.pipeline.z3_gated_repair import Z3GatedRepair
+
         nl2z3 = NL2Z3Extractor()
         return Z3GatedRepair(
             nl2z3_extractor=nl2z3,
@@ -940,7 +955,9 @@ def run_gsm8k_benchmark(
                 final_response = baseline_response
 
             elif mode == "verify_only":
-                final_response, _n_viol = _run_verify_only(question_text, baseline_response, extractor)
+                final_response, _n_viol = _run_verify_only(
+                    question_text, baseline_response, extractor
+                )
 
             elif mode == "verify_repair":
                 final_response = _run_verify_repair(
@@ -956,7 +973,9 @@ def run_gsm8k_benchmark(
                     # Z3 unavailable: skip (copy baseline accuracy)
                     final_response = baseline_response
                 else:
-                    final_response = _run_z3_gated(question_text, baseline_response, z3_gated_repair)
+                    final_response = _run_z3_gated(
+                        question_text, baseline_response, z3_gated_repair
+                    )
 
             else:
                 final_response = baseline_response
@@ -1077,7 +1096,9 @@ def run_humaneval_benchmark(
                             entry_point=entry_point,
                             official_tests=test_code,
                         )
-                        candidate_code = getattr(vr_result, "repaired_code", baseline_code) or baseline_code
+                        candidate_code = (
+                            getattr(vr_result, "repaired_code", baseline_code) or baseline_code
+                        )
                     except Exception:
                         candidate_code = baseline_code
                 else:
@@ -1280,7 +1301,9 @@ def run_experiment(
     tmpl = ExperimentTemplate(
         exp_id=EXPERIMENT,
         title=TITLE,
-        deliverable=str(output_path.relative_to(_REPO_ROOT)) if output_path.is_absolute() else DEFAULT_OUTPUT,
+        deliverable=str(output_path.relative_to(_REPO_ROOT))
+        if output_path.is_absolute()
+        else DEFAULT_OUTPUT,
         requires_gpu=not force_simulated,
         repo_root=_REPO_ROOT,
     )
@@ -1327,7 +1350,9 @@ def run_experiment(
         extractor = _try_build_extractor()
         z3_gated = _try_build_z3_gated(pipeline) if "z3_gated" in modes else None
         if "z3_gated" in modes and z3_gated is None:
-            print(f"[Exp 315] [{model_name}] z3_gated mode: Z3/NL2Z3 unavailable — will use baseline accuracy")
+            print(
+                f"[Exp 315] [{model_name}] z3_gated mode: Z3/NL2Z3 unavailable — will use baseline accuracy"
+            )
 
         rng = random.Random(seed + hash(model_name) % 10000)
 
@@ -1335,6 +1360,7 @@ def run_experiment(
         # are made inside run_gsm8k_benchmark / run_humaneval_benchmark)
         def _make_runner(mdl_pipeline: Any | None, corpus: str) -> Any:
             """Return a runner fn for BatchedInferenceRunner."""
+
             def _runner(prompt: str) -> str:
                 if mdl_pipeline is not None:
                     try:
@@ -1342,6 +1368,7 @@ def run_experiment(
                     except Exception:
                         pass
                 return _simulated_gsm8k_response(prompt, "0", rng)
+
             return _runner
 
         bir = BatchedInferenceRunner(_make_runner(pipeline, "gsm8k"), batch_size=batch_size)
@@ -1498,6 +1525,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

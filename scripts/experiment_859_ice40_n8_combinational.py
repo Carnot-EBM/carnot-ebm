@@ -44,10 +44,10 @@ from scripts.experiment_template import ExperimentTemplate  # noqa: E402
 # Paths
 # ---------------------------------------------------------------------------
 VERILOG_SRC = _ROOT / "hardware" / "fpga" / "ising_energy_n8_comb.v"
-PCF_FILE    = _ROOT / "hardware" / "fpga" / "hx8k.pcf"
-JSON_OUT    = _ROOT / "hardware" / "fpga" / "ising_energy_n8_comb.json"
-ASC_OUT     = _ROOT / "hardware" / "fpga" / "ising_energy_n8_comb.asc"
-BIN_OUT     = _ROOT / "hardware" / "fpga" / "ising_energy_n8_comb.bin"
+PCF_FILE = _ROOT / "hardware" / "fpga" / "hx8k.pcf"
+JSON_OUT = _ROOT / "hardware" / "fpga" / "ising_energy_n8_comb.json"
+ASC_OUT = _ROOT / "hardware" / "fpga" / "ising_energy_n8_comb.asc"
+BIN_OUT = _ROOT / "hardware" / "fpga" / "ising_energy_n8_comb.bin"
 OSS_CAD_BIN = Path(os.environ.get("OSS_CAD_BIN", "/home/ianblenke/tools/oss-cad-suite/bin"))
 
 
@@ -84,8 +84,9 @@ def _run(cmd: list[str], *, label: str) -> tuple[int, str, str]:
     if result.stdout:
         print(result.stdout[-4000:] if len(result.stdout) > 4000 else result.stdout)
     if result.stderr:
-        print(result.stderr[-4000:] if len(result.stderr) > 4000 else result.stderr,
-              file=sys.stderr)
+        print(
+            result.stderr[-4000:] if len(result.stderr) > 4000 else result.stderr, file=sys.stderr
+        )
     return result.returncode, result.stdout, result.stderr
 
 
@@ -158,10 +159,7 @@ def main() -> None:
     synth_cmd = [
         _oss_cmd("yosys"),
         "-p",
-        (
-            f"synth_ice40 -top ising_energy_n8_comb "
-            f"-json {JSON_OUT}"
-        ),
+        (f"synth_ice40 -top ising_energy_n8_comb -json {JSON_OUT}"),
         str(VERILOG_SRC),
     ]
     synth_rc, synth_stdout, synth_stderr = _run(synth_cmd, label="yosys synth_ice40")
@@ -190,8 +188,7 @@ def main() -> None:
 
     synthesis_lut_count = _parse_synth_lut_count(synth_log)
     sequential_logic_present = _has_sequential_logic(synth_log)
-    print(f"Synthesis: {synthesis_lut_count} SB_LUT4, "
-          f"DFF present: {sequential_logic_present}")
+    print(f"Synthesis: {synthesis_lut_count} SB_LUT4, DFF present: {sequential_logic_present}")
 
     # ------------------------------------------------------------------
     # Step 2 — Place and Route (nextpnr-ice40)
@@ -199,10 +196,14 @@ def main() -> None:
     pnr_cmd = [
         _oss_cmd("nextpnr-ice40"),
         "--hx8k",
-        "--package", "ct256",
-        "--json", str(JSON_OUT),
-        "--pcf", str(PCF_FILE),
-        "--asc", str(ASC_OUT),
+        "--package",
+        "ct256",
+        "--json",
+        str(JSON_OUT),
+        "--pcf",
+        str(PCF_FILE),
+        "--asc",
+        str(ASC_OUT),
         "--pcf-allow-unconstrained",
     ]
     pnr_rc, pnr_stdout, pnr_stderr = _run(pnr_cmd, label="nextpnr-ice40")
@@ -245,8 +246,7 @@ def main() -> None:
 
     bitstream_generated = (pack_rc == 0) and BIN_OUT.exists()
     bitstream_size_bytes = BIN_OUT.stat().st_size if bitstream_generated else 0
-    print(f"Bitstream generated: {bitstream_generated} "
-          f"({bitstream_size_bytes} bytes)")
+    print(f"Bitstream generated: {bitstream_generated} ({bitstream_size_bytes} bytes)")
 
     # ------------------------------------------------------------------
     # Step 4 — Determine honest verdict
@@ -282,10 +282,10 @@ def main() -> None:
                 "experiment_id": "exp851-ice40-n16-bitstream",
                 "verdict": "pnr_failed_n16",
                 "root_cause": "sequential spin registers inferred 2077 DFFs "
-                              "+ 9918 LUT4 cells = 12258 LCs (159% of 7680 budget)",
+                "+ 9918 LUT4 cells = 12258 LCs (159% of 7680 budget)",
                 "addressed_by": "removed all sequential logic; Gibbs sampling "
-                                "moved to Python; FPGA is now pure combinational "
-                                "energy oracle only",
+                "moved to Python; FPGA is now pure combinational "
+                "energy oracle only",
             },
             "verilog_src": str(VERILOG_SRC),
             "bitstream_path": str(BIN_OUT) if bitstream_generated else None,
@@ -298,6 +298,7 @@ def main() -> None:
     )
 
     import json
+
     out_path = Path("results/experiment_859_ice40_n8_combinational.json")
     out_path.write_text(json.dumps(artifact, indent=2))
     print(f"Artifact written to {out_path}")

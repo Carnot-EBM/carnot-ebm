@@ -90,18 +90,23 @@ class TestNextpnrIce40Found:
 
     def test_yowasp_module_found(self):
         """REQ-HW-042: native absent but yowasp module importable → found=True."""
+
         def _which_side(name):
             return name != "nextpnr-ice40"
 
-        with patch.object(mod, "_which", side_effect=_which_side), \
-             patch.object(mod, "_run", return_value=(0, "nextpnr 0.10", "")):
+        with (
+            patch.object(mod, "_which", side_effect=_which_side),
+            patch.object(mod, "_run", return_value=(0, "nextpnr 0.10", "")),
+        ):
             found, cmd = mod._find_nextpnr_ice40()
         assert found is True
 
     def test_not_found_when_pip_fails(self):
         """REQ-HW-042: native absent + pip install fails → found=False."""
-        with patch.object(mod, "_which", return_value=False), \
-             patch.object(mod, "_run", return_value=(1, "", "error")):
+        with (
+            patch.object(mod, "_which", return_value=False),
+            patch.object(mod, "_run", return_value=(1, "", "error")),
+        ):
             found, cmd = mod._find_nextpnr_ice40()
         assert found is False
         assert cmd == ""
@@ -128,13 +133,15 @@ class TestHonestVerdictMapping:
         fake_tmpl._repo_root = str(tmp_path)
 
         # Stub the full pipeline: nextpnr found, synthesis ok, PnR ok, icepack ok.
-        with patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")), \
-             patch.object(mod, "_find_yosys", return_value=(True, "yosys")), \
-             patch.object(mod, "_find_icepack", return_value=(True, "icepack")), \
-             patch.object(mod, "_which", return_value=False), \
-             patch.object(mod, "_run_ice40_synthesis", return_value=(True, "")), \
-             patch.object(mod, "_run_nextpnr_ice40", return_value=(True, 26.3, 38.5, "")), \
-             patch.object(mod, "_run_icepack", return_value=(True, str(tmp_path / "out.bin"))):
+        with (
+            patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")),
+            patch.object(mod, "_find_yosys", return_value=(True, "yosys")),
+            patch.object(mod, "_find_icepack", return_value=(True, "icepack")),
+            patch.object(mod, "_which", return_value=False),
+            patch.object(mod, "_run_ice40_synthesis", return_value=(True, "")),
+            patch.object(mod, "_run_nextpnr_ice40", return_value=(True, 26.3, 38.5, "")),
+            patch.object(mod, "_run_icepack", return_value=(True, str(tmp_path / "out.bin"))),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["honest_verdict"] == "bitstream_generated_ice40"
@@ -149,12 +156,14 @@ class TestHonestVerdictMapping:
         fake_tmpl = MagicMock()
         fake_tmpl._repo_root = str(tmp_path)
 
-        with patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")), \
-             patch.object(mod, "_find_yosys", return_value=(True, "yosys")), \
-             patch.object(mod, "_find_icepack", return_value=(False, "")), \
-             patch.object(mod, "_which", return_value=False), \
-             patch.object(mod, "_run_ice40_synthesis", return_value=(True, "")), \
-             patch.object(mod, "_run_nextpnr_ice40", return_value=(True, 30.0, 40.0, "")):
+        with (
+            patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")),
+            patch.object(mod, "_find_yosys", return_value=(True, "yosys")),
+            patch.object(mod, "_find_icepack", return_value=(False, "")),
+            patch.object(mod, "_which", return_value=False),
+            patch.object(mod, "_run_ice40_synthesis", return_value=(True, "")),
+            patch.object(mod, "_run_nextpnr_ice40", return_value=(True, 30.0, 40.0, "")),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["honest_verdict"] == "pnr_successful_no_bitstream"
@@ -166,12 +175,14 @@ class TestHonestVerdictMapping:
         fake_tmpl = MagicMock()
         fake_tmpl._repo_root = str(tmp_path)
 
-        with patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")), \
-             patch.object(mod, "_find_yosys", return_value=(True, "yosys")), \
-             patch.object(mod, "_find_icepack", return_value=(False, "")), \
-             patch.object(mod, "_which", return_value=False), \
-             patch.object(mod, "_run_ice40_synthesis", return_value=(True, "")), \
-             patch.object(mod, "_run_nextpnr_ice40", return_value=(False, 55.0, None, "FAIL")):
+        with (
+            patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")),
+            patch.object(mod, "_find_yosys", return_value=(True, "yosys")),
+            patch.object(mod, "_find_icepack", return_value=(False, "")),
+            patch.object(mod, "_which", return_value=False),
+            patch.object(mod, "_run_ice40_synthesis", return_value=(True, "")),
+            patch.object(mod, "_run_nextpnr_ice40", return_value=(False, 55.0, None, "FAIL")),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["honest_verdict"] == "pnr_failed_timing"
@@ -183,10 +194,12 @@ class TestHonestVerdictMapping:
         fake_tmpl = MagicMock()
         fake_tmpl._repo_root = str(tmp_path)
 
-        with patch.object(mod, "_find_nextpnr_ice40", return_value=(False, "")), \
-             patch.object(mod, "_find_yosys", return_value=(True, "yosys")), \
-             patch.object(mod, "_find_icepack", return_value=(False, "")), \
-             patch.object(mod, "_which", return_value=False):
+        with (
+            patch.object(mod, "_find_nextpnr_ice40", return_value=(False, "")),
+            patch.object(mod, "_find_yosys", return_value=(True, "yosys")),
+            patch.object(mod, "_find_icepack", return_value=(False, "")),
+            patch.object(mod, "_which", return_value=False),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["honest_verdict"] == "nextpnr_not_installable"

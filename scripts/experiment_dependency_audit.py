@@ -319,9 +319,7 @@ def load_experiment_prompt(yaml_path: str, exp_id: str) -> str:
         if exp_id in task_id:
             return str(task.get("prompt", ""))
 
-    raise ValueError(
-        f"No task with id containing {exp_id!r} found in {yaml_path}"
-    )
+    raise ValueError(f"No task with id containing {exp_id!r} found in {yaml_path}")
 
 
 # ---------------------------------------------------------------------------

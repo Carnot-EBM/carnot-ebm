@@ -60,12 +60,12 @@ POST_HOC_BASELINE = 0.12  # Exp 633 hermes_recall
 
 # Synthetic GSM8K-style questions used when the fover corpus has too few entries.
 _SYNTHETIC_INCORRECT = [
-    f"Janet has {10+i} apples and gives away {3+i}. She then buys {2+i} more. "
+    f"Janet has {10 + i} apples and gives away {3 + i}. She then buys {2 + i} more. "
     f"How many apples does she have now?"
     for i in range(N_INCORRECT)
 ]
 _SYNTHETIC_CORRECT = [
-    f"A bag has {5+i} red balls and {3+i} blue balls. How many balls total?"
+    f"A bag has {5 + i} red balls and {3 + i} blue balls. How many balls total?"
     for i in range(N_CORRECT)
 ]
 
@@ -103,16 +103,12 @@ def _load_fover_questions() -> tuple[list[str], list[str]]:
         incorrect = [
             entry["question"]
             for entry in data
-            if isinstance(entry, dict)
-            and entry.get("is_correct") is False
-            and "question" in entry
+            if isinstance(entry, dict) and entry.get("is_correct") is False and "question" in entry
         ]
         correct = [
             entry["question"]
             for entry in data
-            if isinstance(entry, dict)
-            and entry.get("is_correct") is True
-            and "question" in entry
+            if isinstance(entry, dict) and entry.get("is_correct") is True and "question" in entry
         ]
 
         # Pad with synthetic questions if not enough.
@@ -160,7 +156,7 @@ def _build_llm_caller(force_live: bool):
                 generated = out[0].get("generated_text", "")
                 # Strip the prompt prefix from the generated text.
                 if generated.startswith(prompt):
-                    generated = generated[len(prompt):]
+                    generated = generated[len(prompt) :]
                 return generated.strip()
             return ""
 
@@ -237,7 +233,9 @@ def main() -> None:
     hermes_v2_fp_rate = hermes_v2_fp / N_CORRECT
 
     n_hints_per_incorrect = [r.n_hints for r in incorrect_gen_results]
-    mean_hints_per_incorrect = statistics.mean(n_hints_per_incorrect) if n_hints_per_incorrect else 0.0
+    mean_hints_per_incorrect = (
+        statistics.mean(n_hints_per_incorrect) if n_hints_per_incorrect else 0.0
+    )
 
     recall_improvement = round(hermes_v2_recall - POST_HOC_BASELINE, 4)
 
@@ -281,10 +279,12 @@ def main() -> None:
     with open(out_path, "w") as f:
         json.dump(artifact, f, indent=2)
 
-    print(f"[Exp 641] hermes_v2_recall={hermes_v2_recall:.3f} "
-          f"(baseline={POST_HOC_BASELINE}) "
-          f"honest_verdict={honest_verdict} "
-          f"gate_contribution={artifact['gate_contribution']}")
+    print(
+        f"[Exp 641] hermes_v2_recall={hermes_v2_recall:.3f} "
+        f"(baseline={POST_HOC_BASELINE}) "
+        f"honest_verdict={honest_verdict} "
+        f"gate_contribution={artifact['gate_contribution']}"
+    )
 
     # FINAL LINE — must remain last.
     tmpl.assert_deliverable_written()

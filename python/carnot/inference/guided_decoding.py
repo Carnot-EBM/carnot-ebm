@@ -64,12 +64,11 @@ from __future__ import annotations
 import json
 import logging
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import jax.numpy as jnp
-import numpy as np
 
 from carnot.pipeline.extract import AutoExtractor
 
@@ -448,9 +447,7 @@ class EnergyGuidedSampler:
                     next_id = torch.multinomial(probs, num_samples=1)
 
                 # Append and decode.
-                generated_ids = torch.cat(
-                    [generated_ids, next_id.unsqueeze(0)], dim=-1
-                )
+                generated_ids = torch.cat([generated_ids, next_id.unsqueeze(0)], dim=-1)
                 new_token = tokenizer.decode(next_id, skip_special_tokens=True)
                 generated_text += new_token
 
@@ -462,8 +459,7 @@ class EnergyGuidedSampler:
         mean_penalty = float(sum(penalties) / max(len(penalties), 1))
 
         logger.debug(
-            "EnergyGuidedSampler: %d tokens, %d energy checks, "
-            "mean_penalty=%.3f, latency=%.3f s",
+            "EnergyGuidedSampler: %d tokens, %d energy checks, mean_penalty=%.3f, latency=%.3f s",
             len(generated_ids[0]) - len(input_ids[0]),
             energy_checks,
             mean_penalty,
@@ -544,7 +540,7 @@ class GuidedDecoder:
     # ------------------------------------------------------------------
 
     @classmethod
-    def from_pretrained(cls, path_or_repo: str, **kwargs: Any) -> "GuidedDecoder":
+    def from_pretrained(cls, path_or_repo: str, **kwargs: Any) -> GuidedDecoder:
         """Load a GuidedDecoder from a local directory or HuggingFace Hub.
 
         **Detailed explanation for engineers:**
@@ -603,7 +599,7 @@ class GuidedDecoder:
         constraint_weights: dict[str, float] = {}
         for key, val in raw_weights.items():
             if key.startswith("weight_"):
-                ctype = key[len("weight_"):]
+                ctype = key[len("weight_") :]
                 constraint_weights[ctype] = float(val[0])
 
         # Resolve effective alpha and other hyperparams.

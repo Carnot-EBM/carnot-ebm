@@ -15,7 +15,6 @@ import sys
 
 import pytest
 
-
 # ---------------------------------------------------------------------------
 # Import and version checks
 # ---------------------------------------------------------------------------
@@ -72,11 +71,8 @@ class TestPublicAPI:
     def test_model_tiers(self) -> None:
         """REQ-CODE-006: All three model tiers importable."""
         from carnot import (
-            BoltzmannConfig,
             BoltzmannModel,
-            GibbsConfig,
             GibbsModel,
-            IsingConfig,
             IsingModel,
         )
 

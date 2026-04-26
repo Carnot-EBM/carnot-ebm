@@ -31,12 +31,13 @@ Spec: REQ-SAMPLE-025, SCENARIO-SAMPLE-040, SCENARIO-SAMPLE-041
 
 from __future__ import annotations
 
-import numpy as np
-import jax.numpy as jnp
+from typing import TYPE_CHECKING
 
 from carnot.models.sparse_kaem_energy import SparseKAEMEnergy
 from carnot.training.multilevel_kan_trainer import KnotRefinementInterpolator
 
+if TYPE_CHECKING:
+    import jax.numpy as jnp
 
 # ---------------------------------------------------------------------------
 # MultilevelSparseKAEMTrainer

@@ -44,10 +44,8 @@ from pathlib import Path
 from typing import Any
 
 import jax
-import jax.numpy as jnp
 
-from carnot.models.eorm import EORMModel, CoTEnergyInput, _make_token_sequence, _SEP_ID, _forward
-
+from carnot.models.eorm import _SEP_ID, CoTEnergyInput, EORMModel, _forward, _make_token_sequence
 
 # ---------------------------------------------------------------------------
 # GRPOContrastivePair
@@ -165,18 +163,22 @@ def build_grpo_pairs_from_benchmark(
 
         if not baseline_correct and pipeline_correct:
             # Pipeline fixed the question: pipeline is correct, baseline is wrong
-            pairs.append(GRPOContrastivePair(
-                question_id=question_id,
-                correct_response=pipeline_resp,
-                incorrect_response=baseline_resp,
-            ))
+            pairs.append(
+                GRPOContrastivePair(
+                    question_id=question_id,
+                    correct_response=pipeline_resp,
+                    incorrect_response=baseline_resp,
+                )
+            )
         else:
             # Pipeline broke the question: baseline is correct, pipeline is wrong
-            pairs.append(GRPOContrastivePair(
-                question_id=question_id,
-                correct_response=baseline_resp,
-                incorrect_response=pipeline_resp,
-            ))
+            pairs.append(
+                GRPOContrastivePair(
+                    question_id=question_id,
+                    correct_response=baseline_resp,
+                    incorrect_response=pipeline_resp,
+                )
+            )
 
     return pairs
 
@@ -223,6 +225,7 @@ def build_grpo_pairs_from_fover(fover_path: str | Path) -> list[GRPOContrastiveP
 
     # Group by question_id, collecting correct and incorrect step texts
     from collections import defaultdict
+
     correct_steps: dict[str, list[str]] = defaultdict(list)
     incorrect_steps: dict[str, list[str]] = defaultdict(list)
 
@@ -242,11 +245,13 @@ def build_grpo_pairs_from_fover(fover_path: str | Path) -> list[GRPOContrastiveP
     # Pair the first correct and first incorrect step for each question that has both
     all_qids = set(correct_steps) & set(incorrect_steps)
     for qid in sorted(all_qids):
-        pairs.append(GRPOContrastivePair(
-            question_id=qid,
-            correct_response=correct_steps[qid][0],
-            incorrect_response=incorrect_steps[qid][0],
-        ))
+        pairs.append(
+            GRPOContrastivePair(
+                question_id=qid,
+                correct_response=correct_steps[qid][0],
+                incorrect_response=incorrect_steps[qid][0],
+            )
+        )
 
     return pairs
 
@@ -284,14 +289,18 @@ def _compute_auc(model: EORMModel, pairs: list[GRPOContrastivePair]) -> float:
     n_correct = 0
     for pair in pairs:
         # Use question_id as a proxy for the question text (consistent across calls)
-        e_correct = model.energy(CoTEnergyInput(
-            question_text=pair.question_id,
-            response_text=pair.correct_response,
-        ))
-        e_incorrect = model.energy(CoTEnergyInput(
-            question_text=pair.question_id,
-            response_text=pair.incorrect_response,
-        ))
+        e_correct = model.energy(
+            CoTEnergyInput(
+                question_text=pair.question_id,
+                response_text=pair.correct_response,
+            )
+        )
+        e_incorrect = model.energy(
+            CoTEnergyInput(
+                question_text=pair.question_id,
+                response_text=pair.incorrect_response,
+            )
+        )
         if e_incorrect > e_correct:
             n_correct += 1
 
@@ -355,22 +364,16 @@ def train_eorm_grpo(
 
     last_epoch_loss = 0.0
 
-    for epoch in range(epochs):
+    for _epoch in range(epochs):
         epoch_loss = 0.0
         for pair in pairs:
             # Tokenize outside the differentiable function to avoid retracing
-            correct_ids = (
-                _make_token_sequence(
-                    pair.question_id, pair.correct_response, max_seq_len, vocab_size
-                )
-                or [_SEP_ID]
-            )
-            incorrect_ids = (
-                _make_token_sequence(
-                    pair.question_id, pair.incorrect_response, max_seq_len, vocab_size
-                )
-                or [_SEP_ID]
-            )
+            correct_ids = _make_token_sequence(
+                pair.question_id, pair.correct_response, max_seq_len, vocab_size
+            ) or [_SEP_ID]
+            incorrect_ids = _make_token_sequence(
+                pair.question_id, pair.incorrect_response, max_seq_len, vocab_size
+            ) or [_SEP_ID]
 
             def loss_fn(params: dict) -> jax.Array:
                 """GRPO contrastive loss: max(0, margin - (E_wrong - E_right))."""

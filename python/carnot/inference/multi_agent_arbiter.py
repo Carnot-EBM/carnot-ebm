@@ -42,16 +42,16 @@
 Spec: REQ-VERIFY-143, REQ-VERIFY-144, REQ-SAMPLE-020,
       SCENARIO-VERIFY-172, SCENARIO-VERIFY-173, SCENARIO-SAMPLE-032
 """
+
 from __future__ import annotations
 
 import logging
 from collections import Counter
-from typing import Optional
 
 import numpy as np
 
-from carnot.pipeline.ising_constraint_injector import IsingConstraintInjector
 from carnot.inference.gibbs_warmstart import GibbsWarmStart
+from carnot.pipeline.ising_constraint_injector import IsingConstraintInjector
 
 logger = logging.getLogger(__name__)
 
@@ -107,9 +107,7 @@ class MultiAgentArbiter:
         self.consensus_penalty = consensus_penalty
         self.warm_start_sweeps = warm_start_sweeps
 
-        self._injector = IsingConstraintInjector(
-            embedding_dim=embedding_dim, n_spins=n_spins
-        )
+        self._injector = IsingConstraintInjector(embedding_dim=embedding_dim, n_spins=n_spins)
 
         # Weak symmetric coupling matrix: off-diagonal entries only so the matrix
         # does not overwhelm the external field signal from constraint embeddings.
@@ -154,9 +152,7 @@ class MultiAgentArbiter:
         if use_warmstart and constraint_embeddings:
             h = self._injector.project_to_spin_bias(constraint_embeddings)
             h = np.clip(h, 0.0, None)
-            _, e_warmstart = self._warmstart.warmup(
-                self._J, h, n_sweeps=self.warm_start_sweeps
-            )
+            _, e_warmstart = self._warmstart.warmup(self._J, h, n_sweeps=self.warm_start_sweeps)
             if abs(e_warmstart) < 0.5:
                 logger.warning(
                     "Gibbs warm-start energy %.4f below 0.5 magnitude threshold; "
@@ -178,8 +174,8 @@ class MultiAgentArbiter:
     def detect_consensus(
         self,
         energies: np.ndarray,
-        responses: Optional[list[str]] = None,
-        threshold: Optional[float] = None,
+        responses: list[str] | None = None,
+        threshold: float | None = None,
     ) -> bool:
         """Return True if agents are in consensus (energy range OR response cluster).
 

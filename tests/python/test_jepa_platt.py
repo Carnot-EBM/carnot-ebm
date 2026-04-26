@@ -48,9 +48,7 @@ class TestPlattScaledJEPAInit(unittest.TestCase):
 
     def test_env_override_invalid_float_raises(self):
         """Non-numeric env var value must raise ValueError."""
-        with unittest.mock.patch.dict(
-            os.environ, {"JEPA_TIER2_PLATT_TEMPERATURE": "not_a_number"}
-        ):
+        with unittest.mock.patch.dict(os.environ, {"JEPA_TIER2_PLATT_TEMPERATURE": "not_a_number"}):
             with self.assertRaises(ValueError):
                 PlattScaledJEPA(_make_stub_eorm(), temperature=1.0)
 

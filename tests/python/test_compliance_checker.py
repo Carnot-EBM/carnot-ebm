@@ -30,7 +30,9 @@ from carnot.models.compliance_checker import (
 # ---------------------------------------------------------------------------
 
 
-def _make_checker(domain: str = "financial", n_features: int = 8, n_hidden: int = 4) -> ComplianceEnergyChecker:
+def _make_checker(
+    domain: str = "financial", n_features: int = 8, n_hidden: int = 4
+) -> ComplianceEnergyChecker:
     """Small ComplianceEnergyChecker for fast unit tests."""
     return ComplianceEnergyChecker(domain=domain, n_features=n_features, n_hidden=n_hidden)  # type: ignore[arg-type]
 
@@ -126,7 +128,9 @@ class TestEncodeComplianceText:
     def test_keyword_presence_increases_feature(self) -> None:
         """Text with 'buy' should have higher feature 0 than text without."""
         with_kw = encode_compliance_text("buy now", "financial", max_features=16)
-        without_kw = encode_compliance_text("consider options carefully", "financial", max_features=16)
+        without_kw = encode_compliance_text(
+            "consider options carefully", "financial", max_features=16
+        )
         # Feature 0 is "buy" for financial domain.
         assert float(with_kw[0]) > float(without_kw[0])
 
@@ -239,7 +243,7 @@ class TestComplianceEnergyCheckerInit:
 
     def test_default_shapes(self) -> None:
         checker = ComplianceEnergyChecker(domain="financial")
-        assert checker.edge_ctrl.shape == (8, 32, 13)   # n_hidden=8, n_features=32, n_ctrl=13
+        assert checker.edge_ctrl.shape == (8, 32, 13)  # n_hidden=8, n_features=32, n_ctrl=13
         assert checker.output_ctrl.shape == (8, 13)
 
     def test_custom_shapes(self) -> None:
@@ -371,12 +375,12 @@ class TestComplianceEnergyCheckerTrain:
         examples = _financial_examples(n_each=5)
         checker.train(examples, n_epochs=50)
 
-        viol_energy = np.mean([
-            checker.energy(ex.text) for ex in examples if ex.label == "violation"
-        ])
-        comp_energy = np.mean([
-            checker.energy(ex.text) for ex in examples if ex.label == "compliant"
-        ])
+        viol_energy = np.mean(
+            [checker.energy(ex.text) for ex in examples if ex.label == "violation"]
+        )
+        comp_energy = np.mean(
+            [checker.energy(ex.text) for ex in examples if ex.label == "compliant"]
+        )
         # After training, violations should have higher energy (not guaranteed for
         # 50 epochs on random data, but the gradient direction should be correct).
         # We test the weaker property: auroc > 0 (better than worst possible).

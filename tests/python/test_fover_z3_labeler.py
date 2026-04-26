@@ -28,6 +28,7 @@ def _z3_available() -> bool:
     """Return True if z3-solver is installed in this environment."""
     try:
         import z3  # noqa: F401, PLC0415
+
         return True
     except ImportError:
         return False
@@ -118,6 +119,7 @@ class TestExtractArithmeticClaim:
     def test_addition_claim(self):
         """'47 + 28 = 75' produces a satisfiable Z3 expression."""
         import z3  # noqa: PLC0415
+
         claim = self.verifier.extract_arithmetic_claim("47 + 28 = 75")
         assert claim is not None
         s = z3.Solver()
@@ -127,6 +129,7 @@ class TestExtractArithmeticClaim:
     def test_addition_violation_unsatisfiable(self):
         """'47 + 28 = 65' is an incorrect arithmetic claim → unsat."""
         import z3  # noqa: PLC0415
+
         claim = self.verifier.extract_arithmetic_claim("47 + 28 = 65")
         assert claim is not None
         s = z3.Solver()
@@ -136,6 +139,7 @@ class TestExtractArithmeticClaim:
     def test_subtraction_claim(self):
         """'100 - 37 = 63' → satisfiable."""
         import z3  # noqa: PLC0415
+
         claim = self.verifier.extract_arithmetic_claim("100 - 37 = 63")
         assert claim is not None
         s = z3.Solver()
@@ -145,6 +149,7 @@ class TestExtractArithmeticClaim:
     def test_multiplication_claim(self):
         """'6 * 7 = 42' → satisfiable."""
         import z3  # noqa: PLC0415
+
         claim = self.verifier.extract_arithmetic_claim("6 * 7 = 42")
         assert claim is not None
         s = z3.Solver()
@@ -154,6 +159,7 @@ class TestExtractArithmeticClaim:
     def test_multiplication_violation(self):
         """'6 * 7 = 41' → unsat."""
         import z3  # noqa: PLC0415
+
         claim = self.verifier.extract_arithmetic_claim("6 * 7 = 41")
         assert claim is not None
         s = z3.Solver()
@@ -163,6 +169,7 @@ class TestExtractArithmeticClaim:
     def test_division_claim(self):
         """'10 / 2 = 5' → satisfiable (integer division)."""
         import z3  # noqa: PLC0415
+
         claim = self.verifier.extract_arithmetic_claim("10 / 2 = 5")
         assert claim is not None
         s = z3.Solver()
@@ -219,9 +226,7 @@ class TestVerifyStepZ3:
 
     def test_unparseable_prose_step(self):
         """A prose step with no arithmetic returns 'unparseable'."""
-        result = self.verifier.verify_step_z3(
-            [], "Therefore, the farmer has many sheep."
-        )
+        result = self.verifier.verify_step_z3([], "Therefore, the farmer has many sheep.")
         assert result == "unparseable"
 
     def test_prior_steps_provide_context(self):

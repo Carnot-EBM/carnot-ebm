@@ -9,23 +9,18 @@ from unittest.mock import MagicMock, patch
 
 import jax.numpy as jnp
 import numpy as np
-import pytest
-
 from carnot.embeddings.layer_navigator import (
     LayerNavigatorConfig,
     find_best_layers,
     score_layer_steerability,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers: build mock model, tokenizer, torch
 # ---------------------------------------------------------------------------
 
 
-def _build_mock_model(
-    num_layers: int = 4, hidden_dim: int = 8, seq_len: int = 3
-):
+def _build_mock_model(num_layers: int = 4, hidden_dim: int = 8, seq_len: int = 3):
     """Build a mock model with hookable layers and logits output.
 
     REQ-INFER-015: Mocked transformer for layer navigation tests.
@@ -69,9 +64,11 @@ def _build_mock_model(
 
     def fake_forward(**kwargs):
         for i, (layer_mod, hooks) in enumerate(fake_layers):
-            fake_hidden = np.random.RandomState(42 + call_count[0] + i).randn(
-                1, seq_len, hidden_dim
-            ).astype(np.float32)
+            fake_hidden = (
+                np.random.RandomState(42 + call_count[0] + i)
+                .randn(1, seq_len, hidden_dim)
+                .astype(np.float32)
+            )
 
             class FakeOutput:
                 def __init__(self, data):
@@ -105,9 +102,9 @@ def _build_mock_model(
         call_count[0] += 1
         result = MagicMock()
         # Different logits each call to simulate perturbation effect.
-        logits_data = np.random.RandomState(100 + call_count[0]).randn(
-            1, seq_len, 32
-        ).astype(np.float32)
+        logits_data = (
+            np.random.RandomState(100 + call_count[0]).randn(1, seq_len, 32).astype(np.float32)
+        )
 
         class FakeLogits:
             def __init__(self, data):
@@ -197,9 +194,7 @@ class TestScoreLayerSteerability:
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            score = score_layer_steerability(
-                model, tokenizer, qa_pairs, 0, direction
-            )
+            score = score_layer_steerability(model, tokenizer, qa_pairs, 0, direction)
 
         assert score is not None
         assert isinstance(score, float)
@@ -211,26 +206,20 @@ class TestScoreLayerSteerability:
         direction = jnp.ones(8)
 
         with patch.dict("sys.modules", {"torch": mock_torch}):
-            score = score_layer_steerability(
-                model, tokenizer, [("q", "a")], 0, direction
-            )
+            score = score_layer_steerability(model, tokenizer, [("q", "a")], 0, direction)
 
         assert score is None
 
     def test_returns_none_for_out_of_range_layer(self) -> None:
         """REQ-INFER-015: Returns None when layer_idx exceeds model layers."""
-        mock_torch, mock_transformers, model, tokenizer = _build_mock_model(
-            num_layers=2
-        )
+        mock_torch, mock_transformers, model, tokenizer = _build_mock_model(num_layers=2)
         direction = jnp.ones(8)
 
         with patch.dict(
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            score = score_layer_steerability(
-                model, tokenizer, [("q", "a")], 99, direction
-            )
+            score = score_layer_steerability(model, tokenizer, [("q", "a")], 99, direction)
 
         assert score is None
 
@@ -243,9 +232,7 @@ class TestScoreLayerSteerability:
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            score = score_layer_steerability(
-                model, tokenizer, [], 0, direction
-            )
+            score = score_layer_steerability(model, tokenizer, [], 0, direction)
 
         assert score == 0.0
 
@@ -259,9 +246,7 @@ class TestScoreLayerSteerability:
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            score = score_layer_steerability(
-                model, tokenizer, [("q", "a")], 0, direction, config
-            )
+            score = score_layer_steerability(model, tokenizer, [("q", "a")], 0, direction, config)
 
         assert score is not None
 
@@ -269,16 +254,14 @@ class TestScoreLayerSteerability:
         """REQ-INFER-015: Hooks are cleaned up after scoring."""
         mock_torch, mock_transformers, model, tokenizer = _build_mock_model()
         direction = jnp.ones(8)
-        layer = model.model.layers[0]
+        model.model.layers[0]
 
         # Track hook registration/removal through the layer's hook list.
         with patch.dict(
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            score_layer_steerability(
-                model, tokenizer, [("q", "a")], 0, direction
-            )
+            score_layer_steerability(model, tokenizer, [("q", "a")], 0, direction)
 
         # The hook should have been registered and then its handle's
         # remove() called. Since we can't easily inspect mock internals,
@@ -295,9 +278,7 @@ class TestScoreLayerSteerability:
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            score = score_layer_steerability(
-                model, tokenizer, qa_pairs, 0, direction
-            )
+            score = score_layer_steerability(model, tokenizer, qa_pairs, 0, direction)
 
         assert score is not None
         assert score >= 0.0
@@ -313,18 +294,14 @@ class TestFindBestLayers:
 
     def test_returns_list_of_ints(self) -> None:
         """REQ-INFER-015: Returns a list of integer layer indices."""
-        mock_torch, mock_transformers, model, tokenizer = _build_mock_model(
-            num_layers=4
-        )
+        mock_torch, mock_transformers, model, tokenizer = _build_mock_model(num_layers=4)
         direction = jnp.ones(8)
 
         with patch.dict(
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            result = find_best_layers(
-                model, tokenizer, [("q", "a")], direction
-            )
+            result = find_best_layers(model, tokenizer, [("q", "a")], direction)
 
         assert result is not None
         assert isinstance(result, list)
@@ -332,9 +309,7 @@ class TestFindBestLayers:
 
     def test_respects_n_best(self) -> None:
         """REQ-INFER-015: Returns at most n_best layers."""
-        mock_torch, mock_transformers, model, tokenizer = _build_mock_model(
-            num_layers=6
-        )
+        mock_torch, mock_transformers, model, tokenizer = _build_mock_model(num_layers=6)
         direction = jnp.ones(8)
         config = LayerNavigatorConfig(n_best=2)
 
@@ -342,9 +317,7 @@ class TestFindBestLayers:
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            result = find_best_layers(
-                model, tokenizer, [("q", "a")], direction, config
-            )
+            result = find_best_layers(model, tokenizer, [("q", "a")], direction, config)
 
         assert result is not None
         assert len(result) <= 2
@@ -356,17 +329,13 @@ class TestFindBestLayers:
         direction = jnp.ones(8)
 
         with patch.dict("sys.modules", {"torch": mock_torch}):
-            result = find_best_layers(
-                model, tokenizer, [("q", "a")], direction
-            )
+            result = find_best_layers(model, tokenizer, [("q", "a")], direction)
 
         assert result is None
 
     def test_sorted_by_score_descending(self) -> None:
         """REQ-INFER-015: Returned layers are sorted by descending steerability."""
-        mock_torch, mock_transformers, model, tokenizer = _build_mock_model(
-            num_layers=4
-        )
+        mock_torch, mock_transformers, model, tokenizer = _build_mock_model(num_layers=4)
         direction = jnp.ones(8)
         config = LayerNavigatorConfig(n_best=4)
 
@@ -374,9 +343,7 @@ class TestFindBestLayers:
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            result = find_best_layers(
-                model, tokenizer, [("q", "a")], direction, config
-            )
+            result = find_best_layers(model, tokenizer, [("q", "a")], direction, config)
 
         assert result is not None
         # All layer indices should be present (we asked for n_best=4
@@ -386,18 +353,14 @@ class TestFindBestLayers:
 
     def test_default_config_used(self) -> None:
         """REQ-INFER-015: Default config is used when config=None."""
-        mock_torch, mock_transformers, model, tokenizer = _build_mock_model(
-            num_layers=4
-        )
+        mock_torch, mock_transformers, model, tokenizer = _build_mock_model(num_layers=4)
         direction = jnp.ones(8)
 
         with patch.dict(
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            result = find_best_layers(
-                model, tokenizer, [("q", "a")], direction, config=None
-            )
+            result = find_best_layers(model, tokenizer, [("q", "a")], direction, config=None)
 
         assert result is not None
         # Default n_best=3, model has 4 layers, so expect 3.

@@ -252,8 +252,14 @@ def test_deliverable_json_exists_and_valid() -> None:
         artifact = json.load(f)
 
     required_fields = [
-        "experiment", "schema", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "title",
+        "experiment",
+        "schema",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "title",
     ]
     for field in required_fields:
         assert field in artifact, f"missing required field: {field}"
@@ -264,5 +270,7 @@ def test_deliverable_json_exists_and_valid() -> None:
     assert "mixing_sweeps_reduction" in artifact
     assert "honest_verdict" in artifact
     assert artifact["honest_verdict"] in {
-        "discrimination_improved", "partial_improvement", "no_discrimination"
+        "discrimination_improved",
+        "partial_improvement",
+        "no_discrimination",
     }

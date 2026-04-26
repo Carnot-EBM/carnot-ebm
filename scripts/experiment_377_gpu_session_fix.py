@@ -93,9 +93,7 @@ def run_experiment(repo_root: Path) -> dict:
 
     # --- Check 2: Does subprocess inherit the env var? ---
     # This is the PROOF that the fix works end-to-end.
-    subprocess_inherits_env = LiveGPUGate.verify_subprocess_env_propagation(
-        "CARNOT_FORCE_LIVE"
-    )
+    subprocess_inherits_env = LiveGPUGate.verify_subprocess_env_propagation("CARNOT_FORCE_LIVE")
 
     # --- Check 3: Does scripts/session_startup.sh exist? ---
     session_startup_exists = check_session_startup_exists(repo_root)

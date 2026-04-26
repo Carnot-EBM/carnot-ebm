@@ -161,7 +161,7 @@ class AdaptiveWeighter:
 
     @staticmethod
     def apply_to_pipeline(
-        pipeline: "VerifyRepairPipeline",
+        pipeline: VerifyRepairPipeline,
         weights: dict[str, float],
     ) -> None:
         """Store adaptive weights on the pipeline for use in verify().

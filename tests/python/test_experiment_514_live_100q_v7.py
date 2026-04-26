@@ -173,6 +173,7 @@ class TestLoadJitGatedModel:
         mock_result.available_gb = 0.0
 
         import carnot.pipeline.live_100q_v7_helpers as _helpers_mod
+
         with patch.object(_helpers_mod, "JITVRAMCheck") as mock_cls:
             mock_checker = MagicMock()
             mock_checker.gate_model_load.return_value = mock_result
@@ -200,6 +201,7 @@ class TestRun100QBenchmark:
     def _perfect_inference(self, q: dict) -> str:
         # Extracts gold from question pattern "What is N + N?" -> answer 2*N
         import re
+
         m = re.search(r"(\d+) \+ (\d+)", q["question"])
         if m:
             return f"#### {int(m.group(1)) + int(m.group(2))}"
@@ -304,9 +306,16 @@ class TestRun100QBenchmark:
         d = result.to_dict()
 
         required_keys = {
-            "model_id", "n", "baseline_correct", "pipeline_correct",
-            "baseline_accuracy", "pipeline_accuracy", "wilson_95ci_lower",
-            "wilson_95ci_upper", "signed_improvement", "is_positive",
+            "model_id",
+            "n",
+            "baseline_correct",
+            "pipeline_correct",
+            "baseline_accuracy",
+            "pipeline_accuracy",
+            "wilson_95ci_lower",
+            "wilson_95ci_upper",
+            "signed_improvement",
+            "is_positive",
         }
         assert required_keys <= set(d.keys())
 
@@ -356,7 +365,12 @@ class TestWriteCotPairs:
 
     def test_fover_schema_preserved(self, tmp_path):
         """FOVER format keys are preserved exactly as written."""
-        pair = {"question": "Q1", "cot_text": "step1 step2", "correct": True, "model_id": "Gemma4-INT4"}
+        pair = {
+            "question": "Q1",
+            "cot_text": "step1 step2",
+            "correct": True,
+            "model_id": "Gemma4-INT4",
+        }
         out = str(tmp_path / "out.json")
         write_cot_pairs([pair], out)
         loaded = json.loads(Path(out).read_text())
@@ -402,11 +416,13 @@ class TestExperiment514Script:
     def test_deliverable_path_constant(self):
         """DELIVERABLE constant is the expected path."""
         import scripts.experiment_514_live_100q_precision_v7 as exp514
+
         assert "514" in exp514.DELIVERABLE
         assert exp514.DELIVERABLE.endswith(".json")
 
     def test_cot_pairs_path_constant(self):
         """COT_PAIRS_PATH constant is the expected path."""
         import scripts.experiment_514_live_100q_precision_v7 as exp514
+
         assert "514" in exp514.COT_PAIRS_PATH
         assert exp514.COT_PAIRS_PATH.endswith(".json")

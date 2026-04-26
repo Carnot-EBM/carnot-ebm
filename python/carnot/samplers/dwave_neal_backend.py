@@ -200,7 +200,9 @@ class DWaveNealBackend:
         if not self.available or self._sampler is None:
             # Cannot sample — return a sentinel result.
             spins = np.zeros(n, dtype=bool)
-            return SampleResult(spins=spins, energy=float("inf"), wall_time_s=time.perf_counter() - t0)
+            return SampleResult(
+                spins=spins, energy=float("inf"), wall_time_s=time.perf_counter() - t0
+            )
 
         bqm = self.to_bqm(ising_ebm)
         response = self._sampler.sample(

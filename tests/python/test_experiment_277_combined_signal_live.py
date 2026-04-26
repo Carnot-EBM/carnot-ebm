@@ -232,9 +232,7 @@ class TestRunLLMExtractorGSM8K:
 
     def test_extractor_name(self) -> None:
         """REQ-VERIFY-010: Extractor result has correct name."""
-        result = MOD.run_llm_extractor_gsm8k(
-            "1 + 1 = 2.", generate_fn=MOD._ci_gsm8k_generate_fn
-        )
+        result = MOD.run_llm_extractor_gsm8k("1 + 1 = 2.", generate_fn=MOD._ci_gsm8k_generate_fn)
         assert result.extractor_name == "llm"
 
 
@@ -254,12 +252,7 @@ class TestRunCodeExtractor:
 
     def test_valid_code_not_flagged(self) -> None:
         """REQ-VERIFY-002: Valid annotated function is not flagged."""
-        response = (
-            "```python\n"
-            "def add(a: int, b: int) -> int:\n"
-            "    return a + b\n"
-            "```"
-        )
+        response = "```python\ndef add(a: int, b: int) -> int:\n    return a + b\n```"
         result = MOD.run_code_extractor(response)
         assert not result.flagged
 
@@ -270,12 +263,7 @@ class TestRunCodeExtractor:
 
     def test_return_type_mismatch_flagged(self) -> None:
         """SCENARIO-VERIFY-002: Return type mismatch is flagged."""
-        response = (
-            "```python\n"
-            "def double(x: int) -> int:\n"
-            "    return str(x * 2)\n"
-            "```"
-        )
+        response = "```python\ndef double(x: int) -> int:\n    return str(x * 2)\n```"
         result = MOD.run_code_extractor(response)
         # CodeExtractor may or may not detect str() return for -> int;
         # if it does, it should be flagged. If not, at least it parses cleanly.
@@ -338,9 +326,7 @@ class TestRunHumanEvalCase:
     def test_correct_case_fields(self) -> None:
         """REQ-VERIFY-001: Correct case result has all fields populated."""
         case = MOD.CI_HUMANEVAL_CASES[0]
-        result = MOD.run_humaneval_case(
-            case=case, response=case["response"], correct=True
-        )
+        result = MOD.run_humaneval_case(case=case, response=case["response"], correct=True)
         assert result.case_id == case["case_id"]
         assert result.task_id == case["task_id"]
         assert result.correct is True
@@ -353,18 +339,14 @@ class TestRunHumanEvalCase:
     def test_combined_is_or_of_extractors(self) -> None:
         """REQ-VERIFY-001: combined_flagged = code OR z3 OR semantic."""
         case = MOD.CI_HUMANEVAL_CASES[0]
-        result = MOD.run_humaneval_case(
-            case=case, response=case["response"], correct=True
-        )
+        result = MOD.run_humaneval_case(case=case, response=case["response"], correct=True)
         expected = result.code.flagged or result.z3.flagged or result.semantic.flagged
         assert result.combined_flagged == expected
 
     def test_wrong_code_has_result(self) -> None:
         """REQ-VERIFY-001: Wrong-code case produces a non-None result."""
         case = MOD.CI_HUMANEVAL_CASES[1]  # str(x * 2) return type mismatch
-        result = MOD.run_humaneval_case(
-            case=case, response=case["response"], correct=False
-        )
+        result = MOD.run_humaneval_case(case=case, response=case["response"], correct=False)
         assert result.correct is False
         assert isinstance(result.combined_flagged, bool)
 
@@ -640,8 +622,13 @@ class TestComputeGSM8KStatistics:
         stats = MOD.compute_gsm8k_statistics(results)
         eo = stats["extractor_overlap"]
         for key in (
-            "z3_only", "llm_only", "semantic_only",
-            "z3_and_llm", "z3_and_semantic", "llm_and_semantic", "all_three",
+            "z3_only",
+            "llm_only",
+            "semantic_only",
+            "z3_and_llm",
+            "z3_and_semantic",
+            "llm_and_semantic",
+            "all_three",
         ):
             assert key in eo
 
@@ -659,7 +646,9 @@ class TestBuildArtifact:
             extractor_name="code", flagged=False, n_violations=0, n_satisfied=1, n_total=1
         )
         return MOD.HumanEvalCaseResult(
-            case_id="he-0", task_id="HumanEval/1", correct=True,
+            case_id="he-0",
+            task_id="HumanEval/1",
+            correct=True,
             code=ext,
             z3=MOD.ExtractorResult("z3", False, 0, 1, 1),
             semantic=MOD.ExtractorResult("semantic", False, 0, 0, 0),
@@ -668,7 +657,10 @@ class TestBuildArtifact:
 
     def _make_gsm8k_result(self) -> Any:
         return MOD.GSM8KCaseResult(
-            case_id="gsm-0", question="Q", ground_truth=42, correct=True,
+            case_id="gsm-0",
+            question="Q",
+            ground_truth=42,
+            correct=True,
             extracted_answer=42.0,
             z3=MOD.ExtractorResult("z3", False, 0, 1, 1),
             llm=MOD.ExtractorResult("llm", False, 0, 1, 1),
@@ -683,16 +675,26 @@ class TestBuildArtifact:
         he_stats = MOD.compute_humaneval_statistics(he)
         gsm_stats = MOD.compute_gsm8k_statistics(gsm)
         artifact = MOD.build_artifact(
-            he, gsm, he_stats, gsm_stats,
+            he,
+            gsm,
+            he_stats,
+            gsm_stats,
             live_mode=False,
             started_at="2026-04-14T00:00:00Z",
             finished_at="2026-04-14T00:00:01Z",
             runtime_seconds=1.0,
         )
         for key in (
-            "experiment", "benchmark", "title", "run_date", "metadata",
-            "signal_analysis_summary", "humaneval_statistics", "gsm8k_statistics",
-            "humaneval_cases", "gsm8k_cases",
+            "experiment",
+            "benchmark",
+            "title",
+            "run_date",
+            "metadata",
+            "signal_analysis_summary",
+            "humaneval_statistics",
+            "gsm8k_statistics",
+            "humaneval_cases",
+            "gsm8k_cases",
         ):
             assert key in artifact, f"Missing key: {key}"
 
@@ -701,7 +703,8 @@ class TestBuildArtifact:
         he = [self._make_he_result()]
         gsm = [self._make_gsm8k_result()]
         artifact = MOD.build_artifact(
-            he, gsm,
+            he,
+            gsm,
             MOD.compute_humaneval_statistics(he),
             MOD.compute_gsm8k_statistics(gsm),
             live_mode=False,
@@ -716,7 +719,8 @@ class TestBuildArtifact:
         he = [self._make_he_result()]
         gsm = [self._make_gsm8k_result()]
         artifact = MOD.build_artifact(
-            he, gsm,
+            he,
+            gsm,
             MOD.compute_humaneval_statistics(he),
             MOD.compute_gsm8k_statistics(gsm),
             live_mode=False,
@@ -732,7 +736,8 @@ class TestBuildArtifact:
         he = [self._make_he_result()]
         gsm = [self._make_gsm8k_result()]
         artifact = MOD.build_artifact(
-            he, gsm,
+            he,
+            gsm,
             MOD.compute_humaneval_statistics(he),
             MOD.compute_gsm8k_statistics(gsm),
             live_mode=False,
@@ -750,7 +755,8 @@ class TestBuildArtifact:
         he = [self._make_he_result()]
         gsm = [self._make_gsm8k_result(), self._make_gsm8k_result()]
         artifact = MOD.build_artifact(
-            he, gsm,
+            he,
+            gsm,
             MOD.compute_humaneval_statistics(he),
             MOD.compute_gsm8k_statistics(gsm),
             live_mode=False,
@@ -782,8 +788,7 @@ class TestFullCIBenchmark:
         for r in he_results:
             expected = r.code.flagged or r.z3.flagged or r.semantic.flagged
             assert r.combined_flagged == expected, (
-                f"Case {r.case_id}: combined_flagged={r.combined_flagged}, "
-                f"expected={expected}"
+                f"Case {r.case_id}: combined_flagged={r.combined_flagged}, expected={expected}"
             )
 
     def test_ci_gsm8k_combined_is_or(self) -> None:
@@ -792,8 +797,7 @@ class TestFullCIBenchmark:
         for r in gsm_results:
             expected = r.z3.flagged or r.llm.flagged or r.semantic.flagged
             assert r.combined_flagged == expected, (
-                f"Case {r.case_id}: combined_flagged={r.combined_flagged}, "
-                f"expected={expected}"
+                f"Case {r.case_id}: combined_flagged={r.combined_flagged}, expected={expected}"
             )
 
     def test_ci_gsm8k_wrong_cases_have_wrong_answers(self) -> None:
@@ -802,9 +806,7 @@ class TestFullCIBenchmark:
         # Cases with odd case_id (gsm-ci-1, 3, 5, 7, 9) are wrong
         wrong_cases = [r for r in gsm_results if r.case_id.endswith(("1", "3", "7", "9"))]
         for r in wrong_cases:
-            assert not r.correct, (
-                f"Case {r.case_id} expected to be wrong but correct=True"
-            )
+            assert not r.correct, f"Case {r.case_id} expected to be wrong but correct=True"
 
     def test_ci_gsm8k_correct_cases_have_correct_answers(self) -> None:
         """REQ-VERIFY-001: CI cases marked as correct are judged correct."""
@@ -812,9 +814,7 @@ class TestFullCIBenchmark:
         # Cases 0, 2, 4, 6, 8 are correct
         correct_cases = [r for r in gsm_results if r.case_id.endswith(("0", "2", "6", "8"))]
         for r in correct_cases:
-            assert r.correct, (
-                f"Case {r.case_id} expected to be correct but correct=False"
-            )
+            assert r.correct, f"Case {r.case_id} expected to be correct but correct=False"
 
     def test_combined_detection_ge_best_individual_humaneval(self) -> None:
         """REQ-VERIFY-001: HumanEval combined detection >= best single extractor."""

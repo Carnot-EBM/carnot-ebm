@@ -269,9 +269,7 @@ class TestExp716ArtifactSchema:
         if deliverable.exists():
             artifact = json.loads(deliverable.read_text())
             verdict = artifact.get("honest_verdict")
-            assert verdict in valid_verdicts, (
-                f"honest_verdict='{verdict}' not in {valid_verdicts}"
-            )
+            assert verdict in valid_verdicts, f"honest_verdict='{verdict}' not in {valid_verdicts}"
 
 
 # ---------------------------------------------------------------------------
@@ -328,22 +326,30 @@ class TestHelperFunctions:
         is unavailable, the graceful fallback is an empty changed-files list.
         """
         from unittest.mock import patch, MagicMock
-        with patch("carnot.pipeline.incremental_test_selector.subprocess.run", side_effect=OSError("no git")):
+
+        with patch(
+            "carnot.pipeline.incremental_test_selector.subprocess.run",
+            side_effect=OSError("no git"),
+        ):
             result = _get_changed_files(tmp_path)
         assert result == []
 
     def test_get_changed_files_success_path(self, tmp_path):
         """_get_changed_files parses stdout lines from a successful git diff call."""
         from unittest.mock import patch, MagicMock
+
         mock_result = MagicMock()
         mock_result.stdout = "python/carnot/foo.py\nscripts/bar.py\n"
-        with patch("carnot.pipeline.incremental_test_selector.subprocess.run", return_value=mock_result):
+        with patch(
+            "carnot.pipeline.incremental_test_selector.subprocess.run", return_value=mock_result
+        ):
             result = _get_changed_files(tmp_path)
         assert result == ["python/carnot/foo.py", "scripts/bar.py"]
 
     def test_load_cache_reads_existing_file(self, tmp_path):
         """_load_cache returns the dict when the cache file exists and is valid JSON."""
         from carnot.pipeline.incremental_test_selector import _load_cache, _save_cache
+
         cache_path = tmp_path / ".preflight_test_cache.json"
         data = {"import_map": {"carnot": ["tests/python/test_foo.py"]}}
         _save_cache(cache_path, data)
@@ -354,12 +360,14 @@ class TestHelperFunctions:
     def test_load_cache_returns_none_for_missing_file(self, tmp_path):
         """_load_cache returns None when the cache file does not exist."""
         from carnot.pipeline.incremental_test_selector import _load_cache
+
         result = _load_cache(tmp_path / "nonexistent.json")
         assert result is None
 
     def test_load_cache_returns_none_for_corrupt_json(self, tmp_path):
         """_load_cache returns None for corrupt JSON (non-fatal)."""
         from carnot.pipeline.incremental_test_selector import _load_cache
+
         cache_path = tmp_path / ".cache.json"
         cache_path.write_text("{bad json}")
         result = _load_cache(cache_path)
@@ -414,6 +422,7 @@ class TestHelperFunctions:
         (tests_dir / "test_foo.py").write_text("import foo\ndef test_x(): pass\n")
 
         from pathlib import PurePosixPath
+
         # A file with a single-component path: no directory prefix
         changed_files = ["foo.py"]
 
@@ -436,5 +445,6 @@ class TestHelperFunctions:
     def test_repo_root_function(self):
         """_repo_root() returns a valid directory path."""
         from carnot.pipeline.incremental_test_selector import _repo_root
+
         root = _repo_root()
         assert root.is_dir()

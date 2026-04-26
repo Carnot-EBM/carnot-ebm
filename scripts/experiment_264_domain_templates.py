@@ -227,7 +227,9 @@ def run_mining(
         Summary has keys: template_counts_by_domain, precision_stats,
         model_stats, experiment.
     """
-    templates = mine_templates(rows, DOMAIN_PATTERNS, min_precision=min_precision, min_matches=min_matches)
+    templates = mine_templates(
+        rows, DOMAIN_PATTERNS, min_precision=min_precision, min_matches=min_matches
+    )
 
     # Build summary
     counts_by_domain: dict[str, int] = {}

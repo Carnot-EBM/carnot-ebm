@@ -246,8 +246,8 @@ class TestContrastiveLoss:
         inc_emb = jnp.ones((_VOCAB_SIZE,)) * 10.0  # should produce larger energy
 
         # Loss with single pair (batch size 1)
-        con_batch = con_emb[None, :]   # (1, VOCAB_SIZE)
-        inc_batch = inc_emb[None, :]   # (1, VOCAB_SIZE)
+        con_batch = con_emb[None, :]  # (1, VOCAB_SIZE)
+        inc_batch = inc_emb[None, :]  # (1, VOCAB_SIZE)
 
         # Just verify the function runs and returns non-negative scalar
         loss = _hinge_contrastive_loss(params, con_batch, inc_batch)
@@ -268,7 +268,7 @@ class TestAUROC:
         """
         # Perfect separation: all consistent scores < all inconsistent scores
         scores = [0.1, 0.2, 0.3, 0.9, 0.8, 0.7]
-        labels = [0,   0,   0,   1,   1,   1]
+        labels = [0, 0, 0, 1, 1, 1]
         auc = roc_auc_score(labels, scores)
         assert auc == 1.0
 

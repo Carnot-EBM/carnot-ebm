@@ -41,10 +41,12 @@ Spec: REQ-TIER0-005, SCENARIO-TIER0-005
 
 from __future__ import annotations
 
-from typing import Callable
+from typing import TYPE_CHECKING
 
 import numpy as np
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Cosine similarity helper
@@ -135,9 +137,7 @@ class DRIFTProbe:
     # Core signal extraction
     # ------------------------------------------------------------------
 
-    def extract_drift_signature(
-        self, hidden_states: dict[int, np.ndarray]
-    ) -> np.ndarray:
+    def extract_drift_signature(self, hidden_states: dict[int, np.ndarray]) -> np.ndarray:
         """Compute the drift signature from precomputed hidden states.
 
         For each consecutive pair (L, L+1) in self.layers:
@@ -289,9 +289,7 @@ class DRIFTProbe:
         from sklearn.linear_model import LogisticRegression
 
         X = np.vstack([correct_sigs, hallucinated_sigs]).astype(np.float32)
-        y = np.array(
-            [0] * len(correct_sigs) + [1] * len(hallucinated_sigs), dtype=int
-        )
+        y = np.array([0] * len(correct_sigs) + [1] * len(hallucinated_sigs), dtype=int)
         self._probe = LogisticRegression(max_iter=500, random_state=42).fit(X, y)
 
     # ------------------------------------------------------------------

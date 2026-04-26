@@ -32,9 +32,7 @@ def _import_exp715():
     """Import the experiment module without executing main."""
     spec = importlib.util.spec_from_file_location(
         "experiment_715",
-        Path(__file__).resolve().parents[2]
-        / "scripts"
-        / "experiment_715_retro_2026_04_54.py",
+        Path(__file__).resolve().parents[2] / "scripts" / "experiment_715_retro_2026_04_54.py",
     )
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
@@ -108,11 +106,13 @@ def test_governance_held_when_retired_exps_absent():
     Why: the governance fix in .54 retired specific slow experiments; if they
     do not appear in the new slowest-5 the retirement succeeded.
     """
-    slowest = [{"experiment": 709, "duration_s": 946.0},
-               {"experiment": 706, "duration_s": 402.0},
-               {"experiment": 708, "duration_s": 85.7},
-               {"experiment": 705, "duration_s": 11.0},
-               {"experiment": 710, "duration_s": 10.1}]
+    slowest = [
+        {"experiment": 709, "duration_s": 946.0},
+        {"experiment": 706, "duration_s": 402.0},
+        {"experiment": 708, "duration_s": 85.7},
+        {"experiment": 705, "duration_s": 11.0},
+        {"experiment": 710, "duration_s": 10.1},
+    ]
     ids = {r["experiment"] for r in slowest}
     held = ids.isdisjoint(mod.RETIRED_SLOW_EXPS)
     assert held is True
@@ -124,11 +124,13 @@ def test_governance_failed_when_retired_exp_reappears():
     Why: this is the failure mode the retirement governance process is designed
     to detect — if exp 425 runs long again the retrospective must flag it.
     """
-    slowest = [{"experiment": 425, "duration_s": 3000.0},
-               {"experiment": 706, "duration_s": 402.0},
-               {"experiment": 708, "duration_s": 85.7},
-               {"experiment": 705, "duration_s": 11.0},
-               {"experiment": 710, "duration_s": 10.1}]
+    slowest = [
+        {"experiment": 425, "duration_s": 3000.0},
+        {"experiment": 706, "duration_s": 402.0},
+        {"experiment": 708, "duration_s": 85.7},
+        {"experiment": 705, "duration_s": 11.0},
+        {"experiment": 710, "duration_s": 10.1},
+    ]
     ids = {r["experiment"] for r in slowest}
     held = ids.isdisjoint(mod.RETIRED_SLOW_EXPS)
     assert held is False
@@ -144,13 +146,7 @@ def test_honest_verdict_format_all_positive():
 
     Format: wall_time_{dir}_jepa_v17_{auc}_gemma4_{gemma}_psv_{psv}_slowest5_{gov}
     """
-    verdict = (
-        "wall_time_down"
-        "_jepa_v17_cascade_unblocked"
-        "_gemma4_fixed"
-        "_psv_recovering"
-        "_slowest5_held"
-    )
+    verdict = "wall_time_down_jepa_v17_cascade_unblocked_gemma4_fixed_psv_recovering_slowest5_held"
     assert verdict.startswith("wall_time_")
     assert "jepa_v17_" in verdict
     assert "gemma4_" in verdict
@@ -165,11 +161,7 @@ def test_actual_deliverable_honest_verdict():
     the real outcomes, not a placeholder, so downstream milestone planning tools
     can branch on jepa_v17_cascade_unblocked=False and plan v18.
     """
-    path = (
-        Path(__file__).resolve().parents[2]
-        / "results"
-        / "operational_retro_2026_04_54.json"
-    )
+    path = Path(__file__).resolve().parents[2] / "results" / "operational_retro_2026_04_54.json"
     assert path.exists(), "Deliverable must be written before tests run"
     d = json.loads(path.read_text())
     verdict = d["honest_verdict"]
@@ -194,11 +186,7 @@ def test_deliverable_has_required_fields():
     """
     from scripts.experiment_template import REQUIRED_RESULT_FIELDS
 
-    path = (
-        Path(__file__).resolve().parents[2]
-        / "results"
-        / "operational_retro_2026_04_54.json"
-    )
+    path = Path(__file__).resolve().parents[2] / "results" / "operational_retro_2026_04_54.json"
     assert path.exists()
     d = json.loads(path.read_text())
 
@@ -208,11 +196,7 @@ def test_deliverable_has_required_fields():
 
 def test_deliverable_schema_version():
     """Deliverable reports the expected schema version v29."""
-    path = (
-        Path(__file__).resolve().parents[2]
-        / "results"
-        / "operational_retro_2026_04_54.json"
-    )
+    path = Path(__file__).resolve().parents[2] / "results" / "operational_retro_2026_04_54.json"
     d = json.loads(path.read_text())
     assert d["schema"] == "carnot.operational_retro.v29"
 
@@ -223,11 +207,7 @@ def test_deliverable_closure_metrics_present():
     Why: the conductor reads these fields to decide whether to open the next
     milestone — absent fields cause KeyError crashes downstream.
     """
-    path = (
-        Path(__file__).resolve().parents[2]
-        / "results"
-        / "operational_retro_2026_04_54.json"
-    )
+    path = Path(__file__).resolve().parents[2] / "results" / "operational_retro_2026_04_54.json"
     d = json.loads(path.read_text())
 
     required_closure_keys = [

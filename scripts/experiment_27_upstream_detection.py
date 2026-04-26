@@ -62,7 +62,8 @@ def collect_question_activations(
     print(f"  Loading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         torch_dtype=torch.float16 if device == "cuda" else None,
     )
@@ -71,11 +72,11 @@ def collect_question_activations(
     model.eval()
 
     config = model.config
-    if hasattr(config, 'get_text_config'):
+    if hasattr(config, "get_text_config"):
         tc = config.get_text_config()
     else:
         tc = config
-    hidden_dim = getattr(tc, 'hidden_size', getattr(tc, 'd_model', 1024))
+    hidden_dim = getattr(tc, "hidden_size", getattr(tc, "d_model", 1024))
     print(f"  Hidden dim: {hidden_dim}, Device: {device}")
 
     ds = load_dataset("truthful_qa", "generation")
@@ -98,12 +99,16 @@ def collect_question_activations(
             messages = [{"role": "user", "content": prompt}]
             try:
                 text = tokenizer.apply_chat_template(
-                    messages, tokenize=False, add_generation_prompt=True,
+                    messages,
+                    tokenize=False,
+                    add_generation_prompt=True,
                     enable_thinking=False,
                 )
             except TypeError:
                 text = tokenizer.apply_chat_template(
-                    messages, tokenize=False, add_generation_prompt=True,
+                    messages,
+                    tokenize=False,
+                    add_generation_prompt=True,
                 )
         else:
             text = prompt
@@ -127,7 +132,9 @@ def collect_question_activations(
         try:
             with torch.no_grad():
                 outputs = model.generate(
-                    **inputs, max_new_tokens=80, do_sample=False,
+                    **inputs,
+                    max_new_tokens=80,
+                    do_sample=False,
                     pad_token_id=tokenizer.eos_token_id,
                 )
 
@@ -137,7 +144,10 @@ def collect_question_activations(
                 response = response.split("</think>")[-1].strip()
 
             is_correct = check_truthfulqa_answer(
-                response, correct_answers, incorrect_answers, best_answer,
+                response,
+                correct_answers,
+                incorrect_answers,
+                best_answer,
             )
         except Exception:
             is_correct = False
@@ -152,8 +162,10 @@ def collect_question_activations(
         labels.append(1 if is_correct else 0)
 
         if (qi + 1) % 100 == 0:
-            print(f"    [{qi+1:3d}/{n_questions}] correct={n_correct} wrong={n_wrong} "
-                  f"({n_correct/(qi+1)*100:.0f}%)")
+            print(
+                f"    [{qi + 1:3d}/{n_questions}] correct={n_correct} wrong={n_wrong} "
+                f"({n_correct / (qi + 1) * 100:.0f}%)"
+            )
 
     # Free GPU
     del model, tokenizer
@@ -161,7 +173,13 @@ def collect_question_activations(
         torch.cuda.empty_cache()
     gc.collect()
 
-    return np.array(question_acts, dtype=np.float32), np.array(labels, dtype=np.int32), hidden_dim, n_correct, n_wrong
+    return (
+        np.array(question_acts, dtype=np.float32),
+        np.array(labels, dtype=np.int32),
+        hidden_dim,
+        n_correct,
+        n_wrong,
+    )
 
 
 def train_and_evaluate(activations: np.ndarray, labels: np.ndarray, hidden_dim: int, label: str):
@@ -200,8 +218,11 @@ def train_and_evaluate(activations: np.ndarray, labels: np.ndarray, hidden_dim: 
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -231,7 +252,7 @@ def train_and_evaluate(activations: np.ndarray, labels: np.ndarray, hidden_dim: 
     acc = (tp + tn) / (len(ce) + len(we))
     gap = np.mean(we) - np.mean(ce)
 
-    print(f"  {label}: test={acc:.1%}, gap={gap:.4f}, train={split}, test={min_n-split}")
+    print(f"  {label}: test={acc:.1%}, gap={gap:.4f}, train={split}, test={min_n - split}")
     return acc, gap
 
 
@@ -252,12 +273,15 @@ def main() -> int:
     start = time.time()
 
     for model_name, short_id, has_chat in models:
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"MODEL: {short_id} ({model_name})")
-        print(f"{'='*70}")
+        print(f"{'=' * 70}")
 
         acts, labels, hidden_dim, n_correct, n_wrong = collect_question_activations(
-            model_name, short_id, has_chat, n_questions=400,
+            model_name,
+            short_id,
+            has_chat,
+            n_questions=400,
         )
 
         print(f"  Collected: {len(labels)} questions, {n_correct} correct, {n_wrong} wrong")
@@ -275,16 +299,20 @@ def main() -> int:
         tok_acc = None
         if os.path.exists(tok_file):
             from safetensors.numpy import load_file
+
             tok_data = load_file(tok_file)
             print(f"\n  --- Per-Token Detection (baseline) ---")
             tok_acc, tok_gap = train_and_evaluate(
-                tok_data["activations"], tok_data["labels"], hidden_dim, "Token EBM",
+                tok_data["activations"],
+                tok_data["labels"],
+                hidden_dim,
+                "Token EBM",
             )
 
         results[short_id] = {
             "model": model_name,
             "n_questions": len(labels),
-            "model_accuracy": f"{n_correct}/{len(labels)} ({n_correct/len(labels)*100:.0f}%)",
+            "model_accuracy": f"{n_correct}/{len(labels)} ({n_correct / len(labels) * 100:.0f}%)",
             "question_ebm_acc": q_acc,
             "question_gap": q_gap,
             "token_ebm_acc": tok_acc,
@@ -296,15 +324,17 @@ def main() -> int:
     print(f"\n{sep}")
     print(f"EXPERIMENT 27 RESULTS: Upstream Detection ({elapsed:.0f}s)")
     print(sep)
-    print(f"{'Model':20s} {'Model Acc':>10s} {'Question EBM':>13s} {'Token EBM':>10s} {'Delta':>8s}")
+    print(
+        f"{'Model':20s} {'Model Acc':>10s} {'Question EBM':>13s} {'Token EBM':>10s} {'Delta':>8s}"
+    )
     print("-" * 65)
 
     for short_id, r in results.items():
         q = f"{r['question_ebm_acc']:.1%}"
-        t = f"{r['token_ebm_acc']:.1%}" if r['token_ebm_acc'] is not None else "N/A"
+        t = f"{r['token_ebm_acc']:.1%}" if r["token_ebm_acc"] is not None else "N/A"
         delta = ""
-        if r['token_ebm_acc'] is not None:
-            d = r['question_ebm_acc'] - r['token_ebm_acc']
+        if r["token_ebm_acc"] is not None:
+            d = r["question_ebm_acc"] - r["token_ebm_acc"]
             delta = f"{d:+.1%}"
         print(f"{short_id:20s} {r['model_accuracy']:>10s} {q:>13s} {t:>10s} {delta:>8s}")
 

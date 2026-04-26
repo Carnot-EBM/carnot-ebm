@@ -201,9 +201,7 @@ class DRIFTProbe:
         try:
             import torch
 
-            inputs = self._tokenizer(
-                text, return_tensors="pt", truncation=True, max_length=512
-            )
+            inputs = self._tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
             with torch.no_grad():
                 outputs = self._model(**inputs, output_hidden_states=True)
 
@@ -295,9 +293,7 @@ class DRIFTProbe:
         sig = self.extract_drift_signature(text)
         return float(self.linear_probe.predict_proba([sig])[0][1])
 
-    def is_representationally_drifted(
-        self, text: str, threshold: float = 0.6
-    ) -> bool:
+    def is_representationally_drifted(self, text: str, threshold: float = 0.6) -> bool:
         """Return True when the text's drift signature exceeds the hallucination threshold.
 
         Advisory flag — callers should NOT use this to block verification;

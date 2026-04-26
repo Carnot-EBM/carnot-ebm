@@ -28,7 +28,11 @@ from carnot.models.jepa_retrain_v7 import (
 def _make_fover_file(path: Path, n: int = 3) -> Path:
     """Write n FOVER-style entries and return path."""
     data = [
-        {"step_text": f"step {i}", "label": "correct" if i % 2 == 0 else "incorrect", "question_id": f"q{i}"}
+        {
+            "step_text": f"step {i}",
+            "label": "correct" if i % 2 == 0 else "incorrect",
+            "question_id": f"q{i}",
+        }
         for i in range(n)
     ]
     path.write_text(json.dumps(data))
@@ -186,19 +190,13 @@ class TestSummarizeCorpus:
         assert bd["model_1"] == 2
 
     def test_all_correct(self):
-        pairs = [
-            ViolationPair("text", "text", False, "m", f"q{i}")
-            for i in range(4)
-        ]
+        pairs = [ViolationPair("text", "text", False, "m", f"q{i}") for i in range(4)]
         result = summarize_corpus(pairs)
         assert result["n_correct"] == 4
         assert result["n_incorrect"] == 0
 
     def test_all_incorrect(self):
-        pairs = [
-            ViolationPair("text", "text", True, "m", f"q{i}")
-            for i in range(3)
-        ]
+        pairs = [ViolationPair("text", "text", True, "m", f"q{i}") for i in range(3)]
         result = summarize_corpus(pairs)
         assert result["n_correct"] == 0
         assert result["n_incorrect"] == 3

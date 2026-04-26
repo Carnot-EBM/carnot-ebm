@@ -153,6 +153,7 @@ def check_answer(response: str, expected: str) -> bool:
 # Phase 1: Concept vector extraction
 # ---------------------------------------------------------------------------
 
+
 def extract_last_layer_activation(model, tokenizer, text: str):
     """Extract mean activation from the last hidden layer for a text.
 
@@ -293,12 +294,14 @@ def find_best_direction(directions, correct_acts, hallucinated_acts):
             tn = sum(1 for p in correct_projs if p >= threshold)
 
         accuracy = (tp + tn) / (len(correct_projs) + len(halluc_projs))
-        results.append({
-            "name": dir_name,
-            "accuracy": accuracy,
-            "fisher": fisher,
-            "gap": mean_h - mean_c,
-        })
+        results.append(
+            {
+                "name": dir_name,
+                "accuracy": accuracy,
+                "fisher": fisher,
+                "gap": mean_h - mean_c,
+            }
+        )
 
     results.sort(key=lambda r: r["accuracy"], reverse=True)
     best_name = results[0]["name"]
@@ -308,6 +311,7 @@ def find_best_direction(directions, correct_acts, hallucinated_acts):
 # ---------------------------------------------------------------------------
 # Phase 2: Steering hooks
 # ---------------------------------------------------------------------------
+
 
 def make_steering_hook(direction_torch, alpha):
     """Create a forward hook that subtracts alpha * direction from hidden states.
@@ -322,16 +326,18 @@ def make_steering_hook(direction_torch, alpha):
         alpha: Steering strength. Positive alpha SUBTRACTS the direction
                (pushes away from confabulation toward certainty).
     """
+
     def hook_fn(module, input, output):
         if isinstance(output, tuple):
             hidden = output[0]
             orig_dtype = hidden.dtype
             # Truncate direction to match hidden dim (safety for mismatched dims)
-            d = direction_torch[:hidden.shape[-1]].to(device=hidden.device)
+            d = direction_torch[: hidden.shape[-1]].to(device=hidden.device)
             # float32 arithmetic, then cast back to original dtype
             modified = (hidden.float() - alpha * d.float()).to(orig_dtype)
             return (modified,) + output[1:]
         return output
+
     return hook_fn
 
 
@@ -360,10 +366,13 @@ def steer_and_evaluate(model, tokenizer, questions, direction_torch, layers, alp
 
         with torch.no_grad():
             outputs = model.generate(
-                **inputs, max_new_tokens=20, do_sample=False, temperature=1.0,
+                **inputs,
+                max_new_tokens=20,
+                do_sample=False,
+                temperature=1.0,
             )
         response = tokenizer.decode(
-            outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True
+            outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
         )
 
         # Remove hooks immediately after generation
@@ -382,6 +391,7 @@ def steer_and_evaluate(model, tokenizer, questions, direction_torch, layers, alp
 # Phase 3: Logprob rejection baseline
 # ---------------------------------------------------------------------------
 
+
 def generate_with_logprobs(model, tokenizer, question, do_sample=False, temperature=1.0):
     """Generate answer and compute mean per-token logprob."""
     import torch
@@ -396,7 +406,8 @@ def generate_with_logprobs(model, tokenizer, question, do_sample=False, temperat
 
     with torch.no_grad():
         outputs = model.generate(
-            **inputs, **gen_kwargs,
+            **inputs,
+            **gen_kwargs,
             return_dict_in_generate=True,
             output_scores=True,
         )
@@ -432,7 +443,11 @@ def logprob_rejection_baseline(model, tokenizer, questions, n_candidates=5):
         candidates = []
         for _ in range(n_candidates):
             response, mean_lp = generate_with_logprobs(
-                model, tokenizer, q, do_sample=True, temperature=0.8,
+                model,
+                tokenizer,
+                q,
+                do_sample=True,
+                temperature=0.8,
             )
             candidates.append((response, mean_lp, check_answer(response, expected)))
 
@@ -448,6 +463,7 @@ def logprob_rejection_baseline(model, tokenizer, questions, n_candidates=5):
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     print("=" * 70)
@@ -491,10 +507,13 @@ def main() -> int:
 
         with torch.no_grad():
             outputs = model.generate(
-                **inputs, max_new_tokens=20, do_sample=False, temperature=1.0,
+                **inputs,
+                max_new_tokens=20,
+                do_sample=False,
+                temperature=1.0,
             )
         response = tokenizer.decode(
-            outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True
+            outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
         )
 
         # Extract activation from generated tokens (NOT prompt — lesson from exp 9)
@@ -584,25 +603,25 @@ def main() -> int:
                 model, tokenizer, QA_PAIRS, best_dir_torch, layers, alpha
             )
             delta = acc - greedy_acc
-            fixes = sum(
-                1 for g, s in zip(greedy_results, per_q) if not g and s
+            fixes = sum(1 for g, s in zip(greedy_results, per_q) if not g and s)
+            regressions = sum(1 for g, s in zip(greedy_results, per_q) if g and not s)
+            steering_results.append(
+                {
+                    "config": config_name,
+                    "alpha": alpha,
+                    "layer_label": layer_label,
+                    "accuracy": acc,
+                    "delta": delta,
+                    "fixes": fixes,
+                    "regressions": regressions,
+                    "per_q": per_q,
+                }
             )
-            regressions = sum(
-                1 for g, s in zip(greedy_results, per_q) if g and not s
-            )
-            steering_results.append({
-                "config": config_name,
-                "alpha": alpha,
-                "layer_label": layer_label,
-                "accuracy": acc,
-                "delta": delta,
-                "fixes": fixes,
-                "regressions": regressions,
-                "per_q": per_q,
-            })
             sign = "+" if delta >= 0 else ""
-            print(f"  {config_name:<35} {acc:.0%} ({sign}{delta:.0%})  "
-                  f"fixes={fixes} reg={regressions}")
+            print(
+                f"  {config_name:<35} {acc:.0%} ({sign}{delta:.0%})  "
+                f"fixes={fixes} reg={regressions}"
+            )
 
     # Step 6: Logprob rejection baseline for comparison
     print("\n--- Step 6: Logprob rejection baseline (experiment 13 approach) ---")
@@ -610,15 +629,13 @@ def main() -> int:
         model, tokenizer, QA_PAIRS, n_candidates=5
     )
     logprob_delta = logprob_acc - greedy_acc
-    logprob_fixes = sum(
-        1 for g, r in zip(greedy_results, logprob_results) if not g and r
+    logprob_fixes = sum(1 for g, r in zip(greedy_results, logprob_results) if not g and r)
+    logprob_regressions = sum(1 for g, r in zip(greedy_results, logprob_results) if g and not r)
+    print(
+        f"  Logprob rejection (5 candidates): {logprob_acc:.0%} "
+        f"({'+' if logprob_delta >= 0 else ''}{logprob_delta:.0%})  "
+        f"fixes={logprob_fixes} reg={logprob_regressions}"
     )
-    logprob_regressions = sum(
-        1 for g, r in zip(greedy_results, logprob_results) if g and not r
-    )
-    print(f"  Logprob rejection (5 candidates): {logprob_acc:.0%} "
-          f"({'+' if logprob_delta >= 0 else ''}{logprob_delta:.0%})  "
-          f"fixes={logprob_fixes} reg={logprob_regressions}")
 
     # Step 7: Full results summary
     print(f"\n{'=' * 70}")
@@ -627,10 +644,12 @@ def main() -> int:
     print(f"  {'Config':<40} {'Acc':>5} {'Δ':>6} {'Fix':>4} {'Reg':>4} {'Net':>4}")
     print(f"  {'─' * 65}")
     print(f"  {'Greedy baseline':<40} {greedy_acc:>4.0%}   {'—':>5} {'—':>4} {'—':>4} {'—':>4}")
-    print(f"  {'Logprob rejection (5 cands)':<40} {logprob_acc:>4.0%}  "
-          f"{'+' if logprob_delta >= 0 else ''}{logprob_delta:>4.0%} "
-          f"{logprob_fixes:>4} {logprob_regressions:>4} "
-          f"{logprob_fixes - logprob_regressions:>+4}")
+    print(
+        f"  {'Logprob rejection (5 cands)':<40} {logprob_acc:>4.0%}  "
+        f"{'+' if logprob_delta >= 0 else ''}{logprob_delta:>4.0%} "
+        f"{logprob_fixes:>4} {logprob_regressions:>4} "
+        f"{logprob_fixes - logprob_regressions:>+4}"
+    )
     print(f"  {'─' * 65}")
 
     # Sort steering results by accuracy
@@ -638,9 +657,11 @@ def main() -> int:
     for r in steering_results:
         sign = "+" if r["delta"] >= 0 else ""
         net = r["fixes"] - r["regressions"]
-        print(f"  {r['config']:<40} {r['accuracy']:>4.0%}  "
-              f"{sign}{r['delta']:>4.0%} {r['fixes']:>4} "
-              f"{r['regressions']:>4} {net:>+4}")
+        print(
+            f"  {r['config']:<40} {r['accuracy']:>4.0%}  "
+            f"{sign}{r['delta']:>4.0%} {r['fixes']:>4} "
+            f"{r['regressions']:>4} {net:>+4}"
+        )
 
     # Find best steering config
     best_steer = steering_results[0]
@@ -683,9 +704,7 @@ def main() -> int:
         print("simple logprob selection. May need multi-layer targeting or")
         print("per-token steering (not just per-forward-pass).")
     elif best_steer["accuracy"] == greedy_acc:
-        print(
-            f"NEUTRAL: Best steering matches greedy baseline ({greedy_acc:.0%})."
-        )
+        print(f"NEUTRAL: Best steering matches greedy baseline ({greedy_acc:.0%}).")
         print("Concept-specific direction does not causally affect generation on")
         print("this model/task. Possible causes:")
         print("  - Qwen3-0.6B too small for concept separation to be causal")
@@ -693,8 +712,7 @@ def main() -> int:
         print("  - Need per-token adaptive alpha, not constant steering")
     else:
         print(
-            f"REGRESSION: Steering hurts ({best_steer['accuracy']:.0%} < "
-            f"{greedy_acc:.0%} greedy)."
+            f"REGRESSION: Steering hurts ({best_steer['accuracy']:.0%} < {greedy_acc:.0%} greedy)."
         )
         print("The concept direction disrupts generation. Possible causes:")
         print("  - Alpha too large → garbled outputs")

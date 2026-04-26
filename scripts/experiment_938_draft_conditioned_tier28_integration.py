@@ -40,10 +40,14 @@ if PROJECT_ROOT not in sys.path:
 
 from scripts.experiment_template import ExperimentTemplate  # noqa: E402
 
-from python.carnot.models.eorm import CoTEnergyInput, EORMModel  # noqa: E402
+from python.carnot.models.eorm import EORMModel  # noqa: E402
 from python.carnot.pipeline.draft_conditioned_verifier import DraftConditionedVerifier  # noqa: E402
 from python.carnot.pipeline.sink_probe import SinkProbe  # noqa: E402
 from python.carnot.pipeline.three_tier_pipeline import ThreeTierPipeline  # noqa: E402
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from python.carnot.models.eorm import CoTEnergyInput
 
 # ---------------------------------------------------------------------------
 # Stub helpers — keep this experiment CPU-only, no LLM required
@@ -234,8 +238,8 @@ def run_experiment() -> None:
         sink_probe=sink_probe,
         eorm_model=eorm_stub,
         ising_pipeline=ising_with,
-        sink_threshold=0.99,   # threshold so high that SinkProbe never fires
-        eorm_threshold=0.5,    # stub returns 0.9, so EORM never clears
+        sink_threshold=0.99,  # threshold so high that SinkProbe never fires
+        eorm_threshold=0.5,  # stub returns 0.9, so EORM never clears
     )
     try:
         pipeline_with.wire_tier_28(tier28_verifier)
@@ -276,24 +280,16 @@ def run_experiment() -> None:
 
         # --- Pipeline WITH Tier 2.8 ---
         # Correct response
-        _v_c_with, _t_c_with, e_c_with = pipeline_with.verify(
-            correct_resp, question=question
-        )
+        _v_c_with, _t_c_with, e_c_with = pipeline_with.verify(correct_resp, question=question)
         advisory_c = pipeline_with._last_tier28_advisory
 
         # Wrong response
-        _v_w_with, _t_w_with, e_w_with = pipeline_with.verify(
-            wrong_resp, question=question
-        )
+        _v_w_with, _t_w_with, e_w_with = pipeline_with.verify(wrong_resp, question=question)
         advisory_w = pipeline_with._last_tier28_advisory
 
         # --- Pipeline WITHOUT Tier 2.8 ---
-        _v_c_wo, _t_c_wo, e_c_wo = pipeline_without.verify(
-            correct_resp, question=question
-        )
-        _v_w_wo, _t_w_wo, e_w_wo = pipeline_without.verify(
-            wrong_resp, question=question
-        )
+        _v_c_wo, _t_c_wo, e_c_wo = pipeline_without.verify(correct_resp, question=question)
+        _v_w_wo, _t_w_wo, e_w_wo = pipeline_without.verify(wrong_resp, question=question)
 
         # Track Tier 2.8 activations (advisory is set when Tier 2.8 fires).
         activated_c = advisory_c is not None and advisory_c.get("draft_used", False)
@@ -312,16 +308,18 @@ def run_experiment() -> None:
         energies_without.append((e_c_wo, 1))
         energies_without.append((e_w_wo, 0))
 
-        per_question_results.append({
-            "question": question,
-            "correct_answer": correct_answer,
-            "energy_correct_with": round(e_c_with, 4),
-            "energy_wrong_with": round(e_w_with, 4),
-            "energy_correct_without": round(e_c_wo, 4),
-            "energy_wrong_without": round(e_w_wo, 4),
-            "tier28_activated": activated_c or activated_w,
-            "tier28_energy_delta_wrong": round(energy_delta, 4),
-        })
+        per_question_results.append(
+            {
+                "question": question,
+                "correct_answer": correct_answer,
+                "energy_correct_with": round(e_c_with, 4),
+                "energy_wrong_with": round(e_w_with, 4),
+                "energy_correct_without": round(e_c_wo, 4),
+                "energy_wrong_without": round(e_w_wo, 4),
+                "tier28_activated": activated_c or activated_w,
+                "tier28_energy_delta_wrong": round(energy_delta, 4),
+            }
+        )
 
     # ------------------------------------------------------------------
     # Compute AUC (rank-based, no sklearn dependency)
@@ -330,8 +328,7 @@ def run_experiment() -> None:
     auc_without = _compute_auc(energies_without)
 
     mean_energy_delta = (
-        sum(tier28_energy_deltas) / len(tier28_energy_deltas)
-        if tier28_energy_deltas else 0.0
+        sum(tier28_energy_deltas) / len(tier28_energy_deltas) if tier28_energy_deltas else 0.0
     )
 
     # ------------------------------------------------------------------

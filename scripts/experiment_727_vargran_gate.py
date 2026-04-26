@@ -126,12 +126,14 @@ def _build_test_set(n: int, rng: np.random.Generator) -> list[dict]:
         else:
             # Incorrect item: Ising says False (reject) with 97% probability.
             ising_verdict = bool(rng.random() < 0.03)
-        questions.append({
-            "text": f"question_{i}_high_conf",
-            "ground_truth": ground_truth,
-            "eorm_confidence": eorm_conf,
-            "ising_verdict": ising_verdict,
-        })
+        questions.append(
+            {
+                "text": f"question_{i}_high_conf",
+                "ground_truth": ground_truth,
+                "eorm_confidence": eorm_conf,
+                "ising_verdict": ising_verdict,
+            }
+        )
 
     # Low-confidence questions (EORM conf <= 0.92 — Ising always runs).
     for i in range(n_low):
@@ -142,12 +144,14 @@ def _build_test_set(n: int, rng: np.random.Generator) -> list[dict]:
             ising_verdict = bool(rng.random() < 0.95)
         else:
             ising_verdict = bool(rng.random() < 0.05)
-        questions.append({
-            "text": f"question_{i}_low_conf",
-            "ground_truth": ground_truth,
-            "eorm_confidence": eorm_conf,
-            "ising_verdict": ising_verdict,
-        })
+        questions.append(
+            {
+                "text": f"question_{i}_low_conf",
+                "ground_truth": ground_truth,
+                "eorm_confidence": eorm_conf,
+                "ising_verdict": ising_verdict,
+            }
+        )
 
     rng.shuffle(questions)
     return questions
@@ -222,11 +226,7 @@ def _false_negative_rate(
     n_positive = sum(1 for q in questions if q["ground_truth"])
     if n_positive == 0:
         return 0.0
-    n_fn = sum(
-        1
-        for r, q in zip(results, questions)
-        if q["ground_truth"] and not r.verified
-    )
+    n_fn = sum(1 for r, q in zip(results, questions) if q["ground_truth"] and not r.verified)
     return n_fn / n_positive
 
 
@@ -269,7 +269,9 @@ def main() -> None:
     skip_rate_a = sum(1 for r in results_a if r.ising_skip) / len(results_a)
     _log.info(
         "Condition A: fn_rate=%.4f skip_rate=%.4f latency_s=%.4f",
-        fn_rate_a, skip_rate_a, latency_a,
+        fn_rate_a,
+        skip_rate_a,
+        latency_a,
     )
 
     # -----------------------------------------------------------------------
@@ -286,20 +288,22 @@ def main() -> None:
     ising_skip_rate = sum(1 for r in results_b if r.ising_skip) / len(results_b)
     _log.info(
         "Condition B: fn_rate=%.4f skip_rate=%.4f latency_s=%.4f",
-        fn_rate_b, ising_skip_rate, latency_b,
+        fn_rate_b,
+        ising_skip_rate,
+        latency_b,
     )
 
     # -----------------------------------------------------------------------
     # Metrics
     # -----------------------------------------------------------------------
     fn_delta = fn_rate_b - fn_rate_a
-    latency_reduction_pct = (
-        (latency_a - latency_b) / latency_a * 100.0 if latency_a > 0 else 0.0
-    )
+    latency_reduction_pct = (latency_a - latency_b) / latency_a * 100.0 if latency_a > 0 else 0.0
 
     _log.info(
         "Results: ising_skip_rate=%.4f fn_delta=%.4f latency_reduction_pct=%.2f%%",
-        ising_skip_rate, fn_delta, latency_reduction_pct,
+        ising_skip_rate,
+        fn_delta,
+        latency_reduction_pct,
     )
 
     # -----------------------------------------------------------------------

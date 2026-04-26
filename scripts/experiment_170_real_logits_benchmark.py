@@ -94,6 +94,7 @@ logger = logging.getLogger(__name__)
 
 try:
     from sklearn.metrics import roc_auc_score
+
     _SKLEARN_AVAILABLE = True
 except ImportError:
     _SKLEARN_AVAILABLE = False
@@ -121,11 +122,7 @@ def _auroc_manual(labels: list[int], scores: list[float]) -> float:
     if not pos_scores or not neg_scores:
         return 0.5  # degenerate case
     n_pos, n_neg = len(pos_scores), len(neg_scores)
-    correct = sum(
-        1.0 if p > n else 0.5 if p == n else 0.0
-        for p in pos_scores
-        for n in neg_scores
-    )
+    correct = sum(1.0 if p > n else 0.5 if p == n else 0.0 for p in pos_scores for n in neg_scores)
     return correct / (n_pos * n_neg)
 
 
@@ -265,8 +262,8 @@ HARD_QUESTIONS: list[str] = [
 # ---------------------------------------------------------------------------
 
 # Exp 157 calibration constants
-_CORRECT_PEAK_LOGIT: float = 8.0   # creates low spilled energy ≈ 0.289
-_WRONG_NOISE_STD: float = 0.5      # flat logits → high spilled energy ≈ 5.4
+_CORRECT_PEAK_LOGIT: float = 8.0  # creates low spilled energy ≈ 0.289
+_WRONG_NOISE_STD: float = 0.5  # flat logits → high spilled energy ≈ 5.4
 _SIM_VOCAB_SIZE: int = 1000
 _SIM_N_TOKENS: int = 20
 
@@ -360,13 +357,17 @@ def _generate_with_logits(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             text = prompt
@@ -439,9 +440,7 @@ def _try_load_model() -> tuple[Any, Any, str]:
         except Exception as exc:
             logger.warning("Failed to load %s: %s", model_name, exc)
 
-    logger.warning(
-        "All target models failed to load. Using simulated logits."
-    )
+    logger.warning("All target models failed to load. Using simulated logits.")
     return None, None, "none"
 
 
@@ -478,10 +477,7 @@ def run_benchmark() -> dict:
 
     # --- Build question list ---
     # Label 0 = likely_correct (easy), label 1 = likely_hallucinated (hard)
-    all_questions = (
-        [(q, 0) for q in EASY_QUESTIONS] +
-        [(q, 1) for q in HARD_QUESTIONS]
-    )
+    all_questions = [(q, 0) for q in EASY_QUESTIONS] + [(q, 1) for q in HARD_QUESTIONS]
     assert len(all_questions) == 100, f"Expected 100 questions, got {len(all_questions)}"
 
     spilled_extractor = SpilledEnergyExtractor()
@@ -495,11 +491,12 @@ def run_benchmark() -> dict:
     # --- Per-question generation + signal extraction ---
     for q_idx, (question, label) in enumerate(all_questions):
         rng, q_rng = jrandom.split(rng)
-        is_correct = (label == 0)
+        is_correct = label == 0
 
         logger.info(
             "Q%03d/%d [%s] %s",
-            q_idx + 1, len(all_questions),
+            q_idx + 1,
+            len(all_questions),
             "easy" if is_correct else "hard",
             question[:60],
         )
@@ -529,44 +526,38 @@ def run_benchmark() -> dict:
                 logger.warning("  Falling back to simulated logits for Q%03d.", q_idx + 1)
 
         # --- Signal extraction ---
-        spilled_results = spilled_extractor.extract(
-            response_text, domain="factual", logits=logits
-        )
+        spilled_results = spilled_extractor.extract(response_text, domain="factual", logits=logits)
         lookahead_results = lookahead_extractor.extract(
             response_text, domain="factual", logits=logits
         )
 
-        spilled_val = (
-            spilled_results[0].metadata["spilled_energy"]
-            if spilled_results else 0.0
-        )
+        spilled_val = spilled_results[0].metadata["spilled_energy"] if spilled_results else 0.0
         lookahead_val = (
-            lookahead_results[0].metadata["lookahead_energy"]
-            if lookahead_results else 0.0
+            lookahead_results[0].metadata["lookahead_energy"] if lookahead_results else 0.0
         )
 
         spilled_scores.append(spilled_val)
         lookahead_scores.append(lookahead_val)
         ground_truth.append(label)
 
-        per_question_breakdown.append({
-            "question_id": q_idx + 1,
-            "question": question,
-            "difficulty": "easy" if is_correct else "hard",
-            "ground_truth": label,
-            "spilled_energy": spilled_val,
-            "lookahead_energy": lookahead_val,
-            "response_snippet": response_text[:120] if response_text else "",
-        })
+        per_question_breakdown.append(
+            {
+                "question_id": q_idx + 1,
+                "question": question,
+                "difficulty": "easy" if is_correct else "hard",
+                "ground_truth": label,
+                "spilled_energy": spilled_val,
+                "lookahead_energy": lookahead_val,
+                "response_snippet": response_text[:120] if response_text else "",
+            }
+        )
 
     # --- AUROC computation ---
     auroc_spilled = compute_auroc(ground_truth, spilled_scores)
     auroc_lookahead = compute_auroc(ground_truth, lookahead_scores)
 
     # Combined: max(spilled, lookahead) — same as Exp 169
-    combined_max_scores = [
-        max(s, l) for s, l in zip(spilled_scores, lookahead_scores)
-    ]
+    combined_max_scores = [max(s, l) for s, l in zip(spilled_scores, lookahead_scores)]
     auroc_combined_max = compute_auroc(ground_truth, combined_max_scores)
 
     # --- Grid search: optimal α for linear combination ---
@@ -577,10 +568,7 @@ def run_benchmark() -> dict:
     best_alpha = 0.5
 
     for alpha in alpha_values:
-        combined = [
-            alpha * s + (1.0 - alpha) * l
-            for s, l in zip(spilled_scores, lookahead_scores)
-        ]
+        combined = [alpha * s + (1.0 - alpha) * l for s, l in zip(spilled_scores, lookahead_scores)]
         auroc = compute_auroc(ground_truth, combined)
         alpha_aurocs.append({"alpha": alpha, "auroc": auroc})
         if auroc > best_auroc:
@@ -644,29 +632,43 @@ def _print_results(results: dict) -> None:
     print("Experiment 170 — Real Logits Benchmark Results")
     print("=" * 70)
     print(f"  Logits source:  {results['logits_source']} (model: {results['model_used']})")
-    print(f"  Questions:      {results['n_questions']} ({results['n_easy']} easy, {results['n_hard']} hard)")
+    print(
+        f"  Questions:      {results['n_questions']} ({results['n_easy']} easy, {results['n_hard']} hard)"
+    )
     print()
 
     t = results["targets"]
-    print(f"  SpilledEnergy AUROC:           {results['spilled_auroc']:.4f}  "
-          f"(target ≥ {t['spilled_auroc_target']}, "
-          f"{'✓ MET' if t['spilled_auroc_met'] else '✗ NOT MET'})")
-    print(f"  LookaheadEnergy AUROC:         {results['lookahead_auroc']:.4f}  "
-          f"(target ≥ {t['lookahead_auroc_target']}, "
-          f"{'✓ MET' if t['lookahead_auroc_met'] else '✗ NOT MET'})")
+    print(
+        f"  SpilledEnergy AUROC:           {results['spilled_auroc']:.4f}  "
+        f"(target ≥ {t['spilled_auroc_target']}, "
+        f"{'✓ MET' if t['spilled_auroc_met'] else '✗ NOT MET'})"
+    )
+    print(
+        f"  LookaheadEnergy AUROC:         {results['lookahead_auroc']:.4f}  "
+        f"(target ≥ {t['lookahead_auroc_target']}, "
+        f"{'✓ MET' if t['lookahead_auroc_met'] else '✗ NOT MET'})"
+    )
     print(f"  Combined (max) AUROC:          {results['combined_max_auroc']:.4f}")
-    print(f"  Combined (optimal α) AUROC:    {results['combined_optimal_auroc']:.4f}  "
-          f"(α={results['optimal_alpha']:.1f}, "
-          f"{'✓ beats individual' if t['combined_beats_individual'] else '✗ does NOT beat individual'})")
+    print(
+        f"  Combined (optimal α) AUROC:    {results['combined_optimal_auroc']:.4f}  "
+        f"(α={results['optimal_alpha']:.1f}, "
+        f"{'✓ beats individual' if t['combined_beats_individual'] else '✗ does NOT beat individual'})"
+    )
     print()
-    print(f"  FactualExtractor accuracy:     {results['factual_extractor_accuracy_pct']:.1f}%  "
-          f"(Exp 158 baseline — KB-backed comparison)")
+    print(
+        f"  FactualExtractor accuracy:     {results['factual_extractor_accuracy_pct']:.1f}%  "
+        f"(Exp 158 baseline — KB-backed comparison)"
+    )
     print()
     print("  Mean energies by difficulty:")
-    print(f"    Spilled   — easy: {results['mean_spilled_easy']:.4f}, "
-          f"hard: {results['mean_spilled_hard']:.4f}")
-    print(f"    Lookahead — easy: {results['mean_lookahead_easy']:.4f}, "
-          f"hard: {results['mean_lookahead_hard']:.4f}")
+    print(
+        f"    Spilled   — easy: {results['mean_spilled_easy']:.4f}, "
+        f"hard: {results['mean_spilled_hard']:.4f}"
+    )
+    print(
+        f"    Lookahead — easy: {results['mean_lookahead_easy']:.4f}, "
+        f"hard: {results['mean_lookahead_hard']:.4f}"
+    )
     print()
     print("  Alpha grid search (α * spilled + (1-α) * lookahead):")
     for row in results["alpha_sweep"]:
@@ -674,11 +676,7 @@ def _print_results(results: dict) -> None:
         print(f"    α={row['alpha']:.1f}: AUROC={row['auroc']:.4f}{marker}")
     print("=" * 70)
 
-    all_met = (
-        t["spilled_auroc_met"]
-        and t["lookahead_auroc_met"]
-        and t["combined_beats_individual"]
-    )
+    all_met = t["spilled_auroc_met"] and t["lookahead_auroc_met"] and t["combined_beats_individual"]
     if all_met:
         print("\nAll targets met.")
     else:
@@ -704,9 +702,5 @@ if __name__ == "__main__":
     save_results(results)
 
     t = results["targets"]
-    all_met = (
-        t["spilled_auroc_met"]
-        and t["lookahead_auroc_met"]
-        and t["combined_beats_individual"]
-    )
+    all_met = t["spilled_auroc_met"] and t["lookahead_auroc_met"] and t["combined_beats_individual"]
     sys.exit(0 if all_met else 1)

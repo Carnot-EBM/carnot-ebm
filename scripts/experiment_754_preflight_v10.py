@@ -99,10 +99,7 @@ def check_exp527_excluded(manifest_path: Path) -> tuple[bool, int]:
     except (json.JSONDecodeError, OSError):
         return False, 0
     entries = raw.get("excluded", [])
-    exp527_excluded = any(
-        str(e.get("experiment_id", "")).lower() == "527"
-        for e in entries
-    )
+    exp527_excluded = any(str(e.get("experiment_id", "")).lower() == "527" for e in entries)
     return exp527_excluded, len(entries)
 
 

@@ -171,31 +171,19 @@ def build_baseline_prompt(question: str, domain: str) -> str:
         injection.
     """
     if domain == "arithmetic":
-        return (
-            f"Question: {question}\n"
-            f"Give the answer as a number.\n"
-            f"Format:\n"
-            f"Answer: <number>"
-        )
+        return f"Question: {question}\nGive the answer as a number.\nFormat:\nAnswer: <number>"
     elif domain == "logic":
-        return (
-            f"Question: {question}\n"
-            f"Give a clear answer.\n"
-            f"Format:\n"
-            f"Answer: <your answer>"
-        )
+        return f"Question: {question}\nGive a clear answer.\nFormat:\nAnswer: <your answer>"
     else:  # factual
         return (
-            f"Question: {question}\n"
-            f"Give a short, direct factual answer.\n"
-            f"Format:\n"
-            f"Answer: <answer>"
+            f"Question: {question}\nGive a short, direct factual answer.\nFormat:\nAnswer: <answer>"
         )
 
 
 # ---------------------------------------------------------------------------
 # 2. Test questions — 15 questions (5 per domain)
 # ---------------------------------------------------------------------------
+
 
 def _extract_number(text: str) -> float | None:
     """Pull the last number from a string (usually the final answer).
@@ -256,8 +244,7 @@ def get_test_questions() -> list[dict[str, Any]]:
         {
             "domain": "arithmetic",
             "question": (
-                "A store has 45 apples. They sell 18, receive 23, "
-                "then sell 12. How many remain?"
+                "A store has 45 apples. They sell 18, receive 23, then sell 12. How many remain?"
             ),
             "ground_truth": "38",
             "check_answer": lambda ans: _extract_number(ans) == 38,
@@ -278,7 +265,9 @@ def get_test_questions() -> list[dict[str, Any]]:
                 "do all roses fade quickly? Answer yes or no."
             ),
             "ground_truth": "no",
-            "check_answer": lambda ans: "no" in ans.lower() and "yes" not in ans.lower().split("no")[0],
+            "check_answer": lambda ans: (
+                "no" in ans.lower() and "yes" not in ans.lower().split("no")[0]
+            ),
             "why_tricky": "Tempts 'yes' via association: roses→flowers→fade.",
         },
         {
@@ -294,8 +283,7 @@ def get_test_questions() -> list[dict[str, Any]]:
         {
             "domain": "logic",
             "question": (
-                "If A implies B, and B is false, is A true or false? "
-                "Answer 'true' or 'false'."
+                "If A implies B, and B is false, is A true or false? Answer 'true' or 'false'."
             ),
             "ground_truth": "false",
             "check_answer": lambda ans: "false" in ans.lower(),
@@ -328,9 +316,7 @@ def get_test_questions() -> list[dict[str, Any]]:
             "domain": "factual",
             "question": "What is the capital of Myanmar?",
             "ground_truth": "Naypyidaw",
-            "check_answer": lambda ans: (
-                "naypyidaw" in ans.lower() or "nay pyi taw" in ans.lower()
-            ),
+            "check_answer": lambda ans: "naypyidaw" in ans.lower() or "nay pyi taw" in ans.lower(),
             "why_tricky": "Most people (and LLMs) say Yangon/Rangoon.",
         },
         {
@@ -368,6 +354,7 @@ def get_test_questions() -> list[dict[str, Any]]:
 # 3. LLM generation (live or simulated)
 # ---------------------------------------------------------------------------
 
+
 def generate_with_llm(
     prompt: str,
     tokenizer: Any,
@@ -389,13 +376,17 @@ def generate_with_llm(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         # Older tokenizer versions may not support enable_thinking.
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
         )
 
     inputs = tokenizer(text, return_tensors="pt")
@@ -411,7 +402,7 @@ def generate_with_llm(
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:],
+        outputs[0, inputs["input_ids"].shape[1] :],
         skip_special_tokens=True,
     )
 
@@ -425,6 +416,7 @@ def generate_with_llm(
 # ---------------------------------------------------------------------------
 # 4. Constraint extraction (reuses Exp 56 pipeline)
 # ---------------------------------------------------------------------------
+
 
 def extract_constraints(response: str, question: str, domain: str) -> list[dict]:
     """Extract and verify constraints from LLM output, dispatching by domain.
@@ -456,6 +448,7 @@ def extract_constraints(response: str, question: str, domain: str) -> list[dict]
 # ---------------------------------------------------------------------------
 # 5. Verify-repair loop (reused from Exp 57 for Mode C)
 # ---------------------------------------------------------------------------
+
 
 def format_violations(constraints: list[dict], domain: str) -> str:
     """Convert constraint violations into natural language repair feedback.
@@ -555,13 +548,15 @@ def run_with_repair(
         n_violated = sum(1 for c in constraints if c.get("satisfied") is False)
         answer_correct = check_answer(response)
 
-        iterations.append({
-            "iteration": iteration,
-            "response": response,
-            "answer_correct": answer_correct,
-            "constraints": constraints,
-            "n_violated": n_violated,
-        })
+        iterations.append(
+            {
+                "iteration": iteration,
+                "response": response,
+                "answer_correct": answer_correct,
+                "constraints": constraints,
+                "n_violated": n_violated,
+            }
+        )
 
         # Stop if no violations or max iterations reached.
         if n_violated == 0 or iteration == max_iters:
@@ -578,6 +573,7 @@ def run_with_repair(
 # ---------------------------------------------------------------------------
 # 6. Simulated LLM outputs for all three modes
 # ---------------------------------------------------------------------------
+
 
 def get_simulated_outputs() -> dict[str, dict[str, Any]]:
     """Simulated outputs for baseline, constraint-aware, and combined modes.
@@ -599,27 +595,29 @@ def get_simulated_outputs() -> dict[str, dict[str, Any]]:
     return {
         # --- Arithmetic ---
         "What is 97 + 86?": {
-            "baseline": "Answer: 173",           # Wrong (no carry)
+            "baseline": "Answer: 173",  # Wrong (no carry)
             "constraint": "Steps: 97+86. 7+6=13, carry 1. 9+8+1=18. Answer: 183",  # Correct
-            "combined": ["Steps: 97+86. 7+6=13, carry 1. 9+8+1=18. Answer: 183"],  # Correct first try
+            "combined": [
+                "Steps: 97+86. 7+6=13, carry 1. 9+8+1=18. Answer: 183"
+            ],  # Correct first try
         },
         "What is 256 - 178?": {
-            "baseline": "Answer: 88",             # Wrong (borrowing error)
+            "baseline": "Answer: 88",  # Wrong (borrowing error)
             "constraint": "Steps: 256-178. 6-8 borrow: 16-8=8. 4-7 borrow: 14-7=7. 1-1=0. Answer: 78",  # Correct
             "combined": ["Steps: 256-178. Answer: 78"],
         },
         "What is 13 * 17?": {
-            "baseline": "Answer: 211",            # Wrong
+            "baseline": "Answer: 211",  # Wrong
             "constraint": "Steps: 13*17. 13*10=130. 13*7=91. 130+91=221. Verification: 221/13=17. Answer: 221",  # Correct
             "combined": ["Steps: 13*17=221. Answer: 221"],
         },
         "A store has 45 apples. They sell 18, receive 23, then sell 12. How many remain?": {
-            "baseline": "Answer: 40",             # Wrong (missed a step)
+            "baseline": "Answer: 40",  # Wrong (missed a step)
             "constraint": "Steps: 45-18=27. 27+23=50. 50-12=38. Verification: 38+12=50, 50-23=27, 27+18=45. Answer: 38",  # Correct
             "combined": ["Steps: 45-18=27, 27+23=50, 50-12=38. Answer: 38"],
         },
         "What is 7 * 8 + 3 * 9?": {
-            "baseline": "Answer: 83",             # Correct (easy one)
+            "baseline": "Answer: 83",  # Correct (easy one)
             "constraint": "Steps: 7*8=56. 3*9=27. 56+27=83. Verification: correct. Answer: 83",  # Correct
             "combined": ["Steps: 56+27=83. Answer: 83"],
         },
@@ -628,23 +626,20 @@ def get_simulated_outputs() -> dict[str, dict[str, Any]]:
             "If all roses are flowers, and some flowers fade quickly, "
             "do all roses fade quickly? Answer yes or no."
         ): {
-            "baseline": "Answer: Yes",            # Wrong (invalid syllogism)
+            "baseline": "Answer: Yes",  # Wrong (invalid syllogism)
             "constraint": (
                 "Premises: 1. All roses are flowers. 2. Some flowers fade quickly.\n"
                 "Reasoning: 'Some flowers' does not mean 'all flowers'. Roses are "
                 "flowers, but only SOME flowers fade quickly. We cannot conclude all "
                 "roses fade quickly.\nAnswer: No"
             ),  # Correct — constraint about 'some vs all' helped
-            "combined": [
-                "Premises: All roses are flowers. Some flowers fade quickly.\n"
-                "Answer: No"
-            ],
+            "combined": ["Premises: All roses are flowers. Some flowers fade quickly.\nAnswer: No"],
         },
         (
             "If no fish are mammals, and all dolphins are mammals, "
             "are dolphins fish? Answer yes or no."
         ): {
-            "baseline": "Answer: No",             # Correct
+            "baseline": "Answer: No",  # Correct
             "constraint": (
                 "Premises: 1. No fish are mammals. 2. All dolphins are mammals.\n"
                 "Reasoning: Dolphins are mammals. No fish are mammals. Therefore "
@@ -652,11 +647,8 @@ def get_simulated_outputs() -> dict[str, dict[str, Any]]:
             ),
             "combined": ["Answer: No"],
         },
-        (
-            "If A implies B, and B is false, is A true or false? "
-            "Answer 'true' or 'false'."
-        ): {
-            "baseline": "Answer: true",           # Wrong (contrapositive error)
+        ("If A implies B, and B is false, is A true or false? Answer 'true' or 'false'."): {
+            "baseline": "Answer: true",  # Wrong (contrapositive error)
             "constraint": (
                 "Premises: 1. A implies B. 2. B is false.\n"
                 "Reasoning: By modus tollens, if A→B and ¬B, then ¬A. "
@@ -669,7 +661,7 @@ def get_simulated_outputs() -> dict[str, dict[str, Any]]:
             "in another. If he combines them all in one field, how "
             "many haystacks does he have?"
         ): {
-            "baseline": "Answer: 9",              # Wrong (trick question)
+            "baseline": "Answer: 9",  # Wrong (trick question)
             "constraint": (
                 "Reasoning: This is a trick question. If you combine ALL haystacks "
                 "into one field, they merge into a single large haystack.\n"
@@ -682,7 +674,7 @@ def get_simulated_outputs() -> dict[str, dict[str, Any]]:
             "how many minutes does it take 100 machines to make "
             "100 widgets?"
         ): {
-            "baseline": "Answer: 100",            # Wrong (classic trap)
+            "baseline": "Answer: 100",  # Wrong (classic trap)
             "constraint": (
                 "Premises: 5 machines make 5 widgets in 5 minutes.\n"
                 "Reasoning: Each machine makes 1 widget in 5 minutes. So 100 "
@@ -693,7 +685,7 @@ def get_simulated_outputs() -> dict[str, dict[str, Any]]:
         },
         # --- Factual ---
         "What is the capital of Myanmar?": {
-            "baseline": "Answer: Yangon",         # Wrong (old capital)
+            "baseline": "Answer: Yangon",  # Wrong (old capital)
             "constraint": (
                 "Common misconception: Many think Yangon (formerly Rangoon) is the "
                 "capital, but Myanmar moved its capital to Naypyidaw in 2006.\n"
@@ -702,7 +694,7 @@ def get_simulated_outputs() -> dict[str, dict[str, Any]]:
             "combined": ["Answer: Naypyidaw"],
         },
         "What is the largest desert in the world by area?": {
-            "baseline": "Answer: Sahara",         # Wrong
+            "baseline": "Answer: Sahara",  # Wrong
             "constraint": (
                 "Common misconception: Most people say Sahara, but the question asks "
                 "by area. The Antarctic desert (14 million km²) is larger than the "
@@ -712,7 +704,7 @@ def get_simulated_outputs() -> dict[str, dict[str, Any]]:
             "combined": ["Answer: Antarctic Desert"],
         },
         "How many states does the United States have?": {
-            "baseline": "Answer: 50",             # Correct
+            "baseline": "Answer: 50",  # Correct
             "constraint": (
                 "Common misconception: Some confuse states with territories. "
                 "The US has 50 states (not counting territories like Puerto Rico).\n"
@@ -721,7 +713,7 @@ def get_simulated_outputs() -> dict[str, dict[str, Any]]:
             "combined": ["Answer: 50"],
         },
         "What is the smallest country in the world by area?": {
-            "baseline": "Answer: Vatican City",   # Correct
+            "baseline": "Answer: Vatican City",  # Correct
             "constraint": (
                 "Common misconception: Sometimes confused with Monaco. "
                 "Vatican City at 0.44 km² is the smallest.\n"
@@ -730,7 +722,7 @@ def get_simulated_outputs() -> dict[str, dict[str, Any]]:
             "combined": ["Answer: Vatican City"],
         },
         "In what year did the Berlin Wall fall?": {
-            "baseline": "Answer: 1991",           # Wrong (confused with USSR)
+            "baseline": "Answer: 1991",  # Wrong (confused with USSR)
             "constraint": (
                 "Common misconception: Often confused with German reunification "
                 "(1990) or the fall of the USSR (1991). The Berlin Wall fell on "
@@ -745,6 +737,7 @@ def get_simulated_outputs() -> dict[str, dict[str, Any]]:
 # ---------------------------------------------------------------------------
 # 7. Main experiment runner
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     """Run the full constraint prompting experiment across three modes."""
@@ -775,10 +768,12 @@ def main() -> int:
             try:
                 print(f"\n  Loading {model_name} on {device}...")
                 tokenizer = AutoTokenizer.from_pretrained(
-                    model_name, trust_remote_code=True,
+                    model_name,
+                    trust_remote_code=True,
                 )
                 model = AutoModelForCausalLM.from_pretrained(
-                    model_name, trust_remote_code=True,
+                    model_name,
+                    trust_remote_code=True,
                     dtype=torch.float16 if device == "cuda" else None,
                 )
                 if device == "cuda":
@@ -825,15 +820,17 @@ def main() -> int:
         n_satisfied_a = sum(1 for c in constraints_a if c.get("satisfied") is True)
         n_total_a = len(constraints_a)
 
-        mode_results["baseline"].append({
-            "question": question_text,
-            "domain": domain,
-            "ground_truth": q["ground_truth"],
-            "response": response_a,
-            "correct": correct_a,
-            "n_constraints": n_total_a,
-            "n_satisfied": n_satisfied_a,
-        })
+        mode_results["baseline"].append(
+            {
+                "question": question_text,
+                "domain": domain,
+                "ground_truth": q["ground_truth"],
+                "response": response_a,
+                "correct": correct_a,
+                "n_constraints": n_total_a,
+                "n_satisfied": n_satisfied_a,
+            }
+        )
 
         # --- Mode B: Constraint-aware ---
         if use_live_llm:
@@ -848,15 +845,17 @@ def main() -> int:
         n_satisfied_b = sum(1 for c in constraints_b if c.get("satisfied") is True)
         n_total_b = len(constraints_b)
 
-        mode_results["constraint"].append({
-            "question": question_text,
-            "domain": domain,
-            "ground_truth": q["ground_truth"],
-            "response": response_b,
-            "correct": correct_b,
-            "n_constraints": n_total_b,
-            "n_satisfied": n_satisfied_b,
-        })
+        mode_results["constraint"].append(
+            {
+                "question": question_text,
+                "domain": domain,
+                "ground_truth": q["ground_truth"],
+                "response": response_b,
+                "correct": correct_b,
+                "n_constraints": n_total_b,
+                "n_satisfied": n_satisfied_b,
+            }
+        )
 
         # --- Mode C: Combined (constraint prompt + repair loop) ---
         sim_combined = None
@@ -881,22 +880,25 @@ def main() -> int:
         n_satisfied_c = sum(1 for c in constraints_c if c.get("satisfied") is True)
         n_total_c = len(constraints_c)
 
-        mode_results["combined"].append({
-            "question": question_text,
-            "domain": domain,
-            "ground_truth": q["ground_truth"],
-            "response": final_iter["response"],
-            "correct": combined_result["final_correct"],
-            "n_constraints": n_total_c,
-            "n_satisfied": n_satisfied_c,
-            "n_repairs": combined_result["n_repairs"],
-            "initial_correct": combined_result["initial_correct"],
-        })
+        mode_results["combined"].append(
+            {
+                "question": question_text,
+                "domain": domain,
+                "ground_truth": q["ground_truth"],
+                "response": final_iter["response"],
+                "correct": combined_result["final_correct"],
+                "n_constraints": n_total_c,
+                "n_satisfied": n_satisfied_c,
+                "n_repairs": combined_result["n_repairs"],
+                "initial_correct": combined_result["initial_correct"],
+            }
+        )
 
     # --- Free LLM memory ---
     if use_live_llm:
         del model, tokenizer
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
         gc.collect()
@@ -922,14 +924,13 @@ def main() -> int:
         print(f"      Ground truth: {q['ground_truth']}")
         print(f"      A (baseline):    [{icon_a}] {r_a['response'][:60].replace(chr(10), ' ')}")
         print(f"      B (constraint):  [{icon_b}] {r_b['response'][:60].replace(chr(10), ' ')}")
-        resp_c = r_c['response'][:60].replace(chr(10), ' ')
-        repair_note = f" ({r_c['n_repairs']} repairs)" if r_c.get('n_repairs', 0) > 0 else ""
+        resp_c = r_c["response"][:60].replace(chr(10), " ")
+        repair_note = f" ({r_c['n_repairs']} repairs)" if r_c.get("n_repairs", 0) > 0 else ""
         print(f"      C (combined):    [{icon_c}] {resp_c}{repair_note}")
 
     # --- Aggregate metrics ---
     print(f"\n{sep}")
-    print(f"EXPERIMENT 59 RESULTS ({elapsed:.1f}s) "
-          f"[{'LIVE LLM' if use_live_llm else 'SIMULATED'}]")
+    print(f"EXPERIMENT 59 RESULTS ({elapsed:.1f}s) [{'LIVE LLM' if use_live_llm else 'SIMULATED'}]")
     print(sep)
 
     n_total = len(questions)
@@ -952,13 +953,19 @@ def main() -> int:
 
         print(f"\n  {mode_label}:")
         print(f"    Accuracy:                {n_correct}/{n_total} ({accuracy:.0%})")
-        print(f"    Hallucination rate:      {n_total - n_correct}/{n_total} ({hallucination_rate:.0%})")
-        print(f"    Constraint satisfaction: {total_satisfied}/{total_constraints} ({csat_rate:.0%})")
+        print(
+            f"    Hallucination rate:      {n_total - n_correct}/{n_total} ({hallucination_rate:.0%})"
+        )
+        print(
+            f"    Constraint satisfaction: {total_satisfied}/{total_constraints} ({csat_rate:.0%})"
+        )
 
         if mode_name == "combined":
             n_repairs_total = sum(r.get("n_repairs", 0) for r in results)
             n_first_try = sum(1 for r in results if r.get("initial_correct", False))
-            print(f"    First-try accuracy:      {n_first_try}/{n_total} ({n_first_try / n_total:.0%})")
+            print(
+                f"    First-try accuracy:      {n_first_try}/{n_total} ({n_first_try / n_total:.0%})"
+            )
             print(f"    Total repair iterations: {n_repairs_total}")
 
     # --- Per-domain breakdown ---
@@ -972,13 +979,13 @@ def main() -> int:
 
         counts = {}
         for mode_name in ["baseline", "constraint", "combined"]:
-            n_correct = sum(
-                1 for i in domain_indices if mode_results[mode_name][i]["correct"]
-            )
+            n_correct = sum(1 for i in domain_indices if mode_results[mode_name][i]["correct"])
             counts[mode_name] = f"{n_correct}/{d_total}"
 
-        print(f"  {domain:12s} {counts['baseline']:>10s} "
-              f"{counts['constraint']:>12s} {counts['combined']:>10s}")
+        print(
+            f"  {domain:12s} {counts['baseline']:>10s} "
+            f"{counts['constraint']:>12s} {counts['combined']:>10s}"
+        )
 
     # --- Improvement analysis ---
     print(f"\n  Improvement analysis:")
@@ -1025,20 +1032,28 @@ def main() -> int:
 
     print(f"\n  VERDICT:")
     if accuracy_b > accuracy_a:
-        print(f"    Constraint prompting improved accuracy: "
-              f"{accuracy_a:.0%} -> {accuracy_b:.0%} (+{improve_b_over_a})")
+        print(
+            f"    Constraint prompting improved accuracy: "
+            f"{accuracy_a:.0%} -> {accuracy_b:.0%} (+{improve_b_over_a})"
+        )
         print(f"    Preventive constraints reduce hallucination AT GENERATION TIME.")
     else:
-        print(f"    Constraint prompting did not improve over baseline "
-              f"({accuracy_a:.0%} -> {accuracy_b:.0%})")
+        print(
+            f"    Constraint prompting did not improve over baseline "
+            f"({accuracy_a:.0%} -> {accuracy_b:.0%})"
+        )
 
     if accuracy_c > accuracy_b:
-        print(f"    Combined mode added further improvement: "
-              f"{accuracy_b:.0%} -> {accuracy_c:.0%} (+{improve_c_over_b})")
+        print(
+            f"    Combined mode added further improvement: "
+            f"{accuracy_b:.0%} -> {accuracy_c:.0%} (+{improve_c_over_b})"
+        )
         print(f"    Preventive + corrective is the strongest configuration.")
     elif accuracy_c == accuracy_b and accuracy_b > accuracy_a:
-        print(f"    Combined mode matched constraint-aware ({accuracy_c:.0%}) — "
-              f"constraints alone were sufficient for these questions.")
+        print(
+            f"    Combined mode matched constraint-aware ({accuracy_c:.0%}) — "
+            f"constraints alone were sufficient for these questions."
+        )
 
     print(f"\n  Architecture: Constraints → LLM prompt → answer → Carnot verify → repair")
     print(f"  Key insight: injecting constraints BEFORE generation is more efficient")

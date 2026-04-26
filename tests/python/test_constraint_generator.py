@@ -148,7 +148,9 @@ class TestExtractPatterns:
         """Precision = 0.0 when no cases are improved."""
         mod = load_module()
         cm = _make_case_memory()
-        _record(cm=cm, violation_types=("sign_error:x",), repair_outcome="unchanged_failure", support=4)
+        _record(
+            cm=cm, violation_types=("sign_error:x",), repair_outcome="unchanged_failure", support=4
+        )
         [pattern] = mod.extract_patterns(cm, min_support=3)
         assert pattern.observed_precision == pytest.approx(0.0)
 
@@ -157,7 +159,9 @@ class TestExtractPatterns:
         mod = load_module()
         cm = _make_case_memory()
         _record(cm=cm, violation_types=("carry_error:x",), repair_outcome="improved", support=3)
-        _record(cm=cm, violation_types=("carry_error:y",), repair_outcome="unchanged_failure", support=2)
+        _record(
+            cm=cm, violation_types=("carry_error:y",), repair_outcome="unchanged_failure", support=2
+        )
         [pattern] = mod.extract_patterns(cm, min_support=3)
         assert pattern.observed_precision == pytest.approx(3 / 5)
         assert pattern.support_count == 5
@@ -187,7 +191,9 @@ class TestExtractPatterns:
         """example_violations are non-empty strings from violation_types."""
         mod = load_module()
         cm = _make_case_memory()
-        _record(cm=cm, violation_types=("carry_error:cascade",), repair_outcome="improved", support=3)
+        _record(
+            cm=cm, violation_types=("carry_error:cascade",), repair_outcome="improved", support=3
+        )
         [pattern] = mod.extract_patterns(cm, min_support=3)
         assert len(pattern.example_violations) >= 1
 
@@ -203,7 +209,9 @@ class TestExtractPatterns:
         """Families not in _FAMILY_TEMPLATES get the generic fallback pattern_type."""
         mod = load_module()
         cm = _make_case_memory()
-        _record(cm=cm, violation_types=("zzz_unknown_family:x",), repair_outcome="improved", support=3)
+        _record(
+            cm=cm, violation_types=("zzz_unknown_family:x",), repair_outcome="improved", support=3
+        )
         [pattern] = mod.extract_patterns(cm, min_support=3)
         assert pattern.violation_family == "zzz_unknown_family"
         # Fallback pattern_type is used for unknown families
@@ -507,7 +515,9 @@ class TestConstraintGenerator:
         cm = _make_case_memory()
         # 1 improved out of 5 → precision=0.2, well below 0.85
         _record(cm=cm, violation_types=("sign_error:x",), repair_outcome="improved", support=1)
-        _record(cm=cm, violation_types=("sign_error:y",), repair_outcome="unchanged_failure", support=4)
+        _record(
+            cm=cm, violation_types=("sign_error:y",), repair_outcome="unchanged_failure", support=4
+        )
 
         class DummyExtractor:
             pass
@@ -576,7 +586,9 @@ class TestConstraintGenerator:
         # High precision carry_error → should be added
         _record(cm=cm, violation_types=("carry_error:x",), repair_outcome="improved", support=5)
         # Low precision sign_error → rejected_soundness
-        _record(cm=cm, violation_types=("sign_error:y",), repair_outcome="unchanged_failure", support=5)
+        _record(
+            cm=cm, violation_types=("sign_error:y",), repair_outcome="unchanged_failure", support=5
+        )
         # magnitude_error → already_exists
         _record(cm=cm, violation_types=("magnitude_error:z",), repair_outcome="improved", support=5)
 

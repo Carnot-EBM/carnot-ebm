@@ -46,13 +46,11 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-import os
 import re
 import subprocess
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import List, Optional
 
 logger = logging.getLogger("conductor.audit")
 
@@ -63,8 +61,23 @@ AUDIT_LOG = PROJECT_ROOT / "ops" / "conductor-audit.jsonl"
 
 # File extensions considered "source code" (as opposed to data or docs).
 CODE_EXTENSIONS = frozenset(
-    {".py", ".rs", ".toml", ".yaml", ".yml", ".json", ".ts", ".js",
-     ".sh", ".bash", ".zsh", ".fish", ".html", ".css", ".md"}
+    {
+        ".py",
+        ".rs",
+        ".toml",
+        ".yaml",
+        ".yml",
+        ".json",
+        ".ts",
+        ".js",
+        ".sh",
+        ".bash",
+        ".zsh",
+        ".fish",
+        ".html",
+        ".css",
+        ".md",
+    }
 )
 
 # Security-sensitive file patterns — access by an autonomous agent should be
@@ -88,8 +101,14 @@ MASS_DELETE_THRESHOLD = 5
 # Network-access indicators in agent output — substrings that suggest the
 # agent made unexpected outbound calls beyond the project scope.
 NETWORK_INDICATORS = (
-    "curl ", "wget ", "requests.get(", "urllib.request", "http.client",
-    "socket.connect", "paramiko", "ftplib",
+    "curl ",
+    "wget ",
+    "requests.get(",
+    "urllib.request",
+    "http.client",
+    "socket.connect",
+    "paramiko",
+    "ftplib",
 )
 
 
@@ -105,9 +124,9 @@ class AuditEvent:
     """
 
     timestamp: str
-    event_type: str          # "agent_invocation" | "git_commit" | "file_modification" | "anomaly"
-    details: dict            # event-specific fields (varies by type)
-    anomalies: List[str] = field(default_factory=list)
+    event_type: str  # "agent_invocation" | "git_commit" | "file_modification" | "anomaly"
+    details: dict  # event-specific fields (varies by type)
+    anomalies: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -123,8 +142,8 @@ class MilestoneSummary:
     total_commits: int
     total_file_modifications: int
     total_anomalies: int
-    anomaly_breakdown: dict      # {anomaly_type: count}
-    top_modified_files: List[str]
+    anomaly_breakdown: dict  # {anomaly_type: count}
+    top_modified_files: list[str]
     avg_agent_duration_s: float
     total_lines_added: int
     total_lines_removed: int
@@ -218,9 +237,7 @@ class ConductorAudit:
         }
         anomalies = self._detect_commit_anomalies(files_changed, lines_removed)
         self._write_event("git_commit", details, anomalies)
-        self._commit_stats.append(
-            {"lines_added": lines_added, "lines_removed": lines_removed}
-        )
+        self._commit_stats.append({"lines_added": lines_added, "lines_removed": lines_removed})
         return anomalies
 
     def log_file_modification(
@@ -277,6 +294,7 @@ class ConductorAudit:
 
         # Top 10 most frequently modified files
         from collections import Counter
+
         top_files = [f for f, _ in Counter(self._file_mods).most_common(10)]
 
         total_anomalies = sum(self._anomaly_counts.values())
@@ -311,14 +329,10 @@ class ConductorAudit:
         lower = output_snippet.lower()
         for indicator in NETWORK_INDICATORS:
             if indicator.lower() in lower:
-                found.append(
-                    f"Unexpected network indicator in agent output: '{indicator}'"
-                )
+                found.append(f"Unexpected network indicator in agent output: '{indicator}'")
         return found
 
-    def _detect_commit_anomalies(
-        self, files_changed: list[str], lines_removed: int
-    ) -> list[str]:
+    def _detect_commit_anomalies(self, files_changed: list[str], lines_removed: int) -> list[str]:
         """Detect anomalies in a git commit.
 
         Rules:
@@ -332,16 +346,13 @@ class ConductorAudit:
         # Rule 1: conductor self-modification
         for f in files_changed:
             if f == CONDUCTOR_SCRIPT or f.endswith("/" + CONDUCTOR_SCRIPT):
-                found.append(
-                    f"Conductor self-modification detected: {f} was changed"
-                )
+                found.append(f"Conductor self-modification detected: {f} was changed")
 
         # Rule 2: mass deletion (lines_removed is a proxy; file count is better
         # but we use the provided list to count actual deletions vs modifications)
         if len(files_changed) >= MASS_DELETE_THRESHOLD and lines_removed > 200:
             found.append(
-                f"Mass file change: {len(files_changed)} files, "
-                f"{lines_removed} lines removed"
+                f"Mass file change: {len(files_changed)} files, {lines_removed} lines removed"
             )
 
         # Rule 3: security-sensitive file access
@@ -363,9 +374,7 @@ class ConductorAudit:
         found = []
 
         if path == CONDUCTOR_SCRIPT or path.endswith("/" + CONDUCTOR_SCRIPT):
-            found.append(
-                f"Conductor self-modification detected: {path} was modified"
-            )
+            found.append(f"Conductor self-modification detected: {path} was modified")
 
         for pat in SECURITY_PATTERNS:
             if pat.search(path):
@@ -394,9 +403,7 @@ class ConductorAudit:
             anomalies=anomalies,
         )
         if anomalies:
-            logger.warning(
-                "AUDIT ANOMALY [%s]: %s", event_type, "; ".join(anomalies)
-            )
+            logger.warning("AUDIT ANOMALY [%s]: %s", event_type, "; ".join(anomalies))
             for a in anomalies:
                 # Bucket by first few words to get a stable category key
                 key = " ".join(a.split()[:4])
@@ -469,7 +476,7 @@ def collect_staged_files() -> list[str]:
 
 def _utcnow() -> str:
     """Return the current UTC time as an ISO-8601 string."""
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 # ── CLI entry point ───────────────────────────────────────────────────────────
@@ -522,7 +529,7 @@ def main() -> None:
     if args.anomalies_only:
         events = [e for e in events if e.get("anomalies")]
 
-    for event in events[-args.tail:]:
+    for event in events[-args.tail :]:
         ts = event.get("timestamp", "")
         etype = event.get("event_type", "")
         anomalies = event.get("anomalies", [])

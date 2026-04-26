@@ -26,17 +26,21 @@ def _make_pairs(n_correct: int = 15, n_incorrect: int = 15, confidence: float = 
     """Generate labeled pair dicts for testing."""
     pairs = []
     for i in range(n_correct):
-        pairs.append({
-            "step_text": f"2 * {i + 1} = {2 * (i + 1)} so the answer is {2 * (i + 1)}",
-            "label": "correct",
-            "label_confidence": confidence,
-        })
+        pairs.append(
+            {
+                "step_text": f"2 * {i + 1} = {2 * (i + 1)} so the answer is {2 * (i + 1)}",
+                "label": "correct",
+                "label_confidence": confidence,
+            }
+        )
     for i in range(n_incorrect):
-        pairs.append({
-            "step_text": f"2 * {i + 1} = {2 * (i + 1) + 1} wrong calculation",
-            "label": "incorrect",
-            "label_confidence": confidence,
-        })
+        pairs.append(
+            {
+                "step_text": f"2 * {i + 1} = {2 * (i + 1) + 1} wrong calculation",
+                "label": "incorrect",
+                "label_confidence": confidence,
+            }
+        )
     return pairs
 
 
@@ -114,7 +118,9 @@ class TestJEPACurriculumTrainer:
         """
         pairs = _make_mixed_pairs()  # 10 high-conf (0.95), 10 low-conf (0.60)
         trainer = JEPACurriculumTrainer(
-            n_stage1_epochs=1, n_stage2_epochs=1, n_stage3_epochs=1,
+            n_stage1_epochs=1,
+            n_stage2_epochs=1,
+            n_stage3_epochs=1,
             high_conf_threshold=0.85,
         )
         # Verify internal filter returns only high-conf pairs
@@ -179,7 +185,9 @@ class TestJEPACurriculumTrainer:
         trainer = JEPACurriculumTrainer(n_stage1_epochs=2, n_stage2_epochs=2, n_stage3_epochs=2)
         stages = trainer.train(pairs)
         for s in stages:
-            assert 0.0 <= s.auc_after <= 1.0, f"Stage {s.stage} auc_after={s.auc_after} out of range"
+            assert 0.0 <= s.auc_after <= 1.0, (
+                f"Stage {s.stage} auc_after={s.auc_after} out of range"
+            )
 
     def test_get_final_auc_before_train_returns_0_5(self):
         """get_final_auc() returns 0.5 when called before train()."""
@@ -201,7 +209,9 @@ class TestJEPACurriculumTrainer:
         """train() handles the case where no pairs pass Stage 1 filter (all low-confidence)."""
         pairs = _make_pairs(n_correct=10, n_incorrect=10, confidence=0.50)
         trainer = JEPACurriculumTrainer(
-            n_stage1_epochs=1, n_stage2_epochs=1, n_stage3_epochs=1,
+            n_stage1_epochs=1,
+            n_stage2_epochs=1,
+            n_stage3_epochs=1,
             high_conf_threshold=0.85,
         )
         stages = trainer.train(pairs)
@@ -228,9 +238,15 @@ class TestJEPARetrainV3Result:
 
     def _make_stages(self) -> list[CurriculumStageResult]:
         return [
-            CurriculumStageResult(stage=1, n_pairs=10, n_epochs=100, auc_after=0.55, auc_before=0.5),
-            CurriculumStageResult(stage=2, n_pairs=30, n_epochs=100, auc_after=0.65, auc_before=0.55),
-            CurriculumStageResult(stage=3, n_pairs=180, n_epochs=100, auc_after=0.72, auc_before=0.65),
+            CurriculumStageResult(
+                stage=1, n_pairs=10, n_epochs=100, auc_after=0.55, auc_before=0.5
+            ),
+            CurriculumStageResult(
+                stage=2, n_pairs=30, n_epochs=100, auc_after=0.65, auc_before=0.55
+            ),
+            CurriculumStageResult(
+                stage=3, n_pairs=180, n_epochs=100, auc_after=0.72, auc_before=0.65
+            ),
         ]
 
     def test_auc_improvement_positive(self):

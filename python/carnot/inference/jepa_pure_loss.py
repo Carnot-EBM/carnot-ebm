@@ -34,11 +34,13 @@ Spec: REQ-LEARN-061, REQ-LEARN-062,
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Callable
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import jax.numpy as jnp
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # JEPAChainScore
@@ -171,11 +173,7 @@ class PUREMinFormLoss:
 
         Spec: REQ-LEARN-061, SCENARIO-LEARN-095, SCENARIO-LEARN-096
         """
-        pairs = [
-            (c, w)
-            for c in correct_chains
-            for w in incorrect_chains
-        ]
+        pairs = [(c, w) for c in correct_chains for w in incorrect_chains]
         if len(pairs) == 0:
             return self.zero_if_empty(pairs)
         return self._mean_pair_loss(pairs)

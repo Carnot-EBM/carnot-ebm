@@ -191,13 +191,15 @@ def benchmark_threshold(
             logit_mean=lm,
         )
         decision = result.certificate.get("gate_decision", "verify")
-        return json.dumps({
-            "question": row["question"],
-            "ground_truth_violated": row["ground_truth_violated"],
-            "gate_decision": decision,
-            "gate_energy": result.certificate.get("gate_energy"),
-            "ising_ran": decision != "skip",
-        })
+        return json.dumps(
+            {
+                "question": row["question"],
+                "ground_truth_violated": row["ground_truth_violated"],
+                "gate_decision": decision,
+                "gate_energy": result.certificate.get("gate_energy"),
+                "ising_ran": decision != "skip",
+            }
+        )
 
     t_start = time.perf_counter()
     bir = BatchedInferenceRunner(_infer_with_gate, batch_size=8)
@@ -278,11 +280,13 @@ def benchmark_no_gate(
             domain=row["domain"],
             jepa_gate=None,
         )
-        return json.dumps({
-            "question": row["question"],
-            "verified": result.verified,
-            "n_violations": len(result.violations),
-        })
+        return json.dumps(
+            {
+                "question": row["question"],
+                "verified": result.verified,
+                "n_violations": len(result.violations),
+            }
+        )
 
     t_start = time.perf_counter()
     bir = BatchedInferenceRunner(_infer_no_gate, batch_size=8)
@@ -375,9 +379,7 @@ def run_experiment(output_path: str | Path | None = None) -> dict[str, Any]:
 
     # --- Primary metric: did any threshold meet the target? ---
     meets_any = any(t["meets_target"] for t in threshold_sweep)
-    best_threshold = next(
-        (t for t in threshold_sweep if t["meets_target"]), threshold_sweep[-1]
-    )
+    best_threshold = next((t for t in threshold_sweep if t["meets_target"]), threshold_sweep[-1])
     overall_speedup = baseline_time / best_gate_time if best_gate_time > 0 else 1.0
 
     artifact = {

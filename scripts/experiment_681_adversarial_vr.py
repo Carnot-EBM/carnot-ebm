@@ -144,6 +144,7 @@ def _load_gsm8k_questions(start: int, n: int) -> list[str]:
     """
     try:
         from datasets import load_dataset  # noqa: PLC0415
+
         ds = load_dataset("openai/gsm8k", "main", split="test")
         return [row["question"] for row in ds.select(range(start, start + n))]
     except Exception:
@@ -208,10 +209,12 @@ def main() -> None:
     """
     # Step 0: env autofix BEFORE any heavy import (RETRO-022, RETRO-053)
     from carnot.pipeline.env_autofix import apply_env_autofix  # noqa: PLC0415
+
     apply_env_autofix()
 
     # Step 1: watchdog — 90-minute hard cap (25q run is much shorter than 200q)
     from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: PLC0415
+
     _watchdog = ExperimentTimeoutWatchdog(
         EXP_ID,
         timeout_minutes=90,
@@ -258,20 +261,25 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
     # GPU gate: CARNOT_FORCE_LIVE=1 required (REQ-VERIFY-159)
     # ------------------------------------------------------------------
     if os.environ.get("CARNOT_FORCE_LIVE") != "1":
-        _write_and_exit(_build_blocked_artifact(
-            "CARNOT_FORCE_LIVE=1 not set — live GPU required",
-            run_date,
-        ))
+        _write_and_exit(
+            _build_blocked_artifact(
+                "CARNOT_FORCE_LIVE=1 not set — live GPU required",
+                run_date,
+            )
+        )
 
     # ------------------------------------------------------------------
     # GPU hardware check
     # ------------------------------------------------------------------
     import torch as _torch_check  # noqa: PLC0415
+
     if not _torch_check.cuda.is_available():
-        _write_and_exit(_build_blocked_artifact(
-            "torch.cuda.is_available() returned False — no GPU",
-            run_date,
-        ))
+        _write_and_exit(
+            _build_blocked_artifact(
+                "torch.cuda.is_available() returned False — no GPU",
+                run_date,
+            )
+        )
 
     inference_mode = "live_gpu"
 
@@ -317,7 +325,7 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
                 temperature=1.0,
                 pad_token_id=_hf_tokenizer.eos_token_id,
             )
-        new_tokens = outputs[0][inputs["input_ids"].shape[1]:]
+        new_tokens = outputs[0][inputs["input_ids"].shape[1] :]
         return _hf_tokenizer.decode(new_tokens, skip_special_tokens=True)
 
     verifier = SymCodeVerifier(llm_caller=_llm_caller)
@@ -331,8 +339,7 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
     # Adversarialize: seed RNG for reproducibility
     rng = random.Random(681)
     adversarial_questions = [
-        adversarialize_question(q, rng.randint(100, 9999))
-        for q in base_questions
+        adversarialize_question(q, rng.randint(100, 9999)) for q in base_questions
     ]
 
     # ------------------------------------------------------------------
@@ -382,12 +389,14 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
             compute_lines = []
             post_correct = False
 
-        all_results.append({
-            "idx": GSM8K_START_IDX + i,
-            "baseline_correct": baseline_correct,
-            "post_correct": post_correct,
-            "compute_lines_found": len(compute_lines),
-        })
+        all_results.append(
+            {
+                "idx": GSM8K_START_IDX + i,
+                "baseline_correct": baseline_correct,
+                "post_correct": post_correct,
+                "compute_lines_found": len(compute_lines),
+            }
+        )
 
     # ------------------------------------------------------------------
     # Aggregate

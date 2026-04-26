@@ -124,9 +124,7 @@ class TestDetectKv260Hardware:
         assert result["transport"] is not None
         assert result["kv260_detected"] is True
 
-    def test_detection_result_has_required_keys(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_detection_result_has_required_keys(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-SAMPLE-012: detect_kv260_hardware always returns required keys."""
         monkeypatch.delenv("CARNOT_KV260_BITFILE", raising=False)
         result = detect_kv260_hardware(overlay_factory=_none_factory)
@@ -144,9 +142,7 @@ class TestDetectKv260Hardware:
         result = detect_kv260_hardware(overlay_factory=_none_factory)
         assert result["bitfile_path"] == str(bitfile)
 
-    def test_detection_bitfile_path_none_when_unset(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_detection_bitfile_path_none_when_unset(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-SAMPLE-012: bitfile_path is None when env var is unset."""
         monkeypatch.delenv("CARNOT_KV260_BITFILE", raising=False)
         result = detect_kv260_hardware(overlay_factory=_none_factory)
@@ -486,9 +482,7 @@ class TestArtifactSchema:
         for field in self.REQUIRED_FIELDS:
             assert field in payload, f"Missing field: {field}"
 
-    def test_experiment_id_correct(
-        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-    ) -> None:
+    def test_experiment_id_correct(self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
         """REQ-SAMPLE-012: experiment field must be 313."""
         monkeypatch.delenv("CARNOT_KV260_BITFILE", raising=False)
         payload = run_experiment(
@@ -572,9 +566,7 @@ class TestArtifactSchema:
             data = json.load(f)
         assert data["experiment"] == 313
 
-    def test_schema_field_present(
-        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-    ) -> None:
+    def test_schema_field_present(self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
         """REQ-SAMPLE-012: schema field identifies artifact version."""
         monkeypatch.delenv("CARNOT_KV260_BITFILE", raising=False)
         payload = run_experiment(
@@ -592,10 +584,7 @@ class TestArtifactSchema:
 
 
 HW_REASON = "KV260 hardware not available: CARNOT_KV260_BITFILE not set or pynq absent"
-_hw_available = (
-    exp313._check_bitfile_env() is not None
-    and exp313._try_import_pynq() is True
-)
+_hw_available = exp313._check_bitfile_env() is not None and exp313._try_import_pynq() is True
 
 
 @pytest.mark.skipif(not _hw_available, reason=HW_REASON)

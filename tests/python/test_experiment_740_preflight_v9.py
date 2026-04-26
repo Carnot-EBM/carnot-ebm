@@ -54,8 +54,7 @@ class TestExp527Retirement:
 
         manifest = ExclusionManifest(str(_MANIFEST_PATH))
         assert manifest.is_excluded(527), (
-            "Exp 527 must be in the exclusion manifest (REQ-INFRA-048). "
-            "Run Exp 740 to add it."
+            "Exp 527 must be in the exclusion manifest (REQ-INFRA-048). Run Exp 740 to add it."
         )
 
     def test_exp527_manifest_entry_has_correct_fields(self) -> None:
@@ -68,10 +67,7 @@ class TestExp527Retirement:
         Traces to REQ-INFRA-048, SCENARIO-INFRA-057.
         """
         raw = json.loads(_MANIFEST_PATH.read_text())
-        entries_527 = [
-            e for e in raw["excluded"]
-            if e.get("experiment_id") == 527
-        ]
+        entries_527 = [e for e in raw["excluded"] if e.get("experiment_id") == 527]
         assert len(entries_527) >= 1, "No entry for experiment_id=527 in manifest"
         entry = entries_527[-1]  # take the most recent if multiple exist
         assert entry.get("governance_rule") == "3-consecutive-mandatory", (
@@ -144,7 +140,9 @@ class TestDualGPURetrain:
 
         # Patch _count_cuda_gpus to return 1 (single GPU) so we exercise the fallback.
         with patch("carnot.pipeline.dualgpu_retrain._count_cuda_gpus", return_value=1):
-            retrain = DualGPURetrain(DualGPURetrainConfig(eorm_device="cuda:0", jepa_device="cuda:1"))
+            retrain = DualGPURetrain(
+                DualGPURetrainConfig(eorm_device="cuda:0", jepa_device="cuda:1")
+            )
             result = retrain.retrain_parallel(eorm_fn, jepa_fn)
 
         assert result.get("fallback_reason") == "single_gpu", (
@@ -184,7 +182,9 @@ class TestDualGPURetrain:
 
         # Patch _count_cuda_gpus to return 2 so we exercise the parallel path.
         with patch("carnot.pipeline.dualgpu_retrain._count_cuda_gpus", return_value=2):
-            retrain = DualGPURetrain(DualGPURetrainConfig(eorm_device="cuda:0", jepa_device="cuda:1"))
+            retrain = DualGPURetrain(
+                DualGPURetrainConfig(eorm_device="cuda:0", jepa_device="cuda:1")
+            )
             t0 = time.perf_counter()
             result = retrain.retrain_parallel(eorm_fn, jepa_fn)
             elapsed = time.perf_counter() - t0
@@ -217,7 +217,9 @@ class TestDualGPURetrain:
             return {"loss": 0.5}
 
         with patch("carnot.pipeline.dualgpu_retrain._count_cuda_gpus", return_value=0):
-            retrain = DualGPURetrain(DualGPURetrainConfig(eorm_device="cuda:0", jepa_device="cuda:1"))
+            retrain = DualGPURetrain(
+                DualGPURetrainConfig(eorm_device="cuda:0", jepa_device="cuda:1")
+            )
             result = retrain.retrain_parallel(eorm_fn, jepa_fn)
 
         assert result.get("fallback_reason") == "single_gpu"

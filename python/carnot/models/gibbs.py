@@ -254,9 +254,7 @@ class GibbsModel(AutoGradMixin):
             k_w, key = jrandom.split(key)
             # Xavier uniform initialization: scale by sqrt(6 / (fan_in + fan_out))
             limit = jnp.sqrt(6.0 / (prev_dim + hidden_dim))
-            weight = jrandom.uniform(
-                k_w, (hidden_dim, prev_dim), minval=-limit, maxval=limit
-            )
+            weight = jrandom.uniform(k_w, (hidden_dim, prev_dim), minval=-limit, maxval=limit)
             bias = jnp.zeros(hidden_dim)
             self.layers.append((weight, bias))
             prev_dim = hidden_dim

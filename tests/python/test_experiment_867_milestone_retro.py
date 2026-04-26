@@ -190,16 +190,19 @@ class TestHonestVerdict:
 
     def test_verdict_fn_success_boundary(self) -> None:
         from scripts.experiment_867_milestone_retro import honest_verdict
+
         assert honest_verdict(10, 13) == "milestone_success"
         assert honest_verdict(13, 13) == "milestone_success"
 
     def test_verdict_fn_partial_boundary(self) -> None:
         from scripts.experiment_867_milestone_retro import honest_verdict
+
         assert honest_verdict(8, 13) == "milestone_partial"
         assert honest_verdict(6, 13) == "milestone_partial"
 
     def test_verdict_fn_blocked_boundary(self) -> None:
         from scripts.experiment_867_milestone_retro import honest_verdict
+
         assert honest_verdict(5, 13) == "milestone_blocked"
         assert honest_verdict(0, 13) == "milestone_blocked"
 
@@ -282,12 +285,14 @@ class TestWallTime:
 class TestComputeWallTime:
     def test_sum_and_conversion(self) -> None:
         from scripts.experiment_867_milestone_retro import compute_wall_time
+
         arts = {1: {"duration_s": 30.0}, 2: {"duration_s": 90.0}}
         result = compute_wall_time(arts)
         assert abs(result - 2.0) < 0.001  # 120s = 2.0 min
 
     def test_missing_duration_defaults_to_zero(self) -> None:
         from scripts.experiment_867_milestone_retro import compute_wall_time
+
         arts = {1: {}, 2: {"duration_s": 60.0}}
         result = compute_wall_time(arts)
         assert abs(result - 1.0) < 0.001

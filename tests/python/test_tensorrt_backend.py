@@ -79,8 +79,7 @@ class _FakeLLMInstance:
     def generate(self, prompts: list[str], sampling_params: Any = None) -> list[_FakeRequestOutput]:
         self.generate_calls.append((list(prompts), sampling_params))
         return [
-            _FakeRequestOutput(f"<think>hidden</think>{self.model}::{prompt}")
-            for prompt in prompts
+            _FakeRequestOutput(f"<think>hidden</think>{self.model}::{prompt}") for prompt in prompts
         ]
 
     def shutdown(self) -> None:

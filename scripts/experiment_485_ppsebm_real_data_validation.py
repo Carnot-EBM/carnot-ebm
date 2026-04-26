@@ -129,10 +129,35 @@ def _assign_domain_from_fover_step(step: dict) -> str:
     text = step.get("step_text", "").lower()
 
     # Arithmetic: contains inline math patterns.
-    arithmetic_signals = ["×", "\\times", "=", "+", "-", "/", "\\frac", "calculate",
-                          "total", "sum", "multiply", "divide", "subtract", "add"]
-    code_signals = ["def ", "assert", "return", "type_error", "syntax", "function",
-                    "variable", "loop", "index", "array", "string"]
+    arithmetic_signals = [
+        "×",
+        "\\times",
+        "=",
+        "+",
+        "-",
+        "/",
+        "\\frac",
+        "calculate",
+        "total",
+        "sum",
+        "multiply",
+        "divide",
+        "subtract",
+        "add",
+    ]
+    code_signals = [
+        "def ",
+        "assert",
+        "return",
+        "type_error",
+        "syntax",
+        "function",
+        "variable",
+        "loop",
+        "index",
+        "array",
+        "string",
+    ]
 
     code_count = sum(1 for s in code_signals if s in text)
     arith_count = sum(1 for s in arithmetic_signals if s in text)
@@ -174,12 +199,14 @@ def _build_labeled_steps(raw_steps: list[dict]) -> list[dict]:
             continue
 
         domain = _assign_domain_from_fover_step({"step_text": step_text})
-        labeled.append({
-            "step_text": step_text,
-            "label": label,
-            "domain": domain,
-            "question_id": question_id,
-        })
+        labeled.append(
+            {
+                "step_text": step_text,
+                "label": label,
+                "domain": domain,
+                "question_id": question_id,
+            }
+        )
     return labeled
 
 
@@ -285,7 +312,6 @@ def main() -> None:
     tmpl.setup()
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=40):
-
         # --- Step 1: Load real CoT data ---
         fover_steps = _load_fover_steps()
         exp476_pairs = _load_exp476_pairs()
@@ -303,14 +329,26 @@ def main() -> None:
         else:
             # Fallback: synthetic interleaved sequence if no real data available
             fallback_steps = []
-            domains_cycle = ["arithmetic", "code", "logical", "arithmetic", "code",
-                             "logical", "arithmetic", "code", "logical", "arithmetic"]
+            domains_cycle = [
+                "arithmetic",
+                "code",
+                "logical",
+                "arithmetic",
+                "code",
+                "logical",
+                "arithmetic",
+                "code",
+                "logical",
+                "arithmetic",
+            ]
             for i, d in enumerate(domains_cycle):
-                fallback_steps.append({
-                    "step_text": f"step {i}",
-                    "label": "incorrect",
-                    "domain": d,
-                })
+                fallback_steps.append(
+                    {
+                        "step_text": f"step {i}",
+                        "label": "incorrect",
+                        "domain": d,
+                    }
+                )
             seq = InterleavedViolationSequence(fallback_steps)
             n_steps = len(fallback_steps)
             print(f"[Exp {EXP_ID}] WARNING: no real data found, using synthetic fallback")
@@ -342,9 +380,7 @@ def main() -> None:
         if _EXP470_RESULT.exists():
             with open(_EXP470_RESULT) as f:
                 exp470 = json.load(f)
-            synthetic_isolation_baseline = float(
-                exp470.get("partition_isolation_score", 1.0)
-            )
+            synthetic_isolation_baseline = float(exp470.get("partition_isolation_score", 1.0))
         print(f"[Exp {EXP_ID}] synthetic_isolation_baseline={synthetic_isolation_baseline:.4f}")
 
         # --- Step 10: Build validation result ---
@@ -364,8 +400,10 @@ def main() -> None:
             "ppsebm_validated_real" if retro_043_closed else "isolation_degraded_on_real"
         )
 
-        print(f"[Exp {EXP_ID}] isolation_maintained={isolation_maintained}, "
-              f"retro_043_closed={retro_043_closed}, verdict={honest_verdict}")
+        print(
+            f"[Exp {EXP_ID}] isolation_maintained={isolation_maintained}, "
+            f"retro_043_closed={retro_043_closed}, verdict={honest_verdict}"
+        )
 
         # --- Step 11: Build and write artifact ---
         artifact = tmpl.build_result(
@@ -406,6 +444,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

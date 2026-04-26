@@ -178,7 +178,7 @@ _INLINE_PROBLEMS: list[dict[str, Any]] = [
         "prompt": (
             "from typing import List\n\n"
             "def intersperse(numbers: List[int], delimeter: int) -> List[int]:\n"
-            '    """ Insert a number \'delimeter\' between every two consecutive elements of input list `numbers\'\n'
+            "    \"\"\" Insert a number 'delimeter' between every two consecutive elements of input list `numbers'\n"
             "    >>> intersperse([], 4)\n"
             "    []\n"
             "    >>> intersperse([1, 2, 3], 4)\n"
@@ -448,7 +448,7 @@ _INLINE_PROBLEMS: list[dict[str, Any]] = [
         "prompt": (
             "from typing import List\n\n"
             "def sort_numbers(numbers: str) -> str:\n"
-            '    """ Input is a space-delimited string of numberals from \'zero\' to \'nine\'.\n'
+            "    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n"
             "    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n"
             "    Return the string with numbers sorted from smallest to largest\n"
             "    >>> sort_numbers('three one five')\n"
@@ -795,9 +795,7 @@ _INLINE_PROBLEMS: list[dict[str, Any]] = [
         ),
         "entry_point": "fizz_buzz",
         "test": (
-            "assert fizz_buzz(50) == 0\n"
-            "assert fizz_buzz(78) == 2\n"
-            "assert fizz_buzz(79) == 3\n"
+            "assert fizz_buzz(50) == 0\nassert fizz_buzz(78) == 2\nassert fizz_buzz(79) == 3\n"
         ),
     },
     {
@@ -1117,6 +1115,7 @@ assert len(_INLINE_PROBLEMS) == 50, f"Expected 50 inline problems, got {len(_INL
 # Energy scorer
 # ---------------------------------------------------------------------------
 
+
 class _TokenLengthEnergyScorer:
     """Fallback energy scorer: shorter responses get lower energy.
 
@@ -1144,6 +1143,7 @@ def _build_energy_scorer() -> tuple[Any, str]:
 
             def score(self, text: str) -> float:
                 import jax.numpy as jnp  # noqa: PLC0415
+
                 chars = [ord(c) % 2 * 2 - 1 for c in text[:64]]
                 chars = chars[:64] + [1] * max(0, 64 - len(chars))
                 spins = jnp.array(chars, dtype=jnp.float32)
@@ -1157,6 +1157,7 @@ def _build_energy_scorer() -> tuple[Any, str]:
 # ---------------------------------------------------------------------------
 # LLM runner wrappers
 # ---------------------------------------------------------------------------
+
 
 class _LlamaCppRunner:
     """LLM runner backed by llama-cpp-python.
@@ -1201,13 +1202,14 @@ class _TransformersRunner:
                 do_sample=False,
                 pad_token_id=self._tokenizer.eos_token_id,
             )
-        new_tokens = output_ids[0][inputs["input_ids"].shape[1]:]
+        new_tokens = output_ids[0][inputs["input_ids"].shape[1] :]
         return self._tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
 
 
 # ---------------------------------------------------------------------------
 # Model loading — try GGUF path first, then transformers fallback
 # ---------------------------------------------------------------------------
+
 
 def _try_load_gguf(hf_id: str, label: str) -> tuple[Any, str] | None:
     """Try to load a GGUF model via llama.cpp from the HF cache.
@@ -1266,6 +1268,7 @@ def _load_transformers_fallback() -> tuple[Any, str]:
 # Generation prompt builder
 # ---------------------------------------------------------------------------
 
+
 def _build_generation_prompt(problem: dict[str, Any]) -> str:
     """Build the initial generation prompt for a HumanEval problem.
 
@@ -1274,14 +1277,14 @@ def _build_generation_prompt(problem: dict[str, Any]) -> str:
     """
     return (
         "Complete the following Python function. "
-        "Output ONLY the function body code (no imports, no prose):\n\n"
-        + problem["prompt"]
+        "Output ONLY the function body code (no imports, no prose):\n\n" + problem["prompt"]
     )
 
 
 # ---------------------------------------------------------------------------
 # Per-model repair runner
 # ---------------------------------------------------------------------------
+
 
 def _run_model_on_problems(
     runner: Any,
@@ -1313,24 +1316,26 @@ def _run_model_on_problems(
         prompt = _build_generation_prompt(prob)
         test_cases = [line for line in prob["test"].strip().splitlines() if line.strip()]
 
-        print(f"[exp906/{prefix}] {idx+1}/{len(problems)}: {task_id} …", flush=True)
+        print(f"[exp906/{prefix}] {idx + 1}/{len(problems)}: {task_id} …", flush=True)
         t0 = time.perf_counter()
 
         try:
             result = pipeline.repair(prompt, test_cases)
         except Exception as exc:
             print(f"[exp906/{prefix}]   ERROR: {exc}", flush=True)
-            results.append({
-                "task_id": task_id,
-                "error": str(exc),
-                "baseline_passed": False,
-                "repair_passed": False,
-                "n_retries": 0,
-                "energy_score_best": 0.0,
-                "energy_selected_passing": False,
-                "n_attempts": 0,
-                "elapsed_s": round(time.perf_counter() - t0, 2),
-            })
+            results.append(
+                {
+                    "task_id": task_id,
+                    "error": str(exc),
+                    "baseline_passed": False,
+                    "repair_passed": False,
+                    "n_retries": 0,
+                    "energy_score_best": 0.0,
+                    "energy_selected_passing": False,
+                    "n_attempts": 0,
+                    "elapsed_s": round(time.perf_counter() - t0, 2),
+                }
+            )
             continue
 
         baseline_passed = result.all_attempts[0].exec_passed if result.all_attempts else False
@@ -1343,16 +1348,18 @@ def _run_model_on_problems(
             flush=True,
         )
 
-        results.append({
-            "task_id": task_id,
-            "baseline_passed": baseline_passed,
-            "repair_passed": repair_passed,
-            "n_retries": result.n_retries,
-            "energy_score_best": result.best_attempt.energy_score,
-            "energy_selected_passing": result.energy_selected_passing,
-            "n_attempts": len(result.all_attempts),
-            "elapsed_s": elapsed,
-        })
+        results.append(
+            {
+                "task_id": task_id,
+                "baseline_passed": baseline_passed,
+                "repair_passed": repair_passed,
+                "n_retries": result.n_retries,
+                "energy_score_best": result.best_attempt.energy_score,
+                "energy_selected_passing": result.energy_selected_passing,
+                "n_attempts": len(result.all_attempts),
+                "elapsed_s": elapsed,
+            }
+        )
 
         if (idx + 1) % 10 == 0:
             tmpl.checkpoint_save(
@@ -1366,6 +1373,7 @@ def _run_model_on_problems(
 # ---------------------------------------------------------------------------
 # Cross-model energy selection accuracy
 # ---------------------------------------------------------------------------
+
 
 def _compute_cross_model_accuracy(
     qwen_results: list[dict[str, Any]],
@@ -1409,6 +1417,7 @@ def _compute_cross_model_accuracy(
 # Main
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """Orchestrate Exp 906: scale-up IterativeSelfRepair and write the deliverable."""
     # ---- Gate check --------------------------------------------------------
@@ -1429,22 +1438,38 @@ def main() -> None:
         blocked = {
             "experiment": 906,
             "title": "IterativeSelfRepair Scale-Up — 50 HumanEval, Qwen + Gemma",
-            "run_date": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y%m%d"),
-            "started_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "finished_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "run_date": __import__("datetime")
+            .datetime.now(__import__("datetime").timezone.utc)
+            .strftime("%Y%m%d"),
+            "started_at": __import__("datetime")
+            .datetime.now(__import__("datetime").timezone.utc)
+            .strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "finished_at": __import__("datetime")
+            .datetime.now(__import__("datetime").timezone.utc)
+            .strftime("%Y-%m-%dT%H:%M:%SZ"),
             "duration_s": 0.0,
             "status": "skipped",
             "honest_verdict": "skipped_gate_blocked_exp905_no_improvement",
             "gate_blocked": True,
             "exp905_signed_improvement": signed_improvement_905,
-            "schema": ["experiment", "title", "run_date", "started_at", "finished_at",
-                       "duration_s", "status", "honest_verdict"],
+            "schema": [
+                "experiment",
+                "title",
+                "run_date",
+                "started_at",
+                "finished_at",
+                "duration_s",
+                "status",
+                "honest_verdict",
+            ],
         }
         output_path = _REPO_ROOT / _DELIVERABLE
         output_path.write_text(json.dumps(blocked, indent=2))
         return
 
-    print(f"[exp906] Gate PASSED: Exp 905 signed_improvement={signed_improvement_905:.3f}", flush=True)
+    print(
+        f"[exp906] Gate PASSED: Exp 905 signed_improvement={signed_improvement_905:.3f}", flush=True
+    )
 
     # ---- Setup -------------------------------------------------------------
     tmpl = ExperimentTemplate(
@@ -1464,13 +1489,17 @@ def main() -> None:
     # ---- Load 50 HumanEval problems ----------------------------------------
     try:
         from human_eval.data import read_problems  # noqa: PLC0415
+
         all_problems = read_problems()
         task_ids = sorted(all_problems.keys())[:50]
         problems: list[dict[str, Any]] = [all_problems[tid] for tid in task_ids]
         print(f"[exp906] Using human_eval package for {len(problems)} problems.", flush=True)
     except ImportError:
         problems = _INLINE_PROBLEMS
-        print(f"[exp906] human_eval not installed — using inline problems ({len(problems)}).", flush=True)
+        print(
+            f"[exp906] human_eval not installed — using inline problems ({len(problems)}).",
+            flush=True,
+        )
 
     # ---- Load Qwen (primary SOTA) ------------------------------------------
     qwen_result = _try_load_gguf("Qwen3.6-35B-A3B-GGUF", "qwen")
@@ -1478,7 +1507,9 @@ def main() -> None:
         qwen_runner, qwen_model_id = qwen_result
         qwen_fallback = False
     else:
-        print("[exp906] Qwen GGUF not cached — using transformers fallback for Qwen slot.", flush=True)
+        print(
+            "[exp906] Qwen GGUF not cached — using transformers fallback for Qwen slot.", flush=True
+        )
         try:
             qwen_runner, qwen_model_id = _load_transformers_fallback()
             qwen_fallback = True
@@ -1495,7 +1526,9 @@ def main() -> None:
             return
 
     # ---- Run Qwen on all 50 problems ---------------------------------------
-    print(f"[exp906] Running Qwen model ({qwen_model_id}) on {len(problems)} problems …", flush=True)
+    print(
+        f"[exp906] Running Qwen model ({qwen_model_id}) on {len(problems)} problems …", flush=True
+    )
     qwen_results = _run_model_on_problems(
         qwen_runner, qwen_model_id, problems, energy_scorer, tmpl, prefix="qwen"
     )
@@ -1506,9 +1539,11 @@ def main() -> None:
     try:
         del qwen_runner
         import gc
+
         gc.collect()
         try:
             import torch
+
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
         except Exception:
@@ -1521,7 +1556,10 @@ def main() -> None:
         gemma_runner, gemma_model_id = gemma_result
         gemma_fallback = False
     else:
-        print("[exp906] Gemma GGUF not cached — using transformers fallback for Gemma slot.", flush=True)
+        print(
+            "[exp906] Gemma GGUF not cached — using transformers fallback for Gemma slot.",
+            flush=True,
+        )
         try:
             gemma_runner, gemma_model_id = _load_transformers_fallback()
             gemma_fallback = True
@@ -1538,7 +1576,9 @@ def main() -> None:
             return
 
     # ---- Run Gemma on all 50 problems ---------------------------------------
-    print(f"[exp906] Running Gemma model ({gemma_model_id}) on {len(problems)} problems …", flush=True)
+    print(
+        f"[exp906] Running Gemma model ({gemma_model_id}) on {len(problems)} problems …", flush=True
+    )
     gemma_results = _run_model_on_problems(
         gemma_runner, gemma_model_id, problems, energy_scorer, tmpl, prefix="gemma"
     )
@@ -1558,10 +1598,16 @@ def main() -> None:
     gemma_base, gemma_repair, gemma_signed = _pass_rates(gemma_results)
 
     # Combined pass rate: fraction where at least one model passed after repair.
-    combined_pass = sum(
-        1 for q, g in zip(qwen_results, gemma_results)
-        if q.get("repair_passed", False) or g.get("repair_passed", False)
-    ) / n if n > 0 else 0.0
+    combined_pass = (
+        sum(
+            1
+            for q, g in zip(qwen_results, gemma_results)
+            if q.get("repair_passed", False) or g.get("repair_passed", False)
+        )
+        / n
+        if n > 0
+        else 0.0
+    )
 
     cross_model_accuracy = _compute_cross_model_accuracy(qwen_results, gemma_results)
 

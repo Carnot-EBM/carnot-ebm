@@ -74,7 +74,9 @@ class TestSparseAutoEncoderForward:
             f"Top-1 sparsity violated: found samples with >1 active units: {nonzero_counts}"
         )
 
-    def test_sparsity_with_positive_inputs(self, small_model: SparseAutoEncoder, small_params: dict) -> None:
+    def test_sparsity_with_positive_inputs(
+        self, small_model: SparseAutoEncoder, small_params: dict
+    ) -> None:
         """Positive inputs guarantee at least one non-zero activation per sample."""
         x = jnp.ones((4, 10))
         _, h_sparse = small_model.apply(small_params, x)
@@ -83,7 +85,9 @@ class TestSparseAutoEncoderForward:
         # non-negative outputs (after ReLU), so we expect exactly 1 active unit.
         assert jnp.all(nonzero_counts <= 1)
 
-    def test_reconstruction_is_finite(self, small_model: SparseAutoEncoder, small_params: dict) -> None:
+    def test_reconstruction_is_finite(
+        self, small_model: SparseAutoEncoder, small_params: dict
+    ) -> None:
         """Reconstruction values should not be NaN or Inf."""
         x = jnp.array([[1.0, 2.0, -1.0, 0.5, 0.0, 3.0, -2.0, 1.5, 0.2, -0.1]])
         x_recon, _ = small_model.apply(small_params, x)
@@ -239,7 +243,9 @@ class TestIdentifyHallucinationFeatures:
         params, model, features, labels = self._make_corpus()
         result = identify_hallucination_features(params, model, features, labels, top_k=8)
         aurocs = [e["feature_auroc"] for e in result]
-        assert aurocs == sorted(aurocs, reverse=True), "Results should be sorted descending by AUROC"
+        assert aurocs == sorted(aurocs, reverse=True), (
+            "Results should be sorted descending by AUROC"
+        )
 
     def test_feature_idx_within_hidden_dim(self) -> None:
         """Feature indices must be valid hidden_dim indices."""

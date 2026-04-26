@@ -42,12 +42,15 @@ Spec: REQ-REPAIR-016,
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Protocols
 # ---------------------------------------------------------------------------
+
 
 class _EORMScorer(Protocol):
     """Minimal interface required from an EORM model.
@@ -66,6 +69,7 @@ class _EORMScorer(Protocol):
 # ---------------------------------------------------------------------------
 # Dataclasses
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class PRABeamCandidate:
@@ -123,6 +127,7 @@ class PRABeamResult:
 # ---------------------------------------------------------------------------
 # Main class
 # ---------------------------------------------------------------------------
+
 
 class PRAEBMBeamSearch:
     """Step-level beam search using EORM energy as the per-step reward.
@@ -183,6 +188,7 @@ class PRAEBMBeamSearch:
         # a compatible mock is passed instead of a real EORMModel.
         try:
             from carnot.models.eorm import CoTEnergyInput  # noqa: PLC0415
+
             cot_input = CoTEnergyInput(
                 question_text=question,
                 response_text=step_text,
@@ -306,10 +312,7 @@ class PRAEBMBeamSearch:
             best.is_selected = True
             selected_candidates.append(best)
 
-        if n_steps > 0:
-            baseline_violation_rate = baseline_violations / n_steps
-        else:
-            baseline_violation_rate = 0.0
+        baseline_violation_rate = baseline_violations / n_steps if n_steps > 0 else 0.0
         # Beam always picks the minimum-energy candidate, so beam_violation_rate
         # is 0.0 by mathematical invariant (min ≤ mean always).
         beam_violation_rate = 0.0

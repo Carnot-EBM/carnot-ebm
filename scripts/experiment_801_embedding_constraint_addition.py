@@ -27,6 +27,7 @@
 
 Spec: REQ-LEARN-060, REQ-LEARN-061, SCENARIO-LEARN-099
 """
+
 from __future__ import annotations
 
 import json
@@ -155,12 +156,12 @@ def _mock_verify_decision(ising_model: IsingModel, is_correct: bool) -> bool:
     model_accepts = energy < -0.1
 
     if is_correct and model_accepts:
-        return True   # TP
+        return True  # TP
     if is_correct and not model_accepts:
         return False  # FN
     if not is_correct and not model_accepts:
-        return True   # TN
-    return False      # FP
+        return True  # TN
+    return False  # FP
 
 
 def run_session(

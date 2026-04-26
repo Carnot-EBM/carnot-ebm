@@ -35,6 +35,7 @@ if str(_PROJECT_ROOT) not in sys.path:
 # DualGPURunner API surface
 # ===========================================================================
 
+
 def test_dualgpu_runner_importable():
     """DualGPURunner must be importable from carnot.inference.dual_gpu.
 
@@ -50,6 +51,7 @@ def test_dualgpu_runner_has_run_model_tasks():
     Spec: REQ-GPU-010
     """
     from carnot.inference.dual_gpu import DualGPURunner
+
     assert callable(getattr(DualGPURunner, "run_model_tasks", None))
 
 
@@ -57,12 +59,14 @@ def test_dualgpu_runner_has_run_model_tasks():
 # VerifyRepairPipeline wiring
 # ===========================================================================
 
+
 def test_verify_repair_pipeline_dual_gpu_flag_exists():
     """VerifyRepairPipeline must have a DUAL_GPU_ENABLED class attribute.
 
     Spec: REQ-GPU-010-1
     """
     from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
     assert hasattr(VerifyRepairPipeline, "DUAL_GPU_ENABLED")
     assert isinstance(VerifyRepairPipeline.DUAL_GPU_ENABLED, bool)
 
@@ -79,6 +83,7 @@ def test_verify_repair_pipeline_dual_gpu_flag_off_by_default(monkeypatch):
     # Fresh import would be needed for a runtime change, but the attribute
     # contract allows it to be a class-level constant.
     import carnot.pipeline.verify_repair as vrp_mod
+
     # Evaluate what the env-based formula would produce with current env.
     expected = os.getenv("CARNOT_DUAL_GPU", "0") == "1"
     assert vrp_mod.VerifyRepairPipeline.DUAL_GPU_ENABLED == expected
@@ -90,6 +95,7 @@ def test_verify_repair_pipeline_has_second_model_false_when_no_second_spec():
     Spec: REQ-GPU-010-3
     """
     from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
     pipeline = VerifyRepairPipeline(model=None)
     assert pipeline.has_second_model() is False
 
@@ -101,6 +107,7 @@ def test_verify_repair_pipeline_has_second_model_false_when_no_primary():
     Spec: REQ-GPU-010-3
     """
     from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
     pipeline = VerifyRepairPipeline(
         model=None,
         second_model_spec={"name": "model_b", "hf_id": "some/model"},
@@ -128,12 +135,14 @@ def test_verify_repair_pipeline_has_second_model_true_when_both_set():
 # ThreeTierPipeline wiring
 # ===========================================================================
 
+
 def test_three_tier_pipeline_dual_gpu_flag_exists():
     """ThreeTierPipeline must have a DUAL_GPU_ENABLED class attribute.
 
     Spec: REQ-GPU-010-4
     """
     from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
+
     assert hasattr(ThreeTierPipeline, "DUAL_GPU_ENABLED")
     assert isinstance(ThreeTierPipeline.DUAL_GPU_ENABLED, bool)
 
@@ -144,6 +153,7 @@ def test_three_tier_pipeline_has_second_model_callable():
     Spec: REQ-GPU-010-4
     """
     from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
+
     assert callable(getattr(ThreeTierPipeline, "has_second_model", None))
 
 
@@ -192,6 +202,7 @@ def test_three_tier_pipeline_has_second_model_true_when_spec_set():
 # _validate_wiring() helper logic (tested by reproducing its logic)
 # ===========================================================================
 
+
 def test_validate_wiring_returns_all_true_when_imports_present():
     """_validate_wiring() must report True for all flags with proper imports.
 
@@ -213,6 +224,7 @@ def test_validate_wiring_returns_all_true_when_imports_present():
 # ===========================================================================
 # honest_verdict and dual_gpu_deployed logic
 # ===========================================================================
+
 
 @pytest.mark.parametrize(
     "dual_gpu_wired,gpu_validated,expected_verdict",
@@ -251,6 +263,7 @@ def test_dual_gpu_deployed_true_when_wired():
 # Deliverable JSON is written and has required fields
 # ===========================================================================
 
+
 def test_deliverable_json_exists_and_valid():
     """The deliverable results/experiment_856_dualgpu_production.json must exist
     and contain all REQUIRED_RESULT_FIELDS plus the Exp-856 specific keys.
@@ -263,10 +276,19 @@ def test_deliverable_json_exists_and_valid():
         data = json.load(f)
 
     required_fields = [
-        "experiment", "schema", "run_date", "started_at",
-        "finished_at", "duration_s", "status", "title",
-        "dual_gpu_deployed", "throughput_ratio",
-        "verify_repair_wired", "three_tier_wired", "honest_verdict",
+        "experiment",
+        "schema",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "title",
+        "dual_gpu_deployed",
+        "throughput_ratio",
+        "verify_repair_wired",
+        "three_tier_wired",
+        "honest_verdict",
     ]
     for field in required_fields:
         assert field in data, f"Missing field '{field}' in deliverable"

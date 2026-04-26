@@ -47,7 +47,9 @@ def main() -> int:
     print("EXPERIMENT 23: EBM-Guided Rejection Sampling")
     print("=" * 60)
 
-    data_file = os.path.join(os.path.dirname(__file__), "..", "data", "token_activations_qwen35_merged.safetensors")
+    data_file = os.path.join(
+        os.path.dirname(__file__), "..", "data", "token_activations_qwen35_merged.safetensors"
+    )
     if not os.path.exists(data_file):
         print(f"ERROR: {data_file} not found. Run merge_activations_qwen35.py first.")
         return 1
@@ -74,8 +76,11 @@ def main() -> int:
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -83,9 +88,13 @@ def main() -> int:
         m.output_bias = p["output_bias"]
 
     params = get_p(ebm)
+
     def loss_fn(p):
-        old = get_p(ebm); set_p(ebm, p)
-        r = nce_loss(ebm, tc, tw); set_p(ebm, old); return r
+        old = get_p(ebm)
+        set_p(ebm, p)
+        r = nce_loss(ebm, tc, tw)
+        set_p(ebm, old)
+        return r
 
     for ep in range(300):
         grads = jax.grad(loss_fn)(params)
@@ -99,7 +108,8 @@ def main() -> int:
     model_name = "Qwen/Qwen3.5-0.8B"
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         dtype=torch.float16 if device == "cuda" else None,
     )
@@ -142,7 +152,8 @@ def main() -> int:
 
             with torch.no_grad():
                 outputs = model.generate(
-                    **inputs, **gen_kwargs,
+                    **inputs,
+                    **gen_kwargs,
                     return_dict_in_generate=True,
                     output_scores=True,
                 )
@@ -172,15 +183,19 @@ def main() -> int:
             layer_hidden = hs[-1][0, prompt_len:, :].float().cpu().numpy()
             mean_ebm = score_activations_with_ebm(ebm, layer_hidden)
 
-            is_correct = check_truthfulqa_answer(response, correct_answers, incorrect_answers, best_answer)
+            is_correct = check_truthfulqa_answer(
+                response, correct_answers, incorrect_answers, best_answer
+            )
 
-            candidates.append({
-                "response": response,
-                "logprob": mean_lp,
-                "ebm": mean_ebm,
-                "composite": 1.0 * mean_ebm - 1.0 * mean_lp,
-                "correct": is_correct,
-            })
+            candidates.append(
+                {
+                    "response": response,
+                    "logprob": mean_lp,
+                    "ebm": mean_ebm,
+                    "composite": 1.0 * mean_ebm - 1.0 * mean_lp,
+                    "correct": is_correct,
+                }
+            )
 
         # Score each selection strategy
         total += 1
@@ -205,11 +220,13 @@ def main() -> int:
             results["composite"] += 1
 
         if (qi + 1) % 10 == 0:
-            print(f"  [{qi+1:3d}/{len(questions)}] "
-                  f"greedy={results['greedy']}/{total} "
-                  f"logprob={results['logprob']}/{total} "
-                  f"ebm={results['ebm']}/{total} "
-                  f"composite={results['composite']}/{total}")
+            print(
+                f"  [{qi + 1:3d}/{len(questions)}] "
+                f"greedy={results['greedy']}/{total} "
+                f"logprob={results['logprob']}/{total} "
+                f"ebm={results['ebm']}/{total} "
+                f"composite={results['composite']}/{total}"
+            )
 
     # --- Results ---
     sep = "=" * 60

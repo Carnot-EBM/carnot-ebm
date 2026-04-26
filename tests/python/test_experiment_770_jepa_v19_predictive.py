@@ -29,6 +29,7 @@ def _make_binary_data(n: int = 30, seed: int = 42) -> tuple[list[list[str]], lis
     experiment script, not by this unit test.
     """
     import random
+
     rng = random.Random(seed)
     seqs: list[list[str]] = []
     labels: list[float] = []

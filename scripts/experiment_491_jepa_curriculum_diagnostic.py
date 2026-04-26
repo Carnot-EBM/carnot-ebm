@@ -144,7 +144,9 @@ def _determine_root_cause(
     return "unknown"
 
 
-def _determine_curriculum_recommendation(root_cause: str, auc_curriculum: float, auc_all: float) -> str:
+def _determine_curriculum_recommendation(
+    root_cause: str, auc_curriculum: float, auc_all: float
+) -> str:
     """Recommend the next training strategy based on root cause.
 
     **For engineers:**
@@ -179,7 +181,9 @@ def main() -> None:
     tmpl = ExperimentTemplate(EXP_ID, EXP_TITLE, DELIVERABLE)
     guard = DeliverableGuard(str(_REPO_ROOT / DELIVERABLE))
 
-    with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=40, result_path=str(_REPO_ROOT / DELIVERABLE)):
+    with ExperimentTimeoutWatchdog(
+        EXP_ID, timeout_minutes=40, result_path=str(_REPO_ROOT / DELIVERABLE)
+    ):
         tmpl.setup()
 
         # ------------------------------------------------------------------
@@ -192,14 +196,21 @@ def main() -> None:
 
         all_pairs = fover_pairs + exp488_pairs + exp489_pairs
         n_pairs_raw = len(all_pairs)
-        log.info("Loaded %d total pairs (fover=%d, exp488=%d, exp489=%d)",
-                 n_pairs_raw, len(fover_pairs), len(exp488_pairs), len(exp489_pairs))
+        log.info(
+            "Loaded %d total pairs (fover=%d, exp488=%d, exp489=%d)",
+            n_pairs_raw,
+            len(fover_pairs),
+            len(exp488_pairs),
+            len(exp489_pairs),
+        )
 
         # ------------------------------------------------------------------
         # Corpus analysis: reproduce Exp 477 quality gate
         # ------------------------------------------------------------------
-        log.info("Analyzing corpus with Exp 477 quality filter (min_confidence=%.1f)...",
-                 EXP477_MIN_CONFIDENCE)
+        log.info(
+            "Analyzing corpus with Exp 477 quality filter (min_confidence=%.1f)...",
+            EXP477_MIN_CONFIDENCE,
+        )
         quality_filter = CoTPairQualityFilter(
             min_coverage=EXP477_MIN_COVERAGE,
             min_confidence=EXP477_MIN_CONFIDENCE,
@@ -296,6 +307,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

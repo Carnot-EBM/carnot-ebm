@@ -114,18 +114,14 @@ class TestEmptyInput:
         """REQ-VERIFY-003: Empty response across all domains."""
         for domain in ["arithmetic", "code", "logic", "nl"]:
             pipeline = VerifyRepairPipeline(timeout_seconds=0)
-            result = pipeline.verify(
-                question="test", response="", domain=domain
-            )
+            result = pipeline.verify(question="test", response="", domain=domain)
             assert result.verified is True
             assert len(result.constraints) == 0
 
     def test_whitespace_only_response(self) -> None:
         """REQ-VERIFY-003: Whitespace-only response produces no constraints."""
         pipeline = VerifyRepairPipeline(timeout_seconds=0)
-        result = pipeline.verify(
-            question="test", response="   \n\t  \n  "
-        )
+        result = pipeline.verify(question="test", response="   \n\t  \n  ")
         assert result.verified is True
 
     def test_extract_constraints_empty_text(self) -> None:
@@ -136,9 +132,7 @@ class TestEmptyInput:
     def test_verify_and_repair_empty_response(self) -> None:
         """REQ-VERIFY-003: verify_and_repair with empty response string."""
         pipeline = VerifyRepairPipeline(timeout_seconds=0)
-        result = pipeline.verify_and_repair(
-            question="What is 2+2?", response=""
-        )
+        result = pipeline.verify_and_repair(question="What is 2+2?", response="")
         assert isinstance(result, RepairResult)
         assert result.verified is True  # no constraints = vacuously true
 
@@ -156,9 +150,7 @@ class TestVeryLongInput:
         # 1000 correct arithmetic claims.
         claims = " ".join(f"{i} + 1 = {i + 1}." for i in range(1000))
         pipeline = VerifyRepairPipeline(timeout_seconds=0)
-        result = pipeline.verify(
-            question="sums", response=claims, domain="arithmetic"
-        )
+        result = pipeline.verify(question="sums", response=claims, domain="arithmetic")
         assert result.verified is True
         assert len(result.constraints) == 1000
 
@@ -203,9 +195,7 @@ class TestUnicodeInput:
         """REQ-VERIFY-003: Code with unicode strings parses correctly."""
         pipeline = VerifyRepairPipeline(timeout_seconds=0)
         code = '```python\ndef greet(name: str) -> str:\n    return "\u4f60\u597d " + name\n```'
-        result = pipeline.verify(
-            question="Write greet", response=code, domain="code"
-        )
+        result = pipeline.verify(question="Write greet", response=code, domain="code")
         assert isinstance(result, VerificationResult)
         assert len(result.constraints) > 0
 
@@ -254,9 +244,7 @@ class TestMalformedCode:
         """REQ-VERIFY-001: Malformed Python code in fenced block."""
         pipeline = VerifyRepairPipeline(timeout_seconds=0)
         code = "```python\ndef broken(\n    return nope\n```"
-        result = pipeline.verify(
-            question="Write a function", response=code, domain="code"
-        )
+        result = pipeline.verify(question="Write a function", response=code, domain="code")
         # CodeExtractor catches SyntaxError and returns [].
         assert isinstance(result, VerificationResult)
         assert result.verified is True  # no constraints = vacuously true
@@ -278,9 +266,7 @@ class TestMalformedCode:
             "```python\ndef good(x: int) -> int:\n    return x\n```\n"
             "```python\ndef bad(\n    return\n```"
         )
-        result = pipeline.verify(
-            question="Write functions", response=response, domain="code"
-        )
+        result = pipeline.verify(question="Write functions", response=response, domain="code")
         # The valid block produces constraints; the invalid one is skipped.
         assert len(result.constraints) > 0
         assert result.verified is True
@@ -410,9 +396,7 @@ class TestTimeout:
             def supported_domains(self) -> list[str]:
                 return ["slow"]
 
-            def extract(
-                self, text: str, domain: str | None = None
-            ) -> list[ConstraintResult]:
+            def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
                 time.sleep(0.3)
                 return []
 
@@ -422,9 +406,7 @@ class TestTimeout:
             timeout_seconds=0.05,
         )
         with pytest.raises(PipelineTimeoutError):
-            pipeline.verify(
-                question="test", response="test", domain="slow"
-            )
+            pipeline.verify(question="test", response="test", domain="slow")
 
     def test_no_timeout_when_fast(self) -> None:
         """REQ-VERIFY-003: Fast operations complete without timeout."""
@@ -453,9 +435,7 @@ class TestExtractionErrorHandling:
             def supported_domains(self) -> list[str]:
                 return ["broken"]
 
-            def extract(
-                self, text: str, domain: str | None = None
-            ) -> list[ConstraintResult]:
+            def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
                 raise RuntimeError("extractor exploded")
 
         pipeline = VerifyRepairPipeline(
@@ -463,9 +443,7 @@ class TestExtractionErrorHandling:
             timeout_seconds=0,
         )
         # verify() catches ExtractionError and returns degraded result.
-        result = pipeline.verify(
-            question="test", response="test", domain="broken"
-        )
+        result = pipeline.verify(question="test", response="test", domain="broken")
         assert result.verified is False
         assert "error" in result.certificate
 
@@ -477,9 +455,7 @@ class TestExtractionErrorHandling:
             def supported_domains(self) -> list[str]:
                 return ["broken"]
 
-            def extract(
-                self, text: str, domain: str | None = None
-            ) -> list[ConstraintResult]:
+            def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
                 raise RuntimeError("kaboom")
 
         pipeline = VerifyRepairPipeline(
@@ -555,9 +531,7 @@ class TestConcurrentCalls:
         pipeline = VerifyRepairPipeline(timeout_seconds=0)
 
         def do_extract(i: int) -> list[ConstraintResult]:
-            return pipeline.extract_constraints(
-                f"{i} + 1 = {i + 1}", domain="arithmetic"
-            )
+            return pipeline.extract_constraints(f"{i} + 1 = {i + 1}", domain="arithmetic")
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
             futures = [pool.submit(do_extract, i) for i in range(20)]
@@ -577,9 +551,7 @@ class TestVerifyAndRepairTimeout:
 
     def test_repair_loop_timeout(self) -> None:
         """REQ-VERIFY-003: Repair loop that exceeds timeout raises."""
-        pipeline = VerifyRepairPipeline(
-            max_repairs=10, timeout_seconds=0.05
-        )
+        pipeline = VerifyRepairPipeline(max_repairs=10, timeout_seconds=0.05)
         pipeline._model = MagicMock()
         pipeline._tokenizer = MagicMock()
 
@@ -613,9 +585,7 @@ class TestInternalBranches:
             def supported_domains(self) -> list[str]:
                 return ["err"]
 
-            def extract(
-                self, text: str, domain: str | None = None
-            ) -> list[ConstraintResult]:
+            def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
                 raise ExtractionError("already wrapped")
 
         pipeline = VerifyRepairPipeline(
@@ -727,9 +697,7 @@ class TestInternalBranches:
         cr.energy_term = mock_term
 
         # Patch ComposedEnergy to raise during verify.
-        with patch(
-            "carnot.verify.constraint.ComposedEnergy"
-        ) as mock_composed_cls:
+        with patch("carnot.verify.constraint.ComposedEnergy") as mock_composed_cls:
             mock_composed = MagicMock()
             mock_composed.verify.side_effect = RuntimeError("NaN energy")
             mock_composed_cls.return_value = mock_composed

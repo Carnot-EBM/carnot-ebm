@@ -77,16 +77,16 @@ SYNTHETIC_QUESTIONS = [
     ("What is 6! / 4!?", "6! / 4! = 6 × 5 = 30. Answer: 30.", True),
     # Incorrect responses (arithmetic errors)
     ("What is 12 + 15?", "12 + 15 = 26. Answer: 26.", False),  # Should be 27
-    ("What is 8 × 7?", "8 × 7 = 54. Answer: 54.", False),      # Should be 56
+    ("What is 8 × 7?", "8 × 7 = 54. Answer: 54.", False),  # Should be 56
     ("What is 100 / 4?", "100 / 4 = 30. Answer: 30.", False),  # Should be 25
     ("What is 5! (5 factorial)?", "5! = 5 × 4 × 3 × 2 × 1 = 100. Answer: 100.", False),
     ("If x = 3 and y = 4, what is x² + y²?", "x² = 9, y² = 16. 9 + 16 = 23. Answer: 23.", False),
-    ("What is 2^10?", "2^10 = 512. Answer: 512.", False),       # Should be 1024
+    ("What is 2^10?", "2^10 = 512. Answer: 512.", False),  # Should be 1024
     ("What is the sum of 1 to 10?", "Sum = 10 × 11 / 2 = 50. Answer: 50.", False),
     ("What is 17 mod 5?", "17 = 3 × 5 + 2. So 17 mod 5 = 3. Answer: 3.", False),
     ("What is sqrt(144)?", "sqrt(144) = 11. Answer: 11.", False),
     ("What is 7/8 + 1/8?", "7/8 + 1/8 = 8/8 = 2. Answer: 2.", False),
-    ("What is 3/4 × 8?", "3/4 × 8 = 8. Answer: 8.", False),    # Should be 6
+    ("What is 3/4 × 8?", "3/4 × 8 = 8. Answer: 8.", False),  # Should be 6
     ("What is 20% of 150?", "20% of 150 = 0.2 × 150 = 25. Answer: 25.", False),
     ("What is 9² - 4²?", "9² = 81, 4² = 16. 81 - 16 = 60. Answer: 60.", False),
     ("What is (3 + 4) × 2?", "(3 + 4) × 2 = 7 × 2 = 12. Answer: 12.", False),
@@ -178,7 +178,8 @@ def run_benchmark(max_iterations: int = 3) -> dict[str, Any]:
                 "question": question,
                 "is_correct": is_correct,
                 "initial_z3_status": iterations[0].new_z3_result.sat_status
-                if iterations else "sat",
+                if iterations
+                else "sat",
                 "n_iterations": n_iter,
                 "resolved": resolved,
                 "final_response_changed": final_response != response,
@@ -195,9 +196,7 @@ def run_benchmark(max_iterations: int = 3) -> dict[str, Any]:
         per_question_results.append(result)
 
     mean_iterations = (
-        sum(all_iteration_counts) / len(all_iteration_counts)
-        if all_iteration_counts
-        else 0.0
+        sum(all_iteration_counts) / len(all_iteration_counts) if all_iteration_counts else 0.0
     )
 
     # Load Exp 312 baseline for comparison if available
@@ -214,9 +213,7 @@ def run_benchmark(max_iterations: int = 3) -> dict[str, Any]:
     n_total = len(SYNTHETIC_QUESTIONS)
     verge_resolution_rate = (n_sat_initial + n_resolved) / n_total if n_total > 0 else 0.0
     accuracy_vs_baseline = (
-        verge_resolution_rate - baseline_skip_rate
-        if baseline_skip_rate is not None
-        else None
+        verge_resolution_rate - baseline_skip_rate if baseline_skip_rate is not None else None
     )
 
     return {

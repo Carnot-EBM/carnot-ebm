@@ -30,6 +30,7 @@ from carnot.models.prompt_injection_kan import InjectionExample, PromptInjection
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def tiny_checker() -> PromptInjectionEnergyChecker:
     """A PromptInjectionEnergyChecker with the published v1 weights.
@@ -39,7 +40,9 @@ def tiny_checker() -> PromptInjectionEnergyChecker:
 
     Spec: REQ-SAFE-007
     """
-    weights_path = _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_weights.json"
+    weights_path = (
+        _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_weights.json"
+    )
     if not weights_path.exists():
         pytest.skip("v1 weights not present — run Exp 690 first")
     return PromptInjectionEnergyChecker.load(weights_path)
@@ -78,6 +81,7 @@ def small_mixed_samples() -> list[tuple[str, str]]:
 # ---------------------------------------------------------------------------
 # Dataset-loader tests (offline fallbacks)
 # ---------------------------------------------------------------------------
+
 
 class TestSyntheticHackaPromptFallback:
     """Spec: REQ-SAFE-012 (dataset loading must not hard-block when HF unavailable)."""
@@ -166,6 +170,7 @@ class TestSyntheticStressTest:
 # Confusion-matrix computation
 # ---------------------------------------------------------------------------
 
+
 class TestComputeConfusionMatrix:
     """Spec: REQ-SAFE-007 (energy scoring drives decision at threshold)."""
 
@@ -213,6 +218,7 @@ class TestComputeConfusionMatrix:
 # Gate decision
 # ---------------------------------------------------------------------------
 
+
 class TestGateVerdict:
     """Spec: REQ-SAFE-012 (gate semantics are the publishability invariant)."""
 
@@ -248,6 +254,7 @@ class TestGateVerdict:
 # ---------------------------------------------------------------------------
 # Deliverable JSON schema
 # ---------------------------------------------------------------------------
+
 
 class TestDeliverableSchema:
     """Spec: REQ-SAFE-012 (deliverable must contain all required fields)."""
@@ -328,28 +335,37 @@ class TestDeliverableSchema:
 # Model card (integration — only if weights present)
 # ---------------------------------------------------------------------------
 
+
 class TestModelCard:
     """Spec: REQ-SAFE-012 (model card generated iff verdict is publishable)."""
 
     def test_model_card_exists_if_publishable(self) -> None:
-        deliverable_path = _REPO_ROOT / "results" / "experiment_691_prompt_injection_kan_cross_dataset.json"
+        deliverable_path = (
+            _REPO_ROOT / "results" / "experiment_691_prompt_injection_kan_cross_dataset.json"
+        )
         if not deliverable_path.exists():
             pytest.skip("deliverable not present")
         with open(deliverable_path) as fh:
             result = json.load(fh)
         if result["honest_verdict"] == "generalization_verified_publishable":
-            card_path = _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_MODELCARD.md"
+            card_path = (
+                _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_MODELCARD.md"
+            )
             assert card_path.exists(), "Model card should exist for publishable verdict"
 
     def test_model_card_contains_req_safe_007(self) -> None:
-        card_path = _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_MODELCARD.md"
+        card_path = (
+            _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_MODELCARD.md"
+        )
         if not card_path.exists():
             pytest.skip("model card not present (non-publishable run)")
         content = card_path.read_text()
         assert "REQ-SAFE-007" in content
 
     def test_model_card_has_license(self) -> None:
-        card_path = _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_MODELCARD.md"
+        card_path = (
+            _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_MODELCARD.md"
+        )
         if not card_path.exists():
             pytest.skip("model card not present")
         content = card_path.read_text()
@@ -357,7 +373,9 @@ class TestModelCard:
 
     def test_model_card_no_emojis(self) -> None:
         """Public documentation must be emoji-free (feedback rule: no emojis in docs)."""
-        card_path = _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_MODELCARD.md"
+        card_path = (
+            _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_MODELCARD.md"
+        )
         if not card_path.exists():
             pytest.skip("model card not present")
         content = card_path.read_text()

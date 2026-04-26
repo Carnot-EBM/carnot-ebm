@@ -31,6 +31,7 @@ class TestStreamingCoTHalluDetector:
 
     def _get_detector(self):
         from carnot.pipeline.streaming_cot import StreamingCoTHalluDetector
+
         return StreamingCoTHalluDetector(alpha=0.3, threshold=0.35)
 
     def test_empty_steps_returns_stable(self):
@@ -86,6 +87,7 @@ class TestStreamingCoTHalluDetector:
     def test_invalid_alpha_raises(self):
         """Constructor rejects alpha outside (0, 1]."""
         from carnot.pipeline.streaming_cot import StreamingCoTHalluDetector
+
         with pytest.raises(ValueError, match="alpha"):
             StreamingCoTHalluDetector(alpha=0.0)
         with pytest.raises(ValueError, match="alpha"):
@@ -94,6 +96,7 @@ class TestStreamingCoTHalluDetector:
     def test_invalid_threshold_raises(self):
         """Constructor rejects threshold outside [0, 1]."""
         from carnot.pipeline.streaming_cot import StreamingCoTHalluDetector
+
         with pytest.raises(ValueError, match="threshold"):
             StreamingCoTHalluDetector(threshold=-0.1)
         with pytest.raises(ValueError, match="threshold"):
@@ -109,6 +112,7 @@ class TestStreamingCoTHalluDetector:
     def test_ema_is_monotone_accumulative(self):
         """EMA increases when all steps have high proxy score."""
         from carnot.pipeline.streaming_cot import StreamingCoTHalluDetector
+
         det = StreamingCoTHalluDetector(alpha=0.5, threshold=0.9)
         # Very long steps force proxy score > 0
         long_step = "x" * 500
@@ -126,23 +130,27 @@ class TestExtractCotSteps:
 
     def test_numbered_steps_split(self):
         from carnot.pipeline.streaming_cot import extract_cot_steps
+
         response = "1. First step.\n2. Second step.\n3. Third step."
         steps = extract_cot_steps(response)
         assert len(steps) >= 2
 
     def test_step_prefix_split(self):
         from carnot.pipeline.streaming_cot import extract_cot_steps
+
         response = "Step 1: Do this.\nStep 2: Do that.\nStep 3: Done."
         steps = extract_cot_steps(response)
         assert len(steps) >= 2
 
     def test_empty_response_returns_empty(self):
         from carnot.pipeline.streaming_cot import extract_cot_steps
+
         assert extract_cot_steps("") == []
         assert extract_cot_steps("   ") == []
 
     def test_no_delimiter_returns_single_step(self):
         from carnot.pipeline.streaming_cot import extract_cot_steps
+
         response = "This is a plain response with no step delimiters at all."
         steps = extract_cot_steps(response)
         assert len(steps) == 1
@@ -164,6 +172,7 @@ class TestStreamingCotWiringEnabled:
         """Import VerifyRepairPipeline with CARNOT_STREAMING_COT=1 active."""
         # Patch the class attribute directly for isolation (avoids re-import gymnastics).
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         return VerifyRepairPipeline
 
     def test_streaming_cot_enabled_class_attr_true(self):
@@ -309,6 +318,7 @@ class TestExperiment874Integration:
 
         try:
             import scripts.experiment_874_streaming_cot_integration as exp874
+
             # Re-run to get fresh artifact (no caching needed).
             artifact = exp874.run_experiment()
         finally:

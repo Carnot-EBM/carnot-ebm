@@ -27,14 +27,13 @@ Spec: REQ-INFER-011, SCENARIO-INFER-012
 
 from __future__ import annotations
 
-from typing import Any
-
 import hashlib
 import io
 import logging
 import random
 import tokenize
 from dataclasses import dataclass, field
+from typing import Any
 
 import jax
 import jax.numpy as jnp
@@ -227,7 +226,7 @@ def train_reasoning_energy(
         return result
 
     params = get_params(model)
-    for epoch in range(config.n_epochs):
+    for _epoch in range(config.n_epochs):
         grads = jax.grad(loss_fn)(params)
         params = jax.tree.map(
             lambda p, g: p - config.learning_rate * g,

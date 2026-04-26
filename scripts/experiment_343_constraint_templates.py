@@ -105,13 +105,15 @@ def main() -> None:
         constraints = lib.apply_active_templates(response, MODEL_ID)
         n_constraints = len(constraints)
         total_constraints_generated += n_constraints
-        per_response_results.append({
-            "response_index": i,
-            "response_snippet": response[:60],
-            "n_constraints": n_constraints,
-            "constraint_types": [c.constraint_type for c in constraints],
-            "satisfied": [c.metadata.get("satisfied") for c in constraints],
-        })
+        per_response_results.append(
+            {
+                "response_index": i,
+                "response_snippet": response[:60],
+                "n_constraints": n_constraints,
+                "constraint_types": [c.constraint_type for c in constraints],
+                "satisfied": [c.metadata.get("satisfied") for c in constraints],
+            }
+        )
         print(f"Response {i}: {n_constraints} constraints from active templates")
 
     # -------------------------------------------------------------------------
@@ -136,6 +138,7 @@ def main() -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     import json
+
     with open(output_path, "w") as f:
         json.dump(artifact, f, indent=2)
 

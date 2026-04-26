@@ -56,7 +56,7 @@ _GATE_FILE = "results/psv_pool_gate.json"
 
 # PSV loop parameters
 _N_ITERATIONS = 20
-_POOL_A_SIZE = 10   # fixed small pool (Condition A — baseline degradation)
+_POOL_A_SIZE = 10  # fixed small pool (Condition A — baseline degradation)
 _POOL_B_SIZE = 100  # rotating large pool (Condition B — hypothesis fix)
 _SAMPLE_PER_ITER = 10  # questions sampled per PSV iteration
 
@@ -289,14 +289,20 @@ def run_experiment(repo_root: Path | None = None) -> dict:
     inference_b, verify_b = _make_synthetic_fns(pool_b)
 
     rng = random.Random(42)  # deterministic seed for reproducibility
-    questions_per_iter_b = [
-        rng.sample(pool_b, _SAMPLE_PER_ITER) for _ in range(_N_ITERATIONS)
-    ]
+    questions_per_iter_b = [rng.sample(pool_b, _SAMPLE_PER_ITER) for _ in range(_N_ITERATIONS)]
 
-    _log.info("Running Condition A (fixed %d-question pool, %d iterations)...", _POOL_A_SIZE, _N_ITERATIONS)
+    _log.info(
+        "Running Condition A (fixed %d-question pool, %d iterations)...",
+        _POOL_A_SIZE,
+        _N_ITERATIONS,
+    )
     fp_rates_a = _run_psv_condition(questions_per_iter_a, inference_a, verify_a)
 
-    _log.info("Running Condition B (rotating %d-question pool, %d iterations)...", _POOL_B_SIZE, _N_ITERATIONS)
+    _log.info(
+        "Running Condition B (rotating %d-question pool, %d iterations)...",
+        _POOL_B_SIZE,
+        _N_ITERATIONS,
+    )
     fp_rates_b = _run_psv_condition(questions_per_iter_b, inference_b, verify_b)
 
     condition_a_slope = _linear_slope(fp_rates_a)

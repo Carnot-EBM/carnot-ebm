@@ -36,7 +36,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-
 # ---------------------------------------------------------------------------
 # InterleavedViolationSequence
 # ---------------------------------------------------------------------------
@@ -121,7 +120,7 @@ class InterleavedViolationSequence:
         seq = self.domain_sequence
         if len(seq) < 2:
             return 0.0
-        transitions = sum(1 for a, b in zip(seq, seq[1:]) if a != b)
+        transitions = sum(1 for a, b in zip(seq, seq[1:], strict=False) if a != b)
         return transitions / (len(seq) - 1)
 
     def to_training_batches(self, batch_size: int) -> list[list[dict]]:
@@ -142,10 +141,7 @@ class InterleavedViolationSequence:
         """
         if not self.steps:
             return [[]]
-        return [
-            self.steps[i : i + batch_size]
-            for i in range(0, len(self.steps), batch_size)
-        ]
+        return [self.steps[i : i + batch_size] for i in range(0, len(self.steps), batch_size)]
 
 
 # ---------------------------------------------------------------------------

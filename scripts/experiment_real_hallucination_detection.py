@@ -114,7 +114,9 @@ def main() -> int:
                 temperature=1.0,
             )
 
-        response = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        response = tokenizer.decode(
+            outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+        )
 
         # Get hidden states for the full input
         with torch.no_grad():
@@ -126,10 +128,12 @@ def main() -> int:
         mid_hidden = hidden_states[len(hidden_states) // 2][0].mean(dim=0).float().numpy()
 
         # Concatenate last + mid layer as feature vector
-        activation = jnp.concatenate([
-            jnp.array(last_hidden),
-            jnp.array(mid_hidden),
-        ])
+        activation = jnp.concatenate(
+            [
+                jnp.array(last_hidden),
+                jnp.array(mid_hidden),
+            ]
+        )
 
         is_correct = check_answer(response, expected)
         status = "✓" if is_correct else "✗"
@@ -139,19 +143,21 @@ def main() -> int:
         else:
             hallucinated_activations.append(activation)
 
-        results.append({
-            "question": question,
-            "expected": expected,
-            "response": response.strip()[:50],
-            "correct": is_correct,
-            "category": category,
-        })
+        results.append(
+            {
+                "question": question,
+                "expected": expected,
+                "response": response.strip()[:50],
+                "correct": is_correct,
+                "category": category,
+            }
+        )
 
         print(f"  [{status}] Q: {question[:40]}... → {response.strip()[:30]}")
 
     n_correct = sum(1 for r in results if r["correct"])
     n_wrong = len(results) - n_correct
-    print(f"\nModel accuracy: {n_correct}/{len(results)} ({100*n_correct/len(results):.0f}%)")
+    print(f"\nModel accuracy: {n_correct}/{len(results)} ({100 * n_correct / len(results):.0f}%)")
     print(f"Correct: {n_correct}, Hallucinated: {n_wrong}")
 
     if n_wrong == 0:
@@ -179,12 +185,16 @@ def main() -> int:
 
     config = HallucinationDirectionConfig(normalize=True)
     direction = find_hallucination_direction(correct_batch, hallucinated_batch, config)
-    print(f"Hallucination direction: shape={direction.shape}, norm={float(jnp.linalg.norm(direction)):.4f}")
+    print(
+        f"Hallucination direction: shape={direction.shape}, norm={float(jnp.linalg.norm(direction)):.4f}"
+    )
 
     # Step 4: Compute energy and measure separation
     print("\n--- Step 4: Measuring energy separation ---")
     correct_energies = [float(hallucination_energy(a, direction)) for a in correct_activations]
-    hallucinated_energies = [float(hallucination_energy(a, direction)) for a in hallucinated_activations]
+    hallucinated_energies = [
+        float(hallucination_energy(a, direction)) for a in hallucinated_activations
+    ]
 
     mean_correct = sum(correct_energies) / len(correct_energies)
     mean_hallucinated = sum(hallucinated_energies) / len(hallucinated_energies)
@@ -206,15 +216,17 @@ def main() -> int:
     print(f"  Accuracy: {accuracy:.1%}")
 
     # Step 5: Summary
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("RESULTS")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  Model: {model_name}")
     print(f"  Questions: {len(QUESTIONS)}")
-    print(f"  Model accuracy: {n_correct}/{len(results)} ({100*n_correct/len(results):.0f}%)")
-    print(f"  Energy gap: {gap:.4f} ({'POSITIVE — hallucinations have higher energy' if gap > 0 else 'NEGATIVE — direction is inverted'})")
+    print(f"  Model accuracy: {n_correct}/{len(results)} ({100 * n_correct / len(results):.0f}%)")
+    print(
+        f"  Energy gap: {gap:.4f} ({'POSITIVE — hallucinations have higher energy' if gap > 0 else 'NEGATIVE — direction is inverted'})"
+    )
     print(f"  Detection accuracy: {accuracy:.1%}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     if gap > 0 and accuracy > 0.6:
         print("SUCCESS: The energy function separates correct from hallucinated!")

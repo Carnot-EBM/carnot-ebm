@@ -219,9 +219,7 @@ class TestFaithfulnessScore:
         probe = FACTEFaithfulnessProbe()
         # Three steps: pair (A,B) = 1.0, pair (B,C) = 0.0 → mean = 0.5
         response = (
-            "She earns 5 dollars.\n"
-            "She spends 5 dollars on food.\n"
-            "The moon is 384400 km away."
+            "She earns 5 dollars.\nShe spends 5 dollars on food.\nThe moon is 384400 km away."
         )
         score = probe.faithfulness_score(response)
         # pair 0: step_a='She earns 5 dollars.', step_b='She spends 5 dollars on food.'

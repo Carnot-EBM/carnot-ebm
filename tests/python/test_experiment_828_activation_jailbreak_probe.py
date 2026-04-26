@@ -396,8 +396,14 @@ class TestExperimentEndToEnd(unittest.TestCase):
         mock_watchdog.__exit__ = lambda s, *a: None
 
         with (
-            patch("experiment_828_activation_jailbreak_probe.ExperimentTemplate", return_value=mock_tmpl),
-            patch("experiment_828_activation_jailbreak_probe.ExperimentTimeoutWatchdog", return_value=mock_watchdog),
+            patch(
+                "experiment_828_activation_jailbreak_probe.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
+            patch(
+                "experiment_828_activation_jailbreak_probe.ExperimentTimeoutWatchdog",
+                return_value=mock_watchdog,
+            ),
             patch("builtins.open", unittest.mock.mock_open()),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
@@ -425,7 +431,9 @@ class TestExperimentEndToEnd(unittest.TestCase):
         self.assertEqual(artifact["n_test"], 40)
         self.assertEqual(artifact["layers"], [4, 8, 12, 16])
         self.assertEqual(artifact["tier0h_auc"], 1.0)
-        self.assertIn(artifact["honest_verdict"], {"probe_viable", "probe_partial", "probe_not_viable"})
+        self.assertIn(
+            artifact["honest_verdict"], {"probe_viable", "probe_partial", "probe_not_viable"}
+        )
 
         # auc_delta must equal probe_auc - tier0h_auc.
         self.assertAlmostEqual(

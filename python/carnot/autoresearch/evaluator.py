@@ -47,10 +47,11 @@ Spec: REQ-AUTO-005, REQ-AUTO-007
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING
 
-from carnot.autoresearch.baselines import BaselineRecord
-from carnot.autoresearch.sandbox import SandboxResult
+if TYPE_CHECKING:
+    from carnot.autoresearch.baselines import BaselineRecord
+    from carnot.autoresearch.sandbox import SandboxResult
 
 
 @dataclass

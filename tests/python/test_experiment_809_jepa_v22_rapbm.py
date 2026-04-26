@@ -100,20 +100,24 @@ def test_rapbm_soft_label_computation() -> None:
     """
     # Build a small store with two entries: one "violates", one "satisfies".
     store = EmbeddingConstraintStore()
-    store.store(ConstraintSPOTuple(
-        subject="arithmetic_step",
-        predicate="violates",
-        object="step_correctness_constraint",
-        embedding=None,
-        source_violation_type="incorrect",
-    ))
-    store.store(ConstraintSPOTuple(
-        subject="correct_step",
-        predicate="satisfies",
-        object="step_correctness_constraint",
-        embedding=None,
-        source_violation_type="correct",
-    ))
+    store.store(
+        ConstraintSPOTuple(
+            subject="arithmetic_step",
+            predicate="violates",
+            object="step_correctness_constraint",
+            embedding=None,
+            source_violation_type="incorrect",
+        )
+    )
+    store.store(
+        ConstraintSPOTuple(
+            subject="correct_step",
+            predicate="satisfies",
+            object="step_correctness_constraint",
+            embedding=None,
+            source_violation_type="correct",
+        )
+    )
 
     # A single training example with gt_label=0.0 (correct step).
     step_seqs = [["3 + 4 = 7. The answer is 7."]]
@@ -127,17 +131,14 @@ def test_rapbm_soft_label_computation() -> None:
     # The formula is gt × 1.0 + retrieved_avg × 0.4.
     # retrieved_avg is in [0.0, 1.0], so soft_label is in [0.0, 1.4].
     assert 0.0 <= sl <= 1.4 + 1e-6, (
-        f"Soft label {sl} out of expected range [0.0, 1.4]; "
-        "formula: gt × 1.0 + retrieved_avg × 0.4"
+        f"Soft label {sl} out of expected range [0.0, 1.4]; formula: gt × 1.0 + retrieved_avg × 0.4"
     )
 
     # Ground-truth weight must always contribute exactly RAPBM_GT_WEIGHT × gt_label.
     # We can verify by using gt_label=1.0 and checking sl >= RAPBM_GT_WEIGHT.
     step_seqs_violation = [["Divide both sides by 0."]]
     gt_labels_violation = [1.0]
-    soft_labels_v = exp809._build_rapbm_soft_labels(
-        step_seqs_violation, gt_labels_violation, store
-    )
+    soft_labels_v = exp809._build_rapbm_soft_labels(step_seqs_violation, gt_labels_violation, store)
     sl_v = soft_labels_v[0]
     assert sl_v >= exp809.RAPBM_GT_WEIGHT, (
         f"When gt_label=1.0, soft_label must be >= RAPBM_GT_WEIGHT={exp809.RAPBM_GT_WEIGHT}; got {sl_v}"
@@ -236,9 +237,17 @@ def test_path_b_returns_required_fields(tmp_path: Path) -> None:
     result = exp809._run_path_b(tmp_path, exp808_ood_auc=0.2)
 
     required_fields = [
-        "path", "rapbm_applied", "rapbm_k_retrieve", "rapbm_gt_weight",
-        "rapbm_retrieved_weight", "rapbm_soft_label_avg", "rapbm_store_entries",
-        "in_dist_auc", "ood_auc", "ood_auc_delta_vs_808", "honest_verdict",
+        "path",
+        "rapbm_applied",
+        "rapbm_k_retrieve",
+        "rapbm_gt_weight",
+        "rapbm_retrieved_weight",
+        "rapbm_soft_label_avg",
+        "rapbm_store_entries",
+        "in_dist_auc",
+        "ood_auc",
+        "ood_auc_delta_vs_808",
+        "honest_verdict",
     ]
     for field in required_fields:
         assert field in result, f"PATH B result missing required field: {field}"

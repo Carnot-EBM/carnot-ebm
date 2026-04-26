@@ -595,7 +595,7 @@ class TestEdgeCases:
 
         Spec: REQ-VERIFY-080
         """
-        logits = np.zeros(2, dtype=np.float64)   # 2-token uniform → normalised H = 1.0
+        logits = np.zeros(2, dtype=np.float64)  # 2-token uniform → normalised H = 1.0
         result = compute_prompt_uncertainty(logits, threshold=1.0)
         assert result.uncertainty_score == pytest.approx(1.0, abs=1e-6)
         assert result.high_risk is False

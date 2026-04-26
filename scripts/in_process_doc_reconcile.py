@@ -52,7 +52,7 @@ import json
 import re
 import subprocess
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -63,24 +63,56 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 # (research finding). The mapping mirrors the Haiku prompt at
 # scripts/research_conductor.py:2280-2295.
 _FAILED_TOKENS = (
-    "timed_out", "exception", "failed", "crash",
+    "timed_out",
+    "exception",
+    "failed",
+    "crash",
 )
 _BLOCKED_TOKENS = (
-    "blocked", "gpu_required", "synthesis_required",
-    "tools_unavailable", "tools_not_installed",
+    "blocked",
+    "gpu_required",
+    "synthesis_required",
+    "tools_unavailable",
+    "tools_not_installed",
     # Note: the bare token "required" is intentionally NOT in this list.
     # It produced false positives on verdicts like "fr11_required_pass".
 )
 _PARTIAL_TOKENS = (
-    "partial", "inverted", "insufficient", "neutral", "not_viable",
-    "no_improvement", "tolerance_exceeded", "marginal", "still_wrong",
-    "no_delta", "below", "regression", "incorrect", "negative",
-    "flat", "plateau",
+    "partial",
+    "inverted",
+    "insufficient",
+    "neutral",
+    "not_viable",
+    "no_improvement",
+    "tolerance_exceeded",
+    "marginal",
+    "still_wrong",
+    "no_delta",
+    "below",
+    "regression",
+    "incorrect",
+    "negative",
+    "flat",
+    "plateau",
 )
 _WIN_TOKENS = (
-    "complete", "confirmed", "viable", "closed", "resolved", "done",
-    "fixed", "effective", "ships", "improved", "lossless", "positive",
-    "ready", "adequate", "operational", "published", "exceeds_target",
+    "complete",
+    "confirmed",
+    "viable",
+    "closed",
+    "resolved",
+    "done",
+    "fixed",
+    "effective",
+    "ships",
+    "improved",
+    "lossless",
+    "positive",
+    "ready",
+    "adequate",
+    "operational",
+    "published",
+    "exceeds_target",
     # Added 2026-04-25 — verdicts observed in .65/.66/.67/.68 that
     # were genuine wins but defaulted to ⚠️ Research Finding because
     # the relevant token wasn't in this list:
@@ -89,18 +121,37 @@ _WIN_TOKENS = (
     #   .66 Exp 856  "deployed"                     → "deployed"
     #   .66 Exp 875  "fr11_tier2_loop_closed"      (already had "closed")
     #   .67 Exp 874  "streaming_cot_wired"          → "wired"
-    "wired", "implemented", "works", "deployed", "viable_tier",
+    "wired",
+    "implemented",
+    "works",
+    "deployed",
+    "viable_tier",
 )
 
 # Artifact fields that, if present, are pulled into the changelog line as
 # the leading "key metric". First match wins; the order reflects which
 # metric is most informative for the reader of a recent changelog entry.
 _KEY_METRIC_FIELDS = (
-    "auc", "ood_auc", "id_auc", "accuracy", "precision", "recall", "f1",
-    "tp_count", "fp_count", "delta_overall", "discrimination_rate",
-    "skip_rate", "lut_count", "lut_count_n32", "n_repaired",
-    "repair_delta", "ising_calls_saved", "augmentation_ratio",
-    "n_published", "models_published",
+    "auc",
+    "ood_auc",
+    "id_auc",
+    "accuracy",
+    "precision",
+    "recall",
+    "f1",
+    "tp_count",
+    "fp_count",
+    "delta_overall",
+    "discrimination_rate",
+    "skip_rate",
+    "lut_count",
+    "lut_count_n32",
+    "n_repaired",
+    "repair_delta",
+    "ising_calls_saved",
+    "augmentation_ratio",
+    "n_published",
+    "models_published",
 )
 
 
@@ -254,7 +305,10 @@ def _commit_added_lines_in_specs(repo_root: Path) -> list[str]:
     try:
         result = subprocess.run(
             ["git", "show", "--unified=0", "--no-color", "HEAD"],
-            cwd=repo_root, capture_output=True, text=True, timeout=10,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
     except (subprocess.SubprocessError, OSError):
         return []
@@ -353,7 +407,7 @@ def reconcile(
     a `ReconResult` describing what was appended; the conductor uses
     that to log the outcome and to decide whether to commit.
     """
-    today_iso = today or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    today_iso = today or datetime.now(UTC).strftime("%Y-%m-%d")
     task_id = task.get("id", "")
     task_title = task.get("title", "(untitled task)")
 
@@ -392,10 +446,15 @@ def reconcile(
 
     # 1. Always append to ops/changelog.md.
     changelog_line = build_changelog_entry(
-        artifact, task_title, status_label, artifact_rel, today_iso,
+        artifact,
+        task_title,
+        status_label,
+        artifact_rel,
+        today_iso,
     )
     changelog_appended = append_line(
-        repo_root / "ops" / "changelog.md", changelog_line,
+        repo_root / "ops" / "changelog.md",
+        changelog_line,
     )
 
     # 2. Conditionally update _bmad/traceability.md and ops/status.md.
@@ -419,13 +478,9 @@ def reconcile(
             trace_status = "Implemented-Partial"
         trace_lines: list[str] = []
         for rid in new_reqs:
-            trace_lines.append(
-                f"| {rid} | {task_title} | {trace_status} | {artifact_rel} |\n"
-            )
+            trace_lines.append(f"| {rid} | {task_title} | {trace_status} | {artifact_rel} |\n")
         for sid in new_scenarios:
-            trace_lines.append(
-                f"| {sid} | {task_title} | {trace_status} | {artifact_rel} |\n"
-            )
+            trace_lines.append(f"| {sid} | {task_title} | {trace_status} | {artifact_rel} |\n")
         trace_path = repo_root / "_bmad" / "traceability.md"
         if trace_path.exists():
             for line in trace_lines:
@@ -437,11 +492,11 @@ def reconcile(
         # delivered capability in status.md.
         if status_label == "✅ Complete":
             status_line = (
-                f"| {today_iso} | {task_title} | {status_label} | "
-                f"{verdict} | {artifact_rel} |\n"
+                f"| {today_iso} | {task_title} | {status_label} | {verdict} | {artifact_rel} |\n"
             )
             status_appended = append_line(
-                repo_root / "ops" / "status.md", status_line,
+                repo_root / "ops" / "status.md",
+                status_line,
             )
 
     return ReconResult(

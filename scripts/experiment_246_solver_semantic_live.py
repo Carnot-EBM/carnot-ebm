@@ -57,12 +57,24 @@ _SOURCE_ARTIFACT_CONSTRAINT_IR = "results/experiment_221_results.json"
 
 # Constraint types that map to the cardinality solver route
 _CARDINALITY_TYPES = frozenset(
-    {"count_exact", "word_count_range", "sentence_count", "step_count", "sentence_count_per_section"}
+    {
+        "count_exact",
+        "word_count_range",
+        "sentence_count",
+        "step_count",
+        "sentence_count_per_section",
+    }
 )
 # Constraint types that map to the set_membership solver route
 _SET_MEMBERSHIP_TYPES = frozenset(
-    {"must_include_token", "must_include_phrase", "forbidden_token", "forbidden_phrase",
-     "enum_membership", "grounded_selection"}
+    {
+        "must_include_token",
+        "must_include_phrase",
+        "forbidden_token",
+        "forbidden_phrase",
+        "enum_membership",
+        "grounded_selection",
+    }
 )
 # Arithmetic equation regex: captures A OP B = C
 _ARITHMETIC_RE = re.compile(
@@ -251,9 +263,7 @@ def save_checkpoint(path: Path, payload: dict[str, Any]) -> None:
     """Write a checkpoint atomically via a .tmp rename."""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = path.with_suffix(".tmp")
-    tmp_path.write_text(
-        json.dumps(payload, indent=2, sort_keys=False) + "\n", encoding="utf-8"
-    )
+    tmp_path.write_text(json.dumps(payload, indent=2, sort_keys=False) + "\n", encoding="utf-8")
     tmp_path.replace(path)
 
 
@@ -476,7 +486,8 @@ def _constraint_to_formal_claim(
             }
         if constraint_type in {"enum_membership", "grounded_selection"}:
             choices: list[str] = (
-                [str(v) for v in value] if isinstance(value, list)
+                [str(v) for v in value]
+                if isinstance(value, list)
                 else ([str(value)] if value is not None else [])
             )
             if not choices:
@@ -526,9 +537,7 @@ def build_route_summary(claims: list[dict[str, Any]]) -> dict[str, Any]:
         by_verdict[normalized] += 1
         total_claims += 1
 
-    abstain_rate = (
-        round(by_verdict["abstain"] / total_claims, 6) if total_claims > 0 else 0.0
-    )
+    abstain_rate = round(by_verdict["abstain"] / total_claims, 6) if total_claims > 0 else 0.0
     return {
         "by_route": dict(sorted(by_route.items())),
         "by_verdict": dict(sorted(by_verdict.items())),
@@ -638,9 +647,7 @@ def summarize_benchmark_runs(
             "accuracy": repair_accuracy,
             "n_repaired": n_repaired,
             "repair_yield": repair_yield,
-            "avg_repairs": _round_mean(
-                [float(r.get("n_repairs", 0)) for r in verify_repair_runs]
-            ),
+            "avg_repairs": _round_mean([float(r.get("n_repairs", 0)) for r in verify_repair_runs]),
             "mean_latency_seconds": _round_mean(
                 [float(r.get("latency_seconds", 0.0)) for r in verify_repair_runs]
             ),
@@ -711,9 +718,7 @@ def build_artifact_payload(
     Returns:
         Dict ready for ``json.dumps`` / ``write_artifact``.
     """
-    checkpoint_pattern = (
-        "results/checkpoints/experiment_246/<benchmark>__<model>__<mode>.json"
-    )
+    checkpoint_pattern = "results/checkpoints/experiment_246/<benchmark>__<model>__<mode>.json"
 
     def _cohort_block(
         cohort: list[dict[str, Any]],
@@ -968,9 +973,7 @@ def _execute_constraint_ir_case_live(  # pragma: no cover
     response = str(generate(model, tokenizer, prompt, max_new_tokens=256))
     latency = _time.time() - t0
 
-    raw_claims = extract_formal_claims_from_response(
-        response, case=case, benchmark="constraint_ir"
-    )
+    raw_claims = extract_formal_claims_from_response(response, case=case, benchmark="constraint_ir")
     formal_claims = _verify_formal_claims_batch(raw_claims)
 
     flagged = any(c.get("verdict") == "violated" for c in formal_claims)
@@ -1006,9 +1009,7 @@ def _execute_constraint_ir_case_live(  # pragma: no cover
     n_repairs = 0
     if flagged:
         violated_details = [
-            c.get("failure_detail", "")
-            for c in formal_claims
-            if c.get("verdict") == "violated"
+            c.get("failure_detail", "") for c in formal_claims if c.get("verdict") == "violated"
         ]
         for _ in range(max_repairs):
             repair_prompt = (
@@ -1054,9 +1055,7 @@ def _run_benchmark_for_model_live(  # pragma: no cover
     pipeline = None  # placeholder; Exp 247 wires in the VerifyRepairPipeline
 
     prompt_seed_map = {
-        str(case["case_id"]): int(
-            (case.get("prompt_seeds") or {}).get("baseline", 0)
-        )
+        str(case["case_id"]): int((case.get("prompt_seeds") or {}).get("baseline", 0))
         for case in cases
     }
 
@@ -1068,6 +1067,7 @@ def _run_benchmark_for_model_live(  # pragma: no cover
 
     paired: list[dict[str, Any]] = []
     for mode in MODE_ORDER:
+
         def _make_executor(m: str) -> Any:
             def _execute(case: dict[str, Any]) -> dict[str, Any]:
                 return execute_fn(
@@ -1079,6 +1079,7 @@ def _run_benchmark_for_model_live(  # pragma: no cover
                     max_repairs=max_repairs,
                     prompt_seed=prompt_seed_map.get(str(case["case_id"]), 0),
                 )
+
             return _execute
 
         mode_results = run_mode(
@@ -1104,6 +1105,7 @@ def _run_benchmark_for_model_live(  # pragma: no cover
     _gc.collect()
     try:
         import torch
+
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
     except Exception:
@@ -1191,9 +1193,7 @@ def main() -> None:  # pragma: no cover
                 verify_repair_runs=_runs["verify_repair"],
             )
             gsm8k_all_claims.extend(
-                collect_all_claims_from_runs(
-                    _runs["verify_only"] + _runs["verify_repair"]
-                )
+                collect_all_claims_from_runs(_runs["verify_only"] + _runs["verify_repair"])
             )
 
             _ir_runs = {
@@ -1213,9 +1213,7 @@ def main() -> None:  # pragma: no cover
                 verify_repair_runs=_ir_runs["verify_repair"],
             )
             constraint_ir_all_claims.extend(
-                collect_all_claims_from_runs(
-                    _ir_runs["verify_only"] + _ir_runs["verify_repair"]
-                )
+                collect_all_claims_from_runs(_ir_runs["verify_only"] + _ir_runs["verify_repair"])
             )
 
     gsm8k_route_summary = build_route_summary(gsm8k_all_claims)
@@ -1261,6 +1259,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

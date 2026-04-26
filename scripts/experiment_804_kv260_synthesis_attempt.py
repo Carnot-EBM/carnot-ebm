@@ -41,6 +41,7 @@ sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 from experiment_template import ExperimentTemplate  # noqa: E402
 from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: E402
+import contextlib
 
 DELIVERABLE = "results/experiment_804_kv260_synthesis_attempt.json"
 EXP794_ARTIFACT = "results/experiment_794_fpga_toolchain_install.json"
@@ -173,9 +174,7 @@ def _run_yosys_synth(rtl_text: str, n_spins: int, yosys_cmd: str) -> tuple[bool,
 
     with tempfile.NamedTemporaryFile(suffix=".ys", mode="w", delete=False) as ys_tmp:
         ys_tmp.write(
-            f"read_verilog {rtl_path}\n"
-            f"synth_ice40 -top ising_sampler_v3 -json {json_path}\n"
-            "stat\n"
+            f"read_verilog {rtl_path}\nsynth_ice40 -top ising_sampler_v3 -json {json_path}\nstat\n"
         )
         ys_path = ys_tmp.name
 
@@ -188,10 +187,8 @@ def _run_yosys_synth(rtl_text: str, n_spins: int, yosys_cmd: str) -> tuple[bool,
 
     # Clean up temp files
     for p in [rtl_path, json_path, ys_path]:
-        try:
+        with contextlib.suppress(Exception):
             Path(p).unlink(missing_ok=True)
-        except Exception:
-            pass
 
     return not has_error, lut_count, combined
 

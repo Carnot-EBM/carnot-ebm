@@ -34,8 +34,10 @@ Spec: REQ-LEARN-070, REQ-LEARN-071, SCENARIO-LEARN-110, SCENARIO-LEARN-111,
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Data types
@@ -147,7 +149,7 @@ class MISECalibrator:
         def _dot(a: object, b: object) -> float:
             # Support both sequences and array-like objects with element access.
             try:
-                return float(sum(float(ai) * float(bi) for ai, bi in zip(a, b)))  # type: ignore[call-overload]
+                return float(sum(float(ai) * float(bi) for ai, bi in zip(a, b, strict=False)))  # type: ignore[call-overload]
             except TypeError:
                 return float(a) * float(b)  # type: ignore[arg-type]
 
@@ -205,7 +207,11 @@ class MISECalibrator:
         incorrect_scores: list[float] = []
 
         for triple in triples:
-            effective = triple.repaired_response if triple.repaired_response is not None else triple.original_response
+            effective = (
+                triple.repaired_response
+                if triple.repaired_response is not None
+                else triple.original_response
+            )
             score = self.backward_inference_score(effective, triple.question)
             if triple.verdict_correct:
                 correct_scores.append(score)

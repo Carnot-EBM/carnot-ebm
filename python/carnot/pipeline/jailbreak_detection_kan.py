@@ -47,8 +47,6 @@ from __future__ import annotations
 import math
 import random
 from dataclasses import dataclass
-from typing import List
-
 
 # ---------------------------------------------------------------------------
 # JailbreakKANConfig
@@ -142,10 +140,7 @@ class _TFIDFVectorizer:
         # Sort by document frequency (most common first) and cap at max_features.
         # We exclude terms that appear in all documents (df == n_docs) or only once
         # (df == 1) because they carry no discriminative information.
-        useful = {
-            term: count for term, count in df.items()
-            if 1 < count < n_docs or n_docs <= 2
-        }
+        useful = {term: count for term, count in df.items() if 1 < count < n_docs or n_docs <= 2}
         if not useful:
             useful = df
 
@@ -235,8 +230,7 @@ class _LinearClassifier:
         scale2 = math.sqrt(2.0 / (hidden_dim + 1))
 
         self.W1 = [
-            [(rng.gauss(0, 1) * scale1) for _ in range(hidden_dim)]
-            for _ in range(n_features)
+            [(rng.gauss(0, 1) * scale1) for _ in range(hidden_dim)] for _ in range(n_features)
         ]
         self.b1 = [0.0] * hidden_dim
         self.W2 = [rng.gauss(0, 1) * scale2 for _ in range(hidden_dim)]
@@ -282,10 +276,7 @@ class _LinearClassifier:
         d_hidden = [d_logit * self.W2[j] for j in range(self.hidden_dim)]
 
         # ReLU derivative: 1 if hidden > 0, else 0
-        d_hidden_pre = [
-            d_hidden[j] if hidden[j] > 0 else 0.0
-            for j in range(self.hidden_dim)
-        ]
+        d_hidden_pre = [d_hidden[j] if hidden[j] > 0 else 0.0 for j in range(self.hidden_dim)]
 
         d_W1 = [[x[i] * d_hidden_pre[j] for j in range(self.hidden_dim)] for i in range(len(x))]
         d_b1 = d_hidden_pre
@@ -369,7 +360,7 @@ class JailbreakDetectionKAN:
         )
         self._fitted = False
 
-    def fit(self, prompts: List[str], labels: List[int]) -> dict:
+    def fit(self, prompts: list[str], labels: list[int]) -> dict:
         """Train the jailbreak detector on a labelled corpus.
 
         **Training procedure:**
@@ -404,9 +395,7 @@ class JailbreakDetectionKAN:
             rng.shuffle(indices)
             epoch_loss = 0.0
             for idx in indices:
-                loss = self._classifier.train_step(
-                    features[idx], labels[idx], self.learning_rate
-                )
+                loss = self._classifier.train_step(features[idx], labels[idx], self.learning_rate)
                 epoch_loss += loss
             loss_history.append(epoch_loss / max(len(indices), 1))
 
@@ -454,8 +443,8 @@ class JailbreakDetectionKAN:
 
     def evaluate_auroc(
         self,
-        prompts: List[str],
-        labels: List[int],
+        prompts: list[str],
+        labels: list[int],
     ) -> tuple[float, float, float]:
         """Evaluate AUROC, precision, and recall at threshold=0.5.
 
@@ -493,13 +482,13 @@ class JailbreakDetectionKAN:
             auroc = 0.5
         else:
             # Sort by score descending (high score = predicted jailbreak)
-            paired = sorted(zip(scores, labels), key=lambda x: -x[0])
+            paired = sorted(zip(scores, labels, strict=False), key=lambda x: -x[0])
             tp = 0
             fp = 0
             auc = 0.0
             prev_fpr = 0.0
             prev_tpr = 0.0
-            for score, lbl in paired:
+            for _score, lbl in paired:
                 if lbl == 1:
                     tp += 1
                 else:
@@ -514,13 +503,13 @@ class JailbreakDetectionKAN:
 
         # Precision and recall at threshold=0.5
         tp_count = sum(
-            1 for score, lbl in zip(scores, labels) if score > 0.5 and lbl == 1
+            1 for score, lbl in zip(scores, labels, strict=False) if score > 0.5 and lbl == 1
         )
         fp_count = sum(
-            1 for score, lbl in zip(scores, labels) if score > 0.5 and lbl == 0
+            1 for score, lbl in zip(scores, labels, strict=False) if score > 0.5 and lbl == 0
         )
         fn_count = sum(
-            1 for score, lbl in zip(scores, labels) if score <= 0.5 and lbl == 1
+            1 for score, lbl in zip(scores, labels, strict=False) if score <= 0.5 and lbl == 1
         )
 
         precision = tp_count / (tp_count + fp_count) if (tp_count + fp_count) > 0 else 0.0

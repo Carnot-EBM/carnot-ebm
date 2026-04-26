@@ -40,9 +40,7 @@ from typing import Any
 # Force CPU for reproducibility (avoids ROCm/CUDA non-determinism).
 os.environ.setdefault("JAX_PLATFORMS", "cpu")
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -82,19 +80,13 @@ def generate_gsm8k_problems(n: int = 50, seed: int = RANDOM_SEED) -> list[dict]:
             # Addition problem.
             a = rng.randint(1, 50)
             b = rng.randint(1, 50)
-            q = (
-                f"Alice has {a} apples. She buys {b} more. "
-                f"How many apples does she have now?"
-            )
+            q = f"Alice has {a} apples. She buys {b} more. How many apples does she have now?"
             answer = a + b
         else:
             # Multiplication problem.
             s = rng.randint(2, 20)
             t = rng.randint(2, 10)
-            q = (
-                f"A car travels at {s} km/h for {t} hours. "
-                f"How far does it travel?"
-            )
+            q = f"A car travels at {s} km/h for {t} hours. How far does it travel?"
             answer = s * t
         problems.append({"question": q, "answer": answer, "id": i})
     return problems
@@ -190,6 +182,7 @@ class MockArithmeticLLM:
     def parameters(self):
         """Yield a dummy parameter so EnergyGuidedSampler can detect device."""
         import torch
+
         yield torch.zeros(1)
 
 
@@ -212,6 +205,7 @@ class MockTokenizer:
     def encode(self, text: str, return_tensors: str = "pt") -> Any:
         """Encode any text as a single dummy token (token ID 50)."""
         import torch
+
         return torch.tensor([[50]])
 
     def decode(self, ids: Any, skip_special_tokens: bool = True) -> str:
@@ -304,9 +298,7 @@ def run_mode(
         model = MockArithmeticLLM(correct_answer=correct, error_rate=error_rate)
 
         t0 = time.monotonic()
-        result = sampler.generate(
-            prob["question"], model, tokenizer, max_tokens=5, temperature=0
-        )
+        result = sampler.generate(prob["question"], model, tokenizer, max_tokens=5, temperature=0)
         latency_ms = (time.monotonic() - t0) * 1000.0
 
         # Parse predicted answer: the first integer in generated text.

@@ -119,8 +119,7 @@ class TestHonestVerdictMapping:
 
     def test_neutral_no_improvement(self):
         assert (
-            _honest_verdict(0.0, gate_passed=True, gpu_available=True)
-            == "code_repair_50q_neutral"
+            _honest_verdict(0.0, gate_passed=True, gpu_available=True) == "code_repair_50q_neutral"
         )
 
     def test_regression(self):
@@ -135,7 +134,9 @@ class TestHonestVerdictMapping:
 # ---------------------------------------------------------------------------
 
 
-DELIVERABLE = Path(__file__).parent.parent.parent / "results" / "experiment_895_code_repair_50q_scaleup.json"
+DELIVERABLE = (
+    Path(__file__).parent.parent.parent / "results" / "experiment_895_code_repair_50q_scaleup.json"
+)
 
 
 class TestArtifactSchema:

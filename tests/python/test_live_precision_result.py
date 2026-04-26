@@ -114,7 +114,9 @@ class TestDataclassFields:
 
     def test_model_id_stored(self) -> None:
         """model_id field stores the provided string."""
-        r = LivePrecisionResult(model_id="google/gemma-4-E4B-it", pre_accuracy=0.0, post_accuracy=0.0)
+        r = LivePrecisionResult(
+            model_id="google/gemma-4-E4B-it", pre_accuracy=0.0, post_accuracy=0.0
+        )
         assert r.model_id == "google/gemma-4-E4B-it"
 
     def test_pre_and_post_stored(self) -> None:

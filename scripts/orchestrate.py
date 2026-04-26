@@ -39,7 +39,6 @@
 
 import argparse
 import datetime
-import json
 import logging
 import os
 import re
@@ -48,7 +47,7 @@ import sys
 import textwrap
 import uuid
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # PyYAML is required. We import it here and give a clear error if missing.
@@ -128,6 +127,7 @@ INLINE_PROJECT_INSTRUCTIONS = {"opencode"}
 # Data structures -- plain dicts backed by YAML, no dataclasses needed.
 # ---------------------------------------------------------------------------
 
+
 def load_config() -> dict[str, Any]:
     """Load .harness/config.yaml and return the parsed dict.
 
@@ -139,7 +139,7 @@ def load_config() -> dict[str, Any]:
     if not config_path.exists():
         log.error("Config not found at %s", config_path)
         sys.exit(1)
-    with open(config_path, "r") as f:
+    with open(config_path) as f:
         return yaml.safe_load(f)
 
 
@@ -163,7 +163,7 @@ def load_state() -> dict[str, Any]:
     """
     state_path = PROJECT_ROOT / ".harness" / "state.yaml"
     if state_path.exists():
-        with open(state_path, "r") as f:
+        with open(state_path) as f:
             return yaml.safe_load(f) or {}
     return {}
 
@@ -185,6 +185,7 @@ def save_state(state: dict[str, Any]) -> None:
 # ---------------------------------------------------------------------------
 # Epic and story parsing -- extract story slugs from an epic markdown file.
 # ---------------------------------------------------------------------------
+
 
 def parse_epic(epic_path: Path) -> dict[str, Any]:
     """Parse an epic markdown file and extract story references.
@@ -258,12 +259,14 @@ def parse_epic(epic_path: Path) -> dict[str, Any]:
                 done = m.group(1).lower() == "x"
                 story_title = m.group(2).strip()
                 slug = f"ADHOC-{i:03d}"
-                stories.append({
-                    "slug": slug,
-                    "title": story_title,
-                    "status": "Completed" if done else "Pending",
-                    "path": None,
-                })
+                stories.append(
+                    {
+                        "slug": slug,
+                        "title": story_title,
+                        "status": "Completed" if done else "Pending",
+                        "path": None,
+                    }
+                )
 
     return {"title": title, "stories": stories, "epic_path": str(epic_path)}
 
@@ -283,7 +286,8 @@ def load_story_content(story: dict[str, Any]) -> str:
 # Spec resolution -- find the relevant spec for a story.
 # ---------------------------------------------------------------------------
 
-def find_spec_for_story(story_content: str) -> Optional[str]:
+
+def find_spec_for_story(story_content: str) -> str | None:
     """Attempt to find the relevant openspec capability spec for a story.
 
     Stories typically reference a spec via a path like:
@@ -295,15 +299,11 @@ def find_spec_for_story(story_content: str) -> Optional[str]:
     Returns the spec file content if found, or None.
     """
     # Look for explicit spec path references
-    spec_path_pattern = re.compile(
-        r"openspec/capabilities/([a-z0-9-]+)/spec\.md"
-    )
+    spec_path_pattern = re.compile(r"openspec/capabilities/([a-z0-9-]+)/spec\.md")
     match = spec_path_pattern.search(story_content)
     if match:
         cap_name = match.group(1)
-        spec_path = (
-            PROJECT_ROOT / "openspec" / "capabilities" / cap_name / "spec.md"
-        )
+        spec_path = PROJECT_ROOT / "openspec" / "capabilities" / cap_name / "spec.md"
         if spec_path.exists():
             return spec_path.read_text()
 
@@ -330,10 +330,11 @@ def find_spec_for_story(story_content: str) -> Optional[str]:
 # Contract generation -- build a sprint contract YAML from story + spec.
 # ---------------------------------------------------------------------------
 
+
 def build_contract(
     story: dict[str, Any],
     story_content: str,
-    spec_content: Optional[str],
+    spec_content: str | None,
     config: dict[str, Any],
     run_id: str,
 ) -> dict[str, Any]:
@@ -375,13 +376,11 @@ def build_contract(
     scenario_ids: list[str] = []
     if spec_content:
         req_ids = list(set(re.findall(r"REQ-[A-Z0-9-]+", spec_content)))
-        scenario_ids = list(
-            set(re.findall(r"SCENARIO-[A-Z0-9-]+", spec_content))
-        )
+        scenario_ids = list(set(re.findall(r"SCENARIO-[A-Z0-9-]+", spec_content)))
 
     contract: dict[str, Any] = {
         "contract_id": f"{story['slug']}-{run_id[:8]}",
-        "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "created_at": datetime.datetime.now(datetime.UTC).isoformat(),
         "story_slug": story["slug"],
         "story_title": story["title"],
         "acceptance_criteria": acceptance_criteria,
@@ -396,23 +395,14 @@ def build_contract(
                 "pytest tests/python --cov=python/carnot "
                 "--cov-report=term-missing --cov-fail-under=100"
             ),
-            "lint_rust": (
-                "cargo clippy --workspace --exclude carnot-python -- -D warnings"
-            ),
+            "lint_rust": ("cargo clippy --workspace --exclude carnot-python -- -D warnings"),
             "lint_python": "ruff check python/ tests/ && mypy python/carnot",
         },
-        "handoff_path": (
-            f".harness/handoffs/generator-{story['slug']}-{run_id[:8]}.yaml"
-        ),
+        "handoff_path": (f".harness/handoffs/generator-{story['slug']}-{run_id[:8]}.yaml"),
     }
 
     # Save the contract to disk
-    contract_path = (
-        PROJECT_ROOT
-        / ".harness"
-        / "contracts"
-        / f"{story['slug']}-{run_id[:8]}.yaml"
-    )
+    contract_path = PROJECT_ROOT / ".harness" / "contracts" / f"{story['slug']}-{run_id[:8]}.yaml"
     contract_path.parent.mkdir(parents=True, exist_ok=True)
     with open(contract_path, "w") as f:
         yaml.dump(contract, f, default_flow_style=False, sort_keys=False)
@@ -455,17 +445,13 @@ def resolve_agent_bin(agent_type: str, config: dict[str, Any]) -> str:
     return os.environ.get(env_var, agent_bins.get(agent_type, agent_type))
 
 
-def resolve_agent_model(
-    agent_type: str, agent_config: dict[str, Any]
-) -> Optional[str]:
+def resolve_agent_model(agent_type: str, agent_config: dict[str, Any]) -> str | None:
     """Resolve the model configured for this role and provider."""
     provider_models = agent_config.get("models", {})
     return provider_models.get(agent_type) or agent_config.get("model")
 
 
-def resolve_project_instruction_file(
-    agent_type: str, config: dict[str, Any]
-) -> Path:
+def resolve_project_instruction_file(agent_type: str, config: dict[str, Any]) -> Path:
     """Resolve the provider-specific project instruction file path."""
     harness_config = config.get("harness", {})
     configured_files = harness_config.get("project_instruction_files", {})
@@ -480,9 +466,7 @@ def resolve_role_prompt_file(
     config: dict[str, Any],
 ) -> Path:
     """Resolve the prompt file for a harness role."""
-    prompt_dir = Path(
-        config.get("directories", {}).get("prompts", ".harness/prompts")
-    )
+    prompt_dir = Path(config.get("directories", {}).get("prompts", ".harness/prompts"))
     agent_prompt_ref = Path(agent_config.get("prompt", f"prompts/{role}.md"))
     candidates = [
         PROJECT_ROOT / ".harness" / agent_prompt_ref,
@@ -495,14 +479,14 @@ def resolve_role_prompt_file(
     return candidates[0]
 
 
-def _read_optional_text(path: Path) -> Optional[str]:
+def _read_optional_text(path: Path) -> str | None:
     """Read a UTF-8 text file if it exists, otherwise return None."""
     if not path.exists():
         return None
     return path.read_text()
 
 
-def compose_prompt(*sections: tuple[str, Optional[str]]) -> str:
+def compose_prompt(*sections: tuple[str, str | None]) -> str:
     """Render named markdown sections into a single prompt payload."""
     rendered: list[str] = []
     for title, body in sections:
@@ -527,14 +511,12 @@ def build_agent_invocation(
 
     role_prompt_file = resolve_role_prompt_file(role, agent_config, config)
     role_prompt_text = _read_optional_text(role_prompt_file)
-    project_instruction_file = resolve_project_instruction_file(
-        agent_type, config
-    )
+    project_instruction_file = resolve_project_instruction_file(agent_type, config)
     project_instruction_text = None
     if agent_type in INLINE_PROJECT_INSTRUCTIONS:
         project_instruction_text = _read_optional_text(project_instruction_file)
 
-    stdin_text: Optional[str] = prompt_text
+    stdin_text: str | None = prompt_text
     inline_prompt = prompt_text
 
     if agent_type != "claude":
@@ -633,8 +615,7 @@ def invoke_agent(
         )
     else:
         log.warning(
-            "No role prompt found at %s -- %s will run without "
-            "role-specific instructions",
+            "No role prompt found at %s -- %s will run without role-specific instructions",
             invocation["role_prompt_file"],
             agent_display,
         )
@@ -674,7 +655,7 @@ def invoke_agent(
     timeout_hours = agent_config.get("session_limit_hours", 2)
     timeout_seconds = int(timeout_hours * 3600)
 
-    start_time = datetime.datetime.now(datetime.timezone.utc)
+    start_time = datetime.datetime.now(datetime.UTC)
     try:
         result = subprocess.run(
             cmd,
@@ -685,9 +666,7 @@ def invoke_agent(
             cwd=str(PROJECT_ROOT),
         )
     except subprocess.TimeoutExpired:
-        duration = (
-            datetime.datetime.now(datetime.timezone.utc) - start_time
-        ).total_seconds()
+        duration = (datetime.datetime.now(datetime.UTC) - start_time).total_seconds()
         log.error("%s agent timed out after %.0f seconds", role, duration)
         return {
             "stdout": "",
@@ -710,9 +689,7 @@ def invoke_agent(
             "cost_usd": 0.0,
         }
 
-    duration = (
-        datetime.datetime.now(datetime.timezone.utc) - start_time
-    ).total_seconds()
+    duration = (datetime.datetime.now(datetime.UTC) - start_time).total_seconds()
     cost_usd = _parse_cost_from_output(result.stdout + result.stderr)
 
     log.info(
@@ -749,7 +726,8 @@ def _parse_cost_from_output(text: str) -> float:
 # Handoff artifact handling -- read/write structured YAML handoffs.
 # ---------------------------------------------------------------------------
 
-def read_handoff(handoff_path: str) -> Optional[dict[str, Any]]:
+
+def read_handoff(handoff_path: str) -> dict[str, Any] | None:
     """Read a handoff artifact produced by the generator agent.
 
     The generator writes a YAML file at the path specified in the contract.
@@ -763,11 +741,11 @@ def read_handoff(handoff_path: str) -> Optional[dict[str, Any]]:
     if not full_path.exists():
         log.warning("No handoff artifact found at %s", full_path)
         return None
-    with open(full_path, "r") as f:
+    with open(full_path) as f:
         return yaml.safe_load(f)
 
 
-def read_evaluation(evaluation_path: str) -> Optional[dict[str, Any]]:
+def read_evaluation(evaluation_path: str) -> dict[str, Any] | None:
     """Read an evaluation report produced by the evaluator agent.
 
     The evaluator writes a YAML file with its verdict (pass/fail/partial),
@@ -784,7 +762,7 @@ def read_evaluation(evaluation_path: str) -> Optional[dict[str, Any]]:
     if not full_path.exists():
         log.warning("No evaluation report found at %s", full_path)
         return None
-    with open(full_path, "r") as f:
+    with open(full_path) as f:
         return yaml.safe_load(f)
 
 
@@ -792,12 +770,13 @@ def read_evaluation(evaluation_path: str) -> Optional[dict[str, Any]]:
 # Prompt construction -- build the full prompt for each agent role.
 # ---------------------------------------------------------------------------
 
+
 def build_generator_prompt(
     story: dict[str, Any],
     story_content: str,
-    spec_content: Optional[str],
+    spec_content: str | None,
     contract: dict[str, Any],
-    prior_critique: Optional[str] = None,
+    prior_critique: str | None = None,
 ) -> str:
     """Build the full prompt for the generator agent.
 
@@ -847,7 +826,8 @@ def build_generator_prompt(
         "When you have finished implementation, write a YAML handoff artifact "
         f"to `{contract['handoff_path']}` with this structure:\n"
     )
-    sections.append(textwrap.dedent("""\
+    sections.append(
+        textwrap.dedent("""\
         ```yaml
         story_slug: <slug>
         status: "completed"
@@ -863,7 +843,8 @@ def build_generator_prompt(
             changes: "What was updated"
         notes: "Any important context for the evaluator"
         ```
-    """))
+    """)
+    )
 
     return "\n".join(sections)
 
@@ -871,7 +852,7 @@ def build_generator_prompt(
 def build_evaluator_prompt(
     story: dict[str, Any],
     contract: dict[str, Any],
-    handoff: Optional[dict[str, Any]],
+    handoff: dict[str, Any] | None,
     retry_number: int,
 ) -> str:
     """Build the full prompt for the evaluator agent.
@@ -906,9 +887,7 @@ def build_evaluator_prompt(
     if handoff:
         sections.append("## Generator Handoff (what the generator claims)\n")
         sections.append("```yaml")
-        sections.append(
-            yaml.dump(handoff, default_flow_style=False, sort_keys=False)
-        )
+        sections.append(yaml.dump(handoff, default_flow_style=False, sort_keys=False))
         sections.append("```\n")
     else:
         sections.append("## Generator Handoff\n")
@@ -919,7 +898,8 @@ def build_evaluator_prompt(
         )
 
     sections.append("## Evaluation Instructions\n")
-    sections.append(textwrap.dedent("""\
+    sections.append(
+        textwrap.dedent("""\
         1. **Do NOT trust the handoff blindly.** Read the actual code, tests,
            and specs yourself.
         2. **Run the build and test commands** from the contract. Record
@@ -934,14 +914,13 @@ def build_evaluator_prompt(
            - "pass" means ALL criteria are met and ALL tests pass.
            - "fail" means blocking issues exist that prevent acceptance.
            - "partial" means mostly done but minor issues remain.
-    """))
-
-    sections.append(f"## Output\n")
-    sections.append(
-        f"Write your evaluation report to `{evaluation_path}` "
-        "with this structure:\n"
+    """)
     )
-    sections.append(textwrap.dedent("""\
+
+    sections.append("## Output\n")
+    sections.append(f"Write your evaluation report to `{evaluation_path}` with this structure:\n")
+    sections.append(
+        textwrap.dedent("""\
         ```yaml
         verdict: "pass" | "fail" | "partial"
         scores:
@@ -965,7 +944,8 @@ def build_evaluator_prompt(
         blocking_issues:
           - "Specific issue that must be fixed"
         ```
-    """))
+    """)
+    )
 
     return "\n".join(sections), evaluation_path
 
@@ -973,6 +953,7 @@ def build_evaluator_prompt(
 # ---------------------------------------------------------------------------
 # Traceability and ops document updates.
 # ---------------------------------------------------------------------------
+
 
 def update_traceability(story: dict[str, Any], evaluation: dict[str, Any]) -> None:
     """Update _bmad/traceability.md after a story passes evaluation.
@@ -987,9 +968,7 @@ def update_traceability(story: dict[str, Any], evaluation: dict[str, Any]) -> No
         log.warning("traceability.md not found at %s", trace_path)
         return
 
-    timestamp = datetime.datetime.now(datetime.timezone.utc).strftime(
-        "%Y-%m-%d %H:%M UTC"
-    )
+    timestamp = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M UTC")
     note = (
         f"\n\n<!-- Orchestrator update {timestamp} -->\n"
         f"<!-- Story {story['slug']} passed evaluation. "
@@ -1011,9 +990,7 @@ def log_to_changelog(message: str) -> None:
     changelog_path = PROJECT_ROOT / "ops" / "changelog.md"
     changelog_path.parent.mkdir(parents=True, exist_ok=True)
 
-    timestamp = datetime.datetime.now(datetime.timezone.utc).strftime(
-        "%Y-%m-%d %H:%M UTC"
-    )
+    timestamp = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M UTC")
     entry = f"- **{timestamp}** [orchestrator] {message}\n"
 
     if changelog_path.exists():
@@ -1037,9 +1014,7 @@ def log_to_changelog(message: str) -> None:
     log.info("Logged to changelog: %s", message)
 
 
-def escalate_to_known_issues(
-    story: dict[str, Any], evaluation: Optional[dict[str, Any]]
-) -> None:
+def escalate_to_known_issues(story: dict[str, Any], evaluation: dict[str, Any] | None) -> None:
     """Add a story to ops/known-issues.md when it exhausts retries.
 
     This is the escalation path -- when the generator cannot produce work
@@ -1049,9 +1024,7 @@ def escalate_to_known_issues(
     issues_path = PROJECT_ROOT / "ops" / "known-issues.md"
     issues_path.parent.mkdir(parents=True, exist_ok=True)
 
-    timestamp = datetime.datetime.now(datetime.timezone.utc).strftime(
-        "%Y-%m-%d %H:%M UTC"
-    )
+    timestamp = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M UTC")
 
     critique = "No evaluation report available"
     if evaluation:
@@ -1079,9 +1052,7 @@ def escalate_to_known_issues(
     log.info("Escalated story %s to known-issues.md", story["slug"])
 
 
-def update_status(
-    state: dict[str, Any], epic_info: dict[str, Any]
-) -> None:
+def update_status(state: dict[str, Any], epic_info: dict[str, Any]) -> None:
     """Update ops/status.md with current orchestration progress.
 
     This adds a section showing which stories completed, which failed,
@@ -1091,9 +1062,7 @@ def update_status(
     status_path = PROJECT_ROOT / "ops" / "status.md"
     status_path.parent.mkdir(parents=True, exist_ok=True)
 
-    timestamp = datetime.datetime.now(datetime.timezone.utc).strftime(
-        "%Y-%m-%d %H:%M UTC"
-    )
+    timestamp = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M UTC")
 
     completed = state.get("stories_completed", [])
     failed = state.get("stories_failed", [])
@@ -1127,9 +1096,10 @@ def update_status(
 # Main orchestration loop.
 # ---------------------------------------------------------------------------
 
+
 def run_sprint(
     epic_path: Path,
-    target_story: Optional[str],
+    target_story: str | None,
     max_retries: int,
     dry_run: bool,
 ) -> None:
@@ -1182,9 +1152,7 @@ def run_sprint(
         state = {
             "epic_file": str(epic_path),
             "run_id": run_id,
-            "started_at": datetime.datetime.now(
-                datetime.timezone.utc
-            ).isoformat(),
+            "started_at": datetime.datetime.now(datetime.UTC).isoformat(),
             "stories_completed": [],
             "stories_failed": [],
             "current_story": None,
@@ -1195,14 +1163,11 @@ def run_sprint(
         save_state(state)
 
     # Build the execution queue -- skip already-completed and failed stories
-    done_slugs = set(
-        state.get("stories_completed", []) + state.get("stories_failed", [])
-    )
+    done_slugs = set(state.get("stories_completed", []) + state.get("stories_failed", []))
     stories_queue = [
         s
         for s in epic_info["stories"]
-        if s["slug"] not in done_slugs
-        and s.get("status", "").lower() != "completed"
+        if s["slug"] not in done_slugs and s.get("status", "").lower() != "completed"
     ]
 
     # If --story is specified, filter to just that one
@@ -1254,21 +1219,17 @@ def run_sprint(
         spec_content = find_spec_for_story(story_content)
 
         # Build the sprint contract
-        contract = build_contract(
-            story, story_content, spec_content, config, run_id
-        )
+        contract = build_contract(story, story_content, spec_content, config, run_id)
         log_to_changelog(f"Contract built for {story['slug']}")
 
         # Retry loop -- generator gets up to max_retries attempts
         passed = False
-        prior_critique: Optional[str] = None
-        last_evaluation: Optional[dict[str, Any]] = None
+        prior_critique: str | None = None
+        last_evaluation: dict[str, Any] | None = None
 
         for retry in range(max_retries + 1):
             attempt_label = (
-                f"attempt {retry + 1}/{max_retries + 1}"
-                if retry > 0
-                else "initial attempt"
+                f"attempt {retry + 1}/{max_retries + 1}" if retry > 0 else "initial attempt"
             )
             log.info("--- %s: %s ---", story["slug"], attempt_label)
 
@@ -1280,9 +1241,7 @@ def run_sprint(
             generator_prompt = build_generator_prompt(
                 story, story_content, spec_content, contract, prior_critique
             )
-            log_to_changelog(
-                f"Generator invoked for {story['slug']} ({attempt_label})"
-            )
+            log_to_changelog(f"Generator invoked for {story['slug']} ({attempt_label})")
 
             gen_result = invoke_agent(
                 "generator",
@@ -1293,20 +1252,18 @@ def run_sprint(
             )
 
             # Track cost
-            state["cost_total_usd"] = (
-                state.get("cost_total_usd", 0.0) + gen_result["cost_usd"]
+            state["cost_total_usd"] = state.get("cost_total_usd", 0.0) + gen_result["cost_usd"]
+            state["history"].append(
+                {
+                    "role": "generator",
+                    "story": story["slug"],
+                    "retry": retry,
+                    "duration_s": gen_result["duration_s"],
+                    "cost_usd": gen_result["cost_usd"],
+                    "returncode": gen_result["returncode"],
+                    "timestamp": datetime.datetime.now(datetime.UTC).isoformat(),
+                }
             )
-            state["history"].append({
-                "role": "generator",
-                "story": story["slug"],
-                "retry": retry,
-                "duration_s": gen_result["duration_s"],
-                "cost_usd": gen_result["cost_usd"],
-                "returncode": gen_result["returncode"],
-                "timestamp": datetime.datetime.now(
-                    datetime.timezone.utc
-                ).isoformat(),
-            })
             save_state(state)
 
             if gen_result["returncode"] != 0 and not dry_run:
@@ -1324,12 +1281,8 @@ def run_sprint(
 
             # Step 3: Launch the Evaluator agent
             evaluator_config = config.get("agents", {}).get("evaluator", {})
-            eval_prompt, evaluation_path = build_evaluator_prompt(
-                story, contract, handoff, retry
-            )
-            log_to_changelog(
-                f"Evaluator invoked for {story['slug']} ({attempt_label})"
-            )
+            eval_prompt, evaluation_path = build_evaluator_prompt(story, contract, handoff, retry)
+            log_to_changelog(f"Evaluator invoked for {story['slug']} ({attempt_label})")
 
             eval_result = invoke_agent(
                 "evaluator",
@@ -1340,20 +1293,18 @@ def run_sprint(
             )
 
             # Track cost
-            state["cost_total_usd"] = (
-                state.get("cost_total_usd", 0.0) + eval_result["cost_usd"]
+            state["cost_total_usd"] = state.get("cost_total_usd", 0.0) + eval_result["cost_usd"]
+            state["history"].append(
+                {
+                    "role": "evaluator",
+                    "story": story["slug"],
+                    "retry": retry,
+                    "duration_s": eval_result["duration_s"],
+                    "cost_usd": eval_result["cost_usd"],
+                    "returncode": eval_result["returncode"],
+                    "timestamp": datetime.datetime.now(datetime.UTC).isoformat(),
+                }
             )
-            state["history"].append({
-                "role": "evaluator",
-                "story": story["slug"],
-                "retry": retry,
-                "duration_s": eval_result["duration_s"],
-                "cost_usd": eval_result["cost_usd"],
-                "returncode": eval_result["returncode"],
-                "timestamp": datetime.datetime.now(
-                    datetime.timezone.utc
-                ).isoformat(),
-            })
             save_state(state)
 
             # Step 4: Read the evaluation report
@@ -1369,9 +1320,7 @@ def run_sprint(
                 break
 
             if evaluation is None:
-                log.warning(
-                    "No evaluation report produced. Treating as fail."
-                )
+                log.warning("No evaluation report produced. Treating as fail.")
                 prior_critique = (
                     "The evaluator did not produce an evaluation report. "
                     "Ensure your handoff artifact is correctly written and "
@@ -1420,9 +1369,13 @@ def run_sprint(
                 critique_parts.append("Blocking issues:")
                 for issue in blocking:
                     critique_parts.append(f"  - {issue}")
-            prior_critique = "\n".join(critique_parts) if critique_parts else (
-                "The evaluator rejected the implementation but did not "
-                "provide specific critique."
+            prior_critique = (
+                "\n".join(critique_parts)
+                if critique_parts
+                else (
+                    "The evaluator rejected the implementation but did not "
+                    "provide specific critique."
+                )
             )
             log.info(
                 "Retrying with evaluator critique (%d chars)",
@@ -1438,9 +1391,7 @@ def run_sprint(
             # Update traceability and changelog
             if last_evaluation:
                 update_traceability(story, last_evaluation)
-            log_to_changelog(
-                f"Story {story['slug']} completed and passed evaluation"
-            )
+            log_to_changelog(f"Story {story['slug']} completed and passed evaluation")
         else:
             # All retries exhausted
             state["stories_failed"].append(story["slug"])
@@ -1477,6 +1428,7 @@ def run_sprint(
 # ---------------------------------------------------------------------------
 # CLI argument parsing.
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Parse CLI arguments and run the sprint orchestration loop.

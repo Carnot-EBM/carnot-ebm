@@ -233,6 +233,7 @@ class TestNPUEntropyProbe:
     def test_load_vitisai_ort_import_error(self, tmp_path, monkeypatch):
         """load_vitisai returns False when onnxruntime is not importable."""
         import builtins
+
         real_import = builtins.__import__
 
         def mock_import(name, *args, **kwargs):
@@ -256,7 +257,9 @@ class TestNPUEntropyProbe:
         out = str(tmp_path / "entropy.onnx")
         probe.export_onnx(out)
 
-        with mock.patch("carnot.pipeline.npu_entropy_probe._VITISAI_EP", "VitisAIExecutionProvider"):
+        with mock.patch(
+            "carnot.pipeline.npu_entropy_probe._VITISAI_EP", "VitisAIExecutionProvider"
+        ):
             with mock.patch("onnxruntime.get_available_providers", return_value=[]):
                 with mock.patch("onnxruntime.InferenceSession", side_effect=RuntimeError("no EP")):
                     result = probe.load_vitisai(out)
@@ -321,6 +324,7 @@ class TestNPUEntropyProbe:
     def test_export_onnx_fallback_when_onnx_missing(self, tmp_path, monkeypatch):
         """export_onnx writes a stub file when onnx package is not installed."""
         import builtins
+
         real_import = builtins.__import__
 
         def mock_import(name, *args, **kwargs):

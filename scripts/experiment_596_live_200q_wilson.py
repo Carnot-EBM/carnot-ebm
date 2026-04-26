@@ -145,7 +145,7 @@ def _write_json(repo_root: Path, rel_path: str, data: dict) -> None:
     os.replace(str(tmp), str(out))
 
 
-def _load_upstream_gate(repo_root: Path, rel_path: str) -> Optional[dict]:
+def _load_upstream_gate(repo_root: Path, rel_path: str) -> dict | None:
     """Load an upstream experiment result file.  Returns None if missing or corrupt.
 
     Why a dedicated loader: the gate decision must be explicit and logged.
@@ -164,9 +164,7 @@ def _load_upstream_gate(repo_root: Path, rel_path: str) -> Optional[dict]:
         return None
 
 
-def _select_winning_extractor(
-    data_594: Optional[dict], data_595: Optional[dict]
-) -> Optional[str]:
+def _select_winning_extractor(data_594: dict | None, data_595: dict | None) -> str | None:
     """Choose the winning extractor from Exp 594 (coace_v3) or Exp 595 (dsvd).
 
     Priority: coace_v3 (Exp 594) wins if its signed_improvement > 0.
@@ -232,24 +230,32 @@ def _load_gsm8k_questions(start: int, end: int) -> list[dict]:
         from datasets import load_dataset  # type: ignore[import]
 
         ds = load_dataset("gsm8k", "main", split="test")
-        return [{"question": ds[i]["question"], "answer": ds[i]["answer"]} for i in range(start, end + 1)]
+        return [
+            {"question": ds[i]["question"], "answer": ds[i]["answer"]}
+            for i in range(start, end + 1)
+        ]
     except Exception as exc:
-        _log.warning("_load_gsm8k_questions: dataset load failed (%s) -- using synthetic fallback", exc)
+        _log.warning(
+            "_load_gsm8k_questions: dataset load failed (%s) -- using synthetic fallback", exc
+        )
         result = []
         for i in range(start, end + 1):
             idx = i - start
             answer_text = f"#### {idx + 1}"
-            result.append({
-                "question": f"Synthetic question {i}: What is {i} + {i}?",
-                "answer": answer_text,
-            })
+            result.append(
+                {
+                    "question": f"Synthetic question {i}: What is {i} + {i}?",
+                    "answer": answer_text,
+                }
+            )
         return result
 
 
-def _extract_answer(answer_text: str) -> Optional[str]:
+def _extract_answer(answer_text: str) -> str | None:
     """Extract the numeric answer after '####' from a GSM8K answer string."""
     try:
         from carnot.pipeline.live_100q_v7_helpers import _extract_answer as _ea
+
         return _ea(answer_text)
     except Exception:
         if "####" in answer_text:
@@ -257,10 +263,11 @@ def _extract_answer(answer_text: str) -> Optional[str]:
         return None
 
 
-def _is_correct(response: str, gold: Optional[str]) -> bool:
+def _is_correct(response: str, gold: str | None) -> bool:
     """Return True if the model response contains the gold answer."""
     try:
         from carnot.pipeline.live_100q_v7_helpers import _is_correct as _ic
+
         return _ic(response, gold)
     except Exception:
         if gold is None:
@@ -277,6 +284,7 @@ def _run_batch_coace_v3(questions: list[dict], generate_fn: Any) -> dict:
     """
     try:
         from carnot.extraction.coace_extractor_v3 import CoACEExtractorV3
+
         extractor: Any = CoACEExtractorV3()
     except Exception as exc:
         _log.warning("CoACEExtractorV3 load failed: %s", exc)
@@ -319,11 +327,13 @@ def _run_batch_coace_v3(questions: list[dict], generate_fn: Any) -> dict:
         pc = _is_correct(pipeline_resp, gold)
         baseline_correct += int(bc)
         pipeline_correct += int(pc)
-        per_question.append({
-            "baseline_correct": bc,
-            "pipeline_correct": pc,
-            "violation_found": violation_found,
-        })
+        per_question.append(
+            {
+                "baseline_correct": bc,
+                "pipeline_correct": pc,
+                "violation_found": violation_found,
+            }
+        )
 
     return {
         "baseline_correct": baseline_correct,
@@ -336,9 +346,9 @@ def _build_artifact(
     tmpl: ExperimentTemplate,
     stats: dict,
     inference_mode: str,
-    winning_extractor: Optional[str],
+    winning_extractor: str | None,
     status: str = "success",
-    block_reason: Optional[str] = None,
+    block_reason: str | None = None,
 ) -> dict:
     """Assemble the standardised artifact for Exp 596.
 
@@ -356,8 +366,8 @@ def _build_artifact(
 
     # Wilson CI on the improvement delta: compute CI for pipeline proportion
     pipeline_correct = stats.get("pipeline_correct_total", 0)
-    wilson_lower: Optional[float] = None
-    wilson_upper: Optional[float] = None
+    wilson_lower: float | None = None
+    wilson_upper: float | None = None
     if n > 0 and inference_mode == "live_gpu":
         wilson_lower, wilson_upper = compute_wilson_ci(pipeline_correct, n)
 
@@ -404,7 +414,7 @@ def _build_artifact(
 # ---------------------------------------------------------------------------
 
 
-def run_experiment(repo_root: Optional[Path] = None) -> dict:
+def run_experiment(repo_root: Path | None = None) -> dict:
     """Run Exp 596: 200-question Wilson CI benchmark using the winning extractor.
 
     All exit paths write the deliverable JSON before returning.
@@ -442,7 +452,8 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         si_595 = data_595.get("signed_improvement") if data_595 else None
         _log.warning(
             "GATE BLOCKED: no winning extractor (Exp594 si=%s, Exp595 si=%s)",
-            si_594, si_595,
+            si_594,
+            si_595,
         )
         blocked = _build_artifact(
             tmpl,
@@ -499,7 +510,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
             winning_extractor=winning_extractor,
             status="gpu_vram_insufficient",
         )
-        blocked["vram_block_reason"] = f"gemma4_insufficient: {gemma4_gate.available_gb:.1f} GB free"
+        blocked["vram_block_reason"] = (
+            f"gemma4_insufficient: {gemma4_gate.available_gb:.1f} GB free"
+        )
         return _write_and_return(blocked)
 
     questions = _load_gsm8k_questions(QUESTION_START, QUESTION_END)
@@ -520,9 +533,10 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         return ""
 
     # Load Qwen as the generate model (smaller model, cuda:1)
-    qwen_pipeline: Optional[Any] = None
+    qwen_pipeline: Any | None = None
     try:
         from transformers import pipeline as hf_pipeline  # type: ignore[import]
+
         qwen_pipeline = hf_pipeline(
             "text-generation",
             model="Qwen/Qwen2.5-0.5B",
@@ -563,7 +577,10 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         )
         _log.info(
             "Batch %d-%d done: baseline_correct=%d pipeline_correct=%d",
-            batch_start, batch_end, baseline_correct_total, pipeline_correct_total,
+            batch_start,
+            batch_end,
+            baseline_correct_total,
+            pipeline_correct_total,
         )
 
     baseline_accuracy = baseline_correct_total / N_QUESTIONS

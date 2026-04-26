@@ -67,6 +67,7 @@ from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noq
 # Z3 availability check — install if missing
 # ---------------------------------------------------------------------------
 
+
 def _ensure_z3() -> bool:
     """Try to import z3; if missing, install z3-solver and retry.
 
@@ -79,6 +80,7 @@ def _ensure_z3() -> bool:
     """
     try:
         import z3  # noqa: F401, PLC0415
+
         return True
     except ImportError:
         pass
@@ -97,6 +99,7 @@ def _ensure_z3() -> bool:
     # Re-import after install
     try:
         import z3  # noqa: F401, PLC0415
+
         return True
     except ImportError:
         return False
@@ -105,6 +108,7 @@ def _ensure_z3() -> bool:
 # ---------------------------------------------------------------------------
 # Data loading helpers
 # ---------------------------------------------------------------------------
+
 
 def _load_corpus(repo_root: Path) -> list[dict]:
     """Load the largest available corpus of (question, CoT_response) pairs.
@@ -175,14 +179,17 @@ def _load_hand_labels(repo_root: Path) -> dict[str, str]:
         return {}
 
     if isinstance(data, list):
-        return {str(item.get("question_id", i)): item.get("label", "correct")
-                for i, item in enumerate(data)}
+        return {
+            str(item.get("question_id", i)): item.get("label", "correct")
+            for i, item in enumerate(data)
+        }
     return {}
 
 
 # ---------------------------------------------------------------------------
 # Main pipeline
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run the FoVer Z3 labeling pipeline and write the deliverable JSON."""
@@ -243,13 +250,15 @@ def main() -> None:
                 verdict = verifier.verify_step_z3(prior_steps, step_text)
                 step_correct = verdict in ("correct", "unparseable")
 
-                labeled_pairs.append(FoVerZ3Pair(
-                    question=question,
-                    step_text=step_text,
-                    step_index=step_idx,
-                    z3_verdict=verdict,
-                    step_correct=step_correct,
-                ))
+                labeled_pairs.append(
+                    FoVerZ3Pair(
+                        question=question,
+                        step_text=step_text,
+                        step_index=step_idx,
+                        z3_verdict=verdict,
+                        step_correct=step_correct,
+                    )
+                )
 
                 # Accumulate prior steps for context in subsequent steps
                 prior_steps.append(step_text)
@@ -276,7 +285,9 @@ def main() -> None:
                         hl_text = hl.get("step_text", "")
                         hl_label = hl.get("label", "correct")
                         # Match if the step text is contained in or contains the hand-labeled text
-                        if (lp.step_text[:50] in hl_text or hl_text[:50] in lp.step_text) and hl_text:
+                        if (
+                            lp.step_text[:50] in hl_text or hl_text[:50] in lp.step_text
+                        ) and hl_text:
                             agreement_pairs += 1
                             # Z3 step_correct=True → "correct"; False → "incorrect"
                             z3_label = "correct" if lp.step_correct else "incorrect"

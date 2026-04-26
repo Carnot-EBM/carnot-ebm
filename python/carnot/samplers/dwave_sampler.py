@@ -255,8 +255,7 @@ class DWaveSampler:
             self._sampler = _build_qpu_sampler(self.leap_token)
         else:
             raise ValueError(
-                f"Unknown DWaveSampler mode {self.mode!r}. "
-                "Valid modes: 'neal', 'tabu', 'qpu'."
+                f"Unknown DWaveSampler mode {self.mode!r}. Valid modes: 'neal', 'tabu', 'qpu'."
             )
 
     @property

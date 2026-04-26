@@ -46,7 +46,6 @@ Spec: REQ-LEARN-002, SCENARIO-LEARN-002
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
@@ -451,7 +450,9 @@ def audit_energy_trajectory(
 
     if train_distinct < distinct_values_min or holdout_distinct < distinct_values_min:
         # Report whichever is worse (fewest distinct values).
-        seq_len = len(train_energies) if train_distinct <= holdout_distinct else len(holdout_energies)
+        seq_len = (
+            len(train_energies) if train_distinct <= holdout_distinct else len(holdout_energies)
+        )
         distinct = min(train_distinct, holdout_distinct)
         report.findings.append(
             ZeroEnergyFinding(
@@ -528,9 +529,7 @@ def audit_full(
         min_gap=min_gap,
         distinct_values_min=distinct_values_min,
     )
-    combined = RewardHackingReport(
-        findings=tracker_report.findings + energy_report.findings
-    )
+    combined = RewardHackingReport(findings=tracker_report.findings + energy_report.findings)
     return combined
 
 

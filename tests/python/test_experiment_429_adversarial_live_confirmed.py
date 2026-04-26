@@ -118,14 +118,18 @@ class TestLoadPreflightVerdict:
         assert result["honest_verdict"] == "auto_fix_applied"
         assert result["retro_022_resolved"] is True
 
-    def test_missing_file_returns_sentinel(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_missing_file_returns_sentinel(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         monkeypatch.setattr(_mod, "_EXP413_PREFLIGHT_PATH", tmp_path / "nonexistent.json")
         result = _load_preflight_verdict()
         assert result["honest_verdict"] == "preflight_file_missing"
         assert result["retro_022_resolved"] is False
         assert "error" in result
 
-    def test_malformed_json_returns_sentinel(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_malformed_json_returns_sentinel(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         f = tmp_path / "bad.json"
         f.write_text("{not valid json")
         monkeypatch.setattr(_mod, "_EXP413_PREFLIGHT_PATH", f)
@@ -185,58 +189,98 @@ class TestBuildExp429Artifact:
 
     def test_schema_v2(self) -> None:
         art = _build_exp429_artifact(
-            [self._make_per_model(0.10, 0.05)], "live_gpu", 50,
-            False, "auto_fix_applied", False, False,
+            [self._make_per_model(0.10, 0.05)],
+            "live_gpu",
+            50,
+            False,
+            "auto_fix_applied",
+            False,
+            False,
         )
         assert art["adversarial_schema"] == "carnot.adversarial_gsm8k.v2"
 
     def test_improvement_positive_verdict(self) -> None:
         art = _build_exp429_artifact(
-            [self._make_per_model(0.15, 0.06)], "live_gpu", 50,
-            False, "auto_fix_applied", False, False,
+            [self._make_per_model(0.15, 0.06)],
+            "live_gpu",
+            50,
+            False,
+            "auto_fix_applied",
+            False,
+            False,
         )
         assert art["honest_verdict"] == "improvement_positive"
         assert art["headline_result"]["improvement_positive"] is True
 
     def test_degradation_positive_verdict(self) -> None:
         art = _build_exp429_artifact(
-            [self._make_per_model(0.10, 0.0)], "live_gpu", 50,
-            False, "auto_fix_applied", False, False,
+            [self._make_per_model(0.10, 0.0)],
+            "live_gpu",
+            50,
+            False,
+            "auto_fix_applied",
+            False,
+            False,
         )
         assert art["honest_verdict"] == "degradation_positive"
 
     def test_neutral_verdict(self) -> None:
         art = _build_exp429_artifact(
-            [self._make_per_model(0.0, 0.0)], "live_gpu", 50,
-            False, "auto_fix_applied", False, False,
+            [self._make_per_model(0.0, 0.0)],
+            "live_gpu",
+            50,
+            False,
+            "auto_fix_applied",
+            False,
+            False,
         )
         assert art["honest_verdict"] == "neutral"
 
     def test_blocked_simulated_verdict(self) -> None:
         art = _build_exp429_artifact(
-            [self._make_per_model(0.10, 0.05)], "blocked", 0,
-            False, "auto_fix_applied", False, False,
+            [self._make_per_model(0.10, 0.05)],
+            "blocked",
+            0,
+            False,
+            "auto_fix_applied",
+            False,
+            False,
         )
         assert art["honest_verdict"] == "blocked_simulated"
 
     def test_adversarial_drop_pct_is_percentage(self) -> None:
         art = _build_exp429_artifact(
-            [self._make_per_model(0.15, 0.0)], "live_gpu", 50,
-            False, "auto_fix_applied", False, False,
+            [self._make_per_model(0.15, 0.0)],
+            "live_gpu",
+            50,
+            False,
+            "auto_fix_applied",
+            False,
+            False,
         )
         assert abs(art["adversarial_drop_pct"] - 15.0) < 1e-3
 
     def test_repair_improvement_pct_is_percentage(self) -> None:
         art = _build_exp429_artifact(
-            [self._make_per_model(0.10, 0.08)], "live_gpu", 50,
-            False, "auto_fix_applied", False, False,
+            [self._make_per_model(0.10, 0.08)],
+            "live_gpu",
+            50,
+            False,
+            "auto_fix_applied",
+            False,
+            False,
         )
         assert abs(art["repair_improvement_pct"] - 8.0) < 1e-3
 
     def test_gate_fields_propagated(self) -> None:
         art = _build_exp429_artifact(
-            [self._make_per_model(0.10, 0.05)], "live_gpu", 50,
-            True, "auto_fix_applied", True, False,
+            [self._make_per_model(0.10, 0.05)],
+            "live_gpu",
+            50,
+            True,
+            "auto_fix_applied",
+            True,
+            False,
         )
         assert art["gate0_autofix_applied"] is True
         assert art["gate0_preflight_verdict"] == "auto_fix_applied"
@@ -245,36 +289,61 @@ class TestBuildExp429Artifact:
 
     def test_confirmed_from_and_rerun(self) -> None:
         art = _build_exp429_artifact(
-            [self._make_per_model(0.10, 0.05)], "live_gpu", 50,
-            False, "auto_fix_applied", False, False,
-            confirmed_from=421, rerun=True,
+            [self._make_per_model(0.10, 0.05)],
+            "live_gpu",
+            50,
+            False,
+            "auto_fix_applied",
+            False,
+            False,
+            confirmed_from=421,
+            rerun=True,
         )
         assert art["confirmed_from"] == 421
         assert art["rerun"] is True
 
     def test_empty_per_model_results(self) -> None:
         art = _build_exp429_artifact(
-            [], "blocked", 0, False, "preflight_file_missing", False, False,
+            [],
+            "blocked",
+            0,
+            False,
+            "preflight_file_missing",
+            False,
+            False,
         )
         assert art["adversarial_drop_pct"] == 0.0
         assert art["repair_improvement_pct"] == 0.0
 
     def test_headline_result_keys_present(self) -> None:
         art = _build_exp429_artifact(
-            [self._make_per_model(0.10, 0.05)], "live_gpu", 50,
-            False, "auto_fix_applied", False, False,
+            [self._make_per_model(0.10, 0.05)],
+            "live_gpu",
+            50,
+            False,
+            "auto_fix_applied",
+            False,
+            False,
         )
         hr = art["headline_result"]
         for key in [
-            "honest_verdict", "inference_mode", "avg_adversarial_drop",
-            "avg_repair_improvement", "adversarial_drop_pct", "repair_improvement_pct",
-            "improvement_positive", "n_questions_per_model", "n_models",
+            "honest_verdict",
+            "inference_mode",
+            "avg_adversarial_drop",
+            "avg_repair_improvement",
+            "adversarial_drop_pct",
+            "repair_improvement_pct",
+            "improvement_positive",
+            "n_questions_per_model",
+            "n_models",
         ]:
             assert key in hr, f"Missing headline key: {key}"
 
     def test_two_model_average(self) -> None:
         models = [self._make_per_model(0.20, 0.0), self._make_per_model(0.10, 0.10)]
-        art = _build_exp429_artifact(models, "live_gpu", 50, False, "auto_fix_applied", False, False)
+        art = _build_exp429_artifact(
+            models, "live_gpu", 50, False, "auto_fix_applied", False, False
+        )
         # avg drop = 0.15, avg improvement = 0.05
         assert abs(art["adversarial_drop_pct"] - 15.0) < 1e-3
         assert abs(art["repair_improvement_pct"] - 5.0) < 1e-3
@@ -294,7 +363,9 @@ class TestRunThreeConditions:
         tmpl.checkpoint_save = MagicMock()
         return tmpl
 
-    def test_returns_per_model_dict_keys(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_returns_per_model_dict_keys(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         questions = _make_paired_questions(5)
 
         def _fake_call_model(obj: Any, prompt: str) -> str:
@@ -305,19 +376,26 @@ class TestRunThreeConditions:
             return f"#### {int(num) * 2}"
 
         monkeypatch.setattr(_mod, "_call_model", _fake_call_model)
-        monkeypatch.setattr(_mod, "_is_correct", lambda r, g: (g in r))
+        monkeypatch.setattr(_mod, "_is_correct", lambda r, g: g in r)
 
         tmpl = self._make_tmpl(tmp_path)
         result = _run_three_conditions(questions, MagicMock(), "TestModel", tmpl, 0)
 
         for key in [
-            "model_id", "n_questions", "standard_accuracy", "adversarial_accuracy",
-            "accuracy_drop", "repaired_adversarial_accuracy", "repair_improvement",
+            "model_id",
+            "n_questions",
+            "standard_accuracy",
+            "adversarial_accuracy",
+            "accuracy_drop",
+            "repaired_adversarial_accuracy",
+            "repair_improvement",
             "inference_mode",
         ]:
             assert key in result, f"Missing key: {key}"
 
-    def test_inference_mode_is_live_gpu(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_inference_mode_is_live_gpu(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         questions = _make_paired_questions(3)
         monkeypatch.setattr(_mod, "_call_model", lambda *a: "#### 0")
         monkeypatch.setattr(_mod, "_is_correct", lambda *a: False)
@@ -413,12 +491,19 @@ class TestMain:
 
         # Gate 1: LiveGPUGate
         if gate_blocked:
+
             def _fake_gate(tmpl_obj: Any, ids: Any) -> dict[str, Any]:
                 return tmpl_obj.build_result(
-                    {"inference_mode": "blocked", "honest_verdict": "blocked",
-                     "failure_reason": "test: gate blocked", "n_questions": 0,
-                     "n_models": 0, "per_model_results": [],
-                     "adversarial_drop_pct": 0.0, "repair_improvement_pct": 0.0},
+                    {
+                        "inference_mode": "blocked",
+                        "honest_verdict": "blocked",
+                        "failure_reason": "test: gate blocked",
+                        "n_questions": 0,
+                        "n_models": 0,
+                        "per_model_results": [],
+                        "adversarial_drop_pct": 0.0,
+                        "repair_improvement_pct": 0.0,
+                    },
                     status="blocked",
                 )
         else:
@@ -427,17 +512,26 @@ class TestMain:
         monkeypatch.setattr(_mod.LiveGPUGate, "require_live_or_blocked", staticmethod(_fake_gate))
 
         # Gate 2: check_dual_gpu_health
-        monkeypatch.setattr(_mod, "check_dual_gpu_health", lambda: _make_gpu_health(zombie=gpu_zombie))
+        monkeypatch.setattr(
+            _mod, "check_dual_gpu_health", lambda: _make_gpu_health(zombie=gpu_zombie)
+        )
 
         # Gate 3: setup_gpu
         def _fake_setup_gpu(self_obj: Any, specs: Any, **kw: Any) -> dict[str, Any]:
             return {
-                "all_healthy": gpu_healthy, "models": [], "prewarm_time_s": 0.0,
-                "dual_gpu_auto_assigned": False, "model_server_active": False,
-                "gpu_runner_active": False, "cpu_fallback": True,
+                "all_healthy": gpu_healthy,
+                "models": [],
+                "prewarm_time_s": 0.0,
+                "dual_gpu_auto_assigned": False,
+                "model_server_active": False,
+                "gpu_runner_active": False,
+                "cpu_fallback": True,
                 "gpu_monitor_results": {
-                    "n_gpus_detected": 0, "n_zombies": 0, "idle_gpus": [],
-                    "all_healthy": True, "error": "cpu_fallback",
+                    "n_gpus_detected": 0,
+                    "n_zombies": 0,
+                    "idle_gpus": [],
+                    "all_healthy": True,
+                    "error": "cpu_fallback",
                 },
             }
 
@@ -448,22 +542,27 @@ class TestMain:
             monkeypatch.setattr(_mod, "_load_model_pipeline", lambda *a: MagicMock())
         else:
             monkeypatch.setattr(
-                _mod, "_load_model_pipeline",
-                lambda *a: (_ for _ in ()).throw(RuntimeError("load failed"))
+                _mod,
+                "_load_model_pipeline",
+                lambda *a: (_ for _ in ()).throw(RuntimeError("load failed")),
             )
 
         # Questions and three-condition runner
         monkeypatch.setattr(
-            _mod, "load_gsm8k_questions",
-            lambda n: [{"question_id": f"q_{i}", "question": f"Q {i}", "answer": str(i)}
-                       for i in range(3)],
+            _mod,
+            "load_gsm8k_questions",
+            lambda n: [
+                {"question_id": f"q_{i}", "question": f"Q {i}", "answer": str(i)} for i in range(3)
+            ],
         )
         monkeypatch.setattr(
-            _mod, "build_adversarial_questions",
+            _mod,
+            "build_adversarial_questions",
             lambda qs, **kw: _make_paired_questions(len(qs)),
         )
         monkeypatch.setattr(
-            _mod, "_run_three_conditions",
+            _mod,
+            "_run_three_conditions",
             lambda questions, model_obj, model_name, tmpl, idx: {
                 "model_id": model_name,
                 "n_questions": len(questions),
@@ -488,7 +587,8 @@ class TestMain:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         exp421 = {
-            "status": "success", "inference_mode": "live_gpu",
+            "status": "success",
+            "inference_mode": "live_gpu",
             "honest_verdict": "improvement_positive",
             "experiment": 421,
         }
@@ -497,12 +597,12 @@ class TestMain:
         assert artifact["rerun"] is False
         assert artifact["experiment"] == 429
 
-    def test_confirm_path_schema_v2(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_confirm_path_schema_v2(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         exp421 = {
-            "status": "success", "inference_mode": "live_gpu",
-            "honest_verdict": "improvement_positive", "experiment": 421,
+            "status": "success",
+            "inference_mode": "live_gpu",
+            "honest_verdict": "improvement_positive",
+            "experiment": 421,
         }
         artifact = self._run_main(tmp_path, monkeypatch, exp421_data=exp421)
         assert artifact["adversarial_schema"] == "carnot.adversarial_gsm8k.v2"
@@ -531,9 +631,7 @@ class TestMain:
 
     # -- Gate 3 unhealthy --
 
-    def test_gate3_unhealthy_blocked(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_gate3_unhealthy_blocked(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         artifact = self._run_main(tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=False)
         assert artifact["inference_mode"] == "blocked"
         assert artifact["honest_verdict"] == "blocked"
@@ -570,7 +668,11 @@ class TestMain:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         artifact = self._run_main(
-            tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=True, model_ok=True,
+            tmp_path,
+            monkeypatch,
+            gate_blocked=False,
+            gpu_healthy=True,
+            model_ok=True,
             gpu_zombie=True,
         )
         assert artifact["status"] == "success"
@@ -586,17 +688,13 @@ class TestMain:
         )
         assert artifact["inference_mode"] == "live_gpu"
 
-    def test_success_status(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_success_status(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         artifact = self._run_main(
             tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=True, model_ok=True
         )
         assert artifact["status"] == "success"
 
-    def test_success_schema_v2(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_success_schema_v2(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         artifact = self._run_main(
             tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=True, model_ok=True
         )
@@ -644,8 +742,10 @@ class TestMain:
             tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=True, model_ok=True
         )
         for field in [
-            "gate0_autofix_applied", "gate0_preflight_verdict",
-            "gate2_gpu1_zombie", "gate2_temperature_warning",
+            "gate0_autofix_applied",
+            "gate0_preflight_verdict",
+            "gate2_gpu1_zombie",
+            "gate2_temperature_warning",
         ]:
             assert field in artifact, f"Missing gate field: {field}"
 
@@ -660,9 +760,7 @@ class TestMain:
         for field in REQUIRED_RESULT_FIELDS:
             assert field in artifact, f"Missing required field: {field}"
 
-    def test_success_rerun_true(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_success_rerun_true(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         artifact = self._run_main(
             tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=True, model_ok=True
         )

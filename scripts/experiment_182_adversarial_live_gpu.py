@@ -70,6 +70,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import numpy as np
+import contextlib
 
 # ---------------------------------------------------------------------------
 # Force GPU mode before any carnot imports. See ops/known-issues.md.
@@ -107,24 +108,26 @@ if not torch.cuda.is_available():
 _N_GPUS = torch.cuda.device_count()
 print(f"CUDA available: {_N_GPUS} GPU(s).")
 for _i in range(_N_GPUS):
-    print(f"  GPU {_i}: {torch.cuda.get_device_name(_i)} "
-          f"({torch.cuda.get_device_properties(_i).total_memory // 1024**2} MB)")
+    print(
+        f"  GPU {_i}: {torch.cuda.get_device_name(_i)} "
+        f"({torch.cuda.get_device_properties(_i).total_memory // 1024**2} MB)"
+    )
 
 # ---------------------------------------------------------------------------
 # Configuration constants.
 # ---------------------------------------------------------------------------
-N_PER_VARIANT = 400        # 2× Exp 162 for 80% power.
-N_BOOTSTRAP = 10_000       # 10k samples → <±2.5pp CI at N=400.
+N_PER_VARIANT = 400  # 2× Exp 162 for 80% power.
+N_BOOTSTRAP = 10_000  # 10k samples → <±2.5pp CI at N=400.
 BOOTSTRAP_SEED = 182
 N_PERMUTATION = 10_000
 PERMUTATION_SEED = 182
 MAX_REPAIR_ITERS = 3
 
 VARIANTS: list[tuple[str, str, float]] = [
-    ("control",             "Control (standard)",          1.0),
-    ("number_swapped",      "Number-swapped",               1.8),
-    ("irrelevant_injected", "Irrelevant-injected",          1.5),
-    ("combined",            "Combined adversarial",         2.2),
+    ("control", "Control (standard)", 1.0),
+    ("number_swapped", "Number-swapped", 1.8),
+    ("irrelevant_injected", "Irrelevant-injected", 1.5),
+    ("combined", "Combined adversarial", 2.2),
 ]
 
 # ---------------------------------------------------------------------------
@@ -298,8 +301,7 @@ def _tmpl_construction(rng: random.Random) -> tuple[str, int]:
     d = rng.randint(3, 7)
     r = rng.randint(15, 40)
     return (
-        f"{w} workers work {h} hours/day for {d} days, each laying "
-        f"{r} bricks/hour. Total bricks?",
+        f"{w} workers work {h} hours/day for {d} days, each laying {r} bricks/hour. Total bricks?",
         w * h * d * r,
     )
 
@@ -457,10 +459,8 @@ def _inject_irrelevant_sentence(problem: str, rng: random.Random) -> str:
     """
     existing: set[int] = set()
     for m in re.finditer(r"\b(\d+)\b", problem):
-        try:
+        with contextlib.suppress(ValueError):
             existing.add(int(m.group(1)))
-        except ValueError:
-            pass
     irrel = _generate_irrelevant_sentence(rng, existing)
     parts = re.split(r"(?<=\.)\s+", problem.strip())
     if len(parts) <= 1:
@@ -491,7 +491,9 @@ def number_swap(
 
 
 def irrelevant_injection(
-    problem: str, answer: int, inject_rng: random.Random,
+    problem: str,
+    answer: int,
+    inject_rng: random.Random,
 ) -> tuple[str, int]:
     """Insert irrelevant sentence; correct answer unchanged (it IS irrelevant)."""
     return _inject_irrelevant_sentence(problem, inject_rng), answer
@@ -549,42 +551,64 @@ def generate_adversarial_datasets(
         orig_problem, orig_answer = tmpl_fn(random.Random(ctrl_seed))
 
         # Control variant (no perturbation).
-        control_items.append({
-            "id": i, "original_problem": orig_problem,
-            "perturbed_problem": orig_problem,
-            "correct_answer": orig_answer, "original_answer": orig_answer,
-            "perturbation": "none", "template": tmpl_name,
-        })
+        control_items.append(
+            {
+                "id": i,
+                "original_problem": orig_problem,
+                "perturbed_problem": orig_problem,
+                "correct_answer": orig_answer,
+                "original_answer": orig_answer,
+                "perturbation": "none",
+                "template": tmpl_name,
+            }
+        )
 
         # Number-swapped.
         swap_problem, swap_answer = number_swap(tmpl_fn, swap_seed)
-        swapped_items.append({
-            "id": i, "original_problem": orig_problem,
-            "perturbed_problem": swap_problem,
-            "correct_answer": swap_answer, "original_answer": orig_answer,
-            "perturbation": "number_swap", "template": tmpl_name,
-        })
+        swapped_items.append(
+            {
+                "id": i,
+                "original_problem": orig_problem,
+                "perturbed_problem": swap_problem,
+                "correct_answer": swap_answer,
+                "original_answer": orig_answer,
+                "perturbation": "number_swap",
+                "template": tmpl_name,
+            }
+        )
 
         # Irrelevant injection.
         inj_problem, inj_answer = irrelevant_injection(
-            orig_problem, orig_answer, random.Random(inj_seed),
+            orig_problem,
+            orig_answer,
+            random.Random(inj_seed),
         )
-        injected_items.append({
-            "id": i, "original_problem": orig_problem,
-            "perturbed_problem": inj_problem,
-            "correct_answer": inj_answer, "original_answer": orig_answer,
-            "perturbation": "irrelevant_injection", "template": tmpl_name,
-        })
+        injected_items.append(
+            {
+                "id": i,
+                "original_problem": orig_problem,
+                "perturbed_problem": inj_problem,
+                "correct_answer": inj_answer,
+                "original_answer": orig_answer,
+                "perturbation": "irrelevant_injection",
+                "template": tmpl_name,
+            }
+        )
 
         # Combined.
         comb_rng = random.Random(inj_seed + 1)
         comb_problem, comb_answer = combined_adversarial(tmpl_fn, swap_seed, comb_rng)
-        combined_items.append({
-            "id": i, "original_problem": orig_problem,
-            "perturbed_problem": comb_problem,
-            "correct_answer": comb_answer, "original_answer": orig_answer,
-            "perturbation": "combined", "template": tmpl_name,
-        })
+        combined_items.append(
+            {
+                "id": i,
+                "original_problem": orig_problem,
+                "perturbed_problem": comb_problem,
+                "correct_answer": comb_answer,
+                "original_answer": orig_answer,
+                "perturbation": "combined",
+                "template": tmpl_name,
+            }
+        )
 
     return {
         "control": control_items,
@@ -613,7 +637,7 @@ def load_or_generate_datasets() -> dict[str, list[dict[str, Any]]]:
             return datasets
         print(f"  Insufficient size (need {N_PER_VARIANT}/variant) — regenerating.")
 
-    print(f"  Generating {N_PER_VARIANT} questions × 4 variants = {N_PER_VARIANT*4} total...")
+    print(f"  Generating {N_PER_VARIANT} questions × 4 variants = {N_PER_VARIANT * 4} total...")
     datasets = generate_adversarial_datasets(N_PER_VARIANT, seed=182)
     with open(ADVERSARIAL_DATA_PATH, "w") as f:
         json.dump({"n_per_variant": N_PER_VARIANT, "seed": 182, "datasets": datasets}, f)
@@ -650,7 +674,8 @@ def load_model_on_gpu(config: dict[str, Any]) -> tuple[Any, Any, str]:
         t0 = time.perf_counter()
         try:
             tokenizer = AutoTokenizer.from_pretrained(
-                model_id, trust_remote_code=True,
+                model_id,
+                trust_remote_code=True,
             )
             model = AutoModelForCausalLM.from_pretrained(
                 model_id,
@@ -660,9 +685,11 @@ def load_model_on_gpu(config: dict[str, Any]) -> tuple[Any, Any, str]:
             )
             model.eval()
             load_time = time.perf_counter() - t0
-            vram_mb = torch.cuda.memory_allocated(device_index) / 1024 ** 2
-            print(f"  Loaded {model_id} in {load_time:.2f}s | "
-                  f"VRAM GPU{device_index}: {vram_mb:.0f} MB")
+            vram_mb = torch.cuda.memory_allocated(device_index) / 1024**2
+            print(
+                f"  Loaded {model_id} in {load_time:.2f}s | "
+                f"VRAM GPU{device_index}: {vram_mb:.0f} MB"
+            )
             # Quick smoke test.
             _smoke = _generate_on_device(model, tokenizer, "2+2=", 8, device_str)
             print(f"  Smoke test OK: '{_smoke[:30].strip()}'")
@@ -681,7 +708,7 @@ def unload_model(model: Any, tokenizer: Any, device_index: int) -> None:
     del model, tokenizer
     gc.collect()
     torch.cuda.empty_cache()
-    vram_after = torch.cuda.memory_allocated(device_index) / 1024 ** 2
+    vram_after = torch.cuda.memory_allocated(device_index) / 1024**2
     print(f"  Unloaded model. GPU{device_index} VRAM now: {vram_after:.0f} MB")
 
 
@@ -711,13 +738,17 @@ def _generate_on_device(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             text = prompt
@@ -737,7 +768,8 @@ def _generate_on_device(
         )
 
     response = tokenizer.decode(
-        outputs[0, input_len:], skip_special_tokens=True,
+        outputs[0, input_len:],
+        skip_special_tokens=True,
     )
     # Strip Qwen3 chain-of-thought reasoning blocks.
     if "</think>" in response:
@@ -843,12 +875,14 @@ def extract_arithmetic_steps(response: str) -> list[dict[str, Any]]:
             if correct == int(correct):
                 correct = int(correct)
         satisfied = abs(float(claimed) - float(correct)) < 0.01
-        steps.append({
-            "expression": f"{a} {op} {b}",
-            "claimed": claimed,
-            "correct": correct,
-            "satisfied": satisfied,
-        })
+        steps.append(
+            {
+                "expression": f"{a} {op} {b}",
+                "claimed": claimed,
+                "correct": correct,
+                "satisfied": satisfied,
+            }
+        )
     return steps
 
 
@@ -872,8 +906,7 @@ def format_violations(arith_steps: list[dict[str, Any]]) -> str:
         )
     lines += [
         "",
-        "Please recalculate step by step, fixing these errors. "
-        "Give the final answer as a number.",
+        "Please recalculate step by step, fixing these errors. Give the final answer as a number.",
     ]
     return "\n".join(lines)
 
@@ -986,8 +1019,11 @@ def verify_with_pipeline(question: str, response: str) -> dict[str, Any]:
     """
     try:
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         pipeline = VerifyRepairPipeline(
-            model=None, domains=["arithmetic"], timeout_seconds=30.0,
+            model=None,
+            domains=["arithmetic"],
+            timeout_seconds=30.0,
         )
         vr = pipeline.verify(question, response, domain="arithmetic")
         return {
@@ -1035,8 +1071,9 @@ def run_baseline(
     elapsed = time.time() - t0
     extracted = extract_final_number(response)
     correct = extracted is not None and extracted == item["correct_answer"]
-    error_type = categorize_error(item, response, extracted, item["perturbation"]) \
-        if not correct else None
+    error_type = (
+        categorize_error(item, response, extracted, item["perturbation"]) if not correct else None
+    )
     return {
         "mode": "baseline",
         "extracted_answer": extracted,
@@ -1076,8 +1113,9 @@ def run_verify_only(
     extracted = extract_final_number(response)
     correct = extracted is not None and extracted == item["correct_answer"]
     flagged = n_violated > 0 or not pipeline_result["verified"]
-    error_type = categorize_error(item, response, extracted, item["perturbation"]) \
-        if not correct else None
+    error_type = (
+        categorize_error(item, response, extracted, item["perturbation"]) if not correct else None
+    )
     return {
         "mode": "verify_only",
         "extracted_answer": extracted,
@@ -1164,8 +1202,11 @@ def run_verify_repair(
 
     elapsed = time.time() - t0
     final_correct = extracted is not None and extracted == gt
-    error_type = categorize_error(item, response, extracted, item["perturbation"]) \
-        if not final_correct else None
+    error_type = (
+        categorize_error(item, response, extracted, item["perturbation"])
+        if not final_correct
+        else None
+    )
 
     return {
         "mode": "verify_repair",
@@ -1320,8 +1361,7 @@ def two_proportion_ztest(
     p1 = n_success_1 / n_1 if n_1 > 0 else 0.0
     p2 = n_success_2 / n_2 if n_2 > 0 else 0.0
     p_pool = (n_success_1 + n_success_2) / (n_1 + n_2) if (n_1 + n_2) > 0 else 0.5
-    se = math.sqrt(p_pool * (1 - p_pool) * (1 / n_1 + 1 / n_2)) \
-        if n_1 > 0 and n_2 > 0 else 1.0
+    se = math.sqrt(p_pool * (1 - p_pool) * (1 / n_1 + 1 / n_2)) if n_1 > 0 and n_2 > 0 else 1.0
     z_stat = (p2 - p1) / se if se > 0 else 0.0
     p_two_sided = float(math.erfc(abs(z_stat) / math.sqrt(2)))
     p_one_sided = p_two_sided / 2.0 if z_stat > 0 else 1.0 - p_two_sided / 2.0
@@ -1384,8 +1424,7 @@ def permutation_test_hypothesis(
         )
     else:
         interpretation = (
-            f"Hypothesis NOT supported: adversarial delta ≤ control delta "
-            f"(p={p_value:.4f})."
+            f"Hypothesis NOT supported: adversarial delta ≤ control delta (p={p_value:.4f})."
         )
 
     return {
@@ -1436,22 +1475,22 @@ def compute_variant_metrics(
     delta, delta_lo, delta_hi = bootstrap_delta_ci(base_flags, repair_flags)
 
     # Accuracy drop vs. control (positive = worse than control).
-    acc_drop = (control_baseline_acc - base_acc) * 100 \
-        if control_baseline_acc is not None else None
+    acc_drop = (control_baseline_acc - base_acc) * 100 if control_baseline_acc is not None else None
 
     # Verify-only metrics.
     n_flagged = sum(1 for r in verify_results if r.get("flagged", False))
     n_not_flagged = n - n_flagged
     n_flagged_correct = sum(
-        1 for r in verify_results
-        if not r.get("flagged", False) and r["correct"]
+        1 for r in verify_results if not r.get("flagged", False) and r["correct"]
     )
     precision = n_flagged_correct / n_not_flagged if n_not_flagged > 0 else 0.0
 
     # Error taxonomy from repair results (most accurate error info).
     error_types = [
-        "arithmetic_error", "irrelevant_number_error",
-        "logic_error", "reading_comprehension_error",
+        "arithmetic_error",
+        "irrelevant_number_error",
+        "logic_error",
+        "reading_comprehension_error",
     ]
     error_counts: dict[str, int] = {et: 0 for et in error_types}
     for r in repair_results:
@@ -1466,15 +1505,16 @@ def compute_variant_metrics(
     # Exp 122 replication: fraction of irrelevant_number errors that pass Ising.
     irrel_total = error_counts["irrelevant_number_error"]
     irrel_passed = sum(
-        1 for r in verify_results
-        if r.get("error_type") == "irrelevant_number_error"
-        and r.get("pipeline_verified", True)
+        1
+        for r in verify_results
+        if r.get("error_type") == "irrelevant_number_error" and r.get("pipeline_verified", True)
     )
     irrel_pass_rate = round(irrel_passed / irrel_total, 4) if irrel_total > 0 else None
 
     # Number of questions improved by verify-repair (correct in repair, wrong in baseline).
     n_improved = sum(
-        1 for b, r_rep in zip(baseline_results, repair_results)
+        1
+        for b, r_rep in zip(baseline_results, repair_results)
         if r_rep["correct"] and not b["correct"]
     )
 
@@ -1568,7 +1608,9 @@ def compute_adversarial_ratio(
         "interpretation": (
             f"Verify-repair is {pooled_ratio:.2f}× more beneficial on adversarial "
             f"inputs than on standard control inputs."
-        ) if pooled_ratio is not None else "Insufficient data (control delta ≤ 0).",
+        )
+        if pooled_ratio is not None
+        else "Insufficient data (control delta ≤ 0).",
     }
 
 
@@ -1615,7 +1657,9 @@ def check_exp122_replication(all_model_results: dict[str, Any]) -> dict[str, Any
             f"Observed {observed:.1%} pass-through rate for irrelevant-number errors "
             f"vs. Exp 122 reference of {exp122_reference:.1%}. "
             + ("Replicates." if matches else "DEVIATION — investigate.")
-        ) if observed is not None else "No irrelevant-number errors observed.",
+        )
+        if observed is not None
+        else "No irrelevant-number errors observed.",
     }
 
 
@@ -1660,13 +1704,13 @@ def main() -> int:
         device_index = config["device_index"]
         device_str = f"cuda:{device_index}"
 
-        print(f"\n[2/5] Model {mi+1}/{len(MODEL_CONFIGS)}: {model_name} → {device_str}")
+        print(f"\n[2/5] Model {mi + 1}/{len(MODEL_CONFIGS)}: {model_name} → {device_str}")
 
         # Load model onto target GPU.
         load_t0 = time.time()
         tokenizer, model_obj, actual_device = load_model_on_gpu(config)
         load_time = time.time() - load_t0
-        vram_mb = torch.cuda.memory_allocated(device_index) / 1024 ** 2
+        vram_mb = torch.cuda.memory_allocated(device_index) / 1024**2
 
         control_baseline_acc: float | None = None
         variant_results: dict[str, Any] = {}
@@ -1698,7 +1742,11 @@ def main() -> int:
                 r_base = run_baseline(item, tokenizer, model_obj, actual_device)
                 r_verify = run_verify_only(item, tokenizer, model_obj, actual_device)
                 r_repair = run_verify_repair(
-                    item, tokenizer, model_obj, actual_device, MAX_REPAIR_ITERS,
+                    item,
+                    tokenizer,
+                    model_obj,
+                    actual_device,
+                    MAX_REPAIR_ITERS,
                 )
 
                 baseline_results.append(r_base)
@@ -1715,8 +1763,8 @@ def main() -> int:
                     eta_m = (elapsed_m / max(done - completed, 1)) * (n - done)
                     print(
                         f"    [{model_name}/{vk}] {total_done}/{n} | "
-                        f"base {n_b/total_done:.1%} | "
-                        f"repair {n_r/total_done:.1%} | "
+                        f"base {n_b / total_done:.1%} | "
+                        f"repair {n_r / total_done:.1%} | "
                         f"{elapsed_m:.1f}min | ETA {eta_m:.0f}min"
                     )
 
@@ -1736,8 +1784,11 @@ def main() -> int:
 
             # Compute metrics.
             metrics = compute_variant_metrics(
-                baseline_results, verify_results, repair_results,
-                vk, control_baseline_acc,
+                baseline_results,
+                verify_results,
+                repair_results,
+                vk,
+                control_baseline_acc,
             )
 
             if vk == "control":
@@ -1747,8 +1798,11 @@ def main() -> int:
             b = metrics["baseline"]
             vr = metrics["verify_repair"]
             delta = metrics["improvement_delta_pp"]
-            drop_str = (f" (drop: {b['accuracy_drop_pp']:+.1f}pp vs ctrl)"
-                        if b["accuracy_drop_pp"] is not None else "")
+            drop_str = (
+                f" (drop: {b['accuracy_drop_pp']:+.1f}pp vs ctrl)"
+                if b["accuracy_drop_pp"] is not None
+                else ""
+            )
             print(
                 f"    {vlabel}: base={b['accuracy_pct']:.1f}%{drop_str} "
                 f"→ VR={vr['accuracy_pct']:.1f}% "
@@ -1785,11 +1839,13 @@ def main() -> int:
             variant_results[vk]["metrics"]["improvement_delta_pp"]
             for vk in ("number_swapped", "irrelevant_injected", "combined")
         ]
-        hypothesis_data.append({
-            "model": model_name,
-            "control_delta": ctrl_delta,
-            "adversarial_deltas": adv_deltas,
-        })
+        hypothesis_data.append(
+            {
+                "model": model_name,
+                "control_delta": ctrl_delta,
+                "adversarial_deltas": adv_deltas,
+            }
+        )
 
         all_model_results[model_name] = {
             "model_config": {
@@ -1814,15 +1870,15 @@ def main() -> int:
 
     # (a) Permutation test on improvement deltas.
     all_ctrl_deltas = [d["control_delta"] for d in hypothesis_data]
-    all_adv_deltas = [
-        delta for d in hypothesis_data for delta in d["adversarial_deltas"]
-    ]
+    all_adv_deltas = [delta for d in hypothesis_data for delta in d["adversarial_deltas"]]
     perm_result = permutation_test_hypothesis(all_ctrl_deltas, all_adv_deltas)
 
     # (b) Two-proportion z-test.
     ztest_result = two_proportion_ztest(
-        n_success_1=ctrl_improved_total, n_1=ctrl_n_total,
-        n_success_2=adv_improved_total, n_2=adv_n_total,
+        n_success_1=ctrl_improved_total,
+        n_1=ctrl_n_total,
+        n_success_2=adv_improved_total,
+        n_2=adv_n_total,
         one_sided=True,
     )
 
@@ -1837,10 +1893,14 @@ def main() -> int:
     # (d) Exp 122 replication check.
     exp122_check = check_exp122_replication(all_model_results)
 
-    print(f"  Permutation:   p={perm_result['p_value']:.4f} "
-          f"({'SIGNIFICANT' if perm_result['significant_p05'] else 'not sig'})")
-    print(f"  Z-test:        p={ztest_result['p_value']:.4f} "
-          f"({'SIGNIFICANT' if ztest_result['significant_p05'] else 'not sig'})")
+    print(
+        f"  Permutation:   p={perm_result['p_value']:.4f} "
+        f"({'SIGNIFICANT' if perm_result['significant_p05'] else 'not sig'})"
+    )
+    print(
+        f"  Z-test:        p={ztest_result['p_value']:.4f} "
+        f"({'SIGNIFICANT' if ztest_result['significant_p05'] else 'not sig'})"
+    )
     print(f"  Convergent:    {'YES — HYPOTHESIS CONFIRMED' if statistical_significance else 'NO'}")
     print(f"  Adv/ctrl:      {adversarial_ratio['pooled_ratio']}×")
     print(f"  Exp122 check:  {exp122_check['interpretation']}")
@@ -1876,8 +1936,10 @@ def main() -> int:
                 "verify_only_pct": m["verify_only"]["accuracy_pct"],
                 "verify_repair_pct": m["verify_repair"]["accuracy_pct"],
                 "delta_pp": m["improvement_delta_pp"],
-                "ci_95": [m["verify_repair"]["ci_95_lo"] * 100,
-                          m["verify_repair"]["ci_95_hi"] * 100],
+                "ci_95": [
+                    m["verify_repair"]["ci_95_lo"] * 100,
+                    m["verify_repair"]["ci_95_hi"] * 100,
+                ],
                 "accuracy_drop_pp": m["baseline"]["accuracy_drop_pp"],
             }
 
@@ -1905,11 +1967,9 @@ def main() -> int:
     results: dict[str, Any] = {
         "experiment": 182,
         "timestamp": timestamp,
-        "title": (
-            "DEFINITIVE Adversarial GSM8K — Live GPU Inference, N=400/variant"
-        ),
+        "title": ("DEFINITIVE Adversarial GSM8K — Live GPU Inference, N=400/variant"),
         "description": (
-            f"N={N_PER_VARIANT}/variant (4 variants = {N_PER_VARIANT*4} total adversarial items). "
+            f"N={N_PER_VARIANT}/variant (4 variants = {N_PER_VARIANT * 4} total adversarial items). "
             f"Live GPU inference (no simulation). Qwen/Qwen3.5-0.8B (GPU0) + "
             f"google/gemma-4-E4B-it (GPU1). "
             f"95% bootstrap CIs (n={N_BOOTSTRAP:,}). "
@@ -1946,7 +2006,7 @@ def main() -> int:
     with open(OUTPUT_PATH, "w") as f:
         json.dump(results, f, indent=2)
     print(f"\nResults saved to {OUTPUT_PATH}")
-    print(f"Total elapsed: {overall_elapsed/3600:.2f}h")
+    print(f"Total elapsed: {overall_elapsed / 3600:.2f}h")
     print()
 
     # Final verdict.
@@ -2043,10 +2103,14 @@ def _print_tables(
     print(SEP)
     print("HYPOTHESIS TESTS — H1: adversarial Δ > control Δ (one-sided)")
     print(SEP)
-    print(f"  Permutation test: p = {perm_result['p_value']:.4f}  "
-          f"({'SIGNIFICANT' if perm_result['significant_p05'] else 'not sig'})")
-    print(f"  Z-test:           p = {ztest_result['p_value']:.4f}  "
-          f"({'SIGNIFICANT' if ztest_result['significant_p05'] else 'not sig'})")
+    print(
+        f"  Permutation test: p = {perm_result['p_value']:.4f}  "
+        f"({'SIGNIFICANT' if perm_result['significant_p05'] else 'not sig'})"
+    )
+    print(
+        f"  Z-test:           p = {ztest_result['p_value']:.4f}  "
+        f"({'SIGNIFICANT' if ztest_result['significant_p05'] else 'not sig'})"
+    )
     print(f"  Convergent:       {'YES — HYPOTHESIS CONFIRMED' if stat_sig else 'NO'}")
     print(f"  Permutation:      {perm_result['interpretation']}")
     print()
@@ -2067,6 +2131,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

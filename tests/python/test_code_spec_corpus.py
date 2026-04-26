@@ -107,7 +107,9 @@ def test_shared_trace_rows_preserve_multi_artifact_provenance_and_miss_counts() 
         "results/experiment_227_results.json",
     ]
     assert {trace["experiment"] for trace in row["source_traces"]} == {226, 227}
-    assert all("annotated_return_type" in trace["failure_properties"] for trace in row["source_traces"])
+    assert all(
+        "annotated_return_type" in trace["failure_properties"] for trace in row["source_traces"]
+    )
 
 
 # REQ-CODE-023, REQ-CODE-024
@@ -127,7 +129,8 @@ def test_repaired_rows_keep_trace_backed_repair_evidence() -> None:
         "no_exception",
     ]
     assert any(
-        "exp226:humaneval-66" in item["trace_refs"] for item in row["invariants"] + row["postconditions"]
+        "exp226:humaneval-66" in item["trace_refs"]
+        for item in row["invariants"] + row["postconditions"]
     )
 
 
@@ -137,10 +140,7 @@ def test_build_results_reports_family_and_source_trace_counts() -> None:
     rows = module.build_corpus(repo_root)
 
     results = module.build_results(rows)
-    by_family = {
-        family: sum(len(row[family]) for row in rows)
-        for family in module.SPEC_FAMILIES
-    }
+    by_family = {family: sum(len(row[family]) for row in rows) for family in module.SPEC_FAMILIES}
 
     assert results["experiment"] == "Exp 236"
     assert results["run_date"] == "20260413"
@@ -271,7 +271,9 @@ def test_helper_edge_branches_cover_fallback_paths_sparse_payloads_and_trace_ign
 
 
 # REQ-CODE-023, REQ-CODE-024, SCENARIO-CODE-020
-def test_main_writes_corpus_and_summary_idempotently(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_main_writes_corpus_and_summary_idempotently(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     repo = make_repo(tmp_path)
     write_source_fixtures(repo)
 
@@ -287,7 +289,9 @@ def test_main_writes_corpus_and_summary_idempotently(tmp_path: Path, monkeypatch
     assert module.main([]) == 0
 
     corpus = read_jsonl(repo / "data" / "research" / "code_spec_corpus_236.jsonl")
-    results = json.loads((repo / "results" / "experiment_236_results.json").read_text(encoding="utf-8"))
+    results = json.loads(
+        (repo / "results" / "experiment_236_results.json").read_text(encoding="utf-8")
+    )
 
     assert len(corpus) == 164
     assert corpus[0]["row_id"] == "exp236-humaneval-0"
@@ -297,13 +301,13 @@ def test_main_writes_corpus_and_summary_idempotently(tmp_path: Path, monkeypatch
 
 
 # REQ-CODE-023, SCENARIO-CODE-020
-def test_script_entrypoint_honors_repo_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_script_entrypoint_honors_repo_override(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     repo = make_repo(tmp_path)
     write_source_fixtures(repo)
     script_path = (
-        Path(__file__).resolve().parents[2]
-        / "scripts"
-        / "experiment_236_code_spec_corpus.py"
+        Path(__file__).resolve().parents[2] / "scripts" / "experiment_236_code_spec_corpus.py"
     )
 
     monkeypatch.setenv("CARNOT_REPO_ROOT", str(repo))
@@ -319,7 +323,9 @@ def test_script_entrypoint_honors_repo_override(tmp_path: Path, monkeypatch: pyt
 
     assert excinfo.value.code == 0
     assert (repo / "data" / "research" / "code_spec_corpus_236.jsonl").exists()
-    results = json.loads((repo / "results" / "experiment_236_results.json").read_text(encoding="utf-8"))
+    results = json.loads(
+        (repo / "results" / "experiment_236_results.json").read_text(encoding="utf-8")
+    )
     assert results["run_date"] == "20260413"
 
 

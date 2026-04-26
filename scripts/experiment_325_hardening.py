@@ -18,6 +18,7 @@
 Spec: REQ-INFRA-001, REQ-INFRA-002,
       SCENARIO-INFRA-001, SCENARIO-INFRA-002, SCENARIO-INFRA-003
 """
+
 from __future__ import annotations
 
 import ast

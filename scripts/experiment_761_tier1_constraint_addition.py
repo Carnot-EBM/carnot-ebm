@@ -74,9 +74,7 @@ class SyntheticPipeline:
 
     def detection_rate(self) -> float:
         """Return current detection rate: base + boost per active constraint."""
-        rate = self.BASE_DETECTION_RATE + self.CONSTRAINT_BOOST * len(
-            self.active_constraints
-        )
+        rate = self.BASE_DETECTION_RATE + self.CONSTRAINT_BOOST * len(self.active_constraints)
         return min(1.0, rate)
 
     def verify(self, response: str, *, question: str) -> tuple[bool, str, float]:
@@ -249,7 +247,9 @@ def run_experiment(tmpl: ExperimentTemplate) -> None:
 
     print(f"honest_verdict: {honest_verdict}")
     print(f"constraints_added_total: {cumulative_constraints_added}")
-    print(f"precision_s1={precision_s1:.4f}  precision_s10={precision_s10:.4f}  monotonic={monotonic}")
+    print(
+        f"precision_s1={precision_s1:.4f}  precision_s10={precision_s10:.4f}  monotonic={monotonic}"
+    )
 
 
 def main() -> None:

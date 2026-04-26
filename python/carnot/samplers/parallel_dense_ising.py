@@ -40,7 +40,7 @@ Spec: REQ-SAMPLE-023, REQ-SAMPLE-024
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import jax
 import jax.numpy as jnp
@@ -114,9 +114,7 @@ class ParallelDenseIsingInertia:
         # EMA local fields; shape (n_spins,). Reset at start of each sample() call.
         self.h_i: jax.Array = jnp.zeros(config.n_spins)
 
-    def _compute_local_fields(
-        self, J: jax.Array, s: jax.Array
-    ) -> jax.Array:
+    def _compute_local_fields(self, J: jax.Array, s: jax.Array) -> jax.Array:
         """Compute instantaneous local fields from coupling matrix and spin state.
 
         **Detailed explanation:**
@@ -136,9 +134,7 @@ class ParallelDenseIsingInertia:
         """
         return J @ s
 
-    def _update_inertia(
-        self, h_i: jax.Array, local_fields: jax.Array
-    ) -> jax.Array:
+    def _update_inertia(self, h_i: jax.Array, local_fields: jax.Array) -> jax.Array:
         """Apply EMA smoothing to dampen oscillation in dense coupling graphs.
 
         **Detailed explanation:**
@@ -165,9 +161,7 @@ class ParallelDenseIsingInertia:
         alpha = self.config.alpha
         return alpha * h_i + (1.0 - alpha) * local_fields
 
-    def _flip_probabilities(
-        self, h_i: jax.Array, biases: jax.Array
-    ) -> jax.Array:
+    def _flip_probabilities(self, h_i: jax.Array, biases: jax.Array) -> jax.Array:
         """Compute probability of each spin being +1 under the Boltzmann distribution.
 
         **Detailed explanation:**

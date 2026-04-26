@@ -76,11 +76,13 @@ def test_no_constraint_memory_leaves_behavior_unchanged():
 
     # Patch _evaluate_constraints so no real extraction is needed.
     clean_result = _verification_result_clean()
-    with patch.object(pipeline, "_evaluate_constraints", return_value=clean_result), \
-         patch.object(pipeline, "extract_constraints", return_value=[]), \
-         patch.object(pipeline, "extract_typed_reasoning", return_value=None), \
-         patch.object(pipeline, "verify_semantic_grounding", return_value=None), \
-         patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None):
+    with (
+        patch.object(pipeline, "_evaluate_constraints", return_value=clean_result),
+        patch.object(pipeline, "extract_constraints", return_value=[]),
+        patch.object(pipeline, "extract_typed_reasoning", return_value=None),
+        patch.object(pipeline, "verify_semantic_grounding", return_value=None),
+        patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None),
+    ):
         result = pipeline.verify("What is 2+2?", "4", domain="arithmetic")
 
     assert result.verified is True
@@ -103,11 +105,13 @@ def test_observe_called_for_each_violation():
     pipeline = _make_pipeline(constraint_memory=cm)
 
     viol_result = _verification_result_with_violations(["carry:overflow", "sign:flip"])
-    with patch.object(pipeline, "_evaluate_constraints", return_value=viol_result), \
-         patch.object(pipeline, "extract_constraints", return_value=[]), \
-         patch.object(pipeline, "extract_typed_reasoning", return_value=None), \
-         patch.object(pipeline, "verify_semantic_grounding", return_value=None), \
-         patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None):
+    with (
+        patch.object(pipeline, "_evaluate_constraints", return_value=viol_result),
+        patch.object(pipeline, "extract_constraints", return_value=[]),
+        patch.object(pipeline, "extract_typed_reasoning", return_value=None),
+        patch.object(pipeline, "verify_semantic_grounding", return_value=None),
+        patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None),
+    ):
         pipeline.verify("q", "resp", domain="arithmetic")
 
     counts = cm.get_pattern_counts()
@@ -126,11 +130,13 @@ def test_observe_accumulates_across_multiple_verify_calls():
     pipeline = _make_pipeline(constraint_memory=cm)
 
     viol_result = _verification_result_with_violations(["carry:overflow"])
-    with patch.object(pipeline, "_evaluate_constraints", return_value=viol_result), \
-         patch.object(pipeline, "extract_constraints", return_value=[]), \
-         patch.object(pipeline, "extract_typed_reasoning", return_value=None), \
-         patch.object(pipeline, "verify_semantic_grounding", return_value=None), \
-         patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None):
+    with (
+        patch.object(pipeline, "_evaluate_constraints", return_value=viol_result),
+        patch.object(pipeline, "extract_constraints", return_value=[]),
+        patch.object(pipeline, "extract_typed_reasoning", return_value=None),
+        patch.object(pipeline, "verify_semantic_grounding", return_value=None),
+        patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None),
+    ):
         pipeline.verify("q1", "resp1", domain="arithmetic")
         pipeline.verify("q2", "resp2", domain="arithmetic")
         pipeline.verify("q3", "resp3", domain="arithmetic")
@@ -157,11 +163,13 @@ def test_check_and_add_called_during_verify():
 
     pipeline = _make_pipeline(constraint_memory=cm)
     clean_result = _verification_result_clean()
-    with patch.object(pipeline, "_evaluate_constraints", return_value=clean_result), \
-         patch.object(pipeline, "extract_constraints", return_value=[]), \
-         patch.object(pipeline, "extract_typed_reasoning", return_value=None), \
-         patch.object(pipeline, "verify_semantic_grounding", return_value=None), \
-         patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None):
+    with (
+        patch.object(pipeline, "_evaluate_constraints", return_value=clean_result),
+        patch.object(pipeline, "extract_constraints", return_value=[]),
+        patch.object(pipeline, "extract_typed_reasoning", return_value=None),
+        patch.object(pipeline, "verify_semantic_grounding", return_value=None),
+        patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None),
+    ):
         pipeline.verify("q", "r", domain="arithmetic")
 
     cm.check_and_add.assert_called_once_with(pipeline)
@@ -187,11 +195,13 @@ def test_check_and_add_receives_pipeline_reference():
     cm = CapturingMemory()
     pipeline = _make_pipeline(constraint_memory=cm)
     clean_result = _verification_result_clean()
-    with patch.object(pipeline, "_evaluate_constraints", return_value=clean_result), \
-         patch.object(pipeline, "extract_constraints", return_value=[]), \
-         patch.object(pipeline, "extract_typed_reasoning", return_value=None), \
-         patch.object(pipeline, "verify_semantic_grounding", return_value=None), \
-         patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None):
+    with (
+        patch.object(pipeline, "_evaluate_constraints", return_value=clean_result),
+        patch.object(pipeline, "extract_constraints", return_value=[]),
+        patch.object(pipeline, "extract_typed_reasoning", return_value=None),
+        patch.object(pipeline, "verify_semantic_grounding", return_value=None),
+        patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None),
+    ):
         pipeline.verify("q", "r")
 
     assert len(captured) == 1
@@ -209,11 +219,13 @@ def test_no_observe_when_no_violations():
 
     pipeline = _make_pipeline(constraint_memory=cm)
     clean_result = _verification_result_clean()
-    with patch.object(pipeline, "_evaluate_constraints", return_value=clean_result), \
-         patch.object(pipeline, "extract_constraints", return_value=[]), \
-         patch.object(pipeline, "extract_typed_reasoning", return_value=None), \
-         patch.object(pipeline, "verify_semantic_grounding", return_value=None), \
-         patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None):
+    with (
+        patch.object(pipeline, "_evaluate_constraints", return_value=clean_result),
+        patch.object(pipeline, "extract_constraints", return_value=[]),
+        patch.object(pipeline, "extract_typed_reasoning", return_value=None),
+        patch.object(pipeline, "verify_semantic_grounding", return_value=None),
+        patch.object(pipeline, "verify_semantic_verifier_v2", return_value=None),
+    ):
         pipeline.verify("q", "r")
 
     cm.observe.assert_not_called()

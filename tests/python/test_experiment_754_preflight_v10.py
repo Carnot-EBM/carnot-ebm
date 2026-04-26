@@ -59,11 +59,7 @@ class TestCheckPatchApplied:
         Spec: REQ-INFRA-051
         """
         conductor = tmp_path / "research_conductor.py"
-        conductor.write_text(
-            "logger.info('RESEARCH STEP')\n"
-            "    if dry_run:\n"
-            "        return True\n"
-        )
+        conductor.write_text("logger.info('RESEARCH STEP')\n    if dry_run:\n        return True\n")
         assert check_patch_applied(conductor) is False
 
     def test_returns_false_when_file_missing(self, tmp_path: Path) -> None:

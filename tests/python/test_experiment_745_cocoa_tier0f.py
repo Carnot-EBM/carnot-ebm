@@ -280,8 +280,8 @@ class TestCoCoAScore:
         # Build mock model/tokenizer
         mock_output = MagicMock()
         slots: list[object] = [torch.zeros(1, 1, HIDDEN_DIM)] * 20
-        slots[9] = torch.tensor(early_vec).unsqueeze(0).unsqueeze(0)   # layer 8 → slot 9
-        slots[17] = torch.tensor(late_vec).unsqueeze(0).unsqueeze(0)   # layer 16 → slot 17
+        slots[9] = torch.tensor(early_vec).unsqueeze(0).unsqueeze(0)  # layer 8 → slot 9
+        slots[17] = torch.tensor(late_vec).unsqueeze(0).unsqueeze(0)  # layer 16 → slot 17
         mock_output.hidden_states = tuple(slots)
 
         mock_model = MagicMock()

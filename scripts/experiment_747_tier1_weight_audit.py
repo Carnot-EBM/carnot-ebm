@@ -80,7 +80,7 @@ def _make_event(constraint_type: str, query_id: str) -> ViolationEvent:
         probe_confidence=0.9,
         constraint_type=constraint_type,
         question_domain="arithmetic" if constraint_type == "arithmetic" else constraint_type,
-        timestamp=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        timestamp=datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
     )
 
 
@@ -126,9 +126,7 @@ def run_audit(tracker: PerModelFPTracker, bus: FR11EventBus) -> dict:
     # -----------------------------------------------------------------------
     # Step 3: Analyze weight distribution.
     # -----------------------------------------------------------------------
-    per_constraint_weights = {
-        ctype: ws.weight for ctype, ws in weight_state.items()
-    }
+    per_constraint_weights = {ctype: ws.weight for ctype, ws in weight_state.items()}
 
     if not per_constraint_weights:
         # Still no data even after simulation — relay not firing at all.
@@ -151,9 +149,7 @@ def run_audit(tracker: PerModelFPTracker, bus: FR11EventBus) -> dict:
 
     # Any constraint weight < 0.02 is effectively disabled (near-zero after
     # starting at 1.0 means it was somehow decremented — flag for investigation).
-    disabled_constraints = [
-        ctype for ctype, w in per_constraint_weights.items() if w < 0.02
-    ]
+    disabled_constraints = [ctype for ctype, w in per_constraint_weights.items() if w < 0.02]
 
     # Expected ordering for GSM8K: arithmetic > logical > code.
     arithmetic_weight = per_constraint_weights.get("arithmetic", 1.0)
@@ -182,8 +178,7 @@ def run_audit(tracker: PerModelFPTracker, bus: FR11EventBus) -> dict:
     # -----------------------------------------------------------------------
     if total_update_count == 0:
         honest_verdict = "tier1_weights_no_data"
-    elif (update_count_ratio is not None and update_count_ratio >= 2.0
-          and expected_ordering_correct):
+    elif update_count_ratio is not None and update_count_ratio >= 2.0 and expected_ordering_correct:
         honest_verdict = "tier1_weights_converging"
     elif arithmetic_weight < logical_weight:
         honest_verdict = "tier1_weights_inverted"

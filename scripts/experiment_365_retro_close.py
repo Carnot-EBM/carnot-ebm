@@ -57,7 +57,10 @@ TITLE = "Close RETRO-012/013/014 — conductor env fix + JSON enforcer"
 DELIVERABLE = "results/experiment_365_retro_close.json"
 
 RETRO_ITEMS = [
-    ("RETRO-012", "CARNOT_FORCE_LIVE never set by conductor — three consecutive milestones of idle GPUs"),
+    (
+        "RETRO-012",
+        "CARNOT_FORCE_LIVE never set by conductor — three consecutive milestones of idle GPUs",
+    ),
     ("RETRO-013", "Exp 356 LLMExtractor never implemented — gap in extraction pipeline"),
     ("RETRO-014", "Missing result JSONs for module-primary experiments 357, 358, 362"),
 ]
@@ -152,12 +155,8 @@ def run_experiment(repo_root: Path) -> dict:
     all_closed = tracker.all_closed()
     retro_dict = tracker.to_dict()
 
-    retro_items_closed = [
-        item for item in retro_dict["items"] if item["closed"]
-    ]
-    retro_items_open = [
-        item for item in retro_dict["items"] if not item["closed"]
-    ]
+    retro_items_closed = [item for item in retro_dict["items"] if item["closed"]]
+    retro_items_open = [item for item in retro_dict["items"] if not item["closed"]]
 
     artifact = tmpl.build_result(
         {

@@ -46,12 +46,13 @@ from __future__ import annotations
 import json
 import time
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any
 
 import jax
-import jax.numpy as jnp
 import jax.random as jrandom
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @dataclass
@@ -174,7 +175,7 @@ def generate_test_vectors(
     # Time the JAX computation for the performance gate
     start = time.monotonic()
 
-    for i in range(n_vectors):
+    for _i in range(n_vectors):
         key, subkey = jrandom.split(key)
         x = jrandom.normal(subkey, (input_dim,))
 
@@ -185,11 +186,13 @@ def generate_test_vectors(
             grad = energy_fn.grad_energy(x)
             grad_val = [float(g) for g in grad]
 
-        vectors.append(TestVector(
-            input=[float(v) for v in x],
-            expected_energy=energy_val,
-            expected_gradient=grad_val,
-        ))
+        vectors.append(
+            TestVector(
+                input=[float(v) for v in x],
+                expected_energy=energy_val,
+                expected_gradient=grad_val,
+            )
+        )
 
     elapsed = time.monotonic() - start
 
@@ -263,7 +266,7 @@ def validate_conformance(
     max_grad_err: float | None = None if rust_gradients is None else 0.0
     failures: list[str] = []
 
-    for i, (vec, rust_e) in enumerate(zip(vectors, rust_energies)):
+    for i, (vec, rust_e) in enumerate(zip(vectors, rust_energies, strict=False)):
         energy_err = abs(rust_e - vec.expected_energy)
         max_energy_err = max(max_energy_err, energy_err)
 
@@ -277,15 +280,11 @@ def validate_conformance(
         # Check gradient if provided
         if rust_gradients is not None and vec.expected_gradient is not None:
             rust_g = rust_gradients[i]
-            grad_err = max(
-                abs(r - j) for r, j in zip(rust_g, vec.expected_gradient)
-            )
+            grad_err = max(abs(r - j) for r, j in zip(rust_g, vec.expected_gradient, strict=False))
             assert max_grad_err is not None
             max_grad_err = max(max_grad_err, grad_err)
             if grad_err > gradient_tolerance:
-                failures.append(
-                    f"Vector {i}: gradient mismatch max_err={grad_err}"
-                )
+                failures.append(f"Vector {i}: gradient mismatch max_err={grad_err}")
                 continue
 
         matching += 1

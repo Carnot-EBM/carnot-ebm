@@ -118,9 +118,7 @@ def main() -> int:
 
         best_sat = 0
         for s_idx in range(n_got):
-            assignment = {
-                v + 1: bool(samples_np[s_idx, v]) for v in range(n_vars)
-            }
+            assignment = {v + 1: bool(samples_np[s_idx, v]) for v in range(n_vars)}
             sat, _ = check_assignment(clauses, assignment)
             best_sat = max(best_sat, sat)
 
@@ -140,14 +138,16 @@ def main() -> int:
         print(f"  random ({n_random_tries} tries): {rand_best}/{n_clauses} ({r_pct:.1f}%)")
         print(f"  delta: {t_pct - r_pct:+.1f}%")
 
-        results.append({
-            "n_vars": n_vars,
-            "n_clauses": n_clauses,
-            "parallel": best_sat,
-            "random": rand_best,
-            "total": n_clauses,
-            "time": sample_time,
-        })
+        results.append(
+            {
+                "n_vars": n_vars,
+                "n_clauses": n_clauses,
+                "parallel": best_sat,
+                "random": rand_best,
+                "total": n_clauses,
+                "time": sample_time,
+            }
+        )
 
     # Summary table.
     elapsed = time.time() - start
@@ -155,7 +155,9 @@ def main() -> int:
     print(f"\n{sep}")
     print(f"EXPERIMENT 46b RESULTS ({elapsed:.0f}s)")
     print(sep)
-    print(f"{'Vars':>6s} {'Clauses':>8s} {'Parallel':>10s} {'Random':>8s} {'Delta':>8s} {'Time':>8s}")
+    print(
+        f"{'Vars':>6s} {'Clauses':>8s} {'Parallel':>10s} {'Random':>8s} {'Delta':>8s} {'Time':>8s}"
+    )
     print("-" * 52)
 
     for r in results:
@@ -177,17 +179,13 @@ def main() -> int:
             - results[-1]["random"] / results[-1]["total"]
         )
         if large_delta > small_delta:
-            print(
-                f"\n  VERDICT: ✅ Parallel Ising advantage grows with problem size"
-            )
+            print(f"\n  VERDICT: ✅ Parallel Ising advantage grows with problem size")
             print(
                 f"           Small delta: {small_delta * 100:+.1f}%  "
                 f"Large delta: {large_delta * 100:+.1f}%"
             )
         else:
-            print(
-                f"\n  VERDICT: ⚠️ Parallel Ising advantage does not clearly grow with size"
-            )
+            print(f"\n  VERDICT: ⚠️ Parallel Ising advantage does not clearly grow with size")
             print(
                 f"           Small delta: {small_delta * 100:+.1f}%  "
                 f"Large delta: {large_delta * 100:+.1f}%"

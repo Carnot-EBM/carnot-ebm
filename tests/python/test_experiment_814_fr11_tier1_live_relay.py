@@ -9,6 +9,7 @@ Covers:
 
 Spec: REQ-LEARN-814-001, SCENARIO-LEARN-814-001
 """
+
 from __future__ import annotations
 
 import json
@@ -246,9 +247,7 @@ class TestExp813Gate:
         """
         missing = tmp_path / "no_such_file.json"
         tmpl = self._make_tmpl()
-        with patch(
-            "scripts.experiment_814_fr11_tier1_live_relay.EXP_813_PATH", missing
-        ):
+        with patch("scripts.experiment_814_fr11_tier1_live_relay.EXP_813_PATH", missing):
             result = _load_exp813_gate(tmpl)
         assert result is not None
         assert result["honest_verdict"] == "blocked_no_delta"
@@ -263,9 +262,7 @@ class TestExp813Gate:
         p = tmp_path / "experiment_813.json"
         p.write_text(json.dumps(exp813))
         tmpl = self._make_tmpl()
-        with patch(
-            "scripts.experiment_814_fr11_tier1_live_relay.EXP_813_PATH", p
-        ):
+        with patch("scripts.experiment_814_fr11_tier1_live_relay.EXP_813_PATH", p):
             result = _load_exp813_gate(tmpl)
         assert result is not None
         assert result["honest_verdict"] == "blocked_no_delta"
@@ -279,9 +276,7 @@ class TestExp813Gate:
         p = tmp_path / "experiment_813.json"
         p.write_text(json.dumps(exp813))
         tmpl = self._make_tmpl()
-        with patch(
-            "scripts.experiment_814_fr11_tier1_live_relay.EXP_813_PATH", p
-        ):
+        with patch("scripts.experiment_814_fr11_tier1_live_relay.EXP_813_PATH", p):
             result = _load_exp813_gate(tmpl)
         assert result is not None
         assert result["honest_verdict"] == "blocked_no_delta"
@@ -295,8 +290,6 @@ class TestExp813Gate:
         p = tmp_path / "experiment_813.json"
         p.write_text(json.dumps(exp813))
         tmpl = self._make_tmpl()
-        with patch(
-            "scripts.experiment_814_fr11_tier1_live_relay.EXP_813_PATH", p
-        ):
+        with patch("scripts.experiment_814_fr11_tier1_live_relay.EXP_813_PATH", p):
             result = _load_exp813_gate(tmpl)
         assert result is None  # None means gate passes — proceed

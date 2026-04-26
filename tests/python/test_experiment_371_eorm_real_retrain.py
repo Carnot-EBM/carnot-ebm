@@ -42,6 +42,7 @@ from scripts.experiment_371_eorm_real_retrain import (
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_pair(
     question_id: str,
     response: str,
@@ -61,13 +62,16 @@ def _make_pair(
 def _fresh_model() -> EORMModel:
     """Return a tiny EORMModel for fast CPU tests."""
     import jax.random as jrandom
-    return EORMModel(embed_dim=32, n_heads=4, n_layers=1, max_seq_len=64,
-                     vocab_size=512, key=jrandom.PRNGKey(42))
+
+    return EORMModel(
+        embed_dim=32, n_heads=4, n_layers=1, max_seq_len=64, vocab_size=512, key=jrandom.PRNGKey(42)
+    )
 
 
 # ---------------------------------------------------------------------------
 # _evaluate_eorm_auc
 # ---------------------------------------------------------------------------
+
 
 class TestEvaluateEormAuc:
     """SCENARIO-LEARN-048: AUC-ROC evaluation helpers."""
@@ -80,15 +84,13 @@ class TestEvaluateEormAuc:
     def test_all_violations_returns_half(self):
         """All-positive test set → AUC 0.5 (cannot compute meaningful AUC)."""
         model = _fresh_model()
-        pairs = [_make_pair("q1", "wrong answer", True),
-                 _make_pair("q2", "also wrong", True)]
+        pairs = [_make_pair("q1", "wrong answer", True), _make_pair("q2", "also wrong", True)]
         assert _evaluate_eorm_auc(model, pairs) == 0.5
 
     def test_all_correct_returns_half(self):
         """All-negative test set → AUC 0.5 (cannot compute meaningful AUC)."""
         model = _fresh_model()
-        pairs = [_make_pair("q1", "correct answer", False),
-                 _make_pair("q2", "also correct", False)]
+        pairs = [_make_pair("q1", "correct answer", False), _make_pair("q2", "also correct", False)]
         assert _evaluate_eorm_auc(model, pairs) == 0.5
 
     def test_mixed_labels_returns_float_in_range(self):
@@ -145,6 +147,7 @@ class TestEvaluateEormAuc:
 # ---------------------------------------------------------------------------
 # _pairs_to_contrastive_triples
 # ---------------------------------------------------------------------------
+
 
 class TestPairsToContrastiveTriples:
     """Coverage for triple construction logic."""
@@ -238,6 +241,7 @@ class TestPairsToContrastiveTriples:
 # _load_or_build_eorm_model
 # ---------------------------------------------------------------------------
 
+
 class TestLoadOrBuildEormModel:
     """Coverage for the baseline model loader."""
 
@@ -251,6 +255,7 @@ class TestLoadOrBuildEormModel:
     def test_load_success_returns_loaded_model(self, tmp_path):
         """A valid safetensors file is loaded correctly."""
         import jax.random as jrandom
+
         original = EORMModel(embed_dim=32, n_heads=4, n_layers=1, key=jrandom.PRNGKey(1))
         save_path = tmp_path / "eorm_model_346.safetensors"
         original.save(str(save_path))
@@ -277,6 +282,7 @@ class TestLoadOrBuildEormModel:
 # run_experiment — blocked path (insufficient real pairs)
 # ---------------------------------------------------------------------------
 
+
 class TestRunExperimentBlocked:
     """SCENARIO-LEARN-048: blocked artifact when real data is insufficient."""
 
@@ -296,8 +302,16 @@ class TestRunExperimentBlocked:
     def test_blocked_artifact_has_required_fields(self, tmp_path):
         """Blocked artifact must still have all ExperimentTemplate required fields."""
         artifact = run_experiment(repo_root=tmp_path)
-        required = ["experiment", "schema", "run_date", "started_at", "finished_at",
-                    "duration_s", "status", "title"]
+        required = [
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ]
         for field in required:
             assert field in artifact, f"Missing required field: {field}"
 
@@ -307,8 +321,7 @@ class TestRunExperimentBlocked:
         results_dir.mkdir()
         # Write 49 correct responses to Exp 368 result file
         responses = [
-            {"question_id": f"q{i}", "model_id": "test", "response": f"answer {i}",
-             "correct": True}
+            {"question_id": f"q{i}", "model_id": "test", "response": f"answer {i}", "correct": True}
             for i in range(49)
         ]
         (results_dir / "experiment_368_precision_live.json").write_text(
@@ -325,6 +338,7 @@ class TestRunExperimentBlocked:
 # run_experiment — success path (≥50 real pairs)
 # ---------------------------------------------------------------------------
 
+
 def _write_fake_live_results(tmp_path: Path, n_correct: int = 30, n_wrong: int = 30) -> None:
     """Write a minimal fake Exp 368-style result file with real pairs."""
     results_dir = tmp_path / "results"
@@ -332,19 +346,23 @@ def _write_fake_live_results(tmp_path: Path, n_correct: int = 30, n_wrong: int =
 
     responses = []
     for i in range(n_correct):
-        responses.append({
-            "question_id": f"gsm_{i}",
-            "model_id": "test_model",
-            "response": f"The answer is {i}.",
-            "correct": True,
-        })
+        responses.append(
+            {
+                "question_id": f"gsm_{i}",
+                "model_id": "test_model",
+                "response": f"The answer is {i}.",
+                "correct": True,
+            }
+        )
     for i in range(n_wrong):
-        responses.append({
-            "question_id": f"gsm_{i}",     # same question → forms contrastive pair
-            "model_id": "test_model",
-            "response": f"Wrong answer {i}.",
-            "correct": False,
-        })
+        responses.append(
+            {
+                "question_id": f"gsm_{i}",  # same question → forms contrastive pair
+                "model_id": "test_model",
+                "response": f"Wrong answer {i}.",
+                "correct": False,
+            }
+        )
 
     data = {"responses": responses}
     (results_dir / "experiment_368_precision_live.json").write_text(json.dumps(data))
@@ -359,8 +377,16 @@ class TestRunExperimentSuccess:
 
         artifact = run_experiment(repo_root=tmp_path)
 
-        required = ["experiment", "schema", "run_date", "started_at", "finished_at",
-                    "duration_s", "status", "title"]
+        required = [
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ]
         for field in required:
             assert field in artifact, f"Missing required field: {field}"
 
@@ -410,6 +436,7 @@ class TestRunExperimentSuccess:
         _write_fake_live_results(tmp_path, n_correct=30, n_wrong=30)
         # Mock _evaluate_eorm_auc to return increasing AUC
         call_count = [0]
+
         def mock_auc(model, pairs):
             call_count[0] += 1
             return 0.55 if call_count[0] == 1 else 0.70
@@ -427,6 +454,7 @@ class TestRunExperimentSuccess:
         """When after_auc <= before_auc, honest_verdict='real_data_no_improvement'."""
         _write_fake_live_results(tmp_path, n_correct=30, n_wrong=30)
         call_count = [0]
+
         def mock_auc(model, pairs):
             call_count[0] += 1
             return 0.60 if call_count[0] == 1 else 0.50  # AUC regressed
@@ -493,15 +521,29 @@ class TestRunExperimentSuccess:
         # Write 60 pairs to exp 368 (enough on their own for the 50 threshold)
         responses = []
         for i in range(30):
-            responses.append({"question_id": f"q{i}", "model_id": "m", "response": f"a{i}", "correct": True})
-            responses.append({"question_id": f"q{i}", "model_id": "m", "response": f"w{i}", "correct": False})
-        (results_dir / "experiment_368_precision_live.json").write_text(json.dumps({"responses": responses}))
+            responses.append(
+                {"question_id": f"q{i}", "model_id": "m", "response": f"a{i}", "correct": True}
+            )
+            responses.append(
+                {"question_id": f"q{i}", "model_id": "m", "response": f"w{i}", "correct": False}
+            )
+        (results_dir / "experiment_368_precision_live.json").write_text(
+            json.dumps({"responses": responses})
+        )
 
         # Write 10 HumanEval pairs to exp 369
         per_problem = []
         for i in range(10):
-            per_problem.append({"problem_id": f"HumanEval/{i}", "generated_code": f"def f(): return {i}", "passed_tests": bool(i % 2 == 0)})
-        (results_dir / "experiment_369_humaneval_live.json").write_text(json.dumps({"per_problem_results": per_problem}))
+            per_problem.append(
+                {
+                    "problem_id": f"HumanEval/{i}",
+                    "generated_code": f"def f(): return {i}",
+                    "passed_tests": bool(i % 2 == 0),
+                }
+            )
+        (results_dir / "experiment_369_humaneval_live.json").write_text(
+            json.dumps({"per_problem_results": per_problem})
+        )
 
         artifact = run_experiment(repo_root=tmp_path)
         # Total real pairs = 60 (exp368) + 10 (exp369) = 70 loaded, all ≤ MAX_REAL

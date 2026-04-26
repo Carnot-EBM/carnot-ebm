@@ -10,6 +10,7 @@ Why these tests and not others:
     Everything else (model training, GPU allocation) is covered by Exp 685 and
     the dualgpu_retrain unit tests in test_dualgpu_retrain.py.
 """
+
 from __future__ import annotations
 
 import time
@@ -43,9 +44,11 @@ def _fast_fn(device: str = "cpu") -> dict:
 
 def _slow_fn(sleep_s: float):
     """Return a callable that sleeps for `sleep_s` seconds before returning."""
+
     def _inner(device: str = "cpu") -> dict:
         time.sleep(sleep_s)
         return {"loss_after": 0.2, "device": device}
+
     return _inner
 
 
@@ -194,7 +197,11 @@ class TestSpeedupComputation:
         import sys
         from pathlib import Path
 
-        spec_path = Path(__file__).resolve().parents[2] / "scripts" / "experiment_746_dualgpu_eorm_jepa_retrain.py"
+        spec_path = (
+            Path(__file__).resolve().parents[2]
+            / "scripts"
+            / "experiment_746_dualgpu_eorm_jepa_retrain.py"
+        )
         spec_obj = importlib.util.spec_from_file_location("exp746", spec_path)
         exp746 = importlib.util.module_from_spec(spec_obj)  # type: ignore[arg-type]
         sys.modules["exp746"] = exp746
@@ -216,7 +223,11 @@ class TestSpeedupComputation:
         import sys
         from pathlib import Path
 
-        spec_path = Path(__file__).resolve().parents[2] / "scripts" / "experiment_746_dualgpu_eorm_jepa_retrain.py"
+        spec_path = (
+            Path(__file__).resolve().parents[2]
+            / "scripts"
+            / "experiment_746_dualgpu_eorm_jepa_retrain.py"
+        )
         spec_obj = importlib.util.spec_from_file_location("exp746_b", spec_path)
         exp746 = importlib.util.module_from_spec(spec_obj)  # type: ignore[arg-type]
         sys.modules["exp746_b"] = exp746
@@ -238,7 +249,11 @@ class TestSpeedupComputation:
         import sys
         from pathlib import Path
 
-        spec_path = Path(__file__).resolve().parents[2] / "scripts" / "experiment_746_dualgpu_eorm_jepa_retrain.py"
+        spec_path = (
+            Path(__file__).resolve().parents[2]
+            / "scripts"
+            / "experiment_746_dualgpu_eorm_jepa_retrain.py"
+        )
         spec_obj = importlib.util.spec_from_file_location("exp746_c", spec_path)
         exp746 = importlib.util.module_from_spec(spec_obj)  # type: ignore[arg-type]
         sys.modules["exp746_c"] = exp746

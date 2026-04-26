@@ -329,10 +329,12 @@ def _compute_progrs_loss_jax(
     def _chain_e(embeddings: list) -> jnp.ndarray:
         if not embeddings:
             return jnp.array(0.0)
-        scores = jnp.stack([
-            (params["w2"] @ jax.nn.silu(params["w1"] @ emb + params["b1"]) + params["b2"])[0]
-            for emb in embeddings
-        ])
+        scores = jnp.stack(
+            [
+                (params["w2"] @ jax.nn.silu(params["w1"] @ emb + params["b1"]) + params["b2"])[0]
+                for emb in embeddings
+            ]
+        )
         return jnp.mean(scores)
 
     raw_gaps: list[jnp.ndarray] = []
@@ -418,9 +420,7 @@ def retrain_jepa_v13(
     if n_real < MIN_REAL_PAIRS:
         synthetic = builder.build_synthetic_pairs(SYNTHETIC_FALLBACK_COUNT)
         all_pairs = real_pairs + synthetic
-        _log.warning(
-            "v13 retrain: only %d real pairs, added %d synthetic.", n_real, len(synthetic)
-        )
+        _log.warning("v13 retrain: only %d real pairs, added %d synthetic.", n_real, len(synthetic))
 
     if not all_pairs:
         _log.error("v13 retrain: no pairs available — cannot train.")
@@ -445,7 +445,9 @@ def retrain_jepa_v13(
         if epoch % EVAL_EVERY == 0 or epoch == n_epochs:
             val_auc = evaluate_pair_auc(params, val_pairs)
             loss_val = float(_compute_progrs_loss_jax(params, train_pairs, margin))
-            _log.info("v13 epoch %d/%d  loss=%.4f  val_auc=%.4f", epoch, n_epochs, loss_val, val_auc)
+            _log.info(
+                "v13 epoch %d/%d  loss=%.4f  val_auc=%.4f", epoch, n_epochs, loss_val, val_auc
+            )
             if val_auc > best_val_auc:
                 best_val_auc = val_auc
                 best_params = {k: jnp.array(v) for k, v in params.items()}
@@ -472,7 +474,6 @@ def main() -> None:
     """Run Exp 607: JEPA v12 OOD generalization validation."""
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=60):
-
         tmpl = ExperimentTemplate(
             exp_id=EXP_ID,
             title=EXP_TITLE,
@@ -520,15 +521,18 @@ def main() -> None:
         _log.info("Loading fover_corpus_v4 for OOD entries...")
         try:
             corpus_v4_raw = json.loads(CORPUS_V4_PATH.read_text())
-            corpus_v4_entries = corpus_v4_raw if isinstance(corpus_v4_raw, list) else corpus_v4_raw.get("entries", [])
+            corpus_v4_entries = (
+                corpus_v4_raw
+                if isinstance(corpus_v4_raw, list)
+                else corpus_v4_raw.get("entries", [])
+            )
         except (OSError, json.JSONDecodeError) as exc:
             _log.warning("Could not load fover_corpus_v4: %s", exc)
             corpus_v4_entries = []
 
         # Filter corpus_v4 to only OOD question indices (not in 0-49 training range).
         ood_entries = [
-            e for e in corpus_v4_entries
-            if e.get("question_index", 0) > TRAIN_QUESTION_RANGE_MAX
+            e for e in corpus_v4_entries if e.get("question_index", 0) > TRAIN_QUESTION_RANGE_MAX
         ]
         _log.info("fover_corpus_v4 OOD entries (idx>49): %d", len(ood_entries))
 
@@ -568,7 +572,9 @@ def main() -> None:
             n_neg = len(labels) - n_pos
             _log.info(
                 "OOD individual scoring: %d entries (%d incorrect, %d correct)",
-                len(labels), n_pos, n_neg,
+                len(labels),
+                n_pos,
+                n_neg,
             )
             if n_pos == 0 or n_neg == 0:
                 # Cannot compute AUC with only one class — record as 0.5 (random).
@@ -589,7 +595,9 @@ def main() -> None:
         v12_overfit = ood_auc < 0.55
         _log.info(
             "v12_ood_auc=%.4f  v12_generalized=%s  v12_overfit=%s",
-            ood_auc, v12_generalized, v12_overfit,
+            ood_auc,
+            v12_generalized,
+            v12_overfit,
         )
 
         # ------------------------------------------------------------------
@@ -609,9 +617,7 @@ def main() -> None:
                 v13_saved = True
                 _log.info("v13 saved (val_auc=%.4f >= 0.65).", v13_val_auc)
             else:
-                _log.info(
-                    "v13 NOT saved (val_auc=%s < 0.65 or no params).", v13_val_auc
-                )
+                _log.info("v13 NOT saved (val_auc=%s < 0.65 or no params).", v13_val_auc)
 
         # ------------------------------------------------------------------
         # Step 6: FR-11 gate and honest verdict
@@ -629,7 +635,8 @@ def main() -> None:
 
         _log.info(
             "FR-11 generalization confirmed: %s  verdict: %s",
-            fr11_generalization_confirmed, honest_verdict,
+            fr11_generalization_confirmed,
+            honest_verdict,
         )
 
         # ------------------------------------------------------------------

@@ -22,7 +22,7 @@ from __future__ import annotations
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -43,7 +43,7 @@ EXP_891_PATH = RESULTS_DIR / "experiment_891_milestone_retro.json"
 
 DELIVERABLE_PATH = RESULTS_DIR / "experiment_892_preflight_v18.json"
 
-START_TIME = datetime.now(timezone.utc)
+START_TIME = datetime.now(UTC)
 
 # ---------------------------------------------------------------------------
 # Step 1: Read Exp 889 — PIMI retirement status
@@ -60,7 +60,9 @@ PIMI_RETIRED_VERDICTS = {"pimi_retired", "pimi_retired_upstream"}
 pimi_retired: bool = pimi_verdict in PIMI_RETIRED_VERDICTS
 sweeps_reduction = exp889.get("sweeps_reduction", None)
 
-print(f"[892] Exp 889 verdict={pimi_verdict!r}, pimi_retired={pimi_retired}, sweeps_reduction={sweeps_reduction}")
+print(
+    f"[892] Exp 889 verdict={pimi_verdict!r}, pimi_retired={pimi_retired}, sweeps_reduction={sweeps_reduction}"
+)
 
 # ---------------------------------------------------------------------------
 # Step 2: Read Exp 890 — GGUF retro status
@@ -73,7 +75,11 @@ with open(EXP_890_PATH) as f:
 gguf_verdict = exp890.get("honest_verdict", "")
 # RETRO-SOTA-MODEL-DOWNLOAD was formally closed in the .68 retro
 # (retros_closed_this_milestone includes RETRO-SOTA-MODEL-DOWNLOAD).
-gguf_retro_status: str = "closed_download_failed_retire" if gguf_verdict == "download_failed_retire" else f"unknown_{gguf_verdict}"
+gguf_retro_status: str = (
+    "closed_download_failed_retire"
+    if gguf_verdict == "download_failed_retire"
+    else f"unknown_{gguf_verdict}"
+)
 print(f"[892] Exp 890 verdict={gguf_verdict!r}, gguf_retro_status={gguf_retro_status!r}")
 
 # ---------------------------------------------------------------------------
@@ -158,7 +164,10 @@ enforcement_wired: false
 
 existing_known_issues = KNOWN_ISSUES_PATH.read_text()
 # Avoid duplicate entries if this script is re-run
-if "RETRO-MANIFEST-FULL-SCOPE: Human Intervention Required (Milestone .69)" not in existing_known_issues:
+if (
+    "RETRO-MANIFEST-FULL-SCOPE: Human Intervention Required (Milestone .69)"
+    not in existing_known_issues
+):
     with open(KNOWN_ISSUES_PATH, "a") as f:
         f.write(KNOWN_ISSUES_ENTRY)
     print("[892] Appended RETRO-MANIFEST-FULL-SCOPE entry to ops/known-issues.md")
@@ -170,7 +179,11 @@ else:
 # ---------------------------------------------------------------------------
 
 # Determine RETRO-INERTIA status for the prereqs section
-inertia_status = "RETIRED" if pimi_retired else "OPEN (sweeps_reduction=4.33, target=5x; Exp 901 PIMI v4 will attempt)"
+inertia_status = (
+    "RETIRED"
+    if pimi_retired
+    else "OPEN (sweeps_reduction=4.33, target=5x; Exp 901 PIMI v4 will attempt)"
+)
 
 PREREQS_69_SECTION = """
 
@@ -228,6 +241,7 @@ if "## Milestone 2026.04.69 Pre-flight" not in existing_prereqs:
     # Also append exclusion manifest gate section
     sys.path.insert(0, str(PROJECT_ROOT / "python"))
     from carnot.pipeline.manifest_enforcer import ExclusionManifestEnforcer  # noqa: E402
+
     enforcer = ExclusionManifestEnforcer()
     enforcer.load_manifest(str(EXCLUSION_MANIFEST_PATH))
     enforcer.write_prereqs_section(str(PREREQS_PATH))
@@ -239,7 +253,7 @@ else:
 # Step 7: Build artifact
 # ---------------------------------------------------------------------------
 
-END_TIME = datetime.now(timezone.utc)
+END_TIME = datetime.now(UTC)
 duration_s = (END_TIME - START_TIME).total_seconds()
 
 gates = {

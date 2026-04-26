@@ -223,6 +223,7 @@ for i in range(N_QUESTIONS):
 # In production, generate_fn would call a live LLM with adjusted logits.
 # ---------------------------------------------------------------------------
 
+
 def _synthetic_generate_fn(prompt: str, temperature_adjustments: list[float]) -> str:
     """Simulate calibrated generation: use EORM ranking to prefer lower-energy response.
 
@@ -234,6 +235,7 @@ def _synthetic_generate_fn(prompt: str, temperature_adjustments: list[float]) ->
     correct = _CORRECT_RESPONSES[idx]
     incorrect = _INCORRECT_RESPONSES[idx]
     from carnot.models.eorm import CoTEnergyInput
+
     e_correct = eorm_model.energy(CoTEnergyInput(question_text=prompt, response_text=correct))
     e_incorrect = eorm_model.energy(CoTEnergyInput(question_text=prompt, response_text=incorrect))
     # Pick the response with lower energy — this is what calibration aims for
@@ -260,9 +262,7 @@ calibrated_violation_rate = violation_stats["calibrated_violation_rate"]
 violation_rate_delta = violation_stats["violation_rate_delta"]
 
 honest_verdict = (
-    "calibration_reduces_violations"
-    if violation_rate_delta < -0.05
-    else "calibration_neutral"
+    "calibration_reduces_violations" if violation_rate_delta < -0.05 else "calibration_neutral"
 )
 
 # ---------------------------------------------------------------------------

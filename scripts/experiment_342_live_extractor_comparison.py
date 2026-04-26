@@ -264,7 +264,11 @@ def _build_extractors(
         verge_available = False
 
     def _arith_fn(response: str) -> list:
-        return [v for v in arith.extract(response, "arithmetic") if not v.metadata.get("satisfied", True)]
+        return [
+            v
+            for v in arith.extract(response, "arithmetic")
+            if not v.metadata.get("satisfied", True)
+        ]
 
     def _nl2z3_fn(response: str) -> list:
         # Guard: NL2Z3Extractor checks os.environ.get("CARNOT_FORCE_LIVE") truthiness.
@@ -330,8 +334,7 @@ def build_agreement_matrix(
 
     # flags[i][j] = True if extractor j flagged response i.
     flags: list[list[bool]] = [
-        [bool(_run_extractor_fn(fn, resp)) for _, fn in extractors]
-        for resp in responses
+        [bool(_run_extractor_fn(fn, resp)) for _, fn in extractors] for resp in responses
     ]
 
     matrix: dict[str, dict[str, float]] = {}
@@ -411,7 +414,7 @@ def main() -> None:
             "agreement": agreement,
             "exp311_comparison": {
                 "note": "Exp 311 winner (ArithmeticExtractor) was on synthetic corpus; "
-                        "this experiment benchmarks on live IT model responses.",
+                "this experiment benchmarks on live IT model responses.",
                 "exp311_winner": "ArithmeticExtractor",
                 "exp342_recommended": artifact_base.get("recommended_extractor", ""),
             },
@@ -449,6 +452,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

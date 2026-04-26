@@ -28,10 +28,12 @@ Spec: REQ-TIER0-006, SCENARIO-TIER0-006
 
 from __future__ import annotations
 
-from typing import Callable
+from typing import TYPE_CHECKING
 
 import numpy as np
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # helpers (reuse from drift_probe without importing the whole class)
@@ -47,9 +49,7 @@ def _cosine_sim(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.dot(a, b) / (na * nb))
 
 
-def _drift_for_pair(
-    hidden_states: dict[int, np.ndarray], layer_a: int, layer_b: int
-) -> float:
+def _drift_for_pair(hidden_states: dict[int, np.ndarray], layer_a: int, layer_b: int) -> float:
     """Mean token-level cosine distance between two layer representations.
 
     Returns 0.0 when either layer is absent or the sequence is empty, so callers
@@ -123,9 +123,7 @@ class DRIFTProbeEnsemble:
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _extract_per_pair_drifts(
-        self, hidden_states: dict[int, np.ndarray]
-    ) -> np.ndarray:
+    def _extract_per_pair_drifts(self, hidden_states: dict[int, np.ndarray]) -> np.ndarray:
         """Return a 1-D array of cosine-distance drift values, one per adjacent pair.
 
         Shape: (len(self.layers) - 1,).  Each element is the mean token cosine
@@ -204,7 +202,7 @@ class DRIFTProbeEnsemble:
             return np.vstack(rows).astype(np.float32)
 
         # Build feature matrices: shape (n_examples, n_pairs).
-        X_correct = _extract_all(correct_examples)      # label=0
+        X_correct = _extract_all(correct_examples)  # label=0
         X_halluc = _extract_all(hallucinated_examples)  # label=1
 
         n_pairs = len(self.layers) - 1
@@ -294,7 +292,7 @@ class DRIFTProbeEnsemble:
         # Dirichlet-sampled candidates cover non-uniform regions of the simplex.
         raw = rng.random((n_points - 1, n_dims)) + 1e-6  # avoid zeros
         sums = raw.sum(axis=1, keepdims=True)
-        for row in (raw / sums):
+        for row in raw / sums:
             candidates.append(row.astype(np.float64))
         return candidates
 
@@ -325,7 +323,7 @@ class DRIFTProbeEnsemble:
         per_probe_p = np.array(
             [
                 self._probe_prob(probe, drift_val)
-                for probe, drift_val in zip(self.per_layer_probes, drifts)
+                for probe, drift_val in zip(self.per_layer_probes, drifts, strict=False)
             ],
             dtype=np.float64,
         )

@@ -167,7 +167,6 @@ class TestRepair:
         assert float(repaired[0]) >= 1.0
         assert float(repaired[1]) > 0.0
 
-
     def test_repair_with_langevin_noise(self) -> None:
         """REQ-VERIFY-005: Langevin noise during repair (P6) explores landscape."""
         composed = ComposedEnergy(input_dim=2)
@@ -176,8 +175,12 @@ class TestRepair:
 
         x = jnp.array([0.0, 0.0])
         repaired, history = repair(
-            composed, x, step_size=0.1, max_steps=20,
-            noise_scale=0.01, key=jax.random.PRNGKey(42),
+            composed,
+            x,
+            step_size=0.1,
+            max_steps=20,
+            noise_scale=0.01,
+            key=jax.random.PRNGKey(42),
         )
         # Should still reduce energy (noise is small)
         assert history[-1].total_energy < history[0].total_energy
@@ -189,8 +192,12 @@ class TestRepair:
 
         x = jnp.array([0.0, 0.0])
         repaired, history = repair(
-            composed, x, step_size=0.1, max_steps=20,
-            randomize_step_size=True, key=jax.random.PRNGKey(42),
+            composed,
+            x,
+            step_size=0.1,
+            max_steps=20,
+            randomize_step_size=True,
+            key=jax.random.PRNGKey(42),
         )
         assert history[-1].total_energy < history[0].total_energy
 
@@ -201,8 +208,12 @@ class TestRepair:
 
         x = jnp.array([0.0, 0.0])
         repaired, history = repair(
-            composed, x, step_size=0.1, max_steps=20,
-            noise_scale=0.01, randomize_step_size=True,
+            composed,
+            x,
+            step_size=0.1,
+            max_steps=20,
+            noise_scale=0.01,
+            randomize_step_size=True,
             key=jax.random.PRNGKey(42),
         )
         assert history[-1].total_energy < history[0].total_energy
@@ -215,7 +226,10 @@ class TestRepair:
         x = jnp.array([0.0, 0.0])
         # noise_scale > 0 but no key provided — should use default
         repaired, history = repair(
-            composed, x, step_size=0.1, max_steps=10,
+            composed,
+            x,
+            step_size=0.1,
+            max_steps=10,
             noise_scale=0.01,
         )
         assert len(history) > 0

@@ -256,9 +256,11 @@ def _split_entries(
 
     _log.info(
         "Split: %d train entries (%d questions), %d test entries, %d OOD entries (%d questions)",
-        len(train_entries), len(train_q),
+        len(train_entries),
+        len(train_q),
         len(test_entries),
-        len(ood_entries), len(ood_q),
+        len(ood_entries),
+        len(ood_q),
     )
     return train_entries, test_entries, ood_entries
 
@@ -423,7 +425,6 @@ def main() -> None:
     """Run Exp 618: JEPA v13 CAPO calibrated retrain."""
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=30):
-
         tmpl = ExperimentTemplate(
             exp_id=EXP_ID,
             title=EXP_TITLE,
@@ -482,7 +483,9 @@ def main() -> None:
         n_test_pairs = len(test_entries)
         _log.info(
             "Corpus split: %d train, %d in-dist test, %d OOD",
-            n_training_pairs, n_test_pairs, len(ood_entries),
+            n_training_pairs,
+            n_test_pairs,
+            len(ood_entries),
         )
 
         # ------------------------------------------------------------------
@@ -540,7 +543,11 @@ def main() -> None:
 
         _log.info(
             "v13_ood_auc=%.4f  v13_ece=%.4f  ood_improved=%s  calibration_improved=%s  verdict=%s",
-            v13_ood_auc, v13_ece, ood_improved, calibration_improved, honest_verdict,
+            v13_ood_auc,
+            v13_ece,
+            ood_improved,
+            calibration_improved,
+            honest_verdict,
         )
 
         # ------------------------------------------------------------------

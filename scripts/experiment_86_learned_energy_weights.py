@@ -71,16 +71,16 @@ RESULTS_PATH = os.path.join(
 # text heuristics from Exp 66. We group them into broad categories for
 # per-type weight learning.
 CONSTRAINT_TYPE_CATEGORIES = [
-    "arithmetic",       # ArithmeticExtractor: "X + Y = Z" claims
-    "type_check",       # CodeExtractor: parameter type annotations
-    "return_type",      # CodeExtractor: return type annotations
-    "bound",            # CodeExtractor: loop variable bounds
-    "initialization",   # CodeExtractor: uninitialized variable checks
-    "implication",      # LogicExtractor: "if P then Q" patterns
-    "exclusion",        # LogicExtractor: "X but not Y" patterns
-    "factual",          # NLExtractor: "X is Y" claims
-    "quantity",         # NLExtractor: "there are N items" claims
-    "heuristic",        # Lightweight text checks (from Exp 66)
+    "arithmetic",  # ArithmeticExtractor: "X + Y = Z" claims
+    "type_check",  # CodeExtractor: parameter type annotations
+    "return_type",  # CodeExtractor: return type annotations
+    "bound",  # CodeExtractor: loop variable bounds
+    "initialization",  # CodeExtractor: uninitialized variable checks
+    "implication",  # LogicExtractor: "if P then Q" patterns
+    "exclusion",  # LogicExtractor: "X but not Y" patterns
+    "factual",  # NLExtractor: "X is Y" claims
+    "quantity",  # NLExtractor: "there are N items" claims
+    "heuristic",  # Lightweight text checks (from Exp 66)
 ]
 
 # Lightweight text heuristic names (same as Exp 66).
@@ -98,9 +98,52 @@ HEURISTIC_NAMES = [
 DOMAINS = ["arithmetic", "code", "logic", "factual", "scheduling"]
 
 _STOPWORDS = frozenset(
-    "a an the is are was were be been being have has had do does did "
-    "will would shall should may might can could of in to for on with "
-    "at by from it its this that these those and but or not no".split()
+    [
+        "a",
+        "an",
+        "the",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "being",
+        "have",
+        "has",
+        "had",
+        "do",
+        "does",
+        "did",
+        "will",
+        "would",
+        "shall",
+        "should",
+        "may",
+        "might",
+        "can",
+        "could",
+        "of",
+        "in",
+        "to",
+        "for",
+        "on",
+        "with",
+        "at",
+        "by",
+        "from",
+        "it",
+        "its",
+        "this",
+        "that",
+        "these",
+        "those",
+        "and",
+        "but",
+        "or",
+        "not",
+        "no",
+    ]
 )
 
 
@@ -143,24 +186,31 @@ def _generate_multi_domain_dataset(
         else:
             r = a - b
         q = f"What is {a} {op} {b}?"
-        dataset.append({
-            "domain": "arithmetic",
-            "question": q,
-            "answer": f"We compute {a} {op} {b} = {r}. Because this is basic arithmetic.",
-            "is_correct": True,
-        })
+        dataset.append(
+            {
+                "domain": "arithmetic",
+                "question": q,
+                "answer": f"We compute {a} {op} {b} = {r}. Because this is basic arithmetic.",
+                "is_correct": True,
+            }
+        )
         wrong_r = r + int(rng.integers(1, 50))
-        dataset.append({
-            "domain": "arithmetic",
-            "question": q,
-            "answer": f"We compute {a} {op} {b} = {wrong_r}. Because the calculation gives {wrong_r}.",
-            "is_correct": False,
-        })
+        dataset.append(
+            {
+                "domain": "arithmetic",
+                "question": q,
+                "answer": f"We compute {a} {op} {b} = {wrong_r}. Because the calculation gives {wrong_r}.",
+                "is_correct": False,
+            }
+        )
 
     # --- Code ---
     code_tasks = [
         ("reverse a string", "def reverse_string(s: str) -> str:\n    return s[::-1]"),
-        ("compute factorial", "def factorial(n: int) -> int:\n    return 1 if n <= 1 else n * factorial(n-1)"),
+        (
+            "compute factorial",
+            "def factorial(n: int) -> int:\n    return 1 if n <= 1 else n * factorial(n-1)",
+        ),
         ("find maximum", "def find_max(lst: list) -> int:\n    return max(lst)"),
         ("check palindrome", "def is_palindrome(s: str) -> bool:\n    return s == s[::-1]"),
         ("sum of list", "def sum_list(lst: list) -> int:\n    return sum(lst)"),
@@ -168,23 +218,27 @@ def _generate_multi_domain_dataset(
     for i in range(n_each):
         task_name, code = code_tasks[i % len(code_tasks)]
         q = f"Write a Python function to {task_name}."
-        dataset.append({
-            "domain": "code",
-            "question": q,
-            "answer": f"Here is the solution:\n```python\n{code}\n```\nThis works because it implements the required logic.",
-            "is_correct": True,
-        })
+        dataset.append(
+            {
+                "domain": "code",
+                "question": q,
+                "answer": f"Here is the solution:\n```python\n{code}\n```\nThis works because it implements the required logic.",
+                "is_correct": True,
+            }
+        )
         wrong_answers = [
             "def func():\n    pass",
             "The answer is 42.",
             f"def {task_name.replace(' ', '_')}(x):\n    return None  # TODO",
         ]
-        dataset.append({
-            "domain": "code",
-            "question": q,
-            "answer": wrong_answers[i % len(wrong_answers)],
-            "is_correct": False,
-        })
+        dataset.append(
+            {
+                "domain": "code",
+                "question": q,
+                "answer": wrong_answers[i % len(wrong_answers)],
+                "is_correct": False,
+            }
+        )
 
     # --- Logic ---
     # Answers embed "if X, then Y" patterns that LogicExtractor can parse,
@@ -218,52 +272,70 @@ def _generate_multi_domain_dataset(
     ]
     for i in range(n_each):
         q, correct_a, wrong_a = logic_templates[i % len(logic_templates)]
-        dataset.append({
-            "domain": "logic",
-            "question": q,
-            "answer": correct_a,
-            "is_correct": True,
-        })
-        dataset.append({
-            "domain": "logic",
-            "question": q,
-            "answer": wrong_a,
-            "is_correct": False,
-        })
+        dataset.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "answer": correct_a,
+                "is_correct": True,
+            }
+        )
+        dataset.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "answer": wrong_a,
+                "is_correct": False,
+            }
+        )
 
     # --- Factual ---
     # Answers embed "X is Y" and "X is the Y of Z" patterns for NLExtractor.
     factual_pairs = [
-        ("What is the capital of France?",
-         "Paris is the capital of France.",
-         "Lyon is the capital of France."),
-        ("What is the chemical symbol for water?",
-         "H2O is the chemical symbol of water. There are 2 hydrogen atoms.",
-         "CO2 is the chemical symbol of water. There are 2 oxygen atoms."),
-        ("How many continents are there?",
-         "There are 7 continents. This is a well-known fact.",
-         "There are 5 continents. This is what I recall."),
-        ("What planet is closest to the Sun?",
-         "Mercury is the closest planet. Mercury is the first planet of the solar system.",
-         "Venus is the closest planet. Venus is the first planet of the solar system."),
-        ("What year did World War II end?",
-         "World War II ended in 1945. 1945 is the year of victory.",
-         "World War II ended in 1939. 1939 is the year of conclusion."),
+        (
+            "What is the capital of France?",
+            "Paris is the capital of France.",
+            "Lyon is the capital of France.",
+        ),
+        (
+            "What is the chemical symbol for water?",
+            "H2O is the chemical symbol of water. There are 2 hydrogen atoms.",
+            "CO2 is the chemical symbol of water. There are 2 oxygen atoms.",
+        ),
+        (
+            "How many continents are there?",
+            "There are 7 continents. This is a well-known fact.",
+            "There are 5 continents. This is what I recall.",
+        ),
+        (
+            "What planet is closest to the Sun?",
+            "Mercury is the closest planet. Mercury is the first planet of the solar system.",
+            "Venus is the closest planet. Venus is the first planet of the solar system.",
+        ),
+        (
+            "What year did World War II end?",
+            "World War II ended in 1945. 1945 is the year of victory.",
+            "World War II ended in 1939. 1939 is the year of conclusion.",
+        ),
     ]
     for i in range(n_each):
         q, correct_a, wrong_a = factual_pairs[i % len(factual_pairs)]
-        dataset.append({
-            "domain": "factual",
-            "question": q,
-            "answer": correct_a,
-            "is_correct": True,
-        })
-        dataset.append({
-            "domain": "factual",
-            "question": q,
-            "answer": wrong_a,
-            "is_correct": False,
-        })
+        dataset.append(
+            {
+                "domain": "factual",
+                "question": q,
+                "answer": correct_a,
+                "is_correct": True,
+            }
+        )
+        dataset.append(
+            {
+                "domain": "factual",
+                "question": q,
+                "answer": wrong_a,
+                "is_correct": False,
+            }
+        )
 
     # --- Scheduling ---
     for i in range(n_each):
@@ -272,27 +344,31 @@ def _generate_multi_domain_dataset(
         h3 = h2 + int(rng.integers(1, 3))
         q = (
             f"Meeting A is at {h1}:00-{h2}:00. "
-            f"Meeting B is at {h3}:00-{h3+1}:00. "
+            f"Meeting B is at {h3}:00-{h3 + 1}:00. "
             f"Is there a conflict?"
         )
-        dataset.append({
-            "domain": "scheduling",
-            "question": q,
-            "answer": (
-                f"If Meeting A ends at {h2}:00, then Meeting B can start at {h3}:00. "
-                f"There are 2 meetings. {h3} - {h2} = {h3 - h2} hours gap, so no conflict."
-            ),
-            "is_correct": True,
-        })
-        dataset.append({
-            "domain": "scheduling",
-            "question": q,
-            "answer": (
-                f"If Meeting A ends at {h2}:00, then Meeting B cannot start at {h3}:00. "
-                f"There are 2 meetings. {h3} - {h2} = {h3 - h2 + int(rng.integers(5, 15))} overlap hours."
-            ),
-            "is_correct": False,
-        })
+        dataset.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "answer": (
+                    f"If Meeting A ends at {h2}:00, then Meeting B can start at {h3}:00. "
+                    f"There are 2 meetings. {h3} - {h2} = {h3 - h2} hours gap, so no conflict."
+                ),
+                "is_correct": True,
+            }
+        )
+        dataset.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "answer": (
+                    f"If Meeting A ends at {h2}:00, then Meeting B cannot start at {h3}:00. "
+                    f"There are 2 meetings. {h3} - {h2} = {h3 - h2 + int(rng.integers(5, 15))} overlap hours."
+                ),
+                "is_correct": False,
+            }
+        )
 
     # Deterministic shuffle.
     indices = list(range(len(dataset)))
@@ -349,9 +425,7 @@ def _check_heuristics(question: str, answer: str) -> list[bool]:
 
     # 5. has_explanation
     lower = answer.lower()
-    results.append(
-        any(kw in lower for kw in ("because", "since", "therefore", "so ", "thus"))
-    )
+    results.append(any(kw in lower for kw in ("because", "since", "therefore", "so ", "thus")))
 
     # 6. reasonable_length
     results.append(10 <= len(stripped) <= 500)
@@ -478,9 +552,7 @@ def _build_feature_matrix(
     labels = np.zeros(n, dtype=np.float32)
 
     for i, item in enumerate(dataset):
-        ratios = _extract_constraint_type_counts(
-            item["question"], item["answer"], extractor
-        )
+        ratios = _extract_constraint_type_counts(item["question"], item["answer"], extractor)
         for j, ctype in enumerate(CONSTRAINT_TYPE_CATEGORIES):
             val = ratios.get(ctype, float("nan"))
             if not np.isnan(val):
@@ -654,9 +726,9 @@ def batch_loss(
     Returns:
         Scalar mean loss over the batch.
     """
-    losses = jax.vmap(
-        lambda feat, lab: bce_loss_single(params, feat, lab, margin)
-    )(features, labels)
+    losses = jax.vmap(lambda feat, lab: bce_loss_single(params, feat, lab, margin))(
+        features, labels
+    )
     return jnp.mean(losses)
 
 
@@ -719,28 +791,34 @@ def train_weights(
 
         # Adam update.
         m = jax.tree.map(lambda mi, gi: beta1 * mi + (1 - beta1) * gi, m, grads)
-        v = jax.tree.map(lambda vi, gi: beta2 * vi + (1 - beta2) * gi ** 2, v, grads)
+        v = jax.tree.map(lambda vi, gi: beta2 * vi + (1 - beta2) * gi**2, v, grads)
 
-        m_hat = jax.tree.map(lambda mi: mi / (1 - beta1 ** epoch), m)
-        v_hat = jax.tree.map(lambda vi: vi / (1 - beta2 ** epoch), v)
+        m_hat = jax.tree.map(lambda mi: mi / (1 - beta1**epoch), m)
+        v_hat = jax.tree.map(lambda vi: vi / (1 - beta2**epoch), v)
 
         params = jax.tree.map(
             lambda pi, mhi, vhi: pi - lr * mhi / (jnp.sqrt(vhi) + eps),
-            params, m_hat, v_hat,
+            params,
+            m_hat,
+            v_hat,
         )
 
         if epoch % 10 == 0 or epoch == 1:
             train_loss = float(batch_loss(params, X_train, y_train, margin))
             val_loss = float(batch_loss(params, X_val, y_val, margin))
             val_auroc = _compute_auroc(params, X_val, y_val, margin)
-            history.append({
-                "epoch": epoch,
-                "train_loss": train_loss,
-                "val_loss": val_loss,
-                "val_auroc": val_auroc,
-            })
-            print(f"  Epoch {epoch:3d}: train_loss={train_loss:.4f}  "
-                  f"val_loss={val_loss:.4f}  val_auroc={val_auroc:.4f}")
+            history.append(
+                {
+                    "epoch": epoch,
+                    "train_loss": train_loss,
+                    "val_loss": val_loss,
+                    "val_auroc": val_auroc,
+                }
+            )
+            print(
+                f"  Epoch {epoch:3d}: train_loss={train_loss:.4f}  "
+                f"val_loss={val_loss:.4f}  val_auroc={val_auroc:.4f}"
+            )
 
     return params, history
 
@@ -886,8 +964,7 @@ def _bootstrap_auroc_ci(
         "ci_lower": float(np.percentile(diffs_arr, 2.5)),
         "ci_upper": float(np.percentile(diffs_arr, 97.5)),
         "significant": bool(
-            np.percentile(diffs_arr, 2.5) > 0.0
-            or np.percentile(diffs_arr, 97.5) < 0.0
+            np.percentile(diffs_arr, 2.5) > 0.0 or np.percentile(diffs_arr, 97.5) < 0.0
         ),
     }
 
@@ -959,8 +1036,13 @@ def main() -> None:
     # Step 5: Train global learned weights.
     print("\n--- Step 5: Training global learned weights (200 epochs) ---")
     learned_params, train_history = train_weights(
-        X_train, y_train, X_val, y_val,
-        n_epochs=200, lr=5e-3, seed=42,
+        X_train,
+        y_train,
+        X_val,
+        y_val,
+        n_epochs=200,
+        lr=5e-3,
+        seed=42,
     )
 
     learned_auc = _compute_auroc(
@@ -984,8 +1066,12 @@ def main() -> None:
     # Step 6: Bootstrap CI on AUROC difference.
     print("\n--- Step 6: Bootstrap 95% CI on AUROC improvement ---")
     ci_result = _bootstrap_auroc_ci(
-        learned_params, X_val, y_val, uniform_auc,
-        n_bootstrap=1000, seed=99,
+        learned_params,
+        X_val,
+        y_val,
+        uniform_auc,
+        n_bootstrap=1000,
+        seed=99,
     )
     print(f"  Mean AUROC diff (learned - uniform): {ci_result['mean_diff']:+.4f}")
     print(f"  95% CI: [{ci_result['ci_lower']:+.4f}, {ci_result['ci_upper']:+.4f}]")
@@ -999,15 +1085,13 @@ def main() -> None:
     for domain in DOMAINS:
         print(f"\n  === Domain: {domain} ===")
         # Filter to this domain.
-        domain_mask_train = np.array([
-            domains_in_data[i] == domain for i in train_idx
-        ])
-        domain_mask_val = np.array([
-            domains_in_data[i] == domain for i in val_idx
-        ])
+        domain_mask_train = np.array([domains_in_data[i] == domain for i in train_idx])
+        domain_mask_val = np.array([domains_in_data[i] == domain for i in val_idx])
 
         if domain_mask_train.sum() < 10 or domain_mask_val.sum() < 5:
-            print(f"    Skipping (too few samples: train={domain_mask_train.sum()}, val={domain_mask_val.sum()})")
+            print(
+                f"    Skipping (too few samples: train={domain_mask_train.sum()}, val={domain_mask_val.sum()})"
+            )
             domain_results[domain] = {"skipped": True}
             continue
 
@@ -1021,8 +1105,13 @@ def main() -> None:
 
         # Train domain-specific weights.
         d_params, d_history = train_weights(
-            X_d_train, y_d_train, X_d_val, y_d_val,
-            n_epochs=200, lr=5e-3, seed=42,
+            X_d_train,
+            y_d_train,
+            X_d_val,
+            y_d_val,
+            n_epochs=200,
+            lr=5e-3,
+            seed=42,
         )
 
         d_learned_auc = _compute_auroc(
@@ -1033,9 +1122,7 @@ def main() -> None:
 
         d_weights = {
             ctype: float(w)
-            for ctype, w in zip(
-                CONSTRAINT_TYPE_CATEGORIES, np.array(d_params.get_weights())
-            )
+            for ctype, w in zip(CONSTRAINT_TYPE_CATEGORIES, np.array(d_params.get_weights()))
         }
 
         print(f"    Uniform AUROC: {d_uniform_auc:.4f}")
@@ -1101,8 +1188,10 @@ def main() -> None:
     print("\n" + "=" * 70)
     print("SUMMARY")
     print("=" * 70)
-    print(f"  Global AUROC: uniform={uniform_auc:.4f}, learned={learned_auc:.4f} "
-          f"(Δ={learned_auc - uniform_auc:+.4f})")
+    print(
+        f"  Global AUROC: uniform={uniform_auc:.4f}, learned={learned_auc:.4f} "
+        f"(Δ={learned_auc - uniform_auc:+.4f})"
+    )
     print(f"  Bootstrap CI: [{ci_result['ci_lower']:+.4f}, {ci_result['ci_upper']:+.4f}]")
     print(f"  Significant: {ci_result['significant']}")
     print(f"\n  Most important constraint types (by learned weight):")

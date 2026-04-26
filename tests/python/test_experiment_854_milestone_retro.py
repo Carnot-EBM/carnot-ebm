@@ -52,6 +52,7 @@ from scripts.experiment_854_milestone_retro import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture()
 def experiments_all_passing() -> dict:
     """Synthetic artifacts where every success criterion is met (n_met=12 expected)."""
@@ -59,9 +60,7 @@ def experiments_all_passing() -> dict:
         843: {"honest_verdict": "governance_ready"},
         844: {
             "all_domains_coverage": True,
-            "corpus_composition": {
-                "svamp": {"correct": 20, "incorrect": 20}
-            },
+            "corpus_composition": {"svamp": {"correct": 20, "incorrect": 20}},
             "auc_svamp": 0.60,
             "min_domain_auc": 0.60,
         },
@@ -88,26 +87,41 @@ def experiments_actual() -> dict:
         843: {"honest_verdict": "governance_ready", "status": "success"},
         844: {
             "all_domains_coverage": True,
-            "corpus_composition": {
-                "svamp": {"correct": 20, "incorrect": 20}
-            },
+            "corpus_composition": {"svamp": {"correct": 20, "incorrect": 20}},
             "auc_svamp": 0.0,
             "min_domain_auc": 0.0,
             "status": "success",
         },
-        845: {"tier35_deployed": False, "status": "blocked",
-              "blocked_reason": "min_domain_auc=0.0 < 0.50 deployment gate"},
-        846: {"accuracy_standard": 1.0, "accuracy_adversarial": 1.0,
-              "honest_verdict": "arbiter_calibrated", "status": "success"},
-        847: {"retrieval_auroc": 0.72, "honest_verdict": "retrieval_partial",
-              "status": "success"},
-        848: {"honest_verdict": "tier1_relay_works_live", "is_monotonic": True,
-              "status": "success"},
+        845: {
+            "tier35_deployed": False,
+            "status": "blocked",
+            "blocked_reason": "min_domain_auc=0.0 < 0.50 deployment gate",
+        },
+        846: {
+            "accuracy_standard": 1.0,
+            "accuracy_adversarial": 1.0,
+            "honest_verdict": "arbiter_calibrated",
+            "status": "success",
+        },
+        847: {"retrieval_auroc": 0.72, "honest_verdict": "retrieval_partial", "status": "success"},
+        848: {
+            "honest_verdict": "tier1_relay_works_live",
+            "is_monotonic": True,
+            "status": "success",
+        },
         849: {"honest_verdict": "gguf_cache_implemented", "status": "success"},
-        850: {"n_baseline_pass": 0, "n_repair_pass": 0, "signed_improvement": None,
-              "status": "blocked", "honest_verdict": "model_not_cached"},
-        851: {"bitstream_generated": False, "status": "partial",
-              "honest_verdict": "pnr_failed_n16"},
+        850: {
+            "n_baseline_pass": 0,
+            "n_repair_pass": 0,
+            "signed_improvement": None,
+            "status": "blocked",
+            "honest_verdict": "model_not_cached",
+        },
+        851: {
+            "bitstream_generated": False,
+            "status": "partial",
+            "honest_verdict": "pnr_failed_n16",
+        },
         852: {"honest_verdict": "probe_viable", "auc_synthetic": 1.0, "status": "success"},
         853: {"honest_verdict": "simulated_no_verdict", "status": "blocked"},
     }
@@ -138,6 +152,7 @@ def experiments_all_failing() -> dict:
 # ---------------------------------------------------------------------------
 # Tests: eval_criteria
 # ---------------------------------------------------------------------------
+
 
 class TestEvalCriteria:
     def test_all_passing_yields_12_met(self, experiments_all_passing):
@@ -237,7 +252,9 @@ class TestEvalCriteria:
         criteria, _ = eval_criteria(experiments_actual)
         required = {"criterion", "experiment", "target", "met", "actual_value"}
         for c in criteria:
-            assert required.issubset(c.keys()), f"Missing fields in {c['criterion']}: {required - c.keys()}"
+            assert required.issubset(c.keys()), (
+                f"Missing fields in {c['criterion']}: {required - c.keys()}"
+            )
 
     def test_empty_experiments_yields_0_met(self):
         """Missing experiment files (empty dicts) score all criteria as not-met."""
@@ -249,6 +266,7 @@ class TestEvalCriteria:
 # ---------------------------------------------------------------------------
 # Tests: compute_metrics
 # ---------------------------------------------------------------------------
+
 
 class TestComputeMetrics:
     def test_total_wall_time(self):
@@ -293,6 +311,7 @@ class TestComputeMetrics:
 # ---------------------------------------------------------------------------
 # Tests: audit_retros
 # ---------------------------------------------------------------------------
+
 
 class TestAuditRetros:
     def test_arbiter_closed(self, experiments_actual):
@@ -362,6 +381,7 @@ class TestAuditRetros:
 # Tests: compute_slowest_5
 # ---------------------------------------------------------------------------
 
+
 class TestComputeSlowest5:
     def test_returns_5_entries(self):
         """Slowest-5 analysis must return exactly 5 experiment entries."""
@@ -400,6 +420,7 @@ class TestComputeSlowest5:
 # Tests: compute_honest_verdict
 # ---------------------------------------------------------------------------
 
+
 class TestComputeHonestVerdict:
     def test_contains_improvement(self):
         """Verdict must contain 'improvement' when milestone ran faster than .64."""
@@ -428,13 +449,13 @@ class TestComputeHonestVerdict:
 # Tests: write_milestone_prereqs_section
 # ---------------------------------------------------------------------------
 
+
 class TestWriteMilestonePrereqsSection:
     def test_appends_66_section(self, tmp_path):
         """A .66 prerequisites section must be appended to MILESTONE_PREREQS.md."""
         prereqs_file = tmp_path / "MILESTONE_PREREQS.md"
         prereqs_file.write_text("# Existing content\n")
-        with patch("scripts.experiment_854_milestone_retro.MILESTONE_PREREQS",
-                   str(prereqs_file)):
+        with patch("scripts.experiment_854_milestone_retro.MILESTONE_PREREQS", str(prereqs_file)):
             write_milestone_prereqs_section()
         content = prereqs_file.read_text()
         assert "Milestone 2026.04.66 Prerequisites" in content
@@ -444,8 +465,7 @@ class TestWriteMilestonePrereqsSection:
         """Writing the section twice must not duplicate it."""
         prereqs_file = tmp_path / "MILESTONE_PREREQS.md"
         prereqs_file.write_text("# Existing content\n")
-        with patch("scripts.experiment_854_milestone_retro.MILESTONE_PREREQS",
-                   str(prereqs_file)):
+        with patch("scripts.experiment_854_milestone_retro.MILESTONE_PREREQS", str(prereqs_file)):
             write_milestone_prereqs_section()
             write_milestone_prereqs_section()
         content = prereqs_file.read_text()
@@ -454,8 +474,7 @@ class TestWriteMilestonePrereqsSection:
     def test_creates_file_if_missing(self, tmp_path):
         """If MILESTONE_PREREQS.md does not exist, the function must create it."""
         prereqs_file = tmp_path / "MILESTONE_PREREQS.md"
-        with patch("scripts.experiment_854_milestone_retro.MILESTONE_PREREQS",
-                   str(prereqs_file)):
+        with patch("scripts.experiment_854_milestone_retro.MILESTONE_PREREQS", str(prereqs_file)):
             write_milestone_prereqs_section()
         assert prereqs_file.exists()
         assert "2026.04.66" in prereqs_file.read_text()
@@ -465,17 +484,19 @@ class TestWriteMilestonePrereqsSection:
 # Tests: main + assert_deliverable_written
 # ---------------------------------------------------------------------------
 
+
 class TestMainAndDeliverable:
     def test_main_writes_deliverable(self, tmp_path):
         """main() must write results/operational_retro_2026_04_65.json with all required fields."""
         deliverable = tmp_path / "operational_retro_2026_04_65.json"
         prereqs = tmp_path / "MILESTONE_PREREQS.md"
         prereqs.write_text("# existing\n")
-        with patch("scripts.experiment_854_milestone_retro.DELIVERABLE",
-                   str(deliverable)), \
-             patch("scripts.experiment_854_milestone_retro.MILESTONE_PREREQS",
-                   str(prereqs)):
+        with (
+            patch("scripts.experiment_854_milestone_retro.DELIVERABLE", str(deliverable)),
+            patch("scripts.experiment_854_milestone_retro.MILESTONE_PREREQS", str(prereqs)),
+        ):
             from scripts.experiment_854_milestone_retro import main
+
             main()
         assert deliverable.exists()
         artifact = json.loads(deliverable.read_text())
@@ -506,8 +527,7 @@ class TestMainAndDeliverable:
             "slowest_5_experiments": [{}] * 5,
         }
         deliverable.write_text(json.dumps(artifact))
-        with patch("scripts.experiment_854_milestone_retro.DELIVERABLE",
-                   str(deliverable)):
+        with patch("scripts.experiment_854_milestone_retro.DELIVERABLE", str(deliverable)):
             assert_deliverable_written()  # should not raise
 
     def test_assert_deliverable_written_fails_on_missing_file(self, tmp_path):
@@ -538,8 +558,7 @@ class TestMainAndDeliverable:
             "slowest_5_experiments": [{}] * 5,
         }
         deliverable.write_text(json.dumps(artifact))
-        with patch("scripts.experiment_854_milestone_retro.DELIVERABLE",
-                   str(deliverable)):
+        with patch("scripts.experiment_854_milestone_retro.DELIVERABLE", str(deliverable)):
             with pytest.raises(AssertionError, match="Schema version wrong"):
                 assert_deliverable_written()
 
@@ -564,8 +583,7 @@ class TestMainAndDeliverable:
             "slowest_5_experiments": [{}] * 5,
         }
         deliverable.write_text(json.dumps(artifact))
-        with patch("scripts.experiment_854_milestone_retro.DELIVERABLE",
-                   str(deliverable)):
+        with patch("scripts.experiment_854_milestone_retro.DELIVERABLE", str(deliverable)):
             with pytest.raises(AssertionError, match="Expected 12 criteria"):
                 assert_deliverable_written()
 
@@ -573,6 +591,7 @@ class TestMainAndDeliverable:
 # ---------------------------------------------------------------------------
 # Tests: improvements_suggested
 # ---------------------------------------------------------------------------
+
 
 class TestImprovements:
     def test_improvements_list_is_non_empty(self):
@@ -600,6 +619,7 @@ class TestImprovements:
 # ---------------------------------------------------------------------------
 # Tests: constants
 # ---------------------------------------------------------------------------
+
 
 class TestConstants:
     def test_milestone_experiments_is_12(self):

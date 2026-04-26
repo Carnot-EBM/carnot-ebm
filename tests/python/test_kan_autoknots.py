@@ -22,6 +22,7 @@ from carnot.models.kan_autoknots import AutoKnotsRefiner, RefinementResult, _res
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _small_kan(
     input_dim: int = 4,
     num_knots: int = 8,
@@ -64,6 +65,7 @@ def _refiner(
 # _resize_control_points
 # ---------------------------------------------------------------------------
 
+
 class TestResizeControlPoints:
     """REQ-SELF-008-5: Control points must be linearly interpolated after resize."""
 
@@ -98,6 +100,7 @@ class TestResizeControlPoints:
 # RefinementResult
 # ---------------------------------------------------------------------------
 
+
 class TestRefinementResult:
     """REQ-SELF-008-2: RefinementResult is a proper dataclass."""
 
@@ -117,6 +120,7 @@ class TestRefinementResult:
 # ---------------------------------------------------------------------------
 # AutoKnotsRefiner.__init__
 # ---------------------------------------------------------------------------
+
 
 class TestAutoKnotsRefinerInit:
     """REQ-SELF-008-1: AutoKnotsRefiner initialises with correct defaults."""
@@ -140,13 +144,17 @@ class TestAutoKnotsRefinerInit:
         """REQ-SELF-008-1: high <= low raises ValueError."""
         kan = _small_kan()
         with pytest.raises(ValueError, match="high_activation_threshold"):
-            AutoKnotsRefiner(kan_model=kan, high_activation_threshold=0.1, low_activation_threshold=0.5)
+            AutoKnotsRefiner(
+                kan_model=kan, high_activation_threshold=0.1, low_activation_threshold=0.5
+            )
 
     def test_equal_thresholds_raises(self) -> None:
         """REQ-SELF-008-1: high == low raises ValueError."""
         kan = _small_kan()
         with pytest.raises(ValueError):
-            AutoKnotsRefiner(kan_model=kan, high_activation_threshold=0.5, low_activation_threshold=0.5)
+            AutoKnotsRefiner(
+                kan_model=kan, high_activation_threshold=0.5, low_activation_threshold=0.5
+            )
 
     def test_min_knots_too_small_raises(self) -> None:
         """REQ-SELF-008-4: min_knots < 2 raises ValueError (BSpline invariant)."""
@@ -164,6 +172,7 @@ class TestAutoKnotsRefinerInit:
 # ---------------------------------------------------------------------------
 # AutoKnotsRefiner._activation_magnitude
 # ---------------------------------------------------------------------------
+
 
 class TestActivationMagnitude:
     """REQ-SELF-008-2: activation magnitudes computed correctly for edge and bias splines."""
@@ -198,6 +207,7 @@ class TestActivationMagnitude:
 # ---------------------------------------------------------------------------
 # AutoKnotsRefiner.refine_once
 # ---------------------------------------------------------------------------
+
 
 class TestRefineOnce:
     """REQ-SELF-008-2: refine_once returns RefinementResult and mutates model."""
@@ -300,6 +310,7 @@ class TestRefineOnce:
 # AutoKnotsRefiner.multi_round_refine
 # ---------------------------------------------------------------------------
 
+
 class TestMultiRoundRefine:
     """REQ-SELF-008-3: multi_round_refine returns list[RefinementResult] of length=rounds."""
 
@@ -353,13 +364,9 @@ class TestMultiRoundRefine:
         kan = _small_kan(input_dim=3, num_knots=8, sparse=False)
         r = _refiner(kan, high=0.01, low=0.001, max_knots=11, min_knots=2)
         batch = np.ones((5, 3), dtype=np.float32)
-        before_knots = {
-            k: s.num_knots for k, s in kan.energy_fn.edge_splines.items()
-        }
+        before_knots = {k: s.num_knots for k, s in kan.energy_fn.edge_splines.items()}
         r.multi_round_refine(batch, rounds=3)
-        after_knots = {
-            k: s.num_knots for k, s in kan.energy_fn.edge_splines.items()
-        }
+        after_knots = {k: s.num_knots for k, s in kan.energy_fn.edge_splines.items()}
         # All splines should have grown (up to max=11)
         for edge in before_knots:
             assert after_knots[edge] >= before_knots[edge]

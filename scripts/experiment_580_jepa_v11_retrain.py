@@ -87,13 +87,13 @@ MODEL_DELIVERABLE = "results/jepa_predictor_v11.safetensors"
 CORPUS_V3_PATH = _REPO_ROOT / "results" / "fover_corpus_v3.json"
 CORPUS_V2_PATH = _REPO_ROOT / "results" / "fover_corpus_v2.json"
 
-V10_AUC = 0.4444      # Exp 567 baseline; this is what we must beat
+V10_AUC = 0.4444  # Exp 567 baseline; this is what we must beat
 MARGIN = 1.0
 N_EPOCHS = 300
 EVAL_EVERY = 25
 TRAIN_FRAC = 0.8
 SEED = 42
-EMBED_DIM = 128       # Matches JEPAPredictor embed_dim from Exp 557/567
+EMBED_DIM = 128  # Matches JEPAPredictor embed_dim from Exp 557/567
 
 
 # ---------------------------------------------------------------------------
@@ -236,8 +236,12 @@ def _evaluate_auc_from_pairs(params: dict, pairs: list) -> float:
     loss_obj = CPMIContrastiveLoss(margin=0.0, chain_energy_mode="mean")
     n_correct_rank = 0
     for pair in pairs:
-        e_correct = loss_obj.chain_energy(lambda emb: _model_fn(params, emb), pair.correct_embeddings)
-        e_incorrect = loss_obj.chain_energy(lambda emb: _model_fn(params, emb), pair.incorrect_embeddings)
+        e_correct = loss_obj.chain_energy(
+            lambda emb: _model_fn(params, emb), pair.correct_embeddings
+        )
+        e_incorrect = loss_obj.chain_energy(
+            lambda emb: _model_fn(params, emb), pair.incorrect_embeddings
+        )
         if e_incorrect > e_correct:
             n_correct_rank += 1
     return n_correct_rank / len(pairs)
@@ -283,10 +287,14 @@ def _compute_contrastive_loss_jax(
         def _chain_e(embeddings: list) -> jnp.ndarray:
             if not embeddings:
                 return jnp.array(0.0)
-            scores = jnp.stack([
-                (params["w2"] @ jax.nn.silu(params["w1"] @ emb + params["b1"]) + params["b2"])[0]
-                for emb in embeddings
-            ])
+            scores = jnp.stack(
+                [
+                    (params["w2"] @ jax.nn.silu(params["w1"] @ emb + params["b1"]) + params["b2"])[
+                        0
+                    ]
+                    for emb in embeddings
+                ]
+            )
             return jnp.mean(scores)
 
         e_correct = _chain_e(pair.correct_embeddings)
@@ -390,7 +398,6 @@ def main() -> None:
     """Run Exp 580: JEPA v11 full retrain with CPMI contrastive objective."""
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=60):
-
         tmpl = ExperimentTemplate(
             exp_id=EXP_ID,
             title=EXP_TITLE,
@@ -453,8 +460,12 @@ def main() -> None:
             all_pairs = real_pairs + synthetic
             n_synthetic_pairs = len(synthetic)
 
-        _log.info("Total pairs for training: %d (%d real, %d synthetic)",
-                  len(all_pairs), n_real_pairs, n_synthetic_pairs)
+        _log.info(
+            "Total pairs for training: %d (%d real, %d synthetic)",
+            len(all_pairs),
+            n_real_pairs,
+            n_synthetic_pairs,
+        )
 
         # ------------------------------------------------------------------
         # 80/20 train/val split by question_id (no cross-question leakage)
@@ -490,7 +501,10 @@ def main() -> None:
 
         _log.info(
             "Best val AUC=%.4f at epoch %d  improvement=%.4f  verdict=%s",
-            v11_auc, best_epoch, auc_improvement, honest_verdict,
+            v11_auc,
+            best_epoch,
+            auc_improvement,
+            honest_verdict,
         )
 
         # ------------------------------------------------------------------

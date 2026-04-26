@@ -36,14 +36,13 @@ import re
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-import jax.numpy as jnp
-
-from carnot.verify.constraint import ConstraintTerm
-
 if TYPE_CHECKING:
     # Imported only for type-checker; at runtime we defer inside the method
     # body to break the generation.py → extract.py circular import.
+    import jax.numpy as jnp
+
     from carnot.pipeline.memory import ConstraintMemory
+    from carnot.verify.constraint import ConstraintTerm
 
 
 # ---------------------------------------------------------------------------
@@ -104,9 +103,7 @@ class ConstraintExtractor(Protocol):
         """List of domain tags this extractor handles (e.g. ["arithmetic"])."""
         ...
 
-    def extract(
-        self, text: str, domain: str | None = None
-    ) -> list[ConstraintResult]:
+    def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
         """Extract constraints from *text*.
 
         Args:
@@ -144,9 +141,7 @@ class ArithmeticExtractor:
     def supported_domains(self) -> list[str]:
         return ["arithmetic"]
 
-    def extract(
-        self, text: str, domain: str | None = None
-    ) -> list[ConstraintResult]:
+    def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
         if domain is not None and domain not in self.supported_domains:
             return []
 
@@ -212,9 +207,7 @@ class CodeExtractor:
     def supported_domains(self) -> list[str]:
         return ["code"]
 
-    def extract(
-        self, text: str, domain: str | None = None
-    ) -> list[ConstraintResult]:
+    def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
         if domain is not None and domain not in self.supported_domains:
             return []
 
@@ -289,8 +282,7 @@ class CodeExtractor:
                         ConstraintResult(
                             constraint_type="type_check",
                             description=(
-                                f"{func_name}(): parameter '{arg.arg}'"
-                                f" annotated as {tname}"
+                                f"{func_name}(): parameter '{arg.arg}' annotated as {tname}"
                             ),
                             metadata={
                                 "kind": "type",
@@ -315,9 +307,7 @@ class CodeExtractor:
                 results.append(
                     ConstraintResult(
                         constraint_type="return_type",
-                        description=(
-                            f"{func_name}() annotated to return {return_type}"
-                        ),
+                        description=(f"{func_name}() annotated to return {return_type}"),
                         metadata={
                             "kind": "return_type",
                             "function": func_name,
@@ -355,16 +345,11 @@ class CodeExtractor:
                     )
         return results
 
-    def _extract_loop_bounds(
-        self, node: ast.FunctionDef, func_name: str
-    ) -> list[ConstraintResult]:
+    def _extract_loop_bounds(self, node: ast.FunctionDef, func_name: str) -> list[ConstraintResult]:
         """Extract loop variable bound constraints from range() calls."""
         results: list[ConstraintResult] = []
         for child in ast.walk(node):
-            if not (
-                isinstance(child, ast.For)
-                and isinstance(child.target, ast.Name)
-            ):
+            if not (isinstance(child, ast.For) and isinstance(child.target, ast.Name)):
                 continue
             loop_var = child.target.id
             if not (
@@ -421,13 +406,50 @@ class CodeExtractor:
         """Check that all used variables are assigned or passed as params."""
         results: list[ConstraintResult] = []
         builtins_set = {
-            "print", "len", "range", "int", "str", "float", "bool", "list",
-            "dict", "set", "tuple", "type", "isinstance", "enumerate", "zip",
-            "map", "filter", "sorted", "reversed", "sum", "min", "max", "abs",
-            "True", "False", "None", "ValueError", "TypeError", "IndexError",
-            "KeyError", "Exception", "super", "property", "staticmethod",
-            "classmethod", "open", "input", "any", "all", "iter", "next",
-            "hasattr", "getattr", "setattr",
+            "print",
+            "len",
+            "range",
+            "int",
+            "str",
+            "float",
+            "bool",
+            "list",
+            "dict",
+            "set",
+            "tuple",
+            "type",
+            "isinstance",
+            "enumerate",
+            "zip",
+            "map",
+            "filter",
+            "sorted",
+            "reversed",
+            "sum",
+            "min",
+            "max",
+            "abs",
+            "True",
+            "False",
+            "None",
+            "ValueError",
+            "TypeError",
+            "IndexError",
+            "KeyError",
+            "Exception",
+            "super",
+            "property",
+            "staticmethod",
+            "classmethod",
+            "open",
+            "input",
+            "any",
+            "all",
+            "iter",
+            "next",
+            "hasattr",
+            "getattr",
+            "setattr",
         }
         param_names = {arg.arg for arg in node.args.args}
         assigned = param_names | self._collect_assigned_names(node.body)
@@ -475,9 +497,7 @@ class CodeExtractor:
             return True
         if actual == "int" and expected == "float":
             return True
-        if actual == "bool" and expected in ("int", "bool"):
-            return True
-        return False
+        return bool(actual == "bool" and expected in ("int", "bool"))
 
     @staticmethod
     def _expr_source(node: ast.expr) -> str:
@@ -496,11 +516,7 @@ class CodeExtractor:
         assigned: set[str] = set()
         for stmt in body:
             if isinstance(stmt, (ast.Assign, ast.AnnAssign)):
-                targets = (
-                    stmt.targets
-                    if isinstance(stmt, ast.Assign)
-                    else [stmt.target]
-                )
+                targets = stmt.targets if isinstance(stmt, ast.Assign) else [stmt.target]
                 for target in targets:
                     if isinstance(target, ast.Name):
                         assigned.add(target.id)
@@ -513,9 +529,7 @@ class CodeExtractor:
                 assigned |= CodeExtractor._collect_assigned_names(stmt.orelse)
             elif isinstance(stmt, ast.With):
                 for item in stmt.items:
-                    if item.optional_vars and isinstance(
-                        item.optional_vars, ast.Name
-                    ):
+                    if item.optional_vars and isinstance(item.optional_vars, ast.Name):
                         assigned.add(item.optional_vars.id)
                 assigned |= CodeExtractor._collect_assigned_names(stmt.body)
             elif isinstance(stmt, ast.AugAssign):
@@ -528,9 +542,7 @@ class CodeExtractor:
         """Return all Name ids in load context (read, not written)."""
         names: set[str] = set()
         for child in ast.walk(node):
-            if isinstance(child, ast.Name) and isinstance(
-                child.ctx, ast.Load
-            ):
+            if isinstance(child, ast.Name) and isinstance(child.ctx, ast.Load):
                 names.add(child.id)
         return names
 
@@ -561,9 +573,7 @@ class LogicExtractor:
     def supported_domains(self) -> list[str]:
         return ["logic"]
 
-    def extract(
-        self, text: str, domain: str | None = None
-    ) -> list[ConstraintResult]:
+    def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
         if domain is not None and domain not in self.supported_domains:
             return []
 
@@ -608,9 +618,7 @@ class LogicExtractor:
             return [
                 ConstraintResult(
                     constraint_type="exclusion",
-                    description=(
-                        f"{m.group(1).strip()} but not {m.group(2).strip()}"
-                    ),
+                    description=(f"{m.group(1).strip()} but not {m.group(2).strip()}"),
                     metadata={
                         "positive": m.group(1).strip(),
                         "negative": m.group(2).strip(),
@@ -628,9 +636,7 @@ class LogicExtractor:
             return [
                 ConstraintResult(
                     constraint_type="disjunction",
-                    description=(
-                        f"{m.group(1).strip()} or {m.group(2).strip()}"
-                    ),
+                    description=(f"{m.group(1).strip()} or {m.group(2).strip()}"),
                     metadata={
                         "left": m.group(1).strip(),
                         "right": m.group(2).strip(),
@@ -652,9 +658,7 @@ class LogicExtractor:
             return [
                 ConstraintResult(
                     constraint_type="negation",
-                    description=(
-                        f"{m.group(1).strip()} cannot {m.group(2).strip()}"
-                    ),
+                    description=(f"{m.group(1).strip()} cannot {m.group(2).strip()}"),
                     metadata={
                         "subject": m.group(1).strip(),
                         "predicate": m.group(2).strip(),
@@ -672,9 +676,7 @@ class LogicExtractor:
             return [
                 ConstraintResult(
                     constraint_type="universal",
-                    description=(
-                        f"All {m.group(1).strip()} are {m.group(2).strip()}"
-                    ),
+                    description=(f"All {m.group(1).strip()} are {m.group(2).strip()}"),
                     metadata={
                         "category": m.group(1).strip(),
                         "property": m.group(2).strip(),
@@ -714,9 +716,7 @@ class NLExtractor:
     def supported_domains(self) -> list[str]:
         return ["nl"]
 
-    def extract(
-        self, text: str, domain: str | None = None
-    ) -> list[ConstraintResult]:
+    def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
         if domain is not None and domain not in self.supported_domains:
             return []
 
@@ -731,9 +731,7 @@ class NLExtractor:
             results.extend(self._extract_quantity(sent))
         return results
 
-    def _extract_factual_relation(
-        self, sentence: str
-    ) -> list[ConstraintResult]:
+    def _extract_factual_relation(self, sentence: str) -> list[ConstraintResult]:
         """Parse "X is the Y of Z" factual relation claims."""
         s = self._normalize(sentence)
         m = re.match(r"^(.+?)\s+is\s+the\s+(.+?)\s+of\s+(.+?)\.?$", s)
@@ -742,8 +740,7 @@ class NLExtractor:
                 ConstraintResult(
                     constraint_type="factual_relation",
                     description=(
-                        f"{m.group(1).strip()} is the {m.group(2).strip()}"
-                        f" of {m.group(3).strip()}"
+                        f"{m.group(1).strip()} is the {m.group(2).strip()} of {m.group(3).strip()}"
                     ),
                     metadata={
                         "subject": m.group(1).strip(),
@@ -766,9 +763,7 @@ class NLExtractor:
             return [
                 ConstraintResult(
                     constraint_type="factual",
-                    description=(
-                        f"{m.group(1).strip()} is/are {m.group(2).strip()}"
-                    ),
+                    description=(f"{m.group(1).strip()} is/are {m.group(2).strip()}"),
                     metadata={
                         "subject": m.group(1).strip(),
                         "predicate": m.group(2).strip(),
@@ -800,17 +795,12 @@ class NLExtractor:
             return results
 
         # "X has/have N Y"
-        m = re.match(
-            r"^(.+?)\s+(?:has|have)\s+(\d+)\s+(.+?)\.?$", s
-        )
+        m = re.match(r"^(.+?)\s+(?:has|have)\s+(\d+)\s+(.+?)\.?$", s)
         if m:
             results.append(
                 ConstraintResult(
                     constraint_type="quantity",
-                    description=(
-                        f"{m.group(1).strip()} has {m.group(2)}"
-                        f" {m.group(3).strip()}"
-                    ),
+                    description=(f"{m.group(1).strip()} has {m.group(2)} {m.group(3).strip()}"),
                     metadata={
                         "owner": m.group(1).strip(),
                         "quantity": int(m.group(2)),
@@ -878,8 +868,8 @@ class AutoExtractor:
         # Import here to avoid circular imports (knowledge_base imports from
         # extract, so we defer the import to instantiation time).
         from carnot.pipeline.knowledge_base import FactualKBExtractor  # noqa: PLC0415
-        from carnot.pipeline.spilled_energy import SpilledEnergyExtractor  # noqa: PLC0415
         from carnot.pipeline.lookahead_energy import LookaheadEnergyExtractor  # noqa: PLC0415
+        from carnot.pipeline.spilled_energy import SpilledEnergyExtractor  # noqa: PLC0415
 
         self._extractors: list[ConstraintExtractor] = [
             ArithmeticExtractor(),
@@ -924,8 +914,8 @@ class AutoExtractor:
         self,
         text: str,
         domain: str | None = None,
-        memory: "ConstraintMemory | None" = None,
-        logits: "jnp.ndarray | None" = None,
+        memory: ConstraintMemory | None = None,
+        logits: jnp.ndarray | None = None,
     ) -> list[ConstraintResult]:
         """Run all applicable extractors and merge results.
 
@@ -1017,18 +1007,14 @@ class AutoExtractor:
         # entirely, so existing callers see no change in behavior.
         if logits is not None:
             # Exp 157: spilled energy (arxiv 2602.18671, ICLR 2026).
-            spilled_results = self._spilled_energy_extractor.extract(
-                text, logits=logits
-            )
+            spilled_results = self._spilled_energy_extractor.extract(text, logits=logits)
             for result in spilled_results:
                 if result.description not in seen_descriptions:
                     seen_descriptions.add(result.description)
                     results.append(result)
 
             # Exp 169: lookahead energy (arxiv 2512.15605, 2025).
-            lookahead_results = self._lookahead_energy_extractor.extract(
-                text, logits=logits
-            )
+            lookahead_results = self._lookahead_energy_extractor.extract(text, logits=logits)
             for result in lookahead_results:
                 if result.description not in seen_descriptions:
                     seen_descriptions.add(result.description)

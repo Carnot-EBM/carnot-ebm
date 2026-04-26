@@ -14,8 +14,9 @@ standalone script means you can always close the milestone manually.
 import json
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
+import contextlib
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -62,10 +63,8 @@ def get_retired_ids() -> set:
     for line in EXCLUSION_MANIFEST.read_text().splitlines():
         stripped = line.strip()
         if stripped.startswith("- experiment_id:"):
-            try:
+            with contextlib.suppress(ValueError):
                 retired.add(int(stripped.split(":")[1].strip()))
-            except ValueError:
-                pass
     return retired
 
 
@@ -118,9 +117,7 @@ def evaluate_criteria(results: dict[int, dict]) -> dict:
     r = results
 
     # 1. Manifest enforcer deployed (Exp 868 side-channel deployment)
-    manifest_enforcer_deployed = bool(
-        r.get(868, {}).get("manifest_enforcer_deployed", False)
-    )
+    manifest_enforcer_deployed = bool(r.get(868, {}).get("manifest_enforcer_deployed", False))
 
     # 2. GGUF model download verified (Exp 869)
     download_verified = bool(r.get(869, {}).get("download_verified", False))
@@ -128,9 +125,7 @@ def evaluate_criteria(results: dict[int, dict]) -> dict:
     # 3. Live code repair positive — signed_improvement > 0 means the repair
     #    stage produced a measurable improvement on the LLM's output (Exp 870)
     signed_improvement = r.get(870, {}).get("signed_improvement")
-    live_code_repair_positive = (
-        signed_improvement is not None and float(signed_improvement) > 0
-    )
+    live_code_repair_positive = signed_improvement is not None and float(signed_improvement) > 0
 
     # 4. Live cascade benchmark — inference_mode must be "live_gpu" to count;
     #    simulation_fallback does NOT satisfy this criterion (Exp 871)
@@ -149,9 +144,7 @@ def evaluate_criteria(results: dict[int, dict]) -> dict:
     streaming_cot_wired = r.get(874, {}).get("honest_verdict") == "streaming_cot_wired"
 
     # 8. FR-11 Tier-2 relay loop closed (Exp 875)
-    fr11_tier2_loop_closed = (
-        "loop_closed" in str(r.get(875, {}).get("honest_verdict", ""))
-    )
+    fr11_tier2_loop_closed = "loop_closed" in str(r.get(875, {}).get("honest_verdict", ""))
 
     # 9. Inertia sweeps reduced by >= 5x (Exp 876)
     sweeps_reduction = r.get(876, {}).get("sweeps_reduction", 0.0)
@@ -271,15 +264,14 @@ def build_honest_verdict(
 
 
 def main() -> None:
-    started_at = datetime.now(timezone.utc).isoformat()
+    started_at = datetime.now(UTC).isoformat()
 
     # 1. Load all experiment results
     results = {exp_id: load_result(exp_id) for exp_id in MILESTONE_EXP_IDS}
 
     # 2. Compute wall-time metrics
     durations = {
-        exp_id: float(results[exp_id].get("duration_s", 0.0))
-        for exp_id in MILESTONE_EXP_IDS
+        exp_id: float(results[exp_id].get("duration_s", 0.0)) for exp_id in MILESTONE_EXP_IDS
     }
     total_duration_s = sum(durations.values())
     total_wall_time_minutes = total_duration_s / 60.0
@@ -331,7 +323,7 @@ def main() -> None:
         prior_wall_time=PRIOR_WALL_TIME_MINUTES,
     )
 
-    finished_at = datetime.now(timezone.utc).isoformat()
+    finished_at = datetime.now(UTC).isoformat()
     duration_retro_s = (
         datetime.fromisoformat(finished_at) - datetime.fromisoformat(started_at)
     ).total_seconds()
@@ -410,10 +402,13 @@ def main() -> None:
 
     # Print summary
     print(f"\nMilestone {MILESTONE} retrospective complete.")
-    print(f"  Experiments: {exp_count} ({experiments_completed} success, "
-          f"{experiments_blocked} blocked)")
-    print(f"  Wall time:   {total_wall_time_minutes:.2f} min "
-          f"(avg {per_experiment_avg:.2f} min/exp)")
+    print(
+        f"  Experiments: {exp_count} ({experiments_completed} success, "
+        f"{experiments_blocked} blocked)"
+    )
+    print(
+        f"  Wall time:   {total_wall_time_minutes:.2f} min (avg {per_experiment_avg:.2f} min/exp)"
+    )
     print(f"  Criteria:    {n_criteria_met}/{total_criteria}")
     print(f"  RETROs closed: {len(retros_closed)}")
     print(f"  Verdict:     {honest_verdict}")

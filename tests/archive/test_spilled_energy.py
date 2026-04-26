@@ -13,14 +13,12 @@ from __future__ import annotations
 
 import jax.numpy as jnp
 import pytest
-
+from carnot.pipeline.extract import AutoExtractor
 from carnot.pipeline.spilled_energy import (
     DEFAULT_SPILLED_THRESHOLD,
     SpilledEnergyConstraint,
     SpilledEnergyExtractor,
 )
-from carnot.pipeline.extract import AutoExtractor, ConstraintResult
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -236,6 +234,7 @@ class TestSpilledEnergyExtractor:
         """_compute_spilled_energy always returns a non-negative float."""
         ext = SpilledEnergyExtractor()
         import jax
+
         key = jax.random.PRNGKey(42)
         for _ in range(5):
             key, subkey = jax.random.split(key)

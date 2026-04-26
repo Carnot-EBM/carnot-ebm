@@ -219,9 +219,7 @@ def build_humaneval_artifact_v2(
     signed_improvement = round(pass_at_1_after - pass_at_1, 6)
 
     n_repaired = sum(1 for r in results if r.repair_attempted)
-    n_repair_succeeded = sum(
-        1 for r in results if r.repair_attempted and r.final_passed_tests
-    )
+    n_repair_succeeded = sum(1 for r in results if r.repair_attempted and r.final_passed_tests)
     total_violations = sum(r.violations_found for r in results)
     pbt_bugs_found = sum(1 for r in results if r.pbt_bug_found)
 
@@ -296,9 +294,7 @@ def _load_problems() -> list[dict[str, Any]]:
         return _manual_problems()
 
 
-def _parse_official_tests(
-    test_str: str, entry_point: str
-) -> list[tuple[list[Any], Any]]:
+def _parse_official_tests(test_str: str, entry_point: str) -> list[tuple[list[Any], Any]]:
     """Parse HumanEval assert-style test strings into (args, expected) pairs.
 
     **Detailed explanation for engineers:**
@@ -321,9 +317,7 @@ def _parse_official_tests(
         line = line.strip()
         if not line.startswith("assert"):
             continue
-        match = re.match(
-            r"assert\s+candidate\((.+?)\)\s*==\s*(.+?)(?:\s*$|\s*,)", line
-        )
+        match = re.match(r"assert\s+candidate\((.+?)\)\s*==\s*(.+?)(?:\s*$|\s*,)", line)
         if match:
             try:
                 args = eval(f"[{match.group(1)}]")  # noqa: S307
@@ -339,9 +333,7 @@ def _parse_official_tests(
 # ---------------------------------------------------------------------------
 
 
-def _run_tests(
-    code: str, entry_point: str, test_cases: list[tuple[list[Any], Any]]
-) -> bool:
+def _run_tests(code: str, entry_point: str, test_cases: list[tuple[list[Any], Any]]) -> bool:
     """Execute code against test cases; return True iff all pass.
 
     **Detailed explanation for engineers:**
@@ -447,9 +439,7 @@ def _run_tests_subprocess(
 # ---------------------------------------------------------------------------
 
 
-def _run_pbt(
-    code: str, entry_point: str, test_cases: list[tuple[list[Any], Any]]
-) -> bool:
+def _run_pbt(code: str, entry_point: str, test_cases: list[tuple[list[Any], Any]]) -> bool:
     """Run property-based testing to detect unofficial bugs in passing solutions.
 
     **Detailed explanation for engineers:**
@@ -579,7 +569,7 @@ def _load_model_pipeline(
         model = AutoModelForCausalLM.from_pretrained(
             hf_id,
             torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-            device_map={'': 'cuda:0'},
+            device_map={"": "cuda:0"},
         )
         model.eval()
         return tokenizer, model, device_str, True
@@ -737,9 +727,7 @@ def _process_problem(
 
         extractor = CodeExtractor()
         constraints = extractor.extract(generated_code, domain="code")
-        violations_found = sum(
-            1 for c in constraints if c.metadata.get("satisfied") is False
-        )
+        violations_found = sum(1 for c in constraints if c.metadata.get("satisfied") is False)
 
         pipeline = VerifyRepairPipeline(
             model=None,
@@ -765,13 +753,9 @@ def _process_problem(
         if not vr.verified and problem.get("canonical_solution"):
             repaired_code = problem["prompt"] + problem["canonical_solution"]
             final_code = repaired_code
-            final_passed = _run_tests_subprocess(
-                repaired_code, entry_point, test_cases
-            )
+            final_passed = _run_tests_subprocess(repaired_code, entry_point, test_cases)
     except Exception as exc:
-        _log.warning(
-            "[_process_problem] pipeline error on %s: %r", task_id, exc
-        )
+        _log.warning("[_process_problem] pipeline error on %s: %r", task_id, exc)
         violations_found = 0
 
     pbt_bug = False
@@ -884,9 +868,7 @@ def main() -> None:
     )
 
     if not diag.is_live_capable:
-        _log.error(
-            "Live GPU unavailable: %s — writing blocked artifact.", diag.failure_reason
-        )
+        _log.error("Live GPU unavailable: %s — writing blocked artifact.", diag.failure_reason)
         artifact = tmpl.build_result(
             {
                 "humaneval_schema": "carnot.humaneval_benchmark.v2",
@@ -918,9 +900,7 @@ def main() -> None:
     # ---------------------------------------------------------------------------
     # Hard gate 3: load the model.
     # ---------------------------------------------------------------------------
-    tokenizer, model, device, ok = _load_model_pipeline(
-        hf_id=_DIAGNOSTIC_MODEL_IDS[0], device=0
-    )
+    tokenizer, model, device, ok = _load_model_pipeline(hf_id=_DIAGNOSTIC_MODEL_IDS[0], device=0)
     if not ok:
         _log.error("Model load failed — writing blocked artifact.")
         artifact = tmpl.build_result(
@@ -1005,6 +985,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

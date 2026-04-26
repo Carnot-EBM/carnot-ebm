@@ -85,6 +85,7 @@ tmpl.setup()
 # Helper: load JSON result file safely
 # ---------------------------------------------------------------------------
 
+
 def _load_result(path: str) -> dict:
     """Load a JSON experiment result, returning empty dict on any failure.
 
@@ -126,8 +127,7 @@ elif _n594 > 0 or _n595 > 0:
     _violations_source = "exp594" if _n594 >= _n595 else "exp595"
     n_live_violations = max(_n594, _n595)
     _repair_triples_raw = (
-        _exp594.get("repair_triples", []) if _n594 >= _n595
-        else _exp595.get("repair_triples", [])
+        _exp594.get("repair_triples", []) if _n594 >= _n595 else _exp595.get("repair_triples", [])
     ) or []
 else:
     _violations_source = "synthetic_fallback"
@@ -164,9 +164,7 @@ if _violations_source == "synthetic_fallback":
 else:
     # Feed real violations from the live experiment result.
     # Live violations are stored per-violation-type in the experiment artifact.
-    live_viol_list = (
-        _exp594.get("violations", []) or _exp595.get("violations", [])
-    ) or []
+    live_viol_list = (_exp594.get("violations", []) or _exp595.get("violations", [])) or []
     for v in live_viol_list:
         vtype = str(v.get("violation_type", "carry"))
         step_text = str(v.get("response", ""))
@@ -175,9 +173,7 @@ else:
     if not live_viol_list and n_live_violations > 0:
         for _ in range(n_live_violations):
             _cafm.observe("carry", "live_violation_no_detail")
-    fp_rate_before = float(
-        _exp594.get("fp_rate", 0.0) or _exp595.get("fp_rate", 0.0) or 0.0
-    )
+    fp_rate_before = float(_exp594.get("fp_rate", 0.0) or _exp595.get("fp_rate", 0.0) or 0.0)
 
 constraints_added_list = _cafm.check_and_add()
 constraints_added_count = len(constraints_added_list)
@@ -195,6 +191,7 @@ print(
 # ---------------------------------------------------------------------------
 # Step 5: Build MISETriple list and run calibrator
 # ---------------------------------------------------------------------------
+
 
 def _embed_fn(text: str) -> list[float]:
     """Deterministic hash projection into 128-dim space.
@@ -258,10 +255,7 @@ calibrator = MISECalibrator(embed_fn=_embed_fn)
 calibration_stats = calibrator.calibrate(mise_triples)
 mise_calibration_gap = calibration_stats["calibration_gap"]
 
-print(
-    f"EXP-597: mise_calibration_gap={mise_calibration_gap:.4f}, "
-    f"n_triples={len(mise_triples)}"
-)
+print(f"EXP-597: mise_calibration_gap={mise_calibration_gap:.4f}, n_triples={len(mise_triples)}")
 
 # ---------------------------------------------------------------------------
 # Step 6: Determine FR-11 status and build artifact

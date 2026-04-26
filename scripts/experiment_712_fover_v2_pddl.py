@@ -75,6 +75,7 @@ tmpl.setup()
 # Each question is paired with a gold answer so we can generate a mix of
 # correct and incorrect CoT steps for labeling.
 
+
 def _build_question_bank() -> list[dict]:
     """Generate 400 GSM8K-style arithmetic word problems with gold answers.
 
@@ -161,16 +162,56 @@ def _build_question_bank() -> list[dict]:
     # Use a fixed pseudo-random sequence for reproducibility without importing random.
     # Values cycle through small integers to keep arithmetic tractable.
     values = [
-        (3, 5, 2), (4, 6, 3), (7, 8, 4), (5, 10, 3), (6, 9, 5),
-        (8, 7, 4), (10, 3, 6), (2, 11, 1), (9, 4, 7), (12, 5, 3),
-        (15, 6, 4), (3, 12, 2), (7, 4, 3), (6, 8, 5), (11, 2, 4),
-        (5, 7, 1), (9, 3, 2), (4, 10, 3), (8, 5, 6), (13, 4, 7),
-        (2, 9, 1), (14, 3, 5), (6, 7, 4), (10, 8, 3), (3, 6, 2),
-        (5, 4, 1), (7, 9, 6), (11, 5, 4), (8, 3, 2), (4, 7, 3),
-        (6, 10, 5), (9, 6, 3), (12, 4, 8), (3, 8, 1), (7, 5, 4),
-        (5, 11, 2), (10, 7, 6), (4, 9, 3), (8, 6, 5), (2, 12, 1),
-        (6, 4, 3), (9, 7, 5), (13, 3, 6), (5, 8, 4), (7, 6, 2),
-        (11, 4, 3), (3, 9, 2), (8, 10, 4), (4, 5, 1), (6, 3, 2),
+        (3, 5, 2),
+        (4, 6, 3),
+        (7, 8, 4),
+        (5, 10, 3),
+        (6, 9, 5),
+        (8, 7, 4),
+        (10, 3, 6),
+        (2, 11, 1),
+        (9, 4, 7),
+        (12, 5, 3),
+        (15, 6, 4),
+        (3, 12, 2),
+        (7, 4, 3),
+        (6, 8, 5),
+        (11, 2, 4),
+        (5, 7, 1),
+        (9, 3, 2),
+        (4, 10, 3),
+        (8, 5, 6),
+        (13, 4, 7),
+        (2, 9, 1),
+        (14, 3, 5),
+        (6, 7, 4),
+        (10, 8, 3),
+        (3, 6, 2),
+        (5, 4, 1),
+        (7, 9, 6),
+        (11, 5, 4),
+        (8, 3, 2),
+        (4, 7, 3),
+        (6, 10, 5),
+        (9, 6, 3),
+        (12, 4, 8),
+        (3, 8, 1),
+        (7, 5, 4),
+        (5, 11, 2),
+        (10, 7, 6),
+        (4, 9, 3),
+        (8, 6, 5),
+        (2, 12, 1),
+        (6, 4, 3),
+        (9, 7, 5),
+        (13, 3, 6),
+        (5, 8, 4),
+        (7, 6, 2),
+        (11, 4, 3),
+        (3, 9, 2),
+        (8, 10, 4),
+        (4, 5, 1),
+        (6, 3, 2),
     ]
 
     for a, b, c in values * 8:  # 50 * 8 = 400 questions
@@ -209,9 +250,7 @@ def _generate_cot_steps(question: str, gold_answer: float, operands: list[float]
             steps.append(f"Then, {result} - {c} = {second_result}.")
             # Incorrect step: multiply instead of subtract (should be subtract).
             wrong_result = result * c
-            steps.append(
-                f"Therefore, {result} * {c} = {wrong_result}."
-            )
+            steps.append(f"Therefore, {result} * {c} = {wrong_result}.")
         else:
             # Incorrect variant: wrong operation on same operands.
             wrong_result = a * b
@@ -266,6 +305,7 @@ def _compute_pddl_z3_agreement(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run the PDDL labeling pipeline and write corpus + artifact."""

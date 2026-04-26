@@ -43,7 +43,7 @@ Spec: REQ-INFRA-085, SCENARIO-INFRA-090, SCENARIO-INFRA-091
 from __future__ import annotations
 
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -54,7 +54,10 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from carnot.pipeline.exclusion_manifest import DEFAULT_MANIFEST_PATH, ExclusionManifest  # noqa: E402
+from carnot.pipeline.exclusion_manifest import (  # noqa: E402
+    DEFAULT_MANIFEST_PATH,
+    ExclusionManifest,
+)
 
 _MANIFEST_PATH = str(_REPO_ROOT / DEFAULT_MANIFEST_PATH)
 _SENTINEL_PATH = _REPO_ROOT / "scripts" / "conductor_consulted_at.txt"
@@ -62,7 +65,7 @@ _SENTINEL_PATH = _REPO_ROOT / "scripts" / "conductor_consulted_at.txt"
 
 def _utc_now() -> str:
     """Return current UTC timestamp as ISO-8601 string."""
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def run_precheck(exp_ids: list[int], manifest_path: str | None = None) -> tuple[bool, list[int]]:

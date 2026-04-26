@@ -44,10 +44,12 @@ Spec: REQ-CORE-001, REQ-CORE-002
 from __future__ import annotations
 
 import json
-from pathlib import Path
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
 import numpy as np
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # Number of binary features per verification trace.
 FEATURE_DIM: int = 13
@@ -69,7 +71,7 @@ class TraceRecord(NamedTuple):
     """
 
     features: np.ndarray  # shape (FEATURE_DIM,), dtype float32
-    label: float          # 1.0 = satisfied, 0.0 = violated
+    label: float  # 1.0 = satisfied, 0.0 = violated
 
 
 def _majority(vals: list[bool]) -> float:

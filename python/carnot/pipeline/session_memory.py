@@ -38,7 +38,7 @@ from __future__ import annotations
 import json
 import logging
 import pathlib
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -123,8 +123,8 @@ class SessionMemory:
 
     def on_violation(
         self,
-        event: "ViolationEvent",
-        template_library: "ConstraintTemplateLibrary",
+        event: ViolationEvent,
+        template_library: ConstraintTemplateLibrary,
     ) -> None:
         """Cache a violation event and call observe_pattern after 5 of the same type.
 
@@ -199,15 +199,12 @@ class SessionMemory:
         payload: dict[str, Any] = {
             "schema": "carnot.session_memory_relay.v1",
             "model_id": self.model_id,
-            "saved_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "saved_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "violations_by_type": [
-                {"violation_type": vtype, "count": count}
-                for vtype, count in violations.items()
+                {"violation_type": vtype, "count": count} for vtype, count in violations.items()
             ],
             # template_keys = the subset that reached the threshold (count >= 5).
-            "template_keys": [
-                vtype for vtype, count in violations.items() if count >= 5
-            ],
+            "template_keys": [vtype for vtype, count in violations.items() if count >= 5],
         }
         out = pathlib.Path(filepath)
         out.parent.mkdir(parents=True, exist_ok=True)
@@ -217,7 +214,7 @@ class SessionMemory:
     def load_relay(
         self,
         filepath: str,
-        template_library: "ConstraintTemplateLibrary",
+        template_library: ConstraintTemplateLibrary,
     ) -> int:
         """Load persisted violation mappings and replay templates into the library.
 
@@ -263,7 +260,9 @@ class SessionMemory:
         for key in template_keys:
             template_library.replay_template(key, self.model_id)
             replayed += 1
-            _log.info("FR11 cross-session replay: template %s activated for model %s", key, self.model_id)
+            _log.info(
+                "FR11 cross-session replay: template %s activated for model %s", key, self.model_id
+            )
 
         # Restore violation counts so on_violation() accumulation is continuous.
         for entry in payload.get("violations_by_type", []):
@@ -272,16 +271,14 @@ class SessionMemory:
             if vtype:
                 if not hasattr(self, "_violations_by_type"):
                     self._violations_by_type = {}
-                self._violations_by_type[vtype] = max(
-                    self._violations_by_type.get(vtype, 0), count
-                )
+                self._violations_by_type[vtype] = max(self._violations_by_type.get(vtype, 0), count)
         return replayed
 
     def save(
         self,
-        case_memory: "CaseMemory",
-        template_library: "ConstraintTemplateLibrary",
-        fp_tracker: "PerModelFPTracker",
+        case_memory: CaseMemory,
+        template_library: ConstraintTemplateLibrary,
+        fp_tracker: PerModelFPTracker,
     ) -> None:
         """Serialise all three components to disk.
 
@@ -310,7 +307,7 @@ class SessionMemory:
         path.parent.mkdir(parents=True, exist_ok=True)
         payload: dict[str, Any] = {
             "schema": _SCHEMA_VERSION,
-            "saved_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "saved_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "case_memory": case_memory.to_dict(),
             "template_library": template_library.to_dict(),
             "fp_tracker": fp_tracker.to_dict(),
@@ -319,7 +316,7 @@ class SessionMemory:
 
     def load(
         self,
-    ) -> "tuple[CaseMemory, ConstraintTemplateLibrary, PerModelFPTracker] | None":
+    ) -> tuple[CaseMemory, ConstraintTemplateLibrary, PerModelFPTracker] | None:
         """Deserialise saved state from disk.
 
         **CI-safety contract:**

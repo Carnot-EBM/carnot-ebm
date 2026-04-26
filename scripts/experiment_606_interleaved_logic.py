@@ -151,7 +151,9 @@ def main() -> None:
         tp_flags = _run_ilv(incorrect_entries)
 
         # Run ILV on correct entries (false-positive measurement)
-        _log.info("Running InterleavedLogicVerifier on %d correct entries (FP check) ...", n_correct)
+        _log.info(
+            "Running InterleavedLogicVerifier on %d correct entries (FP check) ...", n_correct
+        )
         fp_flags = _run_ilv(correct_entries)
 
         ilv_recall = sum(tp_flags) / n_incorrect if n_incorrect > 0 else 0.0
@@ -169,7 +171,9 @@ def main() -> None:
 
         _log.info(
             "ILV: recall=%.4f  fp_rate=%.4f  verdict=%s",
-            ilv_recall, ilv_fp_rate, honest_verdict,
+            ilv_recall,
+            ilv_fp_rate,
+            honest_verdict,
         )
 
         payload = {

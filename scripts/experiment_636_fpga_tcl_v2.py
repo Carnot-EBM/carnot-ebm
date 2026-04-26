@@ -65,8 +65,12 @@ def check_tcl_v2_content() -> dict:
     """
     tcl_ok = os.path.exists(TCL_V2_PATH)
     if not tcl_ok:
-        return {"tcl_exists": False, "top_module_ok": False,
-                "rtl_file_ok": False, "output_dir_ok": False}
+        return {
+            "tcl_exists": False,
+            "top_module_ok": False,
+            "rtl_file_ok": False,
+            "output_dir_ok": False,
+        }
     with open(TCL_V2_PATH) as fh:
         content = fh.read()
     return {

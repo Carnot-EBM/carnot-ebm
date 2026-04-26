@@ -63,6 +63,7 @@ class TestEormGateSkipsIsing:
         Spec: REQ-INFRA-046, SCENARIO-INFRA-055
         """
         ising_called = []
+
         def ising_fn(_q: str) -> bool:
             ising_called.append(True)
             return True
@@ -97,6 +98,7 @@ class TestEormGateSkipsIsing:
         Spec: REQ-INFRA-046
         """
         ising_called = []
+
         def ising_fn(_q: str) -> bool:
             ising_called.append(True)
             return True
@@ -139,6 +141,7 @@ class TestEormGateRunsIsing:
         Spec: REQ-INFRA-046, SCENARIO-INFRA-056
         """
         ising_called = []
+
         def ising_fn(_q: str) -> bool:
             ising_called.append(True)
             return True
@@ -150,7 +153,9 @@ class TestEormGateRunsIsing:
         )
         result = router.route("some query")
 
-        assert ising_called == [True], "Ising was not called despite EORM confidence below threshold"
+        assert ising_called == [True], (
+            "Ising was not called despite EORM confidence below threshold"
+        )
         assert result.ising_skip is False
         assert result.verified is True
 
@@ -355,9 +360,5 @@ def _compute_fn_rate(results: list[RouteResult], questions: list[dict]) -> float
     n_positive = sum(1 for q in questions if q["ground_truth"])
     if n_positive == 0:
         return 0.0
-    n_fn = sum(
-        1
-        for r, q in zip(results, questions)
-        if q["ground_truth"] and not r.verified
-    )
+    n_fn = sum(1 for r, q in zip(results, questions) if q["ground_truth"] and not r.verified)
     return n_fn / n_positive

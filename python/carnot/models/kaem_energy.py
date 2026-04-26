@@ -71,7 +71,6 @@ import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
 
-
 # Number of integration points used to build the numerical CDF
 # for each variable's marginal distribution. Higher = more accurate
 # inverse CDF, at the cost of O(N_QUAD) work per sample dimension.
@@ -522,14 +521,12 @@ class KAEMEnergy:
         Spec: REQ-SAMPLE-015
         """
         if data.ndim != 2 or data.shape[1] != self.n_vars:
-            raise ValueError(
-                f"data must have shape (n_data, {self.n_vars}), got {data.shape}"
-            )
+            raise ValueError(f"data must have shape (n_data, {self.n_vars}), got {data.shape}")
 
         lr = 0.01
         losses = []
 
-        for epoch in range(n_epochs):
+        for _epoch in range(n_epochs):
             epoch_loss = 0.0
             # Update each variable's spline independently (marginal score matching)
             for i in range(self.n_vars):
@@ -551,7 +548,7 @@ class KAEMEnergy:
 
                     # Gradient: reduce energy at data points (pull control points down)
                     grad = np.zeros(self.n_hidden)
-                    grad[left_idx] = (1.0 - t)
+                    grad[left_idx] = 1.0 - t
                     grad[right_idx] = t
 
                     new_ctrl = np.array(ctrl) - lr * grad
@@ -643,7 +640,7 @@ class CalibrationLayer:
         self.b = float(result[1])
         self._fitted = True
 
-    def transform(self, E_lowrank: "float | np.ndarray") -> "float | np.ndarray":
+    def transform(self, E_lowrank: float | np.ndarray) -> float | np.ndarray:
         """Apply affine calibration: E_calibrated = a * E_lowrank + b.
 
         Can be called on a scalar or array of low-rank energy values.  Returns
@@ -716,7 +713,7 @@ class CalibratedLowRankKAEMEnergy:
 
         self._lowrank = LowRankKAEMEnergy(n_vars=n_vars, k=k, key=key)
         self._calibration = CalibrationLayer()
-        self._full_kaem: "KAEMEnergy | None" = None
+        self._full_kaem: KAEMEnergy | None = None
 
     def calibrate(
         self,
@@ -780,7 +777,7 @@ class CalibratedLowRankKAEMEnergy:
 
     def calibrate_from_reference(
         self,
-        reference_kaem: "KAEMEnergy",
+        reference_kaem: KAEMEnergy,
         data: jax.Array,
     ) -> None:
         """Calibrate using a pre-existing reference model (avoids creating a new one).
@@ -852,7 +849,7 @@ def get_kaem_energy(
     use_lowrank: bool = True,
     k: int = 2,
     key: jax.Array | None = None,
-) -> "KAEMEnergy | Any":
+) -> KAEMEnergy | Any:
     """Factory: return LowRankKAEMEnergy(k) if use_lowrank, else KAEMEnergy.
 
     Selects between the low-rank SVD fast-path and the full-rank model based
@@ -956,7 +953,9 @@ def benchmark_kaem_vs_mcmc(n_vars: int, n_samples: int = 100) -> dict[str, Any]:
     b_jax = jnp.array(biases)
 
     schedule = AnnealingSchedule(beta_init=0.5, beta_final=2.0)
-    sampler = ParallelIsingSampler(n_warmup=50, n_samples=n_samples, steps_per_sample=5, schedule=schedule)
+    sampler = ParallelIsingSampler(
+        n_warmup=50, n_samples=n_samples, steps_per_sample=5, schedule=schedule
+    )
 
     # Warm up with a single chain (init_spins shape is (n_vars,))
     init_spins = jnp.ones(n_vars, dtype=jnp.float32)

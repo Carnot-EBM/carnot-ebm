@@ -68,6 +68,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 # 1. Test questions — 15 questions designed to trip up small LLMs
 # ---------------------------------------------------------------------------
 
+
 def get_repair_test_questions() -> list[dict[str, Any]]:
     """Return 15 questions where small LLMs commonly hallucinate.
 
@@ -131,7 +132,10 @@ def get_repair_test_questions() -> list[dict[str, Any]]:
                 "do all roses fade quickly? Answer yes or no."
             ),
             "ground_truth": "no",
-            "check_answer": lambda ans: "no" in ans.lower() and "yes" not in ans.lower().replace("yes", "").replace("no", ""),
+            "check_answer": lambda ans: (
+                "no" in ans.lower()
+                and "yes" not in ans.lower().replace("yes", "").replace("no", "")
+            ),
             "why_tricky": "Tempts 'yes' via association: roses→flowers→fade.",
         },
         {
@@ -147,8 +151,7 @@ def get_repair_test_questions() -> list[dict[str, Any]]:
         {
             "domain": "logic",
             "question": (
-                "If A implies B, and B is false, is A true or false? "
-                "Answer 'true' or 'false'."
+                "If A implies B, and B is false, is A true or false? Answer 'true' or 'false'."
             ),
             "ground_truth": "false",
             "check_answer": lambda ans: "false" in ans.lower(),
@@ -238,6 +241,7 @@ def _extract_number(text: str) -> float | None:
 # 2. Violation formatting — machine-readable violations → natural language
 # ---------------------------------------------------------------------------
 
+
 def format_violations(verification_result: dict[str, Any]) -> str:
     """Convert constraint violations into natural language feedback for the LLM.
 
@@ -281,8 +285,7 @@ def format_violations(verification_result: dict[str, Any]) -> str:
             claimed = v.get("claimed", "?")
             correct = v.get("correct", "?")
             feedback_lines.append(
-                f"  {i}. Arithmetic error: {expr} = {correct}, "
-                f"but you said {claimed}."
+                f"  {i}. Arithmetic error: {expr} = {correct}, but you said {claimed}."
             )
 
         elif vtype == "logic_answer":
@@ -297,8 +300,7 @@ def format_violations(verification_result: dict[str, Any]) -> str:
             # Logic premise check failed.
             raw = v.get("raw", v.get("description", "?"))
             feedback_lines.append(
-                f"  {i}. Logical error: the claim '{raw}' is inconsistent "
-                f"with the given premises."
+                f"  {i}. Logical error: the claim '{raw}' is inconsistent with the given premises."
             )
 
         elif vtype.startswith("code_"):
@@ -334,6 +336,7 @@ def format_violations(verification_result: dict[str, Any]) -> str:
 # 3. Prompt building (initial + repair)
 # ---------------------------------------------------------------------------
 
+
 def build_initial_prompt(question: str, domain: str) -> str:
     """Build the initial prompt for the LLM (same structure as Exp 56).
 
@@ -359,10 +362,7 @@ def build_initial_prompt(question: str, domain: str) -> str:
         )
     else:  # factual
         return (
-            f"Question: {question}\n"
-            f"Give a short, direct factual answer.\n"
-            f"Format:\n"
-            f"Answer: <answer>"
+            f"Question: {question}\nGive a short, direct factual answer.\nFormat:\nAnswer: <answer>"
         )
 
 
@@ -399,6 +399,7 @@ def build_repair_prompt(
 # 4. LLM generation (live or simulated)
 # ---------------------------------------------------------------------------
 
+
 def generate_with_llm(
     prompt: str,
     tokenizer: Any,
@@ -419,12 +420,16 @@ def generate_with_llm(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
         )
 
     inputs = tokenizer(text, return_tensors="pt")
@@ -440,7 +445,7 @@ def generate_with_llm(
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:],
+        outputs[0, inputs["input_ids"].shape[1] :],
         skip_special_tokens=True,
     )
 
@@ -453,6 +458,7 @@ def generate_with_llm(
 # ---------------------------------------------------------------------------
 # 5. Constraint extraction (reuses Exp 56 extractors)
 # ---------------------------------------------------------------------------
+
 
 def extract_constraints(response: str, question: str, domain: str) -> list[dict]:
     """Extract and verify constraints from LLM output, dispatching by domain.
@@ -486,6 +492,7 @@ def extract_constraints(response: str, question: str, domain: str) -> list[dict]
 # 6. Simulated LLM outputs (fallback when model loading fails)
 # ---------------------------------------------------------------------------
 
+
 def get_simulated_outputs() -> dict[str, list[str]]:
     """Simulated LLM outputs for the repair loop, including repair iterations.
 
@@ -504,80 +511,77 @@ def get_simulated_outputs() -> dict[str, list[str]]:
     return {
         # --- Arithmetic ---
         "What is 97 + 86?": [
-            "Answer: 173",       # Wrong (off by 10, no carry)
-            "Answer: 183",       # Fixed after feedback
+            "Answer: 173",  # Wrong (off by 10, no carry)
+            "Answer: 183",  # Fixed after feedback
         ],
         "What is 256 - 178?": [
-            "Answer: 88",        # Wrong (borrowing error)
-            "Answer: 78",        # Fixed after feedback
+            "Answer: 88",  # Wrong (borrowing error)
+            "Answer: 78",  # Fixed after feedback
         ],
         "What is 13 * 17?": [
-            "Answer: 211",       # Wrong (common multiplication error)
-            "Answer: 231",       # Still wrong
-            "Answer: 221",       # Fixed on 2nd repair
+            "Answer: 211",  # Wrong (common multiplication error)
+            "Answer: 231",  # Still wrong
+            "Answer: 221",  # Fixed on 2nd repair
         ],
         "A store has 45 apples. They sell 18, receive 23, then sell 12. How many remain?": [
-            "Answer: 40",        # Wrong (missed a step)
-            "Answer: 38",        # Fixed after feedback
+            "Answer: 40",  # Wrong (missed a step)
+            "Answer: 38",  # Fixed after feedback
         ],
         "What is 7 * 8 + 3 * 9?": [
-            "Answer: 83",        # Correct on first try
+            "Answer: 83",  # Correct on first try
         ],
         # --- Logic ---
         (
             "If all roses are flowers, and some flowers fade quickly, "
             "do all roses fade quickly? Answer yes or no."
         ): [
-            "Answer: Yes",       # Wrong (invalid syllogism)
-            "Answer: No",        # Fixed after feedback
+            "Answer: Yes",  # Wrong (invalid syllogism)
+            "Answer: No",  # Fixed after feedback
         ],
         (
             "If no fish are mammals, and all dolphins are mammals, "
             "are dolphins fish? Answer yes or no."
         ): [
-            "Answer: No",        # Correct on first try
+            "Answer: No",  # Correct on first try
         ],
-        (
-            "If A implies B, and B is false, is A true or false? "
-            "Answer 'true' or 'false'."
-        ): [
-            "Answer: true",      # Wrong (contrapositive error)
-            "Answer: false",     # Fixed after feedback
+        ("If A implies B, and B is false, is A true or false? Answer 'true' or 'false'."): [
+            "Answer: true",  # Wrong (contrapositive error)
+            "Answer: false",  # Fixed after feedback
         ],
         (
             "A farmer has 5 haystacks in one field and 4 haystacks in another. "
             "If he combines them all in one field, how many haystacks does he have?"
         ): [
-            "Answer: 9",         # Wrong (trick question)
-            "Answer: 9",         # Still wrong (doesn't get the trick)
-            "Answer: 9",         # Never fixes it
+            "Answer: 9",  # Wrong (trick question)
+            "Answer: 9",  # Still wrong (doesn't get the trick)
+            "Answer: 9",  # Never fixes it
         ],
         (
             "If it takes 5 machines 5 minutes to make 5 widgets, "
             "how many minutes does it take 100 machines to make 100 widgets?"
         ): [
-            "Answer: 100",       # Wrong (classic trap)
-            "Answer: 5",         # Fixed after feedback
+            "Answer: 100",  # Wrong (classic trap)
+            "Answer: 5",  # Fixed after feedback
         ],
         # --- Factual ---
         "What is the capital of Myanmar?": [
-            "Answer: Yangon",    # Wrong (old capital)
-            "Answer: Naypyidaw", # Fixed after feedback
+            "Answer: Yangon",  # Wrong (old capital)
+            "Answer: Naypyidaw",  # Fixed after feedback
         ],
         "What is the largest desert in the world by area?": [
-            "Answer: Sahara",    # Wrong (Antarctic is larger)
-            "Answer: Sahara",    # Still wrong (common misconception)
+            "Answer: Sahara",  # Wrong (Antarctic is larger)
+            "Answer: Sahara",  # Still wrong (common misconception)
             "Answer: Antarctic Desert",  # Fixed on 2nd repair
         ],
         "How many states does the United States have?": [
-            "Answer: 50",        # Correct on first try
+            "Answer: 50",  # Correct on first try
         ],
         "What is the smallest country in the world by area?": [
             "Answer: Vatican City",  # Correct on first try
         ],
         "In what year did the Berlin Wall fall?": [
-            "Answer: 1991",      # Wrong (confused with USSR)
-            "Answer: 1989",      # Fixed after feedback
+            "Answer: 1991",  # Wrong (confused with USSR)
+            "Answer: 1989",  # Fixed after feedback
         ],
     }
 
@@ -585,6 +589,7 @@ def get_simulated_outputs() -> dict[str, list[str]]:
 # ---------------------------------------------------------------------------
 # 7. The verify-repair loop — the core of this experiment
 # ---------------------------------------------------------------------------
+
 
 def verify_repair_loop(
     question: str,
@@ -650,7 +655,10 @@ def verify_repair_loop(
             prev_result = iterations[-1]
             feedback = format_violations(prev_result)
             prompt = build_repair_prompt(
-                question, domain, current_answer, feedback,
+                question,
+                domain,
+                current_answer,
+                feedback,
             )
 
         # Generate response.
@@ -722,6 +730,7 @@ def verify_repair_loop(
 # 8. Main — run all 15 questions through the three conditions
 # ---------------------------------------------------------------------------
 
+
 def main() -> int:
     """Run the full verify-repair loop experiment."""
     print("=" * 72)
@@ -750,10 +759,12 @@ def main() -> int:
             try:
                 print(f"\n  Loading {model_name} on {device}...")
                 tokenizer = AutoTokenizer.from_pretrained(
-                    model_name, trust_remote_code=True,
+                    model_name,
+                    trust_remote_code=True,
                 )
                 model = AutoModelForCausalLM.from_pretrained(
-                    model_name, trust_remote_code=True,
+                    model_name,
+                    trust_remote_code=True,
                     dtype=torch.float16 if device == "cuda" else None,
                 )
                 if device == "cuda":
@@ -805,6 +816,7 @@ def main() -> int:
     if use_live_llm:
         del model, tokenizer
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
         gc.collect()
@@ -837,27 +849,22 @@ def main() -> int:
         for it in r["iterations"]:
             it_icon = "o" if it["answer_correct"] else "x"
             resp_short = it["response"][:60].replace("\n", " ")
-            print(f"      Iter {it['iteration']}: [{it_icon}] {resp_short}"
-                  f"  ({it['n_satisfied']} ok, {it['n_violated']} violated)")
+            print(
+                f"      Iter {it['iteration']}: [{it_icon}] {resp_short}"
+                f"  ({it['n_satisfied']} ok, {it['n_violated']} violated)"
+            )
 
     # --- Compute aggregate metrics ---
     print(f"\n{sep}")
-    print(f"EXPERIMENT 57 RESULTS ({elapsed:.1f}s) "
-          f"[{'LIVE LLM' if use_live_llm else 'SIMULATED'}]")
+    print(f"EXPERIMENT 57 RESULTS ({elapsed:.1f}s) [{'LIVE LLM' if use_live_llm else 'SIMULATED'}]")
     print(sep)
 
     n_total = len(results)
     n_initial_correct = sum(1 for r in results if r["initial_correct"])
     n_final_correct = sum(1 for r in results if r["final_correct"])
     n_repaired = sum(1 for r in results if r["repaired"])
-    n_failed_repair = sum(
-        1 for r in results
-        if not r["initial_correct"] and not r["final_correct"]
-    )
-    n_no_repair_needed = sum(
-        1 for r in results
-        if r["initial_correct"]
-    )
+    n_failed_repair = sum(1 for r in results if not r["initial_correct"] and not r["final_correct"])
+    n_no_repair_needed = sum(1 for r in results if r["initial_correct"])
     total_repairs = sum(r["n_repairs"] for r in results)
     repairs_attempted = sum(1 for r in results if r["n_repairs"] > 0)
     avg_repairs = total_repairs / repairs_attempted if repairs_attempted > 0 else 0
@@ -875,17 +882,24 @@ def main() -> int:
     acc_a_str = f"{n_initial_correct}/{n_total} ({accuracy_a:.0%})"
     acc_c_str = f"{n_final_correct}/{n_total} ({accuracy_c:.0%})"
     print(f"  {'A. LLM alone (no verification)':40s} {acc_a_str:>12s}")
-    print(f"  {'B. LLM + verify (detect only)':40s} {acc_a_str:>12s}"
-          f"  (same acc, knows which are wrong)")
-    print(f"  {'C. LLM + verify + repair (this exp)':40s} {acc_c_str:>12s}"
-          f"  (+{n_repaired} repaired)")
+    print(
+        f"  {'B. LLM + verify (detect only)':40s} {acc_a_str:>12s}"
+        f"  (same acc, knows which are wrong)"
+    )
+    print(
+        f"  {'C. LLM + verify + repair (this exp)':40s} {acc_c_str:>12s}  (+{n_repaired} repaired)"
+    )
 
     print(f"\n  Repair statistics:")
     print(f"    Questions needing no repair:  {n_no_repair_needed}/{n_total}")
-    print(f"    Questions successfully repaired: {n_repaired}/{repairs_attempted}"
-          f" (of those attempted)")
-    print(f"    Questions repair failed:     {n_failed_repair}/{repairs_attempted}"
-          f" (of those attempted)")
+    print(
+        f"    Questions successfully repaired: {n_repaired}/{repairs_attempted}"
+        f" (of those attempted)"
+    )
+    print(
+        f"    Questions repair failed:     {n_failed_repair}/{repairs_attempted}"
+        f" (of those attempted)"
+    )
     print(f"    Average repairs when needed:  {avg_repairs:.1f} iterations")
     print(f"    Total repair iterations:      {total_repairs}")
 
@@ -900,26 +914,35 @@ def main() -> int:
         d_initial = sum(1 for r in domain_results if r["initial_correct"])
         d_final = sum(1 for r in domain_results if r["final_correct"])
         d_repaired = sum(1 for r in domain_results if r["repaired"])
-        print(f"  {domain:12s} {d_initial}/{d_total:>8} {d_final}/{d_total:>8} "
-              f"{d_repaired:>10d}")
+        print(f"  {domain:12s} {d_initial}/{d_total:>8} {d_final}/{d_total:>8} {d_repaired:>10d}")
 
     # --- Verdict ---
     improvement = n_final_correct - n_initial_correct
     if improvement > 0:
-        print(f"\n  VERDICT: Verify-repair loop improved accuracy by "
-              f"+{improvement} questions ({accuracy_a:.0%} -> {accuracy_c:.0%})")
-        print(f"  The EBM constraint layer successfully GUIDED the LLM to "
-              f"correct {n_repaired} wrong answers.")
-        print(f"  This validates the core Kona proposition: EBMs as reasoning "
-              f"constraints, not just classifiers.")
+        print(
+            f"\n  VERDICT: Verify-repair loop improved accuracy by "
+            f"+{improvement} questions ({accuracy_a:.0%} -> {accuracy_c:.0%})"
+        )
+        print(
+            f"  The EBM constraint layer successfully GUIDED the LLM to "
+            f"correct {n_repaired} wrong answers."
+        )
+        print(
+            f"  This validates the core Kona proposition: EBMs as reasoning "
+            f"constraints, not just classifiers."
+        )
     elif improvement == 0 and n_initial_correct == n_total:
         print(f"\n  VERDICT: LLM was already perfect — no repair needed.")
         print(f"  The verify layer confirmed all answers correct.")
     else:
-        print(f"\n  VERDICT: Repair loop did not improve accuracy "
-              f"({accuracy_a:.0%} -> {accuracy_c:.0%}).")
-        print(f"  {n_failed_repair} questions resisted repair — constraint "
-              f"coverage may need expansion.")
+        print(
+            f"\n  VERDICT: Repair loop did not improve accuracy "
+            f"({accuracy_a:.0%} -> {accuracy_c:.0%})."
+        )
+        print(
+            f"  {n_failed_repair} questions resisted repair — constraint "
+            f"coverage may need expansion."
+        )
 
     print(f"\n  Architecture: LLM → Carnot verify → NL feedback → LLM repair → re-verify")
     print(f"  Constraint layer is deterministic — no hallucination in verification.")

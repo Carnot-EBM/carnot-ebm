@@ -216,7 +216,9 @@ def _run_three_conditions_for_model(
         )
         _log.info("VerifyRepairPipeline wired for %s", model_name)
     except Exception as exc:
-        _log.warning("VerifyRepairPipeline unavailable for %s (%s) — repair=re-inference", model_name, exc)
+        _log.warning(
+            "VerifyRepairPipeline unavailable for %s (%s) — repair=re-inference", model_name, exc
+        )
 
     def _infer_standard(q: Any) -> bool:
         resp = _call_model(model_obj, q.original_question)
@@ -264,7 +266,9 @@ def _run_three_conditions_for_model(
     batch_std = executor.run_batch(batch_std, _infer_standard_by_idx, watchdog_timeout_minutes=40)
     executor.save_batch(batch_std, f"{prefix}_standard")
 
-    batch_adv = executor.run_batch(batch_adv, _infer_adversarial_by_idx, watchdog_timeout_minutes=40)
+    batch_adv = executor.run_batch(
+        batch_adv, _infer_adversarial_by_idx, watchdog_timeout_minutes=40
+    )
     executor.save_batch(batch_adv, f"{prefix}_adversarial")
 
     batch_rep = executor.run_batch(batch_rep, _infer_repaired_by_idx, watchdog_timeout_minutes=40)
@@ -284,7 +288,12 @@ def _run_three_conditions_for_model(
 
     _log.info(
         "[%s] std=%.3f adv=%.3f rep=%.3f drop_pct=%.2f improvement_pct=%.2f",
-        model_name, std_acc, adv_acc, rep_acc, drop_pct, improvement_pct,
+        model_name,
+        std_acc,
+        adv_acc,
+        rep_acc,
+        drop_pct,
+        improvement_pct,
     )
 
     return MicroAdversarialResult(
@@ -344,16 +353,18 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
     blocked = LiveGPUGate.require_live_or_blocked(tmpl, gate_model_ids)
     if blocked is not None:
         _log.error("Gate 1 (LiveGPUGate) blocked — writing blocked artifact.")
-        blocked.update({
-            "schema": "carnot.adversarial_micro.v1",
-            "honest_verdict": "blocked",
-            "robustness_claim": False,
-            "inference_mode": "blocked",
-            "n_models": 0,
-            "per_model_results": [],
-            "headline_result": None,
-            "gate0_autofix_applied": _autofix_result.auto_fix_applied,
-        })
+        blocked.update(
+            {
+                "schema": "carnot.adversarial_micro.v1",
+                "honest_verdict": "blocked",
+                "robustness_claim": False,
+                "inference_mode": "blocked",
+                "n_models": 0,
+                "per_model_results": [],
+                "headline_result": None,
+                "gate0_autofix_applied": _autofix_result.auto_fix_applied,
+            }
+        )
         artifact = tmpl.build_result(blocked, status="blocked")
         _write_artifact(output_path, artifact)
         return
@@ -368,12 +379,14 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
         _log.warning(
             "Gate 2: GPU1 zombie detected — gpu1_vram=%.0fMB util=%.0f%%. "
             "Will serialise all models to GPU0.",
-            gpu_health.gpu1_vram_mb, gpu_health.gpu1_util_pct,
+            gpu_health.gpu1_vram_mb,
+            gpu_health.gpu1_util_pct,
         )
     if gpu_health.temperature_warning:
         _log.warning(
             "Gate 2: temperature warning — gpu0=%.0fC gpu1=%.0fC",
-            gpu_health.gpu0_temp_c, gpu_health.gpu1_temp_c,
+            gpu_health.gpu0_temp_c,
+            gpu_health.gpu1_temp_c,
         )
 
     # ------------------------------------------------------------------

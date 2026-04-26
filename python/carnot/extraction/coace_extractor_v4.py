@@ -31,8 +31,8 @@
 **CI stub coverage (regex fallback, no LLM):**
 
     The fallback adds patterns NOT covered by V3:
-    - LaTeX inline math: \(N \times M = P\) or \(N \cdot M = P\)
-    - LaTeX display blocks: \[...\] with = sign
+    - LaTeX inline math: \\(N \times M = P\\) or \\(N \\cdot M = P\\)
+    - LaTeX display blocks: \\[...\\] with = sign
     - Unicode × operator: N × M = P
     - Plain symbolic: N * M = P (V3 requires a $ sign; V4 drops that requirement)
     - Division: N / M = P or N ÷ M = P
@@ -49,14 +49,17 @@ import ast
 import json
 import re
 from dataclasses import dataclass
-from typing import Callable, Optional
+from typing import TYPE_CHECKING
 
 from carnot.extraction.coace_extractor import (
+    ArithmeticEquation,
     CoACEResult,
     CoACEViolation,
-    ArithmeticEquation,
 )
 from carnot.extraction.coace_extractor_v3 import CoACEExtractorV3
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # ArithmeticClaim — the GenPRM unit of extraction
@@ -151,7 +154,7 @@ _LATEX_DIV_OP = re.compile(
 )
 
 
-def _clean_num(s: str) -> Optional[float]:
+def _clean_num(s: str) -> float | None:
     """Parse a number string, stripping commas and underscores, ignoring currency.
 
     Returns None if the string cannot be converted to float.  This is a
@@ -172,7 +175,7 @@ def _clean_num(s: str) -> Optional[float]:
 # ---------------------------------------------------------------------------
 
 
-def safe_eval(expr: str) -> Optional[float]:
+def safe_eval(expr: str) -> float | None:
     """Evaluate a restricted arithmetic expression and return the float result.
 
     Allowed: numeric literals, +, -, *, /, **, % operators, parentheses.
@@ -249,7 +252,7 @@ class GenPRMExtractor:
 
     def __init__(
         self,
-        llm_caller: Optional[Callable[[str], str]] = None,
+        llm_caller: Callable[[str], str] | None = None,
         tolerance: float = 1e-6,
     ) -> None:
         self.llm_caller = llm_caller
@@ -305,12 +308,14 @@ class GenPRMExtractor:
                 except (ValueError, TypeError):
                     continue
                 conf = float(item.get("confidence", 0.85))
-                claims.append(ArithmeticClaim(
-                    lhs_expr=lhs,
-                    rhs_value=rhs,
-                    claim_text=text,
-                    confidence=conf,
-                ))
+                claims.append(
+                    ArithmeticClaim(
+                        lhs_expr=lhs,
+                        rhs_value=rhs,
+                        claim_text=text,
+                        confidence=conf,
+                    )
+                )
             return claims
         except Exception:  # noqa: BLE001 — LLM errors are non-fatal
             return self._regex_extract(response)
@@ -323,9 +328,9 @@ class GenPRMExtractor:
         """Sweep the response with regex patterns not covered by V3.
 
         Patterns covered (V3 already handles these, so we skip duplicates later):
-            - LaTeX \times: \(7 \times 1.5 = 10.5\)
-            - LaTeX \cdot: \(4 \cdot 5 = 20\)
-            - LaTeX \div: \(10 \div 2 = 5\)
+            - LaTeX \times: \\(7 \times 1.5 = 10.5\\)
+            - LaTeX \\cdot: \\(4 \\cdot 5 = 20\\)
+            - LaTeX \\div: \\(10 \\div 2 = 5\\)
             - LaTeX \frac: \frac{200}{2} = 100
             - Unicode ×: 60 × 3 = 180
             - Unicode ÷: 10 ÷ 2 = 5
@@ -334,8 +339,8 @@ class GenPRMExtractor:
             - Plain addition without $: 15 + 25 = 40
             - Plain subtraction without $: 100 - 30 = 70
 
-        Why extract LaTeX blocks first: \( ... \) and \[ ... \] blocks sometimes
-        contain the full equation; applying \times / \cdot patterns inside the
+        Why extract LaTeX blocks first: \\( ... \\) and \\[ ... \\] blocks sometimes
+        contain the full equation; applying \times / \\cdot patterns inside the
         extracted block avoids false positives from surrounding prose numbers.
         """
         claims: list[ArithmeticClaim] = []
@@ -351,12 +356,14 @@ class GenPRMExtractor:
             if key in seen:
                 return
             seen.add(key)
-            claims.append(ArithmeticClaim(
-                lhs_expr=lhs_clean,
-                rhs_value=rhs,
-                claim_text=text[:120],
-                confidence=conf,
-            ))
+            claims.append(
+                ArithmeticClaim(
+                    lhs_expr=lhs_clean,
+                    rhs_value=rhs,
+                    claim_text=text[:120],
+                    confidence=conf,
+                )
+            )
 
         # Step 1: extract LaTeX blocks and scan inside them for \times / \cdot / \div
         for block_pat in (_LATEX_INLINE, _LATEX_DISPLAY):
@@ -436,7 +443,7 @@ class CoACEExtractorV4(CoACEExtractorV3):
 
     def __init__(
         self,
-        llm_caller: Optional[Callable[[str], str]] = None,
+        llm_caller: Callable[[str], str] | None = None,
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)
@@ -469,14 +476,14 @@ class CoACEExtractorV4(CoACEExtractorV3):
         # Also populate seen from all V3-sourced equations (including non-violations)
         from carnot.extraction.coace_extractor import _parse_arithmetic_equations
         from carnot.extraction.coace_extractor_v2 import (
-            _parse_prose_arithmetic,
             _extract_chain_equations,
+            _parse_prose_arithmetic,
         )
         from carnot.extraction.coace_extractor_v3 import (
             _parse_narrative_arithmetic,
             _parse_percentage_word_problem,
-            _parse_unit_conversion,
             _parse_running_total_chain,
+            _parse_unit_conversion,
         )
 
         for eq in (

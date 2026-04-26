@@ -21,6 +21,7 @@ from carnot.models.adaptive_kan import AdaptiveKAN, KANConstraintModel
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_binary(n: int, dim: int, seed: int = 0) -> np.ndarray:
     """Random binary {0,1} matrix, shape (n, dim)."""
     rng = np.random.default_rng(seed)
@@ -345,9 +346,7 @@ class TestTrainDiscriminativeCD:
         # Use clearly distinguishable inputs.
         correct = np.ones((16, 4), dtype=np.float32)
         wrong = np.zeros((16, 4), dtype=np.float32)
-        losses = model.train_discriminative_cd(
-            correct, wrong, n_epochs=50, lr=0.05, verbose=False
-        )
+        losses = model.train_discriminative_cd(correct, wrong, n_epochs=50, lr=0.05, verbose=False)
         # Last epoch gap should be >= first epoch gap (model is learning).
         # This is not guaranteed but is very likely with distinguishable inputs.
         assert np.isfinite(losses[-1])
@@ -641,9 +640,7 @@ class TestAUROCMaintenanceAfterRestructure:
         # Build distinguishable correct/wrong training set.
         correct_train = np.ones((20, dim), dtype=np.float32)
         wrong_train = np.zeros((20, dim), dtype=np.float32)
-        model.train_discriminative_cd(
-            correct_train, wrong_train, n_epochs=50, lr=0.05
-        )
+        model.train_discriminative_cd(correct_train, wrong_train, n_epochs=50, lr=0.05)
 
         # Evaluate AUROC before restructure.
         correct_test = np.ones((10, dim), dtype=np.float32)
@@ -656,9 +653,7 @@ class TestAUROCMaintenanceAfterRestructure:
         model._restructure()
 
         # Fine-tune for 5 epochs.
-        model.train_discriminative_cd(
-            correct_train, wrong_train, n_epochs=5, lr=0.005
-        )
+        model.train_discriminative_cd(correct_train, wrong_train, n_epochs=5, lr=0.005)
 
         # Evaluate AUROC after restructure.
         e_c_after = model.energy_batch(correct_test)

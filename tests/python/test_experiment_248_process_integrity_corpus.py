@@ -28,7 +28,9 @@ def load_module():
 
 
 def read_jsonl(path: Path) -> list[dict]:
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    return [
+        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
+    ]
 
 
 REQUIRED_FIELDS = {
@@ -85,9 +87,7 @@ def test_schema_shape():
         assert row["outcome_label"] in VALID_OUTCOME_LABELS, (
             f"Row {i} has invalid outcome_label: {row['outcome_label']!r}"
         )
-        assert row["domain"] in VALID_DOMAINS, (
-            f"Row {i} has invalid domain: {row['domain']!r}"
-        )
+        assert row["domain"] in VALID_DOMAINS, f"Row {i} has invalid domain: {row['domain']!r}"
         assert row["run_date"] == "20260413", f"Row {i} wrong run_date: {row['run_date']!r}"
         assert row["experiment"] == 248, f"Row {i} wrong experiment: {row['experiment']}"
         assert isinstance(row["steps"], list), f"Row {i} steps must be list"
@@ -111,8 +111,12 @@ def test_deterministic_generation(tmp_path: Path):
     out1 = tmp_path / "run1" / "corpus.jsonl"
     out2 = tmp_path / "run2" / "corpus.jsonl"
 
-    module.build_and_write(repo_root=repo_root, corpus_path=out1, summary_path=tmp_path / "run1" / "summary.json")
-    module.build_and_write(repo_root=repo_root, corpus_path=out2, summary_path=tmp_path / "run2" / "summary.json")
+    module.build_and_write(
+        repo_root=repo_root, corpus_path=out1, summary_path=tmp_path / "run1" / "summary.json"
+    )
+    module.build_and_write(
+        repo_root=repo_root, corpus_path=out2, summary_path=tmp_path / "run2" / "summary.json"
+    )
 
     rows1 = read_jsonl(out1)
     rows2 = read_jsonl(out2)
@@ -141,8 +145,7 @@ def test_all_five_process_labels_present():
     }
     missing = required_labels - labels_found
     assert not missing, (
-        f"Corpus missing required process labels: {missing}\n"
-        f"Labels found: {labels_found}"
+        f"Corpus missing required process labels: {missing}\nLabels found: {labels_found}"
     )
 
 
@@ -175,9 +178,19 @@ def test_classify_reasoning_right_answer_wrong_process():
     module = load_module()
     # correct=True, one claim has premise_support < 0.3 (unsupported)
     claim_results = [
-        {"claim_id": "cl1", "is_final": False, "premise_support": 0.1, "missing_clause_ids": ["p1"]},
+        {
+            "claim_id": "cl1",
+            "is_final": False,
+            "premise_support": 0.1,
+            "missing_clause_ids": ["p1"],
+        },
         {"claim_id": "cl2", "is_final": False, "premise_support": 0.9, "missing_clause_ids": []},
-        {"claim_id": "final_answer", "is_final": True, "premise_support": 1.0, "missing_clause_ids": []},
+        {
+            "claim_id": "final_answer",
+            "is_final": True,
+            "premise_support": 1.0,
+            "missing_clause_ids": [],
+        },
     ]
     label = module.classify_reasoning(
         is_correct=True,
@@ -186,7 +199,9 @@ def test_classify_reasoning_right_answer_wrong_process():
         is_repair=False,
         prior_correct=False,
     )
-    assert label == "right_answer_wrong_process", f"Expected right_answer_wrong_process, got {label!r}"
+    assert label == "right_answer_wrong_process", (
+        f"Expected right_answer_wrong_process, got {label!r}"
+    )
 
 
 def test_classify_reasoning_wrong_answer_partially_sound():
@@ -196,7 +211,12 @@ def test_classify_reasoning_wrong_answer_partially_sound():
         {"claim_id": "cl1", "is_final": False, "premise_support": 0.9, "missing_clause_ids": []},
         {"claim_id": "cl2", "is_final": False, "premise_support": 0.8, "missing_clause_ids": []},
         {"claim_id": "cl3", "is_final": False, "premise_support": 0.7, "missing_clause_ids": []},
-        {"claim_id": "final_answer", "is_final": True, "premise_support": 0.0, "missing_clause_ids": []},
+        {
+            "claim_id": "final_answer",
+            "is_final": True,
+            "premise_support": 0.0,
+            "missing_clause_ids": [],
+        },
     ]
     label = module.classify_reasoning(
         is_correct=False,
@@ -212,8 +232,18 @@ def test_classify_reasoning_unsupported_step():
     """REQ-VERIFY-060: wrong answer with unsupported step → unsupported_step."""
     module = load_module()
     claim_results = [
-        {"claim_id": "cl1", "is_final": False, "premise_support": 0.1, "missing_clause_ids": ["p1"]},
-        {"claim_id": "cl2", "is_final": False, "premise_support": 0.2, "missing_clause_ids": ["p2"]},
+        {
+            "claim_id": "cl1",
+            "is_final": False,
+            "premise_support": 0.1,
+            "missing_clause_ids": ["p1"],
+        },
+        {
+            "claim_id": "cl2",
+            "is_final": False,
+            "premise_support": 0.2,
+            "missing_clause_ids": ["p2"],
+        },
     ]
     label = module.classify_reasoning(
         is_correct=False,
@@ -246,7 +276,12 @@ def test_classify_reasoning_repair_fixed_outcome_only():
     """REQ-VERIFY-060: repair iteration that fixed outcome but not process."""
     module = load_module()
     claim_results = [
-        {"claim_id": "cl1", "is_final": False, "premise_support": 0.1, "missing_clause_ids": ["p1"]},
+        {
+            "claim_id": "cl1",
+            "is_final": False,
+            "premise_support": 0.1,
+            "missing_clause_ids": ["p1"],
+        },
     ]
     label = module.classify_reasoning(
         is_correct=True,
@@ -364,6 +399,4 @@ def test_summary_artifact_shape():
     }
     lc = summary["label_counts"]
     for label in required_labels:
-        assert label in lc and lc[label] > 0, (
-            f"Summary label_counts missing or zero for {label!r}"
-        )
+        assert label in lc and lc[label] > 0, f"Summary label_counts missing or zero for {label!r}"

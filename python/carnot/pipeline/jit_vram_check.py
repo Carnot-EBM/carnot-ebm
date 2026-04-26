@@ -31,7 +31,7 @@ from __future__ import annotations
 import logging
 import time
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from typing import Any
 
 _log = logging.getLogger(__name__)
 
@@ -122,7 +122,7 @@ class JITVRAMCheck:
             pynvml.nvmlInit()
             handle = pynvml.nvmlDeviceGetHandleByIndex(self.device_id)
             info = pynvml.nvmlDeviceGetMemoryInfo(handle)
-            return info.free / (1024 ** 3)
+            return info.free / (1024**3)
         except ImportError:
             # CI stub path: no GPU hardware in CI — assume full VRAM available.
             _log.debug(
@@ -175,7 +175,10 @@ class JITVRAMCheck:
         available = self.get_available_gb()
         _log.info(
             "JITVRAMCheck[attempt=1]: model=%r device=%d available=%.2f GB required=%.2f GB",
-            model_id, self.device_id, available, required_gb,
+            model_id,
+            self.device_id,
+            available,
+            required_gb,
         )
 
         if available >= required_gb:
@@ -193,7 +196,9 @@ class JITVRAMCheck:
         _log.warning(
             "JITVRAMCheck[attempt=1]: INSUFFICIENT — %.2f GB free, need %.2f GB; "
             "waiting %.0f s before retry",
-            available, required_gb, retry_wait_s,
+            available,
+            required_gb,
+            retry_wait_s,
         )
         time.sleep(retry_wait_s)
 
@@ -201,14 +206,18 @@ class JITVRAMCheck:
         available = self.get_available_gb()
         _log.info(
             "JITVRAMCheck[attempt=2]: model=%r device=%d available=%.2f GB required=%.2f GB",
-            model_id, self.device_id, available, required_gb,
+            model_id,
+            self.device_id,
+            available,
+            required_gb,
         )
         is_cleared = available >= required_gb
         if not is_cleared:
             _log.warning(
                 "JITVRAMCheck[attempt=2]: STILL INSUFFICIENT — %.2f GB free, need %.2f GB; "
                 "model load will be aborted",
-                available, required_gb,
+                available,
+                required_gb,
             )
 
         return JITVRAMResult(
@@ -223,8 +232,8 @@ class JITVRAMCheck:
 
     def sequential_load_gate(
         self,
-        model_specs: List[Dict[str, Any]],
-    ) -> List[JITVRAMResult]:
+        model_specs: list[dict[str, Any]],
+    ) -> list[JITVRAMResult]:
         """Gate a list of model loads sequentially.
 
         For each entry in model_specs, calls gate_model_load(model_id, required_gb).
@@ -245,7 +254,7 @@ class JITVRAMCheck:
 
         Spec: REQ-INFRA-064
         """
-        results: List[JITVRAMResult] = []
+        results: list[JITVRAMResult] = []
         for spec in model_specs:
             result = self.gate_model_load(
                 model_id=spec["model_id"],

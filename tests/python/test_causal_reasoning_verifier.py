@@ -61,7 +61,9 @@ class TestExtractNumericConclusion:
 
     def test_returns_last_number(self, verifier: CausalReasoningVerifier) -> None:
         # SCENARIO-VERIFY-183 basis: step concludes with 75
-        result = verifier._extract_numeric_conclusion("We have 47 apples plus 28 more, so total is 75")
+        result = verifier._extract_numeric_conclusion(
+            "We have 47 apples plus 28 more, so total is 75"
+        )
         assert result == 75.0
 
     def test_returns_none_for_no_numbers(self, verifier: CausalReasoningVerifier) -> None:
@@ -210,7 +212,9 @@ class TestVerifyResponse:
         results = verifier.verify_response(response)
         assert len(results) >= 1
         # At least one pair should detect a break or arithmetic issue
-        assert any(r.causal_violation for r in results) or all(not r.causal_violation for r in results)
+        assert any(r.causal_violation for r in results) or all(
+            not r.causal_violation for r in results
+        )
 
     def test_step_indices_correct(self, verifier: CausalReasoningVerifier) -> None:
         response = "Step one gives 10.\nStep two gives 20.\nStep three gives 30."
@@ -268,6 +272,7 @@ class TestExports:
 
     def test_pipeline_exports(self) -> None:
         from carnot.pipeline import CausalEntailmentResult as CER, CausalReasoningVerifier as CRV
+
         assert CER is CausalEntailmentResult
         assert CRV is CausalReasoningVerifier
 
@@ -280,6 +285,7 @@ class TestExports:
     def test_llm_extractor_accepted(self) -> None:
         # llm_extractor can be passed (it is stored but not used in regex mode)
         from carnot.extraction.llm_extractor_v1 import LLMAsExtractorV1
+
         symcode = SymCodeVerifier()
         extractor = LLMAsExtractorV1(llm_caller=None, tolerance=0.01)
         v = CausalReasoningVerifier(symcode, llm_extractor=extractor)

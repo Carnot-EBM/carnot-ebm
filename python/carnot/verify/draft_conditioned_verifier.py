@@ -43,7 +43,6 @@ from __future__ import annotations
 import re
 from typing import Any
 
-
 # ---------------------------------------------------------------------------
 # Utility: does draft structurally agree with response?
 # ---------------------------------------------------------------------------
@@ -72,6 +71,7 @@ def draft_differs_from_response(draft: str, response: str) -> bool:
 
     Spec: REQ-TIER2-010
     """
+
     def _extract_last_number(text: str) -> float | None:
         nums = re.findall(r"-?\d+(?:\.\d+)?", text)
         if not nums:

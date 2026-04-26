@@ -35,7 +35,6 @@ from __future__ import annotations
 import ast
 import re
 from dataclasses import dataclass, field
-from typing import Optional
 
 
 @dataclass
@@ -97,6 +96,7 @@ class CoACEResult:
 # _safe_eval — sandboxed arithmetic evaluator
 # ---------------------------------------------------------------------------
 
+
 def _build_allowed_nodes() -> tuple:
     """Build the whitelist of allowed AST node types at import time.
 
@@ -127,7 +127,7 @@ def _build_allowed_nodes() -> tuple:
 _ALLOWED_NODES = _build_allowed_nodes()
 
 
-def _safe_eval(expr: str) -> Optional[float]:
+def _safe_eval(expr: str) -> float | None:
     """Evaluate an arithmetic expression string, returning None if unsafe or invalid.
 
     Why this exists: Python's eval() runs arbitrary code.  We must guarantee that
@@ -193,9 +193,7 @@ _EQ_PATTERNS = [
 
 # Also match prose like 'add 47 and 28' then find a conclusion number.
 # Simpler pattern: capture 'N op N [op N]* = M' with or without spaces.
-_COMPACT_EQ = re.compile(
-    r"(\d+(?:\.\d+)?)\s*([+\-*/])\s*(\d+(?:\.\d+)?)\s*=\s*(\d+(?:\.\d+)?)"
-)
+_COMPACT_EQ = re.compile(r"(\d+(?:\.\d+)?)\s*([+\-*/])\s*(\d+(?:\.\d+)?)\s*=\s*(\d+(?:\.\d+)?)")
 
 
 def _parse_arithmetic_equations(text: str) -> list[ArithmeticEquation]:

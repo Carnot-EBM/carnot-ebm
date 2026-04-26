@@ -43,6 +43,10 @@ import argparse
 import ast
 import os
 import sys
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import random
 
 # Ensure the python package is importable when running from the repo root.
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
@@ -81,7 +85,7 @@ def _parse_test_pair(raw: str) -> tuple[tuple, object]:
         )
 
     input_str = raw[:colon_idx].strip()
-    expected_str = raw[colon_idx + 1:].strip()
+    expected_str = raw[colon_idx + 1 :].strip()
 
     try:
         input_val = ast.literal_eval(input_str)
@@ -125,7 +129,7 @@ def _find_separator_colon(s: str) -> int:
     for i in range(len(s) - 1, 0, -1):
         if s[i] == ":":
             left = s[:i].strip()
-            right = s[i + 1:].strip()
+            right = s[i + 1 :].strip()
             if not left or not right:
                 continue
             try:
@@ -165,9 +169,7 @@ def _resolve_type(name: str) -> type:
     """
     t = _TYPE_MAP.get(name)
     if t is None:
-        raise ValueError(
-            f"Unknown type {name!r}. Supported: {', '.join(sorted(_TYPE_MAP))}"
-        )
+        raise ValueError(f"Unknown type {name!r}. Supported: {', '.join(sorted(_TYPE_MAP))}")
     return t
 
 
@@ -196,7 +198,6 @@ def _build_default_properties(func_name: str) -> list[dict]:
     Returns:
         List of property dicts suitable for ``property_test()``.
     """
-    import random
 
     def gen_single_int(rng: random.Random) -> tuple:
         return (rng.randint(-100, 100),)
@@ -235,8 +236,11 @@ def cmd_verify(args: argparse.Namespace) -> int:
     Returns:
         Exit code: 0 = verified, 1 = violations found.
     """
+    from carnot.verify.property_test import (
+        format_violations_for_llm,
+        property_test,
+    )
     from carnot.verify.python_types import build_code_energy, code_to_embedding, safe_exec_function
-    from carnot.verify.property_test import PropertyTestConstraint, property_test, format_violations_for_llm
 
     # --- Read source file ---
     file_path = args.file
@@ -275,20 +279,22 @@ def cmd_verify(args: argparse.Namespace) -> int:
 
     # --- Structural verification (type + exception + test-pass) ---
     energy_fn = build_code_energy(
-        code, func_name, test_cases, expected_type=expected_type,
+        code,
+        func_name,
+        test_cases,
+        expected_type=expected_type,
     )
     embedding = code_to_embedding(code)
     result = energy_fn.verify(embedding)
 
     # --- Individual test case results ---
-    print(f"\n--- Structural Tests ---")
-    all_passed = True
-    for i, (input_args, expected) in enumerate(test_cases):
+    print("\n--- Structural Tests ---")
+    for _i, (input_args, expected) in enumerate(test_cases):
         actual, error = safe_exec_function(code, func_name, input_args)
         passed = error is None and actual == expected
         icon = "PASS" if passed else "FAIL"
         if not passed:
-            all_passed = False
+            pass
         detail = ""
         if error is not None:
             detail = f" (error: {error})"
@@ -297,7 +303,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
         print(f"  [{icon}] {func_name}{input_args} == {expected!r}{detail}")
 
     # --- Per-constraint energy breakdown ---
-    print(f"\n--- Energy Breakdown ---")
+    print("\n--- Energy Breakdown ---")
     for report in result.constraints:
         icon = "OK" if report.satisfied else "!!"
         print(
@@ -312,7 +318,9 @@ def cmd_verify(args: argparse.Namespace) -> int:
         print(f"\n--- Property-Based Tests ({args.prop_samples} samples) ---")
         properties = _build_default_properties(func_name)
         prop_result = property_test(
-            code, func_name, properties,
+            code,
+            func_name,
+            properties,
             n_samples=args.prop_samples,
             seed=args.prop_seed,
         )
@@ -332,20 +340,20 @@ def cmd_verify(args: argparse.Namespace) -> int:
     if prop_result and prop_result.n_failed > 0:
         has_violations = True
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"  Total energy: {float(result.total_energy):.4f}")
 
     if has_violations:
         failing = result.verdict.failing
         if prop_result and prop_result.n_failed > 0:
             failing = [*failing, "property_tests"]
-        print(f"  Verdict:      FAIL")
+        print("  Verdict:      FAIL")
         print(f"  Violations:   {', '.join(failing)}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
         return 1
     else:
-        print(f"  Verdict:      PASS")
-        print(f"{'='*60}")
+        print("  Verdict:      PASS")
+        print(f"{'=' * 60}")
         return 0
 
 

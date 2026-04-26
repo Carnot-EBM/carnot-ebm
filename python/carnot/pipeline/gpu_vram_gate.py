@@ -52,7 +52,6 @@ import os
 import signal
 import time
 from dataclasses import dataclass
-from typing import List
 
 _log = logging.getLogger(__name__)
 
@@ -224,7 +223,9 @@ class GPUVRAMGate:
                 utilization_pct=util.gpu,
             )
         except Exception as exc:  # pynvml absent, index invalid, etc.
-            _log.debug("check_vram(%d) unavailable: %s — returning synthetic healthy", gpu_index, exc)
+            _log.debug(
+                "check_vram(%d) unavailable: %s — returning synthetic healthy", gpu_index, exc
+            )
             # Return a synthetic 'unlimited free' status so the gate is a no-op.
             return VRAMStatus(
                 gpu_index=gpu_index,
@@ -273,7 +274,11 @@ class GPUVRAMGate:
 
         for proc in procs:
             pid = proc.pid
-            vram_mb = getattr(proc, "usedGpuMemory", 0) // (1024 * 1024) if hasattr(proc, "usedGpuMemory") else 0
+            vram_mb = (
+                getattr(proc, "usedGpuMemory", 0) // (1024 * 1024)
+                if hasattr(proc, "usedGpuMemory")
+                else 0
+            )
             if vram_mb < 100:
                 # Too small to matter — skip (avoids killing system processes with tiny VRAM)
                 continue
@@ -290,7 +295,11 @@ class GPUVRAMGate:
                     if age_s > 60 and (cpu_times.user + cpu_times.system) < 0.1:
                         _log.warning(
                             "kill_zombies: killing GPU %d PID %d (VRAM %d MB, age %.0fs, CPU %.2fs)",
-                            gpu_index, pid, vram_mb, age_s, cpu_times.user + cpu_times.system,
+                            gpu_index,
+                            pid,
+                            vram_mb,
+                            age_s,
+                            cpu_times.user + cpu_times.system,
                         )
                         os.kill(pid, signal.SIGKILL)
                         killed += 1
@@ -313,9 +322,9 @@ class GPUVRAMGate:
 
         if killed:
             _log.warning(
-                "kill_zombies: killed %d zombie process(es) on GPU %d; "
-                "waiting for VRAM reclaim…",
-                killed, gpu_index,
+                "kill_zombies: killed %d zombie process(es) on GPU %d; waiting for VRAM reclaim…",
+                killed,
+                gpu_index,
             )
         return killed
 
@@ -355,7 +364,9 @@ class GPUVRAMGate:
             if status.free_gb >= self.min_free_gb:
                 _log.info(
                     "wait_for_vram: GPU %d has %.2f GB free (threshold %.2f GB) — proceeding",
-                    gpu_index, status.free_gb, self.min_free_gb,
+                    gpu_index,
+                    status.free_gb,
+                    self.min_free_gb,
                 )
                 return True
 
@@ -364,14 +375,20 @@ class GPUVRAMGate:
                 _log.warning(
                     "wait_for_vram: GPU %d still only %.2f GB free after %ds wait "
                     "(threshold %.2f GB) — deferring experiment",
-                    gpu_index, status.free_gb, self.wait_seconds, self.min_free_gb,
+                    gpu_index,
+                    status.free_gb,
+                    self.wait_seconds,
+                    self.min_free_gb,
                 )
                 return False
 
             sleep_time = min(poll_interval, remaining)
             _log.debug(
                 "wait_for_vram: GPU %d free %.2f GB < %.2f GB, retrying in %.0fs",
-                gpu_index, status.free_gb, self.min_free_gb, sleep_time,
+                gpu_index,
+                status.free_gb,
+                self.min_free_gb,
+                sleep_time,
             )
             time.sleep(sleep_time)
 
@@ -393,7 +410,7 @@ class GPUVRAMGate:
     # Context manager
     # ------------------------------------------------------------------
 
-    def __enter__(self) -> "GPUVRAMGate":
+    def __enter__(self) -> GPUVRAMGate:
         """Run the VRAM gate for every detected GPU.
 
         Algorithm for each GPU index:
@@ -419,14 +436,18 @@ class GPUVRAMGate:
             if status.free_gb >= self.min_free_gb:
                 _log.info(
                     "GPUVRAMGate: GPU %d OK — %.2f GB free (>= %.2f GB threshold)",
-                    gpu_idx, status.free_gb, self.min_free_gb,
+                    gpu_idx,
+                    status.free_gb,
+                    self.min_free_gb,
                 )
                 continue
 
             _log.warning(
-                "GPUVRAMGate: GPU %d low VRAM — %.2f GB free < %.2f GB threshold; "
-                "auto_kill=%s",
-                gpu_idx, status.free_gb, self.min_free_gb, self.auto_kill,
+                "GPUVRAMGate: GPU %d low VRAM — %.2f GB free < %.2f GB threshold; auto_kill=%s",
+                gpu_idx,
+                status.free_gb,
+                self.min_free_gb,
+                self.auto_kill,
             )
 
             if self.auto_kill:

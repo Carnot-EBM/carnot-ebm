@@ -93,9 +93,7 @@ class TestExtractCoTSteps:
     def test_step_markers(self) -> None:
         """SCENARIO-EXTRACT-031: 'Step N:' boundaries split into three steps."""
         response = (
-            "Step 1: Calculate 5 + 3 = 8.\n"
-            "Step 2: Multiply by 2 = 16.\n"
-            "Step 3: The answer is 16."
+            "Step 1: Calculate 5 + 3 = 8.\nStep 2: Multiply by 2 = 16.\nStep 3: The answer is 16."
         )
         steps = extract_cot_steps(response)
         assert len(steps) == 3
@@ -115,9 +113,7 @@ class TestExtractCoTSteps:
     def test_discourse_markers(self) -> None:
         """Discourse markers (First, Then, Next, Finally) are step boundaries."""
         response = (
-            "First, compute 3 + 4 = 7.\n"
-            "Then, multiply 7 by 2 = 14.\n"
-            "Finally, the answer is 14."
+            "First, compute 3 + 4 = 7.\nThen, multiply 7 by 2 = 14.\nFinally, the answer is 14."
         )
         steps = extract_cot_steps(response)
         assert len(steps) == 3
@@ -147,8 +143,7 @@ class TestExtractCoTSteps:
     def test_backref_detection(self) -> None:
         """SCENARIO-EXTRACT-032: input_refs populated from 'from step N' text."""
         response = (
-            "Step 1: Calculate 5 + 5 = 10.\n"
-            "Step 2: From step 1, we have 10. Adding 3 gives 13."
+            "Step 1: Calculate 5 + 5 = 10.\nStep 2: From step 1, we have 10. Adding 3 gives 13."
         )
         steps = extract_cot_steps(response)
         assert steps[1].input_refs == [0]  # "step 1" → step_id=0
@@ -156,10 +151,7 @@ class TestExtractCoTSteps:
     def test_backref_out_of_range_ignored(self) -> None:
         """Back-reference to a future step is not stored in input_refs."""
         # "from step 5" when there are only 2 steps — forward ref must be ignored
-        response = (
-            "Step 1: Compute 4.\n"
-            "Step 2: From step 1, value is 4. Answer = 8."
-        )
+        response = "Step 1: Compute 4.\nStep 2: From step 1, value is 4. Answer = 8."
         steps = extract_cot_steps(response)
         # step 2 (idx=1) references step 1 (idx=0), which is valid
         assert 0 in steps[1].input_refs
@@ -179,9 +171,7 @@ class TestExtractCoTSteps:
     def test_multiple_backrefs_in_one_step(self) -> None:
         """A step can reference multiple prior steps."""
         response = (
-            "Step 1: value is 3.\n"
-            "Step 2: value is 7.\n"
-            "Step 3: From step 1 and step 2, sum = 10."
+            "Step 1: value is 3.\nStep 2: value is 7.\nStep 3: From step 1 and step 2, sum = 10."
         )
         steps = extract_cot_steps(response)
         assert 0 in steps[2].input_refs
@@ -189,10 +179,7 @@ class TestExtractCoTSteps:
 
     def test_duplicate_backrefs_deduplicated(self) -> None:
         """Duplicate back-references to the same step are deduplicated."""
-        response = (
-            "Step 1: compute 5.\n"
-            "Step 2: Using step 1 and step 1 again = 10."
-        )
+        response = "Step 1: compute 5.\nStep 2: Using step 1 and step 1 again = 10."
         steps = extract_cot_steps(response)
         assert steps[1].input_refs.count(0) == 1
 
@@ -403,9 +390,7 @@ class TestCoTCircuitVerifier:
     def test_verify_consistent_multistep(self) -> None:
         """SCENARIO-EXTRACT-035: consistent response → no violations."""
         response = (
-            "Step 1: We have 20 items.\n"
-            "Step 2: We remove 5, leaving 15.\n"
-            "Step 3: The answer is 15."
+            "Step 1: We have 20 items.\nStep 2: We remove 5, leaving 15.\nStep 3: The answer is 15."
         )
         verifier = CoTCircuitVerifier()
         circuit = verifier.verify(response)
@@ -414,10 +399,7 @@ class TestCoTCircuitVerifier:
     def test_verify_broken_link(self) -> None:
         """SCENARIO-EXTRACT-033: broken link is surfaced by verify()."""
         # Step 1 produces 10; step 2 claims it used 12 from step 1 (within 2x ratio)
-        response = (
-            "Step 1: Calculate 5 + 5 = 10.\n"
-            "Step 2: From step 1 (12), add 3 = 12."
-        )
+        response = "Step 1: Calculate 5 + 5 = 10.\nStep 2: From step 1 (12), add 3 = 12."
         verifier = CoTCircuitVerifier()
         circuit = verifier.verify(response)
         # May or may not flag depending on exact numeric parsing; test structure
@@ -446,10 +428,7 @@ class TestCoTCircuitVerifier:
         # We inject via verify() → build_circuit() path.
         verifier = CoTCircuitVerifier(tolerance=0.001)
         # A response where step 2 references step 1 with a slightly different value
-        response = (
-            "Step 1: Compute 10.0.\n"
-            "Step 2: From step 1 (value: 10.05) → result 10.05."
-        )
+        response = "Step 1: Compute 10.0.\nStep 2: From step 1 (value: 10.05) → result 10.05."
         results = verifier.extract("some question", response)
         # Results may be empty or not depending on parsing; verify type contract
         assert isinstance(results, list)
@@ -505,10 +484,7 @@ class TestCoTCircuitVerifier:
         verifier = CoTCircuitVerifier(tolerance=0.0)
         # Step 2 references step 1 which has output 10; step 2 has output 10.001
         # With tolerance=0.0, any difference triggers a broken link (if ratio is in range).
-        response = (
-            "Step 1: compute result 10.\n"
-            "Step 2: From step 1, use value 10.001 → 10.001."
-        )
+        response = "Step 1: compute result 10.\nStep 2: From step 1, use value 10.001 → 10.001."
         results = verifier.extract("q", response)
         for r in results:
             # description must mention step numbers

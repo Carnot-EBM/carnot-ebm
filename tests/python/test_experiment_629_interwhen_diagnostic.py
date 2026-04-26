@@ -159,6 +159,7 @@ def test_run_monitor_on_set_uses_fresh_monitor(monkeypatch: pytest.MonkeyPatch) 
     verifier = SymCodeVerifier(llm_caller=None)
     monitor = InterWhenMonitor(verifier)
     from carnot.pipeline.interwhen_monitor import InterWhenViolation
+
     monitor.violations_detected.append(InterWhenViolation(0, "old", True, 0.5))
     # Patch to detect nothing so the return values are deterministic.
     monkeypatch.setattr(InterWhenMonitor, "any_violation", lambda self, r: False)
@@ -174,9 +175,7 @@ def test_run_monitor_on_set_uses_fresh_monitor(monkeypatch: pytest.MonkeyPatch) 
 
 def _write_corpus(path: Path, n_incorrect: int, n_correct: int) -> None:
     """Write a minimal corpus JSON file with synthetic incorrect/correct pairs."""
-    pairs = [
-        {"response": f"wrong_{i}", "is_correct": False} for i in range(n_incorrect)
-    ] + [
+    pairs = [{"response": f"wrong_{i}", "is_correct": False} for i in range(n_incorrect)] + [
         {"response": f"right_{i}", "is_correct": True} for i in range(n_correct)
     ]
     path.write_text(json.dumps(pairs))

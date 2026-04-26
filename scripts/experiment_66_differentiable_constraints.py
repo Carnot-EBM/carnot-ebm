@@ -110,9 +110,52 @@ CONSTRAINT_NAMES = [
 ]
 
 _STOPWORDS = frozenset(
-    "a an the is are was were be been being have has had do does did "
-    "will would shall should may might can could of in to for on with "
-    "at by from it its this that these those and but or not no".split()
+    [
+        "a",
+        "an",
+        "the",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "being",
+        "have",
+        "has",
+        "had",
+        "do",
+        "does",
+        "did",
+        "will",
+        "would",
+        "shall",
+        "should",
+        "may",
+        "might",
+        "can",
+        "could",
+        "of",
+        "in",
+        "to",
+        "for",
+        "on",
+        "with",
+        "at",
+        "by",
+        "from",
+        "it",
+        "its",
+        "this",
+        "that",
+        "these",
+        "those",
+        "and",
+        "but",
+        "or",
+        "not",
+        "no",
+    ]
 )
 
 DOMAINS = ["arithmetic", "code", "logic", "factual", "scheduling"]
@@ -164,9 +207,7 @@ def _check_constraints(question: str, answer: str) -> list[bool]:
 
     # 5. has_explanation
     lower = answer.lower()
-    results.append(
-        any(kw in lower for kw in ("because", "since", "therefore", "so ", "thus"))
-    )
+    results.append(any(kw in lower for kw in ("because", "since", "therefore", "so ", "thus")))
 
     # 6. reasonable_length
     results.append(10 <= len(stripped) <= 500)
@@ -227,25 +268,33 @@ def _generate_multi_domain_dataset(
             a, b = int(rng.integers(2, 30)), int(rng.integers(2, 30))
             r = a * b
         q = f"What is {a} {op} {b}?"
-        dataset.append({
-            "domain": "arithmetic",
-            "question": q,
-            "answer": f"The answer is {r}. Because {a} {op} {b} equals {r}.",
-            "is_correct": True,
-        })
+        dataset.append(
+            {
+                "domain": "arithmetic",
+                "question": q,
+                "answer": f"The answer is {r}. Because {a} {op} {b} equals {r}.",
+                "is_correct": True,
+            }
+        )
         # Wrong: off by random amount
         wrong_r = r + int(rng.integers(1, 50))
-        dataset.append({
-            "domain": "arithmetic",
-            "question": q,
-            "answer": f"The answer is {wrong_r}. Because the calculation gives {wrong_r}.",
-            "is_correct": False,
-        })
+        dataset.append(
+            {
+                "domain": "arithmetic",
+                "question": q,
+                "answer": f"The answer is {wrong_r}. Because the calculation gives {wrong_r}.",
+                "is_correct": False,
+            }
+        )
 
     # --- Code ---
     code_tasks = [
         ("reverse a string", "def reverse_string(s):\n    return s[::-1].", True),
-        ("compute factorial", "def factorial(n):\n    return 1 if n <= 1 else n * factorial(n-1).", True),
+        (
+            "compute factorial",
+            "def factorial(n):\n    return 1 if n <= 1 else n * factorial(n-1).",
+            True,
+        ),
         ("find maximum", "def find_max(lst):\n    return max(lst).", True),
         ("check palindrome", "def is_palindrome(s):\n    return s == s[::-1].", True),
         ("sum of list", "def sum_list(lst):\n    return sum(lst).", True),
@@ -253,24 +302,28 @@ def _generate_multi_domain_dataset(
     for i in range(n_each):
         task_name, code, _ = code_tasks[i % len(code_tasks)]
         q = f"Write a Python function to {task_name}."
-        dataset.append({
-            "domain": "code",
-            "question": q,
-            "answer": f"Here is the solution:\n```python\n{code}\n```\nThis works because it implements the required logic.",
-            "is_correct": True,
-        })
+        dataset.append(
+            {
+                "domain": "code",
+                "question": q,
+                "answer": f"Here is the solution:\n```python\n{code}\n```\nThis works because it implements the required logic.",
+                "is_correct": True,
+            }
+        )
         # Wrong: broken code or off-topic
         wrong_answers = [
             "def func():\n    pass",
             "The answer is 42.",
             f"def {task_name.replace(' ', '_')}():\n    return None  # TODO",
         ]
-        dataset.append({
-            "domain": "code",
-            "question": q,
-            "answer": wrong_answers[i % len(wrong_answers)],
-            "is_correct": False,
-        })
+        dataset.append(
+            {
+                "domain": "code",
+                "question": q,
+                "answer": wrong_answers[i % len(wrong_answers)],
+                "is_correct": False,
+            }
+        )
 
     # --- Logic ---
     logic_templates = [
@@ -278,23 +331,30 @@ def _generate_multi_domain_dataset(
         ("All cats are mammals. Tom is a cat. Is Tom a mammal?", "Yes", "No"),
         ("If A implies B, and A is true, then B must be?", "True", "False"),
         ("If X > 5 and X < 10, and X = 7, is the condition satisfied?", "Yes", "No"),
-        ("All birds can fly. Penguins are birds. Can penguins fly?",
-         "Based on the premises, yes. However the real-world premise is flawed.", "No"),
+        (
+            "All birds can fly. Penguins are birds. Can penguins fly?",
+            "Based on the premises, yes. However the real-world premise is flawed.",
+            "No",
+        ),
     ]
     for i in range(n_each):
         q, correct_a, wrong_a = logic_templates[i % len(logic_templates)]
-        dataset.append({
-            "domain": "logic",
-            "question": q,
-            "answer": f"{correct_a}. Because the logical chain of reasoning supports this conclusion.",
-            "is_correct": True,
-        })
-        dataset.append({
-            "domain": "logic",
-            "question": q,
-            "answer": f"{wrong_a}. Because the premises do not support this.",
-            "is_correct": False,
-        })
+        dataset.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "answer": f"{correct_a}. Because the logical chain of reasoning supports this conclusion.",
+                "is_correct": True,
+            }
+        )
+        dataset.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "answer": f"{wrong_a}. Because the premises do not support this.",
+                "is_correct": False,
+            }
+        )
 
     # --- Factual ---
     factual_pairs = [
@@ -306,18 +366,22 @@ def _generate_multi_domain_dataset(
     ]
     for i in range(n_each):
         q, correct_a, wrong_a = factual_pairs[i % len(factual_pairs)]
-        dataset.append({
-            "domain": "factual",
-            "question": q,
-            "answer": f"The answer is {correct_a}. This is a well-established fact.",
-            "is_correct": True,
-        })
-        dataset.append({
-            "domain": "factual",
-            "question": q,
-            "answer": f"The answer is {wrong_a}. This is what I recall.",
-            "is_correct": False,
-        })
+        dataset.append(
+            {
+                "domain": "factual",
+                "question": q,
+                "answer": f"The answer is {correct_a}. This is a well-established fact.",
+                "is_correct": True,
+            }
+        )
+        dataset.append(
+            {
+                "domain": "factual",
+                "question": q,
+                "answer": f"The answer is {wrong_a}. This is what I recall.",
+                "is_correct": False,
+            }
+        )
 
     # --- Scheduling ---
     for i in range(n_each):
@@ -326,22 +390,26 @@ def _generate_multi_domain_dataset(
         h3 = h2 + int(rng.integers(1, 3))
         q = (
             f"Meeting A is at {h1}:00-{h2}:00. "
-            f"Meeting B is at {h3}:00-{h3+1}:00. "
+            f"Meeting B is at {h3}:00-{h3 + 1}:00. "
             f"Is there a conflict?"
         )
-        dataset.append({
-            "domain": "scheduling",
-            "question": q,
-            "answer": f"No conflict. Meeting A ends at {h2}:00 and Meeting B starts at {h3}:00, so they don't overlap.",
-            "is_correct": True,
-        })
+        dataset.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "answer": f"No conflict. Meeting A ends at {h2}:00 and Meeting B starts at {h3}:00, so they don't overlap.",
+                "is_correct": True,
+            }
+        )
         # Wrong: claim conflict when there is none
-        dataset.append({
-            "domain": "scheduling",
-            "question": q,
-            "answer": f"Yes, there is a conflict because both meetings overlap at {h2}:00.",
-            "is_correct": False,
-        })
+        dataset.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "answer": f"Yes, there is a conflict because both meetings overlap at {h2}:00.",
+                "is_correct": False,
+            }
+        )
 
     # Shuffle deterministically
     indices = list(range(len(dataset)))
@@ -445,6 +513,7 @@ class DifferentiableVerifierParams:
         - mlp_w2: Weight matrix for second MLP layer, shape (hidden_dim, 1).
         - mlp_b2: Scalar bias for output layer.
     """
+
     def __init__(
         self,
         ising_biases: jax.Array,
@@ -464,9 +533,12 @@ class DifferentiableVerifierParams:
     def tree_flatten(self):
         """Flatten into a list of arrays (leaves) and auxiliary data."""
         children = (
-            self.ising_biases, self.ising_J,
-            self.mlp_w1, self.mlp_b1,
-            self.mlp_w2, self.mlp_b2,
+            self.ising_biases,
+            self.ising_J,
+            self.mlp_w1,
+            self.mlp_b1,
+            self.mlp_w2,
+            self.mlp_b2,
         )
         aux_data = None
         return children, aux_data
@@ -623,12 +695,14 @@ def differentiable_verifier_forward(
     ising_e_normalized = jnp.tanh(ising_e * 0.1)
 
     # Step 3: Concatenate all features.
-    features = jnp.concatenate([
-        embedding,                            # semantic meaning (384-dim)
-        constraint_vec,                       # raw constraint pass/fail (8-dim)
-        relaxed_spins,                        # relaxed spin states (8-dim)
-        ising_e_normalized.reshape(1),        # aggregate Ising energy (1-dim)
-    ])
+    features = jnp.concatenate(
+        [
+            embedding,  # semantic meaning (384-dim)
+            constraint_vec,  # raw constraint pass/fail (8-dim)
+            relaxed_spins,  # relaxed spin states (8-dim)
+            ising_e_normalized.reshape(1),  # aggregate Ising energy (1-dim)
+        ]
+    )
 
     # Step 4: 2-layer MLP with SiLU activation → sigmoid output.
     h = jax.nn.silu(features @ params.mlp_w1 + params.mlp_b1)
@@ -689,12 +763,14 @@ def embedding_only_forward(
         Scalar score in [0, 1].
     """
     zeros_spins = jnp.zeros(n_spins)
-    features = jnp.concatenate([
-        embedding,
-        zeros_spins,         # no constraint features
-        zeros_spins,         # no relaxed spins
-        jnp.zeros(1),       # no Ising energy
-    ])
+    features = jnp.concatenate(
+        [
+            embedding,
+            zeros_spins,  # no constraint features
+            zeros_spins,  # no relaxed spins
+            jnp.zeros(1),  # no Ising energy
+        ]
+    )
     h = jax.nn.silu(features @ params.mlp_w1 + params.mlp_b1)
     logit = (h @ params.mlp_w2 + params.mlp_b2).squeeze()
     return jax.nn.sigmoid(logit)
@@ -750,6 +826,7 @@ def batch_loss(
     Returns:
         Scalar mean BCE loss.
     """
+
     def single_loss(emb, cvec, label):
         score = differentiable_verifier_forward(params, emb, cvec, alpha)
         return bce_loss(score, label)
@@ -817,18 +894,20 @@ def train_verifier(
 
         # Track gradient norm for stability monitoring
         grad_leaves = jax.tree.leaves(grads)
-        grad_norm = float(jnp.sqrt(sum(jnp.sum(g ** 2) for g in grad_leaves)))
+        grad_norm = float(jnp.sqrt(sum(jnp.sum(g**2) for g in grad_leaves)))
         grad_norm_history.append(grad_norm)
 
         # Adam update
         t = epoch + 1
         m = jax.tree.map(lambda mi, gi: beta1 * mi + (1 - beta1) * gi, m, grads)
-        v = jax.tree.map(lambda vi, gi: beta2 * vi + (1 - beta2) * gi ** 2, v, grads)
-        m_hat = jax.tree.map(lambda mi: mi / (1 - beta1 ** t), m)
-        v_hat = jax.tree.map(lambda vi: vi / (1 - beta2 ** t), v)
+        v = jax.tree.map(lambda vi, gi: beta2 * vi + (1 - beta2) * gi**2, v, grads)
+        m_hat = jax.tree.map(lambda mi: mi / (1 - beta1**t), m)
+        v_hat = jax.tree.map(lambda vi: vi / (1 - beta2**t), v)
         params = jax.tree.map(
             lambda p, mh, vh: p - lr * mh / (jnp.sqrt(vh) + eps),
-            params, m_hat, v_hat,
+            params,
+            m_hat,
+            v_hat,
         )
 
         # Enforce symmetric, zero-diagonal on Ising J after update
@@ -875,6 +954,7 @@ def compute_auroc(scores: np.ndarray, labels: np.ndarray) -> float:
     """
     try:
         from sklearn.metrics import roc_auc_score
+
         return float(roc_auc_score(labels, scores))
     except ImportError:
         # Manual AUROC: sort by score descending, compute true/false positive rates.
@@ -936,15 +1016,11 @@ def evaluate_verifier(
     embed_scores = np.zeros(n)
 
     for i in range(n):
-        joint_scores[i] = float(differentiable_verifier_forward(
-            params, embeddings[i], constraint_vecs[i], alpha
-        ))
-        ising_scores[i] = float(ising_only_forward(
-            params, constraint_vecs[i], alpha
-        ))
-        embed_scores[i] = float(embedding_only_forward(
-            params, embeddings[i], n_spins
-        ))
+        joint_scores[i] = float(
+            differentiable_verifier_forward(params, embeddings[i], constraint_vecs[i], alpha)
+        )
+        ising_scores[i] = float(ising_only_forward(params, constraint_vecs[i], alpha))
+        embed_scores[i] = float(embedding_only_forward(params, embeddings[i], n_spins))
 
     # Overall AUROC
     auroc_joint = compute_auroc(joint_scores, labels)
@@ -1029,7 +1105,11 @@ def main() -> int:
     cvec_jax = jnp.array(constraint_vecs)
     labels_jax = jnp.array(labels)
 
-    train_emb, train_cvec, train_labels = emb_jax[train_idx], cvec_jax[train_idx], labels_jax[train_idx]
+    train_emb, train_cvec, train_labels = (
+        emb_jax[train_idx],
+        cvec_jax[train_idx],
+        labels_jax[train_idx],
+    )
     val_emb, val_cvec, val_labels = emb_jax[val_idx], cvec_jax[val_idx], labels_jax[val_idx]
     test_emb, test_cvec, test_labels = emb_jax[test_idx], cvec_jax[test_idx], labels_jax[test_idx]
 
@@ -1054,15 +1134,19 @@ def main() -> int:
         print(f"\n  --- LR = {lr} ---")
         key = jrandom.PRNGKey(int(lr * 1e6))
         params, loss_hist, grad_hist = train_verifier(
-            train_emb, train_cvec, train_labels,
-            lr=lr, n_epochs=n_epochs, key=key,
-            hidden_dim=64, alpha=10.0, verbose=True,
+            train_emb,
+            train_cvec,
+            train_labels,
+            lr=lr,
+            n_epochs=n_epochs,
+            key=key,
+            hidden_dim=64,
+            alpha=10.0,
+            verbose=True,
         )
 
         # Evaluate on validation set
-        val_eval = evaluate_verifier(
-            params, val_emb, val_cvec, np.array(val_labels), val_domains
-        )
+        val_eval = evaluate_verifier(params, val_emb, val_cvec, np.array(val_labels), val_domains)
         val_auroc = val_eval["auroc_joint"]
         print(f"  Val AUROC (joint): {val_auroc:.4f}")
         print(f"  Val AUROC (ising_only): {val_eval['auroc_ising_only']:.4f}")
@@ -1097,8 +1181,10 @@ def main() -> int:
 
     print(f"\n  Per-domain AUROC breakdown:")
     for domain, scores in test_eval["per_domain"].items():
-        print(f"    {domain:>12s}: joint={scores['joint']:.4f}  "
-              f"ising={scores['ising_only']:.4f}  embed={scores['embedding_only']:.4f}")
+        print(
+            f"    {domain:>12s}: joint={scores['joint']:.4f}  "
+            f"ising={scores['ising_only']:.4f}  embed={scores['embedding_only']:.4f}"
+        )
 
     # --- Gradient stability analysis ---
     grad_norms = np.array(best_grad_history)
@@ -1158,9 +1244,7 @@ def main() -> int:
         "gradient_stability": grad_stability,
         "training": {
             "final_loss": best_loss_history[-1] if best_loss_history else None,
-            "loss_history_sample": (
-                best_loss_history[::20] if best_loss_history else []
-            ),
+            "loss_history_sample": (best_loss_history[::20] if best_loss_history else []),
             "grad_norm_history_sample": (
                 [float(g) for g in best_grad_history[::20]] if best_grad_history else []
             ),
@@ -1174,9 +1258,9 @@ def main() -> int:
     print(f"\n  Results saved to {RESULTS_PATH}")
 
     # --- Verdict ---
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"EXPERIMENT 66 RESULTS ({elapsed:.0f}s)")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     joint_auroc = test_eval["auroc_joint"]
     ising_auroc = test_eval["auroc_ising_only"]
@@ -1192,7 +1276,9 @@ def main() -> int:
         print(f"  combining them yields better verification than either alone.")
         print(f"  This validates the differentiable verifier architecture for Phase 17.")
     elif joint_auroc > 0.5 + 0.05:
-        print(f"\n  VERDICT: Joint model achieves meaningful discrimination (>{joint_auroc:.2f} AUROC).")
+        print(
+            f"\n  VERDICT: Joint model achieves meaningful discrimination (>{joint_auroc:.2f} AUROC)."
+        )
         print(f"  The end-to-end differentiable pipeline works, though ablation")
         print(f"  differences are modest. Both components contribute signal.")
     else:
@@ -1214,7 +1300,7 @@ def main() -> int:
     print(f"\n  NOTE: This differentiable verifier is the FOUNDATION for Phase 17.")
     print(f"  Exp 86 will integrate it with LLM generation for gradient-guided repair.")
     print(f"  Exp 87 will benchmark it against discrete verification at scale.")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     return 0
 

@@ -89,13 +89,9 @@ class SynchronousIsingSampler:
         beta: float = 1.0,
     ) -> None:
         if couplings.shape != (n_spins, n_spins):
-            raise ValueError(
-                f"couplings must be ({n_spins}, {n_spins}), got {couplings.shape}"
-            )
+            raise ValueError(f"couplings must be ({n_spins}, {n_spins}), got {couplings.shape}")
         if biases.shape != (n_spins,):
-            raise ValueError(
-                f"biases must be ({n_spins},), got {biases.shape}"
-            )
+            raise ValueError(f"biases must be ({n_spins},), got {biases.shape}")
         self.n_spins = n_spins
         self.couplings = np.asarray(couplings, dtype=np.float64)
         self.biases = np.asarray(biases, dtype=np.float64)
@@ -228,7 +224,6 @@ class SynchronousIsingSampler:
 
         Spec: REQ-SAMPLE-037
         """
-        import jax
         import jax.random as jrandom
 
         from carnot.samplers.parallel_ising import AnnealingSchedule, ParallelIsingSampler
@@ -248,9 +243,7 @@ class SynchronousIsingSampler:
             n_warmup=0,
             n_samples=1,
             steps_per_sample=n_steps,
-            schedule=AnnealingSchedule(
-                beta_init=self.beta, beta_final=self.beta
-            ),
+            schedule=AnnealingSchedule(beta_init=self.beta, beta_final=self.beta),
             use_checkerboard=True,
         )
 

@@ -46,6 +46,7 @@ def _make_hf_api() -> Any:
     without importing huggingface_hub at module load time.
     """
     from huggingface_hub import HfApi  # type: ignore[import-untyped]
+
     return HfApi()
 
 
@@ -267,10 +268,13 @@ def run_experiment_304(
     }
     exp66_artifact: dict[str, Any] = {
         "upload_status": exp66_final_status,
-        "hf_url": upload_result["exp66_repo"] if exp66_artifact_status != "skipped_missing_safetensors" else None,
+        "hf_url": upload_result["exp66_repo"]
+        if exp66_artifact_status != "skipped_missing_safetensors"
+        else None,
         "safetensors": exp66_safetensors_str,
         "missing_note": (
-            None if exp66_artifact_status != "skipped_missing_safetensors"
+            None
+            if exp66_artifact_status != "skipped_missing_safetensors"
             else f"results/experiment_66_model.safetensors not found at {_EXP66_SAFETENSORS_PATH}"
         ),
     }

@@ -93,7 +93,7 @@ def _generate_arithmetic_questions(n: int) -> list[str]:
     questions = []
     for i in range(n):
         a = 10 + (i % 20)  # 10–29 (always >9, ensures carry check fires)
-        b = 3 + (i % 7)    # 3–9
+        b = 3 + (i % 7)  # 3–9
         correct = a * b
 
         if i % 2 == 0:
@@ -156,7 +156,9 @@ def _run_experiment() -> None:
         all_questions[i * N_QUESTIONS_PER_SESSION : (i + 1) * N_QUESTIONS_PER_SESSION]
         for i in range(N_SESSIONS)
     ]
-    print(f"[Exp {EXP_ID}] {N_SESSIONS} sessions × {N_QUESTIONS_PER_SESSION} questions = {len(all_questions)} total")
+    print(
+        f"[Exp {EXP_ID}] {N_SESSIONS} sessions × {N_QUESTIONS_PER_SESSION} questions = {len(all_questions)} total"
+    )
 
     # ------------------------------------------------------------------
     # Step 5: Session 1 (no prior memory)
@@ -174,8 +176,10 @@ def _run_experiment() -> None:
         f"n_templates_active={r0.n_templates_active}, "
         f"n_loaded_from_prior={r0.n_templates_loaded_from_prior}"
     )
-    print(f"  carry_check note: after {N_QUESTIONS_PER_SESSION} questions, "
-          f"carry_check should be active (obs={N_QUESTIONS_PER_SESSION} > min_freq=5)")
+    print(
+        f"  carry_check note: after {N_QUESTIONS_PER_SESSION} questions, "
+        f"carry_check should be active (obs={N_QUESTIONS_PER_SESSION} > min_freq=5)"
+    )
 
     # ------------------------------------------------------------------
     # Step 6: Session 2 (load Session 1 memory)
@@ -194,7 +198,9 @@ def _run_experiment() -> None:
         f"n_loaded_from_prior={r1.n_templates_loaded_from_prior}"
     )
     if r1.n_templates_loaded_from_prior > 0:
-        print(f"  CONFIRMED: {r1.n_templates_loaded_from_prior} template(s) pre-loaded from Session 1")
+        print(
+            f"  CONFIRMED: {r1.n_templates_loaded_from_prior} template(s) pre-loaded from Session 1"
+        )
     else:
         print("  WARNING: no templates loaded from Session 1 (carry_check may not have activated)")
 
@@ -225,7 +231,9 @@ def _run_experiment() -> None:
     if honest_verdict == "cross_session_improvement":
         print("  Result: cross-session relay reduced FP rate — Tier 2 memory confirmed working")
     elif honest_verdict == "no_improvement":
-        print("  Result: FP rate did not decrease — templates may not generate violations on this data")
+        print(
+            "  Result: FP rate did not decrease — templates may not generate violations on this data"
+        )
     else:
         print("  Result: insufficient_data (should not happen with 3 sessions)")
 

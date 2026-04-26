@@ -125,9 +125,7 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 def _load_jsonl(path: Path) -> list[dict[str, Any]]:
     return [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
+        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
     ]
 
 
@@ -149,12 +147,7 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def _model_slug(model_name: str) -> str:
     """Convert a model name to a safe filename slug."""
-    return (
-        model_name.lower()
-        .replace("/", "_")
-        .replace(".", "_")
-        .replace("-", "_")
-    )
+    return model_name.lower().replace("/", "_").replace(".", "_").replace("-", "_")
 
 
 # ---------------------------------------------------------------------------
@@ -358,10 +351,7 @@ def _build_record_from_exp241_semantic(
     if repair_outcome == "accepted" and final_response:
         accepted_repair = final_response
 
-    corpus_id = (
-        f"pvc252-241-gsm8k_semantic"
-        f"-{_model_slug(model)}-{case_id}"
-    )
+    corpus_id = f"pvc252-241-gsm8k_semantic-{_model_slug(model)}-{case_id}"
 
     return {
         "corpus_id": corpus_id,
@@ -452,10 +442,7 @@ def _build_record_from_exp241_code(
 
     # Code baseline_success means the official tests passed
     baseline_success = dec.get("baseline_success", False)
-    corpus_id = (
-        f"pvc252-241-humaneval_code"
-        f"-{_model_slug(model)}-{case_id}"
-    )
+    corpus_id = f"pvc252-241-humaneval_code-{_model_slug(model)}-{case_id}"
 
     return {
         "corpus_id": corpus_id,
@@ -538,10 +525,7 @@ def _build_record_from_exp235_baseline(
         confidence = None
 
     is_correct = case.get("correct", False)
-    corpus_id = (
-        f"pvc252-235-gsm8k_semantic"
-        f"-{_model_slug(model)}-{case_id}"
-    )
+    corpus_id = f"pvc252-235-gsm8k_semantic-{_model_slug(model)}-{case_id}"
 
     return {
         "corpus_id": corpus_id,
@@ -636,10 +620,7 @@ def _build_record_from_exp246_verify_only(
         else:
             process_label = "wrong_answer_partially_sound_process"
 
-    corpus_id = (
-        f"pvc252-246-gsm8k_semantic_vo"
-        f"-{_model_slug(model)}-{case_id}"
-    )
+    corpus_id = f"pvc252-246-gsm8k_semantic_vo-{_model_slug(model)}-{case_id}"
 
     return {
         "corpus_id": corpus_id,
@@ -728,10 +709,7 @@ def _build_record_from_exp238_direct(
     is_correct = official_passed
     process_label = "clean" if is_correct else "wrong_answer_wrong_process"
 
-    corpus_id = (
-        f"pvc252-238-humaneval_code"
-        f"-{_model_slug(model)}-{case_id}"
-    )
+    corpus_id = f"pvc252-238-humaneval_code-{_model_slug(model)}-{case_id}"
 
     return {
         "corpus_id": corpus_id,
@@ -806,7 +784,9 @@ def _build_record_from_exp250_code(
         "repair_improved_outcome_only": "repair_fixed_outcome_only",
         "repair_improved_process_and_outcome": "repair_fixed_process_and_outcome",
     }
-    process_label = _LABEL_MAP.get(process_label_raw, process_label_raw or "wrong_answer_partially_sound_process")
+    process_label = _LABEL_MAP.get(
+        process_label_raw, process_label_raw or "wrong_answer_partially_sound_process"
+    )
 
     # Verifier outcome from defect kinds
     defects = pf_baseline.get("defects", [])
@@ -824,8 +804,12 @@ def _build_record_from_exp250_code(
     violation_family = sorted({d.get("kind", "") for d in defects if d.get("kind")})
     # Filter to code-domain families
     code_families = {
-        "unsupported_step", "missing_premise_jump", "contradictory_intermediate",
-        "repair_stall", "syntax_error", "execution_error",
+        "unsupported_step",
+        "missing_premise_jump",
+        "contradictory_intermediate",
+        "repair_stall",
+        "syntax_error",
+        "execution_error",
     }
     violation_family = [f for f in violation_family if f in code_families]
 
@@ -850,10 +834,7 @@ def _build_record_from_exp250_code(
     else:
         confidence = None
 
-    corpus_id = (
-        f"pvc252-250-humaneval_code_pa"
-        f"-{_model_slug(model)}-{case_id}"
-    )
+    corpus_id = f"pvc252-250-humaneval_code_pa-{_model_slug(model)}-{case_id}"
 
     return {
         "corpus_id": corpus_id,
@@ -1014,15 +995,11 @@ def build_corpus(repo_root: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]
     for dec in payload_241.get("held_out_decisions", []):
         if dec.get("source_experiment") == 235:
             # Semantic case
-            row = _build_record_from_exp241_semantic(
-                dec, exp235_idx, exp248_idx, src_241, src_235
-            )
+            row = _build_record_from_exp241_semantic(dec, exp235_idx, exp248_idx, src_241, src_235)
             rows.append(row)
         elif dec.get("source_experiment") == 238:
             # Code case
-            row = _build_record_from_exp241_code(
-                dec, exp238_idx, src_241, src_238
-            )
+            row = _build_record_from_exp241_code(dec, exp238_idx, src_241, src_238)
             rows.append(row)
 
     # -----------------------------------------------------------------------
@@ -1060,9 +1037,7 @@ def build_corpus(repo_root: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]
             if key in held_out_ids_235:
                 # Already captured from Exp 241 with richer metadata — skip
                 continue
-            row = _build_record_from_exp235_baseline(
-                case, model, exp248_idx, src_235, pos
-            )
+            row = _build_record_from_exp235_baseline(case, model, exp248_idx, src_235, pos)
             rows.append(row)
 
     # -----------------------------------------------------------------------
@@ -1073,9 +1048,7 @@ def build_corpus(repo_root: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]
         ckpt_246 = _load_json(ckpt_246_path)
         model_246 = ckpt_246.get("model_name", "Qwen3.5-0.8B")
         rbc = ckpt_246.get("results_by_case", {})
-        for pos, (case_id, case) in enumerate(
-            sorted(rbc.items(), key=lambda kv: kv[0])
-        ):
+        for pos, (case_id, case) in enumerate(sorted(rbc.items(), key=lambda kv: kv[0])):
             row = _build_record_from_exp246_verify_only(
                 case_id, case, model_246, exp248_idx, src_246_qwen, pos
             )
@@ -1093,12 +1066,8 @@ def build_corpus(repo_root: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]
             continue
         ckpt_250 = _load_json(ckpt_250_path)
         rbc = ckpt_250.get("results_by_case", {})
-        for pos, (case_id, case) in enumerate(
-            sorted(rbc.items(), key=lambda kv: kv[0])
-        ):
-            row = _build_record_from_exp250_code(
-                case_id, case, model_250, str(src_250), pos
-            )
+        for pos, (case_id, case) in enumerate(sorted(rbc.items(), key=lambda kv: kv[0])):
+            row = _build_record_from_exp250_code(case_id, case, model_250, str(src_250), pos)
             rows.append(row)
 
     # -----------------------------------------------------------------------
@@ -1171,6 +1140,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

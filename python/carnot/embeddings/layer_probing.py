@@ -178,8 +178,11 @@ def train_layer_probe(
     ebm = GibbsModel(config, key=key)
 
     def get_p(m: GibbsModel) -> dict:
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m: GibbsModel, p: dict) -> None:
         m.layers = list(p["layers"])
@@ -267,21 +270,33 @@ def probe_all_layers(
         min_n = min(len(c), len(w))
 
         train_acc, test_acc, gap = train_layer_probe(
-            c, w, hidden_dim, n_epochs=n_epochs, lr=lr, seed=42 + layer_idx,
+            c,
+            w,
+            hidden_dim,
+            n_epochs=n_epochs,
+            lr=lr,
+            seed=42 + layer_idx,
         )
 
         split = int(min(len(c), len(w)) * 0.8)
-        results.append(LayerProbeResult(
-            layer_index=layer_idx,
-            train_accuracy=train_acc,
-            test_accuracy=test_acc,
-            energy_gap=gap,
-            n_train=split,
-            n_test=min_n - split,
-        ))
+        results.append(
+            LayerProbeResult(
+                layer_index=layer_idx,
+                train_accuracy=train_acc,
+                test_accuracy=test_acc,
+                energy_gap=gap,
+                n_train=split,
+                n_test=min_n - split,
+            )
+        )
 
-        logger.info("Layer %d: train=%.1f%%, test=%.1f%%, gap=%.4f",
-                     layer_idx, train_acc * 100, test_acc * 100, gap)
+        logger.info(
+            "Layer %d: train=%.1f%%, test=%.1f%%, gap=%.4f",
+            layer_idx,
+            train_acc * 100,
+            test_acc * 100,
+            gap,
+        )
 
     default = LayerProbeResult(0, 0.5, 0.5, 0.0, 0, 0)
     best = max(results, key=lambda r: r.test_accuracy) if results else default

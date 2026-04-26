@@ -129,6 +129,7 @@ class TestIsStatisticallyPositive:
 
     def test_consistent_with_wald_formula(self):
         import math
+
         z95 = 1.959963984540054
         r = _make(pre=0.60, post=0.80, n=200)
         se = math.sqrt(0.60 * 0.40 / 200 + 0.80 * 0.20 / 200)
@@ -173,9 +174,16 @@ class TestToDict:
         r = _make()
         d = r.to_dict()
         expected = {
-            "model_id", "pre_acc", "post_acc", "n", "extractor_name",
-            "inference_mode", "signed_improvement", "ci_95_wilson",
-            "is_statistically_positive", "cot_pairs_file",
+            "model_id",
+            "pre_acc",
+            "post_acc",
+            "n",
+            "extractor_name",
+            "inference_mode",
+            "signed_improvement",
+            "ci_95_wilson",
+            "is_statistically_positive",
+            "cot_pairs_file",
         }
         assert expected.issubset(d.keys())
 

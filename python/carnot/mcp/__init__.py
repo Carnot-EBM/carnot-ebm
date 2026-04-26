@@ -21,7 +21,7 @@ from __future__ import annotations
 __all__ = ["create_server"]
 
 
-def create_server() -> "FastMCP":
+def create_server() -> FastMCP:
     """Create and return the configured MCP server instance.
 
     **Detailed explanation for engineers:**

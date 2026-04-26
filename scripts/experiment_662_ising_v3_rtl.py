@@ -55,7 +55,7 @@ print(f"[env_autofix] result: {autofix_result}")
 from scripts.experiment_template import ExperimentTemplate  # noqa: E402
 
 RTL_DELIVERABLE = "hardware/kv260/ising_sampler_v3.v"
-TB_DELIVERABLE  = "hardware/kv260/ising_sampler_v3_tb.v"
+TB_DELIVERABLE = "hardware/kv260/ising_sampler_v3_tb.v"
 
 tmpl = ExperimentTemplate(
     exp_id=662,
@@ -71,20 +71,20 @@ tmpl.setup()
 # ---------------------------------------------------------------------------
 
 rtl_path = REPO_ROOT / RTL_DELIVERABLE
-tb_path  = REPO_ROOT / TB_DELIVERABLE
+tb_path = REPO_ROOT / TB_DELIVERABLE
 
 rtl_written = rtl_path.exists()
-tb_written  = tb_path.exists()
+tb_written = tb_path.exists()
 
-rtl_line_count    = len(rtl_path.read_text().splitlines()) if rtl_written else 0
-rtl_text          = rtl_path.read_text() if rtl_written else ""
+rtl_line_count = len(rtl_path.read_text().splitlines()) if rtl_written else 0
+rtl_text = rtl_path.read_text() if rtl_written else ""
 
 # These keyword checks verify the spec-mandated constructs are present in the RTL.
 # h_ema: the per-spin EMA register (REQ-HW-031-2)
-has_ema_register  = "h_ema" in rtl_text
+has_ema_register = "h_ema" in rtl_text
 
 # EMA_ALPHA: the parameterised alpha fraction numerator/denominator (REQ-HW-031-3)
-has_ema_update    = "EMA_ALPHA" in rtl_text
+has_ema_update = "EMA_ALPHA" in rtl_text
 
 print(f"[662] RTL file exists:        {rtl_written}")
 print(f"[662] Testbench file exists:  {tb_written}")
@@ -96,26 +96,22 @@ print(f"[662] has_ema_update:         {has_ema_update}")
 # Step 4: Build artifact JSON
 # ---------------------------------------------------------------------------
 
-honest_verdict = (
-    "ising_v3_rtl_complete"
-    if (rtl_written and tb_written)
-    else "ising_v3_rtl_partial"
-)
+honest_verdict = "ising_v3_rtl_complete" if (rtl_written and tb_written) else "ising_v3_rtl_partial"
 
 result_path = REPO_ROOT / "results" / "experiment_662_ising_v3_rtl.json"
 result_path.parent.mkdir(parents=True, exist_ok=True)
 
 artifact = tmpl.build_result(
     {
-        "schema":           "carnot.ising_v3_rtl.v1",
-        "rtl_written":      rtl_written,
-        "tb_written":       tb_written,
-        "rtl_path":         RTL_DELIVERABLE,
-        "rtl_line_count":   rtl_line_count,
+        "schema": "carnot.ising_v3_rtl.v1",
+        "rtl_written": rtl_written,
+        "tb_written": tb_written,
+        "rtl_path": RTL_DELIVERABLE,
+        "rtl_line_count": rtl_line_count,
         "has_ema_register": has_ema_register,
-        "has_ema_update":   has_ema_update,
+        "has_ema_update": has_ema_update,
         "vivado_available": False,
-        "honest_verdict":   honest_verdict,
+        "honest_verdict": honest_verdict,
     },
     status="success" if (rtl_written and tb_written) else "partial",
 )

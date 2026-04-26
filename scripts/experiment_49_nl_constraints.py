@@ -80,6 +80,7 @@ KNOWLEDGE_BASE: dict[str, dict] = {
 # Each pattern extractor takes a sentence and returns a list of extracted
 # claim dicts. Claims have a "claim_type" field and type-specific fields.
 
+
 def _normalize(text: str) -> str:
     """Lowercase and strip extra whitespace for pattern matching."""
     return re.sub(r"\s+", " ", text.strip().lower())
@@ -103,24 +104,28 @@ def extract_factual_is(sentence: str) -> list[dict]:
     # Pattern: "X is the Y of Z"
     m = re.match(r"^(.+?)\s+is\s+the\s+(.+?)\s+of\s+(.+?)\.?$", s)
     if m:
-        claims.append({
-            "claim_type": "factual_relation",
-            "subject": m.group(1).strip(),
-            "relation": m.group(2).strip(),
-            "object": m.group(3).strip(),
-            "raw": sentence.strip(),
-        })
+        claims.append(
+            {
+                "claim_type": "factual_relation",
+                "subject": m.group(1).strip(),
+                "relation": m.group(2).strip(),
+                "object": m.group(3).strip(),
+                "raw": sentence.strip(),
+            }
+        )
         return claims
 
     # Pattern: "X is/are Y"
     m = re.match(r"^(.+?)\s+(?:is|are)\s+(.+?)\.?$", s)
     if m:
-        claims.append({
-            "claim_type": "factual",
-            "subject": m.group(1).strip(),
-            "predicate": m.group(2).strip(),
-            "raw": sentence.strip(),
-        })
+        claims.append(
+            {
+                "claim_type": "factual",
+                "subject": m.group(1).strip(),
+                "predicate": m.group(2).strip(),
+                "raw": sentence.strip(),
+            }
+        )
     return claims
 
 
@@ -138,12 +143,14 @@ def extract_implication(sentence: str) -> list[dict]:
     # "if X, Y" or "if X then Y"
     m = re.match(r"^if\s+(.+?)(?:,\s*|\s+then\s+)(.+?)\.?$", s)
     if m:
-        return [{
-            "claim_type": "implication",
-            "antecedent": m.group(1).strip(),
-            "consequent": m.group(2).strip(),
-            "raw": sentence.strip(),
-        }]
+        return [
+            {
+                "claim_type": "implication",
+                "antecedent": m.group(1).strip(),
+                "consequent": m.group(2).strip(),
+                "raw": sentence.strip(),
+            }
+        ]
     return []
 
 
@@ -157,12 +164,14 @@ def extract_conjunction(sentence: str) -> list[dict]:
         right = m.group(2).strip()
         # Skip if it looks like a list item or part of a longer structure.
         if "," not in left and "if " not in left:
-            return [{
-                "claim_type": "conjunction",
-                "left": left,
-                "right": right,
-                "raw": sentence.strip(),
-            }]
+            return [
+                {
+                    "claim_type": "conjunction",
+                    "left": left,
+                    "right": right,
+                    "raw": sentence.strip(),
+                }
+            ]
     return []
 
 
@@ -171,12 +180,14 @@ def extract_disjunction(sentence: str) -> list[dict]:
     s = _normalize(sentence)
     m = re.match(r"^(.+?)\s+or\s+(.+?)\.?$", s)
     if m:
-        return [{
-            "claim_type": "disjunction",
-            "left": m.group(1).strip(),
-            "right": m.group(2).strip(),
-            "raw": sentence.strip(),
-        }]
+        return [
+            {
+                "claim_type": "disjunction",
+                "left": m.group(1).strip(),
+                "right": m.group(2).strip(),
+                "raw": sentence.strip(),
+            }
+        ]
     return []
 
 
@@ -185,12 +196,14 @@ def extract_exclusion(sentence: str) -> list[dict]:
     s = _normalize(sentence)
     m = re.match(r"^(.+?)\s+but\s+not\s+(.+?)\.?$", s)
     if m:
-        return [{
-            "claim_type": "exclusion",
-            "positive": m.group(1).strip(),
-            "negative": m.group(2).strip(),
-            "raw": sentence.strip(),
-        }]
+        return [
+            {
+                "claim_type": "exclusion",
+                "positive": m.group(1).strip(),
+                "negative": m.group(2).strip(),
+                "raw": sentence.strip(),
+            }
+        ]
     return []
 
 
@@ -199,12 +212,14 @@ def extract_negation(sentence: str) -> list[dict]:
     s = _normalize(sentence)
     m = re.match(r"^(.+?)\s+(?:cannot|can't|can not|do not|does not|don't|doesn't)\s+(.+?)\.?$", s)
     if m:
-        return [{
-            "claim_type": "negation",
-            "subject": m.group(1).strip(),
-            "predicate": m.group(2).strip(),
-            "raw": sentence.strip(),
-        }]
+        return [
+            {
+                "claim_type": "negation",
+                "subject": m.group(1).strip(),
+                "predicate": m.group(2).strip(),
+                "raw": sentence.strip(),
+            }
+        ]
     return []
 
 
@@ -221,21 +236,25 @@ def extract_universal(sentence: str) -> list[dict]:
     # "All X are/is Y" (e.g. "All mammals are warm-blooded")
     m = re.match(r"^all\s+(.+?)\s+(?:are|is)\s+(.+?)\.?$", s)
     if m:
-        return [{
-            "claim_type": "universal",
-            "category": m.group(1).strip(),
-            "property": m.group(2).strip(),
-            "raw": sentence.strip(),
-        }]
+        return [
+            {
+                "claim_type": "universal",
+                "category": m.group(1).strip(),
+                "property": m.group(2).strip(),
+                "raw": sentence.strip(),
+            }
+        ]
     # "All X verb" (e.g. "All birds fly") — no copula needed.
     m = re.match(r"^all\s+(.+?)\s+(\w+)\.?$", s)
     if m:
-        return [{
-            "claim_type": "universal",
-            "category": m.group(1).strip(),
-            "property": m.group(2).strip(),
-            "raw": sentence.strip(),
-        }]
+        return [
+            {
+                "claim_type": "universal",
+                "category": m.group(1).strip(),
+                "property": m.group(2).strip(),
+                "raw": sentence.strip(),
+            }
+        ]
     return []
 
 
@@ -281,6 +300,7 @@ def extract_claims(text: str) -> list[dict]:
 # ---------------------------------------------------------------------------
 # Stage 2: Cross-reference claims against the knowledge base
 # ---------------------------------------------------------------------------
+
 
 def _kb_lookup_relation(subject: str, relation: str, obj: str, kb: dict) -> str | None:
     """Look up a "subject is the relation of object" claim.
@@ -427,7 +447,10 @@ def text_to_constraints(text: str, knowledge_base: dict) -> list[dict]:
 # Stage 3: Ising-based logical consistency verification
 # ---------------------------------------------------------------------------
 
-def _build_ising_from_constraints(constraints: list[dict]) -> tuple[list[dict], dict[str, int], int]:
+
+def _build_ising_from_constraints(
+    constraints: list[dict],
+) -> tuple[list[dict], dict[str, int], int]:
     """Convert extracted constraints into Ising claims for the parallel sampler.
 
     **Detailed explanation for engineers:**
@@ -553,8 +576,12 @@ def _detect_contradictions(constraints: list[dict]) -> list[str]:
                     # they likely contradict. E.g. "on monday" vs "on tuesday".
                     words1 = p1.split()
                     words2 = p2.split()
-                    if (len(words1) >= 2 and len(words2) >= 2
-                            and words1[0] == words2[0] and words1[-1] != words2[-1]):
+                    if (
+                        len(words1) >= 2
+                        and len(words2) >= 2
+                        and words1[0] == words2[0]
+                        and words1[-1] != words2[-1]
+                    ):
                         contradictions.append(
                             f"Conflicting claims: '{claims_list[i]['raw']}' vs '{claims_list[j]['raw']}'"
                         )
@@ -610,7 +637,9 @@ def verify_text_constraints(constraints: list[dict]) -> dict:
                     J[j, i] += weights_list[k]
 
                 sampler = ParallelIsingSampler(
-                    n_warmup=500, n_samples=30, steps_per_sample=10,
+                    n_warmup=500,
+                    n_samples=30,
+                    steps_per_sample=10,
                     schedule=AnnealingSchedule(0.1, 8.0),
                     use_checkerboard=True,
                 )
@@ -658,6 +687,7 @@ def verify_text_constraints(constraints: list[dict]) -> dict:
 # ---------------------------------------------------------------------------
 # Test scenarios
 # ---------------------------------------------------------------------------
+
 
 def get_test_scenarios() -> list[dict]:
     """Test scenarios covering consistent and inconsistent free text.
@@ -723,16 +753,16 @@ def get_test_scenarios() -> list[dict]:
             "text": "All birds fly. Penguins are birds. Penguins cannot fly.",
             "expected_consistent": False,
             "reason": "Entailment: 'all birds fly' + 'penguins are birds' → 'penguins fly', "
-                     "but text also says 'penguins cannot fly'. KB confirms penguins cannot fly, "
-                     "so the universal 'all birds fly' leads to a derived contradiction.",
+            "but text also says 'penguins cannot fly'. KB confirms penguins cannot fly, "
+            "so the universal 'all birds fly' leads to a derived contradiction.",
         },
         {
             "name": "Contradictory meeting times",
             "text": "The meeting is on monday. The meeting is on tuesday.",
             "expected_consistent": False,
             "reason": "Same subject with two mutually exclusive predicates. "
-                     "Encoded as two factual assertions that the Ising sampler "
-                     "flags via contradiction detection.",
+            "Encoded as two factual assertions that the Ising sampler "
+            "flags via contradiction detection.",
         },
         {
             "name": "Wrong capital of Japan",
@@ -758,6 +788,7 @@ def get_test_scenarios() -> list[dict]:
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     print("=" * 70)
@@ -785,25 +816,31 @@ def main() -> int:
         exp_str = "consistent" if expected else "inconsistent"
 
         print(f"\n  [{icon}] {scenario['name']}")
-        print(f"      Text: \"{scenario['text'][:70]}{'...' if len(scenario['text']) > 70 else ''}\"")
-        print(f"      Claims extracted: {verdict['n_claims']} "
-              f"(KB true={verdict['kb_truths']}, false={verdict['kb_errors']}, "
-              f"unknown={verdict['kb_unknowns']})")
+        print(f'      Text: "{scenario["text"][:70]}{"..." if len(scenario["text"]) > 70 else ""}"')
+        print(
+            f"      Claims extracted: {verdict['n_claims']} "
+            f"(KB true={verdict['kb_truths']}, false={verdict['kb_errors']}, "
+            f"unknown={verdict['kb_unknowns']})"
+        )
         if verdict["contradictions"]:
             for c in verdict["contradictions"]:
                 print(f"      ⚡ {c}")
         if verdict["error_details"]:
             for e in verdict["error_details"]:
                 print(f"      ❌ Factual error: {e}")
-        print(f"      Verdict: {status} (expected {exp_str}) → {'✓ CORRECT' if correct else '✗ WRONG'}")
+        print(
+            f"      Verdict: {status} (expected {exp_str}) → {'✓ CORRECT' if correct else '✗ WRONG'}"
+        )
 
-        results.append({
-            "name": scenario["name"],
-            "expected": expected,
-            "actual": actual,
-            "correct": correct,
-            "verdict": verdict,
-        })
+        results.append(
+            {
+                "name": scenario["name"],
+                "expected": expected,
+                "actual": actual,
+                "correct": correct,
+                "verdict": verdict,
+            }
+        )
 
     # --- Summary ---
     elapsed = time.time() - start
@@ -841,8 +878,7 @@ def main() -> int:
     all_types = set()
     for r in results:
         for c in text_to_constraints(
-            next(s["text"] for s in scenarios if s["name"] == r["name"]),
-            KNOWLEDGE_BASE
+            next(s["text"] for s in scenarios if s["name"] == r["name"]), KNOWLEDGE_BASE
         ):
             all_types.add(c["claim_type"])
     for ct in sorted(all_types):

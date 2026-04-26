@@ -185,7 +185,9 @@ def main() -> None:
                 "schema": "carnot.env_autofix_fix.v1",
                 "retro_053_resolved": all_passed,
                 "override_applied_verified": all_passed,
-                "honest_verdict": "retro_053_closed" if all_passed else "retro_053_verification_failed",
+                "honest_verdict": "retro_053_closed"
+                if all_passed
+                else "retro_053_verification_failed",
                 "verification": verification,
             },
             status=status,

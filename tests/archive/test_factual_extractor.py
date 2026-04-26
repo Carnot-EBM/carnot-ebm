@@ -11,12 +11,11 @@ Spec: REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-002
 
 from __future__ import annotations
 
-import sys
 from unittest.mock import MagicMock, patch
 
 import jax.numpy as jnp
 import pytest
-
+from carnot.pipeline.extract import AutoExtractor
 from carnot.pipeline.factual_extractor import (
     _CLAIM_CACHE,
     _QID_CACHE,
@@ -27,8 +26,6 @@ from carnot.pipeline.factual_extractor import (
     extract_claims,
     extract_entities,
 )
-from carnot.pipeline.extract import AutoExtractor, ConstraintResult
-
 
 # ---------------------------------------------------------------------------
 # Helpers: reset module-level caches before each test class
@@ -216,8 +213,7 @@ class TestExtractClaims:
         claims = extract_claims("Paris is the capital of France.")
         # subject=France, predicate=capital, object=Paris
         assert any(
-            s.lower() == "france" and p == "capital" and "paris" in o.lower()
-            for s, p, o in claims
+            s.lower() == "france" and p == "capital" and "paris" in o.lower() for s, p, o in claims
         )
 
     def test_capital_of_pattern(self) -> None:
@@ -232,8 +228,7 @@ class TestExtractClaims:
         """'X was born in Y' → (X, born in, Y)."""
         claims = extract_claims("Albert Einstein was born in Ulm.")
         assert any(
-            "einstein" in s.lower() and p == "born in" and "ulm" in o.lower()
-            for s, p, o in claims
+            "einstein" in s.lower() and p == "born in" and "ulm" in o.lower() for s, p, o in claims
         )
 
     def test_located_in_pattern(self) -> None:
@@ -283,10 +278,7 @@ class TestExtractClaims:
 
     def test_multi_sentence_text(self) -> None:
         """Multiple sentences can each contribute claims."""
-        text = (
-            "Paris is the capital of France. "
-            "Albert Einstein was born in Ulm."
-        )
+        text = "Paris is the capital of France. Albert Einstein was born in Ulm."
         claims = extract_claims(text)
         assert len(claims) >= 2
 
@@ -302,9 +294,7 @@ class TestResolveQid:
     def test_returns_qid_on_success(self) -> None:
         """Returns QID string when Wikidata API responds successfully."""
         mock_resp = MagicMock()
-        mock_resp.json.return_value = {
-            "search": [{"id": "Q142", "label": "France"}]
-        }
+        mock_resp.json.return_value = {"search": [{"id": "Q142", "label": "France"}]}
         mock_resp.raise_for_status = MagicMock()
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
@@ -396,13 +386,7 @@ class TestVerifyClaimSparql:
         """Returns True when SPARQL result label contains the object text."""
         mock_resp = MagicMock()
         mock_resp.raise_for_status = MagicMock()
-        mock_resp.json.return_value = {
-            "results": {
-                "bindings": [
-                    {"objLabel": {"value": "Paris"}}
-                ]
-            }
-        }
+        mock_resp.json.return_value = {"results": {"bindings": [{"objLabel": {"value": "Paris"}}]}}
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
             mock_requests.get.return_value = mock_resp
@@ -414,13 +398,7 @@ class TestVerifyClaimSparql:
         """Returns False when SPARQL returns labels but none match object text."""
         mock_resp = MagicMock()
         mock_resp.raise_for_status = MagicMock()
-        mock_resp.json.return_value = {
-            "results": {
-                "bindings": [
-                    {"objLabel": {"value": "Berlin"}}
-                ]
-            }
-        }
+        mock_resp.json.return_value = {"results": {"bindings": [{"objLabel": {"value": "Berlin"}}]}}
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
             mock_requests.get.return_value = mock_resp
@@ -466,9 +444,7 @@ class TestVerifyClaimSparql:
         """Verified result is cached; second call skips network."""
         mock_resp = MagicMock()
         mock_resp.raise_for_status = MagicMock()
-        mock_resp.json.return_value = {
-            "results": {"bindings": [{"objLabel": {"value": "Paris"}}]}
-        }
+        mock_resp.json.return_value = {"results": {"bindings": [{"objLabel": {"value": "Paris"}}]}}
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
             mock_requests.get.return_value = mock_resp
@@ -484,9 +460,7 @@ class TestVerifyClaimSparql:
         mock_resp = MagicMock()
         mock_resp.raise_for_status = MagicMock()
         mock_resp.json.return_value = {
-            "results": {
-                "bindings": [{"objLabel": {"value": "Greater Paris Metropolitan Area"}}]
-            }
+            "results": {"bindings": [{"objLabel": {"value": "Greater Paris Metropolitan Area"}}]}
         }
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
@@ -521,9 +495,7 @@ class TestFactualExtractorExtract:
         """Return a mock requests.Response for a successful SPARQL query."""
         r = MagicMock()
         r.raise_for_status = MagicMock()
-        r.json.return_value = {
-            "results": {"bindings": [{"objLabel": {"value": label}}]}
-        }
+        r.json.return_value = {"results": {"bindings": [{"objLabel": {"value": label}}]}}
         return r
 
     def test_domain_guard_skips_non_factual(self) -> None:
@@ -554,9 +526,7 @@ class TestFactualExtractorExtract:
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
             mock_requests.get.side_effect = [qid_resp, sparql_resp]
-            results = ext.extract(
-                "Paris is the capital of France.", domain="factual"
-            )
+            results = ext.extract("Paris is the capital of France.", domain="factual")
 
         assert len(results) >= 1
         verified = [r for r in results if r.constraint_type == "factual_verified"]
@@ -570,9 +540,7 @@ class TestFactualExtractorExtract:
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
             mock_requests.get.side_effect = [qid_resp, sparql_resp]
-            results = ext.extract(
-                "Paris is the capital of France.", domain="factual"
-            )
+            results = ext.extract("Paris is the capital of France.", domain="factual")
 
         verified = [r for r in results if r.constraint_type == "factual_verified"]
         assert len(verified) >= 1
@@ -592,9 +560,7 @@ class TestFactualExtractorExtract:
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
             mock_requests.get.side_effect = [qid_resp, sparql_resp]
-            results = ext.extract(
-                "London is the capital of France.", domain="factual"
-            )
+            results = ext.extract("London is the capital of France.", domain="factual")
 
         contradicted = [r for r in results if r.constraint_type == "factual_contradicted"]
         assert len(contradicted) >= 1
@@ -604,9 +570,7 @@ class TestFactualExtractorExtract:
         """Claims with predicates not in _PREDICATE_TO_PROPERTY are skipped."""
         ext = FactualExtractor()
         # "X resembles Y" has no Wikidata property mapping
-        results = ext.extract(
-            "The Eiffel Tower resembles an antenna.", domain="factual"
-        )
+        results = ext.extract("The Eiffel Tower resembles an antenna.", domain="factual")
         # Should return empty (no known predicate to verify)
         assert results == []
 
@@ -618,9 +582,7 @@ class TestFactualExtractorExtract:
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
             mock_requests.get.side_effect = real_requests.exceptions.Timeout("timeout")
-            results = ext.extract(
-                "Paris is the capital of France.", domain="factual"
-            )
+            results = ext.extract("Paris is the capital of France.", domain="factual")
 
         # Network failure → no constraints returned
         assert results == []
@@ -635,9 +597,7 @@ class TestFactualExtractorExtract:
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
             mock_requests.get.side_effect = [qid_resp, sparql_resp]
-            results = ext.extract(
-                "Paris is the capital of France.", domain="factual"
-            )
+            results = ext.extract("Paris is the capital of France.", domain="factual")
 
         # Empty SPARQL bindings → None → claim skipped
         assert results == []
@@ -664,9 +624,7 @@ class TestFactualExtractorExtract:
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
             mock_requests.get.side_effect = [qid_resp, sparql_resp]
-            results = ext.extract(
-                "Paris is the capital of France.", domain="factual"
-            )
+            results = ext.extract("Paris is the capital of France.", domain="factual")
 
         assert len(results) >= 1
         meta = results[0].metadata
@@ -692,13 +650,18 @@ class TestFactualExtractorExtract:
     def test_skips_claim_with_unknown_predicate_key(self) -> None:
         """Claims whose predicate_key is not in _PREDICATE_TO_PROPERTY are skipped."""
         from unittest.mock import patch as _patch
+
         import carnot.pipeline.factual_extractor as _fe
 
         ext = FactualExtractor()
         # Mock extract_claims to return a triple with a predicate not in the map
-        with _patch.object(_fe, "extract_claims", return_value=[
-            ("France", "invented_by", "Gauls")  # "invented_by" has no Wikidata property
-        ]):
+        with _patch.object(
+            _fe,
+            "extract_claims",
+            return_value=[
+                ("France", "invented_by", "Gauls")  # "invented_by" has no Wikidata property
+            ],
+        ):
             results = ext.extract("France was invented by the Gauls.", domain="factual")
 
         # Should return empty: predicate not in _PREDICATE_TO_PROPERTY → skip
@@ -748,14 +711,11 @@ class TestAutoExtractorIntegration:
 
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
             mock_requests.get.side_effect = [qid_resp, sparql_resp]
-            results = auto.extract(
-                "Paris is the capital of France.", domain="factual"
-            )
+            results = auto.extract("Paris is the capital of France.", domain="factual")
 
         # FactualExtractor should have contributed at least one result
         factual_results = [
-            r for r in results
-            if r.constraint_type in ("factual_verified", "factual_contradicted")
+            r for r in results if r.constraint_type in ("factual_verified", "factual_contradicted")
         ]
         assert len(factual_results) >= 1
 
@@ -782,15 +742,12 @@ class TestAutoExtractorIntegration:
         with patch("carnot.pipeline.factual_extractor.requests") as mock_requests:
             mock_requests.get.side_effect = real_requests.exceptions.Timeout("timeout")
             # Should not raise; returns results from other extractors
-            results = auto.extract(
-                "Paris is the capital of France.", domain="factual"
-            )
+            results = auto.extract("Paris is the capital of France.", domain="factual")
 
         # FactualExtractor returns [] on timeout; pipeline still returns other results
         assert isinstance(results, list)
         # No factual_verified or factual_contradicted since network failed
         factual = [
-            r for r in results
-            if r.constraint_type in ("factual_verified", "factual_contradicted")
+            r for r in results if r.constraint_type in ("factual_verified", "factual_contradicted")
         ]
         assert factual == []

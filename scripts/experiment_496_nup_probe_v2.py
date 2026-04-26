@@ -84,11 +84,13 @@ def load_labeled_pairs() -> tuple[list[dict], int, int]:
         raw = json.loads(fover_path.read_text())
         # Normalise field names: fover uses 'step_text' and 'label'
         for item in raw:
-            pairs.append({
-                "step_text": item.get("step_text", item.get("cot_text", "")),
-                "label": item.get("label", "incorrect"),
-                "logprobs": item.get("logprobs"),
-            })
+            pairs.append(
+                {
+                    "step_text": item.get("step_text", item.get("cot_text", "")),
+                    "label": item.get("label", "incorrect"),
+                    "logprobs": item.get("logprobs"),
+                }
+            )
         _log.info("Loaded %d pairs from fover_labeled_steps_live.json", len(raw))
     else:
         _log.warning("fover_labeled_steps_live.json not found — proceeding with empty set")
@@ -97,32 +99,44 @@ def load_labeled_pairs() -> tuple[list[dict], int, int]:
     exp488_path = _REPO_ROOT / "results" / "exp488_cot_pairs.json"
     if exp488_path.exists():
         raw488 = json.loads(exp488_path.read_text())
-        for item in (raw488 if isinstance(raw488, list) else raw488.get("pairs", [])):
-            pairs.append({
-                "step_text": item.get("step_text", item.get("cot_text", "")),
-                "label": item.get("label", "incorrect"),
-                "logprobs": item.get("logprobs"),
-            })
-        _log.info("Loaded %d pairs from exp488_cot_pairs.json", len(raw488) if isinstance(raw488, list) else len(raw488.get("pairs", [])))
+        for item in raw488 if isinstance(raw488, list) else raw488.get("pairs", []):
+            pairs.append(
+                {
+                    "step_text": item.get("step_text", item.get("cot_text", "")),
+                    "label": item.get("label", "incorrect"),
+                    "logprobs": item.get("logprobs"),
+                }
+            )
+        _log.info(
+            "Loaded %d pairs from exp488_cot_pairs.json",
+            len(raw488) if isinstance(raw488, list) else len(raw488.get("pairs", [])),
+        )
 
     # Optional: Exp 489 CoT pairs
     exp489_path = _REPO_ROOT / "results" / "exp489_cot_pairs.json"
     if exp489_path.exists():
         raw489 = json.loads(exp489_path.read_text())
-        for item in (raw489 if isinstance(raw489, list) else raw489.get("pairs", [])):
-            pairs.append({
-                "step_text": item.get("step_text", item.get("cot_text", "")),
-                "label": item.get("label", "incorrect"),
-                "logprobs": item.get("logprobs"),
-            })
-        _log.info("Loaded %d pairs from exp489_cot_pairs.json", len(raw489) if isinstance(raw489, list) else len(raw489.get("pairs", [])))
+        for item in raw489 if isinstance(raw489, list) else raw489.get("pairs", []):
+            pairs.append(
+                {
+                    "step_text": item.get("step_text", item.get("cot_text", "")),
+                    "label": item.get("label", "incorrect"),
+                    "logprobs": item.get("logprobs"),
+                }
+            )
+        _log.info(
+            "Loaded %d pairs from exp489_cot_pairs.json",
+            len(raw489) if isinstance(raw489, list) else len(raw489.get("pairs", [])),
+        )
 
     n_with_logprobs = sum(1 for p in pairs if p.get("logprobs") is not None)
     n_char_entropy_fallback = len(pairs) - n_with_logprobs
     return pairs, n_with_logprobs, n_char_entropy_fallback
 
 
-def train_test_split(pairs: list[dict], test_fraction: float = 0.2) -> tuple[list[dict], list[dict]]:
+def train_test_split(
+    pairs: list[dict], test_fraction: float = 0.2
+) -> tuple[list[dict], list[dict]]:
     """Split pairs into train/test sets using a deterministic 80/20 split.
 
     **Why held-out test set:**
@@ -153,7 +167,9 @@ def main() -> None:
         all_pairs, n_with_logprobs, n_char_entropy_fallback = load_labeled_pairs()
         _log.info(
             "Total pairs: %d | with logprobs: %d | char-entropy fallback: %d",
-            len(all_pairs), n_with_logprobs, n_char_entropy_fallback,
+            len(all_pairs),
+            n_with_logprobs,
+            n_char_entropy_fallback,
         )
 
         if len(all_pairs) < 4:
@@ -192,7 +208,10 @@ def main() -> None:
 
         _log.info(
             "NUPProbeV2 AUC=%.4f (v1 baseline=%.3f, improvement=%.4f) | viable=%s",
-            auc_v2, _AUC_V1, auc_improvement, is_viable,
+            auc_v2,
+            _AUC_V1,
+            auc_improvement,
+            is_viable,
         )
 
         artifact = tmpl.build_result(

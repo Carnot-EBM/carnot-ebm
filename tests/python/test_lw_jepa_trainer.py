@@ -182,7 +182,13 @@ class TestLeWorldModelLoss:
         actual = np.array([3.0, 4.0])
         z_mean = np.ones(4)
         z_log_var = np.ones(4)
-        assert abs(loss.total_loss(predicted, actual, z_mean, z_log_var) - loss.prediction_loss(predicted, actual)) < 1e-10
+        assert (
+            abs(
+                loss.total_loss(predicted, actual, z_mean, z_log_var)
+                - loss.prediction_loss(predicted, actual)
+            )
+            < 1e-10
+        )
 
     def test_negative_lambda_raises(self):
         """lambda_reg < 0 is invalid."""
@@ -211,12 +217,14 @@ class TestLeWorldModelJEPATrainer:
         for i in range(n):
             emb = rng.randn(256).tolist()
             label = i % 2
-            pairs.append({
-                "embedding": emb,
-                "violated_arithmetic": label,
-                "violated_code": label,
-                "violated_logic": label,
-            })
+            pairs.append(
+                {
+                    "embedding": emb,
+                    "violated_arithmetic": label,
+                    "violated_code": label,
+                    "violated_logic": label,
+                }
+            )
         return pairs
 
     # --- train_epoch ---
@@ -348,6 +356,7 @@ class TestLeWorldModelJEPATrainer:
             LeWorldModelLoss as LWL,
             gaussian_kl_regularization as gkl,
         )
+
         assert LWT is LeWorldModelJEPATrainer
         assert LWL is LeWorldModelLoss
         assert gkl is gaussian_kl_regularization

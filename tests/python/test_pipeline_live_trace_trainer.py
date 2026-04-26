@@ -85,9 +85,7 @@ class TestBuildExp272Payload:
         }
 
     @patch("python.carnot.pipeline.live_trace_trainer.build_tier1_live_retrain_payload")
-    def test_build_exp272_patches_experiment_number(
-        self, mock_builder: MagicMock
-    ) -> None:
+    def test_build_exp272_patches_experiment_number(self, mock_builder: MagicMock) -> None:
         """build_exp272_payload patches the experiment field."""
         mock_payload = {"experiment": 999, "title": "Old"}
         mock_tracker = MagicMock()
@@ -172,9 +170,7 @@ class TestBuildExp272Payload:
         assert tracker is mock_tracker
 
     @patch("python.carnot.pipeline.live_trace_trainer.build_tier1_live_retrain_payload")
-    def test_build_exp272_updates_comparison_note(
-        self, mock_builder: MagicMock
-    ) -> None:
+    def test_build_exp272_updates_comparison_note(self, mock_builder: MagicMock) -> None:
         """build_exp272_payload updates the comparison_to_exp223 note."""
         mock_payload = {
             "experiment": 999,
@@ -200,9 +196,7 @@ class TestBuildExp272Payload:
         assert "Exp 224" in note
 
     @patch("python.carnot.pipeline.live_trace_trainer.build_tier1_live_retrain_payload")
-    def test_build_exp272_respects_holdout_fraction(
-        self, mock_builder: MagicMock
-    ) -> None:
+    def test_build_exp272_respects_holdout_fraction(self, mock_builder: MagicMock) -> None:
         """build_exp272_payload forwards holdout_fraction parameter."""
         mock_payload = {"experiment": 999}
         mock_tracker = MagicMock()
@@ -237,9 +231,7 @@ class TestRun:
 
     @patch("python.carnot.pipeline.live_trace_trainer.load_json")
     @patch("python.carnot.pipeline.live_trace_trainer.build_exp272_payload")
-    def test_run_loads_four_json_files(
-        self, mock_builder: MagicMock, mock_load: MagicMock
-    ) -> None:
+    def test_run_loads_four_json_files(self, mock_builder: MagicMock, mock_load: MagicMock) -> None:
         """run loads experiment_219/220/221/223 JSON files."""
         mock_load.return_value = {"paired_runs": []}
         mock_payload = {
@@ -269,9 +261,7 @@ class TestRun:
 
     @patch("python.carnot.pipeline.live_trace_trainer.load_json")
     @patch("python.carnot.pipeline.live_trace_trainer.build_exp272_payload")
-    def test_run_writes_result_json(
-        self, mock_builder: MagicMock, mock_load: MagicMock
-    ) -> None:
+    def test_run_writes_result_json(self, mock_builder: MagicMock, mock_load: MagicMock) -> None:
         """run writes the results to output_path."""
         mock_load.return_value = {"paired_runs": []}
         mock_payload = {
@@ -304,9 +294,7 @@ class TestRun:
 
     @patch("python.carnot.pipeline.live_trace_trainer.load_json")
     @patch("python.carnot.pipeline.live_trace_trainer.build_exp272_payload")
-    def test_run_calls_tracker_save(
-        self, mock_builder: MagicMock, mock_load: MagicMock
-    ) -> None:
+    def test_run_calls_tracker_save(self, mock_builder: MagicMock, mock_load: MagicMock) -> None:
         """run calls tracker.save() with the weights path."""
         mock_load.return_value = {"paired_runs": []}
         mock_payload = {

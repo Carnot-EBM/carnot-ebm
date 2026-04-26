@@ -22,6 +22,7 @@ import pytest
 
 def _make_probe():
     from carnot.verify.spectral_attention_probe import SpectralAttentionProbe
+
     return SpectralAttentionProbe(window=3, n_eigenvalues=10, threshold=2.0)
 
 
@@ -289,10 +290,11 @@ class TestTrainPredict:
 
     def _make_halluc_chain(self, idx: int) -> list[str]:
         import random
+
         rng = random.Random(idx * 17)
         extra = [f"novel{rng.randint(0, 200)}" for _ in range(10)]
         return [
-            f"step {i}: " + " ".join(extra[i:i + 3]) + f" new_{i} unique_{idx}_{i} " * (i + 1)
+            f"step {i}: " + " ".join(extra[i : i + 3]) + f" new_{i} unique_{idx}_{i} " * (i + 1)
             for i in range(4)
         ]
 
@@ -369,9 +371,14 @@ class TestSpectralProbeWiring:
             "What is 2+2?",
             "Step 1: 2+2=4. Step 2: result is 4.",
             domain="arithmetic",
-            tracker=None, jepa_predictor=None, jepa_threshold=0.5,
-            think_probe=None, hallufield_detector=None, semantic_energy_probe=None,
-            embedding_constraint_store=None, ising_constraint_injector=None,
+            tracker=None,
+            jepa_predictor=None,
+            jepa_threshold=0.5,
+            think_probe=None,
+            hallufield_detector=None,
+            semantic_energy_probe=None,
+            embedding_constraint_store=None,
+            ising_constraint_injector=None,
         )
         assert "tier_0h_spectral" not in result.certificate
         assert result.spectral_diffuse is False
@@ -394,10 +401,17 @@ class TestSpectralProbeWiring:
                 "Step 3: therefore the result is 5."
             )
             result = pipeline.verify(
-                "What is 2+3?", response, domain="arithmetic",
-                tracker=None, jepa_predictor=None, jepa_threshold=0.5,
-                think_probe=None, hallufield_detector=None, semantic_energy_probe=None,
-                embedding_constraint_store=None, ising_constraint_injector=None,
+                "What is 2+3?",
+                response,
+                domain="arithmetic",
+                tracker=None,
+                jepa_predictor=None,
+                jepa_threshold=0.5,
+                think_probe=None,
+                hallufield_detector=None,
+                semantic_energy_probe=None,
+                embedding_constraint_store=None,
+                ising_constraint_injector=None,
             )
             assert "tier_0h_spectral" in result.certificate
             assert isinstance(result.spectral_diffuse, bool)
@@ -422,10 +436,17 @@ class TestSpectralProbeWiring:
                 "Step 3: iota kappa lambda mu."
             )
             result = pipeline.verify(
-                "Some question?", response, domain="arithmetic",
-                tracker=None, jepa_predictor=None, jepa_threshold=0.5,
-                think_probe=None, hallufield_detector=None, semantic_energy_probe=None,
-                embedding_constraint_store=None, ising_constraint_injector=None,
+                "Some question?",
+                response,
+                domain="arithmetic",
+                tracker=None,
+                jepa_predictor=None,
+                jepa_threshold=0.5,
+                think_probe=None,
+                hallufield_detector=None,
+                semantic_energy_probe=None,
+                embedding_constraint_store=None,
+                ising_constraint_injector=None,
             )
             cert = result.certificate.get("tier_0h_spectral", {})
             assert "is_spectrally_diffuse" in cert
@@ -451,18 +472,32 @@ class TestSpectralProbeWiring:
                 "Step 3: recipe ingredient bandwidth latency subnet unique3."
             )
             result_with = pipeline.verify(
-                "Question?", response, domain="arithmetic",
-                tracker=None, jepa_predictor=None, jepa_threshold=0.5,
-                think_probe=None, hallufield_detector=None, semantic_energy_probe=None,
-                embedding_constraint_store=None, ising_constraint_injector=None,
+                "Question?",
+                response,
+                domain="arithmetic",
+                tracker=None,
+                jepa_predictor=None,
+                jepa_threshold=0.5,
+                think_probe=None,
+                hallufield_detector=None,
+                semantic_energy_probe=None,
+                embedding_constraint_store=None,
+                ising_constraint_injector=None,
             )
 
             os.environ.pop("CARNOT_SPECTRAL_PROBE", None)
             result_without = pipeline.verify(
-                "Question?", response, domain="arithmetic",
-                tracker=None, jepa_predictor=None, jepa_threshold=0.5,
-                think_probe=None, hallufield_detector=None, semantic_energy_probe=None,
-                embedding_constraint_store=None, ising_constraint_injector=None,
+                "Question?",
+                response,
+                domain="arithmetic",
+                tracker=None,
+                jepa_predictor=None,
+                jepa_threshold=0.5,
+                think_probe=None,
+                hallufield_detector=None,
+                semantic_energy_probe=None,
+                embedding_constraint_store=None,
+                ising_constraint_injector=None,
             )
 
             # verified flag must be the same regardless of spectral probe.
@@ -534,9 +569,7 @@ class TestExperiment885Deliverable:
         import sys
         import importlib.util
 
-        repo_root = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..")
-        )
+        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
         scripts_dir = os.path.join(repo_root, "scripts")
         sys.path.insert(0, scripts_dir)
 
@@ -552,15 +585,24 @@ class TestExperiment885Deliverable:
         finally:
             os.chdir(orig_dir)
 
-        deliverable = os.path.join(repo_root, "results",
-                                   "experiment_885_spectral_attention_probe.json")
+        deliverable = os.path.join(
+            repo_root, "results", "experiment_885_spectral_attention_probe.json"
+        )
         assert os.path.exists(deliverable), "Deliverable JSON must be written by main()"
 
         with open(deliverable) as f:
             data = json.load(f)
 
-        for field in ["experiment", "schema", "run_date", "started_at",
-                      "finished_at", "duration_s", "status", "title"]:
+        for field in [
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ]:
             assert field in data, f"Required field '{field}' missing from deliverable"
 
         assert data["experiment"] == 885
@@ -569,5 +611,7 @@ class TestExperiment885Deliverable:
         assert "advisory_signal_rate" in data
         assert "honest_verdict" in data
         assert data["honest_verdict"] in (
-            "tier_0h_viable", "tier_0h_marginal", "tier_0h_not_viable"
+            "tier_0h_viable",
+            "tier_0h_marginal",
+            "tier_0h_not_viable",
         )

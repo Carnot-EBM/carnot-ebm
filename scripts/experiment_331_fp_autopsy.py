@@ -58,21 +58,15 @@ _MIN_CASES_FOR_CONCLUSIVE = 5
 
 # Mapping from primary FP type to recommended fix.
 _RECOMMENDED_FIX: dict[FPCategory, str] = {
-    FPCategory.VALID_INTERMEDIATE: (
-        "Confidence-weighted repair: add expression confidence filter"
-    ),
+    FPCategory.VALID_INTERMEDIATE: ("Confidence-weighted repair: add expression confidence filter"),
     FPCategory.PRECISION_LIMIT: (
         "Model-adaptive threshold: increase ArithmeticExtractor tolerance"
     ),
-    FPCategory.REGEX_ARTIFACT: (
-        "NL2Z3 as primary: regex causes false positives on IT responses"
-    ),
+    FPCategory.REGEX_ARTIFACT: ("NL2Z3 as primary: regex causes false positives on IT responses"),
     FPCategory.REPAIR_DEGRADATION: (
         "Constrain repair: only accept if repaired energy < violation energy"
     ),
-    FPCategory.UNCATEGORIZED: (
-        "Manual review required: insufficient signal for automated fix"
-    ),
+    FPCategory.UNCATEGORIZED: ("Manual review required: insufficient signal for automated fix"),
 }
 
 # ---------------------------------------------------------------------------
@@ -94,9 +88,7 @@ _SYNTHETIC_CASES: list[dict[str, Any]] = [
         "baseline_answer": "11",
         "vr_answer": "7",
         "correct_answer": "11",
-        "violations_flagged": [
-            "step result: 10 - 3 = 7 (intermediate — then add 4)"
-        ],
+        "violations_flagged": ["step result: 10 - 3 = 7 (intermediate — then add 4)"],
         "source": "synthetic_exp184_pattern",
     },
     # Case 2: VALID_INTERMEDIATE — "so" keyword present.
@@ -105,9 +97,7 @@ _SYNTHETIC_CASES: list[dict[str, Any]] = [
         "baseline_answer": "12",
         "vr_answer": "8",
         "correct_answer": "12",
-        "violations_flagged": [
-            "20 - 8 = 12, so the answer is 12 (then later step contradicts)"
-        ],
+        "violations_flagged": ["20 - 8 = 12, so the answer is 12 (then later step contradicts)"],
         "source": "synthetic_exp184_pattern",
     },
     # Case 3: REGEX_ARTIFACT — year-like numbers in a word problem.
@@ -116,9 +106,7 @@ _SYNTHETIC_CASES: list[dict[str, Any]] = [
         "baseline_answer": "4",
         "vr_answer": "2020",
         "correct_answer": "4",
-        "violations_flagged": [
-            "2024 - 4 = 2020 (correct: 2020)"
-        ],
+        "violations_flagged": ["2024 - 4 = 2020 (correct: 2020)"],
         "source": "synthetic_exp184_pattern",
     },
     # Case 4: PRECISION_LIMIT — rounding flagged as error.
@@ -138,9 +126,7 @@ _SYNTHETIC_CASES: list[dict[str, Any]] = [
         "baseline_answer": "8",
         "vr_answer": "9",
         "correct_answer": "8",
-        "violations_flagged": [
-            "5 + 3 = 9 (correct: 8)"
-        ],
+        "violations_flagged": ["5 + 3 = 9 (correct: 8)"],
         "source": "synthetic_exp184_pattern",
     },
     # Case 6: REPAIR_DEGRADATION — no violations flagged but repair changed answer.

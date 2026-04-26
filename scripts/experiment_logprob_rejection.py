@@ -45,7 +45,8 @@ def generate_with_logprobs(model, tokenizer, question, do_sample=False, temperat
 
     with torch.no_grad():
         outputs = model.generate(
-            **inputs, **gen_kwargs,
+            **inputs,
+            **gen_kwargs,
             return_dict_in_generate=True,
             output_scores=True,
         )
@@ -111,7 +112,9 @@ def main() -> int:
         mean_w = sum(wrong_logprobs) / len(wrong_logprobs)
         print(f"Mean logprob (correct): {mean_c:.3f}")
         print(f"Mean logprob (wrong):   {mean_w:.3f}")
-        print(f"Gap: {mean_c - mean_w:.3f} ({'correct > wrong = good signal' if mean_c > mean_w else 'wrong > correct = BAD'})")
+        print(
+            f"Gap: {mean_c - mean_w:.3f} ({'correct > wrong = good signal' if mean_c > mean_w else 'wrong > correct = BAD'})"
+        )
 
     # Phase 2: Rejection sampling — pick highest mean logprob
     print(f"\n--- Phase 2: Rejection sampling (best of {N_CANDIDATES}) ---")
@@ -121,7 +124,11 @@ def main() -> int:
         candidates = []
         for c in range(N_CANDIDATES):
             response, total_lp, mean_lp, n_tok = generate_with_logprobs(
-                model, tokenizer, q, do_sample=True, temperature=0.8,
+                model,
+                tokenizer,
+                q,
+                do_sample=True,
+                temperature=0.8,
             )
             candidates.append((response, mean_lp, check_answer(response, expected)))
 
@@ -156,16 +163,18 @@ def main() -> int:
         # Reuse — we need to regenerate for oracle
         pass
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("RESULTS")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  Greedy baseline:    {sum(greedy_results)}/{len(TEST_QA)} ({greedy_acc:.0%})")
     print(f"  Logprob-selected:   {sum(rejection_results)}/{len(TEST_QA)} ({rejection_acc:.0%})")
     improvement = rejection_acc - greedy_acc
     print(f"  Improvement:        {'+' if improvement >= 0 else ''}{improvement:.0%}")
     print(f"")
-    print(f"  Fixes: {fixes}, Regressions: {regressions}, Net: {'+' if fixes>=regressions else ''}{fixes-regressions}")
-    print(f"{'='*60}")
+    print(
+        f"  Fixes: {fixes}, Regressions: {regressions}, Net: {'+' if fixes >= regressions else ''}{fixes - regressions}"
+    )
+    print(f"{'=' * 60}")
 
     if improvement > 0:
         print("SUCCESS: Logprob selection improves accuracy!")

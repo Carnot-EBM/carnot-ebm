@@ -28,6 +28,7 @@ import pytest
 # Import target module (repository-root sys.path injection already in the script).
 # ---------------------------------------------------------------------------
 import sys
+
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
@@ -299,9 +300,7 @@ class TestRunVariant:
 
     def test_empty_questions_list(self):
         """Empty questions list → all accuracies 0.0."""
-        result = exp340.run_variant(
-            PipelineVariant.BASELINE, [], "Qwen3.5-0.8B", "simulated"
-        )
+        result = exp340.run_variant(PipelineVariant.BASELINE, [], "Qwen3.5-0.8B", "simulated")
         assert result.baseline_accuracy == 0.0
         assert result.precision_stack_accuracy == 0.0
         assert result.n_questions == 0
@@ -380,12 +379,15 @@ class TestMainSimulated:
         env = {"CARNOT_FORCE_LIVE": "0"}
 
         with patch.dict(os.environ, env):
-            with patch.object(exp340, "load_gsm8k_questions",
-                              return_value=exp340._synthetic_gsm8k(8)):
+            with patch.object(
+                exp340, "load_gsm8k_questions", return_value=exp340._synthetic_gsm8k(8)
+            ):
                 # Monkey-patch ExperimentTemplate to use tmp_path as repo_root.
                 from scripts.experiment_template import ExperimentTemplate
 
-                with patch("scripts.experiment_340_live_precision_benchmark.ExperimentTemplate") as MockTmpl:
+                with patch(
+                    "scripts.experiment_340_live_precision_benchmark.ExperimentTemplate"
+                ) as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
                         exp_id=340,
                         title=exp340.EXP_TITLE,
@@ -408,9 +410,12 @@ class TestMainSimulated:
         from scripts.experiment_template import ExperimentTemplate, REQUIRED_RESULT_FIELDS
 
         with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "0"}):
-            with patch.object(exp340, "load_gsm8k_questions",
-                              return_value=exp340._synthetic_gsm8k(4)):
-                with patch("scripts.experiment_340_live_precision_benchmark.ExperimentTemplate") as MockTmpl:
+            with patch.object(
+                exp340, "load_gsm8k_questions", return_value=exp340._synthetic_gsm8k(4)
+            ):
+                with patch(
+                    "scripts.experiment_340_live_precision_benchmark.ExperimentTemplate"
+                ) as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
                         exp_id=340,
                         title=exp340.EXP_TITLE,
@@ -430,9 +435,12 @@ class TestMainSimulated:
         from scripts.experiment_template import ExperimentTemplate
 
         with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "0"}):
-            with patch.object(exp340, "load_gsm8k_questions",
-                              return_value=exp340._synthetic_gsm8k(4)):
-                with patch("scripts.experiment_340_live_precision_benchmark.ExperimentTemplate") as MockTmpl:
+            with patch.object(
+                exp340, "load_gsm8k_questions", return_value=exp340._synthetic_gsm8k(4)
+            ):
+                with patch(
+                    "scripts.experiment_340_live_precision_benchmark.ExperimentTemplate"
+                ) as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
                         exp_id=340,
                         title=exp340.EXP_TITLE,
@@ -451,9 +459,12 @@ class TestMainSimulated:
         from scripts.experiment_template import ExperimentTemplate
 
         with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "0"}):
-            with patch.object(exp340, "load_gsm8k_questions",
-                              return_value=exp340._synthetic_gsm8k(4)):
-                with patch("scripts.experiment_340_live_precision_benchmark.ExperimentTemplate") as MockTmpl:
+            with patch.object(
+                exp340, "load_gsm8k_questions", return_value=exp340._synthetic_gsm8k(4)
+            ):
+                with patch(
+                    "scripts.experiment_340_live_precision_benchmark.ExperimentTemplate"
+                ) as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
                         exp_id=340,
                         title=exp340.EXP_TITLE,
@@ -481,16 +492,29 @@ class TestMainBlocked:
 
         unhealthy_gpu_status = {
             "all_healthy": False,
-            "models": [{"name": "Gemma4-E4B-it", "health_ok": False,
-                         "stall_root_cause": "OOM", "load_time_s": 0.0, "gpu_id": 0}],
+            "models": [
+                {
+                    "name": "Gemma4-E4B-it",
+                    "health_ok": False,
+                    "stall_root_cause": "OOM",
+                    "load_time_s": 0.0,
+                    "gpu_id": 0,
+                }
+            ],
             "prewarm_time_s": 0.1,
             "dual_gpu_auto_assigned": False,
-            "gpu_monitor_results": {"n_gpus_detected": 0, "n_zombies": 0,
-                                     "idle_gpus": [], "all_healthy": False},
+            "gpu_monitor_results": {
+                "n_gpus_detected": 0,
+                "n_zombies": 0,
+                "idle_gpus": [],
+                "all_healthy": False,
+            },
         }
 
         with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}):
-            with patch("scripts.experiment_340_live_precision_benchmark.ExperimentTemplate") as MockTmpl:
+            with patch(
+                "scripts.experiment_340_live_precision_benchmark.ExperimentTemplate"
+            ) as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=340,
                     title=exp340.EXP_TITLE,

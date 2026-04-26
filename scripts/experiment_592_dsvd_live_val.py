@@ -80,7 +80,9 @@ def _load_corpus() -> tuple[list[dict[str, Any]], str]:
     live_path = Path(_LIVE_PAIRS_PATH)
     if live_path.exists():
         raw = json.loads(live_path.read_text())
-        items: list[dict] = raw if isinstance(raw, list) else raw.get("pairs", raw.get("results", []))
+        items: list[dict] = (
+            raw if isinstance(raw, list) else raw.get("pairs", raw.get("results", []))
+        )
         live = [x for x in items if x.get("inference_mode") == "live_gpu"]
         if live:
             return live, "live_gpu"
@@ -97,7 +99,11 @@ def _load_corpus() -> tuple[list[dict[str, Any]], str]:
     for fover_path in [Path(_FOVER_V3_PATH), Path(_FOVER_V2_PATH)]:
         if fover_path.exists():
             raw = json.loads(fover_path.read_text())
-            items = raw if isinstance(raw, list) else raw.get("corpus", raw.get("pairs", raw.get("results", [])))
+            items = (
+                raw
+                if isinstance(raw, list)
+                else raw.get("corpus", raw.get("pairs", raw.get("results", [])))
+            )
             live = [x for x in items if not x.get("is_simulated", True)]
             if live:
                 return live, "fover_not_simulated"

@@ -43,35 +43,88 @@ from scripts.experiment_template import REQUIRED_RESULT_FIELDS
 def _write_fake_results(tmp_path: Path, overrides: dict[int, dict] | None = None) -> None:
     """Write minimal valid result stubs for all 11 milestone experiments."""
     base: dict[int, dict] = {
-        666: {"experiment": 666, "duration_s": 0.07, "status": "success",
-              "manifest_loaded": True, "honest_verdict": "manifest_wired_xdist_available",
-              "title": "Exclusion Manifest Wire-In v3"},
-        667: {"experiment": 667, "duration_s": 0.001, "status": "success",
-              "honest_verdict": "gate_open_retro_070_unblocked",
-              "title": "EnsembleGate v4 Redesign"},
-        668: {"experiment": 668, "duration_s": 1623.408, "status": "success",
-              "signed_improvement": 0.64, "honest_verdict": "vr_positive"},
-        669: {"experiment": 669, "duration_s": 16.84, "status": "success",
-              "honest_verdict": "distillation_corpus_built",
-              "title": "Prompt Injection KAN Rescue"},
-        670: {"experiment": 670, "duration_s": 2.979, "status": "success",
-              "jepa_v14_deployed": True, "honest_verdict": "jepa_v14_deployed",
-              "title": "JEPA v14 Cascade Deploy"},
-        671: {"experiment": 671, "duration_s": 11.113, "status": "success",
-              "ood_auc": 1.0, "honest_verdict": "jepa_v15_auc_met",
-              "title": "JEPA v15 Retrain"},
-        672: {"experiment": 672, "duration_s": 0.0, "status": "blocked",
-              "honest_verdict": "blocked_bitfile_not_configured",
-              "title": "KV260 dfx-mgr"},
-        673: {"experiment": 673, "duration_s": 10.265, "status": "success",
-              "max_gpu1_util_pct": 0.0, "retro_071_resolved": False,
-              "honest_verdict": "dualgpu_partial", "title": "DualGPU Confirmed v3"},
-        674: {"experiment": 674, "duration_s": 0.001, "status": "success",
-              "honest_verdict": "ias_gate_improves_v3", "title": "IAS Adaptive Gate"},
-        675: {"experiment": 675, "duration_s": 0.014, "status": "success",
-              "honest_verdict": "below_threshold", "title": "LOS-Net Detector"},
-        676: {"experiment": 676, "duration_s": 0.001, "status": "success",
-              "honest_verdict": "metajuls_adapted", "title": "MetaJuLS Adaptive"},
+        666: {
+            "experiment": 666,
+            "duration_s": 0.07,
+            "status": "success",
+            "manifest_loaded": True,
+            "honest_verdict": "manifest_wired_xdist_available",
+            "title": "Exclusion Manifest Wire-In v3",
+        },
+        667: {
+            "experiment": 667,
+            "duration_s": 0.001,
+            "status": "success",
+            "honest_verdict": "gate_open_retro_070_unblocked",
+            "title": "EnsembleGate v4 Redesign",
+        },
+        668: {
+            "experiment": 668,
+            "duration_s": 1623.408,
+            "status": "success",
+            "signed_improvement": 0.64,
+            "honest_verdict": "vr_positive",
+        },
+        669: {
+            "experiment": 669,
+            "duration_s": 16.84,
+            "status": "success",
+            "honest_verdict": "distillation_corpus_built",
+            "title": "Prompt Injection KAN Rescue",
+        },
+        670: {
+            "experiment": 670,
+            "duration_s": 2.979,
+            "status": "success",
+            "jepa_v14_deployed": True,
+            "honest_verdict": "jepa_v14_deployed",
+            "title": "JEPA v14 Cascade Deploy",
+        },
+        671: {
+            "experiment": 671,
+            "duration_s": 11.113,
+            "status": "success",
+            "ood_auc": 1.0,
+            "honest_verdict": "jepa_v15_auc_met",
+            "title": "JEPA v15 Retrain",
+        },
+        672: {
+            "experiment": 672,
+            "duration_s": 0.0,
+            "status": "blocked",
+            "honest_verdict": "blocked_bitfile_not_configured",
+            "title": "KV260 dfx-mgr",
+        },
+        673: {
+            "experiment": 673,
+            "duration_s": 10.265,
+            "status": "success",
+            "max_gpu1_util_pct": 0.0,
+            "retro_071_resolved": False,
+            "honest_verdict": "dualgpu_partial",
+            "title": "DualGPU Confirmed v3",
+        },
+        674: {
+            "experiment": 674,
+            "duration_s": 0.001,
+            "status": "success",
+            "honest_verdict": "ias_gate_improves_v3",
+            "title": "IAS Adaptive Gate",
+        },
+        675: {
+            "experiment": 675,
+            "duration_s": 0.014,
+            "status": "success",
+            "honest_verdict": "below_threshold",
+            "title": "LOS-Net Detector",
+        },
+        676: {
+            "experiment": 676,
+            "duration_s": 0.001,
+            "status": "success",
+            "honest_verdict": "metajuls_adapted",
+            "title": "MetaJuLS Adaptive",
+        },
     }
     if overrides:
         for exp_id, patch in overrides.items():
@@ -118,11 +171,18 @@ def test_load_results_all_present(tmp_path: Path) -> None:
 def _fake_results(duration_s_each: float = 60.0) -> dict[int, dict]:
     """Return minimal fake results with a uniform duration_s for every experiment."""
     return {
-        exp_id: {"experiment": exp_id, "duration_s": duration_s_each,
-                 "status": "success", "honest_verdict": "ok",
-                 "manifest_loaded": True, "signed_improvement": 0.5,
-                 "jepa_v14_deployed": True, "ood_auc": 0.8,
-                 "max_gpu1_util_pct": 0.0, "retro_071_resolved": False}
+        exp_id: {
+            "experiment": exp_id,
+            "duration_s": duration_s_each,
+            "status": "success",
+            "honest_verdict": "ok",
+            "manifest_loaded": True,
+            "signed_improvement": 0.5,
+            "jepa_v14_deployed": True,
+            "ood_auc": 0.8,
+            "max_gpu1_util_pct": 0.0,
+            "retro_071_resolved": False,
+        }
         for exp_id in MILESTONE_EXP_IDS
     }
 

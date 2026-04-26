@@ -39,7 +39,7 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
@@ -1646,9 +1646,7 @@ class KnowledgeBase:
                 the embedded facts: ``{entity: {relation: value}}``.
         """
         # Start with embedded defaults
-        self._facts: dict[str, dict[str, Any]] = {
-            k: dict(v) for k, v in _EMBEDDED_FACTS.items()
-        }
+        self._facts: dict[str, dict[str, Any]] = {k: dict(v) for k, v in _EMBEDDED_FACTS.items()}
 
         # Merge in external facts file if provided
         if facts_path is not None:
@@ -1667,9 +1665,7 @@ class KnowledgeBase:
         """Total number of individual fact entries (entity + relation pairs)."""
         return _build_fact_count(self._facts)
 
-    def lookup(
-        self, entity: str, relation: str
-    ) -> Any:
+    def lookup(self, entity: str, relation: str) -> Any:
         """Look up a fact value for a given entity and relation.
 
         **Detailed explanation for engineers:**
@@ -1795,13 +1791,52 @@ def resolve_coreferences(text: str) -> str:
     Spec: REQ-VERIFY-001
     """
     # Common pronouns and stop words that should not be treated as entities.
-    _PRONOUN_WORDS = frozenset({
-        "It", "Its", "They", "Their", "Them", "He", "His", "She", "Her",
-        "We", "Our", "You", "Your", "The", "A", "An", "This", "That",
-        "These", "Those", "There", "Here", "Is", "Are", "Was", "Were",
-        "Has", "Have", "Had", "In", "On", "At", "By", "For", "Of", "To",
-        "And", "But", "Or", "With", "From", "As",
-    })
+    _PRONOUN_WORDS = frozenset(
+        {
+            "It",
+            "Its",
+            "They",
+            "Their",
+            "Them",
+            "He",
+            "His",
+            "She",
+            "Her",
+            "We",
+            "Our",
+            "You",
+            "Your",
+            "The",
+            "A",
+            "An",
+            "This",
+            "That",
+            "These",
+            "Those",
+            "There",
+            "Here",
+            "Is",
+            "Are",
+            "Was",
+            "Were",
+            "Has",
+            "Have",
+            "Had",
+            "In",
+            "On",
+            "At",
+            "By",
+            "For",
+            "Of",
+            "To",
+            "And",
+            "But",
+            "Or",
+            "With",
+            "From",
+            "As",
+        }
+    )
 
     def _first_entity(sent: str) -> str | None:
         """Find the first capitalized proper-noun phrase that is not a pronoun."""
@@ -1851,14 +1886,15 @@ def resolve_coreferences(text: str) -> str:
 # where entity_group and value_group are regex group indices (1-based).
 # relation_name is a string constant (the KB relation key).
 
+
 @dataclass
 class _ExtractionPattern:
     """A single regex extraction pattern for an entity-relation-value triple."""
 
     pattern: re.Pattern[str]
-    entity_group: int       # Group index for entity name in the regex
-    relation: str           # Fixed relation name (KB key)
-    value_group: int        # Group index for the claimed value in the regex
+    entity_group: int  # Group index for entity name in the regex
+    relation: str  # Fixed relation name (KB key)
+    value_group: int  # Group index for the claimed value in the regex
 
 
 # Regex patterns for common factual claim forms.
@@ -2164,9 +2200,7 @@ class FactualKBExtractor:
         """
         return ["factual_kb"]
 
-    def extract(
-        self, text: str, domain: str | None = None
-    ) -> list[ConstraintResult]:
+    def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
         """Extract and verify factual claims from text.
 
         **Detailed explanation for engineers:**

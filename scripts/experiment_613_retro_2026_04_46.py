@@ -201,9 +201,9 @@ def compute_retro() -> dict:
     # FR-11 generalization: Exp 607 confirmed JEPA v12 OOD generalization requirement.
     # Exp 611 did not find real violations (fr11_real_violations_confirmed=False).
     # Combined: FR-11 is architecturally confirmed even though live violations not yet found.
-    fr11_confirmed: bool = bool(
-        results["607"].get("fr11_generalization_confirmed", False)
-    ) or bool(results["611"].get("fr11_real_violations_confirmed", False))
+    fr11_confirmed: bool = bool(results["607"].get("fr11_generalization_confirmed", False)) or bool(
+        results["611"].get("fr11_real_violations_confirmed", False)
+    )
 
     # D-Wave backend registered: Exp 610 confirmed dwave_backend_registered=True.
     dwave_wired: bool = bool(results["610"].get("dwave_backend_registered", False))
@@ -227,14 +227,10 @@ def compute_retro() -> dict:
     # All three were in _RETROS_OPEN_AT_MILESTONE_START so each closure reduces
     # open_retro_count by one.
     n_closed_this_milestone = sum([retro_033_resolved, retro_049_resolved, retro_067_resolved])
-    retro_closure_rate = round(
-        n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3
-    )
+    retro_closure_rate = round(n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3)
     # +1 new RETRO opening this milestone (RETRO-070) if retro_033 is still blocked.
     n_new_retros = 1 if not retro_033_resolved else 0
-    open_retro_count = (
-        len(_RETROS_OPEN_AT_MILESTONE_START) - n_closed_this_milestone + n_new_retros
-    )
+    open_retro_count = len(_RETROS_OPEN_AT_MILESTONE_START) - n_closed_this_milestone + n_new_retros
 
     # --- Honest verdict -------------------------------------------------------
     if retro_033_resolved:

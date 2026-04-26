@@ -183,9 +183,11 @@ def _simulate_eorm_score(step_text: str, label_is_incorrect: bool) -> float:
 
 def main() -> None:
     fover_pairs = _load_fover_pairs()
-    source = "fover_labeled_steps_expanded" if (
-        _repo_root / "results" / "fover_labeled_steps_expanded.json"
-    ).exists() else "fover_labeled_steps_live"
+    source = (
+        "fover_labeled_steps_expanded"
+        if (_repo_root / "results" / "fover_labeled_steps_expanded.json").exists()
+        else "fover_labeled_steps_live"
+    )
 
     if not fover_pairs:
         # No FOVER data — fall back to pure synthetic evaluation

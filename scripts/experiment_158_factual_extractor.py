@@ -362,10 +362,10 @@ def run_benchmark(use_network: bool = True) -> dict:
     ext = FactualExtractor(timeout=timeout)
 
     per_question: list[dict] = []
-    n_covered = 0          # questions with ≥1 constraint from best answer
+    n_covered = 0  # questions with ≥1 constraint from best answer
     total_constraints = 0  # total constraints from best answers
-    total_correct = 0      # constraints with satisfied=True (from best answers)
-    total_false_constraints = 0   # constraints from wrong answers
+    total_correct = 0  # constraints with satisfied=True (from best answers)
+    total_false_constraints = 0  # constraints from wrong answers
     total_false_contradicted = 0  # wrong-answer constraints with satisfied=False
 
     print(f"Exp 158 — FactualExtractor: TruthfulQA Coverage + Accuracy")
@@ -380,16 +380,12 @@ def run_benchmark(use_network: bool = True) -> dict:
         # --- Best answer constraints ---
         best_results = ext.extract(best_answer, domain="factual")
         n_best = len(best_results)
-        n_best_verified = sum(
-            1 for r in best_results if r.metadata.get("verified") is True
-        )
+        n_best_verified = sum(1 for r in best_results if r.metadata.get("verified") is True)
 
         # --- Wrong answer constraints ---
         false_results = ext.extract(wrong_answer, domain="factual")
         n_false = len(false_results)
-        n_false_contradicted = sum(
-            1 for r in false_results if r.metadata.get("verified") is False
-        )
+        n_false_contradicted = sum(1 for r in false_results if r.metadata.get("verified") is False)
 
         covered = n_best >= 1
         if covered:
@@ -423,15 +419,11 @@ def run_benchmark(use_network: bool = True) -> dict:
 
     n_questions = len(QUESTION_BANK)
     coverage_pct = 100.0 * n_covered / n_questions
-    accuracy_pct = (
-        100.0 * total_correct / total_constraints if total_constraints > 0 else 0.0
-    )
+    accuracy_pct = 100.0 * total_correct / total_constraints if total_constraints > 0 else 0.0
     coverage_target_met = coverage_pct >= TARGET_COVERAGE_PCT
 
     # Claims breakdown for covered questions
-    n_extractable = sum(
-        1 for r in per_question if _has_any_claim(r["best_answer"])
-    )
+    n_extractable = sum(1 for r in per_question if _has_any_claim(r["best_answer"]))
 
     results_dict = {
         "experiment": "Exp 158 — FactualExtractor (Wikidata SPARQL)",
@@ -461,10 +453,7 @@ def run_benchmark(use_network: bool = True) -> dict:
         f" {'✓ MET' if coverage_target_met else '✗ NOT MET'})"
     )
     print(f"  Claims extracted from best answers: {total_constraints}")
-    print(
-        f"  Verified correct:                   {total_correct}"
-        f"  ({accuracy_pct:.1f}%)"
-    )
+    print(f"  Verified correct:                   {total_correct}  ({accuracy_pct:.1f}%)")
     print(f"  Wikidata QID cache size:  {len(_QID_CACHE)}")
     print(f"  Wikidata claim cache size:{len(_CLAIM_CACHE)}")
     print()
@@ -521,10 +510,7 @@ if __name__ == "__main__":
 
     # Exit status
     if results["coverage_target_met"]:
-        print(
-            f"\nTarget coverage {TARGET_COVERAGE_PCT:.0f}% met:"
-            f" {results['coverage_pct']:.1f}%"
-        )
+        print(f"\nTarget coverage {TARGET_COVERAGE_PCT:.0f}% met: {results['coverage_pct']:.1f}%")
         sys.exit(0)
     else:
         print(

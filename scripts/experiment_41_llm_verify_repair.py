@@ -55,9 +55,9 @@ def parse_llm_coloring(response: str, n_nodes: int, color_names: list[str]) -> d
     # Try structured formats first
     # Pattern: number followed by color word
     patterns = [
-        r'[Nn]ode\s*(\d+)\s*[:=]\s*(\w+)',
-        r'(\d+)\s*[:=]\s*(\w+)',
-        r'(\d+)\s*[-–]\s*(\w+)',
+        r"[Nn]ode\s*(\d+)\s*[:=]\s*(\w+)",
+        r"(\d+)\s*[:=]\s*(\w+)",
+        r"(\d+)\s*[-–]\s*(\w+)",
     ]
 
     for pattern in patterns:
@@ -100,7 +100,8 @@ def main() -> int:
     print(f"\nLoading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         torch_dtype=torch.float16 if device == "cuda" else None,
     )
     if device == "cuda":
@@ -126,28 +127,39 @@ def main() -> int:
         {
             "name": "Petersen-like",
             "n_nodes": 5,
-            "edges": [(0,1), (1,2), (2,3), (3,4), (4,0), (0,2), (1,3)],
+            "edges": [(0, 1), (1, 2), (2, 3), (3, 4), (4, 0), (0, 2), (1, 3)],
             "n_colors": 3,
             "description": "Color 5 nodes (0-4) with 3 colors (Red, Green, Blue). Edges: 0-1, 1-2, 2-3, 3-4, 4-0, 0-2, 1-3. Adjacent nodes must have different colors.",
         },
         {
             "name": "K4",
             "n_nodes": 4,
-            "edges": [(0,1), (0,2), (0,3), (1,2), (1,3), (2,3)],
+            "edges": [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)],
             "n_colors": 4,
             "description": "Color 4 nodes (0-3) with 4 colors (Red, Green, Blue, Yellow). Every node connects to every other: 0-1, 0-2, 0-3, 1-2, 1-3, 2-3. Adjacent nodes must have different colors.",
         },
         {
             "name": "6-ring",
             "n_nodes": 6,
-            "edges": [(0,1), (1,2), (2,3), (3,4), (4,5), (5,0)],
+            "edges": [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 0)],
             "n_colors": 2,
             "description": "Color 6 nodes (0-5) with 2 colors (Red, Blue). Ring: 0-1, 1-2, 2-3, 3-4, 4-5, 5-0. Adjacent nodes must have different colors.",
         },
         {
             "name": "8-complex",
             "n_nodes": 8,
-            "edges": [(0,1),(1,2),(2,3),(3,4),(4,5),(5,6),(6,7),(7,0),(0,4),(2,6)],
+            "edges": [
+                (0, 1),
+                (1, 2),
+                (2, 3),
+                (3, 4),
+                (4, 5),
+                (5, 6),
+                (6, 7),
+                (7, 0),
+                (0, 4),
+                (2, 6),
+            ],
             "n_colors": 3,
             "description": "Color 8 nodes (0-7) with 3 colors (Red, Green, Blue). Ring plus diagonals: 0-1, 1-2, 2-3, 3-4, 4-5, 5-6, 6-7, 7-0, 0-4, 2-6. Adjacent nodes must have different colors.",
         },
@@ -162,14 +174,16 @@ def main() -> int:
         # Step 1: Ask LLM
         prompt = f"""Solve this graph coloring problem.
 
-{prob['description']}
+{prob["description"]}
 
 Give your answer as: Node 0: Color, Node 1: Color, etc.
 Answer each node with exactly one color. No explanation needed."""
 
         messages = [{"role": "user", "content": prompt}]
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
         inputs = tokenizer(text, return_tensors="pt")
@@ -177,33 +191,43 @@ Answer each node with exactly one color. No explanation needed."""
             inputs = {k: v.cuda() for k, v in inputs.items()}
 
         with torch.no_grad():
-            outputs = model.generate(**inputs, max_new_tokens=200, do_sample=False,
-                                     pad_token_id=tokenizer.eos_token_id)
+            outputs = model.generate(
+                **inputs, max_new_tokens=200, do_sample=False, pad_token_id=tokenizer.eos_token_id
+            )
 
-        response = tokenizer.decode(outputs[0, inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        response = tokenizer.decode(
+            outputs[0, inputs["input_ids"].shape[1] :], skip_special_tokens=True
+        )
         if "</think>" in response:
             response = response.split("</think>")[-1].strip()
 
         print(f"  LLM response: {response[:120]}")
 
         # Step 2: Parse LLM's coloring
-        llm_coloring = parse_llm_coloring(response, prob["n_nodes"], color_names[:prob["n_colors"]])
+        llm_coloring = parse_llm_coloring(
+            response, prob["n_nodes"], color_names[: prob["n_colors"]]
+        )
         print(f"  Parsed: {llm_coloring}")
 
         # Step 3: Verify
         llm_valid, total = check_coloring(llm_coloring, prob["edges"])
         llm_perfect = llm_valid == total
-        print(f"  LLM verify: {llm_valid}/{total} edges valid {'PERFECT' if llm_perfect else 'VIOLATIONS'}")
+        print(
+            f"  LLM verify: {llm_valid}/{total} edges valid {'PERFECT' if llm_perfect else 'VIOLATIONS'}"
+        )
 
         # Step 4: Repair via thrml (always, to compare)
         total_spins, ising_edges, biases, weights = graph_coloring_to_ising(
-            prob["n_nodes"], prob["edges"], prob["n_colors"],
+            prob["n_nodes"],
+            prob["edges"],
+            prob["n_colors"],
         )
         nodes = [SpinNode() for _ in range(total_spins)]
         thrml_edges = [(nodes[e[0]], nodes[e[1]]) for e in ising_edges]
 
         ising_model = IsingEBM(
-            nodes=nodes, edges=thrml_edges,
+            nodes=nodes,
+            edges=thrml_edges,
             biases=jnp.array(biases, dtype=jnp.float32),
             weights=jnp.array(weights, dtype=jnp.float32),
             beta=jnp.array(10.0),
@@ -215,8 +239,12 @@ Answer each node with exactly one color. No explanation needed."""
         schedule = SamplingSchedule(1000, 30, 20)
 
         samples = sample_states(
-            jrandom.PRNGKey(prob["n_nodes"] + 42), program, schedule,
-            init_state, [], free_blocks,
+            jrandom.PRNGKey(prob["n_nodes"] + 42),
+            program,
+            schedule,
+            init_state,
+            [],
+            free_blocks,
         )
 
         # Find best repair
@@ -232,7 +260,9 @@ Answer each node with exactly one color. No explanation needed."""
                 best_repair_coloring = coloring
 
         repair_perfect = best_repair_valid == total
-        print(f"  Ising repair: {best_repair_valid}/{total} edges valid {'PERFECT' if repair_perfect else ''}")
+        print(
+            f"  Ising repair: {best_repair_valid}/{total} edges valid {'PERFECT' if repair_perfect else ''}"
+        )
 
         if best_repair_coloring:
             repair_str = ", ".join(
@@ -250,17 +280,19 @@ Answer each node with exactly one color. No explanation needed."""
         else:
             print(f"  ❌ Repair didn't help")
 
-        results.append({
-            "name": prob["name"],
-            "n_nodes": prob["n_nodes"],
-            "n_edges": len(prob["edges"]),
-            "llm_valid": llm_valid,
-            "repair_valid": best_repair_valid,
-            "total": total,
-            "llm_perfect": llm_perfect,
-            "repair_perfect": repair_perfect,
-            "improved": improved,
-        })
+        results.append(
+            {
+                "name": prob["name"],
+                "n_nodes": prob["n_nodes"],
+                "n_edges": len(prob["edges"]),
+                "llm_valid": llm_valid,
+                "repair_valid": best_repair_valid,
+                "total": total,
+                "llm_perfect": llm_perfect,
+                "repair_perfect": repair_perfect,
+                "improved": improved,
+            }
+        )
 
     # Free LLM memory
     del model, tokenizer

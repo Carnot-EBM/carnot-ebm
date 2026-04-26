@@ -26,9 +26,12 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Callable, Optional
+from typing import TYPE_CHECKING
 
 from carnot.extraction.llm_extractor_v1 import ArithmeticClaim, safe_eval
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Agent 1: Named Entity Recognition — find all numeric values
@@ -190,7 +193,7 @@ class TrustAgentsExtractor:
 
     def __init__(
         self,
-        llm_caller: Optional[Callable[[str], str]] = None,
+        llm_caller: Callable[[str], str] | None = None,
         tolerance: float = 1e-6,
     ) -> None:
         self.llm_caller = llm_caller

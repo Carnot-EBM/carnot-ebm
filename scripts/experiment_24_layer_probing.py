@@ -28,6 +28,7 @@ def main() -> int:
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     from carnot.embeddings.layer_probing import probe_all_layers
+
     # Import the answer checker
     sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
     from collect_truthfulqa_activations import check_truthfulqa_answer
@@ -42,7 +43,8 @@ def main() -> int:
     print(f"\nLoading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         dtype=torch.float16 if device == "cuda" else None,
     )
@@ -71,7 +73,9 @@ def main() -> int:
         incorrect_answers = example["incorrect_answers"]
         best_answer = example.get("best_answer", "")
 
-        messages = [{"role": "user", "content": f"Answer briefly and factually in one sentence. {question}"}]
+        messages = [
+            {"role": "user", "content": f"Answer briefly and factually in one sentence. {question}"}
+        ]
         text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         inputs = tokenizer(text, return_tensors="pt")
         if device == "cuda":
@@ -79,15 +83,18 @@ def main() -> int:
         prompt_len = inputs["input_ids"].shape[1]
 
         with torch.no_grad():
-            outputs = model.generate(**inputs, max_new_tokens=80, do_sample=False,
-                                     pad_token_id=tokenizer.eos_token_id)
+            outputs = model.generate(
+                **inputs, max_new_tokens=80, do_sample=False, pad_token_id=tokenizer.eos_token_id
+            )
 
         gen_ids = outputs[0, prompt_len:]
         response = tokenizer.decode(gen_ids, skip_special_tokens=True)
         if "</think>" in response:
             response = response.split("</think>")[-1].strip()
 
-        is_correct = check_truthfulqa_answer(response, correct_answers, incorrect_answers, best_answer)
+        is_correct = check_truthfulqa_answer(
+            response, correct_answers, incorrect_answers, best_answer
+        )
 
         # Get hidden states from ALL layers
         with torch.no_grad():
@@ -110,8 +117,10 @@ def main() -> int:
 
         if (qi + 1) % 50 == 0:
             total_tokens = sum(len(v) for v in correct_by_layer.values())
-            print(f"  [{qi+1:3d}/{len(questions)}] correct={n_correct} wrong={n_wrong} "
-                  f"tokens/layer≈{total_tokens // len(probe_layers)}")
+            print(
+                f"  [{qi + 1:3d}/{len(questions)}] correct={n_correct} wrong={n_wrong} "
+                f"tokens/layer≈{total_tokens // len(probe_layers)}"
+            )
 
     print(f"\nCollection: {n_correct} correct, {n_wrong} wrong responses")
 
@@ -122,14 +131,17 @@ def main() -> int:
         if correct_by_layer[layer_idx] and wrong_by_layer[layer_idx]:
             correct_acts[layer_idx] = np.array(correct_by_layer[layer_idx])
             wrong_acts[layer_idx] = np.array(wrong_by_layer[layer_idx])
-            print(f"  Layer {layer_idx}: {len(correct_acts[layer_idx])} correct, "
-                  f"{len(wrong_acts[layer_idx])} wrong tokens")
+            print(
+                f"  Layer {layer_idx}: {len(correct_acts[layer_idx])} correct, "
+                f"{len(wrong_acts[layer_idx])} wrong tokens"
+            )
 
     # Probe all layers
     print("\nTraining probes at each layer...")
     start = time.time()
     results = probe_all_layers(
-        correct_acts, wrong_acts,
+        correct_acts,
+        wrong_acts,
         hidden_dim=1024,
         n_epochs=200,
         lr=0.005,
@@ -149,14 +161,20 @@ def main() -> int:
 
     # Compare to final layer baseline
     final_layer = probe_layers[-1]
-    final_acc = next((r.test_accuracy for r in results.layer_results if r.layer_index == final_layer), 0)
+    final_acc = next(
+        (r.test_accuracy for r in results.layer_results if r.layer_index == final_layer), 0
+    )
     best_acc = results.best_test_accuracy
 
     if results.best_layer != final_layer and best_acc > final_acc + 0.02:
-        print(f"VERDICT: ✅ Layer {results.best_layer} ({best_acc:.1%}) beats final layer ({final_acc:.1%})")
+        print(
+            f"VERDICT: ✅ Layer {results.best_layer} ({best_acc:.1%}) beats final layer ({final_acc:.1%})"
+        )
         print("  Intermediate layers retain hallucination signal!")
     elif best_acc > final_acc:
-        print(f"VERDICT: ⚠️ Small difference: layer {results.best_layer} ({best_acc:.1%}) vs final ({final_acc:.1%})")
+        print(
+            f"VERDICT: ⚠️ Small difference: layer {results.best_layer} ({best_acc:.1%}) vs final ({final_acc:.1%})"
+        )
     else:
         print(f"VERDICT: ❌ Final layer ({final_acc:.1%}) is already best or tied")
 

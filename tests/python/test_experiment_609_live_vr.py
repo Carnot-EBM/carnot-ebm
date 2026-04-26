@@ -36,13 +36,17 @@ import scripts.experiment_609_live_vr_coace_v4 as exp609  # noqa: E402
 # ---------------------------------------------------------------------------
 
 
-def _make_gate(tmp_path: Path, gate_open: bool, best_recall: float = 0.04, winning: str = "coace_v4") -> Path:
+def _make_gate(
+    tmp_path: Path, gate_open: bool, best_recall: float = 0.04, winning: str = "coace_v4"
+) -> Path:
     """Write a minimal Exp 605 gate file and return its parent dir (repo_root)."""
     gate_data = {
         "gate_open": gate_open,
         "best_recall": best_recall,
         "winning_extractor": winning,
-        "honest_verdict": "gate_open_proceed_to_vr" if gate_open else "gate_closed_recall_below_threshold",
+        "honest_verdict": "gate_open_proceed_to_vr"
+        if gate_open
+        else "gate_closed_recall_below_threshold",
     }
     gate_path = tmp_path / "results" / "experiment_605_extractor_diagnostic_v4.json"
     gate_path.parent.mkdir(parents=True, exist_ok=True)
@@ -149,8 +153,11 @@ class TestBuildArtifact:
     def test_schema_tag_is_correct(self, tmp_path: Path) -> None:
         tmpl = _make_tmpl(tmp_path)
         art = exp609._build_artifact(
-            tmpl, {}, inference_mode="blocked_gate_closed",
-            winning_extractor=None, best_recall_at_gate=None,
+            tmpl,
+            {},
+            inference_mode="blocked_gate_closed",
+            winning_extractor=None,
+            best_recall_at_gate=None,
         )
         assert art["schema"] == "carnot.live_vr_coace_v4.v1"
 
@@ -225,7 +232,8 @@ class TestBuildArtifact:
     def test_honest_verdict_blocked_when_not_live(self, tmp_path: Path) -> None:
         tmpl = _make_tmpl(tmp_path)
         art = exp609._build_artifact(
-            tmpl, {},
+            tmpl,
+            {},
             inference_mode="blocked_gate_closed",
             winning_extractor=None,
             best_recall_at_gate=0.04,
@@ -236,16 +244,22 @@ class TestBuildArtifact:
     def test_question_indices_always_400_449(self, tmp_path: Path) -> None:
         tmpl = _make_tmpl(tmp_path)
         art = exp609._build_artifact(
-            tmpl, {}, inference_mode="blocked_gate_closed",
-            winning_extractor=None, best_recall_at_gate=None,
+            tmpl,
+            {},
+            inference_mode="blocked_gate_closed",
+            winning_extractor=None,
+            best_recall_at_gate=None,
         )
         assert art["question_indices"] == "400-449"
 
     def test_reason_included_when_provided(self, tmp_path: Path) -> None:
         tmpl = _make_tmpl(tmp_path)
         art = exp609._build_artifact(
-            tmpl, {}, inference_mode="blocked_gate_closed",
-            winning_extractor=None, best_recall_at_gate=None,
+            tmpl,
+            {},
+            inference_mode="blocked_gate_closed",
+            winning_extractor=None,
+            best_recall_at_gate=None,
             reason="gate_closed_recall_below_20pct",
         )
         assert art.get("reason") == "gate_closed_recall_below_20pct"
@@ -253,8 +267,11 @@ class TestBuildArtifact:
     def test_reason_absent_when_not_provided(self, tmp_path: Path) -> None:
         tmpl = _make_tmpl(tmp_path)
         art = exp609._build_artifact(
-            tmpl, {}, inference_mode="blocked_gate_closed",
-            winning_extractor=None, best_recall_at_gate=None,
+            tmpl,
+            {},
+            inference_mode="blocked_gate_closed",
+            winning_extractor=None,
+            best_recall_at_gate=None,
         )
         assert "reason" not in art
 

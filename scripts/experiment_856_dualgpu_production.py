@@ -58,6 +58,7 @@ tmpl.setup()
 # Wiring validation (CPU, always runs)
 # ---------------------------------------------------------------------------
 
+
 def _validate_wiring() -> dict:
     """Check that all three required imports expose the expected API surface.
 
@@ -76,6 +77,7 @@ def _validate_wiring() -> dict:
     dual_gpu_has_run_model_tasks = False
     try:
         from carnot.inference.dual_gpu import DualGPURunner
+
         dual_gpu_importable = True
         dual_gpu_has_run_model_tasks = callable(getattr(DualGPURunner, "run_model_tasks", None))
     except Exception:
@@ -87,6 +89,7 @@ def _validate_wiring() -> dict:
     vrp_has_method = False
     try:
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         vrp_importable = True
         vrp_has_flag = hasattr(VerifyRepairPipeline, "DUAL_GPU_ENABLED")
         vrp_has_method = callable(getattr(VerifyRepairPipeline, "has_second_model", None))
@@ -99,6 +102,7 @@ def _validate_wiring() -> dict:
     ttp_has_method = False
     try:
         from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
+
         ttp_importable = True
         ttp_has_flag = hasattr(ThreeTierPipeline, "DUAL_GPU_ENABLED")
         ttp_has_method = callable(getattr(ThreeTierPipeline, "has_second_model", None))
@@ -138,6 +142,7 @@ gpu_validated: bool | str = "no_gpu"
 
 try:
     import torch
+
     n_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
 except Exception:
     n_gpus = 0
@@ -145,9 +150,7 @@ except Exception:
 if n_gpus >= 2 and dual_gpu_wired:
     # 25 synthetic yes/no questions — lightweight enough that the real test is
     # scheduling overhead and parallel dispatch, not model inference time.
-    SYNTHETIC_QUESTIONS = [
-        f"Is {i} a prime number?" for i in range(2, 27)
-    ]
+    SYNTHETIC_QUESTIONS = [f"Is {i} a prime number?" for i in range(2, 27)]
 
     def _mock_inference(ctx: object) -> list[bool]:
         """Minimal stand-in for real model inference — just measures dispatch overhead."""
@@ -203,9 +206,7 @@ dual_gpu_deployed: bool = dual_gpu_wired
 
 if dual_gpu_wired and isinstance(gpu_validated, bool) and gpu_validated:
     honest_verdict = "deployed"
-elif dual_gpu_wired and gpu_validated == "no_gpu":
-    honest_verdict = "wired_no_gpu"
-elif dual_gpu_wired:
+elif dual_gpu_wired and gpu_validated == "no_gpu" or dual_gpu_wired:
     honest_verdict = "wired_no_gpu"
 else:
     honest_verdict = "partial"

@@ -141,7 +141,9 @@ if _sota_specs is not None:
     GEMMA4_MODEL_PATH = _sota_specs[1]["model_path"]
     _MODELS_USED_REAL_SOTA = True
 else:
-    print("WARNING: cached SOTA GGUFs unavailable, falling back to tiny models — output quality will be poor")
+    print(
+        "WARNING: cached SOTA GGUFs unavailable, falling back to tiny models — output quality will be poor"
+    )
     QWEN_MODEL_ID = "Qwen/Qwen3.5-0.8B"
     GEMMA4_MODEL_ID = "google/gemma-4-E4B-it"
     QWEN_MODEL_PATH = None
@@ -215,7 +217,7 @@ def _qwen_generate(pipeline: Any, prompt: str) -> str:
         return f"[qwen_error: {exc}]"
 
 
-def _load_qwen_pipeline(device: str) -> Optional[Any]:
+def _load_qwen_pipeline(device: str) -> Any | None:
     """Load Qwen3.5-0.8B as a HuggingFace text-generation pipeline on the given device.
 
     Returns None on failure so run_experiment() can continue with stub responses
@@ -265,7 +267,7 @@ def _build_live_data_artifact(
     inference_mode: str,
     n_questions: int,
     n_pairs_collected: int,
-    live_pairs_file: Optional[str],
+    live_pairs_file: str | None,
     per_question_latencies: list[float],
     fover_corpus_v3_size: int = 0,
 ) -> dict:
@@ -285,9 +287,7 @@ def _build_live_data_artifact(
         honest_verdict = "partial_collection_579"
 
     mean_latency = (
-        sum(per_question_latencies) / len(per_question_latencies)
-        if per_question_latencies
-        else 0.0
+        sum(per_question_latencies) / len(per_question_latencies) if per_question_latencies else 0.0
     )
 
     return {
@@ -311,7 +311,7 @@ def _build_live_data_artifact(
 # ---------------------------------------------------------------------------
 
 
-def run_experiment(repo_root: Optional[Path] = None) -> dict:
+def run_experiment(repo_root: Path | None = None) -> dict:
     """Run Exp 579: collect 50 live CoT pairs (indices 200-249) with FOVER annotation.
 
     All exit paths write the deliverable JSON.  Merges results into fover_corpus_v3.json.
@@ -414,9 +414,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     checkpoint = tmpl.checkpoint_resume()
     pairs: list[dict] = checkpoint.get("pairs", []) if checkpoint else []
     done_indices: set[int] = {p["question_index"] for p in pairs} if pairs else set()
-    per_question_latencies: list[float] = (
-        checkpoint.get("latencies", []) if checkpoint else []
-    )
+    per_question_latencies: list[float] = checkpoint.get("latencies", []) if checkpoint else []
 
     # Step 11: Per-question, per-model inference + FOVER annotation (NO repair pipeline)
     for q_dict in questions:
@@ -432,9 +430,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
             (GEMMA4_MODEL_ID, lambda p: gemma4.generate(p)),
             (
                 QWEN_MODEL_ID,
-                lambda p: _qwen_generate(qwen_pipeline, p)
-                if qwen_pipeline
-                else "[qwen_not_loaded]",
+                lambda p: (
+                    _qwen_generate(qwen_pipeline, p) if qwen_pipeline else "[qwen_not_loaded]"
+                ),
             ),
         ]:
             response = generate_fn(question_text)
@@ -490,9 +488,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     ]
     _write_json_atomic(corpus_v3_path, merged_list)
     fover_corpus_v3_size = len(merged_list)
-    _log.info(
-        "fover_corpus_v3.json written: %d entries (was 132 in v2)", fover_corpus_v3_size
-    )
+    _log.info("fover_corpus_v3.json written: %d entries (was 132 in v2)", fover_corpus_v3_size)
 
     # Step 15: Build main artifact and write deliverable
     artifact_data = _build_live_data_artifact(

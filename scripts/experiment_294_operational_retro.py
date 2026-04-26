@@ -28,8 +28,9 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
+import contextlib
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -210,10 +211,8 @@ def _gpu_count_from_result(result: dict) -> int:
 
     # Experiment-class heuristics based on experiment number
     exp_num = result.get("experiment", 0)
-    try:
+    with contextlib.suppress(ValueError, AttributeError):
         exp_num = int(str(exp_num).replace("exp", "").split("-")[0])
-    except (ValueError, AttributeError):
-        pass
 
     return 0  # default: no GPU inference observed in result artifact
 
@@ -307,9 +306,7 @@ def audit_action_items(
     # The spirit of the action item (DualGPURunner active from the
     # first GPU-using experiment) is satisfied.  The letter (wired from
     # Exp 281) is partially satisfied because 281 has no GPU path.
-    dual_gpu_in_282 = any(
-        e["gpu_count"] == 2 for e in scope if e["experiment_id"] == 282
-    )
+    dual_gpu_in_282 = any(e["gpu_count"] == 2 for e in scope if e["experiment_id"] == 282)
     item_a = {
         "id": "RETRO-2026-04-20-A",
         "description": (
@@ -408,8 +405,7 @@ def audit_action_items(
     # No other result file in 281-293 mentions CUDA ORT batching.
     cuda_ort_result = results.get(292, {})
     cuda_ort_tested = (
-        "cuda_ort" in str(cuda_ort_result).lower()
-        or "batch_size" in str(cuda_ort_result).lower()
+        "cuda_ort" in str(cuda_ort_result).lower() or "batch_size" in str(cuda_ort_result).lower()
     )
     item_d = {
         "id": "RETRO-2026-04-20-D",
@@ -615,7 +611,7 @@ def compute_totals(scope: list[dict]) -> tuple[float, int, float]:
 
 def main() -> None:
     """Generate the operational retrospective for milestone 2026.04.21."""
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     # 1. Load results
     results = load_experiment_results()
@@ -691,7 +687,9 @@ def main() -> None:
         "key_improvement": (
             "DualGPURunner wired from Exp 282 (first GPU experiment) — resolves "
             "the persistent single-GPU bottleneck for new experiments."
-        ) if carry_over_rate < 100.0 else "No improvement — 100% carry-over persists.",
+        )
+        if carry_over_rate < 100.0
+        else "No improvement — 100% carry-over persists.",
         "key_remaining_gap": (
             "Apple adversarial benchmark not completed (live GPU required); "
             "CUDA ORT batch_size crossover not tested."

@@ -78,11 +78,15 @@ def _make_results_json(
     rng = np.random.RandomState(seed)
     questions = []
     for i in range(n_questions):
-        questions.append({
-            "question_index": i,
-            "variant": "standard" if i % 3 == 0 else ("number_swap" if i % 3 == 1 else "irrelevant"),
-            "violation_detected": bool(rng.random() > 0.5),
-        })
+        questions.append(
+            {
+                "question_index": i,
+                "variant": "standard"
+                if i % 3 == 0
+                else ("number_swap" if i % 3 == 1 else "irrelevant"),
+                "violation_detected": bool(rng.random() > 0.5),
+            }
+        )
     data = {"experiment": 295, "questions": questions}
     results_path.write_text(json.dumps(data))
 
@@ -223,8 +227,10 @@ class TestExtractTrainingPairs:
             np.save(str(data_dir / f"logits_295_verify_{i}.npy"), logits)
 
         # All violation_detected = True
-        questions = [{"question_index": i, "variant": "standard", "violation_detected": True}
-                     for i in range(20)]
+        questions = [
+            {"question_index": i, "variant": "standard", "violation_detected": True}
+            for i in range(20)
+        ]
         results_path.write_text(json.dumps({"experiment": 295, "questions": questions}))
 
         pairs = extract_training_pairs(data_dir, results_path)
@@ -299,6 +305,7 @@ class TestTrainJepaOnPairs:
         # REQ-JEPA-004: valid loss values.
         """
         import math
+
         pairs = _make_min_pairs(n_pairs=80, vocab_size=32)
         metrics = train_jepa_on_pairs(pairs, epochs=5, lr=1e-3)
         for v in metrics["val_loss"]:
@@ -310,6 +317,7 @@ class TestTrainJepaOnPairs:
         # REQ-JEPA-004: valid loss values.
         """
         import math
+
         pairs = _make_min_pairs(n_pairs=80, vocab_size=32)
         metrics = train_jepa_on_pairs(pairs, epochs=5, lr=1e-3)
         for v in metrics["train_loss"]:
@@ -662,8 +670,10 @@ class TestEdgeCaseBranches:
             logits = rng.randn(10, 32).astype(np.float32)
             np.save(str(data_dir / f"logits_295_verify_{i}.npy"), logits)
 
-        questions = [{"question_index": i, "variant": "standard", "violation_detected": True}
-                     for i in range(20)]
+        questions = [
+            {"question_index": i, "variant": "standard", "violation_detected": True}
+            for i in range(20)
+        ]
         results_path.write_text(json.dumps({"experiment": 295, "questions": questions}))
 
         pairs = extract_training_pairs(data_dir, results_path)
@@ -738,6 +748,7 @@ class TestEdgeCaseBranches:
         # REQ-JEPA-004: checkpoint isolation.
         """
         from scripts.experiment_307_jepa_real_training import _MLPParams
+
         rng = np.random.RandomState(5)
         params = _MLPParams(16, rng)
         copy = params.copy()
@@ -752,6 +763,7 @@ class TestEdgeCaseBranches:
         # REQ-JEPA-004: Adam optimiser integration.
         """
         from scripts.experiment_307_jepa_real_training import _MLPParams, _AdamState
+
         rng = np.random.RandomState(6)
         params = _MLPParams(16, rng)
         adam = _AdamState()
@@ -802,8 +814,10 @@ class TestEdgeCaseBranches:
             logits = rng.randn(10, 32).astype(np.float32)
             np.save(str(data_dir / f"logits_295_verify_{i}.npy"), logits)
 
-        questions = [{"question_index": i, "variant": "standard", "violation_detected": True}
-                     for i in range(20)]
+        questions = [
+            {"question_index": i, "variant": "standard", "violation_detected": True}
+            for i in range(20)
+        ]
         results_path.write_text(json.dumps({"experiment": 295, "questions": questions}))
 
         # Should not raise; 294 1D file is skipped.
@@ -860,4 +874,3 @@ class TestEdgeCaseBranches:
         # Either blocked (expected) or success if real files were somehow added.
         assert result["status"] in ("blocked", "success")
         assert result["experiment"] == 307
-

@@ -176,7 +176,8 @@ def safe_slug(text: str) -> str:
 def utc_now() -> str:
     """Return the current UTC timestamp in ISO-8601 format (e.g. ``2026-04-14T05:00:00Z``)."""
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def get_repo_root() -> Path:
@@ -316,7 +317,7 @@ def model_prewarm(
             inputs = tokenizer(health_prompt, return_tensors="pt").to(device)
             with torch.no_grad():
                 out = model.generate(**inputs, max_new_tokens=16, do_sample=False)
-            generated_ids = out[0][inputs["input_ids"].shape[1]:]
+            generated_ids = out[0][inputs["input_ids"].shape[1] :]
             response = tokenizer.decode(generated_ids, skip_special_tokens=True)
 
         health_ok = bool(response and response.strip())
@@ -411,9 +412,7 @@ def _query_vram_gb() -> dict[str, float]:
 # ---------------------------------------------------------------------------
 
 
-def _ckpt_path(
-    checkpoint_dir: Path, *, model_name: str, mode: str, variant_type: str
-) -> Path:
+def _ckpt_path(checkpoint_dir: Path, *, model_name: str, mode: str, variant_type: str) -> Path:
     """Return the checkpoint file path for a (model, mode, variant_type) triple.
 
     Args:
@@ -886,10 +885,12 @@ class VerifyRepairRunner295:
             ``(1, seq_len, vocab_size)``.
         """
         if os.environ.get("CARNOT_FORCE_LIVE", "0") != "1":
+
             def _mock(question: str, expected_answer: int, **kw: Any) -> tuple[str, np.ndarray]:
                 """Mock inference: always returns the correct answer."""
                 logits = np.zeros((1, 8, 100), dtype=np.float32)
                 return str(expected_answer), logits
+
             return _mock
 
         try:
@@ -943,7 +944,7 @@ class VerifyRepairRunner295:
                         output_scores=True,
                         return_dict_in_generate=True,
                     )
-                generated_ids = output.sequences[0][inputs["input_ids"].shape[1]:]
+                generated_ids = output.sequences[0][inputs["input_ids"].shape[1] :]
                 response = tokenizer.decode(generated_ids, skip_special_tokens=True)
 
                 if output.scores:
@@ -993,9 +994,7 @@ class VerifyRepairRunner295:
     # Verification helpers
     # ------------------------------------------------------------------
 
-    def _run_verifiers(
-        self, *, question: str, response: str
-    ) -> tuple[bool, bool, bool]:
+    def _run_verifiers(self, *, question: str, response: str) -> tuple[bool, bool, bool]:
         """Run semantic grounding and formal claim verifiers.
 
         Args:
@@ -1203,12 +1202,15 @@ class VerifyRepairRunner295:
             # Checkpoint every CHECKPOINT_INTERVAL questions.
             n_done = idx + 1
             if n_done % CHECKPOINT_INTERVAL == 0 or n_done == total:
-                _save_ckpt(ckpt_path, {
-                    "model_name": model_name,
-                    "mode": mode,
-                    "variant_type": variant_type,
-                    "completed": completed,
-                })
+                _save_ckpt(
+                    ckpt_path,
+                    {
+                        "model_name": model_name,
+                        "mode": mode,
+                        "variant_type": variant_type,
+                        "completed": completed,
+                    },
+                )
 
             # Save logits at prefix fractions (REQ-VERIFY-070 / SCENARIO-VERIFY-106).
             if total > 0:
@@ -1234,10 +1236,9 @@ class VerifyRepairRunner295:
                                 completed[r["question_id"]]["logit_path"] = out_path
 
         # Store logit paths for this cell.
-        self._logit_paths.setdefault(model_name, {}).update({
-            f"{mode}__{variant_type}__{k}": v
-            for k, v in cell_logit_paths.items()
-        })
+        self._logit_paths.setdefault(model_name, {}).update(
+            {f"{mode}__{variant_type}__{k}": v for k, v in cell_logit_paths.items()}
+        )
 
         return results
 
@@ -1262,9 +1263,7 @@ class VerifyRepairRunner295:
         for mode in MODES:
             variant_stats: dict[str, Any] = {}
             for vt in VARIANT_TYPES:
-                records = self.run_mode_variant(
-                    model_name=model_name, mode=mode, variant_type=vt
-                )
+                records = self.run_mode_variant(model_name=model_name, mode=mode, variant_type=vt)
                 n_correct = sum(1 for r in records if r.get("correct"))
                 n_total = len(records)
                 n_violations = sum(1 for r in records if r.get("violation_detected"))
@@ -1343,7 +1342,8 @@ class VerifyRepairRunner295:
                             expected = item["expected_answer"]
                             try:
                                 self.generate_fn(
-                                    question, expected,
+                                    question,
+                                    expected,
                                     model_name=model_name,
                                     mode=mode,
                                     variant_type=vt,
@@ -1383,12 +1383,10 @@ class VerifyRepairRunner295:
 
         # Build pre-warm summary dicts.
         pre_warm_status = {
-            name: result.health_ok
-            for name, result in self._pre_warm_results.items()
+            name: result.health_ok for name, result in self._pre_warm_results.items()
         }
         pre_warm_time_s = {
-            name: result.load_time_s
-            for name, result in self._pre_warm_results.items()
+            name: result.load_time_s for name, result in self._pre_warm_results.items()
         }
 
         artifact = build_artifact(
@@ -1461,8 +1459,7 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover
 
     parser = argparse.ArgumentParser(
         description=(
-            "Exp 295: Verify-repair benchmark on Apple adversarial GSM8K corpus "
-            "(pre-warm fix)"
+            "Exp 295: Verify-repair benchmark on Apple adversarial GSM8K corpus (pre-warm fix)"
         ),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
@@ -1505,10 +1502,7 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover
         logit_dir=args.logit_dir,
     )
 
-    print(
-        f"[Exp {EXPERIMENT}] Running 12-cell benchmark "
-        "(3 modes × 2 variants × 2 models)…"
-    )
+    print(f"[Exp {EXPERIMENT}] Running 12-cell benchmark (3 modes × 2 variants × 2 models)…")
     artifact = runner.run_with_timeout_handling(
         output_path=args.output,
         run_date=RUN_DATE,
@@ -1533,6 +1527,7 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover
 
 if __name__ == "__main__":
     import sys
+
     sys.exit(main())
 
 
@@ -1543,6 +1538,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

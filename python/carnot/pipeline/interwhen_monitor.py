@@ -43,9 +43,10 @@ Spec: REQ-VERIFY-130, REQ-VERIFY-131,
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import TYPE_CHECKING
 
-from carnot.pipeline.symcode_verifier import CoTStep, SymCodeVerifier
+if TYPE_CHECKING:
+    from carnot.pipeline.symcode_verifier import CoTStep, SymCodeVerifier
 
 # ---------------------------------------------------------------------------
 # InterWhenViolation — result for one sentence-boundary monitoring event
@@ -165,7 +166,7 @@ class InterWhenMonitor:
     # monitor_partial
     # ------------------------------------------------------------------
 
-    def monitor_partial(self, partial_text: str) -> Optional[InterWhenViolation]:
+    def monitor_partial(self, partial_text: str) -> InterWhenViolation | None:
         """Check the last sentence of partial_text for an arithmetic violation.
 
         This is the core "mid-generation" check.  In a streaming setting it is

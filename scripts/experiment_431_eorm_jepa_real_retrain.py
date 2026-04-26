@@ -81,7 +81,7 @@ REAL_PAIR_THRESHOLD = 10
 
 # Training hyperparameters
 TRAIN_SPLIT = 0.8
-N_EPOCHS = 100         # EORM training epochs (both CI and live — runtime is <10s on CPU)
+N_EPOCHS = 100  # EORM training epochs (both CI and live — runtime is <10s on CPU)
 CHECKPOINT_EVERY = 25  # save intermediate checkpoint every N epochs
 BATCH_SIZE = 16
 LR = 1e-4
@@ -350,7 +350,11 @@ def run_experiment(
 
     # Step 1: apply_env_autofix FIRST (RETRO-022 belt-and-suspenders)
     autofix = apply_env_autofix()
-    _log.info("env_autofix: gpu_detected=%s auto_fix_applied=%s", autofix.gpu_detected, autofix.auto_fix_applied)
+    _log.info(
+        "env_autofix: gpu_detected=%s auto_fix_applied=%s",
+        autofix.gpu_detected,
+        autofix.auto_fix_applied,
+    )
 
     tmpl = ExperimentTemplate(
         EXPERIMENT_ID,
@@ -376,7 +380,8 @@ def run_experiment(
         retrain_mode = "synthetic_only"
         _log.info(
             "Only %d real pairs (threshold %d); falling back to synthetic corpus",
-            n_real, REAL_PAIR_THRESHOLD,
+            n_real,
+            REAL_PAIR_THRESHOLD,
         )
         synthetic_eorm = make_synthetic_eorm_pairs(n=SYNTHETIC_EORM_N, seed=431)
         synthetic_jepa = _make_synthetic_pairs(n=SYNTHETIC_JEPA_N, seed=431)
@@ -408,7 +413,8 @@ def run_experiment(
     triples = _build_eorm_triples(train_fover, train_vp)
     _log.info(
         "Training EORM for %d epochs on %d contrastive triples",
-        N_EPOCHS, len(triples),
+        N_EPOCHS,
+        len(triples),
     )
 
     eorm_trainer = EORMTrainer(eorm_model, lr=LR, margin=MARGIN)
@@ -451,7 +457,11 @@ def run_experiment(
             jepa_retrainer.train_epoch(train_vp, batch_size=BATCH_SIZE)
 
     jepa_after_auc = jepa_retrainer.evaluate_auc_roc(test_vp)
-    _log.info("JEPA after_auc = %.4f (improvement = %+.4f)", jepa_after_auc, jepa_after_auc - jepa_before_auc)
+    _log.info(
+        "JEPA after_auc = %.4f (improvement = %+.4f)",
+        jepa_after_auc,
+        jepa_after_auc - jepa_before_auc,
+    )
 
     # Step 8: Save models
     eorm_path = str(_root / "results" / "eorm_431_real.safetensors")
@@ -477,7 +487,8 @@ def run_experiment(
 
     _log.info(
         "honest_verdict=%s retro_024_closed=%s",
-        honest_verdict, retro_024_closed,
+        honest_verdict,
+        retro_024_closed,
     )
 
     artifact = tmpl.build_result(

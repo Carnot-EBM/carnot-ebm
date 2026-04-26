@@ -14,13 +14,11 @@ from unittest.mock import MagicMock, patch
 
 import jax.numpy as jnp
 import pytest
-
 from carnot.inference.guided_decoding import (
     EnergyGuidedSampler,
     GuidedDecoder,
     GuidedDecodingResult,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers / fixtures
@@ -53,9 +51,7 @@ def _make_mock_model(vocab_size: int = 50, n_tokens: int = 5) -> MagicMock:
     model = MagicMock()
     model.side_effect = side_effect
     model.__call__ = model.side_effect
-    model.parameters = MagicMock(
-        return_value=iter([torch.zeros(1)])
-    )
+    model.parameters = MagicMock(return_value=iter([torch.zeros(1)]))
     return model
 
 
@@ -69,15 +65,11 @@ def _make_mock_tokenizer(vocab_size: int = 50) -> MagicMock:
     tokenizer = MagicMock()
     tokenizer.eos_token_id = 1  # EOS is token 1
     # encode returns a 2-D tensor of shape (1, 3) — a 3-token prompt.
-    tokenizer.encode = MagicMock(
-        return_value=torch.tensor([[2, 3, 4]])
-    )
+    tokenizer.encode = MagicMock(return_value=torch.tensor([[2, 3, 4]]))
+
     # decode a single token ID → letter "A" (or EOS string).
     def decode(ids: Any, skip_special_tokens: bool = True) -> str:
-        if hasattr(ids, "item"):
-            val = ids.item()
-        else:
-            val = int(ids)
+        val = ids.item() if hasattr(ids, "item") else int(ids)
         return "" if val == tokenizer.eos_token_id else "A"
 
     tokenizer.decode = MagicMock(side_effect=decode)
@@ -312,9 +304,7 @@ class TestGenerate:
 
         tokenizer = _make_mock_tokenizer()
 
-        result = sampler.generate(
-            "What is 2+2?", model, tokenizer, max_tokens=10, temperature=0
-        )
+        result = sampler.generate("What is 2+2?", model, tokenizer, max_tokens=10, temperature=0)
 
         assert isinstance(result, GuidedDecodingResult)
         assert result.tokens_generated >= 1
@@ -355,7 +345,7 @@ class TestGenerate:
         model.parameters = MagicMock(return_value=iter([torch.zeros(1)]))
 
         tokenizer = _make_mock_tokenizer()
-        result = sampler.generate("prompt", model, tokenizer, max_tokens=10, temperature=0)
+        sampler.generate("prompt", model, tokenizer, max_tokens=10, temperature=0)
 
         # With 6 generated tokens and check_every_k=3, we expect checks at
         # steps 0, 3, 6 → 3 checks (step 6 may trigger EOS before check in
@@ -387,6 +377,7 @@ class TestGenerate:
         model.parameters = MagicMock(return_value=iter([torch.zeros(1)]))
 
         tokenizer = _make_mock_tokenizer()
+
         # Override decode so token 7 returns "X".
         def decode(ids: Any, skip_special_tokens: bool = True) -> str:
             val = ids.item() if hasattr(ids, "item") else int(ids)
@@ -430,9 +421,7 @@ class TestGenerate:
 
         sampler = EnergyGuidedSampler(alpha=0.0)
         # temperature=1.0 → goes through multinomial path.
-        result = sampler.generate(
-            "hello", model, tokenizer, max_tokens=5, temperature=1.0
-        )
+        result = sampler.generate("hello", model, tokenizer, max_tokens=5, temperature=1.0)
         assert isinstance(result, GuidedDecodingResult)
 
     def test_max_tokens_respected(self) -> None:
@@ -453,6 +442,7 @@ class TestGenerate:
         model.parameters = MagicMock(return_value=iter([torch.zeros(1)]))
 
         tokenizer = _make_mock_tokenizer()
+
         # Override decode so token 0 → "B", EOS (1) → "".
         def decode(ids: Any, skip_special_tokens: bool = True) -> str:
             val = ids.item() if hasattr(ids, "item") else int(ids)
@@ -527,9 +517,7 @@ class TestGuidedDecoder:
         tokenizer = MagicMock()
         tokenizer.eos_token_id = 1
         tokenizer.encode = MagicMock(return_value=torch.tensor([[2, 3, 4]]))
-        tokenizer.decode = MagicMock(
-            side_effect=lambda ids, **kw: "" if ids.item() == 1 else "A"
-        )
+        tokenizer.decode = MagicMock(side_effect=lambda ids, **kw: "" if ids.item() == 1 else "A")
 
         decoder = GuidedDecoder.from_pretrained(_ADAPTER_DIR)
         result = decoder.generate(model, tokenizer, "What is 47 + 28?")
@@ -560,9 +548,7 @@ class TestGuidedDecoder:
         tokenizer = MagicMock()
         tokenizer.eos_token_id = 1
         tokenizer.encode = MagicMock(return_value=torch.tensor([[2, 3]]))
-        tokenizer.decode = MagicMock(
-            side_effect=lambda ids, **kw: "" if ids.item() == 1 else "B"
-        )
+        tokenizer.decode = MagicMock(side_effect=lambda ids, **kw: "" if ids.item() == 1 else "B")
 
         decoder = GuidedDecoder.from_pretrained(_ADAPTER_DIR)
         # Positional args: model, tokenizer, prompt — as per the task spec.
@@ -593,16 +579,18 @@ class TestGuidedDecoder:
     def test_from_pretrained_huggingface_hub_fallback(self, tmp_path: Any) -> None:
         """REQ-VERIFY-001: non-local path resolves via snapshot_download fallback."""
         # snapshot_download returns our real adapter dir so the rest loads fine.
-        with patch(
-            "carnot.inference.guided_decoding.GuidedDecoder.from_pretrained",
-            wraps=GuidedDecoder.from_pretrained,
-        ):
-            with patch(
+        with (
+            patch(
+                "carnot.inference.guided_decoding.GuidedDecoder.from_pretrained",
+                wraps=GuidedDecoder.from_pretrained,
+            ),
+            patch(
                 "huggingface_hub.snapshot_download",
                 return_value=_ADAPTER_DIR,
-            ):
-                # Use a repo ID that doesn't exist locally so the HF branch fires.
-                decoder = GuidedDecoder.from_pretrained("Carnot-EBM/guided-decoding-adapter")
+            ),
+        ):
+            # Use a repo ID that doesn't exist locally so the HF branch fires.
+            decoder = GuidedDecoder.from_pretrained("Carnot-EBM/guided-decoding-adapter")
         assert isinstance(decoder._sampler, EnergyGuidedSampler)
 
 

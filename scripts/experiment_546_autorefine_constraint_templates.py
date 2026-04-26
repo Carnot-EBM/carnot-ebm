@@ -147,7 +147,9 @@ def _load_exp541_patterns(path: Path) -> list[tuple[str, str]]:
 # ---------------------------------------------------------------------------
 
 
-def _test_retrieval(store: ConstraintTemplateStore, queries: list[str], top_k: int = 3) -> list[dict[str, Any]]:
+def _test_retrieval(
+    store: ConstraintTemplateStore, queries: list[str], top_k: int = 3
+) -> list[dict[str, Any]]:
     """Run retrieve() for each query and return structured results.
 
     Each result entry contains:
@@ -168,17 +170,21 @@ def _test_retrieval(store: ConstraintTemplateStore, queries: list[str], top_k: i
         top_info = []
         for tmpl in retrieved:
             overlap = [kw for kw in tmpl.context_keywords if kw in query.lower()]
-            top_info.append({
-                "name": tmpl.name,
-                "violation_type": tmpl.violation_type,
-                "n_violations_observed": tmpl.n_violations_observed,
-                "overlap_keywords": overlap,
-            })
-        results.append({
-            "query": query,
-            "top_templates": top_info,
-            "n_retrieved": len(retrieved),
-        })
+            top_info.append(
+                {
+                    "name": tmpl.name,
+                    "violation_type": tmpl.violation_type,
+                    "n_violations_observed": tmpl.n_violations_observed,
+                    "overlap_keywords": overlap,
+                }
+            )
+        results.append(
+            {
+                "query": query,
+                "top_templates": top_info,
+                "n_retrieved": len(retrieved),
+            }
+        )
         _log.info(
             "retrieve query='%s...' → %d templates (top: %s)",
             query[:40],
@@ -236,7 +242,10 @@ def main() -> None:
     for t in templates:
         _log.info(
             "  template=%s vtype=%s n_obs=%d keywords=%s",
-            t.name, t.violation_type, t.n_violations_observed, t.context_keywords[:5],
+            t.name,
+            t.violation_type,
+            t.n_violations_observed,
+            t.context_keywords[:5],
         )
 
     # ------------------------------------------------------------------
@@ -283,7 +292,9 @@ def main() -> None:
     output_path.write_text(json.dumps(artifact, indent=2) + "\n")
     _log.info(
         "Deliverable written: %s (verdict=%s, n_templates=%d)",
-        RESULT_PATH, honest_verdict, n_templates,
+        RESULT_PATH,
+        honest_verdict,
+        n_templates,
     )
 
     tmpl.assert_deliverable_written()

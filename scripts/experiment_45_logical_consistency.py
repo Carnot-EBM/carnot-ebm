@@ -122,8 +122,12 @@ def check_consistency(claims: list[dict], n_props: int) -> dict:
     schedule = SamplingSchedule(500, 20, 10)
 
     samples = sample_states(
-        jrandom.PRNGKey(123), program, schedule,
-        init_state, [], free_blocks,
+        jrandom.PRNGKey(123),
+        program,
+        schedule,
+        init_state,
+        [],
+        free_blocks,
     )
 
     # Check if any sample satisfies all claims
@@ -150,9 +154,12 @@ def count_violations(claims: list[dict], assignment: dict[int, bool]) -> int:
     violations = 0
     for claim in claims:
         ctype = claim["type"]
-        if ctype == "true" and not assignment.get(claim["prop"], False):
-            violations += 1
-        elif ctype == "false" and assignment.get(claim["prop"], True):
+        if (
+            ctype == "true"
+            and not assignment.get(claim["prop"], False)
+            or ctype == "false"
+            and assignment.get(claim["prop"], True)
+        ):
             violations += 1
         elif ctype == "implies":
             a_val = assignment.get(claim["from"], False)
@@ -192,9 +199,9 @@ def main() -> int:
             "name": "Simple consistent",
             "n_props": 3,
             "claims": [
-                {"type": "true", "prop": 0},    # A is true
+                {"type": "true", "prop": 0},  # A is true
                 {"type": "implies", "from": 0, "to": 1},  # A implies B
-                {"type": "true", "prop": 1},    # B is true
+                {"type": "true", "prop": 1},  # B is true
             ],
             "expected_consistent": True,
         },
@@ -202,9 +209,9 @@ def main() -> int:
             "name": "Simple contradiction",
             "n_props": 3,
             "claims": [
-                {"type": "true", "prop": 0},    # A is true
+                {"type": "true", "prop": 0},  # A is true
                 {"type": "implies", "from": 0, "to": 1},  # A implies B
-                {"type": "false", "prop": 1},   # B is false ← contradiction!
+                {"type": "false", "prop": 1},  # B is false ← contradiction!
             ],
             "expected_consistent": False,
         },
@@ -212,8 +219,8 @@ def main() -> int:
             "name": "Mutual exclusion + both true",
             "n_props": 2,
             "claims": [
-                {"type": "true", "prop": 0},    # A is true
-                {"type": "true", "prop": 1},    # B is true
+                {"type": "true", "prop": 0},  # A is true
+                {"type": "true", "prop": 1},  # B is true
                 {"type": "mutex", "props": [0, 1]},  # A and B can't both be true
             ],
             "expected_consistent": False,
@@ -232,11 +239,11 @@ def main() -> int:
             "name": "Chain implication (consistent)",
             "n_props": 4,
             "claims": [
-                {"type": "true", "prop": 0},           # A
+                {"type": "true", "prop": 0},  # A
                 {"type": "implies", "from": 0, "to": 1},  # A→B
                 {"type": "implies", "from": 1, "to": 2},  # B→C
                 {"type": "implies", "from": 2, "to": 3},  # C→D
-                {"type": "true", "prop": 3},            # D
+                {"type": "true", "prop": 3},  # D
             ],
             "expected_consistent": True,
         },
@@ -244,11 +251,11 @@ def main() -> int:
             "name": "Chain implication (contradiction)",
             "n_props": 4,
             "claims": [
-                {"type": "true", "prop": 0},           # A
+                {"type": "true", "prop": 0},  # A
                 {"type": "implies", "from": 0, "to": 1},  # A→B
                 {"type": "implies", "from": 1, "to": 2},  # B→C
                 {"type": "implies", "from": 2, "to": 3},  # C→D
-                {"type": "false", "prop": 3},           # NOT D ← contradiction with A→B→C→D
+                {"type": "false", "prop": 3},  # NOT D ← contradiction with A→B→C→D
             ],
             "expected_consistent": False,
         },
@@ -256,8 +263,8 @@ def main() -> int:
             "name": "LLM-style: 'Paris is capital AND London is capital' (mutex)",
             "n_props": 2,
             "claims": [
-                {"type": "true", "prop": 0},    # Paris is capital
-                {"type": "true", "prop": 1},    # London is capital
+                {"type": "true", "prop": 0},  # Paris is capital
+                {"type": "true", "prop": 1},  # London is capital
                 {"type": "mutex", "props": [0, 1]},  # Only one can be capital of France
             ],
             "expected_consistent": False,
@@ -301,9 +308,11 @@ def main() -> int:
     n_contradictions_detected = sum(1 for r in results if not r["expected"] and not r["got"])
     n_contradictions_total = sum(1 for r in results if not r["expected"])
 
-    print(f"  Overall accuracy: {n_correct}/{len(results)} ({n_correct/len(results):.0%})")
+    print(f"  Overall accuracy: {n_correct}/{len(results)} ({n_correct / len(results):.0%})")
     print(f"  Contradictions detected: {n_contradictions_detected}/{n_contradictions_total}")
-    print(f"  Consistent correctly identified: {n_consistent_correct}/{len(results) - n_contradictions_total}")
+    print(
+        f"  Consistent correctly identified: {n_consistent_correct}/{len(results) - n_contradictions_total}"
+    )
 
     if n_correct == len(results):
         print(f"\n  VERDICT: ✅ Perfect logical consistency detection!")

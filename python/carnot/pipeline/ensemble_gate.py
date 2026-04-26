@@ -23,15 +23,15 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from carnot.pipeline.interwhen_monitor import InterWhenMonitor
     from carnot.pipeline.causal_reasoning_verifier import CausalReasoningVerifier
+    from carnot.pipeline.interwhen_monitor import InterWhenMonitor
 
 
 def compute_ensemble_hits(
     responses: list[str],
     question_indices: list[int],
-    interwhen_monitor: "InterWhenMonitor",
-    causal_verifier: "CausalReasoningVerifier",
+    interwhen_monitor: InterWhenMonitor,
+    causal_verifier: CausalReasoningVerifier,
     hermes_tp_set: set[int],
 ) -> list[bool]:
     """Return one boolean per response: True if any of the three detectors fires.
@@ -56,7 +56,7 @@ def compute_ensemble_hits(
         List of booleans, one per response in input order.
     """
     hits: list[bool] = []
-    for response, q_idx in zip(responses, question_indices):
+    for response, q_idx in zip(responses, question_indices, strict=False):
         interwhen_hit = interwhen_monitor.any_violation(response)
         causal_hit = causal_verifier.any_violation(response)
         # hermes_hit is True only when Exp 641 stored a known TP index for this question.

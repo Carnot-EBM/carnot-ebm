@@ -65,12 +65,14 @@ def synthetic_trainer_dicts() -> list[dict]:
         label = int(i % 2)
         emb = rng.randn(256).astype(np.float32)
         emb[0] += (1.0 if label else -1.0) * 0.5
-        pairs.append({
-            "embedding": emb.tolist(),
-            "violated_arithmetic": label,
-            "violated_code": label,
-            "violated_logic": label,
-        })
+        pairs.append(
+            {
+                "embedding": emb.tolist(),
+                "violated_arithmetic": label,
+                "violated_code": label,
+                "violated_logic": label,
+            }
+        )
     return pairs
 
 
@@ -89,9 +91,7 @@ class TestLoadV8CotCorpus:
         assert source == "live_fover_expanded"
         assert len(pairs) == 10
 
-    def test_falls_back_to_live_when_expanded_missing(
-        self, tmp_live: Path, tmp_path: Path
-    ) -> None:
+    def test_falls_back_to_live_when_expanded_missing(self, tmp_live: Path, tmp_path: Path) -> None:
         # SCENARIO-LEARN-089: when expanded is absent, live fallback is used
         missing_expanded = str(tmp_path / "no_expanded.json")
         pairs, source = load_v8_cot_corpus(missing_expanded, str(tmp_live))
@@ -107,9 +107,7 @@ class TestLoadV8CotCorpus:
         assert source == "synthetic"
         assert pairs == []
 
-    def test_expanded_takes_priority_over_live(
-        self, tmp_expanded: Path, tmp_live: Path
-    ) -> None:
+    def test_expanded_takes_priority_over_live(self, tmp_expanded: Path, tmp_live: Path) -> None:
         # When both exist, expanded wins
         pairs, source = load_v8_cot_corpus(str(tmp_expanded), str(tmp_live))
         assert source == "live_fover_expanded"
@@ -158,7 +156,7 @@ class TestLeWorldModelLoss:
         loss = LeWorldModelLoss(lambda_reg=0.1)
         p = np.array([1.0])
         a = np.array([0.0])
-        pred_loss = loss.prediction_loss(p, a)    # = 1.0
+        pred_loss = loss.prediction_loss(p, a)  # = 1.0
         kl_loss = loss.regularization_loss(0.0, 0.0)  # = 0.0
         total = loss.total_loss(p, a, 0.0, 0.0)
         assert total == pytest.approx(pred_loss + 0.1 * kl_loss)
@@ -254,18 +252,16 @@ class TestHonestVerdictLogic:
     @pytest.mark.parametrize(
         "final_auc,n_train,expected",
         [
-            (0.95, 100, "jepa_v8_improved"),   # auc>=0.9 AND n_train>=80
-            (0.92, 80, "jepa_v8_improved"),    # boundary exact
-            (0.91, 79, "auc_stable"),          # auc>=0.9 but n_train<80 → auc_stable
-            (0.85, 100, "auc_stable"),         # auc in [0.8, 0.9)
-            (0.80, 100, "auc_stable"),         # boundary exact
-            (0.79, 100, "synthetic_fallback"), # auc<0.8
+            (0.95, 100, "jepa_v8_improved"),  # auc>=0.9 AND n_train>=80
+            (0.92, 80, "jepa_v8_improved"),  # boundary exact
+            (0.91, 79, "auc_stable"),  # auc>=0.9 but n_train<80 → auc_stable
+            (0.85, 100, "auc_stable"),  # auc in [0.8, 0.9)
+            (0.80, 100, "auc_stable"),  # boundary exact
+            (0.79, 100, "synthetic_fallback"),  # auc<0.8
             (0.50, 10, "synthetic_fallback"),  # well below threshold
         ],
     )
-    def test_verdict_thresholds(
-        self, final_auc: float, n_train: int, expected: str
-    ) -> None:
+    def test_verdict_thresholds(self, final_auc: float, n_train: int, expected: str) -> None:
         # Mirror the honest_verdict logic from the experiment script.
         if final_auc >= 0.900 and n_train >= 80:
             verdict = "jepa_v8_improved"

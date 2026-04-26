@@ -63,9 +63,12 @@ def test_init_falls_back_to_neal_when_dwave_samplers_missing() -> None:
 
     with (
         patch.dict("sys.modules", {"dwave.samplers": None, "neal": mock_neal_module}),
-        patch("builtins.__import__", side_effect=_selective_import_error(
-            fail_on="dwave.samplers", neal_module=mock_neal_module
-        )),
+        patch(
+            "builtins.__import__",
+            side_effect=_selective_import_error(
+                fail_on="dwave.samplers", neal_module=mock_neal_module
+            ),
+        ),
     ):
         backend = DWaveNealBackend()
 

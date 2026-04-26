@@ -59,20 +59,18 @@ import jax.random as jrandom
 from carnot.models.ising import IsingConfig, IsingModel
 from carnot.models.lnn_constraint import LNNConstraintConfig, LNNConstraintModel
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 
-INPUT_DIM = 16         # Embedding dimensionality for each reasoning step
-HIDDEN_DIM = 8         # LNN hidden state size
-N_CHAINS = 20          # Total number of reasoning chains (10 correct + 10 with errors)
-N_STEPS = 5            # Steps per reasoning chain
-SEED = 2024            # Master RNG seed for reproducibility
+INPUT_DIM = 16  # Embedding dimensionality for each reasoning step
+HIDDEN_DIM = 8  # LNN hidden state size
+N_CHAINS = 20  # Total number of reasoning chains (10 correct + 10 with errors)
+N_STEPS = 5  # Steps per reasoning chain
+SEED = 2024  # Master RNG seed for reproducibility
 
 # Cluster statistics for generating synthetic embeddings
 # "Correct" steps cluster around the origin with low variance
@@ -80,13 +78,14 @@ CORRECT_STEP_MEAN = 0.0
 CORRECT_STEP_STD = 0.3
 
 # "Erroneous" steps deviate from the cluster — different mean/variance
-ERROR_STEP_MEAN = 2.5   # Shifted mean (inconsistent with earlier steps)
-ERROR_STEP_STD = 0.5    # Higher variance (more uncertain/incoherent)
+ERROR_STEP_MEAN = 2.5  # Shifted mean (inconsistent with earlier steps)
+ERROR_STEP_STD = 0.5  # Higher variance (more uncertain/incoherent)
 
 
 # ---------------------------------------------------------------------------
 # Synthetic chain generation
 # ---------------------------------------------------------------------------
+
 
 def generate_correct_chain(key: jax.Array) -> list[jnp.ndarray]:
     """Generate a 5-step reasoning chain where all steps are consistent.
@@ -111,9 +110,7 @@ def generate_correct_chain(key: jax.Array) -> list[jnp.ndarray]:
     return steps
 
 
-def generate_error_chain(
-    key: jax.Array, error_at_step: int
-) -> tuple[list[jnp.ndarray], int]:
+def generate_error_chain(key: jax.Array, error_at_step: int) -> tuple[list[jnp.ndarray], int]:
     """Generate a 5-step chain with one erroneous step at a specified index.
 
     Steps before the error are "correct" (consistent cluster).
@@ -147,6 +144,7 @@ def generate_error_chain(
 # ---------------------------------------------------------------------------
 # Evaluation helpers
 # ---------------------------------------------------------------------------
+
 
 def evaluate_chain_lnn(
     model: LNNConstraintModel,
@@ -203,9 +201,7 @@ def detect_error_step(energies: list[float]) -> int:
     return int(jnp.argmax(jnp.array(energies)))
 
 
-def compute_energy_gap(
-    energies: list[float], error_at_step: int
-) -> float:
+def compute_energy_gap(energies: list[float], error_at_step: int) -> float:
     """Compute energy gap: energy at error step minus mean energy at correct steps.
 
     A positive gap means the model correctly identified the error step as
@@ -228,6 +224,7 @@ def compute_energy_gap(
 # Main experiment
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """Run Experiment 116: LNN adaptive vs Ising static error detection."""
     logger.info("=== Experiment 116: LNN Adaptive Constraint Model ===")
@@ -239,8 +236,8 @@ def main() -> None:
     lnn_config = LNNConstraintConfig(
         input_dim=INPUT_DIM,
         hidden_dim=HIDDEN_DIM,
-        tau_base=0.8,   # Slightly fast adaptation for sensitivity
-        dt=0.3,         # Moderate step size
+        tau_base=0.8,  # Slightly fast adaptation for sensitivity
+        dt=0.3,  # Moderate step size
     )
     lnn_model = LNNConstraintModel(lnn_config, key=jrandom.PRNGKey(SEED + 1))
 
@@ -248,7 +245,9 @@ def main() -> None:
     ising_model = IsingModel(IsingConfig(input_dim=INPUT_DIM), key=jrandom.PRNGKey(SEED + 2))
 
     # --- Generate synthetic reasoning chains ---
-    logger.info(f"Generating {N_CHAINS} reasoning chains ({N_CHAINS//2} correct, {N_CHAINS//2} with errors)")
+    logger.info(
+        f"Generating {N_CHAINS} reasoning chains ({N_CHAINS // 2} correct, {N_CHAINS // 2} with errors)"
+    )
 
     chains_correct: list[dict[str, Any]] = []
     chains_error: list[dict[str, Any]] = []
@@ -257,12 +256,14 @@ def main() -> None:
     for i in range(N_CHAINS // 2):
         master_key, subkey = jrandom.split(master_key)
         steps = generate_correct_chain(subkey)
-        chains_correct.append({
-            "chain_id": f"correct_{i:02d}",
-            "is_correct": True,
-            "error_at_step": None,
-            "steps": [s.tolist() for s in steps],
-        })
+        chains_correct.append(
+            {
+                "chain_id": f"correct_{i:02d}",
+                "is_correct": True,
+                "error_at_step": None,
+                "steps": [s.tolist() for s in steps],
+            }
+        )
 
     # 10 error chains — errors distributed across steps 1-3 (steps 2-4 in 1-indexed)
     error_steps = [1, 2, 3, 1, 2, 3, 1, 2, 3, 2]  # indices 0-4; errors at 1,2,3
@@ -270,12 +271,14 @@ def main() -> None:
         master_key, subkey = jrandom.split(master_key)
         error_step = error_steps[i % len(error_steps)]
         steps, err_idx = generate_error_chain(subkey, error_at_step=error_step)
-        chains_error.append({
-            "chain_id": f"error_{i:02d}",
-            "is_correct": False,
-            "error_at_step": err_idx,
-            "steps": [s.tolist() for s in steps],
-        })
+        chains_error.append(
+            {
+                "chain_id": f"error_{i:02d}",
+                "is_correct": False,
+                "error_at_step": err_idx,
+                "steps": [s.tolist() for s in steps],
+            }
+        )
 
     all_chains = chains_correct + chains_error
     logger.info(f"Generated {len(all_chains)} chains")
@@ -314,8 +317,8 @@ def main() -> None:
             lnn_gap = compute_energy_gap(lnn_energies, error_at_step)
             ising_gap = compute_energy_gap(ising_energies, error_at_step)
 
-            lnn_detected_correctly = (lnn_detected_step == error_at_step)
-            ising_detected_correctly = (ising_detected_step == error_at_step)
+            lnn_detected_correctly = lnn_detected_step == error_at_step
+            ising_detected_correctly = ising_detected_step == error_at_step
 
             if lnn_detected_correctly:
                 lnn_correct_detections += 1
@@ -325,14 +328,16 @@ def main() -> None:
             lnn_gaps.append(lnn_gap)
             ising_gaps.append(ising_gap)
 
-            chain_result.update({
-                "lnn_detected_step": lnn_detected_step,
-                "ising_detected_step": ising_detected_step,
-                "lnn_detected_correctly": lnn_detected_correctly,
-                "ising_detected_correctly": ising_detected_correctly,
-                "lnn_energy_gap": lnn_gap,
-                "ising_energy_gap": ising_gap,
-            })
+            chain_result.update(
+                {
+                    "lnn_detected_step": lnn_detected_step,
+                    "ising_detected_step": ising_detected_step,
+                    "lnn_detected_correctly": lnn_detected_correctly,
+                    "ising_detected_correctly": ising_detected_correctly,
+                    "lnn_energy_gap": lnn_gap,
+                    "ising_energy_gap": ising_gap,
+                }
+            )
 
             logger.info(
                 f"  {chain_id}: error@step={error_at_step} | "
@@ -350,8 +355,12 @@ def main() -> None:
 
     logger.info("")
     logger.info("=== Summary ===")
-    logger.info(f"LNN detection rate:  {lnn_detection_rate:.1%} ({lnn_correct_detections}/{n_error_chains})")
-    logger.info(f"Ising detection rate: {ising_detection_rate:.1%} ({ising_correct_detections}/{n_error_chains})")
+    logger.info(
+        f"LNN detection rate:  {lnn_detection_rate:.1%} ({lnn_correct_detections}/{n_error_chains})"
+    )
+    logger.info(
+        f"Ising detection rate: {ising_detection_rate:.1%} ({ising_correct_detections}/{n_error_chains})"
+    )
     logger.info(f"LNN mean energy gap:  {lnn_mean_gap:+.4f}")
     logger.info(f"Ising mean energy gap: {ising_mean_gap:+.4f}")
 
@@ -364,8 +373,12 @@ def main() -> None:
     for result in results_per_chain:
         if result["is_correct"]:
             for step_idx in range(N_STEPS):
-                lnn_avg_correct_by_step[step_idx] += result["lnn_energies"][step_idx] / max(n_correct, 1)
-                ising_avg_correct_by_step[step_idx] += result["ising_energies"][step_idx] / max(n_correct, 1)
+                lnn_avg_correct_by_step[step_idx] += result["lnn_energies"][step_idx] / max(
+                    n_correct, 1
+                )
+                ising_avg_correct_by_step[step_idx] += result["ising_energies"][step_idx] / max(
+                    n_correct, 1
+                )
 
     # Average energy per step across error chains (LNN and Ising)
     lnn_avg_error_by_step = [0.0] * N_STEPS
@@ -375,8 +388,12 @@ def main() -> None:
     for result in results_per_chain:
         if not result["is_correct"]:
             for step_idx in range(N_STEPS):
-                lnn_avg_error_by_step[step_idx] += result["lnn_energies"][step_idx] / max(n_error, 1)
-                ising_avg_error_by_step[step_idx] += result["ising_energies"][step_idx] / max(n_error, 1)
+                lnn_avg_error_by_step[step_idx] += result["lnn_energies"][step_idx] / max(
+                    n_error, 1
+                )
+                ising_avg_error_by_step[step_idx] += result["ising_energies"][step_idx] / max(
+                    n_error, 1
+                )
 
     # --- Assemble final results ---
     experiment_results: dict[str, Any] = {
@@ -442,4 +459,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     import jax  # noqa: F401 — ensure JAX is imported before numpy to set platform
+
     main()

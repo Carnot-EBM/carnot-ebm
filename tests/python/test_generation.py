@@ -505,9 +505,7 @@ class TestAutoExtractorWithMemory:
 
     def test_memory_below_threshold_no_extra_constraints(self) -> None:
         """REQ-LEARN-003: Immature memory patterns do NOT add constraints."""
-        mem = _make_memory(
-            "arithmetic", PATTERN_ARITHMETIC_CARRY, PATTERN_THRESHOLD - 1
-        )
+        mem = _make_memory("arithmetic", PATTERN_ARITHMETIC_CARRY, PATTERN_THRESHOLD - 1)
         ext = AutoExtractor()
         text = "99 + 1 = 100"
         results_no_mem = ext.extract(text, domain="arithmetic")

@@ -59,7 +59,6 @@ import time
 from carnot.pipeline.gpu_vram_gate import (
     GPUVRAMGate,
     GPUVRAMInsufficientError,
-    VRAMStatus,
 )
 
 _log = logging.getLogger(__name__)
@@ -146,7 +145,7 @@ class GPUVRAMGateV2(GPUVRAMGate):
         if self.kill_first:
             # --- Kill-first path (REQ-INFRA-049) ---
             n_killed = self.kill_zombies(gpu_index)
-            if n_killed > 0 or True:
+            if True:
                 # Always sleep: even if no zombies were found by our heuristic,
                 # the driver may still be draining contexts from processes that
                 # terminated between our pynvml query and now.  The sleep is cheap
@@ -157,7 +156,9 @@ class GPUVRAMGateV2(GPUVRAMGate):
                 # are not listed as ComputeRunningProcesses but still consume VRAM.
                 _log.debug(
                     "GPUVRAMGateV2: sleeping %ds for GPU %d driver drain (killed=%d)",
-                    self.zombie_drain_sleep_seconds, gpu_index, n_killed,
+                    self.zombie_drain_sleep_seconds,
+                    gpu_index,
+                    n_killed,
                 )
                 time.sleep(self.zombie_drain_sleep_seconds)
 
@@ -168,7 +169,9 @@ class GPUVRAMGateV2(GPUVRAMGate):
             if status.free_gb >= self.min_free_gb:
                 _log.info(
                     "GPUVRAMGateV2: GPU %d OK after drain — %.2f GB free (>= %.2f GB)",
-                    gpu_index, status.free_gb, self.min_free_gb,
+                    gpu_index,
+                    status.free_gb,
+                    self.min_free_gb,
                 )
                 return True
 
@@ -176,7 +179,9 @@ class GPUVRAMGateV2(GPUVRAMGate):
             _log.warning(
                 "GPUVRAMGateV2: GPU %d still %.2f GB free after drain sleep; "
                 "entering %ds wait loop",
-                gpu_index, status.free_gb, self.wait_seconds,
+                gpu_index,
+                status.free_gb,
+                self.wait_seconds,
             )
             return self.wait_for_vram(gpu_index)
 
@@ -192,7 +197,7 @@ class GPUVRAMGateV2(GPUVRAMGate):
             self.kill_zombies(gpu_index)
             return self.wait_for_vram(gpu_index)
 
-    def __enter__(self) -> "GPUVRAMGateV2":
+    def __enter__(self) -> GPUVRAMGateV2:
         """Run the kill-first VRAM gate for every detected GPU.
 
         For each GPU: calls ensure_vram_available().  If it returns False,

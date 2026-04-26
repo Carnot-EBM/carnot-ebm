@@ -69,11 +69,12 @@ from __future__ import annotations
 import os
 import time
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from carnot.pipeline.extract import ConstraintResult
 from carnot.pipeline.knowledge_base import FactualKBExtractor
 
+if TYPE_CHECKING:
+    from carnot.pipeline.extract import ConstraintResult
 
 # ---------------------------------------------------------------------------
 # Baseline constants — used for delta comparison
@@ -430,9 +431,7 @@ def run_extraction_on_responses(
         extractor = FactualKBExtractor()
 
     results: list[ExtractionResult] = []
-    for idx, ((question, response), domain) in enumerate(
-        zip(qa_pairs, domains)
-    ):
+    for idx, ((question, response), domain) in enumerate(zip(qa_pairs, domains, strict=False)):
         # Concatenate question + response so entity mentions in the question
         # help resolve coreferences in the response.
         combined_text = f"{question} {response}"
@@ -442,12 +441,8 @@ def run_extraction_on_responses(
         elapsed = time.monotonic() - t0
 
         covered = len(constraints) > 0
-        has_verified = any(
-            c.metadata.get("kb_result") == "verified" for c in constraints
-        )
-        has_contradicted = any(
-            c.metadata.get("kb_result") == "contradicted" for c in constraints
-        )
+        has_verified = any(c.metadata.get("kb_result") == "verified" for c in constraints)
+        has_contradicted = any(c.metadata.get("kb_result") == "contradicted" for c in constraints)
 
         results.append(
             ExtractionResult(
@@ -515,9 +510,7 @@ def compute_metrics(
     )
 
     coverage_pct = 100.0 * n_covered / n if n else 0.0
-    accuracy_pct = (
-        100.0 * n_covered_verified_only / n_covered if n_covered else 0.0
-    )
+    accuracy_pct = 100.0 * n_covered_verified_only / n_covered if n_covered else 0.0
 
     target_coverage_pct = 40.0
     target_accuracy_pct = 75.0
@@ -665,7 +658,7 @@ def generate_responses_with_gemma4(
 
     Spec: REQ-VERIFY-001
     """
-    from carnot.inference.model_loader import load_model, generate  # noqa: PLC0415
+    from carnot.inference.model_loader import generate, load_model  # noqa: PLC0415
 
     model, tokenizer = load_model(model_name)
     responses = []
@@ -713,7 +706,7 @@ def run_exp274(
         responses = GEMMA4_RESPONSES
         model_name = "google/gemma-4-E4B-it (representative)"
 
-    qa_pairs = list(zip(questions, responses))
+    qa_pairs = list(zip(questions, responses, strict=False))
     results = run_extraction_on_responses(qa_pairs, domains, extractor=extractor)
     metrics = compute_metrics(results)
     return build_results_payload(

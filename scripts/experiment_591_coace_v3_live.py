@@ -104,7 +104,7 @@ def main() -> None:
     v3_recall = v3_diag.tp_rate  # tp_rate = n_true_positive / n_tested
     v2_recall = v2_diag.tp_rate
     v3_precision = v3_diag.tp_rate  # no correct entries, so precision = tp_rate here
-    v3_fp_rate = v3_diag.fp_rate   # will be 0.0 since no correct entries in test set
+    v3_fp_rate = v3_diag.fp_rate  # will be 0.0 since no correct entries in test set
 
     gate_open = v3_recall >= 0.30
 

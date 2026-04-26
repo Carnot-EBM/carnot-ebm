@@ -16,14 +16,12 @@ from __future__ import annotations
 import jax
 import jax.numpy as jnp
 import pytest
-
+from carnot.pipeline.extract import AutoExtractor
 from carnot.pipeline.lookahead_energy import (
     DEFAULT_LOOKAHEAD_THRESHOLD,
     LookaheadEnergyConstraint,
     LookaheadEnergyExtractor,
 )
-from carnot.pipeline.extract import AutoExtractor
-
 
 # ---------------------------------------------------------------------------
 # Helpers

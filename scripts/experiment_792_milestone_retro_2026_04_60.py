@@ -140,7 +140,9 @@ def classify_retros(artifacts: dict[int, dict]) -> dict:
 
     # RETRO-028
     if artifacts[786].get("loader_test_passed"):
-        retros_closed.append("RETRO-028: Gemma4 loader CUDA OOM resolved — loader_test_passed=True (Exp 786).")
+        retros_closed.append(
+            "RETRO-028: Gemma4 loader CUDA OOM resolved — loader_test_passed=True (Exp 786)."
+        )
     else:
         retros_still_open.append(
             "RETRO-028: Gemma4 loader CUDA OOM — Exp 786 blocked_no_live_gpu. "
@@ -149,7 +151,9 @@ def classify_retros(artifacts: dict[int, dict]) -> dict:
 
     # RETRO-JEPA-OOD-V20 (previously V19)
     if (artifacts[783].get("ood_auc") or 0.0) > 0.75:
-        retros_closed.append("RETRO-JEPA-OOD-V20: ood_auc > 0.75 gate — JEPA v20 OOD viable (Exp 783).")
+        retros_closed.append(
+            "RETRO-JEPA-OOD-V20: ood_auc > 0.75 gate — JEPA v20 OOD viable (Exp 783)."
+        )
     else:
         retros_still_open.append(
             "RETRO-JEPA-OOD-V20: ood_auc=0.4467 — REGRESSION vs v19 (0.5667). "
@@ -157,7 +161,10 @@ def classify_retros(artifacts: dict[int, dict]) -> dict:
         )
 
     # RETRO-SOTA-GGUF-TIMEOUT
-    if not artifacts[785].get("timed_out") and (artifacts[785].get("signed_improvement") or 0.0) > 0:
+    if (
+        not artifacts[785].get("timed_out")
+        and (artifacts[785].get("signed_improvement") or 0.0) > 0
+    ):
         retros_closed.append("RETRO-SOTA-GGUF-TIMEOUT: signed_improvement > 0 measured (Exp 785).")
     else:
         retros_still_open.append(
@@ -211,14 +218,16 @@ def compute_slowest_5(artifacts: dict[int, dict]) -> list[dict]:
 
     ranked = sorted(artifacts.items(), key=lambda kv: duration_min(kv[0], kv[1]), reverse=True)
     return [
-        {"exp_id": exp_id, "duration_min": round(duration_min(exp_id, art), 4), "title": art.get("title", "")}
+        {
+            "exp_id": exp_id,
+            "duration_min": round(duration_min(exp_id, art), 4),
+            "title": art.get("title", ""),
+        }
         for exp_id, art in ranked[:5]
     ]
 
 
-def build_honest_verdict(
-    wall_time: dict, criteria: dict[str, bool], retros: dict
-) -> str:
+def build_honest_verdict(wall_time: dict, criteria: dict[str, bool], retros: dict) -> str:
     """Build one dense sentence capturing the milestone outcome.
 
     The format mirrors the .59 convention: direction_word + key_wins_summary.

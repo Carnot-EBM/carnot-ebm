@@ -36,6 +36,7 @@ import scripts.experiment_859_ice40_n8_combinational as exp859
 # Unit tests for LUT-count parsers
 # ---------------------------------------------------------------------------
 
+
 class TestParseSynthLutCount:
     """Tests for _parse_synth_lut_count — extracts SB_LUT4 count from yosys stdout.
     Spec: REQ-FPGA-030"""
@@ -113,8 +114,7 @@ class TestHasSequentialLogic:
         Only numeric count lines of the form '<digits>   SB_DFF' trigger True.
         """
         header_only = (
-            "Generating RTLIL representation for module `\\SB_DFF'.\n"
-            "      132   SB_LUT4\n"
+            "Generating RTLIL representation for module `\\SB_DFF'.\n      132   SB_LUT4\n"
         )
         assert exp859._has_sequential_logic(header_only) is False
 
@@ -123,11 +123,7 @@ class TestHasSequentialLogic:
 # Integration test: main() with mocked subprocess and file I/O
 # ---------------------------------------------------------------------------
 
-_SYNTH_STDOUT_SUCCESS = (
-    "      132   SB_LUT4\n"
-    "        2   SB_CARRY\n"
-    "End of script.\n"
-)
+_SYNTH_STDOUT_SUCCESS = "      132   SB_LUT4\n        2   SB_CARRY\nEnd of script.\n"
 _PNR_STDOUT_SUCCESS = (
     "Info: Device utilisation:\n"
     "Info: \t         ICESTORM_LC:     134/   7680     1%\n"
@@ -150,7 +146,9 @@ class TestMainSuccessPath:
     """Tests for main() when yosys, nextpnr, and icepack all succeed.
     Spec: SCENARIO-FPGA-040"""
 
-    def test_fpga_oracle_ready_verdict(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_fpga_oracle_ready_verdict(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() writes artifact with honest_verdict=fpga_oracle_ready on full success."""
         # Run the experiment with tmp_path as the working directory so the
         # "results/..." relative path resolves inside the temp directory.
@@ -166,7 +164,7 @@ class TestMainSuccessPath:
             elif "nextpnr" in cmd_str:
                 return _make_completed_process(0, _PNR_STDOUT_SUCCESS)
             elif "icepack" in cmd_str:
-                fake_bin.write_bytes(b"\xFF" * 135100)
+                fake_bin.write_bytes(b"\xff" * 135100)
                 return _make_completed_process(0, _ICEPACK_STDOUT_SUCCESS)
             return _make_completed_process(1, "", "unknown command")
 
@@ -192,7 +190,9 @@ class TestMainSynthesisFailure:
     """Tests for main() when yosys returns non-zero exit code.
     Spec: REQ-FPGA-030"""
 
-    def test_synthesis_failed_verdict(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_synthesis_failed_verdict(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() writes synthesis_failed artifact when yosys exits non-zero."""
         (tmp_path / "results").mkdir()
         monkeypatch.chdir(tmp_path)
@@ -275,7 +275,7 @@ class TestLutOverBudget:
                 return _make_completed_process(0, _SYNTH_STDOUT_SUCCESS)
             elif call_count["n"] == 2:
                 return _make_completed_process(0, bloated_pnr)
-            fake_bin.write_bytes(b"\xFF" * 135100)
+            fake_bin.write_bytes(b"\xff" * 135100)
             return _make_completed_process(0, "")
 
         with patch("subprocess.run", side_effect=fake_run):

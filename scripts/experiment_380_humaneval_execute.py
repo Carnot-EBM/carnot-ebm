@@ -168,9 +168,7 @@ def main() -> None:
     # ---------------------------------------------------------------------------
     blocked = LiveGPUGate.require_live_or_blocked(tmpl, _MODEL_IDS)
     if blocked is not None:
-        _log.error(
-            "LiveGPUGate blocked Exp 380 — writing blocked artifact and exiting."
-        )
+        _log.error("LiveGPUGate blocked Exp 380 — writing blocked artifact and exiting.")
         _write_artifact(tmpl, blocked)
         return
 
@@ -178,9 +176,7 @@ def main() -> None:
     # GPU pre-warm via ExperimentTemplate.setup_gpu() (Exp 294 pattern).
     # The prewarm layer confirms the model is loadable and not stalled.
     # ---------------------------------------------------------------------------
-    gpu_status = tmpl.setup_gpu(
-        [{"name": "Gemma4-E4B-it", "hf_id": _MODEL_IDS[0], "gpu": 0}]
-    )
+    gpu_status = tmpl.setup_gpu([{"name": "Gemma4-E4B-it", "hf_id": _MODEL_IDS[0], "gpu": 0}])
     if not gpu_status["all_healthy"]:
         _log.error(
             "setup_gpu reports unhealthy — writing blocked artifact.  models=%s",
@@ -210,9 +206,7 @@ def main() -> None:
     # ---------------------------------------------------------------------------
     # Load model weights (tokenizer + causal LM).
     # ---------------------------------------------------------------------------
-    tokenizer, model, device, ok = _load_model_pipeline(
-        hf_id=_MODEL_IDS[0], device=0
-    )
+    tokenizer, model, device, ok = _load_model_pipeline(hf_id=_MODEL_IDS[0], device=0)
     if not ok:
         _log.error("_load_model_pipeline failed — writing blocked artifact.")
         artifact = tmpl.build_result(
@@ -297,6 +291,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

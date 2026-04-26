@@ -121,4 +121,5 @@ class TestCAPOCalibrationLossComputeLoss:
     def test_export_from_pipeline_init(self):
         # Verifies the class is exported from carnot.pipeline
         from carnot.pipeline import CAPOCalibrationLoss as Imported
+
         assert Imported is CAPOCalibrationLoss

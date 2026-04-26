@@ -86,6 +86,7 @@ _RE_FMAX = re.compile(r"Max frequency for clock.*?:\s*([\d.]+)\s*MHz", re.IGNORE
 # Helper: parse yosys stat output
 # ---------------------------------------------------------------------------
 
+
 def parse_yosys_stat(output: str) -> dict:
     """Extract resource counts from yosys stat command output.
 
@@ -142,6 +143,7 @@ def parse_yosys_stat(output: str) -> dict:
 # Helper: check for tool availability
 # ---------------------------------------------------------------------------
 
+
 def find_yosys() -> tuple[bool, str | None]:
     """Return (found, version_string) for native yosys on PATH.
 
@@ -149,10 +151,7 @@ def find_yosys() -> tuple[bool, str | None]:
     it may support more features than the WASM build (e.g. ABC timing).
     """
     try:
-        result = subprocess.run(
-            ["yosys", "--version"],
-            capture_output=True, text=True, timeout=10
-        )
+        result = subprocess.run(["yosys", "--version"], capture_output=True, text=True, timeout=10)
         if result.returncode == 0:
             version = result.stdout.strip().split("\n")[0]
             return True, version
@@ -165,8 +164,7 @@ def find_nextpnr_ice40() -> bool:
     """Return True if nextpnr-ice40 is available on PATH."""
     try:
         result = subprocess.run(
-            ["nextpnr-ice40", "--version"],
-            capture_output=True, text=True, timeout=10
+            ["nextpnr-ice40", "--version"], capture_output=True, text=True, timeout=10
         )
         return result.returncode == 0
     except (FileNotFoundError, subprocess.TimeoutExpired):
@@ -176,6 +174,7 @@ def find_nextpnr_ice40() -> bool:
 # ---------------------------------------------------------------------------
 # Helper: run yosys synthesis (native or yowasp)
 # ---------------------------------------------------------------------------
+
 
 def run_synthesis(
     rtl_path: str,
@@ -192,9 +191,7 @@ def run_synthesis(
     Returns (stdout+stderr combined, warnings_list, error_count).
     """
     script = (
-        f"read_verilog {rtl_path}; "
-        f"synth -top {top_module} -flatten -noabc; "
-        f"stat -top {top_module}"
+        f"read_verilog {rtl_path}; synth -top {top_module} -flatten -noabc; stat -top {top_module}"
     )
 
     if use_yowasp:
@@ -203,16 +200,23 @@ def run_synthesis(
         # Run in a subprocess to get the actual FD output via capture_output=True.
         result = subprocess.run(
             [
-                sys.executable, "-c",
-                f"from yowasp_yosys import run_yosys; run_yosys(['-p', {script!r}])"
+                sys.executable,
+                "-c",
+                f"from yowasp_yosys import run_yosys; run_yosys(['-p', {script!r}])",
             ],
-            capture_output=True, text=True, timeout=300, cwd=str(_REPO_ROOT)
+            capture_output=True,
+            text=True,
+            timeout=300,
+            cwd=str(_REPO_ROOT),
         )
         combined = result.stdout + result.stderr
     else:
         result = subprocess.run(
             ["yosys", "-p", script],
-            capture_output=True, text=True, timeout=300, cwd=str(_REPO_ROOT)
+            capture_output=True,
+            text=True,
+            timeout=300,
+            cwd=str(_REPO_ROOT),
         )
         combined = result.stdout + result.stderr
 
@@ -230,6 +234,7 @@ def _extract_warnings(output: str) -> list[str]:
 # Helper: optional nextpnr place-and-route for fmax estimation
 # ---------------------------------------------------------------------------
 
+
 def run_nextpnr_ice40(json_netlist: str) -> float | None:
     """Run nextpnr-ice40 for iCE40-HX1K timing analysis.
 
@@ -244,12 +249,18 @@ def run_nextpnr_ice40(json_netlist: str) -> float | None:
             [
                 "nextpnr-ice40",
                 "--hx1k",
-                "--json", json_netlist,
-                "--pcf", "/dev/null",
-                "--asc", "/tmp/ising_v2.asc",
-                "--freq", "50",
+                "--json",
+                json_netlist,
+                "--pcf",
+                "/dev/null",
+                "--asc",
+                "/tmp/ising_v2.asc",
+                "--freq",
+                "50",
             ],
-            capture_output=True, text=True, timeout=120
+            capture_output=True,
+            text=True,
+            timeout=120,
         )
         combined = result.stdout + result.stderr
         m = _RE_FMAX.search(combined)
@@ -263,6 +274,7 @@ def run_nextpnr_ice40(json_netlist: str) -> float | None:
 # ---------------------------------------------------------------------------
 # Main experiment
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Exp 758: Yosys synthesis of Ising sampler v2."""
@@ -322,13 +334,19 @@ def main() -> None:
             # Try yowasp-yosys (already pip-installed by the conductor or manually).
             try:
                 from yowasp_yosys import run_yosys  # noqa: F401
+
                 yosys_found = True
                 yosys_source = "yowasp"
                 # yowasp writes to real FDs — use subprocess to capture version.
                 ver_result = subprocess.run(
-                    [sys.executable, "-c",
-                     "from yowasp_yosys import run_yosys; run_yosys(['--version'])"],
-                    capture_output=True, text=True, timeout=30
+                    [
+                        sys.executable,
+                        "-c",
+                        "from yowasp_yosys import run_yosys; run_yosys(['--version'])",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
                 )
                 combined_ver = (ver_result.stdout + ver_result.stderr).strip()
                 yosys_version = combined_ver.split("\n")[0] if combined_ver else "unknown"
@@ -359,11 +377,9 @@ def main() -> None:
         # Step 2: Synthesize ising_sampler_v2_synth.v.
         # ------------------------------------------------------------------
         synth_path = str(_REPO_ROOT / SYNTH_V)
-        use_yowasp = (yosys_source == "yowasp")
+        use_yowasp = yosys_source == "yowasp"
 
-        synth_output, warnings, error_count = run_synthesis(
-            synth_path, TOP_MODULE, use_yowasp
-        )
+        synth_output, warnings, error_count = run_synthesis(synth_path, TOP_MODULE, use_yowasp)
 
         stats = parse_yosys_stat(synth_output)
 
@@ -397,7 +413,7 @@ def main() -> None:
                 "yosys_source": yosys_source,
                 "top_module": TOP_MODULE,
                 "rtl_file": SYNTH_V,
-                "lut_count": lut_count,        # alias for lut_equiv; matches schema contract
+                "lut_count": lut_count,  # alias for lut_equiv; matches schema contract
                 "lut_equiv": stats["lut_equiv"],
                 "cell_count": stats["cell_count"],
                 "wire_count": stats["wire_count"],
@@ -419,7 +435,9 @@ def main() -> None:
                     "iCE40 ABC mapping would increase this ~10-20% for LUT4 packing overhead."
                 ),
             },
-            status="success" if honest_verdict in ("synthesis_successful", "synthesis_with_warnings") else "error",
+            status="success"
+            if honest_verdict in ("synthesis_successful", "synthesis_with_warnings")
+            else "error",
         )
 
         _write_artifact(tmpl, artifact)

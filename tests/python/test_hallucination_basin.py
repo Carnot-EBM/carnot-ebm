@@ -99,7 +99,9 @@ class TestEstimateBasinDepth:
     def test_deep_basin_positive(self):
         """A known minimum gives positive depth."""
         x = jnp.zeros(4)
-        depth = estimate_basin_depth(x, quadratic_energy, n_perturbations=16, perturbation_scale=0.5)
+        depth = estimate_basin_depth(
+            x, quadratic_energy, n_perturbations=16, perturbation_scale=0.5
+        )
         assert depth > 0.0
 
     def test_shallow_basin_linear(self):
@@ -121,8 +123,12 @@ class TestEstimateBasinDepth:
     def test_different_seeds_reproduce(self):
         """Same seed gives same result; different seed may differ."""
         x = jnp.zeros(4)
-        d1 = estimate_basin_depth(x, quadratic_energy, n_perturbations=8, perturbation_scale=0.1, rng_seed=0)
-        d2 = estimate_basin_depth(x, quadratic_energy, n_perturbations=8, perturbation_scale=0.1, rng_seed=0)
+        d1 = estimate_basin_depth(
+            x, quadratic_energy, n_perturbations=8, perturbation_scale=0.1, rng_seed=0
+        )
+        d2 = estimate_basin_depth(
+            x, quadratic_energy, n_perturbations=8, perturbation_scale=0.1, rng_seed=0
+        )
         assert d1 == pytest.approx(d2, abs=1e-6)
 
     def test_1d_input(self):
@@ -264,6 +270,7 @@ class TestPublicImports:
             HallucinationBasinDetector,
             estimate_basin_depth,
         )
+
         assert BasinEstimate is not None
         assert HallucinationBasinDetector is not None
         assert estimate_basin_depth is not None

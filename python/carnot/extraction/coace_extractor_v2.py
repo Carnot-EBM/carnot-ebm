@@ -32,7 +32,6 @@ Spec: REQ-EXTRACT-035, REQ-EXTRACT-036,
 from __future__ import annotations
 
 import re
-from typing import Optional
 
 from carnot.extraction.coace_extractor import (
     ArithmeticEquation,
@@ -90,9 +89,9 @@ _SUM_OF = re.compile(
 # Chained equality: 'label = expr = final' e.g. 'total = 3 + 4 + 5 = 12'
 # We look for: [word =]? arithmetic_expr = number at end of a segment.
 _CHAINED_EQ = re.compile(
-    r"(?:\w[\w\s]*=\s*)?"           # optional label like 'total ='
+    r"(?:\w[\w\s]*=\s*)?"  # optional label like 'total ='
     r"([\d]+(?:\.\d+)?\s*(?:[+\-*/]\s*[\d]+(?:\.\d+)?)+)"  # arithmetic LHS
-    r"\s*=\s*(\d+(?:\.\d+)?)",       # final stated RHS
+    r"\s*=\s*(\d+(?:\.\d+)?)",  # final stated RHS
     re.IGNORECASE,
 )
 
@@ -216,7 +215,7 @@ def _extract_chain_equations(text: str) -> list[ArithmeticEquation]:
         if final_num_match:
             stated_val_str = final_num_match.group(1)
             lhs_only = expr_raw[: final_num_match.start()].strip()
-            computed: Optional[float] = _safe_eval(lhs_only)
+            computed: float | None = _safe_eval(lhs_only)
         else:
             # Simple 'var = number' or 'var = expr'
             stated_val_str = expr_raw

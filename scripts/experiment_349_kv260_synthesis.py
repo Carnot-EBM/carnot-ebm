@@ -174,8 +174,8 @@ def parse_synthesis_output(stdout: str) -> dict:
     This function never raises: if parsing fails it returns Nones with an
     empty raw_lines list.
     """
-    lut_count: Optional[int] = None
-    ff_count: Optional[int] = None
+    lut_count: int | None = None
+    ff_count: int | None = None
     raw_lines: list[str] = []
 
     # Patterns for LUTn and FD* (flip-flop) cells.
@@ -234,8 +234,8 @@ class SynthesisResult:
     verilog_found: bool
     synthesis_attempted: bool
     synthesis_success: bool
-    lut_count: Optional[int]
-    ff_count: Optional[int]
+    lut_count: int | None
+    ff_count: int | None
     honest_verdict: str
 
     # Approved vocabulary — callers must use one of these strings.
@@ -275,10 +275,7 @@ def run_synthesis(
     cmd = [
         "yosys",
         "-p",
-        (
-            f"synth_xilinx -top {TOP_MODULE} -flatten; "
-            f"write_json {netlist_path}"
-        ),
+        (f"synth_xilinx -top {TOP_MODULE} -flatten; write_json {netlist_path}"),
         str(verilog_path),
     ]
     result = _subprocess_run(
@@ -350,7 +347,7 @@ def run_experiment(
         5. yosys OK, nextpnr OK, P&R succeeds → synthesis_success
         6. yosys OK, nextpnr OK, P&R fails    → synthesis_partial
     """
-    started_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    started_at = datetime.datetime.now(datetime.UTC).isoformat()
 
     # --- prerequisite checks ---
     yosys_ok = check_yosys_available()
@@ -377,8 +374,7 @@ def run_experiment(
             honest_verdict="blocked_missing_yosys",
         )
         return _build_artifact(
-            started_at, prereqs_checked, result, bitfile_path,
-            output_path, write_output
+            started_at, prereqs_checked, result, bitfile_path, output_path, write_output
         )
 
     if not verilog_ok:
@@ -393,8 +389,7 @@ def run_experiment(
             honest_verdict="blocked_missing_verilog",
         )
         return _build_artifact(
-            started_at, prereqs_checked, result, bitfile_path,
-            output_path, write_output
+            started_at, prereqs_checked, result, bitfile_path, output_path, write_output
         )
 
     # --- run yosys synthesis ---
@@ -414,9 +409,14 @@ def run_experiment(
             honest_verdict="synthesis_failed",
         )
         return _build_artifact(
-            started_at, prereqs_checked, result, bitfile_path,
-            output_path, write_output,
-            yosys_stdout=stdout, yosys_stderr=stderr
+            started_at,
+            prereqs_checked,
+            result,
+            bitfile_path,
+            output_path,
+            write_output,
+            yosys_stdout=stdout,
+            yosys_stderr=stderr,
         )
 
     # Parse resource utilization from synthesis report.
@@ -449,8 +449,12 @@ def run_experiment(
         honest_verdict=verdict,
     )
     return _build_artifact(
-        started_at, prereqs_checked, result, bitfile_path,
-        output_path, write_output,
+        started_at,
+        prereqs_checked,
+        result,
+        bitfile_path,
+        output_path,
+        write_output,
         yosys_stdout=stdout,
         bitfile_generated=bitfile_generated,
     )
@@ -477,12 +481,12 @@ def _build_artifact(
     Why: separated from run_experiment to keep that function's control-flow
     readable.  All artifact fields are set here in one place.
     """
-    finished_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    finished_at = datetime.datetime.now(datetime.UTC).isoformat()
 
     artifact = {
         "experiment": EXPERIMENT_ID,
         "schema": "carnot.fpga_synthesis.v1",
-        "run_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d"),
+        "run_date": datetime.datetime.now(datetime.UTC).strftime("%Y%m%d"),
         "started_at": started_at,
         "finished_at": finished_at,
         "prereqs_checked": prereqs_checked,

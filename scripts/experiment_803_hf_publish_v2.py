@@ -120,9 +120,7 @@ def check_hf_auth(cli: str, token: str) -> tuple[bool, str]:
     env = {**os.environ, "HF_TOKEN": token, "HUGGING_FACE_HUB_TOKEN": token}
     for cmd in ([cli, "auth", "whoami"], [cli, "whoami"]):
         try:
-            proc = subprocess.run(
-                cmd, capture_output=True, text=True, timeout=30, env=env
-            )
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=30, env=env)
             if proc.returncode == 0:
                 out = proc.stdout.strip()
                 # Modern format: "user=name orgs=Carnot-EBM"

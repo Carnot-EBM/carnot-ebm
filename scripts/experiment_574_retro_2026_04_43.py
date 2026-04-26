@@ -181,9 +181,7 @@ def compute_retro() -> dict:
     # FPGA alive: KV260 hardware latency < 100 μs (Exp 568).
     # Result: synthesis not complete; hardware_latency_us=null; fpga_alive=False.
     _hw_latency = results["568"].get("hardware_latency_us")
-    fpga_alive: bool = (
-        _hw_latency is not None and float(_hw_latency) < 100.0
-    )
+    fpga_alive: bool = _hw_latency is not None and float(_hw_latency) < 100.0
 
     # Live verify-repair positive: signed_improvement > 0 (Exp 569).
     # Result: signed_improvement=0.0 — pipeline accuracy unchanged at 26%.
@@ -191,21 +189,19 @@ def compute_retro() -> dict:
 
     # FR-11 real violations confirmed (Exp 570).
     # Result: fr11_real_violations_confirmed=True — relay processing real violations.
-    fr11_real_violations: bool = bool(
-        results["570"].get("fr11_real_violations_confirmed", False)
-    )
+    fr11_real_violations: bool = bool(results["570"].get("fr11_real_violations_confirmed", False))
 
     # --- RETRO closure rate --------------------------------------------------
     # RETRO-061 closed (coace_tp_rate > 0 confirmed by Exp 565).
     # RETRO-060: still blocked (v10_auc < 0.5).
     # RETRO-062: still blocked (n_pairs_collected = 0).
-    n_closed_this_milestone = sum([
-        retro_061_resolved,   # RETRO-061 closed
-        # All others remain open
-    ])
-    retro_closure_rate = round(
-        n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3
+    n_closed_this_milestone = sum(
+        [
+            retro_061_resolved,  # RETRO-061 closed
+            # All others remain open
+        ]
     )
+    retro_closure_rate = round(n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3)
 
     # --- Honest verdict ------------------------------------------------------
     # root_cause_fixed requires BOTH retro_061 AND retro_060 resolved.

@@ -59,9 +59,7 @@ def _sink_dominated_attn(
     return attn
 
 
-def _rng_attn(
-    n_heads: int = 4, seq_len: int = 8, seed: int = 42
-) -> jnp.ndarray:
+def _rng_attn(n_heads: int = 4, seq_len: int = 8, seed: int = 42) -> jnp.ndarray:
     """Return a random row-normalised attention matrix (CI-safe, no model needed)."""
     rng = np.random.default_rng(seed)
     raw = rng.exponential(1.0, size=(n_heads, seq_len, seq_len)).astype(np.float32)
@@ -165,9 +163,7 @@ class TestComputeSinkConcentration:
 
     def test_sink_dominated_concentration_high(self) -> None:
         """When every head concentrates 0.9 on sink pos 0, mean_sink_score ≈ 0.9."""
-        attn = _sink_dominated_attn(
-            n_heads=4, seq_len=8, sink_pos=0, sink_mass=0.9
-        )
+        attn = _sink_dominated_attn(n_heads=4, seq_len=8, sink_pos=0, sink_mass=0.9)
         result = compute_sink_concentration(attn, sink_positions=[0])
         # Each head sums attention over all query rows for column 0.
         # For a row-wise matrix, mean over rows then mean over heads ≈ 0.9.
@@ -192,17 +188,13 @@ class TestComputeSinkConcentration:
         """max_sink_score equals max(per_head_sink_scores)."""
         attn = _rng_attn(n_heads=4, seq_len=8, seed=7)
         result = compute_sink_concentration(attn, sink_positions=[0])
-        assert result.max_sink_score == pytest.approx(
-            max(result.per_head_sink_scores), abs=1e-6
-        )
+        assert result.max_sink_score == pytest.approx(max(result.per_head_sink_scores), abs=1e-6)
 
     def test_mean_equals_mean_of_per_head(self) -> None:
         """mean_sink_score equals mean(per_head_sink_scores)."""
         attn = _rng_attn(n_heads=4, seq_len=8, seed=99)
         result = compute_sink_concentration(attn, sink_positions=[0])
-        expected_mean = sum(result.per_head_sink_scores) / len(
-            result.per_head_sink_scores
-        )
+        expected_mean = sum(result.per_head_sink_scores) / len(result.per_head_sink_scores)
         assert result.mean_sink_score == pytest.approx(expected_mean, abs=1e-6)
 
     def test_no_sink_positions_returns_zeros(self) -> None:
@@ -252,9 +244,7 @@ class TestSinkProbeResult:
 
     def test_fields_exist(self) -> None:
         """sink_concentration, is_uncertain, should_skip_verification present."""
-        sc = SinkConcentration(
-            per_head_sink_scores=[0.5], mean_sink_score=0.5, max_sink_score=0.5
-        )
+        sc = SinkConcentration(per_head_sink_scores=[0.5], mean_sink_score=0.5, max_sink_score=0.5)
         result = SinkProbeResult(
             sink_concentration=sc,
             is_uncertain=False,
@@ -299,9 +289,7 @@ class TestSinkProbeScore:
         attn = _rng_attn(n_heads=4, seq_len=8, seed=55)
         from_probe = probe.score(attn, sink_positions=[0])
         from_fn = compute_sink_concentration(attn, sink_positions=[0])
-        assert from_probe.mean_sink_score == pytest.approx(
-            from_fn.mean_sink_score, abs=1e-6
-        )
+        assert from_probe.mean_sink_score == pytest.approx(from_fn.mean_sink_score, abs=1e-6)
 
     def test_score_with_multiple_sink_positions(self) -> None:
         """score() handles multiple sink positions correctly."""
@@ -329,9 +317,7 @@ class TestSinkProbeDecide:
         With threshold=0.3, mean_sink_score >= 0.5 > 0.3 → not uncertain.
         """
         probe = SinkProbe(threshold=0.3)
-        attn = _sink_dominated_attn(
-            n_heads=4, seq_len=8, sink_pos=0, sink_mass=0.8
-        )
+        attn = _sink_dominated_attn(n_heads=4, seq_len=8, sink_pos=0, sink_mass=0.8)
         conc = compute_sink_concentration(attn, sink_positions=[0])
         result = probe.decide(conc)
         assert isinstance(result, SinkProbeResult)
@@ -535,8 +521,7 @@ class TestSinkProbeBenchmark:
         probe = SinkProbe(threshold=0.3)
         # Build uniform attention (low concentration)
         attn_list = [
-            {"attention_matrix": _uniform_attn(4, 16), "sink_positions": [0]}
-            for _ in range(6)
+            {"attention_matrix": _uniform_attn(4, 16), "sink_positions": [0]} for _ in range(6)
         ]
         labels = [True, False, True, False, True, False]
         result = probe.benchmark(attn_list, labels)
@@ -567,8 +552,7 @@ class TestSinkProbeBenchmark:
         """When there are no correct responses, true_negative_rate = 0.0."""
         probe = SinkProbe(threshold=0.3)
         attn_list = [
-            {"attention_matrix": _uniform_attn(2, 8), "sink_positions": [0]}
-            for _ in range(3)
+            {"attention_matrix": _uniform_attn(2, 8), "sink_positions": [0]} for _ in range(3)
         ]
         labels = [False, False, False]
         result = probe.benchmark(attn_list, labels)

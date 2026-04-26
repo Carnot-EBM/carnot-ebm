@@ -23,9 +23,12 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Callable, Optional
+from typing import TYPE_CHECKING
 
-from carnot.pipeline.symcode_verifier import SymCodeVerifier
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from carnot.pipeline.symcode_verifier import SymCodeVerifier
 
 # ---------------------------------------------------------------------------
 # FORCER_SYSTEM_ADDENDUM
@@ -108,7 +111,7 @@ class StructuredEquationForcer:
 
     def __init__(
         self,
-        llm_caller: Optional[Callable[[str, str], str]],
+        llm_caller: Callable[[str, str], str] | None,
         verifier: SymCodeVerifier,
     ) -> None:
         self.llm_caller = llm_caller
@@ -175,9 +178,7 @@ class StructuredEquationForcer:
         if not compute_lines:
             return 0.0
         verified = sum(
-            1
-            for line in compute_lines
-            if self.verifier.detection_score("COMPUTE: " + line) >= 0.0
+            1 for line in compute_lines if self.verifier.detection_score("COMPUTE: " + line) >= 0.0
         )
         return verified / len(compute_lines)
 
@@ -205,9 +206,7 @@ class StructuredEquationForcer:
         if self.llm_caller is None:
             # Synthetic response in CI mode — deliberately contains one COMPUTE: line
             # per arithmetic operation so that detection_rate == 1.0 in tests.
-            forced_response = (
-                "We have 47 apples. COMPUTE: 47 + 28 = 76 So total is 76."
-            )
+            forced_response = "We have 47 apples. COMPUTE: 47 + 28 = 76 So total is 76."
         else:
             system, user = self.build_forced_prompt(question)
             forced_response = self.llm_caller(system, user)

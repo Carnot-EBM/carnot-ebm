@@ -105,6 +105,7 @@ HEADLINE_SOURCES = [
 # Gate check
 # ---------------------------------------------------------------------------
 
+
 def check_679_gate(repo_root: Path) -> tuple[bool, dict[str, Any]]:
     """Return (gate_passes, raw_data) for the primary Exp 679 result.
 
@@ -132,6 +133,7 @@ def check_679_gate(repo_root: Path) -> tuple[bool, dict[str, Any]]:
 # ---------------------------------------------------------------------------
 # Provenance audit
 # ---------------------------------------------------------------------------
+
 
 def load_result_file(repo_root: Path, rel_path: str) -> dict[str, Any]:
     """Load a JSON result file; return an empty dict if the file is missing.
@@ -182,6 +184,7 @@ def build_provenance_table(repo_root: Path) -> list[dict[str, Any]]:
 # ---------------------------------------------------------------------------
 # Document writers
 # ---------------------------------------------------------------------------
+
 
 def write_provenance_doc(
     repo_root: Path,
@@ -382,6 +385,7 @@ Do not push this file directly — use the HuggingFace CLI after review.
 # Honest verdict
 # ---------------------------------------------------------------------------
 
+
 def compute_honest_verdict(
     *,
     gate_passes: bool,
@@ -417,6 +421,7 @@ def compute_honest_verdict(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run the publication readiness audit end to end.
@@ -473,7 +478,9 @@ def main() -> None:
         # Step 2: Load supplementary results
         # ------------------------------------------------------------------
         exp694_data = load_result_file(repo_root, "results/experiment_694_vr_cross_model.json")
-        exp691_data = load_result_file(repo_root, "results/experiment_691_prompt_injection_kan_cross_dataset.json")
+        exp691_data = load_result_file(
+            repo_root, "results/experiment_691_prompt_injection_kan_cross_dataset.json"
+        )
         exp682_data = load_result_file(repo_root, "results/experiment_682_jepa_v15_ood_audit.json")
         exp698_data = load_result_file(repo_root, "results/experiment_698_jepa_v16.json")
         exp681_data = load_result_file(repo_root, "results/experiment_681_adversarial_vr.json")
@@ -497,7 +504,9 @@ def main() -> None:
                     f"true_ood_auc = {exp682_data.get('true_ood_auc', 'N/A'):.4f}"
                     " (below random = 0.50) on GSM8K 500-699. "
                     "honest_verdict: jepa_v15_ood_below_random"
-                ) if exp682_data else "Exp 682 result not found",
+                )
+                if exp682_data
+                else "Exp 682 result not found",
             },
             {
                 "label": "JEPA v16 InfoNCE (Exp 698)",
@@ -505,7 +514,9 @@ def main() -> None:
                     f"v16_ood_auc = {exp698_data.get('v16_ood_auc', 'N/A'):.4f}, "
                     f"delta = {exp698_data.get('ood_auc_delta', 'N/A'):.4f} vs v15. "
                     "InfoNCE did not fix root cause. JEPA cascade still blocked."
-                ) if exp698_data else "Exp 698 result not found",
+                )
+                if exp698_data
+                else "Exp 698 result not found",
             },
             {
                 "label": "Cross-Model VR Gemma-4-E4B-it (Exp 694)",
@@ -513,21 +524,27 @@ def main() -> None:
                     f"signed_improvement = {exp694_data.get('gemma_signed_improvement', 'N/A'):.4f}, "
                     f"cross_model_delta = {exp694_data.get('cross_model_delta', 'N/A'):.4f}. "
                     "VR forcing degraded Gemma accuracy from 0.8 to 0.0."
-                ) if exp694_data else "Exp 694 result not found",
+                )
+                if exp694_data
+                else "Exp 694 result not found",
             },
             {
                 "label": "Adversarial VR (Exp 681)",
                 "description": (
                     f"honest_verdict: {exp681_data.get('honest_verdict', 'N/A')}. "
                     "Live GPU measurement pending; CARNOT_FORCE_LIVE=1 not set."
-                ) if exp681_data else "Exp 681 result not found",
+                )
+                if exp681_data
+                else "Exp 681 result not found",
             },
             {
                 "label": "HumanEval Code VR (Exp 680)",
                 "description": (
                     f"honest_verdict: {exp680_data.get('honest_verdict', 'N/A')}. "
                     "Execution-based code VR requires live GPU run."
-                ) if exp680_data else "Exp 680 result not found",
+                )
+                if exp680_data
+                else "Exp 680 result not found",
             },
         ]
 
@@ -549,9 +566,7 @@ def main() -> None:
         # cross_model_result_exists), not a hard block — those experiments simply
         # have not been run yet, which is different from running in a non-live mode.
         measurable_rows = [r for r in provenance_table if r["inference_mode"] != "missing"]
-        all_measurable_provenance_valid = all(
-            row["provenance_valid"] for row in measurable_rows
-        )
+        all_measurable_provenance_valid = all(row["provenance_valid"] for row in measurable_rows)
         honest_verdict = compute_honest_verdict(
             gate_passes=gate_passes,
             all_provenance_valid=all_measurable_provenance_valid,

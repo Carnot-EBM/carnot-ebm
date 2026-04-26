@@ -49,6 +49,7 @@ from scripts.experiment_template import REQUIRED_RESULT_FIELDS  # noqa: E402
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _write_preflight(results_dir: Path, *, live_env_fixed: bool) -> None:
     """Write a minimal Exp 855 preflight artifact."""
     p = results_dir / "experiment_855_preflight_v15.json"
@@ -92,6 +93,7 @@ def _mock_tmpl_factory(tmp_path: Path) -> MagicMock:
 # Gate check — CARNOT_FORCE_LIVE missing
 # ---------------------------------------------------------------------------
 
+
 class TestGateForceLiveMissing:
     """REQ-BENCH-015: gate must block when CARNOT_FORCE_LIVE is absent."""
 
@@ -106,8 +108,10 @@ class TestGateForceLiveMissing:
         env_without = {k: v for k, v in os.environ.items() if k != "CARNOT_FORCE_LIVE"}
         with (
             patch.object(exp882, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
             patch.dict("os.environ", env_without, clear=True),
         ):
             exp882.main()
@@ -122,6 +126,7 @@ class TestGateForceLiveMissing:
 # Gate check — preflight artifact missing
 # ---------------------------------------------------------------------------
 
+
 class TestGatePrefLightMissing:
     """REQ-BENCH-015: gate blocks when Exp 855 artifact is absent."""
 
@@ -134,8 +139,10 @@ class TestGatePrefLightMissing:
 
         with (
             patch.object(exp882, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
             patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "1"}),
         ):
             exp882.main()
@@ -148,6 +155,7 @@ class TestGatePrefLightMissing:
 # ---------------------------------------------------------------------------
 # Gate check — live_env_fixed False
 # ---------------------------------------------------------------------------
+
 
 class TestGateLiveEnvFalse:
     """REQ-BENCH-015: gate blocks when live_env_fixed != True."""
@@ -162,8 +170,10 @@ class TestGateLiveEnvFalse:
 
         with (
             patch.object(exp882, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
             patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "1"}),
         ):
             exp882.main()
@@ -176,6 +186,7 @@ class TestGateLiveEnvFalse:
 # ---------------------------------------------------------------------------
 # Model load failure
 # ---------------------------------------------------------------------------
+
 
 class TestModelLoadFailure:
     """REQ-BENCH-015: model load failure must produce blocked artifact."""
@@ -195,8 +206,10 @@ class TestModelLoadFailure:
 
         with (
             patch.object(exp882, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
             patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "1"}),
             patch("transformers.AutoTokenizer.from_pretrained", side_effect=_raise),
         ):
@@ -212,6 +225,7 @@ class TestModelLoadFailure:
 # ---------------------------------------------------------------------------
 # _extract_final_answer
 # ---------------------------------------------------------------------------
+
 
 class TestExtractFinalAnswer:
     """Unit tests for _extract_final_answer()."""
@@ -255,6 +269,7 @@ class TestExtractFinalAnswer:
 # _answers_match
 # ---------------------------------------------------------------------------
 
+
 class TestAnswersMatch:
     """Unit tests for _answers_match()."""
 
@@ -283,6 +298,7 @@ class TestAnswersMatch:
 # _run_cascade — simulation path
 # ---------------------------------------------------------------------------
 
+
 class TestRunCascadeSimulation:
     """_run_cascade() with inference_mode=simulation_fallback."""
 
@@ -294,8 +310,13 @@ class TestRunCascadeSimulation:
         p = self._make_problem()
         result = exp882._run_cascade(p, None, None, None, None, "simulation_fallback", None)
         for key in (
-            "id", "tier_exited_at", "was_correct_baseline",
-            "was_correct_carnot", "repaired", "latency_ms", "streaming_cot_unstable",
+            "id",
+            "tier_exited_at",
+            "was_correct_baseline",
+            "was_correct_carnot",
+            "repaired",
+            "latency_ms",
+            "streaming_cot_unstable",
         ):
             assert key in result, f"Missing key: {key}"
 
@@ -320,6 +341,7 @@ class TestRunCascadeSimulation:
 # ---------------------------------------------------------------------------
 # _run_cascade — live GPU path with mocked ThreeTierPipeline
 # ---------------------------------------------------------------------------
+
 
 class TestRunCascadeLiveGPU:
     """SCENARIO-BENCH-034: live_gpu path with mocked pipelines."""
@@ -465,6 +487,7 @@ class TestRunCascadeLiveGPU:
 # _compute_metrics
 # ---------------------------------------------------------------------------
 
+
 class TestComputeMetrics:
     """Unit tests for _compute_metrics() covering all verdict branches."""
 
@@ -482,15 +505,17 @@ class TestComputeMetrics:
         for i in range(n):
             tee = 1 if i < skipped else None
             rep = i >= skipped and i < (skipped + repaired)
-            results.append({
-                "id": f"gsm8k_{i}",
-                "tier_exited_at": tee,
-                "was_correct_baseline": i < base_correct,
-                "was_correct_carnot": i < carnot_correct,
-                "repaired": rep,
-                "latency_ms": 10.0,
-                "streaming_cot_unstable": None,
-            })
+            results.append(
+                {
+                    "id": f"gsm8k_{i}",
+                    "tier_exited_at": tee,
+                    "was_correct_baseline": i < base_correct,
+                    "was_correct_carnot": i < carnot_correct,
+                    "repaired": rep,
+                    "latency_ms": 10.0,
+                    "streaming_cot_unstable": None,
+                }
+            )
         return results
 
     def test_simulation_fallback_verdict(self) -> None:
@@ -521,15 +546,17 @@ class TestComputeMetrics:
         tier_map = [0, 1, 2, None, None]
         for i in range(10):
             tee = tier_map[i % 5]
-            results.append({
-                "id": f"gsm8k_{i}",
-                "tier_exited_at": tee,
-                "was_correct_baseline": True,
-                "was_correct_carnot": True,
-                "repaired": tee is None and i % 5 == 4,
-                "latency_ms": 5.0,
-                "streaming_cot_unstable": None,
-            })
+            results.append(
+                {
+                    "id": f"gsm8k_{i}",
+                    "tier_exited_at": tee,
+                    "was_correct_baseline": True,
+                    "was_correct_carnot": True,
+                    "repaired": tee is None and i % 5 == 4,
+                    "latency_ms": 5.0,
+                    "streaming_cot_unstable": None,
+                }
+            )
         m = exp882._compute_metrics(results, "live_gpu")
         assert m["cascade_tiers_active"] >= 3
         assert m["honest_verdict"] == "cascade_running"
@@ -557,6 +584,7 @@ class TestComputeMetrics:
 # Problem corpus integrity
 # ---------------------------------------------------------------------------
 
+
 class TestProblemCorpus:
     """Validate the GSM8K problem corpus shape. REQ-BENCH-015."""
 
@@ -580,6 +608,7 @@ class TestProblemCorpus:
 # ---------------------------------------------------------------------------
 # Happy-path main() — REQUIRED_RESULT_FIELDS in artifact
 # ---------------------------------------------------------------------------
+
 
 class TestMainHappyPath:
     """SCENARIO-BENCH-034: happy-path main() writes a valid artifact."""
@@ -612,8 +641,10 @@ class TestMainHappyPath:
 
         with (
             patch.object(exp882, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
             patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "1"}, clear=False),
             patch("transformers.AutoTokenizer.from_pretrained", return_value=mock_tok),
             patch("transformers.AutoModelForCausalLM.from_pretrained", return_value=mock_model),
@@ -661,8 +692,10 @@ class TestMainHappyPath:
 
         with (
             patch.object(exp882, "_REPO_ROOT", tmp_path),
-            patch("scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
-                  return_value=mock_tmpl),
+            patch(
+                "scripts.experiment_882_live_cascade_v7_gemma4.ExperimentTemplate",
+                return_value=mock_tmpl,
+            ),
             patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "1"}, clear=False),
             patch("transformers.AutoTokenizer.from_pretrained", return_value=mock_tok),
             patch("transformers.AutoModelForCausalLM.from_pretrained", return_value=mock_model),

@@ -160,8 +160,12 @@ def verify_arithmetic(a: int, b: int, claimed_result: int, operation: str = "+")
 
     schedule = SamplingSchedule(500, 30, 10)
     samples = sample_states(
-        jrandom.PRNGKey(a * 100 + b), program, schedule,
-        init_state, [], free_blocks,
+        jrandom.PRNGKey(a * 100 + b),
+        program,
+        schedule,
+        init_state,
+        [],
+        free_blocks,
     )
 
     # Extract result bits from best sample
@@ -222,8 +226,10 @@ def main() -> int:
         result = verify_arithmetic(a, b, claimed, op)
         icon = "✓" if result["claim_correct"] else "✗"
         ising_icon = "✓" if result["ising_correct"] else "✗"
-        print(f"  [{icon}] {a} {op} {b} = {claimed} (correct={result['correct']}) "
-              f"ising_found={result['ising_found']} [{ising_icon}] — {desc}")
+        print(
+            f"  [{icon}] {a} {op} {b} = {claimed} (correct={result['correct']}) "
+            f"ising_found={result['ising_found']} [{ising_icon}] — {desc}"
+        )
         results.append(result)
 
     # Summary

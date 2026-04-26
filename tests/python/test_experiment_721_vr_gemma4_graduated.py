@@ -216,8 +216,7 @@ class TestAbstainMode:
         )
 
         assert result["constraint_applied"] is True, (
-            "Abstain mode must apply constraint when EORM confidence > 0.90 — "
-            "REQ-VER-031-4"
+            "Abstain mode must apply constraint when EORM confidence > 0.90 — REQ-VER-031-4"
         )
         mock_pipeline.verify_and_repair.assert_called_once()
 
@@ -238,8 +237,7 @@ class TestAbstainMode:
         )
 
         assert result["constraint_applied"] is False, (
-            "Abstain mode must NOT apply constraint when EORM confidence <= 0.90 — "
-            "REQ-VER-031-4"
+            "Abstain mode must NOT apply constraint when EORM confidence <= 0.90 — REQ-VER-031-4"
         )
         mock_pipeline.verify_and_repair.assert_not_called()
 
@@ -354,8 +352,7 @@ class TestClassifyVerdict:
         Spec: REQ-VER-031-5.
         """
         conditions = [
-            {"threshold": t, "signed_improvement": 0.0}
-            for t in [0.10, 0.20, 0.30, 0.40, "abstain"]
+            {"threshold": t, "signed_improvement": 0.0} for t in [0.10, 0.20, 0.30, 0.40, "abstain"]
         ]
         verdict, optimal = exp721.classify_verdict(conditions)
         assert verdict == "gemma4_distortion_confirmed_all_negative"
@@ -484,6 +481,5 @@ class TestBlockedArtifactSchema:
 
         rpc = artifact.get("results_per_condition", [])
         assert len(rpc) == 5, (
-            f"results_per_condition must have exactly 5 entries, got {len(rpc)} — "
-            "REQ-VER-031-1"
+            f"results_per_condition must have exactly 5 entries, got {len(rpc)} — REQ-VER-031-1"
         )

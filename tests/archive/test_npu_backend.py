@@ -13,15 +13,15 @@ The ``onnxruntime`` import lives inside ``NpuJEPAPredictor.__init__``, so patchi
 from __future__ import annotations
 
 import sys
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pytest
-
 from carnot.samplers.npu_backend import NpuJEPAPredictor
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -192,16 +192,12 @@ class TestNpuJEPAPredictorInference:
         assert result["code"] == pytest.approx(0.3)
         assert result["logic"] == pytest.approx(0.1)
 
-    def test_is_high_risk_true_when_above_threshold(
-        self, predictor: NpuJEPAPredictor
-    ) -> None:
+    def test_is_high_risk_true_when_above_threshold(self, predictor: NpuJEPAPredictor) -> None:
         """SCENARIO-JEPA-002: max prob 0.8 ≥ threshold 0.5 → True."""
         embedding = np.zeros(256, dtype=np.float32)
         assert predictor.is_high_risk(embedding, threshold=0.5) is True
 
-    def test_is_high_risk_false_when_below_threshold(
-        self, predictor: NpuJEPAPredictor
-    ) -> None:
+    def test_is_high_risk_false_when_below_threshold(self, predictor: NpuJEPAPredictor) -> None:
         """SCENARIO-JEPA-002: max prob 0.8 < threshold 0.9 → False."""
         embedding = np.zeros(256, dtype=np.float32)
         assert predictor.is_high_risk(embedding, threshold=0.9) is False

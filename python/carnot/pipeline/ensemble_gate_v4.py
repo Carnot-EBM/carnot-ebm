@@ -102,9 +102,7 @@ class EnsembleGateV4:
         # Average excludes HermesV2 — three-component ensemble only.
         ensemble_recall = (symcode_recall + structured_recall + causal_recall) / 3
 
-        verdict = (
-            "gate_open_vr_authorized" if gate_open else "gate_closed_vr_blocked"
-        )
+        verdict = "gate_open_vr_authorized" if gate_open else "gate_closed_vr_blocked"
 
         return EnsembleGateV4Result(
             symcode_recall=symcode_recall,

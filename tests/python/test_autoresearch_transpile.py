@@ -120,11 +120,13 @@ class TestValidateConformance:
         """REQ-AUTO-006: gradient mismatch fails conformance."""
         vectors = TestVectorSet(
             hypothesis_id="test",
-            vectors=[TestVector(
-                input=[1.0, 0.0, 0.0],
-                expected_energy=0.5,
-                expected_gradient=[1.0, 0.0, 0.0],
-            )],
+            vectors=[
+                TestVector(
+                    input=[1.0, 0.0, 0.0],
+                    expected_energy=0.5,
+                    expected_gradient=[1.0, 0.0, 0.0],
+                )
+            ],
         )
         # Energy matches but gradient is wrong
         result = validate_conformance(

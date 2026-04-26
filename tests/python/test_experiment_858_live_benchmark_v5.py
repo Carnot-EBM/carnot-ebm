@@ -48,6 +48,7 @@ from scripts.experiment_template import REQUIRED_RESULT_FIELDS  # noqa: E402
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _write_gate_artifact(dir_path: Path, *, dual_gpu_deployed: bool) -> Path:
     """Write a minimal Exp 856 gate artifact into dir_path."""
     p = dir_path / "experiment_856_dualgpu_production.json"
@@ -66,6 +67,7 @@ def _write_env855_artifact(tmp_path: Path, *, live_env_fixed: bool) -> Path:
 # Test: gate check — missing file
 # ---------------------------------------------------------------------------
 
+
 class TestGateCheckMissingFile:
     """REQ-VR-040: gate must block when Exp 856 artifact is absent."""
 
@@ -81,10 +83,17 @@ class TestGateCheckMissingFile:
             patch("scripts.experiment_858_live_benchmark_v5.ExperimentTemplate") as MockTmpl,
         ):
             mock_tmpl = MagicMock()
-            mock_tmpl.build_result.return_value = {"status": "blocked", "honest_verdict": "blocked",
-                                                    "schema": [], "experiment": 858, "title": "x",
-                                                    "run_date": "2026-04-25", "started_at": "t",
-                                                    "finished_at": "t", "duration_s": 0}
+            mock_tmpl.build_result.return_value = {
+                "status": "blocked",
+                "honest_verdict": "blocked",
+                "schema": [],
+                "experiment": 858,
+                "title": "x",
+                "run_date": "2026-04-25",
+                "started_at": "t",
+                "finished_at": "t",
+                "duration_s": 0,
+            }
             MockTmpl.return_value = mock_tmpl
 
             exp858.main()
@@ -99,6 +108,7 @@ class TestGateCheckMissingFile:
 # ---------------------------------------------------------------------------
 # Test: gate check — dual_gpu_deployed=False
 # ---------------------------------------------------------------------------
+
 
 class TestGateCheckFlagFalse:
     """REQ-VR-040: gate must block when dual_gpu_deployed is False."""
@@ -115,9 +125,15 @@ class TestGateCheckFlagFalse:
         ):
             mock_tmpl = MagicMock()
             mock_tmpl.build_result.return_value = {
-                "status": "blocked", "honest_verdict": "blocked", "schema": [],
-                "experiment": 858, "title": "x", "run_date": "2026-04-25",
-                "started_at": "t", "finished_at": "t", "duration_s": 0,
+                "status": "blocked",
+                "honest_verdict": "blocked",
+                "schema": [],
+                "experiment": 858,
+                "title": "x",
+                "run_date": "2026-04-25",
+                "started_at": "t",
+                "finished_at": "t",
+                "duration_s": 0,
             }
             MockTmpl.return_value = mock_tmpl
 
@@ -132,6 +148,7 @@ class TestGateCheckFlagFalse:
 # Test: tier discovery
 # ---------------------------------------------------------------------------
 
+
 class TestTierDiscovery:
     """Tier manifest must tolerate absent modules without raising."""
 
@@ -141,12 +158,16 @@ class TestTierDiscovery:
         manifest = exp858._discover_tiers()
         assert isinstance(manifest, dict)
         # At minimum the tiers known to be present must be True.
-        assert manifest.get("tier_0b_spilled_energy") is True, "SpilledEnergyDetector must be deployed"
+        assert manifest.get("tier_0b_spilled_energy") is True, (
+            "SpilledEnergyDetector must be deployed"
+        )
         assert manifest.get("tier_0c_nup_probe_v4") is True, "NUPProbeV4 must be deployed"
 
     def test_missing_module_marked_false(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """An ImportError in any tier module must result in False, not a crash."""
-        original_import = __builtins__.__import__ if hasattr(__builtins__, "__import__") else __import__
+        original_import = (
+            __builtins__.__import__ if hasattr(__builtins__, "__import__") else __import__
+        )
 
         def _fake_import(name: str, *args: object, **kwargs: object) -> object:
             if name == "carnot.pipeline.think_probe":
@@ -181,6 +202,7 @@ class TestTierDiscovery:
 # Test: baseline inference helper
 # ---------------------------------------------------------------------------
 
+
 class TestBaselineAnswer:
     """_baseline_answer() must be deterministic and not crash."""
 
@@ -206,6 +228,7 @@ class TestBaselineAnswer:
 # ---------------------------------------------------------------------------
 # Test: pipeline answer helper — simulation path
 # ---------------------------------------------------------------------------
+
 
 class TestPipelineAnswerSimulation:
     """_pipeline_answer() with pipeline=None or inference_mode!='live_gpu'."""
@@ -234,6 +257,7 @@ class TestPipelineAnswerSimulation:
 # ---------------------------------------------------------------------------
 # Test: pipeline answer helper — live GPU path (mocked pipeline)
 # ---------------------------------------------------------------------------
+
 
 class TestPipelineAnswerLive:
     """SCENARIO-VR-050: live_gpu path with mocked ThreeTierPipeline."""
@@ -276,6 +300,7 @@ class TestPipelineAnswerLive:
 # Test: problem corpus sizes
 # ---------------------------------------------------------------------------
 
+
 class TestProblemCorpus:
     """Corpus constants must match the N_GSM8K / N_HUMANEVAL targets."""
 
@@ -298,6 +323,7 @@ class TestProblemCorpus:
 # ---------------------------------------------------------------------------
 # Test: existing deliverable passes assert_deliverable_written
 # ---------------------------------------------------------------------------
+
 
 class TestDeliverableExists:
     """The artifact written by main() must satisfy REQUIRED_RESULT_FIELDS."""
@@ -326,5 +352,8 @@ class TestDeliverableExists:
             pytest.skip("Deliverable not yet written")
         data = json.loads(deliverable.read_text())
         assert data.get("honest_verdict") in {
-            "live_improvement", "live_no_improvement", "simulation_fallback", "blocked"
+            "live_improvement",
+            "live_no_improvement",
+            "simulation_fallback",
+            "blocked",
         }

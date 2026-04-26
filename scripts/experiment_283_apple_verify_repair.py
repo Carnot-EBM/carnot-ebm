@@ -115,8 +115,12 @@ MODEL_SPECS: list[dict[str, Any]] = [
     {"name": "Gemma4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 1},
 ]
 
-_DATASET_PATH = Path(__file__).resolve().parents[1] / "data" / "research" / "gsm8k_adversarial_281.jsonl"
-_CHECKPOINT_BASE = Path(__file__).resolve().parents[1] / "results" / "checkpoints" / "experiment_283"
+_DATASET_PATH = (
+    Path(__file__).resolve().parents[1] / "data" / "research" / "gsm8k_adversarial_281.jsonl"
+)
+_CHECKPOINT_BASE = (
+    Path(__file__).resolve().parents[1] / "results" / "checkpoints" / "experiment_283"
+)
 _LOGIT_BASE = Path(__file__).resolve().parents[1] / "data" / "research"
 _OUTPUT_PATH = Path(__file__).resolve().parents[1] / "results" / "experiment_283_results.json"
 _EXP282_RESULTS = Path(__file__).resolve().parents[1] / "results" / "experiment_282_results.json"
@@ -147,7 +151,8 @@ def safe_slug(text: str) -> str:
 def utc_now() -> str:
     """Return the current UTC timestamp in ISO-8601 format (e.g. ``2026-04-14T05:00:00Z``)."""
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def get_repo_root() -> Path:
@@ -603,10 +608,12 @@ class VerifyRepairRunner:
             ``(1, seq_len, vocab_size)``.
         """
         if os.environ.get("CARNOT_FORCE_LIVE", "0") != "1":
+
             def _mock(question: str, expected_answer: int, **kw: Any) -> tuple[str, np.ndarray]:
                 """Mock inference: always returns the correct answer."""
                 logits = np.zeros((1, 8, 100), dtype=np.float32)
                 return str(expected_answer), logits
+
             return _mock
 
         try:
@@ -656,7 +663,7 @@ class VerifyRepairRunner:
                         output_scores=True,
                         return_dict_in_generate=True,
                     )
-                generated_ids = output.sequences[0][inputs["input_ids"].shape[1]:]
+                generated_ids = output.sequences[0][inputs["input_ids"].shape[1] :]
                 response = tokenizer.decode(generated_ids, skip_special_tokens=True)
 
                 if output.scores:
@@ -706,9 +713,7 @@ class VerifyRepairRunner:
     # Verification helpers
     # ------------------------------------------------------------------
 
-    def _run_verifiers(
-        self, *, question: str, response: str
-    ) -> tuple[bool, bool, bool]:
+    def _run_verifiers(self, *, question: str, response: str) -> tuple[bool, bool, bool]:
         """Run semantic grounding and formal claim verifiers.
 
         Returns:
@@ -823,7 +828,9 @@ class VerifyRepairRunner:
         questions = self._build_variant_questions(variant_type)
         total = len(questions)
 
-        ckpt_path = _ckpt_path(self.checkpoint_dir, model_name=model_name, mode=mode, variant_type=variant_type)
+        ckpt_path = _ckpt_path(
+            self.checkpoint_dir, model_name=model_name, mode=mode, variant_type=variant_type
+        )
         ckpt = _load_ckpt(ckpt_path)
         completed: dict[str, Any] = dict(ckpt.get("completed", {}))
 
@@ -906,12 +913,15 @@ class VerifyRepairRunner:
             # Checkpoint every CHECKPOINT_INTERVAL questions.
             n_done = idx + 1
             if n_done % CHECKPOINT_INTERVAL == 0 or n_done == total:
-                _save_ckpt(ckpt_path, {
-                    "model_name": model_name,
-                    "mode": mode,
-                    "variant_type": variant_type,
-                    "completed": completed,
-                })
+                _save_ckpt(
+                    ckpt_path,
+                    {
+                        "model_name": model_name,
+                        "mode": mode,
+                        "variant_type": variant_type,
+                        "completed": completed,
+                    },
+                )
 
             # Save logits at prefix fractions (REQ-VERIFY-070 / SCENARIO-VERIFY-087).
             if total > 0:
@@ -931,10 +941,9 @@ class VerifyRepairRunner:
                         saved_fractions.add(pct)
 
         # Store logit paths for this cell.
-        self._logit_paths.setdefault(model_name, {}).update({
-            f"{mode}__{variant_type}__{k}": v
-            for k, v in cell_logit_paths.items()
-        })
+        self._logit_paths.setdefault(model_name, {}).update(
+            {f"{mode}__{variant_type}__{k}": v for k, v in cell_logit_paths.items()}
+        )
 
         return results
 
@@ -1039,7 +1048,8 @@ class VerifyRepairRunner:
                             expected = item["expected_answer"]
                             try:
                                 self.generate_fn(
-                                    question, expected,
+                                    question,
+                                    expected,
                                     model_name=model_name,
                                     mode=mode,
                                     variant_type=vt,
@@ -1176,7 +1186,11 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover
     args = parser.parse_args(argv)
 
     # Load dataset.
-    rows = [json.loads(line) for line in args.dataset.read_text(encoding="utf-8").splitlines() if line.strip()]
+    rows = [
+        json.loads(line)
+        for line in args.dataset.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
     print(f"[Exp 283] Loaded {len(rows)} rows from {args.dataset}")
 
     runner = VerifyRepairRunner(
@@ -1237,6 +1251,7 @@ __all__ = [
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

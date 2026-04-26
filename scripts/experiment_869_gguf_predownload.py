@@ -97,7 +97,9 @@ def main() -> None:
     config = GGUFCacheConfig(cache_dir=DEST_DIR)
     resolver = GGUFCacheResolver(config)
 
-    print(f"[Exp {EXP_ID}] Calling pre_download_and_verify({HF_REPO!r}, {FILENAME!r}, {DEST_DIR!r})")
+    print(
+        f"[Exp {EXP_ID}] Calling pre_download_and_verify({HF_REPO!r}, {FILENAME!r}, {DEST_DIR!r})"
+    )
     result = resolver.pre_download_and_verify(HF_REPO, FILENAME, DEST_DIR)
 
     download_verified = result["success"]

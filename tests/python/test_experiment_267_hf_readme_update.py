@@ -68,9 +68,7 @@ class TestRepoEnumeration:
     def test_model_repos_all_under_carnot_ebm_org(self) -> None:
         mod = load_module()
         for repo in mod.MODEL_REPOS:
-            assert repo.startswith("Carnot-EBM/"), (
-                f"Repo {repo!r} must be under Carnot-EBM org"
-            )
+            assert repo.startswith("Carnot-EBM/"), f"Repo {repo!r} must be under Carnot-EBM org"
 
     def test_model_repos_include_known_models(self) -> None:
         mod = load_module()
@@ -180,7 +178,10 @@ class TestReadmeMutation:
         mod = load_module()
         existing = "# My Model\n\nThis model does stuff.\n"
         result = mod.build_updated_readme(existing)
-        assert result.startswith(mod.STATUS_BANNER) or mod.STATUS_BANNER in result[:len(mod.STATUS_BANNER) + 200]
+        assert (
+            result.startswith(mod.STATUS_BANNER)
+            or mod.STATUS_BANNER in result[: len(mod.STATUS_BANNER) + 200]
+        )
         assert "# My Model" in result
 
     def test_existing_content_preserved(self) -> None:
@@ -256,7 +257,9 @@ class TestMockHfPush:
     def test_success_path_returns_success_status(self) -> None:
         mod = load_module()
         mock_api = MagicMock()
-        mock_api.model_info.return_value = MagicMock(modelId="Carnot-EBM/per-token-ebm-qwen35-08b-nothink")
+        mock_api.model_info.return_value = MagicMock(
+            modelId="Carnot-EBM/per-token-ebm-qwen35-08b-nothink"
+        )
         mock_api.hf_hub_download.return_value = None
 
         # Simulate fetching the README content via the API
@@ -384,10 +387,26 @@ class TestResultsArtifact:
     def test_summary_counts_statuses(self) -> None:
         mod = load_module()
         repo_logs = [
-            {"repo_id": "Carnot-EBM/a", "hf_url": "https://huggingface.co/Carnot-EBM/a", "status": "success"},
-            {"repo_id": "Carnot-EBM/b", "hf_url": "https://huggingface.co/Carnot-EBM/b", "status": "success"},
-            {"repo_id": "Carnot-EBM/c", "hf_url": "https://huggingface.co/Carnot-EBM/c", "status": "skipped_already_current"},
-            {"repo_id": "Carnot-EBM/d", "hf_url": "https://huggingface.co/Carnot-EBM/d", "status": "failed"},
+            {
+                "repo_id": "Carnot-EBM/a",
+                "hf_url": "https://huggingface.co/Carnot-EBM/a",
+                "status": "success",
+            },
+            {
+                "repo_id": "Carnot-EBM/b",
+                "hf_url": "https://huggingface.co/Carnot-EBM/b",
+                "status": "success",
+            },
+            {
+                "repo_id": "Carnot-EBM/c",
+                "hf_url": "https://huggingface.co/Carnot-EBM/c",
+                "status": "skipped_already_current",
+            },
+            {
+                "repo_id": "Carnot-EBM/d",
+                "hf_url": "https://huggingface.co/Carnot-EBM/d",
+                "status": "failed",
+            },
         ]
         artifact = mod.build_results_artifact(repo_logs)
         summary = artifact["summary"]

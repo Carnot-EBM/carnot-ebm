@@ -37,7 +37,7 @@ import json
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 # Add repo root so sops_helper is importable when run directly
@@ -66,6 +66,7 @@ _HF_ORG = "Carnot-EBM"
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _run(cmd: list[str], timeout: int = 120) -> tuple[int, str, str]:
     """Run a shell command and return (returncode, stdout, stderr).
@@ -107,7 +108,9 @@ def _repo_create(repo_id: str) -> tuple[bool, str]:
     return rc == 0 or already_exists, err
 
 
-def _hf_upload(repo_id: str, local_path: str, path_in_repo: str, timeout: int = 300) -> tuple[bool, str]:
+def _hf_upload(
+    repo_id: str, local_path: str, path_in_repo: str, timeout: int = 300
+) -> tuple[bool, str]:
     """Upload a single file or directory to a HuggingFace repo using the `hf` CLI."""
     rc, out, err = _run(
         ["hf", "upload", repo_id, local_path, path_in_repo],
@@ -151,7 +154,9 @@ def _publish_vjepa_v2() -> dict:
 
     # Upload weights if they exist
     if _VJEPA_WEIGHTS.exists():
-        ok, err = _hf_upload(repo_id, str(_VJEPA_WEIGHTS), "vjepa_predictor_v2.safetensors", timeout=600)
+        ok, err = _hf_upload(
+            repo_id, str(_VJEPA_WEIGHTS), "vjepa_predictor_v2.safetensors", timeout=600
+        )
         result["weights_uploaded"] = ok
         if not ok:
             result["error"] = f"weights upload failed: {err}"
@@ -211,6 +216,7 @@ def _publish_estimation_verifier() -> dict:
 # Main
 # ---------------------------------------------------------------------------
 
+
 def run_experiment() -> dict:
     """Execute Exp 933: authenticate via SOPS, upload both models, return artifact dict."""
     start = time.time()
@@ -224,7 +230,7 @@ def run_experiment() -> dict:
             "experiment": 933,
             "schema": "carnot-experiment-v1",
             "title": "HuggingFace Publish v4: SOPS Credential Injection + Upload",
-            "run_date": datetime.now(timezone.utc).isoformat(),
+            "run_date": datetime.now(UTC).isoformat(),
             "status": "blocked",
             "honest_verdict": "auth_required_sops_missing",
             "hf_authenticated": False,
@@ -254,7 +260,7 @@ def run_experiment() -> dict:
             "experiment": 933,
             "schema": "carnot-experiment-v1",
             "title": "HuggingFace Publish v4: SOPS Credential Injection + Upload",
-            "run_date": datetime.now(timezone.utc).isoformat(),
+            "run_date": datetime.now(UTC).isoformat(),
             "status": "blocked",
             "honest_verdict": "hf_auth_failed",
             "hf_authenticated": False,
@@ -288,7 +294,7 @@ def run_experiment() -> dict:
         "experiment": 933,
         "schema": "carnot-experiment-v1",
         "title": "HuggingFace Publish v4: SOPS Credential Injection + Upload",
-        "run_date": datetime.now(timezone.utc).isoformat(),
+        "run_date": datetime.now(UTC).isoformat(),
         "status": status,
         "honest_verdict": verdict,
         "hf_authenticated": True,

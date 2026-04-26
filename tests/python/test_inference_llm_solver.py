@@ -195,7 +195,10 @@ class TestRunLLMSATExperiment:
             SATClause([(0, False), (1, False)]),  # x1 OR x2
         ]
         result = run_llm_sat_experiment(
-            _make_config(), clauses, n_vars=2, n_starts=3,
+            _make_config(),
+            clauses,
+            n_vars=2,
+            n_starts=3,
         )
         assert result.initial_verification is not None
         # Multi-start should have attempted repair
@@ -215,7 +218,10 @@ class TestRunLLMSATExperiment:
             SATClause([(0, False), (1, False)]),  # x1 OR x2
         ]
         result = run_llm_sat_experiment(
-            _make_config(), clauses, n_vars=2, n_starts=5,
+            _make_config(),
+            clauses,
+            n_vars=2,
+            n_starts=5,
         )
         assert result.initial_verification is not None
         assert result.initial_verification.verdict.verified
@@ -339,9 +345,7 @@ class TestGenerateWithLogprobs:
         mock_tokenizer.return_value = {"input_ids": torch.tensor([[0, 1, 2]])}
         mock_tokenizer.decode.return_value = "hello world"
 
-        response, mean_lp = _generate_with_logprobs(
-            mock_model, mock_tokenizer, "test prompt"
-        )
+        response, mean_lp = _generate_with_logprobs(mock_model, mock_tokenizer, "test prompt")
 
         assert response == "hello world"
         # Both tokens had high logits, so mean logprob should be close to 0
@@ -364,9 +368,7 @@ class TestGenerateWithLogprobs:
         mock_tokenizer.return_value = {"input_ids": torch.tensor([[0, 1, 2]])}
         mock_tokenizer.decode.return_value = "ok"
 
-        response, mean_lp = _generate_with_logprobs(
-            mock_model, mock_tokenizer, "test"
-        )
+        response, mean_lp = _generate_with_logprobs(mock_model, mock_tokenizer, "test")
         assert response == "ok"
         assert mean_lp == 0.0  # no scores → total_logprob=0, n_tokens=0, fallback 0/1
 
@@ -384,8 +386,11 @@ class TestGenerateWithLogprobs:
         mock_tokenizer.decode.return_value = "sampled"
 
         _generate_with_logprobs(
-            mock_model, mock_tokenizer, "test",
-            do_sample=True, temperature=0.7,
+            mock_model,
+            mock_tokenizer,
+            "test",
+            do_sample=True,
+            temperature=0.7,
         )
 
         call_kwargs = mock_model.generate.call_args[1]
@@ -417,9 +422,7 @@ class TestLogprobRejectionSample:
         outputs_list = []
         decode_returns = []
         for text, token_ids, scores in responses:
-            outputs_list.append(
-                _make_mock_torch_outputs(token_ids, scores, prompt_len=3)
-            )
+            outputs_list.append(_make_mock_torch_outputs(token_ids, scores, prompt_len=3))
             decode_returns.append(text)
 
         mock_model.generate.side_effect = outputs_list
@@ -432,11 +435,13 @@ class TestLogprobRejectionSample:
         # Candidate 0: low confidence (uniform-ish logits)
         # Candidate 1: high confidence (dominant logit)
         # Candidate 2: medium confidence
-        mock_model, mock_tokenizer = self._make_mock_model_returning([
-            ("low conf", [0], [[2.0, 2.0, 2.0, 2.0]]),      # ~uniform → low logprob
-            ("high conf", [0], [[20.0, 0.0, 0.0, 0.0]]),     # dominant → high logprob
-            ("med conf", [0], [[5.0, 1.0, 1.0, 1.0]]),       # moderate
-        ])
+        mock_model, mock_tokenizer = self._make_mock_model_returning(
+            [
+                ("low conf", [0], [[2.0, 2.0, 2.0, 2.0]]),  # ~uniform → low logprob
+                ("high conf", [0], [[20.0, 0.0, 0.0, 0.0]]),  # dominant → high logprob
+                ("med conf", [0], [[5.0, 1.0, 1.0, 1.0]]),  # moderate
+            ]
+        )
 
         result = logprob_rejection_sample(
             _make_config(),
@@ -457,9 +462,11 @@ class TestLogprobRejectionSample:
 
     def test_single_candidate_degrades_gracefully(self) -> None:
         """REQ-INFER-008: n_candidates=1 → single greedy generation."""
-        mock_model, mock_tokenizer = self._make_mock_model_returning([
-            ("only answer", [1], [[1.0, 10.0, 1.0]]),
-        ])
+        mock_model, mock_tokenizer = self._make_mock_model_returning(
+            [
+                ("only answer", [1], [[1.0, 10.0, 1.0]]),
+            ]
+        )
 
         result = logprob_rejection_sample(
             _make_config(),
@@ -477,10 +484,12 @@ class TestLogprobRejectionSample:
 
     def test_uses_sampling_for_multiple_candidates(self) -> None:
         """REQ-INFER-008: n_candidates>1 enables sampling."""
-        mock_model, mock_tokenizer = self._make_mock_model_returning([
-            ("a", [0], [[5.0, 1.0]]),
-            ("b", [1], [[1.0, 5.0]]),
-        ])
+        mock_model, mock_tokenizer = self._make_mock_model_returning(
+            [
+                ("a", [0], [[5.0, 1.0]]),
+                ("b", [1], [[1.0, 5.0]]),
+            ]
+        )
 
         logprob_rejection_sample(
             _make_config(),

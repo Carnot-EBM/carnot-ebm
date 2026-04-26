@@ -279,5 +279,6 @@ class TestExports:
     def test_importable_from_pipeline(self):
         from carnot.pipeline import InterleavedLogicVerifier as ILV  # noqa: PLC0415
         from carnot.pipeline import InterleavedStepResult as ISR  # noqa: PLC0415
+
         assert ILV is not None
         assert ISR is not None

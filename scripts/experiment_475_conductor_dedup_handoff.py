@@ -59,7 +59,8 @@ def main() -> None:
 
         existing = sorted(
             [
-                p for p in glob.glob(os.path.join(results_dir, "experiment_*.json"))
+                p
+                for p in glob.glob(os.path.join(results_dir, "experiment_*.json"))
                 if "_partial" not in p
             ]
         )[:5]

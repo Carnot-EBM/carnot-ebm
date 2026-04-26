@@ -107,7 +107,9 @@ def _make_synthetic_data(n_vars: int, n_data: int, seed: int = 42) -> jnp.ndarra
     return jnp.array(samples)
 
 
-def _eval_energy_mae(model_a: object, model_b: object, n_samples: int = 500, seed: int = 7) -> float:
+def _eval_energy_mae(
+    model_a: object, model_b: object, n_samples: int = 500, seed: int = 7
+) -> float:
     """Compute mean absolute error between two models' energies on random inputs.
 
     Evaluates both models on the same set of random points in [-1, 1]^n_vars,
@@ -151,9 +153,11 @@ try:
     accuracy_standard = exp637.get("energy_accuracy_dense", None)
     accuracy_sparse_only = exp637.get("energy_accuracy_sparse", None)
     sparse_vs_dense_error_prior = exp637.get("sparse_vs_dense_error", 0.429)
-    print(f"Loaded Exp 637: accuracy_standard={accuracy_standard:.4f}, "
-          f"accuracy_sparse_only={accuracy_sparse_only:.4f}, "
-          f"sparse_vs_dense_error_prior={sparse_vs_dense_error_prior:.4f}")
+    print(
+        f"Loaded Exp 637: accuracy_standard={accuracy_standard:.4f}, "
+        f"accuracy_sparse_only={accuracy_sparse_only:.4f}, "
+        f"sparse_vs_dense_error_prior={sparse_vs_dense_error_prior:.4f}"
+    )
 except (FileNotFoundError, KeyError) as e:
     print(f"WARNING: could not load Exp 637 results ({e}). Using fallback values.")
     accuracy_standard = None
@@ -201,11 +205,13 @@ for tkf in TOP_K_FRACTIONS:
         rel_error = float("inf")
 
     print(f"    mae={mae:.4f}, rel_error_vs_dense={rel_error:.4f}")
-    sweep_results.append({
-        "top_k_fraction": tkf,
-        "mae": mae,
-        "relative_error_vs_dense": rel_error,
-    })
+    sweep_results.append(
+        {
+            "top_k_fraction": tkf,
+            "mae": mae,
+            "relative_error_vs_dense": rel_error,
+        }
+    )
 
     if rel_error < best_error:
         best_error = rel_error

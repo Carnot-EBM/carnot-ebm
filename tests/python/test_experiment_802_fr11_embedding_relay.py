@@ -10,6 +10,7 @@ Coverage targets:
   - update_store_from_violations: adds constraints for known error types
   - run_session: returns (tp, fp, violation_events) with expected types
 """
+
 from __future__ import annotations
 
 import sys
@@ -139,7 +140,10 @@ def test_verdict_tier1_relay_works():
     from experiment_802_fr11_embedding_relay import compute_honest_verdict
 
     precision = [0.5, 0.55, 0.60, 0.63, 0.65, 0.67, 0.68, 0.70, 0.71, 0.73]
-    assert compute_honest_verdict(precision, monotonic=True, delta_positive_by_s5=True) == "tier1_relay_works"
+    assert (
+        compute_honest_verdict(precision, monotonic=True, delta_positive_by_s5=True)
+        == "tier1_relay_works"
+    )
 
 
 def test_verdict_tier1_partial_improvement():
@@ -150,7 +154,10 @@ def test_verdict_tier1_partial_improvement():
     from experiment_802_fr11_embedding_relay import compute_honest_verdict
 
     precision = [0.5, 0.55, 0.60, 0.63, 0.65, 0.67, 0.68, 0.70, 0.71, 0.73]
-    assert compute_honest_verdict(precision, monotonic=False, delta_positive_by_s5=True) == "tier1_partial_improvement"
+    assert (
+        compute_honest_verdict(precision, monotonic=False, delta_positive_by_s5=True)
+        == "tier1_partial_improvement"
+    )
 
 
 def test_verdict_tier1_plateau_persists():
@@ -161,7 +168,10 @@ def test_verdict_tier1_plateau_persists():
     from experiment_802_fr11_embedding_relay import compute_honest_verdict
 
     precision = [0.5] * 10
-    assert compute_honest_verdict(precision, monotonic=True, delta_positive_by_s5=False) == "tier1_plateau_persists"
+    assert (
+        compute_honest_verdict(precision, monotonic=True, delta_positive_by_s5=False)
+        == "tier1_plateau_persists"
+    )
 
 
 def test_verdict_plateau_overrides_not_monotonic():
@@ -172,7 +182,10 @@ def test_verdict_plateau_overrides_not_monotonic():
     from experiment_802_fr11_embedding_relay import compute_honest_verdict
 
     precision = [0.5, 0.4, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
-    assert compute_honest_verdict(precision, monotonic=False, delta_positive_by_s5=False) == "tier1_plateau_persists"
+    assert (
+        compute_honest_verdict(precision, monotonic=False, delta_positive_by_s5=False)
+        == "tier1_plateau_persists"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -291,9 +304,7 @@ def test_run_session_returns_correct_types():
     from experiment_802_fr11_embedding_relay import build_session_questions, run_session
 
     store = EmbeddingConstraintStore()
-    store.from_casememory_patterns(
-        {"carry": 4, "sign": 4, "unit": 4, "comparison": 4, "causal": 4}
-    )
+    store.from_casememory_patterns({"carry": 4, "sign": 4, "unit": 4, "comparison": 4, "causal": 4})
     ising = IsingModel(IsingConfig(input_dim=32, coupling_init="xavier_uniform"))
     questions = build_session_questions()
 

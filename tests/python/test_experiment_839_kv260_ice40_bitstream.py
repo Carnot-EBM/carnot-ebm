@@ -53,10 +53,14 @@ def test_gate_fails_when_verdict_wrong(tmp_path: Path) -> None:
     """
     artifact = tmp_path / "results" / "experiment_816_kv260_synthesis_v2.json"
     artifact.parent.mkdir(parents=True)
-    artifact.write_text(json.dumps({
-        "honest_verdict": "synthesis_errors_n32",
-        "lut_count_n32": 3952,
-    }))
+    artifact.write_text(
+        json.dumps(
+            {
+                "honest_verdict": "synthesis_errors_n32",
+                "lut_count_n32": 3952,
+            }
+        )
+    )
     with patch.object(exp839, "EXP816_ARTIFACT", "results/experiment_816_kv260_synthesis_v2.json"):
         ok, lut = exp839.validate_exp816_gate(tmp_path)
     assert ok is False
@@ -70,10 +74,14 @@ def test_gate_fails_when_lut_count_wrong(tmp_path: Path) -> None:
     """
     artifact = tmp_path / "results" / "experiment_816_kv260_synthesis_v2.json"
     artifact.parent.mkdir(parents=True)
-    artifact.write_text(json.dumps({
-        "honest_verdict": "synthesis_clean_n32",
-        "lut_count_n32": 9999,
-    }))
+    artifact.write_text(
+        json.dumps(
+            {
+                "honest_verdict": "synthesis_clean_n32",
+                "lut_count_n32": 9999,
+            }
+        )
+    )
     with patch.object(exp839, "EXP816_ARTIFACT", "results/experiment_816_kv260_synthesis_v2.json"):
         ok, lut = exp839.validate_exp816_gate(tmp_path)
     assert ok is False
@@ -101,10 +109,14 @@ def test_gate_passes_when_correct(tmp_path: Path) -> None:
     """
     artifact = tmp_path / "results" / "experiment_816_kv260_synthesis_v2.json"
     artifact.parent.mkdir(parents=True)
-    artifact.write_text(json.dumps({
-        "honest_verdict": "synthesis_clean_n32",
-        "lut_count_n32": 3952,
-    }))
+    artifact.write_text(
+        json.dumps(
+            {
+                "honest_verdict": "synthesis_clean_n32",
+                "lut_count_n32": 3952,
+            }
+        )
+    )
     with patch.object(exp839, "EXP816_ARTIFACT", "results/experiment_816_kv260_synthesis_v2.json"):
         ok, lut = exp839.validate_exp816_gate(tmp_path)
     assert ok is True
@@ -172,6 +184,7 @@ def test_nextpnr_not_available_when_help_exits_nonzero(tmp_path: Path) -> None:
 
 def _make_fake_run(bin_bytes: bytes | None, *, pnr_rc: int = 0, yosys_rc: int = 0):
     """Build a fake _run() side-effect for run_pnr_and_pack tests."""
+
     def fake_run(cmd, timeout=300):  # noqa: ANN001
         cmd_str = " ".join(str(c) for c in cmd)
         if "yosys" in cmd_str:
@@ -192,6 +205,7 @@ def _make_fake_run(bin_bytes: bytes | None, *, pnr_rc: int = 0, yosys_rc: int = 
                 Path(bin_path).write_bytes(bin_bytes)
             return 0, "", ""
         return 0, "", ""
+
     return fake_run
 
 
@@ -205,9 +219,7 @@ def test_bitstream_valid_header_for_ice40_magic(tmp_path: Path) -> None:
     """
     fake_bin = bytes([0xFF, 0x00, 0x00, 0xFF]) + b"\x00" * 100
     rtl_source = tmp_path / "ising_sampler_v3.v"
-    rtl_source.write_text(
-        "module ising_sampler_v3 #(parameter integer N = 64) (); endmodule\n"
-    )
+    rtl_source.write_text("module ising_sampler_v3 #(parameter integer N = 64) (); endmodule\n")
     work_dir = tmp_path / "work"
     work_dir.mkdir()
 
@@ -231,9 +243,7 @@ def test_bitstream_invalid_header_for_wrong_magic(tmp_path: Path) -> None:
     """
     bad_bin = bytes([0x00, 0xFF, 0xAA, 0xBB]) + b"\x00" * 100
     rtl_source = tmp_path / "ising_sampler_v3.v"
-    rtl_source.write_text(
-        "module ising_sampler_v3 #(parameter integer N = 64) (); endmodule\n"
-    )
+    rtl_source.write_text("module ising_sampler_v3 #(parameter integer N = 64) (); endmodule\n")
     work_dir = tmp_path / "work"
     work_dir.mkdir()
 
@@ -255,9 +265,7 @@ def test_pnr_failed_when_nextpnr_exits_nonzero(tmp_path: Path) -> None:
     Spec: REQ-HW-040-4
     """
     rtl_source = tmp_path / "ising_sampler_v3.v"
-    rtl_source.write_text(
-        "module ising_sampler_v3 #(parameter integer N = 64) (); endmodule\n"
-    )
+    rtl_source.write_text("module ising_sampler_v3 #(parameter integer N = 64) (); endmodule\n")
     work_dir = tmp_path / "work"
     work_dir.mkdir()
 
@@ -298,9 +306,7 @@ def test_timing_not_met_when_constraint_violation_in_log(tmp_path: Path) -> None
         return 0, "", ""
 
     rtl_source = tmp_path / "ising_sampler_v3.v"
-    rtl_source.write_text(
-        "module ising_sampler_v3 #(parameter integer N = 64) (); endmodule\n"
-    )
+    rtl_source.write_text("module ising_sampler_v3 #(parameter integer N = 64) (); endmodule\n")
     work_dir = tmp_path / "work"
     work_dir.mkdir()
 
@@ -324,15 +330,17 @@ def _make_repo(tmp_path: Path, gate_passes: bool = True) -> Path:
     hw_dir = tmp_path / "hardware" / "kv260"
     hw_dir.mkdir(parents=True, exist_ok=True)
     rtl = hw_dir / "ising_sampler_v3.v"
-    rtl.write_text(
-        "module ising_sampler_v3 #(parameter integer N = 64) (); endmodule\n"
-    )
+    rtl.write_text("module ising_sampler_v3 #(parameter integer N = 64) (); endmodule\n")
     if gate_passes:
         art = tmp_path / "results" / "experiment_816_kv260_synthesis_v2.json"
-        art.write_text(json.dumps({
-            "honest_verdict": "synthesis_clean_n32",
-            "lut_count_n32": 3952,
-        }))
+        art.write_text(
+            json.dumps(
+                {
+                    "honest_verdict": "synthesis_clean_n32",
+                    "lut_count_n32": 3952,
+                }
+            )
+        )
     return tmp_path
 
 
@@ -396,8 +404,9 @@ def test_honest_verdict_pnr_failed(tmp_path: Path) -> None:
         patch.object(exp839, "EXP816_ARTIFACT", "results/experiment_816_kv260_synthesis_v2.json"),
         patch.object(exp839, "OSS_CAD_BIN", fake_oss),
         patch.object(exp839, "check_nextpnr_ice40_available", return_value=True),
-        patch.object(exp839, "run_pnr_and_pack",
-                     return_value=(False, False, False, 0, False, "pnr error")),
+        patch.object(
+            exp839, "run_pnr_and_pack", return_value=(False, False, False, 0, False, "pnr error")
+        ),
     ):
         fields, status = exp839.run_experiment(mock_tmpl)
 
@@ -459,8 +468,9 @@ def test_honest_verdict_bitstream_generated_invalid_header(tmp_path: Path) -> No
         patch.object(exp839, "OSS_CAD_BIN", fake_oss),
         patch.object(exp839, "BITSTREAM_DEST", "hardware/kv260/ising_n32_exp839.bin"),
         patch.object(exp839, "check_nextpnr_ice40_available", return_value=True),
-        patch.object(exp839, "run_pnr_and_pack",
-                     return_value=(True, True, True, 256, False, "[log]")),
+        patch.object(
+            exp839, "run_pnr_and_pack", return_value=(True, True, True, 256, False, "[log]")
+        ),
     ):
         fields, status = exp839.run_experiment(mock_tmpl)
 

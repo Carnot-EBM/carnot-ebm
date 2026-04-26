@@ -206,9 +206,7 @@ class DeterministicMockLLM:
 
             Correct probability: baseline=0.55, guided=0.63, repair further helps.
         """
-        rng = random.Random(
-            self._seed + hash(f"humaneval:{idx}:{mode}:{attempt}") % (2**31)
-        )
+        rng = random.Random(self._seed + hash(f"humaneval:{idx}:{mode}:{attempt}") % (2**31))
         p_correct = {
             "baseline": 0.55,
             "guided": 0.63,
@@ -240,9 +238,7 @@ class DeterministicMockLLM:
             Returns the expected label or its opposite, with a brief rationale.
             Correct probability: baseline=0.55, guided=0.63, guided+repair=0.68+.
         """
-        rng = random.Random(
-            self._seed + hash(f"truthfulqa:{idx}:{mode}:{attempt}") % (2**31)
-        )
+        rng = random.Random(self._seed + hash(f"truthfulqa:{idx}:{mode}:{attempt}") % (2**31))
         p_correct = {
             "baseline": 0.55,
             "guided": 0.63,
@@ -343,15 +339,17 @@ def load_humaneval(n: int = N_HUMANEVAL, seed: int = SEED) -> list[dict[str, Any
             # Parse signature args from the function prompt.
             sig_match = re.search(r"def\s+\w+\(([^)]*)\)", ex.get("prompt", ""))
             sig_args = sig_match.group(1) if sig_match else ""
-            problems.append({
-                "task_id": ex.get("task_id", f"HumanEval/{i}"),
-                "prompt": ex.get("prompt", ""),
-                "entry_point": ex.get("entry_point", "solution"),
-                "canonical_solution": ex.get("canonical_solution", "    return None\n"),
-                "test": ex.get("test", ""),
-                "signature_args": sig_args,
-                "source": "humaneval",
-            })
+            problems.append(
+                {
+                    "task_id": ex.get("task_id", f"HumanEval/{i}"),
+                    "prompt": ex.get("prompt", ""),
+                    "entry_point": ex.get("entry_point", "solution"),
+                    "canonical_solution": ex.get("canonical_solution", "    return None\n"),
+                    "test": ex.get("test", ""),
+                    "signature_args": sig_args,
+                    "source": "humaneval",
+                }
+            )
         print(f"  Loaded {len(problems)} HumanEval problems.")
         return problems[:n]
     except Exception as e:
@@ -366,43 +364,34 @@ def _synthetic_humaneval(n: int, seed: int) -> list[dict[str, Any]]:
         {
             "entry_point": "add",
             "signature_args": "a: int, b: int",
-            "prompt": "def add(a: int, b: int) -> int:\n    \"\"\"Return a + b.\"\"\"\n",
+            "prompt": 'def add(a: int, b: int) -> int:\n    """Return a + b."""\n',
             "canonical_solution": "    return a + b\n",
             "test": (
-                "def check(f):\n"
-                "    assert f(1, 2) == 3\n"
-                "    assert f(-1, 1) == 0\n"
-                "check(add)\n"
+                "def check(f):\n    assert f(1, 2) == 3\n    assert f(-1, 1) == 0\ncheck(add)\n"
             ),
         },
         {
             "entry_point": "multiply",
             "signature_args": "a: int, b: int",
-            "prompt": "def multiply(a: int, b: int) -> int:\n    \"\"\"Return a * b.\"\"\"\n",
+            "prompt": 'def multiply(a: int, b: int) -> int:\n    """Return a * b."""\n',
             "canonical_solution": "    return a * b\n",
             "test": (
-                "def check(f):\n"
-                "    assert f(2, 3) == 6\n"
-                "    assert f(0, 5) == 0\n"
-                "check(multiply)\n"
+                "def check(f):\n    assert f(2, 3) == 6\n    assert f(0, 5) == 0\ncheck(multiply)\n"
             ),
         },
         {
             "entry_point": "is_even",
             "signature_args": "n: int",
-            "prompt": "def is_even(n: int) -> bool:\n    \"\"\"Return True if n is even.\"\"\"\n",
+            "prompt": 'def is_even(n: int) -> bool:\n    """Return True if n is even."""\n',
             "canonical_solution": "    return n % 2 == 0\n",
             "test": (
-                "def check(f):\n"
-                "    assert f(4) == True\n"
-                "    assert f(3) == False\n"
-                "check(is_even)\n"
+                "def check(f):\n    assert f(4) == True\n    assert f(3) == False\ncheck(is_even)\n"
             ),
         },
         {
             "entry_point": "max_of_three",
             "signature_args": "a: int, b: int, c: int",
-            "prompt": "def max_of_three(a: int, b: int, c: int) -> int:\n    \"\"\"Return the maximum of a, b, c.\"\"\"\n",
+            "prompt": 'def max_of_three(a: int, b: int, c: int) -> int:\n    """Return the maximum of a, b, c."""\n',
             "canonical_solution": "    return max(a, b, c)\n",
             "test": (
                 "def check(f):\n"
@@ -414,7 +403,7 @@ def _synthetic_humaneval(n: int, seed: int) -> list[dict[str, Any]]:
         {
             "entry_point": "count_vowels",
             "signature_args": "s: str",
-            "prompt": "def count_vowels(s: str) -> int:\n    \"\"\"Return count of vowels in s.\"\"\"\n",
+            "prompt": 'def count_vowels(s: str) -> int:\n    """Return count of vowels in s."""\n',
             "canonical_solution": "    return sum(1 for c in s.lower() if c in 'aeiou')\n",
             "test": (
                 "def check(f):\n"
@@ -428,15 +417,17 @@ def _synthetic_humaneval(n: int, seed: int) -> list[dict[str, Any]]:
     problems: list[dict[str, Any]] = []
     for i in range(n):
         t = templates[i % len(templates)]
-        problems.append({
-            "task_id": f"Synthetic/{i}",
-            "entry_point": t["entry_point"],
-            "signature_args": t["signature_args"],
-            "prompt": t["prompt"],
-            "canonical_solution": t["canonical_solution"],
-            "test": t["test"],
-            "source": "synthetic",
-        })
+        problems.append(
+            {
+                "task_id": f"Synthetic/{i}",
+                "entry_point": t["entry_point"],
+                "signature_args": t["signature_args"],
+                "prompt": t["prompt"],
+                "canonical_solution": t["canonical_solution"],
+                "test": t["test"],
+                "source": "synthetic",
+            }
+        )
     rng.shuffle(problems)
     return problems
 
@@ -470,12 +461,14 @@ def load_truthfulqa(n: int = N_TRUTHFULQA, seed: int = SEED) -> list[dict[str, A
             if not correct_answers:
                 continue
             # For binary classification: label is "True" for the truthful answer.
-            questions.append({
-                "question": ex["question"],
-                "correct_answer": correct_answers[0],
-                "label": "True",  # The truthful answer is "True"
-                "source": "truthfulqa",
-            })
+            questions.append(
+                {
+                    "question": ex["question"],
+                    "correct_answer": correct_answers[0],
+                    "label": "True",  # The truthful answer is "True"
+                    "source": "truthfulqa",
+                }
+            )
             if len(questions) >= n:
                 break
         print(f"  Loaded {len(questions)} TruthfulQA questions.")
@@ -508,12 +501,14 @@ def _synthetic_truthfulqa(n: int, seed: int) -> list[dict[str, Any]]:
     questions: list[dict[str, Any]] = []
     for i in range(n):
         q, label = all_templates[i % len(all_templates)]
-        questions.append({
-            "question": q,
-            "correct_answer": q,
-            "label": label,
-            "source": "synthetic",
-        })
+        questions.append(
+            {
+                "question": q,
+                "correct_answer": q,
+                "label": label,
+                "source": "synthetic",
+            }
+        )
     rng.shuffle(questions)
     return questions
 
@@ -621,7 +616,7 @@ def measure_energy_check_latency(
     latencies_ms: list[float] = []
     warmup = 20
 
-    for i, text in enumerate(texts[:n_samples + warmup]):
+    for i, text in enumerate(texts[: n_samples + warmup]):
         t0 = time.monotonic()
         sampler.compute_energy_penalty(text)
         elapsed_ms = (time.monotonic() - t0) * 1000
@@ -641,9 +636,7 @@ def measure_energy_check_latency(
         "p50_ms": round(p50_ms, 4),
         "p95_ms": round(p95_ms, 4),
         "p99_ms": round(p99_ms, 4),
-        "within_budget_01ms_fraction": round(
-            sum(1 for x in latencies_ms if x < 0.01) / n, 4
-        ),
+        "within_budget_01ms_fraction": round(sum(1 for x in latencies_ms if x < 0.01) / n, 4),
     }
 
 
@@ -697,9 +690,7 @@ def apply_verify_repair(
         elif task == "humaneval" and problem is not None:
             current = llm.answer_humaneval(problem, idx, mode, attempt=attempt)
         elif task == "truthfulqa" and problem is not None:
-            current = llm.answer_truthfulqa(
-                question, problem["label"], idx, mode, attempt=attempt
-            )
+            current = llm.answer_truthfulqa(question, problem["label"], idx, mode, attempt=attempt)
 
     return current
 
@@ -822,9 +813,7 @@ def benchmark_humaneval(
             "total": total,
             "elapsed_seconds": round(elapsed, 3),
         }
-        print(
-            f"  {mode:30s}  pass@1={pass_at_1:.3f}  ({passed}/{total})  {elapsed:.1f}s"
-        )
+        print(f"  {mode:30s}  pass@1={pass_at_1:.3f}  ({passed}/{total})  {elapsed:.1f}s")
 
     return results
 
@@ -963,10 +952,12 @@ def main() -> None:
     # ------------------------------------------------------------------
     print(f"\n[4/5] Latency profiling ({N_LATENCY_SAMPLES} samples)...")
     latency = measure_energy_check_latency(sampler, N_LATENCY_SAMPLES)
-    print(f"      mean={latency['mean_ms']:.4f} ms  "
-          f"p50={latency['p50_ms']:.4f} ms  "
-          f"p95={latency['p95_ms']:.4f} ms  "
-          f"p99={latency['p99_ms']:.4f} ms")
+    print(
+        f"      mean={latency['mean_ms']:.4f} ms  "
+        f"p50={latency['p50_ms']:.4f} ms  "
+        f"p95={latency['p95_ms']:.4f} ms  "
+        f"p99={latency['p99_ms']:.4f} ms"
+    )
     budget_ok = latency["p50_ms"] < 0.01
     print(f"      Budget (<0.01 ms p50): {'PASS' if budget_ok else 'FAIL (over budget)'}")
     within_pct = latency["within_budget_01ms_fraction"] * 100
@@ -1018,17 +1009,24 @@ def main() -> None:
 
     print(f"\nTotal elapsed: {total_elapsed:.1f}s")
     print(f"\nLatency overhead (energy check):")
-    print(f"  p50 = {latency['p50_ms']:.4f} ms  "
-          f"p99 = {latency['p99_ms']:.4f} ms  "
-          f"budget={'OK' if budget_ok else 'EXCEEDED'}")
+    print(
+        f"  p50 = {latency['p50_ms']:.4f} ms  "
+        f"p99 = {latency['p99_ms']:.4f} ms  "
+        f"budget={'OK' if budget_ok else 'EXCEEDED'}"
+    )
 
     # ------------------------------------------------------------------
     # 6. Save results
     # ------------------------------------------------------------------
     output = {
         "experiment": "exp_138_guided_benchmark",
-        "spec": ["REQ-VERIFY-001", "REQ-VERIFY-002", "REQ-VERIFY-003",
-                 "SCENARIO-VERIFY-004", "SCENARIO-VERIFY-006"],
+        "spec": [
+            "REQ-VERIFY-001",
+            "REQ-VERIFY-002",
+            "REQ-VERIFY-003",
+            "SCENARIO-VERIFY-004",
+            "SCENARIO-VERIFY-006",
+        ],
         "parameters": {
             "n_gsm8k": N_GSM8K,
             "n_humaneval": N_HUMANEVAL,

@@ -282,13 +282,25 @@ def test_load_exp668_questions_n_verified(fake_668_result):
 
 def test_load_exp668_questions_truncates_to_n_questions(tmp_path):
     """n_verified_correct is capped at len(questions) when n_post_correct exceeds pairs."""
-    pairs = [{"question": "Q", "model": "m", "response": "r", "is_correct": False,
-              "fover_labels": [], "question_index": 0}]
+    pairs = [
+        {
+            "question": "Q",
+            "model": "m",
+            "response": "r",
+            "is_correct": False,
+            "fover_labels": [],
+            "question_index": 0,
+        }
+    ]
     pairs_path = tmp_path / "pairs.json"
     pairs_path.write_text(json.dumps(pairs))
     result = {
-        "experiment": 668, "schema": "s", "n_questions": 1,
-        "n_post_correct": 999, "live_pairs_source": str(pairs_path), "status": "success",
+        "experiment": 668,
+        "schema": "s",
+        "n_questions": 1,
+        "n_post_correct": 999,
+        "live_pairs_source": str(pairs_path),
+        "status": "success",
     }
     result_path = tmp_path / "r.json"
     result_path.write_text(json.dumps(result))
@@ -358,7 +370,9 @@ def test_run_experiment_fp_delta_equals_after_minus_before(fake_668_result, tmp_
     """fp_rate_delta == fp_rate_after - fp_rate_before."""
     lib_path = str(tmp_path / "lib.json")
     result = run_experiment(exp668_result_path=fake_668_result, library_path=lib_path)
-    assert abs(result["fp_rate_delta"] - (result["fp_rate_after"] - result["fp_rate_before"])) < 1e-9
+    assert (
+        abs(result["fp_rate_delta"] - (result["fp_rate_after"] - result["fp_rate_before"])) < 1e-9
+    )
 
 
 def test_run_experiment_n_test_questions(fake_668_result, tmp_path):

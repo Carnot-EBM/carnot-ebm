@@ -139,7 +139,9 @@ class TestParallelIsingSampler:
         """SCENARIO-SAMPLE-008: Output has correct shape."""
         n = 8
         sampler = ParallelIsingSampler(
-            n_warmup=10, n_samples=5, steps_per_sample=2,
+            n_warmup=10,
+            n_samples=5,
+            steps_per_sample=2,
         )
         key = jrandom.PRNGKey(42)
         b = jnp.zeros(n)
@@ -166,14 +168,18 @@ class TestParallelIsingSampler:
 
         # With annealing.
         sampler_anneal = ParallelIsingSampler(
-            n_warmup=200, n_samples=20, steps_per_sample=10,
+            n_warmup=200,
+            n_samples=20,
+            steps_per_sample=10,
             schedule=AnnealingSchedule(0.1, 10.0),
         )
         samples_a = sampler_anneal.sample(jrandom.PRNGKey(0), b, J, beta=10.0)
 
         # Without annealing (constant low temp).
         sampler_const = ParallelIsingSampler(
-            n_warmup=200, n_samples=20, steps_per_sample=10,
+            n_warmup=200,
+            n_samples=20,
+            steps_per_sample=10,
             schedule=None,
         )
         samples_c = sampler_const.sample(jrandom.PRNGKey(0), b, J, beta=10.0)
@@ -186,7 +192,9 @@ class TestParallelIsingSampler:
         """SCENARIO-SAMPLE-008: Fully parallel mode (no checkerboard)."""
         n = 6
         sampler = ParallelIsingSampler(
-            n_warmup=10, n_samples=5, steps_per_sample=2,
+            n_warmup=10,
+            n_samples=5,
+            steps_per_sample=2,
             use_checkerboard=False,
         )
         samples = sampler.sample(jrandom.PRNGKey(0), jnp.zeros(n), jnp.zeros((n, n)))
@@ -199,7 +207,9 @@ class TestParallelIsingSampler:
         init = jnp.ones(n, dtype=jnp.bool_)
         # With zero warmup and zero steps, output should reflect init.
         # (Though with n_samples=1 and steps_per_sample=0, it collects the state after warmup.)
-        samples = sampler.sample(jrandom.PRNGKey(0), jnp.zeros(n), jnp.zeros((n, n)), init_spins=init)
+        samples = sampler.sample(
+            jrandom.PRNGKey(0), jnp.zeros(n), jnp.zeros((n, n)), init_spins=init
+        )
         assert samples.shape == (1, n)
 
 
@@ -243,6 +253,7 @@ class TestExtractIsingParams:
 
     def test_extract_from_mock_model(self):
         """SCENARIO-SAMPLE-008: Extract biases, J, beta from a mock IsingEBM."""
+
         # Create a minimal mock that has the same attributes as thrml's IsingEBM.
         class MockNode:
             pass
@@ -304,7 +315,9 @@ class TestParallelSampleStates:
         schedule = MockSchedule()
 
         result = parallel_sample_states(
-            jrandom.PRNGKey(0), model, schedule,
+            jrandom.PRNGKey(0),
+            model,
+            schedule,
             nodes_to_sample=blocks,
         )
 
@@ -352,7 +365,8 @@ class TestParallelSampleStates:
         model = MockModel()
         # Pass raw nodes (not Block objects).
         result = parallel_sample_states(
-            jrandom.PRNGKey(0), model,
+            jrandom.PRNGKey(0),
+            model,
             nodes_to_sample=[model.nodes[0], model.nodes[2]],
         )
         assert len(result) == 2
@@ -374,7 +388,8 @@ class TestParallelSampleStates:
 
         model = MockModel()
         result = parallel_sample_states(
-            jrandom.PRNGKey(0), model,
+            jrandom.PRNGKey(0),
+            model,
             annealing=AnnealingSchedule(0.1, 5.0),
         )
         assert len(result) == 3

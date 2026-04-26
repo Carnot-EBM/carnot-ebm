@@ -23,6 +23,7 @@ from carnot.pipeline.pra_eorm_beam import (
 # Minimal mock EORM model (no JAX, no real model weights needed)
 # ---------------------------------------------------------------------------
 
+
 class _FixedEnergyModel:
     """Returns preset energies in round-robin order for deterministic tests.
 
@@ -65,6 +66,7 @@ class _TextHashModel:
 # PRABeamCandidate tests
 # ---------------------------------------------------------------------------
 
+
 class TestPRABeamCandidate:
     """SCENARIO-REPAIR-031: PRABeamCandidate dataclass contract."""
 
@@ -86,6 +88,7 @@ class TestPRABeamCandidate:
 # ---------------------------------------------------------------------------
 # PRABeamResult tests
 # ---------------------------------------------------------------------------
+
 
 class TestPRABeamResult:
     """SCENARIO-REPAIR-031: PRABeamResult dataclass contract."""
@@ -116,6 +119,7 @@ class TestPRABeamResult:
 # ---------------------------------------------------------------------------
 # PRAEBMBeamSearch.score_candidate tests
 # ---------------------------------------------------------------------------
+
 
 class TestScoreCandidate:
     """SCENARIO-REPAIR-031: score_candidate calls model.energy and returns float."""
@@ -168,6 +172,7 @@ class TestScoreCandidate:
 
         # Force the ImportError branch by monkeypatching the module-level import
         import builtins
+
         real_import = builtins.__import__
 
         def fake_import(name: str, *args: object, **kwargs: object) -> object:
@@ -187,6 +192,7 @@ class TestScoreCandidate:
 # ---------------------------------------------------------------------------
 # PRAEBMBeamSearch.select_best tests
 # ---------------------------------------------------------------------------
+
 
 class TestSelectBest:
     """SCENARIO-REPAIR-031: select_best returns minimum-energy candidate."""
@@ -242,12 +248,11 @@ class TestSelectBest:
 # PRAEBMBeamSearch.run_beam_episode tests
 # ---------------------------------------------------------------------------
 
+
 class TestRunBeamEpisode:
     """SCENARIO-REPAIR-032, SCENARIO-REPAIR-033: run_beam_episode correctness."""
 
-    def _fixed_generate_fn(
-        self, candidates_per_step: list[list[str]]
-    ) -> object:
+    def _fixed_generate_fn(self, candidates_per_step: list[list[str]]) -> object:
         """Return a generate_fn that yields preset candidates per step."""
 
         def generate_fn(question: str, step_idx: int) -> list[str]:
@@ -261,10 +266,12 @@ class TestRunBeamEpisode:
         # 2 steps, 3 candidates each
         model = _ConstantEnergyModel(0.5)
         beam = PRAEBMBeamSearch(eorm_model=model, k_candidates=3)
-        gen = self._fixed_generate_fn([
-            ["a1", "a2", "a3"],
-            ["b1", "b2", "b3"],
-        ])
+        gen = self._fixed_generate_fn(
+            [
+                ["a1", "a2", "a3"],
+                ["b1", "b2", "b3"],
+            ]
+        )
         result = beam.run_beam_episode("q", gen, n_steps=2)
         assert result.n_steps == 2
         assert result.n_beams_explored == 6
@@ -279,10 +286,12 @@ class TestRunBeamEpisode:
         # Beam: 0.1 < 0.5 → no violation
         model = _FixedEnergyModel([0.9, 0.1, 0.5, 0.9, 0.1, 0.5])
         beam = PRAEBMBeamSearch(eorm_model=model, k_candidates=3)
-        gen = self._fixed_generate_fn([
-            ["worst", "best", "mid"],
-            ["worst", "best", "mid"],
-        ])
+        gen = self._fixed_generate_fn(
+            [
+                ["worst", "best", "mid"],
+                ["worst", "best", "mid"],
+            ]
+        )
         result = beam.run_beam_episode("q", gen, n_steps=2)
         assert result.baseline_violation_rate == pytest.approx(1.0)
         assert result.beam_violation_rate == pytest.approx(0.0)
@@ -292,10 +301,12 @@ class TestRunBeamEpisode:
         # All energies equal → mean = energy → neither above mean → no violations
         model = _ConstantEnergyModel(0.5)
         beam = PRAEBMBeamSearch(eorm_model=model, k_candidates=3)
-        gen = self._fixed_generate_fn([
-            ["a", "b", "c"],
-            ["d", "e", "f"],
-        ])
+        gen = self._fixed_generate_fn(
+            [
+                ["a", "b", "c"],
+                ["d", "e", "f"],
+            ]
+        )
         result = beam.run_beam_episode("q", gen, n_steps=2)
         assert result.baseline_violation_rate == pytest.approx(0.0)
         assert result.beam_violation_rate == pytest.approx(0.0)
@@ -356,9 +367,11 @@ class TestRunBeamEpisode:
         """Verify that the text-hash mock correctly rewards '=' candidates."""
         model = _TextHashModel()
         beam = PRAEBMBeamSearch(eorm_model=model, k_candidates=3)
-        gen = self._fixed_generate_fn([
-            ["no equals here", "result = 42", "also no equals"],
-        ])
+        gen = self._fixed_generate_fn(
+            [
+                ["no equals here", "result = 42", "also no equals"],
+            ]
+        )
         result = beam.run_beam_episode("2+40=?", gen, n_steps=1)
         assert len(result.selected_candidates) == 1
         # "result = 42" contains '=' so it should be chosen (lowest energy)
@@ -369,6 +382,7 @@ class TestRunBeamEpisode:
 # Export / import tests
 # ---------------------------------------------------------------------------
 
+
 class TestExports:
     """Verify that all three symbols are exported from carnot.pipeline."""
 
@@ -378,6 +392,7 @@ class TestExports:
             PRABeamResult,
             PRAEBMBeamSearch,
         )
+
         assert PRABeamCandidate is not None
         assert PRABeamResult is not None
         assert PRAEBMBeamSearch is not None

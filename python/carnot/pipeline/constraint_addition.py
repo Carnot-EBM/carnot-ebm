@@ -47,9 +47,10 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from carnot.pipeline.case_memory import CaseEntry, CaseMemory
+if TYPE_CHECKING:
+    from carnot.pipeline.case_memory import CaseEntry, CaseMemory
 
 # Fixed compile date for all artifacts produced by this module.
 RUN_DATE: str = "20260413"
@@ -339,8 +340,7 @@ class ConstraintAdditionCompiler:
         qualifying = [
             entry
             for entry in entries
-            if entry.support >= self._min_support
-            and entry.confidence >= self._min_confidence
+            if entry.support >= self._min_support and entry.confidence >= self._min_confidence
         ]
 
         templates: list[ConstraintTemplate] = []
@@ -412,8 +412,7 @@ class ConstraintAdditionCompiler:
                 break
 
         template_id = (
-            f"text_pattern_guard:{entry.key.model_name}:"
-            f"{entry.key.benchmark_slice}:{family}"
+            f"text_pattern_guard:{entry.key.model_name}:{entry.key.benchmark_slice}:{family}"
         )
         return ConstraintTemplate(
             template_id=template_id,
@@ -443,10 +442,7 @@ class ConstraintAdditionCompiler:
         template.
         """
         budget_delta = min(3, max(1, entry.support // self._min_support))
-        template_id = (
-            f"budget_addition:{entry.key.model_name}:"
-            f"{entry.key.benchmark_slice}:{family}"
-        )
+        template_id = f"budget_addition:{entry.key.model_name}:{entry.key.benchmark_slice}:{family}"
         return ConstraintTemplate(
             template_id=template_id,
             kind="budget_addition",
@@ -481,8 +477,7 @@ class ConstraintAdditionCompiler:
             f"on {RUN_DATE}"
         )
         template_id = (
-            f"verifier_guard_clause:{entry.key.model_name}:"
-            f"{entry.key.benchmark_slice}:{family}"
+            f"verifier_guard_clause:{entry.key.model_name}:{entry.key.benchmark_slice}:{family}"
         )
         return ConstraintTemplate(
             template_id=template_id,

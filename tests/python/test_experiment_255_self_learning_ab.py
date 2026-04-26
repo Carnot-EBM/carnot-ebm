@@ -26,9 +26,7 @@ import pytest
 def load_module():
     repo_root = Path(__file__).resolve().parents[2]
     module_path = repo_root / "scripts" / "experiment_255_self_learning_ab.py"
-    spec = importlib.util.spec_from_file_location(
-        "experiment_255_self_learning_ab", module_path
-    )
+    spec = importlib.util.spec_from_file_location("experiment_255_self_learning_ab", module_path)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     sys.modules["experiment_255_self_learning_ab"] = module
@@ -142,8 +140,13 @@ class TestStrategyBranching:
         case = _make_held_out_case()
         result = mod.run_ab_benchmark([case])
         decisions = result["held_out_decisions"][0]["strategies"]
-        required = {"use_repair", "reason", "fast_path_hit", "constraint_templates_fired",
-                    "final_success"}
+        required = {
+            "use_repair",
+            "reason",
+            "fast_path_hit",
+            "constraint_templates_fired",
+            "final_success",
+        }
         for name, decision in decisions.items():
             missing = required - set(decision.keys())
             assert not missing, f"Strategy {name!r} missing keys: {missing}"
@@ -287,9 +290,7 @@ class TestMetricAggregation:
         for name in mod.ALL_STRATEGY_NAMES:
             overall = result["strategies"][name]["overall"]
             total = overall["n_fast_path_hits"] + overall["n_full_verification_triggered"]
-            assert total == overall["n_cases"], (
-                f"Strategy {name!r}: fast_path + full != n_cases"
-            )
+            assert total == overall["n_cases"], f"Strategy {name!r}: fast_path + full != n_cases"
 
     def test_latency_accumulated(self):
         """total_latency_seconds must be > 0 when cases have nonzero latency."""
@@ -337,9 +338,7 @@ class TestReplayVsLiveCompatibility:
         # SCENARIO-VERIFY-255-C
         learn = _make_learning_case(case_id="learn1", sample_position=1)
         replay_held = _make_held_out_case(case_id="replay1", sample_position=2)
-        live_held = _make_held_out_case(
-            case_id="live1", sample_position=3, source_experiment=255
-        )
+        live_held = _make_held_out_case(case_id="live1", sample_position=3, source_experiment=255)
         result = mod.run_ab_benchmark([learn, replay_held, live_held])
         assert result["summary"]["learning_cases"] == 1
         assert result["summary"]["held_out_cases"] == 2
@@ -483,8 +482,13 @@ class TestArtifactSchemaStability:
         # SCENARIO-VERIFY-255-E
         payload = self._build_minimal_payload()
         required = {
-            "experiment", "run_date", "title", "metadata",
-            "summary", "strategies", "held_out_decisions",
+            "experiment",
+            "run_date",
+            "title",
+            "metadata",
+            "summary",
+            "strategies",
+            "held_out_decisions",
         }
         missing = required - set(payload.keys())
         assert not missing, f"Artifact missing top-level keys: {missing}"

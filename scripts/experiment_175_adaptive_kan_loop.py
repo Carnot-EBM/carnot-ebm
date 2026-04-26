@@ -80,9 +80,7 @@ sys.path.insert(0, str(_ROOT / "python"))
 
 from carnot.models.adaptive_kan import AdaptiveKAN, KANConstraintModel
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -92,14 +90,48 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 _SUBJECTS = [
-    "cats", "dogs", "birds", "fish", "trees", "rocks", "stars", "clouds",
-    "rivers", "mountains", "students", "teachers", "engineers", "doctors",
-    "planets", "atoms", "cells", "waves", "crystals", "robots",
+    "cats",
+    "dogs",
+    "birds",
+    "fish",
+    "trees",
+    "rocks",
+    "stars",
+    "clouds",
+    "rivers",
+    "mountains",
+    "students",
+    "teachers",
+    "engineers",
+    "doctors",
+    "planets",
+    "atoms",
+    "cells",
+    "waves",
+    "crystals",
+    "robots",
 ]
 _PREDICATES = [
-    "mortal", "alive", "visible", "heavy", "bright", "fast", "old",
-    "complex", "natural", "rare", "symmetric", "stable", "dense", "warm",
-    "soluble", "magnetic", "elastic", "transparent", "finite", "periodic",
+    "mortal",
+    "alive",
+    "visible",
+    "heavy",
+    "bright",
+    "fast",
+    "old",
+    "complex",
+    "natural",
+    "rare",
+    "symmetric",
+    "stable",
+    "dense",
+    "warm",
+    "soluble",
+    "magnetic",
+    "elastic",
+    "transparent",
+    "finite",
+    "periodic",
 ]
 
 
@@ -123,9 +155,9 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     """
     features: list[int] = []
 
-    q_numbers = [int(x) for x in re.findall(r'\d+', question)]
-    a_numbers = [int(x) for x in re.findall(r'\d+', answer)]
-    a_digits = re.findall(r'\d', answer)
+    q_numbers = [int(x) for x in re.findall(r"\d+", question)]
+    a_numbers = [int(x) for x in re.findall(r"\d+", answer)]
+    a_digits = re.findall(r"\d", answer)
 
     features.append(1 if a_numbers else 0)
     n_nums = len(a_numbers)
@@ -158,7 +190,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     assert len(features) == 20
 
     words = answer.split()
-    sentences = [s.strip() for s in re.split(r'[.!?]+', answer) if s.strip()]
+    sentences = [s.strip() for s in re.split(r"[.!?]+", answer) if s.strip()]
     n_words = len(words)
     n_sentences = len(sentences)
     wc_bounds = [2, 5, 10, 15, 20, 30, 50, 100]
@@ -259,13 +291,31 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features.append(1 if "guaranteed" in lower_answer else 0)
     features.append(1 if "invalid" in lower_answer else 0)
     features.append(1 if "valid" in lower_answer and "invalid" not in lower_answer else 0)
-    bigrams = [f"{words[i]} {words[i+1]}" for i in range(len(words) - 1)] if len(words) > 1 else []
+    bigrams = (
+        [f"{words[i]} {words[i + 1]}" for i in range(len(words) - 1)] if len(words) > 1 else []
+    )
     bigram_lower = [b.lower() for b in bigrams]
     target_bigrams = [
-        "the answer", "answer is", "is not", "not the", "does not",
-        "this follows", "follows by", "by modus", "n +", "+ 1",
-        "return total", "return result", "for i", "in range", "if not",
-        "not lst", "lst 0", "== 0", "== 1", "def ",
+        "the answer",
+        "answer is",
+        "is not",
+        "not the",
+        "does not",
+        "this follows",
+        "follows by",
+        "by modus",
+        "n +",
+        "+ 1",
+        "return total",
+        "return result",
+        "for i",
+        "in range",
+        "if not",
+        "not lst",
+        "lst 0",
+        "== 0",
+        "== 1",
+        "def ",
     ]
     for tb in target_bigrams:
         features.append(1 if any(tb in b for b in bigram_lower) else 0)
@@ -320,7 +370,18 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     q_words_set = set(lower_question.split())
     a_words_set = set(lower_answer.split())
     shared_content_words = q_words_set & a_words_set - {
-        "a", "an", "the", "is", "are", "what", "if", "and", "or", "in", "of", "to"
+        "a",
+        "an",
+        "the",
+        "is",
+        "are",
+        "what",
+        "if",
+        "and",
+        "or",
+        "in",
+        "of",
+        "to",
     }
     features.append(1 if len(shared_content_words) > 2 else 0)
     features.append(1 if len(shared_content_words) > 5 else 0)
@@ -331,21 +392,23 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features.append(1 if "disjunctive" in lower_answer else 0)
     features.append(1 if "eliminate" in lower_answer or "eliminated" in lower_answer else 0)
     features.append(
-        1 if "the answer is" in lower_answer
-        and ("+" in question or "*" in question or "mod" in question) else 0
+        1
+        if "the answer is" in lower_answer
+        and ("+" in question or "*" in question or "mod" in question)
+        else 0
     )
     features.append(
-        1 if ("follows" in lower_answer or "cannot" in lower_answer)
-        and ("if " in lower_question) else 0
+        1
+        if ("follows" in lower_answer or "cannot" in lower_answer) and ("if " in lower_question)
+        else 0
     )
     features.append(1 if "def " in answer and "return" in answer and ":\n" in answer else 0)
     features.append(1 if "write" in lower_question and "def " in answer else 0)
+    features.append(1 if "what is" in lower_question and any(c.isdigit() for c in answer) else 0)
     features.append(
-        1 if "what is" in lower_question and any(c.isdigit() for c in answer) else 0
-    )
-    features.append(
-        1 if "what follows" in lower_question
-        and ("follows" in lower_answer or "not" in lower_answer) else 0
+        1
+        if "what follows" in lower_question and ("follows" in lower_answer or "not" in lower_answer)
+        else 0
     )
     features.append(1 if n_words > 3 else 0)
     features.append(1 if not answer.endswith(" ") else 0)
@@ -360,7 +423,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features.append(1 if a_q_ratio > 2.0 else 0)
     features.append(1 if a_q_ratio < 0.5 else 0)
     features.append(1 if "^" in answer or "**" in answer else 0)
-    features.append(1 if re.search(r'\[.*\]', answer) else 0)
+    features.append(1 if re.search(r"\[.*\]", answer) else 0)
     first_word = words[0].lower() if words else ""
     features.append(1 if first_word in ("def", "the", "all", "no", "yes", "some") else 0)
     features.append(1 if ">=" in answer or "<=" in answer or "!=" in answer else 0)
@@ -390,6 +453,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
 # Data generation helpers
 # ---------------------------------------------------------------------------
 
+
 def generate_arithmetic_pairs(
     n: int,
     rng: np.random.Generator,
@@ -411,8 +475,8 @@ def generate_arithmetic_pairs(
         List of (question, correct_vector, wrong_vector).
     """
     ranges = {
-        "simple":  (1, 10),
-        "medium":  (10, 100),
+        "simple": (1, 10),
+        "medium": (10, 100),
         "complex": (100, 1000),
     }
     lo, hi = ranges[difficulty]
@@ -474,8 +538,26 @@ def generate_logic_pairs(
 
 # Top-20 features from Exp 153 results — reuse for cross-experiment consistency.
 _TOP_FEATURES_EXP153 = [
-    125, 74, 126, 180, 127, 78, 162, 15, 16, 17,
-    167, 79, 168, 22, 171, 175, 77, 166, 169, 114,
+    125,
+    74,
+    126,
+    180,
+    127,
+    78,
+    162,
+    15,
+    16,
+    17,
+    167,
+    79,
+    168,
+    22,
+    171,
+    175,
+    77,
+    166,
+    169,
+    114,
 ]
 
 
@@ -495,6 +577,7 @@ def select_features(vectors: np.ndarray, feature_indices: list[int]) -> np.ndarr
 # ---------------------------------------------------------------------------
 # AUROC computation
 # ---------------------------------------------------------------------------
+
 
 def auroc(e_correct: np.ndarray, e_wrong: np.ndarray) -> float:
     """AUROC via Wilcoxon-Mann-Whitney U statistic.
@@ -521,6 +604,7 @@ def auroc(e_correct: np.ndarray, e_wrong: np.ndarray) -> float:
 # ---------------------------------------------------------------------------
 # Main experiment
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Experiment 175: AdaptiveKAN Live Verification Tracking Loop."""
@@ -553,7 +637,7 @@ def main() -> None:
     eval_wrong = select_features(eval_wrong_200, feat)
     logger.info(
         f"  Eval set: {len(eval_all)} pairs, projected to {len(feat)} features "
-        f"({time.time()-t0:.1f}s)"
+        f"({time.time() - t0:.1f}s)"
     )
 
     # -----------------------------------------------------------------------
@@ -570,7 +654,7 @@ def main() -> None:
     train_wrong_200 = np.stack([p[2] for p in train_all])
     train_correct = select_features(train_correct_200, feat)
     train_wrong = select_features(train_wrong_200, feat)
-    logger.info(f"  Training set: {len(train_all)} pairs ({time.time()-t0:.1f}s)")
+    logger.info(f"  Training set: {len(train_all)} pairs ({time.time() - t0:.1f}s)")
 
     # -----------------------------------------------------------------------
     # Step 3: Initialise models.
@@ -597,8 +681,7 @@ def main() -> None:
     )
 
     logger.info(
-        f"  AdaptiveKAN: {adaptive_kan.n_params} params, "
-        f"restructure_every={RESTRUCTURE_EVERY}"
+        f"  AdaptiveKAN: {adaptive_kan.n_params} params, restructure_every={RESTRUCTURE_EVERY}"
     )
     logger.info(f"  Static KAN: {static_kan.n_params} params (no AMR)")
 
@@ -614,7 +697,7 @@ def main() -> None:
     static_kan.train_discriminative_cd(
         train_correct, train_wrong, n_epochs=100, lr=0.01, verbose=True
     )
-    logger.info(f"  Baseline training done ({time.time()-t0:.1f}s)")
+    logger.info(f"  Baseline training done ({time.time() - t0:.1f}s)")
 
     # -----------------------------------------------------------------------
     # Step 5: Baseline AUROC (before any restructuring).
@@ -630,10 +713,7 @@ def main() -> None:
     auroc_static_batch0 = auroc(e_c_s, e_w_s)
 
     params_batch0 = adaptive_kan.n_params
-    logger.info(
-        f"  AdaptiveKAN AUROC={auroc_adaptive_batch0:.4f}, "
-        f"params={params_batch0}"
-    )
+    logger.info(f"  AdaptiveKAN AUROC={auroc_adaptive_batch0:.4f}, params={params_batch0}")
     logger.info(f"  StaticKAN  AUROC={auroc_static_batch0:.4f}")
 
     # -----------------------------------------------------------------------
@@ -671,8 +751,7 @@ def main() -> None:
             if restructured:
                 restructured_at = adaptive_kan._verification_count
                 logger.info(
-                    f"  AMR triggered at verification {restructured_at} "
-                    f"(batch {batch_idx})"
+                    f"  AMR triggered at verification {restructured_at} (batch {batch_idx})"
                 )
 
         assert restructured_at is not None, (
@@ -712,7 +791,7 @@ def main() -> None:
             f"(Δparams={n_params_now - params_batch0:+d})"
         )
         logger.info(f"  StaticKAN  AUROC={auroc_s:.4f}")
-        logger.info(f"  Batch {batch_idx} done ({time.time()-t0:.1f}s)")
+        logger.info(f"  Batch {batch_idx} done ({time.time() - t0:.1f}s)")
 
     # -----------------------------------------------------------------------
     # Step 12: Validate targets.
@@ -721,22 +800,15 @@ def main() -> None:
 
     # Target 1: AUROC does not decrease across restructures.
     auroc_delta_ok = all(
-        auroc_adaptive[i] >= auroc_adaptive[0] - 0.01
-        for i in range(1, len(auroc_adaptive))
+        auroc_adaptive[i] >= auroc_adaptive[0] - 0.01 for i in range(1, len(auroc_adaptive))
     )
-    logger.info(
-        f"  AUROC sequence (adaptive): {[f'{a:.4f}' for a in auroc_adaptive]}"
-    )
-    logger.info(
-        f"  AUROC maintained (delta >= -0.01): {'PASS' if auroc_delta_ok else 'FAIL'}"
-    )
+    logger.info(f"  AUROC sequence (adaptive): {[f'{a:.4f}' for a in auroc_adaptive]}")
+    logger.info(f"  AUROC maintained (delta >= -0.01): {'PASS' if auroc_delta_ok else 'FAIL'}")
 
     # Target 2: Param count adapts (changes by ≤ ±20%).
     param_change_pct = (params_adaptive[-1] - params_adaptive[0]) / max(params_adaptive[0], 1) * 100
     param_within_bounds = abs(param_change_pct) <= 20.0
-    logger.info(
-        f"  Param counts: {params_adaptive}"
-    )
+    logger.info(f"  Param counts: {params_adaptive}")
     logger.info(
         f"  Param change {param_change_pct:+.1f}% (target ≤ ±20%): "
         f"{'PASS' if param_within_bounds else 'FAIL'}"
@@ -778,7 +850,12 @@ def main() -> None:
             "auroc_adaptive": [float(a) for a in auroc_adaptive],
             "auroc_static": [float(a) for a in auroc_static],
             "params_adaptive": [int(p) for p in params_adaptive],
-            "batch_labels": ["batch_0_baseline", "batch_1_simple", "batch_2_medium", "batch_3_complex"],
+            "batch_labels": [
+                "batch_0_baseline",
+                "batch_1_simple",
+                "batch_2_medium",
+                "batch_3_complex",
+            ],
             "n_restructure_cycles": n_restructures,
             "total_verifications": int(adaptive_kan._verification_count),
         },
@@ -795,9 +872,7 @@ def main() -> None:
             "auroc_batch1": float(auroc_adaptive[1]),
             "auroc_batch2": float(auroc_adaptive[2]),
             "auroc_batch3": float(auroc_adaptive[3]),
-            "auroc_delta_max_drop": float(
-                max(auroc_adaptive[0] - a for a in auroc_adaptive[1:])
-            ),
+            "auroc_delta_max_drop": float(max(auroc_adaptive[0] - a for a in auroc_adaptive[1:])),
             "params_initial": int(params_adaptive[0]),
             "params_final": int(params_adaptive[-1]),
             "static_kan_auroc_batch0": float(auroc_static[0]),
@@ -813,7 +888,7 @@ def main() -> None:
 
     logger.info(f"\nResults written to {out_path}")
     logger.info(
-        f"EXPERIMENT 175 COMPLETE in {time.time()-t_start:.1f}s — "
+        f"EXPERIMENT 175 COMPLETE in {time.time() - t_start:.1f}s — "
         f"{'ALL TARGETS PASS' if results['validation']['all_targets_pass'] else 'SOME TARGETS FAIL'}"
     )
 

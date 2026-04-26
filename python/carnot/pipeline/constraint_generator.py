@@ -52,7 +52,7 @@ SCENARIO-LEARN-015, SCENARIO-LEARN-016, SCENARIO-LEARN-017, SCENARIO-LEARN-018.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -735,7 +735,9 @@ class IsingConstraintGenerator:
                 continue
             indices = _pattern_var_indices(ep.pattern_type, dim)
             if indices is None:
-                _l.debug("IsingConstraintGenerator: unknown pattern_type=%s, skipping", ep.pattern_type)
+                _l.debug(
+                    "IsingConstraintGenerator: unknown pattern_type=%s, skipping", ep.pattern_type
+                )
                 continue
             v1, v2, j_val = indices
             rows.append(CouplingRow(var1=v1, var2=v2, J_value=j_val))
@@ -759,7 +761,6 @@ class IsingConstraintGenerator:
 
         Spec: REQ-LEARN-056, SCENARIO-LEARN-100
         """
-        import jax.numpy as _jnp
 
         if not coupling_rows:
             return

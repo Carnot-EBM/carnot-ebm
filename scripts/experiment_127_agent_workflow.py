@@ -553,9 +553,7 @@ class CodeWorkflowProblem:
     propagated_steps: list[str]
     correct_output: str
     error_output: str
-    step_names: list[str] = field(
-        default_factory=lambda: ["design", "implement", "test"]
-    )
+    step_names: list[str] = field(default_factory=lambda: ["design", "implement", "test"])
 
 
 def build_code_problems() -> list[CodeWorkflowProblem]:
@@ -1344,17 +1342,19 @@ def run_baseline(
     violations_per_step: dict[str, int] = {}
 
     for i, (name, text) in enumerate(zip(step_names, steps_seq)):
-        step_results.append({
-            "step": i + 1,
-            "step_name": name,
-            "output_text": text,
-            "verified": None,
-            "n_violations": 0,
-            "violations": [],
-            "n_new_facts": 0,
-            "contradictions": [],
-            "rollback_triggered": False,
-        })
+        step_results.append(
+            {
+                "step": i + 1,
+                "step_name": name,
+                "output_text": text,
+                "verified": None,
+                "n_violations": 0,
+                "violations": [],
+                "n_new_facts": 0,
+                "contradictions": [],
+                "rollback_triggered": False,
+            }
+        )
         violations_per_step[name] = 0
 
     final_text = steps_seq[-1]
@@ -1461,8 +1461,8 @@ def run_with_csm(
         }
 
         # Check for rollback: violation at the faulty step.
-        is_faulty_step = (step_num == faulty_step_index)
-        violation_detected = (not result.verification.verified and n_viol > 0)
+        is_faulty_step = step_num == faulty_step_index
+        violation_detected = not result.verification.verified and n_viol > 0
 
         if is_faulty_step and violation_detected and not rollback_triggered:
             rollback_triggered = True
@@ -1478,12 +1478,14 @@ def run_with_csm(
             rerun_result = csm.step(input_text, correct_text)
             total_csm_calls += 1
 
-            rollback_events.append({
-                "at_step": step_num,
-                "step_name": step_name,
-                "rolled_back_to": max(rollback_to, 0),
-                "rerun_verified": rerun_result.verification.verified,
-            })
+            rollback_events.append(
+                {
+                    "at_step": step_num,
+                    "step_name": step_name,
+                    "rolled_back_to": max(rollback_to, 0),
+                    "rerun_verified": rerun_result.verification.verified,
+                }
+            )
 
             step_record["rerun_text"] = correct_text
             step_record["rerun_verified"] = rerun_result.verification.verified
@@ -1663,12 +1665,10 @@ def main() -> None:
     all_workflows = [math_results, code_results, planning_results]
     total_n = sum(w["n_problems"] for w in all_workflows)
     total_correct_baseline = sum(
-        sum(1 for r in w["baseline_results"] if r["is_correct"])
-        for w in all_workflows
+        sum(1 for r in w["baseline_results"] if r["is_correct"]) for w in all_workflows
     )
     total_correct_csm = sum(
-        sum(1 for r in w["csm_results"] if r["is_correct"])
-        for w in all_workflows
+        sum(1 for r in w["csm_results"] if r["is_correct"]) for w in all_workflows
     )
     agg_acc_baseline = total_correct_baseline / total_n
     agg_acc_csm = total_correct_csm / total_n

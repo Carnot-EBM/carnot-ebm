@@ -42,7 +42,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -114,9 +113,7 @@ class JepaGate:
             # Silence onnxruntime logging noise (INFO-level provider selection).
             opts = ort.SessionOptions()
             opts.log_severity_level = 3  # ERROR only
-            self._session = ort.InferenceSession(
-                str(self.onnx_path), sess_options=opts
-            )
+            self._session = ort.InferenceSession(str(self.onnx_path), sess_options=opts)
         return self._session
 
     def predict(self, logit_mean: np.ndarray) -> float:

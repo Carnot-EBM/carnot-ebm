@@ -48,9 +48,7 @@ DELIVERABLE = "results/experiment_622_nup_v6_cascade.json"
 
 # Synthetic corpus: 50 well-constrained (correct) steps and 50 free-form (incorrect) steps.
 # We do NOT need live GPU data — this is a latency + integration smoke-test.
-_CORRECT_RESPONSES = [
-    f"2 + {i} = {2 + i}. Therefore the total is {2 + i}." for i in range(50)
-]
+_CORRECT_RESPONSES = [f"2 + {i} = {2 + i}. Therefore the total is {2 + i}." for i in range(50)]
 _INCORRECT_RESPONSES = [
     (
         f"The quantum flux of particle {i} interacts with the holomorphic manifold "
@@ -89,6 +87,7 @@ def main() -> None:
         _log.info("Loading Exp 608 v6 weights from %s", v6_weights_path)
         try:
             import safetensors.numpy as st  # noqa: PLC0415
+
             tensors = st.load_file(str(v6_weights_path))
             if "weights" in tensors and "bias" in tensors:
                 nup_probe._weights = list(tensors["weights"].flatten().tolist())

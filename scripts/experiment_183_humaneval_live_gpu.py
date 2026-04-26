@@ -92,6 +92,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import contextlib
 
 # ---------------------------------------------------------------------------
 # Force GPU mode BEFORE any carnot imports.
@@ -132,7 +133,7 @@ _N_GPUS = torch.cuda.device_count()
 print(f"CUDA available: {_N_GPUS} GPU(s).")
 for _i in range(_N_GPUS):
     _name = torch.cuda.get_device_name(_i)
-    _vram = torch.cuda.get_device_properties(_i).total_memory / 1024 ** 2
+    _vram = torch.cuda.get_device_properties(_i).total_memory / 1024**2
     print(f"  GPU {_i}: {_name} ({_vram:.0f} MB VRAM)")
 
 # ---------------------------------------------------------------------------
@@ -148,12 +149,12 @@ PUBLISHED_BASELINES: dict[str, float] = {
 # ---------------------------------------------------------------------------
 # Configuration constants.
 # ---------------------------------------------------------------------------
-N_BOOTSTRAP = 10_000      # bootstrap samples for CIs
+N_BOOTSTRAP = 10_000  # bootstrap samples for CIs
 BOOTSTRAP_SEED = 183
-MAX_REPAIRS = 3           # maximum repair iterations per problem
-EXEC_TIMEOUT_S = 5        # per-execution subprocess timeout (seconds)
+MAX_REPAIRS = 3  # maximum repair iterations per problem
+EXEC_TIMEOUT_S = 5  # per-execution subprocess timeout (seconds)
 CHECKPOINT_INTERVAL = 20  # save checkpoint every N problems
-N_FUZZ_PROBES = 5         # top-k lowest-energy inputs to execute per function
+N_FUZZ_PROBES = 5  # top-k lowest-energy inputs to execute per function
 MODEL_HF_ID = "Qwen/Qwen3.5-0.8B"
 MODEL_FALLBACK_ID = "Qwen/Qwen3-0.6B"
 DEVICE_INDEX = 0
@@ -187,14 +188,16 @@ def load_humaneval() -> list[dict[str, Any]]:
         problems: list[dict[str, Any]] = []
         for i in range(len(ds)):
             ex = ds[i]
-            problems.append({
-                "task_id": ex["task_id"],
-                "prompt": ex["prompt"],
-                "canonical_solution": ex["canonical_solution"],
-                "test": ex["test"],
-                "entry_point": ex["entry_point"],
-                "source": "humaneval",
-            })
+            problems.append(
+                {
+                    "task_id": ex["task_id"],
+                    "prompt": ex["prompt"],
+                    "canonical_solution": ex["canonical_solution"],
+                    "test": ex["test"],
+                    "entry_point": ex["entry_point"],
+                    "source": "humaneval",
+                }
+            )
         print(f"  Loaded {len(problems)} HumanEval problems.")
         return problems
 
@@ -243,7 +246,7 @@ def load_model() -> tuple[Any, Any, str]:
             )
             model.eval()
             elapsed = time.perf_counter() - t0
-            vram_mb = torch.cuda.memory_allocated(DEVICE_INDEX) / 1024 ** 2
+            vram_mb = torch.cuda.memory_allocated(DEVICE_INDEX) / 1024**2
             print(f"  Loaded {model_id} in {elapsed:.2f}s | VRAM: {vram_mb:.0f} MB")
 
             smoke = _generate_raw(model, tokenizer, "def add(a, b):\n    return", 10, device_str)
@@ -289,13 +292,17 @@ def _generate_raw(
     messages = [{"role": "user", "content": prompt}]
     try:
         formatted = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             formatted = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             formatted = prompt
@@ -360,7 +367,8 @@ def generate_code(
     # Remove any def lines and markdown fences the model may have emitted.
     lines = raw.split("\n")
     body_lines = [
-        ln for ln in lines
+        ln
+        for ln in lines
         if not ln.strip().startswith("def ")
         and not ln.strip().startswith("```")
         and not ln.strip().startswith("'''")
@@ -419,9 +427,7 @@ def generate_repair(
 
     lines = raw.split("\n")
     body_lines = [
-        ln for ln in lines
-        if not ln.strip().startswith("def ")
-        and not ln.strip().startswith("```")
+        ln for ln in lines if not ln.strip().startswith("def ") and not ln.strip().startswith("```")
     ]
     body = "\n".join(body_lines).rstrip()
     if not body.strip():
@@ -492,9 +498,7 @@ def execute_solution(
     body_indented = textwrap.indent(body, "    ")
     full_source = f"{prompt}{body_indented}\n\n{test_code}\n\ncheck({entry})\n"
 
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".py", delete=False, prefix="exp183_"
-    ) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, prefix="exp183_") as f:
         f.write(full_source)
         tmp_path = f.name
 
@@ -519,20 +523,22 @@ def execute_solution(
         lines = [ln for ln in output.split("\n") if ln.strip()]
         error_msg = lines[-1] if lines else "unknown error"
         return ExecResult(
-            passed=False, error_type=error_type,
-            error_msg=error_msg[:300], stdout=output[:1000],
+            passed=False,
+            error_type=error_type,
+            error_msg=error_msg[:300],
+            stdout=output[:1000],
         )
 
     except subprocess.TimeoutExpired:
         return ExecResult(
-            passed=False, error_type="timeout",
-            error_msg=f"Execution exceeded {timeout}s timeout", stdout="",
+            passed=False,
+            error_type="timeout",
+            error_msg=f"Execution exceeded {timeout}s timeout",
+            stdout="",
         )
     finally:
-        try:
+        with contextlib.suppress(OSError):
             os.unlink(tmp_path)
-        except OSError:
-            pass
 
 
 def execute_fuzz_probe(
@@ -584,7 +590,9 @@ def execute_fuzz_probe(
     try:
         proc = subprocess.run(
             [sys.executable, tmp_path],
-            capture_output=True, text=True, timeout=timeout,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
         )
         output = proc.stdout + proc.stderr
         if proc.returncode == 0:
@@ -595,10 +603,8 @@ def execute_fuzz_probe(
     except subprocess.TimeoutExpired:
         return False, f"fuzz timeout after {timeout}s"
     finally:
-        try:
+        with contextlib.suppress(OSError):
             os.unlink(tmp_path)
-        except OSError:
-            pass
 
 
 # ---------------------------------------------------------------------------
@@ -639,8 +645,7 @@ def extract_constraints(body: str, entry_point: str) -> list[str]:
 
         # 1. Check for at least one return-with-value statement.
         has_return = any(
-            isinstance(n, ast.Return) and n.value is not None
-            for n in ast.walk(fn_node)
+            isinstance(n, ast.Return) and n.value is not None for n in ast.walk(fn_node)
         )
         if not has_return:
             constraints.append(f"{entry_point}: no return statement (likely bug)")
@@ -694,10 +699,7 @@ def has_static_bug(constraints: list[str]) -> bool:
     Returns:
         True if any constraint signals a definite static bug.
     """
-    for c in constraints:
-        if "no return statement" in c or "syntax error" in c:
-            return True
-    return False
+    return any("no return statement" in c or "syntax error" in c for c in constraints)
 
 
 # ---------------------------------------------------------------------------
@@ -801,7 +803,9 @@ def _build_ising_params() -> tuple[np.ndarray, np.ndarray]:
 _ISING_J, _ISING_B = _build_ising_params()
 
 
-def generate_fuzz_inputs(prompt: str, entry_point: str, n_probes: int = N_FUZZ_PROBES) -> list[tuple]:
+def generate_fuzz_inputs(
+    prompt: str, entry_point: str, n_probes: int = N_FUZZ_PROBES
+) -> list[tuple]:
     """Generate boundary-value fuzz inputs ranked by Ising energy.
 
     **Detailed explanation for engineers:**
@@ -1059,7 +1063,9 @@ def run_problem(
                 current_body,
                 current_result.error_msg,
                 constraints,
-                model, tokenizer, device_str,
+                model,
+                tokenizer,
+                device_str,
                 repair_idx=repair_idx,
             )
             repair_exec = execute_solution(repaired, problem)
@@ -1248,8 +1254,7 @@ def main() -> int:
     completed_ids = set(checkpoint.keys())
 
     # [4/5] Run benchmark.
-    print(f"\n[4/5] Running {n_problems} problems "
-          f"({len(completed_ids)} already done)...")
+    print(f"\n[4/5] Running {n_problems} problems ({len(completed_ids)} already done)...")
 
     all_results: dict[str, Any] = dict(checkpoint)
     problems_remaining = [p for p in problems if p["task_id"] not in completed_ids]
@@ -1271,8 +1276,8 @@ def main() -> int:
             n_r = sum(1 for v in all_results.values() if v["repair_pass"])
             print(
                 f"    {done_total:3d}/{n_problems} "
-                f"baseline {n_b}/{done_total} ({n_b/done_total:.1%}), "
-                f"repair {n_r}/{done_total} ({n_r/done_total:.1%})  "
+                f"baseline {n_b}/{done_total} ({n_b / done_total:.1%}), "
+                f"repair {n_r}/{done_total} ({n_r / done_total:.1%})  "
                 f"[{elapsed_prob:.1f}s]"
             )
 
@@ -1290,7 +1295,7 @@ def main() -> int:
         del model, tokenizer
         gc.collect()
         torch.cuda.empty_cache()
-        vram = torch.cuda.memory_allocated(DEVICE_INDEX) / 1024 ** 2
+        vram = torch.cuda.memory_allocated(DEVICE_INDEX) / 1024**2
         print(f"  Model freed. GPU {DEVICE_INDEX} VRAM now: {vram:.0f} MB")
     except Exception:
         pass
@@ -1422,10 +1427,14 @@ def main() -> int:
 
     print(f"  {'Mode':<30s}  {'pass@1':>8s}  {'95% CI':>20s}  {'N':>5s}")
     print(f"  {'-' * 68}")
-    print(f"  {'Baseline (no repair)':<30s}  {base_acc:>7.1%}  "
-          f"[{base_lo:.1%}, {base_hi:.1%}]  {int(sum(baseline_flags)):>3d}/{n_actual}")
-    print(f"  {'Verify+Repair (≤3 iters)':<30s}  {repair_acc:>7.1%}  "
-          f"[{repair_lo:.1%}, {repair_hi:.1%}]  {int(sum(repair_flags)):>3d}/{n_actual}")
+    print(
+        f"  {'Baseline (no repair)':<30s}  {base_acc:>7.1%}  "
+        f"[{base_lo:.1%}, {base_hi:.1%}]  {int(sum(baseline_flags)):>3d}/{n_actual}"
+    )
+    print(
+        f"  {'Verify+Repair (≤3 iters)':<30s}  {repair_acc:>7.1%}  "
+        f"[{repair_lo:.1%}, {repair_hi:.1%}]  {int(sum(repair_flags)):>3d}/{n_actual}"
+    )
     print()
     print(f"  Delta (repair - baseline): {delta:+.1%} [{delta_lo:+.1%}, {delta_hi:+.1%}]")
     print()
@@ -1439,8 +1448,10 @@ def main() -> int:
     print(f"  Repair statistics:")
     if n_needed_repair > 0:
         print(f"    Problems needing repair:  {n_needed_repair}/{n_actual}")
-        print(f"    Successfully repaired:    {n_repaired}/{n_needed_repair} "
-              f"({n_repaired/n_needed_repair:.1%})")
+        print(
+            f"    Successfully repaired:    {n_repaired}/{n_needed_repair} "
+            f"({n_repaired / n_needed_repair:.1%})"
+        )
         print(f"    Average repair iters:     {avg_repairs:.1f}")
     else:
         print(f"    No repair needed (all baseline passes).")
@@ -1459,7 +1470,7 @@ def main() -> int:
 
     if n_actual == 164:
         verdict = "PUBLISHABLE — real HumanEval (164 problems) + live GPU inference."
-        verdict2 = f"Bootstrap CIs ≈ ±{(repair_hi - repair_lo)/2:.1%}. Directly comparable to published baselines."
+        verdict2 = f"Bootstrap CIs ≈ ±{(repair_hi - repair_lo) / 2:.1%}. Directly comparable to published baselines."
     else:
         verdict = f"PARTIAL RUN — only {n_actual}/164 problems completed."
         verdict2 = "Re-run to complete remaining problems (checkpoint will resume)."

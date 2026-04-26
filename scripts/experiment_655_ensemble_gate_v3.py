@@ -90,9 +90,7 @@ def _load_json(path: str) -> dict:
 _symcode_data = _load_json("results/experiment_619_dsvd_symcode.json")
 if not _symcode_data:
     _symcode_data = _load_json("results/experiment_630_symcode_v2.json")
-symcode_recall: float = float(
-    _symcode_data.get("symcode_recall", _symcode_data.get("auc", 0.12))
-)
+symcode_recall: float = float(_symcode_data.get("symcode_recall", _symcode_data.get("auc", 0.12)))
 
 # hermes_v2_recall: tracked for provenance but not included in ensemble weight
 _hermes_data = _load_json("results/experiment_641_hermes_v2_live.json")
@@ -100,9 +98,7 @@ hermes_v2_recall: float = float(_hermes_data.get("hermes_v2_recall", 0.12))
 
 # structured_recall: from HermesV2StructuredLoop (Exp 654)
 _structured_data = _load_json("results/experiment_654_hermes_v2_structured.json")
-structured_recall: float = float(
-    _structured_data.get("hermes_v2_structured_recall", 0.0)
-)
+structured_recall: float = float(_structured_data.get("hermes_v2_structured_recall", 0.0))
 
 # causal_recall: from CausalReasoningVerifier (Exp 642)
 _causal_data = _load_json("results/experiment_642_causal_verifier.json")

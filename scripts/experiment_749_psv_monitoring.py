@@ -382,9 +382,9 @@ def run_experiment(repo_root: Path | None = None) -> dict:
     # ------------------------------------------------------------------
     rng = random.Random(749)
 
-    gsm8k_pool = _make_gsm8k_questions(0, 30)        # 30 GSM8K questions
-    algebra_pool = _make_math_algebra_questions(15)   # 15 algebra questions
-    arc_pool = _make_arc_challenge_questions(15)       # 15 ARC questions
+    gsm8k_pool = _make_gsm8k_questions(0, 30)  # 30 GSM8K questions
+    algebra_pool = _make_math_algebra_questions(15)  # 15 algebra questions
+    arc_pool = _make_arc_challenge_questions(15)  # 15 ARC questions
 
     inf_fn, ver_fn = _make_domain_diverse_fns(gsm8k_pool, algebra_pool, arc_pool)
 

@@ -146,9 +146,7 @@ class TestZ3GatedRepairSatPath:
     def _make_sat_extractor(self) -> MagicMock:
         extractor = MagicMock()
         extractor.extract.return_value = []
-        extractor.last_z3_result = Z3Result(
-            sat_status="sat", z3_code="", runtime_ms=0.2
-        )
+        extractor.last_z3_result = Z3Result(sat_status="sat", z3_code="", runtime_ms=0.2)
         return extractor
 
     def test_sat_returns_early_no_ising(self) -> None:
@@ -290,9 +288,7 @@ class TestZ3GatedRepairUnknownPath:
     def _make_unknown_extractor(self) -> MagicMock:
         extractor = MagicMock()
         extractor.extract.return_value = []
-        extractor.last_z3_result = Z3Result(
-            sat_status="unknown", z3_code="", runtime_ms=0.0
-        )
+        extractor.last_z3_result = Z3Result(sat_status="unknown", z3_code="", runtime_ms=0.0)
         return extractor
 
     def test_unknown_triggers_ising(self) -> None:
@@ -368,9 +364,7 @@ class TestZ3GatedRepairDefaults:
         extractor = MagicMock()
         extractor.last_z3_result = Z3Result("sat", "", 0.1)
         extractor.extract.return_value = []
-        gate = Z3GatedRepair(
-            nl2z3_extractor=extractor, ising_pipeline=MagicMock()
-        )
+        gate = Z3GatedRepair(nl2z3_extractor=extractor, ising_pipeline=MagicMock())
         assert gate.confidence_threshold == 0.8
 
     def test_custom_confidence_threshold(self) -> None:

@@ -81,6 +81,7 @@ class TestEceLoss:
     def test_exported_from_carnot_training(self):
         # REQ-VERIFY-121: ece_loss exported from carnot.training package
         from carnot.training import ece_loss as imported_fn
+
         assert imported_fn is ece_loss
 
 
@@ -160,6 +161,7 @@ class TestCapoLoss:
     def test_exported_from_carnot_training(self):
         # REQ-VERIFY-120: capo_loss exported from carnot.training package
         from carnot.training import capo_loss as imported_fn
+
         assert imported_fn is capo_loss
 
     def test_nonnegative_always(self):

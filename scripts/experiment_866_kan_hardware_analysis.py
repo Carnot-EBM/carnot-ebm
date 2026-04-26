@@ -44,10 +44,10 @@ from python.carnot.analysis.kan_hw_analysis import KANHardwareAnalyzer
 # ---------------------------------------------------------------------------
 # Configuration constants matching actual KAEMEnergy defaults
 # ---------------------------------------------------------------------------
-N_INPUTS_N8: int = 8          # Problem size for primary analysis
-N_HIDDEN: int = 16            # Worst-case MLP hidden width approximation
-N_KNOTS: int = 10             # KANConfig.num_knots default
-LUTS_PER_SEGMENT: int = 10    # midpoint of arXiv 2604.03345 8–12 LUT range
+N_INPUTS_N8: int = 8  # Problem size for primary analysis
+N_HIDDEN: int = 16  # Worst-case MLP hidden width approximation
+N_KNOTS: int = 10  # KANConfig.num_knots default
+LUTS_PER_SEGMENT: int = 10  # midpoint of arXiv 2604.03345 8–12 LUT range
 
 # Ising N=8 baseline from Exp 859 (pnr_lut_count after place-and-route)
 ISING_LUT_COUNT_EXP859: int = 134

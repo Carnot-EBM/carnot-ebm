@@ -26,11 +26,13 @@ import experiment_777_hf_publishing as mod
 
 def _make_exp752_json(artifact_paths: dict | None = None) -> str:
     """Build a minimal Exp 752 artifact JSON for test injection."""
-    return json.dumps({
-        "experiment": 752,
-        "artifact_paths": artifact_paths or {},
-        "honest_verdict": "hf_artifacts_ready",
-    })
+    return json.dumps(
+        {
+            "experiment": 752,
+            "artifact_paths": artifact_paths or {},
+            "honest_verdict": "hf_artifacts_ready",
+        }
+    )
 
 
 def _write_exp752(tmp_path: Path, artifact_paths: dict | None = None) -> None:
@@ -73,8 +75,10 @@ class TestHfNotAuthenticated:
         _write_exp752(tmp_path)
         fake_tmpl = _make_fake_tmpl(tmp_path)
 
-        with patch.object(mod, "check_hf_authentication", return_value=(False, "")), \
-             patch.object(mod, "upload_artifact") as mock_upload:
+        with (
+            patch.object(mod, "check_hf_authentication", return_value=(False, "")),
+            patch.object(mod, "upload_artifact") as mock_upload,
+        ):
             mod.run_experiment(fake_tmpl)
 
         mock_upload.assert_not_called()
@@ -84,8 +88,10 @@ class TestHfNotAuthenticated:
         _write_exp752(tmp_path)
         fake_tmpl = _make_fake_tmpl(tmp_path)
 
-        with patch.object(mod, "check_hf_authentication", return_value=(False, "")), \
-             patch.object(mod, "update_readme_with_production_section") as mock_readme:
+        with (
+            patch.object(mod, "check_hf_authentication", return_value=(False, "")),
+            patch.object(mod, "update_readme_with_production_section") as mock_readme,
+        ):
             mod.run_experiment(fake_tmpl)
 
         mock_readme.assert_not_called()
@@ -151,9 +157,11 @@ class TestModelsPublishedCount:
         _write_exp752(tmp_path, paths)
         fake_tmpl = _make_fake_tmpl(tmp_path)
 
-        with patch.object(mod, "check_hf_authentication", return_value=(True, "testuser")), \
-             patch.object(mod, "upload_artifact", return_value=(True, "https://hf.co/test")), \
-             patch.object(mod, "get_existing_org_models", return_value=[]):
+        with (
+            patch.object(mod, "check_hf_authentication", return_value=(True, "testuser")),
+            patch.object(mod, "upload_artifact", return_value=(True, "https://hf.co/test")),
+            patch.object(mod, "get_existing_org_models", return_value=[]),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["n_models_published"] == 2
@@ -164,8 +172,10 @@ class TestModelsPublishedCount:
         _write_exp752(tmp_path, {})
         fake_tmpl = _make_fake_tmpl(tmp_path)
 
-        with patch.object(mod, "check_hf_authentication", return_value=(True, "testuser")), \
-             patch.object(mod, "get_existing_org_models", return_value=[]):
+        with (
+            patch.object(mod, "check_hf_authentication", return_value=(True, "testuser")),
+            patch.object(mod, "get_existing_org_models", return_value=[]),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["n_models_published"] == 0
@@ -185,9 +195,11 @@ class TestModelsPublishedCount:
                 return False, "upload failed"
             return True, f"https://hf.co/{repo_id}"
 
-        with patch.object(mod, "check_hf_authentication", return_value=(True, "testuser")), \
-             patch.object(mod, "upload_artifact", side_effect=_upload_side_effect), \
-             patch.object(mod, "get_existing_org_models", return_value=[]):
+        with (
+            patch.object(mod, "check_hf_authentication", return_value=(True, "testuser")),
+            patch.object(mod, "upload_artifact", side_effect=_upload_side_effect),
+            patch.object(mod, "get_existing_org_models", return_value=[]),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["n_models_published"] == 1
@@ -220,10 +232,12 @@ class TestReadmeUpdate:
         fake_tmpl = _make_fake_tmpl(tmp_path)
         existing = ["Carnot-EBM/model-a", "Carnot-EBM/model-b", "Carnot-EBM/model-c"]
 
-        with patch.object(mod, "check_hf_authentication", return_value=(True, "testuser")), \
-             patch.object(mod, "upload_artifact", return_value=(False, "no artifacts")), \
-             patch.object(mod, "get_existing_org_models", return_value=existing), \
-             patch.object(mod, "update_readme_with_production_section", return_value=(True, "")):
+        with (
+            patch.object(mod, "check_hf_authentication", return_value=(True, "testuser")),
+            patch.object(mod, "upload_artifact", return_value=(False, "no artifacts")),
+            patch.object(mod, "get_existing_org_models", return_value=existing),
+            patch.object(mod, "update_readme_with_production_section", return_value=(True, "")),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["n_readmes_updated"] == 3
@@ -257,10 +271,12 @@ class TestReadmeUpdate:
         fake_tmpl = _make_fake_tmpl(tmp_path)
         existing = ["Carnot-EBM/ebm-v1"]
 
-        with patch.object(mod, "check_hf_authentication", return_value=(True, "u")), \
-             patch.object(mod, "get_existing_org_models", return_value=existing), \
-             patch.object(mod, "update_readme_with_production_section", return_value=(True, "")), \
-             patch.object(mod, "upload_artifact", return_value=(True, "https://hf.co/test")):
+        with (
+            patch.object(mod, "check_hf_authentication", return_value=(True, "u")),
+            patch.object(mod, "get_existing_org_models", return_value=existing),
+            patch.object(mod, "update_readme_with_production_section", return_value=(True, "")),
+            patch.object(mod, "upload_artifact", return_value=(True, "https://hf.co/test")),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["honest_verdict"] == "hf_published_readmes_updated"
@@ -272,9 +288,11 @@ class TestReadmeUpdate:
         _write_exp752(tmp_path, paths_dict)
         fake_tmpl = _make_fake_tmpl(tmp_path)
 
-        with patch.object(mod, "check_hf_authentication", return_value=(True, "u")), \
-             patch.object(mod, "get_existing_org_models", return_value=[]), \
-             patch.object(mod, "upload_artifact", return_value=(True, "https://hf.co/test")):
+        with (
+            patch.object(mod, "check_hf_authentication", return_value=(True, "u")),
+            patch.object(mod, "get_existing_org_models", return_value=[]),
+            patch.object(mod, "upload_artifact", return_value=(True, "https://hf.co/test")),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["honest_verdict"] == "hf_artifacts_uploaded_only"
@@ -286,10 +304,12 @@ class TestReadmeUpdate:
         fake_tmpl = _make_fake_tmpl(tmp_path)
         existing = ["Carnot-EBM/ebm-v1"]
 
-        with patch.object(mod, "check_hf_authentication", return_value=(True, "u")), \
-             patch.object(mod, "get_existing_org_models", return_value=existing), \
-             patch.object(mod, "update_readme_with_production_section", return_value=(False, "err")), \
-             patch.object(mod, "upload_artifact", return_value=(True, "https://hf.co/test")):
+        with (
+            patch.object(mod, "check_hf_authentication", return_value=(True, "u")),
+            patch.object(mod, "get_existing_org_models", return_value=existing),
+            patch.object(mod, "update_readme_with_production_section", return_value=(False, "err")),
+            patch.object(mod, "upload_artifact", return_value=(True, "https://hf.co/test")),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["honest_verdict"] == "hf_published_readmes_blocked"
@@ -299,24 +319,36 @@ class TestReadmeUpdate:
         when the section already exists — does not re-upload."""
         existing_readme = "# MyModel\n\n## Production Use\n\npip install carnot\n"
 
-        with patch.object(mod, "_run", side_effect=[
-            # download succeeds
-            (0, "", ""),
-        ]):
+        with patch.object(
+            mod,
+            "_run",
+            side_effect=[
+                # download succeeds
+                (0, "", ""),
+            ],
+        ):
             readme_path = tmp_path / "README.md"
             readme_path.write_text(existing_readme)
 
             # Patch the tempfile to use our tmp_path so README is found.
             import tempfile
+
             real_tempdir = tempfile.TemporaryDirectory
 
             class FakeTmpDir:
-                def __init__(self): self.name = str(tmp_path)
-                def __enter__(self): return self.name
-                def __exit__(self, *_): pass
+                def __init__(self):
+                    self.name = str(tmp_path)
 
-            with patch("tempfile.TemporaryDirectory", FakeTmpDir), \
-                 patch.object(mod, "_run", return_value=(0, "", "")):
+                def __enter__(self):
+                    return self.name
+
+                def __exit__(self, *_):
+                    pass
+
+            with (
+                patch("tempfile.TemporaryDirectory", FakeTmpDir),
+                patch.object(mod, "_run", return_value=(0, "", "")),
+            ):
                 ok, msg = mod.update_readme_with_production_section("Carnot-EBM/test-model")
 
         assert ok is True

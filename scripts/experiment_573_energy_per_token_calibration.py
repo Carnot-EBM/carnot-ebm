@@ -79,6 +79,7 @@ N_STEPS = 30  # 15 correct + 15 incorrect
 # Corpus loading helpers
 # ---------------------------------------------------------------------------
 
+
 def _load_cot_steps(corpus_path: Path, n_correct: int, n_incorrect: int) -> list[str]:
     """Extract flat step texts from FOVER corpus v2.
 
@@ -129,6 +130,7 @@ def _load_cot_steps(corpus_path: Path, n_correct: int, n_incorrect: int) -> list
 # EORM model loading
 # ---------------------------------------------------------------------------
 
+
 def _load_eorm_model() -> object:
     """Load real EORM from jepa_predictor_v10.safetensors or init a fresh model.
 
@@ -160,6 +162,7 @@ def _load_eorm_model() -> object:
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run the Energy-per-Token EORM Calibration experiment."""

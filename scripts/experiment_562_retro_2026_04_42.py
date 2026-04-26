@@ -63,7 +63,7 @@ SCHEMA = "carnot.operational_retro.v17"
 
 # .41 milestone baseline (from experiment_548_retro_2026_04_41.json) for comparison.
 # Use these to decide whether .42 was faster or slower in wall-time terms.
-_PRIOR_MILESTONE_WALL_TIME_MIN = 41.631   # .41 total wall time
+_PRIOR_MILESTONE_WALL_TIME_MIN = 41.631  # .41 total wall time
 _PRIOR_MILESTONE_AVG_MIN_PER_EXP = 3.785  # .41 average per experiment
 # Cumulative from operational_retro_2026_04_41.json — updated at end of .42.
 _PRIOR_CUMULATIVE_WALL_TIME_MIN = 4484.0
@@ -136,11 +136,14 @@ def compute_retro() -> dict:
     # --- Per-experiment status counts ----------------------------------------
     # n_experiments includes this retro script (562) as the 14th experiment.
     n_experiments = len(_MILESTONE_RESULTS) + 1  # +1 for this retro (562)
-    n_completed = sum(1 for r in results.values() if r.get("status") == "success") + 1  # +1 for 562 itself
+    n_completed = (
+        sum(1 for r in results.values() if r.get("status") == "success") + 1
+    )  # +1 for 562 itself
     # Exp 551 (live_50q_a) was blocked by GPU gate — counts as deferred_to_gpu, not timed_out.
     n_timed_out = sum(1 for r in results.values() if r.get("status") == "timed_out")
     n_deferred_to_gpu = sum(
-        1 for r in results.values()
+        1
+        for r in results.values()
         if r.get("status") == "blocked" and r.get("inference_mode") == "gpu_required"
     )
     n_missing = sum(1 for r in results.values() if not r)
@@ -164,9 +167,7 @@ def compute_retro() -> dict:
     # --- Success criteria evaluation -----------------------------------------
 
     # RETRO-059: conductor exclusion manifest written for fully-modern legacy scripts.
-    exclusion_manifest_created: bool = bool(
-        results["549"].get("exclusion_manifest_created", False)
-    )
+    exclusion_manifest_created: bool = bool(results["549"].get("exclusion_manifest_created", False))
 
     # Live 50q A (Exp 551): GSM8K questions 0-49 with inference_mode=live_gpu.
     # Blocked because CARNOT_FORCE_LIVE was not set — GPU gate prevented execution.
@@ -184,9 +185,7 @@ def compute_retro() -> dict:
 
     # FOVER corpus v2 (Exp 553): diverse corpus with n_labeled>=100 and entropy>=1.5.
     fover_corpus_v2_n_labeled: int = int(results["553"].get("n_pairs_after_balance", 0))
-    fover_corpus_v2_entropy: float = float(
-        results["553"].get("constraint_type_entropy_after", 0.0)
-    )
+    fover_corpus_v2_entropy: float = float(results["553"].get("constraint_type_entropy_after", 0.0))
     fover_corpus_v2_ready: bool = (
         fover_corpus_v2_n_labeled >= 100 and fover_corpus_v2_entropy >= 1.5
     )
@@ -199,9 +198,7 @@ def compute_retro() -> dict:
     # RETRO-057: LowRankKAEM energy_mad < 0.05 required for closure (Exp 559).
     # Result: optimal_k=None — the calibration sweep found no rank that satisfies
     # the <0.05 MAD threshold.  Best achieved: ~0.832 at k=16.
-    kaem_energy_mad_at_optimal: float = float(
-        results["559"].get("energy_mad_at_optimal") or 1.0
-    )
+    kaem_energy_mad_at_optimal: float = float(results["559"].get("energy_mad_at_optimal") or 1.0)
     retro_057_closed: bool = bool(results["559"].get("retro_057_closed", False))
 
     # RETRO-058: Data collection sprint completed (Exp 553).
@@ -224,9 +221,7 @@ def compute_retro() -> dict:
     #            and that criterion is now satisfied.
     # RETRO-056, RETRO-057: explicitly not closed per Exp 557/559 result flags.
     n_closed_this_milestone = sum([retro_059_resolved, retro_058_data_ready])
-    retro_closure_rate = round(
-        n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3
-    )
+    retro_closure_rate = round(n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3)
 
     # --- Top-3 slowest experiments -------------------------------------------
     # Sort by duration_s descending to identify wall-time bottlenecks.
@@ -242,8 +237,10 @@ def compute_retro() -> dict:
             "duration_minutes": round(dur / 60.0, 3),
             "honest_verdict": verdict,
             "carry_status": (
-                "real_data_success" if dur > 100 and "improvement" in verdict
-                else "blocked" if "blocked" in verdict or "gpu" in verdict
+                "real_data_success"
+                if dur > 100 and "improvement" in verdict
+                else "blocked"
+                if "blocked" in verdict or "gpu" in verdict
                 else "completed"
             ),
         }
@@ -540,7 +537,7 @@ def compute_retro() -> dict:
             "is the most valuable output of .42."
         ),
         "wall_time_efficiency": (
-            f"Total .42 wall time: {round(sum(r.get('duration_s',0) for r in results.values())/60,3):.3f} min "
+            f"Total .42 wall time: {round(sum(r.get('duration_s', 0) for r in results.values()) / 60, 3):.3f} min "
             f"(vs .41 baseline: {_PRIOR_MILESTONE_WALL_TIME_MIN} min). "
             "Exp 556 (EORM retrain, 175s) and Exp 552 (live collection, 144s) dominated. "
             "All other experiments completed in <2 min combined. The milestone was faster "

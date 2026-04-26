@@ -57,7 +57,7 @@ import logging
 import os
 import tempfile
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -141,9 +141,7 @@ class SparsifiedIsingConfig:
         mask_upper = jrandom.uniform(k2, shape=(self.n_spins, self.n_spins)) > self.sparsity
         # Mirror to get a symmetric mask, then zero diagonal.
         mask_sym = jnp.logical_or(mask_upper, mask_upper.T)
-        mask_no_diag = mask_sym.at[
-            jnp.arange(self.n_spins), jnp.arange(self.n_spins)
-        ].set(False)
+        mask_no_diag = mask_sym.at[jnp.arange(self.n_spins), jnp.arange(self.n_spins)].set(False)
 
         return J_sym * mask_no_diag.astype(jnp.float32)
 
@@ -409,9 +407,7 @@ class FpgaBackend:
         cache_dir.mkdir(parents=True, exist_ok=True)
 
         # Write to a temp file in the same directory, then rename atomically.
-        with tempfile.NamedTemporaryFile(
-            dir=cache_dir, suffix=".npy", delete=False
-        ) as tmp:
+        with tempfile.NamedTemporaryFile(dir=cache_dir, suffix=".npy", delete=False) as tmp:
             tmp_path = tmp.name
             np.save(tmp, J_np)
 

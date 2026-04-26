@@ -58,8 +58,8 @@ class TestProbeH1DistributionShift:
         Spec: REQ-LEARN-089, SCENARIO-LEARN-138
         """
         rng = np.random.RandomState(0)
-        train_lat = rng.randn(50, 32).astype(np.float32)          # mean ~ 0
-        ood_lat = (rng.randn(50, 32) + 5.0).astype(np.float32)    # mean ~ 5
+        train_lat = rng.randn(50, 32).astype(np.float32)  # mean ~ 0
+        ood_lat = (rng.randn(50, 32) + 5.0).astype(np.float32)  # mean ~ 5
 
         h1, l2, vr = probe_h1_distribution_shift(train_lat, ood_lat)
 
@@ -72,8 +72,8 @@ class TestProbeH1DistributionShift:
         Spec: REQ-LEARN-089, SCENARIO-LEARN-138
         """
         rng = np.random.RandomState(1)
-        train_lat = (rng.randn(50, 32) * 0.1).astype(np.float32)   # low variance
-        ood_lat = (rng.randn(50, 32) * 1.5).astype(np.float32)      # high variance, similar mean
+        train_lat = (rng.randn(50, 32) * 0.1).astype(np.float32)  # low variance
+        ood_lat = (rng.randn(50, 32) * 1.5).astype(np.float32)  # high variance, similar mean
 
         h1, l2, vr = probe_h1_distribution_shift(train_lat, ood_lat)
 
@@ -87,7 +87,7 @@ class TestProbeH1DistributionShift:
         """
         rng = np.random.RandomState(2)
         train_lat = (rng.randn(100, 32) * 0.3).astype(np.float32)
-        ood_lat = (rng.randn(100, 32) * 0.35).astype(np.float32)   # very similar
+        ood_lat = (rng.randn(100, 32) * 0.35).astype(np.float32)  # very similar
 
         h1, l2, vr = probe_h1_distribution_shift(train_lat, ood_lat)
 
@@ -130,7 +130,9 @@ class TestProbeH3LatentRank:
         """
         # Rank-1 matrix: all rows are the same vector
         base = np.ones((1, 32), dtype=np.float32)
-        train_lat = np.repeat(base + np.random.RandomState(3).randn(1, 32).astype(np.float32) * 0.001, 50, axis=0)
+        train_lat = np.repeat(
+            base + np.random.RandomState(3).randn(1, 32).astype(np.float32) * 0.001, 50, axis=0
+        )
 
         h3, eff_rank, top_var = probe_h3_latent_rank(train_lat)
 
@@ -196,11 +198,13 @@ class TestProbeSymbolicCorrelation:
         for d in digit_densities:
             digits = int(d * 20)
             step_text = "1" * digits + "a" * (20 - digits)
-            pairs.append({
-                "question": "What is 2+2?",
-                "step_text": step_text,
-                "step_index": 0,
-            })
+            pairs.append(
+                {
+                    "question": "What is 2+2?",
+                    "step_text": step_text,
+                    "step_index": 0,
+                }
+            )
 
         # Construct latents that perfectly correlate with digit_density along dim 0
         latents = rng.randn(n, 32).astype(np.float32) * 0.01
@@ -221,8 +225,7 @@ class TestProbeSymbolicCorrelation:
 
         # All pairs have the same text (no feature variation)
         pairs = [
-            {"question": "abc def ghi", "step_text": "abc def", "step_index": 0}
-            for _ in range(n)
+            {"question": "abc def ghi", "step_text": "abc def", "step_index": 0} for _ in range(n)
         ]
         latents = rng.randn(n, 32).astype(np.float32)
 

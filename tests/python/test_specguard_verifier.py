@@ -148,9 +148,7 @@ class TestVerifyStep:
         assert result.combined_score == pytest.approx(0.25)
         assert result.step_rejected is False
 
-    def test_step_rejected_when_combined_above_threshold(
-        self, verifier: SpecGuardVerifier
-    ) -> None:
+    def test_step_rejected_when_combined_above_threshold(self, verifier: SpecGuardVerifier) -> None:
         # very long step (lpbv=1.0) with no numbers and no attention (abgv=0.5)
         # combined = 0.5*1.0 + 0.5*0.5 = 0.75 >= 0.5 -> rejected
         long_step = "this is a very long step without any digit information " * 4
@@ -197,7 +195,7 @@ class TestDetectionScore:
     def test_max_over_steps(self, verifier: SpecGuardVerifier) -> None:
         # Two steps: first suspicious (long, no numbers), second clean.
         suspicious = "a" * 250  # lpbv=1.0 fallback, abgv=0.5 -> combined=0.75
-        clean = "value is 1"   # lpbv small, abgv=0.0 -> combined small
+        clean = "value is 1"  # lpbv small, abgv=0.0 -> combined small
         response = f"{suspicious}\n{clean}"
         score = verifier.detection_score(response)
         # Max should be dominated by the suspicious step

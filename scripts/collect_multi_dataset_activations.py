@@ -26,6 +26,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import contextlib
 import gc
 import os
 import sys
@@ -44,8 +45,10 @@ def check_answer_substring(response: str, expected: str) -> bool:
 
 
 def check_truthfulqa_answer(
-    response: str, correct_answers: list[str],
-    incorrect_answers: list[str], best_answer: str = "",
+    response: str,
+    correct_answers: list[str],
+    incorrect_answers: list[str],
+    best_answer: str = "",
 ) -> bool:
     """TruthfulQA-specific answer checking with multiple strategies."""
     response_lower = response.lower().strip()
@@ -56,7 +59,7 @@ def check_truthfulqa_answer(
         words = best_answer.lower().split()
         if len(words) >= 3:
             for i in range(len(words) - 2):
-                phrase = " ".join(words[i:i + 3])
+                phrase = " ".join(words[i : i + 3])
                 if phrase in response_lower:
                     return True
     for incorrect in incorrect_answers:
@@ -73,10 +76,7 @@ def check_mmlu_answer(response: str, correct_letter: str, choices: list[str]) ->
         return True
     # Check for full answer text
     correct_idx = ord(correct_letter.upper()) - ord("A")
-    if 0 <= correct_idx < len(choices):
-        if choices[correct_idx].lower() in response_lower:
-            return True
-    return False
+    return bool(0 <= correct_idx < len(choices) and choices[correct_idx].lower() in response_lower)
 
 
 def load_truthfulqa(n: int) -> list[dict]:
@@ -86,14 +86,18 @@ def load_truthfulqa(n: int) -> list[dict]:
     ds = load_dataset("truthful_qa", "generation")
     questions = []
     for ex in list(ds["validation"])[:n]:
-        questions.append({
-            "source": "truthfulqa",
-            "question": ex["question"],
-            "check_fn": lambda resp, ex=ex: check_truthfulqa_answer(
-                resp, ex["correct_answers"], ex["incorrect_answers"],
-                ex.get("best_answer", ""),
-            ),
-        })
+        questions.append(
+            {
+                "source": "truthfulqa",
+                "question": ex["question"],
+                "check_fn": lambda resp, ex=ex: check_truthfulqa_answer(
+                    resp,
+                    ex["correct_answers"],
+                    ex["incorrect_answers"],
+                    ex.get("best_answer", ""),
+                ),
+            }
+        )
     print(f"  TruthfulQA: {len(questions)} questions")
     return questions
 
@@ -117,15 +121,21 @@ def load_mmlu(n: int) -> list[dict]:
     for idx in indices:
         ex = ds[int(idx)]
         q_text = ex["question"]
-        choices = ex["choices"] if isinstance(ex["choices"], list) else [ex.get(f"choice_{i}", "") for i in range(4)]
+        choices = (
+            ex["choices"]
+            if isinstance(ex["choices"], list)
+            else [ex.get(f"choice_{i}", "") for i in range(4)]
+        )
         answer_raw = ex["answer"]
         correct = answer_raw if isinstance(answer_raw, str) else chr(ord("A") + int(answer_raw))
         formatted = f"{q_text}\nA) {choices[0]}\nB) {choices[1]}\nC) {choices[2]}\nD) {choices[3]}"
-        questions.append({
-            "source": "mmlu",
-            "question": formatted,
-            "check_fn": lambda resp, c=correct, ch=choices: check_mmlu_answer(resp, c, ch),
-        })
+        questions.append(
+            {
+                "source": "mmlu",
+                "question": formatted,
+                "check_fn": lambda resp, c=correct, ch=choices: check_mmlu_answer(resp, c, ch),
+            }
+        )
     print(f"  MMLU: {len(questions)} questions")
     return questions
 
@@ -143,11 +153,13 @@ def load_simpleqa(n: int) -> list[dict]:
             q = ex.get("problem", "")
             a = ex.get("answer", "")
             if q and a:
-                questions.append({
-                    "source": "simpleqa",
-                    "question": q,
-                    "check_fn": lambda resp, expected=a: check_answer_substring(resp, expected),
-                })
+                questions.append(
+                    {
+                        "source": "simpleqa",
+                        "question": q,
+                        "check_fn": lambda resp, expected=a: check_answer_substring(resp, expected),
+                    }
+                )
         print(f"  SimpleQA: {len(questions)} questions")
         return questions
     except Exception as e:
@@ -168,11 +180,13 @@ def load_halueval(n: int) -> list[dict]:
             q = ex.get("question", "")
             a = ex.get("answer", ex.get("right_answer", ""))
             if q and a:
-                questions.append({
-                    "source": "halueval",
-                    "question": q,
-                    "check_fn": lambda resp, expected=a: check_answer_substring(resp, expected),
-                })
+                questions.append(
+                    {
+                        "source": "halueval",
+                        "question": q,
+                        "check_fn": lambda resp, expected=a: check_answer_substring(resp, expected),
+                    }
+                )
         print(f"  HaluEval: {len(questions)} questions")
         return questions
     except Exception as e:
@@ -197,7 +211,8 @@ def collect_activations(
     print(f"\nLoading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         torch_dtype="auto" if device == "cuda" else None,
     )
@@ -206,10 +221,7 @@ def collect_activations(
     model.eval()
 
     config = model.config
-    if hasattr(config, "get_text_config"):
-        tc = config.get_text_config()
-    else:
-        tc = config
+    tc = config.get_text_config() if hasattr(config, "get_text_config") else config
     hidden_dim = getattr(tc, "hidden_size", getattr(tc, "d_model", 1024))
     print(f"  Hidden dim: {hidden_dim}, Device: {device}")
 
@@ -233,17 +245,20 @@ def collect_activations(
             messages = [{"role": "user", "content": prompt}]
             kwargs = {}
             if not enable_thinking:
-                try:
+                with contextlib.suppress(TypeError):
                     kwargs["enable_thinking"] = False
-                except TypeError:
-                    pass
             try:
                 text = tokenizer.apply_chat_template(
-                    messages, tokenize=False, add_generation_prompt=True, **kwargs,
+                    messages,
+                    tokenize=False,
+                    add_generation_prompt=True,
+                    **kwargs,
                 )
             except TypeError:
                 text = tokenizer.apply_chat_template(
-                    messages, tokenize=False, add_generation_prompt=True,
+                    messages,
+                    tokenize=False,
+                    add_generation_prompt=True,
                 )
         else:
             text = prompt
@@ -295,7 +310,7 @@ def collect_activations(
 
         if (qi + 1) % 100 == 0:
             n_tok = len(all_activations)
-            print(f"  [{qi+1:4d}/{len(questions)}] tokens={n_tok}")
+            print(f"  [{qi + 1:4d}/{len(questions)}] tokens={n_tok}")
             for src, s in stats.items():
                 total = s["correct"] + s["wrong"]
                 acc = s["correct"] / total * 100 if total > 0 else 0
@@ -326,7 +341,7 @@ def main() -> int:
     model_short = args.model.split("/")[-1].lower().replace(".", "").replace("-", "")
 
     print("=" * 70)
-    print(f"MULTI-DATASET ACTIVATION COLLECTION")
+    print("MULTI-DATASET ACTIVATION COLLECTION")
     print(f"  Model: {args.model}")
     print(f"  Questions per dataset: {args.n_per_dataset}")
     print(f"  Temperatures: {temperatures}")
@@ -350,7 +365,9 @@ def main() -> int:
     # Collect activations
     start = time.time()
     activations, labels, temp_ids, sources = collect_activations(
-        args.model, all_questions, temperatures,
+        args.model,
+        all_questions,
+        temperatures,
     )
     elapsed = time.time() - start
 
@@ -365,12 +382,15 @@ def main() -> int:
     source_map = {name: i for i, name in enumerate(source_names)}
     source_ids = np.array([source_map[s] for s in sources], dtype=np.int32)
 
-    save_file({
-        "activations": activations,
-        "labels": labels,
-        "temperatures": temp_ids,
-        "source_ids": source_ids,
-    }, output_file)
+    save_file(
+        {
+            "activations": activations,
+            "labels": labels,
+            "temperatures": temp_ids,
+            "source_ids": source_ids,
+        },
+        output_file,
+    )
 
     # Summary
     n_total = len(labels)
@@ -381,21 +401,21 @@ def main() -> int:
     print(f"  Total tokens: {n_total}")
     print(f"  Correct: {int(labels.sum())}, Wrong: {n_total - int(labels.sum())}")
     print(f"  File: {output_file} ({os.path.getsize(output_file) / 1e6:.1f} MB)")
-    print(f"")
-    print(f"  Per source:")
+    print("")
+    print("  Per source:")
     for name in source_names:
         mask = source_ids == source_map[name]
         n = int(mask.sum())
         c = int(labels[mask].sum())
         print(f"    {name}: {n} tokens, {c} correct, {n - c} wrong")
-    print(f"")
-    print(f"  Per temperature:")
+    print("")
+    print("  Per temperature:")
     for t in sorted(set(temp_ids)):
         mask = temp_ids == t
         n = int(mask.sum())
         c = int(labels[mask].sum())
         print(f"    temp={t:.1f}: {n} tokens, {c} correct")
-    print(f"")
+    print("")
     print(f"  Source mapping: {source_map}")
     print(sep)
 

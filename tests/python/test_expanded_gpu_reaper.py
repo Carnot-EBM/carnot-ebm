@@ -88,7 +88,9 @@ class TestListGpuProcesses:
     def test_parses_csv_output(self):
         nvidia_smi_output = "1234, 4096, python3\n5678, 2048, /usr/bin/python\n"
         reaper = _make_reaper()
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             with patch(
                 "carnot.pipeline.expanded_gpu_reaper.subprocess.check_output",
                 return_value=nvidia_smi_output,
@@ -101,7 +103,9 @@ class TestListGpuProcesses:
     def test_skips_malformed_lines(self):
         output = "badline\n1234, 4096, python3\n"
         reaper = _make_reaper()
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             with patch(
                 "carnot.pipeline.expanded_gpu_reaper.subprocess.check_output",
                 return_value=output,
@@ -115,7 +119,9 @@ class TestListGpuProcesses:
         import subprocess as _sub
 
         reaper = _make_reaper()
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             with patch(
                 "carnot.pipeline.expanded_gpu_reaper.subprocess.check_output",
                 side_effect=_sub.CalledProcessError(1, "nvidia-smi", "error"),
@@ -126,7 +132,9 @@ class TestListGpuProcesses:
     def test_skips_empty_lines(self):
         output = "\n  \n1234, 1000, python\n\n"
         reaper = _make_reaper()
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             with patch(
                 "carnot.pipeline.expanded_gpu_reaper.subprocess.check_output",
                 return_value=output,
@@ -138,7 +146,9 @@ class TestListGpuProcesses:
         # Exercises the ValueError branch when pid/memory can't be cast to int
         output = "notapid, notmb, python\n1234, 1000, python\n"
         reaper = _make_reaper()
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             with patch(
                 "carnot.pipeline.expanded_gpu_reaper.subprocess.check_output",
                 return_value=output,
@@ -278,9 +288,7 @@ class TestReapDryRun:
         reaper = ExpandedGPUReaper(cfg)
         reaper._list_gpu_processes = MagicMock(return_value=gpu_procs)
         subtree_set = set(subtree_pids or [])
-        reaper._in_our_subtree = MagicMock(
-            side_effect=lambda pid, root: pid in subtree_set
-        )
+        reaper._in_our_subtree = MagicMock(side_effect=lambda pid, root: pid in subtree_set)
         age_map_ = age_map or {}
         reaper._process_age_s = MagicMock(side_effect=lambda pid: age_map_.get(pid, 9999))
         return reaper
@@ -289,7 +297,9 @@ class TestReapDryRun:
         # SCENARIO-INFRA-076: dry_run=True → candidate goes to skipped with reason='dry_run_candidate'
         procs = [{"pid": 555, "used_memory_mb": 4096, "process_name": "python3"}]
         reaper = self._setup_reaper(procs, age_map={555: 3600})
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             result = reaper.reap()
         assert result.honest_verdict == "reap_dry_run_complete"
         assert result.killed == []
@@ -301,21 +311,27 @@ class TestReapDryRun:
     def test_below_min_vram_skipped(self):
         procs = [{"pid": 111, "used_memory_mb": 100, "process_name": "tiny"}]
         reaper = self._setup_reaper(procs)
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             result = reaper.reap()
         assert result.skipped[0]["reason"] == "below_min_vram"
 
     def test_in_subtree_skipped(self):
         procs = [{"pid": 222, "used_memory_mb": 8192, "process_name": "conductor_child"}]
         reaper = self._setup_reaper(procs, age_map={222: 3600}, subtree_pids=[222])
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             result = reaper.reap()
         assert result.skipped[0]["reason"] == "in_our_subtree"
 
     def test_below_min_age_skipped(self):
         procs = [{"pid": 333, "used_memory_mb": 8192, "process_name": "fresh_worker"}]
         reaper = self._setup_reaper(procs, age_map={333: 60})  # 60s < 1800s
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             result = reaper.reap()
         assert result.skipped[0]["reason"] == "below_min_age"
 
@@ -323,7 +339,9 @@ class TestReapDryRun:
         # age_s==-1 means process already gone → treat as eligible
         procs = [{"pid": 444, "used_memory_mb": 8192, "process_name": "ghost"}]
         reaper = self._setup_reaper(procs, age_map={444: -1})
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             result = reaper.reap()
         assert result.skipped[0]["reason"] == "dry_run_candidate"
 
@@ -339,9 +357,7 @@ class TestReapLiveKill:
         reaper = ExpandedGPUReaper(cfg)
         reaper._list_gpu_processes = MagicMock(return_value=gpu_procs)
         subtree_set = set(subtree_pids or [])
-        reaper._in_our_subtree = MagicMock(
-            side_effect=lambda pid, root: pid in subtree_set
-        )
+        reaper._in_our_subtree = MagicMock(side_effect=lambda pid, root: pid in subtree_set)
         age_map_ = age_map or {}
         reaper._process_age_s = MagicMock(side_effect=lambda pid: age_map_.get(pid, 9999))
         return reaper
@@ -350,7 +366,9 @@ class TestReapLiveKill:
         # SCENARIO-INFRA-077: eligible process → killed, vram_freed updated
         procs = [{"pid": 777, "used_memory_mb": 6144, "process_name": "stale_pytest"}]
         reaper = self._setup_reaper(procs, age_map={777: 7200})
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             with patch("carnot.pipeline.expanded_gpu_reaper.os.kill") as mock_kill:
                 result = reaper.reap()
         mock_kill.assert_called_once_with(777, signal.SIGKILL)
@@ -364,7 +382,9 @@ class TestReapLiveKill:
     def test_process_lookup_error_goes_to_skipped(self):
         procs = [{"pid": 888, "used_memory_mb": 4096, "process_name": "gone"}]
         reaper = self._setup_reaper(procs, age_map={888: 7200})
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             with patch(
                 "carnot.pipeline.expanded_gpu_reaper.os.kill",
                 side_effect=ProcessLookupError("no such process"),
@@ -377,7 +397,9 @@ class TestReapLiveKill:
     def test_permission_error_goes_to_skipped(self):
         procs = [{"pid": 999, "used_memory_mb": 4096, "process_name": "root_owned"}]
         reaper = self._setup_reaper(procs, age_map={999: 7200})
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             with patch(
                 "carnot.pipeline.expanded_gpu_reaper.os.kill",
                 side_effect=PermissionError("not permitted"),
@@ -387,14 +409,16 @@ class TestReapLiveKill:
 
     def test_multiple_processes_mixed_outcomes(self):
         procs = [
-            {"pid": 100, "used_memory_mb": 50, "process_name": "tiny"},   # below_min_vram
+            {"pid": 100, "used_memory_mb": 50, "process_name": "tiny"},  # below_min_vram
             {"pid": 200, "used_memory_mb": 4096, "process_name": "child"},  # in subtree
             {"pid": 300, "used_memory_mb": 4096, "process_name": "fresh"},  # below_min_age
             {"pid": 400, "used_memory_mb": 8192, "process_name": "stale"},  # kill
         ]
         age_map = {200: 9999, 300: 60, 400: 9999}
         reaper = self._setup_reaper(procs, age_map=age_map, subtree_pids=[200])
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             with patch("carnot.pipeline.expanded_gpu_reaper.os.kill"):
                 result = reaper.reap()
         assert len(result.killed) == 1
@@ -404,7 +428,9 @@ class TestReapLiveKill:
 
     def test_verdict_is_reap_complete_for_live_run(self):
         reaper = self._setup_reaper([])
-        with patch("carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"):
+        with patch(
+            "carnot.pipeline.expanded_gpu_reaper.shutil.which", return_value="/usr/bin/nvidia-smi"
+        ):
             result = reaper.reap()
         assert result.honest_verdict == "reap_complete"
 

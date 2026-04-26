@@ -74,16 +74,20 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 # Each pair has: (name, correct_code, buggy_code, bug_type, input_generator)
 # The input_generator returns a list of 100 random input dicts.
 
+
 def _make_input_gen_int(name: str, lo: int, hi: int, seed: int):
     """Create an input generator that produces random ints in [lo, hi)."""
+
     def gen():
         rng = np.random.default_rng(seed)
         return [{name: int(rng.integers(lo, hi))} for _ in range(100)]
+
     return gen
 
 
 def _make_input_gen_list(name: str, max_len: int, seed: int):
     """Create an input generator that produces random int lists."""
+
     def gen():
         rng = np.random.default_rng(seed)
         results = []
@@ -92,17 +96,17 @@ def _make_input_gen_list(name: str, max_len: int, seed: int):
             arr = [int(x) for x in rng.integers(-50, 50, size=length)]
             results.append({name: arr})
         return results
+
     return gen
 
 
 def _make_input_gen_two_ints(n1: str, n2: str, lo: int, hi: int, seed: int):
     """Create an input generator that produces two random ints."""
+
     def gen():
         rng = np.random.default_rng(seed)
-        return [
-            {n1: int(rng.integers(lo, hi)), n2: int(rng.integers(lo, hi))}
-            for _ in range(100)
-        ]
+        return [{n1: int(rng.integers(lo, hi)), n2: int(rng.integers(lo, hi))} for _ in range(100)]
+
     return gen
 
 
@@ -152,7 +156,7 @@ def get_function_pairs() -> list[dict[str, Any]]:
             "func_name": "sum_1_to_n",
             "input_gen": _make_input_gen_int("n", 1, 50, seed=100),
             "description": "Sums 0..n-1 instead of 1..n. Same return type, "
-                           "different values for all n > 1.",
+            "different values for all n > 1.",
         },
         # 2. Type coercion: integer division vs float division
         {
@@ -173,8 +177,8 @@ def get_function_pairs() -> list[dict[str, Any]]:
             "func_name": "safe_divide",
             "input_gen": _make_input_gen_two_ints("a", "b", -20, 20, seed=101),
             "description": "Returns integer floor division instead of float "
-                           "division. Type differs (int vs float) and value "
-                           "differs for non-exact divisions.",
+            "division. Type differs (int vs float) and value "
+            "differs for non-exact divisions.",
         },
         # 3. Wrong formula: circle area vs circumference
         {
@@ -191,8 +195,8 @@ def get_function_pairs() -> list[dict[str, Any]]:
             "func_name": "circle_area",
             "input_gen": _make_input_gen_int("radius", 1, 100, seed=102),
             "description": "Computes circumference (2*pi*r) instead of area "
-                           "(pi*r^2). Both return float, but values diverge "
-                           "as radius grows. Exp 53 CANNOT catch this.",
+            "(pi*r^2). Both return float, but values diverge "
+            "as radius grows. Exp 53 CANNOT catch this.",
         },
         # 4. Boundary error: max of empty list
         {
@@ -219,7 +223,7 @@ def get_function_pairs() -> list[dict[str, Any]]:
             "func_name": "safe_max",
             "input_gen": _make_input_gen_list("arr", 10, seed=103),
             "description": "Crashes on empty list (IndexError). Missing the "
-                           "empty-list guard. Only fails on empty input.",
+            "empty-list guard. Only fails on empty input.",
         },
         # 5. Logic inversion: is_positive checks wrong sign
         {
@@ -236,8 +240,8 @@ def get_function_pairs() -> list[dict[str, Any]]:
             "func_name": "is_positive",
             "input_gen": _make_input_gen_int("n", -50, 50, seed=104),
             "description": "Treats zero as positive (>= vs >). Only differs "
-                           "at n=0, but trace patterns differ for negative "
-                           "inputs near zero.",
+            "at n=0, but trace patterns differ for negative "
+            "inputs near zero.",
         },
         # 6. Accumulator error: product with wrong initial value
         {
@@ -260,7 +264,7 @@ def get_function_pairs() -> list[dict[str, Any]]:
             "func_name": "product",
             "input_gen": _make_input_gen_list("arr", 6, seed=105),
             "description": "Initializes accumulator to 0 instead of 1. "
-                           "Always returns 0 regardless of input.",
+            "Always returns 0 regardless of input.",
         },
         # 7. Index error: second-to-last element
         {
@@ -281,7 +285,7 @@ def get_function_pairs() -> list[dict[str, Any]]:
             "func_name": "second_to_last",
             "input_gen": _make_input_gen_list("arr", 8, seed=106),
             "description": "Returns last element instead of second-to-last. "
-                           "Off by one in index calculation.",
+            "Off by one in index calculation.",
         },
         # 8. Missing case: absolute value forgets zero
         {
@@ -305,8 +309,7 @@ def get_function_pairs() -> list[dict[str, Any]]:
             "bug_type": "missing_case",
             "func_name": "classify_sign",
             "input_gen": _make_input_gen_int("n", -50, 50, seed=107),
-            "description": "Returns -1 for zero instead of 0. Missing the "
-                           "n==0 branch.",
+            "description": "Returns -1 for zero instead of 0. Missing the n==0 branch.",
         },
         # 9. Operator error: subtraction instead of addition
         {
@@ -325,7 +328,7 @@ def get_function_pairs() -> list[dict[str, Any]]:
             "func_name": "distance",
             "input_gen": _make_input_gen_two_ints("x1", "x2", -20, 20, seed=108),
             "description": "Uses addition instead of subtraction for diff. "
-                           "Returns (x1+x2)^2 instead of (x1-x2)^2.",
+            "Returns (x1+x2)^2 instead of (x1-x2)^2.",
         },
         # 10. Silent overflow: fibonacci without bounds
         {
@@ -354,7 +357,7 @@ def get_function_pairs() -> list[dict[str, Any]]:
             "func_name": "bounded_factorial",
             "input_gen": _make_input_gen_int("n", -5, 30, seed=109),
             "description": "Missing the n>12 guard. Returns huge numbers "
-                           "for large n instead of the -1 sentinel.",
+            "for large n instead of the -1 sentinel.",
         },
     ]
 
@@ -362,6 +365,7 @@ def get_function_pairs() -> list[dict[str, Any]]:
 # ---------------------------------------------------------------------------
 # 2. Trace collection — execute code and record per-execution features
 # ---------------------------------------------------------------------------
+
 
 class TraceCollector:
     """Collects execution traces by running code with a tracing callback.
@@ -414,15 +418,39 @@ class TraceCollector:
             Raw trace dict with all recorded execution information.
         """
         # Build a restricted namespace for execution.
-        safe_builtins = {
-            k: v for k, v in __builtins__.items()
-            if k not in {"open", "exec", "eval", "__import__", "compile",
-                         "breakpoint", "exit", "quit"}
-        } if isinstance(__builtins__, dict) else {
-            k: v for k, v in __builtins__.__dict__.items()
-            if k not in {"open", "exec", "eval", "__import__", "compile",
-                         "breakpoint", "exit", "quit"}
-        }
+        safe_builtins = (
+            {
+                k: v
+                for k, v in __builtins__.items()
+                if k
+                not in {
+                    "open",
+                    "exec",
+                    "eval",
+                    "__import__",
+                    "compile",
+                    "breakpoint",
+                    "exit",
+                    "quit",
+                }
+            }
+            if isinstance(__builtins__, dict)
+            else {
+                k: v
+                for k, v in __builtins__.__dict__.items()
+                if k
+                not in {
+                    "open",
+                    "exec",
+                    "eval",
+                    "__import__",
+                    "compile",
+                    "breakpoint",
+                    "exit",
+                    "quit",
+                }
+            }
+        )
         namespace: dict[str, Any] = {
             "__builtins__": safe_builtins,
             "math": math,
@@ -469,9 +497,7 @@ class TraceCollector:
                 # Record variable types and values at this line.
                 # We record loop iteration counts by tracking how many times
                 # each line is hit.
-                trace["loop_counts"][lineno] = (
-                    trace["loop_counts"].get(lineno, 0) + 1
-                )
+                trace["loop_counts"][lineno] = trace["loop_counts"].get(lineno, 0) + 1
 
                 for var_name, var_val in frame.f_locals.items():
                     key = (lineno, var_name)
@@ -532,6 +558,7 @@ class TraceCollector:
 # ---------------------------------------------------------------------------
 # 3. Feature extraction — convert raw traces to binary vectors
 # ---------------------------------------------------------------------------
+
 
 class FeatureExtractor:
     """Converts raw execution traces into fixed-length binary feature vectors.
@@ -600,8 +627,11 @@ class FeatureExtractor:
             for lineno, count in trace["loop_counts"].items():
                 # Bin: 0, 1, 2-5, 6-10, 11+
                 for threshold_name, lo, hi in [
-                    ("0", 0, 0), ("1", 1, 1), ("2to5", 2, 5),
-                    ("6to10", 6, 10), ("11plus", 11, 999999),
+                    ("0", 0, 0),
+                    ("1", 1, 1),
+                    ("2to5", 2, 5),
+                    ("6to10", 6, 10),
+                    ("11plus", 11, 999999),
                 ]:
                     add(f"iter_{lineno}_{threshold_name}")
 
@@ -617,8 +647,12 @@ class FeatureExtractor:
 
         # Return value magnitude bins (for numeric returns).
         for bin_name in [
-            "ret_neg", "ret_zero", "ret_small_pos", "ret_medium_pos",
-            "ret_large_pos", "ret_very_large",
+            "ret_neg",
+            "ret_zero",
+            "ret_small_pos",
+            "ret_medium_pos",
+            "ret_large_pos",
+            "ret_very_large",
         ]:
             add(bin_name)
 
@@ -673,8 +707,11 @@ class FeatureExtractor:
             # Iteration features.
             for lineno, count in trace["loop_counts"].items():
                 for threshold_name, lo, hi in [
-                    ("0", 0, 0), ("1", 1, 1), ("2to5", 2, 5),
-                    ("6to10", 6, 10), ("11plus", 11, 999999),
+                    ("0", 0, 0),
+                    ("1", 1, 1),
+                    ("2to5", 2, 5),
+                    ("6to10", 6, 10),
+                    ("11plus", 11, 999999),
                 ]:
                     if lo <= count <= hi:
                         key = f"iter_{lineno}_{threshold_name}"
@@ -744,6 +781,7 @@ class FeatureExtractor:
 # 4. Discriminative CD training (adapted from Exp 51)
 # ---------------------------------------------------------------------------
 
+
 def train_discriminative_ising(
     correct_features: np.ndarray,
     buggy_features: np.ndarray,
@@ -801,13 +839,9 @@ def train_discriminative_ising(
 
     # Compute phase statistics (constant since both phases use real data).
     pos_bias_moments = np.mean(correct_spins, axis=0)
-    pos_weight_moments = np.mean(
-        np.einsum("bi,bj->bij", correct_spins, correct_spins), axis=0
-    )
+    pos_weight_moments = np.mean(np.einsum("bi,bj->bij", correct_spins, correct_spins), axis=0)
     neg_bias_moments = np.mean(buggy_spins, axis=0)
-    neg_weight_moments = np.mean(
-        np.einsum("bi,bj->bij", buggy_spins, buggy_spins), axis=0
-    )
+    neg_weight_moments = np.mean(np.einsum("bi,bj->bij", buggy_spins, buggy_spins), axis=0)
 
     # Discriminative gradient (constant).
     grad_b = -beta * (pos_bias_moments - neg_bias_moments)
@@ -839,16 +873,16 @@ def train_discriminative_ising(
             acc = _classification_accuracy(correct_features, buggy_features, biases, J)
             n_nonzero = int(np.sum(np.abs(J) > 1e-6))
             n_total = n_features * (n_features - 1) // 2
-            print(f"    Epoch {epoch:3d}: gap={mean_gap:+.4f}  "
-                  f"acc={acc:.0%}  "
-                  f"nonzero_couplings={n_nonzero}/{n_total}")
+            print(
+                f"    Epoch {epoch:3d}: gap={mean_gap:+.4f}  "
+                f"acc={acc:.0%}  "
+                f"nonzero_couplings={n_nonzero}/{n_total}"
+            )
 
     return biases, J, losses
 
 
-def _compute_energies(
-    vectors: np.ndarray, biases: np.ndarray, J: np.ndarray
-) -> np.ndarray:
+def _compute_energies(vectors: np.ndarray, biases: np.ndarray, J: np.ndarray) -> np.ndarray:
     """Compute Ising energy for each sample: E(s) = -(b^T s + s^T J s).
 
     **Detailed explanation for engineers:**
@@ -880,6 +914,7 @@ def _classification_accuracy(
 # 5. Static analysis baseline (from Exp 53)
 # ---------------------------------------------------------------------------
 
+
 def static_analysis_detects(code: str) -> bool:
     """Check if Exp 48/53 static analysis detects any bug in the code.
 
@@ -888,15 +923,14 @@ def static_analysis_detects(code: str) -> bool:
     """
     try:
         from experiment_48_code_constraints import code_to_constraints
+
         constraints = code_to_constraints(code)
         return any(c.get("satisfied") is False for c in constraints)
     except Exception:
         return False
 
 
-def dynamic_analysis_detects(
-    code: str, func_name: str, inputs: list[dict[str, Any]]
-) -> bool:
+def dynamic_analysis_detects(code: str, func_name: str, inputs: list[dict[str, Any]]) -> bool:
     """Check if Exp 53 dynamic instrumentation detects any bug.
 
     Returns True if the instrumented code raises an AssertionError or
@@ -907,6 +941,7 @@ def dynamic_analysis_detects(
             instrument_code,
             execute_instrumented,
         )
+
         instrumented = instrument_code(code)
         result = execute_instrumented(instrumented, inputs[:20], func_name)
         return result["n_fail"] > 0
@@ -917,6 +952,7 @@ def dynamic_analysis_detects(
 # ---------------------------------------------------------------------------
 # 6. Main experiment
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     """Run the full trace-learning experiment."""
@@ -956,27 +992,34 @@ def main() -> int:
         n_err_correct = sum(1 for t in correct_traces if t["error"] is not None)
         n_err_buggy = sum(1 for t in buggy_traces if t["error"] is not None)
 
-        pair_metadata.append({
-            "name": pair["name"],
-            "bug_type": pair["bug_type"],
-            "n_inputs": len(inputs),
-            "n_correct_errors": n_err_correct,
-            "n_buggy_errors": n_err_buggy,
-            "correct_trace_indices": list(range(
-                len(all_correct_traces) - len(correct_traces),
-                len(all_correct_traces),
-            )),
-            "buggy_trace_indices": list(range(
-                len(all_buggy_traces) - len(buggy_traces),
-                len(all_buggy_traces),
-            )),
-        })
+        pair_metadata.append(
+            {
+                "name": pair["name"],
+                "bug_type": pair["bug_type"],
+                "n_inputs": len(inputs),
+                "n_correct_errors": n_err_correct,
+                "n_buggy_errors": n_err_buggy,
+                "correct_trace_indices": list(
+                    range(
+                        len(all_correct_traces) - len(correct_traces),
+                        len(all_correct_traces),
+                    )
+                ),
+                "buggy_trace_indices": list(
+                    range(
+                        len(all_buggy_traces) - len(buggy_traces),
+                        len(all_buggy_traces),
+                    )
+                ),
+            }
+        )
 
-        print(f"  {pair['name']:<35} correct_errs={n_err_correct:3d}  "
-              f"buggy_errs={n_err_buggy:3d}")
+        print(f"  {pair['name']:<35} correct_errs={n_err_correct:3d}  buggy_errs={n_err_buggy:3d}")
 
-    print(f"\n  Total traces: {len(all_correct_traces)} correct + "
-          f"{len(all_buggy_traces)} buggy = {len(all_correct_traces) + len(all_buggy_traces)}")
+    print(
+        f"\n  Total traces: {len(all_correct_traces)} correct + "
+        f"{len(all_buggy_traces)} buggy = {len(all_correct_traces) + len(all_buggy_traces)}"
+    )
 
     # --- Step 2: Extract features ---
     print("\n--- Step 2: Extract binary features from traces ---")
@@ -991,8 +1034,7 @@ def main() -> int:
     # Feature activation statistics.
     n_active_correct = np.mean(np.sum(correct_features, axis=1))
     n_active_buggy = np.mean(np.sum(buggy_features, axis=1))
-    print(f"  Mean active features: correct={n_active_correct:.1f}, "
-          f"buggy={n_active_buggy:.1f}")
+    print(f"  Mean active features: correct={n_active_correct:.1f}, buggy={n_active_buggy:.1f}")
 
     # --- Step 3: Train/test split (80/20 by function pair) ---
     print("\n--- Step 3: Train/test split (80/20 by pair) ---")
@@ -1003,10 +1045,14 @@ def main() -> int:
     train_pair_ids = set(pair_order[:n_train_pairs])
     test_pair_ids = set(pair_order[n_train_pairs:])
 
-    print(f"  Train pairs ({len(train_pair_ids)}): "
-          + ", ".join(pairs[i]["bug_type"] for i in sorted(train_pair_ids)))
-    print(f"  Test pairs ({len(test_pair_ids)}):  "
-          + ", ".join(pairs[i]["bug_type"] for i in sorted(test_pair_ids)))
+    print(
+        f"  Train pairs ({len(train_pair_ids)}): "
+        + ", ".join(pairs[i]["bug_type"] for i in sorted(train_pair_ids))
+    )
+    print(
+        f"  Test pairs ({len(test_pair_ids)}):  "
+        + ", ".join(pairs[i]["bug_type"] for i in sorted(test_pair_ids))
+    )
 
     # Build train/test feature matrices.
     train_correct_idx = []
@@ -1034,14 +1080,20 @@ def main() -> int:
     # --- Step 4: Train discriminative Ising ---
     print(f"\n--- Step 4: Train discriminative Ising (L1 + L2 regularized) ---")
     biases, J, losses = train_discriminative_ising(
-        train_correct, train_buggy,
-        n_epochs=300, lr=0.05, l1_lambda=0.005, weight_decay=0.01, beta=1.0,
+        train_correct,
+        train_buggy,
+        n_epochs=300,
+        lr=0.05,
+        l1_lambda=0.005,
+        weight_decay=0.01,
+        beta=1.0,
     )
 
     # --- Step 5: Evaluate per-pair detection ---
     print(f"\n--- Step 5: Per-pair bug detection results ---")
-    print(f"\n  {'#':<3} {'Function':<35} {'Bug Type':<20} "
-          f"{'Ising':<8} {'Static':<8} {'Dynamic':<8}")
+    print(
+        f"\n  {'#':<3} {'Function':<35} {'Bug Type':<20} {'Ising':<8} {'Static':<8} {'Dynamic':<8}"
+    )
     print("  " + "-" * 100)
 
     # Confusion matrix accumulators.
@@ -1084,11 +1136,13 @@ def main() -> int:
 
         split_tag = "TEST" if is_test else "train"
 
-        print(f"  {pid+1:<3} {pair['name']:<35} {pair['bug_type']:<20} "
-              f"{'Y' if ising_detected else 'n':<8} "
-              f"{'Y' if static_detected else 'n':<8} "
-              f"{'Y' if dynamic_detected else 'n':<8} "
-              f"gap={mean_gap:+.2f} acc={pair_acc:.0%} [{split_tag}]")
+        print(
+            f"  {pid + 1:<3} {pair['name']:<35} {pair['bug_type']:<20} "
+            f"{'Y' if ising_detected else 'n':<8} "
+            f"{'Y' if static_detected else 'n':<8} "
+            f"{'Y' if dynamic_detected else 'n':<8} "
+            f"gap={mean_gap:+.2f} acc={pair_acc:.0%} [{split_tag}]"
+        )
 
         # Accumulate confusion matrix (on ALL pairs for full picture).
         if ising_detected:
@@ -1096,16 +1150,18 @@ def main() -> int:
         else:
             ising_fn += 1  # Missed a buggy pair.
 
-        per_bug_results.append({
-            "name": pair["name"],
-            "bug_type": pair["bug_type"],
-            "ising_detected": ising_detected,
-            "static_detected": static_detected,
-            "dynamic_detected": dynamic_detected,
-            "mean_gap": mean_gap,
-            "pair_accuracy": pair_acc,
-            "is_test": is_test,
-        })
+        per_bug_results.append(
+            {
+                "name": pair["name"],
+                "bug_type": pair["bug_type"],
+                "ising_detected": ising_detected,
+                "static_detected": static_detected,
+                "dynamic_detected": dynamic_detected,
+                "mean_gap": mean_gap,
+                "pair_accuracy": pair_acc,
+                "is_test": is_test,
+            }
+        )
 
     # --- Step 6: Confusion matrix and summary ---
     elapsed = time.time() - start
@@ -1126,7 +1182,8 @@ def main() -> int:
 
     # Ising-only detections (bugs caught by Ising but not static or dynamic).
     ising_only = [
-        r for r in per_bug_results
+        r
+        for r in per_bug_results
         if r["ising_detected"] and not r["static_detected"] and not r["dynamic_detected"]
     ]
 
@@ -1146,17 +1203,23 @@ def main() -> int:
 
     n_nonzero_couplings = int(np.sum(np.abs(J) > 1e-6))
     n_total_couplings = extractor.n_features * (extractor.n_features - 1) // 2
-    print(f"    Non-zero couplings: {n_nonzero_couplings}/{n_total_couplings} "
-          f"({100*n_nonzero_couplings/max(n_total_couplings,1):.1f}% density)")
+    print(
+        f"    Non-zero couplings: {n_nonzero_couplings}/{n_total_couplings} "
+        f"({100 * n_nonzero_couplings / max(n_total_couplings, 1):.1f}% density)"
+    )
 
     print(f"\n  Bug detection confusion matrix (all {n_pairs} pairs):")
     print(f"    ┌─────────────────┬──────────┬──────────┐")
     print(f"    │                 │ Detected │  Missed  │")
     print(f"    ├─────────────────┼──────────┼──────────┤")
-    print(f"    │ Buggy (actual)  │ TP = {n_detected_all:>2}  │ FN = {n_pairs - n_detected_all:>2}  │")
+    print(
+        f"    │ Buggy (actual)  │ TP = {n_detected_all:>2}  │ FN = {n_pairs - n_detected_all:>2}  │"
+    )
     print(f"    └─────────────────┴──────────┴──────────┘")
-    print(f"    Detection rate: {n_detected_all}/{n_pairs} = {n_detected_all/n_pairs:.0%}")
-    print(f"    Test-only rate: {n_detected_test}/{n_test} = {n_detected_test/max(n_test,1):.0%}")
+    print(f"    Detection rate: {n_detected_all}/{n_pairs} = {n_detected_all / n_pairs:.0%}")
+    print(
+        f"    Test-only rate: {n_detected_test}/{n_test} = {n_detected_test / max(n_test, 1):.0%}"
+    )
 
     print(f"\n  Method comparison (detection counts out of {n_pairs} bug types):")
     print(f"    Learned Ising:  {n_detected_all}/{n_pairs}")
@@ -1165,13 +1228,15 @@ def main() -> int:
 
     print(f"\n  Per-bug-type detection rates:")
     print(f"    {'Bug Type':<20} {'Ising':<8} {'Static':<8} {'Dynamic':<8} {'Split'}")
-    print(f"    {'-'*64}")
+    print(f"    {'-' * 64}")
     for r in per_bug_results:
-        print(f"    {r['bug_type']:<20} "
-              f"{'Y' if r['ising_detected'] else 'n':<8} "
-              f"{'Y' if r['static_detected'] else 'n':<8} "
-              f"{'Y' if r['dynamic_detected'] else 'n':<8} "
-              f"{'TEST' if r['is_test'] else 'train'}")
+        print(
+            f"    {r['bug_type']:<20} "
+            f"{'Y' if r['ising_detected'] else 'n':<8} "
+            f"{'Y' if r['static_detected'] else 'n':<8} "
+            f"{'Y' if r['dynamic_detected'] else 'n':<8} "
+            f"{'TEST' if r['is_test'] else 'train'}"
+        )
 
     if ising_only:
         print(f"\n  Bugs caught ONLY by learned Ising ({len(ising_only)}):")
@@ -1181,8 +1246,10 @@ def main() -> int:
 
     # Verdict.
     if n_detected_all >= n_pairs * 0.8 and n_detected_all > n_static:
-        print(f"\n  VERDICT: ✅ Learned Ising detects {n_detected_all}/{n_pairs} bugs, "
-              f"beating static analysis ({n_static}/{n_pairs})!")
+        print(
+            f"\n  VERDICT: ✅ Learned Ising detects {n_detected_all}/{n_pairs} bugs, "
+            f"beating static analysis ({n_static}/{n_pairs})!"
+        )
     elif n_detected_all >= n_pairs * 0.6:
         print(f"\n  VERDICT: ⚠️ Partial success — {n_detected_all}/{n_pairs} bugs detected")
     else:

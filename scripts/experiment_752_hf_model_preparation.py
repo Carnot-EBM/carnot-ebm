@@ -182,9 +182,17 @@ def main() -> None:
     jepa_config_missing = (
         _verify_config_fields(
             JEPA_CONFIG,
-            ["model_type", "hidden_dim", "layer_index", "probe_architecture",
-             "training_data", "eval_auc_5fold", "eval_std_5fold",
-             "latency_p50_ms", "model_class"],
+            [
+                "model_type",
+                "hidden_dim",
+                "layer_index",
+                "probe_architecture",
+                "training_data",
+                "eval_auc_5fold",
+                "eval_std_5fold",
+                "latency_p50_ms",
+                "model_class",
+            ],
         )
         if jepa_config_ok
         else ["(config file missing)"]
@@ -193,8 +201,14 @@ def main() -> None:
     kan_config_missing = (
         _verify_config_fields(
             KAN_CONFIG,
-            ["model_type", "auroc", "fp_rate_gsm8k_1000q", "deployment_tier",
-             "architecture", "training_data"],
+            [
+                "model_type",
+                "auroc",
+                "fp_rate_gsm8k_1000q",
+                "deployment_tier",
+                "architecture",
+                "training_data",
+            ],
         )
         if kan_config_ok
         else ["(config file missing)"]
@@ -226,9 +240,7 @@ def main() -> None:
         and upload_script_ok
     )
 
-    some_ready = (
-        jepa_config_ok or kan_config_ok or jepa_card_ok or kan_card_ok
-    )
+    some_ready = jepa_config_ok or kan_config_ok or jepa_card_ok or kan_card_ok
 
     if all_ready:
         honest_verdict = "hf_artifacts_ready"
@@ -257,9 +269,7 @@ def main() -> None:
             "models_ready": ["carnot_step_jepa_probe_v1", "carnot_kan_tier0b_v3"],
             "artifact_paths": artifact_paths,
             "upload_script": str(UPLOAD_SCRIPT),
-            "operator_action": (
-                "run models/hf_upload_commands.sh after huggingface-cli login"
-            ),
+            "operator_action": ("run models/hf_upload_commands.sh after huggingface-cli login"),
             "jepa_export_status": jepa_export_status,
             "jepa_weights_ok": jepa_weights_ok,
             "kan_weights_ok": kan_copied,

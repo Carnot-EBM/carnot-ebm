@@ -30,6 +30,7 @@
 
 Spec: REQ-VERIFY-171, REQ-VERIFY-172, SCENARIO-VERIFY-200
 """
+
 from __future__ import annotations
 
 import json
@@ -95,9 +96,7 @@ class _SyntheticSinkProbe:
         )
 
 
-def _make_ising_stub(
-    is_correct: bool, energy_values: list[float]
-) -> callable:
+def _make_ising_stub(is_correct: bool, energy_values: list[float]) -> callable:
     """Return a per-response ising stub that cycles through energy_values.
 
     The stub returns a fixed correctness verdict with energy drawn from the
@@ -193,7 +192,9 @@ def _run_pipeline(corpus: list[dict], use_scheduler: bool) -> dict:
     vg_skips = 0
     n_total = len(corpus)
 
-    vg_scheduler = VGSearchScheduler(variance_threshold=0.05, window_size=3) if use_scheduler else None
+    vg_scheduler = (
+        VGSearchScheduler(variance_threshold=0.05, window_size=3) if use_scheduler else None
+    )
 
     for item in corpus:
         # Build a fresh per-response ising stub with the item's energy sequence.
@@ -236,9 +237,7 @@ def _run_pipeline(corpus: list[dict], use_scheduler: bool) -> dict:
 
         # Accuracy: did verification outcome match ground truth?
         # A correct response verified=True is right; incorrect verified=False is right.
-        if item["is_correct"] and _verified:
-            n_correct += 1
-        elif not item["is_correct"] and not _verified:
+        if item["is_correct"] and _verified or not item["is_correct"] and not _verified:
             n_correct += 1
 
     accuracy = n_correct / n_total if n_total > 0 else 0.0

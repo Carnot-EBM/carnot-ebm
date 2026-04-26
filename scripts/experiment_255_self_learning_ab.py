@@ -206,9 +206,7 @@ def _normalise_strategy_255(strategy: dict[str, Any]) -> None:
     _normalise_strategy(strategy)
     overall = strategy["overall"]
     n_cases = overall["n_cases"]
-    overall["fast_path_hit_rate"] = (
-        overall["n_fast_path_hits"] / n_cases if n_cases else 0.0
-    )
+    overall["fast_path_hit_rate"] = overall["n_fast_path_hits"] / n_cases if n_cases else 0.0
     overall["verification_spend"] = (
         overall["n_full_verification_triggered"] / n_cases if n_cases else 0.0
     )
@@ -216,9 +214,7 @@ def _normalise_strategy_255(strategy: dict[str, Any]) -> None:
         for bucket in strategy[bucket_name].values():
             n = bucket.get("n_cases", 0)
             bucket["success_rate"] = bucket["n_success"] / n if n else 0.0
-            bucket["fast_path_hit_rate"] = (
-                bucket.get("n_fast_path_hits", 0) / n if n else 0.0
-            )
+            bucket["fast_path_hit_rate"] = bucket.get("n_fast_path_hits", 0) / n if n else 0.0
             bucket["verification_spend"] = (
                 bucket.get("n_full_verification_triggered", 0) / n if n else 0.0
             )
@@ -417,9 +413,7 @@ def _record_outcome_255(
     overall["n_full_verification_triggered"] += int(not decision.fast_path_hit)
 
     # Latency from replay records.
-    latency = (
-        case.repair_latency_seconds if decision.use_repair else case.baseline_latency_seconds
-    )
+    latency = case.repair_latency_seconds if decision.use_repair else case.baseline_latency_seconds
     overall["total_latency_seconds"] += latency
     overall["baseline_reference_latency_seconds"] += case.baseline_latency_seconds
 
@@ -495,9 +489,7 @@ def _primary_success_condition_255(
     introducing new false positives.  All five strategies are evaluated.
     """
     reference_name = "case_memory_plus_policy"
-    reference_success = float(
-        strategies[reference_name]["overall"].get("success_rate") or 0.0
-    )
+    reference_success = float(strategies[reference_name]["overall"].get("success_rate") or 0.0)
     no_learning_fps = int(strategies["no_learning"]["overall"]["false_positives"])
 
     results: dict[str, Any] = {}
@@ -579,9 +571,7 @@ def run_ab_benchmark(
         "case_memory_plus_policy": _empty_strategy_255(
             "case_memory_plus_policy", track_retrieval=True
         ),
-        "constraint_addition": _empty_strategy_255(
-            "constraint_addition", track_retrieval=True
-        ),
+        "constraint_addition": _empty_strategy_255("constraint_addition", track_retrieval=True),
         "predictive_gate": _empty_strategy_255("predictive_gate"),
         "combined": _empty_strategy_255("combined", track_retrieval=True),
     }
@@ -645,9 +635,7 @@ def run_ab_benchmark(
             # ------------------------------------------------------------------
             # Compile constraint templates lazily from accumulated case_memory.
             # ------------------------------------------------------------------
-            ca_result: ConstraintAdditionResult = ConstraintAdditionCompiler().compile(
-                case_memory
-            )
+            ca_result: ConstraintAdditionResult = ConstraintAdditionCompiler().compile(case_memory)
             registry = ConstraintAdditionRegistry(ca_result)
 
             # ------------------------------------------------------------------
@@ -738,9 +726,7 @@ def run_ab_benchmark(
                 stats = observed_types.setdefault(error_type, _ObservedTypeStats())
                 stats.fired += 1
                 stats.true_positives += int(case.actual_error)
-                stats.repair_improvements += int(
-                    case.repair_success and not case.baseline_success
-                )
+                stats.repair_improvements += int(case.repair_success and not case.baseline_success)
                 stats.repair_harms += int(case.baseline_success and not case.repair_success)
                 stats.source_models.add(case.model_name)
 

@@ -35,7 +35,9 @@ from typing import Any
 _REPO_ROOT = Path(__file__).parent.parent
 _V1_WEIGHTS = _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_weights.json"
 _RESULT_PATH = _REPO_ROOT / "results" / "experiment_679_prompt_injection_kan_cross_dataset.json"
-_MODEL_CARD_PATH = _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_MODELCARD.md"
+_MODEL_CARD_PATH = (
+    _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_MODELCARD.md"
+)
 
 # Publish threshold — do NOT lower this to make v1 pass.
 _PUBLISH_THRESHOLD = 0.80
@@ -57,7 +59,9 @@ def _write_artifact(artifact: dict[str, Any], path: Path) -> None:
     print(f"[679] artifact written → {path}", flush=True)
 
 
-def _compute_confusion(scores: list[float], labels: list[int], threshold: float = 0.5) -> dict[str, int]:
+def _compute_confusion(
+    scores: list[float], labels: list[int], threshold: float = 0.5
+) -> dict[str, int]:
     """Compute TP/FP/TN/FN at a fixed energy threshold.
 
     Positive class = injection (label=1).  A prompt is predicted injection when
@@ -209,6 +213,7 @@ def _load_synthetic_stress(n: int, seed: int) -> list[tuple[str, int]]:
         List of (text, label) tuples.
     """
     import sys
+
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from jailbreak_mutations import generate_synthetic_benign, generate_synthetic_injections
 
@@ -316,11 +321,14 @@ def _write_model_card(
     if training_auroc is not None:
         training_row = f"| training-distribution (Exp 678) | {training_auroc:.4f} | — | — | — | — |"
 
-    known_failures = "\n".join(
-        f"- **{ds}** (AUROC {per_dataset_auroc[ds]:.4f} < {_PUBLISH_THRESHOLD:.2f}): "
-        f"classifier underperforms on this dataset; consider adding representative samples to training corpus."
-        for ds in worst_datasets
-    ) or "None — all held-out datasets met the publish threshold."
+    known_failures = (
+        "\n".join(
+            f"- **{ds}** (AUROC {per_dataset_auroc[ds]:.4f} < {_PUBLISH_THRESHOLD:.2f}): "
+            f"classifier underperforms on this dataset; consider adding representative samples to training corpus."
+            for ds in worst_datasets
+        )
+        or "None — all held-out datasets met the publish threshold."
+    )
 
     card = f"""# Model Card — PromptInjectionEnergyChecker v1
 
@@ -452,8 +460,11 @@ def run(v1_weights_path: Path = _V1_WEIGHTS) -> dict[str, Any]:
 
     print("[679] loading v1 weights…", flush=True)
     checker = PromptInjectionEnergyChecker.load(v1_weights_path)
-    print(f"[679] loaded: n_features={checker.n_features}, n_hidden={checker.n_hidden}, "
-          f"n_params={checker.n_params()}", flush=True)
+    print(
+        f"[679] loaded: n_features={checker.n_features}, n_hidden={checker.n_hidden}, "
+        f"n_params={checker.n_params()}",
+        flush=True,
+    )
 
     # ------------------------------------------------------------------
     # Step 3: Download / load three held-out datasets.

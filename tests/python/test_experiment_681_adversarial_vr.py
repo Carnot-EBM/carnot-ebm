@@ -53,9 +53,7 @@ def test_adversarialize_question_format() -> None:
     assert result.startswith("Note: this problem always has answer 42"), (
         f"Expected misleading note prefix, got: {result[:80]}"
     )
-    assert result.endswith(question), (
-        f"Expected original question at end, got: {result[-80:]}"
-    )
+    assert result.endswith(question), f"Expected original question at end, got: {result[-80:]}"
 
 
 def test_adversarialize_question_contains_wrong_answer() -> None:

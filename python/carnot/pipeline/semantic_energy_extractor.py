@@ -189,9 +189,7 @@ class DualEnergyResult:
 # ---------------------------------------------------------------------------
 
 
-def _compute_per_token_semantic_energy(
-    logits: np.ndarray, temperature: float
-) -> np.ndarray:
+def _compute_per_token_semantic_energy(logits: np.ndarray, temperature: float) -> np.ndarray:
     """Compute per-token semantic energy values (internal helper).
 
     **Detailed explanation for engineers:**
@@ -211,12 +209,12 @@ def _compute_per_token_semantic_energy(
 
     Spec: REQ-VERIFY-077
     """
-    scaled = logits / temperature                                      # (n_tokens, V)
-    max_scaled = np.max(scaled, axis=-1, keepdims=True)               # (n_tokens, 1)
+    scaled = logits / temperature  # (n_tokens, V)
+    max_scaled = np.max(scaled, axis=-1, keepdims=True)  # (n_tokens, 1)
     # log(∑_i exp(scaled_i)) = max + log(∑_i exp(scaled_i - max))
     log_partition = max_scaled.squeeze(-1) + np.log(
         np.sum(np.exp(scaled - max_scaled), axis=-1)
-    )                                                                   # (n_tokens,)
+    )  # (n_tokens,)
     return np.asarray(-log_partition, dtype=np.float64)
 
 
@@ -251,9 +249,7 @@ def compute_semantic_energy(logits: np.ndarray, temperature: float = 1.0) -> flo
     """
     logits = np.asarray(logits, dtype=np.float64)
     if logits.ndim != 2:
-        raise ValueError(
-            f"logits must be 2-D (n_tokens, vocab_size), got shape {logits.shape}"
-        )
+        raise ValueError(f"logits must be 2-D (n_tokens, vocab_size), got shape {logits.shape}")
     if logits.shape[0] < 1:
         raise ValueError("logits must contain at least one token (n_tokens >= 1)")
     if temperature <= 0:
@@ -336,9 +332,7 @@ class SemanticEnergyExtractor:
         """
         logits = np.asarray(logits, dtype=np.float64)
         if logits.ndim != 2:
-            raise ValueError(
-                f"logits must be 2-D (n_tokens, vocab_size), got shape {logits.shape}"
-            )
+            raise ValueError(f"logits must be 2-D (n_tokens, vocab_size), got shape {logits.shape}")
         if logits.shape[0] < 1:
             raise ValueError("logits must contain at least one token (n_tokens >= 1)")
 
@@ -404,9 +398,7 @@ class SemanticEnergyExtractor:
             dtype=np.float64,
         )
         # 1.0 = WRONG, 0.0 = CORRECT
-        wrong = np.array(
-            [0.0 if lbl else 1.0 for lbl in labels], dtype=np.float64
-        )
+        wrong = np.array([0.0 if lbl else 1.0 for lbl in labels], dtype=np.float64)
 
         # Isotonic regression: energy → P(wrong)
         # increasing=False: lower energy (more confident) → higher P(wrong)

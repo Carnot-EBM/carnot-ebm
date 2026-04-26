@@ -35,10 +35,8 @@ from __future__ import annotations
 
 import json
 import statistics
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
-
 
 # ---------------------------------------------------------------------------
 # ForcingFeedback — one observation from a live inference session
@@ -149,9 +147,7 @@ class MetaJuLSForcingAdapter:
         mean_recall = statistics.mean(self._domain_recalls[domain])
         if mean_recall < LOW_RECALL_THRESHOLD:
             # Domain recall is consistently below the threshold — escalate to CRITICAL.
-            self._domain_emphasis[domain] = _CRITICAL_EMPHASIS_TEMPLATE.format(
-                domain=domain
-            )
+            self._domain_emphasis[domain] = _CRITICAL_EMPHASIS_TEMPLATE.format(domain=domain)
         else:
             # Recall is acceptable — remove any previously installed emphasis so we
             # do not permanently over-force domains that have recovered.
@@ -161,7 +157,7 @@ class MetaJuLSForcingAdapter:
     # get_adapted_addendum
     # ------------------------------------------------------------------
 
-    def get_adapted_addendum(self, question: str, domain: Optional[str] = None) -> str:
+    def get_adapted_addendum(self, question: str, domain: str | None = None) -> str:
         """Return FORCER_SYSTEM_ADDENDUM adapted for this question's domain.
 
         If no domain-specific emphasis has been installed, returns the base addendum
@@ -205,7 +201,7 @@ class MetaJuLSForcingAdapter:
         Path(path).write_text(json.dumps(state, indent=2))
 
     @classmethod
-    def load_state(cls, path: str) -> "MetaJuLSForcingAdapter":
+    def load_state(cls, path: str) -> MetaJuLSForcingAdapter:
         """Restore a MetaJuLSForcingAdapter from a previously saved state file.
 
         All accumulated recall history and installed emphasis strings are restored

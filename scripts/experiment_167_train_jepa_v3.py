@@ -73,14 +73,14 @@ V3_MODEL_PATH = Path("results/jepa_predictor_v3.safetensors")
 RESULTS_PATH = Path("results/experiment_167_results.json")
 
 # Training config for Exp 167
-N_EPOCHS = 200             # more epochs for harder learning problem
-LR = 1e-3                  # same learning rate as v2
-BATCH_SIZE = 64            # same batch size
-VAL_FRACTION = 0.2         # held-out fraction
-SEED = 42                  # reproducibility
-EARLY_STOP_PATIENCE = 20   # stop if val macro AUROC does not improve for N epochs
-WEIGHT_DECAY = 1e-4        # L2 regularisation via Adam weight decay
-LOGIC_LOSS_WEIGHT = 2.0    # multiply logic-domain loss by this factor
+N_EPOCHS = 200  # more epochs for harder learning problem
+LR = 1e-3  # same learning rate as v2
+BATCH_SIZE = 64  # same batch size
+VAL_FRACTION = 0.2  # held-out fraction
+SEED = 42  # reproducibility
+EARLY_STOP_PATIENCE = 20  # stop if val macro AUROC does not improve for N epochs
+WEIGHT_DECAY = 1e-4  # L2 regularisation via Adam weight decay
+LOGIC_LOSS_WEIGHT = 2.0  # multiply logic-domain loss by this factor
 POS_WEIGHT_CLIP = (0.5, 10.0)  # clip per-domain class weights to this range
 
 # Baseline v2 results (from Exp 155) — used for comparison table
@@ -172,10 +172,9 @@ def load_combined_pairs() -> list[dict]:
     print(f"Combined dataset: {len(combined)} pairs")
     for domain, count in sorted(domain_counts.items()):
         violated = sum(
-            1 for p in combined
-            if p["domain"] == domain and p.get(f"violated_{domain}", False)
+            1 for p in combined if p["domain"] == domain and p.get(f"violated_{domain}", False)
         )
-        print(f"  {domain}: {count} pairs, {violated} violated ({100*violated/count:.1f}%)")
+        print(f"  {domain}: {count} pairs, {violated} violated ({100 * violated / count:.1f}%)")
 
     return combined
 
@@ -391,9 +390,7 @@ def train_v3(
     domains_arr = np.array([p["domain"] for p in pairs])
 
     # ---- 2. Stratified split by (domain × violated) ----
-    X_train, Y_train, X_val, Y_val = stratified_split(
-        X, Y, domains_arr, VAL_FRACTION, seed
-    )
+    X_train, Y_train, X_val, Y_val = stratified_split(X, Y, domains_arr, VAL_FRACTION, seed)
     # Rebuild domain labels for train/val by reproducing the same split indices
     domains_train, domains_val = _split_domains(domains_arr, X, Y, VAL_FRACTION, seed)
 
@@ -521,21 +518,20 @@ def train_v3(
         if (epoch + 1) % 20 == 0 or epoch == 0:
             auroc_str = ", ".join(f"{d}={auroc_per_domain[d]:.3f}" for d in DOMAINS)
             print(
-                f"  Epoch {epoch+1:3d}: train_loss={train_losses[-1]:.4f}  "
+                f"  Epoch {epoch + 1:3d}: train_loss={train_losses[-1]:.4f}  "
                 f"val_loss={val_loss:.4f}  macro_AUROC={macro_auroc:.4f} "
-                f"[{auroc_str}]"
-                + (" *" if no_improve_count == 0 else "")
+                f"[{auroc_str}]" + (" *" if no_improve_count == 0 else "")
             )
 
         if no_improve_count >= EARLY_STOP_PATIENCE:
             print(
-                f"  Early stop at epoch {epoch+1} "
+                f"  Early stop at epoch {epoch + 1} "
                 f"(no macro AUROC improvement for {EARLY_STOP_PATIENCE} epochs)"
             )
             break
 
     # ---- 9. Restore best checkpoint ----
-    print(f"\nBest macro AUROC={best_macro_auroc:.4f} at epoch {best_epoch+1}")
+    print(f"\nBest macro AUROC={best_macro_auroc:.4f} at epoch {best_epoch + 1}")
     if best_params is None:
         best_params = params
 
@@ -706,12 +702,16 @@ def main() -> None:
         marker = " *" if domain == "logic" else ""
         print(f"{domain:<14} {v2_a:>10.4f} {v3_a:>10.4f} {delta:>+10.4f}{marker}")
     print("-" * 44)
-    print(f"{'macro':<14} {macro_v2:>10.4f} {macro_v3:>10.4f} {macro_v3-macro_v2:>+10.4f}")
+    print(f"{'macro':<14} {macro_v2:>10.4f} {macro_v3:>10.4f} {macro_v3 - macro_v2:>+10.4f}")
     print()
-    print(f"Target logic AUROC >0.70: {'MET' if v3_auroc['logic'] > TARGET_LOGIC_AUROC else 'NOT MET'} "
-          f"({v3_auroc['logic']:.4f})")
-    print(f"Target macro AUROC >0.75: {'MET' if macro_v3 > TARGET_MACRO_AUROC else 'NOT MET'} "
-          f"({macro_v3:.4f})")
+    print(
+        f"Target logic AUROC >0.70: {'MET' if v3_auroc['logic'] > TARGET_LOGIC_AUROC else 'NOT MET'} "
+        f"({v3_auroc['logic']:.4f})"
+    )
+    print(
+        f"Target macro AUROC >0.75: {'MET' if macro_v3 > TARGET_MACRO_AUROC else 'NOT MET'} "
+        f"({macro_v3:.4f})"
+    )
 
     print("\nPrecision / Recall at threshold=0.5 (v3 val set):")
     print(f"{'Domain':<14} {'Precision':>10} {'Recall':>10}")

@@ -529,9 +529,7 @@ class VPRMArithmeticVerifier:
     """
 
     def __init__(self, rules: list[ArithmeticRule] | None = None) -> None:
-        self.rules: list[ArithmeticRule] = (
-            rules if rules is not None else _DEFAULT_RULES
-        )
+        self.rules: list[ArithmeticRule] = rules if rules is not None else _DEFAULT_RULES
 
     def verify_step(self, step_text: str) -> list[RuleVerdict]:
         """Apply all rules to one step and return verdicts for rules that matched.
@@ -611,13 +609,12 @@ class VPRMArithmeticVerifier:
         """
         if len(ground_truth) != len(predicted):
             raise ValueError(
-                f"ground_truth length {len(ground_truth)} != "
-                f"predicted length {len(predicted)}"
+                f"ground_truth length {len(ground_truth)} != predicted length {len(predicted)}"
             )
 
-        tp = sum(g and p for g, p in zip(ground_truth, predicted))
-        fp = sum((not g) and p for g, p in zip(ground_truth, predicted))
-        fn = sum(g and (not p) for g, p in zip(ground_truth, predicted))
+        tp = sum(g and p for g, p in zip(ground_truth, predicted, strict=False))
+        fp = sum((not g) and p for g, p in zip(ground_truth, predicted, strict=False))
+        fn = sum(g and (not p) for g, p in zip(ground_truth, predicted, strict=False))
 
         precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0

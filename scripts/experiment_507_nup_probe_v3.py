@@ -142,6 +142,7 @@ def _real_cot_pairs_to_activations(
         logprobs = pair.get("logprobs")
         if logprobs and len(logprobs) > 1:
             import math
+
             max_lp = max(logprobs)
             probs = [math.exp(lp - max_lp) for lp in logprobs]
             total = sum(probs)
@@ -180,7 +181,9 @@ def main() -> None:
         ci_mode = len(real_pairs) == 0
 
         if ci_mode:
-            _log.info("CI mode: no real CoT pairs found; using %d synthetic pairs", N_SYNTHETIC_PAIRS)
+            _log.info(
+                "CI mode: no real CoT pairs found; using %d synthetic pairs", N_SYNTHETIC_PAIRS
+            )
             all_acts, all_labels = _make_synthetic_activations(
                 N_SYNTHETIC_PAIRS, N_LAYERS, N_TOKENS_SYNTHETIC, HIDDEN_DIM_SYNTHETIC
             )
@@ -213,7 +216,10 @@ def main() -> None:
 
         _log.info(
             "AUC=%.4f (v2 baseline=%.3f, delta=%.4f, tier_0c_met=%s)",
-            auroc, V2_BASELINE, improvement, tier_0c_threshold_met,
+            auroc,
+            V2_BASELINE,
+            improvement,
+            tier_0c_threshold_met,
         )
 
         if tier_0c_threshold_met:
@@ -233,7 +239,11 @@ def main() -> None:
                 "n_training_pairs": n_train,
                 "n_eval_pairs": len(eval_acts),
                 "n_total_pairs": n_total,
-                "features_used": ["per_token_entropy", "topk_concentration", "cross_layer_variance"],
+                "features_used": [
+                    "per_token_entropy",
+                    "topk_concentration",
+                    "cross_layer_variance",
+                ],
                 "retro_049_closed": tier_0c_threshold_met,
                 "honest_verdict": honest_verdict,
                 "ci_mode": ci_mode,

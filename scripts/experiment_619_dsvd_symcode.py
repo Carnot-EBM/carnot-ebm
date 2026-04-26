@@ -171,9 +171,7 @@ def main() -> None:
                 import torch  # type: ignore[import]
 
                 _log.info("Loading Qwen3.5-0.8B for live SymCode generation…")
-                tok = AutoTokenizer.from_pretrained(
-                    "Qwen/Qwen3.5-0.8B", trust_remote_code=False
-                )
+                tok = AutoTokenizer.from_pretrained("Qwen/Qwen3.5-0.8B", trust_remote_code=False)
                 model = AutoModelForCausalLM.from_pretrained(
                     "Qwen/Qwen3.5-0.8B",
                     torch_dtype=torch.float32,
@@ -223,9 +221,7 @@ def main() -> None:
 
         retro_069_partial = symcode_live_auc > DSVD_BASELINE_LIVE_AUC
         retro_069_resolved = symcode_live_auc >= 0.50
-        honest_verdict = (
-            "symcode_beats_dsvd" if retro_069_partial else "symcode_no_improvement"
-        )
+        honest_verdict = "symcode_beats_dsvd" if retro_069_partial else "symcode_no_improvement"
 
         _log.info(
             "symcode_tp=%d  symcode_fp=%d  recall=%.3f  fp_rate=%.3f  auc=%.3f",

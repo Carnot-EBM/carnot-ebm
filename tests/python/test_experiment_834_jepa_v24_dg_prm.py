@@ -516,18 +516,22 @@ class TestTrainJepaV24Integration:
         corpus = []
         for d_idx, domain in enumerate(DOMAIN_NAMES):
             for i in range(4):
-                corpus.append({
-                    "text": f"Correct step {i} for {domain} domain.",
-                    "label": 1,
-                    "domain": domain,
-                    "domain_idx": d_idx,
-                })
-                corpus.append({
-                    "text": f"Incorrect step {i} for {domain} domain errors.",
-                    "label": 0,
-                    "domain": domain,
-                    "domain_idx": d_idx,
-                })
+                corpus.append(
+                    {
+                        "text": f"Correct step {i} for {domain} domain.",
+                        "label": 1,
+                        "domain": domain,
+                        "domain_idx": d_idx,
+                    }
+                )
+                corpus.append(
+                    {
+                        "text": f"Incorrect step {i} for {domain} domain errors.",
+                        "label": 0,
+                        "domain": domain,
+                        "domain_idx": d_idx,
+                    }
+                )
         return corpus
 
     def test_returns_params_and_log(self) -> None:
@@ -609,8 +613,14 @@ class TestDeliverableArtifact:
         """All REQUIRED_RESULT_FIELDS must be present in the artifact."""
         d = self._load()
         required = [
-            "experiment", "schema", "run_date", "started_at",
-            "finished_at", "duration_s", "status", "title",
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
         ]
         for field in required:
             assert field in d, f"Missing required field: {field}"

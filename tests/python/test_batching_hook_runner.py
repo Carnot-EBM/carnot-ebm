@@ -19,6 +19,7 @@ from carnot.pipeline.batching_hook_runner import BatchingHookRunner
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _write_script(scripts_dir: Path, name: str, content: str) -> Path:
     """Write a Python script to scripts_dir and return its path."""
     p = scripts_dir / name
@@ -29,6 +30,7 @@ def _write_script(scripts_dir: Path, name: str, content: str) -> Path:
 # ---------------------------------------------------------------------------
 # SCENARIO-INFRA-060: sequential loop in staged file blocked
 # ---------------------------------------------------------------------------
+
 
 class TestBatchingHookRunnerViolation:
     """Test that a staged file with a sequential loop returns a violation.
@@ -54,12 +56,15 @@ class TestBatchingHookRunnerViolation:
             assert violations[0].is_high_severity
             assert "experiment_bad.py" in violations[0].script_path
 
-    def test_run_logs_violations_when_raise_on_violation_true(self, caplog: pytest.LogCaptureFixture) -> None:
+    def test_run_logs_violations_when_raise_on_violation_true(
+        self, caplog: pytest.LogCaptureFixture
+    ) -> None:
         """run(raise_on_violation=True) logs ERROR-level messages for each violation.
 
         Spec: REQ-INFRA-052
         """
         import logging
+
         with tempfile.TemporaryDirectory() as tmpdir:
             scripts_dir = Path(tmpdir)
             script = _write_script(
@@ -80,6 +85,7 @@ class TestBatchingHookRunnerViolation:
 # ---------------------------------------------------------------------------
 # SCENARIO-INFRA-061: compliant script not blocked
 # ---------------------------------------------------------------------------
+
 
 class TestBatchingHookRunnerCompliant:
     """Test that a compliant script using BatchedInferenceRunner returns no violations.
@@ -109,6 +115,7 @@ class TestBatchingHookRunnerCompliant:
 # ---------------------------------------------------------------------------
 # REQ-INFRA-053: idempotency — no staged files → empty result
 # ---------------------------------------------------------------------------
+
 
 class TestBatchingHookRunnerNoStagedFiles:
     """Test that no staged files returns empty list (idempotency).
@@ -164,6 +171,7 @@ class TestBatchingHookRunnerNoStagedFiles:
 # ---------------------------------------------------------------------------
 # filter_new_violations — direct unit tests
 # ---------------------------------------------------------------------------
+
 
 class TestFilterNewViolations:
     """Unit tests for BatchingHookRunner.filter_new_violations.

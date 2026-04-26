@@ -214,8 +214,7 @@ def add_new_exclusions(manifest_path: Path) -> tuple[list[int], int]:
 
     entries = raw.get("excluded", [])
     existing_ids_at_58 = {
-        e["experiment_id"] for e in entries
-        if e.get("completed_milestone") == "2026.04.58"
+        e["experiment_id"] for e in entries if e.get("completed_milestone") == "2026.04.58"
     }
 
     added_ids: list[int] = []
@@ -361,7 +360,6 @@ def main() -> None:
     tmpl.setup()
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=45, result_path=DELIVERABLE):
-
         # Step 1: Audit dequeue sites.
         coverage = audit_dequeue_sites(_CONDUCTOR_PATH)
 
@@ -405,6 +403,7 @@ def main() -> None:
         )
 
         from python.carnot.pipeline.atomic_writer import AtomicResultWriter
+
         writer = AtomicResultWriter(str(_REPO_ROOT / DELIVERABLE))
         writer.write(artifact)
 

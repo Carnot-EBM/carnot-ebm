@@ -66,10 +66,8 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Optional
 
 import numpy as np
-
 
 # ---------------------------------------------------------------------------
 # CLAPFeatures
@@ -98,7 +96,7 @@ class CLAPFeatures:
     Spec: REQ-VERIFY-104, REQ-VERIFY-105
     """
 
-    per_token_entropy: np.ndarray   # shape (n_tokens,)
+    per_token_entropy: np.ndarray  # shape (n_tokens,)
     topk_concentration: np.ndarray  # shape (n_tokens,)
     cross_layer_variance: np.ndarray  # shape (n_tokens,)
 
@@ -121,17 +119,20 @@ class CLAPFeatures:
             topk_concentration (z-scored), the last n_tokens are cross_layer_variance
             (z-scored).
         """
+
         def _zscore(arr: np.ndarray) -> np.ndarray:
             std = float(np.std(arr))
             if std < 1e-10:
                 return arr - float(np.mean(arr))
             return (arr - float(np.mean(arr))) / std
 
-        return np.concatenate([
-            _zscore(self.per_token_entropy),
-            _zscore(self.topk_concentration),
-            _zscore(self.cross_layer_variance),
-        ])
+        return np.concatenate(
+            [
+                _zscore(self.per_token_entropy),
+                _zscore(self.topk_concentration),
+                _zscore(self.cross_layer_variance),
+            ]
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -294,13 +295,13 @@ class NUPProbeV3:
         self,
         n_features: int,
         threshold: float = 0.5,
-        extractor: Optional[CLAPFeatureExtractor] = None,
+        extractor: CLAPFeatureExtractor | None = None,
     ) -> None:
         self.n_features = n_features
         self.threshold = threshold
         self.extractor = extractor or CLAPFeatureExtractor()
         # Logistic regression weights and bias (initialised at fit time)
-        self._weights: Optional[np.ndarray] = None
+        self._weights: np.ndarray | None = None
         self._bias: float = 0.0
         self._is_fitted: bool = False
 
@@ -322,7 +323,7 @@ class NUPProbeV3:
     def fit(
         self,
         pairs: list[tuple[np.ndarray, int]],
-        labels: Optional[list[int]] = None,
+        labels: list[int] | None = None,
     ) -> None:
         """Train the probe on (activations, label) pairs using mini-batch gradient descent.
 
@@ -341,7 +342,7 @@ class NUPProbeV3:
         """
         if labels is not None:
             # pairs is a list of activations, labels is separate
-            combined = list(zip(pairs, labels))
+            combined = list(zip(pairs, labels, strict=False))
         else:
             combined = list(pairs)
 
@@ -417,7 +418,7 @@ class NUPProbeV3:
     def evaluate(
         self,
         pairs: list[tuple[np.ndarray, int]],
-        labels: Optional[list[int]] = None,
+        labels: list[int] | None = None,
     ) -> dict:
         """Evaluate the probe on held-out pairs, returning auroc and threshold.
 
@@ -439,10 +440,7 @@ class NUPProbeV3:
 
         Spec: REQ-VERIFY-106, SCENARIO-VERIFY-138, SCENARIO-VERIFY-139
         """
-        if labels is not None:
-            combined = list(zip(pairs, labels))
-        else:
-            combined = list(pairs)
+        combined = list(zip(pairs, labels, strict=False)) if labels is not None else list(pairs)
 
         if len(combined) < 2:
             return {"auroc": 0.5, "threshold": self.threshold, "n_pairs": len(combined)}

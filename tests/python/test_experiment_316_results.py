@@ -189,8 +189,7 @@ class TestInferenceMode:
         """REQ-BENCH-001: inference_mode must be 'live_gpu' or 'simulated', never 'unknown'."""
         mode = result["inference_mode"]
         assert mode in VALID_INFERENCE_MODES, (
-            f"inference_mode={mode!r} is not a valid label; "
-            f"must be one of {VALID_INFERENCE_MODES}"
+            f"inference_mode={mode!r} is not a valid label; must be one of {VALID_INFERENCE_MODES}"
         )
 
     def test_inference_mode_is_string(self, result: dict[str, Any]) -> None:
@@ -218,12 +217,8 @@ class TestCIBounds:
             acc = cell["accuracy"]
             lo = cell["ci_lower"]
             hi = cell["ci_upper"]
-            assert lo <= acc + 1e-9, (
-                f"{label}: ci_lower ({lo}) > accuracy ({acc})"
-            )
-            assert acc <= hi + 1e-9, (
-                f"{label}: accuracy ({acc}) > ci_upper ({hi})"
-            )
+            assert lo <= acc + 1e-9, f"{label}: ci_lower ({lo}) > accuracy ({acc})"
+            assert acc <= hi + 1e-9, f"{label}: accuracy ({acc}) > ci_upper ({hi})"
             assert lo >= 0.0, f"{label}: ci_lower ({lo}) < 0"
             assert hi <= 1.0, f"{label}: ci_upper ({hi}) > 1"
 

@@ -249,10 +249,19 @@ def test_verdict_blocked() -> None:
 # ---------------------------------------------------------------------------
 
 REQUIRED_BLOCKED_FIELDS = {
-    "experiment", "schema", "run_date", "status", "honest_verdict",
-    "blocked_reason", "inference_mode", "n_problems",
-    "baseline_pass_at_1", "post_pass_at_1", "signed_improvement",
-    "assert_comments_found", "repair_attempts",
+    "experiment",
+    "schema",
+    "run_date",
+    "status",
+    "honest_verdict",
+    "blocked_reason",
+    "inference_mode",
+    "n_problems",
+    "baseline_pass_at_1",
+    "post_pass_at_1",
+    "signed_improvement",
+    "assert_comments_found",
+    "repair_attempts",
 }
 
 
@@ -417,9 +426,18 @@ def test_deliverable_json_exists_and_valid() -> None:
     data = json.loads(result_path.read_text())
 
     required = {
-        "experiment", "schema", "run_date", "status", "honest_verdict",
-        "inference_mode", "n_problems", "baseline_pass_at_1", "post_pass_at_1",
-        "signed_improvement", "assert_comments_found", "repair_attempts",
+        "experiment",
+        "schema",
+        "run_date",
+        "status",
+        "honest_verdict",
+        "inference_mode",
+        "n_problems",
+        "baseline_pass_at_1",
+        "post_pass_at_1",
+        "signed_improvement",
+        "assert_comments_found",
+        "repair_attempts",
     }
     missing = required - set(data.keys())
     assert not missing, f"Missing fields in deliverable: {missing}"

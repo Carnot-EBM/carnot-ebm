@@ -181,10 +181,7 @@ def _detect_evidence_defects(
         defects.append(
             ProcessDefect(
                 kind=UNSUPPORTED_STEP,
-                detail=(
-                    f"{n_unsupported} claim(s) had no premise support "
-                    f"in the reasoning trace."
-                ),
+                detail=(f"{n_unsupported} claim(s) had no premise support in the reasoning trace."),
                 evidence={
                     "n_unsupported_claims": n_unsupported,
                     "max_premise_support": max_support,
@@ -320,11 +317,7 @@ def _detect_ir_defects(ir: TypedReasoningIR) -> list[ProcessDefect]:
 
     # Identify claims that are not grounded to any known step
     # (TypedReasoningIR uses atomic_claims).
-    ungrounded = [
-        c
-        for c in ir.atomic_claims
-        if c.step_id is None or c.step_id not in step_ids
-    ]
+    ungrounded = [c for c in ir.atomic_claims if c.step_id is None or c.step_id not in step_ids]
 
     n_unsupported = len(ungrounded)
     if n_unsupported > 0:
@@ -462,13 +455,13 @@ class ProcessVerifier:
         if process_evidence:
             # Determine process_label from evidence when it's not a named argument.
             outcome_label: str | None = (
-                "correct" if outcome_correct is True
-                else "incorrect" if outcome_correct is False
+                "correct"
+                if outcome_correct is True
+                else "incorrect"
+                if outcome_correct is False
                 else None
             )
-            defects.extend(
-                _detect_evidence_defects(process_evidence, outcome_label, "unknown")
-            )
+            defects.extend(_detect_evidence_defects(process_evidence, outcome_label, "unknown"))
 
         process_valid = len(defects) == 0
         return ProcessVerificationResult(

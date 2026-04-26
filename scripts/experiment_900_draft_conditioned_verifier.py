@@ -50,7 +50,28 @@ GSM8K_QUESTIONS = [
     "A tank is 3/4 full with 60 liters. What is the tank's total capacity?",
 ]
 
-GSM8K_ANSWERS = [11, 19, 600, 180, 157, 12, 100, 12, 84, 12, 28, 60, 6, None, 24, None, 40, 60, 44, 80]
+GSM8K_ANSWERS = [
+    11,
+    19,
+    600,
+    180,
+    157,
+    12,
+    100,
+    12,
+    84,
+    12,
+    28,
+    60,
+    6,
+    None,
+    24,
+    None,
+    40,
+    60,
+    44,
+    80,
+]
 
 
 def generate_simple_response(question: str) -> str:
@@ -110,9 +131,7 @@ def count_violations_baseline(questions: list[str], responses: list[str]) -> int
         # (catches wild extrapolations), OR response has no arithmetic operators
         max_q = max(q_nums)
         resp_final = r_nums[-1]
-        if resp_final > max_q * 20:
-            violations += 1
-        elif not re.search(r"[+\-*/×÷]", response):
+        if resp_final > max_q * 20 or not re.search(r"[+\-*/×÷]", response):
             violations += 1
 
     return violations
@@ -186,9 +205,12 @@ def count_violations_with_draft_conditioning(
                         range_forgiven = True
                         break
 
-            if resp_final > max_q * 20 and not range_forgiven:
-                is_violation = True
-            elif not re.search(r"[+\-*/×÷]", response) and not range_forgiven:
+            if (
+                resp_final > max_q * 20
+                and not range_forgiven
+                or not re.search(r"[+\-*/×÷]", response)
+                and not range_forgiven
+            ):
                 is_violation = True
 
             # Draft mismatch adds a violation flag
@@ -198,12 +220,14 @@ def count_violations_with_draft_conditioning(
         if is_violation:
             violations += 1
 
-        details.append({
-            "question": question[:60],
-            "structural_constraints": structural_constraints,
-            "draft_mismatch": draft_mismatch,
-            "violation": is_violation,
-        })
+        details.append(
+            {
+                "question": question[:60],
+                "structural_constraints": structural_constraints,
+                "draft_mismatch": draft_mismatch,
+                "violation": is_violation,
+            }
+        )
 
     return violations, details
 
@@ -251,9 +275,9 @@ def main() -> None:
     constraint_violation_post = violations_draft / n
     signed_improvement = violations_baseline - violations_draft
     draft_mismatch_rate = sum(1 for d in per_question_details if d["draft_mismatch"]) / n
-    avg_structural_constraints = sum(
-        len(d["structural_constraints"]) for d in per_question_details
-    ) / n
+    avg_structural_constraints = (
+        sum(len(d["structural_constraints"]) for d in per_question_details) / n
+    )
 
     # --- Honest verdict ---
     if constraint_violation_post < constraint_violation_pre:

@@ -74,9 +74,7 @@ class TestEnsembleOrLogic:
     def test_multiple_responses(self):
         """Correct per-response tracking across a batch (REQ-VERIFY-141-2)."""
         interwhen, causal = _make_monitors([False, True, False], [False, False, True])
-        hits = compute_ensemble_hits(
-            ["r0", "r1", "r2"], [0, 1, 2], interwhen, causal, set()
-        )
+        hits = compute_ensemble_hits(["r0", "r1", "r2"], [0, 1, 2], interwhen, causal, set())
         assert hits == [False, True, True]
 
     def test_hermes_index_not_in_set(self):

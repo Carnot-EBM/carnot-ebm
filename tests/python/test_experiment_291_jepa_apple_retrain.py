@@ -77,9 +77,14 @@ class TestExtractAppleFeatures:
         logits = _make_logits()
         result = extract_apple_features(logits, prefix_fraction=0.5, variant_type="standard")
         required = {
-            "mean_spilled", "max_spilled", "p95_spilled",
-            "semantic_energy", "mean_logit", "max_logit",
-            "variant_type_encoded", "prefix_fraction",
+            "mean_spilled",
+            "max_spilled",
+            "p95_spilled",
+            "semantic_energy",
+            "mean_logit",
+            "max_logit",
+            "variant_type_encoded",
+            "prefix_fraction",
         }
         assert required == set(result.keys()), f"Missing keys: {required - set(result.keys())}"
 
@@ -197,9 +202,17 @@ class TestSyntheticCorpus:
         # REQ-JEPA-003
         rows = build_synthetic_corpus(n_cases=10, seed=291)
         for row in rows:
-            for key in ("mean_spilled", "max_spilled", "p95_spilled",
-                        "semantic_energy", "mean_logit", "max_logit"):
-                val = getattr(row.features, key) if hasattr(row.features, key) else row.features[key]
+            for key in (
+                "mean_spilled",
+                "max_spilled",
+                "p95_spilled",
+                "semantic_energy",
+                "mean_logit",
+                "max_logit",
+            ):
+                val = (
+                    getattr(row.features, key) if hasattr(row.features, key) else row.features[key]
+                )
                 assert math.isfinite(float(val)), f"Non-finite {key} in synthetic row"
 
     def test_synthetic_corpus_has_both_violation_classes(self):
@@ -489,9 +502,16 @@ class TestONNXExport:
         rows = build_synthetic_corpus(n_cases=80, seed=291)
         result = run_experiment(rows=rows, output_dir=tmp_path, seed=291)
         for key in (
-            "experiment", "fast_path_rate", "tp_rate", "fp_rate",
-            "targets_met", "targets_verdict", "conformal_intervals",
-            "ab_test", "n_train", "n_holdout",
+            "experiment",
+            "fast_path_rate",
+            "tp_rate",
+            "fp_rate",
+            "targets_met",
+            "targets_verdict",
+            "conformal_intervals",
+            "ab_test",
+            "n_train",
+            "n_holdout",
         ):
             assert key in result, f"Result missing key: {key}"
 

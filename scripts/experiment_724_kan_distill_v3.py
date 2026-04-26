@@ -58,12 +58,12 @@ _DELIVERABLE = "results/experiment_724_kan_distill_v3.json"
 _DATASET_PATH = _REPO_ROOT / "results" / "kan_distill_v3_dataset.json"
 _CHECKPOINT_PATH = _REPO_ROOT / "models" / "kan_distill_v3_tier0b.safetensors"
 
-_N_EXAMPLES = 3000          # REQ-KAN-003: minimum 3000 examples
-_N_PER_CLASS = 1500         # balanced: 1500 injection + 1500 benign
-_TRAIN_RATIO = 0.80         # 80% train, 20% held-out test
-_N_EPOCHS = 100             # same as v2
-_LR = 1e-3                  # same as v2
-_AUROC_V2_BASELINE = 0.8747 # v2 result from Exp 710
+_N_EXAMPLES = 3000  # REQ-KAN-003: minimum 3000 examples
+_N_PER_CLASS = 1500  # balanced: 1500 injection + 1500 benign
+_TRAIN_RATIO = 0.80  # 80% train, 20% held-out test
+_N_EPOCHS = 100  # same as v2
+_LR = 1e-3  # same as v2
+_AUROC_V2_BASELINE = 0.8747  # v2 result from Exp 710
 
 # Tier gate thresholds for honest_verdict.
 _GATE_PASS = 0.90
@@ -151,20 +151,64 @@ _BENIGN_TEMPLATES = [
 ]
 
 _BENIGN_FILLERS_A = [
-    "binary search", "quicksort", "gradient descent", "recursion",
-    "hash table", "REST API", "graph traversal", "dynamic programming",
-    "object-oriented programming", "functional programming", "TCP", "UDP",
-    "HTTP", "HTTPS", "SQL", "NoSQL", "Docker", "Kubernetes", "Git", "Linux",
-    "Python", "JavaScript", "Rust", "Go", "Java", "C++", "machine learning",
-    "neural networks", "backpropagation", "attention", "transformer",
-    "tokenization", "embedding", "normalization", "regularization",
-    "overfitting", "underfitting", "cross-validation", "hyperparameter",
-    "Fibonacci", "prime numbers", "sorting", "searching", "binary tree",
+    "binary search",
+    "quicksort",
+    "gradient descent",
+    "recursion",
+    "hash table",
+    "REST API",
+    "graph traversal",
+    "dynamic programming",
+    "object-oriented programming",
+    "functional programming",
+    "TCP",
+    "UDP",
+    "HTTP",
+    "HTTPS",
+    "SQL",
+    "NoSQL",
+    "Docker",
+    "Kubernetes",
+    "Git",
+    "Linux",
+    "Python",
+    "JavaScript",
+    "Rust",
+    "Go",
+    "Java",
+    "C++",
+    "machine learning",
+    "neural networks",
+    "backpropagation",
+    "attention",
+    "transformer",
+    "tokenization",
+    "embedding",
+    "normalization",
+    "regularization",
+    "overfitting",
+    "underfitting",
+    "cross-validation",
+    "hyperparameter",
+    "Fibonacci",
+    "prime numbers",
+    "sorting",
+    "searching",
+    "binary tree",
 ]
 
 _BENIGN_FILLERS_B = [
-    "2 + 2", "7 * 8", "100 / 4", "15 + 27", "42 - 13", "3^4", "sqrt(144)",
-    "255 in binary", "the decimal system", "base 16", "log base 2 of 1024",
+    "2 + 2",
+    "7 * 8",
+    "100 / 4",
+    "15 + 27",
+    "42 - 13",
+    "3^4",
+    "sqrt(144)",
+    "255 in binary",
+    "the decimal system",
+    "base 16",
+    "log base 2 of 1024",
 ]
 
 
@@ -187,7 +231,11 @@ def _generate_dataset(n_per_class: int, seed: int = 724) -> list[dict]:
         template = _INJECTION_TEMPLATES[i % len(_INJECTION_TEMPLATES)]
         action = _INJECTION_ACTIONS[i % len(_INJECTION_ACTIONS)]
         # Add numeric variation so adjacent examples differ at the token level.
-        variation = f"(request #{i + 1})" if i >= len(_INJECTION_TEMPLATES) * len(_INJECTION_ACTIONS) else ""
+        variation = (
+            f"(request #{i + 1})"
+            if i >= len(_INJECTION_TEMPLATES) * len(_INJECTION_ACTIONS)
+            else ""
+        )
         text = template.format(action + (" " + variation).rstrip())
         examples.append({"text": text, "label": "injection", "source": "synthetic_template"})
 
@@ -248,13 +296,18 @@ def _run(tmpl: ExperimentTemplate) -> dict:
         _log.info("Generating %d-example balanced dataset (seed=724)", _N_EXAMPLES)
         raw_examples = _generate_dataset(_N_PER_CLASS, seed=724)
         _DATASET_PATH.parent.mkdir(parents=True, exist_ok=True)
-        _DATASET_PATH.write_text(json.dumps({
-            "schema": "carnot.kan_distill_v3_dataset.v1",
-            "n_examples": len(raw_examples),
-            "n_positive": sum(1 for e in raw_examples if e["label"] == "injection"),
-            "n_negative": sum(1 for e in raw_examples if e["label"] == "benign"),
-            "examples": raw_examples,
-        }, indent=2))
+        _DATASET_PATH.write_text(
+            json.dumps(
+                {
+                    "schema": "carnot.kan_distill_v3_dataset.v1",
+                    "n_examples": len(raw_examples),
+                    "n_positive": sum(1 for e in raw_examples if e["label"] == "injection"),
+                    "n_negative": sum(1 for e in raw_examples if e["label"] == "benign"),
+                    "examples": raw_examples,
+                },
+                indent=2,
+            )
+        )
         _log.info("Dataset saved to %s", _DATASET_PATH)
 
     # Convert to InjectionExample instances.

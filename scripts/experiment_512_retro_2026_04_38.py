@@ -134,12 +134,14 @@ def _count_deferred_to_gpu(results: dict[int, dict]) -> tuple[int, list[int]]:
         verdict = d.get("honest_verdict", "")
         status = d.get("status", "")
         blocked_reason = str(d.get("blocked_reason", ""))
-        if verdict in _GPU_DEFERRED_VERDICTS:
-            deferred_ids.append(eid)
-        elif status in _GPU_DEFERRED_STATUSES and (
-            "CUDA" in blocked_reason
-            or "out of memory" in blocked_reason
-            or "gpu_required" in verdict
+        if (
+            verdict in _GPU_DEFERRED_VERDICTS
+            or status in _GPU_DEFERRED_STATUSES
+            and (
+                "CUDA" in blocked_reason
+                or "out of memory" in blocked_reason
+                or "gpu_required" in verdict
+            )
         ):
             deferred_ids.append(eid)
     deferred_ids = sorted(set(deferred_ids))
@@ -156,6 +158,7 @@ def _assess_credibility_milestones(results: dict[int, dict]) -> dict[str, bool |
       retro_048_resolved, retro_033_closed, retro_038_closed, retro_039_confirmed,
       gpu1_utilization_improved, fr11_live_relay, npu_status
     """
+
     def _get_bool(exp_id: int, key: str, default: bool = False) -> bool:
         val = results.get(exp_id, {}).get(key, default)
         if isinstance(val, bool):
@@ -186,6 +189,7 @@ def _assess_retro_closures(results: dict[int, dict]) -> dict[str, bool]:
     Covers both carry-forward items from .37 and items introduced during .38.
     Missing experiments default to False (not closed).
     """
+
     def _get_bool(exp_id: int, key: str, default: bool = False) -> bool:
         val = results.get(exp_id, {}).get(key, default)
         if isinstance(val, bool):
@@ -246,9 +250,9 @@ def _build_headline_results(results: dict[int, dict]) -> dict:
             "gemma4_quantized": exp502.get("gemma4_quantized", False),
             "vram_forecast_feasible": (
                 # Check if all forecasts in the list showed is_feasible=True
-                all(f.get("is_feasible", False)
-                    for f in exp502.get("vram_forecasts", []))
-                if exp502.get("vram_forecasts") else None
+                all(f.get("is_feasible", False) for f in exp502.get("vram_forecasts", []))
+                if exp502.get("vram_forecasts")
+                else None
             ),
         },
         "live_200q_v4": {
@@ -257,8 +261,7 @@ def _build_headline_results(results: dict[int, dict]) -> dict:
             "honest_verdict": exp503.get("honest_verdict", "missing"),
             "retro_038_closed": exp503.get("retro_038_closed", False),
             "blocked_reason_summary": (
-                exp503.get("blocked_reason", "")[:120]
-                if exp503.get("blocked_reason") else None
+                exp503.get("blocked_reason", "")[:120] if exp503.get("blocked_reason") else None
             ),
         },
         "adversarial_v4": {
@@ -326,23 +329,27 @@ def _build_new_retro_items(
     # that may be stale by the time the model actually loads.  Need just-in-time VRAM check.
     exp502 = results.get(502, {})
     vram_forecasts = exp502.get("vram_forecasts", [])
-    forecasts_feasible = all(f.get("is_feasible", False) for f in vram_forecasts) if vram_forecasts else False
+    forecasts_feasible = (
+        all(f.get("is_feasible", False) for f in vram_forecasts) if vram_forecasts else False
+    )
     if forecasts_feasible and not closures.get("retro_033_closed", False):
-        items.append({
-            "id": "RETRO-051",
-            "description": (
-                "VRAM forecast passes (15 GiB available, 9 GiB required per Exp 501 analysis) "
-                "but runtime OOM still blocked Exps 502/503/504.  The forecast is computed once "
-                "at planning time against a stale VRAM snapshot; by the time the model loads, "
-                "VRAM state has changed.  Fix: perform a just-in-time VRAM check immediately "
-                "before each model load call (not at plan time), and retry once after a "
-                "30-second cool-down if the first load fails.  This converts silent OOM mid-load "
-                "into a fast-fail with actionable RETRO annotation."
-            ),
-            "priority": "CRITICAL",
-            "target_milestone": "2026.04.39",
-            "blocked_retro_items": ["RETRO-033", "RETRO-038", "RETRO-039"],
-        })
+        items.append(
+            {
+                "id": "RETRO-051",
+                "description": (
+                    "VRAM forecast passes (15 GiB available, 9 GiB required per Exp 501 analysis) "
+                    "but runtime OOM still blocked Exps 502/503/504.  The forecast is computed once "
+                    "at planning time against a stale VRAM snapshot; by the time the model loads, "
+                    "VRAM state has changed.  Fix: perform a just-in-time VRAM check immediately "
+                    "before each model load call (not at plan time), and retry once after a "
+                    "30-second cool-down if the first load fails.  This converts silent OOM mid-load "
+                    "into a fast-fail with actionable RETRO annotation."
+                ),
+                "priority": "CRITICAL",
+                "target_milestone": "2026.04.39",
+                "blocked_retro_items": ["RETRO-033", "RETRO-038", "RETRO-039"],
+            }
+        )
 
     # RETRO-052: DualGPU sweep found nothing to patch (n_scripts_patched=0).
     # Either all scripts were already patched from .37's enforcement, or the sweep's
@@ -350,35 +357,39 @@ def _build_new_retro_items(
     n_patched = results.get(505, {}).get("n_scripts_patched", 0)
     n_found = results.get(505, {}).get("n_scripts_found", 0)
     if n_patched == 0:
-        items.append({
-            "id": "RETRO-052",
-            "description": (
-                f"DualGPU sweep (Exp 505) found n_scripts_found={n_found}, "
-                f"n_scripts_patched={n_patched}.  Either all dual-model scripts were "
-                "already patched by .37's harness_patch enforcement, or the sweep's "
-                "detection pattern missed eligible scripts.  GPU 1 utilization remains "
-                "at 0%.  Action: audit sweep detection logic against the live script "
-                "inventory; verify at least one script routes a model to cuda:1; "
-                "run a controlled dual-model experiment that confirms GPU 1 compute."
-            ),
-            "priority": "MEDIUM",
-            "target_milestone": "2026.04.39",
-        })
+        items.append(
+            {
+                "id": "RETRO-052",
+                "description": (
+                    f"DualGPU sweep (Exp 505) found n_scripts_found={n_found}, "
+                    f"n_scripts_patched={n_patched}.  Either all dual-model scripts were "
+                    "already patched by .37's harness_patch enforcement, or the sweep's "
+                    "detection pattern missed eligible scripts.  GPU 1 utilization remains "
+                    "at 0%.  Action: audit sweep detection logic against the live script "
+                    "inventory; verify at least one script routes a model to cuda:1; "
+                    "run a controlled dual-model experiment that confirms GPU 1 compute."
+                ),
+                "priority": "MEDIUM",
+                "target_milestone": "2026.04.39",
+            }
+        )
 
     # RETRO-049 carry-forward (NUP Probe still below Tier 0c threshold)
     if not closures.get("retro_049_closed", False):
         auroc = results.get(507, {}).get("auroc", 0.0)
-        items.append({
-            "id": "RETRO-049",
-            "description": (
-                f"NUP Probe v3 AUC = {auroc:.3f} (threshold 0.700 for Tier 0c promotion).  "
-                "v3 feature enrichment did not improve over v2.  Next step: redesign the "
-                "feature extraction layer rather than adding more features to the same "
-                "aggregation approach.  Consider contrastive training objectives."
-            ),
-            "priority": "MEDIUM",
-            "target_milestone": "2026.04.39",
-        })
+        items.append(
+            {
+                "id": "RETRO-049",
+                "description": (
+                    f"NUP Probe v3 AUC = {auroc:.3f} (threshold 0.700 for Tier 0c promotion).  "
+                    "v3 feature enrichment did not improve over v2.  Next step: redesign the "
+                    "feature extraction layer rather than adding more features to the same "
+                    "aggregation approach.  Consider contrastive training objectives."
+                ),
+                "priority": "MEDIUM",
+                "target_milestone": "2026.04.39",
+            }
+        )
 
     return items
 
@@ -409,7 +420,9 @@ def _build_meta_reflection(
         )
     elif retro_048_resolved and retro_033_closed:
         vram_status = "FULLY_RESOLVED"
-        vram_note = "RETRO-048 resolved and RETRO-033 closed.  Live benchmarks now run successfully."
+        vram_note = (
+            "RETRO-048 resolved and RETRO-033 closed.  Live benchmarks now run successfully."
+        )
     else:
         vram_status = "NOT_RESOLVED"
         vram_note = "RETRO-048 still open.  Quantized model not confirmed within VRAM budget."
@@ -486,9 +499,7 @@ def _query_gpu_state() -> dict:
             mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
             util = pynvml.nvmlDeviceGetUtilizationRates(handle)
             try:
-                temp = pynvml.nvmlDeviceGetTemperature(
-                    handle, pynvml.NVML_TEMPERATURE_GPU
-                )
+                temp = pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU)
             except Exception:
                 temp = None
 
@@ -509,12 +520,13 @@ def _query_gpu_state() -> dict:
             except Exception:
                 procs = []
             for p in procs:
-                gpu_state["active_processes"].append({
-                    "pid": p.pid,
-                    "gpu_index": i,
-                    "vram_mb": p.usedGpuMemory // (1024 * 1024)
-                    if p.usedGpuMemory else 0,
-                })
+                gpu_state["active_processes"].append(
+                    {
+                        "pid": p.pid,
+                        "gpu_index": i,
+                        "vram_mb": p.usedGpuMemory // (1024 * 1024) if p.usedGpuMemory else 0,
+                    }
+                )
 
         pynvml.nvmlShutdown()
 
@@ -555,7 +567,8 @@ def main() -> None:
         missing_exps = sorted(set(EXP_RESULT_PATHS.keys()) - set(results.keys()))
         _log.info(
             "Loaded %d results; missing: %s",
-            len(results), missing_exps if missing_exps else "none",
+            len(results),
+            missing_exps if missing_exps else "none",
         )
 
         # --- Step 2: Assess credibility milestones ---
@@ -589,13 +602,13 @@ def main() -> None:
         new_retro_items = _build_new_retro_items(closures, results, n_deferred)
         _log.info(
             "%d new RETRO items for .39: %s",
-            len(new_retro_items), [r["id"] for r in new_retro_items],
+            len(new_retro_items),
+            [r["id"] for r in new_retro_items],
         )
 
         # --- Step 9: credibility_milestone_reached ---
-        credibility_milestone_reached = (
-            closures.get("retro_033_closed", False)
-            or closures.get("retro_038_closed", False)
+        credibility_milestone_reached = closures.get("retro_033_closed", False) or closures.get(
+            "retro_038_closed", False
         )
         _log.info("credibility_milestone_reached=%s", credibility_milestone_reached)
 

@@ -35,7 +35,12 @@ import numpy as np
 
 from scripts.experiment_template import ExperimentTemplate
 from python.carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog
-from python.carnot.pipeline.jepa_v16 import JEPAv16, build_v16_training_data, _text_embedding, EMBED_DIM
+from python.carnot.pipeline.jepa_v16 import (
+    JEPAv16,
+    build_v16_training_data,
+    _text_embedding,
+    EMBED_DIM,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -155,7 +160,9 @@ def _compute_auc(scores: list[float], labels: list[int]) -> float:
     return count / (n_pos * n_neg)
 
 
-def _platt_calibrate(scores: list[float], labels: list[int], n_steps: int = 500) -> tuple[float, float]:
+def _platt_calibrate(
+    scores: list[float], labels: list[int], n_steps: int = 500
+) -> tuple[float, float]:
     """Fit Platt scaling (logistic calibration) via gradient descent.
 
     **What is Platt scaling?**
@@ -261,7 +268,9 @@ def main() -> None:
     )
     tmpl.setup()
 
-    watchdog = ExperimentTimeoutWatchdog(698, timeout_minutes=60, result_path="results/experiment_698_jepa_v16.json")
+    watchdog = ExperimentTimeoutWatchdog(
+        698, timeout_minutes=60, result_path="results/experiment_698_jepa_v16.json"
+    )
     watchdog.start()
 
     try:
@@ -367,7 +376,9 @@ def _run(tmpl: ExperimentTemplate) -> None:
             "n_triplets": train_log["n_triplets"],
             "n_train_pairs": train_log["n_train_pairs"],
             "infonce_loss_final": round(train_log["infonce_loss"], 4),
-            "train_loss_final": round(train_log["train_losses"][-1], 4) if train_log["train_losses"] else None,
+            "train_loss_final": round(train_log["train_losses"][-1], 4)
+            if train_log["train_losses"]
+            else None,
             "n_ood_samples": len(ood_embeddings),
             "v15_baseline_auc": v15_baseline_auc,
         },

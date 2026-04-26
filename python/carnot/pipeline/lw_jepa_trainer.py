@@ -30,11 +30,11 @@ Spec: REQ-LEARN-046, REQ-LEARN-047, SCENARIO-LEARN-074, SCENARIO-LEARN-075
 
 from __future__ import annotations
 
+import contextlib
 import math
 from typing import Any
 
 import numpy as np
-
 
 # ---------------------------------------------------------------------------
 # gaussian_kl_regularization — the closed-form KL divergence
@@ -76,7 +76,7 @@ def gaussian_kl_regularization(
     mean = np.asarray(z_mean, dtype=np.float64)
     log_var = np.asarray(z_log_var, dtype=np.float64)
     # 0.5 * sum(exp(log_var) + mean^2 - 1 - log_var)
-    kl = 0.5 * float(np.sum(np.exp(log_var) + mean ** 2 - 1.0 - log_var))
+    kl = 0.5 * float(np.sum(np.exp(log_var) + mean**2 - 1.0 - log_var))
     return kl
 
 
@@ -263,7 +263,12 @@ class LeWorldModelJEPATrainer:
                 z_mean = predicted[: len(actual)]
             z_log_var = np.zeros_like(z_mean)
 
-            total += self.loss.total_loss(predicted[:len(actual)], actual[:len(predicted)] if len(predicted) <= len(actual) else actual, z_mean, z_log_var)
+            total += self.loss.total_loss(
+                predicted[: len(actual)],
+                actual[: len(predicted)] if len(predicted) <= len(actual) else actual,
+                z_mean,
+                z_log_var,
+            )
 
         return total / len(pairs)
 
@@ -350,27 +355,23 @@ class LeWorldModelJEPATrainer:
         """
         # Run one epoch of predictor training to warm up the model first.
         if hasattr(self.predictor_model, "train"):
-            try:
+            with contextlib.suppress(Exception):
                 self.predictor_model.train(pairs, n_epochs=1)
-            except Exception:
-                pass
 
         loss_history: list[float] = []
         best_loss = math.inf
         no_improvement_count = 0
         converged = False
 
-        for epoch in range(max_epochs):
+        for _epoch in range(max_epochs):
             # One LeWorldModel loss measurement (the KL diagnostic).
             epoch_loss = self.train_epoch(pairs)
             loss_history.append(epoch_loss)
 
             # Also run one internal predictor epoch to update its parameters.
             if hasattr(self.predictor_model, "train"):
-                try:
+                with contextlib.suppress(Exception):
                     self.predictor_model.train(pairs, n_epochs=1)
-                except Exception:
-                    pass
 
             # Patience check: has loss improved by more than 1e-6?
             if epoch_loss < best_loss - 1e-6:

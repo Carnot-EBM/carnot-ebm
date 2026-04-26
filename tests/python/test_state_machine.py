@@ -628,9 +628,7 @@ class TestMultiStepIntegration:
 
         pipeline = MagicMock(spec=VerifyRepairPipeline)
         # step 0, step 1, step 2 (before rollback), step A, step B (after rollback)
-        pipeline.extract_constraints.side_effect = [
-            [cr], [cr], [cr], [cr], [cr]
-        ]
+        pipeline.extract_constraints.side_effect = [[cr], [cr], [cr], [cr], [cr]]
         pipeline.verify.side_effect = [vr, vr, vr, vr, vr]
 
         machine = ConstraintStateMachine(pipeline=pipeline)

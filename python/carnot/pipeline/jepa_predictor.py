@@ -54,7 +54,6 @@ Spec: REQ-VERIFY-003, REQ-JEPA-001
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any
 
@@ -473,7 +472,7 @@ class JEPAViolationPredictor:
         val_losses: list[float] = []
 
         # ---- 4. Training loop ----
-        for epoch in range(n_epochs):
+        for _epoch in range(n_epochs):
             # Shuffle training set each epoch.
             perm = rng.permutation(n_train)
             X_shuf = X_train[perm]
@@ -485,9 +484,7 @@ class JEPAViolationPredictor:
                 end = min(start + batch_size, n_train)
                 x_b = jnp.asarray(X_shuf[start:end])
                 y_b = jnp.asarray(Y_shuf[start:end])
-                self._params, opt_state, batch_loss = _step(
-                    self._params, opt_state, x_b, y_b
-                )
+                self._params, opt_state, batch_loss = _step(self._params, opt_state, x_b, y_b)
                 epoch_loss += float(batch_loss)
                 n_batches += 1
 

@@ -326,6 +326,7 @@ HALLUCINATED_COT_PAIRS: list[list[str]] = [
 # Build reference set from correct CoT steps (flattened)
 # ---------------------------------------------------------------------------
 
+
 def build_reference_steps(correct_pairs: list[list[str]]) -> list[str]:
     """Flatten all correct CoT steps into a single reference list.
 
@@ -347,9 +348,12 @@ def build_reference_steps(correct_pairs: list[list[str]]) -> list[str]:
 # AUC computation
 # ---------------------------------------------------------------------------
 
-def compute_auc(probe: HalluSAEGeometricProbe,
-                correct_pairs: list[list[str]],
-                hallucinated_pairs: list[list[str]]) -> float:
+
+def compute_auc(
+    probe: HalluSAEGeometricProbe,
+    correct_pairs: list[list[str]],
+    hallucinated_pairs: list[list[str]],
+) -> float:
     """Compute AUC-ROC for the probe on 50 synthetic pairs.
 
     **For engineers:**
@@ -389,6 +393,7 @@ def compute_auc(probe: HalluSAEGeometricProbe,
 # ---------------------------------------------------------------------------
 # Main experiment
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Experiment 863: HalluSAEGeometricProbe Tier 0i benchmark."""

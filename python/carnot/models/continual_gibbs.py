@@ -68,7 +68,6 @@ from dataclasses import dataclass, field
 
 import jax
 import jax.numpy as jnp
-import jax.random as jrandom
 
 from carnot.models.gibbs import GibbsConfig, GibbsModel, _apply_activation
 

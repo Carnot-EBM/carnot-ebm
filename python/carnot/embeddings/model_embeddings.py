@@ -45,8 +45,7 @@ Spec: REQ-EMBED-001
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Optional
+from dataclasses import dataclass
 
 import jax.numpy as jnp
 
@@ -84,9 +83,7 @@ class ModelEmbeddingConfig:
     max_length: int = 512
 
 
-def extract_embedding(
-    code: str, config: Optional[ModelEmbeddingConfig] = None
-) -> Optional[jnp.ndarray]:
+def extract_embedding(code: str, config: ModelEmbeddingConfig | None = None) -> jnp.ndarray | None:
     """Extract a semantic embedding vector from a code snippet.
 
     **Researcher summary:**

@@ -30,6 +30,7 @@
 
 Spec: REQ-VERIFY-173, REQ-VERIFY-174, SCENARIO-VERIFY-227, SCENARIO-VERIFY-228
 """
+
 from __future__ import annotations
 
 import json
@@ -96,14 +97,16 @@ def main() -> None:
         if discriminating:
             n_discriminating += 1
 
-        pair_results.append({
-            "E_violation": res_v.E_total,
-            "E_correct": res_c.E_total,
-            "E_field_violation": res_v.E_field,
-            "E_field_correct": res_c.E_field,
-            "h_norm": res_v.h_norm,
-            "discriminating": discriminating,
-        })
+        pair_results.append(
+            {
+                "E_violation": res_v.E_total,
+                "E_correct": res_c.E_total,
+                "E_field_violation": res_v.E_field,
+                "E_field_correct": res_c.E_field,
+                "h_norm": res_v.h_norm,
+                "discriminating": discriminating,
+            }
+        )
 
     discrimination_rate = n_discriminating / N_PAIRS
 
@@ -155,7 +158,9 @@ def main() -> None:
     out_path = Path(DELIVERABLE)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(artifact, indent=2))
-    print(f"Exp {EXP_ID}: {honest_verdict} | discrimination_rate={discrimination_rate:.2f} | legacy_delta={legacy_delta:.6f}")
+    print(
+        f"Exp {EXP_ID}: {honest_verdict} | discrimination_rate={discrimination_rate:.2f} | legacy_delta={legacy_delta:.6f}"
+    )
     print(f"Written: {DELIVERABLE}")
 
     tmpl.assert_deliverable_written()

@@ -42,7 +42,8 @@ def main() -> int:
     print(f"\nLoading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         torch_dtype=torch.float16 if device == "cuda" else None,
     )
@@ -109,7 +110,9 @@ def main() -> int:
         prompt = f"Answer briefly and factually. {question}"
         messages = [{"role": "user", "content": prompt}]
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
         inputs = tokenizer(text, return_tensors="pt")
@@ -118,8 +121,9 @@ def main() -> int:
         prompt_len = inputs["input_ids"].shape[1]
 
         with torch.no_grad():
-            outputs = model.generate(**inputs, max_new_tokens=80, do_sample=False,
-                                     pad_token_id=tokenizer.eos_token_id)
+            outputs = model.generate(
+                **inputs, max_new_tokens=80, do_sample=False, pad_token_id=tokenizer.eos_token_id
+            )
 
         gen_ids = outputs[0, prompt_len:]
         response = tokenizer.decode(gen_ids, skip_special_tokens=True)
@@ -139,30 +143,46 @@ def main() -> int:
             is_correct = expected.lower() in response.lower()
         else:
             # For trick questions, check if model hedges/refuses
-            hedge_words = ["no one", "never", "fictional", "not real", "doesn't exist",
-                           "hasn't", "no person", "nobody", "not a real", "impossible",
-                           "no such", "didn't", "not possible"]
+            hedge_words = [
+                "no one",
+                "never",
+                "fictional",
+                "not real",
+                "doesn't exist",
+                "hasn't",
+                "no person",
+                "nobody",
+                "not a real",
+                "impossible",
+                "no such",
+                "didn't",
+                "not possible",
+            ]
             is_correct = any(w in response.lower() for w in hedge_words)
 
         # EBM verdict: lower energy = more likely correct
         # Use a simple threshold (this is the practical question: what threshold?)
         ebm_says_ok = mean_energy < 0  # Rough heuristic
 
-        results.append({
-            "question": question,
-            "response": response[:100],
-            "difficulty": difficulty,
-            "actually_correct": is_correct,
-            "mean_energy": mean_energy,
-            "ebm_says_ok": ebm_says_ok,
-            "ebm_agrees": (ebm_says_ok == is_correct),
-            "n_tokens": len(gen_ids),
-        })
+        results.append(
+            {
+                "question": question,
+                "response": response[:100],
+                "difficulty": difficulty,
+                "actually_correct": is_correct,
+                "mean_energy": mean_energy,
+                "ebm_says_ok": ebm_says_ok,
+                "ebm_agrees": (ebm_says_ok == is_correct),
+                "n_tokens": len(gen_ids),
+            }
+        )
 
         icon = "CORRECT" if is_correct else "WRONG"
         ebm_icon = "low" if ebm_says_ok else "HIGH"
         agree = "agree" if (ebm_says_ok == is_correct) else "DISAGREE"
-        print(f"  Q{i+1} [{difficulty:6s}] {icon:7s} energy={mean_energy:+.3f} ({ebm_icon}) [{agree}]")
+        print(
+            f"  Q{i + 1} [{difficulty:6s}] {icon:7s} energy={mean_energy:+.3f} ({ebm_icon}) [{agree}]"
+        )
         print(f"    Q: {question}")
         print(f"    A: {response[:80]}")
         print()
@@ -181,7 +201,7 @@ def main() -> int:
     wrong_energies = [r["mean_energy"] for r in results if not r["actually_correct"]]
 
     print(f"  Model accuracy: {n_correct}/{n_total}")
-    print(f"  EBM agreement:  {n_ebm_agree}/{n_total} ({n_ebm_agree/n_total:.0%})")
+    print(f"  EBM agreement:  {n_ebm_agree}/{n_total} ({n_ebm_agree / n_total:.0%})")
 
     if correct_energies:
         print(f"  Correct answer mean energy: {np.mean(correct_energies):+.4f}")

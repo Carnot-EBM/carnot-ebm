@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -351,9 +351,7 @@ def build_bottlenecks() -> list[dict]:
                 "pct_total": pct,
                 "root_cause": root.get("root_cause", "root cause not documented"),
                 "category": root.get("category", "unknown"),
-                "fix_implemented_this_milestone": root.get(
-                    "fix_implemented_this_milestone", False
-                ),
+                "fix_implemented_this_milestone": root.get("fix_implemented_this_milestone", False),
             }
         )
     return bottlenecks
@@ -530,7 +528,7 @@ def append_conductor_log_entry(artifact_path: Path, duration_min: float) -> None
     """
     if not CONDUCTOR_LOG.exists():
         return
-    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
     entry = (
         f"| {timestamp} | Exp 319: Operational retrospective for milestone "
         f"2026.04.23 | OK | {artifact_path.name} written; "
@@ -550,7 +548,7 @@ def append_conductor_log_entry(artifact_path: Path, duration_min: float) -> None
 
 def main() -> None:
     """Generate the operational retrospective for milestone 2026.04.23."""
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     n_experiments = len(_EXPERIMENT_WALL_TIMES)
     total_wall_time = sum(_EXPERIMENT_WALL_TIMES.values())

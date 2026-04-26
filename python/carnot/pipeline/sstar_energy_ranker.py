@@ -33,7 +33,7 @@ Spec: REQ-RANK-001, REQ-RANK-002, SCENARIO-RANK-001, SCENARIO-RANK-002
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from carnot.verify.python_types import code_to_embedding
 

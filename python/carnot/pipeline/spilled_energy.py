@@ -56,17 +56,11 @@ Spec: REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-002
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import jax
 import jax.numpy as jnp
 
-from carnot.verify.constraint import BaseConstraint
 from carnot.pipeline.extract import ConstraintExtractor, ConstraintResult  # noqa: F401
-
-if TYPE_CHECKING:
-    pass
-
+from carnot.verify.constraint import BaseConstraint
 
 # ---------------------------------------------------------------------------
 # Default configuration constants
@@ -129,9 +123,7 @@ class SpilledEnergyConstraint(BaseConstraint):
                 considered satisfied. Defaults to DEFAULT_SPILLED_THRESHOLD.
         """
         if spilled_energy_value < 0.0:
-            raise ValueError(
-                f"spilled_energy_value must be ≥ 0.0, got {spilled_energy_value}"
-            )
+            raise ValueError(f"spilled_energy_value must be ≥ 0.0, got {spilled_energy_value}")
         self._value = spilled_energy_value
         self._threshold = threshold
 

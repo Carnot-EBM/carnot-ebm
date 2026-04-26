@@ -50,7 +50,7 @@ from carnot.stores.memory_bank_compressor import MemoryBankCompressor  # noqa: E
 N_SESSIONS = 10
 CONSTRAINTS_PER_SESSION = 100
 EMBEDDING_DIM = 64
-N_CLUSTERS_TRUE = 5       # synthetic semantic clusters in the data
+N_CLUSTERS_TRUE = 5  # synthetic semantic clusters in the data
 K_COMPRESSION = 32
 N_HELD_OUT = 50
 TOP_K_RETRIEVAL = 5
@@ -61,6 +61,7 @@ SEED = 42
 # ---------------------------------------------------------------------------
 # Synthetic data helpers
 # ---------------------------------------------------------------------------
+
 
 def _build_synthetic_store(rng: np.random.Generator) -> EmbeddingConstraintStore:
     """Create a 10-session constraint store with N_CLUSTERS_TRUE semantic clusters.
@@ -119,7 +120,10 @@ def _build_held_out(
 # AUROC measurement
 # ---------------------------------------------------------------------------
 
-def _measure_auroc(store: EmbeddingConstraintStore, queries: np.ndarray, gt_labels: list[bool]) -> float:
+
+def _measure_auroc(
+    store: EmbeddingConstraintStore, queries: np.ndarray, gt_labels: list[bool]
+) -> float:
     """Compute retrieval AUROC for a store against held-out queries.
 
     For each query:
@@ -158,6 +162,7 @@ def _measure_auroc(store: EmbeddingConstraintStore, queries: np.ndarray, gt_labe
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     tmpl = ExperimentTemplate(
@@ -218,8 +223,10 @@ def main() -> None:
     out_path = Path("results/experiment_865_constraint_memory_compression.json")
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(artifact, indent=2))
-    print(f"[Exp 865] AUROC before={auroc_before:.4f} after={auroc_after:.4f} "
-          f"ratio={ratio:.2f}x  verdict={honest_verdict}")
+    print(
+        f"[Exp 865] AUROC before={auroc_before:.4f} after={auroc_after:.4f} "
+        f"ratio={ratio:.2f}x  verdict={honest_verdict}"
+    )
 
     tmpl.assert_deliverable_written()
 

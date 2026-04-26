@@ -35,11 +35,9 @@ Spec: REQ-INFRA-054, REQ-INFRA-055, REQ-INFRA-056,
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Optional
+from dataclasses import dataclass
 
 import yaml
-
 
 # ---------------------------------------------------------------------------
 # VRAMForecast
@@ -73,7 +71,7 @@ class VRAMForecast:
     is_feasible: bool
     required_gb: float
     available_gb: float
-    blocking_experiment: Optional[str]
+    blocking_experiment: str | None
 
     @property
     def headroom_gb(self) -> float:

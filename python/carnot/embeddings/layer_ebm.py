@@ -55,7 +55,7 @@ Spec: REQ-INFER-015
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any
 
 import jax
 import jax.numpy as jnp
@@ -179,9 +179,7 @@ def identify_critical_layers(
         raise ValueError("Both activation dicts must be non-empty")
 
     # Find layers present in both dicts.
-    common_layers = sorted(
-        set(activations_correct.keys()) & set(activations_hallucinated.keys())
-    )
+    common_layers = sorted(set(activations_correct.keys()) & set(activations_hallucinated.keys()))
     if not common_layers:
         raise ValueError("No common layers between correct and hallucinated activations")
 

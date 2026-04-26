@@ -35,8 +35,10 @@ Spec: REQ-LEARN-076, REQ-LEARN-077,
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Callable
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Data types
@@ -157,7 +159,7 @@ class FLIPRewardCalibrator:
 
         def _dot(a: object, b: object) -> float:
             try:
-                return float(sum(float(ai) * float(bi) for ai, bi in zip(a, b)))  # type: ignore[call-overload]
+                return float(sum(float(ai) * float(bi) for ai, bi in zip(a, b, strict=False)))  # type: ignore[call-overload]
             except TypeError:
                 return float(a) * float(b)  # type: ignore[arg-type]
 

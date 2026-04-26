@@ -48,12 +48,14 @@ class RequestSizeLimitMiddleware(BaseHTTPMiddleware):
         content_length = request.headers.get("content-length")
         if content_length and int(content_length) > MAX_REQUEST_BODY_BYTES:
             return Response(
-                content=json.dumps({
-                    "error": {
-                        "message": f"Request body too large (max {MAX_REQUEST_BODY_BYTES} bytes)",
-                        "type": "invalid_request_error",
+                content=json.dumps(
+                    {
+                        "error": {
+                            "message": f"Request body too large (max {MAX_REQUEST_BODY_BYTES} bytes)",
+                            "type": "invalid_request_error",
+                        }
                     }
-                }),
+                ),
                 status_code=413,
                 media_type="application/json",
             )
@@ -194,11 +196,14 @@ def _build_claude_cmd(
 
     # Output format
     if stream:
-        cmd.extend([
-            "--output-format", "stream-json",
-            "--verbose",
-            "--include-partial-messages",
-        ])
+        cmd.extend(
+            [
+                "--output-format",
+                "stream-json",
+                "--verbose",
+                "--include-partial-messages",
+            ]
+        )
     else:
         cmd.extend(["--output-format", "json"])
 
@@ -257,7 +262,8 @@ def _make_response(
                 "finish_reason": finish_reason,
             }
         ],
-        "usage": usage or {
+        "usage": usage
+        or {
             "prompt_tokens": 0,
             "completion_tokens": 0,
             "total_tokens": 0,
@@ -291,10 +297,12 @@ def _make_chunk(
 @app.get("/v1/models")
 async def list_models() -> JSONResponse:
     """List available models (OpenAI-compatible)."""
-    return JSONResponse({
-        "object": "list",
-        "data": AVAILABLE_MODELS,
-    })
+    return JSONResponse(
+        {
+            "object": "list",
+            "data": AVAILABLE_MODELS,
+        }
+    )
 
 
 @app.get("/v1/models/{model_id}")
@@ -395,9 +403,7 @@ async def _run_claude(
             openai_usage = {
                 "prompt_tokens": usage.get("input_tokens", 0),
                 "completion_tokens": usage.get("output_tokens", 0),
-                "total_tokens": (
-                    usage.get("input_tokens", 0) + usage.get("output_tokens", 0)
-                ),
+                "total_tokens": (usage.get("input_tokens", 0) + usage.get("output_tokens", 0)),
             }
         except json.JSONDecodeError:
             # If not JSON, treat as plain text
@@ -408,7 +414,12 @@ async def _run_claude(
 
     except FileNotFoundError:
         return JSONResponse(
-            {"error": {"message": f"Claude CLI not found at '{CLAUDE_BIN}'", "type": "server_error"}},
+            {
+                "error": {
+                    "message": f"Claude CLI not found at '{CLAUDE_BIN}'",
+                    "type": "server_error",
+                }
+            },
             status_code=500,
         )
     except Exception as e:
@@ -479,9 +490,7 @@ async def _stream_claude(
         await proc.wait()
 
     except FileNotFoundError:
-        error_chunk = {
-            "error": {"message": f"Claude CLI not found at '{CLAUDE_BIN}'"}
-        }
+        error_chunk = {"error": {"message": f"Claude CLI not found at '{CLAUDE_BIN}'"}}
         yield f"data: {json.dumps(error_chunk)}\n\n"
         yield "data: [DONE]\n\n"
     except Exception as e:

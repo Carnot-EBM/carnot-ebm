@@ -144,9 +144,7 @@ def load_eorm_model(seed: int = 374) -> tuple[EORMModel, str]:
         return model, "exp359_real"
 
     # Fresh model — random weights, AUC will start near 0.5.
-    model = EORMModel(
-        embed_dim=64, n_heads=4, n_layers=2, max_seq_len=128, vocab_size=512, key=key
-    )
+    model = EORMModel(embed_dim=64, n_heads=4, n_layers=2, max_seq_len=128, vocab_size=512, key=key)
     return model, "synthetic_fallback"
 
 
@@ -190,15 +188,12 @@ def load_gsm8k_questions(n: int = 100) -> tuple[list[str], list[str]]:
         from datasets import load_dataset  # type: ignore[import]  # noqa: PLC0415
     except ImportError as exc:
         raise ImportError(
-            "The 'datasets' library is required for Exp 374.  "
-            "Install with: pip install datasets"
+            "The 'datasets' library is required for Exp 374.  Install with: pip install datasets"
         ) from exc
 
     dataset = load_dataset("gsm8k", "main", split="test")
     if len(dataset) < n:
-        raise RuntimeError(
-            f"GSM8K test split has only {len(dataset)} questions; need {n}."
-        )
+        raise RuntimeError(f"GSM8K test split has only {len(dataset)} questions; need {n}.")
 
     questions: list[str] = []
     answers: list[str] = []
@@ -306,9 +301,9 @@ def is_correct_answer(response: str, reference: str) -> bool:
 # ---------------------------------------------------------------------------
 
 
-def build_components(eorm_model: EORMModel, seed: int = 374) -> tuple[
-    ThreeTierPipeline, ConstraintTemplateLibrary, PerModelFPTracker
-]:
+def build_components(
+    eorm_model: EORMModel, seed: int = 374
+) -> tuple[ThreeTierPipeline, ConstraintTemplateLibrary, PerModelFPTracker]:
     """Build pipeline, template library, and FP tracker for the relay.
 
     **Detailed explanation for engineers:**
@@ -399,6 +394,7 @@ def run_live_batch(
 
     Spec: SCENARIO-LEARN-050
     """
+
     # BatchedInferenceRunner expects runner(prompt: str) -> str (single call).
     # Wrap the batch pipeline_fn so each question is called individually.
     def _single_infer(prompt: str) -> str:
@@ -409,10 +405,7 @@ def run_live_batch(
     inference_results = bir.run_batch(questions)
 
     responses = [r.response for r in inference_results]
-    ground_truth = [
-        is_correct_answer(resp, ref)
-        for resp, ref in zip(responses, references)
-    ]
+    ground_truth = [is_correct_answer(resp, ref) for resp, ref in zip(responses, references)]
     return responses, ground_truth
 
 
@@ -465,7 +458,7 @@ def _load_model_pipeline(model_id: str) -> Any:
         "text-generation",
         model=hf_id,
         trust_remote_code=trust_remote,
-        device_map={'': 'cuda:1'},
+        device_map={"": "cuda:1"},
         max_new_tokens=256,
     )
 
@@ -640,9 +633,7 @@ def main() -> None:
         batch_refs = answers_all[start:end]
 
         # Run live inference and evaluate correctness.
-        responses, ground_truth = run_live_batch(
-            batch_questions, batch_refs, MODEL_ID, infer_fn
-        )
+        responses, ground_truth = run_live_batch(batch_questions, batch_refs, MODEL_ID, infer_fn)
         batch_responses.append(responses)
 
         result = relay.run_batch(batch_questions, ground_truth, MODEL_ID)

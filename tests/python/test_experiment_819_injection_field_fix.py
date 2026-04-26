@@ -5,6 +5,7 @@ from correct responses, unlike the legacy diagonal injection method.
 
 Spec: REQ-VERIFY-173, REQ-VERIFY-174, SCENARIO-VERIFY-227, SCENARIO-VERIFY-228
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -57,6 +58,7 @@ def spins_correct() -> np.ndarray:
 # REQ-VERIFY-173: structure and formula
 # ---------------------------------------------------------------------------
 
+
 def test_returns_named_tuple(injector, identity_J, constraint_embeddings, spins_violation):
     """compute_energy_with_external_field returns an ExternalFieldEnergyResult namedtuple.
 
@@ -82,7 +84,9 @@ def test_e_ising_formula(injector, identity_J, spins_correct):
     assert abs(result.E_ising - expected_e_ising) < 1e-10
 
 
-def test_e_total_is_e_ising_plus_e_field(injector, identity_J, constraint_embeddings, spins_violation):
+def test_e_total_is_e_ising_plus_e_field(
+    injector, identity_J, constraint_embeddings, spins_violation
+):
     """E_total == E_ising + E_field.
 
     Spec: REQ-VERIFY-173-4
@@ -96,6 +100,7 @@ def test_e_total_is_e_ising_plus_e_field(injector, identity_J, constraint_embedd
 # ---------------------------------------------------------------------------
 # REQ-VERIFY-174: discrimination guarantee
 # ---------------------------------------------------------------------------
+
 
 def test_violation_has_higher_energy_than_correct(
     injector, identity_J, constraint_embeddings, spins_violation, spins_correct
@@ -140,9 +145,7 @@ def test_discrimination_rate_over_10_pairs(injector, identity_J):
             n_discriminating += 1
 
     discrimination_rate = n_discriminating / 10
-    assert discrimination_rate >= 0.8, (
-        f"discrimination_rate {discrimination_rate:.2f} < 0.80"
-    )
+    assert discrimination_rate >= 0.8, f"discrimination_rate {discrimination_rate:.2f} < 0.80"
 
 
 def test_zero_embeddings_no_field(injector, identity_J, spins_violation):
@@ -151,9 +154,7 @@ def test_zero_embeddings_no_field(injector, identity_J, spins_violation):
     Spec: REQ-VERIFY-174-2, SCENARIO-VERIFY-228
     """
     zero_emb = [[0.0] * EMB_DIM]
-    result = injector.compute_energy_with_external_field(
-        identity_J, spins_violation, zero_emb
-    )
+    result = injector.compute_energy_with_external_field(identity_J, spins_violation, zero_emb)
     assert result.h_norm == 0.0
     assert abs(result.E_total - result.E_ising) < 1e-10
 
@@ -172,6 +173,7 @@ def test_empty_embeddings_no_field(injector, identity_J, spins_correct):
 # project_to_spin_bias: non-negative clipping
 # ---------------------------------------------------------------------------
 
+
 def test_project_to_spin_bias_non_negative(injector, constraint_embeddings):
     """project_to_spin_bias output is non-negative after clipping.
 
@@ -188,6 +190,7 @@ def test_project_to_spin_bias_non_negative(injector, constraint_embeddings):
 # ---------------------------------------------------------------------------
 # Legacy diagonal injection: constant energy shift (delta ~= 0)
 # ---------------------------------------------------------------------------
+
 
 def test_legacy_diagonal_constant_shift(injector, identity_J, constraint_embeddings):
     """Legacy inject_into_coupling_matrix produces ~0 delta between violation and correct.

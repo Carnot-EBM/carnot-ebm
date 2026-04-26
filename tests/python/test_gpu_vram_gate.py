@@ -39,7 +39,7 @@ class TestVRAMStatus:
         s = VRAMStatus(
             gpu_index=0,
             total_mb=24576,
-            used_mb=23000,   # ~93.6% used
+            used_mb=23000,  # ~93.6% used
             free_mb=1576,
             utilization_pct=0,
         )
@@ -61,7 +61,7 @@ class TestVRAMStatus:
         s = VRAMStatus(
             gpu_index=0,
             total_mb=24576,
-            used_mb=10000,   # ~40.7% used
+            used_mb=10000,  # ~40.7% used
             free_mb=14576,
             utilization_pct=0,
         )
@@ -110,14 +110,15 @@ class TestCheckVram:
 
     def test_returns_vram_status_from_nvml(self):
         mem_mock = MagicMock()
-        mem_mock.total = 24 * 1024 * 1024 * 1024   # 24 GB in bytes
-        mem_mock.used = 8 * 1024 * 1024 * 1024    # 8 GB
-        mem_mock.free = 16 * 1024 * 1024 * 1024   # 16 GB
+        mem_mock.total = 24 * 1024 * 1024 * 1024  # 24 GB in bytes
+        mem_mock.used = 8 * 1024 * 1024 * 1024  # 8 GB
+        mem_mock.free = 16 * 1024 * 1024 * 1024  # 16 GB
         util_mock = MagicMock()
         util_mock.gpu = 50
 
         with patch.dict("sys.modules", {"pynvml": MagicMock()}):
             import pynvml
+
             pynvml.nvmlInit = MagicMock()
             pynvml.nvmlDeviceGetHandleByIndex = MagicMock(return_value="handle")
             pynvml.nvmlDeviceGetMemoryInfo = MagicMock(return_value=mem_mock)
@@ -180,6 +181,7 @@ class TestKillZombies:
             psutil.Process = MagicMock(return_value=psutil_proc)
 
             import os
+
             with patch("os.kill") as mock_kill:
                 gate = GPUVRAMGate(auto_kill=True)
                 count = gate.kill_zombies(0)
@@ -200,9 +202,7 @@ class TestWaitForVram:
         gate = GPUVRAMGate(min_free_gb=8.0, wait_seconds=60)
         # Patch check_vram to return plenty of free VRAM
         gate.check_vram = MagicMock(
-            return_value=VRAMStatus(
-                gpu_index=0, total_mb=24576, used_mb=4096, free_mb=20480
-            )
+            return_value=VRAMStatus(gpu_index=0, total_mb=24576, used_mb=4096, free_mb=20480)
         )
         result = gate.wait_for_vram(0)
         assert result is True
@@ -222,9 +222,7 @@ class TestWaitForVram:
         gate = GPUVRAMGate(min_free_gb=8.0, wait_seconds=1)
         # Always returns insufficient VRAM
         gate.check_vram = MagicMock(
-            return_value=VRAMStatus(
-                gpu_index=0, total_mb=24576, used_mb=23000, free_mb=1576
-            )
+            return_value=VRAMStatus(gpu_index=0, total_mb=24576, used_mb=23000, free_mb=1576)
         )
         with patch("time.sleep"):  # speed up the test
             result = gate.wait_for_vram(0)
@@ -263,9 +261,7 @@ class TestGPUVRAMGateContextManager:
         gate = GPUVRAMGate(min_free_gb=8.0)
         gate._n_gpus = MagicMock(return_value=1)
         gate.check_vram = MagicMock(
-            return_value=VRAMStatus(
-                gpu_index=0, total_mb=24576, used_mb=4096, free_mb=20480
-            )
+            return_value=VRAMStatus(gpu_index=0, total_mb=24576, used_mb=4096, free_mb=20480)
         )
         gate.kill_zombies = MagicMock()
         gate.wait_for_vram = MagicMock()
@@ -279,9 +275,7 @@ class TestGPUVRAMGateContextManager:
         gate = GPUVRAMGate(min_free_gb=8.0, auto_kill=True)
         gate._n_gpus = MagicMock(return_value=1)
         gate.check_vram = MagicMock(
-            return_value=VRAMStatus(
-                gpu_index=0, total_mb=24576, used_mb=23000, free_mb=1576
-            )
+            return_value=VRAMStatus(gpu_index=0, total_mb=24576, used_mb=23000, free_mb=1576)
         )
         gate.kill_zombies = MagicMock(return_value=1)
         gate.wait_for_vram = MagicMock(return_value=True)
@@ -294,9 +288,7 @@ class TestGPUVRAMGateContextManager:
         gate = GPUVRAMGate(min_free_gb=8.0, auto_kill=False)
         gate._n_gpus = MagicMock(return_value=1)
         gate.check_vram = MagicMock(
-            return_value=VRAMStatus(
-                gpu_index=0, total_mb=24576, used_mb=23000, free_mb=1576
-            )
+            return_value=VRAMStatus(gpu_index=0, total_mb=24576, used_mb=23000, free_mb=1576)
         )
         gate.kill_zombies = MagicMock()
         gate.wait_for_vram = MagicMock(return_value=True)
@@ -351,6 +343,7 @@ class TestNGpus:
     def test_returns_count_from_pynvml(self):
         with patch.dict("sys.modules", {"pynvml": MagicMock()}):
             import pynvml
+
             pynvml.nvmlInit = MagicMock()
             pynvml.nvmlDeviceGetCount = MagicMock(return_value=2)
             gate = GPUVRAMGate()

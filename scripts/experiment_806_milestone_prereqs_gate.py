@@ -74,6 +74,7 @@ try:
             JepaWiringCheckResult,
             check_cpmi_wiring,
         )
+
         jepa_wiring_guard_implemented = True
 
         triples_abs = os.path.join(os.path.dirname(__file__), "..", CPMI_TRIPLES_PATH)

@@ -65,6 +65,7 @@ def test_gate_closed_writes_blocked_artifact(monkeypatch, tmp_path):
 
     # Patch the module-level constants so the script uses our temp files.
     import scripts.experiment_656_live_vr_attempt_18 as exp656  # noqa: PLC0415
+
     monkeypatch.setattr(exp656, "GATE_FILE", str(gate_path))
     monkeypatch.setattr(exp656, "DELIVERABLE", str(deliverable_path))
     monkeypatch.setattr(exp656, "_REPO_ROOT", str(tmp_path))
@@ -88,6 +89,7 @@ def test_gate_file_absent_writes_blocked_artifact(monkeypatch, tmp_path):
     deliverable_path = tmp_path / "experiment_656_live_vr_attempt_18.json"
 
     import scripts.experiment_656_live_vr_attempt_18 as exp656  # noqa: PLC0415
+
     monkeypatch.setattr(exp656, "GATE_FILE", missing_gate)
     monkeypatch.setattr(exp656, "DELIVERABLE", str(deliverable_path))
     monkeypatch.setattr(exp656, "_REPO_ROOT", str(tmp_path))
@@ -115,6 +117,7 @@ def test_ci_stub_when_gate_open_no_force_live(monkeypatch, tmp_path):
     _write_gate_file(str(gate_path), gate_open=True)
 
     import scripts.experiment_656_live_vr_attempt_18 as exp656  # noqa: PLC0415
+
     monkeypatch.setattr(exp656, "GATE_FILE", str(gate_path))
     monkeypatch.setattr(exp656, "DELIVERABLE", str(deliverable_path))
     monkeypatch.setattr(exp656, "_REPO_ROOT", str(tmp_path))

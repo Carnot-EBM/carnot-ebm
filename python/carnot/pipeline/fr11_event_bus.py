@@ -24,9 +24,11 @@ Spec: REQ-FR11-001, SCENARIO-FR11-001
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass, field
-from typing import Callable, List
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # ViolationEvent — the message passed through the bus
@@ -102,7 +104,7 @@ class FR11EventBus:
     """
 
     def __init__(self) -> None:
-        self._subscribers: List[Callable[[ViolationEvent], None]] = []
+        self._subscribers: list[Callable[[ViolationEvent], None]] = []
         self.events_published: int = 0
         self.events_acked: int = 0
 

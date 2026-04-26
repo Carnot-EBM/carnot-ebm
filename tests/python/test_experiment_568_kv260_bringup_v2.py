@@ -172,9 +172,7 @@ class TestSynthesisRequiredPath:
         )
         assert artifact["synthesis_command"] == SYNTHESIS_COMMAND
 
-    def test_bitfile_set_false(
-        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-    ) -> None:
+    def test_bitfile_set_false(self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
         """SCENARIO-SAMPLE-051: bitfile_set=False when env var absent."""
         monkeypatch.delenv("CARNOT_KV260_BITFILE", raising=False)
         artifact = run_experiment(
@@ -196,9 +194,7 @@ class TestSynthesisRequiredPath:
         )
         assert artifact["hardware_latency_us"] is None
 
-    def test_fpga_alive_false(
-        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-    ) -> None:
+    def test_fpga_alive_false(self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
         """REQ-SAMPLE-031: fpga_alive=False when hardware not exercised."""
         monkeypatch.delenv("CARNOT_KV260_BITFILE", raising=False)
         artifact = run_experiment(
@@ -208,9 +204,7 @@ class TestSynthesisRequiredPath:
         )
         assert artifact["fpga_alive"] is False
 
-    def test_fpga_speedup_is_none(
-        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-    ) -> None:
+    def test_fpga_speedup_is_none(self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
         """SCENARIO-SAMPLE-051: fpga_speedup=None when hardware not exercised."""
         monkeypatch.delenv("CARNOT_KV260_BITFILE", raising=False)
         artifact = run_experiment(
@@ -295,9 +289,7 @@ class TestArtifactSchema:
         for field in REQUIRED_ARTIFACT_FIELDS:
             assert field in artifact, f"Missing required field: {field}"
 
-    def test_experiment_id_is_568(
-        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-    ) -> None:
+    def test_experiment_id_is_568(self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
         """REQ-SAMPLE-031: experiment=568 in every artifact."""
         monkeypatch.delenv("CARNOT_KV260_BITFILE", raising=False)
         artifact = run_experiment(
@@ -331,9 +323,7 @@ class TestArtifactSchema:
             data = json.load(f)
         assert data["experiment"] == 568
 
-    def test_status_success(
-        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-    ) -> None:
+    def test_status_success(self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
         """REQ-SAMPLE-031: status='success' on normal completion."""
         monkeypatch.delenv("CARNOT_KV260_BITFILE", raising=False)
         artifact = run_experiment(
@@ -408,8 +398,10 @@ class TestHonestVerdict:
         """SCENARIO-SAMPLE-051: fpga_speedup = cpu_baseline / hardware_latency."""
         monkeypatch.setenv("CARNOT_KV260_BITFILE", "/fake/path/carnot.bit")
 
-        with patch.object(exp568, "_measure_fpga_latency", return_value=50.0), \
-             patch.object(exp568, "_measure_cpu_baseline", return_value=50000.0):
+        with (
+            patch.object(exp568, "_measure_fpga_latency", return_value=50.0),
+            patch.object(exp568, "_measure_cpu_baseline", return_value=50000.0),
+        ):
             artifact = run_experiment(
                 tmp_path / "exp568.json",
                 write_output=False,
@@ -425,7 +417,9 @@ class TestHonestVerdict:
         """REQ-SAMPLE-031: FpgaBackend exception → hardware_too_slow with null latency."""
         monkeypatch.setenv("CARNOT_KV260_BITFILE", "/fake/path/carnot.bit")
 
-        with patch.object(exp568, "_measure_fpga_latency", side_effect=RuntimeError("PYNQ unavailable")):
+        with patch.object(
+            exp568, "_measure_fpga_latency", side_effect=RuntimeError("PYNQ unavailable")
+        ):
             artifact = run_experiment(
                 tmp_path / "exp568.json",
                 write_output=False,

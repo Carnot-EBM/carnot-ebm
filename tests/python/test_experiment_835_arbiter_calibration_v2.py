@@ -13,6 +13,7 @@ Covers:
 
 Spec: REQ-VERIFY-143, REQ-VERIFY-144, SCENARIO-VERIFY-172
 """
+
 from __future__ import annotations
 
 import sys
@@ -311,8 +312,13 @@ class TestScenarioBatches:
         rng = np.random.default_rng(42)
         results = _run_standard_scenarios(arbiter, rng)
         required_fields = {
-            "scenario_id", "type", "arbiter_index", "is_correct",
-            "used_consensus_penalty", "energies_raw", "energies_normalized",
+            "scenario_id",
+            "type",
+            "arbiter_index",
+            "is_correct",
+            "used_consensus_penalty",
+            "energies_raw",
+            "energies_normalized",
             "energies_adjusted",
         }
         for r in results:

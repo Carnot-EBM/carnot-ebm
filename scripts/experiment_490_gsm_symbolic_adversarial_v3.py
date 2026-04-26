@@ -149,73 +149,250 @@ def _is_correct(response: str, gold: str | None) -> bool:
 # ---------------------------------------------------------------------------
 
 _HARDCODED_ADVERSARIAL: list[dict[str, str]] = [
-    {"question": "Janet has 48 apples. Her neighbor owns a blue bicycle. She gives 13 apples to her sister. The local library is open on weekdays. How many apples does Janet have left?", "answer": "48 - 13 = 35. #### 35"},
-    {"question": "A store sells notebooks for $3 each. The mayor gave a speech yesterday. Tom buys 7 notebooks. The weather forecast shows rain on Tuesday. How much does Tom spend?", "answer": "7 * 3 = 21. #### 21"},
-    {"question": "Maria baked 60 cookies. Her cousin plays guitar. She ate 15 and gave 20 to friends. Dogs are popular pets in the city. How many cookies does she have left?", "answer": "60 - 15 - 20 = 25. #### 25"},
-    {"question": "A train travels at 90 km/h. The station was built in 1952. How far does it travel in 3 hours? A new park opened last month.", "answer": "90 * 3 = 270. #### 270"},
-    {"question": "Sam earns $15 per hour. The office has 12 floors. He works 8 hours a day for 5 days. A conference is scheduled for Friday. How much does he earn in total?", "answer": "15 * 8 * 5 = 600. #### 600"},
-    {"question": "A box has 144 chocolates. The box is red. If shared equally among 12 people, the room has 8 chairs. How many chocolates does each person get?", "answer": "144 / 12 = 12. #### 12"},
-    {"question": "Lisa has $200. The bank closes at 5pm. She spends $45 on groceries and $30 on gas. The park has 50 trees. How much does she have left?", "answer": "200 - 45 - 30 = 125. #### 125"},
-    {"question": "A rectangle is 12 cm long and 8 cm wide. Birds migrate south in winter. What is the area? The library has 1000 books.", "answer": "12 * 8 = 96. #### 96"},
-    {"question": "A factory produces 240 units per day. The factory uses green energy. In 5 days, employees wear blue uniforms. How many units are produced?", "answer": "240 * 5 = 1200. #### 1200"},
-    {"question": "A pool holds 5000 liters. The pool was built in 2010. It leaks 50 liters per hour. The lifeguard is certified. How many liters remain after 10 hours?", "answer": "5000 - 50 * 10 = 4500. #### 4500"},
-    {"question": "John has 3 bags each with 15 oranges. The store opens at 9am. He sells 20 oranges total. A truck delivered supplies yesterday. How many oranges remain?", "answer": "3 * 15 - 20 = 25. #### 25"},
-    {"question": "A school has 6 classrooms each with 28 students. The principal has 20 years experience. How many students total? The school flag is red and blue.", "answer": "6 * 28 = 168. #### 168"},
-    {"question": "A car uses 8 liters of fuel per 100 km. The car is silver colored. For a 350 km trip, the highway has 3 rest stops. How many liters of fuel are needed?", "answer": "8 * 350 / 100 = 28. #### 28"},
-    {"question": "Emma saves $25 every week. Her hobby is painting. After 12 weeks she spends $180 on a gift. The gift is for her mother. How much does she have left?", "answer": "25 * 12 - 180 = 120. #### 120"},
-    {"question": "There are 7 shelves with 32 books each. The shelves are wooden. 36 books are borrowed. The librarian wears glasses. How many books remain?", "answer": "7 * 32 - 36 = 188. #### 188"},
-    {"question": "A bakery sells 85 loaves on Monday and 73 on Tuesday. The baker wakes up at 4am. How many loaves are sold in total? The oven is electric.", "answer": "85 + 73 = 158. #### 158"},
-    {"question": "A rope is 90 meters long. The rope is yellow. Cut into 6 equal pieces; dogs are walked nearby. How long is each piece?", "answer": "90 / 6 = 15. #### 15"},
-    {"question": "Tom collects stamps. He has 5 albums with 40 stamps each. The albums have red covers. He adds 35 new stamps. The post office is downtown. How many stamps total?", "answer": "5 * 40 + 35 = 235. #### 235"},
-    {"question": "An elevator holds 8 people. The elevator is stainless steel. 42 people need to go up. The building has 15 floors. How many trips are needed?", "answer": "ceil(42/8) = 6 trips. #### 6"},
-    {"question": "A garden is 25 meters by 14 meters. The garden has rose bushes. What is the perimeter? A cat sits on the garden wall.", "answer": "2 * (25 + 14) = 78. #### 78"},
-    {"question": "Susan reads 45 pages per day. She likes mystery novels. A book has 360 pages. Her reading chair is blue. How many days to finish the book?", "answer": "360 / 45 = 8. #### 8"},
-    {"question": "A tank is 60% full and holds 500 liters at full capacity. The tank is made of steel. How many liters are in the tank? A technician inspects it monthly.", "answer": "0.60 * 500 = 300. #### 300"},
-    {"question": "Tickets cost $12 for adults and $8 for children. The theater has velvet seats. 3 adults and 5 children attend. The show starts at 7pm. What is the total cost?", "answer": "3*12 + 5*8 = 76. #### 76"},
-    {"question": "A cyclist rides 18 km/h for 2.5 hours. The bike is red. How far does she ride? The trail goes through a forest.", "answer": "18 * 2.5 = 45. #### 45"},
-    {"question": "A recipe needs 250g of flour per cake. The recipe is from France. How much flour for 4 cakes? The kitchen has marble countertops.", "answer": "250 * 4 = 1000. #### 1000"},
-    {"question": "A sale offers 30% off a $80 jacket. The store is on Main Street. What is the sale price? The jacket is dark blue.", "answer": "80 - 0.30*80 = 56. #### 56"},
-    {"question": "Workers earn $18/h. The office has air conditioning. For 7.5 hours of work, the manager is named Dave. What is the pay?", "answer": "18 * 7.5 = 135. #### 135"},
-    {"question": "A class of 30 students takes a test. The school motto is 'Excellence'. 18 pass. What percentage pass? The test is multiple choice.", "answer": "18/30 * 100 = 60. #### 60"},
-    {"question": "A pipe fills a tank in 4 hours. The pipe is made of copper. A drain empties it in 12 hours. The tank is in the basement. Working together, how many hours to fill the tank?", "answer": "Fill rate = 1/4 - 1/12 = 1/6. Time = 6 hours. #### 6"},
-    {"question": "Amy has $350. She buys 3 items at $45 each. The store accepts credit cards. How much does she have left? The store is open until 9pm.", "answer": "350 - 3*45 = 215. #### 215"},
-    {"question": "A number is increased by 40% to get 98. There are 7 days in a week. What is the original number? Calendars show 12 months per year.", "answer": "x * 1.40 = 98, x = 70. #### 70"},
-    {"question": "6 people share a bill of $174 equally. The restaurant has outdoor seating. How much does each pay? The waiter is named Carlos.", "answer": "174 / 6 = 29. #### 29"},
-    {"question": "A car depreciates $2400 per year. The car is a sedan. After 3 years, starting from $18000, the color is silver. What is its value?", "answer": "18000 - 3*2400 = 10800. #### 10800"},
-    {"question": "A box weighs 2.5 kg empty. The box is cardboard. Filled with 15 kg of sand, the sand is from a local beach. What is the total weight?", "answer": "2.5 + 15 = 17.5. #### 17.5"},
-    {"question": "A store has 4 employees each working 35 hours per week. The store sells electronics. Total hours worked per week? The store has a loyalty program.", "answer": "4 * 35 = 140. #### 140"},
-    {"question": "A fence is 120 meters. Posts are placed every 4 meters. The fence surrounds a farm. How many posts are needed including both ends? Sheep graze inside.", "answer": "120/4 + 1 = 31. #### 31"},
-    {"question": "A bag of rice costs $3.50. The rice is from Thailand. For 8 bags, the store delivers on weekdays. What is the total cost?", "answer": "3.50 * 8 = 28. #### 28"},
-    {"question": "A temperature rises from -5 degrees C to 18 degrees C. The city is in Canada. What is the change? The forecast shows snow next week.", "answer": "18 - (-5) = 23. #### 23"},
-    {"question": "250 apples are packed in boxes of 15. The orchard is organic. How many full boxes and how many apples are left over? The apples are Fuji variety.", "answer": "250 // 15 = 16 full boxes, 10 left over. #### 10"},
-    {"question": "A student scores 78, 85, 92, and 71 on four tests. The school is public. What is the average score? The student wants to be a doctor.", "answer": "(78+85+92+71)/4 = 81.5. #### 81"},
-    {"question": "A pool is 25m long. Swimmers do 8 laps. The pool is Olympic-sized. Total distance? The coach has a stopwatch.", "answer": "25 * 8 = 200. #### 200"},
-    {"question": "Tim has 3 times as many marbles as Jen. Jen collects stamps too. Jen has 24 marbles. The marbles are glass. How many marbles does Tim have?", "answer": "3 * 24 = 72. #### 72"},
-    {"question": "A pizza has 8 slices. The pizza has extra cheese. 5 people each eat 2 slices. Music plays in the restaurant. How many slices are left if there are 2 pizzas?", "answer": "2*8 - 5*2 = 6. #### 6"},
-    {"question": "A phone plan costs $45 per month plus $0.10 per text. The carrier is nationwide. For 120 texts in a month, the app is free. What is the total bill?", "answer": "45 + 0.10*120 = 57. #### 57"},
-    {"question": "Kim runs 3.5 km on Monday, 4.2 km on Wednesday, and 5.0 km on Friday. She listens to music while running. Total km for the week? Her shoes are blue.", "answer": "3.5 + 4.2 + 5.0 = 12.7. #### 12"},
-    {"question": "A jar has 5 red marbles, 8 blue marbles, and 7 green marbles. The jar is glass. How many marbles total? The marbles were a gift.", "answer": "5 + 8 + 7 = 20. #### 20"},
-    {"question": "A painting is 60 cm wide and 80 cm tall. The painting is an oil painting. What is its perimeter? The frame is gold.", "answer": "2*(60+80) = 280. #### 280"},
-    {"question": "A worker completes 1/3 of a job per day. The job is construction. How many days to complete the job? The worker wears a hard hat.", "answer": "3 days. #### 3"},
-    {"question": "A train departs at 8:45am and arrives at 11:20am. The train has 8 carriages. How long is the journey in minutes? The seats are comfortable.", "answer": "2h 35m = 155 minutes. #### 155"},
-    {"question": "A store marks up items by 25%. The store is downtown. If cost price is $64, the store opens at 10am. What is the selling price?", "answer": "64 * 1.25 = 80. #### 80"},
+    {
+        "question": "Janet has 48 apples. Her neighbor owns a blue bicycle. She gives 13 apples to her sister. The local library is open on weekdays. How many apples does Janet have left?",
+        "answer": "48 - 13 = 35. #### 35",
+    },
+    {
+        "question": "A store sells notebooks for $3 each. The mayor gave a speech yesterday. Tom buys 7 notebooks. The weather forecast shows rain on Tuesday. How much does Tom spend?",
+        "answer": "7 * 3 = 21. #### 21",
+    },
+    {
+        "question": "Maria baked 60 cookies. Her cousin plays guitar. She ate 15 and gave 20 to friends. Dogs are popular pets in the city. How many cookies does she have left?",
+        "answer": "60 - 15 - 20 = 25. #### 25",
+    },
+    {
+        "question": "A train travels at 90 km/h. The station was built in 1952. How far does it travel in 3 hours? A new park opened last month.",
+        "answer": "90 * 3 = 270. #### 270",
+    },
+    {
+        "question": "Sam earns $15 per hour. The office has 12 floors. He works 8 hours a day for 5 days. A conference is scheduled for Friday. How much does he earn in total?",
+        "answer": "15 * 8 * 5 = 600. #### 600",
+    },
+    {
+        "question": "A box has 144 chocolates. The box is red. If shared equally among 12 people, the room has 8 chairs. How many chocolates does each person get?",
+        "answer": "144 / 12 = 12. #### 12",
+    },
+    {
+        "question": "Lisa has $200. The bank closes at 5pm. She spends $45 on groceries and $30 on gas. The park has 50 trees. How much does she have left?",
+        "answer": "200 - 45 - 30 = 125. #### 125",
+    },
+    {
+        "question": "A rectangle is 12 cm long and 8 cm wide. Birds migrate south in winter. What is the area? The library has 1000 books.",
+        "answer": "12 * 8 = 96. #### 96",
+    },
+    {
+        "question": "A factory produces 240 units per day. The factory uses green energy. In 5 days, employees wear blue uniforms. How many units are produced?",
+        "answer": "240 * 5 = 1200. #### 1200",
+    },
+    {
+        "question": "A pool holds 5000 liters. The pool was built in 2010. It leaks 50 liters per hour. The lifeguard is certified. How many liters remain after 10 hours?",
+        "answer": "5000 - 50 * 10 = 4500. #### 4500",
+    },
+    {
+        "question": "John has 3 bags each with 15 oranges. The store opens at 9am. He sells 20 oranges total. A truck delivered supplies yesterday. How many oranges remain?",
+        "answer": "3 * 15 - 20 = 25. #### 25",
+    },
+    {
+        "question": "A school has 6 classrooms each with 28 students. The principal has 20 years experience. How many students total? The school flag is red and blue.",
+        "answer": "6 * 28 = 168. #### 168",
+    },
+    {
+        "question": "A car uses 8 liters of fuel per 100 km. The car is silver colored. For a 350 km trip, the highway has 3 rest stops. How many liters of fuel are needed?",
+        "answer": "8 * 350 / 100 = 28. #### 28",
+    },
+    {
+        "question": "Emma saves $25 every week. Her hobby is painting. After 12 weeks she spends $180 on a gift. The gift is for her mother. How much does she have left?",
+        "answer": "25 * 12 - 180 = 120. #### 120",
+    },
+    {
+        "question": "There are 7 shelves with 32 books each. The shelves are wooden. 36 books are borrowed. The librarian wears glasses. How many books remain?",
+        "answer": "7 * 32 - 36 = 188. #### 188",
+    },
+    {
+        "question": "A bakery sells 85 loaves on Monday and 73 on Tuesday. The baker wakes up at 4am. How many loaves are sold in total? The oven is electric.",
+        "answer": "85 + 73 = 158. #### 158",
+    },
+    {
+        "question": "A rope is 90 meters long. The rope is yellow. Cut into 6 equal pieces; dogs are walked nearby. How long is each piece?",
+        "answer": "90 / 6 = 15. #### 15",
+    },
+    {
+        "question": "Tom collects stamps. He has 5 albums with 40 stamps each. The albums have red covers. He adds 35 new stamps. The post office is downtown. How many stamps total?",
+        "answer": "5 * 40 + 35 = 235. #### 235",
+    },
+    {
+        "question": "An elevator holds 8 people. The elevator is stainless steel. 42 people need to go up. The building has 15 floors. How many trips are needed?",
+        "answer": "ceil(42/8) = 6 trips. #### 6",
+    },
+    {
+        "question": "A garden is 25 meters by 14 meters. The garden has rose bushes. What is the perimeter? A cat sits on the garden wall.",
+        "answer": "2 * (25 + 14) = 78. #### 78",
+    },
+    {
+        "question": "Susan reads 45 pages per day. She likes mystery novels. A book has 360 pages. Her reading chair is blue. How many days to finish the book?",
+        "answer": "360 / 45 = 8. #### 8",
+    },
+    {
+        "question": "A tank is 60% full and holds 500 liters at full capacity. The tank is made of steel. How many liters are in the tank? A technician inspects it monthly.",
+        "answer": "0.60 * 500 = 300. #### 300",
+    },
+    {
+        "question": "Tickets cost $12 for adults and $8 for children. The theater has velvet seats. 3 adults and 5 children attend. The show starts at 7pm. What is the total cost?",
+        "answer": "3*12 + 5*8 = 76. #### 76",
+    },
+    {
+        "question": "A cyclist rides 18 km/h for 2.5 hours. The bike is red. How far does she ride? The trail goes through a forest.",
+        "answer": "18 * 2.5 = 45. #### 45",
+    },
+    {
+        "question": "A recipe needs 250g of flour per cake. The recipe is from France. How much flour for 4 cakes? The kitchen has marble countertops.",
+        "answer": "250 * 4 = 1000. #### 1000",
+    },
+    {
+        "question": "A sale offers 30% off a $80 jacket. The store is on Main Street. What is the sale price? The jacket is dark blue.",
+        "answer": "80 - 0.30*80 = 56. #### 56",
+    },
+    {
+        "question": "Workers earn $18/h. The office has air conditioning. For 7.5 hours of work, the manager is named Dave. What is the pay?",
+        "answer": "18 * 7.5 = 135. #### 135",
+    },
+    {
+        "question": "A class of 30 students takes a test. The school motto is 'Excellence'. 18 pass. What percentage pass? The test is multiple choice.",
+        "answer": "18/30 * 100 = 60. #### 60",
+    },
+    {
+        "question": "A pipe fills a tank in 4 hours. The pipe is made of copper. A drain empties it in 12 hours. The tank is in the basement. Working together, how many hours to fill the tank?",
+        "answer": "Fill rate = 1/4 - 1/12 = 1/6. Time = 6 hours. #### 6",
+    },
+    {
+        "question": "Amy has $350. She buys 3 items at $45 each. The store accepts credit cards. How much does she have left? The store is open until 9pm.",
+        "answer": "350 - 3*45 = 215. #### 215",
+    },
+    {
+        "question": "A number is increased by 40% to get 98. There are 7 days in a week. What is the original number? Calendars show 12 months per year.",
+        "answer": "x * 1.40 = 98, x = 70. #### 70",
+    },
+    {
+        "question": "6 people share a bill of $174 equally. The restaurant has outdoor seating. How much does each pay? The waiter is named Carlos.",
+        "answer": "174 / 6 = 29. #### 29",
+    },
+    {
+        "question": "A car depreciates $2400 per year. The car is a sedan. After 3 years, starting from $18000, the color is silver. What is its value?",
+        "answer": "18000 - 3*2400 = 10800. #### 10800",
+    },
+    {
+        "question": "A box weighs 2.5 kg empty. The box is cardboard. Filled with 15 kg of sand, the sand is from a local beach. What is the total weight?",
+        "answer": "2.5 + 15 = 17.5. #### 17.5",
+    },
+    {
+        "question": "A store has 4 employees each working 35 hours per week. The store sells electronics. Total hours worked per week? The store has a loyalty program.",
+        "answer": "4 * 35 = 140. #### 140",
+    },
+    {
+        "question": "A fence is 120 meters. Posts are placed every 4 meters. The fence surrounds a farm. How many posts are needed including both ends? Sheep graze inside.",
+        "answer": "120/4 + 1 = 31. #### 31",
+    },
+    {
+        "question": "A bag of rice costs $3.50. The rice is from Thailand. For 8 bags, the store delivers on weekdays. What is the total cost?",
+        "answer": "3.50 * 8 = 28. #### 28",
+    },
+    {
+        "question": "A temperature rises from -5 degrees C to 18 degrees C. The city is in Canada. What is the change? The forecast shows snow next week.",
+        "answer": "18 - (-5) = 23. #### 23",
+    },
+    {
+        "question": "250 apples are packed in boxes of 15. The orchard is organic. How many full boxes and how many apples are left over? The apples are Fuji variety.",
+        "answer": "250 // 15 = 16 full boxes, 10 left over. #### 10",
+    },
+    {
+        "question": "A student scores 78, 85, 92, and 71 on four tests. The school is public. What is the average score? The student wants to be a doctor.",
+        "answer": "(78+85+92+71)/4 = 81.5. #### 81",
+    },
+    {
+        "question": "A pool is 25m long. Swimmers do 8 laps. The pool is Olympic-sized. Total distance? The coach has a stopwatch.",
+        "answer": "25 * 8 = 200. #### 200",
+    },
+    {
+        "question": "Tim has 3 times as many marbles as Jen. Jen collects stamps too. Jen has 24 marbles. The marbles are glass. How many marbles does Tim have?",
+        "answer": "3 * 24 = 72. #### 72",
+    },
+    {
+        "question": "A pizza has 8 slices. The pizza has extra cheese. 5 people each eat 2 slices. Music plays in the restaurant. How many slices are left if there are 2 pizzas?",
+        "answer": "2*8 - 5*2 = 6. #### 6",
+    },
+    {
+        "question": "A phone plan costs $45 per month plus $0.10 per text. The carrier is nationwide. For 120 texts in a month, the app is free. What is the total bill?",
+        "answer": "45 + 0.10*120 = 57. #### 57",
+    },
+    {
+        "question": "Kim runs 3.5 km on Monday, 4.2 km on Wednesday, and 5.0 km on Friday. She listens to music while running. Total km for the week? Her shoes are blue.",
+        "answer": "3.5 + 4.2 + 5.0 = 12.7. #### 12",
+    },
+    {
+        "question": "A jar has 5 red marbles, 8 blue marbles, and 7 green marbles. The jar is glass. How many marbles total? The marbles were a gift.",
+        "answer": "5 + 8 + 7 = 20. #### 20",
+    },
+    {
+        "question": "A painting is 60 cm wide and 80 cm tall. The painting is an oil painting. What is its perimeter? The frame is gold.",
+        "answer": "2*(60+80) = 280. #### 280",
+    },
+    {
+        "question": "A worker completes 1/3 of a job per day. The job is construction. How many days to complete the job? The worker wears a hard hat.",
+        "answer": "3 days. #### 3",
+    },
+    {
+        "question": "A train departs at 8:45am and arrives at 11:20am. The train has 8 carriages. How long is the journey in minutes? The seats are comfortable.",
+        "answer": "2h 35m = 155 minutes. #### 155",
+    },
+    {
+        "question": "A store marks up items by 25%. The store is downtown. If cost price is $64, the store opens at 10am. What is the selling price?",
+        "answer": "64 * 1.25 = 80. #### 80",
+    },
 ]
 
-_STANDARD_GSM8K_FALLBACK: list[dict[str, str]] = (
-    [
-        {"question": "Janet has 48 apples. She gives 13 to her sister. How many does she have left?", "answer": "48 - 13 = 35. #### 35"},
-        {"question": "A store sells notebooks for $3 each. Tom buys 7. How much does he spend?", "answer": "7 * 3 = 21. #### 21"},
-        {"question": "Maria baked 60 cookies. She ate 15 and gave 20 to friends. How many remain?", "answer": "60 - 15 - 20 = 25. #### 25"},
-        {"question": "A train travels at 90 km/h. How far does it travel in 3 hours?", "answer": "90 * 3 = 270. #### 270"},
-        {"question": "Sam earns $15/h, works 8h/day for 5 days. What is his total pay?", "answer": "15 * 8 * 5 = 600. #### 600"},
-        {"question": "A box has 144 chocolates shared equally among 12 people. How many each?", "answer": "144 / 12 = 12. #### 12"},
-        {"question": "Lisa has $200. Spends $45 on groceries and $30 on gas. How much left?", "answer": "200 - 45 - 30 = 125. #### 125"},
-        {"question": "A rectangle is 12 cm long and 8 cm wide. What is its area?", "answer": "12 * 8 = 96. #### 96"},
-        {"question": "A factory produces 240 units per day. In 5 days, how many total?", "answer": "240 * 5 = 1200. #### 1200"},
-        {"question": "A pool holds 5000 liters. It leaks 50 L/hour. After 10 hours, how much remains?", "answer": "5000 - 500 = 4500. #### 4500"},
-    ]
-    * 5
-)  # 50 questions total
+_STANDARD_GSM8K_FALLBACK: list[dict[str, str]] = [
+    {
+        "question": "Janet has 48 apples. She gives 13 to her sister. How many does she have left?",
+        "answer": "48 - 13 = 35. #### 35",
+    },
+    {
+        "question": "A store sells notebooks for $3 each. Tom buys 7. How much does he spend?",
+        "answer": "7 * 3 = 21. #### 21",
+    },
+    {
+        "question": "Maria baked 60 cookies. She ate 15 and gave 20 to friends. How many remain?",
+        "answer": "60 - 15 - 20 = 25. #### 25",
+    },
+    {
+        "question": "A train travels at 90 km/h. How far does it travel in 3 hours?",
+        "answer": "90 * 3 = 270. #### 270",
+    },
+    {
+        "question": "Sam earns $15/h, works 8h/day for 5 days. What is his total pay?",
+        "answer": "15 * 8 * 5 = 600. #### 600",
+    },
+    {
+        "question": "A box has 144 chocolates shared equally among 12 people. How many each?",
+        "answer": "144 / 12 = 12. #### 12",
+    },
+    {
+        "question": "Lisa has $200. Spends $45 on groceries and $30 on gas. How much left?",
+        "answer": "200 - 45 - 30 = 125. #### 125",
+    },
+    {
+        "question": "A rectangle is 12 cm long and 8 cm wide. What is its area?",
+        "answer": "12 * 8 = 96. #### 96",
+    },
+    {
+        "question": "A factory produces 240 units per day. In 5 days, how many total?",
+        "answer": "240 * 5 = 1200. #### 1200",
+    },
+    {
+        "question": "A pool holds 5000 liters. It leaks 50 L/hour. After 10 hours, how much remains?",
+        "answer": "5000 - 500 = 4500. #### 4500",
+    },
+] * 5  # 50 questions total
 
 
 # ---------------------------------------------------------------------------

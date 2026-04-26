@@ -36,6 +36,7 @@
 
 Spec: REQ-REPAIR-056, REQ-PIPELINE-030, SCENARIO-REPAIR-089, SCENARIO-PIPELINE-040
 """
+
 from __future__ import annotations
 
 import json
@@ -89,152 +90,152 @@ _INLINE_PROBLEMS: list[dict[str, Any]] = [
     # --- Problems 0-19: carried over from Exp 820 ---
     {
         "task_id": "inline/0",
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "canonical_solution": "    return a + b\n",
         "test": "assert add(1, 2) == 3\nassert add(-1, 1) == 0\n",
     },
     {
         "task_id": "inline/1",
-        "prompt": "def is_even(n):\n    \"\"\"Return True if n is even.\"\"\"\n",
+        "prompt": 'def is_even(n):\n    """Return True if n is even."""\n',
         "canonical_solution": "    return n % 2 == 0\n",
         "test": "assert is_even(4)\nassert not is_even(3)\n",
     },
     {
         "task_id": "inline/2",
-        "prompt": "def max_of_three(a, b, c):\n    \"\"\"Return the largest of three numbers.\"\"\"\n",
+        "prompt": 'def max_of_three(a, b, c):\n    """Return the largest of three numbers."""\n',
         "canonical_solution": "    return max(a, b, c)\n",
         "test": "assert max_of_three(1, 2, 3) == 3\nassert max_of_three(5, 3, 4) == 5\n",
     },
     {
         "task_id": "inline/3",
-        "prompt": "def reverse_string(s):\n    \"\"\"Return s reversed.\"\"\"\n",
+        "prompt": 'def reverse_string(s):\n    """Return s reversed."""\n',
         "canonical_solution": "    return s[::-1]\n",
         "test": "assert reverse_string('abc') == 'cba'\nassert reverse_string('') == ''\n",
     },
     {
         "task_id": "inline/4",
-        "prompt": "def factorial(n):\n    \"\"\"Return n! for non-negative n.\"\"\"\n",
+        "prompt": 'def factorial(n):\n    """Return n! for non-negative n."""\n',
         "canonical_solution": "    if n == 0:\n        return 1\n    return n * factorial(n - 1)\n",
         "test": "assert factorial(0) == 1\nassert factorial(5) == 120\n",
     },
     {
         "task_id": "inline/5",
-        "prompt": "def is_palindrome(s):\n    \"\"\"Return True if s is a palindrome.\"\"\"\n",
+        "prompt": 'def is_palindrome(s):\n    """Return True if s is a palindrome."""\n',
         "canonical_solution": "    return s == s[::-1]\n",
         "test": "assert is_palindrome('racecar')\nassert not is_palindrome('hello')\n",
     },
     {
         "task_id": "inline/6",
-        "prompt": "def sum_list(lst):\n    \"\"\"Return sum of list elements.\"\"\"\n",
+        "prompt": 'def sum_list(lst):\n    """Return sum of list elements."""\n',
         "canonical_solution": "    return sum(lst)\n",
         "test": "assert sum_list([1, 2, 3]) == 6\nassert sum_list([]) == 0\n",
     },
     {
         "task_id": "inline/7",
-        "prompt": "def count_vowels(s):\n    \"\"\"Return count of vowels in s.\"\"\"\n",
+        "prompt": 'def count_vowels(s):\n    """Return count of vowels in s."""\n',
         "canonical_solution": "    return sum(1 for c in s.lower() if c in 'aeiou')\n",
         "test": "assert count_vowels('hello') == 2\nassert count_vowels('xyz') == 0\n",
     },
     {
         "task_id": "inline/8",
-        "prompt": "def flatten(lst):\n    \"\"\"Flatten one level of nesting.\"\"\"\n",
+        "prompt": 'def flatten(lst):\n    """Flatten one level of nesting."""\n',
         "canonical_solution": "    return [x for sub in lst for x in sub]\n",
         "test": "assert flatten([[1, 2], [3]]) == [1, 2, 3]\nassert flatten([]) == []\n",
     },
     {
         "task_id": "inline/9",
-        "prompt": "def unique(lst):\n    \"\"\"Return list with duplicates removed, order preserved.\"\"\"\n",
+        "prompt": 'def unique(lst):\n    """Return list with duplicates removed, order preserved."""\n',
         "canonical_solution": "    seen = set()\n    return [x for x in lst if not (x in seen or seen.add(x))]\n",
         "test": "assert unique([1, 2, 1, 3]) == [1, 2, 3]\nassert unique([]) == []\n",
     },
     {
         "task_id": "inline/10",
-        "prompt": "def clamp(val, lo, hi):\n    \"\"\"Clamp val to [lo, hi].\"\"\"\n",
+        "prompt": 'def clamp(val, lo, hi):\n    """Clamp val to [lo, hi]."""\n',
         "canonical_solution": "    return max(lo, min(hi, val))\n",
         "test": "assert clamp(5, 0, 10) == 5\nassert clamp(-1, 0, 10) == 0\nassert clamp(15, 0, 10) == 10\n",
     },
     {
         "task_id": "inline/11",
-        "prompt": "def fizzbuzz(n):\n    \"\"\"FizzBuzz for 1..n (1-indexed, list).\"\"\"\n",
+        "prompt": 'def fizzbuzz(n):\n    """FizzBuzz for 1..n (1-indexed, list)."""\n',
         "canonical_solution": "    r = []\n    for i in range(1, n+1):\n        if i % 15 == 0: r.append('FizzBuzz')\n        elif i % 3 == 0: r.append('Fizz')\n        elif i % 5 == 0: r.append('Buzz')\n        else: r.append(str(i))\n    return r\n",
         "test": "assert fizzbuzz(5) == ['1', '2', 'Fizz', '4', 'Buzz']\nassert fizzbuzz(15)[-1] == 'FizzBuzz'\n",
     },
     {
         "task_id": "inline/12",
-        "prompt": "def gcd(a, b):\n    \"\"\"Return greatest common divisor of a and b.\"\"\"\n",
+        "prompt": 'def gcd(a, b):\n    """Return greatest common divisor of a and b."""\n',
         "canonical_solution": "    while b:\n        a, b = b, a % b\n    return a\n",
         "test": "assert gcd(12, 8) == 4\nassert gcd(7, 5) == 1\n",
     },
     {
         "task_id": "inline/13",
-        "prompt": "def binary_search(lst, target):\n    \"\"\"Return index of target in sorted lst, or -1.\"\"\"\n",
+        "prompt": 'def binary_search(lst, target):\n    """Return index of target in sorted lst, or -1."""\n',
         "canonical_solution": "    lo, hi = 0, len(lst) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if lst[mid] == target: return mid\n        elif lst[mid] < target: lo = mid + 1\n        else: hi = mid - 1\n    return -1\n",
         "test": "assert binary_search([1, 3, 5, 7], 5) == 2\nassert binary_search([1, 3, 5], 4) == -1\n",
     },
     {
         "task_id": "inline/14",
-        "prompt": "def count_occurrences(lst, val):\n    \"\"\"Return how many times val appears in lst.\"\"\"\n",
+        "prompt": 'def count_occurrences(lst, val):\n    """Return how many times val appears in lst."""\n',
         "canonical_solution": "    return lst.count(val)\n",
         "test": "assert count_occurrences([1, 2, 1, 3], 1) == 2\nassert count_occurrences([], 1) == 0\n",
     },
     {
         "task_id": "inline/15",
-        "prompt": "def rotate_left(lst, k):\n    \"\"\"Rotate lst left by k positions.\"\"\"\n",
+        "prompt": 'def rotate_left(lst, k):\n    """Rotate lst left by k positions."""\n',
         "canonical_solution": "    if not lst: return lst\n    k = k % len(lst)\n    return lst[k:] + lst[:k]\n",
         "test": "assert rotate_left([1, 2, 3, 4], 2) == [3, 4, 1, 2]\nassert rotate_left([], 3) == []\n",
     },
     {
         "task_id": "inline/16",
-        "prompt": "def is_sorted(lst):\n    \"\"\"Return True if lst is non-decreasingly sorted.\"\"\"\n",
+        "prompt": 'def is_sorted(lst):\n    """Return True if lst is non-decreasingly sorted."""\n',
         "canonical_solution": "    return all(lst[i] <= lst[i+1] for i in range(len(lst)-1))\n",
         "test": "assert is_sorted([1, 2, 3])\nassert not is_sorted([3, 1, 2])\nassert is_sorted([])\n",
     },
     {
         "task_id": "inline/17",
-        "prompt": "def chunk(lst, size):\n    \"\"\"Split lst into chunks of given size.\"\"\"\n",
+        "prompt": 'def chunk(lst, size):\n    """Split lst into chunks of given size."""\n',
         "canonical_solution": "    return [lst[i:i+size] for i in range(0, len(lst), size)]\n",
         "test": "assert chunk([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]\nassert chunk([], 3) == []\n",
     },
     {
         "task_id": "inline/18",
-        "prompt": "def zip_with_index(lst):\n    \"\"\"Return list of (index, value) tuples.\"\"\"\n",
+        "prompt": 'def zip_with_index(lst):\n    """Return list of (index, value) tuples."""\n',
         "canonical_solution": "    return list(enumerate(lst))\n",
         "test": "assert zip_with_index(['a', 'b']) == [(0, 'a'), (1, 'b')]\nassert zip_with_index([]) == []\n",
     },
     {
         "task_id": "inline/19",
-        "prompt": "def merge_sorted(a, b):\n    \"\"\"Merge two sorted lists into one sorted list.\"\"\"\n",
+        "prompt": 'def merge_sorted(a, b):\n    """Merge two sorted lists into one sorted list."""\n',
         "canonical_solution": "    result, i, j = [], 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            result.append(a[i]); i += 1\n        else:\n            result.append(b[j]); j += 1\n    return result + a[i:] + b[j:]\n",
         "test": "assert merge_sorted([1, 3], [2, 4]) == [1, 2, 3, 4]\nassert merge_sorted([], [1]) == [1]\n",
     },
     # --- Problems 20-24: new for Exp 850 to reach 25 ---
     {
         "task_id": "inline/20",
-        "prompt": "def product_list(lst):\n    \"\"\"Return product of all elements in lst, 1 if empty.\"\"\"\n",
+        "prompt": 'def product_list(lst):\n    """Return product of all elements in lst, 1 if empty."""\n',
         "canonical_solution": "    result = 1\n    for x in lst:\n        result *= x\n    return result\n",
         "test": "assert product_list([1, 2, 3, 4]) == 24\nassert product_list([]) == 1\n",
     },
     {
         "task_id": "inline/21",
-        "prompt": "def is_prime(n):\n    \"\"\"Return True if n is a prime number.\"\"\"\n",
+        "prompt": 'def is_prime(n):\n    """Return True if n is a prime number."""\n',
         "canonical_solution": "    if n < 2: return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0: return False\n    return True\n",
         "test": "assert is_prime(7)\nassert not is_prime(4)\nassert not is_prime(1)\n",
     },
     {
         "task_id": "inline/22",
-        "prompt": "def char_frequency(s):\n    \"\"\"Return dict mapping each char to its frequency in s.\"\"\"\n",
+        "prompt": 'def char_frequency(s):\n    """Return dict mapping each char to its frequency in s."""\n',
         "canonical_solution": "    freq: dict = {}\n    for c in s:\n        freq[c] = freq.get(c, 0) + 1\n    return freq\n",
         "test": "assert char_frequency('aab') == {'a': 2, 'b': 1}\nassert char_frequency('') == {}\n",
     },
     {
         "task_id": "inline/23",
-        "prompt": "def running_sum(lst):\n    \"\"\"Return list of running (prefix) sums.\"\"\"\n",
+        "prompt": 'def running_sum(lst):\n    """Return list of running (prefix) sums."""\n',
         "canonical_solution": "    result = []\n    total = 0\n    for x in lst:\n        total += x\n        result.append(total)\n    return result\n",
         "test": "assert running_sum([1, 2, 3]) == [1, 3, 6]\nassert running_sum([]) == []\n",
     },
     {
         "task_id": "inline/24",
-        "prompt": "def nth_fibonacci(n):\n    \"\"\"Return the n-th Fibonacci number (0-indexed: fib(0)=0, fib(1)=1).\"\"\"\n",
+        "prompt": 'def nth_fibonacci(n):\n    """Return the n-th Fibonacci number (0-indexed: fib(0)=0, fib(1)=1)."""\n',
         "canonical_solution": "    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\n",
         "test": "assert nth_fibonacci(0) == 0\nassert nth_fibonacci(1) == 1\nassert nth_fibonacci(7) == 13\n",
     },
@@ -427,10 +428,7 @@ def run_problem_with_repair(
         if violations:
             # Re-generate once with a hint about the detected violation.
             hint = violations[0].description
-            repair_prompt = (
-                problem["prompt"]
-                + f"# Repair hint: {hint}\n"
-            )
+            repair_prompt = problem["prompt"] + f"# Repair hint: {hint}\n"
             repair_attempted = True
             try:
                 repair_response = llm(
@@ -503,7 +501,9 @@ def main() -> None:
     try:
         model_path = resolver.resolve(MODEL_ID, QUANTIZATION)
     except GGUFModelNotFoundError as exc:
-        expected_path = exc.details.get("expected_path", "unknown") if hasattr(exc, "details") else str(exc)
+        expected_path = (
+            exc.details.get("expected_path", "unknown") if hasattr(exc, "details") else str(exc)
+        )
         artifact = tmpl.build_result(
             {
                 "honest_verdict": "model_not_cached",
@@ -611,7 +611,9 @@ def main() -> None:
                 break
 
             baseline_pass = run_problem_baseline(prob)
-            repair_pass, repair_attempted, logit_margin = run_problem_with_repair(prob, llm, extractor)
+            repair_pass, repair_attempted, logit_margin = run_problem_with_repair(
+                prob, llm, extractor
+            )
 
             n_baseline_pass += int(baseline_pass)
             n_repair_pass += int(repair_pass)
@@ -631,8 +633,11 @@ def main() -> None:
             )
 
         tmpl.checkpoint_save(
-            {"n_baseline_pass": n_baseline_pass, "n_repair_pass": n_repair_pass,
-             "problem_results": problem_results},
+            {
+                "n_baseline_pass": n_baseline_pass,
+                "n_repair_pass": n_repair_pass,
+                "problem_results": problem_results,
+            },
             step=batch_idx + BATCH_SIZE,
         )
 

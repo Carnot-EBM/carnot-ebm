@@ -122,7 +122,9 @@ def main() -> None:
         # Q1: RETRO-032/033/036 closed?
         # DeliverableGuard shipped (032 closed), but live GPU experiments
         # 464/465 deferred because model prewarm failed without real GPU access.
-        infra_hardened: bool = retro_032_closed  # partial — infrastructure hardened but GPU required
+        infra_hardened: bool = (
+            retro_032_closed  # partial — infrastructure hardened but GPU required
+        )
 
         # Q2: RETRO-034 closed? EBM-CoT AUC > 0.650?
         ebm_cot_auc_v3: float = float(exp466.get("v3_auc", 0.0))
@@ -209,8 +211,20 @@ def main() -> None:
         ]
 
         experiments_completed = sum(
-            1 for exp in [exp462, exp463, exp464, exp465, exp466, exp467,
-                          exp468, exp469, exp470, exp471, exp472]
+            1
+            for exp in [
+                exp462,
+                exp463,
+                exp464,
+                exp465,
+                exp466,
+                exp467,
+                exp468,
+                exp469,
+                exp470,
+                exp471,
+                exp472,
+            ]
             if exp.get("status") in ("success", "gpu_required")
         )
         # Add exp473 (this script) = experiments_completed + 1
@@ -401,6 +415,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

@@ -81,7 +81,9 @@ def run_pre_flight(
         Always 0 (success).  Print goes to stdout so the conductor can capture it.
     """
     if not manifest_path.exists():
-        print(f"[pre-flight] WARNING: manifest not found at {manifest_path} — no exclusions applied")
+        print(
+            f"[pre-flight] WARNING: manifest not found at {manifest_path} — no exclusions applied"
+        )
     else:
         try:
             raw = json.loads(manifest_path.read_text())
@@ -117,14 +119,23 @@ def _run_incremental_tests(repo_root: Path) -> None:
     try:
         # Import here to avoid making incremental_test_selector a hard dependency
         # for callers that only need the exclusion-manifest printing.
-        from carnot.pipeline.incremental_test_selector import IncrementalTestSelector  # noqa: PLC0415
+        from carnot.pipeline.incremental_test_selector import (
+            IncrementalTestSelector,  # noqa: PLC0415
+        )
 
         selector = IncrementalTestSelector(repo_root=repo_root)
         stats = selector.get_stats()
         selected = selector.select()
     except Exception as exc:
-        print(f"[pre-flight-tests] WARNING: IncrementalTestSelector failed ({exc}) — running full suite")
-        stats = {"incremental_mode": False, "tests_selected": -1, "tests_total": -1, "selection_ratio": 1.0}
+        print(
+            f"[pre-flight-tests] WARNING: IncrementalTestSelector failed ({exc}) — running full suite"
+        )
+        stats = {
+            "incremental_mode": False,
+            "tests_selected": -1,
+            "tests_total": -1,
+            "selection_ratio": 1.0,
+        }
         selected = None
 
     print(

@@ -54,7 +54,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Literal, Optional
+from typing import Literal
 
 from carnot.pipeline.llm_z3_formalizer import _exec_z3_snippet
 
@@ -132,8 +132,8 @@ class FOVERCoTStep:
 
     step_idx: int
     step_text: str
-    claimed_equation: Optional[str]
-    z3_label: Optional[Literal["correct", "incorrect", "not_verifiable"]] = None
+    claimed_equation: str | None
+    z3_label: Literal["correct", "incorrect", "not_verifiable"] | None = None
     z3_confidence: float = 0.0
 
 
@@ -316,7 +316,7 @@ def annotate_step_with_z3(step: FOVERCoTStep) -> FOVERCoTStep:
     # Check all three operands parse to valid floats — determines confidence.
     # _INLINE_EQ_RE only matches digit strings so ValueError is not expected in
     # practice; nonetheless we guard defensively and expose it as low confidence.
-    def _safe_val(s: str) -> Optional[float]:
+    def _safe_val(s: str) -> float | None:
         val = s.replace(",", "")
         return float(val) if val.replace(".", "", 1).isdigit() else None
 
@@ -451,7 +451,7 @@ class FOVERAnnotator:
     def to_training_pairs(
         self,
         annotated: list[list[FOVERCoTStep]],
-        responses: Optional[list[dict]] = None,
+        responses: list[dict] | None = None,
     ) -> list[dict]:
         """Convert annotated steps into filtered training pairs for EORM.
 

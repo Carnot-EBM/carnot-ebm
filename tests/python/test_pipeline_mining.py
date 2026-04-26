@@ -162,10 +162,12 @@ class TestFailureAnalyzerAnalyze:
 
     def test_custom_checkers(self) -> None:
         """REQ-VERIFY-001: Custom checkers override default string matching."""
+
         # Default check would pass (ground_truth "5" IS in "the answer is 50"),
         # but custom checker extracts the number and compares strictly.
         def strict_checker(response: str) -> bool:
             import re
+
             nums = re.findall(r"\b\d+\b", response)
             return "5" in nums
 
@@ -233,11 +235,9 @@ class TestCategoryAggregation:
             ],
             responses=[
                 # Implicit logic + comparison, no extractable arithmetic.
-                "Since both are positive, therefore the sum must be 25. "
-                "This is greater than 20.",
+                "Since both are positive, therefore the sum must be 25. This is greater than 20.",
                 # Chain arithmetic without "A * B = C" pattern.
-                "First multiply 5 by 3 which gives us 20. "
-                "Therefore the answer is 20.",
+                "First multiply 5 by 3 which gives us 20. Therefore the answer is 20.",
             ],
             ground_truths=["30", "15"],
         )
@@ -322,6 +322,7 @@ class TestSuggestedPatterns:
     def test_patterns_are_valid_regex(self) -> None:
         """REQ-VERIFY-003: All suggested patterns compile as valid regex."""
         import re
+
         for cat, patterns in SUGGESTED_PATTERNS.items():
             for pat in patterns:
                 try:

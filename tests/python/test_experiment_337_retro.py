@@ -242,8 +242,7 @@ class TestNExperimentsField:
         data = load_retro_artifact(RETRO_RESULT)
         computed = data["total_wall_time_min"] / data["n_experiments"]
         assert abs(data["mean_time_per_exp_min"] - computed) < 0.5, (
-            f"mean_time_per_exp_min {data['mean_time_per_exp_min']:.2f} "
-            f"!= total/n = {computed:.2f}"
+            f"mean_time_per_exp_min {data['mean_time_per_exp_min']:.2f} != total/n = {computed:.2f}"
         )
 
     def test_total_wall_time_positive(self) -> None:

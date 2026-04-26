@@ -46,7 +46,6 @@ from typing import Any
 from carnot.pipeline.extract import ConstraintResult
 from carnot.verify.constraint import BaseConstraint
 
-
 # ---------------------------------------------------------------------------
 # Numeric helpers
 # ---------------------------------------------------------------------------
@@ -198,6 +197,7 @@ class _CRANEConstraint(BaseConstraint):
         _ = x
         try:
             import jax.numpy as jnp  # noqa: PLC0415
+
             return jnp.float32(1.0 if self._is_violated else 0.0)
         except ImportError:
             return 1.0 if self._is_violated else 0.0

@@ -16,6 +16,7 @@ All GPU/LLM/network calls are mocked — tests run entirely on CPU with no side 
 
 Spec: REQ-VR-020, SCENARIO-VR-030, REQ-PIPELINE-030, SCENARIO-PIPELINE-040
 """
+
 from __future__ import annotations
 
 import json
@@ -49,6 +50,7 @@ from scripts.experiment_857_sota_code_repair_v6 import (
 # GGUFCacheResolver.can_download
 # ===========================================================================
 
+
 def test_can_download_default_true() -> None:
     """GGUFCacheResolver.can_download must default to True at the class level.
 
@@ -77,6 +79,7 @@ def test_can_download_class_attr() -> None:
 # ===========================================================================
 # GGUFCacheResolver.download()
 # ===========================================================================
+
 
 def test_download_returns_path_from_hf_hub_download() -> None:
     """download() must return the Path returned by hf_hub_download.
@@ -127,6 +130,7 @@ def test_download_creates_cache_dir_and_calls_hf(tmp_path: Path) -> None:
 # ===========================================================================
 # GGUFCacheResolver.resolve() — download path
 # ===========================================================================
+
 
 def test_resolve_calls_download_when_file_absent(tmp_path: Path) -> None:
     """resolve() must call download() when the file is absent and can_download=True.
@@ -210,6 +214,7 @@ def test_resolve_returns_path_without_download_when_cached(tmp_path: Path) -> No
 # check_exp855_gate
 # ===========================================================================
 
+
 def test_exp855_gate_blocked_missing_file() -> None:
     """check_exp855_gate returns False when the artifact file does not exist.
 
@@ -264,6 +269,7 @@ def test_exp855_gate_passes_when_live_env_fixed_true() -> None:
 # check_exp856_gate
 # ===========================================================================
 
+
 def test_exp856_gate_blocked_missing_file() -> None:
     """check_exp856_gate returns False when the artifact file does not exist.
 
@@ -304,13 +310,14 @@ def test_exp856_gate_passes_when_dual_gpu_deployed_true() -> None:
 # run_problem_baseline
 # ===========================================================================
 
+
 def test_run_problem_baseline_passing() -> None:
     """run_problem_baseline returns True when canonical solution passes the test.
 
     Spec: REQ-VR-020, SCENARIO-VR-030
     """
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "canonical_solution": "    return a + b\n",
         "test": "assert add(1, 2) == 3\n",
     }
@@ -323,7 +330,7 @@ def test_run_problem_baseline_failing() -> None:
     Spec: REQ-VR-020, SCENARIO-VR-030
     """
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "canonical_solution": "    return a - b\n",  # intentionally wrong
         "test": "assert add(1, 2) == 3\n",
     }
@@ -333,6 +340,7 @@ def test_run_problem_baseline_failing() -> None:
 # ===========================================================================
 # compute_signed_improvement
 # ===========================================================================
+
 
 def test_signed_improvement_positive() -> None:
     """compute_signed_improvement returns positive value when repair beats baseline.
@@ -369,6 +377,7 @@ def test_signed_improvement_n_zero() -> None:
 # ===========================================================================
 # classify_verdict
 # ===========================================================================
+
 
 def test_classify_verdict_positive_repair() -> None:
     """classify_verdict returns 'positive_repair' when live GPU and improvement > 0.

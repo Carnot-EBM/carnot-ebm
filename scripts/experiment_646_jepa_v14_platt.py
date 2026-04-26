@@ -291,7 +291,12 @@ def main() -> None:
     Path(DELIVERABLE).write_text(json.dumps(artifact, indent=2))
     _log.info(
         "Done — ECE %.4f -> %.4f (%.1f%% reduction), AUC %.4f -> %.4f, verdict=%s",
-        ece_before, ece_after, ece_reduction_pct, auc_before, auc_after, honest_verdict,
+        ece_before,
+        ece_after,
+        ece_reduction_pct,
+        auc_before,
+        auc_after,
+        honest_verdict,
     )
 
     tmpl.assert_deliverable_written()

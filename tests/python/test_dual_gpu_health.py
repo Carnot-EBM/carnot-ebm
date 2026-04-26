@@ -109,8 +109,15 @@ class TestDualGPUHealthResult:
 class TestCheckDualGpuHealthPynvml:
     """check_dual_gpu_health() via pynvml path."""
 
-    def _make_nvml_mock(self, gpu0_util=88, gpu0_temp=75, gpu0_vram=15736,
-                        gpu1_util=72, gpu1_temp=70, gpu1_vram=14000):
+    def _make_nvml_mock(
+        self,
+        gpu0_util=88,
+        gpu0_temp=75,
+        gpu0_vram=15736,
+        gpu1_util=72,
+        gpu1_temp=70,
+        gpu1_vram=14000,
+    ):
         """Build a minimal pynvml mock with two GPU handles."""
         pynvml = MagicMock()
         pynvml.nvmlInit.return_value = None
@@ -213,7 +220,9 @@ class TestCheckDualGpuHealthPynvml:
         pynvml_mock.nvmlDeviceGetHandleByIndex.side_effect = lambda idx: "handle_0"
         pynvml_mock.nvmlDeviceGetUtilizationRates.side_effect = lambda h: MagicMock(gpu=88)
         pynvml_mock.nvmlDeviceGetTemperature.side_effect = lambda h, s: 75
-        pynvml_mock.nvmlDeviceGetMemoryInfo.side_effect = lambda h: MagicMock(used=15736 * 1024 * 1024)
+        pynvml_mock.nvmlDeviceGetMemoryInfo.side_effect = lambda h: MagicMock(
+            used=15736 * 1024 * 1024
+        )
         with patch.dict("sys.modules", {"pynvml": pynvml_mock}):
             result = check_dual_gpu_health(timeout_seconds=60)
         assert result.gpu1_util_pct == 0.0
@@ -245,8 +254,15 @@ class TestCheckDualGpuHealthPynvml:
 class TestCheckDualGpuHealthNvidiaSmi:
     """check_dual_gpu_health() via nvidia-smi subprocess path (pynvml absent)."""
 
-    def _smi_output(self, gpu0_util=88, gpu0_temp=75, gpu0_vram=15736,
-                    gpu1_util=72, gpu1_temp=70, gpu1_vram=14000):
+    def _smi_output(
+        self,
+        gpu0_util=88,
+        gpu0_temp=75,
+        gpu0_vram=15736,
+        gpu1_util=72,
+        gpu1_temp=70,
+        gpu1_vram=14000,
+    ):
         """Produce fake nvidia-smi --query-gpu CSV output."""
         lines = [
             f"{gpu0_util}, {gpu0_temp}, {gpu0_vram}",
@@ -368,7 +384,9 @@ class TestBuildGpuFixArtifact:
             temperature_warning=False,
             recommended_batch_size_factor=1.0,
         )
-        artifact = build_gpu_fix_artifact(health, prior_retro_path="results/operational_retro_2026_04_31.json")
+        artifact = build_gpu_fix_artifact(
+            health, prior_retro_path="results/operational_retro_2026_04_31.json"
+        )
         assert artifact["schema"] == "carnot.dual_gpu_fix.v1"
         assert artifact["honest_verdict"] == "zombie_detected"
         assert artifact["retro_025_status"] == "zombie_confirmed"
@@ -408,8 +426,13 @@ class TestBuildGpuFixArtifact:
         )
         artifact = build_gpu_fix_artifact(health, prior_retro_path="results/retro.json")
         for field in [
-            "gpu0_util_pct", "gpu1_util_pct", "gpu0_temp_c", "gpu1_temp_c",
-            "gpu0_vram_mb", "gpu1_vram_mb", "temperature_warning",
+            "gpu0_util_pct",
+            "gpu1_util_pct",
+            "gpu0_temp_c",
+            "gpu1_temp_c",
+            "gpu0_vram_mb",
+            "gpu1_vram_mb",
+            "temperature_warning",
             "recommended_batch_size_factor",
         ]:
             assert field in artifact, f"Missing field: {field}"

@@ -59,7 +59,6 @@ import math
 import time
 from collections import Counter
 from dataclasses import dataclass, field
-from typing import Optional
 
 # ---------------------------------------------------------------------------
 # EntropyEstimate
@@ -309,7 +308,7 @@ class BayesianEntropyEstimator:
         h = 0.0
         if 0 < p_max < 1:
             h -= p_max * math.log(p_max)
-        residual = (1.0 - p_max)
+        residual = 1.0 - p_max
         if residual > 0 and residual_tokens > 0:
             p_each = residual / residual_tokens
             h -= residual_tokens * p_each * math.log(p_each)
@@ -428,7 +427,7 @@ class NUPProbeV2:
     def score(
         self,
         cot_text: str,
-        logprobs: Optional[list[float]] = None,
+        logprobs: list[float] | None = None,
     ) -> EntropyEstimate:
         """Compute Bayesian entropy estimate for a CoT step.
 
@@ -455,7 +454,7 @@ class NUPProbeV2:
     def predict_violation(
         self,
         cot_text: str,
-        logprobs: Optional[list[float]] = None,
+        logprobs: list[float] | None = None,
     ) -> bool:
         """Predict whether a CoT step is a constraint violation.
 
@@ -543,7 +542,7 @@ class NUPProbeV2:
 
         return float(min(1.0, max(0.0, auc)))
 
-    def evaluate(self, labeled_pairs: list[dict]) -> "NUPProbeV2Result":
+    def evaluate(self, labeled_pairs: list[dict]) -> NUPProbeV2Result:
         """Evaluate probe on labeled pairs and return full result object.
 
         Times the mean latency per score() call.

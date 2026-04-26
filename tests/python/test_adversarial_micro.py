@@ -216,7 +216,9 @@ class TestRobustnessClaim:
         assert art["robustness_claim"] is True
 
     def test_robustness_claim_blocked_always_false(self) -> None:
-        r = _make_result(inference_mode="simulated", repair_improvement_pct=10.0, adversarial_drop_pct=20.0)
+        r = _make_result(
+            inference_mode="simulated", repair_improvement_pct=10.0, adversarial_drop_pct=20.0
+        )
         art = build_micro_adversarial_artifact([r])
         assert art["robustness_claim"] is False
 

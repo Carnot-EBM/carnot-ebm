@@ -183,11 +183,7 @@ class TestParseThinkProbeOutput:
         assert verdict.verdict == "correct"
 
     def test_extracts_reasoning_steps(self):
-        output = (
-            "Step 1: The claim is 2+2=5.\n"
-            "Step 2: Actually 2+2=4.\n"
-            "Step 3: VERDICT: incorrect"
-        )
+        output = "Step 1: The claim is 2+2=5.\nStep 2: Actually 2+2=4.\nStep 3: VERDICT: incorrect"
         verdict = parse_think_probe_output(output)
         assert len(verdict.reasoning_steps) == 3
 
@@ -258,11 +254,7 @@ class TestCarnotThinkProbeLive:
         """Return a mock llm_caller that emits the given verdict text."""
 
         def caller(prompt: str) -> str:
-            return (
-                "Step 1: Extract claim.\n"
-                "Step 2: Check claim.\n"
-                f"Step 3: VERDICT: {verdict_text}"
-            )
+            return f"Step 1: Extract claim.\nStep 2: Check claim.\nStep 3: VERDICT: {verdict_text}"
 
         return caller
 

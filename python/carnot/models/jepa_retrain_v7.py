@@ -25,16 +25,17 @@ Spec: REQ-LEARN-049, REQ-LEARN-050, SCENARIO-LEARN-078, SCENARIO-LEARN-079
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import TYPE_CHECKING
 
-from carnot.embeddings.jepa_retrain import ViolationPair
 from carnot.models.jepa_retrain_v6 import (
     _load_pairs_from_file,
     compute_held_out_split,
     violation_pairs_to_trainer_dicts,
 )
+
+if TYPE_CHECKING:
+    from carnot.embeddings.jepa_retrain import ViolationPair
 
 __all__ = [
     "load_v7_cot_corpus",
@@ -49,9 +50,9 @@ __all__ = [
 
 
 def load_v7_cot_corpus(
-    preferred_paths: List[str],
-    fallback_paths: List[str],
-) -> Tuple[List[ViolationPair], str]:
+    preferred_paths: list[str],
+    fallback_paths: list[str],
+) -> tuple[list[ViolationPair], str]:
     """Load the best available CoT corpus for v7 training, with cascading fallback.
 
     **Priority order (FR-11 honesty contract):**
@@ -86,7 +87,7 @@ def load_v7_cot_corpus(
     Spec: REQ-LEARN-049, SCENARIO-LEARN-078, SCENARIO-LEARN-079
     """
     # --- Step 1: Try preferred paths (Exps 527/528) ---
-    preferred_pairs: List[ViolationPair] = []
+    preferred_pairs: list[ViolationPair] = []
     for path_str in preferred_paths:
         loaded = _load_pairs_from_file(Path(path_str))
         preferred_pairs.extend(loaded)
@@ -95,7 +96,7 @@ def load_v7_cot_corpus(
         return preferred_pairs, "live_exp527_528"
 
     # --- Step 2: Try fallback paths (FOVER 442, exp514) ---
-    fallback_pairs: List[ViolationPair] = []
+    fallback_pairs: list[ViolationPair] = []
     for path_str in fallback_paths:
         loaded = _load_pairs_from_file(Path(path_str))
         fallback_pairs.extend(loaded)
@@ -112,7 +113,7 @@ def load_v7_cot_corpus(
 # ---------------------------------------------------------------------------
 
 
-def summarize_corpus(pairs: List[ViolationPair]) -> Dict[str, object]:
+def summarize_corpus(pairs: list[ViolationPair]) -> dict[str, object]:
     """Return a summary dict describing the composition of a ViolationPair corpus.
 
     **Why this helper:**
@@ -139,7 +140,7 @@ def summarize_corpus(pairs: List[ViolationPair]) -> Dict[str, object]:
     n_correct = sum(1 for p in pairs if not p.has_violation)
     n_incorrect = sum(1 for p in pairs if p.has_violation)
 
-    source_breakdown: Dict[str, int] = {}
+    source_breakdown: dict[str, int] = {}
     for pair in pairs:
         mid = pair.model_id or "unknown"
         source_breakdown[mid] = source_breakdown.get(mid, 0) + 1

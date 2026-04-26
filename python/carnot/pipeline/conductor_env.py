@@ -28,9 +28,11 @@ Spec: REQ-INFRA-015, REQ-INFRA-016,
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from pathlib import Path
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # ConductorEnvFix dataclass
@@ -197,9 +199,7 @@ class RetroJSONEnforcer:
         matches = list(results_dir.glob(f"experiment_{exp_id}_*.json"))
         return len(matches) > 0
 
-    def audit_missing_jsons(
-        self, exp_ids: list[int], results_dir: Path
-    ) -> list[int]:
+    def audit_missing_jsons(self, exp_ids: list[int], results_dir: Path) -> list[int]:
         """Return the subset of ``exp_ids`` for which no result JSON exists.
 
         The order of the returned list matches the order of ``exp_ids`` — IDs
@@ -218,8 +218,4 @@ class RetroJSONEnforcer:
         list[int]
             Experiment IDs (in input order) that have no matching result JSON.
         """
-        return [
-            eid
-            for eid in exp_ids
-            if not self.check_result_json_exists(eid, results_dir)
-        ]
+        return [eid for eid in exp_ids if not self.check_result_json_exists(eid, results_dir)]

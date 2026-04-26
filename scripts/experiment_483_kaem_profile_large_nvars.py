@@ -74,8 +74,11 @@ TIMEOUT_MINUTES = 45
 def main() -> None:
     """Run Exp 483: profile KAEM vs MCMC at n_vars=(100,200,300,500,1000)."""
     _log.info("Exp %d: %s — starting", EXP_ID, TITLE)
-    _log.info("env_autofix verdict: gpu_detected=%s, auto_fix=%s",
-              _autofix.gpu_detected, _autofix.auto_fix_applied)
+    _log.info(
+        "env_autofix verdict: gpu_detected=%s, auto_fix=%s",
+        _autofix.gpu_detected,
+        _autofix.auto_fix_applied,
+    )
 
     # Deliverable guard: raises FileNotFoundError at end of main() if the
     # result JSON was never written — closes the RETRO-032/033/036 hole.
@@ -100,13 +103,15 @@ def main() -> None:
             bench = benchmark_kaem_vs_mcmc(n_vars=n_vars, n_samples=N_SAMPLES)
             speedup = bench["speedup_ratio"]
             speedups.append(speedup)
-            per_n_vars_results.append({
-                "n_vars": n_vars,
-                "n_samples": N_SAMPLES,
-                "kaem_latency_ms": bench["kaem_latency_ms"],
-                "mcmc_latency_ms": bench["ising_mcmc_latency_ms"],
-                "speedup_ratio": speedup,
-            })
+            per_n_vars_results.append(
+                {
+                    "n_vars": n_vars,
+                    "n_samples": N_SAMPLES,
+                    "kaem_latency_ms": bench["kaem_latency_ms"],
+                    "mcmc_latency_ms": bench["ising_mcmc_latency_ms"],
+                    "speedup_ratio": speedup,
+                }
+            )
             _log.info(
                 "n_vars=%d: kaem=%.1f ms, mcmc=%.1f ms, speedup=%.2fx",
                 n_vars,
@@ -121,13 +126,11 @@ def main() -> None:
     crossover = KAEMCrossoverResult(N_VARS_LIST, speedups)
 
     honest_verdict = (
-        "crossover_found" if crossover.kaem_viable_for_production
-        else "no_crossover_at_1000"
+        "crossover_found" if crossover.kaem_viable_for_production else "no_crossover_at_1000"
     )
 
     _log.info(
-        "Crossover analysis: crossover_n_vars=%s, max_speedup=%.2fx, "
-        "kaem_viable=%s, verdict=%s",
+        "Crossover analysis: crossover_n_vars=%s, max_speedup=%.2fx, kaem_viable=%s, verdict=%s",
         crossover.crossover_n_vars,
         crossover.max_speedup,
         crossover.kaem_viable_for_production,
@@ -180,12 +183,14 @@ def main() -> None:
 
 def _utc_now() -> str:
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _run_date() -> str:
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
+
+    return datetime.datetime.now(datetime.UTC).strftime("%Y%m%d")
 
 
 if __name__ == "__main__":

@@ -49,6 +49,7 @@ if str(_REPO_ROOT) not in sys.path:
 
 from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: E402
 from scripts.experiment_template import ExperimentTemplate  # noqa: E402
+import contextlib
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -299,10 +300,8 @@ def parse_yosys_stat(stdout: str) -> int | None:
     # Fallback: sum all "$_<type>_: N" lines
     total = 0
     for m in re.finditer(r"\$\w+\s+([\d,]+)", stdout):
-        try:
+        with contextlib.suppress(ValueError):
             total += int(m.group(1).replace(",", "").strip())
-        except ValueError:
-            pass
     return total if total > 0 else None
 
 
@@ -389,8 +388,9 @@ def main() -> None:
         vivado_available = check_vivado()
         yosys_available = check_yosys()
 
-        print(f"[Exp {EXP_ID}] vivado_available={vivado_available} "
-              f"yosys_available={yosys_available}")
+        print(
+            f"[Exp {EXP_ID}] vivado_available={vivado_available} yosys_available={yosys_available}"
+        )
 
         synthesis_tool: str
         lut_count: int | None = None
@@ -407,23 +407,20 @@ def main() -> None:
             tcl_path = TCL_DIR / "synth_ising_v3.tcl"
             write_vivado_tcl(tcl_path)
 
-            print(f"[Exp {EXP_ID}] Running Vivado synthesis "
-                  f"(part={PART_NUMBER}) ...")
+            print(f"[Exp {EXP_ID}] Running Vivado synthesis (part={PART_NUMBER}) ...")
             rc, _stdout, _stderr = run_vivado_synthesis(tcl_path)
             print(f"[Exp {EXP_ID}] Vivado returncode={rc}")
 
-            util = parse_utilization_report(
-                RESULTS_DIR / "ising_v3_utilization.rpt"
-            )
+            util = parse_utilization_report(RESULTS_DIR / "ising_v3_utilization.rpt")
             lut_count = util["LUT_count"]
             ff_count = util["FF_count"]
             bram_count = util["BRAM_count"]
 
-            wns_ns, timing_met = parse_timing_report(
-                RESULTS_DIR / "ising_v3_timing.rpt"
+            wns_ns, timing_met = parse_timing_report(RESULTS_DIR / "ising_v3_timing.rpt")
+            print(
+                f"[Exp {EXP_ID}] LUT={lut_count} FF={ff_count} "
+                f"BRAM={bram_count} WNS={wns_ns} timing_met={timing_met}"
             )
-            print(f"[Exp {EXP_ID}] LUT={lut_count} FF={ff_count} "
-                  f"BRAM={bram_count} WNS={wns_ns} timing_met={timing_met}")
 
         elif yosys_available:
             synthesis_tool = "yosys"
@@ -448,15 +445,12 @@ def main() -> None:
                 "RETRO-073 opened for milestone .54."
             )
             append_known_issue(note)
-            print(f"[Exp {EXP_ID}] No synthesis tool found — "
-                  "recording synthesis_blocked_no_tool.")
+            print(f"[Exp {EXP_ID}] No synthesis tool found — recording synthesis_blocked_no_tool.")
 
         # ----------------------------------------------------------------
         # 3. Determine honest_verdict and RETRO-072 status
         # ----------------------------------------------------------------
-        honest_verdict = compute_honest_verdict(
-            synthesis_tool, timing_met, lut_count
-        )
+        honest_verdict = compute_honest_verdict(synthesis_tool, timing_met, lut_count)
         retro_072_resolved = honest_verdict in (
             "synthesis_timing_met",
             "synthesis_lut_estimate_only",
@@ -468,8 +462,10 @@ def main() -> None:
         lut_budget_met: bool | None = None
         if lut_count is not None:
             lut_budget_met = lut_count < LUT_BUDGET
-            print(f"[Exp {EXP_ID}] LUT budget: {lut_count} / {LUT_BUDGET} "
-                  f"(<{LUT_BUDGET_PCT}% KV260 fabric) => met={lut_budget_met}")
+            print(
+                f"[Exp {EXP_ID}] LUT budget: {lut_count} / {LUT_BUDGET} "
+                f"(<{LUT_BUDGET_PCT}% KV260 fabric) => met={lut_budget_met}"
+            )
 
         # ----------------------------------------------------------------
         # 5. Write deliverable
@@ -498,8 +494,10 @@ def main() -> None:
         output_path = _REPO_ROOT / DELIVERABLE
         output_path.write_text(json.dumps(artifact, indent=2))
         print(f"[Exp {EXP_ID}] Deliverable written: {output_path}")
-        print(f"[Exp {EXP_ID}] honest_verdict={honest_verdict} "
-              f"retro_072_resolved={retro_072_resolved}")
+        print(
+            f"[Exp {EXP_ID}] honest_verdict={honest_verdict} "
+            f"retro_072_resolved={retro_072_resolved}"
+        )
 
     tmpl.assert_deliverable_written()
 

@@ -60,6 +60,7 @@ def _load_exp664():
 def _patch_repo_root(mod, tmp_path):
     """Patch the module's _REPO_ROOT and ExperimentTemplate's repo-root resolver."""
     import scripts.experiment_template as et_mod  # noqa: PLC0415
+
     mod._REPO_ROOT = str(tmp_path)
     return et_mod, et_mod._get_repo_root
 
@@ -131,6 +132,7 @@ class TestCIStubPath:
         output_path = _find_output(tmp_path)
         data = json.loads(output_path.read_text())
         from scripts.experiment_template import REQUIRED_RESULT_FIELDS  # noqa: PLC0415
+
         for field in REQUIRED_RESULT_FIELDS:
             assert field in data, f"Missing required field: {field}"
 
@@ -163,6 +165,7 @@ class TestGpuNotAvailablePath:
         Spec: REQ-INFRA-092-4
         """
         import scripts.experiment_template as et_mod  # noqa: PLC0415
+
         original_get = et_mod._get_repo_root
         mod = _load_exp664()
         mod._REPO_ROOT = str(tmp_path)

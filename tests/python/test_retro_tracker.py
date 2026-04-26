@@ -35,9 +35,11 @@ class TestRetroItemTrackerInit:
     def test_creates_with_items(self) -> None:
         """All items start as open."""
         tracker = RetroItemTracker(
-            [("RETRO-012", "CARNOT_FORCE_LIVE never set"),
-             ("RETRO-013", "Exp 356 never implemented"),
-             ("RETRO-014", "Missing result JSONs")]
+            [
+                ("RETRO-012", "CARNOT_FORCE_LIVE never set"),
+                ("RETRO-013", "Exp 356 never implemented"),
+                ("RETRO-014", "Missing result JSONs"),
+            ]
         )
         assert len(tracker.open_items()) == 3
 
@@ -63,9 +65,11 @@ class TestRetroItemTrackerInit:
 class TestRetroItemTrackerClose:
     def _tracker(self) -> RetroItemTracker:
         return RetroItemTracker(
-            [("RETRO-012", "CARNOT_FORCE_LIVE never set"),
-             ("RETRO-013", "Exp 356 never implemented"),
-             ("RETRO-014", "Missing result JSONs")]
+            [
+                ("RETRO-012", "CARNOT_FORCE_LIVE never set"),
+                ("RETRO-013", "Exp 356 never implemented"),
+                ("RETRO-014", "Missing result JSONs"),
+            ]
         )
 
     def test_close_reduces_open_count(self) -> None:
@@ -128,9 +132,7 @@ class TestRetroItemTrackerClose:
 class TestOpenItems:
     def test_returns_only_open(self) -> None:
         """open_items() excludes closed items."""
-        tracker = RetroItemTracker(
-            [("RETRO-012", "A"), ("RETRO-013", "B")]
-        )
+        tracker = RetroItemTracker([("RETRO-012", "A"), ("RETRO-013", "B")])
         tracker.close("RETRO-012", 365, "done")
         open_ids = [i["retro_id"] for i in tracker.open_items()]
         assert "RETRO-012" not in open_ids
@@ -165,18 +167,14 @@ class TestAllClosed:
 class TestSerialisation:
     def test_roundtrip_all_open(self) -> None:
         """to_dict / from_dict preserves open items."""
-        tracker = RetroItemTracker(
-            [("RETRO-012", "A"), ("RETRO-013", "B")]
-        )
+        tracker = RetroItemTracker([("RETRO-012", "A"), ("RETRO-013", "B")])
         d = tracker.to_dict()
         restored = RetroItemTracker.from_dict(d)
         assert len(restored.open_items()) == 2
 
     def test_roundtrip_partial_closed(self) -> None:
         """Closed state survives round-trip."""
-        tracker = RetroItemTracker(
-            [("RETRO-012", "A"), ("RETRO-013", "B")]
-        )
+        tracker = RetroItemTracker([("RETRO-012", "A"), ("RETRO-013", "B")])
         tracker.close("RETRO-012", 365, "done")
         d = tracker.to_dict()
         restored = RetroItemTracker.from_dict(d)

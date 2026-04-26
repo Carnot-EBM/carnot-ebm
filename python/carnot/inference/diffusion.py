@@ -26,15 +26,17 @@ Spec: REQ-INFER-012, SCENARIO-INFER-013
 from __future__ import annotations
 
 import math
-from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 
-from carnot.verify.constraint import ComposedEnergy, VerificationResult
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from carnot.verify.constraint import ComposedEnergy, VerificationResult
 
 
 @dataclass
@@ -154,7 +156,7 @@ def diffusion_generate(
     best_energy = float("inf")
     best_trajectory: list[float] = []
 
-    for c in range(config.n_candidates):
+    for _c in range(config.n_candidates):
         key, subkey = jrandom.split(key)
         state, trajectory = _diffusion_single(energy, config, subkey)
 

@@ -52,10 +52,10 @@ import jax.numpy as jnp
 import numpy as np
 import optax
 
-
 # ---------------------------------------------------------------------------
 # Luhn algorithm — validates credit card numbers
 # ---------------------------------------------------------------------------
+
 
 def luhn_valid(digits: str) -> bool:
     """Return True if the digit string passes the Luhn checksum.
@@ -161,6 +161,7 @@ N_FEATURES_V2: int = 23
 # Feature extractor
 # ---------------------------------------------------------------------------
 
+
 class PrivacyFilterFeatureExtractor:
     """Extract a fixed-size feature vector from text for PII detection.
 
@@ -239,11 +240,13 @@ class PrivacyFilterFeatureExtractor:
             max_len = max((e - s for s, e in span_list), default=0) / char_count
             frac_chars = sum(e - s for s, e in span_list) / char_count
 
-            features.extend([
-                min(match_count, 1.0),
-                min(max_len, 1.0),
-                min(frac_chars, 1.0),
-            ])
+            features.extend(
+                [
+                    min(match_count, 1.0),
+                    min(max_len, 1.0),
+                    min(frac_chars, 1.0),
+                ]
+            )
 
         # Token statistics (features 18-21).
         chars = list(text)
@@ -257,6 +260,7 @@ class PrivacyFilterFeatureExtractor:
         # (95 printable ASCII characters).  High entropy text (mixed alphanumeric
         # + symbols) is more PII-like than pure prose.
         from collections import Counter
+
         freq = Counter(chars)
         entropy = 0.0
         for cnt in freq.values():
@@ -289,6 +293,7 @@ class PrivacyFilterFeatureExtractor:
 # ---------------------------------------------------------------------------
 # KAN energy function (JAX pure, identical structure to v1 but parameterised)
 # ---------------------------------------------------------------------------
+
 
 def _bspline_eval_batch(
     x: jnp.ndarray,
@@ -353,8 +358,8 @@ def _kan_energy(
         vals = _bspline_eval_batch(x, ec_k, n_knots, degree)
         return jnp.sum(vals)
 
-    hidden = jax.vmap(layer1_unit)(edge_ctrl)                     # (n_hidden,)
-    hidden_norm = jnp.tanh(hidden / (n_features + 1e-8))          # (n_hidden,)
+    hidden = jax.vmap(layer1_unit)(edge_ctrl)  # (n_hidden,)
+    hidden_norm = jnp.tanh(hidden / (n_features + 1e-8))  # (n_hidden,)
     energies = _bspline_eval_batch(hidden_norm, output_ctrl, n_knots, degree)
     return jnp.sum(energies)
 
@@ -362,6 +367,7 @@ def _kan_energy(
 # ---------------------------------------------------------------------------
 # PrivacyFilterKANv2 — the complete model
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class PrivacyExampleV2:
@@ -493,12 +499,8 @@ class PrivacyFilterKANv2:
         Spec: REQ-SAFE-019
         """
         extractor = self._extractor
-        benign_arr = jnp.array(
-            [extractor.extract(e.text) for e in benign], dtype=jnp.float32
-        )
-        pii_arr = jnp.array(
-            [extractor.extract(e.text) for e in pii], dtype=jnp.float32
-        )
+        benign_arr = jnp.array([extractor.extract(e.text) for e in benign], dtype=jnp.float32)
+        pii_arr = jnp.array([extractor.extract(e.text) for e in pii], dtype=jnp.float32)
 
         n_knots = self._N_KNOTS
         degree = self._DEGREE
@@ -517,7 +519,7 @@ class PrivacyFilterKANv2:
                 return _kan_energy(feat, ec, oc, n_knots, degree, n_features, n_hidden)
 
             e_benign = jax.vmap(energy_one)(benign_batch)  # (n_benign,)
-            e_pii = jax.vmap(energy_one)(pii_batch)        # (n_pii,)
+            e_pii = jax.vmap(energy_one)(pii_batch)  # (n_pii,)
 
             # Mean energies: benign should be low, PII should be high.
             mean_e_b = jnp.mean(e_benign)
@@ -582,7 +584,7 @@ class PrivacyFilterKANv2:
         tmp.rename(path)
 
     @classmethod
-    def load(cls, path: Path | str) -> "PrivacyFilterKANv2":
+    def load(cls, path: Path | str) -> PrivacyFilterKANv2:
         """Load weights from a JSON file saved by save().
 
         Args:
@@ -614,6 +616,7 @@ class PrivacyFilterKANv2:
 # AUROC computation (copied from privacy_filter_kan.py for independence)
 # ---------------------------------------------------------------------------
 
+
 def _compute_auroc(scores: list[float], labels: list[int]) -> float:
     """Compute AUC-ROC where higher score = predicted positive (PII).
 
@@ -624,7 +627,7 @@ def _compute_auroc(scores: list[float], labels: list[int]) -> float:
     """
     if len(set(labels)) < 2:
         return 0.5
-    paired = sorted(zip(scores, labels), key=lambda x: -x[0])
+    paired = sorted(zip(scores, labels, strict=False), key=lambda x: -x[0])
     n_pos = sum(labels)
     n_neg = len(labels) - n_pos
     if n_pos == 0 or n_neg == 0:

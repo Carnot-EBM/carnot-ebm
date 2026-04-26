@@ -54,7 +54,8 @@ def collect_with_temperatures(
     print(f"Loading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         torch_dtype=torch.float16 if device == "cuda" else None,
     )
@@ -80,7 +81,9 @@ def collect_with_temperatures(
         prompt = f"Answer briefly and factually in one sentence. {question}"
         messages = [{"role": "user", "content": prompt}]
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
         inputs = tokenizer(text, return_tensors="pt")
@@ -110,7 +113,10 @@ def collect_with_temperatures(
                     response = response.split("</think>")[-1].strip()
 
                 is_correct = check_truthfulqa_answer(
-                    response, correct_answers, incorrect_answers, best_answer,
+                    response,
+                    correct_answers,
+                    incorrect_answers,
+                    best_answer,
                 )
 
                 # Get hidden states
@@ -136,7 +142,7 @@ def collect_with_temperatures(
 
         if (qi + 1) % 50 == 0:
             n_tok = len(all_activations)
-            print(f"  [{qi+1:3d}/{n_questions}] tokens={n_tok}")
+            print(f"  [{qi + 1:3d}/{n_questions}] tokens={n_tok}")
             for t in temperatures:
                 c, w = stats[t]["correct"], stats[t]["wrong"]
                 total = c + w
@@ -185,8 +191,11 @@ def train_and_eval(activations, labels, hidden_dim, label):
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -216,7 +225,7 @@ def train_and_eval(activations, labels, hidden_dim, label):
     acc = (tp + tn) / (len(ce) + len(we))
     gap = np.mean(we) - np.mean(ce)
 
-    print(f"  {label}: test={acc:.1%}, gap={gap:.4f}, n_train={split}, n_test={min_n-split}")
+    print(f"  {label}: test={acc:.1%}, gap={gap:.4f}, n_train={split}, n_test={min_n - split}")
     return acc, gap
 
 
@@ -240,7 +249,8 @@ def main() -> int:
     print(f"\n--- Test 1: Greedy Only (temp=0.0) ---")
     greedy_mask = temps == 0.0
     a1_acc, a1_gap = train_and_eval(
-        activations[greedy_mask], labels[greedy_mask], hidden_dim, "Greedy only")
+        activations[greedy_mask], labels[greedy_mask], hidden_dim, "Greedy only"
+    )
 
     # --- Test 2: All temperatures combined ---
     print(f"\n--- Test 2: All Temperatures Combined ---")
@@ -250,7 +260,8 @@ def main() -> int:
     print(f"\n--- Test 3: Sampled Only (temp > 0) ---")
     sampled_mask = temps > 0.0
     a3_acc, a3_gap = train_and_eval(
-        activations[sampled_mask], labels[sampled_mask], hidden_dim, "Sampled only")
+        activations[sampled_mask], labels[sampled_mask], hidden_dim, "Sampled only"
+    )
 
     # --- Test 4: Per-temperature breakdown ---
     print(f"\n--- Test 4: Per-Temperature Breakdown ---")
@@ -259,8 +270,7 @@ def main() -> int:
         mask = temps == t
         n_tok = int(mask.sum())
         n_correct = int(labels[mask].sum())
-        acc, gap = train_and_eval(
-            activations[mask], labels[mask], hidden_dim, f"temp={t:.1f}")
+        acc, gap = train_and_eval(activations[mask], labels[mask], hidden_dim, f"temp={t:.1f}")
         temp_results[t] = {"acc": acc, "gap": gap, "n_tokens": n_tok, "n_correct": n_correct}
 
     # --- Test 5: Cross-temperature transfer ---
@@ -291,8 +301,11 @@ def main() -> int:
     ebm_greedy = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -337,10 +350,14 @@ def main() -> int:
     print(f"  Total tokens: {n_total} ({n_total // 200} per question avg)")
     print(f"")
     print(f"  {'Dataset':25s} {'Accuracy':>9s} {'Gap':>8s} {'Tokens':>8s}")
-    print(f"  {'-'*55}")
-    print(f"  {'Greedy only (baseline)':25s} {a1_acc:>8.1%} {a1_gap:>8.4f} {int(greedy_mask.sum()):>8d}")
+    print(f"  {'-' * 55}")
+    print(
+        f"  {'Greedy only (baseline)':25s} {a1_acc:>8.1%} {a1_gap:>8.4f} {int(greedy_mask.sum()):>8d}"
+    )
     print(f"  {'All temps combined':25s} {a2_acc:>8.1%} {a2_gap:>8.4f} {n_total:>8d}")
-    print(f"  {'Sampled only (temp>0)':25s} {a3_acc:>8.1%} {a3_gap:>8.4f} {int(sampled_mask.sum()):>8d}")
+    print(
+        f"  {'Sampled only (temp>0)':25s} {a3_acc:>8.1%} {a3_gap:>8.4f} {int(sampled_mask.sum()):>8d}"
+    )
     print(f"  {'Train greedy→test sampled':25s} {cross_acc:>8.1%}")
     print(f"")
     print(f"  Per-temperature:")

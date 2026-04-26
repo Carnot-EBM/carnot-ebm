@@ -90,9 +90,7 @@ class TestE2ETrainingSampling:
         assert chain.shape[1] == 2
 
         x_range = float(jnp.max(chain[:, 0]) - jnp.min(chain[:, 0]))
-        assert x_range > 0.1, (
-            f"Chain should explore, but x[0] range is only {x_range:.4f}"
-        )
+        assert x_range > 0.1, f"Chain should explore, but x[0] range is only {x_range:.4f}"
 
     def test_rosenbrock_langevin_convergence(self) -> None:
         """SCENARIO-CORE-001: Langevin on Rosenbrock converges toward minimum."""
@@ -164,9 +162,7 @@ class TestE2ETrainingSampling:
 
         # Center should have moved toward the target
         center_error = float(jnp.linalg.norm(center - target))
-        assert center_error < 1.5, (
-            f"Center should move toward target, error={center_error:.4f}"
-        )
+        assert center_error < 1.5, f"Center should move toward target, error={center_error:.4f}"
 
     def test_full_pipeline_train_then_sample(self) -> None:
         """REQ-TRAIN-001, REQ-SAMPLE-001: Full train->sample E2E.
@@ -219,6 +215,5 @@ class TestE2ETrainingSampling:
         # (which should be near the target [2, 2])
         mean_to_target = float(jnp.linalg.norm(sample_mean - target))
         assert mean_to_target < 2.0, (
-            f"Sample mean {sample_mean} too far from target {target}, "
-            f"error={mean_to_target:.4f}"
+            f"Sample mean {sample_mean} too far from target {target}, error={mean_to_target:.4f}"
         )

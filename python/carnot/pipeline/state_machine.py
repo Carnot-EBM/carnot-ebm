@@ -34,13 +34,12 @@ Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
 from __future__ import annotations
 
 import copy
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from carnot.pipeline.agentic import (
     AgentStep,
     ConstraintState,
-    FactStatus,
     TrackedFact,
     _normalize_fact_key,
     propagate,
@@ -193,8 +192,7 @@ class ConstraintStateMachine:
         # Record which keys were already VERIFIED before this step.
         # Contradictions are violations of these keys.
         pre_verified_keys: set[str] = {
-            _normalize_fact_key(f.fact)
-            for f in self._state.get_verified()
+            _normalize_fact_key(f.fact) for f in self._state.get_verified()
         }
 
         # Record which fact keys existed before this step to find new additions.
@@ -210,9 +208,7 @@ class ConstraintStateMachine:
 
         # Collect new facts introduced in this step.
         new_fact_keys = set(self._state.facts.keys()) - pre_existing_keys
-        new_facts: list[TrackedFact] = [
-            self._state.facts[k] for k in new_fact_keys
-        ]
+        new_facts: list[TrackedFact] = [self._state.facts[k] for k in new_fact_keys]
 
         # Detect contradictions: violations in this step whose keys were
         # already VERIFIED before the step (the new output contradicts a
@@ -230,9 +226,7 @@ class ConstraintStateMachine:
         result = StepResult(
             step_index=step_index,
             verification=agent_step.verification
-            or VerificationResult(
-                verified=True, constraints=[], energy=0.0, violations=[]
-            ),
+            or VerificationResult(verified=True, constraints=[], energy=0.0, violations=[]),
             new_facts=new_facts,
             contradictions=contradictions,
             state_snapshot=state_snapshot,
@@ -328,7 +322,7 @@ class ConstraintStateMachine:
         """
         return self._state.get_assumed()
 
-    def check_global_consistency(self) -> "GlobalConsistencyReport":
+    def check_global_consistency(self) -> GlobalConsistencyReport:
         """Check all completed steps for global cross-step consistency (Exp 172).
 
         **Detailed explanation for engineers:**

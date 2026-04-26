@@ -103,12 +103,16 @@ class TestSopsAuthFailure:
         # Build a minimal ExperimentTemplate stand-in
         mock_tmpl = MagicMock()
         mock_tmpl._repo_root = tmp_path
+
         # Simulate build_result producing a dict with the expected fields
         def fake_build_result(data: dict, **kwargs) -> dict:
             return {**data, "experiment": 829, "status": kwargs.get("status", "success")}
+
         mock_tmpl.build_result.side_effect = fake_build_result
 
-        with patch("scripts.experiment_829_huggingface_v3_publish.decrypt_secret", return_value=None):
+        with patch(
+            "scripts.experiment_829_huggingface_v3_publish.decrypt_secret", return_value=None
+        ):
             artifact = exp829.run(mock_tmpl)
 
         assert artifact["hf_auth_blocked"] is True
@@ -136,8 +140,10 @@ class TestJepaPublishGating:
         results_dir.mkdir(parents=True, exist_ok=True)
         mock_tmpl = MagicMock()
         mock_tmpl._repo_root = tmp_path
+
         def fake_build_result(data: dict, **kwargs) -> dict:
             return {**data, "experiment": 829, "status": kwargs.get("status", "success")}
+
         mock_tmpl.build_result.side_effect = fake_build_result
         return mock_tmpl
 
@@ -149,24 +155,32 @@ class TestJepaPublishGating:
     def _write_exp826(self, tmp_path: Path) -> None:
         result_file = tmp_path / "results" / "experiment_826_prm_cross_domain_benchmark.json"
         result_file.parent.mkdir(parents=True, exist_ok=True)
-        result_file.write_text(json.dumps({
-            "in_dist_auc": 0.87,
-            "auc_gsm8k": 0.36,
-            "auc_humaneval": 0.76,
-            "auc_arc": 0.04,
-            "overall_ood_auc": 0.4,
-            "worst_domain": "arc",
-        }))
+        result_file.write_text(
+            json.dumps(
+                {
+                    "in_dist_auc": 0.87,
+                    "auc_gsm8k": 0.36,
+                    "auc_humaneval": 0.76,
+                    "auc_arc": 0.04,
+                    "overall_ood_auc": 0.4,
+                    "worst_domain": "arc",
+                }
+            )
+        )
 
     def _write_exp819(self, tmp_path: Path, retro_injection_closed: bool) -> None:
         result_file = tmp_path / "results" / "experiment_819_injection_field_fix.json"
         result_file.parent.mkdir(parents=True, exist_ok=True)
-        result_file.write_text(json.dumps({
-            "retro_injection_closed": retro_injection_closed,
-            "discrimination_rate": 1.0,
-            "n_pairs": 10,
-            "n_spins": 16,
-        }))
+        result_file.write_text(
+            json.dumps(
+                {
+                    "retro_injection_closed": retro_injection_closed,
+                    "discrimination_rate": 1.0,
+                    "n_pairs": 10,
+                    "n_spins": 16,
+                }
+            )
+        )
 
     def test_jepa_not_published_when_tier35_false(self, tmp_path: Path) -> None:
         """When tier35_deployed=False, jepa_published must be False.
@@ -181,19 +195,36 @@ class TestJepaPublishGating:
 
         # Mock hf_hub so no network calls are made
         mock_hf = MagicMock()
-        mock_hf.list_models.return_value = iter([
-            SimpleNamespace(id="Carnot-EBM/fake-model-1"),
-        ])
-        mock_hf.hf_hub_download.return_value = str(
-            tmp_path / "fake_readme.md"
+        mock_hf.list_models.return_value = iter(
+            [
+                SimpleNamespace(id="Carnot-EBM/fake-model-1"),
+            ]
         )
+        mock_hf.hf_hub_download.return_value = str(tmp_path / "fake_readme.md")
         (tmp_path / "fake_readme.md").write_text("Phase 1 research artifact. Already present.")
 
-        with patch("scripts.experiment_829_huggingface_v3_publish.decrypt_secret", return_value="hf_fake_token"), \
-             patch("scripts.experiment_829_huggingface_v3_publish.huggingface_hub", mock_hf), \
-             patch.object(exp829, "EXP_825_RESULT", tmp_path / "results/experiment_825_jepa_v23_eval_fr11_tier3.json"), \
-             patch.object(exp829, "EXP_826_RESULT", tmp_path / "results/experiment_826_prm_cross_domain_benchmark.json"), \
-             patch.object(exp829, "EXP_819_RESULT", tmp_path / "results/experiment_819_injection_field_fix.json"):
+        with (
+            patch(
+                "scripts.experiment_829_huggingface_v3_publish.decrypt_secret",
+                return_value="hf_fake_token",
+            ),
+            patch("scripts.experiment_829_huggingface_v3_publish.huggingface_hub", mock_hf),
+            patch.object(
+                exp829,
+                "EXP_825_RESULT",
+                tmp_path / "results/experiment_825_jepa_v23_eval_fr11_tier3.json",
+            ),
+            patch.object(
+                exp829,
+                "EXP_826_RESULT",
+                tmp_path / "results/experiment_826_prm_cross_domain_benchmark.json",
+            ),
+            patch.object(
+                exp829,
+                "EXP_819_RESULT",
+                tmp_path / "results/experiment_819_injection_field_fix.json",
+            ),
+        ):
             artifact = exp829.run(mock_tmpl)
 
         assert artifact["jepa_published"] is False
@@ -213,17 +244,38 @@ class TestJepaPublishGating:
         # list_models called twice: before and after publish
         mock_hf.list_models.side_effect = [
             iter([SimpleNamespace(id="Carnot-EBM/existing-1")]),  # n_existing
-            iter([SimpleNamespace(id="Carnot-EBM/existing-1"),
-                  SimpleNamespace(id="Carnot-EBM/jepa-v23-limo")]),  # n_after
+            iter(
+                [
+                    SimpleNamespace(id="Carnot-EBM/existing-1"),
+                    SimpleNamespace(id="Carnot-EBM/jepa-v23-limo"),
+                ]
+            ),  # n_after
         ]
         (tmp_path / "fake_readme.md").write_text("Phase 1 research artifact. Already present.")
         mock_hf.hf_hub_download.return_value = str(tmp_path / "fake_readme.md")
 
-        with patch("scripts.experiment_829_huggingface_v3_publish.decrypt_secret", return_value="hf_fake_token"), \
-             patch("scripts.experiment_829_huggingface_v3_publish.huggingface_hub", mock_hf), \
-             patch.object(exp829, "EXP_825_RESULT", tmp_path / "results/experiment_825_jepa_v23_eval_fr11_tier3.json"), \
-             patch.object(exp829, "EXP_826_RESULT", tmp_path / "results/experiment_826_prm_cross_domain_benchmark.json"), \
-             patch.object(exp829, "EXP_819_RESULT", tmp_path / "results/experiment_819_injection_field_fix.json"):
+        with (
+            patch(
+                "scripts.experiment_829_huggingface_v3_publish.decrypt_secret",
+                return_value="hf_fake_token",
+            ),
+            patch("scripts.experiment_829_huggingface_v3_publish.huggingface_hub", mock_hf),
+            patch.object(
+                exp829,
+                "EXP_825_RESULT",
+                tmp_path / "results/experiment_825_jepa_v23_eval_fr11_tier3.json",
+            ),
+            patch.object(
+                exp829,
+                "EXP_826_RESULT",
+                tmp_path / "results/experiment_826_prm_cross_domain_benchmark.json",
+            ),
+            patch.object(
+                exp829,
+                "EXP_819_RESULT",
+                tmp_path / "results/experiment_819_injection_field_fix.json",
+            ),
+        ):
             artifact = exp829.run(mock_tmpl)
 
         assert artifact["jepa_published"] is True
@@ -242,17 +294,38 @@ class TestJepaPublishGating:
         mock_hf = MagicMock()
         mock_hf.list_models.side_effect = [
             iter([SimpleNamespace(id="Carnot-EBM/existing-1")]),
-            iter([SimpleNamespace(id="Carnot-EBM/existing-1"),
-                  SimpleNamespace(id="Carnot-EBM/ising-constraint-injector-v2")]),
+            iter(
+                [
+                    SimpleNamespace(id="Carnot-EBM/existing-1"),
+                    SimpleNamespace(id="Carnot-EBM/ising-constraint-injector-v2"),
+                ]
+            ),
         ]
         (tmp_path / "fake_readme.md").write_text("Phase 1 research artifact. Already present.")
         mock_hf.hf_hub_download.return_value = str(tmp_path / "fake_readme.md")
 
-        with patch("scripts.experiment_829_huggingface_v3_publish.decrypt_secret", return_value="hf_fake_token"), \
-             patch("scripts.experiment_829_huggingface_v3_publish.huggingface_hub", mock_hf), \
-             patch.object(exp829, "EXP_825_RESULT", tmp_path / "results/experiment_825_jepa_v23_eval_fr11_tier3.json"), \
-             patch.object(exp829, "EXP_826_RESULT", tmp_path / "results/experiment_826_prm_cross_domain_benchmark.json"), \
-             patch.object(exp829, "EXP_819_RESULT", tmp_path / "results/experiment_819_injection_field_fix.json"):
+        with (
+            patch(
+                "scripts.experiment_829_huggingface_v3_publish.decrypt_secret",
+                return_value="hf_fake_token",
+            ),
+            patch("scripts.experiment_829_huggingface_v3_publish.huggingface_hub", mock_hf),
+            patch.object(
+                exp829,
+                "EXP_825_RESULT",
+                tmp_path / "results/experiment_825_jepa_v23_eval_fr11_tier3.json",
+            ),
+            patch.object(
+                exp829,
+                "EXP_826_RESULT",
+                tmp_path / "results/experiment_826_prm_cross_domain_benchmark.json",
+            ),
+            patch.object(
+                exp829,
+                "EXP_819_RESULT",
+                tmp_path / "results/experiment_819_injection_field_fix.json",
+            ),
+        ):
             artifact = exp829.run(mock_tmpl)
 
         assert artifact["injection_published"] is True

@@ -315,18 +315,20 @@ def build_synthetic_corpus(
 
         for frac in PREFIX_FRACTIONS:
             features = extract_apple_features(logits, prefix_fraction=frac, variant_type=variant)
-            rows.append(AppleFeatureRow(
-                case_id=f"synthetic_299_{i:04d}_{variant}",
-                prefix_fraction=frac,
-                variant_type=variant,
-                features=features,
-                violation_label=violation,
-                metadata={
-                    "synthetic_training": True,
-                    "experiment": EXPERIMENT_ID,
-                    "source": "synthetic_fallback",
-                },
-            ))
+            rows.append(
+                AppleFeatureRow(
+                    case_id=f"synthetic_299_{i:04d}_{variant}",
+                    prefix_fraction=frac,
+                    variant_type=variant,
+                    features=features,
+                    violation_label=violation,
+                    metadata={
+                        "synthetic_training": True,
+                        "experiment": EXPERIMENT_ID,
+                        "source": "synthetic_fallback",
+                    },
+                )
+            )
 
     return rows
 
@@ -367,9 +369,8 @@ def _load_logits_from_exp294_295(data_dir: Path) -> list[AppleFeatureRow] | None
 
     Spec: REQ-JEPA-003
     """
-    npy_files = (
-        sorted(data_dir.glob("logits_294_*.npy"))
-        + sorted(data_dir.glob("logits_295_*.npy"))
+    npy_files = sorted(data_dir.glob("logits_294_*.npy")) + sorted(
+        data_dir.glob("logits_295_*.npy")
     )
     if not npy_files:
         return None
@@ -401,18 +402,20 @@ def _load_logits_from_exp294_295(data_dir: Path) -> list[AppleFeatureRow] | None
         case_id = npy_path.stem
         for frac in PREFIX_FRACTIONS:
             features = extract_apple_features(logits, prefix_fraction=frac, variant_type=variant)
-            rows.append(AppleFeatureRow(
-                case_id=case_id,
-                prefix_fraction=frac,
-                variant_type=variant,
-                features=features,
-                violation_label=violation,
-                metadata={
-                    "synthetic_training": False,
-                    "experiment": EXPERIMENT_ID,
-                    "source": str(npy_path),
-                },
-            ))
+            rows.append(
+                AppleFeatureRow(
+                    case_id=case_id,
+                    prefix_fraction=frac,
+                    variant_type=variant,
+                    features=features,
+                    violation_label=violation,
+                    metadata={
+                        "synthetic_training": False,
+                        "experiment": EXPERIMENT_ID,
+                        "source": str(npy_path),
+                    },
+                )
+            )
 
     return rows if rows else None
 

@@ -169,7 +169,9 @@ def update_known_issues() -> bool:
     if insert_pos == -1:
         new_content = _KNOWN_ISSUES_CLOSURE_ENTRY + content
     else:
-        new_content = content[:insert_pos] + "\n" + _KNOWN_ISSUES_CLOSURE_ENTRY + content[insert_pos:]
+        new_content = (
+            content[:insert_pos] + "\n" + _KNOWN_ISSUES_CLOSURE_ENTRY + content[insert_pos:]
+        )
     _KNOWN_ISSUES_PATH.write_text(new_content, encoding="utf-8")
     _log.info("known-issues.md updated with FR-11 closed entry")
     return True
@@ -178,6 +180,7 @@ def update_known_issues() -> bool:
 # ---------------------------------------------------------------------------
 # Closure certificate
 # ---------------------------------------------------------------------------
+
 
 def write_certificate(docs_updated: list[str]) -> bool:
     """Write the machine-readable FR-11 closure certificate.
@@ -205,6 +208,7 @@ def write_certificate(docs_updated: list[str]) -> bool:
 # Verification helpers
 # ---------------------------------------------------------------------------
 
+
 def verify_doc_contains_operational(path: Path) -> bool:
     """Return True if *path* exists and contains the OPERATIONAL marker string."""
     if not path.exists():
@@ -220,14 +224,22 @@ def verify_certificate_valid() -> bool:
         cert = json.loads(_CERTIFICATE_PATH.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
         return False
-    required = {"requirement", "status", "closed_in_milestone", "closing_experiments",
-                "evidence", "docs_updated", "schema"}
+    required = {
+        "requirement",
+        "status",
+        "closed_in_milestone",
+        "closing_experiments",
+        "evidence",
+        "docs_updated",
+        "schema",
+    }
     return required.issubset(cert.keys()) and cert.get("status") == "OPERATIONAL"
 
 
 # ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
+
 
 def run_experiment() -> None:
     """Perform FR-11 formal closure: update docs, write certificate, verify, emit artifact."""

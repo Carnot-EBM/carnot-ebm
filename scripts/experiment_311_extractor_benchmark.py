@@ -292,9 +292,13 @@ def build_labeled_corpus() -> list[dict[str, Any]]:
     """
     corpus: list[dict[str, Any]] = []
     for entry in _CORRECT_RESPONSES:
-        corpus.append({"question": entry["question"], "response": entry["response"], "correct": True})
+        corpus.append(
+            {"question": entry["question"], "response": entry["response"], "correct": True}
+        )
     for entry in _INCORRECT_RESPONSES:
-        corpus.append({"question": entry["question"], "response": entry["response"], "correct": False})
+        corpus.append(
+            {"question": entry["question"], "response": entry["response"], "correct": False}
+        )
     return corpus
 
 
@@ -494,8 +498,10 @@ def main() -> None:
     ]
 
     corpus = build_labeled_corpus()
-    print(f"[311] Corpus: {len(corpus)} entries ({sum(1 for c in corpus if c['correct'])} correct, "
-          f"{sum(1 for c in corpus if not c['correct'])} incorrect)")
+    print(
+        f"[311] Corpus: {len(corpus)} entries ({sum(1 for c in corpus if c['correct'])} correct, "
+        f"{sum(1 for c in corpus if not c['correct'])} incorrect)"
+    )
 
     all_rows: dict[str, list[ExtractorBenchmarkRow]] = {}
     benchmark_results: list[BenchmarkResult] = []

@@ -177,13 +177,15 @@ def load_gsm8k_questions(seed: int = 161) -> list[dict[str, Any]]:
             gt = _extract_gsm8k_answer(example["answer"])
             if gt is None:
                 continue
-            questions.append({
-                "question": example["question"],
-                "ground_truth": gt,
-                "answer_text": example["answer"],
-                "source": "gsm8k",
-                "idx": idx,
-            })
+            questions.append(
+                {
+                    "question": example["question"],
+                    "ground_truth": gt,
+                    "answer_text": example["answer"],
+                    "source": "gsm8k",
+                    "idx": idx,
+                }
+            )
 
         print(f"  Parsed {len(questions)} questions with valid numeric answers.")
         return questions
@@ -237,28 +239,42 @@ def _generate_synthetic_gsm8k(n: int, seed: int = 161) -> list[dict[str, Any]]:
     questions: list[dict[str, Any]] = []
 
     templates = [
-        _tmpl_shopping, _tmpl_cooking, _tmpl_travel, _tmpl_savings,
-        _tmpl_classroom, _tmpl_garden, _tmpl_bakery, _tmpl_library,
-        _tmpl_sports, _tmpl_construction, _tmpl_fundraiser, _tmpl_farm,
-        _tmpl_factory, _tmpl_restaurant, _tmpl_warehouse,
+        _tmpl_shopping,
+        _tmpl_cooking,
+        _tmpl_travel,
+        _tmpl_savings,
+        _tmpl_classroom,
+        _tmpl_garden,
+        _tmpl_bakery,
+        _tmpl_library,
+        _tmpl_sports,
+        _tmpl_construction,
+        _tmpl_fundraiser,
+        _tmpl_farm,
+        _tmpl_factory,
+        _tmpl_restaurant,
+        _tmpl_warehouse,
     ]
 
     for i in range(n):
         tmpl = templates[i % len(templates)]
         q_text, answer = tmpl(random.Random(seed + i * 137))
-        questions.append({
-            "question": q_text,
-            "ground_truth": answer,
-            "answer_text": "",
-            "source": "synthetic",
-            "idx": i,
-        })
+        questions.append(
+            {
+                "question": q_text,
+                "ground_truth": answer,
+                "answer_text": "",
+                "source": "synthetic",
+                "idx": i,
+            }
+        )
 
     rng.shuffle(questions)
     return questions
 
 
 # --- Synthetic question templates (GSM8K-style, identical to Exp 91 for reproducibility) ---
+
 
 def _tmpl_shopping(rng: random.Random) -> tuple[str, int]:
     """Shopping: buy items, apply discount, compute change."""
@@ -404,8 +420,7 @@ def _tmpl_construction(rng: random.Random) -> tuple[str, int]:
     d = rng.randint(3, 7)
     r = rng.randint(15, 40)
     return (
-        f"{w} workers work {h} hours/day for {d} days, each laying "
-        f"{r} bricks/hour. Total bricks?",
+        f"{w} workers work {h} hours/day for {d} days, each laying {r} bricks/hour. Total bricks?",
         w * h * d * r,
     )
 
@@ -450,8 +465,7 @@ def _tmpl_factory(rng: random.Random) -> tuple[str, int]:
     dp = rng.choice([5, 10, 15, 20])
     total = m * upm * h
     return (
-        f"{m} machines producing {upm} units/hour for {h} hours. "
-        f"{dp}% defective. Good units?",
+        f"{m} machines producing {upm} units/hour for {h} hours. {dp}% defective. Good units?",
         total - total * dp // 100,
     )
 
@@ -568,10 +582,12 @@ def load_model(config: dict[str, Any], use_egpu: bool = False) -> tuple[Any, Any
         try:
             print(f"    Loading {model_name} on {device}...")
             tokenizer = AutoTokenizer.from_pretrained(
-                model_name, trust_remote_code=trust,
+                model_name,
+                trust_remote_code=trust,
             )
             model = AutoModelForCausalLM.from_pretrained(
-                model_name, trust_remote_code=trust,
+                model_name,
+                trust_remote_code=trust,
                 torch_dtype=torch.float16 if device == "cuda" else None,
             )
             if device == "cuda":
@@ -585,7 +601,9 @@ def load_model(config: dict[str, Any], use_egpu: bool = False) -> tuple[Any, Any
                     test_input = {k: v.cuda() for k, v in test_input.items()}
                 with torch.no_grad():
                     _ = model.generate(
-                        **test_input, max_new_tokens=4, do_sample=False,
+                        **test_input,
+                        max_new_tokens=4,
+                        do_sample=False,
                         pad_token_id=tokenizer.eos_token_id,
                     )
                 print("    Smoke test passed.")
@@ -615,6 +633,7 @@ def unload_model(model: Any, tokenizer: Any, device: str) -> None:
     del model, tokenizer
     try:
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
     except ImportError:
@@ -648,13 +667,17 @@ def generate_response(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             text = prompt
@@ -672,7 +695,7 @@ def generate_response(
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:],
+        outputs[0, inputs["input_ids"].shape[1] :],
         skip_special_tokens=True,
     )
 
@@ -731,7 +754,7 @@ def simulate_response(
     if iteration == 0:
         error_rate = base_error
     else:
-        error_rate = base_error * (0.50 ** iteration)
+        error_rate = base_error * (0.50**iteration)
 
     is_correct = rng.random() > error_rate
 
@@ -745,9 +768,7 @@ def simulate_response(
             f"Answer: {gt}"
         )
     else:
-        error_type = rng.choices(
-            ["arithmetic", "logic", "reading"], weights=[50, 35, 15], k=1
-        )[0]
+        error_type = rng.choices(["arithmetic", "logic", "reading"], weights=[50, 35, 15], k=1)[0]
         if error_type == "arithmetic":
             step1 = rng.randint(1, max(1, abs(gt) // 2))
             step2 = gt - step1
@@ -761,17 +782,10 @@ def simulate_response(
         elif error_type == "logic":
             offset = rng.choice([-20, -10, -5, 5, 10, 20])
             wrong = gt + offset
-            return (
-                f"Let me work through this.\n"
-                f"The result is {wrong}.\n"
-                f"Answer: {wrong}"
-            )
+            return f"Let me work through this.\nThe result is {wrong}.\nAnswer: {wrong}"
         else:
             wrong = gt * rng.choice([2, 3]) + rng.randint(-50, 50)
-            return (
-                f"I think the answer is {wrong}.\n"
-                f"Answer: {wrong}"
-            )
+            return f"I think the answer is {wrong}.\nAnswer: {wrong}"
 
 
 # ---------------------------------------------------------------------------
@@ -833,12 +847,14 @@ def extract_arithmetic_steps(response: str) -> list[dict[str, Any]]:
 
         satisfied = abs(claimed - correct) < 0.01
 
-        steps.append({
-            "expression": f"{a} {op} {b}",
-            "claimed": claimed,
-            "correct": correct,
-            "satisfied": satisfied,
-        })
+        steps.append(
+            {
+                "expression": f"{a} {op} {b}",
+                "claimed": claimed,
+                "correct": correct,
+                "satisfied": satisfied,
+            }
+        )
 
     return steps
 
@@ -870,8 +886,7 @@ def format_violations(arith_steps: list[dict[str, Any]]) -> str:
         )
     lines.append("")
     lines.append(
-        "Please recalculate step by step, fixing these errors. "
-        "Give the final answer as a number."
+        "Please recalculate step by step, fixing these errors. Give the final answer as a number."
     )
     return "\n".join(lines)
 
@@ -1081,7 +1096,10 @@ def run_verify_repair(
             response = generate_response(prompt, tokenizer, model, device)
         else:
             response = simulate_response(
-                question, model_name, iteration=iteration, rng=sim_rng,
+                question,
+                model_name,
+                iteration=iteration,
+                rng=sim_rng,
             )
 
         extracted = extract_final_number(response)
@@ -1245,8 +1263,7 @@ def save_results_json(
         compact[model_name] = {}
         for mode_name, entries in modes.items():
             compact[model_name][mode_name] = [
-                {k: v for k, v in e.items() if k not in ("response",)}
-                for e in entries
+                {k: v for k, v in e.items() if k not in ("response",)} for e in entries
             ]
 
     output = {
@@ -1343,8 +1360,11 @@ def main() -> int:
 
             # Mode 1: Baseline.
             r_base = run_baseline(
-                q, model_name,
-                tokenizer=tokenizer, model=model_obj, device=device,
+                q,
+                model_name,
+                tokenizer=tokenizer,
+                model=model_obj,
+                device=device,
                 use_live=use_live,
                 sim_rng=random.Random(seed_base),
             )
@@ -1352,8 +1372,11 @@ def main() -> int:
 
             # Mode 2: Verify-only.
             r_verify = run_verify_only(
-                q, model_name,
-                tokenizer=tokenizer, model=model_obj, device=device,
+                q,
+                model_name,
+                tokenizer=tokenizer,
+                model=model_obj,
+                device=device,
                 use_live=use_live,
                 sim_rng=random.Random(seed_base),
             )
@@ -1361,8 +1384,11 @@ def main() -> int:
 
             # Mode 3: Verify+Repair.
             r_repair = run_verify_repair(
-                q, model_name,
-                tokenizer=tokenizer, model=model_obj, device=device,
+                q,
+                model_name,
+                tokenizer=tokenizer,
+                model=model_obj,
+                device=device,
                 use_live=use_live,
                 sim_rng=random.Random(seed_base),
                 max_repairs=3,
@@ -1372,9 +1398,11 @@ def main() -> int:
             if (qi + 1) % 100 == 0 or qi == 0:
                 n_b = sum(1 for r in modes_results["baseline"] if r["correct"])
                 n_r = sum(1 for r in modes_results["verify_repair"] if r["correct"])
-                print(f"    {qi + 1}/{n_questions} — "
-                      f"baseline {n_b}/{qi + 1} ({n_b/(qi+1):.1%}), "
-                      f"repair {n_r}/{qi + 1} ({n_r/(qi+1):.1%})")
+                print(
+                    f"    {qi + 1}/{n_questions} — "
+                    f"baseline {n_b}/{qi + 1} ({n_b / (qi + 1):.1%}), "
+                    f"repair {n_r}/{qi + 1} ({n_r / (qi + 1):.1%})"
+                )
 
         model_elapsed = time.time() - model_start
         model_metadata[model_name]["time_s"] = model_elapsed
@@ -1420,12 +1448,18 @@ def main() -> int:
 
         # Print model summary.
         print(f"\n  {model_name} summary ({model_elapsed:.1f}s):")
-        print(f"    Baseline:      {sum(base_flags)}/{n_questions} "
-              f"({base_acc:.1%} [{base_lo:.1%}, {base_hi:.1%}])")
-        print(f"    Verify-only:   {sum(verify_flags)}/{n_questions} "
-              f"({verify_acc:.1%} [{verify_lo:.1%}, {verify_hi:.1%}])")
-        print(f"    Verify+Repair: {sum(repair_flags)}/{n_questions} "
-              f"({repair_acc:.1%} [{repair_lo:.1%}, {repair_hi:.1%}])")
+        print(
+            f"    Baseline:      {sum(base_flags)}/{n_questions} "
+            f"({base_acc:.1%} [{base_lo:.1%}, {base_hi:.1%}])"
+        )
+        print(
+            f"    Verify-only:   {sum(verify_flags)}/{n_questions} "
+            f"({verify_acc:.1%} [{verify_lo:.1%}, {verify_hi:.1%}])"
+        )
+        print(
+            f"    Verify+Repair: {sum(repair_flags)}/{n_questions} "
+            f"({repair_acc:.1%} [{repair_lo:.1%}, {repair_hi:.1%}])"
+        )
         print(f"    Δ (repair - baseline): {delta:+.1%} [{delta_lo:+.1%}, {delta_hi:+.1%}]")
 
         # Free model memory.
@@ -1460,8 +1494,10 @@ def main() -> int:
     print(f"\n{sep}")
     print(f"EXPERIMENT 161 FINAL RESULTS ({total_elapsed:.1f}s total)")
     print(sep)
-    print(f"  Dataset: {'REAL GSM8K' if n_real > 0 else 'Synthetic fallback'} "
-          f"(N={n_questions}, {n_real} real, {n_synth} synthetic)")
+    print(
+        f"  Dataset: {'REAL GSM8K' if n_real > 0 else 'Synthetic fallback'} "
+        f"(N={n_questions}, {n_real} real, {n_synth} synthetic)"
+    )
     print(f"  Inference: {inference_mode.upper()}")
     print(f"  Bootstrap CI: 95%, n_bootstrap=10,000")
     print()
@@ -1479,11 +1515,13 @@ def main() -> int:
         d_lo = stats["ci_delta_lower"]
         d_hi = stats["ci_delta_upper"]
 
-        print(f"  {model_name + tag:<20s} "
-              f"{b['accuracy']:>6.1%}±{(b['ci_upper']-b['ci_lower'])/2:>4.1%}  "
-              f"{v['accuracy']:>6.1%}±{(v['ci_upper']-v['ci_lower'])/2:>4.1%}  "
-              f"{r['accuracy']:>6.1%}±{(r['ci_upper']-r['ci_lower'])/2:>4.1%}  "
-              f"{d:>+6.1%}[{d_lo:+.1%},{d_hi:+.1%}]")
+        print(
+            f"  {model_name + tag:<20s} "
+            f"{b['accuracy']:>6.1%}±{(b['ci_upper'] - b['ci_lower']) / 2:>4.1%}  "
+            f"{v['accuracy']:>6.1%}±{(v['ci_upper'] - v['ci_lower']) / 2:>4.1%}  "
+            f"{r['accuracy']:>6.1%}±{(r['ci_upper'] - r['ci_lower']) / 2:>4.1%}  "
+            f"{d:>+6.1%}[{d_lo:+.1%},{d_hi:+.1%}]"
+        )
 
     print()
     print("  Published baselines (for context):")

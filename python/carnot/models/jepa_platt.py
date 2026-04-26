@@ -42,8 +42,10 @@ Spec: REQ-VERIFY-151, SCENARIO-VERIFY-204, SCENARIO-VERIFY-205
 from __future__ import annotations
 
 import os
+from typing import TYPE_CHECKING
 
-from carnot.models.eorm import CoTEnergyInput, EORMModel
+if TYPE_CHECKING:
+    from carnot.models.eorm import CoTEnergyInput, EORMModel
 
 
 class PlattScaledJEPA:

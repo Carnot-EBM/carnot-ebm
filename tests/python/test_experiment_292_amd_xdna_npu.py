@@ -70,9 +70,7 @@ CPU_ORT_BASELINE_US = 5.847
 
 # The .so library directory from the checked-in RyzenAI-SW repo
 RYZEN_AI_SW_DIR = Path.home() / "github.com" / "amd" / "RyzenAI-SW"
-VITISAI_SO_DIR = (
-    RYZEN_AI_SW_DIR / "Ryzen-AI-CVML-Library" / "linux" / "onnx" / "ryzen14"
-)
+VITISAI_SO_DIR = RYZEN_AI_SW_DIR / "Ryzen-AI-CVML-Library" / "linux" / "onnx" / "ryzen14"
 
 
 # ---------------------------------------------------------------------------
@@ -83,9 +81,7 @@ VITISAI_SO_DIR = (
 @pytest.fixture(scope="module")
 def results_json() -> dict[str, Any]:
     """Load the Exp 292 results JSON artifact."""
-    path = (
-        Path(__file__).parent.parent.parent / "results" / "experiment_292_results.json"
-    )
+    path = Path(__file__).parent.parent.parent / "results" / "experiment_292_results.json"
     if not path.exists():
         pytest.skip(f"Results artifact not yet generated: {path}")
     return json.loads(path.read_text())
@@ -124,9 +120,7 @@ class TestExp292Schema:
         """
         run_date = results_json["run_date"]
         assert isinstance(run_date, str), "run_date must be a string"
-        assert re.fullmatch(r"\d{8}", run_date), (
-            f"run_date must be YYYYMMDD, got: {run_date!r}"
-        )
+        assert re.fullmatch(r"\d{8}", run_date), f"run_date must be YYYYMMDD, got: {run_date!r}"
 
     def test_execution_path_is_valid(self, results_json: dict[str, Any]) -> None:
         """execution_path must be one of 'hardware', 'blocked', or 'build_failed'.
@@ -177,9 +171,7 @@ class TestExp292Schema:
         """
         assert isinstance(results_json["result"], dict), "result must be a dict"
 
-    def test_honest_verdict_has_explanation(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_honest_verdict_has_explanation(self, results_json: dict[str, Any]) -> None:
         """honest_verdict must have an explanation string.
 
         Spec: REQ-PRED-003 — honest artifact requires non-empty explanation.
@@ -227,9 +219,7 @@ class TestHardwareArtifact:
             f"npu_latency_us must be positive, got: {lat}"
         )
 
-    def test_speedup_vs_cpu_ort_is_consistent(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_speedup_vs_cpu_ort_is_consistent(self, results_json: dict[str, Any]) -> None:
         """speedup_vs_cpu_ort must equal cpu_ort_baseline_us / npu_latency_us.
 
         Spec: SCENARIO-EXP292-C — derived field must be consistent.
@@ -250,13 +240,9 @@ class TestHardwareArtifact:
         Spec: SCENARIO-EXP292-C
         """
         timed = results_json["result"]["timed_calls"]
-        assert isinstance(timed, int) and timed >= 5000, (
-            f"timed_calls must be ≥ 5000, got: {timed}"
-        )
+        assert isinstance(timed, int) and timed >= 5000, f"timed_calls must be ≥ 5000, got: {timed}"
 
-    def test_providers_used_contains_vitisai(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_providers_used_contains_vitisai(self, results_json: dict[str, Any]) -> None:
         """providers_used must include VitisAIExecutionProvider when on hardware path.
 
         Spec: SCENARIO-EXP292-C
@@ -293,9 +279,7 @@ class TestBlockedArtifact:
         missing = REQUIRED_BLOCKED_RESULT_KEYS - set(result.keys())
         assert not missing, f"Blocked result missing keys: {missing}"
 
-    def test_missing_prereqs_is_nonempty_list(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_missing_prereqs_is_nonempty_list(self, results_json: dict[str, Any]) -> None:
         """missing_prereqs must be a non-empty list of specific items.
 
         Spec: SCENARIO-EXP292-A — blocked artifact names exactly what is missing.
@@ -327,8 +311,7 @@ class TestBlockedArtifact:
         """
         result = results_json["result"]
         assert result.get("npu_latency_us") is None, (
-            f"Blocked path must not have fabricated npu_latency_us: "
-            f"{result.get('npu_latency_us')}"
+            f"Blocked path must not have fabricated npu_latency_us: {result.get('npu_latency_us')}"
         )
 
     def test_no_fabricated_speedup(self, results_json: dict[str, Any]) -> None:
@@ -338,8 +321,7 @@ class TestBlockedArtifact:
         """
         result = results_json["result"]
         assert result.get("speedup_vs_cpu_ort") is None, (
-            f"Blocked path must not have fabricated speedup: "
-            f"{result.get('speedup_vs_cpu_ort')}"
+            f"Blocked path must not have fabricated speedup: {result.get('speedup_vs_cpu_ort')}"
         )
 
 
@@ -376,9 +358,7 @@ class TestBuildFailedArtifact:
         """
         tail = results_json["result"]["build_log_tail"]
         assert isinstance(tail, list), "build_log_tail must be a list"
-        assert 1 <= len(tail) <= 50, (
-            f"build_log_tail must have 1-50 lines, got: {len(tail)}"
-        )
+        assert 1 <= len(tail) <= 50, f"build_log_tail must have 1-50 lines, got: {len(tail)}"
         for line in tail:
             assert isinstance(line, str), "Each build_log_tail entry must be a string"
 
@@ -442,17 +422,13 @@ class TestNpuHardwareInfo:
         hw = results_json["npu_hardware_info"]
         assert isinstance(hw, dict), "npu_hardware_info must be a dict"
 
-    def test_amdxdna_driver_loaded_is_bool(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_amdxdna_driver_loaded_is_bool(self, results_json: dict[str, Any]) -> None:
         """amdxdna_driver_loaded must be a boolean.
 
         Spec: REQ-PRED-003
         """
         hw = results_json["npu_hardware_info"]
-        assert "amdxdna_driver_loaded" in hw, (
-            "npu_hardware_info must have amdxdna_driver_loaded"
-        )
+        assert "amdxdna_driver_loaded" in hw, "npu_hardware_info must have amdxdna_driver_loaded"
         assert isinstance(hw["amdxdna_driver_loaded"], bool)
 
     def test_xrt_version_field_present(self, results_json: dict[str, Any]) -> None:
@@ -469,9 +445,7 @@ class TestNpuHardwareInfo:
         Spec: SCENARIO-EXP292-A — prereq check must verify RyzenAI-SW dir.
         """
         hw = results_json["npu_hardware_info"]
-        assert "ryzen_ai_sw_present" in hw, (
-            "npu_hardware_info must record ryzen_ai_sw_present"
-        )
+        assert "ryzen_ai_sw_present" in hw, "npu_hardware_info must record ryzen_ai_sw_present"
         assert isinstance(hw["ryzen_ai_sw_present"], bool)
 
     def test_vitisai_so_recorded(self, results_json: dict[str, Any]) -> None:
@@ -480,7 +454,5 @@ class TestNpuHardwareInfo:
         Spec: SCENARIO-EXP292-A — prereq check must verify .so presence.
         """
         hw = results_json["npu_hardware_info"]
-        assert "vitisai_so_present" in hw, (
-            "npu_hardware_info must record vitisai_so_present"
-        )
+        assert "vitisai_so_present" in hw, "npu_hardware_info must record vitisai_so_present"
         assert isinstance(hw["vitisai_so_present"], bool)

@@ -72,68 +72,69 @@ N_GSM8K = 50
 # Each answer is the canonical numeric/symbolic string the LLM should produce.
 _GSM8K_PROBLEMS: list[dict[str, Any]] = [
     {"id": f"gsm8k_{i}", "question": q, "answer": a}
-    for i, (q, a) in enumerate([
-        ("Janet has 3 apples and buys 5 more. How many does she have?", "8"),
-        ("A car travels at 60 mph for 2 hours. How many miles?", "120"),
-        ("If 4 shirts cost $48, how much does 1 shirt cost?", "$12"),
-        ("Tom has 7 cats. He gives away 3. How many remain?", "4"),
-        ("A rectangle is 6 cm by 4 cm. What is the area?", "24"),
-        ("There are 5 rows of 8 chairs. How many chairs total?", "40"),
-        ("Sara read 15 pages Monday and 22 Tuesday. Total pages?", "37"),
-        ("A dozen eggs costs $3. How much for 3 dozen?", "$9"),
-        ("A tank holds 120 litres. It is 3/4 full. How many litres?", "90"),
-        ("John is 12. His father is 3 times his age. Father's age?", "36"),
-        ("A train leaves at 9am and arrives at 1pm. Journey hours?", "4"),
-        ("A pizza has 8 slices. 3 are eaten. Slices left?", "5"),
-        ("15% of 200 is what number?", "30"),
-        ("A square has side 7 cm. What is the perimeter?", "28"),
-        ("60 students, 40% are girls. How many girls?", "24"),
-        ("A shop sells 50 items per day. Items in 7 days?", "350"),
-        ("Two numbers sum to 20 and one is 8. Other number?", "12"),
-        ("A bag weighs 2.5 kg. 4 bags weigh how much?", "10"),
-        ("If you earn $15/hr for 8 hrs, total pay?", "$120"),
-        ("A box has 24 chocolates split among 6 kids equally. Each gets?", "4"),
-        ("Temperature drops from 72F to 59F. Drop in degrees?", "13"),
-        ("A recipe uses 2 cups of flour for 12 cookies. For 36 cookies?", "6"),
-        ("A pool is 25m long. 8 laps = how many metres?", "200"),
-        ("There are 100 seats; 63 are taken. Seats available?", "37"),
-        ("5 friends share $75 equally. Each gets?", "$15"),
-        ("A book has 320 pages. You read 80. Pages left?", "240"),
-        ("3 + 4 x 2 = ?", "11"),
-        ("A triangle has angles 45 and 60 degrees. Third angle?", "75"),
-        ("$200 saved, spend $35.50. Amount left?", "$164.50"),
-        ("A car travels 300 km on 30 L. Km per litre?", "10"),
-        ("6 workers build 1 wall in 10 days. 1 worker takes how many days?", "60"),
-        ("25 x 4 = ?", "100"),
-        ("Largest prime less than 20?", "19"),
-        ("A cube has side 3 cm. Volume?", "27"),
-        ("Perimeter of a rectangle 9m by 5m?", "28"),
-        ("Discount 20% off $50. Final price?", "$40"),
-        ("LCM of 4 and 6?", "12"),
-        ("GCD of 12 and 18?", "6"),
-        ("A cistern fills in 6 hours. Fraction filled in 2 hours?", "1/3"),
-        ("Distance = speed x time. Speed=50, time=3. Distance?", "150"),
-        ("Average of 4, 8, 12, 16?", "10"),
-        ("Angle in semicircle subtended at circumference?", "90"),
-        ("Simple interest: P=1000, R=5%, T=2 years?", "$100"),
-        ("Perimeter of equilateral triangle with side 9?", "27"),
-        ("2^8 = ?", "256"),
-        ("3 apples + 2 oranges = 5 fruits. 10 fruits if same ratio: apples?", "6"),
-        ("A store has 5 red, 3 blue, 2 green balls. P(red)?", "0.5"),
-        ("If 2x = 14, x = ?", "7"),
-        ("Sum of first 10 natural numbers?", "55"),
-        ("Area of circle radius 7 (use pi=22/7)?", "154"),
-    ])
+    for i, (q, a) in enumerate(
+        [
+            ("Janet has 3 apples and buys 5 more. How many does she have?", "8"),
+            ("A car travels at 60 mph for 2 hours. How many miles?", "120"),
+            ("If 4 shirts cost $48, how much does 1 shirt cost?", "$12"),
+            ("Tom has 7 cats. He gives away 3. How many remain?", "4"),
+            ("A rectangle is 6 cm by 4 cm. What is the area?", "24"),
+            ("There are 5 rows of 8 chairs. How many chairs total?", "40"),
+            ("Sara read 15 pages Monday and 22 Tuesday. Total pages?", "37"),
+            ("A dozen eggs costs $3. How much for 3 dozen?", "$9"),
+            ("A tank holds 120 litres. It is 3/4 full. How many litres?", "90"),
+            ("John is 12. His father is 3 times his age. Father's age?", "36"),
+            ("A train leaves at 9am and arrives at 1pm. Journey hours?", "4"),
+            ("A pizza has 8 slices. 3 are eaten. Slices left?", "5"),
+            ("15% of 200 is what number?", "30"),
+            ("A square has side 7 cm. What is the perimeter?", "28"),
+            ("60 students, 40% are girls. How many girls?", "24"),
+            ("A shop sells 50 items per day. Items in 7 days?", "350"),
+            ("Two numbers sum to 20 and one is 8. Other number?", "12"),
+            ("A bag weighs 2.5 kg. 4 bags weigh how much?", "10"),
+            ("If you earn $15/hr for 8 hrs, total pay?", "$120"),
+            ("A box has 24 chocolates split among 6 kids equally. Each gets?", "4"),
+            ("Temperature drops from 72F to 59F. Drop in degrees?", "13"),
+            ("A recipe uses 2 cups of flour for 12 cookies. For 36 cookies?", "6"),
+            ("A pool is 25m long. 8 laps = how many metres?", "200"),
+            ("There are 100 seats; 63 are taken. Seats available?", "37"),
+            ("5 friends share $75 equally. Each gets?", "$15"),
+            ("A book has 320 pages. You read 80. Pages left?", "240"),
+            ("3 + 4 x 2 = ?", "11"),
+            ("A triangle has angles 45 and 60 degrees. Third angle?", "75"),
+            ("$200 saved, spend $35.50. Amount left?", "$164.50"),
+            ("A car travels 300 km on 30 L. Km per litre?", "10"),
+            ("6 workers build 1 wall in 10 days. 1 worker takes how many days?", "60"),
+            ("25 x 4 = ?", "100"),
+            ("Largest prime less than 20?", "19"),
+            ("A cube has side 3 cm. Volume?", "27"),
+            ("Perimeter of a rectangle 9m by 5m?", "28"),
+            ("Discount 20% off $50. Final price?", "$40"),
+            ("LCM of 4 and 6?", "12"),
+            ("GCD of 12 and 18?", "6"),
+            ("A cistern fills in 6 hours. Fraction filled in 2 hours?", "1/3"),
+            ("Distance = speed x time. Speed=50, time=3. Distance?", "150"),
+            ("Average of 4, 8, 12, 16?", "10"),
+            ("Angle in semicircle subtended at circumference?", "90"),
+            ("Simple interest: P=1000, R=5%, T=2 years?", "$100"),
+            ("Perimeter of equilateral triangle with side 9?", "27"),
+            ("2^8 = ?", "256"),
+            ("3 apples + 2 oranges = 5 fruits. 10 fruits if same ratio: apples?", "6"),
+            ("A store has 5 red, 3 blue, 2 green balls. P(red)?", "0.5"),
+            ("If 2x = 14, x = ?", "7"),
+            ("Sum of first 10 natural numbers?", "55"),
+            ("Area of circle radius 7 (use pi=22/7)?", "154"),
+        ]
+    )
 ]
 
-assert len(_GSM8K_PROBLEMS) == N_GSM8K, (
-    f"Expected {N_GSM8K} problems, got {len(_GSM8K_PROBLEMS)}"
-)
+assert len(_GSM8K_PROBLEMS) == N_GSM8K, f"Expected {N_GSM8K} problems, got {len(_GSM8K_PROBLEMS)}"
 
 
 # ---------------------------------------------------------------------------
 # Baseline inference helper
 # ---------------------------------------------------------------------------
+
 
 def _baseline_answer(problem: dict[str, Any]) -> str:
     """Return a simulated baseline LLM response without any pipeline repair.
@@ -156,6 +157,7 @@ def _baseline_answer(problem: dict[str, Any]) -> str:
 # ---------------------------------------------------------------------------
 # Per-question cascade runner
 # ---------------------------------------------------------------------------
+
 
 def _run_cascade(
     problem: dict[str, Any],
@@ -182,7 +184,7 @@ def _run_cascade(
 
     # Baseline (pre-repair) answer from simulated or real model.
     baseline_ans = _baseline_answer(problem)
-    baseline_correct = (baseline_ans.strip() == ref_answer.strip())
+    baseline_correct = baseline_ans.strip() == ref_answer.strip()
 
     tier_exited_at: int | None = None
     final_ans = baseline_ans
@@ -228,7 +230,7 @@ def _run_cascade(
             final_ans = ref_answer
             repaired = True
 
-    final_correct = (final_ans.strip() == ref_answer.strip())
+    final_correct = final_ans.strip() == ref_answer.strip()
     latency_ms = (time.perf_counter() - t0) * 1000.0
 
     return {
@@ -244,6 +246,7 @@ def _run_cascade(
 # ---------------------------------------------------------------------------
 # Metrics computation
 # ---------------------------------------------------------------------------
+
 
 def _compute_metrics(
     per_question: list[dict[str, Any]],
@@ -276,10 +279,7 @@ def _compute_metrics(
 
     baseline_correct = sum(1 for r in per_question if r["was_correct_baseline"])
     carnot_correct = sum(1 for r in per_question if r["was_correct_repaired"])
-    skipped = sum(
-        1 for r in per_question
-        if r.get("tier_exited_at") is not None
-    )
+    skipped = sum(1 for r in per_question if r.get("tier_exited_at") is not None)
     # Tiers that fired: 0/1/2 come from tier_exited_at; Tier 3 fires whenever
     # repaired=True AND tier_exited_at is None.
     tiers_fired: set[int] = set()
@@ -321,6 +321,7 @@ def _compute_metrics(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Entry point: gate check → GPU setup → 50-question cascade → artifact."""
@@ -379,9 +380,7 @@ def main() -> None:
     # -------------------------------------------------------------------------
     force_live_raw = os.environ.get("CARNOT_FORCE_LIVE", "0")
     inference_mode = (
-        "live_gpu"
-        if force_live_raw in ("1", "true", "True", "yes")
-        else "simulation_fallback"
+        "live_gpu" if force_live_raw in ("1", "true", "True", "yes") else "simulation_fallback"
     )
 
     # Propagate DualGPU flag for energy parallelism.
@@ -428,6 +427,7 @@ def main() -> None:
     if inference_mode == "live_gpu":
         try:
             from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline  # noqa: PLC0415
+
             three_tier = ThreeTierPipeline()
         except Exception as exc:
             print(f"[WARNING] ThreeTierPipeline unavailable: {exc}", file=sys.stderr)
@@ -435,6 +435,7 @@ def main() -> None:
 
         try:
             from carnot.pipeline.verify_repair import VerifyRepairPipeline  # noqa: PLC0415
+
             verify_repair_pipeline = VerifyRepairPipeline(
                 model=None,
                 domains=["math"],

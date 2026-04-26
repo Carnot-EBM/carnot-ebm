@@ -29,12 +29,11 @@
 
 Spec: REQ-CALIB-001, REQ-CALIB-002
 """
+
 from __future__ import annotations
 
 import json
-import math
 from dataclasses import asdict, dataclass
-from typing import List
 
 import numpy as np
 from sklearn.isotonic import IsotonicRegression
@@ -86,9 +85,7 @@ class EBMCalibrator:
     def __init__(self, n_bins: int = 10) -> None:
         self.n_bins = n_bins
 
-    def _build_bins(
-        self, energies: List[float], labels: List[int]
-    ) -> List[CalibrationBin]:
+    def _build_bins(self, energies: list[float], labels: list[int]) -> list[CalibrationBin]:
         """Split energies into equal-frequency bins and compute per-bin stats.
 
         Equal-frequency = each bin has floor(N/n_bins) samples.  The last bin
@@ -104,7 +101,7 @@ class EBMCalibrator:
         arr_l = arr_l[order]
 
         bin_size = n // self.n_bins
-        bins: List[CalibrationBin] = []
+        bins: list[CalibrationBin] = []
         for i in range(self.n_bins):
             start = i * bin_size
             # Last bin absorbs remainder
@@ -123,7 +120,7 @@ class EBMCalibrator:
             )
         return bins
 
-    def compute_ece(self, energies: List[float], labels: List[int]) -> float:
+    def compute_ece(self, energies: list[float], labels: list[int]) -> float:
         """Compute Expected Calibration Error over equal-frequency energy bins.
 
         ECE = sum_b ( |accuracy_b - confidence_b| * n_b ) / N
@@ -148,14 +145,10 @@ class EBMCalibrator:
             return 0.0
 
         bins = self._build_bins(energies, labels)
-        ece = sum(
-            abs(b.accuracy - b.bin_confidence) * b.n_samples for b in bins
-        ) / n
+        ece = sum(abs(b.accuracy - b.bin_confidence) * b.n_samples for b in bins) / n
         return float(ece)
 
-    def fit_isotonic(
-        self, energies: List[float], labels: List[int]
-    ) -> IsotonicRegression:
+    def fit_isotonic(self, energies: list[float], labels: list[int]) -> IsotonicRegression:
         """Fit isotonic regression on (-energy, label) pairs.
 
         We fit on NEGATIVE energy because lower energy should correspond to
@@ -176,9 +169,7 @@ class EBMCalibrator:
         iso.fit(-arr_e, arr_l)
         return iso
 
-    def compute_ece_from_probs(
-        self, probs: List[float], labels: List[int]
-    ) -> float:
+    def compute_ece_from_probs(self, probs: list[float], labels: list[int]) -> float:
         """Compute ECE from calibrated probabilities (already in [0,1]).
 
         Used after isotonic regression: convert calibrated probs to ECE by
@@ -193,8 +184,7 @@ class EBMCalibrator:
         """
         if len(probs) != len(labels):
             raise ValueError(
-                f"probs and labels must have same length, "
-                f"got {len(probs)} vs {len(labels)}"
+                f"probs and labels must have same length, got {len(probs)} vs {len(labels)}"
             )
         n = len(probs)
         if n == 0:
@@ -218,7 +208,7 @@ class EBMCalibrator:
             ece += abs(float(l_slice.mean()) - float(p_slice.mean())) * (end - start)
         return float(ece / n)
 
-    def save_curve(self, bins: List[CalibrationBin], path: str) -> None:
+    def save_curve(self, bins: list[CalibrationBin], path: str) -> None:
         """Save the calibration curve to a JSON file for external plotting.
 
         The saved JSON contains a list of bin dicts with fields:
@@ -232,8 +222,6 @@ class EBMCalibrator:
         with open(path, "w") as f:
             json.dump([asdict(b) for b in bins], f, indent=2)
 
-    def build_curve(
-        self, energies: List[float], labels: List[int]
-    ) -> List[CalibrationBin]:
+    def build_curve(self, energies: list[float], labels: list[int]) -> list[CalibrationBin]:
         """Public wrapper: build bins and return them for saving or analysis."""
         return self._build_bins(energies, labels)

@@ -32,10 +32,11 @@
 
 Spec: REQ-LEARN-052, REQ-LEARN-053, SCENARIO-LEARN-095
 """
+
 from __future__ import annotations
 
-import re
 import random
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -179,9 +180,8 @@ def _perturb_swap_operator(step: str, rng: random.Random) -> str:
     Sign errors are a classic CPMI hard-negative category — the step structure
     is correct but the direction of arithmetic is wrong.
     """
-    if "+" in step and "-" in step:
-        if rng.random() < 0.5:
-            return step.replace("+", "__PLUS__", 1).replace("-", "+", 1).replace("__PLUS__", "-", 1)
+    if "+" in step and "-" in step and rng.random() < 0.5:
+        return step.replace("+", "__PLUS__", 1).replace("-", "+", 1).replace("__PLUS__", "-", 1)
     if "+" in step:
         return step.replace("+", "-", 1)
     if "-" in step:
@@ -351,7 +351,9 @@ class CPMIContrastivePairBuilder:
                 # The "positive" reference for CPMI is the incorrect step itself
                 # (we want negatives that are close to it but differently wrong).
                 candidates = [
-                    generate_hard_negative(step_text, prefix=prefix_text, n_candidates=n_candidates, rng=self._rng)
+                    generate_hard_negative(
+                        step_text, prefix=prefix_text, n_candidates=n_candidates, rng=self._rng
+                    )
                     for _ in range(n_candidates)
                 ]
                 # Deduplicate; always include original as last-resort fallback.

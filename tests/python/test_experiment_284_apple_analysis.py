@@ -31,9 +31,7 @@ import pytest
 # ---------------------------------------------------------------------------
 
 _MODULE_NAME = "experiment_284_apple_analysis"
-_SCRIPT_PATH = (
-    Path(__file__).resolve().parents[2] / "scripts" / "experiment_284_apple_analysis.py"
-)
+_SCRIPT_PATH = Path(__file__).resolve().parents[2] / "scripts" / "experiment_284_apple_analysis.py"
 
 
 def _load_module() -> Any:
@@ -76,14 +74,14 @@ _FAKE_282 = {
     "stall_at": None,
     "model_results": {
         "Qwen3.5-0.8B": {
-            "standard":             {"accuracy": 0.20, "correct": 40, "total": 200},
-            "number_swap":          {"accuracy": 0.04, "correct":  8, "total": 200},
-            "irrelevant_sentence":  {"accuracy": 0.19, "correct": 38, "total": 200},
+            "standard": {"accuracy": 0.20, "correct": 40, "total": 200},
+            "number_swap": {"accuracy": 0.04, "correct": 8, "total": 200},
+            "irrelevant_sentence": {"accuracy": 0.19, "correct": 38, "total": 200},
         },
         "Gemma4-E4B-it": {
-            "standard":             {"accuracy": 0.465, "correct": 93, "total": 200},
-            "number_swap":          {"accuracy": 0.28,  "correct": 56, "total": 200},
-            "irrelevant_sentence":  {"accuracy": 0.460, "correct": 92, "total": 200},
+            "standard": {"accuracy": 0.465, "correct": 93, "total": 200},
+            "number_swap": {"accuracy": 0.28, "correct": 56, "total": 200},
+            "irrelevant_sentence": {"accuracy": 0.460, "correct": 92, "total": 200},
         },
     },
     "apple_2410_05229_check": {
@@ -105,36 +103,108 @@ _FAKE_283 = {
     "results": {
         "Qwen3.5-0.8B": {
             "number_swap": {
-                "baseline":      {"accuracy": 0.04,  "correct":  8, "total": 200, "violation_detected_count": 0, "repaired_count": 0},
-                "verify_only":   {"accuracy": 0.04,  "correct":  8, "total": 200, "violation_detected_count": 5, "repaired_count": 0},
-                "verify_repair": {"accuracy": 0.065, "correct": 13, "total": 200, "violation_detected_count": 5, "repaired_count": 5},
+                "baseline": {
+                    "accuracy": 0.04,
+                    "correct": 8,
+                    "total": 200,
+                    "violation_detected_count": 0,
+                    "repaired_count": 0,
+                },
+                "verify_only": {
+                    "accuracy": 0.04,
+                    "correct": 8,
+                    "total": 200,
+                    "violation_detected_count": 5,
+                    "repaired_count": 0,
+                },
+                "verify_repair": {
+                    "accuracy": 0.065,
+                    "correct": 13,
+                    "total": 200,
+                    "violation_detected_count": 5,
+                    "repaired_count": 5,
+                },
             },
             "irrelevant_sentence": {
-                "baseline":      {"accuracy": 0.19,  "correct": 38, "total": 200, "violation_detected_count": 0, "repaired_count": 0},
-                "verify_only":   {"accuracy": 0.19,  "correct": 38, "total": 200, "violation_detected_count": 2, "repaired_count": 0},
-                "verify_repair": {"accuracy": 0.195, "correct": 39, "total": 200, "violation_detected_count": 2, "repaired_count": 1},
+                "baseline": {
+                    "accuracy": 0.19,
+                    "correct": 38,
+                    "total": 200,
+                    "violation_detected_count": 0,
+                    "repaired_count": 0,
+                },
+                "verify_only": {
+                    "accuracy": 0.19,
+                    "correct": 38,
+                    "total": 200,
+                    "violation_detected_count": 2,
+                    "repaired_count": 0,
+                },
+                "verify_repair": {
+                    "accuracy": 0.195,
+                    "correct": 39,
+                    "total": 200,
+                    "violation_detected_count": 2,
+                    "repaired_count": 1,
+                },
             },
         },
         "Gemma4-E4B-it": {
             "number_swap": {
-                "baseline":      {"accuracy": 0.28,  "correct": 56, "total": 200, "violation_detected_count":  0, "repaired_count":  0},
-                "verify_only":   {"accuracy": 0.28,  "correct": 56, "total": 200, "violation_detected_count": 18, "repaired_count":  0},
-                "verify_repair": {"accuracy": 0.33,  "correct": 66, "total": 200, "violation_detected_count": 18, "repaired_count": 10},
+                "baseline": {
+                    "accuracy": 0.28,
+                    "correct": 56,
+                    "total": 200,
+                    "violation_detected_count": 0,
+                    "repaired_count": 0,
+                },
+                "verify_only": {
+                    "accuracy": 0.28,
+                    "correct": 56,
+                    "total": 200,
+                    "violation_detected_count": 18,
+                    "repaired_count": 0,
+                },
+                "verify_repair": {
+                    "accuracy": 0.33,
+                    "correct": 66,
+                    "total": 200,
+                    "violation_detected_count": 18,
+                    "repaired_count": 10,
+                },
             },
             "irrelevant_sentence": {
-                "baseline":      {"accuracy": 0.46,  "correct": 92, "total": 200, "violation_detected_count":  0, "repaired_count": 0},
-                "verify_only":   {"accuracy": 0.46,  "correct": 92, "total": 200, "violation_detected_count":  3, "repaired_count": 0},
-                "verify_repair": {"accuracy": 0.465, "correct": 93, "total": 200, "violation_detected_count":  3, "repaired_count": 1},
+                "baseline": {
+                    "accuracy": 0.46,
+                    "correct": 92,
+                    "total": 200,
+                    "violation_detected_count": 0,
+                    "repaired_count": 0,
+                },
+                "verify_only": {
+                    "accuracy": 0.46,
+                    "correct": 92,
+                    "total": 200,
+                    "violation_detected_count": 3,
+                    "repaired_count": 0,
+                },
+                "verify_repair": {
+                    "accuracy": 0.465,
+                    "correct": 93,
+                    "total": 200,
+                    "violation_detected_count": 3,
+                    "repaired_count": 1,
+                },
             },
         },
     },
     "improvement_deltas": {
         "Qwen3.5-0.8B": {
-            "verify_repair_number_swap_delta":         0.025,
+            "verify_repair_number_swap_delta": 0.025,
             "verify_repair_irrelevant_sentence_delta": 0.005,
         },
         "Gemma4-E4B-it": {
-            "verify_repair_number_swap_delta":         0.05,
+            "verify_repair_number_swap_delta": 0.05,
             "verify_repair_irrelevant_sentence_delta": 0.005,
         },
     },
@@ -151,6 +221,7 @@ _FAKE_283 = {
 # ---------------------------------------------------------------------------
 # REQ-VERIFY-074 / SCENARIO-VERIFY-091: compute_delta
 # ---------------------------------------------------------------------------
+
 
 class TestComputeDelta:
     """REQ-VERIFY-074, SCENARIO-VERIFY-091: compute_delta arithmetic."""
@@ -179,37 +250,57 @@ class TestComputeDelta:
 # REQ-VERIFY-075: classify_result
 # ---------------------------------------------------------------------------
 
+
 class TestClassifyResult:
     """REQ-VERIFY-075: classification logic."""
 
     def test_confirmed(self) -> None:
         """REQ-VERIFY-075: primary_met → CONFIRMED."""
-        assert classify_result(primary_met=True, partial_improvement=False, stall_detected=False) == "CONFIRMED"
+        assert (
+            classify_result(primary_met=True, partial_improvement=False, stall_detected=False)
+            == "CONFIRMED"
+        )
 
     def test_confirmed_with_partial(self) -> None:
         """REQ-VERIFY-075: primary_met takes precedence over partial."""
-        assert classify_result(primary_met=True, partial_improvement=True, stall_detected=False) == "CONFIRMED"
+        assert (
+            classify_result(primary_met=True, partial_improvement=True, stall_detected=False)
+            == "CONFIRMED"
+        )
 
     def test_partial(self) -> None:
         """REQ-VERIFY-075: partial_improvement without primary → PARTIAL."""
-        assert classify_result(primary_met=False, partial_improvement=True, stall_detected=False) == "PARTIAL"
+        assert (
+            classify_result(primary_met=False, partial_improvement=True, stall_detected=False)
+            == "PARTIAL"
+        )
 
     def test_ruled_out(self) -> None:
         """REQ-VERIFY-075: no improvement at all → RULED_OUT."""
-        assert classify_result(primary_met=False, partial_improvement=False, stall_detected=False) == "RULED_OUT"
+        assert (
+            classify_result(primary_met=False, partial_improvement=False, stall_detected=False)
+            == "RULED_OUT"
+        )
 
     def test_inconclusive_on_stall(self) -> None:
         """REQ-VERIFY-075: stall detected → INCONCLUSIVE regardless of other flags."""
-        assert classify_result(primary_met=True, partial_improvement=True, stall_detected=True) == "INCONCLUSIVE"
+        assert (
+            classify_result(primary_met=True, partial_improvement=True, stall_detected=True)
+            == "INCONCLUSIVE"
+        )
 
     def test_inconclusive_stall_only(self) -> None:
         """REQ-VERIFY-075: stall alone → INCONCLUSIVE."""
-        assert classify_result(primary_met=False, partial_improvement=False, stall_detected=True) == "INCONCLUSIVE"
+        assert (
+            classify_result(primary_met=False, partial_improvement=False, stall_detected=True)
+            == "INCONCLUSIVE"
+        )
 
 
 # ---------------------------------------------------------------------------
 # SCENARIO-VERIFY-090: compare_vs_exp235
 # ---------------------------------------------------------------------------
+
 
 class TestCompareVsExp235:
     """SCENARIO-VERIFY-090: compare_vs_exp235 returns a comparison dict."""
@@ -242,6 +333,7 @@ class TestCompareVsExp235:
 # ---------------------------------------------------------------------------
 # SCENARIO-VERIFY-089: INCONCLUSIVE when result files are missing
 # ---------------------------------------------------------------------------
+
 
 class TestInconclusiveMissingFiles:
     """SCENARIO-VERIFY-089: INCONCLUSIVE classification when Exp 282/283 files absent."""
@@ -281,7 +373,11 @@ class TestInconclusiveMissingFiles:
         """SCENARIO-VERIFY-089: partial=True + stall_at in Exp 283 → INCONCLUSIVE."""
         p282 = tmp_path / "experiment_282_results.json"
         p282.write_text(json.dumps(_FAKE_282))
-        stalled_283 = {**_FAKE_283, "partial": True, "stall_at": "Qwen3.5-0.8B:baseline:number_swap:gsm8k-178"}
+        stalled_283 = {
+            **_FAKE_283,
+            "partial": True,
+            "stall_at": "Qwen3.5-0.8B:baseline:number_swap:gsm8k-178",
+        }
         # Remove the full results so it looks like a real stall
         stalled_283.pop("results", None)
         stalled_283.pop("improvement_deltas", None)
@@ -295,6 +391,7 @@ class TestInconclusiveMissingFiles:
 # ---------------------------------------------------------------------------
 # SCENARIO-VERIFY-088: five key questions answered
 # ---------------------------------------------------------------------------
+
 
 class TestAnswerFiveQuestions:
     """SCENARIO-VERIFY-088: five key questions are answered when data is available."""
@@ -345,6 +442,7 @@ class TestAnswerFiveQuestions:
 # ---------------------------------------------------------------------------
 # SCENARIO-VERIFY-092: artifact schema
 # ---------------------------------------------------------------------------
+
 
 class TestBuildArtifact:
     """SCENARIO-VERIFY-092: build_artifact schema."""
@@ -403,6 +501,7 @@ class TestBuildArtifact:
 # ---------------------------------------------------------------------------
 # Integration: load_exp_results with valid data produces CONFIRMED
 # ---------------------------------------------------------------------------
+
 
 class TestFullAnalysisWithData:
     """REQ-VERIFY-073: end-to-end analysis with complete fake artifacts."""

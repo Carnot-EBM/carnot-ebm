@@ -20,6 +20,7 @@
     - Exp 857: blocked (same root cause)
     retire_if_same_verdict: true — if this also fails, GGUF-model-download is retired.
 """
+
 from __future__ import annotations
 
 import json
@@ -85,6 +86,7 @@ def main() -> None:
 
     # --- Step 1: probe for CLI availability ---------------------------------
     import shutil as _shutil
+
     hf_cmd = _shutil.which("hf") or _shutil.which("huggingface-cli")
     cli_found = hf_cmd is not None
 

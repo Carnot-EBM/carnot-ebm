@@ -24,7 +24,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
-
 # ---------------------------------------------------------------------------
 # Protocol: what a "violation extractor" must look like for diagnostics
 # ---------------------------------------------------------------------------
@@ -214,7 +213,7 @@ def run_extractor_diagnostic(
         )
 
     n_actual_incorrect = n_tp + n_fn  # total responses that were wrong
-    n_actual_correct = n_fp + n_tn    # total responses that were right
+    n_actual_correct = n_fp + n_tn  # total responses that were right
 
     # tp_rate = recall: of all wrong answers, how many did we catch?
     tp_rate = n_tp / n_actual_incorrect if n_actual_incorrect > 0 else 0.0

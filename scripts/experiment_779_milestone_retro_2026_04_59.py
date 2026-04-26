@@ -102,10 +102,8 @@ def evaluate_success_criteria(artifacts: dict[int, dict]) -> dict[str, bool]:
     return {
         # Exp 767: full_coverage=True means ALL dequeue sites have manifest enforcement.
         "manifest_enforcement_all_sites": bool(d[767].get("full_coverage", False)),
-
         # Exp 768: loader_test_passed=True means RETRO-028 (Gemma4 CUDA OOM) is resolved.
         "gemma4_loader_fixed": bool(d[768].get("loader_test_passed", False)),
-
         # Exp 769: signed_improvement > 0 means SOTA GGUF produced net positive code repair.
         # Timed-out → no signed_improvement → False.
         "sota_gguf_code_repair_positive": (
@@ -113,35 +111,26 @@ def evaluate_success_criteria(artifacts: dict[int, dict]) -> dict[str, bool]:
             and d[769].get("best_signed_improvement") is not None
             and d[769].get("best_signed_improvement", 0) > 0
         ),
-
         # Exp 770: ood_auc > 0.75 is the Tier 3.5 deployment gate.
         "jepa_v19_ood_viable": float(d[770].get("ood_auc", 0)) > 0.75,
-
         # Exp 771: comparison ran and honest_verdict was recorded → validation complete.
         "ebrm_validation_complete": bool(d[771].get("honest_verdict")),
-
         # Exp 772: semantic_energy_auc >= nup_probe_v4_auc means Tier 0g is viable.
         "semantic_energy_tier0g_viable": (
             float(d[772].get("semantic_energy_auc", 0))
             >= float(d[772].get("nup_probe_v4_auc", 1.0))
         ),
-
         # Exp 773: oracle_call_ratio >= 2.0 means Carnot is materially more efficient than SETS.
         "carnot_vs_sets_advantage": float(d[773].get("oracle_call_ratio", 0)) >= 2.0,
-
         # Exp 774: sample_reduction_fraction >= 0.30 means adaptive sampling delivers ≥30% reduction.
         "adaptive_sampling_efficiency": float(d[774].get("sample_reduction_fraction", 0)) >= 0.30,
-
         # Exp 775: auroc >= 0.90 means jailbreak detection is viable for deployment.
         "jailbreak_detection_viable": float(d[775].get("auroc", 0)) >= 0.90,
-
         # Exp 776: synthesis_attempted means nextpnr was found and synthesis was exercised.
         # nextpnr_ice40_found=True is the proxy for "synthesis attempted" even if timing failed.
         "kv260_synthesis_attempted": bool(d[776].get("nextpnr_ice40_found", False)),
-
         # Exp 777: n_models_published > 0 means at least one model reached HuggingFace Hub.
         "hf_models_published": int(d[777].get("n_models_published", 0)) > 0,
-
         # Exp 778: tier35_deployed OR gate correctly blocked (governance working).
         # A clean gate-block is a positive governance outcome, not a failure.
         "jepa_v19_cascade_deployed": (
@@ -149,7 +138,8 @@ def evaluate_success_criteria(artifacts: dict[int, dict]) -> dict[str, bool]:
             or (
                 d[778].get("status") == "blocked"
                 and "ood_auc" in d[778]
-                and float(d[778].get("jepa_v19_ood_auc", 1.0)) < float(d[778].get("ood_auc_gate", 0.75))
+                and float(d[778].get("jepa_v19_ood_auc", 1.0))
+                < float(d[778].get("ood_auc_gate", 0.75))
             )
         ),
     }
@@ -160,6 +150,7 @@ def compute_slowest_5(artifacts: dict[int, dict]) -> list[dict]:
 
     REQ-METRICS-010: exp425_absent_from_timing must be derivable from this list.
     """
+
     def duration_s(data: dict) -> float:
         if data.get("timed_out"):
             return data.get("timeout_minutes", data.get("elapsed_minutes", 0)) * 60
@@ -228,7 +219,10 @@ def identify_retros(
             "Prerequisite: resolve RETRO-028 so GPU is available for GGUF inference. NEWLY OPENED."
         )
 
-    if not criteria["hf_models_published"] and artifacts[777].get("honest_verdict") == "blocked_hf_not_authenticated":
+    if (
+        not criteria["hf_models_published"]
+        and artifacts[777].get("honest_verdict") == "blocked_hf_not_authenticated"
+    ):
         opened.append(
             "RETRO-HF-AUTH: Exp 777 blocked — HF_TOKEN not in environment. "
             "Required: SOPS-encrypted HF credentials in ops/server.md and loaded before conductor run. NEWLY OPENED."
@@ -254,7 +248,8 @@ def build_honest_verdict(
 
     parts = [
         f"wall_time_{direction}_103_6min_DRIVEN_BY_EXP{timeout_exp}_TIMEOUT"
-        if not improvement else "wall_time_improvement",
+        if not improvement
+        else "wall_time_improvement",
         "excl_timeout_8_5min_vs_prior_24_8min_TRUE_EFFICIENCY_WIN",
     ]
     if exp425_absent:
@@ -315,51 +310,57 @@ def main() -> None:
             improvement, criteria, exp425_absent, ood_auc, timeout_exp
         )
 
-        result = tmpl.build_result({
-            "schema": "carnot.operational_retro.v34",
-            "milestone": "2026.04.59",
-            "experiment_range": "767-779",
-            "n_experiments": n_exps,
-            "total_wall_time_min": round(total_min, 4),
-            "mean_min_per_experiment": round(mean_min, 4),
-            "prior_milestone_conductor_cycle_min": prior_conductor_min,
-            "wall_time_delta": round(wall_time_delta, 4),
-            "improvement": improvement,
-            "regression_note": (
-                "Regression driven entirely by Exp 769 timeout (120 min hard cap). "
-                "Excluding Exp 769, remaining 11 experiments total 8.5 min "
-                "(mean 0.77 min/experiment) — a significant efficiency improvement."
-            ),
-            "exp425_absent_from_timing": exp425_absent,
-            "exp425_governance_note": (
-                "GOVERNANCE WIN: Exp 425 absent from conductor cycle timing for the first time "
-                "since milestone .37. Manifest enforcement (Exp 767 full_coverage=True) "
-                "successfully eliminated 22-consecutive-milestone carry. "
-                "Cumulative overhead eliminated: 1,672 min (27.9 hours)."
-            ) if exp425_absent else "Exp 425 still present in timing.",
-            "success_criteria_met": criteria,
-            "criteria_met_count": sum(1 for v in criteria.values() if v),
-            "criteria_total": len(criteria),
-            "headline_results": {
-                "manifest_enforcement_all_sites": f"full_coverage={artifacts[767].get('full_coverage')} (Exp 767)",
-                "gemma4_loader_fixed": f"loader_test_passed={artifacts[768].get('loader_test_passed')} (Exp 768)",
-                "sota_gguf_code_repair_positive": "TIMED_OUT 120 min — no result (Exp 769)" if artifacts[769].get("timed_out") else f"best_signed_improvement={artifacts[769].get('best_signed_improvement')} (Exp 769)",
-                "jepa_v19_ood_viable": f"ood_auc={ood_auc} vs gate 0.75 (Exp 770)",
-                "ebrm_validation_complete": f"eorm_auc={artifacts[771].get('eorm_auc')} vs ebrm_auc={artifacts[771].get('ebrm_auc')} (Exp 771)",
-                "semantic_energy_tier0g_viable": f"semantic_energy_auc={artifacts[772].get('semantic_energy_auc')} vs nup_v4={artifacts[772].get('nup_probe_v4_auc')} (Exp 772)",
-                "carnot_vs_sets_advantage": f"oracle_call_ratio={artifacts[773].get('oracle_call_ratio')} (Exp 773)",
-                "adaptive_sampling_efficiency": f"sample_reduction_fraction={artifacts[774].get('sample_reduction_fraction')} (Exp 774)",
-                "jailbreak_detection_viable": f"auroc={artifacts[775].get('auroc')} (Exp 775)",
-                "kv260_synthesis_attempted": f"nextpnr_ice40_found={artifacts[776].get('nextpnr_ice40_found')}, ice40_synth_ok={artifacts[776].get('ice40_synth_ok')} (Exp 776)",
-                "hf_models_published": f"n_models_published={artifacts[777].get('n_models_published')} (Exp 777)",
-                "jepa_v19_cascade_deployed": f"tier35_deployed={artifacts[778].get('tier35_deployed')}, ood_auc={artifacts[778].get('jepa_v19_ood_auc')} < gate {artifacts[778].get('ood_auc_gate')} (Exp 778)",
-            },
-            "slowest_5": slowest_5,
-            "retros_closed": retros_closed,
-            "retros_opened": retros_opened,
-            "retros_still_open": retros_still_open,
-            "honest_verdict": honest_verdict,
-        })
+        result = tmpl.build_result(
+            {
+                "schema": "carnot.operational_retro.v34",
+                "milestone": "2026.04.59",
+                "experiment_range": "767-779",
+                "n_experiments": n_exps,
+                "total_wall_time_min": round(total_min, 4),
+                "mean_min_per_experiment": round(mean_min, 4),
+                "prior_milestone_conductor_cycle_min": prior_conductor_min,
+                "wall_time_delta": round(wall_time_delta, 4),
+                "improvement": improvement,
+                "regression_note": (
+                    "Regression driven entirely by Exp 769 timeout (120 min hard cap). "
+                    "Excluding Exp 769, remaining 11 experiments total 8.5 min "
+                    "(mean 0.77 min/experiment) — a significant efficiency improvement."
+                ),
+                "exp425_absent_from_timing": exp425_absent,
+                "exp425_governance_note": (
+                    "GOVERNANCE WIN: Exp 425 absent from conductor cycle timing for the first time "
+                    "since milestone .37. Manifest enforcement (Exp 767 full_coverage=True) "
+                    "successfully eliminated 22-consecutive-milestone carry. "
+                    "Cumulative overhead eliminated: 1,672 min (27.9 hours)."
+                )
+                if exp425_absent
+                else "Exp 425 still present in timing.",
+                "success_criteria_met": criteria,
+                "criteria_met_count": sum(1 for v in criteria.values() if v),
+                "criteria_total": len(criteria),
+                "headline_results": {
+                    "manifest_enforcement_all_sites": f"full_coverage={artifacts[767].get('full_coverage')} (Exp 767)",
+                    "gemma4_loader_fixed": f"loader_test_passed={artifacts[768].get('loader_test_passed')} (Exp 768)",
+                    "sota_gguf_code_repair_positive": "TIMED_OUT 120 min — no result (Exp 769)"
+                    if artifacts[769].get("timed_out")
+                    else f"best_signed_improvement={artifacts[769].get('best_signed_improvement')} (Exp 769)",
+                    "jepa_v19_ood_viable": f"ood_auc={ood_auc} vs gate 0.75 (Exp 770)",
+                    "ebrm_validation_complete": f"eorm_auc={artifacts[771].get('eorm_auc')} vs ebrm_auc={artifacts[771].get('ebrm_auc')} (Exp 771)",
+                    "semantic_energy_tier0g_viable": f"semantic_energy_auc={artifacts[772].get('semantic_energy_auc')} vs nup_v4={artifacts[772].get('nup_probe_v4_auc')} (Exp 772)",
+                    "carnot_vs_sets_advantage": f"oracle_call_ratio={artifacts[773].get('oracle_call_ratio')} (Exp 773)",
+                    "adaptive_sampling_efficiency": f"sample_reduction_fraction={artifacts[774].get('sample_reduction_fraction')} (Exp 774)",
+                    "jailbreak_detection_viable": f"auroc={artifacts[775].get('auroc')} (Exp 775)",
+                    "kv260_synthesis_attempted": f"nextpnr_ice40_found={artifacts[776].get('nextpnr_ice40_found')}, ice40_synth_ok={artifacts[776].get('ice40_synth_ok')} (Exp 776)",
+                    "hf_models_published": f"n_models_published={artifacts[777].get('n_models_published')} (Exp 777)",
+                    "jepa_v19_cascade_deployed": f"tier35_deployed={artifacts[778].get('tier35_deployed')}, ood_auc={artifacts[778].get('jepa_v19_ood_auc')} < gate {artifacts[778].get('ood_auc_gate')} (Exp 778)",
+                },
+                "slowest_5": slowest_5,
+                "retros_closed": retros_closed,
+                "retros_opened": retros_opened,
+                "retros_still_open": retros_still_open,
+                "honest_verdict": honest_verdict,
+            }
+        )
 
         out_path = repo_root / DELIVERABLE
         out_path.write_text(json.dumps(result, indent=2))

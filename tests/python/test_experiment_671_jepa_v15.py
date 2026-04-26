@@ -102,7 +102,7 @@ class TestExp659PairLoading:
 
         raw = [
             {"question_id": "1", "step_text": "good step", "label": "correct", "confidence": 1.0},
-            {"question_id": "1", "step_text": "bad step",  "label": "incorrect", "confidence": 1.0},
+            {"question_id": "1", "step_text": "bad step", "label": "incorrect", "confidence": 1.0},
         ]
         mock_path = tmp_path / "fover_labeled_steps_live.json"
         mock_path.write_text(json.dumps(raw))
@@ -149,11 +149,11 @@ class TestCPMIPairBuilding:
         """
         real_fover = [
             {"question_id": "q1", "step_text": "correct: 2+2=4", "is_correct": True},
-            {"question_id": "q1", "step_text": "wrong: 2+2=5",   "is_correct": False},
+            {"question_id": "q1", "step_text": "wrong: 2+2=5", "is_correct": False},
             {"question_id": "q2", "step_text": "correct: 3*3=9", "is_correct": True},
-            {"question_id": "q2", "step_text": "wrong: 3*3=10",  "is_correct": False},
+            {"question_id": "q2", "step_text": "wrong: 3*3=10", "is_correct": False},
             {"question_id": "q3", "step_text": "correct: 5-2=3", "is_correct": True},
-            {"question_id": "q3", "step_text": "wrong: 5-2=4",   "is_correct": False},
+            {"question_id": "q3", "step_text": "wrong: 5-2=4", "is_correct": False},
         ]
         embed_fn = make_embed_fn(embed_dim=256)
         cpmi_pairs, n_real, n_synthetic = build_cpmi_pairs(real_fover, embed_fn)
@@ -216,7 +216,7 @@ class TestPlattCalibration:
         """
         # Perfect separation: violations at high energy, correct at low energy
         energies = np.array([0.1, 0.15, 0.2, 0.8, 0.85, 0.9], dtype=np.float32)
-        labels   = np.array([0.0, 0.0,  0.0, 1.0, 1.0,  1.0], dtype=np.float32)
+        labels = np.array([0.0, 0.0, 0.0, 1.0, 1.0, 1.0], dtype=np.float32)
 
         T = fit_platt_temperature(energies, labels)
         assert T > 0.0
@@ -244,13 +244,16 @@ class TestPlattCalibration:
 class TestHonestVerdict:
     """Verify that determine_verdict() always returns a valid enum member."""
 
-    @pytest.mark.parametrize("ood_auc,ece,n_real,expected", [
-        (0.85, 0.05, 10,  "jepa_v15_target_met"),
-        (0.85, 0.15, 10,  "jepa_v15_auc_met"),
-        (0.70, 0.05, 10,  "jepa_v15_partial"),
-        (0.50, 0.20, 10,  "jepa_v15_no_improvement"),
-        (0.85, 0.05, 0,   "ci_mode_synthetic"),
-    ])
+    @pytest.mark.parametrize(
+        "ood_auc,ece,n_real,expected",
+        [
+            (0.85, 0.05, 10, "jepa_v15_target_met"),
+            (0.85, 0.15, 10, "jepa_v15_auc_met"),
+            (0.70, 0.05, 10, "jepa_v15_partial"),
+            (0.50, 0.20, 10, "jepa_v15_no_improvement"),
+            (0.85, 0.05, 0, "ci_mode_synthetic"),
+        ],
+    )
     def test_verdict_is_valid_enum(self, ood_auc, ece, n_real, expected):
         """determine_verdict() maps (ood_auc, ece, n_real) to the correct enum.
 

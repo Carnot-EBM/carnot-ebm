@@ -90,7 +90,7 @@ CI_HUMANEVAL_CASES: list[dict[str, Any]] = [
     {
         "case_id": "he-ci-0",
         "task_id": "HumanEval/1",
-        "prompt": "def add(a: int, b: int) -> int:\n    \"\"\"Return the sum of a and b.\"\"\"\n",
+        "prompt": 'def add(a: int, b: int) -> int:\n    """Return the sum of a and b."""\n',
         "entry_point": "add",
         "response": (
             "```python\n"
@@ -105,7 +105,7 @@ CI_HUMANEVAL_CASES: list[dict[str, Any]] = [
     {
         "case_id": "he-ci-1",
         "task_id": "HumanEval/2",
-        "prompt": "def double(x: int) -> int:\n    \"\"\"Return twice the value of x.\"\"\"\n",
+        "prompt": 'def double(x: int) -> int:\n    """Return twice the value of x."""\n',
         "entry_point": "double",
         "response": (
             "```python\n"
@@ -120,7 +120,7 @@ CI_HUMANEVAL_CASES: list[dict[str, Any]] = [
     {
         "case_id": "he-ci-2",
         "task_id": "HumanEval/3",
-        "prompt": "def seconds_in_hour() -> int:\n    \"\"\"Return the number of seconds in one hour.\"\"\"\n",
+        "prompt": 'def seconds_in_hour() -> int:\n    """Return the number of seconds in one hour."""\n',
         "entry_point": "seconds_in_hour",
         "response": (
             "```python\n"
@@ -135,14 +135,10 @@ CI_HUMANEVAL_CASES: list[dict[str, Any]] = [
     {
         "case_id": "he-ci-3",
         "task_id": "HumanEval/4",
-        "prompt": "def days_in_week() -> int:\n    \"\"\"Return the number of days in one week.\"\"\"\n",
+        "prompt": 'def days_in_week() -> int:\n    """Return the number of days in one week."""\n',
         "entry_point": "days_in_week",
         "response": (
-            "```python\n"
-            "def days_in_week() -> int:\n"
-            "    return 8\n"
-            "```\n"
-            "There are 8 days in a week."
+            "```python\ndef days_in_week() -> int:\n    return 8\n```\nThere are 8 days in a week."
         ),
         "response_passes_tests": False,
     },
@@ -150,7 +146,7 @@ CI_HUMANEVAL_CASES: list[dict[str, Any]] = [
     {
         "case_id": "he-ci-4",
         "task_id": "HumanEval/5",
-        "prompt": "def is_even(n: int) -> bool:\n    \"\"\"Return True if n is even, False otherwise.\"\"\"\n",
+        "prompt": 'def is_even(n: int) -> bool:\n    """Return True if n is even, False otherwise."""\n',
         "entry_point": "is_even",
         "response": (
             "This is a sorting function:\n"
@@ -711,9 +707,7 @@ def compute_humaneval_statistics(
     sem_stats = _stats(lambda r: r.semantic.flagged)
     combined_stats = _stats(lambda r: r.combined_flagged)
 
-    best_individual_fp = max(
-        code_stats["fp_rate"], z3_stats["fp_rate"], sem_stats["fp_rate"]
-    )
+    best_individual_fp = max(code_stats["fp_rate"], z3_stats["fp_rate"], sem_stats["fp_rate"])
     interference_score = round(combined_stats["fp_rate"] - best_individual_fp, 4)
 
     best_individual_detection = max(
@@ -723,9 +717,7 @@ def compute_humaneval_statistics(
 
     # Unique contribution: cases flagged by combined only because extractor X fired
     # (i.e., cases where X fires but neither of the other two fire)
-    def _unique_contribution(
-        flagged_fn: Any, other1_fn: Any, other2_fn: Any
-    ) -> int:
+    def _unique_contribution(flagged_fn: Any, other1_fn: Any, other2_fn: Any) -> int:
         return sum(
             1
             for r in case_results
@@ -766,32 +758,37 @@ def compute_humaneval_statistics(
         },
         "extractor_overlap": {
             "code_only": sum(
-                1 for r in case_results
+                1
+                for r in case_results
                 if r.code.flagged and not r.z3.flagged and not r.semantic.flagged
             ),
             "z3_only": sum(
-                1 for r in case_results
+                1
+                for r in case_results
                 if r.z3.flagged and not r.code.flagged and not r.semantic.flagged
             ),
             "semantic_only": sum(
-                1 for r in case_results
+                1
+                for r in case_results
                 if r.semantic.flagged and not r.code.flagged and not r.z3.flagged
             ),
             "code_and_z3": sum(
-                1 for r in case_results
+                1
+                for r in case_results
                 if r.code.flagged and r.z3.flagged and not r.semantic.flagged
             ),
             "code_and_semantic": sum(
-                1 for r in case_results
+                1
+                for r in case_results
                 if r.code.flagged and r.semantic.flagged and not r.z3.flagged
             ),
             "z3_and_semantic": sum(
-                1 for r in case_results
+                1
+                for r in case_results
                 if r.z3.flagged and r.semantic.flagged and not r.code.flagged
             ),
             "all_three": sum(
-                1 for r in case_results
-                if r.code.flagged and r.z3.flagged and r.semantic.flagged
+                1 for r in case_results if r.code.flagged and r.z3.flagged and r.semantic.flagged
             ),
         },
     }
@@ -839,9 +836,7 @@ def compute_gsm8k_statistics(
     sem_stats = _stats(lambda r: r.semantic.flagged)
     combined_stats = _stats(lambda r: r.combined_flagged)
 
-    best_individual_fp = max(
-        z3_stats["fp_rate"], llm_stats["fp_rate"], sem_stats["fp_rate"]
-    )
+    best_individual_fp = max(z3_stats["fp_rate"], llm_stats["fp_rate"], sem_stats["fp_rate"])
     interference_score = round(combined_stats["fp_rate"] - best_individual_fp, 4)
 
     best_individual_detection = max(
@@ -849,9 +844,7 @@ def compute_gsm8k_statistics(
     )
     detection_gain = round(combined_stats["detection_rate"] - best_individual_detection, 4)
 
-    def _unique_contribution(
-        flagged_fn: Any, other1_fn: Any, other2_fn: Any
-    ) -> int:
+    def _unique_contribution(flagged_fn: Any, other1_fn: Any, other2_fn: Any) -> int:
         return sum(
             1
             for r in case_results
@@ -892,32 +885,31 @@ def compute_gsm8k_statistics(
         },
         "extractor_overlap": {
             "z3_only": sum(
-                1 for r in case_results
+                1
+                for r in case_results
                 if r.z3.flagged and not r.llm.flagged and not r.semantic.flagged
             ),
             "llm_only": sum(
-                1 for r in case_results
+                1
+                for r in case_results
                 if r.llm.flagged and not r.z3.flagged and not r.semantic.flagged
             ),
             "semantic_only": sum(
-                1 for r in case_results
+                1
+                for r in case_results
                 if r.semantic.flagged and not r.z3.flagged and not r.llm.flagged
             ),
             "z3_and_llm": sum(
-                1 for r in case_results
-                if r.z3.flagged and r.llm.flagged and not r.semantic.flagged
+                1 for r in case_results if r.z3.flagged and r.llm.flagged and not r.semantic.flagged
             ),
             "z3_and_semantic": sum(
-                1 for r in case_results
-                if r.z3.flagged and r.semantic.flagged and not r.llm.flagged
+                1 for r in case_results if r.z3.flagged and r.semantic.flagged and not r.llm.flagged
             ),
             "llm_and_semantic": sum(
-                1 for r in case_results
-                if r.llm.flagged and r.semantic.flagged and not r.z3.flagged
+                1 for r in case_results if r.llm.flagged and r.semantic.flagged and not r.z3.flagged
             ),
             "all_three": sum(
-                1 for r in case_results
-                if r.z3.flagged and r.llm.flagged and r.semantic.flagged
+                1 for r in case_results if r.z3.flagged and r.llm.flagged and r.semantic.flagged
             ),
         },
     }
@@ -1207,9 +1199,7 @@ def main() -> int:
 
     skip = _skip_llm()
     if skip:
-        logger.info(
-            "CARNOT_SKIP_LLM=1: CI mode — 5 HumanEval + 10 GSM8K canned cases"
-        )
+        logger.info("CARNOT_SKIP_LLM=1: CI mode — 5 HumanEval + 10 GSM8K canned cases")
         he_results, gsm8k_results = run_ci_benchmark()
         live_mode = False
     else:

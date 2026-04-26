@@ -113,7 +113,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 377,
         "title": "RETRO-015 infrastructure fix — LiveGPUGate + session_startup.sh",
         "result_file": "results/experiment_377_gpu_session_fix.json",
-        "wall_time_min": 34,   # 03:19 plan → 03:53 commit (conductor log)
+        "wall_time_min": 34,  # 03:19 plan → 03:53 commit (conductor log)
         "status": "completed",
         "note": (
             "47 tests pass. LiveGPUGate class implemented; session_startup.sh now exports "
@@ -125,7 +125,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 378,
         "title": "RETRO-018 re-implementation — CIKANEnergy Python class",
         "result_file": "results/experiment_378_cikan_energy.json",
-        "wall_time_min": 0,    # Session interrupted before this was written
+        "wall_time_min": 0,  # Session interrupted before this was written
         "status": "missing",
         "note": (
             "Session interrupted before Exp 378 could be implemented. "
@@ -137,7 +137,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 379,
         "title": "Live precision pipeline execution — 5 variants × 2 models × 200 GSM8K",
         "result_file": "results/experiment_379_precision_execute.json",
-        "wall_time_min": 42,   # 03:53 → 04:35 (conductor log)
+        "wall_time_min": 42,  # 03:53 → 04:35 (conductor log)
         "status": "partial",
         "note": (
             "22 tests pass. Script written (LiveGPUGate hard gate). "
@@ -149,7 +149,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 380,
         "title": "Live HumanEval code verification benchmark",
         "result_file": "results/experiment_380_humaneval_execute.json",
-        "wall_time_min": 13,   # 04:35 → 04:48 (conductor log)
+        "wall_time_min": 13,  # 04:35 → 04:48 (conductor log)
         "status": "partial",
         "note": (
             "24 tests pass. Script written with LiveGPUGate. "
@@ -160,7 +160,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 381,
         "title": "Live adversarial GSM8K — Apple arXiv 2410.05229 with CARNOT_FORCE_LIVE=1",
         "result_file": "results/experiment_381_adversarial_execute.json",
-        "wall_time_min": 15,   # estimated from checkpoint commit
+        "wall_time_min": 15,  # estimated from checkpoint commit
         "status": "partial",
         "note": "Script created. Extended GPU runtime needed. result JSON status='partial'.",
     },
@@ -168,7 +168,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 382,
         "title": "Live extraction comparison — LLMExtractor vs ArithmeticExtractor",
         "result_file": "results/experiment_382_extraction_execute.json",
-        "wall_time_min": 15,   # estimated
+        "wall_time_min": 15,  # estimated
         "status": "partial",
         "note": "Script created. Extended GPU runtime needed. result JSON status='partial'.",
     },
@@ -176,7 +176,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 383,
         "title": "Combined EORM+JEPA retrain on live pairs from Exps 379-382",
         "result_file": "results/experiment_383_models_retrain.json",
-        "wall_time_min": 85,   # 04:48 → 06:13 (conductor log — significant work)
+        "wall_time_min": 85,  # 04:48 → 06:13 (conductor log — significant work)
         "status": "partial",
         "note": (
             "41 tests pass. EORM+JEPA combined retrain script written. "
@@ -188,7 +188,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 384,
         "title": "FR-11 self-learning relay live — first learning_confirmed verdict",
         "result_file": "results/experiment_384_relay_live.json",
-        "wall_time_min": 15,   # estimated from checkpoint commit (Exp 383-388 batch)
+        "wall_time_min": 15,  # estimated from checkpoint commit (Exp 383-388 batch)
         "status": "partial",
         "note": "Script and tests created. Needs extended runtime. result JSON status='partial'.",
     },
@@ -196,7 +196,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 385,
         "title": "Three-tier pipeline live execution",
         "result_file": "results/experiment_385_three_tier_execute.json",
-        "wall_time_min": 10,   # estimated
+        "wall_time_min": 10,  # estimated
         "status": "partial",
         "note": "Script and tests created. Needs extended runtime.",
     },
@@ -204,7 +204,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 386,
         "title": "JitRL threshold modulation — Tier 1 self-learning memory (arXiv 2601.18510)",
         "result_file": "results/experiment_386_jitrl_memory.json",
-        "wall_time_min": 0,    # Session interrupted before this was written
+        "wall_time_min": 0,  # Session interrupted before this was written
         "status": "missing",
         "note": "Session interrupted before Exp 386 could be implemented. No artifacts.",
     },
@@ -212,7 +212,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 387,
         "title": "Safety KAN AUC-ROC benchmark — constraint-aware safety scoring",
         "result_file": "results/experiment_387_safety_kan.json",
-        "wall_time_min": 0,    # Session interrupted before this was written
+        "wall_time_min": 0,  # Session interrupted before this was written
         "status": "missing",
         "note": "Session interrupted before Exp 387 could be implemented. No artifacts.",
     },
@@ -220,7 +220,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 388,
         "title": "SAVeR live multi-turn verification wrapper — live GPU execution",
         "result_file": "results/experiment_388_saver_live.json",
-        "wall_time_min": 10,   # estimated from checkpoint commit
+        "wall_time_min": 10,  # estimated from checkpoint commit
         "status": "partial",
         "note": "Script and tests created. Needs extended runtime. result JSON status='partial'.",
     },
@@ -503,9 +503,7 @@ def compute_timing_stats(experiments: list[dict[str, Any]]) -> dict[str, Any]:
         }
 
     # "blocked" = missing or blocked status (did no useful GPU work)
-    n_blocked = sum(
-        1 for e in experiments if e.get("status") in ("blocked", "missing")
-    )
+    n_blocked = sum(1 for e in experiments if e.get("status") in ("blocked", "missing"))
     total = sum(e["wall_time_min"] for e in experiments)
     mean = round(total / len(experiments), 1) if experiments else 0.0
 
@@ -647,8 +645,7 @@ def compute_retro_2026_04_28(
     # --- live_gpu_confirmed ---
     # Scan all result files for inference_mode == "live_gpu"
     live_gpu_confirmed = any(
-        r is not None and r.get("inference_mode") == "live_gpu"
-        for r in result_files.values()
+        r is not None and r.get("inference_mode") == "live_gpu" for r in result_files.values()
     )
 
     # --- precision_result_credible ---
@@ -690,9 +687,7 @@ def compute_retro_2026_04_28(
     # --- jitrl_memory_works ---
     # Exp 386 must report honest_verdict == "threshold_modulation_confirmed"
     exp386 = result_files.get("386") or {}
-    jitrl_memory_works = (
-        exp386.get("honest_verdict") == "threshold_modulation_confirmed"
-    )
+    jitrl_memory_works = exp386.get("honest_verdict") == "threshold_modulation_confirmed"
 
     # --- safety_kan_works ---
     # Exp 387 must report test_auc_roc > 0.70
@@ -980,9 +975,9 @@ def main() -> None:
     output_path.write_text(json.dumps(artifact, indent=2))
 
     _log.info("Retrospective written to %s", output_path)
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"MILESTONE {MILESTONE} RETROSPECTIVE COMPLETE")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"Output: {output_path}")
     print(f"\nSuccess criteria:")
     for field in dataclasses.fields(retro):

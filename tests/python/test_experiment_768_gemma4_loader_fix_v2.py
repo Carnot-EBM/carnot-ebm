@@ -91,10 +91,7 @@ def test_per_threshold_results_has_five_entries() -> None:
 
     REQ-VERIFY-170-2: per_threshold_results MUST have exactly 5 entries.
     """
-    results = [
-        {"threshold": t, "signed_improvement": 0.0, "n_abstained": 0}
-        for t in THRESHOLDS
-    ]
+    results = [{"threshold": t, "signed_improvement": 0.0, "n_abstained": 0} for t in THRESHOLDS]
     assert len(results) == 5
 
 
@@ -304,7 +301,9 @@ def test_main_writes_blocked_artifact_when_no_live_gpu(tmp_path: Path) -> None:
         patch.object(mod, "_DELIVERABLE", str(deliverable)),
         patch.dict(os.environ, env_patch, clear=True),
         patch("scripts.experiment_768_gemma4_loader_fix_v2.ExperimentTemplate") as MockTemplate,
-        patch("scripts.experiment_768_gemma4_loader_fix_v2.ExperimentTimeoutWatchdog") as MockWatchdog,
+        patch(
+            "scripts.experiment_768_gemma4_loader_fix_v2.ExperimentTimeoutWatchdog"
+        ) as MockWatchdog,
     ):
         # Mock ExperimentTemplate so no filesystem side-effects.
         mock_tmpl = MagicMock()

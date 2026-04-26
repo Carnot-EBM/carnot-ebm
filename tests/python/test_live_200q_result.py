@@ -15,6 +15,7 @@ from carnot.pipeline.live_200q_result import Live200qResult
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make(pre=0.70, post=0.75, n=200, extractor="VeriCoT+VPRM+CRANE", mode="live_gpu"):
     return Live200qResult(
         model_id="TestModel",
@@ -29,6 +30,7 @@ def _make(pre=0.70, post=0.75, n=200, extractor="VeriCoT+VPRM+CRANE", mode="live
 # ---------------------------------------------------------------------------
 # signed_improvement
 # ---------------------------------------------------------------------------
+
 
 class TestSignedImprovement:
     """REQ-BENCH-019: signed delta is post - pre, unclamped."""
@@ -51,6 +53,7 @@ class TestSignedImprovement:
 # ci_95 — Wilson score interval
 # ---------------------------------------------------------------------------
 
+
 class TestCI95:
     """REQ-BENCH-019, SCENARIO-BENCH-036: Wilson CI at n=200 has half-width <= 3.5pp."""
 
@@ -71,9 +74,7 @@ class TestCI95:
         r = _make(post=0.05, n=200)
         lo, hi = r.ci_95
         half_width = (hi - lo) / 2
-        assert half_width <= 0.035, (
-            f"CI half-width={half_width:.4f} > 0.035 at post=0.05, n=200"
-        )
+        assert half_width <= 0.035, f"CI half-width={half_width:.4f} > 0.035 at post=0.05, n=200"
 
     def test_ci_narrows_with_more_samples(self):
         r100 = _make(post=0.5, n=100)
@@ -104,6 +105,7 @@ class TestCI95:
 # ---------------------------------------------------------------------------
 # is_statistically_positive
 # ---------------------------------------------------------------------------
+
 
 class TestIsStatisticallyPositive:
     """SCENARIO-BENCH-037: is_statistically_positive iff lower CI bound > 0."""
@@ -145,6 +147,7 @@ class TestIsStatisticallyPositive:
 # cot_pairs
 # ---------------------------------------------------------------------------
 
+
 class TestCotPairs:
     """REQ-BENCH-017: cot_pairs collects reasoning traces for JEPA retrain."""
 
@@ -170,6 +173,7 @@ class TestCotPairs:
 # to_dict
 # ---------------------------------------------------------------------------
 
+
 class TestToDict:
     """Serialization completeness check."""
 
@@ -177,9 +181,16 @@ class TestToDict:
         r = _make()
         d = r.to_dict()
         expected_keys = {
-            "model_id", "pre_acc", "post_acc", "n", "extractor_name",
-            "inference_mode", "signed_improvement", "ci_95",
-            "is_statistically_positive", "cot_pairs_count",
+            "model_id",
+            "pre_acc",
+            "post_acc",
+            "n",
+            "extractor_name",
+            "inference_mode",
+            "signed_improvement",
+            "ci_95",
+            "is_statistically_positive",
+            "cot_pairs_count",
         }
         assert expected_keys.issubset(d.keys())
 
@@ -195,8 +206,13 @@ class TestToDict:
     def test_cot_pairs_count(self):
         pairs = [{"x": 1}, {"x": 2}]
         r = Live200qResult(
-            model_id="M", pre_acc=0.5, post_acc=0.6, n=200,
-            extractor_name="E", inference_mode="live_gpu", cot_pairs=pairs,
+            model_id="M",
+            pre_acc=0.5,
+            post_acc=0.6,
+            n=200,
+            extractor_name="E",
+            inference_mode="live_gpu",
+            cot_pairs=pairs,
         )
         assert r.to_dict()["cot_pairs_count"] == 2
 

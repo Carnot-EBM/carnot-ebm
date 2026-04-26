@@ -35,6 +35,7 @@ Spec: REQ-LEARN-057, REQ-LEARN-058, REQ-LEARN-059,
       REQ-VERIFY-150, SCENARIO-VERIFY-230,
       FR-11, SCENARIO-LEARN-098
 """
+
 from __future__ import annotations
 
 import json
@@ -70,9 +71,9 @@ TIMEOUT_MINUTES = 60
 N_SESSIONS = 5
 N_QUESTIONS_PER_SESSION = 15
 SEED = 42
-TOP_K_CONSTRAINT_UPDATE = 5     # only update top-K highest-variance types per session
+TOP_K_CONSTRAINT_UPDATE = 5  # only update top-K highest-variance types per session
 VARIANCE_FREEZE_THRESHOLD = 0.01  # freeze types with rolling variance below this
-RETRIEVAL_AUROC_GATE = 0.70       # must exceed this to proceed (Exp 847 gate)
+RETRIEVAL_AUROC_GATE = 0.70  # must exceed this to proceed (Exp 847 gate)
 
 # Gate artifact to check
 EXP_847_PATH = "results/experiment_847_constraint_retrieval_l2_fix.json"
@@ -258,10 +259,7 @@ def run_relay(
 
         # Update per-type history for capacity-constrained selection
         for vtype in _VIOLATION_SPO:
-            vtype_correct = sum(
-                1 for r in results
-                if r["correct"] or r["violation_type"] != vtype
-            )
+            vtype_correct = sum(1 for r in results if r["correct"] or r["violation_type"] != vtype)
             type_precision = vtype_correct / len(results) if results else 0.0
             precision_history[vtype].append(type_precision)
 

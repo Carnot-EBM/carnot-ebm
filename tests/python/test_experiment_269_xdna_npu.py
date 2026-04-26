@@ -282,6 +282,7 @@ class TestNpuHardwareInfo:
         pci_id = hw.get("pci_id", "")
         # Accept 'unknown', or XXXX:XXXX hex format
         import re
+
         assert pci_id == "unknown" or re.match(r"[0-9a-fA-F]{4}:[0-9a-fA-F]{4}", pci_id), (
             f"pci_id must be 'unknown' or XXXX:XXXX format, got: {pci_id!r}"
         )

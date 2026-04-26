@@ -15,7 +15,7 @@ broken until a clean diagnostic run proves otherwise.
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -36,7 +36,7 @@ def main() -> None:
     artifact = {
         "experiment": 620,
         "schema": "carnot.live_vr_15.v1",
-        "run_date": datetime.now(timezone.utc).isoformat(),
+        "run_date": datetime.now(UTC).isoformat(),
         "status": "blocked",
         "gate_open": False,
         "block_reason": (

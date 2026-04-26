@@ -89,7 +89,7 @@ PREV_MEAN_EXP_DURATION_MIN: float = 33.3
 # are tracked in MILESTONE_EXPERIMENTS with result_file=None.
 RESULT_FILE_MAP: dict[str, str | None] = {
     "365": "results/experiment_365_retro_close.json",
-    "366": None,   # Deliverable is python/carnot/pipeline/llm_extractor.py (module)
+    "366": None,  # Deliverable is python/carnot/pipeline/llm_extractor.py (module)
     "367": "results/experiment_367_extraction_live.json",
     "368": "results/experiment_368_precision_live.json",
     "369": "results/experiment_369_humaneval_live.json",
@@ -108,14 +108,14 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 365,
         "title": "Close RETRO-012/013/014 — conductor_gpu_env.sh + JSON enforcer",
         "result_file": "results/experiment_365_retro_close.json",
-        "wall_time_min": 5,    # 22:08 — trivial script, instant execution
+        "wall_time_min": 5,  # 22:08 — trivial script, instant execution
         "status": "completed",
     },
     {
         "id": 366,
         "title": "LLMConstraintExtractor module — unblocks Exp 358 extraction benchmark",
-        "result_file": None,   # Deliverable: python/carnot/pipeline/llm_extractor.py
-        "wall_time_min": 45,   # 22:08 → ~23:17 before Exp 367
+        "result_file": None,  # Deliverable: python/carnot/pipeline/llm_extractor.py
+        "wall_time_min": 45,  # 22:08 → ~23:17 before Exp 367
         "status": "completed",
         "note": "Module llm_extractor.py written. No JSON artifact (module-primary deliverable).",
     },
@@ -123,7 +123,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 367,
         "title": "Live extraction comparison: LLMExtractor vs ArithmeticExtractor on Gemma4",
         "result_file": "results/experiment_367_extraction_live.json",
-        "wall_time_min": 35,   # ~23:17 → 23:52 (Exp 368)
+        "wall_time_min": 35,  # ~23:17 → 23:52 (Exp 368)
         "status": "partial",
         "note": "42 tests pass. Live GPU comparison pending CARNOT_FORCE_LIVE=1.",
     },
@@ -131,7 +131,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 368,
         "title": "Live precision pipeline benchmark — first credible headline number",
         "result_file": "results/experiment_368_precision_live.json",
-        "wall_time_min": 16,   # ~23:52 → 00:08 (Exp 369)
+        "wall_time_min": 16,  # ~23:52 → 00:08 (Exp 369)
         "status": "blocked",
         "note": "74 tests pass. HARD gate: blocked artifact when GPU not available.",
     },
@@ -139,7 +139,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 369,
         "title": "Live HumanEval code verification benchmark",
         "result_file": "results/experiment_369_humaneval_live.json",
-        "wall_time_min": 20,   # ~00:08 → ~00:28
+        "wall_time_min": 20,  # ~00:08 → ~00:28
         "status": "blocked",
         "note": "69 tests pass. PBT + CodeExtractor + subprocess test execution. Blocked.",
     },
@@ -147,7 +147,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 370,
         "title": "Live adversarial GSM8K benchmark (re-run Exp 355 with CARNOT_FORCE_LIVE=1)",
         "result_file": "results/experiment_370_adversarial_live.json",
-        "wall_time_min": 20,   # ~00:28 → ~00:48
+        "wall_time_min": 20,  # ~00:28 → ~00:48
         "status": "blocked",
         "note": "23 tests pass. Raises RuntimeError when GPU not available. No simulated fallback.",
     },
@@ -155,7 +155,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 371,
         "title": "EORM real-data retrain with Exp 365-370 live pairs",
         "result_file": "results/experiment_371_eorm_real_retrain.json",
-        "wall_time_min": 30,   # ~00:48 → ~01:18
+        "wall_time_min": 30,  # ~00:48 → ~01:18
         "status": "partial",
         "note": "Training loop written. Needs real CoT pairs from live GPU experiments.",
     },
@@ -163,7 +163,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 372,
         "title": "JEPA real-data retrain with Exp 365-370 live violation pairs",
         "result_file": "results/experiment_372_jepa_real_retrain.json",
-        "wall_time_min": 25,   # ~01:18 → ~01:43
+        "wall_time_min": 25,  # ~01:18 → ~01:43
         "status": "partial",
         "note": "Retrain module extended. Needs real violation pairs from live inference.",
     },
@@ -171,7 +171,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 373,
         "title": "Three-tier pipeline live benchmark (SinkProbe + EORM + Ising on real attention)",
         "result_file": "results/experiment_373_three_tier_live.json",
-        "wall_time_min": 19,   # ~01:43 → 02:02 (conductor log timestamp)
+        "wall_time_min": 19,  # ~01:43 → 02:02 (conductor log timestamp)
         "status": "partial",
         "note": "80 tests pass. Beta-mixture approximate attention. LIVE RUN PENDING.",
     },
@@ -179,7 +179,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 374,
         "title": "FR-11 self-learning relay live — first learning_confirmed verdict",
         "result_file": "results/experiment_374_self_learning_relay_live.json",
-        "wall_time_min": 15,   # estimated; partial alongside Exp 373
+        "wall_time_min": 15,  # estimated; partial alongside Exp 373
         "status": "partial",
         "note": "Script and tests created. Extended live runtime needed for relay.",
     },
@@ -187,7 +187,7 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
         "id": 375,
         "title": "CIKAN constraint-informed KAN energy tier (arXiv 2412.03710)",
         "result_file": "results/experiment_375_cikan_energy.json",
-        "wall_time_min": 20,   # estimated
+        "wall_time_min": 20,  # estimated
         "status": "partial",
         "note": (
             "Partial: result JSON present but cikan_energy.py contains JSON instead of "
@@ -358,7 +358,7 @@ NEW_RETRO_ITEMS: list[dict[str, Any]] = [
         "description": (
             "Exp 375 produced results/experiment_375_cikan_energy.json (status='partial') "
             "and attempted to write python/carnot/models/cikan_energy.py, but the file "
-            "on disk is a JSON object ({\"experiment\": 375, ...}), not Python source code. "
+            'on disk is a JSON object ({"experiment": 375, ...}), not Python source code. '
             "The CIKANEnergy class (arXiv 2412.03710 constraint-informed KAN) does not exist. "
             "This means the deliverable for Exp 375 is effectively missing. "
             "cikan_implemented=False in this retrospective. "
@@ -470,8 +470,16 @@ def compute_timing_stats(experiments: list[dict[str, Any]]) -> dict[str, Any]:
         "n_blocked": n_blocked,
         "total_min": total,
         "mean_min": mean,
-        "slowest": {"id": slowest["id"], "title": slowest.get("title", ""), "wall_time_min": slowest["wall_time_min"]},
-        "fastest": {"id": fastest["id"], "title": fastest.get("title", ""), "wall_time_min": fastest["wall_time_min"]},
+        "slowest": {
+            "id": slowest["id"],
+            "title": slowest.get("title", ""),
+            "wall_time_min": slowest["wall_time_min"],
+        },
+        "fastest": {
+            "id": fastest["id"],
+            "title": fastest.get("title", ""),
+            "wall_time_min": fastest["wall_time_min"],
+        },
     }
 
 
@@ -582,8 +590,7 @@ def compute_retro_2026_04_27(repo_root: Path) -> MilestoneRetro2026_04_27:
     # --- live_gpu_confirmed ---
     # Scan all result files for inference_mode == "live_gpu"
     live_gpu_confirmed = any(
-        r is not None and r.get("inference_mode") == "live_gpu"
-        for r in results.values()
+        r is not None and r.get("inference_mode") == "live_gpu" for r in results.values()
     )
 
     # --- llm_extractor_beats_regex ---
@@ -622,9 +629,7 @@ def compute_retro_2026_04_27(repo_root: Path) -> MilestoneRetro2026_04_27:
     # --- all_result_jsons_present ---
     # Check every experiment with a non-None result_file path
     all_result_jsons_present = all(
-        results.get(key) is not None
-        for key, path in RESULT_FILE_MAP.items()
-        if path is not None
+        results.get(key) is not None for key, path in RESULT_FILE_MAP.items() if path is not None
     )
 
     # --- timing stats ---
@@ -861,9 +866,9 @@ def main() -> None:
     output_path.write_text(json.dumps(artifact, indent=2))
 
     _log.info("Retrospective written to %s", output_path)
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"MILESTONE {MILESTONE} RETROSPECTIVE COMPLETE")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"Output: {output_path}")
     print(f"\nSuccess criteria:")
     for field in dataclasses.fields(retro):
@@ -872,9 +877,11 @@ def main() -> None:
             status_str = "PASS" if val else "FAIL"
             print(f"  [{status_str}] {field.name}")
     print(f"\nNew RETRO items: {retro.retro_items_opened}")
-    print(f"Mean exp duration: {retro.mean_exp_duration_min:.1f} min "
-          f"(prev: {PREV_MEAN_EXP_DURATION_MIN} min, "
-          f"speedup: {estimate_speedup_pct(PREV_MEAN_EXP_DURATION_MIN, retro.mean_exp_duration_min):.1f}%)")
+    print(
+        f"Mean exp duration: {retro.mean_exp_duration_min:.1f} min "
+        f"(prev: {PREV_MEAN_EXP_DURATION_MIN} min, "
+        f"speedup: {estimate_speedup_pct(PREV_MEAN_EXP_DURATION_MIN, retro.mean_exp_duration_min):.1f}%)"
+    )
     print(f"\nMILESTONE {MILESTONE} MARKED COMPLETE.")
 
 

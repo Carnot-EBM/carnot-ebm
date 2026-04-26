@@ -163,7 +163,6 @@ def resolve_cached_gguf(
         cached at all.  Callers should treat ``None`` as "fall back to the
         legacy transformers path".
     """
-    import os
     from pathlib import Path
 
     # Preference cascade shared by both hub-cache and project-local lookups.
@@ -214,8 +213,8 @@ def resolve_cached_gguf(
         basename = hf_id.split("/", 1)[-1]  # e.g. "gpt-oss-safeguard-20b-GGUF"
         stripped = basename[:-5] if basename.endswith("-GGUF") else basename
         candidates = [
-            models_root / stripped,         # models/gpt-oss-safeguard-20b/
-            models_root / basename,         # models/gpt-oss-safeguard-20b-GGUF/
+            models_root / stripped,  # models/gpt-oss-safeguard-20b/
+            models_root / basename,  # models/gpt-oss-safeguard-20b-GGUF/
             models_root / stripped.lower(),
             models_root / basename.lower(),
         ]
@@ -251,8 +250,8 @@ def cached_sota_pair(
         else:
             pipe = transformers.pipeline("text-generation", specs[0]["hf_id"])
     """
-    flagship = SOTA_GGUF_MODELS[0]       # Qwen3.6-35B-A3B
-    middle = SOTA_GGUF_MODELS[1]          # Gemma4-26B-A4B-it
+    flagship = SOTA_GGUF_MODELS[0]  # Qwen3.6-35B-A3B
+    middle = SOTA_GGUF_MODELS[1]  # Gemma4-26B-A4B-it
     p_flagship = resolve_cached_gguf(flagship["hf_id"], preferred_quant)
     p_middle = resolve_cached_gguf(middle["hf_id"], preferred_quant)
     if p_flagship is None or p_middle is None:

@@ -96,9 +96,9 @@ DEFAULT_OUTPUT: str = "results/experiment_321_results.json"
 #   512 spins:  0.05 density ≈  6528 edges  (sparse)
 #   2048 spins: 0.01 density ≈ 20971 edges  (very sparse)
 PROBLEM_CONFIGS: list[dict[str, Any]] = [
-    {"n_spins": 128,  "density": 0.20, "n_steps": 1000, "n_samples": 20},
-    {"n_spins": 512,  "density": 0.05, "n_steps":  500, "n_samples": 10},
-    {"n_spins": 2048, "density": 0.01, "n_steps":  200, "n_samples":  5},
+    {"n_spins": 128, "density": 0.20, "n_steps": 1000, "n_samples": 20},
+    {"n_spins": 512, "density": 0.05, "n_steps": 500, "n_samples": 10},
+    {"n_spins": 2048, "density": 0.01, "n_steps": 200, "n_samples": 5},
 ]
 
 # Number of independent random problems per size (for statistical stability).
@@ -401,21 +401,19 @@ def benchmark_problem_size(
                 per_sampler_energies[name].append(energies)
                 per_sampler_elapsed[name].append(elapsed)
                 print(
-                    f"  n={n_spins} trial={trial+1}/{N_TRIALS} {name}: "
+                    f"  n={n_spins} trial={trial + 1}/{N_TRIALS} {name}: "
                     f"best_E={energies.min():.2f} (ground={ground_energy:.2f}) "
                     f"t={elapsed:.3f}s"
                 )
             except Exception as exc:  # noqa: BLE001
-                print(f"  n={n_spins} trial={trial+1}/{N_TRIALS} {name}: ERROR {exc}")
+                print(f"  n={n_spins} trial={trial + 1}/{N_TRIALS} {name}: ERROR {exc}")
                 per_sampler_energies[name].append(np.array([0.0]))
                 per_sampler_elapsed[name].append(float("nan"))
 
     # Compute ground energy for the last problem (representative).
     # Recompute ground energy for reporting: use trial 0 for consistency.
     rng0 = np.random.default_rng(seed)
-    _b, _J, _p, representative_ground_energy = make_planted_ising_problem(
-        n_spins, density, rng0
-    )
+    _b, _J, _p, representative_ground_energy = make_planted_ising_problem(n_spins, density, rng0)
 
     sampler_summaries: dict[str, dict[str, Any]] = {}
     for name in samplers:
@@ -485,8 +483,10 @@ def main(output_path: str = DEFAULT_OUTPUT) -> None:
     except Exception as exc:  # noqa: BLE001
         print(f"[SKIP] DWaveSampler(tabu) unavailable: {exc}")
 
-    print(f"\nRunning {N_TRIALS} trials per size with beta={BETA}, "
-          f"tolerance={TOLERANCE_FRAC*100:.0f}% of ground energy\n")
+    print(
+        f"\nRunning {N_TRIALS} trials per size with beta={BETA}, "
+        f"tolerance={TOLERANCE_FRAC * 100:.0f}% of ground energy\n"
+    )
 
     # --- Run benchmarks ---
     results: list[dict[str, Any]] = []
@@ -494,8 +494,10 @@ def main(output_path: str = DEFAULT_OUTPUT) -> None:
 
     for cfg in PROBLEM_CONFIGS:
         n = cfg["n_spins"]
-        print(f"--- n_spins={n} (density={cfg['density']}, "
-              f"n_steps={cfg['n_steps']}, n_samples={cfg['n_samples']}) ---")
+        print(
+            f"--- n_spins={n} (density={cfg['density']}, "
+            f"n_steps={cfg['n_steps']}, n_samples={cfg['n_samples']}) ---"
+        )
         row = benchmark_problem_size(cfg, seed=base_seed + n, samplers=samplers)
         results.append(row)
         print()
@@ -509,7 +511,7 @@ def main(output_path: str = DEFAULT_OUTPUT) -> None:
     artifact: dict[str, Any] = {
         "experiment": EXPERIMENT,
         "title": TITLE,
-        "run_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d"),
+        "run_date": datetime.datetime.now(datetime.UTC).strftime("%Y%m%d"),
         "schema": {"artifact": "carnot.dwave_cpu_benchmark.v1"},
         "metadata": {
             "n_trials": N_TRIALS,

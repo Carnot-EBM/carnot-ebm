@@ -305,11 +305,14 @@ class TestGloballyConsistentChain:
         Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "The widget costs $50. We know 3 + 5 = 8.",
-            "Confirming: widget costs $50.",
-            "Final answer: widget costs $50, so 3 + 5 = 8 holds.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "The widget costs $50. We know 3 + 5 = 8.",
+                "Confirming: widget costs $50.",
+                "Final answer: widget costs $50, so 3 + 5 = 8 holds.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)
@@ -335,11 +338,14 @@ class TestNumericContradiction:
         Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "The widget costs $50.",
-            "Moving on to the next topic.",
-            "The widget costs $75 based on our calculation.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "The widget costs $50.",
+                "Moving on to the next topic.",
+                "The widget costs $75 based on our calculation.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)
@@ -360,10 +366,13 @@ class TestNumericContradiction:
         Spec: REQ-VERIFY-001
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "The score is 100.",
-            "The score is 100 points.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "The score is 100.",
+                "The score is 100 points.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)
@@ -376,11 +385,14 @@ class TestNumericContradiction:
         Spec: SCENARIO-VERIFY-005
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "The item costs $50.",
-            "No numeric claims here.",
-            "The item costs $75.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "The item costs $50.",
+                "No numeric claims here.",
+                "The item costs $75.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)
@@ -403,11 +415,14 @@ class TestArithmeticContradiction:
         Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "We calculated 3 + 5 = 8 previously.",
-            "Intermediate reasoning step.",
-            "We know that 3 + 5 = 10 from earlier work.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "We calculated 3 + 5 = 8 previously.",
+                "Intermediate reasoning step.",
+                "We know that 3 + 5 = 10 from earlier work.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)
@@ -424,10 +439,13 @@ class TestArithmeticContradiction:
         Spec: REQ-VERIFY-001
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "As noted: 3 + 5 = 8.",
-            "Confirmed: 3 + 5 = 8.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "As noted: 3 + 5 = 8.",
+                "Confirmed: 3 + 5 = 8.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)
@@ -449,11 +467,14 @@ class TestFactualContradiction:
         Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "Paris is the capital of France.",
-            "General discussion about Europe.",
-            "Berlin is the capital of France, as we noted.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "Paris is the capital of France.",
+                "General discussion about Europe.",
+                "Berlin is the capital of France, as we noted.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)
@@ -470,10 +491,13 @@ class TestFactualContradiction:
         Spec: REQ-VERIFY-001
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "Paris is the capital of France.",
-            "Yes, Paris is the capital of France.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "Paris is the capital of France.",
+                "Yes, Paris is the capital of France.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)
@@ -489,10 +513,13 @@ class TestFactualContradiction:
         Spec: SCENARIO-VERIFY-005
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "Paris is the capital of France.",
-            "Berlin is the capital of France.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "Paris is the capital of France.",
+                "Berlin is the capital of France.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)
@@ -523,11 +550,14 @@ class TestLocallyConsistentGloballyInconsistent:
         Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        results = _run_steps(machine, [
-            "The widget costs $50 in our catalogue.",
-            "Next we verify the shipping address is correct.",
-            "The widget costs $75 based on the updated price list.",
-        ])
+        results = _run_steps(
+            machine,
+            [
+                "The widget costs $50 in our catalogue.",
+                "Next we verify the shipping address is correct.",
+                "The widget costs $75 based on the updated price list.",
+            ],
+        )
 
         # Verify all steps pass locally (the pipeline always says verified=True)
         for result in results:
@@ -542,10 +572,7 @@ class TestLocallyConsistentGloballyInconsistent:
         assert report.consistent is False
         assert len(report.inconsistent_pairs) >= 1
         # The contradiction is between step 0 and step 2
-        assert any(
-            i == 0 and j == 2
-            for i, j, _, _ in report.inconsistent_pairs
-        )
+        assert any(i == 0 and j == 2 for i, j, _, _ in report.inconsistent_pairs)
 
 
 class TestSeverityLevels:
@@ -560,10 +587,13 @@ class TestSeverityLevels:
         Spec: SCENARIO-VERIFY-005
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "The value is 42.",
-            "The value is 42.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "The value is 42.",
+                "The value is 42.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)
@@ -576,10 +606,13 @@ class TestSeverityLevels:
         Spec: SCENARIO-VERIFY-005
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "The item costs $10.",
-            "The item costs $20.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "The item costs $10.",
+                "The item costs $20.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)
@@ -593,10 +626,13 @@ class TestSeverityLevels:
         Spec: SCENARIO-VERIFY-005
         """
         machine = ConstraintStateMachine(pipeline=_make_pipeline_always_passes())
-        _run_steps(machine, [
-            "The item costs $10. Also 3 + 5 = 8.",
-            "The item costs $20. Also 3 + 5 = 10.",
-        ])
+        _run_steps(
+            machine,
+            [
+                "The item costs $10. Also 3 + 5 = 8.",
+                "The item costs $20. Also 3 + 5 = 10.",
+            ],
+        )
 
         checker = GlobalConsistencyChecker()
         report = checker.check(machine)

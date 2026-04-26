@@ -215,9 +215,7 @@ class OTVTrainer:
         self.head = head
         self.lr = lr
 
-    def train(
-        self, pairs: list[dict], n_epochs: int = 50
-    ) -> OTVVerificationHead:
+    def train(self, pairs: list[dict], n_epochs: int = 50) -> OTVVerificationHead:
         """Train the head with binary cross-entropy using JAX autograd.
 
         Why warm-start perturbation: OTVVerificationHead initialises all
@@ -252,9 +250,7 @@ class OTVTrainer:
         if float(jnp.sum(jnp.abs(params["W2"]))) == 0.0:
             key = jax.random.PRNGKey(42)
             params["W1"] = jax.random.normal(key, params["W1"].shape) * 0.01
-            params["W2"] = jax.random.normal(
-                jax.random.fold_in(key, 1), params["W2"].shape
-            ) * 0.01
+            params["W2"] = jax.random.normal(jax.random.fold_in(key, 1), params["W2"].shape) * 0.01
             _params_to_head(h, params)
 
         # Pre-compute feature matrix and labels once — avoids redundant

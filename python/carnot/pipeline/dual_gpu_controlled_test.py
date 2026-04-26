@@ -27,7 +27,10 @@ import concurrent.futures
 import logging
 import time
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Tuple
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 _log = logging.getLogger(__name__)
 
@@ -68,10 +71,10 @@ class DualGPUTestResult:
 
 
 def sample_gpu_utilization(
-    device_ids: List[int],
+    device_ids: list[int],
     n_samples: int = 20,
     interval_s: float = 0.5,
-) -> Dict[int, float]:
+) -> dict[int, float]:
     """Poll nvmlDeviceGetUtilizationRates() and return mean compute utilization per GPU.
 
     This function is the measurement instrument for RETRO-052.  It samples compute
@@ -118,7 +121,7 @@ def sample_gpu_utilization(
         return {dev: 0.0 for dev in device_ids}
 
     # Accumulate utilization readings per device.
-    readings: Dict[int, List[float]] = {dev: [] for dev in device_ids}
+    readings: dict[int, list[float]] = {dev: [] for dev in device_ids}
 
     for _ in range(n_samples):
         for dev, handle in handles.items():
@@ -136,17 +139,14 @@ def sample_gpu_utilization(
             time.sleep(interval_s)
 
     # Compute means; devices with no successful readings fall back to 0.0.
-    return {
-        dev: (sum(vals) / len(vals) if vals else 0.0)
-        for dev, vals in readings.items()
-    }
+    return {dev: (sum(vals) / len(vals) if vals else 0.0) for dev, vals in readings.items()}
 
 
 def run_dual_inference(
     model_a: Callable[[str], str],
     model_b: Callable[[str], str],
-    prompts: List[str],
-) -> Tuple[List[str], List[str]]:
+    prompts: list[str],
+) -> tuple[list[str], list[str]]:
     """Run two models simultaneously in separate threads and collect their outputs.
 
     This is the load generator for the RETRO-052 controlled test.  Both models run
@@ -175,8 +175,8 @@ def run_dual_inference(
     Spec: REQ-INFRA-070
     """
 
-    def _run_model(fn: Callable[[str], str]) -> List[str]:
-        results: List[str] = []
+    def _run_model(fn: Callable[[str], str]) -> list[str]:
+        results: list[str] = []
         for prompt in prompts:
             try:
                 results.append(fn(prompt))

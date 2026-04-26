@@ -55,7 +55,7 @@ import json
 import logging
 import os
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Any
 
 from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: E402
@@ -171,7 +171,7 @@ def run_experiment() -> dict:
     Returns:
         The JSON-serializable artifact dict written to DELIVERABLE.
     """
-    started_at = datetime.now(timezone.utc).isoformat()
+    started_at = datetime.now(UTC).isoformat()
     t0 = time.monotonic()
 
     # 1. Load data.
@@ -207,11 +207,9 @@ def run_experiment() -> dict:
     labeled_path = Path(LABELED_STEPS_PATH)
     labeled_path.parent.mkdir(parents=True, exist_ok=True)
     labeled_path.write_text(json.dumps(training_pairs, indent=2))
-    _log.info(
-        "Wrote %d labeled training pairs to %s", len(training_pairs), labeled_path
-    )
+    _log.info("Wrote %d labeled training pairs to %s", len(training_pairs), labeled_path)
 
-    finished_at = datetime.now(timezone.utc).isoformat()
+    finished_at = datetime.now(UTC).isoformat()
     duration_s = round(time.monotonic() - t0, 3)
 
     # 5. Build top-level artifact.

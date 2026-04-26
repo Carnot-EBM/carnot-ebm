@@ -79,8 +79,7 @@ BASELINE_PRECISIONS = [0.60, 0.65, 0.70, 0.75, 0.80]
 ENHANCED_PRECISIONS = [0.60, 0.70, 0.75, 0.80, 0.85]
 
 _QUESTION_TEMPLATE = (
-    "There are {a} students and each gets {b} tokens. "
-    "How many tokens are distributed in total?"
+    "There are {a} students and each gets {b} tokens. How many tokens are distributed in total?"
 )
 
 
@@ -116,10 +115,7 @@ def _make_session_questions(session_idx: int, n: int) -> list[str]:
     Returns:
         List of n question strings.
     """
-    return [
-        _QUESTION_TEMPLATE.format(a=session_idx * n + i + 1, b=i + 2)
-        for i in range(n)
-    ]
+    return [_QUESTION_TEMPLATE.format(a=session_idx * n + i + 1, b=i + 2) for i in range(n)]
 
 
 # ---------------------------------------------------------------------------
@@ -279,9 +275,7 @@ def run_relay(
     session_memory = _SessionMemoryStub()
     cae = ConstraintAdditionEngine(session_memory, min_count=3)
 
-    vjepa: _VJEPAAlwaysTrigger | None = (
-        _VJEPAAlwaysTrigger() if use_vjepa else None
-    )
+    vjepa: _VJEPAAlwaysTrigger | None = _VJEPAAlwaysTrigger() if use_vjepa else None
 
     pipeline = _build_mock_pipeline()
 

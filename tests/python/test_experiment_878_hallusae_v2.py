@@ -31,7 +31,11 @@ HALLUCINATED_STEPS_SHORT = [
 
 # 25 correct + 25 hallucinated pairs (same dataset as Exp 863/878)
 CORRECT_PAIRS = [
-    [f"Let x equal {i}. We need to compute 2 times x.", f"2 times {i} equals {2*i}.", f"Therefore x times 2 equals {2*i}."]
+    [
+        f"Let x equal {i}. We need to compute 2 times x.",
+        f"2 times {i} equals {2 * i}.",
+        f"Therefore x times 2 equals {2 * i}.",
+    ]
     for i in range(1, 26)
 ]
 HALLUCINATED_PAIRS = [
@@ -54,6 +58,7 @@ def reference_steps() -> list[str]:
 def probe(reference_steps):
     """Untrained V2 probe fitted on reference_steps."""
     from carnot.probes.hallusae_geometric_probe_v2 import HalluSAEGeometricProbeV2
+
     return HalluSAEGeometricProbeV2(reference_steps=reference_steps)
 
 
@@ -61,6 +66,7 @@ def probe(reference_steps):
 def trained_probe(reference_steps):
     """V2 probe trained on first 15 pairs from each class."""
     from carnot.probes.hallusae_geometric_probe_v2 import HalluSAEGeometricProbeV2
+
     p = HalluSAEGeometricProbeV2(reference_steps=reference_steps)
     p.train_trajectory(
         pos_corpus=HALLUCINATED_PAIRS[:15],
@@ -230,6 +236,7 @@ class TestProbeV2Constructor:
         Spec: REQ-VERIFY-143
         """
         from carnot.probes.hallusae_geometric_probe_v2 import HalluSAEGeometricProbeV2
+
         with pytest.raises(ValueError):
             HalluSAEGeometricProbeV2(reference_steps=[])
 
@@ -239,6 +246,7 @@ class TestProbeV2Constructor:
         Spec: REQ-VERIFY-143
         """
         from carnot.probes.hallusae_geometric_probe_v2 import HalluSAEGeometricProbeV2
+
         p = HalluSAEGeometricProbeV2(reference_steps=reference_steps, feature_dim=6)
         assert p.feature_dim == 6
 
@@ -324,8 +332,12 @@ class TestDetectTrajectory:
         """
         result = trained_probe.detect_trajectory(CORRECT_STEPS_SHORT)
         expected_keys = {
-            "energy_mean", "energy_std", "peak_energy",
-            "velocity_mean", "accel_mean", "monotone_increase_fraction",
+            "energy_mean",
+            "energy_std",
+            "peak_energy",
+            "velocity_mean",
+            "accel_mean",
+            "monotone_increase_fraction",
         }
         assert set(result["feature_importances"].keys()) == expected_keys
 
@@ -410,7 +422,9 @@ class TestTemporalSignature:
         feat = probe.compute_trajectory_features(oscillating_energies)
         # velocity = [0, 1, -1, 1, -1, 1]
         # accel = [0, 0, -2, 2, -2, 2], accel_mean = 0
-        assert abs(feat[4]) < 0.5, f"Oscillating energy should have near-zero accel_mean, got {feat[4]}"
+        assert abs(feat[4]) < 0.5, (
+            f"Oscillating energy should have near-zero accel_mean, got {feat[4]}"
+        )
 
     def test_monotone_increase_fraction_high_for_hallu(self, probe) -> None:
         """Monotonically increasing energies must produce monotone_increase_fraction = 1.0.

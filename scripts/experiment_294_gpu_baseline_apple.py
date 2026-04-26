@@ -160,7 +160,7 @@ def utc_now() -> str:
     """Return the current UTC timestamp in ISO-8601 format (e.g. ``2026-04-14T05:00:00Z``)."""
     import datetime
 
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def get_repo_root() -> Path:
@@ -315,7 +315,7 @@ def model_prewarm(
             inputs = tokenizer(health_prompt, return_tensors="pt").to(device)
             with torch.no_grad():
                 out = model.generate(**inputs, max_new_tokens=16, do_sample=False)
-            generated_ids = out[0][inputs["input_ids"].shape[1]:]
+            generated_ids = out[0][inputs["input_ids"].shape[1] :]
             response = tokenizer.decode(generated_ids, skip_special_tokens=True)
 
         health_ok = bool(response and response.strip())
@@ -695,6 +695,7 @@ class AppleBaselineRunner294:
         dummy logit tensor.
         """
         if os.environ.get("CARNOT_FORCE_LIVE", "0") != "1":
+
             def _mock(question: str, expected_answer: int, **kw: Any) -> tuple[str, np.ndarray]:
                 logits = np.zeros((1, 8, 100), dtype=np.float32)
                 return str(expected_answer), logits
@@ -732,9 +733,7 @@ class AppleBaselineRunner294:
 
                 if hf_id not in _model_cache:
                     tokenizer = AutoTokenizer.from_pretrained(hf_id)
-                    model = AutoModelForCausalLM.from_pretrained(
-                        hf_id, torch_dtype=torch.float16
-                    )
+                    model = AutoModelForCausalLM.from_pretrained(hf_id, torch_dtype=torch.float16)
                     model = model.to(device).eval()
                     _model_cache[hf_id] = (model, tokenizer)
 
@@ -753,7 +752,7 @@ class AppleBaselineRunner294:
                         output_scores=True,
                         return_dict_in_generate=True,
                     )
-                generated_ids = output.sequences[0][inputs["input_ids"].shape[1]:]
+                generated_ids = output.sequences[0][inputs["input_ids"].shape[1] :]
                 response = tokenizer.decode(generated_ids, skip_special_tokens=True)
 
                 if output.scores:
@@ -796,11 +795,13 @@ class AppleBaselineRunner294:
                 qid = row["question_id"]
                 if qid not in seen:
                     seen.add(qid)
-                    out.append({
-                        "question_id": qid,
-                        "question": row["original_question"],
-                        "expected_answer": row["original_answer"],
-                    })
+                    out.append(
+                        {
+                            "question_id": qid,
+                            "question": row["original_question"],
+                            "expected_answer": row["original_answer"],
+                        }
+                    )
             return out
 
         return [
@@ -895,11 +896,14 @@ class AppleBaselineRunner294:
             # Checkpoint every CHECKPOINT_INTERVAL questions.
             n_done = idx + 1
             if n_done % CHECKPOINT_INTERVAL == 0 or n_done == total:
-                _save_ckpt(ckpt_path, {
-                    "model_name": model_name,
-                    "variant_type": variant_type,
-                    "completed": completed,
-                })
+                _save_ckpt(
+                    ckpt_path,
+                    {
+                        "model_name": model_name,
+                        "variant_type": variant_type,
+                        "completed": completed,
+                    },
+                )
 
             # Save logits at prefix fractions (REQ-VERIFY-067).
             if total > 0:
@@ -1001,9 +1005,7 @@ class AppleBaselineRunner294:
                                 variant_type=vt,
                             )
                             try:
-                                _response, _logits = _fut.result(
-                                    timeout=self.timeout_seconds
-                                )
+                                _response, _logits = _fut.result(timeout=self.timeout_seconds)
                             except concurrent.futures.TimeoutError:
                                 raise TimeoutError(
                                     f"Inference stalled >{self.timeout_seconds}s "
@@ -1048,18 +1050,14 @@ class AppleBaselineRunner294:
         """
         if inference_mode is None:
             inference_mode = (
-                "live_gpu"
-                if os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
-                else "mock"
+                "live_gpu" if os.environ.get("CARNOT_FORCE_LIVE", "0") == "1" else "mock"
             )
 
         started_at = utc_now()
         stall_at = self.run_with_timeout_handling()
         finished_at = utc_now()
 
-        pre_warm_status = {
-            name: r.health_ok for name, r in self._pre_warm_results.items()
-        }
+        pre_warm_status = {name: r.health_ok for name, r in self._pre_warm_results.items()}
         pre_warm_time_s = {
             name: round(r.load_time_s, 3) for name, r in self._pre_warm_results.items()
         }
@@ -1099,9 +1097,7 @@ class AppleBaselineRunner294:
             model_name = spec["name"]
             variant_stats: dict[str, Any] = {}
             for vt in ("standard", "number_swap", "irrelevant_sentence"):
-                ckpt_path = _ckpt_path(
-                    self.checkpoint_dir, model_name=model_name, variant_type=vt
-                )
+                ckpt_path = _ckpt_path(self.checkpoint_dir, model_name=model_name, variant_type=vt)
                 ckpt = _load_ckpt(ckpt_path)
                 completed = ckpt.get("completed", {})
                 results = list(completed.values())
@@ -1152,14 +1148,8 @@ def _print_report(artifact: dict[str, Any]) -> None:
         ns_acc = variants.get("number_swap", {}).get("accuracy", float("nan"))
         ir_acc = variants.get("irrelevant_sentence", {}).get("accuracy", float("nan"))
         print(f"    standard            : {std_acc:.1%}")
-        print(
-            f"    number_swap         : {ns_acc:.1%}  "
-            f"(drop: {(std_acc - ns_acc) * 100:.1f} pp)"
-        )
-        print(
-            f"    irrelevant_sentence : {ir_acc:.1%}  "
-            f"(drop: {(std_acc - ir_acc) * 100:.1f} pp)"
-        )
+        print(f"    number_swap         : {ns_acc:.1%}  (drop: {(std_acc - ns_acc) * 100:.1f} pp)")
+        print(f"    irrelevant_sentence : {ir_acc:.1%}  (drop: {(std_acc - ir_acc) * 100:.1f} pp)")
 
         chk = apple_check.get(model_name, {})
         if chk:
@@ -1219,9 +1209,7 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover
 
     if not args.dataset.exists():
         print(f"[Exp {EXPERIMENT}] ERROR: Dataset not found at {args.dataset}")
-        print(
-            f"  Run scripts/experiment_281_apple_adversarial_dataset.py first to generate it."
-        )
+        print(f"  Run scripts/experiment_281_apple_adversarial_dataset.py first to generate it.")
         return 1
 
     rows = [
@@ -1269,6 +1257,7 @@ __all__ = [
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

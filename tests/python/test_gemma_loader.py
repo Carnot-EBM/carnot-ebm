@@ -132,13 +132,16 @@ class TestLoadUsesTransformers:
         mock_model = MagicMock()
         mock_tokenizer = MagicMock()
 
-        with patch(
-            "carnot.pipeline.gemma_loader.AutoModelForCausalLM",
-            create=True,
-        ) as mock_auto_model, patch(
-            "carnot.pipeline.gemma_loader.AutoTokenizer",
-            create=True,
-        ) as mock_auto_tok:
+        with (
+            patch(
+                "carnot.pipeline.gemma_loader.AutoModelForCausalLM",
+                create=True,
+            ) as mock_auto_model,
+            patch(
+                "carnot.pipeline.gemma_loader.AutoTokenizer",
+                create=True,
+            ) as mock_auto_tok,
+        ):
             # Patch the transformers import inside the module
             mock_auto_model.from_pretrained.return_value = mock_model
             mock_auto_tok.from_pretrained.return_value = mock_tokenizer

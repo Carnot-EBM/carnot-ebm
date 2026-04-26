@@ -43,7 +43,6 @@ import sys
 import threading
 import time
 from dataclasses import dataclass
-from typing import Optional
 
 _log = logging.getLogger(__name__)
 
@@ -82,7 +81,7 @@ class ExperimentTimeoutResult:
     timeout_minutes: int
     elapsed_minutes: float
     timed_out: bool
-    partial_result_path: Optional[str]
+    partial_result_path: str | None
 
 
 # ---------------------------------------------------------------------------
@@ -158,14 +157,14 @@ class ExperimentTimeoutWatchdog:
         self,
         experiment_id: int,
         timeout_minutes: int = 45,
-        result_path: Optional[str] = None,
+        result_path: str | None = None,
     ) -> None:
         self.experiment_id = experiment_id
         self.timeout_minutes = timeout_minutes
         self.result_path = result_path
 
-        self._timer: Optional[threading.Timer] = None
-        self._start_time: Optional[float] = None
+        self._timer: threading.Timer | None = None
+        self._start_time: float | None = None
         self._timed_out: bool = False
         self._stopped: bool = False
 
@@ -240,11 +239,7 @@ class ExperimentTimeoutWatchdog:
 
         Spec: REQ-INFRA-023
         """
-        return (
-            self._timer is not None
-            and not self._timed_out
-            and not self._stopped
-        )
+        return self._timer is not None and not self._timed_out and not self._stopped
 
     def elapsed_minutes(self) -> float:
         """Return wall-clock minutes elapsed since :meth:`start` was called.
@@ -314,9 +309,7 @@ class ExperimentTimeoutWatchdog:
                     self.result_path,
                 )
             except Exception as exc:  # pragma: no cover — file I/O is best-effort
-                _log.error(
-                    "ExperimentTimeoutWatchdog failed to write partial result: %s", exc
-                )
+                _log.error("ExperimentTimeoutWatchdog failed to write partial result: %s", exc)
 
         sys.exit(1)
 
@@ -324,7 +317,7 @@ class ExperimentTimeoutWatchdog:
     # Context manager
     # ------------------------------------------------------------------
 
-    def __enter__(self) -> "ExperimentTimeoutWatchdog":
+    def __enter__(self) -> ExperimentTimeoutWatchdog:
         """Start the watchdog on context entry.
 
         Spec: REQ-INFRA-023

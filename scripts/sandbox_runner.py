@@ -53,10 +53,14 @@ def main() -> int:
     try:
         exec(compile(code, "/hypothesis.py", "exec"), namespace)
     except Exception as e:
-        print(json.dumps({
-            "error": f"Hypothesis compilation/execution failed: {type(e).__name__}: {e}",
-            "traceback": traceback.format_exc(),
-        }))
+        print(
+            json.dumps(
+                {
+                    "error": f"Hypothesis compilation/execution failed: {type(e).__name__}: {e}",
+                    "traceback": traceback.format_exc(),
+                }
+            )
+        )
         return 1
 
     # 4. Call run() function
@@ -67,10 +71,14 @@ def main() -> int:
     try:
         metrics = namespace["run"](benchmark_data)
     except Exception as e:
-        print(json.dumps({
-            "error": f"run() raised {type(e).__name__}: {e}",
-            "traceback": traceback.format_exc(),
-        }))
+        print(
+            json.dumps(
+                {
+                    "error": f"run() raised {type(e).__name__}: {e}",
+                    "traceback": traceback.format_exc(),
+                }
+            )
+        )
         return 1
 
     if not isinstance(metrics, dict):

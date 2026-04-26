@@ -76,6 +76,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import contextlib
 
 # ---------------------------------------------------------------------------
 # Path setup — make carnot library importable.
@@ -147,14 +148,16 @@ def load_humaneval(seed: int = 163) -> list[dict[str, Any]]:
         problems: list[dict[str, Any]] = []
         for i in range(len(ds)):
             ex = ds[i]
-            problems.append({
-                "task_id": ex["task_id"],
-                "prompt": ex["prompt"],
-                "canonical_solution": ex["canonical_solution"],
-                "test": ex["test"],
-                "entry_point": ex["entry_point"],
-                "source": "humaneval",
-            })
+            problems.append(
+                {
+                    "task_id": ex["task_id"],
+                    "prompt": ex["prompt"],
+                    "canonical_solution": ex["canonical_solution"],
+                    "test": ex["test"],
+                    "entry_point": ex["entry_point"],
+                    "source": "humaneval",
+                }
+            )
         return problems
 
     except ImportError:
@@ -197,9 +200,10 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
         }
 
     # -- String problems (10) --
-    problems.append(p(
-        "Synthetic/0",
-        """
+    problems.append(
+        p(
+            "Synthetic/0",
+            """
         def has_unique_chars(s: str) -> bool:
             \"\"\"Return True if all characters in s are unique.
             >>> has_unique_chars("abc")
@@ -208,8 +212,8 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             False
             \"\"\"
         """,
-        "    return len(s) == len(set(s))",
-        """
+            "    return len(s) == len(set(s))",
+            """
         def check(candidate):
             assert candidate("abc") == True
             assert candidate("aab") == False
@@ -218,11 +222,13 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             assert candidate("abcde") == True
             assert candidate("abcda") == False
         """,
-        "has_unique_chars",
-    ))
-    problems.append(p(
-        "Synthetic/1",
-        """
+            "has_unique_chars",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/1",
+            """
         def reverse_words(s: str) -> str:
             \"\"\"Reverse the order of words in a sentence.
             >>> reverse_words("hello world")
@@ -231,19 +237,21 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             'one'
             \"\"\"
         """,
-        "    return ' '.join(s.split()[::-1])",
-        """
+            "    return ' '.join(s.split()[::-1])",
+            """
         def check(candidate):
             assert candidate("hello world") == "world hello"
             assert candidate("one") == "one"
             assert candidate("a b c") == "c b a"
             assert candidate("foo bar baz") == "baz bar foo"
         """,
-        "reverse_words",
-    ))
-    problems.append(p(
-        "Synthetic/2",
-        """
+            "reverse_words",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/2",
+            """
         def count_vowels(s: str) -> int:
             \"\"\"Count the number of vowels (a,e,i,o,u) in s (case-insensitive).
             >>> count_vowels("hello")
@@ -252,8 +260,8 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             5
             \"\"\"
         """,
-        "    return sum(1 for c in s.lower() if c in 'aeiou')",
-        """
+            "    return sum(1 for c in s.lower() if c in 'aeiou')",
+            """
         def check(candidate):
             assert candidate("hello") == 2
             assert candidate("AEIOU") == 5
@@ -261,11 +269,13 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             assert candidate("bcdfg") == 0
             assert candidate("Beautiful") == 5
         """,
-        "count_vowels",
-    ))
-    problems.append(p(
-        "Synthetic/3",
-        """
+            "count_vowels",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/3",
+            """
         def is_palindrome(s: str) -> bool:
             \"\"\"Return True if s reads the same forwards and backwards.
             >>> is_palindrome("racecar")
@@ -274,8 +284,8 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             False
             \"\"\"
         """,
-        "    return s == s[::-1]",
-        """
+            "    return s == s[::-1]",
+            """
         def check(candidate):
             assert candidate("racecar") == True
             assert candidate("hello") == False
@@ -284,47 +294,53 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             assert candidate("abba") == True
             assert candidate("abc") == False
         """,
-        "is_palindrome",
-    ))
-    problems.append(p(
-        "Synthetic/4",
-        """
+            "is_palindrome",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/4",
+            """
         def title_case(s: str) -> str:
             \"\"\"Capitalize the first letter of each word.
             >>> title_case("hello world")
             'Hello World'
             \"\"\"
         """,
-        "    return ' '.join(w.capitalize() for w in s.split())",
-        """
+            "    return ' '.join(w.capitalize() for w in s.split())",
+            """
         def check(candidate):
             assert candidate("hello world") == "Hello World"
             assert candidate("foo") == "Foo"
             assert candidate("a b c") == "A B C"
         """,
-        "title_case",
-    ))
-    problems.append(p(
-        "Synthetic/5",
-        """
+            "title_case",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/5",
+            """
         def longest_word(s: str) -> str:
             \"\"\"Return the longest word in the string. If tie, return the first.
             >>> longest_word("the quick brown fox")
             'quick'
             \"\"\"
         """,
-        "    words = s.split(); return max(words, key=len)",
-        """
+            "    words = s.split(); return max(words, key=len)",
+            """
         def check(candidate):
             assert candidate("the quick brown fox") == "quick"
             assert candidate("a bb ccc") == "ccc"
             assert candidate("hello") == "hello"
         """,
-        "longest_word",
-    ))
-    problems.append(p(
-        "Synthetic/6",
-        """
+            "longest_word",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/6",
+            """
         def compress(s: str) -> str:
             \"\"\"Run-length encode a string: 'aaabbc' -> 'a3b2c1'.
             >>> compress("aaabbc")
@@ -333,7 +349,7 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             'a1b1c1'
             \"\"\"
         """,
-        """
+            """
         if not s:
             return ''
         result = []
@@ -347,18 +363,20 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
         result.append(s[-1] + str(count))
         return ''.join(result)
         """,
-        """
+            """
         def check(candidate):
             assert candidate("aaabbc") == "a3b2c1"
             assert candidate("abc") == "a1b1c1"
             assert candidate("") == ""
             assert candidate("aaaa") == "a4"
         """,
-        "compress",
-    ))
-    problems.append(p(
-        "Synthetic/7",
-        """
+            "compress",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/7",
+            """
         def is_anagram(s1: str, s2: str) -> bool:
             \"\"\"Return True if s1 and s2 are anagrams of each other.
             >>> is_anagram("listen", "silent")
@@ -367,58 +385,64 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             False
             \"\"\"
         """,
-        "    return sorted(s1.lower()) == sorted(s2.lower())",
-        """
+            "    return sorted(s1.lower()) == sorted(s2.lower())",
+            """
         def check(candidate):
             assert candidate("listen", "silent") == True
             assert candidate("hello", "world") == False
             assert candidate("abc", "cab") == True
             assert candidate("ab", "abc") == False
         """,
-        "is_anagram",
-    ))
-    problems.append(p(
-        "Synthetic/8",
-        """
+            "is_anagram",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/8",
+            """
         def remove_duplicates_str(s: str) -> str:
             \"\"\"Remove duplicate characters preserving first occurrence order.
             >>> remove_duplicates_str("abracadabra")
             'abrcd'
             \"\"\"
         """,
-        "    seen = set(); return ''.join(c for c in s if not (c in seen or seen.add(c)))",
-        """
+            "    seen = set(); return ''.join(c for c in s if not (c in seen or seen.add(c)))",
+            """
         def check(candidate):
             assert candidate("abracadabra") == "abrcd"
             assert candidate("aaa") == "a"
             assert candidate("abc") == "abc"
             assert candidate("") == ""
         """,
-        "remove_duplicates_str",
-    ))
-    problems.append(p(
-        "Synthetic/9",
-        """
+            "remove_duplicates_str",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/9",
+            """
         def word_frequency(s: str) -> dict:
             \"\"\"Return a dict mapping each word to its count in s.
             >>> word_frequency("the cat sat on the mat")
             {'the': 2, 'cat': 1, 'sat': 1, 'on': 1, 'mat': 1}
             \"\"\"
         """,
-        "    freq = {}; [freq.update({w: freq.get(w, 0) + 1}) for w in s.split()]; return freq",
-        """
+            "    freq = {}; [freq.update({w: freq.get(w, 0) + 1}) for w in s.split()]; return freq",
+            """
         def check(candidate):
             assert candidate("the cat sat on the mat") == {'the': 2, 'cat': 1, 'sat': 1, 'on': 1, 'mat': 1}
             assert candidate("a a a") == {'a': 3}
             assert candidate("") == {}
         """,
-        "word_frequency",
-    ))
+            "word_frequency",
+        )
+    )
 
     # -- Math problems (10) --
-    problems.append(p(
-        "Synthetic/10",
-        """
+    problems.append(
+        p(
+            "Synthetic/10",
+            """
         def is_prime(n: int) -> bool:
             \"\"\"Return True if n is a prime number.
             >>> is_prime(7)
@@ -427,7 +451,7 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             False
             \"\"\"
         """,
-        """
+            """
         if n < 2:
             return False
         for i in range(2, int(n**0.5) + 1):
@@ -435,7 +459,7 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
                 return False
         return True
         """,
-        """
+            """
         def check(candidate):
             assert candidate(2) == True
             assert candidate(3) == True
@@ -446,11 +470,13 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             assert candidate(97) == True
             assert candidate(100) == False
         """,
-        "is_prime",
-    ))
-    problems.append(p(
-        "Synthetic/11",
-        """
+            "is_prime",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/11",
+            """
         def fibonacci(n: int) -> int:
             \"\"\"Return the n-th Fibonacci number (0-indexed). fib(0)=0, fib(1)=1.
             >>> fibonacci(5)
@@ -459,7 +485,7 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             55
             \"\"\"
         """,
-        """
+            """
         if n <= 0:
             return 0
         a, b = 0, 1
@@ -467,7 +493,7 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             a, b = b, a + b
         return b
         """,
-        """
+            """
         def check(candidate):
             assert candidate(0) == 0
             assert candidate(1) == 1
@@ -475,11 +501,13 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             assert candidate(10) == 55
             assert candidate(2) == 1
         """,
-        "fibonacci",
-    ))
-    problems.append(p(
-        "Synthetic/12",
-        """
+            "fibonacci",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/12",
+            """
         def gcd(a: int, b: int) -> int:
             \"\"\"Return the greatest common divisor of a and b.
             >>> gcd(12, 8)
@@ -488,23 +516,25 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             1
             \"\"\"
         """,
-        """
+            """
         while b:
             a, b = b, a % b
         return a
         """,
-        """
+            """
         def check(candidate):
             assert candidate(12, 8) == 4
             assert candidate(7, 3) == 1
             assert candidate(100, 75) == 25
             assert candidate(0, 5) == 5
         """,
-        "gcd",
-    ))
-    problems.append(p(
-        "Synthetic/13",
-        """
+            "gcd",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/13",
+            """
         def factorial(n: int) -> int:
             \"\"\"Return n! (factorial of n). factorial(0) = 1.
             >>> factorial(5)
@@ -513,24 +543,26 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             1
             \"\"\"
         """,
-        """
+            """
         result = 1
         for i in range(2, n + 1):
             result *= i
         return result
         """,
-        """
+            """
         def check(candidate):
             assert candidate(0) == 1
             assert candidate(1) == 1
             assert candidate(5) == 120
             assert candidate(10) == 3628800
         """,
-        "factorial",
-    ))
-    problems.append(p(
-        "Synthetic/14",
-        """
+            "factorial",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/14",
+            """
         def sum_of_digits(n: int) -> int:
             \"\"\"Return the sum of digits of the absolute value of n.
             >>> sum_of_digits(123)
@@ -539,19 +571,21 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             9
             \"\"\"
         """,
-        "    return sum(int(d) for d in str(abs(n)))",
-        """
+            "    return sum(int(d) for d in str(abs(n)))",
+            """
         def check(candidate):
             assert candidate(123) == 6
             assert candidate(-45) == 9
             assert candidate(0) == 0
             assert candidate(999) == 27
         """,
-        "sum_of_digits",
-    ))
-    problems.append(p(
-        "Synthetic/15",
-        """
+            "sum_of_digits",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/15",
+            """
         def is_perfect(n: int) -> bool:
             \"\"\"Return True if n is a perfect number (sum of proper divisors = n).
             >>> is_perfect(6)
@@ -562,8 +596,8 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             False
             \"\"\"
         """,
-        "    return n > 1 and sum(i for i in range(1, n) if n % i == 0) == n",
-        """
+            "    return n > 1 and sum(i for i in range(1, n) if n % i == 0) == n",
+            """
         def check(candidate):
             assert candidate(6) == True
             assert candidate(28) == True
@@ -571,18 +605,20 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             assert candidate(1) == False
             assert candidate(496) == True
         """,
-        "is_perfect",
-    ))
-    problems.append(p(
-        "Synthetic/16",
-        """
+            "is_perfect",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/16",
+            """
         def collatz_length(n: int) -> int:
             \"\"\"Return the length of the Collatz sequence starting at n.
             >>> collatz_length(6)
             9
             \"\"\"
         """,
-        """
+            """
         count = 1
         while n != 1:
             if n % 2 == 0:
@@ -592,17 +628,19 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             count += 1
         return count
         """,
-        """
+            """
         def check(candidate):
             assert candidate(1) == 1
             assert candidate(6) == 9
             assert candidate(27) == 112
         """,
-        "collatz_length",
-    ))
-    problems.append(p(
-        "Synthetic/17",
-        """
+            "collatz_length",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/17",
+            """
         def celsius_to_fahrenheit(c: float) -> float:
             \"\"\"Convert Celsius to Fahrenheit.
             >>> celsius_to_fahrenheit(0)
@@ -611,18 +649,20 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             212.0
             \"\"\"
         """,
-        "    return c * 9 / 5 + 32",
-        """
+            "    return c * 9 / 5 + 32",
+            """
         def check(candidate):
             assert candidate(0) == 32.0
             assert candidate(100) == 212.0
             assert abs(candidate(-40) - (-40.0)) < 1e-9
         """,
-        "celsius_to_fahrenheit",
-    ))
-    problems.append(p(
-        "Synthetic/18",
-        """
+            "celsius_to_fahrenheit",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/18",
+            """
         def power(base: float, exp: int) -> float:
             \"\"\"Return base raised to exp (non-negative integer exponent).
             >>> power(2, 10)
@@ -631,88 +671,96 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             1
             \"\"\"
         """,
-        """
+            """
         result = 1
         for _ in range(exp):
             result *= base
         return result
         """,
-        """
+            """
         def check(candidate):
             assert candidate(2, 10) == 1024
             assert candidate(3, 0) == 1
             assert candidate(5, 3) == 125
             assert candidate(1, 100) == 1
         """,
-        "power",
-    ))
-    problems.append(p(
-        "Synthetic/19",
-        """
+            "power",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/19",
+            """
         def average(nums: list) -> float:
             \"\"\"Return the arithmetic mean of a non-empty list of numbers.
             >>> average([1, 2, 3, 4, 5])
             3.0
             \"\"\"
         """,
-        "    return sum(nums) / len(nums)",
-        """
+            "    return sum(nums) / len(nums)",
+            """
         def check(candidate):
             assert candidate([1, 2, 3, 4, 5]) == 3.0
             assert candidate([10]) == 10.0
             assert abs(candidate([1, 2]) - 1.5) < 1e-9
         """,
-        "average",
-    ))
+            "average",
+        )
+    )
 
     # -- List problems (10) --
-    problems.append(p(
-        "Synthetic/20",
-        """
+    problems.append(
+        p(
+            "Synthetic/20",
+            """
         def sorted_unique(nums: list) -> list:
             \"\"\"Return sorted list of unique values.
             >>> sorted_unique([3, 1, 2, 1, 3])
             [1, 2, 3]
             \"\"\"
         """,
-        "    return sorted(set(nums))",
-        """
+            "    return sorted(set(nums))",
+            """
         def check(candidate):
             assert candidate([3, 1, 2, 1, 3]) == [1, 2, 3]
             assert candidate([]) == []
             assert candidate([1]) == [1]
             assert candidate([5, 5, 5]) == [5]
         """,
-        "sorted_unique",
-    ))
-    problems.append(p(
-        "Synthetic/21",
-        """
+            "sorted_unique",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/21",
+            """
         def flatten(nested: list) -> list:
             \"\"\"Flatten one level of nesting in a list.
             >>> flatten([[1, 2], [3, 4], [5]])
             [1, 2, 3, 4, 5]
             \"\"\"
         """,
-        "    return [x for sub in nested for x in sub]",
-        """
+            "    return [x for sub in nested for x in sub]",
+            """
         def check(candidate):
             assert candidate([[1, 2], [3, 4], [5]]) == [1, 2, 3, 4, 5]
             assert candidate([]) == []
             assert candidate([[1], [2], [3]]) == [1, 2, 3]
         """,
-        "flatten",
-    ))
-    problems.append(p(
-        "Synthetic/22",
-        """
+            "flatten",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/22",
+            """
         def cumulative_sum(nums: list) -> list:
             \"\"\"Return a list where each element is the cumulative sum up to that index.
             >>> cumulative_sum([1, 2, 3, 4])
             [1, 3, 6, 10]
             \"\"\"
         """,
-        """
+            """
         result = []
         total = 0
         for n in nums:
@@ -720,55 +768,61 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             result.append(total)
         return result
         """,
-        """
+            """
         def check(candidate):
             assert candidate([1, 2, 3, 4]) == [1, 3, 6, 10]
             assert candidate([]) == []
             assert candidate([5]) == [5]
             assert candidate([1, -1, 1]) == [1, 0, 1]
         """,
-        "cumulative_sum",
-    ))
-    problems.append(p(
-        "Synthetic/23",
-        """
+            "cumulative_sum",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/23",
+            """
         def rotate_left(lst: list, k: int) -> list:
             \"\"\"Rotate list left by k positions.
             >>> rotate_left([1, 2, 3, 4, 5], 2)
             [3, 4, 5, 1, 2]
             \"\"\"
         """,
-        "    if not lst: return []; k = k % len(lst); return lst[k:] + lst[:k]",
-        """
+            "    if not lst: return []; k = k % len(lst); return lst[k:] + lst[:k]",
+            """
         def check(candidate):
             assert candidate([1, 2, 3, 4, 5], 2) == [3, 4, 5, 1, 2]
             assert candidate([1, 2, 3], 0) == [1, 2, 3]
             assert candidate([], 3) == []
             assert candidate([1, 2, 3], 3) == [1, 2, 3]
         """,
-        "rotate_left",
-    ))
-    problems.append(p(
-        "Synthetic/24",
-        """
+            "rotate_left",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/24",
+            """
         def chunk(lst: list, n: int) -> list:
             \"\"\"Split list into chunks of size n.
             >>> chunk([1, 2, 3, 4, 5], 2)
             [[1, 2], [3, 4], [5]]
             \"\"\"
         """,
-        "    return [lst[i:i+n] for i in range(0, len(lst), n)]",
-        """
+            "    return [lst[i:i+n] for i in range(0, len(lst), n)]",
+            """
         def check(candidate):
             assert candidate([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]
             assert candidate([1, 2, 3], 3) == [[1, 2, 3]]
             assert candidate([], 2) == []
         """,
-        "chunk",
-    ))
-    problems.append(p(
-        "Synthetic/25",
-        """
+            "chunk",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/25",
+            """
         def second_largest(nums: list) -> int:
             \"\"\"Return the second largest unique value in nums.
             Assumes at least 2 distinct values.
@@ -776,91 +830,101 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             6
             \"\"\"
         """,
-        "    unique = sorted(set(nums)); return unique[-2]",
-        """
+            "    unique = sorted(set(nums)); return unique[-2]",
+            """
         def check(candidate):
             assert candidate([3, 1, 4, 1, 5, 9, 2, 6]) == 6
             assert candidate([1, 2]) == 1
             assert candidate([5, 5, 3]) == 3
         """,
-        "second_largest",
-    ))
-    problems.append(p(
-        "Synthetic/26",
-        """
+            "second_largest",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/26",
+            """
         def zip_lists(a: list, b: list) -> list:
             \"\"\"Return list of (a[i], b[i]) pairs (truncated to shorter list).
             >>> zip_lists([1, 2, 3], ['a', 'b', 'c'])
             [(1, 'a'), (2, 'b'), (3, 'c')]
             \"\"\"
         """,
-        "    return list(zip(a, b))",
-        """
+            "    return list(zip(a, b))",
+            """
         def check(candidate):
             assert candidate([1, 2, 3], ['a', 'b', 'c']) == [(1, 'a'), (2, 'b'), (3, 'c')]
             assert candidate([], []) == []
             assert candidate([1, 2], ['a']) == [(1, 'a')]
         """,
-        "zip_lists",
-    ))
-    problems.append(p(
-        "Synthetic/27",
-        """
+            "zip_lists",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/27",
+            """
         def matrix_transpose(matrix: list) -> list:
             \"\"\"Return the transpose of a 2D list (list of lists).
             >>> matrix_transpose([[1, 2], [3, 4], [5, 6]])
             [[1, 3, 5], [2, 4, 6]]
             \"\"\"
         """,
-        "    return [list(row) for row in zip(*matrix)]",
-        """
+            "    return [list(row) for row in zip(*matrix)]",
+            """
         def check(candidate):
             assert candidate([[1, 2], [3, 4], [5, 6]]) == [[1, 3, 5], [2, 4, 6]]
             assert candidate([[1, 2, 3]]) == [[1], [2], [3]]
         """,
-        "matrix_transpose",
-    ))
-    problems.append(p(
-        "Synthetic/28",
-        """
+            "matrix_transpose",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/28",
+            """
         def moving_average(nums: list, k: int) -> list:
             \"\"\"Return list of k-element moving averages (as floats).
             >>> moving_average([1, 2, 3, 4, 5], 3)
             [2.0, 3.0, 4.0]
             \"\"\"
         """,
-        "    return [sum(nums[i:i+k]) / k for i in range(len(nums) - k + 1)]",
-        """
+            "    return [sum(nums[i:i+k]) / k for i in range(len(nums) - k + 1)]",
+            """
         def check(candidate):
             assert candidate([1, 2, 3, 4, 5], 3) == [2.0, 3.0, 4.0]
             assert candidate([1, 2], 2) == [1.5]
             assert candidate([5], 1) == [5.0]
         """,
-        "moving_average",
-    ))
-    problems.append(p(
-        "Synthetic/29",
-        """
+            "moving_average",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/29",
+            """
         def count_occurrences(lst: list, target) -> int:
             \"\"\"Count how many times target appears in lst.
             >>> count_occurrences([1, 2, 1, 3, 1], 1)
             3
             \"\"\"
         """,
-        "    return lst.count(target)",
-        """
+            "    return lst.count(target)",
+            """
         def check(candidate):
             assert candidate([1, 2, 1, 3, 1], 1) == 3
             assert candidate([], 5) == 0
             assert candidate(['a', 'b', 'a'], 'a') == 2
         """,
-        "count_occurrences",
-    ))
+            "count_occurrences",
+        )
+    )
 
     # -- Algorithm problems (10) --
-    problems.append(p(
-        "Synthetic/30",
-        """
+    problems.append(
+        p(
+            "Synthetic/30",
+            """
         def binary_search(sorted_list: list, target: int) -> int:
             \"\"\"Return the index of target in sorted_list, or -1 if not found.
             >>> binary_search([1, 3, 5, 7, 9], 5)
@@ -869,7 +933,7 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             -1
             \"\"\"
         """,
-        """
+            """
         lo, hi = 0, len(sorted_list) - 1
         while lo <= hi:
             mid = (lo + hi) // 2
@@ -881,18 +945,20 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
                 hi = mid - 1
         return -1
         """,
-        """
+            """
         def check(candidate):
             assert candidate([1, 3, 5, 7, 9], 5) == 2
             assert candidate([1, 3, 5, 7, 9], 6) == -1
             assert candidate([], 1) == -1
             assert candidate([1], 1) == 0
         """,
-        "binary_search",
-    ))
-    problems.append(p(
-        "Synthetic/31",
-        """
+            "binary_search",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/31",
+            """
         def valid_brackets(s: str) -> bool:
             \"\"\"Return True if bracket sequence in s is valid (only '(', ')').
             >>> valid_brackets("(())")
@@ -901,7 +967,7 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             False
             \"\"\"
         """,
-        """
+            """
         depth = 0
         for c in s:
             if c == '(':
@@ -912,7 +978,7 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
                     return False
         return depth == 0
         """,
-        """
+            """
         def check(candidate):
             assert candidate("(())") == True
             assert candidate(")(") == False
@@ -920,18 +986,20 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             assert candidate("(()())") == True
             assert candidate("(()") == False
         """,
-        "valid_brackets",
-    ))
-    problems.append(p(
-        "Synthetic/32",
-        """
+            "valid_brackets",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/32",
+            """
         def merge_sorted(a: list, b: list) -> list:
             \"\"\"Merge two sorted lists into one sorted list.
             >>> merge_sorted([1, 3, 5], [2, 4, 6])
             [1, 2, 3, 4, 5, 6]
             \"\"\"
         """,
-        """
+            """
         result = []
         i = j = 0
         while i < len(a) and j < len(b):
@@ -941,24 +1009,26 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
                 result.append(b[j]); j += 1
         return result + a[i:] + b[j:]
         """,
-        """
+            """
         def check(candidate):
             assert candidate([1, 3, 5], [2, 4, 6]) == [1, 2, 3, 4, 5, 6]
             assert candidate([], [1, 2]) == [1, 2]
             assert candidate([1, 2], []) == [1, 2]
         """,
-        "merge_sorted",
-    ))
-    problems.append(p(
-        "Synthetic/33",
-        """
+            "merge_sorted",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/33",
+            """
         def bubble_sort(lst: list) -> list:
             \"\"\"Return a sorted copy of lst using bubble sort.
             >>> bubble_sort([3, 1, 4, 1, 5, 9, 2, 6])
             [1, 1, 2, 3, 4, 5, 6, 9]
             \"\"\"
         """,
-        """
+            """
         lst = list(lst)
         n = len(lst)
         for i in range(n):
@@ -967,24 +1037,26 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
                     lst[j], lst[j + 1] = lst[j + 1], lst[j]
         return lst
         """,
-        """
+            """
         def check(candidate):
             assert candidate([3, 1, 4, 1, 5, 9, 2, 6]) == [1, 1, 2, 3, 4, 5, 6, 9]
             assert candidate([]) == []
             assert candidate([1]) == [1]
         """,
-        "bubble_sort",
-    ))
-    problems.append(p(
-        "Synthetic/34",
-        """
+            "bubble_sort",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/34",
+            """
         def caesar_cipher(s: str, shift: int) -> str:
             \"\"\"Apply Caesar cipher (shift letters only, preserve case and non-alpha).
             >>> caesar_cipher("Hello, World!", 3)
             'Khoor, Zruog!'
             \"\"\"
         """,
-        """
+            """
         result = []
         for c in s:
             if c.isalpha():
@@ -994,37 +1066,41 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
                 result.append(c)
         return ''.join(result)
         """,
-        """
+            """
         def check(candidate):
             assert candidate("Hello, World!", 3) == "Khoor, Zruog!"
             assert candidate("abc", 0) == "abc"
             assert candidate("xyz", 3) == "abc"
             assert candidate("ABC", 1) == "BCD"
         """,
-        "caesar_cipher",
-    ))
-    problems.append(p(
-        "Synthetic/35",
-        """
+            "caesar_cipher",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/35",
+            """
         def count_words(s: str) -> int:
             \"\"\"Return the number of words in s (words are whitespace-separated).
             >>> count_words("  hello world  ")
             2
             \"\"\"
         """,
-        "    return len(s.split())",
-        """
+            "    return len(s.split())",
+            """
         def check(candidate):
             assert candidate("  hello world  ") == 2
             assert candidate("") == 0
             assert candidate("one") == 1
             assert candidate("a b c d") == 4
         """,
-        "count_words",
-    ))
-    problems.append(p(
-        "Synthetic/36",
-        """
+            "count_words",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/36",
+            """
         def max_subarray_sum(nums: list) -> int:
             \"\"\"Return the maximum subarray sum (Kadane's algorithm).
             Assumes at least one element.
@@ -1032,44 +1108,48 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             6
             \"\"\"
         """,
-        """
+            """
         best = current = nums[0]
         for n in nums[1:]:
             current = max(n, current + n)
             best = max(best, current)
         return best
         """,
-        """
+            """
         def check(candidate):
             assert candidate([-2, 1, -3, 4, -1, 2, 1, -5, 4]) == 6
             assert candidate([1]) == 1
             assert candidate([-1, -2, -3]) == -1
             assert candidate([1, 2, 3]) == 6
         """,
-        "max_subarray_sum",
-    ))
-    problems.append(p(
-        "Synthetic/37",
-        """
+            "max_subarray_sum",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/37",
+            """
         def find_missing(nums: list) -> int:
             \"\"\"Given list of n-1 unique ints from 1..n, find the missing one.
             >>> find_missing([1, 2, 4, 5])
             3
             \"\"\"
         """,
-        "    n = len(nums) + 1; return n * (n + 1) // 2 - sum(nums)",
-        """
+            "    n = len(nums) + 1; return n * (n + 1) // 2 - sum(nums)",
+            """
         def check(candidate):
             assert candidate([1, 2, 4, 5]) == 3
             assert candidate([2]) == 1
             assert candidate([1]) == 2
             assert candidate([1, 2, 3, 5]) == 4
         """,
-        "find_missing",
-    ))
-    problems.append(p(
-        "Synthetic/38",
-        """
+            "find_missing",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/38",
+            """
         def is_sorted(lst: list) -> bool:
             \"\"\"Return True if list is sorted in non-decreasing order.
             >>> is_sorted([1, 2, 3, 3, 5])
@@ -1078,19 +1158,21 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             False
             \"\"\"
         """,
-        "    return all(lst[i] <= lst[i+1] for i in range(len(lst)-1))",
-        """
+            "    return all(lst[i] <= lst[i+1] for i in range(len(lst)-1))",
+            """
         def check(candidate):
             assert candidate([1, 2, 3, 3, 5]) == True
             assert candidate([1, 3, 2]) == False
             assert candidate([]) == True
             assert candidate([1]) == True
         """,
-        "is_sorted",
-    ))
-    problems.append(p(
-        "Synthetic/39",
-        """
+            "is_sorted",
+        )
+    )
+    problems.append(
+        p(
+            "Synthetic/39",
+            """
         def two_sum(nums: list, target: int) -> list:
             \"\"\"Return indices [i, j] such that nums[i] + nums[j] == target.
             Assumes exactly one solution exists.
@@ -1098,7 +1180,7 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             [0, 1]
             \"\"\"
         """,
-        """
+            """
         seen = {}
         for i, n in enumerate(nums):
             complement = target - n
@@ -1107,14 +1189,15 @@ def _create_manual_problems(seed: int = 163) -> list[dict[str, Any]]:
             seen[n] = i
         return []
         """,
-        """
+            """
         def check(candidate):
             assert candidate([2, 7, 11, 15], 9) == [0, 1]
             assert candidate([3, 2, 4], 6) == [1, 2]
             assert candidate([3, 3], 6) == [0, 1]
         """,
-        "two_sum",
-    ))
+            "two_sum",
+        )
+    )
 
     rng = random.Random(seed)
     rng.shuffle(problems)
@@ -1186,9 +1269,7 @@ def execute_solution(
     body_indented = textwrap.indent(solution_body, "    ")
     full_source = f"{prompt}{body_indented}\n\n{test_code}\n\ncheck({entry})\n"
 
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".py", delete=False, prefix="exp163_"
-    ) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, prefix="exp163_") as f:
         f.write(full_source)
         tmp_path = f.name
 
@@ -1231,10 +1312,8 @@ def execute_solution(
             stdout="",
         )
     finally:
-        try:
+        with contextlib.suppress(OSError):
             os.unlink(tmp_path)
-        except OSError:
-            pass
 
 
 # ---------------------------------------------------------------------------
@@ -1275,8 +1354,7 @@ def extract_code_constraints(solution_body: str, entry_point: str) -> list[str]:
 
         # Check for return statement presence.
         has_return = any(
-            isinstance(node, ast.Return) and node.value is not None
-            for node in ast.walk(fn_def)
+            isinstance(node, ast.Return) and node.value is not None for node in ast.walk(fn_def)
         )
         if not has_return:
             constraints.append(f"{entry_point}: missing return statement")
@@ -1399,9 +1477,9 @@ def generate_solution(
             # Strip any def line the model may have emitted.
             lines = output.split("\n")
             body_lines = [
-                ln for ln in lines
-                if not ln.strip().startswith("def ")
-                and not ln.strip().startswith("```")
+                ln
+                for ln in lines
+                if not ln.strip().startswith("def ") and not ln.strip().startswith("```")
             ]
             return "\n".join(body_lines)
         except Exception as e:
@@ -1483,9 +1561,7 @@ def generate_repair(
             from carnot.inference.model_loader import generate
 
             constraint_str = (
-                "\n".join(f"  - {c}" for c in constraints)
-                if constraints
-                else "  (none extracted)"
+                "\n".join(f"  - {c}" for c in constraints) if constraints else "  (none extracted)"
             )
             repair_prompt = (
                 f"The following Python function is incorrect:\n\n"
@@ -1498,9 +1574,9 @@ def generate_repair(
             output = generate(model, tokenizer, repair_prompt, max_new_tokens=256)
             lines = output.split("\n")
             body_lines = [
-                ln for ln in lines
-                if not ln.strip().startswith("def ")
-                and not ln.strip().startswith("```")
+                ln
+                for ln in lines
+                if not ln.strip().startswith("def ") and not ln.strip().startswith("```")
             ]
             return "\n".join(body_lines)
         except Exception as e:
@@ -1601,9 +1677,7 @@ def run_problem(
     # ---- True execution path (live model OR synthetic problems) ----
 
     # Step 1: Generate initial solution.
-    body = generate_solution(
-        problem["prompt"], entry, tokenizer, model, device, use_live, rng
-    )
+    body = generate_solution(problem["prompt"], entry, tokenizer, model, device, use_live, rng)
 
     # For synthetic problems with simulation (buggy body), we can execute
     # the real test harness because the prompts and test code are self-contained.
@@ -1634,7 +1708,11 @@ def run_problem(
                 current_body,
                 constraints,
                 current_result.error_msg,
-                tokenizer, model, device, use_live, rng,
+                tokenizer,
+                model,
+                device,
+                use_live,
+                rng,
                 repair_idx=repair_idx,
             )
             repair_result = execute_solution(repaired_body, problem)
@@ -1699,9 +1777,7 @@ def _simulate_problem(
     verify_pass = sim_correct  # verify doesn't rewrite
 
     # Extract constraints from canonical solution (what pipeline would see on correct code).
-    constraints = extract_code_constraints(
-        problem.get("canonical_solution", "    pass"), entry
-    )
+    constraints = extract_code_constraints(problem.get("canonical_solution", "    pass"), entry)
 
     # Simulate repair iterations.
     error_types_repairs: list[str] = []
@@ -1897,8 +1973,10 @@ def main() -> int:
     inference_mode = "live" if use_live else "simulation"
     if not use_live:
         print(f"\n  *** SIMULATION MODE ***")
-        print(f"  Calibrated from Exp 68: {SIM_BASELINE_PASS_RATE:.0%} baseline, "
-              f"{SIM_REPAIR_SUCCESS_RATE:.0%} repair success rate.")
+        print(
+            f"  Calibrated from Exp 68: {SIM_BASELINE_PASS_RATE:.0%} baseline, "
+            f"{SIM_REPAIR_SUCCESS_RATE:.0%} repair success rate."
+        )
         if n_real > 0:
             print(f"  Real HumanEval problems use statistical simulation.")
             print(f"  Synthetic problems use true code execution (subprocess).")
@@ -1917,9 +1995,11 @@ def main() -> int:
             n_b = sum(1 for x in results if x.baseline_pass)
             n_r = sum(1 for x in results if x.repair_pass)
             done = i + 1
-            print(f"    {done:3d}/{n_problems} — "
-                  f"baseline {n_b}/{done} ({n_b/done:.1%}), "
-                  f"repair {n_r}/{done} ({n_r/done:.1%})")
+            print(
+                f"    {done:3d}/{n_problems} — "
+                f"baseline {n_b}/{done} ({n_b / done:.1%}), "
+                f"repair {n_r}/{done} ({n_r / done:.1%})"
+            )
 
     model_elapsed = time.time() - model_start
 
@@ -1941,17 +2021,13 @@ def main() -> int:
     base_acc, base_lo, base_hi = bootstrap_ci(baseline_flags, seed=163_001)
     verify_acc, verify_lo, verify_hi = bootstrap_ci(verify_flags, seed=163_002)
     repair_acc, repair_lo, repair_hi = bootstrap_ci(repair_flags, seed=163_003)
-    delta, delta_lo, delta_hi = bootstrap_delta_ci(
-        baseline_flags, repair_flags, seed=163_004
-    )
+    delta, delta_lo, delta_hi = bootstrap_delta_ci(baseline_flags, repair_flags, seed=163_004)
 
     # Error type breakdown.
     error_counts: dict[str, int] = {}
     for r in results:
         if not r.baseline_pass:
-            error_counts[r.error_type_baseline] = (
-                error_counts.get(r.error_type_baseline, 0) + 1
-            )
+            error_counts[r.error_type_baseline] = error_counts.get(r.error_type_baseline, 0) + 1
 
     # Repair statistics.
     n_needed_repair = sum(1 for r in results if not r.baseline_pass)
@@ -1960,12 +2036,8 @@ def main() -> int:
     avg_repairs = float(np.mean(n_repairs_list)) if n_repairs_list else 0.0
 
     # Source breakdown.
-    n_humaneval_pass_base = sum(
-        1 for r in results if r.source == "humaneval" and r.baseline_pass
-    )
-    n_humaneval_pass_repair = sum(
-        1 for r in results if r.source == "humaneval" and r.repair_pass
-    )
+    n_humaneval_pass_base = sum(1 for r in results if r.source == "humaneval" and r.baseline_pass)
+    n_humaneval_pass_repair = sum(1 for r in results if r.source == "humaneval" and r.repair_pass)
 
     total_elapsed = time.time() - overall_start
 
@@ -2028,8 +2100,10 @@ def main() -> int:
     print(f"\n{sep}")
     print(f"EXPERIMENT 163 RESULTS ({total_elapsed:.1f}s total)")
     print(sep)
-    print(f"  Dataset: {dataset_source} (N={n_problems}, "
-          f"{n_real} real HumanEval, {n_synth} synthetic)")
+    print(
+        f"  Dataset: {dataset_source} (N={n_problems}, "
+        f"{n_real} real HumanEval, {n_synth} synthetic)"
+    )
     print(f"  Inference: {inference_mode.upper()}")
     print(f"  Bootstrap CI: 95%, n_bootstrap={N_BOOTSTRAP:,}")
     print()
@@ -2040,12 +2114,18 @@ def main() -> int:
 
     print(f"  {'Mode':<25s}  {'pass@1':>8s}  {'95% CI':>18s}  {'N correct':>9s}")
     print(f"  {'-' * 65}")
-    print(f"  {'Baseline (no verify)':<25s}  {base_acc:>7.1%}  "
-          f"[{base_lo:.1%}, {base_hi:.1%}]  {int(sum(baseline_flags)):>5d}/{n_problems}")
-    print(f"  {'Verify-only':<25s}  {verify_acc:>7.1%}  "
-          f"[{verify_lo:.1%}, {verify_hi:.1%}]  {int(sum(verify_flags)):>5d}/{n_problems}")
-    print(f"  {'Verify+Repair (≤3 iters)':<25s}  {repair_acc:>7.1%}  "
-          f"[{repair_lo:.1%}, {repair_hi:.1%}]  {int(sum(repair_flags)):>5d}/{n_problems}")
+    print(
+        f"  {'Baseline (no verify)':<25s}  {base_acc:>7.1%}  "
+        f"[{base_lo:.1%}, {base_hi:.1%}]  {int(sum(baseline_flags)):>5d}/{n_problems}"
+    )
+    print(
+        f"  {'Verify-only':<25s}  {verify_acc:>7.1%}  "
+        f"[{verify_lo:.1%}, {verify_hi:.1%}]  {int(sum(verify_flags)):>5d}/{n_problems}"
+    )
+    print(
+        f"  {'Verify+Repair (≤3 iters)':<25s}  {repair_acc:>7.1%}  "
+        f"[{repair_lo:.1%}, {repair_hi:.1%}]  {int(sum(repair_flags)):>5d}/{n_problems}"
+    )
     print()
     print(f"  Delta (repair - baseline): {delta:+.1%} [{delta_lo:+.1%}, {delta_hi:+.1%}]")
     print()
@@ -2064,8 +2144,10 @@ def main() -> int:
     if n_needed_repair > 0:
         print(f"  Repair statistics:")
         print(f"    Problems needing repair:  {n_needed_repair}/{n_problems}")
-        print(f"    Successfully repaired:    {n_repaired}/{n_needed_repair} "
-              f"({n_repaired / n_needed_repair:.1%})")
+        print(
+            f"    Successfully repaired:    {n_repaired}/{n_needed_repair} "
+            f"({n_repaired / n_needed_repair:.1%})"
+        )
         print(f"    Average repair iters:     {avg_repairs:.1f}")
         print()
 
@@ -2077,11 +2159,15 @@ def main() -> int:
         verdict2 = f"Bootstrap CIs ≈ ±{ci_half_r:.1%}. Directly comparable to published baselines."
     elif n_real > 0:
         verdict = "EXTERNALLY CREDIBLE DATASET but simulated inference."
-        verdict2 = ("Results show pipeline mechanics. Run with live model for final claim. "
-                    "Dataset is real HumanEval (164 problems).")
+        verdict2 = (
+            "Results show pipeline mechanics. Run with live model for final claim. "
+            "Dataset is real HumanEval (164 problems)."
+        )
     else:
         verdict = "Synthetic fallback — pipeline mechanics exercised."
-        verdict2 = "Install `datasets` (pip install datasets) and re-run for real HumanEval numbers."
+        verdict2 = (
+            "Install `datasets` (pip install datasets) and re-run for real HumanEval numbers."
+        )
 
     print(f"  VERDICT: {verdict}")
     print(f"           {verdict2}")

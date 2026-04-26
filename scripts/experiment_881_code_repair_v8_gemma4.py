@@ -85,6 +85,7 @@ def _check_gate() -> tuple[bool, str]:
 # HumanEval execution helper
 # ---------------------------------------------------------------------------
 
+
 def _exec_humaneval_test(code: str, test_str: str, entry_point: str) -> bool:
     """Execute generated code + official test in a sandboxed namespace.
 
@@ -97,10 +98,7 @@ def _exec_humaneval_test(code: str, test_str: str, entry_point: str) -> bool:
     ns: dict[str, Any] = {}
     try:
         exec(code, ns)  # noqa: S102
-        check_fn_code = (
-            test_str
-            + f"\ncheck({entry_point})\n"
-        )
+        check_fn_code = test_str + f"\ncheck({entry_point})\n"
         exec(check_fn_code, ns)  # noqa: S102
         return True
     except Exception:
@@ -110,6 +108,7 @@ def _exec_humaneval_test(code: str, test_str: str, entry_point: str) -> bool:
 # ---------------------------------------------------------------------------
 # Code generation helper
 # ---------------------------------------------------------------------------
+
 
 def _generate_code(model: Any, tokenizer: Any, prompt: str, max_new_tokens: int = 256) -> str:
     """Generate a Python function completion from a HumanEval prompt.
@@ -123,8 +122,7 @@ def _generate_code(model: Any, tokenizer: Any, prompt: str, max_new_tokens: int 
     import torch  # local import — torch is a heavy optional dep
 
     full_prompt = (
-        "Complete the following Python function. Output only the code, "
-        "no prose:\n\n" + prompt
+        "Complete the following Python function. Output only the code, no prose:\n\n" + prompt
     )
     inputs = tokenizer(full_prompt, return_tensors="pt").to(model.device)
     with torch.no_grad():
@@ -135,13 +133,14 @@ def _generate_code(model: Any, tokenizer: Any, prompt: str, max_new_tokens: int 
             pad_token_id=tokenizer.eos_token_id,
         )
     # Decode only the newly generated tokens (skip the prompt)
-    new_tokens = output_ids[0][inputs["input_ids"].shape[1]:]
+    new_tokens = output_ids[0][inputs["input_ids"].shape[1] :]
     return tokenizer.decode(new_tokens, skip_special_tokens=True)
 
 
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Orchestrate the full Exp 881 pipeline and write the deliverable artifact."""
@@ -200,7 +199,7 @@ def main() -> None:
     _generate_code(
         model,
         tokenizer,
-        "def add(a: int, b: int) -> int:\n    \"\"\"Return a + b.\"\"\"\n",
+        'def add(a: int, b: int) -> int:\n    """Return a + b."""\n',
         max_new_tokens=32,
     )
     print("[exp881] Warm-up done.", flush=True)
@@ -264,12 +263,8 @@ def main() -> None:
             # feedback to the prompt and re-generating.
             has_violations = any(not c.satisfied for c in vr.constraints)
             if has_violations and not passed_baseline:
-                violation_msgs = [
-                    c.description for c in vr.constraints if not c.satisfied
-                ]
-                repair_hint = "\n".join(
-                    f"# FIX: {m}" for m in violation_msgs[:3]
-                )
+                violation_msgs = [c.description for c in vr.constraints if not c.satisfied]
+                repair_hint = "\n".join(f"# FIX: {m}" for m in violation_msgs[:3])
                 repair_prompt = (
                     prompt_text
                     + f"\n# Constraints violated:\n{repair_hint}\n"
@@ -284,13 +279,15 @@ def main() -> None:
             passed_repaired = passed_baseline
 
         elapsed = round(time.perf_counter() - t0, 2)
-        results_per_problem.append({
-            "task_id": task_id,
-            "passed_baseline": passed_baseline,
-            "passed_repaired": passed_repaired,
-            "n_constraints_found": n_constraints,
-            "elapsed_s": elapsed,
-        })
+        results_per_problem.append(
+            {
+                "task_id": task_id,
+                "passed_baseline": passed_baseline,
+                "passed_repaired": passed_repaired,
+                "n_constraints_found": n_constraints,
+                "elapsed_s": elapsed,
+            }
+        )
         status_char = "+" if passed_repaired else "-"
         print(
             f"[exp881] {task_id}: baseline={passed_baseline} repaired={passed_repaired} "
@@ -300,7 +297,9 @@ def main() -> None:
 
         # Checkpoint every 5 problems
         if len(results_per_problem) % 5 == 0:
-            tmpl.checkpoint_save({"partial_results": results_per_problem}, step=len(results_per_problem))
+            tmpl.checkpoint_save(
+                {"partial_results": results_per_problem}, step=len(results_per_problem)
+            )
 
     # -- Compute metrics -----------------------------------------------------
     n_problems = len(results_per_problem)

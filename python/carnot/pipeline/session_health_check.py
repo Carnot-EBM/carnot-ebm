@@ -48,8 +48,7 @@ from __future__ import annotations
 import logging
 import os
 import time
-from dataclasses import dataclass, field
-from typing import Optional
+from dataclasses import dataclass
 
 from carnot.pipeline.env_autofix import apply_env_autofix
 
@@ -378,9 +377,7 @@ class ConductorSessionHealthCheck:
                 handle = pynvml.nvmlDeviceGetHandleByIndex(i)
                 mem = pynvml.nvmlDeviceGetMemoryInfo(handle)
                 util = pynvml.nvmlDeviceGetUtilizationRates(handle)
-                temp = pynvml.nvmlDeviceGetTemperature(
-                    handle, pynvml.NVML_TEMPERATURE_GPU
-                )
+                temp = pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU)
                 vram_used_mb = int(mem.used / (1024 * 1024))
                 healths.append(
                     GPUHealth(

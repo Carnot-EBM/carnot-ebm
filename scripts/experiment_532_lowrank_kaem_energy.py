@@ -164,8 +164,12 @@ def main() -> None:
 
     guard = DeliverableGuard(str(_REPO_ROOT / DELIVERABLE))
 
-    _log.info("Exp %d: generating synthetic low-rank logit data (n_vars=%d, rank=%d)",
-              EXP_ID, N_VARS, TRUE_RANK)
+    _log.info(
+        "Exp %d: generating synthetic low-rank logit data (n_vars=%d, rank=%d)",
+        EXP_ID,
+        N_VARS,
+        TRUE_RANK,
+    )
 
     # Generate train/held-out data with rank-11 signal structure
     rng = np.random.default_rng(42)
@@ -182,7 +186,7 @@ def main() -> None:
     norms = np.linalg.norm(held_out, axis=1)
     median_norm = float(np.median(norms))
     x_pos = held_out[norms >= median_norm][:N_HELD_OUT]  # (100, 50)
-    x_neg = held_out[norms < median_norm][:N_HELD_OUT]   # (100, 50)
+    x_neg = held_out[norms < median_norm][:N_HELD_OUT]  # (100, 50)
     # Ensure we have enough samples
     n_pos = min(len(x_pos), N_HELD_OUT)
     n_neg = min(len(x_neg), N_HELD_OUT)
@@ -211,16 +215,24 @@ def main() -> None:
         auroc_vs_full = (auroc / full_auroc * 100.0) if full_auroc > 0 else 0.0
         speedup = full_eval_ms / eval_ms if eval_ms > 0 else float("inf")
 
-        _log.info("k=%d: AUROC=%.4f (%.1f%% of full-rank), eval_ms=%.4f, speedup=%.2fx",
-                  k, auroc, auroc_vs_full, eval_ms, speedup)
+        _log.info(
+            "k=%d: AUROC=%.4f (%.1f%% of full-rank), eval_ms=%.4f, speedup=%.2fx",
+            k,
+            auroc,
+            auroc_vs_full,
+            eval_ms,
+            speedup,
+        )
 
-        results_by_k.append({
-            "k": k,
-            "auroc": float(auroc),
-            "eval_ms": float(eval_ms),
-            "auroc_vs_fullrank_pct": float(auroc_vs_full),
-            "speedup": float(speedup),
-        })
+        results_by_k.append(
+            {
+                "k": k,
+                "auroc": float(auroc),
+                "eval_ms": float(eval_ms),
+                "auroc_vs_fullrank_pct": float(auroc_vs_full),
+                "speedup": float(speedup),
+            }
+        )
 
         # Track optimal_k: minimum k where AUROC >= 95% of full-rank
         if optimal_k is None and auroc >= 0.95 * full_auroc:
@@ -255,8 +267,12 @@ def main() -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(artifact, indent=2))
     _log.info("Wrote %s", output_path)
-    _log.info("honest_verdict=%s, optimal_k=%d, speedup_at_optimal_k=%.2fx",
-              honest_verdict, optimal_k, speedup_at_optimal_k)
+    _log.info(
+        "honest_verdict=%s, optimal_k=%d, speedup_at_optimal_k=%.2fx",
+        honest_verdict,
+        optimal_k,
+        speedup_at_optimal_k,
+    )
 
     tmpl.assert_deliverable_written()
 

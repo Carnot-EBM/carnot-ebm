@@ -18,8 +18,11 @@ Spec: REQ-SELF-021, SCENARIO-SELF-027, SCENARIO-SELF-028
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Callable
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 @dataclass

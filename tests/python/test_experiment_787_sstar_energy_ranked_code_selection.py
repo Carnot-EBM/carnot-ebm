@@ -186,9 +186,9 @@ class TestRankByEnergy:
         """rank_by_energy[0] MUST be the candidate with the globally lowest energy (REQ-RANK-001)."""
         candidates = [
             "def f(a, b):\n    return a + b + 1 + 2 + 3",  # longest (highest energy)
-            "def f(a, b):\n    return a + b",               # shortest (lowest energy)
-            "def f(a, b):\n    return a + b + 1",           # medium
-            "def f(a, b):\n    return a + b + 1 + 2",      # medium-long
+            "def f(a, b):\n    return a + b",  # shortest (lowest energy)
+            "def f(a, b):\n    return a + b + 1",  # medium
+            "def f(a, b):\n    return a + b + 1 + 2",  # medium-long
         ]
         ranked = self.ranker.rank_by_energy(candidates)
         # The shortest candidate must have the lowest energy and come first.
@@ -331,7 +331,7 @@ class TestEnergyCorrectRankPct:
     def test_energy_selected_wrong_candidate(self):
         """energy_correct_rank = False when energy selects a non-correct candidate (REQ-RANK-002)."""
         energy_selected_idx = 2  # energy picked candidate 2
-        first_passing_idx = 0    # but candidate 0 is the correct one
+        first_passing_idx = 0  # but candidate 0 is the correct one
         assert (energy_selected_idx == first_passing_idx) is False
 
 

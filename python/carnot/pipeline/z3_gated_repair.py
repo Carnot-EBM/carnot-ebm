@@ -49,11 +49,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
-
-if TYPE_CHECKING:
-    from carnot.pipeline.nl2z3_extractor import NL2Z3Extractor
-
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # Z3GatedRepairResult dataclass
@@ -85,14 +81,14 @@ class Z3GatedRepairResult:
     Spec: REQ-REPAIR-010, SCENARIO-REPAIR-020, SCENARIO-REPAIR-022
     """
 
-    z3_status: str          # "sat" | "unsat" | "unknown" | "error"
-    z3_code: str            # the Z3 Python code that was generated
-    ising_triggered: bool   # True iff Ising pipeline was invoked
-    ising_violations: int   # violation count from first Ising check (0 if not triggered)
+    z3_status: str  # "sat" | "unsat" | "unknown" | "error"
+    z3_code: str  # the Z3 Python code that was generated
+    ising_triggered: bool  # True iff Ising pipeline was invoked
+    ising_violations: int  # violation count from first Ising check (0 if not triggered)
     repair_attempted: bool  # True iff an LLM repair attempt was made
-    repaired: bool          # True iff the final response passes verification
-    improvement: int        # 1 if repaired, 0 otherwise (honest — never suppressed)
-    runtime_ms: float       # wall-clock time for the entire gate call
+    repaired: bool  # True iff the final response passes verification
+    improvement: int  # 1 if repaired, 0 otherwise (honest — never suppressed)
+    runtime_ms: float  # wall-clock time for the entire gate call
 
 
 # ---------------------------------------------------------------------------

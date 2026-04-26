@@ -36,9 +36,7 @@ import math
 import random
 import re
 from collections import Counter
-from dataclasses import dataclass, field
-from typing import Sequence
-
+from dataclasses import dataclass
 
 # ---------------------------------------------------------------------------
 # Minimal TF-IDF vectoriser (copied from jepa_v19 to avoid circular import)
@@ -61,16 +59,14 @@ class _TFIDFVec:
     def _tok(text: str) -> list[str]:
         return re.findall(r"[a-z0-9]+", text.lower())
 
-    def fit(self, corpus: list[str]) -> "_TFIDFVec":
+    def fit(self, corpus: list[str]) -> _TFIDFVec:
         n = len(corpus)
         df: Counter[str] = Counter()
         for doc in corpus:
             df.update(set(self._tok(doc)))
         top = sorted(df.keys(), key=lambda t: -df[t])[: self.max_features]
         self._vocab = {t: i for i, t in enumerate(top)}
-        self._idf = [
-            math.log((1 + n) / (1 + df[t])) + 1 for t in top
-        ]
+        self._idf = [math.log((1 + n) / (1 + df[t])) + 1 for t in top]
         return self
 
     def transform(self, text: str) -> list[float]:
@@ -109,15 +105,15 @@ class _LogisticRegression:
         return e / (1.0 + e)
 
     def _predict_prob(self, x: list[float]) -> float:
-        z = sum(wi * xi for wi, xi in zip(self.w, x)) + self.b
+        z = sum(wi * xi for wi, xi in zip(self.w, x, strict=False)) + self.b
         return self._sigmoid(z)
 
-    def fit(self, X: list[list[float]], y: list[int]) -> "_LogisticRegression":
+    def fit(self, X: list[list[float]], y: list[int]) -> _LogisticRegression:
         n, d = len(X), len(self.w)
         for _ in range(self.n_epochs):
             dw = [0.0] * d
             db = 0.0
-            for xi, yi in zip(X, y):
+            for xi, yi in zip(X, y, strict=False):
                 p = self._predict_prob(xi)
                 err = p - yi
                 for j in range(d):

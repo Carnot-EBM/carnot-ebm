@@ -261,10 +261,10 @@ class TestHarnessAuditScan:
         self._write_script(
             tmp_path,
             "exp_dual.py",
-            'MODEL_SPECS = [\n'
+            "MODEL_SPECS = [\n"
             '    {"name": "A", "hf_id": "org/A"},\n'
             '    {"name": "B", "hf_id": "org/B"},\n'
-            ']\n',
+            "]\n",
         )
         audit = HarnessAudit(str(tmp_path))
         findings = audit.scan()
@@ -278,10 +278,10 @@ class TestHarnessAuditScan:
         self._write_script(
             tmp_path,
             "exp_good.py",
-            'MODEL_SPECS = [\n'
+            "MODEL_SPECS = [\n"
             '    {"name": "A", "hf_id": "org/A", "gpu": 0},\n'
             '    {"name": "B", "hf_id": "org/B", "gpu": 1},\n'
-            ']\n'
+            "]\n"
             'device = "cuda:1"\n',
         )
         audit = HarnessAudit(str(tmp_path))

@@ -30,7 +30,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from carnot.pipeline.live_trace_memory import load_json
 from carnot.pipeline.self_learning_replay import (
@@ -39,7 +39,9 @@ from carnot.pipeline.self_learning_replay import (
     TRACKER_MIN_SUPPORT,
     build_tier1_live_retrain_payload,
 )
-from carnot.pipeline.tracker import ConstraintTracker
+
+if TYPE_CHECKING:
+    from carnot.pipeline.tracker import ConstraintTracker
 
 # ---------------------------------------------------------------------------
 # Constants

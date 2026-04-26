@@ -26,10 +26,7 @@ Spec: REQ-INFRA-043, SCENARIO-INFRA-052, SCENARIO-INFRA-053
 
 from __future__ import annotations
 
-import json
 import os
-from pathlib import Path
-from typing import List, Optional
 
 import numpy as np
 
@@ -59,7 +56,7 @@ _ACTIVE_VERSION = "v18"
 
 def load_v18_from_manifest(
     version: str = _ACTIVE_VERSION,
-    checkpoint_path: Optional[str] = None,
+    checkpoint_path: str | None = None,
 ) -> JEPALambdaRankV18:
     """Load a JEPALambdaRankV18 model, enforcing the exclusion manifest version block.
 

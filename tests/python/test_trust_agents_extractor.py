@@ -27,8 +27,10 @@ from carnot.extraction.llm_extractor_v1 import ArithmeticClaim
 
 def _stub(response: str):
     """Return a stub llm_caller that always returns the given string."""
+
     def llm_caller(prompt: str) -> str:
         return response
+
     return llm_caller
 
 
@@ -60,6 +62,7 @@ class TestAgent1NER:
     def test_llm_exception_returns_empty(self):
         def bad_llm(prompt: str) -> str:
             raise RuntimeError("GPU OOM")
+
         assert Agent1NER("text", bad_llm) == []
 
     def test_items_stripped(self):
@@ -117,6 +120,7 @@ class TestAgent2ClaimFormer:
     def test_llm_exception_returns_empty(self):
         def bad_llm(prompt: str) -> str:
             raise ValueError("timeout")
+
         assert Agent2ClaimFormer(["3"], "text", bad_llm) == []
 
     def test_missing_lhs_skipped(self):
@@ -140,10 +144,12 @@ class TestAgent2ClaimFormer:
         assert len(claims) == 1
 
     def test_multiple_claims_returned(self):
-        raw = json.dumps([
-            {"lhs": "3*16.50", "rhs": 49.50, "text": "a"},
-            {"lhs": "49.50+10", "rhs": 59.50, "text": "b"},
-        ])
+        raw = json.dumps(
+            [
+                {"lhs": "3*16.50", "rhs": 49.50, "text": "a"},
+                {"lhs": "49.50+10", "rhs": 59.50, "text": "b"},
+            ]
+        )
         claims = Agent2ClaimFormer(["3", "16.50", "49.50", "10", "59.50"], "text", _stub(raw))
         assert len(claims) == 2
 

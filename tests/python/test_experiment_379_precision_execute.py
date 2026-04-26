@@ -32,6 +32,7 @@ import pytest
 # Bootstrap sys.path so scripts.* and carnot.* resolve.
 # ---------------------------------------------------------------------------
 import sys
+
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
@@ -72,7 +73,9 @@ def _make_result(
     )
 
 
-def _all_live_results(baseline_acc: float = 0.50, stack_acc: float = 0.55) -> list[PrecisionStackResult]:
+def _all_live_results(
+    baseline_acc: float = 0.50, stack_acc: float = 0.55
+) -> list[PrecisionStackResult]:
     """Build 10 PrecisionStackResult objects (5 variants × 2 models) in live_gpu mode."""
     results = []
     for model_id in ("Gemma4-E4B-it", "Qwen3.5-0.8B"):
@@ -85,34 +88,61 @@ def _healthy_gpu_status() -> dict:
     return {
         "all_healthy": True,
         "models": [
-            {"name": "Gemma4-E4B-it", "health_ok": True, "stall_root_cause": None,
-             "load_time_s": 1.0, "gpu_id": 0},
-            {"name": "Qwen3.5-0.8B", "health_ok": True, "stall_root_cause": None,
-             "load_time_s": 0.5, "gpu_id": 1},
+            {
+                "name": "Gemma4-E4B-it",
+                "health_ok": True,
+                "stall_root_cause": None,
+                "load_time_s": 1.0,
+                "gpu_id": 0,
+            },
+            {
+                "name": "Qwen3.5-0.8B",
+                "health_ok": True,
+                "stall_root_cause": None,
+                "load_time_s": 0.5,
+                "gpu_id": 1,
+            },
         ],
         "prewarm_time_s": 1.5,
         "dual_gpu_auto_assigned": True,
-        "gpu_monitor_results": {"n_gpus_detected": 2, "n_zombies": 0,
-                                 "idle_gpus": [0, 1], "all_healthy": True},
+        "gpu_monitor_results": {
+            "n_gpus_detected": 2,
+            "n_zombies": 0,
+            "idle_gpus": [0, 1],
+            "all_healthy": True,
+        },
     }
 
 
 def _unhealthy_gpu_status() -> dict:
     return {
         "all_healthy": False,
-        "models": [{"name": "Gemma4-E4B-it", "health_ok": False,
-                     "stall_root_cause": "OOM", "load_time_s": 0.0, "gpu_id": 0}],
+        "models": [
+            {
+                "name": "Gemma4-E4B-it",
+                "health_ok": False,
+                "stall_root_cause": "OOM",
+                "load_time_s": 0.0,
+                "gpu_id": 0,
+            }
+        ],
         "prewarm_time_s": 0.0,
         "dual_gpu_auto_assigned": False,
-        "gpu_monitor_results": {"n_gpus_detected": 0, "n_zombies": 0,
-                                 "idle_gpus": [], "all_healthy": False},
+        "gpu_monitor_results": {
+            "n_gpus_detected": 0,
+            "n_zombies": 0,
+            "idle_gpus": [],
+            "all_healthy": False,
+        },
     }
 
 
 def _mock_model_fn() -> MagicMock:
     """HuggingFace pipeline mock that returns a response containing #### 6."""
+
     def _call(prompt, max_new_tokens=512):
         return [{"generated_text": "Step 1: answer is 6.\n#### 6"}]
+
     return MagicMock(side_effect=_call)
 
 
@@ -124,8 +154,10 @@ def _run_main_success(tmp_path: Path) -> dict:
     ]
     mock_model = _mock_model_fn()
 
-    with patch("scripts.experiment_379_precision_execute.LiveGPUGate.require_live_or_blocked",
-               return_value=None):
+    with patch(
+        "scripts.experiment_379_precision_execute.LiveGPUGate.require_live_or_blocked",
+        return_value=None,
+    ):
         with patch("scripts.experiment_379_precision_execute.ExperimentTemplate") as MockTmpl:
             tmpl_instance = ExperimentTemplate(
                 exp_id=exp379.EXP_ID,
@@ -138,8 +170,10 @@ def _run_main_success(tmp_path: Path) -> dict:
             MockTmpl.return_value = tmpl_instance
 
             with patch.object(exp379, "load_gsm8k_questions", return_value=small_questions):
-                with patch("scripts.experiment_379_precision_execute._load_model_pipeline",
-                           return_value=mock_model):
+                with patch(
+                    "scripts.experiment_379_precision_execute._load_model_pipeline",
+                    return_value=mock_model,
+                ):
                     exp379.main()
 
     return json.loads((tmp_path / exp379.DELIVERABLE).read_text())
@@ -255,8 +289,10 @@ class TestMainBlocked:
             "status": "blocked",
             "blocked_reason": "CARNOT_FORCE_LIVE not set",
         }
-        with patch("scripts.experiment_379_precision_execute.LiveGPUGate.require_live_or_blocked",
-                   return_value=blocked_artifact):
+        with patch(
+            "scripts.experiment_379_precision_execute.LiveGPUGate.require_live_or_blocked",
+            return_value=blocked_artifact,
+        ):
             with patch("scripts.experiment_379_precision_execute.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=exp379.EXP_ID,
@@ -278,8 +314,10 @@ class TestMainBlocked:
 
     def test_setup_gpu_unhealthy_writes_blocked(self, tmp_path: Path):
         """When setup_gpu reports all_healthy=False, main() writes blocked artifact."""
-        with patch("scripts.experiment_379_precision_execute.LiveGPUGate.require_live_or_blocked",
-                   return_value=None):
+        with patch(
+            "scripts.experiment_379_precision_execute.LiveGPUGate.require_live_or_blocked",
+            return_value=None,
+        ):
             with patch("scripts.experiment_379_precision_execute.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=exp379.EXP_ID,
@@ -301,8 +339,10 @@ class TestMainBlocked:
 
     def test_model_load_fails_writes_blocked(self, tmp_path: Path):
         """When a model fails to load, main() writes a blocked artifact."""
-        with patch("scripts.experiment_379_precision_execute.LiveGPUGate.require_live_or_blocked",
-                   return_value=None):
+        with patch(
+            "scripts.experiment_379_precision_execute.LiveGPUGate.require_live_or_blocked",
+            return_value=None,
+        ):
             with patch("scripts.experiment_379_precision_execute.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=exp379.EXP_ID,
@@ -314,8 +354,10 @@ class TestMainBlocked:
                 tmpl_instance.setup_gpu = MagicMock(return_value=_healthy_gpu_status())
                 MockTmpl.return_value = tmpl_instance
 
-                with patch("scripts.experiment_379_precision_execute._load_model_pipeline",
-                           side_effect=RuntimeError("CUDA OOM")):
+                with patch(
+                    "scripts.experiment_379_precision_execute._load_model_pipeline",
+                    side_effect=RuntimeError("CUDA OOM"),
+                ):
                     exp379.main()
 
         output_path = tmp_path / exp379.DELIVERABLE
@@ -339,6 +381,7 @@ class TestMainSuccess:
     def test_artifact_has_required_fields(self, tmp_path: Path):
         """Success artifact contains all REQUIRED_RESULT_FIELDS."""
         from scripts.experiment_template import REQUIRED_RESULT_FIELDS
+
         artifact = _run_main_success(tmp_path)
         for field in REQUIRED_RESULT_FIELDS:
             assert field in artifact, f"Missing required field: {field}"
@@ -377,8 +420,10 @@ class TestMainSuccess:
         ]
         mock_model = _mock_model_fn()
 
-        with patch("scripts.experiment_379_precision_execute.LiveGPUGate.require_live_or_blocked",
-                   return_value=None):
+        with patch(
+            "scripts.experiment_379_precision_execute.LiveGPUGate.require_live_or_blocked",
+            return_value=None,
+        ):
             with patch("scripts.experiment_379_precision_execute.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=exp379.EXP_ID,
@@ -391,11 +436,12 @@ class TestMainSuccess:
                 MockTmpl.return_value = tmpl_instance
 
                 with patch.object(exp379, "load_gsm8k_questions", return_value=small_questions):
-                    with patch("scripts.experiment_379_precision_execute._load_model_pipeline",
-                               return_value=mock_model):
+                    with patch(
+                        "scripts.experiment_379_precision_execute._load_model_pipeline",
+                        return_value=mock_model,
+                    ):
                         # Simulate LLMConstraintExtractor import failure
-                        with patch.dict("sys.modules",
-                                        {"carnot.pipeline.llm_extractor": None}):
+                        with patch.dict("sys.modules", {"carnot.pipeline.llm_extractor": None}):
                             exp379.main()
 
         output_path = tmp_path / exp379.DELIVERABLE

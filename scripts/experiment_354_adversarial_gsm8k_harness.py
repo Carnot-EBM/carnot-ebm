@@ -94,9 +94,7 @@ def load_gsm8k_questions(n: int = N_QUESTIONS) -> list[dict]:
         _log.info("Loaded %d GSM8K questions from HuggingFace datasets.", len(items))
         return [{"question": item["question"], "answer": item["answer"]} for item in items]
     except Exception as exc:
-        _log.warning(
-            "GSM8K HuggingFace load failed (%s) — using synthetic questions.", exc
-        )
+        _log.warning("GSM8K HuggingFace load failed (%s) — using synthetic questions.", exc)
 
     return _synthetic_gsm8k(n)
 
@@ -214,8 +212,11 @@ def main() -> None:
             validation["n_failed"],
         )
     else:
-        _log.info("Harness round-trip validation passed (%d/%d ok).",
-                  validation["n_passed"], validation["n_checked"])
+        _log.info(
+            "Harness round-trip validation passed (%d/%d ok).",
+            validation["n_passed"],
+            validation["n_checked"],
+        )
 
     # --- Step 4: Sample adversarial question for artifact ---
     sample_aq = adversarial_questions[0] if adversarial_questions else None

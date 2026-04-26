@@ -59,13 +59,10 @@ SCENARIO-VERIFY-113, SCENARIO-VERIFY-114, SCENARIO-VERIFY-115
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Sequence
 
 import jax.numpy as jnp
-import numpy as np
-
 
 # ---------------------------------------------------------------------------
 # SinkTokenType
@@ -402,7 +399,7 @@ class SinkProbe:
         n_correct = 0
         n_tn = 0  # Correct responses that were skipped (good)
 
-        for item, label in zip(responses_with_attention, correctness_labels):
+        for item, label in zip(responses_with_attention, correctness_labels, strict=False):
             attn = item["attention_matrix"]
             sink_positions = item["sink_positions"]
             conc = self.score(attn, sink_positions)

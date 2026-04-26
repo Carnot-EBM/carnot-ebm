@@ -53,11 +53,13 @@ def main() -> None:
     # when pytest imported the module tree.
     try:
         from carnot.pipeline.env_autofix import apply_env_autofix
+
         apply_env_autofix()
     except ImportError:
         pass
 
     import logging
+
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(message)s",
@@ -171,17 +173,21 @@ def _run(tmpl, log, deliverable, weights_path, corpus_dir, training_curve_path):
     # --- Build labeled dataset ---
     examples: list[InjectionExample] = []
     for prompt in benign_prompts:
-        examples.append(InjectionExample(
-            text=prompt,
-            label="benign",
-            source="synthetic_benign",
-        ))
+        examples.append(
+            InjectionExample(
+                text=prompt,
+                label="benign",
+                source="synthetic_benign",
+            )
+        )
     for prompt in injection_prompts:
-        examples.append(InjectionExample(
-            text=prompt,
-            label="injection",
-            source="synthetic_injection",
-        ))
+        examples.append(
+            InjectionExample(
+                text=prompt,
+                label="injection",
+                source="synthetic_injection",
+            )
+        )
 
     log.info(
         "Corpus: %d benign + %d injection = %d total",
@@ -192,10 +198,16 @@ def _run(tmpl, log, deliverable, weights_path, corpus_dir, training_curve_path):
 
     # Persist corpus artifact with deterministic sha256 filename.
     corpus_content = json.dumps(
-        [{"text": e.text, "label": e.label, "source": e.source,
-          "model_hash": model_hash,
-          "prompt_hash": prompt_hash(e.text)}
-         for e in examples],
+        [
+            {
+                "text": e.text,
+                "label": e.label,
+                "source": e.source,
+                "model_hash": model_hash,
+                "prompt_hash": prompt_hash(e.text),
+            }
+            for e in examples
+        ],
         indent=2,
     )
     corpus_sha = hashlib.sha256(corpus_content.encode()).hexdigest()[:16]
@@ -210,6 +222,7 @@ def _run(tmpl, log, deliverable, weights_path, corpus_dir, training_curve_path):
 
     # Shuffle with fixed seed for reproducibility.
     import random
+
     rng = random.Random(652)
     rng.shuffle(examples)
 
@@ -232,18 +245,25 @@ def _run(tmpl, log, deliverable, weights_path, corpus_dir, training_curve_path):
         loss_curve = []
 
     train_time_s = round(time.perf_counter() - t_train_start, 2)
-    log.info("Training complete in %.1f s, final loss: %s",
-             train_time_s,
-             f"{loss_curve[-1]:.4f}" if loss_curve else "N/A")
+    log.info(
+        "Training complete in %.1f s, final loss: %s",
+        train_time_s,
+        f"{loss_curve[-1]:.4f}" if loss_curve else "N/A",
+    )
 
     # Save training curve
     training_curve_path.parent.mkdir(parents=True, exist_ok=True)
-    training_curve_path.write_text(json.dumps({
-        "experiment": 652,
-        "n_epochs": len(loss_curve),
-        "loss_curve": loss_curve,
-        "train_time_s": train_time_s,
-    }, indent=2))
+    training_curve_path.write_text(
+        json.dumps(
+            {
+                "experiment": 652,
+                "n_epochs": len(loss_curve),
+                "loss_curve": loss_curve,
+                "train_time_s": train_time_s,
+            },
+            indent=2,
+        )
+    )
 
     if not train_ok:
         artifact = tmpl.build_result(
@@ -328,7 +348,9 @@ def _run(tmpl, log, deliverable, weights_path, corpus_dir, training_curve_path):
     _write_artifact(artifact, tmpl._repo_root / deliverable)
     log.info(
         "Result written: status=%s honest_verdict=%s auroc=%.4f",
-        status, honest_verdict, auroc,
+        status,
+        honest_verdict,
+        auroc,
     )
 
 
@@ -422,6 +444,7 @@ def _extended_injection_prompts(n: int) -> list[str]:
     ]
 
     import random
+
     rng = random.Random(9999)
     if len(templates) >= n:
         return templates[:n]

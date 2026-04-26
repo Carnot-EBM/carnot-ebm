@@ -62,9 +62,7 @@ class TestPerResponseComparison:
 
     def test_all_both(self):
         """When both extractors fire, all go to 'both'."""
-        result = exp623.compute_per_response_comparison(
-            [True, True], [True, True]
-        )
+        result = exp623.compute_per_response_comparison([True, True], [True, True])
         assert result == {"n_only_v1": 0, "n_only_trust": 0, "n_both": 2, "n_neither": 0}
 
     def test_only_v1(self):
@@ -88,7 +86,9 @@ class TestPerResponseComparison:
         v1 = [True, False, True, False, True]
         trust = [False, True, True, False, False]
         result = exp623.compute_per_response_comparison(v1, trust)
-        total = result["n_only_v1"] + result["n_only_trust"] + result["n_both"] + result["n_neither"]
+        total = (
+            result["n_only_v1"] + result["n_only_trust"] + result["n_both"] + result["n_neither"]
+        )
         assert total == len(v1)
 
     def test_mixed_classification(self):
@@ -159,17 +159,22 @@ class TestRunExtractorOnCorpus:
 
     def _always_fire_extractor(self):
         """Stub extractor that always finds a violation."""
+
         class AlwaysFire:
             def extract(self, response):
                 from carnot.extraction.llm_extractor_v1 import ArithmeticClaim
+
                 return [ArithmeticClaim("1+1", 3.0, "text", "stub", 0.9)]
+
         return AlwaysFire()
 
     def _never_fire_extractor(self):
         """Stub extractor that never finds a violation."""
+
         class NeverFire:
             def extract(self, response):
                 return []
+
         return NeverFire()
 
     def test_all_fire_recall_one(self):
@@ -230,9 +235,7 @@ class TestLoadCorpus:
         monkeypatch.setattr(exp623, "_REPO_ROOT", tmp_path)
         results_dir = tmp_path / "results"
         results_dir.mkdir()
-        pairs = [
-            {"response": f"bad {i}", "is_correct": False} for i in range(60)
-        ] + [
+        pairs = [{"response": f"bad {i}", "is_correct": False} for i in range(60)] + [
             {"response": f"good {i}", "is_correct": True} for i in range(25)
         ]
         corpus = {"metadata": {}, "pairs": pairs}
@@ -315,10 +318,21 @@ class TestMainIntegration:
 
         artifact = json.loads(result_path.read_text())
         for field in (
-            "schema", "n_incorrect", "n_correct", "llm_mode",
-            "v1_recall", "v1_fp_rate", "trust_recall", "trust_fp_rate",
-            "n_only_v1", "n_only_trust", "n_both", "n_neither",
-            "best_extractor", "recommendation", "honest_verdict",
+            "schema",
+            "n_incorrect",
+            "n_correct",
+            "llm_mode",
+            "v1_recall",
+            "v1_fp_rate",
+            "trust_recall",
+            "trust_fp_rate",
+            "n_only_v1",
+            "n_only_trust",
+            "n_both",
+            "n_neither",
+            "best_extractor",
+            "recommendation",
+            "honest_verdict",
         ):
             assert field in artifact, f"Missing required field: {field}"
 

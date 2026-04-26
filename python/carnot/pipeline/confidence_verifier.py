@@ -186,9 +186,9 @@ class ViolationConfidence:
 # Attach class constants AFTER the dataclass is created so they are
 # accessible on both the class and instances without being overridden
 # by the dataclass machinery.
-ViolationConfidence.HIGH = "HIGH"    # type: ignore[misc]
+ViolationConfidence.HIGH = "HIGH"  # type: ignore[misc]
 ViolationConfidence.MEDIUM = "MEDIUM"  # type: ignore[misc]
-ViolationConfidence.LOW = "LOW"      # type: ignore[misc]
+ViolationConfidence.LOW = "LOW"  # type: ignore[misc]
 
 
 def _assign_class(score: float) -> str:

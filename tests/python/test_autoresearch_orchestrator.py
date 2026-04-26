@@ -151,8 +151,14 @@ class TestOrchestrator:
         baselines = _make_baselines()
         # Two hypotheses: first improves to -6, second improves to -7
         hypotheses = [
-            ("step 1", 'def run(d): return {"double_well": {"final_energy": -6.0, "wall_clock_seconds": 0.5}}'),
-            ("step 2", 'def run(d): return {"double_well": {"final_energy": -7.0, "wall_clock_seconds": 0.5}}'),
+            (
+                "step 1",
+                'def run(d): return {"double_well": {"final_energy": -6.0, "wall_clock_seconds": 0.5}}',
+            ),
+            (
+                "step 2",
+                'def run(d): return {"double_well": {"final_energy": -7.0, "wall_clock_seconds": 0.5}}',
+            ),
         ]
         result = run_loop(hypotheses, baselines, {})
 
@@ -181,7 +187,10 @@ class TestOrchestrator:
         """REQ-AUTO-004: benchmark data reaches the hypothesis."""
         baselines = _make_baselines()
         hypotheses = [
-            ("echo dim", 'def run(d): return {"double_well": {"final_energy": -6.0, "wall_clock_seconds": 0.5, "dim": d["dim"]}}'),
+            (
+                "echo dim",
+                'def run(d): return {"double_well": {"final_energy": -6.0, "wall_clock_seconds": 0.5, "dim": d["dim"]}}',
+            ),
         ]
         result = run_loop(hypotheses, baselines, {"dim": 42})
 
@@ -205,19 +214,19 @@ class TestOrchestrator:
         # what the loop will generate. The ID format is auto-YYYYMMDD-HHMMSS-NNN.
         # We mock datetime to produce a known timestamp.
         fake_now = real_datetime(2099, 1, 1, 0, 0, 0, tzinfo=timezone(timedelta(0)))
-        with unittest.mock.patch(
-            "carnot.autoresearch.orchestrator.datetime"
-        ) as mock_dt:
+        with unittest.mock.patch("carnot.autoresearch.orchestrator.datetime") as mock_dt:
             mock_dt.now.return_value = fake_now
             mock_dt.side_effect = lambda *a, **kw: real_datetime(*a, **kw)
             # The loop will generate ID "auto-20990101-000000-000"
             pre_log = ExperimentLog()
-            pre_log.append(ExperimentEntry(
-                id="auto-20990101-000000-000",
-                timestamp="",
-                hypothesis_code="",
-                outcome="rejected",
-            ))
+            pre_log.append(
+                ExperimentEntry(
+                    id="auto-20990101-000000-000",
+                    timestamp="",
+                    hypothesis_code="",
+                    outcome="rejected",
+                )
+            )
 
             result = run_loop(
                 [GOOD_HYPOTHESIS],
@@ -242,7 +251,10 @@ class TestOrchestrator:
         )
         # Improve double_well but regress rosenbrock
         hypotheses = [
-            ("mixed", 'def run(d): return {"double_well": {"final_energy": -8.0, "wall_clock_seconds": 0.5}, "rosenbrock": {"final_energy": -1.0, "wall_clock_seconds": 1.0}}'),
+            (
+                "mixed",
+                'def run(d): return {"double_well": {"final_energy": -8.0, "wall_clock_seconds": 0.5}, "rosenbrock": {"final_energy": -1.0, "wall_clock_seconds": 1.0}}',
+            ),
         ]
         result = run_loop(hypotheses, baselines, {})
 
@@ -257,7 +269,10 @@ class TestOrchestrator:
         baselines = _make_baselines()
         # Return a mix of dict and non-dict metric values
         hypotheses = [
-            ("partial", 'def run(d): return {"double_well": {"final_energy": -6.0, "wall_clock_seconds": 0.5}, "extra_info": "not a dict"}'),
+            (
+                "partial",
+                'def run(d): return {"double_well": {"final_energy": -6.0, "wall_clock_seconds": 0.5}, "extra_info": "not a dict"}',
+            ),
         ]
         result = run_loop(hypotheses, baselines, {})
 
@@ -269,7 +284,10 @@ class TestOrchestrator:
         """REQ-AUTO-002: metrics dict without final_energy is skipped during baseline update."""
         baselines = _make_baselines()
         hypotheses = [
-            ("no energy", 'def run(d): return {"double_well": {"final_energy": -6.0, "wall_clock_seconds": 0.5}, "new_bench": {"convergence_steps": 100}}'),
+            (
+                "no energy",
+                'def run(d): return {"double_well": {"final_energy": -6.0, "wall_clock_seconds": 0.5}, "new_bench": {"convergence_steps": 100}}',
+            ),
         ]
         result = run_loop(hypotheses, baselines, {})
 
@@ -284,20 +302,24 @@ class TestExperimentLog:
     def test_save_load_roundtrip(self, tmp_path: Path) -> None:
         """REQ-AUTO-008: experiment log can be saved and loaded."""
         log = ExperimentLog()
-        log.append(ExperimentEntry(
-            id="test-001",
-            timestamp="2026-04-03T00:00:00Z",
-            hypothesis_code="def run(d): return {}",
-            eval_verdict="PASS",
-            outcome="accepted",
-        ))
-        log.append(ExperimentEntry(
-            id="test-002",
-            timestamp="2026-04-03T00:01:00Z",
-            hypothesis_code="def run(d): raise ValueError('bad')",
-            eval_verdict="FAIL",
-            outcome="rejected",
-        ))
+        log.append(
+            ExperimentEntry(
+                id="test-001",
+                timestamp="2026-04-03T00:00:00Z",
+                hypothesis_code="def run(d): return {}",
+                eval_verdict="PASS",
+                outcome="accepted",
+            )
+        )
+        log.append(
+            ExperimentEntry(
+                id="test-002",
+                timestamp="2026-04-03T00:01:00Z",
+                hypothesis_code="def run(d): raise ValueError('bad')",
+                eval_verdict="FAIL",
+                outcome="rejected",
+            )
+        )
 
         path = tmp_path / "experiments.json"
         log.save(path)

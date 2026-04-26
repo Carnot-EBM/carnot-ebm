@@ -27,6 +27,7 @@ from carnot.training.psv_selfplay import PSVParallelChains, _ChainResult
 
 def _always_correct_fns():
     """inference_fn and verify_fn where every response is "correct"."""
+
     def inference_fn(q: str) -> str:
         return f"COMPUTE: result = 42. {q[:10]}"
 
@@ -38,6 +39,7 @@ def _always_correct_fns():
 
 def _always_violation_fns():
     """inference_fn and verify_fn where every response is a "violation"."""
+
     def inference_fn(q: str) -> str:
         return f"COMPUTE: result = 0. {q[:10]}"
 
@@ -113,13 +115,17 @@ def test_init_stores_params(memory: JitRLConstraintMemory) -> None:
 def test_init_raises_on_zero_chains(memory: JitRLConstraintMemory) -> None:
     """n_chains=0 must raise ValueError (REQ-LEARN-091)."""
     with pytest.raises(ValueError, match="n_chains must be >= 1"):
-        PSVParallelChains(n_chains=0, n_iterations=1, n_questions_per_iter=1, constraint_memory=memory)
+        PSVParallelChains(
+            n_chains=0, n_iterations=1, n_questions_per_iter=1, constraint_memory=memory
+        )
 
 
 def test_init_raises_on_negative_chains(memory: JitRLConstraintMemory) -> None:
     """n_chains=-1 must raise ValueError."""
     with pytest.raises(ValueError, match="n_chains must be >= 1"):
-        PSVParallelChains(n_chains=-1, n_iterations=1, n_questions_per_iter=1, constraint_memory=memory)
+        PSVParallelChains(
+            n_chains=-1, n_iterations=1, n_questions_per_iter=1, constraint_memory=memory
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -163,7 +169,9 @@ def test_split_pool_empty(chains: PSVParallelChains) -> None:
 
 def test_split_pool_single_chain(memory: JitRLConstraintMemory) -> None:
     """n_chains=1 puts all questions in the single subset."""
-    single = PSVParallelChains(n_chains=1, n_iterations=2, n_questions_per_iter=5, constraint_memory=memory)
+    single = PSVParallelChains(
+        n_chains=1, n_iterations=2, n_questions_per_iter=5, constraint_memory=memory
+    )
     pool = list(range(10))
     subsets = single._split_pool(pool)
     assert len(subsets) == 1
@@ -175,7 +183,9 @@ def test_split_pool_single_chain(memory: JitRLConstraintMemory) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_run_parallel_returns_required_keys(chains: PSVParallelChains, question_pool: list[str]) -> None:
+def test_run_parallel_returns_required_keys(
+    chains: PSVParallelChains, question_pool: list[str]
+) -> None:
     """run_parallel result must contain chain_results, merged_constraint_updates, speedup."""
     inf, ver = _always_correct_fns()
     result = chains.run_parallel(question_pool, inf, ver)
@@ -184,14 +194,18 @@ def test_run_parallel_returns_required_keys(chains: PSVParallelChains, question_
     assert "parallel_speedup_factor" in result
 
 
-def test_run_parallel_chain_results_count(chains: PSVParallelChains, question_pool: list[str]) -> None:
+def test_run_parallel_chain_results_count(
+    chains: PSVParallelChains, question_pool: list[str]
+) -> None:
     """chain_results list must have exactly n_chains entries."""
     inf, ver = _always_correct_fns()
     result = chains.run_parallel(question_pool, inf, ver)
     assert len(result["chain_results"]) == chains.n_chains
 
 
-def test_run_parallel_chain_result_structure(chains: PSVParallelChains, question_pool: list[str]) -> None:
+def test_run_parallel_chain_result_structure(
+    chains: PSVParallelChains, question_pool: list[str]
+) -> None:
     """Each chain result must have chain_id, fp_rates, wall_time_s, n_iterations, n_constraint_updates."""
     inf, ver = _always_correct_fns()
     result = chains.run_parallel(question_pool, inf, ver)
@@ -205,7 +219,9 @@ def test_run_parallel_chain_result_structure(chains: PSVParallelChains, question
         assert len(cr["fp_rates"]) == chains.n_iterations
 
 
-def test_run_parallel_merged_updates_nonneg(chains: PSVParallelChains, question_pool: list[str]) -> None:
+def test_run_parallel_merged_updates_nonneg(
+    chains: PSVParallelChains, question_pool: list[str]
+) -> None:
     """merged_constraint_updates must be a non-negative integer (REQ-LEARN-092)."""
     inf, ver = _always_violation_fns()
     result = chains.run_parallel(question_pool, inf, ver)
@@ -213,7 +229,9 @@ def test_run_parallel_merged_updates_nonneg(chains: PSVParallelChains, question_
     assert result["merged_constraint_updates"] >= 0
 
 
-def test_run_parallel_violations_increase_updates(chains: PSVParallelChains, question_pool: list[str]) -> None:
+def test_run_parallel_violations_increase_updates(
+    chains: PSVParallelChains, question_pool: list[str]
+) -> None:
     """When all responses are violations, merged_constraint_updates must be > 0."""
     inf, ver = _always_violation_fns()
     result = chains.run_parallel(question_pool, inf, ver)
@@ -237,7 +255,9 @@ def test_run_parallel_fp_rates_range(chains: PSVParallelChains, question_pool: l
             assert 0.0 <= rate <= 1.0
 
 
-def test_run_parallel_all_correct_zero_updates(chains: PSVParallelChains, question_pool: list[str], memory: JitRLConstraintMemory) -> None:
+def test_run_parallel_all_correct_zero_updates(
+    chains: PSVParallelChains, question_pool: list[str], memory: JitRLConstraintMemory
+) -> None:
     """All-correct responses: constraint memory records were_fp=True entries (thresholds raised)."""
     inf, ver = _always_correct_fns()
     result = chains.run_parallel(question_pool, inf, ver)
@@ -249,7 +269,9 @@ def test_run_parallel_all_correct_zero_updates(chains: PSVParallelChains, questi
         assert all(r == 0.0 for r in cr["fp_rates"])
 
 
-def test_run_parallel_all_violations_fp_rate_1(chains: PSVParallelChains, question_pool: list[str]) -> None:
+def test_run_parallel_all_violations_fp_rate_1(
+    chains: PSVParallelChains, question_pool: list[str]
+) -> None:
     """All-violation responses: fp_rates should all equal 1.0 (REQ-LEARN-091)."""
     inf, ver = _always_violation_fns()
     result = chains.run_parallel(question_pool, inf, ver)
@@ -257,7 +279,9 @@ def test_run_parallel_all_violations_fp_rate_1(chains: PSVParallelChains, questi
         assert all(abs(r - 1.0) < 1e-9 for r in cr["fp_rates"])
 
 
-def test_run_parallel_single_chain_degenerate(memory: JitRLConstraintMemory, question_pool: list[str]) -> None:
+def test_run_parallel_single_chain_degenerate(
+    memory: JitRLConstraintMemory, question_pool: list[str]
+) -> None:
     """n_chains=1 must still produce a valid result (degenerate parallel case)."""
     single = PSVParallelChains(
         n_chains=1, n_iterations=2, n_questions_per_iter=5, constraint_memory=memory
@@ -277,7 +301,9 @@ def test_run_parallel_empty_pool(chains: PSVParallelChains) -> None:
     assert len(result["chain_results"]) == chains.n_chains
 
 
-def test_run_parallel_chain_ids_correct(chains: PSVParallelChains, question_pool: list[str]) -> None:
+def test_run_parallel_chain_ids_correct(
+    chains: PSVParallelChains, question_pool: list[str]
+) -> None:
     """chain_result[i].chain_id must equal i for all i in range(n_chains)."""
     inf, ver = _always_correct_fns()
     result = chains.run_parallel(question_pool, inf, ver)
@@ -285,7 +311,9 @@ def test_run_parallel_chain_ids_correct(chains: PSVParallelChains, question_pool
     assert sorted(ids) == list(range(chains.n_chains))
 
 
-def test_run_parallel_updates_shared_memory(memory: JitRLConstraintMemory, question_pool: list[str]) -> None:
+def test_run_parallel_updates_shared_memory(
+    memory: JitRLConstraintMemory, question_pool: list[str]
+) -> None:
     """After run_parallel, the shared constraint memory must contain records from both chains."""
     chains = PSVParallelChains(
         n_chains=2, n_iterations=2, n_questions_per_iter=5, constraint_memory=memory

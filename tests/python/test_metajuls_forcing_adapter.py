@@ -234,8 +234,11 @@ class TestGetAdaptedAddendum:
         adapter = MetaJuLSForcingAdapter(base_addendum=_BASE)
         adapter.update(
             ForcingFeedback(
-                question="q", compute_lines_found=0, total_arithmetic_ops=1,
-                recall=0.10, domain="percentage"
+                question="q",
+                compute_lines_found=0,
+                total_arithmetic_ops=1,
+                recall=0.10,
+                domain="percentage",
             )
         )
         result = adapter.get_adapted_addendum(question="q", domain="percentage")
@@ -267,14 +270,20 @@ class TestSaveLoadState:
         adapter = MetaJuLSForcingAdapter(base_addendum=_BASE, learning_rate=0.05)
         adapter.update(
             ForcingFeedback(
-                question="q", compute_lines_found=0, total_arithmetic_ops=2,
-                recall=0.10, domain="percentage"
+                question="q",
+                compute_lines_found=0,
+                total_arithmetic_ops=2,
+                recall=0.10,
+                domain="percentage",
             )
         )
         adapter.update(
             ForcingFeedback(
-                question="q", compute_lines_found=1, total_arithmetic_ops=1,
-                recall=1.0, domain="arithmetic"
+                question="q",
+                compute_lines_found=1,
+                total_arithmetic_ops=1,
+                recall=1.0,
+                domain="arithmetic",
             )
         )
         return adapter
@@ -370,8 +379,13 @@ class TestProperties:
     def test_domain_recalls_property_returns_copy(self):
         adapter = MetaJuLSForcingAdapter(base_addendum=_BASE)
         adapter.update(
-            ForcingFeedback(question="q", compute_lines_found=1, total_arithmetic_ops=1,
-                            recall=1.0, domain="arithmetic")
+            ForcingFeedback(
+                question="q",
+                compute_lines_found=1,
+                total_arithmetic_ops=1,
+                recall=1.0,
+                domain="arithmetic",
+            )
         )
         copy = adapter.domain_recalls
         copy["arithmetic"].append(999.0)
@@ -381,8 +395,13 @@ class TestProperties:
     def test_domain_emphasis_property_returns_copy(self):
         adapter = MetaJuLSForcingAdapter(base_addendum=_BASE)
         adapter.update(
-            ForcingFeedback(question="q", compute_lines_found=0, total_arithmetic_ops=1,
-                            recall=0.0, domain="arithmetic")
+            ForcingFeedback(
+                question="q",
+                compute_lines_found=0,
+                total_arithmetic_ops=1,
+                recall=0.0,
+                domain="arithmetic",
+            )
         )
         copy = adapter.domain_emphasis
         copy["injected"] = "hack"

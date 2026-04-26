@@ -39,8 +39,6 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import List
-
 
 # ---------------------------------------------------------------------------
 # QuantileRegressionHead
@@ -66,7 +64,7 @@ class QuantileRegressionHead:
     Spec: REQ-VERIFY-151-1
     """
 
-    def train(self, observations: List[float], quantile: float = 0.10) -> float:
+    def train(self, observations: list[float], quantile: float = 0.10) -> float:
         """Fit pinball loss at the given quantile and return the threshold.
 
         The pinball (check) loss for quantile q has its global minimum at the
@@ -177,9 +175,9 @@ def calibrate(fover_pairs_path: str) -> IASGateCalibration:
     with open(fover_pairs_path) as f:
         pairs = json.load(f)
 
-    symcode_recalls: List[float] = []
-    structured_recalls: List[float] = []
-    causal_recalls: List[float] = []
+    symcode_recalls: list[float] = []
+    structured_recalls: list[float] = []
+    causal_recalls: list[float] = []
 
     for pair in pairs:
         label = pair["label"]

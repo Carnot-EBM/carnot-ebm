@@ -280,9 +280,7 @@ class TestEvaluateSuccessCriteria:
         base.update(overrides)
         return base
 
-    def test_live_gpu_false_when_no_live_inference_mode(
-        self, exp352_data: dict[str, Any]
-    ) -> None:
+    def test_live_gpu_false_when_no_live_inference_mode(self, exp352_data: dict[str, Any]) -> None:
         """live_gpu_confirmed=False when no experiment has inference_mode='live_gpu'."""
         results = self._make_results({352: exp352_data})
         criteria = evaluate_success_criteria(results, MILESTONE_EXPERIMENTS)
@@ -302,9 +300,7 @@ class TestEvaluateSuccessCriteria:
         criteria = evaluate_success_criteria(results, MILESTONE_EXPERIMENTS)
         assert criteria["live_gpu_confirmed"]["is_live_capable_diagnostic"] is True
 
-    def test_adversarial_false_when_simulated(
-        self, exp355_simulated_data: dict[str, Any]
-    ) -> None:
+    def test_adversarial_false_when_simulated(self, exp355_simulated_data: dict[str, Any]) -> None:
         """adversarial_result_credible=False when honest_verdict=blocked_simulated."""
         results = self._make_results({355: exp355_simulated_data})
         criteria = evaluate_success_criteria(results, MILESTONE_EXPERIMENTS)
@@ -344,9 +340,7 @@ class TestEvaluateSuccessCriteria:
         assert criteria["llm_extractor_beats_regex"]["value"] is True
         assert criteria["llm_extractor_beats_regex"]["detection_rate"] == 0.65
 
-    def test_eorm_false_when_synthetic_only(
-        self, exp359_synthetic_data: dict[str, Any]
-    ) -> None:
+    def test_eorm_false_when_synthetic_only(self, exp359_synthetic_data: dict[str, Any]) -> None:
         """eorm_retrained_on_real=False when retrain_mode=synthetic_only."""
         results = self._make_results({359: exp359_synthetic_data})
         criteria = evaluate_success_criteria(results, MILESTONE_EXPERIMENTS)
@@ -367,9 +361,7 @@ class TestEvaluateSuccessCriteria:
         criteria = evaluate_success_criteria(results, MILESTONE_EXPERIMENTS)
         assert criteria["eorm_retrained_on_real"]["value"] is False
 
-    def test_self_learning_true_when_improved(
-        self, exp361_improved_data: dict[str, Any]
-    ) -> None:
+    def test_self_learning_true_when_improved(self, exp361_improved_data: dict[str, Any]) -> None:
         """self_learning_improved=True when exp361 improved=True."""
         results = self._make_results({361: exp361_improved_data})
         criteria = evaluate_success_criteria(results, MILESTONE_EXPERIMENTS)
@@ -498,7 +490,9 @@ class TestComputeRetro:
         results_dir = repo_root / "results"
         results_dir.mkdir(exist_ok=True)
         _write_result(results_dir, "experiment_352_live_gpu_diagnostic.json", exp352_data)
-        _write_result(results_dir, "experiment_355_adversarial_gsm8k_benchmark.json", exp355_simulated_data)
+        _write_result(
+            results_dir, "experiment_355_adversarial_gsm8k_benchmark.json", exp355_simulated_data
+        )
         _write_result(results_dir, "experiment_359_eorm_real_retrain.json", exp359_synthetic_data)
         _write_result(results_dir, "experiment_361_self_learning_relay.json", exp361_improved_data)
 

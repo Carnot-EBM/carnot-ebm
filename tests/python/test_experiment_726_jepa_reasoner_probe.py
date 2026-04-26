@@ -72,9 +72,7 @@ def test_hidden_state_shape_with_mock():
     # We only care about index layer_index+1 = 17.
     # Shape per layer: (batch=1, seq_len=5, hidden_dim).
     n_layers = 18  # 0..17 needed; 16+1=17 is the one we index
-    fake_hs_list = [
-        torch.zeros(1, 5, hidden_dim) for _ in range(n_layers + 1)
-    ]
+    fake_hs_list = [torch.zeros(1, 5, hidden_dim) for _ in range(n_layers + 1)]
     # Put a recognisable signal in the expected slot so we can confirm the right
     # layer and position are selected.
     expected_vector = torch.arange(hidden_dim, dtype=torch.float32)
@@ -86,7 +84,9 @@ def test_hidden_state_shape_with_mock():
     mock_model = MagicMock(return_value=mock_output)
     # Tokenizer return value must support .to(device) — use a MagicMock, not a plain dict.
     mock_token_output = MagicMock()
-    mock_token_output.__iter__ = lambda self: iter({"input_ids": torch.zeros(1, 5, dtype=torch.long)}.items())
+    mock_token_output.__iter__ = lambda self: iter(
+        {"input_ids": torch.zeros(1, 5, dtype=torch.long)}.items()
+    )
     mock_token_output.to = lambda dev: mock_token_output
     mock_tokenizer = MagicMock(return_value=mock_token_output)
 
@@ -96,9 +96,7 @@ def test_hidden_state_shape_with_mock():
     result = probe.extract_hidden_state("What is 2 + 2?")
 
     # Shape contract: must be exactly (hidden_dim,).
-    assert result.shape == (hidden_dim,), (
-        f"Expected shape ({hidden_dim},), got {result.shape}"
-    )
+    assert result.shape == (hidden_dim,), f"Expected shape ({hidden_dim},), got {result.shape}"
     # Verify correct layer was selected (values should match expected_vector).
     np.testing.assert_allclose(result, expected_vector.numpy(), atol=1e-5)
 

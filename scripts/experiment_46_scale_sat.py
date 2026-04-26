@@ -58,7 +58,8 @@ def main() -> int:
         edges = [(nodes[i], nodes[j]) for i in range(n_vars) for j in range(i + 1, n_vars)]
 
         model = IsingEBM(
-            nodes=nodes, edges=edges,
+            nodes=nodes,
+            edges=edges,
             biases=jnp.array(biases, dtype=jnp.float32),
             weights=jnp.array(weights, dtype=jnp.float32),
             beta=jnp.array(10.0),
@@ -76,8 +77,12 @@ def main() -> int:
 
         t0 = time.time()
         samples = sample_states(
-            jrandom.PRNGKey(n_vars + 100), program, schedule,
-            init_state, [], free_blocks,
+            jrandom.PRNGKey(n_vars + 100),
+            program,
+            schedule,
+            init_state,
+            [],
+            free_blocks,
         )
         sample_time = time.time() - t0
 
@@ -105,14 +110,16 @@ def main() -> int:
         print(f"  random ({n_random_tries} tries): {rand_best}/{n_clauses} ({r_pct:.1f}%)")
         print(f"  delta: {t_pct - r_pct:+.1f}%")
 
-        results.append({
-            "n_vars": n_vars,
-            "n_clauses": n_clauses,
-            "thrml": best_sat,
-            "random": rand_best,
-            "total": n_clauses,
-            "time": sample_time,
-        })
+        results.append(
+            {
+                "n_vars": n_vars,
+                "n_clauses": n_clauses,
+                "thrml": best_sat,
+                "random": rand_best,
+                "total": n_clauses,
+                "time": sample_time,
+            }
+        )
 
     # Summary
     elapsed = time.time() - start
@@ -126,12 +133,19 @@ def main() -> int:
     for r in results:
         t = r["thrml"] / r["total"] * 100
         ra = r["random"] / r["total"] * 100
-        print(f"{r['n_vars']:>6d} {r['n_clauses']:>8d} {t:>7.1f}% {ra:>7.1f}% {t-ra:>+7.1f}% {r['time']:>7.1f}s")
+        print(
+            f"{r['n_vars']:>6d} {r['n_clauses']:>8d} {t:>7.1f}% {ra:>7.1f}% {t - ra:>+7.1f}% {r['time']:>7.1f}s"
+        )
 
     # Does advantage grow with size?
     if len(results) >= 3:
-        small_delta = results[0]["thrml"] / results[0]["total"] - results[0]["random"] / results[0]["total"]
-        large_delta = results[-1]["thrml"] / results[-1]["total"] - results[-1]["random"] / results[-1]["total"]
+        small_delta = (
+            results[0]["thrml"] / results[0]["total"] - results[0]["random"] / results[0]["total"]
+        )
+        large_delta = (
+            results[-1]["thrml"] / results[-1]["total"]
+            - results[-1]["random"] / results[-1]["total"]
+        )
         if large_delta > small_delta:
             print(f"\n  VERDICT: ✅ thrml advantage grows with problem size")
         else:

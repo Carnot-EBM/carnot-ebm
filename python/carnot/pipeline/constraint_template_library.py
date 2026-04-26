@@ -52,13 +52,15 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any
 
 from carnot.pipeline.extract import ConstraintResult
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # ConstraintTemplate dataclass
@@ -365,30 +367,38 @@ class ConstraintTemplateLibrary:
 
         Spec: REQ-LEARN-018
         """
-        self.add_template(ConstraintTemplate(
-            pattern_key="carry_check",
-            description="Check multi-digit carry propagation in arithmetic steps",
-            min_frequency=5,
-            template_fn=carry_check_template,
-        ))
-        self.add_template(ConstraintTemplate(
-            pattern_key="sign_check",
-            description="Check that negative times negative equals positive",
-            min_frequency=5,
-            template_fn=sign_check_template,
-        ))
-        self.add_template(ConstraintTemplate(
-            pattern_key="unit_consistency",
-            description="Check that units in intermediate steps are consistent",
-            min_frequency=3,
-            template_fn=unit_consistency_template,
-        ))
-        self.add_template(ConstraintTemplate(
-            pattern_key="comparison_direction",
-            description="Check that X > Y is consistent with X minus Y being positive",
-            min_frequency=5,
-            template_fn=comparison_direction_template,
-        ))
+        self.add_template(
+            ConstraintTemplate(
+                pattern_key="carry_check",
+                description="Check multi-digit carry propagation in arithmetic steps",
+                min_frequency=5,
+                template_fn=carry_check_template,
+            )
+        )
+        self.add_template(
+            ConstraintTemplate(
+                pattern_key="sign_check",
+                description="Check that negative times negative equals positive",
+                min_frequency=5,
+                template_fn=sign_check_template,
+            )
+        )
+        self.add_template(
+            ConstraintTemplate(
+                pattern_key="unit_consistency",
+                description="Check that units in intermediate steps are consistent",
+                min_frequency=3,
+                template_fn=unit_consistency_template,
+            )
+        )
+        self.add_template(
+            ConstraintTemplate(
+                pattern_key="comparison_direction",
+                description="Check that X > Y is consistent with X minus Y being positive",
+                min_frequency=5,
+                template_fn=comparison_direction_template,
+            )
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -424,7 +434,7 @@ def carry_check_template(response: str) -> list[ConstraintResult]:
     results = []
     # Match "A × B = C" or "A * B = C" with optional surrounding whitespace.
     # The × character (U+00D7) is the multiplication sign used in many LLM outputs.
-    pattern = re.compile(r'(\d+)\s*[×*]\s*(\d+)\s*=\s*(\d+)')
+    pattern = re.compile(r"(\d+)\s*[×*]\s*(\d+)\s*=\s*(\d+)")
     for m in pattern.finditer(response):
         a = int(m.group(1))
         b = int(m.group(2))
@@ -434,20 +444,19 @@ def carry_check_template(response: str) -> list[ConstraintResult]:
         if a > 9 or b > 9:
             correct = a * b
             satisfied = claimed == correct
-            results.append(ConstraintResult(
-                constraint_type="carry_check",
-                description=(
-                    f"carry check: {a} × {b} = {claimed} "
-                    f"(expected {correct})"
-                ),
-                metadata={
-                    "a": a,
-                    "b": b,
-                    "claimed": claimed,
-                    "correct": correct,
-                    "satisfied": satisfied,
-                },
-            ))
+            results.append(
+                ConstraintResult(
+                    constraint_type="carry_check",
+                    description=(f"carry check: {a} × {b} = {claimed} (expected {correct})"),
+                    metadata={
+                        "a": a,
+                        "b": b,
+                        "claimed": claimed,
+                        "correct": correct,
+                        "satisfied": satisfied,
+                    },
+                )
+            )
     return results
 
 
@@ -476,10 +485,10 @@ def sign_check_template(response: str) -> list[ConstraintResult]:
     # Match "(-A) × (-B) = C" where A, B are positive numbers and C may be negative.
     # Both × and * are accepted as multiplication symbols.
     pattern = re.compile(
-        r'\(\s*-\s*(\d+(?:\.\d+)?)\s*\)'
-        r'\s*[×*]\s*'
-        r'\(\s*-\s*(\d+(?:\.\d+)?)\s*\)'
-        r'\s*=\s*(-?\d+(?:\.\d+)?)'
+        r"\(\s*-\s*(\d+(?:\.\d+)?)\s*\)"
+        r"\s*[×*]\s*"
+        r"\(\s*-\s*(\d+(?:\.\d+)?)\s*\)"
+        r"\s*=\s*(-?\d+(?:\.\d+)?)"
     )
     for m in pattern.finditer(response):
         a = float(m.group(1))
@@ -488,19 +497,18 @@ def sign_check_template(response: str) -> list[ConstraintResult]:
         # The sign rule: negative × negative = positive.
         # Claimed result must be strictly positive.
         satisfied = claimed > 0
-        results.append(ConstraintResult(
-            constraint_type="sign_check",
-            description=(
-                f"sign check: (-{a}) × (-{b}) = {claimed} "
-                f"(must be positive)"
-            ),
-            metadata={
-                "a": -a,
-                "b": -b,
-                "claimed": claimed,
-                "satisfied": satisfied,
-            },
-        ))
+        results.append(
+            ConstraintResult(
+                constraint_type="sign_check",
+                description=(f"sign check: (-{a}) × (-{b}) = {claimed} (must be positive)"),
+                metadata={
+                    "a": -a,
+                    "b": -b,
+                    "claimed": claimed,
+                    "satisfied": satisfied,
+                },
+            )
+        )
     return results
 
 
@@ -537,9 +545,7 @@ def unit_consistency_template(response: str) -> list[ConstraintResult]:
     """
     # Find all numeric quantities with unit annotations.
     # The \b word boundary ensures we match "5 kg" but not "5 kg/h" for the "kg" unit.
-    unit_pattern = re.compile(
-        r'\d+(?:\.\d+)?\s*(kg|g\b|m\b|cm|mm|km\b|s\b|ms|L\b|ml|km/h|m/s)'
-    )
+    unit_pattern = re.compile(r"\d+(?:\.\d+)?\s*(kg|g\b|m\b|cm|mm|km\b|s\b|ms|L\b|ml|km/h|m/s)")
     matches = unit_pattern.findall(response)
     if not matches:
         return []
@@ -556,29 +562,33 @@ def unit_consistency_template(response: str) -> list[ConstraintResult]:
     for pair in incompatible_pairs:
         if pair.issubset(unit_set):
             sorted_pair = sorted(pair)
-            results.append(ConstraintResult(
-                constraint_type="unit_consistency",
-                description=(
-                    f"unit inconsistency: '{sorted_pair[0]}' and '{sorted_pair[1]}' "
-                    f"mixed without explicit conversion"
-                ),
-                metadata={
-                    "units_found": sorted(unit_set),
-                    "inconsistent_pair": sorted_pair,
-                    "satisfied": False,
-                },
-            ))
+            results.append(
+                ConstraintResult(
+                    constraint_type="unit_consistency",
+                    description=(
+                        f"unit inconsistency: '{sorted_pair[0]}' and '{sorted_pair[1]}' "
+                        f"mixed without explicit conversion"
+                    ),
+                    metadata={
+                        "units_found": sorted(unit_set),
+                        "inconsistent_pair": sorted_pair,
+                        "satisfied": False,
+                    },
+                )
+            )
 
     if not results:
         # Units were found but all are from compatible groups.
-        results.append(ConstraintResult(
-            constraint_type="unit_consistency",
-            description="unit consistency: all units are consistent",
-            metadata={
-                "units_found": sorted(unit_set),
-                "satisfied": True,
-            },
-        ))
+        results.append(
+            ConstraintResult(
+                constraint_type="unit_consistency",
+                description="unit consistency: all units are consistent",
+                metadata={
+                    "units_found": sorted(unit_set),
+                    "satisfied": True,
+                },
+            )
+        )
 
     return results
 
@@ -611,10 +621,8 @@ def comparison_direction_template(response: str) -> list[ConstraintResult]:
     Spec: REQ-LEARN-017, SCENARIO-LEARN-032
     """
     results = []
-    gt_pattern = re.compile(r'(\d+(?:\.\d+)?)\s*>\s*(\d+(?:\.\d+)?)')
-    sub_pattern = re.compile(
-        r'(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*=\s*(-?\d+(?:\.\d+)?)'
-    )
+    gt_pattern = re.compile(r"(\d+(?:\.\d+)?)\s*>\s*(\d+(?:\.\d+)?)")
+    sub_pattern = re.compile(r"(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*=\s*(-?\d+(?:\.\d+)?)")
 
     # Collect all "X > Y" pairs first.
     gt_pairs: set[tuple[float, float]] = set()
@@ -629,14 +637,16 @@ def comparison_direction_template(response: str) -> list[ConstraintResult]:
         if (x, y) in gt_pairs:
             # If X > Y was claimed, then X - Y = Z must have Z > 0.
             satisfied = z > 0
-            results.append(ConstraintResult(
-                constraint_type="comparison_direction",
-                description=(
-                    f"comparison direction: {x} > {y} implies "
-                    f"{x} - {y} = {z} should be positive"
-                ),
-                metadata={"x": x, "y": y, "z": z, "satisfied": satisfied},
-            ))
+            results.append(
+                ConstraintResult(
+                    constraint_type="comparison_direction",
+                    description=(
+                        f"comparison direction: {x} > {y} implies "
+                        f"{x} - {y} = {z} should be positive"
+                    ),
+                    metadata={"x": x, "y": y, "z": z, "satisfied": satisfied},
+                )
+            )
 
     return results
 
@@ -939,9 +949,7 @@ class ViolationPatternLibrary:
         if not self.templates or not responses:
             return 0.0
         fp_count = sum(
-            1
-            for r in responses
-            if any(t.violation_pattern in r for t in self.templates)
+            1 for r in responses if any(t.violation_pattern in r for t in self.templates)
         )
         return fp_count / len(responses)
 

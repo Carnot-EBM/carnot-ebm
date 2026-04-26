@@ -31,7 +31,6 @@ import json
 import logging
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 _log = logging.getLogger(__name__)
 
@@ -97,9 +96,7 @@ def _python_modules_changed(changed_files: list[str]) -> list[Path]:
     result = []
     for f in changed_files:
         p = Path(f)
-        if p.suffix == ".py" and (
-            str(p).startswith("python/") or str(p).startswith("scripts/")
-        ):
+        if p.suffix == ".py" and (str(p).startswith("python/") or str(p).startswith("scripts/")):
             result.append(p)
     return result
 
@@ -126,9 +123,8 @@ def _collect_test_imports(test_file: Path) -> set[str]:
         if isinstance(node, ast.Import):
             for alias in node.names:
                 imports.add(alias.name.split(".")[0])
-        elif isinstance(node, ast.ImportFrom):
-            if node.module:
-                imports.add(node.module.split(".")[0])
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imports.add(node.module.split(".")[0])
     return imports
 
 
@@ -194,14 +190,14 @@ class IncrementalTestSelector:
 
     def __init__(
         self,
-        repo_root: Optional[Path] = None,
-        tests_dir: Optional[Path] = None,
+        repo_root: Path | None = None,
+        tests_dir: Path | None = None,
     ) -> None:
         self._root = repo_root if repo_root is not None else _repo_root()
         self._tests_dir = tests_dir if tests_dir is not None else (self._root / "tests" / "python")
         self._cache_path = self._root / _CACHE_FILENAME
 
-    def select(self) -> Optional[list[str]]:
+    def select(self) -> list[str] | None:
         """Return the list of test files to run, or None for a full-suite run.
 
         Returns None when:
@@ -228,9 +224,7 @@ class IncrementalTestSelector:
 
         # REQ-INFRA-041-2: any Rust change → full suite
         if _any_rust_changed(changed):
-            _log.info(
-                "incremental_test_selector: crates/ file detected in diff — full suite"
-            )
+            _log.info("incremental_test_selector: crates/ file detected in diff — full suite")
             return None
 
         py_modules = _python_modules_changed(changed)

@@ -51,17 +51,17 @@ Spec: REQ-REPAIR-014, REQ-REPAIR-015,
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass
-from typing import Optional
+from typing import TYPE_CHECKING
 
 import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 
-from carnot.models.ising import IsingConfig, IsingModel
 from carnot.samplers.parallel_ising import AnnealingSchedule, ParallelIsingSampler
 
+if TYPE_CHECKING:
+    from carnot.models.ising import IsingModel
 
 # ---------------------------------------------------------------------------
 # RepairDirection
@@ -142,7 +142,7 @@ class LinearSpinAdapter:
     Spec: REQ-REPAIR-014, SCENARIO-REPAIR-030
     """
 
-    def __init__(self, spin_dim: int, embed_dim: int, key: Optional[jax.Array] = None) -> None:
+    def __init__(self, spin_dim: int, embed_dim: int, key: jax.Array | None = None) -> None:
         """Initialise the linear adapter with Xavier uniform weights.
 
         Args:

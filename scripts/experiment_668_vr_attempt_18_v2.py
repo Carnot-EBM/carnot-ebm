@@ -235,10 +235,12 @@ def main() -> None:
     """
     # Step 0: env autofix BEFORE any heavy import (RETRO-022, RETRO-053)
     from carnot.pipeline.env_autofix import apply_env_autofix  # noqa: PLC0415
+
     apply_env_autofix()
 
     # Step 1: watchdog — 90-minute hard cap (this run could take longer than typical)
     from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: PLC0415
+
     _watchdog = ExperimentTimeoutWatchdog(
         EXP_ID,
         timeout_minutes=90,
@@ -316,9 +318,7 @@ def _run_inner(_watchdog) -> None:
     # ------------------------------------------------------------------
     # Gate 1: LiveGPUGate — hard gate on live GPU
     # ------------------------------------------------------------------
-    blocked = LiveGPUGate.require_live_or_blocked(
-        tmpl, model_ids=["Qwen/Qwen3.5-0.8B"]
-    )
+    blocked = LiveGPUGate.require_live_or_blocked(tmpl, model_ids=["Qwen/Qwen3.5-0.8B"])
     if blocked is not None:
         blocked["experiment"] = EXP_ID
         blocked["schema"] = SCHEMA
@@ -401,6 +401,7 @@ def _run_inner(_watchdog) -> None:
     try:
         model_server = getattr(tmpl, "model_server", None)
         if model_server is not None:
+
             def _live_caller(system_prompt: str, user_prompt: str) -> str:
                 """Call the warmed Qwen model with system + user prompts.
 
@@ -412,6 +413,7 @@ def _run_inner(_watchdog) -> None:
                 return model_server.generate(
                     full_prompt, model="Qwen/Qwen3.5-0.8B", max_new_tokens=512
                 )
+
             llm_caller = _live_caller
         else:
             llm_caller = None

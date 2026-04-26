@@ -32,6 +32,7 @@
 
 Spec: REQ-VERIFY-143, REQ-VERIFY-144, SCENARIO-VERIFY-172
 """
+
 from __future__ import annotations
 
 import json
@@ -84,9 +85,7 @@ def _make_constraint_embeddings(rng: np.random.Generator, n: int = 5) -> list[li
     return embs.tolist()
 
 
-def _run_standard_scenarios(
-    arbiter: MultiAgentArbiter, rng: np.random.Generator
-) -> list[dict]:
+def _run_standard_scenarios(arbiter: MultiAgentArbiter, rng: np.random.Generator) -> list[dict]:
     """Run 6 standard scenarios using real arbitrate() with z-score normalization.
 
     Standard scenario: 3 agents with distinct responses (correct_std_N, wrong_std_a_N,
@@ -130,9 +129,7 @@ def _run_standard_scenarios(
     return results
 
 
-def _run_adversarial_scenarios(
-    arbiter: MultiAgentArbiter, rng: np.random.Generator
-) -> list[dict]:
+def _run_adversarial_scenarios(arbiter: MultiAgentArbiter, rng: np.random.Generator) -> list[dict]:
     """Run 6 adversarial scenarios where 2 of 3 agents share the wrong answer.
 
     Adversarial scenario: agents = [correct_adv_N, wrong_adv_N, wrong_adv_N].
@@ -228,7 +225,9 @@ def main() -> None:
     all_results = standard_results + adversarial_results
 
     accuracy_standard = sum(r["is_correct"] for r in standard_results) / len(standard_results)
-    accuracy_adversarial = sum(r["is_correct"] for r in adversarial_results) / len(adversarial_results)
+    accuracy_adversarial = sum(r["is_correct"] for r in adversarial_results) / len(
+        adversarial_results
+    )
     accuracy_overall = sum(r["is_correct"] for r in all_results) / len(all_results)
     consensus_penalty_triggered_n = sum(r["used_consensus_penalty"] for r in all_results)
 

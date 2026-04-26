@@ -68,7 +68,9 @@ def _run_scenario_b(checker: JITVRAMCheck) -> dict:
     checker.get_available_gb = MagicMock(side_effect=[8.0, 12.0])
     sleep_calls = []
 
-    with patch("carnot.pipeline.jit_vram_check.time.sleep", side_effect=lambda s: sleep_calls.append(s)):
+    with patch(
+        "carnot.pipeline.jit_vram_check.time.sleep", side_effect=lambda s: sleep_calls.append(s)
+    ):
         result = checker.gate_model_load("scenario-b-model", required_gb=10.0, retry_wait_s=30.0)
 
     assert result.is_cleared is True, f"scenario_b: expected is_cleared=True, got {result}"
@@ -102,6 +104,7 @@ def _run_scenario_c(checker: JITVRAMCheck) -> dict:
 def _verify_gemma4_wired() -> bool:
     """Confirm JITVRAMCheck param is accepted by Gemma4QuantizedLoader."""
     from carnot.pipeline.gemma4_quantized_loader import Gemma4QuantizedLoader
+
     check = JITVRAMCheck(device_id=0)
     loader = Gemma4QuantizedLoader(model_path="", jit_vram_check=check)
     return loader.jit_vram_check is check
@@ -110,6 +113,7 @@ def _verify_gemma4_wired() -> bool:
 def _verify_gemma_loader_wired() -> bool:
     """Confirm JITVRAMCheck param is accepted by GemmaTransformersLoader."""
     from carnot.pipeline.gemma_loader import GemmaTransformersLoader
+
     check = JITVRAMCheck(device_id=0)
     loader = GemmaTransformersLoader(model_id="google/gemma-4-E4B-it", jit_vram_check=check)
     return loader.jit_vram_check is check

@@ -113,9 +113,7 @@ class TestExp66ModelCard:
         from scripts.experiment_293_huggingface_publish import build_exp66_model_card
 
         card = build_exp66_model_card()
-        assert "1.0" in card and "auroc" in card.lower(), (
-            "Model card must report 1.0 AUROC"
-        )
+        assert "1.0" in card and "auroc" in card.lower(), "Model card must report 1.0 AUROC"
 
     def test_model_card_has_not_production_disclaimer(self) -> None:
         """Model card must say NOT production quality."""
@@ -433,8 +431,10 @@ class TestExp66SkipWhenSafetensorsMissing:
         results_file = tmp_path / "experiment_293_results.json"
         with (
             patch("subprocess.run") as mock_run,
-            patch("scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
-                  tmp_path / "nonexistent.safetensors"),
+            patch(
+                "scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
+                tmp_path / "nonexistent.safetensors",
+            ),
         ):
             mock_run.return_value = MagicMock(returncode=0, stdout="TestUser\n", stderr="")
             result = run_experiment_293(
@@ -454,8 +454,10 @@ class TestExp66SkipWhenSafetensorsMissing:
         results_file = tmp_path / "experiment_293_results.json"
         with (
             patch("subprocess.run") as mock_run,
-            patch("scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
-                  tmp_path / "nonexistent.safetensors"),
+            patch(
+                "scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
+                tmp_path / "nonexistent.safetensors",
+            ),
         ):
             mock_run.return_value = MagicMock(returncode=0, stdout="TestUser\n", stderr="")
             result = run_experiment_293(
@@ -486,8 +488,10 @@ class TestResultsWrittenToDisk:
 
         with (
             patch("subprocess.run") as mock_run,
-            patch("scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
-                  tmp_path / "nonexistent.safetensors"),
+            patch(
+                "scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
+                tmp_path / "nonexistent.safetensors",
+            ),
         ):
             mock_run.return_value = MagicMock(returncode=0, stdout="TestUser\n", stderr="")
             run_experiment_293(
@@ -526,8 +530,10 @@ class TestResultsWrittenToDisk:
         results_file = tmp_path / "experiment_293_results.json"
         with (
             patch("subprocess.run") as mock_run,
-            patch("scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
-                  tmp_path / "nonexistent.safetensors"),
+            patch(
+                "scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
+                tmp_path / "nonexistent.safetensors",
+            ),
         ):
             mock_run.return_value = MagicMock(returncode=0, stdout="TestUser\n", stderr="")
             result = run_experiment_293(

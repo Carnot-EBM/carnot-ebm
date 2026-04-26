@@ -19,13 +19,18 @@ from scripts.conductor_manifest_validator import validate_manifest_at_dequeue
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture()
 def manifest_with_308(tmp_path: Path) -> Path:
     """A manifest JSON that excludes experiment_id=308 (integer) and jepa_v15_cascade (string)."""
     data = {
         "excluded": [
             {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "legacy"},
-            {"experiment_id": "jepa_v15_cascade", "completed_milestone": "2026.04.53", "reason": "ood_auc_below_random"},
+            {
+                "experiment_id": "jepa_v15_cascade",
+                "completed_milestone": "2026.04.53",
+                "reason": "ood_auc_below_random",
+            },
         ]
     }
     p = tmp_path / "manifest.json"
@@ -45,6 +50,7 @@ def empty_manifest(tmp_path: Path) -> Path:
 # ---------------------------------------------------------------------------
 # Tests: validate_manifest_at_dequeue
 # ---------------------------------------------------------------------------
+
 
 class TestValidateManifestAtDequeue:
     """REQ-INFRA-046b: conductor MUST block excluded tasks at dequeue."""
@@ -107,6 +113,7 @@ class TestValidateManifestAtDequeue:
 # Tests: incremental test selector returns 0 on clean repo
 # ---------------------------------------------------------------------------
 
+
 class TestIncrementalTestSelector:
     """REQ-INFRA-047b: validate clean-repo behaviour of incremental test selector."""
 
@@ -119,6 +126,7 @@ class TestIncrementalTestSelector:
         Spec: REQ-INFRA-047b (variant: GPU VRAM clean / milestone pre-flight clean)
         """
         import subprocess
+
         repo_root = Path(__file__).resolve().parents[2]
 
         # Check if the working tree is clean before trusting the selector result.
@@ -134,16 +142,11 @@ class TestIncrementalTestSelector:
             capture_output=True,
             text=True,
         )
-        changed_py = [
-            f for f in diff_result.stdout.splitlines()
-            if f.strip().endswith(".py")
-        ]
-        new_py = [
-            f for f in untracked_result.stdout.splitlines()
-            if f.strip().endswith(".py")
-        ]
+        changed_py = [f for f in diff_result.stdout.splitlines() if f.strip().endswith(".py")]
+        new_py = [f for f in untracked_result.stdout.splitlines() if f.strip().endswith(".py")]
 
         from carnot.pipeline.incremental_test_selector import IncrementalTestSelector
+
         sel = IncrementalTestSelector(repo_root=repo_root)
         stats = sel.get_stats()
         selected = sel.select()

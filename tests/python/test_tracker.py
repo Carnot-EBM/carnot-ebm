@@ -153,9 +153,7 @@ class TestSaveLoad:
         tracker = ConstraintTracker()
         tracker.record("arithmetic", fired=True, caught_error=True)
 
-        with tempfile.NamedTemporaryFile(
-            suffix=".json", delete=False, mode="w"
-        ) as f:
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False, mode="w") as f:
             path = f.name
         try:
             tracker.save(path)
@@ -169,9 +167,7 @@ class TestSaveLoad:
 
     def test_load_invalid_version_raises(self) -> None:
         """REQ-LEARN-001: load() raises ValueError on unsupported version."""
-        with tempfile.NamedTemporaryFile(
-            suffix=".json", delete=False, mode="w"
-        ) as f:
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False, mode="w") as f:
             json.dump({"version": 99, "stats": {}}, f)
             path = f.name
         try:
@@ -182,9 +178,7 @@ class TestSaveLoad:
 
     def test_load_empty_stats(self) -> None:
         """REQ-LEARN-001: load() handles file with zero recorded types."""
-        with tempfile.NamedTemporaryFile(
-            suffix=".json", delete=False, mode="w"
-        ) as f:
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False, mode="w") as f:
             json.dump({"version": 1, "stats": {}}, f)
             path = f.name
         try:

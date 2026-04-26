@@ -175,9 +175,12 @@ def load_adversarial_data() -> dict[str, list[dict[str, Any]]]:
     print("  adversarial_gsm8k_data.json not found. Regenerating via Exp 119 logic...")
     try:
         import subprocess
+
         result = subprocess.run(
             [sys.executable, str(REPO_ROOT / "scripts/experiment_119_adversarial_gsm8k.py")],
-            capture_output=True, text=True, timeout=120,
+            capture_output=True,
+            text=True,
+            timeout=120,
         )
         if result.returncode == 0 and ADVERSARIAL_DATA_PATH.exists():
             print("  Regenerated successfully.")
@@ -466,9 +469,7 @@ def simulate_response_adversarial(
                 )
 
     # Regular error types: arithmetic, logic, reading.
-    error_type = rng.choices(
-        ["arithmetic", "logic", "reading"], weights=[50, 35, 15], k=1
-    )[0]
+    error_type = rng.choices(["arithmetic", "logic", "reading"], weights=[50, 35, 15], k=1)[0]
 
     if error_type == "arithmetic":
         # Arithmetic error: chain-of-thought contains a wrong calculation.
@@ -489,19 +490,12 @@ def simulate_response_adversarial(
         # Ising CANNOT catch this (no arithmetic violation to detect).
         offset = rng.choice([-20, -10, -5, 5, 10, 20])
         wrong = gt + offset
-        return (
-            f"Let me work through this.\n"
-            f"The result is {wrong}.\n"
-            f"Answer: {wrong}"
-        )
+        return f"Let me work through this.\nThe result is {wrong}.\nAnswer: {wrong}"
     else:
         # Reading comprehension: wildly wrong answer, no useful arithmetic.
         # Ising CANNOT catch this (no parseable steps to check).
         wrong = gt * rng.choice([2, 3]) + rng.randint(-50, 50)
-        return (
-            f"I think the answer is {wrong}.\n"
-            f"Answer: {wrong}"
-        )
+        return f"I think the answer is {wrong}.\nAnswer: {wrong}"
 
 
 # ---------------------------------------------------------------------------
@@ -509,9 +503,7 @@ def simulate_response_adversarial(
 # ---------------------------------------------------------------------------
 
 
-def check_arithmetic_constraints(
-    question: str, response: str, pipeline: Any
-) -> dict[str, Any]:
+def check_arithmetic_constraints(question: str, response: str, pipeline: Any) -> dict[str, Any]:
     """Run arithmetic constraint verification on a response.
 
     **Detailed explanation for engineers:**
@@ -594,12 +586,14 @@ def check_arithmetic_constraints(
         except ZeroDivisionError:
             continue
         satisfied = abs(claimed - correct_val) < 0.01
-        steps.append({
-            "expression": f"{a} {op} {b}",
-            "claimed": claimed,
-            "correct": correct_val,
-            "satisfied": satisfied,
-        })
+        steps.append(
+            {
+                "expression": f"{a} {op} {b}",
+                "claimed": claimed,
+                "correct": correct_val,
+                "satisfied": satisfied,
+            }
+        )
 
     violations = [s for s in steps if not s["satisfied"]]
     return {
@@ -631,6 +625,7 @@ def init_pipeline() -> Any:
     """
     try:
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         pipeline = VerifyRepairPipeline(
             model=None,
             domains=["arithmetic"],
@@ -680,7 +675,8 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
             print(f"    Loading {model_name} on {device}...")
             tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=trust)
             model = AutoModelForCausalLM.from_pretrained(
-                model_name, trust_remote_code=trust,
+                model_name,
+                trust_remote_code=trust,
                 torch_dtype=__import__("torch").float16 if device == "cuda" else None,
             )
             if device == "cuda":
@@ -693,7 +689,9 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
                 test_input = {k: v.cuda() for k, v in test_input.items()}
             with __import__("torch").no_grad():
                 _ = model.generate(
-                    **test_input, max_new_tokens=4, do_sample=False,
+                    **test_input,
+                    max_new_tokens=4,
+                    do_sample=False,
                     pad_token_id=tokenizer.eos_token_id,
                 )
             print(f"    Smoke test passed.")
@@ -709,6 +707,7 @@ def unload_model(model: Any, tokenizer: Any, device: str) -> None:
     del model, tokenizer
     try:
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
     except ImportError:
@@ -730,12 +729,17 @@ def generate_response_live(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True, enable_thinking=False,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             text = prompt
@@ -746,12 +750,15 @@ def generate_response_live(
 
     with torch.no_grad():
         outputs = model.generate(
-            **inputs, max_new_tokens=max_new_tokens, do_sample=False,
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            do_sample=False,
             pad_token_id=tokenizer.eos_token_id,
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:], skip_special_tokens=True,
+        outputs[0, inputs["input_ids"].shape[1] :],
+        skip_special_tokens=True,
     )
     if "</think>" in response:
         response = response.split("</think>")[-1].strip()
@@ -807,11 +814,7 @@ def simulate_repair_response(
         # No improvement possible: return something similarly wrong.
         numbers = re.findall(r"-?\d+", original_response)
         wrong_ans = int(numbers[-1]) if numbers else gt + 5
-        return (
-            f"Let me reconsider.\n"
-            f"After reviewing: {wrong_ans}\n"
-            f"Answer: {wrong_ans}"
-        )
+        return f"Let me reconsider.\nAfter reviewing: {wrong_ans}\nAnswer: {wrong_ans}"
 
     # arithmetic_error: 70% fix per iteration (from Exp 91 empirical results).
     fix_prob = 0.70
@@ -830,11 +833,7 @@ def simulate_repair_response(
         step1 = rng.randint(1, max(1, abs(gt) // 2 + 1))
         step2 = gt - step1
         new_wrong = step1 + step2 + rng.choice([-4, -3, -2, 2, 3, 4])
-        return (
-            f"Rechecking my work.\n"
-            f"Revised: {step1} + {step2} = {new_wrong}\n"
-            f"Answer: {new_wrong}"
-        )
+        return f"Rechecking my work.\nRevised: {step1} + {step2} = {new_wrong}\nAnswer: {new_wrong}"
 
 
 # ---------------------------------------------------------------------------
@@ -905,9 +904,7 @@ def run_item_three_modes(
     # -----------------------------------------------------------------------
     t0 = time.time()
     if use_live:
-        baseline_response = generate_response_live(
-            prompt, tokenizer, model_obj, device
-        )
+        baseline_response = generate_response_live(prompt, tokenizer, model_obj, device)
     else:
         baseline_response = simulate_response_adversarial(
             item, model_name, variant_key, rng_baseline
@@ -936,11 +933,10 @@ def run_item_three_modes(
         # (logic, irrelevant_number, reading) — Ising correctly skips.
         verify_only_correct = baseline_correct
         verify_only_abstained = False
-        verify_only_ising_ignored_error = (
-            not baseline_correct
-            and baseline_error_type in (
-                "irrelevant_number_error", "logic_error", "reading_comprehension_error"
-            )
+        verify_only_ising_ignored_error = not baseline_correct and baseline_error_type in (
+            "irrelevant_number_error",
+            "logic_error",
+            "reading_comprehension_error",
         )
     else:
         # Pipeline found arithmetic violations → abstain (uncertain answer).
@@ -967,9 +963,7 @@ def run_item_three_modes(
 
             if use_live:
                 # Build repair prompt with violation feedback.
-                violations_text = _format_violations_for_prompt(
-                    verify_result["violations_detail"]
-                )
+                violations_text = _format_violations_for_prompt(verify_result["violations_detail"])
                 repair_prompt = (
                     f"Question: {item['perturbed_problem']}\n\n"
                     f"Your previous answer:\n{repair_response}\n\n"
@@ -981,8 +975,11 @@ def run_item_three_modes(
                 )
             else:
                 repair_response = simulate_repair_response(
-                    item, repair_response, repair_error_type or "arithmetic_error",
-                    iteration, rng_repair
+                    item,
+                    repair_response,
+                    repair_error_type or "arithmetic_error",
+                    iteration,
+                    rng_repair,
                 )
 
             # Re-verify.
@@ -998,9 +995,7 @@ def run_item_three_modes(
 
             # Update error type for next iteration's repair sim.
             repair_error_type = (
-                categorize_error(
-                    item, repair_response, repair_extracted, variant_key
-                )
+                categorize_error(item, repair_response, repair_extracted, variant_key)
                 if repair_extracted is not None and not repair_correct
                 else None
             )
@@ -1211,12 +1206,14 @@ def paired_bootstrap_test_adversarial_improvement(
     boot_stats = np.empty(n_resamples)
     for i in range(n_resamples):
         b_ctrl = control_deltas[rng_np.integers(0, n_ctrl, size=n_ctrl)].mean()
-        b_adv = np.mean([
-            variant_deltas[vk][
-                rng_np.integers(0, len(variant_deltas[vk]), size=len(variant_deltas[vk]))
-            ].mean()
-            for vk in adversarial_vks
-        ])
+        b_adv = np.mean(
+            [
+                variant_deltas[vk][
+                    rng_np.integers(0, len(variant_deltas[vk]), size=len(variant_deltas[vk]))
+                ].mean()
+                for vk in adversarial_vks
+            ]
+        )
         boot_stats[i] = b_adv - b_ctrl
 
     ci_lo = float(np.percentile(boot_stats, 2.5))
@@ -1298,8 +1295,10 @@ def compute_variant_metrics(
 
     # Error type breakdown.
     error_types = [
-        "arithmetic_error", "irrelevant_number_error",
-        "logic_error", "reading_comprehension_error",
+        "arithmetic_error",
+        "irrelevant_number_error",
+        "logic_error",
+        "reading_comprehension_error",
     ]
     error_counts: dict[str, int] = {et: 0 for et in error_types}
     for it in per_item:
@@ -1334,7 +1333,8 @@ def compute_variant_metrics(
         "baseline_ci": (round(ci_baseline[0], 4), round(ci_baseline[1], 4)),
         "exp120_published_baseline_pct": (
             round(baseline_accuracy_exp120 * 100, 2)
-            if baseline_accuracy_exp120 is not None else None
+            if baseline_accuracy_exp120 is not None
+            else None
         ),
         "exp120_match_delta_pp": round(exp120_delta * 100, 2) if exp120_delta is not None else None,
         # Verify-only (Mode B).
@@ -1461,19 +1461,19 @@ def run_model_experiment(
 
         print(
             f"    Baseline: {metrics['baseline_accuracy_pct']:.1f}%"
-            f"  [95%CI: {metrics['baseline_ci'][0]*100:.1f}–{metrics['baseline_ci'][1]*100:.1f}%]"
+            f"  [95%CI: {metrics['baseline_ci'][0] * 100:.1f}–{metrics['baseline_ci'][1] * 100:.1f}%]"
         )
         print(
             f"    Verify-only: {metrics['verify_only_accuracy_pct']:.1f}%"
             f"  (abstained: {metrics['n_abstained']})"
-            f"  [95%CI: {metrics['verify_only_ci'][0]*100:.1f}–{metrics['verify_only_ci'][1]*100:.1f}%]"
+            f"  [95%CI: {metrics['verify_only_ci'][0] * 100:.1f}–{metrics['verify_only_ci'][1] * 100:.1f}%]"
         )
         print(
             f"    Verify-repair: {metrics['repair_accuracy_pct']:.1f}%"
-            f"  [95%CI: {metrics['repair_ci'][0]*100:.1f}–{metrics['repair_ci'][1]*100:.1f}%]"
+            f"  [95%CI: {metrics['repair_ci'][0] * 100:.1f}–{metrics['repair_ci'][1] * 100:.1f}%]"
             f"  Δ={metrics['improvement_delta_pp']:+.1f}pp"
         )
-        arith_frac_pct = metrics['arithmetic_error_fraction'] * 100
+        arith_frac_pct = metrics["arithmetic_error_fraction"] * 100
         print(
             f"    Error types: arith={arith_frac_pct:.0f}% of errors"
             f"  Ising-ignored: {metrics['ising_ignore_rate_pct']:.0f}%"
@@ -1561,16 +1561,25 @@ def compute_cross_model_summary(
 
         variant_summary[vk] = {
             "variant_label": vlabel,
-            "avg_baseline_accuracy_pct": round(np.mean(baseline_accs) * 100, 2) if baseline_accs else None,
-            "avg_repair_accuracy_pct": round(np.mean(repair_accs) * 100, 2) if repair_accs else None,
+            "avg_baseline_accuracy_pct": round(np.mean(baseline_accs) * 100, 2)
+            if baseline_accs
+            else None,
+            "avg_repair_accuracy_pct": round(np.mean(repair_accs) * 100, 2)
+            if repair_accs
+            else None,
             "avg_improvement_delta_pp": round(np.mean(deltas) * 100, 2) if deltas else None,
-            "avg_arithmetic_error_fraction": round(np.mean(arith_fracs), 3) if arith_fracs else None,
-            "avg_ising_ignore_rate_pct": round(np.mean(ising_ignores), 1) if ising_ignores else None,
+            "avg_arithmetic_error_fraction": round(np.mean(arith_fracs), 3)
+            if arith_fracs
+            else None,
+            "avg_ising_ignore_rate_pct": round(np.mean(ising_ignores), 1)
+            if ising_ignores
+            else None,
         }
 
     # Check consistency: is improvement larger on adversarial for ALL models?
     n_models_hypothesis_supported = sum(
-        1 for mdata in all_model_results.values()
+        1
+        for mdata in all_model_results.values()
         if mdata.get("hypothesis_test", {}).get("reject_null_p05", False)
     )
 
@@ -1625,7 +1634,9 @@ def print_results_table(results: dict[str, Any]) -> None:
     print("\n" + "=" * 100)
     print("EXPERIMENT 121 — ADVERSARIAL VERIFY-REPAIR: ACCURACY PER MODE")
     print("=" * 100)
-    print(f"{'Model/Variant':<28} {'Baseline%':>10} {'Verify-Only%':>13} {'Repair%':>10} {'Δ Repair':>10} {'Arith%':>8} {'Ising-OK%':>10}")
+    print(
+        f"{'Model/Variant':<28} {'Baseline%':>10} {'Verify-Only%':>13} {'Repair%':>10} {'Δ Repair':>10} {'Arith%':>8} {'Ising-OK%':>10}"
+    )
     print("-" * 100)
 
     for model_name in models:
@@ -1660,9 +1671,9 @@ def print_results_table(results: dict[str, Any]) -> None:
         ht = mdata.get("hypothesis_test", {})
         print(
             f"\n  Hypothesis test: observed Δ_adversarial - Δ_control = "
-            f"{ht.get('observed_stat', 0)*100:+.2f}pp  "
+            f"{ht.get('observed_stat', 0) * 100:+.2f}pp  "
             f"p={ht.get('p_value', 'N/A')}  "
-            f"95%CI [{ht.get('ci_95_lo', 0)*100:.2f}, {ht.get('ci_95_hi', 0)*100:.2f}]pp"
+            f"95%CI [{ht.get('ci_95_lo', 0) * 100:.2f}, {ht.get('ci_95_hi', 0) * 100:.2f}]pp"
         )
         print(f"  {ht.get('interpretation', '')}")
 
@@ -1673,7 +1684,9 @@ def print_results_table(results: dict[str, Any]) -> None:
         print("CROSS-MODEL SUMMARY")
         print("=" * 100)
         vs = summary.get("variant_summary", {})
-        print(f"\n{'Variant':<28} {'Avg Baseline%':>14} {'Avg Repair%':>12} {'Avg Δ pp':>10} {'Avg Arith%':>12} {'Avg Ising-OK%':>14}")
+        print(
+            f"\n{'Variant':<28} {'Avg Baseline%':>14} {'Avg Repair%':>12} {'Avg Δ pp':>10} {'Avg Arith%':>12} {'Avg Ising-OK%':>14}"
+        )
         print("-" * 95)
         for vk in variant_keys:
             vinfo = vs.get(vk, {})
@@ -1684,7 +1697,7 @@ def print_results_table(results: dict[str, Any]) -> None:
                 f" {vinfo.get('avg_baseline_accuracy_pct', 0):>13.1f}%"
                 f" {vinfo.get('avg_repair_accuracy_pct', 0):>11.1f}%"
                 f" {vinfo.get('avg_improvement_delta_pp', 0):>+9.1f}pp"
-                f" {(vinfo.get('avg_arithmetic_error_fraction', 0) or 0)*100:>11.0f}%"
+                f" {(vinfo.get('avg_arithmetic_error_fraction', 0) or 0) * 100:>11.0f}%"
                 f" {vinfo.get('avg_ising_ignore_rate_pct', 0):>13.0f}%"
             )
 

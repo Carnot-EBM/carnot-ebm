@@ -118,20 +118,26 @@ class TestLoadPreflightVerdict:
     def test_loads_valid_file(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         preflight_file = tmp_path / "results" / "experiment_413_env_autofix.json"
         preflight_file.parent.mkdir(parents=True)
-        preflight_file.write_text(json.dumps({"honest_verdict": "auto_fix_applied", "retro_022_resolved": True}))
+        preflight_file.write_text(
+            json.dumps({"honest_verdict": "auto_fix_applied", "retro_022_resolved": True})
+        )
         monkeypatch.setattr(_mod, "_EXP413_PREFLIGHT_PATH", preflight_file)
         result = _load_preflight_verdict()
         assert result["honest_verdict"] == "auto_fix_applied"
         assert result["retro_022_resolved"] is True
 
-    def test_missing_file_returns_sentinel(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_missing_file_returns_sentinel(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         monkeypatch.setattr(_mod, "_EXP413_PREFLIGHT_PATH", tmp_path / "nonexistent.json")
         result = _load_preflight_verdict()
         assert result["honest_verdict"] == "preflight_file_missing"
         assert result["retro_022_resolved"] is False
         assert "error" in result
 
-    def test_malformed_json_returns_sentinel(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_malformed_json_returns_sentinel(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         bad_file = tmp_path / "bad.json"
         bad_file.write_text("{not valid json")
         monkeypatch.setattr(_mod, "_EXP413_PREFLIGHT_PATH", bad_file)
@@ -203,14 +209,19 @@ class TestMain:
         # Gate 0: mock preflight file path so it uses the real test fixture
         preflight_file = tmp_path / "results" / "experiment_413_env_autofix.json"
         preflight_file.parent.mkdir(parents=True, exist_ok=True)
-        preflight_file.write_text(json.dumps({
-            "honest_verdict": "auto_fix_applied",
-            "retro_022_resolved": True,
-        }))
+        preflight_file.write_text(
+            json.dumps(
+                {
+                    "honest_verdict": "auto_fix_applied",
+                    "retro_022_resolved": True,
+                }
+            )
+        )
         monkeypatch.setattr(_mod, "_EXP413_PREFLIGHT_PATH", preflight_file)
 
         # Gate 1: LiveGPUGate.require_live_or_blocked
         if gate_blocked:
+
             def _fake_gate(tmpl: Any, model_ids: Any) -> dict[str, Any]:
                 return tmpl.build_result(
                     {
@@ -259,17 +270,20 @@ class TestMain:
 
         # Gate 4: _load_model_pipeline
         monkeypatch.setattr(
-            _mod, "_load_model_pipeline",
+            _mod,
+            "_load_model_pipeline",
             lambda *a, **kw: (MagicMock(), MagicMock(), "cpu", model_ok),
         )
 
         # Problems and processing
         monkeypatch.setattr(
-            _mod, "_load_problems",
-            lambda: (problems_override if problems_override is not None else _MINI_PROBLEMS),
+            _mod,
+            "_load_problems",
+            lambda: problems_override if problems_override is not None else _MINI_PROBLEMS,
         )
         monkeypatch.setattr(
-            _mod, "_process_problem",
+            _mod,
+            "_process_problem",
             lambda p, tok, mod, dev: _make_he_result(problem_id=p["task_id"]),
         )
 
@@ -307,9 +321,7 @@ class TestMain:
     def test_gate3_unhealthy_produces_blocked(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        artifact = self._run_main(
-            tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=False)
         assert artifact["inference_mode"] == "blocked"
         assert artifact["honest_verdict"] == "blocked"
         assert artifact["status"] == "blocked"
@@ -317,9 +329,7 @@ class TestMain:
     def test_gate3_unhealthy_failure_reason_present(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        artifact = self._run_main(
-            tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=False)
         assert "failure_reason" in artifact
 
     # -- Gate 4: model load failure --
@@ -348,8 +358,11 @@ class TestMain:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         artifact = self._run_main(
-            tmp_path, monkeypatch,
-            gate_blocked=False, gpu_healthy=True, model_ok=True,
+            tmp_path,
+            monkeypatch,
+            gate_blocked=False,
+            gpu_healthy=True,
+            model_ok=True,
             gpu_zombie=True,
         )
         # Zombie is a warning, not a block — experiment still runs
@@ -366,17 +379,13 @@ class TestMain:
         )
         assert artifact["inference_mode"] == "live_gpu"
 
-    def test_success_status(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_success_status(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         artifact = self._run_main(
             tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=True, model_ok=True
         )
         assert artifact["status"] == "success"
 
-    def test_success_schema_v2(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_success_schema_v2(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         artifact = self._run_main(
             tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=True, model_ok=True
         )
@@ -415,14 +424,19 @@ class TestMain:
         artifact = self._run_main(
             tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=True, model_ok=True
         )
-        for field in ["gate0_autofix_applied", "gate0_preflight_verdict",
-                      "gate2_gpu1_zombie", "gate2_temperature_warning"]:
+        for field in [
+            "gate0_autofix_applied",
+            "gate0_preflight_verdict",
+            "gate2_gpu1_zombie",
+            "gate2_temperature_warning",
+        ]:
             assert field in artifact, f"Missing field: {field}"
 
     def test_success_required_fields_present(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         from experiment_template import REQUIRED_RESULT_FIELDS
+
         artifact = self._run_main(
             tmp_path, monkeypatch, gate_blocked=False, gpu_healthy=True, model_ok=True
         )
@@ -452,22 +466,37 @@ class TestMain:
 
         preflight_file = tmp_path / "results" / "experiment_413_env_autofix.json"
         preflight_file.parent.mkdir(parents=True, exist_ok=True)
-        preflight_file.write_text(json.dumps({"honest_verdict": "auto_fix_applied", "retro_022_resolved": True}))
+        preflight_file.write_text(
+            json.dumps({"honest_verdict": "auto_fix_applied", "retro_022_resolved": True})
+        )
         monkeypatch.setattr(_mod, "_EXP413_PREFLIGHT_PATH", preflight_file)
-        monkeypatch.setattr(_mod.LiveGPUGate, "require_live_or_blocked", staticmethod(lambda tmpl, ids: None))
+        monkeypatch.setattr(
+            _mod.LiveGPUGate, "require_live_or_blocked", staticmethod(lambda tmpl, ids: None)
+        )
         monkeypatch.setattr(_mod, "check_dual_gpu_health", lambda: _make_gpu_health())
 
         def _fake_setup_gpu(self_obj: Any, model_specs: Any, **kw: Any) -> dict[str, Any]:
             return {
-                "all_healthy": True, "models": [], "prewarm_time_s": 0.0,
-                "dual_gpu_auto_assigned": False, "model_server_active": False,
-                "gpu_runner_active": False, "cpu_fallback": True,
-                "gpu_monitor_results": {"n_gpus_detected": 0, "n_zombies": 0,
-                                        "idle_gpus": [], "all_healthy": True, "error": "cpu_fallback"},
+                "all_healthy": True,
+                "models": [],
+                "prewarm_time_s": 0.0,
+                "dual_gpu_auto_assigned": False,
+                "model_server_active": False,
+                "gpu_runner_active": False,
+                "cpu_fallback": True,
+                "gpu_monitor_results": {
+                    "n_gpus_detected": 0,
+                    "n_zombies": 0,
+                    "idle_gpus": [],
+                    "all_healthy": True,
+                    "error": "cpu_fallback",
+                },
             }
 
         monkeypatch.setattr(_mod.ExperimentTemplate, "setup_gpu", _fake_setup_gpu)
-        monkeypatch.setattr(_mod, "_load_model_pipeline", lambda *a, **kw: (MagicMock(), MagicMock(), "cpu", True))
+        monkeypatch.setattr(
+            _mod, "_load_model_pipeline", lambda *a, **kw: (MagicMock(), MagicMock(), "cpu", True)
+        )
         monkeypatch.setattr(_mod, "_load_problems", lambda: _MINI_PROBLEMS)
         monkeypatch.setattr(_mod, "_process_problem", _failing_then_repaired)
 
@@ -505,8 +534,11 @@ class TestMain:
         monkeypatch.setattr(_mod.ExperimentTemplate, "checkpoint_save", _tracking)
 
         self._run_main(
-            tmp_path, monkeypatch,
-            gate_blocked=False, gpu_healthy=True, model_ok=True,
+            tmp_path,
+            monkeypatch,
+            gate_blocked=False,
+            gpu_healthy=True,
+            model_ok=True,
             problems_override=ten_problems,
         )
         assert checkpoint_steps == [10]

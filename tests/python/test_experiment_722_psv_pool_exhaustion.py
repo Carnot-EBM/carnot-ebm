@@ -56,9 +56,7 @@ def _make_repo_root(tmp_path: Path) -> Path:
     (root / "scripts").mkdir(parents=True)
     # Minimal exclusion manifest so check_exclusion_manifest() does not raise.
     manifest = {"excluded": []}
-    (root / "scripts" / "conductor_exclusion_manifest.json").write_text(
-        json.dumps(manifest)
-    )
+    (root / "scripts" / "conductor_exclusion_manifest.json").write_text(json.dumps(manifest))
     return root
 
 

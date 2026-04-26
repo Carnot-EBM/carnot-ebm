@@ -28,6 +28,7 @@
 
 Spec: REQ-VERIFY-143, REQ-VERIFY-144, SCENARIO-VERIFY-172, SCENARIO-VERIFY-173
 """
+
 from __future__ import annotations
 
 import json
@@ -118,9 +119,7 @@ def _make_constraint_embeddings(rng: np.random.Generator, n: int = 5) -> list[li
     return embs.tolist()
 
 
-def _build_standard_scenarios(
-    arbiter: MultiAgentArbiter, rng: np.random.Generator
-) -> list[dict]:
+def _build_standard_scenarios(arbiter: MultiAgentArbiter, rng: np.random.Generator) -> list[dict]:
     """Build 6 standard scenarios with synthetic energy assignments.
 
     In standard scenarios 3 agents disagree (distinct responses).  We ASSIGN energies
@@ -294,7 +293,9 @@ def main() -> None:
     all_results = standard_results + adversarial_results
 
     accuracy_standard = sum(r["is_correct"] for r in standard_results) / len(standard_results)
-    accuracy_adversarial = sum(r["is_correct"] for r in adversarial_results) / len(adversarial_results)
+    accuracy_adversarial = sum(r["is_correct"] for r in adversarial_results) / len(
+        adversarial_results
+    )
     accuracy_overall = sum(r["is_correct"] for r in all_results) / len(all_results)
     consensus_penalty_triggered_n = sum(r["used_consensus_penalty"] for r in all_results)
 

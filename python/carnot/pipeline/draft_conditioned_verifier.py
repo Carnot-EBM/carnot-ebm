@@ -39,7 +39,6 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-
 # ---------------------------------------------------------------------------
 # VerificationResult
 # ---------------------------------------------------------------------------
@@ -200,9 +199,7 @@ class DraftConditionedVerifier:
     # score_with_constraints
     # ------------------------------------------------------------------
 
-    def score_with_constraints(
-        self, response: str, constraints: list[dict[str, Any]]
-    ) -> float:
+    def score_with_constraints(self, response: str, constraints: list[dict[str, Any]]) -> float:
         """Score a full response using Ising energy + structural constraint signals.
 
         If ``self.ising`` is set, delegates to ``ising.score_with_constraints()``.
@@ -266,9 +263,7 @@ class DraftConditionedVerifier:
     # verify_with_draft
     # ------------------------------------------------------------------
 
-    def verify_with_draft(
-        self, question: str, full_response: str
-    ) -> VerificationResult:
+    def verify_with_draft(self, question: str, full_response: str) -> VerificationResult:
         """Run full Tier 2.8 verification: draft → constraints → constrained Ising score.
 
         Steps:
@@ -331,9 +326,7 @@ class DraftConditionedVerifier:
     # condition_and_verify  (ThreeTierPipeline wire_tier_28 interface)
     # ------------------------------------------------------------------
 
-    def condition_and_verify(
-        self, question: str, full_response: str
-    ) -> dict[str, Any]:
+    def condition_and_verify(self, question: str, full_response: str) -> dict[str, Any]:
         """Tier 2.8 interface expected by ThreeTierPipeline.wire_tier_28().
 
         Wraps verify_with_draft() and returns the result as a plain dict so that

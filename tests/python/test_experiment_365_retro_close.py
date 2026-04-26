@@ -65,8 +65,16 @@ class TestArtifactSchema:
         """All REQUIRED_RESULT_FIELDS must be in the artifact."""
         repo = _make_repo(tmp_path)
         artifact = run_experiment(repo)
-        for field in ("experiment", "schema", "run_date", "started_at",
-                      "finished_at", "duration_s", "status", "title"):
+        for field in (
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ):
             assert field in artifact, f"Missing field: {field}"
 
     def test_schema_is_retro_close_v2(self, tmp_path: Path) -> None:
@@ -83,8 +91,13 @@ class TestArtifactSchema:
         """Retro-specific keys must be present."""
         repo = _make_repo(tmp_path)
         artifact = run_experiment(repo)
-        for key in ("retro_items_closed", "retro_items_open",
-                    "env_script_created", "missing_jsons_audit", "all_closed"):
+        for key in (
+            "retro_items_closed",
+            "retro_items_open",
+            "env_script_created",
+            "missing_jsons_audit",
+            "all_closed",
+        ):
             assert key in artifact, f"Missing retro field: {key}"
 
     def test_experiment_id(self, tmp_path: Path) -> None:
@@ -167,10 +180,7 @@ class TestRetro013:
         """RETRO-013 rationale references Exp 366."""
         repo = _make_repo(tmp_path)
         artifact = run_experiment(repo)
-        item = next(
-            i for i in artifact["retro_items_closed"]
-            if i["retro_id"] == "RETRO-013"
-        )
+        item = next(i for i in artifact["retro_items_closed"] if i["retro_id"] == "RETRO-013")
         assert "366" in item["rationale"]
 
 

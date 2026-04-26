@@ -121,12 +121,12 @@ def _token_features(text: str, domain: str | None, prior_confidence: float) -> d
 
     # The 9-element feature vector in PredictiveFeatures order
     feature_vector = [
-        min(token_count / 100.0, 1.0),   # token_count scaled
-        min(char_count / 500.0, 1.0),    # char_count scaled
+        min(token_count / 100.0, 1.0),  # token_count scaled
+        min(char_count / 500.0, 1.0),  # char_count scaled
         numeric_density,
         operator_density,
         json_parseable,
-        min(n_claims / 10.0, 1.0),       # n_claims scaled
+        min(n_claims / 10.0, 1.0),  # n_claims scaled
         has_final_answer,
         domain_code,
         prior,
@@ -193,7 +193,8 @@ def build_corpus(
     """
     # Filter to non-abstain rows with a partial_response
     usable = [
-        r for r in source_rows
+        r
+        for r in source_rows
         if str(r.get("verifier_outcome", "")).lower() not in ("abstain", "")
         and r.get("partial_response")
     ]
@@ -224,22 +225,24 @@ def build_corpus(
         for frac in prefix_fractions:
             prefix_text = _truncate_at_fraction(partial, frac)
             feats = _token_features(prefix_text, domain, confidence)
-            output_rows.append({
-                "case_id": cid,
-                "prefix_fraction": frac,
-                "token_feature_vector": feats["feature_vector"],
-                "n_tokens_in_prefix": feats["n_tokens"],
-                "token_pattern_features": feats["token_pattern_features"],
-                "violation_label": violation_label,
-                "n_violations_final": n_violations_final,
-                "provenance_exp": provenance_exp,
-                "domain": domain,
-                "model": model,
-                "confidence": confidence,
-                "partial_response": partial,
-                "run_date": RUN_DATE,
-                "experiment": EXPERIMENT,
-            })
+            output_rows.append(
+                {
+                    "case_id": cid,
+                    "prefix_fraction": frac,
+                    "token_feature_vector": feats["feature_vector"],
+                    "n_tokens_in_prefix": feats["n_tokens"],
+                    "token_pattern_features": feats["token_pattern_features"],
+                    "violation_label": violation_label,
+                    "n_violations_final": n_violations_final,
+                    "provenance_exp": provenance_exp,
+                    "domain": domain,
+                    "model": model,
+                    "confidence": confidence,
+                    "partial_response": partial,
+                    "run_date": RUN_DATE,
+                    "experiment": EXPERIMENT,
+                }
+            )
 
     return output_rows
 
@@ -260,7 +263,9 @@ def build_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     pfi: dict[str, float] = {}
     for frac in PREFIX_FRACTIONS:
         subset = [r for r in rows if r["prefix_fraction"] == frac]
-        pfi[str(frac)] = sum(1 for r in subset if r["violation_label"]) / len(subset) if subset else 0.0
+        pfi[str(frac)] = (
+            sum(1 for r in subset if r["violation_label"]) / len(subset) if subset else 0.0
+        )
 
     # Token pattern stats: mean value for positive vs negative cases
     tps: dict[str, dict[str, float]] = {}
@@ -269,11 +274,13 @@ def build_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     for feature in ("digit_density", "operator_count", "equals_count", "sentence_count"):
         mean_pos = (
             sum(r["token_pattern_features"][feature] for r in pos_rows) / len(pos_rows)
-            if pos_rows else 0.0
+            if pos_rows
+            else 0.0
         )
         mean_neg = (
             sum(r["token_pattern_features"][feature] for r in neg_rows) / len(neg_rows)
-            if neg_rows else 0.0
+            if neg_rows
+            else 0.0
         )
         tps[feature] = {
             "mean_positive": round(mean_pos, 6),
@@ -406,8 +413,7 @@ def _generate_mock_rows(n: int) -> list[dict[str, Any]]:
         violated = i % 2 == 0
         if violated:
             partial = (
-                '{"final_answer": 42, "claims": ["Step 1: 3 * 14 = 42. '
-                'Step 2: 14 + 14 = 42."]}'
+                '{"final_answer": 42, "claims": ["Step 1: 3 * 14 = 42. Step 2: 14 + 14 = 42."]}'
             )
             outcome = "violated"
         else:
@@ -416,16 +422,18 @@ def _generate_mock_rows(n: int) -> list[dict[str, Any]]:
                 'Verified: 3 + 3 + 3 + ... = 42."]}'
             )
             outcome = "verified"
-        rows.append({
-            "case_id": f"mock-{i:04d}",
-            "partial_response": partial,
-            "verifier_outcome": outcome,
-            "domain": "reasoning",
-            "confidence": 0.5 + 0.1 * (i % 5),
-            "model": "mock-model",
-            "source_experiment": 235,
-            "experiment": 252,
-        })
+        rows.append(
+            {
+                "case_id": f"mock-{i:04d}",
+                "partial_response": partial,
+                "verifier_outcome": outcome,
+                "domain": "reasoning",
+                "confidence": 0.5 + 0.1 * (i % 5),
+                "model": "mock-model",
+                "source_experiment": 235,
+                "experiment": 252,
+            }
+        )
     return rows
 
 

@@ -47,7 +47,6 @@ from dataclasses import dataclass
 import jax
 import jax.numpy as jnp
 
-
 # ---------------------------------------------------------------------------
 # Default configuration
 # ---------------------------------------------------------------------------
@@ -171,9 +170,7 @@ class HalluFieldDetector:
         if temperature <= 0.0:
             raise ValueError(f"temperature must be > 0, got {temperature}")
         if instability_threshold < 0.0:
-            raise ValueError(
-                f"instability_threshold must be >= 0, got {instability_threshold}"
-            )
+            raise ValueError(f"instability_threshold must be >= 0, got {instability_threshold}")
         self.n_paths = n_paths
         self.temperature = temperature
         self.instability_threshold = instability_threshold
@@ -224,7 +221,7 @@ class HalluFieldDetector:
         # We sample from the categorical distribution defined by log_probs.
         # For efficiency, sample all paths at once: shape (n_paths, seq_len).
         path_energies = []
-        for i in range(self.n_paths):
+        for _i in range(self.n_paths):
             rng_key, subkey = jax.random.split(rng_key)
             # Sample one token per position: shape (seq_len,)
             sampled_tokens = jax.random.categorical(subkey, logits / self.temperature, axis=-1)
@@ -278,8 +275,8 @@ class HalluFieldDetector:
             Var(E) as a Python float.  Always >= 0 (by definition of variance).
         """
         mean_e = jnp.mean(path_energies)
-        mean_e2 = jnp.mean(path_energies ** 2)
-        variance = float(mean_e2 - mean_e ** 2)
+        mean_e2 = jnp.mean(path_energies**2)
+        variance = float(mean_e2 - mean_e**2)
         # Clamp to 0 to avoid tiny negative values from floating-point arithmetic
         return max(0.0, variance)
 

@@ -143,7 +143,7 @@ class TestLNNAdaptation:
             input_dim=8,
             hidden_dim=4,
             tau_base=0.5,  # Fast adaptation
-            dt=0.5,        # Large step to ensure visible change
+            dt=0.5,  # Large step to ensure visible change
         )
         model = LNNConstraintModel(config, key=jrandom.PRNGKey(7))
 
@@ -233,7 +233,9 @@ class TestLNNAdaptation:
         """
         model = LNNConstraintModel(LNNConstraintConfig(input_dim=4, hidden_dim=3))
         model.adapt(jnp.ones(4))
-        assert not jnp.allclose(model._h, jnp.zeros(3)), "Hidden state should be non-zero after adapt"
+        assert not jnp.allclose(model._h, jnp.zeros(3)), (
+            "Hidden state should be non-zero after adapt"
+        )
 
         model.reset()
         assert jnp.allclose(model._h, jnp.zeros(3)), "Hidden state should be zero after reset"

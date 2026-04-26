@@ -96,9 +96,7 @@ def _run_simulation() -> dict:
 def main() -> None:
     """Run Exp 624: Vivado v2 synthesis check + synchronous Ising simulation."""
     result_path = str(_REPO_ROOT / _RESULT_PATH)
-    tmpl_obj = __import__(
-        "scripts.experiment_template", fromlist=["ExperimentTemplate"]
-    )
+    tmpl_obj = __import__("scripts.experiment_template", fromlist=["ExperimentTemplate"])
     ExperimentTemplate = tmpl_obj.ExperimentTemplate
 
     tmpl = ExperimentTemplate(

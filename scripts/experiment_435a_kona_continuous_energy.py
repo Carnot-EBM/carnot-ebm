@@ -172,9 +172,7 @@ def main() -> None:
     # 4. Gradient descent on the continuous EBM
     print("  Running gradient descent (continuous EBM)...")
     cont_state = sample_continuous(cont_model, n_steps=2000, lr=0.02, seed=0)
-    cont_energy = float(
-        -0.5 * cont_state @ J @ cont_state - h @ cont_state
-    )
+    cont_energy = float(-0.5 * cont_state @ J @ cont_state - h @ cont_state)
     print(f"    Continuous minimiser energy: {cont_energy:.6f}")
     print(f"    Continuous state: {np.round(cont_state, 3)}")
 

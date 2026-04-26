@@ -24,7 +24,9 @@ import numpy as np
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
 QA_DATASET = os.path.join(os.path.dirname(__file__), "..", "data", "qa_dataset_1000.json")
-OUTPUT = os.path.join(os.path.dirname(__file__), "..", "data", "token_activations_qa_qwen35.safetensors")
+OUTPUT = os.path.join(
+    os.path.dirname(__file__), "..", "data", "token_activations_qa_qwen35.safetensors"
+)
 
 
 def check_answer(response: str, expected: str) -> bool:
@@ -51,14 +53,15 @@ def main() -> int:
     start = time.time()
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         dtype=torch.float16 if device == "cuda" else None,
     )
     if device == "cuda":
         model = model.cuda()
     model.eval()
-    print(f"Loaded in {time.time()-start:.1f}s")
+    print(f"Loaded in {time.time() - start:.1f}s")
 
     # Collect activations using chat template (same as TruthfulQA)
     all_token_ids = []
@@ -73,7 +76,9 @@ def main() -> int:
         expected = pair.get("expected_answer_substring", pair.get("expected", ""))
 
         # Use chat template like TruthfulQA collection for consistency
-        messages = [{"role": "user", "content": f"Answer briefly and factually in one sentence. {question}"}]
+        messages = [
+            {"role": "user", "content": f"Answer briefly and factually in one sentence. {question}"}
+        ]
         text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         inputs = tokenizer(text, return_tensors="pt")
         if device == "cuda":
@@ -82,8 +87,9 @@ def main() -> int:
         prompt_len = inputs["input_ids"].shape[1]
 
         with torch.no_grad():
-            outputs = model.generate(**inputs, max_new_tokens=80, do_sample=False,
-                                     pad_token_id=tokenizer.eos_token_id)
+            outputs = model.generate(
+                **inputs, max_new_tokens=80, do_sample=False, pad_token_id=tokenizer.eos_token_id
+            )
 
         generated_ids = outputs[0, prompt_len:]
         response = tokenizer.decode(generated_ids, skip_special_tokens=True)
@@ -113,10 +119,12 @@ def main() -> int:
 
         if (qi + 1) % 50 == 0:
             total = len(all_token_ids)
-            print(f"  [{qi+1:4d}/{len(qa_pairs)}] "
-                  f"tokens={total:6d} "
-                  f"correct={n_correct} wrong={n_wrong} "
-                  f"({n_correct/(qi+1)*100:.0f}%)")
+            print(
+                f"  [{qi + 1:4d}/{len(qa_pairs)}] "
+                f"tokens={total:6d} "
+                f"correct={n_correct} wrong={n_wrong} "
+                f"({n_correct / (qi + 1) * 100:.0f}%)"
+            )
 
     # Save
     total_tokens = len(all_token_ids)
@@ -124,9 +132,9 @@ def main() -> int:
 
     sep = "=" * 60
     print(f"\n{sep}")
-    print(f"Collection complete (Qwen3.5-0.8B):")
+    print("Collection complete (Qwen3.5-0.8B):")
     print(f"  Questions: {len(qa_pairs)}")
-    print(f"  Model accuracy: {n_correct}/{len(qa_pairs)} ({n_correct/len(qa_pairs)*100:.0f}%)")
+    print(f"  Model accuracy: {n_correct}/{len(qa_pairs)} ({n_correct / len(qa_pairs) * 100:.0f}%)")
     print(f"  Total tokens: {total_tokens}")
     print(f"  Activation dim: {act_dim}")
     print(f"  Correct tokens: {sum(all_labels)}")

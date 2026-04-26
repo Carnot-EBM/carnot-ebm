@@ -37,16 +37,18 @@ _SIMULATED_RESULT_PATH = _REPO_ROOT / "results" / "experiment_318_self_learning_
 
 # Required top-level keys for every carnot.live_relay_benchmark.v1 wrapper artifact.
 # This set is the schema contract: any new field must be added here too.
-REQUIRED_WRAPPER_KEYS: frozenset[str] = frozenset({
-    "experiment",
-    "schema",
-    "inference_mode",
-    "run_date",
-    "improvement_1to3",
-    "jepa_skip_rate_live",
-    "simulation_comparison",
-    "primary_result_path",
-})
+REQUIRED_WRAPPER_KEYS: frozenset[str] = frozenset(
+    {
+        "experiment",
+        "schema",
+        "inference_mode",
+        "run_date",
+        "improvement_1to3",
+        "jepa_skip_rate_live",
+        "simulation_comparison",
+        "primary_result_path",
+    }
+)
 
 
 # ---------------------------------------------------------------------------
@@ -84,9 +86,7 @@ def load_live_relay_results(path: str | Path) -> dict[str, Any]:
         data = json.load(fh)
     missing = REQUIRED_WRAPPER_KEYS - set(data.keys())
     if missing:
-        raise ValueError(
-            f"Live relay artifact missing required keys: {sorted(missing)}"
-        )
+        raise ValueError(f"Live relay artifact missing required keys: {sorted(missing)}")
     return data
 
 
@@ -482,7 +482,7 @@ class TestJepaSkipRateLive:
         """REQ-LEARN-014-5: jepa_skip_rate_live is in [0.0, 1.0]."""
         for rate in [0.0, 0.24, 0.5, 1.0]:
             artifact = _make_valid_wrapper(jepa_skip_rate_live=rate)
-            p = tmp_path / f"wrapper_{int(rate*100)}.json"
+            p = tmp_path / f"wrapper_{int(rate * 100)}.json"
             p.write_text(json.dumps(artifact), encoding="utf-8")
             loaded = load_live_relay_results(p)
             assert 0.0 <= loaded["jepa_skip_rate_live"] <= 1.0
@@ -543,9 +543,7 @@ def live_relay_result() -> dict[str, Any]:
     been executed.
     """
     if not _LIVE_RESULT_PATH.exists():
-        pytest.skip(
-            f"Exp 329 artifact not found at {_LIVE_RESULT_PATH}; run Exp 329 first"
-        )
+        pytest.skip(f"Exp 329 artifact not found at {_LIVE_RESULT_PATH}; run Exp 329 first")
     with _LIVE_RESULT_PATH.open("r", encoding="utf-8") as fh:
         return json.load(fh)
 

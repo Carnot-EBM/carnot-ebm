@@ -79,7 +79,12 @@ def _make_contradicted_constraint() -> ConstraintResult:
     return ConstraintResult(
         constraint_type="factual_contradicted",
         description="KB contradicts: France capital London",
-        metadata={"subject": "France", "predicate": "capital", "object": "London", "verified": False},
+        metadata={
+            "subject": "France",
+            "predicate": "capital",
+            "object": "London",
+            "verified": False,
+        },
     )
 
 
@@ -458,9 +463,7 @@ class TestBuildResultsPayload:
     def test_model_name_passed_through(self) -> None:
         """REQ-VERIFY-001: model_name kwarg appears in payload."""
         metrics, results = self._metrics_and_results()
-        payload = build_results_payload(
-            metrics, results, model_name="google/gemma-4-E4B-it"
-        )
+        payload = build_results_payload(metrics, results, model_name="google/gemma-4-E4B-it")
         assert payload["model_name"] == "google/gemma-4-E4B-it"
 
 
@@ -475,9 +478,7 @@ class TestRunExp272:
     def test_returns_dict_with_required_keys(self) -> None:
         """REQ-VERIFY-001: run_exp272 returns a payload dict with expected keys."""
         # Use stub extractor that returns one verified constraint for every call
-        stub = _StubExtractor(
-            [[_make_verified_constraint()] for _ in range(20)]
-        )
+        stub = _StubExtractor([[_make_verified_constraint()] for _ in range(20)])
         payload = run_exp272(use_live_model=False, extractor=stub)
         assert "coverage_pct" in payload
         assert "accuracy_pct" in payload
@@ -491,9 +492,7 @@ class TestRunExp272:
 
     def test_all_covered_when_stub_returns_constraints(self) -> None:
         """REQ-VERIFY-002: coverage_pct=100 when stub always returns ≥1 constraint."""
-        stub = _StubExtractor(
-            [[_make_verified_constraint()] for _ in range(20)]
-        )
+        stub = _StubExtractor([[_make_verified_constraint()] for _ in range(20)])
         payload = run_exp272(use_live_model=False, extractor=stub)
         assert payload["coverage_pct"] == 100.0
         assert payload["coverage_target_met"] is True
@@ -536,12 +535,12 @@ class TestGemma4ResponsesContainExtractableClaims:
     @pytest.mark.parametrize(
         "response_idx,expected_substring",
         [
-            (0, "paris"),       # "Paris is the capital of France."
-            (1, "tokyo"),       # "The capital of Japan is Tokyo."
-            (2, "brasília"),    # "The capital of Brazil is Brasília."
-            (3, "canberra"),    # "Canberra is the capital of Australia."
-            (4, "ottawa"),      # "Ottawa is the capital of Canada."
-            (5, "new delhi"),   # "New Delhi is the capital of India."
+            (0, "paris"),  # "Paris is the capital of France."
+            (1, "tokyo"),  # "The capital of Japan is Tokyo."
+            (2, "brasília"),  # "The capital of Brazil is Brasília."
+            (3, "canberra"),  # "Canberra is the capital of Australia."
+            (4, "ottawa"),  # "Ottawa is the capital of Canada."
+            (5, "new delhi"),  # "New Delhi is the capital of India."
         ],
     )
     def test_geography_responses_contain_capital_claim(

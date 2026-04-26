@@ -173,7 +173,15 @@ class TestLabelGsm8kChain:
         question = "There are 2 apples."
         steps = ["2 + 1 = 3."]
         result = label_gsm8k_chain(question, steps)
-        required_keys = {"step", "step_index", "step_correct", "action", "prev_state", "next_state", "labeler"}
+        required_keys = {
+            "step",
+            "step_index",
+            "step_correct",
+            "action",
+            "prev_state",
+            "next_state",
+            "labeler",
+        }
         assert required_keys.issubset(result[0].keys())
 
     def test_step_index_is_sequential(self) -> None:
@@ -297,7 +305,9 @@ class TestEncodeStepTransition:
         state = {"apples": 5.0}
         action, new_state = encode_step_transition("5 + 3", state)
         # apples was 5, which is operand a; result should be 8.
-        assert new_state.get("apples") == pytest.approx(8.0) or new_state.get("_result") == pytest.approx(8.0)
+        assert new_state.get("apples") == pytest.approx(8.0) or new_state.get(
+            "_result"
+        ) == pytest.approx(8.0)
 
     def test_new_quantity_stored_as_result(self) -> None:
         """When no state key matches an operand, result is stored under '_result'."""

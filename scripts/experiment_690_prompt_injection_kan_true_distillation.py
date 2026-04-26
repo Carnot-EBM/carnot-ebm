@@ -86,9 +86,7 @@ _SAFEGUARD_SYSTEM = (
     "contains a prompt injection attempt. Nothing else — one word only."
 )
 
-_SAFEGUARD_USER_TEMPLATE = (
-    "Classify this user message as safe or unsafe (one word):\n\n{prompt}"
-)
+_SAFEGUARD_USER_TEMPLATE = "Classify this user message as safe or unsafe (one word):\n\n{prompt}"
 
 # REQ-SAFE-011: minimum seconds per prompt for a real teacher inference call.
 # A 20B Q4_K_M model on GPU cannot classify a prompt in under 0.5 s;
@@ -110,6 +108,7 @@ def main() -> None:
     """Run Exp 690 end-to-end with a 360-minute hard stop."""
     try:
         from carnot.pipeline.env_autofix import apply_env_autofix
+
         apply_env_autofix()
     except ImportError:
         pass
@@ -126,12 +125,10 @@ def main() -> None:
 
     DELIVERABLE = "results/experiment_690_prompt_injection_kan_true_distillation.json"
     V1_WEIGHTS_PATH = (
-        _REPO_ROOT / "python" / "carnot" / "models"
-        / "prompt_injection_kan_v1_weights.json"
+        _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_weights.json"
     )
     V0_WEIGHTS_PATH = (
-        _REPO_ROOT / "python" / "carnot" / "models"
-        / "prompt_injection_kan_weights.json"
+        _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_weights.json"
     )
     CORPUS_DIR = _REPO_ROOT / "data" / "prompt_injection_distill"
 
@@ -254,8 +251,8 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
     benign_pool = [ex for ex in corpus_examples if ex.get("label") == "benign"]
     injection_pool = [ex for ex in corpus_examples if ex.get("label") == "injection"]
     # Stable sort: cached prompts first, then uncached, preserving original order.
-    benign_pool.sort(key=lambda ex: (0 if _is_cached(ex) else 1))
-    injection_pool.sort(key=lambda ex: (0 if _is_cached(ex) else 1))
+    benign_pool.sort(key=lambda ex: 0 if _is_cached(ex) else 1)
+    injection_pool.sort(key=lambda ex: 0 if _is_cached(ex) else 1)
     corpus_examples = benign_pool[:N_PER_CLASS] + injection_pool[:N_PER_CLASS]
 
     log.info(
@@ -348,8 +345,7 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
     # spent generating labels across ALL corpus examples, including prior cached runs.
     teacher_inference_duration_s = total_teacher_elapsed_s
     mean_s_per_prompt = (
-        teacher_inference_duration_s / len(corpus_examples)
-        if corpus_examples else 0.0
+        teacher_inference_duration_s / len(corpus_examples) if corpus_examples else 0.0
     )
 
     log.info(
@@ -381,16 +377,19 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
             missing_count += 1
             continue
         label_str = "injection" if teacher_label_int == 1 else "benign"
-        teacher_labeled.append(InjectionExample(
-            text=ex["text"],
-            label=label_str,
-            source=f"teacher_distilled:{ex.get('source', 'unknown')}",
-        ))
+        teacher_labeled.append(
+            InjectionExample(
+                text=ex["text"],
+                label=label_str,
+                source=f"teacher_distilled:{ex.get('source', 'unknown')}",
+            )
+        )
         teacher_labels_map[ph] = teacher_label_int
 
     log.info(
         "Teacher labeled examples: %d (missing/unparseable: %d)",
-        len(teacher_labeled), missing_count,
+        len(teacher_labeled),
+        missing_count,
     )
 
     if len(teacher_labeled) < 50:
@@ -510,7 +509,9 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
 
     log.info(
         "Teacher vs. source agreement: %.4f (%d/%d)",
-        agreement_rate, agreement_count, total_comparable,
+        agreement_rate,
+        agreement_count,
+        total_comparable,
     )
 
     # -----------------------------------------------------------------------
@@ -519,6 +520,7 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
     log.info("Phase 5: KAN training on teacher labels (80/20 split, seed 690)")
 
     import random
+
     rng = random.Random(690)
     rng.shuffle(teacher_labeled)
 
@@ -528,7 +530,8 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
 
     log.info(
         "Train: %d / Test: %d — benign=%d inj=%d train, benign=%d inj=%d test",
-        len(train_examples), len(test_examples),
+        len(train_examples),
+        len(test_examples),
         sum(1 for e in train_examples if e.label == "benign"),
         sum(1 for e in train_examples if e.label == "injection"),
         sum(1 for e in test_examples if e.label == "benign"),
@@ -586,7 +589,8 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
     v1_median_inference_ms, latency_flag = _latency_check(checker, n=1000)
     log.info(
         "v1 Median inference: %.3f ms (flag: %s)",
-        v1_median_inference_ms, latency_flag,
+        v1_median_inference_ms,
+        latency_flag,
     )
 
     # -----------------------------------------------------------------------
@@ -618,8 +622,9 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
     log.info(
         "v1 - v0 delta AUROC: %+.4f (%s)",
         v0_vs_v1_delta_auroc,
-        "improvement" if v0_vs_v1_delta_auroc >= 0 else
-        "regression (expected if v0 overfit source-origin artifacts)",
+        "improvement"
+        if v0_vs_v1_delta_auroc >= 0
+        else "regression (expected if v0 overfit source-origin artifacts)",
     )
 
     # -----------------------------------------------------------------------
@@ -692,7 +697,10 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
     _write_artifact(artifact, repo_root / deliverable)
     log.info(
         "Experiment 690 complete. honest_verdict=%s AUROC=%.4f delta=%+.4f agreement=%.4f",
-        honest_verdict, v1_auroc, v0_vs_v1_delta_auroc, agreement_rate,
+        honest_verdict,
+        v1_auroc,
+        v0_vs_v1_delta_auroc,
+        agreement_rate,
     )
 
 
@@ -730,7 +738,9 @@ def _load_corpus(corpus_dir: Path, log) -> list[dict]:
                 after = len(seen_texts)
                 log.info(
                     "Corpus file %s: %d examples, %d new unique prompts",
-                    f.name, len(data), after - before,
+                    f.name,
+                    len(data),
+                    after - before,
                 )
         except Exception as exc:
             log.warning("Could not parse %s: %s", f.name, exc)
@@ -848,7 +858,7 @@ def _run_teacher_inference(
     llm = Llama(
         model_path=model_path,
         n_gpu_layers=-1,
-        n_ctx=512,   # Short classification prompts; 512 tokens is sufficient.
+        n_ctx=512,  # Short classification prompts; 512 tokens is sufficient.
         verbose=False,
     )
     load_time_s = time.perf_counter() - t_load_start
@@ -867,7 +877,7 @@ def _run_teacher_inference(
             user_msg = _SAFEGUARD_USER_TEMPLATE.format(prompt=prompt_text)
             messages = [
                 {"role": "system", "content": _SAFEGUARD_SYSTEM},
-                {"role": "user",   "content": user_msg},
+                {"role": "user", "content": user_msg},
             ]
 
             t0 = time.perf_counter()
@@ -901,17 +911,19 @@ def _run_teacher_inference(
             updated_cache[cache_key] = entry
 
             if (i + 1) % 50 == 0 or i == total - 1:
-                n_valid = sum(
-                    1 for e in updated_cache.values() if e.get("teacher_label") in (0, 1)
-                )
+                n_valid = sum(1 for e in updated_cache.values() if e.get("teacher_label") in (0, 1))
                 log.info(
                     "Teacher inference: %d/%d done (%d valid labels, last=%.2f s)",
-                    i + 1, total, n_valid, elapsed_s,
+                    i + 1,
+                    total,
+                    n_valid,
+                    elapsed_s,
                 )
 
     log.info(
         "Teacher inference complete: %d new prompts processed, cache at %s",
-        total, cache_path,
+        total,
+        cache_path,
     )
     return updated_cache
 
@@ -942,10 +954,9 @@ def _parse_teacher_output(raw: str) -> tuple[int, str]:
         marker = f"<|channel|>{channel_name}<|message|>"
         pos = raw_lower.rfind(marker.lower())
         if pos != -1:
-            verdict_text = raw[pos + len(marker):].strip()
+            verdict_text = raw[pos + len(marker) :].strip()
             first_word = (
-                verdict_text.split()[0].lower().rstrip(".,;:")
-                if verdict_text.split() else ""
+                verdict_text.split()[0].lower().rstrip(".,;:") if verdict_text.split() else ""
             )
             if first_word.startswith("unsafe"):
                 return 1, f"{channel_name}_channel_unsafe: {raw[:120]}"

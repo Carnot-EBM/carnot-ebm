@@ -62,7 +62,9 @@ class EBRMEnergy:
 
         rng = np.random.default_rng(42)
         # Xavier-style initialisation: scale = sqrt(2 / fan_in)
-        self.W1 = rng.normal(0, np.sqrt(2.0 / input_dim), (input_dim, hidden_dim)).astype(np.float32)
+        self.W1 = rng.normal(0, np.sqrt(2.0 / input_dim), (input_dim, hidden_dim)).astype(
+            np.float32
+        )
         self.b1 = np.zeros(hidden_dim, dtype=np.float32)
         self.W2 = rng.normal(0, np.sqrt(2.0 / hidden_dim), (hidden_dim, 1)).astype(np.float32)
         self.b2 = np.zeros(1, dtype=np.float32)
@@ -89,7 +91,7 @@ class EBRMEnergy:
         """
         x = np.concatenate([response_features, [reward_scalar]], axis=0).astype(np.float32)
         h = np.maximum(0.0, x @ self.W1 + self.b1)  # ReLU hidden layer
-        e = (h @ self.W2 + self.b2)[0]               # scalar output
+        e = (h @ self.W2 + self.b2)[0]  # scalar output
         return float(e)
 
     def log_prob(self, response_features: np.ndarray, reward_scalar: float) -> float:
@@ -113,7 +115,9 @@ class EBRMEnergy:
             Unnormalized log-probability (float).  Higher = model thinks this is correct.
         """
         if self.vectorizer is None:
-            raise RuntimeError("EBRMEnergy.score() called before training. Call EBRMTrainer.train() first.")
+            raise RuntimeError(
+                "EBRMEnergy.score() called before training. Call EBRMTrainer.train() first."
+            )
         features = self.vectorizer.transform([response_text]).toarray()[0].astype(np.float32)
         # Truncate or pad to feature_dim (TF-IDF vocab may differ from feature_dim)
         features = _resize_vector(features, self.feature_dim)
@@ -188,7 +192,7 @@ class EBRMTrainer:
             pos_sample = rng.choice(pos_idx, size=n_pairs, replace=False)
             neg_sample = rng.choice(neg_idx, size=n_pairs, replace=False)
 
-            for pi, ni in zip(pos_sample, neg_sample):
+            for pi, ni in zip(pos_sample, neg_sample, strict=False):
                 x_pos = X[pi]
                 x_neg = X[ni]
 
@@ -220,23 +224,23 @@ class EBRMTrainer:
         Gradients are computed analytically through the 2-layer MLP.
         """
         x = np.concatenate([features, [reward]], axis=0).astype(np.float32)
-        h_pre = x @ self.model.W1 + self.model.b1   # (hidden_dim,)
-        h = np.maximum(0.0, h_pre)                   # ReLU
+        h_pre = x @ self.model.W1 + self.model.b1  # (hidden_dim,)
+        h = np.maximum(0.0, h_pre)  # ReLU
         # e = h @ W2 + b2  (scalar)
 
         # Backprop: d(loss) = direction * 1.0
         d_e = direction * 1.0
 
         # Gradients for W2, b2
-        dW2 = np.outer(h, [d_e])          # (hidden_dim, 1)
+        dW2 = np.outer(h, [d_e])  # (hidden_dim, 1)
         db2 = np.array([d_e])
 
         # Backprop through ReLU
-        d_h = (self.model.W2 @ [d_e])     # (hidden_dim,) — chain rule
+        d_h = self.model.W2 @ [d_e]  # (hidden_dim,) — chain rule
         d_h_pre = d_h * (h_pre > 0).astype(np.float32)  # ReLU mask
 
         # Gradients for W1, b1
-        dW1 = np.outer(x, d_h_pre)        # (input_dim, hidden_dim)
+        dW1 = np.outer(x, d_h_pre)  # (input_dim, hidden_dim)
         db1 = d_h_pre
 
         # SGD update (direction already baked into d_e sign)

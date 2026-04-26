@@ -526,9 +526,7 @@ class TestBuildResultsPayload:
     def test_model_name_passed_through(self) -> None:
         """REQ-VERIFY-001: model_name kwarg appears in payload."""
         metrics, results = self._metrics_and_results()
-        payload = build_results_payload(
-            metrics, results, model_name="google/gemma-4-E4B-it"
-        )
+        payload = build_results_payload(metrics, results, model_name="google/gemma-4-E4B-it")
         assert payload["model_name"] == "google/gemma-4-E4B-it"
 
 
@@ -542,9 +540,7 @@ class TestRunExp274:
 
     def test_returns_dict_with_required_keys(self) -> None:
         """REQ-VERIFY-001: run_exp274 returns a payload dict with expected keys."""
-        stub = _StubExtractor(
-            [[_make_verified_constraint()] for _ in range(20)]
-        )
+        stub = _StubExtractor([[_make_verified_constraint()] for _ in range(20)])
         payload = run_exp274(use_live_model=False, extractor=stub)
         assert "coverage_pct" in payload
         assert "accuracy_pct" in payload
@@ -558,9 +554,7 @@ class TestRunExp274:
 
     def test_all_covered_when_stub_returns_constraints(self) -> None:
         """REQ-VERIFY-002: coverage_pct=100 when stub always returns ≥1 constraint."""
-        stub = _StubExtractor(
-            [[_make_verified_constraint()] for _ in range(20)]
-        )
+        stub = _StubExtractor([[_make_verified_constraint()] for _ in range(20)])
         payload = run_exp274(use_live_model=False, extractor=stub)
         assert payload["coverage_pct"] == 100.0
         assert payload["coverage_target_met"] is True
@@ -636,9 +630,7 @@ class TestGenerateResponsesWithGemma4:
         assert all(isinstance(r, str) for r in responses)
         assert "Response to: What is the capital of France?" in responses[0]
 
-    def test_generate_responses_respects_model_name(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_generate_responses_respects_model_name(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-VERIFY-001: generate_responses_with_gemma4 passes model_name to loader."""
         loaded_model_name = None
 
@@ -656,9 +648,7 @@ class TestGenerateResponsesWithGemma4:
             lambda m, t, q, **kw: "response",
         )
 
-        generate_responses_with_gemma4(
-            ["Q1"], model_name="custom/model-id"
-        )
+        generate_responses_with_gemma4(["Q1"], model_name="custom/model-id")
         assert loaded_model_name == "custom/model-id"
 
     def test_generate_responses_respects_max_new_tokens(
@@ -695,12 +685,12 @@ class TestGemma4ResponsesContainExtractableClaims:
     @pytest.mark.parametrize(
         "response_idx,expected_substring",
         [
-            (0, "paris"),       # "Paris is the capital of France."
-            (1, "tokyo"),       # "Tokyo is the capital of Japan."
-            (2, "brasília"),    # "The capital of Brazil is Brasília."
-            (3, "canberra"),    # "The capital of Australia is Canberra."
-            (4, "ottawa"),      # "The capital of Canada is Ottawa."
-            (5, "new delhi"),   # "New Delhi is the capital of India."
+            (0, "paris"),  # "Paris is the capital of France."
+            (1, "tokyo"),  # "Tokyo is the capital of Japan."
+            (2, "brasília"),  # "The capital of Brazil is Brasília."
+            (3, "canberra"),  # "The capital of Australia is Canberra."
+            (4, "ottawa"),  # "The capital of Canada is Ottawa."
+            (5, "new delhi"),  # "New Delhi is the capital of India."
         ],
     )
     def test_geography_responses_contain_capital_claim(
@@ -790,9 +780,7 @@ class TestLiveKBExtractorOnRepresentativeResponses:
         extractor = RealExtractor()
         text = f"{QUESTION_BANK[0]['question']} {GEMMA4_RESPONSES[0]}"
         constraints = extractor.extract(text, domain="factual_kb")
-        capital_constraints = [
-            c for c in constraints if c.metadata.get("relation") == "capital"
-        ]
+        capital_constraints = [c for c in constraints if c.metadata.get("relation") == "capital"]
         assert len(capital_constraints) >= 1
         assert capital_constraints[0].metadata["kb_result"] == "verified"
 
@@ -804,9 +792,7 @@ class TestLiveKBExtractorOnRepresentativeResponses:
         # "Au is the chemical symbol for gold."
         text = f"{QUESTION_BANK[10]['question']} {GEMMA4_RESPONSES[10]}"
         constraints = extractor.extract(text, domain="factual_kb")
-        symbol_constraints = [
-            c for c in constraints if c.metadata.get("relation") == "symbol"
-        ]
+        symbol_constraints = [c for c in constraints if c.metadata.get("relation") == "symbol"]
         assert len(symbol_constraints) >= 1
 
     def test_carbon_atomic_number_response_yields_constraint(self) -> None:
@@ -816,9 +802,7 @@ class TestLiveKBExtractorOnRepresentativeResponses:
         extractor = RealExtractor()
         text = f"{QUESTION_BANK[11]['question']} {GEMMA4_RESPONSES[11]}"
         constraints = extractor.extract(text, domain="factual_kb")
-        an_constraints = [
-            c for c in constraints if c.metadata.get("relation") == "atomic_number"
-        ]
+        an_constraints = [c for c in constraints if c.metadata.get("relation") == "atomic_number"]
         assert len(an_constraints) >= 1
 
     def test_newton_birth_year_response_yields_birth_year_constraint(self) -> None:
@@ -828,9 +812,7 @@ class TestLiveKBExtractorOnRepresentativeResponses:
         extractor = RealExtractor()
         text = f"{QUESTION_BANK[18]['question']} {GEMMA4_RESPONSES[18]}"
         constraints = extractor.extract(text, domain="factual_kb")
-        by_constraints = [
-            c for c in constraints if c.metadata.get("relation") == "birth_year"
-        ]
+        by_constraints = [c for c in constraints if c.metadata.get("relation") == "birth_year"]
         assert len(by_constraints) >= 1
 
     def test_full_run_meets_coverage_target(self) -> None:

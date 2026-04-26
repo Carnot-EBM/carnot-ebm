@@ -92,6 +92,7 @@ TEST_FRACTION = 0.2
 # Data loading
 # ---------------------------------------------------------------------------
 
+
 def _load_exp340_pairs() -> list[tuple[str, str, str]] | None:
     """Try to load (correct_response, incorrect_response, question) pairs from Exp 340.
 
@@ -184,9 +185,7 @@ def _generate_synthetic_pairs(n: int = 100) -> list[tuple[str, str, str]]:
         delta = rng.randint(1, 9)
         question = f"What is {a} times {b}?"
         correct = (
-            f"Step 1: {a} times {b}. "
-            f"Step 2: Multiply to get {answer}. "
-            f"The answer is {answer}."
+            f"Step 1: {a} times {b}. Step 2: Multiply to get {answer}. The answer is {answer}."
         )
         incorrect = (
             f"Step 1: Trying {a} times {b}. "
@@ -200,6 +199,7 @@ def _generate_synthetic_pairs(n: int = 100) -> list[tuple[str, str, str]]:
 # ---------------------------------------------------------------------------
 # AUC-ROC computation
 # ---------------------------------------------------------------------------
+
 
 def _compute_auc_roc(
     model: EORMModel,
@@ -232,9 +232,7 @@ def _compute_auc_roc(
     n_correct = 0
     n_tie = 0
     for correct_resp, incorrect_resp, question in test_pairs:
-        e_correct = model.energy(
-            CoTEnergyInput(question_text=question, response_text=correct_resp)
-        )
+        e_correct = model.energy(CoTEnergyInput(question_text=question, response_text=correct_resp))
         e_incorrect = model.energy(
             CoTEnergyInput(question_text=question, response_text=incorrect_resp)
         )
@@ -250,6 +248,7 @@ def _compute_auc_roc(
 # ---------------------------------------------------------------------------
 # Experiment entry point
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Experiment 346: EORM training and evaluation."""
@@ -278,9 +277,7 @@ def main() -> None:
     test_pairs = all_pairs[:n_test]
     train_pairs = all_pairs[n_test:]
 
-    _log.info(
-        "Split: %d train pairs, %d test pairs.", len(train_pairs), len(test_pairs)
-    )
+    _log.info("Split: %d train pairs, %d test pairs.", len(train_pairs), len(test_pairs))
 
     # ------------------------------------------------------------------ #
     # 2. Initialise model and trainer                                     #
@@ -295,7 +292,10 @@ def main() -> None:
 
     _log.info(
         "Initialising EORMModel: embed_dim=%d, n_layers=%d, n_heads=%d, epochs=%d",
-        embed_dim, n_layers, n_heads, n_epochs,
+        embed_dim,
+        n_layers,
+        n_heads,
+        n_epochs,
     )
 
     model = EORMModel(
@@ -393,7 +393,10 @@ def main() -> None:
     _log.info("Wrote artifact to %s", output_path)
     _log.info(
         "Done — AUC-ROC=%.4f  n_params=%d  n_train=%d  n_test=%d",
-        auc_roc, n_params, len(train_pairs), len(test_pairs),
+        auc_roc,
+        n_params,
+        len(train_pairs),
+        len(test_pairs),
     )
 
 

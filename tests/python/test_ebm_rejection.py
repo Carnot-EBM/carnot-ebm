@@ -148,8 +148,11 @@ def test_score_activations_correct_vs_random() -> None:
 
     # Quick train
     def get_p(m: GibbsModel) -> dict:
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m: GibbsModel, p: dict) -> None:
         m.layers = list(p["layers"])
@@ -270,6 +273,7 @@ def test_exports_from_inference_package() -> None:
         ebm_rejection_sample,
         score_activations_with_ebm,
     )
+
     assert EBMCandidateScore is not None
     assert EBMRejectionConfig is not None
     assert EBMRejectionResult is not None

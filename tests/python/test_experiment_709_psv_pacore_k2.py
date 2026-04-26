@@ -440,9 +440,18 @@ def test_main_produces_deliverable_with_synthetic_inference() -> None:
     env["CARNOT_FORCE_LIVE"] = "1"
 
     with (
-        patch("scripts.experiment_709_psv_pacore_k2._make_live_inference_fn", return_value=_synthetic_inference_fn),
-        patch("scripts.experiment_709_psv_pacore_k2._make_verify_fn", return_value=_synthetic_verify_fn),
-        patch("scripts.experiment_709_psv_pacore_k2._detect_gpu_mode", return_value=("sequential_fallback", "cpu", "cpu")),
+        patch(
+            "scripts.experiment_709_psv_pacore_k2._make_live_inference_fn",
+            return_value=_synthetic_inference_fn,
+        ),
+        patch(
+            "scripts.experiment_709_psv_pacore_k2._make_verify_fn",
+            return_value=_synthetic_verify_fn,
+        ),
+        patch(
+            "scripts.experiment_709_psv_pacore_k2._detect_gpu_mode",
+            return_value=("sequential_fallback", "cpu", "cpu"),
+        ),
         patch("scripts.experiment_709_psv_pacore_k2.apply_env_autofix"),
         patch(
             "scripts.experiment_709_psv_pacore_k2.ExperimentTimeoutWatchdog",

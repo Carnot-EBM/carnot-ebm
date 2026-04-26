@@ -115,7 +115,7 @@ class TestVRAMBudgetLedger:
         forecast_cpu = ledger_cpu.check_feasibility("exp502")
 
         assert forecast_gpu.is_feasible is False  # 18 > 15
-        assert forecast_cpu.is_feasible is True   # 18 <= 24
+        assert forecast_cpu.is_feasible is True  # 18 <= 24
 
     def test_check_all_returns_all_experiments(self):
         ledger = VRAMBudgetLedger(conductor_vram_gb=9.0, gpu_total_gb=24.0)
@@ -131,7 +131,7 @@ class TestVRAMBudgetLedger:
     def test_check_all_mixed_feasibility(self):
         ledger = VRAMBudgetLedger(conductor_vram_gb=9.0, gpu_total_gb=24.0)
         ledger.add_experiment("exp502", required_gb=18.0)  # not feasible (15 avail)
-        ledger.add_experiment("exp507", required_gb=9.0)   # feasible
+        ledger.add_experiment("exp507", required_gb=9.0)  # feasible
         forecasts = ledger.check_all()
         assert forecasts[0].is_feasible is False
         assert forecasts[1].is_feasible is True

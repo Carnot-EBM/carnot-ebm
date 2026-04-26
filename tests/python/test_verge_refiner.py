@@ -245,9 +245,7 @@ class TestVergeRefiner:
         def _extract(q, r, d=None):  # noqa: ANN001
             call_count["n"] += 1
             if call_count["n"] == 1:
-                ext.last_z3_result = Z3Result(
-                    sat_status="unsat", z3_code=code, runtime_ms=5.0
-                )
+                ext.last_z3_result = Z3Result(sat_status="unsat", z3_code=code, runtime_ms=5.0)
             else:
                 ext.last_z3_result = Z3Result(sat_status="sat", z3_code=code, runtime_ms=2.0)
             return []

@@ -128,9 +128,7 @@ def _wrong_response(prob: dict, rng: np.random.Generator) -> str:
     suspicious_step = rng.choice(patterns)  # type: ignore[arg-type]
 
     return (
-        f"Step 1: Read the problem: {prob['q']}\n"
-        f"{suspicious_step}\n"
-        f"Step 3: The answer is {wrong}."
+        f"Step 1: Read the problem: {prob['q']}\n{suspicious_step}\nStep 3: The answer is {wrong}."
     )
 
 
@@ -147,6 +145,7 @@ def _baseline_score(response: str) -> float:
     This is the "direct-scoring PRM" baseline from arXiv 2503.21295.
     """
     import re
+
     flags = [
         "= 0" in response and len(response) > 40,
         response.count("=") > 4,
@@ -222,8 +221,10 @@ def main() -> None:
     with open(out_path, "w") as f:
         json.dump(artifact, f, indent=2)
 
-    print(f"[exp924] baseline_auc={baseline_auc:.4f}  rprm_auc={rprm_auc:.4f}  "
-          f"delta={rprm_auc - baseline_auc:+.4f}  verdict={honest_verdict}")
+    print(
+        f"[exp924] baseline_auc={baseline_auc:.4f}  rprm_auc={rprm_auc:.4f}  "
+        f"delta={rprm_auc - baseline_auc:+.4f}  verdict={honest_verdict}"
+    )
     print(f"[exp924] duration={duration:.2f}s  deliverable={DELIVERABLE}")
 
     tmpl.assert_deliverable_written()

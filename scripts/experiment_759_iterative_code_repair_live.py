@@ -33,6 +33,7 @@
 Spec: REQ-REPAIR-020, REQ-REPAIR-021, SCENARIO-REPAIR-040, SCENARIO-REPAIR-041,
       REQ-CODE-031, REQ-CODE-032
 """
+
 from __future__ import annotations
 
 import json
@@ -248,7 +249,7 @@ def _build_qwen_caller(model_name: str = "Qwen/Qwen3.5-0.8B", gpu_id: int = 0):
                 do_sample=True,
                 pad_token_id=tokenizer.eos_token_id,
             )
-        generated_ids = output[0][inputs["input_ids"].shape[1]:]
+        generated_ids = output[0][inputs["input_ids"].shape[1] :]
         return tokenizer.decode(generated_ids, skip_special_tokens=True)
 
     return _call
@@ -271,7 +272,6 @@ def main() -> None:
     tmpl.check_exclusion_manifest()
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=90, result_path=DELIVERABLE):
-
         # Guard: CARNOT_FORCE_LIVE=1 required — REQ-REPAIR-021
         if not FORCE_LIVE:
             artifact = tmpl.build_result(
@@ -339,6 +339,7 @@ def main() -> None:
         # SIGALRM for timeouts, which only works in the main thread.  Threading through
         # BatchedInferenceRunner raises ValueError("signal only works in main thread").
         import time as _time  # noqa: PLC0415
+
         for i, problem_dict in enumerate(problems_to_run):
             t0 = _time.perf_counter()
             try:
@@ -349,8 +350,12 @@ def main() -> None:
                 )
             except Exception:
                 result = TwoRoundResult(
-                    round0_pass=False, round1_pass=False, round2_pass=False,
-                    round0_code="", round1_code="", round2_code="",
+                    round0_pass=False,
+                    round1_pass=False,
+                    round2_pass=False,
+                    round0_code="",
+                    round1_code="",
+                    round2_code="",
                     error_types=["other"],
                 )
             elapsed = round(_time.perf_counter() - t0, 3)
@@ -365,9 +370,7 @@ def main() -> None:
 
         pass_at_1_round1, pass_at_1_round2 = compute_pass_at_1(all_results)
         signed_improvement = compute_signed_improvement(pass_at_1_round1, pass_at_1_round2)
-        n_repaired = sum(
-            1 for r in all_results if not r.round0_pass and r.round1_pass
-        )
+        n_repaired = sum(1 for r in all_results if not r.round0_pass and r.round1_pass)
         verdict = classify_honest_verdict(signed_improvement, "live_gpu")
 
         artifact = tmpl.build_result(

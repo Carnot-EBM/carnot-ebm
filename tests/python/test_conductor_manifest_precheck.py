@@ -54,6 +54,7 @@ MODULE = _load_module()
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_manifest(tmp_path: Path, excluded_ids: list[int]) -> Path:
     """Write a minimal exclusion manifest JSON to tmp_path and return its path."""
     manifest_path = tmp_path / "test_manifest.json"
@@ -74,6 +75,7 @@ def _make_manifest(tmp_path: Path, excluded_ids: list[int]) -> Path:
 # ---------------------------------------------------------------------------
 # Tests for run_precheck()
 # ---------------------------------------------------------------------------
+
 
 class TestRunPrecheck:
     """REQ-INFRA-085: run_precheck() returns (False, [id]) when id is excluded."""
@@ -152,6 +154,7 @@ class TestRunPrecheck:
 # Tests for write_sentinel()
 # ---------------------------------------------------------------------------
 
+
 class TestWriteSentinel:
     """REQ-INFRA-085: write_sentinel() creates the sentinel file with a timestamp."""
 
@@ -192,6 +195,7 @@ class TestWriteSentinel:
 # ---------------------------------------------------------------------------
 # Tests for main()
 # ---------------------------------------------------------------------------
+
 
 class TestMain:
     """Tests for the CLI entry point main()."""

@@ -38,8 +38,10 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Callable, Optional
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Result types
@@ -106,7 +108,7 @@ class RPRMStepReward:
 
     def __init__(
         self,
-        llm_runner: Optional[Callable[[str, int], str]] = None,
+        llm_runner: Callable[[str, int], str] | None = None,
         n_reasoning_tokens: int = 50,
     ) -> None:
         self.llm = llm_runner
@@ -116,9 +118,7 @@ class RPRMStepReward:
     # Public API
     # ------------------------------------------------------------------
 
-    def score_step_with_reasoning(
-        self, step: str, context: str
-    ) -> StepReasoningResult:
+    def score_step_with_reasoning(self, step: str, context: str) -> StepReasoningResult:
         """Score a single reasoning step, generating an explanation first.
 
         Args:
@@ -154,9 +154,7 @@ class RPRMStepReward:
                 repair_hints=[],
             )
 
-        step_results = [
-            self.score_step_with_reasoning(s, question) for s in steps
-        ]
+        step_results = [self.score_step_with_reasoning(s, question) for s in steps]
         overall_score = max(r.step_score for r in step_results)
         flagged = [r for r in step_results if r.step_score > 0.5]
 
@@ -179,11 +177,13 @@ class RPRMStepReward:
         - More than two equals signs (often indicates contradictory rewrites)
         - Division-by-zero pattern: a literal "0" on the left of an equals
         """
-        suspicious = any([
-            "= 0" in step and len(step) > 20,
-            step.count("=") > 2,
-            bool(re.search(r"\b0\b.*=", step)),
-        ])
+        suspicious = any(
+            [
+                "= 0" in step and len(step) > 20,
+                step.count("=") > 2,
+                bool(re.search(r"\b0\b.*=", step)),
+            ]
+        )
         if suspicious:
             reasoning = "heuristic: suspicious pattern detected"
             score = 0.7

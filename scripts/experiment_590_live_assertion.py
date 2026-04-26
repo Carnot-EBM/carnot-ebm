@@ -42,6 +42,7 @@ def verify_module_importable() -> bool:
     """Return True iff live_assertion.py is importable from carnot.pipeline."""
     try:
         import carnot.pipeline.live_assertion  # noqa: F401, PLC0415
+
         return True
     except ImportError:
         return False
@@ -53,11 +54,13 @@ def verify_functions_importable() -> tuple[bool, bool]:
     assert_ci_ok = False
     try:
         from carnot.pipeline.live_assertion import assert_live_gpu_available  # noqa: PLC0415
+
         assert_live_ok = callable(assert_live_gpu_available)
     except (ImportError, AttributeError):
         pass
     try:
         from carnot.pipeline.live_assertion import assert_live_or_ci_skip  # noqa: PLC0415
+
         assert_ci_ok = callable(assert_live_or_ci_skip)
     except (ImportError, AttributeError):
         pass
@@ -136,15 +139,17 @@ def run_experiment() -> dict:
     raises_ok = test_raises_when_force_live_not_set()
     export_live_ok, export_ci_ok = verify_pipeline_exports()
 
-    all_checks_passed = all([
-        module_created,
-        assert_live_ok,
-        assert_ci_ok,
-        no_raise_ok,
-        raises_ok,
-        export_live_ok,
-        export_ci_ok,
-    ])
+    all_checks_passed = all(
+        [
+            module_created,
+            assert_live_ok,
+            assert_ci_ok,
+            no_raise_ok,
+            raises_ok,
+            export_live_ok,
+            export_ci_ok,
+        ]
+    )
 
     return {
         "schema": "carnot.live_assertion.v1",
@@ -157,7 +162,9 @@ def run_experiment() -> dict:
         "raises_when_force_live_0": raises_ok,
         "all_checks_passed": all_checks_passed,
         "retro_062_prevention_mechanism": "import_time_assertion_raises_before_model_load",
-        "honest_verdict": "assertion_module_ready" if all_checks_passed else "assertion_module_checks_failed",
+        "honest_verdict": "assertion_module_ready"
+        if all_checks_passed
+        else "assertion_module_checks_failed",
     }
 
 
@@ -173,7 +180,9 @@ def main() -> None:
     )
     tmpl.setup()
 
-    with ExperimentTimeoutWatchdog(590, timeout_minutes=10, result_path=str(_REPO_ROOT / _RESULT_PATH)):
+    with ExperimentTimeoutWatchdog(
+        590, timeout_minutes=10, result_path=str(_REPO_ROOT / _RESULT_PATH)
+    ):
         payload = run_experiment()
 
     artifact = tmpl.build_result(payload, status="success")

@@ -212,7 +212,9 @@ def _baseline_steps_to_converge(n: int, J: jnp.ndarray, biases: jnp.ndarray, see
 # ---------------------------------------------------------------------------
 
 
-def _inertia_steps_to_converge(n: int, J: jnp.ndarray, biases: jnp.ndarray, seed: int, alpha: float) -> int:
+def _inertia_steps_to_converge(
+    n: int, J: jnp.ndarray, biases: jnp.ndarray, seed: int, alpha: float
+) -> int:
     """Run inertia Ising sampler and return steps to converge.
 
     Args:
@@ -381,16 +383,20 @@ def main() -> None:
         baseline_steps_all.append(float(b_steps))
         inertia_steps_all.append(float(i_steps))
 
-        per_size_results.append({
-            "n_spins": n,
-            "baseline_steps": b_steps,
-            "inertia_steps_alpha03": i_steps,
-            "convergence_reduction_pct": round(reduction, 4),
-        })
+        per_size_results.append(
+            {
+                "n_spins": n,
+                "baseline_steps": b_steps,
+                "inertia_steps_alpha03": i_steps,
+                "convergence_reduction_pct": round(reduction, 4),
+            }
+        )
 
     baseline_steps_mean = float(np.mean(baseline_steps_all))
     inertia_steps_mean = float(np.mean(inertia_steps_all))
-    convergence_reduction_pct = (baseline_steps_mean - inertia_steps_mean) / max(baseline_steps_mean, 1.0)
+    convergence_reduction_pct = (baseline_steps_mean - inertia_steps_mean) / max(
+        baseline_steps_mean, 1.0
+    )
 
     # Alpha sweep on n=100 (moderate size, representative)
     print("\n=== Alpha sweep (n=100) ===")
@@ -410,15 +416,15 @@ def main() -> None:
     print(f"\nBest alpha: {best_alpha} ({best_alpha_steps} steps)")
 
     # Write v3 RTL spec
-    _write_v3_rtl_spec(best_alpha, baseline_steps_mean, inertia_steps_mean, convergence_reduction_pct)
+    _write_v3_rtl_spec(
+        best_alpha, baseline_steps_mean, inertia_steps_mean, convergence_reduction_pct
+    )
     print(f"\nWrote v3 RTL spec: {_V3_RTL_SPEC}")
 
     # Honest verdict
     inertia_faster = convergence_reduction_pct >= 0.20
     honest_verdict = (
-        "inertia_faster_v3_path_clear"
-        if inertia_faster
-        else "inertia_comparable_no_clear_win"
+        "inertia_faster_v3_path_clear" if inertia_faster else "inertia_comparable_no_clear_win"
     )
 
     print(f"\nConvergence reduction: {convergence_reduction_pct * 100:.1f}%")

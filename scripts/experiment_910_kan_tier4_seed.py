@@ -59,15 +59,15 @@ EXP_ID = 910
 TITLE = "KAN Tier 4 Seed — AutoKnots Adaptive Grid Refinement"
 DELIVERABLE = "results/experiment_910_kan_tier4_seed.json"
 
-INPUT_DIM = 16       # Binary feature vector: digit flags, sign flags, operator flags
-NUM_KNOTS = 8        # Starting knot count — mid-range so both add and remove can fire
-N_SAMPLES = 50       # 25 correct + 25 wrong (GSM8K verification task)
+INPUT_DIM = 16  # Binary feature vector: digit flags, sign flags, operator flags
+NUM_KNOTS = 8  # Starting knot count — mid-range so both add and remove can fire
+N_SAMPLES = 50  # 25 correct + 25 wrong (GSM8K verification task)
 SEED = 42
 REFINEMENT_ROUNDS = 3
 
 # Thresholds tuned for binary {0,1} inputs where expected magnitudes are 0–1.
-HIGH_THRESH = 0.45   # Above this → add knot (spline is active)
-LOW_THRESH = 0.05    # Below this → remove knot (spline is dormant)
+HIGH_THRESH = 0.45  # Above this → add knot (spline is active)
+LOW_THRESH = 0.05  # Below this → remove knot (spline is dormant)
 
 
 def _make_gsm8k_embeddings(
@@ -135,9 +135,7 @@ def _compute_auc(energies_correct: np.ndarray, energies_wrong: np.ndarray) -> fl
     return wins / max(pairs, 1)
 
 
-def _run_kan_eval(
-    kan: KANModel, correct_embs: np.ndarray, wrong_embs: np.ndarray
-) -> float:
+def _run_kan_eval(kan: KANModel, correct_embs: np.ndarray, wrong_embs: np.ndarray) -> float:
     """Evaluate KAN AUC on correct vs. wrong embeddings.
 
     Args:
@@ -150,14 +148,8 @@ def _run_kan_eval(
     """
     import jax.numpy as jnp
 
-    e_correct = np.array([
-        float(kan.energy(jnp.array(x, dtype=jnp.float32)))
-        for x in correct_embs
-    ])
-    e_wrong = np.array([
-        float(kan.energy(jnp.array(x, dtype=jnp.float32)))
-        for x in wrong_embs
-    ])
+    e_correct = np.array([float(kan.energy(jnp.array(x, dtype=jnp.float32))) for x in correct_embs])
+    e_wrong = np.array([float(kan.energy(jnp.array(x, dtype=jnp.float32))) for x in wrong_embs])
     return _compute_auc(e_correct, e_wrong)
 
 
@@ -179,16 +171,14 @@ def main() -> None:
         input_dim=INPUT_DIM,
         num_knots=NUM_KNOTS,
         degree=3,
-        sparse=False,     # fully connected for a 16-dim model (120 edges)
+        sparse=False,  # fully connected for a 16-dim model (120 edges)
     )
     kan = KANModel(config, key=jrandom.PRNGKey(SEED))
 
     # -----------------------------------------------------------------------
     # Synthetic GSM8K embeddings
     # -----------------------------------------------------------------------
-    correct_embs, wrong_embs, full_batch = _make_gsm8k_embeddings(
-        N_SAMPLES, INPUT_DIM, SEED
-    )
+    correct_embs, wrong_embs, full_batch = _make_gsm8k_embeddings(N_SAMPLES, INPUT_DIM, SEED)
 
     # -----------------------------------------------------------------------
     # Baseline AUC (untrained KAN — random control points)

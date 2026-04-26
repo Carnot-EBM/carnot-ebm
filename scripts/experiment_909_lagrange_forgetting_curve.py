@@ -60,7 +60,7 @@ TITLE = "Lagrange Forgetting Curve — Weight Entropy and Tier 3 Rejection Rate"
 DELIVERABLE = "results/experiment_909_lagrange_forgetting_curve.json"
 
 N_STEPS = 100
-HIGH_VIOLATION_STEPS = 50   # steps 0-49: high violation rate
+HIGH_VIOLATION_STEPS = 50  # steps 0-49: high violation rate
 HIGH_VIOLATION_PROB = 0.7
 LOW_VIOLATION_PROB = 0.1
 SEED = 42
@@ -71,7 +71,7 @@ CHECKPOINT_INTERVAL = 10
 # Tier 3 rejection threshold: constraints with weight > this are "active rejectors"
 TIER3_WEIGHT_THRESHOLD = 1.5
 
-FORGETTING_LAMBDA = 0.05   # decay variant: exp(-0.05) per tick ≈ 0.951
+FORGETTING_LAMBDA = 0.05  # decay variant: exp(-0.05) per tick ≈ 0.951
 
 
 def _build_violation_sequence(n_steps: int, seed: int) -> list[bool]:
@@ -125,7 +125,9 @@ def _run_simulation(
                 max_w = max(weights)
                 mean_w = sum(weights) / len(weights)
                 # Tier 3 rejection rate: fraction of active constraints above threshold.
-                rejection_rate = sum(1 for w in weights if w > TIER3_WEIGHT_THRESHOLD) / len(weights)
+                rejection_rate = sum(1 for w in weights if w > TIER3_WEIGHT_THRESHOLD) / len(
+                    weights
+                )
             else:
                 # All constraints expired (possible at high lambda).
                 max_w = 0.0
@@ -134,14 +136,16 @@ def _run_simulation(
 
             entropy = updater.weight_entropy
 
-            checkpoints.append({
-                "step": step + 1,
-                "weight_entropy": round(entropy, 6),
-                "max_weight": round(max_w, 6),
-                "mean_weight": round(mean_w, 6),
-                "tier3_rejection_rate": round(rejection_rate, 6),
-                "n_active_constraints": updater.n_constraints,
-            })
+            checkpoints.append(
+                {
+                    "step": step + 1,
+                    "weight_entropy": round(entropy, 6),
+                    "max_weight": round(max_w, 6),
+                    "mean_weight": round(mean_w, 6),
+                    "tier3_rejection_rate": round(rejection_rate, 6),
+                    "n_active_constraints": updater.n_constraints,
+                }
+            )
 
     final_entropy = checkpoints[-1]["weight_entropy"] if checkpoints else 0.0
     final_rejection_rate = checkpoints[-1]["tier3_rejection_rate"] if checkpoints else 0.0

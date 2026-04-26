@@ -50,7 +50,7 @@ import jax.numpy as jnp
 import numpy as np
 import optax
 
-from carnot.models.privacy_filter_features import encode_privacy, N_PRIVACY_FEATURES
+from carnot.models.privacy_filter_features import N_PRIVACY_FEATURES, encode_privacy
 
 
 @dataclass
@@ -158,7 +158,7 @@ def _privacy_energy(
         vals = _bspline_eval_batch(x, ec_k, n_knots, degree)
         return jnp.sum(vals)
 
-    hidden = jax.vmap(layer1_unit)(edge_ctrl)          # (n_hidden,)
+    hidden = jax.vmap(layer1_unit)(edge_ctrl)  # (n_hidden,)
     hidden_norm = jnp.tanh(hidden / (n_features + 1e-8))  # (n_hidden,)
 
     energies = _bspline_eval_batch(hidden_norm, output_ctrl, n_knots, degree)
@@ -264,9 +264,7 @@ class PrivacyFilterEnergyChecker:
         self._edge_ctrl = jnp.array(
             rng.normal(0, 0.01, (n_hidden, n_features, n_ctrl)), dtype=jnp.float32
         )
-        self._output_ctrl = jnp.array(
-            rng.normal(0, 0.01, (n_hidden, n_ctrl)), dtype=jnp.float32
-        )
+        self._output_ctrl = jnp.array(rng.normal(0, 0.01, (n_hidden, n_ctrl)), dtype=jnp.float32)
 
     def n_params(self) -> int:
         """Return total parameter count (edge + output control points)."""
@@ -362,8 +360,7 @@ class PrivacyFilterEnergyChecker:
 
             def single_energy(features):
                 return _privacy_energy(
-                    features, ec, oc,
-                    self._N_KNOTS, self._DEGREE, self.n_features, self.n_hidden
+                    features, ec, oc, self._N_KNOTS, self._DEGREE, self.n_features, self.n_hidden
                 )
 
             benign_energies = jax.vmap(single_energy)(benign_batch)
@@ -450,7 +447,7 @@ class PrivacyFilterEnergyChecker:
         tmp.rename(path)
 
     @classmethod
-    def load(cls, path: Path | str) -> "PrivacyFilterEnergyChecker":
+    def load(cls, path: Path | str) -> PrivacyFilterEnergyChecker:
         """Load model weights from a JSON file saved by save().
 
         Args:

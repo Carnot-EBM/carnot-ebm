@@ -214,10 +214,7 @@ def main() -> None:
         r_defer = _test_defer_on_vram_exhausted()
         r_template = _test_template_calls_gate()
 
-        all_passed = all(
-            r["passed"]
-            for r in [r_cpu, r_sufficient, r_zombie, r_defer, r_template]
-        )
+        all_passed = all(r["passed"] for r in [r_cpu, r_sufficient, r_zombie, r_defer, r_template])
 
         artifact = tmpl.build_result(
             {

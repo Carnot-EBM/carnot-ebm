@@ -46,13 +46,11 @@ ARITHMETIC_WRONG = [
 ]
 
 SUBTRACTION_CORRECT = [
-    ("Compute", f"{a} - {b} = {a - b}")
-    for a, b in [(10, 3), (100, 50), (7, 7), (20, 5)]
+    ("Compute", f"{a} - {b} = {a - b}") for a, b in [(10, 3), (100, 50), (7, 7), (20, 5)]
 ]
 
 SUBTRACTION_WRONG = [
-    ("Compute", f"{a} - {b} = {a - b + 1}")
-    for a, b in [(10, 3), (100, 50), (20, 5), (8, 2)]
+    ("Compute", f"{a} - {b} = {a - b + 1}") for a, b in [(10, 3), (100, 50), (20, 5), (8, 2)]
 ]
 
 # REQ-VERIFY-001: Logic patterns.
@@ -110,16 +108,16 @@ EDGE_CASE_INPUTS = [
 
 # Assemble all 100 inputs.
 ALL_INPUTS: list[tuple[str, str]] = []
-ALL_INPUTS.extend(ARITHMETIC_CORRECT)       # 6
-ALL_INPUTS.extend(ARITHMETIC_WRONG)         # 6
-ALL_INPUTS.extend(SUBTRACTION_CORRECT)      # 4
-ALL_INPUTS.extend(SUBTRACTION_WRONG)        # 4
-ALL_INPUTS.extend(LOGIC_INPUTS)             # 10
-ALL_INPUTS.extend(MIXED_INPUTS)             # 6
-ALL_INPUTS.extend(NO_CONSTRAINT_INPUTS)     # 5
-ALL_INPUTS.extend(MULTI_ARITHMETIC)         # 3
-ALL_INPUTS.extend(NEGATIVE_INPUTS)          # 3
-ALL_INPUTS.extend(EDGE_CASE_INPUTS)         # 2
+ALL_INPUTS.extend(ARITHMETIC_CORRECT)  # 6
+ALL_INPUTS.extend(ARITHMETIC_WRONG)  # 6
+ALL_INPUTS.extend(SUBTRACTION_CORRECT)  # 4
+ALL_INPUTS.extend(SUBTRACTION_WRONG)  # 4
+ALL_INPUTS.extend(LOGIC_INPUTS)  # 10
+ALL_INPUTS.extend(MIXED_INPUTS)  # 6
+ALL_INPUTS.extend(NO_CONSTRAINT_INPUTS)  # 5
+ALL_INPUTS.extend(MULTI_ARITHMETIC)  # 3
+ALL_INPUTS.extend(NEGATIVE_INPUTS)  # 3
+ALL_INPUTS.extend(EDGE_CASE_INPUTS)  # 2
 
 # Pad to exactly 100 with more arithmetic pairs.
 while len(ALL_INPUTS) < 100:

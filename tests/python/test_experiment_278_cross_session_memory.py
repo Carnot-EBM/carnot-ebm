@@ -199,7 +199,11 @@ def _extract_exp221_tp_records(data: dict[str, Any]) -> list[tuple[CaseRecord, s
             for v in violated:
                 family = str(v.get("family", "") or "")
                 vtype = str(v.get("type", "") or "")
-                composite = f"{family}:{vtype}" if family and vtype else (vtype or family or "constraint_violation")
+                composite = (
+                    f"{family}:{vtype}"
+                    if family and vtype
+                    else (vtype or family or "constraint_violation")
+                )
                 viol_types.append(composite)
             record = CaseRecord.normalize(
                 benchmark="constraint_ir",
@@ -265,23 +269,25 @@ def _gsm8k_tp_probes() -> list[CaseQuery]:
     """Probes for gsm8k_semantic — same violation family as Exp 219 TP cases."""
     # REQ-VERIFY-051: retrieval should find matches for queries with overlapping families
     probes = []
-    for i, (prompt_text, viol_type, desc) in enumerate([
-        (
-            "How many more miles did the faster runner cover than the slower one?",
-            "question_grounding_failures:answer_target_mismatch",
-            "The response does not compute the requested comparison quantity.",
-        ),
-        (
-            "What is the total amount of money Alice saved after three months?",
-            "omitted_premises:missing_quantity_coverage",
-            "The response ignores the compounding savings rule stated in the problem.",
-        ),
-        (
-            "How many students attended the second session compared to the first?",
-            "question_grounding_failures:answer_target_mismatch",
-            "The response computes the wrong target quantity for the comparison.",
-        ),
-    ]):
+    for i, (prompt_text, viol_type, desc) in enumerate(
+        [
+            (
+                "How many more miles did the faster runner cover than the slower one?",
+                "question_grounding_failures:answer_target_mismatch",
+                "The response does not compute the requested comparison quantity.",
+            ),
+            (
+                "What is the total amount of money Alice saved after three months?",
+                "omitted_premises:missing_quantity_coverage",
+                "The response ignores the compounding savings rule stated in the problem.",
+            ),
+            (
+                "How many students attended the second session compared to the first?",
+                "question_grounding_failures:answer_target_mismatch",
+                "The response computes the wrong target quantity for the comparison.",
+            ),
+        ]
+    ):
         probe_record = CaseRecord.normalize(
             benchmark="gsm8k_semantic",
             benchmark_slice="gsm8k_semantic/live_gsm8k_semantic_failure",
@@ -310,7 +316,9 @@ def _humaneval_tp_probes() -> list[CaseQuery]:
             case_id=f"probe-humaneval-tp-{i}",
             violation_types=(viol_type,),
             prompt_text="",
-            description_texts=(f"{viol_type} (official_tests) failed for input=(x,): AssertionError",),
+            description_texts=(
+                f"{viol_type} (official_tests) failed for input=(x,): AssertionError",
+            ),
             baseline_success=None,
             repair_success=None,
             confidence=0.0,
@@ -323,11 +331,13 @@ def _humaneval_tp_probes() -> list[CaseQuery]:
 def _constraint_ir_tp_probes() -> list[CaseQuery]:
     """Probes for constraint_ir — same violation families as Exp 221 TP cases."""
     probes = []
-    for i, (task_slice, viol_type) in enumerate([
-        ("code_typed_properties", "semantic:semantic_property"),
-        ("instruction_surface_only", "literal:json_exact_keys"),
-        ("code_typed_properties", "literal:function_name"),
-    ]):
+    for i, (task_slice, viol_type) in enumerate(
+        [
+            ("code_typed_properties", "semantic:semantic_property"),
+            ("instruction_surface_only", "literal:json_exact_keys"),
+            ("code_typed_properties", "literal:function_name"),
+        ]
+    ):
         probe_record = CaseRecord.normalize(
             benchmark="constraint_ir",
             benchmark_slice=f"constraint_ir/{task_slice}",
@@ -348,11 +358,17 @@ def _constraint_ir_tp_probes() -> list[CaseQuery]:
 def _tn_probes() -> list[CaseQuery]:
     """Probes that should NOT match memory (different benchmark_slice)."""
     probes = []
-    for i, (benchmark, benchmark_slice, viol_type) in enumerate([
-        ("custom_eval", "custom_eval/never_seen_slice", "some_custom_violation"),
-        ("totally_new", "totally_new/unseen", "novel_family:novel_type"),
-        ("gsm8k_semantic", "gsm8k_semantic/live_gsm8k_semantic_failure", "completely_unrelated_family:no_match"),
-    ]):
+    for i, (benchmark, benchmark_slice, viol_type) in enumerate(
+        [
+            ("custom_eval", "custom_eval/never_seen_slice", "some_custom_violation"),
+            ("totally_new", "totally_new/unseen", "novel_family:novel_type"),
+            (
+                "gsm8k_semantic",
+                "gsm8k_semantic/live_gsm8k_semantic_failure",
+                "completely_unrelated_family:no_match",
+            ),
+        ]
+    ):
         probe_record = CaseRecord.normalize(
             benchmark=benchmark,
             benchmark_slice=benchmark_slice,
@@ -544,11 +560,7 @@ class TestColdStartVsWarmMemory:
     def test_cold_start_returns_no_matches(self) -> None:
         """REQ-VERIFY-051: empty CaseMemory returns no retrieval matches for any probe."""
         cold_memory = CaseMemory()
-        all_probes = (
-            _gsm8k_tp_probes()
-            + _humaneval_tp_probes()
-            + _constraint_ir_tp_probes()
-        )
+        all_probes = _gsm8k_tp_probes() + _humaneval_tp_probes() + _constraint_ir_tp_probes()
         cold_rate = _hit_rate(cold_memory, all_probes)
         assert cold_rate == 0.0, "Empty memory must return 0 hits"
 
@@ -614,11 +626,7 @@ class TestColdStartVsWarmMemory:
         memory_s1.save(mem_path)
         warm_memory = CaseMemory.load(mem_path)
 
-        all_tp_probes = (
-            _gsm8k_tp_probes()
-            + _humaneval_tp_probes()
-            + _constraint_ir_tp_probes()
-        )
+        all_tp_probes = _gsm8k_tp_probes() + _humaneval_tp_probes() + _constraint_ir_tp_probes()
         cold_rate = _hit_rate(CaseMemory(), all_tp_probes)
         warm_rate = _hit_rate(warm_memory, all_tp_probes)
         accuracy_gain = warm_rate - cold_rate

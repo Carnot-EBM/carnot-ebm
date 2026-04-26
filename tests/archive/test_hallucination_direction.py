@@ -10,7 +10,6 @@ import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
 import pytest
-
 from carnot.embeddings.hallucination_direction import (
     HallucinationDirectionConfig,
     HallucinationDirectionConstraint,
@@ -18,7 +17,6 @@ from carnot.embeddings.hallucination_direction import (
     hallucination_energy,
 )
 from carnot.verify.constraint import ComposedEnergy
-
 
 # ---------------------------------------------------------------------------
 # Helpers: synthetic activation data
@@ -369,9 +367,7 @@ class TestHallucinationDirectionConstraint:
         energies = jax.vmap(c.energy)(xs)
         assert energies.shape == (3,)
         # First should be 2.0, second should be 0.0 (ReLU), third 0.5.
-        np.testing.assert_allclose(
-            np.array(energies), np.array([2.0, 0.0, 0.5]), atol=1e-5
-        )
+        np.testing.assert_allclose(np.array(energies), np.array([2.0, 0.0, 0.5]), atol=1e-5)
 
 
 # ---------------------------------------------------------------------------
@@ -386,8 +382,14 @@ class TestPackageExports:
         """REQ-INFER-014: Hallucination direction symbols accessible from carnot.embeddings."""
         from carnot.embeddings import (
             HallucinationDirectionConfig as PkgConfig,
+        )
+        from carnot.embeddings import (
             HallucinationDirectionConstraint as PkgConstraint,
+        )
+        from carnot.embeddings import (
             find_hallucination_direction as pkg_find,
+        )
+        from carnot.embeddings import (
             hallucination_energy as pkg_energy,
         )
 

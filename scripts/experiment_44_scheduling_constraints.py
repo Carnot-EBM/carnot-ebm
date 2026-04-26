@@ -77,6 +77,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 # 1. Scheduling problem definition
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class Event:
     """A single event (meeting, task) to be scheduled.
@@ -89,6 +90,7 @@ class Event:
         person: Which person attends. Used for "same person, two places"
             conflict detection. If None, no person constraint.
     """
+
     name: str
     duration: int = 1
     resource: str | None = None
@@ -108,6 +110,7 @@ class SchedulingProblem:
         available_slots: Dict mapping event index to set of allowed slot indices.
             If absent for an event, all slots are available.
     """
+
     events: list[Event]
     n_slots: int
     resources: list[str]
@@ -124,12 +127,14 @@ class ProposedSchedule:
         assignments: Dict mapping event index to the time slot it is
             assigned to. If an event is missing, it is unscheduled.
     """
+
     assignments: dict[int, int]
 
 
 # ---------------------------------------------------------------------------
 # 2. Ising encoding
 # ---------------------------------------------------------------------------
+
 
 def encode_scheduling_as_ising(
     problem: SchedulingProblem,
@@ -219,7 +224,7 @@ def encode_scheduling_as_ising(
 
     for _resource, e_indices in resource_events.items():
         for i, e1 in enumerate(e_indices):
-            for e2 in e_indices[i + 1:]:
+            for e2 in e_indices[i + 1 :]:
                 # These events share a resource. They must not overlap in time.
                 # For duration-1 events: same slot is forbidden.
                 dur1 = problem.events[e1].duration
@@ -256,7 +261,7 @@ def encode_scheduling_as_ising(
 
     for _person, e_indices in person_events.items():
         for i, e1 in enumerate(e_indices):
-            for e2 in e_indices[i + 1:]:
+            for e2 in e_indices[i + 1 :]:
                 dur1 = problem.events[e1].duration
                 dur2 = problem.events[e2].duration
                 for t1 in range(n_slots):
@@ -280,6 +285,7 @@ def encode_scheduling_as_ising(
 # ---------------------------------------------------------------------------
 # 3. Verification via ParallelIsingSampler
 # ---------------------------------------------------------------------------
+
 
 def verify_schedule(
     problem: SchedulingProblem,
@@ -388,9 +394,7 @@ def check_violations_direct(
     # Check: every event is assigned.
     for e_idx in range(n_events):
         if e_idx not in schedule.assignments:
-            violations.append(
-                f"Event '{problem.events[e_idx].name}' is not assigned a time slot"
-            )
+            violations.append(f"Event '{problem.events[e_idx].name}' is not assigned a time slot")
 
     # Check: assigned slot is within bounds.
     for e_idx, t in schedule.assignments.items():
@@ -454,7 +458,7 @@ def check_violations_direct(
     for person, entries in person_schedule.items():
         entries_sorted = sorted(entries)
         for i, (s1, e1, n1) in enumerate(entries_sorted):
-            for s2, e2, n2 in entries_sorted[i + 1:]:
+            for s2, e2, n2 in entries_sorted[i + 1 :]:
                 if s1 < e2 and s2 < e1:
                     violations.append(
                         f"Person '{person}' double-booked: "
@@ -467,6 +471,7 @@ def check_violations_direct(
 # ---------------------------------------------------------------------------
 # 4. Test scenarios
 # ---------------------------------------------------------------------------
+
 
 def get_test_scenarios() -> list[dict[str, Any]]:
     """Return 10 scheduling test scenarios: valid and invalid.
@@ -483,172 +488,192 @@ def get_test_scenarios() -> list[dict[str, Any]]:
     # === VALID SCHEDULES (should be feasible) ===
 
     # Scenario 1: 3 meetings, 3 rooms, no conflicts.
-    scenarios.append({
-        "name": "3 meetings, 3 rooms, no conflicts",
-        "description": "Each meeting in its own room at the same time -- no overlap.",
-        "problem": SchedulingProblem(
-            events=[
-                Event("StandupA", resource="Room1"),
-                Event("StandupB", resource="Room2"),
-                Event("StandupC", resource="Room3"),
-            ],
-            n_slots=4,
-            resources=["Room1", "Room2", "Room3"],
-        ),
-        "schedule": ProposedSchedule({0: 0, 1: 0, 2: 0}),
-        "expected_feasible": True,
-    })
+    scenarios.append(
+        {
+            "name": "3 meetings, 3 rooms, no conflicts",
+            "description": "Each meeting in its own room at the same time -- no overlap.",
+            "problem": SchedulingProblem(
+                events=[
+                    Event("StandupA", resource="Room1"),
+                    Event("StandupB", resource="Room2"),
+                    Event("StandupC", resource="Room3"),
+                ],
+                n_slots=4,
+                resources=["Room1", "Room2", "Room3"],
+            ),
+            "schedule": ProposedSchedule({0: 0, 1: 0, 2: 0}),
+            "expected_feasible": True,
+        }
+    )
 
     # Scenario 2: Sequential tasks with ordering constraints.
-    scenarios.append({
-        "name": "Sequential tasks, correct order",
-        "description": "A before B before C, and the schedule respects this.",
-        "problem": SchedulingProblem(
-            events=[
-                Event("Build", resource="CI"),
-                Event("Test", resource="CI"),
-                Event("Deploy", resource="CI"),
-            ],
-            n_slots=6,
-            resources=["CI"],
-            ordering=[(0, 1), (1, 2)],
-        ),
-        "schedule": ProposedSchedule({0: 0, 1: 1, 2: 2}),
-        "expected_feasible": True,
-    })
+    scenarios.append(
+        {
+            "name": "Sequential tasks, correct order",
+            "description": "A before B before C, and the schedule respects this.",
+            "problem": SchedulingProblem(
+                events=[
+                    Event("Build", resource="CI"),
+                    Event("Test", resource="CI"),
+                    Event("Deploy", resource="CI"),
+                ],
+                n_slots=6,
+                resources=["CI"],
+                ordering=[(0, 1), (1, 2)],
+            ),
+            "schedule": ProposedSchedule({0: 0, 1: 1, 2: 2}),
+            "expected_feasible": True,
+        }
+    )
 
     # Scenario 3: Multi-slot events, no overlap.
-    scenarios.append({
-        "name": "Multi-slot events, no overlap",
-        "description": "Two 2-hour meetings in the same room, back to back.",
-        "problem": SchedulingProblem(
-            events=[
-                Event("Workshop", duration=2, resource="BigRoom"),
-                Event("Review", duration=2, resource="BigRoom"),
-            ],
-            n_slots=6,
-            resources=["BigRoom"],
-        ),
-        "schedule": ProposedSchedule({0: 0, 1: 2}),
-        "expected_feasible": True,
-    })
+    scenarios.append(
+        {
+            "name": "Multi-slot events, no overlap",
+            "description": "Two 2-hour meetings in the same room, back to back.",
+            "problem": SchedulingProblem(
+                events=[
+                    Event("Workshop", duration=2, resource="BigRoom"),
+                    Event("Review", duration=2, resource="BigRoom"),
+                ],
+                n_slots=6,
+                resources=["BigRoom"],
+            ),
+            "schedule": ProposedSchedule({0: 0, 1: 2}),
+            "expected_feasible": True,
+        }
+    )
 
     # Scenario 4: Person attends two non-overlapping meetings.
-    scenarios.append({
-        "name": "Person in two meetings, no overlap",
-        "description": "Alice attends meetings at different times -- no conflict.",
-        "problem": SchedulingProblem(
-            events=[
-                Event("Morning sync", resource="Room1", person="Alice"),
-                Event("Afternoon review", resource="Room2", person="Alice"),
-            ],
-            n_slots=4,
-            resources=["Room1", "Room2"],
-        ),
-        "schedule": ProposedSchedule({0: 0, 1: 2}),
-        "expected_feasible": True,
-    })
+    scenarios.append(
+        {
+            "name": "Person in two meetings, no overlap",
+            "description": "Alice attends meetings at different times -- no conflict.",
+            "problem": SchedulingProblem(
+                events=[
+                    Event("Morning sync", resource="Room1", person="Alice"),
+                    Event("Afternoon review", resource="Room2", person="Alice"),
+                ],
+                n_slots=4,
+                resources=["Room1", "Room2"],
+            ),
+            "schedule": ProposedSchedule({0: 0, 1: 2}),
+            "expected_feasible": True,
+        }
+    )
 
     # === INVALID SCHEDULES (LLM-style errors) ===
 
     # Scenario 5: Double-booked room.
-    scenarios.append({
-        "name": "Double-booked room",
-        "description": "Two meetings in Room1 at the same time. Classic LLM error.",
-        "problem": SchedulingProblem(
-            events=[
-                Event("MeetingA", resource="Room1"),
-                Event("MeetingB", resource="Room1"),
-            ],
-            n_slots=4,
-            resources=["Room1"],
-        ),
-        "schedule": ProposedSchedule({0: 1, 1: 1}),
-        "expected_feasible": False,
-    })
+    scenarios.append(
+        {
+            "name": "Double-booked room",
+            "description": "Two meetings in Room1 at the same time. Classic LLM error.",
+            "problem": SchedulingProblem(
+                events=[
+                    Event("MeetingA", resource="Room1"),
+                    Event("MeetingB", resource="Room1"),
+                ],
+                n_slots=4,
+                resources=["Room1"],
+            ),
+            "schedule": ProposedSchedule({0: 1, 1: 1}),
+            "expected_feasible": False,
+        }
+    )
 
     # Scenario 6: Meeting before its prerequisite.
-    scenarios.append({
-        "name": "Meeting before prerequisite",
-        "description": "Test scheduled before Build, violating ordering.",
-        "problem": SchedulingProblem(
-            events=[
-                Event("Build", resource="CI"),
-                Event("Test", resource="CI"),
-            ],
-            n_slots=4,
-            resources=["CI"],
-            ordering=[(0, 1)],  # Build must be before Test
-        ),
-        "schedule": ProposedSchedule({0: 2, 1: 1}),  # Test at t=1, Build at t=2!
-        "expected_feasible": False,
-    })
+    scenarios.append(
+        {
+            "name": "Meeting before prerequisite",
+            "description": "Test scheduled before Build, violating ordering.",
+            "problem": SchedulingProblem(
+                events=[
+                    Event("Build", resource="CI"),
+                    Event("Test", resource="CI"),
+                ],
+                n_slots=4,
+                resources=["CI"],
+                ordering=[(0, 1)],  # Build must be before Test
+            ),
+            "schedule": ProposedSchedule({0: 2, 1: 1}),  # Test at t=1, Build at t=2!
+            "expected_feasible": False,
+        }
+    )
 
     # Scenario 7: Same person in two places at once.
-    scenarios.append({
-        "name": "Same person in two places",
-        "description": "Alice is in Room1 and Room2 at the same time.",
-        "problem": SchedulingProblem(
-            events=[
-                Event("Design review", resource="Room1", person="Alice"),
-                Event("Sprint planning", resource="Room2", person="Alice"),
-            ],
-            n_slots=4,
-            resources=["Room1", "Room2"],
-        ),
-        "schedule": ProposedSchedule({0: 1, 1: 1}),
-        "expected_feasible": False,
-    })
+    scenarios.append(
+        {
+            "name": "Same person in two places",
+            "description": "Alice is in Room1 and Room2 at the same time.",
+            "problem": SchedulingProblem(
+                events=[
+                    Event("Design review", resource="Room1", person="Alice"),
+                    Event("Sprint planning", resource="Room2", person="Alice"),
+                ],
+                n_slots=4,
+                resources=["Room1", "Room2"],
+            ),
+            "schedule": ProposedSchedule({0: 1, 1: 1}),
+            "expected_feasible": False,
+        }
+    )
 
     # Scenario 8: Event outside available hours.
-    scenarios.append({
-        "name": "Event outside available hours",
-        "description": "Meeting scheduled at t=3 but only t=0,1 are available.",
-        "problem": SchedulingProblem(
-            events=[
-                Event("Morning standup", resource="Room1"),
-            ],
-            n_slots=4,
-            resources=["Room1"],
-            available_slots={0: {0, 1}},  # Only morning slots
-        ),
-        "schedule": ProposedSchedule({0: 3}),  # Scheduled in afternoon
-        "expected_feasible": False,
-    })
+    scenarios.append(
+        {
+            "name": "Event outside available hours",
+            "description": "Meeting scheduled at t=3 but only t=0,1 are available.",
+            "problem": SchedulingProblem(
+                events=[
+                    Event("Morning standup", resource="Room1"),
+                ],
+                n_slots=4,
+                resources=["Room1"],
+                available_slots={0: {0, 1}},  # Only morning slots
+            ),
+            "schedule": ProposedSchedule({0: 3}),  # Scheduled in afternoon
+            "expected_feasible": False,
+        }
+    )
 
     # Scenario 9: Overlapping multi-slot events in same room.
-    scenarios.append({
-        "name": "Overlapping multi-slot events",
-        "description": "2-hour workshop starts at t=1, 2-hour review starts at t=2. They overlap at t=2.",
-        "problem": SchedulingProblem(
-            events=[
-                Event("Workshop", duration=2, resource="BigRoom"),
-                Event("Review", duration=2, resource="BigRoom"),
-            ],
-            n_slots=6,
-            resources=["BigRoom"],
-        ),
-        "schedule": ProposedSchedule({0: 1, 1: 2}),  # Overlap at slot 2
-        "expected_feasible": False,
-    })
+    scenarios.append(
+        {
+            "name": "Overlapping multi-slot events",
+            "description": "2-hour workshop starts at t=1, 2-hour review starts at t=2. They overlap at t=2.",
+            "problem": SchedulingProblem(
+                events=[
+                    Event("Workshop", duration=2, resource="BigRoom"),
+                    Event("Review", duration=2, resource="BigRoom"),
+                ],
+                n_slots=6,
+                resources=["BigRoom"],
+            ),
+            "schedule": ProposedSchedule({0: 1, 1: 2}),  # Overlap at slot 2
+            "expected_feasible": False,
+        }
+    )
 
     # Scenario 10: Resource capacity exceeded.
-    scenarios.append({
-        "name": "Resource capacity exceeded",
-        "description": "Lab supports 2 concurrent experiments, but 3 are scheduled at t=0.",
-        "problem": SchedulingProblem(
-            events=[
-                Event("ExpA", resource="Lab"),
-                Event("ExpB", resource="Lab"),
-                Event("ExpC", resource="Lab"),
-            ],
-            n_slots=4,
-            resources=["Lab"],
-            capacity={"Lab": 2},  # Max 2 concurrent
-        ),
-        "schedule": ProposedSchedule({0: 0, 1: 0, 2: 0}),  # All 3 at t=0
-        "expected_feasible": False,
-    })
+    scenarios.append(
+        {
+            "name": "Resource capacity exceeded",
+            "description": "Lab supports 2 concurrent experiments, but 3 are scheduled at t=0.",
+            "problem": SchedulingProblem(
+                events=[
+                    Event("ExpA", resource="Lab"),
+                    Event("ExpB", resource="Lab"),
+                    Event("ExpC", resource="Lab"),
+                ],
+                n_slots=4,
+                resources=["Lab"],
+                capacity={"Lab": 2},  # Max 2 concurrent
+            ),
+            "schedule": ProposedSchedule({0: 0, 1: 0, 2: 0}),  # All 3 at t=0
+            "expected_feasible": False,
+        }
+    )
 
     return scenarios
 
@@ -656,6 +681,7 @@ def get_test_scenarios() -> list[dict[str, Any]]:
 # ---------------------------------------------------------------------------
 # 5. Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     """Run all scheduling scenarios and report results."""
@@ -693,16 +719,18 @@ def main() -> int:
             f"best_sampled={result['energy_best']:.1f}"
         )
 
-        results.append({
-            "name": name,
-            "expected": expected,
-            "actual": actual,
-            "correct": correct,
-            "n_violations": result["n_violations"],
-            "energy_proposed": result["energy_proposed"],
-            "energy_best": result["energy_best"],
-            "description": scenario["description"],
-        })
+        results.append(
+            {
+                "name": name,
+                "expected": expected,
+                "actual": actual,
+                "correct": correct,
+                "n_violations": result["n_violations"],
+                "energy_proposed": result["energy_proposed"],
+                "energy_best": result["energy_best"],
+                "description": scenario["description"],
+            }
+        )
 
     # --- Summary ---
     elapsed = time.time() - start
@@ -716,9 +744,7 @@ def main() -> int:
     n_valid = sum(1 for r in results if r["expected"])
     n_invalid = n_total - n_valid
     n_valid_correct = sum(1 for r in results if r["expected"] and r["actual"])
-    n_invalid_detected = sum(
-        1 for r in results if not r["expected"] and not r["actual"]
-    )
+    n_invalid_detected = sum(1 for r in results if not r["expected"] and not r["actual"])
 
     print(f"  Total scenarios:                 {n_total}")
     print(f"  Correct classifications:         {n_correct}/{n_total}")
@@ -726,12 +752,8 @@ def main() -> int:
     print(f"  Invalid schedules detected:      {n_invalid_detected}/{n_invalid}")
 
     # Energy analysis: invalid schedules should have higher proposed energy.
-    valid_energies = [
-        r["energy_proposed"] for r in results if r["expected"]
-    ]
-    invalid_energies = [
-        r["energy_proposed"] for r in results if not r["expected"]
-    ]
+    valid_energies = [r["energy_proposed"] for r in results if r["expected"]]
+    invalid_energies = [r["energy_proposed"] for r in results if not r["expected"]]
     if valid_energies and invalid_energies:
         avg_valid = np.mean(valid_energies)
         avg_invalid = np.mean(invalid_energies)

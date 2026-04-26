@@ -39,9 +39,7 @@ _SCRIPT_PATH = (
 def _load_module() -> Any:
     """Load experiment_294 without executing main(), in mock mode."""
     os.environ.setdefault("CARNOT_FORCE_LIVE", "0")
-    spec = importlib.util.spec_from_file_location(
-        "experiment_294_gpu_baseline_apple", _SCRIPT_PATH
-    )
+    spec = importlib.util.spec_from_file_location("experiment_294_gpu_baseline_apple", _SCRIPT_PATH)
     assert spec is not None and spec.loader is not None
     mod = importlib.util.module_from_spec(spec)
     sys.modules["experiment_294_gpu_baseline_apple"] = mod
@@ -273,7 +271,14 @@ class TestBaselineAccuracyBounds:
     def _make_runner(self, correct_answer: bool) -> AppleBaselineRunner294:
         """Build an AppleBaselineRunner294 with a deterministic mock generate_fn."""
 
-        def _generate(question: str, expected: int, *, model_name: str = "M", variant_type: str = "standard", **kw: Any) -> tuple[str, np.ndarray]:
+        def _generate(
+            question: str,
+            expected: int,
+            *,
+            model_name: str = "M",
+            variant_type: str = "standard",
+            **kw: Any,
+        ) -> tuple[str, np.ndarray]:
             logits = np.zeros((1, 8, 100), dtype=np.float32)
             return str(expected) if correct_answer else "999999", logits
 
@@ -400,9 +405,7 @@ class TestCheckpointResume:
             logit_dir=logit_dir,
         )
         runner2.run_variant(model_name="Qwen3.5-0.8B", variant_type="standard")
-        assert call_count[0] == 0, (
-            f"Expected 0 generate_fn calls on resume, got {call_count[0]}"
-        )
+        assert call_count[0] == 0, f"Expected 0 generate_fn calls on resume, got {call_count[0]}"
         assert first_run_calls > 0, "First run should have called generate_fn"
 
 

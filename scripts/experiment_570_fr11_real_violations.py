@@ -204,7 +204,7 @@ def _write_json(repo_root: Path, rel_path: str, data: dict) -> None:
     out.write_text(json.dumps(data, indent=2))
 
 
-def _load_gate(repo_root: Path) -> Optional[dict]:
+def _load_gate(repo_root: Path) -> dict | None:
     """Load Exp 565 gate result.  Returns None if file is missing or unreadable.
 
     Why a dedicated loader: the gate_open field is the ONLY reason this experiment
@@ -242,7 +242,9 @@ def _load_gsm8k_questions(start: int, end: int) -> list[dict]:
         indices = list(range(start, end + 1))
         return [{"question": ds[i]["question"], "answer": ds[i]["answer"]} for i in indices]
     except Exception as exc:
-        _log.warning("_load_gsm8k_questions: dataset load failed (%s) — using synthetic fallback", exc)
+        _log.warning(
+            "_load_gsm8k_questions: dataset load failed (%s) — using synthetic fallback", exc
+        )
         result = []
         for i in range(start, end + 1):
             idx = i - start
@@ -271,7 +273,7 @@ def _qwen_generate(pipeline: Any, prompt: str) -> str:
         return f"[qwen_error: {exc}]"
 
 
-def _load_qwen_pipeline(device: str) -> Optional[Any]:
+def _load_qwen_pipeline(device: str) -> Any | None:
     """Load Qwen3.5-0.8B (or 2.5-0.5B) as a HuggingFace text-generation pipeline."""
     try:
         from transformers import pipeline as hf_pipeline  # type: ignore[import]
@@ -394,14 +396,10 @@ def _run_batches_with_coace(
 
         # Step 5: extract per-batch violation stats from pipeline.call_log
         batch_log = pipeline.call_log[batch_start_log_idx:]
-        n_violations_this_batch = sum(
-            1 for entry in batch_log if entry["n_violations"] > 0
-        )
+        n_violations_this_batch = sum(1 for entry in batch_log if entry["n_violations"] > 0)
         n_correct = sum(int(gt) for gt in ground_truth)
         n_fp_this_batch = sum(
-            1
-            for entry, gt in zip(batch_log, ground_truth)
-            if entry["n_violations"] > 0 and gt
+            1 for entry, gt in zip(batch_log, ground_truth) if entry["n_violations"] > 0 and gt
         )
         fp_rate = n_fp_this_batch / n_correct if n_correct > 0 else 0.0
         accuracy = sum(int(gt) for gt in ground_truth) / len(ground_truth) if ground_truth else 0.0
@@ -515,7 +513,7 @@ def _build_artifact(
 # ---------------------------------------------------------------------------
 
 
-def run_experiment(repo_root: Optional[Path] = None) -> dict:
+def run_experiment(repo_root: Path | None = None) -> dict:
     """Run Exp 570: FR-11 relay with CoACEExtractor wired in for real violation detection.
 
     All exit paths (blocked, gpu_required, error) write the deliverable JSON.
@@ -595,7 +593,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
             inference_mode="gpu_required",
             status="gpu_vram_insufficient",
         )
-        blocked["vram_block_reason"] = f"gemma4_insufficient: {gemma4_gate.available_gb:.1f} GB free"
+        blocked["vram_block_reason"] = (
+            f"gemma4_insufficient: {gemma4_gate.available_gb:.1f} GB free"
+        )
         return _write_and_return(blocked)
 
     qwen_vram = JITVRAMCheck(device_id=1)
@@ -625,7 +625,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         Path.home() / ".cache" / "huggingface" / "hub" / "models--google--gemma-4-e4b-it" / "blobs",
         Path("/data/models/gemma4"),
     ]
-    gemma4_gguf_path: Optional[str] = None
+    gemma4_gguf_path: str | None = None
     for candidate in gemma4_path_candidates:
         if candidate.exists():
             gguf_files = list(candidate.glob("*.gguf"))
@@ -633,7 +633,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
                 gemma4_gguf_path = str(gguf_files[0])
                 break
 
-    gemma4_loader: Optional[Gemma4QuantizedLoader] = None
+    gemma4_loader: Gemma4QuantizedLoader | None = None
     if gemma4_gguf_path:
         try:
             gemma4_loader = Gemma4QuantizedLoader(
@@ -648,14 +648,12 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
             _log.warning("Gemma4QuantizedLoader load failed: %s", exc)
             gemma4_loader = None
 
-    qwen_pipe: Optional[Any] = None
+    qwen_pipe: Any | None = None
     try:
         import torch
 
         qwen_device = (
-            "cuda:1"
-            if torch.cuda.is_available() and torch.cuda.device_count() > 1
-            else "cuda:0"
+            "cuda:1" if torch.cuda.is_available() and torch.cuda.device_count() > 1 else "cuda:0"
         )
         qwen_pipe = _load_qwen_pipeline(qwen_device)
         if qwen_pipe:
@@ -687,7 +685,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     # Step 8: Load 25 GSM8K questions (indices 150-174)
     # -----------------------------------------------------------------------
     questions = _load_gsm8k_questions(QUESTION_START, QUESTION_END)
-    _log.info("Loaded %d GSM8K questions (indices %d-%d)", len(questions), QUESTION_START, QUESTION_END)
+    _log.info(
+        "Loaded %d GSM8K questions (indices %d-%d)", len(questions), QUESTION_START, QUESTION_END
+    )
 
     # -----------------------------------------------------------------------
     # Step 9: 3 batches with CoACEExtractor wired into self-learning relay

@@ -77,8 +77,11 @@ def train_ebm_on(activations: np.ndarray, labels: np.ndarray, hidden_dim: int, s
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -157,9 +160,9 @@ def main() -> int:
     start = time.time()
 
     for dim, models in groups.items():
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"DIMENSION GROUP: {dim}")
-        print(f"{'='*70}")
+        print(f"{'=' * 70}")
 
         # Load all datasets in this group
         data = {}
@@ -207,22 +210,24 @@ def main() -> int:
                 acc, gap = evaluate_ebm(ebms[train_id], acts, labels)
                 marker = " *" if train_id == eval_id else ""
                 row += f" {acc:>13.1%}{marker}"
-                all_results.append({
-                    "dim": dim,
-                    "trained_on": train_label,
-                    "evaluated_on": data[eval_id][2],
-                    "accuracy": acc,
-                    "gap": gap,
-                    "is_self": train_id == eval_id,
-                })
+                all_results.append(
+                    {
+                        "dim": dim,
+                        "trained_on": train_label,
+                        "evaluated_on": data[eval_id][2],
+                        "accuracy": acc,
+                        "gap": gap,
+                        "is_self": train_id == eval_id,
+                    }
+                )
             print(row)
 
     elapsed = time.time() - start
 
     # Summary
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"EXPERIMENT 26 SUMMARY ({elapsed:.0f}s)")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     # Compute transfer rates
     self_accs = [r["accuracy"] for r in all_results if r["is_self"]]
@@ -239,10 +244,16 @@ def main() -> int:
         print(f"  Transfer penalty:      {mean_self - mean_cross:.1%}")
 
         # Same-family vs cross-family
-        same_family = [r for r in all_results if not r["is_self"]
-                       and r["trained_on"].split()[0] == r["evaluated_on"].split()[0]]
-        cross_family = [r for r in all_results if not r["is_self"]
-                        and r["trained_on"].split()[0] != r["evaluated_on"].split()[0]]
+        same_family = [
+            r
+            for r in all_results
+            if not r["is_self"] and r["trained_on"].split()[0] == r["evaluated_on"].split()[0]
+        ]
+        cross_family = [
+            r
+            for r in all_results
+            if not r["is_self"] and r["trained_on"].split()[0] != r["evaluated_on"].split()[0]
+        ]
 
         if same_family:
             print(f"  Same-family transfer:  {np.mean([r['accuracy'] for r in same_family]):.1%}")
@@ -250,13 +261,17 @@ def main() -> int:
             print(f"  Cross-family transfer: {np.mean([r['accuracy'] for r in cross_family]):.1%}")
 
         if transfer_rate > 0.85:
-            print(f"\n  VERDICT: ✅ Strong transfer ({transfer_rate:.0%}) — hallucination direction may be universal!")
+            print(
+                f"\n  VERDICT: ✅ Strong transfer ({transfer_rate:.0%}) — hallucination direction may be universal!"
+            )
         elif transfer_rate > 0.7:
             print(f"\n  VERDICT: ⚠️ Partial transfer ({transfer_rate:.0%}) — some shared structure")
         else:
-            print(f"\n  VERDICT: ❌ Poor transfer ({transfer_rate:.0%}) — model-specific representations")
+            print(
+                f"\n  VERDICT: ❌ Poor transfer ({transfer_rate:.0%}) — model-specific representations"
+            )
 
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
     return 0
 
 

@@ -33,23 +33,27 @@ def _make_corpus(n_correct: int = 6, n_incorrect: int = 6) -> list[dict]:
     """Build a minimal synthetic corpus for testing."""
     entries = []
     for i in range(n_correct):
-        entries.append({
-            "question": f"Q{i}",
-            "response": f"Correct response {i}",
-            "model_id": f"model_{i}",
-            "is_correct": True,
-            "constraint_types": ["correct", "correct", "incorrect"],
-            "cot_steps": [{"step_text": f"Step {i}"}],
-        })
+        entries.append(
+            {
+                "question": f"Q{i}",
+                "response": f"Correct response {i}",
+                "model_id": f"model_{i}",
+                "is_correct": True,
+                "constraint_types": ["correct", "correct", "incorrect"],
+                "cot_steps": [{"step_text": f"Step {i}"}],
+            }
+        )
     for i in range(n_incorrect):
-        entries.append({
-            "question": f"Q{n_correct + i}",
-            "response": f"Incorrect response {i}",
-            "model_id": f"model_{i}",
-            "is_correct": False,
-            "constraint_types": ["incorrect", "incorrect", "correct"],
-            "cot_steps": [{"step_text": f"Bad step {i}"}],
-        })
+        entries.append(
+            {
+                "question": f"Q{n_correct + i}",
+                "response": f"Incorrect response {i}",
+                "model_id": f"model_{i}",
+                "is_correct": False,
+                "constraint_types": ["incorrect", "incorrect", "correct"],
+                "cot_steps": [{"step_text": f"Bad step {i}"}],
+            }
+        )
     return entries
 
 
@@ -97,6 +101,7 @@ class TestInitParams:
 
     def test_param_shapes(self):
         import jax.random as jrandom
+
         params = exp567._init_params(jrandom.PRNGKey(0))
         assert params["w1"].shape == (exp567.EMBED_DIM, exp567.FEAT_DIM)
         assert params["b1"].shape == (exp567.EMBED_DIM,)
@@ -114,6 +119,7 @@ class TestScore:
 
     def test_score_returns_scalar_in_01(self):
         import jax.random as jrandom
+
         params = exp567._init_params(jrandom.PRNGKey(1))
         x = jnp.ones(exp567.FEAT_DIM)
         s = exp567._score_scalar(params, x)
@@ -121,6 +127,7 @@ class TestScore:
 
     def test_score_scalar_is_float(self):
         import jax.random as jrandom
+
         params = exp567._init_params(jrandom.PRNGKey(2))
         x = jnp.zeros(exp567.FEAT_DIM)
         s = exp567._score_scalar(params, x)
@@ -168,6 +175,7 @@ class TestComputePureLossJax:
 
     def test_loss_positive_when_gap_less_than_margin(self):
         import jax.random as jrandom
+
         params = exp567._init_params(jrandom.PRNGKey(42))
         # Craft features so correct score > incorrect score (inverted) -> large loss
         cf = [jnp.array([1.0, 0.0, 0.0, 0.0])]  # high correct signal
@@ -177,6 +185,7 @@ class TestComputePureLossJax:
 
     def test_empty_correct_returns_zero(self):
         import jax.random as jrandom
+
         params = exp567._init_params(jrandom.PRNGKey(0))
         wf = [jnp.zeros(exp567.FEAT_DIM)]
         loss = exp567._compute_pure_loss_jax(params, [], wf, margin=1.0)
@@ -184,6 +193,7 @@ class TestComputePureLossJax:
 
     def test_empty_incorrect_returns_zero(self):
         import jax.random as jrandom
+
         params = exp567._init_params(jrandom.PRNGKey(0))
         cf = [jnp.zeros(exp567.FEAT_DIM)]
         loss = exp567._compute_pure_loss_jax(params, cf, [], margin=1.0)
@@ -200,6 +210,7 @@ class TestBuildChainScores:
 
     def test_splits_correct_and_incorrect(self):
         import jax.random as jrandom
+
         params = exp567._init_params(jrandom.PRNGKey(0))
         corpus = _make_corpus(3, 4)
         correct, incorrect = exp567._build_chain_scores(params, corpus)
@@ -208,6 +219,7 @@ class TestBuildChainScores:
 
     def test_min_score_equals_step_score(self):
         import jax.random as jrandom
+
         params = exp567._init_params(jrandom.PRNGKey(0))
         corpus = _make_corpus(2, 2)
         correct, incorrect = exp567._build_chain_scores(params, corpus)
@@ -225,6 +237,7 @@ class TestEvaluateAuc:
 
     def test_returns_float_in_01(self):
         import jax.random as jrandom
+
         params = exp567._init_params(jrandom.PRNGKey(7))
         corpus = _make_corpus(5, 5)
         auc = exp567._evaluate_auc(params, corpus)
@@ -242,6 +255,7 @@ class TestSaveModelSafetensors:
 
     def test_saves_file(self, tmp_path):
         import jax.random as jrandom
+
         params = exp567._init_params(jrandom.PRNGKey(3))
         out = tmp_path / "model.safetensors"
         exp567.save_model_safetensors(params, out)
@@ -251,6 +265,7 @@ class TestSaveModelSafetensors:
     def test_saved_file_loadable(self, tmp_path):
         import jax.random as jrandom
         from safetensors.numpy import load_file
+
         params = exp567._init_params(jrandom.PRNGKey(4))
         out = tmp_path / "model.safetensors"
         exp567.save_model_safetensors(params, out)
@@ -270,8 +285,12 @@ class TestTrainJepaV10:
         corpus = _make_corpus(6, 6)
         train, val = corpus[:10], corpus[10:]
         result = exp567.train_jepa_v10(
-            train_entries=train, val_entries=val,
-            margin=1.0, n_epochs=20, eval_every=10, seed=42,
+            train_entries=train,
+            val_entries=val,
+            margin=1.0,
+            n_epochs=20,
+            eval_every=10,
+            seed=42,
         )
         assert len(result) == 4
 
@@ -279,8 +298,12 @@ class TestTrainJepaV10:
         corpus = _make_corpus(6, 6)
         train, val = corpus[:10], corpus[10:]
         _, best_auc, best_epoch, eval_log = exp567.train_jepa_v10(
-            train_entries=train, val_entries=val,
-            margin=1.0, n_epochs=20, eval_every=10, seed=42,
+            train_entries=train,
+            val_entries=val,
+            margin=1.0,
+            n_epochs=20,
+            eval_every=10,
+            seed=42,
         )
         assert best_epoch > 0
         assert 0.0 <= best_auc <= 1.0
@@ -289,8 +312,12 @@ class TestTrainJepaV10:
         corpus = _make_corpus(6, 6)
         train, val = corpus[:10], corpus[10:]
         _, _, _, eval_log = exp567.train_jepa_v10(
-            train_entries=train, val_entries=val,
-            margin=1.0, n_epochs=20, eval_every=10, seed=42,
+            train_entries=train,
+            val_entries=val,
+            margin=1.0,
+            n_epochs=20,
+            eval_every=10,
+            seed=42,
         )
         # eval at epoch 10 and 20 -> 2 entries
         assert len(eval_log) == 2
@@ -302,8 +329,12 @@ class TestTrainJepaV10:
         corpus = _make_corpus(6, 6)
         train, val = corpus[:10], corpus[10:]
         best_params, _, _, _ = exp567.train_jepa_v10(
-            train_entries=train, val_entries=val,
-            margin=1.0, n_epochs=10, eval_every=10, seed=42,
+            train_entries=train,
+            val_entries=val,
+            margin=1.0,
+            n_epochs=10,
+            eval_every=10,
+            seed=42,
         )
         assert set(best_params.keys()) == {"w1", "b1", "w2", "b2"}
 
@@ -335,6 +366,7 @@ class TestMain:
             corpus_json = json.dumps(corpus)
 
             import carnot.pipeline.atomic_writer as aw_mod
+
             orig_write = aw_mod.AtomicResultWriter.write
 
             written_artifacts = []
@@ -346,19 +378,20 @@ class TestMain:
             with (
                 patch.object(aw_mod.AtomicResultWriter, "write", _capture_write),
                 patch.object(
-                    Path, "read_text",
+                    Path,
+                    "read_text",
                     lambda self: corpus_json,
                 ),
                 patch.object(
                     exp567,
                     "MODEL_DELIVERABLE",
-                    new=str(model_out.relative_to(_REPO_ROOT)) if model_out.is_relative_to(_REPO_ROOT) else "results/jepa_predictor_v10.safetensors",
+                    new=str(model_out.relative_to(_REPO_ROOT))
+                    if model_out.is_relative_to(_REPO_ROOT)
+                    else "results/jepa_predictor_v10.safetensors",
                 ),
             ):
                 # Override deliverable path so ExperimentTemplate doesn't error
-                with patch.object(
-                    exp567.ExperimentTemplate, "assert_deliverable_written"
-                ):
+                with patch.object(exp567.ExperimentTemplate, "assert_deliverable_written"):
                     with patch.object(
                         exp567,
                         "_REPO_ROOT",
@@ -373,8 +406,10 @@ class TestMain:
                         class _NoopWatchdog:
                             def __init__(self, *a, **kw):
                                 pass
+
                             def __enter__(self):
                                 return self
+
                             def __exit__(self, *a):
                                 pass
 
@@ -392,7 +427,11 @@ class TestMain:
 
                             with (
                                 patch.object(exp567.ExperimentTemplate, "setup", _mock_setup),
-                                patch.object(exp567.ExperimentTemplate, "assert_deliverable_written", _mock_assert),
+                                patch.object(
+                                    exp567.ExperimentTemplate,
+                                    "assert_deliverable_written",
+                                    _mock_assert,
+                                ),
                                 patch.object(exp567, "CORPUS_PATH", new=corpus_file),
                             ):
                                 exp567.main()
@@ -402,8 +441,12 @@ class TestMain:
         corpus = _make_corpus(8, 8)
         train, val = corpus[:12], corpus[12:]
         best_params, v10_auc, best_epoch, eval_log = exp567.train_jepa_v10(
-            train_entries=train, val_entries=val,
-            margin=1.0, n_epochs=20, eval_every=10, seed=42,
+            train_entries=train,
+            val_entries=val,
+            margin=1.0,
+            n_epochs=20,
+            eval_every=10,
+            seed=42,
         )
         auc_improvement = v10_auc - exp567.V9_AUC
         retro_resolved = v10_auc > 0.5

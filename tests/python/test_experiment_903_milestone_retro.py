@@ -41,6 +41,7 @@ from scripts.experiment_903_milestone_retro import (
 # We do NOT load real result files — that would tie tests to on-disk state.
 # ---------------------------------------------------------------------------
 
+
 def _make_stub_data(overrides: dict | None = None) -> dict:
     """
     Build a minimal dict that matches what load_artifacts() would return.
@@ -139,6 +140,7 @@ def _make_stub_data(overrides: dict | None = None) -> dict:
 # REQ-INFRA-073: wall-time statistics are computed correctly
 # ---------------------------------------------------------------------------
 
+
 class TestComputeWallTime:
     """SCENARIO-INFRA-073-A: wall-time computation."""
 
@@ -183,6 +185,7 @@ class TestComputeWallTime:
 # REQ-INFRA-073: criteria evaluation is correct
 # ---------------------------------------------------------------------------
 
+
 class TestEvaluateCriteria:
     """SCENARIO-INFRA-073-B: criteria evaluation."""
 
@@ -200,21 +203,23 @@ class TestEvaluateCriteria:
 
     def test_manifest_enforcement_via_enforcement_note(self):
         """ops/known-issues.md in enforcement_note also counts as escalated."""
-        data = _make_stub_data({
-            892: {"enforcement_note": "Documented in ops/known-issues.md", "notes": ""}
-        })
+        data = _make_stub_data(
+            {892: {"enforcement_note": "Documented in ops/known-issues.md", "notes": ""}}
+        )
         criteria = evaluate_criteria(data)
         assert criteria["manifest_enforcement_verified"] is True
 
     def test_manifest_enforcement_false_when_not_escalated(self):
         """False when neither enforcement_wired nor escalated."""
-        data = _make_stub_data({
-            892: {
-                "enforcement_wired": False,
-                "enforcement_note": "Cannot wire.",
-                "notes": "No escalation.",
+        data = _make_stub_data(
+            {
+                892: {
+                    "enforcement_wired": False,
+                    "enforcement_note": "Cannot wire.",
+                    "notes": "No escalation.",
+                }
             }
-        })
+        )
         criteria = evaluate_criteria(data)
         assert criteria["manifest_enforcement_verified"] is False
 
@@ -262,10 +267,14 @@ class TestEvaluateCriteria:
 
     def test_lagrange_forgetting_not_improves(self):
         """with_forget <= no_forget → criterion not met."""
-        data = _make_stub_data({897: {
-            "constraint_precision_with_forget": 0.2,
-            "constraint_precision_no_forget": 0.3,
-        }})
+        data = _make_stub_data(
+            {
+                897: {
+                    "constraint_precision_with_forget": 0.2,
+                    "constraint_precision_no_forget": 0.3,
+                }
+            }
+        )
         criteria = evaluate_criteria(data)
         assert criteria["lagrange_forgetting_improves"] is False
 
@@ -322,6 +331,7 @@ class TestEvaluateCriteria:
 # REQ-INFRA-073: retro closure logic
 # ---------------------------------------------------------------------------
 
+
 class TestEvaluateRetroCLosures:
     """SCENARIO-INFRA-073-C: retro closure determination."""
 
@@ -360,6 +370,7 @@ class TestEvaluateRetroCLosures:
 # REQ-INFRA-073: slowest-5 governance check
 # ---------------------------------------------------------------------------
 
+
 class TestCheckSlowest5Governance:
     """SCENARIO-INFRA-073-D: governance violation detection."""
 
@@ -375,8 +386,13 @@ class TestCheckSlowest5Governance:
         """A retired experiment ID in slowest-5 triggers a violation."""
         # Exp 527 is in the YAML retired set (exclusion_manifest.yaml, completed .57)
         fake_slowest_5 = [
-            {"experiment": 527, "elapsed_minutes": 52.0, "elapsed_seconds": 3120.0,
-             "status": "success", "honest_verdict": "live_100q_precision"},
+            {
+                "experiment": 527,
+                "elapsed_minutes": 52.0,
+                "elapsed_seconds": 3120.0,
+                "status": "success",
+                "honest_verdict": "live_100q_precision",
+            },
         ]
         gov = check_slowest5_governance(fake_slowest_5)
         assert gov["slowest5_governance_violation"] is True
@@ -386,6 +402,7 @@ class TestCheckSlowest5Governance:
 # ---------------------------------------------------------------------------
 # REQ-INFRA-073: honest_verdict content
 # ---------------------------------------------------------------------------
+
 
 class TestBuildHonestVerdict:
     """SCENARIO-INFRA-073-E: honest_verdict string construction."""
@@ -427,6 +444,7 @@ class TestBuildHonestVerdict:
 # ---------------------------------------------------------------------------
 # REQ-INFRA-073: assert_deliverable_written validation
 # ---------------------------------------------------------------------------
+
 
 class TestAssertDeliverableWritten:
     """SCENARIO-INFRA-073-F: deliverable validation."""
@@ -474,6 +492,7 @@ class TestAssertDeliverableWritten:
 # ---------------------------------------------------------------------------
 # REQ-INFRA-073: experiment count constants
 # ---------------------------------------------------------------------------
+
 
 class TestConstants:
     """SCENARIO-INFRA-073-G: constant values match documented state."""

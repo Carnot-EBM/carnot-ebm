@@ -307,9 +307,7 @@ def run(tmpl: ExperimentTemplate) -> dict:
     exp_826 = _load_json(EXP_826_RESULT)
     if exp_825.get("tier35_deployed") is True:
         try:
-            huggingface_hub.create_repo(
-                "Carnot-EBM/jepa-v23-limo", token=token, exist_ok=True
-            )
+            huggingface_hub.create_repo("Carnot-EBM/jepa-v23-limo", token=token, exist_ok=True)
             card_text = _build_jepa_card(exp_826)
             with tempfile.NamedTemporaryFile(
                 mode="w", suffix=".md", delete=False, encoding="utf-8"

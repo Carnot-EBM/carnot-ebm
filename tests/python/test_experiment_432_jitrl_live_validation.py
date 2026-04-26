@@ -205,7 +205,11 @@ class TestLoadLiveViolations:
         data = {
             "status": "live",
             "questions": [
-                {"violations": [{"domain": "arithmetic", "violation_energy": 0.4, "outcome": "not_fixed"}]}
+                {
+                    "violations": [
+                        {"domain": "arithmetic", "violation_energy": 0.4, "outcome": "not_fixed"}
+                    ]
+                }
             ],
         }
         p.write_text(json.dumps(data))
@@ -225,9 +229,7 @@ class TestLoadLiveViolations:
         p = tmp_path / "exp427.json"
         data = {
             "status": "success",
-            "questions": [
-                {"violations": [{"violation_energy": 0.5, "outcome": "fixed"}]}
-            ],
+            "questions": [{"violations": [{"violation_energy": 0.5, "outcome": "fixed"}]}],
         }
         p.write_text(json.dumps(data))
         mod = _load_exp432()
@@ -352,8 +354,8 @@ class TestComputeFpRate:
 
         mem = JitRLConstraintMemory(base_threshold=0.5, lr=0.02)
         records = [
-            self._make_record("arithmetic", 0.3, True),   # below threshold → suppressed
-            self._make_record("arithmetic", 0.7, True),   # above threshold → fired
+            self._make_record("arithmetic", 0.3, True),  # below threshold → suppressed
+            self._make_record("arithmetic", 0.7, True),  # above threshold → fired
         ]
         rate = self.mod._compute_fp_rate(records, memory=mem)
         # Only second record fires; it's a FP → rate = 1.0
@@ -397,7 +399,9 @@ class TestMain:
         with (
             patch.object(self.mod, "_EXP_427_PATH", tmp_path / "nofile.json"),
             patch.object(self.mod, "_REPO_ROOT", tmp_path),
-            patch.object(self.mod, "_OUTPUT_PATH", "results/experiment_432_jitrl_live_validation.json"),
+            patch.object(
+                self.mod, "_OUTPUT_PATH", "results/experiment_432_jitrl_live_validation.json"
+            ),
         ):
             self.mod.main()
 
@@ -430,7 +434,9 @@ class TestMain:
         with (
             patch.object(self.mod, "_EXP_427_PATH", exp427),
             patch.object(self.mod, "_REPO_ROOT", tmp_path),
-            patch.object(self.mod, "_OUTPUT_PATH", "results/experiment_432_jitrl_live_validation.json"),
+            patch.object(
+                self.mod, "_OUTPUT_PATH", "results/experiment_432_jitrl_live_validation.json"
+            ),
         ):
             self.mod.main()
 
@@ -447,7 +453,9 @@ class TestMain:
         with (
             patch.object(self.mod, "_EXP_427_PATH", exp427),
             patch.object(self.mod, "_REPO_ROOT", tmp_path),
-            patch.object(self.mod, "_OUTPUT_PATH", "results/experiment_432_jitrl_live_validation.json"),
+            patch.object(
+                self.mod, "_OUTPUT_PATH", "results/experiment_432_jitrl_live_validation.json"
+            ),
         ):
             self.mod.main()
 
@@ -461,7 +469,9 @@ class TestMain:
         with (
             patch.object(self.mod, "_EXP_427_PATH", tmp_path / "nofile.json"),
             patch.object(self.mod, "_REPO_ROOT", tmp_path),
-            patch.object(self.mod, "_OUTPUT_PATH", "results/experiment_432_jitrl_live_validation.json"),
+            patch.object(
+                self.mod, "_OUTPUT_PATH", "results/experiment_432_jitrl_live_validation.json"
+            ),
         ):
             self.mod.main()
 

@@ -10,8 +10,8 @@ Spec: REQ-INFRA-041, SCENARIO-INFRA-050, SCENARIO-INFRA-051
 from __future__ import annotations
 
 from carnot.pipeline.incremental_test_selector import (  # noqa: F401
-    IncrementalTestSelector,
     _FULL_SUITE_DIFF_THRESHOLD,
+    IncrementalTestSelector,
     _any_rust_changed,
     _build_import_map,
     _collect_test_imports,

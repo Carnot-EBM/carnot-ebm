@@ -100,9 +100,7 @@ class TestMonitorAndRollback:
 
     @patch("carnot.autoresearch.rollback.git_revert_commit", return_value=False)
     @patch("carnot.autoresearch.rollback.time.sleep")
-    def test_failed_revert(
-        self, mock_sleep: MagicMock, mock_revert: MagicMock
-    ) -> None:
+    def test_failed_revert(self, mock_sleep: MagicMock, mock_revert: MagicMock) -> None:
         """REQ-AUTO-007: handles failed git revert gracefully."""
         measure_fn = MagicMock(return_value=-2.0)
         config = RollbackConfig(
@@ -125,9 +123,7 @@ class TestMonitorAndRollback:
 
     @patch("carnot.autoresearch.rollback.git_revert_commit", return_value=True)
     @patch("carnot.autoresearch.rollback.time.sleep")
-    def test_regression_logged(
-        self, mock_sleep: MagicMock, mock_revert: MagicMock
-    ) -> None:
+    def test_regression_logged(self, mock_sleep: MagicMock, mock_revert: MagicMock) -> None:
         """REQ-AUTO-007: regression is logged to experiment log."""
         log = ExperimentLog()
         measure_fn = MagicMock(return_value=-2.0)

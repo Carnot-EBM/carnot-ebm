@@ -9,8 +9,6 @@ from unittest.mock import MagicMock, patch
 
 import jax.numpy as jnp
 import numpy as np
-import pytest
-
 from carnot.embeddings.activation_extractor import (
     ActivationConfig,
     _activation_entropy,
@@ -68,18 +66,15 @@ class TestExtractLayerActivationsFallback:
 class TestExtractLayerActivationsWithMock:
     """Tests for REQ-INFER-014: Activation extraction with mocked transformer."""
 
-    def _build_mocks(
-        self, num_layers: int = 3, hidden_dim: int = 16, seq_len: int = 4
-    ):
+    def _build_mocks(self, num_layers: int = 3, hidden_dim: int = 16, seq_len: int = 4):
         """Build mock tokenizer, model, and torch module with hookable layers."""
         mock_torch = MagicMock()
 
         # Create fake layers that support register_forward_hook.
         # When the model forward is called, we simulate the hooks firing.
         fake_layers = []
-        hook_callbacks: list[tuple[int, MagicMock]] = []
 
-        for i in range(num_layers):
+        for _i in range(num_layers):
             layer = MagicMock()
             # Track registered hooks so we can fire them during forward pass.
             registered_hooks = []
@@ -107,11 +102,9 @@ class TestExtractLayerActivationsWithMock:
 
         # When forward is called, fire all registered hooks with fake activations.
         def fake_forward(**kwargs):
-            for i, (layer_mod, hooks) in enumerate(fake_layers):
+            for _i, (layer_mod, hooks) in enumerate(fake_layers):
                 # Create a fake output tensor for this layer.
-                fake_hidden = np.random.randn(1, seq_len, hidden_dim).astype(
-                    np.float32
-                )
+                fake_hidden = np.random.randn(1, seq_len, hidden_dim).astype(np.float32)
 
                 class FakeOutput:
                     def __init__(self, data):
@@ -189,7 +182,7 @@ class TestExtractLayerActivationsWithMock:
             result = extract_layer_activations("test")
 
         assert result is not None
-        for layer_idx, act in result.items():
+        for _layer_idx, act in result.items():
             assert isinstance(act, jnp.ndarray)
             assert act.shape == (seq_len, hidden_dim)
 
@@ -203,9 +196,7 @@ class TestExtractLayerActivationsWithMock:
         ):
             result = extract_layer_activations("code", config=None)
 
-        mock_transformers.AutoTokenizer.from_pretrained.assert_called_once_with(
-            "Qwen/Qwen3-0.6B"
-        )
+        mock_transformers.AutoTokenizer.from_pretrained.assert_called_once_with("Qwen/Qwen3-0.6B")
         assert result is not None
 
     def test_custom_config_model_name(self) -> None:
@@ -219,9 +210,7 @@ class TestExtractLayerActivationsWithMock:
         ):
             result = extract_layer_activations("code", config=config)
 
-        mock_transformers.AutoTokenizer.from_pretrained.assert_called_once_with(
-            "custom/llm"
-        )
+        mock_transformers.AutoTokenizer.from_pretrained.assert_called_once_with("custom/llm")
         assert result is not None
 
     def test_returns_none_when_layers_not_found(self) -> None:
@@ -283,7 +272,7 @@ class TestExtractLayerActivationsWithMock:
 
         # Track registered hooks on the layer.
         registered = []
-        original_register = original_layers[0].register_forward_hook
+        original_layers[0].register_forward_hook
 
         def tracking_register(fn):
             registered.append(fn)
@@ -323,9 +312,7 @@ class TestExtractLayerActivationsWithMock:
         assert result is not None
         assert 0 in result
         # Should be all ones since we used np.ones.
-        np.testing.assert_allclose(
-            np.array(result[0]), np.ones((seq_len, hidden_dim)), atol=1e-6
-        )
+        np.testing.assert_allclose(np.array(result[0]), np.ones((seq_len, hidden_dim)), atol=1e-6)
 
 
 class TestFindTransformerLayers:

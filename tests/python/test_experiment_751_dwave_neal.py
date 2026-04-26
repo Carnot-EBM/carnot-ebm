@@ -40,12 +40,15 @@ class TestToBqm(unittest.TestCase):
     def _make_mock_ebm(self, n: int = 4) -> MagicMock:
         """Create a mock IsingEBM with known J and h values."""
         ebm = MagicMock()
-        J = np.array([
-            [0.0, 0.5, 0.0, 0.0],
-            [0.5, 0.0, 0.3, 0.0],
-            [0.0, 0.3, 0.0, -0.2],
-            [0.0, 0.0, -0.2, 0.0],
-        ], dtype=np.float32)
+        J = np.array(
+            [
+                [0.0, 0.5, 0.0, 0.0],
+                [0.5, 0.0, 0.3, 0.0],
+                [0.0, 0.3, 0.0, -0.2],
+                [0.0, 0.0, -0.2, 0.0],
+            ],
+            dtype=np.float32,
+        )
         h = np.array([0.1, -0.2, 0.3, 0.0], dtype=np.float32)
         ebm.coupling = jnp.asarray(J)
         ebm.bias = jnp.asarray(h)

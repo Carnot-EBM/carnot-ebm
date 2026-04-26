@@ -27,6 +27,7 @@ def csp() -> EidokuCSP:
 # build_constraint_domain() tests
 # ---------------------------------------------------------------------------
 
+
 # SCENARIO-VERIFY-219: explicit "x = N" assignments are extracted.
 def test_build_domain_explicit_assignment(csp: EidokuCSP) -> None:
     """Explicit 'word = number' assignments are captured as constraint domain.
@@ -115,6 +116,7 @@ def test_build_domain_case_normalisation(csp: EidokuCSP) -> None:
 # check_global_consistency() tests
 # ---------------------------------------------------------------------------
 
+
 # SCENARIO-VERIFY-219: empty chain is consistent.
 def test_check_consistency_empty(csp: EidokuCSP) -> None:
     """An empty chain has no variables and is trivially consistent.
@@ -157,7 +159,7 @@ def test_check_consistency_contradiction_detected(csp: EidokuCSP) -> None:
     """
     steps = [
         "total = 75",
-        "total = 76",   # contradiction — same variable, different value
+        "total = 76",  # contradiction — same variable, different value
     ]
     assert csp.check_global_consistency(steps) is False
 
@@ -169,7 +171,7 @@ def test_check_consistency_tolerance(csp: EidokuCSP) -> None:
     """
     steps = [
         "total = 75.000000",
-        "total = 75.0000001",   # within tolerance — not a contradiction
+        "total = 75.0000001",  # within tolerance — not a contradiction
     ]
     assert csp.check_global_consistency(steps) is True
 
@@ -195,6 +197,6 @@ def test_check_consistency_multi_step_contradiction(csp: EidokuCSP) -> None:
     steps = [
         "x = 10",
         "y = 20",
-        "x = 99",   # contradiction with step 0
+        "x = 99",  # contradiction with step 0
     ]
     assert csp.check_global_consistency(steps) is False

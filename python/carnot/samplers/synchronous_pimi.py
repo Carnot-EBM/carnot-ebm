@@ -377,9 +377,7 @@ def pimi_alpha_sweep(
     results: dict[str, float] = {}
 
     for alpha in alphas:
-        sampler = SynchronousPIMISampler(
-            n_spins=8, J=J, h=h, alpha=alpha, beta=1.0
-        )
+        sampler = SynchronousPIMISampler(n_spins=8, J=J, h=h, alpha=alpha, beta=1.0)
         mean_sweeps = sampler.measure_convergence(
             n_trials=n_trials,
             target_energy=energy_threshold,

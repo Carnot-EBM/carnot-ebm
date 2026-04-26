@@ -109,10 +109,7 @@ def _load_gsm8k_questions(n: int, seed: int) -> list[dict[str, Any]]:
         rng = random.Random(seed)
         rng.shuffle(indices)
         selected = indices[:n]
-        return [
-            {"question": ds[i]["question"], "answer": ds[i]["answer"]}
-            for i in selected
-        ]
+        return [{"question": ds[i]["question"], "answer": ds[i]["answer"]} for i in selected]
     except Exception as exc:
         _log.warning("Could not load GSM8K from datasets (%s) — using synthetic fallback", exc)
         rng = random.Random(seed)
@@ -198,7 +195,9 @@ def _run_vr_grid(
             except Exception as exc:
                 _log.debug("VR failed for q=%d t=%.2f: %s", q_idx, t, exc)
                 final_resp = baseline_responses[q_idx]
-            if q["answer"] != "synthetic" and _extract_number(final_resp) == _extract_number(q["answer"]):
+            if q["answer"] != "synthetic" and _extract_number(final_resp) == _extract_number(
+                q["answer"]
+            ):
                 vr_correct += 1
         vr_accuracy = vr_correct / len(questions) if questions else 0.0
         signed_improvement = vr_accuracy - baseline_accuracy
@@ -211,12 +210,19 @@ def _run_vr_grid(
         }
         per_threshold_results.append(entry)
         tmpl.checkpoint_save(
-            {"per_threshold_results": per_threshold_results, "baseline_accuracy": baseline_accuracy},
+            {
+                "per_threshold_results": per_threshold_results,
+                "baseline_accuracy": baseline_accuracy,
+            },
             step=t_idx + 1,
         )
         _log.info(
             "Threshold %.2f: baseline=%.3f vr=%.3f improvement=%.3f abstained=%d",
-            t, baseline_accuracy, vr_accuracy, signed_improvement, n_abstained,
+            t,
+            baseline_accuracy,
+            vr_accuracy,
+            signed_improvement,
+            n_abstained,
         )
 
     return per_threshold_results
@@ -301,7 +307,8 @@ def main() -> None:
         if free_vram_mb < MIN_FREE_VRAM_MB:
             _log.error(
                 "Insufficient VRAM after zombie kill: %.0f MB free, need %d MB — aborting",
-                free_vram_mb, MIN_FREE_VRAM_MB,
+                free_vram_mb,
+                MIN_FREE_VRAM_MB,
             )
             artifact = tmpl.build_result(
                 {
@@ -351,7 +358,8 @@ def main() -> None:
             loader_test_passed = GemmaTransformersLoader.is_valid_output(test_response)
             _log.info(
                 "Loader smoke test: response=%r valid=%s",
-                test_response, loader_test_passed,
+                test_response,
+                loader_test_passed,
             )
         except Exception as exc:
             _log.error("GemmaTransformersLoader failed: %s", exc)
@@ -384,9 +392,7 @@ def main() -> None:
         per_threshold_results = _run_vr_grid(loader, questions, THRESHOLDS, tmpl)
 
         # --- Step 8: Compute summary metrics ---
-        positive_threshold_found = any(
-            r["signed_improvement"] > 0 for r in per_threshold_results
-        )
+        positive_threshold_found = any(r["signed_improvement"] > 0 for r in per_threshold_results)
         best_threshold: float | None = None
         if per_threshold_results:
             best_entry = max(per_threshold_results, key=lambda r: r["signed_improvement"])
@@ -399,7 +405,9 @@ def main() -> None:
 
         _log.info(
             "VR grid complete: positive_threshold_found=%s best_threshold=%s verdict=%s",
-            positive_threshold_found, best_threshold, honest_verdict,
+            positive_threshold_found,
+            best_threshold,
+            honest_verdict,
         )
 
         # --- Step 9: Write final artifact ---

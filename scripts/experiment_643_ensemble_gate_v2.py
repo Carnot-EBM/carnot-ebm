@@ -124,14 +124,13 @@ correct_sample = correct_all[:N_CORRECT]
 # Pad with synthetic responses if corpus is smaller than required (CI safety net).
 _SYNTHETIC_INCORRECT = [
     (
-        f"Step 1: {10+i} + {5+i} = {15+i} items. "
-        f"Step 2: We had {20+i} items so we have {20+i} - {3+i} = {17+i} left."
+        f"Step 1: {10 + i} + {5 + i} = {15 + i} items. "
+        f"Step 2: We had {20 + i} items so we have {20 + i} - {3 + i} = {17 + i} left."
     )
     for i in range(N_INCORRECT)
 ]
 _SYNTHETIC_CORRECT = [
-    f"Step 1: {5+i} + {3+i} = {8+i}. The answer is {8+i}."
-    for i in range(N_CORRECT)
+    f"Step 1: {5 + i} + {3 + i} = {8 + i}. The answer is {8 + i}." for i in range(N_CORRECT)
 ]
 
 while len(incorrect_sample) < N_INCORRECT:
@@ -154,12 +153,8 @@ causal = CausalReasoningVerifier(_verifier)
 # Run ensemble on incorrect responses
 # ---------------------------------------------------------------------------
 
-incorrect_indices = [
-    p.get("question_index", i) for i, p in enumerate(incorrect_sample)
-]
-correct_indices = [
-    p.get("question_index", N_INCORRECT + i) for i, p in enumerate(correct_sample)
-]
+incorrect_indices = [p.get("question_index", i) for i, p in enumerate(incorrect_sample)]
+correct_indices = [p.get("question_index", N_INCORRECT + i) for i, p in enumerate(correct_sample)]
 
 incorrect_responses = [p.get("response", "") for p in incorrect_sample]
 correct_responses = [p.get("response", "") for p in correct_sample]
@@ -195,9 +190,7 @@ gate_note = (
     if gate_open
     else "Exp 644 VR #17 BLOCKED — combined recall below 0.30 threshold"
 )
-honest_verdict = (
-    "gate_open_vr_unblocked" if gate_open else "gate_closed_recall_below_threshold"
-)
+honest_verdict = "gate_open_vr_unblocked" if gate_open else "gate_closed_recall_below_threshold"
 
 # ---------------------------------------------------------------------------
 # Build and write artifact

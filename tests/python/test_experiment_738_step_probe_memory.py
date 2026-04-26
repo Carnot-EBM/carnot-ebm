@@ -284,9 +284,9 @@ def test_replay_template_activates_in_library():
 
     # carry_check has min_frequency=5; verify it's not active before replay.
     active_before = lib.get_active_templates("my-model")
-    assert all(
-        t.pattern_key != "carry_check" for t in active_before
-    ), "carry_check should not be active before any replay"
+    assert all(t.pattern_key != "carry_check" for t in active_before), (
+        "carry_check should not be active before any replay"
+    )
 
     lib.replay_template("carry_check", "my-model")
     active_after = lib.get_active_templates("my-model")

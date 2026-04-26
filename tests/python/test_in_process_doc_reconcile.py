@@ -44,35 +44,38 @@ from in_process_doc_reconcile import (  # noqa: E402
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("verdict, expected", [
-    # Wins — single token from the win list
-    ("retro_028_closed", "✅ Complete"),
-    ("injection_field_fixed", "✅ Complete"),
-    ("vg_search_effective", "✅ Complete"),
-    ("hf_models_published", "✅ Complete"),
-    ("retrieval_auc_exceeds_target", "✅ Complete"),
-    # Partial / research-finding tokens
-    ("retro_061_partial", "⚠️ Research Finding"),
-    ("constraint_addition_no_delta_live", "⚠️ Research Finding"),
-    ("arbiter_still_wrong", "⚠️ Research Finding"),
-    ("jepa_v22_below_random", "⚠️ Research Finding"),
-    ("loss_redesign_partial", "⚠️ Research Finding"),
-    ("tier1_plateau_persists", "⚠️ Research Finding"),
-    ("injection_negative_delta", "⚠️ Research Finding"),
-    # Blocked — gate / prereq / tool unavailable
-    ("blocked_no_delta", "⚠️ Blocked"),
-    ("blocked_gate", "⚠️ Blocked"),
-    ("tools_not_installed", "⚠️ Blocked"),
-    ("tools_unavailable", "⚠️ Blocked"),
-    ("blocked_model_load_failed", "⚠️ Blocked"),
-    # Failed — exception or timeout
-    ("timed_out", "❌ Failed"),
-    ("exception", "❌ Failed"),
-    ("test_suite_failed", "❌ Failed"),
-    # Default — unrecognised verdict falls to "Research Finding", not "Complete"
-    ("frobnicated_the_widget", "⚠️ Research Finding"),
-    ("", "⚠️ Research Finding"),
-])
+@pytest.mark.parametrize(
+    "verdict, expected",
+    [
+        # Wins — single token from the win list
+        ("retro_028_closed", "✅ Complete"),
+        ("injection_field_fixed", "✅ Complete"),
+        ("vg_search_effective", "✅ Complete"),
+        ("hf_models_published", "✅ Complete"),
+        ("retrieval_auc_exceeds_target", "✅ Complete"),
+        # Partial / research-finding tokens
+        ("retro_061_partial", "⚠️ Research Finding"),
+        ("constraint_addition_no_delta_live", "⚠️ Research Finding"),
+        ("arbiter_still_wrong", "⚠️ Research Finding"),
+        ("jepa_v22_below_random", "⚠️ Research Finding"),
+        ("loss_redesign_partial", "⚠️ Research Finding"),
+        ("tier1_plateau_persists", "⚠️ Research Finding"),
+        ("injection_negative_delta", "⚠️ Research Finding"),
+        # Blocked — gate / prereq / tool unavailable
+        ("blocked_no_delta", "⚠️ Blocked"),
+        ("blocked_gate", "⚠️ Blocked"),
+        ("tools_not_installed", "⚠️ Blocked"),
+        ("tools_unavailable", "⚠️ Blocked"),
+        ("blocked_model_load_failed", "⚠️ Blocked"),
+        # Failed — exception or timeout
+        ("timed_out", "❌ Failed"),
+        ("exception", "❌ Failed"),
+        ("test_suite_failed", "❌ Failed"),
+        # Default — unrecognised verdict falls to "Research Finding", not "Complete"
+        ("frobnicated_the_widget", "⚠️ Research Finding"),
+        ("", "⚠️ Research Finding"),
+    ],
+)
 def test_map_status_label_matches_haiku_table(verdict, expected):
     """Each verdict maps to the same label the Haiku prompt would assign.
 
@@ -151,6 +154,7 @@ def test_find_artifact_picks_most_recent_when_multiple_match(tmp_path):
     older.write_text("{}")
     import os
     import time
+
     time.sleep(0.01)  # ensure mtime difference
     newer = results / "experiment_819_v2.json"
     newer.write_text("{}")
@@ -176,8 +180,8 @@ def test_extract_key_metric_skips_none_and_collections():
     artifact = {
         "auc": None,
         "accuracy": [0.5, 0.6],  # list — skipped
-        "details": {"k": "v"},   # dict — skipped
-        "delta_overall": 0.0,    # scalar — kept
+        "details": {"k": "v"},  # dict — skipped
+        "delta_overall": 0.0,  # scalar — kept
     }
     assert extract_key_metric(artifact) == "delta_overall=0.0"
 
@@ -264,6 +268,7 @@ def test_extract_new_req_scenario_ids_returns_empty_when_git_fails(tmp_path):
     and rely solely on the always-on changelog append. Defensive.
     """
     import subprocess
+
     with mock.patch(
         "in_process_doc_reconcile.subprocess.run",
         side_effect=subprocess.SubprocessError("git not available"),
@@ -283,9 +288,7 @@ def _make_repo_skeleton(tmp_path: Path) -> Path:
     (tmp_path / "results").mkdir()
     (tmp_path / "ops").mkdir()
     (tmp_path / "_bmad").mkdir()
-    (tmp_path / "ops" / "changelog.md").write_text(
-        "# Changelog\n\nExisting line.\n"
-    )
+    (tmp_path / "ops" / "changelog.md").write_text("# Changelog\n\nExisting line.\n")
     (tmp_path / "ops" / "status.md").write_text(
         "# Status\n\n| Date | Task | Status | Verdict | Artifact |\n"
         "|------|------|--------|---------|----------|\n"
@@ -302,10 +305,14 @@ def test_reconcile_appends_changelog_for_clear_win(tmp_path):
     """A win verdict with no new REQ/SCENARIO: changelog only."""
     repo = _make_repo_skeleton(tmp_path)
     artifact_path = repo / "results" / "experiment_900_demo.json"
-    artifact_path.write_text(json.dumps({
-        "honest_verdict": "demo_complete",
-        "auc": 0.92,
-    }))
+    artifact_path.write_text(
+        json.dumps(
+            {
+                "honest_verdict": "demo_complete",
+                "auc": 0.92,
+            }
+        )
+    )
     task = {"id": "exp900-demo", "title": "Exp 900: Demo Win"}
     with mock.patch(
         "in_process_doc_reconcile.subprocess.run",
@@ -326,9 +333,13 @@ def test_reconcile_appends_status_and_traceability_when_new_reqs_added(tmp_path)
     """A win with new REQ-* gets all three updates: changelog + status + traceability."""
     repo = _make_repo_skeleton(tmp_path)
     artifact_path = repo / "results" / "experiment_901_capability.json"
-    artifact_path.write_text(json.dumps({
-        "honest_verdict": "capability_ready",
-    }))
+    artifact_path.write_text(
+        json.dumps(
+            {
+                "honest_verdict": "capability_ready",
+            }
+        )
+    )
     task = {"id": "exp901-capability", "title": "Exp 901: New Capability"}
     fake_diff = (
         "diff --git a/openspec/capabilities/foo/spec.md b/openspec/capabilities/foo/spec.md\n"
@@ -355,9 +366,13 @@ def test_reconcile_does_not_promote_partial_to_implemented(tmp_path):
     """A partial verdict with new REQ-*: traceability rows are 'Implemented-Partial'."""
     repo = _make_repo_skeleton(tmp_path)
     artifact_path = repo / "results" / "experiment_902_partial.json"
-    artifact_path.write_text(json.dumps({
-        "honest_verdict": "constraint_addition_no_delta_live",
-    }))
+    artifact_path.write_text(
+        json.dumps(
+            {
+                "honest_verdict": "constraint_addition_no_delta_live",
+            }
+        )
+    )
     task = {"id": "exp902-partial", "title": "Exp 902: Partial"}
     fake_diff = (
         "diff --git a/openspec/capabilities/foo/spec.md b/openspec/capabilities/foo/spec.md\n"
@@ -409,13 +424,16 @@ def test_reconcile_skips_when_artifact_unreadable(tmp_path):
 from in_process_doc_reconcile import classify_artifact  # noqa: E402
 
 
-@pytest.mark.parametrize("verdict", [
-    "tier1_relay_works_live",     # .65 Exp 848
-    "gguf_cache_implemented",     # .65 Exp 849
-    "deployed",                   # .66 Exp 856
-    "streaming_cot_wired",        # .67 Exp 874
-    "fr11_self_learning_confirmed",  # .66 Exp 862 (was already a win — sanity)
-])
+@pytest.mark.parametrize(
+    "verdict",
+    [
+        "tier1_relay_works_live",  # .65 Exp 848
+        "gguf_cache_implemented",  # .65 Exp 849
+        "deployed",  # .66 Exp 856
+        "streaming_cot_wired",  # .67 Exp 874
+        "fr11_self_learning_confirmed",  # .66 Exp 862 (was already a win — sanity)
+    ],
+)
 def test_added_win_tokens_now_classify_as_complete(verdict):
     """Verdicts that were under-counted in .65/.66/.67 now map to ✅ Complete.
 
@@ -492,7 +510,7 @@ def test_classify_artifact_ignores_non_retro_closed_fields():
     """
     artifact = {
         "honest_verdict": "neutral_phrase",
-        "gate_closed": True,           # not a retro
-        "window_closed": "yes",        # not a retro
+        "gate_closed": True,  # not a retro
+        "window_closed": "yes",  # not a retro
     }
     assert classify_artifact(artifact) == "⚠️ Research Finding"

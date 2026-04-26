@@ -159,12 +159,14 @@ def find_scaffolding_experiments() -> list[dict[str, Any]]:
         if not script_full.exists():
             logger.warning("Skip %s: script %s not found", task["id"], script_path)
             continue
-        candidates.append({
-            "id": task["id"],
-            "title": task.get("title", task["id"]),
-            "script_path": str(script_full),
-            "deliverable_path": str(deliverable),
-        })
+        candidates.append(
+            {
+                "id": task["id"],
+                "title": task.get("title", task["id"]),
+                "script_path": str(script_full),
+                "deliverable_path": str(deliverable),
+            }
+        )
     return candidates
 
 
@@ -193,12 +195,13 @@ def wait_for_healthy_gpu(max_retries: int = 3, retry_delay_s: int = 60) -> bool:
         if health.temperature_warning:
             reason.append(f"GPU0 temp {health.gpu0_temp_c}C")
         if health.gpu1_is_zombie:
-            reason.append(
-                f"GPU1 zombie ({health.gpu1_vram_mb}MB / {health.gpu1_util_pct}%)"
-            )
+            reason.append(f"GPU1 zombie ({health.gpu1_vram_mb}MB / {health.gpu1_util_pct}%)")
         logger.warning(
             "GPU unhealthy (attempt %d/%d): %s — sleeping %ds",
-            attempt + 1, max_retries, "; ".join(reason), retry_delay_s,
+            attempt + 1,
+            max_retries,
+            "; ".join(reason),
+            retry_delay_s,
         )
         time.sleep(retry_delay_s)
     return False
@@ -235,7 +238,9 @@ def run_experiment(exp: dict[str, Any]) -> bool:
     if result.returncode != 0:
         logger.error(
             "%s failed (exit %d, %.1f min)",
-            exp["id"], result.returncode, elapsed / 60,
+            exp["id"],
+            result.returncode,
+            elapsed / 60,
         )
         return False
 
@@ -252,7 +257,8 @@ def run_experiment(exp: dict[str, Any]) -> bool:
         if verdict in SCAFFOLDING_VERDICTS:
             logger.warning(
                 "%s: deliverable still marked %r — script may not have upgraded to live",
-                exp["id"], verdict,
+                exp["id"],
+                verdict,
             )
     except (json.JSONDecodeError, OSError):
         logger.warning("%s: could not re-read deliverable", exp["id"])
@@ -272,7 +278,9 @@ def _commit_locally(exp: dict[str, Any]) -> None:
     subprocess.run(["git", "add", exp["deliverable_path"]], cwd=str(PROJECT_ROOT))
     result = subprocess.run(
         ["git", "commit", "-m", msg, "--", exp["deliverable_path"]],
-        cwd=str(PROJECT_ROOT), capture_output=True, text=True,
+        cwd=str(PROJECT_ROOT),
+        capture_output=True,
+        text=True,
     )
     if result.returncode == 0:
         logger.info("Committed %s (not pushed)", exp["id"])
@@ -315,10 +323,10 @@ def one_pass(dry_run: bool = False) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Carnot GPU Executor")
-    parser.add_argument("--loop", action="store_true",
-                        help="Scan every 5 min for new scaffolding")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="List what would be run; do not execute")
+    parser.add_argument("--loop", action="store_true", help="Scan every 5 min for new scaffolding")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="List what would be run; do not execute"
+    )
     args = parser.parse_args()
 
     if not acquire_lock():

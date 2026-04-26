@@ -23,7 +23,7 @@ import json
 import os
 import tempfile
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from typing import Any, Callable
 
@@ -65,7 +65,7 @@ def utc_now() -> str:
     Returns:
         String of form '2026-04-13T22:00:00Z' (length 20).
     """
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     return now.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
@@ -203,18 +203,14 @@ def _stage_flags(case_result: dict[str, Any]) -> dict[str, bool]:
         "official_tests_verify_only": bool(
             case_result.get("official_tests_verify_only", {}).get("accepted", False)
         ),
-        "pbt_verify_only": bool(
-            case_result.get("pbt_verify_only", {}).get("accepted", False)
-        ),
+        "pbt_verify_only": bool(case_result.get("pbt_verify_only", {}).get("accepted", False)),
         "spec_aware_verify_only": bool(
             case_result.get("spec_aware_verify_only", {}).get("accepted", False)
         ),
         "process_aware_verify_only": bool(
             case_result.get("process_aware_verify_only", {}).get("accepted", False)
         ),
-        "verify_repair": bool(
-            case_result.get("verify_repair", {}).get("accepted", False)
-        ),
+        "verify_repair": bool(case_result.get("verify_repair", {}).get("accepted", False)),
     }
 
 
@@ -360,12 +356,9 @@ def build_cross_model_comparison(
     """
     # Index Exp 226 Gemma cases by case_id
     gemma_by_id: dict[str, dict[str, Any]] = {
-        c.get("case_id", f"humaneval-{c.get('dataset_idx', 0)}"): c
-        for c in gemma_exp226_cases
+        c.get("case_id", f"humaneval-{c.get('dataset_idx', 0)}"): c for c in gemma_exp226_cases
     }
-    qwen_by_id: dict[str, dict[str, Any]] = {
-        c["case_id"]: c for c in qwen_cases
-    }
+    qwen_by_id: dict[str, dict[str, Any]] = {c["case_id"]: c for c in qwen_cases}
 
     paired_ids = sorted(set(gemma_by_id) & set(qwen_by_id))
     n_paired = len(paired_ids)
@@ -374,7 +367,9 @@ def build_cross_model_comparison(
         return {
             "paired_case_count": 0,
             "stage_deltas": {},
-            "stage_outcomes": {"baseline": {"gemma_only": 0, "qwen_only": 0, "both": 0, "neither": 0}},
+            "stage_outcomes": {
+                "baseline": {"gemma_only": 0, "qwen_only": 0, "both": 0, "neither": 0}
+            },
             "schema_mapping_note": (
                 "Exp 226 Gemma schema: {baseline.passed, verify_only.accepted, "
                 "verify_repair.passed}. Mapped to Exp 261 Qwen schema for comparison."
@@ -560,10 +555,17 @@ def run_benchmark(
             "dataset_idx": idx,
             "task_id": case.get("task_id", ""),
             "entry_point": case.get("entry_point", ""),
-            "baseline": {"official_passed": True, "body": "    pass", "candidate_code": "def fn(x): pass"},
+            "baseline": {
+                "official_passed": True,
+                "body": "    pass",
+                "candidate_code": "def fn(x): pass",
+            },
             "official_tests_verify_only": {"accepted": True},
             "pbt_verify_only": {"accepted": True, "harness_passing_rejected_by_pbt": False},
-            "spec_aware_verify_only": {"accepted": True, "harness_passing_rejected_by_specs": False},
+            "spec_aware_verify_only": {
+                "accepted": True,
+                "harness_passing_rejected_by_specs": False,
+            },
             "process_aware_verify_only": {"accepted": True, "right_for_wrong_reasons": False},
             "verify_repair": {
                 "accepted": True,
@@ -574,9 +576,23 @@ def run_benchmark(
                 "final_code": "def fn(x): pass",
             },
             "process_flags": {
-                "baseline": {"process_valid": True, "outcome_correct": True, "right_for_wrong_reasons": False, "defects": [], "process_label": "clean", "run_date": "20260413"},
+                "baseline": {
+                    "process_valid": True,
+                    "outcome_correct": True,
+                    "right_for_wrong_reasons": False,
+                    "defects": [],
+                    "process_label": "clean",
+                    "run_date": "20260413",
+                },
                 "history": [],
-                "final": {"process_valid": True, "outcome_correct": True, "right_for_wrong_reasons": False, "defects": [], "process_label": "clean", "run_date": "20260413"},
+                "final": {
+                    "process_valid": True,
+                    "outcome_correct": True,
+                    "right_for_wrong_reasons": False,
+                    "defects": [],
+                    "process_label": "clean",
+                    "run_date": "20260413",
+                },
             },
             "history": [],
         }
@@ -594,7 +610,9 @@ def run_benchmark(
 
         # Checkpoint at regular intervals
         if (i + 1) % checkpoint_interval == 0:
-            save_checkpoint(checkpoint_path, {"case_ids": case_ids, "results_by_case": results_by_case})
+            save_checkpoint(
+                checkpoint_path, {"case_ids": case_ids, "results_by_case": results_by_case}
+            )
 
     # Final checkpoint
     save_checkpoint(checkpoint_path, {"case_ids": case_ids, "results_by_case": results_by_case})

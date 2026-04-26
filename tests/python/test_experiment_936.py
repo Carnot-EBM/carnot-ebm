@@ -41,6 +41,7 @@ from experiment_936_kan_tier4_real_data import (  # noqa: E402
 # _extract_features
 # ---------------------------------------------------------------------------
 
+
 def test_extract_features_shape():
     # REQ-SELF-008: feature vector must have INPUT_DIM elements
     feats = _extract_features("The answer is 42.")
@@ -93,6 +94,7 @@ def test_extract_features_empty_string():
 # _load_real_fover_pairs
 # ---------------------------------------------------------------------------
 
+
 def test_load_real_fover_pairs_correct_and_incorrect():
     data = [
         {"step_text": "The answer is 3 + 4 = 7. Therefore correct.", "label": "correct"},
@@ -140,6 +142,7 @@ def test_load_real_fover_pairs_unknown_label_skipped():
 # _make_synthetic_fallback
 # ---------------------------------------------------------------------------
 
+
 def test_make_synthetic_fallback_shapes():
     correct, wrong = _make_synthetic_fallback(50, INPUT_DIM, SEED)
     assert correct.shape == (25, INPUT_DIM)
@@ -162,6 +165,7 @@ def test_make_synthetic_fallback_deterministic():
 # ---------------------------------------------------------------------------
 # _compute_auc
 # ---------------------------------------------------------------------------
+
 
 def test_compute_auc_perfect():
     # Perfect model: all correct energies lower than wrong energies
@@ -197,6 +201,7 @@ def test_compute_auc_empty():
 # _train_split
 # ---------------------------------------------------------------------------
 
+
 def test_train_split_sizes():
     correct = np.ones((10, INPUT_DIM), dtype=np.float32)
     wrong = np.ones((10, INPUT_DIM), dtype=np.float32) * 2
@@ -230,8 +235,10 @@ def test_train_split_small_data_at_least_one():
 # _run_kan_eval (integration — uses real KANModel, CPU JAX)
 # ---------------------------------------------------------------------------
 
+
 def test_run_kan_eval_returns_float():
     import os
+
     os.environ.setdefault("JAX_PLATFORMS", "cpu")
     import jax.random as jrandom
     from carnot.models.kan import KANConfig, KANModel
@@ -249,6 +256,7 @@ def test_run_kan_eval_returns_float():
 # Deliverable JSON schema
 # ---------------------------------------------------------------------------
 
+
 def test_deliverable_json_required_fields():
     path = Path("results/experiment_936_kan_tier4_real_data.json")
     assert path.exists(), "Deliverable JSON must exist after running the experiment"
@@ -256,10 +264,21 @@ def test_deliverable_json_required_fields():
         d = json.load(f)
 
     required = [
-        "experiment", "title", "run_date", "status", "honest_verdict",
-        "inference_mode", "n_real_pairs", "baseline_auc", "post_refinement_auc",
-        "signed_auc_improvement", "delta_vs_exp910_post", "n_knots_added",
-        "n_knots_removed", "refinement_rounds", "round_summaries",
+        "experiment",
+        "title",
+        "run_date",
+        "status",
+        "honest_verdict",
+        "inference_mode",
+        "n_real_pairs",
+        "baseline_auc",
+        "post_refinement_auc",
+        "signed_auc_improvement",
+        "delta_vs_exp910_post",
+        "n_knots_added",
+        "n_knots_removed",
+        "refinement_rounds",
+        "round_summaries",
     ]
     for field in required:
         assert field in d, f"Missing field: {field}"

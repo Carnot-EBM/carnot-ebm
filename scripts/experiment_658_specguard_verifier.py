@@ -60,9 +60,7 @@ AUC_TARGET = 0.70
 # Watchdog (arms immediately — guards the entire script lifetime)
 # ---------------------------------------------------------------------------
 
-_watchdog = ExperimentTimeoutWatchdog(
-    EXP_ID, timeout_minutes=30, result_path=DELIVERABLE
-)
+_watchdog = ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=30, result_path=DELIVERABLE)
 _watchdog.start()
 
 # ---------------------------------------------------------------------------
@@ -125,6 +123,7 @@ for pair in live_pairs:
 # Compute AUROC via trapezoidal rule (no sklearn dependency)
 # ---------------------------------------------------------------------------
 
+
 def _compute_auroc(labels: list[int], scores: list[float]) -> float:
     """Compute AUROC from parallel label and score lists.
 
@@ -177,12 +176,12 @@ specguard_auc = _compute_auroc(labels, scores)
 tier_0f_viable = specguard_auc >= AUC_TARGET
 n_pairs = len(live_pairs)
 
-honest_verdict = (
-    "specguard_tier_0f_viable" if tier_0f_viable else "specguard_below_threshold"
-)
+honest_verdict = "specguard_tier_0f_viable" if tier_0f_viable else "specguard_below_threshold"
 
-print(f"[Exp {EXP_ID}] n_pairs={n_pairs}, specguard_auc={specguard_auc:.4f}, "
-      f"tier_0f_viable={tier_0f_viable}, verdict={honest_verdict}")
+print(
+    f"[Exp {EXP_ID}] n_pairs={n_pairs}, specguard_auc={specguard_auc:.4f}, "
+    f"tier_0f_viable={tier_0f_viable}, verdict={honest_verdict}"
+)
 print(f"[Exp {EXP_ID}] TP={tp} FP={fp} TN={tn} FN={fn}")
 
 # ---------------------------------------------------------------------------

@@ -33,9 +33,7 @@ import pytest
 # ---------------------------------------------------------------------------
 
 _MODULE_NAME = "experiment_296_apple_analysis"
-_SCRIPT_PATH = (
-    Path(__file__).resolve().parents[2] / "scripts" / "experiment_296_apple_analysis.py"
-)
+_SCRIPT_PATH = Path(__file__).resolve().parents[2] / "scripts" / "experiment_296_apple_analysis.py"
 
 
 def _load_module() -> Any:
@@ -78,14 +76,14 @@ _FAKE_294 = {
     "stall_at": None,
     "model_results": {
         "Qwen3.5-0.8B": {
-            "standard":             {"accuracy": 0.20, "correct": 40, "total": 200},
-            "number_swap":          {"accuracy": 0.04, "correct":  8, "total": 200},
-            "irrelevant_sentence":  {"accuracy": 0.19, "correct": 38, "total": 200},
+            "standard": {"accuracy": 0.20, "correct": 40, "total": 200},
+            "number_swap": {"accuracy": 0.04, "correct": 8, "total": 200},
+            "irrelevant_sentence": {"accuracy": 0.19, "correct": 38, "total": 200},
         },
         "Gemma4-E4B-it": {
-            "standard":             {"accuracy": 0.465, "correct": 93, "total": 200},
-            "number_swap":          {"accuracy": 0.28,  "correct": 56, "total": 200},
-            "irrelevant_sentence":  {"accuracy": 0.460, "correct": 92, "total": 200},
+            "standard": {"accuracy": 0.465, "correct": 93, "total": 200},
+            "number_swap": {"accuracy": 0.28, "correct": 56, "total": 200},
+            "irrelevant_sentence": {"accuracy": 0.460, "correct": 92, "total": 200},
         },
     },
     "apple_2410_05229_check": {
@@ -111,36 +109,36 @@ _FAKE_295 = {
     "results": {
         "Qwen3.5-0.8B": {
             "number_swap": {
-                "baseline":      {"accuracy": 0.04,  "correct":  8, "total": 200},
-                "verify_only":   {"accuracy": 0.04,  "correct":  8, "total": 200},
+                "baseline": {"accuracy": 0.04, "correct": 8, "total": 200},
+                "verify_only": {"accuracy": 0.04, "correct": 8, "total": 200},
                 "verify_repair": {"accuracy": 0.065, "correct": 13, "total": 200},
             },
             "irrelevant_sentence": {
-                "baseline":      {"accuracy": 0.19,  "correct": 38, "total": 200},
-                "verify_only":   {"accuracy": 0.19,  "correct": 38, "total": 200},
+                "baseline": {"accuracy": 0.19, "correct": 38, "total": 200},
+                "verify_only": {"accuracy": 0.19, "correct": 38, "total": 200},
                 "verify_repair": {"accuracy": 0.195, "correct": 39, "total": 200},
             },
         },
         "Gemma4-E4B-it": {
             "number_swap": {
-                "baseline":      {"accuracy": 0.28, "correct": 56, "total": 200},
-                "verify_only":   {"accuracy": 0.28, "correct": 56, "total": 200},
+                "baseline": {"accuracy": 0.28, "correct": 56, "total": 200},
+                "verify_only": {"accuracy": 0.28, "correct": 56, "total": 200},
                 "verify_repair": {"accuracy": 0.33, "correct": 66, "total": 200},
             },
             "irrelevant_sentence": {
-                "baseline":      {"accuracy": 0.46,  "correct": 92, "total": 200},
-                "verify_only":   {"accuracy": 0.46,  "correct": 92, "total": 200},
+                "baseline": {"accuracy": 0.46, "correct": 92, "total": 200},
+                "verify_only": {"accuracy": 0.46, "correct": 92, "total": 200},
                 "verify_repair": {"accuracy": 0.465, "correct": 93, "total": 200},
             },
         },
     },
     "improvement_deltas": {
         "Qwen3.5-0.8B": {
-            "verify_repair_number_swap_delta":         0.025,
+            "verify_repair_number_swap_delta": 0.025,
             "verify_repair_irrelevant_sentence_delta": 0.005,
         },
         "Gemma4-E4B-it": {
-            "verify_repair_number_swap_delta":         0.05,
+            "verify_repair_number_swap_delta": 0.05,
             "verify_repair_irrelevant_sentence_delta": 0.005,
         },
     },
@@ -157,6 +155,7 @@ _FAKE_295 = {
 # ---------------------------------------------------------------------------
 # REQ-VERIFY-077 / SCENARIO-VERIFY-096: compute_delta arithmetic
 # ---------------------------------------------------------------------------
+
 
 class TestComputeDelta:
     """REQ-VERIFY-081, SCENARIO-VERIFY-112: compute_delta arithmetic and precision."""
@@ -190,6 +189,7 @@ class TestComputeDelta:
 # ---------------------------------------------------------------------------
 # REQ-VERIFY-078 / SCENARIO-VERIFY-097: classify_result branches
 # ---------------------------------------------------------------------------
+
 
 class TestClassifyResult:
     """REQ-VERIFY-078: classify_result maps flags to exactly one of four labels."""
@@ -226,6 +226,7 @@ class TestClassifyResult:
 # ---------------------------------------------------------------------------
 # SCENARIO-VERIFY-094: INCONCLUSIVE when result files are missing
 # ---------------------------------------------------------------------------
+
 
 class TestMissingArtifacts:
     """SCENARIO-VERIFY-094: INCONCLUSIVE when one or both result files are missing."""
@@ -282,6 +283,7 @@ class TestMissingArtifacts:
 # SCENARIO-VERIFY-093: five key questions answered
 # ---------------------------------------------------------------------------
 
+
 class TestAnswerFiveQuestions:
     """SCENARIO-VERIFY-093: five key questions are answered when data is available."""
 
@@ -304,7 +306,7 @@ class TestAnswerFiveQuestions:
         small_drop_294 = {
             **_FAKE_294,
             "apple_2410_05229_check": {
-                "Qwen3.5-0.8B": {"number_swap_drop_pp": 8.0,  "drop_gte_15pp": False},
+                "Qwen3.5-0.8B": {"number_swap_drop_pp": 8.0, "drop_gte_15pp": False},
                 "Gemma4-E4B-it": {"number_swap_drop_pp": 10.0, "drop_gte_15pp": False},
             },
         }
@@ -334,14 +336,14 @@ class TestAnswerFiveQuestions:
             **_FAKE_294,
             "model_results": {
                 "Qwen3.5-0.8B": {
-                    "standard":            {"accuracy": 0.20,  "correct": 40, "total": 200},
-                    "number_swap":         {"accuracy": 0.04,  "correct":  8, "total": 200},
-                    "irrelevant_sentence": {"accuracy": 0.14,  "correct": 28, "total": 200},
+                    "standard": {"accuracy": 0.20, "correct": 40, "total": 200},
+                    "number_swap": {"accuracy": 0.04, "correct": 8, "total": 200},
+                    "irrelevant_sentence": {"accuracy": 0.14, "correct": 28, "total": 200},
                 },
                 "Gemma4-E4B-it": {
-                    "standard":            {"accuracy": 0.465, "correct": 93, "total": 200},
-                    "number_swap":         {"accuracy": 0.28,  "correct": 56, "total": 200},
-                    "irrelevant_sentence": {"accuracy": 0.40,  "correct": 80, "total": 200},
+                    "standard": {"accuracy": 0.465, "correct": 93, "total": 200},
+                    "number_swap": {"accuracy": 0.28, "correct": 56, "total": 200},
+                    "irrelevant_sentence": {"accuracy": 0.40, "correct": 80, "total": 200},
                 },
             },
         }
@@ -374,6 +376,7 @@ class TestAnswerFiveQuestions:
 # ---------------------------------------------------------------------------
 # SCENARIO-VERIFY-095: compare_vs_exp235
 # ---------------------------------------------------------------------------
+
 
 class TestCompareVsExp235:
     """SCENARIO-VERIFY-095: compare_vs_exp235 returns comparison dict."""
@@ -412,6 +415,7 @@ class TestCompareVsExp235:
 # ---------------------------------------------------------------------------
 # SCENARIO-VERIFY-097: artifact schema
 # ---------------------------------------------------------------------------
+
 
 class TestBuildArtifact:
     """SCENARIO-VERIFY-097: build_artifact schema."""
@@ -474,6 +478,7 @@ class TestBuildArtifact:
 # ---------------------------------------------------------------------------
 # SCENARIO-VERIFY-098: docs_updated field
 # ---------------------------------------------------------------------------
+
 
 class TestDocsUpdated:
     """SCENARIO-VERIFY-098: docs_updated is True only when Exp 295 fully completed."""
@@ -562,6 +567,7 @@ class TestDocsUpdated:
 # ---------------------------------------------------------------------------
 # Integration: load_exp_results end-to-end with fake data
 # ---------------------------------------------------------------------------
+
 
 class TestFullAnalysisWithData:
     """REQ-VERIFY-076: end-to-end analysis with complete fake artifacts."""

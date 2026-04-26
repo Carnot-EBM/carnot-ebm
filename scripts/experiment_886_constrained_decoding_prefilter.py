@@ -161,40 +161,40 @@ def _make_semantic_error_functions() -> list[str]:
     """
     templates = [
         # Off-by-one in range (skips last element)
-        '''\
+        """\
 def compute_sum_buggy(n: int) -> int:
     total = 0
     for i in range(n - 1):
         total += i
     return total
-''',
+""",
         # Wrong operator (subtraction instead of addition)
-        '''\
+        """\
 def compute_product_buggy(items: list) -> float:
     result = 1.0
     for item in items:
         result -= item
     return result
-''',
+""",
         # Returns wrong type (int instead of str)
-        '''\
+        """\
 def repeat_string_buggy(s: str, n: int) -> str:
     output = 0
     for _ in range(n):
         output += 1
     return output
-''',
+""",
         # Wrong comparison (< instead of >)
-        '''\
+        """\
 def find_max_buggy(values: list) -> float:
     best = float("inf")
     for v in values:
         if v < best:
             best = v
     return best
-''',
+""",
         # Off-by-one in divisor
-        '''\
+        """\
 def running_average_buggy(values: list) -> list:
     result = []
     total = 0.0
@@ -202,18 +202,18 @@ def running_average_buggy(values: list) -> list:
         total += v
         result.append(total / (i + 2))
     return result
-''',
+""",
         # Missing initialization reset
-        '''\
+        """\
 def count_occurrences_buggy(items: list, target: int) -> int:
     count = 1
     for item in items:
         if item == target:
             count += 1
     return count
-''',
+""",
         # Appends to wrong variable
-        '''\
+        """\
 def flatten_buggy(nested: list) -> list:
     result = []
     other = []
@@ -221,32 +221,32 @@ def flatten_buggy(nested: list) -> list:
         for item in sublist:
             other.append(item)
     return result
-''',
+""",
         # Builds reverse incorrectly
-        '''\
+        """\
 def reverse_string_buggy(s: str) -> str:
     result = ""
     for ch in s:
         result = result + ch
     return result
-''',
+""",
         # Clamp logic inverted
-        '''\
+        """\
 def clamp_buggy(value: float, lo: float, hi: float) -> float:
     if value > lo:
         return lo
     if value < hi:
         return hi
     return value
-''',
+""",
         # Palindrome check uses wrong index
-        '''\
+        """\
 def is_palindrome_buggy(s: str) -> bool:
     for i in range(len(s) // 2):
         if s[i] != s[i]:
             return False
     return True
-''',
+""",
     ]
     return templates
 
@@ -259,59 +259,59 @@ def _make_syntactic_error_functions() -> list[str]:
     """
     templates = [
         # Missing colon after def
-        '''\
+        """\
 def compute_sum_broken(n: int) -> int
     total = 0
     for i in range(n):
         total += i
     return total
-''',
+""",
         # Bad indentation (dedent doesn't match)
-        '''\
+        """\
 def compute_product_broken(items: list) -> float:
     result = 1.0
     for item in items:
       result *= item
         result += 0
     return result
-''',
+""",
         # Missing colon after for
-        '''\
+        """\
 def repeat_string_broken(s: str, n: int) -> str:
     output = ""
     for _ in range(n)
         output += s
     return output
-''',
+""",
         # Unterminated string literal in the middle
-        '''\
+        """\
 def find_max_broken(values: list) -> float:
     best = float("-inf
     for v in values:
         if v > best:
             best = v
     return best
-''',
+""",
         # Invalid keyword usage
-        '''\
+        """\
 def count_broken(items: list, target: int) -> int:
     count = 0
     foreach item in items:
         if item == target:
             count += 1
     return count
-''',
+""",
         # Wrong indentation at function body start
-        '''\
+        """\
 def flatten_broken(nested: list) -> list:
 result = []
 for sublist in nested:
     for item in sublist:
         result.append(item)
 return result
-''',
+""",
         # Missing closing parenthesis in mid-body call
-        '''\
+        """\
 def running_average_broken(values: list) -> list:
     result = []
     total = 0.0
@@ -319,29 +319,29 @@ def running_average_broken(values: list) -> list:
         total += v
         result.append(total / (i + 1))
     return result
-''',
+""",
         # Double assignment operator
-        '''\
+        """\
 def reverse_broken(s: str) -> str:
     result == ""
     for ch in s:
         result = ch + result
     return result
-''',
+""",
         # Mismatched bracket
-        '''\
+        """\
 def clamp_broken(value: float, lo: float, hi: float) -> float:
     if value < lo:
         return lo]
     if value > hi:
         return hi
     return value
-''',
+""",
         # Truncated mid-expression (simulates LLM stopping early)
-        '''\
+        """\
 def is_palindrome_broken(s: str) -> bool:
     for i in range(len(s
-''',
+""",
     ]
     return templates
 
@@ -372,7 +372,7 @@ def main() -> None:
     # -----------------------------------------------------------------------
     # Build the 30-sample corpus.
     # -----------------------------------------------------------------------
-    correct_samples = _make_correct_functions()        # 10 correct
+    correct_samples = _make_correct_functions()  # 10 correct
     semantic_samples = _make_semantic_error_functions()  # 10 semantic-error (syntax OK)
     syntactic_samples = _make_syntactic_error_functions()  # 10 syntax-broken
 
@@ -436,6 +436,7 @@ def main() -> None:
     )
 
     import json
+
     os.makedirs("results", exist_ok=True)
     with open("results/experiment_886_constrained_decoding_prefilter.json", "w") as f:
         json.dump(artifact, f, indent=2)

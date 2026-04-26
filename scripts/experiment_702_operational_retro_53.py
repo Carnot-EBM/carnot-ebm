@@ -149,12 +149,12 @@ def main() -> None:
         total_experiments = len(CYCLE_EXPERIMENTS)
         per_experiment_avg_min = wall_time_minutes / total_experiments
 
-        slowest_5 = sorted(
-            experiment_table, key=lambda x: x["duration_s"], reverse=True
-        )[:5]
+        slowest_5 = sorted(experiment_table, key=lambda x: x["duration_s"], reverse=True)[:5]
 
         wall_time_delta = wall_time_minutes - PRIOR_MILESTONE_AVG_MIN * total_experiments
-        wall_time_direction = "improvement" if per_experiment_avg_min < PRIOR_MILESTONE_AVG_MIN else "regression"
+        wall_time_direction = (
+            "improvement" if per_experiment_avg_min < PRIOR_MILESTONE_AVG_MIN else "regression"
+        )
 
         # ---------------------------------------------------------------
         # Step 3: Key research metrics
@@ -175,7 +175,9 @@ def main() -> None:
         # Distillation invariant: teacher_inference_duration_s >= corpus_size * 0.5
         teacher_s = r690.get("teacher_inference_duration_s", 0.0)
         corpus_size = r690.get("corpus_size", 0)
-        distillation_invariant_confirmed = teacher_s >= (corpus_size * DISTILLATION_CORPUS_MULTIPLIER)
+        distillation_invariant_confirmed = teacher_s >= (
+            corpus_size * DISTILLATION_CORPUS_MULTIPLIER
+        )
 
         # JEPA v16 OOD AUC
         jepa_v16_ood_auc = r698.get("v16_ood_auc", 0.0)
@@ -195,8 +197,7 @@ def main() -> None:
             "vr_cross_model_delta": r694.get("cross_model_delta", None),
             "tier_28_winner": r695.get("tier_28_winner", "unknown"),
             "abstention_fp_reduced": (
-                r696.get("fp_rate_best_abstention", 1.0)
-                < r696.get("fp_rate_no_abstention", 1.0)
+                r696.get("fp_rate_best_abstention", 1.0) < r696.get("fp_rate_no_abstention", 1.0)
             ),
             "psv_real_fp_trend_slope": psv_real_fp_trend_slope,
             "jepa_v16_ood_auc": jepa_v16_ood_auc,
@@ -239,8 +240,8 @@ def main() -> None:
         # Count tiers with at least one positive result in this cycle
         # Tier map from CLAUDE.md: Large=Boltzmann, Medium=Gibbs, Efficient=KAN, Small=Ising
         tier_results = {
-            "tier_1_boltzmann": False,   # no boltzmann experiment in this cycle
-            "tier_2_gibbs": False,       # no gibbs experiment in this cycle
+            "tier_1_boltzmann": False,  # no boltzmann experiment in this cycle
+            "tier_2_gibbs": False,  # no gibbs experiment in this cycle
             "tier_3_kan_distill": key_metrics["distillation_invariant_confirmed"],
             "tier_4_ising_synthesis": key_metrics["retro_072_resolved"],
         }

@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import List
 
 import jax.numpy as jnp
 import numpy as np
@@ -84,10 +83,10 @@ def _count_numbers(text: str) -> int:
     count = 0
     i = 0
     while i < len(text):
-        if text[i].isdigit() or (text[i] == '-' and i + 1 < len(text) and text[i + 1].isdigit()):
+        if text[i].isdigit() or (text[i] == "-" and i + 1 < len(text) and text[i + 1].isdigit()):
             count += 1
             i += 1
-            while i < len(text) and (text[i].isdigit() or text[i] == '.'):
+            while i < len(text) and (text[i].isdigit() or text[i] == "."):
                 i += 1
         else:
             i += 1
@@ -166,7 +165,7 @@ class DSVDLinearProbe:
         projected = self._W @ raw  # shape (hidden_dim,)
         return jnp.array(projected)
 
-    def fit(self, steps: List[str], labels: List[float]) -> None:
+    def fit(self, steps: list[str], labels: list[float]) -> None:
         """Fit the probe weights using gradient-free logistic regression.
 
         We implement a single-pass Newton update (IRLS with one iteration) on
@@ -275,7 +274,7 @@ class DSVDAdapter:
         """
         return self.probe.score(step_text)
 
-    def verify_chain(self, cot_steps: List[str]) -> List[DSVDProbeResult]:
+    def verify_chain(self, cot_steps: list[str]) -> list[DSVDProbeResult]:
         """Score all steps in a chain-of-thought sequence.
 
         Each result carries the correct step_idx so callers can correlate
@@ -287,7 +286,7 @@ class DSVDAdapter:
         Returns:
             List of DSVDProbeResult, one per step, in the same order.
         """
-        results: List[DSVDProbeResult] = []
+        results: list[DSVDProbeResult] = []
         for idx, step_text in enumerate(cot_steps):
             result = self.probe.score(step_text)
             results.append(
@@ -301,7 +300,7 @@ class DSVDAdapter:
             )
         return results
 
-    def n_violations(self, results: List[DSVDProbeResult]) -> int:
+    def n_violations(self, results: list[DSVDProbeResult]) -> int:
         """Count results where violation_probability exceeds the threshold.
 
         Args:

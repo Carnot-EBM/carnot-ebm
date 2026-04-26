@@ -154,6 +154,6 @@ class InfoNCELoss:
             return 0.0
         losses = [
             self.compute(a, p, ns)
-            for a, p, ns in zip(anchors, positives, negatives_list)
+            for a, p, ns in zip(anchors, positives, negatives_list, strict=False)
         ]
         return float(np.mean(losses))

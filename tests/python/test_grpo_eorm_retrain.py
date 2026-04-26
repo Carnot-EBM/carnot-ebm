@@ -44,40 +44,48 @@ def _benchmark_with_per_question(
     entries = []
     idx = 0
     for _ in range(n_pipeline_wins):
-        entries.append({
-            "question_id": f"q{idx:03d}",
-            "baseline_correct": False,
-            "pipeline_correct": True,
-            "baseline_response": f"baseline_wrong_{idx}",
-            "pipeline_response": f"pipeline_right_{idx}",
-        })
+        entries.append(
+            {
+                "question_id": f"q{idx:03d}",
+                "baseline_correct": False,
+                "pipeline_correct": True,
+                "baseline_response": f"baseline_wrong_{idx}",
+                "pipeline_response": f"pipeline_right_{idx}",
+            }
+        )
         idx += 1
     for _ in range(n_baseline_wins):
-        entries.append({
-            "question_id": f"q{idx:03d}",
-            "baseline_correct": True,
-            "pipeline_correct": False,
-            "baseline_response": f"baseline_right_{idx}",
-            "pipeline_response": f"pipeline_wrong_{idx}",
-        })
+        entries.append(
+            {
+                "question_id": f"q{idx:03d}",
+                "baseline_correct": True,
+                "pipeline_correct": False,
+                "baseline_response": f"baseline_right_{idx}",
+                "pipeline_response": f"pipeline_wrong_{idx}",
+            }
+        )
         idx += 1
     for _ in range(n_ties_correct):
-        entries.append({
-            "question_id": f"q{idx:03d}",
-            "baseline_correct": True,
-            "pipeline_correct": True,
-            "baseline_response": f"both_right_{idx}",
-            "pipeline_response": f"also_right_{idx}",
-        })
+        entries.append(
+            {
+                "question_id": f"q{idx:03d}",
+                "baseline_correct": True,
+                "pipeline_correct": True,
+                "baseline_response": f"both_right_{idx}",
+                "pipeline_response": f"also_right_{idx}",
+            }
+        )
         idx += 1
     for _ in range(n_ties_wrong):
-        entries.append({
-            "question_id": f"q{idx:03d}",
-            "baseline_correct": False,
-            "pipeline_correct": False,
-            "baseline_response": f"both_wrong_{idx}",
-            "pipeline_response": f"also_wrong_{idx}",
-        })
+        entries.append(
+            {
+                "question_id": f"q{idx:03d}",
+                "baseline_correct": False,
+                "pipeline_correct": False,
+                "baseline_response": f"both_wrong_{idx}",
+                "pipeline_response": f"also_wrong_{idx}",
+            }
+        )
         idx += 1
     return {"per_question_results": entries}
 
@@ -88,11 +96,17 @@ def _fover_data(n_correct: int = 4, n_incorrect: int = 4) -> list:
     # Each question gets one correct and one incorrect step
     n = min(n_correct, n_incorrect)
     for i in range(n):
-        entries.append({"question_id": f"fq{i}", "step_text": f"correct step {i}", "label": "correct"})
-        entries.append({"question_id": f"fq{i}", "step_text": f"incorrect step {i}", "label": "incorrect"})
+        entries.append(
+            {"question_id": f"fq{i}", "step_text": f"correct step {i}", "label": "correct"}
+        )
+        entries.append(
+            {"question_id": f"fq{i}", "step_text": f"incorrect step {i}", "label": "incorrect"}
+        )
     # Extra correct entries without a matching incorrect (should not form pairs)
     for i in range(n, n_correct):
-        entries.append({"question_id": f"fq_solo_{i}", "step_text": f"solo correct {i}", "label": "correct"})
+        entries.append(
+            {"question_id": f"fq_solo_{i}", "step_text": f"solo correct {i}", "label": "correct"}
+        )
     return entries
 
 
@@ -101,8 +115,8 @@ def _synthetic_pairs(n: int = 5) -> list[GRPOContrastivePair]:
     return [
         GRPOContrastivePair(
             question_id=f"sq{i}",
-            correct_response=f"The answer is {i*2}.",
-            incorrect_response=f"The answer is {i*2 + 1}.",
+            correct_response=f"The answer is {i * 2}.",
+            incorrect_response=f"The answer is {i * 2 + 1}.",
         )
         for i in range(n)
     ]
@@ -140,19 +154,27 @@ class TestBuildGrpoPairsFromBenchmark:
         """SCENARIO-LEARN-080: benchmark with no per-question paired fields → empty."""
         # Exp 538 real format: only summary-level accuracy, no per-question data
         f = tmp_path / "exp538.json"
-        _write_json(f, {
-            "experiment": 538,
-            "baseline_accuracy": 0.32,
-            "pipeline_accuracy": 0.32,
-            "n_questions": 25,
-        })
+        _write_json(
+            f,
+            {
+                "experiment": 538,
+                "baseline_accuracy": 0.32,
+                "pipeline_accuracy": 0.32,
+                "n_questions": 25,
+            },
+        )
         result = build_grpo_pairs_from_benchmark(f)
         assert result == []
 
     def test_pipeline_wins_create_pairs(self, tmp_path: Path) -> None:
         """REQ-LEARN-051: pipeline_correct=True, baseline_correct=False → pipeline is correct."""
         f = tmp_path / "bench.json"
-        _write_json(f, _benchmark_with_per_question(n_pipeline_wins=3, n_baseline_wins=0, n_ties_correct=0, n_ties_wrong=0))
+        _write_json(
+            f,
+            _benchmark_with_per_question(
+                n_pipeline_wins=3, n_baseline_wins=0, n_ties_correct=0, n_ties_wrong=0
+            ),
+        )
         pairs = build_grpo_pairs_from_benchmark(f)
         assert len(pairs) == 3
         for pair in pairs:
@@ -162,7 +184,12 @@ class TestBuildGrpoPairsFromBenchmark:
     def test_baseline_wins_create_pairs(self, tmp_path: Path) -> None:
         """REQ-LEARN-051: baseline_correct=True, pipeline_correct=False → baseline is correct."""
         f = tmp_path / "bench.json"
-        _write_json(f, _benchmark_with_per_question(n_pipeline_wins=0, n_baseline_wins=2, n_ties_correct=0, n_ties_wrong=0))
+        _write_json(
+            f,
+            _benchmark_with_per_question(
+                n_pipeline_wins=0, n_baseline_wins=2, n_ties_correct=0, n_ties_wrong=0
+            ),
+        )
         pairs = build_grpo_pairs_from_benchmark(f)
         assert len(pairs) == 2
         for pair in pairs:
@@ -172,7 +199,12 @@ class TestBuildGrpoPairsFromBenchmark:
     def test_tied_pairs_are_skipped(self, tmp_path: Path) -> None:
         """Concordant (both right or both wrong) pairs produce no contrastive signal."""
         f = tmp_path / "bench.json"
-        _write_json(f, _benchmark_with_per_question(n_pipeline_wins=0, n_baseline_wins=0, n_ties_correct=3, n_ties_wrong=2))
+        _write_json(
+            f,
+            _benchmark_with_per_question(
+                n_pipeline_wins=0, n_baseline_wins=0, n_ties_correct=3, n_ties_wrong=2
+            ),
+        )
         pairs = build_grpo_pairs_from_benchmark(f)
         assert pairs == []
 
@@ -189,51 +221,66 @@ class TestBuildGrpoPairsFromBenchmark:
     def test_empty_responses_skipped(self, tmp_path: Path) -> None:
         """Entries with empty response strings are skipped."""
         f = tmp_path / "bench.json"
-        _write_json(f, {"per_question_results": [
+        _write_json(
+            f,
             {
-                "question_id": "q0",
-                "baseline_correct": False,
-                "pipeline_correct": True,
-                "baseline_response": "",
-                "pipeline_response": "some answer",
+                "per_question_results": [
+                    {
+                        "question_id": "q0",
+                        "baseline_correct": False,
+                        "pipeline_correct": True,
+                        "baseline_response": "",
+                        "pipeline_response": "some answer",
+                    },
+                    {
+                        "question_id": "q1",
+                        "baseline_correct": False,
+                        "pipeline_correct": True,
+                        "baseline_response": "some wrong answer",
+                        "pipeline_response": "",
+                    },
+                ]
             },
-            {
-                "question_id": "q1",
-                "baseline_correct": False,
-                "pipeline_correct": True,
-                "baseline_response": "some wrong answer",
-                "pipeline_response": "",
-            },
-        ]})
+        )
         pairs = build_grpo_pairs_from_benchmark(f)
         assert pairs == []
 
     def test_missing_boolean_fields_skipped(self, tmp_path: Path) -> None:
         """Entries without boolean baseline_correct/pipeline_correct are skipped."""
         f = tmp_path / "bench.json"
-        _write_json(f, {"per_question_results": [
+        _write_json(
+            f,
             {
-                "question_id": "q0",
-                "baseline_response": "wrong",
-                "pipeline_response": "right",
-                # missing boolean fields
-            }
-        ]})
+                "per_question_results": [
+                    {
+                        "question_id": "q0",
+                        "baseline_response": "wrong",
+                        "pipeline_response": "right",
+                        # missing boolean fields
+                    }
+                ]
+            },
+        )
         pairs = build_grpo_pairs_from_benchmark(f)
         assert pairs == []
 
     def test_responses_key_also_scanned(self, tmp_path: Path) -> None:
         """'responses' key is recognized in addition to 'per_question_results'."""
         f = tmp_path / "bench.json"
-        _write_json(f, {"responses": [
+        _write_json(
+            f,
             {
-                "question_id": "r0",
-                "baseline_correct": False,
-                "pipeline_correct": True,
-                "baseline_response": "wrong",
-                "pipeline_response": "right",
-            }
-        ]})
+                "responses": [
+                    {
+                        "question_id": "r0",
+                        "baseline_correct": False,
+                        "pipeline_correct": True,
+                        "baseline_response": "wrong",
+                        "pipeline_response": "right",
+                    }
+                ]
+            },
+        )
         pairs = build_grpo_pairs_from_benchmark(f)
         assert len(pairs) == 1
 
@@ -246,14 +293,19 @@ class TestBuildGrpoPairsFromBenchmark:
     def test_question_id_fallback_to_unknown(self, tmp_path: Path) -> None:
         """Missing question_id field falls back to 'unknown'."""
         f = tmp_path / "bench.json"
-        _write_json(f, {"per_question_results": [
+        _write_json(
+            f,
             {
-                "baseline_correct": False,
-                "pipeline_correct": True,
-                "baseline_response": "wrong",
-                "pipeline_response": "right",
-            }
-        ]})
+                "per_question_results": [
+                    {
+                        "baseline_correct": False,
+                        "pipeline_correct": True,
+                        "baseline_response": "wrong",
+                        "pipeline_response": "right",
+                    }
+                ]
+            },
+        )
         pairs = build_grpo_pairs_from_benchmark(f)
         assert len(pairs) == 1
         assert pairs[0].question_id == "unknown"
@@ -305,10 +357,13 @@ class TestBuildGrpoPairsFromFover:
 
     def test_entries_with_empty_text_skipped(self, tmp_path: Path) -> None:
         f = tmp_path / "fover.json"
-        _write_json(f, [
-            {"question_id": "q0", "step_text": "", "label": "correct"},
-            {"question_id": "q0", "step_text": "real step", "label": "incorrect"},
-        ])
+        _write_json(
+            f,
+            [
+                {"question_id": "q0", "step_text": "", "label": "correct"},
+                {"question_id": "q0", "step_text": "real step", "label": "incorrect"},
+            ],
+        )
         pairs = build_grpo_pairs_from_fover(f)
         # q0 has no valid correct step so no pair
         assert pairs == []
@@ -345,6 +400,7 @@ class TestTrainEormGrpo:
         """Empty pair list → (0.0, 0.5, 0.5) without touching model."""
         model = EORMModel(embed_dim=32, n_heads=4, n_layers=1)
         import copy
+
         original_params = copy.deepcopy(model.params)
         loss, before_auc, after_auc = train_eorm_grpo(model, [], epochs=5)
         assert loss == 0.0
@@ -369,6 +425,7 @@ class TestTrainEormGrpo:
     def test_params_updated_after_training(self) -> None:
         """SCENARIO-LEARN-081: model parameters change after training."""
         import jax.numpy as jnp
+
         model = EORMModel(embed_dim=32, n_heads=4, n_layers=1)
         before = float(jnp.sum(model.params["out_weight"]))
         train_eorm_grpo(model, _synthetic_pairs(5), epochs=5, lr=1e-2)
@@ -383,11 +440,16 @@ class TestTrainEormGrpo:
         """REQ-LEARN-052: contrastive loss is max(0, margin - (E_wrong - E_right))."""
         import jax.numpy as jnp
         from carnot.models.eorm import _make_token_sequence, _SEP_ID, _forward
+
         model = EORMModel(embed_dim=32, n_heads=4, n_layers=1)
         pair = GRPOContrastivePair("q0", "right answer here", "wrong answer here")
         margin = 1.0
-        correct_ids = _make_token_sequence("q0", pair.correct_response, model.max_seq_len, model.vocab_size) or [_SEP_ID]
-        incorrect_ids = _make_token_sequence("q0", pair.incorrect_response, model.max_seq_len, model.vocab_size) or [_SEP_ID]
+        correct_ids = _make_token_sequence(
+            "q0", pair.correct_response, model.max_seq_len, model.vocab_size
+        ) or [_SEP_ID]
+        incorrect_ids = _make_token_sequence(
+            "q0", pair.incorrect_response, model.max_seq_len, model.vocab_size
+        ) or [_SEP_ID]
         e_correct = float(_forward(model.params, correct_ids, model.n_heads))
         e_incorrect = float(_forward(model.params, incorrect_ids, model.n_heads))
         expected_loss = max(0.0, margin - (e_incorrect - e_correct))

@@ -21,7 +21,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -231,14 +231,32 @@ def check_slowest5_governance(slowest_5: list[dict]) -> dict:
     """
     # Experiment IDs explicitly known-retired heading into .69
     # (from exclusion_manifest.yaml PIMI additions and prior entries)
-    retired_ids = {260, 308, 309, 346, 380, 381, 382, 383, 410, 425, 491, 527, 603, 627,
-                   783, 799, 804, 809, 825, 834, 872, 887}
+    retired_ids = {
+        260,
+        308,
+        309,
+        346,
+        380,
+        381,
+        382,
+        383,
+        410,
+        425,
+        491,
+        527,
+        603,
+        627,
+        783,
+        799,
+        804,
+        809,
+        825,
+        834,
+        872,
+        887,
+    }
 
-    violations = [
-        exp["experiment"]
-        for exp in slowest_5
-        if exp["experiment"] in retired_ids
-    ]
+    violations = [exp["experiment"] for exp in slowest_5 if exp["experiment"] in retired_ids]
     return {
         "slowest5_governance_violation": len(violations) > 0,
         "violations": violations,
@@ -359,12 +377,14 @@ def assert_deliverable_written(path: Path) -> None:
     missing = [k for k in required_fields if k not in artifact]
     if missing:
         raise RuntimeError(f"Deliverable missing required fields: {missing}")
-    print(f"[assert_deliverable_written] OK — {path.name} validated ({len(required_fields)} fields)")
+    print(
+        f"[assert_deliverable_written] OK — {path.name} validated ({len(required_fields)} fields)"
+    )
 
 
 def main() -> None:
     """Run the milestone .69 operational retrospective."""
-    started_at = datetime.now(timezone.utc).isoformat()
+    started_at = datetime.now(UTC).isoformat()
 
     print("Loading experiment artifacts for milestone 2026.04.69 (Exps 892-902)...")
     data = load_artifacts()
@@ -392,11 +412,9 @@ def main() -> None:
     # Exp 903 is the retro itself, so total experiments = 818 + 11 (892-902) + 1 (903) = 830
     experiment_count = PRIOR_EXPERIMENT_COUNT + len(MILESTONE_EXPERIMENTS) + 1
 
-    finished_at = datetime.now(timezone.utc).isoformat()
+    finished_at = datetime.now(UTC).isoformat()
     duration_s = round(
-        (
-            datetime.fromisoformat(finished_at) - datetime.fromisoformat(started_at)
-        ).total_seconds(),
+        (datetime.fromisoformat(finished_at) - datetime.fromisoformat(started_at)).total_seconds(),
         3,
     )
 
@@ -411,12 +429,8 @@ def main() -> None:
         "status": "success",
         "experiment_count": experiment_count,
         "experiments_in_milestone": len(MILESTONE_EXPERIMENTS),
-        "experiments_completed": sum(
-            1 for d in data.values() if d.get("status") == "success"
-        ),
-        "experiments_blocked": sum(
-            1 for d in data.values() if d.get("status") == "blocked"
-        ),
+        "experiments_completed": sum(1 for d in data.values() if d.get("status") == "success"),
+        "experiments_blocked": sum(1 for d in data.values() if d.get("status") == "blocked"),
         "wall_time_minutes": wall_time_minutes,
         "per_experiment_avg_minutes": per_exp_avg,
         "slowest_5": slowest_5,
@@ -454,7 +468,9 @@ def main() -> None:
             },
             "lagrange_forgetting_improves": {
                 "result": criteria["lagrange_forgetting_improves"],
-                "constraint_precision_with_forget": data[897].get("constraint_precision_with_forget"),
+                "constraint_precision_with_forget": data[897].get(
+                    "constraint_precision_with_forget"
+                ),
                 "constraint_precision_no_forget": data[897].get("constraint_precision_no_forget"),
                 "precision_delta": data[897].get("precision_delta"),
             },
@@ -474,7 +490,9 @@ def main() -> None:
                 "result": criteria["draft_conditioned_verifier_viable"],
                 "signed_improvement": data[900].get("signed_improvement"),
                 "constraint_violations_baseline": data[900].get("constraint_violations_baseline"),
-                "constraint_violations_draft_conditioned": data[900].get("constraint_violations_draft_conditioned"),
+                "constraint_violations_draft_conditioned": data[900].get(
+                    "constraint_violations_draft_conditioned"
+                ),
             },
             "pimi_resolved": {
                 "result": criteria["pimi_resolved"],

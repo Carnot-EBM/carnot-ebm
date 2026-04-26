@@ -36,7 +36,7 @@ def _uniform_logits(n_tokens: int = 4, vocab_size: int = 8) -> np.ndarray:
 def _peaked_logits(n_tokens: int = 4, vocab_size: int = 8, peak: float = 10.0) -> np.ndarray:
     """Logit array where the first vocab entry dominates via large logit value."""
     arr = np.zeros((n_tokens, vocab_size), dtype=np.float64)
-    arr[:, 0] = peak   # token 0 receives a large logit → high probability
+    arr[:, 0] = peak  # token 0 receives a large logit → high probability
     return arr
 
 
@@ -400,7 +400,7 @@ def test_load_exp282_logits_if_present() -> None:
         pytest.skip("No Exp 282 logit files found — Exp 282 has not been run")
 
     extractor = SpilledEnergyExtractor()
-    for npy_path in npy_files[:3]:   # Check up to 3 files to keep test fast.
+    for npy_path in npy_files[:3]:  # Check up to 3 files to keep test fast.
         result = extractor.extract_from_file(npy_path)
         assert isinstance(result, SpilledEnergyResult)
         assert result.per_token_spilled.shape[0] >= 1

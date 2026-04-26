@@ -67,9 +67,7 @@ def main() -> None:
     )
     tmpl.setup()
 
-    watchdog = ExperimentTimeoutWatchdog(
-        704, timeout_minutes=60, result_path=DELIVERABLE
-    )
+    watchdog = ExperimentTimeoutWatchdog(704, timeout_minutes=60, result_path=DELIVERABLE)
     watchdog.start()
 
     try:

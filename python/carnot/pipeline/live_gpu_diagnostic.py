@@ -243,7 +243,6 @@ def diagnose_live_gpu(
     model_loadable = True  # vacuously true when no models requested
     carnot_force_live_set = check_carnot_force_live()
     failure_reason = ""
-    is_live_capable = False
 
     try:
         # --- Layer 1: CUDA driver visibility ---
@@ -280,9 +279,7 @@ def diagnose_live_gpu(
             loadable, err_msg = check_model_loadable(model_id)
             if not loadable:
                 model_loadable = False
-                failure_reason = (
-                    f"model_loadable: {model_id} failed to load — {err_msg}"
-                )
+                failure_reason = f"model_loadable: {model_id} failed to load — {err_msg}"
                 return LiveGPUDiagnostic(
                     cuda_visible=cuda_visible,
                     torch_available=torch_available,
@@ -293,7 +290,6 @@ def diagnose_live_gpu(
                 )
 
         # All layers passed.
-        is_live_capable = True
         return LiveGPUDiagnostic(
             cuda_visible=cuda_visible,
             torch_available=torch_available,

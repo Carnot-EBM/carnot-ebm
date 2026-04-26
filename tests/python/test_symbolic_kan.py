@@ -23,6 +23,7 @@ from python.carnot.models.symbolic_kan import (
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_pair(n: int = 4, seed: int = 0) -> tuple[np.ndarray, np.ndarray]:
     """Small random (correct, incorrect) feature pair for testing."""
     rng = np.random.default_rng(seed)
@@ -40,6 +41,7 @@ def _small_model(seed: int = 0) -> SymbolicKANModel:
 # ---------------------------------------------------------------------------
 # VOCAB tests — REQ-MODEL-030
 # ---------------------------------------------------------------------------
+
 
 class TestVocab:
     """REQ-MODEL-030: SymbolicKAN node vocabulary."""
@@ -82,6 +84,7 @@ class TestVocab:
 # ---------------------------------------------------------------------------
 # ResidualSpline tests — SCENARIO-MODEL-015
 # ---------------------------------------------------------------------------
+
 
 class TestResidualSpline:
     """SCENARIO-MODEL-015: residual correction behaviour."""
@@ -128,6 +131,7 @@ class TestResidualSpline:
 # SymbolicKANConfig tests — REQ-MODEL-030
 # ---------------------------------------------------------------------------
 
+
 class TestSymbolicKANConfig:
     """REQ-MODEL-030: configuration defaults and attributes."""
 
@@ -145,6 +149,7 @@ class TestSymbolicKANConfig:
 # ---------------------------------------------------------------------------
 # SymbolicKANModel tests — REQ-MODEL-030, SCENARIO-MODEL-015
 # ---------------------------------------------------------------------------
+
 
 class TestSymbolicKANModel:
     """REQ-MODEL-030, SCENARIO-MODEL-015: model forward pass, training, interpretability."""

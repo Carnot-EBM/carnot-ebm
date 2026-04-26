@@ -41,8 +41,18 @@ class TestLoadLabeledResponses:
     def test_loads_from_exp538_cot_pairs_fallback(self, tmp_path):
         # SCENARIO-EXTRACT-073: final fallback uses exp538 cot_pairs format
         cot_pairs = [
-            {"cot_text": "We compute 5 + 3 = 8.", "correct": True, "question": "q1", "model_id": "m1"},
-            {"cot_text": "We compute 5 + 3 = 9.", "correct": False, "question": "q2", "model_id": "m1"},
+            {
+                "cot_text": "We compute 5 + 3 = 8.",
+                "correct": True,
+                "question": "q1",
+                "model_id": "m1",
+            },
+            {
+                "cot_text": "We compute 5 + 3 = 9.",
+                "correct": False,
+                "question": "q2",
+                "model_id": "m1",
+            },
         ]
         results_dir = tmp_path / "results"
         results_dir.mkdir()
@@ -145,20 +155,24 @@ class TestRunExperimentGate:
         responses = []
         # Incorrect responses: use a wrong arithmetic equation v2 can detect
         for i in range(n_incorrect):
-            responses.append({
-                "response": f"We compute 5 + 3 = 9 for item {i}.",  # wrong: 5+3=8
-                "is_correct": False,
-                "question": f"q{i}",
-                "model_id": "test",
-            })
+            responses.append(
+                {
+                    "response": f"We compute 5 + 3 = 9 for item {i}.",  # wrong: 5+3=8
+                    "is_correct": False,
+                    "question": f"q{i}",
+                    "model_id": "test",
+                }
+            )
         # Correct responses: plaintext with no arithmetic
         for i in range(n_correct):
-            responses.append({
-                "response": f"The answer is 42 for item {i}.",
-                "is_correct": True,
-                "question": f"q{n_incorrect + i}",
-                "model_id": "test",
-            })
+            responses.append(
+                {
+                    "response": f"The answer is 42 for item {i}.",
+                    "is_correct": True,
+                    "question": f"q{n_incorrect + i}",
+                    "model_id": "test",
+                }
+            )
         return responses
 
     def test_blocked_artifact_when_no_responses(self, tmp_path):
@@ -189,7 +203,9 @@ class TestRunExperimentGate:
         results_dir = tmp_path / "results"
         results_dir.mkdir(parents=True, exist_ok=True)
         (results_dir / "exp538_cot_pairs.json").write_text(
-            json.dumps([{**r, "cot_text": r["response"], "correct": r["is_correct"]} for r in responses])
+            json.dumps(
+                [{**r, "cot_text": r["response"], "correct": r["is_correct"]} for r in responses]
+            )
         )
 
         with (
@@ -209,18 +225,11 @@ class TestRunExperimentGate:
     def test_gate_open_partial_when_recall_20_to_29(self, tmp_path):
         # SCENARIO-EXTRACT-072: v2_recall in [0.20, 0.30) → gate_open_partial
         # 5 incorrect with flaggable errors, 20 incorrect without = 20% recall
-        flaggable = [
-            {"cot_text": f"5 + 3 = 9 for step {i}.", "correct": False}
-            for i in range(5)
-        ]
+        flaggable = [{"cot_text": f"5 + 3 = 9 for step {i}.", "correct": False} for i in range(5)]
         unflaggable_wrong = [
-            {"cot_text": f"The sky is blue item {i}.", "correct": False}
-            for i in range(20)
+            {"cot_text": f"The sky is blue item {i}.", "correct": False} for i in range(20)
         ]
-        correct = [
-            {"cot_text": f"The answer is 42 item {i}.", "correct": True}
-            for i in range(25)
-        ]
+        correct = [{"cot_text": f"The answer is 42 item {i}.", "correct": True} for i in range(25)]
         all_responses = flaggable + unflaggable_wrong + correct
 
         results_dir = tmp_path / "results"
@@ -245,18 +254,11 @@ class TestRunExperimentGate:
     def test_gate_open_resolved_when_recall_gte_30(self, tmp_path):
         # SCENARIO-EXTRACT-072: v2_recall >= 0.30 → gate_open_recall_resolved
         # 10 flaggable incorrect, 20 unflaggable incorrect, 10 correct → recall = 10/30 = 33%
-        flaggable = [
-            {"cot_text": f"5 + 3 = 9 case {i}.", "correct": False}
-            for i in range(10)
-        ]
+        flaggable = [{"cot_text": f"5 + 3 = 9 case {i}.", "correct": False} for i in range(10)]
         unflaggable_wrong = [
-            {"cot_text": f"The sky is blue case {i}.", "correct": False}
-            for i in range(20)
+            {"cot_text": f"The sky is blue case {i}.", "correct": False} for i in range(20)
         ]
-        correct = [
-            {"cot_text": f"Correct answer {i}.", "correct": True}
-            for i in range(10)
-        ]
+        correct = [{"cot_text": f"Correct answer {i}.", "correct": True} for i in range(10)]
         all_responses = flaggable + unflaggable_wrong + correct
 
         results_dir = tmp_path / "results"
@@ -332,6 +334,7 @@ class TestRunExperimentGate:
         artifact = json.loads(
             (results_dir / "experiment_581_coace_recall_diagnostic_v2.json").read_text()
         )
-        assert abs(
-            artifact["recall_improvement"] - (artifact["v2_recall"] - artifact["v1_recall"])
-        ) < 1e-9
+        assert (
+            abs(artifact["recall_improvement"] - (artifact["v2_recall"] - artifact["v1_recall"]))
+            < 1e-9
+        )

@@ -105,11 +105,11 @@ class TestBatchVerifyCorrectness:
     def test_mixed_paragraphs_violations_counted(self) -> None:
         v = SymCodeVerifier()
         paragraphs = [
-            "3 * 4 = 12",   # correct
-            "3 * 4 = 99",   # wrong → violation
+            "3 * 4 = 12",  # correct
+            "3 * 4 = 99",  # wrong → violation
             "No arithmetic here.",
-            "5 + 5 = 10",   # correct
-            "5 + 5 = 11",   # wrong → violation
+            "5 + 5 = 10",  # correct
+            "5 + 5 = 11",  # wrong → violation
         ]
         result = v.batch_verify(paragraphs)
         assert result.total_violations == 2
@@ -125,7 +125,7 @@ class TestBatchVerifyCorrectness:
         v = SymCodeVerifier()
         paragraphs = [
             "47 + 28 = 75",
-            "47 + 28 = 99",   # wrong
+            "47 + 28 = 99",  # wrong
             "The sky is blue.",
             "100 - 25 = 75",
             "100 - 25 = 70",  # wrong

@@ -81,12 +81,12 @@ EXP_ID = 566
 EXP_TITLE = "JEPA PURE MinForm Loss"
 DELIVERABLE = "results/experiment_566_jepa_pure_margin.json"
 CORPUS_PATH = _REPO_ROOT / "results" / "fover_corpus_v2.json"
-OLD_AUC = 0.4286          # Exp 557 baseline
+OLD_AUC = 0.4286  # Exp 557 baseline
 MARGIN = 1.0
 N_EPOCHS = 100
 TRAIN_FRAC = 0.8
 SEED = 566
-FEAT_DIM = 4              # [frac_correct, frac_incorrect, frac_nv, norm_n_steps]
+FEAT_DIM = 4  # [frac_correct, frac_incorrect, frac_nv, norm_n_steps]
 HIDDEN_DIM = 16
 
 
@@ -177,12 +177,12 @@ def _train_pure(
         chains: list[JEPAChainScore] = []
         for e in entries:
             feat = _entry_to_features(e)
-            score = float(jax.nn.sigmoid(
-                p["w2"] @ jax.nn.silu(p["w1"] @ feat + p["b1"]) + p["b2"]
-            )[0])
+            score = float(
+                jax.nn.sigmoid(p["w2"] @ jax.nn.silu(p["w1"] @ feat + p["b1"]) + p["b2"])[0]
+            )
             chains.append(
                 JEPAChainScore(
-                    chain_id=f"{e.get('question','')[:30]}/{e.get('model_id','')}",
+                    chain_id=f"{e.get('question', '')[:30]}/{e.get('model_id', '')}",
                     step_scores=[score],
                     min_score=score,
                     is_correct=bool(e.get("is_correct", False)),
@@ -200,9 +200,7 @@ def _train_pure(
         n_pairs = 0
         for ce in correct_entries:
             feat_c = _entry_to_features(ce)
-            score_c = jax.nn.sigmoid(
-                p["w2"] @ jax.nn.silu(p["w1"] @ feat_c + p["b1"]) + p["b2"]
-            )[0]
+            score_c = jax.nn.sigmoid(p["w2"] @ jax.nn.silu(p["w1"] @ feat_c + p["b1"]) + p["b2"])[0]
             for we in incorrect_entries:
                 feat_w = _entry_to_features(we)
                 score_w = jax.nn.sigmoid(
@@ -251,12 +249,15 @@ def _evaluate_auc(params: dict, entries: list[dict]) -> float:
     labels: list[float] = []
     for e in entries:
         feat = _entry_to_features(e)
-        score = float(jax.nn.sigmoid(
-            params["w2"] @ jax.nn.silu(params["w1"] @ feat + params["b1"]) + params["b2"]
-        )[0])
+        score = float(
+            jax.nn.sigmoid(
+                params["w2"] @ jax.nn.silu(params["w1"] @ feat + params["b1"]) + params["b2"]
+            )[0]
+        )
         scores.append(score)
         labels.append(float(bool(e.get("is_correct", False))))
     from carnot.embeddings.jepa_energy import _auc_from_scores  # re-import for clarity
+
     return _auc_from_scores(scores, labels)
 
 
@@ -305,7 +306,6 @@ def main() -> None:
     """Run Exp 566: JEPA PURE MinForm Loss retrain and AUC comparison."""
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=30):
-
         tmpl = ExperimentTemplate(
             exp_id=EXP_ID,
             title=EXP_TITLE,
@@ -366,6 +366,7 @@ def main() -> None:
 
         class _DictEntry:
             """Adapter to make raw dicts quack like FOVERCorpusEntry for pairs_to_pure_chains."""
+
             def __init__(self, d: dict) -> None:
                 self.question = str(d.get("question", ""))
                 self.model_id = str(d.get("model_id", "unknown"))
@@ -378,7 +379,9 @@ def main() -> None:
         correct_chains, incorrect_chains = pairs_to_pure_chains(adapted, embed_fn)
 
         n_pairs = len(correct_chains) + len(incorrect_chains)
-        _log.info("Correct chains: %d  Incorrect chains: %d", len(correct_chains), len(incorrect_chains))
+        _log.info(
+            "Correct chains: %d  Incorrect chains: %d", len(correct_chains), len(incorrect_chains)
+        )
 
         # ------------------------------------------------------------------
         # Honest verdict
@@ -395,7 +398,9 @@ def main() -> None:
 
         _log.info(
             "AUC improvement=%.4f  retro_060_partial=%s  verdict=%s",
-            auc_improvement, retro_060_partial, honest_verdict,
+            auc_improvement,
+            retro_060_partial,
+            honest_verdict,
         )
 
         # ------------------------------------------------------------------

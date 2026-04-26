@@ -323,9 +323,7 @@ def main() -> None:
     for spec in MODEL_SPECS:
         try:
             _log.info("Loading %s on GPU %d ...", spec["name"], spec["gpu"])
-            model_objects[spec["name"]] = _load_model_pipeline(
-                spec["hf_id"], spec["gpu"], "auto"
-            )
+            model_objects[spec["name"]] = _load_model_pipeline(spec["hf_id"], spec["gpu"], "auto")
             _log.info("Loaded %s OK", spec["name"])
         except Exception as exc:
             _log.error("Failed to load %s: %s — blocked", spec["name"], exc)
@@ -460,8 +458,7 @@ def main() -> None:
         label = hr.get("headline_label", "no_positive_result")
         verdict = precision_artifact.get("honest_verdict", "unknown")
         _log.info(
-            "HEADLINE: Gemma4-E4B-it FULL_STACK signed_improvement=%.4f "
-            "label=%s honest_verdict=%s",
+            "HEADLINE: Gemma4-E4B-it FULL_STACK signed_improvement=%.4f label=%s honest_verdict=%s",
             hr.get("signed_improvement", float("nan")),
             label,
             verdict,
@@ -498,6 +495,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

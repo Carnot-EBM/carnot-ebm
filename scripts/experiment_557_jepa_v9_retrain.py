@@ -87,10 +87,10 @@ EXP_TITLE = "JEPA v9 Retrain Diverse Corpus"
 DELIVERABLE = "results/experiment_557_jepa_v9_retrain.json"
 CORPUS_PATH = _REPO_ROOT / "results" / "fover_corpus_v2.json"
 MODEL_OUTPUT = _REPO_ROOT / "results" / "jepa_predictor_557_real.safetensors"
-BEFORE_AUC = 0.444          # Exp 543 v8 result
-MIN_LABELED = 100           # gate: need at least 100 corpus entries
-MIN_ENTROPY = 1.0           # gate: need at least 1.0 bits constraint_type_entropy
-RETRO_AUC_GATE = 0.800      # retro_056_closed threshold
+BEFORE_AUC = 0.444  # Exp 543 v8 result
+MIN_LABELED = 100  # gate: need at least 100 corpus entries
+MIN_ENTROPY = 1.0  # gate: need at least 1.0 bits constraint_type_entropy
+RETRO_AUC_GATE = 0.800  # retro_056_closed threshold
 LAMBDA_KL = 0.01
 
 
@@ -108,9 +108,7 @@ def _compute_entropy(entries: list[dict]) -> float:
     total = sum(counter.values())
     if total == 0:
         return 0.0
-    return -sum(
-        (c / total) * math.log2(c / total) for c in counter.values() if c > 0
-    )
+    return -sum((c / total) * math.log2(c / total) for c in counter.values() if c > 0)
 
 
 def _stratified_split(
@@ -150,9 +148,7 @@ def _stratified_split(
     return train_entries, test_entries
 
 
-def _evaluate_auc_on_set(
-    params: dict, test_entries: list[dict]
-) -> float:
+def _evaluate_auc_on_set(params: dict, test_entries: list[dict]) -> float:
     """Compute ROC-AUC on the test set using trained LeWorldModel params.
 
     **For engineers:**
@@ -197,7 +193,6 @@ def main() -> None:
 
     # Step 2: hard timeout guard
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=30):
-
         # Step 3: ExperimentTemplate scaffolding
         tmpl = ExperimentTemplate(
             exp_id=EXP_ID,
@@ -240,7 +235,8 @@ def main() -> None:
         if n_labeled < MIN_LABELED:
             _log.warning(
                 "Corpus has %d entries, need >= %d — writing blocked artifact",
-                n_labeled, MIN_LABELED,
+                n_labeled,
+                MIN_LABELED,
             )
             artifact = tmpl.build_result(
                 {
@@ -270,12 +266,17 @@ def main() -> None:
         # Filter entries that have at least one constraint_type label
         labeled_entries = [e for e in raw_corpus if e.get("constraint_types")]
         entropy_after = _compute_entropy(labeled_entries)
-        _log.info("Entropy after filtering unlabeled: %.4f bits (n=%d)", entropy_after, len(labeled_entries))
+        _log.info(
+            "Entropy after filtering unlabeled: %.4f bits (n=%d)",
+            entropy_after,
+            len(labeled_entries),
+        )
 
         if entropy_after < MIN_ENTROPY:
             _log.warning(
                 "Entropy %.4f bits < %.1f bits minimum — writing blocked artifact",
-                entropy_after, MIN_ENTROPY,
+                entropy_after,
+                MIN_ENTROPY,
             )
             artifact = tmpl.build_result(
                 {
@@ -302,16 +303,24 @@ def main() -> None:
         # Fall back to full corpus if fewer than MIN_LABELED labeled entries remain
         training_corpus = labeled_entries if len(labeled_entries) >= MIN_LABELED else raw_corpus
         corpus_entropy = entropy_after if len(labeled_entries) >= MIN_LABELED else entropy_before
-        _log.info("Training corpus size: %d, entropy: %.4f bits", len(training_corpus), corpus_entropy)
+        _log.info(
+            "Training corpus size: %d, entropy: %.4f bits", len(training_corpus), corpus_entropy
+        )
 
         # Step 6: Stratified 80/20 split by constraint_type
         train_entries, test_entries = _stratified_split(training_corpus)
         _log.info("Train: %d, Test: %d", len(train_entries), len(test_entries))
 
         # Step 7: Train with LeWorldModel objective
-        _log.info("Training JEPA v9 with LeWorldModel objective (lambda_kl=%.3f, 200 epochs)...", LAMBDA_KL)
+        _log.info(
+            "Training JEPA v9 with LeWorldModel objective (lambda_kl=%.3f, 200 epochs)...",
+            LAMBDA_KL,
+        )
         training_history = train_leworldmodel(train_entries, lambda_kl=LAMBDA_KL)
-        _log.info("Training complete. Final epoch loss: %.4f", training_history[-1][1] if training_history else float("nan"))
+        _log.info(
+            "Training complete. Final epoch loss: %.4f",
+            training_history[-1][1] if training_history else float("nan"),
+        )
 
         # Extract final trained params for AUC evaluation and saving
         # Re-run training to get final params back (train_leworldmodel returns history only)
@@ -330,7 +339,9 @@ def main() -> None:
         )
 
         X_train = jnp.stack([_corpus_entry_to_features(e) for e in train_entries])
-        y_train = jnp.array([float(bool(e.get("is_correct", False))) for e in train_entries], dtype=jnp.float32)
+        y_train = jnp.array(
+            [float(bool(e.get("is_correct", False))) for e in train_entries], dtype=jnp.float32
+        )
         X_test = jnp.stack([_corpus_entry_to_features(e) for e in test_entries])
         y_test_labels = [float(bool(e.get("is_correct", False))) for e in test_entries]
 
@@ -341,6 +352,7 @@ def main() -> None:
         def _batch_loss(p: dict):
             def _single(xi, yi):
                 return _leworldmodel_loss(p, xi, yi, LAMBDA_KL)
+
             totals, preds, kls = jax.vmap(_single)(X_train, y_train)
             return jnp.mean(totals), (jnp.mean(preds), jnp.mean(kls))
 

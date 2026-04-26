@@ -29,6 +29,7 @@
 
 Spec: REQ-LEARN-052, REQ-LEARN-053, SCENARIO-LEARN-095
 """
+
 from __future__ import annotations
 
 import sys
@@ -76,20 +77,24 @@ def _load_corpus() -> tuple[list[dict], str]:
     _log.warning("No real corpus found — using 50 synthetic pairs (CI fallback)")
     synthetic = []
     for i in range(25):
-        synthetic.append({
-            "question_id": f"synthetic_{i}",
-            "step_text": f"Step {i}: {i} + {i+1} = {2*i+1}.",
-            "label": "correct",
-            "confidence": 1.0,
-            "source_domain": "synthetic",
-        })
-        synthetic.append({
-            "question_id": f"synthetic_{i}",
-            "step_text": f"Step {i}: {i} + {i+1} = {2*i+2}.",
-            "label": "incorrect",
-            "confidence": 1.0,
-            "source_domain": "synthetic",
-        })
+        synthetic.append(
+            {
+                "question_id": f"synthetic_{i}",
+                "step_text": f"Step {i}: {i} + {i + 1} = {2 * i + 1}.",
+                "label": "correct",
+                "confidence": 1.0,
+                "source_domain": "synthetic",
+            }
+        )
+        synthetic.append(
+            {
+                "question_id": f"synthetic_{i}",
+                "step_text": f"Step {i}: {i} + {i + 1} = {2 * i + 2}.",
+                "label": "incorrect",
+                "confidence": 1.0,
+                "source_domain": "synthetic",
+            }
+        )
     return synthetic, "synthetic_ci"
 
 
@@ -113,7 +118,11 @@ def main() -> None:
         n_input_pairs = sum(1 for e in corpus if e.get("label") == "incorrect")
         if n_input_pairs == 0:
             n_input_pairs = len(corpus)  # fallback: avoid div-by-zero on all-correct corpus
-        _log.info("Building CPMI triples from %d incorrect pairs (source=%s)", n_input_pairs, corpus_source)
+        _log.info(
+            "Building CPMI triples from %d incorrect pairs (source=%s)",
+            n_input_pairs,
+            corpus_source,
+        )
 
         builder = CPMIContrastivePairBuilder(seed=42)
         triples = builder.build_triples(corpus, n_candidates=5)
@@ -123,7 +132,9 @@ def main() -> None:
         # Collect CPMI scores (exclude 0.0 positives from statistics to avoid bias).
         non_zero_scores = [t.cpmi_score for t in triples if t.cpmi_score > 0.0]
         cpmi_score_mean = round(statistics.mean(non_zero_scores), 4) if non_zero_scores else 0.0
-        cpmi_score_std = round(statistics.stdev(non_zero_scores), 4) if len(non_zero_scores) > 1 else 0.0
+        cpmi_score_std = (
+            round(statistics.stdev(non_zero_scores), 4) if len(non_zero_scores) > 1 else 0.0
+        )
         cpmi_mode = triples[0].cpmi_mode if triples else "ci_proxy"
 
         # Write triples file.
@@ -153,7 +164,10 @@ def main() -> None:
 
         _log.info(
             "augmentation_ratio=%.3f n_input=%d n_output=%d verdict=%s",
-            augmentation_ratio, n_input_pairs, n_output_triples, honest_verdict,
+            augmentation_ratio,
+            n_input_pairs,
+            n_output_triples,
+            honest_verdict,
         )
 
         artifact = tmpl.build_result(

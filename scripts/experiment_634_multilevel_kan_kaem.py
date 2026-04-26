@@ -134,9 +134,7 @@ def compute_energy_mae(model: KAEMEnergy, test_x: np.ndarray) -> float:
         Mean absolute error between model and ground-truth energies.
     """
     n_test = len(test_x)
-    model_energies = np.array(
-        [float(model.energy(jnp.array(test_x[i]))) for i in range(n_test)]
-    )
+    model_energies = np.array([float(model.energy(jnp.array(test_x[i]))) for i in range(n_test)])
     gt_energies = np.array([ground_truth_energy(test_x[i]) for i in range(n_test)])
 
     # Center both energy scales (energy-based models are defined up to an additive constant)
@@ -169,7 +167,9 @@ def main() -> None:
     n_test = 500
     rng = np.random.default_rng(42)
 
-    _log.info("Generating synthetic energy landscape: %d vars, %d train, %d test", n_vars, n_train, n_test)
+    _log.info(
+        "Generating synthetic energy landscape: %d vars, %d train, %d test", n_vars, n_train, n_test
+    )
     train_data = generate_data(n_train, n_vars, rng)
     test_x = rng.uniform(-1.0, 1.0, size=(n_test, n_vars)).astype(np.float32)
 
@@ -192,7 +192,11 @@ def main() -> None:
     ml_model = trainer.train(n_vars=n_vars, data=train_jax)
     accuracy_multilevel = compute_energy_mae(ml_model, test_x)
     total_epochs_multilevel = len(trainer.schedule) * trainer.epochs_per_level
-    _log.info("Multilevel accuracy (MAE): %.6f (total epochs: %d)", accuracy_multilevel, total_epochs_multilevel)
+    _log.info(
+        "Multilevel accuracy (MAE): %.6f (total epochs: %d)",
+        accuracy_multilevel,
+        total_epochs_multilevel,
+    )
 
     # ------------------------------------------------------------------
     # Comparison metrics

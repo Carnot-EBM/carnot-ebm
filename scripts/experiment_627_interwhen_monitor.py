@@ -122,9 +122,7 @@ def main() -> None:
     incorrect_responses = incorrect_responses[:25]
     correct_responses = correct_responses[:10]
 
-    _log.info(
-        "Corpus: %d incorrect, %d correct", len(incorrect_responses), len(correct_responses)
-    )
+    _log.info("Corpus: %d incorrect, %d correct", len(incorrect_responses), len(correct_responses))
 
     # Step 8: run mid-generation monitoring on all responses.
     # For each response, record whether any violation was detected and how early.
@@ -135,8 +133,10 @@ def main() -> None:
         detected = len(violations) > 0
         first_sentence_idx = violations[0].sentence_index if violations else None
         is_early = (
-            first_sentence_idx is not None and first_sentence_idx < n_sentences - 1
-        ) if n_sentences > 1 else False
+            (first_sentence_idx is not None and first_sentence_idx < n_sentences - 1)
+            if n_sentences > 1
+            else False
+        )
         incorrect_results.append(
             {
                 "detected": detected,

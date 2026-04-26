@@ -361,8 +361,7 @@ def _make_math_tutor_instances() -> list[WorkflowInstance]:
 
     for p in correct_problems:
         step_objs = [
-            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i])
-            for i in range(4)
+            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i]) for i in range(4)
         ]
         instances.append(
             WorkflowInstance(
@@ -451,8 +450,7 @@ def _make_math_tutor_instances() -> list[WorkflowInstance]:
 
     for p in error_problems:
         step_objs = [
-            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i])
-            for i in range(4)
+            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i]) for i in range(4)
         ]
         instances.append(
             WorkflowInstance(
@@ -643,8 +641,7 @@ def _make_code_assistant_instances() -> list[WorkflowInstance]:
 
     for p in correct_code:
         step_objs = [
-            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i])
-            for i in range(4)
+            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i]) for i in range(4)
         ]
         instances.append(
             WorkflowInstance(
@@ -862,8 +859,7 @@ def _make_code_assistant_instances() -> list[WorkflowInstance]:
 
     for p in error_code:
         step_objs = [
-            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i])
-            for i in range(4)
+            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i]) for i in range(4)
         ]
         instances.append(
             WorkflowInstance(
@@ -962,8 +958,7 @@ def _make_research_assistant_instances() -> list[WorkflowInstance]:
 
     for p in correct_research:
         step_objs = [
-            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i])
-            for i in range(4)
+            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i]) for i in range(4)
         ]
         instances.append(
             WorkflowInstance(
@@ -1051,8 +1046,7 @@ def _make_research_assistant_instances() -> list[WorkflowInstance]:
 
     for p in error_research:
         step_objs = [
-            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i])
-            for i in range(4)
+            AgentStep(step_index=i, input_text=p["q"], output_text=p["steps"][i]) for i in range(4)
         ]
         instances.append(
             WorkflowInstance(
@@ -1188,9 +1182,7 @@ def _analyze_instance(
     }
 
     # Flag: did agentic verification catch something that final-only missed?
-    result["agentic_catches_more"] = (
-        any_violation_detected and final_only_vr.verified
-    )
+    result["agentic_catches_more"] = any_violation_detected and final_only_vr.verified
 
     return result
 
@@ -1222,7 +1214,9 @@ def _compute_aggregate_metrics(
     metrics["error_detection_rate"] = detected / len(error_instances) if error_instances else 0
 
     # (b) Detection latency.
-    latencies = [r["detection_latency"] for r in error_instances if r["detection_latency"] is not None]
+    latencies = [
+        r["detection_latency"] for r in error_instances if r["detection_latency"] is not None
+    ]
     metrics["detection_latency_mean"] = sum(latencies) / len(latencies) if latencies else None
     metrics["detection_latency_at_error_step"] = sum(1 for l in latencies if l == 0)
     metrics["detection_latency_counts"] = {
@@ -1240,11 +1234,15 @@ def _compute_aggregate_metrics(
     # (d) Repair success rate.
     repair_attempted = [r for r in error_instances if r["repair_attempted"]]
     repair_succeeded = sum(1 for r in repair_attempted if r["repair_success"])
-    metrics["repair_success_rate"] = repair_succeeded / len(repair_attempted) if repair_attempted else 0
+    metrics["repair_success_rate"] = (
+        repair_succeeded / len(repair_attempted) if repair_attempted else 0
+    )
 
     # (e) False positive rate.
     false_positives = sum(1 for r in correct_instances if r["violation_detected"])
-    metrics["false_positive_rate"] = false_positives / len(correct_instances) if correct_instances else 0
+    metrics["false_positive_rate"] = (
+        false_positives / len(correct_instances) if correct_instances else 0
+    )
 
     # (f) Per-workflow-type breakdown.
     by_type: dict[str, dict[str, Any]] = {}
@@ -1257,7 +1255,9 @@ def _compute_aggregate_metrics(
         type_fp = sum(1 for r in type_correct if r["violation_detected"])
         type_root_correct = sum(1 for r in type_errors if r["root_cause_correct"])
         type_repair_ok = sum(1 for r in type_errors if r.get("repair_success", False))
-        type_latencies = [r["detection_latency"] for r in type_errors if r["detection_latency"] is not None]
+        type_latencies = [
+            r["detection_latency"] for r in type_errors if r["detection_latency"] is not None
+        ]
 
         by_type[wtype] = {
             "n_instances": len(type_results),
@@ -1267,7 +1267,9 @@ def _compute_aggregate_metrics(
             "false_positive_rate": type_fp / len(type_correct) if type_correct else 0,
             "root_cause_accuracy": type_root_correct / len(type_errors) if type_errors else 0,
             "repair_success_rate": type_repair_ok / len(type_errors) if type_errors else 0,
-            "mean_detection_latency": sum(type_latencies) / len(type_latencies) if type_latencies else None,
+            "mean_detection_latency": sum(type_latencies) / len(type_latencies)
+            if type_latencies
+            else None,
         }
     metrics["by_workflow_type"] = by_type
 
@@ -1283,10 +1285,7 @@ def _compute_aggregate_metrics(
     )
 
     # Final-only detection rate for comparison.
-    final_only_detected = sum(
-        1 for r in error_instances
-        if not r["final_only"]["verified"]
-    )
+    final_only_detected = sum(1 for r in error_instances if not r["final_only"]["verified"])
     metrics["final_only_detection_rate"] = (
         final_only_detected / len(error_instances) if error_instances else 0
     )
@@ -1333,7 +1332,7 @@ def main() -> None:
     # Run analysis on each instance.
     all_results: list[dict[str, Any]] = []
     for i, instance in enumerate(all_instances):
-        print(f"  [{i+1:2d}/{len(all_instances)}] {instance.name}...", end=" ", flush=True)
+        print(f"  [{i + 1:2d}/{len(all_instances)}] {instance.name}...", end=" ", flush=True)
         try:
             result = _analyze_instance(instance, pipeline)
             all_results.append(result)
@@ -1341,12 +1340,14 @@ def main() -> None:
             print(f"{status} ({result['chain_verify_time_ms']:.1f}ms)")
         except Exception as exc:
             print(f"ERROR: {exc}")
-            all_results.append({
-                "name": instance.name,
-                "workflow_type": instance.workflow_type,
-                "has_error": instance.has_error,
-                "error": str(exc),
-            })
+            all_results.append(
+                {
+                    "name": instance.name,
+                    "workflow_type": instance.workflow_type,
+                    "has_error": instance.has_error,
+                    "error": str(exc),
+                }
+            )
 
     print()
 
@@ -1390,7 +1391,9 @@ def main() -> None:
     print(f"Repair success rate:         {metrics['repair_success_rate']:.1%}")
     print(f"False positive rate:         {metrics['false_positive_rate']:.1%}")
     print(f"Mean constraint coverage:    {metrics['mean_constraint_coverage']:.1%}")
-    print(f"Agentic catches more:        {metrics['agentic_catches_more_count']}/{len([r for r in all_results if r.get('has_error')])} errors")
+    print(
+        f"Agentic catches more:        {metrics['agentic_catches_more_count']}/{len([r for r in all_results if r.get('has_error')])} errors"
+    )
     print()
 
     latency = metrics.get("detection_latency_counts", {})
@@ -1409,7 +1412,11 @@ def main() -> None:
         print(f"    Root cause accuracy:     {wmetrics['root_cause_accuracy']:.1%}")
         print(f"    Repair success rate:     {wmetrics['repair_success_rate']:.1%}")
         lat = wmetrics.get("mean_detection_latency")
-        print(f"    Mean detection latency:  {lat:.1f} steps" if lat is not None else "    Mean detection latency:  N/A")
+        print(
+            f"    Mean detection latency:  {lat:.1f} steps"
+            if lat is not None
+            else "    Mean detection latency:  N/A"
+        )
     print()
     print("=" * 72)
 

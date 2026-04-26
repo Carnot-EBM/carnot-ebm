@@ -391,7 +391,9 @@ def test_run_experiment_required_fields(exp705_gate_closed, exp694_standard, tmp
         assert field in result, f"Missing required field: {field}"
 
 
-def test_run_experiment_fp_delta_equals_after_minus_before(exp705_gate_closed, exp694_standard, tmp_path):
+def test_run_experiment_fp_delta_equals_after_minus_before(
+    exp705_gate_closed, exp694_standard, tmp_path
+):
     """fp_rate_delta == fp_rate_after - fp_rate_before (arithmetic check)."""
     lib_path = str(tmp_path / "lib.json")
     result = run_experiment(

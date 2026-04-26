@@ -18,7 +18,6 @@ from __future__ import annotations
 import time
 
 import jax.numpy as jnp
-
 from carnot.inference.benchmark import (
     generate_random_graph,
     generate_random_sat,
@@ -56,33 +55,33 @@ def demo_sat() -> None:
     # Verify initial assignment
     initial = energy.verify(x)
     failing = initial.verdict.failing
-    print(f"\n--- Initial Verification ---")
+    print("\n--- Initial Verification ---")
     print(f"Total energy: {initial.total_energy:.4f}")
     print(f"Verified: {initial.verdict.verified}")
     print(f"Failing constraints: {len(failing)}/{energy.num_constraints}")
 
     # Repair via gradient descent
-    print(f"\n--- Gradient Repair (200 steps, step_size=0.1) ---")
+    print("\n--- Gradient Repair (200 steps, step_size=0.1) ---")
 
     def round_fn(arr: jnp.ndarray) -> jnp.ndarray:
         return jnp.where(arr >= 0.5, 1.0, 0.0)
 
     start = time.time()
-    result = verify_and_repair(
-        x, energy, step_size=0.1, max_repair_steps=200, round_fn=round_fn
-    )
+    result = verify_and_repair(x, energy, step_size=0.1, max_repair_steps=200, round_fn=round_fn)
     elapsed = time.time() - start
 
     print(f"Repair steps: {result.n_repair_steps}")
     print(f"Time: {elapsed:.2f}s")
 
     if result.repair_trajectory:
-        print(f"Energy trajectory: {result.repair_trajectory[0]:.4f} → {result.repair_trajectory[-1]:.4f}")
+        print(
+            f"Energy trajectory: {result.repair_trajectory[0]:.4f} → {result.repair_trajectory[-1]:.4f}"
+        )
 
     # Final verification
     assert result.rounded_verification is not None
     r_failing = result.rounded_verification.verdict.failing
-    print(f"\n--- After Repair + Rounding ---")
+    print("\n--- After Repair + Rounding ---")
     print(f"Total energy: {result.rounded_verification.total_energy:.4f}")
     print(f"Verified: {result.rounded_verification.verdict.verified}")
     print(f"Failing constraints: {len(r_failing)}/{energy.num_constraints}")
@@ -117,7 +116,7 @@ def demo_graph_coloring() -> None:
     print(f"Simulated LLM coloring: {bad_coloring} (all same color!)")
 
     initial = energy.verify(x)
-    print(f"\n--- Initial Verification ---")
+    print("\n--- Initial Verification ---")
     print(f"Total energy: {initial.total_energy:.4f}")
     print(f"Verified: {initial.verdict.verified}")
     print(f"Failing: {len(initial.verdict.failing)}/{energy.num_constraints}")
@@ -125,12 +124,10 @@ def demo_graph_coloring() -> None:
     def round_fn(arr: jnp.ndarray) -> jnp.ndarray:
         return jnp.round(jnp.clip(arr, 0.0, float(n_colors - 1)))
 
-    result = verify_and_repair(
-        x, energy, step_size=0.1, max_repair_steps=200, round_fn=round_fn
-    )
+    result = verify_and_repair(x, energy, step_size=0.1, max_repair_steps=200, round_fn=round_fn)
 
     assert result.rounded_verification is not None
-    print(f"\n--- After Repair + Rounding ---")
+    print("\n--- After Repair + Rounding ---")
     print(f"Total energy: {result.rounded_verification.total_energy:.4f}")
     print(f"Verified: {result.rounded_verification.verdict.verified}")
 
@@ -145,9 +142,7 @@ def demo_benchmark() -> None:
     print("=" * 70)
 
     print("\n--- SAT Benchmark (10 vars, 30 clauses) ---")
-    sat_summary = run_sat_benchmark(
-        n_instances=10, n_vars=10, n_clauses=30, max_repair_steps=50
-    )
+    sat_summary = run_sat_benchmark(n_instances=10, n_vars=10, n_clauses=30, max_repair_steps=50)
     print(f"Avg initial violations: {sat_summary.avg_initial_violations:.1f}")
     print(f"Avg repaired violations: {sat_summary.avg_repaired_violations:.1f}")
     print(f"Repair success rate: {sat_summary.repair_success_rate:.0%}")

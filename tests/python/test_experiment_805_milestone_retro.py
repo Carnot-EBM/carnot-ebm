@@ -43,17 +43,52 @@ def _minimal_artifacts() -> dict[int, dict]:
     """
     return {
         793: {"experiment": 793, "honest_verdict": "1_unguarded_sites_found", "duration_s": 1.0},
-        794: {"experiment": 794, "honest_verdict": "tools_installed_synthesis_clean", "tools_installed": True, "duration_s": 2.0},
+        794: {
+            "experiment": 794,
+            "honest_verdict": "tools_installed_synthesis_clean",
+            "tools_installed": True,
+            "duration_s": 2.0,
+        },
         795: {"experiment": 795, "honest_verdict": "retro_028_closed", "duration_s": 60.0},
         796: {"experiment": 796, "honest_verdict": "code_repair_positive", "duration_s": 5.0},
-        797: {"experiment": 797, "honest_verdict": "multi_source_corpus_adequate", "n_labeled_total": 150, "duration_s": 3.0},
-        798: {"experiment": 798, "honest_verdict": "cpmi_augmentation_adequate", "augmentation_ratio": 3.0, "duration_s": 1.0},
-        799: {"experiment": 799, "honest_verdict": "jepa_v21_above_gate", "ood_auc": 0.80, "duration_s": 30.0},
-        800: {"experiment": 800, "honest_verdict": "retrieval_auc_exceeds_target", "retrieval_auc_plain": 0.95, "duration_s": 4.0},
-        801: {"experiment": 801, "honest_verdict": "constraint_addition_positive", "constraint_addition_delta_overall": 0.05, "duration_s": 4.0},
+        797: {
+            "experiment": 797,
+            "honest_verdict": "multi_source_corpus_adequate",
+            "n_labeled_total": 150,
+            "duration_s": 3.0,
+        },
+        798: {
+            "experiment": 798,
+            "honest_verdict": "cpmi_augmentation_adequate",
+            "augmentation_ratio": 3.0,
+            "duration_s": 1.0,
+        },
+        799: {
+            "experiment": 799,
+            "honest_verdict": "jepa_v21_above_gate",
+            "ood_auc": 0.80,
+            "duration_s": 30.0,
+        },
+        800: {
+            "experiment": 800,
+            "honest_verdict": "retrieval_auc_exceeds_target",
+            "retrieval_auc_plain": 0.95,
+            "duration_s": 4.0,
+        },
+        801: {
+            "experiment": 801,
+            "honest_verdict": "constraint_addition_positive",
+            "constraint_addition_delta_overall": 0.05,
+            "duration_s": 4.0,
+        },
         802: {"experiment": 802, "honest_verdict": "tier1_relay_works", "duration_s": 4.0},
         803: {"experiment": 803, "honest_verdict": "hf_models_published", "duration_s": 2.0},
-        804: {"experiment": 804, "honest_verdict": "synthesis_complete", "tools_installed": True, "duration_s": 0.0},
+        804: {
+            "experiment": 804,
+            "honest_verdict": "synthesis_complete",
+            "tools_installed": True,
+            "duration_s": 0.0,
+        },
     }
 
 
@@ -112,7 +147,7 @@ def test_load_artifact_returns_empty_dict_when_json_is_list(tmp_path: Path) -> N
 
     Spec: REQ-METRICS-010
     """
-    (tmp_path / "experiment_798_cpmi_pairs.json").write_text('[1, 2, 3]')
+    (tmp_path / "experiment_798_cpmi_pairs.json").write_text("[1, 2, 3]")
     result = exp805.load_artifact(798, results_dir=tmp_path)
     assert result == {}
 
@@ -596,12 +631,20 @@ def test_run_produces_valid_deliverable(tmp_path: Path) -> None:
 
     # Required schema fields
     for field in [
-        "milestone", "experiment_range", "n_experiments",
-        "criteria_met_count", "criteria_total",
-        "retros_closed", "retros_opened", "retros_still_open",
-        "slowest_experiment", "fastest_experiment",
-        "improvements_suggested", "estimated_time_savings_pct",
-        "honest_verdict", "status",
+        "milestone",
+        "experiment_range",
+        "n_experiments",
+        "criteria_met_count",
+        "criteria_total",
+        "retros_closed",
+        "retros_opened",
+        "retros_still_open",
+        "slowest_experiment",
+        "fastest_experiment",
+        "improvements_suggested",
+        "estimated_time_savings_pct",
+        "honest_verdict",
+        "status",
     ]:
         assert field in on_disk, f"Missing required field: {field}"
 

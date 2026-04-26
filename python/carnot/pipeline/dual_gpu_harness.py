@@ -196,10 +196,12 @@ class HarnessAudit:
             if isinstance(node, ast.Call):
                 func = node.func
                 # Direct call: _load_something(...)
-                if isinstance(func, ast.Name) and func.id.startswith("_load_"):
-                    count += 1
-                # Method call: obj._load_something(...)
-                elif isinstance(func, ast.Attribute) and func.attr.startswith("_load_"):
+                if (
+                    isinstance(func, ast.Name)
+                    and func.id.startswith("_load_")
+                    or isinstance(func, ast.Attribute)
+                    and func.attr.startswith("_load_")
+                ):
                     count += 1
         return count
 
@@ -239,7 +241,7 @@ class DualGPUHarness:
         self._live_mode = live_mode
 
     @classmethod
-    def from_env(cls) -> "DualGPUHarness":
+    def from_env(cls) -> DualGPUHarness:
         """Construct from current environment (CARNOT_FORCE_LIVE + torch.cuda.device_count).
 
         Convenience factory for production use.  Unit tests should use the

@@ -286,7 +286,9 @@ class TestRunExperimentLive:
 
     def _make_annotated_pairs(self, n_labeled: int) -> tuple[list, list]:
         """Build minimal mock annotation output that produces n_labeled pairs."""
-        responses = [{"question_id": f"q{i}", "question": f"Q{i}", "response": f"R{i}"} for i in range(5)]
+        responses = [
+            {"question_id": f"q{i}", "question": f"Q{i}", "response": f"R{i}"} for i in range(5)
+        ]
         pairs = [
             {"question_id": f"q{i}", "step_text": f"step{i}", "label": "correct", "confidence": 1.0}
             for i in range(n_labeled)

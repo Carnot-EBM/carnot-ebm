@@ -140,7 +140,9 @@ class _ResidualBlock:
         self.use_residual = use_residual
         if use_residual and in_dim != out_dim:
             limit_proj = jnp.sqrt(6.0 / (in_dim + out_dim))
-            self.proj = jrandom.uniform(k3, (out_dim, in_dim), minval=-limit_proj, maxval=limit_proj)
+            self.proj = jrandom.uniform(
+                k3, (out_dim, in_dim), minval=-limit_proj, maxval=limit_proj
+            )
         else:
             self.proj = None
 
@@ -221,8 +223,10 @@ class BoltzmannModel(AutoGradMixin):
         k_proj, key = jrandom.split(key)
         limit = jnp.sqrt(6.0 / (config.input_dim + hidden_dims[0]))
         self.input_proj = jrandom.uniform(
-            k_proj, (hidden_dims[0], config.input_dim),
-            minval=-limit, maxval=limit,
+            k_proj,
+            (hidden_dims[0], config.input_dim),
+            minval=-limit,
+            maxval=limit,
         )
         self.input_bias = jnp.zeros(hidden_dims[0])
 

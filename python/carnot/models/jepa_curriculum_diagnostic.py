@@ -47,12 +47,10 @@ import random
 from dataclasses import dataclass
 from typing import Any
 
-import jax.numpy as jnp
 import jax.random as jrandom
 
 from carnot.models.eorm import CoTEnergyInput, EORMModel, EORMTrainer
 from carnot.models.jepa_retrain_v2 import CoTPairQualityFilter
-
 
 # ---------------------------------------------------------------------------
 # CorpusAnalysis — snapshot of corpus health metrics after applying a filter

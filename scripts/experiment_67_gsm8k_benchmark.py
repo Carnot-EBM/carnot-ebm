@@ -70,6 +70,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 # 1. GSM8K dataset loading — real or synthetic fallback
 # ---------------------------------------------------------------------------
 
+
 def load_gsm8k_questions(n: int = 200, seed: int = 67) -> list[dict[str, Any]]:
     """Load n questions from the GSM8K dataset.
 
@@ -126,21 +127,21 @@ def load_gsm8k_questions(n: int = 200, seed: int = 67) -> list[dict[str, Any]]:
             if gt is None:
                 continue  # Skip malformed examples.
 
-            questions.append({
-                "question": q_text,
-                "ground_truth": gt,
-                "answer_text": answer_text,
-                "source": "gsm8k",
-            })
+            questions.append(
+                {
+                    "question": q_text,
+                    "ground_truth": gt,
+                    "answer_text": answer_text,
+                    "source": "gsm8k",
+                }
+            )
 
         print(f"  Extracted {len(questions)} questions with valid numeric answers.")
 
         # Pad with synthetic if we didn't get enough.
         if len(questions) < n:
             print(f"  Padding with {n - len(questions)} synthetic questions.")
-            questions.extend(
-                _generate_synthetic_gsm8k(n - len(questions), seed=seed + 1000)
-            )
+            questions.extend(_generate_synthetic_gsm8k(n - len(questions), seed=seed + 1000))
 
         return questions[:n]
 
@@ -218,18 +219,21 @@ def _generate_synthetic_gsm8k(n: int, seed: int = 67) -> list[dict[str, Any]]:
         tmpl = templates[i % len(templates)]
         # Each call uses a different seed for variety.
         q_text, answer = tmpl(random.Random(seed + i * 137))
-        questions.append({
-            "question": q_text,
-            "ground_truth": answer,
-            "answer_text": "",
-            "source": "synthetic",
-        })
+        questions.append(
+            {
+                "question": q_text,
+                "ground_truth": answer,
+                "answer_text": "",
+                "source": "synthetic",
+            }
+        )
 
     rng.shuffle(questions)
     return questions
 
 
 # --- Synthetic question templates (GSM8K-style multi-step word problems) ---
+
 
 def _tmpl_shopping(rng: random.Random) -> tuple[str, int]:
     """Shopping scenario: buy items, apply discount, compute total/change."""
@@ -530,6 +534,7 @@ def _tmpl_warehouse(rng: random.Random) -> tuple[str, int]:
 # 2. Arithmetic constraint extraction from chain-of-thought
 # ---------------------------------------------------------------------------
 
+
 def extract_arithmetic_steps(response: str) -> list[dict[str, Any]]:
     """Parse chain-of-thought text for intermediate arithmetic calculations.
 
@@ -555,10 +560,10 @@ def extract_arithmetic_steps(response: str) -> list[dict[str, Any]]:
     # Match patterns like "3 * 15 = 45" or "45 + 28 = 73".
     # Allow commas in numbers and various multiplication symbols.
     pattern = re.compile(
-        r"(-?[\d,]+(?:\.\d+)?)\s*"             # First operand
-        r"([+\-*/×x÷])\s*"                     # Operator
-        r"(-?[\d,]+(?:\.\d+)?)\s*"             # Second operand
-        r"=\s*(-?[\d,]+(?:\.\d+)?)"            # Result
+        r"(-?[\d,]+(?:\.\d+)?)\s*"  # First operand
+        r"([+\-*/×x÷])\s*"  # Operator
+        r"(-?[\d,]+(?:\.\d+)?)\s*"  # Second operand
+        r"=\s*(-?[\d,]+(?:\.\d+)?)"  # Result
     )
 
     for match in pattern.finditer(response):
@@ -599,21 +604,23 @@ def extract_arithmetic_steps(response: str) -> list[dict[str, Any]]:
 
         satisfied = abs(claimed - correct) < 0.01
 
-        steps.append({
-            "type": "arithmetic",
-            "expression": f"{a} {op} {b}",
-            "a": a,
-            "b": b,
-            "op": op,
-            "claimed": claimed,
-            "correct": correct,
-            "satisfied": satisfied,
-            "description": (
-                f"{a} {op} {b} = {correct}"
-                if not satisfied
-                else f"{a} {op} {b} = {claimed} (correct)"
-            ),
-        })
+        steps.append(
+            {
+                "type": "arithmetic",
+                "expression": f"{a} {op} {b}",
+                "a": a,
+                "b": b,
+                "op": op,
+                "claimed": claimed,
+                "correct": correct,
+                "satisfied": satisfied,
+                "description": (
+                    f"{a} {op} {b} = {correct}"
+                    if not satisfied
+                    else f"{a} {op} {b} = {claimed} (correct)"
+                ),
+            }
+        )
 
     return steps
 
@@ -634,7 +641,7 @@ def verify_addition_carry_chain(a: int, b: int, claimed: int) -> dict[str, Any]:
         since carry-chain verification is specific to addition.
     """
     correct = a + b
-    is_correct = (claimed == correct)
+    is_correct = claimed == correct
 
     max_val = max(abs(a), abs(b), abs(claimed), abs(correct)) + 1
     n_bits = max(4, int(np.ceil(np.log2(max_val + 1))) + 2)
@@ -703,6 +710,7 @@ def verify_arithmetic_constraints(steps: list[dict[str, Any]]) -> dict[str, Any]
 # 3. Error categorization
 # ---------------------------------------------------------------------------
 
+
 def categorize_error(
     question: str,
     response: str,
@@ -757,6 +765,7 @@ def categorize_error(
 # 4. Number extraction from LLM responses
 # ---------------------------------------------------------------------------
 
+
 def _extract_number(text: str) -> int | None:
     """Extract the final numeric answer from an LLM response.
 
@@ -803,6 +812,7 @@ def _extract_number(text: str) -> int | None:
 # 5. Violation formatting for repair prompts
 # ---------------------------------------------------------------------------
 
+
 def format_violations_for_repair(
     arithmetic_result: dict[str, Any],
     extracted_answer: int | None,
@@ -834,9 +844,7 @@ def format_violations_for_repair(
         expr = v.get("expression", "?")
         claimed = v.get("claimed", "?")
         correct = v.get("correct", "?")
-        lines.append(
-            f"  {i}. You wrote {expr} = {claimed}, but the correct result is {correct}."
-        )
+        lines.append(f"  {i}. You wrote {expr} = {claimed}, but the correct result is {correct}.")
 
     lines.append("")
     lines.append(
@@ -850,6 +858,7 @@ def format_violations_for_repair(
 # ---------------------------------------------------------------------------
 # 6. LLM generation (live or simulated)
 # ---------------------------------------------------------------------------
+
 
 def load_llm() -> tuple[Any, Any, str, bool]:
     """Attempt to load Qwen3.5-0.8B; return (tokenizer, model, device, success).
@@ -873,10 +882,12 @@ def load_llm() -> tuple[Any, Any, str, bool]:
             try:
                 print(f"  Loading {model_name} on {device}...")
                 tokenizer = AutoTokenizer.from_pretrained(
-                    model_name, trust_remote_code=True,
+                    model_name,
+                    trust_remote_code=True,
                 )
                 model = AutoModelForCausalLM.from_pretrained(
-                    model_name, trust_remote_code=True,
+                    model_name,
+                    trust_remote_code=True,
                     dtype=torch.float16 if device == "cuda" else None,
                 )
                 if device == "cuda":
@@ -949,12 +960,16 @@ def generate_with_llm(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
         )
 
     inputs = tokenizer(text, return_tensors="pt")
@@ -970,7 +985,7 @@ def generate_with_llm(
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:],
+        outputs[0, inputs["input_ids"].shape[1] :],
         skip_special_tokens=True,
     )
 
@@ -1021,7 +1036,7 @@ def simulate_gsm8k_response(
     else:
         # Repair effectiveness: 70% of arithmetic errors fixed per iteration,
         # 30% of logic errors, 10% of reading errors. Blended ~50% fix rate.
-        error_rate = base_error_rate * (0.50 ** iteration)
+        error_rate = base_error_rate * (0.50**iteration)
 
     is_correct = rng.random() > error_rate
 
@@ -1081,16 +1096,13 @@ def _simulate_wrong_cot(gt: int, error_type: str, rng: random.Random) -> str:
     else:  # reading
         # Wildly wrong answer.
         wrong = gt * rng.choice([2, 3]) + rng.randint(-50, 50)
-        return (
-            f"Let me think about this.\n"
-            f"I think the answer is {wrong}.\n"
-            f"Answer: {wrong}"
-        )
+        return f"Let me think about this.\nI think the answer is {wrong}.\nAnswer: {wrong}"
 
 
 # ---------------------------------------------------------------------------
 # 7. The three benchmark modes
 # ---------------------------------------------------------------------------
+
 
 def run_baseline(
     question: dict[str, Any],
@@ -1122,7 +1134,7 @@ def run_baseline(
 
     elapsed = time.time() - t0
     extracted = _extract_number(response)
-    correct = (extracted is not None and extracted == question["ground_truth"])
+    correct = extracted is not None and extracted == question["ground_truth"]
 
     return {
         "mode": "baseline",
@@ -1170,15 +1182,18 @@ def run_verify_only(
 
     elapsed = time.time() - t0
     extracted = _extract_number(response)
-    correct = (extracted is not None and extracted == question["ground_truth"])
+    correct = extracted is not None and extracted == question["ground_truth"]
     flagged = arith_result["n_violated"] > 0
 
     # Categorize error if wrong.
     error_type = None
     if not correct:
         error_type = categorize_error(
-            question["question"], response, question["ground_truth"],
-            extracted, arith_result,
+            question["question"],
+            response,
+            question["ground_truth"],
+            extracted,
+            arith_result,
         )
 
     return {
@@ -1253,7 +1268,9 @@ def run_verify_repair(
             response = generate_with_llm(prompt, tokenizer, model, device)
         else:
             response = simulate_gsm8k_response(
-                question, iteration=iteration, rng=sim_rng,
+                question,
+                iteration=iteration,
+                rng=sim_rng,
             )
 
         # Extract answer and verify arithmetic steps.
@@ -1265,7 +1282,7 @@ def run_verify_repair(
         total_violated += arith_result["n_violated"]
 
         if iteration == 0:
-            initial_correct = (extracted is not None and extracted == gt)
+            initial_correct = extracted is not None and extracted == gt
             initial_extracted = extracted
 
         # If no violations, stop.
@@ -1278,13 +1295,17 @@ def run_verify_repair(
 
     elapsed = time.time() - t0
     final_extracted = extracted
-    final_correct = (final_extracted is not None and final_extracted == gt)
+    final_correct = final_extracted is not None and final_extracted == gt
 
     # Categorize error if still wrong after repair.
     error_type = None
     if not final_correct:
         error_type = categorize_error(
-            q_text, response, gt, final_extracted, arith_result,
+            q_text,
+            response,
+            gt,
+            final_extracted,
+            arith_result,
         )
 
     return {
@@ -1306,6 +1327,7 @@ def run_verify_repair(
 # ---------------------------------------------------------------------------
 # 8. Main benchmark
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     """Run the GSM8K benchmark: 200 questions, 3 modes, error analysis."""
@@ -1348,22 +1370,35 @@ def main() -> int:
 
         # Mode A: Baseline.
         r_a = run_baseline(
-            q, tokenizer=tokenizer, model=model, device=device,
-            use_live_llm=use_live_llm, sim_rng=sim_rng_a,
+            q,
+            tokenizer=tokenizer,
+            model=model,
+            device=device,
+            use_live_llm=use_live_llm,
+            sim_rng=sim_rng_a,
         )
         results["baseline"].append(r_a)
 
         # Mode B: Verify-only.
         r_b = run_verify_only(
-            q, tokenizer=tokenizer, model=model, device=device,
-            use_live_llm=use_live_llm, sim_rng=sim_rng_b,
+            q,
+            tokenizer=tokenizer,
+            model=model,
+            device=device,
+            use_live_llm=use_live_llm,
+            sim_rng=sim_rng_b,
         )
         results["verify_only"].append(r_b)
 
         # Mode C: Verify-repair.
         r_c = run_verify_repair(
-            q, tokenizer=tokenizer, model=model, device=device,
-            use_live_llm=use_live_llm, sim_rng=sim_rng_c, max_iters=3,
+            q,
+            tokenizer=tokenizer,
+            model=model,
+            device=device,
+            use_live_llm=use_live_llm,
+            sim_rng=sim_rng_c,
+            max_iters=3,
         )
         results["verify_repair"].append(r_c)
 
@@ -1375,6 +1410,7 @@ def main() -> int:
     if use_live_llm:
         del model, tokenizer
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
         gc.collect()
@@ -1385,8 +1421,7 @@ def main() -> int:
     n_total = len(questions)
 
     print(f"\n{sep}")
-    print(f"EXPERIMENT 67 RESULTS ({elapsed:.1f}s) "
-          f"[{'LIVE LLM' if use_live_llm else 'SIMULATED'}]")
+    print(f"EXPERIMENT 67 RESULTS ({elapsed:.1f}s) [{'LIVE LLM' if use_live_llm else 'SIMULATED'}]")
     print(f"  Dataset: {'GSM8K test set' if n_real > 0 else 'Synthetic GSM8K-style'}")
     print(sep)
 
@@ -1409,8 +1444,7 @@ def main() -> int:
         print(f"  {mode_labels[mode]:<28s} {n_correct}/{n_total:>8} {acc:>7.1%}")
 
     improvement = mode_correct["verify_repair"] - mode_correct["baseline"]
-    print(f"\n  Improvement (C vs A): +{improvement} questions "
-          f"(+{improvement / n_total:.1%})")
+    print(f"\n  Improvement (C vs A): +{improvement} questions (+{improvement / n_total:.1%})")
 
     # --- Error categorization ---
     print(f"\n  Error Categorization (Mode B — Verify-only):")
@@ -1507,16 +1541,12 @@ def main() -> int:
         print(f"  {'Source':<12s} {'Baseline':>10s} {'Verify':>10s} {'Repair':>10s}")
         print(f"  {'-' * 45}")
         for source in ["gsm8k", "synthetic"]:
-            source_indices = [
-                i for i, q in enumerate(questions) if q.get("source") == source
-            ]
+            source_indices = [i for i, q in enumerate(questions) if q.get("source") == source]
             n_src = len(source_indices)
             if n_src == 0:
                 continue
             for mode in modes:
-                acc = sum(
-                    1 for i in source_indices if results[mode][i]["correct"]
-                ) / n_src
+                acc = sum(1 for i in source_indices if results[mode][i]["correct"]) / n_src
                 if mode == "baseline":
                     print(f"  {source:<12s} {acc:>9.1%}", end="")
                 else:
@@ -1529,29 +1559,34 @@ def main() -> int:
     repair_acc = mode_correct["verify_repair"] / n_total
 
     if improvement > 0:
-        print(f"  VERDICT: Verify-repair loop improved GSM8K accuracy by "
-              f"+{improvement} questions ({baseline_acc:.1%} -> {repair_acc:.1%})")
+        print(
+            f"  VERDICT: Verify-repair loop improved GSM8K accuracy by "
+            f"+{improvement} questions ({baseline_acc:.1%} -> {repair_acc:.1%})"
+        )
         arith_repaired = repair_by_type["arithmetic"]["repaired"]
-        print(f"  Arithmetic errors are the primary repair target: "
-              f"{arith_repaired} fixed out of "
-              f"{error_counts.get('arithmetic', 0)} detected.")
-        print(f"  The Ising carry-chain verifier provides deterministic, "
-              f"trustworthy feedback.")
+        print(
+            f"  Arithmetic errors are the primary repair target: "
+            f"{arith_repaired} fixed out of "
+            f"{error_counts.get('arithmetic', 0)} detected."
+        )
+        print(f"  The Ising carry-chain verifier provides deterministic, trustworthy feedback.")
     elif improvement == 0 and mode_correct["baseline"] == n_total:
         print(f"  VERDICT: LLM was already perfect on all {n_total} questions.")
     elif improvement == 0:
-        print(f"  VERDICT: Repair loop did not improve overall accuracy "
-              f"({baseline_acc:.1%} -> {repair_acc:.1%}).")
+        print(
+            f"  VERDICT: Repair loop did not improve overall accuracy "
+            f"({baseline_acc:.1%} -> {repair_acc:.1%})."
+        )
         print(f"  Constraint coverage may need expansion for GSM8K-style problems.")
     else:
-        print(f"  VERDICT: Repair loop decreased accuracy by {-improvement}. "
-              f"Investigation needed.")
+        print(f"  VERDICT: Repair loop decreased accuracy by {-improvement}. Investigation needed.")
 
-    print(f"\n  Architecture: LLM -> chain-of-thought parse -> Ising carry-chain "
-          f"verify -> NL feedback -> LLM repair")
+    print(
+        f"\n  Architecture: LLM -> chain-of-thought parse -> Ising carry-chain "
+        f"verify -> NL feedback -> LLM repair"
+    )
     print(f"  Benchmark: {n_total} questions, GSM8K (grade-school math reasoning)")
-    print(f"  This is the first external benchmark validation for Carnot's "
-          f"verify-repair pipeline.")
+    print(f"  This is the first external benchmark validation for Carnot's verify-repair pipeline.")
     print(sep)
     return 0
 

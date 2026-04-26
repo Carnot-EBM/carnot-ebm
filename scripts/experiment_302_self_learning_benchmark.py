@@ -65,7 +65,9 @@ MIN_PRECISION: float = 0.85
 RUN_DATE: str = "20260414"
 """Wall-clock date of this benchmark run, embedded in the artifact."""
 
-TITLE: str = "Integrated self-learning benchmark: Tier 1+2 confidence-weighted + constraint generation"
+TITLE: str = (
+    "Integrated self-learning benchmark: Tier 1+2 confidence-weighted + constraint generation"
+)
 
 # Preferred model — falls back gracefully when GPU unavailable.
 _PREFERRED_MODEL = "Qwen/Qwen3.5-0.8B"
@@ -168,8 +170,7 @@ class BatchResult:
     def __post_init__(self) -> None:
         if len(self.records) != BATCH_SIZE:
             raise ValueError(
-                f"BatchResult requires exactly {BATCH_SIZE} records, "
-                f"got {len(self.records)}"
+                f"BatchResult requires exactly {BATCH_SIZE} records, got {len(self.records)}"
             )
 
     @property
@@ -224,9 +225,7 @@ class ConstraintGenerationSummary:
 
     def __post_init__(self) -> None:
         if self.n_new_constraints < 0:
-            raise ValueError(
-                f"n_new_constraints must be >= 0, got {self.n_new_constraints}"
-            )
+            raise ValueError(f"n_new_constraints must be >= 0, got {self.n_new_constraints}")
         if self.memory_patterns_found < 0:
             raise ValueError(
                 f"memory_patterns_found must be >= 0, got {self.memory_patterns_found}"
@@ -324,16 +323,20 @@ def simulate_gsm8k_questions(n: int = 100, seed: int = 302) -> list[dict[str, An
 
     templates = [
         # (question_template, correct_value_expr)
-        ("If Alice has {a} apples and Bob gives her {b} more, how many does she have?",
-         lambda a, b: a + b),
-        ("A store sells {a} items at ${b} each. What is the total revenue?",
-         lambda a, b: a * b),
-        ("Sarah had {a} coins and spent {b}. How many does she have left?",
-         lambda a, b: a - b),
-        ("A class has {a} students split into {b} equal groups. How many per group?",
-         lambda a, b: a // b),
-        ("Jake ran {a} miles on Monday and {b} miles on Tuesday. How many total?",
-         lambda a, b: a + b),
+        (
+            "If Alice has {a} apples and Bob gives her {b} more, how many does she have?",
+            lambda a, b: a + b,
+        ),
+        ("A store sells {a} items at ${b} each. What is the total revenue?", lambda a, b: a * b),
+        ("Sarah had {a} coins and spent {b}. How many does she have left?", lambda a, b: a - b),
+        (
+            "A class has {a} students split into {b} equal groups. How many per group?",
+            lambda a, b: a // b,
+        ),
+        (
+            "Jake ran {a} miles on Monday and {b} miles on Tuesday. How many total?",
+            lambda a, b: a + b,
+        ),
     ]
 
     questions = []
@@ -357,19 +360,18 @@ def simulate_gsm8k_questions(n: int = 100, seed: int = 302) -> list[dict[str, An
             if answer_value == correct:
                 answer_value = correct + 2  # ensure not accidentally correct
 
-        answer_text = (
-            f"Let me work through this step by step. "
-            f"The answer is {answer_value}."
+        answer_text = f"Let me work through this step by step. The answer is {answer_value}."
+        questions.append(
+            {
+                "question_id": f"exp302_q_{i:04d}",
+                "question": question_text,
+                "answer": answer_text,
+                "correct_answer": str(correct),
+                "is_correct_answer": is_correct,
+                "_true_correct": correct,
+                "_given_answer": answer_value,
+            }
         )
-        questions.append({
-            "question_id": f"exp302_q_{i:04d}",
-            "question": question_text,
-            "answer": answer_text,
-            "correct_answer": str(correct),
-            "is_correct_answer": is_correct,
-            "_true_correct": correct,
-            "_given_answer": answer_value,
-        })
     return questions
 
 
@@ -387,6 +389,7 @@ def _extract_number_from_response(response: str) -> float | None:
         The extracted number, or None.
     """
     import re
+
     numbers = re.findall(r"-?\d+(?:\.\d+)?", response)
     if numbers:
         try:
@@ -439,15 +442,18 @@ def _try_load_gpu_model() -> tuple[Any | None, str]:
     try:
         # Check GPU availability before loading
         import importlib.util
+
         torch_spec = importlib.util.find_spec("torch")
         if torch_spec is None:
             return None, "simulated"
 
         import torch  # type: ignore[import-untyped]
+
         if not torch.cuda.is_available():
             return None, "simulated"
 
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         pipeline = VerifyRepairPipeline(
             model=_PREFERRED_MODEL,
             domains=["arithmetic"],
@@ -734,11 +740,13 @@ def run_constraint_generation(
     # Build generated_constraint_log
     generated_constraint_log: list[dict[str, Any]] = []
     for constraint in added_constraints:
-        generated_constraint_log.append({
-            "pattern_type": constraint.pattern.pattern_type,
-            "constraint_id": constraint.constraint_id,
-            "confidence": round(constraint.pattern.observed_precision, 4),
-        })
+        generated_constraint_log.append(
+            {
+                "pattern_type": constraint.pattern.pattern_type,
+                "constraint_id": constraint.constraint_id,
+                "confidence": round(constraint.pattern.observed_precision, 4),
+            }
+        )
 
     return ConstraintGenerationSummary(
         constraint_count_before=count_before,
@@ -921,8 +929,7 @@ def run_experiment(
     delta = compute_improvement_delta(batch1_result.accuracy, batch2_result.accuracy)
     improved = delta > 0
     print(
-        f"[Exp 302] improvement_delta={delta:+.4f} "
-        f"({'IMPROVED' if improved else 'NO IMPROVEMENT'})"
+        f"[Exp 302] improvement_delta={delta:+.4f} ({'IMPROVED' if improved else 'NO IMPROVEMENT'})"
     )
 
     # [OUTPUT] Build and write artifact
@@ -947,7 +954,9 @@ def main() -> None:
     """Command-line entry point for Exp 302."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Experiment 302: Integrated self-learning benchmark")
+    parser = argparse.ArgumentParser(
+        description="Experiment 302: Integrated self-learning benchmark"
+    )
     parser.add_argument(
         "--output",
         type=Path,

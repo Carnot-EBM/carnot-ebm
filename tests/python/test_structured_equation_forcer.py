@@ -206,7 +206,9 @@ def test_force_and_verify_live_mode(verifier: SymCodeVerifier) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_free_form_lower_than_forced(forcer: StructuredEquationForcer, verifier: SymCodeVerifier) -> None:
+def test_free_form_lower_than_forced(
+    forcer: StructuredEquationForcer, verifier: SymCodeVerifier
+) -> None:
     """REQ-VERIFY-147-2 / SCENARIO-VERIFY-196: free-form score < forced detection_rate."""
     free_form = "You have 47 apples and get 28 more, totaling 75 apples."
     free_score = verifier.detection_score(free_form)

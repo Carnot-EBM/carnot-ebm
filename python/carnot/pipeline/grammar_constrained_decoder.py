@@ -22,13 +22,6 @@
 
 from __future__ import annotations
 
-import re
-from typing import TYPE_CHECKING, Optional
-
-if TYPE_CHECKING:
-    pass
-
-
 # ---------------------------------------------------------------------------
 # GrammarConstrainedDecoder
 # ---------------------------------------------------------------------------
@@ -68,8 +61,8 @@ class GrammarConstrainedDecoder:
 
     def __init__(
         self,
-        model: Optional[object],
-        tokenizer: Optional[object],
+        model: object | None,
+        tokenizer: object | None,
         required_tokens: list[str],
     ) -> None:
         self.model = model
@@ -142,9 +135,9 @@ class GrammarConstrainedDecoder:
 
             def __call__(
                 self,
-                input_ids: "torch.LongTensor",
-                scores: "torch.FloatTensor",
-            ) -> "torch.FloatTensor":
+                input_ids: torch.LongTensor,
+                scores: torch.FloatTensor,
+            ) -> torch.FloatTensor:
                 # input_ids shape: (batch_size, seq_len_so_far)
                 # We only boost when: (a) enough tokens generated, AND
                 # (b) none of the required tokens have appeared yet.
@@ -211,9 +204,5 @@ class GrammarConstrainedDecoder:
         """
         if not outputs:
             return 0.0
-        n_passing = sum(
-            1
-            for out in outputs
-            if any(token in out for token in self.required_tokens)
-        )
+        n_passing = sum(1 for out in outputs if any(token in out for token in self.required_tokens))
         return n_passing / len(outputs)

@@ -62,9 +62,11 @@ Spec: REQ-INFRA-046, REQ-INFRA-047, REQ-VER-035, REQ-VER-036, REQ-VER-037,
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Callable, Optional
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     import numpy as np
 
     from carnot.cascade.tier0b_kan import KANTier0bClassifier
@@ -116,7 +118,7 @@ class RouteResult:
     verdict: str
     eorm_confidence: float
     ising_skip: bool
-    ising_result: Optional[bool] = None
+    ising_result: bool | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
@@ -182,10 +184,10 @@ class CascadeRouter:
         eorm_fn: Callable[[str], float],
         ising_fn: Callable[[str], bool],
         eorm_ising_skip_threshold: float = 0.92,
-        tier21_probe: Optional["Tier21ProbeWrapper"] = None,
-        hidden_state_fn: Optional[Callable[[str], "np.ndarray"]] = None,
-        tier0b_classifier: Optional["KANTier0bClassifier"] = None,
-    tier0f_cocoa: Optional["CoCoADetector"] = None,
+        tier21_probe: Tier21ProbeWrapper | None = None,
+        hidden_state_fn: Callable[[str], np.ndarray] | None = None,
+        tier0b_classifier: KANTier0bClassifier | None = None,
+        tier0f_cocoa: CoCoADetector | None = None,
     ) -> None:
         self.eorm_fn = eorm_fn
         self.ising_fn = ising_fn

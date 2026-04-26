@@ -162,12 +162,14 @@ def build_repair_pairs(questions: list[str], n_verified_correct: int) -> list[Ve
         # The "(synthetic_compute_pattern)" suffix ensures downstream audits
         # know this is reconstructed from 668 aggregate data, not verbatim.
         repair_text = f"COMPUTE: {q[:80].strip()} (synthetic_compute_pattern)"
-        pairs.append(VerifiedRepairPair(
-            question=q,
-            violated_constraint="structured_arithmetic_forcing",
-            repair_response=repair_text,
-            repair_verified_correct=(i < n_verified_correct),
-        ))
+        pairs.append(
+            VerifiedRepairPair(
+                question=q,
+                violated_constraint="structured_arithmetic_forcing",
+                repair_response=repair_text,
+                repair_verified_correct=(i < n_verified_correct),
+            )
+        )
     return pairs
 
 

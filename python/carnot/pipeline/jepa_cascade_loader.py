@@ -90,7 +90,7 @@ def find_exp646_result(project_root: str) -> dict | None:
     if not matches:
         return None
     try:
-        with open(matches[0], "r", encoding="utf-8") as fh:
+        with open(matches[0], encoding="utf-8") as fh:
             return json.load(fh)
     except (OSError, json.JSONDecodeError):
         return None

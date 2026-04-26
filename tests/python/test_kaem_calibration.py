@@ -270,12 +270,8 @@ class TestCalibratedLowRankKAEMEnergy:
             # (the same reference used to fit the calibration layer).
             assert cal._full_kaem is not None
 
-            E_full = np.array(
-                [float(cal._full_kaem.energy(data_cal_jax[i])) for i in range(N_CAL)]
-            )
-            E_lr = np.array(
-                [float(cal._lowrank.energy(data_cal_jax[i])) for i in range(N_CAL)]
-            )
+            E_full = np.array([float(cal._full_kaem.energy(data_cal_jax[i])) for i in range(N_CAL)])
+            E_lr = np.array([float(cal._lowrank.energy(data_cal_jax[i])) for i in range(N_CAL)])
             E_cal = np.array([cal.energy(data_cal_jax[i]) for i in range(N_CAL)])
 
             E_std = float(np.std(E_full)) or 1.0

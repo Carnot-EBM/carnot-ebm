@@ -69,10 +69,7 @@ def _make_relay_batch(
 ) -> RelayBatchResult:
     """Helper: build a RelayBatchResult with n_correct correct answers."""
     # Build per-question results: first n_correct are correct
-    per_question = [
-        {"question_id": f"q{i}", "correct": i < n_correct}
-        for i in range(BATCH_SIZE)
-    ]
+    per_question = [{"question_id": f"q{i}", "correct": i < n_correct} for i in range(BATCH_SIZE)]
     return RelayBatchResult(
         batch_id=batch_id,
         n_questions=BATCH_SIZE,
@@ -366,10 +363,7 @@ def _make_dummy_relay_batch(
     tiers_active: list[str],
     constraint_delta: int = 0,
 ) -> RelayBatchResult:
-    per_question = [
-        {"question_id": f"q{i}", "correct": i < n_correct}
-        for i in range(BATCH_SIZE)
-    ]
+    per_question = [{"question_id": f"q{i}", "correct": i < n_correct} for i in range(BATCH_SIZE)]
     return RelayBatchResult(
         batch_id=batch_id,
         n_questions=BATCH_SIZE,

@@ -11,16 +11,16 @@ from carnot.verify.constraint import (
     VerificationResult,
     repair,
 )
-from carnot.verify.graph_coloring import (
-    ColorDifferenceConstraint,
-    ColorRangeConstraint,
-    build_coloring_energy,
-)
 from carnot.verify.convergence import (
     ConvergenceCertificate,
     certify_repair_convergence,
     compute_absorbing_radius,
     estimate_jacobian_bound,
+)
+from carnot.verify.graph_coloring import (
+    ColorDifferenceConstraint,
+    ColorRangeConstraint,
+    build_coloring_energy,
 )
 from carnot.verify.landscape import LandscapeCertificate, certify_landscape
 from carnot.verify.property_test import (

@@ -38,8 +38,10 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
-from typing import Callable
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Prompt prefixes for candidate generation
@@ -159,7 +161,9 @@ class SETSBaseline:
     ) -> None:
         self._llm_fn = llm_fn
         self._config = config or SETSConfig()
-        self._prefixes = prefixes if prefixes is not None else CANDIDATE_PREFIXES[: self._config.n_candidates]
+        self._prefixes = (
+            prefixes if prefixes is not None else CANDIDATE_PREFIXES[: self._config.n_candidates]
+        )
 
     def generate_candidates(self, question: str) -> list[str]:
         """Generate N candidate responses using distinct prompt prefixes.

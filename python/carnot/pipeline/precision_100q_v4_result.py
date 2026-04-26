@@ -173,12 +173,14 @@ class CoTPairCollector:
         correct : bool
             True if the response contained the correct final answer.
         """
-        self._pairs.append({
-            "model": model,
-            "question": question,
-            "cot_text": cot,
-            "correct": correct,
-        })
+        self._pairs.append(
+            {
+                "model": model,
+                "question": question,
+                "cot_text": cot,
+                "correct": correct,
+            }
+        )
 
     def flush(self) -> int:
         """Write all accumulated pairs to disk atomically and return the count.

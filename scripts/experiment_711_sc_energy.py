@@ -57,6 +57,7 @@ def _write_artifact(artifact: dict, path: Path) -> None:
         json.dump(artifact, fh, indent=2)
     tmp.rename(path)
 
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -87,9 +88,7 @@ def load_fover_chains(path: Path) -> dict[str, list[str]]:
     by_q: dict[str, list[tuple[int, str]]] = defaultdict(list)
     for pair in data["pairs"]:
         if pair.get("step_correct", True):
-            by_q[pair["question"]].append(
-                (pair["step_index"], pair["step_text"])
-            )
+            by_q[pair["question"]].append((pair["step_index"], pair["step_text"]))
     chains: dict[str, list[str]] = {}
     for q, steps in by_q.items():
         ordered = [text for _, text in sorted(steps, key=lambda x: x[0])]
@@ -184,7 +183,9 @@ def main() -> None:
     )
     tmpl.setup()
 
-    with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=60, result_path=str(_REPO / DELIVERABLE)):
+    with ExperimentTimeoutWatchdog(
+        EXP_ID, timeout_minutes=60, result_path=str(_REPO / DELIVERABLE)
+    ):
         # ------------------------------------------------------------------
         # 1. Load FoVer data
         # ------------------------------------------------------------------
@@ -252,7 +253,8 @@ def main() -> None:
         # 5. Verdict
         # ------------------------------------------------------------------
         honest_verdict = (
-            "tier_29_viable" if sc_energy_auc >= TIER_29_AUC_THRESHOLD
+            "tier_29_viable"
+            if sc_energy_auc >= TIER_29_AUC_THRESHOLD
             else "tier_29_below_threshold"
         )
 

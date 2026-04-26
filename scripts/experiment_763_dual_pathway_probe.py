@@ -55,7 +55,7 @@ BASELINE_AUROC = 0.993  # Exp 732 5-fold CV result
 
 FOVER_PATH = Path("results/fover_labeled_steps_live.json")
 
-TRAIN_RATIO = 0.80   # 80% train, 20% test
+TRAIN_RATIO = 0.80  # 80% train, 20% test
 N_EPOCHS = 100
 LR = 1e-3
 RANDOM_SEED = 42
@@ -164,14 +164,8 @@ def run_experiment() -> None:
         # ------------------------------------------------------------------ #
         # 3. Evaluate on test split
         # ------------------------------------------------------------------ #
-        scores = [
-            mop.predict(s.get("question_context", ""), s["step_text"])
-            for s in test_steps
-        ]
-        test_labels = [
-            1.0 if s["label"] == "incorrect" else 0.0
-            for s in test_steps
-        ]
+        scores = [mop.predict(s.get("question_context", ""), s["step_text"]) for s in test_steps]
+        test_labels = [1.0 if s["label"] == "incorrect" else 0.0 for s in test_steps]
 
         auroc = MixtureOfProbes.evaluate_auroc(scores, test_labels)
         precision, recall = MixtureOfProbes.compute_precision_recall(
@@ -203,12 +197,8 @@ def run_experiment() -> None:
                     "embedding": "tfidf_proxy_128dim",
                 },
                 "confidence_caveat": (
-                    "Test set size={}. AUROC confidence interval is wide "
-                    "(+/-{:.2f} at 95% for N={}) — treat as directional, not definitive.".format(
-                        len(test_steps),
-                        1.0 / (2.0 * len(test_steps) ** 0.5),
-                        len(test_steps),
-                    )
+                    f"Test set size={len(test_steps)}. AUROC confidence interval is wide "
+                    f"(+/-{1.0 / (2.0 * len(test_steps) ** 0.5):.2f} at 95% for N={len(test_steps)}) — treat as directional, not definitive."
                 ),
                 "reference": "arXiv 2601.07422",
                 "baseline_reference": "Exp 732 JEPAReasonerProbe 5-fold CV",

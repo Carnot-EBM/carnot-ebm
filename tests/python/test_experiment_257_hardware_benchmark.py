@@ -160,9 +160,7 @@ class TestExportPathBranching:
         import onnxruntime as ort
 
         vp, onnx_path = _make_verifier_and_onnx(tmp_path)
-        sess = ort.InferenceSession(
-            str(onnx_path), providers=["CPUExecutionProvider"]
-        )
+        sess = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
         assert sess is not None
 
     def test_onnx_cpu_inference_shape(self, tmp_path: Path):
@@ -171,9 +169,7 @@ class TestExportPathBranching:
         import onnxruntime as ort
 
         vp, onnx_path = _make_verifier_and_onnx(tmp_path)
-        sess = ort.InferenceSession(
-            str(onnx_path), providers=["CPUExecutionProvider"]
-        )
+        sess = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
         x = np.random.rand(1, FEATURE_DIM).astype(np.float32)
         outputs = sess.run(None, {"input": x})
         assert len(outputs) == 1
@@ -190,9 +186,7 @@ class TestExportPathBranching:
         feats = extract_features(text, domain="arithmetic", prior_confidence=0.7)
         numpy_confidence = vp._predict_from_features(feats).confidence
 
-        sess = ort.InferenceSession(
-            str(onnx_path), providers=["CPUExecutionProvider"]
-        )
+        sess = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
         x = feats.to_array().reshape(1, FEATURE_DIM)
         ort_output = float(sess.run(None, {"input": x})[0].ravel()[0])
         assert abs(ort_output - numpy_confidence) < 1e-5, (

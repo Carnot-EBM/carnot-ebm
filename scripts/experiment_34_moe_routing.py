@@ -51,7 +51,8 @@ def collect_routing_data(n_questions: int = 100) -> dict:
     print(f"Loading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         torch_dtype="auto" if device == "cuda" else None,
     )
     if device == "cuda":
@@ -71,7 +72,7 @@ def collect_routing_data(n_questions: int = 100) -> dict:
         # The exact format depends on the model implementation
         if isinstance(output, tuple) and len(output) >= 2:
             router_out = output[1]
-            if router_out is not None and hasattr(router_out, 'shape'):
+            if router_out is not None and hasattr(router_out, "shape"):
                 captured_router_logits.append(router_out.detach().cpu())
 
     # Find MoE layers and attach hooks
@@ -79,26 +80,34 @@ def collect_routing_data(n_questions: int = 100) -> dict:
     moe_layers = []
     for name, module in model.named_modules():
         # Qwen3.5 MoE uses 'mlp' with experts
-        if "moe" in name.lower() or (hasattr(module, 'experts') and hasattr(module, 'gate')):
+        if "moe" in name.lower() or (hasattr(module, "experts") and hasattr(module, "gate")):
             moe_layers.append(name)
             # Hook the gate/router specifically
-            if hasattr(module, 'gate'):
-                hooks.append(module.gate.register_forward_hook(
-                    lambda m, i, o, name=name: captured_router_logits.append(
-                        ("gate", name, o.detach().cpu() if isinstance(o, torch.Tensor) else o)
+            if hasattr(module, "gate"):
+                hooks.append(
+                    module.gate.register_forward_hook(
+                        lambda m, i, o, name=name: captured_router_logits.append(
+                            ("gate", name, o.detach().cpu() if isinstance(o, torch.Tensor) else o)
+                        )
                     )
-                ))
+                )
 
     if not hooks:
         # Try alternative: hook all modules and look for router-like outputs
         print("  No standard MoE gate found, trying alternative hook strategy...")
         for name, module in model.named_modules():
             if "gate" in name.lower() and "proj" not in name.lower():
-                hooks.append(module.register_forward_hook(
-                    lambda m, i, o, name=name: captured_router_logits.append(
-                        ("alt_gate", name, o.detach().cpu() if isinstance(o, torch.Tensor) else o)
+                hooks.append(
+                    module.register_forward_hook(
+                        lambda m, i, o, name=name: captured_router_logits.append(
+                            (
+                                "alt_gate",
+                                name,
+                                o.detach().cpu() if isinstance(o, torch.Tensor) else o,
+                            )
+                        )
                     )
-                ))
+                )
                 moe_layers.append(name)
 
     print(f"  Hooked {len(hooks)} router modules: {moe_layers[:5]}...")
@@ -115,7 +124,9 @@ def collect_routing_data(n_questions: int = 100) -> dict:
         prompt = f"Answer briefly and factually in one sentence. {question}"
         messages = [{"role": "user", "content": prompt}]
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
         inputs = tokenizer(text, return_tensors="pt")
@@ -127,8 +138,12 @@ def collect_routing_data(n_questions: int = 100) -> dict:
 
         try:
             with torch.no_grad():
-                outputs = model.generate(**inputs, max_new_tokens=80, do_sample=False,
-                                         pad_token_id=tokenizer.eos_token_id)
+                outputs = model.generate(
+                    **inputs,
+                    max_new_tokens=80,
+                    do_sample=False,
+                    pad_token_id=tokenizer.eos_token_id,
+                )
 
             gen_ids = outputs[0, prompt_len:]
             response = tokenizer.decode(gen_ids, skip_special_tokens=True)
@@ -136,7 +151,10 @@ def collect_routing_data(n_questions: int = 100) -> dict:
                 response = response.split("</think>")[-1].strip()
 
             is_correct = check_truthfulqa_answer(
-                response, correct_answers, incorrect_answers, best_answer,
+                response,
+                correct_answers,
+                incorrect_answers,
+                best_answer,
             )
 
             if is_correct:
@@ -169,8 +187,9 @@ def collect_routing_data(n_questions: int = 100) -> dict:
                     }
                     # Count top expert frequency
                     for eid in top_expert_ids:
-                        record["top_expert_distribution"][str(eid)] = \
+                        record["top_expert_distribution"][str(eid)] = (
                             record["top_expert_distribution"].get(str(eid), 0) + 1
+                        )
 
                     target = "correct" if is_correct else "wrong"
                     routing_data[target].append(record)
@@ -182,8 +201,10 @@ def collect_routing_data(n_questions: int = 100) -> dict:
         if (qi + 1) % 10 == 0:
             n_c_routes = len(routing_data["correct"])
             n_w_routes = len(routing_data["wrong"])
-            print(f"  [{qi+1:3d}/{n_questions}] correct={n_correct} wrong={n_wrong} "
-                  f"routing_data: {n_c_routes}c/{n_w_routes}w")
+            print(
+                f"  [{qi + 1:3d}/{n_questions}] correct={n_correct} wrong={n_wrong} "
+                f"routing_data: {n_c_routes}c/{n_w_routes}w"
+            )
 
     # Remove hooks
     for h in hooks:
@@ -249,7 +270,9 @@ def main() -> int:
     elapsed_collect = time.time() - start
 
     print(f"\nCollection done ({elapsed_collect:.0f}s): {n_correct} correct, {n_wrong} wrong")
-    print(f"  Routing records: {len(routing_data['correct'])} correct, {len(routing_data['wrong'])} wrong")
+    print(
+        f"  Routing records: {len(routing_data['correct'])} correct, {len(routing_data['wrong'])} wrong"
+    )
 
     if not routing_data["correct"] or not routing_data["wrong"]:
         print("\n  WARNING: No routing data captured. The model may not expose router logits")
@@ -258,9 +281,13 @@ def main() -> int:
 
         # Still try to analyze what we got
         if routing_data["correct"]:
-            print(f"\n  Correct routing entropy: {np.mean([r['mean_entropy'] for r in routing_data['correct']]):.4f}")
+            print(
+                f"\n  Correct routing entropy: {np.mean([r['mean_entropy'] for r in routing_data['correct']]):.4f}"
+            )
         if routing_data["wrong"]:
-            print(f"  Wrong routing entropy: {np.mean([r['mean_entropy'] for r in routing_data['wrong']]):.4f}")
+            print(
+                f"  Wrong routing entropy: {np.mean([r['mean_entropy'] for r in routing_data['wrong']]):.4f}"
+            )
 
         print("\n  VERDICT: ⚠️ Router hooks didn't capture routing decisions")
         return 0
@@ -271,12 +298,18 @@ def main() -> int:
     print(f"\n{sep}")
     print("EXPERIMENT 34 RESULTS")
     print(sep)
-    print(f"  Correct answers: entropy = {results['correct']['mean_entropy']:.4f} "
-          f"(±{results['correct']['std_entropy']:.4f})")
-    print(f"  Wrong answers:   entropy = {results['wrong']['mean_entropy']:.4f} "
-          f"(±{results['wrong']['std_entropy']:.4f})")
+    print(
+        f"  Correct answers: entropy = {results['correct']['mean_entropy']:.4f} "
+        f"(±{results['correct']['std_entropy']:.4f})"
+    )
+    print(
+        f"  Wrong answers:   entropy = {results['wrong']['mean_entropy']:.4f} "
+        f"(±{results['wrong']['std_entropy']:.4f})"
+    )
     print(f"  Entropy gap:     {results.get('entropy_gap', 0):.4f}")
-    print(f"  Detection accuracy (entropy threshold): {results.get('entropy_detection_accuracy', 0):.1%}")
+    print(
+        f"  Detection accuracy (entropy threshold): {results.get('entropy_detection_accuracy', 0):.1%}"
+    )
 
     gap = results.get("entropy_gap", 0)
     acc = results.get("entropy_detection_accuracy", 0.5)

@@ -202,9 +202,7 @@ def run_experiment(tmpl: ExperimentTemplate) -> dict:
     # Verify the adapted addendum is longer than base for a low-recall domain.
     # Use 'percentage' as the test domain since both feedback sessions pushed it below 0.30.
     sample_domain = "percentage"
-    adapted_addendum = adapter.get_adapted_addendum(
-        question="test question", domain=sample_domain
-    )
+    adapted_addendum = adapter.get_adapted_addendum(question="test question", domain=sample_domain)
     addendum_extended = len(adapted_addendum) > len(FORCER_SYSTEM_ADDENDUM)
 
     # Honest verdict: "metajuls_adapted" if any domain emphasis was installed,

@@ -219,6 +219,7 @@ def _save_jepa_model(model: ContextPredictionEnergy, path: str) -> None:
 
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     from safetensors.numpy import save_file as _save  # noqa: F811
+
     _save(np_flat, path)
 
 
@@ -345,7 +346,8 @@ def run_experiment(
     autofix = apply_env_autofix()
     _log.info(
         "env_autofix: gpu_detected=%s auto_fix_applied=%s",
-        autofix.gpu_detected, autofix.auto_fix_applied,
+        autofix.gpu_detected,
+        autofix.auto_fix_applied,
     )
 
     tmpl = ExperimentTemplate(
@@ -369,7 +371,8 @@ def run_experiment(
             n_labeled_from_442 = int(ann_data.get("n_labeled", 0))
             _log.info(
                 "Loaded Exp 442 annotation: source=%s n_labeled=%d",
-                source, n_labeled_from_442,
+                source,
+                n_labeled_from_442,
             )
         except (OSError, json.JSONDecodeError, ValueError) as exc:
             _log.warning("Could not load Exp 442 annotation (%s); defaulting to synthetic", exc)
@@ -391,7 +394,9 @@ def run_experiment(
         retrain_mode = "synthetic_only"
         _log.info(
             "Real pairs insufficient (n=%d, threshold=%d, source=%s); using synthetic fallback",
-            n_real, REAL_PAIR_THRESHOLD, source,
+            n_real,
+            REAL_PAIR_THRESHOLD,
+            source,
         )
         synthetic_eorm = make_synthetic_eorm_pairs(n=SYNTHETIC_EORM_N, seed=443)
         synthetic_jepa = _make_synthetic_pairs(n=SYNTHETIC_JEPA_N, seed=443)
@@ -411,7 +416,8 @@ def run_experiment(
     triples = _build_eorm_triples(train_vp)
     _log.info(
         "Training EORM for %d epochs on %d contrastive triples",
-        N_EPOCHS, len(triples),
+        N_EPOCHS,
+        len(triples),
     )
 
     eorm_trainer = EORMTrainer(eorm_model, lr=LR, margin=MARGIN)
@@ -451,7 +457,9 @@ def run_experiment(
             jepa_retrainer.train_epoch(train_vp, batch_size=BATCH_SIZE)
 
     jepa_after_auc = jepa_retrainer.evaluate_auc_roc(test_vp)
-    _log.info("JEPA after_auc = %.4f (delta = %+.4f)", jepa_after_auc, jepa_after_auc - jepa_before_auc)
+    _log.info(
+        "JEPA after_auc = %.4f (delta = %+.4f)", jepa_after_auc, jepa_after_auc - jepa_before_auc
+    )
 
     # Step 9: Save models
     eorm_path = str(_root / "results" / "eorm_443_live.safetensors")
@@ -477,7 +485,8 @@ def run_experiment(
 
     _log.info(
         "honest_verdict=%s retro_024_closed=%s",
-        honest_verdict, retro_024_closed,
+        honest_verdict,
+        retro_024_closed,
     )
 
     artifact = tmpl.build_result(

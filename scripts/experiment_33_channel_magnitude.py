@@ -212,9 +212,7 @@ def extract_expert_channel_profiles(model_name: str) -> dict:
         # Stack all FC1 norm vectors and compute pairwise cosine similarity.
         if len(all_fc1_norms) > 1:
             norms_matrix = np.stack(all_fc1_norms)
-            normed = norms_matrix / (
-                np.linalg.norm(norms_matrix, axis=1, keepdims=True) + 1e-10
-            )
+            normed = norms_matrix / (np.linalg.norm(norms_matrix, axis=1, keepdims=True) + 1e-10)
             similarity = normed @ normed.T
             triu_idx = np.triu_indices(len(all_fc1_norms), k=1)
             sims = similarity[triu_idx]
@@ -263,9 +261,7 @@ def extract_expert_channel_profiles(model_name: str) -> dict:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Experiment 33: Channel Magnitude Introspection"
-    )
+    parser = argparse.ArgumentParser(description="Experiment 33: Channel Magnitude Introspection")
     parser.add_argument(
         "--model",
         type=str,

@@ -114,9 +114,7 @@ def _test_check_exclusion_manifest_excluded() -> bool:
         tmp_results.mkdir()
         tmp_deliverable = str(tmp_results / "exp_308_test.json")
 
-        t = ExperimentTemplate(
-            308, "Test Exp 308", tmp_deliverable, repo_root=_REPO_ROOT
-        )
+        t = ExperimentTemplate(308, "Test Exp 308", tmp_deliverable, repo_root=_REPO_ROOT)
         # Redirect output path to our temp directory so we don't pollute results/
         t._output_path = Path(tmp_deliverable)
 

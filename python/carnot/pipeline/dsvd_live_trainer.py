@@ -29,15 +29,14 @@ Spec: REQ-VERIFY-130, REQ-VERIFY-131,
 from __future__ import annotations
 
 import json
-import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Tuple
+from typing import TYPE_CHECKING
 
 import jax.numpy as jnp
-import numpy as np
 
-from carnot.pipeline.dsvd_adapter import DSVDAdapter
+if TYPE_CHECKING:
+    from carnot.pipeline.dsvd_adapter import DSVDAdapter
 
 
 @dataclass
@@ -78,9 +77,7 @@ class TemporalWindowLabeler:
     def __init__(self, window_size: int = 32) -> None:
         self.window_size = window_size
 
-    def label_windows(
-        self, pair: DSVDLiveTrainPair
-    ) -> List[Tuple[jnp.ndarray, bool]]:
+    def label_windows(self, pair: DSVDLiveTrainPair) -> list[tuple[jnp.ndarray, bool]]:
         """Split hidden_states into windows and assign per-window correctness labels.
 
         For correct responses: all windows are labeled True (no violation anywhere).
@@ -152,7 +149,7 @@ class DSVDLiveTrainer:
         self.adapter = dsvd_adapter
         self._labeler = TemporalWindowLabeler()
 
-    def build_training_pairs(self, corpus_path: str) -> List[DSVDLiveTrainPair]:
+    def build_training_pairs(self, corpus_path: str) -> list[DSVDLiveTrainPair]:
         """Load the corpus and construct DSVDLiveTrainPair objects.
 
         Supports fover_corpus_v4.json (or any version) and live_pairs_578.json.
@@ -185,7 +182,7 @@ class DSVDLiveTrainer:
                     corpus = v
                     break
 
-        pairs: List[DSVDLiveTrainPair] = []
+        pairs: list[DSVDLiveTrainPair] = []
         for entry in corpus:
             response = str(entry.get("response", ""))
             is_correct = bool(entry.get("is_correct", False))
@@ -203,9 +200,7 @@ class DSVDLiveTrainer:
             )
         return pairs
 
-    def train(
-        self, pairs: List[DSVDLiveTrainPair], n_epochs: int = 100
-    ) -> float:
+    def train(self, pairs: list[DSVDLiveTrainPair], n_epochs: int = 100) -> float:
         """Fine-tune the DSVDAdapter probe on the provided training pairs.
 
         The training loop:
@@ -242,8 +237,8 @@ class DSVDLiveTrainer:
             val_pairs = pairs
 
         # Expand training pairs to window-level examples.
-        train_steps: List[str] = []
-        train_labels: List[float] = []
+        train_steps: list[str] = []
+        train_labels: list[float] = []
         for p in train_pairs:
             for _window, label in self._labeler.label_windows(p):
                 # Label convention for DSVDLinearProbe: 1.0 = violation (is_correct=False).
@@ -256,7 +251,7 @@ class DSVDLiveTrainer:
         # Evaluate val_auc using DSVDAdapter.score() on held-out pairs.
         return self._compute_auc(val_pairs)
 
-    def _compute_auc(self, pairs: List[DSVDLiveTrainPair]) -> float:
+    def _compute_auc(self, pairs: list[DSVDLiveTrainPair]) -> float:
         """Compute AUC (area under ROC curve) on the provided pairs.
 
         Uses the trapezoidal rule over all unique violation-probability thresholds.
@@ -271,8 +266,8 @@ class DSVDLiveTrainer:
         if not pairs:
             return 0.5
 
-        scores: List[float] = []
-        labels: List[int] = []
+        scores: list[float] = []
+        labels: list[int] = []
         for p in pairs:
             result = self.adapter.verify_step(p.response)
             scores.append(result.violation_probability)
@@ -283,7 +278,7 @@ class DSVDLiveTrainer:
             return 0.5
 
         # Sort by descending score to sweep thresholds.
-        paired = sorted(zip(scores, labels), key=lambda x: -x[0])
+        paired = sorted(zip(scores, labels, strict=False), key=lambda x: -x[0])
         n_pos = sum(labels)
         n_neg = len(labels) - n_pos
 

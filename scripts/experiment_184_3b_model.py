@@ -108,16 +108,16 @@ _N_GPUS = torch.cuda.device_count()
 print(f"CUDA available: {_N_GPUS} GPU(s) detected.")
 for _i in range(_N_GPUS):
     _name = torch.cuda.get_device_name(_i)
-    _vram = torch.cuda.get_device_properties(_i).total_memory / 1024 ** 2
+    _vram = torch.cuda.get_device_properties(_i).total_memory / 1024**2
     print(f"  GPU {_i}: {_name} ({_vram:.0f} MB VRAM)")
 
 # ---------------------------------------------------------------------------
 # Experiment constants.
 # ---------------------------------------------------------------------------
-N_STANDARD = 200        # Number of standard GSM8K questions to run.
-N_ADVERSARIAL = 200     # Number of number-swapped adversarial questions.
-MAX_REPAIR_ITERS = 3    # Maximum verify-repair iterations per question.
-N_BOOTSTRAP = 10_000    # Bootstrap samples for CI computation.
+N_STANDARD = 200  # Number of standard GSM8K questions to run.
+N_ADVERSARIAL = 200  # Number of number-swapped adversarial questions.
+MAX_REPAIR_ITERS = 3  # Maximum verify-repair iterations per question.
+N_BOOTSTRAP = 10_000  # Bootstrap samples for CI computation.
 BOOTSTRAP_SEED_BASE = 184
 
 # ---------------------------------------------------------------------------
@@ -141,7 +141,7 @@ MODEL_CANDIDATES: list[dict[str, Any]] = [
     },
 ]
 
-DEVICE_INDEX = 0   # Always GPU 0 for this single-model experiment.
+DEVICE_INDEX = 0  # Always GPU 0 for this single-model experiment.
 DEVICE_STR = f"cuda:{DEVICE_INDEX}"
 
 
@@ -165,7 +165,7 @@ def load_3b_model() -> tuple[Any, Any, dict[str, Any]]:
         Raises:
             SystemExit: If no candidate model can be loaded (CARNOT_FORCE_LIVE=1).
     """
-    vram_before = torch.cuda.memory_allocated(DEVICE_INDEX) / 1024 ** 2
+    vram_before = torch.cuda.memory_allocated(DEVICE_INDEX) / 1024**2
     print(f"  GPU {DEVICE_INDEX} VRAM before load: {vram_before:.0f} MB")
 
     for candidate in MODEL_CANDIDATES:
@@ -176,7 +176,8 @@ def load_3b_model() -> tuple[Any, Any, dict[str, Any]]:
         t_load = time.perf_counter()
         try:
             tokenizer = AutoTokenizer.from_pretrained(
-                hf_id, trust_remote_code=True,
+                hf_id,
+                trust_remote_code=True,
             )
             model = AutoModelForCausalLM.from_pretrained(
                 hf_id,
@@ -186,28 +187,34 @@ def load_3b_model() -> tuple[Any, Any, dict[str, Any]]:
             )
             model.eval()
             load_time = time.perf_counter() - t_load
-            vram_after = torch.cuda.memory_allocated(DEVICE_INDEX) / 1024 ** 2
+            vram_after = torch.cuda.memory_allocated(DEVICE_INDEX) / 1024**2
             vram_delta = vram_after - vram_before
 
-            print(f"  Loaded {hf_id} in {load_time:.2f}s | "
-                  f"VRAM: {vram_before:.0f} → {vram_after:.0f} MB (+{vram_delta:.0f} MB)")
+            print(
+                f"  Loaded {hf_id} in {load_time:.2f}s | "
+                f"VRAM: {vram_before:.0f} → {vram_after:.0f} MB (+{vram_delta:.0f} MB)"
+            )
 
             # Smoke test with a trivial arithmetic prompt.
             smoke = _generate(model, tokenizer, "What is 2 + 2?", 20)
             print(f"  Smoke test OK: '{smoke[:40].strip()}'")
 
-            return tokenizer, model, {
-                "name": candidate["name"],
-                "hf_id": hf_id,
-                "device": DEVICE_STR,
-                "device_index": DEVICE_INDEX,
-                "load_time_s": round(load_time, 3),
-                "vram_before_mb": round(vram_before, 1),
-                "vram_after_mb": round(vram_after, 1),
-                "vram_delta_mb": round(vram_delta, 1),
-                "dtype": "float16",
-                "live": True,
-            }
+            return (
+                tokenizer,
+                model,
+                {
+                    "name": candidate["name"],
+                    "hf_id": hf_id,
+                    "device": DEVICE_STR,
+                    "device_index": DEVICE_INDEX,
+                    "load_time_s": round(load_time, 3),
+                    "vram_before_mb": round(vram_before, 1),
+                    "vram_after_mb": round(vram_after, 1),
+                    "vram_delta_mb": round(vram_delta, 1),
+                    "dtype": "float16",
+                    "live": True,
+                },
+            )
 
         except Exception as exc:
             print(f"  FAILED to load {hf_id}: {exc}")
@@ -230,7 +237,7 @@ def unload_model(model: Any, tokenizer: Any) -> None:
     del model, tokenizer
     gc.collect()
     torch.cuda.empty_cache()
-    vram = torch.cuda.memory_allocated(DEVICE_INDEX) / 1024 ** 2
+    vram = torch.cuda.memory_allocated(DEVICE_INDEX) / 1024**2
     print(f"  Unloaded model. GPU{DEVICE_INDEX} VRAM now: {vram:.0f} MB")
 
 
@@ -257,13 +264,17 @@ def _generate(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             text = prompt
@@ -379,12 +390,14 @@ def extract_arithmetic_steps(response: str) -> list[dict[str, Any]]:
                 correct = int(correct)
 
         satisfied = abs(float(claimed) - float(correct)) < 0.01
-        steps.append({
-            "expression": f"{a} {op} {b}",
-            "claimed": claimed,
-            "correct": correct,
-            "satisfied": satisfied,
-        })
+        steps.append(
+            {
+                "expression": f"{a} {op} {b}",
+                "claimed": claimed,
+                "correct": correct,
+                "satisfied": satisfied,
+            }
+        )
     return steps
 
 
@@ -408,8 +421,7 @@ def format_violations(arith_steps: list[dict[str, Any]]) -> str:
         )
     lines += [
         "",
-        "Please recalculate step by step, fixing these errors. "
-        "Give the final answer as a number.",
+        "Please recalculate step by step, fixing these errors. Give the final answer as a number.",
     ]
     return "\n".join(lines)
 
@@ -630,13 +642,15 @@ def load_gsm8k_standard(n: int = N_STANDARD) -> list[dict[str, Any]]:
         gt = _extract_gsm8k_answer(ex["answer"])
         if gt is None:
             continue
-        questions.append({
-            "question": ex["question"],
-            "ground_truth": gt,
-            "answer_text": ex["answer"],
-            "source": "gsm8k_real",
-            "idx": idx,
-        })
+        questions.append(
+            {
+                "question": ex["question"],
+                "ground_truth": gt,
+                "answer_text": ex["answer"],
+                "source": "gsm8k_real",
+                "idx": idx,
+            }
+        )
         if len(questions) >= n:
             break
 
@@ -691,14 +705,16 @@ def load_adversarial_questions(n: int = N_ADVERSARIAL) -> list[dict[str, Any]]:
 
     questions: list[dict[str, Any]] = []
     for item in selected:
-        questions.append({
-            "perturbed_problem": item["perturbed_problem"],
-            "ground_truth": item["correct_answer"],
-            "original_problem": item.get("original_problem", ""),
-            "template": item.get("template", ""),
-            "source": "adversarial_number_swapped",
-            "id": item.get("id", ""),
-        })
+        questions.append(
+            {
+                "perturbed_problem": item["perturbed_problem"],
+                "ground_truth": item["correct_answer"],
+                "original_problem": item.get("original_problem", ""),
+                "template": item.get("template", ""),
+                "source": "adversarial_number_swapped",
+                "id": item.get("id", ""),
+            }
+        )
 
     print(f"  Loaded {len(questions)} number-swapped adversarial questions from {adv_path.name}")
     return questions
@@ -813,8 +829,10 @@ def bootstrap_delta_ci(
 
 
 def two_proportion_z_test(
-    n1_success: int, n1_total: int,
-    n2_success: int, n2_total: int,
+    n1_success: int,
+    n1_total: int,
+    n2_success: int,
+    n2_total: int,
 ) -> tuple[float, float]:
     """One-sided two-proportion z-test: p1 > p2 (H1: adversarial delta > standard delta).
 
@@ -885,8 +903,10 @@ def load_08b_comparison() -> dict[str, Any] | None:
     n = min(len(base_entries), len(repair_entries), N_STANDARD)
 
     if n < N_STANDARD:
-        print(f"  0.8B comparison: only {n} entries in checkpoint (need {N_STANDARD}) — "
-              f"using {n} entries.")
+        print(
+            f"  0.8B comparison: only {n} entries in checkpoint (need {N_STANDARD}) — "
+            f"using {n} entries."
+        )
 
     if n == 0:
         return None
@@ -897,11 +917,15 @@ def load_08b_comparison() -> dict[str, Any] | None:
     base_acc = sum(base_flags) / n
     repair_acc = sum(repair_flags) / n
     delta, delta_lo, delta_hi = bootstrap_delta_ci(
-        base_flags, repair_flags, seed=BOOTSTRAP_SEED_BASE + 10,
+        base_flags,
+        repair_flags,
+        seed=BOOTSTRAP_SEED_BASE + 10,
     )
 
-    print(f"  0.8B comparison (N={n}): baseline={base_acc:.1%}, "
-          f"repair={repair_acc:.1%}, Δ={delta:+.1%} [{delta_lo:+.1%}, {delta_hi:+.1%}]")
+    print(
+        f"  0.8B comparison (N={n}): baseline={base_acc:.1%}, "
+        f"repair={repair_acc:.1%}, Δ={delta:+.1%} [{delta_lo:+.1%}, {delta_hi:+.1%}]"
+    )
 
     return {
         "model": "Qwen3.5-0.8B",
@@ -947,8 +971,7 @@ def run_split(
         Dict with 'baseline', 'verify_repair' result lists and 'statistics'.
     """
     n = len(questions)
-    print(f"\n  [{split_name}] Running {n} questions × 2 modes "
-          f"(baseline + verify-repair)...")
+    print(f"\n  [{split_name}] Running {n} questions × 2 modes (baseline + verify-repair)...")
 
     # Load checkpoint if available.
     ckpt = load_checkpoint(split_name)
@@ -984,8 +1007,8 @@ def run_split(
             eta_m = (elapsed_m / max(done - completed, 1)) * (n - done)
             print(
                 f"  [{split_name}] {total_done}/{n} | "
-                f"baseline {n_b/total_done:.1%} | "
-                f"repair {n_r/total_done:.1%} | "
+                f"baseline {n_b / total_done:.1%} | "
+                f"repair {n_r / total_done:.1%} | "
                 f"{elapsed_m:.1f}min elapsed | ETA {eta_m:.0f}min"
             )
 
@@ -1004,12 +1027,20 @@ def run_split(
     base_flags = [r["correct"] for r in mode_results["baseline"]]
     repair_flags = [r["correct"] for r in mode_results["verify_repair"]]
 
-    base_acc, base_lo, base_hi = bootstrap_ci(base_flags, seed=BOOTSTRAP_SEED_BASE + hash(split_name) % 1000)
-    repair_acc, repair_lo, repair_hi = bootstrap_ci(repair_flags, seed=BOOTSTRAP_SEED_BASE + hash(split_name) % 1000 + 1)
-    delta, delta_lo, delta_hi = bootstrap_delta_ci(base_flags, repair_flags, seed=BOOTSTRAP_SEED_BASE + hash(split_name) % 1000 + 2)
+    base_acc, base_lo, base_hi = bootstrap_ci(
+        base_flags, seed=BOOTSTRAP_SEED_BASE + hash(split_name) % 1000
+    )
+    repair_acc, repair_lo, repair_hi = bootstrap_ci(
+        repair_flags, seed=BOOTSTRAP_SEED_BASE + hash(split_name) % 1000 + 1
+    )
+    delta, delta_lo, delta_hi = bootstrap_delta_ci(
+        base_flags, repair_flags, seed=BOOTSTRAP_SEED_BASE + hash(split_name) % 1000 + 2
+    )
 
     n_repaired = sum(1 for r in mode_results["verify_repair"] if r.get("repaired", False))
-    avg_repairs = sum(r.get("n_repairs", 0) for r in mode_results["verify_repair"]) / n if n > 0 else 0.0
+    avg_repairs = (
+        sum(r.get("n_repairs", 0) for r in mode_results["verify_repair"]) / n if n > 0 else 0.0
+    )
 
     stats = {
         "n_questions": n,
@@ -1037,13 +1068,17 @@ def run_split(
     # Print split summary.
     sep = "-" * 60
     print(f"\n  {sep}")
-    print(f"  [{split_name.upper()}] RESULTS ({split_elapsed:.1f}s = {split_elapsed/60:.1f}min)")
-    print(f"    Baseline:      {int(sum(base_flags))}/{n} "
-          f"({base_acc:.1%} [{base_lo:.1%}, {base_hi:.1%}])")
-    print(f"    Verify+Repair: {int(sum(repair_flags))}/{n} "
-          f"({repair_acc:.1%} [{repair_lo:.1%}, {repair_hi:.1%}])")
+    print(f"  [{split_name.upper()}] RESULTS ({split_elapsed:.1f}s = {split_elapsed / 60:.1f}min)")
+    print(
+        f"    Baseline:      {int(sum(base_flags))}/{n} "
+        f"({base_acc:.1%} [{base_lo:.1%}, {base_hi:.1%}])"
+    )
+    print(
+        f"    Verify+Repair: {int(sum(repair_flags))}/{n} "
+        f"({repair_acc:.1%} [{repair_lo:.1%}, {repair_hi:.1%}])"
+    )
     print(f"    Δ (repair-baseline): {delta:+.1%} [{delta_lo:+.1%}, {delta_hi:+.1%}]")
-    print(f"    Questions repaired: {n_repaired} ({n_repaired/n:.1%})")
+    print(f"    Questions repaired: {n_repaired} ({n_repaired / n:.1%})")
     if delta_lo > 0:
         print(f"    CI EXCLUDES ZERO → verify-repair improves accuracy (p<0.05 approx).")
     else:
@@ -1144,8 +1179,10 @@ def main() -> int:
     std_repair_rate = std_n_repaired / std_n_total if std_n_total > 0 else 0.0
 
     z_adv_vs_std, p_adv_vs_std = two_proportion_z_test(
-        adv_n_repaired, adv_n_total,
-        std_n_repaired, std_n_total,
+        adv_n_repaired,
+        adv_n_total,
+        std_n_repaired,
+        std_n_total,
     )
 
     # Scaling comparison: 3B vs 0.8B standard delta.
@@ -1155,16 +1192,23 @@ def main() -> int:
         delta_3b = std_stats["improvement_delta"]
         scaling_note = (
             f"3B Δ={delta_3b:+.1%} vs 0.8B Δ={delta_08b:+.1%} on standard GSM8K (N={N_STANDARD}) — "
-            + ("3B delta SMALLER (hypothesis confirmed)" if delta_3b < delta_08b else
-               "3B delta LARGER (hypothesis rejected)")
+            + (
+                "3B delta SMALLER (hypothesis confirmed)"
+                if delta_3b < delta_08b
+                else "3B delta LARGER (hypothesis rejected)"
+            )
         )
         scaling_sig = delta_3b < delta_08b
     else:
         scaling_note = "0.8B baseline not available (Exp 181 checkpoint missing)."
         delta_08b = None
 
-    print(f"  Adversarial Δ = {adv_delta:+.1%} (CI=[{adv_stats['ci_delta_lower']:+.1%}, {adv_stats['ci_delta_upper']:+.1%}])")
-    print(f"  Standard Δ   = {std_delta:+.1%} (CI=[{std_stats['ci_delta_lower']:+.1%}, {std_stats['ci_delta_upper']:+.1%}])")
+    print(
+        f"  Adversarial Δ = {adv_delta:+.1%} (CI=[{adv_stats['ci_delta_lower']:+.1%}, {adv_stats['ci_delta_upper']:+.1%}])"
+    )
+    print(
+        f"  Standard Δ   = {std_delta:+.1%} (CI=[{std_stats['ci_delta_lower']:+.1%}, {std_stats['ci_delta_upper']:+.1%}])"
+    )
     print(f"  Repair rate: adversarial={adv_repair_rate:.1%}, standard={std_repair_rate:.1%}")
     print(f"  z-test (adv repair rate > std): z={z_adv_vs_std:.3f}, p={p_adv_vs_std:.4f}")
     print(f"  Adversarial CI excludes zero: {adv_ci_sig}")
@@ -1188,7 +1232,8 @@ def main() -> int:
             "ci_upper": round(adv_stats["ci_delta_upper"], 6),
             "confirmed": adv_ci_sig,
             "note": (
-                "Adversarial improvement IS significant at 3B (CI>0)" if adv_ci_sig
+                "Adversarial improvement IS significant at 3B (CI>0)"
+                if adv_ci_sig
                 else "Adversarial improvement NOT significant at 3B (CI includes 0)"
             ),
         },
@@ -1245,22 +1290,36 @@ def main() -> int:
     print(f"  Model: {model_meta['hf_id']} ({model_meta['vram_delta_mb']:.0f} MB VRAM)")
     print()
     print(f"  Standard GSM8K (N={N_STANDARD}):")
-    print(f"    Baseline:      {std_stats['baseline']['n_correct']}/{N_STANDARD} "
-          f"({std_stats['baseline']['accuracy']:.1%})")
-    print(f"    Verify+Repair: {std_stats['verify_repair']['n_correct']}/{N_STANDARD} "
-          f"({std_stats['verify_repair']['accuracy']:.1%})")
-    print(f"    Δ = {std_delta:+.1%} [{std_stats['ci_delta_lower']:+.1%}, {std_stats['ci_delta_upper']:+.1%}]")
+    print(
+        f"    Baseline:      {std_stats['baseline']['n_correct']}/{N_STANDARD} "
+        f"({std_stats['baseline']['accuracy']:.1%})"
+    )
+    print(
+        f"    Verify+Repair: {std_stats['verify_repair']['n_correct']}/{N_STANDARD} "
+        f"({std_stats['verify_repair']['accuracy']:.1%})"
+    )
+    print(
+        f"    Δ = {std_delta:+.1%} [{std_stats['ci_delta_lower']:+.1%}, {std_stats['ci_delta_upper']:+.1%}]"
+    )
     if comparison_08b is not None:
         print(f"    vs 0.8B Δ = {delta_08b:+.1%} → {scaling_note}")
     print()
     print(f"  Adversarial number-swapped (N={N_ADVERSARIAL}):")
-    print(f"    Baseline:      {adv_stats['baseline']['n_correct']}/{N_ADVERSARIAL} "
-          f"({adv_stats['baseline']['accuracy']:.1%})")
-    print(f"    Verify+Repair: {adv_stats['verify_repair']['n_correct']}/{N_ADVERSARIAL} "
-          f"({adv_stats['verify_repair']['accuracy']:.1%})")
-    print(f"    Δ = {adv_delta:+.1%} [{adv_stats['ci_delta_lower']:+.1%}, {adv_stats['ci_delta_upper']:+.1%}]")
-    print(f"    CI excludes zero: {adv_ci_sig} — "
-          + ("adversarial improvement IS significant" if adv_ci_sig else "not significant at this N"))
+    print(
+        f"    Baseline:      {adv_stats['baseline']['n_correct']}/{N_ADVERSARIAL} "
+        f"({adv_stats['baseline']['accuracy']:.1%})"
+    )
+    print(
+        f"    Verify+Repair: {adv_stats['verify_repair']['n_correct']}/{N_ADVERSARIAL} "
+        f"({adv_stats['verify_repair']['accuracy']:.1%})"
+    )
+    print(
+        f"    Δ = {adv_delta:+.1%} [{adv_stats['ci_delta_lower']:+.1%}, {adv_stats['ci_delta_upper']:+.1%}]"
+    )
+    print(
+        f"    CI excludes zero: {adv_ci_sig} — "
+        + ("adversarial improvement IS significant" if adv_ci_sig else "not significant at this N")
+    )
     print()
     print("  Hypothesis verdicts:")
     for h_key, h_val in hypothesis_verdict.items():
@@ -1283,6 +1342,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

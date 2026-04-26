@@ -81,15 +81,13 @@ class TestNarrativeArithmetic:
     def test_currency_addition_detected(self):
         eqs = _parse_narrative_arithmetic("$80,000 + $50,000 = $130,000")
         assert any(
-            e.lhs_expr == "80000+50000" and e.rhs_value == pytest.approx(130000.0)
-            for e in eqs
+            e.lhs_expr == "80000+50000" and e.rhs_value == pytest.approx(130000.0) for e in eqs
         )
 
     def test_currency_subtraction_detected(self):
         eqs = _parse_narrative_arithmetic("$325,000 - $130,000 = $195,000")
         assert any(
-            e.lhs_expr == "325000-130000" and e.rhs_value == pytest.approx(195000.0)
-            for e in eqs
+            e.lhs_expr == "325000-130000" and e.rhs_value == pytest.approx(195000.0) for e in eqs
         )
 
     def test_narrative_adding_gives_wrong(self):
@@ -173,9 +171,7 @@ class TestPercentageWordProblem:
         assert markup_eqs[0].rhs_value == pytest.approx(120.0)
 
     def test_out_of_total_percent_meaning(self):
-        eqs = _parse_percentage_word_problem(
-            "out of 200 total, 25% attended, meaning 50 people"
-        )
+        eqs = _parse_percentage_word_problem("out of 200 total, 25% attended, meaning 50 people")
         assert any(e.rhs_value == pytest.approx(50.0) for e in eqs)
 
     def test_empty_text(self):
@@ -278,10 +274,7 @@ class TestCoACEExtractorV3Extract:
     def test_correct_equation_no_violation(self):
         result = self.extractor.extract("3 * $16.50 = $49.50")
         # Should have 0 violations for correct arithmetic
-        currency_violations = [
-            v for v in result.violations
-            if v.equation.lhs_expr == "3*16.5"
-        ]
+        currency_violations = [v for v in result.violations if v.equation.lhs_expr == "3*16.5"]
         assert len(currency_violations) == 0
 
     def test_narrative_addition_violation(self):
@@ -291,10 +284,7 @@ class TestCoACEExtractorV3Extract:
 
     def test_narrative_addition_correct(self):
         result = self.extractor.extract("Adding 47 to 28 gives us 75")
-        narrative_violations = [
-            v for v in result.violations
-            if v.equation.lhs_expr == "47+28"
-        ]
+        narrative_violations = [v for v in result.violations if v.equation.lhs_expr == "47+28"]
         assert len(narrative_violations) == 0
 
     def test_unit_conversion_violation(self):
@@ -319,10 +309,7 @@ class TestCoACEExtractorV3Extract:
 
     def test_detect_violations_empty_on_correct(self):
         violations = self.extractor.detect_violations("3 * $16.50 = $49.50")
-        currency_violations = [
-            v for v in violations
-            if v.equation.lhs_expr == "3*16.5"
-        ]
+        currency_violations = [v for v in violations if v.equation.lhs_expr == "3*16.5"]
         assert len(currency_violations) == 0
 
     def test_v2_patterns_still_work(self):
@@ -354,6 +341,7 @@ class TestCoACEExtractorV3Extract:
 
     def test_inherits_from_v2(self):
         from carnot.extraction.coace_extractor_v2 import CoACEExtractorV2
+
         assert isinstance(self.extractor, CoACEExtractorV2)
 
     def test_confidence_threshold_respected(self):
@@ -362,8 +350,5 @@ class TestCoACEExtractorV3Extract:
         extractor = CoACEExtractorV3(min_confidence=0.95)
         # V3 narrative equations have confidence=0.85 — should be filtered out.
         result = extractor.extract("Adding 47 to 28 gives us 76")
-        narrative_violations = [
-            v for v in result.violations
-            if v.equation.lhs_expr == "47+28"
-        ]
+        narrative_violations = [v for v in result.violations if v.equation.lhs_expr == "47+28"]
         assert len(narrative_violations) == 0

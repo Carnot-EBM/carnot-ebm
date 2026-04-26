@@ -26,6 +26,7 @@ If not, write gated_retro028_not_closed artifact and exit.
 
 Spec: REQ-BENCH-060, REQ-BENCH-061, SCENARIO-BENCH-084, SCENARIO-BENCH-085
 """
+
 from __future__ import annotations
 
 import json
@@ -185,6 +186,7 @@ def main() -> None:
     # Step f: resolve GGUF model.
     try:
         from carnot.pipeline.gguf_cache import resolve_cached_gguf  # type: ignore[import]
+
         model_path = resolve_cached_gguf("unsloth/Qwen3.6-35B-A3B-GGUF", quant="Q4_K_M")
     except Exception as exc:
         artifact = build_blocked_artifact(
@@ -200,6 +202,7 @@ def main() -> None:
     # Step g: load 25 HumanEval problems.
     try:
         from scripts.experiment_744_iterative_2round_repair import _HUMANEVAL_SUBSET  # type: ignore[import]
+
         problems = list(_HUMANEVAL_SUBSET)[:N_PROBLEMS]
     except Exception as exc:
         artifact = build_blocked_artifact(
@@ -232,7 +235,8 @@ def main() -> None:
                     "n_completed": n_completed,
                     "pass_at_1_baseline": total_baseline_pass / max(n_completed, 1),
                     "pass_at_1_repair": total_repair_pass / max(n_completed, 1),
-                    "signed_improvement": (total_repair_pass - total_baseline_pass) / max(n_completed, 1),
+                    "signed_improvement": (total_repair_pass - total_baseline_pass)
+                    / max(n_completed, 1),
                     "oracle_calls_saved": total_oracle_calls_saved,
                     "batch_results": all_batch_results,
                 },
@@ -251,6 +255,7 @@ def main() -> None:
             # Baseline: generate without repair.
             try:
                 from carnot.pipeline.two_round_repair import TwoRoundCodeRepairPipeline  # type: ignore[import]
+
                 pipeline = TwoRoundCodeRepairPipeline(
                     model_path=model_path,
                     device_map={"": f"cuda:{GPU_INDEX}"},
@@ -341,7 +346,9 @@ def main() -> None:
             "gpu_index": GPU_INDEX,
             "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
             "zombie_kills": zombie_result.n_killed if hasattr(zombie_result, "n_killed") else 0,
-            "vram_eviction": evict_result.vram_freed_mb if hasattr(evict_result, "vram_freed_mb") else 0,
+            "vram_eviction": evict_result.vram_freed_mb
+            if hasattr(evict_result, "vram_freed_mb")
+            else 0,
         },
         status="success",
     )

@@ -97,7 +97,7 @@ def generate_arithmetic_wrong(n: int = 40, seed: int = 88) -> list[dict[str, Any
             # Multi-step chain — pipeline likely misses intermediate error.
             mid = a + rng.randint(1, 10)
             response = (
-                f"First, we compute {a} + {rng.randint(1,10)} which gives us {mid}. "
+                f"First, we compute {a} + {rng.randint(1, 10)} which gives us {mid}. "
                 f"Then we add {b}, resulting in {wrong}."
             )
             checker = _make_number_checker(correct)
@@ -118,13 +118,15 @@ def generate_arithmetic_wrong(n: int = 40, seed: int = 88) -> list[dict[str, Any
             )
             checker = _make_number_checker(correct)
 
-        items.append({
-            "domain": "arithmetic",
-            "question": f"What is {a} + {b}?",
-            "ground_truth": str(correct),
-            "response": response,
-            "check_answer": checker,
-        })
+        items.append(
+            {
+                "domain": "arithmetic",
+                "question": f"What is {a} + {b}?",
+                "ground_truth": str(correct),
+                "response": response,
+                "check_answer": checker,
+            }
+        )
 
     return items
 
@@ -217,13 +219,15 @@ def generate_code_wrong(n: int = 40, seed: int = 88) -> list[dict[str, Any]]:
         problem = code_problems[i % len(code_problems)]
         # For code, the "wrong" part is semantic — the code has bugs or
         # wrong complexity claims that the pipeline can't detect.
-        items.append({
-            "domain": "code",
-            "question": problem["question"],
-            "ground_truth": problem["ground_truth"],
-            "response": problem["wrong_response"],
-            "check_answer": _make_code_checker(problem["keywords"]),
-        })
+        items.append(
+            {
+                "domain": "code",
+                "question": problem["question"],
+                "ground_truth": problem["ground_truth"],
+                "response": problem["wrong_response"],
+                "check_answer": _make_code_checker(problem["keywords"]),
+            }
+        )
 
     return items
 
@@ -289,13 +293,15 @@ def generate_logic_wrong(n: int = 40, seed: int = 88) -> list[dict[str, Any]]:
 
     for i in range(n):
         template = logic_templates[i % len(logic_templates)]
-        items.append({
-            "domain": "logic",
-            "question": template["question"],
-            "ground_truth": template["ground_truth"],
-            "response": template["wrong_response"],
-            "check_answer": lambda ans, gt=template["ground_truth"]: gt in ans.lower(),
-        })
+        items.append(
+            {
+                "domain": "logic",
+                "question": template["question"],
+                "ground_truth": template["ground_truth"],
+                "response": template["wrong_response"],
+                "check_answer": lambda ans, gt=template["ground_truth"]: gt in ans.lower(),
+            }
+        )
 
     return items
 
@@ -360,13 +366,15 @@ def generate_factual_wrong(n: int = 40, seed: int = 88) -> list[dict[str, Any]]:
 
     for i in range(n):
         template = factual_wrongs[i % len(factual_wrongs)]
-        items.append({
-            "domain": "factual",
-            "question": template["question"],
-            "ground_truth": template["ground_truth"],
-            "response": template["wrong_response"],
-            "check_answer": lambda ans, gt=template["ground_truth"]: gt in ans.lower(),
-        })
+        items.append(
+            {
+                "domain": "factual",
+                "question": template["question"],
+                "ground_truth": template["ground_truth"],
+                "response": template["wrong_response"],
+                "check_answer": lambda ans, gt=template["ground_truth"]: gt in ans.lower(),
+            }
+        )
 
     return items
 
@@ -389,7 +397,7 @@ def generate_scheduling_wrong(n: int = 40, seed: int = 88) -> list[dict[str, Any
         total = sum(hours_per_task)
         wrong_total = total + rng.choice([-2, -1, 1, 2])
 
-        task_desc = ", ".join(f"Task {j+1} takes {h} hours" for j, h in enumerate(hours_per_task))
+        task_desc = ", ".join(f"Task {j + 1} takes {h} hours" for j, h in enumerate(hours_per_task))
         question = f"You have {tasks} tasks: {task_desc}. How many total hours?"
 
         if i % 3 == 0:
@@ -414,13 +422,15 @@ def generate_scheduling_wrong(n: int = 40, seed: int = 88) -> list[dict[str, Any
                 f"Then adding the remaining tasks results in {wrong_total}."
             )
 
-        items.append({
-            "domain": "scheduling",
-            "question": question,
-            "ground_truth": str(total),
-            "response": response,
-            "check_answer": _make_number_checker(total),
-        })
+        items.append(
+            {
+                "domain": "scheduling",
+                "question": question,
+                "ground_truth": str(total),
+                "response": response,
+                "check_answer": _make_number_checker(total),
+            }
+        )
 
     return items
 
@@ -444,21 +454,25 @@ def _extract_number(text: str) -> float | None:
 
 def _make_number_checker(expected: int | float) -> Any:
     """Create a checker that extracts the last number and compares."""
+
     def checker(ans: str) -> bool:
         extracted = _extract_number(ans)
         if extracted is None:
             return False
         return int(extracted) == int(expected)
+
     return checker
 
 
 def _make_code_checker(keywords: list[str]) -> Any:
     """Create a checker that verifies code response has def + keywords."""
+
     def checker(ans: str) -> bool:
         if "def " not in ans:
             return False
         ans_lower = ans.lower()
         return any(kw.lower() in ans_lower for kw in keywords)
+
     return checker
 
 
@@ -567,8 +581,10 @@ def run_experiment() -> dict[str, Any]:
         for sp in report.suggested_patterns[:6]:
             print(f"  [{sp['category']}] {sp['name']}")
             print(f"    Pattern: {sp['pattern'][:60]}...")
-            print(f"    Est. catch: {sp['estimated_catch_count']}/{total_fn} "
-                  f"({sp['estimated_catch_rate']:.1%})")
+            print(
+                f"    Est. catch: {sp['estimated_catch_count']}/{total_fn} "
+                f"({sp['estimated_catch_rate']:.1%})"
+            )
             print()
     else:
         print("  No patterns suggested (no false negatives found).")
@@ -587,8 +603,10 @@ def run_experiment() -> dict[str, Any]:
                     caught_by_any.add(j)
 
         coverage_improvement = len(caught_by_any) / total_fn * 100 if total_fn > 0 else 0
-        print(f"  False negatives caught by ANY suggested pattern: "
-              f"{len(caught_by_any)}/{len(report.false_negatives)}")
+        print(
+            f"  False negatives caught by ANY suggested pattern: "
+            f"{len(caught_by_any)}/{len(report.false_negatives)}"
+        )
         print(f"  Estimated coverage improvement: {coverage_improvement:.1f}%")
     else:
         print("  No patterns to test.")
@@ -623,9 +641,9 @@ def run_experiment() -> dict[str, Any]:
             }
             for sp in report.suggested_patterns
         ],
-        "coverage_improvement_estimate": round(
-            len(caught_by_any) / total_fn * 100, 2
-        ) if report.suggested_patterns and total_fn > 0 else 0.0,
+        "coverage_improvement_estimate": round(len(caught_by_any) / total_fn * 100, 2)
+        if report.suggested_patterns and total_fn > 0
+        else 0.0,
         "elapsed_seconds": round(elapsed, 2),
         "spec": "REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-005",
     }

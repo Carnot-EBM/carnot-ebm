@@ -25,9 +25,10 @@ Spec: REQ-DATA-012, REQ-DATA-013,
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import TYPE_CHECKING
 
-from carnot.pipeline.symcode_verifier import SymCodeVerifier
+if TYPE_CHECKING:
+    from carnot.pipeline.symcode_verifier import SymCodeVerifier
 
 
 @dataclass
@@ -56,8 +57,8 @@ class StepLabel:
     step_index: int
     step_text: str
     violation_detected: bool
-    executed_result: Optional[float]
-    stated_result: Optional[float]
+    executed_result: float | None
+    stated_result: float | None
     label: str  # 'correct' | 'violated' | 'unknown'
 
 

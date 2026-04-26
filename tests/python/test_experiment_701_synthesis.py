@@ -194,9 +194,7 @@ class TestParseUtilizationReport:
     def test_parses_comma_formatted_numbers(self, tmp_path: Path) -> None:
         """Handles comma-separated numbers (Vivado uses these for large counts)."""
         report = tmp_path / "util.rpt"
-        report.write_text(
-            "| LUT as Logic             |  23,000 |  117,120 |  19.64 |\n"
-        )
+        report.write_text("| LUT as Logic             |  23,000 |  117,120 |  19.64 |\n")
         result = parse_utilization_report(report)
         assert result["LUT_count"] == 23000
 
@@ -227,10 +225,7 @@ class TestParseTimingReport:
     def test_positive_wns_timing_met(self, tmp_path: Path) -> None:
         """WNS >= 0 means timing closed — REQ-HW-037 satisfied."""
         report = tmp_path / "timing.rpt"
-        report.write_text(
-            "WNS(ns)  TNS(ns)  TNS Failing Endpoints\n"
-            "  2.345  0.000    0\n"
-        )
+        report.write_text("WNS(ns)  TNS(ns)  TNS Failing Endpoints\n  2.345  0.000    0\n")
         wns, met = parse_timing_report(report)
         assert wns == pytest.approx(2.345)
         assert met is True
@@ -238,10 +233,7 @@ class TestParseTimingReport:
     def test_negative_wns_timing_failed(self, tmp_path: Path) -> None:
         """WNS < 0 means timing violation — REQ-HW-037 not satisfied."""
         report = tmp_path / "timing.rpt"
-        report.write_text(
-            "WNS(ns)  TNS(ns)  TNS Failing Endpoints\n"
-            " -1.234  -5.678   3\n"
-        )
+        report.write_text("WNS(ns)  TNS(ns)  TNS Failing Endpoints\n -1.234  -5.678   3\n")
         wns, met = parse_timing_report(report)
         assert wns == pytest.approx(-1.234)
         assert met is False
@@ -249,10 +241,7 @@ class TestParseTimingReport:
     def test_zero_wns_timing_met(self, tmp_path: Path) -> None:
         """WNS == 0 exactly counts as timing met (boundary case)."""
         report = tmp_path / "timing.rpt"
-        report.write_text(
-            "WNS(ns)  TNS(ns)  TNS Failing Endpoints\n"
-            "  0.000  0.000    0\n"
-        )
+        report.write_text("WNS(ns)  TNS(ns)  TNS Failing Endpoints\n  0.000  0.000    0\n")
         wns, met = parse_timing_report(report)
         assert wns == pytest.approx(0.0)
         assert met is True
@@ -332,17 +321,11 @@ class TestComputeHonestVerdict:
 
     def test_yosys_parse_failed(self) -> None:
         """yosys ran but stat parse failed."""
-        assert (
-            compute_honest_verdict("yosys", None, None)
-            == "synthesis_blocked_yosys_parse_failed"
-        )
+        assert compute_honest_verdict("yosys", None, None) == "synthesis_blocked_yosys_parse_failed"
 
     def test_no_tool(self) -> None:
         """SCENARIO-HW-039: no synthesis tool available."""
-        assert (
-            compute_honest_verdict("none_available", None, None)
-            == "synthesis_blocked_no_tool"
-        )
+        assert compute_honest_verdict("none_available", None, None) == "synthesis_blocked_no_tool"
 
 
 # ---------------------------------------------------------------------------
@@ -354,9 +337,7 @@ def test_append_known_issue_appends(tmp_path: Path) -> None:
     """Note is appended when not already present."""
     ki_path = tmp_path / "known-issues.md"
     ki_path.write_text("## Existing content\n")
-    with patch(
-        "scripts.experiment_701_kv260_synthesis.KNOWN_ISSUES_PATH", ki_path
-    ):
+    with patch("scripts.experiment_701_kv260_synthesis.KNOWN_ISSUES_PATH", ki_path):
         append_known_issue("## RETRO-072: test note")
     assert "RETRO-072: test note" in ki_path.read_text()
 
@@ -366,9 +347,7 @@ def test_append_known_issue_no_duplicate(tmp_path: Path) -> None:
     ki_path = tmp_path / "known-issues.md"
     note = "## RETRO-072: test note"
     ki_path.write_text(f"{note}\n")
-    with patch(
-        "scripts.experiment_701_kv260_synthesis.KNOWN_ISSUES_PATH", ki_path
-    ):
+    with patch("scripts.experiment_701_kv260_synthesis.KNOWN_ISSUES_PATH", ki_path):
         append_known_issue(note)
     assert ki_path.read_text().count(note) == 1
 
@@ -376,9 +355,7 @@ def test_append_known_issue_no_duplicate(tmp_path: Path) -> None:
 def test_append_known_issue_file_missing(tmp_path: Path) -> None:
     """Silently does nothing when known-issues.md does not exist."""
     missing_path = tmp_path / "nonexistent.md"
-    with patch(
-        "scripts.experiment_701_kv260_synthesis.KNOWN_ISSUES_PATH", missing_path
-    ):
+    with patch("scripts.experiment_701_kv260_synthesis.KNOWN_ISSUES_PATH", missing_path):
         append_known_issue("## RETRO-072 note")  # must not raise
 
 
@@ -424,6 +401,14 @@ def test_main_no_tool_produces_deliverable(tmp_path: Path) -> None:
     assert artifact["status"] == "blocked"
     assert artifact["experiment"] == EXP_ID
     # REQUIRED_RESULT_FIELDS check
-    for field in ("experiment", "schema", "run_date", "started_at",
-                  "finished_at", "duration_s", "status", "title"):
+    for field in (
+        "experiment",
+        "schema",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "title",
+    ):
         assert field in artifact, f"Missing required field: {field}"

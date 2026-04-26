@@ -14,6 +14,7 @@ side effects beyond tempfile usage.
 Spec: REQ-REPAIR-056, REQ-PIPELINE-030, REQ-BENCH-016-6, SCENARIO-REPAIR-089,
       SCENARIO-PIPELINE-040
 """
+
 from __future__ import annotations
 
 import json
@@ -249,7 +250,7 @@ def test_run_problem_baseline_passes_for_correct_solution() -> None:
     Spec: REQ-REPAIR-056
     """
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "canonical_solution": "    return a + b\n",
         "test": "assert add(1, 2) == 3\n",
     }
@@ -262,7 +263,7 @@ def test_run_problem_baseline_fails_for_wrong_solution() -> None:
     Spec: REQ-REPAIR-056
     """
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "canonical_solution": "    return a - b\n",
         "test": "assert add(1, 2) == 3\n",
     }
@@ -326,7 +327,7 @@ def test_model_not_cached_path_repair_skipped_by_mars() -> None:
     # logprob = -4.0 → margin = 4.0 > MARS_THRESHOLD → repair skipped
     llm = _make_llm_mock("    return a + b\n", logprob=-4.0)
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "test": "assert add(1, 2) == 3\n",
     }
     repair_pass, repair_attempted, logit_margin = run_problem_with_repair(problem, llm, extractor)
@@ -376,7 +377,7 @@ def test_repair_attempted_when_below_mars_threshold() -> None:
         },
     ]
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "test": "assert add(1, 2) == 3\n",
     }
     repair_pass, repair_attempted, logit_margin = run_problem_with_repair(problem, llm, extractor)
@@ -397,7 +398,7 @@ def test_repair_not_attempted_when_no_violations() -> None:
     # logprob = -1.0 → margin = 1.0 < threshold → would attempt repair IF violations found
     llm = _make_llm_mock("    return a + b\n", logprob=-1.0)
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "test": "assert add(1, 2) == 3\n",
     }
     repair_pass, repair_attempted, logit_margin = run_problem_with_repair(problem, llm, extractor)
@@ -417,7 +418,7 @@ def test_llm_exception_fallback_to_empty_generation() -> None:
     llm = MagicMock()
     llm.side_effect = RuntimeError("GPU OOM")
     problem = {
-        "prompt": "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a, b):\n    """Return a + b."""\n',
         "test": "assert add(1, 2) == 3\n",
     }
     repair_pass, repair_attempted, logit_margin = run_problem_with_repair(problem, llm, extractor)

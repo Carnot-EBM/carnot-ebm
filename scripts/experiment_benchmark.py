@@ -49,7 +49,7 @@ def utc_now() -> str:
     """Return current UTC timestamp in ISO-8601 format."""
     import datetime
 
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 # ---------------------------------------------------------------------------
@@ -196,19 +196,13 @@ def run_benchmark(output_path: Path, *, n_questions: int = 20) -> dict:
     sequential_responses, _ = _run_sequential_baseline(questions)
     # Note: we can't compare exact responses because the sequential re-run
     # produces the same answers (arithmetic is deterministic).
-    n_correct = sum(
-        1
-        for br, sr in zip(batch_results, sequential_responses)
-        if br.response == sr
-    )
+    n_correct = sum(1 for br, sr in zip(batch_results, sequential_responses) if br.response == sr)
     correctness_ratio = n_correct / len(questions) if questions else 0.0
 
     # ------------------------------------------------------------------
     # 4. Compute metrics
     # ------------------------------------------------------------------
-    batch_speedup = (
-        round(sequential_time_s / batched_time_s, 3) if batched_time_s > 0 else 1.0
-    )
+    batch_speedup = round(sequential_time_s / batched_time_s, 3) if batched_time_s > 0 else 1.0
     overhead_ok = overhead_s < 0.5
     # Note: batch_speedup_vs_sequential in simulation reflects ThreadPoolExecutor
     # overhead, not real LLM throughput gains.  With real LLM inference (2-10 s/question)

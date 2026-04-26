@@ -226,14 +226,10 @@ def compute_retro() -> dict:
     # --- RETRO closure rate ---------------------------------------------------
     # RETROs closed this milestone: RETRO-069 only.
     n_closed_this_milestone = sum([retro_069_resolved])
-    retro_closure_rate = round(
-        n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3
-    )
+    retro_closure_rate = round(n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3)
     # New RETRO opening this milestone: RETRO-071 if dualgpu unconfirmed for 6 milestones.
     n_new_retros = 1 if not dualgpu_confirmed else 0
-    open_retro_count = (
-        len(_RETROS_OPEN_AT_MILESTONE_START) - n_closed_this_milestone + n_new_retros
-    )
+    open_retro_count = len(_RETROS_OPEN_AT_MILESTONE_START) - n_closed_this_milestone + n_new_retros
 
     # --- Honest verdict -------------------------------------------------------
     # Priority: first check the main blocker (VR), then positive closures.

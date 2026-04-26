@@ -31,7 +31,9 @@ import pytest
 # Module loading helper
 # ---------------------------------------------------------------------------
 
-_SCRIPT_PATH = Path(__file__).resolve().parents[2] / "scripts" / "experiment_282_apple_baseline_gpu.py"
+_SCRIPT_PATH = (
+    Path(__file__).resolve().parents[2] / "scripts" / "experiment_282_apple_baseline_gpu.py"
+)
 
 
 def _load_module() -> Any:
@@ -97,11 +99,14 @@ def _make_fake_generate(correct_rate: float = 1.0) -> Any:
     """
     call_counter = [0]
 
-    def _generate(question: str, expected_answer: int, *, rng: Any = None, **kw: Any) -> tuple[str, np.ndarray]:
+    def _generate(
+        question: str, expected_answer: int, *, rng: Any = None, **kw: Any
+    ) -> tuple[str, np.ndarray]:
         """Fake generator: alternates correct / wrong based on correct_rate."""
         call_counter[0] += 1
         if rng is None:
             import random
+
             correct = random.random() < correct_rate
         else:
             correct = rng.random() < correct_rate
@@ -116,6 +121,7 @@ def _make_fake_generate(correct_rate: float = 1.0) -> Any:
 # ---------------------------------------------------------------------------
 # SCENARIO-VERIFY-080: Artifact schema
 # ---------------------------------------------------------------------------
+
 
 # REQ-VERIFY-064
 def test_artifact_schema_required_fields() -> None:
@@ -173,6 +179,7 @@ def test_artifact_experiment_number() -> None:
 # REQ-VERIFY-066: Partial artifact on stall (stall_at field)
 # ---------------------------------------------------------------------------
 
+
 # REQ-VERIFY-066
 def test_partial_artifact_has_stall_at_field() -> None:
     """SCENARIO-VERIFY-080/REQ-VERIFY-066: stall_at is present when timeout occurs."""
@@ -209,6 +216,7 @@ def test_full_artifact_has_no_stall() -> None:
 # REQ-VERIFY-065: Checkpoint resume
 # ---------------------------------------------------------------------------
 
+
 # REQ-VERIFY-065
 def test_checkpoint_resume_skips_completed_questions(tmp_path: Path) -> None:
     """SCENARIO-VERIFY-081/REQ-VERIFY-065: runner skips questions already in checkpoint."""
@@ -220,11 +228,13 @@ def test_checkpoint_resume_skips_completed_questions(tmp_path: Path) -> None:
     # Filename must match _ckpt_path() output: safe_slug(model)__safe_slug(variant).json
     ckpt_file = ckpt_dir / f"{_mod.safe_slug('Qwen3.5-0.8B')}__{_mod.safe_slug('standard')}.json"
     ckpt_file.write_text(
-        json.dumps({
-            "model_name": "Qwen3.5-0.8B",
-            "variant_type": "standard",
-            "completed": {"gsm8k-001": {"correct": True, "response": "5"}},
-        }),
+        json.dumps(
+            {
+                "model_name": "Qwen3.5-0.8B",
+                "variant_type": "standard",
+                "completed": {"gsm8k-001": {"correct": True, "response": "5"}},
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -259,6 +269,7 @@ def test_checkpoint_interval_constant() -> None:
 # REQ-VERIFY-067: Logit tensor shape
 # ---------------------------------------------------------------------------
 
+
 # REQ-VERIFY-067
 def test_logit_tensor_shape_is_three_dimensional(tmp_path: Path) -> None:
     """REQ-VERIFY-067: saved logit array has shape (n_questions, seq_len, vocab_size)."""
@@ -285,7 +296,9 @@ def test_logit_tensor_shape_is_three_dimensional(tmp_path: Path) -> None:
         # Each element must be a 2-D (seq_len, vocab_size) array.
         assert arr.ndim == 1, f"Object logit array must be 1-D, got shape {arr.shape}"
         for elem in arr:
-            assert elem.ndim == 2, f"Each logit element must be (seq_len, vocab_size), got {elem.shape}"
+            assert elem.ndim == 2, (
+                f"Each logit element must be (seq_len, vocab_size), got {elem.shape}"
+            )
     else:
         assert arr.ndim == 3, f"Logit array must be 3-D (n, seq_len, vocab), got shape {arr.shape}"
 
@@ -302,15 +315,17 @@ def test_logit_files_saved_at_each_fraction(tmp_path: Path) -> None:
     # Use 4 rows of same variant so we get 25/50/75/100% checkpoints.
     four_rows = []
     for i in range(4):
-        four_rows.append({
-            "question_id": f"gsm8k-{i:03d}",
-            "original_question": f"Question {i}. What is {i}+1?",
-            "original_answer": i + 1,
-            "variant_type": "number_swap",
-            "variant_question": f"Question {i} scaled. What is {i*2}+2?",
-            "variant_answer": (i + 1) * 2,
-            "provenance": {},
-        })
+        four_rows.append(
+            {
+                "question_id": f"gsm8k-{i:03d}",
+                "original_question": f"Question {i}. What is {i}+1?",
+                "original_answer": i + 1,
+                "variant_type": "number_swap",
+                "variant_question": f"Question {i} scaled. What is {i * 2}+2?",
+                "variant_answer": (i + 1) * 2,
+                "provenance": {},
+            }
+        )
 
     logit_dir = tmp_path / "logits"
     logit_dir.mkdir()
@@ -343,6 +358,7 @@ def test_logit_files_saved_at_each_fraction(tmp_path: Path) -> None:
 # SCENARIO-VERIFY-081/083: Variant type accuracy breakdown
 # ---------------------------------------------------------------------------
 
+
 # REQ-VERIFY-064, SCENARIO-VERIFY-081
 def test_variant_type_breakdown_in_results(tmp_path: Path) -> None:
     """SCENARIO-VERIFY-081: results include per-variant_type accuracy for each model."""
@@ -370,7 +386,9 @@ def test_number_swap_accuracy_drop_detected(tmp_path: Path) -> None:
     call_seq: list[str] = []
     variant_seq: list[str] = []
 
-    def _generate_variant_aware(question: str, expected_answer: int, *, variant_type: str = "standard", **kw: Any) -> tuple[str, np.ndarray]:
+    def _generate_variant_aware(
+        question: str, expected_answer: int, *, variant_type: str = "standard", **kw: Any
+    ) -> tuple[str, np.ndarray]:
         """Return correct for standard, wrong for number_swap."""
         logits = np.zeros((1, _FAKE_SEQ_LEN, _FAKE_VOCAB_SIZE), dtype=np.float32)
         if variant_type == "number_swap":
@@ -404,6 +422,7 @@ def test_number_swap_accuracy_drop_detected(tmp_path: Path) -> None:
 # SCENARIO-VERIFY-082: DualGPU dispatch (Qwen GPU 0, Gemma GPU 1)
 # ---------------------------------------------------------------------------
 
+
 # REQ-VERIFY-064, SCENARIO-VERIFY-082
 def test_model_specs_gpu_assignments() -> None:
     """SCENARIO-VERIFY-082: MODEL_SPECS assigns Qwen to GPU 0, Gemma to GPU 1."""
@@ -425,7 +444,9 @@ def test_runner_dispatches_both_models(tmp_path: Path) -> None:
     """SCENARIO-VERIFY-082: AppleBaselineRunner runs each configured model spec."""
     model_names_seen: list[str] = []
 
-    def _tracking_generate(question: str, expected_answer: int, *, model_name: str = "unknown", **kw: Any) -> tuple[str, np.ndarray]:
+    def _tracking_generate(
+        question: str, expected_answer: int, *, model_name: str = "unknown", **kw: Any
+    ) -> tuple[str, np.ndarray]:
         model_names_seen.append(model_name)
         logits = np.zeros((1, _FAKE_SEQ_LEN, _FAKE_VOCAB_SIZE), dtype=np.float32)
         return str(expected_answer), logits
@@ -452,6 +473,7 @@ def test_runner_dispatches_both_models(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 # REQ-VERIFY-066: Timeout constant
 # ---------------------------------------------------------------------------
+
 
 # REQ-VERIFY-066
 def test_inference_timeout_constant() -> None:

@@ -9,6 +9,7 @@ Covers:
 
 Spec: REQ-VERIFY-143, REQ-VERIFY-144, SCENARIO-VERIFY-172, SCENARIO-VERIFY-173
 """
+
 from __future__ import annotations
 
 import json
@@ -119,9 +120,9 @@ class TestApplyConsensusPenalty:
         adjusted = arbiter.apply_consensus_penalty(energies, responses)
 
         # "wrong" appears twice — majority cluster.
-        assert adjusted[0] == pytest.approx(1.0)   # "correct" not penalised
-        assert adjusted[1] == pytest.approx(0.9)   # 0.8 + 0.1
-        assert adjusted[2] == pytest.approx(0.9)   # 0.8 + 0.1
+        assert adjusted[0] == pytest.approx(1.0)  # "correct" not penalised
+        assert adjusted[1] == pytest.approx(0.9)  # 0.8 + 0.1
+        assert adjusted[2] == pytest.approx(0.9)  # 0.8 + 0.1
 
     def test_penalty_only_on_majority_not_minority(self, arbiter: MultiAgentArbiter) -> None:
         """Minority agent energy is unchanged after penalty.
@@ -132,7 +133,7 @@ class TestApplyConsensusPenalty:
         responses = ["minority_correct", "majority_wrong", "majority_wrong"]
         adjusted = arbiter.apply_consensus_penalty(energies, responses)
 
-        assert adjusted[0] == pytest.approx(0.5)   # minority unchanged
+        assert adjusted[0] == pytest.approx(0.5)  # minority unchanged
         assert adjusted[1] == pytest.approx(1.3)
         assert adjusted[2] == pytest.approx(1.3)
 
@@ -189,7 +190,11 @@ class TestArbitrate:
         constraint_embeddings = _make_constraint_embeddings(rng, n=3)
 
         # Three distinct responses — spin encodings will differ.
-        responses = ["response_alpha_unique_123", "response_beta_unique_456", "response_gamma_unique_789"]
+        responses = [
+            "response_alpha_unique_123",
+            "response_beta_unique_456",
+            "response_gamma_unique_789",
+        ]
         result = arbiter.arbitrate(responses, constraint_embeddings)
 
         # The arbiter must have picked one of the 3 agents.
@@ -343,9 +348,7 @@ class TestExp819Gate:
         missing = tmp_path / "no_file.json"
         tmpl = MagicMock()
         tmpl.build_result.side_effect = lambda *a, **kw: {"status": "blocked", **kw}
-        with patch(
-            "scripts.experiment_822_arbiter_fix_v2_agent_auditor.EXP_819_PATH", missing
-        ):
+        with patch("scripts.experiment_822_arbiter_fix_v2_agent_auditor.EXP_819_PATH", missing):
             result = _check_exp819_gate(tmpl)
         assert result is not None
         assert result["honest_verdict"] == "blocked_gate"
@@ -359,9 +362,7 @@ class TestExp819Gate:
         f.write_text(json.dumps({"honest_verdict": "injection_partial"}))
         tmpl = MagicMock()
         tmpl.build_result.side_effect = lambda *a, **kw: {"status": "blocked", **kw}
-        with patch(
-            "scripts.experiment_822_arbiter_fix_v2_agent_auditor.EXP_819_PATH", f
-        ):
+        with patch("scripts.experiment_822_arbiter_fix_v2_agent_auditor.EXP_819_PATH", f):
             result = _check_exp819_gate(tmpl)
         assert result is not None
         assert result["honest_verdict"] == "blocked_gate"
@@ -374,9 +375,7 @@ class TestExp819Gate:
         f = tmp_path / "exp819.json"
         f.write_text(json.dumps({"honest_verdict": "injection_field_fixed"}))
         tmpl = MagicMock()
-        with patch(
-            "scripts.experiment_822_arbiter_fix_v2_agent_auditor.EXP_819_PATH", f
-        ):
+        with patch("scripts.experiment_822_arbiter_fix_v2_agent_auditor.EXP_819_PATH", f):
             result = _check_exp819_gate(tmpl)
         assert result is None
 
@@ -497,9 +496,7 @@ class TestScenarioBatches:
         n_correct = sum(r["is_correct"] for r in results)
         assert n_correct == 6, f"Expected all 6 correct, got {n_correct}"
 
-    def test_adversarial_correct_agent_wins_with_penalty(
-        self, arbiter: MultiAgentArbiter
-    ) -> None:
+    def test_adversarial_correct_agent_wins_with_penalty(self, arbiter: MultiAgentArbiter) -> None:
         """Adversarial scenarios: correct agent wins after consensus penalty flips the ranking.
 
         Synthetic setup: wrong majority has lower raw energy, but gap < penalty → flip.

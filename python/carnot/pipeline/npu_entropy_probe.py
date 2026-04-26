@@ -46,16 +46,15 @@ Spec: REQ-INFRA-061, REQ-INFRA-062, REQ-INFRA-063,
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
-
 
 # ---------------------------------------------------------------------------
 # NPUBenchmarkResult
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class NPUBenchmarkResult:
@@ -69,7 +68,7 @@ class NPUBenchmarkResult:
         with LLM generation in a production system.
     """
 
-    npu_latency_ms: Optional[float]
+    npu_latency_ms: float | None
     """Median per-token entropy latency on NPU in milliseconds, or None if unavailable."""
 
     cpu_latency_ms: float
@@ -78,7 +77,7 @@ class NPUBenchmarkResult:
     npu_available: bool
     """True iff the VitisAI execution provider loaded successfully."""
 
-    speedup_ratio: Optional[float]
+    speedup_ratio: float | None
     """cpu_latency_ms / npu_latency_ms when both available, else None."""
 
     @property
@@ -113,8 +112,8 @@ _VITISAI_SETUP_INSTRUCTIONS = (
     "  2. Install Vitis AI runtime from https://github.com/amd/RyzenAI-SW\n"
     "     (follow the NPU EP quickstart for your OS/kernel version)\n"
     "  3. Set XLNX_VART_FIRMWARE to the NPU firmware binary path.\n"
-    "  4. Verify: python -c \"import onnxruntime; "
-    "print(onnxruntime.get_available_providers())\"\n"
+    '  4. Verify: python -c "import onnxruntime; '
+    'print(onnxruntime.get_available_providers())"\n'
     "     Expected: [..., 'VitisAIExecutionProvider', ...]"
 )
 
@@ -182,32 +181,22 @@ class NPUEntropyProbe:
         logits_input = helper.make_tensor_value_info(
             "logits", TensorProto.FLOAT, [self.seq_len, self.vocab_size]
         )
-        entropy_output = helper.make_tensor_value_info(
-            "entropy", TensorProto.FLOAT, [self.seq_len]
-        )
+        entropy_output = helper.make_tensor_value_info("entropy", TensorProto.FLOAT, [self.seq_len])
 
         log_softmax_node = helper.make_node(
             "LogSoftmax", inputs=["logits"], outputs=["log_p"], axis=-1
         )
-        softmax_node = helper.make_node(
-            "Softmax", inputs=["logits"], outputs=["p"], axis=-1
-        )
-        mul_node = helper.make_node(
-            "Mul", inputs=["p", "log_p"], outputs=["p_log_p"]
-        )
+        softmax_node = helper.make_node("Softmax", inputs=["logits"], outputs=["p"], axis=-1)
+        mul_node = helper.make_node("Mul", inputs=["p", "log_p"], outputs=["p_log_p"])
         # ReduceSum with keepdims=0, axes=[-1]
-        axes_init = helper.make_tensor(
-            "axes", TensorProto.INT64, [1], [-1]
-        )
+        axes_init = helper.make_tensor("axes", TensorProto.INT64, [1], [-1])
         reduce_node = helper.make_node(
             "ReduceSum",
             inputs=["p_log_p", "axes"],
             outputs=["sum_p_log_p"],
             keepdims=0,
         )
-        neg_node = helper.make_node(
-            "Neg", inputs=["sum_p_log_p"], outputs=["entropy"]
-        )
+        neg_node = helper.make_node("Neg", inputs=["sum_p_log_p"], outputs=["entropy"])
 
         graph = helper.make_graph(
             [log_softmax_node, softmax_node, mul_node, reduce_node, neg_node],
@@ -248,18 +237,14 @@ class NPUEntropyProbe:
         if _VITISAI_EP not in available:
             # Fall through to CPU EP — record that NPU is not available
             try:
-                self._session = ort.InferenceSession(
-                    onnx_path, providers=[_CPU_EP]
-                )
+                self._session = ort.InferenceSession(onnx_path, providers=[_CPU_EP])
             except Exception:  # noqa: BLE001
                 self._session = None
             self._using_npu = False
             return False
 
         try:
-            self._session = ort.InferenceSession(
-                onnx_path, providers=[_VITISAI_EP, _CPU_EP]
-            )
+            self._session = ort.InferenceSession(onnx_path, providers=[_VITISAI_EP, _CPU_EP])
             self._using_npu = True
             return True
         except Exception:  # noqa: BLE001

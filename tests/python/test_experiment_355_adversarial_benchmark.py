@@ -195,7 +195,9 @@ class TestIsCorrect:
 
     def test_string_fallback_match(self):
         """Non-numeric gold uses string equality."""
-        assert exp355._is_correct("The answer is abc", "abc") is False  # extraction gives "abc" not matched
+        assert (
+            exp355._is_correct("The answer is abc", "abc") is False
+        )  # extraction gives "abc" not matched
 
     def test_with_comma_in_gold(self):
         assert exp355._is_correct("#### 1000", "1,000") is True
@@ -435,7 +437,15 @@ class TestMain:
         artifact = json.loads(artifact_path.read_text())
 
         # Required REQUIRED_RESULT_FIELDS from ExperimentTemplate
-        for field in ["experiment", "run_date", "started_at", "finished_at", "duration_s", "status", "title"]:
+        for field in [
+            "experiment",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ]:
             assert field in artifact, f"Missing required field: {field}"
 
         # Exp-355-specific fields

@@ -199,8 +199,13 @@ def _make_negation_v2_question(correct: bool, rng: random.Random) -> tuple[str, 
 
     elif sub_type == "not_all":
         # "not all A are B" — violated by asserting "all A are B".
-        nouns = [("swans", "white"), ("dogs", "friendly"), ("birds", "small"),
-                 ("cats", "black"), ("cars", "fast")]
+        nouns = [
+            ("swans", "white"),
+            ("dogs", "friendly"),
+            ("birds", "small"),
+            ("cats", "black"),
+            ("cars", "fast"),
+        ]
         noun, prop = rng.choice(nouns)
         question = f"True or false: not all {noun} are {prop}?"
         if correct:
@@ -211,8 +216,13 @@ def _make_negation_v2_question(correct: bool, rng: random.Random) -> tuple[str, 
 
     else:  # no_are
         # "no A are B" — violated by asserting "A are B".
-        nouns = [("fish", "mammals"), ("rocks", "alive"), ("plants", "animals"),
-                 ("metals", "liquids"), ("deserts", "forests")]
+        nouns = [
+            ("fish", "mammals"),
+            ("rocks", "alive"),
+            ("plants", "animals"),
+            ("metals", "liquids"),
+            ("deserts", "forests"),
+        ]
         subj, pred = rng.choice(nouns)
         question = f"Is it true that no {subj} are {pred}?"
         if correct:
@@ -298,13 +308,15 @@ def generate_negation_cohort(n: int, rng: random.Random) -> list[SimQuestion]:
     for _ in range(n):
         is_correct = rng.random() < CORRECT_FRACTION
         q, r = _make_negation_v2_question(is_correct, rng)
-        questions.append(SimQuestion(
-            question=q,
-            response=r,
-            is_correct=is_correct,
-            error_type="negation_scope" if not is_correct else "",
-            cohort="negation",
-        ))
+        questions.append(
+            SimQuestion(
+                question=q,
+                response=r,
+                is_correct=is_correct,
+                error_type="negation_scope" if not is_correct else "",
+                cohort="negation",
+            )
+        )
     return questions
 
 
@@ -314,13 +326,15 @@ def generate_carry_cohort(n: int, rng: random.Random) -> list[SimQuestion]:
     for _ in range(n):
         is_correct = rng.random() < CORRECT_FRACTION
         q, r = _make_carry_v2_question(is_correct, rng)
-        questions.append(SimQuestion(
-            question=q,
-            response=r,
-            is_correct=is_correct,
-            error_type="arithmetic_carry" if not is_correct else "",
-            cohort="carry",
-        ))
+        questions.append(
+            SimQuestion(
+                question=q,
+                response=r,
+                is_correct=is_correct,
+                error_type="arithmetic_carry" if not is_correct else "",
+                cohort="carry",
+            )
+        )
     return questions
 
 
@@ -341,13 +355,15 @@ def generate_regression_cohort(n: int, rng: random.Random) -> list[SimQuestion]:
         else:
             q, r = _make_negation_question_v1(is_correct, rng)
 
-        questions.append(SimQuestion(
-            question=q,
-            response=r,
-            is_correct=is_correct,
-            error_type=etype if not is_correct else "",
-            cohort="regression",
-        ))
+        questions.append(
+            SimQuestion(
+                question=q,
+                response=r,
+                is_correct=is_correct,
+                error_type=etype if not is_correct else "",
+                cohort="regression",
+            )
+        )
     return questions
 
 
@@ -409,14 +425,16 @@ def per_error_breakdown(
             continue
 
         caught_static = sum(
-            1 for q in wrong_qs
+            1
+            for q in wrong_qs
             if any(
                 r.metadata.get("satisfied") is False
                 for r in ext.extract(q.response, domain="arithmetic")
             )
         )
         caught_memory = sum(
-            1 for q in wrong_qs
+            1
+            for q in wrong_qs
             if any(
                 r.metadata.get("satisfied") is False
                 for r in ext.extract(q.response, domain="arithmetic", memory=memory)
@@ -487,8 +505,10 @@ def run_experiment() -> dict[str, Any]:
 
     if "arithmetic" in mem_summary:
         arith = mem_summary["arithmetic"]
-        print(f"  arithmetic patterns: total={arith['total_patterns']}, "
-              f"mature={arith['mature_patterns']}")
+        print(
+            f"  arithmetic patterns: total={arith['total_patterns']}, "
+            f"mature={arith['mature_patterns']}"
+        )
         for p in arith.get("top_patterns", []):
             print(f"    {p['error_type']}: {p['frequency']} occurrences")
     print(f"  Warmup elapsed: {warmup_elapsed:.3f}s")
@@ -499,7 +519,9 @@ def run_experiment() -> dict[str, Any]:
     # ------------------------------------------------------------------
     cohort_a = generate_negation_cohort(COHORT_NEGATION_SIZE, random.Random(COHORT_NEGATION_SEED))
     cohort_b = generate_carry_cohort(COHORT_CARRY_SIZE, random.Random(COHORT_CARRY_SEED))
-    cohort_c = generate_regression_cohort(COHORT_REGRESSION_SIZE, random.Random(COHORT_REGRESSION_SEED))
+    cohort_c = generate_regression_cohort(
+        COHORT_REGRESSION_SIZE, random.Random(COHORT_REGRESSION_SEED)
+    )
     all_questions = cohort_a + cohort_b + cohort_c
 
     # ------------------------------------------------------------------
@@ -508,8 +530,11 @@ def run_experiment() -> dict[str, Any]:
     results_by_cohort: dict[str, Any] = {}
     all_breakdown: dict[str, Any] = {}
 
-    for cohort_name, cohort_qs in [("negation", cohort_a), ("carry", cohort_b),
-                                    ("regression", cohort_c)]:
+    for cohort_name, cohort_qs in [
+        ("negation", cohort_a),
+        ("carry", cohort_b),
+        ("regression", cohort_c),
+    ]:
         print(f"Evaluating cohort '{cohort_name}' ({len(cohort_qs)} questions)...")
         t0 = time.perf_counter()
 
@@ -525,9 +550,11 @@ def run_experiment() -> dict[str, Any]:
         print(f"  memory:  {acc_memory:.4f}  avg_constraints: {avg_c_memory:.2f}")
         print(f"  delta:   {delta:+.4f}")
         for etype, bd in breakdown.items():
-            print(f"  [{etype}] n={bd['n_wrong']}, "
-                  f"static_recall={bd['recall_static']:.2f}, "
-                  f"memory_recall={bd['recall_memory']:.2f}")
+            print(
+                f"  [{etype}] n={bd['n_wrong']}, "
+                f"static_recall={bd['recall_static']:.2f}, "
+                f"memory_recall={bd['recall_memory']:.2f}"
+            )
         print(f"  elapsed: {cohort_elapsed:.3f}s")
         print()
 
@@ -565,20 +592,28 @@ def run_experiment() -> dict[str, Any]:
     # Hypothesis checks
     # ------------------------------------------------------------------
     hyp_negation_recall_improved = (
-        results_by_cohort["negation"].get("per_error_breakdown", {})
+        results_by_cohort["negation"]
+        .get("per_error_breakdown", {})
         .get("negation_scope", {})
-        .get("recall_memory", 0.0) > 0.0
+        .get("recall_memory", 0.0)
+        > 0.0
     )
     hyp_delta_vs_141_positive = delta_vs_141 > 0.0
     hyp_combined_above_098 = acc_memory_all >= 0.98
 
     print("Hypothesis checks:")
-    print(f"  negation recall > 0 (was 0% in Exp 141): "
-          f"{'MET' if hyp_negation_recall_improved else 'NOT MET'}")
-    print(f"  delta_vs_exp141 > 0:                     "
-          f"{'MET' if hyp_delta_vs_141_positive else 'NOT MET'}")
-    print(f"  combined accuracy >= 0.98:               "
-          f"{'MET' if hyp_combined_above_098 else 'NOT MET'}")
+    print(
+        f"  negation recall > 0 (was 0% in Exp 141): "
+        f"{'MET' if hyp_negation_recall_improved else 'NOT MET'}"
+    )
+    print(
+        f"  delta_vs_exp141 > 0:                     "
+        f"{'MET' if hyp_delta_vs_141_positive else 'NOT MET'}"
+    )
+    print(
+        f"  combined accuracy >= 0.98:               "
+        f"{'MET' if hyp_combined_above_098 else 'NOT MET'}"
+    )
     print()
 
     total_elapsed = time.perf_counter() - t_total

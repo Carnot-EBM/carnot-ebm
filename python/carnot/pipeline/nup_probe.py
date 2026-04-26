@@ -59,8 +59,6 @@ import math
 import time
 from collections import Counter
 from dataclasses import dataclass, field
-from typing import Optional
-
 
 # ---------------------------------------------------------------------------
 # ContinuationEntropy
@@ -106,7 +104,7 @@ class ContinuationEntropy:
         cls,
         logprobs: list[float],
         threshold: float = 1.5,
-    ) -> "ContinuationEntropy":
+    ) -> ContinuationEntropy:
         """Compute Shannon entropy from a list of log-probabilities.
 
         **Detailed explanation for engineers:**
@@ -242,7 +240,7 @@ class NUPProbe:
     def score(
         self,
         cot_text: str,
-        logprobs: Optional[list[float]] = None,
+        logprobs: list[float] | None = None,
     ) -> float:
         """Compute uncertainty score for a CoT step.
 
@@ -281,7 +279,7 @@ class NUPProbe:
     def predict_violation(
         self,
         cot_text: str,
-        logprobs: Optional[list[float]] = None,
+        logprobs: list[float] | None = None,
     ) -> bool:
         """Predict whether a CoT step is likely a constraint violation.
 
@@ -420,11 +418,7 @@ class NUPProbe:
             return 0.0
         counts = Counter(text)
         total = len(text)
-        return -sum(
-            (c / total) * math.log(c / total)
-            for c in counts.values()
-            if c > 0
-        )
+        return -sum((c / total) * math.log(c / total) for c in counts.values() if c > 0)
 
 
 # ---------------------------------------------------------------------------
@@ -435,7 +429,7 @@ class NUPProbe:
 def score_with_latency(
     probe: NUPProbe,
     cot_text: str,
-    logprobs: Optional[list[float]] = None,
+    logprobs: list[float] | None = None,
 ) -> tuple[float, float]:
     """Score a step and return (score, latency_ms).
 

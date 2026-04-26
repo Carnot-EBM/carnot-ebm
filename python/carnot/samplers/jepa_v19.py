@@ -42,8 +42,10 @@ from __future__ import annotations
 import math
 import re
 from collections import Counter
-from typing import Sequence
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 # ---------------------------------------------------------------------------
 # Internal TF-IDF vectoriser — no sklearn dependency for CPU edge deployments
@@ -68,15 +70,15 @@ class _TFIDFVectoriser:
 
     def __init__(self, max_features: int = 500) -> None:
         self.max_features = max_features
-        self._vocab: dict[str, int] = {}   # token → column index
-        self._idf: list[float] = []        # idf[col] for each vocab token
+        self._vocab: dict[str, int] = {}  # token → column index
+        self._idf: list[float] = []  # idf[col] for each vocab token
 
     @staticmethod
     def _tokenise(text: str) -> list[str]:
         """Lower-case, split on non-alphanumeric characters."""
         return re.findall(r"[a-z0-9]+", text.lower())
 
-    def fit(self, corpus: list[str]) -> "_TFIDFVectoriser":
+    def fit(self, corpus: list[str]) -> _TFIDFVectoriser:
         """Fit vocabulary and IDF weights from a list of documents.
 
         Parameters
@@ -187,10 +189,10 @@ class MultiStepJEPAv19:
 
         self._vectoriser = _TFIDFVectoriser(max_features=max_vocab)
         # MLP weights — initialised in train()
-        self._w1: list[list[float]] = []   # (hidden_dim, vocab_size)
-        self._b1: list[float] = []         # (hidden_dim,)
-        self._w2: list[list[float]] = []   # (output_dim, hidden_dim)
-        self._b2: list[float] = []         # (output_dim,)
+        self._w1: list[list[float]] = []  # (hidden_dim, vocab_size)
+        self._b1: list[float] = []  # (hidden_dim,)
+        self._w2: list[list[float]] = []  # (output_dim, hidden_dim)
+        self._b2: list[float] = []  # (output_dim,)
         self._fitted = False
 
     # ------------------------------------------------------------------
@@ -241,14 +243,9 @@ class MultiStepJEPAv19:
         exp_x = math.exp(x)
         return exp_x / (1.0 + exp_x)
 
-    def _matmul_add(
-        self, w: list[list[float]], b: list[float], x: list[float]
-    ) -> list[float]:
+    def _matmul_add(self, w: list[list[float]], b: list[float], x: list[float]) -> list[float]:
         """Compute W @ x + b."""
-        return [
-            sum(w[i][j] * x[j] for j in range(len(x))) + b[i]
-            for i in range(len(w))
-        ]
+        return [sum(w[i][j] * x[j] for j in range(len(x))) + b[i] for i in range(len(w))]
 
     def _mlp_forward(self, x: list[float]) -> float:
         """Run 2-layer MLP: Linear(vocab, hidden) → ReLU → Linear(hidden, 1) → Sigmoid."""
@@ -352,7 +349,9 @@ class MultiStepJEPAv19:
 
         self._w1 = [[_randn(he_scale_1) for _ in range(vocab_size)] for _ in range(self.hidden_dim)]
         self._b1 = [0.0] * self.hidden_dim
-        self._w2 = [[_randn(he_scale_2) for _ in range(self.hidden_dim)] for _ in range(self.output_dim)]
+        self._w2 = [
+            [_randn(he_scale_2) for _ in range(self.hidden_dim)] for _ in range(self.output_dim)
+        ]
         self._b2 = [0.0] * self.output_dim
 
         # Adam moment estimates.
@@ -373,7 +372,7 @@ class MultiStepJEPAv19:
         final_loss = float("inf")
         t = 0  # Adam time step
 
-        for epoch in range(n_epochs):
+        for _epoch in range(n_epochs):
             epoch_loss = 0.0
             for i in range(n):
                 t += 1
@@ -382,8 +381,8 @@ class MultiStepJEPAv19:
 
                 # Forward pass.
                 h_pre = self._matmul_add(self._w1, self._b1, x_i)  # (hidden,)
-                h = self._relu(h_pre)                                # (hidden,)
-                logit_pre = self._matmul_add(self._w2, self._b2, h) # (1,)
+                h = self._relu(h_pre)  # (hidden,)
+                logit_pre = self._matmul_add(self._w2, self._b2, h)  # (1,)
                 pred = self._sigmoid(logit_pre[0])
 
                 # Binary cross-entropy loss (clipped for numerical stability).
@@ -397,7 +396,9 @@ class MultiStepJEPAv19:
                 d_logit = pred - y_i  # scalar
 
                 # Gradients for w2 and b2.
-                d_w2 = [[d_logit * h[j] for j in range(self.hidden_dim)] for _ in range(self.output_dim)]
+                d_w2 = [
+                    [d_logit * h[j] for j in range(self.hidden_dim)] for _ in range(self.output_dim)
+                ]
                 d_b2 = [d_logit]
 
                 # Backprop through hidden layer.
@@ -406,7 +407,10 @@ class MultiStepJEPAv19:
                 d_h_pre = [d_h[j] * (1.0 if h_pre[j] > 0 else 0.0) for j in range(self.hidden_dim)]
 
                 # Gradients for w1 and b1.
-                d_w1 = [[d_h_pre[i2] * x_i[j] for j in range(vocab_size)] for i2 in range(self.hidden_dim)]
+                d_w1 = [
+                    [d_h_pre[i2] * x_i[j] for j in range(vocab_size)]
+                    for i2 in range(self.hidden_dim)
+                ]
                 d_b1 = list(d_h_pre)
 
                 # Adam update for w1.
@@ -415,8 +419,8 @@ class MultiStepJEPAv19:
                         g = d_w1[i2][j]
                         m_w1[i2][j] = beta1 * m_w1[i2][j] + (1 - beta1) * g
                         v_w1[i2][j] = beta2 * v_w1[i2][j] + (1 - beta2) * g * g
-                        m_hat = m_w1[i2][j] / (1 - beta1 ** t)
-                        v_hat = v_w1[i2][j] / (1 - beta2 ** t)
+                        m_hat = m_w1[i2][j] / (1 - beta1**t)
+                        v_hat = v_w1[i2][j] / (1 - beta2**t)
                         self._w1[i2][j] -= lr * m_hat / (math.sqrt(v_hat) + eps)
 
                 # Adam update for b1.
@@ -424,8 +428,8 @@ class MultiStepJEPAv19:
                     g = d_b1[i2]
                     m_b1[i2] = beta1 * m_b1[i2] + (1 - beta1) * g
                     v_b1[i2] = beta2 * v_b1[i2] + (1 - beta2) * g * g
-                    m_hat = m_b1[i2] / (1 - beta1 ** t)
-                    v_hat = v_b1[i2] / (1 - beta2 ** t)
+                    m_hat = m_b1[i2] / (1 - beta1**t)
+                    v_hat = v_b1[i2] / (1 - beta2**t)
                     self._b1[i2] -= lr * m_hat / (math.sqrt(v_hat) + eps)
 
                 # Adam update for w2.
@@ -434,8 +438,8 @@ class MultiStepJEPAv19:
                         g = d_w2[i2][j]
                         m_w2[i2][j] = beta1 * m_w2[i2][j] + (1 - beta1) * g
                         v_w2[i2][j] = beta2 * v_w2[i2][j] + (1 - beta2) * g * g
-                        m_hat = m_w2[i2][j] / (1 - beta1 ** t)
-                        v_hat = v_w2[i2][j] / (1 - beta2 ** t)
+                        m_hat = m_w2[i2][j] / (1 - beta1**t)
+                        v_hat = v_w2[i2][j] / (1 - beta2**t)
                         self._w2[i2][j] -= lr * m_hat / (math.sqrt(v_hat) + eps)
 
                 # Adam update for b2.
@@ -443,8 +447,8 @@ class MultiStepJEPAv19:
                     g = d_b2[i2]
                     m_b2[i2] = beta1 * m_b2[i2] + (1 - beta1) * g
                     v_b2[i2] = beta2 * v_b2[i2] + (1 - beta2) * g * g
-                    m_hat = m_b2[i2] / (1 - beta1 ** t)
-                    v_hat = v_b2[i2] / (1 - beta2 ** t)
+                    m_hat = m_b2[i2] / (1 - beta1**t)
+                    v_hat = v_b2[i2] / (1 - beta2**t)
                     self._b2[i2] -= lr * m_hat / (math.sqrt(v_hat) + eps)
 
             final_loss = epoch_loss / n
@@ -473,8 +477,8 @@ class MultiStepJEPAv19:
 
         Spec: REQ-LEARN-044, SCENARIO-LEARN-086
         """
-        pos = [s for s, l in zip(scores, labels) if l == 1.0]
-        neg = [s for s, l in zip(scores, labels) if l == 0.0]
+        pos = [s for s, l in zip(scores, labels, strict=False) if l == 1.0]
+        neg = [s for s, l in zip(scores, labels, strict=False) if l == 0.0]
         if not pos or not neg:
             return 0.5
         n_pos, n_neg = len(pos), len(neg)

@@ -68,10 +68,9 @@ Spec: REQ-SAMPLE-022, REQ-SAMPLE-023, REQ-SAMPLE-024,
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
-import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
@@ -191,9 +190,7 @@ class KAEMDistributionBenchmark:
     # _mean_l2_vs_ground_truth
     # ------------------------------------------------------------------
 
-    def _mean_l2_vs_ground_truth(
-        self, samples: np.ndarray, ground_truth: np.ndarray
-    ) -> float:
+    def _mean_l2_vs_ground_truth(self, samples: np.ndarray, ground_truth: np.ndarray) -> float:
         """Compute mean L2 distance between empirical CDFs of samples and ground truth.
 
         For each variable dimension:
@@ -237,9 +234,7 @@ class KAEMDistributionBenchmark:
     # _fit_and_sample_kaem
     # ------------------------------------------------------------------
 
-    def _fit_and_sample_kaem(
-        self, ground_truth: np.ndarray
-    ) -> np.ndarray:
+    def _fit_and_sample_kaem(self, ground_truth: np.ndarray) -> np.ndarray:
         """Fit KAEMEnergy on ground_truth data and draw KAEM samples.
 
         Clips ground-truth data to [-1, 1] before fitting, since KAEM operates in
@@ -430,10 +425,10 @@ class KAEMDistributionBenchmark:
         samples_list = []
         for i in range(self.n_vars):
             col_pieces = piece_idx[:, i]
-            col = np.array([
-                self._rng.uniform(pieces[p][0], pieces[p][1])
-                for p in col_pieces
-            ], dtype=np.float32)
+            col = np.array(
+                [self._rng.uniform(pieces[p][0], pieces[p][1]) for p in col_pieces],
+                dtype=np.float32,
+            )
             samples_list.append(col)
         ground_truth = np.stack(samples_list, axis=1).astype(np.float32)
 

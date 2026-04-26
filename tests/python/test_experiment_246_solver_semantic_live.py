@@ -100,7 +100,12 @@ def _write_exp221_artifact(repo: Path, cases: list[dict[str, Any]] | None = None
                 "prompt": "Write dedupe(lst)",
                 "expected_answer_schema": {"type": "python_function", "name": "dedupe"},
                 "gold_atomic_constraints": [
-                    {"constraint_id": "c1", "type": "function_name", "value": "dedupe", "target": "function_name"},
+                    {
+                        "constraint_id": "c1",
+                        "type": "function_name",
+                        "value": "dedupe",
+                        "target": "function_name",
+                    },
                 ],
                 "prompt_seeds": {"baseline": 33, "verify_only": 33, "verify_repair": 33},
             },
@@ -113,7 +118,12 @@ def _write_exp221_artifact(repo: Path, cases: list[dict[str, Any]] | None = None
                 "prompt": "List 3 items",
                 "expected_answer_schema": {"type": "bullet_list"},
                 "gold_atomic_constraints": [
-                    {"constraint_id": "c2", "type": "count_exact", "value": 3, "target": "bullet_count"},
+                    {
+                        "constraint_id": "c2",
+                        "type": "count_exact",
+                        "value": 3,
+                        "target": "bullet_count",
+                    },
                 ],
                 "prompt_seeds": {"baseline": 44, "verify_only": 44, "verify_repair": 44},
             },
@@ -446,7 +456,9 @@ def test_extract_formal_claims_gsm8k_arithmetic() -> None:
     }
     response = "First I compute 3 + 4 = 7. Then 7 + 5 = 12."
 
-    claims = module.extract_formal_claims_from_response(response, case=case, benchmark="gsm8k_semantic")
+    claims = module.extract_formal_claims_from_response(
+        response, case=case, benchmark="gsm8k_semantic"
+    )
 
     assert len(claims) >= 2
     routes = {c["candidate_solver_route"] for c in claims}
@@ -624,9 +636,17 @@ def test_build_artifact_payload_schema_keys(tmp_path: Path) -> None:
     payload = module.build_artifact_payload(
         output_path=output_path,
         gsm8k_cohort=gsm8k_cases,
-        gsm8k_cohort_meta={"source_artifact": "results/experiment_235_results.json", "benchmark": "gsm8k_semantic", "case_count": 2},
+        gsm8k_cohort_meta={
+            "source_artifact": "results/experiment_235_results.json",
+            "benchmark": "gsm8k_semantic",
+            "case_count": 2,
+        },
         constraint_ir_cohort=constraint_ir_cases,
-        constraint_ir_cohort_meta={"source_artifact": "results/experiment_221_results.json", "benchmark": "constraint_ir", "case_count": 2},
+        constraint_ir_cohort_meta={
+            "source_artifact": "results/experiment_221_results.json",
+            "benchmark": "constraint_ir",
+            "case_count": 2,
+        },
         gsm8k_paired_runs=_make_stub_paired_runs("gsm8k_semantic", gsm8k_cases),
         constraint_ir_paired_runs=_make_stub_paired_runs("constraint_ir", constraint_ir_cases),
         gsm8k_route_summary=_make_stub_route_summary(),
@@ -675,9 +695,17 @@ def test_build_artifact_payload_run_date(tmp_path: Path) -> None:
     payload = module.build_artifact_payload(
         output_path=output_path,
         gsm8k_cohort=gsm8k_cases,
-        gsm8k_cohort_meta={"source_artifact": "results/experiment_235_results.json", "benchmark": "gsm8k_semantic", "case_count": 1},
+        gsm8k_cohort_meta={
+            "source_artifact": "results/experiment_235_results.json",
+            "benchmark": "gsm8k_semantic",
+            "case_count": 1,
+        },
         constraint_ir_cohort=constraint_ir_cases,
-        constraint_ir_cohort_meta={"source_artifact": "results/experiment_221_results.json", "benchmark": "constraint_ir", "case_count": 1},
+        constraint_ir_cohort_meta={
+            "source_artifact": "results/experiment_221_results.json",
+            "benchmark": "constraint_ir",
+            "case_count": 1,
+        },
         gsm8k_paired_runs=_make_stub_paired_runs("gsm8k_semantic", gsm8k_cases),
         constraint_ir_paired_runs=_make_stub_paired_runs("constraint_ir", constraint_ir_cases),
         gsm8k_route_summary=_make_stub_route_summary(),
@@ -708,9 +736,17 @@ def test_build_artifact_payload_schema_artifact_string(tmp_path: Path) -> None:
     payload = module.build_artifact_payload(
         output_path=output_path,
         gsm8k_cohort=gsm8k_cases,
-        gsm8k_cohort_meta={"source_artifact": "results/experiment_235_results.json", "benchmark": "gsm8k_semantic", "case_count": 1},
+        gsm8k_cohort_meta={
+            "source_artifact": "results/experiment_235_results.json",
+            "benchmark": "gsm8k_semantic",
+            "case_count": 1,
+        },
         constraint_ir_cohort=constraint_ir_cases,
-        constraint_ir_cohort_meta={"source_artifact": "results/experiment_221_results.json", "benchmark": "constraint_ir", "case_count": 1},
+        constraint_ir_cohort_meta={
+            "source_artifact": "results/experiment_221_results.json",
+            "benchmark": "constraint_ir",
+            "case_count": 1,
+        },
         gsm8k_paired_runs=_make_stub_paired_runs("gsm8k_semantic", gsm8k_cases),
         constraint_ir_paired_runs=_make_stub_paired_runs("constraint_ir", constraint_ir_cases),
         gsm8k_route_summary=_make_stub_route_summary(),
@@ -738,19 +774,36 @@ def test_build_artifact_payload_cohort_preserves_ids(tmp_path: Path) -> None:
     ckpt_dir = repo / "results" / "checkpoints" / "experiment_246"
 
     gsm8k_cases = [
-        {"case_id": "gsm8k-1", "prompt_seeds": {"baseline": 1, "verify_only": 1, "verify_repair": 1}},
-        {"case_id": "gsm8k-2", "prompt_seeds": {"baseline": 2, "verify_only": 2, "verify_repair": 2}},
+        {
+            "case_id": "gsm8k-1",
+            "prompt_seeds": {"baseline": 1, "verify_only": 1, "verify_repair": 1},
+        },
+        {
+            "case_id": "gsm8k-2",
+            "prompt_seeds": {"baseline": 2, "verify_only": 2, "verify_repair": 2},
+        },
     ]
     constraint_ir_cases = [
-        {"case_id": "exp211-1", "prompt_seeds": {"baseline": 3, "verify_only": 3, "verify_repair": 3}},
+        {
+            "case_id": "exp211-1",
+            "prompt_seeds": {"baseline": 3, "verify_only": 3, "verify_repair": 3},
+        },
     ]
 
     payload = module.build_artifact_payload(
         output_path=output_path,
         gsm8k_cohort=gsm8k_cases,
-        gsm8k_cohort_meta={"source_artifact": "results/experiment_235_results.json", "benchmark": "gsm8k_semantic", "case_count": 2},
+        gsm8k_cohort_meta={
+            "source_artifact": "results/experiment_235_results.json",
+            "benchmark": "gsm8k_semantic",
+            "case_count": 2,
+        },
         constraint_ir_cohort=constraint_ir_cases,
-        constraint_ir_cohort_meta={"source_artifact": "results/experiment_221_results.json", "benchmark": "constraint_ir", "case_count": 1},
+        constraint_ir_cohort_meta={
+            "source_artifact": "results/experiment_221_results.json",
+            "benchmark": "constraint_ir",
+            "case_count": 1,
+        },
         gsm8k_paired_runs=_make_stub_paired_runs("gsm8k_semantic", gsm8k_cases),
         constraint_ir_paired_runs=_make_stub_paired_runs("constraint_ir", constraint_ir_cases),
         gsm8k_route_summary=_make_stub_route_summary(),
@@ -788,9 +841,17 @@ def test_build_artifact_payload_is_json_serializable(tmp_path: Path) -> None:
     payload = module.build_artifact_payload(
         output_path=output_path,
         gsm8k_cohort=gsm8k_cases,
-        gsm8k_cohort_meta={"source_artifact": "results/experiment_235_results.json", "benchmark": "gsm8k_semantic", "case_count": 2},
+        gsm8k_cohort_meta={
+            "source_artifact": "results/experiment_235_results.json",
+            "benchmark": "gsm8k_semantic",
+            "case_count": 2,
+        },
         constraint_ir_cohort=constraint_ir_cases,
-        constraint_ir_cohort_meta={"source_artifact": "results/experiment_221_results.json", "benchmark": "constraint_ir", "case_count": 2},
+        constraint_ir_cohort_meta={
+            "source_artifact": "results/experiment_221_results.json",
+            "benchmark": "constraint_ir",
+            "case_count": 2,
+        },
         gsm8k_paired_runs=_make_stub_paired_runs("gsm8k_semantic", gsm8k_cases),
         constraint_ir_paired_runs=_make_stub_paired_runs("constraint_ir", constraint_ir_cases),
         gsm8k_route_summary=_make_stub_route_summary(),
@@ -890,22 +951,130 @@ def test_summarize_benchmark_runs_baseline_accuracy() -> None:
     module = load_module()
 
     baseline_runs = [
-        {"case_id": "a", "correct": True, "formal_claims": [], "latency_seconds": 1.0, "prompt_tokens": 10, "response_tokens": 5, "total_tokens": 15},
-        {"case_id": "b", "correct": False, "formal_claims": [], "latency_seconds": 1.2, "prompt_tokens": 10, "response_tokens": 5, "total_tokens": 15},
-        {"case_id": "c", "correct": True, "formal_claims": [], "latency_seconds": 0.8, "prompt_tokens": 10, "response_tokens": 5, "total_tokens": 15},
-        {"case_id": "d", "correct": False, "formal_claims": [], "latency_seconds": 1.5, "prompt_tokens": 10, "response_tokens": 5, "total_tokens": 15},
+        {
+            "case_id": "a",
+            "correct": True,
+            "formal_claims": [],
+            "latency_seconds": 1.0,
+            "prompt_tokens": 10,
+            "response_tokens": 5,
+            "total_tokens": 15,
+        },
+        {
+            "case_id": "b",
+            "correct": False,
+            "formal_claims": [],
+            "latency_seconds": 1.2,
+            "prompt_tokens": 10,
+            "response_tokens": 5,
+            "total_tokens": 15,
+        },
+        {
+            "case_id": "c",
+            "correct": True,
+            "formal_claims": [],
+            "latency_seconds": 0.8,
+            "prompt_tokens": 10,
+            "response_tokens": 5,
+            "total_tokens": 15,
+        },
+        {
+            "case_id": "d",
+            "correct": False,
+            "formal_claims": [],
+            "latency_seconds": 1.5,
+            "prompt_tokens": 10,
+            "response_tokens": 5,
+            "total_tokens": 15,
+        },
     ]
     verify_only_runs = [
-        {"case_id": "a", "flagged": False, "accepted_correct": True, "formal_claims": [], "latency_seconds": 0.5, "prompt_tokens": 5, "response_tokens": 3, "total_tokens": 8},
-        {"case_id": "b", "flagged": True, "accepted_correct": False, "formal_claims": [], "latency_seconds": 0.6, "prompt_tokens": 5, "response_tokens": 3, "total_tokens": 8},
-        {"case_id": "c", "flagged": False, "accepted_correct": True, "formal_claims": [], "latency_seconds": 0.4, "prompt_tokens": 5, "response_tokens": 3, "total_tokens": 8},
-        {"case_id": "d", "flagged": True, "accepted_correct": False, "formal_claims": [], "latency_seconds": 0.7, "prompt_tokens": 5, "response_tokens": 3, "total_tokens": 8},
+        {
+            "case_id": "a",
+            "flagged": False,
+            "accepted_correct": True,
+            "formal_claims": [],
+            "latency_seconds": 0.5,
+            "prompt_tokens": 5,
+            "response_tokens": 3,
+            "total_tokens": 8,
+        },
+        {
+            "case_id": "b",
+            "flagged": True,
+            "accepted_correct": False,
+            "formal_claims": [],
+            "latency_seconds": 0.6,
+            "prompt_tokens": 5,
+            "response_tokens": 3,
+            "total_tokens": 8,
+        },
+        {
+            "case_id": "c",
+            "flagged": False,
+            "accepted_correct": True,
+            "formal_claims": [],
+            "latency_seconds": 0.4,
+            "prompt_tokens": 5,
+            "response_tokens": 3,
+            "total_tokens": 8,
+        },
+        {
+            "case_id": "d",
+            "flagged": True,
+            "accepted_correct": False,
+            "formal_claims": [],
+            "latency_seconds": 0.7,
+            "prompt_tokens": 5,
+            "response_tokens": 3,
+            "total_tokens": 8,
+        },
     ]
     verify_repair_runs = [
-        {"case_id": "a", "correct": True, "repaired": False, "n_repairs": 0, "formal_claims": [], "latency_seconds": 0.0, "prompt_tokens": 0, "response_tokens": 0, "total_tokens": 0},
-        {"case_id": "b", "correct": True, "repaired": True, "n_repairs": 1, "formal_claims": [], "latency_seconds": 1.0, "prompt_tokens": 20, "response_tokens": 10, "total_tokens": 30},
-        {"case_id": "c", "correct": True, "repaired": False, "n_repairs": 0, "formal_claims": [], "latency_seconds": 0.0, "prompt_tokens": 0, "response_tokens": 0, "total_tokens": 0},
-        {"case_id": "d", "correct": False, "repaired": False, "n_repairs": 1, "formal_claims": [], "latency_seconds": 0.9, "prompt_tokens": 20, "response_tokens": 10, "total_tokens": 30},
+        {
+            "case_id": "a",
+            "correct": True,
+            "repaired": False,
+            "n_repairs": 0,
+            "formal_claims": [],
+            "latency_seconds": 0.0,
+            "prompt_tokens": 0,
+            "response_tokens": 0,
+            "total_tokens": 0,
+        },
+        {
+            "case_id": "b",
+            "correct": True,
+            "repaired": True,
+            "n_repairs": 1,
+            "formal_claims": [],
+            "latency_seconds": 1.0,
+            "prompt_tokens": 20,
+            "response_tokens": 10,
+            "total_tokens": 30,
+        },
+        {
+            "case_id": "c",
+            "correct": True,
+            "repaired": False,
+            "n_repairs": 0,
+            "formal_claims": [],
+            "latency_seconds": 0.0,
+            "prompt_tokens": 0,
+            "response_tokens": 0,
+            "total_tokens": 0,
+        },
+        {
+            "case_id": "d",
+            "correct": False,
+            "repaired": False,
+            "n_repairs": 1,
+            "formal_claims": [],
+            "latency_seconds": 0.9,
+            "prompt_tokens": 20,
+            "response_tokens": 10,
+            "total_tokens": 30,
+        },
     ]
 
     stats = module.summarize_benchmark_runs(

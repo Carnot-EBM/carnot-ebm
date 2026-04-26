@@ -35,8 +35,10 @@ def _const_model(value: float):
 
     Useful for constructing pairs with known energy gaps without needing real embeddings.
     """
+
     def _model(emb: jnp.ndarray) -> float:
         return value
+
     return _model
 
 
@@ -45,9 +47,11 @@ def _model_from_dict(energy_map: dict[str, float]):
 
     We encode the embedding as jnp.array([value]) and look up by that integer key.
     """
+
     def _model(emb: jnp.ndarray) -> float:
         key = int(float(emb[0]))
         return energy_map.get(key, 0.0)
+
     return _model
 
 
@@ -292,4 +296,5 @@ class TestSinglePairGroupCentering:
         Spec: REQ-LEARN-069
         """
         from carnot.inference import PROGRSCentering as PROGRSFromInit  # noqa: PLC0415
+
         assert PROGRSFromInit is PROGRSCentering

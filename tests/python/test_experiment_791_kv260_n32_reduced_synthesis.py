@@ -67,9 +67,11 @@ class TestToolsUnavailableVerdict:
         fake_tmpl = MagicMock()
         fake_tmpl._repo_root = str(tmp_path)
 
-        with patch.object(mod, "_find_yosys", return_value=(True, "yosys")), \
-             patch.object(mod, "_find_nextpnr_ice40", return_value=(False, "")), \
-             patch.object(mod, "_find_icepack", return_value=(False, "")):
+        with (
+            patch.object(mod, "_find_yosys", return_value=(True, "yosys")),
+            patch.object(mod, "_find_nextpnr_ice40", return_value=(False, "")),
+            patch.object(mod, "_find_icepack", return_value=(False, "")),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["honest_verdict"] == "tools_unavailable"
@@ -82,9 +84,11 @@ class TestToolsUnavailableVerdict:
         fake_tmpl = MagicMock()
         fake_tmpl._repo_root = str(tmp_path)
 
-        with patch.object(mod, "_find_yosys", return_value=(False, "")), \
-             patch.object(mod, "_find_nextpnr_ice40", return_value=(False, "")), \
-             patch.object(mod, "_find_icepack", return_value=(False, "")):
+        with (
+            patch.object(mod, "_find_yosys", return_value=(False, "")),
+            patch.object(mod, "_find_nextpnr_ice40", return_value=(False, "")),
+            patch.object(mod, "_find_icepack", return_value=(False, "")),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert "tools_available" in result
@@ -113,12 +117,14 @@ class TestBitstreamGeneratedVerdict:
         fake_tmpl = MagicMock()
         fake_tmpl._repo_root = str(tmp_path)
 
-        with patch.object(mod, "_find_yosys", return_value=(True, "yosys")), \
-             patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")), \
-             patch.object(mod, "_find_icepack", return_value=(True, "icepack")), \
-             patch.object(mod, "_run_yosys_synthesis", return_value=(True, 612, "")), \
-             patch.object(mod, "_run_nextpnr", return_value=(True, 12.5, 8.0, "")), \
-             patch.object(mod, "_run_icepack", return_value=(True, str(tmp_path / "out.bin"))):
+        with (
+            patch.object(mod, "_find_yosys", return_value=(True, "yosys")),
+            patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")),
+            patch.object(mod, "_find_icepack", return_value=(True, "icepack")),
+            patch.object(mod, "_run_yosys_synthesis", return_value=(True, 612, "")),
+            patch.object(mod, "_run_nextpnr", return_value=(True, 12.5, 8.0, "")),
+            patch.object(mod, "_run_icepack", return_value=(True, str(tmp_path / "out.bin"))),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["honest_verdict"] == "bitstream_generated_n32_ice40"
@@ -134,11 +140,13 @@ class TestBitstreamGeneratedVerdict:
         fake_tmpl = MagicMock()
         fake_tmpl._repo_root = str(tmp_path)
 
-        with patch.object(mod, "_find_yosys", return_value=(True, "yosys")), \
-             patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")), \
-             patch.object(mod, "_find_icepack", return_value=(False, "")), \
-             patch.object(mod, "_run_yosys_synthesis", return_value=(True, 700, "")), \
-             patch.object(mod, "_run_nextpnr", return_value=(True, 10.0, 9.1, "")):
+        with (
+            patch.object(mod, "_find_yosys", return_value=(True, "yosys")),
+            patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")),
+            patch.object(mod, "_find_icepack", return_value=(False, "")),
+            patch.object(mod, "_run_yosys_synthesis", return_value=(True, 700, "")),
+            patch.object(mod, "_run_nextpnr", return_value=(True, 10.0, 9.1, "")),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["honest_verdict"] == "pnr_success_lut_fit"
@@ -151,11 +159,13 @@ class TestBitstreamGeneratedVerdict:
         fake_tmpl = MagicMock()
         fake_tmpl._repo_root = str(tmp_path)
 
-        with patch.object(mod, "_find_yosys", return_value=(True, "yosys")), \
-             patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")), \
-             patch.object(mod, "_find_icepack", return_value=(False, "")), \
-             patch.object(mod, "_run_yosys_synthesis", return_value=(True, 650, "")), \
-             patch.object(mod, "_run_nextpnr", return_value=(False, None, None, "FAIL")):
+        with (
+            patch.object(mod, "_find_yosys", return_value=(True, "yosys")),
+            patch.object(mod, "_find_nextpnr_ice40", return_value=(True, "nextpnr-ice40")),
+            patch.object(mod, "_find_icepack", return_value=(False, "")),
+            patch.object(mod, "_run_yosys_synthesis", return_value=(True, 650, "")),
+            patch.object(mod, "_run_nextpnr", return_value=(False, None, None, "FAIL")),
+        ):
             result = mod.run_experiment(fake_tmpl)
 
         assert result["honest_verdict"] == "pnr_failed_timing_n32"
@@ -203,8 +213,10 @@ class TestHelpers:
 
     def test_find_yosys_not_found(self):
         """_find_yosys: returns False when neither native nor yowasp is present."""
-        with patch.object(mod, "_which", return_value=False), \
-             patch.object(mod, "_run", return_value=(1, "", "error")):
+        with (
+            patch.object(mod, "_which", return_value=False),
+            patch.object(mod, "_run", return_value=(1, "", "error")),
+        ):
             found, cmd = mod._find_yosys()
         assert found is False
         assert cmd == ""
@@ -218,18 +230,23 @@ class TestHelpers:
 
     def test_find_icepack_not_found(self):
         """_find_icepack: returns (False, '') when neither native nor yowasp installs."""
-        with patch.object(mod, "_which", return_value=False), \
-             patch.object(mod, "_run", return_value=(1, "", "error")):
+        with (
+            patch.object(mod, "_which", return_value=False),
+            patch.object(mod, "_run", return_value=(1, "", "error")),
+        ):
             found, cmd = mod._find_icepack()
         assert found is False
 
     def test_find_nextpnr_ice40_yowasp_module(self):
         """_find_nextpnr_ice40: yowasp module found without native binary."""
+
         def _which_side(name):
             return False  # native not found
 
-        with patch.object(mod, "_which", side_effect=_which_side), \
-             patch.object(mod, "_run", return_value=(0, "nextpnr 0.10", "")):
+        with (
+            patch.object(mod, "_which", side_effect=_which_side),
+            patch.object(mod, "_run", return_value=(0, "nextpnr 0.10", "")),
+        ):
             found, cmd = mod._find_nextpnr_ice40()
         assert found is True
 
@@ -246,15 +263,19 @@ class TestHelpers:
                 return (0, "", "")  # pip install succeeds
             return (0, "nextpnr 0.10", "")  # recheck succeeds
 
-        with patch.object(mod, "_which", return_value=False), \
-             patch.object(mod, "_run", side_effect=_run_side):
+        with (
+            patch.object(mod, "_which", return_value=False),
+            patch.object(mod, "_run", side_effect=_run_side),
+        ):
             found, cmd = mod._find_nextpnr_ice40()
         assert found is True
 
     def test_find_nextpnr_all_fail(self):
         """_find_nextpnr_ice40: returns (False, '') when all attempts fail."""
-        with patch.object(mod, "_which", return_value=False), \
-             patch.object(mod, "_run", return_value=(1, "", "error")):
+        with (
+            patch.object(mod, "_which", return_value=False),
+            patch.object(mod, "_run", return_value=(1, "", "error")),
+        ):
             found, cmd = mod._find_nextpnr_ice40()
         assert found is False
         assert cmd == ""
@@ -272,6 +293,7 @@ class TestHelpers:
         (synth_dir / "synth_yosys_ice40_n32.ys").write_text(
             "chparam -set N_SPINS 32 -set MAX_DEGREE 8 top\n"
         )
+
         # Simulate yosys output with SB_LUT4 count and write the JSON file
         def _run_side(cmd, timeout=300):
             (tmp_path / "hardware" / "kv260" / "ising_sampler_n32_ice40.json").write_text("{}")

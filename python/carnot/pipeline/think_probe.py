@@ -65,8 +65,10 @@ from __future__ import annotations
 import re
 import time
 from dataclasses import dataclass, field
-from typing import Callable, Literal
+from typing import TYPE_CHECKING, Literal
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # ThinkVerdict dataclass
@@ -211,9 +213,7 @@ def build_think_probe_prompt(response: str) -> str:
 # Output parser
 # ---------------------------------------------------------------------------
 
-_VERDICT_PATTERN = re.compile(
-    r"VERDICT\s*:\s*(incorrect|uncertain|correct)", re.IGNORECASE
-)
+_VERDICT_PATTERN = re.compile(r"VERDICT\s*:\s*(incorrect|uncertain|correct)", re.IGNORECASE)
 _STEP_PATTERN = re.compile(r"Step\s+\d+\s*:", re.IGNORECASE)
 
 
@@ -430,7 +430,7 @@ class CarnotThinkProbe:
         n_correct = 0
         n_fp = 0  # correct responses wrongly flagged as 'incorrect'
 
-        for response, label in zip(responses, ground_truth):
+        for response, label in zip(responses, ground_truth, strict=False):
             result = self.probe(response)
             flagged_incorrect = not result.should_run_ising  # i.e., verdict=='incorrect'
 

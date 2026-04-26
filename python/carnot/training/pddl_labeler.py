@@ -69,15 +69,11 @@ _WORD_THEN_NUM = re.compile(
 
 # Matches arithmetic expressions of the form "a OP b = c" where OP is +, -, *, /
 # The result value c is what we compare against the expected next state.
-_ARITH_EXPR = re.compile(
-    r"(\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(\d+(?:\.\d+)?)\s*=\s*(\d+(?:\.\d+)?)"
-)
+_ARITH_EXPR = re.compile(r"(\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(\d+(?:\.\d+)?)\s*=\s*(\d+(?:\.\d+)?)")
 
 # Matches any arithmetic expression "a OP b" without a stated result — used
 # when we want to evaluate the expression ourselves and compare to a target.
-_ARITH_NO_RESULT = re.compile(
-    r"(\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(\d+(?:\.\d+)?)"
-)
+_ARITH_NO_RESULT = re.compile(r"(\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(\d+(?:\.\d+)?)")
 
 # Standalone numeric literal — used to find any number mentioned in a step.
 _ANY_NUMBER = re.compile(r"\b(\d+(?:\.\d+)?)\b")
@@ -86,12 +82,50 @@ _ANY_NUMBER = re.compile(r"\b(\d+(?:\.\d+)?)\b")
 # so "3 times" doesn't produce {"times": 3.0} which pollutes the state.
 _QUANTITY_STOPWORDS: frozenset[str] = frozenset(
     {
-        "times", "more", "less", "each", "per", "total", "half", "quarter",
-        "third", "first", "second", "third", "fourth", "fifth",
-        "a", "an", "the", "and", "or", "of", "in", "at", "to", "for",
-        "by", "with", "from", "into", "onto", "upon", "about",
-        "day", "days", "week", "weeks", "month", "months", "year", "years",
-        "time", "hour", "hours", "minute", "minutes", "second", "seconds",
+        "times",
+        "more",
+        "less",
+        "each",
+        "per",
+        "total",
+        "half",
+        "quarter",
+        "third",
+        "first",
+        "second",
+        "fourth",
+        "fifth",
+        "a",
+        "an",
+        "the",
+        "and",
+        "or",
+        "of",
+        "in",
+        "at",
+        "to",
+        "for",
+        "by",
+        "with",
+        "from",
+        "into",
+        "onto",
+        "upon",
+        "about",
+        "day",
+        "days",
+        "week",
+        "weeks",
+        "month",
+        "months",
+        "year",
+        "years",
+        "time",
+        "hour",
+        "hours",
+        "minute",
+        "minutes",
+        "seconds",
     }
 )
 
@@ -140,9 +174,7 @@ def extract_quantities(problem_text: str) -> dict[str, float]:
     return quantities
 
 
-def encode_step_transition(
-    step_text: str, state: dict[str, float]
-) -> tuple[str, dict[str, float]]:
+def encode_step_transition(step_text: str, state: dict[str, float]) -> tuple[str, dict[str, float]]:
     """Parse a CoT step as a PDDL action and estimate the resulting new state.
 
     A PDDL action in this context is any arithmetic expression found in
@@ -275,9 +307,7 @@ def verify_transition(
     return False
 
 
-def label_gsm8k_chain(
-    question: str, cot_steps: list[str]
-) -> list[dict[str, Any]]:
+def label_gsm8k_chain(question: str, cot_steps: list[str]) -> list[dict[str, Any]]:
     """Label each step in a CoT chain with a PDDL-derived correctness verdict.
 
     For each step:

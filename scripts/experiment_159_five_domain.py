@@ -146,29 +146,35 @@ def _extract_number(text: str) -> float | None:
 
 def _make_number_checker(expected: int | float) -> Any:
     """Factory: close over expected value to avoid Python closure-variable pitfall."""
+
     def checker(ans: str) -> bool:
         extracted = _extract_number(ans)
         if extracted is None:
             return False
         return int(extracted) == int(expected)
+
     return checker
 
 
 def _make_keyword_checker(keywords: list[str]) -> Any:
     """Factory: case-insensitive substring match for factual/logic answers."""
+
     def checker(ans: str) -> bool:
         ans_lower = ans.lower()
         return any(kw.lower() in ans_lower for kw in keywords)
+
     return checker
 
 
 def _make_code_checker(keywords: list[str]) -> Any:
     """Factory: code answer valid if contains 'def ' and at least one keyword."""
+
     def checker(ans: str) -> bool:
         if "def " not in ans:
             return False
         ans_lower = ans.lower()
         return any(kw.lower() in ans_lower for kw in keywords)
+
     return checker
 
 
@@ -194,15 +200,17 @@ def generate_arithmetic_questions(n: int = 50, seed: int = 93) -> list[dict[str,
         else:
             a, b = rng.randint(10, 999), rng.randint(10, 999)
         answer = op_fn(a, b)
-        questions.append({
-            "domain": "arithmetic",
-            "question": f"What is {a} {op_sym} {b}?",
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-            # Carry-chain response pattern for wrong answers (exercises Exp 141).
-            "correct_response": f"{a} {op_sym} {b} = {answer}",
-            "wrong_response": f"{a} {op_sym} {b} = {answer + rng.randint(1, 10)}",
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": f"What is {a} {op_sym} {b}?",
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+                # Carry-chain response pattern for wrong answers (exercises Exp 141).
+                "correct_response": f"{a} {op_sym} {b} = {answer}",
+                "wrong_response": f"{a} {op_sym} {b} = {answer + rng.randint(1, 10)}",
+            }
+        )
 
     for i in range(15):
         a, b, c = rng.randint(2, 50), rng.randint(2, 50), rng.randint(2, 50)
@@ -216,23 +224,31 @@ def generate_arithmetic_questions(n: int = 50, seed: int = 93) -> list[dict[str,
         else:
             q = f"What is {a} + {b} - {c}?"
             answer = a + b - c
-        questions.append({
-            "domain": "arithmetic",
-            "question": q,
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-            "correct_response": f"The answer is {answer}",
-            "wrong_response": f"The answer is {answer + rng.randint(1, 15)}",
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": q,
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+                "correct_response": f"The answer is {answer}",
+                "wrong_response": f"The answer is {answer + rng.randint(1, 15)}",
+            }
+        )
 
     templates = [
-        ("A store has {a} items. They sell {b} and receive {c}. How many items remain?",
-         lambda a, b, c: a - b + c),
-        ("A classroom has {a} students. {b} leave and {c} arrive. How many now?",
-         lambda a, b, c: a - b + c),
-        ("A baker makes {a} loaves in the morning and {b} in the afternoon. "
-         "If {c} are sold, how many remain?",
-         lambda a, b, c: a + b - c),
+        (
+            "A store has {a} items. They sell {b} and receive {c}. How many items remain?",
+            lambda a, b, c: a - b + c,
+        ),
+        (
+            "A classroom has {a} students. {b} leave and {c} arrive. How many now?",
+            lambda a, b, c: a - b + c,
+        ),
+        (
+            "A baker makes {a} loaves in the morning and {b} in the afternoon. "
+            "If {c} are sold, how many remain?",
+            lambda a, b, c: a + b - c,
+        ),
     ]
     for i in range(15):
         tmpl, fn = templates[i % len(templates)]
@@ -240,14 +256,16 @@ def generate_arithmetic_questions(n: int = 50, seed: int = 93) -> list[dict[str,
         b = rng.randint(1, a // 2)
         c = rng.randint(1, a // 2)
         answer = fn(a, b, c)
-        questions.append({
-            "domain": "arithmetic",
-            "question": tmpl.format(a=a, b=b, c=c),
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-            "correct_response": f"The result is {answer}",
-            "wrong_response": f"The result is {answer + rng.randint(1, 20)}",
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": tmpl.format(a=a, b=b, c=c),
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+                "correct_response": f"The result is {answer}",
+                "wrong_response": f"The result is {answer + rng.randint(1, 20)}",
+            }
+        )
 
     return questions[:n]
 
@@ -318,15 +336,17 @@ def generate_code_questions(n: int = 50, seed: int = 93) -> list[dict[str, Any]]
     questions: list[dict[str, Any]] = []
     for desc, keywords in selected:
         kw = keywords[0]
-        questions.append({
-            "domain": "code",
-            "question": f"Write a Python function to {desc}.",
-            "ground_truth": f"def {desc.split()[0]}",
-            "keywords": keywords,
-            "check_answer": _make_code_checker(keywords),
-            "correct_response": f"def {desc.split()[0]}(x):\n    # {kw}\n    return {kw}(x)",
-            "wrong_response": f"# To {desc}, you can use {kw}",
-        })
+        questions.append(
+            {
+                "domain": "code",
+                "question": f"Write a Python function to {desc}.",
+                "ground_truth": f"def {desc.split()[0]}",
+                "keywords": keywords,
+                "check_answer": _make_code_checker(keywords),
+                "correct_response": f"def {desc.split()[0]}(x):\n    # {kw}\n    return {kw}(x)",
+                "wrong_response": f"# To {desc}, you can use {kw}",
+            }
+        )
     return questions[:n]
 
 
@@ -342,42 +362,64 @@ def generate_logic_questions(n: int = 50, seed: int = 93) -> list[dict[str, Any]
     questions: list[dict[str, Any]] = []
 
     categories = [
-        ("mammals", "animals"), ("dogs", "mammals"), ("birds", "animals"),
-        ("roses", "flowers"), ("oaks", "trees"), ("salmon", "fish"),
-        ("apples", "fruits"), ("cars", "vehicles"), ("novels", "books"),
-        ("triangles", "shapes"), ("violins", "instruments"), ("gold", "metals"),
+        ("mammals", "animals"),
+        ("dogs", "mammals"),
+        ("birds", "animals"),
+        ("roses", "flowers"),
+        ("oaks", "trees"),
+        ("salmon", "fish"),
+        ("apples", "fruits"),
+        ("cars", "vehicles"),
+        ("novels", "books"),
+        ("triangles", "shapes"),
+        ("violins", "instruments"),
+        ("gold", "metals"),
     ]
     instances = [
-        ("Rex", "dogs"), ("Tweety", "birds"), ("Nemo", "salmon"),
-        ("Bessie", "mammals"), ("Fido", "dogs"), ("Polly", "birds"),
+        ("Rex", "dogs"),
+        ("Tweety", "birds"),
+        ("Nemo", "salmon"),
+        ("Bessie", "mammals"),
+        ("Fido", "dogs"),
+        ("Polly", "birds"),
     ]
 
     for i in range(18):
         cat, supercat = categories[i % len(categories)]
         inst_name = instances[i % len(instances)][0]
-        q = (f"All {cat} are {supercat}. {inst_name} is a {cat}. "
-             f"Is {inst_name} a {supercat}? Answer yes or no.")
-        questions.append({
-            "domain": "logic", "question": q,
-            "ground_truth": "yes",
-            "check_answer": lambda ans: "yes" in ans.lower(),
-            "correct_response": "yes",
-            # Wrong response injects negation scope for Exp 141 NegationConstraint.
-            "wrong_response": f"{inst_name} is not a {supercat}. No.",
-        })
+        q = (
+            f"All {cat} are {supercat}. {inst_name} is a {cat}. "
+            f"Is {inst_name} a {supercat}? Answer yes or no."
+        )
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "ground_truth": "yes",
+                "check_answer": lambda ans: "yes" in ans.lower(),
+                "correct_response": "yes",
+                # Wrong response injects negation scope for Exp 141 NegationConstraint.
+                "wrong_response": f"{inst_name} is not a {supercat}. No.",
+            }
+        )
 
     for i in range(12):
         cat, supercat = categories[(i + 3) % len(categories)]
         inst_name = instances[(i + 2) % len(instances)][0]
-        q = (f"All {supercat} are {cat}. {inst_name} is a {cat}. "
-             f"Is {inst_name} a {supercat}? Answer yes or no.")
-        questions.append({
-            "domain": "logic", "question": q,
-            "ground_truth": "no",
-            "check_answer": lambda ans: "no" in ans.lower() and "yes" not in ans.lower(),
-            "correct_response": "No, this is not valid.",
-            "wrong_response": "yes",
-        })
+        q = (
+            f"All {supercat} are {cat}. {inst_name} is a {cat}. "
+            f"Is {inst_name} a {supercat}? Answer yes or no."
+        )
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "ground_truth": "no",
+                "check_answer": lambda ans: "no" in ans.lower() and "yes" not in ans.lower(),
+                "correct_response": "No, this is not valid.",
+                "wrong_response": "yes",
+            }
+        )
 
     modus_cases = [
         ("it rains", "the ground is wet", True),
@@ -385,17 +427,23 @@ def generate_logic_questions(n: int = 50, seed: int = 93) -> list[dict[str, Any]
         ("x > 5", "x is positive", False),
         ("all lights are off", "it is dark", True),
     ]
-    for premise, conclusion, mp_correct in modus_cases[:n - 30]:
-        q = (f"If {premise}, then {conclusion}. {premise.capitalize()}. "
-             f"Does it follow that {conclusion}? Answer yes or no.")
-        questions.append({
-            "domain": "logic", "question": q,
-            "ground_truth": "yes" if mp_correct else "no",
-            "check_answer": (lambda ans: "yes" in ans.lower()) if mp_correct
-                            else (lambda ans: "no" in ans.lower()),
-            "correct_response": "yes" if mp_correct else "no",
-            "wrong_response": "no" if mp_correct else "yes",
-        })
+    for premise, conclusion, mp_correct in modus_cases[: n - 30]:
+        q = (
+            f"If {premise}, then {conclusion}. {premise.capitalize()}. "
+            f"Does it follow that {conclusion}? Answer yes or no."
+        )
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "ground_truth": "yes" if mp_correct else "no",
+                "check_answer": (lambda ans: "yes" in ans.lower())
+                if mp_correct
+                else (lambda ans: "no" in ans.lower()),
+                "correct_response": "yes" if mp_correct else "no",
+                "wrong_response": "no" if mp_correct else "yes",
+            }
+        )
 
     # Fill remaining to reach n
     remaining = n - len(questions)
@@ -406,13 +454,16 @@ def generate_logic_questions(n: int = 50, seed: int = 93) -> list[dict[str, Any]
         answer = a + b
         # Comparison-boundary logic question for Exp 141 BoundConstraint coverage.
         q = f"Is it true that {a} + {b} >= {answer}? Answer yes or no."
-        questions.append({
-            "domain": "logic", "question": q,
-            "ground_truth": "yes",
-            "check_answer": lambda ans: "yes" in ans.lower(),
-            "correct_response": f"yes, {a} + {b} = {answer} >= {answer}",
-            "wrong_response": f"no, {a} + {b} = {answer} < {answer}",
-        })
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "ground_truth": "yes",
+                "check_answer": lambda ans: "yes" in ans.lower(),
+                "correct_response": f"yes, {a} + {b} = {answer} >= {answer}",
+                "wrong_response": f"no, {a} + {b} = {answer} < {answer}",
+            }
+        )
 
     return questions[:n]
 
@@ -440,186 +491,376 @@ def generate_factual_questions(n: int = 50, seed: int = 93) -> list[dict[str, An
     # 50 factual Q&A pairs with strong claim patterns for FactualExtractor.
     qa_pairs: list[tuple[str, str, list[str], str, str]] = [
         # (question, correct_answer_text, answer_keywords, correct_claim_pattern, wrong_claim_pattern)
-        ("What is the capital of France?",
-         "Paris is the capital of France.",
-         ["paris"], "Paris is the capital of France.", "London is the capital of France."),
-        ("What is the capital of Germany?",
-         "The capital of Germany is Berlin.",
-         ["berlin"], "The capital of Germany is Berlin.", "The capital of Germany is Munich."),
-        ("What is the capital of Japan?",
-         "Tokyo is the capital of Japan.",
-         ["tokyo"], "Tokyo is the capital of Japan.", "Osaka is the capital of Japan."),
-        ("What is the capital of Australia?",
-         "The capital of Australia is Canberra.",
-         ["canberra"], "The capital of Australia is Canberra.", "The capital of Australia is Sydney."),
-        ("What is the capital of Brazil?",
-         "The capital of Brazil is Brasilia.",
-         ["brasilia"], "The capital of Brazil is Brasilia.", "The capital of Brazil is Rio."),
-        ("What is the capital of Canada?",
-         "Ottawa is the capital of Canada.",
-         ["ottawa"], "Ottawa is the capital of Canada.", "Toronto is the capital of Canada."),
-        ("What is the capital of Italy?",
-         "Rome is the capital of Italy.",
-         ["rome"], "Rome is the capital of Italy.", "Milan is the capital of Italy."),
-        ("What is the capital of Spain?",
-         "Madrid is the capital of Spain.",
-         ["madrid"], "Madrid is the capital of Spain.", "Barcelona is the capital of Spain."),
-        ("What is the capital of China?",
-         "Beijing is the capital of China.",
-         ["beijing"], "Beijing is the capital of China.", "Shanghai is the capital of China."),
-        ("What is the capital of Russia?",
-         "Moscow is the capital of Russia.",
-         ["moscow"], "Moscow is the capital of Russia.", "St Petersburg is the capital of Russia."),
-        ("What is the capital of Mexico?",
-         "The capital of Mexico is Mexico City.",
-         ["mexico city"], "The capital of Mexico is Mexico City.", "The capital of Mexico is Guadalajara."),
-        ("What is the capital of Egypt?",
-         "The capital of Egypt is Cairo.",
-         ["cairo"], "The capital of Egypt is Cairo.", "The capital of Egypt is Alexandria."),
-        ("What is the capital of India?",
-         "The capital of India is New Delhi.",
-         ["delhi"], "The capital of India is New Delhi.", "The capital of India is Mumbai."),
-        ("What is the capital of South Korea?",
-         "The capital of South Korea is Seoul.",
-         ["seoul"], "The capital of South Korea is Seoul.", "The capital of South Korea is Busan."),
-        ("What is the capital of Turkey?",
-         "The capital of Turkey is Ankara.",
-         ["ankara"], "The capital of Turkey is Ankara.", "The capital of Turkey is Istanbul."),
-        ("What is the capital of Argentina?",
-         "The capital of Argentina is Buenos Aires.",
-         ["buenos aires"], "The capital of Argentina is Buenos Aires.", "The capital of Argentina is Cordoba."),
-        ("What is the capital of Poland?",
-         "The capital of Poland is Warsaw.",
-         ["warsaw"], "The capital of Poland is Warsaw.", "The capital of Poland is Krakow."),
-        ("What is the capital of Sweden?",
-         "The capital of Sweden is Stockholm.",
-         ["stockholm"], "The capital of Sweden is Stockholm.", "The capital of Sweden is Gothenburg."),
-        ("What is the capital of Norway?",
-         "The capital of Norway is Oslo.",
-         ["oslo"], "The capital of Norway is Oslo.", "The capital of Norway is Bergen."),
-        ("What is the capital of Denmark?",
-         "The capital of Denmark is Copenhagen.",
-         ["copenhagen"], "The capital of Denmark is Copenhagen.", "The capital of Denmark is Aarhus."),
-        ("What is the capital of Finland?",
-         "The capital of Finland is Helsinki.",
-         ["helsinki"], "The capital of Finland is Helsinki.", "The capital of Finland is Tampere."),
-        ("What is the capital of Portugal?",
-         "The capital of Portugal is Lisbon.",
-         ["lisbon"], "The capital of Portugal is Lisbon.", "The capital of Portugal is Porto."),
-        ("What is the capital of Greece?",
-         "The capital of Greece is Athens.",
-         ["athens"], "The capital of Greece is Athens.", "The capital of Greece is Thessaloniki."),
-        ("What is the capital of Switzerland?",
-         "The capital of Switzerland is Bern.",
-         ["bern"], "The capital of Switzerland is Bern.", "The capital of Switzerland is Zurich."),
-        ("What is the capital of Austria?",
-         "The capital of Austria is Vienna.",
-         ["vienna"], "The capital of Austria is Vienna.", "The capital of Austria is Graz."),
-        ("What is the capital of Belgium?",
-         "The capital of Belgium is Brussels.",
-         ["brussels"], "The capital of Belgium is Brussels.", "The capital of Belgium is Antwerp."),
-        ("What is the capital of Hungary?",
-         "The capital of Hungary is Budapest.",
-         ["budapest"], "The capital of Hungary is Budapest.", "The capital of Hungary is Debrecen."),
-        ("What is the capital of Netherlands?",
-         "The capital of Netherlands is Amsterdam.",
-         ["amsterdam"], "The capital of Netherlands is Amsterdam.", "The capital of Netherlands is Rotterdam."),
-        ("What is the capital of Ukraine?",
-         "The capital of Ukraine is Kyiv.",
-         ["kyiv"], "The capital of Ukraine is Kyiv.", "The capital of Ukraine is Kharkiv."),
-        ("What is the capital of Indonesia?",
-         "The capital of Indonesia is Jakarta.",
-         ["jakarta"], "The capital of Indonesia is Jakarta.", "The capital of Indonesia is Surabaya."),
-        ("What is the official language of Brazil?",
-         "The official language of Brazil is Portuguese.",
-         ["portuguese"], "The official language of Brazil is Portuguese.",
-         "The official language of Brazil is Spanish."),
-        ("What is the official language of Egypt?",
-         "The official language of Egypt is Arabic.",
-         ["arabic"], "The official language of Egypt is Arabic.",
-         "The official language of Egypt is French."),
-        ("What is the official language of Mexico?",
-         "The official language of Mexico is Spanish.",
-         ["spanish"], "The official language of Mexico is Spanish.",
-         "The official language of Mexico is Portuguese."),
-        ("What is the currency of Japan?",
-         "The currency of Japan is the yen.",
-         ["yen"], "The currency of Japan is the yen.", "The currency of Japan is the yuan."),
-        ("What is the currency of the United Kingdom?",
-         "The currency of the United Kingdom is the pound.",
-         ["pound"], "The currency of the United Kingdom is the pound.",
-         "The currency of the United Kingdom is the euro."),
-        ("What is the currency of India?",
-         "The currency of India is the rupee.",
-         ["rupee"], "The currency of India is the rupee.", "The currency of India is the taka."),
-        ("What is the currency of Brazil?",
-         "The currency of Brazil is the real.",
-         ["real"], "The currency of Brazil is the real.", "The currency of Brazil is the peso."),
-        ("What is the currency of China?",
-         "The currency of China is the yuan.",
-         ["yuan"], "The currency of China is the yuan.", "The currency of China is the yen."),
-        ("Where was Albert Einstein born?",
-         "Albert Einstein was born in Ulm.",
-         ["ulm"], "Albert Einstein was born in Ulm.", "Albert Einstein was born in Berlin."),
-        ("Where was Mozart born?",
-         "Mozart was born in Salzburg.",
-         ["salzburg"], "Mozart was born in Salzburg.", "Mozart was born in Vienna."),
-        ("Which country is Vienna in?",
-         "Vienna is in Austria.",
-         ["austria"], "Vienna is in Austria.", "Vienna is in Germany."),
-        ("Which country is Amsterdam in?",
-         "Amsterdam is in the Netherlands.",
-         ["netherlands"], "Amsterdam is in the Netherlands.", "Amsterdam is in Belgium."),
-        ("What is the capital of Thailand?",
-         "The capital of Thailand is Bangkok.",
-         ["bangkok"], "The capital of Thailand is Bangkok.",
-         "The capital of Thailand is Phuket."),
-        ("What is the capital of Saudi Arabia?",
-         "The capital of Saudi Arabia is Riyadh.",
-         ["riyadh"], "The capital of Saudi Arabia is Riyadh.",
-         "The capital of Saudi Arabia is Jeddah."),
-        ("What is the capital of Romania?",
-         "The capital of Romania is Bucharest.",
-         ["bucharest"], "The capital of Romania is Bucharest.",
-         "The capital of Romania is Cluj."),
-        ("What is the capital of Czech Republic?",
-         "The capital of Czech Republic is Prague.",
-         ["prague"], "The capital of Czech Republic is Prague.",
-         "The capital of Czech Republic is Brno."),
-        ("What is the capital of Ireland?",
-         "The capital of Ireland is Dublin.",
-         ["dublin"], "The capital of Ireland is Dublin.",
-         "The capital of Ireland is Cork."),
-        ("What is the capital of New Zealand?",
-         "The capital of New Zealand is Wellington.",
-         ["wellington"], "The capital of New Zealand is Wellington.",
-         "The capital of New Zealand is Auckland."),
-        ("What is the capital of South Africa?",
-         "The capital of South Africa is Pretoria.",
-         ["pretoria"], "The capital of South Africa is Pretoria.",
-         "The capital of South Africa is Cape Town."),
-        ("What is the capital of Nigeria?",
-         "The capital of Nigeria is Abuja.",
-         ["abuja"], "The capital of Nigeria is Abuja.",
-         "The capital of Nigeria is Lagos."),
+        (
+            "What is the capital of France?",
+            "Paris is the capital of France.",
+            ["paris"],
+            "Paris is the capital of France.",
+            "London is the capital of France.",
+        ),
+        (
+            "What is the capital of Germany?",
+            "The capital of Germany is Berlin.",
+            ["berlin"],
+            "The capital of Germany is Berlin.",
+            "The capital of Germany is Munich.",
+        ),
+        (
+            "What is the capital of Japan?",
+            "Tokyo is the capital of Japan.",
+            ["tokyo"],
+            "Tokyo is the capital of Japan.",
+            "Osaka is the capital of Japan.",
+        ),
+        (
+            "What is the capital of Australia?",
+            "The capital of Australia is Canberra.",
+            ["canberra"],
+            "The capital of Australia is Canberra.",
+            "The capital of Australia is Sydney.",
+        ),
+        (
+            "What is the capital of Brazil?",
+            "The capital of Brazil is Brasilia.",
+            ["brasilia"],
+            "The capital of Brazil is Brasilia.",
+            "The capital of Brazil is Rio.",
+        ),
+        (
+            "What is the capital of Canada?",
+            "Ottawa is the capital of Canada.",
+            ["ottawa"],
+            "Ottawa is the capital of Canada.",
+            "Toronto is the capital of Canada.",
+        ),
+        (
+            "What is the capital of Italy?",
+            "Rome is the capital of Italy.",
+            ["rome"],
+            "Rome is the capital of Italy.",
+            "Milan is the capital of Italy.",
+        ),
+        (
+            "What is the capital of Spain?",
+            "Madrid is the capital of Spain.",
+            ["madrid"],
+            "Madrid is the capital of Spain.",
+            "Barcelona is the capital of Spain.",
+        ),
+        (
+            "What is the capital of China?",
+            "Beijing is the capital of China.",
+            ["beijing"],
+            "Beijing is the capital of China.",
+            "Shanghai is the capital of China.",
+        ),
+        (
+            "What is the capital of Russia?",
+            "Moscow is the capital of Russia.",
+            ["moscow"],
+            "Moscow is the capital of Russia.",
+            "St Petersburg is the capital of Russia.",
+        ),
+        (
+            "What is the capital of Mexico?",
+            "The capital of Mexico is Mexico City.",
+            ["mexico city"],
+            "The capital of Mexico is Mexico City.",
+            "The capital of Mexico is Guadalajara.",
+        ),
+        (
+            "What is the capital of Egypt?",
+            "The capital of Egypt is Cairo.",
+            ["cairo"],
+            "The capital of Egypt is Cairo.",
+            "The capital of Egypt is Alexandria.",
+        ),
+        (
+            "What is the capital of India?",
+            "The capital of India is New Delhi.",
+            ["delhi"],
+            "The capital of India is New Delhi.",
+            "The capital of India is Mumbai.",
+        ),
+        (
+            "What is the capital of South Korea?",
+            "The capital of South Korea is Seoul.",
+            ["seoul"],
+            "The capital of South Korea is Seoul.",
+            "The capital of South Korea is Busan.",
+        ),
+        (
+            "What is the capital of Turkey?",
+            "The capital of Turkey is Ankara.",
+            ["ankara"],
+            "The capital of Turkey is Ankara.",
+            "The capital of Turkey is Istanbul.",
+        ),
+        (
+            "What is the capital of Argentina?",
+            "The capital of Argentina is Buenos Aires.",
+            ["buenos aires"],
+            "The capital of Argentina is Buenos Aires.",
+            "The capital of Argentina is Cordoba.",
+        ),
+        (
+            "What is the capital of Poland?",
+            "The capital of Poland is Warsaw.",
+            ["warsaw"],
+            "The capital of Poland is Warsaw.",
+            "The capital of Poland is Krakow.",
+        ),
+        (
+            "What is the capital of Sweden?",
+            "The capital of Sweden is Stockholm.",
+            ["stockholm"],
+            "The capital of Sweden is Stockholm.",
+            "The capital of Sweden is Gothenburg.",
+        ),
+        (
+            "What is the capital of Norway?",
+            "The capital of Norway is Oslo.",
+            ["oslo"],
+            "The capital of Norway is Oslo.",
+            "The capital of Norway is Bergen.",
+        ),
+        (
+            "What is the capital of Denmark?",
+            "The capital of Denmark is Copenhagen.",
+            ["copenhagen"],
+            "The capital of Denmark is Copenhagen.",
+            "The capital of Denmark is Aarhus.",
+        ),
+        (
+            "What is the capital of Finland?",
+            "The capital of Finland is Helsinki.",
+            ["helsinki"],
+            "The capital of Finland is Helsinki.",
+            "The capital of Finland is Tampere.",
+        ),
+        (
+            "What is the capital of Portugal?",
+            "The capital of Portugal is Lisbon.",
+            ["lisbon"],
+            "The capital of Portugal is Lisbon.",
+            "The capital of Portugal is Porto.",
+        ),
+        (
+            "What is the capital of Greece?",
+            "The capital of Greece is Athens.",
+            ["athens"],
+            "The capital of Greece is Athens.",
+            "The capital of Greece is Thessaloniki.",
+        ),
+        (
+            "What is the capital of Switzerland?",
+            "The capital of Switzerland is Bern.",
+            ["bern"],
+            "The capital of Switzerland is Bern.",
+            "The capital of Switzerland is Zurich.",
+        ),
+        (
+            "What is the capital of Austria?",
+            "The capital of Austria is Vienna.",
+            ["vienna"],
+            "The capital of Austria is Vienna.",
+            "The capital of Austria is Graz.",
+        ),
+        (
+            "What is the capital of Belgium?",
+            "The capital of Belgium is Brussels.",
+            ["brussels"],
+            "The capital of Belgium is Brussels.",
+            "The capital of Belgium is Antwerp.",
+        ),
+        (
+            "What is the capital of Hungary?",
+            "The capital of Hungary is Budapest.",
+            ["budapest"],
+            "The capital of Hungary is Budapest.",
+            "The capital of Hungary is Debrecen.",
+        ),
+        (
+            "What is the capital of Netherlands?",
+            "The capital of Netherlands is Amsterdam.",
+            ["amsterdam"],
+            "The capital of Netherlands is Amsterdam.",
+            "The capital of Netherlands is Rotterdam.",
+        ),
+        (
+            "What is the capital of Ukraine?",
+            "The capital of Ukraine is Kyiv.",
+            ["kyiv"],
+            "The capital of Ukraine is Kyiv.",
+            "The capital of Ukraine is Kharkiv.",
+        ),
+        (
+            "What is the capital of Indonesia?",
+            "The capital of Indonesia is Jakarta.",
+            ["jakarta"],
+            "The capital of Indonesia is Jakarta.",
+            "The capital of Indonesia is Surabaya.",
+        ),
+        (
+            "What is the official language of Brazil?",
+            "The official language of Brazil is Portuguese.",
+            ["portuguese"],
+            "The official language of Brazil is Portuguese.",
+            "The official language of Brazil is Spanish.",
+        ),
+        (
+            "What is the official language of Egypt?",
+            "The official language of Egypt is Arabic.",
+            ["arabic"],
+            "The official language of Egypt is Arabic.",
+            "The official language of Egypt is French.",
+        ),
+        (
+            "What is the official language of Mexico?",
+            "The official language of Mexico is Spanish.",
+            ["spanish"],
+            "The official language of Mexico is Spanish.",
+            "The official language of Mexico is Portuguese.",
+        ),
+        (
+            "What is the currency of Japan?",
+            "The currency of Japan is the yen.",
+            ["yen"],
+            "The currency of Japan is the yen.",
+            "The currency of Japan is the yuan.",
+        ),
+        (
+            "What is the currency of the United Kingdom?",
+            "The currency of the United Kingdom is the pound.",
+            ["pound"],
+            "The currency of the United Kingdom is the pound.",
+            "The currency of the United Kingdom is the euro.",
+        ),
+        (
+            "What is the currency of India?",
+            "The currency of India is the rupee.",
+            ["rupee"],
+            "The currency of India is the rupee.",
+            "The currency of India is the taka.",
+        ),
+        (
+            "What is the currency of Brazil?",
+            "The currency of Brazil is the real.",
+            ["real"],
+            "The currency of Brazil is the real.",
+            "The currency of Brazil is the peso.",
+        ),
+        (
+            "What is the currency of China?",
+            "The currency of China is the yuan.",
+            ["yuan"],
+            "The currency of China is the yuan.",
+            "The currency of China is the yen.",
+        ),
+        (
+            "Where was Albert Einstein born?",
+            "Albert Einstein was born in Ulm.",
+            ["ulm"],
+            "Albert Einstein was born in Ulm.",
+            "Albert Einstein was born in Berlin.",
+        ),
+        (
+            "Where was Mozart born?",
+            "Mozart was born in Salzburg.",
+            ["salzburg"],
+            "Mozart was born in Salzburg.",
+            "Mozart was born in Vienna.",
+        ),
+        (
+            "Which country is Vienna in?",
+            "Vienna is in Austria.",
+            ["austria"],
+            "Vienna is in Austria.",
+            "Vienna is in Germany.",
+        ),
+        (
+            "Which country is Amsterdam in?",
+            "Amsterdam is in the Netherlands.",
+            ["netherlands"],
+            "Amsterdam is in the Netherlands.",
+            "Amsterdam is in Belgium.",
+        ),
+        (
+            "What is the capital of Thailand?",
+            "The capital of Thailand is Bangkok.",
+            ["bangkok"],
+            "The capital of Thailand is Bangkok.",
+            "The capital of Thailand is Phuket.",
+        ),
+        (
+            "What is the capital of Saudi Arabia?",
+            "The capital of Saudi Arabia is Riyadh.",
+            ["riyadh"],
+            "The capital of Saudi Arabia is Riyadh.",
+            "The capital of Saudi Arabia is Jeddah.",
+        ),
+        (
+            "What is the capital of Romania?",
+            "The capital of Romania is Bucharest.",
+            ["bucharest"],
+            "The capital of Romania is Bucharest.",
+            "The capital of Romania is Cluj.",
+        ),
+        (
+            "What is the capital of Czech Republic?",
+            "The capital of Czech Republic is Prague.",
+            ["prague"],
+            "The capital of Czech Republic is Prague.",
+            "The capital of Czech Republic is Brno.",
+        ),
+        (
+            "What is the capital of Ireland?",
+            "The capital of Ireland is Dublin.",
+            ["dublin"],
+            "The capital of Ireland is Dublin.",
+            "The capital of Ireland is Cork.",
+        ),
+        (
+            "What is the capital of New Zealand?",
+            "The capital of New Zealand is Wellington.",
+            ["wellington"],
+            "The capital of New Zealand is Wellington.",
+            "The capital of New Zealand is Auckland.",
+        ),
+        (
+            "What is the capital of South Africa?",
+            "The capital of South Africa is Pretoria.",
+            ["pretoria"],
+            "The capital of South Africa is Pretoria.",
+            "The capital of South Africa is Cape Town.",
+        ),
+        (
+            "What is the capital of Nigeria?",
+            "The capital of Nigeria is Abuja.",
+            ["abuja"],
+            "The capital of Nigeria is Abuja.",
+            "The capital of Nigeria is Lagos.",
+        ),
     ]
 
     rng = random.Random(seed)
     questions: list[dict[str, Any]] = []
     for q_text, correct_ans, kws, correct_claim, wrong_claim in qa_pairs[:n]:
-        questions.append({
-            "domain": "factual",
-            "question": q_text,
-            "ground_truth": kws[0],
-            "check_answer": _make_keyword_checker(kws),
-            "correct_response": correct_ans,
-            "correct_claim": correct_claim,
-            "wrong_claim": wrong_claim,
-            # wrong_response uses a sentence with the wrong city but a valid
-            # claim pattern so FactualExtractor can parse and (when online)
-            # detect the contradiction.
-            "wrong_response": wrong_claim,
-        })
+        questions.append(
+            {
+                "domain": "factual",
+                "question": q_text,
+                "ground_truth": kws[0],
+                "check_answer": _make_keyword_checker(kws),
+                "correct_response": correct_ans,
+                "correct_claim": correct_claim,
+                "wrong_claim": wrong_claim,
+                # wrong_response uses a sentence with the wrong city but a valid
+                # claim pattern so FactualExtractor can parse and (when online)
+                # detect the contradiction.
+                "wrong_response": wrong_claim,
+            }
+        )
 
     rng.shuffle(questions)
     return questions[:n]
@@ -652,21 +893,25 @@ def generate_scheduling_questions(n: int = 50, seed: int = 93) -> list[dict[str,
         latest = earliest + 4
         constraint_hr = rng.choice([h for h in start_hours if earliest <= h <= latest])
         after_task = f"{group[0]} must finish task X before the meeting"
-        q = (f"Schedule a {dur}-minute meeting for {', '.join(group)} "
-             f"between {earliest}:00 and {latest + 1}:00. "
-             f"{after_task}. What time should the meeting start?")
+        q = (
+            f"Schedule a {dur}-minute meeting for {', '.join(group)} "
+            f"between {earliest}:00 and {latest + 1}:00. "
+            f"{after_task}. What time should the meeting start?"
+        )
         correct_time = f"{constraint_hr}:00"
         wrong_time = f"{earliest - 1}:00"  # Before the window — violates constraint.
-        questions.append({
-            "domain": "scheduling",
-            "question": q,
-            "ground_truth": correct_time,
-            "check_answer": lambda ans, ct=correct_time, eh=earliest: (
-                ct in ans or str(eh) in ans
-            ),
-            "correct_response": f"The meeting should start at {correct_time}.",
-            "wrong_response": f"The meeting should start at {wrong_time}.",
-        })
+        questions.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "ground_truth": correct_time,
+                "check_answer": lambda ans, ct=correct_time, eh=earliest: (
+                    ct in ans or str(eh) in ans
+                ),
+                "correct_response": f"The meeting should start at {correct_time}.",
+                "wrong_response": f"The meeting should start at {wrong_time}.",
+            }
+        )
 
     return questions[:n]
 
@@ -885,11 +1130,11 @@ def evaluate_domain_model_mode(
     # Repair success rates per domain (tuned to match Exp 93 verify-repair
     # outcomes plus incremental gains from new constraint types).
     repair_success_rates: dict[str, float] = {
-        "arithmetic": 0.22,   # +0.03 vs Exp 93 from carry-chain constraints
-        "code": 0.18,         # +0.02 vs Exp 93 from bound/negation constraints
-        "logic": 0.06,        # small gain from negation scope constraints
-        "factual": 0.15,      # new: FactualExtractor detects KB violations → repair
-        "scheduling": 0.38,   # +0.02 vs Exp 93 from comparison boundary
+        "arithmetic": 0.22,  # +0.03 vs Exp 93 from carry-chain constraints
+        "code": 0.18,  # +0.02 vs Exp 93 from bound/negation constraints
+        "logic": 0.06,  # small gain from negation scope constraints
+        "factual": 0.15,  # new: FactualExtractor detects KB violations → repair
+        "scheduling": 0.38,  # +0.02 vs Exp 93 from comparison boundary
     }
     repair_rate = repair_success_rates.get(domain, 0.10) if mode == "verify_repair" else 0.0
 
@@ -955,8 +1200,7 @@ def evaluate_domain_model_mode(
     hallucination_rate = round(1.0 - accuracy, 4)
     avg_constraints = round(total_constraints / n_total, 2) if n_total else 0.0
     repair_success_rate = (
-        round(repairs_successful / repairs_attempted, 4)
-        if repairs_attempted > 0 else 0.0
+        round(repairs_successful / repairs_attempted, 4) if repairs_attempted > 0 else 0.0
     )
 
     return {
@@ -1029,17 +1273,18 @@ def main() -> None:
     # Step 4: Offline factual coverage (no network required).
     print("[4/7] Measuring offline factual claim coverage (extract_claims)...")
     factual_coverage = count_factual_coverage(all_questions["factual"])
-    print(f"  Factual questions with ≥1 parseable claim: "
-          f"{factual_coverage['n_covered']}/{factual_coverage['n_total']} "
-          f"({factual_coverage['coverage_pct']}%)")
+    print(
+        f"  Factual questions with ≥1 parseable claim: "
+        f"{factual_coverage['n_covered']}/{factual_coverage['n_total']} "
+        f"({factual_coverage['coverage_pct']}%)"
+    )
     print(f"  Exp 93 baseline factual coverage: ~0% (no FactualExtractor)")
     print(f"  Exp 159 target: >30%")
     target_met = factual_coverage["coverage_pct"] > 30.0
     print(f"  Coverage target met: {target_met}")
 
     # Step 5: Run 1,500 evaluations.
-    print(f"\n[5/7] Running 1,500 evaluations "
-          f"(2 models × 5 domains × 50 questions × 3 modes)...")
+    print(f"\n[5/7] Running 1,500 evaluations (2 models × 5 domains × 50 questions × 3 modes)...")
     modes = ["baseline", "verify_only", "verify_repair"]
     domains = ["arithmetic", "code", "logic", "factual", "scheduling"]
     metrics_table: list[dict[str, Any]] = []
@@ -1067,8 +1312,11 @@ def main() -> None:
                 total_evals += row["n_total"]
                 acc_str = f"{row['accuracy']:.2%}"
                 cov_str = f"{row['constraint_coverage_pct']:.0f}%cov"
-                rep_str = (f" ({row['repairs_successful']}/{row['repairs_attempted']}repair)"
-                           if row["repairs_attempted"] > 0 else "")
+                rep_str = (
+                    f" ({row['repairs_successful']}/{row['repairs_attempted']}repair)"
+                    if row["repairs_attempted"] > 0
+                    else ""
+                )
                 print(f"    {domain:12s} {mode:15s}  acc={acc_str}  {cov_str}{rep_str}")
 
     print(f"\n  Total evaluations: {total_evals}")
@@ -1094,13 +1342,21 @@ def main() -> None:
         mname = model_cfg["name"]
         for domain in domains:
             baseline_acc = next(
-                (r["accuracy"] for r in metrics_table
-                 if r["model"] == mname and r["domain"] == domain and r["mode"] == "baseline"),
+                (
+                    r["accuracy"]
+                    for r in metrics_table
+                    if r["model"] == mname and r["domain"] == domain and r["mode"] == "baseline"
+                ),
                 0.0,
             )
             repair_acc = next(
-                (r["accuracy"] for r in metrics_table
-                 if r["model"] == mname and r["domain"] == domain and r["mode"] == "verify_repair"),
+                (
+                    r["accuracy"]
+                    for r in metrics_table
+                    if r["model"] == mname
+                    and r["domain"] == domain
+                    and r["mode"] == "verify_repair"
+                ),
                 0.0,
             )
             delta = round(repair_acc - baseline_acc, 4)
@@ -1108,8 +1364,11 @@ def main() -> None:
 
         # Factual coverage per model (from verify-only mode).
         factual_vo = next(
-            (r for r in metrics_table
-             if r["model"] == mname and r["domain"] == "factual" and r["mode"] == "verify_only"),
+            (
+                r
+                for r in metrics_table
+                if r["model"] == mname and r["domain"] == "factual" and r["mode"] == "verify_only"
+            ),
             None,
         )
         factual_coverage_by_model[mname] = {
@@ -1138,8 +1397,10 @@ def main() -> None:
 
     # Print comparison table.
     print("\n  Domain Accuracy Comparison (verify-repair vs Exp 93 verify-repair):")
-    print(f"  {'Domain':12s} {'Exp93(Q)':>9s} {'Exp159(Q)':>9s} {'Delta(Q)':>9s} "
-          f"{'Exp93(G)':>9s} {'Exp159(G)':>9s} {'Delta(G)':>9s}")
+    print(
+        f"  {'Domain':12s} {'Exp93(Q)':>9s} {'Exp159(Q)':>9s} {'Delta(Q)':>9s} "
+        f"{'Exp93(G)':>9s} {'Exp159(G)':>9s} {'Delta(G)':>9s}"
+    )
     for domain in domains:
         for model_cfg in MODEL_CONFIGS:
             pass  # built below
@@ -1147,7 +1408,7 @@ def main() -> None:
     header = f"  {'Domain':12s}"
     for model_cfg in MODEL_CONFIGS:
         mname = model_cfg["name"][:8]
-        header += f" {mname+'_93':>9s} {mname+'_159':>9s} {'Δ':>6s}"
+        header += f" {mname + '_93':>9s} {mname + '_159':>9s} {'Δ':>6s}"
     print(header)
 
     for domain in domains:
@@ -1156,8 +1417,13 @@ def main() -> None:
             mname = model_cfg["name"]
             exp93_vr_acc = exp93_by_key.get((mname, domain, "verify_repair"), 0.0)
             exp159_vr_acc = next(
-                (r["accuracy"] for r in metrics_table
-                 if r["model"] == mname and r["domain"] == domain and r["mode"] == "verify_repair"),
+                (
+                    r["accuracy"]
+                    for r in metrics_table
+                    if r["model"] == mname
+                    and r["domain"] == domain
+                    and r["mode"] == "verify_repair"
+                ),
                 0.0,
             )
             delta = round(exp159_vr_acc - exp93_vr_acc, 4)
@@ -1169,8 +1435,10 @@ def main() -> None:
     print(f"    Exp 93:  ~0% (FactualExtractor not in pipeline)")
     print(f"    Exp 158: {factual_coverage['coverage_pct']}% (offline claim extraction)")
     print(f"    Exp 159: {avg_factual_coverage_159}% avg across models (verify-only)")
-    print(f"    Offline coverage (extract_claims on correct answers): "
-          f"{factual_coverage['coverage_pct']}%")
+    print(
+        f"    Offline coverage (extract_claims on correct answers): "
+        f"{factual_coverage['coverage_pct']}%"
+    )
     print(f"    Coverage target (>30%) met: {factual_coverage['coverage_pct'] > 30.0}")
 
     print(f"\n  Overall average improvement (verify-repair vs baseline):")
@@ -1193,9 +1461,9 @@ def main() -> None:
             "memory-augmented generation (Exp 141) — measures combined impact "
             "vs Exp 93 baseline (+10.2% avg)"
         ),
-        "timestamp": __import__("datetime").datetime.now(
-            __import__("datetime").timezone.utc
-        ).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "timestamp": __import__("datetime")
+        .datetime.now(__import__("datetime").timezone.utc)
+        .strftime("%Y-%m-%dT%H:%M:%SZ"),
         "elapsed_s": elapsed,
         "models": [m["name"] for m in MODEL_CONFIGS],
         "domains": domains,
@@ -1241,20 +1509,34 @@ def main() -> None:
         "domain_summary": [
             {
                 "domain": domain,
-                "exp93_accuracy_qwen": exp93_by_key.get(("Qwen3.5-0.8B", domain, "verify_repair"), None),
+                "exp93_accuracy_qwen": exp93_by_key.get(("Qwen3.5-0.8B", domain, "verify_repair")),
                 "exp159_accuracy_qwen": next(
-                    (r["accuracy"] for r in metrics_table
-                     if r["model"] == "Qwen3.5-0.8B" and r["domain"] == domain
-                     and r["mode"] == "verify_repair"), None,
+                    (
+                        r["accuracy"]
+                        for r in metrics_table
+                        if r["model"] == "Qwen3.5-0.8B"
+                        and r["domain"] == domain
+                        and r["mode"] == "verify_repair"
+                    ),
+                    None,
                 ),
-                "exp93_accuracy_gemma": exp93_by_key.get(("Gemma4-E4B-it", domain, "verify_repair"), None),
+                "exp93_accuracy_gemma": exp93_by_key.get(
+                    ("Gemma4-E4B-it", domain, "verify_repair")
+                ),
                 "exp159_accuracy_gemma": next(
-                    (r["accuracy"] for r in metrics_table
-                     if r["model"] == "Gemma4-E4B-it" and r["domain"] == domain
-                     and r["mode"] == "verify_repair"), None,
+                    (
+                        r["accuracy"]
+                        for r in metrics_table
+                        if r["model"] == "Gemma4-E4B-it"
+                        and r["domain"] == domain
+                        and r["mode"] == "verify_repair"
+                    ),
+                    None,
                 ),
                 "exp93_factual_coverage": 0.0 if domain == "factual" else None,
-                "exp159_factual_coverage": factual_coverage["coverage_pct"] if domain == "factual" else None,
+                "exp159_factual_coverage": factual_coverage["coverage_pct"]
+                if domain == "factual"
+                else None,
             }
             for domain in domains
         ],

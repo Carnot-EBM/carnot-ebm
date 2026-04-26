@@ -51,7 +51,7 @@ SYNTHETIC_PARAGRAPHS = [
     "Total after tax: 75 + 7.5 = 82.5.",
     "We split the bill 3 ways: 82.5 / 3 = 27.5.",
     "Add a tip of 5 * 2 = 10 (wrong: should be 10).",  # correct
-    "Final per-person share is 27.5 + 10 = 99.",       # wrong: 27.5+10=37.5
+    "Final per-person share is 27.5 + 10 = 99.",  # wrong: 27.5+10=37.5
     "So the answer is clear and requires no arithmetic.",
 ]
 

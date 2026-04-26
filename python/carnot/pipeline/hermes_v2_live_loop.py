@@ -31,10 +31,12 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Callable, Optional
+from typing import TYPE_CHECKING
 
-from carnot.pipeline.symcode_verifier import SymCodeVerifier
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
+    from carnot.pipeline.symcode_verifier import SymCodeVerifier
 
 # ---------------------------------------------------------------------------
 # HermesV2StepResult — result of one sentence in the live generation loop
@@ -67,7 +69,7 @@ class HermesV2StepResult:
     violation_detected: bool
     detection_score: float
     hint_injected: bool
-    hint_text: Optional[str]
+    hint_text: str | None
 
 
 # ---------------------------------------------------------------------------
@@ -153,7 +155,7 @@ class HermesV2LiveLoop:
 
     def __init__(
         self,
-        llm_caller: Optional[Callable[[str], str]],
+        llm_caller: Callable[[str], str] | None,
         verifier: SymCodeVerifier,
         max_sentences: int = 10,
         max_new_tokens_per_step: int = 80,
@@ -250,7 +252,7 @@ class HermesV2LiveLoop:
 
             score = self.verifier.detection_score(sentence)
             violated = score > 0.0
-            hint: Optional[str] = None
+            hint: str | None = None
             hint_injected = False
 
             if violated:

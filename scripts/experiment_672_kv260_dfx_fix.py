@@ -158,16 +158,15 @@ def _diagnose_failure(methods_tried: list[dict]) -> str:
     all_stderr = " ".join(r.get("stderr", "") for r in methods_tried).lower()
 
     if "not found" in all_stderr and all(
-        r.get("stderr", "").lower().startswith("command not found") or
-        "not found" in r.get("stderr", "").lower()
+        r.get("stderr", "").lower().startswith("command not found")
+        or "not found" in r.get("stderr", "").lower()
         for r in methods_tried
-        if "command not found" in r.get("stderr", "").lower() or
-        r.get("exit_code") == -1
+        if "command not found" in r.get("stderr", "").lower() or r.get("exit_code") == -1
     ):
         # Check if ALL methods failed with "not found"
         all_cmd_missing = all(
-            "command not found" in r.get("stderr", "").lower() or
-            "not found: " in r.get("stderr", "").lower()
+            "command not found" in r.get("stderr", "").lower()
+            or "not found: " in r.get("stderr", "").lower()
             for r in methods_tried
         )
         if all_cmd_missing:
@@ -175,7 +174,11 @@ def _diagnose_failure(methods_tried: list[dict]) -> str:
 
     # Protocol errors (daemon unreachable) take priority — this is the Exp 661
     # failure mode and is more actionable than a permission error on a copy step.
-    if "timeout" in all_stderr or "not responding" in all_stderr or "connection refused" in all_stderr:
+    if (
+        "timeout" in all_stderr
+        or "not responding" in all_stderr
+        or "connection refused" in all_stderr
+    ):
         return "protocol_error"
 
     if "permission denied" in all_stderr or "operation not permitted" in all_stderr:

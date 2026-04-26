@@ -260,7 +260,9 @@ ADVERSARIAL_PROMPTS: list[str] = [
 ]
 
 assert len(BENIGN_PROMPTS) == 100, f"Expected 100 benign prompts, got {len(BENIGN_PROMPTS)}"
-assert len(ADVERSARIAL_PROMPTS) == 100, f"Expected 100 adversarial prompts, got {len(ADVERSARIAL_PROMPTS)}"
+assert len(ADVERSARIAL_PROMPTS) == 100, (
+    f"Expected 100 adversarial prompts, got {len(ADVERSARIAL_PROMPTS)}"
+)
 
 
 # ---------------------------------------------------------------------------
@@ -424,9 +426,11 @@ def main() -> None:
     with open(output_path, "w") as f:
         json.dump(artifact, f, indent=2)
 
-    print(f"[Exp 775] auroc={artifact.get('auroc', 'N/A'):.4f}  "
-          f"precision={artifact.get('precision', 'N/A'):.4f}  "
-          f"verdict={artifact.get('honest_verdict', 'N/A')}")
+    print(
+        f"[Exp 775] auroc={artifact.get('auroc', 'N/A'):.4f}  "
+        f"precision={artifact.get('precision', 'N/A'):.4f}  "
+        f"verdict={artifact.get('honest_verdict', 'N/A')}"
+    )
 
     tmpl.assert_deliverable_written()
 

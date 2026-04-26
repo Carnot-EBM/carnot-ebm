@@ -157,13 +157,15 @@ def _synthetic_gsm8k(n: int) -> list[dict]:
         a = i + 1
         b = i + 2
         answer = (a + b) * 2
-        questions.append({
-            "question": (
-                f"A store has {a} red apples and {b} green apples. "
-                f"Each apple is sold in pairs. How many apples are sold in total?"
-            ),
-            "answer": f"#### {answer}",
-        })
+        questions.append(
+            {
+                "question": (
+                    f"A store has {a} red apples and {b} green apples. "
+                    f"Each apple is sold in pairs. How many apples are sold in total?"
+                ),
+                "answer": f"#### {answer}",
+            }
+        )
     return questions
 
 
@@ -175,6 +177,7 @@ def _synthetic_gsm8k(n: int) -> list[dict]:
 def _extract_gsm8k_answer(text: str) -> str | None:
     """Extract the numeric answer from GSM8K-formatted text (#### N)."""
     import re
+
     m = re.search(r"####\s*(-?\d+(?:\.\d+)?)", text)
     return m.group(1) if m else None
 
@@ -458,8 +461,10 @@ def _apply_variant(
         PipelineVariant.FULL_STACK,
     ):
         from carnot.pipeline.confidence_weighted_repair import compute_expression_confidence
-        high_conf = [v for v in violations
-                     if compute_expression_confidence(v.description) >= MIN_CONFIDENCE]
+
+        high_conf = [
+            v for v in violations if compute_expression_confidence(v.description) >= MIN_CONFIDENCE
+        ]
         n_viol = len(high_conf)
         # In simulated mode, we count would-be repair attempts but do not actually repair.
         n_rep = 1 if high_conf else 0
@@ -505,6 +510,7 @@ def _is_correct(response: str, gold: str | None) -> bool:
     if predicted is None:
         # Try a broader search: last number in response.
         import re
+
         nums = re.findall(r"-?\d+(?:\.\d+)?", response)
         if nums:
             predicted = nums[-1]
@@ -684,6 +690,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

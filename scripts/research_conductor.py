@@ -280,7 +280,7 @@ def run_agent(
                 os.killpg(pgid, signal.SIGKILL)
             except (ProcessLookupError, PermissionError) as exc:
                 logger.warning(
-                    "Process group kill for %s failed (%s) — " "falling back to proc.kill()",
+                    "Process group kill for %s failed (%s) — falling back to proc.kill()",
                     reason,
                     exc,
                 )
@@ -1301,9 +1301,9 @@ def _run_operational_retrospective(push: bool = True) -> bool:
         total_min = sum(e["duration_min"] for e in experiment_times)
         slowest = sorted(experiment_times, key=lambda x: x["duration_min"], reverse=True)[:5]
         timing_summary = (
-            f"Total milestone wall time: {total_min:.0f} minutes ({total_min/60:.1f} hours)\n"
+            f"Total milestone wall time: {total_min:.0f} minutes ({total_min / 60:.1f} hours)\n"
             f"Experiments completed: {len(experiment_times)}\n"
-            f"Average per experiment: {total_min/len(experiment_times):.0f} minutes\n"
+            f"Average per experiment: {total_min / len(experiment_times):.0f} minutes\n"
             f"Slowest experiments:\n"
         )
         for e in slowest:
@@ -1911,9 +1911,11 @@ def _dogfood_verify_generated_code() -> None:
                         fixed = prompt
                         fixed = re.sub(
                             r"\{([^}]+)\}",
-                            lambda m: m.group(0)
-                            if m.group(1) in ("project_root", "date")
-                            else "(" + m.group(1) + ")",
+                            lambda m: (
+                                m.group(0)
+                                if m.group(1) in ("project_root", "date")
+                                else "(" + m.group(1) + ")"
+                            ),
                             fixed,
                         )
                         t["prompt"] = fixed
@@ -2211,8 +2213,7 @@ def research_step(
                         if gdiff.strip():
                             run_cmd(["git", "checkout", "--", guarded])
                     git_commit_and_push(
-                        f"[conductor] Pre-gate block: {task['title']}\n\n"
-                        f"{gate_check.summary}\n",
+                        f"[conductor] Pre-gate block: {task['title']}\n\n{gate_check.summary}\n",
                         push=push,
                     )
                 log_step(task["title"], "GATE_BLOCK", gate_check.summary)
@@ -2309,8 +2310,7 @@ def research_step(
             )
     except Exception:
         logger.exception(
-            "Failed-experiment rerun-discipline check raised; "
-            "falling through to Sonnet (defensive)"
+            "Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)"
         )
 
     # Preserve any dirty state from previous interrupted runs by committing it.

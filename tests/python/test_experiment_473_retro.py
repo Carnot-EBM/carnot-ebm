@@ -71,7 +71,11 @@ class TestLoadJson:
             return tmp_path / "scripts" / "dummy.py"
 
         # We can't easily redirect __file__, so patch _load_json behavior via a wrapper
-        result = mod._load_json.__wrapped__(tmp_path, "results/test_999.json") if hasattr(mod._load_json, "__wrapped__") else None
+        result = (
+            mod._load_json.__wrapped__(tmp_path, "results/test_999.json")
+            if hasattr(mod._load_json, "__wrapped__")
+            else None
+        )
 
         # Direct test: write file at expected path and call _load_json with monkeypatched repo root
         # The function uses Path(__file__).resolve().parents[1] — we test the behavior via main() instead
@@ -128,7 +132,9 @@ class TestMain:
                 "results/operational_retro_2026_04_35.json",
                 repo_root=tmp_path,
             )
-            new_guard = DeliverableGuard(str(tmp_path / "results" / "operational_retro_2026_04_35.json"))
+            new_guard = DeliverableGuard(
+                str(tmp_path / "results" / "operational_retro_2026_04_35.json")
+            )
 
             with patch.object(mod, "tmpl", new_tmpl), patch.object(mod, "guard", new_guard):
                 mod.main()
@@ -155,7 +161,9 @@ class TestMain:
             "results/operational_retro_2026_04_35.json",
             repo_root=tmp_path,
         )
-        new_guard = DeliverableGuard(str(tmp_path / "results" / "operational_retro_2026_04_35.json"))
+        new_guard = DeliverableGuard(
+            str(tmp_path / "results" / "operational_retro_2026_04_35.json")
+        )
 
         with patch.object(mod, "tmpl", new_tmpl), patch.object(mod, "guard", new_guard):
             mod.main()
@@ -185,8 +193,12 @@ class TestArtifactSchema:
         (tmp_path / "results").mkdir(parents=True)
         (tmp_path / "results" / "checkpoints").mkdir(parents=True)
 
-        new_tmpl = ExperimentTemplate(473, "test", "results/operational_retro_2026_04_35.json", repo_root=tmp_path)
-        new_guard = DeliverableGuard(str(tmp_path / "results" / "operational_retro_2026_04_35.json"))
+        new_tmpl = ExperimentTemplate(
+            473, "test", "results/operational_retro_2026_04_35.json", repo_root=tmp_path
+        )
+        new_guard = DeliverableGuard(
+            str(tmp_path / "results" / "operational_retro_2026_04_35.json")
+        )
 
         with patch.object(mod, "tmpl", new_tmpl), patch.object(mod, "guard", new_guard):
             mod.main()

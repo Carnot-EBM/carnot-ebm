@@ -175,7 +175,9 @@ def main() -> None:
 
     # Pre-run check: note whether file already exists (for logging only).
     pre_exists = output_path.exists()
-    _log.info("Pre-run check: result file %s (%s)", output_path, "exists" if pre_exists else "absent")
+    _log.info(
+        "Pre-run check: result file %s (%s)", output_path, "exists" if pre_exists else "absent"
+    )
 
     # Step 2: Watchdog as context manager — hard 30-minute wall-clock cap.
     # The context manager ensures watchdog.stop() is called even on exceptions.
@@ -200,7 +202,9 @@ def main() -> None:
         # Step 4: Build Ising model (same seed as 435a/446).
         _log.info(
             "Building %d-variable sparse Ising (seed=%d, density=%.2f)",
-            N_VARS, ISING_SEED, COUPLING_DENSITY,
+            N_VARS,
+            ISING_SEED,
+            COUPLING_DENSITY,
         )
         ising = _build_sparse_ising(N_VARS, COUPLING_DENSITY, ISING_SEED)
 
@@ -227,15 +231,21 @@ def main() -> None:
 
         _log.info(
             "gradient_descent: mean_l2=%.4f std=%.4f sign=%.3f",
-            gd["mean_l2"], gd["std_l2"], gd["mean_sign_agreement"],
+            gd["mean_l2"],
+            gd["std_l2"],
+            gd["mean_sign_agreement"],
         )
         _log.info(
             "langevin:         mean_l2=%.4f std=%.4f sign=%.3f",
-            lan["mean_l2"], lan["std_l2"], lan["mean_sign_agreement"],
+            lan["mean_l2"],
+            lan["std_l2"],
+            lan["mean_sign_agreement"],
         )
         _log.info(
             "energy_matching:  mean_l2=%.4f std=%.4f sign=%.3f",
-            em["mean_l2"], em["std_l2"], em["mean_sign_agreement"],
+            em["mean_l2"],
+            em["std_l2"],
+            em["mean_sign_agreement"],
         )
         _log.info("best_sampler: %s", best_sampler)
 
@@ -246,7 +256,9 @@ def main() -> None:
             phase3_improvement = float(exp446_baseline - energy_loss)
             _log.info(
                 "Phase 3 improvement: %.4f (Exp 446 baseline=%.4f, this run=%.4f)",
-                phase3_improvement, exp446_baseline, energy_loss,
+                phase3_improvement,
+                exp446_baseline,
+                energy_loss,
             )
         else:
             phase3_improvement = None

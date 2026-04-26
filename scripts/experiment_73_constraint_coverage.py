@@ -231,12 +231,11 @@ def count_claims_in_text(
     # sentence in a logic/factual question typically states one verifiable
     # proposition (e.g., "All mammals are animals." is one logical claim).
     if question:
-        sentences = [
-            s.strip() for s in re.split(r"[.!?]", question) if s.strip()
-        ]
+        sentences = [s.strip() for s in re.split(r"[.!?]", question) if s.strip()]
         # Filter out interrogatives (questions aren't claims).
         declaratives = [
-            s for s in sentences
+            s
+            for s in sentences
             if not s.lower().startswith(("what", "how", "is ", "are ", "does", "did", "can"))
             and "?" not in s
         ]
@@ -259,11 +258,13 @@ def count_claims_in_text(
     # For scheduling questions, count explicit constraints mentioned
     # (e.g., "Meeting 1 and Meeting 2 cannot overlap" = one logical claim).
     if domain == "scheduling" and question:
-        sched_constraints = len(re.findall(
-            r"(?:cannot overlap|must come before|needs \d+ units)",
-            question,
-            re.IGNORECASE,
-        ))
+        sched_constraints = len(
+            re.findall(
+                r"(?:cannot overlap|must come before|needs \d+ units)",
+                question,
+                re.IGNORECASE,
+            )
+        )
         # Each scheduling constraint is a logical claim about feasibility,
         # plus the overall "can all be scheduled?" is one more.
         counts["logical"] = max(counts.get("logical", 0), sched_constraints + 1)
@@ -302,6 +303,7 @@ def count_claims_in_text(
 # ---------------------------------------------------------------------------
 # 2. Generate 50 annotated LLM answers (10 per domain)
 # ---------------------------------------------------------------------------
+
 
 def generate_annotated_answers(seed: int = 73) -> list[dict[str, Any]]:
     """Generate 50 question-answer pairs with manually annotated claim counts.
@@ -366,15 +368,17 @@ def generate_annotated_answers(seed: int = 73) -> list[dict[str, Any]]:
 
             total = sum(claims.values())
 
-            annotated.append({
-                "domain": domain,
-                "question": q["question"],
-                "response": response,
-                "ground_truth": q["ground_truth"],
-                "is_correct": is_correct,
-                "total_claims": claims,
-                "total_claim_count": total,
-            })
+            annotated.append(
+                {
+                    "domain": domain,
+                    "question": q["question"],
+                    "response": response,
+                    "ground_truth": q["ground_truth"],
+                    "is_correct": is_correct,
+                    "total_claims": claims,
+                    "total_claim_count": total,
+                }
+            )
 
     return annotated
 
@@ -382,6 +386,7 @@ def generate_annotated_answers(seed: int = 73) -> list[dict[str, Any]]:
 # ---------------------------------------------------------------------------
 # 3. Run constraint extraction pipeline on all 50 answers
 # ---------------------------------------------------------------------------
+
 
 def extract_pipeline_constraints(
     response: str,
@@ -404,6 +409,7 @@ def extract_pipeline_constraints(
     """
     try:
         from experiment_58_multi_domain_benchmark import extract_constraints
+
         return extract_constraints(response, question, domain)
     except Exception:
         # Fallback: if the extraction pipeline is not available (e.g.,
@@ -468,6 +474,7 @@ def count_extracted_by_type(constraints: list[dict]) -> dict[str, int]:
 # 4. Compute coverage metrics
 # ---------------------------------------------------------------------------
 
+
 def compute_coverage(
     annotated_answers: list[dict[str, Any]],
 ) -> dict[str, Any]:
@@ -519,19 +526,21 @@ def compute_coverage(
         total_claims = entry["total_claim_count"]
         overall_cov = min(1.0, total_extracted / total_claims) if total_claims > 0 else 0.0
 
-        per_answer.append({
-            "domain": entry["domain"],
-            "question": entry["question"][:80],
-            "response": entry["response"][:80],
-            "is_correct": entry["is_correct"],
-            "total_claims": entry["total_claims"],
-            "total_claim_count": total_claims,
-            "extracted_by_type": extracted_by_type,
-            "total_extracted": total_extracted,
-            "type_coverage": type_coverage,
-            "overall_coverage": overall_cov,
-            "n_constraints": len(constraints),
-        })
+        per_answer.append(
+            {
+                "domain": entry["domain"],
+                "question": entry["question"][:80],
+                "response": entry["response"][:80],
+                "is_correct": entry["is_correct"],
+                "total_claims": entry["total_claims"],
+                "total_claim_count": total_claims,
+                "extracted_by_type": extracted_by_type,
+                "total_extracted": total_extracted,
+                "type_coverage": type_coverage,
+                "overall_coverage": overall_cov,
+                "n_constraints": len(constraints),
+            }
+        )
 
     # Aggregate per-domain coverage.
     domains = ["arithmetic", "code", "logic", "factual", "scheduling"]
@@ -544,8 +553,7 @@ def compute_coverage(
         total_claims_sum = sum(a["total_claim_count"] for a in domain_answers)
         total_extracted_sum = sum(a["total_extracted"] for a in domain_answers)
         domain_cov = (
-            min(1.0, total_extracted_sum / total_claims_sum)
-            if total_claims_sum > 0 else 0.0
+            min(1.0, total_extracted_sum / total_claims_sum) if total_claims_sum > 0 else 0.0
         )
 
         # Per-type coverage within this domain.
@@ -553,9 +561,7 @@ def compute_coverage(
         for ctype in CLAIM_TYPES:
             claims_sum = sum(a["total_claims"].get(ctype, 0) for a in domain_answers)
             extr_sum = sum(a["extracted_by_type"].get(ctype, 0) for a in domain_answers)
-            type_covs[ctype] = (
-                min(1.0, extr_sum / claims_sum) if claims_sum > 0 else 0.0
-            )
+            type_covs[ctype] = min(1.0, extr_sum / claims_sum) if claims_sum > 0 else 0.0
 
         n_correct = sum(1 for a in domain_answers if a["is_correct"])
         per_domain[domain] = {
@@ -574,9 +580,7 @@ def compute_coverage(
         claims_sum = sum(a["total_claims"].get(ctype, 0) for a in per_answer)
         extr_sum = sum(a["extracted_by_type"].get(ctype, 0) for a in per_answer)
         # Count how many answers have at least one claim of this type.
-        n_applicable = sum(
-            1 for a in per_answer if a["total_claims"].get(ctype, 0) > 0
-        )
+        n_applicable = sum(1 for a in per_answer if a["total_claims"].get(ctype, 0) > 0)
         per_type[ctype] = {
             "total_claims": claims_sum,
             "total_extracted": extr_sum,
@@ -591,8 +595,7 @@ def compute_coverage(
         "total_claims": total_all_claims,
         "total_extracted": total_all_extracted,
         "coverage": (
-            min(1.0, total_all_extracted / total_all_claims)
-            if total_all_claims > 0 else 0.0
+            min(1.0, total_all_extracted / total_all_claims) if total_all_claims > 0 else 0.0
         ),
         "n_answers": len(per_answer),
     }
@@ -608,6 +611,7 @@ def compute_coverage(
 # ---------------------------------------------------------------------------
 # 5. Coverage-accuracy correlation
 # ---------------------------------------------------------------------------
+
 
 def compute_coverage_accuracy_correlation(
     per_answer: list[dict[str, Any]],
@@ -656,11 +660,13 @@ def compute_coverage_accuracy_correlation(
             acc_above = float(np.mean(correctness[mask]))
         else:
             acc_above = 0.0
-        threshold_results.append({
-            "threshold": thresh,
-            "n_answers": n_above,
-            "accuracy": acc_above,
-        })
+        threshold_results.append(
+            {
+                "threshold": thresh,
+                "n_answers": n_above,
+                "accuracy": acc_above,
+            }
+        )
 
     # Bucket analysis: accuracy within coverage buckets.
     bucket_edges = [(0.0, 0.2), (0.2, 0.4), (0.4, 0.6), (0.6, 0.8), (0.8, 1.01)]
@@ -672,11 +678,13 @@ def compute_coverage_accuracy_correlation(
             acc = float(np.mean(correctness[mask]))
         else:
             acc = 0.0
-        bucket_results.append({
-            "range": f"{lo:.0%}-{hi:.0%}",
-            "n_answers": n_in_bucket,
-            "accuracy": acc,
-        })
+        bucket_results.append(
+            {
+                "range": f"{lo:.0%}-{hi:.0%}",
+                "n_answers": n_in_bucket,
+                "accuracy": acc,
+            }
+        )
 
     return {
         "pearson_r": correlation,
@@ -688,6 +696,7 @@ def compute_coverage_accuracy_correlation(
 # ---------------------------------------------------------------------------
 # 6. Main: run everything and print results
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     """Run the constraint coverage analysis experiment.
@@ -715,8 +724,10 @@ def main() -> int:
     # --- Step 1: Generate annotated answers ---
     print("\n[1/5] Generating 50 annotated LLM answers (10 per domain)...")
     annotated = generate_annotated_answers(seed=73)
-    print(f"  Generated {len(annotated)} answers across "
-          f"{len(set(a['domain'] for a in annotated))} domains.")
+    print(
+        f"  Generated {len(annotated)} answers across "
+        f"{len(set(a['domain'] for a in annotated))} domains."
+    )
 
     # Print sample annotation to show what we're working with.
     sample = annotated[0]
@@ -736,30 +747,38 @@ def main() -> int:
 
     # --- Step 3: Per-domain coverage table ---
     print(f"\n[3/5] Coverage breakdown by domain:")
-    print(f"\n  {'Domain':<12s} {'Answers':>7s} {'Claims':>7s} {'Extracted':>9s} "
-          f"{'Coverage':>8s} {'Accuracy':>8s}")
+    print(
+        f"\n  {'Domain':<12s} {'Answers':>7s} {'Claims':>7s} {'Extracted':>9s} "
+        f"{'Coverage':>8s} {'Accuracy':>8s}"
+    )
     print(f"  {'-' * 55}")
 
     for domain in ["arithmetic", "code", "logic", "factual", "scheduling"]:
         d = results["per_domain"].get(domain, {})
         if not d:
             continue
-        print(f"  {domain:<12s} {d['n_answers']:>7d} {d['avg_claims']:>7.1f} "
-              f"{d['avg_extracted']:>9.1f} {d['overall_coverage']:>8.1%} "
-              f"{d['accuracy']:>8.1%}")
+        print(
+            f"  {domain:<12s} {d['n_answers']:>7d} {d['avg_claims']:>7.1f} "
+            f"{d['avg_extracted']:>9.1f} {d['overall_coverage']:>8.1%} "
+            f"{d['accuracy']:>8.1%}"
+        )
 
     # --- Step 4: Per-type coverage table ---
     print(f"\n  Coverage by claim type (across all domains):")
-    print(f"\n  {'Claim Type':<14s} {'Total':>7s} {'Extracted':>9s} "
-          f"{'Coverage':>8s} {'Applicable':>10s}")
+    print(
+        f"\n  {'Claim Type':<14s} {'Total':>7s} {'Extracted':>9s} "
+        f"{'Coverage':>8s} {'Applicable':>10s}"
+    )
     print(f"  {'-' * 52}")
 
     for ctype in CLAIM_TYPES:
         t = results["per_type"].get(ctype, {})
         if not t:
             continue
-        print(f"  {ctype:<14s} {t['total_claims']:>7d} {t['total_extracted']:>9d} "
-              f"{t['coverage']:>8.1%} {t['n_applicable']:>10d}")
+        print(
+            f"  {ctype:<14s} {t['total_claims']:>7d} {t['total_extracted']:>9d} "
+            f"{t['coverage']:>8.1%} {t['n_applicable']:>10d}"
+        )
 
     # --- Step 5: Domain x Type coverage matrix ---
     print(f"\n  Coverage matrix (domain x claim type):")
@@ -813,8 +832,7 @@ def main() -> int:
     print(f"  {'-' * 28}")
     for t in corr["thresholds"]:
         if t["n_answers"] > 0:
-            print(f"  {t['threshold']:>8.0%}  {t['n_answers']:>7d} "
-                  f"{t['accuracy']:>8.1%}")
+            print(f"  {t['threshold']:>8.0%}  {t['n_answers']:>7d} {t['accuracy']:>8.1%}")
 
     # --- Step 7: Dark matter analysis ---
     print(f"\n[5/5] Dark matter summary — what escapes verification:")
@@ -832,8 +850,10 @@ def main() -> int:
     print(f"  Constraints extracted:       {total_extracted}")
     print(f"  'Dark matter' (uncovered):   {dark_matter} ({dark_pct:.1%})")
     if total_extracted > total_claims:
-        print(f"  Note: pipeline produced {total_extracted - total_claims} more constraints "
-              f"than claims counted —")
+        print(
+            f"  Note: pipeline produced {total_extracted - total_claims} more constraints "
+            f"than claims counted —"
+        )
         print(f"        extractors decompose some claims into multiple constraints.")
 
     # Break down dark matter by claim type.
@@ -866,8 +886,7 @@ def main() -> int:
     # (ctype, total_claims, extracted, uncovered).
     biggest_gap_type = dark_by_type[0][0] if dark_by_type else "unknown"
     biggest_gap_pct = (
-        dark_by_type[0][3] / dark_by_type[0][1]
-        if dark_by_type and dark_by_type[0][1] > 0 else 0.0
+        dark_by_type[0][3] / dark_by_type[0][1] if dark_by_type and dark_by_type[0][1] > 0 else 0.0
     )
 
     if dark_pct > 0.5:
@@ -883,8 +902,10 @@ def main() -> int:
     if r > 0.1:
         print(f"  Coverage correlates with accuracy (r={r:.2f}) — closing gaps should help.")
     else:
-        print(f"  Coverage does NOT correlate with accuracy (r={r:.2f}) — "
-              f"quality matters more than quantity.")
+        print(
+            f"  Coverage does NOT correlate with accuracy (r={r:.2f}) — "
+            f"quality matters more than quantity."
+        )
 
     print(f"\n  Implication for autoresearch:")
     print(f"    Arithmetic/structural claims → well covered by current pipeline")

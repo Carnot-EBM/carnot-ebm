@@ -167,10 +167,10 @@ def main() -> None:
     import time
 
     def _utc_now() -> str:
-        return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     def _run_date() -> str:
-        return datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
+        return datetime.datetime.now(datetime.UTC).strftime("%Y%m%d")
 
     started_at = _utc_now()
     t0 = time.perf_counter()

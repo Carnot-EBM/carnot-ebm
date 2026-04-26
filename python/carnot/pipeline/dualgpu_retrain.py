@@ -30,7 +30,10 @@ import concurrent.futures
 import logging
 import time
 from dataclasses import dataclass
-from typing import Any, Callable, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 _log = logging.getLogger(__name__)
 
@@ -47,6 +50,7 @@ def _count_cuda_gpus() -> int:
         return torch.cuda.device_count()
     except Exception:
         return 0
+
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -117,11 +121,11 @@ class DualGPURetrain:
 
     def retrain_parallel(
         self,
-        eorm_fn: "Callable[..., dict[str, Any]]",
-        jepa_fn: "Callable[..., dict[str, Any]]",
+        eorm_fn: Callable[..., dict[str, Any]],
+        jepa_fn: Callable[..., dict[str, Any]],
         eorm_device: str = "cuda:0",
         jepa_device: str = "cuda:1",
-    ) -> "dict[str, Any]":
+    ) -> dict[str, Any]:
         """Run EORM and JEPA retraining concurrently; fall back to sequential on 1 GPU.
 
         This is the REQ-INFRA-049 entry point — the validated Exp 685 ThreadPoolExecutor
@@ -206,7 +210,7 @@ class DualGPURetrain:
         }
 
 
-def _call_with_device(fn: "Callable[..., Any]", device: str) -> Any:
+def _call_with_device(fn: Callable[..., Any], device: str) -> Any:
     """Call fn(device=device) if accepted; otherwise call fn().
 
     Why this helper: pre-existing training functions may not accept a `device`

@@ -159,9 +159,14 @@ def update_readme_with_production_section(repo_id: str) -> tuple[bool, str]:
 
         # Try to download existing README.
         dl_cmd = [
-            "hf", "download", repo_id, "README.md",
-            "--repo-type", "model",
-            "--local-dir", tmpdir,
+            "hf",
+            "download",
+            repo_id,
+            "README.md",
+            "--repo-type",
+            "model",
+            "--local-dir",
+            tmpdir,
         ]
         dl_rc, _dl_out, _dl_err = _run(dl_cmd, timeout=60)
 
@@ -200,8 +205,12 @@ def update_readme_with_production_section(repo_id: str) -> tuple[bool, str]:
         readme_path.write_text(updated)
 
         ul_cmd = [
-            "hf", "upload", repo_id, str(readme_path),
-            "--repo-type", "model",
+            "hf",
+            "upload",
+            repo_id,
+            str(readme_path),
+            "--repo-type",
+            "model",
         ]
         ul_rc, _ul_out, ul_err = _run(ul_cmd, timeout=120)
         if ul_rc == 0:
@@ -348,6 +357,7 @@ def main() -> None:
 
         import json as _json
         from pathlib import Path as _Path
+
         _Path(tmpl._output_path).write_text(_json.dumps(artifact, indent=2))
 
     tmpl.assert_deliverable_written()

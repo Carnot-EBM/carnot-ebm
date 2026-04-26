@@ -53,14 +53,14 @@ from python.carnot.pipeline.lagrange_updater import LagrangeAdaptiveUpdater  # n
 # Each entry: name -> (high_viol_prob used in steps 1-100, low_viol_prob used in 101-200).
 # The spread across probabilities ensures weight_entropy is non-degenerate from step 1.
 CONSTRAINTS: dict[str, tuple[float, float]] = {
-    "arithmetic_carry":     (0.80, 0.05),
-    "sign_check":           (0.70, 0.10),
-    "unit_consistency":     (0.60, 0.15),
+    "arithmetic_carry": (0.80, 0.05),
+    "sign_check": (0.70, 0.10),
+    "unit_consistency": (0.60, 0.15),
     "comparison_direction": (0.50, 0.20),
-    "equality_check":       (0.40, 0.25),
-    "range_check":          (0.30, 0.30),
-    "step_coherence":       (0.20, 0.50),
-    "modular_arithmetic":   (0.10, 0.70),
+    "equality_check": (0.40, 0.25),
+    "range_check": (0.30, 0.30),
+    "step_coherence": (0.20, 0.50),
+    "modular_arithmetic": (0.10, 0.70),
 }
 
 TOTAL_STEPS = 200
@@ -98,7 +98,7 @@ def run_simulation(rng: random.Random) -> dict:
 
     Returns a dict with the interval log and final entropy values for verdict computation.
     """
-    baseline = _make_updater(forgetting_lambda=0.0)   # no forgetting
+    baseline = _make_updater(forgetting_lambda=0.0)  # no forgetting
     decay_upd = _make_updater(forgetting_lambda=FORGETTING_LAMBDA)
 
     interval_log: list[dict] = []
@@ -122,17 +122,19 @@ def run_simulation(rng: random.Random) -> dict:
         if step % RECORD_INTERVAL == 0:
             weights_b = list(baseline.constraint_weights.values())
             weights_d = list(decay_upd.constraint_weights.values())
-            interval_log.append({
-                "step": step,
-                "entropy_baseline": baseline.weight_entropy,
-                "entropy_decay": decay_upd.weight_entropy,
-                "max_weight_baseline": max(weights_b) if weights_b else 0.0,
-                "mean_weight_baseline": sum(weights_b) / len(weights_b) if weights_b else 0.0,
-                "max_weight_decay": max(weights_d) if weights_d else 0.0,
-                "mean_weight_decay": sum(weights_d) / len(weights_d) if weights_d else 0.0,
-                "n_active_baseline": baseline.n_constraints,
-                "n_active_decay": decay_upd.n_constraints,
-            })
+            interval_log.append(
+                {
+                    "step": step,
+                    "entropy_baseline": baseline.weight_entropy,
+                    "entropy_decay": decay_upd.weight_entropy,
+                    "max_weight_baseline": max(weights_b) if weights_b else 0.0,
+                    "mean_weight_baseline": sum(weights_b) / len(weights_b) if weights_b else 0.0,
+                    "max_weight_decay": max(weights_d) if weights_d else 0.0,
+                    "mean_weight_decay": sum(weights_d) / len(weights_d) if weights_d else 0.0,
+                    "n_active_baseline": baseline.n_constraints,
+                    "n_active_decay": decay_upd.n_constraints,
+                }
+            )
 
     # Entropy after the first interval — used to verify corpus is non-degenerate.
     entropy_step1 = interval_log[0]["entropy_baseline"] if interval_log else 0.0
@@ -188,9 +190,7 @@ def main() -> None:
 
     prior_exp = 909
     prior_verdict = "no_improvement"
-    prior_root_cause = (
-        "Single-constraint corpus with p=1.0 always; entropy = 0 by construction."
-    )
+    prior_root_cause = "Single-constraint corpus with p=1.0 always; entropy = 0 by construction."
     fix_applied = (
         "8 heterogeneous constraint types with violation rates spanning 0.05–0.80, "
         "producing non-zero entropy from step 1 (~log(8) = 2.08 nats at equal weights)."
@@ -230,6 +230,7 @@ def main() -> None:
     print(f"signed_entropy_improvement:     {sim['signed_entropy_improvement']:.4f}")
 
     import json
+
     out_path = Path(tmpl.deliverable)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w") as f:

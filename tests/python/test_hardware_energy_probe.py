@@ -27,6 +27,7 @@ from carnot.pipeline.hardware_energy_probe import (
 # Minimal mock EORM model — no JAX, no real weights needed
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class _MockCoTInput:
     question_text: str
@@ -50,6 +51,7 @@ class _FixedEnergyModel:
 # HardwareEnergyReading dataclass
 # ---------------------------------------------------------------------------
 
+
 def test_hardware_energy_reading_fields() -> None:
     """HardwareEnergyReading stores timestamp_ns, joules, source."""
     r = HardwareEnergyReading(timestamp_ns=123, joules=0.5, source="mock")
@@ -61,6 +63,7 @@ def test_hardware_energy_reading_fields() -> None:
 # ---------------------------------------------------------------------------
 # _try_rapl — returns None when file absent (CI)
 # ---------------------------------------------------------------------------
+
 
 def test_try_rapl_returns_none_when_file_absent(tmp_path: pytest.FixtureRequest) -> None:
     """_try_rapl() returns None when /sys/class/powercap/.../energy_uj does not exist.
@@ -108,6 +111,7 @@ def test_try_rapl_returns_none_on_invalid_content(tmp_path: pytest.FixtureReques
 # ---------------------------------------------------------------------------
 # _try_pyrapl — returns None when not installed
 # ---------------------------------------------------------------------------
+
 
 def test_try_pyrapl_returns_none_when_not_installed() -> None:
     """_try_pyrapl() returns None when pyRAPL is not importable."""
@@ -163,16 +167,20 @@ def test_try_pyrapl_returns_none_on_exception() -> None:
 # read() — returns mock source when RAPL unavailable (SCENARIO-LEARN-098)
 # ---------------------------------------------------------------------------
 
+
 def test_read_returns_mock_when_rapl_unavailable() -> None:
     """read() returns source='mock' and joules=0.0 when no hardware available.
 
     Spec: SCENARIO-LEARN-098
     """
     # Force mock source by patching both backends
-    with patch(
-        "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
-        new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
-    ), patch.dict("sys.modules", {"pyRAPL": None}):
+    with (
+        patch(
+            "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
+            new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
+        ),
+        patch.dict("sys.modules", {"pyRAPL": None}),
+    ):
         probe = HardwareEnergyProbe()
 
     assert probe.source == "mock"
@@ -204,15 +212,19 @@ def test_read_returns_rapl_source_when_file_present(tmp_path: pytest.FixtureRequ
 # measure_segment() — returns (result, delta_joules) (SCENARIO-LEARN-099)
 # ---------------------------------------------------------------------------
 
+
 def test_measure_segment_returns_result_and_delta_joules() -> None:
     """measure_segment(fn) returns (fn(), delta_joules).
 
     Spec: SCENARIO-LEARN-099
     """
-    with patch(
-        "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
-        new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
-    ), patch.dict("sys.modules", {"pyRAPL": None}):
+    with (
+        patch(
+            "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
+            new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
+        ),
+        patch.dict("sys.modules", {"pyRAPL": None}),
+    ):
         probe = HardwareEnergyProbe()
 
     result, delta = probe.measure_segment(lambda: 42)
@@ -223,17 +235,22 @@ def test_measure_segment_returns_result_and_delta_joules() -> None:
 
 def test_measure_segment_handles_wraparound() -> None:
     """measure_segment() clamps negative delta (counter wrap) to 0.0."""
-    with patch(
-        "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
-        new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
-    ), patch.dict("sys.modules", {"pyRAPL": None}):
+    with (
+        patch(
+            "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
+            new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
+        ),
+        patch.dict("sys.modules", {"pyRAPL": None}),
+    ):
         probe = HardwareEnergyProbe()
 
     # Force the internal read() to return decreasing values
-    readings = iter([
-        HardwareEnergyReading(timestamp_ns=1, joules=100.0, source="mock"),
-        HardwareEnergyReading(timestamp_ns=2, joules=50.0, source="mock"),  # wrapped
-    ])
+    readings = iter(
+        [
+            HardwareEnergyReading(timestamp_ns=1, joules=100.0, source="mock"),
+            HardwareEnergyReading(timestamp_ns=2, joules=50.0, source="mock"),  # wrapped
+        ]
+    )
     with patch.object(probe, "read", side_effect=readings):
         _, delta = probe.measure_segment(lambda: None)
     assert delta == 0.0
@@ -242,6 +259,7 @@ def test_measure_segment_handles_wraparound() -> None:
 # ---------------------------------------------------------------------------
 # compute_eorm_hardware_correlation() — SCENARIO-LEARN-100
 # ---------------------------------------------------------------------------
+
 
 def test_correlation_with_mock_probe() -> None:
     """compute_eorm_hardware_correlation() works end-to-end with mock probe.
@@ -252,10 +270,13 @@ def test_correlation_with_mock_probe() -> None:
     """
     from carnot.models.eorm import CoTEnergyInput  # only to validate import path
 
-    with patch(
-        "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
-        new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
-    ), patch.dict("sys.modules", {"pyRAPL": None}):
+    with (
+        patch(
+            "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
+            new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
+        ),
+        patch.dict("sys.modules", {"pyRAPL": None}),
+    ):
         probe = HardwareEnergyProbe()
 
     energies = [float(i) for i in range(5)]
@@ -292,32 +313,47 @@ def test_correlation_calibration_viable_threshold() -> None:
     """calibration_viable requires r > 0.5 AND p_value < 0.05."""
     # Viable
     c1 = EORMHardwareCorrelation(
-        n_steps=30, pearson_r=0.7, p_value=0.01,
-        hardware_energies=[], eorm_energies=[], calibration_viable=True,
+        n_steps=30,
+        pearson_r=0.7,
+        p_value=0.01,
+        hardware_energies=[],
+        eorm_energies=[],
+        calibration_viable=True,
     )
     assert c1.calibration_viable
 
     # r too low
     c2 = EORMHardwareCorrelation(
-        n_steps=30, pearson_r=0.3, p_value=0.01,
-        hardware_energies=[], eorm_energies=[], calibration_viable=False,
+        n_steps=30,
+        pearson_r=0.3,
+        p_value=0.01,
+        hardware_energies=[],
+        eorm_energies=[],
+        calibration_viable=False,
     )
     assert not c2.calibration_viable
 
     # p too high
     c3 = EORMHardwareCorrelation(
-        n_steps=30, pearson_r=0.7, p_value=0.1,
-        hardware_energies=[], eorm_energies=[], calibration_viable=False,
+        n_steps=30,
+        pearson_r=0.7,
+        p_value=0.1,
+        hardware_energies=[],
+        eorm_energies=[],
+        calibration_viable=False,
     )
     assert not c3.calibration_viable
 
 
 def test_correlation_handles_single_step() -> None:
     """compute_eorm_hardware_correlation() handles edge case of 1 step (no pearsonr)."""
-    with patch(
-        "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
-        new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
-    ), patch.dict("sys.modules", {"pyRAPL": None}):
+    with (
+        patch(
+            "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
+            new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
+        ),
+        patch.dict("sys.modules", {"pyRAPL": None}),
+    ):
         probe = HardwareEnergyProbe()
 
     model = _FixedEnergyModel([0.5])
@@ -329,9 +365,12 @@ def test_correlation_handles_single_step() -> None:
 
 def test_source_property() -> None:
     """HardwareEnergyProbe.source property returns the active source label."""
-    with patch(
-        "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
-        new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
-    ), patch.dict("sys.modules", {"pyRAPL": None}):
+    with (
+        patch(
+            "carnot.pipeline.hardware_energy_probe._RAPL_ENERGY_PATH",
+            new=pytest.importorskip("pathlib").Path("/nonexistent/energy_uj"),
+        ),
+        patch.dict("sys.modules", {"pyRAPL": None}),
+    ):
         probe = HardwareEnergyProbe()
     assert probe.source == "mock"

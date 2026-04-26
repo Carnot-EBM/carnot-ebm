@@ -15,7 +15,7 @@ the full schema so downstream readers can find the data either way.
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 
 # ---------------------------------------------------------------------------
 # Path setup — resolve repo root relative to this script so it works from
@@ -90,7 +90,7 @@ def compute_retro() -> dict:
     - Slowest-5 governance check against the exclusion manifest
     - Comparison against prior milestone .67 wall time
     """
-    started_at = datetime.now(timezone.utc).isoformat()
+    started_at = datetime.now(UTC).isoformat()
 
     # -----------------------------------------------------------------------
     # Step 1: Load all experiment results
@@ -115,8 +115,7 @@ def compute_retro() -> dict:
         reverse=True,
     )
     slowest_5 = [
-        {"exp_id": eid, "duration_min": round(dur / 60.0, 4)}
-        for eid, dur in exp_times[:5]
+        {"exp_id": eid, "duration_min": round(dur / 60.0, 4)} for eid, dur in exp_times[:5]
     ]
 
     # -----------------------------------------------------------------------
@@ -188,16 +187,13 @@ def compute_retro() -> dict:
 
     # 10. pimi_resolved: sweeps_reduction >= 5.0 OR verdict indicates retirement
     sr = art[889].get("sweeps_reduction")
-    criteria["pimi_resolved"] = (
-        (isinstance(sr, float) and sr >= 5.0)
-        or _str_contains(art[889].get("honest_verdict"), "pimi_retired")
+    criteria["pimi_resolved"] = (isinstance(sr, float) and sr >= 5.0) or _str_contains(
+        art[889].get("honest_verdict"), "pimi_retired"
     )
 
     # 11. gguf_resolved: download_verified OR verdict indicates retirement
     dv = art[890].get("download_verified")
-    criteria["gguf_resolved"] = bool(dv) or _str_contains(
-        art[890].get("honest_verdict"), "retire"
-    )
+    criteria["gguf_resolved"] = bool(dv) or _str_contains(art[890].get("honest_verdict"), "retire")
 
     n_criteria_met = sum(1 for v in criteria.values() if v)
 
@@ -216,9 +212,7 @@ def compute_retro() -> dict:
     retro_inertia_closed = isinstance(sr, float) and sr >= 5.0
 
     # RETRO-SOTA-MODEL-DOWNLOAD: closed if download_verified OR retired
-    retro_gguf_closed = bool(dv) or _str_contains(
-        art[890].get("honest_verdict"), "retire"
-    )
+    retro_gguf_closed = bool(dv) or _str_contains(art[890].get("honest_verdict"), "retire")
 
     retros_closed: list[str] = []
     if retro_hallusae_closed:
@@ -256,7 +250,7 @@ def compute_retro() -> dict:
     # -----------------------------------------------------------------------
     # Step 9: Assemble artifact
     # -----------------------------------------------------------------------
-    finished_at = datetime.now(timezone.utc).isoformat()
+    finished_at = datetime.now(UTC).isoformat()
     duration_s = (
         datetime.fromisoformat(finished_at) - datetime.fromisoformat(started_at)
     ).total_seconds()
@@ -359,7 +353,9 @@ def main() -> None:
     print(f"\nMilestone 2026.04.68 Retro:")
     print(f"  Wall time:       {artifact['wall_time_minutes']:.2f} min")
     print(f"  Criteria met:    {artifact['n_criteria_met']}/{artifact['n_criteria_total']}")
-    print(f"  Retros closed:   {artifact['retros_closed_count']} — {artifact['retros_closed_this_milestone']}")
+    print(
+        f"  Retros closed:   {artifact['retros_closed_count']} — {artifact['retros_closed_this_milestone']}"
+    )
     print(f"  Open retros:     {artifact['open_retros']}")
     print(f"  Verdict: {artifact['honest_verdict']}")
 

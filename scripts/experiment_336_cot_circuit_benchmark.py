@@ -70,9 +70,7 @@ CORPUS: list[dict] = [
     },
     {
         "response": (
-            "First, compute 5 * 6 = 30.\n"
-            "Then, add 15 to get 45.\n"
-            "Finally, the answer is 45."
+            "First, compute 5 * 6 = 30.\nThen, add 15 to get 45.\nFinally, the answer is 45."
         ),
         "is_correct": True,
         "description": "discourse markers — consistent arithmetic",
@@ -103,9 +101,7 @@ CORPUS: list[dict] = [
     },
     {
         "response": (
-            "First, note that 100 / 4 = 25.\n"
-            "Then, 25 * 3 = 75.\n"
-            "Finally, the answer is 75."
+            "First, note that 100 / 4 = 25.\nThen, 25 * 3 = 75.\nFinally, the answer is 75."
         ),
         "is_correct": True,
         "description": "fraction of a whole — consistent",
@@ -390,8 +386,12 @@ def main() -> None:
         json.dump(artifact, f, indent=2)
 
     print(f"Exp 336 complete.")
-    print(f"  TP rate: {benchmark_results['tp_rate']:.1%}  ({benchmark_results['tp_count']}/{benchmark_results['n_incorrect']} incorrect responses flagged)")
-    print(f"  FP rate: {benchmark_results['fp_rate']:.1%}  ({benchmark_results['fp_count']}/{benchmark_results['n_correct']} correct responses incorrectly flagged)")
+    print(
+        f"  TP rate: {benchmark_results['tp_rate']:.1%}  ({benchmark_results['tp_count']}/{benchmark_results['n_incorrect']} incorrect responses flagged)"
+    )
+    print(
+        f"  FP rate: {benchmark_results['fp_rate']:.1%}  ({benchmark_results['fp_count']}/{benchmark_results['n_correct']} correct responses incorrectly flagged)"
+    )
     print(f"  Results: {output_path}")
 
 

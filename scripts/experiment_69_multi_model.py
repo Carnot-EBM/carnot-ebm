@@ -72,6 +72,7 @@ MODEL_CONFIGS: list[dict[str, Any]] = [
 # 2. Test questions — same 20 from Exp 56 for comparability
 # ---------------------------------------------------------------------------
 
+
 def get_test_questions() -> list[dict[str, Any]]:
     """Return the same 20 test questions from Experiment 56.
 
@@ -142,10 +143,7 @@ def get_test_questions() -> list[dict[str, Any]]:
         },
         {
             "domain": "logic",
-            "question": (
-                "If A is true and A implies B, is B true? "
-                "Answer yes or no."
-            ),
+            "question": ("If A is true and A implies B, is B true? Answer yes or no."),
             "ground_truth": "yes",
             "check_answer": lambda ans: "yes" in ans.lower(),
         },
@@ -163,13 +161,17 @@ def get_test_questions() -> list[dict[str, Any]]:
             "domain": "code",
             "question": "Write a Python function to reverse a string.",
             "ground_truth": "def reverse",
-            "check_answer": lambda ans: "def " in ans and ("reverse" in ans.lower() or "[::-1]" in ans),
+            "check_answer": lambda ans: (
+                "def " in ans and ("reverse" in ans.lower() or "[::-1]" in ans)
+            ),
         },
         {
             "domain": "code",
             "question": "Write a Python function that returns the sum of a list of integers.",
             "ground_truth": "def sum_list",
-            "check_answer": lambda ans: "def " in ans and ("sum" in ans.lower() or "total" in ans.lower()),
+            "check_answer": lambda ans: (
+                "def " in ans and ("sum" in ans.lower() or "total" in ans.lower())
+            ),
         },
         {
             "domain": "code",
@@ -187,7 +189,9 @@ def get_test_questions() -> list[dict[str, Any]]:
             "domain": "code",
             "question": "Write a Python function that returns the factorial of n.",
             "ground_truth": "def factorial",
-            "check_answer": lambda ans: "def " in ans and ("factorial" in ans.lower() or "fact" in ans.lower()),
+            "check_answer": lambda ans: (
+                "def " in ans and ("factorial" in ans.lower() or "fact" in ans.lower())
+            ),
         },
         # --- Factual (5 questions) ---
         {
@@ -246,6 +250,7 @@ def _extract_number(text: str) -> float | None:
 # 3. LLM generation — works for any HuggingFace causal LM
 # ---------------------------------------------------------------------------
 
+
 def generate_with_llm(
     prompt: str,
     tokenizer: Any,
@@ -273,13 +278,17 @@ def generate_with_llm(
     # Try chat template first; not all models support all kwargs.
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             # Model has no chat template — use raw prompt.
@@ -298,7 +307,7 @@ def generate_with_llm(
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:],
+        outputs[0, inputs["input_ids"].shape[1] :],
         skip_special_tokens=True,
     )
 
@@ -312,6 +321,7 @@ def generate_with_llm(
 # ---------------------------------------------------------------------------
 # 4. Prompt builders (reuse Exp 56/57 format)
 # ---------------------------------------------------------------------------
+
 
 def build_initial_prompt(question: str, domain: str) -> str:
     """Build the initial prompt for any LLM (domain-specific format).
@@ -335,16 +345,10 @@ def build_initial_prompt(question: str, domain: str) -> str:
             f"Answer: <yes/no>"
         )
     elif domain == "code":
-        return (
-            f"Question: {question}\n"
-            f"Write ONLY the Python function. No explanation."
-        )
+        return f"Question: {question}\nWrite ONLY the Python function. No explanation."
     else:  # factual
         return (
-            f"Question: {question}\n"
-            f"Give a short, direct factual answer.\n"
-            f"Format:\n"
-            f"Answer: <answer>"
+            f"Question: {question}\nGive a short, direct factual answer.\nFormat:\nAnswer: <answer>"
         )
 
 
@@ -373,6 +377,7 @@ def build_repair_prompt(
 # ---------------------------------------------------------------------------
 # 5. Constraint extraction — reuses Exp 56 extractors
 # ---------------------------------------------------------------------------
+
 
 def extract_constraints(response: str, question: str, domain: str) -> list[dict]:
     """Extract and verify constraints from LLM output by domain.
@@ -406,6 +411,7 @@ def extract_constraints(response: str, question: str, domain: str) -> list[dict]
 # 6. Violation formatting (reuse Exp 57 logic)
 # ---------------------------------------------------------------------------
 
+
 def format_violations(verification_result: dict[str, Any]) -> str:
     """Convert constraint violations into natural language feedback.
 
@@ -415,12 +421,14 @@ def format_violations(verification_result: dict[str, Any]) -> str:
         that gets appended to repair prompts.
     """
     from experiment_57_verify_repair_loop import format_violations as _fmt
+
     return _fmt(verification_result)
 
 
 # ---------------------------------------------------------------------------
 # 7. The verify-repair loop — per model, per question
 # ---------------------------------------------------------------------------
+
 
 def verify_repair_loop(
     question: str,
@@ -459,7 +467,10 @@ def verify_repair_loop(
             prev_result = iterations[-1]
             feedback = format_violations(prev_result)
             prompt = build_repair_prompt(
-                question, domain, current_answer, feedback,
+                question,
+                domain,
+                current_answer,
+                feedback,
             )
 
         # Generate response. Code questions need more tokens for function bodies.
@@ -525,6 +536,7 @@ def verify_repair_loop(
 # 8. Simulated outputs — fallback for both models
 # ---------------------------------------------------------------------------
 
+
 def get_simulated_outputs_qwen() -> dict[str, list[str]]:
     """Simulated Qwen3.5-0.8B outputs for the 20 Exp 56 questions.
 
@@ -540,13 +552,12 @@ def get_simulated_outputs_qwen() -> dict[str, list[str]]:
         "What is 200 - 137?": ["Answer: 63"],
         "What is 144 / 12?": ["Answer: 12"],
         "What is 23 + 19 + 8?": [
-            "Answer: 48",      # Wrong (off by 2).
-            "Answer: 50",      # Fixed after repair feedback.
+            "Answer: 48",  # Wrong (off by 2).
+            "Answer: 50",  # Fixed after repair feedback.
         ],
         # Logic — all correct for Qwen (simple syllogisms).
         (
-            "If all cats are mammals and Whiskers is a cat, "
-            "is Whiskers a mammal? Answer yes or no."
+            "If all cats are mammals and Whiskers is a cat, is Whiskers a mammal? Answer yes or no."
         ): ["Answer: Yes"],
         (
             "If it is raining then the ground is wet. "
@@ -556,32 +567,34 @@ def get_simulated_outputs_qwen() -> dict[str, list[str]]:
             "All birds have feathers. Penguins are birds. "
             "Do penguins have feathers? Answer yes or no."
         ): ["Answer: Yes"],
-        (
-            "If A is true and A implies B, is B true? "
-            "Answer yes or no."
-        ): ["Answer: Yes"],
+        ("If A is true and A implies B, is B true? Answer yes or no."): ["Answer: Yes"],
         (
             "Nothing can be both a circle and a square. "
             "Shape X is a circle. Is shape X a square? Answer yes or no."
         ): ["Answer: No"],
         # Code — all parseable.
-        "Write a Python function to reverse a string.":
-            ["```python\ndef reverse_string(s: str) -> str:\n    return s[::-1]\n```"],
-        "Write a Python function that returns the sum of a list of integers.":
-            ["```python\ndef sum_list(numbers: list) -> int:\n    total = 0\n    for n in numbers:\n        total += n\n    return total\n```"],
-        "Write a Python function to check if a number is even.":
-            ["```python\ndef is_even(n: int) -> bool:\n    return n % 2 == 0\n```"],
-        "Write a Python function to find the maximum value in a list.":
-            ["```python\ndef find_max(arr: list) -> int:\n    result = arr[0]\n    for x in arr:\n        if x > result:\n            result = x\n    return result\n```"],
-        "Write a Python function that returns the factorial of n.":
-            ["```python\ndef factorial(n: int) -> int:\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n```"],
+        "Write a Python function to reverse a string.": [
+            "```python\ndef reverse_string(s: str) -> str:\n    return s[::-1]\n```"
+        ],
+        "Write a Python function that returns the sum of a list of integers.": [
+            "```python\ndef sum_list(numbers: list) -> int:\n    total = 0\n    for n in numbers:\n        total += n\n    return total\n```"
+        ],
+        "Write a Python function to check if a number is even.": [
+            "```python\ndef is_even(n: int) -> bool:\n    return n % 2 == 0\n```"
+        ],
+        "Write a Python function to find the maximum value in a list.": [
+            "```python\ndef find_max(arr: list) -> int:\n    result = arr[0]\n    for x in arr:\n        if x > result:\n            result = x\n    return result\n```"
+        ],
+        "Write a Python function that returns the factorial of n.": [
+            "```python\ndef factorial(n: int) -> int:\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n```"
+        ],
         # Factual — 4 correct, 1 wrong.
         "What is the capital of France?": ["Answer: Paris"],
         "What is the capital of Japan?": ["Answer: Tokyo"],
         "What is the capital of Germany?": ["Answer: Berlin"],
         "What is the capital of Australia?": [
-            "Answer: Sydney",   # Wrong (common LLM error).
-            "Answer: Canberra", # Fixed after repair feedback.
+            "Answer: Sydney",  # Wrong (common LLM error).
+            "Answer: Canberra",  # Fixed after repair feedback.
         ],
         "What continent is Japan on?": ["Answer: Asia"],
     }
@@ -600,50 +613,51 @@ def get_simulated_outputs_gemma() -> dict[str, list[str]]:
         # Arithmetic — 3 correct, 2 wrong (different errors than Qwen).
         "What is 47 + 28?": ["Answer: 75"],
         "What is 15 * 7?": [
-            "Answer: 115",     # Wrong (different error than Qwen).
-            "Answer: 105",     # Fixed after repair.
+            "Answer: 115",  # Wrong (different error than Qwen).
+            "Answer: 105",  # Fixed after repair.
         ],
         "What is 200 - 137?": [
-            "Answer: 73",      # Wrong (borrowing error).
-            "Answer: 63",      # Fixed after repair.
+            "Answer: 73",  # Wrong (borrowing error).
+            "Answer: 63",  # Fixed after repair.
         ],
         "What is 144 / 12?": ["Answer: 12"],
         "What is 23 + 19 + 8?": ["Answer: 50"],
         # Logic — 4 correct, 1 wrong (different from Qwen).
         (
-            "If all cats are mammals and Whiskers is a cat, "
-            "is Whiskers a mammal? Answer yes or no."
+            "If all cats are mammals and Whiskers is a cat, is Whiskers a mammal? Answer yes or no."
         ): ["Answer: Yes"],
         (
             "If it is raining then the ground is wet. "
             "The ground is dry. Is it raining? Answer yes or no."
         ): [
-            "Answer: Yes",     # Wrong (contrapositive error).
-            "Answer: No",      # Fixed after repair.
+            "Answer: Yes",  # Wrong (contrapositive error).
+            "Answer: No",  # Fixed after repair.
         ],
         (
             "All birds have feathers. Penguins are birds. "
             "Do penguins have feathers? Answer yes or no."
         ): ["Answer: Yes"],
-        (
-            "If A is true and A implies B, is B true? "
-            "Answer yes or no."
-        ): ["Answer: Yes"],
+        ("If A is true and A implies B, is B true? Answer yes or no."): ["Answer: Yes"],
         (
             "Nothing can be both a circle and a square. "
             "Shape X is a circle. Is shape X a square? Answer yes or no."
         ): ["Answer: No"],
         # Code — all parseable but different style.
-        "Write a Python function to reverse a string.":
-            ["```python\ndef reverse(text: str) -> str:\n    return text[::-1]\n```"],
-        "Write a Python function that returns the sum of a list of integers.":
-            ["```python\ndef sum_integers(nums: list[int]) -> int:\n    return sum(nums)\n```"],
-        "Write a Python function to check if a number is even.":
-            ["```python\ndef is_even(number: int) -> bool:\n    return number % 2 == 0\n```"],
-        "Write a Python function to find the maximum value in a list.":
-            ["```python\ndef find_max(values: list[int]) -> int:\n    return max(values)\n```"],
-        "Write a Python function that returns the factorial of n.":
-            ["```python\ndef factorial(n: int) -> int:\n    if n == 0:\n        return 1\n    return n * factorial(n - 1)\n```"],
+        "Write a Python function to reverse a string.": [
+            "```python\ndef reverse(text: str) -> str:\n    return text[::-1]\n```"
+        ],
+        "Write a Python function that returns the sum of a list of integers.": [
+            "```python\ndef sum_integers(nums: list[int]) -> int:\n    return sum(nums)\n```"
+        ],
+        "Write a Python function to check if a number is even.": [
+            "```python\ndef is_even(number: int) -> bool:\n    return number % 2 == 0\n```"
+        ],
+        "Write a Python function to find the maximum value in a list.": [
+            "```python\ndef find_max(values: list[int]) -> int:\n    return max(values)\n```"
+        ],
+        "Write a Python function that returns the factorial of n.": [
+            "```python\ndef factorial(n: int) -> int:\n    if n == 0:\n        return 1\n    return n * factorial(n - 1)\n```"
+        ],
         # Factual — all correct (Gemma's strength is factual recall).
         "What is the capital of France?": ["Answer: Paris"],
         "What is the capital of Japan?": ["Answer: Tokyo"],
@@ -656,6 +670,7 @@ def get_simulated_outputs_gemma() -> dict[str, list[str]]:
 # ---------------------------------------------------------------------------
 # 9. Model loading helper
 # ---------------------------------------------------------------------------
+
 
 def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
     """Attempt to load a model from HuggingFace, trying candidates in order.
@@ -684,10 +699,12 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
         try:
             print(f"    Loading {model_name} on {device}...")
             tokenizer = AutoTokenizer.from_pretrained(
-                model_name, trust_remote_code=trust,
+                model_name,
+                trust_remote_code=trust,
             )
             model = AutoModelForCausalLM.from_pretrained(
-                model_name, trust_remote_code=trust,
+                model_name,
+                trust_remote_code=trust,
                 dtype=torch.float16 if device == "cuda" else None,
             )
             if device == "cuda":
@@ -738,6 +755,7 @@ def _speed_test(tokenizer: Any, model: Any, device: str, timeout: int = 60) -> b
     def _generate_test() -> None:
         """Run in a thread to test generation speed."""
         import torch as _torch
+
         try:
             test_input = tokenizer("Hello", return_tensors="pt")
             if device == "cuda":
@@ -777,6 +795,7 @@ def unload_model(model: Any, tokenizer: Any, device: str) -> None:
     gc.collect()
     try:
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
     except ImportError:
@@ -786,6 +805,7 @@ def unload_model(model: Any, tokenizer: Any, device: str) -> None:
 # ---------------------------------------------------------------------------
 # 10. Analysis helpers
 # ---------------------------------------------------------------------------
+
 
 def compute_model_stats(
     results: list[dict[str, Any]],
@@ -806,15 +826,9 @@ def compute_model_stats(
     avg_repairs = total_repairs / repairs_attempted if repairs_attempted > 0 else 0.0
 
     # Total constraints across all questions.
-    total_constraints = sum(
-        r["iterations"][-1]["n_constraints"] for r in results
-    )
-    total_satisfied = sum(
-        r["iterations"][-1]["n_satisfied"] for r in results
-    )
-    total_violated = sum(
-        r["iterations"][-1]["n_violated"] for r in results
-    )
+    total_constraints = sum(r["iterations"][-1]["n_constraints"] for r in results)
+    total_satisfied = sum(r["iterations"][-1]["n_satisfied"] for r in results)
+    total_violated = sum(r["iterations"][-1]["n_violated"] for r in results)
 
     # Per-domain stats.
     domain_stats = {}
@@ -828,15 +842,11 @@ def compute_model_stats(
             "initial_correct": sum(1 for r in dr if r["initial_correct"]),
             "final_correct": sum(1 for r in dr if r["final_correct"]),
             "repaired": sum(1 for r in dr if r["repaired"]),
-            "total_constraints": sum(
-                r["iterations"][-1]["n_constraints"] for r in dr
-            ),
+            "total_constraints": sum(r["iterations"][-1]["n_constraints"] for r in dr),
         }
 
     # Questions where the model hallucinated (got wrong answer).
-    hallucinated_questions = [
-        r["question"] for r in results if not r["initial_correct"]
-    ]
+    hallucinated_questions = [r["question"] for r in results if not r["initial_correct"]]
 
     return {
         "n_total": n_total,
@@ -860,6 +870,7 @@ def compute_model_stats(
 # ---------------------------------------------------------------------------
 # 11. Main — run all models on all questions, compare
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     """Run the multi-model constraint transfer experiment."""
@@ -928,8 +939,9 @@ def main() -> int:
             icon = "o" if result["final_correct"] else "x"
             repair_info = f" (repaired in {result['n_repairs']})" if result["repaired"] else ""
             src = "live" if model_is_live else "sim"
-            print(f"    [{icon}] Q{i+1:2d} [{domain:10s}] "
-                  f"{question_text[:45]}{repair_info} [{src}]")
+            print(
+                f"    [{icon}] Q{i + 1:2d} [{domain:10s}] {question_text[:45]}{repair_info} [{src}]"
+            )
 
         all_results[model_name] = results
 
@@ -965,9 +977,11 @@ def main() -> int:
             else:
                 status = "WRONG"
 
-            print(f"    [{init_icon}->{final_icon}] [{r['domain']:10s}] "
-                  f"{r['question'][:45]}  {status}"
-                  f"  (repairs: {r['n_repairs']})")
+            print(
+                f"    [{init_icon}->{final_icon}] [{r['domain']:10s}] "
+                f"{r['question'][:45]}  {status}"
+                f"  (repairs: {r['n_repairs']})"
+            )
 
     # --- Comparison table ---
     print(f"\n{sep}")
@@ -1000,15 +1014,19 @@ def main() -> int:
     # Baseline accuracy.
     print_row(
         "Baseline accuracy (LLM alone)",
-        [f"{s['n_initial_correct']}/{s['n_total']} "
-         f"({s['baseline_accuracy']:.0%})" for s in all_stats.values()],
+        [
+            f"{s['n_initial_correct']}/{s['n_total']} ({s['baseline_accuracy']:.0%})"
+            for s in all_stats.values()
+        ],
     )
 
     # Final accuracy (after verify-repair).
     print_row(
         "Final accuracy (+verify+repair)",
-        [f"{s['n_final_correct']}/{s['n_total']} "
-         f"({s['final_accuracy']:.0%})" for s in all_stats.values()],
+        [
+            f"{s['n_final_correct']}/{s['n_total']} ({s['final_accuracy']:.0%})"
+            for s in all_stats.values()
+        ],
     )
 
     # Repaired count.
@@ -1087,22 +1105,20 @@ def main() -> int:
 
         # Constraint transfer verdict: did constraints catch errors in BOTH models?
         # Check if repair worked for both models on their respective hallucinations.
-        repair_a = sum(
-            1 for r in all_results[model_names[0]]
-            if r["repaired"]
-        )
-        repair_b = sum(
-            1 for r in all_results[model_names[1]]
-            if r["repaired"]
-        )
+        repair_a = sum(1 for r in all_results[model_names[0]] if r["repaired"])
+        repair_b = sum(1 for r in all_results[model_names[1]] if r["repaired"])
         total_hall_a = len(hall_a)
         total_hall_b = len(hall_b)
 
         print(f"\n  Constraint transfer effectiveness:")
-        print(f"    {model_names[0]}: {repair_a}/{total_hall_a} hallucinations "
-              f"repaired via constraints")
-        print(f"    {model_names[1]}: {repair_b}/{total_hall_b} hallucinations "
-              f"repaired via constraints")
+        print(
+            f"    {model_names[0]}: {repair_a}/{total_hall_a} hallucinations "
+            f"repaired via constraints"
+        )
+        print(
+            f"    {model_names[1]}: {repair_b}/{total_hall_b} hallucinations "
+            f"repaired via constraints"
+        )
 
     # --- Model-specific hallucination patterns ---
     print(f"\n{sep}")
@@ -1141,10 +1157,14 @@ def main() -> int:
         if both_improved:
             print(f"\n  CONSTRAINT TRANSFER: VALIDATED")
             print(f"  The same constraint pipeline improved accuracy for BOTH models:")
-            print(f"    {model_names[0]}: {stats_a['baseline_accuracy']:.0%} -> "
-                  f"{stats_a['final_accuracy']:.0%} (+{stats_a['n_repaired']} repaired)")
-            print(f"    {model_names[1]}: {stats_b['baseline_accuracy']:.0%} -> "
-                  f"{stats_b['final_accuracy']:.0%} (+{stats_b['n_repaired']} repaired)")
+            print(
+                f"    {model_names[0]}: {stats_a['baseline_accuracy']:.0%} -> "
+                f"{stats_a['final_accuracy']:.0%} (+{stats_a['n_repaired']} repaired)"
+            )
+            print(
+                f"    {model_names[1]}: {stats_b['baseline_accuracy']:.0%} -> "
+                f"{stats_b['final_accuracy']:.0%} (+{stats_b['n_repaired']} repaired)"
+            )
             print(f"\n  Key finding: constraint extractors are MODEL-AGNOSTIC.")
             print(f"  No retraining needed when switching model families.")
         elif either_improved:
@@ -1153,18 +1173,16 @@ def main() -> int:
                 if stats_a["n_final_correct"] > stats_a["n_initial_correct"]
                 else model_names[1]
             )
-            other_mn = (
-                model_names[1]
-                if improved_mn == model_names[0]
-                else model_names[0]
-            )
+            other_mn = model_names[1] if improved_mn == model_names[0] else model_names[0]
             print(f"\n  CONSTRAINT TRANSFER: PARTIAL")
             print(f"  Constraints improved {improved_mn} but not {other_mn}.")
             print(f"  The other model may need domain-specific tuning.")
         else:
             # Check if both were already perfect.
-            if (stats_a["n_initial_correct"] == stats_a["n_total"]
-                    and stats_b["n_initial_correct"] == stats_b["n_total"]):
+            if (
+                stats_a["n_initial_correct"] == stats_a["n_total"]
+                and stats_b["n_initial_correct"] == stats_b["n_total"]
+            ):
                 print(f"\n  CONSTRAINT TRANSFER: UNTESTABLE (both models perfect)")
                 print(f"  Both models got all questions right — no errors to repair.")
             else:

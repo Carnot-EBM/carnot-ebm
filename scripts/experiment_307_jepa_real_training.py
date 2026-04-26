@@ -269,10 +269,10 @@ class _MLPParams:
             (pred, cache) where pred has shape (N, 1) and cache stores
             intermediate activations needed for the backward pass.
         """
-        z1 = X @ self.W1 + self.b1        # (N, 128)
-        a1 = np.maximum(0, z1)             # ReLU
-        z2 = a1 @ self.W2 + self.b2       # (N, 1)
-        pred = _sigmoid(z2)               # (N, 1)
+        z1 = X @ self.W1 + self.b1  # (N, 128)
+        a1 = np.maximum(0, z1)  # ReLU
+        z2 = a1 @ self.W2 + self.b2  # (N, 1)
+        pred = _sigmoid(z2)  # (N, 1)
         return pred, {"X": X, "z1": z1, "a1": a1, "z2": z2}
 
     def backward(
@@ -293,14 +293,14 @@ class _MLPParams:
         """
         N = y.shape[0]
         # Gradient of BCE w.r.t. z2: dL/dz2 = (pred - y) / N
-        dz2 = (pred - y) / N                    # (N, 1)
-        dW2 = cache["a1"].T @ dz2               # (128, 1)
-        db2 = dz2.sum(axis=0)                   # (1,)
+        dz2 = (pred - y) / N  # (N, 1)
+        dW2 = cache["a1"].T @ dz2  # (128, 1)
+        db2 = dz2.sum(axis=0)  # (1,)
 
-        da1 = dz2 @ self.W2.T                   # (N, 128)
-        dz1 = da1 * (cache["z1"] > 0)           # ReLU backward: (N, 128)
-        dW1 = cache["X"].T @ dz1                # (V, 128)
-        db1 = dz1.sum(axis=0)                   # (128,)
+        da1 = dz2 @ self.W2.T  # (N, 128)
+        dz1 = da1 * (cache["z1"] > 0)  # ReLU backward: (N, 128)
+        dW1 = cache["X"].T @ dz1  # (V, 128)
+        db1 = dz1.sum(axis=0)  # (128,)
 
         return {"dW1": dW1, "db1": db1, "dW2": dW2, "db2": db2}
 
@@ -351,20 +351,24 @@ class _AdamState:
         """Apply Adam update to params."""
         self.t += 1
         param_map = {
-            "W1": params.W1, "b1": params.b1,
-            "W2": params.W2, "b2": params.b2,
+            "W1": params.W1,
+            "b1": params.b1,
+            "W2": params.W2,
+            "b2": params.b2,
         }
         grad_map = {
-            "W1": grads["dW1"], "b1": grads["db1"],
-            "W2": grads["dW2"], "b2": grads["db2"],
+            "W1": grads["dW1"],
+            "b1": grads["db1"],
+            "W2": grads["dW2"],
+            "b2": grads["db2"],
         }
         for key in ("W1", "b1", "W2", "b2"):
             g = grad_map[key]
             self._ensure_key(key, g.shape)
             self.m[key] = self.beta1 * self.m[key] + (1 - self.beta1) * g
-            self.v[key] = self.beta2 * self.v[key] + (1 - self.beta2) * (g ** 2)
-            m_hat = self.m[key] / (1 - self.beta1 ** self.t)
-            v_hat = self.v[key] / (1 - self.beta2 ** self.t)
+            self.v[key] = self.beta2 * self.v[key] + (1 - self.beta2) * (g**2)
+            m_hat = self.m[key] / (1 - self.beta1**self.t)
+            v_hat = self.v[key] / (1 - self.beta2**self.t)
             update = lr * m_hat / (np.sqrt(v_hat) + self.eps)
             param_map[key] -= update
 
@@ -422,8 +426,8 @@ def train_jepa_on_pairs(
     # Build X (N, V) and y (N, 1) arrays.
     vecs = [p[0] for p in pairs]
     labels = [float(p[1]) for p in pairs]
-    X = np.stack(vecs, axis=0).astype(np.float32)   # (N, V)
-    y = np.array(labels, dtype=np.float32).reshape(-1, 1)   # (N, 1)
+    X = np.stack(vecs, axis=0).astype(np.float32)  # (N, V)
+    y = np.array(labels, dtype=np.float32).reshape(-1, 1)  # (N, 1)
 
     input_dim = X.shape[1]
 
@@ -460,11 +464,11 @@ def train_jepa_on_pairs(
         val_losses.append(val_loss)
 
         # TP rate and FP rate at threshold.
-        pred_val_1d = pred_val.squeeze()   # (N_val,)
-        y_val_1d = y_val.squeeze()         # (N_val,)
-        predicted_pos = (pred_val_1d >= THRESHOLD)
-        actual_pos = (y_val_1d == 1.0)
-        actual_neg = (y_val_1d == 0.0)
+        pred_val_1d = pred_val.squeeze()  # (N_val,)
+        y_val_1d = y_val.squeeze()  # (N_val,)
+        predicted_pos = pred_val_1d >= THRESHOLD
+        actual_pos = y_val_1d == 1.0
+        actual_neg = y_val_1d == 0.0
 
         n_pos = int(actual_pos.sum())
         n_neg = int(actual_neg.sum())
@@ -529,11 +533,11 @@ def _export_onnx(params: "_MLPParams", input_dim: int, onnx_path: Path) -> None:
 
     # Weights in (out_features, in_features) layout for Gemm transB=1.
     # params.W1 is (input_dim, HIDDEN_DIM) — transpose to (HIDDEN_DIM, input_dim).
-    W1_onnx = params.W1.T.astype(np.float32)   # (HIDDEN_DIM, input_dim)
-    b1_onnx = params.b1.astype(np.float32)      # (HIDDEN_DIM,)
+    W1_onnx = params.W1.T.astype(np.float32)  # (HIDDEN_DIM, input_dim)
+    b1_onnx = params.b1.astype(np.float32)  # (HIDDEN_DIM,)
     # params.W2 is (HIDDEN_DIM, 1) — transpose to (1, HIDDEN_DIM).
-    W2_onnx = params.W2.T.astype(np.float32)    # (1, HIDDEN_DIM)
-    b2_onnx = params.b2.astype(np.float32)      # (1,)
+    W2_onnx = params.W2.T.astype(np.float32)  # (1, HIDDEN_DIM)
+    b2_onnx = params.b2.astype(np.float32)  # (1,)
 
     # Define graph inputs and outputs.
     X_info = helper.make_tensor_value_info("logit_vec", TensorProto.FLOAT, [1, input_dim])
@@ -551,7 +555,7 @@ def _export_onnx(params: "_MLPParams", input_dim: int, onnx_path: Path) -> None:
             "Gemm",
             inputs=["logit_vec", "W1", "b1"],
             outputs=["z1"],
-            transB=1,          # W1 is already (out, in), use transB=1 for (in, out) mul.
+            transB=1,  # W1 is already (out, in), use transB=1 for (in, out) mul.
         ),
         helper.make_node("Relu", inputs=["z1"], outputs=["a1"]),
         helper.make_node(
@@ -564,7 +568,10 @@ def _export_onnx(params: "_MLPParams", input_dim: int, onnx_path: Path) -> None:
     ]
 
     graph = helper.make_graph(
-        nodes, "jepa_mlp_307", [X_info], [Y_info],
+        nodes,
+        "jepa_mlp_307",
+        [X_info],
+        [Y_info],
         initializer=[init_W1, init_b1, init_W2, init_b2],
     )
     model_proto = helper.make_model(
@@ -647,6 +654,7 @@ def run_experiment(
     # Check inference mode.
     try:
         import torch
+
         inference_mode = "live_gpu" if torch.cuda.is_available() else "cpu_training"
     except ImportError:  # pragma: no cover
         inference_mode = "cpu_training"

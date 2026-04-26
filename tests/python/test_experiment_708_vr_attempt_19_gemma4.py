@@ -103,9 +103,7 @@ class TestGateLoadedBeforeInference:
         state_file = tmp_path / "gate_state.json"
         # No file present — _build_seeded_gate should seed synthetic FPs.
         gate = exp708._build_seeded_gate(state_file)
-        assert gate.is_suppressed(
-            exp708.GEMMA4_MODEL_ID, exp708.SUPPRESSED_CONSTRAINT_TYPE
-        ), (
+        assert gate.is_suppressed(exp708.GEMMA4_MODEL_ID, exp708.SUPPRESSED_CONSTRAINT_TYPE), (
             "Gate must suppress SymCodeVerifier for Gemma4 immediately after "
             "_build_seeded_gate() when no prior state file exists"
         )
@@ -123,7 +121,9 @@ class TestGateLoadedBeforeInference:
         # Pre-populate state file with 5 FP observations.
         prep_gate = ModelAdaptiveThresholdGate(state_file=state_file)
         for _ in range(5):
-            prep_gate.update(exp708.GEMMA4_MODEL_ID, exp708.SUPPRESSED_CONSTRAINT_TYPE, was_tp=False)
+            prep_gate.update(
+                exp708.GEMMA4_MODEL_ID, exp708.SUPPRESSED_CONSTRAINT_TYPE, was_tp=False
+            )
 
         loaded_gate = exp708._build_seeded_gate(state_file)
         assert loaded_gate.is_suppressed(
@@ -137,9 +137,9 @@ class TestGateLoadedBeforeInference:
         """
         state_file = tmp_path / "gate_state.json"
         gate = exp708._build_seeded_gate(state_file)
-        assert not gate.is_suppressed(
-            "Qwen/Qwen3.5-0.8B", exp708.SUPPRESSED_CONSTRAINT_TYPE
-        ), "Qwen must NOT be suppressed by the Gemma4-only FP seed"
+        assert not gate.is_suppressed("Qwen/Qwen3.5-0.8B", exp708.SUPPRESSED_CONSTRAINT_TYPE), (
+            "Qwen must NOT be suppressed by the Gemma4-only FP seed"
+        )
 
 
 # ---------------------------------------------------------------------------

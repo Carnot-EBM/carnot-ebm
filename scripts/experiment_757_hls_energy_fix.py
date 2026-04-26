@@ -90,12 +90,14 @@ def check_hls_cpp_sign() -> tuple[bool, str]:
 
     if minus_match:
         # Extract the line for the artifact.
-        line_no = text[:minus_match.start()].count("\n") + 1
+        line_no = text[: minus_match.start()].count("\n") + 1
         evidence = f"Line {line_no}: {text.splitlines()[line_no - 1].strip()}"
         return True, evidence
     elif plus_match:
-        line_no = text[:plus_match.start()].count("\n") + 1
-        evidence = f"Line {line_no}: {text.splitlines()[line_no - 1].strip()} ← WRONG (should be -=)"
+        line_no = text[: plus_match.start()].count("\n") + 1
+        evidence = (
+            f"Line {line_no}: {text.splitlines()[line_no - 1].strip()} ← WRONG (should be -=)"
+        )
         return False, evidence
     else:
         return False, "No energy accumulation pattern found in compute_ising_energy"
@@ -258,7 +260,11 @@ def main() -> None:
     ):
         payload = run_experiment(tmpl)
 
-    status = "success" if payload["sign_convention_fixed"] and payload["ground_state_valid"] else "partial"
+    status = (
+        "success"
+        if payload["sign_convention_fixed"] and payload["ground_state_valid"]
+        else "partial"
+    )
     artifact = tmpl.build_result(payload, status=status)
 
     result_path.parent.mkdir(parents=True, exist_ok=True)

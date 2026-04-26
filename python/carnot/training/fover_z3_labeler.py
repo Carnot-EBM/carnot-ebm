@@ -39,7 +39,6 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Optional
 
 # ---------------------------------------------------------------------------
 # Z3 import — graceful degradation when library is absent
@@ -47,6 +46,7 @@ from typing import Optional
 
 try:
     import z3  # type: ignore[import]
+
     z3_available = True
 except ImportError:
     z3_available = False
@@ -113,9 +113,7 @@ class Z3StepVerifier:
     Spec: REQ-LEARN-045, SCENARIO-LEARN-075, SCENARIO-LEARN-076
     """
 
-    def extract_arithmetic_claim(
-        self, step_text: str
-    ) -> Optional["z3.BoolRef"]:  # type: ignore[name-defined]
+    def extract_arithmetic_claim(self, step_text: str) -> z3.BoolRef | None:  # type: ignore[name-defined]
         """Extract an arithmetic claim from step text and encode it as a Z3 expression.
 
         Looks for "A op B = C" patterns (binary operations with stated result) and
@@ -181,9 +179,7 @@ class Z3StepVerifier:
         else:
             return None
 
-    def verify_step_z3(
-        self, prior_steps: list[str], current_step: str
-    ) -> str:
+    def verify_step_z3(self, prior_steps: list[str], current_step: str) -> str:
         """Verify whether current_step is arithmetically consistent with prior_steps.
 
         Encodes each prior step as a Z3 premise (if it contains parseable arithmetic)

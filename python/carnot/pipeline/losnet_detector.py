@@ -41,8 +41,7 @@ Spec: REQ-VERIFY-153, REQ-VERIFY-154,
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
-
+from dataclasses import dataclass
 
 # ---------------------------------------------------------------------------
 # LOSNetFeatures — the sequence-level feature vector
@@ -168,7 +167,7 @@ def extract_losnet_features(
     ts = list(range(n_steps))
     sum_t = sum(ts)
     sum_h = sum(sequence_entropy)
-    sum_th = sum(t * h for t, h in zip(ts, sequence_entropy))
+    sum_th = sum(t * h for t, h in zip(ts, sequence_entropy, strict=False))
     sum_t2 = sum(t * t for t in ts)
     denom = n_steps * sum_t2 - sum_t * sum_t
     if denom == 0.0 or n_steps == 1:
@@ -311,7 +310,9 @@ class LOSNetClassifier:
 
         for _ in range(n_iterations):
             # Forward pass: compute predictions.
-            preds = [self._sigmoid(sum(weights[j] * X[i][j] for j in range(nf)) + bias) for i in range(n)]
+            preds = [
+                self._sigmoid(sum(weights[j] * X[i][j] for j in range(nf)) + bias) for i in range(n)
+            ]
             # Compute gradients.
             errors = [preds[i] - y[i] for i in range(n)]
             grad_w = [sum(errors[i] * X[i][j] for i in range(n)) / n for j in range(nf)]

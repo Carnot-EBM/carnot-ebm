@@ -40,11 +40,10 @@ Spec: REQ-REPAIR-012, REQ-REPAIR-013,
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
 from carnot.pipeline.nl2z3_extractor import Z3Result
-
 
 # ---------------------------------------------------------------------------
 # VergeIteration dataclass
@@ -321,17 +320,13 @@ class VergeRefiner:
             repaired_step = self._llm_caller(repair_prompt)
 
             # Patch the response: append the correction.
-            patched_response = (
-                f"{current_response}\n\nCorrection (iteration {n}): {repaired_step}"
-            )
+            patched_response = f"{current_response}\n\nCorrection (iteration {n}): {repaired_step}"
 
             # Re-verify the patched response.
             self._extractor.extract(question, patched_response, "reasoning")
             new_z3_result: Z3Result | None = getattr(self._extractor, "last_z3_result", None)
             if new_z3_result is None:
-                new_z3_result = Z3Result(
-                    sat_status="unknown", z3_code="", runtime_ms=0.0
-                )
+                new_z3_result = Z3Result(sat_status="unknown", z3_code="", runtime_ms=0.0)
 
             resolved = new_z3_result.sat_status == "sat"
 

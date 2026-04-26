@@ -161,7 +161,7 @@ def sat_to_ising(clauses: list[list[int]], n_vars: int) -> tuple[np.ndarray, np.
                 sign_b = 1.0 if clause[b] > 0 else -1.0
                 weights[ei] += penalty / 3.0 * sign_a * sign_b
 
-    return biases[:n_vars], weights[:n_vars * (n_vars - 1) // 2], n_vars
+    return biases[:n_vars], weights[: n_vars * (n_vars - 1) // 2], n_vars
 
 
 def main() -> int:
@@ -181,10 +181,10 @@ def main() -> int:
 
     # Test on increasingly hard SAT instances
     test_cases = [
-        (10, 30, "easy"),     # 10 vars, 30 clauses
-        (20, 85, "medium"),   # 20 vars, 85 clauses (phase transition)
-        (30, 128, "hard"),    # 30 vars, 128 clauses (above phase transition)
-        (50, 213, "extreme"), # 50 vars, 213 clauses (hard for random)
+        (10, 30, "easy"),  # 10 vars, 30 clauses
+        (20, 85, "medium"),  # 20 vars, 85 clauses (phase transition)
+        (30, 128, "hard"),  # 30 vars, 128 clauses (above phase transition)
+        (50, 213, "extreme"),  # 50 vars, 213 clauses (hard for random)
     ]
 
     results = []
@@ -219,8 +219,12 @@ def main() -> int:
 
         sample_start = time.time()
         samples = sample_states(
-            jrandom.PRNGKey(n_vars + 100), program, schedule,
-            init_state, [], free_blocks,
+            jrandom.PRNGKey(n_vars + 100),
+            program,
+            schedule,
+            init_state,
+            [],
+            free_blocks,
         )
         sample_time = time.time() - sample_start
 
@@ -252,19 +256,23 @@ def main() -> int:
         pct_sat = best_satisfied / n_clauses * 100
         pct_rand = random_best / n_clauses * 100
 
-        print(f"  thrml Ising: {best_satisfied}/{n_clauses} satisfied ({pct_sat:.0f}%) in {sample_time:.2f}s")
+        print(
+            f"  thrml Ising: {best_satisfied}/{n_clauses} satisfied ({pct_sat:.0f}%) in {sample_time:.2f}s"
+        )
         print(f"  Random:      {random_best}/{n_clauses} satisfied ({pct_rand:.0f}%)")
         print(f"  Improvement: {pct_sat - pct_rand:+.0f}%")
 
-        results.append({
-            "difficulty": difficulty,
-            "n_vars": n_vars,
-            "n_clauses": n_clauses,
-            "thrml_satisfied": best_satisfied,
-            "random_satisfied": random_best,
-            "total": n_clauses,
-            "time": sample_time,
-        })
+        results.append(
+            {
+                "difficulty": difficulty,
+                "n_vars": n_vars,
+                "n_clauses": n_clauses,
+                "thrml_satisfied": best_satisfied,
+                "random_satisfied": random_best,
+                "total": n_clauses,
+                "time": sample_time,
+            }
+        )
 
     # Summary
     elapsed = time.time() - start
@@ -272,19 +280,28 @@ def main() -> int:
     print(f"\n{sep}")
     print(f"EXPERIMENT 39 RESULTS ({elapsed:.0f}s)")
     print(sep)
-    print(f"{'Difficulty':>10s} {'Vars':>5s} {'Clauses':>8s} {'thrml':>8s} {'Random':>8s} {'Delta':>8s}")
+    print(
+        f"{'Difficulty':>10s} {'Vars':>5s} {'Clauses':>8s} {'thrml':>8s} {'Random':>8s} {'Delta':>8s}"
+    )
     print("-" * 50)
 
     for r in results:
         t_pct = r["thrml_satisfied"] / r["total"] * 100
         r_pct = r["random_satisfied"] / r["total"] * 100
-        print(f"{r['difficulty']:>10s} {r['n_vars']:>5d} {r['n_clauses']:>8d} "
-              f"{t_pct:>7.0f}% {r_pct:>7.0f}% {t_pct - r_pct:>+7.0f}%")
+        print(
+            f"{r['difficulty']:>10s} {r['n_vars']:>5d} {r['n_clauses']:>8d} "
+            f"{t_pct:>7.0f}% {r_pct:>7.0f}% {t_pct - r_pct:>+7.0f}%"
+        )
 
-    mean_improvement = np.mean([
-        r["thrml_satisfied"] / r["total"] - r["random_satisfied"] / r["total"]
-        for r in results
-    ]) * 100
+    mean_improvement = (
+        np.mean(
+            [
+                r["thrml_satisfied"] / r["total"] - r["random_satisfied"] / r["total"]
+                for r in results
+            ]
+        )
+        * 100
+    )
 
     if mean_improvement > 5:
         print(f"\n  VERDICT: ✅ thrml Ising SAT solver beats random by {mean_improvement:.0f}%")

@@ -53,8 +53,8 @@ import re
 import subprocess
 import sys
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable
 
 from carnot.pipeline.extract import ConstraintResult
 
@@ -328,9 +328,7 @@ class NL2Z3Extractor:
 
         # CI guard: skip LLM call when not in live mode.
         if not os.environ.get("CARNOT_FORCE_LIVE"):
-            self.last_z3_result = Z3Result(
-                sat_status="unknown", z3_code="", runtime_ms=0.0
-            )
+            self.last_z3_result = Z3Result(sat_status="unknown", z3_code="", runtime_ms=0.0)
             return []
 
         # Build the combined prompt (system + user as a single string for
@@ -352,9 +350,7 @@ class NL2Z3Extractor:
 
         z3_code = self._extract_code_block(llm_output)
         if not z3_code:
-            self.last_z3_result = Z3Result(
-                sat_status="unknown", z3_code="", runtime_ms=0.0
-            )
+            self.last_z3_result = Z3Result(sat_status="unknown", z3_code="", runtime_ms=0.0)
             return []
 
         z3_result = run_z3_code(z3_code, timeout_s=self._timeout_s)

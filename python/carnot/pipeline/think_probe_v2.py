@@ -56,11 +56,13 @@ from __future__ import annotations
 import concurrent.futures
 import json
 import logging
-import os
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 _log = logging.getLogger(__name__)
 
@@ -206,7 +208,7 @@ class ThinkProbeV2:
         self,
         budget_minutes: float = 60,
         checkpoint_interval: int = 10,
-        checkpoint_dir: Optional[Path] = None,
+        checkpoint_dir: Path | None = None,
     ) -> None:
         self.budget_minutes = budget_minutes
         self.checkpoint_interval = checkpoint_interval
@@ -295,9 +297,7 @@ class ThinkProbeV2:
             n_done = idx + 1
             if n_done % self.checkpoint_interval == 0:
                 self._checkpoint(results, step=n_done)
-                _log.info(
-                    "ThinkProbeV2: checkpoint written at step %d/%d", n_done, n_total
-                )
+                _log.info("ThinkProbeV2: checkpoint written at step %d/%d", n_done, n_total)
 
         n_completed = len(results)
         if n_completed == n_total:
@@ -402,4 +402,4 @@ def _utc_now() -> str:
     """Return current UTC time in ISO-8601 format."""
     import datetime
 
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")

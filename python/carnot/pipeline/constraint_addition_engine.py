@@ -201,7 +201,7 @@ class ConstraintAcceptingPipeline(Protocol):
     Spec: REQ-LEARN-040-4
     """
 
-    active_constraints: list["ConstraintTerm"]
+    active_constraints: list[ConstraintTerm]
 
 
 # ---------------------------------------------------------------------------
@@ -233,7 +233,7 @@ class ConstraintAdditionEngine:
     Spec: REQ-LEARN-040, REQ-LEARN-040-1
     """
 
-    def __init__(self, session_memory: "SessionMemory", min_count: int = 3) -> None:
+    def __init__(self, session_memory: SessionMemory, min_count: int = 3) -> None:
         self._session_memory = session_memory
         self.min_count = min_count
 
@@ -259,9 +259,7 @@ class ConstraintAdditionEngine:
 
         Spec: REQ-LEARN-040-2, SCENARIO-LEARN-080
         """
-        violations: dict[str, int] = getattr(
-            self._session_memory, "_violations_by_type", {}
-        )
+        violations: dict[str, int] = getattr(self._session_memory, "_violations_by_type", {})
         patterns = [
             ConstraintPattern(
                 violation_type=vtype,
@@ -274,7 +272,7 @@ class ConstraintAdditionEngine:
         patterns.sort(key=lambda p: p.count, reverse=True)
         return patterns
 
-    def generate_constraint(self, pattern: ConstraintPattern) -> "ConstraintTerm | None":
+    def generate_constraint(self, pattern: ConstraintPattern) -> ConstraintTerm | None:
         """Return a new ConstraintTerm for the given violation pattern, or None if unknown.
 
         **Why None for unknown types (not raise):**
@@ -331,9 +329,7 @@ class ConstraintAdditionEngine:
 
         Spec: REQ-LEARN-059
         """
-        violations: dict | None = getattr(
-            self._session_memory, "_violations_by_type", None
-        )
+        violations: dict | None = getattr(self._session_memory, "_violations_by_type", None)
         if violations is None:
             _log.warning(
                 "ConstraintAdditionEngine.add_from_violation: "
@@ -381,9 +377,7 @@ class ConstraintAdditionEngine:
             )
             return 0
 
-        existing_names: set[str] = {
-            c.name for c in pipeline.active_constraints
-        }
+        existing_names: set[str] = {c.name for c in pipeline.active_constraints}
         n_injected = 0
 
         for pattern in self.scan_for_patterns():

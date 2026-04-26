@@ -8,6 +8,7 @@ Coverage:
 
 Spec: REQ-SAFE-019, REQ-SAFE-020
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -29,6 +30,7 @@ from carnot.models.privacy_filter_kan_v2 import (
 # REQ-SAFE-019: Feature extraction correctness
 # ---------------------------------------------------------------------------
 
+
 class TestPrivacyFilterFeatureExtractor:
     """Tests for PrivacyFilterFeatureExtractor.
 
@@ -42,9 +44,7 @@ class TestPrivacyFilterFeatureExtractor:
         """
         extractor = PrivacyFilterFeatureExtractor()
         feat = extractor.extract("Hello, this is a simple test sentence.")
-        assert feat.shape == (N_FEATURES_V2,), (
-            f"Expected ({N_FEATURES_V2},) but got {feat.shape}"
-        )
+        assert feat.shape == (N_FEATURES_V2,), f"Expected ({N_FEATURES_V2},) but got {feat.shape}"
         assert feat.dtype == np.float32
 
     def test_extract_shape_on_pii_text(self):
@@ -94,6 +94,7 @@ class TestPrivacyFilterFeatureExtractor:
 # REQ-SAFE-019: Luhn algorithm correctness
 # ---------------------------------------------------------------------------
 
+
 class TestLuhnAlgorithm:
     """Tests for the Luhn credit card validation algorithm.
 
@@ -110,9 +111,9 @@ class TestLuhnAlgorithm:
         """
         # Classic Luhn-valid test cards (publicly documented test data, not real cards).
         valid_cards = [
-            "4111111111111111",   # Visa test card
-            "5500005555555559",   # Mastercard test card
-            "4012888888881881",   # Another Visa test card
+            "4111111111111111",  # Visa test card
+            "5500005555555559",  # Mastercard test card
+            "4012888888881881",  # Another Visa test card
         ]
         for card in valid_cards:
             assert luhn_valid(card), f"Expected {card} to be Luhn-valid"
@@ -124,9 +125,9 @@ class TestLuhnAlgorithm:
         would produce false positives on non-PII numeric text.
         """
         invalid_cards = [
-            "4111111111111112",   # Valid Visa prefix but wrong check digit (1 off)
-            "1234567890123456",   # Sequential digits — Luhn-invalid
-            "4111111111111113",   # Another wrong check digit
+            "4111111111111112",  # Valid Visa prefix but wrong check digit (1 off)
+            "1234567890123456",  # Sequential digits — Luhn-invalid
+            "4111111111111113",  # Another wrong check digit
         ]
         for card in invalid_cards:
             assert not luhn_valid(card), f"Expected {card} to be Luhn-invalid"
@@ -175,6 +176,7 @@ class TestLuhnAlgorithm:
 # REQ-SAFE-019: SSN pattern correctness
 # ---------------------------------------------------------------------------
 
+
 class TestSSNPattern:
     """Tests for the SSN regex pattern.
 
@@ -201,16 +203,17 @@ class TestSSNPattern:
         should not fire to avoid false positives on phone numbers or other codes.
         """
         invalid_formats = [
-            "12-34-5678",       # too few digits in first group
-            "1234-56-7890",     # too many digits in first group
-            "123-456-7890",     # 3-3-4 format (phone, not SSN)
-            "123456789",        # no separators
-            "123 45 6789",      # space separators
+            "12-34-5678",  # too few digits in first group
+            "1234-56-7890",  # too many digits in first group
+            "123-456-7890",  # 3-3-4 format (phone, not SSN)
+            "123456789",  # no separators
+            "123 45 6789",  # space separators
         ]
         for text in invalid_formats:
             # We test that the FULL string (as a standalone token) does NOT match.
             # Use word-boundary match to be precise.
             import re
+
             full_pattern = re.compile(r"^\d{3}-\d{2}-\d{4}$")
             assert not full_pattern.match(text), f"Did not expect full SSN match on {text!r}"
 
@@ -238,6 +241,7 @@ class TestSSNPattern:
 # REQ-SAFE-020: AUROC and min_tp computed correctly
 # ---------------------------------------------------------------------------
 
+
 class TestAUROCAndMinTP:
     """Tests for AUROC computation and gate metric correctness.
 
@@ -250,7 +254,7 @@ class TestAUROCAndMinTP:
         Spec: REQ-SAFE-020 — gate requires AUROC >= 0.80; perfect = 1.0.
         """
         scores = [10.0, 9.0, 8.0, 1.0, 0.5, 0.1]
-        labels = [1,    1,   1,   0,   0,   0  ]
+        labels = [1, 1, 1, 0, 0, 0]
         auroc = _compute_auroc(scores, labels)
         assert auroc == pytest.approx(1.0, abs=1e-6), f"Expected 1.0, got {auroc}"
 
@@ -261,7 +265,7 @@ class TestAUROCAndMinTP:
         """
         # Perfectly interleaved: no separation.
         scores = [1.0, 2.0, 3.0, 4.0]
-        labels = [1,   0,   1,   0  ]
+        labels = [1, 0, 1, 0]
         auroc = _compute_auroc(scores, labels)
         # Not necessarily 0.5 exactly, but should not be very high.
         assert auroc <= 0.8, f"Expected low AUROC for random labels, got {auroc}"
@@ -311,12 +315,13 @@ class TestAUROCAndMinTP:
 
         Spec: REQ-SAFE-020 — validates the gate boolean logic used in Exp 743.
         """
+
         # Simulate gate check.
         def check_gate(auroc: float, min_tp: int) -> bool:
             return auroc >= 0.80 and min_tp >= 1
 
-        assert check_gate(0.85, 1) is True,  "0.85 AUROC + 1 TP should pass"
-        assert check_gate(0.80, 1) is True,  "0.80 AUROC + 1 TP should pass"
+        assert check_gate(0.85, 1) is True, "0.85 AUROC + 1 TP should pass"
+        assert check_gate(0.80, 1) is True, "0.80 AUROC + 1 TP should pass"
         assert check_gate(0.79, 5) is False, "0.79 AUROC should fail"
         assert check_gate(0.85, 0) is False, "0 TP should fail even with high AUROC"
         assert check_gate(0.50, 0) is False, "Both failing should fail"
@@ -326,6 +331,7 @@ class TestAUROCAndMinTP:
 
         Spec: REQ-SAFE-020 — verdict strings must be well-defined and unambiguous.
         """
+
         def compute_verdict(auroc: float, min_tp: int) -> str:
             if auroc >= 0.85 and min_tp >= 1:
                 return "privacy_filter_v2_gate_passed_high"
@@ -345,6 +351,7 @@ class TestAUROCAndMinTP:
 # ---------------------------------------------------------------------------
 # REQ-SAFE-019: Model save/load round-trip
 # ---------------------------------------------------------------------------
+
 
 class TestModelSaveLoad:
     """Tests for PrivacyFilterKANv2 serialisation round-trip.
@@ -376,6 +383,7 @@ class TestModelSaveLoad:
         Spec: REQ-SAFE-019 — prevents v1 weights from being silently loaded as v2.
         """
         import json
+
         bad_payload = {"schema": "carnot.privacy_filter_kan.v1", "n_features": 16}
         path = tmp_path / "bad.json"
         path.write_text(json.dumps(bad_payload))

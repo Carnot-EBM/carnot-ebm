@@ -71,9 +71,7 @@ class TestBuildUserPrompt:
 
     def test_extra_context(self) -> None:
         """REQ-AUTO-003: extra context is included."""
-        prompt = _build_user_prompt(
-            _make_baselines(), extra_context="Focus on HMC sampling."
-        )
+        prompt = _build_user_prompt(_make_baselines(), extra_context="Focus on HMC sampling.")
         assert "Focus on HMC sampling" in prompt
 
     def test_empty_baselines(self) -> None:
@@ -239,9 +237,7 @@ def run(benchmark_data):
         mock_client.chat.completions.create.return_value = mock_response
 
         with patch("openai.OpenAI", return_value=mock_client):
-            hypotheses = generate_hypotheses_batch(
-                config, _make_baselines(), count=2
-            )
+            hypotheses = generate_hypotheses_batch(config, _make_baselines(), count=2)
             assert len(hypotheses) == 2
 
     def test_batch_handles_failures(self) -> None:
@@ -269,9 +265,7 @@ def run(benchmark_data):
         mock_client.chat.completions.create.side_effect = mock_create
 
         with patch("openai.OpenAI", return_value=mock_client):
-            hypotheses = generate_hypotheses_batch(
-                config, _make_baselines(), count=2
-            )
+            hypotheses = generate_hypotheses_batch(config, _make_baselines(), count=2)
             # First call fails, second succeeds
             assert len(hypotheses) == 1
 
@@ -289,13 +283,15 @@ class TestRunLoopWithGenerator:
         baselines = _make_baselines()
 
         def generator(bl, failures, iteration):
-            return [(
-                "better step size",
-                """
+            return [
+                (
+                    "better step size",
+                    """
 def run(benchmark_data):
     return {"double_well": {"final_energy": 0.01, "wall_clock_seconds": 1.0}}
 """,
-            )]
+                )
+            ]
 
         config = AutoresearchConfig(max_iterations=1)
         result = run_loop_with_generator(generator, baselines, {}, config)
@@ -306,13 +302,15 @@ def run(benchmark_data):
         baselines = _make_baselines()
 
         def generator(bl, failures, iteration):
-            return [(
-                "worse step size",
-                """
+            return [
+                (
+                    "worse step size",
+                    """
 def run(benchmark_data):
     return {"double_well": {"final_energy": 10.0, "wall_clock_seconds": 1.0}}
 """,
-            )]
+                )
+            ]
 
         config = AutoresearchConfig(max_iterations=1)
         result = run_loop_with_generator(generator, baselines, {}, config)
@@ -334,10 +332,12 @@ def run(benchmark_data):
         baselines = _make_baselines()
 
         def generator(bl, failures, iteration):
-            return [(
-                f"crash hypothesis {iteration}",
-                "def run(benchmark_data):\n    raise ValueError('boom')",
-            )]
+            return [
+                (
+                    f"crash hypothesis {iteration}",
+                    "def run(benchmark_data):\n    raise ValueError('boom')",
+                )
+            ]
 
         config = AutoresearchConfig(
             max_iterations=20,
@@ -403,16 +403,18 @@ def run(benchmark_data):
 
         def generator(bl, failures, iteration):
             # Improve one benchmark, regress the other -> REVIEW
-            return [(
-                "mixed results",
-                """
+            return [
+                (
+                    "mixed results",
+                    """
 def run(benchmark_data):
     return {
         "double_well": {"final_energy": 0.01, "wall_clock_seconds": 1.0},
         "rosenbrock": {"final_energy": 99.0, "wall_clock_seconds": 1.0},
     }
 """,
-            )]
+                )
+            ]
 
         config = AutoresearchConfig(max_iterations=1)
         result = run_loop_with_generator(generator, baselines, {}, config)
@@ -428,10 +430,7 @@ def run(benchmark_data):
             nonlocal call_count
             call_count += 1
             # Return many crash hypotheses in one batch
-            return [
-                (f"crash {i}", "def run(d):\n    raise ValueError('boom')")
-                for i in range(5)
-            ]
+            return [(f"crash {i}", "def run(d):\n    raise ValueError('boom')") for i in range(5)]
 
         config = AutoresearchConfig(
             max_iterations=20,
@@ -448,13 +447,15 @@ def run(benchmark_data):
         def generator(bl, failures, iteration):
             received_failures.append(list(failures))
             if iteration == 0:
-                return [(
-                    "bad idea",
-                    """
+                return [
+                    (
+                        "bad idea",
+                        """
 def run(benchmark_data):
     return {"double_well": {"final_energy": 99.0, "wall_clock_seconds": 1.0}}
 """,
-                )]
+                    )
+                ]
             return []
 
         config = AutoresearchConfig(max_iterations=5)

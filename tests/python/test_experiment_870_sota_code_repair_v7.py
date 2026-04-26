@@ -221,12 +221,7 @@ class TestCodeExtractorIntegration:
         from carnot.pipeline.extract import CodeExtractor
 
         extractor = CodeExtractor()
-        code_with_types = (
-            "```python\n"
-            "def multiply(x: int, y: int) -> int:\n"
-            "    return x * y\n"
-            "```"
-        )
+        code_with_types = "```python\ndef multiply(x: int, y: int) -> int:\n    return x * y\n```"
         results = extractor.extract(code_with_types, "code")
         # The extractor should find type annotation constraints.
         assert len(results) >= 1

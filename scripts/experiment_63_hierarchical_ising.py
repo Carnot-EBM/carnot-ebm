@@ -108,9 +108,7 @@ class HierarchicalBlock:
         # Map from global var index to local index within this block.
         self.global_to_local = {g: l for l, g in enumerate(var_indices)}
         # Dense intra-block couplings (initialized to zero, filled later).
-        self.intra_J = np.zeros(
-            (self.block_size, self.block_size), dtype=np.float32
-        )
+        self.intra_J = np.zeros((self.block_size, self.block_size), dtype=np.float32)
         self.intra_biases = np.zeros(self.block_size, dtype=np.float32)
         # Sparse inter-block edges: (local_idx, other_global_idx, weight).
         self.inter_edges: list[tuple[int, int, float]] = []
@@ -205,9 +203,7 @@ def hierarchical_encode(
                     block_j.inter_edges.append((lj, vi, weight))
 
     # Report decomposition statistics.
-    total_intra_params = sum(
-        b.block_size * (b.block_size - 1) // 2 for b in blocks
-    )
+    total_intra_params = sum(b.block_size * (b.block_size - 1) // 2 for b in blocks)
     total_inter_edges = sum(len(b.inter_edges) for b in blocks) // 2
     total_flat_params = n_vars * (n_vars - 1) // 2
     print(
@@ -386,9 +382,7 @@ def hierarchical_cd_train(
 
         # Positive-phase statistics (from data).
         pos_bias = np.mean(spins_data, axis=0)
-        pos_corr = np.mean(
-            np.einsum("bi,bj->bij", spins_data, spins_data), axis=0
-        )
+        pos_corr = np.mean(np.einsum("bi,bj->bij", spins_data, spins_data), axis=0)
 
         # Initialize intra_J with small random values (keep existing from
         # clause structure as a warm start).
@@ -399,23 +393,14 @@ def hierarchical_cd_train(
         for epoch in range(n_epochs_intra):
             # Negative phase: Gibbs sample within this block.
             # Start from random state each epoch (CD-k with fresh init).
-            model_spins = rng.choice(
-                [-1.0, 1.0], size=(min(n_samples, 500), bs)
-            ).astype(np.float32)
+            model_spins = rng.choice([-1.0, 1.0], size=(min(n_samples, 500), bs)).astype(np.float32)
             for _ in range(5):  # 5 Gibbs steps.
                 h = block.intra_biases + model_spins @ block.intra_J.T
                 probs = 1.0 / (1.0 + np.exp(-2.0 * beta * h))
-                model_spins = (
-                    2.0 * (rng.random(model_spins.shape) < probs).astype(
-                        np.float32
-                    )
-                    - 1.0
-                )
+                model_spins = 2.0 * (rng.random(model_spins.shape) < probs).astype(np.float32) - 1.0
 
             neg_bias = np.mean(model_spins, axis=0)
-            neg_corr = np.mean(
-                np.einsum("bi,bj->bij", model_spins, model_spins), axis=0
-            )
+            neg_corr = np.mean(np.einsum("bi,bj->bij", model_spins, model_spins), axis=0)
 
             # CD gradient.
             grad_J = -beta * (pos_corr - neg_corr)
@@ -429,17 +414,12 @@ def hierarchical_cd_train(
 
         if block.block_id % 5 == 0 or block.block_id == len(blocks) - 1:
             recon = float(np.mean((pos_bias - neg_bias) ** 2))
-            print(
-                f"      Block {block.block_id}: final recon={recon:.6f}"
-            )
+            print(f"      Block {block.block_id}: final recon={recon:.6f}")
 
     # =========================
     # Phase 2: Inter-block CD
     # =========================
-    print(
-        f"    Phase 2: Inter-block CD ({n_epochs_inter} epochs, "
-        f"L1={l1_lambda_inter})..."
-    )
+    print(f"    Phase 2: Inter-block CD ({n_epochs_inter} epochs, L1={l1_lambda_inter})...")
     # Map {0,1} -> {-1,+1} for correlation computation.
     spins_data = 2.0 * data - 1.0
 
@@ -455,9 +435,7 @@ def hierarchical_cd_train(
     # Precompute positive correlations for these edges.
     pos_corr_inter: dict[tuple[int, int], float] = {}
     for gi, gj in inter_edge_set:
-        pos_corr_inter[(gi, gj)] = float(
-            np.mean(spins_data[:, gi] * spins_data[:, gj])
-        )
+        pos_corr_inter[(gi, gj)] = float(np.mean(spins_data[:, gi] * spins_data[:, gj]))
 
     for epoch in range(n_epochs_inter):
         # Negative phase: sample from current hierarchical model.
@@ -475,9 +453,7 @@ def hierarchical_cd_train(
                     effective_bias[local_i] += weight * state[global_j]
                 h = effective_bias + block.intra_J @ block_spins
                 probs = 1.0 / (1.0 + np.exp(-2.0 * beta * h))
-                new_spins = (rng.random(block.block_size) < probs).astype(
-                    np.float32
-                )
+                new_spins = (rng.random(block.block_size) < probs).astype(np.float32)
                 for local_i, global_i in enumerate(block.var_indices):
                     state[global_i] = new_spins[local_i]
             neg_samples_list.append(state)
@@ -488,9 +464,7 @@ def hierarchical_cd_train(
         # Compute negative correlations for inter-block edges.
         neg_corr_inter: dict[tuple[int, int], float] = {}
         for gi, gj in inter_edge_set:
-            neg_corr_inter[(gi, gj)] = float(
-                np.mean(neg_spins[:, gi] * neg_spins[:, gj])
-            )
+            neg_corr_inter[(gi, gj)] = float(np.mean(neg_spins[:, gi] * neg_spins[:, gj]))
 
         # Update inter-block edge weights.
         for block in blocks:
@@ -508,11 +482,7 @@ def hierarchical_cd_train(
 
         if epoch % 10 == 0 or epoch == n_epochs_inter - 1:
             # Report average absolute inter-block weight.
-            all_weights = [
-                abs(w)
-                for block in blocks
-                for _, _, w in block.inter_edges
-            ]
+            all_weights = [abs(w) for block in blocks for _, _, w in block.inter_edges]
             mean_w = np.mean(all_weights) if all_weights else 0.0
             print(f"      Epoch {epoch}: mean |inter_weight|={mean_w:.4f}")
 
@@ -776,9 +746,7 @@ def random_baseline(
     n_clauses = len(clauses)
     sat_counts = []
     for _ in range(n_tries):
-        assignment = {
-            i + 1: bool(rng_base.choice([True, False])) for i in range(n_vars)
-        }
+        assignment = {i + 1: bool(rng_base.choice([True, False])) for i in range(n_vars)}
         sat, _ = check_assignment(clauses, assignment)
         sat_counts.append(sat)
 
@@ -786,10 +754,7 @@ def random_baseline(
     mean_pct = np.mean(sat_counts) / n_clauses * 100
     best_pct = best / n_clauses * 100
 
-    print(
-        f"    {'Random':20s}: mean={mean_pct:.1f}%, "
-        f"best={best}/{n_clauses} ({best_pct:.1f}%)"
-    )
+    print(f"    {'Random':20s}: mean={mean_pct:.1f}%, best={best}/{n_clauses} ({best_pct:.1f}%)")
 
     return {
         "best_sat": best,
@@ -922,9 +887,10 @@ def main() -> int:
 
         # Reconstruct flat model for comparison.
         biases_hier, J_hier = blocks_to_flat(blocks, n_vars)
-        hier_n_params = sum(
-            b.block_size * (b.block_size - 1) // 2 for b in blocks
-        ) + sum(len(b.inter_edges) for b in blocks) // 2
+        hier_n_params = (
+            sum(b.block_size * (b.block_size - 1) // 2 for b in blocks)
+            + sum(len(b.inter_edges) for b in blocks) // 2
+        )
 
         # --- Step 3: Flat sparse CD (Exp 61 style) ---
         print(f"\n  [3/6] Flat sparse CD (Exp 61 style, {n_epochs} epochs)...")
@@ -953,9 +919,7 @@ def main() -> int:
 
         # --- Step 5: Hand-coded Ising (oracle) ---
         biases_hc_vec, weights_hc_vec, _ = sat_to_ising(clauses, n_vars)
-        biases_hc, J_hc = sat_to_coupling_matrix(
-            biases_hc_vec, weights_hc_vec, n_vars
-        )
+        biases_hc, J_hc = sat_to_coupling_matrix(biases_hc_vec, weights_hc_vec, n_vars)
         biases_hc_np = np.array(biases_hc)
         J_hc_np = np.array(J_hc)
 
@@ -964,31 +928,46 @@ def main() -> int:
 
         # Hierarchical sampler (native two-level).
         res_hier_native = evaluate_hierarchical_sampler(
-            blocks, n_vars, clauses, n_eval_samples=200,
+            blocks,
+            n_vars,
+            clauses,
+            n_eval_samples=200,
             label="Hier (native)",
         )
 
         # Hierarchical couplings with flat sampler.
         res_hier_flat = evaluate_model(
-            biases_hier, J_hier, clauses, n_vars,
+            biases_hier,
+            J_hier,
+            clauses,
+            n_vars,
             label="Hier (flat eval)",
         )
 
         # Flat sparse.
         res_sparse = evaluate_model(
-            biases_sparse, J_sparse, clauses, n_vars,
+            biases_sparse,
+            J_sparse,
+            clauses,
+            n_vars,
             label="Flat sparse",
         )
 
         # Flat dense.
         res_dense = evaluate_model(
-            biases_dense, J_dense, clauses, n_vars,
+            biases_dense,
+            J_dense,
+            clauses,
+            n_vars,
             label="Flat dense",
         )
 
         # Hand-coded.
         res_hc = evaluate_model(
-            biases_hc_np, J_hc_np, clauses, n_vars,
+            biases_hc_np,
+            J_hc_np,
+            clauses,
+            n_vars,
             label="Hand-coded",
         )
 
@@ -1002,27 +981,29 @@ def main() -> int:
         sparse_mem_bytes = sparse_n_params * 4
         dense_mem_bytes = n_flat_params * 4
 
-        all_results.append({
-            "n_vars": n_vars,
-            "n_clauses": n_clauses,
-            "n_blocks": n_blocks,
-            "n_flat_params": n_flat_params,
-            "hier_n_params": hier_n_params,
-            "sparse_n_params": sparse_n_params,
-            "data_time": data_time,
-            "hier_time": hier_time,
-            "sparse_time": sparse_time,
-            "dense_time": dense_time,
-            "hier_mem_kb": hier_mem_bytes / 1024,
-            "sparse_mem_kb": sparse_mem_bytes / 1024,
-            "dense_mem_kb": dense_mem_bytes / 1024,
-            "hier_native": res_hier_native,
-            "hier_flat": res_hier_flat,
-            "sparse": res_sparse,
-            "dense": res_dense,
-            "handcoded": res_hc,
-            "random": res_random,
-        })
+        all_results.append(
+            {
+                "n_vars": n_vars,
+                "n_clauses": n_clauses,
+                "n_blocks": n_blocks,
+                "n_flat_params": n_flat_params,
+                "hier_n_params": hier_n_params,
+                "sparse_n_params": sparse_n_params,
+                "data_time": data_time,
+                "hier_time": hier_time,
+                "sparse_time": sparse_time,
+                "dense_time": dense_time,
+                "hier_mem_kb": hier_mem_bytes / 1024,
+                "sparse_mem_kb": sparse_mem_bytes / 1024,
+                "dense_mem_kb": dense_mem_bytes / 1024,
+                "hier_native": res_hier_native,
+                "hier_flat": res_hier_flat,
+                "sparse": res_sparse,
+                "dense": res_dense,
+                "handcoded": res_hc,
+                "random": res_random,
+            }
+        )
 
     # =====================================================================
     # Summary
@@ -1052,10 +1033,7 @@ def main() -> int:
         )
 
     print(f"\n  SCALING TABLE: Best % Clauses Satisfied")
-    print(
-        f"  {'Vars':>6s} {'Hier(N)':>9s} {'Hier(F)':>9s} {'Sparse':>9s} "
-        f"{'Dense':>9s} {'HC':>9s}"
-    )
+    print(f"  {'Vars':>6s} {'Hier(N)':>9s} {'Hier(F)':>9s} {'Sparse':>9s} {'Dense':>9s} {'HC':>9s}")
     print(f"  {'-' * 52}")
     for r in all_results:
         print(
@@ -1068,9 +1046,7 @@ def main() -> int:
         )
 
     print(f"\n  SCALING TABLE: Training Time (seconds)")
-    print(
-        f"  {'Vars':>6s} {'Data':>8s} {'Hier':>8s} {'Sparse':>8s} {'Dense':>8s}"
-    )
+    print(f"  {'Vars':>6s} {'Data':>8s} {'Hier':>8s} {'Sparse':>8s} {'Dense':>8s}")
     print(f"  {'-' * 38}")
     for r in all_results:
         print(
@@ -1082,9 +1058,7 @@ def main() -> int:
         )
 
     print(f"\n  SCALING TABLE: Memory (Parameter Count + KB)")
-    print(
-        f"  {'Vars':>6s} {'Hier':>12s} {'Sparse':>12s} {'Dense':>12s}"
-    )
+    print(f"  {'Vars':>6s} {'Hier':>12s} {'Sparse':>12s} {'Dense':>12s}")
     print(f"  {'-' * 44}")
     for r in all_results:
         print(
@@ -1100,17 +1074,9 @@ def main() -> int:
 
         # Hierarchical vs flat sparse.
         for r in all_results:
-            hier_over_sparse = (
-                r["hier_native"]["mean_pct"] - r["sparse"]["mean_pct"]
-            )
-            hier_over_random = (
-                r["hier_native"]["mean_pct"] - r["random"]["mean_pct"]
-            )
-            speedup = (
-                r["sparse_time"] / r["hier_time"]
-                if r["hier_time"] > 0
-                else 0
-            )
+            hier_over_sparse = r["hier_native"]["mean_pct"] - r["sparse"]["mean_pct"]
+            hier_over_random = r["hier_native"]["mean_pct"] - r["random"]["mean_pct"]
+            speedup = r["sparse_time"] / r["hier_time"] if r["hier_time"] > 0 else 0
             print(
                 f"    {r['n_vars']} vars: "
                 f"hier vs sparse: {hier_over_sparse:+.1f}%, "
@@ -1119,14 +1085,12 @@ def main() -> int:
             )
 
         # Overall verdict.
-        mean_hier_over_sparse = np.mean([
-            r["hier_native"]["mean_pct"] - r["sparse"]["mean_pct"]
-            for r in all_results
-        ])
-        mean_hier_over_random = np.mean([
-            r["hier_native"]["mean_pct"] - r["random"]["mean_pct"]
-            for r in all_results
-        ])
+        mean_hier_over_sparse = np.mean(
+            [r["hier_native"]["mean_pct"] - r["sparse"]["mean_pct"] for r in all_results]
+        )
+        mean_hier_over_random = np.mean(
+            [r["hier_native"]["mean_pct"] - r["random"]["mean_pct"] for r in all_results]
+        )
 
         if mean_hier_over_sparse > 2:
             print(
@@ -1162,26 +1126,16 @@ def main() -> int:
 
         # Scaling trend.
         hier_advantages = [
-            r["hier_native"]["mean_pct"] - r["sparse"]["mean_pct"]
-            for r in all_results
+            r["hier_native"]["mean_pct"] - r["sparse"]["mean_pct"] for r in all_results
         ]
         if len(hier_advantages) >= 2:
             trend = hier_advantages[-1] - hier_advantages[0]
             if trend > 2:
-                print(
-                    f"  SCALING: Hierarchical advantage GROWS with size "
-                    f"({trend:+.1f}%)"
-                )
+                print(f"  SCALING: Hierarchical advantage GROWS with size ({trend:+.1f}%)")
             elif trend < -2:
-                print(
-                    f"  SCALING: Hierarchical advantage SHRINKS with size "
-                    f"({trend:+.1f}%)"
-                )
+                print(f"  SCALING: Hierarchical advantage SHRINKS with size ({trend:+.1f}%)")
             else:
-                print(
-                    f"  SCALING: Hierarchical advantage stable "
-                    f"({trend:+.1f}%)"
-                )
+                print(f"  SCALING: Hierarchical advantage stable ({trend:+.1f}%)")
 
     print(sep)
     return 0

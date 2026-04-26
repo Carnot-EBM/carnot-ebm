@@ -44,10 +44,8 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
-import textwrap
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Protocol
-
 
 # ---------------------------------------------------------------------------
 # Protocols — let callers inject any LLM runner or energy scorer
@@ -342,10 +340,7 @@ class IterativeSelfRepair:
         test_block = "\n".join(test_cases)
         full_script = f"{clean_code}\n\n# --- test cases ---\n{test_block}\n"
 
-        use_gvisor = (
-            self.sandbox
-            and os.environ.get("CARNOT_USE_SANDBOX", "0") == "1"
-        )
+        use_gvisor = self.sandbox and os.environ.get("CARNOT_USE_SANDBOX", "0") == "1"
 
         if use_gvisor:
             return self._exec_gvisor(full_script)
@@ -412,11 +407,11 @@ class IterativeSelfRepair:
             if isinstance(exc, subprocess.TimeoutExpired):
                 return ExecResult(
                     passed=False,
-                    error=f"TimeoutError: gVisor execution exceeded timeout",
+                    error="TimeoutError: gVisor execution exceeded timeout",
                     timed_out=True,
                 )
             return self._exec_subprocess(script)
-        except Exception as exc:
+        except Exception:
             return self._exec_subprocess(script)
 
         if result.returncode == 0:
@@ -450,7 +445,7 @@ def _extract_code(response: str) -> str:
     # Try ```python ... ``` first, then ``` ... ```.
     for fence in ("```python", "```"):
         if stripped.startswith(fence):
-            rest = stripped[len(fence):]
+            rest = stripped[len(fence) :]
             end_idx = rest.rfind("```")
             if end_idx != -1:
                 return rest[:end_idx].strip()
