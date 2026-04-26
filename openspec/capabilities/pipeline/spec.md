@@ -1682,3 +1682,44 @@ each used to run `benchmark()`,
      sequential throughput by more than 5%.
 
 **Spec traces:** REQ-PERF-004, SCENARIO-PERF-004, Exp 913
+
+
+### REQ-PIPE-025: DraftConditionedVerifier (Tier 2.8) Wired into ThreeTierPipeline
+
+`ThreeTierPipeline.wire_tier_28(verifier)` MUST attach a `DraftConditionedVerifier`
+instance so that `verify()` calls `verifier.condition_and_verify(question, response)`
+for every response that reaches Tier 3 (Ising).  The advisory result MUST be stored
+in `self._last_tier28_advisory`.  When `draft_conditioned_verifier` is None, the
+behaviour MUST be identical to the pre-Tier-2.8 pipeline (ADDITIVE, no regression).
+
+**Rationale:** Exp 912 confirmed DraftConditionedVerifier is viable standalone
+(AUC 0.42 → 0.48, signed_energy_improvement=0.011).  Exp 938 wires it into the
+production pipeline so the improvement is captured end-to-end.
+
+**Acceptance criteria:**
+- `pipeline.wire_tier_28(verifier)` MUST NOT raise.
+- After wiring, calling `pipeline.verify(response, question=q)` MUST invoke
+  `verifier.condition_and_verify(q, response)`.
+- `pipeline._last_tier28_advisory` MUST be populated after each `verify()` call
+  that reaches Tier 3.
+- When `wire_tier_28` is not called, `pipeline._last_tier28_advisory` MUST remain None
+  (or be unset) after each `verify()` call.
+- tier28_activation_count >= 3 in a 20-question run is the acceptance gate (Exp 938).
+
+**Spec traces:** REQ-PIPE-025, REQ-TIER2-010, Exp 912, Exp 938
+
+
+### SCENARIO-PIPE-010: DraftConditioned Tier 2.8 Activates on Causal Uncertainty
+
+**Given** a ThreeTierPipeline with stub EORM (energy=0.9, above eorm_threshold=0.5)
+and a DraftConditionedVerifier wired via wire_tier_28(),
+**When** 20 arithmetic questions are run through the full pipeline end-to-end,
+**Then**
+  1. `tier28_activation_count >= 3` — Tier 2.8 fires for at least 3 questions.
+  2. `pipeline._last_tier28_advisory` is a dict with keys energy, draft_used,
+     n_constraints, draft_text, constraints after each verify() call.
+  3. `honest_verdict == "tier28_wired"` if both activation and energy delta conditions hold.
+  4. `honest_verdict == "tier28_wired_no_activation"` if Tier 2.8 is wired but never fires.
+  5. `honest_verdict == "tier28_wiring_failed"` if wire_tier_28() raises.
+
+**Spec traces:** REQ-PIPE-025, SCENARIO-PIPE-010, Exp 938

@@ -6598,3 +6598,22 @@ logs/conductor.log     | 18 ++++++++++++++++++
 2026-04-26 11:58:42,716 [conductor] RESEARCH STEP: Exp 938: DraftConditioned Tier 2.8 Pipeline Integration — Wire into ThreeTierPipeline (CPU)
 2026-04-26 11:58:42,716 [conductor] ============================================================
 2026-04-26 11:58:43,332 [conductor] Committing 3 dirty files as checkpoint (preserving work)
+2026-04-26 11:58:43,398 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 11:58:43,398 [conductor] Running test suite (smart subset)...
+2026-04-26 11:58:49,075 [conductor] Pre-check: 81 passed, 3 warnings in 2.95s
+2026-04-26 11:58:49,176 [conductor] Injected 36 symbol signatures from 3 files (AST outlines)
+2026-04-26 11:58:49,176 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Deliverable is valid. All 24 tests pass. Summary:
+
+- **`results/experiment_938_draft_conditioned_tier28_integration.json`** — written with `honest_verdict: "tier28_wired"`, `tier28_activation_count: 20/20`, `end_to_end_auc_with_tier28: 1.0`
+- **`scripts/experiment_938_draft_conditioned_tier28_integration.py`** — CPU-only experiment using `ThreeTierPipeline.wire_tier_28(DraftConditionedVerifier(...))`, 20 arithmetic questions, measures activation count, energy delta, and AUC
+- **`tests/python/test_experiment_938_draft_conditioned_tier28_integration.py`** — 24 tests covering `wire_tier_28`, advisory dict contract, all helper stubs, and activation rate gate
+- **`openspec/capabilities/pipeline/spec.md`** — added `REQ-PIPE-025` and `SCENARIO-PIPE-010`
+2026-04-26 12:03:55,212 [conductor] Claude Code completed (exit 0)
+2026-04-26 12:03:55,226 [conductor] Changes:
+logs/conductor.log                     | 12 ++++++++++
+ openspec/capabilities/pipeline/spec.md | 41 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
+2026-04-26 12:03:55,259 [conductor] DOGFOOD: Verification complete (total: 602 checks, 57 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 12:03:55,259 [conductor] Running test suite (smart subset)...
+2026-04-26 12:04:00,967 [conductor] Post-check: 81 passed, 3 warnings in 2.91s
