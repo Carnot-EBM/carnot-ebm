@@ -16045,3 +16045,37 @@ Positioned between Tier 2.7 (CausalReasoningVerifier) and Tier 3 (Ising).
 **And** condition_and_verify returns a dict with all four required keys
 
 **Spec traces:** REQ-TIER2-010, Exp 900
+
+
+### REQ-VERIFY-148: RPRMStepReward Reasoning-Driven Step Verification (Exp 924)
+
+Tier 2.9 step-level process reward model based on arXiv 2503.21295 (R-PRM).
+
+- REQ-VERIFY-148-1: RPRMStepReward SHALL accept an optional llm_runner callable
+  and an n_reasoning_tokens int; when llm_runner is None the class operates in
+  heuristic mode (CI-safe, no GPU required).
+- REQ-VERIFY-148-2: score_step_with_reasoning(step, context) SHALL return a
+  StepReasoningResult with step_text, reasoning, step_score in [0,1], and
+  reasoning_mode in {"heuristic", "llm"}.
+- REQ-VERIFY-148-3: In heuristic mode, a step containing "= 0" (len>20),
+  more than two equals signs, or a division-by-zero pattern SHALL receive
+  step_score=0.7; all other steps SHALL receive step_score=0.1.
+- REQ-VERIFY-148-4: In llm mode, the reasoning prompt SHALL end with
+  "VERDICT: [correct|suspicious|wrong]" and score SHALL be 0.9/0.5/0.1 for
+  wrong/suspicious/correct respectively.
+- REQ-VERIFY-148-5: verify_response(question, response) SHALL return an
+  RPRMResult with overall_violation_prob = max(step_score) and repair_hints
+  containing reasoning strings for all flagged steps (score > 0.5).
+- REQ-VERIFY-148-6: _split_steps SHALL discard fragments shorter than 10
+  characters and split on sentence boundaries (period or newline).
+
+### SCENARIO-VERIFY-148: Step Reasoning Identifies Violations with Explanation for Repair
+
+**Given** an RPRMStepReward in heuristic mode (no LLM)
+**When** verify_response is called on a GSM8K response containing a suspicious step
+**Then** the suspicious step SHALL receive step_score > 0.5
+**And** repair_hints SHALL be non-empty for responses with at least one flagged step
+**And** overall_violation_prob SHALL equal the max step_score across all steps
+**And** n_flagged SHALL count exactly the steps with step_score > 0.5
+
+**Spec traces:** REQ-VERIFY-148, Exp 924
