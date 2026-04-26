@@ -1,0 +1,61 @@
+{
+  "experiment": 899,
+  "title": "DRIFTProbe \u2014 Hidden-State Representational Drift Tier 0i",
+  "run_date": "20260426",
+  "started_at": "2026-04-26T04:38:54Z",
+  "finished_at": "2026-04-26T04:39:27Z",
+  "duration_s": 32.128,
+  "status": "success",
+  "probe_auc": 0.5,
+  "ood_auc": 0.5,
+  "probe_layers": [
+    4,
+    8,
+    12,
+    16
+  ],
+  "drift_signature_shape": [
+    3
+  ],
+  "linear_probe_coef": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ]
+  ],
+  "inference_mode": "cpu_live",
+  "train_n": 50,
+  "eval_n": 10,
+  "ood_n": 20,
+  "model_name": "Qwen/Qwen3.5-0.8B",
+  "model_loaded": true,
+  "honest_verdict": "drift_probe_not_viable",
+  "label_counts_train": {
+    "0": 17,
+    "1": 33
+  },
+  "schema": [
+    "drift_signature_shape",
+    "duration_s",
+    "eval_n",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "inference_mode",
+    "label_counts_train",
+    "linear_probe_coef",
+    "model_loaded",
+    "model_name",
+    "ood_auc",
+    "ood_n",
+    "probe_auc",
+    "probe_layers",
+    "run_date",
+    "started_at",
+    "status",
+    "title",
+    "train_n"
+  ],
+  "invariant_violations": []
+}
