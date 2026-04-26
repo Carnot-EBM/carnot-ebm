@@ -35,6 +35,46 @@ Not content itself, but signals to prioritise what to read next.
 
 ## 2026-04-26 arxiv Scan (Milestone 2026.04.72 Planning)
 
+### The Topological Trouble With Transformers
+- **Paper:** arXiv 2604.17121 (Mozer, Siddiqui, Liu — April 2026)
+- **What:** Argues that pure-feedforward transformers cannot reliably track dynamic state. As
+  new inputs arrive, the evolving latent representation is pushed deeper into the layer
+  stack — by the time a downstream consumer queries a shallow layer the relevant state has
+  moved past it. The fix the authors prescribe is to shift to recurrent / continuous-thought
+  architectures with implicit activation dynamics rather than explicit thought traces, and
+  they offer a taxonomy of recurrent transformers along two axes (recurrence axis: depth vs
+  step; input-to-recurrence ratio).
+- **Relevance to Carnot — direct implications for live experiment lines:**
+  - **Explains DRIFTProbe's repeated failure** (.69 not-viable → .70 marginal → .72 ensemble
+    no-improvement). Carnot's existing DRIFTProbe attempts read state from a single hidden
+    layer. Mozer's prediction is exactly that this can't work — the state isn't localized.
+    A *depth-recurrent* probe that pools across layers (or attends over the layer stack)
+    is the architecturally-aligned next attempt.
+  - **Explains the math-IterativeSelfRepair zero-improvement** (Exp 930). Code repair
+    succeeded (+72 pp HumanEval) because execution traceback is an *external* state-feedback
+    signal that re-enters the model at the input layer. Math repair has no such external
+    signal — each retry's diagnostic state is lost into deep layers. The +0 pp is not a
+    bug, it's a topological prediction. The architecturally-aligned fix is an *external
+    scratchpad* (re-feed prior-attempt errors as input text), not internal recurrence.
+  - **Legitimizes Phase 3 (EBM/EBT foundation model).** Boltzmann/Gibbs/Ising sampler tiers
+    are already recurrent — each MCMC step is a recurrence on the latent state. JEPA's
+    iterative-encoding pattern likewise. Carnot's "continuous-latent-space, non-autoregressive,
+    self-correcting" endgame sits exactly where Mozer prescribes.
+  - **Supports KAN over MLP for Tier 4.** Exp 936's `real_data_improves_over_synthetic`
+    shows KAN's spline representation is more robust than feedforward MLP. KAN's local
+    spline structure doesn't have transformer's "push state deeper" topology.
+- **Limitations the authors flag:** The taxonomy is theoretical; no concrete benchmarks or
+  numerical comparisons in the abstract. Their characterisation of current solutions
+  (dynamic depth, explicit thinking) as "computationally and memory inefficient" is
+  qualitative.
+- **Concrete experiments to consider for .73:**
+  - **DRIFTProbe v3 — depth-recurrent**: read state from all layers via attention pooling
+    (or a small RNN over the layer dimension), not single linear probe.
+  - **MathIterativeSelfRepair v2 — external scratchpad**: feed prior-attempt error text
+    back into the prompt for the next attempt, mirroring the code-repair traceback path.
+- **When to incorporate:** Milestone 2026.04.73 — Phase 1 (probe restructure) and Phase 2
+  (math-repair scratchpad). Required reading for any new probe / repair experiment.
+
 ### Symbolic-KAN: Discrete Symbolic Structure for KAN Interpretability
 - **Paper:** arXiv 2603.23854 (April 2026)
 - **What:** Augments KAN splines with discrete symbolic node labels (ADD, MUL, CMP, EQ) drawn from
