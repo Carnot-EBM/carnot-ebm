@@ -4250,3 +4250,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-25: Exp 884: VJEPA v2 Cascade Deploy — Replace Tier 2 JEPA (CPU, GATED on 883 ood_auc > 0.60) (✅ Complete) — honest_verdict=deployed_retro_closed; results/experiment_884_vjepa_cascade_deploy.json
 - 2026-04-25: Exp 885: SpectralAttentionProbe — Tier 0h Advisory (arXiv 2502.17598) (CPU) (✅ Complete) — honest_verdict=tier_0h_viable; results/experiment_885_spectral_attention_probe.json
 - 2026-04-25: Exp 886: ConstrainedDecodingPreFilter — AST-Guided Token Masking for Code (arXiv 2508.15866) (CPU) (⚠️ Research Finding) — honest_verdict=no_fp_reduction; results/experiment_886_constrained_decoding_prefilter.json
+- 2026-04-26: Exp 887: JEPA OOD Final Surgery — VJEPA Encoder Pretraining (RETRO-JEPA-OOD, FINAL ATTEMPT) (CPU) (⚠️ Research Finding) — honest_verdict=jepa_discriminative_retired; ood_auc=0.56; results/experiment_887_jepa_ood_final_surgery.json
