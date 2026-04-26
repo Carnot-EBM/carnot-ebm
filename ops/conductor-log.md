@@ -2794,3 +2794,4 @@ python/ |
 | 2026-04-25 23:26 UTC | Exp 885: SpectralAttentionProbe — Tier 0h Advisory | OK | 145 passed, 3 warnings in 3.36s |
 | 2026-04-25 23:46 UTC | Exp 886: ConstrainedDecodingPreFilter — AST-Guided | OK | 81 passed, 3 warnings in 2.97s |
 | 2026-04-26 00:00 UTC | Exp 887: JEPA OOD Final Surgery — VJEPA Encoder Pr | OK | 81 passed, 3 warnings in 2.84s |
+| 2026-04-26 00:16 UTC | Exp 888: FR-11 Tier 3 Relay — VJEPA-Guided Constra | OK | 81 passed, 3 warnings in 2.87s |
