@@ -33,14 +33,13 @@ import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
 
-from carnot.models.kan import BSpline, BSplineParams, KANConfig, KANEnergyFunction, KANModel
-
+from carnot.models.kan import BSpline, BSplineParams, KANModel
 
 # Density thresholds for restructuring decisions.
 _HIGH_DENSITY_THRESHOLD = 0.30  # top-2 bins fraction that triggers grid doubling
-_LOW_DENSITY_THRESHOLD = 0.60   # bottom-2 bins fraction that triggers grid halving
-_MIN_KNOTS = 3                  # never halve below this (BSpline requires >= 2)
-_MAX_KNOTS = 64                 # practical upper bound
+_LOW_DENSITY_THRESHOLD = 0.60  # bottom-2 bins fraction that triggers grid halving
+_MIN_KNOTS = 3  # never halve below this (BSpline requires >= 2)
+_MAX_KNOTS = 64  # practical upper bound
 
 
 def _resize_control_points(old_cp: np.ndarray, new_n_params: int) -> np.ndarray:
@@ -164,7 +163,9 @@ class KANAdaptiveStructure:
         # Restructure edge splines
         for (i, j), old_spline in old_ef.edge_splines.items():
             spline_id = f"edge_{i}_{j}"
-            info = analysis.get(spline_id, {"density": "neutral", "knot_count": old_spline.num_knots})
+            info = analysis.get(
+                spline_id, {"density": "neutral", "knot_count": old_spline.num_knots}
+            )
             new_num_knots = _new_knot_count(old_spline.num_knots, info["density"])
             new_n_params = new_num_knots + old_spline.degree
             old_cp = np.array(old_spline.params.control_points)
@@ -176,7 +177,9 @@ class KANAdaptiveStructure:
         # Restructure bias splines
         for idx, old_spline in enumerate(old_ef.bias_splines):
             spline_id = f"bias_{idx}"
-            info = analysis.get(spline_id, {"density": "neutral", "knot_count": old_spline.num_knots})
+            info = analysis.get(
+                spline_id, {"density": "neutral", "knot_count": old_spline.num_knots}
+            )
             new_num_knots = _new_knot_count(old_spline.num_knots, info["density"])
             new_n_params = new_num_knots + old_spline.degree
             old_cp = np.array(old_spline.params.control_points)
@@ -209,6 +212,7 @@ class KANAdaptiveStructure:
             Dict with keys: energy_loss_before, energy_loss_after, delta,
             knot_count_before, knot_count_after, knot_count_change_pct.
         """
+
         def _mean_energy(kan: KANModel) -> float:
             energies = []
             for item in eval_pairs:

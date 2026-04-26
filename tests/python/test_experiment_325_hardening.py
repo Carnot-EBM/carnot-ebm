@@ -4,6 +4,7 @@ Traces to:
   REQ-INFRA-001  — conductor timeout wrapper (SCENARIO-INFRA-001)
   REQ-INFRA-002  — test-first stub generation (SCENARIO-INFRA-002, SCENARIO-INFRA-003)
 """
+
 from __future__ import annotations
 
 import ast

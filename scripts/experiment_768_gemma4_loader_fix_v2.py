@@ -68,54 +68,156 @@ THRESHOLDS = [0.10, 0.20, 0.30, 0.40, 0.50]
 
 # 50 GSM8K-style questions, seed=42 (distinct from Exp 760 seed=0 / Exp 742 seed=999).
 _QUESTIONS: list[dict[str, Any]] = [
-    {"question": "A bookstore has 200 books. It sells 45 books on Monday and 30 on Tuesday. How many remain?", "answer": 125},
-    {"question": "Lisa has 8 packs of stickers with 12 stickers each. She gives away 20. How many remain?", "answer": 76},
-    {"question": "A bus travels at 50 km/h for 3 hours. How many kilometers does it travel?", "answer": 150},
-    {"question": "There are 5 rows of seats with 8 seats each. 17 seats are taken. How many are free?", "answer": 23},
-    {"question": "Mike earns $11 per hour and works 40 hours this week. How much does he earn?", "answer": 440},
-    {"question": "A tank is 3/4 full with 60 liters. What is the tank's total capacity?", "answer": 80},
-    {"question": "A baker makes 48 muffins and packages them in boxes of 6. How many boxes does he need?", "answer": 8},
-    {"question": "Sara has $85 and buys 3 items at $12 each. How much money remains?", "answer": 49},
-    {"question": "A rectangle has perimeter 28 cm and width 5 cm. What is its length?", "answer": 9},
-    {"question": "In a class of 32 students, 3/8 are girls. How many boys are there?", "answer": 20},
-    {"question": "A cyclist rides 15 km in the morning and 22 km in the afternoon. Total distance?", "answer": 37},
+    {
+        "question": "A bookstore has 200 books. It sells 45 books on Monday and 30 on Tuesday. How many remain?",
+        "answer": 125,
+    },
+    {
+        "question": "Lisa has 8 packs of stickers with 12 stickers each. She gives away 20. How many remain?",
+        "answer": 76,
+    },
+    {
+        "question": "A bus travels at 50 km/h for 3 hours. How many kilometers does it travel?",
+        "answer": 150,
+    },
+    {
+        "question": "There are 5 rows of seats with 8 seats each. 17 seats are taken. How many are free?",
+        "answer": 23,
+    },
+    {
+        "question": "Mike earns $11 per hour and works 40 hours this week. How much does he earn?",
+        "answer": 440,
+    },
+    {
+        "question": "A tank is 3/4 full with 60 liters. What is the tank's total capacity?",
+        "answer": 80,
+    },
+    {
+        "question": "A baker makes 48 muffins and packages them in boxes of 6. How many boxes does he need?",
+        "answer": 8,
+    },
+    {
+        "question": "Sara has $85 and buys 3 items at $12 each. How much money remains?",
+        "answer": 49,
+    },
+    {
+        "question": "A rectangle has perimeter 28 cm and width 5 cm. What is its length?",
+        "answer": 9,
+    },
+    {
+        "question": "In a class of 32 students, 3/8 are girls. How many boys are there?",
+        "answer": 20,
+    },
+    {
+        "question": "A cyclist rides 15 km in the morning and 22 km in the afternoon. Total distance?",
+        "answer": 37,
+    },
     {"question": "There are 144 eggs in 12 cartons. How many eggs per carton?", "answer": 12},
-    {"question": "Tom has 3 times as many marbles as Jerry. Jerry has 14. How many does Tom have?", "answer": 42},
+    {
+        "question": "Tom has 3 times as many marbles as Jerry. Jerry has 14. How many does Tom have?",
+        "answer": 42,
+    },
     {"question": "A shop sells 240 items in 6 days equally. How many items per day?", "answer": 40},
-    {"question": "A tower is 120 m tall. A building is 1/3 of that height. How tall is the building?", "answer": 40},
+    {
+        "question": "A tower is 120 m tall. A building is 1/3 of that height. How tall is the building?",
+        "answer": 40,
+    },
     {"question": "Julia saves $25 each month. How much does she save in 8 months?", "answer": 200},
-    {"question": "A box has 5 layers of 9 apples each. 18 apples are removed. How many remain?", "answer": 27},
-    {"question": "A pool is filled at 15 liters/minute. How many liters after 12 minutes?", "answer": 180},
+    {
+        "question": "A box has 5 layers of 9 apples each. 18 apples are removed. How many remain?",
+        "answer": 27,
+    },
+    {
+        "question": "A pool is filled at 15 liters/minute. How many liters after 12 minutes?",
+        "answer": 180,
+    },
     {"question": "There are 7 teams with 11 players each. How many players total?", "answer": 77},
-    {"question": "A shirt costs $18. A discount of 10% is applied. What is the sale price?", "answer": 16.2},
-    {"question": "Pedro walks 4 km on Monday, 6 km on Wednesday, and 5 km on Friday. Total?", "answer": 15},
+    {
+        "question": "A shirt costs $18. A discount of 10% is applied. What is the sale price?",
+        "answer": 16.2,
+    },
+    {
+        "question": "Pedro walks 4 km on Monday, 6 km on Wednesday, and 5 km on Friday. Total?",
+        "answer": 15,
+    },
     {"question": "A container holds 5 liters. How many 250 ml servings can it fill?", "answer": 20},
-    {"question": "Anna bought 4 books at $9 each and paid with $50. How much change?", "answer": 14},
+    {
+        "question": "Anna bought 4 books at $9 each and paid with $50. How much change?",
+        "answer": 14,
+    },
     {"question": "A train travels 90 km/h. How far does it go in 2.5 hours?", "answer": 225},
     {"question": "A field is 25 m wide and 40 m long. What is its area?", "answer": 1000},
-    {"question": "Jack has 96 cards and divides them equally among 8 friends. Cards per friend?", "answer": 12},
-    {"question": "A factory produces 350 units per day for 5 days. How many total units?", "answer": 1750},
-    {"question": "A pizza is cut into 8 slices. 3 slices are eaten. What fraction remains?", "answer": 0.625},
+    {
+        "question": "Jack has 96 cards and divides them equally among 8 friends. Cards per friend?",
+        "answer": 12,
+    },
+    {
+        "question": "A factory produces 350 units per day for 5 days. How many total units?",
+        "answer": 1750,
+    },
+    {
+        "question": "A pizza is cut into 8 slices. 3 slices are eaten. What fraction remains?",
+        "answer": 0.625,
+    },
     {"question": "Tim reads 40 pages per day. How many days to read a 280-page book?", "answer": 7},
     {"question": "A room is 6 m long, 4 m wide, and 3 m tall. What is the volume?", "answer": 72},
     {"question": "Sarah has $120 and spends 25% on food. How much does she spend?", "answer": 30},
-    {"question": "There are 9 bags with 15 candies each. 27 candies are eaten. How many remain?", "answer": 108},
-    {"question": "A car travels 300 km using 25 liters of fuel. Fuel efficiency in km/liter?", "answer": 12},
-    {"question": "A rope is 45 m long. It is cut into pieces of 5 m each. How many pieces?", "answer": 9},
-    {"question": "Nina scores 88, 92, and 76 on three tests. What is her average score?", "answer": 85.33},
-    {"question": "A store buys an item for $40 and sells it for $60. What is the profit?", "answer": 20},
+    {
+        "question": "There are 9 bags with 15 candies each. 27 candies are eaten. How many remain?",
+        "answer": 108,
+    },
+    {
+        "question": "A car travels 300 km using 25 liters of fuel. Fuel efficiency in km/liter?",
+        "answer": 12,
+    },
+    {
+        "question": "A rope is 45 m long. It is cut into pieces of 5 m each. How many pieces?",
+        "answer": 9,
+    },
+    {
+        "question": "Nina scores 88, 92, and 76 on three tests. What is her average score?",
+        "answer": 85.33,
+    },
+    {
+        "question": "A store buys an item for $40 and sells it for $60. What is the profit?",
+        "answer": 20,
+    },
     {"question": "A swimming pool is 50 m long and 25 m wide. What is its area?", "answer": 1250},
     {"question": "Ben has 5 dozen pencils and gives 18 away. How many remain?", "answer": 42},
     {"question": "A wheel makes 120 rotations per minute. How many in 3 minutes?", "answer": 360},
     {"question": "A bag weighs 2.5 kg. 10 such bags are shipped. Total weight?", "answer": 25},
-    {"question": "Kim has $200 and saves 15% each month. How much does she save in one month?", "answer": 30},
-    {"question": "A garden has 6 rows of 14 plants each. 20 plants die. How many remain?", "answer": 64},
-    {"question": "A shelf holds 8 books. There are 12 shelves. How many books total?", "answer": 96},
-    {"question": "A bucket is filled at 2 liters/minute. How full after 35 minutes if capacity is 100 L?", "answer": 70},
-    {"question": "Dan earns $15/hour. He works 6 hours on Saturday and 4 on Sunday. Weekly weekend pay?", "answer": 150},
-    {"question": "A ribbon is 3 m long. It is cut into 12 equal pieces. Length of each piece in cm?", "answer": 25},
-    {"question": "A store has 500 items. It receives 150 more and sells 200. How many remain?", "answer": 450},
-    {"question": "Emma typed 1200 words in 30 minutes. What is her typing speed in words per minute?", "answer": 40},
+    {
+        "question": "Kim has $200 and saves 15% each month. How much does she save in one month?",
+        "answer": 30,
+    },
+    {
+        "question": "A garden has 6 rows of 14 plants each. 20 plants die. How many remain?",
+        "answer": 64,
+    },
+    {
+        "question": "A shelf holds 8 books. There are 12 shelves. How many books total?",
+        "answer": 96,
+    },
+    {
+        "question": "A bucket is filled at 2 liters/minute. How full after 35 minutes if capacity is 100 L?",
+        "answer": 70,
+    },
+    {
+        "question": "Dan earns $15/hour. He works 6 hours on Saturday and 4 on Sunday. Weekly weekend pay?",
+        "answer": 150,
+    },
+    {
+        "question": "A ribbon is 3 m long. It is cut into 12 equal pieces. Length of each piece in cm?",
+        "answer": 25,
+    },
+    {
+        "question": "A store has 500 items. It receives 150 more and sells 200. How many remain?",
+        "answer": 450,
+    },
+    {
+        "question": "Emma typed 1200 words in 30 minutes. What is her typing speed in words per minute?",
+        "answer": 40,
+    },
     {"question": "A class has 24 students. 1/3 pass the exam. How many fail?", "answer": 16},
     {"question": "A box is 10 cm wide, 8 cm long, 5 cm tall. What is its volume?", "answer": 400},
 ]
@@ -363,7 +465,9 @@ def evaluate_threshold(
         "n_broken": n_broken,
         "n_questions": n_total,
     }
-    tmpl.checkpoint_save({"threshold_index": threshold_index, "result": result}, step=threshold_index + 1)
+    tmpl.checkpoint_save(
+        {"threshold_index": threshold_index, "result": result}, step=threshold_index + 1
+    )
     return result
 
 
@@ -411,7 +515,6 @@ def main() -> None:
     tmpl.setup()
 
     with ExperimentTimeoutWatchdog(768, timeout_minutes=120, result_path=_DELIVERABLE):
-
         # ------------------------------------------------------------------
         # Step 1: Audit Gemma4 call sites (always runs, even in blocked mode).
         # ------------------------------------------------------------------

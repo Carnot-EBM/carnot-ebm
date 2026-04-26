@@ -30,10 +30,10 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass
-from typing import Optional
+from typing import TYPE_CHECKING
 
-from carnot.pipeline.interwhen_monitor import InterWhenMonitor, InterWhenViolation
-
+if TYPE_CHECKING:
+    from carnot.pipeline.interwhen_monitor import InterWhenMonitor, InterWhenViolation
 
 # ---------------------------------------------------------------------------
 # BacktrackEvent — record for one sentence-boundary backtrack decision
@@ -64,7 +64,7 @@ class BacktrackEvent:
     sentence_index: int
     detection_score: float
     backtrack_triggered: bool
-    correction_hint: Optional[str]
+    correction_hint: str | None
 
 
 # ---------------------------------------------------------------------------
@@ -136,9 +136,7 @@ class AdapTrackRepairer:
         p_backtrack = detection_score / self.threshold
         return random.random() < p_backtrack
 
-    def generate_hint(
-        self, violated_sentence: str, violation: InterWhenViolation
-    ) -> str:
+    def generate_hint(self, violated_sentence: str, violation: InterWhenViolation) -> str:
         """Generate a correction hint to inject before the violated sentence is regenerated.
 
         The hint is a plain-text prefix that nudges the model to reconsider its
@@ -159,15 +157,13 @@ class AdapTrackRepairer:
         str
             Non-empty correction hint string.
         """
-        if violation.step_results and any(
-            s.violation_detected for s in violation.step_results
-        ):
-            return "[Note: The arithmetic in the previous step was incorrect. Recalculate carefully.]"
+        if violation.step_results and any(s.violation_detected for s in violation.step_results):
+            return (
+                "[Note: The arithmetic in the previous step was incorrect. Recalculate carefully.]"
+            )
         return "[Note: Recheck the previous calculation.]"
 
-    def simulate_repair(
-        self, response: str
-    ) -> tuple[str, list[BacktrackEvent]]:
+    def simulate_repair(self, response: str) -> tuple[str, list[BacktrackEvent]]:
         """Simulate AdapTrack repair on a completed response.
 
         Replays the response sentence-by-sentence.  At each sentence boundary,
@@ -204,9 +200,7 @@ class AdapTrackRepairer:
             if violation is not None and self.should_backtrack(violation.detection_score):
                 hint = self.generate_hint(sent, violation)
                 repaired_sentences[i] = hint + " " + sent
-                events.append(
-                    BacktrackEvent(i, violation.detection_score, True, hint)
-                )
+                events.append(BacktrackEvent(i, violation.detection_score, True, hint))
             else:
                 events.append(
                     BacktrackEvent(

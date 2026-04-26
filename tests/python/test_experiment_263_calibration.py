@@ -26,6 +26,7 @@ import pytest
 # Helpers — minimal synthetic corpus
 # ---------------------------------------------------------------------------
 
+
 def _make_corpus_row(
     case_id: str,
     violation_label: bool,
@@ -47,12 +48,29 @@ def _make_corpus_row(
         "experiment": 263,
         "n_tokens_in_prefix": 16,
         "n_violations_final": 1 if violation_label else 0,
-        "partial_response": '{"final_answer": 42, "claims": ["2+2=4"]}' if violation_label else "plain text",
+        "partial_response": '{"final_answer": 42, "claims": ["2+2=4"]}'
+        if violation_label
+        else "plain text",
         "prefix_fraction": prefix_fraction,
         "provenance_exp": "262",
         "run_date": "20260413",
-        "token_feature_vector": [0.16, 0.20, nd, 0.0, 1.0 if violation_label else 0.0, 0.1, 1.0 if violation_label else 0.0, 0.0, confidence],
-        "token_pattern_features": {"digit_density": nd, "equals_count": 0, "operator_count": 0, "sentence_count": 1},
+        "token_feature_vector": [
+            0.16,
+            0.20,
+            nd,
+            0.0,
+            1.0 if violation_label else 0.0,
+            0.1,
+            1.0 if violation_label else 0.0,
+            0.0,
+            confidence,
+        ],
+        "token_pattern_features": {
+            "digit_density": nd,
+            "equals_count": 0,
+            "operator_count": 0,
+            "sentence_count": 1,
+        },
         "violation_label": violation_label,
     }
 
@@ -173,10 +191,12 @@ class TestCalibrationFitting:
         cal = fit_calibration(corpus, seed=263)
         vp = PredictiveVerifier()
 
-        probs = np.array([
-            apply_calibration(cal, vp, np.array(r["token_feature_vector"], dtype=np.float32))
-            for r in corpus
-        ])
+        probs = np.array(
+            [
+                apply_calibration(cal, vp, np.array(r["token_feature_vector"], dtype=np.float32))
+                for r in corpus
+            ]
+        )
         labels = np.array([float(r["violation_label"]) for r in corpus])
         zone = classify_operating_zone(probs, labels, cal.threshold)
         # Zone must be one of the four valid values
@@ -234,8 +254,13 @@ class TestThresholdPersistence:
             save_calibration(cal, path)
             with open(path) as f:
                 data = json.load(f)
-        for key in ("threshold", "isotonic_x_thresholds", "isotonic_y_thresholds",
-                    "experiment", "run_date"):
+        for key in (
+            "threshold",
+            "isotonic_x_thresholds",
+            "isotonic_y_thresholds",
+            "experiment",
+            "run_date",
+        ):
             assert key in data, f"Missing key: {key}"
 
 
@@ -294,10 +319,14 @@ class TestABStrategyBranching:
         corpus = _make_synthetic_corpus(60)
         cal_partial = fit_calibration(corpus, seed=263)
         vp = PredictiveVerifier()
-        probs = np.array([
-            apply_calibration(cal_partial, vp, np.array(r["token_feature_vector"], dtype=np.float32))
-            for r in corpus
-        ])
+        probs = np.array(
+            [
+                apply_calibration(
+                    cal_partial, vp, np.array(r["token_feature_vector"], dtype=np.float32)
+                )
+                for r in corpus
+            ]
+        )
         labels = np.array([float(r["violation_label"]) for r in corpus])
         thr = find_operating_threshold(probs, labels, min_detection_rate=0.6, max_fp_rate=0.2)
         assert isinstance(thr, float)
@@ -333,10 +362,12 @@ class TestABStrategyBranching:
         vp = PredictiveVerifier()
 
         from scripts.experiment_255_self_learning_ab import _Decision255
+
         base = _Decision255(use_repair=True, reason="test_base")
 
         # Use a threshold of 1.0 to guarantee FAST_PATH regardless of calibration
         from carnot.pipeline.predictive_calibration import IsotonicCalibration
+
         force_fast_cal = IsotonicCalibration(
             threshold=1.0,  # everything goes FAST_PATH
             x_thresholds=cal.x_thresholds,
@@ -344,6 +375,8 @@ class TestABStrategyBranching:
             experiment=263,
             run_date="20260413",
         )
-        decision = _calibrated_gate_decision(case, verifier=vp, calibration=force_fast_cal, base_decision=base)
+        decision = _calibrated_gate_decision(
+            case, verifier=vp, calibration=force_fast_cal, base_decision=base
+        )
         assert decision.fast_path_hit is True
         assert decision.use_repair is False

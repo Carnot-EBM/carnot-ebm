@@ -109,12 +109,12 @@ def _find_function_node(source: str, entry_point: str) -> ast.FunctionDef | None
     return None
 
 
-def _extract_signature_data(prompt: str, entry_point: str) -> tuple[str, list[tuple[str, str, str]], str | None]:
+def _extract_signature_data(
+    prompt: str, entry_point: str
+) -> tuple[str, list[tuple[str, str, str]], str | None]:
     node = _find_function_node(prompt, entry_point)
     if node is None:
-        return (f"{entry_point}(...)",
-                [],
-                None)
+        return (f"{entry_point}(...)", [], None)
 
     params: list[tuple[str, str, str]] = []
     rendered_args: list[str] = []
@@ -218,7 +218,9 @@ def _base_family_map(
                 sources=["signature"],
             )
             if kind in _MUTABLE_KINDS:
-                mutation_kind = "mutation_allowed" if _allows_input_mutation(prompt) else "input_immutability"
+                mutation_kind = (
+                    "mutation_allowed" if _allows_input_mutation(prompt) else "input_immutability"
+                )
                 mutation_text = (
                     f"{name} may be updated in place when required by the prompt"
                     if mutation_kind == "mutation_allowed"
@@ -229,7 +231,9 @@ def _base_family_map(
                     "mutation_constraints",
                     kind=mutation_kind,
                     text=mutation_text,
-                    sources=["prompt_intent" if mutation_kind == "mutation_allowed" else "signature"],
+                    sources=[
+                        "prompt_intent" if mutation_kind == "mutation_allowed" else "signature"
+                    ],
                 )
     else:
         _add_clause(
@@ -483,7 +487,9 @@ def build_corpus(repo_root: Path | None = None) -> list[dict[str, Any]]:
                     entry_point=entry_point,
                 )
                 row = {
-                    "_dataset_idx": int(case_meta.get("dataset_idx") or result.get("dataset_idx") or 0),
+                    "_dataset_idx": int(
+                        case_meta.get("dataset_idx") or result.get("dataset_idx") or 0
+                    ),
                     "_families": families,
                     "case_id": str(case_meta.get("case_id") or case_id),
                     "entry_point": entry_point,
@@ -521,10 +527,7 @@ def build_corpus(repo_root: Path | None = None) -> list[dict[str, Any]]:
 
 def build_results(rows: list[dict[str, Any]]) -> dict[str, Any]:
     by_source_trace: dict[str, int] = {}
-    by_spec_family = {
-        family: sum(len(row[family]) for row in rows)
-        for family in SPEC_FAMILIES
-    }
+    by_spec_family = {family: sum(len(row[family]) for row in rows) for family in SPEC_FAMILIES}
 
     for row in rows:
         for trace in row["source_traces"]:

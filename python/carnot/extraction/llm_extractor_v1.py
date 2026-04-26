@@ -50,7 +50,10 @@ import json
 import re
 import textwrap
 from dataclasses import dataclass
-from typing import Callable, Optional
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # ArithmeticClaim — the LLMAsExtractorV1 unit of extraction
@@ -80,7 +83,7 @@ class ArithmeticClaim:
     """
 
     lhs_expr: str
-    rhs_value: Optional[float]
+    rhs_value: float | None
     claim_text: str
     strategy: str
     confidence: float
@@ -91,7 +94,7 @@ class ArithmeticClaim:
 # ---------------------------------------------------------------------------
 
 
-def safe_eval(expr: str) -> Optional[float]:
+def safe_eval(expr: str) -> float | None:
     """Evaluate a restricted arithmetic expression, returning the float result or None.
 
     Allowed node types: numeric literals, +, -, *, /, **, % operators, parentheses.
@@ -323,9 +326,7 @@ class SymCodeExtractor:
 _NUM = r"\$?[\d,_]+(?:\.\d+)?"
 
 # Pattern: N op M = P with symbolic operators (the CoACEV4 plain-symbolic set).
-_ARITH_EQ_RE = re.compile(
-    rf"({_NUM})\s*([+\-*/])\s*({_NUM})\s*=\s*({_NUM})"
-)
+_ARITH_EQ_RE = re.compile(rf"({_NUM})\s*([+\-*/])\s*({_NUM})\s*=\s*({_NUM})")
 
 # Pattern: "N times/multiplied by M equals/is P" (prose multiplication)
 _PROSE_MUL_RE = re.compile(
@@ -340,7 +341,7 @@ _PROSE_ADD_RE = re.compile(
 )
 
 
-def _clean_num_str(s: str) -> Optional[float]:
+def _clean_num_str(s: str) -> float | None:
     """Strip currency and separators, return float or None."""
     cleaned = re.sub(r"[\$,_]", "", s.strip())
     try:
@@ -455,7 +456,7 @@ class LLMAsExtractorV1:
 
     def __init__(
         self,
-        llm_caller: Optional[Callable[[str], str]] = None,
+        llm_caller: Callable[[str], str] | None = None,
         tolerance: float = 1e-6,
     ) -> None:
         self.llm_caller = llm_caller
@@ -478,9 +479,7 @@ class LLMAsExtractorV1:
         This mirrors the CoACEV4 contract: the caller counts violations, not claims.
         """
         if self.llm_caller is None:
-            return self._filter_violations(
-                self._chain_extractor.extract_claims(response)
-            )
+            return self._filter_violations(self._chain_extractor.extract_claims(response))
 
         # Live mode: union all three strategies.
         json_claims = self._json_extractor.extract_claims(response, self.llm_caller)
@@ -516,7 +515,7 @@ class LLMAsExtractorV1:
         the first occurrence (JsonClaimExtractor takes precedence, since it has
         the most context-aware extraction).
         """
-        seen: set[tuple[str, Optional[float]]] = set()
+        seen: set[tuple[str, float | None]] = set()
         result: list[ArithmeticClaim] = []
         for claim in claims:
             lhs_clean = re.sub(r"[\$,_\s]", "", claim.lhs_expr)

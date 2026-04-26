@@ -72,6 +72,7 @@ def _compute_auc(scores: list[float], labels: list[bool]) -> float:
     """
     try:
         from sklearn.metrics import roc_auc_score  # type: ignore[import]
+
         # sklearn expects: label=1 means "positive class" = incorrect.
         # Our convention: score is "probability of violation" (higher = more likely wrong).
         # labels are True=correct, False=incorrect, so we invert for sklearn.
@@ -174,7 +175,9 @@ def main() -> None:
             labels.append(correct)
 
         n_unique_labels = len(set(labels))
-        print(f"Label distribution: {sum(labels)} correct, {sum(1 for l in labels if not l)} incorrect")
+        print(
+            f"Label distribution: {sum(labels)} correct, {sum(1 for l in labels if not l)} incorrect"
+        )
         corpus_degenerate = n_unique_labels < 2
 
         # ------------------------------------------------------------------

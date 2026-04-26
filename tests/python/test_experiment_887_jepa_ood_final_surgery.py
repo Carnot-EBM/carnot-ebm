@@ -56,6 +56,7 @@ from python.carnot.models.vjepa_predictor import (
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _tiny_corpus(n: int = 8) -> list[dict[str, Any]]:
     """Build a minimal feature/label corpus for training smoke-tests."""
     feats = [[float(i % 3)] * 50 for i in range(n)]
@@ -66,6 +67,7 @@ def _tiny_corpus(n: int = 8) -> list[dict[str, Any]]:
 def _make_safetensors(path: Path, in_dim: int = 50, latent_dim: int = 32) -> None:
     """Write a minimal safetensors file with encoder keys (enc_*) for testing."""
     from safetensors.numpy import save_file
+
     enc = VariationalEncoder(in_dim=in_dim, latent_dim=latent_dim)
     enc_params = enc.get_params()
     tensors = {f"enc_{k}": np.array(v) for k, v in enc_params.items()}
@@ -78,6 +80,7 @@ def _make_safetensors(path: Path, in_dim: int = 50, latent_dim: int = 32) -> Non
 # ---------------------------------------------------------------------------
 # REQ-LEARN-050: Encoder loading
 # ---------------------------------------------------------------------------
+
 
 class TestLoadEncoderFromSafetensors:
     """REQ-LEARN-050 — encoder loading from safetensors."""
@@ -98,6 +101,7 @@ class TestLoadEncoderFromSafetensors:
     def test_raises_on_missing_enc_keys(self, tmp_path: Path) -> None:
         """KeyError raised when file has no enc_* keys."""
         from safetensors.numpy import save_file
+
         sf = tmp_path / "bad.safetensors"
         save_file({"some_key": np.zeros((4,), dtype=np.float32)}, str(sf))
         with pytest.raises(KeyError):
@@ -115,6 +119,7 @@ class TestLoadEncoderFromSafetensors:
 # ---------------------------------------------------------------------------
 # REQ-LEARN-050: VJEPAPretrainedJEPA — frozen encoder, trainable head
 # ---------------------------------------------------------------------------
+
 
 class TestVJEPAPretrainedJEPA:
     """REQ-LEARN-050 — classifier-only training with frozen VJEPA encoder."""
@@ -183,6 +188,7 @@ class TestVJEPAPretrainedJEPA:
 # REQ-LEARN-050: evaluate_on_split
 # ---------------------------------------------------------------------------
 
+
 class TestEvaluateOnSplit:
     """REQ-LEARN-050 — AUC evaluation helper."""
 
@@ -212,6 +218,7 @@ class TestEvaluateOnSplit:
 # ---------------------------------------------------------------------------
 # REQ-LEARN-050: retire_discriminative_jepa
 # ---------------------------------------------------------------------------
+
 
 class TestRetireDiscriminativeJepa:
     """REQ-LEARN-050 — exclusion manifest update."""
@@ -247,6 +254,7 @@ class TestRetireDiscriminativeJepa:
 # REQ-LEARN-050: run_experiment — blocked artifact path
 # ---------------------------------------------------------------------------
 
+
 class TestRunExperimentBlocked:
     """REQ-LEARN-050 — run_experiment writes blocked artifact when no safetensors."""
 
@@ -268,6 +276,7 @@ class TestRunExperimentBlocked:
             ),
         ):
             from experiment_887_jepa_ood_final_surgery import run_experiment as _run
+
             result = _run()
 
         assert result["honest_verdict"] == "blocked"
@@ -280,6 +289,7 @@ class TestRunExperimentBlocked:
 # ---------------------------------------------------------------------------
 # REQ-LEARN-050: integration — train from real safetensors (if present)
 # ---------------------------------------------------------------------------
+
 
 class TestRunExperimentIntegration:
     """REQ-LEARN-050 — full run_experiment with real VJEPA v2 safetensors."""
@@ -306,6 +316,7 @@ class TestRunExperimentIntegration:
         ):
             # Patch retire to use tmp manifest, avoiding real-file side-effects
             import experiment_887_jepa_ood_final_surgery as mod887
+
             orig_retire = mod887.retire_discriminative_jepa
 
             def _safe_retire(manifest_path: Path) -> None:
@@ -315,10 +326,18 @@ class TestRunExperimentIntegration:
                 result = mod887.run_experiment()
 
         required_fields = [
-            "experiment", "schema", "run_date", "honest_verdict",
-            "in_dist_auc", "ood_auc", "svamp_auc",
-            "encoder_frozen", "discriminative_jepa_retired",
-            "n_epochs", "n_training_pairs", "spec",
+            "experiment",
+            "schema",
+            "run_date",
+            "honest_verdict",
+            "in_dist_auc",
+            "ood_auc",
+            "svamp_auc",
+            "encoder_frozen",
+            "discriminative_jepa_retired",
+            "n_epochs",
+            "n_training_pairs",
+            "spec",
         ]
         for field in required_fields:
             assert field in result, f"Missing field: {field}"
@@ -326,7 +345,9 @@ class TestRunExperimentIntegration:
         assert result["experiment"] == 887
         assert result["encoder_frozen"] is True
         assert result["honest_verdict"] in (
-            "retro_jepa_ood_closed", "marginal", "jepa_discriminative_retired"
+            "retro_jepa_ood_closed",
+            "marginal",
+            "jepa_discriminative_retired",
         )
         assert 0.0 <= result["in_dist_auc"] <= 1.0
         assert 0.0 <= result["ood_auc"] <= 1.0

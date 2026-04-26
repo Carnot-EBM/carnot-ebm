@@ -98,9 +98,9 @@ OUTPUT_PATH = RESULTS_DIR / "experiment_136_results.json"
 # ---------------------------------------------------------------------------
 
 # Number of questions per session.
-N_SESSION_1 = 200   # Arithmetic warm-up → build memory
-N_SESSION_2 = 200   # New arithmetic questions → test memory vs no-memory
-N_SESSION_3 = 200   # Mixed domain → test cross-domain isolation
+N_SESSION_1 = 200  # Arithmetic warm-up → build memory
+N_SESSION_2 = 200  # New arithmetic questions → test memory vs no-memory
+N_SESSION_3 = 200  # Mixed domain → test cross-domain isolation
 
 # Fraction of responses that are correct (ground truth).
 CORRECT_FRACTION = 0.50  # 50% correct so arithmetic errors appear abundantly.
@@ -188,9 +188,7 @@ def generate_arithmetic_questions(n: int, seed: int) -> list[tuple[str, str, boo
             if claimed == correct_ans:
                 claimed = correct_ans + 1
 
-        response = (
-            f"We compute {a} {op_sym} {b} = {claimed}. The answer is {claimed}."
-        )
+        response = f"We compute {a} {op_sym} {b} = {claimed}. The answer is {claimed}."
         items.append((q, response, is_correct))
 
     return items
@@ -297,9 +295,7 @@ def generate_code_questions(n: int, seed: int) -> list[tuple[str, str, bool]]:
     return items
 
 
-def generate_mixed_questions(
-    n: int, seed: int
-) -> list[tuple[str, str, bool, str]]:
+def generate_mixed_questions(n: int, seed: int) -> list[tuple[str, str, bool, str]]:
     """Generate n mixed (question, response, is_correct, domain) 4-tuples.
 
     **Detailed explanation for engineers:**
@@ -318,18 +314,9 @@ def generate_mixed_questions(
     n_logic = n // 3
     n_code = n - n_arith - n_logic  # Absorb remainder.
 
-    arith = [
-        (q, r, ic, "arithmetic")
-        for q, r, ic in generate_arithmetic_questions(n_arith, seed)
-    ]
-    logic = [
-        (q, r, ic, "logic")
-        for q, r, ic in generate_logic_questions(n_logic, seed + 1)
-    ]
-    code = [
-        (q, r, ic, "code")
-        for q, r, ic in generate_code_questions(n_code, seed + 2)
-    ]
+    arith = [(q, r, ic, "arithmetic") for q, r, ic in generate_arithmetic_questions(n_arith, seed)]
+    logic = [(q, r, ic, "logic") for q, r, ic in generate_logic_questions(n_logic, seed + 1)]
+    code = [(q, r, ic, "code") for q, r, ic in generate_code_questions(n_code, seed + 2)]
 
     combined = arith + logic + code
     # Shuffle so domains are interleaved rather than blocked.
@@ -391,9 +378,7 @@ def run_verification_session(
         t_ms = (time.monotonic() - t0) * 1000
 
         # Count how many constraints came from memory (type="learned").
-        n_mem = sum(
-            1 for c in result.constraints if c.constraint_type == "learned"
-        )
+        n_mem = sum(1 for c in result.constraints if c.constraint_type == "learned")
         n_memory_suggestions_total += n_mem
 
         agreement = result.verified == is_correct
@@ -470,9 +455,7 @@ def run_mixed_domain_session(
 
     for question, response, is_correct, domain in questions:
         result = pipeline.verify(question, response, domain=domain)
-        n_mem = sum(
-            1 for c in result.constraints if c.constraint_type == "learned"
-        )
+        n_mem = sum(1 for c in result.constraints if c.constraint_type == "learned")
         agreement = result.verified == is_correct
         acc_domain = by_domain[domain]
         acc_domain["n"] += 1
@@ -638,8 +621,7 @@ def simulate_repair_speed(
         and mem_summary["mean_iterations_to_repair"] > 0
     ):
         speedup = round(
-            no_mem_summary["mean_iterations_to_repair"]
-            / mem_summary["mean_iterations_to_repair"],
+            no_mem_summary["mean_iterations_to_repair"] / mem_summary["mean_iterations_to_repair"],
             4,
         )
 
@@ -721,9 +703,7 @@ def run_experiment() -> dict[str, Any]:
     memory_s1 = ConstraintMemory()
     tracker_s1 = ConstraintTracker()
 
-    session1_result = run_verification_session(
-        questions_s1, "arithmetic", memory_s1, tracker_s1
-    )
+    session1_result = run_verification_session(questions_s1, "arithmetic", memory_s1, tracker_s1)
     s1_elapsed = time.monotonic() - t_s1
 
     print(f"  Accuracy (pipeline)  : {session1_result['accuracy']:.1%}")
@@ -793,8 +773,7 @@ def run_experiment() -> dict[str, Any]:
         # Compare conditions.
         acc_delta_s2 = session2b_result["accuracy"] - session2a_result["accuracy"]
         hint_delta_s2 = (
-            session2b_result["avg_memory_suggestions"]
-            - session2a_result["avg_memory_suggestions"]
+            session2b_result["avg_memory_suggestions"] - session2a_result["avg_memory_suggestions"]
         )
         print(f"\n  Accuracy delta (B-A) : {acc_delta_s2:+.4f}")
         print(f"  Hint delta (B-A)     : {hint_delta_s2:+.4f}")
@@ -814,8 +793,12 @@ def run_experiment() -> dict[str, Any]:
         print(f"    No-memory mean iters to repair : {no_mem_iters}")
         print(f"    With-memory mean iters         : {mem_iters}")
         print(f"    Speedup ratio                  : {repair_s2['speedup_ratio']}")
-        print(f"    No-memory repaired fraction    : {repair_s2['no_memory']['fraction_repaired']:.1%}")
-        print(f"    With-memory repaired fraction  : {repair_s2['with_memory']['fraction_repaired']:.1%}")
+        print(
+            f"    No-memory repaired fraction    : {repair_s2['no_memory']['fraction_repaired']:.1%}"
+        )
+        print(
+            f"    With-memory repaired fraction  : {repair_s2['with_memory']['fraction_repaired']:.1%}"
+        )
 
         s2_elapsed = time.monotonic() - t_s2
         print(f"\n  Session 2 elapsed    : {s2_elapsed:.1f}s")
@@ -871,17 +854,16 @@ def run_experiment() -> dict[str, Any]:
     print(f"    Result: {'PASS ✓' if h1_pass else 'FAIL ✗'}")
 
     # H2: Memory helps same domain — session 2 with memory gets more hints.
-    h2_pass = session2b_result["avg_memory_suggestions"] > session2a_result["avg_memory_suggestions"]
+    h2_pass = (
+        session2b_result["avg_memory_suggestions"] > session2a_result["avg_memory_suggestions"]
+    )
     print(f"\nH2 — Memory provides hints in same domain:")
     print(f"    No-memory avg hints : {session2a_result['avg_memory_suggestions']:.3f}")
     print(f"    With-memory avg hints: {session2b_result['avg_memory_suggestions']:.3f}")
     print(f"    Result: {'PASS ✓' if h2_pass else 'FAIL ✗'}")
 
     # H3: Memory speeds repair — speedup ratio > 1.0.
-    h3_pass = (
-        repair_s2["speedup_ratio"] is not None
-        and repair_s2["speedup_ratio"] > 1.0
-    )
+    h3_pass = repair_s2["speedup_ratio"] is not None and repair_s2["speedup_ratio"] > 1.0
     print(f"\nH3 — Memory speeds repair (speedup ratio > 1.0):")
     print(f"    Speedup ratio: {repair_s2['speedup_ratio']}")
     print(f"    Result: {'PASS ✓' if h3_pass else 'FAIL ✗'}")
@@ -890,11 +872,7 @@ def run_experiment() -> dict[str, Any]:
     arith_hints_s3 = session3_result["domain_summaries"]["arithmetic"]["avg_memory_suggestions"]
     logic_hints_s3 = session3_result["domain_summaries"]["logic"]["avg_memory_suggestions"]
     code_hints_s3 = session3_result["domain_summaries"]["code"]["avg_memory_suggestions"]
-    h4_pass = (
-        arith_hints_s3 > 0
-        and logic_hints_s3 == 0.0
-        and code_hints_s3 == 0.0
-    )
+    h4_pass = arith_hints_s3 > 0 and logic_hints_s3 == 0.0 and code_hints_s3 == 0.0
     print(f"\nH4 — Domain specificity (arith hints > 0, logic/code hints == 0):")
     print(f"    arithmetic avg hints : {arith_hints_s3:.3f}")
     print(f"    logic avg hints      : {logic_hints_s3:.3f}")

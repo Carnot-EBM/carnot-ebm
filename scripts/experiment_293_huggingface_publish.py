@@ -54,7 +54,9 @@ _EXP66_RESULTS_PATH = Path(__file__).parent.parent / "results" / "experiment_66_
 # Do NOT synthesize random weights in the main pipeline; that would publish noise under
 # the guise of the trained model.  Only build_exp66_safetensors() (used in tests) creates
 # synthetic weights for schema / shape validation.
-_EXP66_SAFETENSORS_PATH = Path(__file__).parent.parent / "results" / "experiment_66_model.safetensors"
+_EXP66_SAFETENSORS_PATH = (
+    Path(__file__).parent.parent / "results" / "experiment_66_model.safetensors"
+)
 
 
 # ---------------------------------------------------------------------------
@@ -88,8 +90,7 @@ def check_hf_credentials() -> tuple[bool, str]:
         )
     except Exception as exc:
         return False, (
-            f"Error running huggingface-cli whoami: {exc}\n"
-            "Authenticate with: huggingface-cli login"
+            f"Error running huggingface-cli whoami: {exc}\nAuthenticate with: huggingface-cli login"
         )
 
     if result.returncode != 0:
@@ -377,11 +378,11 @@ def build_exp66_safetensors(out_dir: Path | str) -> Path:
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    n = _EXP66_ARCH["n_constraints"]   # 8
-    d = _EXP66_ARCH["embed_dim"]       # 384
-    h = _EXP66_ARCH["hidden_dim"]      # 64
+    n = _EXP66_ARCH["n_constraints"]  # 8
+    d = _EXP66_ARCH["embed_dim"]  # 384
+    h = _EXP66_ARCH["hidden_dim"]  # 64
     # MLP input = embedding + Ising activations + Ising biases + alpha scalar
-    mlp_in = d + n + n + 1             # 393
+    mlp_in = d + n + n + 1  # 393
 
     rng = np.random.default_rng(seed=66)  # Deterministic seed for reproducibility
 
@@ -452,16 +453,19 @@ def export_fcv_onnx(out_dir: Path | str) -> tuple[Path, Path]:
         helper.make_node("Sub", ["a_minus_b", "col_r"], ["diff"], "sub_diff"),
         helper.make_node("Abs", ["diff"], ["abs_diff"], "abs_op"),
         helper.make_node("Less", ["abs_diff", "tol"], ["bool_v"], "less_op"),
-        helper.make_node("Cast", ["bool_v"], ["verdict_2d"], "cast_op",
-                         to=int(TensorProto.FLOAT)),
+        helper.make_node("Cast", ["bool_v"], ["verdict_2d"], "cast_op", to=int(TensorProto.FLOAT)),
         helper.make_node("Squeeze", ["verdict_2d", "sq_ax"], ["verdict"], "squeeze_op"),
     ]
     arith_graph = helper.make_graph(
-        arith_nodes, "arithmetic_verifier",
-        arith_inputs, arith_outputs, arith_initializers,
+        arith_nodes,
+        "arithmetic_verifier",
+        arith_inputs,
+        arith_outputs,
+        arith_initializers,
     )
     arith_model = helper.make_model(
-        arith_graph, producer_name="carnot",
+        arith_graph,
+        producer_name="carnot",
         opset_imports=[helper.make_opsetid("", 13)],
     )
     arith_path = out_dir / "arithmetic_route.onnx"
@@ -485,16 +489,21 @@ def export_fcv_onnx(out_dir: Path | str) -> tuple[Path, Path]:
         helper.make_node("Slice", ["operands", "c0", "c1", "cax1"], ["col_x"], "get_x"),
         helper.make_node("Slice", ["operands", "c1", "c2", "cax1"], ["col_y"], "get_y"),
         helper.make_node("Less", ["col_x", "col_y"], ["bool_cmp"], "cmp_op"),
-        helper.make_node("Cast", ["bool_cmp"], ["verdict_2d"], "cast_cmp",
-                         to=int(TensorProto.FLOAT)),
+        helper.make_node(
+            "Cast", ["bool_cmp"], ["verdict_2d"], "cast_cmp", to=int(TensorProto.FLOAT)
+        ),
         helper.make_node("Squeeze", ["verdict_2d", "csq_ax"], ["verdict"], "squeeze_cmp"),
     ]
     cmp_graph = helper.make_graph(
-        cmp_nodes, "comparison_verifier",
-        cmp_inputs, cmp_outputs, cmp_initializers,
+        cmp_nodes,
+        "comparison_verifier",
+        cmp_inputs,
+        cmp_outputs,
+        cmp_initializers,
     )
     cmp_model = helper.make_model(
-        cmp_graph, producer_name="carnot",
+        cmp_graph,
+        producer_name="carnot",
         opset_imports=[helper.make_opsetid("", 13)],
     )
     cmp_path = out_dir / "comparison_route.onnx"
@@ -521,7 +530,9 @@ def _write_fcv_python_module(out_dir: Path) -> Path:
     Returns:
         Path to the written module.
     """
-    src = Path(__file__).parent.parent / "python" / "carnot" / "pipeline" / "formal_claim_verifier.py"
+    src = (
+        Path(__file__).parent.parent / "python" / "carnot" / "pipeline" / "formal_claim_verifier.py"
+    )
     dst = out_dir / "verifier.py"
     if not src.exists():
         raise FileNotFoundError(
@@ -589,6 +600,7 @@ def upload_artifacts(
 
     if hf_api is None:
         from huggingface_hub import HfApi  # type: ignore[import-untyped]
+
         hf_api = HfApi()
 
     hf_api.create_repo(repo_id=exp66_repo_id, repo_type="model", exist_ok=True)
@@ -732,7 +744,11 @@ def run_experiment_293(
     )
 
     upload_status = "dry_run" if dry_run else "uploaded"
-    exp66_final_status = "skipped_missing_safetensors" if exp66_artifact_status == "skipped_missing_safetensors" else upload_status
+    exp66_final_status = (
+        "skipped_missing_safetensors"
+        if exp66_artifact_status == "skipped_missing_safetensors"
+        else upload_status
+    )
 
     # ------------------------------------------------------------------
     # Step 4: Write results JSON
@@ -762,10 +778,13 @@ def run_experiment_293(
         "artifacts": {
             "exp66": {
                 "upload_status": exp66_final_status,
-                "hf_url": upload_result["exp66_repo"] if exp66_artifact_status != "skipped_missing_safetensors" else None,
+                "hf_url": upload_result["exp66_repo"]
+                if exp66_artifact_status != "skipped_missing_safetensors"
+                else None,
                 "safetensors": exp66_safetensors_str,
                 "missing_note": (
-                    None if exp66_artifact_status != "skipped_missing_safetensors"
+                    None
+                    if exp66_artifact_status != "skipped_missing_safetensors"
                     else f"results/experiment_66_model.safetensors not found at {_EXP66_SAFETENSORS_PATH}"
                 ),
             },

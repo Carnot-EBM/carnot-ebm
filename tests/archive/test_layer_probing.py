@@ -80,7 +80,11 @@ def test_train_probe_separable_data() -> None:
     wrong = rng.standard_normal((100, 16)).astype(np.float32) - 3.0
 
     train_acc, test_acc, gap = train_layer_probe(
-        correct, wrong, hidden_dim=16, n_epochs=100, lr=0.01,
+        correct,
+        wrong,
+        hidden_dim=16,
+        n_epochs=100,
+        lr=0.01,
     )
 
     assert train_acc > 0.6
@@ -98,7 +102,11 @@ def test_train_probe_random_data_near_chance() -> None:
     wrong = rng.standard_normal((100, 16)).astype(np.float32)
 
     train_acc, test_acc, gap = train_layer_probe(
-        correct, wrong, hidden_dim=16, n_epochs=50, lr=0.005,
+        correct,
+        wrong,
+        hidden_dim=16,
+        n_epochs=50,
+        lr=0.005,
     )
 
     # Should be near chance (40-60%)
@@ -115,7 +123,9 @@ def test_train_probe_insufficient_data() -> None:
     wrong = rng.standard_normal((5, 16)).astype(np.float32)
 
     train_acc, test_acc, gap = train_layer_probe(
-        correct, wrong, hidden_dim=16,
+        correct,
+        wrong,
+        hidden_dim=16,
     )
 
     assert train_acc == 0.5
@@ -148,8 +158,11 @@ def test_probe_all_layers_finds_best() -> None:
     }
 
     results = probe_all_layers(
-        correct_acts, wrong_acts,
-        hidden_dim=16, n_epochs=100, lr=0.01,
+        correct_acts,
+        wrong_acts,
+        hidden_dim=16,
+        n_epochs=100,
+        lr=0.01,
         model_name="test-model",
     )
 
@@ -180,8 +193,10 @@ def test_probe_subset_of_layers() -> None:
     }
 
     results = probe_all_layers(
-        correct_acts, wrong_acts,
-        hidden_dim=8, n_epochs=50,
+        correct_acts,
+        wrong_acts,
+        hidden_dim=8,
+        n_epochs=50,
         layers=[0, 2],  # Skip layer 1
     )
 
@@ -195,7 +210,8 @@ def test_probe_empty_layers() -> None:
     Spec: REQ-INFER-016
     """
     results = probe_all_layers(
-        {}, {},
+        {},
+        {},
         hidden_dim=8,
     )
 
@@ -237,6 +253,7 @@ def test_exports_from_embeddings_package() -> None:
         probe_all_layers,
         train_layer_probe,
     )
+
     assert LayerProbeResult is not None
     assert MultiLayerProbeResults is not None
     assert callable(probe_all_layers)

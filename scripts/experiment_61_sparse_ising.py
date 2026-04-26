@@ -158,8 +158,10 @@ def generate_training_data(
     top_sats = [s for s, _ in scored[:n_samples]]
     mean_pct = np.mean(top_sats) / n_clauses * 100
     best_pct = max(top_sats) / n_clauses * 100
-    print(f"    Training data: {len(data)} samples, "
-          f"mean {mean_pct:.1f}% sat, best {best_pct:.1f}% sat")
+    print(
+        f"    Training data: {len(data)} samples, "
+        f"mean {mean_pct:.1f}% sat, best {best_pct:.1f}% sat"
+    )
 
     return data
 
@@ -218,9 +220,7 @@ def train_ising_cd_sparse(
     data_jax = jnp.array(data)
     spins_data = 2.0 * data_jax - 1.0
     pos_bias_moments = jnp.mean(spins_data, axis=0)
-    pos_weight_moments = jnp.mean(
-        jnp.einsum("bi,bj->bij", spins_data, spins_data), axis=0
-    )
+    pos_weight_moments = jnp.mean(jnp.einsum("bi,bj->bij", spins_data, spins_data), axis=0)
 
     # Cap the negative-phase sampler to avoid OOM. We need n_samples
     # model samples per epoch — but for large models, use fewer samples
@@ -244,9 +244,7 @@ def train_ising_cd_sparse(
 
         spins_model = 2.0 * model_samples.astype(jnp.float32) - 1.0
         neg_bias_moments = jnp.mean(spins_model, axis=0)
-        neg_weight_moments = jnp.mean(
-            jnp.einsum("bi,bj->bij", spins_model, spins_model), axis=0
-        )
+        neg_weight_moments = jnp.mean(jnp.einsum("bi,bj->bij", spins_model, spins_model), axis=0)
 
         # CD gradient.
         grad_J = -beta * (pos_weight_moments - neg_weight_moments)
@@ -280,8 +278,10 @@ def train_ising_cd_sparse(
         if epoch % 50 == 0 or epoch == n_epochs - 1:
             sparsity = np.mean(np.abs(J) < 0.01) * 100
             n_nonzero = np.count_nonzero(np.abs(J) >= 0.01)
-            print(f"    Epoch {epoch:3d}: recon={recon_error:.6f}, "
-                  f"sparsity={sparsity:.0f}%, nonzero={n_nonzero}")
+            print(
+                f"    Epoch {epoch:3d}: recon={recon_error:.6f}, "
+                f"sparsity={sparsity:.0f}%, nonzero={n_nonzero}"
+            )
 
     return biases, J, losses
 
@@ -345,9 +345,11 @@ def evaluate_method(
     n_perfect = sum(1 for s in sat_counts if s == n_clauses)
 
     if label:
-        print(f"    {label:15s}: mean={mean_pct:.1f}%, "
-              f"best={best}/{n_clauses} ({best_pct:.1f}%), "
-              f"perfect={n_perfect}/{n_eval_samples}")
+        print(
+            f"    {label:15s}: mean={mean_pct:.1f}%, "
+            f"best={best}/{n_clauses} ({best_pct:.1f}%), "
+            f"perfect={n_perfect}/{n_eval_samples}"
+        )
 
     return {
         "best_sat": best,
@@ -381,8 +383,7 @@ def random_baseline(
     mean_pct = np.mean(sat_counts) / n_clauses * 100
     best_pct = best / n_clauses * 100
 
-    print(f"    {'Random':15s}: mean={mean_pct:.1f}%, "
-          f"best={best}/{n_clauses} ({best_pct:.1f}%)")
+    print(f"    {'Random':15s}: mean={mean_pct:.1f}%, best={best}/{n_clauses} ({best_pct:.1f}%)")
 
     return {
         "best_sat": best,
@@ -410,8 +411,8 @@ def main() -> int:
     # Full coupling params: N^2. Sparse params: ~3*n_clauses (each clause
     # adds up to 3 edges).
     test_cases = [
-        (200,  int(200 * 3.5)),
-        (500,  int(500 * 3.5)),
+        (200, int(200 * 3.5)),
+        (500, int(500 * 3.5)),
         (1000, int(1000 * 3.5)),
     ]
 
@@ -421,8 +422,7 @@ def main() -> int:
         sep = "-" * 70
         print(f"\n{sep}")
         n_dense_params = n_vars * (n_vars - 1) // 2
-        print(f"  {n_vars} vars, {n_clauses} clauses "
-              f"(dense: {n_dense_params} params)")
+        print(f"  {n_vars} vars, {n_clauses} clauses (dense: {n_dense_params} params)")
         print(sep)
 
         # Generate SAT instances: train on seed=42, test on seed=99.
@@ -433,10 +433,12 @@ def main() -> int:
         mask = build_clause_edge_mask(clauses_train, n_vars)
         density = compute_mask_density(mask)
         n_sparse_params = int(np.count_nonzero(mask)) // 2  # Symmetric.
-        print(f"  Clause-graph density: {density:.1f}%, "
-              f"sparse params: {n_sparse_params} "
-              f"(vs dense: {n_dense_params}, "
-              f"ratio: {n_sparse_params / n_dense_params * 100:.1f}%)")
+        print(
+            f"  Clause-graph density: {density:.1f}%, "
+            f"sparse params: {n_sparse_params} "
+            f"(vs dense: {n_dense_params}, "
+            f"ratio: {n_sparse_params / n_dense_params * 100:.1f}%)"
+        )
 
         # --- Step 1: Generate training data ---
         # Scale samples with problem size but cap to keep runtime reasonable
@@ -444,9 +446,7 @@ def main() -> int:
         n_train_samples = min(2000, max(500, n_vars * 2))
         print(f"\n  [1/5] Generating training data ({n_train_samples} samples)...")
         t0 = time.time()
-        data = generate_training_data(
-            clauses_train, n_vars, n_samples=n_train_samples, seed=42
-        )
+        data = generate_training_data(clauses_train, n_vars, n_samples=n_train_samples, seed=42)
         data_time = time.time() - t0
         print(f"    Data generation: {data_time:.1f}s")
 
@@ -460,30 +460,40 @@ def main() -> int:
         n_epochs = max(100, 200 - n_vars // 10)
 
         # --- Step 2: Train SPARSE CD model ---
-        print(f"\n  [2/5] Training SPARSE CD model "
-              f"({n_epochs} epochs, {n_sparse_params} params)...")
+        print(
+            f"\n  [2/5] Training SPARSE CD model ({n_epochs} epochs, {n_sparse_params} params)..."
+        )
         t0 = time.time()
         biases_sparse, J_sparse, losses_sparse = train_ising_cd_sparse(
-            data, edge_mask=mask, n_epochs=n_epochs, lr=lr,
-            beta=2.0, cd_steps=1, l1_lambda=0.001,
+            data,
+            edge_mask=mask,
+            n_epochs=n_epochs,
+            lr=lr,
+            beta=2.0,
+            cd_steps=1,
+            l1_lambda=0.001,
         )
         sparse_time = time.time() - t0
-        print(f"    Sparse training: {sparse_time:.1f}s, "
-              f"final recon={losses_sparse[-1]:.6f}")
+        print(f"    Sparse training: {sparse_time:.1f}s, final recon={losses_sparse[-1]:.6f}")
 
         # --- Step 3: Train DENSE CD model (Exp 60 style, for comparison) ---
         # For 1000 vars, dense training is very slow. Use fewer epochs.
         dense_epochs = max(50, n_epochs // 2)
-        print(f"\n  [3/5] Training DENSE CD model "
-              f"({dense_epochs} epochs, {n_dense_params} params)...")
+        print(
+            f"\n  [3/5] Training DENSE CD model ({dense_epochs} epochs, {n_dense_params} params)..."
+        )
         t0 = time.time()
         biases_dense, J_dense, losses_dense = train_ising_cd_sparse(
-            data, edge_mask=None, n_epochs=dense_epochs, lr=lr,
-            beta=2.0, cd_steps=1, l1_lambda=0.001,
+            data,
+            edge_mask=None,
+            n_epochs=dense_epochs,
+            lr=lr,
+            beta=2.0,
+            cd_steps=1,
+            l1_lambda=0.001,
         )
         dense_time = time.time() - t0
-        print(f"    Dense training: {dense_time:.1f}s, "
-              f"final recon={losses_dense[-1]:.6f}")
+        print(f"    Dense training: {dense_time:.1f}s, final recon={losses_dense[-1]:.6f}")
 
         # --- Step 4: Build hand-coded model ---
         biases_hc_vec, weights_hc_vec, _ = sat_to_ising(clauses_train, n_vars)
@@ -494,55 +504,61 @@ def main() -> int:
         # --- Step 4a: Evaluate on TRAINING instance ---
         print(f"\n  [4/5] Evaluating on training instance (seed=42)...")
         res_sparse_train = evaluate_method(
-            biases_sparse, J_sparse, clauses_train, n_vars, label="Sparse CD")
+            biases_sparse, J_sparse, clauses_train, n_vars, label="Sparse CD"
+        )
         res_dense_train = evaluate_method(
-            biases_dense, J_dense, clauses_train, n_vars, label="Dense CD")
+            biases_dense, J_dense, clauses_train, n_vars, label="Dense CD"
+        )
         res_hc_train = evaluate_method(
-            biases_hc_np, J_hc_np, clauses_train, n_vars, label="Hand-coded")
+            biases_hc_np, J_hc_np, clauses_train, n_vars, label="Hand-coded"
+        )
         res_rand_train = random_baseline(clauses_train, n_vars)
 
         # --- Step 5: Evaluate on HELD-OUT instance (seed=99) ---
         print(f"\n  [5/5] Evaluating on held-out instance (seed=99, generalization)...")
         # Hand-coded uses the test instance's own mapping (oracle).
         biases_hc2_vec, weights_hc2_vec, _ = sat_to_ising(clauses_test, n_vars)
-        biases_hc2, J_hc2 = sat_to_coupling_matrix(
-            biases_hc2_vec, weights_hc2_vec, n_vars
-        )
+        biases_hc2, J_hc2 = sat_to_coupling_matrix(biases_hc2_vec, weights_hc2_vec, n_vars)
         biases_hc2_np = np.array(biases_hc2)
         J_hc2_np = np.array(J_hc2)
 
         res_sparse_test = evaluate_method(
-            biases_sparse, J_sparse, clauses_test, n_vars, label="Sparse CD")
+            biases_sparse, J_sparse, clauses_test, n_vars, label="Sparse CD"
+        )
         res_dense_test = evaluate_method(
-            biases_dense, J_dense, clauses_test, n_vars, label="Dense CD")
+            biases_dense, J_dense, clauses_test, n_vars, label="Dense CD"
+        )
         res_hc_test = evaluate_method(
-            biases_hc2_np, J_hc2_np, clauses_test, n_vars, label="Hand-coded*")
+            biases_hc2_np, J_hc2_np, clauses_test, n_vars, label="Hand-coded*"
+        )
         res_rand_test = random_baseline(clauses_test, n_vars)
 
-        all_results.append({
-            "n_vars": n_vars,
-            "n_clauses": n_clauses,
-            "n_dense_params": n_dense_params,
-            "n_sparse_params": n_sparse_params,
-            "mask_density_pct": density,
-            "data_time": data_time,
-            "sparse_time": sparse_time,
-            "dense_time": dense_time,
-            "sparse_final_loss": losses_sparse[-1],
-            "dense_final_loss": losses_dense[-1],
-            "train": {
-                "sparse": res_sparse_train,
-                "dense": res_dense_train,
-                "handcoded": res_hc_train,
-                "random": res_rand_train,
-            },
-            "test": {
-                "sparse": res_sparse_test,
-                "dense": res_dense_test,
-                "handcoded": res_hc_test,
-                "random": res_rand_test,
-            },
-        })
+        all_results.append(
+            {
+                "n_vars": n_vars,
+                "n_clauses": n_clauses,
+                "n_dense_params": n_dense_params,
+                "n_sparse_params": n_sparse_params,
+                "mask_density_pct": density,
+                "data_time": data_time,
+                "sparse_time": sparse_time,
+                "dense_time": dense_time,
+                "sparse_final_loss": losses_sparse[-1],
+                "dense_final_loss": losses_dense[-1],
+                "train": {
+                    "sparse": res_sparse_train,
+                    "dense": res_dense_train,
+                    "handcoded": res_hc_train,
+                    "random": res_rand_train,
+                },
+                "test": {
+                    "sparse": res_sparse_test,
+                    "dense": res_dense_test,
+                    "handcoded": res_hc_test,
+                    "random": res_rand_test,
+                },
+            }
+        )
 
     # --- Summary ---
     elapsed = time.time() - start
@@ -554,65 +570,73 @@ def main() -> int:
     # Sparsity stats.
     print(f"\n  Sparsity Analysis:")
     print(f"  {'Vars':>6s} {'Dense':>8s} {'Sparse':>8s} {'Density':>8s} {'Ratio':>8s}")
-    print(f"  {'-'*42}")
+    print(f"  {'-' * 42}")
     for r in all_results:
-        print(f"  {r['n_vars']:>6d} {r['n_dense_params']:>8d} "
-              f"{r['n_sparse_params']:>8d} {r['mask_density_pct']:>7.1f}% "
-              f"{r['n_sparse_params'] / r['n_dense_params'] * 100:>7.1f}%")
+        print(
+            f"  {r['n_vars']:>6d} {r['n_dense_params']:>8d} "
+            f"{r['n_sparse_params']:>8d} {r['mask_density_pct']:>7.1f}% "
+            f"{r['n_sparse_params'] / r['n_dense_params'] * 100:>7.1f}%"
+        )
 
     # Training instance results.
     print(f"\n  Training Instance (seed=42):")
     print(f"  {'Vars':>6s} {'Sparse':>9s} {'Dense':>9s} {'HC':>9s} {'Random':>9s}")
-    print(f"  {'-'*45}")
+    print(f"  {'-' * 45}")
     for r in all_results:
-        print(f"  {r['n_vars']:>6d} "
-              f"{r['train']['sparse']['mean_pct']:>8.1f}% "
-              f"{r['train']['dense']['mean_pct']:>8.1f}% "
-              f"{r['train']['handcoded']['mean_pct']:>8.1f}% "
-              f"{r['train']['random']['mean_pct']:>8.1f}%")
+        print(
+            f"  {r['n_vars']:>6d} "
+            f"{r['train']['sparse']['mean_pct']:>8.1f}% "
+            f"{r['train']['dense']['mean_pct']:>8.1f}% "
+            f"{r['train']['handcoded']['mean_pct']:>8.1f}% "
+            f"{r['train']['random']['mean_pct']:>8.1f}%"
+        )
 
     # Held-out instance results.
     print(f"\n  Held-out Instance (seed=99, generalization):")
     print(f"  {'Vars':>6s} {'Sparse':>9s} {'Dense':>9s} {'HC*':>9s} {'Random':>9s}")
-    print(f"  {'-'*45}")
+    print(f"  {'-' * 45}")
     for r in all_results:
-        print(f"  {r['n_vars']:>6d} "
-              f"{r['test']['sparse']['mean_pct']:>8.1f}% "
-              f"{r['test']['dense']['mean_pct']:>8.1f}% "
-              f"{r['test']['handcoded']['mean_pct']:>8.1f}% "
-              f"{r['test']['random']['mean_pct']:>8.1f}%")
+        print(
+            f"  {r['n_vars']:>6d} "
+            f"{r['test']['sparse']['mean_pct']:>8.1f}% "
+            f"{r['test']['dense']['mean_pct']:>8.1f}% "
+            f"{r['test']['handcoded']['mean_pct']:>8.1f}% "
+            f"{r['test']['random']['mean_pct']:>8.1f}%"
+        )
     print(f"  (* Hand-coded uses the test instance's own Ising mapping — oracle)")
 
     # Best satisfaction (what matters for SAT solving).
     print(f"\n  Best Satisfaction (training instance):")
     print(f"  {'Vars':>6s} {'Sparse':>9s} {'Dense':>9s} {'HC':>9s}")
-    print(f"  {'-'*36}")
+    print(f"  {'-' * 36}")
     for r in all_results:
-        print(f"  {r['n_vars']:>6d} "
-              f"{r['train']['sparse']['best_pct']:>8.1f}% "
-              f"{r['train']['dense']['best_pct']:>8.1f}% "
-              f"{r['train']['handcoded']['best_pct']:>8.1f}%")
+        print(
+            f"  {r['n_vars']:>6d} "
+            f"{r['train']['sparse']['best_pct']:>8.1f}% "
+            f"{r['train']['dense']['best_pct']:>8.1f}% "
+            f"{r['train']['handcoded']['best_pct']:>8.1f}%"
+        )
 
     # Timing comparison.
     print(f"\n  Timing:")
     for r in all_results:
         speedup = r["dense_time"] / r["sparse_time"] if r["sparse_time"] > 0 else 0
-        print(f"    {r['n_vars']} vars: data={r['data_time']:.1f}s, "
-              f"sparse={r['sparse_time']:.1f}s, dense={r['dense_time']:.1f}s "
-              f"(sparse {speedup:.1f}x faster)")
+        print(
+            f"    {r['n_vars']} vars: data={r['data_time']:.1f}s, "
+            f"sparse={r['sparse_time']:.1f}s, dense={r['dense_time']:.1f}s "
+            f"(sparse {speedup:.1f}x faster)"
+        )
 
     # Verdict.
     if all_results:
         sparse_advantages = []
         for r in all_results:
-            sparse_over_dense = (r["train"]["sparse"]["mean_pct"]
-                                 - r["train"]["dense"]["mean_pct"])
+            sparse_over_dense = r["train"]["sparse"]["mean_pct"] - r["train"]["dense"]["mean_pct"]
             sparse_advantages.append(sparse_over_dense)
 
         sparse_over_rand = []
         for r in all_results:
-            adv = (r["train"]["sparse"]["mean_pct"]
-                   - r["train"]["random"]["mean_pct"])
+            adv = r["train"]["sparse"]["mean_pct"] - r["train"]["random"]["mean_pct"]
             sparse_over_rand.append(adv)
 
         gen_gap_sparse = []
@@ -621,42 +645,50 @@ def main() -> int:
             gen_gap_sparse.append(
                 r["train"]["sparse"]["mean_pct"] - r["test"]["sparse"]["mean_pct"]
             )
-            gen_gap_dense.append(
-                r["train"]["dense"]["mean_pct"] - r["test"]["dense"]["mean_pct"]
-            )
+            gen_gap_dense.append(r["train"]["dense"]["mean_pct"] - r["test"]["dense"]["mean_pct"])
 
         mean_sparse_advantage = np.mean(sparse_advantages)
         mean_sparse_over_rand = np.mean(sparse_over_rand)
         mean_gen_gap_sparse = np.mean(gen_gap_sparse)
         mean_gen_gap_dense = np.mean(gen_gap_dense)
 
-        print(f"\n  Sparse CD vs Dense CD (train): "
-              f"{[f'{a:+.1f}%' for a in sparse_advantages]}")
-        print(f"  Sparse CD over Random (train): "
-              f"{[f'{a:+.1f}%' for a in sparse_over_rand]}")
-        print(f"  Generalization gap (train - test): "
-              f"sparse={[f'{g:.1f}%' for g in gen_gap_sparse]}, "
-              f"dense={[f'{g:.1f}%' for g in gen_gap_dense]}")
+        print(f"\n  Sparse CD vs Dense CD (train): {[f'{a:+.1f}%' for a in sparse_advantages]}")
+        print(f"  Sparse CD over Random (train): {[f'{a:+.1f}%' for a in sparse_over_rand]}")
+        print(
+            f"  Generalization gap (train - test): "
+            f"sparse={[f'{g:.1f}%' for g in gen_gap_sparse]}, "
+            f"dense={[f'{g:.1f}%' for g in gen_gap_dense]}"
+        )
 
         # Sparsity verdict.
         if mean_sparse_advantage > 2:
-            print(f"\n  SPARSITY: ✅ Sparse CD outperforms dense CD "
-                  f"by {mean_sparse_advantage:+.1f}% mean")
+            print(
+                f"\n  SPARSITY: ✅ Sparse CD outperforms dense CD "
+                f"by {mean_sparse_advantage:+.1f}% mean"
+            )
         elif mean_sparse_advantage > -1:
-            print(f"\n  SPARSITY: ➡️ Sparse CD matches dense CD "
-                  f"({mean_sparse_advantage:+.1f}%) with far fewer params")
+            print(
+                f"\n  SPARSITY: ➡️ Sparse CD matches dense CD "
+                f"({mean_sparse_advantage:+.1f}%) with far fewer params"
+            )
         else:
-            print(f"\n  SPARSITY: ❌ Sparse CD underperforms dense CD "
-                  f"by {mean_sparse_advantage:+.1f}%")
+            print(
+                f"\n  SPARSITY: ❌ Sparse CD underperforms dense CD "
+                f"by {mean_sparse_advantage:+.1f}%"
+            )
 
         # Generalization verdict.
         if mean_gen_gap_sparse < mean_gen_gap_dense:
-            print(f"  GENERALIZATION: ✅ Sparse generalizes better "
-                  f"(gap: {mean_gen_gap_sparse:.1f}% vs dense {mean_gen_gap_dense:.1f}%)")
+            print(
+                f"  GENERALIZATION: ✅ Sparse generalizes better "
+                f"(gap: {mean_gen_gap_sparse:.1f}% vs dense {mean_gen_gap_dense:.1f}%)"
+            )
         else:
-            print(f"  GENERALIZATION: ➡️ Similar generalization "
-                  f"(sparse gap: {mean_gen_gap_sparse:.1f}%, "
-                  f"dense gap: {mean_gen_gap_dense:.1f}%)")
+            print(
+                f"  GENERALIZATION: ➡️ Similar generalization "
+                f"(sparse gap: {mean_gen_gap_sparse:.1f}%, "
+                f"dense gap: {mean_gen_gap_dense:.1f}%)"
+            )
 
         # Overall usefulness.
         if mean_sparse_over_rand > 5:

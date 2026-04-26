@@ -431,7 +431,9 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
             exp421_mode,
         )
         tmpl = ExperimentTemplate(
-            exp_id=EXP_ID, title=EXP_TITLE, deliverable=DELIVERABLE,
+            exp_id=EXP_ID,
+            title=EXP_TITLE,
+            deliverable=DELIVERABLE,
             requires_gpu=False,
         )
         tmpl.setup()
@@ -449,7 +451,9 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
 
     _log.info(
         "Exp 421 status=%r mode=%r verdict=%r — proceeding to RERUN.",
-        exp421_status, exp421_mode, exp421_verdict,
+        exp421_status,
+        exp421_mode,
+        exp421_verdict,
     )
 
     # ------------------------------------------------------------------
@@ -470,7 +474,9 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
     # Step 3: ExperimentTemplate setup (RERUN path)
     # ------------------------------------------------------------------
     tmpl = ExperimentTemplate(
-        exp_id=EXP_ID, title=EXP_TITLE, deliverable=DELIVERABLE,
+        exp_id=EXP_ID,
+        title=EXP_TITLE,
+        deliverable=DELIVERABLE,
         requires_gpu=True,
     )
     tmpl.setup()
@@ -482,20 +488,22 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
     blocked = LiveGPUGate.require_live_or_blocked(tmpl, gate_model_ids)
     if blocked is not None:
         _log.error("Gate 1 (LiveGPUGate) blocked Exp 429 — writing blocked artifact.")
-        blocked.update({
-            "adversarial_schema": "carnot.adversarial_gsm8k.v2",
-            "inference_mode": "blocked",
-            "honest_verdict": "blocked",
-            "confirmed_from": 421,
-            "rerun": True,
-            "n_questions": 0,
-            "n_models": 0,
-            "per_model_results": [],
-            "adversarial_drop_pct": 0.0,
-            "repair_improvement_pct": 0.0,
-            "gate0_autofix_applied": _autofix_result.auto_fix_applied,
-            "gate0_preflight_verdict": preflight.get("honest_verdict"),
-        })
+        blocked.update(
+            {
+                "adversarial_schema": "carnot.adversarial_gsm8k.v2",
+                "inference_mode": "blocked",
+                "honest_verdict": "blocked",
+                "confirmed_from": 421,
+                "rerun": True,
+                "n_questions": 0,
+                "n_models": 0,
+                "per_model_results": [],
+                "adversarial_drop_pct": 0.0,
+                "repair_improvement_pct": 0.0,
+                "gate0_autofix_applied": _autofix_result.auto_fix_applied,
+                "gate0_preflight_verdict": preflight.get("honest_verdict"),
+            }
+        )
         _write_artifact(tmpl, blocked)
         return
 
@@ -509,12 +517,14 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
         _log.warning(
             "Gate 2: GPU1 zombie detected (RETRO-025) — gpu1_vram_mb=%.0f gpu1_util=%.0f%%. "
             "Inference will serialise to GPU0 only.",
-            gpu_health.gpu1_vram_mb, gpu_health.gpu1_util_pct,
+            gpu_health.gpu1_vram_mb,
+            gpu_health.gpu1_util_pct,
         )
     if gpu_health.temperature_warning:
         _log.warning(
             "Gate 2: temperature warning — gpu0=%.0fC gpu1=%.0fC  batch_factor=%.2f",
-            gpu_health.gpu0_temp_c, gpu_health.gpu1_temp_c,
+            gpu_health.gpu0_temp_c,
+            gpu_health.gpu1_temp_c,
             gpu_health.recommended_batch_size_factor,
         )
 
@@ -556,9 +566,7 @@ def main() -> None:  # noqa: C901 — gate chain is inherently long
     for spec in MODEL_SPECS:
         try:
             _log.info("Loading %s on GPU %d ...", spec["name"], spec["gpu"])
-            model_objects[spec["name"]] = _load_model_pipeline(
-                spec["hf_id"], spec["gpu"], "auto"
-            )
+            model_objects[spec["name"]] = _load_model_pipeline(spec["hf_id"], spec["gpu"], "auto")
             _log.info("Loaded %s OK", spec["name"])
         except Exception as exc:
             _log.error("Gate 4: failed to load %s: %s — blocked", spec["name"], exc)
@@ -666,6 +674,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

@@ -259,7 +259,9 @@ class JEPARankNetV17:
         """
         rng = np.random.default_rng(seed)
         # He init: scale by sqrt(2 / fan_in) to prevent vanishing/exploding gradients.
-        self._W1 = rng.standard_normal((EMBED_DIM, 64)).astype(np.float32) * math.sqrt(2.0 / EMBED_DIM)
+        self._W1 = rng.standard_normal((EMBED_DIM, 64)).astype(np.float32) * math.sqrt(
+            2.0 / EMBED_DIM
+        )
         self._b1 = np.zeros(64, dtype=np.float32)
         self._W2 = rng.standard_normal((64, 32)).astype(np.float32) * math.sqrt(2.0 / 64)
         self._b2 = np.zeros(32, dtype=np.float32)
@@ -268,9 +270,12 @@ class JEPARankNetV17:
 
     def _params(self) -> dict[str, np.ndarray]:
         return {
-            "W1": self._W1, "b1": self._b1,
-            "W2": self._W2, "b2": self._b2,
-            "W3": self._W3, "b3": self._b3,
+            "W1": self._W1,
+            "b1": self._b1,
+            "W2": self._W2,
+            "b2": self._b2,
+            "W3": self._W3,
+            "b3": self._b3,
         }
 
     def _set_params(self, params: dict[str, np.ndarray]) -> None:
@@ -399,7 +404,9 @@ def build_ranknet_pairs(
         correct_emb = _text_embedding(step_text)
         # Generate two incorrect variants with different prime offsets for diversity.
         incorrect_text_a = _make_incorrect_step(step_text, offset_idx=i % len(_INCORRECT_OFFSETS))
-        incorrect_text_b = _make_incorrect_step(step_text, offset_idx=(i + 1) % len(_INCORRECT_OFFSETS))
+        incorrect_text_b = _make_incorrect_step(
+            step_text, offset_idx=(i + 1) % len(_INCORRECT_OFFSETS)
+        )
         incorrect_emb_a = _text_embedding(incorrect_text_a)
         incorrect_emb_b = _text_embedding(incorrect_text_b)
 
@@ -413,8 +420,8 @@ def build_ranknet_pairs(
 
     # Apply hard negative mining: for each correct embedding, select the most similar
     # incorrect embedding from the pool. This forces discrimination on hard cases.
-    correct_matrix = np.stack(correct_embs)           # (2*n_pairs, EMBED_DIM)
-    incorrect_matrix = np.stack(incorrect_embs_pool)   # (2*n_pairs, EMBED_DIM)
+    correct_matrix = np.stack(correct_embs)  # (2*n_pairs, EMBED_DIM)
+    incorrect_matrix = np.stack(incorrect_embs_pool)  # (2*n_pairs, EMBED_DIM)
 
     hard_neg_indices = hard_negative_mining(correct_matrix, incorrect_matrix)
 
@@ -469,9 +476,12 @@ def train_jepa_v17(
     # Initialise model and extract JAX-compatible params.
     model = JEPARankNetV17(seed=42)
     params: dict[str, jnp.ndarray] = {
-        "W1": jnp.array(model._W1), "b1": jnp.array(model._b1),
-        "W2": jnp.array(model._W2), "b2": jnp.array(model._b2),
-        "W3": jnp.array(model._W3), "b3": jnp.array(model._b3),
+        "W1": jnp.array(model._W1),
+        "b1": jnp.array(model._b1),
+        "W2": jnp.array(model._W2),
+        "b2": jnp.array(model._b2),
+        "W3": jnp.array(model._W3),
+        "b3": jnp.array(model._b3),
     }
 
     # Adam optimiser.
@@ -510,8 +520,8 @@ def _compute_auc(scores: list[float], labels: list[int]) -> float:
     Returns:
         AUROC in [0, 1]. 0.5 = random; 1.0 = perfect separation.
     """
-    pos_scores = [s for s, l in zip(scores, labels) if l == 1]
-    neg_scores = [s for s, l in zip(scores, labels) if l == 0]
+    pos_scores = [s for s, l in zip(scores, labels, strict=False) if l == 1]
+    neg_scores = [s for s, l in zip(scores, labels, strict=False) if l == 0]
     if not pos_scores or not neg_scores:
         return 0.5
 

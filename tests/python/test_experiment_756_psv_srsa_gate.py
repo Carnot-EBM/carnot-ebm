@@ -259,7 +259,8 @@ class TestRecoverySustained:
         assert w2_slope > 0
 
         honest_verdict = (
-            "recovery_sustained" if recovery_sustained
+            "recovery_sustained"
+            if recovery_sustained
             else ("recovery_partial" if w1_slope < 0 else "recovery_failed")
         )
         assert honest_verdict == "recovery_partial"
@@ -278,7 +279,8 @@ class TestRecoverySustained:
         assert recovery_sustained is False
 
         honest_verdict = (
-            "recovery_sustained" if recovery_sustained
+            "recovery_sustained"
+            if recovery_sustained
             else ("recovery_partial" if w1_slope < 0 else "recovery_failed")
         )
         assert honest_verdict == "recovery_failed"
@@ -293,7 +295,9 @@ class TestRecoverySustained:
         import json
         from pathlib import Path
 
-        deliverable = Path(__file__).resolve().parents[2] / "results" / "experiment_756_psv_srsa_gate.json"
+        deliverable = (
+            Path(__file__).resolve().parents[2] / "results" / "experiment_756_psv_srsa_gate.json"
+        )
         assert deliverable.exists(), f"Deliverable not found: {deliverable}"
 
         with deliverable.open() as f:

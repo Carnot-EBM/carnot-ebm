@@ -74,7 +74,9 @@ def _load_corpus(n_incorrect: int = 50, n_correct: int = 20) -> tuple[list[str],
         except (json.JSONDecodeError, OSError):
             continue
 
-        raw_pairs = data if isinstance(data, list) else data.get("pairs", data.get("live_pairs", []))
+        raw_pairs = (
+            data if isinstance(data, list) else data.get("pairs", data.get("live_pairs", []))
+        )
         incorrect: list[str] = []
         correct: list[str] = []
         for p in raw_pairs:

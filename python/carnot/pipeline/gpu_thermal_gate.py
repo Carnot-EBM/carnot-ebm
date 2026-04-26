@@ -211,13 +211,14 @@ class GPUThermalGate:
 
             pynvml.nvmlInit()
             handle = pynvml.nvmlDeviceGetHandleByIndex(gpu_index)
-            temp = float(pynvml.nvmlDeviceGetTemperature(
-                handle, pynvml.NVML_TEMPERATURE_GPU
-            ))
+            temp = float(pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU))
             is_safe = temp <= self.hot_threshold_c
             _log.debug(
                 "GPUThermalGate: GPU %d temperature = %.1f°C (safe=%s, threshold=%.1f°C)",
-                gpu_index, temp, is_safe, self.hot_threshold_c,
+                gpu_index,
+                temp,
+                is_safe,
+                self.hot_threshold_c,
             )
             return ThermalStatus(gpu_index=gpu_index, temperature_c=temp, is_safe=is_safe)
         except Exception as exc:
@@ -225,7 +226,8 @@ class GPUThermalGate:
             # treat as no GPU present; gate is a no-op.
             _log.debug(
                 "GPUThermalGate: pynvml unavailable or GPU %d not found (%s) — no-op",
-                gpu_index, exc,
+                gpu_index,
+                exc,
             )
             return ThermalStatus(gpu_index=gpu_index, temperature_c=None, is_safe=True)
 
@@ -272,15 +274,20 @@ class GPUThermalGate:
         if status.temperature_c <= self.cool_threshold_c:
             _log.debug(
                 "GPUThermalGate: GPU %d already cool (%.1f°C <= %.1f°C)",
-                gpu_index, status.temperature_c, self.cool_threshold_c,
+                gpu_index,
+                status.temperature_c,
+                self.cool_threshold_c,
             )
             return True
 
         _log.warning(
             "GPUThermalGate: GPU %d is hot (%.1f°C > %.1f°C threshold); "
             "waiting up to %ds for it to cool to %.1f°C",
-            gpu_index, status.temperature_c, self.hot_threshold_c,
-            self.max_wait_seconds, self.cool_threshold_c,
+            gpu_index,
+            status.temperature_c,
+            self.hot_threshold_c,
+            self.max_wait_seconds,
+            self.cool_threshold_c,
         )
 
         elapsed = 0.0
@@ -290,7 +297,9 @@ class GPUThermalGate:
             sleep_time = min(backoff, self.max_wait_seconds - elapsed)
             _log.debug(
                 "GPUThermalGate: sleeping %.0fs (elapsed=%.0fs / %ds)",
-                sleep_time, elapsed, self.max_wait_seconds,
+                sleep_time,
+                elapsed,
+                self.max_wait_seconds,
             )
             time.sleep(sleep_time)
             elapsed += sleep_time
@@ -301,22 +310,25 @@ class GPUThermalGate:
             if status.temperature_c <= self.cool_threshold_c:
                 _log.info(
                     "GPUThermalGate: GPU %d cooled to %.1f°C after %.0fs",
-                    gpu_index, status.temperature_c, elapsed,
+                    gpu_index,
+                    status.temperature_c,
+                    elapsed,
                 )
                 return True
 
             _log.debug(
                 "GPUThermalGate: GPU %d still hot (%.1f°C), continuing wait",
-                gpu_index, status.temperature_c,
+                gpu_index,
+                status.temperature_c,
             )
             backoff *= 2.0  # exponential backoff
 
         # Timed out.
         final = self.check_temperature(gpu_index)
         _log.error(
-            "GPUThermalGate: GPU %d failed to cool within %ds "
-            "(final temperature: %s°C)",
-            gpu_index, self.max_wait_seconds,
+            "GPUThermalGate: GPU %d failed to cool within %ds (final temperature: %s°C)",
+            gpu_index,
+            self.max_wait_seconds,
             f"{final.temperature_c:.1f}" if final.temperature_c is not None else "N/A",
         )
         return False
@@ -325,7 +337,7 @@ class GPUThermalGate:
     # Context manager
     # ------------------------------------------------------------------
 
-    def __enter__(self) -> "GPUThermalGate":
+    def __enter__(self) -> GPUThermalGate:
         """Run the thermal gate for GPU 0 (single-GPU default).
 
         For multi-GPU experiments, call wait_for_cool(gpu_index) directly.

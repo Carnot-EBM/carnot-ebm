@@ -31,6 +31,7 @@
 
 Spec: REQ-LEARN-048, REQ-LEARN-049, SCENARIO-LEARN-060, SCENARIO-LEARN-836-001
 """
+
 from __future__ import annotations
 
 import json
@@ -66,36 +67,36 @@ BLOCKED_VERDICTS = {"pipeline_wiring_correct", "diagnosis_inconclusive"}
 
 TEST_CASES: list[tuple[str, str, bool]] = [
     # (question, response, is_correct)
-    ("What is 13 + 29?", "Step 1: 13 + 29 = 41. The answer is 41.", False),      # wrong (42)
+    ("What is 13 + 29?", "Step 1: 13 + 29 = 41. The answer is 41.", False),  # wrong (42)
     ("What is 50 - 17?", "Step 1: 50 - 17 = 33. The answer is 33.", True),
-    ("What is 8 * 7?", "Step 1: 8 * 7 = 54. The answer is 54.", False),           # wrong (56)
+    ("What is 8 * 7?", "Step 1: 8 * 7 = 54. The answer is 54.", False),  # wrong (56)
     ("What is 100 / 4?", "Step 1: 100 / 4 = 25. The answer is 25.", True),
     ("What is 2^5?", "Step 1: 2^5 = 2*2*2*2*2 = 30. The answer is 30.", False),  # wrong (32)
     ("What is 99 - 44?", "Step 1: 99 - 44 = 55. The answer is 55.", True),
-    ("What is 6 + 37?", "Step 1: 6 + 37 = 42. The answer is 42.", False),         # wrong (43)
+    ("What is 6 + 37?", "Step 1: 6 + 37 = 42. The answer is 42.", False),  # wrong (43)
     ("What is 9 * 8?", "Step 1: 9 * 8 = 72. The answer is 72.", True),
-    ("What is 144 / 12?", "Step 1: 144 / 12 = 13. The answer is 13.", False),     # wrong (12)
+    ("What is 144 / 12?", "Step 1: 144 / 12 = 13. The answer is 13.", False),  # wrong (12)
     ("What is 17 + 58?", "Step 1: 17 + 58 = 75. The answer is 75.", True),
-    ("What is 3 * 14?", "Step 1: 3 * 14 = 41. The answer is 41.", False),         # wrong (42)
+    ("What is 3 * 14?", "Step 1: 3 * 14 = 41. The answer is 41.", False),  # wrong (42)
     ("What is 81 / 9?", "Step 1: 81 / 9 = 9. The answer is 9.", True),
-    ("What is 47 + 28?", "Step 1: 47 + 28 = 76. The answer is 76.", False),       # wrong (75)
+    ("What is 47 + 28?", "Step 1: 47 + 28 = 76. The answer is 76.", False),  # wrong (75)
     ("What is 200 - 63?", "Step 1: 200 - 63 = 137. The answer is 137.", True),
-    ("What is 5 * 13?", "Step 1: 5 * 13 = 64. The answer is 64.", False),         # wrong (65)
+    ("What is 5 * 13?", "Step 1: 5 * 13 = 64. The answer is 64.", False),  # wrong (65)
     ("What is 48 / 6?", "Step 1: 48 / 6 = 8. The answer is 8.", True),
-    ("What is 19 + 46?", "Step 1: 19 + 46 = 64. The answer is 64.", False),       # wrong (65)
+    ("What is 19 + 46?", "Step 1: 19 + 46 = 64. The answer is 64.", False),  # wrong (65)
     ("What is 7 * 9?", "Step 1: 7 * 9 = 63. The answer is 63.", True),
-    ("What is 121 / 11?", "Step 1: 121 / 11 = 10. The answer is 10.", False),     # wrong (11)
+    ("What is 121 / 11?", "Step 1: 121 / 11 = 10. The answer is 10.", False),  # wrong (11)
     ("What is 34 + 19?", "Step 1: 34 + 19 = 53. The answer is 53.", True),
-    ("What is 6 * 9?", "Step 1: 6 * 9 = 42. The answer is 42.", False),           # wrong (54)
+    ("What is 6 * 9?", "Step 1: 6 * 9 = 42. The answer is 42.", False),  # wrong (54)
     ("What is 90 - 27?", "Step 1: 90 - 27 = 63. The answer is 63.", True),
-    ("What is 11 * 8?", "Step 1: 11 * 8 = 87. The answer is 87.", False),         # wrong (88)
+    ("What is 11 * 8?", "Step 1: 11 * 8 = 87. The answer is 87.", False),  # wrong (88)
     ("What is 56 / 7?", "Step 1: 56 / 7 = 8. The answer is 8.", True),
-    ("What is 23 + 48?", "Step 1: 23 + 48 = 70. The answer is 70.", False),       # wrong (71)
+    ("What is 23 + 48?", "Step 1: 23 + 48 = 70. The answer is 70.", False),  # wrong (71)
     ("What is 4 * 16?", "Step 1: 4 * 16 = 64. The answer is 64.", True),
-    ("What is 72 / 8?", "Step 1: 72 / 8 = 8. The answer is 8.", False),           # wrong (9)
+    ("What is 72 / 8?", "Step 1: 72 / 8 = 8. The answer is 8.", False),  # wrong (9)
     ("What is 55 - 18?", "Step 1: 55 - 18 = 37. The answer is 37.", True),
     ("What is 15% of 200?", "Step 1: 0.15 * 200 = 30. The answer is 30.", True),
-    ("What is 3^3?", "Step 1: 3 * 3 * 3 = 28. The answer is 28.", False),         # wrong (27)
+    ("What is 3^3?", "Step 1: 3 * 3 * 3 = 28. The answer is 28.", False),  # wrong (27)
 ]
 
 N_QUESTIONS = len(TEST_CASES)
@@ -191,13 +192,15 @@ def _run_session(
         violation_detected = len(result.violations) > 0
         if not is_correct and violation_detected:
             n_detected_incorrect += 1
-        results.append({
-            "idx": idx,
-            "question": question[:60],
-            "is_correct": is_correct,
-            "violation_detected": violation_detected,
-            "n_violations": len(result.violations),
-        })
+        results.append(
+            {
+                "idx": idx,
+                "question": question[:60],
+                "is_correct": is_correct,
+                "violation_detected": violation_detected,
+                "n_violations": len(result.violations),
+            }
+        )
 
     # Restore original store.store() so next session gets a fresh counter.
     store.store = original_store_fn
@@ -281,7 +284,9 @@ def run_accumulation_experiment(
 
     precisions = [s1["precision"], s2["precision"], s3["precision"]]
     delta_overall = max(precisions) - s1["precision"]
-    n_written_total = s1["n_constraints_written"] + s2["n_constraints_written"] + s3["n_constraints_written"]
+    n_written_total = (
+        s1["n_constraints_written"] + s2["n_constraints_written"] + s3["n_constraints_written"]
+    )
 
     honest_verdict = compute_honest_verdict(n_written_total, delta_overall)
 

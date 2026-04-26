@@ -224,18 +224,21 @@ def export_fcv_onnx(out_dir: Path | str) -> tuple[Path, Path]:
         # abs_diff < 0.5  → bool [batch, 1]
         helper.make_node("Less", ["abs_diff", "tol"], ["bool_v"], "less_op"),
         # Cast bool → float  [batch, 1]
-        helper.make_node("Cast", ["bool_v"], ["verdict_2d"], "cast_op",
-                         to=int(TensorProto.FLOAT)),
+        helper.make_node("Cast", ["bool_v"], ["verdict_2d"], "cast_op", to=int(TensorProto.FLOAT)),
         # Squeeze axis=1 → [batch]
         helper.make_node("Squeeze", ["verdict_2d", "sq_ax"], ["verdict"], "squeeze_op"),
     ]
 
     arith_graph = helper.make_graph(
-        arith_nodes, "arithmetic_verifier",
-        arith_inputs, arith_outputs, arith_initializers,
+        arith_nodes,
+        "arithmetic_verifier",
+        arith_inputs,
+        arith_outputs,
+        arith_initializers,
     )
     arith_model = helper.make_model(
-        arith_graph, producer_name="carnot",
+        arith_graph,
+        producer_name="carnot",
         opset_imports=[helper.make_opsetid("", 13)],
     )
     arith_path = out_dir / "arithmetic_route.onnx"
@@ -269,18 +272,23 @@ def export_fcv_onnx(out_dir: Path | str) -> tuple[Path, Path]:
         # x < y → bool [batch, 1]
         helper.make_node("Less", ["col_x", "col_y"], ["bool_cmp"], "cmp_op"),
         # Cast bool → float  [batch, 1]
-        helper.make_node("Cast", ["bool_cmp"], ["verdict_2d"], "cast_cmp",
-                         to=int(TensorProto.FLOAT)),
+        helper.make_node(
+            "Cast", ["bool_cmp"], ["verdict_2d"], "cast_cmp", to=int(TensorProto.FLOAT)
+        ),
         # Squeeze axis=1 → [batch]
         helper.make_node("Squeeze", ["verdict_2d", "csq_ax"], ["verdict"], "squeeze_cmp"),
     ]
 
     cmp_graph = helper.make_graph(
-        cmp_nodes, "comparison_verifier",
-        cmp_inputs, cmp_outputs, cmp_initializers,
+        cmp_nodes,
+        "comparison_verifier",
+        cmp_inputs,
+        cmp_outputs,
+        cmp_initializers,
     )
     cmp_model = helper.make_model(
-        cmp_graph, producer_name="carnot",
+        cmp_graph,
+        producer_name="carnot",
         opset_imports=[helper.make_opsetid("", 13)],
     )
     cmp_path = out_dir / "comparison_route.onnx"
@@ -323,6 +331,7 @@ def upload_artifacts(
     # Real upload path: use the provided or real HF API
     if hf_api is None:
         from huggingface_hub import HfApi  # type: ignore[import-untyped]
+
         hf_api = HfApi()
 
     hf_api.create_repo(repo_id=exp66_repo_id, exist_ok=True)

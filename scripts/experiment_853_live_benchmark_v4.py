@@ -118,18 +118,20 @@ def _load_gsm8k_questions(n: int = N_QUESTIONS) -> list[dict[str, Any]]:
     for i in range(1, n + 1):
         a, b = i * 7, i * 3
         c = a + b
-        synthetic.append({
-            "question": (
-                f"A store has {a} apples in the morning and receives {b} more in "
-                f"the afternoon.  How many apples does the store have at the end of "
-                f"the day?"
-            ),
-            "answer": (
-                f"The store starts with {a} apples.  It receives {b} more.  "
-                f"{a} + {b} = {c}.  #### {c}"
-            ),
-            "source": "synthetic",
-        })
+        synthetic.append(
+            {
+                "question": (
+                    f"A store has {a} apples in the morning and receives {b} more in "
+                    f"the afternoon.  How many apples does the store have at the end of "
+                    f"the day?"
+                ),
+                "answer": (
+                    f"The store starts with {a} apples.  It receives {b} more.  "
+                    f"{a} + {b} = {c}.  #### {c}"
+                ),
+                "source": "synthetic",
+            }
+        )
     _log.info("Using %d synthetic GSM8K questions (real dataset unavailable)", len(synthetic))
     return synthetic
 
@@ -240,6 +242,7 @@ def _build_vr_infer_fn(base_fn: Any, pipeline: Any) -> Any:
     response on pipeline error so the benchmark can still score the question.
     Also records constraint_violations_found from the repair result.
     """
+
     def _vr_infer(q_dict: dict[str, Any]) -> tuple[str, str]:
         raw_resp, mode = base_fn(q_dict)
         if not pipeline or not raw_resp:
@@ -262,6 +265,7 @@ def _build_se_infer_fn(vr_fn: Any, se_probe: Any) -> Any:
     result is advisory-only (Tier 0f): it does not suppress or alter the response.
     The is_unstable flag is returned via the question dict side-channel (mutates q_dict).
     """
+
     def _se_infer(q_dict: dict[str, Any]) -> tuple[str, str]:
         resp, mode = vr_fn(q_dict)
         if se_probe and resp:
@@ -347,15 +351,19 @@ def _run_condition(
         )
         _log.info(
             "Condition %s: completed batch (%d responses so far)",
-            condition_name, len(all_responses),
+            condition_name,
+            len(all_responses),
         )
 
-    n_correct, _ = _score_responses(questions[:len(all_responses)], all_responses)
+    n_correct, _ = _score_responses(questions[: len(all_responses)], all_responses)
     n_answered = len(all_responses)
     accuracy = n_correct / n_answered if n_answered > 0 else 0.0
     _log.info(
         "Condition %s: n_correct=%d/%d accuracy=%.4f",
-        condition_name, n_correct, n_answered, accuracy,
+        condition_name,
+        n_correct,
+        n_answered,
+        accuracy,
     )
     return n_correct, accuracy, all_responses, all_modes, all_unstable
 
@@ -565,28 +573,45 @@ def main() -> None:
         # ------------------------------------------------------------------
         with tmpl.phase("baseline_condition"):
             n_correct_baseline, acc_baseline, resp_baseline, modes_baseline, _ = _run_condition(
-                "BASELINE", questions, base_infer_fn, executor, tmpl,
+                "BASELINE",
+                questions,
+                base_infer_fn,
+                executor,
+                tmpl,
                 checkpoint_prefix=f"exp{EXP_ID}_baseline",
             )
 
         with tmpl.phase("vr_condition"):
             n_correct_vr, acc_vr, resp_vr, modes_vr, _ = _run_condition(
-                "VR", questions, vr_infer_fn, executor, tmpl,
+                "VR",
+                questions,
+                vr_infer_fn,
+                executor,
+                tmpl,
                 checkpoint_prefix=f"exp{EXP_ID}_vr",
             )
 
         with tmpl.phase("vr_jepa_condition"):
             n_correct_vr_jepa, acc_vr_jepa, resp_vr_jepa, modes_vr_jepa, _ = _run_condition(
-                "VR_JEPA", questions, vr_jepa_infer_fn, executor, tmpl,
+                "VR_JEPA",
+                questions,
+                vr_jepa_infer_fn,
+                executor,
+                tmpl,
                 checkpoint_prefix=f"exp{EXP_ID}_vr_jepa",
             )
 
         with tmpl.phase("vr_jepa_se_condition"):
             # Copy questions so _semantic_energy_unstable side-channel per question is captured.
             import copy
+
             questions_se = copy.deepcopy(questions)
             n_correct_full, acc_full, resp_full, modes_full, unstable_full = _run_condition(
-                "VR_JEPA_SE", questions_se, vr_jepa_se_infer_fn, executor, tmpl,
+                "VR_JEPA_SE",
+                questions_se,
+                vr_jepa_se_infer_fn,
+                executor,
+                tmpl,
                 checkpoint_prefix=f"exp{EXP_ID}_vr_jepa_se",
             )
 
@@ -608,8 +633,12 @@ def main() -> None:
         _log.info(
             "Results: baseline=%.4f vr=%.4f vr+jepa=%.4f full=%.4f "
             "signed_improvement=%.4f verdict=%s",
-            acc_baseline, acc_vr, acc_vr_jepa, acc_full,
-            signed_improvement, honest_verdict,
+            acc_baseline,
+            acc_vr,
+            acc_vr_jepa,
+            acc_full,
+            signed_improvement,
+            honest_verdict,
         )
 
         # ------------------------------------------------------------------
@@ -620,9 +649,7 @@ def main() -> None:
                 "honest_verdict": honest_verdict,
                 "inference_mode": inference_mode_full,
                 "inference_mode_baseline": (
-                    "live_gpu"
-                    if all(m == "live_gpu" for m in modes_baseline)
-                    else "mixed"
+                    "live_gpu" if all(m == "live_gpu" for m in modes_baseline) else "mixed"
                 ),
                 "n_questions": N_QUESTIONS,
                 "model": MODEL_SPECS[0]["hf_id"],

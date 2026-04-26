@@ -27,10 +27,10 @@ from __future__ import annotations
 
 import datetime
 from pathlib import Path
-from typing import Optional
 
 try:
     import yaml  # type: ignore[import]
+
     _YAML_AVAILABLE = True
 except ImportError:
     _YAML_AVAILABLE = False
@@ -59,7 +59,7 @@ class ExclusionManifestEnforcer:
     def __init__(self) -> None:
         # Maps retired integer experiment ID -> human-readable reason.
         self._retired: dict[int, str] = {}
-        self._manifest_path: Optional[str] = None
+        self._manifest_path: str | None = None
 
     # ------------------------------------------------------------------
     # load_manifest
@@ -174,23 +174,23 @@ class ExclusionManifestEnforcer:
         timestamp = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
         lines: list[str] = [
             "\n\n---\n",
-            f"## Exclusion Manifest Gate\n",
-            f"\n",
+            "## Exclusion Manifest Gate\n",
+            "\n",
             f"*Written by ExclusionManifestEnforcer at {timestamp}*\n",
             f"*Source: {self._manifest_path or 'ops/exclusion_manifest.yaml'}*\n",
-            f"\n",
-            f"The conductor MUST NOT launch any experiment whose ID appears below.\n",
-            f"These experiments are permanently retired and have no research value.\n",
-            f"\n",
-            f"| Experiment ID | Retirement Reason |\n",
-            f"|--------------|------------------|\n",
+            "\n",
+            "The conductor MUST NOT launch any experiment whose ID appears below.\n",
+            "These experiments are permanently retired and have no research value.\n",
+            "\n",
+            "| Experiment ID | Retirement Reason |\n",
+            "|--------------|------------------|\n",
         ]
         for eid in sorted(self._retired.keys()):
             reason = self._retired[eid].replace("|", "/")
             lines.append(f"| {eid} | {reason} |\n")
 
-        lines.append(f"\n")
-        lines.append(f"manifest_enforcer_deployed: true\n")
+        lines.append("\n")
+        lines.append("manifest_enforcer_deployed: true\n")
         lines.append(f"retired_count: {len(self._retired)}\n")
 
         p = Path(prereqs_path)
@@ -244,7 +244,7 @@ def _parse_yaml_fallback(raw: str) -> dict[int, str]:
         Map of integer experiment_id -> reason.
     """
     result: dict[int, str] = {}
-    current_id: Optional[int] = None
+    current_id: int | None = None
     for line in raw.splitlines():
         # Strip indentation and the optional YAML list dash.
         stripped = line.strip().lstrip("- ").strip()

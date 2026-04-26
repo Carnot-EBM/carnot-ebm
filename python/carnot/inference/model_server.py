@@ -567,9 +567,7 @@ def benchmark_three_way(
 
     # --- Tier 2: Warm server (HuggingFace backend) ---
     # Model loaded once; all questions routed through the batching worker.
-    hf_factory = hf_server_factory or (
-        lambda: ModelServer([model_name], batch_size=batch_size)
-    )
+    hf_factory = hf_server_factory or (lambda: ModelServer([model_name], batch_size=batch_size))
     warm_start = clock()
     with hf_factory() as hf_server:
         hf_server.generate_batch(

@@ -148,8 +148,14 @@ def test_load_fover_corpus_v2_skips_empty_response() -> None:
         path = Path(f.name)
 
     entries = [
-        {"question": "Q1", "response": "", "is_correct": True,
-         "model_id": "m", "constraint_types": [], "cot_steps": []},
+        {
+            "question": "Q1",
+            "response": "",
+            "is_correct": True,
+            "model_id": "m",
+            "constraint_types": [],
+            "cot_steps": [],
+        },
         _make_entry("Q1", "wrong", False),
     ]
     _write_corpus(path, entries)
@@ -165,10 +171,22 @@ def test_load_fover_corpus_v2_skips_empty_question() -> None:
         path = Path(f.name)
 
     entries = [
-        {"question": "", "response": "answer", "is_correct": True,
-         "model_id": "m", "constraint_types": [], "cot_steps": []},
-        {"question": "", "response": "wrong", "is_correct": False,
-         "model_id": "m", "constraint_types": [], "cot_steps": []},
+        {
+            "question": "",
+            "response": "answer",
+            "is_correct": True,
+            "model_id": "m",
+            "constraint_types": [],
+            "cot_steps": [],
+        },
+        {
+            "question": "",
+            "response": "wrong",
+            "is_correct": False,
+            "model_id": "m",
+            "constraint_types": [],
+            "cot_steps": [],
+        },
     ]
     _write_corpus(path, entries)
 

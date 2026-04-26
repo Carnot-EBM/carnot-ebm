@@ -36,9 +36,12 @@ from __future__ import annotations
 import re
 import time
 from dataclasses import dataclass, field
-from typing import Callable, Optional
+from typing import TYPE_CHECKING
 
 from carnot.extraction.llm_extractor_v1 import safe_eval
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # CoTStep — result for one step's verification
@@ -58,14 +61,12 @@ _LAST_NUMBER_RE = re.compile(
 # cost per step.  "None" as the output is the canonical signal for "no arithmetic".
 _SYMCODE_STEP_PROMPT = (
     "Write a single-line Python expression that computes the arithmetic stated "
-    "in this reasoning step. Output ONLY the expression (e.g. \"47+28\"). "
+    'in this reasoning step. Output ONLY the expression (e.g. "47+28"). '
     'If no arithmetic: output "None". Step: {step}'
 )
 
 # Fallback regex for CI / no-LLM mode: recognise "N op M" patterns.
-_EXPR_RE = re.compile(
-    r"([\d,]+(?:\.\d+)?)\s*([+\-*/])\s*([\d,]+(?:\.\d+)?)"
-)
+_EXPR_RE = re.compile(r"([\d,]+(?:\.\d+)?)\s*([+\-*/])\s*([\d,]+(?:\.\d+)?)")
 
 
 @dataclass
@@ -90,9 +91,9 @@ class CoTStep:
 
     text: str
     step_index: int
-    generated_code: Optional[str]
-    executed_result: Optional[float]
-    stated_result: Optional[float]
+    generated_code: str | None
+    executed_result: float | None
+    stated_result: float | None
     violation_detected: bool
 
 
@@ -154,7 +155,7 @@ class SymCodeVerifier:
     Spec: REQ-VERIFY-122, REQ-VERIFY-123
     """
 
-    def __init__(self, llm_caller: Optional[Callable[[str], str]] = None) -> None:
+    def __init__(self, llm_caller: Callable[[str], str] | None = None) -> None:
         self.llm_caller = llm_caller
 
     # ------------------------------------------------------------------
@@ -189,7 +190,7 @@ class SymCodeVerifier:
     # Code extraction per step
     # ------------------------------------------------------------------
 
-    def extract_code_for_step(self, step: str) -> Optional[str]:
+    def extract_code_for_step(self, step: str) -> str | None:
         """Produce a Python expression that computes the arithmetic in this step.
 
         With llm_caller: sends the step to the LLM with the SymCode prompt and
@@ -233,7 +234,7 @@ class SymCodeVerifier:
     # Per-step verification
     # ------------------------------------------------------------------
 
-    def _extract_stated_result(self, step: str) -> Optional[float]:
+    def _extract_stated_result(self, step: str) -> float | None:
         """Extract the last numeric value stated in the step.
 
         Looks for "= N", "is N", "gives N", etc. first; if none found, falls
@@ -296,11 +297,7 @@ class SymCodeVerifier:
         executed = safe_eval(code_raw)
         stated = self._extract_stated_result(step)
 
-        violation = (
-            executed is not None
-            and stated is not None
-            and abs(executed - stated) > 1e-6
-        )
+        violation = executed is not None and stated is not None and abs(executed - stated) > 1e-6
 
         return CoTStep(
             text=step,
@@ -367,9 +364,7 @@ class SymCodeVerifier:
 
         # Step 1: extract code expressions for all paragraphs.
         # We use the same extract_code_for_step logic; None means no arithmetic.
-        codes: list[Optional[str]] = [
-            self.extract_code_for_step(p) for p in paragraphs
-        ]
+        codes: list[str | None] = [self.extract_code_for_step(p) for p in paragraphs]
 
         # Step 2: build a single exec script with all non-None expressions.
         # Variable names are _expr_0, _expr_1, … so they never clash.
@@ -389,7 +384,7 @@ class SymCodeVerifier:
 
         # Step 4 & 5: build per-paragraph CoTStep results using namespace values.
         results: list[CoTStep] = []
-        for idx, (paragraph, code) in enumerate(zip(paragraphs, codes)):
+        for idx, (paragraph, code) in enumerate(zip(paragraphs, codes, strict=False)):
             if code is None or code.strip().lower() == "none":
                 results.append(
                     CoTStep(
@@ -406,15 +401,13 @@ class SymCodeVerifier:
             # Retrieve the evaluated result from the shared namespace.
             raw_result = namespace.get(f"_expr_{idx}")
             try:
-                executed: Optional[float] = float(raw_result) if raw_result is not None else None
+                executed: float | None = float(raw_result) if raw_result is not None else None
             except (TypeError, ValueError):
                 executed = None
 
             stated = self._extract_stated_result(paragraph)
             violation = (
-                executed is not None
-                and stated is not None
-                and abs(executed - stated) > 1e-6
+                executed is not None and stated is not None and abs(executed - stated) > 1e-6
             )
 
             results.append(

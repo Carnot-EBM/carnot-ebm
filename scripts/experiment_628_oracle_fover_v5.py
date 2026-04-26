@@ -104,9 +104,7 @@ def main() -> None:
 
         for row in rows:
             q_id = str(
-                row.get("question_id")
-                or row.get("question_index")
-                or hash(row.get("question", ""))
+                row.get("question_id") or row.get("question_index") or hash(row.get("question", ""))
             )
             if q_id in seen_ids:
                 continue

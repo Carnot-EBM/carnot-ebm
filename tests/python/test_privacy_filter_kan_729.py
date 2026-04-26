@@ -85,7 +85,9 @@ class TestEncodePrivacy:
         sparse_text = "Hello how are you doing today"
         dense_vec = encode_privacy(dense_text)
         sparse_vec = encode_privacy(sparse_text)
-        assert float(dense_vec[12]) > float(sparse_vec[12]), "Digit density should be higher for numeric text"
+        assert float(dense_vec[12]) > float(sparse_vec[12]), (
+            "Digit density should be higher for numeric text"
+        )
 
     def test_max_features_truncation(self):
         # max_features parameter should control output length.
@@ -193,8 +195,9 @@ class TestPrivacyFilterEnergyCheckerTraining:
         initial_ctrl = np.array(checker._edge_ctrl).copy()
         examples = self._make_examples()
         checker.train(examples, n_epochs=10)
-        assert not np.allclose(np.array(checker._edge_ctrl), initial_ctrl), \
+        assert not np.allclose(np.array(checker._edge_ctrl), initial_ctrl), (
             "Weights should change after training"
+        )
 
     def test_train_empty_examples_returns_empty_curve(self):
         checker = PrivacyFilterEnergyChecker()
@@ -216,7 +219,9 @@ class TestPrivacyFilterEnergyCheckerTraining:
         checker.train(examples, n_epochs=50)
 
         benign_energies = [checker.energy(f"What is {i} + {i}?") for i in range(20)]
-        pii_energies = [checker.energy(f"My SSN is {100 + i:03d}-{i:02d}-{1000 + i:04d}") for i in range(20)]
+        pii_energies = [
+            checker.energy(f"My SSN is {100 + i:03d}-{i:02d}-{1000 + i:04d}") for i in range(20)
+        ]
 
         mean_benign = np.mean(benign_energies)
         mean_pii = np.mean(pii_energies)
@@ -291,7 +296,18 @@ class TestPrivacyFilterSaveLoad:
         with tempfile.TemporaryDirectory() as tmpdir:
             path = Path(tmpdir) / "wrong.json"
             with open(path, "w") as fh:
-                json.dump({"schema": "carnot.prompt_injection_kan.v1", "n_features": 16, "n_hidden": 32, "n_knots": 3, "degree": 3, "edge_ctrl": [], "output_ctrl": []}, fh)
+                json.dump(
+                    {
+                        "schema": "carnot.prompt_injection_kan.v1",
+                        "n_features": 16,
+                        "n_hidden": 32,
+                        "n_knots": 3,
+                        "degree": 3,
+                        "edge_ctrl": [],
+                        "output_ctrl": [],
+                    },
+                    fh,
+                )
             with pytest.raises(ValueError, match="Unexpected schema"):
                 PrivacyFilterEnergyChecker.load(path)
 
@@ -351,6 +367,7 @@ class TestExperiment729Blocked:
     def test_blocked_on_missing_model(self, tmp_path):
         # The openai/privacy-filter directory does not exist → blocked artifact.
         import sys
+
         sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
         sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "python"))
 
@@ -368,7 +385,16 @@ class TestExperiment729Blocked:
         tmpl.setup()
 
         from scripts.experiment_729_privacy_filter_kan_true_distillation import _run
-        _run(tmpl, log, str(tmp_path / deliverable), missing_model_dir, corpus_dir, cache_path, weights_path)
+
+        _run(
+            tmpl,
+            log,
+            str(tmp_path / deliverable),
+            missing_model_dir,
+            corpus_dir,
+            cache_path,
+            weights_path,
+        )
 
         artifact_path = tmp_path / deliverable
         assert artifact_path.exists(), "Artifact should be written for blocked run"

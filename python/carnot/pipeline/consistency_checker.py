@@ -58,7 +58,7 @@ Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -121,17 +121,27 @@ _NUMERIC_PATTERNS: list[re.Pattern[str]] = [
 
 #: Matches arithmetic equations like "3 + 5 = 8" or "-3 - 2 = -5".
 #: Groups: (a, op, b, claimed_result)
-_ARITH_PATTERN: re.Pattern[str] = re.compile(
-    r"(-?\d+)\s*([+\-])\s*(-?\d+)\s*=\s*(-?\d+)"
-)
+_ARITH_PATTERN: re.Pattern[str] = re.compile(r"(-?\d+)\s*([+\-])\s*(-?\d+)\s*=\s*(-?\d+)")
 
 #: Stop words stripped from entity names during normalisation.
 #: Articles and common sentence starters that appear before noun phrases
 #: should not be part of the entity key used for cross-step comparison.
 _ENTITY_STOP_WORDS: frozenset[str] = frozenset(
     {
-        "the", "a", "an", "this", "that", "its", "our", "their",
-        "is", "was", "are", "were", "has", "have",
+        "the",
+        "a",
+        "an",
+        "this",
+        "that",
+        "its",
+        "our",
+        "their",
+        "is",
+        "was",
+        "are",
+        "were",
+        "has",
+        "have",
     }
 )
 
@@ -326,7 +336,7 @@ class GlobalConsistencyChecker:
     Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
     """
 
-    def check(self, state_machine: "ConstraintStateMachine") -> GlobalConsistencyReport:
+    def check(self, state_machine: ConstraintStateMachine) -> GlobalConsistencyReport:
         """Check all completed step pairs for global consistency.
 
         **Detailed explanation for engineers:**
@@ -380,11 +390,7 @@ class GlobalConsistencyChecker:
         # Severity: "critical" if any factual contradiction or 2+ pairs.
         # "warning" for exactly 1 non-factual pair.
         has_factual = any(ctype == "factual" for _, _, ctype, _ in inconsistent_pairs)
-        severity = (
-            "critical"
-            if (len(inconsistent_pairs) >= 2 or has_factual)
-            else "warning"
-        )
+        severity = "critical" if (len(inconsistent_pairs) >= 2 or has_factual) else "warning"
 
         # Recommend rolling back to the earliest step i involved in any pair.
         # Step i is the last state known to be globally consistent before
@@ -461,8 +467,7 @@ class GlobalConsistencyChecker:
                 val_j = claims_j[entity]
                 if abs(val_i - val_j) > 1e-9:
                     desc = (
-                        f"Entity '{entity}' has value {val_i} in step {i} "
-                        f"but {val_j} in step {j}"
+                        f"Entity '{entity}' has value {val_i} in step {i} but {val_j} in step {j}"
                     )
                     contradictions.append((i, j, "numeric", desc))
         return contradictions

@@ -93,7 +93,7 @@ def print_training_log(log: dict) -> None:
     # Print loss every 10 epochs.
     print("\n  Epoch  Train    Val")
     for i in range(0, n_epochs, max(1, n_epochs // 10)):
-        print(f"  {i+1:5d}  {train_losses[i]:.4f}  {val_losses[i]:.4f}")
+        print(f"  {i + 1:5d}  {train_losses[i]:.4f}  {val_losses[i]:.4f}")
     print(f"  {n_epochs:5d}  {train_losses[-1]:.4f}  {val_losses[-1]:.4f}")
 
 
@@ -110,11 +110,9 @@ def print_metrics(log: dict) -> None:
 
     print("\n--- Validation Metrics (threshold=0.5) ---")
     print(f"  {'Domain':<12}  AUROC    Precision  Recall")
-    print(f"  {'-'*12}  {'------':<8} {'--------':<10} {'------'}")
+    print(f"  {'-' * 12}  {'------':<8} {'--------':<10} {'------'}")
     for domain in DOMAINS:
-        print(
-            f"  {domain:<12}  {auroc[domain]:.4f}  {prec[domain]:.4f}     {recall[domain]:.4f}"
-        )
+        print(f"  {domain:<12}  {auroc[domain]:.4f}  {prec[domain]:.4f}     {recall[domain]:.4f}")
     print(f"  {'Macro':<12}  {macro:.4f}")
 
 
@@ -175,15 +173,9 @@ def main() -> None:
     if macro_auroc > AUROC_TARGET:
         print("  RESULT: TARGET MET ✓")
     else:
-        print(
-            f"  RESULT: TARGET NOT MET — AUROC {macro_auroc:.4f} <= {AUROC_TARGET}."
-        )
-        print(
-            "  NOTE: With only arithmetic violations in training data, code/logic AUROC = 0.5"
-        )
-        print(
-            "  (undefined — no positives in those domains). This is expected for Exp 143 data."
-        )
+        print(f"  RESULT: TARGET NOT MET — AUROC {macro_auroc:.4f} <= {AUROC_TARGET}.")
+        print("  NOTE: With only arithmetic violations in training data, code/logic AUROC = 0.5")
+        print("  (undefined — no positives in those domains). This is expected for Exp 143 data.")
 
     # Save model.
     MODEL_OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)

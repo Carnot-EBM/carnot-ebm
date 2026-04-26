@@ -59,17 +59,20 @@ def steer_and_evaluate(model, tokenizer, questions, direction_torch, layers, alp
 
         handles = []
         for layer_idx in layers:
-            if hasattr(model.model, 'layers') and layer_idx < len(model.model.layers):
+            if hasattr(model.model, "layers") and layer_idx < len(model.model.layers):
+
                 def make_hook(d, a):
                     def hook_fn(module, input, output):
                         if isinstance(output, tuple):
                             hidden = output[0]
                             orig_dtype = hidden.dtype
-                            dv = d[:hidden.shape[-1]].to(device=hidden.device).float()
+                            dv = d[: hidden.shape[-1]].to(device=hidden.device).float()
                             modified = (hidden.float() + a * dv).to(orig_dtype)
                             return (modified,) + output[1:]
                         return output
+
                     return hook_fn
+
                 h = model.model.layers[layer_idx].register_forward_hook(
                     make_hook(direction_torch, alpha)
                 )
@@ -77,7 +80,9 @@ def steer_and_evaluate(model, tokenizer, questions, direction_torch, layers, alp
 
         with torch.no_grad():
             outputs = model.generate(**inputs, max_new_tokens=20, do_sample=False)
-        response = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        response = tokenizer.decode(
+            outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+        )
 
         for h in handles:
             h.remove()
@@ -96,7 +101,9 @@ def main() -> int:
     print(f"Loading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True, output_hidden_states=True,
+        model_name,
+        trust_remote_code=True,
+        output_hidden_states=True,
     )
     model.eval()
 
@@ -113,7 +120,9 @@ def main() -> int:
         inputs = tokenizer(prompt, return_tensors="pt")
         with torch.no_grad():
             outputs = model.generate(**inputs, max_new_tokens=20, do_sample=False)
-        response = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        response = tokenizer.decode(
+            outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+        )
 
         prompt_len = inputs["input_ids"].shape[1]
         with torch.no_grad():
@@ -138,12 +147,14 @@ def main() -> int:
     # Phase 2: Compute concept vectors
     print("\n--- Phase 2: Concept vectors ---")
     from carnot.embeddings.hallucination_direction import (
-        HallucinationDirectionConfig, find_hallucination_direction,
+        HallucinationDirectionConfig,
+        find_hallucination_direction,
     )
 
     # Generic direction
     generic_dir = find_hallucination_direction(
-        jnp.stack(correct_acts), jnp.stack(wrong_acts),
+        jnp.stack(correct_acts),
+        jnp.stack(wrong_acts),
         HallucinationDirectionConfig(normalize=True),
     )
     generic_torch = torch.tensor(generic_dir.tolist(), dtype=torch.float32)
@@ -176,18 +187,18 @@ def main() -> int:
         print(f"  {name}: {acc:.0%} ({'+' if delta >= 0 else ''}{delta:.0%})")
 
     # Summary
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("RESULTS")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  {'Config':<40} {'Acc':>5} {'Δ':>6}")
-    print(f"  {'─'*52}")
+    print(f"  {'─' * 52}")
     print(f"  {'Greedy baseline':<40} {greedy_acc:>4.0%}   {'—':>5}")
     for name, acc, delta in results_table:
         print(f"  {name:<40} {acc:>4.0%}  {'+' if delta >= 0 else ''}{delta:>4.0%}")
 
     best = max(results_table, key=lambda r: r[1])
     print(f"\n  Best: {best[0]} at {best[1]:.0%} ({'+' if best[2] >= 0 else ''}{best[2]:.0%})")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     return 0
 

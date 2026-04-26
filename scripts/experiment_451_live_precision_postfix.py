@@ -145,13 +145,14 @@ def _load_gsm8k_questions(n: int) -> list[dict]:
     for i in range(1, n + 1):
         a, b = i * 3, i * 2
         c = a + b
-        synthetic.append({
-            "question": (
-                f"Janet has {a} apples and receives {b} more.  "
-                f"How many apples does she have?"
-            ),
-            "answer": f"She starts with {a} and gets {b} more, so {a} + {b} = {c}.  #### {c}",
-        })
+        synthetic.append(
+            {
+                "question": (
+                    f"Janet has {a} apples and receives {b} more.  How many apples does she have?"
+                ),
+                "answer": f"She starts with {a} and gets {b} more, so {a} + {b} = {c}.  #### {c}",
+            }
+        )
     _log.info("Using %d synthetic GSM8K questions (real dataset unavailable)", len(synthetic))
     return synthetic[:n]
 
@@ -253,7 +254,10 @@ def _run_model_benchmark(
     pre_accuracy = n_correct_baseline / max(len(questions), 1)
     _log.info(
         "  [%s] BASELINE: %d/%d correct (%.4f)",
-        model_name, n_correct_baseline, len(questions), pre_accuracy,
+        model_name,
+        n_correct_baseline,
+        len(questions),
+        pre_accuracy,
     )
 
     # ---- Pass 2: PIPELINE (CRANE extraction + one-shot repair) ----
@@ -276,7 +280,10 @@ def _run_model_benchmark(
     post_accuracy = n_correct_pipeline / max(len(questions), 1)
     _log.info(
         "  [%s] PIPELINE: %d/%d correct (%.4f) delta=%.4f",
-        model_name, n_correct_pipeline, len(questions), post_accuracy,
+        model_name,
+        n_correct_pipeline,
+        len(questions),
+        post_accuracy,
         post_accuracy - pre_accuracy,
     )
 
@@ -489,8 +496,7 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
     _write_artifact(repo_root, artifact)
 
     _log.info(
-        "HEADLINE: honest_verdict=%s first_positive=%s "
-        "gemma4_delta=%.4f qwen_delta=%.4f",
+        "HEADLINE: honest_verdict=%s first_positive=%s gemma4_delta=%.4f qwen_delta=%.4f",
         honest_verdict,
         first_positive_number,
         gemma4_result.signed_improvement,
@@ -531,8 +537,7 @@ def main() -> None:
         gemma4 = artifact.get("gemma4_result") or {}
         qwen = artifact.get("qwen_result") or {}
         _log.info(
-            "FIRST POSITIVE VERIFY-REPAIR NUMBER: "
-            "Gemma4 delta=%.4f Qwen delta=%.4f",
+            "FIRST POSITIVE VERIFY-REPAIR NUMBER: Gemma4 delta=%.4f Qwen delta=%.4f",
             gemma4.get("signed_improvement", float("nan")),
             qwen.get("signed_improvement", float("nan")),
         )

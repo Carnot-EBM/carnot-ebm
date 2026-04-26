@@ -122,6 +122,7 @@ def test_gate_blocks_when_tools_not_installed(tmp_path: Path) -> None:
 
     # Create a minimal ExperimentTemplate that points at tmp_path
     from experiment_template import ExperimentTemplate  # noqa: PLC0415
+
     tmpl = ExperimentTemplate(
         exp_id=804,
         title="test",
@@ -148,6 +149,7 @@ def test_gate_blocks_when_artifact_missing(tmp_path: Path) -> None:
     """
     # No artifact written — results dir doesn't even exist
     from experiment_template import ExperimentTemplate  # noqa: PLC0415
+
     tmpl = ExperimentTemplate(
         exp_id=804,
         title="test",
@@ -199,6 +201,7 @@ def test_gate_passes_with_synthesis_failed_verdict(tmp_path: Path) -> None:
         (hw_dir / "ising_sampler_v3.v").write_text("module stub(); endmodule\n")
 
     from experiment_template import ExperimentTemplate  # noqa: PLC0415
+
     tmpl = ExperimentTemplate(
         exp_id=804,
         title="test",
@@ -212,7 +215,9 @@ def test_gate_passes_with_synthesis_failed_verdict(tmp_path: Path) -> None:
         data, status = exp804.run_experiment(tmpl)
 
     # Gate passed but no yosys → blocked on tools_not_installed (different path)
-    assert data["gate_passed"] is True, "Gate must pass when verdict is tools_installed_synthesis_failed"
+    assert data["gate_passed"] is True, (
+        "Gate must pass when verdict is tools_installed_synthesis_failed"
+    )
 
 
 # ---------------------------------------------------------------------------

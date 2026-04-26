@@ -53,16 +53,13 @@ SCENARIO-SELFLEARN-013, SCENARIO-SELFLEARN-014, SCENARIO-SELFLEARN-015
 
 from __future__ import annotations
 
-import random
 from dataclasses import dataclass, field
 from typing import Any
 
-import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 
 from carnot.models.ising import IsingConfig, IsingModel
-
 
 # ---------------------------------------------------------------------------
 # ViolationDistribution
@@ -282,7 +279,7 @@ class LSEBMConstraintReplayer:
 
         # Step 6: CD training loop (skipped when there are no training pairs).
         rng = np.random.default_rng(seed=0)
-        for iteration in range(self.ebm_n_iter if n_train > 0 else 0):
+        for _iteration in range(self.ebm_n_iter if n_train > 0 else 0):
             # Pick a random positive sample.
             pos_idx = rng.integers(0, n_train)
             x_pos = x_pos_all[pos_idx].copy()

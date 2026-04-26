@@ -163,10 +163,7 @@ CI_CASES: list[dict[str, Any]] = [
             "10 are burned. How many good rolls are there?"
         ),
         "ground_truth": 134,
-        "response": (
-            "48 * 3 = 144 total rolls. "
-            "144 - 10 = 134 good rolls."
-        ),
+        "response": ("48 * 3 = 144 total rolls. 144 - 10 = 134 good rolls."),
     },
     # ---- WRONG: Z3 detects bad multiplication ----
     {
@@ -373,7 +370,7 @@ def run_llm_extractor(response: str, generate_fn: Any = None) -> ExtractorResult
     else:
         # Inject the provided (or CI stub) generate function
         ext = LLMConstraintExtractor(
-            model=object(),      # non-None sentinel so _ensure_model skips load
+            model=object(),  # non-None sentinel so _ensure_model skips load
             tokenizer=object(),  # same
             generate_fn=generate_fn,
         )
@@ -534,12 +531,8 @@ def compute_statistics(case_results: list[CaseResult]) -> dict[str, Any]:
     baseline_accuracy = round(n_correct / n, 4)
 
     def _extractor_stats(flagged_fn: Any) -> dict[str, Any]:
-        n_flagged_wrong = sum(
-            1 for r in case_results if flagged_fn(r) and not r.correct
-        )
-        n_flagged_correct = sum(
-            1 for r in case_results if flagged_fn(r) and r.correct
-        )
+        n_flagged_wrong = sum(1 for r in case_results if flagged_fn(r) and not r.correct)
+        n_flagged_correct = sum(1 for r in case_results if flagged_fn(r) and r.correct)
         detection_rate = round(n_flagged_wrong / n_wrong, 4) if n_wrong > 0 else 0.0
         fp_rate = round(n_flagged_correct / n_correct, 4) if n_correct > 0 else 0.0
         theoretical_accuracy = (n_correct + n_flagged_wrong) / n
@@ -580,24 +573,16 @@ def compute_statistics(case_results: list[CaseResult]) -> dict[str, Any]:
                 if r.semantic.flagged and not r.z3.flagged and not r.llm.flagged
             ),
             "z3_and_llm": sum(
-                1
-                for r in case_results
-                if r.z3.flagged and r.llm.flagged and not r.semantic.flagged
+                1 for r in case_results if r.z3.flagged and r.llm.flagged and not r.semantic.flagged
             ),
             "z3_and_semantic": sum(
-                1
-                for r in case_results
-                if r.z3.flagged and r.semantic.flagged and not r.llm.flagged
+                1 for r in case_results if r.z3.flagged and r.semantic.flagged and not r.llm.flagged
             ),
             "llm_and_semantic": sum(
-                1
-                for r in case_results
-                if r.llm.flagged and r.semantic.flagged and not r.z3.flagged
+                1 for r in case_results if r.llm.flagged and r.semantic.flagged and not r.z3.flagged
             ),
             "all_three": sum(
-                1
-                for r in case_results
-                if r.z3.flagged and r.llm.flagged and r.semantic.flagged
+                1 for r in case_results if r.z3.flagged and r.llm.flagged and r.semantic.flagged
             ),
         },
     }

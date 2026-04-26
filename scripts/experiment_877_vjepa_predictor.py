@@ -44,16 +44,28 @@ MODEL_SAVE_PATH = _REPO_ROOT / "results" / "vjepa_predictor_877.npz"
 
 # Synthetic ARC-style OOD steps (different vocabulary domain from GSM8K arithmetic)
 _ARC_OOD_STEPS = [
-    ("The mitochondria is the powerhouse of the cell producing ATP through oxidative phosphorylation.", 0),
+    (
+        "The mitochondria is the powerhouse of the cell producing ATP through oxidative phosphorylation.",
+        0,
+    ),
     ("Photosynthesis converts carbon dioxide and water into glucose using solar energy.", 0),
     ("The nervous system transmits electrical signals via action potentials along axons.", 1),
-    ("DNA replication requires helicase to unwind the double helix before polymerase can copy it.", 0),
+    (
+        "DNA replication requires helicase to unwind the double helix before polymerase can copy it.",
+        0,
+    ),
     ("Plate tectonics explains how continents drift apart over millions of years.", 1),
     ("Natural selection favors traits that increase reproductive success in an environment.", 0),
     ("The speed of light in vacuum is approximately 299792458 metres per second.", 0),
     ("Water boils at 100 degrees Celsius at standard atmospheric pressure of 101.325 kPa.", 1),
-    ("The periodic table organises elements by increasing atomic number and recurring properties.", 0),
-    ("Gravity causes objects to accelerate at 9.8 m/s^2 near Earth's surface neglecting air resistance.", 1),
+    (
+        "The periodic table organises elements by increasing atomic number and recurring properties.",
+        0,
+    ),
+    (
+        "Gravity causes objects to accelerate at 9.8 m/s^2 near Earth's surface neglecting air resistance.",
+        1,
+    ),
 ]
 
 
@@ -103,7 +115,7 @@ def main() -> None:
 
     # If test set is empty, use a small slice of train for evaluation
     if not test_corpus:
-        test_corpus = corpus[:max(4, len(corpus) // 5)]
+        test_corpus = corpus[: max(4, len(corpus) // 5)]
 
     print(f"[Exp 877] Train={len(train_corpus)}, Test={len(test_corpus)}")
 
@@ -116,7 +128,9 @@ def main() -> None:
 
     final_loss = train_metrics.epoch_losses[-1] if train_metrics.epoch_losses else float("nan")
     kl_magnitude = (
-        float(sum(train_metrics.kl_magnitudes[-10:]) / max(1, len(train_metrics.kl_magnitudes[-10:])))
+        float(
+            sum(train_metrics.kl_magnitudes[-10:]) / max(1, len(train_metrics.kl_magnitudes[-10:]))
+        )
         if train_metrics.kl_magnitudes
         else 0.0
     )
@@ -234,6 +248,7 @@ def main() -> None:
 
 def _timestamp() -> str:
     import datetime
+
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
 

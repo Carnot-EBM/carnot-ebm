@@ -7,6 +7,7 @@ Covers:
 
 Spec: REQ-LEARN-813-001, REQ-LEARN-813-002
 """
+
 from __future__ import annotations
 
 import json
@@ -51,17 +52,13 @@ class TestExp812Gate:
         """
         missing = tmp_path / "no_such_file.json"
         tmpl = self._make_tmpl()
-        with patch(
-            "scripts.experiment_813_constraint_addition_live.EXP_812_PATH", missing
-        ):
+        with patch("scripts.experiment_813_constraint_addition_live.EXP_812_PATH", missing):
             result = _load_exp812_gate(tmpl)
         assert result is not None
         assert result["honest_verdict"] == "injection_not_wired"
         assert result["status"] == "blocked"
 
-    def test_gate_blocks_when_verdict_is_injection_negative_delta(
-        self, tmp_path: Path
-    ) -> None:
+    def test_gate_blocks_when_verdict_is_injection_negative_delta(self, tmp_path: Path) -> None:
         """Gate returns blocked artifact when honest_verdict is 'injection_negative_delta'.
 
         This is the real Exp 812 state — the injector lowers energy instead of raising it,
@@ -70,21 +67,15 @@ class TestExp812Gate:
         Spec: REQ-LEARN-813-001
         """
         exp812_file = tmp_path / "experiment_812.json"
-        exp812_file.write_text(
-            json.dumps({"honest_verdict": "injection_negative_delta"})
-        )
+        exp812_file.write_text(json.dumps({"honest_verdict": "injection_negative_delta"}))
         tmpl = self._make_tmpl()
-        with patch(
-            "scripts.experiment_813_constraint_addition_live.EXP_812_PATH", exp812_file
-        ):
+        with patch("scripts.experiment_813_constraint_addition_live.EXP_812_PATH", exp812_file):
             result = _load_exp812_gate(tmpl)
         assert result is not None
         assert result["honest_verdict"] == "injection_not_wired"
         assert "injection_negative_delta" in result["blocked_reason"]
 
-    def test_gate_blocks_when_verdict_is_injection_no_delta(
-        self, tmp_path: Path
-    ) -> None:
+    def test_gate_blocks_when_verdict_is_injection_no_delta(self, tmp_path: Path) -> None:
         """Gate blocks when honest_verdict is 'injection_no_delta'.
 
         Spec: REQ-LEARN-813-001
@@ -92,16 +83,12 @@ class TestExp812Gate:
         exp812_file = tmp_path / "experiment_812.json"
         exp812_file.write_text(json.dumps({"honest_verdict": "injection_no_delta"}))
         tmpl = self._make_tmpl()
-        with patch(
-            "scripts.experiment_813_constraint_addition_live.EXP_812_PATH", exp812_file
-        ):
+        with patch("scripts.experiment_813_constraint_addition_live.EXP_812_PATH", exp812_file):
             result = _load_exp812_gate(tmpl)
         assert result is not None
         assert result["honest_verdict"] == "injection_not_wired"
 
-    def test_gate_passes_when_verdict_is_injection_works(
-        self, tmp_path: Path
-    ) -> None:
+    def test_gate_passes_when_verdict_is_injection_works(self, tmp_path: Path) -> None:
         """Gate returns None (pass) when honest_verdict is 'injection_works'.
 
         Spec: REQ-LEARN-813-001
@@ -109,9 +96,7 @@ class TestExp812Gate:
         exp812_file = tmp_path / "experiment_812.json"
         exp812_file.write_text(json.dumps({"honest_verdict": "injection_works"}))
         tmpl = self._make_tmpl()
-        with patch(
-            "scripts.experiment_813_constraint_addition_live.EXP_812_PATH", exp812_file
-        ):
+        with patch("scripts.experiment_813_constraint_addition_live.EXP_812_PATH", exp812_file):
             result = _load_exp812_gate(tmpl)
         assert result is None
 
@@ -176,50 +161,35 @@ class TestMapHonestVerdict:
 
         Spec: REQ-LEARN-813-002
         """
-        assert (
-            map_honest_verdict(0.05, "live_gpu")
-            == "constraint_addition_works_live"
-        )
+        assert map_honest_verdict(0.05, "live_gpu") == "constraint_addition_works_live"
 
     def test_no_delta_when_zero_delta_and_live_gpu(self) -> None:
         """Zero delta + live_gpu -> constraint_addition_no_delta_live.
 
         Spec: REQ-LEARN-813-002
         """
-        assert (
-            map_honest_verdict(0.0, "live_gpu")
-            == "constraint_addition_no_delta_live"
-        )
+        assert map_honest_verdict(0.0, "live_gpu") == "constraint_addition_no_delta_live"
 
     def test_no_delta_when_negative_delta_and_live_gpu(self) -> None:
         """Negative delta + live_gpu -> constraint_addition_no_delta_live.
 
         Spec: REQ-LEARN-813-002
         """
-        assert (
-            map_honest_verdict(-0.03, "live_gpu")
-            == "constraint_addition_no_delta_live"
-        )
+        assert map_honest_verdict(-0.03, "live_gpu") == "constraint_addition_no_delta_live"
 
     def test_injection_not_wired_when_gate_blocked(self) -> None:
         """gate_blocked=True -> injection_not_wired regardless of delta.
 
         Spec: REQ-LEARN-813-001
         """
-        assert (
-            map_honest_verdict(0.5, "live_gpu", gate_blocked=True)
-            == "injection_not_wired"
-        )
+        assert map_honest_verdict(0.5, "live_gpu", gate_blocked=True) == "injection_not_wired"
 
     def test_blocked_no_live_gpu_when_gpu_gate_blocked(self) -> None:
         """live_gpu_blocked=True -> blocked_no_live_gpu.
 
         Spec: REQ-LEARN-813-001
         """
-        assert (
-            map_honest_verdict(None, "blocked", live_gpu_blocked=True)
-            == "blocked_no_live_gpu"
-        )
+        assert map_honest_verdict(None, "blocked", live_gpu_blocked=True) == "blocked_no_live_gpu"
 
     def test_gate_blocked_takes_priority_over_live_gpu_blocked(self) -> None:
         """gate_blocked takes priority over live_gpu_blocked.
@@ -238,7 +208,4 @@ class TestMapHonestVerdict:
 
         Spec: REQ-LEARN-813-001
         """
-        assert (
-            map_honest_verdict(0.5, "synthetic_cpu")
-            == "constraint_addition_no_delta_live"
-        )
+        assert map_honest_verdict(0.5, "synthetic_cpu") == "constraint_addition_no_delta_live"

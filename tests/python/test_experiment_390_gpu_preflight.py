@@ -363,9 +363,7 @@ class TestRunGpuPreflight:
                 return_value=True,
             ),
             patch(f"{_MODULE}.diagnose_live_gpu", return_value=diag),
-            patch(
-                "carnot.pipeline.gpu_preflight.run_smoke_test"
-            ) as mock_smoke,
+            patch("carnot.pipeline.gpu_preflight.run_smoke_test") as mock_smoke,
         ):
             result = run_gpu_preflight(tmp_path)
 

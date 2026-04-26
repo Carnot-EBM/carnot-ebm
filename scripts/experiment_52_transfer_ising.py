@@ -43,6 +43,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 
 # --- SAT instance generators ---
 
+
 def generate_random_3sat_data(
     n_vars: int,
     ratio: float,
@@ -98,7 +99,9 @@ def generate_random_3sat_data(
     return clauses, np.array(data[:n_samples], dtype=np.float32)
 
 
-def graph_coloring_to_sat(n_nodes: int, n_colors: int, edges: list[tuple[int, int]]) -> list[list[int]]:
+def graph_coloring_to_sat(
+    n_nodes: int, n_colors: int, edges: list[tuple[int, int]]
+) -> list[list[int]]:
     """Encode a graph coloring problem as a SAT instance.
 
     Each node-color pair (node i, color c) becomes a Boolean variable.
@@ -122,6 +125,7 @@ def graph_coloring_to_sat(n_nodes: int, n_colors: int, edges: list[tuple[int, in
     Returns:
         List of clauses, each a list of signed integers (SAT literal format).
     """
+
     def var(node: int, color: int) -> int:
         return node * n_colors + color + 1
 
@@ -204,6 +208,7 @@ def generate_graph_coloring_data(
 
 # --- CD training (reused from Exp 50 with minor adaptations) ---
 
+
 def train_ising_cd(
     data: np.ndarray,
     n_epochs: int = 100,
@@ -248,9 +253,7 @@ def train_ising_cd(
     data_jax = jnp.array(data)
     spins_data = 2.0 * data_jax - 1.0  # Map {0,1} -> {-1,+1}.
     pos_bias_moments = jnp.mean(spins_data, axis=0)
-    pos_weight_moments = jnp.mean(
-        jnp.einsum("bi,bj->bij", spins_data, spins_data), axis=0
-    )
+    pos_weight_moments = jnp.mean(jnp.einsum("bi,bj->bij", spins_data, spins_data), axis=0)
 
     sampler = ParallelIsingSampler(
         n_warmup=cd_steps * 10,
@@ -270,9 +273,7 @@ def train_ising_cd(
 
         spins_model = 2.0 * model_samples.astype(jnp.float32) - 1.0
         neg_bias_moments = jnp.mean(spins_model, axis=0)
-        neg_weight_moments = jnp.mean(
-            jnp.einsum("bi,bj->bij", spins_model, spins_model), axis=0
-        )
+        neg_weight_moments = jnp.mean(jnp.einsum("bi,bj->bij", spins_model, spins_model), axis=0)
 
         # CD gradient update.
         grad_b = -beta * (pos_bias_moments - neg_bias_moments)
@@ -287,6 +288,7 @@ def train_ising_cd(
 
 
 # --- Evaluation ---
+
 
 def evaluate_model_on_domain(
     biases: np.ndarray,
@@ -443,9 +445,11 @@ def main() -> int:
         for j, (test_name, test_clauses, _) in enumerate(domains):
             result = evaluate_model_on_domain(biases, J, test_clauses, n_vars, beta=2.0)
             tag = "in-domain" if i == j else "TRANSFER"
-            print(f"    Train={train_name} -> Test={test_name}: "
-                  f"mean={result['mean_pct']:.1f}% best={result['best_pct']:.1f}% "
-                  f"perfect={result['n_perfect']} [{tag}]")
+            print(
+                f"    Train={train_name} -> Test={test_name}: "
+                f"mean={result['mean_pct']:.1f}% best={result['best_pct']:.1f}% "
+                f"perfect={result['n_perfect']} [{tag}]"
+            )
             row.append(result)
         transfer_matrix.append(row)
 
@@ -469,7 +473,8 @@ def main() -> int:
 
     # Mean SAT% transfer matrix.
     print("\n  TRANSFER MATRIX (mean SAT%)")
-    print(f"  {'Train \\ Test':>18s}", end="")
+    train_test_label = "Train \\ Test"
+    print(f"  {train_test_label:>18s}", end="")
     for sn in short_names:
         print(f"  {sn:>10s}", end="")
     print(f"  {'Random':>10s}")
@@ -486,7 +491,8 @@ def main() -> int:
 
     # Best SAT% transfer matrix.
     print("\n  TRANSFER MATRIX (best SAT%)")
-    print(f"  {'Train \\ Test':>18s}", end="")
+    train_test_label = "Train \\ Test"
+    print(f"  {train_test_label:>18s}", end="")
     for sn in short_names:
         print(f"  {sn:>10s}", end="")
     print(f"  {'Random':>10s}")
@@ -534,7 +540,8 @@ def main() -> int:
                     cross_beats_random += 1
 
     in_beats_random = sum(
-        1 for i in range(len(domains))
+        1
+        for i in range(len(domains))
         if transfer_matrix[i][i]["mean_pct"] > baselines[i]["mean_pct"] + 1.0
     )
 
@@ -545,7 +552,9 @@ def main() -> int:
     print(f"\n{sep}")
     if avg_cross_domain > avg_random + 3.0 and cross_beats_random >= cross_total // 2:
         print("  VERDICT: Ising models TRANSFER across SAT domains!")
-        print(f"  Cross-domain ({avg_cross_domain:.1f}%) substantially beats random ({avg_random:.1f}%).")
+        print(
+            f"  Cross-domain ({avg_cross_domain:.1f}%) substantially beats random ({avg_random:.1f}%)."
+        )
         print("  Structural constraints encoded in couplings generalize.")
     elif avg_cross_domain > avg_random + 1.0:
         print("  VERDICT: PARTIAL transfer -- cross-domain slightly above random.")

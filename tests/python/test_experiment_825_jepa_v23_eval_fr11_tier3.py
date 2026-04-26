@@ -119,15 +119,15 @@ class TestGateCheck(unittest.TestCase):
         import os
 
         gate_data = {"honest_verdict": "jepa_v23_below_random", "ood_auc": 0.4}
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as gf:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as gf:
             json.dump(gate_data, gf)
             gate_path = gf.name
 
         try:
-            with patch.object(exp825, "GATE_FILE", gate_path), \
-                 patch.object(exp825, "MODEL_FILE", gate_path):
+            with (
+                patch.object(exp825, "GATE_FILE", gate_path),
+                patch.object(exp825, "MODEL_FILE", gate_path),
+            ):
                 # We need to patch the open calls to use our temp file.
                 # Simpler: directly call the logic with mocked open.
                 pass
@@ -141,14 +141,17 @@ class TestGateCheck(unittest.TestCase):
             with patch("builtins.open") as mock_open:
                 from io import StringIO
                 import io
+
                 mock_open.return_value.__enter__ = lambda s: s
                 mock_open.return_value.__exit__ = MagicMock(return_value=False)
                 mock_open.return_value.read = lambda: json.dumps(gate_data)
                 mock_open.return_value.__iter__ = lambda s: iter([])
 
                 # Call the real run() but patch Path.open and json.load.
-                with patch("json.load", return_value=gate_data), \
-                     patch("pathlib.Path.open", mock_open):
+                with (
+                    patch("json.load", return_value=gate_data),
+                    patch("pathlib.Path.open", mock_open),
+                ):
                     result = exp825.run(tmpl)
 
             self.assertEqual(result["honest_verdict"], "blocked_gate")
@@ -196,9 +199,11 @@ class TestTier35Wiring(unittest.TestCase):
                 return io.BytesIO(model_bytes)
             return io.StringIO(json.dumps(gate_data))
 
-        with patch("builtins.open", side_effect=fake_open), \
-             patch("json.load", return_value=gate_data), \
-             patch("pickle.load", return_value=model):
+        with (
+            patch("builtins.open", side_effect=fake_open),
+            patch("json.load", return_value=gate_data),
+            patch("pickle.load", return_value=model),
+        ):
             tmpl = MagicMock()
             result = exp825.run(tmpl)
 
@@ -225,10 +230,11 @@ class TestTier35Wiring(unittest.TestCase):
         gate_data = {"honest_verdict": "jepa_v23_viable", "ood_auc": 0.55}
         model_bytes = pickle.dumps(model)
 
-        with patch("json.load", return_value=gate_data), \
-             patch("pickle.load", return_value=model), \
-             patch.object(exp825, "evaluate_domain",
-                          return_value=(0.60, [("step_0", 0.5, 1.0)])):
+        with (
+            patch("json.load", return_value=gate_data),
+            patch("pickle.load", return_value=model),
+            patch.object(exp825, "evaluate_domain", return_value=(0.60, [("step_0", 0.5, 1.0)])),
+        ):
             tmpl = MagicMock()
             result = exp825.run(tmpl)
 
@@ -288,8 +294,7 @@ class TestSelectAndEmitCertificates(unittest.TestCase):
         """SCENARIO-LEARN-061: 20 VerificationCertificates emitted."""
         import random
 
-        all_triples = [(f"step_{i}", 0.3 + i * 0.01, float(i % 2))
-                       for i in range(40)]
+        all_triples = [(f"step_{i}", 0.3 + i * 0.01, float(i % 2)) for i in range(40)]
         rng = random.Random(42)
         certs = exp825.select_and_emit_certificates(all_triples, 20, rng)
         self.assertEqual(len(certs), 20)
@@ -338,8 +343,7 @@ class TestArtifactSchema(unittest.TestCase):
         """Helper: run exp825 with a viable gate and mocked model."""
         model = _make_minimal_model()
         gate_data = {"honest_verdict": "jepa_v23_viable", "ood_auc": 0.811}
-        with patch("json.load", return_value=gate_data), \
-             patch("pickle.load", return_value=model):
+        with patch("json.load", return_value=gate_data), patch("pickle.load", return_value=model):
             tmpl = MagicMock()
             return exp825.run(tmpl)
 
@@ -348,8 +352,13 @@ class TestArtifactSchema(unittest.TestCase):
         tier35_deployed, n_certificates_emitted, honest_verdict) must be present."""
         result = self._run_with_viable_gate()
         for field in [
-            "auc_gsm8k", "auc_humaneval", "auc_arc", "overall_ood_auc",
-            "tier35_deployed", "n_certificates_emitted", "honest_verdict",
+            "auc_gsm8k",
+            "auc_humaneval",
+            "auc_arc",
+            "overall_ood_auc",
+            "tier35_deployed",
+            "n_certificates_emitted",
+            "honest_verdict",
         ]:
             self.assertIn(field, result, f"Missing required field: {field}")
 

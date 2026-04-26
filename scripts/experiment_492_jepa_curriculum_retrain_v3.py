@@ -91,9 +91,9 @@ N_STAGE3_EPOCHS = 100
 HIGH_CONF_THRESHOLD = 0.85  # more conservative than Exp 477's 0.70
 
 # AUC targets
-TARGET_AUC = 0.600          # RETRO-040 closure bar
-RECOVERY_AUC = 0.400        # recovery from 0.281 regression
-RETRO_CLOSED_AUC = 0.500    # minimum for retro_040_closed
+TARGET_AUC = 0.600  # RETRO-040 closure bar
+RECOVERY_AUC = 0.400  # recovery from 0.281 regression
+RETRO_CLOSED_AUC = 0.500  # minimum for retro_040_closed
 
 
 def _load_json_pairs(path: Path) -> list[dict]:
@@ -140,6 +140,7 @@ def main() -> None:
             # Create minimal synthetic corpus so experiment can still proceed
             from carnot.models.ising import IsingConfig, IsingModel
             from carnot.models.jepa_retrain_v2 import JEPAQualityAugmentor
+
             ising = IsingModel(IsingConfig(input_dim=8))
             aug = JEPAQualityAugmentor(ising_model=ising, n_samples=60)
             all_pairs = aug.generate_violation_pairs() + aug.generate_correct_pairs()
@@ -148,8 +149,9 @@ def main() -> None:
         # --- Compute before_auc on current (untrained baseline) EORM ---
         log.info("Computing before_auc on held-out 20%...")
         import jax.random as jrandom
+
         n_held = max(1, len(all_pairs) // 5)
-        held_out = all_pairs[len(all_pairs) - n_held:]
+        held_out = all_pairs[len(all_pairs) - n_held :]
 
         key = jrandom.PRNGKey(42)
         baseline_model = EORMModel(
@@ -164,7 +166,10 @@ def main() -> None:
         log.info("before_auc (untrained baseline) = %.4f", before_auc)
 
         # --- Three-stage curriculum training ---
-        log.info("Starting three-stage curriculum training (high_conf_threshold=%.2f)...", HIGH_CONF_THRESHOLD)
+        log.info(
+            "Starting three-stage curriculum training (high_conf_threshold=%.2f)...",
+            HIGH_CONF_THRESHOLD,
+        )
         trainer = JEPACurriculumTrainer(
             n_stage1_epochs=N_STAGE1_EPOCHS,
             n_stage2_epochs=N_STAGE2_EPOCHS,
@@ -176,7 +181,10 @@ def main() -> None:
         for s in stages:
             log.info(
                 "Stage %d: n_pairs=%d, n_epochs=%d, auc_after=%.4f",
-                s.stage, s.n_pairs, s.n_epochs, s.auc_after,
+                s.stage,
+                s.n_pairs,
+                s.n_epochs,
+                s.auc_after,
             )
 
         # --- Final AUC ---
@@ -264,6 +272,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

@@ -129,9 +129,7 @@ class TestCodeExtractor:
         """REQ-VERIFY-002: Literal return value type check passes when matching."""
         code = "def get_count() -> int:\n    return 42"
         results = self.ext.extract(code)
-        rv_results = [
-            r for r in results if r.constraint_type == "return_value_type"
-        ]
+        rv_results = [r for r in results if r.constraint_type == "return_value_type"]
         assert len(rv_results) == 1
         assert rv_results[0].metadata["satisfied"] is True
 
@@ -139,9 +137,7 @@ class TestCodeExtractor:
         """REQ-VERIFY-002: Literal return value type mismatch is detected."""
         code = 'def get_id() -> int:\n    return "not_a_number"'
         results = self.ext.extract(code)
-        rv_results = [
-            r for r in results if r.constraint_type == "return_value_type"
-        ]
+        rv_results = [r for r in results if r.constraint_type == "return_value_type"]
         assert len(rv_results) == 1
         assert rv_results[0].metadata["satisfied"] is False
 
@@ -177,9 +173,7 @@ class TestCodeExtractor:
         """REQ-VERIFY-002: Uninitialized variable usage is detected."""
         code = "def compute(x: int) -> int:\n    return x + uninitialized_var"
         results = self.ext.extract(code)
-        init_results = [
-            r for r in results if r.constraint_type == "initialization"
-        ]
+        init_results = [r for r in results if r.constraint_type == "initialization"]
         assert len(init_results) == 1
         assert init_results[0].metadata["variable"] == "uninitialized_var"
         assert init_results[0].metadata["satisfied"] is False
@@ -188,19 +182,13 @@ class TestCodeExtractor:
         """REQ-VERIFY-002: No initialization issues for well-formed code."""
         code = "def add(x: int, y: int) -> int:\n    return x + y"
         results = self.ext.extract(code)
-        init_results = [
-            r for r in results if r.constraint_type == "initialization"
-        ]
+        init_results = [r for r in results if r.constraint_type == "initialization"]
         assert len(init_results) == 0
 
     def test_fenced_code_block(self) -> None:
         """SCENARIO-VERIFY-002: Code inside fenced blocks is parsed."""
         text = (
-            "Here is some code:\n"
-            "```python\n"
-            "def greet(name: str) -> str:\n"
-            '    return "hello"\n'
-            "```\n"
+            'Here is some code:\n```python\ndef greet(name: str) -> str:\n    return "hello"\n```\n'
         )
         results = self.ext.extract(text)
         assert len(results) > 0
@@ -233,12 +221,7 @@ class TestCodeExtractor:
 
     def test_syntax_error_in_fenced_block(self) -> None:
         """REQ-VERIFY-001: SyntaxError inside a fenced block is handled gracefully."""
-        text = (
-            "```python\n"
-            "def broken(:\n"
-            "    pass\n"
-            "```\n"
-        )
+        text = "```python\ndef broken(:\n    pass\n```\n"
         results = self.ext.extract(text)
         assert results == []
 
@@ -275,9 +258,7 @@ class TestCodeExtractor:
         """REQ-VERIFY-002: int literal returning for float annotation is compatible."""
         code = "def get_val() -> float:\n    return 42"
         results = self.ext.extract(code)
-        rv_results = [
-            r for r in results if r.constraint_type == "return_value_type"
-        ]
+        rv_results = [r for r in results if r.constraint_type == "return_value_type"]
         assert len(rv_results) == 1
         assert rv_results[0].metadata["satisfied"] is True
 
@@ -285,23 +266,15 @@ class TestCodeExtractor:
         """REQ-VERIFY-002: bool literal returning for int annotation is compatible."""
         code = "def get_flag() -> int:\n    return True"
         results = self.ext.extract(code)
-        rv_results = [
-            r for r in results if r.constraint_type == "return_value_type"
-        ]
+        rv_results = [r for r in results if r.constraint_type == "return_value_type"]
         assert len(rv_results) == 1
         assert rv_results[0].metadata["satisfied"] is True
 
     def test_ann_assign_in_body(self) -> None:
         """REQ-VERIFY-002: Annotated assignments in function body are tracked."""
-        code = (
-            "def f() -> int:\n"
-            "    x: int = 5\n"
-            "    return x"
-        )
+        code = "def f() -> int:\n    x: int = 5\n    return x"
         results = self.ext.extract(code)
-        init_results = [
-            r for r in results if r.constraint_type == "initialization"
-        ]
+        init_results = [r for r in results if r.constraint_type == "initialization"]
         assert len(init_results) == 0
 
     def test_with_statement_assignment(self) -> None:
@@ -313,9 +286,7 @@ class TestCodeExtractor:
             "    return data"
         )
         results = self.ext.extract(code)
-        init_results = [
-            r for r in results if r.constraint_type == "initialization"
-        ]
+        init_results = [r for r in results if r.constraint_type == "initialization"]
         # f, data, path are all assigned; open is a builtin
         uninitialized_vars = [r.metadata["variable"] for r in init_results]
         assert "f" not in uninitialized_vars
@@ -331,9 +302,7 @@ class TestCodeExtractor:
             "    return total"
         )
         results = self.ext.extract(code)
-        init_results = [
-            r for r in results if r.constraint_type == "initialization"
-        ]
+        init_results = [r for r in results if r.constraint_type == "initialization"]
         uninitialized_vars = [r.metadata["variable"] for r in init_results]
         assert "total" not in uninitialized_vars
 
@@ -356,9 +325,7 @@ class TestCodeExtractor:
             "    return result"
         )
         results = self.ext.extract(code)
-        init_results = [
-            r for r in results if r.constraint_type == "initialization"
-        ]
+        init_results = [r for r in results if r.constraint_type == "initialization"]
         uninitialized_vars = [r.metadata["variable"] for r in init_results]
         assert "result" not in uninitialized_vars
 
@@ -377,9 +344,7 @@ class TestLogicExtractor:
     def test_if_then(self) -> None:
         """REQ-VERIFY-001: 'If P then Q' implication is extracted."""
         results = self.ext.extract("If it rains, then the ground is wet.")
-        implications = [
-            r for r in results if r.constraint_type == "implication"
-        ]
+        implications = [r for r in results if r.constraint_type == "implication"]
         assert len(implications) == 1
         assert implications[0].metadata["antecedent"] == "it rains"
         assert implications[0].metadata["consequent"] == "the ground is wet"
@@ -387,9 +352,7 @@ class TestLogicExtractor:
     def test_if_comma(self) -> None:
         """REQ-VERIFY-001: 'If P, Q' pattern (comma separator) is extracted."""
         results = self.ext.extract("If it rains, the ground is wet.")
-        implications = [
-            r for r in results if r.constraint_type == "implication"
-        ]
+        implications = [r for r in results if r.constraint_type == "implication"]
         assert len(implications) == 1
 
     def test_exclusion(self) -> None:
@@ -436,9 +399,7 @@ class TestLogicExtractor:
         """REQ-VERIFY-001: Multiple logical claims in one text."""
         text = "If A then B. If B then C."
         results = self.ext.extract(text)
-        implications = [
-            r for r in results if r.constraint_type == "implication"
-        ]
+        implications = [r for r in results if r.constraint_type == "implication"]
         assert len(implications) == 2
 
     def test_domain_filter(self) -> None:
@@ -556,12 +517,7 @@ class TestAutoExtractor:
     def test_code_extraction(self) -> None:
         """SCENARIO-VERIFY-002: Code blocks in mixed text are parsed."""
         text = (
-            "Here is code:\n"
-            "```python\n"
-            "def add(x: int) -> int:\n"
-            "    return x\n"
-            "```\n"
-            "And 2 + 3 = 5."
+            "Here is code:\n```python\ndef add(x: int) -> int:\n    return x\n```\nAnd 2 + 3 = 5."
         )
         results = self.ext.extract(text)
         types = {r.constraint_type for r in results}
@@ -601,14 +557,13 @@ class TestAutoExtractor:
 
     def test_add_extractor(self) -> None:
         """REQ-VERIFY-002: Custom extractors can be registered."""
+
         class CustomExtractor:
             @property
             def supported_domains(self) -> list[str]:
                 return ["custom"]
 
-            def extract(
-                self, text: str, domain: str | None = None
-            ) -> list[ConstraintResult]:
+            def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
                 if domain is not None and domain != "custom":
                     return []
                 return [
@@ -675,9 +630,7 @@ class TestConstraintResult:
 
     def test_default_fields(self) -> None:
         """REQ-VERIFY-001: Default energy_term is None, metadata is empty dict."""
-        result = ConstraintResult(
-            constraint_type="test", description="a test"
-        )
+        result = ConstraintResult(constraint_type="test", description="a test")
         assert result.energy_term is None
         assert result.metadata == {}
 

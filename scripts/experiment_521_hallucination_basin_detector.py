@@ -66,7 +66,9 @@ tmpl.setup()
 
 from carnot.pipeline.deliverable_guard import DeliverableGuard  # noqa: E402
 
-_guard = DeliverableGuard(str(_REPO / "results" / "experiment_521_hallucination_basin_detector.json"))
+_guard = DeliverableGuard(
+    str(_REPO / "results" / "experiment_521_hallucination_basin_detector.json")
+)
 
 # ---------------------------------------------------------------------------
 # Imports for experiment body
@@ -83,8 +85,8 @@ from carnot.pipeline.hallucination_basin import HallucinationBasinDetector  # no
 
 print("[521] Generating 200 synthetic hidden-state trajectories...")
 
-HIDDEN_DIM = 32   # hidden-state dimensionality (small for speed)
-SEQ_LEN = 10      # timesteps per trajectory
+HIDDEN_DIM = 32  # hidden-state dimensionality (small for speed)
+SEQ_LEN = 10  # timesteps per trajectory
 N_CORRECT = 100
 N_HALLUCINATED = 100
 
@@ -130,8 +132,10 @@ for _ in range(N_HALLUCINATED):
 all_trajectories = correct_trajectories + hallucinated_trajectories
 all_labels = [0] * N_CORRECT + [1] * N_HALLUCINATED
 
-print(f"[521] Generated {len(all_trajectories)} trajectories "
-      f"({N_CORRECT} correct, {N_HALLUCINATED} hallucinated).")
+print(
+    f"[521] Generated {len(all_trajectories)} trajectories "
+    f"({N_CORRECT} correct, {N_HALLUCINATED} hallucinated)."
+)
 
 # ---------------------------------------------------------------------------
 # Step f: SpilledEnergy baseline (random baseline if unavailable)

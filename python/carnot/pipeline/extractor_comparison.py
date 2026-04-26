@@ -68,7 +68,10 @@ Spec: REQ-EXTRACT-017, SCENARIO-EXTRACT-036, SCENARIO-EXTRACT-037,
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # FP category penalty weights (from Exp 331 analysis)
@@ -252,10 +255,7 @@ def _compute_estimated_precision(fp_categories: dict[str, int], n_violations: in
     if n_violations == 0:
         return 1.0
 
-    penalty = sum(
-        count * _FP_PENALTY.get(cat, 0.30)
-        for cat, count in fp_categories.items()
-    )
+    penalty = sum(count * _FP_PENALTY.get(cat, 0.30) for cat, count in fp_categories.items())
     fp_rate = penalty / n_violations
     return max(0.0, min(1.0, 1.0 - fp_rate))
 
@@ -447,7 +447,7 @@ def run_extractor_comparison(
     questions: list[dict],
     ground_truth_wrong: list[bool],
     inference_mode: str,
-) -> "ExtractorComparisonResult":
+) -> ExtractorComparisonResult:
     """Run one extractor over a labelled set of (question, response) pairs (Exp 367).
 
     **Detailed explanation for engineers:**
@@ -490,7 +490,7 @@ def run_extractor_comparison(
     n_true_positives = 0
     n_false_positives = 0
 
-    for item, is_wrong in zip(questions, ground_truth_wrong):
+    for item, is_wrong in zip(questions, ground_truth_wrong, strict=False):
         violated = detector_fn(item["question"], item["response"])
         if violated:
             if is_wrong:
@@ -526,7 +526,7 @@ def run_extractor_comparison(
 
 
 def build_extractor_comparison_artifact(
-    results: list["ExtractorComparisonResult"],
+    results: list[ExtractorComparisonResult],
 ) -> dict:
     """Combine Exp 367 per-extractor results into a schema-versioned summary dict.
 

@@ -139,10 +139,7 @@ class TestBuildAdversarialQuestions:
     """REQ-BENCH-006, SCENARIO-BENCH-014: build_adversarial_questions."""
 
     def _sample_inputs(self, n: int = 5) -> list[dict[str, str]]:
-        return [
-            {"question": f"What is {i} + {i}?", "answer": str(i * 2)}
-            for i in range(n)
-        ]
+        return [{"question": f"What is {i} + {i}?", "answer": str(i * 2)} for i in range(n)]
 
     def test_returns_correct_count(self):
         """SCENARIO-BENCH-014: output list has same length as input."""
@@ -321,16 +318,12 @@ class TestComputeAdversarialResults:
 
     def test_returns_adversarial_benchmark_result(self):
         """Return type is AdversarialBenchmarkResult."""
-        result = compute_adversarial_results(
-            [True, False], [True, False], [True, False]
-        )
+        result = compute_adversarial_results([True, False], [True, False], [True, False])
         assert isinstance(result, AdversarialBenchmarkResult)
 
     def test_inference_mode_passthrough(self):
         """inference_mode parameter is passed through to the result."""
-        result = compute_adversarial_results(
-            [True], [True], [True], inference_mode="live_gpu"
-        )
+        result = compute_adversarial_results([True], [True], [True], inference_mode="live_gpu")
         assert result.inference_mode == "live_gpu"
 
     def test_default_inference_mode_simulated(self):
@@ -359,9 +352,7 @@ class TestComputeAdversarialResults:
 
     def test_all_correct(self):
         """All True inputs give accuracy=1.0 and no drop."""
-        result = compute_adversarial_results(
-            [True] * 5, [True] * 5, [True] * 5
-        )
+        result = compute_adversarial_results([True] * 5, [True] * 5, [True] * 5)
         assert result.standard_accuracy == 1.0
         assert result.adversarial_accuracy == 1.0
         assert result.accuracy_drop == pytest.approx(0.0)
@@ -369,26 +360,24 @@ class TestComputeAdversarialResults:
 
     def test_all_incorrect(self):
         """All False inputs give accuracy=0.0."""
-        result = compute_adversarial_results(
-            [False] * 4, [False] * 4, [False] * 4
-        )
+        result = compute_adversarial_results([False] * 4, [False] * 4, [False] * 4)
         assert result.standard_accuracy == 0.0
         assert result.adversarial_accuracy == 0.0
 
     def test_negative_accuracy_drop_no_clamping(self):
         """Negative accuracy_drop is preserved (adversarial somehow better than standard)."""
-        std = [True] * 6 + [False] * 4   # 0.60
-        adv = [True] * 8 + [False] * 2   # 0.80
-        rep = [True] * 8 + [False] * 2   # 0.80
+        std = [True] * 6 + [False] * 4  # 0.60
+        adv = [True] * 8 + [False] * 2  # 0.80
+        rep = [True] * 8 + [False] * 2  # 0.80
         result = compute_adversarial_results(std, adv, rep)
         # accuracy_drop = 0.60 - 0.80 = -0.20
         assert result.accuracy_drop == pytest.approx(-0.20)
 
     def test_negative_repair_improvement_no_clamping(self):
         """Negative repair_improvement is preserved (repair made things worse)."""
-        std = [True] * 5 + [False] * 5   # 0.50
-        adv = [True] * 6 + [False] * 4   # 0.60
-        rep = [True] * 4 + [False] * 6   # 0.40
+        std = [True] * 5 + [False] * 5  # 0.50
+        adv = [True] * 6 + [False] * 4  # 0.60
+        rep = [True] * 4 + [False] * 6  # 0.40
         result = compute_adversarial_results(std, adv, rep)
         # repair_improvement = 0.40 - 0.60 = -0.20
         assert result.repair_improvement == pytest.approx(-0.20)
@@ -436,7 +425,9 @@ class TestSyntheticCIResults:
 
     def test_accuracy_drop_consistent(self):
         """accuracy_drop matches standard - adversarial."""
-        expected = SYNTHETIC_CI_RESULTS.standard_accuracy - SYNTHETIC_CI_RESULTS.adversarial_accuracy
+        expected = (
+            SYNTHETIC_CI_RESULTS.standard_accuracy - SYNTHETIC_CI_RESULTS.adversarial_accuracy
+        )
         assert SYNTHETIC_CI_RESULTS.accuracy_drop == pytest.approx(expected)
 
     def test_repair_improvement_consistent(self):
@@ -531,7 +522,7 @@ class TestBuildAdversarialArtifact:
         result = _make_result(
             inference_mode="live_gpu",
             standard_accuracy=0.80,
-            adversarial_accuracy=0.82,   # adversarial BETTER than standard
+            adversarial_accuracy=0.82,  # adversarial BETTER than standard
             repaired_adversarial_accuracy=0.82,
             accuracy_drop=-0.02,
             repair_improvement=0.0,
@@ -543,7 +534,7 @@ class TestBuildAdversarialArtifact:
         """REQ-BENCH-007: robustness_invariant_holds=True when drop <= 0.05."""
         result = _make_result(
             standard_accuracy=0.80,
-            adversarial_accuracy=0.76,   # drop = 0.04, within 0.05 tolerance
+            adversarial_accuracy=0.76,  # drop = 0.04, within 0.05 tolerance
         )
         artifact = build_adversarial_artifact(result)
         assert artifact["robustness_invariant_holds"] is True
@@ -552,7 +543,7 @@ class TestBuildAdversarialArtifact:
         """robustness_invariant_holds=True when drop equals exactly 0.05."""
         result = _make_result(
             standard_accuracy=0.80,
-            adversarial_accuracy=0.75,   # drop = exactly 0.05
+            adversarial_accuracy=0.75,  # drop = exactly 0.05
         )
         artifact = build_adversarial_artifact(result)
         assert artifact["robustness_invariant_holds"] is True
@@ -561,7 +552,7 @@ class TestBuildAdversarialArtifact:
         """REQ-BENCH-007: robustness_invariant_holds=False when drop > 0.05."""
         result = _make_result(
             standard_accuracy=0.80,
-            adversarial_accuracy=0.74,   # drop = 0.06, exceeds 0.05 tolerance
+            adversarial_accuracy=0.74,  # drop = 0.06, exceeds 0.05 tolerance
         )
         artifact = build_adversarial_artifact(result)
         assert artifact["robustness_invariant_holds"] is False
@@ -570,7 +561,7 @@ class TestBuildAdversarialArtifact:
         """robustness_invariant_holds=True when adversarial_accuracy > standard_accuracy."""
         result = _make_result(
             standard_accuracy=0.75,
-            adversarial_accuracy=0.80,   # adversarial better (drop = -0.05)
+            adversarial_accuracy=0.80,  # adversarial better (drop = -0.05)
         )
         artifact = build_adversarial_artifact(result)
         assert artifact["robustness_invariant_holds"] is True

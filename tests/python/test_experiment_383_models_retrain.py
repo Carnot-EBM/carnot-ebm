@@ -80,6 +80,7 @@ def _make_violation_pairs(n: int = 20, seed: int = 1) -> list[ViolationPair]:
 def _make_fresh_eorm() -> EORMModel:
     """Return a tiny EORMModel for fast CPU tests."""
     import jax.random as jr
+
     return EORMModel(embed_dim=32, n_heads=2, n_layers=1, key=jr.PRNGKey(0))
 
 
@@ -134,8 +135,8 @@ class TestEvaluateEormAuc:
 
         model.energy = patched_energy  # type: ignore[method-assign]
         pairs = [
-            ViolationPair("p", "f", True, "m", "q_viol"),    # violation, low energy
-            ViolationPair("p", "f", False, "m", "q_correct"), # correct, high energy
+            ViolationPair("p", "f", True, "m", "q_viol"),  # violation, low energy
+            ViolationPair("p", "f", False, "m", "q_correct"),  # correct, high energy
         ]
         auc = _evaluate_eorm_auc(model, pairs)
         # Perfect discrimination: violation gets highest score (-(-10)=10 > -(10)=-10)
@@ -269,14 +270,29 @@ class TestLoadJepaPairsFromFiles:
 
     def test_multiple_files_concatenated(self, tmp_path: Path) -> None:
         """Pairs from multiple files are concatenated."""
+
         def _make_file(name: str, q_id: str) -> Path:
             p = tmp_path / name
-            p.write_text(json.dumps({
-                "responses": [
-                    {"question_id": q_id, "model_id": "m", "response": "a b c d", "correct": True},
-                    {"question_id": q_id, "model_id": "m", "response": "x y z w", "correct": False},
-                ]
-            }))
+            p.write_text(
+                json.dumps(
+                    {
+                        "responses": [
+                            {
+                                "question_id": q_id,
+                                "model_id": "m",
+                                "response": "a b c d",
+                                "correct": True,
+                            },
+                            {
+                                "question_id": q_id,
+                                "model_id": "m",
+                                "response": "x y z w",
+                                "correct": False,
+                            },
+                        ]
+                    }
+                )
+            )
             return p
 
         f1 = _make_file("exp1.json", "q1")
@@ -304,15 +320,20 @@ class TestCombinedHonestVerdict:
         assert _combined_honest_verdict("no_improvement", "no_improvement") == "neither_improved"
 
     def test_eorm_insufficient(self) -> None:
-        assert _combined_honest_verdict("insufficient_real_pairs", "improved") == "insufficient_pairs"
+        assert (
+            _combined_honest_verdict("insufficient_real_pairs", "improved") == "insufficient_pairs"
+        )
 
     def test_jepa_insufficient(self) -> None:
-        assert _combined_honest_verdict("improved", "insufficient_real_pairs") == "insufficient_pairs"
+        assert (
+            _combined_honest_verdict("improved", "insufficient_real_pairs") == "insufficient_pairs"
+        )
 
     def test_both_insufficient(self) -> None:
-        assert _combined_honest_verdict(
-            "insufficient_real_pairs", "insufficient_real_pairs"
-        ) == "insufficient_pairs"
+        assert (
+            _combined_honest_verdict("insufficient_real_pairs", "insufficient_real_pairs")
+            == "insufficient_pairs"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -327,13 +348,25 @@ class TestRunExperimentInsufficientPairs:
         """Spec: SCENARIO-LEARN-048 — artifact has all required keys."""
         artifact = run_experiment(repo_root=tmp_path)
         required = [
-            "experiment", "schema", "run_date", "started_at", "finished_at",
-            "duration_s", "status",
-            "n_eorm_pairs", "eorm_before_auc", "eorm_after_auc",
-            "eorm_improvement", "eorm_verdict",
-            "n_jepa_pairs", "jepa_before_auc", "jepa_after_auc",
-            "jepa_improvement", "jepa_verdict",
-            "retrain_mode", "honest_verdict",
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "n_eorm_pairs",
+            "eorm_before_auc",
+            "eorm_after_auc",
+            "eorm_improvement",
+            "eorm_verdict",
+            "n_jepa_pairs",
+            "jepa_before_auc",
+            "jepa_after_auc",
+            "jepa_improvement",
+            "jepa_verdict",
+            "retrain_mode",
+            "honest_verdict",
         ]
         for key in required:
             assert key in artifact, f"Missing key: {key}"
@@ -527,6 +560,7 @@ class TestRunExperimentRealData:
         jepa_pairs = self._make_enough_jepa_pairs()
 
         import safetensors.numpy as st_numpy
+
         original_save = st_numpy.save_file
 
         def _raise(*a: Any, **k: Any) -> None:
@@ -558,19 +592,23 @@ class TestMain:
         """main() writes a valid JSON file to the deliverable path."""
         with (
             patch.object(_mod, "_REPO_ROOT", tmp_path),
-            patch.object(_mod, "run_experiment", return_value={
-                "experiment": 383,
-                "schema": "carnot.combined_retrain.v1",
-                "status": "success",
-                "retrain_mode": "synthetic_only",
-                "honest_verdict": "insufficient_pairs",
-                "eorm_verdict": "insufficient_real_pairs",
-                "eorm_before_auc": 0.5,
-                "eorm_after_auc": 0.5,
-                "jepa_verdict": "insufficient_real_pairs",
-                "jepa_before_auc": 0.5,
-                "jepa_after_auc": 0.5,
-            }),
+            patch.object(
+                _mod,
+                "run_experiment",
+                return_value={
+                    "experiment": 383,
+                    "schema": "carnot.combined_retrain.v1",
+                    "status": "success",
+                    "retrain_mode": "synthetic_only",
+                    "honest_verdict": "insufficient_pairs",
+                    "eorm_verdict": "insufficient_real_pairs",
+                    "eorm_before_auc": 0.5,
+                    "eorm_after_auc": 0.5,
+                    "jepa_verdict": "insufficient_real_pairs",
+                    "jepa_before_auc": 0.5,
+                    "jepa_after_auc": 0.5,
+                },
+            ),
         ):
             main()
 

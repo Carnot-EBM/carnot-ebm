@@ -43,8 +43,6 @@ import math
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
-
 
 # ---------------------------------------------------------------------------
 # FOVERCorpusEntry dataclass
@@ -329,7 +327,7 @@ def balance_corpus(
 
     balanced = list(entries)
 
-    def _majority_label(e: FOVERCorpusEntry) -> Optional[str]:
+    def _majority_label(e: FOVERCorpusEntry) -> str | None:
         if not e.constraint_types:
             return None
         return Counter(e.constraint_types).most_common(1)[0][0]
@@ -354,7 +352,7 @@ def balance_corpus(
             break
 
         # Find the last entry whose majority label matches the dominant type.
-        remove_idx: Optional[int] = None
+        remove_idx: int | None = None
         for i in range(len(balanced) - 1, -1, -1):
             if _majority_label(balanced[i]) == dominant_type:
                 remove_idx = i

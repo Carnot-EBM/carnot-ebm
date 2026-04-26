@@ -54,7 +54,8 @@ def main() -> int:
     model_name = "cross-encoder/nli-deberta-v3-small"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     nli_model = AutoModelForSequenceClassification.from_pretrained(
-        model_name, output_hidden_states=True,
+        model_name,
+        output_hidden_states=True,
     )
     device = "cuda" if torch.cuda.is_available() else "cpu"
     nli_model = nli_model.to(device)
@@ -115,7 +116,9 @@ def main() -> int:
             wrong_logits.append(outputs.logits[0].float().cpu().numpy())
 
         if (qi + 1) % 100 == 0:
-            print(f"    [{qi+1}/{len(examples)}] correct={len(correct_hiddens)} wrong={len(wrong_hiddens)}")
+            print(
+                f"    [{qi + 1}/{len(examples)}] correct={len(correct_hiddens)} wrong={len(wrong_hiddens)}"
+            )
 
     correct_hiddens = np.array(correct_hiddens, dtype=np.float32)
     wrong_hiddens = np.array(wrong_hiddens, dtype=np.float32)
@@ -169,8 +172,11 @@ def main() -> int:
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])

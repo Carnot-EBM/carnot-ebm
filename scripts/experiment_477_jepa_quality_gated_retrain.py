@@ -80,7 +80,7 @@ N_EPOCHS = 300
 LR = 0.001
 BATCH_SIZE = 8
 TRAIN_SPLIT = 0.80
-ISING_DIM = 16       # Small Ising model for EBM-guided augmentation
+ISING_DIM = 16  # Small Ising model for EBM-guided augmentation
 N_SYNTHETIC_TARGET_MULTIPLIER = 3  # n_total = max(200, n_filtered * 3)
 
 MIN_COVERAGE = 0.3
@@ -107,15 +107,17 @@ def _load_fover_steps(path: Path) -> list[dict]:
         steps = json.load(f)
     pairs = []
     for step in steps:
-        pairs.append({
-            "question_id": step.get("question_id", "unknown"),
-            "step_text": step.get("step_text", ""),
-            "label": step.get("label", "incorrect"),
-            "confidence": step.get("confidence", 1.0),
-            "label_confidence": step.get("confidence", 1.0),
-            "correct": step.get("label", "incorrect") == "correct",
-            "source": "fover_live",
-        })
+        pairs.append(
+            {
+                "question_id": step.get("question_id", "unknown"),
+                "step_text": step.get("step_text", ""),
+                "label": step.get("label", "incorrect"),
+                "confidence": step.get("confidence", 1.0),
+                "label_confidence": step.get("confidence", 1.0),
+                "correct": step.get("label", "incorrect") == "correct",
+                "source": "fover_live",
+            }
+        )
     _log.info("Loaded %d FOVER steps from %s", len(pairs), path)
     return pairs
 
@@ -240,7 +242,9 @@ def main() -> None:
         # ------------------------------------------------------------------
         _log.info(
             "Applying quality filter (min_coverage=%.1f, min_confidence=%.1f) to %d pairs...",
-            MIN_COVERAGE, MIN_CONFIDENCE, n_real_raw,
+            MIN_COVERAGE,
+            MIN_CONFIDENCE,
+            n_real_raw,
         )
         quality_filter = CoTPairQualityFilter(
             min_coverage=MIN_COVERAGE,
@@ -251,7 +255,9 @@ def main() -> None:
         filter_rate = n_filtered / max(1, n_real_raw)
         _log.info(
             "After quality gate: %d/%d pairs retained (filter_rate=%.3f)",
-            n_filtered, n_real_raw, filter_rate,
+            n_filtered,
+            n_real_raw,
+            filter_rate,
         )
 
         # ------------------------------------------------------------------
@@ -261,7 +267,8 @@ def main() -> None:
         n_synthetic_needed = max(0, n_total_target - n_filtered)
         _log.info(
             "Target corpus size: %d (need %d synthetic pairs from EBM augmentation)",
-            n_total_target, n_synthetic_needed,
+            n_total_target,
+            n_synthetic_needed,
         )
 
         # Build small Ising model for EBM-guided synthetic generation
@@ -301,8 +308,11 @@ def main() -> None:
 
         # Evaluate AUC BEFORE retrain (regression baseline)
         before_auc = _evaluate_jepa_auc(jepa_model, test_pairs)
-        _log.info("Before AUC (fresh model): %.4f (regression baseline was %.3f)",
-                  before_auc, REGRESSION_BASELINE_AUC)
+        _log.info(
+            "Before AUC (fresh model): %.4f (regression baseline was %.3f)",
+            before_auc,
+            REGRESSION_BASELINE_AUC,
+        )
 
         # ------------------------------------------------------------------
         # Phase 5: Retrain JEPA
@@ -326,8 +336,10 @@ def main() -> None:
         )
         _log.info(
             "Result: improvement=%.4f, target_met=%s, regression_recovered=%s, retro_040_closed=%s",
-            result.auc_improvement, result.target_met,
-            result.regression_recovered, result.retro_040_closed,
+            result.auc_improvement,
+            result.target_met,
+            result.regression_recovered,
+            result.retro_040_closed,
         )
 
         # ------------------------------------------------------------------
@@ -392,6 +404,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

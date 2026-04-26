@@ -110,11 +110,18 @@ def _synthetic_gsm8k_steps() -> list[dict]:
     ]
     steps = []
     for i, (qid, text) in enumerate(correct_patterns):
-        steps.append({"question_id": f"gsm8k_{i}", "step_text": text,
-                      "label": "correct", "domain": "gsm8k"})
+        steps.append(
+            {"question_id": f"gsm8k_{i}", "step_text": text, "label": "correct", "domain": "gsm8k"}
+        )
     for i, (qid, text) in enumerate(incorrect_patterns):
-        steps.append({"question_id": f"gsm8k_{i + 10}", "step_text": text,
-                      "label": "incorrect", "domain": "gsm8k"})
+        steps.append(
+            {
+                "question_id": f"gsm8k_{i + 10}",
+                "step_text": text,
+                "label": "incorrect",
+                "domain": "gsm8k",
+            }
+        )
     return steps
 
 
@@ -145,11 +152,23 @@ def _synthetic_humaneval_steps() -> list[dict]:
     ]
     steps = []
     for i, text in enumerate(correct_patterns):
-        steps.append({"question_id": f"humaneval_{i}", "step_text": text,
-                      "label": "correct", "domain": "humaneval"})
+        steps.append(
+            {
+                "question_id": f"humaneval_{i}",
+                "step_text": text,
+                "label": "correct",
+                "domain": "humaneval",
+            }
+        )
     for i, text in enumerate(incorrect_patterns):
-        steps.append({"question_id": f"humaneval_{i + 5}", "step_text": text,
-                      "label": "incorrect", "domain": "humaneval"})
+        steps.append(
+            {
+                "question_id": f"humaneval_{i + 5}",
+                "step_text": text,
+                "label": "incorrect",
+                "domain": "humaneval",
+            }
+        )
     return steps
 
 
@@ -180,11 +199,18 @@ def _synthetic_arc_steps() -> list[dict]:
     ]
     steps = []
     for i, text in enumerate(correct_patterns):
-        steps.append({"question_id": f"arc_{i}", "step_text": text,
-                      "label": "correct", "domain": "arc"})
+        steps.append(
+            {"question_id": f"arc_{i}", "step_text": text, "label": "correct", "domain": "arc"}
+        )
     for i, text in enumerate(incorrect_patterns):
-        steps.append({"question_id": f"arc_{i + 5}", "step_text": text,
-                      "label": "incorrect", "domain": "arc"})
+        steps.append(
+            {
+                "question_id": f"arc_{i + 5}",
+                "step_text": text,
+                "label": "incorrect",
+                "domain": "arc",
+            }
+        )
     return steps
 
 
@@ -261,13 +287,15 @@ def select_and_emit_certificates(
         else:
             ctype = "planning"
         cert = make_certificate(step_id, energy, ctype)
-        certs.append({
-            "step_id": cert.step_id,
-            "jepa_energy_delta": cert.jepa_energy_delta,
-            "constraint_type": cert.constraint_type,
-            "z3_verdict": cert.z3_verdict,
-            "confidence_score": cert.confidence_score,
-        })
+        certs.append(
+            {
+                "step_id": cert.step_id,
+                "jepa_energy_delta": cert.jepa_energy_delta,
+                "constraint_type": cert.constraint_type,
+                "z3_verdict": cert.z3_verdict,
+                "confidence_score": cert.confidence_score,
+            }
+        )
     return certs
 
 
@@ -341,6 +369,7 @@ def run(tmpl: ExperimentTemplate) -> dict:
         # Import here to avoid circular dependency issues when running tests.
         try:
             from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline  # noqa: PLC0415
+
             # Set tier_35 on the class level so any downstream pipeline instance
             # constructed after Exp 825 will inherit the wired predictor.
             # Per-instance wiring is done by callers who hold a live pipeline instance.

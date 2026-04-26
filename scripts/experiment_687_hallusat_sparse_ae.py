@@ -68,7 +68,9 @@ _FOVER_PATH = _REPO_ROOT / "results" / "fover_labeled_steps_live.json"
 # ---------------------------------------------------------------------------
 
 
-def _make_train_state(model: SparseAutoEncoder, rng: jax.Array, lr: float) -> train_state.TrainState:
+def _make_train_state(
+    model: SparseAutoEncoder, rng: jax.Array, lr: float
+) -> train_state.TrainState:
     """Initialise Flax TrainState with Adam optimiser."""
     dummy_input = jnp.zeros((1, model.input_dim))
     params = model.init(rng, dummy_input)
@@ -77,7 +79,9 @@ def _make_train_state(model: SparseAutoEncoder, rng: jax.Array, lr: float) -> tr
 
 
 @jax.jit
-def _train_step(state: train_state.TrainState, batch: jnp.ndarray, sparsity_weight: float) -> tuple[train_state.TrainState, jnp.ndarray]:
+def _train_step(
+    state: train_state.TrainState, batch: jnp.ndarray, sparsity_weight: float
+) -> tuple[train_state.TrainState, jnp.ndarray]:
     """Single gradient step — JIT-compiled for speed even on CPU."""
 
     def loss_fn(params: dict) -> jnp.ndarray:
@@ -106,7 +110,9 @@ def train_sparse_ae(
     rather than batching — no information is withheld, and variance is dominated
     by the small dataset size anyway.
     """
-    model = SparseAutoEncoder(input_dim=FEATURE_DIM, hidden_dim=hidden_dim, sparsity_weight=sparsity_weight)
+    model = SparseAutoEncoder(
+        input_dim=FEATURE_DIM, hidden_dim=hidden_dim, sparsity_weight=sparsity_weight
+    )
     rng = jax.random.PRNGKey(seed)
     state = _make_train_state(model, rng, lr)
 
@@ -132,7 +138,9 @@ def main() -> None:
     )
     tmpl.setup()
 
-    with ExperimentTimeoutWatchdog(687, timeout_minutes=20, result_path=str(_REPO_ROOT / _DELIVERABLE)):
+    with ExperimentTimeoutWatchdog(
+        687, timeout_minutes=20, result_path=str(_REPO_ROOT / _DELIVERABLE)
+    ):
         # 1. Load FOVER pairs
         if not _FOVER_PATH.exists():
             artifact = tmpl.build_result(
@@ -152,7 +160,9 @@ def main() -> None:
         texts = [p["step_text"] for p in fover_pairs]
         raw_labels = [p["label"] for p in fover_pairs]
         # 1 = incorrect (hallucinated), 0 = correct
-        labels_np = jnp.array([1 if lb == "incorrect" else 0 for lb in raw_labels], dtype=jnp.float32)
+        labels_np = jnp.array(
+            [1 if lb == "incorrect" else 0 for lb in raw_labels], dtype=jnp.float32
+        )
         features = jnp.stack([extract_text_features(t) for t in texts])
         print(f"Feature matrix shape: {features.shape}")
 
@@ -171,7 +181,9 @@ def main() -> None:
         top_features = identify_hallucination_features(params, model, features, labels_np, top_k=10)
         print("Top-10 hallucination features:")
         for feat in top_features:
-            print(f"  dim={feat['feature_idx']:3d}  auroc={feat['feature_auroc']:.4f}  {feat['feature_name']}")
+            print(
+                f"  dim={feat['feature_idx']:3d}  auroc={feat['feature_auroc']:.4f}  {feat['feature_name']}"
+            )
 
         # 5. Check COMPUTE: line causal hypothesis
         max_auroc = max(f["feature_auroc"] for f in top_features) if top_features else 0.0
@@ -184,7 +196,9 @@ def main() -> None:
         compute_line_auroc = float(_direct_auroc(compute_line_raw, labels_np))
         compute_line_in_top10 = any(f["feature_idx"] == 132 for f in top_features)
 
-        print(f"max_auroc={max_auroc:.4f}  compute_line_raw_auroc={compute_line_auroc:.4f}  in_top10={compute_line_in_top10}")
+        print(
+            f"max_auroc={max_auroc:.4f}  compute_line_raw_auroc={compute_line_auroc:.4f}  in_top10={compute_line_in_top10}"
+        )
 
         # 6. Honest verdict
         if max_auroc >= 0.60 and compute_line_in_top10:

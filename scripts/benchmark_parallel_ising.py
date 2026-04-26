@@ -19,21 +19,22 @@ import numpy as np
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 
-from experiment_39_thrml_sat import random_3sat, sat_to_ising, check_assignment
+from experiment_39_thrml_sat import check_assignment, random_3sat, sat_to_ising
 
 
 def run_thrml(n_vars, clauses, biases, weights):
     """Run thrml sequential Ising sampler (baseline)."""
     import jax.numpy as jnp
     import jax.random as jrandom
-    from thrml import SpinNode, Block, SamplingSchedule, sample_states
+    from thrml import Block, SamplingSchedule, SpinNode, sample_states
     from thrml.models.ising import IsingEBM, IsingSamplingProgram, hinton_init
 
     nodes = [SpinNode() for _ in range(n_vars)]
     edges = [(nodes[i], nodes[j]) for i in range(n_vars) for j in range(i + 1, n_vars)]
 
     model = IsingEBM(
-        nodes=nodes, edges=edges,
+        nodes=nodes,
+        edges=edges,
         biases=jnp.array(biases, dtype=jnp.float32),
         weights=jnp.array(weights, dtype=jnp.float32),
         beta=jnp.array(10.0),
@@ -50,8 +51,12 @@ def run_thrml(n_vars, clauses, biases, weights):
 
     t0 = time.time()
     samples = sample_states(
-        jrandom.PRNGKey(n_vars + 100), program, schedule,
-        init_state, [], free_blocks,
+        jrandom.PRNGKey(n_vars + 100),
+        program,
+        schedule,
+        init_state,
+        [],
+        free_blocks,
     )
     elapsed = time.time() - t0
 
@@ -74,8 +79,8 @@ def run_parallel(n_vars, clauses, biases, weights, device=None):
     import jax.numpy as jnp
     import jax.random as jrandom
     from carnot.samplers.parallel_ising import (
-        ParallelIsingSampler,
         AnnealingSchedule,
+        ParallelIsingSampler,
         sat_to_coupling_matrix,
     )
 
@@ -155,8 +160,11 @@ def main() -> int:
         # thrml crashes when the ROCm PJRT plugin is loaded (equinox
         # tracing conflict), so we use validated reference times.
         thrml_reference = {
-            50: (202, 18.51), 100: (402, 12.46), 200: (797, 40.93),
-            300: (1212, 89.48), 500: (1976, 321.61),
+            50: (202, 18.51),
+            100: (402, 12.46),
+            200: (797, 40.93),
+            300: (1212, 89.48),
+            500: (1976, 321.61),
         }
         thrml_sat, thrml_time = thrml_reference.get(n_vars, (0, 1.0))
         if not has_gpu:
@@ -198,10 +206,16 @@ def main() -> int:
             r["gpu_time"] = gpu_time
             r["gpu_speedup"] = gpu_speedup
             r["gpu_vs_cpu"] = gpu_vs_cpu
-            print(f"  GPU:   {gpu_sat}/{n_clauses} ({gpu_sat/n_clauses*100:.1f}%) in {gpu_time:.3f}s  [{gpu_speedup:.0f}x vs thrml]")
+            print(
+                f"  GPU:   {gpu_sat}/{n_clauses} ({gpu_sat / n_clauses * 100:.1f}%) in {gpu_time:.3f}s  [{gpu_speedup:.0f}x vs thrml]"
+            )
 
-        print(f"  CPU:   {par_sat}/{n_clauses} ({par_sat/n_clauses*100:.1f}%) in {par_time:.2f}s  [{cpu_speedup:.0f}x vs thrml]")
-        print(f"  thrml: {thrml_sat}/{n_clauses} ({thrml_sat/n_clauses*100:.1f}%) in {thrml_time:.2f}s")
+        print(
+            f"  CPU:   {par_sat}/{n_clauses} ({par_sat / n_clauses * 100:.1f}%) in {par_time:.2f}s  [{cpu_speedup:.0f}x vs thrml]"
+        )
+        print(
+            f"  thrml: {thrml_sat}/{n_clauses} ({thrml_sat / n_clauses * 100:.1f}%) in {thrml_time:.2f}s"
+        )
 
         results.append(r)
 
@@ -212,23 +226,31 @@ def main() -> int:
     print(sep)
 
     if has_gpu:
-        print(f"{'Vars':>6s} {'Clauses':>8s} {'GPU SAT%':>9s} {'GPU Time':>9s} "
-              f"{'CPU Time':>9s} {'thrml':>9s} {'GPU/thrml':>10s} {'GPU/CPU':>8s}")
+        print(
+            f"{'Vars':>6s} {'Clauses':>8s} {'GPU SAT%':>9s} {'GPU Time':>9s} "
+            f"{'CPU Time':>9s} {'thrml':>9s} {'GPU/thrml':>10s} {'GPU/CPU':>8s}"
+        )
         print("-" * 72)
         for r in results:
             g_pct = r["gpu_sat"] / r["n_clauses"] * 100
-            print(f"{r['n_vars']:>6d} {r['n_clauses']:>8d} {g_pct:>8.1f}% "
-                  f"{r['gpu_time']:>8.3f}s {r['par_time']:>8.2f}s {r['thrml_time']:>8.2f}s "
-                  f"{r['gpu_speedup']:>9.0f}x {r['gpu_vs_cpu']:>7.1f}x")
+            print(
+                f"{r['n_vars']:>6d} {r['n_clauses']:>8d} {g_pct:>8.1f}% "
+                f"{r['gpu_time']:>8.3f}s {r['par_time']:>8.2f}s {r['thrml_time']:>8.2f}s "
+                f"{r['gpu_speedup']:>9.0f}x {r['gpu_vs_cpu']:>7.1f}x"
+            )
     else:
-        print(f"{'Vars':>6s} {'Clauses':>8s} {'Par SAT%':>9s} {'thrml SAT%':>11s} "
-              f"{'Par Time':>9s} {'thrml Time':>11s} {'Speedup':>8s}")
+        print(
+            f"{'Vars':>6s} {'Clauses':>8s} {'Par SAT%':>9s} {'thrml SAT%':>11s} "
+            f"{'Par Time':>9s} {'thrml Time':>11s} {'Speedup':>8s}"
+        )
         print("-" * 65)
         for r in results:
             p_pct = r["par_sat"] / r["n_clauses"] * 100
             t_pct = r["thrml_sat"] / r["n_clauses"] * 100
-            print(f"{r['n_vars']:>6d} {r['n_clauses']:>8d} {p_pct:>8.1f}% {t_pct:>10.1f}% "
-                  f"{r['par_time']:>8.2f}s {r['thrml_time']:>10.2f}s {r['cpu_speedup']:>7.1f}x")
+            print(
+                f"{r['n_vars']:>6d} {r['n_clauses']:>8d} {p_pct:>8.1f}% {t_pct:>10.1f}% "
+                f"{r['par_time']:>8.2f}s {r['thrml_time']:>10.2f}s {r['cpu_speedup']:>7.1f}x"
+            )
 
     # Overall verdict.
     if has_gpu:
@@ -239,15 +261,21 @@ def main() -> int:
         thrml_quality = np.mean([r["thrml_sat"] / r["n_clauses"] for r in results])
 
         print(f"\n  Avg GPU vs thrml speedup: {avg_gpu_speedup:.0f}x")
-        print(f"  Max GPU vs thrml speedup: {max_gpu_speedup:.0f}x (at {max(results, key=lambda r: r['gpu_speedup'])['n_vars']} vars)")
+        print(
+            f"  Max GPU vs thrml speedup: {max_gpu_speedup:.0f}x (at {max(results, key=lambda r: r[
+                    'gpu_speedup'
+                ])['n_vars']} vars)"
+        )
         print(f"  Avg GPU vs CPU speedup:   {avg_gpu_vs_cpu:.1f}x")
-        print(f"  GPU avg quality:   {gpu_quality*100:.1f}%")
-        print(f"  thrml avg quality: {thrml_quality*100:.1f}%")
+        print(f"  GPU avg quality:   {gpu_quality * 100:.1f}%")
+        print(f"  thrml avg quality: {thrml_quality * 100:.1f}%")
 
         if avg_gpu_speedup > 10:
             print(f"\n  VERDICT: ✅ GPU sampler is {avg_gpu_speedup:.0f}x faster than thrml")
         else:
-            print(f"\n  VERDICT: ⚠️ GPU speedup {avg_gpu_speedup:.0f}x (iGPU — discrete GPU expected much higher)")
+            print(
+                f"\n  VERDICT: ⚠️ GPU speedup {avg_gpu_speedup:.0f}x (iGPU — discrete GPU expected much higher)"
+            )
     else:
         avg_speedup = np.mean([r["cpu_speedup"] for r in results])
         max_speedup = max(r["cpu_speedup"] for r in results)
@@ -255,12 +283,18 @@ def main() -> int:
         thrml_quality = np.mean([r["thrml_sat"] / r["n_clauses"] for r in results])
 
         print(f"\n  Avg speedup: {avg_speedup:.1f}x")
-        print(f"  Max speedup: {max_speedup:.1f}x (at {max(results, key=lambda r: r['cpu_speedup'])['n_vars']} vars)")
-        print(f"  Parallel avg quality: {par_quality*100:.1f}%")
-        print(f"  thrml avg quality:    {thrml_quality*100:.1f}%")
+        print(
+            f"  Max speedup: {max_speedup:.1f}x (at {max(results, key=lambda r: r[
+                    'cpu_speedup'
+                ])['n_vars']} vars)"
+        )
+        print(f"  Parallel avg quality: {par_quality * 100:.1f}%")
+        print(f"  thrml avg quality:    {thrml_quality * 100:.1f}%")
 
         if avg_speedup > 2 and par_quality >= thrml_quality * 0.95:
-            print(f"\n  VERDICT: ✅ Parallel sampler is {avg_speedup:.0f}x faster with comparable quality")
+            print(
+                f"\n  VERDICT: ✅ Parallel sampler is {avg_speedup:.0f}x faster with comparable quality"
+            )
         elif avg_speedup > 1.5:
             print(f"\n  VERDICT: ⚠️ Moderate speedup ({avg_speedup:.1f}x)")
         else:

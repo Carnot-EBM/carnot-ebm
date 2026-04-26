@@ -95,7 +95,7 @@ class TestComputeAuc:
         # correct="x" (zero vector, score=0), incorrect="hello world" (positive score).
         # AUC = 1.0 because every incorrect > every correct.
         weights = [1.0] * 32
-        correct_steps = ["x"]        # zero vector, score = 0
+        correct_steps = ["x"]  # zero vector, score = 0
         incorrect_steps = ["hello world"]  # positive score
         auc = _compute_auc(correct_steps, incorrect_steps, weights, 0.0)
         assert auc == pytest.approx(1.0, abs=1e-6)
@@ -104,7 +104,7 @@ class TestComputeAuc:
         # Reversed: correct has high energy, incorrect has low energy -> AUC = 0.
         weights = [1.0] * 32
         correct_steps = ["hello world"]  # high energy
-        incorrect_steps = ["x"]          # zero energy
+        incorrect_steps = ["x"]  # zero energy
         auc = _compute_auc(correct_steps, incorrect_steps, weights, 0.0)
         assert auc == pytest.approx(0.0, abs=1e-6)
 

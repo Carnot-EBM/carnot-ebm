@@ -57,9 +57,7 @@ def _uniform_logits(n_tokens: int = 10, vocab_size: int = 20) -> np.ndarray:
     return np.zeros((n_tokens, vocab_size), dtype=np.float64)
 
 
-def _peaked_logits(
-    n_tokens: int = 10, vocab_size: int = 20, peak: float = 8.0
-) -> np.ndarray:
+def _peaked_logits(n_tokens: int = 10, vocab_size: int = 20, peak: float = 8.0) -> np.ndarray:
     """Peaked logit array — token 0 dominates, low spilled energy."""
     arr = np.zeros((n_tokens, vocab_size), dtype=np.float64)
     arr[:, 0] = peak
@@ -173,7 +171,7 @@ def test_threshold_sweep_recall_non_increasing() -> None:
     for i in range(len(recalls) - 1):
         # Allow small floating-point tolerance.
         assert recalls[i] >= recalls[i + 1] - 1e-9, (
-            f"Recall increased at step {i}: {recalls[i]:.4f} → {recalls[i+1]:.4f}"
+            f"Recall increased at step {i}: {recalls[i]:.4f} → {recalls[i + 1]:.4f}"
         )
 
 
@@ -192,7 +190,7 @@ def test_threshold_sweep_precision_non_decreasing() -> None:
     for i in range(len(precisions) - 1):
         # Precision is non-decreasing when threshold is stricter.
         assert precisions[i] <= precisions[i + 1] + 1e-9, (
-            f"Precision decreased at step {i}: {precisions[i]:.4f} → {precisions[i+1]:.4f}"
+            f"Precision decreased at step {i}: {precisions[i]:.4f} → {precisions[i + 1]:.4f}"
         )
 
 
@@ -324,12 +322,24 @@ def test_per_variant_breakdown_signal_fractions() -> None:
     rows = []
     # 10 number_swap errors: semantic fires
     for _ in range(10):
-        rows.append({"variant_type": "number_swap", "trigger_signal": "semantic",
-                     "gate_fired": True, "is_error": True})
+        rows.append(
+            {
+                "variant_type": "number_swap",
+                "trigger_signal": "semantic",
+                "gate_fired": True,
+                "is_error": True,
+            }
+        )
     # 10 irrelevant_sentence errors: spilled fires
     for _ in range(10):
-        rows.append({"variant_type": "irrelevant_sentence", "trigger_signal": "spilled",
-                     "gate_fired": True, "is_error": True})
+        rows.append(
+            {
+                "variant_type": "irrelevant_sentence",
+                "trigger_signal": "spilled",
+                "gate_fired": True,
+                "is_error": True,
+            }
+        )
     breakdown = _mod.per_variant_breakdown(rows)
     ns = breakdown["number_swap"]
     is_ = breakdown["irrelevant_sentence"]
@@ -345,12 +355,24 @@ def test_per_variant_breakdown_counts() -> None:
     Spec: REQ-VERIFY-078, SCENARIO-VERIFY-099
     """
     rows = [
-        {"variant_type": "number_swap", "trigger_signal": "semantic",
-         "gate_fired": True, "is_error": True},
-        {"variant_type": "number_swap", "trigger_signal": "none",
-         "gate_fired": False, "is_error": False},
-        {"variant_type": "number_swap", "trigger_signal": "both",
-         "gate_fired": True, "is_error": True},
+        {
+            "variant_type": "number_swap",
+            "trigger_signal": "semantic",
+            "gate_fired": True,
+            "is_error": True,
+        },
+        {
+            "variant_type": "number_swap",
+            "trigger_signal": "none",
+            "gate_fired": False,
+            "is_error": False,
+        },
+        {
+            "variant_type": "number_swap",
+            "trigger_signal": "both",
+            "gate_fired": True,
+            "is_error": True,
+        },
     ]
     breakdown = _mod.per_variant_breakdown(rows)
     ns = breakdown["number_swap"]
@@ -492,9 +514,7 @@ def test_run_benchmark_returns_expected_keys() -> None:
         "threshold_sweep",
         "gap_filler",
     }
-    assert required.issubset(set(result.keys())), (
-        f"Missing keys: {required - set(result.keys())}"
-    )
+    assert required.issubset(set(result.keys())), f"Missing keys: {required - set(result.keys())}"
 
 
 def test_run_benchmark_primary_criterion_met() -> None:
@@ -506,9 +526,7 @@ def test_run_benchmark_primary_criterion_met() -> None:
     assert result["primary_criterion_met"] is True, (
         f"Primary criterion FAILED: combined AUROC = {result['auroc_combined']:.4f}"
     )
-    assert result["auroc_combined"] >= 0.65, (
-        f"Combined AUROC {result['auroc_combined']:.4f} < 0.65"
-    )
+    assert result["auroc_combined"] >= 0.65, f"Combined AUROC {result['auroc_combined']:.4f} < 0.65"
 
 
 def test_run_benchmark_combined_auroc_exceeds_individuals() -> None:

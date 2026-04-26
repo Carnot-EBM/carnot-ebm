@@ -87,10 +87,7 @@ def _load_gsm8k_questions(n: int, seed: int) -> list[dict[str, Any]]:
         rng = random.Random(seed)
         rng.shuffle(indices)
         selected = indices[:n]
-        return [
-            {"question": ds[i]["question"], "answer": ds[i]["answer"]}
-            for i in selected
-        ]
+        return [{"question": ds[i]["question"], "answer": ds[i]["answer"]} for i in selected]
     except Exception as exc:
         _log.warning("Could not load GSM8K (%s) — using synthetic fallback", exc)
         rng = random.Random(seed)
@@ -278,7 +275,10 @@ def main() -> None:
                 n_valid_responses += 1
             _log.info(
                 "Question %d/%d: valid=%s resp_len=%d",
-                i + 1, len(questions), is_valid, len(resp),
+                i + 1,
+                len(questions),
+                is_valid,
+                len(resp),
             )
             # Checkpoint every 5 questions to survive interruption.
             if (i + 1) % 5 == 0:
@@ -299,7 +299,10 @@ def main() -> None:
 
         _log.info(
             "Experiment 795 complete: n_valid=%d/%d verdict=%s retro_028_closed=%s",
-            n_valid_responses, N_QUESTIONS, honest_verdict, retro_028_closed,
+            n_valid_responses,
+            N_QUESTIONS,
+            honest_verdict,
+            retro_028_closed,
         )
 
         artifact = tmpl.build_result(

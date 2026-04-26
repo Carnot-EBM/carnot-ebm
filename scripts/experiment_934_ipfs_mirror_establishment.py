@@ -32,7 +32,7 @@ import os
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -64,7 +64,7 @@ TITLE = "IPFS Mirror Establishment: VJEPA v2 + EstimationVerifier weights"
 
 
 def _now_iso() -> str:
-    return datetime.now(tz=timezone.utc).isoformat()
+    return datetime.now(tz=UTC).isoformat()
 
 
 def _run(cmd: list[str], timeout: int = 30) -> tuple[int, str, str]:
@@ -249,9 +249,7 @@ def build_artifact(
         "ipfs_installed": ipfs_installed,
         "ipfs_cid_vjepa": ipfs_cid_vjepa,
         "ipfs_cid_estimation": ipfs_cid_estimation,
-        "vjepa_gateway_url": (
-            f"https://ipfs.io/ipfs/{ipfs_cid_vjepa}" if ipfs_cid_vjepa else None
-        ),
+        "vjepa_gateway_url": (f"https://ipfs.io/ipfs/{ipfs_cid_vjepa}" if ipfs_cid_vjepa else None),
         "estimation_gateway_url": (
             f"https://ipfs.io/ipfs/{ipfs_cid_estimation}" if ipfs_cid_estimation else None
         ),

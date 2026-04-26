@@ -109,9 +109,52 @@ CONSTRAINT_NAMES = [
 ]
 
 _STOPWORDS = frozenset(
-    "a an the is are was were be been being have has had do does did "
-    "will would shall should may might can could of in to for on with "
-    "at by from it its this that these those and but or not no".split()
+    [
+        "a",
+        "an",
+        "the",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "being",
+        "have",
+        "has",
+        "had",
+        "do",
+        "does",
+        "did",
+        "will",
+        "would",
+        "shall",
+        "should",
+        "may",
+        "might",
+        "can",
+        "could",
+        "of",
+        "in",
+        "to",
+        "for",
+        "on",
+        "with",
+        "at",
+        "by",
+        "from",
+        "it",
+        "its",
+        "this",
+        "that",
+        "these",
+        "those",
+        "and",
+        "but",
+        "or",
+        "not",
+        "no",
+    ]
 )
 
 DOMAINS = ["arithmetic", "code", "logic", "factual", "scheduling"]
@@ -171,9 +214,7 @@ def _check_constraints(question: str, answer: str) -> list[bool]:
 
     # 5. has_explanation
     lower = answer.lower()
-    results.append(
-        any(kw in lower for kw in ("because", "since", "therefore", "so ", "thus"))
-    )
+    results.append(any(kw in lower for kw in ("because", "since", "therefore", "so ", "thus")))
 
     # 6. reasonable_length
     results.append(10 <= len(stripped) <= 500)
@@ -284,9 +325,7 @@ def _generate_multi_domain_dataset(
                     break
             else:
                 # Fallback: just rephrase with the prefix
-                codebook.append(
-                    (f"{prefix} correct. {correct_answer}", True)
-                )
+                codebook.append((f"{prefix} correct. {correct_answer}", True))
 
         # 3. Wrong variations (up to 5)
         for wv in wrong_variations[:5]:
@@ -342,26 +381,34 @@ def _generate_multi_domain_dataset(
         codebook = _make_codebook(q, correct_ans, wrong_variations, rng)
 
         # Correct entry
-        dataset.append({
-            "domain": "arithmetic",
-            "question": q,
-            "answer": correct_ans,
-            "is_correct": True,
-            "codebook": codebook,
-        })
+        dataset.append(
+            {
+                "domain": "arithmetic",
+                "question": q,
+                "answer": correct_ans,
+                "is_correct": True,
+                "codebook": codebook,
+            }
+        )
         # Wrong entry (use first wrong variation)
-        dataset.append({
-            "domain": "arithmetic",
-            "question": q,
-            "answer": wrong_variations[0],
-            "is_correct": False,
-            "codebook": codebook,
-        })
+        dataset.append(
+            {
+                "domain": "arithmetic",
+                "question": q,
+                "answer": wrong_variations[0],
+                "is_correct": False,
+                "codebook": codebook,
+            }
+        )
 
     # --- Code ---
     code_tasks = [
         ("reverse a string", "def reverse_string(s):\n    return s[::-1].", True),
-        ("compute factorial", "def factorial(n):\n    return 1 if n <= 1 else n * factorial(n-1).", True),
+        (
+            "compute factorial",
+            "def factorial(n):\n    return 1 if n <= 1 else n * factorial(n-1).",
+            True,
+        ),
         ("find maximum", "def find_max(lst):\n    return max(lst).", True),
         ("check palindrome", "def is_palindrome(s):\n    return s == s[::-1].", True),
         ("sum of list", "def sum_list(lst):\n    return sum(lst).", True),
@@ -381,20 +428,24 @@ def _generate_multi_domain_dataset(
             f"def func(x): return x  # This does not {task_name}.",
         ]
         codebook = _make_codebook(q, correct_ans, wrong_variations, rng)
-        dataset.append({
-            "domain": "code",
-            "question": q,
-            "answer": correct_ans,
-            "is_correct": True,
-            "codebook": codebook,
-        })
-        dataset.append({
-            "domain": "code",
-            "question": q,
-            "answer": wrong_variations[0],
-            "is_correct": False,
-            "codebook": codebook,
-        })
+        dataset.append(
+            {
+                "domain": "code",
+                "question": q,
+                "answer": correct_ans,
+                "is_correct": True,
+                "codebook": codebook,
+            }
+        )
+        dataset.append(
+            {
+                "domain": "code",
+                "question": q,
+                "answer": wrong_variations[0],
+                "is_correct": False,
+                "codebook": codebook,
+            }
+        )
 
     # --- Logic ---
     logic_templates = [
@@ -402,12 +453,17 @@ def _generate_multi_domain_dataset(
         ("All cats are mammals. Tom is a cat. Is Tom a mammal?", "Yes", "No"),
         ("If A implies B, and A is true, then B must be?", "True", "False"),
         ("If X > 5 and X < 10, and X = 7, is the condition satisfied?", "Yes", "No"),
-        ("All birds can fly. Penguins are birds. Can penguins fly?",
-         "Based on the premises, yes", "No"),
+        (
+            "All birds can fly. Penguins are birds. Can penguins fly?",
+            "Based on the premises, yes",
+            "No",
+        ),
     ]
     for i in range(n_each):
         q, correct_a, wrong_a = logic_templates[i % len(logic_templates)]
-        correct_ans = f"{correct_a}. Because the logical chain of reasoning supports this conclusion."
+        correct_ans = (
+            f"{correct_a}. Because the logical chain of reasoning supports this conclusion."
+        )
         wrong_ans = f"{wrong_a}. Because the premises do not support this."
         wrong_variations = [
             wrong_ans,
@@ -417,20 +473,24 @@ def _generate_multi_domain_dataset(
             "Both yes and no are valid answers.",
         ]
         codebook = _make_codebook(q, correct_ans, wrong_variations, rng)
-        dataset.append({
-            "domain": "logic",
-            "question": q,
-            "answer": correct_ans,
-            "is_correct": True,
-            "codebook": codebook,
-        })
-        dataset.append({
-            "domain": "logic",
-            "question": q,
-            "answer": wrong_ans,
-            "is_correct": False,
-            "codebook": codebook,
-        })
+        dataset.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "answer": correct_ans,
+                "is_correct": True,
+                "codebook": codebook,
+            }
+        )
+        dataset.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "answer": wrong_ans,
+                "is_correct": False,
+                "codebook": codebook,
+            }
+        )
 
     # --- Factual ---
     factual_pairs = [
@@ -452,20 +512,24 @@ def _generate_multi_domain_dataset(
             "This question is outside my knowledge domain.",
         ]
         codebook = _make_codebook(q, correct_ans, wrong_variations, rng)
-        dataset.append({
-            "domain": "factual",
-            "question": q,
-            "answer": correct_ans,
-            "is_correct": True,
-            "codebook": codebook,
-        })
-        dataset.append({
-            "domain": "factual",
-            "question": q,
-            "answer": wrong_ans,
-            "is_correct": False,
-            "codebook": codebook,
-        })
+        dataset.append(
+            {
+                "domain": "factual",
+                "question": q,
+                "answer": correct_ans,
+                "is_correct": True,
+                "codebook": codebook,
+            }
+        )
+        dataset.append(
+            {
+                "domain": "factual",
+                "question": q,
+                "answer": wrong_ans,
+                "is_correct": False,
+                "codebook": codebook,
+            }
+        )
 
     # --- Scheduling ---
     for i in range(n_each):
@@ -474,16 +538,14 @@ def _generate_multi_domain_dataset(
         h3 = h2 + int(rng.integers(1, 3))
         q = (
             f"Meeting A is at {h1}:00-{h2}:00. "
-            f"Meeting B is at {h3}:00-{h3+1}:00. "
+            f"Meeting B is at {h3}:00-{h3 + 1}:00. "
             f"Is there a conflict?"
         )
         correct_ans = (
             f"No conflict. Meeting A ends at {h2}:00 and Meeting B starts at "
             f"{h3}:00, so they don't overlap."
         )
-        wrong_ans = (
-            f"Yes, there is a conflict because both meetings overlap at {h2}:00."
-        )
+        wrong_ans = f"Yes, there is a conflict because both meetings overlap at {h2}:00."
         wrong_variations = [
             wrong_ans,
             "There might be a conflict depending on buffer time.",
@@ -492,20 +554,24 @@ def _generate_multi_domain_dataset(
             f"The schedule is too packed. Both meetings conflict at {h2}:00.",
         ]
         codebook = _make_codebook(q, correct_ans, wrong_variations, rng)
-        dataset.append({
-            "domain": "scheduling",
-            "question": q,
-            "answer": correct_ans,
-            "is_correct": True,
-            "codebook": codebook,
-        })
-        dataset.append({
-            "domain": "scheduling",
-            "question": q,
-            "answer": wrong_ans,
-            "is_correct": False,
-            "codebook": codebook,
-        })
+        dataset.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "answer": correct_ans,
+                "is_correct": True,
+                "codebook": codebook,
+            }
+        )
+        dataset.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "answer": wrong_ans,
+                "is_correct": False,
+                "codebook": codebook,
+            }
+        )
 
     # Shuffle deterministically
     indices = list(range(len(dataset)))
@@ -636,7 +702,7 @@ def _constraint_energy(
     """
     constraint_part = joint_vec[embed_dim:]
     diff = constraint_part - target_constraint_vec
-    return jnp.sum(weights * diff ** 2)
+    return jnp.sum(weights * diff**2)
 
 
 # ---------------------------------------------------------------------------
@@ -833,10 +899,14 @@ class GradientRepairer:
 
         # Initial state: the response embedding
         emb = jnp.array(response_embedding)
-        original_energy = float(_constraint_energy(
-            jnp.concatenate([emb, constraint_vec]),
-            EMBED_DIM, target, self.constraint_weights,
-        ))
+        original_energy = float(
+            _constraint_energy(
+                jnp.concatenate([emb, constraint_vec]),
+                EMBED_DIM,
+                target,
+                self.constraint_weights,
+            )
+        )
 
         def combined_energy(embedding: jax.Array) -> jax.Array:
             """Energy = constraint violation + manifold regularizer.
@@ -927,10 +997,16 @@ class GradientRepairer:
 
         # Verify the decoded text
         decoded_constraints = _compute_constraint_vector(question, decoded_text)
-        decoded_energy = float(_constraint_energy(
-            jnp.concatenate([jnp.array(codebook_embeddings[best_idx]), jnp.array(decoded_constraints)]),
-            EMBED_DIM, target, self.constraint_weights,
-        ))
+        decoded_energy = float(
+            _constraint_energy(
+                jnp.concatenate(
+                    [jnp.array(codebook_embeddings[best_idx]), jnp.array(decoded_constraints)]
+                ),
+                EMBED_DIM,
+                target,
+                self.constraint_weights,
+            )
+        )
         repair_succeeded = all(c > 0.5 for c in decoded_constraints)
 
         elapsed = time.time() - t0
@@ -938,7 +1014,9 @@ class GradientRepairer:
         return RepairResult(
             original_text=response,
             repaired_text=decoded_text,
-            original_constraints=constraint_vec.tolist() if hasattr(constraint_vec, 'tolist') else list(constraint_vec),
+            original_constraints=constraint_vec.tolist()
+            if hasattr(constraint_vec, "tolist")
+            else list(constraint_vec),
             repaired_constraints=decoded_constraints.tolist(),
             original_energy=original_energy,
             final_energy=final_energy,
@@ -1064,24 +1142,25 @@ def main() -> int:
                 all_codebook_texts.append(key)
 
     codebook_embeddings_all = _embed_texts(all_codebook_texts)
-    print(f"  Codebook embeddings: {len(all_codebook_texts)} unique entries, shape {codebook_embeddings_all.shape}")
+    print(
+        f"  Codebook embeddings: {len(all_codebook_texts)} unique entries, shape {codebook_embeddings_all.shape}"
+    )
 
     # -------------------------------------------------------------------
     # Step 3: Compute constraint vectors for all responses
     # -------------------------------------------------------------------
     print("\nStep 3: Computing constraint vectors...")
 
-    constraint_vectors = np.array([
-        _compute_constraint_vector(d["question"], d["answer"])
-        for d in dataset
-    ], dtype=np.float32)
+    constraint_vectors = np.array(
+        [_compute_constraint_vector(d["question"], d["answer"]) for d in dataset], dtype=np.float32
+    )
     print(f"  Constraint vectors: shape {constraint_vectors.shape}")
 
     # Show constraint satisfaction rates by correctness
     correct_mask = np.array([d["is_correct"] for d in dataset])
     print("\n  Constraint satisfaction rates:")
     print(f"  {'Constraint':<25s} {'Correct':>8s} {'Wrong':>8s} {'Delta':>8s}")
-    print(f"  {'-'*25} {'-'*8} {'-'*8} {'-'*8}")
+    print(f"  {'-' * 25} {'-' * 8} {'-' * 8} {'-' * 8}")
     for j, cname in enumerate(CONSTRAINT_NAMES):
         rate_c = constraint_vectors[correct_mask, j].mean()
         rate_w = constraint_vectors[~correct_mask, j].mean()
@@ -1152,9 +1231,7 @@ def main() -> int:
         gradient_results.append(gr)
 
         # Discrete repair simulation
-        dr = _simulate_discrete_repair(
-            d["question"], d["answer"], d["codebook"], max_repairs=3
-        )
+        dr = _simulate_discrete_repair(d["question"], d["answer"], d["codebook"], max_repairs=3)
         discrete_results.append(dr)
 
         if idx_in_wrong < 5:
@@ -1182,9 +1259,7 @@ def main() -> int:
     # Combined: try gradient first, then discrete on failures
     combined_success = 0
     for gr, dr in zip(gradient_results, discrete_results):
-        if gr.repair_succeeded:
-            combined_success += 1
-        elif dr["success"]:
+        if gr.repair_succeeded or dr["success"]:
             combined_success += 1
 
     grad_rate = grad_success / n_repair if n_repair > 0 else 0.0
@@ -1196,9 +1271,13 @@ def main() -> int:
     avg_grad_time = np.mean([r.wall_clock_seconds for r in gradient_results])
 
     print(f"\n  {'Strategy':<25s} {'Success Rate':>14s} {'Avg Iters':>10s} {'Avg Time':>10s}")
-    print(f"  {'-'*25} {'-'*14} {'-'*10} {'-'*10}")
-    print(f"  {'Gradient repair':<25s} {grad_rate:>13.1%} {avg_grad_iters:>10.1f} {avg_grad_time:>9.3f}s")
-    print(f"  {'Discrete repair (sim)':<25s} {disc_rate:>13.1%} {avg_disc_iters:>10.1f} {'N/A':>10s}")
+    print(f"  {'-' * 25} {'-' * 14} {'-' * 10} {'-' * 10}")
+    print(
+        f"  {'Gradient repair':<25s} {grad_rate:>13.1%} {avg_grad_iters:>10.1f} {avg_grad_time:>9.3f}s"
+    )
+    print(
+        f"  {'Discrete repair (sim)':<25s} {disc_rate:>13.1%} {avg_disc_iters:>10.1f} {'N/A':>10s}"
+    )
     print(f"  {'Combined (grad+disc)':<25s} {comb_rate:>13.1%} {'N/A':>10s} {'N/A':>10s}")
 
     # Per-domain breakdown
@@ -1211,7 +1290,7 @@ def main() -> int:
         domain_grad_results[domain].append(gradient_results[i].repair_succeeded)
 
     print(f"  {'Domain':<15s} {'Success':>8s} {'Total':>6s} {'Rate':>8s}")
-    print(f"  {'-'*15} {'-'*8} {'-'*6} {'-'*8}")
+    print(f"  {'-' * 15} {'-' * 8} {'-' * 6} {'-' * 8}")
     for domain in DOMAINS:
         if domain in domain_grad_results:
             successes = sum(domain_grad_results[domain])
@@ -1227,7 +1306,7 @@ def main() -> int:
     ablation_results: dict[str, dict] = {}
 
     # Use a subset of wrong responses for ablation (first 20 for speed)
-    ablation_indices = wrong_indices[:min(20, len(wrong_indices))]
+    ablation_indices = wrong_indices[: min(20, len(wrong_indices))]
 
     for ss in STEP_SIZES:
         for mi in MAX_ITERS_LIST:
@@ -1294,7 +1373,7 @@ def main() -> int:
             }
 
     print(f"\n  {'Config':<20s} {'Success':>8s} {'Avg Iters':>10s} {'Avg Time':>10s}")
-    print(f"  {'-'*20} {'-'*8} {'-'*10} {'-'*10}")
+    print(f"  {'-' * 20} {'-' * 8} {'-' * 10} {'-' * 10}")
     for config_key, ar in sorted(ablation_results.items()):
         print(
             f"  {config_key:<20s} {ar['success_rate']:>7.0%} "
@@ -1315,13 +1394,13 @@ def main() -> int:
     energy_improved = sum(1 for b, a in zip(energy_before, energy_after) if a < b)
     avg_energy_drop = np.mean([b - a for b, a in zip(energy_before, energy_after)])
 
-    print(f"  Energy improved: {energy_improved}/{n_repair} ({energy_improved/n_repair:.0%})")
+    print(f"  Energy improved: {energy_improved}/{n_repair} ({energy_improved / n_repair:.0%})")
     print(f"  Average energy drop: {avg_energy_drop:.4f}")
     print(f"  Mean energy before: {np.mean(energy_before):.4f}")
     print(f"  Mean energy after:  {np.mean(energy_after):.4f}")
 
     converged_count = sum(1 for r in gradient_results if r.converged)
-    print(f"  Converged: {converged_count}/{n_repair} ({converged_count/n_repair:.0%})")
+    print(f"  Converged: {converged_count}/{n_repair} ({converged_count / n_repair:.0%})")
 
     # -------------------------------------------------------------------
     # Step 8: Save results
@@ -1432,15 +1511,15 @@ def main() -> int:
 
     print(f"\n  Repair Strategy Comparison:")
     print(f"  {'Strategy':<25s} {'Success Rate':>14s}")
-    print(f"  {'-'*25} {'-'*14}")
+    print(f"  {'-' * 25} {'-' * 14}")
     print(f"  {'Gradient repair':<25s} {grad_rate:>13.1%}")
     print(f"  {'Discrete repair (sim)':<25s} {disc_rate:>13.1%}")
     print(f"  {'Combined':<25s} {comb_rate:>13.1%}")
 
     print(f"\n  Energy Analysis:")
-    print(f"    Energy improved: {energy_improved}/{n_repair} ({energy_improved/n_repair:.0%})")
+    print(f"    Energy improved: {energy_improved}/{n_repair} ({energy_improved / n_repair:.0%})")
     print(f"    Avg energy drop: {avg_energy_drop:.4f}")
-    print(f"    Convergence rate: {converged_count/n_repair:.0%}")
+    print(f"    Convergence rate: {converged_count / n_repair:.0%}")
 
     print(f"\n  Best Ablation: {best_config[0]} ({best_config[1]['success_rate']:.0%})")
 

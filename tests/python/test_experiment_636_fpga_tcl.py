@@ -98,8 +98,9 @@ class TestRunSynthesis:
         mock_proc.stderr = ""
 
         with (
-            patch("scripts.experiment_636_fpga_tcl_v2.subprocess.run",
-                  return_value=mock_proc) as mock_run,
+            patch(
+                "scripts.experiment_636_fpga_tcl_v2.subprocess.run", return_value=mock_proc
+            ) as mock_run,
             patch.object(exp636, "BITFILE_PATH", str(bitfile)),
             patch.object(exp636, "VIVADO_OUTPUT_DIR", str(tmp_path)),
         ):
@@ -120,8 +121,7 @@ class TestRunSynthesis:
         mock_proc.stderr = "ERROR: some synthesis error"
 
         with (
-            patch("scripts.experiment_636_fpga_tcl_v2.subprocess.run",
-                  return_value=mock_proc),
+            patch("scripts.experiment_636_fpga_tcl_v2.subprocess.run", return_value=mock_proc),
             patch.object(exp636, "BITFILE_PATH", str(tmp_path / "missing.bit")),
             patch.object(exp636, "VIVADO_OUTPUT_DIR", str(tmp_path)),
         ):
@@ -132,12 +132,12 @@ class TestRunSynthesis:
     def test_synthesis_timeout(self) -> None:
         # SCENARIO: Vivado times out — synthesis_succeeded=False, error recorded.
         import subprocess as sp
+
         with patch(
             "scripts.experiment_636_fpga_tcl_v2.subprocess.run",
             side_effect=sp.TimeoutExpired(cmd="vivado", timeout=3600),
         ):
-            result = exp636.run_synthesis("hardware/kv260/synth_ising_v2.tcl",
-                                          timeout_s=3600)
+            result = exp636.run_synthesis("hardware/kv260/synth_ising_v2.tcl", timeout_s=3600)
         assert result["synthesis_succeeded"] is False
         assert "timeout" in result["error"]
 
@@ -170,6 +170,7 @@ class TestRunPythonSimulation:
         # SCENARIO: energy values are finite floats (not NaN or inf).
         result = exp636.run_python_simulation()
         import math
+
         assert math.isfinite(result["sync_mean_energy"])
         assert math.isfinite(result["async_mean_energy"])
 
@@ -183,8 +184,7 @@ class TestMain:
     """Integration: main() produces deliverable JSON with correct schema."""
 
     def _make_sim_result(self) -> dict:
-        return {"sync_mean_energy": 0.01, "async_mean_energy": -0.32,
-                "energy_gap": 0.33}
+        return {"sync_mean_energy": 0.01, "async_mean_energy": -0.32, "energy_gap": 0.33}
 
     def test_main_vivado_absent(self, tmp_path: Path) -> None:
         # SCENARIO: Vivado not installed — honest_verdict=tcl_updated_synthesis_deferred.
@@ -202,10 +202,10 @@ class TestMain:
         with (
             patch.object(exp636, "DELIVERABLE", str(deliverable)),
             patch.object(exp636, "TCL_V2_PATH", str(tcl)),
-            patch("scripts.experiment_636_fpga_tcl_v2.subprocess.run",
-                  return_value=mock_vivado_fail),
-            patch.object(exp636, "run_python_simulation",
-                         return_value=self._make_sim_result()),
+            patch(
+                "scripts.experiment_636_fpga_tcl_v2.subprocess.run", return_value=mock_vivado_fail
+            ),
+            patch.object(exp636, "run_python_simulation", return_value=self._make_sim_result()),
         ):
             exp636.main()
 
@@ -248,11 +248,9 @@ class TestMain:
             patch.object(exp636, "TCL_V2_PATH", str(tcl)),
             patch.object(exp636, "BITFILE_PATH", str(bitfile)),
             patch.object(exp636, "VIVADO_OUTPUT_DIR", str(tmp_path)),
-            patch("scripts.experiment_636_fpga_tcl_v2.subprocess.run",
-                  return_value=mock_vivado_ok),
+            patch("scripts.experiment_636_fpga_tcl_v2.subprocess.run", return_value=mock_vivado_ok),
             patch.object(exp636, "run_synthesis", return_value=synth_result_ok),
-            patch.object(exp636, "run_python_simulation",
-                         return_value=self._make_sim_result()),
+            patch.object(exp636, "run_python_simulation", return_value=self._make_sim_result()),
         ):
             exp636.main()
 
@@ -280,11 +278,9 @@ class TestMain:
         with (
             patch.object(exp636, "DELIVERABLE", str(deliverable)),
             patch.object(exp636, "TCL_V2_PATH", str(tcl)),
-            patch("scripts.experiment_636_fpga_tcl_v2.subprocess.run",
-                  return_value=mock_vivado_ok),
+            patch("scripts.experiment_636_fpga_tcl_v2.subprocess.run", return_value=mock_vivado_ok),
             patch.object(exp636, "run_synthesis", return_value=synth_result_fail),
-            patch.object(exp636, "run_python_simulation",
-                         return_value=self._make_sim_result()),
+            patch.object(exp636, "run_python_simulation", return_value=self._make_sim_result()),
         ):
             exp636.main()
 
@@ -306,10 +302,8 @@ class TestMain:
         with (
             patch.object(exp636, "DELIVERABLE", str(deliverable)),
             patch.object(exp636, "TCL_V2_PATH", str(tcl)),
-            patch("scripts.experiment_636_fpga_tcl_v2.subprocess.run",
-                  return_value=mock_fail),
-            patch.object(exp636, "run_python_simulation",
-                         return_value=self._make_sim_result()),
+            patch("scripts.experiment_636_fpga_tcl_v2.subprocess.run", return_value=mock_fail),
+            patch.object(exp636, "run_python_simulation", return_value=self._make_sim_result()),
         ):
             exp636.main()
 

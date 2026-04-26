@@ -40,10 +40,13 @@ from __future__ import annotations
 import json
 import logging
 import os
-from dataclasses import dataclass, field
-from typing import Any, Callable, List, Optional
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any
 
 from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 _log = logging.getLogger(__name__)
 
@@ -112,8 +115,8 @@ class BenchmarkBatch:
     batch_id: int
     start_idx: int
     end_idx: int
-    questions: List[Any]
-    results: Optional[List[Any]] = None
+    questions: list[Any]
+    results: list[Any] | None = None
     status: str = "pending"
 
 
@@ -159,7 +162,7 @@ class LongRunBenchmarkResult:
     batch_size: int
     n_batches: int
     completed_batches: int
-    all_results: List[Any]
+    all_results: list[Any]
     honest_verdict: str
 
 
@@ -202,7 +205,7 @@ class LongRunBenchmarkExecutor:
     # partition
     # ------------------------------------------------------------------
 
-    def partition(self, questions: list) -> List[BenchmarkBatch]:
+    def partition(self, questions: list) -> list[BenchmarkBatch]:
         """Split a flat list of questions into fixed-size ``BenchmarkBatch`` objects.
 
         Questions are assigned to batches in order; the last batch may be smaller
@@ -222,7 +225,7 @@ class LongRunBenchmarkExecutor:
 
         Spec: REQ-INFRA-027, SCENARIO-INFRA-034
         """
-        batches: List[BenchmarkBatch] = []
+        batches: list[BenchmarkBatch] = []
         batch_id = 0
         for start in range(0, len(questions), self.batch_size):
             end = min(start + self.batch_size, len(questions))
@@ -291,7 +294,7 @@ class LongRunBenchmarkExecutor:
         )
         return path
 
-    def load_batch(self, path: str) -> Optional[BenchmarkBatch]:
+    def load_batch(self, path: str) -> BenchmarkBatch | None:
         """Resume a batch from a checkpoint file.
 
         Returns ``None`` if the file does not exist or cannot be parsed, so
@@ -389,7 +392,7 @@ class LongRunBenchmarkExecutor:
     # assemble
     # ------------------------------------------------------------------
 
-    def assemble(self, batches: List[BenchmarkBatch]) -> LongRunBenchmarkResult:
+    def assemble(self, batches: list[BenchmarkBatch]) -> LongRunBenchmarkResult:
         """Build a ``LongRunBenchmarkResult`` from a list of (possibly partial) batches.
 
         Collects results from all batches with ``status='complete'``. Batches with
@@ -415,10 +418,10 @@ class LongRunBenchmarkExecutor:
         Spec: REQ-INFRA-027, SCENARIO-INFRA-035, SCENARIO-INFRA-036
         """
         n_batches = len(batches)
-        completed: List[BenchmarkBatch] = [b for b in batches if b.status == "complete"]
+        completed: list[BenchmarkBatch] = [b for b in batches if b.status == "complete"]
         completed_count = len(completed)
 
-        all_results: List[Any] = []
+        all_results: list[Any] = []
         for b in completed:
             if b.results:
                 all_results.extend(b.results)

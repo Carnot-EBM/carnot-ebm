@@ -2,6 +2,7 @@
 
 Traces to: REQ-LEARN-060, REQ-LEARN-061, SCENARIO-LEARN-099
 """
+
 from __future__ import annotations
 
 import sys
@@ -27,9 +28,7 @@ def _make_store_with_patterns():
     from carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
 
     store = EmbeddingConstraintStore()
-    store.from_casememory_patterns(
-        {"carry": 4, "sign": 4, "unit": 4, "comparison": 4, "causal": 4}
-    )
+    store.from_casememory_patterns({"carry": 4, "sign": 4, "unit": 4, "comparison": 4, "causal": 4})
     return store
 
 
@@ -136,14 +135,16 @@ def test_static_constraints_unchanged_with_store():
 
     # Injected constraints must carry the 'embedding_retrieved_' prefix
     injected = [
-        c for c in result_with_store.constraints
+        c
+        for c in result_with_store.constraints
         if c.constraint_type.startswith("embedding_retrieved_")
     ]
     assert len(injected) > 0, "No embedding_retrieved_ constraints injected"
 
     # Count of static constraints should be >= without-store count
     static_types_with = {
-        c.constraint_type for c in result_with_store.constraints
+        c.constraint_type
+        for c in result_with_store.constraints
         if not c.constraint_type.startswith("embedding_retrieved_")
     }
     static_types_without = {c.constraint_type for c in result_without_store.constraints}
@@ -169,8 +170,7 @@ def test_injected_constraint_metadata_fields():
     )
 
     injected = [
-        c for c in result.constraints
-        if c.constraint_type.startswith("embedding_retrieved_")
+        c for c in result.constraints if c.constraint_type.startswith("embedding_retrieved_")
     ]
     assert injected, "Expected at least one injected constraint"
     for c in injected:

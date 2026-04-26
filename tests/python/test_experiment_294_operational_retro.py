@@ -67,8 +67,7 @@ class TestRetroArtifactSchema:
         data = json.loads(RETRO_RESULT.read_text())
         for field, expected_type in self.REQUIRED_FIELDS.items():
             assert isinstance(data[field], expected_type), (
-                f"Field '{field}' should be {expected_type}, "
-                f"got {type(data[field])}"
+                f"Field '{field}' should be {expected_type}, got {type(data[field])}"
             )
 
     def test_milestone_value(self) -> None:
@@ -117,8 +116,7 @@ class TestCarryOverRateComputation:
         deferred = sum(1 for item in audit if item["resolution"] == "deferred")
         expected_rate = round(deferred / total * 100, 1)
         assert abs(data["carry_over_rate_pct"] - expected_rate) < 0.5, (
-            f"carry_over_rate_pct {data['carry_over_rate_pct']} != "
-            f"computed {expected_rate}"
+            f"carry_over_rate_pct {data['carry_over_rate_pct']} != computed {expected_rate}"
         )
 
     def test_carry_over_rate_improved_vs_prior(self) -> None:
@@ -217,12 +215,8 @@ class TestActionItemResolutionTracking:
         """SCENARIO-OPS-003: evidence field must be a non-empty string."""
         data = self._load()
         for item in data["action_item_audit"]:
-            assert isinstance(item["evidence"], str), (
-                f"evidence for {item['id']!r} is not a string"
-            )
-            assert len(item["evidence"]) > 0, (
-                f"evidence for {item['id']!r} is empty"
-            )
+            assert isinstance(item["evidence"], str), f"evidence for {item['id']!r} is not a string"
+            assert len(item["evidence"]) > 0, f"evidence for {item['id']!r} is empty"
 
 
 # ---------------------------------------------------------------------------
@@ -269,8 +263,7 @@ class TestGPUUtilizationFields:
         data = self._load()
         for exp in data["experiments_in_scope"]:
             assert "gpu_count" in exp, (
-                f"Experiment entry {exp.get('experiment_id', '?')} "
-                "missing gpu_count"
+                f"Experiment entry {exp.get('experiment_id', '?')} missing gpu_count"
             )
             assert exp["gpu_count"] in (0, 1, 2), (
                 f"gpu_count must be 0, 1, or 2; got {exp['gpu_count']!r}"
@@ -306,9 +299,7 @@ class TestStructuralRootCauseFields:
         """SCENARIO-OPS-005: stories_created must be a positive integer."""
         data = self._load()
         n = data["structural_action_taken"]["stories_created"]
-        assert isinstance(n, int) and n > 0, (
-            f"stories_created must be a positive int, got {n!r}"
-        )
+        assert isinstance(n, int) and n > 0, f"stories_created must be a positive int, got {n!r}"
 
     def test_story_paths_are_strings(self) -> None:
         """SCENARIO-OPS-005: story_paths must be a list of strings."""

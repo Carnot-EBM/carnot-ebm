@@ -25,7 +25,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 from carnot.autoresearch.code_improvement import (
     build_code_verification_baselines,
     code_verification_hypothesis_template,
-    run_code_verification_autoresearch,
 )
 from carnot.autoresearch.orchestrator import AutoresearchConfig
 
@@ -51,6 +50,7 @@ def main() -> int:
     except Exception as e:
         print(f"Baseline creation failed: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 
@@ -86,9 +86,9 @@ def main() -> int:
 
     # Print results
     elapsed = time.time() - start
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"CODE VERIFICATION AUTORESEARCH RESULTS ({elapsed:.0f}s)")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  Iterations:       {result.iterations}")
     print(f"  Accepted:         {result.accepted}")
     print(f"  Rejected:         {result.rejected}")
@@ -111,10 +111,10 @@ def main() -> int:
         for name, metrics in sorted(result.final_baselines.benchmarks.items()):
             print(f"  {name}: energy={metrics.final_energy:.4f}")
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"  {result.accepted} hypothesis(es) accepted!")
     print("  The energy function served as the objective judge.")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     return 0
 

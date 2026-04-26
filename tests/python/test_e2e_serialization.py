@@ -252,12 +252,8 @@ class TestE2ESerializationPyO3CrossLanguage:
 
     def test_gibbs_rust_python_energy_agreement(self, rust_module) -> None:
         """SCENARIO-CORE-004: Rust and Python Gibbs produce finite energy on same input."""
-        rust_model = rust_module.RustGibbsModel(
-            input_dim=4, hidden_dims=[3, 2], activation="silu"
-        )
-        python_model = GibbsModel(
-            GibbsConfig(input_dim=4, hidden_dims=[3, 2], activation="silu")
-        )
+        rust_model = rust_module.RustGibbsModel(input_dim=4, hidden_dims=[3, 2], activation="silu")
+        python_model = GibbsModel(GibbsConfig(input_dim=4, hidden_dims=[3, 2], activation="silu"))
 
         x = np.array([0.1, -0.2, 0.3, -0.4], dtype=np.float32)
 

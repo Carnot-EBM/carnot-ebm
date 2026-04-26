@@ -254,4 +254,5 @@ def test_export_from_training() -> None:
     Spec: REQ-SAMPLE-025-5
     """
     from carnot.training import MultilevelSparseKAEMTrainer as T
+
     assert T is MultilevelSparseKAEMTrainer

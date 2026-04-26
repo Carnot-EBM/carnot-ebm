@@ -165,13 +165,15 @@ def _synthetic_gsm8k(n: int) -> list[dict]:
         a = i + 1
         b = i + 2
         answer = (a + b) * 2
-        questions.append({
-            "question": (
-                f"A store has {a} red apples and {b} green apples. "
-                f"Each apple is sold in pairs. How many apples are sold in total?"
-            ),
-            "answer": f"#### {answer}",
-        })
+        questions.append(
+            {
+                "question": (
+                    f"A store has {a} red apples and {b} green apples. "
+                    f"Each apple is sold in pairs. How many apples are sold in total?"
+                ),
+                "answer": f"#### {answer}",
+            }
+        )
     return questions
 
 
@@ -187,6 +189,7 @@ def _extract_gsm8k_answer(text: str) -> str | None:
     The number may be negative or a decimal.
     """
     import re
+
     m = re.search(r"####\s*(-?\d+(?:\.\d+)?)", text)
     return m.group(1) if m else None
 
@@ -205,6 +208,7 @@ def _is_correct(response: str, gold: str | None) -> bool:
     predicted = _extract_gsm8k_answer(response)
     if predicted is None:
         import re
+
         nums = re.findall(r"-?\d+(?:\.\d+)?", response)
         if nums:
             predicted = nums[-1]
@@ -352,11 +356,18 @@ def _apply_variant(
             # Take the union — don't lose ArithmeticExtractor detections.
             n_viol = max(n_viol, len(llm_violations))
         except Exception as exc:
-            _log.warning("LLMExtractor failed for %s: %s — falling back to ArithmeticExtractor", model_id, exc)
+            _log.warning(
+                "LLMExtractor failed for %s: %s — falling back to ArithmeticExtractor",
+                model_id,
+                exc,
+            )
 
     # Filter by expression confidence (ConfidenceWeightedRepair logic).
     from carnot.pipeline.confidence_weighted_repair import compute_expression_confidence
-    high_conf = [v for v in violations if compute_expression_confidence(v.description) >= MIN_CONFIDENCE]
+
+    high_conf = [
+        v for v in violations if compute_expression_confidence(v.description) >= MIN_CONFIDENCE
+    ]
     n_viol = max(n_viol, len(high_conf))
     n_rep = 1 if high_conf else 0
 
@@ -714,9 +725,7 @@ def main() -> None:
     for spec in MODEL_SPECS:
         try:
             _log.info("Loading %s on GPU %d ...", spec["name"], spec["gpu"])
-            model_objects[spec["name"]] = _load_model_pipeline(
-                spec["hf_id"], spec["gpu"], "auto"
-            )
+            model_objects[spec["name"]] = _load_model_pipeline(spec["hf_id"], spec["gpu"], "auto")
             _log.info("Loaded %s OK", spec["name"])
         except Exception as exc:
             _log.error("Failed to load %s: %s — blocked", spec["name"], exc)
@@ -746,7 +755,10 @@ def main() -> None:
             )
             _log.info("LLMConstraintExtractor wired to Qwen3.5-0.8B")
         except Exception as exc:
-            _log.warning("Could not build LLMConstraintExtractor: %s — falling back to ArithmeticExtractor", exc)
+            _log.warning(
+                "Could not build LLMConstraintExtractor: %s — falling back to ArithmeticExtractor",
+                exc,
+            )
 
     # ---------------------------------------------------------------------------
     # Load GSM8K questions.
@@ -802,8 +814,7 @@ def main() -> None:
         label = hr.get("headline_label", "no_positive_result")
         verdict = precision_artifact.get("honest_verdict", "unknown")
         _log.info(
-            "HEADLINE: Gemma4-E4B-it FULL_STACK signed_improvement=%.4f "
-            "label=%s honest_verdict=%s",
+            "HEADLINE: Gemma4-E4B-it FULL_STACK signed_improvement=%.4f label=%s honest_verdict=%s",
             hr.get("signed_improvement", float("nan")),
             label,
             verdict,
@@ -849,6 +860,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

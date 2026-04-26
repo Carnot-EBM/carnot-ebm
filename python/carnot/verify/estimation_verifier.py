@@ -31,17 +31,43 @@
 from __future__ import annotations
 
 import re
-from typing import Optional
-
 
 # ---------------------------------------------------------------------------
 # Keyword dictionaries for operation detection.
 # Each set contains English words that signal the corresponding operation.
 # ---------------------------------------------------------------------------
 
-_ADD_KEYWORDS: set[str] = {"more", "total", "sum", "combined", "together", "added", "plus", "increased"}
-_SUB_KEYWORDS: set[str] = {"left", "remaining", "fewer", "difference", "less", "lost", "spent", "removed", "decreased"}
-_MUL_KEYWORDS: set[str] = {"times", "each", "per", "product", "every", "multiplied", "rows", "columns"}
+_ADD_KEYWORDS: set[str] = {
+    "more",
+    "total",
+    "sum",
+    "combined",
+    "together",
+    "added",
+    "plus",
+    "increased",
+}
+_SUB_KEYWORDS: set[str] = {
+    "left",
+    "remaining",
+    "fewer",
+    "difference",
+    "less",
+    "lost",
+    "spent",
+    "removed",
+    "decreased",
+}
+_MUL_KEYWORDS: set[str] = {
+    "times",
+    "each",
+    "per",
+    "product",
+    "every",
+    "multiplied",
+    "rows",
+    "columns",
+}
 _DIV_KEYWORDS: set[str] = {"split", "share", "average", "divided", "portions", "equally", "groups"}
 
 # Regex to extract numbers including decimals.
@@ -124,7 +150,7 @@ class EstimationVerifier:
         self,
         question: str,
         response: str,
-        ground_truth: Optional[float] = None,
+        ground_truth: float | None = None,
     ) -> int:
         """Return 1 (correct) or 0 (wrong) for a question/response pair.
 
@@ -187,9 +213,7 @@ class EstimationVerifier:
                 return op
         return "unknown"
 
-    def _compute_range(
-        self, numbers: list[float], operation: str
-    ) -> Optional[list[float]]:
+    def _compute_range(self, numbers: list[float], operation: str) -> list[float] | None:
         """Compute a generous plausible answer range given the numbers and operation.
 
         Ranges are deliberately wide — the goal is to reject clearly wrong answers
@@ -223,7 +247,7 @@ class EstimationVerifier:
 
         return [lo, hi]
 
-    def _extract_answer(self, response: str) -> Optional[float]:
+    def _extract_answer(self, response: str) -> float | None:
         """Extract a numerical answer from the model's response text.
 
         Tries each answer-extraction pattern in priority order. Returns the

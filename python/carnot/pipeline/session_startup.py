@@ -137,13 +137,28 @@ def run_session_startup(dry_run: bool = True) -> dict:
         )
     except FileNotFoundError:
         _log.warning("session_startup.sh not found at %s — returning unhealthy", _SCRIPT_PATH)
-        return {"n_gpus_detected": 0, "n_zombies_found": 0, "n_zombies_killed": 0, "all_healthy": False}
+        return {
+            "n_gpus_detected": 0,
+            "n_zombies_found": 0,
+            "n_zombies_killed": 0,
+            "all_healthy": False,
+        }
     except subprocess.TimeoutExpired:
         _log.warning("session_startup.sh timed out — returning unhealthy")
-        return {"n_gpus_detected": 0, "n_zombies_found": 0, "n_zombies_killed": 0, "all_healthy": False}
+        return {
+            "n_gpus_detected": 0,
+            "n_zombies_found": 0,
+            "n_zombies_killed": 0,
+            "all_healthy": False,
+        }
     except Exception as exc:  # pragma: no cover — unexpected OS-level failure
         _log.warning("session_startup.sh error: %s — returning unhealthy", exc)
-        return {"n_gpus_detected": 0, "n_zombies_found": 0, "n_zombies_killed": 0, "all_healthy": False}
+        return {
+            "n_gpus_detected": 0,
+            "n_zombies_found": 0,
+            "n_zombies_killed": 0,
+            "all_healthy": False,
+        }
 
     combined = result.stdout + "\n" + result.stderr
     return parse_session_startup_output(combined)

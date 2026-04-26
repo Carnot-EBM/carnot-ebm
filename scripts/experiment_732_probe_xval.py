@@ -229,6 +229,7 @@ def run_cross_validation(
     try:
         import torch  # noqa: PLC0415
         import gc  # noqa: PLC0415
+
         gc.collect()
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
@@ -245,7 +246,9 @@ def run_cross_validation(
     n_val_per_fold_list: list[int] = []
 
     for fold_i, (train_idx, val_idx) in enumerate(skf.split(all_hidden, labels)):
-        _log.info("Fold %d/%d: n_train=%d, n_val=%d", fold_i + 1, n_folds, len(train_idx), len(val_idx))
+        _log.info(
+            "Fold %d/%d: n_train=%d, n_val=%d", fold_i + 1, n_folds, len(train_idx), len(val_idx)
+        )
 
         X_train = all_hidden[train_idx]
         y_train = labels[train_idx]
@@ -261,7 +264,9 @@ def run_cross_validation(
         _log.info("Fold %d train_loss=%.4f", fold_i + 1, train_result["final_loss"])
 
         # Score the validation split.
-        val_scores = np.array([fold_probe.predict(X_val[i]) for i in range(len(X_val))], dtype=np.float32)
+        val_scores = np.array(
+            [fold_probe.predict(X_val[i]) for i in range(len(X_val))], dtype=np.float32
+        )
         fold_auc = JEPAReasonerProbe.evaluate_auc(val_scores, y_val)
         fold_aucs.append(float(fold_auc))
         _log.info("Fold %d AUC=%.4f", fold_i + 1, fold_auc)
@@ -338,7 +343,9 @@ def run_transfer_test(
     extractor = JEPAReasonerProbe(model_name=MODEL_NAME, layer_index=LAYER_INDEX, device=device)
     extractor.load_model()
     questions = [item["question"] for item in math_items]
-    labels = np.array([item.get("label", item.get("step_correct", 1.0)) for item in math_items], dtype=np.float32)
+    labels = np.array(
+        [item.get("label", item.get("step_correct", 1.0)) for item in math_items], dtype=np.float32
+    )
     # Normalise labels to 0/1 float (step_correct=True → label=0, violation).
     # If the field is already a float label, use it directly.
     if labels.max() > 1.0 or labels.dtype == bool:
@@ -347,7 +354,9 @@ def run_transfer_test(
     hidden_states = extractor.extract_hidden_states_batch(questions, batch_size=BATCH_SIZE)
     del extractor
 
-    scores = np.array([probe.forward(hidden_states[i]) for i in range(len(hidden_states))], dtype=np.float32)
+    scores = np.array(
+        [probe.forward(hidden_states[i]) for i in range(len(hidden_states))], dtype=np.float32
+    )
     transfer_auc = JEPAReasonerProbe.evaluate_auc(scores, labels)
 
     return {
@@ -424,12 +433,17 @@ def main() -> None:
     tmpl.setup()
     tmpl.check_exclusion_manifest()
 
-    with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=90, result_path=str(_REPO_ROOT / DELIVERABLE)):
-
+    with ExperimentTimeoutWatchdog(
+        EXP_ID, timeout_minutes=90, result_path=str(_REPO_ROOT / DELIVERABLE)
+    ):
         # --- GPU setup ---
         MODEL_SPECS = [{"name": "Qwen3.5-0.8B", "hf_id": MODEL_NAME, "gpu": 0}]
         gpu_status = tmpl.setup_gpu(MODEL_SPECS)
-        extraction_device = "cuda:0" if gpu_status.get("all_healthy") and not gpu_status.get("cpu_fallback") else "cpu"
+        extraction_device = (
+            "cuda:0"
+            if gpu_status.get("all_healthy") and not gpu_status.get("cpu_fallback")
+            else "cpu"
+        )
         _log.info("Hidden-state extraction device: %s", extraction_device)
 
         # --- Load corpus ---
@@ -457,7 +471,9 @@ def main() -> None:
         fold_aucs = cv_results["fold_aucs"]
         mean_auc = cv_results["mean_auc"]
         std_auc = cv_results["std_auc"]
-        _log.info("CV complete: mean_auc=%.4f std_auc=%.4f fold_aucs=%s", mean_auc, std_auc, fold_aucs)
+        _log.info(
+            "CV complete: mean_auc=%.4f std_auc=%.4f fold_aucs=%s", mean_auc, std_auc, fold_aucs
+        )
 
         # Checkpoint after CV — this is the expensive part.
         tmpl.checkpoint_save({"cv_results": cv_results}, step=1)
@@ -471,12 +487,14 @@ def main() -> None:
             device=extraction_device,
         )
         transfer_auc = transfer_result.get("transfer_auc")
-        _log.info("Transfer test: transfer_auc=%s note=%s", transfer_auc, transfer_result.get("transfer_note"))
+        _log.info(
+            "Transfer test: transfer_auc=%s note=%s",
+            transfer_auc,
+            transfer_result.get("transfer_note"),
+        )
 
         # --- Gate file ---
-        gate_pass = write_gate_file(
-            _REPO_ROOT, mean_auc, std_auc, transfer_auc, fold_aucs
-        )
+        gate_pass = write_gate_file(_REPO_ROOT, mean_auc, std_auc, transfer_auc, fold_aucs)
 
         # --- honest_verdict ---
         if mean_auc >= MEAN_AUC_GATE and std_auc < STD_AUC_GATE:

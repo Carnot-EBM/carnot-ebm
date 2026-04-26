@@ -58,15 +58,15 @@ from scripts.experiment_template import ExperimentTemplate
 TEST_CASES: list[tuple[str, str]] = [
     (
         "What is 47 + 28?",
-        "Step 1: 47 + 28 = 76. The answer is 76.",           # WRONG (should be 75)
+        "Step 1: 47 + 28 = 76. The answer is 76.",  # WRONG (should be 75)
     ),
     (
         "What is 100 - 37?",
-        "Step 1: 100 - 37 = 63. The answer is 63.",           # correct
+        "Step 1: 100 - 37 = 63. The answer is 63.",  # correct
     ),
     (
         "What is 6 * 9?",
-        "Step 1: 6 * 9 = 42. The answer is 42.",              # WRONG (should be 54)
+        "Step 1: 6 * 9 = 42. The answer is 42.",  # WRONG (should be 54)
     ),
     (
         "What is 15% of 200?",
@@ -74,7 +74,7 @@ TEST_CASES: list[tuple[str, str]] = [
     ),
     (
         "What is 3^3?",
-        "Step 1: 3^3 = 3 * 3 * 3 = 27. The answer is 27.",   # correct
+        "Step 1: 3^3 = 3 * 3 * 3 = 27. The answer is 27.",  # correct
     ),
 ]
 
@@ -316,13 +316,15 @@ def run_diagnosis(
             embedding_constraint_store=constraint_store,
             ising_constraint_injector=injector,
         )
-        verify_results.append({
-            "question": question,
-            "response": response[:60],
-            "verified": result.verified,
-            "n_violations": len(result.violations),
-            "violation_types": [v.constraint_type for v in result.violations],
-        })
+        verify_results.append(
+            {
+                "question": question,
+                "response": response[:60],
+                "verified": result.verified,
+                "n_violations": len(result.violations),
+                "violation_types": [v.constraint_type for v in result.violations],
+            }
+        )
 
     # Compute aggregated metrics from counters.
     norms = counters["retrieved_vector_norms"]

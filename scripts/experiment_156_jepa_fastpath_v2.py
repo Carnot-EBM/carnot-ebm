@@ -194,11 +194,7 @@ def generate_code_qa(rng: random.Random) -> list[dict]:
         tmpl = templates[i % len(templates)]
         n = rng.randint(3, 12)
         is_correct = rng.random() < 0.60
-        code = (
-            tmpl["correct"].format(n=n)
-            if is_correct
-            else tmpl["wrong"].format(n=n)
-        )
+        code = tmpl["correct"].format(n=n) if is_correct else tmpl["wrong"].format(n=n)
         pairs.append(
             {
                 "question": tmpl["question"].format(n=n),
@@ -228,16 +224,52 @@ def generate_logic_qa(rng: random.Random) -> list[dict]:
         List of Q&A dicts for logic domain.
     """
     syllogisms = [
-        ("All mammals are warm-blooded. Dogs are mammals.", "Dogs are warm-blooded.", "Dogs are not warm-blooded."),
-        ("All birds have feathers. Eagles are birds.", "Eagles have feathers.", "Eagles do not have feathers."),
-        ("If it rains, the ground gets wet. It is raining.", "The ground is wet.", "The ground is not wet."),
-        ("All squares are rectangles. ABCD is a square.", "ABCD is a rectangle.", "ABCD is not a rectangle."),
+        (
+            "All mammals are warm-blooded. Dogs are mammals.",
+            "Dogs are warm-blooded.",
+            "Dogs are not warm-blooded.",
+        ),
+        (
+            "All birds have feathers. Eagles are birds.",
+            "Eagles have feathers.",
+            "Eagles do not have feathers.",
+        ),
+        (
+            "If it rains, the ground gets wet. It is raining.",
+            "The ground is wet.",
+            "The ground is not wet.",
+        ),
+        (
+            "All squares are rectangles. ABCD is a square.",
+            "ABCD is a rectangle.",
+            "ABCD is not a rectangle.",
+        ),
         ("If P then Q. P is true.", "Q is true.", "Q is false."),
-        ("All prime numbers greater than 2 are odd. 7 is prime and greater than 2.", "7 is odd.", "7 is even."),
-        ("All cats are felines. Whiskers is a cat.", "Whiskers is a feline.", "Whiskers is not a feline."),
-        ("If the battery is charged, the device works. The battery is charged.", "The device works.", "The device does not work."),
-        ("All integers divisible by 4 are divisible by 2. 12 is divisible by 4.", "12 is divisible by 2.", "12 is not divisible by 2."),
-        ("All roses are flowers. Some flowers fade quickly. Some roses are red.", "Roses are a type of flower.", "Roses are not flowers."),
+        (
+            "All prime numbers greater than 2 are odd. 7 is prime and greater than 2.",
+            "7 is odd.",
+            "7 is even.",
+        ),
+        (
+            "All cats are felines. Whiskers is a cat.",
+            "Whiskers is a feline.",
+            "Whiskers is not a feline.",
+        ),
+        (
+            "If the battery is charged, the device works. The battery is charged.",
+            "The device works.",
+            "The device does not work.",
+        ),
+        (
+            "All integers divisible by 4 are divisible by 2. 12 is divisible by 4.",
+            "12 is divisible by 2.",
+            "12 is not divisible by 2.",
+        ),
+        (
+            "All roses are flowers. Some flowers fade quickly. Some roses are red.",
+            "Roses are a type of flower.",
+            "Roses are not flowers.",
+        ),
     ]
 
     pairs = []
@@ -552,8 +584,8 @@ def main() -> None:
         print(f"\nLoaded Exp 145 v1 baseline from {V1_RESULTS_PATH}")
         for mode in v1_results.get("modes", []):
             print(
-                f"  v1 {mode['name']}: fast_path={100*mode['fast_path_rate']:.1f}%"
-                f"  degradation={100*mode['accuracy_degradation']:.2f}%"
+                f"  v1 {mode['name']}: fast_path={100 * mode['fast_path_rate']:.1f}%"
+                f"  degradation={100 * mode['accuracy_degradation']:.2f}%"
             )
 
     # --- Generate synthetic Q&A pairs (same seed as Exp 145) ---
@@ -566,7 +598,7 @@ def main() -> None:
     n_correct = sum(1 for p in all_pairs if p["ground_truth_correct"])
     print(
         f"  {N_ARITHMETIC} arithmetic, {N_CODE} code, {N_LOGIC} logic  "
-        f"({n_correct}/{N_TOTAL} = {100*n_correct/N_TOTAL:.1f}% ground-truth correct)"
+        f"({n_correct}/{N_TOTAL} = {100 * n_correct / N_TOTAL:.1f}% ground-truth correct)"
     )
 
     # --- Set up pipeline ---
@@ -599,12 +631,13 @@ def main() -> None:
 
     n_baseline_verified = sum(baseline_decisions)
     baseline_gt_match = sum(
-        1 for i, qa in enumerate(all_pairs)
-        if (baseline_decisions[i] == qa["ground_truth_correct"])
+        1 for i, qa in enumerate(all_pairs) if (baseline_decisions[i] == qa["ground_truth_correct"])
     )
     print(f"  Total time: {baseline_result.total_wall_time_s:.3f}s")
-    print(f"  Verified: {n_baseline_verified}/{N_TOTAL} = {100*n_baseline_verified/N_TOTAL:.1f}%")
-    print(f"  Accuracy vs ground truth: {100*baseline_gt_match/N_TOTAL:.1f}%")
+    print(
+        f"  Verified: {n_baseline_verified}/{N_TOTAL} = {100 * n_baseline_verified / N_TOTAL:.1f}%"
+    )
+    print(f"  Accuracy vs ground truth: {100 * baseline_gt_match / N_TOTAL:.1f}%")
 
     # =========================================================================
     # Mode 2: v2 predictor at thresholds 0.3, 0.5, 0.7
@@ -633,12 +666,18 @@ def main() -> None:
         status = "PASS" if (fp_ok and deg_ok) else "MISS"
 
         print(f"  Time: {v2_mode.total_wall_time_s:.3f}s  (speedup: {speedup_v2:.2f}×)")
-        print(f"  Fast-path rate: {100*v2_mode.fast_path_rate:.1f}%  (target ≥ {100*TARGET_FASTPATH_RATE:.0f}%)")
-        print(f"  Fast-path accuracy: {100*v2_mode.fast_path_accuracy:.1f}%")
-        print(f"  Slow-path accuracy: {100*v2_mode.slow_path_accuracy:.1f}%")
-        print(f"  Overall accuracy: {100*v2_mode.overall_accuracy:.1f}%")
-        print(f"  Accuracy degradation: {100*degradation_v2:.2f}%  (target < {100*TARGET_MAX_DEGRADATION:.0f}%)")
-        print(f"  Target [{TARGET_FASTPATH_RATE*100:.0f}% fast-path, <{TARGET_MAX_DEGRADATION*100:.0f}% degradation]: {status}")
+        print(
+            f"  Fast-path rate: {100 * v2_mode.fast_path_rate:.1f}%  (target ≥ {100 * TARGET_FASTPATH_RATE:.0f}%)"
+        )
+        print(f"  Fast-path accuracy: {100 * v2_mode.fast_path_accuracy:.1f}%")
+        print(f"  Slow-path accuracy: {100 * v2_mode.slow_path_accuracy:.1f}%")
+        print(f"  Overall accuracy: {100 * v2_mode.overall_accuracy:.1f}%")
+        print(
+            f"  Accuracy degradation: {100 * degradation_v2:.2f}%  (target < {100 * TARGET_MAX_DEGRADATION:.0f}%)"
+        )
+        print(
+            f"  Target [{TARGET_FASTPATH_RATE * 100:.0f}% fast-path, <{TARGET_MAX_DEGRADATION * 100:.0f}% degradation]: {status}"
+        )
 
         # Per-domain fast-path accuracy.
         domain_acc = v2_mode.per_domain_fast_path_accuracy()
@@ -646,7 +685,7 @@ def main() -> None:
         for domain, acc in domain_acc.items():
             n_fast = v2_mode.per_domain_fast[domain]
             if n_fast > 0:
-                print(f"    {domain:12s}: {100*acc:.1f}%  ({n_fast} fast-path questions)")
+                print(f"    {domain:12s}: {100 * acc:.1f}%  ({n_fast} fast-path questions)")
             else:
                 print(f"    {domain:12s}: — (no fast-path questions)")
 
@@ -665,16 +704,16 @@ def main() -> None:
             v1_results_by_threshold.append(v1_mode)
             degradation_v1 = 1.0 - v1_mode.overall_accuracy
             print(
-                f"  v1: fast_path={100*v1_mode.fast_path_rate:.1f}%  "
-                f"degradation={100*degradation_v1:.2f}%  "
-                f"accuracy={100*v1_mode.overall_accuracy:.1f}%"
+                f"  v1: fast_path={100 * v1_mode.fast_path_rate:.1f}%  "
+                f"degradation={100 * degradation_v1:.2f}%  "
+                f"accuracy={100 * v1_mode.overall_accuracy:.1f}%"
             )
             # v2 delta.
             fp_delta = v2_mode.fast_path_rate - v1_mode.fast_path_rate
             deg_delta = degradation_v2 - degradation_v1
             print(
-                f"  v2 vs v1 delta: fast_path Δ={100*fp_delta:+.1f}%  "
-                f"degradation Δ={100*deg_delta:+.2f}%"
+                f"  v2 vs v1 delta: fast_path Δ={100 * fp_delta:+.1f}%  "
+                f"degradation Δ={100 * deg_delta:+.2f}%"
             )
 
     # =========================================================================
@@ -697,11 +736,13 @@ def main() -> None:
     if optimal_mode is not None:
         print(
             f"  Optimal threshold: {optimal_threshold}  "
-            f"(fast_path={100*optimal_mode.fast_path_rate:.1f}%  "
-            f"degradation={100*(1.0 - optimal_mode.overall_accuracy):.2f}%)"
+            f"(fast_path={100 * optimal_mode.fast_path_rate:.1f}%  "
+            f"degradation={100 * (1.0 - optimal_mode.overall_accuracy):.2f}%)"
         )
         target_met = optimal_mode.fast_path_rate >= TARGET_FASTPATH_RATE
-        print(f"  Fast-path target (≥{100*TARGET_FASTPATH_RATE:.0f}%): {'MET' if target_met else 'NOT MET'}")
+        print(
+            f"  Fast-path target (≥{100 * TARGET_FASTPATH_RATE:.0f}%): {'MET' if target_met else 'NOT MET'}"
+        )
     else:
         print("  No threshold achieved <2% degradation. Target NOT MET.")
         target_met = False
@@ -726,18 +767,22 @@ def main() -> None:
             total_errors = analysis["n_errors"]
             if total_errors > 0:
                 code_frac = code_errors / total_errors
-                print(f"    Code error fraction: {100*code_frac:.1f}%  (v1 Exp145: code dominated at threshold=0.3)")
+                print(
+                    f"    Code error fraction: {100 * code_frac:.1f}%  (v1 Exp145: code dominated at threshold=0.3)"
+                )
 
     # =========================================================================
     # Wall-clock summary
     # =========================================================================
     print("\n--- Wall-clock summary ---")
-    print(f"  Baseline: {baseline_result.total_wall_time_s:.3f}s ({N_TOTAL} questions, full verify)")
+    print(
+        f"  Baseline: {baseline_result.total_wall_time_s:.3f}s ({N_TOTAL} questions, full verify)"
+    )
     for mode in v2_results_by_threshold:
         speedup = baseline_result.total_wall_time_s / max(mode.total_wall_time_s, 1e-9)
         print(
             f"  {mode.name}: {mode.total_wall_time_s:.3f}s  "
-            f"(speedup {speedup:.2f}×, {100*mode.fast_path_rate:.1f}% fast-path)"
+            f"(speedup {speedup:.2f}×, {100 * mode.fast_path_rate:.1f}% fast-path)"
         )
     if v1_results_by_threshold:
         print("\n  v1 comparison (same questions):")
@@ -745,7 +790,7 @@ def main() -> None:
             speedup = baseline_result.total_wall_time_s / max(mode.total_wall_time_s, 1e-9)
             print(
                 f"  {mode.name}: {mode.total_wall_time_s:.3f}s  "
-                f"(speedup {speedup:.2f}×, {100*mode.fast_path_rate:.1f}% fast-path)"
+                f"(speedup {speedup:.2f}×, {100 * mode.fast_path_rate:.1f}% fast-path)"
             )
 
     # =========================================================================
@@ -766,7 +811,9 @@ def main() -> None:
         v1_json = v1_exp145_by_threshold.get(threshold, {})
 
         v1_fast_path_rate = v1_live.fast_path_rate if v1_live else v1_json.get("fast_path_rate")
-        v1_degradation = (1.0 - v1_live.overall_accuracy) if v1_live else v1_json.get("accuracy_degradation")
+        v1_degradation = (
+            (1.0 - v1_live.overall_accuracy) if v1_live else v1_json.get("accuracy_degradation")
+        )
 
         domain_acc = v2_mode.per_domain_fast_path_accuracy()
         domain_counts_v2 = dict(v2_mode.per_domain_fast)
@@ -797,11 +844,11 @@ def main() -> None:
                     "accuracy_degradation": v1_degradation,
                     "fast_path_rate_delta": (
                         v2_mode.fast_path_rate - v1_fast_path_rate
-                        if v1_fast_path_rate is not None else None
+                        if v1_fast_path_rate is not None
+                        else None
                     ),
                     "degradation_delta": (
-                        degradation_v2 - v1_degradation
-                        if v1_degradation is not None else None
+                        degradation_v2 - v1_degradation if v1_degradation is not None else None
                     ),
                     "source": "live_run" if v1_live else "exp_145_json",
                 },
@@ -810,9 +857,7 @@ def main() -> None:
 
     # Per-domain v1 fast-path accuracy at threshold=0.5 from Exp 145 error analysis.
     # v1 had 42 code errors at threshold=0.3 (dominant), 57 arithmetic errors at 0.5.
-    v1_domain_analysis = {
-        mode["mode"]: mode for mode in v1_results.get("error_analysis", [])
-    }
+    v1_domain_analysis = {mode["mode"]: mode for mode in v1_results.get("error_analysis", [])}
 
     results: dict = {
         "experiment": 156,
@@ -844,10 +889,8 @@ def main() -> None:
         },
         "thresholds": thresholds_output,
         "optimal_threshold": optimal_threshold,
-        "target_met": target_met and (
-            optimal_mode is not None and
-            optimal_mode.fast_path_rate >= TARGET_FASTPATH_RATE
-        ),
+        "target_met": target_met
+        and (optimal_mode is not None and optimal_mode.fast_path_rate >= TARGET_FASTPATH_RATE),
         "error_analysis": error_analyses,
         "v1_exp145_reference": {
             "threshold_0_3": v1_exp145_by_threshold.get(0.3, {}),
@@ -883,8 +926,8 @@ def main() -> None:
         deg_ok = degradation <= TARGET_MAX_DEGRADATION
         status = "PASS" if (fp_ok and deg_ok) else "MISS"
         print(
-            f"  v2 threshold={t:<5}       {100*mode.fast_path_rate:>8.1f}%  "
-            f"{100*degradation:>10.2f}%  {status:>6}"
+            f"  v2 threshold={t:<5}       {100 * mode.fast_path_rate:>8.1f}%  "
+            f"{100 * degradation:>10.2f}%  {status:>6}"
         )
 
     if v1_exp145_by_threshold:
@@ -894,17 +937,21 @@ def main() -> None:
             if m:
                 print(
                     f"  v1 threshold={t:<5}       "
-                    f"{100*m.get('fast_path_rate', 0):>8.1f}%  "
-                    f"{100*m.get('accuracy_degradation', 0):>10.2f}%"
+                    f"{100 * m.get('fast_path_rate', 0):>8.1f}%  "
+                    f"{100 * m.get('accuracy_degradation', 0):>10.2f}%"
                 )
 
     print("-" * 60)
     if optimal_threshold is not None:
         print(f"  Optimal threshold: {optimal_threshold}")
         if target_met:
-            print(f"  OVERALL: TARGET MET ✓ (≥{100*TARGET_FASTPATH_RATE:.0f}% fast-path, <{100*TARGET_MAX_DEGRADATION:.0f}% degradation)")
+            print(
+                f"  OVERALL: TARGET MET ✓ (≥{100 * TARGET_FASTPATH_RATE:.0f}% fast-path, <{100 * TARGET_MAX_DEGRADATION:.0f}% degradation)"
+            )
         else:
-            print(f"  OVERALL: Degradation target met but fast-path rate < {100*TARGET_FASTPATH_RATE:.0f}%")
+            print(
+                f"  OVERALL: Degradation target met but fast-path rate < {100 * TARGET_FASTPATH_RATE:.0f}%"
+            )
     else:
         print("  OVERALL: TARGET NOT MET (no threshold achieved <2% degradation)")
     print("=" * 70)

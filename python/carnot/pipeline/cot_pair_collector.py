@@ -68,12 +68,14 @@ class CoTPairCollector:
         correct : bool
             Whether the model's final answer was correct after the pipeline pass.
         """
-        self._pairs.append({
-            "model": model,
-            "question": question,
-            "cot_text": cot_text,
-            "correct": correct,
-        })
+        self._pairs.append(
+            {
+                "model": model,
+                "question": question,
+                "cot_text": cot_text,
+                "correct": correct,
+            }
+        )
 
     def flush(self) -> int:
         """Write all accumulated pairs atomically to disk and return the count.

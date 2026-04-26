@@ -69,6 +69,7 @@ import re
 import sys
 from pathlib import Path
 from typing import Any, Callable
+import contextlib
 
 # ---------------------------------------------------------------------------
 # Path setup
@@ -238,8 +239,7 @@ def _tmpl_construction(rng: random.Random) -> tuple[str, int]:
     d = rng.randint(3, 7)
     r = rng.randint(15, 40)
     return (
-        f"{w} workers work {h} hours/day for {d} days, each laying "
-        f"{r} bricks/hour. Total bricks?",
+        f"{w} workers work {h} hours/day for {d} days, each laying {r} bricks/hour. Total bricks?",
         w * h * d * r,
     )
 
@@ -433,10 +433,8 @@ def _inject_irrelevant_sentence(problem: str, rng: random.Random) -> str:
     # Collect numbers already in the problem to avoid injecting a matching one.
     existing_numbers: set[int] = set()
     for m in re.finditer(r"\b(\d+)\b", problem):
-        try:
+        with contextlib.suppress(ValueError):
             existing_numbers.add(int(m.group(1)))
-        except ValueError:
-            pass
 
     irrelevant = _generate_irrelevant_sentence(rng, existing_numbers)
 
@@ -599,61 +597,69 @@ def generate_all_datasets(
         orig_problem, orig_answer = tmpl_fn(random.Random(ctrl_seed))
 
         # --- Control variant: no perturbation ---
-        control_items.append({
-            "id": i,
-            "original_problem": orig_problem,
-            "perturbed_problem": orig_problem,   # Identical to original.
-            "correct_answer": orig_answer,
-            "original_answer": orig_answer,
-            "perturbation": "none",
-            "template": tmpl_name,
-            "control_seed": ctrl_seed,
-            "swap_seed": ctrl_seed,
-        })
+        control_items.append(
+            {
+                "id": i,
+                "original_problem": orig_problem,
+                "perturbed_problem": orig_problem,  # Identical to original.
+                "correct_answer": orig_answer,
+                "original_answer": orig_answer,
+                "perturbation": "none",
+                "template": tmpl_name,
+                "control_seed": ctrl_seed,
+                "swap_seed": ctrl_seed,
+            }
+        )
 
         # --- Number-swapped variant ---
         swap_problem, swap_answer = number_swap(tmpl_fn, swap_seed)
-        swapped_items.append({
-            "id": i,
-            "original_problem": orig_problem,
-            "perturbed_problem": swap_problem,
-            "correct_answer": swap_answer,          # NEW answer after swapping.
-            "original_answer": orig_answer,
-            "perturbation": "number_swap",
-            "template": tmpl_name,
-            "control_seed": ctrl_seed,
-            "swap_seed": swap_seed,
-        })
+        swapped_items.append(
+            {
+                "id": i,
+                "original_problem": orig_problem,
+                "perturbed_problem": swap_problem,
+                "correct_answer": swap_answer,  # NEW answer after swapping.
+                "original_answer": orig_answer,
+                "perturbation": "number_swap",
+                "template": tmpl_name,
+                "control_seed": ctrl_seed,
+                "swap_seed": swap_seed,
+            }
+        )
 
         # --- Irrelevant injection variant ---
         inject_rng = random.Random(inj_seed)
         inj_problem, inj_answer = irrelevant_injection(orig_problem, orig_answer, inject_rng)
-        injected_items.append({
-            "id": i,
-            "original_problem": orig_problem,
-            "perturbed_problem": inj_problem,
-            "correct_answer": inj_answer,           # SAME answer (injection is irrelevant).
-            "original_answer": orig_answer,
-            "perturbation": "irrelevant_injection",
-            "template": tmpl_name,
-            "control_seed": ctrl_seed,
-            "swap_seed": ctrl_seed,
-        })
+        injected_items.append(
+            {
+                "id": i,
+                "original_problem": orig_problem,
+                "perturbed_problem": inj_problem,
+                "correct_answer": inj_answer,  # SAME answer (injection is irrelevant).
+                "original_answer": orig_answer,
+                "perturbation": "irrelevant_injection",
+                "template": tmpl_name,
+                "control_seed": ctrl_seed,
+                "swap_seed": ctrl_seed,
+            }
+        )
 
         # --- Combined (swap + inject) variant ---
         comb_inject_rng = random.Random(inj_seed + 1)  # Different rng from inject-only.
         comb_problem, comb_answer = combined_adversarial(tmpl_fn, swap_seed, comb_inject_rng)
-        combined_items.append({
-            "id": i,
-            "original_problem": orig_problem,
-            "perturbed_problem": comb_problem,
-            "correct_answer": comb_answer,          # Swapped answer + irrelevant sentence.
-            "original_answer": orig_answer,
-            "perturbation": "combined",
-            "template": tmpl_name,
-            "control_seed": ctrl_seed,
-            "swap_seed": swap_seed,
-        })
+        combined_items.append(
+            {
+                "id": i,
+                "original_problem": orig_problem,
+                "perturbed_problem": comb_problem,
+                "correct_answer": comb_answer,  # Swapped answer + irrelevant sentence.
+                "original_answer": orig_answer,
+                "perturbation": "combined",
+                "template": tmpl_name,
+                "control_seed": ctrl_seed,
+                "swap_seed": swap_seed,
+            }
+        )
 
     return {
         "control": control_items,
@@ -751,8 +757,7 @@ def spot_check_dataset(
         if not item_ok:
             all_pass = False
             print(
-                f"    [{status}] id={item['id']} template={tmpl_name} "
-                f"perturbation={perturbation}"
+                f"    [{status}] id={item['id']} template={tmpl_name} perturbation={perturbation}"
             )
             print(f"           orig_stored={stored_orig_answer} orig_recomp={recomp_orig_answer}")
             print(f"           ans_stored={stored_answer}  ans_recomp={recomp_answer}")
@@ -798,7 +803,7 @@ def main() -> None:
         print(
             f"  {ds_name}: "
             f"min={min(answers)}, max={max(answers)}, "
-            f"mean={sum(answers)/len(answers):.1f}, "
+            f"mean={sum(answers) / len(answers):.1f}, "
             f"answers_changed={n_diff}/{len(items)}"
         )
 

@@ -203,7 +203,9 @@ def _load_corpus() -> List[Dict]:
             raw = json.loads(path.read_text())
             if isinstance(raw, list):
                 entries.extend(raw)
-            _log.info("  Loaded %d entries from %s", len(raw) if isinstance(raw, list) else 0, path.name)
+            _log.info(
+                "  Loaded %d entries from %s", len(raw) if isinstance(raw, list) else 0, path.name
+            )
 
     return entries
 

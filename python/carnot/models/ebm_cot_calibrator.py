@@ -58,27 +58,22 @@ Spec: REQ-EORM-005, REQ-EORM-006, REQ-EORM-007,
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
 
 from carnot.models.eorm import (
+    _SEP_ID,
     CoTEnergyInput,
     EORMModel,
     _make_token_sequence,
-    _SEP_ID,
 )
-
-if TYPE_CHECKING:
-    pass
-
 
 # ---------------------------------------------------------------------------
 # Hidden-state extraction helper
 # ---------------------------------------------------------------------------
+
 
 def _forward_get_pooled(
     params: dict,
@@ -154,6 +149,7 @@ def _energy_from_pooled(
 # ---------------------------------------------------------------------------
 # EBMCoTCalibrator
 # ---------------------------------------------------------------------------
+
 
 class EBMCoTCalibrator:
     """Applies Langevin dynamics to EORM hidden states before scoring.
@@ -256,8 +252,8 @@ class EBMCoTCalibrator:
 
         Spec: REQ-EORM-005
         """
-        out_weight = self.eorm.params["out_weight"]   # (embed_dim,)
-        out_bias = self.eorm.params["out_bias"]       # (1,)
+        out_weight = self.eorm.params["out_weight"]  # (embed_dim,)
+        out_bias = self.eorm.params["out_bias"]  # (1,)
 
         # Gradient of E(h) = dot(h, w) + b w.r.t. h is just w (constant)
         # Use jax.grad for correctness and consistency with non-linear extensions
@@ -378,6 +374,7 @@ class EBMCoTCalibrator:
 # AUC helper
 # ---------------------------------------------------------------------------
 
+
 def _auc_roc(labels: list[int], scores: list[float]) -> float:
     """Compute AUC-ROC using the trapezoidal rule (no sklearn dependency).
 
@@ -406,7 +403,7 @@ def _auc_roc(labels: list[int], scores: list[float]) -> float:
         return 0.5
 
     # Sort by score descending
-    paired = sorted(zip(scores, labels), key=lambda x: -x[0])
+    paired = sorted(zip(scores, labels, strict=False), key=lambda x: -x[0])
 
     tpr_vals = [0.0]
     fpr_vals = [0.0]

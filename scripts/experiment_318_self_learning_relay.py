@@ -296,10 +296,7 @@ def simulate_gsm8k_questions(n: int = 99, seed: int = 318) -> list[dict[str, Any
             if answer_value == correct:
                 answer_value = correct + 2  # ensure not accidentally correct
 
-        answer_text = (
-            f"Let me work through this step by step. "
-            f"The answer is {answer_value}."
-        )
+        answer_text = f"Let me work through this step by step. The answer is {answer_value}."
         questions.append(
             {
                 "question_id": f"exp318_q_{i:04d}",
@@ -516,15 +513,18 @@ def _try_load_gpu_model() -> tuple[Any | None, str]:
     """
     try:
         import importlib.util
+
         torch_spec = importlib.util.find_spec("torch")
         if torch_spec is None:
             return None, "simulated"
 
         import torch  # type: ignore[import-untyped]
+
         if not torch.cuda.is_available():
             return None, "simulated"
 
         from carnot.pipeline.verify_repair import VerifyRepairPipeline  # type: ignore[import]
+
         pipeline = VerifyRepairPipeline(
             model=_PREFERRED_MODEL,
             domains=["arithmetic"],
@@ -853,8 +853,8 @@ def run_experiment(
     # Generate all 99 questions deterministically
     all_questions = simulate_gsm8k_questions(n=BATCH_SIZE * 3, seed=seed)
     batch1_questions = all_questions[:BATCH_SIZE]
-    batch2_questions = all_questions[BATCH_SIZE: BATCH_SIZE * 2]
-    batch3_questions = all_questions[BATCH_SIZE * 2:]
+    batch2_questions = all_questions[BATCH_SIZE : BATCH_SIZE * 2]
+    batch3_questions = all_questions[BATCH_SIZE * 2 :]
 
     rng = random.Random(seed)
 
@@ -932,27 +932,17 @@ def run_experiment(
     # [METRICS] Compute JEPA skip rate and Z3 SAT rate for Batch 3
     b3_pq = batch3_result.per_question
     jepa_skip_rate = (
-        sum(1 for pq in b3_pq if pq.get("jepa_skipped", False)) / len(b3_pq)
-        if b3_pq
-        else 0.0
+        sum(1 for pq in b3_pq if pq.get("jepa_skipped", False)) / len(b3_pq) if b3_pq else 0.0
     )
     z3_sat_rate = (
-        sum(1 for pq in b3_pq if pq.get("z3_status") == "sat") / len(b3_pq)
-        if b3_pq
-        else 0.0
+        sum(1 for pq in b3_pq if pq.get("z3_status") == "sat") / len(b3_pq) if b3_pq else 0.0
     )
 
     # [COMPARE] Compute signed improvement deltas
     imp_1to2 = compute_relay_improvement(batch1_result.accuracy, batch2_result.accuracy)
     imp_1to3 = compute_relay_improvement(batch1_result.accuracy, batch3_result.accuracy)
-    print(
-        f"[Exp 318] improvement_1to2={imp_1to2:+.4f}, "
-        f"improvement_1to3={imp_1to3:+.4f}"
-    )
-    print(
-        f"[Exp 318] jepa_skip_rate={jepa_skip_rate:.3f}, "
-        f"z3_sat_rate={z3_sat_rate:.3f}"
-    )
+    print(f"[Exp 318] improvement_1to2={imp_1to2:+.4f}, improvement_1to3={imp_1to3:+.4f}")
+    print(f"[Exp 318] jepa_skip_rate={jepa_skip_rate:.3f}, z3_sat_rate={z3_sat_rate:.3f}")
 
     # [OUTPUT] Build and write artifact
     artifact = build_relay_artifact(

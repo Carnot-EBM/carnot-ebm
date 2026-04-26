@@ -130,9 +130,7 @@ def compute_wilson_ci(n_success: int, n_total: int, z: float = 1.96) -> tuple[fl
     z2 = z * z
     denom = 1.0 + z2 / n_total
     center = (p_hat + z2 / (2.0 * n_total)) / denom
-    half = (z / denom) * math.sqrt(
-        p_hat * (1.0 - p_hat) / n_total + z2 / (4.0 * n_total * n_total)
-    )
+    half = (z / denom) * math.sqrt(p_hat * (1.0 - p_hat) / n_total + z2 / (4.0 * n_total * n_total))
     return (max(0.0, center - half), min(1.0, center + half))
 
 
@@ -217,6 +215,7 @@ def _load_gsm8k_questions(n: int, seed: int) -> list[dict]:
 
         ds = load_dataset("gsm8k", "main", split="test")
         import random
+
         rng = random.Random(seed)
         indices = list(range(len(ds)))
         rng.shuffle(indices)
@@ -246,7 +245,7 @@ def _qwen_generate(pipeline: Any, prompt: str) -> str:
         return f"[qwen_error: {exc}]"
 
 
-def _load_qwen_pipeline(device: str) -> Optional[Any]:
+def _load_qwen_pipeline(device: str) -> Any | None:
     """Load Qwen3.5-0.8B as a text-generation pipeline.  Returns None on failure."""
     try:
         from transformers import pipeline as hf_pipeline  # type: ignore[import]
@@ -291,7 +290,9 @@ def _build_v8_artifact(
     baseline_accuracy = baseline_correct / n_scored if n_scored > 0 else 0.0
     pipeline_accuracy = pipeline_correct / n_scored if n_scored > 0 else 0.0
     signed_improvement = pipeline_accuracy - baseline_accuracy
-    mean_latency = sum(per_question_latencies) / len(per_question_latencies) if per_question_latencies else 0.0
+    mean_latency = (
+        sum(per_question_latencies) / len(per_question_latencies) if per_question_latencies else 0.0
+    )
 
     if inference_mode == "gpu_required":
         honest_verdict = "gpu_required"
@@ -332,7 +333,7 @@ def _write_json(repo_root: Path, rel_path: str, data: dict) -> None:
 # ---------------------------------------------------------------------------
 
 
-def run_experiment(repo_root: Optional[Path] = None) -> dict:
+def run_experiment(repo_root: Path | None = None) -> dict:
     """Run Exp 539: live 100q VeriCoT+VPRM v8 benchmark.
 
     Every exit path writes the deliverable JSON.
@@ -382,8 +383,16 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         blocked = tmpl.build_result(
             {
                 **_build_v8_artifact(
-                    n_questions, 0, 0, 0, [], "gpu_required",
-                    0.0, 0.0, False, env_autofix_dict,
+                    n_questions,
+                    0,
+                    0,
+                    0,
+                    [],
+                    "gpu_required",
+                    0.0,
+                    0.0,
+                    False,
+                    env_autofix_dict,
                 ),
                 "artifact_type": "carnot.vericot_benchmark.v8",
                 "gate_result": str(gate_result),
@@ -395,15 +404,25 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     # Step 7: JIT VRAM gates
     gemma4_vram = JITVRAMCheck(device_id=0)
     gemma4_gate = gemma4_vram.gate_model_load(
-        model_id="Gemma4-INT4", required_gb=GEMMA4_REQUIRED_GB, retry_wait_s=5,
+        model_id="Gemma4-INT4",
+        required_gb=GEMMA4_REQUIRED_GB,
+        retry_wait_s=5,
     )
     if not gemma4_gate.is_cleared:
         _log.warning("JIT VRAM gate blocked Gemma4-INT4: %.1f GB free", gemma4_gate.available_gb)
         blocked = tmpl.build_result(
             {
                 **_build_v8_artifact(
-                    n_questions, 0, 0, 0, [], "gpu_required",
-                    0.0, 0.0, False, env_autofix_dict,
+                    n_questions,
+                    0,
+                    0,
+                    0,
+                    [],
+                    "gpu_required",
+                    0.0,
+                    0.0,
+                    False,
+                    env_autofix_dict,
                 ),
                 "artifact_type": "carnot.vericot_benchmark.v8",
                 "vram_block_reason": f"gemma4_insufficient: {gemma4_gate.available_gb:.1f} GB",
@@ -414,15 +433,25 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
 
     qwen_vram = JITVRAMCheck(device_id=1)
     qwen_gate = qwen_vram.gate_model_load(
-        model_id="Qwen3.5-0.8B", required_gb=QWEN_REQUIRED_GB, retry_wait_s=5,
+        model_id="Qwen3.5-0.8B",
+        required_gb=QWEN_REQUIRED_GB,
+        retry_wait_s=5,
     )
     if not qwen_gate.is_cleared:
         _log.warning("JIT VRAM gate blocked Qwen3.5-0.8B: %.1f GB free", qwen_gate.available_gb)
         blocked = tmpl.build_result(
             {
                 **_build_v8_artifact(
-                    n_questions, 0, 0, 0, [], "gpu_required",
-                    0.0, 0.0, False, env_autofix_dict,
+                    n_questions,
+                    0,
+                    0,
+                    0,
+                    [],
+                    "gpu_required",
+                    0.0,
+                    0.0,
+                    False,
+                    env_autofix_dict,
                 ),
                 "artifact_type": "carnot.vericot_benchmark.v8",
                 "vram_block_reason": f"qwen_insufficient: {qwen_gate.available_gb:.1f} GB",
@@ -436,7 +465,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         Path.home() / ".cache" / "huggingface" / "hub" / "models--google--gemma-4-e4b-it" / "blobs",
         Path("/data/models/gemma4"),
     ]
-    gemma4_gguf_path: Optional[str] = None
+    gemma4_gguf_path: str | None = None
     for candidate in gemma4_path_candidates:
         if candidate.exists():
             gguf_files = list(candidate.glob("*.gguf"))
@@ -444,7 +473,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
                 gemma4_gguf_path = str(gguf_files[0])
                 break
 
-    gemma4_loader: Optional[Gemma4QuantizedLoader] = None
+    gemma4_loader: Gemma4QuantizedLoader | None = None
     if gemma4_gguf_path:
         try:
             gemma4_loader = Gemma4QuantizedLoader(
@@ -459,10 +488,13 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
             _log.warning("Gemma4QuantizedLoader load failed: %s", exc)
             gemma4_loader = None
 
-    qwen_pipe: Optional[Any] = None
+    qwen_pipe: Any | None = None
     try:
         import torch
-        qwen_device = "cuda:1" if torch.cuda.is_available() and torch.cuda.device_count() > 1 else "cuda:0"
+
+        qwen_device = (
+            "cuda:1" if torch.cuda.is_available() and torch.cuda.device_count() > 1 else "cuda:0"
+        )
         qwen_pipe = _load_qwen_pipeline(qwen_device)
         if qwen_pipe:
             _log.info("Qwen pipeline loaded on %s", qwen_device)
@@ -474,8 +506,16 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         blocked = tmpl.build_result(
             {
                 **_build_v8_artifact(
-                    n_questions, 0, 0, 0, [], "gpu_required",
-                    0.0, 0.0, False, env_autofix_dict,
+                    n_questions,
+                    0,
+                    0,
+                    0,
+                    [],
+                    "gpu_required",
+                    0.0,
+                    0.0,
+                    False,
+                    env_autofix_dict,
                 ),
                 "artifact_type": "carnot.vericot_benchmark.v8",
                 "no_models": True,
@@ -558,7 +598,12 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
 
             _log.info(
                 "[%s] q=%d baseline=%s pipeline=%s violations=%d lat=%.1fs",
-                model_id, n_scored, bc, pc, len(violations), lat,
+                model_id,
+                n_scored,
+                bc,
+                pc,
+                len(violations),
+                lat,
             )
 
         # Run only one model (primary model is sufficient for this milestone)
@@ -571,7 +616,10 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     retro_038_closed = ci_excludes_zero
     _log.info(
         "Wilson CI: [%.4f, %.4f] ci_excludes_zero=%s retro_038_closed=%s",
-        wilson_ci_lower, wilson_ci_upper, ci_excludes_zero, retro_038_closed,
+        wilson_ci_lower,
+        wilson_ci_upper,
+        ci_excludes_zero,
+        retro_038_closed,
     )
 
     # Step 12: Build artifact
@@ -600,10 +648,13 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     _log.info(
         "HEADLINE: honest_verdict=%s retro_038_closed=%s "
         "baseline=%.4f pipeline=%.4f delta=%.4f wilson=[%.4f,%.4f] mean_lat=%.1fs",
-        v8_fields["honest_verdict"], retro_038_closed,
-        v8_fields["baseline_accuracy"], v8_fields["pipeline_accuracy"],
+        v8_fields["honest_verdict"],
+        retro_038_closed,
+        v8_fields["baseline_accuracy"],
+        v8_fields["pipeline_accuracy"],
         v8_fields["signed_improvement"],
-        wilson_ci_lower, wilson_ci_upper,
+        wilson_ci_lower,
+        wilson_ci_upper,
         v8_fields["mean_latency_s"],
     )
 
@@ -629,7 +680,10 @@ def main() -> None:
     verdict = artifact.get("honest_verdict", "unknown")
     _log.info(
         "Exp %d complete: honest_verdict=%s status=%s retro_038_closed=%s",
-        EXP_ID, verdict, artifact.get("status", "unknown"), artifact.get("retro_038_closed"),
+        EXP_ID,
+        verdict,
+        artifact.get("status", "unknown"),
+        artifact.get("retro_038_closed"),
     )
 
 

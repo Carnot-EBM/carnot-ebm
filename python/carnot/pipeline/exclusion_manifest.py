@@ -23,10 +23,8 @@ Spec: REQ-INFRA-070, REQ-INFRA-071,
 from __future__ import annotations
 
 import json
-import os
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Optional
 
 from carnot.pipeline.atomic_writer import AtomicResultWriter
 
@@ -79,7 +77,7 @@ class ExclusionManifest:
     def __init__(self, manifest_path: str) -> None:
         self._path = Path(manifest_path)
         # Cache the excluded set after load so is_excluded() is O(1).
-        self._excluded_ids: Optional[set[int]] = None
+        self._excluded_ids: set[int] | None = None
 
     def load(self) -> list[ExclusionEntry]:
         """Read the manifest JSON and return a list of ExclusionEntry objects.
@@ -162,7 +160,7 @@ class ExclusionManifest:
         self.save(existing)
 
 
-def load_manifest(path: str) -> "ExclusionManifest | None":
+def load_manifest(path: str) -> ExclusionManifest | None:
     """Load the exclusion manifest from path; return None if file missing (non-blocking).
 
     This module-level wrapper is the preferred entry-point for experiment scripts
@@ -193,7 +191,7 @@ def load_manifest(path: str) -> "ExclusionManifest | None":
         return None
 
 
-def is_excluded(manifest: "ExclusionManifest | None", exp_id: int) -> bool:
+def is_excluded(manifest: ExclusionManifest | None, exp_id: int) -> bool:
     """Return True if exp_id is excluded in manifest; False if manifest is None.
 
     Designed for use alongside load_manifest() so callers never need to
@@ -215,7 +213,7 @@ def is_excluded(manifest: "ExclusionManifest | None", exp_id: int) -> bool:
 
 
 def build_manifest_check_result(
-    manifest: "ExclusionManifest | None",
+    manifest: ExclusionManifest | None,
     checked_ids: list[int],
 ) -> dict:
     """Return a structured summary of which experiment IDs are excluded.

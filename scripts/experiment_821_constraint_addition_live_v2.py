@@ -38,6 +38,7 @@
 
 Spec: REQ-LEARN-821-001, REQ-LEARN-821-002, SCENARIO-LEARN-821-001
 """
+
 from __future__ import annotations
 
 import json
@@ -85,7 +86,11 @@ GSM8K_TRIPLES: list[tuple[str, str, str]] = [
     ("If 7 workers build a wall in 10 days, how long for 5 workers?", "14 days", "12 days"),
     ("Sarah earns $15/hr and works 8 hrs Mon-Fri. What are her weekly earnings?", "$600", "$560"),
     ("A store marks up items 30%. An item costs $40. What is the selling price?", "$52", "$48"),
-    ("There are 365 days in a year. How many weeks and days is that?", "52 weeks 1 day", "52 weeks"),
+    (
+        "There are 365 days in a year. How many weeks and days is that?",
+        "52 weeks 1 day",
+        "52 weeks",
+    ),
     ("A car uses 8L per 100km. How much fuel for 350km?", "28L", "24L"),
     ("If 3/5 of a number is 24, what is the number?", "40", "36"),
     # Batch 2 — carry/sign errors
@@ -181,6 +186,7 @@ def _text_to_spins(text: str, n_spins: int) -> np.ndarray:
         numpy array of shape (n_spins,) with values in {-1.0, +1.0}.
     """
     import hashlib
+
     digest = hashlib.sha256(text.encode("utf-8")).digest()
     spins = np.ones(n_spins, dtype=np.float64)
     for i in range(n_spins):
@@ -211,7 +217,9 @@ def _correct_spins(n_spins: int) -> np.ndarray:
     return -np.ones(n_spins, dtype=np.float64)
 
 
-def _extract_violation_constraint(question: str, wrong_answer: str, session: int) -> ConstraintSPOTuple:
+def _extract_violation_constraint(
+    question: str, wrong_answer: str, session: int
+) -> ConstraintSPOTuple:
     """Build an SPO constraint from a misclassified question-answer pair.
 
     When the energy model fails to flag a violation (E_violation <= E_correct),

@@ -127,9 +127,15 @@ class TestPrecision100qResult:
         d = r.to_dict()
 
         required = {
-            "model_id", "pre_accuracy", "post_accuracy", "n_questions",
-            "extractor_used", "inference_mode", "signed_improvement",
-            "confidence_interval_95", "is_positive",
+            "model_id",
+            "pre_accuracy",
+            "post_accuracy",
+            "n_questions",
+            "extractor_used",
+            "inference_mode",
+            "signed_improvement",
+            "confidence_interval_95",
+            "is_positive",
         }
         assert required.issubset(d.keys())
 
@@ -154,6 +160,7 @@ class TestPrecision100qResult:
     def test_to_dict_values_are_json_serializable(self) -> None:
         """to_dict() can be serialized to JSON without error."""
         import json
+
         r = _make()
         json.dumps(r.to_dict())  # must not raise
 

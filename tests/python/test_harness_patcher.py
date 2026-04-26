@@ -182,10 +182,10 @@ class TestPatchScriptInjectBlock:
         script = _write_script(
             tmp_path,
             "exp_inject.py",
-            'MODEL_SPECS = [\n'
+            "MODEL_SPECS = [\n"
             '    {"name": "A", "hf_id": "org/A"},\n'
             '    {"name": "B", "hf_id": "org/B"},\n'
-            ']\n',
+            "]\n",
         )
         patcher = HarnessPatcher(str(tmp_path))
         result = patcher.patch_script(str(script))
@@ -281,8 +281,11 @@ class TestPatchAll:
 
     def test_patch_all_returns_result_per_needs_fix(self, tmp_path: Path) -> None:
         """SCENARIO-INFRA-066: patch_all returns one result per needs_fix=True finding."""
-        s1 = _write_script(tmp_path, "a.py", "m=load(device_map='auto', hf_id='x')\n"
-                                                "m2=load(device_map='auto', hf_id='y')\n")
+        s1 = _write_script(
+            tmp_path,
+            "a.py",
+            "m=load(device_map='auto', hf_id='x')\nm2=load(device_map='auto', hf_id='y')\n",
+        )
         s2 = _write_script(tmp_path, "b.py", 'MODEL_SPECS=[{"hf_id":"x"},{"hf_id":"y"}]\n')
         findings = [
             _make_finding(str(s1), needs_fix=True),

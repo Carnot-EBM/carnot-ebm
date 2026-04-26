@@ -66,6 +66,7 @@ from experiment_884_vjepa_cascade_deploy import (
 # SCENARIO-VERIFY-233: Gate check passes / fails correctly
 # ===========================================================================
 
+
 class TestCheckGate:
     """REQ-VERIFY-145 — Gate check enforces ood_auc > 0.60 strictly."""
 
@@ -132,6 +133,7 @@ class TestCheckGate:
 # _write_blocked_artifact: schema validation
 # ===========================================================================
 
+
 class TestWriteBlockedArtifact:
     """REQ-VERIFY-145 — Blocked artifact contains all required schema fields."""
 
@@ -158,6 +160,7 @@ class TestWriteBlockedArtifact:
 # ===========================================================================
 # SCENARIO-VERIFY-234: Honest verdict assignment
 # ===========================================================================
+
 
 class TestAssignHonestVerdict:
     """REQ-VERIFY-145 — All verdict branches are reachable."""
@@ -197,6 +200,7 @@ class TestAssignHonestVerdict:
 # VJEPAv2EnergyAdapter: energy() interface
 # ===========================================================================
 
+
 class TestVJEPAv2EnergyAdapter:
     """REQ-VERIFY-145 — Adapter wraps VariationalJEPAPredictor with .energy() method."""
 
@@ -225,7 +229,9 @@ class TestVJEPAv2EnergyAdapter:
         adapter = self._make_adapter()
         same_response = "correct arithmetic step"
         e1 = adapter.energy(CoTEnergyInput(question_text="Q1", response_text=same_response))
-        e2 = adapter.energy(CoTEnergyInput(question_text="Q2 different", response_text=same_response))
+        e2 = adapter.energy(
+            CoTEnergyInput(question_text="Q2 different", response_text=same_response)
+        )
         assert e1 == e2, "Energy must depend only on response_text"
 
     def test_empty_response_does_not_crash(self):
@@ -237,6 +243,7 @@ class TestVJEPAv2EnergyAdapter:
 # ===========================================================================
 # _load_jepa_model(): priority order
 # ===========================================================================
+
 
 class TestLoadJepaModelPriority:
     """REQ-VERIFY-145 — _load_jepa_model checks v2 first, falls back on missing file."""
@@ -298,11 +305,13 @@ class TestLoadJepaModelPriority:
 # save_model_safetensors: round-trip fidelity
 # ===========================================================================
 
+
 class TestSaveModelSafetensors:
     """REQ-VERIFY-145 — Saved params survive safetensors save/load round-trip."""
 
     def test_roundtrip_preserves_params(self, tmp_path):
         from safetensors.numpy import load_file as st_load
+
         model = VariationalJEPAPredictor(in_dim=VOCAB_SIZE, context_dim=VOCAB_SIZE, latent_dim=32)
         path = tmp_path / "test_vjepa.safetensors"
         save_model_safetensors(model, path)
@@ -324,6 +333,7 @@ class TestSaveModelSafetensors:
     def test_all_param_keys_saved(self, tmp_path):
         """All expected parameter keys must be present in the saved file."""
         from safetensors.numpy import load_file as st_load
+
         model = VariationalJEPAPredictor(in_dim=VOCAB_SIZE, context_dim=VOCAB_SIZE, latent_dim=32)
         path = tmp_path / "params.safetensors"
         save_model_safetensors(model, path)
@@ -335,6 +345,7 @@ class TestSaveModelSafetensors:
 # ===========================================================================
 # update_architecture_tier2: content transformation
 # ===========================================================================
+
 
 class TestUpdateArchitectureTier2:
     """REQ-VERIFY-145 — Architecture Tier 2 row updated correctly."""
@@ -381,7 +392,9 @@ class TestUpdateArchitectureTier2:
     def test_idempotent_when_eorm_row_missing(self, tmp_path):
         """When the EORM row is already replaced, function must not crash."""
         arch = tmp_path / "architecture.md"
-        arch.write_text("| 2 | VJEPA v2 | already updated row |\n\nEach tier returns early if it can clear the response\n")
+        arch.write_text(
+            "| 2 | VJEPA v2 | already updated row |\n\nEach tier returns early if it can clear the response\n"
+        )
         # Should not raise
         update_architecture_tier2(arch, 0.664, "2026-04-25")
 
@@ -389,6 +402,7 @@ class TestUpdateArchitectureTier2:
 # ===========================================================================
 # generate_arc_heldout / generate_svamp_heldout: different from Exp 883
 # ===========================================================================
+
 
 class TestHeldoutGenerators:
     """REQ-VERIFY-145 — Held-out corpora use different seeds from Exp 883."""
@@ -432,6 +446,7 @@ class TestHeldoutGenerators:
             generate_arc_synthetic,
             generate_svamp_synthetic,
         )
+
         exp883_arc = generate_arc_synthetic(n_steps=10, seed=42)
         exp883_svamp = generate_svamp_synthetic(n_steps=10, seed=42)
         heldout_arc = generate_arc_heldout(n_steps=10, seed=999)
@@ -444,6 +459,7 @@ class TestHeldoutGenerators:
 # ===========================================================================
 # evaluate_on_heldout: edge cases
 # ===========================================================================
+
 
 class TestEvaluateOnHeldout:
     """REQ-VERIFY-145 — evaluate_on_heldout handles edge cases."""
@@ -472,6 +488,7 @@ class TestEvaluateOnHeldout:
 # Integration smoke test: full run on tiny corpus
 # ===========================================================================
 
+
 class TestIntegrationSmoke:
     """SCENARIO-VERIFY-233 — Full Exp 884 produces valid artifact with all fields."""
 
@@ -483,8 +500,10 @@ class TestIntegrationSmoke:
         results_dir = tmp_path / "results"
         results_dir.mkdir()
         exp883_data = {
-            "experiment": 883, "schema": "carnot-experiment-v1",
-            "run_date": "2026-04-25T00:00:00Z", "honest_verdict": "vjepa_ood_above_gate",
+            "experiment": 883,
+            "schema": "carnot-experiment-v1",
+            "run_date": "2026-04-25T00:00:00Z",
+            "honest_verdict": "vjepa_ood_above_gate",
             "ood_auc": 0.664,
         }
         exp883_path = results_dir / "experiment_883_vjepa_v2_expanded_corpus.json"
@@ -557,6 +576,7 @@ class TestIntegrationSmoke:
     def test_assert_deliverable_fails_when_missing(self, tmp_path):
         """assert_deliverable_written() raises AssertionError when file absent."""
         import experiment_884_vjepa_cascade_deploy as exp884
+
         missing = tmp_path / "not_there.json"
         with patch.object(exp884, "RESULT_PATH", missing):
             with pytest.raises(AssertionError):

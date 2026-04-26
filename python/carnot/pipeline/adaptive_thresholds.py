@@ -42,7 +42,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from carnot.pipeline.extract import ConstraintExtractor
@@ -78,7 +78,7 @@ class WeightState:
 
     weight: float
     update_count: int
-    last_updated_at: Optional[str]
+    last_updated_at: str | None
 
 
 # ---------------------------------------------------------------------------
@@ -204,7 +204,7 @@ class PerModelFPTracker:
         Spec: REQ-LEARN-015-3, SCENARIO-LEARN-026
         """
         active: set[str] = set()
-        for (mid, ctype) in self._stats:
+        for mid, ctype in self._stats:
             if mid == model_id and not self.should_disable(model_id, ctype):
                 active.add(ctype)
         return frozenset(active)
@@ -228,19 +228,21 @@ class PerModelFPTracker:
         """
         stats_list = []
         for (model_id, constraint_type), counts in self._stats.items():
-            stats_list.append({
-                "model_id": model_id,
-                "constraint_type": constraint_type,
-                "fp_count": counts["fp_count"],
-                "tp_count": counts["tp_count"],
-                "n_observations": counts["n_observations"],
-            })
+            stats_list.append(
+                {
+                    "model_id": model_id,
+                    "constraint_type": constraint_type,
+                    "fp_count": counts["fp_count"],
+                    "tp_count": counts["tp_count"],
+                    "n_observations": counts["n_observations"],
+                }
+            )
         return {
             "min_observations": self._min_observations,
             "stats": stats_list,
         }
 
-    def on_violation(self, event: "ViolationEvent") -> None:
+    def on_violation(self, event: ViolationEvent) -> None:
         """Increment constraint_weight for event.constraint_type (REQ-FR11-002).
 
         **Why a constraint_weight dict rather than the existing fp/tp stats?**
@@ -284,7 +286,7 @@ class PerModelFPTracker:
             new_weight = min(current + 0.01, 2.0)
             self._constraint_weights[ctype] = new_weight
             self._weight_update_counts[ctype] = self._weight_update_counts.get(ctype, 0) + 1
-            self._weight_last_updated[ctype] = datetime.datetime.now(datetime.timezone.utc).strftime(
+            self._weight_last_updated[ctype] = datetime.datetime.now(datetime.UTC).strftime(
                 "%Y-%m-%dT%H:%M:%SZ"
             )
             _log.debug(
@@ -420,9 +422,7 @@ class ModelAdaptiveThresholds:
 
         # Check whether this model has any observations at all.
         # If not, nothing can be disabled — return everything unchanged.
-        model_has_observations = any(
-            mid == model_id for (mid, _) in self._tracker._stats
-        )
+        model_has_observations = any(mid == model_id for (mid, _) in self._tracker._stats)
         if not model_has_observations:
             return list(all_violations)
 

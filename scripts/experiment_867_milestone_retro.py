@@ -57,8 +57,7 @@ def _load(filename: str) -> dict:
     path = _RESULTS_DIR / filename
     if not path.exists():
         raise FileNotFoundError(
-            f"Required artifact missing: {path}. "
-            "Run the corresponding experiment before the retro."
+            f"Required artifact missing: {path}. Run the corresponding experiment before the retro."
         )
     with path.open() as f:
         return json.load(f)
@@ -222,8 +221,7 @@ def evaluate_criteria(arts: dict[int, dict]) -> list[dict]:
             "criterion": "streaming_cot_viable",
             "met": c7_met,
             "evidence": (
-                f"Exp 861: AUC_streaming={auc_streaming} (need >0.65), "
-                f"tier={a861.get('tier')}"
+                f"Exp 861: AUC_streaming={auc_streaming} (need >0.65), tier={a861.get('tier')}"
             ),
         }
     )
@@ -519,12 +517,8 @@ def main() -> None:
     with out_path.open("w") as f:
         json.dump(artifact, f, indent=2)
     print(f"Wrote {out_path}")
-    print(
-        f"Criteria met: {n_met}/{len(criteria)} — verdict: {verdict}"
-    )
-    print(
-        f"Wall time: {wall_time_min:.3f} min (delta vs .65: {wall_time_delta:.3f} min)"
-    )
+    print(f"Criteria met: {n_met}/{len(criteria)} — verdict: {verdict}")
+    print(f"Wall time: {wall_time_min:.3f} min (delta vs .65: {wall_time_delta:.3f} min)")
     print(f"RETROs closed: {retros_closed}")
     print(f"RETROs opened: {retros_opened}")
     print(f"Open RETROs: {open_retros}")

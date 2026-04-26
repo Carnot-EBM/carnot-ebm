@@ -23,6 +23,7 @@
 
 Spec: REQ-REPAIR-056, SCENARIO-REPAIR-089
 """
+
 from __future__ import annotations
 
 import json
@@ -71,108 +72,110 @@ _INLINE_PROBLEMS: list[dict[str, Any]] = [
         "canonical_solution": textwrap.dedent(s),
         "test": textwrap.dedent(t),
     }
-    for i, (p, s, t) in enumerate([
-        (
-            "def add(a, b):\n    \"\"\"Return a + b.\"\"\"\n",
-            "    return a + b\n",
-            "assert add(1, 2) == 3\nassert add(-1, 1) == 0\n",
-        ),
-        (
-            "def is_even(n):\n    \"\"\"Return True if n is even.\"\"\"\n",
-            "    return n % 2 == 0\n",
-            "assert is_even(4)\nassert not is_even(3)\n",
-        ),
-        (
-            "def max_of_three(a, b, c):\n    \"\"\"Return the largest of three numbers.\"\"\"\n",
-            "    return max(a, b, c)\n",
-            "assert max_of_three(1, 2, 3) == 3\nassert max_of_three(5, 3, 4) == 5\n",
-        ),
-        (
-            "def reverse_string(s):\n    \"\"\"Return s reversed.\"\"\"\n",
-            "    return s[::-1]\n",
-            "assert reverse_string('abc') == 'cba'\nassert reverse_string('') == ''\n",
-        ),
-        (
-            "def factorial(n):\n    \"\"\"Return n! for non-negative n.\"\"\"\n",
-            "    if n == 0:\n        return 1\n    return n * factorial(n - 1)\n",
-            "assert factorial(0) == 1\nassert factorial(5) == 120\n",
-        ),
-        (
-            "def is_palindrome(s):\n    \"\"\"Return True if s is a palindrome.\"\"\"\n",
-            "    return s == s[::-1]\n",
-            "assert is_palindrome('racecar')\nassert not is_palindrome('hello')\n",
-        ),
-        (
-            "def sum_list(lst):\n    \"\"\"Return sum of list elements.\"\"\"\n",
-            "    return sum(lst)\n",
-            "assert sum_list([1, 2, 3]) == 6\nassert sum_list([]) == 0\n",
-        ),
-        (
-            "def count_vowels(s):\n    \"\"\"Return count of vowels in s.\"\"\"\n",
-            "    return sum(1 for c in s.lower() if c in 'aeiou')\n",
-            "assert count_vowels('hello') == 2\nassert count_vowels('xyz') == 0\n",
-        ),
-        (
-            "def flatten(lst):\n    \"\"\"Flatten one level of nesting.\"\"\"\n",
-            "    return [x for sub in lst for x in sub]\n",
-            "assert flatten([[1, 2], [3]]) == [1, 2, 3]\nassert flatten([]) == []\n",
-        ),
-        (
-            "def unique(lst):\n    \"\"\"Return list with duplicates removed, order preserved.\"\"\"\n",
-            "    seen = set()\n    return [x for x in lst if not (x in seen or seen.add(x))]\n",
-            "assert unique([1, 2, 1, 3]) == [1, 2, 3]\nassert unique([]) == []\n",
-        ),
-        (
-            "def clamp(val, lo, hi):\n    \"\"\"Clamp val to [lo, hi].\"\"\"\n",
-            "    return max(lo, min(hi, val))\n",
-            "assert clamp(5, 0, 10) == 5\nassert clamp(-1, 0, 10) == 0\nassert clamp(15, 0, 10) == 10\n",
-        ),
-        (
-            "def fizzbuzz(n):\n    \"\"\"FizzBuzz for 1..n (1-indexed, list).\"\"\"\n",
-            "    r = []\n    for i in range(1, n+1):\n        if i % 15 == 0: r.append('FizzBuzz')\n        elif i % 3 == 0: r.append('Fizz')\n        elif i % 5 == 0: r.append('Buzz')\n        else: r.append(str(i))\n    return r\n",
-            "assert fizzbuzz(5) == ['1', '2', 'Fizz', '4', 'Buzz']\nassert fizzbuzz(15)[-1] == 'FizzBuzz'\n",
-        ),
-        (
-            "def gcd(a, b):\n    \"\"\"Return greatest common divisor of a and b.\"\"\"\n",
-            "    while b:\n        a, b = b, a % b\n    return a\n",
-            "assert gcd(12, 8) == 4\nassert gcd(7, 5) == 1\n",
-        ),
-        (
-            "def binary_search(lst, target):\n    \"\"\"Return index of target in sorted lst, or -1.\"\"\"\n",
-            "    lo, hi = 0, len(lst) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if lst[mid] == target: return mid\n        elif lst[mid] < target: lo = mid + 1\n        else: hi = mid - 1\n    return -1\n",
-            "assert binary_search([1, 3, 5, 7], 5) == 2\nassert binary_search([1, 3, 5], 4) == -1\n",
-        ),
-        (
-            "def count_occurrences(lst, val):\n    \"\"\"Return how many times val appears in lst.\"\"\"\n",
-            "    return lst.count(val)\n",
-            "assert count_occurrences([1, 2, 1, 3], 1) == 2\nassert count_occurrences([], 1) == 0\n",
-        ),
-        (
-            "def rotate_left(lst, k):\n    \"\"\"Rotate lst left by k positions.\"\"\"\n",
-            "    if not lst: return lst\n    k = k % len(lst)\n    return lst[k:] + lst[:k]\n",
-            "assert rotate_left([1, 2, 3, 4], 2) == [3, 4, 1, 2]\nassert rotate_left([], 3) == []\n",
-        ),
-        (
-            "def is_sorted(lst):\n    \"\"\"Return True if lst is non-decreasingly sorted.\"\"\"\n",
-            "    return all(lst[i] <= lst[i+1] for i in range(len(lst)-1))\n",
-            "assert is_sorted([1, 2, 3])\nassert not is_sorted([3, 1, 2])\nassert is_sorted([])\n",
-        ),
-        (
-            "def chunk(lst, size):\n    \"\"\"Split lst into chunks of given size.\"\"\"\n",
-            "    return [lst[i:i+size] for i in range(0, len(lst), size)]\n",
-            "assert chunk([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]\nassert chunk([], 3) == []\n",
-        ),
-        (
-            "def zip_with_index(lst):\n    \"\"\"Return list of (index, value) tuples.\"\"\"\n",
-            "    return list(enumerate(lst))\n",
-            "assert zip_with_index(['a', 'b']) == [(0, 'a'), (1, 'b')]\nassert zip_with_index([]) == []\n",
-        ),
-        (
-            "def merge_sorted(a, b):\n    \"\"\"Merge two sorted lists into one sorted list.\"\"\"\n",
-            "    result, i, j = [], 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            result.append(a[i]); i += 1\n        else:\n            result.append(b[j]); j += 1\n    return result + a[i:] + b[j:]\n",
-            "assert merge_sorted([1, 3], [2, 4]) == [1, 2, 3, 4]\nassert merge_sorted([], [1]) == [1]\n",
-        ),
-    ])
+    for i, (p, s, t) in enumerate(
+        [
+            (
+                'def add(a, b):\n    """Return a + b."""\n',
+                "    return a + b\n",
+                "assert add(1, 2) == 3\nassert add(-1, 1) == 0\n",
+            ),
+            (
+                'def is_even(n):\n    """Return True if n is even."""\n',
+                "    return n % 2 == 0\n",
+                "assert is_even(4)\nassert not is_even(3)\n",
+            ),
+            (
+                'def max_of_three(a, b, c):\n    """Return the largest of three numbers."""\n',
+                "    return max(a, b, c)\n",
+                "assert max_of_three(1, 2, 3) == 3\nassert max_of_three(5, 3, 4) == 5\n",
+            ),
+            (
+                'def reverse_string(s):\n    """Return s reversed."""\n',
+                "    return s[::-1]\n",
+                "assert reverse_string('abc') == 'cba'\nassert reverse_string('') == ''\n",
+            ),
+            (
+                'def factorial(n):\n    """Return n! for non-negative n."""\n',
+                "    if n == 0:\n        return 1\n    return n * factorial(n - 1)\n",
+                "assert factorial(0) == 1\nassert factorial(5) == 120\n",
+            ),
+            (
+                'def is_palindrome(s):\n    """Return True if s is a palindrome."""\n',
+                "    return s == s[::-1]\n",
+                "assert is_palindrome('racecar')\nassert not is_palindrome('hello')\n",
+            ),
+            (
+                'def sum_list(lst):\n    """Return sum of list elements."""\n',
+                "    return sum(lst)\n",
+                "assert sum_list([1, 2, 3]) == 6\nassert sum_list([]) == 0\n",
+            ),
+            (
+                'def count_vowels(s):\n    """Return count of vowels in s."""\n',
+                "    return sum(1 for c in s.lower() if c in 'aeiou')\n",
+                "assert count_vowels('hello') == 2\nassert count_vowels('xyz') == 0\n",
+            ),
+            (
+                'def flatten(lst):\n    """Flatten one level of nesting."""\n',
+                "    return [x for sub in lst for x in sub]\n",
+                "assert flatten([[1, 2], [3]]) == [1, 2, 3]\nassert flatten([]) == []\n",
+            ),
+            (
+                'def unique(lst):\n    """Return list with duplicates removed, order preserved."""\n',
+                "    seen = set()\n    return [x for x in lst if not (x in seen or seen.add(x))]\n",
+                "assert unique([1, 2, 1, 3]) == [1, 2, 3]\nassert unique([]) == []\n",
+            ),
+            (
+                'def clamp(val, lo, hi):\n    """Clamp val to [lo, hi]."""\n',
+                "    return max(lo, min(hi, val))\n",
+                "assert clamp(5, 0, 10) == 5\nassert clamp(-1, 0, 10) == 0\nassert clamp(15, 0, 10) == 10\n",
+            ),
+            (
+                'def fizzbuzz(n):\n    """FizzBuzz for 1..n (1-indexed, list)."""\n',
+                "    r = []\n    for i in range(1, n+1):\n        if i % 15 == 0: r.append('FizzBuzz')\n        elif i % 3 == 0: r.append('Fizz')\n        elif i % 5 == 0: r.append('Buzz')\n        else: r.append(str(i))\n    return r\n",
+                "assert fizzbuzz(5) == ['1', '2', 'Fizz', '4', 'Buzz']\nassert fizzbuzz(15)[-1] == 'FizzBuzz'\n",
+            ),
+            (
+                'def gcd(a, b):\n    """Return greatest common divisor of a and b."""\n',
+                "    while b:\n        a, b = b, a % b\n    return a\n",
+                "assert gcd(12, 8) == 4\nassert gcd(7, 5) == 1\n",
+            ),
+            (
+                'def binary_search(lst, target):\n    """Return index of target in sorted lst, or -1."""\n',
+                "    lo, hi = 0, len(lst) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if lst[mid] == target: return mid\n        elif lst[mid] < target: lo = mid + 1\n        else: hi = mid - 1\n    return -1\n",
+                "assert binary_search([1, 3, 5, 7], 5) == 2\nassert binary_search([1, 3, 5], 4) == -1\n",
+            ),
+            (
+                'def count_occurrences(lst, val):\n    """Return how many times val appears in lst."""\n',
+                "    return lst.count(val)\n",
+                "assert count_occurrences([1, 2, 1, 3], 1) == 2\nassert count_occurrences([], 1) == 0\n",
+            ),
+            (
+                'def rotate_left(lst, k):\n    """Rotate lst left by k positions."""\n',
+                "    if not lst: return lst\n    k = k % len(lst)\n    return lst[k:] + lst[:k]\n",
+                "assert rotate_left([1, 2, 3, 4], 2) == [3, 4, 1, 2]\nassert rotate_left([], 3) == []\n",
+            ),
+            (
+                'def is_sorted(lst):\n    """Return True if lst is non-decreasingly sorted."""\n',
+                "    return all(lst[i] <= lst[i+1] for i in range(len(lst)-1))\n",
+                "assert is_sorted([1, 2, 3])\nassert not is_sorted([3, 1, 2])\nassert is_sorted([])\n",
+            ),
+            (
+                'def chunk(lst, size):\n    """Split lst into chunks of given size."""\n',
+                "    return [lst[i:i+size] for i in range(0, len(lst), size)]\n",
+                "assert chunk([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]\nassert chunk([], 3) == []\n",
+            ),
+            (
+                'def zip_with_index(lst):\n    """Return list of (index, value) tuples."""\n',
+                "    return list(enumerate(lst))\n",
+                "assert zip_with_index(['a', 'b']) == [(0, 'a'), (1, 'b')]\nassert zip_with_index([]) == []\n",
+            ),
+            (
+                'def merge_sorted(a, b):\n    """Merge two sorted lists into one sorted list."""\n',
+                "    result, i, j = [], 0, 0\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            result.append(a[i]); i += 1\n        else:\n            result.append(b[j]); j += 1\n    return result + a[i:] + b[j:]\n",
+                "assert merge_sorted([1, 3], [2, 4]) == [1, 2, 3, 4]\nassert merge_sorted([], [1]) == [1]\n",
+            ),
+        ]
+    )
 ]
 
 
@@ -196,6 +199,7 @@ def diagnose_llama_cpp_import() -> tuple[bool, str]:
     """
     try:
         from llama_cpp import Llama  # noqa: F401
+
         return True, ""
     except ImportError as exc:
         return False, str(exc)
@@ -403,6 +407,7 @@ def main() -> None:
     # Resolve the GGUF model path from the HF cache.
     try:
         from huggingface_hub import hf_hub_download  # noqa: PLC0415
+
         model_path = hf_hub_download(
             repo_id="unsloth/Qwen3.5-0.8B-GGUF",
             filename="Qwen3.5-0.8B-Q4_K_M.gguf",

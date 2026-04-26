@@ -74,7 +74,7 @@ class PottsState:
 
     def __post_init__(self) -> None:
         if not (0 <= self.value < self.q):
-            raise ValueError(f"value must be in [0, {self.q-1}], got {self.value}")
+            raise ValueError(f"value must be in [0, {self.q - 1}], got {self.value}")
         if self.q < 2:
             raise ValueError("q must be >= 2")
 
@@ -402,7 +402,9 @@ class PottsMachineVerifier:
         """
         correct_np = np.array(correct_configs, dtype=np.int32)
         violated_np = np.array(violated_configs, dtype=np.int32)
-        partial_np = np.array(partial_configs, dtype=np.int32) if partial_configs is not None else None
+        partial_np = (
+            np.array(partial_configs, dtype=np.int32) if partial_configs is not None else None
+        )
 
         J_np = np.array(self.J)
         h_np = np.array(self.h)

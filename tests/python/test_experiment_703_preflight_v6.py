@@ -35,6 +35,7 @@ _RETIREMENT_IDS = [346, 380, 381, 382, 383, 410, 425]
 # Traces to REQ-INFRA-039.
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.parametrize("exp_id", _RETIREMENT_IDS)
 def test_retirement_file_has_valid_schema(exp_id: int) -> None:
     """Each retirement file must be valid JSON with schema='carnot.retirement.v1' and status='retired'.
@@ -45,9 +46,7 @@ def test_retirement_file_has_valid_schema(exp_id: int) -> None:
     SCENARIO-INFRA-048.
     """
     retirement_file = _RESULTS_DIR / f"experiment_{exp_id}_retired.json"
-    assert retirement_file.exists(), (
-        f"Retirement file missing for Exp {exp_id}: {retirement_file}"
-    )
+    assert retirement_file.exists(), f"Retirement file missing for Exp {exp_id}: {retirement_file}"
 
     data = json.loads(retirement_file.read_text())
     assert data.get("schema") == "carnot.retirement.v1", (
@@ -70,15 +69,14 @@ def test_retirement_file_has_valid_schema(exp_id: int) -> None:
     assert "cumulative_overhead_min" in data, (
         f"Exp {exp_id} retirement file missing 'cumulative_overhead_min' field"
     )
-    assert "superseded_by" in data, (
-        f"Exp {exp_id} retirement file missing 'superseded_by' field"
-    )
+    assert "superseded_by" in data, f"Exp {exp_id} retirement file missing 'superseded_by' field"
 
 
 # ---------------------------------------------------------------------------
 # SCENARIO-INFRA-049: JEPA v15 and v16 cascade blocks present in manifest.
 # Traces to REQ-INFRA-040.
 # ---------------------------------------------------------------------------
+
 
 def test_manifest_contains_all_seven_experiment_ids() -> None:
     """conductor_exclusion_manifest.json must contain entries for all 7 retired experiments.

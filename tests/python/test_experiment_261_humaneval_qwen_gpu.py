@@ -80,7 +80,14 @@ def _make_process_flags(
         "outcome_correct": True,
         "right_for_wrong_reasons": right_for_wrong_reasons,
         "defects": (
-            [{"kind": "outcome_correct_process_invalid", "detail": "rfwr", "step_id": None, "evidence": {}}]
+            [
+                {
+                    "kind": "outcome_correct_process_invalid",
+                    "detail": "rfwr",
+                    "step_id": None,
+                    "evidence": {},
+                }
+            ]
             if right_for_wrong_reasons
             else []
         ),
@@ -109,7 +116,11 @@ def _make_case_result(
         "dataset_idx": idx,
         "task_id": f"HumanEval/{idx}",
         "entry_point": f"fn_{idx}",
-        "baseline": {"official_passed": official_passed, "body": "    pass", "candidate_code": "def fn(x): pass"},
+        "baseline": {
+            "official_passed": official_passed,
+            "body": "    pass",
+            "candidate_code": "def fn(x): pass",
+        },
         "official_tests_verify_only": {"accepted": official_passed},
         "pbt_verify_only": {
             "accepted": pbt_accepted,
@@ -382,8 +393,14 @@ class TestStageSummary:
         result = _mod.summarize_model_results([], n_bootstrap=100, seed=0)
         assert "stages" in result
         assert "process_integrity" in result
-        for stage in ("baseline", "official_tests_verify_only", "pbt_verify_only",
-                      "spec_aware_verify_only", "process_aware_verify_only", "verify_repair"):
+        for stage in (
+            "baseline",
+            "official_tests_verify_only",
+            "pbt_verify_only",
+            "spec_aware_verify_only",
+            "process_aware_verify_only",
+            "verify_repair",
+        ):
             assert stage in result["stages"]
 
     def test_summarize_model_results_pass_at_1(self) -> None:
@@ -458,7 +475,9 @@ class TestCrossModelComparisonBlock:
             repair_budget=3,
         )
         outcomes = block["stage_outcomes"]["baseline"]
-        total = outcomes["gemma_only"] + outcomes["qwen_only"] + outcomes["both"] + outcomes["neither"]
+        total = (
+            outcomes["gemma_only"] + outcomes["qwen_only"] + outcomes["both"] + outcomes["neither"]
+        )
         assert total == 4
 
     def test_build_cross_model_comparison_empty_returns_zero_block(self) -> None:
@@ -565,8 +584,18 @@ class TestArtifactSchema:
 
     def test_artifact_top_level_keys(self) -> None:
         artifact = self._minimal_artifact()
-        for key in ("experiment", "benchmark", "run_date", "schema", "metadata",
-                    "cohort", "model_run", "comparison", "blockers", "run_status"):
+        for key in (
+            "experiment",
+            "benchmark",
+            "run_date",
+            "schema",
+            "metadata",
+            "cohort",
+            "model_run",
+            "comparison",
+            "blockers",
+            "run_status",
+        ):
             assert key in artifact, f"Missing key: {key}"
 
     def test_artifact_experiment_number(self) -> None:
@@ -580,7 +609,10 @@ class TestArtifactSchema:
     def test_artifact_schema_field(self) -> None:
         artifact = self._minimal_artifact()
         assert "artifact" in artifact["schema"]
-        assert "261" in artifact["schema"]["artifact"] or "qwen" in artifact["schema"]["artifact"].lower()
+        assert (
+            "261" in artifact["schema"]["artifact"]
+            or "qwen" in artifact["schema"]["artifact"].lower()
+        )
 
     def test_artifact_cohort_case_count(self) -> None:
         artifact = self._minimal_artifact()

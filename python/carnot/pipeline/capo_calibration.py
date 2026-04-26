@@ -53,8 +53,6 @@ Spec: REQ-VERIFY-140, REQ-VERIFY-141,
 
 from __future__ import annotations
 
-from typing import List
-
 
 class CAPOCalibrationLoss:
     """Calibration-aware training loss combining contrastive margin loss with a WMW calibration term.
@@ -99,8 +97,8 @@ class CAPOCalibrationLoss:
 
     def compute_loss(
         self,
-        scores_correct: List[float],
-        scores_incorrect: List[float],
+        scores_correct: list[float],
+        scores_incorrect: list[float],
     ) -> float:
         """Compute CAPO total loss for a batch of (correct, incorrect) score pairs.
 
@@ -149,10 +147,7 @@ class CAPOCalibrationLoss:
             # WMW calibration loss: penalise pairs that are not yet well-separated
             # diff = score_correct - score_incorrect (want < 0 for a correct EBM)
             diff = sc - si
-            if abs(diff) < self._CALIBRATION_THRESHOLD:
-                cal_loss = (diff + 0.5) ** 2
-            else:
-                cal_loss = 0.0
+            cal_loss = (diff + 0.5) ** 2 if abs(diff) < self._CALIBRATION_THRESHOLD else 0.0
 
             total += margin_loss + self.lambda_cal * cal_loss
 

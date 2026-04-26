@@ -32,16 +32,22 @@ class TestBuildLiveDataArtifact:
     """REQ-DATA-001: artifact must have all required fields."""
 
     def test_schema_field(self):
-        art = exp551._build_live_data_artifact("live_gpu", 50, 100, "results/live_pairs_551.json", [1.0] * 50)
+        art = exp551._build_live_data_artifact(
+            "live_gpu", 50, 100, "results/live_pairs_551.json", [1.0] * 50
+        )
         assert art["schema"] == "carnot.live_data_collection.v1"
 
     def test_honest_verdict_live_data_collected(self):
         # SCENARIO-DATA-001: >=50 pairs -> live_data_collected
-        art = exp551._build_live_data_artifact("live_gpu", 50, 50, "results/live_pairs_551.json", [])
+        art = exp551._build_live_data_artifact(
+            "live_gpu", 50, 50, "results/live_pairs_551.json", []
+        )
         assert art["honest_verdict"] == "live_data_collected"
 
     def test_honest_verdict_partial_collection(self):
-        art = exp551._build_live_data_artifact("live_gpu", 50, 30, "results/live_pairs_551.json", [])
+        art = exp551._build_live_data_artifact(
+            "live_gpu", 50, 30, "results/live_pairs_551.json", []
+        )
         assert art["honest_verdict"] == "partial_collection"
 
     def test_honest_verdict_gpu_required(self):
@@ -71,7 +77,9 @@ class TestBuildLiveDataArtifact:
         assert art["mean_latency_s"] == 0.0
 
     def test_live_pairs_file_field(self):
-        art = exp551._build_live_data_artifact("live_gpu", 50, 50, "results/live_pairs_551.json", [])
+        art = exp551._build_live_data_artifact(
+            "live_gpu", 50, 50, "results/live_pairs_551.json", []
+        )
         assert art["live_pairs_file"] == "results/live_pairs_551.json"
 
 
@@ -115,6 +123,7 @@ class TestAnnotateResponse:
 
     def test_returns_cot_steps_and_labels(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp551._annotate_response(annotator, "1. 2 + 2 = 4", "q0")
         assert "cot_steps" in result
@@ -122,6 +131,7 @@ class TestAnnotateResponse:
 
     def test_cot_steps_have_required_keys(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp551._annotate_response(annotator, "1. 2 + 2 = 4", "q0")
         for step in result["cot_steps"]:
@@ -130,12 +140,14 @@ class TestAnnotateResponse:
 
     def test_fover_labels_parallel_to_cot_steps(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp551._annotate_response(annotator, "1. Step A\n2. Step B", "q1")
         assert len(result["cot_steps"]) == len(result["fover_labels"])
 
     def test_empty_response_returns_single_step(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp551._annotate_response(annotator, "No steps here", "q2")
         # Single-step response: parse_cot_into_steps returns one step

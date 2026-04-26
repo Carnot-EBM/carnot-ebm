@@ -69,9 +69,7 @@ from carnot.embeddings.fast_embedding import (
     benchmark_embedding,
 )
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -82,8 +80,8 @@ RESULTS_DIR = _ROOT / "results"
 WARMUP_ITERS = 20
 MEASURE_ITERS = 200
 MINILM_WARMUP = 10
-MINILM_MEASURE = 50   # MiniLM is slower, use fewer iters
-EMBED_DIM = 384       # Match MiniLM output dimension for compatibility
+MINILM_MEASURE = 50  # MiniLM is slower, use fewer iters
+EMBED_DIM = 384  # Match MiniLM output dimension for compatibility
 
 # ---------------------------------------------------------------------------
 # AUROC evaluation dataset
@@ -196,7 +194,9 @@ def compute_auroc(
         solver="lbfgs",
     )
     scores = cross_val_score(
-        clf, embeddings, labels,
+        clf,
+        embeddings,
+        labels,
         cv=5,
         scoring="roc_auc",
     )
@@ -266,16 +266,41 @@ def run_embedding_benchmark() -> dict[str, Any]:
     # Embedding configurations to test.
     # MiniLM is benchmarked with fewer iters (it's slow).
     configs: list[tuple[str, str, FastEmbeddingProtocol, int, int]] = [
-        ("minilm", "MiniLM-L6-v2 (sentence-transformers baseline)",
-         MiniLMEmbedding(), MINILM_WARMUP, MINILM_MEASURE),
-        ("tfidf", "TF-IDF + random projection (sklearn, domain corpus)",
-         TFIDFProjectionEmbedding(embed_dim=EMBED_DIM), WARMUP_ITERS, MEASURE_ITERS),
-        ("char_ngram", "Char n-gram hash + random projection (sklearn)",
-         CharNgramEmbedding(embed_dim=EMBED_DIM), WARMUP_ITERS, MEASURE_ITERS),
-        ("hash", "Word token hash + random projection",
-         HashEmbedding(embed_dim=EMBED_DIM), WARMUP_ITERS, MEASURE_ITERS),
-        ("random", "Byte histogram + random projection (ablation baseline)",
-         RandomProjectionEmbedding(embed_dim=EMBED_DIM), WARMUP_ITERS, MEASURE_ITERS),
+        (
+            "minilm",
+            "MiniLM-L6-v2 (sentence-transformers baseline)",
+            MiniLMEmbedding(),
+            MINILM_WARMUP,
+            MINILM_MEASURE,
+        ),
+        (
+            "tfidf",
+            "TF-IDF + random projection (sklearn, domain corpus)",
+            TFIDFProjectionEmbedding(embed_dim=EMBED_DIM),
+            WARMUP_ITERS,
+            MEASURE_ITERS,
+        ),
+        (
+            "char_ngram",
+            "Char n-gram hash + random projection (sklearn)",
+            CharNgramEmbedding(embed_dim=EMBED_DIM),
+            WARMUP_ITERS,
+            MEASURE_ITERS,
+        ),
+        (
+            "hash",
+            "Word token hash + random projection",
+            HashEmbedding(embed_dim=EMBED_DIM),
+            WARMUP_ITERS,
+            MEASURE_ITERS,
+        ),
+        (
+            "random",
+            "Byte histogram + random projection (ablation baseline)",
+            RandomProjectionEmbedding(embed_dim=EMBED_DIM),
+            WARMUP_ITERS,
+            MEASURE_ITERS,
+        ),
     ]
 
     results_per_embedder: list[dict[str, Any]] = []
@@ -310,7 +335,11 @@ def run_embedding_benchmark() -> dict[str, Any]:
         results_per_embedder.append(entry)
         logger.info(
             "  %s: p50=%.3fms  p99=%.3fms  AUROC=%.4f  mem=%.1fKB",
-            key, lat["p50_ms"], lat["p99_ms"], auroc, mem_kb,
+            key,
+            lat["p50_ms"],
+            lat["p99_ms"],
+            auroc,
+            mem_kb,
         )
 
     # ---------------------------------------------------------------------------

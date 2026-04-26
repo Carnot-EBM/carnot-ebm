@@ -284,9 +284,7 @@ def test_retro_033_resolved_when_positive_live_gpu(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """retro_033_resolved is True only when signed_improvement > 0 AND inference_mode='live_gpu'."""
-    _write_fake_results(
-        tmp_path, signed_improvement_582=0.04, inference_mode_582="live_gpu"
-    )
+    _write_fake_results(tmp_path, signed_improvement_582=0.04, inference_mode_582="live_gpu")
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
     retro = compute_retro()
     assert retro["retro_033_resolved"] is True
@@ -310,17 +308,13 @@ def test_retro_033_not_resolved_when_positive_but_not_live_gpu(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """retro_033_resolved is False when improvement > 0 but not live_gpu mode."""
-    _write_fake_results(
-        tmp_path, signed_improvement_582=0.04, inference_mode_582="simulated"
-    )
+    _write_fake_results(tmp_path, signed_improvement_582=0.04, inference_mode_582="simulated")
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
     retro = compute_retro()
     assert retro["retro_033_resolved"] is False
 
 
-def test_fr11_improved_from_exp583(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fr11_improved_from_exp583(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """fr11_improved reflects Exp 583's fr11_improved field."""
     _write_fake_results(tmp_path, fr11_improved=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -338,9 +332,7 @@ def test_fr11_not_improved_when_gate_closed(
     assert retro["fr11_improved"] is False
 
 
-def test_fpga_progress_when_bitfile_built(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fpga_progress_when_bitfile_built(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """fpga_progress is True when bitfile_built=True."""
     _write_fake_results(tmp_path, bitfile_built=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -358,9 +350,7 @@ def test_fpga_progress_when_vivado_available(
     assert retro["fpga_progress"] is True
 
 
-def test_fpga_progress_false_when_neither(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fpga_progress_false_when_neither(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """fpga_progress is False when neither bitfile_built nor vivado_available."""
     _write_fake_results(tmp_path, bitfile_built=False, vivado_available=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -368,9 +358,7 @@ def test_fpga_progress_false_when_neither(
     assert retro["fpga_progress"] is False
 
 
-def test_symbolic_viable_from_exp586(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_symbolic_viable_from_exp586(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """symbolic_viable reflects Exp 586's formula_interpretable field."""
     _write_fake_results(tmp_path, formula_interpretable=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -388,9 +376,7 @@ def test_symbolic_not_viable_when_formula_not_interpretable(
     assert retro["symbolic_viable"] is False
 
 
-def test_dsvd_viable_from_exp587(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_dsvd_viable_from_exp587(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """dsvd_viable reflects Exp 587's tier_2_5_viable field."""
     _write_fake_results(tmp_path, tier_2_5_viable=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -398,9 +384,7 @@ def test_dsvd_viable_from_exp587(
     assert retro["dsvd_viable"] is True
 
 
-def test_dsvd_not_viable_when_flag_false(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_dsvd_not_viable_when_flag_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """dsvd_viable is False when tier_2_5_viable=False."""
     _write_fake_results(tmp_path, tier_2_5_viable=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -417,9 +401,7 @@ def test_honest_verdict_first_positive_achieved(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """honest_verdict='first_positive_achieved' when retro_033_resolved=True."""
-    _write_fake_results(
-        tmp_path, signed_improvement_582=0.06, inference_mode_582="live_gpu"
-    )
+    _write_fake_results(tmp_path, signed_improvement_582=0.06, inference_mode_582="live_gpu")
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
     retro = compute_retro()
     assert retro["honest_verdict"] == "first_positive_achieved"
@@ -450,9 +432,7 @@ def test_honest_verdict_recall_still_blocked(
 # ---------------------------------------------------------------------------
 
 
-def test_closure_rate_three_of_eleven(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_closure_rate_three_of_eleven(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Closure rate = 3/11 when RETRO-056, RETRO-062, RETRO-063 are closed."""
     _write_fake_results(
         tmp_path,
@@ -486,9 +466,7 @@ def test_closure_rate_zero_when_nothing_resolved(
 # ---------------------------------------------------------------------------
 
 
-def test_n_experiments_is_fourteen(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_n_experiments_is_fourteen(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_experiments_run = 14 when all 13 upstream files exist plus this retro."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -496,9 +474,7 @@ def test_n_experiments_is_fourteen(
     assert retro["n_experiments_run"] == 14
 
 
-def test_n_not_run_zero_when_all_present(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_n_not_run_zero_when_all_present(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_not_run = 0 when all upstream result files are present."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -534,9 +510,7 @@ def test_mean_time_min_is_wall_time_over_n_experiments(
 # ---------------------------------------------------------------------------
 
 
-def test_new_retro_items_structure(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_new_retro_items_structure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Each new_retro_item has id, title, carry_count, description, priority fields."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -549,9 +523,7 @@ def test_new_retro_items_structure(
         assert "priority" in item
 
 
-def test_new_retro_items_ids(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_new_retro_items_ids(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """New retro items opened in .44 are RETRO-066 and RETRO-067."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -571,9 +543,7 @@ def test_top_priorities_for_45_has_three_entries(
     assert len(retro["top_priorities_for_45"]) == 3
 
 
-def test_schema_and_milestone_fields(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_schema_and_milestone_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Schema and milestone fields are set to the expected v19 values."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -587,9 +557,7 @@ def test_schema_and_milestone_fields(
 # ---------------------------------------------------------------------------
 
 
-def test_main_writes_deliverable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_writes_deliverable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """main() writes a valid JSON artifact at DELIVERABLE path with all required fields."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -603,10 +571,17 @@ def test_main_writes_deliverable(
     artifact = json.loads(deliverable.read_text())
 
     required_fields = [
-        "experiment", "title", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "schema",
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "schema",
         "retro_056_resolved",
-        "retro_064_partial", "retro_064_resolved",
+        "retro_064_partial",
+        "retro_064_resolved",
         "retro_063_resolved",
         "retro_062_resolved",
         "retro_033_resolved",

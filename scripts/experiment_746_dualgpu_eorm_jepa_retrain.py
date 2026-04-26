@@ -65,6 +65,7 @@ FOVER_V2_PATH = _REPO_ROOT / "results" / "fover_v2_combined.json"
 # and to ensure the data pipeline is exercised end-to-end.
 # ---------------------------------------------------------------------------
 
+
 def _simulate_eorm_train(n_samples: int, n_epochs: int, device: str = "cpu") -> dict:
     """Simulate EORM training: sleep proportional to workload, return loss.
 
@@ -75,7 +76,9 @@ def _simulate_eorm_train(n_samples: int, n_epochs: int, device: str = "cpu") -> 
         ThreadPoolExecutor speedup measurement is not confounded by model loading.
         The loss value is synthetic but realistic for a converged EBM (~0.35).
     """
-    _log.info("EORM train start — device=%s  n_samples=%d  n_epochs=%d", device, n_samples, n_epochs)
+    _log.info(
+        "EORM train start — device=%s  n_samples=%d  n_epochs=%d", device, n_samples, n_epochs
+    )
     work_s = n_samples * n_epochs * 0.0005  # 0.5 ms per sample per epoch
     time.sleep(work_s)
     result = {"loss_after": 0.342, "n_samples": n_samples, "n_epochs": n_epochs, "device": device}
@@ -93,7 +96,9 @@ def _simulate_jepa_train(n_samples: int, n_epochs: int, device: str = "cpu") -> 
         so the parallel path must overlap heterogeneous workloads — a harder
         test than two identical sleeps.
     """
-    _log.info("JEPA train start — device=%s  n_samples=%d  n_epochs=%d", device, n_samples, n_epochs)
+    _log.info(
+        "JEPA train start — device=%s  n_samples=%d  n_epochs=%d", device, n_samples, n_epochs
+    )
     work_s = n_samples * n_epochs * 0.0006  # 0.6 ms per sample per epoch
     time.sleep(work_s)
     result = {"loss_after": 0.289, "n_samples": n_samples, "n_epochs": n_epochs, "device": device}
@@ -154,11 +159,16 @@ def _run_parallel(n_samples: int, n_epochs: int) -> tuple[float, dict, dict]:
     jepa_fn = lambda device=jepa_device: _simulate_jepa_train(n_samples, n_epochs, device=device)  # noqa: E731
 
     t0 = time.perf_counter()
-    results = retrain.retrain_parallel(eorm_fn, jepa_fn, eorm_device=eorm_device, jepa_device=jepa_device)
+    results = retrain.retrain_parallel(
+        eorm_fn, jepa_fn, eorm_device=eorm_device, jepa_device=jepa_device
+    )
     wall_s = round(time.perf_counter() - t0, 3)
 
-    _log.info("Parallel wall time: %.3f s  (retrain_parallel reported %.3f s)",
-              wall_s, results.get("wall_time_s", wall_s))
+    _log.info(
+        "Parallel wall time: %.3f s  (retrain_parallel reported %.3f s)",
+        wall_s,
+        results.get("wall_time_s", wall_s),
+    )
     return wall_s, results["eorm_result"], results["jepa_result"]
 
 
@@ -170,8 +180,10 @@ def _honest_verdict(speedup: float, eorm_result: dict, jepa_result: dict) -> str
     went wrong with GPU allocation and should be investigated.
     """
     both_trained = (
-        isinstance(eorm_result, dict) and "loss_after" in eorm_result
-        and isinstance(jepa_result, dict) and "loss_after" in jepa_result
+        isinstance(eorm_result, dict)
+        and "loss_after" in eorm_result
+        and isinstance(jepa_result, dict)
+        and "loss_after" in jepa_result
     )
     if speedup >= 1.8 and both_trained:
         return "dualgpu_retrain_validated"
@@ -215,8 +227,12 @@ def main() -> None:
         n_samples = min(100, n_training_examples)
         n_epochs = 10
 
-        _log.info("Exp 746: n_samples=%d  n_epochs=%d  n_training_examples=%d",
-                  n_samples, n_epochs, n_training_examples)
+        _log.info(
+            "Exp 746: n_samples=%d  n_epochs=%d  n_training_examples=%d",
+            n_samples,
+            n_epochs,
+            n_training_examples,
+        )
 
         # Step 3: Sequential baseline
         wall_seq, eorm_seq, jepa_seq = _run_sequential(n_samples, n_epochs)
@@ -229,7 +245,10 @@ def main() -> None:
 
         _log.info(
             "Exp 746 result: seq=%.3fs  par=%.3fs  speedup=%.4f  verdict=%s",
-            wall_seq, wall_par, speedup, verdict,
+            wall_seq,
+            wall_par,
+            speedup,
+            verdict,
         )
 
         artifact = tmpl.build_result(

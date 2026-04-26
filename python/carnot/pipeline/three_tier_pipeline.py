@@ -77,30 +77,38 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any
 
 import jax
 import jax.numpy as jnp
-import numpy as np
 
 from carnot.models.eorm import CoTEnergyInput, EORMModel
-from carnot.models.jepa_platt import PlattScaledJEPA
 from carnot.models.vjepa_predictor import (
     VOCAB_SIZE as _VJEPA_VOCAB_SIZE,
+)
+from carnot.models.vjepa_predictor import (
     VariationalJEPAPredictor,
-    build_tfidf_features,
     text_to_tfidf,
 )
-from carnot.pipeline.hallucination_basin import HallucinationBasinDetector
-from carnot.pipeline.nup_probe_v4 import NUPProbeV4
-from carnot.pipeline.sink_probe import SinkProbe
-from carnot.pipeline.spilled_energy import SpilledEnergyDetector, SpilledEnergyDetectorResult  # noqa: F401
-from carnot.pipeline.vg_search_scheduler import VGSearchScheduler  # noqa: F401
-from carnot.probes.drift_probe import DRIFTProbe
-from carnot.probes.hallusae_geometric_probe import HalluSAEGeometricProbe
-from carnot.probes.streaming_cot_detector import StreamingCoTHalluDetector
-from carnot.samplers.lagrange_adaptive import LagrangeAdaptiveIsingConstraints
+from carnot.pipeline.spilled_energy import (  # noqa: F401
+    SpilledEnergyDetectorResult,
+)
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from carnot.models.jepa_platt import PlattScaledJEPA
+    from carnot.pipeline.hallucination_basin import HallucinationBasinDetector
+    from carnot.pipeline.nup_probe_v4 import NUPProbeV4
+    from carnot.pipeline.sink_probe import SinkProbe
+    from carnot.pipeline.spilled_energy import (  # noqa: F401
+        SpilledEnergyDetector,
+    )
+    from carnot.pipeline.vg_search_scheduler import VGSearchScheduler
+    from carnot.probes.drift_probe import DRIFTProbe
+    from carnot.probes.hallusae_geometric_probe import HalluSAEGeometricProbe
+    from carnot.probes.streaming_cot_detector import StreamingCoTHalluDetector
+    from carnot.samplers.lagrange_adaptive import LagrangeAdaptiveIsingConstraints
 
 # ---------------------------------------------------------------------------
 # ThreeTierPipelineResult
@@ -674,9 +682,7 @@ class ThreeTierPipeline:
         # ------------------------------------------------------------------
         injected_structural_constraints: list[str] = []
         if self.draft_conditioned_verifier is not None:
-            advisory = self.draft_conditioned_verifier.condition_and_verify(
-                question, response
-            )
+            advisory = self.draft_conditioned_verifier.condition_and_verify(question, response)
             self._last_tier28_advisory = advisory
             injected_structural_constraints = advisory.get("structural_constraints", [])
 
@@ -783,8 +789,8 @@ class ThreeTierPipeline:
         if use_dual_gpu and total >= 2:
             mid = total // 2
             partitions = [
-                list(zip(responses[:mid], ground_truth[:mid])),
-                list(zip(responses[mid:], ground_truth[mid:])),
+                list(zip(responses[:mid], ground_truth[:mid], strict=False)),
+                list(zip(responses[mid:], ground_truth[mid:], strict=False)),
             ]
 
             # Each partition_results element is a list of (tier_used, is_correct) pairs.
@@ -833,7 +839,7 @@ class ThreeTierPipeline:
                     if not is_correct:
                         n_fn += 1
         else:
-            for item, is_correct in zip(responses, ground_truth):
+            for item, is_correct in zip(responses, ground_truth, strict=False):
                 response_text = item.get("response", "")
                 question_text = item.get("question", "")
                 attn = item.get("attention_matrix", None)
@@ -881,8 +887,7 @@ class ThreeTierPipeline:
         skip_rate_eorm = n_skipped_eorm / total
         skip_rate_spilled_energy = n_skipped_spilled / total
         total_skip_rate = (
-            n_skipped_sink + n_skipped_eorm + n_skipped_spilled
-            + n_skipped_nup + n_skipped_basin
+            n_skipped_sink + n_skipped_eorm + n_skipped_spilled + n_skipped_nup + n_skipped_basin
         ) / total
         fn_rate = (n_fn / n_wrong) if n_wrong > 0 else 0.0
         ising_calls_saved_pct = total_skip_rate * 100.0
@@ -1074,21 +1079,65 @@ def _load_jepa_model(
         return None
 
     params = {k: jnp.array(v) for k, v in raw.items()}
-    model = VariationalJEPAPredictor(
-        in_dim=vocab_size, context_dim=vocab_size, latent_dim=32
-    )
+    model = VariationalJEPAPredictor(in_dim=vocab_size, context_dim=vocab_size, latent_dim=32)
     model.set_all_params(params)
 
     # Bootstrap a minimal vocabulary from the param keys (used only for key presence check)
     # We use a fixed math/logic keyword set that approximates the training vocabulary.
     _BOOTSTRAP_TOKENS = [
-        "step", "equals", "total", "correct", "incorrect", "error", "calculate",
-        "multiply", "add", "subtract", "divide", "sum", "result", "answer",
-        "value", "number", "count", "plus", "minus", "times", "so", "then",
-        "therefore", "because", "if", "is", "are", "the", "and", "of",
-        "a", "an", "in", "to", "for", "with", "that", "this", "it", "we",
-        "get", "have", "can", "will", "all", "each", "not", "no", "wrong",
-        "valid", "invalid", "final", "check",
+        "step",
+        "equals",
+        "total",
+        "correct",
+        "incorrect",
+        "error",
+        "calculate",
+        "multiply",
+        "add",
+        "subtract",
+        "divide",
+        "sum",
+        "result",
+        "answer",
+        "value",
+        "number",
+        "count",
+        "plus",
+        "minus",
+        "times",
+        "so",
+        "then",
+        "therefore",
+        "because",
+        "if",
+        "is",
+        "are",
+        "the",
+        "and",
+        "of",
+        "a",
+        "an",
+        "in",
+        "to",
+        "for",
+        "with",
+        "that",
+        "this",
+        "it",
+        "we",
+        "get",
+        "have",
+        "can",
+        "will",
+        "all",
+        "each",
+        "not",
+        "no",
+        "wrong",
+        "valid",
+        "invalid",
+        "final",
+        "check",
     ]
     token_to_idx = {tok: i for i, tok in enumerate(_BOOTSTRAP_TOKENS[:vocab_size])}
     return VJEPAv2EnergyAdapter(model, token_to_idx, vocab_size)

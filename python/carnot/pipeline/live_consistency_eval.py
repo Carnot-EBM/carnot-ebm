@@ -48,8 +48,10 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
-from typing import Callable
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Chain templates — questions + turn prompts
@@ -164,6 +166,7 @@ _QUESTION_SEEDS: list[dict[str, str]] = [
 # representative text here; see scripts/experiment_271_live_consistency.py
 # for the actual live inference run.
 
+
 def _build_consistent_chain(seed: dict[str, str]) -> list[str]:
     """Build 4 consistent turn outputs for a given question seed.
 
@@ -195,14 +198,8 @@ def _build_consistent_chain(seed: dict[str, str]) -> list[str]:
                 f"Let me think through this step by step. Question: {q} "
                 f"I will compute the {entity} carefully."
             ),
-            (
-                f"Setting up the calculation: the {entity} is {v}. "
-                f"We verify: the value is {v}."
-            ),
-            (
-                f"The {entity} is {v}. Checking against the problem statement — "
-                f"this is consistent."
-            ),
+            (f"Setting up the calculation: the {entity} is {v}. We verify: the value is {v}."),
+            (f"The {entity} is {v}. Checking against the problem statement — this is consistent."),
             (
                 f"Final answer: the {entity} is {v}. "
                 f"All intermediate steps are consistent. The answer is {v}."
@@ -217,37 +214,25 @@ def _build_consistent_chain(seed: dict[str, str]) -> list[str]:
             # beginning of a sentence so the extractor captures the object correctly.
             turns = [
                 f"Let me think through this. Question: {q} I will recall the geographic fact.",
-                f"Paris is the capital of France. This is a well-established fact.",
-                f"Paris is the capital of France. The answer is Paris.",
-                f"Paris is the capital of France. This is correct.",
+                "Paris is the capital of France. This is a well-established fact.",
+                "Paris is the capital of France. The answer is Paris.",
+                "Paris is the capital of France. This is correct.",
             ]
         else:
             # fact_1: born in Ulm (Albert Einstein)
             turns = [
                 f"Let me think through this. Question: {q} I will recall the biographical fact.",
-                f"Albert Einstein was born in Ulm. This is the birthplace.",
-                f"Albert Einstein was born in Ulm. The answer is Ulm.",
-                f"Albert Einstein was born in Ulm. This is consistent.",
+                "Albert Einstein was born in Ulm. This is the birthplace.",
+                "Albert Einstein was born in Ulm. The answer is Ulm.",
+                "Albert Einstein was born in Ulm. This is consistent.",
             ]
     else:
         # Numeric chains: "<entity> is <N>" phrasing.
         turns = [
-            (
-                f"Let me think through this step by step. Question: {q} "
-                f"I need to find the {entity}."
-            ),
-            (
-                f"Working through the problem: the {entity} is {v}. "
-                f"This comes from the given data."
-            ),
-            (
-                f"Checking the result: the {entity} is {v}. "
-                f"This is consistent with all constraints."
-            ),
-            (
-                f"Final answer: the {entity} is {v}. "
-                f"The answer is {v}."
-            ),
+            (f"Let me think through this step by step. Question: {q} I need to find the {entity}."),
+            (f"Working through the problem: the {entity} is {v}. This comes from the given data."),
+            (f"Checking the result: the {entity} is {v}. This is consistent with all constraints."),
+            (f"Final answer: the {entity} is {v}. The answer is {v}."),
         ]
     _ = qid  # available for debugging
     return turns
@@ -284,28 +269,20 @@ def _build_contradicted_chain(seed: dict[str, str]) -> list[str]:
     # The contradiction must match the checker's extraction patterns exactly.
     if ctype == "factual" and seed["id"] == "fact_0":
         # Factual: different object for same (France, capital) predicate
-        contradiction_suffix = (
-            f" On reflection, Lyon is the capital of France, not Paris."
-        )
+        contradiction_suffix = " On reflection, Lyon is the capital of France, not Paris."
     elif ctype == "factual" and seed["id"] == "fact_1":
         # Factual: different birthplace for Einstein
-        contradiction_suffix = (
-            f" On reflection, Albert Einstein was born in Berlin, not Ulm."
-        )
+        contradiction_suffix = " On reflection, Albert Einstein was born in Berlin, not Ulm."
     elif ctype == "arithmetic":
         # Re-state a conflicting arithmetic result for the same equation.
         # eq_0: sum of 1..10 = 55; contradiction: 45
         # eq_1: 17 * 6 = 102; contradiction: 98
         # Use the numeric pattern since arithmetic contradictions in prose
         # use "the {entity} is {v}" rather than an equation form.
-        contradiction_suffix = (
-            f" Re-checking: the {entity} is {v_wrong}."
-        )
+        contradiction_suffix = f" Re-checking: the {entity} is {v_wrong}."
     else:
         # Numeric: same entity, wrong value — matches "<entity> is <N>" pattern
-        contradiction_suffix = (
-            f" Re-checking: the {entity} is {v_wrong}."
-        )
+        contradiction_suffix = f" Re-checking: the {entity} is {v_wrong}."
 
     turns.append(consistent_turns[3] + contradiction_suffix)
 
@@ -398,7 +375,6 @@ def evaluate_chain(
     from unittest.mock import MagicMock
 
     from carnot.pipeline.consistency_checker import GlobalConsistencyChecker
-    from carnot.pipeline.extract import ConstraintResult
     from carnot.pipeline.state_machine import ConstraintStateMachine
     from carnot.pipeline.verify_repair import VerificationResult, VerifyRepairPipeline
 
@@ -523,20 +499,22 @@ def run_evaluation(
     # Serialize chain results
     chains_serialized = []
     for r in chain_results:
-        chains_serialized.append({
-            "chain_id": r.chain_id,
-            "chain_type": r.chain_type,
-            "contradiction_type": r.contradiction_type,
-            "expected_consistent": r.expected_consistent,
-            "global_detected": r.global_detected,
-            "severity": r.severity,
-            "n_inconsistent_pairs": r.n_inconsistent_pairs,
-            "inconsistent_pairs": [
-                {"step_i": i, "step_j": j, "type": t, "description": d}
-                for i, j, t, d in r.inconsistent_pairs
-            ],
-            "latency_ms": round(r.latency_ms, 3),
-        })
+        chains_serialized.append(
+            {
+                "chain_id": r.chain_id,
+                "chain_type": r.chain_type,
+                "contradiction_type": r.contradiction_type,
+                "expected_consistent": r.expected_consistent,
+                "global_detected": r.global_detected,
+                "severity": r.severity,
+                "n_inconsistent_pairs": r.n_inconsistent_pairs,
+                "inconsistent_pairs": [
+                    {"step_i": i, "step_j": j, "type": t, "description": d}
+                    for i, j, t, d in r.inconsistent_pairs
+                ],
+                "latency_ms": round(r.latency_ms, 3),
+            }
+        )
 
     return {
         "experiment": "271_global_consistency_live",
@@ -640,8 +618,7 @@ def _generate_live_chain(
     if inject:
         # Append contradiction injection to final turn
         t3 = (
-            t3
-            + f" Wait — re-examining the calculation, the {entity} is actually {v_wrong}, "
+            t3 + f" Wait — re-examining the calculation, the {entity} is actually {v_wrong}, "
             f"not {v_right} as I said earlier."
         )
 

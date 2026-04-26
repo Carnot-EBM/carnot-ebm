@@ -103,8 +103,8 @@ def _run(tmpl: ExperimentTemplate) -> dict:
     labels = [0 if r.get("label", "incorrect") == "correct" else 1 for r in records]
 
     n_total = len(texts)
-    n_pos = sum(labels)       # incorrect steps
-    n_neg = n_total - n_pos   # correct steps
+    n_pos = sum(labels)  # incorrect steps
+    n_neg = n_total - n_pos  # correct steps
 
     # ------------------------------------------------------------------
     # 2. Guard: insufficient data

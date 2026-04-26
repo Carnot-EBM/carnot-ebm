@@ -84,9 +84,7 @@ class TestCpuBackend:
         """SCENARIO-SAMPLE-007: sample at high beta on ferromagnet is biased."""
         b, J = self._ferromagnetic_problem(8)
         backend = CpuBackend(seed=42)
-        samples = backend.sample(
-            b, J, n_samples=20, config={"beta": 15.0, "n_warmup": 500}
-        )
+        samples = backend.sample(b, J, n_samples=20, config={"beta": 15.0, "n_warmup": 500})
         mean_magnetization = samples.mean()
         assert mean_magnetization > 0.7, f"Expected high magnetization, got {mean_magnetization}"
 

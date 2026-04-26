@@ -45,7 +45,6 @@ import numpy as np
 
 from carnot.models.kaem_energy import KAEMEnergy
 
-
 # ---------------------------------------------------------------------------
 # LowRankProjector
 # ---------------------------------------------------------------------------
@@ -95,7 +94,7 @@ class LowRankProjector:
         # Store all singular values for explained_variance_ratio computation.
         # Variance contribution of each component is proportional to s_i^2.
         self._singular_values: np.ndarray = s.astype(np.float64)
-        self._variance: np.ndarray = (s ** 2).astype(np.float64)
+        self._variance: np.ndarray = (s**2).astype(np.float64)
         self._total_variance: float = float(np.sum(self._variance))
 
         # Top-k projection matrix: shape (k_actual, n_vars).
@@ -280,9 +279,7 @@ class LowRankKAEMEnergy:
         Spec: REQ-SAMPLE-027
         """
         if data.ndim != 2 or data.shape[1] != self.n_vars:
-            raise ValueError(
-                f"data must have shape (n_samples, {self.n_vars}), got {data.shape}"
-            )
+            raise ValueError(f"data must have shape (n_samples, {self.n_vars}), got {data.shape}")
 
         # Step 1: Compute SVD projector on training data
         self.projector = LowRankProjector(data, k=self.k)

@@ -240,9 +240,7 @@ def run_smoke_test(
     # --- CI-safe path: CARNOT_FORCE_LIVE not set ---
     # Return immediately without touching GPU hardware.
     if not force_live:
-        _log.info(
-            "run_smoke_test: CARNOT_FORCE_LIVE not set — returning ci_skip result"
-        )
+        _log.info("run_smoke_test: CARNOT_FORCE_LIVE not set — returning ci_skip result")
         return SmokeTestResult(
             inference_mode="ci_skip",
             n_questions=n_questions,
@@ -268,9 +266,7 @@ def run_smoke_test(
 
         diag = diagnose_live_gpu([model_id])
         reason = diag.failure_reason or (prewarm_result.stall_root_cause or "model prewarm failed")
-        raise RuntimeError(
-            f"Live GPU required but unavailable: {reason}"
-        )
+        raise RuntimeError(f"Live GPU required but unavailable: {reason}")
 
     # Step 2: Load model for live inference.
     _log.info("run_smoke_test: loading model %s on GPU 0", model_id)

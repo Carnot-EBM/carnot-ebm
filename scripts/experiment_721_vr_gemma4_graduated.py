@@ -51,6 +51,7 @@ from scripts.experiment_template import (  # noqa: E402
     InferenceResult,
 )
 from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: E402
+import contextlib
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 _log = logging.getLogger(__name__)
@@ -66,60 +67,138 @@ _GEMMA4_MODEL_ID = "google/gemma-4-E4B-it"
 _ABSTAIN_CONFIDENCE_THRESHOLD = 0.90
 
 # The 5 threshold conditions to test (REQ-VER-031-1).
-_CONDITIONS: list[Union[float, str]] = [0.10, 0.20, 0.30, 0.40, "abstain"]
+_CONDITIONS: list[float | str] = [0.10, 0.20, 0.30, 0.40, "abstain"]
 
 # 50 GSM8K-style arithmetic questions per condition (REQ-VER-031-2).
 # These are drawn from the same fixed pool used in Exp 720 so results are
 # directly comparable without network access.
 _QUESTIONS: list[dict[str, Any]] = [
-    {"question": "Janet has 3 apples. She buys 5 more. How many apples does Janet have now?", "answer": 8},
+    {
+        "question": "Janet has 3 apples. She buys 5 more. How many apples does Janet have now?",
+        "answer": 8,
+    },
     {"question": "A store sells 12 items per hour. How many items in 3 hours?", "answer": 36},
     {"question": "Tom has $20 and spends $7. How much does Tom have left?", "answer": 13},
     {"question": "A rectangle is 6 cm wide and 4 cm tall. What is the area?", "answer": 24},
     {"question": "Sarah runs 2 miles each day for 5 days. How many miles total?", "answer": 10},
-    {"question": "15 students share 60 candies equally. How many does each student get?", "answer": 4},
+    {
+        "question": "15 students share 60 candies equally. How many does each student get?",
+        "answer": 4,
+    },
     {"question": "A bag has 8 red and 5 blue marbles. How many marbles in total?", "answer": 13},
-    {"question": "John earns $9 per hour and works 8 hours. How much does John earn?", "answer": 72},
+    {
+        "question": "John earns $9 per hour and works 8 hours. How much does John earn?",
+        "answer": 72,
+    },
     {"question": "A class has 30 students. 12 are absent. How many are present?", "answer": 18},
     {"question": "Maria bakes 4 batches of 6 cookies each. How many cookies total?", "answer": 24},
     {"question": "A train travels 60 km/h for 2 hours. How far does it travel?", "answer": 120},
-    {"question": "Pedro has 50 stickers and gives away 15. How many does Pedro have left?", "answer": 35},
-    {"question": "A tank holds 100 liters. It is 40% full. How many liters are in the tank?", "answer": 40},
+    {
+        "question": "Pedro has 50 stickers and gives away 15. How many does Pedro have left?",
+        "answer": 35,
+    },
+    {
+        "question": "A tank holds 100 liters. It is 40% full. How many liters are in the tank?",
+        "answer": 40,
+    },
     {"question": "Lucy reads 25 pages per day. How many pages in 4 days?", "answer": 100},
     {"question": "There are 7 shelves with 9 books each. How many books total?", "answer": 63},
-    {"question": "A shirt costs $15. A pair of pants costs $25. What is the total cost?", "answer": 40},
+    {
+        "question": "A shirt costs $15. A pair of pants costs $25. What is the total cost?",
+        "answer": 40,
+    },
     {"question": "A garden is 8 m long and 3 m wide. What is the perimeter?", "answer": 22},
     {"question": "David saves $12 per week for 6 weeks. How much does David save?", "answer": 72},
     {"question": "A box contains 48 eggs. 16 eggs are used. How many remain?", "answer": 32},
-    {"question": "Five friends share a $35 dinner bill equally. How much does each pay?", "answer": 7},
-    {"question": "A pool holds 200 gallons. It leaks 5 gallons per hour. After 10 hours, how much remains?", "answer": 150},
+    {
+        "question": "Five friends share a $35 dinner bill equally. How much does each pay?",
+        "answer": 7,
+    },
+    {
+        "question": "A pool holds 200 gallons. It leaks 5 gallons per hour. After 10 hours, how much remains?",
+        "answer": 150,
+    },
     {"question": "Anna types 40 words per minute. How many words in 3 minutes?", "answer": 120},
-    {"question": "A farmer has 5 cows and each gives 8 liters of milk daily. Total daily milk?", "answer": 40},
-    {"question": "A movie is 90 minutes long. It has a 15-minute intermission. Total runtime?", "answer": 105},
+    {
+        "question": "A farmer has 5 cows and each gives 8 liters of milk daily. Total daily milk?",
+        "answer": 40,
+    },
+    {
+        "question": "A movie is 90 minutes long. It has a 15-minute intermission. Total runtime?",
+        "answer": 105,
+    },
     {"question": "Carlos has 3 dozen eggs. He uses 7. How many eggs remain?", "answer": 29},
     {"question": "A baker makes 5 dozen rolls. He sells 32. How many are left?", "answer": 28},
-    {"question": "A car uses 8 liters per 100 km. How many liters for a 350 km trip?", "answer": 28},
-    {"question": "Emma buys 4 notebooks at $3 each and 2 pens at $1.50 each. Total cost?", "answer": 15},
+    {
+        "question": "A car uses 8 liters per 100 km. How many liters for a 350 km trip?",
+        "answer": 28,
+    },
+    {
+        "question": "Emma buys 4 notebooks at $3 each and 2 pens at $1.50 each. Total cost?",
+        "answer": 15,
+    },
     {"question": "A factory makes 240 items per day. How many items in 2 weeks?", "answer": 3360},
     {"question": "A class of 28 students splits into groups of 4. How many groups?", "answer": 7},
     {"question": "Mark runs 5 km in 30 minutes. At that rate, how far in 1 hour?", "answer": 10},
-    {"question": "A bookshelf has 6 shelves with 14 books each. 20 books are removed. How many remain?", "answer": 64},
-    {"question": "A pizza is cut into 8 slices. 3 people each eat 2 slices. How many slices remain?", "answer": 2},
-    {"question": "A swimming pool is filled at 150 liters per minute. How long to fill 4500 liters?", "answer": 30},
-    {"question": "Sophie earns $15 per hour. She works 6 hours on Monday and 4 hours on Tuesday. Total earnings?", "answer": 150},
-    {"question": "A garden has 5 rows of tomatoes with 8 plants each and 3 rows of peppers with 6 plants each. Total plants?", "answer": 58},
-    {"question": "Tom has $100. He spends $35 on groceries and $18 on gas. How much does Tom have left?", "answer": 47},
-    {"question": "A school has 450 students. 60% are girls. How many boys are there?", "answer": 180},
-    {"question": "A recipe uses 250g flour per batch. How much flour for 4 batches?", "answer": 1000},
-    {"question": "A theater has 20 rows with 15 seats each. 175 seats are occupied. How many are empty?", "answer": 125},
-    {"question": "An athlete runs 3 km in the morning and 5 km in the evening for 5 days. Total km?", "answer": 40},
-    {"question": "A jar has 50 coins: 20 quarters and 30 dimes. What is the total value in cents?", "answer": 800},
-    {"question": "A builder lays 120 bricks per hour. How many bricks in a 7.5-hour workday?", "answer": 900},
+    {
+        "question": "A bookshelf has 6 shelves with 14 books each. 20 books are removed. How many remain?",
+        "answer": 64,
+    },
+    {
+        "question": "A pizza is cut into 8 slices. 3 people each eat 2 slices. How many slices remain?",
+        "answer": 2,
+    },
+    {
+        "question": "A swimming pool is filled at 150 liters per minute. How long to fill 4500 liters?",
+        "answer": 30,
+    },
+    {
+        "question": "Sophie earns $15 per hour. She works 6 hours on Monday and 4 hours on Tuesday. Total earnings?",
+        "answer": 150,
+    },
+    {
+        "question": "A garden has 5 rows of tomatoes with 8 plants each and 3 rows of peppers with 6 plants each. Total plants?",
+        "answer": 58,
+    },
+    {
+        "question": "Tom has $100. He spends $35 on groceries and $18 on gas. How much does Tom have left?",
+        "answer": 47,
+    },
+    {
+        "question": "A school has 450 students. 60% are girls. How many boys are there?",
+        "answer": 180,
+    },
+    {
+        "question": "A recipe uses 250g flour per batch. How much flour for 4 batches?",
+        "answer": 1000,
+    },
+    {
+        "question": "A theater has 20 rows with 15 seats each. 175 seats are occupied. How many are empty?",
+        "answer": 125,
+    },
+    {
+        "question": "An athlete runs 3 km in the morning and 5 km in the evening for 5 days. Total km?",
+        "answer": 40,
+    },
+    {
+        "question": "A jar has 50 coins: 20 quarters and 30 dimes. What is the total value in cents?",
+        "answer": 800,
+    },
+    {
+        "question": "A builder lays 120 bricks per hour. How many bricks in a 7.5-hour workday?",
+        "answer": 900,
+    },
     {"question": "A cyclist rides 18 km in 45 minutes. Speed in km per hour?", "answer": 24},
-    {"question": "A class collected 240 bottles for recycling over 8 weeks. Average per week?", "answer": 30},
+    {
+        "question": "A class collected 240 bottles for recycling over 8 weeks. Average per week?",
+        "answer": 30,
+    },
     {"question": "Lily saves $25 per month. After 8 months she has saved how much?", "answer": 200},
     {"question": "A jacket costs $80. It is on sale for 25% off. Sale price?", "answer": 60},
-    {"question": "A class of 40 students scored an average of 75. Total score points?", "answer": 3000},
+    {
+        "question": "A class of 40 students scored an average of 75. Total score points?",
+        "answer": 3000,
+    },
     {"question": "A store increases prices by 10%. A $50 item now costs?", "answer": 55},
     {"question": "3/8 of 96 students passed the exam. How many passed?", "answer": 36},
 ]
@@ -201,7 +280,7 @@ def _run_one_question_with_threshold(
     pipeline: Any,
     question: str,
     ground_truth: float | int,
-    threshold: Union[float, str],
+    threshold: float | str,
 ) -> dict[str, Any]:
     """Run one question with a specific threshold condition.
 
@@ -259,9 +338,7 @@ def _run_one_question_with_threshold(
                 else baseline_response
             )
         except Exception as exc:
-            _log.warning(
-                "VR pipeline failed for threshold=%s: %s — using baseline", threshold, exc
-            )
+            _log.warning("VR pipeline failed for threshold=%s: %s — using baseline", threshold, exc)
             vr_response = baseline_response
 
     vr_numeric = _extract_numeric_answer(vr_response)
@@ -282,7 +359,7 @@ def _run_one_question_with_threshold(
 
 def evaluate_condition(
     pipeline: Any,
-    threshold: Union[float, str],
+    threshold: float | str,
     questions: list[dict[str, Any]],
 ) -> dict[str, Any]:
     """Run 50 questions for a single threshold condition.
@@ -351,7 +428,7 @@ def evaluate_condition(
 
 def classify_verdict(
     results_per_condition: list[dict[str, Any]],
-) -> tuple[str, Union[float, str, None]]:
+) -> tuple[str, float | str | None]:
     """Classify the honest_verdict and determine the optimal threshold.
 
     Returns (honest_verdict, optimal_threshold).
@@ -377,12 +454,11 @@ def classify_verdict(
     threshold-tuning task (requires calibration curve work).
     """
     positive_numeric: list[dict[str, Any]] = [
-        r for r in results_per_condition
+        r
+        for r in results_per_condition
         if r["threshold"] != "abstain" and r["signed_improvement"] > 0
     ]
-    abstain_result = next(
-        (r for r in results_per_condition if r["threshold"] == "abstain"), None
-    )
+    abstain_result = next((r for r in results_per_condition if r["threshold"] == "abstain"), None)
     abstain_positive = abstain_result is not None and abstain_result["signed_improvement"] > 0
 
     if positive_numeric:
@@ -415,7 +491,6 @@ def main() -> None:
     tmpl.setup()
 
     with ExperimentTimeoutWatchdog(721, timeout_minutes=90, result_path=_DELIVERABLE):
-
         # ------------------------------------------------------------------
         # Step 1: GPU setup — prefer SOTA GGUFs on GPU 1.
         # Falls back to the tiny Gemma4 model with a warning that output
@@ -423,6 +498,7 @@ def main() -> None:
         # ------------------------------------------------------------------
         try:
             from carnot.inference.sota_models import cached_sota_pair  # noqa: PLC0415
+
             specs = cached_sota_pair(gpu_indices=(1,))
         except Exception:
             specs = None
@@ -489,21 +565,21 @@ def main() -> None:
         combined_batch_log: list[dict[str, Any]] = []
 
         for i, threshold in enumerate(_CONDITIONS):
-            _log.info(
-                "Evaluating condition %d/5: threshold=%s", i + 1, threshold
-            )
+            _log.info("Evaluating condition %d/5: threshold=%s", i + 1, threshold)
             t_cond_start = time.perf_counter()
             condition_result = evaluate_condition(pipeline, threshold, _QUESTIONS)
             condition_result["duration_s"] = round(time.perf_counter() - t_cond_start, 3)
 
-            results_per_condition.append({
-                "threshold": condition_result["threshold"],
-                "signed_improvement": condition_result["signed_improvement"],
-                "baseline_accuracy": condition_result["baseline_accuracy"],
-                "vr_accuracy": condition_result["vr_accuracy"],
-                "n_constraint_applied": condition_result["n_constraint_applied"],
-                "duration_s": condition_result["duration_s"],
-            })
+            results_per_condition.append(
+                {
+                    "threshold": condition_result["threshold"],
+                    "signed_improvement": condition_result["signed_improvement"],
+                    "baseline_accuracy": condition_result["baseline_accuracy"],
+                    "vr_accuracy": condition_result["vr_accuracy"],
+                    "n_constraint_applied": condition_result["n_constraint_applied"],
+                    "duration_s": condition_result["duration_s"],
+                }
+            )
             combined_batch_log.extend(condition_result["batch_log"])
 
             _log.info(
@@ -529,9 +605,7 @@ def main() -> None:
         # Step 4: Classify verdict (REQ-VER-031-5).
         # ------------------------------------------------------------------
         honest_verdict, optimal_threshold = classify_verdict(results_per_condition)
-        _log.info(
-            "honest_verdict=%s optimal_threshold=%s", honest_verdict, optimal_threshold
-        )
+        _log.info("honest_verdict=%s optimal_threshold=%s", honest_verdict, optimal_threshold)
 
         # ------------------------------------------------------------------
         # Step 5: Write deliverable.
@@ -551,10 +625,8 @@ def main() -> None:
         tmpl._output_path.parent.mkdir(parents=True, exist_ok=True)
         tmpl._output_path.write_text(json.dumps(artifact, indent=2))
 
-        try:
+        with contextlib.suppress(Exception):
             pipeline.close()
-        except Exception:
-            pass
 
     tmpl.assert_deliverable_written()
 

@@ -113,12 +113,14 @@ def _make_synthetic_trainer_dicts(n: int = 100, seed: int = 543) -> list:
         label = int(i % 2)
         emb = rng.randn(256).astype(np.float32)
         emb[0] += (1.0 if label else -1.0) * 0.5
-        pairs.append({
-            "embedding": emb.tolist(),
-            "violated_arithmetic": label,
-            "violated_code": label,
-            "violated_logic": label,
-        })
+        pairs.append(
+            {
+                "embedding": emb.tolist(),
+                "violated_arithmetic": label,
+                "violated_code": label,
+                "violated_logic": label,
+            }
+        )
     return pairs
 
 
@@ -174,7 +176,9 @@ print(
 final_auc = trainer.evaluate_auc(test_dicts)
 auc_v7_baseline = 0.967  # v7 baseline from Exp 535 (AUC=0.966667, rounded)
 auc_improvement = final_auc - auc_v7_baseline
-print(f"  [543] Test AUC: {final_auc:.4f} (vs v7 baseline {auc_v7_baseline:.3f}, delta={auc_improvement:+.4f})")
+print(
+    f"  [543] Test AUC: {final_auc:.4f} (vs v7 baseline {auc_v7_baseline:.3f}, delta={auc_improvement:+.4f})"
+)
 
 # ---------------------------------------------------------------------------
 # Step h: Save model checkpoint to results/jepa_predictor_543_v8.safetensors

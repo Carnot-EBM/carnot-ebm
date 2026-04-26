@@ -369,7 +369,9 @@ def verify_arithmetic_qubo(a: int, b: int, claimed_result: int) -> dict:
                 # ΔE = Q_ii*(new^2 - old^2) + sum_j≠i (Q_ij+Q_ji)*x[j]*(new-old)
                 # Since new^2=new, old^2=old for binary: ΔE = Q_ii*(new-old) + ...
                 flip = new_val - old_val  # +1 or -1
-                delta_e = Q_full[i, i] * flip + flip * (Q_full[i, :] @ x + Q_full[:, i] @ x - 2 * Q_full[i, i] * old_val)
+                delta_e = Q_full[i, i] * flip + flip * (
+                    Q_full[i, :] @ x + Q_full[:, i] @ x - 2 * Q_full[i, i] * old_val
+                )
                 if delta_e < 0 or rng.random() < np.exp(-beta_t * delta_e):
                     x[i] = new_val
                     e += delta_e
@@ -454,9 +456,11 @@ def main() -> int:
         result = verify_arithmetic_qubo(a, b, claimed)
         icon = "✓" if result["claim_correct"] else "✗"
         ising_icon = "✓" if result["ising_correct"] else "✗"
-        print(f"  [{icon}] {a} + {b} = {claimed} (correct={result['correct']}) "
-              f"ising_found={result['ising_found']} [{ising_icon}] "
-              f"E={result['best_energy']:.1f} — {desc}")
+        print(
+            f"  [{icon}] {a} + {b} = {claimed} (correct={result['correct']}) "
+            f"ising_found={result['ising_found']} [{ising_icon}] "
+            f"E={result['best_energy']:.1f} — {desc}"
+        )
         results.append(result)
 
     # Summary.

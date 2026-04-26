@@ -84,8 +84,10 @@ def _run() -> None:
     n_svamp = sum(1 for p in curated if p.source_domain == "svamp")
     n_total = len(curated)
 
-    print(f"[Exp 824] Curated corpus: {n_total} pairs "
-          f"(gsm8k={n_gsm8k}, humaneval={n_humaneval}, svamp={n_svamp})")
+    print(
+        f"[Exp 824] Curated corpus: {n_total} pairs "
+        f"(gsm8k={n_gsm8k}, humaneval={n_humaneval}, svamp={n_svamp})"
+    )
 
     # ------------------------------------------------------------------
     # Step 2: Train JEPA v23 with triplet loss

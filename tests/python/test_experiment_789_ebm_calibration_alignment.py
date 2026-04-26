@@ -2,6 +2,7 @@
 
 Spec: REQ-CALIB-001, REQ-CALIB-002, SCENARIO-CALIB-001, SCENARIO-CALIB-002
 """
+
 from __future__ import annotations
 
 import json
@@ -149,8 +150,28 @@ class TestBuildBins:
 
     def test_bins_are_sorted_by_energy(self):
         # Bins must be in ascending energy order. REQ-CALIB-001.
-        energies = [5.0, 1.0, 3.0, 2.0, 4.0, 6.0, 7.0, 8.0, 9.0, 10.0,
-                    11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0]
+        energies = [
+            5.0,
+            1.0,
+            3.0,
+            2.0,
+            4.0,
+            6.0,
+            7.0,
+            8.0,
+            9.0,
+            10.0,
+            11.0,
+            12.0,
+            13.0,
+            14.0,
+            15.0,
+            16.0,
+            17.0,
+            18.0,
+            19.0,
+            20.0,
+        ]
         labels = [0] * 20
         calibrator = EBMCalibrator(n_bins=2)
         bins = calibrator._build_bins(energies, labels)
@@ -188,6 +209,7 @@ class TestFitIsotonic:
     def test_fit_isotonic_returns_sklearn_object(self):
         # fit_isotonic must return a fitted sklearn IsotonicRegression.
         from sklearn.isotonic import IsotonicRegression
+
         rng = np.random.default_rng(1)
         energies = rng.standard_normal(50).tolist()
         labels = rng.integers(0, 2, 50).tolist()
@@ -325,6 +347,7 @@ class TestLoadLabeledSteps:
         (fover_dir / "fover_labeled_steps_live.json").write_text(json.dumps(data))
         # Temporarily patch _FOVER_V1 path via monkeypatching the repo root
         import scripts.experiment_789_ebm_calibration_alignment as mod
+
         orig_fover_v1 = mod._FOVER_V1
         orig_fover_v2 = mod._FOVER_V2
         mod._FOVER_V1 = "results/fover_labeled_steps_live.json"
@@ -347,6 +370,7 @@ class TestLoadLabeledSteps:
         (fover_dir / "fover_labeled_steps_live.json").write_text(json.dumps(v1))
         (fover_dir / "fover_labeled_steps_live_v2.json").write_text(json.dumps(v2))
         import scripts.experiment_789_ebm_calibration_alignment as mod
+
         orig_v1 = mod._FOVER_V1
         orig_v2 = mod._FOVER_V2
         mod._FOVER_V1 = "results/fover_labeled_steps_live.json"
@@ -365,6 +389,7 @@ class TestLoadLabeledSteps:
         v1 = [{"step_text": "A", "label": "correct"}]
         (fover_dir / "fover_labeled_steps_live.json").write_text(json.dumps(v1))
         import scripts.experiment_789_ebm_calibration_alignment as mod
+
         orig_v1 = mod._FOVER_V1
         orig_v2 = mod._FOVER_V2
         mod._FOVER_V1 = "results/fover_labeled_steps_live.json"

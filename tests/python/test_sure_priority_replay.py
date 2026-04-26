@@ -205,9 +205,7 @@ class TestSuRePriorityReplay:
         batch = replay.get_replay_batch(n=len(energies))
         # Verify first element has higher surprise than last (at minimum)
         # Get the actual buffer items to check
-        sorted_items = sorted(
-            replay._buffer, key=lambda x: x.surprise_score, reverse=True
-        )
+        sorted_items = sorted(replay._buffer, key=lambda x: x.surprise_score, reverse=True)
         # Returned dicts should match sorted order
         for returned, expected in zip(batch, sorted_items):
             assert returned == expected.violation

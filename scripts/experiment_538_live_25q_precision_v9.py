@@ -84,6 +84,7 @@ from carnot.pipeline.jit_vram_check import JITVRAMCheck
 from carnot.pipeline.live_gpu_gate import LiveGPUGate
 from carnot.pipeline.live_100q_v7_helpers import _extract_answer, _is_correct
 from scripts.experiment_template import ExperimentTemplate  # noqa: E402
+import contextlib
 
 _log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -130,13 +131,16 @@ def _load_gsm8k_questions(n: int, seed: int) -> list[dict]:
         ds = load_dataset("gsm8k", "main", split="test")
         # Deterministic shuffle then take N
         import random
+
         rng = random.Random(seed)
         indices = list(range(len(ds)))
         rng.shuffle(indices)
         selected = indices[:n]
         return [{"question": ds[i]["question"], "answer": ds[i]["answer"]} for i in selected]
     except Exception as exc:
-        _log.warning("_load_gsm8k_questions: dataset load failed (%s) — using synthetic fallback", exc)
+        _log.warning(
+            "_load_gsm8k_questions: dataset load failed (%s) — using synthetic fallback", exc
+        )
         # Synthetic fallback for unit tests and offline environments
         return [
             {"question": f"Synthetic question {i}: What is {i} + {i}?", "answer": f"#### {i * 2}"}
@@ -159,7 +163,7 @@ def _qwen_generate(pipeline: Any, prompt: str) -> str:
         return f"[qwen_error: {exc}]"
 
 
-def _load_qwen_pipeline(device: str) -> Optional[Any]:
+def _load_qwen_pipeline(device: str) -> Any | None:
     """Load Qwen3.5-0.8B as a HuggingFace text-generation pipeline on the given device.
 
     Returns None if transformers is not available or the model fails to load.
@@ -181,7 +185,7 @@ def _load_qwen_pipeline(device: str) -> Optional[Any]:
 def _build_v9_artifact(
     results: dict,
     inference_mode: str,
-    cot_pairs_path: Optional[str],
+    cot_pairs_path: str | None,
     per_question_latencies: list[float],
     env_autofix_dict: dict,
 ) -> dict:
@@ -209,8 +213,9 @@ def _build_v9_artifact(
     signed_improvement = pipeline - baseline
     is_positive = signed_improvement > 0
     retro_033_closed = is_positive and inference_mode == "live_gpu"
-    mean_latency = (sum(per_question_latencies) / len(per_question_latencies)
-                    if per_question_latencies else 0.0)
+    mean_latency = (
+        sum(per_question_latencies) / len(per_question_latencies) if per_question_latencies else 0.0
+    )
 
     if inference_mode == "gpu_required":
         honest_verdict = "gpu_required"
@@ -251,7 +256,7 @@ def _write_cot_pairs(pairs: list[dict], path: str) -> int:
 # ---------------------------------------------------------------------------
 
 
-def run_experiment(repo_root: Optional[Path] = None) -> dict:
+def run_experiment(repo_root: Path | None = None) -> dict:
     """Run Exp 538: 25-question live precision benchmark.
 
     All exit paths (deferred, live, error) write the deliverable JSON.
@@ -316,7 +321,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         retry_wait_s=5,
     )
     if not gemma4_gate.is_cleared:
-        _log.warning("JIT VRAM gate blocked Gemma4-INT4: only %.1f GB free", gemma4_gate.available_gb)
+        _log.warning(
+            "JIT VRAM gate blocked Gemma4-INT4: only %.1f GB free", gemma4_gate.available_gb
+        )
         blocked = tmpl.build_result(
             {
                 **_build_v9_artifact({}, "gpu_required", None, [], env_autofix_dict),
@@ -334,7 +341,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         retry_wait_s=5,
     )
     if not qwen_gate.is_cleared:
-        _log.warning("JIT VRAM gate blocked Qwen3.5-0.8B: only %.1f GB free", qwen_gate.available_gb)
+        _log.warning(
+            "JIT VRAM gate blocked Qwen3.5-0.8B: only %.1f GB free", qwen_gate.available_gb
+        )
         blocked = tmpl.build_result(
             {
                 **_build_v9_artifact({}, "gpu_required", None, [], env_autofix_dict),
@@ -354,7 +363,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         Path.home() / ".cache" / "huggingface" / "hub" / "models--google--gemma-4-e4b-it" / "blobs",
         Path("/data/models/gemma4"),
     ]
-    gemma4_gguf_path: Optional[str] = None
+    gemma4_gguf_path: str | None = None
     for candidate in gemma4_path_candidates:
         if candidate.exists():
             gguf_files = list(candidate.glob("*.gguf"))
@@ -362,7 +371,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
                 gemma4_gguf_path = str(gguf_files[0])
                 break
 
-    gemma4_loader: Optional[Gemma4QuantizedLoader] = None
+    gemma4_loader: Gemma4QuantizedLoader | None = None
     if gemma4_gguf_path:
         try:
             gemma4_loader = Gemma4QuantizedLoader(
@@ -379,10 +388,13 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     else:
         _log.warning("No Gemma4 GGUF checkpoint found — will skip Gemma4")
 
-    qwen_pipe: Optional[Any] = None
+    qwen_pipe: Any | None = None
     try:
         import torch
-        qwen_device = "cuda:1" if torch.cuda.is_available() and torch.cuda.device_count() > 1 else "cuda:0"
+
+        qwen_device = (
+            "cuda:1" if torch.cuda.is_available() and torch.cuda.device_count() > 1 else "cuda:0"
+        )
         qwen_pipe = _load_qwen_pipeline(qwen_device)
         if qwen_pipe:
             _log.info("Qwen pipeline loaded on %s", qwen_device)
@@ -444,7 +456,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
 
             # Extract violations
             try:
-                vericot_violations = vericot.detect_violations(baseline_resp) if baseline_resp else []
+                vericot_violations = (
+                    vericot.detect_violations(baseline_resp) if baseline_resp else []
+                )
             except Exception:
                 vericot_violations = []
             try:
@@ -469,10 +483,8 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
                     _log.warning("Repair inference error: %s", exc)
                     pipeline_resp = baseline_resp
                 # Re-verify after repair (for provenance; result not gated on this)
-                try:
+                with contextlib.suppress(Exception):
                     vericot.detect_violations(pipeline_resp)
-                except Exception:
-                    pass
             else:
                 pipeline_resp = baseline_resp
 
@@ -485,16 +497,22 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
             pipeline_correct_total += int(pc)
             n_scored += 1
 
-            all_cot_pairs.append({
-                "question": prompt,
-                "cot_text": pipeline_resp,
-                "correct": pc,
-                "model_id": model_id,
-                "latency_s": lat,
-            })
+            all_cot_pairs.append(
+                {
+                    "question": prompt,
+                    "cot_text": pipeline_resp,
+                    "correct": pc,
+                    "model_id": model_id,
+                    "latency_s": lat,
+                }
+            )
             _log.info(
                 "[%s] q=%d baseline=%s pipeline=%s lat=%.1fs",
-                model_id, n_scored, bc, pc, lat,
+                model_id,
+                n_scored,
+                bc,
+                pc,
+                lat,
             )
 
     # -----------------------------------------------------------------------
@@ -502,11 +520,17 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     # -----------------------------------------------------------------------
     fover = FOVERAnnotator()
     # annotate_corpus expects list of dicts with 'response' key
-    fover_inputs = [{"response": p["cot_text"], "question_id": str(i)} for i, p in enumerate(all_cot_pairs)]
+    fover_inputs = [
+        {"response": p["cot_text"], "question_id": str(i)} for i, p in enumerate(all_cot_pairs)
+    ]
     try:
         annotated = fover.annotate_corpus(fover_inputs)
         training_pairs = fover.to_training_pairs(annotated, responses=all_cot_pairs)
-        _log.info("FOVERAnnotator: %d training pairs from %d responses", len(training_pairs), len(fover_inputs))
+        _log.info(
+            "FOVERAnnotator: %d training pairs from %d responses",
+            len(training_pairs),
+            len(fover_inputs),
+        )
     except Exception as exc:
         _log.warning("FOVERAnnotator failed: %s — writing raw CoT pairs only", exc)
         training_pairs = []
@@ -515,7 +539,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     n_cot_written = 0
     try:
         n_cot_written = _write_cot_pairs(all_cot_pairs, cot_path)
-        cot_pairs_path: Optional[str] = cot_path
+        cot_pairs_path: str | None = cot_path
         _log.info("CoT pairs written: %d to %s", n_cot_written, cot_path)
     except Exception as exc:
         _log.warning("CoT pairs write failed: %s", exc)
@@ -552,9 +576,12 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     _log.info(
         "HEADLINE: honest_verdict=%s retro_033_closed=%s retro_055_resolved=%s "
         "baseline=%.4f pipeline=%.4f delta=%.4f mean_latency=%.1fs",
-        v9_fields["honest_verdict"], v9_fields["retro_033_closed"],
+        v9_fields["honest_verdict"],
+        v9_fields["retro_033_closed"],
         v9_fields["retro_055_resolved"],
-        baseline_acc, pipeline_acc, v9_fields["signed_improvement"],
+        baseline_acc,
+        pipeline_acc,
+        v9_fields["signed_improvement"],
         v9_fields["mean_latency_s"],
     )
 
@@ -580,7 +607,9 @@ def main() -> None:
     verdict = artifact.get("honest_verdict", "unknown")
     _log.info(
         "Exp %d complete: honest_verdict=%s status=%s",
-        EXP_ID, verdict, artifact.get("status", "unknown"),
+        EXP_ID,
+        verdict,
+        artifact.get("status", "unknown"),
     )
 
 

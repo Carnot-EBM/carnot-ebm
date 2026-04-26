@@ -22,6 +22,7 @@ from python.carnot.pipeline.hls_energy_validator import HLSEnergyValidator
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _ferro_validator(n: int = 4, j: float = 1.0) -> HLSEnergyValidator:
     """Return an HLSEnergyValidator for a fully connected ferromagnetic system.
 
@@ -47,6 +48,7 @@ def _antiferro_validator(n: int = 4, j: float = 1.0) -> HLSEnergyValidator:
 # ---------------------------------------------------------------------------
 # REQ-HW-040: compute_energy — sign convention and basic arithmetic
 # ---------------------------------------------------------------------------
+
 
 class TestComputeEnergy:
     """Spec: REQ-HW-040 — energy function MUST use E = -sum J s s."""
@@ -148,6 +150,7 @@ class TestComputeEnergy:
 # REQ-HW-040: validate_ground_state
 # ---------------------------------------------------------------------------
 
+
 class TestValidateGroundState:
     """Spec: REQ-HW-040 — ground-state validator returns True when energy is negative."""
 
@@ -201,6 +204,7 @@ class TestValidateGroundState:
 # REQ-HW-040: compare_with_python_ising
 # ---------------------------------------------------------------------------
 
+
 class TestCompareWithPythonIsing:
     """Spec: REQ-HW-040 — consistency check across random spin configurations."""
 
@@ -211,9 +215,7 @@ class TestCompareWithPythonIsing:
         """
         v = _ferro_validator(n=4)
         _max_delta, max_delta_pct = v.compare_with_python_ising(n_samples=100)
-        assert max_delta_pct < 10.0, (
-            f"max_delta_pct={max_delta_pct:.2f}% exceeds 10% threshold"
-        )
+        assert max_delta_pct < 10.0, f"max_delta_pct={max_delta_pct:.2f}% exceeds 10% threshold"
 
     def test_returns_finite_floats(self):
         """compare_with_python_ising must return finite float values.
@@ -244,6 +246,7 @@ class TestCompareWithPythonIsing:
         Spec: REQ-HW-040
         """
         import math as _math
+
         # Coupling with J=inf causes energy to be inf.
         n = 2
         j_inf = [[0.0, float("inf")], [float("inf"), 0.0]]
@@ -255,6 +258,7 @@ class TestCompareWithPythonIsing:
 # ---------------------------------------------------------------------------
 # REQ-HW-040: constructor validation
 # ---------------------------------------------------------------------------
+
 
 class TestConstructorValidation:
     """Spec: REQ-HW-040 — constructor must reject invalid inputs."""

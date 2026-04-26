@@ -39,6 +39,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 
 # --- Constraint types ---
 
+
 def verify_arithmetic_constraint(a: int, b: int, claimed_sum: int) -> dict:
     """Verify a + b = claimed_sum via direct computation.
 
@@ -85,7 +86,9 @@ def verify_logical_constraints(claims: list[dict], n_props: int) -> dict:
             J[j, i] += weights_list[k]
 
         sampler = ParallelIsingSampler(
-            n_warmup=500, n_samples=30, steps_per_sample=10,
+            n_warmup=500,
+            n_samples=30,
+            steps_per_sample=10,
             schedule=AnnealingSchedule(0.1, 8.0),
             use_checkerboard=True,
         )
@@ -141,6 +144,7 @@ def verify_mutual_exclusion(claims: list[str], truth: dict[str, bool]) -> dict:
 
 # --- Simulated LLM outputs ---
 
+
 def get_test_scenarios() -> list[dict]:
     """Simulated LLM outputs with self-extracted constraints.
 
@@ -168,8 +172,8 @@ def get_test_scenarios() -> list[dict]:
             "llm_answer": "Yes, the ground is wet.",
             "constraints": [
                 {"type": "implies", "from": 0, "to": 1},  # rain → wet
-                {"type": "true", "prop": 0},                # it rained
-                {"type": "true", "prop": 1},                # ground is wet
+                {"type": "true", "prop": 0},  # it rained
+                {"type": "true", "prop": 1},  # ground is wet
             ],
             "n_props": 2,
             "expected_pass": True,
@@ -209,9 +213,9 @@ def get_test_scenarios() -> list[dict]:
             "question": "Can something be both a mammal and a reptile?",
             "llm_answer": "A platypus is both a mammal and a reptile.",
             "constraints": [
-                {"type": "true", "prop": 0},                # is_mammal
-                {"type": "true", "prop": 1},                # is_reptile
-                {"type": "mutex", "props": [0, 1]},         # mammal XOR reptile
+                {"type": "true", "prop": 0},  # is_mammal
+                {"type": "true", "prop": 1},  # is_reptile
+                {"type": "mutex", "props": [0, 1]},  # mammal XOR reptile
             ],
             "n_props": 2,
             "expected_pass": False,
@@ -221,14 +225,14 @@ def get_test_scenarios() -> list[dict]:
             "question": "If all birds fly, do penguins fly?",
             "llm_answer": "Penguins are birds and all birds fly, so penguins fly.",
             "constraints": [
-                {"type": "true", "prop": 0},                # penguin_is_bird
-                {"type": "implies", "from": 0, "to": 1},   # bird → flies
-                {"type": "true", "prop": 1},                # penguin_flies
+                {"type": "true", "prop": 0},  # penguin_is_bird
+                {"type": "implies", "from": 0, "to": 1},  # bird → flies
+                {"type": "true", "prop": 1},  # penguin_flies
                 # But also:
-                {"type": "true", "prop": 2},                # penguin_is_flightless
-                {"type": "implies", "from": 2, "to": 3},   # flightless → not_flies
-                {"type": "true", "prop": 3},                # not_flies
-                {"type": "mutex", "props": [1, 3]},         # flies XOR not_flies
+                {"type": "true", "prop": 2},  # penguin_is_flightless
+                {"type": "implies", "from": 2, "to": 3},  # flightless → not_flies
+                {"type": "true", "prop": 3},  # not_flies
+                {"type": "mutex", "props": [1, 3]},  # flies XOR not_flies
             ],
             "n_props": 4,
             "expected_pass": False,
@@ -258,11 +262,11 @@ def get_test_scenarios() -> list[dict]:
             "question": "If A implies B, and B implies C, and A is true, is C true?",
             "llm_answer": "A→B, B→C, A is true. So B is true, but C might not be.",
             "constraints": [
-                {"type": "implies", "from": 0, "to": 1},   # A → B
-                {"type": "implies", "from": 1, "to": 2},   # B → C
-                {"type": "true", "prop": 0},                # A is true
-                {"type": "true", "prop": 1},                # B is true (correct)
-                {"type": "false", "prop": 2},               # C is false (WRONG)
+                {"type": "implies", "from": 0, "to": 1},  # A → B
+                {"type": "implies", "from": 1, "to": 2},  # B → C
+                {"type": "true", "prop": 0},  # A is true
+                {"type": "true", "prop": 1},  # B is true (correct)
+                {"type": "false", "prop": 2},  # C is false (WRONG)
             ],
             "n_props": 3,
             "expected_pass": False,
@@ -277,9 +281,7 @@ def verify_scenario(scenario: dict) -> dict:
 
     for constraint in scenario["constraints"]:
         if constraint["type"] == "arithmetic":
-            r = verify_arithmetic_constraint(
-                constraint["a"], constraint["b"], constraint["result"]
-            )
+            r = verify_arithmetic_constraint(constraint["a"], constraint["b"], constraint["result"])
             if not r["satisfied"]:
                 all_pass = False
             results.append(r)
@@ -296,8 +298,9 @@ def verify_scenario(scenario: dict) -> dict:
             pass  # Handled below.
 
     # Verify logical constraints as a group.
-    logical_claims = [c for c in scenario["constraints"]
-                      if c["type"] in ("true", "false", "implies", "mutex")]
+    logical_claims = [
+        c for c in scenario["constraints"] if c["type"] in ("true", "false", "implies", "mutex")
+    ]
     if logical_claims:
         n_props = scenario.get("n_props", 2)
         r = verify_logical_constraints(logical_claims, n_props)

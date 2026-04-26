@@ -83,7 +83,6 @@ def main() -> None:
 
     # Step 2: hard timeout guard
     with ExperimentTimeoutWatchdog(540, timeout_minutes=30):
-
         # Step 3: ExperimentTemplate scaffolding
         tmpl = ExperimentTemplate(
             exp_id=540,

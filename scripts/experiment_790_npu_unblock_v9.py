@@ -67,9 +67,7 @@ TIMEOUT_MINUTES = 45
 CPU_GEMM_US_BASELINE = 117.0
 
 # mlir-aie GitHub API endpoint
-MLIR_AIE_RELEASES_API = (
-    "https://api.github.com/repos/Xilinx/mlir-aie/releases/latest"
-)
+MLIR_AIE_RELEASES_API = "https://api.github.com/repos/Xilinx/mlir-aie/releases/latest"
 
 
 # ---------------------------------------------------------------------------
@@ -277,14 +275,10 @@ def check_vitisai_preconditions() -> dict:
         ninja_found (bool)    — True if `which ninja` finds an executable.
         openblas_found (bool) — True if ldconfig reports a libopenblas.
     """
-    ninja_proc = subprocess.run(
-        ["which", "ninja"], capture_output=True, text=True, timeout=10
-    )
+    ninja_proc = subprocess.run(["which", "ninja"], capture_output=True, text=True, timeout=10)
     ninja_found = ninja_proc.returncode == 0
 
-    openblas_proc = subprocess.run(
-        ["ldconfig", "-p"], capture_output=True, text=True, timeout=10
-    )
+    openblas_proc = subprocess.run(["ldconfig", "-p"], capture_output=True, text=True, timeout=10)
     openblas_found = "openblas" in openblas_proc.stdout.lower()
 
     _log.info("VitisAI pre-conditions: ninja=%s openblas=%s", ninja_found, openblas_found)
@@ -351,9 +345,7 @@ except ImportError as e:
             result["error"] = line.split("=", 1)[1].strip()
 
     if result["npu_gemm_runs"] and result["npu_gemm_us"] > 0:
-        result["npu_speedup_vs_cpu"] = (
-            CPU_GEMM_US_BASELINE / result["npu_gemm_us"]
-        )
+        result["npu_speedup_vs_cpu"] = CPU_GEMM_US_BASELINE / result["npu_gemm_us"]
     _log.info(
         "NPU GEMM benchmark: runs=%s error=%s",
         result["npu_gemm_runs"],

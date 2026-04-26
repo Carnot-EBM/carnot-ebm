@@ -295,6 +295,7 @@ def evaluate_direction(
 
     # Standard deviations for Fisher ratio.
     import numpy as np
+
     std_correct = float(np.std(correct_projs)) if len(correct_projs) > 1 else 0.0
     std_halluc = float(np.std(halluc_projs)) if len(halluc_projs) > 1 else 0.0
 
@@ -384,11 +385,14 @@ def main() -> int:
 
         with torch.no_grad():
             outputs = model.generate(
-                **inputs, max_new_tokens=20, do_sample=False, temperature=1.0,
+                **inputs,
+                max_new_tokens=20,
+                do_sample=False,
+                temperature=1.0,
             )
 
         response = tokenizer.decode(
-            outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True
+            outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
         )
 
         # Extract last-layer activation from the prompt (pre-generation state).
@@ -423,6 +427,7 @@ def main() -> int:
         HallucinationDirectionConfig,
         find_hallucination_direction,
     )
+
     generic_dir = find_hallucination_direction(
         jnp.stack(correct_acts),
         jnp.stack(hallucinated_acts),
@@ -434,7 +439,9 @@ def main() -> int:
     all_results = []
 
     # Generic baseline.
-    generic_eval = evaluate_direction(generic_dir, correct_acts, hallucinated_acts, "generic_mean_diff")
+    generic_eval = evaluate_direction(
+        generic_dir, correct_acts, hallucinated_acts, "generic_mean_diff"
+    )
     all_results.append(generic_eval)
 
     # Concept-specific directions.

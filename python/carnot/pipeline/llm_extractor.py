@@ -12,7 +12,8 @@ from __future__ import annotations
 import math
 import re
 import time
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import jax.numpy as jnp
 
@@ -98,9 +99,7 @@ class LLMConstraintExtractor:
     def supported_domains(self) -> list[str]:
         return ["arithmetic"]
 
-    def extract(
-        self, text: str, domain: str | None = None
-    ) -> list[ConstraintResult]:
+    def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
         if domain is not None and domain not in self.supported_domains:
             self.last_latency_seconds = 0.0
             return []
@@ -126,15 +125,12 @@ class LLMConstraintExtractor:
 
         if self._model_name is None:
             raise RuntimeError(
-                "LLMConstraintExtractor requires model_name or preloaded "
-                "model/tokenizer."
+                "LLMConstraintExtractor requires model_name or preloaded model/tokenizer."
             )
 
         model, tokenizer = self._load_model_fn(self._model_name)
         if model is None or tokenizer is None:
-            raise RuntimeError(
-                f"Could not load extractor model '{self._model_name}'."
-            )
+            raise RuntimeError(f"Could not load extractor model '{self._model_name}'.")
 
         self._model = model
         self._tokenizer = tokenizer

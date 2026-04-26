@@ -35,8 +35,31 @@ def main() -> int:
 
     # Groups of units that should not be mixed without explicit conversion.
     UNIT_GROUPS = {
-        "length_metric": {"m", "cm", "mm", "km", "meter", "meters", "centimeter", "centimeters", "kilometer", "kilometers"},
-        "length_imperial": {"ft", "in", "mi", "yard", "yards", "foot", "feet", "inch", "inches", "mile", "miles"},
+        "length_metric": {
+            "m",
+            "cm",
+            "mm",
+            "km",
+            "meter",
+            "meters",
+            "centimeter",
+            "centimeters",
+            "kilometer",
+            "kilometers",
+        },
+        "length_imperial": {
+            "ft",
+            "in",
+            "mi",
+            "yard",
+            "yards",
+            "foot",
+            "feet",
+            "inch",
+            "inches",
+            "mile",
+            "miles",
+        },
         "mass_metric": {"kg", "g", "mg", "gram", "grams", "kilogram", "kilograms"},
         "mass_imperial": {"lb", "lbs", "oz", "pound", "pounds", "ounce", "ounces"},
         "temp_celsius": {"celsius", "°c"},
@@ -61,9 +84,7 @@ def main() -> int:
         def supported_domains(self) -> list[str]:
             return ["units"]
 
-        def extract(
-            self, text: str, domain: str | None = None
-        ) -> list[ConstraintResult]:
+        def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
             if domain is not None and domain not in self.supported_domains:
                 return []
 
@@ -84,7 +105,13 @@ def main() -> int:
                 if group_a in found_groups and group_b in found_groups:
                     # Check if "convert" or "equivalent" appears, suggesting
                     # intentional cross-system usage.
-                    conversion_words = {"convert", "conversion", "equivalent", "equals", "approximately"}
+                    conversion_words = {
+                        "convert",
+                        "conversion",
+                        "equivalent",
+                        "equals",
+                        "approximately",
+                    }
                     has_conversion = bool(words & conversion_words)
 
                     results.append(

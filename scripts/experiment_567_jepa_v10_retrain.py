@@ -74,15 +74,15 @@ EXP_TITLE = "JEPA v10 Retrain PURE"
 DELIVERABLE = "results/experiment_567_jepa_v10_retrain.json"
 MODEL_DELIVERABLE = "results/jepa_predictor_v10.safetensors"
 CORPUS_PATH = _REPO_ROOT / "results" / "fover_corpus_v2.json"
-V9_AUC = 0.4286          # Exp 557 baseline
+V9_AUC = 0.4286  # Exp 557 baseline
 MARGIN = 1.0
 N_EPOCHS = 200
 EVAL_EVERY = 20
 TRAIN_FRAC = 0.8
 SEED = 42
-FEAT_DIM = 4             # [frac_correct, frac_incorrect, frac_nv, norm_n_steps]
-EMBED_DIM = 128          # Matches Exp 557 JEPAPredictor embed_dim
-N_LAYERS = 2             # Matches Exp 557 JEPAPredictor n_layers
+FEAT_DIM = 4  # [frac_correct, frac_incorrect, frac_nv, norm_n_steps]
+EMBED_DIM = 128  # Matches Exp 557 JEPAPredictor embed_dim
+N_LAYERS = 2  # Matches Exp 557 JEPAPredictor n_layers
 
 
 # ---------------------------------------------------------------------------
@@ -240,7 +240,7 @@ def _build_chain_scores(
         feat = _entry_to_features(e)
         sc = _score_scalar(params, feat)
         chain = JEPAChainScore(
-            chain_id=f"{str(e.get('question',''))[:40]}/{e.get('model_id','')}",
+            chain_id=f"{str(e.get('question', ''))[:40]}/{e.get('model_id', '')}",
             step_scores=[sc],
             min_score=sc,
             is_correct=bool(e.get("is_correct", False)),
@@ -366,7 +366,6 @@ def main() -> None:
     """Run Exp 567: JEPA v10 full retrain with PURE objective."""
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=45):
-
         tmpl = ExperimentTemplate(
             exp_id=EXP_ID,
             title=EXP_TITLE,
@@ -442,7 +441,10 @@ def main() -> None:
 
         _log.info(
             "Best val AUC=%.4f at epoch %d  improvement=%.4f  verdict=%s",
-            v10_auc, best_epoch, auc_improvement, honest_verdict,
+            v10_auc,
+            best_epoch,
+            auc_improvement,
+            honest_verdict,
         )
 
         # ------------------------------------------------------------------

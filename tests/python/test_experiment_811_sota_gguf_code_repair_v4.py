@@ -13,6 +13,7 @@ Covers:
 
 Spec: REQ-BENCH-016, SCENARIO-BENCH-035
 """
+
 from __future__ import annotations
 
 import json

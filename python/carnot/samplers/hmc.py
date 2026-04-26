@@ -42,12 +42,14 @@ Spec: REQ-SAMPLE-002
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 
-from carnot.core.energy import EnergyFunction
+if TYPE_CHECKING:
+    from carnot.core.energy import EnergyFunction
 
 
 @dataclass
@@ -254,7 +256,9 @@ class HMCSampler:
         if key is None:
             key = jrandom.PRNGKey(0)
 
-        def step(carry: tuple[jax.Array, jax.Array], _: None) -> tuple[tuple[jax.Array, jax.Array], jax.Array]:
+        def step(
+            carry: tuple[jax.Array, jax.Array], _: None
+        ) -> tuple[tuple[jax.Array, jax.Array], jax.Array]:
             x, key = carry
             # Split into 3 keys: next iteration, momentum sampling, uniform for accept
             key, k1, k2 = jrandom.split(key, 3)

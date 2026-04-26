@@ -38,7 +38,6 @@ Spec: REQ-VERIFY-002, REQ-VERIFY-003, FR-11
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 from typing import Any
 
@@ -107,13 +106,9 @@ class IsingConstraintModel:
         Spec: REQ-VERIFY-002
         """
         if coupling.ndim != 2 or coupling.shape[0] != coupling.shape[1]:
-            raise ValueError(
-                f"coupling must be a square 2D array, got shape {coupling.shape}"
-            )
+            raise ValueError(f"coupling must be a square 2D array, got shape {coupling.shape}")
         if bias.ndim != 1 or bias.shape[0] != coupling.shape[0]:
-            raise ValueError(
-                f"bias shape {bias.shape} must match coupling dim {coupling.shape[0]}"
-            )
+            raise ValueError(f"bias shape {bias.shape} must match coupling dim {coupling.shape[0]}")
         self.coupling = coupling.astype(np.float32)
         self.bias = bias.astype(np.float32)
         self.config = config
@@ -206,7 +201,7 @@ class IsingConstraintModel:
     # ------------------------------------------------------------------
 
     @classmethod
-    def from_pretrained(cls, path_or_repo: str) -> "IsingConstraintModel":
+    def from_pretrained(cls, path_or_repo: str) -> IsingConstraintModel:
         """Load a constraint model from a local directory or HuggingFace Hub.
 
         **Detailed explanation for engineers:**
@@ -236,11 +231,7 @@ class IsingConstraintModel:
         path = Path(path_or_repo)
 
         # Determine if this is a local path or a Hub repo ID.
-        is_local = (
-            path_or_repo.startswith(".")
-            or path_or_repo.startswith("/")
-            or path.exists()
-        )
+        is_local = path_or_repo.startswith(".") or path_or_repo.startswith("/") or path.exists()
 
         if is_local:
             return cls._load_local(path)
@@ -248,7 +239,7 @@ class IsingConstraintModel:
             return cls._load_hub(path_or_repo)
 
     @classmethod
-    def _load_local(cls, directory: Path) -> "IsingConstraintModel":
+    def _load_local(cls, directory: Path) -> IsingConstraintModel:
         """Load model from a local directory.
 
         Expects:
@@ -273,9 +264,7 @@ class IsingConstraintModel:
         try:
             from safetensors.numpy import load_file
         except ImportError as e:
-            raise ImportError(
-                "safetensors is required: pip install safetensors"
-            ) from e
+            raise ImportError("safetensors is required: pip install safetensors") from e
 
         tensors = load_file(str(weights_path))
         coupling = tensors["coupling"]
@@ -284,7 +273,7 @@ class IsingConstraintModel:
         return cls(coupling=coupling, bias=bias, config=config)
 
     @classmethod
-    def _load_hub(cls, repo_id: str) -> "IsingConstraintModel":
+    def _load_hub(cls, repo_id: str) -> IsingConstraintModel:
         """Download model from HuggingFace Hub and load it.
 
         **Detailed explanation for engineers:**
@@ -298,14 +287,11 @@ class IsingConstraintModel:
             from huggingface_hub import hf_hub_download
         except ImportError as e:
             raise ImportError(
-                "huggingface_hub is required for Hub loading: "
-                "pip install huggingface_hub"
+                "huggingface_hub is required for Hub loading: pip install huggingface_hub"
             ) from e
 
         config_local = hf_hub_download(repo_id=repo_id, filename="config.json")
-        weights_local = hf_hub_download(
-            repo_id=repo_id, filename="model.safetensors"
-        )
+        hf_hub_download(repo_id=repo_id, filename="model.safetensors")
 
         directory = Path(config_local).parent
         return cls._load_local(directory)
@@ -334,9 +320,7 @@ class IsingConstraintModel:
         try:
             from safetensors.numpy import save_file
         except ImportError as e:
-            raise ImportError(
-                "safetensors is required: pip install safetensors"
-            ) from e
+            raise ImportError("safetensors is required: pip install safetensors") from e
 
         out = Path(path)
         out.mkdir(parents=True, exist_ok=True)

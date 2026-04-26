@@ -155,6 +155,7 @@ def _load_gsm8k_questions(n: int) -> list[str]:
     """
     try:
         from datasets import load_dataset  # noqa: PLC0415
+
         ds = load_dataset("openai/gsm8k", "main", split="test")
         return [row["question"] for row in ds.select(range(n))]
     except Exception:
@@ -184,10 +185,12 @@ def main() -> None:
     """
     # Step 0: env autofix BEFORE any heavy import (RETRO-022, RETRO-053)
     from carnot.pipeline.env_autofix import apply_env_autofix  # noqa: PLC0415
+
     apply_env_autofix()
 
     # Step 1: watchdog — 180-minute hard cap for the 200q run
     from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: PLC0415
+
     _watchdog = ExperimentTimeoutWatchdog(
         EXP_ID,
         timeout_minutes=180,
@@ -329,7 +332,7 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
         with torch.no_grad():
             outputs = _hf_model.generate(**inputs, max_new_tokens=256, do_sample=False)
         return _hf_tokenizer.decode(
-            outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True
+            outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
         )
 
     verifier = SymCodeVerifier(llm_caller=None)  # CI-safe: no LLM needed for verification

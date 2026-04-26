@@ -175,6 +175,7 @@ def _update_architecture_md(arch_path: Path, today: str) -> bool:
 
     # Update Last Reconciled date
     import re
+
     updated = re.sub(
         r"(Last Reconciled[:\s*]+)\d{4}-\d{2}-\d{2}",
         rf"\g<1>{today}",
@@ -182,7 +183,9 @@ def _update_architecture_md(arch_path: Path, today: str) -> bool:
     )
 
     # Add VJEPA v2 note near Tier 2 mention if not already present
-    vjepa_note = f"<!-- Tier 2 updated: VJEPA v2 ood_auc=0.9211 (Exp 884, milestone .68, {today}) -->"
+    vjepa_note = (
+        f"<!-- Tier 2 updated: VJEPA v2 ood_auc=0.9211 (Exp 884, milestone .68, {today}) -->"
+    )
     if "VJEPA v2 ood_auc=0.9211" not in updated:
         # Insert after first "Tier 2" or "vjepa" line
         updated = re.sub(

@@ -162,30 +162,50 @@ class TestBuildArtifact:
 
     def test_fr11_improved_when_violations_above_12(self, tmp_path):
         tmpl = self._make_tmpl(tmp_path)
-        art = exp583._build_artifact(tmpl, total_violations=15, n_constraints_added=2,
-                                     batch_results=[], inference_mode="live_gpu")
+        art = exp583._build_artifact(
+            tmpl,
+            total_violations=15,
+            n_constraints_added=2,
+            batch_results=[],
+            inference_mode="live_gpu",
+        )
         assert art["fr11_improved"] is True
         assert art["honest_verdict"] == "fr11_improved"
         assert art["violations_improvement"] == 3
 
     def test_no_improvement_when_violations_below_12(self, tmp_path):
         tmpl = self._make_tmpl(tmp_path)
-        art = exp583._build_artifact(tmpl, total_violations=8, n_constraints_added=0,
-                                     batch_results=[], inference_mode="live_gpu")
+        art = exp583._build_artifact(
+            tmpl,
+            total_violations=8,
+            n_constraints_added=0,
+            batch_results=[],
+            inference_mode="live_gpu",
+        )
         assert art["fr11_improved"] is False
         assert art["honest_verdict"] == "fr11_no_improvement_v3"
 
     def test_still_zero_when_no_violations(self, tmp_path):
         tmpl = self._make_tmpl(tmp_path)
-        art = exp583._build_artifact(tmpl, total_violations=0, n_constraints_added=0,
-                                     batch_results=[], inference_mode="live_gpu")
+        art = exp583._build_artifact(
+            tmpl,
+            total_violations=0,
+            n_constraints_added=0,
+            batch_results=[],
+            inference_mode="live_gpu",
+        )
         assert art["fr11_improved"] is False
         assert art["honest_verdict"] == "fr11_still_zero"
 
     def test_schema_field_present(self, tmp_path):
         tmpl = self._make_tmpl(tmp_path)
-        art = exp583._build_artifact(tmpl, total_violations=5, n_constraints_added=0,
-                                     batch_results=[], inference_mode="live_gpu")
+        art = exp583._build_artifact(
+            tmpl,
+            total_violations=5,
+            n_constraints_added=0,
+            batch_results=[],
+            inference_mode="live_gpu",
+        )
         assert art["schema"] == "carnot.fr11_relay_real.v3"
         assert art["extractor"] == "coace_v2"
         assert art["n_questions"] == exp583.N_QUESTIONS
@@ -215,8 +235,11 @@ class TestRunExperimentGateBlocked:
 
         with patch.object(exp583.ExperimentTemplate, "kill_gpu_zombies"):
             with patch.object(exp583.ExperimentTemplate, "setup"):
-                with patch.object(exp583.ExperimentTemplate, "build_result",
-                                   side_effect=lambda d, status="success": {**d, "status": status}):
+                with patch.object(
+                    exp583.ExperimentTemplate,
+                    "build_result",
+                    side_effect=lambda d, status="success": {**d, "status": status},
+                ):
                     with patch.object(exp583.ExperimentTemplate, "assert_deliverable_written"):
                         artifact = exp583.run_experiment(repo_root=tmp_path)
 
@@ -230,8 +253,11 @@ class TestRunExperimentGateBlocked:
 
         with patch.object(exp583.ExperimentTemplate, "kill_gpu_zombies"):
             with patch.object(exp583.ExperimentTemplate, "setup"):
-                with patch.object(exp583.ExperimentTemplate, "build_result",
-                                   side_effect=lambda d, status="success": {**d, "status": status}):
+                with patch.object(
+                    exp583.ExperimentTemplate,
+                    "build_result",
+                    side_effect=lambda d, status="success": {**d, "status": status},
+                ):
                     with patch.object(exp583.ExperimentTemplate, "assert_deliverable_written"):
                         artifact = exp583.run_experiment(repo_root=tmp_path)
 

@@ -144,9 +144,7 @@ def make_smoke_eval_groups(n: int = _N_SMOKE_QUESTIONS) -> List[dict]:
 # ---------------------------------------------------------------------------
 
 
-def train_v18_for_smoke(
-    model: JEPALambdaRankV18, n_train: int = 200
-) -> List[float]:
+def train_v18_for_smoke(model: JEPALambdaRankV18, n_train: int = 200) -> List[float]:
     """Train the v18 model on synthetic arithmetic groups to warm it up for eval.
 
     WHY TRAIN DURING SMOKE TEST:
@@ -175,10 +173,30 @@ def train_v18_for_smoke(
         cs = a + b
         ws = cs + int(rng.integers(1, 15))
         steps = [
-            {"text": f"Correct: {a} + {b} = {cs}.", "label": 1, "z3_label": True, "pddl_label": True},
-            {"text": f"Correct: {b} + {a} = {cs}.", "label": 1, "z3_label": True, "pddl_label": True},
-            {"text": f"Wrong: {a} + {b} = {ws}.", "label": 0, "z3_label": False, "pddl_label": False},
-            {"text": f"Wrong: {b} - {a} = {ws}.", "label": 0, "z3_label": False, "pddl_label": True},
+            {
+                "text": f"Correct: {a} + {b} = {cs}.",
+                "label": 1,
+                "z3_label": True,
+                "pddl_label": True,
+            },
+            {
+                "text": f"Correct: {b} + {a} = {cs}.",
+                "label": 1,
+                "z3_label": True,
+                "pddl_label": True,
+            },
+            {
+                "text": f"Wrong: {a} + {b} = {ws}.",
+                "label": 0,
+                "z3_label": False,
+                "pddl_label": False,
+            },
+            {
+                "text": f"Wrong: {b} - {a} = {ws}.",
+                "label": 0,
+                "z3_label": False,
+                "pddl_label": True,
+            },
         ]
         train_groups.append({"steps": steps})
     return model.train(train_groups, n_epochs=50, lr=1e-4)
@@ -247,11 +265,7 @@ def run_experiment(
     # ------------------------------------------------------------------
     # Step 5: Measure per-question latency
     # ------------------------------------------------------------------
-    all_step_texts = [
-        step["text"]
-        for group in eval_groups
-        for step in group["steps"]
-    ]
+    all_step_texts = [step["text"] for group in eval_groups for step in group["steps"]]
     n_steps = len(all_step_texts)
 
     # Baseline: time a no-op pass (pure Python overhead, no scoring)
@@ -356,7 +370,7 @@ def write_gated_blocked_artifact(repo_root: Path | None = None) -> dict:
     out_path = _root / DELIVERABLE
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    now = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     artifact = {
         "experiment": EXPERIMENT_ID,
         "title": TITLE,
@@ -364,7 +378,7 @@ def write_gated_blocked_artifact(repo_root: Path | None = None) -> dict:
         "gate_source": "exp717",
         "honest_verdict": "gated_blocked_jepa_v18_below_threshold",
         "schema": "carnot.result.v1",
-        "run_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d"),
+        "run_date": datetime.datetime.now(datetime.UTC).strftime("%Y%m%d"),
         "started_at": now,
         "finished_at": now,
         "duration_s": 0.0,

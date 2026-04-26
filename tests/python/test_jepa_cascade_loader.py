@@ -48,7 +48,9 @@ def _fake_exp646_result(**overrides) -> dict:
     return base
 
 
-def _write_exp646_file(directory: Path, filename: str = "experiment_646_jepa_v14_platt.json", **kwargs) -> Path:
+def _write_exp646_file(
+    directory: Path, filename: str = "experiment_646_jepa_v14_platt.json", **kwargs
+) -> Path:
     """Write a fake Exp 646 JSON file and return its path."""
     results_dir = directory / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
@@ -59,7 +61,9 @@ def _write_exp646_file(directory: Path, filename: str = "experiment_646_jepa_v14
 
 def _make_tiny_eorm() -> EORMModel:
     """Build a tiny EORM for CI tests (fast on CPU)."""
-    return EORMModel(embed_dim=32, n_heads=2, n_layers=1, max_seq_len=64, vocab_size=256, key=jr.PRNGKey(0))
+    return EORMModel(
+        embed_dim=32, n_heads=2, n_layers=1, max_seq_len=64, vocab_size=256, key=jr.PRNGKey(0)
+    )
 
 
 def _ising_stub(response: str, question: str) -> tuple[bool, float]:
@@ -275,7 +279,9 @@ class TestThreeTierPipelinePlattWiring:
         pipeline_loose = self._make_pipeline(platt_temperature=100.0)
 
         n = 10
-        responses = [{"question": f"q{i}", "response": f"r{i}", "attention_matrix": None} for i in range(n)]
+        responses = [
+            {"question": f"q{i}", "response": f"r{i}", "attention_matrix": None} for i in range(n)
+        ]
         ground_truth = [True] * n
 
         result_tight = pipeline_tight.benchmark(responses, ground_truth)

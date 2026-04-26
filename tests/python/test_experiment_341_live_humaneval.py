@@ -100,7 +100,7 @@ def _simple_problem() -> dict[str, Any]:
     return {
         "task_id": "HumanEval/0",
         "entry_point": "add",
-        "prompt": "def add(a: int, b: int) -> int:\n    \"\"\"Return a + b.\"\"\"\n",
+        "prompt": 'def add(a: int, b: int) -> int:\n    """Return a + b."""\n',
         "canonical_solution": "    return a + b\n",
         "test_cases": [([1, 2], 3), ([0, 0], 0)],
         "test": "",
@@ -507,6 +507,7 @@ class TestProcessProblem:
 
     def test_passing_code_no_repair(self):
         """When generated code passes tests, repair_attempted=False."""
+
         # Force canonical path by patching _simulated_solution
         def canonical_rng(*args, **kwargs):
             return _simulated_solution(args[0], rng=random.Random(7))

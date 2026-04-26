@@ -555,10 +555,19 @@ class TestRunExperimentEndToEnd:
         # REQ-JEPA-003: structured result for JSON persistence.
         result = run_experiment(output_dir=tmp_path, data_dir=tmp_path, seed=299)
         for key in (
-            "experiment", "fast_path_rate", "tp_rate", "fp_rate",
-            "targets_met", "targets_verdict", "conformal_intervals",
-            "n_train", "n_holdout", "training_source", "comparison_vs_exp291",
-            "onnx_path", "feature_names",
+            "experiment",
+            "fast_path_rate",
+            "tp_rate",
+            "fp_rate",
+            "targets_met",
+            "targets_verdict",
+            "conformal_intervals",
+            "n_train",
+            "n_holdout",
+            "training_source",
+            "comparison_vs_exp291",
+            "onnx_path",
+            "feature_names",
         ):
             assert key in result, f"Result missing key: {key}"
 

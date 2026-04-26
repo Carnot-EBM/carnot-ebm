@@ -40,6 +40,7 @@ sys.path.insert(0, str(_REPO_ROOT))
 from scripts.experiment_template import ExperimentTemplate  # noqa: E402
 from carnot.pipeline.adaptive_gate import ModelAdaptiveThresholdGate  # noqa: E402
 from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: E402
+import contextlib
 
 _DELIVERABLE = "results/experiment_707_adaptive_thresholds.json"
 _EXP_706_PATH = Path("results/experiment_706_gemma4_vr_diagnostic.json")
@@ -78,9 +79,7 @@ def main() -> None:
         # ------------------------------------------------------------------
         # Use a temporary file so this experiment does not contaminate any
         # real accumulated gate state in results/adaptive_gate_state.json.
-        with tempfile.NamedTemporaryFile(
-            suffix=".json", delete=False, dir="results"
-        ) as tmp:
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False, dir="results") as tmp:
             tmp_state_file = Path(tmp.name)
 
         try:
@@ -155,14 +154,13 @@ def main() -> None:
                 status="success",
             )
             import json as _json
+
             tmpl._output_path.parent.mkdir(parents=True, exist_ok=True)
             tmpl._output_path.write_text(_json.dumps(artifact, indent=2))
         finally:
             # Clean up the temp state file — it was only for this experiment run.
-            try:
+            with contextlib.suppress(Exception):
                 tmp_state_file.unlink(missing_ok=True)
-            except Exception:
-                pass
 
     tmpl.assert_deliverable_written()
 

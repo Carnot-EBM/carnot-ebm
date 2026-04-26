@@ -219,8 +219,16 @@ def test_gate_file_written_with_correct_schema(tmp_path):
 
     payload = json.loads(gate_path.read_text())
 
-    required_fields = {"gate", "mean_auc", "std_auc", "transfer_auc", "fold_aucs",
-                       "mean_auc_threshold", "std_auc_threshold", "transfer_auc_threshold"}
+    required_fields = {
+        "gate",
+        "mean_auc",
+        "std_auc",
+        "transfer_auc",
+        "fold_aucs",
+        "mean_auc_threshold",
+        "std_auc_threshold",
+        "transfer_auc_threshold",
+    }
     missing = required_fields - set(payload.keys())
     assert not missing, f"Gate file missing fields: {missing}"
 
@@ -236,6 +244,7 @@ def test_gate_file_pass_when_conditions_met(tmp_path):
     Spec: REQ-VER-034-3c, REQ-VER-034-3d
     """
     import sys
+
     repo_root = Path(__file__).resolve().parents[2]
     sys.path.insert(0, str(repo_root))
     from scripts.experiment_732_probe_xval import write_gate_file
@@ -257,6 +266,7 @@ def test_gate_file_fail_when_std_too_high(tmp_path):
     Spec: REQ-VER-034-3c, REQ-VER-034-3d
     """
     import sys
+
     repo_root = Path(__file__).resolve().parents[2]
     sys.path.insert(0, str(repo_root))
     from scripts.experiment_732_probe_xval import write_gate_file
@@ -288,13 +298,18 @@ def test_transfer_auc_null_when_no_math500(tmp_path):
     Spec: REQ-VER-034-4b, SCENARIO-VER-043
     """
     import sys
+
     repo_root = Path(__file__).resolve().parents[2]
     sys.path.insert(0, str(repo_root))
     from scripts.experiment_732_probe_xval import run_transfer_test
 
     result = run_transfer_test(
-        best_probe_weights={"w1": [[0.0]*256]*1024, "b1": [0.0]*256,
-                            "w2": [[0.0]*1]*256, "b2": [0.0]*1},
+        best_probe_weights={
+            "w1": [[0.0] * 256] * 1024,
+            "b1": [0.0] * 256,
+            "w2": [[0.0] * 1] * 256,
+            "b2": [0.0] * 1,
+        },
         math_items=None,
         device="cpu",
     )
@@ -308,6 +323,7 @@ def test_transfer_auc_null_when_no_probe_weights(tmp_path):
     Spec: REQ-VER-034-4a, SCENARIO-VER-043
     """
     import sys
+
     repo_root = Path(__file__).resolve().parents[2]
     sys.path.insert(0, str(repo_root))
     from scripts.experiment_732_probe_xval import run_transfer_test
@@ -328,6 +344,7 @@ def test_transfer_auc_null_when_empty_math_items(tmp_path):
     Spec: REQ-VER-034-4b, SCENARIO-VER-043
     """
     import sys
+
     repo_root = Path(__file__).resolve().parents[2]
     sys.path.insert(0, str(repo_root))
     from scripts.experiment_732_probe_xval import run_transfer_test
@@ -346,11 +363,14 @@ def test_transfer_auc_null_when_empty_math_items(tmp_path):
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("fold_aucs,expected_verdict", [
-    ([0.85, 0.88, 0.82, 0.90, 0.87], "probe_xval_robust"),
-    ([1.0, 0.75, 0.50, 0.90, 0.80], "probe_xval_high_variance"),
-    ([0.50, 0.55, 0.60, 0.52, 0.58], "probe_xval_below_threshold"),
-])
+@pytest.mark.parametrize(
+    "fold_aucs,expected_verdict",
+    [
+        ([0.85, 0.88, 0.82, 0.90, 0.87], "probe_xval_robust"),
+        ([1.0, 0.75, 0.50, 0.90, 0.80], "probe_xval_high_variance"),
+        ([0.50, 0.55, 0.60, 0.52, 0.58], "probe_xval_below_threshold"),
+    ],
+)
 def test_honest_verdict_all_branches(fold_aucs: list, expected_verdict: str):
     """All three honest_verdict strings are reachable from valid fold_auc inputs.
 

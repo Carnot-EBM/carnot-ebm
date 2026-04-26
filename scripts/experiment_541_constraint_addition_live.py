@@ -73,17 +73,58 @@ EXP538_PATH = Path(__file__).parent.parent / "results" / "experiment_538_live_25
 # ---------------------------------------------------------------------------
 
 _CARRY_QUESTIONS = [
-    f"What is {a} + {b}?" for a, b in [
-        (47, 28), (89, 56), (73, 48), (65, 37), (94, 76),
-        (38, 85), (67, 54), (29, 83), (91, 47), (58, 66),
-        (84, 37), (72, 49), (63, 58), (46, 75), (87, 34),
-        (53, 68), (79, 43), (96, 25), (41, 69), (82, 38),
-        (55, 76), (68, 47), (34, 89), (77, 56), (43, 78),
-        (61, 59), (88, 43), (26, 97), (74, 36), (49, 73),
-        (83, 48), (57, 64), (92, 39), (36, 75), (71, 58),
-        (48, 83), (65, 46), (37, 74), (93, 28), (56, 67),
-        (44, 87), (78, 33), (62, 59), (95, 47), (39, 82),
-        (76, 55), (51, 68), (84, 39), (27, 96), (73, 48),
+    f"What is {a} + {b}?"
+    for a, b in [
+        (47, 28),
+        (89, 56),
+        (73, 48),
+        (65, 37),
+        (94, 76),
+        (38, 85),
+        (67, 54),
+        (29, 83),
+        (91, 47),
+        (58, 66),
+        (84, 37),
+        (72, 49),
+        (63, 58),
+        (46, 75),
+        (87, 34),
+        (53, 68),
+        (79, 43),
+        (96, 25),
+        (41, 69),
+        (82, 38),
+        (55, 76),
+        (68, 47),
+        (34, 89),
+        (77, 56),
+        (43, 78),
+        (61, 59),
+        (88, 43),
+        (26, 97),
+        (74, 36),
+        (49, 73),
+        (83, 48),
+        (57, 64),
+        (92, 39),
+        (36, 75),
+        (71, 58),
+        (48, 83),
+        (65, 46),
+        (37, 74),
+        (93, 28),
+        (56, 67),
+        (44, 87),
+        (78, 33),
+        (62, 59),
+        (95, 47),
+        (39, 82),
+        (76, 55),
+        (51, 68),
+        (84, 39),
+        (27, 96),
+        (73, 48),
     ]
 ]
 
@@ -155,9 +196,8 @@ def _load_exp538_violation_types() -> list[str]:
     n_wrong = max(1, round(n_questions * (1.0 - baseline_accuracy)))
     # Use 'carry' and 'semantic' as the two most common violation families for
     # arithmetic questions (consistent with Exp 134, Exp 456, Exp 538 domain).
-    violation_types: list[str] = (
-        ["carry"] * (n_wrong // 2 + n_wrong % 2)
-        + ["semantic"] * (n_wrong // 2)
+    violation_types: list[str] = ["carry"] * (n_wrong // 2 + n_wrong % 2) + ["semantic"] * (
+        n_wrong // 2
     )
     _log.info(
         "Exp 538 seed: %d synthetic violation types (%d carry, %d semantic) from %d wrong answers",
@@ -202,13 +242,15 @@ def run_session(
                 _log.warning("Pipeline verify failed for '%s': %s", q[:40], exc)
         if not detected:
             missed += 1
-        details.append({
-            "question": q,
-            "response": response,
-            "carry_error_detected": detected,
-            "carry_error_missed": not detected,
-            "pipeline_verified": pipeline_verified,
-        })
+        details.append(
+            {
+                "question": q,
+                "response": response,
+                "carry_error_detected": detected,
+                "carry_error_missed": not detected,
+                "pipeline_verified": pipeline_verified,
+            }
+        )
     fp_rate = missed / len(questions) if questions else 0.0
     return fp_rate, details
 

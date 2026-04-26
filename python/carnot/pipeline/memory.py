@@ -194,9 +194,7 @@ class ConstraintMemory:
     # Suggestion
     # -------------------------------------------------------------------
 
-    def suggest_constraints(
-        self, text: str, domain: str
-    ) -> list[ConstraintResult]:
+    def suggest_constraints(self, text: str, domain: str) -> list[ConstraintResult]:
         """Return learned constraint suggestions for ``domain`` based on memory.
 
         **Detailed explanation for engineers:**
@@ -312,7 +310,7 @@ class ConstraintMemory:
             json.dump(payload, fh, indent=2)
 
     @classmethod
-    def load(cls, path: str) -> "ConstraintMemory":
+    def load(cls, path: str) -> ConstraintMemory:
         """Restore a ConstraintMemory from a JSON file written by save().
 
         **Detailed explanation for engineers:**
@@ -330,13 +328,11 @@ class ConstraintMemory:
             OSError: If the file cannot be read.
             ValueError: If the file format is invalid or version is unsupported.
         """
-        with open(path, "r", encoding="utf-8") as fh:
+        with open(path, encoding="utf-8") as fh:
             payload = json.load(fh)
 
         if not isinstance(payload, dict) or payload.get("version") != 1:
-            raise ValueError(
-                f"Unsupported memory file format (expected version=1): {path}"
-            )
+            raise ValueError(f"Unsupported memory file format (expected version=1): {path}")
 
         memory = cls()
         for domain, domain_patterns in payload.get("patterns", {}).items():
@@ -381,14 +377,11 @@ class ConstraintMemory:
                 reverse=True,
             )
             top_patterns = [
-                {"error_type": et, "frequency": rec.frequency}
-                for et, rec in sorted_patterns[:5]
+                {"error_type": et, "frequency": rec.frequency} for et, rec in sorted_patterns[:5]
             ]
             result[domain] = {
                 "total_patterns": len(domain_patterns),
-                "mature_patterns": sum(
-                    1 for rec in domain_patterns.values() if rec.auto_generated
-                ),
+                "mature_patterns": sum(1 for rec in domain_patterns.values() if rec.auto_generated),
                 "top_patterns": top_patterns,
             }
         return result

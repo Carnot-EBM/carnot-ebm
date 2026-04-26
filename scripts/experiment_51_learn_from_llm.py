@@ -49,6 +49,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 
 # --- Binary encoding ---
 
+
 def int_to_bits(n: int, n_bits: int) -> list[int]:
     """Convert integer to binary feature vector (LSB first, 0/1 ints)."""
     return [(n >> i) & 1 for i in range(n_bits)]
@@ -70,6 +71,7 @@ def encode_arithmetic_triple(a: int, b: int, result: int, n_bits: int) -> np.nda
 
 
 # --- Dataset generation ---
+
 
 def generate_arithmetic_pairs(seed: int = 42) -> tuple[list, list]:
     """Generate (correct, wrong) arithmetic pairs for training and testing.
@@ -115,21 +117,62 @@ def generate_arithmetic_pairs(seed: int = 42) -> tuple[list, list]:
     # overfit. With too many, the experiment runs slowly. 40 is a good
     # middle ground for demonstrating what discriminative CD can/can't learn.
     train_operands = [
-        (3, 4), (12, 5), (7, 8), (15, 1), (6, 7),
-        (20, 13), (9, 9), (11, 14), (25, 30), (8, 3),
-        (50, 27), (100, 23), (1, 1), (2, 3), (5, 5),
-        (17, 18), (31, 32), (40, 40), (19, 7), (14, 28),
-        (63, 1), (48, 15), (35, 35), (21, 42), (10, 90),
-        (55, 44), (37, 26), (82, 17), (29, 71), (66, 33),
-        (43, 56), (27, 73), (88, 11), (16, 84), (51, 49),
-        (75, 24), (39, 61), (58, 42), (95, 4), (2, 97),
+        (3, 4),
+        (12, 5),
+        (7, 8),
+        (15, 1),
+        (6, 7),
+        (20, 13),
+        (9, 9),
+        (11, 14),
+        (25, 30),
+        (8, 3),
+        (50, 27),
+        (100, 23),
+        (1, 1),
+        (2, 3),
+        (5, 5),
+        (17, 18),
+        (31, 32),
+        (40, 40),
+        (19, 7),
+        (14, 28),
+        (63, 1),
+        (48, 15),
+        (35, 35),
+        (21, 42),
+        (10, 90),
+        (55, 44),
+        (37, 26),
+        (82, 17),
+        (29, 71),
+        (66, 33),
+        (43, 56),
+        (27, 73),
+        (88, 11),
+        (16, 84),
+        (51, 49),
+        (75, 24),
+        (39, 61),
+        (58, 42),
+        (95, 4),
+        (2, 97),
     ]
 
     # Test pairs (12 pairs) — different operands, never seen during training.
     test_operands = [
-        (4, 5), (13, 6), (10, 11), (16, 2), (7, 9),
-        (22, 15), (33, 44), (18, 19), (60, 35), (99, 1),
-        (45, 55), (70, 30),
+        (4, 5),
+        (13, 6),
+        (10, 11),
+        (16, 2),
+        (7, 9),
+        (22, 15),
+        (33, 44),
+        (18, 19),
+        (60, 35),
+        (99, 1),
+        (45, 55),
+        (70, 30),
     ]
 
     def build_pairs(operands, rng):
@@ -150,6 +193,7 @@ def generate_arithmetic_pairs(seed: int = 42) -> tuple[list, list]:
 
 
 # --- Discriminative CD training ---
+
 
 def train_discriminative_cd(
     correct_vectors: np.ndarray,
@@ -210,14 +254,10 @@ def train_discriminative_cd(
     wrong_spins = 2.0 * wrong_vectors - 1.0
 
     pos_bias_moments = np.mean(correct_spins, axis=0)
-    pos_weight_moments = np.mean(
-        np.einsum("bi,bj->bij", correct_spins, correct_spins), axis=0
-    )
+    pos_weight_moments = np.mean(np.einsum("bi,bj->bij", correct_spins, correct_spins), axis=0)
 
     neg_bias_moments = np.mean(wrong_spins, axis=0)
-    neg_weight_moments = np.mean(
-        np.einsum("bi,bj->bij", wrong_spins, wrong_spins), axis=0
-    )
+    neg_weight_moments = np.mean(np.einsum("bi,bj->bij", wrong_spins, wrong_spins), axis=0)
 
     # The gradient is the difference in correlations.
     # Constant since both phases use fixed data.
@@ -283,6 +323,7 @@ def classification_accuracy(
 
 # --- QUBO baseline (from Exp 42b) ---
 
+
 def qubo_energy_for_triple(a: int, b: int, result: int, n_bits: int) -> float:
     """Compute QUBO energy for an arithmetic triple using Exp 42b's encoding.
 
@@ -320,7 +361,7 @@ def qubo_energy_for_triple(a: int, b: int, result: int, n_bits: int) -> float:
     # Brute-force minimize over free bits (only 2*n_bits free bits, feasible for small n).
     best_e = float("inf")
     n_free = len(free_indices)
-    for mask in range(2 ** n_free):
+    for mask in range(2**n_free):
         for k, idx in enumerate(free_indices):
             x[idx] = float((mask >> k) & 1)
         e = float(x @ Q_sym @ x)
@@ -380,8 +421,12 @@ def main() -> int:
     # --- Step 2: Train discriminative Ising model ---
     print(f"\n--- Step 2: Train discriminative CD ({train_correct.shape[0]} pairs) ---")
     biases, J, losses = train_discriminative_cd(
-        train_correct, train_wrong,
-        n_epochs=200, lr=0.1, beta=1.0, weight_decay=0.01,
+        train_correct,
+        train_wrong,
+        n_epochs=200,
+        lr=0.1,
+        beta=1.0,
+        weight_decay=0.01,
     )
 
     # --- Step 3: Evaluate on held-out test pairs ---
@@ -397,8 +442,10 @@ def main() -> int:
         gap = ew - ec
         ranked = "correct < wrong" if ec < ew else "WRONG < correct"
         icon = "✓" if ec < ew else "✗"
-        print(f"    [{icon}] {a}+{b}: E(={correct})={ec:+.2f}, E(={wrong})={ew:+.2f}, "
-              f"gap={gap:+.2f}  ({ranked})")
+        print(
+            f"    [{icon}] {a}+{b}: E(={correct})={ec:+.2f}, E(={wrong})={ew:+.2f}, "
+            f"gap={gap:+.2f}  ({ranked})"
+        )
         if ec < ew:
             n_test_correct += 1
 
@@ -413,8 +460,10 @@ def main() -> int:
         e_wrong_qubo = qubo_energy_for_triple(a, b, wrong, n_bits)
         ranked = "correct < wrong" if e_correct_qubo < e_wrong_qubo else "WRONG < correct"
         icon = "✓" if e_correct_qubo < e_wrong_qubo else "✗"
-        print(f"    [{icon}] {a}+{b}: QUBO E(={correct})={e_correct_qubo:.1f}, "
-              f"E(={wrong})={e_wrong_qubo:.1f}  ({ranked})")
+        print(
+            f"    [{icon}] {a}+{b}: QUBO E(={correct})={e_correct_qubo:.1f}, "
+            f"E(={wrong})={e_wrong_qubo:.1f}  ({ranked})"
+        )
         if e_correct_qubo < e_wrong_qubo:
             qubo_test_correct += 1
 
@@ -431,10 +480,16 @@ def main() -> int:
     print(f"  Training epochs: 200, lr=0.1, beta=1.0, weight_decay=0.01")
     print(f"")
     print(f"  Train accuracy (E_correct < E_wrong): {train_accuracy:.0%}")
-    print(f"  Test accuracy  (E_correct < E_wrong): {test_accuracy:.0%} ({n_test_correct}/{len(test_pairs)})")
-    print(f"  QUBO baseline test accuracy:          {qubo_accuracy:.0%} ({qubo_test_correct}/{len(test_pairs)})")
+    print(
+        f"  Test accuracy  (E_correct < E_wrong): {test_accuracy:.0%} ({n_test_correct}/{len(test_pairs)})"
+    )
+    print(
+        f"  QUBO baseline test accuracy:          {qubo_accuracy:.0%} ({qubo_test_correct}/{len(test_pairs)})"
+    )
     print(f"")
-    print(f"  Mean energy gap (test, wrong - correct): {float(np.mean(test_e_wrong - test_e_correct)):+.2f}")
+    print(
+        f"  Mean energy gap (test, wrong - correct): {float(np.mean(test_e_wrong - test_e_correct)):+.2f}"
+    )
     print(f"  Energy gap trend (first → last): {losses[0]:+.4f} → {losses[-1]:+.4f}")
 
     if test_accuracy >= 1.0:
@@ -442,16 +497,22 @@ def main() -> int:
     elif test_accuracy >= 0.8:
         print(f"\n  VERDICT: ✅ Strong discrimination ({test_accuracy:.0%} test accuracy)")
     elif test_accuracy >= 0.6:
-        print(f"\n  VERDICT: ⚠️ Partial discrimination ({test_accuracy:.0%}), needs more data or features")
+        print(
+            f"\n  VERDICT: ⚠️ Partial discrimination ({test_accuracy:.0%}), needs more data or features"
+        )
     else:
         print(f"\n  VERDICT: ❌ Poor discrimination ({test_accuracy:.0%})")
 
     if test_accuracy > qubo_accuracy:
-        print(f"  vs QUBO: Learned model BEATS hand-coded QUBO ({test_accuracy:.0%} vs {qubo_accuracy:.0%})")
+        print(
+            f"  vs QUBO: Learned model BEATS hand-coded QUBO ({test_accuracy:.0%} vs {qubo_accuracy:.0%})"
+        )
     elif test_accuracy == qubo_accuracy:
         print(f"  vs QUBO: Learned model MATCHES hand-coded QUBO ({test_accuracy:.0%})")
     else:
-        print(f"  vs QUBO: Hand-coded QUBO still better ({qubo_accuracy:.0%} vs {test_accuracy:.0%})")
+        print(
+            f"  vs QUBO: Hand-coded QUBO still better ({qubo_accuracy:.0%} vs {test_accuracy:.0%})"
+        )
         print(f"           (Expected — QUBO encodes exact arithmetic structure)")
 
     print(sep)

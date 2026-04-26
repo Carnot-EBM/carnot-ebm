@@ -213,10 +213,7 @@ def load_all_results(
     dict[int, dict | None]
         Mapping from experiment ID to parsed JSON (or None when unavailable).
     """
-    return {
-        exp["id"]: load_result_file(repo_root, exp.get("result_file"))
-        for exp in experiments
-    }
+    return {exp["id"]: load_result_file(repo_root, exp.get("result_file")) for exp in experiments}
 
 
 # ---------------------------------------------------------------------------

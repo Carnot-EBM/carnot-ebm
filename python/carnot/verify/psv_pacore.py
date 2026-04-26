@@ -32,9 +32,11 @@ Spec: REQ-LEARN-020, REQ-LEARN-021,
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Callable, List, Tuple
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # IterationResult
@@ -62,8 +64,8 @@ class IterationResult:
     """
 
     iteration: int
-    best_responses: List[str]
-    all_violations: List[Tuple[str, str]]
+    best_responses: list[str]
+    all_violations: list[tuple[str, str]]
     fp_rate_estimate: float
     n_questions: int
     n_chain_a_violations: int
@@ -118,7 +120,7 @@ class PSVPaCoReRunner:
         self.n_questions = n_questions
         # Shared constraint pool: accumulated (question, response) violation pairs
         # from both chains across all iterations.
-        self._constraint_pool: List[Tuple[str, str]] = []
+        self._constraint_pool: list[tuple[str, str]] = []
 
     # ------------------------------------------------------------------
     # Public API
@@ -126,7 +128,7 @@ class PSVPaCoReRunner:
 
     def run_iteration(
         self,
-        questions: List[str],
+        questions: list[str],
         model_a_device: str = "cpu",
         model_b_device: str = "cpu",
         temp_a: float = 0.7,
@@ -165,8 +167,8 @@ class PSVPaCoReRunner:
         labels_a = [self._verify_fn(r) for r in responses_a]
         labels_b = [self._verify_fn(r) for r in responses_b]
 
-        best_responses: List[str] = []
-        new_violations: List[Tuple[str, str]] = []
+        best_responses: list[str] = []
+        new_violations: list[tuple[str, str]] = []
         both_violated_count = 0
 
         for i, q in enumerate(questions):
@@ -213,12 +215,12 @@ class PSVPaCoReRunner:
 
     def run_10_iterations(
         self,
-        questions: List[str],
+        questions: list[str],
         model_a_device: str = "cpu",
         model_b_device: str = "cpu",
         temp_a: float = 0.7,
         temp_b: float = 1.0,
-    ) -> List[IterationResult]:
+    ) -> list[IterationResult]:
         """Run n_iterations PSV iterations with both chains, accumulating the pool.
 
         Each call re-uses the same question list for all iterations.  This mirrors
@@ -239,7 +241,7 @@ class PSVPaCoReRunner:
         Returns:
             List of IterationResult, one per iteration, in order.
         """
-        results: List[IterationResult] = []
+        results: list[IterationResult] = []
         for it in range(self.n_iterations):
             result = self.run_iteration(
                 questions,
@@ -253,6 +255,6 @@ class PSVPaCoReRunner:
         return results
 
     @property
-    def constraint_pool(self) -> List[Tuple[str, str]]:
+    def constraint_pool(self) -> list[tuple[str, str]]:
         """Read-only view of the accumulated constraint pool from all iterations."""
         return list(self._constraint_pool)

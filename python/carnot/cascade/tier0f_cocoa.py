@@ -46,7 +46,7 @@ Spec: REQ-VERIFY-151, REQ-VERIFY-152, SCENARIO-VERIFY-201, SCENARIO-VERIFY-202
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
@@ -90,7 +90,7 @@ class CoCoADetector:
         tokenizer: Any,
         early_layers: tuple[int, ...] = (8, 10, 12),
         late_layers: tuple[int, ...] = (14, 16),
-        threshold: Optional[float] = None,
+        threshold: float | None = None,
         device: str = "cpu",
     ) -> None:
         self._model = model
@@ -104,9 +104,7 @@ class CoCoADetector:
     # Hidden-state extraction  (REQ-VERIFY-151-1)
     # ------------------------------------------------------------------
 
-    def extract_hidden_states(
-        self, text: str, layer_indices: list[int]
-    ) -> dict[int, np.ndarray]:
+    def extract_hidden_states(self, text: str, layer_indices: list[int]) -> dict[int, np.ndarray]:
         """Run a single forward pass and extract last-token hidden states at requested layers.
 
         WHY a single forward pass for all layers: output_hidden_states=True returns
@@ -202,7 +200,7 @@ class CoCoADetector:
     # Full scoring  (REQ-VERIFY-151)
     # ------------------------------------------------------------------
 
-    def score(self, text: str) -> tuple[float, Optional[bool]]:
+    def score(self, text: str) -> tuple[float, bool | None]:
         """Compute ConMLDS for text and return (conmlds, is_unstable).
 
         Extracts hidden states at all early and late layers in a single forward pass,
@@ -233,7 +231,7 @@ class CoCoADetector:
 
         conmlds = float(np.mean(distances)) if distances else 0.0
 
-        is_unstable: Optional[bool] = None
+        is_unstable: bool | None = None
         if self.threshold is not None:
             is_unstable = bool(conmlds > self.threshold)
 
@@ -243,7 +241,7 @@ class CoCoADetector:
     # Batch scoring
     # ------------------------------------------------------------------
 
-    def score_batch(self, texts: list[str]) -> list[tuple[float, Optional[bool]]]:
+    def score_batch(self, texts: list[str]) -> list[tuple[float, bool | None]]:
         """Score a list of texts sequentially, returning (conmlds, is_unstable) per text.
 
         WHY sequential rather than batched forward pass: each text may have a different

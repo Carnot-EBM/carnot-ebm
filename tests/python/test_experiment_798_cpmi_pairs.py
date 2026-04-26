@@ -2,6 +2,7 @@
 
 Spec: REQ-LEARN-052, REQ-LEARN-053, SCENARIO-LEARN-095
 """
+
 from __future__ import annotations
 
 import random
@@ -20,6 +21,7 @@ from carnot.pipeline.cpmi_builder import (
 # ---------------------------------------------------------------------------
 # REQ-LEARN-052: CPMITriple dataclass has all required fields
 # ---------------------------------------------------------------------------
+
 
 def test_cpmi_triple_fields_present() -> None:
     """REQ-LEARN-052: CPMITriple must expose prefix_text, positive_step,
@@ -50,6 +52,7 @@ def test_cpmi_triple_instantiation() -> None:
 # ---------------------------------------------------------------------------
 # REQ-LEARN-052: compute_cpmi_score CI proxy uses cosine-similarity fallback
 # ---------------------------------------------------------------------------
+
 
 def test_compute_cpmi_score_ci_proxy_identical_steps() -> None:
     """REQ-LEARN-052: Identical steps → cosine similarity = 1.0 → proxy = 0.0."""
@@ -88,6 +91,7 @@ def test_compute_cpmi_score_with_model_logprobs_falls_back() -> None:
 # REQ-LEARN-052: generate_hard_negative produces a perturbed step
 # ---------------------------------------------------------------------------
 
+
 def test_generate_hard_negative_differs_from_input() -> None:
     """REQ-LEARN-052: Hard negative must differ from the positive step."""
     step = "Add 15 + 27 = 42."
@@ -118,24 +122,29 @@ def test_generate_hard_negative_no_numbers_returns_fallback() -> None:
 # REQ-LEARN-053: build_triples augmentation_ratio >= 2.0 on synthetic corpus
 # ---------------------------------------------------------------------------
 
+
 def _make_synthetic_corpus(n_pairs: int = 10) -> list[dict]:
     """Build a tiny synthetic corpus with equal correct/incorrect entries."""
     corpus = []
     for i in range(n_pairs):
-        corpus.append({
-            "question_id": f"q{i}",
-            "step_text": f"Step {i}: {i} + {i+1} = {2*i+1}.",
-            "label": "correct",
-            "confidence": 1.0,
-            "source_domain": "synthetic",
-        })
-        corpus.append({
-            "question_id": f"q{i}",
-            "step_text": f"Step {i}: {i} + {i+1} = {2*i+2}.",  # deliberately wrong
-            "label": "incorrect",
-            "confidence": 1.0,
-            "source_domain": "synthetic",
-        })
+        corpus.append(
+            {
+                "question_id": f"q{i}",
+                "step_text": f"Step {i}: {i} + {i + 1} = {2 * i + 1}.",
+                "label": "correct",
+                "confidence": 1.0,
+                "source_domain": "synthetic",
+            }
+        )
+        corpus.append(
+            {
+                "question_id": f"q{i}",
+                "step_text": f"Step {i}: {i} + {i + 1} = {2 * i + 2}.",  # deliberately wrong
+                "label": "incorrect",
+                "confidence": 1.0,
+                "source_domain": "synthetic",
+            }
+        )
     return corpus
 
 
@@ -154,7 +163,9 @@ def test_build_triples_augmentation_ratio() -> None:
     n_output = len(triples)
     ratio = n_output / n_input_pairs
 
-    assert ratio >= 2.0, f"augmentation_ratio={ratio:.3f} < 2.0 (n_input_pairs={n_input_pairs}, n_output={n_output})"
+    assert ratio >= 2.0, (
+        f"augmentation_ratio={ratio:.3f} < 2.0 (n_input_pairs={n_input_pairs}, n_output={n_output})"
+    )
 
 
 def test_build_triples_all_have_required_fields() -> None:

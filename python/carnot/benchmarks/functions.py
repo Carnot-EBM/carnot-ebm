@@ -344,7 +344,8 @@ def get_standard_benchmarks(dim: int = 2) -> dict[str, Any]:
         "rosenbrock": Rosenbrock(max(dim, 2)),
         "ackley": Ackley(dim),
         "rastrigin": Rastrigin(dim),
-        "gaussian_mixture": GaussianMixture.two_modes(4.0) if dim == 1
+        "gaussian_mixture": GaussianMixture.two_modes(4.0)
+        if dim == 1
         else GaussianMixture(
             dim=dim,
             means=[jnp.full(dim, -2.0), jnp.full(dim, 2.0)],

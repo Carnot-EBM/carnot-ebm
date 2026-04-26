@@ -543,7 +543,10 @@ class TestComputeRetro2026_04_29:
 
     def test_humaneval_credible_when_code_verification_positive(self, tmp_path: Path) -> None:
         files = self._all_none()
-        files["395"] = {"honest_verdict": "code_verification_positive", "inference_mode": "live_gpu"}
+        files["395"] = {
+            "honest_verdict": "code_verification_positive",
+            "inference_mode": "live_gpu",
+        }
         retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.humaneval_result_credible is True
 
@@ -555,7 +558,10 @@ class TestComputeRetro2026_04_29:
 
     def test_humaneval_not_credible_simulated(self, tmp_path: Path) -> None:
         files = self._all_none()
-        files["395"] = {"honest_verdict": "code_verification_positive", "inference_mode": "simulated"}
+        files["395"] = {
+            "honest_verdict": "code_verification_positive",
+            "inference_mode": "simulated",
+        }
         retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.humaneval_result_credible is False
 
@@ -772,7 +778,9 @@ class TestComputeRetro2026_04_29:
 
     # --- retro_020_closed ---
 
-    def test_retro_020_closed_when_cikan_implemented_and_exp391_success(self, tmp_path: Path) -> None:
+    def test_retro_020_closed_when_cikan_implemented_and_exp391_success(
+        self, tmp_path: Path
+    ) -> None:
         cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
         cikan_path.parent.mkdir(parents=True, exist_ok=True)
         cikan_path.write_text("class CIKANEnergy:\n    pass\n")
@@ -1037,11 +1045,20 @@ class TestBuildRetroArtifact:
         artifact = build_retro_artifact(retro)
         sc = artifact["success_criteria"]
         bool_criteria = [
-            "retro_019_resolved", "retro_020_closed", "retro_021_closed",
-            "live_gpu_confirmed", "precision_result_credible", "humaneval_result_credible",
-            "adversarial_result_credible", "extraction_winner_known", "fr11_learning_confirmed",
-            "jitrl_memory_works", "safety_kan_works", "saver_live_verified",
-            "semantic_energy_viable", "crane_extraction_improved",
+            "retro_019_resolved",
+            "retro_020_closed",
+            "retro_021_closed",
+            "live_gpu_confirmed",
+            "precision_result_credible",
+            "humaneval_result_credible",
+            "adversarial_result_credible",
+            "extraction_winner_known",
+            "fr11_learning_confirmed",
+            "jitrl_memory_works",
+            "safety_kan_works",
+            "saver_live_verified",
+            "semantic_energy_viable",
+            "crane_extraction_improved",
         ]
         for key in bool_criteria:
             assert sc[key] is True, f"Expected {key}=True, got {sc[key]}"

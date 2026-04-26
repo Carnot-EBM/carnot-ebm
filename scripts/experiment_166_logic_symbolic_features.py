@@ -125,9 +125,7 @@ def logic_feature_vector(text: str) -> np.ndarray:
 
     # --- 3: has_quantifier_no -----------------------------------------------
     # Negative quantifiers are often confused with negated universals.
-    features[3] = float(
-        "no " in text_lower or "none" in tokens or "neither" in tokens
-    )
+    features[3] = float("no " in text_lower or "none" in tokens or "neither" in tokens)
 
     # --- 4: has_therefore ---------------------------------------------------
     # Conclusion markers are structural. Valid arguments always have one;
@@ -156,9 +154,7 @@ def logic_feature_vector(text: str) -> np.ndarray:
     # --- 8: clause_density --------------------------------------------------
     # Number of clause boundaries (commas, semicolons, periods) divided by
     # token count. Arguments with more clauses tend to be structurally richer.
-    features[8] = (
-        text.count(",") + text.count(";") + text.count(".")
-    ) / n_tokens
+    features[8] = (text.count(",") + text.count(";") + text.count(".")) / n_tokens
 
     # --- 9: conclusion_ratio ------------------------------------------------
     # Ratio of last sentence length to total text length. In well-formed
@@ -170,9 +166,7 @@ def logic_feature_vector(text: str) -> np.ndarray:
     # --- 10: negation_after_quantifier --------------------------------------
     # Pattern "all...not" or "no...all" indicates potential negation scope
     # confusion — a common source of logical fallacies.
-    features[10] = float(
-        bool(re.search(r"\ball\b.*\bnot\b|\bno\b.*\ball\b", text_lower))
-    )
+    features[10] = float(bool(re.search(r"\ball\b.*\bnot\b|\bno\b.*\ball\b", text_lower)))
 
     # --- 11: double_negation ------------------------------------------------
     # "not...not" within the same text often indicates either a double
@@ -183,13 +177,13 @@ def logic_feature_vector(text: str) -> np.ndarray:
     # Products of core features allow a linear probe to capture interactions.
     # E.g., feature 12 = "negation AND universal quantifier" which is the
     # signature of negation scope errors.
-    features[12] = features[0] * features[1]   # negation × all-quantifier
-    features[13] = features[0] * features[2]   # negation × some-quantifier
-    features[14] = features[4] * features[5]   # therefore × if-then (modus ponens pattern)
-    features[15] = features[5] * features[1]   # if-then × all-quantifier
-    features[16] = features[4] * features[1]   # therefore × all-quantifier (syllogism)
-    features[17] = features[8] * features[9]   # clause density × conclusion ratio
-    features[18] = min(float(n_tokens) / 50.0, 1.0)   # normalized text length [0,1]
+    features[12] = features[0] * features[1]  # negation × all-quantifier
+    features[13] = features[0] * features[2]  # negation × some-quantifier
+    features[14] = features[4] * features[5]  # therefore × if-then (modus ponens pattern)
+    features[15] = features[5] * features[1]  # if-then × all-quantifier
+    features[16] = features[4] * features[1]  # therefore × all-quantifier (syllogism)
+    features[17] = features[8] * features[9]  # clause density × conclusion ratio
+    features[18] = min(float(n_tokens) / 50.0, 1.0)  # normalized text length [0,1]
     features[19] = min(float(len(sentences)) / 5.0, 1.0)  # sentence count [0,1]
 
     # --- 20–39: Reserved (zeros) --------------------------------------------
@@ -214,44 +208,93 @@ def logic_feature_vector(text: str) -> np.ndarray:
 
 # Subject pools for varied, natural-sounding arguments
 ANIMALS = [
-    "dogs", "cats", "eagles", "salmon", "frogs",
-    "dolphins", "penguins", "elephants", "owls", "bats",
-    "tigers", "horses", "wolves",
+    "dogs",
+    "cats",
+    "eagles",
+    "salmon",
+    "frogs",
+    "dolphins",
+    "penguins",
+    "elephants",
+    "owls",
+    "bats",
+    "tigers",
+    "horses",
+    "wolves",
 ]
 PROPERTIES_A = [
-    "warm-blooded", "vertebrates", "capable of flight", "carnivores",
-    "social creatures", "nocturnal", "herbivores", "fast runners",
-    "excellent swimmers", "highly intelligent", "migratory", "omnivores",
+    "warm-blooded",
+    "vertebrates",
+    "capable of flight",
+    "carnivores",
+    "social creatures",
+    "nocturnal",
+    "herbivores",
+    "fast runners",
+    "excellent swimmers",
+    "highly intelligent",
+    "migratory",
+    "omnivores",
     "protective of offspring",
 ]
 PROPERTIES_B = [
-    "require warm environments", "need specialized care", "consume large amounts of food",
-    "form complex social structures", "possess acute senses", "exhibit territorial behavior",
-    "are well-adapted to their environments", "play important ecological roles",
-    "are protected by conservation laws", "have been studied extensively",
-    "are found across multiple continents", "have distinctive markings",
+    "require warm environments",
+    "need specialized care",
+    "consume large amounts of food",
+    "form complex social structures",
+    "possess acute senses",
+    "exhibit territorial behavior",
+    "are well-adapted to their environments",
+    "play important ecological roles",
+    "are protected by conservation laws",
+    "have been studied extensively",
+    "are found across multiple continents",
+    "have distinctive markings",
     "show remarkable adaptations",
 ]
 CITIES = [
-    "Paris", "London", "Tokyo", "Rome", "Sydney",
-    "Cairo", "Berlin", "Toronto", "Mumbai", "Seoul",
-    "Nairobi", "Lima", "Oslo",
+    "Paris",
+    "London",
+    "Tokyo",
+    "Rome",
+    "Sydney",
+    "Cairo",
+    "Berlin",
+    "Toronto",
+    "Mumbai",
+    "Seoul",
+    "Nairobi",
+    "Lima",
+    "Oslo",
 ]
 CITY_PROPS_A = [
-    "a major European capital", "a coastal city", "a financial hub",
-    "a city with over 10 million residents", "a UNESCO World Heritage site",
-    "a city famous for its cuisine", "a major port city",
-    "a city known for its museums", "a city with an advanced metro system",
-    "a city that hosted the Olympics", "a city with a tropical climate",
-    "a major center of commerce", "a city renowned for its architecture",
+    "a major European capital",
+    "a coastal city",
+    "a financial hub",
+    "a city with over 10 million residents",
+    "a UNESCO World Heritage site",
+    "a city famous for its cuisine",
+    "a major port city",
+    "a city known for its museums",
+    "a city with an advanced metro system",
+    "a city that hosted the Olympics",
+    "a city with a tropical climate",
+    "a major center of commerce",
+    "a city renowned for its architecture",
 ]
 CITY_PROPS_B = [
-    "attracts millions of tourists each year", "has high living costs",
-    "has a significant cultural heritage", "experiences heavy traffic congestion",
-    "has world-class educational institutions", "is a center for international events",
-    "has diverse culinary options", "has extensive public transportation",
-    "is home to major international companies", "has a thriving arts scene",
-    "has significant infrastructure investment", "hosts major sporting events",
+    "attracts millions of tourists each year",
+    "has high living costs",
+    "has a significant cultural heritage",
+    "experiences heavy traffic congestion",
+    "has world-class educational institutions",
+    "is a center for international events",
+    "has diverse culinary options",
+    "has extensive public transportation",
+    "is home to major international companies",
+    "has a thriving arts scene",
+    "has significant infrastructure investment",
+    "hosts major sporting events",
     "is a popular destination for business travelers",
 ]
 
@@ -264,8 +307,7 @@ def _subject_and_props(idx: int) -> tuple[str, str, str, str, str]:
     """
     if idx < len(ANIMALS):
         s = ANIMALS[idx]
-        return ("animal", s, PROPERTIES_A[idx], PROPERTIES_B[idx],
-                s.rstrip("s"))  # rough singular
+        return ("animal", s, PROPERTIES_A[idx], PROPERTIES_B[idx], s.rstrip("s"))  # rough singular
     else:
         j = idx - len(ANIMALS)
         s = CITIES[j]
@@ -294,8 +336,7 @@ def _make_subject_pool() -> list[tuple[str, str, str, str, str]]:
         s_type, subj, pa, pb, sing = _subject_and_props(j)
         s_type2, subj2, pa2, pb2, sing2 = _subject_and_props((j + 5) % 13)
         # Mix subjects for variety
-        pool.append((s_type, subj, PROPERTIES_A[(i + 7) % 13],
-                     PROPERTIES_B[(i + 3) % 13], sing))
+        pool.append((s_type, subj, PROPERTIES_A[(i + 7) % 13], PROPERTIES_B[(i + 3) % 13], sing))
     return pool[:65]
 
 
@@ -306,8 +347,8 @@ SUBJECT_POOL = _make_subject_pool()
 # Valid argument generators (5 types × 13 instances = 65 valid texts)
 # ---------------------------------------------------------------------------
 
-def _gen_modus_ponens(subj_type: str, subj: str, pa: str, pb: str, sing: str,
-                      variant: int) -> str:
+
+def _gen_modus_ponens(subj_type: str, subj: str, pa: str, pb: str, sing: str, variant: int) -> str:
     """Modus ponens: If P then Q. P is true. Therefore Q.
 
     **Detailed explanation for engineers:**
@@ -318,21 +359,26 @@ def _gen_modus_ponens(subj_type: str, subj: str, pa: str, pb: str, sing: str,
               Therefore, [subject] have property B.
     """
     variants = [
-        (f"If {subj} are {pa}, then they are also {pb}. "
-         f"{subj.capitalize()} are indeed {pa}. "
-         f"Therefore, {subj} are {pb}."),
-        (f"If an animal is {pa}, it follows that it is {pb}. "
-         f"{subj.capitalize()} are {pa}. "
-         f"Therefore, {subj} are {pb}."),
-        (f"Whenever {subj} exhibit {pa}, they also exhibit {pb}. "
-         f"We observe that {subj} are {pa}. "
-         f"Hence, {subj} are {pb}."),
+        (
+            f"If {subj} are {pa}, then they are also {pb}. "
+            f"{subj.capitalize()} are indeed {pa}. "
+            f"Therefore, {subj} are {pb}."
+        ),
+        (
+            f"If an animal is {pa}, it follows that it is {pb}. "
+            f"{subj.capitalize()} are {pa}. "
+            f"Therefore, {subj} are {pb}."
+        ),
+        (
+            f"Whenever {subj} exhibit {pa}, they also exhibit {pb}. "
+            f"We observe that {subj} are {pa}. "
+            f"Hence, {subj} are {pb}."
+        ),
     ]
     return variants[variant % len(variants)]
 
 
-def _gen_modus_tollens(subj_type: str, subj: str, pa: str, pb: str, sing: str,
-                       variant: int) -> str:
+def _gen_modus_tollens(subj_type: str, subj: str, pa: str, pb: str, sing: str, variant: int) -> str:
     """Modus tollens: If P then Q. Q is false. Therefore P is false.
 
     **Detailed explanation for engineers:**
@@ -343,21 +389,28 @@ def _gen_modus_tollens(subj_type: str, subj: str, pa: str, pb: str, sing: str,
               Therefore, [subject] does not have A.
     """
     variants = [
-        (f"If {subj} are {pa}, then they must be {pb}. "
-         f"{subj.capitalize()} are not {pb}. "
-         f"Therefore, {subj} are not {pa}."),
-        (f"If an entity is {pa}, it follows that it is {pb}. "
-         f"We know {subj} are not {pb}. "
-         f"Thus, {subj} are not {pa}."),
-        (f"Whenever something is {pa}, it is also {pb}. "
-         f"Since {subj} are not {pb}, "
-         f"we conclude that {subj} are not {pa}."),
+        (
+            f"If {subj} are {pa}, then they must be {pb}. "
+            f"{subj.capitalize()} are not {pb}. "
+            f"Therefore, {subj} are not {pa}."
+        ),
+        (
+            f"If an entity is {pa}, it follows that it is {pb}. "
+            f"We know {subj} are not {pb}. "
+            f"Thus, {subj} are not {pa}."
+        ),
+        (
+            f"Whenever something is {pa}, it is also {pb}. "
+            f"Since {subj} are not {pb}, "
+            f"we conclude that {subj} are not {pa}."
+        ),
     ]
     return variants[variant % len(variants)]
 
 
-def _gen_disjunctive_syllogism(subj_type: str, subj: str, pa: str, pb: str,
-                                sing: str, variant: int) -> str:
+def _gen_disjunctive_syllogism(
+    subj_type: str, subj: str, pa: str, pb: str, sing: str, variant: int
+) -> str:
     """Disjunctive syllogism: P or Q. Not P. Therefore Q.
 
     **Detailed explanation for engineers:**
@@ -368,21 +421,28 @@ def _gen_disjunctive_syllogism(subj_type: str, subj: str, pa: str, pb: str,
               Therefore, [subject] are B.
     """
     variants = [
-        (f"{subj.capitalize()} are either {pa} or {pb}. "
-         f"{subj.capitalize()} are not {pa}. "
-         f"Therefore, {subj} are {pb}."),
-        (f"Either {subj} are {pa} or they are {pb}. "
-         f"It has been established that {subj} are not {pa}. "
-         f"Hence, {subj} must be {pb}."),
-        (f"One of two things must be true: {subj} are {pa}, or {subj} are {pb}. "
-         f"We have confirmed that {subj} are not {pa}. "
-         f"Therefore, {subj} are {pb}."),
+        (
+            f"{subj.capitalize()} are either {pa} or {pb}. "
+            f"{subj.capitalize()} are not {pa}. "
+            f"Therefore, {subj} are {pb}."
+        ),
+        (
+            f"Either {subj} are {pa} or they are {pb}. "
+            f"It has been established that {subj} are not {pa}. "
+            f"Hence, {subj} must be {pb}."
+        ),
+        (
+            f"One of two things must be true: {subj} are {pa}, or {subj} are {pb}. "
+            f"We have confirmed that {subj} are not {pa}. "
+            f"Therefore, {subj} are {pb}."
+        ),
     ]
     return variants[variant % len(variants)]
 
 
-def _gen_universal_instantiation(subj_type: str, subj: str, pa: str, pb: str,
-                                  sing: str, variant: int) -> str:
+def _gen_universal_instantiation(
+    subj_type: str, subj: str, pa: str, pb: str, sing: str, variant: int
+) -> str:
     """Universal instantiation: All A are B. X is an A. Therefore X is a B.
 
     **Detailed explanation for engineers:**
@@ -394,21 +454,24 @@ def _gen_universal_instantiation(subj_type: str, subj: str, pa: str, pb: str,
               Therefore, [singular] is [pa].
     """
     variants = [
-        (f"All {subj} are {pa}. "
-         f"A {sing} is one of many {subj}. "
-         f"Therefore, this {sing} is {pa}."),
-        (f"Every member of the {subj} group is {pa}. "
-         f"The individual we are examining is a {sing}. "
-         f"Therefore, this individual is {pa}."),
-        (f"Without exception, all {subj} possess the property of being {pa}. "
-         f"Our subject is a {sing}. "
-         f"Thus, our subject is {pa}."),
+        (f"All {subj} are {pa}. A {sing} is one of many {subj}. Therefore, this {sing} is {pa}."),
+        (
+            f"Every member of the {subj} group is {pa}. "
+            f"The individual we are examining is a {sing}. "
+            f"Therefore, this individual is {pa}."
+        ),
+        (
+            f"Without exception, all {subj} possess the property of being {pa}. "
+            f"Our subject is a {sing}. "
+            f"Thus, our subject is {pa}."
+        ),
     ]
     return variants[variant % len(variants)]
 
 
-def _gen_categorical_syllogism(subj_type: str, subj: str, pa: str, pb: str,
-                                sing: str, variant: int) -> str:
+def _gen_categorical_syllogism(
+    subj_type: str, subj: str, pa: str, pb: str, sing: str, variant: int
+) -> str:
     """Categorical syllogism: All M are P. All S are M. Therefore All S are P.
 
     **Detailed explanation for engineers:**
@@ -421,16 +484,22 @@ def _gen_categorical_syllogism(subj_type: str, subj: str, pa: str, pb: str,
               Therefore, all [subj] are [pb].
     """
     variants = [
-        (f"All things that are {pa} are also {pb}. "
-         f"All {subj} are {pa}. "
-         f"Therefore, all {subj} are {pb}."),
-        (f"Everything that is {pa} is necessarily {pb}. "
-         f"Every {sing} is {pa}. "
-         f"Therefore, every {sing} is {pb}."),
-        (f"The class of entities that are {pa} is entirely contained within "
-         f"the class of entities that are {pb}. "
-         f"All {subj} belong to the class of {pa} entities. "
-         f"Therefore, all {subj} are {pb}."),
+        (
+            f"All things that are {pa} are also {pb}. "
+            f"All {subj} are {pa}. "
+            f"Therefore, all {subj} are {pb}."
+        ),
+        (
+            f"Everything that is {pa} is necessarily {pb}. "
+            f"Every {sing} is {pa}. "
+            f"Therefore, every {sing} is {pb}."
+        ),
+        (
+            f"The class of entities that are {pa} is entirely contained within "
+            f"the class of entities that are {pb}. "
+            f"All {subj} belong to the class of {pa} entities. "
+            f"Therefore, all {subj} are {pb}."
+        ),
     ]
     return variants[variant % len(variants)]
 
@@ -439,8 +508,10 @@ def _gen_categorical_syllogism(subj_type: str, subj: str, pa: str, pb: str,
 # Invalid argument generators (5 fallacy types × 13 instances = 65 invalid texts)
 # ---------------------------------------------------------------------------
 
-def _gen_affirming_consequent(subj_type: str, subj: str, pa: str, pb: str,
-                               sing: str, variant: int) -> str:
+
+def _gen_affirming_consequent(
+    subj_type: str, subj: str, pa: str, pb: str, sing: str, variant: int
+) -> str:
     """FALLACY — Affirming the consequent: If P then Q. Q. Therefore P.
 
     **Detailed explanation for engineers:**
@@ -451,21 +522,28 @@ def _gen_affirming_consequent(subj_type: str, subj: str, pa: str, pb: str,
         sprinkler. This is marked as violated_logic=True.
     """
     variants = [
-        (f"If {subj} are {pa}, then they are {pb}. "
-         f"{subj.capitalize()} are {pb}. "
-         f"Therefore, {subj} are {pa}."),
-        (f"If an entity is {pa}, it follows that it is {pb}. "
-         f"We observe that {subj} are {pb}. "
-         f"Therefore, {subj} must be {pa}."),
-        (f"Whenever something is {pa}, it is also {pb}. "
-         f"{subj.capitalize()} are {pb}. "
-         f"Thus, {subj} are {pa}."),
+        (
+            f"If {subj} are {pa}, then they are {pb}. "
+            f"{subj.capitalize()} are {pb}. "
+            f"Therefore, {subj} are {pa}."
+        ),
+        (
+            f"If an entity is {pa}, it follows that it is {pb}. "
+            f"We observe that {subj} are {pb}. "
+            f"Therefore, {subj} must be {pa}."
+        ),
+        (
+            f"Whenever something is {pa}, it is also {pb}. "
+            f"{subj.capitalize()} are {pb}. "
+            f"Thus, {subj} are {pa}."
+        ),
     ]
     return variants[variant % len(variants)]
 
 
-def _gen_denying_antecedent(subj_type: str, subj: str, pa: str, pb: str,
-                             sing: str, variant: int) -> str:
+def _gen_denying_antecedent(
+    subj_type: str, subj: str, pa: str, pb: str, sing: str, variant: int
+) -> str:
     """FALLACY — Denying the antecedent: If P then Q. Not P. Therefore not Q.
 
     **Detailed explanation for engineers:**
@@ -475,21 +553,28 @@ def _gen_denying_antecedent(subj_type: str, subj: str, pa: str, pb: str,
         the sprinkler might have run. This is marked as violated_logic=True.
     """
     variants = [
-        (f"If {subj} are {pa}, then they are {pb}. "
-         f"{subj.capitalize()} are not {pa}. "
-         f"Therefore, {subj} are not {pb}."),
-        (f"If an entity is {pa}, it will be {pb}. "
-         f"We have established that {subj} are not {pa}. "
-         f"Thus, {subj} are not {pb}."),
-        (f"Whenever something is {pa}, it is {pb}. "
-         f"Since {subj} are not {pa}, "
-         f"they cannot be {pb}."),
+        (
+            f"If {subj} are {pa}, then they are {pb}. "
+            f"{subj.capitalize()} are not {pa}. "
+            f"Therefore, {subj} are not {pb}."
+        ),
+        (
+            f"If an entity is {pa}, it will be {pb}. "
+            f"We have established that {subj} are not {pa}. "
+            f"Thus, {subj} are not {pb}."
+        ),
+        (
+            f"Whenever something is {pa}, it is {pb}. "
+            f"Since {subj} are not {pa}, "
+            f"they cannot be {pb}."
+        ),
     ]
     return variants[variant % len(variants)]
 
 
-def _gen_undistributed_middle(subj_type: str, subj: str, pa: str, pb: str,
-                               sing: str, variant: int) -> str:
+def _gen_undistributed_middle(
+    subj_type: str, subj: str, pa: str, pb: str, sing: str, variant: int
+) -> str:
     """FALLACY — Undistributed middle: All A are C. All B are C. Therefore A=B.
 
     **Detailed explanation for engineers:**
@@ -506,21 +591,24 @@ def _gen_undistributed_middle(subj_type: str, subj: str, pa: str, pb: str,
         other_subj = "reptiles" if subj_type == "animal" else "Moscow"
         other_sing = other_subj.rstrip("s")
     variants = [
-        (f"All {subj} are {pa}. "
-         f"All {other_subj} are {pa}. "
-         f"Therefore, {subj} are {other_subj}."),
-        (f"Every {sing} is {pa}. "
-         f"Every {other_sing} is also {pa}. "
-         f"Hence, {subj} and {other_subj} are the same kind of entity."),
-        (f"All {subj} have the property of being {pa}, and "
-         f"all {other_subj} also have the property of being {pa}. "
-         f"Therefore, {subj} and {other_subj} are equivalent."),
+        (f"All {subj} are {pa}. All {other_subj} are {pa}. Therefore, {subj} are {other_subj}."),
+        (
+            f"Every {sing} is {pa}. "
+            f"Every {other_sing} is also {pa}. "
+            f"Hence, {subj} and {other_subj} are the same kind of entity."
+        ),
+        (
+            f"All {subj} have the property of being {pa}, and "
+            f"all {other_subj} also have the property of being {pa}. "
+            f"Therefore, {subj} and {other_subj} are equivalent."
+        ),
     ]
     return variants[variant % len(variants)]
 
 
-def _gen_negation_scope_error(subj_type: str, subj: str, pa: str, pb: str,
-                               sing: str, variant: int) -> str:
+def _gen_negation_scope_error(
+    subj_type: str, subj: str, pa: str, pb: str, sing: str, variant: int
+) -> str:
     """FALLACY — Negation scope: 'Not all A are B' → 'All A are not B'.
 
     **Detailed explanation for engineers:**
@@ -531,18 +619,19 @@ def _gen_negation_scope_error(subj_type: str, subj: str, pa: str, pb: str,
         scope error. Violated_logic=True.
     """
     variants = [
-        (f"Not all {subj} are {pa}. "
-         f"Therefore, all {subj} are not {pa}."),
-        (f"It is false that all {subj} are {pa}. "
-         f"We can therefore conclude that no {subj} are {pa}."),
-        (f"We know that not every {sing} is {pa}. "
-         f"It follows that all {subj} are not {pa}."),
+        (f"Not all {subj} are {pa}. Therefore, all {subj} are not {pa}."),
+        (
+            f"It is false that all {subj} are {pa}. "
+            f"We can therefore conclude that no {subj} are {pa}."
+        ),
+        (f"We know that not every {sing} is {pa}. It follows that all {subj} are not {pa}."),
     ]
     return variants[variant % len(variants)]
 
 
-def _gen_quantifier_shift(subj_type: str, subj: str, pa: str, pb: str,
-                           sing: str, variant: int) -> str:
+def _gen_quantifier_shift(
+    subj_type: str, subj: str, pa: str, pb: str, sing: str, variant: int
+) -> str:
     """FALLACY — Quantifier shift: Some A are B. Some B are C. Therefore some A are C.
 
     **Detailed explanation for engineers:**
@@ -561,15 +650,21 @@ def _gen_quantifier_shift(subj_type: str, subj: str, pa: str, pb: str,
         other_sing = "researcher"
         other_pa = "well-connected"
     variants = [
-        (f"Some {subj} are {pa}. "
-         f"Some entities that are {pa} are also {other_pa}. "
-         f"Therefore, some {subj} are {other_pa}."),
-        (f"Some {subj} exhibit {pa}. "
-         f"Some {pa} entities are {other_subj}. "
-         f"Therefore, some {subj} are {other_subj}."),
-        (f"A number of {subj} are {pa}. "
-         f"Some {pa} things are also {pb}. "
-         f"Hence, some {subj} are {pb}."),
+        (
+            f"Some {subj} are {pa}. "
+            f"Some entities that are {pa} are also {other_pa}. "
+            f"Therefore, some {subj} are {other_pa}."
+        ),
+        (
+            f"Some {subj} exhibit {pa}. "
+            f"Some {pa} entities are {other_subj}. "
+            f"Therefore, some {subj} are {other_subj}."
+        ),
+        (
+            f"A number of {subj} are {pa}. "
+            f"Some {pa} things are also {pb}. "
+            f"Hence, some {subj} are {pb}."
+        ),
     ]
     return variants[variant % len(variants)]
 
@@ -595,6 +690,7 @@ INVALID_GENERATORS = [
 # ---------------------------------------------------------------------------
 # Generate logic texts
 # ---------------------------------------------------------------------------
+
 
 def generate_logic_texts(
     generators: list[tuple[str, object]],
@@ -627,8 +723,7 @@ def generate_logic_texts(
             except Exception:
                 # Fallback: use basic template if generator raises (e.g. undistributed middle
                 # needs a subject pool lookup that may fail for some indices)
-                text = gen_fn("animal", "dogs", "warm-blooded", "vertebrates",
-                              "dog", variant=i % 3)
+                text = gen_fn("animal", "dogs", "warm-blooded", "vertebrates", "dog", variant=i % 3)
             results.append((arg_type, text))
     return results
 
@@ -636,6 +731,7 @@ def generate_logic_texts(
 # ---------------------------------------------------------------------------
 # Build training pairs from logic texts
 # ---------------------------------------------------------------------------
+
 
 def build_logic_pairs(
     valid_texts: list[tuple[str, str]],
@@ -678,17 +774,19 @@ def build_logic_pairs(
                 cutoff = max(int(n * ratio), 1)
                 prefix = text[:cutoff]
                 embedding = logic_feature_vector(prefix)
-                result.append({
-                    "prefix_ratio": ratio,
-                    "embedding": embedding.tolist(),
-                    "violated_arithmetic": False,
-                    "violated_code": False,
-                    "violated_logic": violated,
-                    "any_violated": violated,
-                    "domain": "logic",
-                    "source_exp": 166,
-                    "argument_type": arg_type,
-                })
+                result.append(
+                    {
+                        "prefix_ratio": ratio,
+                        "embedding": embedding.tolist(),
+                        "violated_arithmetic": False,
+                        "violated_code": False,
+                        "violated_logic": violated,
+                        "any_violated": violated,
+                        "domain": "logic",
+                        "source_exp": 166,
+                        "argument_type": arg_type,
+                    }
+                )
         return result
 
     valid_pairs = _extract_pairs(valid_texts, violated=False)
@@ -705,6 +803,7 @@ def build_logic_pairs(
 # ---------------------------------------------------------------------------
 # Load arithmetic pairs from v2.json
 # ---------------------------------------------------------------------------
+
 
 def load_arithmetic_pairs(v2_path: Path) -> list[dict]:
     """Load only arithmetic-domain pairs from jepa_training_pairs_v2.json.
@@ -742,6 +841,7 @@ def load_arithmetic_pairs(v2_path: Path) -> list[dict]:
 # Balance summary
 # ---------------------------------------------------------------------------
 
+
 def print_balance_summary(pairs: list[dict]) -> None:
     """Print dataset balance statistics to stdout.
 
@@ -770,8 +870,7 @@ def print_balance_summary(pairs: list[dict]) -> None:
         domain_pairs = [p for p in pairs if p["domain"] == domain]
         n_pos = sum(1 for p in domain_pairs if p.get("any_violated", False))
         rate = 100.0 * n_pos / max(len(domain_pairs), 1)
-        print(f"  {domain:20s}: {len(domain_pairs):5d} pairs, "
-              f"{n_pos:4d} positive ({rate:.1f}%)")
+        print(f"  {domain:20s}: {len(domain_pairs):5d} pairs, {n_pos:4d} positive ({rate:.1f}%)")
 
     # Feature vector stats for logic pairs
     logic_pairs = [p for p in pairs if p["domain"] == "logic"]
@@ -788,6 +887,7 @@ def print_balance_summary(pairs: list[dict]) -> None:
 
         # Argument type distribution
         from collections import Counter as C2
+
         arg_types = C2(p.get("argument_type", "?") for p in logic_pairs)
         print(f"\nArgument type distribution (logic pairs):")
         for at, cnt in sorted(arg_types.items()):
@@ -799,6 +899,7 @@ def print_balance_summary(pairs: list[dict]) -> None:
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Experiment 166: generate and save logic symbolic feature pairs.
@@ -821,21 +922,23 @@ def main() -> None:
     # Step 1–2: Generate logic texts
     print("Generating valid argument texts...")
     valid_texts = generate_logic_texts(VALID_GENERATORS, n_per_type=13)
-    print(f"  Generated {len(valid_texts)} valid texts "
-          f"({len(VALID_GENERATORS)} types × 13 instances)")
+    print(
+        f"  Generated {len(valid_texts)} valid texts ({len(VALID_GENERATORS)} types × 13 instances)"
+    )
 
     print("Generating invalid argument texts (fallacies)...")
     invalid_texts = generate_logic_texts(INVALID_GENERATORS, n_per_type=13)
-    print(f"  Generated {len(invalid_texts)} invalid texts "
-          f"({len(INVALID_GENERATORS)} types × 13 instances)")
+    print(
+        f"  Generated {len(invalid_texts)} invalid texts "
+        f"({len(INVALID_GENERATORS)} types × 13 instances)"
+    )
 
     # Step 3: Build logic pairs (250 valid + 250 invalid)
     print("\nBuilding logic training pairs (4 prefix ratios each)...")
     logic_pairs = build_logic_pairs(valid_texts, invalid_texts, target_per_class=250)
     n_valid = sum(1 for p in logic_pairs if not p["violated_logic"])
     n_invalid = sum(1 for p in logic_pairs if p["violated_logic"])
-    print(f"  Logic pairs: {len(logic_pairs)} total "
-          f"({n_valid} valid, {n_invalid} invalid)")
+    print(f"  Logic pairs: {len(logic_pairs)} total ({n_valid} valid, {n_invalid} invalid)")
 
     # Step 4: Load arithmetic pairs
     print(f"\nLoading arithmetic pairs from {V2_JSON.name}...")
@@ -847,6 +950,7 @@ def main() -> None:
 
     # Compute domain counts and positive rates
     from collections import Counter
+
     domain_counts = dict(Counter(p["domain"] for p in combined))
     positive_rate_per_domain = {}
     for domain in domain_counts:
@@ -885,12 +989,14 @@ def main() -> None:
 
     # Sanity check: confirm at least 200 positive logic examples
     n_logic_pos = sum(
-        1 for p in combined
-        if p["domain"] == "logic" and p.get("any_violated", False)
+        1 for p in combined if p["domain"] == "logic" and p.get("any_violated", False)
     )
     if n_logic_pos < 200:
-        print(f"\nWARNING: Only {n_logic_pos} positive logic examples "
-              f"(target: ≥200). Check generator output.", file=sys.stderr)
+        print(
+            f"\nWARNING: Only {n_logic_pos} positive logic examples "
+            f"(target: ≥200). Check generator output.",
+            file=sys.stderr,
+        )
         sys.exit(1)
     else:
         print(f"\nSanity check PASSED: {n_logic_pos} positive logic examples (≥200 required)")

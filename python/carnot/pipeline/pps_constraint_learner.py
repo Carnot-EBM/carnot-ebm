@@ -41,15 +41,10 @@ from __future__ import annotations
 import enum
 import hashlib
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 import numpy as np
 
 from carnot.pipeline.lsebm_replayer import LSEBMConstraintReplayer
-
-if TYPE_CHECKING:
-    pass
-
 
 # ---------------------------------------------------------------------------
 # ConstraintDomain
@@ -305,22 +300,16 @@ class PPSConstraintLearner:
             # Xavier-uniform-style initialisation: weights ~ U(-1/sqrt(d), 1/sqrt(d)).
             scale = 1.0 / np.sqrt(self._PARTITION_DIM)
             init_weights = rng.uniform(-scale, scale, size=self._PARTITION_DIM)
-            self._partitions[domain] = DomainParameterPartition(
-                domain=domain, weights=init_weights
-            )
+            self._partitions[domain] = DomainParameterPartition(domain=domain, weights=init_weights)
 
         # Per-domain EBM replayers — each domain gets a fresh instance.
         self._replayers: dict[ConstraintDomain, LSEBMConstraintReplayer] = {
-            d: LSEBMConstraintReplayer(
-                n_replay=self._n_replay, ebm_n_iter=self._ebm_n_iter
-            )
+            d: LSEBMConstraintReplayer(n_replay=self._n_replay, ebm_n_iter=self._ebm_n_iter)
             for d in self.domains
         }
 
         # Per-domain violation vocabulary — populated by fit_domain().
-        self._domain_violations: dict[ConstraintDomain, list[str]] = {
-            d: [] for d in self.domains
-        }
+        self._domain_violations: dict[ConstraintDomain, list[str]] = {d: [] for d in self.domains}
 
     def fit_domain(self, domain: ConstraintDomain, violations: list[str]) -> None:
         """Update ONLY the specified domain's parameter partition.
@@ -386,9 +375,7 @@ class PPSConstraintLearner:
 
         # All other partitions are intentionally NOT touched — partition isolation.
 
-    def generate_boundary_violations(
-        self, domain: ConstraintDomain, n: int
-    ) -> list[str]:
+    def generate_boundary_violations(self, domain: ConstraintDomain, n: int) -> list[str]:
         """Generate n EBM-sampled boundary violations for the specified domain.
 
         WHY EBM sampling (not random): the domain's LSEBMConstraintReplayer was fitted
@@ -409,9 +396,7 @@ class PPSConstraintLearner:
         """
         return self._replayers[domain].generate_replay(n)
 
-    def session_fp_rate(
-        self, domain: ConstraintDomain, test_questions: list
-    ) -> float:
+    def session_fp_rate(self, domain: ConstraintDomain, test_questions: list) -> float:
         """Simulate session FP rate for a domain after partition training.
 
         WHY simulation (not live LLM inference): this is a CPU-only experiment.

@@ -208,8 +208,16 @@ def _build_consistent_chain(chain_id: int, chain_variant: int) -> ChainSpec:
     Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
     """
     topic = [
-        "shipping", "inventory", "pricing", "quality", "logistics",
-        "supply", "demand", "production", "distribution", "returns",
+        "shipping",
+        "inventory",
+        "pricing",
+        "quality",
+        "logistics",
+        "supply",
+        "demand",
+        "production",
+        "distribution",
+        "returns",
     ][chain_variant % 10]
     return ChainSpec(
         chain_id=chain_id,
@@ -452,21 +460,23 @@ def run_benchmark() -> dict[str, Any]:
     # Build serialisable chain records
     chain_records = []
     for r in chain_results:
-        chain_records.append({
-            "chain_id": r.chain_id,
-            "chain_type": r.chain_type,
-            "contradiction_type": r.contradiction_type,
-            "expected_consistent": r.expected_consistent,
-            "local_detected": r.local_detected,
-            "global_detected": r.global_detected,
-            "global_report_severity": r.global_report_severity,
-            "n_inconsistent_pairs": len(r.inconsistent_pairs),
-            "inconsistent_pairs": [
-                {"step_i": i, "step_j": j, "type": ctype, "description": desc}
-                for i, j, ctype, desc in r.inconsistent_pairs
-            ],
-            "latency_ms": round(r.latency_ms, 3),
-        })
+        chain_records.append(
+            {
+                "chain_id": r.chain_id,
+                "chain_type": r.chain_type,
+                "contradiction_type": r.contradiction_type,
+                "expected_consistent": r.expected_consistent,
+                "local_detected": r.local_detected,
+                "global_detected": r.global_detected,
+                "global_report_severity": r.global_report_severity,
+                "n_inconsistent_pairs": len(r.inconsistent_pairs),
+                "inconsistent_pairs": [
+                    {"step_i": i, "step_j": j, "type": ctype, "description": desc}
+                    for i, j, ctype, desc in r.inconsistent_pairs
+                ],
+                "latency_ms": round(r.latency_ms, 3),
+            }
+        )
 
     return {
         "experiment": "172_global_consistency",

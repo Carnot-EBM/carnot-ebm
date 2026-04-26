@@ -326,9 +326,7 @@ def init_embedding_ebt(config: EmbeddingEBTConfig, key: jax.Array) -> dict:
     params["final_ln_beta"] = jnp.zeros(config.d_model)
     k_out, key = jrandom.split(key)
     out_limit = jnp.sqrt(6.0 / (config.d_model + 1))
-    params["out_w"] = jrandom.uniform(
-        k_out, (config.d_model,), minval=-out_limit, maxval=out_limit
-    )
+    params["out_w"] = jrandom.uniform(k_out, (config.d_model,), minval=-out_limit, maxval=out_limit)
     params["out_b"] = jnp.array(0.0)
 
     return params
@@ -458,9 +456,7 @@ def p5_inner_loop(
     def inner_step(a_emb: jax.Array, _: None) -> tuple[jax.Array, None]:
         """One step of gradient descent on the energy w.r.t. answer embedding."""
         # Gradient of energy w.r.t. a_emb (not params — a_emb is the variable)
-        grad_a = jax.grad(
-            lambda a: embedding_ebt_energy(params, config, q_emb, a)
-        )(a_emb)
+        grad_a = jax.grad(lambda a: embedding_ebt_energy(params, config, q_emb, a))(a_emb)
         a_emb_new = a_emb - inner_lr * grad_a
         return a_emb_new, None
 
@@ -508,9 +504,7 @@ def p5_loss_single(
     init_a_emb = jrandom.normal(key, correct_a_emb.shape) * std
 
     # Run inner optimization
-    optimized_a_emb = p5_inner_loop(
-        params, config, q_emb, init_a_emb, n_inner_steps, inner_lr
-    )
+    optimized_a_emb = p5_inner_loop(params, config, q_emb, init_a_emb, n_inner_steps, inner_lr)
 
     # MSE loss between optimized and correct answer embedding
     return jnp.mean((optimized_a_emb - correct_a_emb) ** 2)
@@ -598,7 +592,7 @@ def extract_activations(
             )
 
         response = tokenizer.decode(
-            outputs[0][inputs["input_ids"].shape[1]:],
+            outputs[0][inputs["input_ids"].shape[1] :],
             skip_special_tokens=True,
         )
 
@@ -624,7 +618,12 @@ def extract_activations(
         if answer_tokens.shape[1] > n_input_tokens:
             # Mean-pool over answer tokens only
             last_ans = answer_hidden[-1][0, n_input_tokens:].mean(dim=0).float().numpy()
-            mid_ans = answer_hidden[len(answer_hidden) // 2][0, n_input_tokens:].mean(dim=0).float().numpy()
+            mid_ans = (
+                answer_hidden[len(answer_hidden) // 2][0, n_input_tokens:]
+                .mean(dim=0)
+                .float()
+                .numpy()
+            )
         else:
             # Fallback: use last token
             last_ans = answer_hidden[-1][0, -1].float().numpy()
@@ -641,18 +640,20 @@ def extract_activations(
         status = "correct" if is_correct else "HALLUC"
         if (i + 1) % 10 == 0 or i < 5:
             logger.info(
-                f"  [{i+1}/{len(questions)}] [{status}] "
+                f"  [{i + 1}/{len(questions)}] [{status}] "
                 f"Q: {question[:40]}... -> {response.strip()[:30]}"
             )
 
-        results.append({
-            "question": question,
-            "expected": expected,
-            "response": response.strip(),
-            "correct": is_correct,
-            "q_activation": q_activation,
-            "a_activation": a_activation,
-        })
+        results.append(
+            {
+                "question": question,
+                "expected": expected,
+                "response": response.strip(),
+                "correct": is_correct,
+                "q_activation": q_activation,
+                "a_activation": a_activation,
+            }
+        )
 
     return results, n_correct, n_halluc
 
@@ -676,9 +677,7 @@ def evaluate_ranking(
     halluc_energies = []
 
     for item in test_data:
-        e = float(embedding_ebt_energy(
-            params, config, item["q_activation"], item["a_activation"]
-        ))
+        e = float(embedding_ebt_energy(params, config, item["q_activation"], item["a_activation"]))
         if item["correct"]:
             correct_energies.append(e)
         else:
@@ -749,7 +748,9 @@ def main() -> int:
 
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     llm = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True, output_hidden_states=True,
+        model_name,
+        trust_remote_code=True,
+        output_hidden_states=True,
     )
     llm.eval()
     logger.info(f"Model loaded in {time.time() - start:.1f}s")
@@ -795,13 +796,9 @@ def main() -> int:
     test_halluc = [d for d in test_data if not d["correct"]]
 
     logger.info(
-        f"Train: {len(train_data)} ({len(train_correct)} correct, "
-        f"{len(train_halluc)} halluc)"
+        f"Train: {len(train_data)} ({len(train_correct)} correct, {len(train_halluc)} halluc)"
     )
-    logger.info(
-        f"Test:  {len(test_data)} ({len(test_correct)} correct, "
-        f"{len(test_halluc)} halluc)"
-    )
+    logger.info(f"Test:  {len(test_data)} ({len(test_correct)} correct, {len(test_halluc)} halluc)")
 
     # -----------------------------------------------------------------------
     # Step 4: Initialize EBT and optimizer
@@ -870,15 +867,14 @@ def main() -> int:
 
             Both losses are averaged over the batch and weighted.
         """
+
         def loss_fn(params: dict) -> jax.Array:
             batch_size_actual = q_embs.shape[0]
 
             # P5 loss: optimization-through-training
             keys = jrandom.split(rng_key, batch_size_actual)
             p5_losses = jax.vmap(
-                lambda q, a, k: p5_loss_single(
-                    params, config, q, a, k, n_inner_steps, inner_lr
-                )
+                lambda q, a, k: p5_loss_single(params, config, q, a, k, n_inner_steps, inner_lr)
             )(q_embs, correct_a_embs, keys)
             p5_loss = jnp.mean(p5_losses)
 
@@ -967,7 +963,7 @@ def main() -> int:
 
         if (epoch + 1) % 5 == 0 or epoch == 0:
             logger.info(
-                f"Epoch {epoch+1:3d}/{n_epochs} | loss={mean_loss:.4f} | "
+                f"Epoch {epoch + 1:3d}/{n_epochs} | loss={mean_loss:.4f} | "
                 f"test_pairwise_acc={test_metrics['pairwise_accuracy']:.3f} | "
                 f"test_thresh_acc={test_metrics['threshold_accuracy']:.3f} | "
                 f"gap={test_metrics['energy_gap']:.4f} | "
@@ -980,11 +976,13 @@ def main() -> int:
     print("\n--- Step 6: Final evaluation on test set ---")
     final_metrics = evaluate_ranking(best_params, config, test_data)
 
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print("FINAL RESULTS")
-    print(f"{'='*70}")
-    print(f"  Test samples:        {final_metrics['n_correct']} correct, "
-          f"{final_metrics['n_halluc']} hallucinated")
+    print(f"{'=' * 70}")
+    print(
+        f"  Test samples:        {final_metrics['n_correct']} correct, "
+        f"{final_metrics['n_halluc']} hallucinated"
+    )
     print(f"  Mean energy (correct):      {final_metrics['mean_correct_energy']:.4f}")
     print(f"  Mean energy (hallucinated): {final_metrics['mean_halluc_energy']:.4f}")
     print(f"  Energy gap:                 {final_metrics['energy_gap']:.4f}")
@@ -1033,18 +1031,20 @@ def main() -> int:
         json.dump(final_metrics, f, indent=2)
 
     logger.info(f"Model saved to {output_dir}/")
-    logger.info(f"  model.safetensors: {(output_dir / 'model.safetensors').stat().st_size / 1024:.1f} KB")
-    logger.info(f"  config.json: architecture + training hyperparameters")
-    logger.info(f"  metrics.json: final evaluation metrics")
+    logger.info(
+        f"  model.safetensors: {(output_dir / 'model.safetensors').stat().st_size / 1024:.1f} KB"
+    )
+    logger.info("  config.json: architecture + training hyperparameters")
+    logger.info("  metrics.json: final evaluation metrics")
 
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     if final_metrics["pairwise_accuracy"] >= 0.6:
         print("SUCCESS: EBT ranks correct answers better than hallucinated!")
     elif final_metrics["energy_gap"] > 0:
         print("PARTIAL: Positive energy gap but pairwise accuracy < 60%")
     else:
         print("NEEDS WORK: Energy gap is inverted — try more data or epochs")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     return 0
 

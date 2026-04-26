@@ -49,8 +49,16 @@ DELIVERABLE = "results/experiment_547_legacy_modernization.json"
 
 # Scripts under audit and their approximate per-milestone overhead from the retro data.
 _AUDIT_TARGETS = [
-    {"id": "exp308", "script": "scripts/experiment_308_jepa_gate_benchmark.py", "overhead_min": 180},
-    {"id": "exp260", "script": "scripts/experiment_260_solver_semantic_gpu.py", "overhead_min": 240},
+    {
+        "id": "exp308",
+        "script": "scripts/experiment_308_jepa_gate_benchmark.py",
+        "overhead_min": 180,
+    },
+    {
+        "id": "exp260",
+        "script": "scripts/experiment_260_solver_semantic_gpu.py",
+        "overhead_min": 240,
+    },
     {"id": "exp309", "script": "scripts/experiment_309_tier3_pipeline.py", "overhead_min": 210},
     {"id": "exp425", "script": "scripts/experiment_425_conductor_timeout.py", "overhead_min": 180},
     {"id": "exp410", "script": "scripts/experiment_410_precision_live.py", "overhead_min": 210},
@@ -120,14 +128,16 @@ def classify_modernization(audit: dict[str, Any]) -> str:
     """
     if not audit["script_exists"]:
         return "missing"
-    n_present = sum([
-        audit["env_autofix"],
-        audit["watchdog"],
-        audit["template"],
-        audit["assert_deliverable"],
-        # BatchedInferenceRunner is not always applicable (non-standard inference loops)
-        # so we count it separately but don't penalize scripts that don't need it.
-    ])
+    n_present = sum(
+        [
+            audit["env_autofix"],
+            audit["watchdog"],
+            audit["template"],
+            audit["assert_deliverable"],
+            # BatchedInferenceRunner is not always applicable (non-standard inference loops)
+            # so we count it separately but don't penalize scripts that don't need it.
+        ]
+    )
     if n_present == 4:
         return "fully_modern"
     if n_present == 3:
@@ -226,7 +236,14 @@ def main() -> None:
     # -----------------------------------------------------------------------
     estimated_savings_pct = estimate_savings_pct(
         _AUDIT_TARGETS,
-        [{k: v for k, v in a.items() if k not in ("script_id", "script_path", "classification", "overhead_min")} for a in script_audits],
+        [
+            {
+                k: v
+                for k, v in a.items()
+                if k not in ("script_id", "script_path", "classification", "overhead_min")
+            }
+            for a in script_audits
+        ],
     )
 
     # -----------------------------------------------------------------------

@@ -119,14 +119,17 @@ def _make_synthetic_pairs(n: int = 100, rng: random.Random | None = None) -> lis
     for i in range(n):
         label = "correct" if i % 2 == 0 else "incorrect"
         confidence = rng.uniform(0.70, 0.99)
-        pairs.append({
-            "step_text": (
-                f"Step {i}: {i + 1} * 2 = {(i + 1) * 2}" if label == "correct"
-                else f"Step {i}: {i + 1} * 2 = {(i + 1) * 2 + 1}"
-            ),
-            "label": label,
-            "label_confidence": confidence,
-        })
+        pairs.append(
+            {
+                "step_text": (
+                    f"Step {i}: {i + 1} * 2 = {(i + 1) * 2}"
+                    if label == "correct"
+                    else f"Step {i}: {i + 1} * 2 = {(i + 1) * 2 + 1}"
+                ),
+                "label": label,
+                "label_confidence": confidence,
+            }
+        )
     return pairs
 
 
@@ -157,9 +160,9 @@ def _train_with_quasimetric(
         (pre_auc, post_auc): AUC before and after all curriculum stages.
     """
     trainer = JEPACurriculumTrainer(
-        n_stage1_epochs=200,     # high-confidence pairs first (anchor the energy landscape)
-        n_stage2_epochs=100,     # all pairs (recover lower-confidence information)
-        n_stage3_epochs=0,       # no synthetic augmentation stage — using live data
+        n_stage1_epochs=200,  # high-confidence pairs first (anchor the energy landscape)
+        n_stage2_epochs=100,  # all pairs (recover lower-confidence information)
+        n_stage3_epochs=0,  # no synthetic augmentation stage — using live data
         high_conf_threshold=_HIGH_CONF_THRESHOLD,
     )
 
@@ -235,12 +238,8 @@ def main() -> None:
             inference_mode=inference_mode,
         )
 
-        fr11_relay_confirmed = (
-            inference_mode == "live" and retrain_result.post_auc >= 0.700
-        )
-        honest_verdict = (
-            "fr11_live_relay" if fr11_relay_confirmed else "fr11_synthetic_only"
-        )
+        fr11_relay_confirmed = inference_mode == "live" and retrain_result.post_auc >= 0.700
+        honest_verdict = "fr11_live_relay" if fr11_relay_confirmed else "fr11_synthetic_only"
 
         artifact_data: dict[str, Any] = {
             "schema": "carnot.jepa_retrain.v4",

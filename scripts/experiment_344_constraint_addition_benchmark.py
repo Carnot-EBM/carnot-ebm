@@ -79,9 +79,9 @@ SEED = 42  # Same seed as Exp 134 for comparability
 
 # Fraction of questions that contain each error type.
 # These percentages mirror the autopsy findings from Exp 331 on Qwen3.5-0.8B.
-CARRY_ERROR_RATE = 0.30   # 30% of questions have carry propagation errors
-SIGN_ERROR_RATE = 0.15    # 15% have sign errors (neg × neg)
-UNIT_ERROR_RATE = 0.05    # 5% have unit inconsistency errors
+CARRY_ERROR_RATE = 0.30  # 30% of questions have carry propagation errors
+SIGN_ERROR_RATE = 0.15  # 15% have sign errors (neg × neg)
+UNIT_ERROR_RATE = 0.05  # 5% have unit inconsistency errors
 MODEL_ID = "qwen3.5-0.8b-simulated"
 
 
@@ -143,14 +143,16 @@ def generate_simulated_questions(n: int, seed: int) -> list[dict[str, Any]]:
             # Correct answer — no errors.
             response_parts.append(f"Step {i}: 24 × 3 = 72 (correct)")
 
-        questions.append({
-            "question": f"Q{i}: Arithmetic problem {i}",
-            "response": " ".join(response_parts),
-            "has_carry_error": has_carry,
-            "has_sign_error": has_sign,
-            "has_unit_error": has_unit,
-            "has_any_error": has_carry or has_sign or has_unit,
-        })
+        questions.append(
+            {
+                "question": f"Q{i}: Arithmetic problem {i}",
+                "response": " ".join(response_parts),
+                "has_carry_error": has_carry,
+                "has_sign_error": has_sign,
+                "has_unit_error": has_unit,
+                "has_any_error": has_carry or has_sign or has_unit,
+            }
+        )
 
     return questions
 
@@ -267,10 +269,7 @@ def run_treatment_condition(questions: list[dict[str, Any]]) -> dict[str, Any]:
         n_new_constraints += len(template_constraints)
 
         # Step 2: Did any active template detect an error?
-        template_detected = any(
-            not c.metadata.get("satisfied", True)
-            for c in template_constraints
-        )
+        template_detected = any(not c.metadata.get("satisfied", True) for c in template_constraints)
 
         if template_detected and q["has_any_error"]:
             n_detected += 1
@@ -403,7 +402,9 @@ def main() -> None:
     n_sign = sum(1 for q in questions if q["has_sign_error"])
     n_unit = sum(1 for q in questions if q["has_unit_error"])
     n_any = sum(1 for q in questions if q["has_any_error"])
-    print(f"[Exp 344] Error distribution: carry={n_carry}, sign={n_sign}, unit={n_unit}, any={n_any}")
+    print(
+        f"[Exp 344] Error distribution: carry={n_carry}, sign={n_sign}, unit={n_unit}, any={n_any}"
+    )
 
     print("[Exp 344] Running Control condition (reweighting only)...")
     control_result = run_control_condition(questions)

@@ -115,8 +115,9 @@ class TestOracleChain:
     """SCENARIO-DATA-019: OracleChain aggregates step labels correctly."""
 
     def _make_oracle_chain(self, has_violation: bool = False) -> OracleChain:
-        sl = StepLabel(0, "step text", has_violation, None, None,
-                       "violated" if has_violation else "correct")
+        sl = StepLabel(
+            0, "step text", has_violation, None, None, "violated" if has_violation else "correct"
+        )
         return OracleChain(
             question_id="q0",
             question="What is X?",
@@ -326,6 +327,7 @@ class TestBuildCorpus:
         result = self.builder.build_corpus(pairs)
         dicts = [dataclasses.asdict(c) for c in result]
         import json
+
         serialised = json.dumps(dicts)  # must not raise
         loaded = json.loads(serialised)
         assert loaded[0]["question_id"] == "q1"

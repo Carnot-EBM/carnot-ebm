@@ -44,7 +44,6 @@ Spec: REQ-INFER-014
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 import jax
 import jax.numpy as jnp
@@ -96,7 +95,7 @@ class HallucinationDirectionConfig:
 def find_hallucination_direction(
     correct_activations: list[jax.Array],
     hallucinated_activations: list[jax.Array],
-    config: Optional[HallucinationDirectionConfig] = None,
+    config: HallucinationDirectionConfig | None = None,
 ) -> jax.Array:
     """Find the principal direction(s) separating correct from hallucinated activations.
 
@@ -190,7 +189,7 @@ def find_hallucination_direction(
 
     # Thin SVD: we only need the top-k right singular vectors.
     _u, _s, vt = jnp.linalg.svd(signed, full_matrices=False)
-    directions = vt[:config.top_k]
+    directions = vt[: config.top_k]
 
     if config.normalize:
         # Each row is already unit-norm from SVD, but normalize explicitly

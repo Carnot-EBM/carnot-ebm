@@ -127,9 +127,7 @@ class TestEvaluateGsm8kAnswerProxyMode:
     def test_clean_response_returns_true(self, stub_verifier):
         """Response with no arithmetic violations returns True (proxy: correct)."""
         # A simple sentence with no arithmetic expression — no violation possible.
-        result = exp644.evaluate_gsm8k_answer(
-            "There are five apples.", None, stub_verifier
-        )
+        result = exp644.evaluate_gsm8k_answer("There are five apples.", None, stub_verifier)
         assert result is True
 
     def test_violation_response_returns_false(self, stub_verifier):
@@ -193,14 +191,10 @@ class TestBuildLlmCaller:
 class TestEnsembleAnyViolation:
     """SCENARIO-VERIFY-189: ensemble OR-gate violation detection."""
 
-    def test_no_violation_on_clean_response(
-        self, stub_hermes, stub_causal, stub_interwhen
-    ):
+    def test_no_violation_on_clean_response(self, stub_hermes, stub_causal, stub_interwhen):
         """Clean response → all three components return no violation → False."""
         response = "There are five apples."
-        result = exp644._ensemble_any_violation(
-            response, stub_hermes, stub_causal, stub_interwhen
-        )
+        result = exp644._ensemble_any_violation(response, stub_hermes, stub_causal, stub_interwhen)
         # CI stub: SymCodeVerifier uses regex-only mode, short clean sentence → no violation.
         # We only assert the return type is bool.
         assert isinstance(result, bool)
@@ -208,9 +202,7 @@ class TestEnsembleAnyViolation:
     def test_returns_bool_type(self, stub_hermes, stub_causal, stub_interwhen):
         """_ensemble_any_violation always returns a bool, never raises."""
         for text in ["", "x", "3 + 4 = 7.", "The answer is 42."]:
-            result = exp644._ensemble_any_violation(
-                text, stub_hermes, stub_causal, stub_interwhen
-            )
+            result = exp644._ensemble_any_violation(text, stub_hermes, stub_causal, stub_interwhen)
             assert isinstance(result, bool)
 
 
@@ -275,9 +267,7 @@ class TestMainDeliverableWritten:
         monkeypatch.setattr(exp644, "ExperimentTemplate", lambda **_kw: _StubTemplate())
         monkeypatch.setattr(exp644, "BatchedInferenceRunner", _StubBIR)
         monkeypatch.setattr(exp644, "JITVRAMCheck", lambda device_id=0: _StubJIT())
-        monkeypatch.setattr(
-            exp644, "ExperimentTimeoutWatchdog", lambda *a, **kw: _StubWatchdog()
-        )
+        monkeypatch.setattr(exp644, "ExperimentTimeoutWatchdog", lambda *a, **kw: _StubWatchdog())
 
         exp644.main()
 
@@ -347,9 +337,7 @@ class TestMainDeliverableWritten:
         monkeypatch.setattr(exp644, "ExperimentTemplate", lambda **_kw: _StubTemplate())
         monkeypatch.setattr(exp644, "BatchedInferenceRunner", _StubBIR)
         monkeypatch.setattr(exp644, "JITVRAMCheck", lambda device_id=0: _StubJIT())
-        monkeypatch.setattr(
-            exp644, "ExperimentTimeoutWatchdog", lambda *a, **kw: _StubWatchdog()
-        )
+        monkeypatch.setattr(exp644, "ExperimentTimeoutWatchdog", lambda *a, **kw: _StubWatchdog())
 
         exp644.main()
 
@@ -406,9 +394,7 @@ class TestMainDeliverableWritten:
         monkeypatch.setattr(exp644, "ExperimentTemplate", lambda **_kw: _StubTemplate())
         monkeypatch.setattr(exp644, "BatchedInferenceRunner", _StubBIR)
         monkeypatch.setattr(exp644, "JITVRAMCheck", lambda device_id=0: _StubJIT())
-        monkeypatch.setattr(
-            exp644, "ExperimentTimeoutWatchdog", lambda *a, **kw: _StubWatchdog()
-        )
+        monkeypatch.setattr(exp644, "ExperimentTimeoutWatchdog", lambda *a, **kw: _StubWatchdog())
 
         exp644.main()
 

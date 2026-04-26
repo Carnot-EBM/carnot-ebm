@@ -70,8 +70,7 @@ class TestHalluSAEGeometricProbe:
         correct_energy = probe.geometric_energy(CORRECT_STEPS)
         hallu_energy = probe.geometric_energy(HALLUCINATED_STEPS)
         assert correct_energy < hallu_energy, (
-            f"Expected correct_energy={correct_energy:.4f} < "
-            f"hallu_energy={hallu_energy:.4f}"
+            f"Expected correct_energy={correct_energy:.4f} < hallu_energy={hallu_energy:.4f}"
         )
 
     def test_geometric_energy_nonnegative(self, probe) -> None:

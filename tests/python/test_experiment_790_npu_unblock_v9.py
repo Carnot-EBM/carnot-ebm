@@ -24,9 +24,7 @@ import sys
 import os
 
 # Ensure repo root is on the path so the import resolves.
-_REPO_ROOT = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..")
-)
+_REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
@@ -99,9 +97,7 @@ def test_verdict_npu_gemm_running():
         npu_gemm_runs=True,
         mlir_aie_import_ok=True,
     )
-    assert verdict == "npu_gemm_running", (
-        f"Expected npu_gemm_running, got {verdict!r}"
-    )
+    assert verdict == "npu_gemm_running", f"Expected npu_gemm_running, got {verdict!r}"
 
 
 def test_verdict_npu_gemm_running_not_emitted_without_benchmark():

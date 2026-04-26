@@ -121,9 +121,7 @@ def compute_energy_mae(model: "KAEMEnergy | SparseKAEMEnergy", test_x: np.ndarra
         Mean absolute error between model and ground-truth energies.
     """
     n_test = len(test_x)
-    model_energies = np.array(
-        [float(model.energy(jnp.array(test_x[i]))) for i in range(n_test)]
-    )
+    model_energies = np.array([float(model.energy(jnp.array(test_x[i]))) for i in range(n_test)])
     gt_energies = np.array([ground_truth_energy(test_x[i]) for i in range(n_test)])
     model_energies -= model_energies.mean()
     gt_energies -= gt_energies.mean()
@@ -182,7 +180,9 @@ def main() -> None:
     n_test = 500
     rng = np.random.default_rng(42)
 
-    _log.info("Generating synthetic energy landscape: %d vars, %d train, %d test", n_vars, n_train, n_test)
+    _log.info(
+        "Generating synthetic energy landscape: %d vars, %d train, %d test", n_vars, n_train, n_test
+    )
     train_data = generate_data(n_train, n_vars, rng)
     test_x = rng.uniform(-1.0, 1.0, size=(n_test, n_vars)).astype(np.float32)
     train_jax = jnp.array(train_data)
@@ -226,12 +226,14 @@ def main() -> None:
         else:
             rel_err = abs(mae - energy_accuracy_dense)
         _log.info("  fraction=%.2f MAE=%.6f rel_err=%.4f", frac, mae, rel_err)
-        sweep_results.append({
-            "top_k_fraction": frac,
-            "mae": float(mae),
-            "relative_error_vs_dense": float(rel_err),
-            "within_5pct": bool(rel_err < 0.05),
-        })
+        sweep_results.append(
+            {
+                "top_k_fraction": frac,
+                "mae": float(mae),
+                "relative_error_vs_dense": float(rel_err),
+                "within_5pct": bool(rel_err < 0.05),
+            }
+        )
         # Track the maximum fraction that still achieves < 5% relative error
         if rel_err < 0.05:
             best_fraction = frac
@@ -248,7 +250,9 @@ def main() -> None:
     # RETRO-057 resolution check
     # ------------------------------------------------------------------
     if energy_accuracy_dense > 1e-10:
-        sparse_vs_dense_error = abs(energy_accuracy_sparse - energy_accuracy_dense) / energy_accuracy_dense
+        sparse_vs_dense_error = (
+            abs(energy_accuracy_sparse - energy_accuracy_dense) / energy_accuracy_dense
+        )
     else:
         sparse_vs_dense_error = abs(energy_accuracy_sparse - energy_accuracy_dense)
 

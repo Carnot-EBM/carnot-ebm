@@ -39,6 +39,7 @@ import pytest
 # Bootstrap sys.path so scripts.* and carnot.* resolve.
 # ---------------------------------------------------------------------------
 import sys
+
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
@@ -71,34 +72,61 @@ def _healthy_gpu_status() -> dict:
     return {
         "all_healthy": True,
         "models": [
-            {"name": "Gemma4-E4B-it", "health_ok": True, "stall_root_cause": None,
-             "load_time_s": 1.0, "gpu_id": 0},
-            {"name": "Qwen3.5-0.8B", "health_ok": True, "stall_root_cause": None,
-             "load_time_s": 0.5, "gpu_id": 1},
+            {
+                "name": "Gemma4-E4B-it",
+                "health_ok": True,
+                "stall_root_cause": None,
+                "load_time_s": 1.0,
+                "gpu_id": 0,
+            },
+            {
+                "name": "Qwen3.5-0.8B",
+                "health_ok": True,
+                "stall_root_cause": None,
+                "load_time_s": 0.5,
+                "gpu_id": 1,
+            },
         ],
         "prewarm_time_s": 1.5,
         "dual_gpu_auto_assigned": True,
-        "gpu_monitor_results": {"n_gpus_detected": 2, "n_zombies": 0,
-                                 "idle_gpus": [0, 1], "all_healthy": True},
+        "gpu_monitor_results": {
+            "n_gpus_detected": 2,
+            "n_zombies": 0,
+            "idle_gpus": [0, 1],
+            "all_healthy": True,
+        },
     }
 
 
 def _unhealthy_gpu_status() -> dict:
     return {
         "all_healthy": False,
-        "models": [{"name": "Gemma4-E4B-it", "health_ok": False,
-                     "stall_root_cause": "OOM", "load_time_s": 0.0, "gpu_id": 0}],
+        "models": [
+            {
+                "name": "Gemma4-E4B-it",
+                "health_ok": False,
+                "stall_root_cause": "OOM",
+                "load_time_s": 0.0,
+                "gpu_id": 0,
+            }
+        ],
         "prewarm_time_s": 0.0,
         "dual_gpu_auto_assigned": False,
-        "gpu_monitor_results": {"n_gpus_detected": 0, "n_zombies": 0,
-                                 "idle_gpus": [], "all_healthy": False},
+        "gpu_monitor_results": {
+            "n_gpus_detected": 0,
+            "n_zombies": 0,
+            "idle_gpus": [],
+            "all_healthy": False,
+        },
     }
 
 
 def _mock_model_fn():
     """HuggingFace pipeline mock that returns a response with #### 6."""
+
     def _call(prompt, max_new_tokens=512):
         return [{"generated_text": "Step 1: answer is 6.\n#### 6"}]
+
     return MagicMock(side_effect=_call)
 
 
@@ -340,7 +368,9 @@ class TestApplyVariant:
         """When LLMExtractor raises, it falls back gracefully (no crash)."""
         mock_extractor = MagicMock()
         mock_extractor.extract.side_effect = RuntimeError("LLM failed")
-        response, n_viol, n_rep = self._run(PipelineVariant.CONFIDENCE_ONLY, extractor_obj=mock_extractor)
+        response, n_viol, n_rep = self._run(
+            PipelineVariant.CONFIDENCE_ONLY, extractor_obj=mock_extractor
+        )
         assert response == self._RESPONSE
 
 
@@ -356,6 +386,7 @@ class TestRunVariant:
     def _mock_model(self) -> MagicMock:
         def _side_effect(prompt, max_new_tokens=512):
             return [{"generated_text": "#### 6"}]
+
         return MagicMock(side_effect=_side_effect)
 
     def test_returns_precision_stack_result(self):
@@ -370,46 +401,64 @@ class TestRunVariant:
 
     def test_inference_mode_set(self):
         result = exp368.run_variant(
-            PipelineVariant.FULL_STACK, self._make_questions(4),
-            "Gemma4-E4B-it", "live_gpu", model_obj=self._mock_model(),
+            PipelineVariant.FULL_STACK,
+            self._make_questions(4),
+            "Gemma4-E4B-it",
+            "live_gpu",
+            model_obj=self._mock_model(),
         )
         assert result.inference_mode == "live_gpu"
 
     def test_model_id_set(self):
         result = exp368.run_variant(
-            PipelineVariant.BASELINE, self._make_questions(4),
-            "Gemma4-E4B-it", "live_gpu", model_obj=self._mock_model(),
+            PipelineVariant.BASELINE,
+            self._make_questions(4),
+            "Gemma4-E4B-it",
+            "live_gpu",
+            model_obj=self._mock_model(),
         )
         assert result.model_id == "Gemma4-E4B-it"
 
     def test_n_questions_set(self):
         result = exp368.run_variant(
-            PipelineVariant.BASELINE, self._make_questions(6),
-            "Qwen3.5-0.8B", "live_gpu", model_obj=self._mock_model(),
+            PipelineVariant.BASELINE,
+            self._make_questions(6),
+            "Qwen3.5-0.8B",
+            "live_gpu",
+            model_obj=self._mock_model(),
         )
         assert result.n_questions == 6
 
     def test_accuracy_in_range(self):
         for variant in PipelineVariant:
             result = exp368.run_variant(
-                variant, self._make_questions(6),
-                "Qwen3.5-0.8B", "live_gpu", model_obj=self._mock_model(),
+                variant,
+                self._make_questions(6),
+                "Qwen3.5-0.8B",
+                "live_gpu",
+                model_obj=self._mock_model(),
             )
             assert 0.0 <= result.baseline_accuracy <= 1.0
             assert 0.0 <= result.precision_stack_accuracy <= 1.0
 
     def test_signed_improvement_formula(self):
         result = exp368.run_variant(
-            PipelineVariant.FULL_STACK, self._make_questions(6),
-            "Gemma4-E4B-it", "live_gpu", model_obj=self._mock_model(),
+            PipelineVariant.FULL_STACK,
+            self._make_questions(6),
+            "Gemma4-E4B-it",
+            "live_gpu",
+            model_obj=self._mock_model(),
         )
         expected = result.precision_stack_accuracy - result.baseline_accuracy
         assert abs(result.signed_improvement - expected) < 1e-9
 
     def test_counters_non_negative(self):
         result = exp368.run_variant(
-            PipelineVariant.FULL_STACK, self._make_questions(6),
-            "Gemma4-E4B-it", "live_gpu", model_obj=self._mock_model(),
+            PipelineVariant.FULL_STACK,
+            self._make_questions(6),
+            "Gemma4-E4B-it",
+            "live_gpu",
+            model_obj=self._mock_model(),
         )
         assert result.n_violations_found >= 0
         assert result.n_repairs_attempted >= 0
@@ -418,8 +467,11 @@ class TestRunVariant:
 
     def test_empty_questions(self):
         result = exp368.run_variant(
-            PipelineVariant.BASELINE, [],
-            "Qwen3.5-0.8B", "live_gpu", model_obj=self._mock_model(),
+            PipelineVariant.BASELINE,
+            [],
+            "Qwen3.5-0.8B",
+            "live_gpu",
+            model_obj=self._mock_model(),
         )
         assert result.baseline_accuracy == 0.0
         assert result.precision_stack_accuracy == 0.0
@@ -429,8 +481,11 @@ class TestRunVariant:
         """When model always raises, run_variant handles it gracefully."""
         mock_model = MagicMock(side_effect=RuntimeError("timeout"))
         result = exp368.run_variant(
-            PipelineVariant.BASELINE, self._make_questions(4),
-            "Qwen3.5-0.8B", "live_gpu", model_obj=mock_model,
+            PipelineVariant.BASELINE,
+            self._make_questions(4),
+            "Qwen3.5-0.8B",
+            "live_gpu",
+            model_obj=mock_model,
         )
         assert result.n_questions == 4
 
@@ -482,15 +537,17 @@ class TestBuildExp368Artifact:
         results = []
         for variant in PipelineVariant:
             si = signed_improvement if variant == PipelineVariant.FULL_STACK else 0.0
-            results.append(PrecisionStackResult(
-                model_id="Gemma4-E4B-it",
-                n_questions=10,
-                baseline_accuracy=0.5,
-                precision_stack_accuracy=0.5 + si,
-                signed_improvement=si,
-                pipeline_variant=variant,
-                inference_mode="live_gpu",
-            ))
+            results.append(
+                PrecisionStackResult(
+                    model_id="Gemma4-E4B-it",
+                    n_questions=10,
+                    baseline_accuracy=0.5,
+                    precision_stack_accuracy=0.5 + si,
+                    signed_improvement=si,
+                    pipeline_variant=variant,
+                    inference_mode="live_gpu",
+                )
+            )
         return results
 
     def test_schema_v2(self):
@@ -503,17 +560,23 @@ class TestBuildExp368Artifact:
 
     def test_live_improvement_verdict(self):
         """FULL_STACK positive improvement + live_gpu → live_improvement."""
-        artifact = exp368.build_exp368_artifact(self._make_results(signed_improvement=0.05), "live_gpu")
+        artifact = exp368.build_exp368_artifact(
+            self._make_results(signed_improvement=0.05), "live_gpu"
+        )
         assert artifact["honest_verdict"] == "live_improvement"
 
     def test_live_no_improvement_verdict(self):
         """Negative improvement + live_gpu → live_no_improvement."""
-        artifact = exp368.build_exp368_artifact(self._make_results(signed_improvement=-0.05), "live_gpu")
+        artifact = exp368.build_exp368_artifact(
+            self._make_results(signed_improvement=-0.05), "live_gpu"
+        )
         assert artifact["honest_verdict"] == "live_no_improvement"
 
     def test_zero_improvement_is_no_improvement(self):
         """Zero improvement → live_no_improvement (not positive)."""
-        artifact = exp368.build_exp368_artifact(self._make_results(signed_improvement=0.0), "live_gpu")
+        artifact = exp368.build_exp368_artifact(
+            self._make_results(signed_improvement=0.0), "live_gpu"
+        )
         assert artifact["honest_verdict"] == "live_no_improvement"
 
     def test_blocked_inference_mode(self):
@@ -605,19 +668,23 @@ class TestRunVariantRepairTracking:
             """Returns wrong answer on first call (baseline), correct on second (variant)."""
             call_count[0] += 1
             if call_count[0] <= 1:
-                return [{"generated_text": "#### 99"}]   # wrong
-            return [{"generated_text": "#### 42"}]        # correct
+                return [{"generated_text": "#### 99"}]  # wrong
+            return [{"generated_text": "#### 42"}]  # correct
 
         mock_model = MagicMock(side_effect=_model)
 
         # Patch _apply_variant so the "repair" returns a corrected response.
         with patch.object(
-            exp368, "_apply_variant",
+            exp368,
+            "_apply_variant",
             return_value=("#### 42", 1, 1),  # repaired_response, n_viol, rep_attempted=1
         ):
             result = exp368.run_variant(
-                PipelineVariant.CONFIDENCE_ONLY, questions,
-                "Qwen3.5-0.8B", "live_gpu", model_obj=mock_model,
+                PipelineVariant.CONFIDENCE_ONLY,
+                questions,
+                "Qwen3.5-0.8B",
+                "live_gpu",
+                model_obj=mock_model,
             )
         # With baseline returning wrong and "repaired" response being correct,
         # n_repairs_improved should be 1.
@@ -632,18 +699,23 @@ class TestRunVariantRepairTracking:
         def _model(prompt, max_new_tokens=512):
             call_count[0] += 1
             if call_count[0] <= 1:
-                return [{"generated_text": "#### 42"}]   # correct baseline
-            return [{"generated_text": "#### 42"}]        # correct in variant too
+                return [{"generated_text": "#### 42"}]  # correct baseline
+            return [{"generated_text": "#### 42"}]  # correct in variant too
+
         mock_model = MagicMock(side_effect=_model)
 
         # Patch _apply_variant so the "repair" breaks the correct response.
         with patch.object(
-            exp368, "_apply_variant",
+            exp368,
+            "_apply_variant",
             return_value=("#### 99", 1, 1),  # wrong repaired_response, rep_attempted=1
         ):
             result = exp368.run_variant(
-                PipelineVariant.CONFIDENCE_ONLY, questions,
-                "Qwen3.5-0.8B", "live_gpu", model_obj=mock_model,
+                PipelineVariant.CONFIDENCE_ONLY,
+                questions,
+                "Qwen3.5-0.8B",
+                "live_gpu",
+                model_obj=mock_model,
             )
         assert result.n_repairs_broken >= 0  # field accessible
 
@@ -658,10 +730,14 @@ class TestWriteArtifact:
         from scripts.experiment_template import ExperimentTemplate
 
         tmpl = ExperimentTemplate(
-            exp_id=368, title="test",
-            deliverable="results/test_exp368.json", repo_root=tmp_path,
+            exp_id=368,
+            title="test",
+            deliverable="results/test_exp368.json",
+            repo_root=tmp_path,
         )
-        exp368._write_artifact(tmpl, {"schema": "carnot.precision_benchmark.v2", "status": "success"})
+        exp368._write_artifact(
+            tmpl, {"schema": "carnot.precision_benchmark.v2", "status": "success"}
+        )
         written = json.loads((tmp_path / "results" / "test_exp368.json").read_text())
         assert written["schema"] == "carnot.precision_benchmark.v2"
 
@@ -669,8 +745,10 @@ class TestWriteArtifact:
         from scripts.experiment_template import ExperimentTemplate
 
         tmpl = ExperimentTemplate(
-            exp_id=368, title="test",
-            deliverable="deep/nested/exp368.json", repo_root=tmp_path,
+            exp_id=368,
+            title="test",
+            deliverable="deep/nested/exp368.json",
+            repo_root=tmp_path,
         )
         exp368._write_artifact(tmpl, {"x": 1})
         assert (tmp_path / "deep" / "nested" / "exp368.json").exists()
@@ -688,8 +766,10 @@ class TestMainForceLiveNotSet:
         with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "0"}):
             with patch("scripts.experiment_368_precision_live.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
-                    exp_id=368, title=exp368.EXP_TITLE,
-                    deliverable=exp368.DELIVERABLE, repo_root=tmp_path,
+                    exp_id=368,
+                    title=exp368.EXP_TITLE,
+                    deliverable=exp368.DELIVERABLE,
+                    repo_root=tmp_path,
                 )
                 tmpl_instance.setup()
                 MockTmpl.return_value = tmpl_instance
@@ -706,8 +786,10 @@ class TestMainForceLiveNotSet:
         with patch.dict(os.environ, env, clear=True):
             with patch("scripts.experiment_368_precision_live.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
-                    exp_id=368, title=exp368.EXP_TITLE,
-                    deliverable=exp368.DELIVERABLE, repo_root=tmp_path,
+                    exp_id=368,
+                    title=exp368.EXP_TITLE,
+                    deliverable=exp368.DELIVERABLE,
+                    repo_root=tmp_path,
                 )
                 tmpl_instance.setup()
                 MockTmpl.return_value = tmpl_instance
@@ -731,11 +813,15 @@ class TestMainGpuNotCapable:
         )
 
         with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}):
-            with patch("scripts.experiment_368_precision_live.diagnose_live_gpu", return_value=not_capable):
+            with patch(
+                "scripts.experiment_368_precision_live.diagnose_live_gpu", return_value=not_capable
+            ):
                 with patch("scripts.experiment_368_precision_live.ExperimentTemplate") as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
-                        exp_id=368, title=exp368.EXP_TITLE,
-                        deliverable=exp368.DELIVERABLE, repo_root=tmp_path,
+                        exp_id=368,
+                        title=exp368.EXP_TITLE,
+                        deliverable=exp368.DELIVERABLE,
+                        repo_root=tmp_path,
                     )
                     tmpl_instance.setup()
                     MockTmpl.return_value = tmpl_instance
@@ -757,11 +843,15 @@ class TestMainGpuSetupUnhealthy:
         capable = _live_diag(is_live_capable=True)
 
         with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}):
-            with patch("scripts.experiment_368_precision_live.diagnose_live_gpu", return_value=capable):
+            with patch(
+                "scripts.experiment_368_precision_live.diagnose_live_gpu", return_value=capable
+            ):
                 with patch("scripts.experiment_368_precision_live.ExperimentTemplate") as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
-                        exp_id=368, title=exp368.EXP_TITLE,
-                        deliverable=exp368.DELIVERABLE, repo_root=tmp_path,
+                        exp_id=368,
+                        title=exp368.EXP_TITLE,
+                        deliverable=exp368.DELIVERABLE,
+                        repo_root=tmp_path,
                     )
                     tmpl_instance.setup()
                     tmpl_instance.setup_gpu = MagicMock(return_value=_unhealthy_gpu_status())
@@ -784,11 +874,15 @@ class TestMainModelLoadFails:
         capable = _live_diag(is_live_capable=True)
 
         with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}):
-            with patch("scripts.experiment_368_precision_live.diagnose_live_gpu", return_value=capable):
+            with patch(
+                "scripts.experiment_368_precision_live.diagnose_live_gpu", return_value=capable
+            ):
                 with patch("scripts.experiment_368_precision_live.ExperimentTemplate") as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
-                        exp_id=368, title=exp368.EXP_TITLE,
-                        deliverable=exp368.DELIVERABLE, repo_root=tmp_path,
+                        exp_id=368,
+                        title=exp368.EXP_TITLE,
+                        deliverable=exp368.DELIVERABLE,
+                        repo_root=tmp_path,
                     )
                     tmpl_instance.setup()
                     tmpl_instance.setup_gpu = MagicMock(return_value=_healthy_gpu_status())
@@ -857,11 +951,15 @@ class TestMainSuccess:
         mock_model = _mock_model_fn()
 
         with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}):
-            with patch("scripts.experiment_368_precision_live.diagnose_live_gpu", return_value=capable):
+            with patch(
+                "scripts.experiment_368_precision_live.diagnose_live_gpu", return_value=capable
+            ):
                 with patch("scripts.experiment_368_precision_live.ExperimentTemplate") as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
-                        exp_id=368, title=exp368.EXP_TITLE,
-                        deliverable=exp368.DELIVERABLE, repo_root=tmp_path,
+                        exp_id=368,
+                        title=exp368.EXP_TITLE,
+                        deliverable=exp368.DELIVERABLE,
+                        repo_root=tmp_path,
                     )
                     tmpl_instance.setup()
                     tmpl_instance.setup_gpu = MagicMock(return_value=_healthy_gpu_status())
@@ -896,22 +994,30 @@ class TestMainSuccess:
         qwen_only = [{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]
 
         with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}):
-            with patch("scripts.experiment_368_precision_live.diagnose_live_gpu", return_value=capable):
+            with patch(
+                "scripts.experiment_368_precision_live.diagnose_live_gpu", return_value=capable
+            ):
                 with patch("scripts.experiment_368_precision_live.MODEL_SPECS", qwen_only):
                     with patch(
                         "scripts.experiment_368_precision_live._DIAGNOSTIC_MODEL_IDS",
                         [s["hf_id"] for s in qwen_only],
                     ):
-                        with patch("scripts.experiment_368_precision_live.ExperimentTemplate") as MockTmpl:
+                        with patch(
+                            "scripts.experiment_368_precision_live.ExperimentTemplate"
+                        ) as MockTmpl:
                             tmpl_instance = ExperimentTemplate(
-                                exp_id=368, title=exp368.EXP_TITLE,
-                                deliverable=exp368.DELIVERABLE, repo_root=tmp_path,
+                                exp_id=368,
+                                title=exp368.EXP_TITLE,
+                                deliverable=exp368.DELIVERABLE,
+                                repo_root=tmp_path,
                             )
                             tmpl_instance.setup()
                             tmpl_instance.setup_gpu = MagicMock(return_value=_healthy_gpu_status())
                             MockTmpl.return_value = tmpl_instance
 
-                            with patch.object(exp368, "load_gsm8k_questions", return_value=small_questions):
+                            with patch.object(
+                                exp368, "load_gsm8k_questions", return_value=small_questions
+                            ):
                                 with patch(
                                     "scripts.experiment_368_precision_live._load_model_pipeline",
                                     return_value=mock_model,

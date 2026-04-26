@@ -215,20 +215,24 @@ class TestGateDecisionRecord:
 # ---------------------------------------------------------------------------
 
 
-def _make_gate_records(n: int = 50, *, n_skipped: int = 15, n_correct: int = 40) -> list[GateDecisionRecord]:
+def _make_gate_records(
+    n: int = 50, *, n_skipped: int = 15, n_correct: int = 40
+) -> list[GateDecisionRecord]:
     """Build n GateDecisionRecords with specified skip and correct counts."""
     records = []
     for i in range(n):
         skipped = i < n_skipped
         correct = i < n_correct
-        records.append(GateDecisionRecord(
-            question_id=f"q{i}",
-            correct=correct,
-            gate_decision="skip" if skipped else "verify",
-            gate_energy=0.3 if skipped else 0.7,
-            ising_ran=not skipped,
-            violation_detected=(not skipped and i % 3 == 0),
-        ))
+        records.append(
+            GateDecisionRecord(
+                question_id=f"q{i}",
+                correct=correct,
+                gate_decision="skip" if skipped else "verify",
+                gate_energy=0.3 if skipped else 0.7,
+                ising_ran=not skipped,
+                violation_detected=(not skipped and i % 3 == 0),
+            )
+        )
     return records
 
 

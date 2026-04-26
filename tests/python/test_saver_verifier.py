@@ -684,10 +684,7 @@ class TestBuildSaverArtifact:
 
         Spec: REQ-AGENT-001
         """
-        steps = [
-            AgentStep(i, f"Q{i}", f"A{i}", f"A{i}", committed=(i % 2 == 0))
-            for i in range(4)
-        ]
+        steps = [AgentStep(i, f"Q{i}", f"A{i}", f"A{i}", committed=(i % 2 == 0)) for i in range(4)]
         faithfulness = sum(1 for s in steps if s.committed) / len(steps)
         artifact = build_saver_artifact(steps, faithfulness)
 

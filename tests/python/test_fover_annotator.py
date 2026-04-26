@@ -120,9 +120,7 @@ class TestParseCotIntoSteps:
 
     def test_multiline_numbered_steps(self):
         response = (
-            "1. First compute 2 + 3 = 5.\n"
-            "   This is still step 1.\n"
-            "2. Then compute 5 + 1 = 6."
+            "1. First compute 2 + 3 = 5.\n   This is still step 1.\n2. Then compute 5 + 1 = 6."
         )
         steps = parse_cot_into_steps(response)
         assert len(steps) == 2
@@ -216,6 +214,7 @@ class TestAnnotateStepWithZ3:
     def test_z3_unknown_or_error_yields_not_verifiable(self, monkeypatch):
         # Lines 343-344: Z3 returns 'unknown' → label='not_verifiable', confidence=0.0
         from carnot.pipeline import fover_annotator as fa
+
         monkeypatch.setattr(fa, "_exec_z3_snippet", lambda code: ("unknown", None))
         step = FOVERCoTStep(
             step_idx=0,
@@ -236,6 +235,7 @@ class TestAnnotateStepWithZ3:
         # The ValueError branch (line 322) is unreachable via _INLINE_EQ_RE since
         # the regex only matches digit strings; test the else branch via monkeypatch:
         from carnot.pipeline import fover_annotator as fa
+
         monkeypatch.setattr(fa, "_exec_z3_snippet", lambda code: ("sat", None))
         step = FOVERCoTStep(
             step_idx=0,

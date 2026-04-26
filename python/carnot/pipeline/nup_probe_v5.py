@@ -44,13 +44,10 @@ Spec: REQ-VERIFY-125, SCENARIO-VERIFY-155, SCENARIO-VERIFY-156
 
 from __future__ import annotations
 
-import json
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, Iterator, List, Tuple
 
 from carnot.pipeline.nup_probe_v4 import NUPProbeV4
-
 
 # ---------------------------------------------------------------------------
 # GRPOContrastivePairer
@@ -77,7 +74,7 @@ class GRPOContrastivePairer:
     Spec: REQ-VERIFY-125-1, SCENARIO-VERIFY-155
     """
 
-    def pairs(self, entries: List[Dict]) -> List[Tuple[Dict, Dict]]:
+    def pairs(self, entries: list[dict]) -> list[tuple[dict, dict]]:
         """Group entries by question_index and yield (correct, incorrect) pairs.
 
         **Algorithm:**
@@ -98,8 +95,8 @@ class GRPOContrastivePairer:
 
         Spec: REQ-VERIFY-125-1, SCENARIO-VERIFY-155
         """
-        correct_by_q: Dict[int, List[Dict]] = defaultdict(list)
-        incorrect_by_q: Dict[int, List[Dict]] = defaultdict(list)
+        correct_by_q: dict[int, list[dict]] = defaultdict(list)
+        incorrect_by_q: dict[int, list[dict]] = defaultdict(list)
 
         for entry in entries:
             q_idx = entry.get("question_index", -1)
@@ -108,7 +105,7 @@ class GRPOContrastivePairer:
             else:
                 incorrect_by_q[q_idx].append(entry)
 
-        result: List[Tuple[Dict, Dict]] = []
+        result: list[tuple[dict, dict]] = []
         for q_idx in correct_by_q:
             if q_idx not in incorrect_by_q:
                 continue  # no contrastive partner — skip
@@ -119,7 +116,7 @@ class GRPOContrastivePairer:
         return result
 
 
-def _extract_step_text(entry: Dict) -> str:
+def _extract_step_text(entry: dict) -> str:
     """Extract the primary text signal from a live_pairs entry.
 
     **Why prefer cot_steps over response:**
@@ -189,9 +186,9 @@ class NUPProbeV5:
 
     def train_from_pairs(
         self,
-        entries: List[Dict],
+        entries: list[dict],
         n_epochs: int = 100,
-    ) -> Dict:
+    ) -> dict:
         """Train the probe using GRPO-style contrastive pairs extracted from live_pairs.
 
         **What this does step-by-step:**
@@ -221,8 +218,8 @@ class NUPProbeV5:
         """
         pairs = self._pairer.pairs(entries)
 
-        correct_steps: List[str] = []
-        incorrect_steps: List[str] = []
+        correct_steps: list[str] = []
+        incorrect_steps: list[str] = []
 
         for correct_entry, incorrect_entry in pairs:
             correct_steps.append(_extract_step_text(correct_entry))
@@ -239,7 +236,7 @@ class NUPProbeV5:
         train_result["n_incorrect_steps"] = len(incorrect_steps)
         return train_result
 
-    def evaluate_auc(self, entries: List[Dict]) -> float:
+    def evaluate_auc(self, entries: list[dict]) -> float:
         """Evaluate AUROC on a FOVER corpus (list of live_pairs entries).
 
         **How this works:**
@@ -279,7 +276,7 @@ class NUPProbeV5:
         import struct
 
         weights = self._probe._weights  # list of floats
-        bias = self._probe._bias        # float scalar
+        bias = self._probe._bias  # float scalar
 
         # Encode as raw float32 bytes (safetensors header + data layout)
         # We write a minimal safetensors-compatible binary:

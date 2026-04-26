@@ -32,18 +32,24 @@ class TestBuildLiveDataArtifact:
     """REQ-DATA-001: artifact must have all required fields."""
 
     def test_schema_field(self):
-        art = exp552._build_live_data_artifact("live_gpu", 50, 100, "results/live_pairs_552.json", [1.0] * 50)
+        art = exp552._build_live_data_artifact(
+            "live_gpu", 50, 100, "results/live_pairs_552.json", [1.0] * 50
+        )
         assert art["schema"] == "carnot.live_data_collection.v1"
 
     def test_honest_verdict_cumulative_100(self):
         # SCENARIO-DATA-005: cumulative >=100 -> live_data_collected
-        art = exp552._build_live_data_artifact("live_gpu", 50, 50, "f.json", [], n_pairs_from_exp551=50)
+        art = exp552._build_live_data_artifact(
+            "live_gpu", 50, 50, "f.json", [], n_pairs_from_exp551=50
+        )
         assert art["honest_verdict"] == "live_data_collected"
         assert art["cumulative_pairs"] == 100
 
     def test_honest_verdict_partial_collection(self):
         # cumulative < 100 -> partial_collection
-        art = exp552._build_live_data_artifact("live_gpu", 50, 30, "f.json", [], n_pairs_from_exp551=0)
+        art = exp552._build_live_data_artifact(
+            "live_gpu", 50, 30, "f.json", [], n_pairs_from_exp551=0
+        )
         assert art["honest_verdict"] == "partial_collection"
 
     def test_honest_verdict_gpu_required(self):
@@ -52,7 +58,9 @@ class TestBuildLiveDataArtifact:
         assert art["honest_verdict"] == "gpu_required"
 
     def test_cumulative_pairs_calculation(self):
-        art = exp552._build_live_data_artifact("live_gpu", 50, 60, "f.json", [], n_pairs_from_exp551=45)
+        art = exp552._build_live_data_artifact(
+            "live_gpu", 50, 60, "f.json", [], n_pairs_from_exp551=45
+        )
         assert art["cumulative_pairs"] == 105
         assert art["n_pairs_from_exp551"] == 45
 
@@ -79,7 +87,9 @@ class TestBuildLiveDataArtifact:
         assert art["mean_latency_s"] == 0.0
 
     def test_live_pairs_file_field(self):
-        art = exp552._build_live_data_artifact("live_gpu", 50, 50, "results/live_pairs_552.json", [])
+        art = exp552._build_live_data_artifact(
+            "live_gpu", 50, 50, "results/live_pairs_552.json", []
+        )
         assert art["live_pairs_file"] == "results/live_pairs_552.json"
 
 
@@ -170,6 +180,7 @@ class TestAnnotateResponse:
 
     def test_returns_cot_steps_and_labels(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp552._annotate_response(annotator, "1. 2 + 2 = 4", "q50")
         assert "cot_steps" in result
@@ -177,6 +188,7 @@ class TestAnnotateResponse:
 
     def test_cot_steps_have_required_keys(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp552._annotate_response(annotator, "1. 2 + 2 = 4", "q50")
         for step in result["cot_steps"]:
@@ -185,6 +197,7 @@ class TestAnnotateResponse:
 
     def test_fover_labels_parallel_to_cot_steps(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         annotator = FOVERAnnotator()
         result = exp552._annotate_response(annotator, "1. Step A\n2. Step B", "q51")
         assert len(result["cot_steps"]) == len(result["fover_labels"])

@@ -52,11 +52,12 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from carnot.pipeline.extract import AutoExtractor, ConstraintResult
 from carnot.pipeline.verify_repair import VerificationResult, VerifyRepairPipeline
 
+if TYPE_CHECKING:
+    from carnot.pipeline.extract import ConstraintResult
 
 # ---------------------------------------------------------------------------
 # Claim category detection patterns
@@ -403,7 +404,7 @@ class FailureAnalyzer:
         false_negatives: list[FalseNegative] = []
         total_wrong = 0
 
-        for i, (q, r, gt) in enumerate(zip(questions, responses, ground_truths)):
+        for i, (q, r, gt) in enumerate(zip(questions, responses, ground_truths, strict=False)):
             # Determine if the response is correct.
             if checkers and i < len(checkers) and checkers[i] is not None:
                 is_correct = checkers[i](r)
@@ -529,9 +530,7 @@ class FailureAnalyzer:
 
         return uncovered
 
-    def _aggregate_categories(
-        self, false_negatives: list[FalseNegative]
-    ) -> dict[str, int]:
+    def _aggregate_categories(self, false_negatives: list[FalseNegative]) -> dict[str, int]:
         """Count how many false negatives have uncovered claims per category.
 
         **Detailed explanation for engineers:**
@@ -580,18 +579,18 @@ class FailureAnalyzer:
                     if compiled.search(fn.response):
                         catch_count += 1
 
-                suggestions.append({
-                    "category": category,
-                    "name": pat_info["name"],
-                    "pattern": pat_info["pattern"],
-                    "description": pat_info["description"],
-                    "estimated_catch_count": catch_count,
-                    "estimated_catch_rate": (
-                        catch_count / len(false_negatives)
-                        if false_negatives
-                        else 0.0
-                    ),
-                })
+                suggestions.append(
+                    {
+                        "category": category,
+                        "name": pat_info["name"],
+                        "pattern": pat_info["pattern"],
+                        "description": pat_info["description"],
+                        "estimated_catch_count": catch_count,
+                        "estimated_catch_rate": (
+                            catch_count / len(false_negatives) if false_negatives else 0.0
+                        ),
+                    }
+                )
 
         # Sort by estimated catch count descending.
         suggestions.sort(key=lambda x: x["estimated_catch_count"], reverse=True)

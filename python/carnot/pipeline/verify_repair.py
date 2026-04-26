@@ -56,7 +56,6 @@ from carnot.pipeline.errors import (
     RepairError,
     VerificationError,
 )
-from carnot.pipeline.constraint_template_library import ConstraintTemplateLibrary
 from carnot.pipeline.extract import AutoExtractor, ConstraintExtractor, ConstraintResult
 from carnot.pipeline.formal_claim_verifier import (
     FormalClaimBatchResult,
@@ -72,19 +71,20 @@ from carnot.pipeline.typed_reasoning import extract_typed_reasoning as build_typ
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    import numpy as np
+
+    from carnot.pipeline.confidence_weighted_repair import ConfidenceRepairResult
+    from carnot.pipeline.constraint_template_library import ConstraintTemplateLibrary
+    from carnot.pipeline.cot_circuit_verifier import CoTCircuit
     from carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
     from carnot.pipeline.ising_constraint_injector import IsingConstraintInjector
     from carnot.pipeline.memory import ConstraintMemory
+    from carnot.pipeline.semantic_energy_extractor import DualEnergyResult
     from carnot.pipeline.semantic_grounding import SemanticGroundingResult
     from carnot.pipeline.semantic_verifier_v2 import SemanticVerifierV2Result
-    import numpy as np
-
-    from carnot.pipeline.semantic_energy_extractor import DualEnergyResult
     from carnot.pipeline.spilled_energy_extractor import SpilledEnergyResult
     from carnot.pipeline.tracker import ConstraintTracker
     from carnot.pipeline.typed_reasoning import TypedReasoningIR
-    from carnot.pipeline.confidence_weighted_repair import ConfidenceRepairResult
-    from carnot.pipeline.cot_circuit_verifier import CoTCircuit
 
 logger = logging.getLogger(__name__)
 
@@ -532,7 +532,9 @@ class VerifyRepairPipeline:
             self._device = "cuda" if torch.cuda.is_available() else "cpu"
             logger.info("Loading model %s on %s...", model_name, self._device)
 
-            self._tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1")
+            self._tokenizer = AutoTokenizer.from_pretrained(
+                model_name, trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1"
+            )
             self._model = AutoModelForCausalLM.from_pretrained(
                 model_name,
                 trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1",
@@ -1238,6 +1240,7 @@ class VerifyRepairPipeline:
                 StreamingCoTHalluDetector,
                 extract_cot_steps,
             )
+
             _cot_steps = extract_cot_steps(response)
             if _cot_steps:
                 _streaming_detector = StreamingCoTHalluDetector(alpha=0.3, threshold=0.35)
@@ -1383,7 +1386,6 @@ class VerifyRepairPipeline:
             # in `constraints` are never removed — retrieved constraints supplement
             # them from the store's semantically-distinct embedding subspaces.
             if embedding_constraint_store is not None:
-                from carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore as _ECS  # noqa: PLC0415
                 retrieved_spо = embedding_constraint_store.retrieve(response, top_k=3)
                 for spo in retrieved_spо:
                     injected = ConstraintResult(
@@ -1410,11 +1412,10 @@ class VerifyRepairPipeline:
             # metadata list.  Existing behaviour is unchanged when either param is None.
             if ising_constraint_injector is not None and embedding_constraint_store is not None:
                 retrieved_for_ising = embedding_constraint_store.retrieve(response, top_k=3)
-                embeddings_for_ising = [
-                    c.embedding for c in retrieved_for_ising if c.embedding
-                ]
+                embeddings_for_ising = [c.embedding for c in retrieved_for_ising if c.embedding]
                 if embeddings_for_ising:
                     import numpy as _np  # noqa: PLC0415
+
                     _bias = ising_constraint_injector.project_to_spin_bias(embeddings_for_ising)
                     # Record the injected bias in the certificate for traceability.
                     # Actual J substitution is done in compute_energy_with_injection;
@@ -1482,8 +1483,10 @@ class VerifyRepairPipeline:
             os.getenv("CARNOT_SPECTRAL_PROBE", "0") == "1"
         )
         if _spectral_probe_enabled:
-            from carnot.verify.spectral_attention_probe import SpectralAttentionProbe  # noqa: PLC0415
             from carnot.pipeline.streaming_cot import extract_cot_steps  # noqa: PLC0415
+            from carnot.verify.spectral_attention_probe import (
+                SpectralAttentionProbe,  # noqa: PLC0415
+            )
 
             _spectral_steps = extract_cot_steps(response)
             if _spectral_steps:
@@ -1535,6 +1538,7 @@ class VerifyRepairPipeline:
             from carnot.pipeline.embedding_constraint_store import (  # noqa: PLC0415
                 ConstraintSPOTuple as _ConstraintSPOTuple,
             )
+
             # Map canonical violation type prefixes to structured SPO roles.
             # Unmapped types fall back to a generic triple using the raw type string.
             _SPO_MAP = {
@@ -1650,7 +1654,7 @@ class VerifyRepairPipeline:
         question: str,
         response: str,
         timeout_s: float = 2.0,
-    ) -> "Z3Result":
+    ) -> Z3Result:
         """Check a chain-of-thought response for internal inconsistency via Z3.
 
         **Detailed explanation for engineers:**
@@ -1699,7 +1703,7 @@ class VerifyRepairPipeline:
         question: str,
         response: str,
         tolerance: float = 0.01,
-    ) -> "CoTCircuit":
+    ) -> CoTCircuit:
         """Check a chain-of-thought response for structural (circuit) consistency.
 
         **Detailed explanation for engineers:**
@@ -1728,11 +1732,13 @@ class VerifyRepairPipeline:
               SCENARIO-EXTRACT-031, SCENARIO-EXTRACT-032, SCENARIO-EXTRACT-033,
               SCENARIO-EXTRACT-034, SCENARIO-EXTRACT-035
         """
-        from carnot.pipeline.cot_circuit_verifier import CoTCircuit, CoTCircuitVerifier
+        from carnot.pipeline.cot_circuit_verifier import CoTCircuitVerifier
 
-        if not hasattr(self, "_cot_circuit_verifier") or self._cot_circuit_verifier is None:
-            self._cot_circuit_verifier = CoTCircuitVerifier(tolerance=tolerance)
-        elif self._cot_circuit_verifier.tolerance != tolerance:
+        if (
+            not hasattr(self, "_cot_circuit_verifier")
+            or self._cot_circuit_verifier is None
+            or self._cot_circuit_verifier.tolerance != tolerance
+        ):
             self._cot_circuit_verifier = CoTCircuitVerifier(tolerance=tolerance)
 
         return self._cot_circuit_verifier.verify(response)
@@ -1935,9 +1941,7 @@ class VerifyRepairPipeline:
         # Step 1: get or generate initial response.
         if response is None:
             if not self.has_model:
-                raise ValueError(
-                    "No response provided and no model loaded."
-                )
+                raise ValueError("No response provided and no model loaded.")
             response = self._generate(question)
 
         initial_response = response
@@ -2140,7 +2144,7 @@ class VerifyRepairPipeline:
         domain: str | None = None,
         nl2z3_extractor: object | None = None,
         confidence_threshold: float = 0.8,
-    ) -> "Z3GatedRepairResult":
+    ) -> Z3GatedRepairResult:
         """Run Z3-gated repair: Z3 first-pass gate, Ising repair only on UNSAT/unknown.
 
         **Detailed explanation for engineers:**
@@ -2169,7 +2173,7 @@ class VerifyRepairPipeline:
               SCENARIO-REPAIR-021, SCENARIO-REPAIR-022
         """
         from carnot.pipeline.nl2z3_extractor import NL2Z3Extractor
-        from carnot.pipeline.z3_gated_repair import Z3GatedRepair, Z3GatedRepairResult
+        from carnot.pipeline.z3_gated_repair import Z3GatedRepair
 
         extractor = nl2z3_extractor if nl2z3_extractor is not None else NL2Z3Extractor()
         gate = Z3GatedRepair(
@@ -2186,7 +2190,7 @@ class VerifyRepairPipeline:
         nl2z3_extractor: object | None = None,
         llm_caller: object | None = None,
         max_iterations: int = 3,
-    ) -> "tuple[str, list]":
+    ) -> tuple[str, list]:
         """Run VERGE-style iterative Z3 refinement on a chain-of-thought response.
 
         **Detailed explanation for engineers:**
@@ -2222,8 +2226,10 @@ class VerifyRepairPipeline:
         # CI-safe stub: if no llm_caller provided, use a no-op that returns a
         # generic "no repair" string without calling a real LLM.
         if llm_caller is None:
+
             def _noop_llm(prompt: str) -> str:  # noqa: ANN001
                 return "[no repair — CI mode]"
+
             caller = _noop_llm
         else:
             caller = llm_caller  # type: ignore[assignment]
@@ -2242,7 +2248,7 @@ class VerifyRepairPipeline:
         domain: str | None = None,
         min_confidence: float = 0.8,
         n_samples: int = 5,
-    ) -> "ConfidenceRepairResult":
+    ) -> ConfidenceRepairResult:
         """Dual-signal confidence-weighted repair gate (expression + Ising variance).
 
         **Detailed explanation for engineers:**
@@ -2282,7 +2288,6 @@ class VerifyRepairPipeline:
               SCENARIO-VERIFY-111, SCENARIO-VERIFY-112
         """
         from carnot.pipeline.confidence_weighted_repair import (
-            ConfidenceRepairResult,
             ConfidenceWeightedRepair,
         )
 

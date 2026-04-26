@@ -474,7 +474,7 @@ _HARDCODED_ADVERSARIAL: list[dict[str, str]] = [
             "How many slices are left?"
         ),
         "answer": "8 - 5*2 = 8 - 10 = -2. Wait: if not enough: they ordered 2 pizzas. "
-                  "Actually with 1 pizza: 8 - 10 = deficit; assume 1 pizza: #### -2",
+        "Actually with 1 pizza: 8 - 10 = deficit; assume 1 pizza: #### -2",
     },
     {
         "question": (
@@ -605,9 +605,7 @@ def _load_adversarial_questions() -> tuple[list[dict], str]:
             if q and a:
                 questions.append({"question": q, "answer": a})
         if questions:
-            _log.info(
-                "Loaded %d questions from apple/GSM-Symbolic (HuggingFace)", len(questions)
-            )
+            _log.info("Loaded %d questions from apple/GSM-Symbolic (HuggingFace)", len(questions))
             return questions[:N_QUESTIONS], "huggingface"
     except Exception as exc:
         _log.warning("Could not load apple/GSM-Symbolic: %s — using hardcoded fallback", exc)

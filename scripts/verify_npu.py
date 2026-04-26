@@ -92,9 +92,13 @@ def _check_hardware() -> dict:
     if not lspci:
         return {"ok": False, "reason": "lspci missing; cannot enumerate PCI"}
     out = subprocess.run(
-        [lspci, "-nn"], capture_output=True, text=True,
+        [lspci, "-nn"],
+        capture_output=True,
+        text=True,
     ).stdout
-    match = re.search(r"(?im)^(\S+).*(Signal processing|XDNA|Neural Processing Unit).*\[1022:17f0\]", out)
+    match = re.search(
+        r"(?im)^(\S+).*(Signal processing|XDNA|Neural Processing Unit).*\[1022:17f0\]", out
+    )
     if not match:
         return {"ok": False, "reason": "No AMD XDNA device found on PCI bus"}
     return {"ok": True, "pci_bdf": match.group(1)}
@@ -107,7 +111,10 @@ def _check_kernel_device() -> dict:
     readable = os.access(ACCEL_DEV, os.R_OK)
     writable = os.access(ACCEL_DEV, os.W_OK)
     if not (readable and writable):
-        return {"ok": False, "reason": f"{ACCEL_DEV} not accessible to user; need 'render' group membership"}
+        return {
+            "ok": False,
+            "reason": f"{ACCEL_DEV} not accessible to user; need 'render' group membership",
+        }
     return {"ok": True, "path": ACCEL_DEV}
 
 
@@ -117,10 +124,14 @@ def _check_firmware_version() -> dict:
     dmesg = shutil.which("dmesg")
     if dmesg:
         out = subprocess.run(
-            [dmesg], capture_output=True, text=True,
+            [dmesg],
+            capture_output=True,
+            text=True,
         ).stdout
-        fw_line = next((ln for ln in out.splitlines()
-                        if "amdxdna" in ln.lower() and "firmware" in ln.lower()), None)
+        fw_line = next(
+            (ln for ln in out.splitlines() if "amdxdna" in ln.lower() and "firmware" in ln.lower()),
+            None,
+        )
         if fw_line:
             return {"ok": True, "dmesg_firmware_line": fw_line.strip()}
     # Fall back: xrt-smi examine parses the firmware version out of device
@@ -128,12 +139,17 @@ def _check_firmware_version() -> dict:
     xrt_smi = shutil.which("xrt-smi")
     if xrt_smi:
         out = subprocess.run(
-            [xrt_smi, "examine"], capture_output=True, text=True,
+            [xrt_smi, "examine"],
+            capture_output=True,
+            text=True,
         ).stdout
         match = re.search(r"NPU Firmware Version\s*:\s*([\d.]+)", out)
         if match:
             return {"ok": True, "npu_firmware_version": match.group(1)}
-    return {"ok": False, "reason": "Could not confirm firmware load (dmesg gated + xrt-smi absent/failed)"}
+    return {
+        "ok": False,
+        "reason": "Could not confirm firmware load (dmesg gated + xrt-smi absent/failed)",
+    }
 
 
 def _check_xrt_userspace() -> dict:
@@ -151,9 +167,11 @@ def _check_pyxrt_import() -> dict:
     except ImportError as exc:
         return {"ok": False, "reason": f"pyxrt not importable: {exc}"}
     n_devices = pyxrt.enumerate_devices()
-    return {"ok": n_devices >= 1,
-            "enumerated_devices": n_devices,
-            "pyxrt_module": getattr(pyxrt, "__file__", "unknown")}
+    return {
+        "ok": n_devices >= 1,
+        "enumerated_devices": n_devices,
+        "pyxrt_module": getattr(pyxrt, "__file__", "unknown"),
+    }
 
 
 def _check_memlock() -> dict:
@@ -162,13 +180,17 @@ def _check_memlock() -> dict:
     if soft == resource.RLIM_INFINITY:
         return {"ok": True, "soft": "unlimited", "hard": "unlimited"}
     if soft < MIN_MEMLOCK_BYTES:
-        return {"ok": False,
-                "soft_bytes": soft,
-                "hard_bytes": hard,
-                "required_bytes": MIN_MEMLOCK_BYTES,
-                "reason": ("RLIMIT_MEMLOCK too low; install "
-                           "/etc/security/limits.d/xrt.conf raising memlock "
-                           "to unlimited for @render, then re-login")}
+        return {
+            "ok": False,
+            "soft_bytes": soft,
+            "hard_bytes": hard,
+            "required_bytes": MIN_MEMLOCK_BYTES,
+            "reason": (
+                "RLIMIT_MEMLOCK too low; install "
+                "/etc/security/limits.d/xrt.conf raising memlock "
+                "to unlimited for @render, then re-login"
+            ),
+        }
     return {"ok": True, "soft_bytes": soft, "hard_bytes": hard}
 
 
@@ -187,14 +209,17 @@ def _check_device_open() -> dict:
         d = pyxrt.device(0)
     except RuntimeError as exc:
         msg = str(exc)
-        hint = ("memlock-related; see layer 5" if "mmap" in msg.lower()
-                and "err=-11" in msg.lower()
-                else "unknown open failure")
+        hint = (
+            "memlock-related; see layer 5"
+            if "mmap" in msg.lower() and "err=-11" in msg.lower()
+            else "unknown open failure"
+        )
         return {"ok": False, "reason": msg, "hint": hint}
     bdf = None
     name = None
     try:
         import pyxrt  # re-import for xrt_info_device enum
+
         bdf = d.get_info(pyxrt.xrt_info_device.bdf)
         name = d.get_info(pyxrt.xrt_info_device.name)
     except Exception:
@@ -213,14 +238,19 @@ def _check_onnxruntime_vitisai() -> dict:
     try:
         import onnxruntime as ort
     except ImportError as exc:
-        return {"available": False, "reason": f"onnxruntime not installed: {exc}",
-                "expected_missing": True}
+        return {
+            "available": False,
+            "reason": f"onnxruntime not installed: {exc}",
+            "expected_missing": True,
+        }
     providers = list(ort.get_available_providers())
     vitisai = "VitisAIExecutionProvider" in providers
-    return {"available": vitisai,
-            "providers": providers,
-            "expected_missing": not vitisai,
-            "onnxruntime_version": getattr(ort, "__version__", "unknown")}
+    return {
+        "available": vitisai,
+        "providers": providers,
+        "expected_missing": not vitisai,
+        "onnxruntime_version": getattr(ort, "__version__", "unknown"),
+    }
 
 
 def classify_overall(layers: dict) -> str:
@@ -242,8 +272,11 @@ def classify_overall(layers: dict) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Verify the AMD XDNA NPU stack.")
-    parser.add_argument("--json-only", action="store_true",
-                        help="Suppress human-readable output; just write the JSON.")
+    parser.add_argument(
+        "--json-only",
+        action="store_true",
+        help="Suppress human-readable output; just write the JSON.",
+    )
     args = parser.parse_args()
 
     layers = {

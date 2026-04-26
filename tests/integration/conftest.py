@@ -6,7 +6,6 @@ subprocess calls. No mocking of core components.
 """
 
 import jax
-import pytest
 
 # Force CPU for reproducibility (REQ-VERIFY-001).
 jax.config.update("jax_platform_name", "cpu")

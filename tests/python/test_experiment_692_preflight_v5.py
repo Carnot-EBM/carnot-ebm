@@ -23,6 +23,7 @@ _RETIREMENT_IDS = [425, 410, 383]
 # SCENARIO-INFRA-046: Retirement files created with required schema fields.
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.parametrize("exp_id", _RETIREMENT_IDS)
 def test_retirement_file_valid_json_with_schema(exp_id: int) -> None:
     """Each retirement file must be valid JSON with the required schema fields.
@@ -38,9 +39,7 @@ def test_retirement_file_valid_json_with_schema(exp_id: int) -> None:
     assert data.get("schema") == "carnot.retirement.v1", (
         f"Exp {exp_id} retirement file missing schema='carnot.retirement.v1'"
     )
-    assert data.get("status") == "retired", (
-        f"Exp {exp_id} retirement file missing status='retired'"
-    )
+    assert data.get("status") == "retired", f"Exp {exp_id} retirement file missing status='retired'"
     assert data.get("experiment") == exp_id, (
         f"Exp {exp_id} retirement file experiment field mismatch"
     )
@@ -52,6 +51,7 @@ def test_retirement_file_valid_json_with_schema(exp_id: int) -> None:
 # ---------------------------------------------------------------------------
 # SCENARIO-INFRA-047: Manifest contains retirement entries and JEPA block.
 # ---------------------------------------------------------------------------
+
 
 def test_manifest_includes_retired_experiments() -> None:
     """conductor_exclusion_manifest.json must include entries for Exps 425, 410, 383.
@@ -65,9 +65,7 @@ def test_manifest_includes_retired_experiments() -> None:
     entry_ids = {e.get("experiment_id") for e in data.get("excluded", [])}
 
     for exp_id in _RETIREMENT_IDS:
-        assert exp_id in entry_ids, (
-            f"Exp {exp_id} missing from conductor_exclusion_manifest.json"
-        )
+        assert exp_id in entry_ids, f"Exp {exp_id} missing from conductor_exclusion_manifest.json"
 
 
 def test_manifest_includes_jepa_v15_cascade_block() -> None:
@@ -90,6 +88,7 @@ def test_manifest_includes_jepa_v15_cascade_block() -> None:
 # ---------------------------------------------------------------------------
 # SCENARIO-INFRA-047: conductor_pre_flight.py runs without ImportError.
 # ---------------------------------------------------------------------------
+
 
 def test_conductor_pre_flight_runs_without_error() -> None:
     """conductor_pre_flight.py must execute cleanly and print 'Excluded experiments'.

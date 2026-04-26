@@ -40,7 +40,9 @@ SymbolicActivationType = Literal["linear", "quadratic", "tanh", "relu", "abs"]
 _ALL_TYPES: list[SymbolicActivationType] = ["linear", "quadratic", "tanh", "relu", "abs"]
 
 
-def _apply_activation(act_type: SymbolicActivationType, coef: float, bias: float, x: np.ndarray) -> np.ndarray:
+def _apply_activation(
+    act_type: SymbolicActivationType, coef: float, bias: float, x: np.ndarray
+) -> np.ndarray:
     """Apply a named activation with scalar coefficient and bias to a 1-D array.
 
     Returns coef * f(x) + bias where f is determined by act_type.
@@ -50,7 +52,7 @@ def _apply_activation(act_type: SymbolicActivationType, coef: float, bias: float
     if act_type == "linear":
         z = x
     elif act_type == "quadratic":
-        z = x ** 2
+        z = x**2
     elif act_type == "tanh":
         z = np.tanh(x)
     elif act_type == "relu":
@@ -123,7 +125,7 @@ def _fit_single_type(
     if act_type == "linear":
         z = x_data
     elif act_type == "quadratic":
-        z = x_data ** 2
+        z = x_data**2
     elif act_type == "tanh":
         z = np.tanh(x_data)
     elif act_type == "relu":
@@ -264,9 +266,7 @@ class SymbolicKANEnergy:
     def __init__(self, n_vars: int, n_layers: int = 2) -> None:
         self.n_vars = n_vars
         self.n_layers = n_layers
-        self.layers: list[SymbolicKANLayer] = [
-            SymbolicKANLayer(n_vars) for _ in range(n_layers)
-        ]
+        self.layers: list[SymbolicKANLayer] = [SymbolicKANLayer(n_vars) for _ in range(n_layers)]
 
     def energy(self, x: jnp.ndarray) -> float:
         """Compute the scalar energy for a single input vector x.

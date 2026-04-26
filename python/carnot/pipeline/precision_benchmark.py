@@ -52,13 +52,12 @@ import dataclasses
 import enum
 from typing import Any
 
-
 # ---------------------------------------------------------------------------
 # PipelineVariant enum
 # ---------------------------------------------------------------------------
 
 
-class PipelineVariant(str, enum.Enum):
+class PipelineVariant(enum.StrEnum):
     """The five ablation conditions for the precision stack benchmark.
 
     **Detailed explanation for engineers:**

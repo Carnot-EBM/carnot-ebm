@@ -35,10 +35,12 @@ Spec: REQ-VERIFY-102, REQ-VERIFY-103,
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable
+from typing import TYPE_CHECKING
 
 from carnot.models.eorm import CoTEnergyInput, EORMModel
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Result dataclass
@@ -180,6 +182,7 @@ class EORMAdaptiveRectifier:
         effective_k = k if k is not None else self.k
 
         if is_correct_fn is None:
+
             def is_correct_fn(response: str, gold: str) -> bool:  # type: ignore[misc]
                 return gold.strip() in response
 
@@ -206,9 +209,7 @@ class EORMAdaptiveRectifier:
         rectified_acc = rectified_correct / n if n > 0 else 0.0
         signed_improvement = rectified_acc - baseline_acc
 
-        verdict = (
-            "eorm_rectification_positive" if signed_improvement > 0 else "no_improvement"
-        )
+        verdict = "eorm_rectification_positive" if signed_improvement > 0 else "no_improvement"
 
         return RectifierResult(
             baseline_accuracy=baseline_acc,

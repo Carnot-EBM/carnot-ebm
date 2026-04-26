@@ -132,7 +132,14 @@ def test_build_jepa_violation_pairs_partial_prefix() -> None:
 
     Spec: SCENARIO-LEARN-074
     """
-    records = [{"question_id": "x", "step_text": "one two three four five six", "label": True, "confidence": 0.9}]
+    records = [
+        {
+            "question_id": "x",
+            "step_text": "one two three four five six",
+            "label": True,
+            "confidence": 0.9,
+        }
+    ]
     pairs = _build_jepa_violation_pairs(records)
     assert len(pairs) == 1
     words = records[0]["step_text"].split()
@@ -247,9 +254,22 @@ def test_train_eorm_saves_safetensors(tmp_path: Path) -> None:
 def _make_jepa_pairs() -> list:
     """Build two minimal ViolationPair objects for testing."""
     from carnot.embeddings.jepa_retrain import ViolationPair  # noqa: PLC0415
+
     return [
-        ViolationPair(question_id="1", model_id="test", full_response="Correct answer here.", partial_response="Correct", has_violation=False),
-        ViolationPair(question_id="2", model_id="test", full_response="Wrong answer with error.", partial_response="Wrong", has_violation=True),
+        ViolationPair(
+            question_id="1",
+            model_id="test",
+            full_response="Correct answer here.",
+            partial_response="Correct",
+            has_violation=False,
+        ),
+        ViolationPair(
+            question_id="2",
+            model_id="test",
+            full_response="Wrong answer with error.",
+            partial_response="Wrong",
+            has_violation=True,
+        ),
     ]
 
 
@@ -286,6 +306,7 @@ def test_train_jepa_loss_is_finite(tmp_path: Path) -> None:
 def _make_tmpl(tmp_path: Path):
     """Build a minimal ExperimentTemplate pointed at tmp_path."""
     from scripts.experiment_template import ExperimentTemplate  # noqa: PLC0415
+
     tmpl = ExperimentTemplate(
         685,
         "DualGPU EORM+JEPA test",
@@ -355,9 +376,19 @@ def test_run_success_produces_required_fields(tmp_path: Path) -> None:
 
     artifact = json.loads((tmp_path / DELIVERABLE).read_text())
 
-    required = ["experiment", "title", "run_date", "started_at", "finished_at",
-                "duration_s", "status", "honest_verdict", "speedup",
-                "sequential_total_s", "parallel_total_s"]
+    required = [
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "honest_verdict",
+        "speedup",
+        "sequential_total_s",
+        "parallel_total_s",
+    ]
     for field in required:
         assert field in artifact, f"Missing required field: {field}"
 

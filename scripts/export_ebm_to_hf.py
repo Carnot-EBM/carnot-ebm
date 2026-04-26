@@ -42,15 +42,14 @@ def train_and_export_ebm(
     import jax
     import jax.numpy as jnp
     import jax.random as jrandom
-    from safetensors.numpy import save_file
-
     from carnot.models.gibbs import GibbsConfig, GibbsModel
     from carnot.training.nce import nce_loss
+    from safetensors.numpy import save_file
 
     out_dir = os.path.join(EXPORT_DIR, name)
     os.makedirs(out_dir, exist_ok=True)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Training: {name}")
     print(f"  Tokens: {len(labels)}, dim={activations.shape[1]}")
     print(f"  Correct: {int(labels.sum())}, Wrong: {int(len(labels) - labels.sum())}")
@@ -74,8 +73,11 @@ def train_and_export_ebm(
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -308,9 +310,9 @@ def main() -> int:
         print("  or collect no-thinking activations separately.")
 
     # --- Summary ---
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("EXPORT SUMMARY")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     for model_id, meta in results.items():
         print(f"  {model_id}: {meta['test_accuracy']:.1%} accuracy, {meta['n_tokens']} tokens")
     print(f"\n  Export directory: {os.path.abspath(EXPORT_DIR)}")
@@ -320,6 +322,7 @@ def main() -> int:
         print(f"\n--- Uploading to HuggingFace ({args.org}) ---")
         try:
             from huggingface_hub import HfApi
+
             api = HfApi()
 
             for model_id in results:

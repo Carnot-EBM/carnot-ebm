@@ -84,8 +84,12 @@ def test_standard_improvement_positive(result_robust):
 def test_standard_improvement_zero():
     """standard_improvement is zero when pipeline equals baseline on standard questions."""
     r = AdversarialV4Result(
-        model_id="M", standard_baseline=0.75, standard_pipeline=0.75,
-        adversarial_baseline=0.60, adversarial_pipeline=0.65, n=100,
+        model_id="M",
+        standard_baseline=0.75,
+        standard_pipeline=0.75,
+        adversarial_baseline=0.60,
+        adversarial_pipeline=0.65,
+        n=100,
     )
     assert r.standard_improvement == pytest.approx(0.0)
 
@@ -93,8 +97,12 @@ def test_standard_improvement_zero():
 def test_standard_improvement_positive_value():
     """standard_improvement is positive when pipeline beats baseline on standard questions."""
     r = AdversarialV4Result(
-        model_id="M", standard_baseline=0.70, standard_pipeline=0.80,
-        adversarial_baseline=0.60, adversarial_pipeline=0.65, n=100,
+        model_id="M",
+        standard_baseline=0.70,
+        standard_pipeline=0.80,
+        adversarial_baseline=0.60,
+        adversarial_pipeline=0.65,
+        n=100,
     )
     assert r.standard_improvement == pytest.approx(0.10)
 
@@ -130,8 +138,12 @@ def test_standard_drop_baseline(result_robust):
 def test_standard_drop_baseline_zero():
     """Drop is zero when LLM is equally accurate on standard and adversarial."""
     r = AdversarialV4Result(
-        model_id="M", standard_baseline=0.80, standard_pipeline=0.80,
-        adversarial_baseline=0.80, adversarial_pipeline=0.80, n=100,
+        model_id="M",
+        standard_baseline=0.80,
+        standard_pipeline=0.80,
+        adversarial_baseline=0.80,
+        adversarial_pipeline=0.80,
+        n=100,
     )
     assert r.standard_drop_baseline == pytest.approx(0.0)
 
@@ -139,8 +151,12 @@ def test_standard_drop_baseline_zero():
 def test_standard_drop_baseline_negative():
     """Drop can be negative if adversarial questions are accidentally easier (honest reporting)."""
     r = AdversarialV4Result(
-        model_id="M", standard_baseline=0.60, standard_pipeline=0.70,
-        adversarial_baseline=0.70, adversarial_pipeline=0.75, n=100,
+        model_id="M",
+        standard_baseline=0.60,
+        standard_pipeline=0.70,
+        adversarial_baseline=0.70,
+        adversarial_pipeline=0.75,
+        n=100,
     )
     assert r.standard_drop_baseline == pytest.approx(-0.10)
 
@@ -159,8 +175,12 @@ def test_standard_drop_pipeline(result_robust):
 def test_standard_drop_pipeline_zero():
     """Pipeline drop is zero when pipeline accuracy is equal on standard and adversarial."""
     r = AdversarialV4Result(
-        model_id="M", standard_baseline=0.80, standard_pipeline=0.75,
-        adversarial_baseline=0.70, adversarial_pipeline=0.75, n=100,
+        model_id="M",
+        standard_baseline=0.80,
+        standard_pipeline=0.75,
+        adversarial_baseline=0.70,
+        adversarial_pipeline=0.75,
+        n=100,
     )
     # standard_pipeline == adversarial_pipeline → drop is 0
     assert r.standard_drop_pipeline == pytest.approx(0.0)
@@ -226,12 +246,18 @@ def test_to_dict_contains_all_fields(result_robust):
     """
     d = result_robust.to_dict()
     required_keys = {
-        "model_id", "n",
-        "standard_baseline", "standard_pipeline",
-        "adversarial_baseline", "adversarial_pipeline",
-        "standard_improvement", "adversarial_improvement",
-        "standard_drop_baseline", "standard_drop_pipeline",
-        "robustness_delta", "carnot_more_robust",
+        "model_id",
+        "n",
+        "standard_baseline",
+        "standard_pipeline",
+        "adversarial_baseline",
+        "adversarial_pipeline",
+        "standard_improvement",
+        "adversarial_improvement",
+        "standard_drop_baseline",
+        "standard_drop_pipeline",
+        "robustness_delta",
+        "carnot_more_robust",
     }
     assert required_keys.issubset(d.keys())
 
@@ -278,8 +304,10 @@ def test_perfect_pipeline_robustness():
     """When pipeline has zero adversarial drop, robustness_delta equals baseline drop."""
     r = AdversarialV4Result(
         model_id="Perfect",
-        standard_baseline=0.80, standard_pipeline=0.80,
-        adversarial_baseline=0.60, adversarial_pipeline=0.80,
+        standard_baseline=0.80,
+        standard_pipeline=0.80,
+        adversarial_baseline=0.60,
+        adversarial_pipeline=0.80,
         n=200,
     )
     # standard_drop_baseline = 0.80 - 0.60 = 0.20
@@ -295,8 +323,10 @@ def test_zero_n_valid():
     """n=0 is valid structurally (result arithmetic still works)."""
     r = AdversarialV4Result(
         model_id="Empty",
-        standard_baseline=0.0, standard_pipeline=0.0,
-        adversarial_baseline=0.0, adversarial_pipeline=0.0,
+        standard_baseline=0.0,
+        standard_pipeline=0.0,
+        adversarial_baseline=0.0,
+        adversarial_pipeline=0.0,
         n=0,
     )
     assert r.robustness_delta == pytest.approx(0.0)
@@ -307,8 +337,10 @@ def test_model_id_preserved():
     """model_id is stored as-is and returned by to_dict()."""
     r = AdversarialV4Result(
         model_id="Gemma4-Q4KM",
-        standard_baseline=0.75, standard_pipeline=0.77,
-        adversarial_baseline=0.68, adversarial_pipeline=0.73,
+        standard_baseline=0.75,
+        standard_pipeline=0.77,
+        adversarial_baseline=0.68,
+        adversarial_pipeline=0.73,
         n=100,
     )
     assert r.model_id == "Gemma4-Q4KM"

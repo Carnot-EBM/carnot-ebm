@@ -19,7 +19,6 @@ import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 import pytest
-
 from carnot.core.energy import EnergyFunction
 from carnot.models.lagoon import (
     LagONN,
@@ -29,7 +28,6 @@ from carnot.models.lagoon import (
     make_sat_constrained_ising,
     make_scheduling_ising,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -149,7 +147,9 @@ class TestEnergyFunctionProtocol:
 class TestEnergyComposition:
     """REQ-LAGOON-001: Energy = Ising term + Lagrange penalty."""
 
-    def test_energy_with_zero_lambda_is_ising(self, simple_lagoon: LagONN, feasible_config: jax.Array) -> None:
+    def test_energy_with_zero_lambda_is_ising(
+        self, simple_lagoon: LagONN, feasible_config: jax.Array
+    ) -> None:
         """REQ-LAGOON-001: With λ=0, energy equals pure Ising energy."""
         x = feasible_config
         # Pure Ising energy
@@ -158,7 +158,9 @@ class TestEnergyComposition:
         e_lagoon = simple_lagoon.energy(x)
         assert jnp.allclose(e_ising, e_lagoon, atol=1e-5)
 
-    def test_lagrange_penalty_zero_when_feasible(self, simple_lagoon: LagONN, feasible_config: jax.Array) -> None:
+    def test_lagrange_penalty_zero_when_feasible(
+        self, simple_lagoon: LagONN, feasible_config: jax.Array
+    ) -> None:
         """REQ-LAGOON-001: Lagrange penalty is 0 when all constraints are satisfied."""
         # With non-zero lambda and feasible config, penalty = 0
         lagoon_with_lambda = LagONN(
@@ -402,7 +404,9 @@ class TestLocalFieldAndGibbs:
         # → Lagrange field should make h[1] negative (discouraging x1=1)
         assert float(h[1]) < 0.0
 
-    def test_gibbs_sweep_output_shape(self, simple_lagoon: LagONN, feasible_config: jax.Array) -> None:
+    def test_gibbs_sweep_output_shape(
+        self, simple_lagoon: LagONN, feasible_config: jax.Array
+    ) -> None:
         """REQ-LAGOON-002: _gibbs_sweep returns shape (n,)."""
         key = jrandom.PRNGKey(42)
         x_new = _gibbs_sweep(
@@ -421,7 +425,7 @@ class TestLocalFieldAndGibbs:
         """REQ-LAGOON-002: _gibbs_sweep outputs values in {0.0, 1.0}."""
         key = jrandom.PRNGKey(7)
         x = jnp.array([0.0, 1.0, 0.0, 1.0], dtype=jnp.float32)
-        for seed in range(10):
+        for _seed in range(10):
             key, subkey = jrandom.split(key)
             x_new = _gibbs_sweep(
                 x,
@@ -492,12 +496,14 @@ class TestSample:
         baseline = LagONN(J=J, bias=bias, A=A, b=b, lambda_=jnp.zeros(2))
         key = jrandom.PRNGKey(42)
         baseline_samples, _ = baseline.sample(key, n_steps=50, n_samples=20, beta=10.0, lr=0.0)
-        baseline_feasibility = baseline.feasibility_rate(baseline_samples)
+        baseline.feasibility_rate(baseline_samples)
 
         # LagONN: λ updates enabled
         lagoon = LagONN(J=J, bias=bias, A=A, b=b, lambda_=jnp.zeros(2))
         key = jrandom.PRNGKey(42)
-        lagoon_samples, final_model = lagoon.sample(key, n_steps=200, n_samples=20, beta=10.0, lr=0.05)
+        lagoon_samples, final_model = lagoon.sample(
+            key, n_steps=200, n_samples=20, beta=10.0, lr=0.05
+        )
         lagoon_feasibility = lagoon.feasibility_rate(lagoon_samples)
 
         # LagONN should be at least as feasible as baseline (usually much better)

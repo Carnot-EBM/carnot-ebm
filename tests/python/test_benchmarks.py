@@ -241,7 +241,11 @@ class TestGetStandardBenchmarks:
         benchmarks = get_standard_benchmarks(dim=2)
         assert len(benchmarks) == 5
         assert set(benchmarks.keys()) == {
-            "double_well", "rosenbrock", "ackley", "rastrigin", "gaussian_mixture"
+            "double_well",
+            "rosenbrock",
+            "ackley",
+            "rastrigin",
+            "gaussian_mixture",
         }
 
     def test_all_have_info(self) -> None:

@@ -44,9 +44,7 @@ DELIVERABLE = "results/experiment_904_preflight_v19.json"
 # ── Root-cause constants ────────────────────────────────────────────────────
 
 EXPECTED_ROOT_CAUSE = "yaml_key_error_title"
-CONDUCTOR_LOG_PATTERN = re.compile(
-    r"Failed to load research-roadmap\.yaml: 'title'"
-)
+CONDUCTOR_LOG_PATTERN = re.compile(r"Failed to load research-roadmap\.yaml: 'title'")
 
 # ── RETRO registry ──────────────────────────────────────────────────────────
 
@@ -59,7 +57,7 @@ OPEN_RETROS = [
 
 RETRO_STATUSES: dict[str, str] = {
     "RETRO-MANIFEST-FULL-SCOPE": "HUMAN_REQUIRED",
-    "RETRO-SVAMP-ZERO-AUC": "TARGETED",       # Exp 907+908
+    "RETRO-SVAMP-ZERO-AUC": "TARGETED",  # Exp 907+908
     "RETRO-XILINX-TOOLS-UNAVAILABLE": "HUMAN_REQUIRED",
     "RETRO-INERTIA-SWEEPS-TARGET-MISSED": "TARGETED",  # Exp 914
 }

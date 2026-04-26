@@ -48,6 +48,7 @@ from scripts.experiment_908_estimation_verifier import (  # noqa: E402
 # SCENARIO-VER-085a-1: gate check
 # ---------------------------------------------------------------------------
 
+
 class TestGateCheck:
     """SCENARIO-VER-085a-1 and 085a-11: gate check behaviour."""
 
@@ -89,12 +90,14 @@ class TestGateCheck:
 # SCENARIO-VER-085a-2: correct responses classified as in_range
 # ---------------------------------------------------------------------------
 
+
 class TestCorrectResponsesInRange:
     """SCENARIO-VER-085a-2: verifier marks most correct responses as in_range."""
 
     def test_clear_subtraction_in_range(self) -> None:
         """Q0: 9 chickens (15-6) should be in_range for op=unknown, range=[0, 42]."""
         from python.carnot.verify.estimation_verifier import EstimationVerifier
+
         ev = EstimationVerifier()
         result = ev.verify(SVAMP_QUESTIONS[0], SVAMP_RESPONSES[0])
         # Answer 9, range broad enough to include it.
@@ -103,6 +106,7 @@ class TestCorrectResponsesInRange:
     def test_clear_addition_in_range(self) -> None:
         """Q1: 13 oranges (8+5) should be in_range for op=add, range=[5, 26]."""
         from python.carnot.verify.estimation_verifier import EstimationVerifier
+
         ev = EstimationVerifier()
         result = ev.verify(SVAMP_QUESTIONS[1], SVAMP_RESPONSES[1])
         assert result["in_range"] is True
@@ -110,6 +114,7 @@ class TestCorrectResponsesInRange:
     def test_multiply_per_in_range(self) -> None:
         """Q4: 28 dollars (7*4) should be in_range for op=multiply (per keyword), range=[4, 49]."""
         from python.carnot.verify.estimation_verifier import EstimationVerifier
+
         ev = EstimationVerifier()
         result = ev.verify(SVAMP_QUESTIONS[4], SVAMP_RESPONSES[4])
         assert result["in_range"] is True
@@ -119,12 +124,14 @@ class TestCorrectResponsesInRange:
 # SCENARIO-VER-085a-3: wrong responses detected as out_of_range
 # ---------------------------------------------------------------------------
 
+
 class TestWrongResponsesOutOfRange:
     """SCENARIO-VER-085a-3: verifier detects catastrophically wrong answers."""
 
     def test_wrong_q15_out_of_range(self) -> None:
         """Q15: 129 pencils (correct=9) is off by >10x — should be out_of_range."""
         from python.carnot.verify.estimation_verifier import EstimationVerifier
+
         ev = EstimationVerifier()
         result = ev.verify(SVAMP_QUESTIONS[15], SVAMP_RESPONSES[15])
         assert result["in_range"] is False
@@ -132,6 +139,7 @@ class TestWrongResponsesOutOfRange:
     def test_wrong_q16_out_of_range(self) -> None:
         """Q16: 150 pupils (correct=15) is off by 10x — should be out_of_range."""
         from python.carnot.verify.estimation_verifier import EstimationVerifier
+
         ev = EstimationVerifier()
         result = ev.verify(SVAMP_QUESTIONS[16], SVAMP_RESPONSES[16])
         assert result["in_range"] is False
@@ -139,6 +147,7 @@ class TestWrongResponsesOutOfRange:
     def test_wrong_q17_out_of_range(self) -> None:
         """Q17: 1200 cups (correct=12) is off by 100x — should be out_of_range."""
         from python.carnot.verify.estimation_verifier import EstimationVerifier
+
         ev = EstimationVerifier()
         result = ev.verify(SVAMP_QUESTIONS[17], SVAMP_RESPONSES[17])
         assert result["in_range"] is False
@@ -146,6 +155,7 @@ class TestWrongResponsesOutOfRange:
     def test_wrong_q18_out_of_range(self) -> None:
         """Q18: 9000 cents (correct=90) is off by 100x — should be out_of_range."""
         from python.carnot.verify.estimation_verifier import EstimationVerifier
+
         ev = EstimationVerifier()
         result = ev.verify(SVAMP_QUESTIONS[18], SVAMP_RESPONSES[18])
         assert result["in_range"] is False
@@ -153,6 +163,7 @@ class TestWrongResponsesOutOfRange:
     def test_wrong_q19_out_of_range(self) -> None:
         """Q19: 4800 flowers/row (correct=8) is off by 600x — should be out_of_range."""
         from python.carnot.verify.estimation_verifier import EstimationVerifier
+
         ev = EstimationVerifier()
         result = ev.verify(SVAMP_QUESTIONS[19], SVAMP_RESPONSES[19])
         assert result["in_range"] is False
@@ -161,6 +172,7 @@ class TestWrongResponsesOutOfRange:
 # ---------------------------------------------------------------------------
 # SCENARIO-VER-085a-4: AUC > 0.5 on mixed corpus
 # ---------------------------------------------------------------------------
+
 
 class TestAUCOnMixedCorpus:
     """SCENARIO-VER-085a-4: AUC exceeds 0.5 with correct+wrong mixed responses."""
@@ -193,6 +205,7 @@ class TestAUCOnMixedCorpus:
 # ---------------------------------------------------------------------------
 # SCENARIO-VER-085a-5: manual AUC fallback
 # ---------------------------------------------------------------------------
+
 
 class TestComputeAUC:
     """SCENARIO-VER-085a-5: _compute_auc produces correct values."""
@@ -230,6 +243,7 @@ class TestComputeAUC:
     def test_sklearn_fallback_on_import_error(self) -> None:
         """SCENARIO-VER-085a-5: falls back to manual estimator when sklearn unavailable."""
         import builtins
+
         real_import = builtins.__import__
 
         def mock_import(name: str, *args: Any, **kwargs: Any) -> Any:
@@ -247,6 +261,7 @@ class TestComputeAUC:
 # ---------------------------------------------------------------------------
 # SCENARIO-VER-085a-6/7/8: honest verdict assignment
 # ---------------------------------------------------------------------------
+
 
 class TestHonestVerdict:
     """SCENARIO-VER-085a-6/7/8: verdict assignment based on AUC thresholds."""
@@ -271,10 +286,13 @@ class TestHonestVerdict:
         """SCENARIO-VER-085a-6: signed_improvement = auc - baseline > 0 when improved."""
         artifact = self._run_with_gate_open(tmp_path)
         assert artifact["signed_improvement"] > 0.0
-        assert abs(
-            artifact["signed_improvement"]
-            - (artifact["svamp_auc_estimation"] - artifact["svamp_auc_fover_baseline"])
-        ) < 1e-6
+        assert (
+            abs(
+                artifact["signed_improvement"]
+                - (artifact["svamp_auc_estimation"] - artifact["svamp_auc_fover_baseline"])
+            )
+            < 1e-6
+        )
 
     def test_marginal_verdict_threshold(self) -> None:
         """SCENARIO-VER-085a-7: 0.125 < AUC <= 0.5 → svamp_auc_marginal.
@@ -310,6 +328,7 @@ class TestHonestVerdict:
 # ---------------------------------------------------------------------------
 # SCENARIO-VER-085a-9/10: assert_deliverable_written
 # ---------------------------------------------------------------------------
+
 
 class TestAssertDeliverableWritten:
     """SCENARIO-VER-085a-9/10: deliverable validation."""
@@ -368,16 +387,28 @@ class TestAssertDeliverableWritten:
 # SCENARIO-VER-085a-12: _REQUIRED_FIELDS completeness
 # ---------------------------------------------------------------------------
 
+
 class TestRequiredFields:
     """SCENARIO-VER-085a-12: _REQUIRED_FIELDS contains all expected keys."""
 
     def test_required_fields_present(self) -> None:
         expected = {
-            "experiment", "schema", "run_date", "started_at", "finished_at",
-            "honest_verdict", "svamp_auc_estimation", "svamp_auc_fover_baseline",
-            "signed_improvement", "n_questions", "n_correct_responses",
-            "n_wrong_responses", "n_in_range", "n_out_of_range",
-            "labeling_mismatch_confirmed", "duration_s",
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "honest_verdict",
+            "svamp_auc_estimation",
+            "svamp_auc_fover_baseline",
+            "signed_improvement",
+            "n_questions",
+            "n_correct_responses",
+            "n_wrong_responses",
+            "n_in_range",
+            "n_out_of_range",
+            "labeling_mismatch_confirmed",
+            "duration_s",
         }
         assert expected == _REQUIRED_FIELDS
 
@@ -385,6 +416,7 @@ class TestRequiredFields:
 # ---------------------------------------------------------------------------
 # Corpus integrity checks (sanity checks, not scenario-labelled)
 # ---------------------------------------------------------------------------
+
 
 class TestCorpusIntegrity:
     """Sanity checks on the question/response/answer arrays."""

@@ -168,8 +168,7 @@ def run_experiment(tmpl: ExperimentTemplate) -> dict[str, Any]:
     # Step 2: gate on live GPU availability BEFORE touching hardware.
     if inference_mode != "live_gpu":
         _log.warning(
-            "CARNOT_FORCE_LIVE not set — cannot run live benchmark. "
-            "Returning blocked artifact."
+            "CARNOT_FORCE_LIVE not set — cannot run live benchmark. Returning blocked artifact."
         )
         artifact = tmpl.build_result(
             {
@@ -231,9 +230,7 @@ def run_experiment(tmpl: ExperimentTemplate) -> dict[str, Any]:
     completed_responses: list[dict] = ckpt.get("responses", []) if ckpt else []
     completed_ids = {r["question_id"] for r in completed_responses}
     remaining = [q for q in questions if q["question_id"] not in completed_ids]
-    _log.info(
-        "Checkpoint: %d already done, %d remaining", len(completed_responses), len(remaining)
-    )
+    _log.info("Checkpoint: %d already done, %d remaining", len(completed_responses), len(remaining))
 
     # Step 7: run inference in batches of BATCH_SIZE with VerifyRepairPipeline.
     # Import here so tests can mock before this point.

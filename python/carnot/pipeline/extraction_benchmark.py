@@ -27,9 +27,11 @@ Spec: REQ-EXTRACT-021, SCENARIO-EXTRACT-042, SCENARIO-EXTRACT-043
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Callable, Protocol, runtime_checkable
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Protocol: ExtractorWrapper
@@ -161,7 +163,7 @@ def run_extraction_benchmark(
     n_wrong = sum(1 for g in ground_truth_wrong if g)
     n_correct = n_questions - n_wrong
 
-    for item, is_wrong in zip(questions, ground_truth_wrong):
+    for item, is_wrong in zip(questions, ground_truth_wrong, strict=False):
         question = item["question"]
         response = item["response"]
         violated = inference_fn(question, response)

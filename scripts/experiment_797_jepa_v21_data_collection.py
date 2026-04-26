@@ -31,6 +31,7 @@
 
 Spec: REQ-LEARN-093, REQ-LEARN-094, SCENARIO-LEARN-144
 """
+
 from __future__ import annotations
 
 # ---------------------------------------------------------------------------
@@ -84,7 +85,11 @@ _GSM8K_END = 361  # exclusive → 60 questions
 _MATH500_PROBLEMS: list[dict] = [
     {"question_id": "math500_000", "question": "Compute 3^4 - 4^3.", "answer": "17"},
     {"question_id": "math500_001", "question": "What is 15 * 17?", "answer": "255"},
-    {"question_id": "math500_002", "question": "Find the sum of 123 + 456 + 789.", "answer": "1368"},
+    {
+        "question_id": "math500_002",
+        "question": "Find the sum of 123 + 456 + 789.",
+        "answer": "1368",
+    },
     {"question_id": "math500_003", "question": "Compute 7! / 5!", "answer": "42"},
     {"question_id": "math500_004", "question": "What is 144 / 12?", "answer": "12"},
     {"question_id": "math500_005", "question": "What is 18^2?", "answer": "324"},
@@ -117,36 +122,126 @@ _MATH500_PROBLEMS: list[dict] = [
 # HumanEval source C: 30 problems with step-by-step reasoning prompts.
 # We ask for CoT explanation so FOVERAnnotator can find arithmetic steps.
 _HUMANEVAL_PROBLEMS: list[dict] = [
-    {"question_id": "humaneval_000", "question": "Write a function that returns the sum of two numbers a and b. Show your step-by-step reasoning. For a=3, b=5, compute a + b = ?"},
-    {"question_id": "humaneval_001", "question": "Write a function that returns n! (factorial). Show steps: compute 5! step by step."},
-    {"question_id": "humaneval_002", "question": "Write a function that finds the max of a list. For [3, 7, 2, 9, 1], show each comparison step."},
-    {"question_id": "humaneval_003", "question": "Write a function that checks if a number is prime. Show whether 17 is prime, step by step."},
-    {"question_id": "humaneval_004", "question": "Write a function that computes fibonacci(n). Compute fibonacci(7) = ? step by step."},
-    {"question_id": "humaneval_005", "question": "Write a function that returns the product of a list. For [2, 3, 4, 5], compute 2 * 3 * 4 * 5 = ?"},
-    {"question_id": "humaneval_006", "question": "Write a function that counts vowels in a string. For 'hello world', count each vowel step by step."},
-    {"question_id": "humaneval_007", "question": "Write a function that reverses a string. Trace through reversing 'abc': step 1, 2, 3."},
-    {"question_id": "humaneval_008", "question": "Write a function that returns the GCD. Compute GCD(48, 18) using Euclidean algorithm step by step."},
-    {"question_id": "humaneval_009", "question": "Write a function that converts Celsius to Fahrenheit. Convert 100C: compute 100 * 9 / 5 + 32 = ?"},
-    {"question_id": "humaneval_010", "question": "Write a function that sums digits of a number. For 12345, sum 1 + 2 + 3 + 4 + 5 = ?"},
-    {"question_id": "humaneval_011", "question": "Write a function that counts words in a sentence. For 'the quick brown fox', count each word."},
-    {"question_id": "humaneval_012", "question": "Write a function returning nth triangular number. Compute T(10) = 1+2+...+10 = ?"},
-    {"question_id": "humaneval_013", "question": "Write a function that checks if a string is a palindrome. Check 'racecar': compare positions 0 and 6, 1 and 5, 2 and 4."},
-    {"question_id": "humaneval_014", "question": "Write a function that computes power(base, exp). Compute 2^8 step by step: 2*2=4, 4*2=8, ..."},
-    {"question_id": "humaneval_015", "question": "Write a function returning the number of divisors of n. Count divisors of 12: 1,2,3,4,6,12. How many = ?"},
-    {"question_id": "humaneval_016", "question": "Write a function that computes the LCM of two numbers. Compute LCM(12, 18): step by step."},
-    {"question_id": "humaneval_017", "question": "Write a function returning sum of even numbers 1..n. Sum evens 1..10: 2+4+6+8+10 = ?"},
-    {"question_id": "humaneval_018", "question": "Write a function that flattens a nested list [[1,2],[3,4],[5]]. Count total elements step by step."},
-    {"question_id": "humaneval_019", "question": "Write a function computing the mean of a list. For [10, 20, 30, 40, 50], compute mean: sum=? / count=? = ?"},
-    {"question_id": "humaneval_020", "question": "Write a function that finds second largest. For [3, 1, 4, 1, 5, 9, 2, 6], step through finding the second largest."},
-    {"question_id": "humaneval_021", "question": "Write a function that converts binary string to int. Convert '1101': 1*8 + 1*4 + 0*2 + 1*1 = ?"},
-    {"question_id": "humaneval_022", "question": "Write a function that checks if two strings are anagrams. Check 'listen' vs 'silent': count each character."},
-    {"question_id": "humaneval_023", "question": "Write a function returning cumulative sum. For [1,2,3,4,5], step: 1, 1+2=3, 3+3=6, 6+4=10, 10+5=15."},
-    {"question_id": "humaneval_024", "question": "Write a function returning count of negative numbers. For [-1, 2, -3, 4, -5], count: step through each element."},
-    {"question_id": "humaneval_025", "question": "Write a function computing area of circle radius r. For r=7, compute 3.14159 * 7 * 7 = ?"},
-    {"question_id": "humaneval_026", "question": "Write a function that returns the mode of a list. For [1,2,2,3,3,3], count each value step by step."},
-    {"question_id": "humaneval_027", "question": "Write a function that computes string edit distance. For 'cat' and 'bat', count differences step by step."},
-    {"question_id": "humaneval_028", "question": "Write a function that zips two lists. Zip [1,2,3] and ['a','b','c']: pair each index step by step."},
-    {"question_id": "humaneval_029", "question": "Write a function returning sum of squares 1..n. Compute 1^2+2^2+3^2+4^2+5^2 = 1+4+9+16+25 = ?"},
+    {
+        "question_id": "humaneval_000",
+        "question": "Write a function that returns the sum of two numbers a and b. Show your step-by-step reasoning. For a=3, b=5, compute a + b = ?",
+    },
+    {
+        "question_id": "humaneval_001",
+        "question": "Write a function that returns n! (factorial). Show steps: compute 5! step by step.",
+    },
+    {
+        "question_id": "humaneval_002",
+        "question": "Write a function that finds the max of a list. For [3, 7, 2, 9, 1], show each comparison step.",
+    },
+    {
+        "question_id": "humaneval_003",
+        "question": "Write a function that checks if a number is prime. Show whether 17 is prime, step by step.",
+    },
+    {
+        "question_id": "humaneval_004",
+        "question": "Write a function that computes fibonacci(n). Compute fibonacci(7) = ? step by step.",
+    },
+    {
+        "question_id": "humaneval_005",
+        "question": "Write a function that returns the product of a list. For [2, 3, 4, 5], compute 2 * 3 * 4 * 5 = ?",
+    },
+    {
+        "question_id": "humaneval_006",
+        "question": "Write a function that counts vowels in a string. For 'hello world', count each vowel step by step.",
+    },
+    {
+        "question_id": "humaneval_007",
+        "question": "Write a function that reverses a string. Trace through reversing 'abc': step 1, 2, 3.",
+    },
+    {
+        "question_id": "humaneval_008",
+        "question": "Write a function that returns the GCD. Compute GCD(48, 18) using Euclidean algorithm step by step.",
+    },
+    {
+        "question_id": "humaneval_009",
+        "question": "Write a function that converts Celsius to Fahrenheit. Convert 100C: compute 100 * 9 / 5 + 32 = ?",
+    },
+    {
+        "question_id": "humaneval_010",
+        "question": "Write a function that sums digits of a number. For 12345, sum 1 + 2 + 3 + 4 + 5 = ?",
+    },
+    {
+        "question_id": "humaneval_011",
+        "question": "Write a function that counts words in a sentence. For 'the quick brown fox', count each word.",
+    },
+    {
+        "question_id": "humaneval_012",
+        "question": "Write a function returning nth triangular number. Compute T(10) = 1+2+...+10 = ?",
+    },
+    {
+        "question_id": "humaneval_013",
+        "question": "Write a function that checks if a string is a palindrome. Check 'racecar': compare positions 0 and 6, 1 and 5, 2 and 4.",
+    },
+    {
+        "question_id": "humaneval_014",
+        "question": "Write a function that computes power(base, exp). Compute 2^8 step by step: 2*2=4, 4*2=8, ...",
+    },
+    {
+        "question_id": "humaneval_015",
+        "question": "Write a function returning the number of divisors of n. Count divisors of 12: 1,2,3,4,6,12. How many = ?",
+    },
+    {
+        "question_id": "humaneval_016",
+        "question": "Write a function that computes the LCM of two numbers. Compute LCM(12, 18): step by step.",
+    },
+    {
+        "question_id": "humaneval_017",
+        "question": "Write a function returning sum of even numbers 1..n. Sum evens 1..10: 2+4+6+8+10 = ?",
+    },
+    {
+        "question_id": "humaneval_018",
+        "question": "Write a function that flattens a nested list [[1,2],[3,4],[5]]. Count total elements step by step.",
+    },
+    {
+        "question_id": "humaneval_019",
+        "question": "Write a function computing the mean of a list. For [10, 20, 30, 40, 50], compute mean: sum=? / count=? = ?",
+    },
+    {
+        "question_id": "humaneval_020",
+        "question": "Write a function that finds second largest. For [3, 1, 4, 1, 5, 9, 2, 6], step through finding the second largest.",
+    },
+    {
+        "question_id": "humaneval_021",
+        "question": "Write a function that converts binary string to int. Convert '1101': 1*8 + 1*4 + 0*2 + 1*1 = ?",
+    },
+    {
+        "question_id": "humaneval_022",
+        "question": "Write a function that checks if two strings are anagrams. Check 'listen' vs 'silent': count each character.",
+    },
+    {
+        "question_id": "humaneval_023",
+        "question": "Write a function returning cumulative sum. For [1,2,3,4,5], step: 1, 1+2=3, 3+3=6, 6+4=10, 10+5=15.",
+    },
+    {
+        "question_id": "humaneval_024",
+        "question": "Write a function returning count of negative numbers. For [-1, 2, -3, 4, -5], count: step through each element.",
+    },
+    {
+        "question_id": "humaneval_025",
+        "question": "Write a function computing area of circle radius r. For r=7, compute 3.14159 * 7 * 7 = ?",
+    },
+    {
+        "question_id": "humaneval_026",
+        "question": "Write a function that returns the mode of a list. For [1,2,2,3,3,3], count each value step by step.",
+    },
+    {
+        "question_id": "humaneval_027",
+        "question": "Write a function that computes string edit distance. For 'cat' and 'bat', count differences step by step.",
+    },
+    {
+        "question_id": "humaneval_028",
+        "question": "Write a function that zips two lists. Zip [1,2,3] and ['a','b','c']: pair each index step by step.",
+    },
+    {
+        "question_id": "humaneval_029",
+        "question": "Write a function returning sum of squares 1..n. Compute 1^2+2^2+3^2+4^2+5^2 = 1+4+9+16+25 = ?",
+    },
 ]
 
 

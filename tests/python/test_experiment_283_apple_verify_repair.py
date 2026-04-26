@@ -40,7 +40,9 @@ _SCRIPT_PATH = (
 def _load_module() -> Any:
     """Load experiment_283 without executing main(), in mock mode."""
     os.environ.setdefault("CARNOT_FORCE_LIVE", "0")
-    spec = importlib.util.spec_from_file_location("experiment_283_apple_verify_repair", _SCRIPT_PATH)
+    spec = importlib.util.spec_from_file_location(
+        "experiment_283_apple_verify_repair", _SCRIPT_PATH
+    )
     assert spec is not None and spec.loader is not None
     mod = importlib.util.module_from_spec(spec)
     sys.modules["experiment_283_apple_verify_repair"] = mod
@@ -180,18 +182,13 @@ def test_run_all_produces_12_cells(tmp_path: Path) -> None:
 
     # Expect entries for each (model, mode, variant_type) combination.
     expected_cells = [
-        (model["name"], mode, vt)
-        for model in two_specs
-        for mode in MODES
-        for vt in VARIANT_TYPES
+        (model["name"], mode, vt) for model in two_specs for mode in MODES for vt in VARIANT_TYPES
     ]
     assert len(expected_cells) == 12
 
     for model_name, mode, vt in expected_cells:
         cell = results.get(model_name, {}).get(mode, {}).get(vt)
-        assert cell is not None, (
-            f"Missing cell ({model_name!r}, {mode!r}, {vt!r}) in results"
-        )
+        assert cell is not None, f"Missing cell ({model_name!r}, {mode!r}, {vt!r}) in results"
         for field in ("correct", "total", "accuracy", "violation_detected_count", "repaired_count"):
             assert field in cell, f"Cell missing field {field!r}: {cell}"
 
@@ -300,7 +297,58 @@ def test_primary_criterion_field_in_artifact() -> None:
         started_at="2026-04-14T05:00:00Z",
         finished_at="2026-04-14T05:10:00Z",
         inference_mode="mock",
-        cell_results={"Qwen3.5-0.8B": {"baseline": {"number_swap": {"accuracy": 0.4, "correct": 2, "total": 5, "violation_detected_count": 0, "repaired_count": 0}, "irrelevant_sentence": {"accuracy": 0.8, "correct": 4, "total": 5, "violation_detected_count": 0, "repaired_count": 0}}, "verify_only": {"number_swap": {"accuracy": 0.5, "correct": 3, "total": 5, "violation_detected_count": 2, "repaired_count": 0}, "irrelevant_sentence": {"accuracy": 0.8, "correct": 4, "total": 5, "violation_detected_count": 1, "repaired_count": 0}}, "verify_repair": {"number_swap": {"accuracy": 0.7, "correct": 4, "total": 5, "violation_detected_count": 2, "repaired_count": 2}, "irrelevant_sentence": {"accuracy": 0.8, "correct": 4, "total": 5, "violation_detected_count": 1, "repaired_count": 1}}}},
+        cell_results={
+            "Qwen3.5-0.8B": {
+                "baseline": {
+                    "number_swap": {
+                        "accuracy": 0.4,
+                        "correct": 2,
+                        "total": 5,
+                        "violation_detected_count": 0,
+                        "repaired_count": 0,
+                    },
+                    "irrelevant_sentence": {
+                        "accuracy": 0.8,
+                        "correct": 4,
+                        "total": 5,
+                        "violation_detected_count": 0,
+                        "repaired_count": 0,
+                    },
+                },
+                "verify_only": {
+                    "number_swap": {
+                        "accuracy": 0.5,
+                        "correct": 3,
+                        "total": 5,
+                        "violation_detected_count": 2,
+                        "repaired_count": 0,
+                    },
+                    "irrelevant_sentence": {
+                        "accuracy": 0.8,
+                        "correct": 4,
+                        "total": 5,
+                        "violation_detected_count": 1,
+                        "repaired_count": 0,
+                    },
+                },
+                "verify_repair": {
+                    "number_swap": {
+                        "accuracy": 0.7,
+                        "correct": 4,
+                        "total": 5,
+                        "violation_detected_count": 2,
+                        "repaired_count": 2,
+                    },
+                    "irrelevant_sentence": {
+                        "accuracy": 0.8,
+                        "correct": 4,
+                        "total": 5,
+                        "violation_detected_count": 1,
+                        "repaired_count": 1,
+                    },
+                },
+            }
+        },
         logit_paths={},
         improvement_deltas={},
         primary_criterion_met=True,
@@ -441,14 +489,26 @@ def test_checkpoint_resume_skips_completed(tmp_path: Path) -> None:
 
     # Pre-populate a checkpoint with question 0 already done for baseline/number_swap.
     model_name = MODEL_SPECS[0]["name"]
-    ckpt_file = ckpt_dir / f"{_mod.safe_slug(model_name)}__{_mod.safe_slug('baseline')}__{_mod.safe_slug('number_swap')}.json"
+    ckpt_file = (
+        ckpt_dir
+        / f"{_mod.safe_slug(model_name)}__{_mod.safe_slug('baseline')}__{_mod.safe_slug('number_swap')}.json"
+    )
     ckpt_file.write_text(
-        json.dumps({
-            "model_name": model_name,
-            "mode": "baseline",
-            "variant_type": "number_swap",
-            "completed": {"gsm8k-001": {"correct": True, "response": "10", "violation_detected": False, "repaired": False}},
-        }),
+        json.dumps(
+            {
+                "model_name": model_name,
+                "mode": "baseline",
+                "variant_type": "number_swap",
+                "completed": {
+                    "gsm8k-001": {
+                        "correct": True,
+                        "response": "10",
+                        "violation_detected": False,
+                        "repaired": False,
+                    }
+                },
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -484,15 +544,17 @@ def test_logit_files_saved_at_fractions(tmp_path: Path) -> None:
     # Use 4 rows of same variant_type to hit all 4 fractions.
     four_ns_rows = []
     for i in range(4):
-        four_ns_rows.append({
-            "question_id": f"gsm8k-{i:03d}",
-            "original_question": f"Q{i}: What is {i}+1?",
-            "original_answer": i + 1,
-            "variant_type": "number_swap",
-            "variant_question": f"Q{i} scaled: What is {i*2}+2?",
-            "variant_answer": (i + 1) * 2,
-            "provenance": {},
-        })
+        four_ns_rows.append(
+            {
+                "question_id": f"gsm8k-{i:03d}",
+                "original_question": f"Q{i}: What is {i}+1?",
+                "original_answer": i + 1,
+                "variant_type": "number_swap",
+                "variant_question": f"Q{i} scaled: What is {i * 2}+2?",
+                "variant_answer": (i + 1) * 2,
+                "provenance": {},
+            }
+        )
 
     logit_dir = tmp_path / "logits"
     logit_dir.mkdir()
@@ -504,7 +566,9 @@ def test_logit_files_saved_at_fractions(tmp_path: Path) -> None:
         logit_dir=logit_dir,
         timeout_seconds=60,
     )
-    runner.run_mode_variant(model_name=MODEL_SPECS[0]["name"], mode="baseline", variant_type="number_swap")
+    runner.run_mode_variant(
+        model_name=MODEL_SPECS[0]["name"], mode="baseline", variant_type="number_swap"
+    )
 
     npy_files = sorted(logit_dir.rglob("*.npy"))
     assert len(npy_files) >= 1, "No .npy logit files were saved"
@@ -527,7 +591,9 @@ def test_logit_array_shape(tmp_path: Path) -> None:
         logit_dir=logit_dir,
         timeout_seconds=60,
     )
-    runner.run_mode_variant(model_name=MODEL_SPECS[0]["name"], mode="baseline", variant_type="number_swap")
+    runner.run_mode_variant(
+        model_name=MODEL_SPECS[0]["name"], mode="baseline", variant_type="number_swap"
+    )
 
     npy_files = list(logit_dir.rglob("*.npy"))
     assert len(npy_files) > 0
@@ -607,8 +673,17 @@ def test_per_question_record_fields(tmp_path: Path) -> None:
     records = runner.run_mode_variant(
         model_name=MODEL_SPECS[0]["name"], mode="baseline", variant_type="number_swap"
     )
-    required = {"question_id", "mode", "variant_type", "model", "correct",
-                "violation_detected", "repaired", "semantic_grounding_fired", "formal_claim_fired"}
+    required = {
+        "question_id",
+        "mode",
+        "variant_type",
+        "model",
+        "correct",
+        "violation_detected",
+        "repaired",
+        "semantic_grounding_fired",
+        "formal_claim_fired",
+    }
     for rec in records:
         for field in required:
             assert field in rec, f"Missing per-question field {field!r} in record: {rec}"

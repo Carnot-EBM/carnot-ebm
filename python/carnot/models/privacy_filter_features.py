@@ -33,7 +33,6 @@ import re
 
 import jax.numpy as jnp
 
-
 # ---------------------------------------------------------------------------
 # Compiled regex patterns for structural PII detection
 # ---------------------------------------------------------------------------
@@ -55,10 +54,15 @@ _RE_PHONE = re.compile(
 )
 
 # Street address: digits followed by a street name word (crude but fast).
-_RE_ADDRESS = re.compile(r"\b\d{1,5}\s+[A-Za-z]+(?:\s+[A-Za-z]+){0,3}\s+(?:St|Ave|Rd|Blvd|Dr|Ln|Way|Ct|Pl)\b", re.IGNORECASE)
+_RE_ADDRESS = re.compile(
+    r"\b\d{1,5}\s+[A-Za-z]+(?:\s+[A-Za-z]+){0,3}\s+(?:St|Ave|Rd|Blvd|Dr|Ln|Way|Ct|Pl)\b",
+    re.IGNORECASE,
+)
 
 # IPv4 address: four octets 0-255 separated by dots.
-_RE_IP = re.compile(r"\b(?:25[0-5]|2\d{2}|1\d{2}|[1-9]\d|\d)(?:\.(?:25[0-5]|2\d{2}|1\d{2}|[1-9]\d|\d)){3}\b")
+_RE_IP = re.compile(
+    r"\b(?:25[0-5]|2\d{2}|1\d{2}|[1-9]\d|\d)(?:\.(?:25[0-5]|2\d{2}|1\d{2}|[1-9]\d|\d)){3}\b"
+)
 
 # Date of birth: MM/DD/YYYY or YYYY-MM-DD or spelled-out month forms.
 _RE_DOB = re.compile(r"\b(?:\d{1,2}/\d{1,2}/\d{4}|\d{4}-\d{2}-\d{2})\b")
@@ -77,18 +81,18 @@ _RE_PASSPORT = re.compile(
 # High-signal PII disclosure keywords — phrases that appear in text disclosing
 # private information (e.g., "my SSN is", "billing address", etc.).
 _PII_KEYWORDS: list[str] = [
-    "social security",      # SSN disclosure prefix
-    "credit card",          # CC disclosure prefix
-    "date of birth",        # DOB disclosure phrase
-    "home address",         # address disclosure prefix
-    "medical record",       # PHI indicator
-    "account number",       # financial PII
-    "password",             # credential PII
-    "private key",          # cryptographic secret
-    "mother's maiden",      # security question PII
-    "full name",            # identity PII
-    "phone number",         # contact PII
-    "zip code",             # address PII
+    "social security",  # SSN disclosure prefix
+    "credit card",  # CC disclosure prefix
+    "date of birth",  # DOB disclosure phrase
+    "home address",  # address disclosure prefix
+    "medical record",  # PHI indicator
+    "account number",  # financial PII
+    "password",  # credential PII
+    "private key",  # cryptographic secret
+    "mother's maiden",  # security question PII
+    "full name",  # identity PII
+    "phone number",  # contact PII
+    "zip code",  # address PII
 ]
 
 
@@ -144,9 +148,9 @@ def encode_privacy(text: str, max_features: int = N_PRIVACY_FEATURES) -> jnp.nda
     keyword_hits = [text_lower.count(kw) for kw in _PII_KEYWORDS]
     # Bucket into 4 groups of 3 to stay within 16 total features.
     kw_features = [
-        sum(keyword_hits[0:3]) / word_count,   # identity/SSN/CC keywords
-        sum(keyword_hits[3:6]) / word_count,   # address/medical/financial keywords
-        sum(keyword_hits[6:9]) / word_count,   # password/security/name keywords
+        sum(keyword_hits[0:3]) / word_count,  # identity/SSN/CC keywords
+        sum(keyword_hits[3:6]) / word_count,  # address/medical/financial keywords
+        sum(keyword_hits[6:9]) / word_count,  # password/security/name keywords
         sum(keyword_hits[9:12]) / word_count,  # phone/zip/contact keywords
     ]
 

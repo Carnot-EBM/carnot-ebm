@@ -144,7 +144,7 @@ def detect_gpus() -> tuple[int, float, float]:
 
     def _vram(idx: int) -> float:
         if idx < n:
-            return torch.cuda.get_device_properties(idx).total_memory / (1024 ** 3)
+            return torch.cuda.get_device_properties(idx).total_memory / (1024**3)
         return 0.0
 
     return n, _vram(0), _vram(1)
@@ -192,7 +192,9 @@ def load_model_split(model_id: str) -> object | None:
         return None
 
 
-def run_forward_passes(model: object, model_id: str, n_passes: int = 10) -> tuple[list[float], list[float]]:
+def run_forward_passes(
+    model: object, model_id: str, n_passes: int = 10
+) -> tuple[list[float], list[float]]:
     """Run ``n_passes`` forward passes and sample GPU utilization after each.
 
     Returns (util_0_list, util_1_list) — parallel lists of per-pass GPU

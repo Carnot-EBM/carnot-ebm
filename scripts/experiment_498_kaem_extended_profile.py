@@ -108,13 +108,15 @@ def main() -> None:
 
             n_vars_tested.append(n_vars)
             speedups.append(speedup)
-            per_n_vars_results.append({
-                "n_vars": n_vars,
-                "n_samples": N_SAMPLES,
-                "kaem_latency_ms": bench["kaem_latency_ms"],
-                "mcmc_latency_ms": bench["ising_mcmc_latency_ms"],
-                "speedup_ratio": speedup,
-            })
+            per_n_vars_results.append(
+                {
+                    "n_vars": n_vars,
+                    "n_samples": N_SAMPLES,
+                    "kaem_latency_ms": bench["kaem_latency_ms"],
+                    "mcmc_latency_ms": bench["ising_mcmc_latency_ms"],
+                    "speedup_ratio": speedup,
+                }
+            )
             _log.info(
                 "n_vars=%d: kaem=%.1f ms, mcmc=%.1f ms, speedup=%.2fx",
                 n_vars,
@@ -127,7 +129,8 @@ def main() -> None:
             if speedup >= 5.0:
                 _log.info(
                     "Crossover found at n_vars=%d (speedup=%.2fx >= 5x) — stopping early.",
-                    n_vars, speedup,
+                    n_vars,
+                    speedup,
                 )
                 early_stop = True
                 break
@@ -172,8 +175,7 @@ def main() -> None:
         "fpga_path_recommended": extended.fpga_path_recommended,
         "retro_031_closed": True,
         "honest_verdict": (
-            "crossover_found" if extended.kaem_viable_for_cpu
-            else "fpga_path_recommended"
+            "crossover_found" if extended.kaem_viable_for_cpu else "fpga_path_recommended"
         ),
         "env_autofix": {
             "gpu_detected": _autofix.gpu_detected,
@@ -202,12 +204,14 @@ def main() -> None:
 
 def _utc_now() -> str:
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _run_date() -> str:
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
+
+    return datetime.datetime.now(datetime.UTC).strftime("%Y%m%d")
 
 
 if __name__ == "__main__":

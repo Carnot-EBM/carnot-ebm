@@ -362,6 +362,7 @@ _BACKENDS: dict[str, BackendFactory] = {
     "tsu": TsuBackend,
 }
 
+
 # Registry for CARNOT_SAMPLER env-var-selectable backends.
 # Maps the short name used in CARNOT_SAMPLER to the backend class.
 # DWaveNealBackend uses a different call interface than SamplerBackend (J/h
@@ -371,8 +372,8 @@ _BACKENDS: dict[str, BackendFactory] = {
 # get_sampler_backend() which is a looser factory for experiment scripts.
 def _build_backend_registry() -> dict[str, type]:
     """Build the sampler backend registry, importing lazily to avoid hard deps."""
-    from carnot.samplers.parallel_ising import ParallelIsingSampler  # noqa: F401 (used as value)
     from carnot.samplers.dwave_backend import DWaveNealBackend  # noqa: F401
+    from carnot.samplers.parallel_ising import ParallelIsingSampler  # noqa: F401 (used as value)
 
     return {
         "cpu": CpuBackend,
@@ -430,9 +431,7 @@ def get_sampler_backend(name: str | None = None) -> object:
         name = os.environ.get("CARNOT_SAMPLER", "cpu")
     if name not in backend_registry:
         available = ", ".join(sorted(backend_registry))
-        raise ValueError(
-            f"Unknown CARNOT_SAMPLER backend {name!r}. Available: {available}"
-        )
+        raise ValueError(f"Unknown CARNOT_SAMPLER backend {name!r}. Available: {available}")
     return backend_registry[name]()
 
 
@@ -476,12 +475,14 @@ def get_backend(name: str | None = None) -> SamplerBackend:
     if name in {"dwave_neal", "dwave_tabu", "dwave_qpu"}:
         from carnot.samplers.dwave_sampler import DWaveSampler
 
-        mode = name[len("dwave_"):]  # strips "dwave_" prefix → "neal", "tabu", "qpu"
+        mode = name[len("dwave_") :]  # strips "dwave_" prefix → "neal", "tabu", "qpu"
         dwave_backend: SamplerBackend = DWaveSampler(mode=mode)
         return dwave_backend
 
     if name not in _BACKENDS:
-        available = ", ".join(sorted([*_BACKENDS.keys(), "fpga", "dwave_neal", "dwave_tabu", "dwave_qpu"]))
+        available = ", ".join(
+            sorted([*_BACKENDS.keys(), "fpga", "dwave_neal", "dwave_tabu", "dwave_qpu"])
+        )
         raise ValueError(f"Unknown sampler backend {name!r}. Available backends: {available}")
 
     return _BACKENDS[name]()

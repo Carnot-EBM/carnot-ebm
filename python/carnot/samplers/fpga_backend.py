@@ -146,9 +146,7 @@ def sparsify_coupling(coupling: np.ndarray, max_degree: int = 32) -> np.ndarray:
     return out
 
 
-def quantum_annealing_schedule(
-    n_steps: int, beta_min: float, beta_max: float
-) -> list[float]:
+def quantum_annealing_schedule(n_steps: int, beta_min: float, beta_max: float) -> list[float]:
     """Compute a log-linear (geometric) β-schedule from arXiv 2604.04606.
 
     **Researcher summary:**
@@ -402,9 +400,7 @@ class FpgaBackend:
         j_sparse = sparsify_coupling(np.asarray(couplings), self.max_degree)
         h = np.asarray(biases, dtype=np.float32)
         if self.use_lagrangian_penalty:
-            j_sparse, h = _apply_lagrangian_penalty(
-                j_sparse, h, self.lagrangian_penalty_strength
-            )
+            j_sparse, h = _apply_lagrangian_penalty(j_sparse, h, self.lagrangian_penalty_strength)
         return self.dispatch(j_sparse, h, n_samples, n_steps)
 
     def sample(
@@ -438,9 +434,7 @@ class FpgaBackend:
         j_sparse = sparsify_coupling(np.asarray(couplings), self.max_degree)
         h = np.asarray(biases, dtype=np.float32)
         if self.use_lagrangian_penalty:
-            j_sparse, h = _apply_lagrangian_penalty(
-                j_sparse, h, self.lagrangian_penalty_strength
-            )
+            j_sparse, h = _apply_lagrangian_penalty(j_sparse, h, self.lagrangian_penalty_strength)
         return self.dispatch(j_sparse, h, n_samples, steps)
 
     def dispatch(

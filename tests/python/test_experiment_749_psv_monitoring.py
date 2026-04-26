@@ -124,7 +124,7 @@ class TestHonestVerdictMapping:
         REQ-PSV-012 — near-zero slope (plateau) is acceptable; recovery held.
         """
         verdict = _compute_honest_verdict(
-            fp_rate_slope_new30=0.00005,   # below 0.0001 threshold
+            fp_rate_slope_new30=0.00005,  # below 0.0001 threshold
             fp_rate_slope_737=-0.00131257,
             condition_a_slope=0.0,
         )
@@ -138,9 +138,9 @@ class TestHonestVerdictMapping:
         this maps to decelerating.  Tested with condition_a = 0.005 to give room.
         """
         verdict = _compute_honest_verdict(
-            fp_rate_slope_new30=0.002,     # positive, above plateau threshold
+            fp_rate_slope_new30=0.002,  # positive, above plateau threshold
             fp_rate_slope_737=-0.00131257,
-            condition_a_slope=0.005,       # new30 < condition_a → decelerating
+            condition_a_slope=0.005,  # new30 < condition_a → decelerating
         )
         assert verdict == "psv_recovery_decelerating"
 
@@ -151,9 +151,9 @@ class TestHonestVerdictMapping:
         This is the "deeper structural problem" scenario requiring architecture review.
         """
         verdict = _compute_honest_verdict(
-            fp_rate_slope_new30=0.01,      # positive AND above condition_a
+            fp_rate_slope_new30=0.01,  # positive AND above condition_a
             fp_rate_slope_737=-0.00131257,
-            condition_a_slope=0.005,       # new30 > condition_a → relapse
+            condition_a_slope=0.005,  # new30 > condition_a → relapse
         )
         assert verdict == "psv_recovery_relapse"
 
@@ -165,7 +165,7 @@ class TestHonestVerdictMapping:
         verdict = _compute_honest_verdict(
             fp_rate_slope_new30=0.005,
             fp_rate_slope_737=-0.00131257,
-            condition_a_slope=0.005,       # new30 == condition_a → relapse (not strictly less)
+            condition_a_slope=0.005,  # new30 == condition_a → relapse (not strictly less)
         )
         assert verdict == "psv_recovery_relapse"
 
@@ -217,9 +217,7 @@ class TestDomainPoolCoverage:
 
         # Build one iteration's question list (same logic as run_experiment)
         iteration_qs = (
-            rng.sample(gsm8k_pool, 10)
-            + rng.sample(algebra_pool, 5)
-            + rng.sample(arc_pool, 5)
+            rng.sample(gsm8k_pool, 10) + rng.sample(algebra_pool, 5) + rng.sample(arc_pool, 5)
         )
 
         gsm8k_count = sum(1 for q in iteration_qs if q.startswith("GSM8K-"))
@@ -374,9 +372,36 @@ def _setup_exp737_result(tmp_path: Path) -> None:
         "slope_delta": -0.00131257,
         "iterations_run": 30,
         "fp_rates": [
-            0.65, 0.55, 0.75, 0.8, 0.75, 0.7, 0.75, 0.75, 0.55, 0.6,
-            0.75, 0.65, 0.65, 0.55, 0.7, 0.7, 0.7, 0.65, 0.7, 0.75,
-            0.6, 0.6, 0.55, 0.6, 0.7, 0.7, 0.75, 0.6, 0.65, 0.7,
+            0.65,
+            0.55,
+            0.75,
+            0.8,
+            0.75,
+            0.7,
+            0.75,
+            0.75,
+            0.55,
+            0.6,
+            0.75,
+            0.65,
+            0.65,
+            0.55,
+            0.7,
+            0.7,
+            0.7,
+            0.65,
+            0.7,
+            0.75,
+            0.6,
+            0.6,
+            0.55,
+            0.6,
+            0.7,
+            0.7,
+            0.75,
+            0.6,
+            0.65,
+            0.7,
         ],
         "gate_source": "exp736",
     }

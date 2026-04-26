@@ -27,7 +27,6 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
-from typing import List, Tuple
 
 import numpy as np
 
@@ -54,7 +53,7 @@ _FOVER_FALLBACK_FILENAME = "fover_labeled_steps_live.json"
 # ---------------------------------------------------------------------------
 
 
-def _text_to_embedding(text: str) -> List[float]:
+def _text_to_embedding(text: str) -> list[float]:
     """Convert text to a deterministic 256-D float embedding via SHA-256 seeding.
 
     **Why hash-based rather than RandomProjection:**
@@ -91,9 +90,9 @@ def _text_to_embedding(text: str) -> List[float]:
 
 
 def load_cot_pairs_from_experiments(
-    exp_ids: List[int],
+    exp_ids: list[int],
     fallback_path: str,
-) -> List[ViolationPair]:
+) -> list[ViolationPair]:
     """Load CoT pairs from experiment result files, with cascading fallback.
 
     **Priority order (FR-11 honesty contract):**
@@ -130,7 +129,7 @@ def load_cot_pairs_from_experiments(
     Spec: REQ-LEARN-048, SCENARIO-LEARN-076
     """
     repo_root = _get_repo_root()
-    pairs: List[ViolationPair] = []
+    pairs: list[ViolationPair] = []
 
     for exp_id in exp_ids:
         candidate = repo_root / "results" / f"exp{exp_id}_cot_pairs.json"
@@ -170,7 +169,7 @@ def _get_repo_root() -> Path:
     return _find_repo_root_from(Path(__file__).resolve())
 
 
-def _load_pairs_from_file(path: Path) -> List[ViolationPair]:
+def _load_pairs_from_file(path: Path) -> list[ViolationPair]:
     """Load ViolationPairs from a single JSON file, returning [] on any error.
 
     Supports FOVER-style, response-style, and ViolationPair-style schemas.
@@ -187,7 +186,7 @@ def _load_pairs_from_file(path: Path) -> List[ViolationPair]:
     if not isinstance(raw, list):
         return []
 
-    pairs: List[ViolationPair] = []
+    pairs: list[ViolationPair] = []
     for entry in raw:
         if not isinstance(entry, dict):
             continue
@@ -256,9 +255,9 @@ def _entry_to_violation_pair(entry: dict) -> ViolationPair | None:
 
 
 def compute_held_out_split(
-    pairs: List[ViolationPair],
+    pairs: list[ViolationPair],
     test_fraction: float = 0.2,
-) -> Tuple[List[ViolationPair], List[ViolationPair]]:
+) -> tuple[list[ViolationPair], list[ViolationPair]]:
     """Split pairs into (train, test) deterministically.
 
     **Why deterministic split (not random_state shuffle):**
@@ -302,9 +301,9 @@ def compute_held_out_split(
 
 
 def violation_pairs_to_trainer_dicts(
-    pairs: List[ViolationPair],
+    pairs: list[ViolationPair],
     label_signal_strength: float = 0.5,
-) -> List[dict]:
+) -> list[dict]:
     """Convert ViolationPair objects to LeWorldModelJEPATrainer-compatible dicts.
 
     **Why hash-based embeddings:**
@@ -345,10 +344,12 @@ def violation_pairs_to_trainer_dicts(
         bias = label_signal_strength if pair.has_violation else -label_signal_strength
         emb_arr = np.array(emb, dtype=np.float32)
         emb_arr[0] += bias
-        result.append({
-            "embedding": emb_arr.tolist(),
-            "violated_arithmetic": label_int,
-            "violated_code": label_int,
-            "violated_logic": label_int,
-        })
+        result.append(
+            {
+                "embedding": emb_arr.tolist(),
+                "violated_arithmetic": label_int,
+                "violated_code": label_int,
+                "violated_logic": label_int,
+            }
+        )
     return result

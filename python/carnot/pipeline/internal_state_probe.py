@@ -33,13 +33,8 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 import numpy as np
-
-if TYPE_CHECKING:
-    pass
-
 
 # ---------------------------------------------------------------------------
 # InternalStateProbeResult
@@ -170,13 +165,13 @@ class InternalStateProbe:
             return
 
         X = np.stack([p[0] for p in pairs], axis=0).astype(np.float64)  # (N, D)
-        y = np.array([p[1] for p in pairs], dtype=np.float64)             # (N,)
+        y = np.array([p[1] for p in pairs], dtype=np.float64)  # (N,)
 
         for _ in range(epochs):
-            logits = X @ self._W + self._b          # (N,)
+            logits = X @ self._W + self._b  # (N,)
             # Numerically stable sigmoid
             probs = _sigmoid(logits)
-            error = probs - y                        # (N,)
+            error = probs - y  # (N,)
             self._W -= lr * (X.T @ error) / len(y)
             self._b -= lr * error.mean()
 
@@ -265,8 +260,8 @@ def simulate_hidden_states(
     # Incorrect steps: higher norm, larger spread — further from correct cluster
     incorrect_raw = rng.normal(0.0, 1.5, size=(n_samples, hidden_size))
     norms2 = np.linalg.norm(incorrect_raw, axis=1, keepdims=True) + 1e-9
-    incorrect_states = (
-        2.5 * incorrect_raw / norms2 + rng.normal(0.0, 0.3, size=(n_samples, hidden_size))
+    incorrect_states = 2.5 * incorrect_raw / norms2 + rng.normal(
+        0.0, 0.3, size=(n_samples, hidden_size)
     )
 
     return correct_states.astype(np.float64), incorrect_states.astype(np.float64)
@@ -394,7 +389,7 @@ def _compute_auc(scores: list[float], labels: list[int]) -> float:
         return 0.5
 
     # Sort by score descending
-    pairs_sorted = sorted(zip(scores, labels), key=lambda x: x[0], reverse=True)
+    pairs_sorted = sorted(zip(scores, labels, strict=False), key=lambda x: x[0], reverse=True)
 
     tp, fp = 0, 0
     auc = 0.0

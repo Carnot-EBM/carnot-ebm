@@ -80,68 +80,69 @@ N_GSM8K = 50
 # Identical corpus to Exp 871 for comparability.
 _GSM8K_PROBLEMS: list[dict[str, Any]] = [
     {"id": f"gsm8k_{i}", "question": q, "answer": a}
-    for i, (q, a) in enumerate([
-        ("Janet has 3 apples and buys 5 more. How many does she have?", "8"),
-        ("A car travels at 60 mph for 2 hours. How many miles?", "120"),
-        ("If 4 shirts cost $48, how much does 1 shirt cost?", "$12"),
-        ("Tom has 7 cats. He gives away 3. How many remain?", "4"),
-        ("A rectangle is 6 cm by 4 cm. What is the area?", "24"),
-        ("There are 5 rows of 8 chairs. How many chairs total?", "40"),
-        ("Sara read 15 pages Monday and 22 Tuesday. Total pages?", "37"),
-        ("A dozen eggs costs $3. How much for 3 dozen?", "$9"),
-        ("A tank holds 120 litres. It is 3/4 full. How many litres?", "90"),
-        ("John is 12. His father is 3 times his age. Father's age?", "36"),
-        ("A train leaves at 9am and arrives at 1pm. Journey hours?", "4"),
-        ("A pizza has 8 slices. 3 are eaten. Slices left?", "5"),
-        ("15% of 200 is what number?", "30"),
-        ("A square has side 7 cm. What is the perimeter?", "28"),
-        ("60 students, 40% are girls. How many girls?", "24"),
-        ("A shop sells 50 items per day. Items in 7 days?", "350"),
-        ("Two numbers sum to 20 and one is 8. Other number?", "12"),
-        ("A bag weighs 2.5 kg. 4 bags weigh how much?", "10"),
-        ("If you earn $15/hr for 8 hrs, total pay?", "$120"),
-        ("A box has 24 chocolates split among 6 kids equally. Each gets?", "4"),
-        ("Temperature drops from 72F to 59F. Drop in degrees?", "13"),
-        ("A recipe uses 2 cups of flour for 12 cookies. For 36 cookies?", "6"),
-        ("A pool is 25m long. 8 laps = how many metres?", "200"),
-        ("There are 100 seats; 63 are taken. Seats available?", "37"),
-        ("5 friends share $75 equally. Each gets?", "$15"),
-        ("A book has 320 pages. You read 80. Pages left?", "240"),
-        ("3 + 4 x 2 = ?", "11"),
-        ("A triangle has angles 45 and 60 degrees. Third angle?", "75"),
-        ("$200 saved, spend $35.50. Amount left?", "$164.50"),
-        ("A car travels 300 km on 30 L. Km per litre?", "10"),
-        ("6 workers build 1 wall in 10 days. 1 worker takes how many days?", "60"),
-        ("25 x 4 = ?", "100"),
-        ("Largest prime less than 20?", "19"),
-        ("A cube has side 3 cm. Volume?", "27"),
-        ("Perimeter of a rectangle 9m by 5m?", "28"),
-        ("Discount 20% off $50. Final price?", "$40"),
-        ("LCM of 4 and 6?", "12"),
-        ("GCD of 12 and 18?", "6"),
-        ("A cistern fills in 6 hours. Fraction filled in 2 hours?", "1/3"),
-        ("Distance = speed x time. Speed=50, time=3. Distance?", "150"),
-        ("Average of 4, 8, 12, 16?", "10"),
-        ("Angle in semicircle subtended at circumference?", "90"),
-        ("Simple interest: P=1000, R=5%, T=2 years?", "$100"),
-        ("Perimeter of equilateral triangle with side 9?", "27"),
-        ("2^8 = ?", "256"),
-        ("3 apples + 2 oranges = 5 fruits. 10 fruits if same ratio: apples?", "6"),
-        ("A store has 5 red, 3 blue, 2 green balls. P(red)?", "0.5"),
-        ("If 2x = 14, x = ?", "7"),
-        ("Sum of first 10 natural numbers?", "55"),
-        ("Area of circle radius 7 (use pi=22/7)?", "154"),
-    ])
+    for i, (q, a) in enumerate(
+        [
+            ("Janet has 3 apples and buys 5 more. How many does she have?", "8"),
+            ("A car travels at 60 mph for 2 hours. How many miles?", "120"),
+            ("If 4 shirts cost $48, how much does 1 shirt cost?", "$12"),
+            ("Tom has 7 cats. He gives away 3. How many remain?", "4"),
+            ("A rectangle is 6 cm by 4 cm. What is the area?", "24"),
+            ("There are 5 rows of 8 chairs. How many chairs total?", "40"),
+            ("Sara read 15 pages Monday and 22 Tuesday. Total pages?", "37"),
+            ("A dozen eggs costs $3. How much for 3 dozen?", "$9"),
+            ("A tank holds 120 litres. It is 3/4 full. How many litres?", "90"),
+            ("John is 12. His father is 3 times his age. Father's age?", "36"),
+            ("A train leaves at 9am and arrives at 1pm. Journey hours?", "4"),
+            ("A pizza has 8 slices. 3 are eaten. Slices left?", "5"),
+            ("15% of 200 is what number?", "30"),
+            ("A square has side 7 cm. What is the perimeter?", "28"),
+            ("60 students, 40% are girls. How many girls?", "24"),
+            ("A shop sells 50 items per day. Items in 7 days?", "350"),
+            ("Two numbers sum to 20 and one is 8. Other number?", "12"),
+            ("A bag weighs 2.5 kg. 4 bags weigh how much?", "10"),
+            ("If you earn $15/hr for 8 hrs, total pay?", "$120"),
+            ("A box has 24 chocolates split among 6 kids equally. Each gets?", "4"),
+            ("Temperature drops from 72F to 59F. Drop in degrees?", "13"),
+            ("A recipe uses 2 cups of flour for 12 cookies. For 36 cookies?", "6"),
+            ("A pool is 25m long. 8 laps = how many metres?", "200"),
+            ("There are 100 seats; 63 are taken. Seats available?", "37"),
+            ("5 friends share $75 equally. Each gets?", "$15"),
+            ("A book has 320 pages. You read 80. Pages left?", "240"),
+            ("3 + 4 x 2 = ?", "11"),
+            ("A triangle has angles 45 and 60 degrees. Third angle?", "75"),
+            ("$200 saved, spend $35.50. Amount left?", "$164.50"),
+            ("A car travels 300 km on 30 L. Km per litre?", "10"),
+            ("6 workers build 1 wall in 10 days. 1 worker takes how many days?", "60"),
+            ("25 x 4 = ?", "100"),
+            ("Largest prime less than 20?", "19"),
+            ("A cube has side 3 cm. Volume?", "27"),
+            ("Perimeter of a rectangle 9m by 5m?", "28"),
+            ("Discount 20% off $50. Final price?", "$40"),
+            ("LCM of 4 and 6?", "12"),
+            ("GCD of 12 and 18?", "6"),
+            ("A cistern fills in 6 hours. Fraction filled in 2 hours?", "1/3"),
+            ("Distance = speed x time. Speed=50, time=3. Distance?", "150"),
+            ("Average of 4, 8, 12, 16?", "10"),
+            ("Angle in semicircle subtended at circumference?", "90"),
+            ("Simple interest: P=1000, R=5%, T=2 years?", "$100"),
+            ("Perimeter of equilateral triangle with side 9?", "27"),
+            ("2^8 = ?", "256"),
+            ("3 apples + 2 oranges = 5 fruits. 10 fruits if same ratio: apples?", "6"),
+            ("A store has 5 red, 3 blue, 2 green balls. P(red)?", "0.5"),
+            ("If 2x = 14, x = ?", "7"),
+            ("Sum of first 10 natural numbers?", "55"),
+            ("Area of circle radius 7 (use pi=22/7)?", "154"),
+        ]
+    )
 ]
 
-assert len(_GSM8K_PROBLEMS) == N_GSM8K, (
-    f"Expected {N_GSM8K} problems, got {len(_GSM8K_PROBLEMS)}"
-)
+assert len(_GSM8K_PROBLEMS) == N_GSM8K, f"Expected {N_GSM8K} problems, got {len(_GSM8K_PROBLEMS)}"
 
 
 # ---------------------------------------------------------------------------
 # Gate check
 # ---------------------------------------------------------------------------
+
 
 def _check_gate() -> tuple[bool, str]:
     """Return (ok, reason).  Gate passes when live_env_fixed==True and CARNOT_FORCE_LIVE set.
@@ -165,6 +166,7 @@ def _check_gate() -> tuple[bool, str]:
 # ---------------------------------------------------------------------------
 # Answer generation helper (real Gemma4 inference)
 # ---------------------------------------------------------------------------
+
 
 def _generate_answer(model: Any, tokenizer: Any, question: str, max_new_tokens: int = 128) -> str:
     """Generate a concise math answer from Gemma4-E4B-it given a question.
@@ -199,13 +201,14 @@ def _generate_answer(model: Any, tokenizer: Any, question: str, max_new_tokens: 
             do_sample=False,
             pad_token_id=tokenizer.eos_token_id,
         )
-    new_tokens = output_ids[0][inputs["input_ids"].shape[1]:]
+    new_tokens = output_ids[0][inputs["input_ids"].shape[1] :]
     return tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
 
 
 # ---------------------------------------------------------------------------
 # Answer extraction / comparison
 # ---------------------------------------------------------------------------
+
 
 def _extract_final_answer(raw: str) -> str:
     """Extract the first number-like token from a model response.
@@ -257,6 +260,7 @@ def _answers_match(predicted: str, reference: str) -> bool:
     Returns:
         True if the answers are equivalent.
     """
+
     def norm(s: str) -> str:
         # Remove spaces around $ and normalise whitespace
         return re.sub(r"\s+", "", s.lower().replace("$ ", "$").replace(" $", "$"))
@@ -267,6 +271,7 @@ def _answers_match(predicted: str, reference: str) -> bool:
 # ---------------------------------------------------------------------------
 # Per-question cascade runner
 # ---------------------------------------------------------------------------
+
 
 def _run_cascade(
     problem: dict[str, Any],
@@ -329,8 +334,8 @@ def _run_cascade(
             verified, tier_used, _energy = three_tier.verify(
                 response=raw_response,
                 question=question,
-                attention_matrix=None,   # no attention matrix — offline mode
-                hidden_states=None,      # no hidden states — CI-safe
+                attention_matrix=None,  # no attention matrix — offline mode
+                hidden_states=None,  # no hidden states — CI-safe
             )
             # Map tier_used string to integer tier index for the artifact
             _TIER_MAP = {
@@ -384,6 +389,7 @@ def _run_cascade(
 # Metrics computation
 # ---------------------------------------------------------------------------
 
+
 def _compute_metrics(
     per_question: list[dict[str, Any]],
     inference_mode: str,
@@ -417,10 +423,7 @@ def _compute_metrics(
 
     baseline_correct = sum(1 for r in per_question if r["was_correct_baseline"])
     carnot_correct = sum(1 for r in per_question if r["was_correct_carnot"])
-    skipped = sum(
-        1 for r in per_question
-        if r.get("tier_exited_at") is not None
-    )
+    skipped = sum(1 for r in per_question if r.get("tier_exited_at") is not None)
 
     # Track distinct tiers that fired: 0/1/2 from tier_exited_at; 3 when repaired
     tiers_fired: set[int] = set()
@@ -460,6 +463,7 @@ def _compute_metrics(
 # Main
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """Orchestrate: gate check → model load → 50-question cascade → artifact."""
     import torch  # noqa: PLC0415 — heavy dep, local import
@@ -478,8 +482,7 @@ def main() -> None:
     gate_ok, gate_reason = _check_gate()
     if not gate_ok:
         artifact = tmpl.build_result(
-            {"honest_verdict": "blocked", "gate_reason": gate_reason,
-             "inference_mode": "blocked"},
+            {"honest_verdict": "blocked", "gate_reason": gate_reason, "inference_mode": "blocked"},
             status="blocked",
             honest_verdict="blocked",
             inference_mode="blocked",
@@ -542,6 +545,7 @@ def main() -> None:
 
     try:
         from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline  # noqa: PLC0415
+
         three_tier = ThreeTierPipeline()
         print("[exp882] ThreeTierPipeline loaded.", flush=True)
     except Exception as exc:
@@ -549,6 +553,7 @@ def main() -> None:
 
     try:
         from carnot.pipeline.verify_repair import VerifyRepairPipeline  # noqa: PLC0415
+
         verify_repair_pipeline = VerifyRepairPipeline(
             model=None,
             domains=["math"],
@@ -574,6 +579,7 @@ def main() -> None:
     if os.environ.get("CARNOT_STREAMING_COT") == "1":
         try:
             from carnot.pipeline.streaming_cot import StreamingCoTHalluDetector  # noqa: PLC0415
+
             streaming_cot_detector = StreamingCoTHalluDetector(alpha=0.3, threshold=0.35)
             if three_tier is not None:
                 three_tier.wire_tier_0g(streaming_cot_detector)

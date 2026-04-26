@@ -156,10 +156,19 @@ def test_build_v8_artifact_fields_complete() -> None:
         env_autofix_dict={},
     )
     required = [
-        "schema", "inference_mode", "n_questions", "n_scored",
-        "baseline_accuracy", "pipeline_accuracy", "signed_improvement",
-        "wilson_ci_lower", "wilson_ci_upper", "retro_038_closed",
-        "mean_latency_s", "per_question_latencies", "honest_verdict",
+        "schema",
+        "inference_mode",
+        "n_questions",
+        "n_scored",
+        "baseline_accuracy",
+        "pipeline_accuracy",
+        "signed_improvement",
+        "wilson_ci_lower",
+        "wilson_ci_upper",
+        "retro_038_closed",
+        "mean_latency_s",
+        "per_question_latencies",
+        "honest_verdict",
     ]
     for field in required:
         assert field in art, f"Missing required field: {field}"
@@ -170,10 +179,13 @@ def test_build_v8_artifact_gpu_required_verdict() -> None:
     """inference_mode='gpu_required' → honest_verdict='gpu_required'."""
     art = _build_v8_artifact(
         n_questions=100,
-        baseline_correct=0, pipeline_correct=0, n_scored=0,
+        baseline_correct=0,
+        pipeline_correct=0,
+        n_scored=0,
         per_question_latencies=[],
         inference_mode="gpu_required",
-        wilson_ci_lower=0.0, wilson_ci_upper=0.0,
+        wilson_ci_lower=0.0,
+        wilson_ci_upper=0.0,
         retro_038_closed=False,
         env_autofix_dict={},
     )
@@ -185,10 +197,13 @@ def test_build_v8_artifact_publishable_verdict() -> None:
     """retro_038_closed=True → honest_verdict='wilson_ci_publishable'."""
     art = _build_v8_artifact(
         n_questions=100,
-        baseline_correct=50, pipeline_correct=60, n_scored=100,
+        baseline_correct=50,
+        pipeline_correct=60,
+        n_scored=100,
         per_question_latencies=[1.0] * 100,
         inference_mode="live_gpu",
-        wilson_ci_lower=0.02, wilson_ci_upper=0.18,
+        wilson_ci_lower=0.02,
+        wilson_ci_upper=0.18,
         retro_038_closed=True,
         env_autofix_dict={},
     )
@@ -201,10 +216,13 @@ def test_build_v8_artifact_no_improvement_verdict() -> None:
     """No improvement → honest_verdict='no_improvement'."""
     art = _build_v8_artifact(
         n_questions=100,
-        baseline_correct=60, pipeline_correct=60, n_scored=100,
+        baseline_correct=60,
+        pipeline_correct=60,
+        n_scored=100,
         per_question_latencies=[1.0] * 100,
         inference_mode="live_gpu",
-        wilson_ci_lower=-0.05, wilson_ci_upper=0.05,
+        wilson_ci_lower=-0.05,
+        wilson_ci_upper=0.05,
         retro_038_closed=False,
         env_autofix_dict={},
     )

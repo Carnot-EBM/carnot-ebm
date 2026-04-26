@@ -63,6 +63,7 @@ class TestInstrumentModeFields:
     def _make_pipeline(self) -> Any:
         """Build a minimal VerifyRepairPipeline with no LLM for instrument tests."""
         from python.carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         return VerifyRepairPipeline(
             model=None,
             domains=["arithmetic"],
@@ -82,6 +83,7 @@ class TestInstrumentModeFields:
     def _make_extractor(self) -> Any:
         """Build AutoExtractor in arithmetic-only mode for instrument tests."""
         from python.carnot.pipeline.extract import AutoExtractor
+
         return AutoExtractor(enable_factual_extractor=False)
 
     def test_all_required_fields_present_for_correct_response(self) -> None:
@@ -224,10 +226,9 @@ class TestFailureModeClassification:
         Spec: REQ-VERIFY-145-1, SCENARIO-VERIFY-145.
         """
         # 10 correct responses, 4 with extractor_fired=True → fp_rate=0.40 > 0.20
-        records_correct = (
-            self._make_records(4, extractor_fired=True, original_correct=True, final_correct=True)
-            + self._make_records(6, extractor_fired=False, original_correct=True, final_correct=True)
-        )
+        records_correct = self._make_records(
+            4, extractor_fired=True, original_correct=True, final_correct=True
+        ) + self._make_records(6, extractor_fired=False, original_correct=True, final_correct=True)
         records_incorrect = self._make_records(
             10, extractor_fired=True, original_correct=False, final_correct=False
         )
@@ -245,14 +246,12 @@ class TestFailureModeClassification:
         Spec: REQ-VERIFY-145.
         """
         # fp_rate=0.10, regression_rate=0.0, miss_rate=0.10 — all below threshold
-        records_correct = (
-            self._make_records(1, extractor_fired=True)
-            + self._make_records(9, extractor_fired=False)
+        records_correct = self._make_records(1, extractor_fired=True) + self._make_records(
+            9, extractor_fired=False
         )
-        records_incorrect = (
-            self._make_records(1, extractor_fired=False, original_correct=False, final_correct=False)
-            + self._make_records(9, extractor_fired=True, original_correct=False, final_correct=False)
-        )
+        records_incorrect = self._make_records(
+            1, extractor_fired=False, original_correct=False, final_correct=False
+        ) + self._make_records(9, extractor_fired=True, original_correct=False, final_correct=False)
         result = exp706.classify_failure_mode(records_correct, records_incorrect)
         assert result["failure_mode"] == "no_clear_failure"
         assert result["honest_verdict"] == "failure_mode_ambiguous"
@@ -266,10 +265,9 @@ class TestFailureModeClassification:
         """
         records_correct = self._make_records(10, extractor_fired=False)
         # 6 out of 10 incorrect responses NOT detected → miss_rate=0.60 > 0.50
-        records_incorrect = (
-            self._make_records(6, extractor_fired=False, original_correct=False, final_correct=False)
-            + self._make_records(4, extractor_fired=True, original_correct=False, final_correct=False)
-        )
+        records_incorrect = self._make_records(
+            6, extractor_fired=False, original_correct=False, final_correct=False
+        ) + self._make_records(4, extractor_fired=True, original_correct=False, final_correct=False)
         result = exp706.classify_failure_mode(records_correct, records_incorrect)
         assert result["failure_mode"] == "threshold_too_high"
         assert result["honest_verdict"] == "failure_mode_identified"
@@ -282,14 +280,12 @@ class TestFailureModeClassification:
         Spec: REQ-VERIFY-145.
         """
         # fp_rate=0.40 > 0.20 AND miss_rate=0.60 > 0.50
-        records_correct = (
-            self._make_records(4, extractor_fired=True)
-            + self._make_records(6, extractor_fired=False)
+        records_correct = self._make_records(4, extractor_fired=True) + self._make_records(
+            6, extractor_fired=False
         )
-        records_incorrect = (
-            self._make_records(6, extractor_fired=False, original_correct=False, final_correct=False)
-            + self._make_records(4, extractor_fired=True, original_correct=False, final_correct=False)
-        )
+        records_incorrect = self._make_records(
+            6, extractor_fired=False, original_correct=False, final_correct=False
+        ) + self._make_records(4, extractor_fired=True, original_correct=False, final_correct=False)
         result = exp706.classify_failure_mode(records_correct, records_incorrect)
         assert result["failure_mode"] == "combined"
         assert result["honest_verdict"] == "failure_mode_identified"
@@ -301,9 +297,8 @@ class TestFailureModeClassification:
         Any non-ambiguous failure must produce 'failure_mode_identified'.
         Spec: REQ-VERIFY-145-2.
         """
-        records_correct = (
-            self._make_records(5, extractor_fired=True)
-            + self._make_records(5, extractor_fired=False)
+        records_correct = self._make_records(5, extractor_fired=True) + self._make_records(
+            5, extractor_fired=False
         )
         records_incorrect = self._make_records(
             10, extractor_fired=True, original_correct=False, final_correct=False
@@ -320,10 +315,9 @@ class TestFailureModeClassification:
         Spec: REQ-VERIFY-145-3.
         """
         records_correct = self._make_records(10, extractor_fired=False)
-        records_incorrect = (
-            self._make_records(4, extractor_fired=False, original_correct=False, final_correct=False)
-            + self._make_records(6, extractor_fired=True, original_correct=False, final_correct=False)
-        )
+        records_incorrect = self._make_records(
+            4, extractor_fired=False, original_correct=False, final_correct=False
+        ) + self._make_records(6, extractor_fired=True, original_correct=False, final_correct=False)
         result = exp706.classify_failure_mode(records_correct, records_incorrect)
         # fp_rate=0.0, miss_rate=0.40 — all below threshold
         assert result["failure_mode"] == "no_clear_failure"
@@ -336,11 +330,12 @@ class TestFailureModeClassification:
         to cross-check the failure_mode label.  An off-by-one would produce a wrong label.
         Spec: REQ-VERIFY-145.
         """
-        records_correct = (
-            self._make_records(3, extractor_fired=True)
-            + self._make_records(7, extractor_fired=False)
+        records_correct = self._make_records(3, extractor_fired=True) + self._make_records(
+            7, extractor_fired=False
         )
-        records_incorrect = self._make_records(10, extractor_fired=True, original_correct=False, final_correct=False)
+        records_incorrect = self._make_records(
+            10, extractor_fired=True, original_correct=False, final_correct=False
+        )
         result = exp706.classify_failure_mode(records_correct, records_incorrect)
         assert abs(result["fp_rate_on_correct"] - 0.3) < 0.001, (
             f"fp_rate_on_correct should be 0.30, got {result['fp_rate_on_correct']}"
@@ -353,10 +348,9 @@ class TestFailureModeClassification:
         Spec: REQ-VERIFY-145.
         """
         records_correct = self._make_records(10, extractor_fired=False)
-        records_incorrect = (
-            self._make_records(3, extractor_fired=False, original_correct=False, final_correct=False)
-            + self._make_records(7, extractor_fired=True, original_correct=False, final_correct=False)
-        )
+        records_incorrect = self._make_records(
+            3, extractor_fired=False, original_correct=False, final_correct=False
+        ) + self._make_records(7, extractor_fired=True, original_correct=False, final_correct=False)
         result = exp706.classify_failure_mode(records_correct, records_incorrect)
         assert abs(result["threshold_miss_rate"] - 0.3) < 0.001, (
             f"threshold_miss_rate should be 0.30, got {result['threshold_miss_rate']}"
@@ -371,8 +365,13 @@ class TestFailureModeClassification:
         Spec: REQ-VERIFY-145.
         """
         result = exp706.classify_failure_mode([], [])
-        assert result["failure_mode"] in {"no_clear_failure", "combined", "extraction_fp",
-                                           "repair_regression", "threshold_too_high"}
+        assert result["failure_mode"] in {
+            "no_clear_failure",
+            "combined",
+            "extraction_fp",
+            "repair_regression",
+            "threshold_too_high",
+        }
 
 
 # ---------------------------------------------------------------------------
@@ -542,13 +541,17 @@ class TestDeliverableSchema:
         prevent failure mode rate computation.
         Spec: REQ-VERIFY-144, SCENARIO-VERIFY-144.
         """
-        required = {"extractor_fired", "constraint_type", "repair_applied", "answer_changed", "final_correct"}
+        required = {
+            "extractor_fired",
+            "constraint_type",
+            "repair_applied",
+            "answer_changed",
+            "final_correct",
+        }
         data = self._load()
         for i, rec in enumerate(data.get("per_response_records", [])):
             for field in required:
-                assert field in rec, (
-                    f"Record {i} missing required field '{field}'"
-                )
+                assert field in rec, f"Record {i} missing required field '{field}'"
 
 
 # ---------------------------------------------------------------------------

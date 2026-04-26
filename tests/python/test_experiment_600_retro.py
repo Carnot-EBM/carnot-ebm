@@ -212,9 +212,7 @@ def test_retro_033_resolved_when_exp595_positive(
     assert retro["retro_033_resolved"] is True
 
 
-def test_retro_038_not_resolved(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_038_not_resolved(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_038_resolved is False when Exp 596 is blocked."""
     _write_fake_results(tmp_path, retro_038_resolved_flag=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -222,9 +220,7 @@ def test_retro_038_not_resolved(
     assert retro["retro_038_resolved"] is False
 
 
-def test_retro_038_resolved_when_flag_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_038_resolved_when_flag_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_038_resolved is True when Exp 596 sets retro_038_resolved=True."""
     _write_fake_results(tmp_path, retro_038_resolved_flag=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -242,9 +238,7 @@ def test_retro_066_not_resolved_when_recall_low(
     assert retro["retro_066_resolved"] is False
 
 
-def test_retro_066_resolved_when_gate_open(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_066_resolved_when_gate_open(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_066_resolved is True when Exp 591 sets retro_066_resolved=True."""
     _write_fake_results(tmp_path, v3_recall=0.35, retro_066_resolved_flag=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -252,9 +246,7 @@ def test_retro_066_resolved_when_gate_open(
     assert retro["retro_066_resolved"] is True
 
 
-def test_retro_063_validated_from_exp593(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_063_validated_from_exp593(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_063_validated is True when Exp 593 sets retro_063_validated=True."""
     _write_fake_results(tmp_path, retro_063_validated_flag=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -322,9 +314,7 @@ def test_dsvd_live_not_validated_at_exact_threshold_minus_epsilon(
     assert retro["dsvd_live_validated"] is False
 
 
-def test_npu_unblocked_when_iron_available(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_npu_unblocked_when_iron_available(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """npu_unblocked is True when npu_iron_available=True."""
     _write_fake_results(tmp_path, npu_iron_available=True, npu_ninja_available=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -352,9 +342,7 @@ def test_npu_still_blocked_when_neither_available(
     assert retro["npu_unblocked"] is False
 
 
-def test_fpga_progress_when_bitfile_built(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fpga_progress_when_bitfile_built(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """fpga_progress is True when bitfile_built=True."""
     _write_fake_results(tmp_path, bitfile_built=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -372,9 +360,7 @@ def test_fpga_not_progressed_when_bitfile_none(
     assert retro["fpga_progress"] is False
 
 
-def test_dwave_available_from_exp598(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_dwave_available_from_exp598(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """dwave_available reflects Exp 598's dwave_available field."""
     _write_fake_results(tmp_path, dwave_available=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -382,9 +368,7 @@ def test_dwave_available_from_exp598(
     assert retro["dwave_available"] is True
 
 
-def test_hisr_credit_correct_from_exp598(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_hisr_credit_correct_from_exp598(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """hisr_credit_correct reflects Exp 598's hisr_credit_assignment_correct field."""
     _write_fake_results(tmp_path, hisr_credit_assignment_correct=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -489,9 +473,7 @@ def test_open_retro_count_increases_for_new_items(
 # ---------------------------------------------------------------------------
 
 
-def test_n_experiments_is_twelve(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_n_experiments_is_twelve(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_experiments_run = 12 when all 11 upstream files exist plus this retro."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -499,9 +481,7 @@ def test_n_experiments_is_twelve(
     assert retro["n_experiments_run"] == 12
 
 
-def test_n_not_run_zero_when_all_present(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_n_not_run_zero_when_all_present(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_not_run = 0 when all upstream result files are present."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -532,9 +512,7 @@ def test_mean_time_min_is_wall_time_over_n_experiments(
     assert retro["mean_time_min"] == pytest.approx(expected, abs=1e-6)
 
 
-def test_wall_time_vs_prior_is_negative(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_wall_time_vs_prior_is_negative(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """wall_time_vs_prior_delta_minutes is negative (this milestone is faster than .44)."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -548,9 +526,7 @@ def test_wall_time_vs_prior_is_negative(
 # ---------------------------------------------------------------------------
 
 
-def test_new_retro_items_structure(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_new_retro_items_structure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Each new_retro_item has id, title, carry_count, description, priority fields."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -563,9 +539,7 @@ def test_new_retro_items_structure(
         assert "priority" in item
 
 
-def test_new_retro_items_ids(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_new_retro_items_ids(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """New retro items opened in .45 are RETRO-068 and RETRO-069."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -585,9 +559,7 @@ def test_top_priorities_for_46_has_three_entries(
     assert len(retro["top_priorities_for_46"]) == 3
 
 
-def test_schema_and_milestone_fields(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_schema_and_milestone_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Schema and milestone fields are set to the expected v20 values."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -601,9 +573,7 @@ def test_schema_and_milestone_fields(
 # ---------------------------------------------------------------------------
 
 
-def test_main_writes_deliverable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_writes_deliverable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """main() writes a valid JSON artifact at DELIVERABLE path with all required fields."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -617,8 +587,14 @@ def test_main_writes_deliverable(
     artifact = json.loads(deliverable.read_text())
 
     required_fields = [
-        "experiment", "title", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "schema",
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "schema",
         "retro_033_resolved",
         "retro_038_resolved",
         "retro_066_resolved",

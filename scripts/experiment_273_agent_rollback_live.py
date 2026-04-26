@@ -121,6 +121,7 @@ class _RollbackPipeline:
             violations=[],
         )
 
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -458,8 +459,7 @@ def run_workflow_trial(
 
     # --- Detect: contradiction or failed verification ---
     violation_detected = (
-        bool(violation_result.contradictions)
-        or not violation_result.verification.verified
+        bool(violation_result.contradictions) or not violation_result.verification.verified
     )
 
     # --- Rollback to last consistent step (injection_step - 1) ---
@@ -540,9 +540,7 @@ def run_experiment(
 
     n_rollback_success = sum(1 for t in trials if t.rollback_success)
     n_violation_detected = sum(1 for t in trials if t.violation_detected)
-    avg_steps_preserved = (
-        sum(t.steps_preserved for t in trials) / len(trials) if trials else 0.0
-    )
+    avg_steps_preserved = sum(t.steps_preserved for t in trials) / len(trials) if trials else 0.0
 
     return {
         "experiment": 273,

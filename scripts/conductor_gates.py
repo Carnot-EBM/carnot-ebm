@@ -39,9 +39,8 @@ from __future__ import annotations
 
 import json
 import re
-import subprocess
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -105,7 +104,10 @@ def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
     if op == "!=":
         return actual != expected, f"actual={actual!r} != expected={expected!r}"
     if op in (">", ">=", "<", "<=") and (actual is None or expected is None):
-        return False, f"numeric comparison rejected because one side is None (actual={actual!r}, expected={expected!r})"
+        return (
+            False,
+            f"numeric comparison rejected because one side is None (actual={actual!r}, expected={expected!r})",
+        )
     if op == ">":
         return actual > expected, f"actual={actual} > expected={expected}"
     if op == ">=":
@@ -116,11 +118,17 @@ def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
         return actual <= expected, f"actual={actual} <= expected={expected}"
     if op == "in":
         if not isinstance(expected, (list, tuple, set)):
-            return False, f"'in' op requires a list/tuple/set on the right (got {type(expected).__name__})"
+            return (
+                False,
+                f"'in' op requires a list/tuple/set on the right (got {type(expected).__name__})",
+            )
         return actual in expected, f"actual={actual!r} in expected={list(expected)!r}"
     if op == "not_in":
         if not isinstance(expected, (list, tuple, set)):
-            return False, f"'not_in' op requires a list/tuple/set on the right (got {type(expected).__name__})"
+            return (
+                False,
+                f"'not_in' op requires a list/tuple/set on the right (got {type(expected).__name__})",
+            )
         return actual not in expected, f"actual={actual!r} not in expected={list(expected)!r}"
     if op == "contains":
         if actual is None:
@@ -167,44 +175,50 @@ def evaluate_gates(
 
         artifact_path = _find_artifact_by_task_id(upstream, results_dir)
         if artifact_path is None:
-            results.append(GateResult(
-                upstream=upstream,
-                artifact_field=artifact_field,
-                op=op,
-                expected=expected,
-                actual=None,
-                passed=False,
-                reason=f"upstream artifact not found for task id {upstream!r}",
-            ))
+            results.append(
+                GateResult(
+                    upstream=upstream,
+                    artifact_field=artifact_field,
+                    op=op,
+                    expected=expected,
+                    actual=None,
+                    passed=False,
+                    reason=f"upstream artifact not found for task id {upstream!r}",
+                )
+            )
             all_passed = False
             continue
 
         try:
             data = json.loads(artifact_path.read_text())
         except (json.JSONDecodeError, OSError) as exc:
-            results.append(GateResult(
-                upstream=upstream,
-                artifact_field=artifact_field,
-                op=op,
-                expected=expected,
-                actual=None,
-                passed=False,
-                reason=f"upstream artifact unreadable: {exc}",
-            ))
+            results.append(
+                GateResult(
+                    upstream=upstream,
+                    artifact_field=artifact_field,
+                    op=op,
+                    expected=expected,
+                    actual=None,
+                    passed=False,
+                    reason=f"upstream artifact unreadable: {exc}",
+                )
+            )
             all_passed = False
             continue
 
         actual = data.get(artifact_field)
         passed, op_reason = _eval_op(actual, op, expected)
-        results.append(GateResult(
-            upstream=upstream,
-            artifact_field=artifact_field,
-            op=op,
-            expected=expected,
-            actual=actual,
-            passed=passed,
-            reason=op_reason,
-        ))
+        results.append(
+            GateResult(
+                upstream=upstream,
+                artifact_field=artifact_field,
+                op=op,
+                expected=expected,
+                actual=actual,
+                passed=passed,
+                reason=op_reason,
+            )
+        )
         if not passed:
             all_passed = False
 
@@ -249,7 +263,7 @@ def write_blocked_artifact(
     slug = match.group(2).replace("-", "_")
     target = results_dir / f"experiment_{exp_num}_{slug}.json"
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     iso_now = now.isoformat()
 
     artifact = {

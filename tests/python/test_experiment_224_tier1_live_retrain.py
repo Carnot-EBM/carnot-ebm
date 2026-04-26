@@ -73,47 +73,107 @@ def _learning_cases() -> list[ReplayCase]:
     """Six learning cases covering two high-precision and one noisy error type."""
     return [
         # "arithmetic" fires 4× and catches 3× real errors → precision=0.75
-        _make_case("learn-1", sample_position=1, held_out=False,
-                   actual_error=True, detected=True,
-                   error_types=("arithmetic",),
-                   baseline_success=False, repair_success=True),
-        _make_case("learn-2", sample_position=2, held_out=False,
-                   actual_error=True, detected=True,
-                   error_types=("arithmetic",),
-                   baseline_success=False, repair_success=True),
-        _make_case("learn-3", sample_position=3, held_out=False,
-                   actual_error=True, detected=True,
-                   error_types=("arithmetic",),
-                   baseline_success=False, repair_success=True),
-        _make_case("learn-4", sample_position=4, held_out=False,
-                   actual_error=False, detected=True,   # false positive
-                   error_types=("arithmetic",),
-                   baseline_success=True, repair_success=False),
+        _make_case(
+            "learn-1",
+            sample_position=1,
+            held_out=False,
+            actual_error=True,
+            detected=True,
+            error_types=("arithmetic",),
+            baseline_success=False,
+            repair_success=True,
+        ),
+        _make_case(
+            "learn-2",
+            sample_position=2,
+            held_out=False,
+            actual_error=True,
+            detected=True,
+            error_types=("arithmetic",),
+            baseline_success=False,
+            repair_success=True,
+        ),
+        _make_case(
+            "learn-3",
+            sample_position=3,
+            held_out=False,
+            actual_error=True,
+            detected=True,
+            error_types=("arithmetic",),
+            baseline_success=False,
+            repair_success=True,
+        ),
+        _make_case(
+            "learn-4",
+            sample_position=4,
+            held_out=False,
+            actual_error=False,
+            detected=True,  # false positive
+            error_types=("arithmetic",),
+            baseline_success=True,
+            repair_success=False,
+        ),
         # "noisy" fires 6× but catches 0 → precision=0.0 (should be suppressed)
-        _make_case("learn-5", sample_position=5, held_out=False,
-                   actual_error=False, detected=True,
-                   error_types=("noisy_type",),
-                   baseline_success=True, repair_success=True),
-        _make_case("learn-6", sample_position=6, held_out=False,
-                   actual_error=False, detected=True,
-                   error_types=("noisy_type",),
-                   baseline_success=True, repair_success=True),
-        _make_case("learn-7", sample_position=7, held_out=False,
-                   actual_error=False, detected=True,
-                   error_types=("noisy_type",),
-                   baseline_success=True, repair_success=True),
-        _make_case("learn-8", sample_position=8, held_out=False,
-                   actual_error=False, detected=True,
-                   error_types=("noisy_type",),
-                   baseline_success=True, repair_success=True),
-        _make_case("learn-9", sample_position=9, held_out=False,
-                   actual_error=False, detected=True,
-                   error_types=("noisy_type",),
-                   baseline_success=True, repair_success=True),
-        _make_case("learn-10", sample_position=10, held_out=False,
-                   actual_error=False, detected=True,
-                   error_types=("noisy_type",),
-                   baseline_success=True, repair_success=True),
+        _make_case(
+            "learn-5",
+            sample_position=5,
+            held_out=False,
+            actual_error=False,
+            detected=True,
+            error_types=("noisy_type",),
+            baseline_success=True,
+            repair_success=True,
+        ),
+        _make_case(
+            "learn-6",
+            sample_position=6,
+            held_out=False,
+            actual_error=False,
+            detected=True,
+            error_types=("noisy_type",),
+            baseline_success=True,
+            repair_success=True,
+        ),
+        _make_case(
+            "learn-7",
+            sample_position=7,
+            held_out=False,
+            actual_error=False,
+            detected=True,
+            error_types=("noisy_type",),
+            baseline_success=True,
+            repair_success=True,
+        ),
+        _make_case(
+            "learn-8",
+            sample_position=8,
+            held_out=False,
+            actual_error=False,
+            detected=True,
+            error_types=("noisy_type",),
+            baseline_success=True,
+            repair_success=True,
+        ),
+        _make_case(
+            "learn-9",
+            sample_position=9,
+            held_out=False,
+            actual_error=False,
+            detected=True,
+            error_types=("noisy_type",),
+            baseline_success=True,
+            repair_success=True,
+        ),
+        _make_case(
+            "learn-10",
+            sample_position=10,
+            held_out=False,
+            actual_error=False,
+            detected=True,
+            error_types=("noisy_type",),
+            baseline_success=True,
+            repair_success=True,
+        ),
     ]
 
 
@@ -121,20 +181,38 @@ def _held_out_cases() -> list[ReplayCase]:
     """Three held-out cases for evaluation."""
     return [
         # Real arithmetic error — tracker should approve repair.
-        _make_case("held-1", sample_position=11, held_out=True,
-                   actual_error=True, detected=True,
-                   error_types=("arithmetic",),
-                   baseline_success=False, repair_success=True),
+        _make_case(
+            "held-1",
+            sample_position=11,
+            held_out=True,
+            actual_error=True,
+            detected=True,
+            error_types=("arithmetic",),
+            baseline_success=False,
+            repair_success=True,
+        ),
         # Noisy type — tracker should suppress repair.
-        _make_case("held-2", sample_position=12, held_out=True,
-                   actual_error=False, detected=True,
-                   error_types=("noisy_type",),
-                   baseline_success=True, repair_success=False),
+        _make_case(
+            "held-2",
+            sample_position=12,
+            held_out=True,
+            actual_error=False,
+            detected=True,
+            error_types=("noisy_type",),
+            baseline_success=True,
+            repair_success=False,
+        ),
         # Undetected — no repair regardless.
-        _make_case("held-3", sample_position=13, held_out=True,
-                   actual_error=True, detected=False,
-                   error_types=(),
-                   baseline_success=False, repair_success=True),
+        _make_case(
+            "held-3",
+            sample_position=13,
+            held_out=True,
+            actual_error=True,
+            detected=False,
+            error_types=(),
+            baseline_success=False,
+            repair_success=True,
+        ),
     ]
 
 
@@ -167,8 +245,7 @@ def _minimal_exp_payload(
 ) -> dict:
     """Build a minimal live-experiment JSON payload for integration tests."""
     case_ids = [f"{benchmark}-{i}" for i in range(1, n_cases + 1)]
-    cases_meta = [{"case_id": cid, "sample_position": i + 1}
-                  for i, cid in enumerate(case_ids)]
+    cases_meta = [{"case_id": cid, "sample_position": i + 1} for i, cid in enumerate(case_ids)]
     return {
         "experiment": exp_number,
         "benchmark": benchmark,
@@ -261,10 +338,16 @@ class TestTrainTier1Weights:
     def test_undetected_cases_not_recorded(self) -> None:
         """REQ-LEARN-001: cases with detected=False do not touch the tracker."""
         cases = [
-            _make_case("undetected", sample_position=1, held_out=False,
-                       actual_error=True, detected=False,
-                       error_types=("arithmetic",),
-                       baseline_success=False, repair_success=True),
+            _make_case(
+                "undetected",
+                sample_position=1,
+                held_out=False,
+                actual_error=True,
+                detected=False,
+                error_types=("arithmetic",),
+                baseline_success=False,
+                repair_success=True,
+            ),
         ]
         tracker, observed = train_tier1_weights(cases)
         assert tracker.stats() == {}
@@ -298,8 +381,11 @@ class TestEvaluateTier1OnHeldOut:
         """SCENARIO-VERIFY-033: only held-out cases are evaluated."""
         tracker, observed = self._trained()
         results = evaluate_tier1_on_held_out(
-            _all_cases(), tracker, observed,
-            tracker_min_support=4, tracker_min_precision=0.75,
+            _all_cases(),
+            tracker,
+            observed,
+            tracker_min_support=4,
+            tracker_min_precision=0.75,
         )
         assert results["held_out_cases"] == 3
 
@@ -307,8 +393,11 @@ class TestEvaluateTier1OnHeldOut:
         """REQ-VERIFY-033: arithmetic (precision≥0.75, support≥4) → use_repair=True."""
         tracker, observed = self._trained()
         results = evaluate_tier1_on_held_out(
-            _all_cases(), tracker, observed,
-            tracker_min_support=4, tracker_min_precision=0.75,
+            _all_cases(),
+            tracker,
+            observed,
+            tracker_min_support=4,
+            tracker_min_precision=0.75,
         )
         decisions = {d["case_id"]: d["strategies"] for d in results["held_out_decisions"]}
         assert decisions["held-1"]["tracker_only_live"]["use_repair"] is True
@@ -318,8 +407,11 @@ class TestEvaluateTier1OnHeldOut:
         """REQ-VERIFY-033: noisy_type (precision=0.0) → use_repair=False."""
         tracker, observed = self._trained()
         results = evaluate_tier1_on_held_out(
-            _all_cases(), tracker, observed,
-            tracker_min_support=4, tracker_min_precision=0.75,
+            _all_cases(),
+            tracker,
+            observed,
+            tracker_min_support=4,
+            tracker_min_precision=0.75,
         )
         decisions = {d["case_id"]: d["strategies"] for d in results["held_out_decisions"]}
         assert decisions["held-2"]["tracker_only_live"]["use_repair"] is False
@@ -329,8 +421,11 @@ class TestEvaluateTier1OnHeldOut:
         """REQ-VERIFY-033: detected=False → use_repair=False regardless of tracker."""
         tracker, observed = self._trained()
         results = evaluate_tier1_on_held_out(
-            _all_cases(), tracker, observed,
-            tracker_min_support=4, tracker_min_precision=0.75,
+            _all_cases(),
+            tracker,
+            observed,
+            tracker_min_support=4,
+            tracker_min_precision=0.75,
         )
         decisions = {d["case_id"]: d["strategies"] for d in results["held_out_decisions"]}
         assert decisions["held-3"]["tracker_only_live"]["use_repair"] is False
@@ -340,8 +435,11 @@ class TestEvaluateTier1OnHeldOut:
         """REQ-VERIFY-033: tracker suppresses the noisy FP relative to no_learning."""
         tracker, observed = self._trained()
         results = evaluate_tier1_on_held_out(
-            _all_cases(), tracker, observed,
-            tracker_min_support=4, tracker_min_precision=0.75,
+            _all_cases(),
+            tracker,
+            observed,
+            tracker_min_support=4,
+            tracker_min_precision=0.75,
         )
         overall_no_learning = results["strategies"]["no_learning"]["overall"]
         overall_live = results["strategies"]["tracker_only_live"]["overall"]
@@ -354,8 +452,11 @@ class TestEvaluateTier1OnHeldOut:
         """REQ-VERIFY-033: tracker_only_live must not exceed no_learning FP count."""
         tracker, observed = self._trained()
         results = evaluate_tier1_on_held_out(
-            _all_cases(), tracker, observed,
-            tracker_min_support=4, tracker_min_precision=0.75,
+            _all_cases(),
+            tracker,
+            observed,
+            tracker_min_support=4,
+            tracker_min_precision=0.75,
         )
         budget = results["false_positive_regression_budget"]["tracker_only_live"]
         assert budget["within_budget"] is True
@@ -364,8 +465,11 @@ class TestEvaluateTier1OnHeldOut:
         """REQ-VERIFY-033: success_rate computed for both strategies."""
         tracker, observed = self._trained()
         results = evaluate_tier1_on_held_out(
-            _all_cases(), tracker, observed,
-            tracker_min_support=4, tracker_min_precision=0.75,
+            _all_cases(),
+            tracker,
+            observed,
+            tracker_min_support=4,
+            tracker_min_precision=0.75,
         )
         for name in ("no_learning", "tracker_only_live"):
             assert 0.0 <= results["strategies"][name]["overall"]["success_rate"] <= 1.0
@@ -374,7 +478,11 @@ class TestEvaluateTier1OnHeldOut:
         """REQ-VERIFY-033: no cases → 0 held-out cases, 0 success."""
         tracker, observed = self._trained()
         results = evaluate_tier1_on_held_out(
-            [], tracker, observed, tracker_min_support=4, tracker_min_precision=0.75,
+            [],
+            tracker,
+            observed,
+            tracker_min_support=4,
+            tracker_min_precision=0.75,
         )
         assert results["held_out_cases"] == 0
         assert results["strategies"]["tracker_only_live"]["overall"]["n_cases"] == 0
@@ -482,9 +590,11 @@ class TestRunExperiment224:
     def _make_repo(self, tmp_path: Path) -> Path:
         repo = tmp_path / "repo"
         (repo / "results").mkdir(parents=True)
-        for exp_num, benchmark, n in [(219, "gsm8k_semantic", 8),
-                                      (220, "humaneval_property", 8),
-                                      (221, "constraint_ir", 8)]:
+        for exp_num, benchmark, n in [
+            (219, "gsm8k_semantic", 8),
+            (220, "humaneval_property", 8),
+            (221, "constraint_ir", 8),
+        ]:
             payload = _minimal_exp_payload(exp_num, benchmark, n)
             path = repo / "results" / f"experiment_{exp_num}_results.json"
             path.write_text(json.dumps(payload), encoding="utf-8")
@@ -493,9 +603,7 @@ class TestRunExperiment224:
         exp223_path.write_text(json.dumps(_exp223_reference()), encoding="utf-8")
         return repo
 
-    def test_result_json_written(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_result_json_written(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """SCENARIO-VERIFY-033: results/experiment_224_results.json is created."""
         repo = self._make_repo(tmp_path)
         monkeypatch.setenv("CARNOT_REPO_ROOT", str(repo))
@@ -506,9 +614,7 @@ class TestRunExperiment224:
         assert payload["experiment"] == 224
         assert payload["metadata"]["no_simulated_data"] is True
 
-    def test_weights_json_written(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_weights_json_written(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """SCENARIO-LEARN-001: results/tier1_live_weights.json is created and valid."""
         repo = self._make_repo(tmp_path)
         monkeypatch.setenv("CARNOT_REPO_ROOT", str(repo))
@@ -574,8 +680,11 @@ class TestHeldOutDecisionsIntegrity:
         """REQ-VERIFY-034: one decision per held-out case."""
         tracker, observed = train_tier1_weights(_all_cases())
         results = evaluate_tier1_on_held_out(
-            _all_cases(), tracker, observed,
-            tracker_min_support=4, tracker_min_precision=0.75,
+            _all_cases(),
+            tracker,
+            observed,
+            tracker_min_support=4,
+            tracker_min_precision=0.75,
         )
         assert len(results["held_out_decisions"]) == results["held_out_cases"]
 
@@ -583,8 +692,11 @@ class TestHeldOutDecisionsIntegrity:
         """REQ-VERIFY-034: each decision has case_id, held_out, and both strategy keys."""
         tracker, observed = train_tier1_weights(_all_cases())
         results = evaluate_tier1_on_held_out(
-            _all_cases(), tracker, observed,
-            tracker_min_support=4, tracker_min_precision=0.75,
+            _all_cases(),
+            tracker,
+            observed,
+            tracker_min_support=4,
+            tracker_min_precision=0.75,
         )
         for decision in results["held_out_decisions"]:
             assert decision["held_out"] is True
@@ -599,8 +711,11 @@ class TestHeldOutDecisionsIntegrity:
         """REQ-VERIFY-034: held_out_decisions contains only held-out cases."""
         tracker, observed = train_tier1_weights(_all_cases())
         results = evaluate_tier1_on_held_out(
-            _all_cases(), tracker, observed,
-            tracker_min_support=4, tracker_min_precision=0.75,
+            _all_cases(),
+            tracker,
+            observed,
+            tracker_min_support=4,
+            tracker_min_precision=0.75,
         )
         case_ids = {d["case_id"] for d in results["held_out_decisions"]}
         learning_ids = {c.case_id for c in _learning_cases()}

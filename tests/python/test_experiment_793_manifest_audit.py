@@ -207,9 +207,7 @@ class TestGuardClassification:
     SCENARIO-INFRA-067, SCENARIO-INFRA-068.
     """
 
-    def test_adjacent_manifest_classifies_as_guarded(
-        self, guarded_conductor_text: str
-    ) -> None:
+    def test_adjacent_manifest_classifies_as_guarded(self, guarded_conductor_text: str) -> None:
         """When 'manifest' appears within 5 lines, site is classified guarded.
 
         Traces: REQ-INFRA-058, SCENARIO-INFRA-068 — the for-loop in
@@ -221,9 +219,7 @@ class TestGuardClassification:
         assert all(s["is_manifest_checked"] for s in for_task_sites)
         assert all(not s["patch_required"] for s in for_task_sites)
 
-    def test_distant_manifest_classifies_as_unguarded(
-        self, unguarded_conductor_text: str
-    ) -> None:
+    def test_distant_manifest_classifies_as_unguarded(self, unguarded_conductor_text: str) -> None:
         """When 'manifest' is >5 lines away, site is classified unguarded.
 
         Traces: REQ-INFRA-058, SCENARIO-INFRA-067 — the real bug: manifest
@@ -237,9 +233,7 @@ class TestGuardClassification:
         unguarded = [s for s in for_task_sites if not s["is_manifest_checked"]]
         assert len(unguarded) >= 1
 
-    def test_pop_without_manifest_is_unguarded(
-        self, mixed_conductor_text: str
-    ) -> None:
+    def test_pop_without_manifest_is_unguarded(self, mixed_conductor_text: str) -> None:
         """A bare .pop() without adjacent manifest check is flagged as unguarded.
 
         Traces: REQ-INFRA-058 — secondary dequeue paths (not going through
@@ -252,9 +246,7 @@ class TestGuardClassification:
         assert len(pop_sites) >= 1
         assert any(not s["is_manifest_checked"] for s in pop_sites)
 
-    def test_patch_required_matches_is_manifest_checked(
-        self, mixed_conductor_text: str
-    ) -> None:
+    def test_patch_required_matches_is_manifest_checked(self, mixed_conductor_text: str) -> None:
         """patch_required is always the logical inverse of is_manifest_checked.
 
         Traces: REQ-INFRA-058 — consistency invariant: a guarded site needs no
@@ -279,9 +271,7 @@ class TestGuardClassification:
             assert "_task_is_excluded" in code
             assert "logger.warning" in code
 
-    def test_recommended_patch_code_noop_for_guarded(
-        self, guarded_conductor_text: str
-    ) -> None:
+    def test_recommended_patch_code_noop_for_guarded(self, guarded_conductor_text: str) -> None:
         """Guarded sites have recommended_patch_code indicating no change needed.
 
         Traces: REQ-INFRA-058 — humans must be able to distinguish sites that
@@ -314,9 +304,7 @@ class TestArtifactFields:
         "recommended_patch_code",
     }
 
-    def test_build_patch_sites_returns_required_fields(
-        self, mixed_conductor_text: str
-    ) -> None:
+    def test_build_patch_sites_returns_required_fields(self, mixed_conductor_text: str) -> None:
         """build_patch_sites returns dicts with all required schema fields.
 
         Traces: REQ-INFRA-058 — artifact schema completeness.
@@ -327,9 +315,7 @@ class TestArtifactFields:
             missing = self.REQUIRED_PATCH_SITE_FIELDS - set(site.keys())
             assert missing == set(), f"Missing fields in patch site: {missing}"
 
-    def test_build_patch_sites_drops_context_lines(
-        self, mixed_conductor_text: str
-    ) -> None:
+    def test_build_patch_sites_drops_context_lines(self, mixed_conductor_text: str) -> None:
         """build_patch_sites strips internal context_lines from the output.
 
         Traces: REQ-INFRA-058 — the deliverable artifact should be lean;

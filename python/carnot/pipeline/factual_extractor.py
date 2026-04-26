@@ -73,8 +73,8 @@ from typing import TYPE_CHECKING
 
 import jax.numpy as jnp
 
-from carnot.verify.constraint import BaseConstraint
 from carnot.pipeline.extract import ConstraintExtractor, ConstraintResult  # noqa: F401
+from carnot.verify.constraint import BaseConstraint
 
 if TYPE_CHECKING:
     import jax
@@ -114,34 +114,34 @@ _CLAIM_CACHE: dict[tuple[str, str, str], bool | None] = {}
 #: predicates are silently skipped — we do not add unverifiable constraints.
 _PREDICATE_TO_PROPERTY: dict[str, str] = {
     # Geography
-    "capital": "P36",           # capital city of a country/region
+    "capital": "P36",  # capital city of a country/region
     "capital of": "P36",
     "is the capital of": "P36",
-    "located in": "P131",       # administrative territory entity is in
+    "located in": "P131",  # administrative territory entity is in
     "is located in": "P131",
     "is in": "P131",
-    "country": "P17",           # country this entity belongs to
-    "continent": "P30",         # continent
+    "country": "P17",  # country this entity belongs to
+    "continent": "P30",  # continent
     # People
-    "born in": "P19",           # place of birth
+    "born in": "P19",  # place of birth
     "was born in": "P19",
     "birthplace": "P19",
     "place of birth": "P19",
-    "died in": "P20",           # place of death
-    "nationality": "P27",       # country of citizenship
-    "occupation": "P106",       # occupation
+    "died in": "P20",  # place of death
+    "nationality": "P27",  # country of citizenship
+    "occupation": "P106",  # occupation
     # Organizations & things
-    "founded by": "P112",       # founder
-    "official language": "P37", # official language
-    "currency": "P38",          # currency
-    "head of government": "P6", # head of government
-    "head of state": "P35",     # head of state
+    "founded by": "P112",  # founder
+    "official language": "P37",  # official language
+    "currency": "P38",  # currency
+    "head of government": "P6",  # head of government
+    "head of state": "P35",  # head of state
     "language": "P37",
-    "population": "P1082",      # population (numeric)
+    "population": "P1082",  # population (numeric)
     # Science
-    "chemical formula": "P274", # chemical formula
-    "element symbol": "P246",   # element symbol
-    "atomic number": "P1086",   # atomic number (numeric)
+    "chemical formula": "P274",  # chemical formula
+    "element symbol": "P246",  # element symbol
+    "atomic number": "P1086",  # atomic number (numeric)
 }
 
 
@@ -207,7 +207,7 @@ class FactualClaimConstraint(BaseConstraint):
         """Threshold: 0.5 (energy is 0.0 or 1.0, never in between)."""
         return 0.5
 
-    def energy(self, x: "jax.Array") -> "jax.Array":
+    def energy(self, x: jax.Array) -> jax.Array:
         """Return constant energy: 0.0 if satisfied, 1.0 if violated.
 
         **Detailed explanation for engineers:**
@@ -225,7 +225,7 @@ class FactualClaimConstraint(BaseConstraint):
         _ = x  # intentionally unused — energy is KB-determined, not x-dependent
         return jnp.float32(0.0 if self._satisfied else 1.0)
 
-    def is_satisfied(self, x: "jax.Array") -> bool:
+    def is_satisfied(self, x: jax.Array) -> bool:
         """Return True iff the KB confirmed this claim.
 
         Args:
@@ -248,7 +248,7 @@ class FactualClaimConstraint(BaseConstraint):
 _ENTITY_PATTERN = re.compile(
     r"\b([A-Z][a-zA-Z\-]*(?:\s+[A-Z][a-zA-Z\-]*){1,4})\b"
     r"|"
-    r"\b([A-Z]{2,6})\b",   # acronyms: USA, UK, NASA, CERN
+    r"\b([A-Z]{2,6})\b",  # acronyms: USA, UK, NASA, CERN
 )
 
 #: Common English words that begin a sentence with a capital letter but are NOT
@@ -257,10 +257,46 @@ _ENTITY_PATTERN = re.compile(
 #: leading word "The" is stripped → entity is "USA".
 _LEADING_STOP_WORDS: frozenset[str] = frozenset(
     {
-        "The", "A", "An", "In", "On", "At", "By", "Of", "For", "And", "Or",
-        "But", "Its", "Their", "This", "That", "These", "Those", "His", "Her",
-        "Our", "Your", "My", "It", "He", "She", "We", "They", "Who", "Which",
-        "What", "When", "Where", "How", "Why", "If", "As", "So", "No", "Not",
+        "The",
+        "A",
+        "An",
+        "In",
+        "On",
+        "At",
+        "By",
+        "Of",
+        "For",
+        "And",
+        "Or",
+        "But",
+        "Its",
+        "Their",
+        "This",
+        "That",
+        "These",
+        "Those",
+        "His",
+        "Her",
+        "Our",
+        "Your",
+        "My",
+        "It",
+        "He",
+        "She",
+        "We",
+        "They",
+        "Who",
+        "Which",
+        "What",
+        "When",
+        "Where",
+        "How",
+        "Why",
+        "If",
+        "As",
+        "So",
+        "No",
+        "Not",
     }
 )
 
@@ -720,9 +756,7 @@ class FactualExtractor:
         """Domains this extractor handles: factual knowledge verification."""
         return ["factual"]
 
-    def extract(
-        self, text: str, domain: str | None = None
-    ) -> list[ConstraintResult]:
+    def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
         """Extract and verify factual claims from text.
 
         **Detailed explanation for engineers:**

@@ -36,6 +36,7 @@
 Spec: REQ-VERIFY-095, REQ-VERIFY-096, REQ-VERIFY-173, REQ-VERIFY-174,
       SCENARIO-VERIFY-129, SCENARIO-VERIFY-227, SCENARIO-VERIFY-228
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -126,9 +127,7 @@ class IsingConstraintInjector:
         rng = np.random.default_rng(42)
         self._projection: np.ndarray = rng.standard_normal((embedding_dim, n_spins)) * 0.01
 
-    def project_to_spin_bias(
-        self, constraint_embeddings: list[list[float]]
-    ) -> np.ndarray:
+    def project_to_spin_bias(self, constraint_embeddings: list[list[float]]) -> np.ndarray:
         """Project constraint embeddings to an (n_spins,) bias vector.
 
         Each embedding is independently projected via W: bias_i = embedding @ W.
@@ -151,9 +150,7 @@ class IsingConstraintInjector:
         projected = emb_array @ self._projection
         return projected.mean(axis=0)
 
-    def inject_into_coupling_matrix(
-        self, J: np.ndarray, bias: np.ndarray
-    ) -> np.ndarray:
+    def inject_into_coupling_matrix(self, J: np.ndarray, bias: np.ndarray) -> np.ndarray:
         """Return a new coupling matrix with bias added to its diagonal.
 
         This is ADDITIVE — the original J is never mutated.  The returned
@@ -213,7 +210,7 @@ class IsingConstraintInjector:
         J: np.ndarray,
         spins: np.ndarray,
         constraint_embeddings: list[list[float]],
-    ) -> "ExternalFieldEnergyResult":
+    ) -> ExternalFieldEnergyResult:
         """Compute Ising energy with an external field derived from constraint embeddings.
 
         Unlike inject_into_coupling_matrix (which adds a constant to the diagonal and

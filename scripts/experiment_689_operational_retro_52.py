@@ -149,9 +149,7 @@ def main() -> None:
         cycle_wall_time_minutes = round(cycle_duration_s / 60.0, 2)
         cumulative_wall_time_minutes = PRIOR_WALL_TIME_MINUTES + cycle_wall_time_minutes
         total_experiments = PRIOR_EXPERIMENTS + len(MILESTONE_EXPERIMENTS)
-        per_experiment_avg_min = round(
-            cumulative_wall_time_minutes / total_experiments, 2
-        )
+        per_experiment_avg_min = round(cumulative_wall_time_minutes / total_experiments, 2)
 
         # Slowest 5 in this cycle
         sorted_by_dur = sorted(experiment_table, key=lambda x: x["duration_s"], reverse=True)
@@ -230,18 +228,78 @@ def main() -> None:
         # Step 7: Build milestone history (carry forward from .51)
         # ------------------------------------------------------------------
         prior_history = [
-            {"milestone": "2026.04.40", "wall_time_min": 4620, "experiments": 388, "avg_min_per_exp": 11.9},
-            {"milestone": "2026.04.41", "wall_time_min": 4484, "experiments": 400, "avg_min_per_exp": 11.2},
-            {"milestone": "2026.04.42", "wall_time_min": 4520, "experiments": 422, "avg_min_per_exp": 10.7},
-            {"milestone": "2026.04.43", "wall_time_min": 4584, "experiments": 444, "avg_min_per_exp": 10.3},
-            {"milestone": "2026.04.44", "wall_time_min": 4654, "experiments": 465, "avg_min_per_exp": 10.0},
-            {"milestone": "2026.04.45", "wall_time_min": 4600, "experiments": 481, "avg_min_per_exp": 9.6},
-            {"milestone": "2026.04.46", "wall_time_min": 4569, "experiments": 493, "avg_min_per_exp": 9.3},
-            {"milestone": "2026.04.47", "wall_time_min": 4557, "experiments": 498, "avg_min_per_exp": 9.1},
-            {"milestone": "2026.04.48", "wall_time_min": 4467, "experiments": 491, "avg_min_per_exp": 9.1},
-            {"milestone": "2026.04.49", "wall_time_min": 4380, "experiments": 509, "avg_min_per_exp": 8.6},
-            {"milestone": "2026.04.50", "wall_time_min": 4304, "experiments": 519, "avg_min_per_exp": 8.3},
-            {"milestone": "2026.04.51", "wall_time_min": 4231, "experiments": 532, "avg_min_per_exp": 8.0},
+            {
+                "milestone": "2026.04.40",
+                "wall_time_min": 4620,
+                "experiments": 388,
+                "avg_min_per_exp": 11.9,
+            },
+            {
+                "milestone": "2026.04.41",
+                "wall_time_min": 4484,
+                "experiments": 400,
+                "avg_min_per_exp": 11.2,
+            },
+            {
+                "milestone": "2026.04.42",
+                "wall_time_min": 4520,
+                "experiments": 422,
+                "avg_min_per_exp": 10.7,
+            },
+            {
+                "milestone": "2026.04.43",
+                "wall_time_min": 4584,
+                "experiments": 444,
+                "avg_min_per_exp": 10.3,
+            },
+            {
+                "milestone": "2026.04.44",
+                "wall_time_min": 4654,
+                "experiments": 465,
+                "avg_min_per_exp": 10.0,
+            },
+            {
+                "milestone": "2026.04.45",
+                "wall_time_min": 4600,
+                "experiments": 481,
+                "avg_min_per_exp": 9.6,
+            },
+            {
+                "milestone": "2026.04.46",
+                "wall_time_min": 4569,
+                "experiments": 493,
+                "avg_min_per_exp": 9.3,
+            },
+            {
+                "milestone": "2026.04.47",
+                "wall_time_min": 4557,
+                "experiments": 498,
+                "avg_min_per_exp": 9.1,
+            },
+            {
+                "milestone": "2026.04.48",
+                "wall_time_min": 4467,
+                "experiments": 491,
+                "avg_min_per_exp": 9.1,
+            },
+            {
+                "milestone": "2026.04.49",
+                "wall_time_min": 4380,
+                "experiments": 509,
+                "avg_min_per_exp": 8.6,
+            },
+            {
+                "milestone": "2026.04.50",
+                "wall_time_min": 4304,
+                "experiments": 519,
+                "avg_min_per_exp": 8.3,
+            },
+            {
+                "milestone": "2026.04.51",
+                "wall_time_min": 4231,
+                "experiments": 532,
+                "avg_min_per_exp": 8.0,
+            },
             {
                 "milestone": MILESTONE,
                 "wall_time_min": round(cumulative_wall_time_minutes, 2),

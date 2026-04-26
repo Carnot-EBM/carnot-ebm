@@ -36,7 +36,7 @@ def test_gate_opens_on_causal_recall_even_if_structured_below_threshold():
         symcode_recall=0.12,
         hermes_v2_recall=0.0,
         structured_recall=0.10,  # below structured_threshold
-        causal_recall=0.36,       # above max_component_threshold
+        causal_recall=0.36,  # above max_component_threshold
     )
     assert result.gate_open is True
     assert result.authorizes_vr is True
@@ -61,7 +61,7 @@ def test_gate_closes_when_both_conditions_fail():
         symcode_recall=0.10,
         hermes_v2_recall=0.90,  # high HermesV2 must NOT rescue the gate (REQ-VERIFY-148)
         structured_recall=0.10,  # below 0.20
-        causal_recall=0.10,      # below 0.30
+        causal_recall=0.10,  # below 0.30
     )
     assert result.gate_open is False
     assert result.authorizes_vr is False
@@ -88,7 +88,7 @@ def test_ensemble_recall_excludes_hermes_v2():
     gate = EnsembleGateV4()
     result = gate.compute(
         symcode_recall=0.30,
-        hermes_v2_recall=0.99,   # should NOT affect ensemble_recall
+        hermes_v2_recall=0.99,  # should NOT affect ensemble_recall
         structured_recall=0.30,
         causal_recall=0.30,
     )

@@ -135,12 +135,14 @@ def _make_synthetic_trainer_dicts(n: int = 100, seed: int = 535) -> list:
         label = int(i % 2)
         emb = rng.randn(256).astype(np.float32)
         emb[0] += (1.0 if label else -1.0) * 0.5
-        pairs.append({
-            "embedding": emb.tolist(),
-            "violated_arithmetic": label,
-            "violated_code": label,
-            "violated_logic": label,
-        })
+        pairs.append(
+            {
+                "embedding": emb.tolist(),
+                "violated_arithmetic": label,
+                "violated_code": label,
+                "violated_logic": label,
+            }
+        )
     return pairs
 
 

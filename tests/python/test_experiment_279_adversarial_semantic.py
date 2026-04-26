@@ -23,6 +23,7 @@ import pytest
 # Module loading helper — matches the pattern used across Exp 2xx tests
 # ---------------------------------------------------------------------------
 
+
 def _load_module() -> Any:
     """Load experiment_279_adversarial_semantic without side-effects."""
     repo_root = Path(__file__).resolve().parents[2]
@@ -39,6 +40,7 @@ def _load_module() -> Any:
 # ===========================================================================
 # 1. Dataset generation
 # ===========================================================================
+
 
 # REQ-VERIFY-020 — question grounding requires correctly extracted quantities
 def test_generate_pairs_produces_correct_count() -> None:
@@ -81,8 +83,14 @@ def test_generate_pairs_schema() -> None:
     mod = _load_module()
     pairs = mod.generate_pairs(n=5, seed=279_000)
     required_keys = {
-        "id", "template", "original_question", "original_answer",
-        "swapped_question", "swapped_answer", "orig_seed", "swap_seed",
+        "id",
+        "template",
+        "original_question",
+        "original_answer",
+        "swapped_question",
+        "swapped_answer",
+        "orig_seed",
+        "swap_seed",
     }
     for pair in pairs:
         assert required_keys <= pair.keys(), (
@@ -93,6 +101,7 @@ def test_generate_pairs_schema() -> None:
 # ===========================================================================
 # 2. Response simulation
 # ===========================================================================
+
 
 # REQ-VERIFY-021 — claims in response must be grounded in question premises
 def test_simulate_responses_all_pairs_have_responses() -> None:
@@ -132,13 +141,10 @@ def test_stale_response_uses_original_quantities() -> None:
     pair = different[0]
 
     rng = random.Random(42)
-    stale_resp = mod._stale_response(
-        pair["original_question"], pair["original_answer"], rng
-    )
+    stale_resp = mod._stale_response(pair["original_question"], pair["original_answer"], rng)
     # The stale response must contain the original answer
     assert str(pair["original_answer"]) in stale_resp, (
-        f"Stale response does not mention original answer {pair['original_answer']}: "
-        f"{stale_resp!r}"
+        f"Stale response does not mention original answer {pair['original_answer']}: {stale_resp!r}"
     )
 
 
@@ -162,6 +168,7 @@ def test_correct_response_references_question_numbers() -> None:
 # 3. Semantic grounding — stale answers should trigger violations
 # ===========================================================================
 
+
 # REQ-VERIFY-020, REQ-VERIFY-021
 def test_semantic_grounding_flags_stale_response() -> None:
     """SCENARIO-VERIFY-020: stale response on swapped question triggers violations.
@@ -176,7 +183,8 @@ def test_semantic_grounding_flags_stale_response() -> None:
     pairs = mod.generate_pairs(n=20, seed=279_000)
     # Find a pair where original and swapped have clearly different numbers
     different = [
-        p for p in pairs
+        p
+        for p in pairs
         if set(mod._extract_numbers(p["original_question"]))
         != set(mod._extract_numbers(p["swapped_question"]))
     ]
@@ -184,9 +192,7 @@ def test_semantic_grounding_flags_stale_response() -> None:
     pair = different[0]
 
     rng = random.Random(42)
-    stale_resp = mod._stale_response(
-        pair["original_question"], pair["original_answer"], rng
-    )
+    stale_resp = mod._stale_response(pair["original_question"], pair["original_answer"], rng)
     result = verify_semantic_grounding(
         question=pair["swapped_question"],
         response=stale_resp,
@@ -225,14 +231,14 @@ def test_semantic_grounding_low_fp_on_correct_originals() -> None:
 
     fp_rate = flagged / len(pairs)
     assert fp_rate < 0.60, (
-        f"FP rate {fp_rate:.0%} on correct originals exceeds 60% — "
-        "semantic grounding is too noisy"
+        f"FP rate {fp_rate:.0%} on correct originals exceeds 60% — semantic grounding is too noisy"
     )
 
 
 # ===========================================================================
 # 4. End-to-end metrics
 # ===========================================================================
+
 
 # REQ-VERIFY-020, REQ-VERIFY-021
 def test_run_experiment_produces_results_json(tmp_path: Path) -> None:
@@ -263,13 +269,18 @@ def test_metrics_schema_complete() -> None:
     result = mod.run_experiment(n=10, seed=279_000)
     metrics = result["metrics"]
     required = {
-        "n_pairs", "n_wrong_swap", "n_stale", "n_fresh_wrong",
-        "n_correct_orig", "detection_rate", "stale_detection_rate",
-        "fresh_wrong_detection_rate", "fp_rate", "lift",
+        "n_pairs",
+        "n_wrong_swap",
+        "n_stale",
+        "n_fresh_wrong",
+        "n_correct_orig",
+        "detection_rate",
+        "stale_detection_rate",
+        "fresh_wrong_detection_rate",
+        "fp_rate",
+        "lift",
     }
-    assert required <= metrics.keys(), (
-        f"Missing metrics keys: {required - metrics.keys()}"
-    )
+    assert required <= metrics.keys(), f"Missing metrics keys: {required - metrics.keys()}"
 
 
 # REQ-VERIFY-020, REQ-VERIFY-021
@@ -323,9 +334,15 @@ def test_records_have_required_fields() -> None:
     mod = _load_module()
     result = mod.run_experiment(n=10, seed=279_000)
     required = {
-        "id", "template", "orig_is_correct", "swap_error_type",
-        "orig_grounding_verified", "orig_n_violations",
-        "swap_grounding_verified", "swap_n_violations", "swap_violation_types",
+        "id",
+        "template",
+        "orig_is_correct",
+        "swap_error_type",
+        "orig_grounding_verified",
+        "orig_n_violations",
+        "swap_grounding_verified",
+        "swap_n_violations",
+        "swap_violation_types",
     }
     for record in result["records"]:
         assert required <= record.keys(), (

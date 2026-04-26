@@ -68,6 +68,7 @@ def _patch_n_spins(rtl_text: str, n_spins: int) -> str:
     Spec: REQ-HW-039-3
     """
     import re
+
     return re.sub(
         r"(parameter\s+integer\s+N\s*=\s*)\d+",
         rf"\g<1>{n_spins}",
@@ -150,9 +151,12 @@ def run_xilinx_synthesis(
     xilinx_bin = oss_cad_bin / "nextpnr-xilinx"
     cmd = [
         xilinx_bin,
-        "--chipdb", "xczu5eg",
-        "--json", str(json_netlist),
-        "--asc", str(asc_out),
+        "--chipdb",
+        "xczu5eg",
+        "--json",
+        str(json_netlist),
+        "--asc",
+        str(asc_out),
     ]
     rc_pnr, out_pnr, err_pnr = _run(cmd, timeout=300)
     combined_pnr = out_pnr + "\n" + err_pnr
@@ -210,8 +214,11 @@ def run_ice40_bitstream(
     )
     combined_pnr = out_pnr + "\n" + err_pnr
     if rc_pnr != 0:
-        return False, False, 0, (
-            f"[yosys]\n{combined_yosys}\n[nextpnr-ice40 failed]\n{combined_pnr}"
+        return (
+            False,
+            False,
+            0,
+            (f"[yosys]\n{combined_yosys}\n[nextpnr-ice40 failed]\n{combined_pnr}"),
         )
 
     # icepack: convert ASC → binary bitstream.
@@ -222,9 +229,7 @@ def run_ice40_bitstream(
     )
     combined_pack = out_pack + "\n" + err_pack
     full_log = (
-        f"[yosys]\n{combined_yosys}\n"
-        f"[nextpnr-ice40]\n{combined_pnr}\n"
-        f"[icepack]\n{combined_pack}"
+        f"[yosys]\n{combined_yosys}\n[nextpnr-ice40]\n{combined_pnr}\n[icepack]\n{combined_pack}"
     )
 
     if not bin_out.exists():

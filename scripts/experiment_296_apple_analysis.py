@@ -38,7 +38,7 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from typing import Any
 
@@ -85,6 +85,7 @@ IRRELEVANT_DROP_THRESHOLD_PP: float = 5.0
 # ---------------------------------------------------------------------------
 # Pure analysis functions (exposed for unit-testing, REQ-VERIFY-077/078)
 # ---------------------------------------------------------------------------
+
 
 def compute_delta(baseline_acc: float, mode_acc: float) -> float:
     """Return the percentage-point improvement of *mode_acc* over *baseline_acc*.
@@ -166,6 +167,7 @@ def compare_vs_exp235(number_swap_acc: float, exp235_acc: float) -> dict[str, An
 # Five-questions analyser (SCENARIO-VERIFY-093)
 # ---------------------------------------------------------------------------
 
+
 def answer_five_questions(
     exp294: dict[str, Any],
     exp295: dict[str, Any],
@@ -203,14 +205,11 @@ def answer_five_questions(
     # Q1: Did the Apple number_swap drop replicate (≥15 pp)?
     apple_check: dict[str, Any] = exp294.get("apple_2410_05229_check", {})
     apple_drop_replicated = any(
-        model_check.get("drop_gte_15pp", False)
-        for model_check in apple_check.values()
+        model_check.get("drop_gte_15pp", False) for model_check in apple_check.values()
     )
 
     # Q2: Was verify_repair improvement larger on number_swap than standard?
-    verify_repair_delta_larger_on_swap: bool = bool(
-        exp295.get("primary_criterion_met", False)
-    )
+    verify_repair_delta_larger_on_swap: bool = bool(exp295.get("primary_criterion_met", False))
 
     # Q3: Does Carnot ignore irrelevant context (< 5 pp drop)?
     model_results: dict[str, Any] = exp294.get("model_results", {})
@@ -258,6 +257,7 @@ def answer_five_questions(
 # ---------------------------------------------------------------------------
 # Result file loader and classifier (SCENARIO-VERIFY-094)
 # ---------------------------------------------------------------------------
+
 
 def load_exp_results(
     exp294_path: Path,
@@ -355,9 +355,7 @@ def load_exp_results(
     # Use Gemma verify_repair number_swap accuracy as the comparison point.
     gemma_results: dict[str, Any] = exp295.get("results", {}).get("Gemma4-E4B-it", {})
     gemma_ns_vr_acc = (
-        gemma_results.get("number_swap", {})
-        .get("verify_repair", {})
-        .get("accuracy", 0.0)
+        gemma_results.get("number_swap", {}).get("verify_repair", {}).get("accuracy", 0.0)
     )
     exp235_comparison = compare_vs_exp235(
         number_swap_acc=gemma_ns_vr_acc,
@@ -448,6 +446,7 @@ def _build_analysis_notes(
 # Artifact builder (SCENARIO-VERIFY-097)
 # ---------------------------------------------------------------------------
 
+
 def build_artifact(
     classification: str,
     missing_artifacts: list[str],
@@ -477,7 +476,7 @@ def build_artifact(
 
     Spec: SCENARIO-VERIFY-113.
     """
-    now = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    now = datetime.now(tz=UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     return {
         "experiment": EXPERIMENT,
         "schema": "carnot.apple_analysis.v2",
@@ -497,6 +496,7 @@ def build_artifact(
 # ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run the Exp 296 analysis and write the result artifact.
@@ -584,13 +584,14 @@ def _update_docs(repo_root: Path, artifact: dict[str, Any]) -> None:
         tr_text = tr_path.read_text()
         section_header = "## Adversarial Robustness (Apple 2410.05229 Re-run — Exp 294/295/296)"
         if section_header not in tr_text:
-            extractor_lines = "\n".join(
-                f"  - {k}: {v} firings" for k, v in sorted(extractors.items())
-            ) or "  - (no extractor data)"
+            extractor_lines = (
+                "\n".join(f"  - {k}: {v} firings" for k, v in sorted(extractors.items()))
+                or "  - (no extractor data)"
+            )
             new_section = f"""
 {section_header}
 
-**Classification: {classification}** (Exp 296, run date {artifact['run_date']})
+**Classification: {classification}** (Exp 296, run date {artifact["run_date"]})
 
 Experiments 294 (baseline re-run with pre-warm fix) and 295 (verify-repair
 re-run with pre-warm fix) repeated the Apple adversarial benchmark from
@@ -600,10 +601,10 @@ Exps 282/283, correcting the GPU pre-warm regression identified in Exp 293.
 
 | Question | Answer |
 |----------|--------|
-| Apple 2410.05229 drop replicated (≥15 pp)? | {'Yes' if apple_replicated else 'No'} |
-| verify-repair Δ larger on number_swap than standard? | {'Yes — PRIMARY CRITERION MET' if primary_met else 'No'} |
-| Irrelevant-sentence variants ignored (< 5 pp drop)? | {'Yes' if irrelevant_ignored else 'No'} |
-| Dual-model consistent (Qwen + Gemma agree)? | {'Yes' if dual_consistent else 'No'} |
+| Apple 2410.05229 drop replicated (≥15 pp)? | {"Yes" if apple_replicated else "No"} |
+| verify-repair Δ larger on number_swap than standard? | {"Yes — PRIMARY CRITERION MET" if primary_met else "No"} |
+| Irrelevant-sentence variants ignored (< 5 pp drop)? | {"Yes" if irrelevant_ignored else "No"} |
+| Dual-model consistent (Qwen + Gemma agree)? | {"Yes" if dual_consistent else "No"} |
 
 ### Extractor Firing Summary
 
@@ -613,11 +614,11 @@ Exps 282/283, correcting the GPU pre-warm regression identified in Exp 293.
 
 Gemma verify_repair on number_swap vs Exp 235 standard baseline
 ({exp235_ref:.1%}): delta = {exp235_delta:+.1%}
-({'better' if exp235.get('better_than_exp235') else 'not better'} than Exp 235).
+({"better" if exp235.get("better_than_exp235") else "not better"} than Exp 235).
 
 ### Analysis Notes
 
-{''.join(f'- {n}' + chr(10) for n in notes)}
+{"".join(f"- {n}" + chr(10) for n in notes)}
 """
             tr_path.write_text(tr_text.rstrip() + "\n" + new_section)
             print("[Exp 296] Updated docs/technical-report.md")

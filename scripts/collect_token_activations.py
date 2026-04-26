@@ -41,21 +41,36 @@ import numpy as np
 # ---------------------------------------------------------------------------
 QA_PAIRS = [
     # Math — easy
-    ("What is 2+3?", "5"), ("What is 7*8?", "56"), ("What is 100/4?", "25"),
-    ("What is 15-9?", "6"), ("What is 3^3?", "27"), ("What is 50+50?", "100"),
-    ("What is 12*12?", "144"), ("What is 81/9?", "9"), ("What is 1000-1?", "999"),
+    ("What is 2+3?", "5"),
+    ("What is 7*8?", "56"),
+    ("What is 100/4?", "25"),
+    ("What is 15-9?", "6"),
+    ("What is 3^3?", "27"),
+    ("What is 50+50?", "100"),
+    ("What is 12*12?", "144"),
+    ("What is 81/9?", "9"),
+    ("What is 1000-1?", "999"),
     ("What is 2^10?", "1024"),
     # Math — medium
-    ("What is the square root of 169?", "13"), ("What is 17*19?", "323"),
-    ("What is 256/16?", "16"), ("What is 99*99?", "9801"),
-    ("What is the cube root of 27?", "3"), ("What is 7! (7 factorial)?", "5040"),
-    ("What is 2^16?", "65536"), ("What is 1+2+3+4+5+6+7+8+9+10?", "55"),
+    ("What is the square root of 169?", "13"),
+    ("What is 17*19?", "323"),
+    ("What is 256/16?", "16"),
+    ("What is 99*99?", "9801"),
+    ("What is the cube root of 27?", "3"),
+    ("What is 7! (7 factorial)?", "5040"),
+    ("What is 2^16?", "65536"),
+    ("What is 1+2+3+4+5+6+7+8+9+10?", "55"),
     # Math — hard (likely hallucination)
-    ("What is 37*43?", "1591"), ("What is 123*456?", "56088"),
-    ("What is the 20th prime number?", "71"), ("What is 11! (11 factorial)?", "39916800"),
-    ("What is 2^20?", "1048576"), ("What is the square root of 1764?", "42"),
-    ("What is 97*103?", "9991"), ("What is 19^2?", "361"),
-    ("What is 23*29?", "667"), ("What is the 12th Fibonacci number?", "144"),
+    ("What is 37*43?", "1591"),
+    ("What is 123*456?", "56088"),
+    ("What is the 20th prime number?", "71"),
+    ("What is 11! (11 factorial)?", "39916800"),
+    ("What is 2^20?", "1048576"),
+    ("What is the square root of 1764?", "42"),
+    ("What is 97*103?", "9991"),
+    ("What is 19^2?", "361"),
+    ("What is 23*29?", "667"),
+    ("What is the 12th Fibonacci number?", "144"),
     # Geography — easy
     ("What is the capital of Germany?", "Berlin"),
     ("What is the capital of Japan?", "Tokyo"),
@@ -162,10 +177,10 @@ def main() -> int:
     print(f"Loaded in {time.time() - t0:.1f}s")
 
     # Accumulators — we append numpy arrays and stack at the end.
-    all_token_ids: list[np.ndarray] = []      # [n_tokens_i] int32
-    all_activations: list[np.ndarray] = []    # [n_tokens_i, D] float32
-    all_labels: list[np.ndarray] = []         # [n_tokens_i] int32
-    all_question_ids: list[np.ndarray] = []   # [n_tokens_i] int32
+    all_token_ids: list[np.ndarray] = []  # [n_tokens_i] int32
+    all_activations: list[np.ndarray] = []  # [n_tokens_i, D] float32
+    all_labels: list[np.ndarray] = []  # [n_tokens_i] int32
+    all_question_ids: list[np.ndarray] = []  # [n_tokens_i] int32
 
     n_correct = 0
     n_wrong = 0
@@ -232,20 +247,22 @@ def main() -> int:
         icon = "✓" if is_correct else "✗"
         if (q_idx + 1) % 10 == 0 or q_idx == len(QA_PAIRS) - 1:
             print(
-                f"  [{q_idx+1:3d}/{len(QA_PAIRS)}] {icon} "
+                f"  [{q_idx + 1:3d}/{len(QA_PAIRS)}] {icon} "
                 f"tokens={n_gen:2d}  total={total_tokens:5d}  "
-                f"q=\"{question[:35]}...\""
+                f'q="{question[:35]}..."'
             )
 
     # -----------------------------------------------------------
     # Stack and save
     # -----------------------------------------------------------
-    token_ids = np.concatenate(all_token_ids)        # [N]
-    activations = np.concatenate(all_activations)     # [N, D]
-    labels = np.concatenate(all_labels)               # [N]
-    question_ids = np.concatenate(all_question_ids)   # [N]
+    token_ids = np.concatenate(all_token_ids)  # [N]
+    activations = np.concatenate(all_activations)  # [N, D]
+    labels = np.concatenate(all_labels)  # [N]
+    question_ids = np.concatenate(all_question_ids)  # [N]
 
-    out_path = os.path.join(os.path.dirname(__file__), "..", "data", "token_activations.safetensors")
+    out_path = os.path.join(
+        os.path.dirname(__file__), "..", "data", "token_activations.safetensors"
+    )
     out_path = os.path.abspath(out_path)
 
     save_file(
@@ -262,13 +279,15 @@ def main() -> int:
     # Report
     # -----------------------------------------------------------
     hidden_dim = activations.shape[1]
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("COLLECTION COMPLETE")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  Total tokens:     {total_tokens}")
     print(f"  Hidden dim:       {hidden_dim}")
-    print(f"  Correct answers:  {n_correct}/{len(QA_PAIRS)} ({100*n_correct/len(QA_PAIRS):.0f}%)")
-    print(f"  Wrong answers:    {n_wrong}/{len(QA_PAIRS)} ({100*n_wrong/len(QA_PAIRS):.0f}%)")
+    print(
+        f"  Correct answers:  {n_correct}/{len(QA_PAIRS)} ({100 * n_correct / len(QA_PAIRS):.0f}%)"
+    )
+    print(f"  Wrong answers:    {n_wrong}/{len(QA_PAIRS)} ({100 * n_wrong / len(QA_PAIRS):.0f}%)")
     correct_tokens = int(labels.sum())
     wrong_tokens = total_tokens - correct_tokens
     print(f"  Correct tokens:   {correct_tokens}")
@@ -285,7 +304,7 @@ def main() -> int:
     else:
         print(f"\n  Target met: {total_tokens} >= 5000 tokens.")
 
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     return 0
 
 

@@ -516,10 +516,12 @@ class TestSetupGpuRaisesOnForceLive:
             failure_reason="",
             is_live_capable=True,
         )
-        with patch(
-            "carnot.pipeline.dual_gpu_monitor.DualGPUMonitor"
-        ) as mock_monitor_cls, patch(
-            "carnot.pipeline.live_gpu_diagnostic.diagnose_live_gpu", return_value=mock_diagnostic
+        with (
+            patch("carnot.pipeline.dual_gpu_monitor.DualGPUMonitor") as mock_monitor_cls,
+            patch(
+                "carnot.pipeline.live_gpu_diagnostic.diagnose_live_gpu",
+                return_value=mock_diagnostic,
+            ),
         ):
             mock_monitor = MagicMock()
             mock_monitor._get_gpu_count.return_value = 2

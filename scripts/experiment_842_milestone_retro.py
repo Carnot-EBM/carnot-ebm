@@ -24,7 +24,7 @@
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -48,14 +48,15 @@ MILESTONE_PREREQS = os.path.join(REPO_ROOT, "MILESTONE_PREREQS.md")
 # ---------------------------------------------------------------------------
 PRIOR_TOTAL_WALL_TIME_MINUTES = 3904
 PRIOR_EXPERIMENTS_COMPLETED = 728
-MILESTONE_WALL_TIME_MINUTES = 218   # .64 milestone: 04:51 → 08:29 UTC
-MILESTONE_EXPERIMENTS = 12          # Exps 831-841 (11) + retro 842 (1)
-EXPERIMENT_CAP = 700                # Governance cap per CLAUDE.md
+MILESTONE_WALL_TIME_MINUTES = 218  # .64 milestone: 04:51 → 08:29 UTC
+MILESTONE_EXPERIMENTS = 12  # Exps 831-841 (11) + retro 842 (1)
+EXPERIMENT_CAP = 700  # Governance cap per CLAUDE.md
 
 
 # ---------------------------------------------------------------------------
 # Load experiment results
 # ---------------------------------------------------------------------------
+
 
 def _load(filename: str) -> dict:
     """Load a JSON result file; return empty dict on missing file.
@@ -98,6 +99,7 @@ def load_experiments() -> dict:
 # Success Criteria Evaluation
 # ---------------------------------------------------------------------------
 
+
 def eval_criteria(experiments: dict) -> tuple[list[dict], int]:
     """Evaluate each .64 milestone success criterion against experiment result data.
 
@@ -111,121 +113,143 @@ def eval_criteria(experiments: dict) -> tuple[list[dict], int]:
 
     # 1. governance_ready — Exp 831 honest_verdict = "governance_ready"
     v831 = experiments[831].get("honest_verdict", "")
-    criteria.append({
-        "criterion": "governance_ready",
-        "experiment": 831,
-        "target": "honest_verdict == 'governance_ready'",
-        "met": v831 == "governance_ready",
-        "actual_value": v831,
-    })
+    criteria.append(
+        {
+            "criterion": "governance_ready",
+            "experiment": 831,
+            "target": "honest_verdict == 'governance_ready'",
+            "met": v831 == "governance_ready",
+            "actual_value": v831,
+        }
+    )
 
     # 2. arc_diagnosis_found — Exp 832 confirms ARC collapse origin at AUC=0.04
     # The diagnosis is "found" if the experiment completed with status=success and
     # the ARC AUC from the referenced Exp 824 baseline is present.
     arc_auc_baseline = experiments[832].get("exp_824_auc_arc", None)
-    criteria.append({
-        "criterion": "arc_diagnosis_found",
-        "experiment": 832,
-        "target": "exp_824_auc_arc <= 0.10 (confirms collapse)",
-        "met": arc_auc_baseline is not None and arc_auc_baseline <= 0.10,
-        "actual_value": arc_auc_baseline,
-    })
+    criteria.append(
+        {
+            "criterion": "arc_diagnosis_found",
+            "experiment": 832,
+            "target": "exp_824_auc_arc <= 0.10 (confirms collapse)",
+            "met": arc_auc_baseline is not None and arc_auc_baseline <= 0.10,
+            "actual_value": arc_auc_baseline,
+        }
+    )
 
     # 3. constraint_root_cause_found — Exp 833 hypothesis_confirmed = "H1"
     h833 = experiments[833].get("hypothesis_confirmed", "")
-    criteria.append({
-        "criterion": "constraint_root_cause_found",
-        "experiment": 833,
-        "target": "hypothesis_confirmed == 'H1'",
-        "met": h833 == "H1",
-        "actual_value": h833,
-    })
+    criteria.append(
+        {
+            "criterion": "constraint_root_cause_found",
+            "experiment": 833,
+            "target": "hypothesis_confirmed == 'H1'",
+            "met": h833 == "H1",
+            "actual_value": h833,
+        }
+    )
 
     # 4. jepa_v24_domain_balanced — Exp 834 min_domain_auc >= 0.50
     # All four domains (gsm8k, humaneval, arc, svamp) must be above random.
     # min_domain_auc=0.0 means SVAMP collapsed completely.
     min_auc = experiments[834].get("min_domain_auc", 0.0)
-    criteria.append({
-        "criterion": "jepa_v24_domain_balanced",
-        "experiment": 834,
-        "target": "min_domain_auc >= 0.50",
-        "met": min_auc is not None and min_auc >= 0.50,
-        "actual_value": min_auc,
-    })
+    criteria.append(
+        {
+            "criterion": "jepa_v24_domain_balanced",
+            "experiment": 834,
+            "target": "min_domain_auc >= 0.50",
+            "met": min_auc is not None and min_auc >= 0.50,
+            "actual_value": min_auc,
+        }
+    )
 
     # 5. arbiter_calibrated — Exp 835 accuracy_standard >= 0.70
     acc_std = experiments[835].get("accuracy_standard", 0.0)
-    criteria.append({
-        "criterion": "arbiter_calibrated",
-        "experiment": 835,
-        "target": "accuracy_standard >= 0.70",
-        "met": acc_std >= 0.70,
-        "actual_value": acc_std,
-    })
+    criteria.append(
+        {
+            "criterion": "arbiter_calibrated",
+            "experiment": 835,
+            "target": "accuracy_standard >= 0.70",
+            "met": acc_std >= 0.70,
+            "actual_value": acc_std,
+        }
+    )
 
     # 6. constraint_delta_positive — Exp 836 delta_overall > 0
     # Write path was fixed (constraints now stored) but retrieval precision
     # is still zero, so delta_overall = 0.0.  The fix is partial.
     delta_overall = experiments[836].get("delta_overall", 0.0)
-    criteria.append({
-        "criterion": "constraint_delta_positive",
-        "experiment": 836,
-        "target": "delta_overall > 0",
-        "met": delta_overall is not None and delta_overall > 0,
-        "actual_value": delta_overall,
-    })
+    criteria.append(
+        {
+            "criterion": "constraint_delta_positive",
+            "experiment": 836,
+            "target": "delta_overall > 0",
+            "met": delta_overall is not None and delta_overall > 0,
+            "actual_value": delta_overall,
+        }
+    )
 
     # 7. tier1_relay_works_live — Exp 837 not blocked
     # Exp 837 was blocked at the gate (requires exp836 to show positive delta).
     v837 = experiments[837].get("honest_verdict", "")
-    criteria.append({
-        "criterion": "tier1_relay_works_live",
-        "experiment": 837,
-        "target": "honest_verdict != 'blocked_gate'",
-        "met": v837 not in ("blocked_gate", ""),
-        "actual_value": v837,
-    })
+    criteria.append(
+        {
+            "criterion": "tier1_relay_works_live",
+            "experiment": 837,
+            "target": "honest_verdict != 'blocked_gate'",
+            "met": v837 not in ("blocked_gate", ""),
+            "actual_value": v837,
+        }
+    )
 
     # 8. jepa_v24_tier35_deployed — Exp 838 tier35_deployed = True
     tier35 = experiments[838].get("tier35_deployed", False)
-    criteria.append({
-        "criterion": "jepa_v24_tier35_deployed",
-        "experiment": 838,
-        "target": "tier35_deployed == True",
-        "met": bool(tier35),
-        "actual_value": tier35,
-    })
+    criteria.append(
+        {
+            "criterion": "jepa_v24_tier35_deployed",
+            "experiment": 838,
+            "target": "tier35_deployed == True",
+            "met": bool(tier35),
+            "actual_value": tier35,
+        }
+    )
 
     # 9. bitstream_generated — Exp 839 bitstream_generated = True
     bitstream_ok = experiments[839].get("bitstream_generated", False)
-    criteria.append({
-        "criterion": "bitstream_generated",
-        "experiment": 839,
-        "target": "bitstream_generated == True",
-        "met": bool(bitstream_ok),
-        "actual_value": bitstream_ok,
-    })
+    criteria.append(
+        {
+            "criterion": "bitstream_generated",
+            "experiment": 839,
+            "target": "bitstream_generated == True",
+            "met": bool(bitstream_ok),
+            "actual_value": bitstream_ok,
+        }
+    )
 
     # 10. pipeline_improvement — Exp 840 not blocked (live GPU benchmark)
     v840 = experiments[840].get("honest_verdict", "")
-    criteria.append({
-        "criterion": "pipeline_improvement",
-        "experiment": 840,
-        "target": "honest_verdict != 'simulated_no_verdict'",
-        "met": v840 not in ("simulated_no_verdict", ""),
-        "actual_value": v840,
-    })
+    criteria.append(
+        {
+            "criterion": "pipeline_improvement",
+            "experiment": 840,
+            "target": "honest_verdict != 'simulated_no_verdict'",
+            "met": v840 not in ("simulated_no_verdict", ""),
+            "actual_value": v840,
+        }
+    )
 
     # 11. batching_effective — Exp 841 speedup > 1.0 and RETRO closed
     speedup = experiments[841].get("speedup", 0.0)
     retro_closed = experiments[841].get("retro_symcode_serial_closed", False)
-    criteria.append({
-        "criterion": "batching_effective",
-        "experiment": 841,
-        "target": "speedup > 1.0 AND retro_symcode_serial_closed == True",
-        "met": speedup > 1.0 and bool(retro_closed),
-        "actual_value": {"speedup": speedup, "retro_symcode_serial_closed": retro_closed},
-    })
+    criteria.append(
+        {
+            "criterion": "batching_effective",
+            "experiment": 841,
+            "target": "speedup > 1.0 AND retro_symcode_serial_closed == True",
+            "met": speedup > 1.0 and bool(retro_closed),
+            "actual_value": {"speedup": speedup, "retro_symcode_serial_closed": retro_closed},
+        }
+    )
 
     n_met = sum(1 for c in criteria if c["met"])
     return criteria, n_met
@@ -239,8 +263,8 @@ def eval_criteria(experiments: dict) -> tuple[list[dict], int]:
 # - RETRO-SYMCODE-SERIAL: Exp 841 speedup=1.71, retro_symcode_serial_closed=True
 # - RETRO-TIER1-PLATEAU: confirmed closed per Exp 831 governance audit (inherited from .63 Exps 819/823)
 RETROS_CLOSED = [
-    "RETRO-SYMCODE-SERIAL",     # Exp 841: speedup=1.71x; paragraph batching is faster
-    "RETRO-TIER1-PLATEAU",      # Exp 831: governance confirmed closure from .63 Exps 819/823
+    "RETRO-SYMCODE-SERIAL",  # Exp 841: speedup=1.71x; paragraph batching is faster
+    "RETRO-TIER1-PLATEAU",  # Exp 831: governance confirmed closure from .63 Exps 819/823
 ]
 
 # Opened this milestone (new failure modes first seen in .64 experiments):
@@ -251,16 +275,16 @@ RETROS_CLOSED = [
 #   uses 3952 LUTs which exceeds the iCE40 HX8K capacity after P&R reserve allocation.
 #   nextpnr-ice40 ran but could not complete routing; no bitstream was emitted.
 RETROS_OPENED = [
-    "RETRO-SVAMP-ZERO-AUC",            # Exp 834: SVAMP domain AUC=0.0 after DG-PRM reweighting
-    "RETRO-ICE40-PNR-LUT-OVERFLOW",    # Exp 839: N=32 ising sampler exceeds HX8K LUT capacity
+    "RETRO-SVAMP-ZERO-AUC",  # Exp 834: SVAMP domain AUC=0.0 after DG-PRM reweighting
+    "RETRO-ICE40-PNR-LUT-OVERFLOW",  # Exp 839: N=32 ising sampler exceeds HX8K LUT capacity
 ]
 
 # Still open after .64 (inherited from prior milestones, not resolved):
 RETROS_STILL_OPEN = [
-    "RETRO-JEPA-OOD",               # Exp 834 min_domain_auc=0.0; not resolved
-    "RETRO-ARBITER-FLAT-ENERGY",    # Exp 835 accuracy_standard=0.0; not resolved
+    "RETRO-JEPA-OOD",  # Exp 834 min_domain_auc=0.0; not resolved
+    "RETRO-ARBITER-FLAT-ENERGY",  # Exp 835 accuracy_standard=0.0; not resolved
     "RETRO-CONSTRAINT-ZERO-DELTA",  # Exp 836 delta_overall=0.0; write path fixed but no delta
-    "RETRO-MANIFEST-FULL-SCOPE",    # Requires conductor code change; not attempted in .64
+    "RETRO-MANIFEST-FULL-SCOPE",  # Requires conductor code change; not attempted in .64
     "RETRO-XILINX-TOOLS-UNAVAILABLE",  # Exp 839 pnr_failed; blocked at synthesis stage
 ]
 
@@ -408,6 +432,7 @@ IMPROVEMENTS = [
 # Compute milestone metrics
 # ---------------------------------------------------------------------------
 
+
 def compute_metrics() -> dict:
     """Compute cumulative and per-milestone timing metrics.
 
@@ -447,6 +472,7 @@ def compute_metrics() -> dict:
 # ---------------------------------------------------------------------------
 # RETRO audit
 # ---------------------------------------------------------------------------
+
 
 def audit_retros(experiments: dict) -> dict:
     """Evaluate each named RETRO and return its status after milestone .64.
@@ -500,6 +526,7 @@ def audit_retros(experiments: dict) -> dict:
 # Honest verdict
 # ---------------------------------------------------------------------------
 
+
 def compute_honest_verdict(n_met: int, n_total: int, retros_still_open: list) -> str:
     """Encode the honest verdict per the schema encoding rule.
 
@@ -519,6 +546,7 @@ def compute_honest_verdict(n_met: int, n_total: int, retros_still_open: list) ->
 # Main
 # ---------------------------------------------------------------------------
 
+
 def main():
     """Run the full .64 retrospective and write the deliverable JSON.
 
@@ -531,14 +559,13 @@ def main():
     6. Write results/operational_retro_2026_04_64.json.
     7. Assert deliverable was written and is parseable.
     """
-    started_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    started_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
     experiments = load_experiments()
 
     # Verdicts map (str keys for JSON compatibility)
     verdicts = {
-        str(eid): data.get("honest_verdict", "unknown")
-        for eid, data in experiments.items()
+        str(eid): data.get("honest_verdict", "unknown") for eid, data in experiments.items()
     }
 
     metrics = compute_metrics()
@@ -546,7 +573,7 @@ def main():
     retro_audit = audit_retros(experiments)
     honest_verdict = compute_honest_verdict(n_met, len(criteria), RETROS_STILL_OPEN)
 
-    finished_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    finished_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
     artifact = {
         "schema": "carnot.operational_retro.v39",
@@ -556,31 +583,24 @@ def main():
         "title": "Milestone 2026.04.64 Operational Retrospective",
         "started_at": started_at,
         "finished_at": finished_at,
-
         # Experiments evaluated (831-841; 842 is the retro itself)
         "experiments_evaluated": list(range(831, 842)),
         "experiment_verdicts": verdicts,
-
         # Milestone metrics
         **metrics,
-
         # Success criteria
         "success_criteria": criteria,
         "n_criteria_met": n_met,
         "n_criteria_total": len(criteria),
-
         # RETRO accounting
         "retros_closed": RETROS_CLOSED,
         "retros_opened": RETROS_OPENED,
         "retros_still_open": RETROS_STILL_OPEN,
         "retro_audit": retro_audit,
-
         # Improvements for .65
         "improvements_suggested": IMPROVEMENTS,
-
         # Honest verdict (encoded per schema spec)
         "honest_verdict": honest_verdict,
-
         # Invariant check
         "invariant_violations": [],
     }
@@ -610,11 +630,20 @@ def assert_deliverable_written() -> None:
         check = json.load(fh)
 
     required_fields = [
-        "schema", "milestone", "experiment", "honest_verdict",
-        "n_criteria_met", "n_criteria_total", "success_criteria",
-        "retros_closed", "retros_opened", "retros_still_open",
-        "improvements_suggested", "total_wall_time_minutes",
-        "experiments_completed", "avg_time_per_experiment_minutes",
+        "schema",
+        "milestone",
+        "experiment",
+        "honest_verdict",
+        "n_criteria_met",
+        "n_criteria_total",
+        "success_criteria",
+        "retros_closed",
+        "retros_opened",
+        "retros_still_open",
+        "improvements_suggested",
+        "total_wall_time_minutes",
+        "experiments_completed",
+        "avg_time_per_experiment_minutes",
     ]
     for field in required_fields:
         assert field in check, f"Missing required field: {field}"

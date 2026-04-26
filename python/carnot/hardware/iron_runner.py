@@ -26,7 +26,6 @@ Spec: REQ-HARDWARE-010, REQ-HARDWARE-011, REQ-HARDWARE-012,
 from __future__ import annotations
 
 import logging
-import os
 import statistics
 import subprocess
 import sys
@@ -65,6 +64,7 @@ class NPUEnvironment:
         """
         try:
             import mlir_aie  # noqa: F401, PLC0415 — intentional probe import
+
             return True
         except Exception:
             return False

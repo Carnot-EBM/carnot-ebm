@@ -173,7 +173,10 @@ class TestBuildMicroPrecisionArtifact:
     def test_schema_always_present(self):
         """schema='carnot.precision_micro.v1' in all code paths."""
         assert build_micro_precision_artifact([])["schema"] == "carnot.precision_micro.v1"
-        assert build_micro_precision_artifact([_make_result("baseline", 0.0)])["schema"] == "carnot.precision_micro.v1"
+        assert (
+            build_micro_precision_artifact([_make_result("baseline", 0.0)])["schema"]
+            == "carnot.precision_micro.v1"
+        )
 
     def test_simulated_mode_always_blocked(self):
         """inference_mode='simulated' → blocked verdict even with positive improvement."""

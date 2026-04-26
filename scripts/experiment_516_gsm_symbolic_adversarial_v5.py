@@ -181,10 +181,12 @@ def _load_standard_gsm8k(n: int = N_QUESTIONS) -> list[dict[str, str]]:
     for i in range(n):
         a = rng.randint(10, 99)
         b = rng.randint(1, a)
-        fallback.append({
-            "question": f"Alice has {a} items. She gives {b} away. How many does she have?",
-            "answer": f"{a} - {b} = {a - b}. #### {a - b}",
-        })
+        fallback.append(
+            {
+                "question": f"Alice has {a} items. She gives {b} away. How many does she have?",
+                "answer": f"{a} - {b} = {a - b}. #### {a - b}",
+            }
+        )
     _log.info("Using %d synthetic standard questions", len(fallback))
     return fallback
 
@@ -327,7 +329,9 @@ def run_experiment(repo_root: Path) -> dict:
     if not jit_result.is_cleared:
         _log.error(
             "JITVRAMCheck: insufficient VRAM for %s: available=%.2f GB required=%.2f GB",
-            spec["hf_id"], jit_result.available_gb, jit_result.required_gb,
+            spec["hf_id"],
+            jit_result.available_gb,
+            jit_result.required_gb,
         )
         raw_results = {
             "baseline_standard_accuracy": 0.0,
@@ -387,7 +391,9 @@ def run_experiment(repo_root: Path) -> dict:
 
     _log.info(
         "Dataset: standard=%d adversarial=%d inference_mode=%s",
-        len(standard_questions), len(adversarial_questions), inference_mode,
+        len(standard_questions),
+        len(adversarial_questions),
+        inference_mode,
     )
 
     # Shared extractor for all pipeline conditions
@@ -398,9 +404,7 @@ def run_experiment(repo_root: Path) -> dict:
 
     # Run four conditions
     _log.info("=== Condition 1/4: standard_baseline ===")
-    baseline_std = _run_condition_accuracy(
-        _model_fn, standard_questions, None, "standard_baseline"
-    )
+    baseline_std = _run_condition_accuracy(_model_fn, standard_questions, None, "standard_baseline")
 
     _log.info("=== Condition 2/4: standard_pipeline ===")
     pipeline_std = _run_condition_accuracy(
@@ -417,7 +421,9 @@ def run_experiment(repo_root: Path) -> dict:
         _model_fn, adversarial_questions, extractor, "adversarial_pipeline"
     )
 
-    robustness_delta = compute_robustness_delta(baseline_std, baseline_adv, pipeline_std, pipeline_adv)
+    robustness_delta = compute_robustness_delta(
+        baseline_std, baseline_adv, pipeline_std, pipeline_adv
+    )
     _log.info(
         "robustness_delta=%.4f (baseline_drop=%.4f, pipeline_drop=%.4f)",
         robustness_delta,
@@ -438,7 +444,8 @@ def run_experiment(repo_root: Path) -> dict:
     v5 = build_adversarial_v5_artifact(raw_results, inference_mode)
     _log.info(
         "honest_verdict=%s retro_039_confirmed=%s",
-        v5["honest_verdict"], v5["retro_039_confirmed"],
+        v5["honest_verdict"],
+        v5["retro_039_confirmed"],
     )
 
     artifact = tmpl.build_result(v5, status="success")

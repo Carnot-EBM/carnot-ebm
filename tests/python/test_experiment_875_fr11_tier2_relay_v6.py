@@ -103,7 +103,7 @@ class TestLagrangeAdaptiveIsing:
     def test_mean_lambda_average(self):
         """mean_lambda() returns the mean across all constraints."""
         lag = LagrangeAdaptiveIsing(n_constraints=2, lambda_lr=0.1)
-        lag.update(0, violated=True)   # constraint 0: 1.1
+        lag.update(0, violated=True)  # constraint 0: 1.1
         # constraint 1: 1.0 (unchanged)
         assert abs(lag.mean_lambda() - 1.05) < 1e-9
 
@@ -288,7 +288,7 @@ class TestSelfLearningRelayIntegration:
         assert violations[0]["constraint_type"] == "verification"
         assert violations[0]["question_idx"] == 0
         assert violations[0]["violated"] is False  # q0 is correct
-        assert violations[1]["violated"] is True   # q1 is incorrect
+        assert violations[1]["violated"] is True  # q1 is incorrect
 
 
 # ---------------------------------------------------------------------------
@@ -483,11 +483,22 @@ class TestRunExperiment:
 
         # Verify required schema fields.
         required_fields = [
-            "experiment", "title", "run_date", "started_at", "finished_at",
-            "duration_s", "status",
-            "n_sessions", "n_per_session",
-            "baseline_session_precisions", "enhanced_session_precisions",
-            "precision_s1", "precision_s2", "precision_s3", "precision_s4", "precision_s5",
+            "experiment",
+            "title",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "n_sessions",
+            "n_per_session",
+            "baseline_session_precisions",
+            "enhanced_session_precisions",
+            "precision_s1",
+            "precision_s2",
+            "precision_s3",
+            "precision_s4",
+            "precision_s5",
             "is_monotonically_non_decreasing",
             "lagrange_delta_improvement",
             "compression_overhead_ms",

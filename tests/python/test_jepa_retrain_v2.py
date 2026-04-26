@@ -160,9 +160,7 @@ class TestEstimateArithmeticCoverage:
 
     def test_result_clamped_to_one(self):
         # Dense arithmetic text should not exceed 1.0
-        pair = {
-            "step_text": "1+2=3\n2+3=5\n3+4=7\n4+5=9\n5+6=11\n6+7=13"
-        }
+        pair = {"step_text": "1+2=3\n2+3=5\n3+4=7\n4+5=9\n5+6=11\n6+7=13"}
         result = _estimate_arithmetic_coverage(pair)
         assert result <= 1.0
 
@@ -217,7 +215,9 @@ class TestCoTPairQualityFilter:
         f = CoTPairQualityFilter()
         assert f.filter([]) == []
 
-    def test_filter_mixed_corpus(self, high_coverage_pair, low_coverage_pair, low_confidence_pair, passing_pair):
+    def test_filter_mixed_corpus(
+        self, high_coverage_pair, low_coverage_pair, low_confidence_pair, passing_pair
+    ):
         f = CoTPairQualityFilter(min_coverage=0.3, min_confidence=0.7)
         corpus = [high_coverage_pair, low_coverage_pair, low_confidence_pair, passing_pair]
         result = f.filter(corpus)
@@ -234,7 +234,11 @@ class TestCoTPairQualityFilter:
         assert q.label_confidence == pytest.approx(0.9)
 
     def test_compute_quality_n_steps_from_text(self):
-        pair = {"step_text": "line 1\nline 2\nline 3", "arithmetic_coverage": 0.5, "confidence": 0.8}
+        pair = {
+            "step_text": "line 1\nline 2\nline 3",
+            "arithmetic_coverage": 0.5,
+            "confidence": 0.8,
+        }
         f = CoTPairQualityFilter()
         q = f.compute_quality(pair)
         assert q.n_steps == 3
@@ -344,8 +348,7 @@ class TestJEPAQualityAugmentor:
 class TestJEPARetrainV2Result:
     def test_auc_improvement(self):
         r = JEPARetrainV2Result(
-            n_pairs_raw=57, n_pairs_filtered=30, n_synthetic=170,
-            before_auc=0.400, after_auc=0.650
+            n_pairs_raw=57, n_pairs_filtered=30, n_synthetic=170, before_auc=0.400, after_auc=0.650
         )
         assert r.auc_improvement == pytest.approx(0.250)
 
@@ -385,8 +388,7 @@ class TestJEPARetrainV2Result:
     def test_scenario_learn_068_exact(self):
         # SCENARIO-LEARN-068 exactly as spec'd
         r = JEPARetrainV2Result(
-            n_pairs_raw=57, n_pairs_filtered=30, n_synthetic=170,
-            before_auc=0.400, after_auc=0.620
+            n_pairs_raw=57, n_pairs_filtered=30, n_synthetic=170, before_auc=0.400, after_auc=0.620
         )
         assert r.regression_recovered is True
         assert r.retro_040_closed is True
@@ -395,4 +397,5 @@ class TestJEPARetrainV2Result:
     def test_import_from_carnot_models(self):
         # Verify the export from carnot.models.__init__
         from carnot.models import JEPARetrainV2Result as imported
+
         assert imported is JEPARetrainV2Result

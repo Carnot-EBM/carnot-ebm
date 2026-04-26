@@ -33,7 +33,6 @@ Spec: REQ-CODE-001, REQ-CODE-006
 
 from __future__ import annotations
 
-import random
 import sys
 from pathlib import Path
 from typing import Any
@@ -43,11 +42,8 @@ _project_root = str(Path(__file__).resolve().parent.parent.parent)
 if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
 
-from mcp.server.fastmcp import FastMCP
-
 from carnot.verify.property_test import (
     PropertyTestResult,
-    PropertyViolation,
     gen_int,
     gen_list_int,
     gen_pair_int,
@@ -56,6 +52,7 @@ from carnot.verify.property_test import (
     property_test,
 )
 from carnot.verify.python_types import safe_exec_function
+from mcp.server.fastmcp import FastMCP
 
 # ---------------------------------------------------------------------------
 # MCP Server setup
@@ -107,31 +104,37 @@ def _run_structural_tests(
 
         if error is not None:
             n_failed += 1
-            details.append({
-                "args": tc["args"],
-                "expected": expected,
-                "actual": None,
-                "passed": False,
-                "error": str(error),
-            })
+            details.append(
+                {
+                    "args": tc["args"],
+                    "expected": expected,
+                    "actual": None,
+                    "passed": False,
+                    "error": str(error),
+                }
+            )
         elif result != expected:
             n_failed += 1
-            details.append({
-                "args": tc["args"],
-                "expected": expected,
-                "actual": result,
-                "passed": False,
-                "error": None,
-            })
+            details.append(
+                {
+                    "args": tc["args"],
+                    "expected": expected,
+                    "actual": result,
+                    "passed": False,
+                    "error": None,
+                }
+            )
         else:
             n_passed += 1
-            details.append({
-                "args": tc["args"],
-                "expected": expected,
-                "actual": result,
-                "passed": True,
-                "error": None,
-            })
+            details.append(
+                {
+                    "args": tc["args"],
+                    "expected": expected,
+                    "actual": result,
+                    "passed": True,
+                    "error": None,
+                }
+            )
 
     n_total = n_passed + n_failed
     energy = n_failed / max(n_total, 1)
@@ -342,11 +345,13 @@ def verify_with_properties(
         gen_fn = _resolve_generator(prop["generator"])
         check_fn = _resolve_check(prop["check"])
 
-        resolved_properties.append({
-            "name": name,
-            "gen_args": gen_fn,
-            "check": check_fn,
-        })
+        resolved_properties.append(
+            {
+                "name": name,
+                "gen_args": gen_fn,
+                "check": check_fn,
+            }
+        )
 
     result = property_test(
         code=code,
@@ -405,8 +410,7 @@ def score_candidates(
         "best_response": candidates[best_idx],
         "n_candidates": len(candidates),
         "scores": [
-            {"index": i, "response": c[:100], "length": len(c)}
-            for i, c in enumerate(candidates)
+            {"index": i, "response": c[:100], "length": len(c)} for i, c in enumerate(candidates)
         ],
     }
 
@@ -441,9 +445,9 @@ def score_with_ebm(
         Dict with mean_energy, per_token_energies, and model metadata.
     """
     try:
+        import numpy as np
         from carnot.inference.ebm_loader import get_model_info, load_ebm
         from carnot.inference.ebm_rejection import score_activations_with_ebm
-        import numpy as np
 
         ebm = load_ebm(model_id)
         info = get_model_info(model_id)
@@ -453,6 +457,7 @@ def score_with_ebm(
 
         # Per-token energies
         import jax.numpy as jnp
+
         per_token = [float(ebm.energy(jnp.array(acts[i]))) for i in range(len(acts))]
 
         return {
@@ -486,10 +491,7 @@ def list_ebm_models() -> dict[str, Any]:
     from carnot.inference.ebm_loader import KNOWN_MODELS
 
     return {
-        "models": [
-            {"model_id": mid, **info}
-            for mid, info in KNOWN_MODELS.items()
-        ],
+        "models": [{"model_id": mid, **info} for mid, info in KNOWN_MODELS.items()],
         "recommendation": "Use per-token-ebm-qwen35-08b-nothink for best results on instruction-tuned models. Disable thinking (enable_thinking=False) when generating to get clearer signals.",
     }
 

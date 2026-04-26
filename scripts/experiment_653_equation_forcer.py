@@ -154,9 +154,7 @@ if live_evaluated:
 # Build and write artifact
 # ---------------------------------------------------------------------------
 honest_verdict = (
-    "equation_forcer_ready"
-    if detection_rate_on_forced == 1.0
-    else "equation_forcer_partial"
+    "equation_forcer_ready" if detection_rate_on_forced == 1.0 else "equation_forcer_partial"
 )
 
 artifact = tmpl.build_result(

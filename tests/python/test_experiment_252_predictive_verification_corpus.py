@@ -31,9 +31,7 @@ def load_module():
 
 def read_jsonl(path: Path) -> list[dict]:
     return [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
+        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
     ]
 
 
@@ -111,9 +109,7 @@ def test_schema_shape():
         assert isinstance(row["case_id"], str) and row["case_id"], (
             f"Row {i} case_id must be non-empty string"
         )
-        assert isinstance(row["sample_position"], int), (
-            f"Row {i} sample_position must be int"
-        )
+        assert isinstance(row["sample_position"], int), f"Row {i} sample_position must be int"
         assert isinstance(row["provenance"], dict), f"Row {i} provenance must be dict"
 
         # provenance must carry source tracing fields
@@ -165,9 +161,7 @@ def test_deterministic_generation(tmp_path: Path):
     rows2 = read_jsonl(out2)
     assert len(rows1) == len(rows2), f"Row counts differ: {len(rows1)} vs {len(rows2)}"
     for i, (r1, r2) in enumerate(zip(rows1, rows2)):
-        assert r1 == r2, (
-            f"Row {i} differs between runs:\n  run1: {r1!r}\n  run2: {r2!r}"
-        )
+        assert r1 == r2, f"Row {i} differs between runs:\n  run1: {r1!r}\n  run2: {r2!r}"
 
     s1 = json.loads(summary1.read_text())
     s2 = json.loads(summary2.read_text())
@@ -187,10 +181,7 @@ def test_provenance_covers_all_source_experiments():
     found = {row["source_experiment"] for row in rows}
     required = {235, 238, 241}
     missing = required - found
-    assert not missing, (
-        f"Corpus missing entries from source experiments: {missing}\n"
-        f"Found: {found}"
-    )
+    assert not missing, f"Corpus missing entries from source experiments: {missing}\nFound: {found}"
 
 
 def test_provenance_covers_all_source_artifacts():
@@ -293,25 +284,33 @@ def test_violation_family_matches_domain():
     repo_root = Path(__file__).resolve().parents[2]
     corpus_path = repo_root / "data" / "research" / "predictive_verification_corpus_252.jsonl"
     rows = read_jsonl(corpus_path)
-    code_families = {"syntax_error", "humaneval_failure", "deterministic", "no_exception",
-                     "syntax", "pbt_failure", "spec_failure"}
-    semantic_families = {"question_grounding_failures", "answer_target_mismatch",
-                         "missing_entity_coverage", "unit_aggregation_errors",
-                         "missing_quantity_coverage", "omitted_premises",
-                         "entity_quantity_binding_errors"}
+    code_families = {
+        "syntax_error",
+        "humaneval_failure",
+        "deterministic",
+        "no_exception",
+        "syntax",
+        "pbt_failure",
+        "spec_failure",
+    }
+    semantic_families = {
+        "question_grounding_failures",
+        "answer_target_mismatch",
+        "missing_entity_coverage",
+        "unit_aggregation_errors",
+        "missing_quantity_coverage",
+        "omitted_premises",
+        "entity_quantity_binding_errors",
+    }
     for i, row in enumerate(rows):
         vf_set = set(row["violation_family"])
         if row["domain"] == "code":
             # code rows may have empty violation_family (clean) or code families
             cross = vf_set & semantic_families
-            assert not cross, (
-                f"Code row {i} has semantic violation families: {cross}"
-            )
+            assert not cross, f"Code row {i} has semantic violation families: {cross}"
         elif row["domain"] == "reasoning":
             cross = vf_set & code_families
-            assert not cross, (
-                f"Reasoning row {i} has code violation families: {cross}"
-            )
+            assert not cross, f"Reasoning row {i} has code violation families: {cross}"
 
 
 def test_summary_artifact_label_counts():

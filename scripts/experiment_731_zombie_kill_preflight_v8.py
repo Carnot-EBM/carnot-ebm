@@ -62,12 +62,15 @@ MANIFEST_FIX_PATH = _REPO_ROOT / "results" / "manifest_fix_patch.txt"
 # Step 3: GPU zombie check and kill
 # ---------------------------------------------------------------------------
 
+
 def _get_gpu1_vram_mb() -> int:
     """Return GPU 1 used VRAM in MiB via nvidia-smi, or -1 if unavailable."""
     try:
         result = subprocess.run(
             ["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits"],
-            capture_output=True, text=True, timeout=15
+            capture_output=True,
+            text=True,
+            timeout=15,
         )
         lines = [l.strip() for l in result.stdout.strip().splitlines() if l.strip()]
         if len(lines) >= 2:
@@ -90,10 +93,7 @@ def _is_pid_defunct(pid: int) -> bool:
     """Return True if pid exists in /proc and is in zombie (Z) state."""
     try:
         status = Path(f"/proc/{pid}/status").read_text()
-        for line in status.splitlines():
-            if line.startswith("State:") and "Z" in line:
-                return True
-        return False
+        return any(line.startswith("State:") and "Z" in line for line in status.splitlines())
     except Exception:
         return False
 
@@ -124,7 +124,7 @@ def kill_gpu_zombie() -> dict:
         _log.info(
             "PID %d is a defunct zombie (Z state) — already dead, parent must reap it. "
             "VRAM will be freed when the parent process calls wait().",
-            ZOMBIE_PID
+            ZOMBIE_PID,
         )
     else:
         try:
@@ -152,19 +152,18 @@ def kill_gpu_zombie() -> dict:
 # Step 4: Incremental test selection
 # ---------------------------------------------------------------------------
 
+
 def validate_incremental_tests() -> dict:
     """Run incremental test selector on current diff; expect 0 tests on clean repo."""
     try:
         from carnot.pipeline.incremental_test_selector import IncrementalTestSelector  # noqa: PLC0415
+
         sel = IncrementalTestSelector(repo_root=_REPO_ROOT)
         stats = sel.get_stats()
         selected = sel.select()
         tests_selected = len(selected) if selected is not None else stats.get("tests_selected", -1)
         incremental_mode = stats.get("incremental_mode", False)
-        _log.info(
-            "incremental_mode=%s tests_selected=%d",
-            incremental_mode, tests_selected
-        )
+        _log.info("incremental_mode=%s tests_selected=%d", incremental_mode, tests_selected)
         return {
             "incremental_mode": incremental_mode,
             "tests_selected": tests_selected,
@@ -183,6 +182,7 @@ def validate_incremental_tests() -> dict:
 # Step 5+6: Manifest fix validation
 # ---------------------------------------------------------------------------
 
+
 def check_manifest_fix_written() -> bool:
     """Return True if results/manifest_fix_patch.txt was written by this run."""
     return MANIFEST_FIX_PATH.exists()
@@ -192,16 +192,21 @@ def validate_manifest_validator_works() -> bool:
     """Import and exercise conductor_manifest_validator to confirm it works."""
     try:
         from scripts.conductor_manifest_validator import validate_manifest_at_dequeue  # noqa: PLC0415
+
         manifest_path = _REPO_ROOT / "scripts" / "conductor_exclusion_manifest.json"
         # exp308 is in the manifest — should be blocked
         blocked = not validate_manifest_at_dequeue("exp308-legacy", manifest_path=manifest_path)
         # exp999 is not in the manifest — should be allowed
         allowed = validate_manifest_at_dequeue("exp999-new-unknown", manifest_path=manifest_path)
         # jepa_v15_cascade is in the manifest as a string — should be blocked
-        jepa_blocked = not validate_manifest_at_dequeue("jepa_v15_cascade", manifest_path=manifest_path)
+        jepa_blocked = not validate_manifest_at_dequeue(
+            "jepa_v15_cascade", manifest_path=manifest_path
+        )
         _log.info(
             "validator smoke-test: exp308_blocked=%s exp999_allowed=%s jepa_blocked=%s",
-            blocked, allowed, jepa_blocked
+            blocked,
+            allowed,
+            jepa_blocked,
         )
         return blocked and allowed and jepa_blocked
     except Exception as exc:
@@ -212,6 +217,7 @@ def validate_manifest_validator_works() -> bool:
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     tmpl = ExperimentTemplate(
@@ -224,7 +230,6 @@ def main() -> None:
     tmpl.setup()
 
     with ExperimentTimeoutWatchdog(731, timeout_minutes=30):
-
         # Step 3: Kill zombie
         gpu_result = kill_gpu_zombie()
 
@@ -240,7 +245,9 @@ def main() -> None:
         _log.info("validator_works=%s", validator_works)
 
         # Determine honest_verdict
-        gpu1_vram_ok = gpu_result["gpu1_vram_mb_after"] < 100 or gpu_result["gpu1_vram_mb_after"] == -1
+        gpu1_vram_ok = (
+            gpu_result["gpu1_vram_mb_after"] < 100 or gpu_result["gpu1_vram_mb_after"] == -1
+        )
         incremental_confirmed = test_result["incremental_confirmed"]
 
         if not gpu1_vram_ok:
@@ -274,6 +281,7 @@ def main() -> None:
 
         # Write artifact
         import json as _json  # noqa: PLC0415 — already imported above, but explicit here
+
         tmpl._output_path.parent.mkdir(parents=True, exist_ok=True)
         tmpl._output_path.write_text(_json.dumps(artifact, indent=2))
         _log.info("Artifact written to %s", tmpl._output_path)

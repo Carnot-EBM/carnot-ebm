@@ -166,8 +166,7 @@ def load_math_problems(n: int = 100, seed: int = 92) -> list[dict[str, Any]]:
             if level in allowed_levels and subject in allowed_types:
                 filtered_indices.append(i)
 
-        print(f"  Filtered to {len(filtered_indices)} problems "
-              f"(Level 1-3, algebra/number_theory).")
+        print(f"  Filtered to {len(filtered_indices)} problems (Level 1-3, algebra/number_theory).")
 
         if len(filtered_indices) == 0:
             print("  No matching problems found. Falling back to synthetic.")
@@ -183,14 +182,16 @@ def load_math_problems(n: int = 100, seed: int = 92) -> list[dict[str, Any]]:
             if gt is None:
                 continue
 
-            problems.append({
-                "problem": example["problem"],
-                "ground_truth": gt,
-                "solution": example.get("solution", ""),
-                "level": example.get("level", ""),
-                "subject": example.get("type", ""),
-                "source": "math",
-            })
+            problems.append(
+                {
+                    "problem": example["problem"],
+                    "ground_truth": gt,
+                    "solution": example.get("solution", ""),
+                    "level": example.get("level", ""),
+                    "subject": example.get("type", ""),
+                    "source": "math",
+                }
+            )
 
         print(f"  Extracted {len(problems)} problems with valid boxed answers.")
 
@@ -240,7 +241,7 @@ def _extract_boxed_answer(solution: str) -> str | None:
     if depth != 0:
         return None
 
-    return solution[start:pos - 1].strip()
+    return solution[start : pos - 1].strip()
 
 
 def _generate_synthetic_math(n: int, seed: int = 92) -> list[dict[str, Any]]:
@@ -284,14 +285,16 @@ def _generate_synthetic_math(n: int, seed: int = 92) -> list[dict[str, Any]]:
         level_num = rng.randint(1, 3)
         subject = rng.choice(["Algebra", "Number Theory"])
 
-        problems.append({
-            "problem": problem,
-            "ground_truth": str(answer),
-            "solution": solution_text,
-            "level": f"Level {level_num}",
-            "subject": subject,
-            "source": "synthetic",
-        })
+        problems.append(
+            {
+                "problem": problem,
+                "ground_truth": str(answer),
+                "solution": solution_text,
+                "level": f"Level {level_num}",
+                "subject": subject,
+                "source": "synthetic",
+            }
+        )
 
     rng.shuffle(problems)
     return problems
@@ -328,10 +331,7 @@ def _math_system_of_equations(rng: random.Random) -> tuple[str, str, int | str]:
     c1 = a1 * x + b1 * y
     c2 = a2 * x + b2 * y
 
-    problem = (
-        f"Solve the system: ${a1}x + {b1}y = {c1}$ and "
-        f"${a2}x + {b2}y = {c2}$. Find $x + y$."
-    )
+    problem = f"Solve the system: ${a1}x + {b1}y = {c1}$ and ${a2}x + {b2}y = {c2}$. Find $x + y$."
     answer = x + y
     solution = (
         f"Step 1: From equation 1: {a1}x + {b1}y = {c1}\n"
@@ -361,7 +361,7 @@ def _math_arithmetic_sequence(rng: random.Random) -> tuple[str, str, int | str]:
         f"with first term {a1} and common difference {d}."
     )
     solution = (
-        f"Step 1: Find the nth term: a_{n} = {a1} + ({n} - 1) * {d} = {a1} + {(n-1)*d} = {an}\n"
+        f"Step 1: Find the nth term: a_{n} = {a1} + ({n} - 1) * {d} = {a1} + {(n - 1) * d} = {an}\n"
         f"Step 2: Sum formula: S = n * (a_1 + a_n) / 2\n"
         f"Step 3: S = {n} * ({a1} + {an}) / 2 = {n} * {a1 + an} / 2 = {total}\n"
         f"\\boxed{{{total}}}"
@@ -395,6 +395,7 @@ def _math_modular_arithmetic(rng: random.Random) -> tuple[str, str, int | str]:
 def _math_gcd_lcm(rng: random.Random) -> tuple[str, str, int | str]:
     """Find GCD or LCM of two numbers."""
     import math
+
     a = rng.randint(12, 60)
     b = rng.randint(12, 60)
     use_lcm = rng.choice([True, False])
@@ -412,10 +413,7 @@ def _math_gcd_lcm(rng: random.Random) -> tuple[str, str, int | str]:
     else:
         answer = math.gcd(a, b)
         problem = f"Find the greatest common divisor of ${a}$ and ${b}$."
-        solution = (
-            f"Step 1: Factor {a} and {b}\n"
-            f"Step 2: Using Euclidean algorithm:\n"
-        )
+        solution = f"Step 1: Factor {a} and {b}\nStep 2: Using Euclidean algorithm:\n"
         # Euclidean algorithm steps.
         x, y = max(a, b), min(a, b)
         step_num = 3
@@ -489,9 +487,7 @@ def _math_divisibility(rng: random.Random) -> tuple[str, str, int | str]:
     upper = 10**n_digits - 1
     answer = upper - (upper % k)
 
-    problem = (
-        f"What is the largest {n_digits}-digit number that is divisible by ${k}$?"
-    )
+    problem = f"What is the largest {n_digits}-digit number that is divisible by ${k}$?"
     solution = (
         f"Step 1: The largest {n_digits}-digit number is {upper}\n"
         f"Step 2: {upper} divided by {k} gives remainder {upper % k}\n"
@@ -729,7 +725,8 @@ def parse_reasoning_steps(response: str) -> list[dict[str, Any]]:
             # Try keyword-based splitting.
             keyword_match = re.match(
                 r"^(First|Then|Next|Also|Finally|Therefore|So|Thus)[,:]?\s+(.*)",
-                line, re.IGNORECASE,
+                line,
+                re.IGNORECASE,
             )
             if keyword_match:
                 if current_step is not None:
@@ -816,33 +813,35 @@ def extract_step_constraints(step_text: str) -> list[dict[str, Any]]:
 
         satisfied = abs(claimed - correct) < 0.01
 
-        constraints.append({
-            "expression": f"{a} {op} {b}",
-            "claimed": claimed,
-            "correct": correct,
-            "satisfied": satisfied,
-            "raw_match": match.group(0),
-        })
+        constraints.append(
+            {
+                "expression": f"{a} {op} {b}",
+                "claimed": claimed,
+                "correct": correct,
+                "satisfied": satisfied,
+                "raw_match": match.group(0),
+            }
+        )
 
     # Pattern: "A^2 = B" or "A squared = B"
-    sq_pattern = re.compile(
-        r"(-?\d+(?:\.\d+)?)\s*(?:\^2|\*\*2|squared)\s*=\s*(-?\d+(?:\.\d+)?)"
-    )
+    sq_pattern = re.compile(r"(-?\d+(?:\.\d+)?)\s*(?:\^2|\*\*2|squared)\s*=\s*(-?\d+(?:\.\d+)?)")
     for match in sq_pattern.finditer(step_text):
         try:
             base = float(match.group(1))
             claimed = float(match.group(2))
         except ValueError:
             continue
-        correct = base ** 2
+        correct = base**2
         satisfied = abs(claimed - correct) < 0.01
-        constraints.append({
-            "expression": f"{int(base) if base == int(base) else base}^2",
-            "claimed": int(claimed) if claimed == int(claimed) else claimed,
-            "correct": int(correct) if correct == int(correct) else correct,
-            "satisfied": satisfied,
-            "raw_match": match.group(0),
-        })
+        constraints.append(
+            {
+                "expression": f"{int(base) if base == int(base) else base}^2",
+                "claimed": int(claimed) if claimed == int(claimed) else claimed,
+                "correct": int(correct) if correct == int(correct) else correct,
+                "satisfied": satisfied,
+                "raw_match": match.group(0),
+            }
+        )
 
     return constraints
 
@@ -879,13 +878,15 @@ def verify_steps(steps: list[dict[str, Any]]) -> dict[str, Any]:
         if step_violations > 0 and first_error_step is None:
             first_error_step = step["index"]
 
-        per_step.append({
-            "step_index": step["index"],
-            "text_preview": step["text"][:100],
-            "n_constraints": len(constraints),
-            "n_violations": step_violations,
-            "constraints": constraints,
-        })
+        per_step.append(
+            {
+                "step_index": step["index"],
+                "text_preview": step["text"][:100],
+                "n_constraints": len(constraints),
+                "n_violations": step_violations,
+                "constraints": constraints,
+            }
+        )
 
     n_steps = len(steps)
     if first_error_step is not None:
@@ -936,10 +937,12 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
         try:
             print(f"    Loading {model_name} on {device}...")
             tokenizer = AutoTokenizer.from_pretrained(
-                model_name, trust_remote_code=trust,
+                model_name,
+                trust_remote_code=trust,
             )
             model = AutoModelForCausalLM.from_pretrained(
-                model_name, trust_remote_code=trust,
+                model_name,
+                trust_remote_code=trust,
                 torch_dtype=torch.float16 if device == "cuda" else None,
             )
             if device == "cuda":
@@ -953,7 +956,9 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
                     test_input = {k: v.cuda() for k, v in test_input.items()}
                 with torch.no_grad():
                     _ = model.generate(
-                        **test_input, max_new_tokens=4, do_sample=False,
+                        **test_input,
+                        max_new_tokens=4,
+                        do_sample=False,
                         pad_token_id=tokenizer.eos_token_id,
                     )
                 print(f"    Smoke test passed.")
@@ -977,6 +982,7 @@ def unload_model(model: Any, tokenizer: Any, device: str) -> None:
     del model, tokenizer
     try:
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
     except ImportError:
@@ -1008,13 +1014,17 @@ def generate_response(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             text = prompt
@@ -1032,7 +1042,7 @@ def generate_response(
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:],
+        outputs[0, inputs["input_ids"].shape[1] :],
         skip_special_tokens=True,
     )
 
@@ -1353,23 +1363,20 @@ def compute_metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
 
     # Average first-error step (among problems where an error was detected).
     first_error_steps = [
-        r["first_error_step"] for r in results
-        if r["first_error_step"] is not None
+        r["first_error_step"] for r in results if r["first_error_step"] is not None
     ]
     avg_first_error_step = float(np.mean(first_error_steps)) if first_error_steps else 0.0
 
     # 3. Error propagation.
     propagation_distances = [
-        r["steps_after_first_error"] for r in results
-        if r["first_error_step"] is not None
+        r["steps_after_first_error"] for r in results if r["first_error_step"] is not None
     ]
     avg_propagation = float(np.mean(propagation_distances)) if propagation_distances else 0.0
 
     # 4. Coverage.
     total_steps = sum(r["n_steps"] for r in results)
     steps_with_constraints = sum(
-        sum(1 for s in range(r["n_steps"]) if r["total_constraints"] > 0)
-        for r in results
+        sum(1 for s in range(r["n_steps"]) if r["total_constraints"] > 0) for r in results
     )
     # More precise: fraction of problems where at least one constraint was extracted.
     problems_with_constraints = sum(1 for r in results if r["total_constraints"] > 0)
@@ -1424,8 +1431,7 @@ def save_results(
         compact[model_name] = {
             "metrics": compute_metrics(entries),
             "per_problem": [
-                {k: v for k, v in e.items() if k != "response_preview"}
-                for e in entries
+                {k: v for k, v in e.items() if k != "response_preview"} for e in entries
             ],
         }
 
@@ -1493,8 +1499,11 @@ def main() -> int:
             seed_base = 92_000 + mi * 10_000 + qi
 
             result = run_problem(
-                prob, model_name,
-                tokenizer=tokenizer, model=model, device=device,
+                prob,
+                model_name,
+                tokenizer=tokenizer,
+                model=model,
+                device=device,
                 use_live=use_live,
                 sim_rng=random.Random(seed_base),
             )
@@ -1503,8 +1512,10 @@ def main() -> int:
             if (qi + 1) % 25 == 0:
                 n_c = sum(1 for r in model_results if r["final_correct"])
                 n_det = sum(1 for r in model_results if r["step_detected"])
-                print(f"    {qi + 1}/{n_problems} — "
-                      f"correct {n_c}/{qi + 1}, step-errors-detected {n_det}/{qi + 1}")
+                print(
+                    f"    {qi + 1}/{n_problems} — "
+                    f"correct {n_c}/{qi + 1}, step-errors-detected {n_det}/{qi + 1}"
+                )
 
         model_elapsed = time.time() - model_start
         model_metadata[model_name]["time_s"] = model_elapsed
@@ -1519,9 +1530,11 @@ def main() -> int:
         print(f"    Avg first error at step: {metrics['avg_first_error_step']:.1f}")
         print(f"    Avg error propagation: {metrics['avg_error_propagation']:.1f} steps")
         print(f"    Constraint coverage: {metrics['constraint_coverage']:.1%}")
-        print(f"    Detection comparison: both_flagged={dc['both_flagged']}, "
-              f"step_only={dc['step_only']}, final_only={dc['final_only']}, "
-              f"both_clean={dc['both_clean']}")
+        print(
+            f"    Detection comparison: both_flagged={dc['both_flagged']}, "
+            f"step_only={dc['step_only']}, final_only={dc['final_only']}, "
+            f"both_clean={dc['both_clean']}"
+        )
 
         # Free model memory.
         if use_live:
@@ -1548,20 +1561,24 @@ def main() -> int:
     print(f"EXPERIMENT 92 FINAL RESULTS ({total_elapsed:.1f}s)")
     print(sep)
 
-    print(f"\n  {'Model':<20s} {'Accuracy':>10s} {'StepDet':>10s} "
-          f"{'AvgErr@':>10s} {'Propag':>10s} {'Coverage':>10s}")
+    print(
+        f"\n  {'Model':<20s} {'Accuracy':>10s} {'StepDet':>10s} "
+        f"{'AvgErr@':>10s} {'Propag':>10s} {'Coverage':>10s}"
+    )
     print(f"  {'-' * 72}")
 
     for model_name, entries in all_results.items():
         live = model_metadata[model_name]["live"]
         tag = " (LIVE)" if live else " (SIM)"
         m = compute_metrics(entries)
-        print(f"  {model_name + tag:<20s} "
-              f"{m['accuracy']:>9.1%} "
-              f"{m['step_detection_rate']:>9.1%} "
-              f"{m['avg_first_error_step']:>9.1f} "
-              f"{m['avg_error_propagation']:>9.1f} "
-              f"{m['constraint_coverage']:>9.1%}")
+        print(
+            f"  {model_name + tag:<20s} "
+            f"{m['accuracy']:>9.1%} "
+            f"{m['step_detection_rate']:>9.1%} "
+            f"{m['avg_first_error_step']:>9.1f} "
+            f"{m['avg_error_propagation']:>9.1f} "
+            f"{m['constraint_coverage']:>9.1%}"
+        )
 
     # Key insight summary.
     print(f"\n  KEY INSIGHT: Step-level vs Final-answer-only verification")
@@ -1573,17 +1590,25 @@ def main() -> int:
             step_catches = dc["both_flagged"] + dc["step_only"]
             final_only_catches = dc["final_only"]
             print(f"  {model_name}:")
-            print(f"    Step-level catches: {step_catches}/{total_errors} errors "
-                  f"({step_catches/total_errors:.0%})")
-            print(f"    Final-only catches: {final_only_catches}/{total_errors} "
-                  f"(errors invisible to step-level, likely conceptual)")
+            print(
+                f"    Step-level catches: {step_catches}/{total_errors} errors "
+                f"({step_catches / total_errors:.0%})"
+            )
+            print(
+                f"    Final-only catches: {final_only_catches}/{total_errors} "
+                f"(errors invisible to step-level, likely conceptual)"
+            )
             if dc["step_only"] > 0:
-                print(f"    Step-ONLY catches: {dc['step_only']} "
-                      f"(intermediate errors that cancelled out in final answer)")
+                print(
+                    f"    Step-ONLY catches: {dc['step_only']} "
+                    f"(intermediate errors that cancelled out in final answer)"
+                )
 
     # Dataset info.
-    print(f"\n  Dataset: {'REAL MATH' if n_real > 0 else 'Synthetic fallback'} "
-          f"({n_real} real, {n_synth} synthetic)")
+    print(
+        f"\n  Dataset: {'REAL MATH' if n_real > 0 else 'Synthetic fallback'} "
+        f"({n_real} real, {n_synth} synthetic)"
+    )
 
     any_live = any(m_info["live"] for m_info in model_metadata.values())
     if any_live and n_real > 0:

@@ -59,7 +59,7 @@ TIMEOUT_MINUTES = 20
 
 # The injection block appended to each matched script.
 # Uses the same pattern as Exp 495 HarnessPatcher so the blocks are uniform.
-_INJECTION_BLOCK = '''
+_INJECTION_BLOCK = """
 # --- Exp 505 DualGPUSweep: DualGPUHarness.apply() injected — REQ-INFRA-059 ---
 # Auto-injected by the Exp 505 retroactive sweep because HarnessAudit flagged
 # this script as loading two or more models without assigning any model to cuda:1.
@@ -71,7 +71,7 @@ try:
         MODEL_SPECS = _Exp505DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001
     pass  # best-effort injection; script continues even if harness import fails
-'''
+"""
 
 
 def _already_has_dual_gpu_harness(source: str) -> bool:
@@ -81,11 +81,7 @@ def _already_has_dual_gpu_harness(source: str) -> bool:
     aliases used by automated injection blocks.  This prevents double-injection
     on scripts already patched by a prior sweep or by manual edit.
     """
-    return (
-        "DualGPUHarness" in source
-        or "_Exp495DGH" in source
-        or "_Exp505DGH" in source
-    )
+    return "DualGPUHarness" in source or "_Exp495DGH" in source or "_Exp505DGH" in source
 
 
 def _patch_script(py_file: Path) -> bool:
@@ -130,7 +126,9 @@ def _run_pytest(repo_root: Path) -> bool:
     try:
         result = subprocess.run(
             [
-                sys.executable, "-m", "pytest",
+                sys.executable,
+                "-m",
+                "pytest",
                 "tests/python/test_dual_gpu_sweep.py",
                 "-q",
                 "--override-ini=addopts=",
@@ -144,7 +142,9 @@ def _run_pytest(repo_root: Path) -> bool:
         )
         _log.info("pytest stdout:\n%s", result.stdout[-2000:] if result.stdout else "(empty)")
         if result.returncode != 0:
-            _log.warning("pytest stderr:\n%s", result.stderr[-1000:] if result.stderr else "(empty)")
+            _log.warning(
+                "pytest stderr:\n%s", result.stderr[-1000:] if result.stderr else "(empty)"
+            )
         return result.returncode == 0
     except subprocess.TimeoutExpired:
         _log.warning("pytest timed out — treating as non-fatal, tests_pass=False")
@@ -165,7 +165,6 @@ def main() -> None:
     output_path = repo_root / DELIVERABLE
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=TIMEOUT_MINUTES):
-
         scripts_dir = repo_root / "scripts"
 
         # ---- Step 2: Scan experiment_*.py for dual-model scripts needing fix ----
@@ -178,9 +177,10 @@ def main() -> None:
         all_findings = audit.scan()
         # Keep only findings for files whose basename matches experiment_*.py
         findings = [
-            f for f in all_findings
+            f
+            for f in all_findings
             if Path(f.script_path).name.startswith("experiment_")
-               and Path(f.script_path).name.endswith(".py")
+            and Path(f.script_path).name.endswith(".py")
         ]
 
         # Only care about scripts that have dual-model patterns AND need a fix

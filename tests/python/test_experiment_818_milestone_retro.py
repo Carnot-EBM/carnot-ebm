@@ -38,10 +38,29 @@ def _minimal_artifacts() -> dict[int, dict]:
     """
     return {
         806: {"experiment": 806, "honest_verdict": "prereqs_gate_ready", "duration_s": 0.5},
-        807: {"experiment": 807, "honest_verdict": "tools_installed_synthesis_clean", "duration_s": 10.0},
-        808: {"experiment": 808, "honest_verdict": "jepa_v22_above_gate", "ood_auc": 0.80, "duration_s": 600.0},
-        809: {"experiment": 809, "honest_verdict": "rapbm_ood_improved", "ood_auc": 0.82, "duration_s": 240.0},
-        810: {"experiment": 810, "honest_verdict": "retro_028_closed", "retro_028_closed": True, "duration_s": 120.0},
+        807: {
+            "experiment": 807,
+            "honest_verdict": "tools_installed_synthesis_clean",
+            "duration_s": 10.0,
+        },
+        808: {
+            "experiment": 808,
+            "honest_verdict": "jepa_v22_above_gate",
+            "ood_auc": 0.80,
+            "duration_s": 600.0,
+        },
+        809: {
+            "experiment": 809,
+            "honest_verdict": "rapbm_ood_improved",
+            "ood_auc": 0.82,
+            "duration_s": 240.0,
+        },
+        810: {
+            "experiment": 810,
+            "honest_verdict": "retro_028_closed",
+            "retro_028_closed": True,
+            "duration_s": 120.0,
+        },
         811: {"experiment": 811, "honest_verdict": "code_repair_positive", "duration_s": 10.0},
         812: {
             "experiment": 812,
@@ -50,11 +69,21 @@ def _minimal_artifacts() -> dict[int, dict]:
             "mean_energy_delta_pct_clean": -0.10,
             "duration_s": 2.0,
         },
-        813: {"experiment": 813, "honest_verdict": "injection_live", "retro_constraint_zero_delta_closed": True, "duration_s": 5.0},
+        813: {
+            "experiment": 813,
+            "honest_verdict": "injection_live",
+            "retro_constraint_zero_delta_closed": True,
+            "duration_s": 5.0,
+        },
         814: {"experiment": 814, "honest_verdict": "tier1_relay_works_live", "duration_s": 5.0},
         815: {"experiment": 815, "honest_verdict": "vg_search_effective", "duration_s": 0.5},
         816: {"experiment": 816, "honest_verdict": "synthesis_clean_n32", "duration_s": 9.0},
-        817: {"experiment": 817, "honest_verdict": "arbiter_correct", "arbiter_accuracy": 1.0, "duration_s": 0.016},
+        817: {
+            "experiment": 817,
+            "honest_verdict": "arbiter_correct",
+            "arbiter_accuracy": 1.0,
+            "duration_s": 0.016,
+        },
     }
 
 
@@ -633,12 +662,20 @@ def test_run_produces_valid_deliverable(tmp_path: Path) -> None:
     on_disk = json.loads(deliverable.read_text())
 
     for fld in [
-        "milestone", "experiment_range", "n_experiments",
-        "criteria_met_count", "criteria_total",
-        "retros_closed", "retros_opened", "retros_still_open",
-        "slowest_experiment", "fastest_experiment",
-        "improvements_suggested", "estimated_time_savings_pct",
-        "honest_verdict", "status",
+        "milestone",
+        "experiment_range",
+        "n_experiments",
+        "criteria_met_count",
+        "criteria_total",
+        "retros_closed",
+        "retros_opened",
+        "retros_still_open",
+        "slowest_experiment",
+        "fastest_experiment",
+        "improvements_suggested",
+        "estimated_time_savings_pct",
+        "honest_verdict",
+        "status",
     ]:
         assert fld in on_disk, f"Missing required field: {fld}"
 

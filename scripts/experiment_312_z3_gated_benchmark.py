@@ -404,7 +404,9 @@ def main() -> None:
             "n_skipped": metrics["n_skipped"],
             "benchmark_elapsed_s": round(elapsed, 3),
             "results": rows,
-            "inference_mode": "CI (no live LLM)" if not __import__("os").environ.get("CARNOT_FORCE_LIVE") else "live",
+            "inference_mode": "CI (no live LLM)"
+            if not __import__("os").environ.get("CARNOT_FORCE_LIVE")
+            else "live",
         },
         status="success",
     )

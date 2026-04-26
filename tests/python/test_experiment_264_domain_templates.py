@@ -21,7 +21,9 @@ import pytest
 # Import the module-under-test via path so it runs standalone without install
 # ---------------------------------------------------------------------------
 
-_SCRIPT_PATH = Path(__file__).parent.parent.parent / "scripts" / "experiment_264_domain_templates.py"
+_SCRIPT_PATH = (
+    Path(__file__).parent.parent.parent / "scripts" / "experiment_264_domain_templates.py"
+)
 
 
 def _load_module():
@@ -42,6 +44,7 @@ def mod():
 # Helpers: build synthetic corpus rows for unit testing
 # ---------------------------------------------------------------------------
 
+
 def _row(
     partial_response: str,
     violation_label: bool,
@@ -56,7 +59,12 @@ def _row(
         "model": model,
         "partial_response": partial_response,
         "violation_label": violation_label,
-        "token_pattern_features": {"digit_density": 0.1, "equals_count": 0, "operator_count": 0, "sentence_count": 1},
+        "token_pattern_features": {
+            "digit_density": 0.1,
+            "equals_count": 0,
+            "operator_count": 0,
+            "sentence_count": 1,
+        },
         "experiment": 262,
         "run_date": "20260413",
     }
@@ -162,7 +170,9 @@ class TestPrecisionThreshold:
         # Pattern matches c1,c2,c3 (3 of 4 rows). Positive matches: 2. Negative matches: 1.
         prec, recall, n_pos, n_neg = mod._pattern_stats(r"\b\d+\s*\+\s*\d+", rows)
         assert abs(prec - (2 / 3)) < 1e-9, f"Expected precision=2/3, got {prec}"
-        assert abs(recall - (2 / 3)) < 1e-9, f"Expected recall=2/3 (2 of 3 positives matched), got {recall}"
+        assert abs(recall - (2 / 3)) < 1e-9, (
+            f"Expected recall=2/3 (2 of 3 positives matched), got {recall}"
+        )
         assert n_pos == 2
         assert n_neg == 1
 

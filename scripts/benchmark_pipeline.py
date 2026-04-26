@@ -142,12 +142,14 @@ def benchmark_extract_scaling() -> list[dict]:
             times.append((time.perf_counter() - t0) * 1000.0)
             n_constraints = len(cr)
 
-        results.append({
-            "length": actual_len,
-            "time_ms_mean": statistics.mean(times),
-            "time_ms_p95": percentile(times, 95),
-            "n_constraints": n_constraints,
-        })
+        results.append(
+            {
+                "length": actual_len,
+                "time_ms_mean": statistics.mean(times),
+                "time_ms_p95": percentile(times, 95),
+                "n_constraints": n_constraints,
+            }
+        )
     return results
 
 
@@ -225,7 +227,7 @@ def format_report(
         "# Pipeline Benchmark Results",
         "",
         f"**Date**: {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}",
-        f"**Platform**: CPU (JAX_PLATFORMS=cpu)",
+        "**Platform**: CPU (JAX_PLATFORMS=cpu)",
         "",
         "## 1. verify() Latency per Domain (100 calls each)",
         "",

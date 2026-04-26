@@ -23,6 +23,7 @@ from carnot.autoresearch.constitution import (
 # Helper
 # ---------------------------------------------------------------------------
 
+
 def _checker() -> ConstitutionChecker:
     """Return a default-configured checker using module-level policy tables."""
     return ConstitutionChecker()

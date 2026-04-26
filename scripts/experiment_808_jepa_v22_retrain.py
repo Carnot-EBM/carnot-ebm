@@ -68,6 +68,7 @@ tmpl = ExperimentTemplate(
 # These were NOT in v22 training; using them as held-out OOD set is honest.
 # ---------------------------------------------------------------------------
 
+
 def _load_ood_proxy(live_path: Path) -> tuple[list[list[str]], list[float]]:
     """Load fover_labeled_steps_live.json as the OOD evaluation set.
 
@@ -113,6 +114,7 @@ def _load_ood_proxy(live_path: Path) -> tuple[list[list[str]], list[float]]:
 # ---------------------------------------------------------------------------
 # Training corpus loading — merges FoVer multi-source + CPMI triples
 # ---------------------------------------------------------------------------
+
 
 def load_v22_corpus(
     multi_path: Path,
@@ -226,12 +228,21 @@ def load_v22_corpus(
     total_training_items = len(step_seqs)
     augmentation_ratio = total_training_items / max(n_fover_pairs, 1)
 
-    return step_seqs, labels, weights, n_fover_pairs, n_cpmi_triples, total_training_items, augmentation_ratio
+    return (
+        step_seqs,
+        labels,
+        weights,
+        n_fover_pairs,
+        n_cpmi_triples,
+        total_training_items,
+        augmentation_ratio,
+    )
 
 
 # ---------------------------------------------------------------------------
 # Per-domain OOD AUC (failure analysis)
 # ---------------------------------------------------------------------------
+
 
 def _compute_per_domain_auc(
     probe: MultiStepJEPAv20,
@@ -280,6 +291,7 @@ def _compute_per_domain_auc(
 # ---------------------------------------------------------------------------
 # Main experiment
 # ---------------------------------------------------------------------------
+
 
 def run_experiment() -> dict:
     """Train JEPA v22 with merged FoVer + CPMI corpus and evaluate OOD AUC.
@@ -369,12 +381,14 @@ def run_experiment() -> dict:
         ood_scores_ckpt = [probe.forward(seq) for seq in ood_seqs_ckpt]
         ood_auc_ckpt = round(MultiStepJEPAv19.compute_auc(ood_scores_ckpt, ood_labels_ckpt), 4)
 
-        epoch_checkpoints.append({
-            "epoch": checkpoint_epoch,
-            "in_dist_auc": indist_auc_ckpt,
-            "ood_auc": ood_auc_ckpt,
-            "final_loss": round(train_info["final_loss"], 6),
-        })
+        epoch_checkpoints.append(
+            {
+                "epoch": checkpoint_epoch,
+                "in_dist_auc": indist_auc_ckpt,
+                "ood_auc": ood_auc_ckpt,
+                "final_loss": round(train_info["final_loss"], 6),
+            }
+        )
         print(
             f"[808] Epoch {checkpoint_epoch}: in_dist={indist_auc_ckpt:.4f}, "
             f"ood={ood_auc_ckpt:.4f}, loss={train_info['final_loss']:.4f}"
@@ -398,6 +412,7 @@ def run_experiment() -> dict:
         # Save model weights
         try:
             import numpy as np  # noqa: PLC0415
+
             save_path_npz = REPO_ROOT / "results/jepa_predictor_v22.npz"
             np.savez(
                 str(save_path_npz),
@@ -415,9 +430,7 @@ def run_experiment() -> dict:
         print("[808] Gate PASSED. Tier 3.5 deployed.")
     elif ood_auc >= 0.5:
         per_domain_auc = _compute_per_domain_auc(probe, multi_path)
-        worst_domain = (
-            min(per_domain_auc, key=per_domain_auc.get) if per_domain_auc else "unknown"
-        )
+        worst_domain = min(per_domain_auc, key=per_domain_auc.get) if per_domain_auc else "unknown"
         failure_analysis = {
             "per_domain_auc": per_domain_auc,
             "worst_domain": worst_domain,
@@ -430,9 +443,7 @@ def run_experiment() -> dict:
         print(f"[808] Gate NOT passed but above random. Worst domain: {worst_domain}.")
     else:
         per_domain_auc = _compute_per_domain_auc(probe, multi_path)
-        worst_domain = (
-            min(per_domain_auc, key=per_domain_auc.get) if per_domain_auc else "unknown"
-        )
+        worst_domain = min(per_domain_auc, key=per_domain_auc.get) if per_domain_auc else "unknown"
         failure_analysis = {
             "per_domain_auc": per_domain_auc,
             "worst_domain": worst_domain,
@@ -444,9 +455,7 @@ def run_experiment() -> dict:
         honest_verdict = "jepa_v22_below_random"
         print(f"[808] OOD below random (< 0.5). Worst domain: {worst_domain}.")
 
-    progrs_weight_summary = {
-        domain: round(acc, 4) for domain, acc in DOMAIN_ACCURACY.items()
-    }
+    progrs_weight_summary = {domain: round(acc, 4) for domain, acc in DOMAIN_ACCURACY.items()}
 
     return tmpl.build_result(
         {

@@ -18,7 +18,9 @@ from carnot.pipeline.think_probe_live_v3_result import ThinkProbeLiveV3Result
 # ---------------------------------------------------------------------------
 
 
-def _make(n_completed: int = 42, tp_rate: float = 0.80, fp_rate: float = 0.15, **kw) -> ThinkProbeLiveV3Result:
+def _make(
+    n_completed: int = 42, tp_rate: float = 0.80, fp_rate: float = 0.15, **kw
+) -> ThinkProbeLiveV3Result:
     """Construct a ThinkProbeLiveV3Result with sensible defaults for most tests."""
     defaults = {
         "inference_mode": "live_gpu",

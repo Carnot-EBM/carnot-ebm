@@ -215,8 +215,12 @@ def test_save_batch_creates_checkpoint_dir():
         ckpt_dir = os.path.join(tmpdir, "nested", "ckpt")
         executor = LongRunBenchmarkExecutor(batch_size=50, checkpoint_dir=ckpt_dir)
         batch = BenchmarkBatch(
-            batch_id=0, start_idx=0, end_idx=2, questions=["a", "b"],
-            results=["ra", "rb"], status="complete",
+            batch_id=0,
+            start_idx=0,
+            end_idx=2,
+            questions=["a", "b"],
+            results=["ra", "rb"],
+            status="complete",
         )
         path = executor.save_batch(batch, prefix="x")
         assert os.path.exists(path)
@@ -242,9 +246,7 @@ def test_run_batch_success():
     """run_batch runs all questions and sets status='complete'."""
     with tempfile.TemporaryDirectory() as tmpdir:
         executor = LongRunBenchmarkExecutor(batch_size=5, checkpoint_dir=tmpdir)
-        batch = BenchmarkBatch(
-            batch_id=0, start_idx=0, end_idx=5, questions=list(range(5))
-        )
+        batch = BenchmarkBatch(batch_id=0, start_idx=0, end_idx=5, questions=list(range(5)))
 
         def inference_fn(q):
             return q * 10
@@ -264,9 +266,7 @@ def test_run_batch_inference_fn_receives_questions():
             received.append(q)
             return f"ans_{q}"
 
-        batch = BenchmarkBatch(
-            batch_id=0, start_idx=0, end_idx=3, questions=["a", "b", "c"]
-        )
+        batch = BenchmarkBatch(batch_id=0, start_idx=0, end_idx=3, questions=["a", "b", "c"])
         executor.run_batch(batch, capture, watchdog_timeout_minutes=1)
         assert received == ["a", "b", "c"]
 

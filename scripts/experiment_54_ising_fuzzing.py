@@ -93,6 +93,7 @@ class ParamEncoding:
         spin_offset: Index of the first spin allocated to this parameter.
         n_spins: Total number of spins allocated to this parameter.
     """
+
     name: str
     kind: str  # "int" or "list_int"
     spin_offset: int
@@ -200,9 +201,7 @@ def encode_input_space(
     return biases, J, encodings
 
 
-def _set_int_biases(
-    biases: np.ndarray, J: np.ndarray, offset: int, n_bits: int
-) -> None:
+def _set_int_biases(biases: np.ndarray, J: np.ndarray, offset: int, n_bits: int) -> None:
     """Set biases and couplings for an integer spin block.
 
     **How it works:**
@@ -254,16 +253,15 @@ def _bias_toward_int_value(
         if bit == 1:
             biases[offset + b] += -strength  # encourage spin=1
         else:
-            biases[offset + b] += strength   # encourage spin=0
+            biases[offset + b] += strength  # encourage spin=0
 
 
 # ---------------------------------------------------------------------------
 # 2. Decoding: convert spin configurations back to function arguments
 # ---------------------------------------------------------------------------
 
-def decode_spins(
-    spins: np.ndarray, encodings: list[ParamEncoding]
-) -> dict[str, Any]:
+
+def decode_spins(spins: np.ndarray, encodings: list[ParamEncoding]) -> dict[str, Any]:
     """Decode a spin configuration into concrete function arguments.
 
     **How it works:**
@@ -306,7 +304,7 @@ def _decode_int(spins: np.ndarray, offset: int, n_bits: int) -> int:
     unsigned = 0
     for b in range(n_bits):
         if bool(spins[offset + b]):
-            unsigned |= (1 << b)
+            unsigned |= 1 << b
     # Two's complement: if sign bit is set, subtract 2^n_bits.
     if unsigned >= (1 << (n_bits - 1)):
         return unsigned - (1 << n_bits)
@@ -318,13 +316,14 @@ def _decode_uint(spins: np.ndarray, offset: int, n_bits: int) -> int:
     val = 0
     for b in range(n_bits):
         if bool(spins[offset + b]):
-            val |= (1 << b)
+            val |= 1 << b
     return val
 
 
 # ---------------------------------------------------------------------------
 # 3. Random input generation (baseline)
 # ---------------------------------------------------------------------------
+
 
 def random_inputs(
     params: list[tuple[str, str]],
@@ -358,6 +357,7 @@ def random_inputs(
 # 4. Differential testing: run buggy vs reference on generated inputs
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class FuzzResult:
     """Result of fuzzing a single function pair.
@@ -371,6 +371,7 @@ class FuzzResult:
         errors: List of (input, buggy_output, reference_output) triples
             for inputs that triggered disagreements.
     """
+
     bugs_found: int
     unique_sigs: set
     time_to_first_bug: float | None
@@ -464,6 +465,7 @@ def _short_repr(val: Any) -> str:
 # 5. Ising-guided fuzzing: sample inputs via ParallelIsingSampler
 # ---------------------------------------------------------------------------
 
+
 def ising_fuzz(
     buggy_func: Callable,
     reference_func: Callable,
@@ -535,6 +537,7 @@ def ising_fuzz(
 # ---------------------------------------------------------------------------
 # 6. Test suite: 8 buggy/correct function pairs
 # ---------------------------------------------------------------------------
+
 
 def get_function_pairs() -> list[dict[str, Any]]:
     """Return 8 function pairs for differential testing.
@@ -755,6 +758,7 @@ def get_function_pairs() -> list[dict[str, Any]]:
 # 7. Main: run Ising-guided vs random fuzzing and print comparison
 # ---------------------------------------------------------------------------
 
+
 def main() -> int:
     """Run Ising-guided and random fuzzing on all 8 function pairs."""
     print("=" * 78)
@@ -769,9 +773,11 @@ def main() -> int:
     rng = np.random.default_rng(54)
 
     # Column headers.
-    print(f"\n{'#':<3} {'Bug Type':<28} {'Ising':>6} {'Rand':>6} "
-          f"{'Ising Uniq':>10} {'Rand Uniq':>10} "
-          f"{'Ising T1':>9} {'Rand T1':>9}")
+    print(
+        f"\n{'#':<3} {'Bug Type':<28} {'Ising':>6} {'Rand':>6} "
+        f"{'Ising Uniq':>10} {'Rand Uniq':>10} "
+        f"{'Ising T1':>9} {'Rand T1':>9}"
+    )
     print("-" * 105)
 
     ising_total_bugs = 0
@@ -792,7 +798,9 @@ def main() -> int:
 
         # --- Ising-guided fuzzing ---
         ising_result = ising_fuzz(
-            buggy, reference, params,
+            buggy,
+            reference,
+            params,
             n_samples=n_samples,
             edge_cases=pair.get("edge_cases"),
             seed=54 + i,
@@ -816,11 +824,19 @@ def main() -> int:
             ties += 1
 
         # Format time-to-first-bug.
-        it1 = f"{ising_result.time_to_first_bug:.4f}s" if ising_result.time_to_first_bug is not None else "N/A"
-        rt1 = f"{rand_result.time_to_first_bug:.4f}s" if rand_result.time_to_first_bug is not None else "N/A"
+        it1 = (
+            f"{ising_result.time_to_first_bug:.4f}s"
+            if ising_result.time_to_first_bug is not None
+            else "N/A"
+        )
+        rt1 = (
+            f"{rand_result.time_to_first_bug:.4f}s"
+            if rand_result.time_to_first_bug is not None
+            else "N/A"
+        )
 
         print(
-            f"{i+1:<3} {pair['bug_type']:<28} "
+            f"{i + 1:<3} {pair['bug_type']:<28} "
             f"{ising_result.bugs_found:>6} {rand_result.bugs_found:>6} "
             f"{len(ising_result.unique_sigs):>10} {len(rand_result.unique_sigs):>10} "
             f"{it1:>9} {rt1:>9}"
@@ -833,16 +849,18 @@ def main() -> int:
             print(f"    example: {inp_short}")
             print(f"    buggy={_short_repr(buggy_out)}  ref={_short_repr(ref_out)}")
 
-        results.append({
-            "name": name,
-            "bug_type": pair["bug_type"],
-            "ising_bugs": ising_result.bugs_found,
-            "rand_bugs": rand_result.bugs_found,
-            "ising_uniq": len(ising_result.unique_sigs),
-            "rand_uniq": len(rand_result.unique_sigs),
-            "ising_t1": ising_result.time_to_first_bug,
-            "rand_t1": rand_result.time_to_first_bug,
-        })
+        results.append(
+            {
+                "name": name,
+                "bug_type": pair["bug_type"],
+                "ising_bugs": ising_result.bugs_found,
+                "rand_bugs": rand_result.bugs_found,
+                "ising_uniq": len(ising_result.unique_sigs),
+                "rand_uniq": len(rand_result.unique_sigs),
+                "ising_t1": ising_result.time_to_first_bug,
+                "rand_t1": rand_result.time_to_first_bug,
+            }
+        )
 
     # --- Summary ---
     elapsed = time.time() - start

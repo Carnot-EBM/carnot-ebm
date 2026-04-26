@@ -74,17 +74,13 @@ class TestRustGibbsModel:
 
     def test_creation_custom(self) -> None:
         """REQ-CORE-005: Rust Gibbs model creates with custom config."""
-        model = carnot_rust.RustGibbsModel(
-            input_dim=10, hidden_dims=[8, 4], activation="relu"
-        )
+        model = carnot_rust.RustGibbsModel(input_dim=10, hidden_dims=[8, 4], activation="relu")
         assert model.input_dim() == 10
 
     def test_all_activations(self) -> None:
         """REQ-CORE-005: all three activations work."""
         for act in ["silu", "relu", "tanh"]:
-            model = carnot_rust.RustGibbsModel(
-                input_dim=5, hidden_dims=[4, 3], activation=act
-            )
+            model = carnot_rust.RustGibbsModel(input_dim=5, hidden_dims=[4, 3], activation=act)
             x = np.random.randn(5).astype(np.float32)
             e = model.energy(x)
             assert np.isfinite(e), f"Energy not finite for activation={act}"
@@ -121,9 +117,7 @@ class TestRustBoltzmannModel:
 
     def test_creation_custom(self) -> None:
         """REQ-CORE-005: Rust Boltzmann model creates with custom config."""
-        model = carnot_rust.RustBoltzmannModel(
-            input_dim=10, hidden_dims=[8, 6, 4]
-        )
+        model = carnot_rust.RustBoltzmannModel(input_dim=10, hidden_dims=[8, 6, 4])
         assert model.input_dim() == 10
 
     def test_energy_finite(self) -> None:
@@ -151,9 +145,7 @@ class TestRustBoltzmannModel:
 
     def test_no_residual(self) -> None:
         """REQ-CORE-005: Boltzmann works without residual connections."""
-        model = carnot_rust.RustBoltzmannModel(
-            input_dim=5, hidden_dims=[4, 3], residual=False
-        )
+        model = carnot_rust.RustBoltzmannModel(input_dim=5, hidden_dims=[4, 3], residual=False)
         x = np.random.randn(5).astype(np.float32)
         e = model.energy(x)
         assert np.isfinite(e)

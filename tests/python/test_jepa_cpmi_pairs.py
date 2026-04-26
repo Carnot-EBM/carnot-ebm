@@ -27,6 +27,7 @@ from carnot.inference.jepa_cpmi_pairs import (
 @dataclass
 class _FakeEntry:
     """Minimal FOVERCorpusEntry-like object for testing."""
+
     question: str
     is_correct: bool
     cot_steps: list = field(default_factory=list)
@@ -42,8 +43,10 @@ def _dummy_embed(text: str) -> jnp.ndarray:
 
 def _const_model(value: float):
     """Returns a model that always outputs a fixed scalar."""
+
     def _model(emb: jnp.ndarray) -> float:
         return value
+
     return _model
 
 
@@ -57,7 +60,7 @@ class TestBuildPairsGrouping:
 
     def test_single_question_yields_one_pair(self):
         entries = [
-            _FakeEntry("q1", is_correct=True,  cot_steps=[{"step_text": "a"}]),
+            _FakeEntry("q1", is_correct=True, cot_steps=[{"step_text": "a"}]),
             _FakeEntry("q1", is_correct=False, cot_steps=[{"step_text": "b"}]),
         ]
         builder = JEPACPMIPairBuilder(embed_fn=_dummy_embed)
@@ -67,9 +70,9 @@ class TestBuildPairsGrouping:
 
     def test_two_questions_yield_two_pairs(self):
         entries = [
-            _FakeEntry("q1", is_correct=True,  cot_steps=[{"step_text": "a"}]),
+            _FakeEntry("q1", is_correct=True, cot_steps=[{"step_text": "a"}]),
             _FakeEntry("q1", is_correct=False, cot_steps=[{"step_text": "b"}]),
-            _FakeEntry("q2", is_correct=True,  cot_steps=[{"step_text": "c"}]),
+            _FakeEntry("q2", is_correct=True, cot_steps=[{"step_text": "c"}]),
             _FakeEntry("q2", is_correct=False, cot_steps=[{"step_text": "d"}]),
         ]
         builder = JEPACPMIPairBuilder(embed_fn=_dummy_embed)
@@ -102,7 +105,9 @@ class TestBuildPairsGrouping:
 
     def test_pair_has_embeddings(self):
         entries = [
-            _FakeEntry("q1", is_correct=True,  cot_steps=[{"step_text": "step A"}, {"step_text": "step B"}]),
+            _FakeEntry(
+                "q1", is_correct=True, cot_steps=[{"step_text": "step A"}, {"step_text": "step B"}]
+            ),
             _FakeEntry("q1", is_correct=False, cot_steps=[{"step_text": "step C"}]),
         ]
         builder = JEPACPMIPairBuilder(embed_fn=_dummy_embed)
@@ -112,8 +117,12 @@ class TestBuildPairsGrouping:
 
     def test_pair_quality_computed(self):
         entries = [
-            _FakeEntry("q1", is_correct=True,  cot_steps=[{"step_text": "a"}, {"step_text": "b"}]),
-            _FakeEntry("q1", is_correct=False, cot_steps=[{"step_text": "c"}, {"step_text": "d"}, {"step_text": "e"}]),
+            _FakeEntry("q1", is_correct=True, cot_steps=[{"step_text": "a"}, {"step_text": "b"}]),
+            _FakeEntry(
+                "q1",
+                is_correct=False,
+                cot_steps=[{"step_text": "c"}, {"step_text": "d"}, {"step_text": "e"}],
+            ),
         ]
         builder = JEPACPMIPairBuilder(embed_fn=_dummy_embed)
         pairs = builder.build_pairs(entries)
@@ -127,11 +136,14 @@ class TestHardNegativeSelection:
     def test_hardest_incorrect_picked_by_step_count(self):
         # incorrect_short has 1 step, incorrect_long has 3 steps
         entries = [
-            _FakeEntry("q1", is_correct=True,  cot_steps=[{"step_text": "ok"}]),
+            _FakeEntry("q1", is_correct=True, cot_steps=[{"step_text": "ok"}]),
             _FakeEntry("q1", is_correct=False, cot_steps=[{"step_text": "bad"}], model_id="short"),
-            _FakeEntry("q1", is_correct=False, cot_steps=[
-                {"step_text": "bad1"}, {"step_text": "bad2"}, {"step_text": "bad3"}
-            ], model_id="long"),
+            _FakeEntry(
+                "q1",
+                is_correct=False,
+                cot_steps=[{"step_text": "bad1"}, {"step_text": "bad2"}, {"step_text": "bad3"}],
+                model_id="long",
+            ),
         ]
         builder = JEPACPMIPairBuilder(embed_fn=_dummy_embed)
         pairs = builder.build_pairs(entries)
@@ -140,10 +152,16 @@ class TestHardNegativeSelection:
 
     def test_hard_negative_step_idx_is_last_step(self):
         entries = [
-            _FakeEntry("q1", is_correct=True,  cot_steps=[{"step_text": "ok"}]),
-            _FakeEntry("q1", is_correct=False, cot_steps=[
-                {"step_text": "w1"}, {"step_text": "w2"}, {"step_text": "w3"},
-            ]),
+            _FakeEntry("q1", is_correct=True, cot_steps=[{"step_text": "ok"}]),
+            _FakeEntry(
+                "q1",
+                is_correct=False,
+                cot_steps=[
+                    {"step_text": "w1"},
+                    {"step_text": "w2"},
+                    {"step_text": "w3"},
+                ],
+            ),
         ]
         builder = JEPACPMIPairBuilder(embed_fn=_dummy_embed)
         pairs = builder.build_pairs(entries)
@@ -152,7 +170,7 @@ class TestHardNegativeSelection:
     def test_no_steps_fallback_to_empty_string_embedding(self):
         """Entry with no cot_steps still gets one embedding (empty string fallback)."""
         entries = [
-            _FakeEntry("q1", is_correct=True,  cot_steps=[]),
+            _FakeEntry("q1", is_correct=True, cot_steps=[]),
             _FakeEntry("q1", is_correct=False, cot_steps=[]),
         ]
         builder = JEPACPMIPairBuilder(embed_fn=_dummy_embed)
@@ -164,7 +182,7 @@ class TestHardNegativeSelection:
     def test_non_dict_step_converted_to_string(self):
         """Steps that are plain strings (not dicts) are handled via str()."""
         entries = [
-            _FakeEntry("q1", is_correct=True,  cot_steps=["step text as string"]),
+            _FakeEntry("q1", is_correct=True, cot_steps=["step text as string"]),
             _FakeEntry("q1", is_correct=False, cot_steps=["wrong step as string"]),
         ]
         builder = JEPACPMIPairBuilder(embed_fn=_dummy_embed)
@@ -357,9 +375,9 @@ class TestMeanLossMultiplePairs:
             if call_log[0] <= 2:
                 return 0.0
             elif call_log[0] == 3:
-                return 0.0   # correct for pair2
+                return 0.0  # correct for pair2
             else:
-                return 2.0   # incorrect for pair2
+                return 2.0  # incorrect for pair2
 
         loss_fn = CPMIContrastiveLoss(margin=1.0, chain_energy_mode="mean")
         loss = loss_fn.compute_loss(_model, [pair1, pair2])

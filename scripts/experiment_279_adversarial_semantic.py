@@ -70,8 +70,8 @@ OUTPUT_PATH = RESULTS_DIR / "experiment_279_results.json"
 # ---------------------------------------------------------------------------
 # Experiment parameters
 # ---------------------------------------------------------------------------
-N_QUESTIONS = 50          # number of (original, swapped) pairs
-BASE_SEED = 279_000       # deterministic seed
+N_QUESTIONS = 50  # number of (original, swapped) pairs
+BASE_SEED = 279_000  # deterministic seed
 # Gemma4-E4B-it calibrated error rate (Apple paper, ~4B scale)
 GEMMA4_BASE_ERROR_RATE = 0.25
 # Fraction of adversarial errors that are "stale answer" (use original quantities)
@@ -83,6 +83,7 @@ EXPECTED_DETECTION_LOWER_BOUND = 0.30
 # ===========================================================================
 # 1. Question-generating templates (re-used from Exp 119/178)
 # ===========================================================================
+
 
 def _tmpl_shopping(rng: random.Random) -> tuple[str, int]:
     """Sarah buys shirts and pants with a discount."""
@@ -264,22 +265,23 @@ def _tmpl_warehouse(rng: random.Random) -> tuple[str, int]:
 
 
 TEMPLATES: list[tuple[str, Callable[[random.Random], tuple[str, int]]]] = [
-    ("shopping",   _tmpl_shopping),
-    ("cooking",    _tmpl_cooking),
-    ("travel",     _tmpl_travel),
-    ("savings",    _tmpl_savings),
-    ("classroom",  _tmpl_classroom),
-    ("garden",     _tmpl_garden),
-    ("bakery",     _tmpl_bakery),
-    ("farm",       _tmpl_farm),
-    ("factory",    _tmpl_factory),
-    ("warehouse",  _tmpl_warehouse),
+    ("shopping", _tmpl_shopping),
+    ("cooking", _tmpl_cooking),
+    ("travel", _tmpl_travel),
+    ("savings", _tmpl_savings),
+    ("classroom", _tmpl_classroom),
+    ("garden", _tmpl_garden),
+    ("bakery", _tmpl_bakery),
+    ("farm", _tmpl_farm),
+    ("factory", _tmpl_factory),
+    ("warehouse", _tmpl_warehouse),
 ]
 
 
 # ===========================================================================
 # 2. Dataset generation — 50 (original, swapped) pairs
 # ===========================================================================
+
 
 def _extract_numbers(text: str) -> list[int]:
     """Return all integer numbers found in text."""
@@ -318,22 +320,25 @@ def generate_pairs(n: int, seed: int) -> list[dict[str, Any]]:
             swap_nums = set(_extract_numbers(swap_q))
             attempts += 1
 
-        pairs.append({
-            "id": i,
-            "template": tmpl_name,
-            "original_question": orig_q,
-            "original_answer": orig_a,
-            "swapped_question": swap_q,
-            "swapped_answer": swap_a,
-            "orig_seed": orig_seed,
-            "swap_seed": swap_seed,
-        })
+        pairs.append(
+            {
+                "id": i,
+                "template": tmpl_name,
+                "original_question": orig_q,
+                "original_answer": orig_a,
+                "swapped_question": swap_q,
+                "swapped_answer": swap_a,
+                "orig_seed": orig_seed,
+                "swap_seed": swap_seed,
+            }
+        )
     return pairs
 
 
 # ===========================================================================
 # 3. Response simulation
 # ===========================================================================
+
 
 def _response_with_all_numbers(
     question: str,
@@ -434,16 +439,12 @@ def simulate_responses(
         # --- Swapped question response ---
         is_swap_correct = rng.random() > base_error_rate
         if is_swap_correct:
-            swap_resp = _correct_response(
-                pair["swapped_question"], pair["swapped_answer"], rng
-            )
+            swap_resp = _correct_response(pair["swapped_question"], pair["swapped_answer"], rng)
             swap_error_type = "none"
         else:
             if rng.random() < stale_fraction:
                 # Stale: uses original question's quantities → should be detected
-                swap_resp = _stale_response(
-                    pair["original_question"], pair["original_answer"], rng
-                )
+                swap_resp = _stale_response(pair["original_question"], pair["original_answer"], rng)
                 swap_error_type = "stale"
             else:
                 # Fresh wrong: uses swapped quantities, arithmetic error
@@ -452,19 +453,22 @@ def simulate_responses(
                 )
                 swap_error_type = "fresh_wrong"
 
-        augmented.append({
-            **pair,
-            "orig_response": orig_resp,
-            "orig_is_correct": is_orig_correct,
-            "swap_response": swap_resp,
-            "swap_error_type": swap_error_type,
-        })
+        augmented.append(
+            {
+                **pair,
+                "orig_response": orig_resp,
+                "orig_is_correct": is_orig_correct,
+                "swap_response": swap_resp,
+                "swap_error_type": swap_error_type,
+            }
+        )
     return augmented
 
 
 # ===========================================================================
 # 4. Semantic grounding verification
 # ===========================================================================
+
 
 def run_semantic_grounding(
     augmented: list[dict[str, Any]],
@@ -489,19 +493,22 @@ def run_semantic_grounding(
             question=record["swapped_question"],
             response=record["swap_response"],
         )
-        results.append({
-            **record,
-            "orig_grounding_verified": orig_result.verified,
-            "orig_grounding_violations": [v.to_dict() for v in orig_result.violations],
-            "swap_grounding_verified": swap_result.verified,
-            "swap_grounding_violations": [v.to_dict() for v in swap_result.violations],
-        })
+        results.append(
+            {
+                **record,
+                "orig_grounding_verified": orig_result.verified,
+                "orig_grounding_violations": [v.to_dict() for v in orig_result.violations],
+                "swap_grounding_verified": swap_result.verified,
+                "swap_grounding_violations": [v.to_dict() for v in swap_result.violations],
+            }
+        )
     return results
 
 
 # ===========================================================================
 # 5. Metrics computation
 # ===========================================================================
+
 
 def compute_metrics(records: list[dict[str, Any]]) -> dict[str, Any]:
     """Compute detection rate and FP rate.
@@ -567,6 +574,7 @@ def compute_metrics(records: list[dict[str, Any]]) -> dict[str, Any]:
 # 6. Main entry point
 # ===========================================================================
 
+
 def run_experiment(
     n: int = N_QUESTIONS,
     seed: int = BASE_SEED,
@@ -589,8 +597,10 @@ def run_experiment(
     print(f"[Exp 279] Generating {n} question pairs (seed={seed})...")
     pairs = generate_pairs(n, seed)
 
-    print(f"[Exp 279] Simulating Gemma4-E4B-it responses "
-          f"(error_rate={base_error_rate}, stale_frac={stale_fraction})...")
+    print(
+        f"[Exp 279] Simulating Gemma4-E4B-it responses "
+        f"(error_rate={base_error_rate}, stale_frac={stale_fraction})..."
+    )
     augmented = simulate_responses(pairs, base_error_rate, stale_fraction, rng)
 
     print("[Exp 279] Running semantic grounding verifier...")

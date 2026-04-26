@@ -23,6 +23,7 @@
 
 Spec: REQ-SAFE-019, REQ-SAFE-020
 """
+
 from __future__ import annotations
 
 import json
@@ -165,6 +166,7 @@ def _build_benign_corpus(n: int = 1000) -> list[PrivacyExampleV2]:
 # PII corpus builders
 # ---------------------------------------------------------------------------
 
+
 def _build_pii_corpus(n_each: int = 200) -> list[PrivacyExampleV2]:
     """Build PII samples: n_each of each of 5 PII types (CC, SSN, email, phone, address)."""
     samples: list[PrivacyExampleV2] = []
@@ -216,29 +218,36 @@ def _build_pii_corpus(n_each: int = 200) -> list[PrivacyExampleV2]:
 # Cross-dataset evaluation helpers
 # ---------------------------------------------------------------------------
 
+
 def _build_dataset1_holdout(n: int = 200) -> list[PrivacyExampleV2]:
     """Dataset 1: novel Luhn-valid CC + SSN hold-out (not in training split)."""
     samples: list[PrivacyExampleV2] = []
     for _ in range(n // 2):
-        samples.append(PrivacyExampleV2(
-            text=f"New card: {_gen_luhn_cc()}",
-            label="pii",
-            source="holdout_cc",
-        ))
-        samples.append(PrivacyExampleV2(
-            text=f"My SSN: {_gen_ssn()}",
-            label="pii",
-            source="holdout_ssn",
-        ))
+        samples.append(
+            PrivacyExampleV2(
+                text=f"New card: {_gen_luhn_cc()}",
+                label="pii",
+                source="holdout_cc",
+            )
+        )
+        samples.append(
+            PrivacyExampleV2(
+                text=f"My SSN: {_gen_ssn()}",
+                label="pii",
+                source="holdout_ssn",
+            )
+        )
     # Add benign counterparts.
     for i in range(n):
-        samples.append(PrivacyExampleV2(
-            text=_GSM8K_TEMPLATES[i % len(_GSM8K_TEMPLATES)].format(
-                a=i + 1, b=float(i + 2), c=i + 3
-            ),
-            label="benign",
-            source="holdout_benign",
-        ))
+        samples.append(
+            PrivacyExampleV2(
+                text=_GSM8K_TEMPLATES[i % len(_GSM8K_TEMPLATES)].format(
+                    a=i + 1, b=float(i + 2), c=i + 3
+                ),
+                label="benign",
+                source="holdout_benign",
+            )
+        )
     return samples
 
 
@@ -258,11 +267,13 @@ def _build_dataset2_mixed(n: int = 200) -> list[PrivacyExampleV2]:
         except (IndexError, TypeError):
             text = f"Problem {i}: {pii_val}"
         samples.append(PrivacyExampleV2(text=text, label="pii", source="mixed_gsm8k_pii"))
-        samples.append(PrivacyExampleV2(
-            text=f"Standard problem {i}: if x + {i+1} = {i*2+3}, solve for x.",
-            label="benign",
-            source="mixed_benign",
-        ))
+        samples.append(
+            PrivacyExampleV2(
+                text=f"Standard problem {i}: if x + {i + 1} = {i * 2 + 3}, solve for x.",
+                label="benign",
+                source="mixed_benign",
+            )
+        )
     return samples
 
 
@@ -283,6 +294,7 @@ def _build_dataset3_code(n: int = 200) -> list[PrivacyExampleV2]:
 # ---------------------------------------------------------------------------
 # Gate metric helpers
 # ---------------------------------------------------------------------------
+
 
 def _calibrate_threshold(
     model: PrivacyFilterKANv2,
@@ -341,6 +353,7 @@ def _confusion_at_threshold(
 # ---------------------------------------------------------------------------
 # Main experiment
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Exp 743: PrivacyFilterKANv2 training, evaluation, and gate check."""

@@ -44,7 +44,7 @@ _env_result = apply_env_autofix()
 from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 from scripts.experiment_template import ExperimentTemplate
@@ -249,13 +249,13 @@ def write_manifest_patch(path: Path) -> bool:
         "Validation\n"
         "----------\n\n"
         "After applying the patch, run:\n\n"
-        "  python3 -c \"\n"
+        '  python3 -c "\n'
         "  from scripts.research_conductor import _exp_id_is_excluded, _ensure_exclusion_manifest_loaded\n"
         "  _ensure_exclusion_manifest_loaded()\n"
         "  for eid in [786, 527, 627]:\n"
         "      is_ex, reason = _exp_id_is_excluded(eid)\n"
         "      print(f'Exp {eid}: excluded={is_ex}, reason={reason}')\n"
-        "  \"\n\n"
+        '  "\n\n'
         "All three must print excluded=True.  If any prints excluded=False, add the\n"
         "experiment ID to conductor_exclusion_manifest.json before proceeding.\n\n"
         "Priority: IMMEDIATE.  Without this patch, .65 slowest-5 is mathematically\n"
@@ -280,13 +280,9 @@ def update_milestone_prereqs(prereqs_path: Path) -> bool:
     if section_header in existing:
         return True  # Already written — idempotent.
 
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    open_retro_rows = "\n".join(
-        f"| {r} | open |" for r in OPEN_RETROS
-    )
-    closed_rows = "\n".join(
-        f"| {r} | CLOSED in .64 |" for r in RETROS_CONFIRMED_CLOSED
-    )
+    today = datetime.now(UTC).strftime("%Y-%m-%d")
+    open_retro_rows = "\n".join(f"| {r} | open |" for r in OPEN_RETROS)
+    closed_rows = "\n".join(f"| {r} | CLOSED in .64 |" for r in RETROS_CONFIRMED_CLOSED)
 
     section = f"""
 

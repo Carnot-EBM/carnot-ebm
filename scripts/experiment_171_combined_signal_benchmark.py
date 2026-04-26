@@ -118,14 +118,14 @@ from carnot.pipeline.factual_extractor import FactualExtractor
 # Experiment configuration
 # ---------------------------------------------------------------------------
 
-N_PER_DOMAIN = 50           # Questions per domain (half correct, half wrong)
-N_CORRECT_PER_DOMAIN = 25   # "Correct" (non-hallucinated) samples per domain
-N_WRONG_PER_DOMAIN = 25     # "Hallucinated" samples per domain
-VOCAB_SIZE = 1000           # Simulated vocabulary size for logit generation
-N_TOKENS = 20               # Number of tokens per simulated generation
-CORRECT_PEAK_LOGIT = 8.0    # Logit advantage for "correct" simulated outputs
-WRONG_NOISE_STD = 0.5       # Std of Gaussian noise for "wrong" simulated outputs
-BASE_SEED = 171             # RNG seed for reproducibility
+N_PER_DOMAIN = 50  # Questions per domain (half correct, half wrong)
+N_CORRECT_PER_DOMAIN = 25  # "Correct" (non-hallucinated) samples per domain
+N_WRONG_PER_DOMAIN = 25  # "Hallucinated" samples per domain
+VOCAB_SIZE = 1000  # Simulated vocabulary size for logit generation
+N_TOKENS = 20  # Number of tokens per simulated generation
+CORRECT_PEAK_LOGIT = 8.0  # Logit advantage for "correct" simulated outputs
+WRONG_NOISE_STD = 0.5  # Std of Gaussian noise for "wrong" simulated outputs
+BASE_SEED = 171  # RNG seed for reproducibility
 
 TARGET_MODELS = ["Qwen/Qwen3.5-0.8B", "google/gemma-4-E4B-it"]
 
@@ -178,18 +178,35 @@ def _generate_arithmetic_questions() -> list[Question]:
 
     # Correct arithmetic: small positive integers, verified sum.
     correct_pairs = [
-        (47, 28), (15, 37), (83, 14), (29, 56), (72, 18),
-        (61, 39), (44, 53), (90, 11), (35, 65), (48, 32),
-        (17, 63), (55, 45), (82, 19), (26, 74), (93, 7),
-        (38, 62), (71, 29), (14, 86), (50, 50), (67, 33),
-        (12, 88), (45, 55), (78, 22), (31, 69), (66, 34),
+        (47, 28),
+        (15, 37),
+        (83, 14),
+        (29, 56),
+        (72, 18),
+        (61, 39),
+        (44, 53),
+        (90, 11),
+        (35, 65),
+        (48, 32),
+        (17, 63),
+        (55, 45),
+        (82, 19),
+        (26, 74),
+        (93, 7),
+        (38, 62),
+        (71, 29),
+        (14, 86),
+        (50, 50),
+        (67, 33),
+        (12, 88),
+        (45, 55),
+        (78, 22),
+        (31, 69),
+        (66, 34),
     ]
     for i, (a, b) in enumerate(correct_pairs):
         correct_sum = a + b
-        text = (
-            f"To solve {a} + {b}: "
-            f"{a} + {b} = {correct_sum}. The answer is {correct_sum}."
-        )
+        text = f"To solve {a} + {b}: {a} + {b} = {correct_sum}. The answer is {correct_sum}."
         questions.append(
             Question(
                 domain="arithmetic",
@@ -201,18 +218,35 @@ def _generate_arithmetic_questions() -> list[Question]:
 
     # Incorrect arithmetic: off-by-one errors (common LLM error pattern).
     wrong_pairs = [
-        (53, 37), (22, 48), (77, 13), (64, 36), (41, 59),
-        (86, 14), (33, 67), (95, 5), (18, 82), (73, 27),
-        (40, 60), (57, 43), (24, 76), (89, 11), (16, 84),
-        (69, 31), (52, 48), (37, 63), (81, 19), (25, 75),
-        (44, 56), (68, 32), (79, 21), (36, 64), (91, 9),
+        (53, 37),
+        (22, 48),
+        (77, 13),
+        (64, 36),
+        (41, 59),
+        (86, 14),
+        (33, 67),
+        (95, 5),
+        (18, 82),
+        (73, 27),
+        (40, 60),
+        (57, 43),
+        (24, 76),
+        (89, 11),
+        (16, 84),
+        (69, 31),
+        (52, 48),
+        (37, 63),
+        (81, 19),
+        (25, 75),
+        (44, 56),
+        (68, 32),
+        (79, 21),
+        (36, 64),
+        (91, 9),
     ]
     for i, (a, b) in enumerate(wrong_pairs):
         wrong_sum = a + b + 1  # off-by-one error
-        text = (
-            f"To solve {a} + {b}: "
-            f"{a} + {b} = {wrong_sum}. The answer is {wrong_sum}."
-        )
+        text = f"To solve {a} + {b}: {a} + {b} = {wrong_sum}. The answer is {wrong_sum}."
         questions.append(
             Question(
                 domain="arithmetic",
@@ -250,56 +284,37 @@ def _generate_code_questions() -> list[Question]:
 
     # Correct functions: clean type annotations, no uninitialized vars.
     correct_funcs = [
-        ("add_ints",
-         "def add_ints(a: int, b: int) -> int:\n    return a + b"),
-        ("multiply",
-         "def multiply(x: float, y: float) -> float:\n    return x * y"),
-        ("greet",
-         "def greet(name: str) -> str:\n    return 'Hello, ' + name"),
-        ("is_even",
-         "def is_even(n: int) -> bool:\n    return n % 2 == 0"),
-        ("square",
-         "def square(x: int) -> int:\n    return x * x"),
-        ("abs_val",
-         "def abs_val(x: float) -> float:\n    return abs(x)"),
-        ("negate",
-         "def negate(x: int) -> int:\n    return -x"),
-        ("max_two",
-         "def max_two(a: int, b: int) -> int:\n    return a if a > b else b"),
-        ("clamp",
-         "def clamp(val: float, lo: float, hi: float) -> float:\n    return max(lo, min(hi, val))"),
-        ("count_chars",
-         "def count_chars(s: str, c: str) -> int:\n    return s.count(c)"),
-        ("repeat_str",
-         "def repeat_str(s: str, n: int) -> str:\n    return s * n"),
-        ("first_char",
-         "def first_char(s: str) -> str:\n    return s[0]"),
-        ("to_float",
-         "def to_float(x: int) -> float:\n    return float(x)"),
-        ("double",
-         "def double(n: int) -> int:\n    return n * 2"),
-        ("halve",
-         "def halve(x: float) -> float:\n    return x / 2.0"),
-        ("sign",
-         "def sign(x: int) -> int:\n    return 1 if x > 0 else -1"),
-        ("strlen",
-         "def strlen(s: str) -> int:\n    return len(s)"),
-        ("concat",
-         "def concat(a: str, b: str) -> str:\n    return a + b"),
-        ("subtract",
-         "def subtract(a: int, b: int) -> int:\n    return a - b"),
-        ("cube",
-         "def cube(x: int) -> int:\n    return x * x * x"),
-        ("safe_div",
-         "def safe_div(a: float, b: float) -> float:\n    return a / b if b != 0.0 else 0.0"),
-        ("to_upper",
-         "def to_upper(s: str) -> str:\n    return s.upper()"),
-        ("trim",
-         "def trim(s: str) -> str:\n    return s.strip()"),
-        ("last_char",
-         "def last_char(s: str) -> str:\n    return s[-1]"),
-        ("swap_sign",
-         "def swap_sign(x: int) -> int:\n    result: int = -x\n    return result"),
+        ("add_ints", "def add_ints(a: int, b: int) -> int:\n    return a + b"),
+        ("multiply", "def multiply(x: float, y: float) -> float:\n    return x * y"),
+        ("greet", "def greet(name: str) -> str:\n    return 'Hello, ' + name"),
+        ("is_even", "def is_even(n: int) -> bool:\n    return n % 2 == 0"),
+        ("square", "def square(x: int) -> int:\n    return x * x"),
+        ("abs_val", "def abs_val(x: float) -> float:\n    return abs(x)"),
+        ("negate", "def negate(x: int) -> int:\n    return -x"),
+        ("max_two", "def max_two(a: int, b: int) -> int:\n    return a if a > b else b"),
+        (
+            "clamp",
+            "def clamp(val: float, lo: float, hi: float) -> float:\n    return max(lo, min(hi, val))",
+        ),
+        ("count_chars", "def count_chars(s: str, c: str) -> int:\n    return s.count(c)"),
+        ("repeat_str", "def repeat_str(s: str, n: int) -> str:\n    return s * n"),
+        ("first_char", "def first_char(s: str) -> str:\n    return s[0]"),
+        ("to_float", "def to_float(x: int) -> float:\n    return float(x)"),
+        ("double", "def double(n: int) -> int:\n    return n * 2"),
+        ("halve", "def halve(x: float) -> float:\n    return x / 2.0"),
+        ("sign", "def sign(x: int) -> int:\n    return 1 if x > 0 else -1"),
+        ("strlen", "def strlen(s: str) -> int:\n    return len(s)"),
+        ("concat", "def concat(a: str, b: str) -> str:\n    return a + b"),
+        ("subtract", "def subtract(a: int, b: int) -> int:\n    return a - b"),
+        ("cube", "def cube(x: int) -> int:\n    return x * x * x"),
+        (
+            "safe_div",
+            "def safe_div(a: float, b: float) -> float:\n    return a / b if b != 0.0 else 0.0",
+        ),
+        ("to_upper", "def to_upper(s: str) -> str:\n    return s.upper()"),
+        ("trim", "def trim(s: str) -> str:\n    return s.strip()"),
+        ("last_char", "def last_char(s: str) -> str:\n    return s[-1]"),
+        ("swap_sign", "def swap_sign(x: int) -> int:\n    result: int = -x\n    return result"),
     ]
 
     for i, (fname, code_body) in enumerate(correct_funcs):
@@ -317,56 +332,91 @@ def _generate_code_questions() -> list[Question]:
     # The CodeExtractor's _extract_initialization catches this and returns a
     # constraint with satisfied=False, which we treat as a violation.
     wrong_funcs = [
-        ("buggy_add",
-         "def buggy_add(a: int, b: int) -> int:\n    return a + c"),          # c uninitialized
-        ("buggy_mul",
-         "def buggy_mul(x: float) -> float:\n    return x * factor"),         # factor uninitialized
-        ("buggy_greet",
-         "def buggy_greet(name: str) -> str:\n    return prefix + name"),      # prefix uninitialized
-        ("buggy_check",
-         "def buggy_check(n: int) -> bool:\n    return n > threshold"),        # threshold uninitialized
-        ("buggy_sq",
-         "def buggy_sq(x: int) -> int:\n    return x * scale"),                # scale uninitialized
-        ("buggy_abs",
-         "def buggy_abs(x: float) -> float:\n    return abs(x) + offset"),     # offset uninitialized
-        ("buggy_neg",
-         "def buggy_neg(x: int) -> int:\n    return -x + bias"),               # bias uninitialized
-        ("buggy_max",
-         "def buggy_max(a: int, b: int) -> int:\n    return a if a > limit else b"),  # limit uninitialized
-        ("buggy_clamp",
-         "def buggy_clamp(val: float) -> float:\n    return max(lo, val)"),    # lo uninitialized
-        ("buggy_count",
-         "def buggy_count(s: str) -> int:\n    return s.count(target)"),       # target uninitialized
-        ("buggy_repeat",
-         "def buggy_repeat(s: str) -> str:\n    return s * times"),            # times uninitialized
-        ("buggy_first",
-         "def buggy_first(s: str) -> str:\n    return s[idx]"),                # idx uninitialized
-        ("buggy_conv",
-         "def buggy_conv(x: int) -> float:\n    return float(x) + delta"),     # delta uninitialized
-        ("buggy_double",
-         "def buggy_double(n: int) -> int:\n    return n * multiplier"),       # multiplier uninitialized
-        ("buggy_halve",
-         "def buggy_halve(x: float) -> float:\n    return x / divisor"),       # divisor uninitialized
-        ("buggy_sign",
-         "def buggy_sign(x: int) -> int:\n    return direction if x > 0 else -1"),  # direction uninitialized
-        ("buggy_strlen",
-         "def buggy_strlen(s: str) -> int:\n    return len(s) - padding"),     # padding uninitialized
-        ("buggy_concat",
-         "def buggy_concat(a: str) -> str:\n    return a + suffix"),           # suffix uninitialized
-        ("buggy_sub",
-         "def buggy_sub(a: int, b: int) -> int:\n    return a - b - extra"),   # extra uninitialized
-        ("buggy_cube",
-         "def buggy_cube(x: int) -> int:\n    return x * x * coeff"),          # coeff uninitialized
-        ("buggy_div",
-         "def buggy_div(a: float) -> float:\n    return a / denominator"),     # denominator uninitialized
-        ("buggy_upper",
-         "def buggy_upper(s: str) -> str:\n    return s.upper() + trailer"),   # trailer uninitialized
-        ("buggy_trim",
-         "def buggy_trim(s: str) -> str:\n    return s.strip()[start:]"),      # start uninitialized
-        ("buggy_last",
-         "def buggy_last(s: str) -> str:\n    return s[end]"),                 # end uninitialized
-        ("buggy_swap",
-         "def buggy_swap(x: int) -> int:\n    return x + correction"),         # correction uninitialized
+        ("buggy_add", "def buggy_add(a: int, b: int) -> int:\n    return a + c"),  # c uninitialized
+        (
+            "buggy_mul",
+            "def buggy_mul(x: float) -> float:\n    return x * factor",
+        ),  # factor uninitialized
+        (
+            "buggy_greet",
+            "def buggy_greet(name: str) -> str:\n    return prefix + name",
+        ),  # prefix uninitialized
+        (
+            "buggy_check",
+            "def buggy_check(n: int) -> bool:\n    return n > threshold",
+        ),  # threshold uninitialized
+        ("buggy_sq", "def buggy_sq(x: int) -> int:\n    return x * scale"),  # scale uninitialized
+        (
+            "buggy_abs",
+            "def buggy_abs(x: float) -> float:\n    return abs(x) + offset",
+        ),  # offset uninitialized
+        ("buggy_neg", "def buggy_neg(x: int) -> int:\n    return -x + bias"),  # bias uninitialized
+        (
+            "buggy_max",
+            "def buggy_max(a: int, b: int) -> int:\n    return a if a > limit else b",
+        ),  # limit uninitialized
+        (
+            "buggy_clamp",
+            "def buggy_clamp(val: float) -> float:\n    return max(lo, val)",
+        ),  # lo uninitialized
+        (
+            "buggy_count",
+            "def buggy_count(s: str) -> int:\n    return s.count(target)",
+        ),  # target uninitialized
+        (
+            "buggy_repeat",
+            "def buggy_repeat(s: str) -> str:\n    return s * times",
+        ),  # times uninitialized
+        ("buggy_first", "def buggy_first(s: str) -> str:\n    return s[idx]"),  # idx uninitialized
+        (
+            "buggy_conv",
+            "def buggy_conv(x: int) -> float:\n    return float(x) + delta",
+        ),  # delta uninitialized
+        (
+            "buggy_double",
+            "def buggy_double(n: int) -> int:\n    return n * multiplier",
+        ),  # multiplier uninitialized
+        (
+            "buggy_halve",
+            "def buggy_halve(x: float) -> float:\n    return x / divisor",
+        ),  # divisor uninitialized
+        (
+            "buggy_sign",
+            "def buggy_sign(x: int) -> int:\n    return direction if x > 0 else -1",
+        ),  # direction uninitialized
+        (
+            "buggy_strlen",
+            "def buggy_strlen(s: str) -> int:\n    return len(s) - padding",
+        ),  # padding uninitialized
+        (
+            "buggy_concat",
+            "def buggy_concat(a: str) -> str:\n    return a + suffix",
+        ),  # suffix uninitialized
+        (
+            "buggy_sub",
+            "def buggy_sub(a: int, b: int) -> int:\n    return a - b - extra",
+        ),  # extra uninitialized
+        (
+            "buggy_cube",
+            "def buggy_cube(x: int) -> int:\n    return x * x * coeff",
+        ),  # coeff uninitialized
+        (
+            "buggy_div",
+            "def buggy_div(a: float) -> float:\n    return a / denominator",
+        ),  # denominator uninitialized
+        (
+            "buggy_upper",
+            "def buggy_upper(s: str) -> str:\n    return s.upper() + trailer",
+        ),  # trailer uninitialized
+        (
+            "buggy_trim",
+            "def buggy_trim(s: str) -> str:\n    return s.strip()[start:]",
+        ),  # start uninitialized
+        ("buggy_last", "def buggy_last(s: str) -> str:\n    return s[end]"),  # end uninitialized
+        (
+            "buggy_swap",
+            "def buggy_swap(x: int) -> int:\n    return x + correction",
+        ),  # correction uninitialized
     ]
 
     for i, (fname, code_body) in enumerate(wrong_funcs):
@@ -552,31 +602,31 @@ def _generate_factual_questions() -> list[Question]:
 
     # Hard factual questions: obscure or subtly wrong claims (incorrect label).
     hard_responses = [
-        "The capital of Australia is Sydney.",            # Wrong: Canberra
-        "The chemical symbol for iron is Ir.",            # Wrong: Fe
-        "The Battle of Hastings occurred in 1066 BC.",   # Wrong: AD 1066
-        "Marie Curie was born in Germany.",               # Wrong: Poland
-        "The Amazon River is located in Africa.",         # Wrong: South America
-        "The speed of light is 300 km/s.",                # Wrong: 300,000 km/s
-        "Humans have 48 chromosomes.",                    # Wrong: 46
-        "Shakespeare wrote Don Quixote.",                 # Wrong: Cervantes
-        "The Eiffel Tower is located in London.",         # Wrong: Paris
-        "Gold has atomic number 79.",                     # Actually correct — testing the model
-        "The human brain has 10 neurons.",                # Wrong: ~86 billion
-        "DNA was discovered in 2001.",                    # Wrong: 1953 by Watson & Crick
-        "The Sun is a planet.",                           # Wrong: star
+        "The capital of Australia is Sydney.",  # Wrong: Canberra
+        "The chemical symbol for iron is Ir.",  # Wrong: Fe
+        "The Battle of Hastings occurred in 1066 BC.",  # Wrong: AD 1066
+        "Marie Curie was born in Germany.",  # Wrong: Poland
+        "The Amazon River is located in Africa.",  # Wrong: South America
+        "The speed of light is 300 km/s.",  # Wrong: 300,000 km/s
+        "Humans have 48 chromosomes.",  # Wrong: 46
+        "Shakespeare wrote Don Quixote.",  # Wrong: Cervantes
+        "The Eiffel Tower is located in London.",  # Wrong: Paris
+        "Gold has atomic number 79.",  # Actually correct — testing the model
+        "The human brain has 10 neurons.",  # Wrong: ~86 billion
+        "DNA was discovered in 2001.",  # Wrong: 1953 by Watson & Crick
+        "The Sun is a planet.",  # Wrong: star
         "The Pythagorean theorem states a² + b² = c³.",  # Wrong exponent
-        "Water boils at 50 degrees Celsius at sea level.", # Wrong: 100°C
-        "Isaac Newton discovered penicillin.",            # Wrong: Fleming
-        "The chemical formula for table salt is NaCl2.", # Wrong: NaCl
-        "Tokyo is the capital of China.",                 # Wrong: Beijing
-        "The Pacific Ocean is the smallest ocean.",       # Wrong: largest
-        "World War II ended in 1944.",                    # Wrong: 1945
-        "Rome is the capital of Spain.",                  # Wrong: Madrid
-        "The Moon is larger than Earth.",                 # Wrong: smaller
-        "Albert Einstein invented the telephone.",        # Wrong: Bell
-        "Carbon dioxide has the formula CO3.",            # Wrong: CO2
-        "The Great Wall is located in Japan.",            # Wrong: China
+        "Water boils at 50 degrees Celsius at sea level.",  # Wrong: 100°C
+        "Isaac Newton discovered penicillin.",  # Wrong: Fleming
+        "The chemical formula for table salt is NaCl2.",  # Wrong: NaCl
+        "Tokyo is the capital of China.",  # Wrong: Beijing
+        "The Pacific Ocean is the smallest ocean.",  # Wrong: largest
+        "World War II ended in 1944.",  # Wrong: 1945
+        "Rome is the capital of Spain.",  # Wrong: Madrid
+        "The Moon is larger than Earth.",  # Wrong: smaller
+        "Albert Einstein invented the telephone.",  # Wrong: Bell
+        "Carbon dioxide has the formula CO3.",  # Wrong: CO2
+        "The Great Wall is located in Japan.",  # Wrong: China
     ]
 
     for i, text in enumerate(hard_responses):
@@ -660,10 +710,13 @@ def _make_logits(
         # Add large peak at token index 0 to simulate confident generation.
         logits = logits.at[:, 0].add(CORRECT_PEAK_LOGIT)
     else:
-        logits = jrandom.normal(
-            rng_key,
-            shape=(n_tokens, vocab_size),
-        ) * WRONG_NOISE_STD
+        logits = (
+            jrandom.normal(
+                rng_key,
+                shape=(n_tokens, vocab_size),
+            )
+            * WRONG_NOISE_STD
+        )
     return logits
 
 
@@ -692,10 +745,7 @@ def _has_ising_violation(results: list) -> bool:
     Returns:
         True if any result has metadata["satisfied"] == False.
     """
-    for r in results:
-        if r.metadata.get("satisfied") is False:
-            return True
-    return False
+    return any(r.metadata.get("satisfied") is False for r in results)
 
 
 def _has_logic_contradiction(results: list) -> bool:
@@ -723,14 +773,10 @@ def _has_logic_contradiction(results: list) -> bool:
         True if an implication-negation contradiction is detected.
     """
     implications = [
-        r.metadata.get("consequent", "")
-        for r in results
-        if r.constraint_type == "implication"
+        r.metadata.get("consequent", "") for r in results if r.constraint_type == "implication"
     ]
     negations = [
-        r.metadata.get("predicate", "")
-        for r in results
-        if r.constraint_type == "negation"
+        r.metadata.get("predicate", "") for r in results if r.constraint_type == "negation"
     ]
     for consequent in implications:
         for neg_pred in negations:
@@ -826,9 +872,7 @@ def classify_spilled(
         domain=q.domain if q.domain == "factual" else None,
         logits=logits,
     )
-    spilled_hit = any(
-        not r.metadata.get("satisfied", True) for r in spilled_results
-    )
+    spilled_hit = any(not r.metadata.get("satisfied", True) for r in spilled_results)
     return ising_hit or spilled_hit
 
 
@@ -859,9 +903,7 @@ def classify_lookahead(
         domain=q.domain if q.domain == "factual" else None,
         logits=logits,
     )
-    lookahead_hit = any(
-        not r.metadata.get("satisfied", True) for r in lookahead_results
-    )
+    lookahead_hit = any(not r.metadata.get("satisfied", True) for r in lookahead_results)
     return ising_hit or lookahead_hit
 
 
@@ -913,10 +955,7 @@ def classify_all_combined(
     # Add FactualExtractor for factual domain (KB-backed, may be empty in sandbox).
     if q.domain == "factual":
         factual_results = factual_ext.extract(q.text, domain="factual")
-        if any(
-            r.constraint_type == "factual_contradicted"
-            for r in factual_results
-        ):
+        if any(r.constraint_type == "factual_contradicted" for r in factual_results):
             return True
 
     return False
@@ -999,11 +1038,7 @@ def compute_metrics(
     accuracy = n_correct / n if n > 0 else 0.0
     precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
     recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-    f1 = (
-        2.0 * precision * recall / (precision + recall)
-        if (precision + recall) > 0
-        else 0.0
-    )
+    f1 = 2.0 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
     mean_latency = float(np.mean(latencies_ms)) if latencies_ms else 0.0
 
     return DomainMetrics(
@@ -1060,8 +1095,10 @@ def run_benchmark() -> dict[str, Any]:
 
     for d in domains:
         n_hall = sum(1 for q in q_by_domain[d] if q.is_hallucinated)
-        print(f"  {d}: {len(q_by_domain[d])} questions "
-              f"({n_hall} hallucinated, {len(q_by_domain[d]) - n_hall} correct)")
+        print(
+            f"  {d}: {len(q_by_domain[d])} questions "
+            f"({n_hall} hallucinated, {len(q_by_domain[d]) - n_hall} correct)"
+        )
 
     # ------------------------------------------------------------------ #
     # 2. Pre-compute simulated logits
@@ -1075,8 +1112,9 @@ def run_benchmark() -> dict[str, Any]:
             is_correct=not q.is_hallucinated,
             rng_key=q_key,
         )
-    print(f"  Logit shape per question: "
-          f"{list(logits_by_qid[0].shape)} (T={N_TOKENS}, V={VOCAB_SIZE})")
+    print(
+        f"  Logit shape per question: {list(logits_by_qid[0].shape)} (T={N_TOKENS}, V={VOCAB_SIZE})"
+    )
 
     # ------------------------------------------------------------------ #
     # 3. Instantiate extractors (shared across all questions in a config)
@@ -1099,15 +1137,11 @@ def run_benchmark() -> dict[str, Any]:
         },
         "config3_spilled_ising": {
             "description": "Spilled energy + Ising (Exp 157)",
-            "classifier": lambda q, lgt: classify_spilled(
-                q, lgt, spilled_ext
-            ),
+            "classifier": lambda q, lgt: classify_spilled(q, lgt, spilled_ext),
         },
         "config4_lookahead_ising": {
             "description": "Lookahead energy + Ising (Exp 169)",
-            "classifier": lambda q, lgt: classify_lookahead(
-                q, lgt, lookahead_ext
-            ),
+            "classifier": lambda q, lgt: classify_lookahead(q, lgt, lookahead_ext),
         },
         "config5_all_combined": {
             "description": "All combined: Ising + Spilled + Lookahead + Factual (Exps 157,158,169)",
@@ -1159,9 +1193,7 @@ def run_benchmark() -> dict[str, Any]:
             )
 
         # Overall accuracy across all domains.
-        total_correct = sum(
-            m.n_correct_classified for m in config_domain_metrics.values()
-        )
+        total_correct = sum(m.n_correct_classified for m in config_domain_metrics.values())
         overall_acc = total_correct / len(questions)
         print(f"  Overall accuracy: {overall_acc:.3f}")
 
@@ -1220,7 +1252,7 @@ def run_benchmark() -> dict[str, Any]:
     for d in domains:
         lat4 = all_config_results["config4_lookahead_ising"]["per_domain"][d]["latency_ms"]
         lat2 = all_config_results["config2_ising_only"]["per_domain"][d]["latency_ms"]
-        print(f"    {d}: {lat4:.3f}ms vs {lat2:.3f}ms (Δ={lat4-lat2:+.3f}ms)")
+        print(f"    {d}: {lat4:.3f}ms vs {lat2:.3f}ms (Δ={lat4 - lat2:+.3f}ms)")
 
     # ------------------------------------------------------------------ #
     # 7. Assemble final results dict
@@ -1281,9 +1313,11 @@ def main() -> None:
     print(f"Config 5 (all combined) overall accuracy: {c5_acc:.3f}")
     print(f"Delta (Config5 - Config2):                {delta:+.3f}")
 
-    date_str = __import__("subprocess").check_output(
-        ["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"], text=True
-    ).strip()
+    date_str = (
+        __import__("subprocess")
+        .check_output(["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"], text=True)
+        .strip()
+    )
     print(f"\nExperiment 171 completed at {date_str}")
 
 

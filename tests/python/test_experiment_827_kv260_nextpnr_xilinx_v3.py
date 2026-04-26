@@ -57,10 +57,14 @@ def test_gate_fails_when_verdict_wrong(tmp_path: Path) -> None:
     """
     artifact = tmp_path / "results" / "experiment_816_kv260_synthesis_v2.json"
     artifact.parent.mkdir(parents=True)
-    artifact.write_text(json.dumps({
-        "honest_verdict": "synthesis_errors_n32",
-        "lut_count_n32": 3952,
-    }))
+    artifact.write_text(
+        json.dumps(
+            {
+                "honest_verdict": "synthesis_errors_n32",
+                "lut_count_n32": 3952,
+            }
+        )
+    )
     # Temporarily redirect the constant to the temp path.
     with patch.object(exp827, "EXP816_ARTIFACT", "results/experiment_816_kv260_synthesis_v2.json"):
         ok, lut = exp827.validate_exp816_gate(tmp_path)
@@ -78,10 +82,14 @@ def test_gate_fails_when_lut_count_wrong(tmp_path: Path) -> None:
     """
     artifact = tmp_path / "results" / "experiment_816_kv260_synthesis_v2.json"
     artifact.parent.mkdir(parents=True)
-    artifact.write_text(json.dumps({
-        "honest_verdict": "synthesis_clean_n32",
-        "lut_count_n32": 1234,
-    }))
+    artifact.write_text(
+        json.dumps(
+            {
+                "honest_verdict": "synthesis_clean_n32",
+                "lut_count_n32": 1234,
+            }
+        )
+    )
     with patch.object(exp827, "EXP816_ARTIFACT", "results/experiment_816_kv260_synthesis_v2.json"):
         ok, lut = exp827.validate_exp816_gate(tmp_path)
     assert ok is False
@@ -95,10 +103,14 @@ def test_gate_passes_when_correct(tmp_path: Path) -> None:
     """
     artifact = tmp_path / "results" / "experiment_816_kv260_synthesis_v2.json"
     artifact.parent.mkdir(parents=True)
-    artifact.write_text(json.dumps({
-        "honest_verdict": "synthesis_clean_n32",
-        "lut_count_n32": 3952,
-    }))
+    artifact.write_text(
+        json.dumps(
+            {
+                "honest_verdict": "synthesis_clean_n32",
+                "lut_count_n32": 3952,
+            }
+        )
+    )
     with patch.object(exp827, "EXP816_ARTIFACT", "results/experiment_816_kv260_synthesis_v2.json"):
         ok, lut = exp827.validate_exp816_gate(tmp_path)
     assert ok is True
@@ -199,9 +211,7 @@ def test_valid_header_true_for_ice40_magic(tmp_path: Path) -> None:
             rtl_source.write_text("module ising_sampler_v3(); endmodule\n")
             work_dir = tmp_dir / "work"
             work_dir.mkdir()
-            generated, valid, size, log = exp827.run_ice40_bitstream(
-                tmp_dir, rtl_source, work_dir
-            )
+            generated, valid, size, log = exp827.run_ice40_bitstream(tmp_dir, rtl_source, work_dir)
 
     assert generated is True
     assert valid is True
@@ -241,9 +251,7 @@ def test_valid_header_false_for_wrong_magic(tmp_path: Path) -> None:
             rtl_source.write_text("module ising_sampler_v3(); endmodule\n")
             work_dir = tmp_dir / "work"
             work_dir.mkdir()
-            generated, valid, size, log = exp827.run_ice40_bitstream(
-                tmp_dir, rtl_source, work_dir
-            )
+            generated, valid, size, log = exp827.run_ice40_bitstream(tmp_dir, rtl_source, work_dir)
 
     assert generated is True
     assert valid is False
@@ -270,10 +278,14 @@ def test_bitstream_copied_to_hardware_kv260(tmp_path: Path) -> None:
 
     # Write a passing Exp 816 gate artifact.
     gate_art = results_dir / "experiment_816_kv260_synthesis_v2.json"
-    gate_art.write_text(json.dumps({
-        "honest_verdict": "synthesis_clean_n32",
-        "lut_count_n32": 3952,
-    }))
+    gate_art.write_text(
+        json.dumps(
+            {
+                "honest_verdict": "synthesis_clean_n32",
+                "lut_count_n32": 3952,
+            }
+        )
+    )
 
     # Write a minimal RTL source.
     rtl = hw_dir / "ising_sampler_v3.v"
@@ -358,10 +370,14 @@ def test_honest_verdict_bitstream_invalid_header(tmp_path: Path) -> None:
     hw_dir.mkdir(parents=True)
 
     gate_art = results_dir / "experiment_816_kv260_synthesis_v2.json"
-    gate_art.write_text(json.dumps({
-        "honest_verdict": "synthesis_clean_n32",
-        "lut_count_n32": 3952,
-    }))
+    gate_art.write_text(
+        json.dumps(
+            {
+                "honest_verdict": "synthesis_clean_n32",
+                "lut_count_n32": 3952,
+            }
+        )
+    )
     rtl = hw_dir / "ising_sampler_v3.v"
     rtl.write_text("module ising_sampler_v3(); endmodule\n")
 

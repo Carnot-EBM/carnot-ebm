@@ -44,15 +44,13 @@ from __future__ import annotations
 import math
 import random
 from dataclasses import dataclass
-from typing import Dict, List, Tuple
-
 
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
 
 
-def _extract_sentences(text: str) -> List[str]:
+def _extract_sentences(text: str) -> list[str]:
     """Split response text into declarative sentence fragments.
 
     **Why these split points:**
@@ -72,7 +70,7 @@ def _extract_sentences(text: str) -> List[str]:
     return [s.strip() for s in raw if len(s.strip()) > 1]
 
 
-def _tokenize(text: str) -> List[str]:
+def _tokenize(text: str) -> list[str]:
     """Split text into lowercase word tokens (letters and digits only).
 
     Args:
@@ -86,7 +84,7 @@ def _tokenize(text: str) -> List[str]:
     return re.findall(r"[a-z0-9]+", text.lower())
 
 
-def _build_vocab(sentences: List[str]) -> Dict[str, int]:
+def _build_vocab(sentences: list[str]) -> dict[str, int]:
     """Assign a unique integer index to each distinct token across all sentences.
 
     Args:
@@ -95,7 +93,7 @@ def _build_vocab(sentences: List[str]) -> Dict[str, int]:
     Returns:
         Dict mapping token -> integer index (0-based, insertion order).
     """
-    vocab: Dict[str, int] = {}
+    vocab: dict[str, int] = {}
     for s in sentences:
         for tok in _tokenize(s):
             if tok not in vocab:
@@ -103,7 +101,7 @@ def _build_vocab(sentences: List[str]) -> Dict[str, int]:
     return vocab
 
 
-def _tf_vector(sentence: str, vocab: Dict[str, int]) -> List[float]:
+def _tf_vector(sentence: str, vocab: dict[str, int]) -> list[float]:
     """Compute a raw term-frequency (TF) vector for one sentence.
 
     **Why TF (not TF-IDF) for intra-response sentence comparison:**
@@ -136,7 +134,7 @@ def _tf_vector(sentence: str, vocab: Dict[str, int]) -> List[float]:
     return vec
 
 
-def _random_project(vec: List[float], out_dim: int, seed: int = 42) -> List[float]:
+def _random_project(vec: list[float], out_dim: int, seed: int = 42) -> list[float]:
     """Project a high-dimensional sparse vector into `out_dim` dimensions via random projection.
 
     **Why random projection (Johnson-Lindenstrauss lemma):**
@@ -172,7 +170,7 @@ def _random_project(vec: List[float], out_dim: int, seed: int = 42) -> List[floa
     return projected
 
 
-def _l2_normalize(vec: List[float]) -> List[float]:
+def _l2_normalize(vec: list[float]) -> list[float]:
     """L2-normalize a vector to unit length.
 
     **Why L2 normalisation:**
@@ -194,7 +192,7 @@ def _l2_normalize(vec: List[float]) -> List[float]:
     return [x / norm for x in vec]
 
 
-def _embed_sentences(sentences: List[str], embedding_dim: int) -> List[List[float]]:
+def _embed_sentences(sentences: list[str], embedding_dim: int) -> list[list[float]]:
     """Embed each sentence as an L2-normalised random-projected TF-IDF vector.
 
     Steps:
@@ -222,7 +220,7 @@ def _embed_sentences(sentences: List[str], embedding_dim: int) -> List[List[floa
     return embeddings
 
 
-def _gaussian_kernel(ei: List[float], ej: List[float], sigma: float) -> float:
+def _gaussian_kernel(ei: list[float], ej: list[float], sigma: float) -> float:
     """Compute the Gaussian (RBF) kernel between two L2-normalised embeddings.
 
     k(e_i, e_j) = exp(-||e_i - e_j||^2 / sigma^2)
@@ -240,14 +238,14 @@ def _gaussian_kernel(ei: List[float], ej: List[float], sigma: float) -> float:
     Returns:
         Float in (0, 1].  1.0 when embeddings are identical.
     """
-    dot = sum(a * b for a, b in zip(ei, ej))
+    dot = sum(a * b for a, b in zip(ei, ej, strict=False))
     # Clamp to avoid floating-point values slightly outside [-1, 1]
     dot = max(-1.0, min(1.0, dot))
     sq_dist = 2.0 - 2.0 * dot
     return math.exp(-sq_dist / (sigma * sigma))
 
 
-def _row_entropy(kernel_row: List[float]) -> float:
+def _row_entropy(kernel_row: list[float]) -> float:
     """Compute Shannon entropy of a probability distribution derived from one kernel row.
 
     **Why row entropy:**
@@ -390,7 +388,7 @@ class SemanticEnergyProbe:
         embeddings = _embed_sentences(sentences, self.embedding_dim)
 
         # Compute n×n kernel matrix
-        kernel: List[List[float]] = [[0.0] * n for _ in range(n)]
+        kernel: list[list[float]] = [[0.0] * n for _ in range(n)]
         for i in range(n):
             for j in range(n):
                 if i == j:
@@ -401,16 +399,11 @@ class SemanticEnergyProbe:
         # Energy: mean of off-diagonal kernel values, negated
         # More coherent (higher k_ij) → more negative energy
         n_pairs = n * (n - 1)
-        total_k = sum(
-            kernel[i][j]
-            for i in range(n)
-            for j in range(n)
-            if i != j
-        )
+        total_k = sum(kernel[i][j] for i in range(n) for j in range(n) if i != j)
         energy = -(total_k / n_pairs) if n_pairs > 0 else 0.0
 
         # Cluster entropy: entropy of row-normalised kernel (off-diagonal rows)
-        entropies: List[float] = []
+        entropies: list[float] = []
         for i in range(n):
             row_off_diag = [kernel[i][j] for j in range(n) if j != i]
             row_sum = sum(row_off_diag)
@@ -432,7 +425,7 @@ class SemanticEnergyProbe:
             threshold=self.threshold,
         )
 
-    def evaluate_auc(self, texts: List[str], labels: List[int]) -> float:
+    def evaluate_auc(self, texts: list[str], labels: list[int]) -> float:
         """Compute AUROC of energy scores against binary hallucination labels.
 
         **How this is used:**
@@ -455,8 +448,8 @@ class SemanticEnergyProbe:
         if n_pos == 0 or n_neg == 0:
             return 0.5
 
-        scored: List[Tuple[float, int]] = [
-            (self.score(t).energy, lb) for t, lb in zip(texts, labels)
+        scored: list[tuple[float, int]] = [
+            (self.score(t).energy, lb) for t, lb in zip(texts, labels, strict=False)
         ]
         # Sort descending: high energy (closer to 0) → predicted hallucinated
         scored.sort(key=lambda x: x[0], reverse=True)

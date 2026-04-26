@@ -27,13 +27,7 @@ Spec: REQ-STORE-010 (add_constraint), REQ-STORE-011 (retrieve cosine),
 
 from __future__ import annotations
 
-from collections import Counter
-from typing import TYPE_CHECKING
-
 import numpy as np
-
-if TYPE_CHECKING:
-    from carnot.stores.memory_bank_compressor import MemoryBankCompressor
 
 
 class EmbeddingConstraintStore:
@@ -109,9 +103,7 @@ class EmbeddingConstraintStore:
     # Retrieval
     # ------------------------------------------------------------------
 
-    def retrieve(
-        self, query: np.ndarray, top_k: int = 5
-    ) -> list[tuple[float, bool]]:
+    def retrieve(self, query: np.ndarray, top_k: int = 5) -> list[tuple[float, bool]]:
         """Return the top-k most similar constraints by cosine similarity.
 
         **Note on the RETRO-CONSTRAINT-ZERO-DELTA bug:**

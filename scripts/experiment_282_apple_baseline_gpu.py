@@ -103,8 +103,12 @@ MODEL_SPECS: list[dict[str, Any]] = [
 # for the Apple 2410.05229 number_swap hypothesis (§4 predicts ≥ 15 pp drop).
 _APPLE_DROP_THRESHOLD_PP: float = 15.0
 
-_DATASET_PATH = Path(__file__).resolve().parents[1] / "data" / "research" / "gsm8k_adversarial_281.jsonl"
-_CHECKPOINT_BASE = Path(__file__).resolve().parents[1] / "results" / "checkpoints" / "experiment_282"
+_DATASET_PATH = (
+    Path(__file__).resolve().parents[1] / "data" / "research" / "gsm8k_adversarial_281.jsonl"
+)
+_CHECKPOINT_BASE = (
+    Path(__file__).resolve().parents[1] / "results" / "checkpoints" / "experiment_282"
+)
 _LOGIT_BASE = Path(__file__).resolve().parents[1] / "data" / "research"
 _OUTPUT_PATH = Path(__file__).resolve().parents[1] / "results" / "experiment_282_results.json"
 
@@ -132,7 +136,8 @@ def safe_slug(text: str) -> str:
 def utc_now() -> str:
     """Return the current UTC timestamp in ISO-8601 format (e.g. ``2026-04-14T05:00:00Z``)."""
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def get_repo_root() -> Path:
@@ -184,6 +189,7 @@ def _is_correct(response: str, expected_answer: int | float) -> bool:
 # Checkpoint helpers
 # ---------------------------------------------------------------------------
 
+
 def _ckpt_path(checkpoint_dir: Path, *, model_name: str, variant_type: str) -> Path:
     """Return the checkpoint file path for a given (model, variant_type) pair.
 
@@ -234,6 +240,7 @@ def _save_ckpt(path: Path, payload: dict[str, Any]) -> None:
 # ---------------------------------------------------------------------------
 # Logit saving helpers
 # ---------------------------------------------------------------------------
+
 
 def _logit_npy_path(logit_dir: Path, *, model_name: str, variant_type: str, pct: int) -> Path:
     """Return the .npy path for the logit tensor at a given prefix fraction.
@@ -292,6 +299,7 @@ def _save_logits(
 # ---------------------------------------------------------------------------
 # Artifact builder
 # ---------------------------------------------------------------------------
+
 
 def build_artifact(
     *,
@@ -477,6 +485,7 @@ class AppleBaselineRunner:
             def _mock(question: str, expected_answer: int, **kw: Any) -> tuple[str, np.ndarray]:
                 logits = np.zeros((1, 8, 100), dtype=np.float32)
                 return str(expected_answer), logits
+
             return _mock
 
         try:
@@ -485,7 +494,14 @@ class AppleBaselineRunner:
 
             _model_cache: dict[str, Any] = {}
 
-            def _live(question: str, expected_answer: int, *, model_name: str = "Qwen3.5-0.8B", variant_type: str = "standard", **kw: Any) -> tuple[str, np.ndarray]:
+            def _live(
+                question: str,
+                expected_answer: int,
+                *,
+                model_name: str = "Qwen3.5-0.8B",
+                variant_type: str = "standard",
+                **kw: Any,
+            ) -> tuple[str, np.ndarray]:
                 """Live GPU inference: greedy decode with logit capture."""
                 # Look up HF model id from MODEL_SPECS.
                 hf_id = next(
@@ -520,7 +536,7 @@ class AppleBaselineRunner:
                         return_dict_in_generate=True,
                     )
                 # Decode the response text.
-                generated_ids = output.sequences[0][inputs["input_ids"].shape[1]:]
+                generated_ids = output.sequences[0][inputs["input_ids"].shape[1] :]
                 response = tokenizer.decode(generated_ids, skip_special_tokens=True)
 
                 # Stack per-token score tensors: (generated_len, vocab_size) → (1, seq_len, vocab_size).
@@ -567,11 +583,13 @@ class AppleBaselineRunner:
                 qid = row["question_id"]
                 if qid not in seen:
                     seen.add(qid)
-                    out.append({
-                        "question_id": qid,
-                        "question": row["original_question"],
-                        "expected_answer": row["original_answer"],
-                    })
+                    out.append(
+                        {
+                            "question_id": qid,
+                            "question": row["original_question"],
+                            "expected_answer": row["original_answer"],
+                        }
+                    )
             return out
 
         return [
@@ -615,7 +633,9 @@ class AppleBaselineRunner:
         questions = self._build_variant_questions(variant_type)
         total = len(questions)
 
-        ckpt_path = _ckpt_path(self.checkpoint_dir, model_name=model_name, variant_type=variant_type)
+        ckpt_path = _ckpt_path(
+            self.checkpoint_dir, model_name=model_name, variant_type=variant_type
+        )
         ckpt = _load_ckpt(ckpt_path)
         completed: dict[str, Any] = dict(ckpt.get("completed", {}))
 
@@ -667,11 +687,14 @@ class AppleBaselineRunner:
             # Checkpoint every CHECKPOINT_INTERVAL questions.
             n_done = idx + 1
             if n_done % CHECKPOINT_INTERVAL == 0 or n_done == total:
-                _save_ckpt(ckpt_path, {
-                    "model_name": model_name,
-                    "variant_type": variant_type,
-                    "completed": completed,
-                })
+                _save_ckpt(
+                    ckpt_path,
+                    {
+                        "model_name": model_name,
+                        "variant_type": variant_type,
+                        "completed": completed,
+                    },
+                )
 
             # Save logits at prefix fractions (REQ-VERIFY-067).
             if total > 0:
@@ -857,9 +880,7 @@ class AppleBaselineRunner:
             model_name = spec["name"]
             variant_stats: dict[str, Any] = {}
             for vt in ("standard", "number_swap", "irrelevant_sentence"):
-                ckpt_path = _ckpt_path(
-                    self.checkpoint_dir, model_name=model_name, variant_type=vt
-                )
+                ckpt_path = _ckpt_path(self.checkpoint_dir, model_name=model_name, variant_type=vt)
                 ckpt = _load_ckpt(ckpt_path)
                 completed = ckpt.get("completed", {})
                 results = list(completed.values())
@@ -876,6 +897,7 @@ class AppleBaselineRunner:
 # ---------------------------------------------------------------------------
 # Reporting helpers
 # ---------------------------------------------------------------------------
+
 
 def _print_report(artifact: dict[str, Any]) -> None:
     """Print a human-readable accuracy report to stdout.
@@ -899,8 +921,8 @@ def _print_report(artifact: dict[str, Any]) -> None:
         ns_acc = variants.get("number_swap", {}).get("accuracy", float("nan"))
         ir_acc = variants.get("irrelevant_sentence", {}).get("accuracy", float("nan"))
         print(f"    standard            : {std_acc:.1%}")
-        print(f"    number_swap         : {ns_acc:.1%}  (drop: {(std_acc - ns_acc)*100:.1f} pp)")
-        print(f"    irrelevant_sentence : {ir_acc:.1%}  (drop: {(std_acc - ir_acc)*100:.1f} pp)")
+        print(f"    number_swap         : {ns_acc:.1%}  (drop: {(std_acc - ns_acc) * 100:.1f} pp)")
+        print(f"    irrelevant_sentence : {ir_acc:.1%}  (drop: {(std_acc - ir_acc) * 100:.1f} pp)")
 
         chk = apple_check.get(model_name, {})
         if chk:
@@ -913,6 +935,7 @@ def _print_report(artifact: dict[str, Any]) -> None:
 # ---------------------------------------------------------------------------
 # CLI entry point
 # ---------------------------------------------------------------------------
+
 
 def main(argv: list[str] | None = None) -> int:  # pragma: no cover
     """CLI entry point for Exp 282.
@@ -975,13 +998,13 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover
         logit_dir=args.logit_dir,
     )
 
-    print(f"[Exp {EXPERIMENT}] Starting baseline inference "
-          f"(CARNOT_FORCE_LIVE={os.environ.get('CARNOT_FORCE_LIVE', '0')})…")
+    print(
+        f"[Exp {EXPERIMENT}] Starting baseline inference "
+        f"(CARNOT_FORCE_LIVE={os.environ.get('CARNOT_FORCE_LIVE', '0')})…"
+    )
     artifact = runner.run_with_timeout_handling(
         output_path=args.output,
-        inference_mode=(
-            "live_gpu" if os.environ.get("CARNOT_FORCE_LIVE", "0") == "1" else "mock"
-        ),
+        inference_mode=("live_gpu" if os.environ.get("CARNOT_FORCE_LIVE", "0") == "1" else "mock"),
     )
 
     _print_report(artifact)
@@ -1016,6 +1039,7 @@ __all__ = [
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

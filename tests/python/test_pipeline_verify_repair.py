@@ -95,9 +95,7 @@ def add(a: int, b: int) -> int:
             domain="logic",
         )
         assert len(result.constraints) > 0
-        assert any(
-            c.constraint_type == "implication" for c in result.constraints
-        )
+        assert any(c.constraint_type == "implication" for c in result.constraints)
 
     def test_nl_factual_extraction(self) -> None:
         """REQ-VERIFY-001: NL extractor finds factual claims."""
@@ -107,9 +105,7 @@ def add(a: int, b: int) -> int:
             domain="nl",
         )
         assert len(result.constraints) > 0
-        assert any(
-            c.constraint_type == "factual_relation" for c in result.constraints
-        )
+        assert any(c.constraint_type == "factual_relation" for c in result.constraints)
 
     def test_auto_domain_detection(self) -> None:
         """REQ-VERIFY-001: Without domain hint, auto-detects constraints."""
@@ -118,9 +114,7 @@ def add(a: int, b: int) -> int:
             response="10 + 5 = 15.",
         )
         assert result.verified is True
-        assert any(
-            c.constraint_type == "arithmetic" for c in result.constraints
-        )
+        assert any(c.constraint_type == "arithmetic" for c in result.constraints)
 
     def test_empty_response(self) -> None:
         """REQ-VERIFY-003: Empty response yields no constraints, verified=True."""
@@ -284,9 +278,7 @@ class TestExtractConstraints:
     def test_arithmetic_extraction(self) -> None:
         """REQ-VERIFY-001: Extract arithmetic constraints."""
         pipeline = VerifyRepairPipeline()
-        constraints = pipeline.extract_constraints(
-            "47 + 28 = 75", domain="arithmetic"
-        )
+        constraints = pipeline.extract_constraints("47 + 28 = 75", domain="arithmetic")
         assert len(constraints) == 1
         assert constraints[0].constraint_type == "arithmetic"
 
@@ -313,9 +305,7 @@ class TestExtractConstraints:
             def supported_domains(self) -> list[str]:
                 return ["mock"]
 
-            def extract(
-                self, text: str, domain: str | None = None
-            ) -> list[ConstraintResult]:
+            def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
                 return [
                     ConstraintResult(
                         constraint_type="mock",
@@ -481,13 +471,16 @@ class TestLoadModel:
         mock_torch.float16 = "float16"
 
         with (
-            patch.dict("sys.modules", {
-                "torch": mock_torch,
-                "transformers": MagicMock(
-                    AutoModelForCausalLM=mock_model_cls,
-                    AutoTokenizer=mock_tokenizer_cls,
-                ),
-            }),
+            patch.dict(
+                "sys.modules",
+                {
+                    "torch": mock_torch,
+                    "transformers": MagicMock(
+                        AutoModelForCausalLM=mock_model_cls,
+                        AutoTokenizer=mock_tokenizer_cls,
+                    ),
+                },
+            ),
         ):
             pipeline = VerifyRepairPipeline()
             pipeline._load_model("test-model")
@@ -508,13 +501,16 @@ class TestLoadModel:
         mock_torch.float16 = "float16"
 
         with (
-            patch.dict("sys.modules", {
-                "torch": mock_torch,
-                "transformers": MagicMock(
-                    AutoModelForCausalLM=mock_model_cls,
-                    AutoTokenizer=mock_tokenizer_cls,
-                ),
-            }),
+            patch.dict(
+                "sys.modules",
+                {
+                    "torch": mock_torch,
+                    "transformers": MagicMock(
+                        AutoModelForCausalLM=mock_model_cls,
+                        AutoTokenizer=mock_tokenizer_cls,
+                    ),
+                },
+            ),
         ):
             pipeline = VerifyRepairPipeline()
             pipeline._load_model("test-model")
@@ -779,9 +775,11 @@ class TestRustBackendPaths:
         import importlib
         import carnot.pipeline.verify_repair as vr_mod
 
-        with patch.object(vr_mod, "RUST_AVAILABLE", True), \
-             patch.object(vr_mod, "RustVerifyPipeline", MagicMock()), \
-             patch.dict("os.environ", {"CARNOT_USE_RUST": "1"}):
+        with (
+            patch.object(vr_mod, "RUST_AVAILABLE", True),
+            patch.object(vr_mod, "RustVerifyPipeline", MagicMock()),
+            patch.dict("os.environ", {"CARNOT_USE_RUST": "1"}),
+        ):
             # Simulate module-level logic (lines 82, 96)
             _FORCE_RUST = "1"
             _USE_RUST = vr_mod.RUST_AVAILABLE  # True
@@ -791,8 +789,10 @@ class TestRustBackendPaths:
         """REQ-CORE-005: CARNOT_USE_RUST=1 without Rust logs warning."""
         import carnot.pipeline.verify_repair as vr_mod
 
-        with patch.object(vr_mod, "RUST_AVAILABLE", False), \
-             patch.object(vr_mod, "logger") as mock_logger:
+        with (
+            patch.object(vr_mod, "RUST_AVAILABLE", False),
+            patch.object(vr_mod, "logger") as mock_logger,
+        ):
             # Simulate lines 82-84: CARNOT_USE_RUST=1 but no Rust
             _FORCE_RUST = "1"
             _USE_RUST = vr_mod.RUST_AVAILABLE  # False
@@ -823,7 +823,7 @@ class TestRustBackendPaths:
         orig_use_rust = vr_mod._USE_RUST_PIPELINE
 
         # Patch the import to fail and reload the module
-        real_import = __builtins__.__import__ if hasattr(__builtins__, '__import__') else __import__
+        real_import = __builtins__.__import__ if hasattr(__builtins__, "__import__") else __import__
 
         def fake_import(name: str, *args: Any, **kwargs: Any) -> Any:
             if name == "carnot._rust_compat":
@@ -846,13 +846,18 @@ class TestRustBackendPaths:
 
         mock_pipeline_cls = MagicMock()
 
-        with patch.dict("os.environ", {"CARNOT_USE_RUST": "1"}), \
-             patch.dict("sys.modules", {
-                 "carnot._rust_compat": MagicMock(
-                     RUST_AVAILABLE=True,
-                     RustVerifyPipeline=mock_pipeline_cls,
-                 ),
-             }):
+        with (
+            patch.dict("os.environ", {"CARNOT_USE_RUST": "1"}),
+            patch.dict(
+                "sys.modules",
+                {
+                    "carnot._rust_compat": MagicMock(
+                        RUST_AVAILABLE=True,
+                        RustVerifyPipeline=mock_pipeline_cls,
+                    ),
+                },
+            ),
+        ):
             importlib.reload(vr_mod)
 
         assert vr_mod._USE_RUST_PIPELINE is True
@@ -873,8 +878,10 @@ class TestRustBackendPaths:
                 raise ImportError("fake: no Rust")
             return real_import(name, *args, **kwargs)
 
-        with patch.dict("os.environ", {"CARNOT_USE_RUST": "1"}), \
-             patch("builtins.__import__", side_effect=fake_import):
+        with (
+            patch.dict("os.environ", {"CARNOT_USE_RUST": "1"}),
+            patch("builtins.__import__", side_effect=fake_import),
+        ):
             importlib.reload(vr_mod)
 
         assert vr_mod._USE_RUST_PIPELINE is False
@@ -888,13 +895,18 @@ class TestRustBackendPaths:
         import importlib
         import carnot.pipeline.verify_repair as vr_mod
 
-        with patch.dict("os.environ", {"CARNOT_USE_RUST": "0"}), \
-             patch.dict("sys.modules", {
-                 "carnot._rust_compat": MagicMock(
-                     RUST_AVAILABLE=True,
-                     RustVerifyPipeline=MagicMock(),
-                 ),
-             }):
+        with (
+            patch.dict("os.environ", {"CARNOT_USE_RUST": "0"}),
+            patch.dict(
+                "sys.modules",
+                {
+                    "carnot._rust_compat": MagicMock(
+                        RUST_AVAILABLE=True,
+                        RustVerifyPipeline=MagicMock(),
+                    ),
+                },
+            ),
+        ):
             importlib.reload(vr_mod)
 
         assert vr_mod._USE_RUST_PIPELINE is False
@@ -925,8 +937,10 @@ class TestRustBackendPaths:
 
         pipeline = VerifyRepairPipeline(domains=["arithmetic"])
 
-        with patch.object(vr_mod, "_USE_RUST_PIPELINE", True), \
-             patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls):
+        with (
+            patch.object(vr_mod, "_USE_RUST_PIPELINE", True),
+            patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls),
+        ):
             result = pipeline.verify("What is 2+3?", "2 + 3 = 5")
 
         assert result.verified is True
@@ -947,8 +961,10 @@ class TestRustBackendPaths:
 
         pipeline = VerifyRepairPipeline()
 
-        with patch.object(vr_mod, "_USE_RUST_PIPELINE", True), \
-             patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls):
+        with (
+            patch.object(vr_mod, "_USE_RUST_PIPELINE", True),
+            patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls),
+        ):
             result = pipeline.verify("Q", "R", domain="logic")
 
         assert result.certificate["backend"] == "rust"
@@ -962,8 +978,10 @@ class TestRustBackendPaths:
 
         pipeline = VerifyRepairPipeline(domains=["arithmetic"])
 
-        with patch.object(vr_mod, "_USE_RUST_PIPELINE", True), \
-             patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls):
+        with (
+            patch.object(vr_mod, "_USE_RUST_PIPELINE", True),
+            patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls),
+        ):
             result = pipeline.verify("What is 2+3?", "2 + 3 = 5")
 
         # Should have fallen through to Python path
@@ -977,8 +995,10 @@ class TestRustBackendPaths:
 
         pipeline = VerifyRepairPipeline(domains=["code"])
 
-        with patch.object(vr_mod, "_USE_RUST_PIPELINE", True), \
-             patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls):
+        with (
+            patch.object(vr_mod, "_USE_RUST_PIPELINE", True),
+            patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls),
+        ):
             result = pipeline.verify("Q", "def foo(): pass")
 
         # Rust was not called since "code" is not a supported domain
@@ -1013,14 +1033,18 @@ class TestRustBackendPaths:
 
         pipeline = VerifyRepairPipeline(domains=["arithmetic"])
 
-        with patch.object(vr_mod, "_USE_RUST_PIPELINE", True), \
-             patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls):
+        with (
+            patch.object(vr_mod, "_USE_RUST_PIPELINE", True),
+            patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls),
+        ):
             result = pipeline.verify("What is 2+3?", "2 + 3 = 6")
 
         assert result.verified is False
         assert result.energy == 1.0
         assert len(result.violations) == 1
-        assert result.violations[0].metadata == {"satisfied": False}  # None -> {}, then verified sets satisfied
+        assert result.violations[0].metadata == {
+            "satisfied": False
+        }  # None -> {}, then verified sets satisfied
         assert result.certificate["backend"] == "rust"
 
     def test_verify_rust_method_none_verified(self) -> None:
@@ -1045,8 +1069,10 @@ class TestRustBackendPaths:
 
         pipeline = VerifyRepairPipeline(domains=["logic"])
 
-        with patch.object(vr_mod, "_USE_RUST_PIPELINE", True), \
-             patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls):
+        with (
+            patch.object(vr_mod, "_USE_RUST_PIPELINE", True),
+            patch.object(vr_mod, "RustVerifyPipeline", mock_rust_cls),
+        ):
             result = pipeline.verify("Explain", "If A then B")
 
         assert result.verified is True

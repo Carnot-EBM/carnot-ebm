@@ -129,7 +129,7 @@ def main() -> None:
         train_data = jnp.array(correct_samples[:N_TRAIN].reshape(-1, 1))
 
         # Held-out test set: last N_TEST correct + N_TEST violated
-        test_correct = correct_samples[N_TRAIN:N_TRAIN + N_TEST]
+        test_correct = correct_samples[N_TRAIN : N_TRAIN + N_TEST]
         test_violated = violated_samples[:N_TEST]
 
         # Near-boundary test: |x| < NEAR_BOUNDARY_THRESHOLD
@@ -142,11 +142,13 @@ def main() -> None:
 
         _log.info(
             "Near-boundary test set: %d correct, %d violated",
-            len(near_correct), len(near_violated),
+            len(near_correct),
+            len(near_violated),
         )
         _log.info(
             "Far-from-boundary test set: %d correct, %d violated",
-            len(far_correct), len(far_violated),
+            len(far_correct),
+            len(far_violated),
         )
 
         # -----------------------------------------------------------------
@@ -195,11 +197,13 @@ def main() -> None:
 
         _log.info(
             "Near-boundary AUROC — baseline=%.3f, cikan=%.3f",
-            baseline_auroc_near, cikan_auroc_near,
+            baseline_auroc_near,
+            cikan_auroc_near,
         )
         _log.info(
             "Far AUROC — baseline=%.3f, cikan=%.3f",
-            baseline_auroc_far, cikan_auroc_far,
+            baseline_auroc_far,
+            cikan_auroc_far,
         )
 
         cikan_advantage = bool(cikan_auroc_near > baseline_auroc_near)

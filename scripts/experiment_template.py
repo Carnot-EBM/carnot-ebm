@@ -222,12 +222,12 @@ _CHECKPOINT_FILENAME = "checkpoint.json"
 
 def _utc_now() -> str:
     """Return the current UTC timestamp in ISO-8601 format (e.g. ``2026-04-14T12:00:00Z``)."""
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _run_date() -> str:
     """Return today's date as an 8-digit string (e.g. ``'20260414'``)."""
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
+    return datetime.datetime.now(datetime.UTC).strftime("%Y%m%d")
 
 
 def _get_repo_root() -> Path:
@@ -421,9 +421,7 @@ class ExperimentTemplate:
         self.gpu_runner: Any | None = None
 
         # Set by setup()
-        self._ckpt_dir: Path = (
-            self._repo_root / "results" / "checkpoints" / f"experiment_{exp_id}"
-        )
+        self._ckpt_dir: Path = self._repo_root / "results" / "checkpoints" / f"experiment_{exp_id}"
         self._output_path: Path = self._repo_root / deliverable
 
         # REQ-INFRA-033: guard that raises FileNotFoundError if the deliverable
@@ -597,7 +595,10 @@ class ExperimentTemplate:
             # Take the minimum across all GPUs as a conservative idle signal.
             # If ANY GPU is busy, we avoid killing processes on that machine.
             util_lines = [l.strip() for l in util_result.stdout.strip().splitlines() if l.strip()]
-            gpu_util_pct = min((float(u) for u in util_lines if u.isdigit() or u.replace(".", "").isdigit()), default=0.0)
+            gpu_util_pct = min(
+                (float(u) for u in util_lines if u.isdigit() or u.replace(".", "").isdigit()),
+                default=0.0,
+            )
         except Exception:
             gpu_util_pct = 0.0  # assume idle if we cannot read utilization
 
@@ -630,7 +631,9 @@ class ExperimentTemplate:
                         gpu_util_pct,
                     )
                 except OSError as exc:
-                    _log.warning("kill_gpu_zombies (nvidia-smi): could not kill PID %d: %s", pid, exc)
+                    _log.warning(
+                        "kill_gpu_zombies (nvidia-smi): could not kill PID %d: %s", pid, exc
+                    )
 
         return {"killed_pids": killed_pids, "freed_mb": freed_mb, "method": "nvidia_smi_fallback"}
 
@@ -775,7 +778,10 @@ class ExperimentTemplate:
         """
         os.environ["CARNOT_FORCE_LIVE"] = "1"
         EnvPropagationGuard.write_session_env({"CARNOT_FORCE_LIVE": "1"})
-        _log.info("apply_env_autofix: CARNOT_FORCE_LIVE=1 set in process env and written to %s", EnvPropagationGuard._path)
+        _log.info(
+            "apply_env_autofix: CARNOT_FORCE_LIVE=1 set in process env and written to %s",
+            EnvPropagationGuard._path,
+        )
 
     # ------------------------------------------------------------------
     # assert_live_env_if_gpu() — REQ-INFRA-070
@@ -903,7 +909,9 @@ class ExperimentTemplate:
         except (json.JSONDecodeError, OSError) as exc:
             _log.warning(
                 "assert_deliverable_written: could not parse deliverable "
-                "%s for invariant check: %s", self._output_path, exc,
+                "%s for invariant check: %s",
+                self._output_path,
+                exc,
             )
             return
 
@@ -922,8 +930,7 @@ class ExperimentTemplate:
                 artifact["honest_verdict"] = substitute
             for v in violations:
                 sys.stderr.write(
-                    f"[INVARIANT VIOLATION] exp={self.exp_id} "
-                    f"{v.invariant_name}: {v.reason}\n"
+                    f"[INVARIANT VIOLATION] exp={self.exp_id} {v.invariant_name}: {v.reason}\n"
                 )
         # Re-write the artifact.  We keep the same indent=2 convention used by
         # build_result elsewhere to avoid noisy diffs.
@@ -1053,9 +1060,7 @@ class ExperimentTemplate:
             except GPUThermalThrottleError:
                 raise  # let the conductor see the honest deferral
             except Exception as _thermal_exc:
-                _log.warning(
-                    "GPUThermalGate raised %s — continuing (non-fatal)", _thermal_exc
-                )
+                _log.warning("GPUThermalGate raised %s — continuing (non-fatal)", _thermal_exc)
 
             try:
                 from carnot.pipeline.gpu_vram_gate_v2 import GPUVRAMGateV2  # noqa: PLC0415
@@ -1104,9 +1109,7 @@ class ExperimentTemplate:
                 self.model_server = ModelServer(hf_ids, batch_size=8)
                 self.model_server.start()
                 model_server_active = True
-                _log.info(
-                    "ModelServer started — warm cache + batching + TRT for %s", hf_ids
-                )
+                _log.info("ModelServer started — warm cache + batching + TRT for %s", hf_ids)
             except Exception as exc:
                 _log.warning(
                     "ModelServer failed to start (%s); falling back to cold-load inference",
@@ -1831,13 +1834,9 @@ class BatchedInferenceRunner:
 
     def _chunk(self, items: list[str]) -> list[list[str]]:
         """Split *items* into sublists of at most ``self.batch_size`` elements."""
-        return [
-            items[i : i + self.batch_size] for i in range(0, len(items), self.batch_size)
-        ]
+        return [items[i : i + self.batch_size] for i in range(0, len(items), self.batch_size)]
 
-    def _run_one_batch(
-        self, batch: list[str], batch_id: int
-    ) -> list[InferenceResult]:
+    def _run_one_batch(self, batch: list[str], batch_id: int) -> list[InferenceResult]:
         """Run one batch of questions, respecting ``self.batch_timeout_s``.
 
         Uses a ``ThreadPoolExecutor`` to enforce the timeout.  On timeout, every
@@ -1872,8 +1871,6 @@ class BatchedInferenceRunner:
                 ]
             except concurrent.futures.TimeoutError:
                 return [
-                    InferenceResult(
-                        prompt=prompt, response="", batch_id=batch_id, timed_out=True
-                    )
+                    InferenceResult(prompt=prompt, response="", batch_id=batch_id, timed_out=True)
                     for prompt in batch
                 ]

@@ -166,9 +166,7 @@ class TestRunExtractorDiagnostic:
 
     def test_always_flags_on_mixed(self) -> None:
         """SCENARIO-EXTRACT-056: AlwaysFlags → every correct response is FP, every incorrect is TP."""
-        result = run_extractor_diagnostic(
-            AlwaysFlagsExtractor(), "always", _MIXED_RESPONSES
-        )
+        result = run_extractor_diagnostic(AlwaysFlagsExtractor(), "always", _MIXED_RESPONSES)
         # 2 correct flagged → FP; 2 incorrect flagged → TP; no FN, no TN
         assert result.n_false_positive == 2
         assert result.n_true_positive == 2
@@ -181,9 +179,7 @@ class TestRunExtractorDiagnostic:
 
     def test_never_flags_on_mixed(self) -> None:
         """SCENARIO-EXTRACT-056: NeverFlags → every incorrect response is FN, every correct is TN."""
-        result = run_extractor_diagnostic(
-            NeverFlagsExtractor(), "never", _MIXED_RESPONSES
-        )
+        result = run_extractor_diagnostic(NeverFlagsExtractor(), "never", _MIXED_RESPONSES)
         assert result.n_false_positive == 0
         assert result.n_true_positive == 0
         assert result.n_true_negative == 2
@@ -194,9 +190,7 @@ class TestRunExtractorDiagnostic:
 
     def test_selective_flags_on_mixed(self) -> None:
         """SCENARIO-EXTRACT-056: SelectiveFlags → TP on WRONG responses, TN on correct."""
-        result = run_extractor_diagnostic(
-            SelectiveFlagsExtractor(), "selective", _MIXED_RESPONSES
-        )
+        result = run_extractor_diagnostic(SelectiveFlagsExtractor(), "selective", _MIXED_RESPONSES)
         # "Good answer" and "Another good answer" → no flag → TN
         # "WRONG answer one" and "WRONG answer two" → flagged → TP
         assert result.n_true_positive == 2
@@ -208,9 +202,7 @@ class TestRunExtractorDiagnostic:
 
     def test_per_question_flags_populated(self) -> None:
         """SCENARIO-EXTRACT-057: per_question_flags has one entry per response with cell label."""
-        result = run_extractor_diagnostic(
-            SelectiveFlagsExtractor(), "selective", _MIXED_RESPONSES
-        )
+        result = run_extractor_diagnostic(SelectiveFlagsExtractor(), "selective", _MIXED_RESPONSES)
         assert len(result.per_question_flags) == 4
         cells = [f["cell"] for f in result.per_question_flags]
         assert cells == ["TN", "TN", "TP", "TP"]
@@ -237,9 +229,7 @@ class TestRunExtractorDiagnostic:
 
     def test_empty_responses(self) -> None:
         """SCENARIO-EXTRACT-056: Empty response list returns zero counts and zero rates."""
-        result = run_extractor_diagnostic(
-            AlwaysFlagsExtractor(), "always", []
-        )
+        result = run_extractor_diagnostic(AlwaysFlagsExtractor(), "always", [])
         assert result.n_tested == 0
         assert result.n_violations_found == 0
         assert result.n_true_positive == 0
@@ -249,18 +239,14 @@ class TestRunExtractorDiagnostic:
 
     def test_all_correct_with_never_flags(self) -> None:
         """SCENARIO-EXTRACT-056: All correct + NeverFlags → fp_rate=0.0, tp_rate=0.0."""
-        result = run_extractor_diagnostic(
-            NeverFlagsExtractor(), "never", _ALL_CORRECT
-        )
+        result = run_extractor_diagnostic(NeverFlagsExtractor(), "never", _ALL_CORRECT)
         assert result.fp_rate == pytest.approx(0.0)
         assert result.tp_rate == pytest.approx(0.0)
         assert result.n_true_negative == 2
 
     def test_all_correct_with_always_flags(self) -> None:
         """SCENARIO-EXTRACT-056: All correct + AlwaysFlags → fp_rate=1.0, tp_rate=0.0 (no incorrect)."""
-        result = run_extractor_diagnostic(
-            AlwaysFlagsExtractor(), "always", _ALL_CORRECT
-        )
+        result = run_extractor_diagnostic(AlwaysFlagsExtractor(), "always", _ALL_CORRECT)
         assert result.fp_rate == pytest.approx(1.0)
         assert result.tp_rate == pytest.approx(0.0)
         assert result.n_false_positive == 2
@@ -268,18 +254,14 @@ class TestRunExtractorDiagnostic:
 
     def test_all_incorrect_with_never_flags(self) -> None:
         """SCENARIO-EXTRACT-056: All incorrect + NeverFlags → tp_rate=0.0, fp_rate=0.0 (no correct)."""
-        result = run_extractor_diagnostic(
-            NeverFlagsExtractor(), "never", _ALL_INCORRECT
-        )
+        result = run_extractor_diagnostic(NeverFlagsExtractor(), "never", _ALL_INCORRECT)
         assert result.tp_rate == pytest.approx(0.0)
         assert result.fp_rate == pytest.approx(0.0)
         assert result.n_false_negative == 2
 
     def test_all_incorrect_with_always_flags(self) -> None:
         """SCENARIO-EXTRACT-056: All incorrect + AlwaysFlags → tp_rate=1.0, fp_rate=0.0 (no correct)."""
-        result = run_extractor_diagnostic(
-            AlwaysFlagsExtractor(), "always", _ALL_INCORRECT
-        )
+        result = run_extractor_diagnostic(AlwaysFlagsExtractor(), "always", _ALL_INCORRECT)
         assert result.tp_rate == pytest.approx(1.0)
         # fp_rate should be 0.0 because there are no correct responses
         assert result.fp_rate == pytest.approx(0.0)
@@ -289,7 +271,5 @@ class TestRunExtractorDiagnostic:
     def test_fn_cell_label(self) -> None:
         """SCENARIO-EXTRACT-057: FN cell label produced when incorrect response not flagged."""
         incorrect_response = [_make_response("missed violation", False)]
-        result = run_extractor_diagnostic(
-            NeverFlagsExtractor(), "never", incorrect_response
-        )
+        result = run_extractor_diagnostic(NeverFlagsExtractor(), "never", incorrect_response)
         assert result.per_question_flags[0]["cell"] == "FN"

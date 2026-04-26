@@ -149,7 +149,9 @@ def test_build_contrastive_pairs_intruder_is_foreign():
     # Each inconsistent set must differ from the corresponding consistent set
     for c_set, i_set in zip(con, inc):
         # They should differ somewhere (intruder was injected)
-        assert c_set != i_set or len(c_set) == 1  # single-step chains may keep same if swap identical
+        assert (
+            c_set != i_set or len(c_set) == 1
+        )  # single-step chains may keep same if swap identical
 
 
 def test_build_contrastive_pairs_single_question():
@@ -237,9 +239,19 @@ def test_deliverable_exists_and_schema():
     assert deliverable.exists(), f"Deliverable not found: {deliverable}"
     art = json.loads(deliverable.read_text())
     required = [
-        "experiment", "title", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "ood_auc", "v1_baseline_auc", "auc_delta",
-        "training_pairs", "honest_verdict", "schema",
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "ood_auc",
+        "v1_baseline_auc",
+        "auc_delta",
+        "training_pairs",
+        "honest_verdict",
+        "schema",
     ]
     for field in required:
         assert field in art, f"Missing required field: {field}"

@@ -302,15 +302,29 @@ class TestMainSuccess:
         """All REQUIRED_RESULT_FIELDS and exp370-specific fields are present."""
         art = self._run_success(tmp_path)
         for field in [
-            "experiment", "schema", "run_date", "started_at", "finished_at",
-            "duration_s", "status", "title",
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
         ]:
             assert field in art, f"Missing required field: {field}"
         for field in [
-            "inference_mode", "honest_verdict", "per_model_results",
-            "headline_result", "standard_accuracy", "adversarial_accuracy",
-            "accuracy_drop", "repaired_adversarial_accuracy", "repair_improvement",
-            "robustness_invariant_holds", "n_questions", "n_models",
+            "inference_mode",
+            "honest_verdict",
+            "per_model_results",
+            "headline_result",
+            "standard_accuracy",
+            "adversarial_accuracy",
+            "accuracy_drop",
+            "repaired_adversarial_accuracy",
+            "repair_improvement",
+            "robustness_invariant_holds",
+            "n_questions",
+            "n_models",
         ]:
             assert field in art, f"Missing exp370 field: {field}"
 
@@ -319,9 +333,14 @@ class TestMainSuccess:
         art = self._run_success(tmp_path)
         for entry in art["per_model_results"]:
             for key in [
-                "model_id", "n_questions", "standard_accuracy",
-                "adversarial_accuracy", "accuracy_drop",
-                "repaired_adversarial_accuracy", "repair_improvement", "inference_mode",
+                "model_id",
+                "n_questions",
+                "standard_accuracy",
+                "adversarial_accuracy",
+                "accuracy_drop",
+                "repaired_adversarial_accuracy",
+                "repair_improvement",
+                "inference_mode",
             ]:
                 assert key in entry, f"per_model_results entry missing: {key}"
 
@@ -330,9 +349,14 @@ class TestMainSuccess:
         art = self._run_success(tmp_path)
         hl = art["headline_result"]
         for key in [
-            "honest_verdict", "inference_mode", "n_models", "n_questions_per_model",
-            "avg_accuracy_drop", "avg_repair_improvement",
-            "robustness_invariant_holds", "improvement_positive",
+            "honest_verdict",
+            "inference_mode",
+            "n_models",
+            "n_questions_per_model",
+            "avg_accuracy_drop",
+            "avg_repair_improvement",
+            "robustness_invariant_holds",
+            "improvement_positive",
         ]:
             assert key in hl, f"headline_result missing: {key}"
 

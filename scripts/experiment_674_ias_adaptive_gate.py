@@ -112,9 +112,7 @@ def main() -> None:
         # Step 3: Recompute v3 gate (fixed threshold=0.30, ensemble average).
         # v3 averages all four components including HermesV2.
         # ------------------------------------------------------------------
-        v3_ensemble = (
-            RECALL_SYMCODE + RECALL_HERMES_V2 + RECALL_STRUCTURED + RECALL_CAUSAL
-        ) / 4.0
+        v3_ensemble = (RECALL_SYMCODE + RECALL_HERMES_V2 + RECALL_STRUCTURED + RECALL_CAUSAL) / 4.0
         v3_gate_open: bool = v3_ensemble >= 0.30
 
         # ------------------------------------------------------------------
@@ -170,8 +168,12 @@ def main() -> None:
                 "honest_verdict": honest_verdict,
                 "fover_pairs_path": FOVER_PAIRS_PATH,
                 "quantile_used": 0.10,
-                "spec_refs": ["REQ-VERIFY-151", "REQ-VERIFY-152",
-                              "SCENARIO-VERIFY-200", "SCENARIO-VERIFY-201"],
+                "spec_refs": [
+                    "REQ-VERIFY-151",
+                    "REQ-VERIFY-152",
+                    "SCENARIO-VERIFY-200",
+                    "SCENARIO-VERIFY-201",
+                ],
             },
             status="success",
             decision_class="verify",

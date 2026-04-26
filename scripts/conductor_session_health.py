@@ -39,8 +39,10 @@ def main() -> None:
     print(f"  zombies_killed:  {result.zombies_killed}")
     print(f"  thermal_ok:      {result.thermal_ok}")
     print(f"  honest_verdict:  {result.honest_verdict}")
-    print(f"  env_autofix:     gpu_detected={env_result.gpu_detected} "
-          f"auto_fix_applied={env_result.auto_fix_applied}")
+    print(
+        f"  env_autofix:     gpu_detected={env_result.gpu_detected} "
+        f"auto_fix_applied={env_result.auto_fix_applied}"
+    )
 
     # Step 4: thermal gate (REQ-INFRA-038)
     if not result.thermal_ok:

@@ -241,9 +241,9 @@ def _run_cascade_condition(
         hidden_state_fn=hidden_state_fn if use_tier21 else None,
     )
 
-    fn_count = 0        # predicted correct, actually violated
-    tp_count = 0        # predicted violation, actually violated
-    skip_count = 0      # queries where Tier 2.5+ was skipped
+    fn_count = 0  # predicted correct, actually violated
+    tp_count = 0  # predicted violation, actually violated
+    skip_count = 0  # queries where Tier 2.5+ was skipped
 
     for i in range(N_QUESTIONS):
         q = f"{i}:synthetic"
@@ -361,7 +361,11 @@ def _run_experiment(tmpl: ExperimentTemplate, gate: dict) -> None:
     )
 
     # --- Honest verdict (REQ-VER-036) ---
-    if skip_rate_symcode >= SKIP_RATE_THRESHOLD and fn_delta < FN_DELTA_THRESHOLD and probe_latency_p99_ms < LATENCY_P99_MS_THRESHOLD:
+    if (
+        skip_rate_symcode >= SKIP_RATE_THRESHOLD
+        and fn_delta < FN_DELTA_THRESHOLD
+        and probe_latency_p99_ms < LATENCY_P99_MS_THRESHOLD
+    ):
         honest_verdict = "tier21_cascade_success"
     elif fn_delta >= FN_DELTA_THRESHOLD:
         honest_verdict = "tier21_cascade_fn_too_high"

@@ -35,10 +35,10 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OSS_CAD_BIN = Path(os.path.expanduser("~/tools/oss-cad-suite/bin"))
 VERILOG_SRC = REPO_ROOT / "hardware" / "kv260" / "ising_sampler_n16.v"
-OUTPUT_DIR  = REPO_ROOT / "output"
-SYNTH_JSON  = OUTPUT_DIR / "ising_n16_synth.json"
-PNR_ASC     = OUTPUT_DIR / "ising_n16.asc"
-BITSTREAM   = OUTPUT_DIR / "carnot_ising_n16.bin"
+OUTPUT_DIR = REPO_ROOT / "output"
+SYNTH_JSON = OUTPUT_DIR / "ising_n16_synth.json"
+PNR_ASC = OUTPUT_DIR / "ising_n16.asc"
+BITSTREAM = OUTPUT_DIR / "carnot_ising_n16.bin"
 DELIVERABLE = REPO_ROOT / "results" / "experiment_851_ice40_n16_bitstream.json"
 
 
@@ -127,10 +127,7 @@ def synthesise_n16() -> dict:
 
     # Build the synthesis script inline.  The synth_ice40 pass runs the full
     # iCE40 synthesis flow: flatten → techmap → abc → map to SB_LUT4/SB_DFF.
-    synth_script = (
-        f"read_verilog {VERILOG_SRC}; "
-        f"synth_ice40 -top ising_sampler -json {SYNTH_JSON}"
-    )
+    synth_script = f"read_verilog {VERILOG_SRC}; synth_ice40 -top ising_sampler -json {SYNTH_JSON}"
     cmd = [yosys_bin, "-p", synth_script]
     rc, stdout, stderr = run_tool(cmd, "yosys", timeout=180)
 
@@ -155,9 +152,13 @@ def place_and_route() -> dict:
     pnr_bin = str(OSS_CAD_BIN / "nextpnr-ice40")
     cmd = [
         pnr_bin,
-        "--hx8k", "--package", "ct256",
-        "--json",  str(SYNTH_JSON),
-        "--asc",   str(PNR_ASC),
+        "--hx8k",
+        "--package",
+        "ct256",
+        "--json",
+        str(SYNTH_JSON),
+        "--asc",
+        str(PNR_ASC),
     ]
     rc, stdout, stderr = run_tool(cmd, "nextpnr-ice40", timeout=300)
     combined_log = stdout + stderr
@@ -375,14 +376,31 @@ def build_artifact(
         "synth_log": synth_log,
         "pnr_log": pnr_log,
         "pack_log": pack_log,
-        "schema": sorted([
-            "experiment", "title", "run_date", "started_at", "finished_at",
-            "duration_s", "status", "honest_verdict",
-            "gate_exp839_lut_count_n32", "lut_count_n16", "lut_reduction_factor",
-            "fmax_mhz", "bitstream_generated", "bitstream_size_bytes",
-            "bitstream_valid_header", "output_path", "oss_cad_bin",
-            "verilog_src", "synth_log", "pnr_log", "pack_log",
-        ]),
+        "schema": sorted(
+            [
+                "experiment",
+                "title",
+                "run_date",
+                "started_at",
+                "finished_at",
+                "duration_s",
+                "status",
+                "honest_verdict",
+                "gate_exp839_lut_count_n32",
+                "lut_count_n16",
+                "lut_reduction_factor",
+                "fmax_mhz",
+                "bitstream_generated",
+                "bitstream_size_bytes",
+                "bitstream_valid_header",
+                "output_path",
+                "oss_cad_bin",
+                "verilog_src",
+                "synth_log",
+                "pnr_log",
+                "pack_log",
+            ]
+        ),
         "invariant_violations": [],
     }
 

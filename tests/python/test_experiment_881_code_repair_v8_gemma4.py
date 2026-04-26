@@ -171,10 +171,7 @@ def test_verdict_mapping(
     expected_si: float,
 ) -> None:
     """Parametric test covering all four honest_verdict branches."""
-    results = [
-        {"passed_baseline": b, "passed_repaired": r}
-        for b, r in zip(pass_base, pass_rep)
-    ]
+    results = [{"passed_baseline": b, "passed_repaired": r} for b, r in zip(pass_base, pass_rep)]
     si, verdict = _signed_improvement_and_verdict(results, n_constraints, inference_mode)
     assert verdict == expected_verdict
     assert abs(si - expected_si) < 1e-6
@@ -210,7 +207,9 @@ def test_main_gate_blocked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> N
         "title": "t",
         "honest_verdict": "blocked",
     }
-    with patch("scripts.experiment_881_code_repair_v8_gemma4.ExperimentTemplate", return_value=mock_tmpl):
+    with patch(
+        "scripts.experiment_881_code_repair_v8_gemma4.ExperimentTemplate", return_value=mock_tmpl
+    ):
         exp881.main()
 
     assert deliverable.exists()
@@ -257,7 +256,10 @@ def test_main_model_load_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     mock_auto_tokenizer.from_pretrained.return_value = MagicMock()
 
     with (
-        patch("scripts.experiment_881_code_repair_v8_gemma4.ExperimentTemplate", return_value=mock_tmpl),
+        patch(
+            "scripts.experiment_881_code_repair_v8_gemma4.ExperimentTemplate",
+            return_value=mock_tmpl,
+        ),
         patch.dict(
             "sys.modules",
             {

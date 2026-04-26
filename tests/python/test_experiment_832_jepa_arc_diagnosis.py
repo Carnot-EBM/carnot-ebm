@@ -415,9 +415,7 @@ class TestDeliverableArtifact:
     Traces to: REQ-LEARN-832-001, SCENARIO-LEARN-832-001
     """
 
-    _artifact_path = Path(
-        "results/experiment_832_jepa_arc_collapse_diagnosis.json"
-    )
+    _artifact_path = Path("results/experiment_832_jepa_arc_collapse_diagnosis.json")
 
     def test_deliverable_exists(self) -> None:
         """The deliverable JSON must exist on disk after the experiment runs."""

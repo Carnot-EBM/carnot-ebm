@@ -183,14 +183,19 @@ class TestSuccessfulCredentialPath304:
         from scripts.experiment_304_hf_publish import run_experiment_304
 
         mock_api = MagicMock()
-        mock_api.whoami.return_value = {"name": "ianblenke", "type": "user",
-                                        "orgs": [{"name": "Carnot-EBM"}]}
+        mock_api.whoami.return_value = {
+            "name": "ianblenke",
+            "type": "user",
+            "orgs": [{"name": "Carnot-EBM"}],
+        }
         results_file = tmp_path / "experiment_304_hf_results.json"
         with (
             patch("subprocess.run", side_effect=FileNotFoundError("not found")),
             patch("scripts.experiment_304_hf_publish._make_hf_api", return_value=mock_api),
-            patch("scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
-                  tmp_path / "nonexistent.safetensors"),
+            patch(
+                "scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
+                tmp_path / "nonexistent.safetensors",
+            ),
         ):
             return run_experiment_304(
                 out_dir=tmp_path / "staging",
@@ -244,14 +249,19 @@ class TestSuccessfulCredentialPath304:
         from scripts.experiment_304_hf_publish import run_experiment_304
 
         mock_api = MagicMock()
-        mock_api.whoami.return_value = {"name": "ianblenke", "type": "user",
-                                        "orgs": [{"name": "Carnot-EBM"}]}
+        mock_api.whoami.return_value = {
+            "name": "ianblenke",
+            "type": "user",
+            "orgs": [{"name": "Carnot-EBM"}],
+        }
         results_file = tmp_path / "experiment_304_hf_results.json"
         with (
             patch("subprocess.run", side_effect=FileNotFoundError("not found")),
             patch("scripts.experiment_304_hf_publish._make_hf_api", return_value=mock_api),
-            patch("scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
-                  tmp_path / "nonexistent.safetensors"),
+            patch(
+                "scripts.experiment_293_huggingface_publish._EXP66_SAFETENSORS_PATH",
+                tmp_path / "nonexistent.safetensors",
+            ),
         ):
             run_experiment_304(
                 out_dir=tmp_path / "staging",

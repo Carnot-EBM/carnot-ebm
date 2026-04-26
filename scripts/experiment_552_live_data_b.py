@@ -105,7 +105,9 @@ if _sota_specs is not None:
     GEMMA4_MODEL_PATH = _sota_specs[1]["model_path"]
     _MODELS_USED_REAL_SOTA = True
 else:
-    print("WARNING: cached SOTA GGUFs unavailable, falling back to tiny models — output quality will be poor")
+    print(
+        "WARNING: cached SOTA GGUFs unavailable, falling back to tiny models — output quality will be poor"
+    )
     QWEN_MODEL_ID = "Qwen/Qwen3.5-0.8B"
     GEMMA4_MODEL_ID = "google/gemma-4-E4B-it"
     QWEN_MODEL_PATH = None
@@ -184,7 +186,7 @@ def _qwen_generate(pipeline: Any, prompt: str) -> str:
         return f"[qwen_error: {exc}]"
 
 
-def _load_qwen_pipeline(device: str) -> Optional[Any]:
+def _load_qwen_pipeline(device: str) -> Any | None:
     """Load Qwen3.5-0.8B as a HuggingFace text-generation pipeline on the given device.
 
     Returns None if transformers is not available or the model fails to load.
@@ -246,7 +248,7 @@ def _build_live_data_artifact(
     inference_mode: str,
     n_questions: int,
     n_pairs_collected: int,
-    live_pairs_file: Optional[str],
+    live_pairs_file: str | None,
     per_question_latencies: list[float],
     n_pairs_from_exp551: int = 0,
 ) -> dict:
@@ -269,9 +271,7 @@ def _build_live_data_artifact(
         honest_verdict = "partial_collection"
 
     mean_latency = (
-        sum(per_question_latencies) / len(per_question_latencies)
-        if per_question_latencies
-        else 0.0
+        sum(per_question_latencies) / len(per_question_latencies) if per_question_latencies else 0.0
     )
 
     return {
@@ -295,7 +295,7 @@ def _build_live_data_artifact(
 # ---------------------------------------------------------------------------
 
 
-def run_experiment(repo_root: Optional[Path] = None) -> dict:
+def run_experiment(repo_root: Path | None = None) -> dict:
     """Run Exp 552: collect 50 live CoT pairs (indices 50-99) with FOVER annotation.
 
     All exit paths (deferred, live, error) write the deliverable JSON.
@@ -357,8 +357,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     gate0 = vram0.gate_model_load(GEMMA4_MODEL_ID, required_gb=GEMMA4_REQUIRED_GB)
     if not gate0.is_cleared:
         blocked = tmpl.build_result(
-            _build_live_data_artifact("gpu_required", 0, 0, None, [],
-                                      n_pairs_from_exp551=n_pairs_from_exp551),
+            _build_live_data_artifact(
+                "gpu_required", 0, 0, None, [], n_pairs_from_exp551=n_pairs_from_exp551
+            ),
             status="blocked",
             blocked_reason=f"cuda:0 VRAM insufficient: {gate0.available_gb:.1f} GB < {GEMMA4_REQUIRED_GB} GB",
         )
@@ -371,8 +372,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     gate1 = vram1.gate_model_load(QWEN_MODEL_ID, required_gb=QWEN_REQUIRED_GB)
     if not gate1.is_cleared:
         blocked = tmpl.build_result(
-            _build_live_data_artifact("gpu_required", 0, 0, None, [],
-                                      n_pairs_from_exp551=n_pairs_from_exp551),
+            _build_live_data_artifact(
+                "gpu_required", 0, 0, None, [], n_pairs_from_exp551=n_pairs_from_exp551
+            ),
             status="blocked",
             blocked_reason=f"cuda:1 VRAM insufficient: {gate1.available_gb:.1f} GB < {QWEN_REQUIRED_GB} GB",
         )
@@ -403,9 +405,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     checkpoint = tmpl.checkpoint_resume()
     pairs: list[dict] = checkpoint.get("pairs", []) if checkpoint else []
     done_indices: set[int] = {p["question_index"] for p in pairs} if pairs else set()
-    per_question_latencies: list[float] = (
-        checkpoint.get("latencies", []) if checkpoint else []
-    )
+    per_question_latencies: list[float] = checkpoint.get("latencies", []) if checkpoint else []
 
     # Step 9: Per-question, per-model inference + FOVER annotation (NO repair)
     for q_dict in questions:
@@ -419,7 +419,12 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
 
         for model_id, generate_fn in [
             (GEMMA4_MODEL_ID, lambda p: gemma4.generate(p)),
-            (QWEN_MODEL_ID, lambda p: _qwen_generate(qwen_pipeline, p) if qwen_pipeline else "[qwen_not_loaded]"),
+            (
+                QWEN_MODEL_ID,
+                lambda p: (
+                    _qwen_generate(qwen_pipeline, p) if qwen_pipeline else "[qwen_not_loaded]"
+                ),
+            ),
         ]:
             response = generate_fn(question_text)
             is_correct_flag = _is_correct(response, _extract_answer(gold_answer))

@@ -274,8 +274,12 @@ class TestSelectWinner:
     def test_prefer_tp_over_zero_tp(self) -> None:
         """SCENARIO-EXTRACT-026: extractor with TP > 0 beats one with TP = 0."""
         results = [
-            BenchmarkResult("ArithmeticExtractor", fp_rate=0.0, tp_rate=0.0, mean_runtime_ms=1.0, n_total=30),
-            BenchmarkResult("NL2Z3Extractor", fp_rate=0.1, tp_rate=0.3, mean_runtime_ms=200.0, n_total=30),
+            BenchmarkResult(
+                "ArithmeticExtractor", fp_rate=0.0, tp_rate=0.0, mean_runtime_ms=1.0, n_total=30
+            ),
+            BenchmarkResult(
+                "NL2Z3Extractor", fp_rate=0.1, tp_rate=0.3, mean_runtime_ms=200.0, n_total=30
+            ),
         ]
         winner = select_winner(results)
         assert winner == "NL2Z3Extractor"

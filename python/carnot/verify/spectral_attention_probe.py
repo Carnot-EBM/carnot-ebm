@@ -45,7 +45,6 @@ from typing import Any
 
 import numpy as np
 
-
 # ---------------------------------------------------------------------------
 # SpectralAttentionProbe
 # ---------------------------------------------------------------------------
@@ -62,8 +61,7 @@ class SpectralAttentionProbe:
     Spec: REQ-VERIFY-146
     """
 
-    def __init__(self, window: int = 3, n_eigenvalues: int = 10,
-                 threshold: float = 2.0) -> None:
+    def __init__(self, window: int = 3, n_eigenvalues: int = 10, threshold: float = 2.0) -> None:
         """Initialise probe with configurable window and eigenvalue count.
 
         Args:
@@ -185,8 +183,7 @@ class SpectralAttentionProbe:
         try:
             from scipy.linalg import eigh  # noqa: PLC0415
 
-            eigenvalues = eigh(laplacian, subset_by_index=[0, k - 1],
-                               eigvals_only=True)
+            eigenvalues = eigh(laplacian, subset_by_index=[0, k - 1], eigvals_only=True)
         except Exception:
             # Fallback: full eigen-decomposition with numpy (slower but always works).
             eigenvalues = np.linalg.eigvalsh(laplacian)[:k]
@@ -298,8 +295,7 @@ class SpectralAttentionProbe:
             x = np.arange(len(traj), dtype=np.float32)
             xm = x.mean()
             tm = traj.mean()
-            slope = float(((x - xm) * (traj - tm)).sum() /
-                          (((x - xm) ** 2).sum() + 1e-8))
+            slope = float(((x - xm) * (traj - tm)).sum() / (((x - xm) ** 2).sum() + 1e-8))
         else:
             slope = 0.0
 

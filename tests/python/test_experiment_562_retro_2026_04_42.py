@@ -95,105 +95,146 @@ def _minimal_results(
     results_dir.mkdir(exist_ok=True)
 
     files: dict[str, tuple[str, dict]] = {
-        "549": ("experiment_549_exclusion_manifest.json", {
-            "status": "success",
-            "exclusion_manifest_created": exclusion_manifest,
-            "duration_s": 0.069,
-            "honest_verdict": "retro_059_closed",
-        }),
-        "550": ("experiment_550_batching_real_migration.json", {
-            "status": "success",
-            "duration_s": 0.146,
-            "scripts_migrated": ["experiment_308", "experiment_260"],
-            "honest_verdict": "batching_migration_complete",
-        }),
-        "551": ("experiment_551_live_data_a.json", {
-            "status": live_a_status,
-            "inference_mode": "gpu_required" if live_a_status == "blocked" else "live_gpu",
-            "n_pairs_collected": 0 if live_a_status == "blocked" else 50,
-            "duration_s": 0.0,
-            "honest_verdict": "gpu_required" if live_a_status == "blocked" else "live_data_collected",
-        }),
-        "552": ("experiment_552_live_data_b.json", {
-            "status": live_b_status,
-            "inference_mode": "live_gpu" if live_b_status == "success" else "gpu_required",
-            "n_pairs_collected": 100 if live_b_status == "success" else 0,
-            "mean_latency_s": 2.81,
-            "duration_s": 143.974,
-            "honest_verdict": "live_data_collected",
-        }),
-        "553": ("experiment_553_fover_corpus_v2.json", {
-            "status": "success",
-            "n_pairs_after_balance": n_labeled,
-            "constraint_type_entropy_after": entropy,
-            "retro_058_data_ready": retro_058_data_ready,
-            "n_sources_merged": 3,
-            "duration_s": 0.011,
-            "honest_verdict": "corpus_ready",
-        }),
-        "554": ("experiment_554_extraction_diagnostic.json", {
-            "status": "success",
-            "duration_s": 0.008,
-            "honest_verdict": "diagnostic_complete",
-        }),
-        "555": ("experiment_555_confidence_weighted.json", {
-            "status": "success",
-            "duration_s": 0.001,
-            "honest_verdict": "marginal_improvement",
-        }),
-        "556": ("experiment_556_eorm_grpo_retrain.json", {
-            "status": "success",
-            "inference_mode": "real_data",
-            "n_training_pairs": 132,
-            "n_contrastive_triples": 9,
-            "before_auc": 1.0,
-            "after_auc": 1.0,
-            "auc_improvement": 0.0,
-            "duration_s": 175.138,
-            "honest_verdict": "real_data_improvement",
-        }),
-        "557": ("experiment_557_jepa_v9_retrain.json", {
-            "status": "success",
-            "inference_mode": "real_data",
-            "final_auc": jepa_auc,
-            "corpus_entropy": entropy,
-            "n_train": 85,
-            "retro_056_closed": retro_056_closed,
-            "duration_s": 11.284,
-            "honest_verdict": "jepa_still_inverted",
-        }),
-        "558": ("experiment_558_internal_probe_real.json", {
-            "status": "success",
-            "n_labeled": 132,
-            "probe_auc": 0.5217,
-            "eorm_auc_for_comparison": 1.0,
-            "probe_viable": False,
-            "duration_s": 0.023,
-            "honest_verdict": "probe_not_viable",
-        }),
-        "559": ("experiment_559_lowrank_kaem_calibration.json", {
-            "status": "success",
-            "energy_mad_at_optimal": kaem_energy_mad,
-            "retro_057_closed": retro_057_closed,
-            "duration_s": 63.17,
-            "honest_verdict": "calibration_insufficient",
-        }),
-        "560": ("experiment_560_latent_cot_calibrator.json", {
-            "status": "success",
-            "inference_mode": "real_data_556",
-            "violation_rate_delta": 0.0,
-            "duration_s": 17.264,
-            "honest_verdict": "calibration_neutral",
-        }),
-        "561": ("experiment_561_tier1_relay_real.json", {
-            "status": "success",
-            "inference_mode": "real_data",
-            "fr11_real_data": fr11_real_data,
-            "n_responses": 25,
-            "constraints_added": [],
-            "duration_s": 0.023,
-            "honest_verdict": "real_data_no_improvement",
-        }),
+        "549": (
+            "experiment_549_exclusion_manifest.json",
+            {
+                "status": "success",
+                "exclusion_manifest_created": exclusion_manifest,
+                "duration_s": 0.069,
+                "honest_verdict": "retro_059_closed",
+            },
+        ),
+        "550": (
+            "experiment_550_batching_real_migration.json",
+            {
+                "status": "success",
+                "duration_s": 0.146,
+                "scripts_migrated": ["experiment_308", "experiment_260"],
+                "honest_verdict": "batching_migration_complete",
+            },
+        ),
+        "551": (
+            "experiment_551_live_data_a.json",
+            {
+                "status": live_a_status,
+                "inference_mode": "gpu_required" if live_a_status == "blocked" else "live_gpu",
+                "n_pairs_collected": 0 if live_a_status == "blocked" else 50,
+                "duration_s": 0.0,
+                "honest_verdict": "gpu_required"
+                if live_a_status == "blocked"
+                else "live_data_collected",
+            },
+        ),
+        "552": (
+            "experiment_552_live_data_b.json",
+            {
+                "status": live_b_status,
+                "inference_mode": "live_gpu" if live_b_status == "success" else "gpu_required",
+                "n_pairs_collected": 100 if live_b_status == "success" else 0,
+                "mean_latency_s": 2.81,
+                "duration_s": 143.974,
+                "honest_verdict": "live_data_collected",
+            },
+        ),
+        "553": (
+            "experiment_553_fover_corpus_v2.json",
+            {
+                "status": "success",
+                "n_pairs_after_balance": n_labeled,
+                "constraint_type_entropy_after": entropy,
+                "retro_058_data_ready": retro_058_data_ready,
+                "n_sources_merged": 3,
+                "duration_s": 0.011,
+                "honest_verdict": "corpus_ready",
+            },
+        ),
+        "554": (
+            "experiment_554_extraction_diagnostic.json",
+            {
+                "status": "success",
+                "duration_s": 0.008,
+                "honest_verdict": "diagnostic_complete",
+            },
+        ),
+        "555": (
+            "experiment_555_confidence_weighted.json",
+            {
+                "status": "success",
+                "duration_s": 0.001,
+                "honest_verdict": "marginal_improvement",
+            },
+        ),
+        "556": (
+            "experiment_556_eorm_grpo_retrain.json",
+            {
+                "status": "success",
+                "inference_mode": "real_data",
+                "n_training_pairs": 132,
+                "n_contrastive_triples": 9,
+                "before_auc": 1.0,
+                "after_auc": 1.0,
+                "auc_improvement": 0.0,
+                "duration_s": 175.138,
+                "honest_verdict": "real_data_improvement",
+            },
+        ),
+        "557": (
+            "experiment_557_jepa_v9_retrain.json",
+            {
+                "status": "success",
+                "inference_mode": "real_data",
+                "final_auc": jepa_auc,
+                "corpus_entropy": entropy,
+                "n_train": 85,
+                "retro_056_closed": retro_056_closed,
+                "duration_s": 11.284,
+                "honest_verdict": "jepa_still_inverted",
+            },
+        ),
+        "558": (
+            "experiment_558_internal_probe_real.json",
+            {
+                "status": "success",
+                "n_labeled": 132,
+                "probe_auc": 0.5217,
+                "eorm_auc_for_comparison": 1.0,
+                "probe_viable": False,
+                "duration_s": 0.023,
+                "honest_verdict": "probe_not_viable",
+            },
+        ),
+        "559": (
+            "experiment_559_lowrank_kaem_calibration.json",
+            {
+                "status": "success",
+                "energy_mad_at_optimal": kaem_energy_mad,
+                "retro_057_closed": retro_057_closed,
+                "duration_s": 63.17,
+                "honest_verdict": "calibration_insufficient",
+            },
+        ),
+        "560": (
+            "experiment_560_latent_cot_calibrator.json",
+            {
+                "status": "success",
+                "inference_mode": "real_data_556",
+                "violation_rate_delta": 0.0,
+                "duration_s": 17.264,
+                "honest_verdict": "calibration_neutral",
+            },
+        ),
+        "561": (
+            "experiment_561_tier1_relay_real.json",
+            {
+                "status": "success",
+                "inference_mode": "real_data",
+                "fr11_real_data": fr11_real_data,
+                "n_responses": 25,
+                "constraints_added": [],
+                "duration_s": 0.023,
+                "honest_verdict": "real_data_no_improvement",
+            },
+        ),
     }
     for _exp_id, (filename, data) in files.items():
         (results_dir / filename).write_text(json.dumps(data))
@@ -206,9 +247,7 @@ def _minimal_results(
 # ---------------------------------------------------------------------------
 
 
-def test_compute_retro_partial(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_compute_retro_partial(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Partial scenario: live_50q_a blocked → synthetic_barrier_partial."""
     _minimal_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -231,9 +270,7 @@ def test_compute_retro_partial(
     assert result["milestone"] == MILESTONE
 
 
-def test_compute_retro_broken(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_compute_retro_broken(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """All three criteria met → synthetic_barrier_broken."""
     _minimal_results(tmp_path, live_a_status="success", n_labeled=100, entropy=1.5)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -246,13 +283,9 @@ def test_compute_retro_broken(
     assert result["fover_corpus_v2_n_labeled"] == 100
 
 
-def test_compute_retro_intact(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_compute_retro_intact(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Both live halves blocked and n_labeled < 100 → synthetic_barrier_intact."""
-    _minimal_results(
-        tmp_path, live_a_status="blocked", live_b_status="blocked", n_labeled=50
-    )
+    _minimal_results(tmp_path, live_a_status="blocked", live_b_status="blocked", n_labeled=50)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
 
     result = compute_retro()
@@ -266,9 +299,7 @@ def test_compute_retro_intact(
 # ---------------------------------------------------------------------------
 
 
-def test_compute_retro_counts(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_compute_retro_counts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_experiments=14 (13 upstream + this retro), n_deferred_to_gpu=1."""
     _minimal_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -281,9 +312,7 @@ def test_compute_retro_counts(
     assert result["n_missing"] == 0
 
 
-def test_compute_retro_wall_time(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_compute_retro_wall_time(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Total wall time computed correctly from duration_s fields."""
     _minimal_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -292,8 +321,19 @@ def test_compute_retro_wall_time(
 
     # Expected: sum of all duration_s values in _minimal_results
     expected_durations = [
-        0.069, 0.146, 0.0, 143.974, 0.011, 0.008, 0.001,
-        175.138, 11.284, 0.023, 63.17, 17.264, 0.023,
+        0.069,
+        0.146,
+        0.0,
+        143.974,
+        0.011,
+        0.008,
+        0.001,
+        175.138,
+        11.284,
+        0.023,
+        63.17,
+        17.264,
+        0.023,
     ]
     expected_total_min = round(sum(expected_durations) / 60.0, 3)
     assert result["total_wall_time_minutes"] == pytest.approx(expected_total_min, abs=0.01)
@@ -307,9 +347,7 @@ def test_compute_retro_wall_time(
 # ---------------------------------------------------------------------------
 
 
-def test_compute_retro_closure_rate(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_compute_retro_closure_rate(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_059 + retro_058 closed = 2 / 8 open at start = 0.25."""
     _minimal_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -325,9 +363,7 @@ def test_compute_retro_closure_rate_none_closed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """If neither retro_058 nor retro_059 met, closure rate is 0."""
-    _minimal_results(
-        tmp_path, exclusion_manifest=False, retro_058_data_ready=False
-    )
+    _minimal_results(tmp_path, exclusion_manifest=False, retro_058_data_ready=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
 
     result = compute_retro()
@@ -340,9 +376,7 @@ def test_compute_retro_closure_rate_none_closed(
 # ---------------------------------------------------------------------------
 
 
-def test_compute_retro_top3_slowest(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_compute_retro_top3_slowest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Top-3 slowest experiments are returned in descending duration order."""
     _minimal_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -363,9 +397,7 @@ def test_compute_retro_top3_slowest(
 # ---------------------------------------------------------------------------
 
 
-def test_new_retro_items_structure(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_new_retro_items_structure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Each new RETRO item has id, title, description, priority, carry_count."""
     _minimal_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -385,9 +417,7 @@ def test_new_retro_items_structure(
     assert "RETRO-062" in ids
 
 
-def test_open_retro_items_carry_forward(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_open_retro_items_carry_forward(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Carry-forward open RETROs include all unresolved items from prior milestone."""
     _minimal_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -414,9 +444,7 @@ def test_open_retro_items_carry_forward(
 # ---------------------------------------------------------------------------
 
 
-def test_compute_retro_missing_files(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_compute_retro_missing_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Missing result files increment n_missing rather than crashing."""
     # Write no result files at all
     results_dir = tmp_path / "results"
@@ -476,18 +504,14 @@ _REQUIRED_FIELDS = [
 ]
 
 
-def test_main_writes_deliverable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_writes_deliverable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """main() writes the deliverable JSON with all required schema fields."""
     _minimal_results(tmp_path)
     results_dir = tmp_path / "results"
     deliverable_path = results_dir / "experiment_562_retro_2026_04_42.json"
 
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
-    monkeypatch.setattr(
-        retro_mod, "DELIVERABLE", "results/experiment_562_retro_2026_04_42.json"
-    )
+    monkeypatch.setattr(retro_mod, "DELIVERABLE", "results/experiment_562_retro_2026_04_42.json")
 
     retro_mod.main()
 
@@ -504,16 +528,12 @@ def test_main_writes_deliverable(
     assert artifact["env_autofix"] is True
 
 
-def test_main_schema_is_string_not_list(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_schema_is_string_not_list(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """schema field must be the v17 string identifier, not the sorted-keys list
     that build_result() inserts by default."""
     _minimal_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
-    monkeypatch.setattr(
-        retro_mod, "DELIVERABLE", "results/experiment_562_retro_2026_04_42.json"
-    )
+    monkeypatch.setattr(retro_mod, "DELIVERABLE", "results/experiment_562_retro_2026_04_42.json")
 
     retro_mod.main()
 

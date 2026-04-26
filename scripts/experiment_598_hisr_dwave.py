@@ -112,12 +112,8 @@ _incorrect_violations = [
 
 _weighter = HISRWeighter()
 
-_correct_weights = _weighter.compute_hindsight_score(
-    _correct_violations, final_correct=True
-)
-_incorrect_weights = _weighter.compute_hindsight_score(
-    _incorrect_violations, final_correct=False
-)
+_correct_weights = _weighter.compute_hindsight_score(_correct_violations, final_correct=True)
+_incorrect_weights = _weighter.compute_hindsight_score(_incorrect_violations, final_correct=False)
 
 # Correct chain: all scores must be 0.0 (false positives).
 _correct_scores_all_zero = all(w.hindsight_score == 0.0 for w in _correct_weights)

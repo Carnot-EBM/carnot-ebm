@@ -141,15 +141,12 @@ class TestOTVTrainer:
         # Incorrect responses: short non-math text.
         correct = [
             {
-                "response": f"Step 1: multiply {i} by 3 = {i*3}. Step 2: add 5 = {i*3+5}. Answer: {i*3+5}",
+                "response": f"Step 1: multiply {i} by 3 = {i * 3}. Step 2: add 5 = {i * 3 + 5}. Answer: {i * 3 + 5}",
                 "is_correct": True,
             }
             for i in range(1, 21)
         ]
-        incorrect = [
-            {"response": f"The answer is {i}.", "is_correct": False}
-            for i in range(1, 21)
-        ]
+        incorrect = [{"response": f"The answer is {i}.", "is_correct": False} for i in range(1, 21)]
         return correct + incorrect
 
     def test_train_returns_head(self):

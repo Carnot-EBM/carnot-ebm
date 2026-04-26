@@ -62,6 +62,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 # 1. Hypothesis types and templates
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class ImprovementHypothesis:
     """A single proposed improvement to the constraint pipeline.
@@ -309,8 +310,10 @@ ISING_FEATURE_TEMPLATES: list[dict[str, str]] = [
 # 2. Synthetic failure cases for testing hypotheses
 # ---------------------------------------------------------------------------
 
+
 def generate_failure_cases(
-    n: int, rng: np.random.Generator,
+    n: int,
+    rng: np.random.Generator,
 ) -> list[dict[str, str]]:
     """Generate synthetic failure cases that mimic Exp 88 FailureAnalyzer output.
 
@@ -548,8 +551,11 @@ def generate_failure_cases(
     ]
 
     all_templates = (
-        arith_templates + logic_templates + code_templates
-        + comparison_templates + negation_templates
+        arith_templates
+        + logic_templates
+        + code_templates
+        + comparison_templates
+        + negation_templates
     )
 
     # Cycle and shuffle to reach n cases.
@@ -557,17 +563,20 @@ def generate_failure_cases(
         all_templates = all_templates * (n // len(all_templates) + 1)
 
     import random
+
     py_rng = random.Random(int(rng.integers(0, 2**31)))
     py_rng.shuffle(all_templates)
     all_templates = all_templates[:n]
 
     for tmpl in all_templates:
-        cases.append({
-            "question": tmpl["q"],
-            "response": tmpl["r"],
-            "ground_truth": tmpl["gt"],
-            "category": tmpl["cat"],
-        })
+        cases.append(
+            {
+                "question": tmpl["q"],
+                "response": tmpl["r"],
+                "ground_truth": tmpl["gt"],
+                "category": tmpl["cat"],
+            }
+        )
 
     return cases
 
@@ -575,6 +584,7 @@ def generate_failure_cases(
 # ---------------------------------------------------------------------------
 # 3. Hypothesis proposer
 # ---------------------------------------------------------------------------
+
 
 def propose_hypothesis(
     iteration: int,
@@ -613,10 +623,7 @@ def propose_hypothesis(
 
     for idx in order:
         t = type_names[idx]
-        candidates = [
-            tmpl for tmpl in banks[t]
-            if tmpl["name"] not in already_proposed
-        ]
+        candidates = [tmpl for tmpl in banks[t] if tmpl["name"] not in already_proposed]
         if not candidates:
             continue
 
@@ -642,6 +649,7 @@ def propose_hypothesis(
 # ---------------------------------------------------------------------------
 # 4. Hypothesis testing: apply hypothesis to failure cases
 # ---------------------------------------------------------------------------
+
 
 def test_hypothesis_on_failures(
     hypothesis: ImprovementHypothesis,
@@ -776,23 +784,28 @@ def _evaluate_ising_feature(pattern_name: str, response: str) -> bool:
         sentences = re.split(r"[.!?]+", response.strip())
         return len([s for s in sentences if s.strip()]) > 3
     elif pattern_name == "contains_negation":
-        return bool(re.search(
-            r"\b(?:never|not|no|none|neither|nor|cannot|can't|don't|doesn't|won't)\b",
-            response,
-            re.IGNORECASE,
-        ))
+        return bool(
+            re.search(
+                r"\b(?:never|not|no|none|neither|nor|cannot|can't|don't|doesn't|won't)\b",
+                response,
+                re.IGNORECASE,
+            )
+        )
     elif pattern_name == "contains_conditional":
-        return bool(re.search(
-            r"\b(?:if|when|unless|provided|assuming|whenever)\b",
-            response,
-            re.IGNORECASE,
-        ))
+        return bool(
+            re.search(
+                r"\b(?:if|when|unless|provided|assuming|whenever)\b",
+                response,
+                re.IGNORECASE,
+            )
+        )
     return False
 
 
 # ---------------------------------------------------------------------------
 # 5. AUROC evaluation using Ising model (from Exp 89)
 # ---------------------------------------------------------------------------
+
 
 def encode_response_features(
     response: str,
@@ -941,14 +954,12 @@ def train_and_evaluate_auroc(
         AUROC on the 30% held-out test set.
     """
     # Encode all responses.
-    correct_vecs = np.array([
-        encode_response_features(r, accepted_hypotheses)
-        for r in correct_responses
-    ])
-    wrong_vecs = np.array([
-        encode_response_features(r, accepted_hypotheses)
-        for r in wrong_responses
-    ])
+    correct_vecs = np.array(
+        [encode_response_features(r, accepted_hypotheses) for r in correct_responses]
+    )
+    wrong_vecs = np.array(
+        [encode_response_features(r, accepted_hypotheses) for r in wrong_responses]
+    )
 
     # Split 70/30.
     n = min(len(correct_vecs), len(wrong_vecs))
@@ -962,9 +973,15 @@ def train_and_evaluate_auroc(
     # Train discriminative CD (same logic as Exp 89).
     n_features = train_c.shape[1]
     biases = np.zeros(n_features, dtype=np.float32)
-    J = np.random.default_rng(42).normal(
-        0, 0.001, (n_features, n_features),
-    ).astype(np.float32)
+    J = (
+        np.random.default_rng(42)
+        .normal(
+            0,
+            0.001,
+            (n_features, n_features),
+        )
+        .astype(np.float32)
+    )
     J = (J + J.T) / 2.0
     np.fill_diagonal(J, 0.0)
 
@@ -972,11 +989,13 @@ def train_and_evaluate_auroc(
     wrong_spins = 2.0 * train_w - 1.0
     pos_bias = np.mean(correct_spins, axis=0)
     pos_weight = np.mean(
-        np.einsum("bi,bj->bij", correct_spins, correct_spins), axis=0,
+        np.einsum("bi,bj->bij", correct_spins, correct_spins),
+        axis=0,
     )
     neg_bias = np.mean(wrong_spins, axis=0)
     neg_weight = np.mean(
-        np.einsum("bi,bj->bij", wrong_spins, wrong_spins), axis=0,
+        np.einsum("bi,bj->bij", wrong_spins, wrong_spins),
+        axis=0,
     )
 
     grad_b = -(pos_bias - neg_bias)
@@ -1014,8 +1033,10 @@ def train_and_evaluate_auroc(
 # 6. Generate correct/wrong response pairs for AUROC evaluation
 # ---------------------------------------------------------------------------
 
+
 def generate_evaluation_pairs(
-    n: int, rng: np.random.Generator,
+    n: int,
+    rng: np.random.Generator,
 ) -> tuple[list[str], list[str]]:
     """Generate matched pairs of correct and wrong responses for AUROC eval.
 
@@ -1056,12 +1077,10 @@ def generate_evaluation_pairs(
             s = subjects[int(rng.integers(0, len(subjects)))]
             p = predicates[int(rng.integers(0, len(predicates)))]
             correct.append(
-                f"Since all {s} are {p}, and Rex is a {s[:-1]}, "
-                f"therefore Rex is {p}.",
+                f"Since all {s} are {p}, and Rex is a {s[:-1]}, therefore Rex is {p}.",
             )
             wrong.append(
-                f"Since all {s} are {p}, and Rex is {p}, "
-                f"therefore Rex must be a {s[:-1]}.",
+                f"Since all {s} are {p}, and Rex is {p}, therefore Rex must be a {s[:-1]}.",
             )
 
         elif pair_type == 2:
@@ -1106,6 +1125,7 @@ def generate_evaluation_pairs(
 # 7. ConstraintImprovementOrchestrator — the autoresearch loop
 # ---------------------------------------------------------------------------
 
+
 class ConstraintImprovementOrchestrator:
     """Autoresearch orchestrator that proposes and tests constraint improvements.
 
@@ -1145,7 +1165,8 @@ class ConstraintImprovementOrchestrator:
         self.rng = np.random.default_rng(seed)
         self.failure_cases = generate_failure_cases(n_failure_cases, self.rng)
         self.eval_correct, self.eval_wrong = generate_evaluation_pairs(
-            n_eval_pairs, self.rng,
+            n_eval_pairs,
+            self.rng,
         )
         self.accepted: list[ImprovementHypothesis] = []
         self.rejected: list[ImprovementHypothesis] = []
@@ -1168,7 +1189,9 @@ class ConstraintImprovementOrchestrator:
         """
         print("\n--- Computing baseline AUROC (no extra patterns) ---")
         baseline_auroc = train_and_evaluate_auroc(
-            self.eval_correct, self.eval_wrong, [],
+            self.eval_correct,
+            self.eval_wrong,
+            [],
         )
         self.auroc_history.append(baseline_auroc)
         print(f"  Baseline AUROC: {baseline_auroc:.4f}")
@@ -1188,17 +1211,22 @@ class ConstraintImprovementOrchestrator:
 
             # 2. Test against failure cases
             test_result = test_hypothesis_on_failures(
-                hypothesis, self.failure_cases,
+                hypothesis,
+                self.failure_cases,
             )
-            print(f"  Test: {test_result['matches']}/{len(self.failure_cases)} "
-                  f"failures matched ({test_result['match_rate']:.1%})")
+            print(
+                f"  Test: {test_result['matches']}/{len(self.failure_cases)} "
+                f"failures matched ({test_result['match_rate']:.1%})"
+            )
             if test_result["matched_categories"]:
                 print(f"    Categories: {test_result['matched_categories']}")
 
             # 3. Evaluate AUROC with this hypothesis tentatively added
             tentative_accepted = self.accepted + [hypothesis]
             new_auroc = train_and_evaluate_auroc(
-                self.eval_correct, self.eval_wrong, tentative_accepted,
+                self.eval_correct,
+                self.eval_wrong,
+                tentative_accepted,
             )
             auroc_delta = new_auroc - self.auroc_history[-1]
             hypothesis.auroc_delta = auroc_delta
@@ -1231,27 +1259,30 @@ class ConstraintImprovementOrchestrator:
                     if test_result["matches"] == 0
                     else f"AUROC regression ({auroc_delta:+.4f})"
                 )
-                print(f"  x REJECTED: {reject_reason} "
-                      f"(consecutive: {self.consecutive_rejections})")
+                print(f"  x REJECTED: {reject_reason} (consecutive: {self.consecutive_rejections})")
 
-            self.iteration_log.append({
-                "iteration": i + 1,
-                "hypothesis_type": hypothesis.hypothesis_type,
-                "hypothesis_name": hypothesis.name,
-                "description": hypothesis.description,
-                "pattern": hypothesis.pattern,
-                "test_matches": test_result["matches"],
-                "test_match_rate": test_result["match_rate"],
-                "matched_categories": test_result["matched_categories"],
-                "auroc_delta": auroc_delta,
-                "accepted": accept,
-                "cumulative_auroc": self.auroc_history[-1],
-            })
+            self.iteration_log.append(
+                {
+                    "iteration": i + 1,
+                    "hypothesis_type": hypothesis.hypothesis_type,
+                    "hypothesis_name": hypothesis.name,
+                    "description": hypothesis.description,
+                    "pattern": hypothesis.pattern,
+                    "test_matches": test_result["matches"],
+                    "test_match_rate": test_result["match_rate"],
+                    "matched_categories": test_result["matched_categories"],
+                    "auroc_delta": auroc_delta,
+                    "accepted": accept,
+                    "cumulative_auroc": self.auroc_history[-1],
+                }
+            )
 
             # Circuit breaker check
             if self.consecutive_rejections >= self.circuit_breaker_limit:
-                print(f"\n  CIRCUIT BREAKER: {self.circuit_breaker_limit} "
-                      "consecutive rejections — halting loop.")
+                print(
+                    f"\n  CIRCUIT BREAKER: {self.circuit_breaker_limit} "
+                    "consecutive rejections — halting loop."
+                )
                 break
 
         # Compile final results.
@@ -1277,15 +1308,16 @@ class ConstraintImprovementOrchestrator:
         print(f"  Baseline AUROC:  {baseline_auroc:.4f}")
         print(f"  Final AUROC:     {final_auroc:.4f}")
         print(f"  Improvement:     {total_improvement:+.4f}")
-        print(f"  Acceptance rate: {len(self.accepted)}/{iterations_run} "
-              f"({len(self.accepted)/max(iterations_run, 1):.1%})")
+        print(
+            f"  Acceptance rate: {len(self.accepted)}/{iterations_run} "
+            f"({len(self.accepted) / max(iterations_run, 1):.1%})"
+        )
         print(f"\n  Per-type stats:")
         for t, stats in sorted(per_type.items()):
             print(f"    {t}: {stats['accepted']}/{stats['proposed']} accepted")
         print(f"\n  Accepted hypotheses:")
         for hyp in self.accepted:
-            print(f"    [{hyp.hypothesis_type}] {hyp.name}: "
-                  f"AUROC delta={hyp.auroc_delta:+.4f}")
+            print(f"    [{hyp.hypothesis_type}] {hyp.name}: AUROC delta={hyp.auroc_delta:+.4f}")
 
         return {
             "experiment": "90_autoresearch_constraints",
@@ -1337,6 +1369,7 @@ class ConstraintImprovementOrchestrator:
 # ---------------------------------------------------------------------------
 # 8. Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     """Run Experiment 90: Autoresearch constraints self-improvement loop.
@@ -1404,8 +1437,10 @@ def main() -> int:
         print("\n  SUCCESS: Pipeline self-improvement demonstrated.")
         return 0
     else:
-        print("\n  NOTE: No hypotheses accepted — pipeline may already be "
-              "well-covered for these failure types.")
+        print(
+            "\n  NOTE: No hypotheses accepted — pipeline may already be "
+            "well-covered for these failure types."
+        )
         return 0
 
 

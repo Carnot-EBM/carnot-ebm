@@ -43,6 +43,7 @@ from scripts.experiment_842_milestone_retro import (
 # Fixtures — synthetic experiment artifacts mirroring actual results
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture()
 def experiments_all_passing() -> dict:
     """Synthetic artifacts where every success criterion is met.
@@ -77,7 +78,11 @@ def experiments_actual() -> dict:
     return {
         831: {"honest_verdict": "governance_ready"},
         832: {"exp_824_auc_arc": 0.04, "n_domains": 3, "status": "success"},
-        833: {"hypothesis_confirmed": "H1", "root_cause": "write_path_missing", "status": "success"},
+        833: {
+            "hypothesis_confirmed": "H1",
+            "root_cause": "write_path_missing",
+            "status": "success",
+        },
         834: {
             "min_domain_auc": 0.0,
             "auc_svamp": 0.0,
@@ -129,6 +134,7 @@ def experiments_actual() -> dict:
 # ---------------------------------------------------------------------------
 # Tests for eval_criteria()
 # ---------------------------------------------------------------------------
+
 
 class TestEvalCriteria:
     """REQ-INFRA-064: eval_criteria must score each of the 11 criteria correctly."""
@@ -257,6 +263,7 @@ class TestEvalCriteria:
 # Tests for compute_metrics()
 # ---------------------------------------------------------------------------
 
+
 class TestComputeMetrics:
     """REQ-INFRA-064: compute_metrics must correctly accumulate wall-time and experiment counts."""
 
@@ -307,6 +314,7 @@ class TestComputeMetrics:
 # ---------------------------------------------------------------------------
 # Tests for audit_retros()
 # ---------------------------------------------------------------------------
+
 
 class TestAuditRetros:
     """REQ-INFRA-064: audit_retros must correctly classify each named RETRO."""
@@ -368,6 +376,7 @@ class TestAuditRetros:
 # Tests for compute_honest_verdict()
 # ---------------------------------------------------------------------------
 
+
 class TestComputeHonestVerdict:
     """REQ-INFRA-064: honest_verdict must follow the encoding schema."""
 
@@ -396,6 +405,7 @@ class TestComputeHonestVerdict:
 # ---------------------------------------------------------------------------
 # Tests for RETRO accounting constants
 # ---------------------------------------------------------------------------
+
 
 class TestRetroConstants:
     """Schema contract: RETROS_CLOSED and RETROS_OPENED must list the correct items."""
@@ -434,6 +444,7 @@ class TestRetroConstants:
 # Tests for IMPROVEMENTS constants
 # ---------------------------------------------------------------------------
 
+
 class TestImprovements:
     """REQ-INFRA-064: improvements_suggested must contain required priority levels."""
 
@@ -459,7 +470,9 @@ class TestImprovements:
         immediate_actions = " ".join(
             i["action"] for i in IMPROVEMENTS if i["priority"] == "IMMEDIATE"
         )
-        assert "ConstraintRetriever" in immediate_actions or "retrieval" in immediate_actions.lower()
+        assert (
+            "ConstraintRetriever" in immediate_actions or "retrieval" in immediate_actions.lower()
+        )
 
     def test_ice40_n16_fix_in_immediate(self):
         """IMMEDIATE improvements must include the N=16 iCE40 fix."""
@@ -473,6 +486,7 @@ class TestImprovements:
 # Integration test: run main() and verify the deliverable
 # ---------------------------------------------------------------------------
 
+
 class TestMainIntegration:
     """Integration test: run the full retro script against real result files."""
 
@@ -482,11 +496,10 @@ class TestMainIntegration:
         # during testing.  We keep RESULTS_DIR pointing at the real results/ directory
         # so load_experiments() can read actual experiment result files.
         temp_deliverable = str(tmp_path / "operational_retro_2026_04_64.json")
-        monkeypatch.setattr(
-            "scripts.experiment_842_milestone_retro.DELIVERABLE", temp_deliverable
-        )
+        monkeypatch.setattr("scripts.experiment_842_milestone_retro.DELIVERABLE", temp_deliverable)
 
         from scripts.experiment_842_milestone_retro import main
+
         main()
 
         assert os.path.exists(temp_deliverable)
@@ -507,9 +520,7 @@ class TestMainIntegration:
     def test_assert_deliverable_written_passes_on_valid_file(self, tmp_path, monkeypatch):
         """assert_deliverable_written must not raise when the file has all required fields."""
         temp_deliverable = str(tmp_path / "operational_retro_2026_04_64.json")
-        monkeypatch.setattr(
-            "scripts.experiment_842_milestone_retro.DELIVERABLE", temp_deliverable
-        )
+        monkeypatch.setattr("scripts.experiment_842_milestone_retro.DELIVERABLE", temp_deliverable)
 
         # Write a minimal valid artifact
         artifact = {
@@ -537,9 +548,7 @@ class TestMainIntegration:
     def test_assert_deliverable_written_raises_on_missing_file(self, tmp_path, monkeypatch):
         """assert_deliverable_written must raise AssertionError when file does not exist."""
         temp_deliverable = str(tmp_path / "missing.json")
-        monkeypatch.setattr(
-            "scripts.experiment_842_milestone_retro.DELIVERABLE", temp_deliverable
-        )
+        monkeypatch.setattr("scripts.experiment_842_milestone_retro.DELIVERABLE", temp_deliverable)
 
         with pytest.raises(AssertionError, match="Deliverable not written"):
             assert_deliverable_written()
@@ -547,9 +556,7 @@ class TestMainIntegration:
     def test_assert_deliverable_written_raises_on_wrong_schema(self, tmp_path, monkeypatch):
         """assert_deliverable_written must raise when schema version is wrong."""
         temp_deliverable = str(tmp_path / "operational_retro_2026_04_64.json")
-        monkeypatch.setattr(
-            "scripts.experiment_842_milestone_retro.DELIVERABLE", temp_deliverable
-        )
+        monkeypatch.setattr("scripts.experiment_842_milestone_retro.DELIVERABLE", temp_deliverable)
 
         artifact = {
             "schema": "carnot.operational_retro.v38",  # wrong version

@@ -34,7 +34,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-
 # ---------------------------------------------------------------------------
 # HALPProbeResult
 # ---------------------------------------------------------------------------
@@ -169,16 +168,12 @@ class HALPProbe:
         optimizer = optax.adam(1e-3)
         opt_state = optimizer.init((weights, bias))
 
-        def loss_fn(
-            w: Any, b: Any, X: Any, y: Any
-        ) -> Any:
+        def loss_fn(w: Any, b: Any, X: Any, y: Any) -> Any:
             logits = X @ w + b[0]
             return jnp.mean(optax.sigmoid_binary_cross_entropy(logits, y))
 
         for _ in range(100):
-            grads = jax.grad(loss_fn, argnums=(0, 1))(
-                weights, bias, feature_matrix, labels_array
-            )
+            grads = jax.grad(loss_fn, argnums=(0, 1))(weights, bias, feature_matrix, labels_array)
             updates, opt_state = optimizer.update(grads, opt_state)
             weights, bias = optax.apply_updates((weights, bias), updates)
 

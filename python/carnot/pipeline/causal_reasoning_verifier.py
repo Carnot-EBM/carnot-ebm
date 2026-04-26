@@ -27,11 +27,11 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Literal, Optional
+from typing import TYPE_CHECKING, Literal
 
-from carnot.pipeline.symcode_verifier import SymCodeVerifier
-from carnot.extraction.llm_extractor_v1 import LLMAsExtractorV1
-
+if TYPE_CHECKING:
+    from carnot.extraction.llm_extractor_v1 import LLMAsExtractorV1
+    from carnot.pipeline.symcode_verifier import SymCodeVerifier
 
 # ---------------------------------------------------------------------------
 # CausalEntailmentResult
@@ -117,7 +117,7 @@ class CausalReasoningVerifier:
     def __init__(
         self,
         symcode: SymCodeVerifier,
-        llm_extractor: Optional[LLMAsExtractorV1] = None,
+        llm_extractor: LLMAsExtractorV1 | None = None,
     ) -> None:
         self.symcode = symcode
         self.extractor = llm_extractor
@@ -126,7 +126,7 @@ class CausalReasoningVerifier:
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _extract_numeric_conclusion(self, step_text: str) -> Optional[float]:
+    def _extract_numeric_conclusion(self, step_text: str) -> float | None:
         """Extract the numeric conclusion of a step (the final number stated).
 
         Why 'last' number: CoT steps typically state their answer at the end
@@ -147,7 +147,9 @@ class CausalReasoningVerifier:
     # Core entailment check
     # ------------------------------------------------------------------
 
-    def check_entailment(self, step_k: str, step_k1: str, step_k_index: int = 0) -> CausalEntailmentResult:
+    def check_entailment(
+        self, step_k: str, step_k1: str, step_k_index: int = 0
+    ) -> CausalEntailmentResult:
         """Check whether step_k causally justifies step_(k+1).
 
         Algorithm (see class docstring for full description):

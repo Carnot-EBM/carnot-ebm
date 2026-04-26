@@ -61,11 +61,11 @@ def factorial(n: int) -> int:
     print("Example 2: Code with undefined variable caught")
     print("=" * 60)
 
-    buggy_code = '''```python
+    buggy_code = """```python
 def compute_average(numbers: list) -> float:
     total = sum(numbers)
     return total / count
-```'''
+```"""
 
     result = pipeline.verify(
         question="Write a function to compute the average",
@@ -84,10 +84,10 @@ def compute_average(numbers: list) -> float:
     print("Example 3: Return type mismatch detected")
     print("=" * 60)
 
-    type_mismatch_code = '''```python
+    type_mismatch_code = """```python
 def get_name(user_id: int) -> int:
     return "Alice"
-```'''
+```"""
 
     result = pipeline.verify(
         question="Write a function that returns a user name",
@@ -123,9 +123,11 @@ def process_items(items: list) -> int:
     for c in constraints:
         print(f"    [{c.constraint_type}] {c.description}")
         if c.metadata.get("kind") == "loop_bound":
-            print(f"      Variable '{c.metadata['variable']}' "
-                  f"bounded by {c.metadata.get('lower', '?')} <= "
-                  f"{c.metadata['variable']} < {c.metadata.get('upper_expr', '?')}")
+            print(
+                f"      Variable '{c.metadata['variable']}' "
+                f"bounded by {c.metadata.get('lower', '?')} <= "
+                f"{c.metadata['variable']} < {c.metadata.get('upper_expr', '?')}"
+            )
 
     print()
     print("Done. All examples completed successfully.")

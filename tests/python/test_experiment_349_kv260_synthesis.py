@@ -324,8 +324,10 @@ class TestRunExperimentBlockedPaths:
         verilog = tmp_path / "ising_sampler_v1.v"
         verilog.write_text("module top; endmodule\n")
 
-        with patch.object(exp349, "check_yosys_available", return_value=False), \
-             patch.object(exp349, "check_nextpnr_available", return_value=False):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=False),
+            patch.object(exp349, "check_nextpnr_available", return_value=False),
+        ):
             artifact = run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=verilog,
@@ -338,8 +340,10 @@ class TestRunExperimentBlockedPaths:
 
     def test_blocked_missing_verilog(self, tmp_path: Path) -> None:
         """SCENARIO-HW-006: honest_verdict=blocked_missing_verilog when RTL absent."""
-        with patch.object(exp349, "check_yosys_available", return_value=True), \
-             patch.object(exp349, "check_nextpnr_available", return_value=False):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=True),
+            patch.object(exp349, "check_nextpnr_available", return_value=False),
+        ):
             artifact = run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=tmp_path / "nonexistent.v",
@@ -352,8 +356,10 @@ class TestRunExperimentBlockedPaths:
 
     def test_synthesis_attempted_false_when_yosys_absent(self, tmp_path: Path) -> None:
         """REQ-HW-003: synthesis_attempted=False in artifact when yosys absent."""
-        with patch.object(exp349, "check_yosys_available", return_value=False), \
-             patch.object(exp349, "check_nextpnr_available", return_value=False):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=False),
+            patch.object(exp349, "check_nextpnr_available", return_value=False),
+        ):
             artifact = run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=tmp_path / "some.v",
@@ -363,8 +369,10 @@ class TestRunExperimentBlockedPaths:
 
     def test_bitfile_not_generated_when_blocked(self, tmp_path: Path) -> None:
         """SCENARIO-HW-006: bitfile_generated=False when blocked."""
-        with patch.object(exp349, "check_yosys_available", return_value=False), \
-             patch.object(exp349, "check_nextpnr_available", return_value=False):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=False),
+            patch.object(exp349, "check_nextpnr_available", return_value=False),
+        ):
             artifact = run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=tmp_path / "some.v",
@@ -390,8 +398,10 @@ class TestRunExperimentSynthesisFailed:
         def _fake_run(cmd, **kwargs):
             return _make_subprocess_result(1, stdout="", stderr="syntax error")
 
-        with patch.object(exp349, "check_yosys_available", return_value=True), \
-             patch.object(exp349, "check_nextpnr_available", return_value=False):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=True),
+            patch.object(exp349, "check_nextpnr_available", return_value=False),
+        ):
             artifact = run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=verilog,
@@ -411,8 +421,10 @@ class TestRunExperimentSynthesisFailed:
         def _fake_run(cmd, **kwargs):
             return _make_subprocess_result(1, stdout="", stderr="error")
 
-        with patch.object(exp349, "check_yosys_available", return_value=True), \
-             patch.object(exp349, "check_nextpnr_available", return_value=False):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=True),
+            patch.object(exp349, "check_nextpnr_available", return_value=False),
+        ):
             artifact = run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=verilog,
@@ -438,8 +450,10 @@ class TestRunExperimentSynthesisPartial:
         def _fake_run(cmd, **kwargs):
             return _make_subprocess_result(0, stdout=YOSYS_SAMPLE_OUTPUT)
 
-        with patch.object(exp349, "check_yosys_available", return_value=True), \
-             patch.object(exp349, "check_nextpnr_available", return_value=False):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=True),
+            patch.object(exp349, "check_nextpnr_available", return_value=False),
+        ):
             artifact = run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=verilog,
@@ -458,8 +472,10 @@ class TestRunExperimentSynthesisPartial:
         def _fake_run(cmd, **kwargs):
             return _make_subprocess_result(0, stdout=YOSYS_SAMPLE_OUTPUT)
 
-        with patch.object(exp349, "check_yosys_available", return_value=True), \
-             patch.object(exp349, "check_nextpnr_available", return_value=False):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=True),
+            patch.object(exp349, "check_nextpnr_available", return_value=False),
+        ):
             artifact = run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=verilog,
@@ -483,6 +499,7 @@ class TestRunExperimentSynthesisPartial:
                 netlist = kwargs.get("capture_output")  # not relevant
                 # Write the netlist file to satisfy the .exists() check
                 import tempfile
+
                 return _make_subprocess_result(0, stdout=YOSYS_SAMPLE_OUTPUT)
             # nextpnr-xilinx fails
             return _make_subprocess_result(1, stdout="", stderr="P&R failed")
@@ -490,8 +507,10 @@ class TestRunExperimentSynthesisPartial:
         netlist_path = tmp_path / "netlist_349.json"
         netlist_path.write_text("{}")  # simulate netlist present
 
-        with patch.object(exp349, "check_yosys_available", return_value=True), \
-             patch.object(exp349, "check_nextpnr_available", return_value=True):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=True),
+            patch.object(exp349, "check_nextpnr_available", return_value=True),
+        ):
             artifact = run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=verilog,
@@ -526,8 +545,10 @@ class TestRunExperimentSynthesisSuccess:
             bitfile_path.write_bytes(b"\x00" * 16)
             return _make_subprocess_result(0, stdout="P&R OK")
 
-        with patch.object(exp349, "check_yosys_available", return_value=True), \
-             patch.object(exp349, "check_nextpnr_available", return_value=True):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=True),
+            patch.object(exp349, "check_nextpnr_available", return_value=True),
+        ):
             artifact = run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=verilog,
@@ -554,8 +575,10 @@ class TestRunExperimentSynthesisSuccess:
             bitfile_path.write_bytes(b"\x00" * 16)
             return _make_subprocess_result(0)
 
-        with patch.object(exp349, "check_yosys_available", return_value=True), \
-             patch.object(exp349, "check_nextpnr_available", return_value=True):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=True),
+            patch.object(exp349, "check_nextpnr_available", return_value=True),
+        ):
             artifact = run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=verilog,
@@ -593,8 +616,10 @@ class TestArtifactSchema:
     """REQ-HW-003: Artifact must have all required fields in all code paths."""
 
     def _run_blocked(self, tmp_path: Path) -> dict:
-        with patch.object(exp349, "check_yosys_available", return_value=False), \
-             patch.object(exp349, "check_nextpnr_available", return_value=False):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=False),
+            patch.object(exp349, "check_nextpnr_available", return_value=False),
+        ):
             return run_experiment(
                 output_path=tmp_path / "out.json",
                 verilog_path=tmp_path / "nonexistent.v",
@@ -645,17 +670,24 @@ class TestArtifactSchema:
         artifact = self._run_blocked(tmp_path)
         sr = artifact["synthesis_result"]
         for field in (
-            "yosys_available", "nextpnr_available", "verilog_found",
-            "synthesis_attempted", "synthesis_success",
-            "lut_count", "ff_count", "honest_verdict",
+            "yosys_available",
+            "nextpnr_available",
+            "verilog_found",
+            "synthesis_attempted",
+            "synthesis_success",
+            "lut_count",
+            "ff_count",
+            "honest_verdict",
         ):
             assert field in sr, f"Missing synthesis_result field: {field}"
 
     def test_write_output_creates_file(self, tmp_path: Path) -> None:
         """REQ-HW-003: write_output=True creates JSON file at output_path."""
         out = tmp_path / "results" / "exp349.json"
-        with patch.object(exp349, "check_yosys_available", return_value=False), \
-             patch.object(exp349, "check_nextpnr_available", return_value=False):
+        with (
+            patch.object(exp349, "check_yosys_available", return_value=False),
+            patch.object(exp349, "check_nextpnr_available", return_value=False),
+        ):
             run_experiment(
                 output_path=out,
                 verilog_path=tmp_path / "nonexistent.v",

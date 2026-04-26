@@ -87,11 +87,11 @@ def _retire_hallusae(manifest_path: Path) -> bool:
 
     entry = (
         "\nretired_experiments:\n"
-        "  - experiment_scope: \"HalluSAEGeometricProbe (python/carnot/verify/hallusae_probe.py)\"\n"
-        "    reason: \"retire_if_same_verdict triggered by Exp 878: auc_v2=0.45 < v1=0.61"
-        " (below_v1 verdict). SAE geometry approach does not discriminate\"\n"
-        "             \"hallucinations reliably after two attempts.\"\n"
-        "    retired_milestone: \"2026.04.67\"\n"
+        '  - experiment_scope: "HalluSAEGeometricProbe (python/carnot/verify/hallusae_probe.py)"\n'
+        '    reason: "retire_if_same_verdict triggered by Exp 878: auc_v2=0.45 < v1=0.61'
+        ' (below_v1 verdict). SAE geometry approach does not discriminate"\n'
+        '             "hallucinations reliably after two attempts."\n'
+        '    retired_milestone: "2026.04.67"\n'
         "    retire_if_same_verdict: true\n"
     )
     try:
@@ -113,9 +113,7 @@ def _append_prereqs_68(prereqs_path: Path, open_retros: list[str]) -> None:
         return  # Already written — idempotent.
 
     now = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    retro_rows = "\n".join(
-        f"| {r} | open |" for r in open_retros
-    )
+    retro_rows = "\n".join(f"| {r} | open |" for r in open_retros)
     section = f"""
 
 ---
@@ -208,9 +206,7 @@ def main() -> None:
     # ------------------------------------------------------------------
     # Step 3: Compute open RETRO list after HalluSAE retirement
     # ------------------------------------------------------------------
-    open_retros_after_retirement = [
-        r for r in open_retros_67 if r not in _RETIRING_THIS_MILESTONE
-    ]
+    open_retros_after_retirement = [r for r in open_retros_67 if r not in _RETIRING_THIS_MILESTONE]
     open_retros_count = len(open_retros_after_retirement)
 
     # ------------------------------------------------------------------
@@ -259,6 +255,7 @@ def main() -> None:
     _out = _REPO_ROOT / "results" / "experiment_880_preflight_v17.json"
     _out.parent.mkdir(parents=True, exist_ok=True)
     import json as _json
+
     with open(_out, "w") as _f:
         _json.dump(artifact, _f, indent=2)
 

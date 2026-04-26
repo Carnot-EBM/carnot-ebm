@@ -41,6 +41,7 @@ _DELIVERABLE = _REPO_ROOT / "results" / "experiment_735_kan_tier0b_integration.j
 # Shared fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture(scope="module")
 def classifier():
     """Load KANTier0bClassifier from the real Exp 724 checkpoint.
@@ -51,6 +52,7 @@ def classifier():
     if not _CHECKPOINT.exists():
         pytest.skip(f"Checkpoint not found: {_CHECKPOINT}. Run Exp 724 first.")
     from carnot.cascade.tier0b_kan import KANTier0bClassifier
+
     return KANTier0bClassifier(checkpoint_path=_CHECKPOINT)
 
 
@@ -62,6 +64,7 @@ def router_with_tier0b(classifier):
     Tier 0b routing behaviour is under test.
     """
     from carnot.cascade.cascade_router import CascadeRouter
+
     return CascadeRouter(
         eorm_fn=lambda q: 0.5,
         ising_fn=lambda q: True,
@@ -78,6 +81,7 @@ def router_without_tier0b():
     no 'safety_violation' verdict, no tier0b_* keys in metadata.
     """
     from carnot.cascade.cascade_router import CascadeRouter
+
     return CascadeRouter(
         eorm_fn=lambda q: 0.5,
         ising_fn=lambda q: True,
@@ -89,6 +93,7 @@ def router_without_tier0b():
 # ---------------------------------------------------------------------------
 # Test: injection prompt is routed to safety pipeline (REQ-SAFE-016)
 # ---------------------------------------------------------------------------
+
 
 class TestTier0bInjectionRouting:
     """REQ-SAFE-016: injection prompts MUST be routed to safety pipeline."""
@@ -126,6 +131,7 @@ class TestTier0bInjectionRouting:
         """
         # Use a mock classifier that deterministically flags as injection.
         from carnot.cascade.cascade_router import CascadeRouter
+
         mock_clf = MagicMock()
         mock_clf.classify.return_value = (0.9, "injection_detected")
 
@@ -170,6 +176,7 @@ class TestTier0bInjectionRouting:
 # Test: benign prompt passes through to cascade (REQ-SAFE-017)
 # ---------------------------------------------------------------------------
 
+
 class TestTier0bBenignPassthrough:
     """REQ-SAFE-017: benign prompts MUST pass through to the verification cascade."""
 
@@ -186,6 +193,7 @@ class TestTier0bBenignPassthrough:
         """
         # Mock classifier returns benign verdict.
         from carnot.cascade.cascade_router import CascadeRouter
+
         mock_clf = MagicMock()
         mock_clf.classify.return_value = (0.1, "benign")
 
@@ -241,6 +249,7 @@ class TestTier0bBenignPassthrough:
 # Test: latency < 5ms for single CPU forward pass (REQ-SAFE-018)
 # ---------------------------------------------------------------------------
 
+
 class TestTier0bLatency:
     """REQ-SAFE-018: Tier 0b inference latency MUST be < 5ms CPU (p99)."""
 
@@ -253,6 +262,7 @@ class TestTier0bLatency:
         Spec: REQ-SAFE-018, SCENARIO-SAFE-018
         """
         import numpy as np
+
         prompt = "What is 15 + 27?"
         latencies_ms = []
         for _ in range(100):
@@ -282,6 +292,7 @@ class TestTier0bLatency:
 # ---------------------------------------------------------------------------
 # Test: experiment 735 artifact has all required schema fields
 # ---------------------------------------------------------------------------
+
 
 class TestExperiment735Artifact:
     """Validate the Exp 735 result JSON against the required schema."""
@@ -364,6 +375,7 @@ class TestExperiment735Artifact:
 # Test: KANTier0bClassifier loading
 # ---------------------------------------------------------------------------
 
+
 class TestKANTier0bClassifierLoading:
     """Validate that KANTier0bClassifier loads correctly from checkpoint."""
 
@@ -399,5 +411,6 @@ class TestKANTier0bClassifierLoading:
         Spec: REQ-SAFE-016
         """
         from carnot.cascade.tier0b_kan import KANTier0bClassifier
+
         with pytest.raises(FileNotFoundError):
             KANTier0bClassifier(checkpoint_path="/nonexistent/path/model.safetensors")

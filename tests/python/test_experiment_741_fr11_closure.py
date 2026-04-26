@@ -46,6 +46,7 @@ def _import_module():
     """Import experiment_741 fresh each call (enables per-test path patching)."""
     import importlib
     import experiment_741_fr11_formal_closure as m
+
     importlib.reload(m)
     return m
 
@@ -62,7 +63,9 @@ def test_spec_md_update_adds_operational():
     """
     m = _import_module()
 
-    existing_content = "# Self-Learning Spec\n\n## REQ-LEARN-020: Some requirement\n\nExisting row content.\n"
+    existing_content = (
+        "# Self-Learning Spec\n\n## REQ-LEARN-020: Some requirement\n\nExisting row content.\n"
+    )
 
     with tempfile.TemporaryDirectory() as tmpdir:
         spec_path = Path(tmpdir) / "spec.md"
@@ -215,12 +218,15 @@ def test_closure_certificate_schema():
         cert = json.loads(cert_path.read_text(encoding="utf-8"))
 
     required_fields = {
-        "requirement", "status", "closed_in_milestone",
-        "closing_experiments", "evidence", "docs_updated", "schema",
+        "requirement",
+        "status",
+        "closed_in_milestone",
+        "closing_experiments",
+        "evidence",
+        "docs_updated",
+        "schema",
     }
-    assert required_fields.issubset(cert.keys()), (
-        f"Missing fields: {required_fields - cert.keys()}"
-    )
+    assert required_fields.issubset(cert.keys()), f"Missing fields: {required_fields - cert.keys()}"
     assert cert["requirement"] == "FR-11"
     assert cert["status"] == "OPERATIONAL"
     assert cert["schema"] == "carnot.closure.v1"

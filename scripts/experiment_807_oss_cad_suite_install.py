@@ -71,9 +71,7 @@ endmodule
 """
 
 # GitHub API URL for the latest OSS-CAD-Suite release.
-_GITHUB_API_URL = (
-    "https://api.github.com/repos/YosysHQ/oss-cad-suite-build/releases/latest"
-)
+_GITHUB_API_URL = "https://api.github.com/repos/YosysHQ/oss-cad-suite-build/releases/latest"
 
 GITHUB_API_URL = _GITHUB_API_URL  # exported for test access
 
@@ -297,8 +295,7 @@ def _update_hardware_wishlist(
         return
 
     version_summary = "; ".join(
-        f"{t}={'present' if v['present'] else 'absent'}"
-        for t, v in tool_versions.items()
+        f"{t}={'present' if v['present'] else 'absent'}" for t, v in tool_versions.items()
     )
     entry = (
         f"\n### KV260 Synthesis Status (Exp 807 — 20260424) — OSS-CAD-Suite Install\n\n"

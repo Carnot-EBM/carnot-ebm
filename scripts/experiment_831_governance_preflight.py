@@ -37,7 +37,7 @@ from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog
 import json
 import os
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 from scripts.experiment_template import ExperimentTemplate
@@ -144,7 +144,7 @@ def update_milestone_prereqs(
     - Immediate actions for .64 (Exp 833 diagnosis before Exp 836 fix)
     """
     section_header = "## Milestone 2026.04.64 Pre-flight"
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    today = datetime.now(UTC).strftime("%Y-%m-%d")
 
     # Build the corrected RETRO table.
     retro_rows: list[str] = []

@@ -99,11 +99,13 @@ QUESTIONS_GPU1 = [
     "Solve step by step: LCM(4, 6) =",
 ]
 
-VALID_VERDICTS = frozenset({
-    "dualgpu_confirmed",
-    "dualgpu_partial_no_pynvml",
-    "dualgpu_blocked",
-})
+VALID_VERDICTS = frozenset(
+    {
+        "dualgpu_confirmed",
+        "dualgpu_partial_no_pynvml",
+        "dualgpu_blocked",
+    }
+)
 
 
 # ---------------------------------------------------------------------------
@@ -123,6 +125,7 @@ def ensure_pynvml() -> bool:
     """
     try:
         import pynvml  # noqa: PLC0415, F401
+
         return True
     except ImportError:
         pass
@@ -144,6 +147,7 @@ def ensure_pynvml() -> bool:
 
     try:
         import pynvml  # noqa: PLC0415, F401
+
         return True
     except ImportError:
         _log.warning("pynvml still not importable after pip install")
@@ -244,7 +248,7 @@ def run_inference_batch(
                 do_sample=False,
                 pad_token_id=tokenizer.eos_token_id,
             )
-        new_ids = output_ids[0][inputs["input_ids"].shape[1]:]
+        new_ids = output_ids[0][inputs["input_ids"].shape[1] :]
         output_tokens_total += len(new_ids)
         response = tokenizer.decode(new_ids, skip_special_tokens=True)
         response_previews.append(response[:100])
@@ -280,8 +284,9 @@ def main() -> None:
     tmpl.setup()
 
     # --- 2. Watchdog: hard cap at 45 minutes ---
-    with ExperimentTimeoutWatchdog(684, timeout_minutes=45, result_path=str(_REPO_ROOT / DELIVERABLE)):
-
+    with ExperimentTimeoutWatchdog(
+        684, timeout_minutes=45, result_path=str(_REPO_ROOT / DELIVERABLE)
+    ):
         # --- 3. GPU gate: CARNOT_FORCE_LIVE=1 required ---
         force_live = os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
         if not force_live:
@@ -305,6 +310,7 @@ def main() -> None:
         # --- 4. Check available GPUs ---
         try:
             import torch  # noqa: PLC0415
+
             n_gpus = torch.cuda.device_count()
         except Exception:
             n_gpus = 0
@@ -337,6 +343,7 @@ def main() -> None:
         if pynvml_installed:
             try:
                 import pynvml  # noqa: PLC0415
+
                 pynvml.nvmlInit()
                 handle0 = pynvml.nvmlDeviceGetHandleByIndex(0)
                 handle1 = pynvml.nvmlDeviceGetHandleByIndex(1)
@@ -421,12 +428,8 @@ def main() -> None:
 
         try:
             with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-                future0 = executor.submit(
-                    run_inference_batch, model0, tok0, QUESTIONS_GPU0, 0
-                )
-                future1 = executor.submit(
-                    run_inference_batch, model1, tok1, QUESTIONS_GPU1, 1
-                )
+                future0 = executor.submit(run_inference_batch, model0, tok0, QUESTIONS_GPU0, 0)
+                future1 = executor.submit(run_inference_batch, model1, tok1, QUESTIONS_GPU1, 1)
                 try:
                     result0 = future0.result(timeout=600)
                 except Exception as exc:
@@ -445,6 +448,7 @@ def main() -> None:
             if pynvml_installed:
                 try:
                     import pynvml as _pynvml  # noqa: PLC0415
+
                     _pynvml.nvmlShutdown()
                 except Exception:
                     pass
@@ -460,7 +464,9 @@ def main() -> None:
         if gpu0_latency_s is not None and gpu1_latency_s is not None:
             parallel_time = max(gpu0_latency_s, gpu1_latency_s)
             sequential_time = gpu0_latency_s + gpu1_latency_s
-            throughput_ratio = round(sequential_time / parallel_time, 3) if parallel_time > 0 else None
+            throughput_ratio = (
+                round(sequential_time / parallel_time, 3) if parallel_time > 0 else None
+            )
         else:
             throughput_ratio = None
 

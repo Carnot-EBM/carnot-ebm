@@ -120,9 +120,7 @@ def compute_retro() -> dict:
     n_experiments = len(_MILESTONE_RESULTS)
     n_completed = sum(1 for r in results.values() if r.get("status") == "success")
     n_timed_out = sum(1 for r in results.values() if r.get("status") == "timed_out")
-    n_deferred_to_gpu = sum(
-        1 for r in results.values() if r.get("status") == "deferred_to_gpu"
-    )
+    n_deferred_to_gpu = sum(1 for r in results.values() if r.get("status") == "deferred_to_gpu")
     n_missing = sum(1 for r in results.values() if not r)
 
     # --- Wall time -----------------------------------------------------------
@@ -132,9 +130,7 @@ def compute_retro() -> dict:
     total_wall_time_minutes = round(
         sum(r.get("duration_s", 0.0) for r in results.values()) / 60.0, 3
     )
-    average_minutes_per_experiment = round(
-        total_wall_time_minutes / n_experiments, 3
-    )
+    average_minutes_per_experiment = round(total_wall_time_minutes / n_experiments, 3)
 
     # --- RETRO closure status ------------------------------------------------
 
@@ -160,9 +156,7 @@ def compute_retro() -> dict:
     # RETRO-054 closed.  RETRO-055 opened AND closed within this milestone (net zero).
     # So 1 of 5 pre-existing open items was closed.
     n_closed_this_milestone = sum([retro_054_resolved])  # only pre-existing closures
-    retro_closure_rate = round(
-        n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3
-    )
+    retro_closure_rate = round(n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3)
 
     # --- FR-11 and JEPA v8 ---------------------------------------------------
 

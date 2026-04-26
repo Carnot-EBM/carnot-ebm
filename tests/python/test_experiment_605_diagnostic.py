@@ -60,10 +60,9 @@ class TestLoadTestSets:
 
     def test_returns_correct_counts(self, tmp_path: Path) -> None:
         # SCENARIO-BENCH-050: first 25 incorrect entries loaded
-        pairs = (
-            [_make_pair(i, "ModelA", False) for i in range(30)]
-            + [_make_pair(i, "ModelB", True) for i in range(15)]
-        )
+        pairs = [_make_pair(i, "ModelA", False) for i in range(30)] + [
+            _make_pair(i, "ModelB", True) for i in range(15)
+        ]
         p = tmp_path / "live_pairs.json"
         _write_corpus(p, pairs)
         incorrect, correct = exp605._load_test_sets(p, n_incorrect=25, n_correct=10)
@@ -99,10 +98,9 @@ class TestLoadTestSets:
 
     def test_stops_early_when_both_filled(self, tmp_path: Path) -> None:
         # Should stop as soon as both quotas are met (not scan the whole file)
-        pairs = (
-            [_make_pair(i, "M", False) for i in range(30)]
-            + [_make_pair(i + 30, "M", True) for i in range(20)]
-        )
+        pairs = [_make_pair(i, "M", False) for i in range(30)] + [
+            _make_pair(i + 30, "M", True) for i in range(20)
+        ]
         p = tmp_path / "live_pairs.json"
         _write_corpus(p, pairs)
         incorrect, correct = exp605._load_test_sets(p, n_incorrect=3, n_correct=3)
@@ -176,14 +174,18 @@ class TestBuildArtifact:
     def test_schema_field(self, tmp_path: Path) -> None:
         # build_result() stores the schema identifier in result_schema; schema key is sorted key list
         tmpl = self._make_tmpl(tmp_path)
-        art = exp605._build_artifact(tmpl, [False] * 25, [False] * 10, [False] * 25, [False] * 10, 25, 10)
+        art = exp605._build_artifact(
+            tmpl, [False] * 25, [False] * 10, [False] * 25, [False] * 10, 25, 10
+        )
         assert art["result_schema"] == "carnot.extractor_diagnostic_v4.v1"
         assert isinstance(art["schema"], list)
 
     def test_gate_closed_when_both_zero_recall(self, tmp_path: Path) -> None:
         # SCENARIO-BENCH-052: gate_open=False when both recalls are below 0.20
         tmpl = self._make_tmpl(tmp_path)
-        art = exp605._build_artifact(tmpl, [False] * 25, [False] * 10, [False] * 25, [False] * 10, 25, 10)
+        art = exp605._build_artifact(
+            tmpl, [False] * 25, [False] * 10, [False] * 25, [False] * 10, 25, 10
+        )
         assert art["gate_open"] is False
         assert art["honest_verdict"] == "gate_closed_recall_below_threshold"
 
@@ -191,7 +193,9 @@ class TestBuildArtifact:
         # 6/25 = 0.24 >= 0.20 — gate should open
         tmpl = self._make_tmpl(tmp_path)
         coace_flags = [True] * 6 + [False] * 19
-        art = exp605._build_artifact(tmpl, coace_flags, [False] * 10, [False] * 25, [False] * 10, 25, 10)
+        art = exp605._build_artifact(
+            tmpl, coace_flags, [False] * 10, [False] * 25, [False] * 10, 25, 10
+        )
         assert art["gate_open"] is True
         assert art["honest_verdict"] == "gate_open_proceed_to_vr"
 
@@ -199,7 +203,9 @@ class TestBuildArtifact:
         # 5/25 = 0.20 — exactly at threshold — gate should open
         tmpl = self._make_tmpl(tmp_path)
         dsvd_flags = [True] * 5 + [False] * 20
-        art = exp605._build_artifact(tmpl, [False] * 25, [False] * 10, dsvd_flags, [False] * 10, 25, 10)
+        art = exp605._build_artifact(
+            tmpl, [False] * 25, [False] * 10, dsvd_flags, [False] * 10, 25, 10
+        )
         assert art["gate_open"] is True
 
     def test_gate_note_contains_exp609_when_open(self, tmp_path: Path) -> None:
@@ -210,7 +216,9 @@ class TestBuildArtifact:
 
     def test_gate_note_contains_do_not_schedule_when_closed(self, tmp_path: Path) -> None:
         tmpl = self._make_tmpl(tmp_path)
-        art = exp605._build_artifact(tmpl, [False] * 25, [False] * 10, [False] * 25, [False] * 10, 25, 10)
+        art = exp605._build_artifact(
+            tmpl, [False] * 25, [False] * 10, [False] * 25, [False] * 10, 25, 10
+        )
         assert "DO NOT schedule Exp 609" in art["gate_note"]
 
     def test_winning_extractor_coace_v4_when_higher(self, tmp_path: Path) -> None:
@@ -218,7 +226,9 @@ class TestBuildArtifact:
         tmpl = self._make_tmpl(tmp_path)
         coace_flags = [True] * 2 + [False] * 23
         dsvd_flags = [True] * 1 + [False] * 24
-        art = exp605._build_artifact(tmpl, coace_flags, [False] * 10, dsvd_flags, [False] * 10, 25, 10)
+        art = exp605._build_artifact(
+            tmpl, coace_flags, [False] * 10, dsvd_flags, [False] * 10, 25, 10
+        )
         assert art["winning_extractor"] == "coace_v4"
 
     def test_winning_extractor_dsvd_when_higher(self, tmp_path: Path) -> None:
@@ -226,38 +236,50 @@ class TestBuildArtifact:
         tmpl = self._make_tmpl(tmp_path)
         coace_flags = [True] * 1 + [False] * 24
         dsvd_flags = [True] * 3 + [False] * 22
-        art = exp605._build_artifact(tmpl, coace_flags, [False] * 10, dsvd_flags, [False] * 10, 25, 10)
+        art = exp605._build_artifact(
+            tmpl, coace_flags, [False] * 10, dsvd_flags, [False] * 10, 25, 10
+        )
         assert art["winning_extractor"] == "dsvd"
 
     def test_coace_v4_recall_computed_correctly(self, tmp_path: Path) -> None:
         tmpl = self._make_tmpl(tmp_path)
         coace_flags = [True] * 3 + [False] * 22  # 3/25 = 0.12
-        art = exp605._build_artifact(tmpl, coace_flags, [False] * 10, [False] * 25, [False] * 10, 25, 10)
+        art = exp605._build_artifact(
+            tmpl, coace_flags, [False] * 10, [False] * 25, [False] * 10, 25, 10
+        )
         assert art["coace_v4_recall"] == pytest.approx(3 / 25)
 
     def test_coace_v4_fp_rate_computed_correctly(self, tmp_path: Path) -> None:
         tmpl = self._make_tmpl(tmp_path)
         fp_flags = [True] * 2 + [False] * 8  # 2/10 = 0.20
-        art = exp605._build_artifact(tmpl, [False] * 25, fp_flags, [False] * 25, [False] * 10, 25, 10)
+        art = exp605._build_artifact(
+            tmpl, [False] * 25, fp_flags, [False] * 25, [False] * 10, 25, 10
+        )
         assert art["coace_v4_fp_rate"] == pytest.approx(2 / 10)
 
     def test_dsvd_recall_computed_correctly(self, tmp_path: Path) -> None:
         tmpl = self._make_tmpl(tmp_path)
         dsvd_flags = [True] * 4 + [False] * 21  # 4/25 = 0.16
-        art = exp605._build_artifact(tmpl, [False] * 25, [False] * 10, dsvd_flags, [False] * 10, 25, 10)
+        art = exp605._build_artifact(
+            tmpl, [False] * 25, [False] * 10, dsvd_flags, [False] * 10, 25, 10
+        )
         assert art["dsvd_recall"] == pytest.approx(4 / 25)
 
     def test_n_incorrect_and_n_correct_in_artifact(self, tmp_path: Path) -> None:
         tmpl = self._make_tmpl(tmp_path)
-        art = exp605._build_artifact(tmpl, [False] * 25, [False] * 10, [False] * 25, [False] * 10, 25, 10)
+        art = exp605._build_artifact(
+            tmpl, [False] * 25, [False] * 10, [False] * 25, [False] * 10, 25, 10
+        )
         assert art["n_incorrect"] == 25
         assert art["n_correct"] == 10
 
     def test_best_recall_is_max(self, tmp_path: Path) -> None:
         tmpl = self._make_tmpl(tmp_path)
         coace_flags = [True] * 2 + [False] * 23  # 0.08
-        dsvd_flags = [True] * 4 + [False] * 21   # 0.16
-        art = exp605._build_artifact(tmpl, coace_flags, [False] * 10, dsvd_flags, [False] * 10, 25, 10)
+        dsvd_flags = [True] * 4 + [False] * 21  # 0.16
+        art = exp605._build_artifact(
+            tmpl, coace_flags, [False] * 10, dsvd_flags, [False] * 10, 25, 10
+        )
         assert art["best_recall"] == pytest.approx(4 / 25)
 
 

@@ -66,30 +66,60 @@ BASELINE_SIGNED_IMPROVEMENT = -0.8
 # 25 GSM8K-style arithmetic word problems (same set used in Exp 706).
 # These are fixed so the experiment is reproducible without network access.
 _QUESTIONS: list[dict[str, Any]] = [
-    {"question": "Janet has 3 apples. She buys 5 more. How many apples does Janet have now?", "answer": 8},
+    {
+        "question": "Janet has 3 apples. She buys 5 more. How many apples does Janet have now?",
+        "answer": 8,
+    },
     {"question": "A store sells 12 items per hour. How many items in 3 hours?", "answer": 36},
     {"question": "Tom has $20 and spends $7. How much does Tom have left?", "answer": 13},
     {"question": "A rectangle is 6 cm wide and 4 cm tall. What is the area?", "answer": 24},
     {"question": "Sarah runs 2 miles each day for 5 days. How many miles total?", "answer": 10},
-    {"question": "15 students share 60 candies equally. How many does each student get?", "answer": 4},
+    {
+        "question": "15 students share 60 candies equally. How many does each student get?",
+        "answer": 4,
+    },
     {"question": "A bag has 8 red and 5 blue marbles. How many marbles in total?", "answer": 13},
-    {"question": "John earns $9 per hour and works 8 hours. How much does John earn?", "answer": 72},
+    {
+        "question": "John earns $9 per hour and works 8 hours. How much does John earn?",
+        "answer": 72,
+    },
     {"question": "A class has 30 students. 12 are absent. How many are present?", "answer": 18},
     {"question": "Maria bakes 4 batches of 6 cookies each. How many cookies total?", "answer": 24},
     {"question": "A train travels 60 km/h for 2 hours. How far does it travel?", "answer": 120},
-    {"question": "Pedro has 50 stickers and gives away 15. How many does Pedro have left?", "answer": 35},
-    {"question": "A tank holds 100 liters. It is 40% full. How many liters are in the tank?", "answer": 40},
+    {
+        "question": "Pedro has 50 stickers and gives away 15. How many does Pedro have left?",
+        "answer": 35,
+    },
+    {
+        "question": "A tank holds 100 liters. It is 40% full. How many liters are in the tank?",
+        "answer": 40,
+    },
     {"question": "Lucy reads 25 pages per day. How many pages in 4 days?", "answer": 100},
     {"question": "There are 7 shelves with 9 books each. How many books total?", "answer": 63},
-    {"question": "A shirt costs $15. A pair of pants costs $25. What is the total cost?", "answer": 40},
+    {
+        "question": "A shirt costs $15. A pair of pants costs $25. What is the total cost?",
+        "answer": 40,
+    },
     {"question": "A garden is 8 m long and 3 m wide. What is the perimeter?", "answer": 22},
     {"question": "David saves $12 per week for 6 weeks. How much does David save?", "answer": 72},
     {"question": "A box contains 48 eggs. 16 eggs are used. How many remain?", "answer": 32},
-    {"question": "Five friends share a $35 dinner bill equally. How much does each pay?", "answer": 7},
-    {"question": "A pool holds 200 gallons. It leaks 5 gallons per hour. After 10 hours, how much remains?", "answer": 150},
+    {
+        "question": "Five friends share a $35 dinner bill equally. How much does each pay?",
+        "answer": 7,
+    },
+    {
+        "question": "A pool holds 200 gallons. It leaks 5 gallons per hour. After 10 hours, how much remains?",
+        "answer": 150,
+    },
     {"question": "Anna types 40 words per minute. How many words in 3 minutes?", "answer": 120},
-    {"question": "A farmer has 5 cows and each gives 8 liters of milk daily. Total daily milk?", "answer": 40},
-    {"question": "A movie is 90 minutes long. It has a 15-minute intermission. Total runtime?", "answer": 105},
+    {
+        "question": "A farmer has 5 cows and each gives 8 liters of milk daily. Total daily milk?",
+        "answer": 40,
+    },
+    {
+        "question": "A movie is 90 minutes long. It has a 15-minute intermission. Total runtime?",
+        "answer": 105,
+    },
     {"question": "Carlos has 3 dozen eggs. He uses 7. How many eggs remain?", "answer": 29},
 ]
 
@@ -239,7 +269,9 @@ def run_question_with_gate(
 
     # -- VR path: extract constraints, skip suppressed types, then repair.
     try:
-        constraints = extractor.extract(baseline_response, domain="arithmetic", memory=None, logits=None)
+        constraints = extractor.extract(
+            baseline_response, domain="arithmetic", memory=None, logits=None
+        )
     except Exception as exc:
         _log.warning("Extraction failed: %s", exc)
         constraints = []
@@ -261,7 +293,9 @@ def run_question_with_gate(
     # remain after gate filtering, repair is a no-op and we keep the original.
     try:
         vr_result = pipeline.verify_and_repair(question, baseline_response, "arithmetic")
-        vr_response = vr_result.final_response if hasattr(vr_result, "final_response") else baseline_response
+        vr_response = (
+            vr_result.final_response if hasattr(vr_result, "final_response") else baseline_response
+        )
     except Exception as exc:
         _log.warning("VR pipeline failed: %s — using baseline response", exc)
         vr_response = baseline_response
@@ -316,6 +350,7 @@ def main() -> None:
         # ------------------------------------------------------------------
         try:
             from carnot.inference.sota_models import cached_sota_pair  # noqa: PLC0415
+
             specs = cached_sota_pair(gpu_indices=(0,))
         except Exception:
             specs = None

@@ -288,10 +288,20 @@ def test_blocked_artifact_has_all_required_fields(tmp_path: Path) -> None:
                 mod._run_inner(MagicMock())
 
     required_fields = {
-        "experiment", "schema", "run_date", "status", "honest_verdict",
-        "inference_mode", "baseline_accuracy", "post_accuracy",
-        "signed_improvement", "wilson_ci_lower", "wilson_ci_upper",
-        "n_questions", "forcing_recall", "retro_033_validated",
+        "experiment",
+        "schema",
+        "run_date",
+        "status",
+        "honest_verdict",
+        "inference_mode",
+        "baseline_accuracy",
+        "post_accuracy",
+        "signed_improvement",
+        "wilson_ci_lower",
+        "wilson_ci_upper",
+        "n_questions",
+        "forcing_recall",
+        "retro_033_validated",
     }
     missing = required_fields - set(written[0].keys())
     assert not missing, f"Missing schema fields in blocked artifact: {missing}"
@@ -389,10 +399,20 @@ def test_deliverable_json_exists_and_valid() -> None:
     data = json.loads(result_path.read_text())
 
     required = {
-        "experiment", "schema", "run_date", "status", "honest_verdict",
-        "inference_mode", "baseline_accuracy", "post_accuracy",
-        "signed_improvement", "wilson_ci_lower", "wilson_ci_upper",
-        "n_questions", "forcing_recall", "retro_033_validated",
+        "experiment",
+        "schema",
+        "run_date",
+        "status",
+        "honest_verdict",
+        "inference_mode",
+        "baseline_accuracy",
+        "post_accuracy",
+        "signed_improvement",
+        "wilson_ci_lower",
+        "wilson_ci_upper",
+        "n_questions",
+        "forcing_recall",
+        "retro_033_validated",
     }
     missing = required - set(data.keys())
     assert not missing, f"Missing fields in deliverable: {missing}"

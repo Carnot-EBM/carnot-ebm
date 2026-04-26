@@ -1912,6 +1912,7 @@ def test_serialize_verification_result_preserves_semantic_trace_artifacts():
 # REQ-VERIFY-028
 import pytest
 
+
 @pytest.mark.skip(reason="safetensors import conflict — tracked in known-issues")
 def test_run_humaneval_baseline_preserves_generation_trace(monkeypatch: pytest.MonkeyPatch):
     module = load_module()

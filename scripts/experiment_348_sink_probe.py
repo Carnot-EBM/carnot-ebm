@@ -89,11 +89,11 @@ DELIVERABLE = "results/experiment_348_sink_probe.json"
 EXP_340_PATH = _REPO_ROOT / "results" / "experiment_340_live_precision_benchmark.json"
 
 THRESHOLD = 0.3
-N_CORRECT = 30      # synthetic correct responses (high sink)
-N_WRONG = 20        # synthetic wrong responses (low sink)
+N_CORRECT = 30  # synthetic correct responses (high sink)
+N_WRONG = 20  # synthetic wrong responses (low sink)
 N_HEADS = 8
 SEQ_LEN = 16
-SINK_POS = [0]      # BOS at position 0
+SINK_POS = [0]  # BOS at position 0
 
 # Questions for the ensemble comparison (50 synthetic)
 N_QUESTIONS = N_CORRECT + N_WRONG
@@ -219,9 +219,7 @@ def load_or_generate_corpus(
                 labels = []
                 for item in exp340["attention_tensors"]:
                     attn = jnp.array(np.array(item["matrix"], dtype=np.float32))
-                    responses.append(
-                        {"attention_matrix": attn, "sink_positions": sink_pos}
-                    )
+                    responses.append({"attention_matrix": attn, "sink_positions": sink_pos})
                     labels.append(bool(item.get("correct", True)))
                 return responses, labels, "live_gpu"
         except Exception as exc:
@@ -229,8 +227,7 @@ def load_or_generate_corpus(
 
     # Fall back to synthetic corpus
     _log.info(
-        "No live attention tensors available — generating synthetic corpus "
-        "(%d correct, %d wrong).",
+        "No live attention tensors available — generating synthetic corpus (%d correct, %d wrong).",
         n_correct,
         n_wrong,
     )
@@ -243,20 +240,14 @@ def load_or_generate_corpus(
     # Correct responses: high sink concentration (BOS mass uniformly in [0.6, 0.85])
     for i in range(n_correct):
         sink_mass = float(rng.uniform(0.6, 0.85))
-        attn_np = _make_sink_dominated_attn(
-            rng, n_heads, seq_len, sink_pos[0], sink_mass
-        )
-        responses.append(
-            {"attention_matrix": jnp.array(attn_np), "sink_positions": sink_pos}
-        )
+        attn_np = _make_sink_dominated_attn(rng, n_heads, seq_len, sink_pos[0], sink_mass)
+        responses.append({"attention_matrix": jnp.array(attn_np), "sink_positions": sink_pos})
         labels.append(True)
 
     # Wrong responses: low sink concentration (near-uniform, BOS mass ≈ 1/seq_len)
     for i in range(n_wrong):
         attn_np = _make_uniform_attn(rng, n_heads, seq_len)
-        responses.append(
-            {"attention_matrix": jnp.array(attn_np), "sink_positions": sink_pos}
-        )
+        responses.append({"attention_matrix": jnp.array(attn_np), "sink_positions": sink_pos})
         labels.append(False)
 
     return responses, labels, "simulated"

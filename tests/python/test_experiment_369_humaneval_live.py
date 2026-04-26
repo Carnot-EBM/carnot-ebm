@@ -163,9 +163,7 @@ class TestComputePassAt1:
         assert compute_pass_at_1(results) == 0.0
 
     def test_half_pass(self) -> None:
-        results = [_make_result(passed_tests=True)] * 2 + [
-            _make_result(passed_tests=False)
-        ] * 2
+        results = [_make_result(passed_tests=True)] * 2 + [_make_result(passed_tests=False)] * 2
         assert compute_pass_at_1(results) == 0.5
 
     def test_single_passing(self) -> None:
@@ -244,9 +242,7 @@ class TestBuildHumanevalArtifactV2:
 
     def test_simulated_mode_never_positive(self) -> None:
         # inference_mode != "live_gpu" -> never code_verification_positive
-        results = [
-            _make_result(passed_tests=False, final_passed_tests=True, repair_attempted=True)
-        ]
+        results = [_make_result(passed_tests=False, final_passed_tests=True, repair_attempted=True)]
         artifact = build_humaneval_artifact_v2(results, "simulated")
         assert artifact["honest_verdict"] == "no_improvement"
 
@@ -346,10 +342,7 @@ class TestParseOfficialTests:
         assert cases[0] == (["hello"], 5)
 
     def test_multiple_asserts(self) -> None:
-        test_str = (
-            "    assert candidate(1) == 1\n"
-            "    assert candidate(2) == 4\n"
-        )
+        test_str = "    assert candidate(1) == 1\n    assert candidate(2) == 4\n"
         cases = _parse_official_tests(test_str, "square")
         assert len(cases) == 2
 
@@ -475,11 +468,7 @@ class TestRunPbt:
 
     def test_non_deterministic_function_detected(self) -> None:
         # A function that returns random output should trigger non-determinism check
-        code = (
-            "import random as _r\n"
-            "def flaky(x):\n"
-            "    return x if _r.random() > 0.01 else x + 1\n"
-        )
+        code = "import random as _r\ndef flaky(x):\n    return x if _r.random() > 0.01 else x + 1\n"
         # Run many iterations — statistically should find the non-determinism
         # We run PBT multiple times with different seeds to increase confidence
         detected = False
@@ -577,13 +566,21 @@ class TestMain:
         """Run main() with mocked GPU; return the JSON artifact written to disk."""
         monkeypatch.setenv("CARNOT_FORCE_LIVE", force_live)
         monkeypatch.setenv("CARNOT_REPO_ROOT", str(tmp_path))
-        monkeypatch.setattr(_mod, "diagnose_live_gpu", lambda _ids: _make_diag_mock(is_live=diag_is_live))
-        monkeypatch.setattr(_mod, "_load_model_pipeline", lambda *a, **kw: (None, None, None, model_ok))
-        monkeypatch.setattr(_mod, "_process_problem", lambda p, tok, mod, dev: _make_result(
-            problem_id=p["task_id"],
-            passed_tests=True,
-            final_passed_tests=True,
-        ))
+        monkeypatch.setattr(
+            _mod, "diagnose_live_gpu", lambda _ids: _make_diag_mock(is_live=diag_is_live)
+        )
+        monkeypatch.setattr(
+            _mod, "_load_model_pipeline", lambda *a, **kw: (None, None, None, model_ok)
+        )
+        monkeypatch.setattr(
+            _mod,
+            "_process_problem",
+            lambda p, tok, mod, dev: _make_result(
+                problem_id=p["task_id"],
+                passed_tests=True,
+                final_passed_tests=True,
+            ),
+        )
         monkeypatch.setattr(_mod, "_load_problems", lambda: _MINI_PROBLEMS)
 
         _mod.main()
@@ -592,36 +589,56 @@ class TestMain:
         assert artifact_path.exists(), f"Artifact not written to {artifact_path}"
         return json.loads(artifact_path.read_text())
 
-    def test_no_force_live_produces_blocked(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_no_force_live_produces_blocked(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         artifact = self._run_main(tmp_path, monkeypatch, force_live="0")
         assert artifact["inference_mode"] == "blocked"
         assert artifact["honest_verdict"] == "blocked"
         assert artifact["status"] == "blocked"
 
-    def test_gpu_not_live_produces_blocked(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_gpu_not_live_produces_blocked(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         artifact = self._run_main(tmp_path, monkeypatch, force_live="1", diag_is_live=False)
         assert artifact["inference_mode"] == "blocked"
         assert artifact["honest_verdict"] == "blocked"
 
-    def test_model_load_failure_produces_blocked(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-        artifact = self._run_main(tmp_path, monkeypatch, force_live="1", diag_is_live=True, model_ok=False)
+    def test_model_load_failure_produces_blocked(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        artifact = self._run_main(
+            tmp_path, monkeypatch, force_live="1", diag_is_live=True, model_ok=False
+        )
         assert artifact["inference_mode"] == "blocked"
         assert artifact["honest_verdict"] == "blocked"
 
-    def test_live_run_produces_schema_v2(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-        artifact = self._run_main(tmp_path, monkeypatch, force_live="1", diag_is_live=True, model_ok=True)
+    def test_live_run_produces_schema_v2(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        artifact = self._run_main(
+            tmp_path, monkeypatch, force_live="1", diag_is_live=True, model_ok=True
+        )
         assert artifact["humaneval_schema"] == "carnot.humaneval_benchmark.v2"
         assert artifact["inference_mode"] == "live_gpu"
 
-    def test_live_run_has_pbt_bugs_found(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-        artifact = self._run_main(tmp_path, monkeypatch, force_live="1", diag_is_live=True, model_ok=True)
+    def test_live_run_has_pbt_bugs_found(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        artifact = self._run_main(
+            tmp_path, monkeypatch, force_live="1", diag_is_live=True, model_ok=True
+        )
         assert "pbt_bugs_found" in artifact
 
     def test_live_run_status_success(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-        artifact = self._run_main(tmp_path, monkeypatch, force_live="1", diag_is_live=True, model_ok=True)
+        artifact = self._run_main(
+            tmp_path, monkeypatch, force_live="1", diag_is_live=True, model_ok=True
+        )
         assert artifact["status"] == "success"
 
-    def test_no_force_live_never_calls_diagnose(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_no_force_live_never_calls_diagnose(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """When CARNOT_FORCE_LIVE=0, diagnose_live_gpu must NOT be called."""
         call_count = {"n": 0}
 
@@ -649,7 +666,7 @@ class TestProcessProblem:
     _SIMPLE_PROBLEM = {
         "task_id": "HumanEval/23",
         "entry_point": "strlen",
-        "prompt": "def strlen(string: str) -> int:\n    \"\"\"Return length.\"\"\"\n",
+        "prompt": 'def strlen(string: str) -> int:\n    """Return length."""\n',
         "canonical_solution": "    return len(string)\n",
         "test_cases": [(["hello"], 5), ([""], 0)],
         "test": "",
@@ -700,10 +717,7 @@ class TestProcessProblem:
             patch.object(
                 _mod,
                 "_generate_code_live",
-                return_value=(
-                    self._SIMPLE_PROBLEM["prompt"]
-                    + "    return len(string)\n"
-                ),
+                return_value=(self._SIMPLE_PROBLEM["prompt"] + "    return len(string)\n"),
             ),
             patch.object(_mod, "_run_pbt", return_value=True) as pbt_mock,
         ):

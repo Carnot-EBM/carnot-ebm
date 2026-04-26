@@ -173,8 +173,10 @@ class TestSampleGpuUtilizationWithMockedPynvml:
         pynvml_mock = self._make_pynvml_mock({0: 50})
         sleep_calls: list[float] = []
         with patch.dict("sys.modules", {"pynvml": pynvml_mock}):
-            with patch("carnot.pipeline.dual_gpu_controlled_test.time.sleep",
-                       side_effect=lambda s: sleep_calls.append(s)):
+            with patch(
+                "carnot.pipeline.dual_gpu_controlled_test.time.sleep",
+                side_effect=lambda s: sleep_calls.append(s),
+            ):
                 sample_gpu_utilization([0], n_samples=3, interval_s=0.25)
         assert sleep_calls == [0.25, 0.25, 0.25]
 

@@ -266,23 +266,17 @@ class TestVerifyStepMock:
 
     def test_correct_addition_is_sat(self) -> None:
         """SCENARIO-EXTRACT-050: 'gives 75' (correct) → status='sat'."""
-        verdict = self.validator.verify_step(
-            "the total is 47 plus 28, which gives 75"
-        )
+        verdict = self.validator.verify_step("the total is 47 plus 28, which gives 75")
         assert verdict.status == "sat"
 
     def test_wrong_addition_is_unsat(self) -> None:
         """SCENARIO-EXTRACT-049: 'gives 76' (wrong) → status='unsat'."""
-        verdict = self.validator.verify_step(
-            "the total is 47 plus 28, which gives 76"
-        )
+        verdict = self.validator.verify_step("the total is 47 plus 28, which gives 76")
         assert verdict.status == "unsat"
 
     def test_unsat_verdict_has_premises(self) -> None:
         """REQ-EXTRACT-024: UNSAT verdict preserves the extracted premises."""
-        verdict = self.validator.verify_step(
-            "the total is 47 plus 28, which gives 76"
-        )
+        verdict = self.validator.verify_step("the total is 47 plus 28, which gives 76")
         assert len(verdict.fol_premises) >= 1
 
     def test_no_arithmetic_step_is_unknown(self) -> None:
@@ -389,8 +383,7 @@ class TestArithmeticVsVeriCoT:
         extractor = ArithmeticExtractor()
         results = extractor.extract(self.IT_WRONG_SAMPLE)
         assert results == [], (
-            f"ArithmeticExtractor should find 0 violations on IT natural language, "
-            f"got: {results}"
+            f"ArithmeticExtractor should find 0 violations on IT natural language, got: {results}"
         )
 
     def test_vericot_finds_violation_on_same_it_text(self) -> None:

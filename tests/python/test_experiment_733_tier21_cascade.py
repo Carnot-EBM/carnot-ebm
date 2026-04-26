@@ -138,7 +138,9 @@ class TestTier21ProbeWrapper:
         """
         from carnot.cascade.tier21_probe import ViolationEventStub
 
-        event = ViolationEventStub(query_id="q_007", probe_score=0.77, timestamp_utc="2026-04-22T00:00:00Z")
+        event = ViolationEventStub(
+            query_id="q_007", probe_score=0.77, timestamp_utc="2026-04-22T00:00:00Z"
+        )
         d = event.to_dict()
         assert d["query_id"] == "q_007"
         assert abs(d["probe_score"] - 0.77) < 1e-6
@@ -309,11 +311,15 @@ class TestExp733GateAndSchema:
         Spec: SCENARIO-VER-046
         """
         gate_file = tmp_path / "tier21_gate.json"
-        gate_file.write_text(json.dumps({
-            "gate": "pass",
-            "mean_auc": 0.99,
-            "std_auc": 0.005,
-        }))
+        gate_file.write_text(
+            json.dumps(
+                {
+                    "gate": "pass",
+                    "mean_auc": 0.99,
+                    "std_auc": 0.005,
+                }
+            )
+        )
 
         deliverable = tmp_path / "experiment_733_tier21_cascade.json"
         cascade_gate_file = tmp_path / "tier21_cascade_gate.json"

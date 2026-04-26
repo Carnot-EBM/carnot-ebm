@@ -79,6 +79,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import numpy as np
+import contextlib
 
 # ---------------------------------------------------------------------------
 # Path setup
@@ -96,16 +97,16 @@ ADVERSARIAL_DATA_PATH = RESULTS_DIR / "adversarial_gsm8k_data.json"
 # Variant / mode configuration (same as Exp 162)
 # ---------------------------------------------------------------------------
 VARIANTS: list[tuple[str, str, float]] = [
-    ("control",             "Control (standard)",   1.0),
-    ("number_swapped",      "Number-swapped",        1.8),
-    ("irrelevant_injected", "Irrelevant-injected",   1.5),
-    ("combined",            "Combined adversarial",  2.2),
+    ("control", "Control (standard)", 1.0),
+    ("number_swapped", "Number-swapped", 1.8),
+    ("irrelevant_injected", "Irrelevant-injected", 1.5),
+    ("combined", "Combined adversarial", 2.2),
 ]
 ADVERSARIAL_VARIANT_KEYS = ("number_swapped", "irrelevant_injected", "combined")
 
 MODES: list[tuple[str, str]] = [
-    ("baseline",      "Baseline (no verification)"),
-    ("verify",        "Verify-only (flag, no repair)"),
+    ("baseline", "Baseline (no verification)"),
+    ("verify", "Verify-only (flag, no repair)"),
     ("verify_repair", "Verify-repair (up to 3 iters)"),
 ]
 
@@ -153,9 +154,12 @@ MODEL_CONFIGS: list[dict[str, Any]] = [
 # Each template is a callable (rng) -> (problem_text, correct_integer_answer).
 # Keeping them here avoids import coupling with Exp 119.
 
+
 def _tmpl_shopping(rng: random.Random) -> tuple[str, int]:
-    shirts = rng.randint(2, 8); shirt_price = rng.randint(10, 40)
-    pants = rng.randint(1, 5); pant_price = rng.randint(30, 80)
+    shirts = rng.randint(2, 8)
+    shirt_price = rng.randint(10, 40)
+    pants = rng.randint(1, 5)
+    pant_price = rng.randint(30, 80)
     discount_pct = rng.choice([10, 15, 20, 25])
     budget = rng.randint(100, 300)
     total = shirts * shirt_price + pants * pant_price
@@ -171,7 +175,8 @@ def _tmpl_shopping(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_cooking(rng: random.Random) -> tuple[str, int]:
-    batches = rng.randint(2, 6); cookies_per_batch = rng.randint(12, 30)
+    batches = rng.randint(2, 6)
+    cookies_per_batch = rng.randint(12, 30)
     eaten_pct = rng.choice([10, 20, 25, 30])
     guests = rng.randint(3, 10)
     total = batches * cookies_per_batch
@@ -187,9 +192,11 @@ def _tmpl_cooking(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_travel(rng: random.Random) -> tuple[str, int]:
-    speed = rng.randint(50, 90); hours = rng.randint(2, 8)
+    speed = rng.randint(50, 90)
+    hours = rng.randint(2, 8)
     stop_minutes = rng.choice([15, 20, 30, 45])
-    fuel_per_100km = rng.randint(7, 12); fuel_cost = rng.randint(1, 3)
+    fuel_per_100km = rng.randint(7, 12)
+    fuel_cost = rng.randint(1, 3)
     distance = speed * hours
     fuel = round(distance / 100 * fuel_per_100km)
     total_cost = fuel * fuel_cost
@@ -202,7 +209,8 @@ def _tmpl_travel(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_savings(rng: random.Random) -> tuple[str, int]:
-    weekly = rng.randint(20, 100); weeks = rng.randint(4, 20)
+    weekly = rng.randint(20, 100)
+    weeks = rng.randint(4, 20)
     spend_pct = rng.choice([10, 20, 25, 30])
     item_cost = rng.randint(50, 300)
     saved = weekly * weeks
@@ -219,7 +227,8 @@ def _tmpl_savings(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_classroom(rng: random.Random) -> tuple[str, int]:
-    classes = rng.randint(3, 8); students_per = rng.randint(20, 35)
+    classes = rng.randint(3, 8)
+    students_per = rng.randint(20, 35)
     absent_pct = rng.choice([5, 10, 15, 20])
     groups = rng.randint(3, 7)
     total = classes * students_per
@@ -234,7 +243,8 @@ def _tmpl_classroom(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_garden(rng: random.Random) -> tuple[str, int]:
-    rows = rng.randint(4, 10); plants_per_row = rng.randint(5, 15)
+    rows = rng.randint(4, 10)
+    plants_per_row = rng.randint(5, 15)
     died_pct = rng.choice([10, 20, 25])
     harvest_per = rng.randint(3, 10)
     total = rows * plants_per_row
@@ -249,8 +259,10 @@ def _tmpl_garden(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_bakery(rng: random.Random) -> tuple[str, int]:
-    loaves = rng.randint(10, 50); price = rng.randint(2, 8)
-    cost_per = rng.randint(1, 4); overhead = rng.randint(10, 50)
+    loaves = rng.randint(10, 50)
+    price = rng.randint(2, 8)
+    cost_per = rng.randint(1, 4)
+    overhead = rng.randint(10, 50)
     revenue = loaves * price
     cost = loaves * cost_per + overhead
     profit = revenue - cost
@@ -263,7 +275,8 @@ def _tmpl_bakery(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_library(rng: random.Random) -> tuple[str, int]:
-    shelves = rng.randint(5, 15); books_per = rng.randint(20, 50)
+    shelves = rng.randint(5, 15)
+    books_per = rng.randint(20, 50)
     checked_pct = rng.choice([10, 20, 25, 30])
     returned = rng.randint(5, 30)
     total = shelves * books_per
@@ -278,9 +291,12 @@ def _tmpl_library(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_sports(rng: random.Random) -> tuple[str, int]:
-    teams = rng.randint(4, 12); players = rng.randint(8, 18)
-    fee = rng.randint(20, 100); discount = rng.choice([10, 15, 20])
-    sponsors = rng.randint(1, 5); sponsor_amt = rng.randint(100, 500)
+    teams = rng.randint(4, 12)
+    players = rng.randint(8, 18)
+    fee = rng.randint(20, 100)
+    discount = rng.choice([10, 15, 20])
+    sponsors = rng.randint(1, 5)
+    sponsor_amt = rng.randint(100, 500)
     gross = teams * players * fee
     after_disc = round(gross * (1 - discount / 100))
     total = after_disc + sponsors * sponsor_amt
@@ -294,9 +310,12 @@ def _tmpl_sports(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_construction(rng: random.Random) -> tuple[str, int]:
-    workers = rng.randint(5, 20); days = rng.randint(3, 14)
-    daily_wage = rng.randint(80, 200); materials = rng.randint(500, 2000)
-    overtime_days = rng.randint(1, 3); ot_rate = rng.choice([1.25, 1.5])
+    workers = rng.randint(5, 20)
+    days = rng.randint(3, 14)
+    daily_wage = rng.randint(80, 200)
+    materials = rng.randint(500, 2000)
+    overtime_days = rng.randint(1, 3)
+    ot_rate = rng.choice([1.25, 1.5])
     base_labor = workers * days * daily_wage
     ot_pay = round(workers * overtime_days * daily_wage * ot_rate)
     total = base_labor + ot_pay + materials
@@ -310,7 +329,8 @@ def _tmpl_construction(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_fundraiser(rng: random.Random) -> tuple[str, int]:
-    students = rng.randint(30, 100); goal = rng.randint(500, 2000)
+    students = rng.randint(30, 100)
+    goal = rng.randint(500, 2000)
     raised_pct = rng.choice([60, 70, 75, 80])
     extra_per = rng.randint(2, 10)
     raised = round(goal * raised_pct / 100)
@@ -326,8 +346,10 @@ def _tmpl_fundraiser(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_farm(rng: random.Random) -> tuple[str, int]:
-    cows = rng.randint(5, 20); milk_per = rng.randint(15, 40)
-    sell_pct = rng.choice([50, 60, 70, 75]); price = rng.randint(1, 4)
+    cows = rng.randint(5, 20)
+    milk_per = rng.randint(15, 40)
+    sell_pct = rng.choice([50, 60, 70, 75])
+    price = rng.randint(1, 4)
     total_milk = cows * milk_per
     sold = round(total_milk * sell_pct / 100)
     revenue = sold * price
@@ -340,8 +362,10 @@ def _tmpl_farm(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_factory(rng: random.Random) -> tuple[str, int]:
-    machines = rng.randint(3, 10); units_per_hr = rng.randint(50, 200)
-    hrs = rng.randint(6, 12); defect_pct = rng.choice([2, 5, 8, 10])
+    machines = rng.randint(3, 10)
+    units_per_hr = rng.randint(50, 200)
+    hrs = rng.randint(6, 12)
+    defect_pct = rng.choice([2, 5, 8, 10])
     price = rng.randint(5, 30)
     total = machines * units_per_hr * hrs
     defects = round(total * defect_pct / 100)
@@ -356,8 +380,10 @@ def _tmpl_factory(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_restaurant(rng: random.Random) -> tuple[str, int]:
-    tables = rng.randint(8, 20); seats = rng.randint(2, 6)
-    meals = rng.randint(2, 4); meal_price = rng.randint(10, 40)
+    tables = rng.randint(8, 20)
+    seats = rng.randint(2, 6)
+    meals = rng.randint(2, 4)
+    meal_price = rng.randint(10, 40)
     tip_pct = rng.choice([10, 15, 18, 20])
     total_customers = tables * seats
     food_total = total_customers * meals * meal_price
@@ -372,8 +398,10 @@ def _tmpl_restaurant(rng: random.Random) -> tuple[str, int]:
 
 
 def _tmpl_warehouse(rng: random.Random) -> tuple[str, int]:
-    pallets = rng.randint(10, 50); boxes_per = rng.randint(12, 30)
-    items_per = rng.randint(6, 20); shipped_pct = rng.choice([20, 25, 30, 40])
+    pallets = rng.randint(10, 50)
+    boxes_per = rng.randint(12, 30)
+    items_per = rng.randint(6, 20)
+    shipped_pct = rng.choice([20, 25, 30, 40])
     total_boxes = pallets * boxes_per
     total_items = total_boxes * items_per
     shipped = round(total_items * shipped_pct / 100)
@@ -387,21 +415,21 @@ def _tmpl_warehouse(rng: random.Random) -> tuple[str, int]:
 
 
 TEMPLATES: list[tuple[str, Callable[[random.Random], tuple[str, int]]]] = [
-    ("shopping",     _tmpl_shopping),
-    ("cooking",      _tmpl_cooking),
-    ("travel",       _tmpl_travel),
-    ("savings",      _tmpl_savings),
-    ("classroom",    _tmpl_classroom),
-    ("garden",       _tmpl_garden),
-    ("bakery",       _tmpl_bakery),
-    ("library",      _tmpl_library),
-    ("sports",       _tmpl_sports),
+    ("shopping", _tmpl_shopping),
+    ("cooking", _tmpl_cooking),
+    ("travel", _tmpl_travel),
+    ("savings", _tmpl_savings),
+    ("classroom", _tmpl_classroom),
+    ("garden", _tmpl_garden),
+    ("bakery", _tmpl_bakery),
+    ("library", _tmpl_library),
+    ("sports", _tmpl_sports),
     ("construction", _tmpl_construction),
-    ("fundraiser",   _tmpl_fundraiser),
-    ("farm",         _tmpl_farm),
-    ("factory",      _tmpl_factory),
-    ("restaurant",   _tmpl_restaurant),
-    ("warehouse",    _tmpl_warehouse),
+    ("fundraiser", _tmpl_fundraiser),
+    ("farm", _tmpl_farm),
+    ("factory", _tmpl_factory),
+    ("restaurant", _tmpl_restaurant),
+    ("warehouse", _tmpl_warehouse),
 ]
 
 IRRELEVANT_TEMPLATES: list[str] = [
@@ -447,10 +475,8 @@ def _inject_irrelevant_sentence(problem: str, rng: random.Random) -> str:
     """Insert one irrelevant numeric sentence at a random position."""
     existing_numbers: set[int] = set()
     for m in re.finditer(r"\b(\d+)\b", problem):
-        try:
+        with contextlib.suppress(ValueError):
             existing_numbers.add(int(m.group(1)))
-        except ValueError:
-            pass
     irrelevant = _generate_irrelevant_sentence(rng, existing_numbers)
     parts = re.split(r"(?<=\.)\s+", problem.strip())
     if len(parts) <= 1:
@@ -527,62 +553,70 @@ def generate_dataset_items(
 
         ctrl_seed = seed + i * 1000
         swap_seed = seed + i * 1000 + 500
-        inj_seed  = seed + i * 1000 + 250
+        inj_seed = seed + i * 1000 + 250
 
         orig_problem, orig_answer = tmpl_fn(random.Random(ctrl_seed))
 
-        control_items.append({
-            "id": id_offset + i,
-            "original_problem": orig_problem,
-            "perturbed_problem": orig_problem,
-            "correct_answer": orig_answer,
-            "original_answer": orig_answer,
-            "perturbation": "none",
-            "template": tmpl_name,
-            "control_seed": ctrl_seed,
-            "swap_seed": ctrl_seed,
-        })
+        control_items.append(
+            {
+                "id": id_offset + i,
+                "original_problem": orig_problem,
+                "perturbed_problem": orig_problem,
+                "correct_answer": orig_answer,
+                "original_answer": orig_answer,
+                "perturbation": "none",
+                "template": tmpl_name,
+                "control_seed": ctrl_seed,
+                "swap_seed": ctrl_seed,
+            }
+        )
 
         swap_problem, swap_answer = number_swap(tmpl_fn, swap_seed)
-        swapped_items.append({
-            "id": id_offset + i,
-            "original_problem": orig_problem,
-            "perturbed_problem": swap_problem,
-            "correct_answer": swap_answer,
-            "original_answer": orig_answer,
-            "perturbation": "number_swap",
-            "template": tmpl_name,
-            "control_seed": ctrl_seed,
-            "swap_seed": swap_seed,
-        })
+        swapped_items.append(
+            {
+                "id": id_offset + i,
+                "original_problem": orig_problem,
+                "perturbed_problem": swap_problem,
+                "correct_answer": swap_answer,
+                "original_answer": orig_answer,
+                "perturbation": "number_swap",
+                "template": tmpl_name,
+                "control_seed": ctrl_seed,
+                "swap_seed": swap_seed,
+            }
+        )
 
         inject_rng = random.Random(inj_seed)
         inj_problem, inj_answer = irrelevant_injection(orig_problem, orig_answer, inject_rng)
-        injected_items.append({
-            "id": id_offset + i,
-            "original_problem": orig_problem,
-            "perturbed_problem": inj_problem,
-            "correct_answer": inj_answer,
-            "original_answer": orig_answer,
-            "perturbation": "irrelevant_injection",
-            "template": tmpl_name,
-            "control_seed": ctrl_seed,
-            "swap_seed": ctrl_seed,
-        })
+        injected_items.append(
+            {
+                "id": id_offset + i,
+                "original_problem": orig_problem,
+                "perturbed_problem": inj_problem,
+                "correct_answer": inj_answer,
+                "original_answer": orig_answer,
+                "perturbation": "irrelevant_injection",
+                "template": tmpl_name,
+                "control_seed": ctrl_seed,
+                "swap_seed": ctrl_seed,
+            }
+        )
 
         comb_inject_rng = random.Random(inj_seed + 1)
         comb_problem, comb_answer = combined_adversarial(tmpl_fn, swap_seed, comb_inject_rng)
-        combined_items.append({
-            "id": id_offset + i,
-            "original_problem": orig_problem,
-            "perturbed_problem": comb_problem,
-            "correct_answer": comb_answer,
-            "original_answer": orig_answer,
-            "perturbation": "combined",
-            "template": tmpl_name,
-            "control_seed": ctrl_seed,
-            "swap_seed": swap_seed,
-        })
+        combined_items.append(
+            {
+                "id": id_offset + i,
+                "original_problem": orig_problem,
+                "perturbed_problem": comb_problem,
+                "correct_answer": comb_answer,
+                "original_answer": orig_answer,
+                "perturbation": "combined",
+                "template": tmpl_name,
+                "control_seed": ctrl_seed,
+                "swap_seed": swap_seed,
+            }
+        )
 
     return {
         "control": control_items,
@@ -619,9 +653,13 @@ def load_and_augment_data() -> dict[str, list[dict[str, Any]]]:
             raw = json.load(f)
         for key in ("control", "number_swapped", "irrelevant_injected", "combined"):
             datasets[key] = raw["datasets"][key]
-        print(f"  Loaded {len(datasets['control'])} items/variant from {ADVERSARIAL_DATA_PATH.name}")
+        print(
+            f"  Loaded {len(datasets['control'])} items/variant from {ADVERSARIAL_DATA_PATH.name}"
+        )
     else:
-        print(f"  {ADVERSARIAL_DATA_PATH.name} not found — generating 200 items via Exp 119 logic...")
+        print(
+            f"  {ADVERSARIAL_DATA_PATH.name} not found — generating 200 items via Exp 119 logic..."
+        )
         base = generate_dataset_items(n=200, seed=119_000, id_offset=0)
         for key in ("control", "number_swapped", "irrelevant_injected", "combined"):
             datasets[key] = base[key]
@@ -629,8 +667,10 @@ def load_and_augment_data() -> dict[str, list[dict[str, Any]]]:
     current_n = len(datasets["control"])
     if current_n < TARGET_N:
         n_aug = TARGET_N - current_n
-        print(f"  Augmenting {current_n} → {TARGET_N} items/variant "
-              f"(generating {n_aug} new items with seed {AUGMENT_BASE_SEED})...")
+        print(
+            f"  Augmenting {current_n} → {TARGET_N} items/variant "
+            f"(generating {n_aug} new items with seed {AUGMENT_BASE_SEED})..."
+        )
         aug = generate_dataset_items(n=n_aug, seed=AUGMENT_BASE_SEED, id_offset=current_n)
         for key in ("control", "number_swapped", "irrelevant_injected", "combined"):
             datasets[key] = datasets[key] + aug[key]
@@ -802,9 +842,7 @@ def simulate_baseline_response(
                     f"Answer: {wrong}"
                 )
 
-    error_type = rng.choices(
-        ["arithmetic", "logic", "reading"], weights=[50, 35, 15], k=1
-    )[0]
+    error_type = rng.choices(["arithmetic", "logic", "reading"], weights=[50, 35, 15], k=1)[0]
 
     if error_type == "arithmetic":
         step1 = rng.randint(1, max(1, abs(gt) // 2 + 1))
@@ -820,11 +858,7 @@ def simulate_baseline_response(
     if error_type == "logic":
         offset = rng.choice([-20, -10, -5, 5, 10, 20])
         wrong = gt + offset
-        return (
-            f"Let me work through this.\n"
-            f"The result is {wrong}.\n"
-            f"Answer: {wrong}"
-        )
+        return f"Let me work through this.\nThe result is {wrong}.\nAnswer: {wrong}"
 
     wrong = gt * rng.choice([2, 3]) + rng.randint(-50, 50)
     return f"I think the answer is {wrong}.\nAnswer: {wrong}"
@@ -901,9 +935,19 @@ def simulate_repair(
         success = rng.random() < repair_prob
         history.append({"iter": i + 1, "repaired": success})
         if success:
-            return {"repaired": True, "n_iters": i + 1, "final_correct": True, "iteration_history": history}
+            return {
+                "repaired": True,
+                "n_iters": i + 1,
+                "final_correct": True,
+                "iteration_history": history,
+            }
 
-    return {"repaired": False, "n_iters": max_iters, "final_correct": False, "iteration_history": history}
+    return {
+        "repaired": False,
+        "n_iters": max_iters,
+        "final_correct": False,
+        "iteration_history": history,
+    }
 
 
 # ===========================================================================
@@ -960,7 +1004,9 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
                 test_input = {k: v.cuda() for k, v in test_input.items()}
             with torch.no_grad():
                 _ = model.generate(
-                    **test_input, max_new_tokens=4, do_sample=False,
+                    **test_input,
+                    max_new_tokens=4,
+                    do_sample=False,
                     pad_token_id=tokenizer.eos_token_id,
                 )
             print(f"    Loaded {model_name} successfully on {device}.")
@@ -990,11 +1036,16 @@ def generate_response_live(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True, enable_thinking=False,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            enable_thinking=False,
         )
     except TypeError:
         try:
-            text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            text = tokenizer.apply_chat_template(
+                messages, tokenize=False, add_generation_prompt=True
+            )
         except Exception:
             text = prompt
 
@@ -1011,7 +1062,7 @@ def generate_response_live(
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:],
+        outputs[0, inputs["input_ids"].shape[1] :],
         skip_special_tokens=True,
     )
     if "</think>" in response:
@@ -1024,6 +1075,7 @@ def unload_model(model: Any, tokenizer: Any, device: str) -> None:
     del model, tokenizer
     try:
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
     except ImportError:
@@ -1067,7 +1119,12 @@ def evaluate_item(
         baseline_response = generate_response_live(prompt, tokenizer, model_obj, device)
     else:
         baseline_response = simulate_baseline_response(
-            item, model_name, base_error_rate, variant_key, multiplier, sim_rng,
+            item,
+            model_name,
+            base_error_rate,
+            variant_key,
+            multiplier,
+            sim_rng,
         )
 
     extracted = extract_final_number(baseline_response)
@@ -1088,8 +1145,10 @@ def evaluate_item(
     t2 = time.time()
     if verify_result["verified"]:
         repair_result: dict[str, Any] = {
-            "repaired": False, "n_iters": 0,
-            "final_correct": baseline_correct, "iteration_history": [],
+            "repaired": False,
+            "n_iters": 0,
+            "final_correct": baseline_correct,
+            "iteration_history": [],
         }
         vr_correct = baseline_correct
     else:
@@ -1303,7 +1362,12 @@ def compute_variant_metrics(
     )
     verify_m["precision"] = round(verified_correct / n_verified, 4) if n_verified > 0 else 0.0
 
-    error_types = ["arithmetic_error", "irrelevant_number_error", "logic_error", "reading_comprehension_error"]
+    error_types = [
+        "arithmetic_error",
+        "irrelevant_number_error",
+        "logic_error",
+        "reading_comprehension_error",
+    ]
     error_counts: dict[str, int] = {et: 0 for et in error_types}
     for r in item_results:
         et = r.get("error_type")
@@ -1316,7 +1380,8 @@ def compute_variant_metrics(
 
     irrel_total = error_counts.get("irrelevant_number_error", 0)
     irrel_passed_ising = sum(
-        1 for r in item_results
+        1
+        for r in item_results
         if r.get("error_type") == "irrelevant_number_error" and r["verify"]["verified"]
     )
     irrel_pass_rate = round(irrel_passed_ising / irrel_total, 4) if irrel_total > 0 else None
@@ -1377,7 +1442,9 @@ def compute_adversarial_ratio(all_model_results: dict[str, Any]) -> dict[str, An
         "interpretation": (
             f"Verify-repair is {pooled_ratio:.2f}× more beneficial on adversarial "
             f"inputs than on standard control inputs."
-        ) if pooled_ratio is not None else "Insufficient data.",
+        )
+        if pooled_ratio is not None
+        else "Insufficient data.",
     }
 
 
@@ -1410,7 +1477,9 @@ def check_exp122_replication(all_model_results: dict[str, Any]) -> dict[str, Any
             f"Observed {observed:.1%} pass-through rate for irrelevant-number errors "
             f"vs. Exp 122 reference of {exp122_reference:.1%}. "
             + ("Replicates." if matches else "DEVIATION — investigate simulation.")
-        ) if observed is not None else "No irrelevant-number errors observed.",
+        )
+        if observed is not None
+        else "No irrelevant-number errors observed.",
     }
 
 
@@ -1450,7 +1519,9 @@ def extract_paired_deltas(
     )
     deltas: list[float] = []
     for ctrl_r, adv_r in zip(ctrl_item_results, adv_item_results):
-        ctrl_improvement = int(ctrl_r["verify_repair"]["correct"]) - int(ctrl_r["baseline"]["correct"])
+        ctrl_improvement = int(ctrl_r["verify_repair"]["correct"]) - int(
+            ctrl_r["baseline"]["correct"]
+        )
         adv_improvement = int(adv_r["verify_repair"]["correct"]) - int(adv_r["baseline"]["correct"])
         deltas.append(float(adv_improvement - ctrl_improvement))
     return deltas
@@ -1535,12 +1606,19 @@ def run_experiment() -> dict[str, Any]:
 
             for i, item in enumerate(items):
                 if (i + 1) % 100 == 0:
-                    print(f"    [{i+1}/{n}] {time.time()-t_var:.1f}s elapsed...")
+                    print(f"    [{i + 1}/{n}] {time.time() - t_var:.1f}s elapsed...")
                 result = evaluate_item(
-                    item, variant_key, multiplier,
-                    model_name, base_error_rate,
-                    tokenizer, model_obj, device, use_live,
-                    sim_rng, repair_rng,
+                    item,
+                    variant_key,
+                    multiplier,
+                    model_name,
+                    base_error_rate,
+                    tokenizer,
+                    model_obj,
+                    device,
+                    use_live,
+                    sim_rng,
+                    repair_rng,
                 )
                 item_results.append(result)
 
@@ -1555,7 +1633,11 @@ def run_experiment() -> dict[str, Any]:
             delta = metrics["improvement_delta_pp"]
             print(
                 f"    Baseline: {b['accuracy_pct']:.1f}%"
-                + (f" (drop: {b['accuracy_drop_pp']:+.1f}pp vs ctrl)" if b["accuracy_drop_pp"] is not None else "")
+                + (
+                    f" (drop: {b['accuracy_drop_pp']:+.1f}pp vs ctrl)"
+                    if b["accuracy_drop_pp"] is not None
+                    else ""
+                )
                 + f"  →  VR: {vr['accuracy_pct']:.1f}%"
                 + f"  Δ={delta:+.1f}pp  [{t_var_elapsed:.1f}s]"
             )
@@ -1622,12 +1704,14 @@ def run_experiment() -> dict[str, Any]:
         all_paired_deltas: list[float] = []
         for model_name in all_model_results:
             ctrl_results = all_item_results[model_name]["control"]
-            adv_results  = all_item_results[model_name][adv_vk]
+            adv_results = all_item_results[model_name][adv_vk]
             paired_deltas = extract_paired_deltas(ctrl_results, adv_results)
             all_paired_deltas.extend(paired_deltas)
 
         perm_result = paired_sign_permutation_test(
-            all_paired_deltas, n_permutations=N_PERMUTATION, seed=PERMUTATION_SEED,
+            all_paired_deltas,
+            n_permutations=N_PERMUTATION,
+            seed=PERMUTATION_SEED,
         )
         per_variant_paired_tests[adv_vk] = perm_result
 
@@ -1638,11 +1722,11 @@ def run_experiment() -> dict[str, Any]:
         adv_n_var = 0
         for model_name in all_model_results:
             ctrl_met = all_model_results[model_name]["variants"]["control"]["metrics"]
-            adv_met  = all_model_results[model_name]["variants"][adv_vk]["metrics"]
+            adv_met = all_model_results[model_name]["variants"][adv_vk]["metrics"]
             ctrl_improved_var += ctrl_met["n_improved_by_vr"]
-            ctrl_n_var        += ctrl_met["n_questions"]
-            adv_improved_var  += adv_met["n_improved_by_vr"]
-            adv_n_var         += adv_met["n_questions"]
+            ctrl_n_var += ctrl_met["n_questions"]
+            adv_improved_var += adv_met["n_improved_by_vr"]
+            adv_n_var += adv_met["n_questions"]
 
         ztest_result = two_proportion_ztest(
             n_success_1=ctrl_improved_var,
@@ -1654,8 +1738,12 @@ def run_experiment() -> dict[str, Any]:
         per_variant_ztest[adv_vk] = ztest_result
 
         sig_perm = perm_result["significant_p05"]
-        sig_z    = ztest_result["significant_p05"]
-        marker = "✓ BOTH" if (sig_perm and sig_z) else ("perm✓" if sig_perm else ("z✓" if sig_z else "✗ neither"))
+        sig_z = ztest_result["significant_p05"]
+        marker = (
+            "✓ BOTH"
+            if (sig_perm and sig_z)
+            else ("perm✓" if sig_perm else ("z✓" if sig_z else "✗ neither"))
+        )
         print(
             f"  {adv_vk:22s} | perm p={perm_result['p_value']:.4f}"
             f" ({'' if sig_perm else 'NOT '}sig)"
@@ -1666,8 +1754,10 @@ def run_experiment() -> dict[str, Any]:
 
     # Pooled legacy z-test (for comparison with Exp 162).
     pooled_ztest = two_proportion_ztest(
-        n_success_1=ctrl_improved_total, n_1=ctrl_n_total,
-        n_success_2=adv_improved_total, n_2=adv_n_total,
+        n_success_1=ctrl_improved_total,
+        n_1=ctrl_n_total,
+        n_success_2=adv_improved_total,
+        n_2=adv_n_total,
         one_sided=True,
     )
 
@@ -1707,7 +1797,10 @@ def run_experiment() -> dict[str, Any]:
                 "baseline_pct": m["baseline"]["accuracy_pct"],
                 "verify_repair_pct": m["verify_repair"]["accuracy_pct"],
                 "delta_pp": m["improvement_delta_pp"],
-                "ci_95": [m["verify_repair"]["ci_95_lo"] * 100, m["verify_repair"]["ci_95_hi"] * 100],
+                "ci_95": [
+                    m["verify_repair"]["ci_95_lo"] * 100,
+                    m["verify_repair"]["ci_95_hi"] * 100,
+                ],
             }
 
     improvement_deltas: dict[str, Any] = {}
@@ -1737,38 +1830,54 @@ def run_experiment() -> dict[str, Any]:
     per_variant_summary: dict[str, dict[str, Any]] = {}
     for vk in ADVERSARIAL_VARIANT_KEYS:
         # Pool across models for aggregate values.
-        ctrl_baselines = [all_model_results[m]["variants"]["control"]["metrics"]["baseline"]["accuracy_pct"]
-                          for m in all_model_results]
-        adv_baselines  = [all_model_results[m]["variants"][vk]["metrics"]["baseline"]["accuracy_pct"]
-                          for m in all_model_results]
-        ctrl_repaired  = [all_model_results[m]["variants"]["control"]["metrics"]["verify_repair"]["accuracy_pct"]
-                          for m in all_model_results]
-        adv_repaired   = [all_model_results[m]["variants"][vk]["metrics"]["verify_repair"]["accuracy_pct"]
-                          for m in all_model_results]
-        ctrl_delta_pp_list = [all_model_results[m]["variants"]["control"]["metrics"]["improvement_delta_pp"]
-                              for m in all_model_results]
-        adv_delta_pp_list  = [all_model_results[m]["variants"][vk]["metrics"]["improvement_delta_pp"]
-                              for m in all_model_results]
+        ctrl_baselines = [
+            all_model_results[m]["variants"]["control"]["metrics"]["baseline"]["accuracy_pct"]
+            for m in all_model_results
+        ]
+        adv_baselines = [
+            all_model_results[m]["variants"][vk]["metrics"]["baseline"]["accuracy_pct"]
+            for m in all_model_results
+        ]
+        ctrl_repaired = [
+            all_model_results[m]["variants"]["control"]["metrics"]["verify_repair"]["accuracy_pct"]
+            for m in all_model_results
+        ]
+        adv_repaired = [
+            all_model_results[m]["variants"][vk]["metrics"]["verify_repair"]["accuracy_pct"]
+            for m in all_model_results
+        ]
+        ctrl_delta_pp_list = [
+            all_model_results[m]["variants"]["control"]["metrics"]["improvement_delta_pp"]
+            for m in all_model_results
+        ]
+        adv_delta_pp_list = [
+            all_model_results[m]["variants"][vk]["metrics"]["improvement_delta_pp"]
+            for m in all_model_results
+        ]
 
         mean_ctrl_delta = sum(ctrl_delta_pp_list) / len(ctrl_delta_pp_list)
-        mean_adv_delta  = sum(adv_delta_pp_list)  / len(adv_delta_pp_list)
+        mean_adv_delta = sum(adv_delta_pp_list) / len(adv_delta_pp_list)
         # CI from Exp 162-style bootstrap (use combined VR flags for CI).
         ci_95_list = [
-            [all_model_results[m]["variants"][vk]["metrics"]["verify_repair"]["ci_95_lo"] * 100,
-             all_model_results[m]["variants"][vk]["metrics"]["verify_repair"]["ci_95_hi"] * 100]
+            [
+                all_model_results[m]["variants"][vk]["metrics"]["verify_repair"]["ci_95_lo"] * 100,
+                all_model_results[m]["variants"][vk]["metrics"]["verify_repair"]["ci_95_hi"] * 100,
+            ]
             for m in all_model_results
         ]
         per_variant_summary[vk] = {
             "baseline_accuracy_pct_per_model": dict(zip(all_model_results.keys(), adv_baselines)),
-            "repair_accuracy_pct_per_model":   dict(zip(all_model_results.keys(), adv_repaired)),
-            "improvement_delta_pp_per_model":  dict(zip(all_model_results.keys(), adv_delta_pp_list)),
+            "repair_accuracy_pct_per_model": dict(zip(all_model_results.keys(), adv_repaired)),
+            "improvement_delta_pp_per_model": dict(
+                zip(all_model_results.keys(), adv_delta_pp_list)
+            ),
             "mean_improvement_delta_pp": round(mean_adv_delta, 2),
             "mean_ctrl_delta_pp": round(mean_ctrl_delta, 2),
             "ci_95_per_model": dict(zip(all_model_results.keys(), ci_95_list)),
             "p_permutation": per_variant_paired_tests[vk]["p_value"],
-            "p_ztest":        per_variant_ztest[vk]["p_value"],
+            "p_ztest": per_variant_ztest[vk]["p_value"],
             "significant_permutation": per_variant_paired_tests[vk]["significant_p05"],
-            "significant_ztest":       per_variant_ztest[vk]["significant_p05"],
+            "significant_ztest": per_variant_ztest[vk]["significant_p05"],
             "goal5_this_variant": bool(
                 per_variant_paired_tests[vk]["significant_p05"]
                 and per_variant_ztest[vk]["significant_p05"]
@@ -1814,8 +1923,12 @@ def run_experiment() -> dict[str, Any]:
         "ci_95": {
             model_name: {
                 vk: [
-                    all_model_results[model_name]["variants"][vk]["metrics"]["verify_repair"]["ci_95_lo"],
-                    all_model_results[model_name]["variants"][vk]["metrics"]["verify_repair"]["ci_95_hi"],
+                    all_model_results[model_name]["variants"][vk]["metrics"]["verify_repair"][
+                        "ci_95_lo"
+                    ],
+                    all_model_results[model_name]["variants"][vk]["metrics"]["verify_repair"][
+                        "ci_95_hi"
+                    ],
                 ]
                 for vk, _, _ in VARIANTS
             }
@@ -1865,7 +1978,7 @@ def print_results_table(results: dict[str, Any]) -> None:
         row_ci = f"    {'(95% CI)':>22}"
         for vk in variant_keys:
             m = mdata["variants"][vk]["metrics"]["verify_repair"]
-            row_ci += f"  [{m['ci_95_lo']*100:.0f}–{m['ci_95_hi']*100:.0f}%]"
+            row_ci += f"  [{m['ci_95_lo'] * 100:.0f}–{m['ci_95_hi'] * 100:.0f}%]"
         print(row_ci)
         print()
 
@@ -1904,7 +2017,9 @@ def print_results_table(results: dict[str, Any]) -> None:
     print("TWO-PROPORTION Z-TEST (per adversarial variant)")
     print("  H1: improvement rate on adversarial > improvement rate on control (one-sided)")
     print(SEP)
-    print(f"{'Variant':<24} {'ctrl rate':>12} {'adv rate':>12} {'z-stat':>10} {'p-value':>10} {'sig?':>8}")
+    print(
+        f"{'Variant':<24} {'ctrl rate':>12} {'adv rate':>12} {'z-stat':>10} {'p-value':>10} {'sig?':>8}"
+    )
     print("-" * 84)
     for adv_vk in ADVERSARIAL_VARIANT_KEYS:
         zt = results["per_variant_ztest"][adv_vk]
@@ -1940,7 +2055,9 @@ def print_results_table(results: dict[str, Any]) -> None:
     print(f"  Adversarial/control improvement ratio: {results['adversarial_control_ratio']:.2f}×")
     print(f"  Exp 122 replication: {results['exp122_replication']['interpretation']}")
     print()
-    print(f"  {'★ GOAL #5 ACHIEVED' if results['goal5_achieved'] else '✗ Goal #5 NOT YET ACHIEVED'}")
+    print(
+        f"  {'★ GOAL #5 ACHIEVED' if results['goal5_achieved'] else '✗ Goal #5 NOT YET ACHIEVED'}"
+    )
     print(f"  Experiment elapsed: {results['experiment_elapsed_s']:.1f}s")
     print(SEP)
 

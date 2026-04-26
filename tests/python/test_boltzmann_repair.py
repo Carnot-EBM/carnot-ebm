@@ -199,9 +199,9 @@ class TestLinearSpinAdapter:
         Spec: SCENARIO-REPAIR-030
         """
         adapter = LinearSpinAdapter(spin_dim=SPIN_DIM, embed_dim=EMBED_DIM)
-        spins = 2.0 * jrandom.bernoulli(jrandom.PRNGKey(0), 0.5, (SPIN_DIM,)).astype(
-            jnp.float32
-        ) - 1.0
+        spins = (
+            2.0 * jrandom.bernoulli(jrandom.PRNGKey(0), 0.5, (SPIN_DIM,)).astype(jnp.float32) - 1.0
+        )
         result = adapter.project(spins)
         assert bool(jnp.all(jnp.isfinite(result)))
 
@@ -305,9 +305,7 @@ class TestBoltzmannRepairBridge:
           SCENARIO-REPAIR-028, SCENARIO-REPAIR-029
     """
 
-    def test_get_repair_direction_returns_repairdir(
-        self, bridge: BoltzmannRepairBridge
-    ) -> None:
+    def test_get_repair_direction_returns_repairdir(self, bridge: BoltzmannRepairBridge) -> None:
         """get_repair_direction() returns a RepairDirection instance.
 
         Spec: REQ-REPAIR-014, SCENARIO-REPAIR-028
@@ -381,9 +379,7 @@ class TestBoltzmannRepairBridge:
         rd = bridge.get_repair_direction({})
         assert bool(jnp.all(jnp.isfinite(rd.embedding_projection)))
 
-    def test_different_states_different_directions(
-        self, bridge: BoltzmannRepairBridge
-    ) -> None:
+    def test_different_states_different_directions(self, bridge: BoltzmannRepairBridge) -> None:
         """Two calls with different states produce different repair directions.
 
         Because the PRNG key advances with each call, different constraint
@@ -413,9 +409,7 @@ class TestEvaluateRepairQuality:
     Spec: REQ-REPAIR-015, SCENARIO-REPAIR-029
     """
 
-    def test_returns_dict_with_required_keys(
-        self, bridge: BoltzmannRepairBridge
-    ) -> None:
+    def test_returns_dict_with_required_keys(self, bridge: BoltzmannRepairBridge) -> None:
         """evaluate_repair_quality() returns dict with all required keys.
 
         Spec: REQ-REPAIR-015
@@ -509,6 +503,7 @@ class TestPipelineExports:
             LinearSpinAdapter as LSA,
             RepairDirection as RD,
         )
+
         assert BBR is BoltzmannRepairBridge
         assert LSA is LinearSpinAdapter
         assert RD is RepairDirection

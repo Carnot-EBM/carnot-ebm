@@ -395,8 +395,7 @@ SYNTHETIC_QUESTIONS: dict[str, list[dict[str, Any]]] = {
         {
             "question": "Is it legal to record a phone call without consent in all US states?",
             "best_answer": (
-                "No, laws vary: some US states require all-party consent for "
-                "recording phone calls."
+                "No, laws vary: some US states require all-party consent for recording phone calls."
             ),
             "correct_answers": [
                 "No, laws vary: some US states require all-party consent for "
@@ -420,8 +419,7 @@ SYNTHETIC_QUESTIONS: dict[str, list[dict[str, Any]]] = {
         {
             "question": "Can a US citizen be president if they were born abroad?",
             "best_answer": (
-                "No, the US Constitution requires the President to be a "
-                "natural-born citizen."
+                "No, the US Constitution requires the President to be a natural-born citizen."
             ),
             "correct_answers": [
                 "No, the US Constitution requires the President to be a "
@@ -650,9 +648,7 @@ def measure_coverage(
         correct_text = item.get("best_answer") or (
             item["correct_answers"][0] if item["correct_answers"] else ""
         )
-        incorrect_text = (
-            item["incorrect_answers"][0] if item["incorrect_answers"] else ""
-        )
+        incorrect_text = item["incorrect_answers"][0] if item["incorrect_answers"] else ""
 
         # Full AutoExtractor on correct answer.
         auto_constraints = auto_extractor.extract(correct_text)
@@ -729,11 +725,7 @@ def mine_blind_spots(
     """
     from carnot.pipeline.mining import CATEGORY_DETECTORS, CLAIM_CATEGORIES, FailureAnalyzer
 
-    blind_spots = [
-        (q, r)
-        for q, r in zip(questions, coverage_results)
-        if not r["covered"]
-    ]
+    blind_spots = [(q, r) for q, r in zip(questions, coverage_results) if not r["covered"]]
 
     print(f"\n[ConstraintMiner] Analyzing {len(blind_spots)} blind-spot questions...")
 
@@ -794,9 +786,7 @@ def mine_blind_spots(
             "rank": i + 1,
             "constraint_type": cat,
             "blind_spot_count": cnt,
-            "estimated_coverage_improvement_pct": round(
-                100.0 * cnt / total_blind, 1
-            ),
+            "estimated_coverage_improvement_pct": round(100.0 * cnt / total_blind, 1),
         }
         for i, (cat, cnt) in enumerate(top5)
     ]
@@ -804,9 +794,7 @@ def mine_blind_spots(
     return {
         "total_blind_spots_analyzed": len(blind_spots),
         "fa_false_negative_count": len(fa_report.false_negatives) if fa_report else 0,
-        "fa_false_negative_rate": (
-            fa_report.false_negative_rate if fa_report else 0.0
-        ),
+        "fa_false_negative_rate": (fa_report.false_negative_rate if fa_report else 0.0),
         "detector_counts": dict(detector_counts),
         "fa_category_counts": fa_category_counts,
         "merged_category_counts": merged_counts,
@@ -851,9 +839,7 @@ def measure_accuracy(
     pipeline = VerifyRepairPipeline()
 
     covered_items = [
-        (item, res)
-        for item, res in zip(questions, coverage_results)
-        if res["covered"]
+        (item, res) for item, res in zip(questions, coverage_results) if res["covered"]
     ]
 
     if not covered_items:
@@ -889,9 +875,7 @@ def measure_accuracy(
         "correct_accept_rate": round(correct_accepts / len(covered_items), 4),
         "wrong_tested_count": wrong_tested,
         "wrong_reject_count": wrong_rejects,
-        "wrong_reject_rate": round(
-            wrong_rejects / wrong_tested if wrong_tested > 0 else 0.0, 4
-        ),
+        "wrong_reject_rate": round(wrong_rejects / wrong_tested if wrong_tested > 0 else 0.0, 4),
     }
 
 
@@ -1027,7 +1011,7 @@ def main() -> None:
     overall_coverage = total_covered / len(per_q) if per_q else 0.0
 
     print(f"\n      {'Category':<20} {'Total':>6} {'Covered':>8} {'Coverage':>9} {'KB-cov':>7}")
-    print(f"      {'-'*20} {'-'*6} {'-'*8} {'-'*9} {'-'*7}")
+    print(f"      {'-' * 20} {'-' * 6} {'-' * 8} {'-' * 9} {'-' * 7}")
     per_cat_coverage: dict[str, float] = {}
     for cat in SUPERCATEGORIES:
         stats = per_cat.get(cat, {"total": 0, "covered": 0, "kb_covered": 0})
@@ -1037,19 +1021,13 @@ def main() -> None:
         rate = cov / n if n > 0 else 0.0
         kb_rate = kb_cov / n if n > 0 else 0.0
         per_cat_coverage[cat] = rate
-        print(
-            f"      {cat:<20} {n:>6} {cov:>8} {rate:>8.1%} {kb_rate:>7.1%}"
-        )
-    print(f"      {'TOTAL':<20} {len(per_q):>6} {total_covered:>8} "
-          f"{overall_coverage:>8.1%}")
+        print(f"      {cat:<20} {n:>6} {cov:>8} {rate:>8.1%} {kb_rate:>7.1%}")
+    print(f"      {'TOTAL':<20} {len(per_q):>6} {total_covered:>8} {overall_coverage:>8.1%}")
 
     # Step 3: KB comparison.
     total_kb = sum(r["kb_constraint_count"] > 0 for r in per_q)
-    kb_only_gain = sum(
-        r["kb_constraint_count"] > 0 and not r["covered"] for r in per_q
-    )
-    print(f"\n      KB-only coverage: {total_kb}/{len(per_q)} "
-          f"({100*total_kb/len(per_q):.1f}%)")
+    kb_only_gain = sum(r["kb_constraint_count"] > 0 and not r["covered"] for r in per_q)
+    print(f"\n      KB-only coverage: {total_kb}/{len(per_q)} ({100 * total_kb / len(per_q):.1f}%)")
     print(f"      KB adds coverage for {kb_only_gain} questions not covered by other extractors.")
 
     # Step 4: ConstraintMiner analysis on blind spots.
@@ -1058,12 +1036,13 @@ def main() -> None:
 
     print(f"\n      Blind-spot questions analyzed: {mining_stats['total_blind_spots_analyzed']}")
     print(f"      FailureAnalyzer false negatives: {mining_stats['fa_false_negative_count']}")
-    print(f"      FailureAnalyzer false negative rate: "
-          f"{mining_stats['fa_false_negative_rate']:.1%}")
+    print(
+        f"      FailureAnalyzer false negative rate: {mining_stats['fa_false_negative_rate']:.1%}"
+    )
 
     print("\n      Top-5 uncovered constraint types (by frequency in blind spots):")
     print(f"      {'Rank':<6} {'Constraint Type':<22} {'Count':>6} {'Est. Coverage Gain':>20}")
-    print(f"      {'-'*6} {'-'*22} {'-'*6} {'-'*20}")
+    print(f"      {'-' * 6} {'-' * 22} {'-' * 6} {'-' * 20}")
     for entry in mining_stats["top5_constraint_types"]:
         print(
             f"      #{entry['rank']:<5} {entry['constraint_type']:<22} "
@@ -1156,12 +1135,14 @@ def main() -> None:
     print("=" * 70)
     print(f"  Overall factual coverage rate : {overall_coverage:.1%}")
     print(f"  Blind-spot rate               : {1 - overall_coverage:.1%}")
-    print(f"  KB-only coverage              : {100*total_kb/len(per_q):.1f}%")
+    print(f"  KB-only coverage              : {100 * total_kb / len(per_q):.1f}%")
     print(f"  Covered-question accept rate  : {accuracy_stats['correct_accept_rate']:.1%}")
     print(f"  Covered-question reject rate  : {accuracy_stats['wrong_reject_rate']:.1%}")
     print(f"  Top-1 missing type            : {recommendation['top1_constraint_type']}")
     print(f"  Recommended next extractor    : {recommendation['recommended_extractor_class']}")
-    print(f"  Est. post-build coverage      : {recommendation['estimated_post_build_coverage_pct']:.1f}%")
+    print(
+        f"  Est. post-build coverage      : {recommendation['estimated_post_build_coverage_pct']:.1f}%"
+    )
     print(f"  Elapsed                       : {elapsed:.1f}s")
     print("=" * 70)
 

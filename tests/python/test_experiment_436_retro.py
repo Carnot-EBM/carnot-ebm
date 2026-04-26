@@ -213,7 +213,10 @@ def test_gpu1_zombie_fixed_none() -> None:
 
 def test_live_numbers_all_scaffolding() -> None:
     """All scaffolding_only → False."""
-    so = {"status": "scaffolding_only", "honest_verdict": "live_benchmark_needs_human_triggered_run"}
+    so = {
+        "status": "scaffolding_only",
+        "honest_verdict": "live_benchmark_needs_human_triggered_run",
+    }
     assert mod._live_numbers_from_results(so, so, so) is False
 
 
@@ -307,7 +310,9 @@ def test_spilled_energy_none() -> None:
 
 def test_compliance_checker_works_verdict() -> None:
     """compliance_checker_works → True."""
-    assert mod._compliance_checker_from_results({"honest_verdict": "compliance_checker_works"}) is True
+    assert (
+        mod._compliance_checker_from_results({"honest_verdict": "compliance_checker_works"}) is True
+    )
 
 
 def test_compliance_checker_success_verdict() -> None:
@@ -554,8 +559,9 @@ def test_print_success_table_no_crash(capsys: pytest.CaptureFixture) -> None:
 def test_print_retro_items_with_items(capsys: pytest.CaptureFixture) -> None:
     """_print_retro_items prints NEW and CLOSED sections."""
     retro = mod.MilestoneRetro2026_04_32(
-        new_retro_items=[{"id": "RETRO-026", "severity": "high",
-                          "description": "Test item description here."}],
+        new_retro_items=[
+            {"id": "RETRO-026", "severity": "high", "description": "Test item description here."}
+        ],
         closed_retro_items=["RETRO-003 (per-experiment): closed."],
     )
     mod._print_retro_items(retro)
@@ -581,7 +587,10 @@ def test_run_retro_produces_artifact(tmp_path: Path) -> None:
     """run_retro returns a dict with schema and milestone fields."""
     # Use minimal stubs for all result files.
     stub_426 = {"honest_verdict": "zombie_detected", "retro_025_status": "zombie_confirmed"}
-    stub_scaffolding = {"status": "scaffolding_only", "honest_verdict": "live_benchmark_needs_human_triggered_run"}
+    stub_scaffolding = {
+        "status": "scaffolding_only",
+        "honest_verdict": "live_benchmark_needs_human_triggered_run",
+    }
     stub_success = {"status": "success", "duration_s": 0.1, "honest_verdict": "synthetic_fallback"}
     stub_435a = {"honest_verdict": "partial_match", "experiment": "435a"}
 
@@ -606,7 +615,9 @@ def test_run_retro_produces_artifact(tmp_path: Path) -> None:
         fake_paths[key].write_text(json.dumps(stub_scaffolding))
     for key in ("430", "432"):
         fake_paths[key].write_text(json.dumps(stub_success))
-    fake_paths["431"].write_text(json.dumps({"status": "scaffolding_only", "retro_024_closed": False}))
+    fake_paths["431"].write_text(
+        json.dumps({"status": "scaffolding_only", "retro_024_closed": False})
+    )
     fake_paths["435a"].write_text(json.dumps(stub_435a))
     # 425, 433, 434, 435 intentionally absent.
 

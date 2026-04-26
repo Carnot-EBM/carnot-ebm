@@ -23,6 +23,7 @@ import pytest
 # Import helpers from the experiment module under test.
 # ---------------------------------------------------------------------------
 import sys
+
 _REPO = Path(__file__).resolve().parents[2]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
@@ -40,9 +41,11 @@ from carnot.pipeline.constraint_addition import ViolationPattern
 # ---------------------------------------------------------------------------
 
 
-def _make_exp554_data(n_fn_vericot: int = 17, n_fn_vprm: int = 17,
-                      n_fp_vericot: int = 0, n_fp_vprm: int = 0) -> dict:
+def _make_exp554_data(
+    n_fn_vericot: int = 17, n_fn_vprm: int = 17, n_fp_vericot: int = 0, n_fp_vprm: int = 0
+) -> dict:
     """Build a minimal Exp 554 diagnostic JSON matching the real schema."""
+
     def _flags(n_fn: int, n_fp: int) -> list[dict]:
         flags = []
         for _ in range(n_fn):
@@ -123,9 +126,7 @@ def test_load_exp554_fp_patterns_no_violations(tmp_path):
         "status": "success",
         "vericot_result": {
             "extractor_name": "VeriCoTStepValidator",
-            "per_question_flags": [
-                {"is_correct": True, "violation_found": False, "cell": "TN"}
-            ],
+            "per_question_flags": [{"is_correct": True, "violation_found": False, "cell": "TN"}],
         },
         "vprm_result": {
             "extractor_name": "VPRMArithmeticVerifier",
@@ -270,14 +271,15 @@ def test_run_session_tp_rate_computed_correctly():
 def test_run_session_detail_cells_classified_correctly():
     """All four cell types (FP, TP, FN, TN) are assigned correctly."""
     corpus = [
-        {"question": "q1", "response": "fp_resp", "is_correct": True},   # FP
+        {"question": "q1", "response": "fp_resp", "is_correct": True},  # FP
         {"question": "q2", "response": "tp_resp", "is_correct": False},  # TP
         {"question": "q3", "response": "fn_resp", "is_correct": False},  # FN
-        {"question": "q4", "response": "tn_resp", "is_correct": True},   # TN
+        {"question": "q4", "response": "tn_resp", "is_correct": True},  # TN
     ]
 
     def _verify(question, response, domain="general"):
         from carnot.pipeline.verify_repair import VerificationResult
+
         # flag fp_resp and tp_resp, not the others
         verified = response not in ("fp_resp", "tp_resp")
         return VerificationResult(verified=verified, constraints=[], energy=0.0, violations=[])
@@ -290,7 +292,7 @@ def test_run_session_detail_cells_classified_correctly():
     cells = [d["cell"] for d in details]
     assert cells == ["FP", "TP", "FN", "TN"]
     assert abs(fp_rate - 0.5) < 1e-9  # 1 FP / 2 correct
-    assert tp_rate == 0.5              # 1 TP / 2 incorrect
+    assert tp_rate == 0.5  # 1 TP / 2 incorrect
 
 
 def test_run_session_pipeline_exception_is_graceful():

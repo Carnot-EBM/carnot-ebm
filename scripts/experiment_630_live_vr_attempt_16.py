@@ -57,8 +57,7 @@ def main() -> None:
     OUTPUT_PATH.write_text(json.dumps(artifact, indent=2, sort_keys=True))
     print(f"[Exp 630] BLOCKED — artifact written to {OUTPUT_PATH}", file=sys.stderr)
     print(
-        "[Exp 630] gate_open=False (recall=0.12 < 0.20). "
-        "Do not retry VR until recall >= 0.20.",
+        "[Exp 630] gate_open=False (recall=0.12 < 0.20). Do not retry VR until recall >= 0.20.",
         file=sys.stderr,
     )
 

@@ -24,7 +24,7 @@ import os
 import sys
 import time
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from typing import Optional
 
@@ -112,7 +112,7 @@ class MilestoneRetro2026_04_32:
 # ---------------------------------------------------------------------------
 
 
-def load_result(exp_key: str) -> Optional[dict]:
+def load_result(exp_key: str) -> dict | None:
     """Load a result JSON; return None (with a log warning) if absent.
 
     WHY return None instead of raising: missing results are an expected state
@@ -132,7 +132,7 @@ def load_result(exp_key: str) -> Optional[dict]:
 # ---------------------------------------------------------------------------
 
 
-def _conductor_timeout_from_results(r425: Optional[dict]) -> bool:
+def _conductor_timeout_from_results(r425: dict | None) -> bool:
     """Derive conductor_timeout_implemented from Exp 425 result or watchdog module.
 
     WHY check the module as fallback: Exp 425 may not have a result JSON if the
@@ -147,7 +147,7 @@ def _conductor_timeout_from_results(r425: Optional[dict]) -> bool:
     return watchdog_path.exists()
 
 
-def _gpu1_zombie_fixed_from_results(r426: Optional[dict]) -> bool:
+def _gpu1_zombie_fixed_from_results(r426: dict | None) -> bool:
     """Exp 426 honest_verdict='zombie_detected' means confirmed but NOT fixed.
 
     RETRO-025 is closed only when honest_verdict transitions to 'zombie_cleared'
@@ -164,7 +164,7 @@ def _gpu1_zombie_fixed_from_results(r426: Optional[dict]) -> bool:
     return verdict in ("zombie_cleared", "zombie_fixed", "healthy")
 
 
-def _live_numbers_from_results(r427: Optional[dict], r428: Optional[dict], r429: Optional[dict]) -> bool:
+def _live_numbers_from_results(r427: dict | None, r428: dict | None, r429: dict | None) -> bool:
     """True only when at least one of 427/428/429 ran live and produced a signed improvement.
 
     scaffolding_only results do NOT count as live_numbers_confirmed because their
@@ -185,14 +185,14 @@ def _live_numbers_from_results(r427: Optional[dict], r428: Optional[dict], r429:
     return False
 
 
-def _fr11_relay_from_results(r431: Optional[dict]) -> bool:
+def _fr11_relay_from_results(r431: dict | None) -> bool:
     """Exp 431 sets retro_024_closed=True when EORM retrained on real FOVER pairs."""
     if r431 is None:
         return False
     return bool(r431.get("retro_024_closed", False))
 
 
-def _tier1_live_from_results(r432: Optional[dict]) -> bool:
+def _tier1_live_from_results(r432: dict | None) -> bool:
     """Exp 432 tier1_live_validated requires honest_verdict='live_fp_reduction'.
 
     synthetic_fallback does NOT count. The JitRL controller must have trained
@@ -204,19 +204,19 @@ def _tier1_live_from_results(r432: Optional[dict]) -> bool:
     return verdict in ("live_fp_reduction", "tier1_live_validated")
 
 
-def _spilled_energy_from_results(r433: Optional[dict]) -> bool:
+def _spilled_energy_from_results(r433: dict | None) -> bool:
     if r433 is None:
         return False
     return r433.get("honest_verdict") == "spilled_energy_viable"
 
 
-def _compliance_checker_from_results(r434: Optional[dict]) -> bool:
+def _compliance_checker_from_results(r434: dict | None) -> bool:
     if r434 is None:
         return False
     return r434.get("honest_verdict") in ("compliance_checker_works", "success", True)
 
 
-def _npu_status_from_results(r435: Optional[dict], r435a: Optional[dict]) -> str:
+def _npu_status_from_results(r435: dict | None, r435a: dict | None) -> str:
     """Return the honest NPU verdict: prefer Exp 435 over 435a (seed experiment).
 
     WHY 435 takes precedence: 435a is a Phase 3 toy seed validating discrete-to-
@@ -230,19 +230,23 @@ def _npu_status_from_results(r435: Optional[dict], r435a: Optional[dict]) -> str
     return "not_run"
 
 
-def _build_headline_results(r427: Optional[dict], r428: Optional[dict], r429: Optional[dict]) -> dict:
+def _build_headline_results(r427: dict | None, r428: dict | None, r429: dict | None) -> dict:
     """Collect signed precision/humaneval/adversarial improvements from live results.
 
     Returns empty sub-dicts for scaffolding_only results. Callers must not cite
     these as headline numbers until the experiments run live.
     """
-    def _extract(r: Optional[dict], label: str) -> dict:
+
+    def _extract(r: dict | None, label: str) -> dict:
         if r is None:
             return {"status": "result_missing", "provenance": label}
         status = r.get("status", "unknown")
         if status == "scaffolding_only":
-            return {"status": "scaffolding_only", "provenance": label,
-                    "note": "Script written; live execution pending GPU slot + human trigger."}
+            return {
+                "status": "scaffolding_only",
+                "provenance": label,
+                "note": "Script written; live execution pending GPU slot + human trigger.",
+            }
         return {"status": status, "honest_verdict": r.get("honest_verdict"), "provenance": label}
 
     return {
@@ -252,7 +256,7 @@ def _build_headline_results(r427: Optional[dict], r428: Optional[dict], r429: Op
     }
 
 
-def _duration_minutes(r: Optional[dict]) -> Optional[float]:
+def _duration_minutes(r: dict | None) -> float | None:
     """Extract duration in minutes from a result, if available."""
     if r is None:
         return None
@@ -262,7 +266,7 @@ def _duration_minutes(r: Optional[dict]) -> Optional[float]:
     return None
 
 
-def _compute_timing(results: dict[str, Optional[dict]]) -> tuple[int, float]:
+def _compute_timing(results: dict[str, dict | None]) -> tuple[int, float]:
     """Return (n_experiments, mean_minutes_per_exp) for this milestone.
 
     Scaffolding_only experiments that hit the 45-min timeout are credited at
@@ -271,7 +275,20 @@ def _compute_timing(results: dict[str, Optional[dict]]) -> tuple[int, float]:
     actual duration_s.
     """
     # Experiments in this milestone: 425 through 435 (inclusive), 435a as a bonus.
-    experiment_keys = ["425", "426", "427", "428", "429", "430", "431", "432", "433", "434", "435", "435a"]
+    experiment_keys = [
+        "425",
+        "426",
+        "427",
+        "428",
+        "429",
+        "430",
+        "431",
+        "432",
+        "433",
+        "434",
+        "435",
+        "435a",
+    ]
     durations: list[float] = []
 
     for key in experiment_keys:
@@ -301,40 +318,39 @@ def _compute_timing(results: dict[str, Optional[dict]]) -> tuple[int, float]:
 
 
 def _new_retro_items(
-    r427: Optional[dict],
-    r428: Optional[dict],
-    r429: Optional[dict],
-    r433: Optional[dict],
-    r434: Optional[dict],
-    r435: Optional[dict],
+    r427: dict | None,
+    r428: dict | None,
+    r429: dict | None,
+    r433: dict | None,
+    r434: dict | None,
+    r435: dict | None,
 ) -> list[dict]:
     """Identify new RETRO items surfaced in this milestone."""
     items: list[dict] = []
 
     # RETRO-026: Scaffold-only live benchmarks need human-triggered long runs.
-    if all(
-        r is None or r.get("status") == "scaffolding_only"
-        for r in [r427, r428, r429]
-    ):
-        items.append({
-            "id": "RETRO-026",
-            "severity": "high",
-            "description": (
-                "Exps 427, 428, 429 (precision/HumanEval/adversarial) all produced scaffolding_only "
-                "results after hitting the 45-minute conductor wall-clock timeout. The benchmarks "
-                "legitimately require >45 minutes of live GPU inference. They cannot run inside the "
-                "conductor's subagent budget. A dedicated long-running executor (human-triggered or "
-                "conductor side-channel) is required to close these."
-            ),
-            "milestones_carried": 1,
-            "new_this_milestone": True,
-            "action_required": (
-                "Fix RETRO-025 (GPU 1 scheduling) THEN manually run: "
-                "JAX_PLATFORMS=cpu python scripts/experiment_427_precision_live_confirmed.py "
-                "(also 428, 429). Alternatively, configure a long-running executor with a "
-                "120-minute budget for benchmark-class experiments."
-            ),
-        })
+    if all(r is None or r.get("status") == "scaffolding_only" for r in [r427, r428, r429]):
+        items.append(
+            {
+                "id": "RETRO-026",
+                "severity": "high",
+                "description": (
+                    "Exps 427, 428, 429 (precision/HumanEval/adversarial) all produced scaffolding_only "
+                    "results after hitting the 45-minute conductor wall-clock timeout. The benchmarks "
+                    "legitimately require >45 minutes of live GPU inference. They cannot run inside the "
+                    "conductor's subagent budget. A dedicated long-running executor (human-triggered or "
+                    "conductor side-channel) is required to close these."
+                ),
+                "milestones_carried": 1,
+                "new_this_milestone": True,
+                "action_required": (
+                    "Fix RETRO-025 (GPU 1 scheduling) THEN manually run: "
+                    "JAX_PLATFORMS=cpu python scripts/experiment_427_precision_live_confirmed.py "
+                    "(also 428, 429). Alternatively, configure a long-running executor with a "
+                    "120-minute budget for benchmark-class experiments."
+                ),
+            }
+        )
 
     # RETRO-027: Exps 433 and 434 have no result files at all.
     missing_no_result = []
@@ -345,22 +361,24 @@ def _new_retro_items(
     if r435 is None:
         missing_no_result.append("Exp 435 (AMD XDNA NPU Unblock)")
     if missing_no_result:
-        items.append({
-            "id": "RETRO-027",
-            "severity": "medium",
-            "description": (
-                f"{', '.join(missing_no_result)} have no result JSON files. "
-                "Scripts exist and tests pass, but the conductor never executed them. "
-                "This represents silent experiment drop — no timeout artifact, no partial result."
-            ),
-            "milestones_carried": 1,
-            "new_this_milestone": True,
-            "action_required": (
-                "Run missing experiment scripts manually. Add conductor logic to detect and "
-                "report experiments with scripts but no result file as 'not_run' rather than "
-                "silently skipping them."
-            ),
-        })
+        items.append(
+            {
+                "id": "RETRO-027",
+                "severity": "medium",
+                "description": (
+                    f"{', '.join(missing_no_result)} have no result JSON files. "
+                    "Scripts exist and tests pass, but the conductor never executed them. "
+                    "This represents silent experiment drop — no timeout artifact, no partial result."
+                ),
+                "milestones_carried": 1,
+                "new_this_milestone": True,
+                "action_required": (
+                    "Run missing experiment scripts manually. Add conductor logic to detect and "
+                    "report experiments with scripts but no result file as 'not_run' rather than "
+                    "silently skipping them."
+                ),
+            }
+        )
 
     return items
 
@@ -442,14 +460,18 @@ def run_retro() -> dict:
 def _print_success_table(retro: MilestoneRetro2026_04_32) -> None:
     """Print a human-readable success criteria table to stdout."""
     rows = [
-        ("conductor_timeout_implemented", retro.conductor_timeout_implemented, "Exp 425 / experiment_watchdog.py"),
-        ("gpu1_zombie_fixed",             retro.gpu1_zombie_fixed,             "Exp 426 retro_025_status"),
-        ("live_numbers_confirmed",        retro.live_numbers_confirmed,        "Exps 427/428/429 live status"),
-        ("fr11_relay_confirmed",          retro.fr11_relay_confirmed,          "Exp 431 retro_024_closed"),
-        ("tier1_live_validated",          retro.tier1_live_validated,          "Exp 432 honest_verdict"),
-        ("spilled_energy_viable",         retro.spilled_energy_viable,         "Exp 433"),
-        ("compliance_checker_works",      retro.compliance_checker_works,      "Exp 434"),
-        ("npu_status",                    retro.npu_status,                    "Exp 435"),
+        (
+            "conductor_timeout_implemented",
+            retro.conductor_timeout_implemented,
+            "Exp 425 / experiment_watchdog.py",
+        ),
+        ("gpu1_zombie_fixed", retro.gpu1_zombie_fixed, "Exp 426 retro_025_status"),
+        ("live_numbers_confirmed", retro.live_numbers_confirmed, "Exps 427/428/429 live status"),
+        ("fr11_relay_confirmed", retro.fr11_relay_confirmed, "Exp 431 retro_024_closed"),
+        ("tier1_live_validated", retro.tier1_live_validated, "Exp 432 honest_verdict"),
+        ("spilled_energy_viable", retro.spilled_energy_viable, "Exp 433"),
+        ("compliance_checker_works", retro.compliance_checker_works, "Exp 434"),
+        ("npu_status", retro.npu_status, "Exp 435"),
     ]
     print("\n=== Milestone 2026.04.32 Success Criteria ===")
     print(f"{'Criterion':<35} {'Result':<20} {'Notes'}")
@@ -476,7 +498,7 @@ def _build_artifact(retro: MilestoneRetro2026_04_32) -> dict:
     """Build the serializable JSON artifact."""
     data = asdict(retro)
     data["schema"] = "carnot.operational_retro.v6"
-    data["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    data["generated_at"] = datetime.now(UTC).isoformat(timespec="seconds")
     data["status"] = "complete"
     return data
 

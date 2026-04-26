@@ -49,8 +49,11 @@ def _run(cmd: list[str]) -> str:
     surfaces the failure rather than silently pretending everything is fine.
     """
     return subprocess.run(
-        cmd, cwd=str(PROJECT_ROOT), check=True,
-        capture_output=True, text=True,
+        cmd,
+        cwd=str(PROJECT_ROOT),
+        check=True,
+        capture_output=True,
+        text=True,
     ).stdout.strip()
 
 

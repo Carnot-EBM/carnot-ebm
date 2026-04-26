@@ -160,9 +160,7 @@ class HumanEvalLiveResult:
 # ---------------------------------------------------------------------------
 
 
-def _parse_official_tests(
-    test_str: str, entry_point: str
-) -> list[tuple[list[Any], Any]]:
+def _parse_official_tests(test_str: str, entry_point: str) -> list[tuple[list[Any], Any]]:
     """Parse HumanEval assert-style test strings into (args, expected) pairs.
 
     HumanEval tests look like: assert candidate(1, 2) == 3
@@ -181,9 +179,7 @@ def _parse_official_tests(
         line = line.strip()
         if not line.startswith("assert"):
             continue
-        match = re.match(
-            r"assert\s+candidate\((.+?)\)\s*==\s*(.+?)(?:\s*$|\s*,)", line
-        )
+        match = re.match(r"assert\s+candidate\((.+?)\)\s*==\s*(.+?)(?:\s*$|\s*,)", line)
         if match:
             try:
                 args = eval(f"[{match.group(1)}]")  # noqa: S307
@@ -233,7 +229,7 @@ def _load_problems() -> list[dict[str, Any]]:
             return [
                 {
                     "task_id": "HumanEval/0",
-                    "prompt": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n",
+                    "prompt": 'def add(a: int, b: int) -> int:\n    """Add two numbers."""\n',
                     "canonical_solution": "    return a + b\n",
                     "test_cases": [([1, 2], 3), ([0, 0], 0)],
                     "entry_point": "add",
@@ -247,9 +243,7 @@ def _load_problems() -> list[dict[str, Any]]:
 # ---------------------------------------------------------------------------
 
 
-def _run_tests(
-    code: str, entry_point: str, test_cases: list[tuple[list[Any], Any]]
-) -> bool:
+def _run_tests(code: str, entry_point: str, test_cases: list[tuple[list[Any], Any]]) -> bool:
     """Execute code against test cases in-process; return True iff all pass.
 
     Why in-process: for a research benchmark with trusted HumanEval inputs, the
@@ -354,7 +348,7 @@ def _load_model(
         mdl = AutoModelForCausalLM.from_pretrained(
             hf_id,
             torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-            device_map={'': 'cuda:0'},
+            device_map={"": "cuda:0"},
         )
         mdl.eval()
         return tok, mdl, device_str, True
@@ -393,9 +387,7 @@ def _generate_code(
 
     instruction = (
         "Complete the following Python function. "
-        "Output only the Python code, no explanation.\n\n"
-        + problem["prompt"]
-        + "\n"
+        "Output only the Python code, no explanation.\n\n" + problem["prompt"] + "\n"
     )
     inputs = tokenizer(instruction, return_tensors="pt").to(device)
     with torch.no_grad():
@@ -612,12 +604,8 @@ def build_humaneval_live_v2_artifact(
         JSON-serializable artifact dict conforming to schema='carnot.humaneval.live.v2'.
     """
     n = len(per_problem)
-    baseline_pass_at_1 = (
-        sum(1 for r in per_problem if r.baseline_passed) / n if n > 0 else 0.0
-    )
-    pipeline_pass_at_1 = (
-        sum(1 for r in per_problem if r.pipeline_passed) / n if n > 0 else 0.0
-    )
+    baseline_pass_at_1 = sum(1 for r in per_problem if r.baseline_passed) / n if n > 0 else 0.0
+    pipeline_pass_at_1 = sum(1 for r in per_problem if r.pipeline_passed) / n if n > 0 else 0.0
     agg = HumanEvalLiveResult(
         n_problems=n,
         baseline_pass_at_1=baseline_pass_at_1,
@@ -788,9 +776,7 @@ def main() -> None:
                         result.violations_detected,
                     )
                 except Exception as exc:
-                    _log.warning(
-                        "[Exp 469] problem %d error: %r", global_idx, exc
-                    )
+                    _log.warning("[Exp 469] problem %d error: %r", global_idx, exc)
                     per_problem_results.append(
                         CodeVerificationResult(
                             problem_id=problem.get("task_id", f"unknown/{global_idx}"),
@@ -819,9 +805,7 @@ def main() -> None:
             )
 
         # Step 8: build and write artifact
-        artifact = build_humaneval_live_v2_artifact(
-            per_problem_results, inference_mode, tmpl
-        )
+        artifact = build_humaneval_live_v2_artifact(per_problem_results, inference_mode, tmpl)
 
         baseline_p = artifact.get("baseline_pass_at_1", 0.0)
         pipeline_p = artifact.get("pipeline_pass_at_1", 0.0)
@@ -862,6 +846,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

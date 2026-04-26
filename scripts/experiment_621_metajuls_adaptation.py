@@ -156,9 +156,7 @@ def main() -> None:
             "precision_trend": precision_trend,
             "adaptation_effective": adaptation_effective,
             "honest_verdict": (
-                "adaptation_effective"
-                if adaptation_effective
-                else "adaptation_not_effective"
+                "adaptation_effective" if adaptation_effective else "adaptation_not_effective"
             ),
         },
         status="success",

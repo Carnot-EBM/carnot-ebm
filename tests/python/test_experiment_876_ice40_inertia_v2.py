@@ -148,8 +148,9 @@ def test_local_fields_matches_dense(n8_sampler: SparseInertiaIsingSampler) -> No
         J_dense[j, i] += w
     h_dense = J_dense @ s
 
-    np.testing.assert_allclose(h_sparse, h_dense, atol=1e-12,
-                               err_msg="sparse and dense local fields disagree")
+    np.testing.assert_allclose(
+        h_sparse, h_dense, atol=1e-12, err_msg="sparse and dense local fields disagree"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -166,9 +167,7 @@ def test_energy_all_aligned_is_minimum(n8_sampler: SparseInertiaIsingSampler) ->
     mixed[0] = -1.0
     e_aligned = n8_sampler.energy(all_plus)
     e_mixed = n8_sampler.energy(mixed)
-    assert e_aligned < e_mixed, (
-        f"aligned energy {e_aligned:.3f} should be < mixed {e_mixed:.3f}"
-    )
+    assert e_aligned < e_mixed, f"aligned energy {e_aligned:.3f} should be < mixed {e_mixed:.3f}"
 
 
 def test_energy_returns_float(ring4_sampler: SparseInertiaIsingSampler) -> None:
@@ -277,8 +276,7 @@ def test_alpha_sweep_inertia_faster_than_none() -> None:
     """
     result = alpha_sweep_convergence([0.0, 0.5], n_trials=20, energy_threshold=-3.0, max_sweeps=400)
     assert result[0.5] < result[0.0], (
-        f"expected inertia (0.5) faster than baseline (0.0): "
-        f"{result[0.5]:.1f} vs {result[0.0]:.1f}"
+        f"expected inertia (0.5) faster than baseline (0.0): {result[0.5]:.1f} vs {result[0.0]:.1f}"
     )
 
 
@@ -345,9 +343,20 @@ def test_deliverable_json_exists_and_valid() -> None:
         artifact = json.load(f)
 
     required_fields = [
-        "experiment", "schema", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "title", "best_alpha", "sweeps_reduction",
-        "inertia_sweeps", "baseline_sweeps", "lut_count", "synthesis_clean",
+        "experiment",
+        "schema",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "title",
+        "best_alpha",
+        "sweeps_reduction",
+        "inertia_sweeps",
+        "baseline_sweeps",
+        "lut_count",
+        "synthesis_clean",
         "honest_verdict",
     ]
     for field in required_fields:

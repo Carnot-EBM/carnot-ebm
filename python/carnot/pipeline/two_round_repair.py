@@ -35,10 +35,12 @@ Spec: REQ-CODE-031, REQ-CODE-032, SCENARIO-CODE-029, SCENARIO-CODE-030
 from __future__ import annotations
 
 import signal
-import sys
 import traceback
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 _EXECUTION_TIMEOUT_S = 10
 """Hard timeout in seconds for a single code execution attempt.
@@ -288,8 +290,10 @@ class TwoRoundCodeRepairPipeline:
             # Set up SIGALRM timeout on Unix platforms.
             _alarm_available = hasattr(signal, "SIGALRM")
             if _alarm_available:
+
                 def _timeout_handler(signum: int, frame: Any) -> None:  # noqa: ARG001
                     raise TimeoutError(f"execution exceeded {_EXECUTION_TIMEOUT_S}s")
+
                 signal.signal(signal.SIGALRM, _timeout_handler)
                 signal.alarm(_EXECUTION_TIMEOUT_S)
 

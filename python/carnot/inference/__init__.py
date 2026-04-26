@@ -64,6 +64,17 @@ from carnot.inference.guided_decoding import (
     EnergyGuidedSampler,
     GuidedDecodingResult,
 )
+from carnot.inference.jepa_cpmi_pairs import (
+    CPMIContrastiveLoss,
+    JEPACPMIPair,
+    JEPACPMIPairBuilder,
+    PROGRSCentering,
+)
+from carnot.inference.jepa_pure_loss import (
+    JEPAChainScore,
+    PUREMinFormLoss,
+    pairs_to_pure_chains,
+)
 from carnot.inference.learned_verifier import (
     ComparisonResult,
     LearnedEnergyWrapper,
@@ -83,13 +94,6 @@ from carnot.inference.llm_solver import (
     run_llm_sat_experiment,
     solve_coloring_with_llm,
     solve_sat_with_llm,
-)
-from carnot.inference.sota_models import (
-    SOTA_GGUF_MODELS,
-    SotaModelSpec,
-    default_pair,
-    flagship_dense,
-    flagship_moe,
 )
 from carnot.inference.model_loader import (
     ModelLoadError,
@@ -119,23 +123,19 @@ from carnot.inference.semantic_energy import (
     classify_hallucination,
     compute_semantic_energy,
 )
+from carnot.inference.sota_models import (
+    SOTA_GGUF_MODELS,
+    SotaModelSpec,
+    default_pair,
+    flagship_dense,
+    flagship_moe,
+)
 from carnot.inference.tensorrt_backend import (
     TRTBackendStatus,
     TRTLLMBackend,
     TRTLLMBenchmarkResult,
     benchmark_huggingface_vs_tensorrt,
     load_trt_backend,
-)
-from carnot.inference.jepa_pure_loss import (
-    JEPAChainScore,
-    PUREMinFormLoss,
-    pairs_to_pure_chains,
-)
-from carnot.inference.jepa_cpmi_pairs import (
-    JEPACPMIPair,
-    JEPACPMIPairBuilder,
-    CPMIContrastiveLoss,
-    PROGRSCentering,
 )
 from carnot.inference.verify_and_repair import (
     VerifyRepairResult,

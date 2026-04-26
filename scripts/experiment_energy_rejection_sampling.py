@@ -74,7 +74,9 @@ def main() -> int:
     start = time.time()
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True, output_hidden_states=True,
+        model_name,
+        trust_remote_code=True,
+        output_hidden_states=True,
     )
     model.eval()
     print(f"Loaded in {time.time() - start:.1f}s")
@@ -91,7 +93,9 @@ def main() -> int:
 
         with torch.no_grad():
             outputs = model.generate(**inputs, max_new_tokens=20, do_sample=False)
-        response = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        response = tokenizer.decode(
+            outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+        )
 
         # Extract activations from GENERATED tokens (not just prompt)
         full_seq = outputs[0].unsqueeze(0)  # (1, prompt_len + gen_len)
@@ -101,7 +105,7 @@ def main() -> int:
             hs = hidden_out.hidden_states
         # Mean-pool only the generated token activations
         gen_last = hs[-1][0, prompt_len:, :].mean(dim=0).float().numpy()
-        gen_mid = hs[len(hs)//2][0, prompt_len:, :].mean(dim=0).float().numpy()
+        gen_mid = hs[len(hs) // 2][0, prompt_len:, :].mean(dim=0).float().numpy()
         act = jnp.concatenate([jnp.array(gen_last), jnp.array(gen_mid)])
 
         correct = check_answer(response, expected)
@@ -120,12 +124,17 @@ def main() -> int:
 
     # Find hallucination direction
     from carnot.embeddings.hallucination_direction import (
-        HallucinationDirectionConfig, find_hallucination_direction, hallucination_energy,
+        HallucinationDirectionConfig,
+        find_hallucination_direction,
+        hallucination_energy,
     )
+
     correct_batch = jnp.stack(correct_acts)
     hallucinated_batch = jnp.stack(hallucinated_acts)
     direction = find_hallucination_direction(
-        correct_batch, hallucinated_batch, HallucinationDirectionConfig(normalize=True),
+        correct_batch,
+        hallucinated_batch,
+        HallucinationDirectionConfig(normalize=True),
     )
     print(f"Calibrated on {len(correct_acts)} correct + {len(hallucinated_acts)} hallucinated")
 
@@ -141,10 +150,15 @@ def main() -> int:
         for c in range(N_CANDIDATES):
             with torch.no_grad():
                 outputs = model.generate(
-                    **inputs, max_new_tokens=20,
-                    do_sample=True, temperature=0.8, top_p=0.95,
+                    **inputs,
+                    max_new_tokens=20,
+                    do_sample=True,
+                    temperature=0.8,
+                    top_p=0.95,
                 )
-            response = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+            response = tokenizer.decode(
+                outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+            )
 
             # Extract activations from GENERATED tokens
             full_seq = outputs[0].unsqueeze(0)
@@ -153,7 +167,7 @@ def main() -> int:
                 hidden_out = model(full_seq)
                 hs = hidden_out.hidden_states
             gen_last = hs[-1][0, prompt_len:, :].mean(dim=0).float().numpy()
-            gen_mid = hs[len(hs)//2][0, prompt_len:, :].mean(dim=0).float().numpy()
+            gen_mid = hs[len(hs) // 2][0, prompt_len:, :].mean(dim=0).float().numpy()
             act = jnp.concatenate([jnp.array(gen_last), jnp.array(gen_mid)])
 
             energy = float(hallucination_energy(act, direction))
@@ -168,22 +182,26 @@ def main() -> int:
 
         greedy_icon = "✓" if greedy_results[i] else "✗"
         best_icon = "✓" if best_correct else "✗"
-        print(f"  [{greedy_icon}→{best_icon}] {question[:40]}... "
-              f"best_e={best_energy:.1f} {'(FIXED!)' if best_correct and not greedy_results[i] else ''}")
+        print(
+            f"  [{greedy_icon}→{best_icon}] {question[:40]}... "
+            f"best_e={best_energy:.1f} {'(FIXED!)' if best_correct and not greedy_results[i] else ''}"
+        )
 
         rejection_results.append(best_correct)
 
     rejection_accuracy = sum(rejection_results) / len(rejection_results)
 
     # Summary
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("RESULTS")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  Model: {model_name}")
     print(f"  Candidates per question: {N_CANDIDATES}")
     print(f"")
     print(f"  Greedy baseline:    {sum(greedy_results)}/{len(QUESTIONS)} ({greedy_accuracy:.0%})")
-    print(f"  Energy-selected:    {sum(rejection_results)}/{len(QUESTIONS)} ({rejection_accuracy:.0%})")
+    print(
+        f"  Energy-selected:    {sum(rejection_results)}/{len(QUESTIONS)} ({rejection_accuracy:.0%})"
+    )
     improvement = rejection_accuracy - greedy_accuracy
     print(f"  Improvement:        {'+' if improvement >= 0 else ''}{improvement:.0%}")
     print(f"")
@@ -194,7 +212,7 @@ def main() -> int:
     print(f"  Fixes (wrong→right): {fixes}")
     print(f"  Regressions (right→wrong): {regressions}")
     print(f"  Net: +{fixes - regressions}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     if improvement > 0:
         print("SUCCESS: Energy-ranked selection IMPROVES model accuracy!")

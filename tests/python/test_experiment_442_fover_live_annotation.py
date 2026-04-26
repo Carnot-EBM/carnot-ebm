@@ -234,10 +234,9 @@ class TestRunExperiment442:
     def test_ci_mode_valid_verdict(self, tmp_path):
         with patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0"}):
             mod = _import_exp442()
-            with patch.object(
-                mod, "DELIVERABLE", str(tmp_path / "result.json")
-            ), patch.object(
-                mod, "LABELED_STEPS_PATH", str(tmp_path / "labeled.json")
+            with (
+                patch.object(mod, "DELIVERABLE", str(tmp_path / "result.json")),
+                patch.object(mod, "LABELED_STEPS_PATH", str(tmp_path / "labeled.json")),
             ):
                 artifact = mod.run_experiment()
         assert artifact["fover_live"]["honest_verdict"] in _VALID_VERDICTS
@@ -245,10 +244,9 @@ class TestRunExperiment442:
     def test_required_result_fields_present(self, tmp_path):
         with patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0"}):
             mod = _import_exp442()
-            with patch.object(
-                mod, "DELIVERABLE", str(tmp_path / "result.json")
-            ), patch.object(
-                mod, "LABELED_STEPS_PATH", str(tmp_path / "labeled.json")
+            with (
+                patch.object(mod, "DELIVERABLE", str(tmp_path / "result.json")),
+                patch.object(mod, "LABELED_STEPS_PATH", str(tmp_path / "labeled.json")),
             ):
                 artifact = mod.run_experiment()
         for field in REQUIRED_RESULT_FIELDS:
@@ -258,8 +256,9 @@ class TestRunExperiment442:
         out = tmp_path / "result.json"
         with patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0"}):
             mod = _import_exp442()
-            with patch.object(mod, "DELIVERABLE", str(out)), patch.object(
-                mod, "LABELED_STEPS_PATH", str(tmp_path / "labeled.json")
+            with (
+                patch.object(mod, "DELIVERABLE", str(out)),
+                patch.object(mod, "LABELED_STEPS_PATH", str(tmp_path / "labeled.json")),
             ):
                 mod.run_experiment()
         assert out.exists()
@@ -269,10 +268,9 @@ class TestRunExperiment442:
     def test_env_autofix_block_embedded(self, tmp_path):
         with patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0"}):
             mod = _import_exp442()
-            with patch.object(
-                mod, "DELIVERABLE", str(tmp_path / "result.json")
-            ), patch.object(
-                mod, "LABELED_STEPS_PATH", str(tmp_path / "labeled.json")
+            with (
+                patch.object(mod, "DELIVERABLE", str(tmp_path / "result.json")),
+                patch.object(mod, "LABELED_STEPS_PATH", str(tmp_path / "labeled.json")),
             ):
                 artifact = mod.run_experiment()
         assert "env_autofix" in artifact
@@ -280,10 +278,9 @@ class TestRunExperiment442:
     def test_fover_live_block_present(self, tmp_path):
         with patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0"}):
             mod = _import_exp442()
-            with patch.object(
-                mod, "DELIVERABLE", str(tmp_path / "result.json")
-            ), patch.object(
-                mod, "LABELED_STEPS_PATH", str(tmp_path / "labeled.json")
+            with (
+                patch.object(mod, "DELIVERABLE", str(tmp_path / "result.json")),
+                patch.object(mod, "LABELED_STEPS_PATH", str(tmp_path / "labeled.json")),
             ):
                 artifact = mod.run_experiment()
         assert "fover_live" in artifact
@@ -293,9 +290,10 @@ class TestRunExperiment442:
         labeled = tmp_path / "labeled.json"
         with patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0"}):
             mod = _import_exp442()
-            with patch.object(
-                mod, "DELIVERABLE", str(tmp_path / "result.json")
-            ), patch.object(mod, "LABELED_STEPS_PATH", str(labeled)):
+            with (
+                patch.object(mod, "DELIVERABLE", str(tmp_path / "result.json")),
+                patch.object(mod, "LABELED_STEPS_PATH", str(labeled)),
+            ):
                 mod.run_experiment()
         assert labeled.exists()
         pairs = json.loads(labeled.read_text())
@@ -325,12 +323,11 @@ class TestMain442:
             def __exit__(self, *_):
                 return False
 
-        with patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0"}), patch.object(
-            mod, "ExperimentTimeoutWatchdog", FakeWatchdog
-        ), patch.object(
-            mod, "DELIVERABLE", str(tmp_path / "r.json")
-        ), patch.object(
-            mod, "LABELED_STEPS_PATH", str(tmp_path / "l.json")
+        with (
+            patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0"}),
+            patch.object(mod, "ExperimentTimeoutWatchdog", FakeWatchdog),
+            patch.object(mod, "DELIVERABLE", str(tmp_path / "r.json")),
+            patch.object(mod, "LABELED_STEPS_PATH", str(tmp_path / "l.json")),
         ):
             mod.main()
 
@@ -355,7 +352,10 @@ class TestMain442:
                 "schema": "carnot.fover_live.v1",
                 "honest_verdict": "synthetic_fallback",
                 "env_autofix": {},
-                "fover_live": {"schema": "carnot.fover_live.v1", "honest_verdict": "synthetic_fallback"},
+                "fover_live": {
+                    "schema": "carnot.fover_live.v1",
+                    "honest_verdict": "synthetic_fallback",
+                },
             }
 
         class FakeWatchdog:
@@ -368,14 +368,12 @@ class TestMain442:
             def __exit__(self, *_):
                 return False
 
-        with patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0"}), patch.object(
-            mod, "run_experiment", fake_run
-        ), patch.object(
-            mod, "ExperimentTimeoutWatchdog", FakeWatchdog
-        ), patch.object(
-            mod, "DELIVERABLE", str(tmp_path / "r.json")
-        ), patch.object(
-            mod, "LABELED_STEPS_PATH", str(tmp_path / "l.json")
+        with (
+            patch.dict("os.environ", {"CARNOT_FORCE_LIVE": "0"}),
+            patch.object(mod, "run_experiment", fake_run),
+            patch.object(mod, "ExperimentTimeoutWatchdog", FakeWatchdog),
+            patch.object(mod, "DELIVERABLE", str(tmp_path / "r.json")),
+            patch.object(mod, "LABELED_STEPS_PATH", str(tmp_path / "l.json")),
         ):
             mod.main()
 

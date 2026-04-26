@@ -34,9 +34,7 @@ def _uniform_logits(n_tokens: int = 4, vocab_size: int = 8) -> np.ndarray:
     return np.zeros((n_tokens, vocab_size), dtype=np.float64)
 
 
-def _peaked_logits(
-    n_tokens: int = 4, vocab_size: int = 8, peak: float = 10.0
-) -> np.ndarray:
+def _peaked_logits(n_tokens: int = 4, vocab_size: int = 8, peak: float = 10.0) -> np.ndarray:
     """Logit array where the first vocab entry dominates via a large logit value."""
     arr = np.zeros((n_tokens, vocab_size), dtype=np.float64)
     arr[:, 0] = peak
@@ -62,9 +60,7 @@ def _make_spilled_result(suspected: bool, threshold: float = 1.0) -> SpilledEner
     )
 
 
-def _make_semantic_result(
-    overconfident: bool, energy: float = -3.0
-) -> SemanticEnergyResult:
+def _make_semantic_result(overconfident: bool, energy: float = -3.0) -> SemanticEnergyResult:
     """Build a minimal SemanticEnergyResult for gate tests."""
     return SemanticEnergyResult(
         semantic_energy=energy,
@@ -373,15 +369,11 @@ def test_calibrate_threshold_separates_corpus() -> None:
 
     # Wrong examples (peaked) have very negative energies → below threshold
     wrong_energies = [
-        compute_semantic_energy(lg)
-        for lg, lbl in zip(corpus, labels, strict=True)
-        if not lbl
+        compute_semantic_energy(lg) for lg, lbl in zip(corpus, labels, strict=True) if not lbl
     ]
     # Correct examples (uniform) have less negative energies → above threshold
     correct_energies = [
-        compute_semantic_energy(lg)
-        for lg, lbl in zip(corpus, labels, strict=True)
-        if lbl
+        compute_semantic_energy(lg) for lg, lbl in zip(corpus, labels, strict=True) if lbl
     ]
 
     mean_correct = float(np.mean(correct_energies))

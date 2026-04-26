@@ -202,7 +202,12 @@ def train_eorm(device_str: str, eorm_pairs: list[tuple[str, str, str]]) -> dict:
     """
     from carnot.models.eorm import EORMModel, EORMTrainer  # noqa: PLC0415
 
-    _log.info("train_eorm: starting on %s with %d pairs for %d epochs", device_str, len(eorm_pairs), EORM_EPOCHS)
+    _log.info(
+        "train_eorm: starting on %s with %d pairs for %d epochs",
+        device_str,
+        len(eorm_pairs),
+        EORM_EPOCHS,
+    )
     t0 = time.perf_counter()
 
     model = EORMModel(embed_dim=64, n_layers=1)  # small for CI speed; real training uses defaults
@@ -212,7 +217,13 @@ def train_eorm(device_str: str, eorm_pairs: list[tuple[str, str, str]]) -> dict:
     for epoch in range(EORM_EPOCHS):
         final_loss = trainer.train_epoch(eorm_pairs)
         if epoch % 10 == 0:
-            _log.info("train_eorm epoch %d/%d loss=%.4f device=%s", epoch, EORM_EPOCHS, final_loss, device_str)
+            _log.info(
+                "train_eorm epoch %d/%d loss=%.4f device=%s",
+                epoch,
+                EORM_EPOCHS,
+                final_loss,
+                device_str,
+            )
 
     elapsed = time.perf_counter() - t0
     _log.info("train_eorm done: loss=%.4f in %.2fs on %s", final_loss, elapsed, device_str)
@@ -248,7 +259,12 @@ def train_jepa(device_str: str, jepa_pairs: list) -> dict:
     from carnot.embeddings.jepa_energy import ContextPredictionEnergy, JEPAEnergyConfig  # noqa: PLC0415
     from carnot.embeddings.jepa_retrain import JEPARetrainer  # noqa: PLC0415
 
-    _log.info("train_jepa: starting on %s with %d pairs for %d epochs", device_str, len(jepa_pairs), JEPA_EPOCHS)
+    _log.info(
+        "train_jepa: starting on %s with %d pairs for %d epochs",
+        device_str,
+        len(jepa_pairs),
+        JEPA_EPOCHS,
+    )
     t0 = time.perf_counter()
 
     cfg = JEPAEnergyConfig(embed_dim=64)
@@ -273,7 +289,13 @@ def train_jepa(device_str: str, jepa_pairs: list) -> dict:
     for epoch in range(JEPA_EPOCHS):
         final_loss = retrainer.train_epoch(jepa_pairs)
         if epoch % 20 == 0:
-            _log.info("train_jepa epoch %d/%d loss=%.4f device=%s", epoch, JEPA_EPOCHS, final_loss, device_str)
+            _log.info(
+                "train_jepa epoch %d/%d loss=%.4f device=%s",
+                epoch,
+                JEPA_EPOCHS,
+                final_loss,
+                device_str,
+            )
 
     elapsed = time.perf_counter() - t0
     _log.info("train_jepa done: loss=%.4f in %.2fs on %s", final_loss, elapsed, device_str)
@@ -411,8 +433,12 @@ def _run(tmpl: ExperimentTemplate) -> None:
     seq_jepa = train_jepa("cuda:0", jepa_pairs)
 
     sequential_total_s = round(time.perf_counter() - t_seq_start, 3)
-    _log.info("Sequential total: %.2fs (EORM=%.2fs, JEPA=%.2fs)",
-              sequential_total_s, seq_eorm["eorm_train_time_s"], seq_jepa["jepa_train_time_s"])
+    _log.info(
+        "Sequential total: %.2fs (EORM=%.2fs, JEPA=%.2fs)",
+        sequential_total_s,
+        seq_eorm["eorm_train_time_s"],
+        seq_jepa["jepa_train_time_s"],
+    )
 
     # ------------------------------------------------------------------
     # Parallel run: EORM on cuda:0, JEPA on cuda:1 simultaneously
@@ -427,8 +453,12 @@ def _run(tmpl: ExperimentTemplate) -> None:
         par_jepa = future_jepa.result()
 
     parallel_total_s = round(time.perf_counter() - t_par_start, 3)
-    _log.info("Parallel total: %.2fs (EORM=%.2fs, JEPA=%.2fs)",
-              parallel_total_s, par_eorm["eorm_train_time_s"], par_jepa["jepa_train_time_s"])
+    _log.info(
+        "Parallel total: %.2fs (EORM=%.2fs, JEPA=%.2fs)",
+        parallel_total_s,
+        par_eorm["eorm_train_time_s"],
+        par_jepa["jepa_train_time_s"],
+    )
 
     # ------------------------------------------------------------------
     # Compute speedup and honest verdict

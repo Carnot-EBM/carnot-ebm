@@ -90,7 +90,6 @@ import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 
-
 # ---------------------------------------------------------------------------
 # Helper: Lagrange-augmented local field
 # ---------------------------------------------------------------------------
@@ -136,7 +135,7 @@ def _lagoon_local_field(
 
     Spec: REQ-LAGOON-002
     """
-    n = x.shape[0]
+    x.shape[0]
 
     # Standard Ising local field for all spins at once: (J @ x)_i + b_i
     # Since J is zero-diagonal, (J @ x)_i is correct regardless of x_i's value.
@@ -359,7 +358,7 @@ class LagONN:
     # Dual-ascent λ update
     # ------------------------------------------------------------------
 
-    def update_lambda(self, x: jax.Array, lr: float = 0.01) -> "LagONN":
+    def update_lambda(self, x: jax.Array, lr: float = 0.01) -> LagONN:
         """Dual-ascent step: increase λ for currently-violated constraints.
 
         **Researcher summary:**
@@ -467,7 +466,7 @@ class LagONN:
         n_samples: int = 10,
         beta: float = 5.0,
         lr: float = 0.01,
-    ) -> tuple[jax.Array, "LagONN"]:
+    ) -> tuple[jax.Array, LagONN]:
         """Sample via interleaved parallel Gibbs sweeps and λ dual-ascent updates.
 
         **Researcher summary:**
@@ -529,7 +528,9 @@ class LagONN:
         # progressively toward feasibility.
         for _ in range(n_steps):
             key, sweep_key = jrandom.split(key)
-            x = _gibbs_sweep(x, model.J, model.bias, model.A, model.b, model.lambda_, beta, sweep_key)
+            x = _gibbs_sweep(
+                x, model.J, model.bias, model.A, model.b, model.lambda_, beta, sweep_key
+            )
             model = model.update_lambda(x, lr=lr)
 
         # --- Phase 2: Collect samples (still updating λ during collection) ---
@@ -538,7 +539,9 @@ class LagONN:
         collected: list[jax.Array] = []
         for _ in range(n_samples):
             key, sweep_key = jrandom.split(key)
-            x = _gibbs_sweep(x, model.J, model.bias, model.A, model.b, model.lambda_, beta, sweep_key)
+            x = _gibbs_sweep(
+                x, model.J, model.bias, model.A, model.b, model.lambda_, beta, sweep_key
+            )
             model = model.update_lambda(x, lr=lr)
             collected.append(x)
 

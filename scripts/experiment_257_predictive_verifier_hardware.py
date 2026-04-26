@@ -55,7 +55,7 @@ from carnot.pipeline.predictive_verifier import (  # noqa: E402
 
 EXPERIMENT: int = 257
 WARMUP_CALLS: int = 500
-TIMED_CALLS: int = 5_000   # calls per timed section
+TIMED_CALLS: int = 5_000  # calls per timed section
 
 # Synthetic corpus covering diverse response types to test gate routing
 _CORPUS: list[dict[str, str | float]] = [
@@ -67,8 +67,7 @@ _CORPUS: list[dict[str, str | float]] = [
     },
     {
         "text": (
-            "First, 55 + 45 = 100. Then 100 * 4 = 400. "
-            "So 400 - 170 = 230. Divide: 230 / 2 = 115."
+            "First, 55 + 45 = 100. Then 100 * 4 = 400. So 400 - 170 = 230. Divide: 230 / 2 = 115."
         ),
         "domain": "arithmetic",
         "prior_confidence": 0.70,
@@ -171,13 +170,19 @@ def _bench_cpu_numpy(vp: PredictiveVerifier) -> dict[str, Any]:
     priors = [float(row["prior_confidence"]) for row in _CORPUS]  # type: ignore[arg-type]
 
     for i in range(WARMUP_CALLS):
-        vp.gate(texts[i % len(texts)], domain=domains[i % len(domains)],
-                prior_confidence=priors[i % len(priors)])
+        vp.gate(
+            texts[i % len(texts)],
+            domain=domains[i % len(domains)],
+            prior_confidence=priors[i % len(priors)],
+        )
 
     t0 = time.perf_counter()
     for i in range(TIMED_CALLS):
-        vp.gate(texts[i % len(texts)], domain=domains[i % len(domains)],
-                prior_confidence=priors[i % len(priors)])
+        vp.gate(
+            texts[i % len(texts)],
+            domain=domains[i % len(domains)],
+            prior_confidence=priors[i % len(priors)],
+        )
     elapsed_gate = time.perf_counter() - t0
     latency_gate_us = (elapsed_gate / TIMED_CALLS) * 1e6
 
@@ -222,9 +227,7 @@ def _bench_onnx_cpu(vp: PredictiveVerifier, onnx_path: Path) -> dict[str, Any]:
             "throughput_calls_per_sec": None,
         }
 
-    sess = ort.InferenceSession(
-        str(onnx_path), providers=["CPUExecutionProvider"]
-    )
+    sess = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
 
     # Pre-build input arrays for the timed loop.
     inputs_list = [
@@ -232,7 +235,9 @@ def _bench_onnx_cpu(vp: PredictiveVerifier, onnx_path: Path) -> dict[str, Any]:
             str(row["text"]),
             domain=str(row["domain"]),
             prior_confidence=float(row["prior_confidence"]),  # type: ignore[arg-type]
-        ).to_array().reshape(1, FEATURE_DIM)
+        )
+        .to_array()
+        .reshape(1, FEATURE_DIM)
         for row in _CORPUS
     ]
 
@@ -316,9 +321,7 @@ def _bench_onnx_cuda(onnx_path: Path) -> dict[str, Any]:
             "status": "blocker",
             "missing_component": "onnxruntime CUDAExecutionProvider",
             "available_providers": available,
-            "install_hint": (
-                "pip install onnxruntime-gpu  # CUDA 12 build; replaces onnxruntime"
-            ),
+            "install_hint": ("pip install onnxruntime-gpu  # CUDA 12 build; replaces onnxruntime"),
             "gpu_inventory": {
                 "gpu_0": "NVIDIA GeForce RTX 3090 (24 GB VRAM)",
                 "gpu_1": "NVIDIA GeForce RTX 3090 (24 GB VRAM)",
@@ -398,9 +401,8 @@ def _bench_npu_xdna() -> dict[str, Any]:
     amdxdna_loaded = False
     try:
         import subprocess  # noqa: PLC0415
-        result = subprocess.run(
-            ["lsmod"], capture_output=True, text=True, timeout=5
-        )
+
+        result = subprocess.run(["lsmod"], capture_output=True, text=True, timeout=5)
         amdxdna_loaded = "amdxdna" in result.stdout
     except Exception:
         pass
@@ -450,7 +452,7 @@ def _model_metadata(vp: PredictiveVerifier, st_path: Path) -> dict[str, Any]:
     return {
         "safetensors_size_bytes": size_bytes,
         "feature_dim": FEATURE_DIM,
-        "parameter_count": FEATURE_DIM + 1,   # w (9) + b (1)
+        "parameter_count": FEATURE_DIM + 1,  # w (9) + b (1)
         "w_l2_norm": round(float(np.linalg.norm(vp._w)), 6),
         "b_value": round(float(vp._b), 6),
         "export_format": "onnx + safetensors",
@@ -501,7 +503,7 @@ def main() -> None:
         print("  [cpu_numpy] benchmarking ... ", end="", flush=True)
         rec_cpu = _bench_cpu_numpy(vp)
         print(
-            f"latency={rec_cpu['latency_ms']*1000:.1f} µs  "
+            f"latency={rec_cpu['latency_ms'] * 1000:.1f} µs  "
             f"throughput={rec_cpu['throughput_calls_per_sec']:,.0f} calls/s"
         )
 
@@ -630,7 +632,7 @@ def main() -> None:
         if ratio >= 1:
             print(f"  ORT CPU speedup vs gate(): {ratio:.2f}× faster")
         else:
-            print(f"  ORT CPU overhead vs gate(): {1/ratio:.2f}× slower (session overhead)")
+            print(f"  ORT CPU overhead vs gate(): {1 / ratio:.2f}× slower (session overhead)")
     print(f"  Paths OK     : {s['paths_ok']}")
     print(f"  Paths BLOCKED: {s['paths_blocked']}")
 

@@ -58,7 +58,7 @@ _AUTO_DEVICE_MAP_RE = re.compile(r"""device_map\s*=\s*['"]auto['"]""")
 # HarnessAudit heuristic ("cuda:1" in source) correctly clears the finding.
 # ---------------------------------------------------------------------------
 
-_INJECT_BLOCK = '''\n
+_INJECT_BLOCK = """\n
 # --- Exp 495 HarnessPatcher: DualGPUHarness.apply() injected — REQ-INFRA-057 ---
 # Auto-injected because HarnessAudit flagged this script as loading two models
 # without assigning any model to cuda:1.  apply() pins model[0] to cuda:0 and
@@ -70,7 +70,7 @@ try:
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001
     pass  # best-effort injection; script continues even if harness import fails
-'''
+"""
 
 
 # ---------------------------------------------------------------------------
@@ -284,7 +284,9 @@ class HarnessPatcher:
         """
         findings = HarnessAudit(scripts_dir).scan()
         remaining = sum(1 for f in findings if f.needs_fix)
-        _log.info("HarnessPatcher.verify_clean: %d remaining violations in '%s'", remaining, scripts_dir)
+        _log.info(
+            "HarnessPatcher.verify_clean: %d remaining violations in '%s'", remaining, scripts_dir
+        )
         return remaining
 
     # ------------------------------------------------------------------

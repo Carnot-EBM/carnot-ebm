@@ -91,7 +91,11 @@ auc_checkpoints: dict[str, float] = {}
 last_val_auc = 0.0
 
 for ckpt in _CHECKPOINT_EPOCHS:
-    n_extra = ckpt - (list(_CHECKPOINT_EPOCHS).index(ckpt) and _CHECKPOINT_EPOCHS[list(_CHECKPOINT_EPOCHS).index(ckpt) - 1] or 0)
+    n_extra = ckpt - (
+        list(_CHECKPOINT_EPOCHS).index(ckpt)
+        and _CHECKPOINT_EPOCHS[list(_CHECKPOINT_EPOCHS).index(ckpt) - 1]
+        or 0
+    )
     last_val_auc = trainer.train(train_pairs, n_epochs=n_extra)
     auc_checkpoints[f"auc_at_{ckpt}"] = last_val_auc
     print(f"[604] Epoch {ckpt:3d}: val_auc={last_val_auc:.4f}")
@@ -108,7 +112,9 @@ else:
 
 retro_069_resolved = post_finetune_val_auc >= _GATE_THRESHOLD
 
-print(f"[604] Final val_auc={post_finetune_val_auc:.4f}, gate_open={gate_open}, verdict={honest_verdict}")
+print(
+    f"[604] Final val_auc={post_finetune_val_auc:.4f}, gate_open={gate_open}, verdict={honest_verdict}"
+)
 
 # ---------------------------------------------------------------------------
 # Build and write artifact

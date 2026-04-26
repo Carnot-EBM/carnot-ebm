@@ -43,9 +43,11 @@ def count_models() -> int:
     exports_dir = os.path.join(os.path.dirname(__file__), "..", "exports")
     if not os.path.exists(exports_dir):
         return 0
-    return sum(1 for d in os.listdir(exports_dir)
-               if d.startswith("per-token-ebm-") and
-               os.path.isdir(os.path.join(exports_dir, d)))
+    return sum(
+        1
+        for d in os.listdir(exports_dir)
+        if d.startswith("per-token-ebm-") and os.path.isdir(os.path.join(exports_dir, d))
+    )
 
 
 def count_principles() -> int:
@@ -65,7 +67,9 @@ def count_tests() -> int:
     try:
         result = subprocess.run(
             [sys.executable, "-m", "pytest", "tests/python", "--collect-only", "-q", "--no-header"],
-            capture_output=True, text=True, timeout=30,
+            capture_output=True,
+            text=True,
+            timeout=30,
             cwd=os.path.join(os.path.dirname(__file__), ".."),
         )
         # Last line is like "1107 tests collected"

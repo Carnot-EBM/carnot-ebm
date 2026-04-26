@@ -40,9 +40,7 @@ def test_load_gate_result_file_present_bitfile_built(tmp_path):
     """SCENARIO-SAMPLE-056: Gate file present with bitfile_built=True returns True."""
     gate = {"bitfile_built": True, "bitfile_path": "/some/path.bit"}
     (tmp_path / "results").mkdir()
-    (tmp_path / "results" / "experiment_584_kv260_synthesis.json").write_text(
-        json.dumps(gate)
-    )
+    (tmp_path / "results" / "experiment_584_kv260_synthesis.json").write_text(json.dumps(gate))
     result = load_gate_result(tmp_path)
     assert result["bitfile_built"] is True
     assert result["bitfile_path"] == "/some/path.bit"
@@ -52,9 +50,7 @@ def test_load_gate_result_file_present_bitfile_not_built(tmp_path):
     """SCENARIO-SAMPLE-055: Gate file present with bitfile_built=False returns False."""
     gate = {"bitfile_built": False, "bitfile_path": None, "honest_verdict": "vivado_not_installed"}
     (tmp_path / "results").mkdir()
-    (tmp_path / "results" / "experiment_584_kv260_synthesis.json").write_text(
-        json.dumps(gate)
-    )
+    (tmp_path / "results" / "experiment_584_kv260_synthesis.json").write_text(json.dumps(gate))
     result = load_gate_result(tmp_path)
     assert result["bitfile_built"] is False
 
@@ -88,6 +84,7 @@ def test_check_bitfile_env_match_matches():
 def test_check_bitfile_env_match_mismatch(caplog):
     """Env var differs from bitfile_path — warning logged, returns False."""
     import logging
+
     with patch.dict(os.environ, {"CARNOT_KV260_BITFILE": "/other/path.bit"}):
         with caplog.at_level(logging.WARNING):
             result = check_bitfile_env_match("/some/path.bit")
@@ -239,6 +236,7 @@ def test_main_blocked_no_bitfile(tmp_path, monkeypatch):
     class FakeTmpl:
         def setup(self):
             pass
+
         def assert_deliverable_written(self):
             deliverable_written_calls.append(True)
 

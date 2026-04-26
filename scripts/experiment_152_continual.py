@@ -68,20 +68,18 @@ import jax.random as jrandom
 from carnot.models.continual_gibbs import ContinualGibbsConfig, ContinualGibbsModel
 from carnot.models.gibbs import GibbsConfig
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Constants — IDENTICAL to Exp 116 for fair comparison
 # ---------------------------------------------------------------------------
 
-INPUT_DIM = 16         # Embedding dimensionality for each reasoning step
-HIDDEN_DIM = 8         # Hidden state size (same as LNN's hidden_dim)
-N_CHAINS = 20          # Total number of reasoning chains (10 correct + 10 with errors)
-N_STEPS = 5            # Steps per reasoning chain
-SEED = 2024            # Master RNG seed (SAME as Exp 116 for identical chains)
+INPUT_DIM = 16  # Embedding dimensionality for each reasoning step
+HIDDEN_DIM = 8  # Hidden state size (same as LNN's hidden_dim)
+N_CHAINS = 20  # Total number of reasoning chains (10 correct + 10 with errors)
+N_STEPS = 5  # Steps per reasoning chain
+SEED = 2024  # Master RNG seed (SAME as Exp 116 for identical chains)
 
 # Cluster statistics — SAME as Exp 116
 CORRECT_STEP_MEAN = 0.0
@@ -93,6 +91,7 @@ ERROR_STEP_STD = 0.5
 # ---------------------------------------------------------------------------
 # Synthetic chain generation — IDENTICAL to Exp 116 for reproducibility
 # ---------------------------------------------------------------------------
+
 
 def generate_correct_chain(key: jax.Array) -> list[jnp.ndarray]:
     """Generate a 5-step reasoning chain where all steps are consistent.
@@ -115,9 +114,7 @@ def generate_correct_chain(key: jax.Array) -> list[jnp.ndarray]:
     return steps
 
 
-def generate_error_chain(
-    key: jax.Array, error_at_step: int
-) -> tuple[list[jnp.ndarray], int]:
+def generate_error_chain(key: jax.Array, error_at_step: int) -> tuple[list[jnp.ndarray], int]:
     """Generate a 5-step chain with one erroneous step at `error_at_step`.
 
     Error propagates: steps at and after the error use a shifted distribution.
@@ -148,6 +145,7 @@ def generate_error_chain(
 # ---------------------------------------------------------------------------
 # ContinualGibbs evaluation
 # ---------------------------------------------------------------------------
+
 
 def evaluate_chain_continual(
     model: ContinualGibbsModel,
@@ -221,6 +219,7 @@ def compute_step5_energies_continual(
 # Binary classification accuracy (sign-agnostic)
 # ---------------------------------------------------------------------------
 
+
 def binary_accuracy_at_threshold(
     energies: list[float],
     labels: list[bool],  # True = error chain, False = correct chain
@@ -278,6 +277,7 @@ def compute_best_accuracy(
 # Per-step accuracy degradation analysis
 # ---------------------------------------------------------------------------
 
+
 def compute_per_step_accuracy(
     model: ContinualGibbsModel,
     chains: list[dict[str, Any]],
@@ -321,6 +321,7 @@ def compute_per_step_accuracy(
 # Main experiment
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """Run Experiment 152: ContinualGibbs vs LNN vs Static Ising step-5 accuracy."""
     logger.info("=== Experiment 152: ContinualGibbs Orthogonal Gradient Learning ===")
@@ -351,12 +352,14 @@ def main() -> None:
     for i in range(N_CHAINS // 2):
         master_key, subkey = jrandom.split(master_key)
         steps = generate_correct_chain(subkey)
-        all_chains.append({
-            "chain_id": f"correct_{i:02d}",
-            "is_correct": True,
-            "error_at_step": None,
-            "steps": [s.tolist() for s in steps],
-        })
+        all_chains.append(
+            {
+                "chain_id": f"correct_{i:02d}",
+                "is_correct": True,
+                "error_at_step": None,
+                "steps": [s.tolist() for s in steps],
+            }
+        )
 
     # 10 error chains — same distribution as Exp 116
     error_steps_seq = [1, 2, 3, 1, 2, 3, 1, 2, 3, 2]
@@ -364,15 +367,19 @@ def main() -> None:
         master_key, subkey = jrandom.split(master_key)
         error_step = error_steps_seq[i % len(error_steps_seq)]
         steps, err_idx = generate_error_chain(subkey, error_at_step=error_step)
-        all_chains.append({
-            "chain_id": f"error_{i:02d}",
-            "is_correct": False,
-            "error_at_step": err_idx,
-            "steps": [s.tolist() for s in steps],
-        })
+        all_chains.append(
+            {
+                "chain_id": f"error_{i:02d}",
+                "is_correct": False,
+                "error_at_step": err_idx,
+                "steps": [s.tolist() for s in steps],
+            }
+        )
 
     is_error = [not c["is_correct"] for c in all_chains]
-    logger.info(f"Generated {N_CHAINS} chains ({sum(not e for e in is_error)} correct, {sum(is_error)} error)")
+    logger.info(
+        f"Generated {N_CHAINS} chains ({sum(not e for e in is_error)} correct, {sum(is_error)} error)"
+    )
 
     # --- Evaluate ContinualGibbs per-step trajectory ---
     logger.info("\n--- ContinualGibbs: full 5-step energy trajectory ---")
@@ -405,19 +412,15 @@ def main() -> None:
             exp116_results = json.load(f)
 
         # Extract step-4 energies from Exp 116 per-chain results
-        lnn_step5_energies = [
-            r["lnn_energies"][4] for r in exp116_results["per_chain_results"]
-        ]
-        ising_step5_energies = [
-            r["ising_energies"][4] for r in exp116_results["per_chain_results"]
-        ]
+        lnn_step5_energies = [r["lnn_energies"][4] for r in exp116_results["per_chain_results"]]
+        ising_step5_energies = [r["ising_energies"][4] for r in exp116_results["per_chain_results"]]
 
         # Labels from Exp 116 (should match since same chain generation order)
-        exp116_is_error = [
-            not r["is_correct"] for r in exp116_results["per_chain_results"]
-        ]
+        exp116_is_error = [not r["is_correct"] for r in exp116_results["per_chain_results"]]
 
-        lnn_step5_accuracy, lnn_threshold = compute_best_accuracy(lnn_step5_energies, exp116_is_error)
+        lnn_step5_accuracy, lnn_threshold = compute_best_accuracy(
+            lnn_step5_energies, exp116_is_error
+        )
         ising_step5_accuracy, ising_threshold = compute_best_accuracy(
             ising_step5_energies, exp116_is_error
         )
@@ -438,15 +441,12 @@ def main() -> None:
 
     # --- Summary ---
     logger.info("\n=== Experiment 152 Summary ===")
-    logger.info(
-        f"{'Model':<20} {'Step-5 Accuracy':>16} {'vs LNN':>10} {'Target Met':>12}"
-    )
+    logger.info(f"{'Model':<20} {'Step-5 Accuracy':>16} {'vs LNN':>10} {'Target Met':>12}")
     logger.info("-" * 62)
     lnn_acc_str = f"{lnn_step5_accuracy:.1%}" if lnn_available else "N/A"
     ising_acc_str = f"{ising_step5_accuracy:.1%}" if lnn_available else "N/A"
     continual_vs_lnn = (
-        f"+{(continual_step5_accuracy - lnn_step5_accuracy):.1%}"
-        if lnn_available else "N/A"
+        f"+{(continual_step5_accuracy - lnn_step5_accuracy):.1%}" if lnn_available else "N/A"
     )
     target_met = "YES" if continual_step5_accuracy >= 0.80 else "NO"
 
@@ -459,29 +459,27 @@ def main() -> None:
     logger.info(f"Target: ContinualGibbs > 80% — {target_met}")
     logger.info(
         f"ContinualGibbs per-step accuracy: "
-        + " | ".join(f"step{i+2}={a:.0%}" for i, a in enumerate(continual_per_step_acc))
+        + " | ".join(f"step{i + 2}={a:.0%}" for i, a in enumerate(continual_per_step_acc))
     )
 
     # --- Compute energy gap statistics ---
-    continual_correct_step5 = [
-        e for e, err in zip(continual_step5_energies, is_error) if not err
-    ]
-    continual_error_step5 = [
-        e for e, err in zip(continual_step5_energies, is_error) if err
-    ]
-    continual_mean_correct_step5 = float(jnp.mean(jnp.array(continual_correct_step5))) if continual_correct_step5 else float("nan")
-    continual_mean_error_step5 = float(jnp.mean(jnp.array(continual_error_step5))) if continual_error_step5 else float("nan")
+    continual_correct_step5 = [e for e, err in zip(continual_step5_energies, is_error) if not err]
+    continual_error_step5 = [e for e, err in zip(continual_step5_energies, is_error) if err]
+    continual_mean_correct_step5 = (
+        float(jnp.mean(jnp.array(continual_correct_step5)))
+        if continual_correct_step5
+        else float("nan")
+    )
+    continual_mean_error_step5 = (
+        float(jnp.mean(jnp.array(continual_error_step5))) if continual_error_step5 else float("nan")
+    )
     continual_energy_gap = continual_mean_error_step5 - continual_mean_correct_step5
 
     logger.info(
         f"ContinualGibbs energy gap (error - correct) at step 5: {continual_energy_gap:+.4f}"
     )
-    logger.info(
-        f"  mean E(correct step 5) = {continual_mean_correct_step5:.4f}"
-    )
-    logger.info(
-        f"  mean E(error step 5)   = {continual_mean_error_step5:.4f}"
-    )
+    logger.info(f"  mean E(correct step 5) = {continual_mean_correct_step5:.4f}")
+    logger.info(f"  mean E(error step 5)   = {continual_mean_error_step5:.4f}")
 
     # --- Per-chain results ---
     per_chain_results = []

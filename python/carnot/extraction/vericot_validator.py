@@ -372,7 +372,7 @@ class VeriCoTStepValidator:
             line = line.strip()
             if not line.startswith("ASSERT:"):
                 continue
-            expr = line[len("ASSERT:"):].strip()
+            expr = line[len("ASSERT:") :].strip()
             if expr.lower() == "none" or not expr:
                 continue
             premises.append(FOLPremise(expression=expr, source_step=step_text))

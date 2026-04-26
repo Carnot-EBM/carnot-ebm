@@ -31,6 +31,7 @@ from carnot.models.vjepa_predictor import (
 # VariationalEncoder
 # ---------------------------------------------------------------------------
 
+
 class TestVariationalEncoder:
     """Traces: REQ-VERIFY-175 (VariationalJEPAPredictor interface)."""
 
@@ -75,7 +76,9 @@ class TestVariationalEncoder:
         enc2 = self._enc()
         enc2.set_params(params)
         for k in params:
-            assert jnp.allclose(getattr(enc, k.replace("w_mu", "w_mu")), getattr(enc2, k.replace("w_mu", "w_mu")))
+            assert jnp.allclose(
+                getattr(enc, k.replace("w_mu", "w_mu")), getattr(enc2, k.replace("w_mu", "w_mu"))
+            )
 
     def test_encode_batch(self):
         """encode() works on batched inputs (batch, in_dim)."""
@@ -89,6 +92,7 @@ class TestVariationalEncoder:
 # ---------------------------------------------------------------------------
 # VariationalPrior
 # ---------------------------------------------------------------------------
+
 
 class TestVariationalPrior:
     """Traces: REQ-VERIFY-176 (KL regularisation prevents OOD collapse)."""
@@ -120,6 +124,7 @@ class TestVariationalPrior:
 # ---------------------------------------------------------------------------
 # VariationalJEPAPredictor
 # ---------------------------------------------------------------------------
+
 
 class TestVariationalJEPAPredictor:
     """Traces: REQ-VERIFY-175, REQ-VERIFY-176, SCENARIO-VERIFY-229, SCENARIO-VERIFY-230."""
@@ -246,6 +251,7 @@ class TestVariationalJEPAPredictor:
             call_count["n"] += 1
             if call_count["n"] >= 2:
                 import jax.numpy as jnp
+
                 return jnp.array(float("nan")), jnp.array(0.0)
             return real_loss(x, y, c, key)
 
@@ -270,6 +276,7 @@ class TestVariationalJEPAPredictor:
 # ---------------------------------------------------------------------------
 # Feature extraction helpers
 # ---------------------------------------------------------------------------
+
 
 class TestFeatureExtraction:
     """Traces: REQ-VERIFY-175 (corpus preparation pipeline)."""
@@ -332,6 +339,7 @@ class TestFeatureExtraction:
 # AUC helper
 # ---------------------------------------------------------------------------
 
+
 class TestComputeAuc:
     """Traces: REQ-VERIFY-175 (evaluation pipeline)."""
 
@@ -360,6 +368,7 @@ class TestComputeAuc:
 # ---------------------------------------------------------------------------
 # TrainMetrics dataclass
 # ---------------------------------------------------------------------------
+
 
 class TestTrainMetrics:
     def test_default_empty(self):

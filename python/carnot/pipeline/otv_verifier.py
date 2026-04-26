@@ -35,11 +35,14 @@ Spec: REQ-VERIFY-120, SCENARIO-VERIFY-160, SCENARIO-VERIFY-161, SCENARIO-VERIFY-
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-import jax.numpy as jnp
 import numpy as np
 
 from carnot.pipeline.live_assertion import assert_live_or_ci_skip
+
+if TYPE_CHECKING:
+    import jax.numpy as jnp
 
 
 @dataclass
@@ -122,7 +125,9 @@ class OTVVerifier:
         if not pairs:
             return
 
-        X = np.stack([np.array(h, dtype=np.float32).reshape(-1) for h, _ in pairs])  # (n, embed_dim)
+        X = np.stack(
+            [np.array(h, dtype=np.float32).reshape(-1) for h, _ in pairs]
+        )  # (n, embed_dim)
         y = np.array([1.0 if correct else 0.0 for _, correct in pairs], dtype=np.float32)  # (n,)
 
         W = self._W.copy()  # (1, embed_dim)

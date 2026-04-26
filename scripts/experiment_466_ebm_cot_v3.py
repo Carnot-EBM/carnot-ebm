@@ -36,6 +36,7 @@ sys.path.insert(0, str(_PROJECT_ROOT))
 
 # Step 1: apply env autofix FIRST (before any GPU-related imports)
 from python.carnot.pipeline.env_autofix import apply_env_autofix  # noqa: E402
+
 _env_fix = apply_env_autofix()
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -63,19 +64,20 @@ DELIVERABLE = "results/experiment_466_ebm_cot_v3.json"
 EORM_443_PATH = "results/eorm_443_live.safetensors"
 EXP_458_JSON = "results/experiment_458_ebm_cot_calibration.json"
 
-N_REAL_PAIRS = 57         # from Exp 443
-N_SYNTHETIC_PAIRS = 93    # augmentation to reach 150 total
+N_REAL_PAIRS = 57  # from Exp 443
+N_SYNTHETIC_PAIRS = 93  # augmentation to reach 150 total
 N_TOTAL_PAIRS = 150
 N_LANGEVIN_STEPS = 50
 EP_LR = 0.01
 TARGET_AUC = 0.650
 RETRO_034_THRESHOLD = 0.600
-V2_AUC = 0.5554           # from Exp 458
+V2_AUC = 0.5554  # from Exp 458
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _build_synthetic_pairs(n: int) -> list[dict]:
     """Build n synthetic labeled CoT pairs for evaluation.
@@ -85,25 +87,31 @@ def _build_synthetic_pairs(n: int) -> list[dict]:
     """
     pairs = []
     for i in range(n // 2):
-        pairs.append({
-            "question_text": f"Question {i}: evaluate the reasoning",
-            "response_text": f"correct answer step by step reasoning {i}",
-            "label": 1,
-        })
+        pairs.append(
+            {
+                "question_text": f"Question {i}: evaluate the reasoning",
+                "response_text": f"correct answer step by step reasoning {i}",
+                "label": 1,
+            }
+        )
     for i in range(n // 2):
-        pairs.append({
-            "question_text": f"Question {i}: evaluate the reasoning",
-            "response_text": f"wrong incorrect reasoning with error {i}",
-            "label": 0,
-        })
+        pairs.append(
+            {
+                "question_text": f"Question {i}: evaluate the reasoning",
+                "response_text": f"wrong incorrect reasoning with error {i}",
+                "label": 0,
+            }
+        )
     # If n is odd, add one more correct pair
     if n % 2 == 1:
         i = n // 2
-        pairs.append({
-            "question_text": f"Question {i}: evaluate the reasoning",
-            "response_text": f"correct answer step by step reasoning {i}",
-            "label": 1,
-        })
+        pairs.append(
+            {
+                "question_text": f"Question {i}: evaluate the reasoning",
+                "response_text": f"correct answer step by step reasoning {i}",
+                "label": 1,
+            }
+        )
     return pairs[:n]
 
 
@@ -134,6 +142,7 @@ def _train_test_split(
 # Main experiment
 # ---------------------------------------------------------------------------
 
+
 def run_experiment(tmpl: ExperimentTemplate) -> dict:
     """Run EBM-CoT v3 calibration and return artifact dict."""
     repo_root = _PROJECT_ROOT
@@ -160,15 +169,22 @@ def run_experiment(tmpl: ExperimentTemplate) -> dict:
     # Use a question prefix that differs from real_pairs to add diversity
     synth_pairs = []
     for j, (cot_text, is_correct) in enumerate(synthetic_raw):
-        synth_pairs.append({
-            "question_text": f"Synthetic reasoning task {j}",
-            "response_text": cot_text,
-            "label": int(is_correct),
-        })
+        synth_pairs.append(
+            {
+                "question_text": f"Synthetic reasoning task {j}",
+                "response_text": cot_text,
+                "label": int(is_correct),
+            }
+        )
 
     all_pairs = real_pairs + synth_pairs
     assert len(all_pairs) == N_TOTAL_PAIRS, f"Expected {N_TOTAL_PAIRS}, got {len(all_pairs)}"
-    _log.info("Dataset: %d real + %d synthetic = %d total pairs", N_REAL_PAIRS, N_SYNTHETIC_PAIRS, N_TOTAL_PAIRS)
+    _log.info(
+        "Dataset: %d real + %d synthetic = %d total pairs",
+        N_REAL_PAIRS,
+        N_SYNTHETIC_PAIRS,
+        N_TOTAL_PAIRS,
+    )
 
     # --- Baseline AUC (uncalibrated) ---
     baseline_auc = _compute_baseline_auc(eorm, all_pairs)
@@ -209,16 +225,18 @@ def run_experiment(tmpl: ExperimentTemplate) -> dict:
     target_met = v3_auc > TARGET_AUC
     retro_034_closed = v3_auc > RETRO_034_THRESHOLD
 
-    if target_met:
-        honest_verdict = "retro_034_closed"
-    elif retro_034_closed:
+    if target_met or retro_034_closed:
         honest_verdict = "retro_034_closed"
     else:
         honest_verdict = "improvement_below_target"
 
     _log.info(
         "v3_auc=%.4f | v2_auc=%.4f | improvement=%.4f | target_met=%s | retro_034_closed=%s",
-        v3_auc, V2_AUC, auc_improvement, target_met, retro_034_closed,
+        v3_auc,
+        V2_AUC,
+        auc_improvement,
+        target_met,
+        retro_034_closed,
     )
 
     return tmpl.build_result(

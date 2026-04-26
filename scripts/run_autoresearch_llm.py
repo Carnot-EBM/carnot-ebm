@@ -28,8 +28,8 @@ Spec: FR-11, REQ-AUTO-003, SCENARIO-AUTO-001
 
 import argparse
 import logging
-import sys
 import os
+import sys
 
 # Add the Python package to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
@@ -44,7 +44,7 @@ from carnot.autoresearch.hypothesis_generator import (
     GeneratorConfig,
     generate_hypotheses,
 )
-from carnot.benchmarks import DoubleWell, Rosenbrock, Ackley, Rastrigin
+from carnot.benchmarks import DoubleWell, Rosenbrock
 
 logging.basicConfig(
     level=logging.INFO,
@@ -64,7 +64,7 @@ def create_initial_baselines() -> tuple[BaselineRecord, dict]:
         benchmark names to their configurations for hypothesis code.
     """
     import time
-    import jax.numpy as jnp
+
     import jax.random as jrandom
     from carnot.samplers.langevin import LangevinSampler
 
@@ -136,9 +136,7 @@ def make_generator(gen_config: GeneratorConfig):
             logger.error("Hypothesis generation failed: %s", result.error)
             return []
 
-        logger.info(
-            "Generated %d hypothesis(es) from LLM", len(result.hypotheses)
-        )
+        logger.info("Generated %d hypothesis(es) from LLM", len(result.hypotheses))
         for desc, _ in result.hypotheses:
             logger.info("  - %s", desc)
 
@@ -157,10 +155,7 @@ def print_results(result) -> None:
     print(f"  Accepted:         {result.accepted}")
     print(f"  Rejected:         {result.rejected}")
     print(f"  Pending review:   {result.pending_review}")
-    print(
-        f"  Circuit breaker:  "
-        f"{'TRIPPED' if result.circuit_breaker_tripped else 'OK'}"
-    )
+    print(f"  Circuit breaker:  {'TRIPPED' if result.circuit_breaker_tripped else 'OK'}")
     print()
 
     print("EXPERIMENT LOG:")

@@ -231,6 +231,7 @@ class TestRunExtractorFn:
     def test_exception_returns_empty(self):
         def bad_fn(resp):
             raise RuntimeError("boom")
+
         result = _run_extractor_fn(bad_fn, "text")
         assert result == []
 
@@ -296,9 +297,11 @@ class TestCompareExtractors:
 
     def test_violation_rate_fraction(self):
         calls = [0]
+
         def fn(r):
             calls[0] += 1
             return ["v"] if calls[0] % 2 == 1 else []
+
         results = compare_extractors(["r1", "r2", "r3", "r4"], [("X", fn)])
         # 4 calls: 1st, 3rd flagged → 2 violations
         assert results[0].n_violations_found == 2
@@ -503,12 +506,16 @@ class TestLoadFpPrior:
 
     def test_valid_file_loaded(self, tmp_path):
         f = tmp_path / "fp.json"
-        f.write_text(json.dumps({
-            "category_distribution": {
-                "VALID_INTERMEDIATE": 5,
-                "REGEX_ARTIFACT": 3,
-            }
-        }))
+        f.write_text(
+            json.dumps(
+                {
+                    "category_distribution": {
+                        "VALID_INTERMEDIATE": 5,
+                        "REGEX_ARTIFACT": 3,
+                    }
+                }
+            )
+        )
         result = _load_fp_prior(f)
         assert result["VALID_INTERMEDIATE"] == 5
         assert result["REGEX_ARTIFACT"] == 3
@@ -667,10 +674,14 @@ def _safe_extractors(force_live: bool) -> list[tuple[str, Any]]:
     crv = CoTCircuitVerifier()
 
     return [
-        ("ArithmeticExtractor",
-         lambda r: [v for v in arith.extract(r, "arithmetic") if not v.metadata.get("satisfied", True)]),
+        (
+            "ArithmeticExtractor",
+            lambda r: [
+                v for v in arith.extract(r, "arithmetic") if not v.metadata.get("satisfied", True)
+            ],
+        ),
         ("NL2Z3Extractor", lambda r: []),  # CI-safe no-op
-        ("VergeRefiner", lambda r: []),    # CI-safe no-op
+        ("VergeRefiner", lambda r: []),  # CI-safe no-op
         ("CoTCircuitVerifier", lambda r: crv.extract("", r, "reasoning")),
     ]
 
@@ -690,9 +701,11 @@ class TestMain:
         ):
             # Write a minimal exp331 file so _load_fp_prior succeeds.
             (tmp_path).mkdir(exist_ok=True)
-            (tmp_path / "exp331.json").write_text(json.dumps({
-                "category_distribution": {"VALID_INTERMEDIATE": 2, "REGEX_ARTIFACT": 1}
-            }))
+            (tmp_path / "exp331.json").write_text(
+                json.dumps(
+                    {"category_distribution": {"VALID_INTERMEDIATE": 2, "REGEX_ARTIFACT": 1}}
+                )
+            )
             output_path.parent.mkdir(parents=True, exist_ok=True)
             main()
 
@@ -733,9 +746,7 @@ class TestMain:
         """When CARNOT_FORCE_LIVE=1 and exp340 has responses, use them."""
         output_path = tmp_path / "results" / "experiment_342_live_extractor_comparison.json"
         exp340_path = tmp_path / "exp340.json"
-        exp340_path.write_text(json.dumps({
-            "responses": [f"response {i}" for i in range(50)]
-        }))
+        exp340_path.write_text(json.dumps({"responses": [f"response {i}" for i in range(50)]}))
 
         with (
             patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}),

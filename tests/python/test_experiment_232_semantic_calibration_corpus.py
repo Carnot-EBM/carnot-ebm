@@ -77,9 +77,7 @@ def test_build_live_calibration_rows_preserve_live_outcomes_and_provenance(tmp_p
     }
 
     qwen_tp = next(
-        row
-        for row in rows
-        if row["example_id"] == "exp232-live-219-qwen3-5-0-8b-gsm8k-249"
+        row for row in rows if row["example_id"] == "exp232-live-219-qwen3-5-0-8b-gsm8k-249"
     )
     assert qwen_tp["labels"]["actual_error"] is True
     assert qwen_tp["labels"]["verifier_detected"] is True
@@ -124,13 +122,13 @@ def test_build_follow_up_rows_only_fill_missing_prompt_side_buckets(tmp_path: Pa
         "instruction_surface_only",
         "instruction_grounded",
     }
-    assert all(row["provenance"]["follow_up_gap"] in {"false_positive", "false_negative"} for row in rows)
+    assert all(
+        row["provenance"]["follow_up_gap"] in {"false_positive", "false_negative"} for row in rows
+    )
     assert all(str(row["source_refs"][0]).startswith("exp221:") for row in rows)
 
     code_fn = next(
-        row
-        for row in rows
-        if row["example_id"] == "exp232-followup-code-typed-properties-fn-1"
+        row for row in rows if row["example_id"] == "exp232-followup-code-typed-properties-fn-1"
     )
     assert code_fn["labels"]["actual_error"] is True
     assert code_fn["labels"]["verifier_detected"] is False
@@ -210,16 +208,22 @@ def test_helper_branches_cover_validation_and_label_edge_cases(tmp_path: Path):
 
     assert module.primary_221_family([{"status": "violated", "family": "custom"}]) == "custom"
     assert module.answer_target_alignment_219(True, "omitted_premises", []) == "partially_aligned"
-    assert module.claim_granularity_219(
-        {"typed_reasoning_parse_status": "fallback_text", "response_mode": "fallback_text"},
-        {"claims": [{"claim_id": "c1"}]},
-    ) == "final_answer_only"
-    assert module.premise_coverage_221(
-        actual_error=True,
-        constraint_coverage=1.0,
-        gold_family="semantic",
-        semantic_violation_count=0,
-    ) == "partial"
+    assert (
+        module.claim_granularity_219(
+            {"typed_reasoning_parse_status": "fallback_text", "response_mode": "fallback_text"},
+            {"claims": [{"claim_id": "c1"}]},
+        )
+        == "final_answer_only"
+    )
+    assert (
+        module.premise_coverage_221(
+            actual_error=True,
+            constraint_coverage=1.0,
+            gold_family="semantic",
+            semantic_violation_count=0,
+        )
+        == "partial"
+    )
 
 
 # REQ-VERIFY-042, REQ-VERIFY-043, SCENARIO-VERIFY-043, SCENARIO-VERIFY-044

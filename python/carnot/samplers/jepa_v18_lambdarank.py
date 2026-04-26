@@ -35,11 +35,8 @@ Spec: REQ-VER-028, REQ-VER-029, SCENARIO-VER-035, SCENARIO-VER-036
 from __future__ import annotations
 
 import math
-from collections import Counter
-from typing import List, Tuple
 
 import numpy as np
-
 
 # ---------------------------------------------------------------------------
 # Feature extractor — bag-of-words over character n-grams
@@ -137,7 +134,7 @@ def lambda_rank_loss(
     scores: np.ndarray,
     labels: np.ndarray,
     example_weights: np.ndarray | None = None,
-) -> Tuple[float, np.ndarray]:
+) -> tuple[float, np.ndarray]:
     """Compute LambdaRank loss and per-item gradient for a single query group.
 
     LambdaRank (Burges 2006) directly optimises NDCG by computing a signed
@@ -212,8 +209,8 @@ def lambda_rank_loss(
             # But for LambdaRank we use: lambda_ij = delta_NDCG * w * (1 - sigma)
             # positive for i (should be ranked higher), negative for j
             lam = delta_ndcg * w * (1.0 - sigma)
-            lambdas[i] += lam   # push i's score up
-            lambdas[j] -= lam   # push j's score down
+            lambdas[i] += lam  # push i's score up
+            lambdas[j] -= lam  # push j's score down
 
     return total_loss, lambdas
 
@@ -313,7 +310,7 @@ class JEPALambdaRankV18:
         self._adam_state: dict = {}
         self._adam_t = 0  # step counter
 
-    def _forward(self, x: np.ndarray) -> Tuple[float, dict]:
+    def _forward(self, x: np.ndarray) -> tuple[float, dict]:
         """Forward pass: feature vector → scalar score, caching activations.
 
         Parameters
@@ -327,8 +324,8 @@ class JEPALambdaRankV18:
             ``score`` is the scalar output.
             ``cache`` holds intermediate activations needed for backprop.
         """
-        h1 = np.maximum(0.0, self.W1 @ x + self.b1)    # ReLU
-        h2 = np.maximum(0.0, self.W2 @ h1 + self.b2)   # ReLU
+        h1 = np.maximum(0.0, self.W1 @ x + self.b1)  # ReLU
+        h2 = np.maximum(0.0, self.W2 @ h1 + self.b2)  # ReLU
         score = float((self.W3 @ h2 + self.b3)[0])
         return score, {"x": x, "h1": h1, "h2": h2}
 
@@ -349,15 +346,15 @@ class JEPALambdaRankV18:
         """
         x, h1, h2 = cache["x"], cache["h1"], cache["h2"]
 
-        d_h2 = self.W3.T * d_score          # shape (hidden_dim,)
+        d_h2 = self.W3.T * d_score  # shape (hidden_dim,)
         d_h2 = d_h2.squeeze()
-        d_h2_relu = d_h2 * (h2 > 0)         # ReLU backward
+        d_h2_relu = d_h2 * (h2 > 0)  # ReLU backward
 
         dW3 = np.outer(np.array([d_score]), h2)
         db3 = np.array([d_score], dtype=np.float32)
 
         d_h1 = self.W2.T @ d_h2_relu
-        d_h1_relu = d_h1 * (h1 > 0)         # ReLU backward
+        d_h1_relu = d_h1 * (h1 > 0)  # ReLU backward
 
         dW2 = np.outer(d_h2_relu, h1)
         db2 = d_h2_relu.copy()
@@ -367,9 +364,16 @@ class JEPALambdaRankV18:
 
         return {"W1": dW1, "b1": db1, "W2": dW2, "b2": db2, "W3": dW3, "b3": db3}
 
-    def _adam_update(self, param_name: str, param: np.ndarray, grad: np.ndarray,
-                     lr: float, beta1: float = 0.9, beta2: float = 0.999,
-                     eps: float = 1e-8) -> np.ndarray:
+    def _adam_update(
+        self,
+        param_name: str,
+        param: np.ndarray,
+        grad: np.ndarray,
+        lr: float,
+        beta1: float = 0.9,
+        beta2: float = 0.999,
+        eps: float = 1e-8,
+    ) -> np.ndarray:
         """Apply one Adam update step to a parameter.
 
         WHY Adam over plain SGD: Adam adapts the learning rate per-parameter
@@ -385,9 +389,9 @@ class JEPALambdaRankV18:
             }
         state = self._adam_state[param_name]
         state["m"] = beta1 * state["m"] + (1 - beta1) * grad
-        state["v"] = beta2 * state["v"] + (1 - beta2) * grad ** 2
-        m_hat = state["m"] / (1 - beta1 ** self._adam_t)
-        v_hat = state["v"] / (1 - beta2 ** self._adam_t)
+        state["v"] = beta2 * state["v"] + (1 - beta2) * grad**2
+        m_hat = state["m"] / (1 - beta1**self._adam_t)
+        v_hat = state["v"] / (1 - beta2**self._adam_t)
         return param - lr * m_hat / (np.sqrt(v_hat) + eps)
 
     def predict_score(self, step_text: str) -> float:
@@ -411,10 +415,10 @@ class JEPALambdaRankV18:
 
     def train(
         self,
-        groups: List[dict],
+        groups: list[dict],
         n_epochs: int = 50,
         lr: float = 1e-4,
-    ) -> List[float]:
+    ) -> list[float]:
         """Train the model on a list of query groups using LambdaRank.
 
         Each group represents one question (query) and contains a list of steps
@@ -437,9 +441,9 @@ class JEPALambdaRankV18:
         list of float
             Training loss per epoch.
         """
-        epoch_losses: List[float] = []
+        epoch_losses: list[float] = []
 
-        for epoch in range(n_epochs):
+        for _epoch in range(n_epochs):
             self._adam_t += 1
             epoch_loss = 0.0
             n_groups = 0
@@ -463,10 +467,10 @@ class JEPALambdaRankV18:
                 caches = [self._forward(x)[1] for x in features]
 
                 # ActPRM weights for each step
-                weights = np.array([
-                    actprm_weight(s.get("z3_label"), s.get("pddl_label"))
-                    for s in steps
-                ], dtype=np.float32)
+                weights = np.array(
+                    [actprm_weight(s.get("z3_label"), s.get("pddl_label")) for s in steps],
+                    dtype=np.float32,
+                )
 
                 # LambdaRank loss and per-step score gradients
                 loss, lambdas = lambda_rank_loss(scores, labels_arr, weights)
@@ -474,7 +478,7 @@ class JEPALambdaRankV18:
                 n_groups += 1
 
                 # Backprop: for each step, use lambda_i as d_loss/d_score_i
-                for idx, (cache, lam) in enumerate(zip(caches, lambdas)):
+                for _idx, (cache, lam) in enumerate(zip(caches, lambdas, strict=False)):
                     # Negate lambda because lambdas point in the "increase score" direction
                     # and we want to minimise loss (i.e., move in the -gradient direction)
                     d_score = -float(lam)
@@ -496,7 +500,7 @@ class JEPALambdaRankV18:
 
         return epoch_losses
 
-    def evaluate_auc(self, eval_groups: List[dict]) -> float:
+    def evaluate_auc(self, eval_groups: list[dict]) -> float:
         """Evaluate OOD AUC on a list of held-out query groups.
 
         AUC = AUROC over all (correct_step, incorrect_step) pairs from the eval
@@ -517,8 +521,8 @@ class JEPALambdaRankV18:
         float
             OOD AUC in [0, 1].
         """
-        correct_scores: List[float] = []
-        incorrect_scores: List[float] = []
+        correct_scores: list[float] = []
+        incorrect_scores: list[float] = []
 
         for group in eval_groups:
             steps = group["steps"]

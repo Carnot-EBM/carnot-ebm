@@ -21,7 +21,10 @@ import pytest
 import numpy as np
 
 from carnot.pipeline.vg_search_scheduler import VGScheduleResult, VGSearchScheduler
-from carnot.pipeline import VGScheduleResult as _ExportedResult, VGSearchScheduler as _ExportedScheduler
+from carnot.pipeline import (
+    VGScheduleResult as _ExportedResult,
+    VGSearchScheduler as _ExportedScheduler,
+)
 from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
 
 

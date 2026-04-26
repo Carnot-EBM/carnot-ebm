@@ -110,11 +110,7 @@ class ThinkProbeLiveV3Result:
         which is within the noise floor of the corpus.  Above 40 questions the variance drops
         below 1.5%, making the rate estimates actionable.
         """
-        return (
-            self.completion_fraction >= 0.80
-            and self.tp_rate >= 0.70
-            and self.fp_rate <= 0.20
-        )
+        return self.completion_fraction >= 0.80 and self.tp_rate >= 0.70 and self.fp_rate <= 0.20
 
     @property
     def retro_036_closed(self) -> bool:

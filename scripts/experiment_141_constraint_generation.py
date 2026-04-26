@@ -277,25 +277,17 @@ def is_verified_static(ext: AutoExtractor, q: SimQuestion) -> bool:
         that have satisfied=False).
     """
     results = ext.extract(q.response, domain="arithmetic")
-    for r in results:
-        if r.metadata.get("satisfied") is False:
-            return False
-    return True
+    return all(r.metadata.get("satisfied") is not False for r in results)
 
 
-def is_verified_with_memory(
-    ext: AutoExtractor, q: SimQuestion, memory: ConstraintMemory
-) -> bool:
+def is_verified_with_memory(ext: AutoExtractor, q: SimQuestion, memory: ConstraintMemory) -> bool:
     """Check whether the memory-augmented extractor catches errors.
 
     Same logic as is_verified_static but passes memory= to get generated
     constraints from mature patterns.
     """
     results = ext.extract(q.response, domain="arithmetic", memory=memory)
-    for r in results:
-        if r.metadata.get("satisfied") is False:
-            return False
-    return True
+    return all(r.metadata.get("satisfied") is not False for r in results)
 
 
 def accuracy(
@@ -384,8 +376,10 @@ def run_experiment() -> dict[str, Any]:
     print(f"  Warmup complete in {warmup_elapsed:.3f}s")
     if "arithmetic" in mem_summary:
         arith = mem_summary["arithmetic"]
-        print(f"  arithmetic patterns: total={arith['total_patterns']}, "
-              f"mature={arith['mature_patterns']}")
+        print(
+            f"  arithmetic patterns: total={arith['total_patterns']}, "
+            f"mature={arith['mature_patterns']}"
+        )
         for p in arith.get("top_patterns", []):
             print(f"    {p['error_type']}: {p['frequency']} occurrences")
     print()
@@ -424,14 +418,20 @@ def run_experiment() -> dict[str, Any]:
         if not wrong_qs:
             continue
         caught_static = sum(
-            1 for q in wrong_qs
-            if any(r.metadata.get("satisfied") is False
-                   for r in ext.extract(q.response, domain="arithmetic"))
+            1
+            for q in wrong_qs
+            if any(
+                r.metadata.get("satisfied") is False
+                for r in ext.extract(q.response, domain="arithmetic")
+            )
         )
         caught_memory = sum(
-            1 for q in wrong_qs
-            if any(r.metadata.get("satisfied") is False
-                   for r in ext.extract(q.response, domain="arithmetic", memory=memory))
+            1
+            for q in wrong_qs
+            if any(
+                r.metadata.get("satisfied") is False
+                for r in ext.extract(q.response, domain="arithmetic", memory=memory)
+            )
         )
         n = len(wrong_qs)
         breakdown[etype] = {
@@ -441,10 +441,12 @@ def run_experiment() -> dict[str, Any]:
             "recall_static": caught_static / n if n > 0 else 0.0,
             "recall_memory": caught_memory / n if n > 0 else 0.0,
         }
-        print(f"  {etype}: n={n}, "
-              f"static recall={caught_static/n:.2f}, "
-              f"memory recall={caught_memory/n:.2f} "
-              f"(+{(caught_memory-caught_static)/n:+.2f})")
+        print(
+            f"  {etype}: n={n}, "
+            f"static recall={caught_static / n:.2f}, "
+            f"memory recall={caught_memory / n:.2f} "
+            f"(+{(caught_memory - caught_static) / n:+.2f})"
+        )
 
     print()
 
@@ -453,8 +455,9 @@ def run_experiment() -> dict[str, Any]:
     # ------------------------------------------------------------------
 
     hypothesis_met = delta > 0.0
-    print(f"Hypothesis (memory accuracy > static accuracy): "
-          f"{'MET' if hypothesis_met else 'NOT MET'}")
+    print(
+        f"Hypothesis (memory accuracy > static accuracy): {'MET' if hypothesis_met else 'NOT MET'}"
+    )
     print(f"  delta={delta:+.4f} (need > 0.0)")
     print()
 

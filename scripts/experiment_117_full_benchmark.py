@@ -138,29 +138,35 @@ def _extract_number(text: str) -> float | None:
 
 def _make_number_checker(expected: int | float) -> Any:
     """Create a closure that checks if a response contains the expected number."""
+
     def checker(ans: str) -> bool:
         extracted = _extract_number(ans)
         if extracted is None:
             return False
         return int(extracted) == int(expected)
+
     return checker
 
 
 def _make_keyword_checker(keywords: list[str]) -> Any:
     """Create a checker that verifies the response contains at least one keyword."""
+
     def checker(ans: str) -> bool:
         ans_lower = ans.lower()
         return any(kw.lower() in ans_lower for kw in keywords)
+
     return checker
 
 
 def _make_code_checker(keywords: list[str]) -> Any:
     """Create a checker for code responses: must contain 'def' and a keyword."""
+
     def checker(ans: str) -> bool:
         if "def " not in ans:
             return False
         ans_lower = ans.lower()
         return any(kw.lower() in ans_lower for kw in keywords)
+
     return checker
 
 
@@ -186,12 +192,14 @@ def generate_arithmetic_questions(n: int = 50, seed: int = 117) -> list[dict[str
         else:
             a, b = rng.randint(10, 999), rng.randint(10, 999)
         answer = op_fn(a, b)
-        questions.append({
-            "domain": "arithmetic",
-            "question": f"What is {a} {op_sym} {b}?",
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": f"What is {a} {op_sym} {b}?",
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+            }
+        )
 
     for i in range(15):
         a, b, c = rng.randint(2, 50), rng.randint(2, 50), rng.randint(2, 50)
@@ -205,21 +213,29 @@ def generate_arithmetic_questions(n: int = 50, seed: int = 117) -> list[dict[str
         else:
             q = f"What is {a} + {b} - {c}?"
             answer = a + b - c
-        questions.append({
-            "domain": "arithmetic",
-            "question": q,
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": q,
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+            }
+        )
 
     templates = [
-        ("A store has {a} items. They sell {b} and receive {c}. How many items remain?",
-         lambda a, b, c: a - b + c),
-        ("A classroom has {a} students. {b} leave and {c} arrive. How many now?",
-         lambda a, b, c: a - b + c),
-        ("A baker makes {a} loaves in the morning and {b} in the afternoon. "
-         "If {c} are sold, how many remain?",
-         lambda a, b, c: a + b - c),
+        (
+            "A store has {a} items. They sell {b} and receive {c}. How many items remain?",
+            lambda a, b, c: a - b + c,
+        ),
+        (
+            "A classroom has {a} students. {b} leave and {c} arrive. How many now?",
+            lambda a, b, c: a - b + c,
+        ),
+        (
+            "A baker makes {a} loaves in the morning and {b} in the afternoon. "
+            "If {c} are sold, how many remain?",
+            lambda a, b, c: a + b - c,
+        ),
     ]
     for i in range(15):
         tmpl, fn = templates[i % len(templates)]
@@ -227,12 +243,14 @@ def generate_arithmetic_questions(n: int = 50, seed: int = 117) -> list[dict[str
         b = rng.randint(1, a // 2)
         c = rng.randint(1, a // 2)
         answer = fn(a, b, c)
-        questions.append({
-            "domain": "arithmetic",
-            "question": tmpl.format(a=a, b=b, c=c),
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": tmpl.format(a=a, b=b, c=c),
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+            }
+        )
 
     return questions[:n]
 
@@ -298,13 +316,15 @@ def generate_code_questions(n: int = 50, seed: int = 117) -> list[dict[str, Any]
 
     questions: list[dict[str, Any]] = []
     for desc, keywords in selected:
-        questions.append({
-            "domain": "code",
-            "question": f"Write a Python function to {desc}.",
-            "ground_truth": f"def {desc.split()[0]}",
-            "keywords": keywords,
-            "check_answer": _make_code_checker(keywords),
-        })
+        questions.append(
+            {
+                "domain": "code",
+                "question": f"Write a Python function to {desc}.",
+                "ground_truth": f"def {desc.split()[0]}",
+                "keywords": keywords,
+                "check_answer": _make_code_checker(keywords),
+            }
+        )
     return questions[:n]
 
 
@@ -314,37 +334,59 @@ def generate_logic_questions(n: int = 50, seed: int = 117) -> list[dict[str, Any
     questions: list[dict[str, Any]] = []
 
     categories = [
-        ("mammals", "animals"), ("dogs", "mammals"), ("birds", "animals"),
-        ("roses", "flowers"), ("oaks", "trees"), ("salmon", "fish"),
-        ("apples", "fruits"), ("cars", "vehicles"), ("novels", "books"),
-        ("triangles", "shapes"), ("violins", "instruments"), ("gold", "metals"),
+        ("mammals", "animals"),
+        ("dogs", "mammals"),
+        ("birds", "animals"),
+        ("roses", "flowers"),
+        ("oaks", "trees"),
+        ("salmon", "fish"),
+        ("apples", "fruits"),
+        ("cars", "vehicles"),
+        ("novels", "books"),
+        ("triangles", "shapes"),
+        ("violins", "instruments"),
+        ("gold", "metals"),
     ]
     instances = [
-        ("Rex", "dogs"), ("Tweety", "birds"), ("Nemo", "salmon"),
-        ("Bessie", "mammals"), ("Fido", "dogs"), ("Polly", "birds"),
+        ("Rex", "dogs"),
+        ("Tweety", "birds"),
+        ("Nemo", "salmon"),
+        ("Bessie", "mammals"),
+        ("Fido", "dogs"),
+        ("Polly", "birds"),
     ]
 
     for i in range(18):
         cat, supercat = categories[i % len(categories)]
         inst_name = instances[i % len(instances)][0]
-        q = (f"All {cat} are {supercat}. {inst_name} is a {cat}. "
-             f"Is {inst_name} a {supercat}? Answer yes or no.")
-        questions.append({
-            "domain": "logic", "question": q,
-            "ground_truth": "yes",
-            "check_answer": lambda ans: "yes" in ans.lower(),
-        })
+        q = (
+            f"All {cat} are {supercat}. {inst_name} is a {cat}. "
+            f"Is {inst_name} a {supercat}? Answer yes or no."
+        )
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "ground_truth": "yes",
+                "check_answer": lambda ans: "yes" in ans.lower(),
+            }
+        )
 
     for i in range(12):
         cat, supercat = categories[i % len(categories)]
         inst_name = instances[i % len(instances)][0]
-        q = (f"All {cat} are {supercat}. {inst_name} is a {supercat}. "
-             f"Is {inst_name} necessarily a {cat}? Answer yes or no.")
-        questions.append({
-            "domain": "logic", "question": q,
-            "ground_truth": "no",
-            "check_answer": lambda ans: "no" in ans.lower(),
-        })
+        q = (
+            f"All {cat} are {supercat}. {inst_name} is a {supercat}. "
+            f"Is {inst_name} necessarily a {cat}? Answer yes or no."
+        )
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q,
+                "ground_truth": "no",
+                "check_answer": lambda ans: "no" in ans.lower(),
+            }
+        )
 
     propositions = [
         ("it rains", "the ground is wet"),
@@ -356,36 +398,46 @@ def generate_logic_questions(n: int = 50, seed: int = 117) -> list[dict[str, Any
     for i in range(10):
         p, q = propositions[i % len(propositions)]
         if i % 2 == 0:
-            q_text = (f"If {p}, then {q}. {p.capitalize()}. "
-                      f"Does {q}? Answer yes or no.")
+            q_text = f"If {p}, then {q}. {p.capitalize()}. Does {q}? Answer yes or no."
             expected = "yes"
         else:
-            q_text = (f"If {p}, then {q}. {q.capitalize()} did NOT happen. "
-                      f"Did {p}? Answer yes or no.")
+            q_text = (
+                f"If {p}, then {q}. {q.capitalize()} did NOT happen. Did {p}? Answer yes or no."
+            )
             expected = "no"
-        questions.append({
-            "domain": "logic", "question": q_text,
-            "ground_truth": expected,
-            "check_answer": _make_keyword_checker([expected]),
-        })
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q_text,
+                "ground_truth": expected,
+                "check_answer": _make_keyword_checker([expected]),
+            }
+        )
 
     for i in range(10):
         cat, supercat = categories[i % len(categories)]
         if i % 2 == 0:
-            q_text = (f"Statement A: 'All {cat} are {supercat}.' "
-                      f"Statement B: 'Some {cat} are not {supercat}.' "
-                      f"Are these statements consistent? Answer yes or no.")
+            q_text = (
+                f"Statement A: 'All {cat} are {supercat}.' "
+                f"Statement B: 'Some {cat} are not {supercat}.' "
+                f"Are these statements consistent? Answer yes or no."
+            )
             expected = "no"
         else:
-            q_text = (f"Statement A: 'Some {cat} are {supercat}.' "
-                      f"Statement B: 'Some {cat} are not {supercat}.' "
-                      f"Are these statements consistent? Answer yes or no.")
+            q_text = (
+                f"Statement A: 'Some {cat} are {supercat}.' "
+                f"Statement B: 'Some {cat} are not {supercat}.' "
+                f"Are these statements consistent? Answer yes or no."
+            )
             expected = "yes"
-        questions.append({
-            "domain": "logic", "question": q_text,
-            "ground_truth": expected,
-            "check_answer": _make_keyword_checker([expected]),
-        })
+        questions.append(
+            {
+                "domain": "logic",
+                "question": q_text,
+                "ground_truth": expected,
+                "check_answer": _make_keyword_checker([expected]),
+            }
+        )
 
     rng.shuffle(questions)
     return questions[:n]
@@ -452,12 +504,14 @@ def generate_factual_questions(n: int = 50, seed: int = 117) -> list[dict[str, A
 
     questions: list[dict[str, Any]] = []
     for q_text, gt, kws in selected:
-        questions.append({
-            "domain": "factual",
-            "question": q_text,
-            "ground_truth": gt,
-            "check_answer": _make_keyword_checker(kws),
-        })
+        questions.append(
+            {
+                "domain": "factual",
+                "question": q_text,
+                "ground_truth": gt,
+                "check_answer": _make_keyword_checker(kws),
+            }
+        )
     return questions[:n]
 
 
@@ -502,14 +556,19 @@ def generate_scheduling_questions(n: int = 50, seed: int = 117) -> list[dict[str
         conflict_str = "; ".join(
             f"Meeting {a} and Meeting {b} cannot overlap" for a, b in conflicts
         )
-        q = (f"You have {n_meetings} meetings to schedule in {n_slots} time slots. "
-             f"Constraints: {conflict_str}. "
-             f"Can all meetings be scheduled without conflicts? Answer yes or no.")
-        questions.append({
-            "domain": "scheduling", "question": q,
-            "ground_truth": answer,
-            "check_answer": _make_keyword_checker([answer]),
-        })
+        q = (
+            f"You have {n_meetings} meetings to schedule in {n_slots} time slots. "
+            f"Constraints: {conflict_str}. "
+            f"Can all meetings be scheduled without conflicts? Answer yes or no."
+        )
+        questions.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "ground_truth": answer,
+                "check_answer": _make_keyword_checker([answer]),
+            }
+        )
 
     for i in range(15):
         n_tasks = rng.randint(3, 6)
@@ -518,9 +577,11 @@ def generate_scheduling_questions(n: int = 50, seed: int = 117) -> list[dict[str
             dep = rng.randint(1, t - 1)
             deps.append((dep, t))
         dep_str = ", ".join(f"Task {a} must come before Task {b}" for a, b in deps)
-        q = (f"You have {n_tasks} tasks with these dependencies: {dep_str}. "
-             f"What is the minimum number of rounds needed if independent tasks "
-             f"can run in parallel?")
+        q = (
+            f"You have {n_tasks} tasks with these dependencies: {dep_str}. "
+            f"What is the minimum number of rounds needed if independent tasks "
+            f"can run in parallel?"
+        )
         adj: dict[int, list[int]] = {t: [] for t in range(1, n_tasks + 1)}
         for a, b in deps:
             adj[a].append(b)
@@ -529,11 +590,14 @@ def generate_scheduling_questions(n: int = 50, seed: int = 117) -> list[dict[str
             if t not in depth:
                 _compute_depth(t, adj, depth)
         longest = max(depth.values()) if depth else 1
-        questions.append({
-            "domain": "scheduling", "question": q,
-            "ground_truth": str(longest),
-            "check_answer": _make_number_checker(longest),
-        })
+        questions.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "ground_truth": str(longest),
+                "check_answer": _make_number_checker(longest),
+            }
+        )
 
     for i in range(15):
         n_tasks = rng.randint(3, 5)
@@ -542,17 +606,20 @@ def generate_scheduling_questions(n: int = 50, seed: int = 117) -> list[dict[str
         total_demand = sum(demands)
         fits = total_demand <= capacity
         answer = "yes" if fits else "no"
-        demand_str = ", ".join(
-            f"Task {j + 1} needs {d} units" for j, d in enumerate(demands)
+        demand_str = ", ".join(f"Task {j + 1} needs {d} units" for j, d in enumerate(demands))
+        q = (
+            f"A server has {capacity} units of capacity. "
+            f"Tasks: {demand_str}. "
+            f"Can all tasks run simultaneously? Answer yes or no."
         )
-        q = (f"A server has {capacity} units of capacity. "
-             f"Tasks: {demand_str}. "
-             f"Can all tasks run simultaneously? Answer yes or no.")
-        questions.append({
-            "domain": "scheduling", "question": q,
-            "ground_truth": answer,
-            "check_answer": _make_keyword_checker([answer]),
-        })
+        questions.append(
+            {
+                "domain": "scheduling",
+                "question": q,
+                "ground_truth": answer,
+                "check_answer": _make_keyword_checker([answer]),
+            }
+        )
 
     rng.shuffle(questions)
     return questions[:n]
@@ -585,10 +652,12 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
             try:
                 print(f"    Loading {model_name} on {device}...")
                 tokenizer = AutoTokenizer.from_pretrained(
-                    model_name, trust_remote_code=config.get("trust_remote_code", True),
+                    model_name,
+                    trust_remote_code=config.get("trust_remote_code", True),
                 )
                 model = AutoModelForCausalLM.from_pretrained(
-                    model_name, trust_remote_code=config.get("trust_remote_code", True),
+                    model_name,
+                    trust_remote_code=config.get("trust_remote_code", True),
                     torch_dtype=torch.float16 if device == "cuda" else None,
                 )
                 if device == "cuda":
@@ -611,7 +680,9 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
                 try:
                     result = subprocess.run(
                         [sys.executable, "-c", smoke_script],
-                        timeout=60, capture_output=True, text=True,
+                        timeout=60,
+                        capture_output=True,
+                        text=True,
                     )
                     if "OK" in result.stdout:
                         print(f"    Smoke test passed. {config['name']} ready.")
@@ -638,7 +709,10 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
 
 
 def generate_with_llm(
-    prompt: str, tokenizer: Any, model: Any, device: str,
+    prompt: str,
+    tokenizer: Any,
+    model: Any,
+    device: str,
     max_new_tokens: int = 256,
 ) -> str:
     """Generate a response from a loaded HuggingFace model (greedy, reproducible)."""
@@ -647,13 +721,17 @@ def generate_with_llm(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             text = prompt
@@ -664,12 +742,15 @@ def generate_with_llm(
 
     with torch.no_grad():
         outputs = model.generate(
-            **inputs, max_new_tokens=max_new_tokens, do_sample=False,
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            do_sample=False,
             pad_token_id=tokenizer.eos_token_id,
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:], skip_special_tokens=True,
+        outputs[0, inputs["input_ids"].shape[1] :],
+        skip_special_tokens=True,
     )
     if "</think>" in response:
         response = response.split("</think>")[-1].strip()
@@ -710,7 +791,7 @@ def simulate_response(
         effective_error = base_error * guided_factor
     else:
         # Repair iterations: each iteration reduces error by 60% (factor 0.4).
-        effective_error = base_error * (0.4 ** iteration)
+        effective_error = base_error * (0.4**iteration)
 
     is_correct = rng.random() > effective_error
 
@@ -730,9 +811,11 @@ def simulate_response(
         if is_correct:
             keywords = question.get("keywords", [])
             kw = keywords[0] if keywords else "pass"
-            return (f"```python\ndef {func_name}(x):\n"
-                    f"    # Implementation using {kw}\n"
-                    f"    return {kw}(x) if callable({kw}) else x\n```")
+            return (
+                f"```python\ndef {func_name}(x):\n"
+                f"    # Implementation using {kw}\n"
+                f"    return {kw}(x) if callable({kw}) else x\n```"
+            )
         else:
             return "The function would iterate over the input and return the result."
 
@@ -776,24 +859,29 @@ def build_prompt(question: str, domain: str) -> str:
         output. Short prompts perform better with small models (0.6–0.8B).
     """
     if domain == "arithmetic":
-        return (f"Question: {question}\n"
-                f"Think step by step. Give the answer as a number.\n"
-                f"Format:\nAnswer: <number>")
+        return (
+            f"Question: {question}\n"
+            f"Think step by step. Give the answer as a number.\n"
+            f"Format:\nAnswer: <number>"
+        )
     elif domain == "code":
-        return (f"Question: {question}\n"
-                f"Write ONLY the Python function. No explanation.")
+        return f"Question: {question}\nWrite ONLY the Python function. No explanation."
     elif domain == "logic":
-        return (f"Question: {question}\n"
-                f"Think step by step. Give a clear answer.\n"
-                f"Format:\nAnswer: <your answer>")
+        return (
+            f"Question: {question}\n"
+            f"Think step by step. Give a clear answer.\n"
+            f"Format:\nAnswer: <your answer>"
+        )
     elif domain == "scheduling":
-        return (f"Question: {question}\n"
-                f"Think step by step about the constraints. Give a clear answer.\n"
-                f"Format:\nAnswer: <your answer>")
+        return (
+            f"Question: {question}\n"
+            f"Think step by step about the constraints. Give a clear answer.\n"
+            f"Format:\nAnswer: <your answer>"
+        )
     else:  # factual
-        return (f"Question: {question}\n"
-                f"Give a short, direct factual answer.\n"
-                f"Format:\nAnswer: <answer>")
+        return (
+            f"Question: {question}\nGive a short, direct factual answer.\nFormat:\nAnswer: <answer>"
+        )
 
 
 def extract_constraints_with_breakdown(
@@ -852,12 +940,14 @@ def extract_constraints_with_breakdown(
             if cr.description not in seen_descriptions:
                 seen_descriptions.add(cr.description)
                 satisfied = cr.metadata.get("satisfied")
-                all_constraints.append({
-                    "type": cr.constraint_type,
-                    "description": cr.description,
-                    "satisfied": satisfied,
-                    "extractor": ext_name,
-                })
+                all_constraints.append(
+                    {
+                        "type": cr.constraint_type,
+                        "description": cr.description,
+                        "satisfied": satisfied,
+                        "extractor": ext_name,
+                    }
+                )
                 n_c += 1
                 if satisfied is False:
                     n_v += 1
@@ -1034,17 +1124,22 @@ def run_verify_repair(
             feedback = format_violations(constraints, domain)
             if not feedback:
                 break
-            prompt = (f"Question: {q_text}\n\n"
-                      f"Your previous answer was:\n{response}\n\n"
-                      f"However, verification found problems:\n{feedback}\n\n"
-                      f"Please provide a corrected answer.\n"
-                      f"Format:\nAnswer: <your corrected answer>")
+            prompt = (
+                f"Question: {q_text}\n\n"
+                f"Your previous answer was:\n{response}\n\n"
+                f"However, verification found problems:\n{feedback}\n\n"
+                f"Please provide a corrected answer.\n"
+                f"Format:\nAnswer: <your corrected answer>"
+            )
 
         if use_live_llm:
             response = generate_with_llm(prompt, tokenizer, model, device)
         else:
             response = simulate_response(
-                question, model_config, iteration=iteration, rng=sim_rng,
+                question,
+                model_config,
+                iteration=iteration,
+                rng=sim_rng,
             )
 
         if iteration == 0:
@@ -1136,7 +1231,11 @@ def run_guided_generation(
 
             sampler = EnergyGuidedSampler(alpha=alpha, check_every_k=check_every_k)
             result = sampler.generate(
-                prompt, model, tokenizer, max_tokens=256, temperature=0.0,
+                prompt,
+                model,
+                tokenizer,
+                max_tokens=256,
+                temperature=0.0,
                 domain=domain,
             )
             response = result.text
@@ -1157,7 +1256,10 @@ def run_guided_generation(
         # This reflects that guiding during generation is more effective than
         # post-hoc correction because bad paths are never fully explored.
         response = simulate_response(
-            question, model_config, iteration=0, rng=sim_rng,
+            question,
+            model_config,
+            iteration=0,
+            rng=sim_rng,
             guided_factor=0.25,
         )
         energy_checks = 5  # Simulated: typical tokens in a short answer
@@ -1219,6 +1321,7 @@ def paired_t_test(x: list[float], y: list[float]) -> tuple[float, float]:
 
     try:
         from scipy import stats
+
         p_value = stats.t.sf(abs(t_stat), df=n - 1) * 2
     except ImportError:
         p_value = 2.0 * (1.0 - 0.5 * (1.0 + math.erf(abs(t_stat) / math.sqrt(2.0))))
@@ -1287,8 +1390,7 @@ def load_v10_baseline() -> dict[str, dict[str, float]] | None:
         as {model_name: {domain_mode: accuracy}} or None if the file is missing.
     """
     if not EXP93_RESULTS_PATH.exists():
-        print(f"  Note: Exp 93 results not found at {EXP93_RESULTS_PATH}. "
-              f"Skipping v10 comparison.")
+        print(f"  Note: Exp 93 results not found at {EXP93_RESULTS_PATH}. Skipping v10 comparison.")
         return None
 
     try:
@@ -1369,9 +1471,7 @@ def main() -> int:
             rate_str = ", ".join(f"{d}={r:.0%}" for d, r in rates.items())
             print(f"  Simulated error rates: {rate_str}")
 
-        results: dict[str, dict[str, list[dict]]] = {
-            d: {m: [] for m in modes} for d in domains
-        }
+        results: dict[str, dict[str, list[dict]]] = {d: {m: [] for m in modes} for d in domains}
 
         for domain in domains:
             questions = all_questions[domain]
@@ -1388,27 +1488,49 @@ def main() -> int:
                 sim_rng_d = random.Random(117_000 + qi + model_offset)
 
                 r_a = run_baseline(
-                    q, mc, tokenizer=tokenizer, model=model, device=device,
-                    use_live_llm=use_live_llm, sim_rng=sim_rng_a,
+                    q,
+                    mc,
+                    tokenizer=tokenizer,
+                    model=model,
+                    device=device,
+                    use_live_llm=use_live_llm,
+                    sim_rng=sim_rng_a,
                 )
                 results[domain]["baseline"].append(r_a)
 
                 r_b = run_verify_only(
-                    q, mc, tokenizer=tokenizer, model=model, device=device,
-                    use_live_llm=use_live_llm, sim_rng=sim_rng_b,
+                    q,
+                    mc,
+                    tokenizer=tokenizer,
+                    model=model,
+                    device=device,
+                    use_live_llm=use_live_llm,
+                    sim_rng=sim_rng_b,
                 )
                 results[domain]["verify_only"].append(r_b)
 
                 r_c = run_verify_repair(
-                    q, mc, tokenizer=tokenizer, model=model, device=device,
-                    use_live_llm=use_live_llm, sim_rng=sim_rng_c, max_iters=3,
+                    q,
+                    mc,
+                    tokenizer=tokenizer,
+                    model=model,
+                    device=device,
+                    use_live_llm=use_live_llm,
+                    sim_rng=sim_rng_c,
+                    max_iters=3,
                 )
                 results[domain]["verify_repair"].append(r_c)
 
                 r_d = run_guided_generation(
-                    q, mc, tokenizer=tokenizer, model=model, device=device,
-                    use_live_llm=use_live_llm, sim_rng=sim_rng_d,
-                    alpha=0.5, check_every_k=1,
+                    q,
+                    mc,
+                    tokenizer=tokenizer,
+                    model=model,
+                    device=device,
+                    use_live_llm=use_live_llm,
+                    sim_rng=sim_rng_d,
+                    alpha=0.5,
+                    check_every_k=1,
                 )
                 results[domain]["guided_generation"].append(r_d)
 
@@ -1419,6 +1541,7 @@ def main() -> int:
         if use_live_llm:
             del model, tokenizer
             import torch
+
             if device == "cuda":
                 torch.cuda.empty_cache()
             gc.collect()
@@ -1436,10 +1559,10 @@ def main() -> int:
     print(sep)
 
     mode_labels = {
-        "baseline":           "A. Baseline",
-        "verify_only":        "B. Verify-only",
-        "verify_repair":      "C. Verify+Repair",
-        "guided_generation":  "D. Guided-Gen",
+        "baseline": "A. Baseline",
+        "verify_only": "B. Verify-only",
+        "verify_repair": "C. Verify+Repair",
+        "guided_generation": "D. Guided-Gen",
     }
 
     metrics_table: list[dict[str, Any]] = []
@@ -1449,8 +1572,10 @@ def main() -> int:
         results = all_results[model_name]
 
         print(f"\n  --- {model_name} ---")
-        print(f"  {'Domain':<12s} {'Mode':<18s} {'Acc':>7s} {'Halluc%':>8s} "
-              f"{'Repair':>8s} {'AvgConstr':>10s} {'Time(s)':>8s}")
+        print(
+            f"  {'Domain':<12s} {'Mode':<18s} {'Acc':>7s} {'Halluc%':>8s} "
+            f"{'Repair':>8s} {'AvgConstr':>10s} {'Time(s)':>8s}"
+        )
         print(f"  {'-' * 76}")
 
         for domain in domains:
@@ -1474,9 +1599,11 @@ def main() -> int:
                     repair_str = "n/a"
                     repair_rate = 0.0
 
-                print(f"  {domain:<12s} {mode_labels[mode]:<18s} "
-                      f"{n_correct}/{n_total:>3} {halluc_rate:>7.1%} "
-                      f"{repair_str:>8s} {avg_constraints:>10.1f} {total_time:>8.3f}")
+                print(
+                    f"  {domain:<12s} {mode_labels[mode]:<18s} "
+                    f"{n_correct}/{n_total:>3} {halluc_rate:>7.1%} "
+                    f"{repair_str:>8s} {avg_constraints:>10.1f} {total_time:>8.3f}"
+                )
 
                 # Aggregate per-extractor contribution across all questions in cell.
                 extractor_agg: dict[str, dict[str, float]] = {}
@@ -1485,33 +1612,41 @@ def main() -> int:
                     for ext_name, ext_stats in bd.items():
                         if ext_name not in extractor_agg:
                             extractor_agg[ext_name] = {"n_constraints": 0, "n_violated": 0}
-                        extractor_agg[ext_name]["n_constraints"] += ext_stats.get("n_constraints", 0)
+                        extractor_agg[ext_name]["n_constraints"] += ext_stats.get(
+                            "n_constraints", 0
+                        )
                         extractor_agg[ext_name]["n_violated"] += ext_stats.get("n_violated", 0)
 
-                metrics_table.append({
-                    "model": model_name,
-                    "domain": domain,
-                    "mode": mode,
-                    "n_total": n_total,
-                    "n_correct": n_correct,
-                    "accuracy": round(accuracy, 4),
-                    "hallucination_rate": round(halluc_rate, 4),
-                    "repair_success_rate": round(repair_rate, 4),
-                    "avg_constraints": round(float(avg_constraints), 2),
-                    "total_time_s": round(total_time, 3),
-                    "avg_time_s": round(total_time / n_total, 4) if n_total else 0,
-                    "repairs_attempted": n_rep_attempted,
-                    "repairs_successful": n_rep_ok,
-                    "extractor_contribution": {
-                        k: {
-                            "n_constraints": v["n_constraints"],
-                            "n_violated": v["n_violated"],
-                            "avg_constraints": round(v["n_constraints"] / n_total, 2) if n_total else 0,
-                            "avg_violated": round(v["n_violated"] / n_total, 2) if n_total else 0,
-                        }
-                        for k, v in extractor_agg.items()
-                    },
-                })
+                metrics_table.append(
+                    {
+                        "model": model_name,
+                        "domain": domain,
+                        "mode": mode,
+                        "n_total": n_total,
+                        "n_correct": n_correct,
+                        "accuracy": round(accuracy, 4),
+                        "hallucination_rate": round(halluc_rate, 4),
+                        "repair_success_rate": round(repair_rate, 4),
+                        "avg_constraints": round(float(avg_constraints), 2),
+                        "total_time_s": round(total_time, 3),
+                        "avg_time_s": round(total_time / n_total, 4) if n_total else 0,
+                        "repairs_attempted": n_rep_attempted,
+                        "repairs_successful": n_rep_ok,
+                        "extractor_contribution": {
+                            k: {
+                                "n_constraints": v["n_constraints"],
+                                "n_violated": v["n_violated"],
+                                "avg_constraints": round(v["n_constraints"] / n_total, 2)
+                                if n_total
+                                else 0,
+                                "avg_violated": round(v["n_violated"] / n_total, 2)
+                                if n_total
+                                else 0,
+                            }
+                            for k, v in extractor_agg.items()
+                        },
+                    }
+                )
 
         print(f"  {'-' * 76}")
 
@@ -1592,7 +1727,9 @@ def main() -> int:
         model_name = mc["name"]
         mode_comparison[model_name] = {}
         print(f"\n  {model_name}")
-        print(f"  {'Domain':<12s} {'Baseline':>9s} {'V-only':>8s} {'V+Repair':>9s} {'Guided':>8s} {'Best':>6s}")
+        print(
+            f"  {'Domain':<12s} {'Baseline':>9s} {'V-only':>8s} {'V+Repair':>9s} {'Guided':>8s} {'Best':>6s}"
+        )
         print(f"  {'-' * 58}")
         for domain in domains:
             accs: dict[str, float] = {}
@@ -1603,11 +1740,13 @@ def main() -> int:
             mode_comparison[model_name][domain] = accs
             best_mode = max(accs, key=accs.get)  # type: ignore[arg-type]
             best_acc = accs[best_mode]
-            print(f"  {domain:<12s} {accs['baseline']:>8.1%} "
-                  f"{accs['verify_only']:>7.1%} "
-                  f"{accs['verify_repair']:>8.1%} "
-                  f"{accs['guided_generation']:>7.1%} "
-                  f"{best_mode.replace('guided_generation', 'guided').replace('verify_repair', 'v+r'):>8s}")
+            print(
+                f"  {domain:<12s} {accs['baseline']:>8.1%} "
+                f"{accs['verify_only']:>7.1%} "
+                f"{accs['verify_repair']:>8.1%} "
+                f"{accs['guided_generation']:>7.1%} "
+                f"{best_mode.replace('guided_generation', 'guided').replace('verify_repair', 'v+r'):>8s}"
+            )
 
     # -----------------------------------------------------------------------
     # v10 vs v12 comparison (if Exp 93 results available)
@@ -1620,7 +1759,9 @@ def main() -> int:
         print("  v12 = v10 + FactualKBExtractor (Exp 113)")
         print(sep)
 
-        print(f"\n  Model / Domain            v10 baseline  v12 baseline  v10 repair    v12 repair    v12 guided    Δ v12 guided")
+        print(
+            f"\n  Model / Domain            v10 baseline  v12 baseline  v10 repair    v12 repair    v12 guided    Δ v12 guided"
+        )
         print(f"  {'-' * 110}")
 
         for mc in MODEL_CONFIGS:
@@ -1630,7 +1771,9 @@ def main() -> int:
 
             for domain in domains:
                 v10_base = v10_baseline.get(v10_model_key, {}).get(f"{domain}_baseline", None)
-                v10_repair = v10_baseline.get(v10_model_key, {}).get(f"{domain}_verify_repair", None)
+                v10_repair = v10_baseline.get(v10_model_key, {}).get(
+                    f"{domain}_verify_repair", None
+                )
 
                 v12_base = mode_comparison[model_name][domain]["baseline"]
                 v12_repair = mode_comparison[model_name][domain]["verify_repair"]
@@ -1640,28 +1783,36 @@ def main() -> int:
                     v12_guided - v10_base if v10_base is not None else float("nan")
                 )
 
-                version_comparison.append({
-                    "model": model_name,
-                    "domain": domain,
-                    "v10_baseline": v10_base,
-                    "v12_baseline": v12_base,
-                    "v10_verify_repair": v10_repair,
-                    "v12_verify_repair": v12_repair,
-                    "v12_guided_generation": v12_guided,
-                    "delta_guided_vs_v10_baseline": (
-                        round(delta_guided_vs_v10_base, 4)
-                        if not math.isnan(delta_guided_vs_v10_base) else None
-                    ),
-                })
+                version_comparison.append(
+                    {
+                        "model": model_name,
+                        "domain": domain,
+                        "v10_baseline": v10_base,
+                        "v12_baseline": v12_base,
+                        "v10_verify_repair": v10_repair,
+                        "v12_verify_repair": v12_repair,
+                        "v12_guided_generation": v12_guided,
+                        "delta_guided_vs_v10_baseline": (
+                            round(delta_guided_vs_v10_base, 4)
+                            if not math.isnan(delta_guided_vs_v10_base)
+                            else None
+                        ),
+                    }
+                )
 
                 v10_base_str = f"{v10_base:.1%}" if v10_base is not None else "n/a"
                 v10_rep_str = f"{v10_repair:.1%}" if v10_repair is not None else "n/a"
-                delta_str = (f"{delta_guided_vs_v10_base:+.1%}"
-                             if not math.isnan(delta_guided_vs_v10_base) else "n/a")
-                print(f"  {model_name[:12]:<12s} / {domain:<10s}  "
-                      f"{v10_base_str:>12s}  {v12_base:>12.1%}  "
-                      f"{v10_rep_str:>12s}  {v12_repair:>12.1%}  "
-                      f"{v12_guided:>12.1%}  {delta_str:>12s}")
+                delta_str = (
+                    f"{delta_guided_vs_v10_base:+.1%}"
+                    if not math.isnan(delta_guided_vs_v10_base)
+                    else "n/a"
+                )
+                print(
+                    f"  {model_name[:12]:<12s} / {domain:<10s}  "
+                    f"{v10_base_str:>12s}  {v12_base:>12.1%}  "
+                    f"{v10_rep_str:>12s}  {v12_repair:>12.1%}  "
+                    f"{v12_guided:>12.1%}  {delta_str:>12s}"
+                )
 
     # -----------------------------------------------------------------------
     # False negative reduction analysis
@@ -1691,16 +1842,20 @@ def main() -> int:
                     else:
                         n_false_negative += 1
             fn_rate = n_false_negative / n_wrong if n_wrong > 0 else 0.0
-            print(f"  {domain:<12s} {n_wrong:>8d} {n_flagged_when_wrong:>8d} "
-                  f"{fn_rate:>8.1%} {n_false_negative:>9d}")
-            fn_analysis.append({
-                "model": model_name,
-                "domain": domain,
-                "n_wrong": n_wrong,
-                "n_flagged_when_wrong": n_flagged_when_wrong,
-                "n_false_negative": n_false_negative,
-                "false_negative_rate": round(fn_rate, 4),
-            })
+            print(
+                f"  {domain:<12s} {n_wrong:>8d} {n_flagged_when_wrong:>8d} "
+                f"{fn_rate:>8.1%} {n_false_negative:>9d}"
+            )
+            fn_analysis.append(
+                {
+                    "model": model_name,
+                    "domain": domain,
+                    "n_wrong": n_wrong,
+                    "n_flagged_when_wrong": n_flagged_when_wrong,
+                    "n_false_negative": n_false_negative,
+                    "false_negative_rate": round(fn_rate, 4),
+                }
+            )
 
     # -----------------------------------------------------------------------
     # Statistical significance: bootstrap 95% CI on all pairwise mode deltas
@@ -1732,25 +1887,36 @@ def main() -> int:
 
             lower, upper, delta = bootstrap_ci(scores_a, scores_b)
             t_stat, p_value = paired_t_test(scores_a, scores_b)
-            sig = ("***" if p_value < 0.001 else "**" if p_value < 0.01
-                   else "*" if p_value < 0.05 else "ns")
+            sig = (
+                "***"
+                if p_value < 0.001
+                else "**"
+                if p_value < 0.01
+                else "*"
+                if p_value < 0.05
+                else "ns"
+            )
             sign = "+" if delta >= 0 else ""
-            print(f"    {label:<40s}: {sign}{delta:.3f} "
-                  f"[{lower:+.3f}, {upper:+.3f}] "
-                  f"p={p_value:.4f} {sig}")
+            print(
+                f"    {label:<40s}: {sign}{delta:.3f} "
+                f"[{lower:+.3f}, {upper:+.3f}] "
+                f"p={p_value:.4f} {sig}"
+            )
 
-            stat_analysis.append({
-                "model": model_name,
-                "comparison": label,
-                "mode_a": mode_a,
-                "mode_b": mode_b,
-                "delta": round(delta, 4),
-                "ci_lower": round(lower, 4),
-                "ci_upper": round(upper, 4),
-                "t_stat": round(t_stat, 4),
-                "p_value": round(p_value, 6),
-                "significant": sig,
-            })
+            stat_analysis.append(
+                {
+                    "model": model_name,
+                    "comparison": label,
+                    "mode_a": mode_a,
+                    "mode_b": mode_b,
+                    "delta": round(delta, 4),
+                    "ci_lower": round(lower, 4),
+                    "ci_upper": round(upper, 4),
+                    "t_stat": round(t_stat, 4),
+                    "p_value": round(p_value, 6),
+                    "significant": sig,
+                }
+            )
 
     # -----------------------------------------------------------------------
     # Per-extractor contribution summary
@@ -1771,19 +1937,29 @@ def main() -> int:
             rs = all_results[model_name][domain]["verify_only"]
             n = len(rs)
             for ext_name in extractor_names:
-                total_c = sum(r.get("extractor_breakdown", {}).get(ext_name, {}).get("n_constraints", 0) for r in rs)
-                total_v = sum(r.get("extractor_breakdown", {}).get(ext_name, {}).get("n_violated", 0) for r in rs)
+                total_c = sum(
+                    r.get("extractor_breakdown", {}).get(ext_name, {}).get("n_constraints", 0)
+                    for r in rs
+                )
+                total_v = sum(
+                    r.get("extractor_breakdown", {}).get(ext_name, {}).get("n_violated", 0)
+                    for r in rs
+                )
                 avg_c = total_c / n if n else 0
                 avg_v = total_v / n if n else 0
                 if avg_c > 0 or True:  # always print for completeness
-                    print(f"      {ext_name:<14s}: {avg_c:.2f} constraints/q, {avg_v:.2f} violations/q")
-                extractor_summary.append({
-                    "model": model_name,
-                    "domain": domain,
-                    "extractor": ext_name,
-                    "avg_constraints_per_q": round(avg_c, 3),
-                    "avg_violations_per_q": round(avg_v, 3),
-                })
+                    print(
+                        f"      {ext_name:<14s}: {avg_c:.2f} constraints/q, {avg_v:.2f} violations/q"
+                    )
+                extractor_summary.append(
+                    {
+                        "model": model_name,
+                        "domain": domain,
+                        "extractor": ext_name,
+                        "avg_constraints_per_q": round(avg_c, 3),
+                        "avg_violations_per_q": round(avg_v, 3),
+                    }
+                )
 
     # -----------------------------------------------------------------------
     # Key findings
@@ -1809,16 +1985,22 @@ def main() -> int:
             if acc_guided >= acc_repair:
                 guided_vs_repair_wins += 1
             guided_vs_repair_total += 1
-    guided_win_rate = guided_vs_repair_wins / guided_vs_repair_total if guided_vs_repair_total else 0
+    guided_win_rate = (
+        guided_vs_repair_wins / guided_vs_repair_total if guided_vs_repair_total else 0
+    )
 
     print(f"\n{sep}")
     print("KEY FINDINGS:")
-    print(f"  Best improvement over baseline: +{avg_overall_delta:.1%} avg across 2 models × 5 domains")
+    print(
+        f"  Best improvement over baseline: +{avg_overall_delta:.1%} avg across 2 models × 5 domains"
+    )
     print(f"  Best-helped model: {best_model} (+{overall_deltas[best_model]:.1%})")
     print(f"  Best domain: {sorted_domains[0][0]} (+{sorted_domains[0][1]:.1%})")
     print(f"  Worst domain: {sorted_domains[-1][0]} ({sorted_domains[-1][1]:+.1%})")
-    print(f"  Guided generation ≥ verify+repair in {guided_vs_repair_wins}/{guided_vs_repair_total} cells "
-          f"({guided_win_rate:.0%})")
+    print(
+        f"  Guided generation ≥ verify+repair in {guided_vs_repair_wins}/{guided_vs_repair_total} cells "
+        f"({guided_win_rate:.0%})"
+    )
     print(sep)
 
     # -----------------------------------------------------------------------
@@ -1910,8 +2092,12 @@ def main() -> int:
         model_name = mc["name"]
         md_lines.append(f"### {model_name}")
         md_lines.append("")
-        md_lines.append("| Domain | Baseline | Verify-only | Verify+Repair | Guided-Gen | Δ (best−base) |")
-        md_lines.append("|--------|----------|-------------|---------------|------------|---------------|")
+        md_lines.append(
+            "| Domain | Baseline | Verify-only | Verify+Repair | Guided-Gen | Δ (best−base) |"
+        )
+        md_lines.append(
+            "|--------|----------|-------------|---------------|------------|---------------|"
+        )
         for domain in domains:
             accs = mode_comparison[model_name][domain]
             best = max(accs[m] for m in ["verify_only", "verify_repair", "guided_generation"])
@@ -1926,15 +2112,19 @@ def main() -> int:
 
     # Version comparison table if v10 data available.
     if version_comparison:
-        md_lines.extend([
-            "## Version Comparison: v10 (Exp 93) vs v12 (Exp 117)",
-            "",
-            "| Model | Domain | v10 Base | v12 Base | v10 Repair | v12 Repair | v12 Guided | Δ Guided−v10Base |",
-            "|-------|--------|----------|----------|------------|------------|------------|-----------------|",
-        ])
+        md_lines.extend(
+            [
+                "## Version Comparison: v10 (Exp 93) vs v12 (Exp 117)",
+                "",
+                "| Model | Domain | v10 Base | v12 Base | v10 Repair | v12 Repair | v12 Guided | Δ Guided−v10Base |",
+                "|-------|--------|----------|----------|------------|------------|------------|-----------------|",
+            ]
+        )
         for row in version_comparison:
             v10b = f"{row['v10_baseline']:.1%}" if row["v10_baseline"] is not None else "n/a"
-            v10r = f"{row['v10_verify_repair']:.1%}" if row["v10_verify_repair"] is not None else "n/a"
+            v10r = (
+                f"{row['v10_verify_repair']:.1%}" if row["v10_verify_repair"] is not None else "n/a"
+            )
             delta = row.get("delta_guided_vs_v10_baseline")
             delta_str = f"{delta:+.1%}" if delta is not None else "n/a"
             md_lines.append(
@@ -1946,12 +2136,14 @@ def main() -> int:
         md_lines.append("")
 
     # Statistical significance.
-    md_lines.extend([
-        "## Statistical Significance (Bootstrap 95% CI)",
-        "",
-        "| Model | Comparison | Delta | CI Lower | CI Upper | p-value | Sig |",
-        "|-------|-----------|-------|----------|----------|---------|-----|",
-    ])
+    md_lines.extend(
+        [
+            "## Statistical Significance (Bootstrap 95% CI)",
+            "",
+            "| Model | Comparison | Delta | CI Lower | CI Upper | p-value | Sig |",
+            "|-------|-----------|-------|----------|----------|---------|-----|",
+        ]
+    )
     for row in stat_analysis:
         sign = "+" if row["delta"] >= 0 else ""
         md_lines.append(
@@ -1962,14 +2154,16 @@ def main() -> int:
     md_lines.append("")
 
     # False negative analysis.
-    md_lines.extend([
-        "## False Negative Analysis",
-        "",
-        "False negatives = wrong answers NOT detected by verify-only.",
-        "",
-        "| Model | Domain | # Wrong | # Flagged | FN Rate | True FN |",
-        "|-------|--------|---------|-----------|---------|---------|",
-    ])
+    md_lines.extend(
+        [
+            "## False Negative Analysis",
+            "",
+            "False negatives = wrong answers NOT detected by verify-only.",
+            "",
+            "| Model | Domain | # Wrong | # Flagged | FN Rate | True FN |",
+            "|-------|--------|---------|-----------|---------|---------|",
+        ]
+    )
     for row in fn_analysis:
         md_lines.append(
             f"| {row['model']} | {row['domain']} | {row['n_wrong']} | "
@@ -1979,27 +2173,31 @@ def main() -> int:
     md_lines.append("")
 
     # Per-domain improvement summary.
-    md_lines.extend([
-        "## Domain Impact (avg across models)",
-        "",
-        "| Domain | Avg Improvement (best mode vs baseline) |",
-        "|--------|-----------------------------------------|",
-    ])
+    md_lines.extend(
+        [
+            "## Domain Impact (avg across models)",
+            "",
+            "| Domain | Avg Improvement (best mode vs baseline) |",
+            "|--------|-----------------------------------------|",
+        ]
+    )
     for domain, imp in sorted_domains:
         sign = "+" if imp >= 0 else ""
         md_lines.append(f"| {domain} | {sign}{imp:.1%} |")
     md_lines.append("")
 
     # Key finding.
-    md_lines.extend([
-        "## Key Finding",
-        "",
-        f"> {results_json['key_finding']}",
-        "",
-        "---",
-        f"*Generated by Experiment 117 | {time.strftime('%Y-%m-%d', time.gmtime())}*",
-        "",
-    ])
+    md_lines.extend(
+        [
+            "## Key Finding",
+            "",
+            f"> {results_json['key_finding']}",
+            "",
+            "---",
+            f"*Generated by Experiment 117 | {time.strftime('%Y-%m-%d', time.gmtime())}*",
+            "",
+        ]
+    )
 
     md_path = REPO_ROOT / "ops" / "full-benchmark-v12.md"
     with open(md_path, "w") as f:

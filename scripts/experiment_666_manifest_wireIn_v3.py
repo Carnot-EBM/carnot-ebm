@@ -47,9 +47,7 @@ def main() -> None:
     )
     tmpl.setup()
 
-    with ExperimentTimeoutWatchdog(666, timeout_minutes=20,
-                                   result_path=str(_REPO / DELIVERABLE)):
-
+    with ExperimentTimeoutWatchdog(666, timeout_minutes=20, result_path=str(_REPO / DELIVERABLE)):
         # --- 1. Load manifest via module-level API ---
         manifest = load_manifest(MANIFEST_PATH)
         conductor_consulted: bool = manifest is not None
@@ -60,6 +58,7 @@ def main() -> None:
         # --- 3. Probe pytest-xdist availability ---
         try:
             import xdist  # noqa: F401
+
             xdist_available = True
         except ImportError:
             xdist_available = False

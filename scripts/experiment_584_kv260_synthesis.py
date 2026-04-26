@@ -105,7 +105,10 @@ def tcl_is_complete(tcl_path: str) -> bool:
     if not p.exists():
         return False
     text = p.read_text()
-    return "write_bitstream" in text and len([ln for ln in text.splitlines() if ln.strip()]) >= _TCL_MINIMAL_LINE_THRESHOLD
+    return (
+        "write_bitstream" in text
+        and len([ln for ln in text.splitlines() if ln.strip()]) >= _TCL_MINIMAL_LINE_THRESHOLD
+    )
 
 
 def build_vivado_result(

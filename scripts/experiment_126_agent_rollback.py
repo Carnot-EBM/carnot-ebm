@@ -116,6 +116,7 @@ class _SingleArgCompatPipeline(VerifyRepairPipeline):
 # Problem definition
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class MathProblem:
     """One 4-step arithmetic problem with correct, faulty, and propagated steps.
@@ -149,14 +150,15 @@ class MathProblem:
         correct_answer: Ground-truth integer final answer.
         error_answer: What wrong answer the error path produces.
     """
+
     problem_id: int
     question: str
-    correct_steps: list[str]     # Correct outputs for steps 1..4
-    faulty_step_index: int       # 1-based (2 or 3)
-    faulty_step_text: str        # Injected-error output for that step
+    correct_steps: list[str]  # Correct outputs for steps 1..4
+    faulty_step_index: int  # 1-based (2 or 3)
+    faulty_step_text: str  # Injected-error output for that step
     propagated_steps: list[str]  # Downstream steps if error propagates
     correct_answer: int
-    error_answer: int            # Wrong answer from propagated error path
+    error_answer: int  # Wrong answer from propagated error path
 
 
 def build_problems() -> list[MathProblem]:
@@ -534,6 +536,7 @@ def build_problems() -> list[MathProblem]:
 # Answer extraction
 # ---------------------------------------------------------------------------
 
+
 def extract_answer(step4_text: str) -> int | None:
     """Extract the integer answer from step 4 output text.
 
@@ -551,6 +554,7 @@ def extract_answer(step4_text: str) -> int | None:
         The extracted integer answer, or None.
     """
     import re
+
     matches = re.findall(r"\b(\d+)\b", step4_text)
     if matches:
         return int(matches[-1])
@@ -560,6 +564,7 @@ def extract_answer(step4_text: str) -> int | None:
 # ---------------------------------------------------------------------------
 # Build step sequences for no-rollback and with-rollback runs
 # ---------------------------------------------------------------------------
+
 
 def no_rollback_step_sequence(problem: MathProblem) -> list[str]:
     """Return the 4-step sequence for the no-rollback (error propagates) run.
@@ -596,9 +601,8 @@ def no_rollback_step_sequence(problem: MathProblem) -> list[str]:
 # Run one problem — no rollback baseline
 # ---------------------------------------------------------------------------
 
-def run_no_rollback(
-    problem: MathProblem, pipeline: _SingleArgCompatPipeline
-) -> dict[str, Any]:
+
+def run_no_rollback(problem: MathProblem, pipeline: _SingleArgCompatPipeline) -> dict[str, Any]:
     """Run a problem through the CSM without rollback.
 
     **Detailed explanation for engineers:**
@@ -628,15 +632,17 @@ def run_no_rollback(
         input_text = problem.question if step_num == 1 else f"Step {step_num}"
         result = csm.step(input_text, output_text)
 
-        step_results.append({
-            "step": step_num,
-            "output_text": output_text,
-            "verified": result.verification.verified,
-            "n_violations": len(result.verification.violations),
-            "violations": [v.description for v in result.verification.violations],
-            "n_new_facts": len(result.new_facts),
-            "contradictions": result.contradictions,
-        })
+        step_results.append(
+            {
+                "step": step_num,
+                "output_text": output_text,
+                "verified": result.verification.verified,
+                "n_violations": len(result.verification.violations),
+                "violations": [v.description for v in result.verification.violations],
+                "n_new_facts": len(result.new_facts),
+                "contradictions": result.contradictions,
+            }
+        )
 
         if step_num == 4:
             final_text = output_text
@@ -660,9 +666,8 @@ def run_no_rollback(
 # Run one problem — with rollback
 # ---------------------------------------------------------------------------
 
-def run_with_rollback(
-    problem: MathProblem, pipeline: _SingleArgCompatPipeline
-) -> dict[str, Any]:
+
+def run_with_rollback(problem: MathProblem, pipeline: _SingleArgCompatPipeline) -> dict[str, Any]:
     """Run a problem through the CSM with rollback on detected violations.
 
     **Detailed explanation for engineers:**
@@ -744,11 +749,13 @@ def run_with_rollback(
                 # Error was at step 1: reset to fresh CSM.
                 csm = ConstraintStateMachine(pipeline)
 
-            rollback_events.append({
-                "at_step": step_num,
-                "rolled_back_to": max(0, step_num - 1),
-                "violations": [v.description for v in result.verification.violations],
-            })
+            rollback_events.append(
+                {
+                    "at_step": step_num,
+                    "rolled_back_to": max(0, step_num - 1),
+                    "violations": [v.description for v in result.verification.violations],
+                }
+            )
             step_info["rolled_back"] = True
             step_results.append(step_info)
 
@@ -756,17 +763,19 @@ def run_with_rollback(
             correct_text = problem.correct_steps[idx]
             repair_result = csm.step(input_text, correct_text)
 
-            step_results.append({
-                "step": step_num,
-                "output_text": correct_text,
-                "verified": repair_result.verification.verified,
-                "n_violations": len(repair_result.verification.violations),
-                "violations": [v.description for v in repair_result.verification.violations],
-                "n_new_facts": len(repair_result.new_facts),
-                "contradictions": repair_result.contradictions,
-                "rolled_back": False,
-                "is_repair": True,
-            })
+            step_results.append(
+                {
+                    "step": step_num,
+                    "output_text": correct_text,
+                    "verified": repair_result.verification.verified,
+                    "n_violations": len(repair_result.verification.violations),
+                    "violations": [v.description for v in repair_result.verification.violations],
+                    "n_new_facts": len(repair_result.new_facts),
+                    "contradictions": repair_result.contradictions,
+                    "rolled_back": False,
+                    "is_repair": True,
+                }
+            )
 
             if step_num == 4:
                 final_text = correct_text
@@ -795,6 +804,7 @@ def run_with_rollback(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Experiment 126: Agent rollback on 20 multi-step math problems.
@@ -829,8 +839,10 @@ def main() -> None:
     with_rollback_results: list[dict[str, Any]] = []
 
     for problem in problems:
-        print(f"\n--- Problem {problem.problem_id:02d} | Error at step {problem.faulty_step_index} "
-              f"| Correct={problem.correct_answer}, ErrorPath={problem.error_answer} ---")
+        print(
+            f"\n--- Problem {problem.problem_id:02d} | Error at step {problem.faulty_step_index} "
+            f"| Correct={problem.correct_answer}, ErrorPath={problem.error_answer} ---"
+        )
         print(f"  Q: {problem.question[:70]}...")
 
         # Baseline: no rollback — errors propagate into step 4.
@@ -867,8 +879,12 @@ def main() -> None:
     acc_with_rb_s3 = subgroup_acc(with_rollback_results, s3_ids)
 
     # Detection rate per step group.
-    det_s2 = sum(1 for r in with_rollback_results if r["problem_id"] in s2_ids and r["rollback_detected"])
-    det_s3 = sum(1 for r in with_rollback_results if r["problem_id"] in s3_ids and r["rollback_detected"])
+    det_s2 = sum(
+        1 for r in with_rollback_results if r["problem_id"] in s2_ids and r["rollback_detected"]
+    )
+    det_s3 = sum(
+        1 for r in with_rollback_results if r["problem_id"] in s3_ids and r["rollback_detected"]
+    )
 
     t_elapsed = time.time() - t_start
 
@@ -881,9 +897,13 @@ def main() -> None:
     print(f"  Improvement:                     +{(acc_with_rb - acc_no_rb):.1%}")
     print(f"  Rollback detected:               {detected}/{n}")
     print(f"  Rollback missed:                 {missed}/{n}")
-    print(f"  Detection rate:                  {detected/n:.1%}")
-    print(f"  Step-2 errors | no-rb: {acc_no_rb_s2:.1%}  with-rb: {acc_with_rb_s2:.1%}  detected: {det_s2}/{n_s2}")
-    print(f"  Step-3 errors | no-rb: {acc_no_rb_s3:.1%}  with-rb: {acc_with_rb_s3:.1%}  detected: {det_s3}/{n_s3}")
+    print(f"  Detection rate:                  {detected / n:.1%}")
+    print(
+        f"  Step-2 errors | no-rb: {acc_no_rb_s2:.1%}  with-rb: {acc_with_rb_s2:.1%}  detected: {det_s2}/{n_s2}"
+    )
+    print(
+        f"  Step-3 errors | no-rb: {acc_no_rb_s3:.1%}  with-rb: {acc_with_rb_s3:.1%}  detected: {det_s3}/{n_s3}"
+    )
     print(f"  Elapsed: {t_elapsed:.1f}s")
 
     # --- Save results ---

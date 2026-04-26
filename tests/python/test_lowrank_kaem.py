@@ -178,9 +178,7 @@ class TestLowRankKAEMEnergy:
     """REQ-SAMPLE-027, REQ-SAMPLE-028, SCENARIO-SAMPLE-041, SCENARIO-SAMPLE-042, SCENARIO-SAMPLE-043"""
 
     def _make_model_and_data(self, n_vars: int = 50, k: int = 11):
-        data = jnp.array(
-            _make_low_rank_data(n_samples=100, n_vars=n_vars, true_rank=k)
-        )
+        data = jnp.array(_make_low_rank_data(n_samples=100, n_vars=n_vars, true_rank=k))
         model = LowRankKAEMEnergy(n_vars=n_vars, k=k)
         model.fit(data, n_epochs=10)
         return model, data
@@ -283,9 +281,7 @@ class TestLowRankKAEMEnergy:
     def test_fit_returns_loss_history(self):
         """fit() returns a list of floats (loss per epoch)."""
         n_vars = 15
-        data = jnp.array(
-            _make_low_rank_data(n_samples=50, n_vars=n_vars, true_rank=5)
-        )
+        data = jnp.array(_make_low_rank_data(n_samples=50, n_vars=n_vars, true_rank=5))
         model = LowRankKAEMEnergy(n_vars=n_vars, k=5)
         losses = model.fit(data, n_epochs=5)
         assert isinstance(losses, list)

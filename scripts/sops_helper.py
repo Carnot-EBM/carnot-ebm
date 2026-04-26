@@ -85,4 +85,8 @@ def decrypt_secret(key: str, *, timeout: int = 10) -> str | None:
             break
 
     # Env var fallback: acceptable for local dev and CI/CD environments
-    return os.environ.get(key) or os.environ.get("HUGGING_FACE_HUB_TOKEN" if key == "HF_TOKEN" else key) or None
+    return (
+        os.environ.get(key)
+        or os.environ.get("HUGGING_FACE_HUB_TOKEN" if key == "HF_TOKEN" else key)
+        or None
+    )

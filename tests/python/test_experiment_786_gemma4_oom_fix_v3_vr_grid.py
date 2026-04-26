@@ -83,10 +83,17 @@ class TestKillGpuZombiesCalledFirst:
             patch(
                 "scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.GemmaTransformersLoader",
             ) as mock_cls,
-            patch("scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.ExperimentTemplate") as mock_tmpl_cls,
-            patch("scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.ExperimentTimeoutWatchdog") as mock_wd,
+            patch(
+                "scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.ExperimentTemplate"
+            ) as mock_tmpl_cls,
+            patch(
+                "scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.ExperimentTimeoutWatchdog"
+            ) as mock_wd,
             patch("scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.apply_env_autofix"),
-            patch("scripts.experiment_786_gemma4_oom_fix_v3_vr_grid._load_gsm8k_questions", return_value=[]),
+            patch(
+                "scripts.experiment_786_gemma4_oom_fix_v3_vr_grid._load_gsm8k_questions",
+                return_value=[],
+            ),
             patch("scripts.experiment_786_gemma4_oom_fix_v3_vr_grid._run_vr_grid", return_value=[]),
             patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}),
             patch("scripts.experiment_786_gemma4_oom_fix_v3_vr_grid._REPO_ROOT", tmp_path),
@@ -99,9 +106,14 @@ class TestKillGpuZombiesCalledFirst:
 
             tmpl_instance = MagicMock()
             tmpl_instance.build_result.return_value = {
-                "experiment": 786, "schema": [], "run_date": "20260423",
-                "started_at": "2026-04-23T00:00:00Z", "finished_at": "2026-04-23T00:01:00Z",
-                "duration_s": 60.0, "status": "success", "title": "test",
+                "experiment": 786,
+                "schema": [],
+                "run_date": "20260423",
+                "started_at": "2026-04-23T00:00:00Z",
+                "finished_at": "2026-04-23T00:01:00Z",
+                "duration_s": 60.0,
+                "status": "success",
+                "title": "test",
                 "honest_verdict": "retro028_closed_no_improvement",
             }
             # MagicMock blocks any attribute starting with "assert" by default.
@@ -164,8 +176,12 @@ class TestBlockedInsufficientVram:
             patch(
                 "scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.GemmaTransformersLoader",
             ) as mock_cls,
-            patch("scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.ExperimentTemplate") as mock_tmpl_cls,
-            patch("scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.ExperimentTimeoutWatchdog") as mock_wd,
+            patch(
+                "scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.ExperimentTemplate"
+            ) as mock_tmpl_cls,
+            patch(
+                "scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.ExperimentTimeoutWatchdog"
+            ) as mock_wd,
             patch("scripts.experiment_786_gemma4_oom_fix_v3_vr_grid.apply_env_autofix"),
             patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}),
             patch("scripts.experiment_786_gemma4_oom_fix_v3_vr_grid._REPO_ROOT", tmp_path),
@@ -176,9 +192,14 @@ class TestBlockedInsufficientVram:
 
             tmpl_instance = MagicMock()
             tmpl_instance.build_result.side_effect = lambda data, **kw: {
-                "experiment": 786, "schema": [], "run_date": "20260423",
-                "started_at": "2026-04-23T00:00:00Z", "finished_at": "2026-04-23T00:01:00Z",
-                "duration_s": 1.0, "status": kw.get("status", "blocked"), "title": "test",
+                "experiment": 786,
+                "schema": [],
+                "run_date": "20260423",
+                "started_at": "2026-04-23T00:00:00Z",
+                "finished_at": "2026-04-23T00:01:00Z",
+                "duration_s": 1.0,
+                "status": kw.get("status", "blocked"),
+                "title": "test",
                 **data,
             }
             # MagicMock blocks any attribute starting with "assert" by default.
@@ -227,9 +248,27 @@ class TestPositiveThresholdFound:
         demonstrated that the VR pipeline adds value for Gemma4 on GSM8K.
         """
         per_threshold_results = [
-            {"threshold": 0.10, "baseline_accuracy": 0.5, "vr_accuracy": 0.48, "signed_improvement": -0.02, "n_abstained": 0},
-            {"threshold": 0.20, "baseline_accuracy": 0.5, "vr_accuracy": 0.52, "signed_improvement": 0.02, "n_abstained": 1},
-            {"threshold": 0.30, "baseline_accuracy": 0.5, "vr_accuracy": 0.50, "signed_improvement": 0.00, "n_abstained": 3},
+            {
+                "threshold": 0.10,
+                "baseline_accuracy": 0.5,
+                "vr_accuracy": 0.48,
+                "signed_improvement": -0.02,
+                "n_abstained": 0,
+            },
+            {
+                "threshold": 0.20,
+                "baseline_accuracy": 0.5,
+                "vr_accuracy": 0.52,
+                "signed_improvement": 0.02,
+                "n_abstained": 1,
+            },
+            {
+                "threshold": 0.30,
+                "baseline_accuracy": 0.5,
+                "vr_accuracy": 0.50,
+                "signed_improvement": 0.00,
+                "n_abstained": 3,
+            },
         ]
         positive_threshold_found = any(r["signed_improvement"] > 0 for r in per_threshold_results)
         assert positive_threshold_found is True
@@ -242,9 +281,27 @@ class TestPositiveThresholdFound:
         in that case is "retro028_closed_no_improvement", not "retro028_closed_positive_threshold".
         """
         per_threshold_results = [
-            {"threshold": 0.10, "baseline_accuracy": 0.5, "vr_accuracy": 0.48, "signed_improvement": -0.02, "n_abstained": 0},
-            {"threshold": 0.20, "baseline_accuracy": 0.5, "vr_accuracy": 0.50, "signed_improvement": 0.00, "n_abstained": 2},
-            {"threshold": 0.30, "baseline_accuracy": 0.5, "vr_accuracy": 0.49, "signed_improvement": -0.01, "n_abstained": 5},
+            {
+                "threshold": 0.10,
+                "baseline_accuracy": 0.5,
+                "vr_accuracy": 0.48,
+                "signed_improvement": -0.02,
+                "n_abstained": 0,
+            },
+            {
+                "threshold": 0.20,
+                "baseline_accuracy": 0.5,
+                "vr_accuracy": 0.50,
+                "signed_improvement": 0.00,
+                "n_abstained": 2,
+            },
+            {
+                "threshold": 0.30,
+                "baseline_accuracy": 0.5,
+                "vr_accuracy": 0.49,
+                "signed_improvement": -0.01,
+                "n_abstained": 5,
+            },
         ]
         positive_threshold_found = any(r["signed_improvement"] > 0 for r in per_threshold_results)
         assert positive_threshold_found is False

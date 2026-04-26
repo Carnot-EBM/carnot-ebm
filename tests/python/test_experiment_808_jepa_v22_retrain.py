@@ -101,8 +101,7 @@ def test_corpus_merge_augmentation_ratio_formula(tmp_path: Path) -> None:
     """
     # 4 FoVer pairs, 2 CPMI triples (each → 2 items = 4 CPMI items)
     multi_data = [
-        {"step_text": f"Step {i}", "label": "correct", "source_domain": "gsm8k"}
-        for i in range(4)
+        {"step_text": f"Step {i}", "label": "correct", "source_domain": "gsm8k"} for i in range(4)
     ]
     cpmi_data = [
         {
@@ -200,9 +199,7 @@ def test_cpmi_negative_weight_applied(tmp_path: Path) -> None:
     # With no FoVer corpus, load_v22_corpus uses synthetic fallback as base.
     # We test CPMI negative weight by checking that the negative item (label=1.0)
     # has a lower weight than the positive item (label=0.0) from the same triple.
-    _, labels, weights, n_fover, n_cpmi, total, _ = exp808.load_v22_corpus(
-        multi_path, cpmi_path
-    )
+    _, labels, weights, n_fover, n_cpmi, total, _ = exp808.load_v22_corpus(multi_path, cpmi_path)
 
     # After synthetic fallback is loaded, CPMI items are appended.
     # Find positive/negative pairs from CPMI (last 2 items appended after synthetic).
@@ -225,7 +222,9 @@ def test_cpmi_negative_weight_applied(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_blocked_wiring_miss_when_cpmi_file_missing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_blocked_wiring_miss_when_cpmi_file_missing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """run_experiment writes blocked_wiring_miss artifact when CPMI file absent.
 
     Spec: REQ-LEARN-100, SCENARIO-LEARN-147 — wiring guard blocks training when
@@ -319,9 +318,7 @@ def test_load_v22_corpus_raises_when_cpmi_missing_and_only_fover(tmp_path: Path)
 
     Spec: REQ-LEARN-099 — assertion guard
     """
-    multi_data = [
-        {"step_text": "Step A", "label": "correct", "source_domain": "gsm8k"}
-    ]
+    multi_data = [{"step_text": "Step A", "label": "correct", "source_domain": "gsm8k"}]
     multi_path = tmp_path / "multi.json"
     multi_path.write_text(json.dumps(multi_data))
     cpmi_path = tmp_path / "cpmi_absent.json"  # missing

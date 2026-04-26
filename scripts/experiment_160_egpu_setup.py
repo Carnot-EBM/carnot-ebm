@@ -78,10 +78,10 @@ log = logging.getLogger("exp160")
 # Constants
 # ---------------------------------------------------------------------------
 MODEL_NAME = "Qwen/Qwen3.5-0.8B"
-WARMUP_RUNS = 10       # discarded
-TIMED_RUNS = 20        # for p50/p99 calculation
-MATMUL_SIZE = 1000     # side length of the square matrix for JAX benchmark
-MATMUL_RUNS = 20       # repeated matmul runs to get stable timing
+WARMUP_RUNS = 10  # discarded
+TIMED_RUNS = 20  # for p50/p99 calculation
+MATMUL_SIZE = 1000  # side length of the square matrix for JAX benchmark
+MATMUL_RUNS = 20  # repeated matmul runs to get stable timing
 
 # A simple prompt that produces short, deterministic output — fast enough to
 # benchmark without waiting minutes per run.
@@ -91,6 +91,7 @@ BENCHMARK_PROMPT = "What is 7 times 8? Answer with just the number."
 # ---------------------------------------------------------------------------
 # Step 1: System detection helpers
 # ---------------------------------------------------------------------------
+
 
 def detect_rocm_devices() -> list[str]:
     """Run rocminfo and return a list of gfx architecture strings found.
@@ -181,6 +182,7 @@ def detect_pytorch_gpu() -> dict[str, Any]:
     """
     try:
         import torch  # type: ignore[import]
+
         available = torch.cuda.is_available()
         if available:
             device_name = torch.cuda.get_device_name(0)
@@ -217,6 +219,7 @@ def detect_jax_devices() -> dict[str, Any]:
     """
     try:
         import jax  # type: ignore[import]
+
         devices = jax.devices()
         device_reprs = [repr(d) for d in devices]
         backend = jax.default_backend()
@@ -268,6 +271,7 @@ def classify_blocker(rocm_devices: list[str], pytorch_info: dict[str, Any]) -> s
 # ---------------------------------------------------------------------------
 # Step 2: JAX matmul benchmark
 # ---------------------------------------------------------------------------
+
 
 def benchmark_jax_matmul(device: str = "cpu") -> dict[str, Any]:
     """Run repeated 1000×1000 matmuls on the given JAX device, return timing.
@@ -334,6 +338,7 @@ def benchmark_jax_matmul(device: str = "cpu") -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Step 3: LLM inference benchmark
 # ---------------------------------------------------------------------------
+
 
 def _time_inference_runs(
     model: Any,
@@ -425,15 +430,14 @@ def benchmark_llm_inference(egpu_available: bool) -> dict[str, Any]:
             }
 
         log.info("[LLM] Running CPU inference benchmark...")
-        cpu_timing = _time_inference_runs(
-            model_cpu, tok_cpu, "cpu", WARMUP_RUNS, TIMED_RUNS
-        )
+        cpu_timing = _time_inference_runs(model_cpu, tok_cpu, "cpu", WARMUP_RUNS, TIMED_RUNS)
 
         # Free CPU model before GPU load to avoid OOM.
         del model_cpu, tok_cpu
         try:
             import gc
             import torch  # type: ignore[import]
+
             gc.collect()
             torch.cuda.empty_cache()
         except Exception:
@@ -488,6 +492,7 @@ def benchmark_llm_inference(egpu_available: bool) -> dict[str, Any]:
 # Main orchestration
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """Run experiment 160 end-to-end and write results JSON."""
     log.info("=" * 60)
@@ -535,7 +540,8 @@ def main() -> None:
     jax_cpu_matmul = benchmark_jax_matmul("cpu")
     log.info(
         "  CPU matmul %dx%d: median=%.3f ms, min=%.3f ms, max=%.3f ms",
-        MATMUL_SIZE, MATMUL_SIZE,
+        MATMUL_SIZE,
+        MATMUL_SIZE,
         jax_cpu_matmul.get("median_ms") or 0,
         jax_cpu_matmul.get("min_ms") or 0,
         jax_cpu_matmul.get("max_ms") or 0,
@@ -547,7 +553,8 @@ def main() -> None:
         jax_gpu_matmul = benchmark_jax_matmul("gpu")
         log.info(
             "  GPU matmul %dx%d: median=%.3f ms, min=%.3f ms, max=%.3f ms",
-            MATMUL_SIZE, MATMUL_SIZE,
+            MATMUL_SIZE,
+            MATMUL_SIZE,
             jax_gpu_matmul.get("median_ms") or 0,
             jax_gpu_matmul.get("min_ms") or 0,
             jax_gpu_matmul.get("max_ms") or 0,
@@ -618,7 +625,6 @@ def main() -> None:
     results: dict[str, Any] = {
         "experiment": 160,
         "title": "eGPU Hardware Validation — RX 7900 XTX via Thunderbolt",
-
         # Detection summary (top-level for quick scanning)
         "egpu_detected": egpu_detected,
         "rocm_version": rocm_version,
@@ -627,14 +633,12 @@ def main() -> None:
         "jax_gpu_available": jax_info["gpu_available"],
         "pytorch_cuda_available": pytorch_info["available"],
         "pytorch_device_name": pytorch_info["device_name"],
-
         # LLM inference timing (top-level for easy comparison with other exps)
         "cpu_inference_p50_ms": cpu_p50,
         "cpu_inference_p99_ms": cpu_p99,
         "gpu_inference_p50_ms": gpu_p50,
         "gpu_inference_p99_ms": gpu_p99,
         "speedup_ratio": llm_results.get("speedup_ratio"),
-
         # Blocker (null when eGPU works)
         "blocker": blocker if blocker != "none" else None,
         "blocker_message": blocker_message,
@@ -644,14 +648,12 @@ def main() -> None:
             if blocker != "none"
             else None
         ),
-
         # Detailed sub-results
         "jax_cpu_matmul": jax_cpu_matmul,
         "jax_gpu_matmul": jax_gpu_matmul,
         "llm_benchmark": llm_results,
         "pytorch_info": pytorch_info,
         "jax_info": jax_info,
-
         # Recommendations
         "recommendations": _build_recommendations(
             egpu_detected=egpu_detected,

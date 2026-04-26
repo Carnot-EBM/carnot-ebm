@@ -231,6 +231,7 @@ class TestRunInDocker:
     ) -> None:
         """REQ-AUTO-004: timeout is enforced."""
         import subprocess as sp
+
         mock_run.side_effect = sp.TimeoutExpired(cmd="docker run", timeout=60)
 
         config = DockerSandboxConfig(timeout_seconds=60)

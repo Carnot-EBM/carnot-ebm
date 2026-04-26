@@ -253,6 +253,7 @@ def _build_artifact(
 def main() -> None:
     """Run the combined extractor diagnostic and emit the gate decision artifact."""
     import sys
+
     _SCRIPT_DIR = Path(__file__).resolve().parent
     if str(_SCRIPT_DIR) not in sys.path:
         sys.path.insert(0, str(_SCRIPT_DIR))
@@ -299,7 +300,9 @@ def main() -> None:
         _log.info("Running CoACEExtractorV4 on %d incorrect entries ...", len(incorrect_entries))
         coace_tp_flags = _run_coace_v4(incorrect_entries)
 
-        _log.info("Running CoACEExtractorV4 on %d correct entries (FP check) ...", len(correct_entries))
+        _log.info(
+            "Running CoACEExtractorV4 on %d correct entries (FP check) ...", len(correct_entries)
+        )
         coace_fp_flags = _run_coace_v4(correct_entries)
 
         # DSVDAdapter pass

@@ -24,9 +24,12 @@ Spec: REQ-STORE-020, SCENARIO-STORE-030
 from __future__ import annotations
 
 from collections import Counter
+from typing import TYPE_CHECKING
 
-import numpy as np
 from sklearn.cluster import MiniBatchKMeans
+
+if TYPE_CHECKING:
+    import numpy as np
 
 
 class MemoryBankCompressor:

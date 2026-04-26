@@ -31,7 +31,7 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 import numpy as np
@@ -51,13 +51,13 @@ EXP_ID = 914
 TITLE = "PIMI Sparse Adjacency Final — N=64 top-20% couplings (RETRO CLOSURE ATTEMPT)"
 DELIVERABLE = Path("results/experiment_914_pimi_sparse_adjacency_final.json")
 
-N_SPINS = 64       # KV260 FPGA capacity (see ops/status.md)
-SPARSITY = 0.2     # Keep top-20% strongest couplings
+N_SPINS = 64  # KV260 FPGA capacity (see ops/status.md)
+SPARSITY = 0.2  # Keep top-20% strongest couplings
 INERTIA_ALPHA = 0.85  # Higher momentum to compensate for less information per sweep
 DENSE_ALPHA = 0.5  # Best alpha from Exp 889 for the dense synchronous baseline
 
-N_TRIALS = 30      # Number of independent convergence trials to average
-MAX_SWEEPS = 500   # Cap per trial to bound runtime
+N_TRIALS = 30  # Number of independent convergence trials to average
+MAX_SWEEPS = 500  # Cap per trial to bound runtime
 BASE_SEED = 42
 
 # Energy threshold for "converged".
@@ -67,8 +67,8 @@ BASE_SEED = 42
 ENERGY_THRESHOLD = -25.0
 
 # Retirement threshold: sweeps_reduction > PRIOR_BEST means improvement
-PRIOR_BEST_SWEEPS_REDUCTION = 4.33   # Exp 889 best result
-TARGET_SWEEPS_REDUCTION = 5.0        # 5x target from RETRO-INERTIA-SWEEPS-TARGET-MISSED
+PRIOR_BEST_SWEEPS_REDUCTION = 4.33  # Exp 889 best result
+TARGET_SWEEPS_REDUCTION = 5.0  # 5x target from RETRO-INERTIA-SWEEPS-TARGET-MISSED
 
 
 def make_n64_sk_coupling_matrix(seed: int = 0) -> np.ndarray:
@@ -236,12 +236,14 @@ def update_milestone_prereqs(verdict: str) -> None:
 
 def main() -> None:
     """Run Exp 914: sparse adjacency PIMI at N=64, retire scope if not 5x."""
-    started_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    started_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     t0 = __import__("time").monotonic()
 
     print(f"[Exp {EXP_ID}] {TITLE}")
     print(f"[Exp {EXP_ID}] N={N_SPINS}, sparsity={SPARSITY}, alpha_sparse={INERTIA_ALPHA}")
-    print(f"[Exp {EXP_ID}] Trials={N_TRIALS}, max_sweeps={MAX_SWEEPS}, threshold={ENERGY_THRESHOLD}")
+    print(
+        f"[Exp {EXP_ID}] Trials={N_TRIALS}, max_sweeps={MAX_SWEEPS}, threshold={ENERGY_THRESHOLD}"
+    )
 
     # Build the N=64 SK frustrated coupling matrix
     print(f"[Exp {EXP_ID}] Building N={N_SPINS} SK coupling matrix...")
@@ -256,7 +258,7 @@ def main() -> None:
     )
     J_sparse = sampler_sparse.build_sparse_J(J)
     nnz = J_sparse.nnz
-    effective_sweep_cost = nnz / (N_SPINS ** 2)
+    effective_sweep_cost = nnz / (N_SPINS**2)
     theoretical_speedup = 1.0 / effective_sweep_cost
 
     print(f"[Exp {EXP_ID}] J_sparse nnz={nnz} / {N_SPINS**2} = {effective_sweep_cost:.3f}")
@@ -295,7 +297,9 @@ def main() -> None:
     else:
         sweeps_reduction = float("inf")
 
-    print(f"[Exp {EXP_ID}] sweeps_reduction = {dense_sweeps}/{sparse_sweeps} = {sweeps_reduction:.2f}x")
+    print(
+        f"[Exp {EXP_ID}] sweeps_reduction = {dense_sweeps}/{sparse_sweeps} = {sweeps_reduction:.2f}x"
+    )
 
     # Step 4: Determine honest verdict
     honest_verdict = determine_verdict(
@@ -316,7 +320,7 @@ def main() -> None:
         print(f"[Exp {EXP_ID}] MILESTONE_PREREQS.md updated.")
 
     # Step 6: Build result artifact
-    finished_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    finished_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     duration_s = round(__import__("time").monotonic() - t0, 1)
 
     artifact: dict = {
@@ -342,7 +346,7 @@ def main() -> None:
         "effective_sweep_cost": round(measured_cost, 4),
         "theoretical_per_sweep_speedup": round(theoretical_speedup, 2),
         "j_sparse_nnz": nnz,
-        "j_dense_n2": N_SPINS ** 2,
+        "j_dense_n2": N_SPINS**2,
         # Retirement tracking
         "retire_if_same_verdict": True,
         "retro_closed_as_retired": retro_closed_as_retired,
@@ -393,16 +397,40 @@ def main() -> None:
                 else "Target met — RETRO-INERTIA-SWEEPS-TARGET-MISSED CLOSED."
             )
         ),
-        "schema": sorted([
-            "dense_alpha", "dense_sweeps_baseline", "duration_s", "effective_sweep_cost",
-            "energy_threshold", "experiment", "finished_at", "honest_verdict",
-            "inertia_alpha_sparse", "j_dense_n2", "j_sparse_nnz", "max_sweeps",
-            "n_spins", "n_trials", "notes", "prior_best_sweeps_reduction",
-            "prior_failures", "retro_closed_as_retired", "retro_id",
-            "retire_if_same_verdict", "run_date", "sampler_module", "sparse_sweeps",
-            "sparsity", "started_at", "status", "sweeps_reduction",
-            "target_sweeps_reduction", "theoretical_per_sweep_speedup", "title",
-        ]),
+        "schema": sorted(
+            [
+                "dense_alpha",
+                "dense_sweeps_baseline",
+                "duration_s",
+                "effective_sweep_cost",
+                "energy_threshold",
+                "experiment",
+                "finished_at",
+                "honest_verdict",
+                "inertia_alpha_sparse",
+                "j_dense_n2",
+                "j_sparse_nnz",
+                "max_sweeps",
+                "n_spins",
+                "n_trials",
+                "notes",
+                "prior_best_sweeps_reduction",
+                "prior_failures",
+                "retro_closed_as_retired",
+                "retro_id",
+                "retire_if_same_verdict",
+                "run_date",
+                "sampler_module",
+                "sparse_sweeps",
+                "sparsity",
+                "started_at",
+                "status",
+                "sweeps_reduction",
+                "target_sweeps_reduction",
+                "theoretical_per_sweep_speedup",
+                "title",
+            ]
+        ),
         "invariant_violations": [],
     }
 
@@ -417,7 +445,9 @@ def main() -> None:
     assert loaded["honest_verdict"] == honest_verdict, "verdict mismatch"
     print(f"[Exp {EXP_ID}] assert_deliverable_written: PASS")
 
-    print(f"[Exp {EXP_ID}] Done. verdict={honest_verdict}, sweeps_reduction={sweeps_reduction:.2f}x, duration={duration_s}s")
+    print(
+        f"[Exp {EXP_ID}] Done. verdict={honest_verdict}, sweeps_reduction={sweeps_reduction:.2f}x, duration={duration_s}s"
+    )
 
 
 if __name__ == "__main__":

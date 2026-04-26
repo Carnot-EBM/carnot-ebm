@@ -492,9 +492,12 @@ class TestCLI:
             [
                 sys.executable,
                 self._script,
-                "--exp-id", "327",
-                "--prompt-file", str(prompt_file),
-                "--project-root", str(tmp_path),
+                "--exp-id",
+                "327",
+                "--prompt-file",
+                str(prompt_file),
+                "--project-root",
+                str(tmp_path),
             ],
             capture_output=True,
             text=True,
@@ -517,9 +520,12 @@ class TestCLI:
             [
                 sys.executable,
                 self._script,
-                "--exp-id", "327",
-                "--prompt-file", str(prompt_file),
-                "--project-root", str(tmp_path),
+                "--exp-id",
+                "327",
+                "--prompt-file",
+                str(prompt_file),
+                "--project-root",
+                str(tmp_path),
             ],
             capture_output=True,
             text=True,
@@ -536,9 +542,12 @@ class TestCLI:
             [
                 sys.executable,
                 self._script,
-                "--exp-id", "327",
-                "--prompt-file", str(prompt_file),
-                "--project-root", str(tmp_path),
+                "--exp-id",
+                "327",
+                "--prompt-file",
+                str(prompt_file),
+                "--project-root",
+                str(tmp_path),
             ],
             capture_output=True,
             text=True,
@@ -556,9 +565,7 @@ class TestCLI:
                 {
                     "id": "exp327-test",
                     "prompt": (
-                        "EXISTING CODE TO READ FIRST:\n"
-                        "- scripts/real.py — exists\n\n"
-                        "TASK: Go.\n"
+                        "EXISTING CODE TO READ FIRST:\n- scripts/real.py — exists\n\nTASK: Go.\n"
                     ),
                 }
             ]
@@ -570,9 +577,12 @@ class TestCLI:
             [
                 sys.executable,
                 self._script,
-                "--exp-id", "327",
-                "--yaml-path", str(yaml_path),
-                "--project-root", str(tmp_path),
+                "--exp-id",
+                "327",
+                "--yaml-path",
+                str(yaml_path),
+                "--project-root",
+                str(tmp_path),
             ],
             capture_output=True,
             text=True,

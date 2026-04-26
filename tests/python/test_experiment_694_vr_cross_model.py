@@ -185,9 +185,7 @@ def test_select_hard_questions_no_overlap_with_exp679() -> None:
     assert HARD_PROXY_START >= 200, (
         f"Proxy start {HARD_PROXY_START} overlaps with Exp 679 range 0-199"
     )
-    assert HARD_PROXY_END <= 650, (
-        f"Proxy end {HARD_PROXY_END} extends beyond expected 650"
-    )
+    assert HARD_PROXY_END <= 650, f"Proxy end {HARD_PROXY_END} extends beyond expected 650"
 
 
 def test_select_hard_questions_fallback_small_dataset() -> None:
@@ -421,10 +419,20 @@ def test_deliverable_json_exists_and_valid() -> None:
     data = json.loads(result_path.read_text())
 
     required = {
-        "experiment", "schema", "run_date", "status", "honest_verdict",
-        "inference_mode", "qwen_signed_improvement", "gemma_baseline_acc",
-        "gemma_post_acc", "gemma_signed_improvement", "cross_model_delta",
-        "grammar_recall", "n_hard_questions", "hard_baseline_threshold",
+        "experiment",
+        "schema",
+        "run_date",
+        "status",
+        "honest_verdict",
+        "inference_mode",
+        "qwen_signed_improvement",
+        "gemma_baseline_acc",
+        "gemma_post_acc",
+        "gemma_signed_improvement",
+        "cross_model_delta",
+        "grammar_recall",
+        "n_hard_questions",
+        "hard_baseline_threshold",
     }
     missing = required - set(data.keys())
     assert not missing, f"Missing fields in deliverable: {missing}"

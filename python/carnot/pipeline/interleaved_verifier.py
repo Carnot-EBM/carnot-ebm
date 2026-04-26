@@ -43,11 +43,12 @@ Spec: REQ-VERIFY-135, SCENARIO-VERIFY-168, SCENARIO-VERIFY-169, SCENARIO-VERIFY-
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 # ---------------------------------------------------------------------------
 # InterleavedStepResult
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class InterleavedStepResult:
@@ -115,14 +116,13 @@ _STEP_SPLIT_RE = re.compile(
 )
 
 # Matches inference boundary words to split step text that was not caught by regex A/B.
-_INFERENCE_KW_RE = re.compile(
-    r"\b(therefore|so\b|thus|hence)\b", re.IGNORECASE
-)
+_INFERENCE_KW_RE = re.compile(r"\b(therefore|so\b|thus|hence)\b", re.IGNORECASE)
 
 
 # ---------------------------------------------------------------------------
 # Numeric helpers
 # ---------------------------------------------------------------------------
+
 
 def _clean_num(s: str) -> float | None:
     """Parse a number string, stripping commas.  Returns None on failure.
@@ -159,6 +159,7 @@ def _safe_eval(expr: str) -> float | None:
 # ---------------------------------------------------------------------------
 # InterleavedLogicVerifier
 # ---------------------------------------------------------------------------
+
 
 class InterleavedLogicVerifier:
     """Interleaves lightweight Z3 arithmetic checks at CoT step boundaries.
@@ -263,9 +264,9 @@ class InterleavedLogicVerifier:
             # Within each paragraph, split on sentence-terminal + arithmetic/keyword.
             # We also split at inline inference keywords (therefore/thus/hence/so).
             parts = re.split(
-                r'(?<=[.!?])\s+(?=[\d(])'      # sentence end before number
-                r'|(?<=[.!?])\s+(?=(?:therefore|thus|hence|so)\b)'  # before keyword
-                r'|\b(?:therefore|thus|hence)\s+',  # after keyword
+                r"(?<=[.!?])\s+(?=[\d(])"  # sentence end before number
+                r"|(?<=[.!?])\s+(?=(?:therefore|thus|hence|so)\b)"  # before keyword
+                r"|\b(?:therefore|thus|hence)\s+",  # after keyword
                 para,
                 flags=re.IGNORECASE,
             )
@@ -280,9 +281,7 @@ class InterleavedLogicVerifier:
     # Equation extraction → Z3 assertion
     # ------------------------------------------------------------------
 
-    def _formalize_step(
-        self, step: str, prior_constraints: list[str]
-    ) -> str | None:
+    def _formalize_step(self, step: str, prior_constraints: list[str]) -> str | None:
         """Extract a numeric equation from step text and return a Z3 assertion.
 
         The assertion is in violation form: "LHS != RHS" (Python Z3 notation).
@@ -302,11 +301,11 @@ class InterleavedLogicVerifier:
             Z3 assertion string (Python expression) or None if no equation found.
         """
         # Strip LaTeX delimiters to expose plain arithmetic.
-        clean = re.sub(r'\\[\[\]()]', '', step)          # remove \[, \], \(, \)
-        clean = re.sub(r'\\times', '*', clean)
-        clean = re.sub(r'\\cdot', '*', clean)
-        clean = re.sub(r'\\frac\{([^}]+)\}\{([^}]+)\}', r'(\1)/(\2)', clean)
-        clean = re.sub(r'[$]', '', clean)                 # strip currency markers
+        clean = re.sub(r"\\[\[\]()]", "", step)  # remove \[, \], \(, \)
+        clean = re.sub(r"\\times", "*", clean)
+        clean = re.sub(r"\\cdot", "*", clean)
+        clean = re.sub(r"\\frac\{([^}]+)\}\{([^}]+)\}", r"(\1)/(\2)", clean)
+        clean = re.sub(r"[$]", "", clean)  # strip currency markers
 
         match = _EQ_RE.search(clean)
         if match is None:

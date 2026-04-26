@@ -74,9 +74,15 @@ def _build_synthetic_benign() -> list[str]:
     Spec: REQ-SAFE-016
     """
     texts: list[str] = []
-    texts += [f"If a train travels {i * 10} miles in {i} hours, what is its average speed?" for i in range(1, 51)]
+    texts += [
+        f"If a train travels {i * 10} miles in {i} hours, what is its average speed?"
+        for i in range(1, 51)
+    ]
     texts += [f"What is {i} * {i + 7} + {i * 2}?" for i in range(1, 51)]
-    texts += [f"Write a function that returns the Fibonacci sequence up to {i} terms." for i in range(1, 51)]
+    texts += [
+        f"Write a function that returns the Fibonacci sequence up to {i} terms."
+        for i in range(1, 51)
+    ]
     texts += [f"What is the square root of {i * i}?" for i in range(1, 51)]
     texts += [
         "Explain the difference between a list and a tuple in Python.",
@@ -209,13 +215,9 @@ def _build_corpus() -> tuple[list[dict], list[dict]]:
     benign_texts = _build_synthetic_benign()
     pii_texts = _build_synthetic_pii()
     benign = [
-        {"text": t, "label": "benign", "source": "synthetic_gsm8k_humaneval"}
-        for t in benign_texts
+        {"text": t, "label": "benign", "source": "synthetic_gsm8k_humaneval"} for t in benign_texts
     ]
-    pii = [
-        {"text": t, "label": "pii", "source": "synthetic_pii"}
-        for t in pii_texts
-    ]
+    pii = [{"text": t, "label": "pii", "source": "synthetic_pii"} for t in pii_texts]
     return benign, pii
 
 
@@ -297,7 +299,9 @@ def _run_teacher_inference_privacy(
                     with torch.no_grad():
                         logits = model(**inputs).logits
                     probs = torch.softmax(logits, dim=-1).squeeze()
-                    pii_prob = float(probs[1]) if probs.ndim > 0 and len(probs) > 1 else float(probs)
+                    pii_prob = (
+                        float(probs[1]) if probs.ndim > 0 and len(probs) > 1 else float(probs)
+                    )
                     teacher_label = 1 if pii_prob >= 0.5 else 0
                     teacher_raw = f"pii_prob={pii_prob:.4f}"
                 except Exception as exc:
@@ -343,12 +347,14 @@ def _run_teacher_inference_privacy(
         entry = existing_cache.get(key)
         if entry and entry.get("teacher_label") in (0, 1):
             lbl = "pii" if entry["teacher_label"] == 1 else "benign"
-            labeled.append({
-                "text": item["text"],
-                "label": lbl,
-                "source": f"teacher_distilled:{item.get('source', 'unknown')}",
-                "elapsed_s": entry.get("elapsed_s", 0.0),
-            })
+            labeled.append(
+                {
+                    "text": item["text"],
+                    "label": lbl,
+                    "source": f"teacher_distilled:{item.get('source', 'unknown')}",
+                    "elapsed_s": entry.get("elapsed_s", 0.0),
+                }
+            )
         else:
             labeled.append(dict(item))
 
@@ -397,6 +403,7 @@ def main() -> None:
     """Run Exp 729 end-to-end with a 120-minute hard stop."""
     try:
         from carnot.pipeline.env_autofix import apply_env_autofix
+
         apply_env_autofix()
     except ImportError:
         pass
@@ -485,11 +492,16 @@ def _run(tmpl, log, deliverable, model_dir, corpus_dir, teacher_cache_path, weig
     benign_items, pii_items = _build_corpus()
     all_items = benign_items + pii_items
 
-    log.info("Corpus: %d benign + %d PII = %d total", len(benign_items), len(pii_items), len(all_items))
+    log.info(
+        "Corpus: %d benign + %d PII = %d total", len(benign_items), len(pii_items), len(all_items)
+    )
 
     if len(all_items) < 100:
         artifact = tmpl.build_result(
-            {"honest_verdict": "distillation_corpus_not_built", "teacher_inference_duration_s": 0.0},
+            {
+                "honest_verdict": "distillation_corpus_not_built",
+                "teacher_inference_duration_s": 0.0,
+            },
             status="blocked",
             reason="Corpus construction returned fewer than 100 examples",
         )

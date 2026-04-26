@@ -155,17 +155,18 @@ def run_retrospective(tmpl: ExperimentTemplate) -> dict:
     retro_critical_resolved = jepa_v17_cascade_unblocked
 
     # Gemma4 cross-model fix: signed_improvement must be >= 0 (no longer harmful)
-    gemma4_fixed = (vr19_gemma4_signed_improvement is not None
-                    and vr19_gemma4_signed_improvement >= 0)
+    gemma4_fixed = (
+        vr19_gemma4_signed_improvement is not None and vr19_gemma4_signed_improvement >= 0
+    )
 
     # PSV PaCoRe slope recovering: slope must be negative (FP rate shrinking)
-    psv_pacore_improving = (psv_pacore_slope is not None and psv_pacore_slope < 0)
+    psv_pacore_improving = psv_pacore_slope is not None and psv_pacore_slope < 0
 
     # Distillation publication gate: AUROC >= 0.90
-    distillation_gate_met = (distillation_auroc_v2 is not None and distillation_auroc_v2 >= 0.90)
+    distillation_gate_met = distillation_auroc_v2 is not None and distillation_auroc_v2 >= 0.90
 
     # FoVer v2 training data gate: >= 1000 pairs
-    fover_v2_target_met = (fover_v2_n_pairs is not None and fover_v2_n_pairs >= 1000)
+    fover_v2_target_met = fover_v2_n_pairs is not None and fover_v2_n_pairs >= 1000
 
     # NPU unblocked
     npu_unblocked = bool(npu_benchmarkable)
@@ -175,9 +176,12 @@ def run_retrospective(tmpl: ExperimentTemplate) -> dict:
     # -------------------------------------------------------------------------
     try:
         import subprocess
+
         result = subprocess.run(
             ["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         vram_used = [int(x.strip()) for x in result.stdout.strip().splitlines() if x.strip()]
         gpu_close_clean = all(v < 100 for v in vram_used)
@@ -205,7 +209,7 @@ def run_retrospective(tmpl: ExperimentTemplate) -> dict:
         if s["duration_s"] > 300:  # > 5 min flagged for watch
             retros_new.append(
                 f"RETRO-NEW-WATCH: exp_{s['experiment']} duration {s['duration_s']:.0f}s "
-                f"({s['duration_s']/60:.1f}min) — watch for recurrence in .55"
+                f"({s['duration_s'] / 60:.1f}min) — watch for recurrence in .55"
             )
 
     # -------------------------------------------------------------------------
@@ -236,7 +240,6 @@ def run_retrospective(tmpl: ExperimentTemplate) -> dict:
         "milestone": "2026.04.54",
         "status": "success",
         "honest_verdict": honest_verdict,
-
         # --- wall-time metrics ---
         "wall_time_minutes": round(wall_time_minutes, 2),
         "per_experiment_avg_min": round(per_experiment_avg_min, 2),
@@ -244,12 +247,10 @@ def run_retrospective(tmpl: ExperimentTemplate) -> dict:
         "wall_time_delta_direction": wall_time_delta_direction,
         "cycle_duration_s": round(cycle_duration_s, 3),
         "total_experiments": total_experiments,
-
         # --- slowest-5 governance ---
         "slowest_5": slowest_5,
         "slowest_5_governance_held": slowest_5_governance_held,
         "retired_slow_exps": sorted(RETIRED_SLOW_EXPS),
-
         # --- closure metrics ---
         "preflight_v6_complete": preflight_v6_complete,
         "jepa_v17_ood_auc": jepa_v17_ood_auc,
@@ -267,18 +268,14 @@ def run_retrospective(tmpl: ExperimentTemplate) -> dict:
         "fr11_tier_advancement": fr11_tier_advancement,
         "npu_benchmarkable": npu_benchmarkable,
         "npu_unblocked": npu_unblocked,
-
         # --- RETRO-CRITICAL closure ---
         "retro_critical_resolved": retro_critical_resolved,
-
         # --- GPU state ---
         "gpu_close_clean": gpu_close_clean,
         "gpu_vram_used_mb": gpu_vram_used_mb,
-
         # --- RETRO tracking ---
         "retros_resolved": retros_resolved,
         "retros_new": retros_new,
-
         # --- experiment table (full detail for audit) ---
         "cycle_data": {
             "cycle_experiments": total_experiments,

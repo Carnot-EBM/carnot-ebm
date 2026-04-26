@@ -45,10 +45,8 @@ Spec: REQ-LEARN-037, REQ-LEARN-038,
 
 from __future__ import annotations
 
-import os
 import pathlib
 from dataclasses import dataclass
-from typing import Any
 
 from carnot.pipeline.adaptive_thresholds import PerModelFPTracker
 from carnot.pipeline.case_memory import CaseMemory
@@ -58,7 +56,6 @@ from carnot.pipeline.constraint_template_library import (
 )
 from carnot.pipeline.session_memory import SessionMemory
 from carnot.pipeline.verify_repair import VerifyRepairPipeline
-
 
 # ---------------------------------------------------------------------------
 # CrossSessionResult
@@ -238,12 +235,8 @@ def simulate_session(
         # This is the mechanism that makes Session N+1 benefit from Session N's
         # accumulated template observations — the templates fire on the response
         # text and may produce additional constraint violations.
-        template_constraints = template_library.apply_active_templates(
-            question, _RELAY_MODEL_ID
-        )
-        template_violated = any(
-            c.metadata.get("satisfied") is False for c in template_constraints
-        )
+        template_constraints = template_library.apply_active_templates(question, _RELAY_MODEL_ID)
+        template_violated = any(c.metadata.get("satisfied") is False for c in template_constraints)
 
         # Accumulate pattern observations: every question gets a carry_error
         # observation so that the carry_check template activates quickly.

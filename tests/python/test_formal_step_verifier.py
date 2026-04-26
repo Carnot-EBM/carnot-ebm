@@ -27,6 +27,7 @@ def verifier() -> FormalStepVerifier:
 # verify_chain() tests
 # ---------------------------------------------------------------------------
 
+
 # SCENARIO-VERIFY-217: verify_chain on an empty list returns empty list.
 def test_verify_chain_empty(verifier: FormalStepVerifier) -> None:
     """verify_chain([]) must return [] with no errors.
@@ -95,8 +96,8 @@ def test_verify_chain_violation_detected(verifier: FormalStepVerifier) -> None:
     Spec: REQ-VERIFY-165, SCENARIO-VERIFY-218
     """
     steps = [
-        "47 + 28 = 75",   # step 0: correct, no prior
-        "47 + 28 = 65",   # step 1: contradicts step 0 — Z3 should say "violation"
+        "47 + 28 = 75",  # step 0: correct, no prior
+        "47 + 28 = 65",  # step 1: contradicts step 0 — Z3 should say "violation"
     ]
     result = verifier.verify_chain(steps)
     assert len(result) == 2
@@ -121,6 +122,7 @@ def test_verify_chain_multiple_steps(verifier: FormalStepVerifier) -> None:
 # ---------------------------------------------------------------------------
 # chain_correct() tests
 # ---------------------------------------------------------------------------
+
 
 # SCENARIO-VERIFY-217: empty chain is trivially correct.
 def test_chain_correct_empty(verifier: FormalStepVerifier) -> None:

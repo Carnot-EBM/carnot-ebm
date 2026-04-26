@@ -72,19 +72,19 @@ import jax.random as jrandom
 import numpy as np
 from safetensors.numpy import load_file, save_file
 
-
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 
 # Special token IDs (reserved at the bottom of the vocabulary)
-_PAD_ID: int = 0   # padding — fills sequences shorter than max_seq_len
-_SEP_ID: int = 1   # separator between question and response
+_PAD_ID: int = 0  # padding — fills sequences shorter than max_seq_len
+_SEP_ID: int = 1  # separator between question and response
 
 
 # ---------------------------------------------------------------------------
 # Dataclass
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class CoTEnergyInput:
@@ -114,6 +114,7 @@ class CoTEnergyInput:
 # ---------------------------------------------------------------------------
 # Tokenizer helpers
 # ---------------------------------------------------------------------------
+
 
 def _tokenize(text: str, max_seq_len: int, vocab_size: int) -> list[int]:
     """Convert text to a list of token IDs using a hash-based word tokenizer.
@@ -192,6 +193,7 @@ def _make_token_sequence(
 # ---------------------------------------------------------------------------
 # Parameter initialization helpers
 # ---------------------------------------------------------------------------
+
 
 def _init_layer(embed_dim: int, n_heads: int, key: jax.Array) -> dict[str, jax.Array]:
     """Initialize parameters for one transformer encoder layer.
@@ -335,6 +337,7 @@ def _init_params(
 # Pure-functional forward pass (takes explicit params for jax.grad)
 # ---------------------------------------------------------------------------
 
+
 def _layer_norm(
     x: jax.Array,
     gamma: jax.Array,
@@ -415,7 +418,7 @@ def _transformer_layer_forward(
     scale = jnp.sqrt(jnp.float32(d_head))
     scores = jnp.matmul(q, k.transpose(0, 2, 1)) / scale  # (n_heads, seq_len, seq_len)
     attn_weights = jax.nn.softmax(scores, axis=-1)
-    attn_out = jnp.matmul(attn_weights, v)                 # (n_heads, seq_len, d_head)
+    attn_out = jnp.matmul(attn_weights, v)  # (n_heads, seq_len, d_head)
 
     # Concatenate heads back: (n_heads, seq_len, d_head) → (seq_len, embed_dim)
     attn_out = attn_out.transpose(1, 0, 2).reshape(seq_len, embed_dim)
@@ -494,6 +497,7 @@ def _forward(
 # Parameter count helpers
 # ---------------------------------------------------------------------------
 
+
 def _count_params(params: dict[str, Any]) -> int:
     """Count total number of scalar parameters in a nested pytree dict.
 
@@ -515,6 +519,7 @@ def _count_params(params: dict[str, Any]) -> int:
 # ---------------------------------------------------------------------------
 # Serialization helpers
 # ---------------------------------------------------------------------------
+
 
 def _flatten_params(params: dict[str, Any], prefix: str = "") -> dict[str, jax.Array]:
     """Flatten a nested param dict to a flat string-keyed dict for safetensors.
@@ -568,17 +573,12 @@ def _unflatten_params(
     Returns:
         Nested dict matching the structure of ``template`` with values from ``flat``.
     """
+
     def _restore(node: Any, prefix: str) -> Any:
         if isinstance(node, dict):
-            return {
-                k: _restore(v, f"{prefix}/{k}" if prefix else k)
-                for k, v in node.items()
-            }
+            return {k: _restore(v, f"{prefix}/{k}" if prefix else k) for k, v in node.items()}
         if isinstance(node, list):
-            return [
-                _restore(v, f"{prefix}/{i}" if prefix else str(i))
-                for i, v in enumerate(node)
-            ]
+            return [_restore(v, f"{prefix}/{i}" if prefix else str(i)) for i, v in enumerate(node)]
         # Leaf: look up in flat dict
         return flat[prefix]
 
@@ -588,6 +588,7 @@ def _unflatten_params(
 # ---------------------------------------------------------------------------
 # EORMModel
 # ---------------------------------------------------------------------------
+
 
 class EORMModel:
     """EORM CoT energy reward model — scores chain-of-thought responses by energy.
@@ -662,9 +663,7 @@ class EORMModel:
         Spec: REQ-LEARN-022-2
         """
         if embed_dim % n_heads != 0:
-            raise ValueError(
-                f"embed_dim ({embed_dim}) must be divisible by n_heads ({n_heads})"
-            )
+            raise ValueError(f"embed_dim ({embed_dim}) must be divisible by n_heads ({n_heads})")
 
         self.embed_dim = embed_dim
         self.n_heads = n_heads
@@ -741,8 +740,7 @@ class EORMModel:
         Spec: REQ-LEARN-022-4, SCENARIO-LEARN-039
         """
         energies = [
-            self.energy(CoTEnergyInput(question_text=question, response_text=r))
-            for r in responses
+            self.energy(CoTEnergyInput(question_text=question, response_text=r)) for r in responses
         ]
         # argsort: returns indices that would sort energies in ascending order
         return sorted(range(len(energies)), key=lambda i: energies[i])
@@ -792,7 +790,7 @@ class EORMModel:
             json.dump(config, f, indent=2)
 
     @classmethod
-    def load(cls, path: str | Path) -> "EORMModel":
+    def load(cls, path: str | Path) -> EORMModel:
         """Load a saved EORMModel from a safetensors file and config sidecar.
 
         **For engineers:**
@@ -853,6 +851,7 @@ class EORMModel:
 # ---------------------------------------------------------------------------
 # EORMTrainer
 # ---------------------------------------------------------------------------
+
 
 class EORMTrainer:
     """Trains an EORMModel via contrastive (hinge) loss on CoT response pairs.

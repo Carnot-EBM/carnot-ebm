@@ -214,9 +214,9 @@ def test_restructure_does_not_mutate_original():
         analysis[f"bias_{idx}"] = {"density": "neutral", "knot_count": original_knots}
 
     _new_kan = KANAdaptiveStructure.restructure(kan, analysis)
-    assert (
-        kan.energy_fn.edge_splines[edge_key].num_knots == original_knots
-    ), "Original KAN was mutated by restructure()"
+    assert kan.energy_fn.edge_splines[edge_key].num_knots == original_knots, (
+        "Original KAN was mutated by restructure()"
+    )
 
 
 # ---------------------------------------------------------------------------

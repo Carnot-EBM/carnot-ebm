@@ -114,16 +114,10 @@ def main() -> None:
     synchronous_lines = len([l for l in rtl_content.splitlines() if l.strip()])
 
     area_reduction_estimate = (
-        "~50%"
-        if (synchronous_lines < asynchronous_lines * 0.7)
-        else "smaller_than_expected"
+        "~50%" if (synchronous_lines < asynchronous_lines * 0.7) else "smaller_than_expected"
     )
 
-    honest_verdict = (
-        "fact_e_viable_rtl_updated"
-        if probe_viable
-        else "fact_e_no_signal_rtl_updated"
-    )
+    honest_verdict = "fact_e_viable_rtl_updated" if probe_viable else "fact_e_no_signal_rtl_updated"
 
     artifact = tmpl.build_result(
         {

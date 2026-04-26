@@ -53,9 +53,7 @@ def _make_repo_root(tmp_path: Path) -> Path:
     (root / "results" / "checkpoints").mkdir(parents=True)
     (root / "scripts").mkdir(parents=True)
     manifest = {"excluded": []}
-    (root / "scripts" / "conductor_exclusion_manifest.json").write_text(
-        json.dumps(manifest)
-    )
+    (root / "scripts" / "conductor_exclusion_manifest.json").write_text(json.dumps(manifest))
     return root
 
 
@@ -170,7 +168,7 @@ def test_gsm8k_synthetic_fns_correct_on_multiples_of_3() -> None:
     """
     qs = _make_gsm8k_questions(0, 10)
     inf, ver = _make_synthetic_fns_gsm8k(qs)
-    assert ver(inf(qs[0])) is True   # index 0: correct
+    assert ver(inf(qs[0])) is True  # index 0: correct
     assert ver(inf(qs[1])) is False  # index 1: violation
 
 

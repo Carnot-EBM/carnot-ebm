@@ -16,6 +16,7 @@ from carnot.pipeline.jepa_wiring_guard import JepaWiringCheckResult, check_cpmi_
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 def _make_triples_file(n: int, n_prefixes: int | None = None) -> str:
     """Write a temp CPMI triples JSON file with ``n`` entries.
 
@@ -27,11 +28,13 @@ def _make_triples_file(n: int, n_prefixes: int | None = None) -> str:
     triples = []
     for i in range(n):
         prefix_idx = i % max(n_prefixes, 1)
-        triples.append({
-            "prefix_text": f"prefix_{prefix_idx}",
-            "positive_step": f"pos_{i}",
-            "negative_step": f"neg_{i}",
-        })
+        triples.append(
+            {
+                "prefix_text": f"prefix_{prefix_idx}",
+                "positive_step": f"pos_{i}",
+                "negative_step": f"neg_{i}",
+            }
+        )
     fd, path = tempfile.mkstemp(suffix=".json")
     with os.fdopen(fd, "w") as fh:
         json.dump(triples, fh)
@@ -42,6 +45,7 @@ def _make_triples_file(n: int, n_prefixes: int | None = None) -> str:
 # REQ-INFRA-061 — AssertionError when ratio < threshold
 # SCENARIO-INFRA-070
 # ---------------------------------------------------------------------------
+
 
 class TestCheckCpmiWiringAssertionFailure:
     """REQ-INFRA-061: check_cpmi_wiring raises AssertionError when ratio < min."""
@@ -77,6 +81,7 @@ class TestCheckCpmiWiringAssertionFailure:
 # REQ-INFRA-061 — is_wired=True when ratio >= threshold
 # SCENARIO-INFRA-069
 # ---------------------------------------------------------------------------
+
 
 class TestCheckCpmiWiringSuccess:
     """REQ-INFRA-061: check_cpmi_wiring returns is_wired=True when ratio is sufficient."""
@@ -124,6 +129,7 @@ class TestCheckCpmiWiringSuccess:
 # ---------------------------------------------------------------------------
 # REQ-INFRA-061 — JepaWiringCheckResult dataclass types
 # ---------------------------------------------------------------------------
+
 
 class TestJepaWiringCheckResultFields:
     """REQ-INFRA-061: JepaWiringCheckResult fields are typed correctly."""

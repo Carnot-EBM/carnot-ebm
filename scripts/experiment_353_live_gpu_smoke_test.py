@@ -140,8 +140,7 @@ def main() -> None:
     if honest_verdict == "live_confirmed":
         status = "success"
         _log.info(
-            "Experiment %d SUCCESS: live GPU inference confirmed — "
-            "n_answered=%d/%d elapsed_s=%.3f",
+            "Experiment %d SUCCESS: live GPU inference confirmed — n_answered=%d/%d elapsed_s=%.3f",
             EXP_ID,
             smoke_result.n_answered,
             smoke_result.n_questions,

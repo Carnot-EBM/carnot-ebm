@@ -37,7 +37,6 @@ import re
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
 
 _log = logging.getLogger(__name__)
 
@@ -107,12 +106,10 @@ class HostPrereqRegistry:
         Override the default path to ``ops/host-prereqs.md``.  Used in tests.
     """
 
-    def __init__(self, registry_path: Optional[Path] = None) -> None:
+    def __init__(self, registry_path: Path | None = None) -> None:
         path = registry_path if registry_path is not None else _DEFAULT_REGISTRY_PATH
         self._entries: list[PrereqEntry] = _parse_registry(path)
-        _log.debug(
-            "HostPrereqRegistry: loaded %d entries from %s", len(self._entries), path
-        )
+        _log.debug("HostPrereqRegistry: loaded %d entries from %s", len(self._entries), path)
 
     # ------------------------------------------------------------------
     # Public API
@@ -125,7 +122,7 @@ class HostPrereqRegistry:
 
     def check_prereqs(
         self,
-        experiment_class: Optional[str] = None,
+        experiment_class: str | None = None,
     ) -> list[str]:
         """Return a list of package names that are missing on this host.
 
@@ -159,7 +156,7 @@ class HostPrereqRegistry:
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _filter_entries(self, experiment_class: Optional[str]) -> list[PrereqEntry]:
+    def _filter_entries(self, experiment_class: str | None) -> list[PrereqEntry]:
         """Return entries relevant to *experiment_class* (or all if None)."""
         if experiment_class is None:
             return list(self._entries)

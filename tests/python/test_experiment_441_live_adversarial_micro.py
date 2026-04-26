@@ -135,7 +135,7 @@ class TestRunThreeConditions:
         """Model always returns correct answer for standard questions."""
         qs = _make_adversarial_questions(4)
         # Model callable that returns "#### <gold>" format.
-        model = MagicMock(side_effect=lambda prompt: [{"generated_text": f"#### {1+1}"}])
+        model = MagicMock(side_effect=lambda prompt: [{"generated_text": f"#### {1 + 1}"}])
         # Patch _call_model and _is_correct to be deterministic.
         with (
             patch.object(_mod, "_call_model", side_effect=lambda m, p: "#### 2"),
@@ -213,8 +213,7 @@ class TestMainGatePaths:
         from carnot.pipeline.adversarial_gsm8k import AdversarialGSMQuestion
 
         fake_questions = [
-            {"question_id": f"q_{i:04d}", "question": f"Q{i}", "answer": str(i)}
-            for i in range(5)
+            {"question_id": f"q_{i:04d}", "question": f"Q{i}", "answer": str(i)} for i in range(5)
         ]
         fake_adv_questions = [
             AdversarialGSMQuestion(
@@ -311,7 +310,9 @@ class TestMainGatePaths:
             patch.object(_mod, "ExperimentTemplate", return_value=ctx["tmpl_mock"]),
             patch.object(_mod, "_load_model_with_explicit_device", return_value=MagicMock()),
             patch.object(_mod, "load_gsm8k_questions", return_value=ctx["fake_questions"]),
-            patch.object(_mod, "build_adversarial_questions", return_value=ctx["fake_adv_questions"]),
+            patch.object(
+                _mod, "build_adversarial_questions", return_value=ctx["fake_adv_questions"]
+            ),
             patch.object(_mod, "_run_three_conditions_for_model", return_value=fake_micro_result),
             patch.object(_mod, "_write_artifact") as mock_write,
         ):
@@ -330,9 +331,14 @@ class TestMainGatePaths:
         from carnot.pipeline.adversarial_gsm8k import MicroAdversarialResult
 
         fake_micro_result = MicroAdversarialResult(
-            model_id="M", n_questions=5,
-            standard_accuracy=0.8, adversarial_accuracy=0.6, repaired_accuracy=0.7,
-            adversarial_drop_pct=20.0, repair_improvement_pct=10.0, inference_mode="live_gpu",
+            model_id="M",
+            n_questions=5,
+            standard_accuracy=0.8,
+            adversarial_accuracy=0.6,
+            repaired_accuracy=0.7,
+            adversarial_drop_pct=20.0,
+            repair_improvement_pct=10.0,
+            inference_mode="live_gpu",
         )
 
         with (
@@ -341,7 +347,9 @@ class TestMainGatePaths:
             patch.object(_mod, "ExperimentTemplate", return_value=ctx["tmpl_mock"]),
             patch.object(_mod, "_load_model_with_explicit_device", return_value=MagicMock()),
             patch.object(_mod, "load_gsm8k_questions", return_value=ctx["fake_questions"]),
-            patch.object(_mod, "build_adversarial_questions", return_value=ctx["fake_adv_questions"]),
+            patch.object(
+                _mod, "build_adversarial_questions", return_value=ctx["fake_adv_questions"]
+            ),
             patch.object(_mod, "_run_three_conditions_for_model", return_value=fake_micro_result),
             patch.object(_mod, "_write_artifact") as mock_write,
         ):

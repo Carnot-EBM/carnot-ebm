@@ -14,8 +14,6 @@ import json
 import tempfile
 from pathlib import Path
 
-import pytest
-
 from carnot.pipeline.extract import AutoExtractor
 from carnot.pipeline.knowledge_base import (
     FactualKBExtractor,
@@ -24,7 +22,6 @@ from carnot.pipeline.knowledge_base import (
     normalize_entity,
     resolve_coreferences,
 )
-
 
 # ---------------------------------------------------------------------------
 # KnowledgeBase — lookup tests (REQ-VERIFY-001)
@@ -183,9 +180,7 @@ class TestKnowledgeBaseExternalFacts:
         """REQ-VERIFY-001: External facts file is merged with embedded facts."""
         external = {"testopia": {"capital": "testburg", "population": 42000}}
 
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(external, f)
             tmp_path = f.name
 
@@ -352,9 +347,9 @@ class TestFactualKBExtractorPatterns:
         # Should not include any contradicted or verified results for atlantis
         factual = [r for r in results if r.constraint_type == "factual_kb"]
         # All should be unknown (skipped), so factual list should be empty
-        assert all(
-            r.metadata.get("kb_result") != "unknown" for r in factual
-        ), "Unknown claims should be dropped (not emitted)"
+        assert all(r.metadata.get("kb_result") != "unknown" for r in factual), (
+            "Unknown claims should be dropped (not emitted)"
+        )
 
     def test_energy_zero_for_verified(self) -> None:
         """SCENARIO-VERIFY-002: Verified claims encode energy=0.0."""
@@ -376,8 +371,7 @@ class TestFactualKBExtractorPatterns:
         """REQ-VERIFY-001: Duplicate claims from the same text are deduplicated."""
         # Same claim twice in one text
         results = self.ext.extract(
-            "Paris is the capital of France. "
-            "Paris is the capital of France."
+            "Paris is the capital of France. Paris is the capital of France."
         )
         factual = [r for r in results if r.constraint_type == "factual_kb"]
         # Should not have duplicates
@@ -391,16 +385,12 @@ class TestFactualKBExtractorPatterns:
 
     def test_domain_filter_ignored(self) -> None:
         """REQ-VERIFY-001: domain='arithmetic' causes empty return."""
-        results = self.ext.extract(
-            "Paris is the capital of France.", domain="arithmetic"
-        )
+        results = self.ext.extract("Paris is the capital of France.", domain="arithmetic")
         assert results == []
 
     def test_domain_factual_kb_accepted(self) -> None:
         """REQ-VERIFY-001: domain='factual_kb' is accepted."""
-        results = self.ext.extract(
-            "Paris is the capital of France.", domain="factual_kb"
-        )
+        results = self.ext.extract("Paris is the capital of France.", domain="factual_kb")
         factual = [r for r in results if r.constraint_type == "factual_kb"]
         assert len(factual) >= 1
 
@@ -422,9 +412,7 @@ class TestFactualKBExtractorCoreference:
         text = "Germany is in Europe. Its capital is Berlin."
         results = self.ext.extract(text)
         factual = [r for r in results if r.constraint_type == "factual_kb"]
-        capital_results = [
-            r for r in factual if r.metadata.get("relation") == "capital"
-        ]
+        capital_results = [r for r in factual if r.metadata.get("relation") == "capital"]
         # Should have extracted a capital claim for Germany
         assert len(capital_results) >= 1
 
@@ -453,10 +441,7 @@ class TestAutoExtractorIntegration:
 
     def test_auto_extracts_arithmetic_and_factual(self) -> None:
         """REQ-VERIFY-002: AutoExtractor handles mixed arithmetic + factual text."""
-        text = (
-            "The sum 2 + 3 = 5 is correct. "
-            "Paris is the capital of France."
-        )
+        text = "The sum 2 + 3 = 5 is correct. Paris is the capital of France."
         results = self.auto.extract(text)
         arith = [r for r in results if r.constraint_type == "arithmetic"]
         factual = [r for r in results if r.constraint_type == "factual_kb"]
@@ -503,7 +488,8 @@ class TestVerifyRepairPipelineIntegration:
         response = "The capital of Germany is Berlin."
         result = pipeline.verify(question=question, response=response)
         factual = [
-            c for c in result.constraints
+            c
+            for c in result.constraints
             if hasattr(c, "constraint_type") and c.constraint_type == "factual_kb"
         ]
         assert len(factual) >= 1

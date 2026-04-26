@@ -138,7 +138,9 @@ def load_gsm8k_questions(n: int) -> list[dict]:
                 break
             # GSM8K answer format: "... #### 42"
             raw_answer = row.get("answer", "")
-            answer = raw_answer.split("####")[-1].strip() if "####" in raw_answer else raw_answer.strip()
+            answer = (
+                raw_answer.split("####")[-1].strip() if "####" in raw_answer else raw_answer.strip()
+            )
             items.append({"question": row["question"], "answer": answer})
         return items
     except Exception as exc:  # noqa: BLE001
@@ -234,11 +236,7 @@ def _make_arithmetic_inference_fn():
 
     def _fn(question: str, response: str) -> bool:
         results = extractor.extract(response, domain="arithmetic")
-        return any(
-            not r.metadata.get("satisfied", True)
-            for r in results
-            if r.metadata
-        )
+        return any(not r.metadata.get("satisfied", True) for r in results if r.metadata)
 
     return _fn
 
@@ -270,11 +268,7 @@ def _make_llm_inference_fn(extractor: LLMConstraintExtractor | None = None):
 
     def _fn(question: str, response: str) -> bool:
         results = extractor.extract(response, domain="arithmetic")
-        return any(
-            not r.metadata.get("satisfied", True)
-            for r in results
-            if r.metadata
-        )
+        return any(not r.metadata.get("satisfied", True) for r in results if r.metadata)
 
     return _fn
 
@@ -296,7 +290,9 @@ def _make_z3_inference_fn(llm_caller=None):
     Returns:
         Callable (question: str, response: str) -> bool
     """
-    formalizer = LLMz3Formalizer(llm_caller=llm_caller, model_id="ci_stub" if llm_caller is None else "live")
+    formalizer = LLMz3Formalizer(
+        llm_caller=llm_caller, model_id="ci_stub" if llm_caller is None else "live"
+    )
 
     def _fn(question: str, response: str) -> bool:
         result = formalizer.formalize(question, response)
@@ -531,7 +527,9 @@ def main() -> None:
         "batch_log": batch_log,
         "per_extractor_results": comparison["per_extractor_results"],
         "winner": comparison["winner"],
-        "improvement_over_arithmetic_extractor": comparison["improvement_over_arithmetic_extractor"],
+        "improvement_over_arithmetic_extractor": comparison[
+            "improvement_over_arithmetic_extractor"
+        ],
         "honest_verdict": comparison["honest_verdict"],
         "n_extractors": comparison["n_extractors"],
     }

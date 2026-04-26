@@ -32,6 +32,7 @@
 
 Spec: REQ-LEARN-056, REQ-LEARN-057, SCENARIO-LEARN-100, SCENARIO-LEARN-101
 """
+
 from __future__ import annotations
 
 import json
@@ -149,11 +150,11 @@ def _mock_verify(ising_model: IsingModel, question: str, response: str, is_corre
     model_accepts = energy < -0.1
 
     if is_correct and model_accepts:
-        return True   # TP: correct response, model accepted
+        return True  # TP: correct response, model accepted
     if is_correct and not model_accepts:
         return False  # FN: correct response, model wrongly flagged
     if not is_correct and not model_accepts:
-        return True   # TN: incorrect response, model correctly rejected
+        return True  # TN: incorrect response, model correctly rejected
     # not is_correct and model_accepts → FP: incorrect response, model missed
     return False
 
@@ -260,16 +261,12 @@ def main() -> None:
 
         # --- Static baseline ---
         static_model = IsingModel(IsingConfig(input_dim=32, coupling_init="xavier_uniform"))
-        static_result = _run_pipeline(
-            static_model, questions, dynamic=False, generator=None
-        )
+        static_result = _run_pipeline(static_model, questions, dynamic=False, generator=None)
 
         # --- Dynamic adaptive pipeline ---
         dynamic_model = IsingModel(IsingConfig(input_dim=32, coupling_init="xavier_uniform"))
         gen = IsingConstraintGenerator(dynamic_model, threshold=PATTERN_THRESHOLD)
-        dynamic_result = _run_pipeline(
-            dynamic_model, questions, dynamic=True, generator=gen
-        )
+        dynamic_result = _run_pipeline(dynamic_model, questions, dynamic=True, generator=gen)
 
         # --- Metrics ---
         # "baseline" accuracy = fraction correct WITHOUT verify-repair (oracle accuracy).
@@ -283,7 +280,9 @@ def main() -> None:
         n_constraints_added = dynamic_result["n_constraints_added"]
         n_patterns_above_threshold = dynamic_result["n_patterns_above_threshold"]
 
-        honest_verdict = compute_honest_verdict(constraint_addition_delta, n_patterns_above_threshold)
+        honest_verdict = compute_honest_verdict(
+            constraint_addition_delta, n_patterns_above_threshold
+        )
 
         artifact = tmpl.build_result(
             {

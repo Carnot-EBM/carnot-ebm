@@ -34,6 +34,7 @@ import scripts.experiment_512_retro_2026_04_38 as retro
 # _load_results
 # ---------------------------------------------------------------------------
 
+
 class TestLoadResults:
     """_load_results handles present, missing, and corrupt files correctly."""
 
@@ -58,6 +59,7 @@ class TestLoadResults:
 
     def test_missing_file_excluded_with_warning(self, tmp_path, caplog):
         import logging
+
         orig = retro.EXP_RESULT_PATHS
         retro.EXP_RESULT_PATHS = {500: "results/experiment_500_MISSING.json"}
         try:
@@ -70,6 +72,7 @@ class TestLoadResults:
 
     def test_corrupt_json_excluded_with_warning(self, tmp_path, caplog):
         import logging
+
         p = tmp_path / "results" / "experiment_500_bad.json"
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text("{not valid json")
@@ -95,6 +98,7 @@ class TestLoadResults:
 # ---------------------------------------------------------------------------
 # _count_deferred_to_gpu
 # ---------------------------------------------------------------------------
+
 
 class TestCountDeferredToGpu:
     """_count_deferred_to_gpu identifies GPU-blocked experiments."""
@@ -145,6 +149,7 @@ class TestCountDeferredToGpu:
 # _assess_credibility_milestones
 # ---------------------------------------------------------------------------
 
+
 class TestAssessCredibilityMilestones:
     """_assess_credibility_milestones reads fields from the right experiment JSONs."""
 
@@ -193,6 +198,7 @@ class TestAssessCredibilityMilestones:
 # _assess_retro_closures
 # ---------------------------------------------------------------------------
 
+
 class TestAssessRetroClosure:
     """_assess_retro_closures reads correct fields from the right experiments."""
 
@@ -230,6 +236,7 @@ class TestAssessRetroClosure:
 # _compute_wall_time_stats
 # ---------------------------------------------------------------------------
 
+
 class TestComputeWallTimeStats:
     """_compute_wall_time_stats correctly aggregates duration_s from results."""
 
@@ -261,6 +268,7 @@ class TestComputeWallTimeStats:
 # ---------------------------------------------------------------------------
 # _build_headline_results
 # ---------------------------------------------------------------------------
+
 
 class TestBuildHeadlineResults:
     """_build_headline_results extracts structured data from Exps 502/503/504."""
@@ -312,6 +320,7 @@ class TestBuildHeadlineResults:
 # _build_open_retro_items
 # ---------------------------------------------------------------------------
 
+
 class TestBuildOpenRetroItems:
     """_build_open_retro_items enumerates carry-forward open items."""
 
@@ -361,6 +370,7 @@ class TestBuildOpenRetroItems:
 # ---------------------------------------------------------------------------
 # _build_new_retro_items
 # ---------------------------------------------------------------------------
+
 
 class TestBuildNewRetroItems:
     """_build_new_retro_items generates correct new RETRO items for .39."""
@@ -449,6 +459,7 @@ class TestBuildNewRetroItems:
 # _build_meta_reflection
 # ---------------------------------------------------------------------------
 
+
 class TestBuildMetaReflection:
     """_build_meta_reflection composes a structured reflection dict."""
 
@@ -464,9 +475,7 @@ class TestBuildMetaReflection:
         }
 
     def test_has_required_keys(self):
-        meta = retro._build_meta_reflection(
-            self._base_closures(), {}, {}, n_deferred=3
-        )
+        meta = retro._build_meta_reflection(self._base_closures(), {}, {}, n_deferred=3)
         assert "vram_status" in meta
         assert "vram_note" in meta
         assert "credibility_verdict" in meta
@@ -475,9 +484,7 @@ class TestBuildMetaReflection:
         assert "wall_time_note" in meta
 
     def test_vram_status_partially_resolved_when_048_resolved_and_033_open(self):
-        meta = retro._build_meta_reflection(
-            self._base_closures(), {}, {}, n_deferred=3
-        )
+        meta = retro._build_meta_reflection(self._base_closures(), {}, {}, n_deferred=3)
         assert meta["vram_status"] == "PARTIALLY_RESOLVED"
 
     def test_vram_status_fully_resolved_when_both_resolved_and_closed(self):
@@ -487,21 +494,15 @@ class TestBuildMetaReflection:
         assert meta["vram_status"] == "FULLY_RESOLVED"
 
     def test_miss_count_is_6(self):
-        meta = retro._build_meta_reflection(
-            self._base_closures(), {}, {}, n_deferred=3
-        )
+        meta = retro._build_meta_reflection(self._base_closures(), {}, {}, n_deferred=3)
         assert meta["retro_033_miss_count"] == 6
 
     def test_closures_list_includes_031_when_closed(self):
         results = {508: {"best_family": "gaussian_mixture", "retro_031_closed": True}}
-        meta = retro._build_meta_reflection(
-            self._base_closures(), {}, results, n_deferred=0
-        )
+        meta = retro._build_meta_reflection(self._base_closures(), {}, results, n_deferred=0)
         assert any("RETRO-031" in c for c in meta["closures_achieved_in_38"])
 
     def test_closures_list_includes_050_when_closed(self):
         results = {509: {"retro_050_closed": True, "energy_magnitude_better": True}}
-        meta = retro._build_meta_reflection(
-            self._base_closures(), {}, results, n_deferred=0
-        )
+        meta = retro._build_meta_reflection(self._base_closures(), {}, results, n_deferred=0)
         assert any("RETRO-050" in c for c in meta["closures_achieved_in_38"])

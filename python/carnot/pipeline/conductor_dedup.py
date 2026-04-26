@@ -138,10 +138,7 @@ class ConductorDedupCheck:
         Spec: REQ-INFRA-042, SCENARIO-INFRA-050
         """
         pattern = os.path.join(self.results_dir, f"experiment_{exp_id}*.json")
-        matches = [
-            p for p in glob.glob(pattern)
-            if not p.endswith("_partial.json")
-        ]
+        matches = [p for p in glob.glob(pattern) if not p.endswith("_partial.json")]
         if not matches:
             return False
 
@@ -154,7 +151,9 @@ class ConductorDedupCheck:
                     return True
             except (OSError, json.JSONDecodeError, ValueError):
                 # Corrupt or unreadable result file — treat as not complete.
-                _log.warning("ConductorDedupCheck: could not read '%s' — treating as incomplete", path)
+                _log.warning(
+                    "ConductorDedupCheck: could not read '%s' — treating as incomplete", path
+                )
 
         return False
 
@@ -256,14 +255,14 @@ class PartialResultHandoff:
         self.results_dir = results_dir
         # Track the most-recently installed template and state so the atexit/signal
         # handler can call save() without holding a reference in the closure.
-        self._active_template: "ExperimentTemplate | None" = None
+        self._active_template: ExperimentTemplate | None = None
         self._active_partial_state: dict | None = None
 
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
 
-    def install(self, template: "ExperimentTemplate") -> None:
+    def install(self, template: ExperimentTemplate) -> None:
         """Register atexit and SIGTERM handlers that serialize partial state on exit.
 
         Why both atexit AND SIGTERM?
@@ -299,7 +298,7 @@ class PartialResultHandoff:
             self._partial_path(template),
         )
 
-    def save(self, template: "ExperimentTemplate", partial_state: dict) -> None:
+    def save(self, template: ExperimentTemplate, partial_state: dict) -> None:
         """Write *partial_state* atomically to ``results/experiment_NNN_partial.json``.
 
         Why atomic write here:
@@ -338,7 +337,7 @@ class PartialResultHandoff:
         except Exception as exc:  # noqa: BLE001 — must not raise in interrupt handler
             _log.error("PartialResultHandoff: failed to write partial state to '%s': %s", path, exc)
 
-    def resume_if_available(self, template: "ExperimentTemplate") -> dict | None:
+    def resume_if_available(self, template: ExperimentTemplate) -> dict | None:
         """Return the partial state dict if a partial file exists, else None.
 
         Call this near the top of the experiment's main loop, AFTER ``install()``.
@@ -395,20 +394,26 @@ class PartialResultHandoff:
     # Private helpers
     # ------------------------------------------------------------------
 
-    def _partial_path(self, template: "ExperimentTemplate") -> str:
+    def _partial_path(self, template: ExperimentTemplate) -> str:
         """Return the path for the partial result file for *template*."""
         return os.path.join(self.results_dir, f"experiment_{template.exp_id}_partial.json")
 
     def _atexit_handler(self) -> None:
         """Write partial state on normal Python interpreter shutdown."""
         if self._active_template is not None and self._active_partial_state is not None:
-            _log.info("PartialResultHandoff atexit handler firing for Exp %s", self._active_template.exp_id)
+            _log.info(
+                "PartialResultHandoff atexit handler firing for Exp %s",
+                self._active_template.exp_id,
+            )
             self.save(self._active_template, self._active_partial_state)
 
     def _sigterm_handler(self, signum: int, frame: object) -> None:  # noqa: ARG002
         """Write partial state then re-raise SIGTERM so the process exits cleanly."""
         if self._active_template is not None and self._active_partial_state is not None:
-            _log.info("PartialResultHandoff SIGTERM handler firing for Exp %s", self._active_template.exp_id)
+            _log.info(
+                "PartialResultHandoff SIGTERM handler firing for Exp %s",
+                self._active_template.exp_id,
+            )
             self.save(self._active_template, self._active_partial_state)
         # Re-raise the default SIGTERM behaviour so the process terminates.
         signal.signal(signal.SIGTERM, signal.SIG_DFL)

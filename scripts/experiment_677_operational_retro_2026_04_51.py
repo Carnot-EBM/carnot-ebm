@@ -56,9 +56,7 @@ def load_experiment_results(repo_root: Path) -> dict[int, dict]:
     for exp_id, rel_path in _RESULT_FILES.items():
         full_path = repo_root / rel_path
         if not full_path.exists():
-            raise FileNotFoundError(
-                f"Experiment {exp_id} result not found: {full_path}"
-            )
+            raise FileNotFoundError(f"Experiment {exp_id} result not found: {full_path}")
         results[exp_id] = json.loads(full_path.read_text())
     return results
 
@@ -82,9 +80,7 @@ def compute_milestone_metrics(
         Cumulative experiment count from the prior retrospective.
     """
     # --- Wall-time and experiment counts ---
-    this_cycle_duration_s = sum(
-        float(r.get("duration_s", 0.0)) for r in results.values()
-    )
+    this_cycle_duration_s = sum(float(r.get("duration_s", 0.0)) for r in results.values())
     this_cycle_min = this_cycle_duration_s / 60.0
     total_wall_time_min = prior_wall_time_min + this_cycle_min
     n_experiments_this_cycle = len(results)
@@ -135,13 +131,13 @@ def compute_milestone_metrics(
 
     # RETRO-071: DualGPU proof required pynvml for utilization measurement;
     # pynvml was unavailable (pynvml_available=False in Exp 673 artifact).
-    retro_071_status = (
-        "resolved" if r673.get("retro_071_resolved", False) else "open_partial"
-    )
+    retro_071_status = "resolved" if r673.get("retro_071_resolved", False) else "open_partial"
 
     # --- Honest verdict summary ---
     vr_tag = "vr_positive" if vr_signed_improvement > 0 else "vr_negative"
-    manifest_tag = "manifest_confirmed" if manifest_consulted == "confirmed" else "manifest_unconfirmed"
+    manifest_tag = (
+        "manifest_confirmed" if manifest_consulted == "confirmed" else "manifest_unconfirmed"
+    )
     dualgpu_tag = "dualgpu_proven" if retro_071_status == "resolved" else "dualgpu_partial"
     retro033_tag = "retro033_closed" if retro_033_status == "closed" else "retro033_open"
     kv260_tag = "kv260_blocked" if kv260_hardware_latency_us is None else "kv260_active"

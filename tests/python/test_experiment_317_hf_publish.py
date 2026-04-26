@@ -22,6 +22,7 @@ import pytest
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_mock_api(
     existing_readme: str = "",
     whoami_result: dict | None = None,
@@ -317,7 +318,14 @@ class TestBuildFcvReadmeWithExp316:
 
         exp316 = {
             "per_variant_results": {
-                "all": {"Qwen3.5-0.8B": {"accuracy": 0.34, "ci_lower": 0.25, "ci_upper": 0.44, "n_total": 100}}
+                "all": {
+                    "Qwen3.5-0.8B": {
+                        "accuracy": 0.34,
+                        "ci_lower": 0.25,
+                        "ci_upper": 0.44,
+                        "n_total": 100,
+                    }
+                }
             },
             "n_gsm8k": 100,
             "n_humaneval": 20,
@@ -665,9 +673,7 @@ class TestResultsJsonSchema317:
     @pytest.fixture
     def results(self) -> dict:
         results_path = (
-            Path(__file__).parent.parent.parent
-            / "results"
-            / "experiment_317_hf_publish.json"
+            Path(__file__).parent.parent.parent / "results" / "experiment_317_hf_publish.json"
         )
         if not results_path.exists():
             pytest.skip("experiment_317_hf_publish.json not yet generated")

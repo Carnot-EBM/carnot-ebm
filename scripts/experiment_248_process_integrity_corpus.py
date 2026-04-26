@@ -128,9 +128,7 @@ def classify_reasoning(
         and cr.get("missing_clause_ids")
     )
     n_sound = sum(
-        1
-        for cr in non_final
-        if cr.get("premise_support", 0.0) >= _SOUND_PREMISE_SUPPORT_THRESHOLD
+        1 for cr in non_final if cr.get("premise_support", 0.0) >= _SOUND_PREMISE_SUPPORT_THRESHOLD
     )
     process_sound = (n_unsupported == 0) and (verdict != "violated")
     majority_sound = n_total > 0 and n_sound > n_unsupported
@@ -277,11 +275,13 @@ def _extract_reasoning_steps(typed_reasoning: dict[str, Any]) -> list[dict[str, 
     """Return a compact step list from a TypedReasoningIR dict."""
     steps = []
     for step in typed_reasoning.get("reasoning_steps", []):
-        steps.append({
-            "step_id": step.get("step_id", ""),
-            "kind": step.get("kind", ""),
-            "text": step.get("text", ""),
-        })
+        steps.append(
+            {
+                "step_id": step.get("step_id", ""),
+                "kind": step.get("kind", ""),
+                "text": step.get("text", ""),
+            }
+        )
     return steps
 
 
@@ -473,13 +473,17 @@ def build_code_entries(
 
                 # Steps for code: represent the code body as a single step
                 code_body: str = h.get("body", "")
-                steps = [
-                    {
-                        "step_id": "code_body",
-                        "kind": "implementation",
-                        "text": code_body,
-                    }
-                ] if code_body else []
+                steps = (
+                    [
+                        {
+                            "step_id": "code_body",
+                            "kind": "implementation",
+                            "text": code_body,
+                        }
+                    ]
+                    if code_body
+                    else []
+                )
 
                 corpus_id = (
                     f"pi248-{source_experiment}-{benchmark}-{model_slug}-{case_id}-it{iteration}"
@@ -628,9 +632,7 @@ def build_corpus(
                 "A repair attempt produced a correct answer AND the process is now sound "
                 "(all verifier checks pass)."
             ),
-            "clean": (
-                "Outcome is correct and the process is sound (no verifier violations)."
-            ),
+            "clean": ("Outcome is correct and the process is sound (no verifier violations)."),
         },
     }
 
@@ -738,6 +740,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

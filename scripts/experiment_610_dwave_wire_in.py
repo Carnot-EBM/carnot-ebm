@@ -135,8 +135,7 @@ def _test_hisr_wire_in() -> dict:
     # Validate: after incorrect chain, 'carry' and 'sign' should each be observed
     # once (from the high-signal indices 3 and 4).  After correct chain, nothing.
     hisr_filters_low_confidence = (
-        sum(counts_after_incorrect.values()) > 0
-        and sum(counts_after_correct.values()) == 0
+        sum(counts_after_incorrect.values()) > 0 and sum(counts_after_correct.values()) == 0
     )
 
     return {
@@ -221,14 +220,16 @@ def main() -> None:
     # -----------------------------------------------------------------------
     # Step 5: Build artifact
     # -----------------------------------------------------------------------
-    all_ok = all([
-        cpu_registered,
-        dwave_registered,
-        cpu_correct_type,
-        dwave_correct_type,
-        carnot_sampler_env_works,
-        hisr_results["hisr_filters_low_confidence"],
-    ])
+    all_ok = all(
+        [
+            cpu_registered,
+            dwave_registered,
+            cpu_correct_type,
+            dwave_correct_type,
+            carnot_sampler_env_works,
+            hisr_results["hisr_filters_low_confidence"],
+        ]
+    )
 
     honest_verdict = "dwave_wired_hisr_integrated" if all_ok else "partial_failure"
 

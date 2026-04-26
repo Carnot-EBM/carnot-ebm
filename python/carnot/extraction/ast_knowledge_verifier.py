@@ -43,8 +43,7 @@ from __future__ import annotations
 import ast
 import inspect
 import logging
-from dataclasses import dataclass, field
-from typing import Any
+from dataclasses import dataclass
 
 _log = logging.getLogger(__name__)
 
@@ -73,7 +72,7 @@ class KnowledgeBase:
         self._attrs: dict[str, frozenset[str]] = {}
 
     @classmethod
-    def build_from_modules(cls, module_names: list[str]) -> "KnowledgeBase":
+    def build_from_modules(cls, module_names: list[str]) -> KnowledgeBase:
         """Import each named module and record all its public attributes.
 
         Why both dir() and inspect.getmembers():

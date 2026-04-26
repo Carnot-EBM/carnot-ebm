@@ -76,15 +76,14 @@ _SAFEGUARD_SYSTEM = (
     "contains a prompt injection attempt. Nothing else — one word only."
 )
 
-_SAFEGUARD_USER_TEMPLATE = (
-    "Classify this user message as safe or unsafe (one word):\n\n{prompt}"
-)
+_SAFEGUARD_USER_TEMPLATE = "Classify this user message as safe or unsafe (one word):\n\n{prompt}"
 
 
 def main() -> None:
     """Run Exp 678 end-to-end with a 240-minute hard stop."""
     try:
         from carnot.pipeline.env_autofix import apply_env_autofix
+
         apply_env_autofix()
     except ImportError:
         pass
@@ -101,12 +100,10 @@ def main() -> None:
 
     DELIVERABLE = "results/experiment_678_prompt_injection_kan_true_distillation.json"
     V1_WEIGHTS_PATH = (
-        _REPO_ROOT / "python" / "carnot" / "models"
-        / "prompt_injection_kan_v1_weights.json"
+        _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_v1_weights.json"
     )
     V0_WEIGHTS_PATH = (
-        _REPO_ROOT / "python" / "carnot" / "models"
-        / "prompt_injection_kan_weights.json"
+        _REPO_ROOT / "python" / "carnot" / "models" / "prompt_injection_kan_weights.json"
     )
     CORPUS_DIR = _REPO_ROOT / "data" / "prompt_injection_distill"
 
@@ -194,12 +191,13 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
         _write_artifact(artifact, repo_root / deliverable)
         return
 
-    log.info("Loaded %d corpus examples (source labels preserved for agreement check)", len(corpus_examples))
+    log.info(
+        "Loaded %d corpus examples (source labels preserved for agreement check)",
+        len(corpus_examples),
+    )
 
     # Compute a stable hash of the prompts (not labels) to name the teacher cache.
-    prompts_content = json.dumps(
-        sorted(ex["text"] for ex in corpus_examples)
-    )
+    prompts_content = json.dumps(sorted(ex["text"] for ex in corpus_examples))
     corpus_sha = hashlib.sha256(prompts_content.encode()).hexdigest()[:16]
     teacher_cache_path = corpus_dir / f"teacher_outputs_{corpus_sha}.jsonl"
 
@@ -273,22 +271,24 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
             missing_count += 1
             continue
         label_str = "injection" if teacher_label_int == 1 else "benign"
-        teacher_labeled.append(InjectionExample(
-            text=ex["text"],
-            label=label_str,
-            source=f"teacher_distilled:{ex.get('source', 'unknown')}",
-        ))
+        teacher_labeled.append(
+            InjectionExample(
+                text=ex["text"],
+                label=label_str,
+                source=f"teacher_distilled:{ex.get('source', 'unknown')}",
+            )
+        )
         teacher_labels_map[ph] = teacher_label_int
 
     log.info(
         "Teacher labeled examples: %d (missing/unparseable: %d)",
-        len(teacher_labeled), missing_count,
+        len(teacher_labeled),
+        missing_count,
     )
 
     if len(teacher_labeled) < 100:
         log.error(
-            "Too few teacher-labeled examples (%d < 100) — "
-            "cannot train a meaningful classifier",
+            "Too few teacher-labeled examples (%d < 100) — cannot train a meaningful classifier",
             len(teacher_labeled),
         )
         artifact = tmpl.build_result(
@@ -324,7 +324,9 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
     agreement_rate = agreement_count / total_comparable if total_comparable > 0 else 0.0
     log.info(
         "Teacher vs. source agreement: %.4f (%d/%d)",
-        agreement_rate, agreement_count, total_comparable,
+        agreement_rate,
+        agreement_count,
+        total_comparable,
     )
 
     if agreement_rate >= 0.95:
@@ -355,6 +357,7 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
     log.info("Phase 5: KAN training on teacher labels (80/20 split)")
 
     import random
+
     rng = random.Random(678)
     rng.shuffle(teacher_labeled)
 
@@ -364,7 +367,8 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
 
     log.info(
         "Train: %d / Test: %d (teacher-labeled; benign=%d inj=%d train, benign=%d inj=%d test)",
-        len(train_examples), len(test_examples),
+        len(train_examples),
+        len(test_examples),
         sum(1 for e in train_examples if e.label == "benign"),
         sum(1 for e in train_examples if e.label == "injection"),
         sum(1 for e in test_examples if e.label == "benign"),
@@ -420,7 +424,8 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
     v1_median_inference_ms, latency_flag = _latency_check(checker, n=1000)
     log.info(
         "v1 Median inference: %.3f ms (flag: %s)",
-        v1_median_inference_ms, latency_flag,
+        v1_median_inference_ms,
+        latency_flag,
     )
 
     # -----------------------------------------------------------------------
@@ -442,7 +447,9 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
         log.info(
             "v1 - v0 delta AUROC: %+.4f (%s)",
             v0_vs_v1_delta,
-            "improvement" if v0_vs_v1_delta >= 0 else "regression (expected if v0 overfit artifacts)",
+            "improvement"
+            if v0_vs_v1_delta >= 0
+            else "regression (expected if v0 overfit artifacts)",
         )
 
     # -----------------------------------------------------------------------
@@ -508,7 +515,10 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
     log.info(
         "Result written: status=%s honest_verdict=%s v1_auroc=%.4f "
         "teacher_agreement=%.4f v0_vs_v1_delta=%s",
-        status, honest_verdict, v1_auroc, agreement_rate,
+        status,
+        honest_verdict,
+        v1_auroc,
+        agreement_rate,
         f"{v0_vs_v1_delta:+.4f}" if v0_vs_v1_delta is not None else "N/A",
     )
 
@@ -547,7 +557,12 @@ def _load_corpus(corpus_dir: Path, log) -> list[dict]:
                     if text and text not in seen_texts:
                         seen_texts[text] = ex
                 after = len(seen_texts)
-                log.info("Corpus file %s: %d examples, %d new unique prompts", f.name, len(data), after - before)
+                log.info(
+                    "Corpus file %s: %d examples, %d new unique prompts",
+                    f.name,
+                    len(data),
+                    after - before,
+                )
         except Exception as exc:
             log.warning("Could not parse %s: %s", f.name, exc)
 
@@ -662,7 +677,7 @@ def _run_teacher_inference(
             user_msg = _SAFEGUARD_USER_TEMPLATE.format(prompt=prompt_text)
             messages = [
                 {"role": "system", "content": _SAFEGUARD_SYSTEM},
-                {"role": "user",   "content": user_msg},
+                {"role": "user", "content": user_msg},
             ]
 
             t0 = time.perf_counter()
@@ -703,12 +718,16 @@ def _run_teacher_inference(
                 )
                 log.info(
                     "Teacher inference: %d/%d done (%d valid labels), last=%.2f s",
-                    i + 1, total, n_labeled, elapsed_s,
+                    i + 1,
+                    total,
+                    n_labeled,
+                    elapsed_s,
                 )
 
     log.info(
         "Teacher inference complete: %d prompts processed, cache now at %s",
-        total, cache_path,
+        total,
+        cache_path,
     )
     return updated_cache
 
@@ -751,8 +770,10 @@ def _parse_teacher_output(raw: str) -> tuple[int, str]:
         marker = f"<|channel|>{channel_name}<|message|>"
         pos = raw_lower.rfind(marker.lower())
         if pos != -1:
-            verdict_text = raw[pos + len(marker):].strip()
-            first_word = verdict_text.split()[0].lower().rstrip(".,;:") if verdict_text.split() else ""
+            verdict_text = raw[pos + len(marker) :].strip()
+            first_word = (
+                verdict_text.split()[0].lower().rstrip(".,;:") if verdict_text.split() else ""
+            )
             if first_word.startswith("unsafe"):
                 return 1, f"{channel_name}_channel_unsafe: {raw[:120]}"
             elif first_word.startswith("safe"):

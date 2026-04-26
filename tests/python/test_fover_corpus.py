@@ -56,7 +56,10 @@ class TestFOVERCorpusEntry:
 
     def test_default_cot_steps(self) -> None:
         e = FOVERCorpusEntry(
-            question="q", response="r", model_id="m", is_correct=False,
+            question="q",
+            response="r",
+            model_id="m",
+            is_correct=False,
             constraint_types=[],
         )
         assert e.cot_steps == []
@@ -82,7 +85,12 @@ class TestMergeFoverSources:
         data = [
             {"question_id": "q1", "step_text": "step A", "label": "correct", "confidence": 1.0},
             {"question_id": "q1", "step_text": "step B", "label": "incorrect", "confidence": 1.0},
-            {"question_id": "q2", "step_text": "step C", "label": "not_verifiable", "confidence": 0.0},
+            {
+                "question_id": "q2",
+                "step_text": "step C",
+                "label": "not_verifiable",
+                "confidence": 0.0,
+            },
         ]
         f = tmp_path / "fover_steps.json"
         _write_json(f, data)
@@ -120,7 +128,13 @@ class TestMergeFoverSources:
     def test_exp538_cot_schema(self, tmp_path: Path) -> None:
         # Exp 538 indirect format: cot_text, model_id, correct.
         data = [
-            {"question": "Q1", "cot_text": "some CoT", "correct": False, "model_id": "ModelA", "latency_s": 1.0}
+            {
+                "question": "Q1",
+                "cot_text": "some CoT",
+                "correct": False,
+                "model_id": "ModelA",
+                "latency_s": 1.0,
+            }
         ]
         f = tmp_path / "cot_pairs.json"
         _write_json(f, data)
@@ -249,13 +263,14 @@ class TestBalanceCorpus:
 
     def test_already_balanced_no_change(self) -> None:
         # Three equal types → entropy ~1.585 >= 1.5, no change.
-        entries = [
-            FOVERCorpusEntry(f"q{i}", "r", "m", False, ["correct"]) for i in range(10)
-        ] + [
-            FOVERCorpusEntry(f"q{i+10}", "r", "m", False, ["incorrect"]) for i in range(10)
-        ] + [
-            FOVERCorpusEntry(f"q{i+20}", "r", "m", False, ["not_verifiable"]) for i in range(10)
-        ]
+        entries = (
+            [FOVERCorpusEntry(f"q{i}", "r", "m", False, ["correct"]) for i in range(10)]
+            + [FOVERCorpusEntry(f"q{i + 10}", "r", "m", False, ["incorrect"]) for i in range(10)]
+            + [
+                FOVERCorpusEntry(f"q{i + 20}", "r", "m", False, ["not_verifiable"])
+                for i in range(10)
+            ]
+        )
         balanced = balance_corpus(entries, target_entropy=1.5)
         assert len(balanced) == len(entries)
 
@@ -264,9 +279,7 @@ class TestBalanceCorpus:
         # With 10 correct entries and ~10 incorrect, 50/50 split hits exactly 1.0 bits.
         entries = [
             FOVERCorpusEntry(f"carry_{i}", "r", "m", False, ["incorrect"]) for i in range(20)
-        ] + [
-            FOVERCorpusEntry(f"ok_{i}", "r", "m", True, ["correct"]) for i in range(10)
-        ]
+        ] + [FOVERCorpusEntry(f"ok_{i}", "r", "m", True, ["correct"]) for i in range(10)]
         balanced = balance_corpus(entries, target_entropy=1.0)
         div = compute_corpus_diversity(balanced)
         assert div["constraint_type_entropy"] >= 1.0
@@ -288,9 +301,7 @@ class TestBalanceCorpus:
 
     def test_single_type_below_min_size_stops(self) -> None:
         # Only 5 entries, all 'correct' — guard triggers at <=10, no removal possible.
-        entries = [
-            FOVERCorpusEntry(f"q{i}", "r", "m", True, ["correct"]) for i in range(5)
-        ]
+        entries = [FOVERCorpusEntry(f"q{i}", "r", "m", True, ["correct"]) for i in range(5)]
         balanced = balance_corpus(entries, target_entropy=1.5)
         # Too few to remove; returns as-is (len=5 already <= 10).
         assert len(balanced) == len(entries)
@@ -298,9 +309,7 @@ class TestBalanceCorpus:
     def test_returns_copy_not_mutation(self) -> None:
         entries = [
             FOVERCorpusEntry(f"carry_{i}", "r", "m", False, ["incorrect"]) for i in range(20)
-        ] + [
-            FOVERCorpusEntry(f"ok_{i}", "r", "m", True, ["correct"]) for i in range(5)
-        ]
+        ] + [FOVERCorpusEntry(f"ok_{i}", "r", "m", True, ["correct"]) for i in range(5)]
         original_len = len(entries)
         balance_corpus(entries, target_entropy=1.0)
         # Original list must not be mutated.

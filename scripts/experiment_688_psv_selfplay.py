@@ -82,6 +82,7 @@ GSM8K_INDEX_END = 599  # inclusive
 # Synthetic mode helpers
 # ---------------------------------------------------------------------------
 
+
 def _load_synthetic_pairs(pairs_path: Path) -> list[dict]:
     """Load pre-generated question/response/label triples from live_pairs_578.json.
 
@@ -133,7 +134,9 @@ def _make_synthetic_fns(
     return inference_fn, verify_fn, questions
 
 
-def _make_synthetic_gsm8k_fallback() -> tuple[Callable[[str], str], Callable[[str], bool], list[str]]:
+def _make_synthetic_gsm8k_fallback() -> tuple[
+    Callable[[str], str], Callable[[str], bool], list[str]
+]:
     """Build a minimal synthetic fallback when live_pairs_578.json is missing.
 
     Returns 200 simple arithmetic questions with correct/incorrect responses
@@ -166,6 +169,7 @@ def _make_synthetic_gsm8k_fallback() -> tuple[Callable[[str], str], Callable[[st
 # Linear regression slope
 # ---------------------------------------------------------------------------
 
+
 def _linear_slope(values: list[float]) -> float:
     """Compute the least-squares slope of a list of y-values against x=[0,1,...,n-1].
 
@@ -190,6 +194,7 @@ def _linear_slope(values: list[float]) -> float:
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run the PSV self-play experiment."""
@@ -219,6 +224,7 @@ def main() -> None:
         # This prevents accidental GPU allocation during conductor runs that don't
         # have GPU resources allocated for this step.
         import os  # noqa: PLC0415
+
         force_live = os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
         if fr11_confirmed and force_live:
             # Live mode: use real GPU inference.
@@ -255,9 +261,7 @@ def main() -> None:
 
         iteration_results = []
         for i in range(N_ITERATIONS):
-            q_slice = selected_questions[
-                i * N_QUESTIONS_PER_ITER: (i + 1) * N_QUESTIONS_PER_ITER
-            ]
+            q_slice = selected_questions[i * N_QUESTIONS_PER_ITER : (i + 1) * N_QUESTIONS_PER_ITER]
             # Pad with first N questions if slice is shorter than expected
             while len(q_slice) < N_QUESTIONS_PER_ITER:
                 q_slice = q_slice + all_questions[: N_QUESTIONS_PER_ITER - len(q_slice)]
@@ -353,7 +357,7 @@ def _run_live_mode(tmpl: ExperimentTemplate) -> None:  # type: ignore[name-defin
 
     iteration_results = []
     for i in range(N_ITERATIONS):
-        q_slice = selected_questions[i * N_QUESTIONS_PER_ITER: (i + 1) * N_QUESTIONS_PER_ITER]
+        q_slice = selected_questions[i * N_QUESTIONS_PER_ITER : (i + 1) * N_QUESTIONS_PER_ITER]
         while len(q_slice) < N_QUESTIONS_PER_ITER:
             q_slice = q_slice + all_questions[: N_QUESTIONS_PER_ITER - len(q_slice)]
         psv_iter = loop.run_iteration(q_slice, inference_fn, verify_fn, iteration=i)
@@ -369,8 +373,7 @@ def _run_live_mode(tmpl: ExperimentTemplate) -> None:  # type: ignore[name-defin
         )
 
     fp_rate_per_iteration = [
-        r["fp_count"] / r["n_questions"] if r["n_questions"] > 0 else 0.0
-        for r in iteration_results
+        r["fp_count"] / r["n_questions"] if r["n_questions"] > 0 else 0.0 for r in iteration_results
     ]
     fp_rate_trend_slope = _linear_slope(fp_rate_per_iteration)
 

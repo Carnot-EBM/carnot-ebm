@@ -129,7 +129,9 @@ def main() -> None:
         # ----------------------------------------------------------------
         precommit_config = _repo_root / ".pre-commit-config.yaml"
         config_text = precommit_config.read_text(encoding="utf-8")
-        hook_installed = "batching-check" in config_text and "batching_precommit_check" in config_text
+        hook_installed = (
+            "batching-check" in config_text and "batching_precommit_check" in config_text
+        )
 
         # ----------------------------------------------------------------
         # Step 3: build artifact
@@ -141,7 +143,9 @@ def main() -> None:
                 "pre_commit_config_updated": hook_installed,
                 "violation_detection_works": violation_detection_works,
                 "false_positive_rate": false_positive_rate,
-                "retro_045_closed": hook_installed and violation_detection_works and false_positive_rate == 0.0,
+                "retro_045_closed": hook_installed
+                and violation_detection_works
+                and false_positive_rate == 0.0,
                 "honest_verdict": "batching_hook_installed",
                 "bad_violations_found": len(bad_violations),
                 "good_violations_found": len(good_violations),

@@ -113,7 +113,8 @@ def compute_svamp_auc_post_filter(
     """
     # Filter to high-confidence labeled pairs only.
     high_conf = [
-        r for r in svamp_results
+        r
+        for r in svamp_results
         if r.labeling_successful
         and r.label_value is not None
         and (r.label_confidence or 0.0) >= 0.5
@@ -137,9 +138,7 @@ def compute_svamp_auc_post_filter(
         for r in high_conf
     ]
 
-    token_to_idx = build_tfidf_features(
-        [s["step_text"] for s in raw], vocab_size=VOCAB_SIZE
-    )
+    token_to_idx = build_tfidf_features([s["step_text"] for s in raw], vocab_size=VOCAB_SIZE)
     corpus = prepare_corpus(raw, token_to_idx, vocab_size=VOCAB_SIZE)
 
     if len(corpus) < 2:
@@ -154,11 +153,13 @@ def compute_svamp_auc_post_filter(
 
     _key = jax.random.PRNGKey(0)
     scores = [
-        float(predictor.predict(
-            jnp.array(item["feature"], dtype=jnp.float32),
-            jnp.array(item["context"], dtype=jnp.float32),
-            _key,
-        ))
+        float(
+            predictor.predict(
+                jnp.array(item["feature"], dtype=jnp.float32),
+                jnp.array(item["context"], dtype=jnp.float32),
+                _key,
+            )
+        )
         for item in corpus
     ]
     label_ints = [item["label"] for item in corpus]

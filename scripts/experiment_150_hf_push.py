@@ -21,7 +21,7 @@ import os
 import shutil
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -153,8 +153,8 @@ def _build_benchmark_section(exp138: dict, exp140: dict) -> str:
 | Logit projection (energy gradient) | {proj_p50:.3f} ms | {proj_p99:.3f} ms |
 | Total per-token (grad + projection) | {total_p50:.3f} ms | {total_p99:.3f} ms |
 
-Exp-140 pass criterion: total p50 < 5 ms — **{'PASSED' if exp140['success_criterion']['passed'] else 'FAILED'}**
-(actual {exp140['success_criterion']['total_p50_batch1_ms']:.4f} ms vs 5.0 ms threshold).
+Exp-140 pass criterion: total p50 < 5 ms — **{"PASSED" if exp140["success_criterion"]["passed"] else "FAILED"}**
+(actual {exp140["success_criterion"]["total_p50_batch1_ms"]:.4f} ms vs 5.0 ms threshold).
 """
 
 
@@ -214,6 +214,7 @@ def update_adapter_readme(exp138: dict, exp140: dict) -> None:
         rest_after = current[idx:]
         # Locate the next top-level heading after Known Limitations
         import re
+
         next_heading_match = re.search(r"\n## ", rest_after[3:])  # skip the ## itself
         if next_heading_match:
             end_idx = idx + 3 + next_heading_match.start()
@@ -226,12 +227,7 @@ def update_adapter_readme(exp138: dict, exp140: dict) -> None:
             )
         else:
             # Known Limitations is the last section
-            new_readme = (
-                current[:idx]
-                + bench_section
-                + install_section
-                + limitations_section
-            )
+            new_readme = current[:idx] + bench_section + install_section + limitations_section
     else:
         # No existing Limitations section — append everything at the end
         new_readme = current + bench_section + install_section + limitations_section
@@ -340,9 +336,7 @@ def generate_model_readme_updates() -> int:
                 "  - phase-1-research\n"
                 "  - carnot\n"
                 "license: apache-2.0\n"
-                "---\n\n"
-                + PHASE1_PREAMBLE
-                + f"# {model_name}\n\n"
+                "---\n\n" + PHASE1_PREAMBLE + f"# {model_name}\n\n"
                 "<!-- TODO: paste existing HuggingFace model card body here -->\n"
             )
 
@@ -371,7 +365,7 @@ def save_results(
         "skip_reason": skip_reason,
         "hf_url": hf_url,
         "readme_updates_generated": readme_updates_generated,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }
     RESULTS_PATH.write_text(json.dumps(payload, indent=2) + "\n")
     print(f"[RESULTS] Saved: {RESULTS_PATH}")

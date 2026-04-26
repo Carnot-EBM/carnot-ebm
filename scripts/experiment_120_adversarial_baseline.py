@@ -145,9 +145,12 @@ def load_adversarial_data() -> dict[str, list[dict[str, Any]]]:
     print("  adversarial_gsm8k_data.json not found. Regenerating via Exp 119 logic...")
     try:
         import subprocess
+
         result = subprocess.run(
             [sys.executable, str(REPO_ROOT / "scripts/experiment_119_adversarial_gsm8k.py")],
-            capture_output=True, text=True, timeout=120,
+            capture_output=True,
+            text=True,
+            timeout=120,
         )
         if result.returncode == 0 and ADVERSARIAL_DATA_PATH.exists():
             print("  Regenerated successfully.")
@@ -344,10 +347,12 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
         try:
             print(f"    Loading {model_name} on {device}...")
             tokenizer = AutoTokenizer.from_pretrained(
-                model_name, trust_remote_code=trust,
+                model_name,
+                trust_remote_code=trust,
             )
             model = AutoModelForCausalLM.from_pretrained(
-                model_name, trust_remote_code=trust,
+                model_name,
+                trust_remote_code=trust,
                 torch_dtype=torch.float16 if device == "cuda" else None,
             )
             if device == "cuda":
@@ -360,7 +365,9 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
                 test_input = {k: v.cuda() for k, v in test_input.items()}
             with torch.no_grad():
                 _ = model.generate(
-                    **test_input, max_new_tokens=4, do_sample=False,
+                    **test_input,
+                    max_new_tokens=4,
+                    do_sample=False,
                     pad_token_id=tokenizer.eos_token_id,
                 )
             print(f"    Smoke test passed.")
@@ -382,6 +389,7 @@ def unload_model(model: Any, tokenizer: Any, device: str) -> None:
     del model, tokenizer
     try:
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
     except ImportError:
@@ -413,13 +421,17 @@ def generate_response(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             text = prompt
@@ -437,7 +449,7 @@ def generate_response(
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:],
+        outputs[0, inputs["input_ids"].shape[1] :],
         skip_special_tokens=True,
     )
 
@@ -521,7 +533,9 @@ def simulate_response_adversarial(
         if rng.random() < 0.50:
             # Extract injected numbers from the perturbed problem.
             original_nums = set(re.findall(r"\d+", item.get("original_problem", "")))
-            perturbed_nums = list(set(re.findall(r"\d+", item["perturbed_problem"])) - original_nums)
+            perturbed_nums = list(
+                set(re.findall(r"\d+", item["perturbed_problem"])) - original_nums
+            )
             if perturbed_nums:
                 distractor = int(rng.choice(perturbed_nums))
                 # Model uses distractor in calculation, produces wrong answer.
@@ -534,9 +548,7 @@ def simulate_response_adversarial(
                 )
 
     # Regular error types: arithmetic, logic, reading.
-    error_type = rng.choices(
-        ["arithmetic", "logic", "reading"], weights=[50, 35, 15], k=1
-    )[0]
+    error_type = rng.choices(["arithmetic", "logic", "reading"], weights=[50, 35, 15], k=1)[0]
 
     if error_type == "arithmetic":
         step1 = rng.randint(1, max(1, abs(gt) // 2 + 1))
@@ -551,17 +563,10 @@ def simulate_response_adversarial(
     elif error_type == "logic":
         offset = rng.choice([-20, -10, -5, 5, 10, 20])
         wrong = gt + offset
-        return (
-            f"Let me work through this.\n"
-            f"The result is {wrong}.\n"
-            f"Answer: {wrong}"
-        )
+        return f"Let me work through this.\nThe result is {wrong}.\nAnswer: {wrong}"
     else:
         wrong = gt * rng.choice([2, 3]) + rng.randint(-50, 50)
-        return (
-            f"I think the answer is {wrong}.\n"
-            f"Answer: {wrong}"
-        )
+        return f"I think the answer is {wrong}.\nAnswer: {wrong}"
 
 
 # ---------------------------------------------------------------------------
@@ -666,9 +671,7 @@ def run_variant(
         if use_live:
             response = generate_response(prompt, tokenizer, model_obj, device)
         else:
-            response = simulate_response_adversarial(
-                item, model_name, variant_key, sim_rng
-            )
+            response = simulate_response_adversarial(item, model_name, variant_key, sim_rng)
 
         elapsed = time.time() - t0
         extracted = extract_final_number(response)
@@ -679,14 +682,16 @@ def run_variant(
         if not correct:
             error_type = categorize_error(item, response, extracted, variant_key)
 
-        results.append({
-            "id": item["id"],
-            "correct": correct,
-            "extracted_answer": extracted,
-            "ground_truth": gt,
-            "error_type": error_type,
-            "time_s": elapsed,
-        })
+        results.append(
+            {
+                "id": item["id"],
+                "correct": correct,
+                "extracted_answer": extracted,
+                "ground_truth": gt,
+                "error_type": error_type,
+                "time_s": elapsed,
+            }
+        )
 
     return results
 
@@ -724,8 +729,12 @@ def compute_variant_metrics(
     correct_flags = [r["correct"] for r in results]
     accuracy = sum(correct_flags) / n if n > 0 else 0.0
 
-    error_types = ["arithmetic_error", "irrelevant_number_error",
-                   "logic_error", "reading_comprehension_error"]
+    error_types = [
+        "arithmetic_error",
+        "irrelevant_number_error",
+        "logic_error",
+        "reading_comprehension_error",
+    ]
     error_counts: dict[str, int] = {et: 0 for et in error_types}
     for r in results:
         if not r["correct"] and r["error_type"]:
@@ -808,8 +817,14 @@ def run_experiment() -> dict[str, Any]:
 
             t_start = time.time()
             per_item = run_variant(
-                variant_key, items, model_name,
-                tokenizer, model_obj, device, use_live, sim_rng,
+                variant_key,
+                items,
+                model_name,
+                tokenizer,
+                model_obj,
+                device,
+                use_live,
+                sim_rng,
             )
             t_end = time.time()
 
@@ -822,9 +837,10 @@ def run_experiment() -> dict[str, Any]:
                 f"    Accuracy: {metrics['accuracy_pct']:.1f}%"
                 + (
                     f"  (drop: {metrics['accuracy_drop_pp']:+.1f} pp)"
-                    if metrics["accuracy_drop_pp"] is not None else ""
+                    if metrics["accuracy_drop_pp"] is not None
+                    else ""
                 )
-                + f"  [95% CI: {metrics['ci_95_lo']*100:.1f}–{metrics['ci_95_hi']*100:.1f}%]"
+                + f"  [95% CI: {metrics['ci_95_lo'] * 100:.1f}–{metrics['ci_95_hi'] * 100:.1f}%]"
                 + f"  ({t_end - t_start:.1f}s)"
             )
 

@@ -108,9 +108,7 @@ KRIA_HOST = os.environ.get("CARNOT_KRIA_HOST", "kria")
 # the basename of the .bit.bin / .dtbo files inside it.  See
 # hardware/kv260/app/package_app.sh which produces the bundle under this name.
 KRIA_APP_NAME = "carnot_ising_v2_n64"
-KRIA_APP_BUNDLE_DIR = (
-    _REPO_ROOT / "hardware" / "kv260" / "app" / "build" / KRIA_APP_NAME
-)
+KRIA_APP_BUNDLE_DIR = _REPO_ROOT / "hardware" / "kv260" / "app" / "build" / KRIA_APP_NAME
 # Raw .bit is kept for reference/sha256 but is NOT what gets loaded — Kria's
 # in-kernel FPGA manager requires the bootgen-wrapped .bit.bin inside the app
 # bundle.  See the .48 retro / Exp 661 first run which failed with
@@ -139,7 +137,7 @@ COUPL_BASE = 0x06000
 SPOUT_BASE = 0x0A010
 
 SPEEDUP_TARGET = 10.0
-MARGINAL_ABS_ERR_THRESHOLD = 0.05   # 5 pp
+MARGINAL_ABS_ERR_THRESHOLD = 0.05  # 5 pp
 CORRELATION_THRESHOLD = 0.90
 ENERGY_KL_THRESHOLD = 0.20
 
@@ -162,9 +160,18 @@ HONEST_VERDICTS = {
 def run_ssh(cmd: str, timeout: int = 30) -> tuple[int, str, str]:
     """Run a command on kria via ssh.  Returns (returncode, stdout, stderr)."""
     result = subprocess.run(
-        ["ssh", "-o", "StrictHostKeyChecking=accept-new", "-o", "ConnectTimeout=10",
-         KRIA_HOST, cmd],
-        capture_output=True, text=True, timeout=timeout,
+        [
+            "ssh",
+            "-o",
+            "StrictHostKeyChecking=accept-new",
+            "-o",
+            "ConnectTimeout=10",
+            KRIA_HOST,
+            cmd,
+        ],
+        capture_output=True,
+        text=True,
+        timeout=timeout,
     )
     return result.returncode, result.stdout, result.stderr
 
@@ -172,9 +179,18 @@ def run_ssh(cmd: str, timeout: int = 30) -> tuple[int, str, str]:
 def run_scp(local: str, remote: str, timeout: int = 120) -> tuple[int, str, str]:
     """Copy a file to kria."""
     result = subprocess.run(
-        ["scp", "-o", "StrictHostKeyChecking=accept-new", "-o", "ConnectTimeout=10",
-         local, f"{KRIA_HOST}:{remote}"],
-        capture_output=True, text=True, timeout=timeout,
+        [
+            "scp",
+            "-o",
+            "StrictHostKeyChecking=accept-new",
+            "-o",
+            "ConnectTimeout=10",
+            local,
+            f"{KRIA_HOST}:{remote}",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=timeout,
     )
     return result.returncode, result.stdout, result.stderr
 
@@ -188,6 +204,7 @@ def build_sk_problem(n: int, max_degree: int, beta: float, seed: int) -> dict:
     thermal distribution and stays within the RTL's adjacency-list layout.
     """
     import numpy as np  # deferred import so preflight can run without scipy/numpy
+
     rng = np.random.default_rng(seed)
     bias = rng.standard_normal(n).astype(np.float32) * 0.1  # small random biases
     adj = np.full((n, max_degree), fill_value=-1, dtype=np.int32)
@@ -225,6 +242,7 @@ def cpu_gibbs_reference(problem: dict, n_samples: int, n_steps: int) -> dict:
     at the same algorithmic granularity".
     """
     import numpy as np
+
     rng = np.random.default_rng(problem["seed"] + 1)
     n = problem["n_spins"]
     md = problem["max_degree"]
@@ -273,25 +291,33 @@ def preflight(tmpl: ExperimentTemplate) -> tuple[bool, str | None, dict]:
     ctx: dict = {}
 
     if not LOCAL_BITSTREAM.exists():
-        return False, HONEST_VERDICTS["no_bitstream"], {
-            "expected_bitstream_path": str(LOCAL_BITSTREAM),
-            "reason": (
-                f"Local bitstream not found at {LOCAL_BITSTREAM}. "
-                f"Run: vivado -mode batch -source hardware/kv260/build_bd.tcl"
-            ),
-        }
+        return (
+            False,
+            HONEST_VERDICTS["no_bitstream"],
+            {
+                "expected_bitstream_path": str(LOCAL_BITSTREAM),
+                "reason": (
+                    f"Local bitstream not found at {LOCAL_BITSTREAM}. "
+                    f"Run: vivado -mode batch -source hardware/kv260/build_bd.tcl"
+                ),
+            },
+        )
     ctx["local_bitstream_size_bytes"] = LOCAL_BITSTREAM.stat().st_size
     ctx["local_bitstream_sha256"] = hashlib.sha256(LOCAL_BITSTREAM.read_bytes()).hexdigest()
 
     rc, out, err = run_ssh("uname -a", timeout=15)
     if rc != 0:
-        return False, HONEST_VERDICTS["ssh_fail"], {
-            "reason": f"ssh {KRIA_HOST} returned {rc}: {err.strip() or 'no stderr'}",
-            "hint": (
-                "Confirm CARNOT_KRIA_HOST resolves, ssh keys are configured, "
-                "and the KV260 board is powered on and reachable."
-            ),
-        }
+        return (
+            False,
+            HONEST_VERDICTS["ssh_fail"],
+            {
+                "reason": f"ssh {KRIA_HOST} returned {rc}: {err.strip() or 'no stderr'}",
+                "hint": (
+                    "Confirm CARNOT_KRIA_HOST resolves, ssh keys are configured, "
+                    "and the KV260 board is powered on and reachable."
+                ),
+            },
+        )
     ctx["kria_uname"] = out.strip()
     return True, None, ctx
 
@@ -321,14 +347,18 @@ def deploy_bitstream(ctx: dict) -> tuple[bool, str | None, dict]:
     deploy: dict = {}
 
     if not KRIA_APP_BUNDLE_DIR.is_dir():
-        return False, HONEST_VERDICTS["load_fail"], {
-            "phase": "bundle_check",
-            "reason": (
-                f"Kria app bundle not found at {KRIA_APP_BUNDLE_DIR}. "
-                f"Run: source /tools/Xilinx/2025.2.1/Vivado/settings64.sh && "
-                f"CARNOT_DTC_ON_KRIA=1 hardware/kv260/app/package_app.sh"
-            ),
-        }
+        return (
+            False,
+            HONEST_VERDICTS["load_fail"],
+            {
+                "phase": "bundle_check",
+                "reason": (
+                    f"Kria app bundle not found at {KRIA_APP_BUNDLE_DIR}. "
+                    f"Run: source /tools/Xilinx/2025.2.1/Vivado/settings64.sh && "
+                    f"CARNOT_DTC_ON_KRIA=1 hardware/kv260/app/package_app.sh"
+                ),
+            },
+        )
     deploy["app_bundle_dir"] = str(KRIA_APP_BUNDLE_DIR)
     deploy["app_bundle_files"] = sorted(p.name for p in KRIA_APP_BUNDLE_DIR.iterdir())
 
@@ -336,32 +366,54 @@ def deploy_bitstream(ctx: dict) -> tuple[bool, str | None, dict]:
     remote_tmp = f"/tmp/{KRIA_APP_NAME}"
     rc, _, err = run_ssh(f"rm -rf {remote_tmp}", timeout=15)
     if rc != 0:
-        return False, HONEST_VERDICTS["load_fail"], {
-            "phase": "cleanup_tmp",
-            "reason": f"rm -rf {remote_tmp} failed: {err.strip()}",
-        }
+        return (
+            False,
+            HONEST_VERDICTS["load_fail"],
+            {
+                "phase": "cleanup_tmp",
+                "reason": f"rm -rf {remote_tmp} failed: {err.strip()}",
+            },
+        )
     result = subprocess.run(
-        ["scp", "-r", "-o", "StrictHostKeyChecking=accept-new",
-         "-o", "ConnectTimeout=10",
-         str(KRIA_APP_BUNDLE_DIR), f"{KRIA_HOST}:/tmp/"],
-        capture_output=True, text=True, timeout=180,
+        [
+            "scp",
+            "-r",
+            "-o",
+            "StrictHostKeyChecking=accept-new",
+            "-o",
+            "ConnectTimeout=10",
+            str(KRIA_APP_BUNDLE_DIR),
+            f"{KRIA_HOST}:/tmp/",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=180,
     )
     if result.returncode != 0:
-        return False, HONEST_VERDICTS["load_fail"], {
-            "phase": "scp_bundle",
-            "reason": f"scp -r failed: {result.stderr.strip()}",
-        }
+        return (
+            False,
+            HONEST_VERDICTS["load_fail"],
+            {
+                "phase": "scp_bundle",
+                "reason": f"scp -r failed: {result.stderr.strip()}",
+            },
+        )
     deploy["remote_bundle_tmp"] = remote_tmp
 
     target = f"/lib/firmware/xilinx/{KRIA_APP_NAME}"
     rc, _, err = run_ssh(
-        f"sudo rm -rf {target} && sudo mv {remote_tmp} {target}", timeout=30,
+        f"sudo rm -rf {target} && sudo mv {remote_tmp} {target}",
+        timeout=30,
     )
     if rc != 0:
-        return False, HONEST_VERDICTS["load_fail"], {
-            "phase": "install_bundle",
-            "reason": f"sudo mv -> {target} failed: {err.strip()}",
-        }
+        return (
+            False,
+            HONEST_VERDICTS["load_fail"],
+            {
+                "phase": "install_bundle",
+                "reason": f"sudo mv -> {target} failed: {err.strip()}",
+            },
+        )
     deploy["installed_bundle"] = target
 
     # Unload any previously-loaded app to avoid "PL is already loaded" races.
@@ -369,11 +421,15 @@ def deploy_bitstream(ctx: dict) -> tuple[bool, str | None, dict]:
 
     rc, out, err = run_ssh(f"sudo xmutil loadapp {KRIA_APP_NAME}", timeout=60)
     if rc != 0:
-        return False, HONEST_VERDICTS["load_fail"], {
-            "phase": "xmutil_loadapp",
-            "reason": f"xmutil loadapp returned {rc}; stdout={out.strip()}; stderr={err.strip()}",
-            "remote_bundle_files": _remote_ls(target),
-        }
+        return (
+            False,
+            HONEST_VERDICTS["load_fail"],
+            {
+                "phase": "xmutil_loadapp",
+                "reason": f"xmutil loadapp returned {rc}; stdout={out.strip()}; stderr={err.strip()}",
+                "remote_bundle_files": _remote_ls(target),
+            },
+        )
     deploy["xmutil_loadapp_stdout"] = out.strip()
 
     rc, out, err = run_ssh("xrt-smi examine || true", timeout=15)
@@ -517,6 +573,7 @@ with open(args.out_json, "w") as fh:
 def run_sampler_on_kria(problem: dict) -> tuple[bool, str | None, dict]:
     """Push a helper to kria, transfer the problem JSON, execute, read back."""
     import tempfile
+
     helper_remote = "/tmp/carnot_axi_helper.py"
     problem_remote = "/tmp/carnot_problem.json"
     result_remote = "/tmp/carnot_fpga_samples.json"
@@ -533,9 +590,14 @@ def run_sampler_on_kria(problem: dict) -> tuple[bool, str | None, dict]:
         for local, remote in [(helper_local, helper_remote), (problem_local, problem_remote)]:
             rc, _, err = run_scp(local, remote, timeout=30)
             if rc != 0:
-                return False, HONEST_VERDICTS["axi_only"], {
-                    "phase": "scp helper/problem", "reason": err.strip(),
-                }
+                return (
+                    False,
+                    HONEST_VERDICTS["axi_only"],
+                    {
+                        "phase": "scp helper/problem",
+                        "reason": err.strip(),
+                    },
+                )
         rc, out, err = run_ssh(
             f"sudo python3 {helper_remote} --problem-json {problem_remote} "
             f"--n-samples {N_SAMPLES} --n-steps-hw {N_STEPS_HW} --out-json {result_remote}",
@@ -548,21 +610,33 @@ def run_sampler_on_kria(problem: dict) -> tuple[bool, str | None, dict]:
                 info = json.loads(out.strip().splitlines()[-1])
             except Exception:
                 info = {"stdout": out.strip(), "stderr": err.strip()}
-            verdict = HONEST_VERDICTS["axi_only"] if info.get("axi_smoke") else HONEST_VERDICTS["load_fail"]
+            verdict = (
+                HONEST_VERDICTS["axi_only"]
+                if info.get("axi_smoke")
+                else HONEST_VERDICTS["load_fail"]
+            )
             return False, verdict, {"phase": "axi helper", "reason": info}
         # Pull the result JSON back.
         pull = subprocess.run(
             ["scp", f"{KRIA_HOST}:{result_remote}", f"{tempfile.gettempdir()}/fpga_samples.json"],
-            capture_output=True, text=True, timeout=30,
+            capture_output=True,
+            text=True,
+            timeout=30,
         )
         if pull.returncode != 0:
-            return False, HONEST_VERDICTS["axi_only"], {
-                "phase": "scp results back", "reason": pull.stderr.strip(),
-            }
+            return (
+                False,
+                HONEST_VERDICTS["axi_only"],
+                {
+                    "phase": "scp results back",
+                    "reason": pull.stderr.strip(),
+                },
+            )
         with open(f"{tempfile.gettempdir()}/fpga_samples.json") as fh:
             return True, None, json.load(fh)
     finally:
-        os.unlink(helper_local); os.unlink(problem_local)
+        os.unlink(helper_local)
+        os.unlink(problem_local)
 
 
 # -----------------------------------------------------------------------------
@@ -573,24 +647,30 @@ def run_sampler_on_kria(problem: dict) -> tuple[bool, str | None, dict]:
 def compare_distributions(fpga_samples: list, cpu_samples: list) -> dict:
     """Three correctness checks: marginals, correlations, energy KL."""
     import numpy as np
+
     f = np.array(fpga_samples, dtype=np.float32)
     c = np.array(cpu_samples, dtype=np.float32)
     # Per-spin marginals (mean of +/-1 across samples).
-    m_f = f.mean(axis=0); m_c = c.mean(axis=0)
+    m_f = f.mean(axis=0)
+    m_c = c.mean(axis=0)
     marginal_abs_err = float(np.abs(m_f - m_c).mean())
     # Pairwise correlation matrix, compare via Pearson on the vectorised
     # upper-triangle.
-    corr_f = np.corrcoef(f.T); corr_c = np.corrcoef(c.T)
+    corr_f = np.corrcoef(f.T)
+    corr_c = np.corrcoef(c.T)
     iu = np.triu_indices(corr_f.shape[0], k=1)
-    r_f = corr_f[iu]; r_c = corr_c[iu]
+    r_f = corr_f[iu]
+    r_c = corr_c[iu]
     corr_of_corrs = float(np.corrcoef(r_f, r_c)[0, 1]) if r_f.size > 1 else 0.0
     # Energy histogram KL on a 32-bin grid covering the combined range.
     # Energy E = -sum_ij J_ij s_i s_j / 2 — we compute it from the samples only,
     # so we don't need the coupling matrix here.  As a proxy we use
     # per-sample magnetization squared; for a pure correctness check this
     # captures whether the two sampler's *shape* of distribution matches.
-    e_f = (f.mean(axis=1) ** 2); e_c = (c.mean(axis=1) ** 2)
-    lo = min(e_f.min(), e_c.min()); hi = max(e_f.max(), e_c.max())
+    e_f = f.mean(axis=1) ** 2
+    e_c = c.mean(axis=1) ** 2
+    lo = min(e_f.min(), e_c.min())
+    hi = max(e_f.max(), e_c.max())
     if hi - lo < 1e-6:
         energy_kl = 0.0
     else:
@@ -598,8 +678,10 @@ def compare_distributions(fpga_samples: list, cpu_samples: list) -> dict:
         h_f, _ = np.histogram(e_f, bins=bins, density=True)
         h_c, _ = np.histogram(e_c, bins=bins, density=True)
         eps = 1e-9
-        h_f = h_f + eps; h_c = h_c + eps
-        h_f = h_f / h_f.sum(); h_c = h_c / h_c.sum()
+        h_f = h_f + eps
+        h_c = h_c + eps
+        h_f = h_f / h_f.sum()
+        h_c = h_c / h_c.sum()
         energy_kl = float((h_f * np.log(h_f / h_c)).sum())
     return {
         "marginal_abs_err": marginal_abs_err,
@@ -632,18 +714,30 @@ def main() -> None:
     # Preflight.
     ok, verdict, ctx = preflight(tmpl)
     if not ok:
-        _write(tmpl.build_result(
-            {"preflight": ctx}, status="blocked",
-            honest_verdict=verdict, reason=ctx.get("reason", verdict)))
-        tmpl.assert_deliverable_written(); return
+        _write(
+            tmpl.build_result(
+                {"preflight": ctx},
+                status="blocked",
+                honest_verdict=verdict,
+                reason=ctx.get("reason", verdict),
+            )
+        )
+        tmpl.assert_deliverable_written()
+        return
 
     # Deploy.
     ok, verdict, deploy_info = deploy_bitstream(ctx)
     if not ok:
-        _write(tmpl.build_result(
-            {"preflight": ctx, "deploy": deploy_info}, status="blocked",
-            honest_verdict=verdict, reason=deploy_info.get("reason", verdict)))
-        tmpl.assert_deliverable_written(); return
+        _write(
+            tmpl.build_result(
+                {"preflight": ctx, "deploy": deploy_info},
+                status="blocked",
+                honest_verdict=verdict,
+                reason=deploy_info.get("reason", verdict),
+            )
+        )
+        tmpl.assert_deliverable_written()
+        return
 
     # Build reference problem.
     problem = build_sk_problem(N_SPINS, MAX_DEGREE, BETA, SK_RNG_SEED)
@@ -651,18 +745,25 @@ def main() -> None:
     # Run sampler on FPGA.
     ok, verdict, fpga = run_sampler_on_kria(problem)
     if not ok:
-        _write(tmpl.build_result(
-            {"preflight": ctx, "deploy": deploy_info, "fpga": fpga},
-            status="partial", honest_verdict=verdict,
-            reason=str(fpga.get("reason", verdict))))
-        tmpl.assert_deliverable_written(); return
+        _write(
+            tmpl.build_result(
+                {"preflight": ctx, "deploy": deploy_info, "fpga": fpga},
+                status="partial",
+                honest_verdict=verdict,
+                reason=str(fpga.get("reason", verdict)),
+            )
+        )
+        tmpl.assert_deliverable_written()
+        return
 
     # CPU baseline (same problem, same N_STEPS).
     cpu = cpu_gibbs_reference(problem, CPU_SAMPLES_FOR_BASELINE, N_STEPS_HW)
 
     # Compare.
     cmp = compare_distributions(fpga["samples"], cpu["samples"])
-    speedup = fpga["throughput_mups"] / cpu["throughput_mups"] if cpu["throughput_mups"] > 0 else 0.0
+    speedup = (
+        fpga["throughput_mups"] / cpu["throughput_mups"] if cpu["throughput_mups"] > 0 else 0.0
+    )
 
     if not (cmp["marginal_pass"] and cmp["pairwise_corr_pass"] and cmp["energy_proxy_kl_pass"]):
         verdict = HONEST_VERDICTS["distribution_wrong"]
@@ -685,28 +786,39 @@ def main() -> None:
             f"below {SPEEDUP_TARGET}x target.  Calibrates throughput claim."
         )
 
-    _write(tmpl.build_result({
-        "preflight": ctx,
-        "deploy": deploy_info,
-        "problem_summary": {
-            "n_spins": N_SPINS, "max_degree": MAX_DEGREE, "beta": BETA,
-            "seed": SK_RNG_SEED, "n_samples": N_SAMPLES, "n_steps_hw": N_STEPS_HW,
-        },
-        "fpga": {
-            "elapsed_s": fpga["elapsed_s"],
-            "throughput_mups": fpga["throughput_mups"],
-            "n_samples_drawn": len(fpga["samples"]),
-            "first_sample_hamming_weight": sum(1 for b in fpga["samples"][0] if b == 1),
-        },
-        "cpu_baseline": {
-            "elapsed_s": cpu["elapsed_s"],
-            "throughput_mups": cpu["throughput_mups"],
-            "n_samples": cpu["n_samples"],
-        },
-        "comparison": cmp,
-        "speedup": speedup,
-        "total_elapsed_s": time.perf_counter() - t_start,
-    }, status=status, honest_verdict=verdict, reason=reason))
+    _write(
+        tmpl.build_result(
+            {
+                "preflight": ctx,
+                "deploy": deploy_info,
+                "problem_summary": {
+                    "n_spins": N_SPINS,
+                    "max_degree": MAX_DEGREE,
+                    "beta": BETA,
+                    "seed": SK_RNG_SEED,
+                    "n_samples": N_SAMPLES,
+                    "n_steps_hw": N_STEPS_HW,
+                },
+                "fpga": {
+                    "elapsed_s": fpga["elapsed_s"],
+                    "throughput_mups": fpga["throughput_mups"],
+                    "n_samples_drawn": len(fpga["samples"]),
+                    "first_sample_hamming_weight": sum(1 for b in fpga["samples"][0] if b == 1),
+                },
+                "cpu_baseline": {
+                    "elapsed_s": cpu["elapsed_s"],
+                    "throughput_mups": cpu["throughput_mups"],
+                    "n_samples": cpu["n_samples"],
+                },
+                "comparison": cmp,
+                "speedup": speedup,
+                "total_elapsed_s": time.perf_counter() - t_start,
+            },
+            status=status,
+            honest_verdict=verdict,
+            reason=reason,
+        )
+    )
     tmpl.assert_deliverable_written()
 
 

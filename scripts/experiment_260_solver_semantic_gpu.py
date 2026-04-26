@@ -74,11 +74,23 @@ _EXP246_CHECKPOINT_DIR = "results/checkpoints/experiment_246"
 
 # Constraint type buckets for solver routing (shared with Exp 246)
 _CARDINALITY_TYPES = frozenset(
-    {"count_exact", "word_count_range", "sentence_count", "step_count", "sentence_count_per_section"}
+    {
+        "count_exact",
+        "word_count_range",
+        "sentence_count",
+        "step_count",
+        "sentence_count_per_section",
+    }
 )
 _SET_MEMBERSHIP_TYPES = frozenset(
-    {"must_include_token", "must_include_phrase", "forbidden_token", "forbidden_phrase",
-     "enum_membership", "grounded_selection"}
+    {
+        "must_include_token",
+        "must_include_phrase",
+        "forbidden_token",
+        "forbidden_phrase",
+        "enum_membership",
+        "grounded_selection",
+    }
 )
 # Matches explicit arithmetic equations of the form A OP B = C in response text.
 _ARITHMETIC_RE = re.compile(
@@ -90,7 +102,9 @@ _ARITHMETIC_RE = re.compile(
 # ---------------------------------------------------------------------------
 
 _EXP258_SCRIPT = Path(__file__).parent / "experiment_258_dual_gpu_harness.py"
-_exp258_spec = importlib.util.spec_from_file_location("experiment_258_dual_gpu_harness", _EXP258_SCRIPT)
+_exp258_spec = importlib.util.spec_from_file_location(
+    "experiment_258_dual_gpu_harness", _EXP258_SCRIPT
+)
 assert _exp258_spec is not None and _exp258_spec.loader is not None
 _exp258_mod = importlib.util.module_from_spec(_exp258_spec)
 sys.modules.setdefault("experiment_258_dual_gpu_harness", _exp258_mod)
@@ -173,9 +187,7 @@ def load_gsm8k_cohort(path: Path | None = None) -> tuple[list[dict[str, Any]], d
     artifact_path = path or (get_repo_root() / _SOURCE_ARTIFACT_GSM8K)
     payload = json.loads(artifact_path.read_text(encoding="utf-8"))
     if str(payload.get("benchmark")) != "gsm8k_semantic":
-        raise ValueError(
-            f"Expected benchmark='gsm8k_semantic'; got {payload.get('benchmark')!r}"
-        )
+        raise ValueError(f"Expected benchmark='gsm8k_semantic'; got {payload.get('benchmark')!r}")
     cohort_block = payload.get("cohort", {})
     cases = [dict(c) for c in list(cohort_block.get("cases", []))]
     metadata = payload.get("metadata", {})
@@ -189,7 +201,9 @@ def load_gsm8k_cohort(path: Path | None = None) -> tuple[list[dict[str, Any]], d
     }
 
 
-def load_constraint_ir_cohort(path: Path | None = None) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+def load_constraint_ir_cohort(
+    path: Path | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Load the constraint-IR cohort from the checked-in Exp 221 artifact.
 
     Returns (cases, meta) with the same shape as ``load_gsm8k_cohort``.
@@ -203,9 +217,7 @@ def load_constraint_ir_cohort(path: Path | None = None) -> tuple[list[dict[str, 
     artifact_path = path or (get_repo_root() / _SOURCE_ARTIFACT_CONSTRAINT_IR)
     payload = json.loads(artifact_path.read_text(encoding="utf-8"))
     if str(payload.get("benchmark")) != "constraint_ir":
-        raise ValueError(
-            f"Expected benchmark='constraint_ir'; got {payload.get('benchmark')!r}"
-        )
+        raise ValueError(f"Expected benchmark='constraint_ir'; got {payload.get('benchmark')!r}")
     cohort_block = payload.get("cohort", {})
     cases = [dict(c) for c in list(cohort_block.get("cases", []))]
     metadata = payload.get("metadata", {})
@@ -306,16 +318,18 @@ def _extract_arithmetic_claims(response: str) -> list[dict[str, Any]]:
             result = float(match.group(3))
         except ValueError:
             continue
-        claims.append({
-            "claim_id": f"arith-{match_idx}",
-            "claim_text": match.group(0),
-            "candidate_solver_route": "arithmetic",
-            "formalization_status": "formalized",
-            "relation_type": "equation",
-            "operands": [a, b, result],
-            "target": "arithmetic_result",
-            "bound_variables": [],
-        })
+        claims.append(
+            {
+                "claim_id": f"arith-{match_idx}",
+                "claim_text": match.group(0),
+                "candidate_solver_route": "arithmetic",
+                "formalization_status": "formalized",
+                "relation_type": "equation",
+                "operands": [a, b, result],
+                "target": "arithmetic_result",
+                "bound_variables": [],
+            }
+        )
     return claims
 
 
@@ -399,7 +413,8 @@ def _constraint_to_formal_claim(constraint: dict[str, Any], idx: int) -> dict[st
             }
         if constraint_type in {"enum_membership", "grounded_selection"}:
             choices: list[str] = (
-                [str(v) for v in value] if isinstance(value, list)
+                [str(v) for v in value]
+                if isinstance(value, list)
                 else ([str(value)] if value is not None else [])
             )
             if not choices:
@@ -443,9 +458,7 @@ def build_route_summary(claims: list[dict[str, Any]]) -> dict[str, Any]:
         normalized = verdict if verdict in by_verdict else "abstain"
         by_verdict[normalized] += 1
         total_claims += 1
-    abstain_rate = (
-        round(by_verdict["abstain"] / total_claims, 6) if total_claims > 0 else 0.0
-    )
+    abstain_rate = round(by_verdict["abstain"] / total_claims, 6) if total_claims > 0 else 0.0
     return {
         "by_route": dict(sorted(by_route.items())),
         "by_verdict": dict(sorted(by_verdict.items())),
@@ -512,7 +525,8 @@ def summarize_benchmark_runs(
 
     # False positive analysis: cases flagged that were actually correct
     n_fp = sum(
-        1 for base, vo in zip(baseline_runs, verify_only_runs)
+        1
+        for base, vo in zip(baseline_runs, verify_only_runs)
         if base.get("correct") and vo.get("flagged")
     )
     fp_rate = round(n_fp / n_flagged, 6) if n_flagged > 0 else 0.0
@@ -522,10 +536,18 @@ def summarize_benchmark_runs(
             "n_cases": n_cases,
             "accuracy": baseline_accuracy,
             "n_correct": n_correct_baseline,
-            "mean_latency_seconds": _round_mean([float(r.get("latency_seconds", 0.0)) for r in baseline_runs]),
-            "mean_prompt_tokens": _round_mean([float(r.get("prompt_tokens", 0.0)) for r in baseline_runs]),
-            "mean_response_tokens": _round_mean([float(r.get("response_tokens", 0.0)) for r in baseline_runs]),
-            "mean_total_tokens": _round_mean([float(r.get("total_tokens", 0.0)) for r in baseline_runs]),
+            "mean_latency_seconds": _round_mean(
+                [float(r.get("latency_seconds", 0.0)) for r in baseline_runs]
+            ),
+            "mean_prompt_tokens": _round_mean(
+                [float(r.get("prompt_tokens", 0.0)) for r in baseline_runs]
+            ),
+            "mean_response_tokens": _round_mean(
+                [float(r.get("response_tokens", 0.0)) for r in baseline_runs]
+            ),
+            "mean_total_tokens": _round_mean(
+                [float(r.get("total_tokens", 0.0)) for r in baseline_runs]
+            ),
         },
         "verify_only": {
             "n_cases": n_cases,
@@ -533,8 +555,12 @@ def summarize_benchmark_runs(
             "accuracy": verify_accuracy,
             "false_positives": n_fp,
             "false_positive_rate": fp_rate,
-            "mean_latency_seconds": _round_mean([float(r.get("latency_seconds", 0.0)) for r in verify_only_runs]),
-            "mean_total_tokens": _round_mean([float(r.get("total_tokens", 0.0)) for r in verify_only_runs]),
+            "mean_latency_seconds": _round_mean(
+                [float(r.get("latency_seconds", 0.0)) for r in verify_only_runs]
+            ),
+            "mean_total_tokens": _round_mean(
+                [float(r.get("total_tokens", 0.0)) for r in verify_only_runs]
+            ),
         },
         "verify_repair": {
             "n_cases": n_cases,
@@ -542,8 +568,12 @@ def summarize_benchmark_runs(
             "n_repaired": n_repaired,
             "repair_yield": repair_yield,
             "avg_repairs": _round_mean([float(r.get("n_repairs", 0)) for r in verify_repair_runs]),
-            "mean_latency_seconds": _round_mean([float(r.get("latency_seconds", 0.0)) for r in verify_repair_runs]),
-            "mean_total_tokens": _round_mean([float(r.get("total_tokens", 0.0)) for r in verify_repair_runs]),
+            "mean_latency_seconds": _round_mean(
+                [float(r.get("latency_seconds", 0.0)) for r in verify_repair_runs]
+            ),
+            "mean_total_tokens": _round_mean(
+                [float(r.get("total_tokens", 0.0)) for r in verify_repair_runs]
+            ),
         },
         "paired_deltas": {
             "verify_only_minus_baseline": round(verify_accuracy - baseline_accuracy, 6),
@@ -665,10 +695,13 @@ def build_comparison_block(
                 "exp260_fp_rate": exp260_fp_rate,
                 "fp_rate_delta": (
                     round(exp260_fp_rate - ref["semantic_verifier_v2"]["false_positive_rate"], 6)
-                    if exp260_fp_rate is not None else None
+                    if exp260_fp_rate is not None
+                    else None
                 ),
-                "exp235_verdict_abstain_rate": ref["semantic_verifier_v2"]["verdict_level_abstain_rate"],
-                "exp260_gsm8k_claim_abstain_rate": gsm8k_route_summary.get("abstain_rate", None),
+                "exp235_verdict_abstain_rate": ref["semantic_verifier_v2"][
+                    "verdict_level_abstain_rate"
+                ],
+                "exp260_gsm8k_claim_abstain_rate": gsm8k_route_summary.get("abstain_rate"),
             }
         else:
             per_model_vs_235[model_name] = {"status": "no_data"}
@@ -683,7 +716,9 @@ def build_comparison_block(
             s = bench_stats.get(model_name, {})
             delta = s.get("paired_deltas", {}).get("verify_only_minus_baseline", None)
             if delta is not None and delta >= 0.0:
-                non_harmful_cases.append({"model": model_name, "benchmark": bench_name, "delta": delta})
+                non_harmful_cases.append(
+                    {"model": model_name, "benchmark": bench_name, "delta": delta}
+                )
 
     return {
         "vs_exp235_semantic_verifier_v2": {
@@ -704,7 +739,9 @@ def build_comparison_block(
             "exp247_cells_completed": exp247_cells_completed,
             "exp247_cells_total": exp247_cells_total,
             "exp247_blocker": _EXP247_REF["blocker"],
-            "exp247_throughput_seconds_per_case": _EXP247_REF["measured_throughput_seconds_per_case"],
+            "exp247_throughput_seconds_per_case": _EXP247_REF[
+                "measured_throughput_seconds_per_case"
+            ],
             "exp260_cells_completed": exp260_cells_completed,
             "exp260_cells_total": exp247_cells_total,
             "progress_note": (
@@ -716,7 +753,8 @@ def build_comparison_block(
             "question": "Is verify-only non-harmful for at least one model on at least one benchmark slice?",
             "non_harmful_cases": non_harmful_cases,
             "finding": (
-                "CONFIRMED: verify-only is non-harmful" if non_harmful_cases
+                "CONFIRMED: verify-only is non-harmful"
+                if non_harmful_cases
                 else "NOT CONFIRMED: verify-only reduces accuracy for all evaluated model+benchmark combinations"
             ),
         },
@@ -781,9 +819,7 @@ def build_artifact_payload(
     Returns:
         Dict ready for ``write_artifact()``.
     """
-    checkpoint_pattern = (
-        "results/checkpoints/experiment_246/<benchmark>__<model>__<mode>.json"
-    )
+    checkpoint_pattern = "results/checkpoints/experiment_246/<benchmark>__<model>__<mode>.json"
 
     def _cohort_block(cohort: list[dict[str, Any]], meta: dict[str, Any]) -> dict[str, Any]:
         return {
@@ -855,7 +891,9 @@ def _live_inference_mode(gpu_active: bool) -> str:
     return "simulated"
 
 
-def _verify_formal_claims_batch(claims: list[dict[str, Any]]) -> list[dict[str, Any]]:  # pragma: no cover
+def _verify_formal_claims_batch(
+    claims: list[dict[str, Any]],
+) -> list[dict[str, Any]]:  # pragma: no cover
     """Run FormalClaimVerifier over a list of claim dicts.
 
     Returns a list of verdict dicts suitable for embedding under the ``formal_claims``
@@ -865,6 +903,7 @@ def _verify_formal_claims_batch(claims: list[dict[str, Any]]) -> list[dict[str, 
         FormalClaimVerifier,
         normalize_claim,
     )
+
     verifier = FormalClaimVerifier()
     verdicts: list[dict[str, Any]] = []
     for raw in claims:
@@ -897,7 +936,9 @@ def _execute_gsm8k_case_live(  # pragma: no cover
     response = str(generate(model, tokenizer, prompt, max_new_tokens=256))
     latency = _time.time() - t0
 
-    raw_claims = extract_formal_claims_from_response(response, case=case, benchmark="gsm8k_semantic")
+    raw_claims = extract_formal_claims_from_response(
+        response, case=case, benchmark="gsm8k_semantic"
+    )
     formal_claims = _verify_formal_claims_batch(raw_claims)
 
     numbers = re.findall(r"-?\d+(?:\.\d+)?", response)
@@ -949,8 +990,14 @@ def _execute_gsm8k_case_live(  # pragma: no cover
             if correct:
                 repaired = True
                 break
-    return {**vo_result, "response": response, "predicted": predicted, "correct": correct,
-            "repaired": repaired, "n_repairs": n_repairs}
+    return {
+        **vo_result,
+        "response": response,
+        "predicted": predicted,
+        "correct": correct,
+        "repaired": repaired,
+        "n_repairs": n_repairs,
+    }
 
 
 def _execute_constraint_ir_case_live(  # pragma: no cover
@@ -1017,7 +1064,9 @@ def _execute_constraint_ir_case_live(  # pragma: no cover
                 "Please revise your answer.\n\nAnswer:"
             )
             response = str(generate(model, tokenizer, repair_prompt, max_new_tokens=256))
-            raw_claims = extract_formal_claims_from_response(response, case=case, benchmark="constraint_ir")
+            raw_claims = extract_formal_claims_from_response(
+                response, case=case, benchmark="constraint_ir"
+            )
             formal_claims = _verify_formal_claims_batch(raw_claims)
             flagged = any(c.get("verdict") == "violated" for c in formal_claims)
             n_repairs += 1
@@ -1066,15 +1115,20 @@ def _run_benchmark_for_model_cpu(  # pragma: no cover
     model, tokenizer = load_model(hf_id, device=device)
 
     execute_fn = (
-        _execute_gsm8k_case_live if benchmark == "gsm8k_semantic"
+        _execute_gsm8k_case_live
+        if benchmark == "gsm8k_semantic"
         else _execute_constraint_ir_case_live
     )
 
     paired: list[dict[str, Any]] = []
     for mode in MODE_ORDER:
+
         def _make_executor(m: str) -> Any:
             def _execute(case: dict[str, Any]) -> dict[str, Any]:
-                return execute_fn(case, model=model, tokenizer=tokenizer, mode=m, max_repairs=max_repairs)
+                return execute_fn(
+                    case, model=model, tokenizer=tokenizer, mode=m, max_repairs=max_repairs
+                )
+
             return _execute
 
         mode_results = harness.run_mode(
@@ -1085,14 +1139,16 @@ def _run_benchmark_for_model_cpu(  # pragma: no cover
             checkpoint_dir=checkpoint_dir,
             execute_case=_make_executor(mode),
         )
-        paired.append({
-            "benchmark": benchmark,
-            "model_name": model_spec["name"],
-            "hf_id": model_spec["hf_id"],
-            "mode": mode,
-            "cases": mode_results,
-            "summary": {"n_cases": len(mode_results)},
-        })
+        paired.append(
+            {
+                "benchmark": benchmark,
+                "model_name": model_spec["name"],
+                "hf_id": model_spec["hf_id"],
+                "mode": mode,
+                "cases": mode_results,
+                "summary": {"n_cases": len(mode_results)},
+            }
+        )
 
     del model, tokenizer
     gc.collect()
@@ -1227,6 +1283,7 @@ def main() -> None:  # pragma: no cover
 
         try:
             import torch
+
             harness._torch = torch  # wire real torch for VRAM check
             harness.verify_gpu_assignments()
             gpu_active = True
@@ -1239,7 +1296,9 @@ def main() -> None:  # pragma: no cover
         inference_mode = _live_inference_mode(gpu_active)
 
         for model_spec in MODEL_SPECS:
-            print(f"[Exp 260] Running GSM8K for {model_spec['name']} on {'GPU' if gpu_active else 'CPU'}...")
+            print(
+                f"[Exp 260] Running GSM8K for {model_spec['name']} on {'GPU' if gpu_active else 'CPU'}..."
+            )
             model_paired = _run_benchmark_for_model_cpu(
                 benchmark="gsm8k_semantic",
                 model_spec=model_spec,
@@ -1251,7 +1310,9 @@ def main() -> None:  # pragma: no cover
             )
             gsm8k_paired_runs.extend(model_paired)
 
-            print(f"[Exp 260] Running constraint_ir for {model_spec['name']} on {'GPU' if gpu_active else 'CPU'}...")
+            print(
+                f"[Exp 260] Running constraint_ir for {model_spec['name']} on {'GPU' if gpu_active else 'CPU'}..."
+            )
             ir_paired = _run_benchmark_for_model_cpu(
                 benchmark="constraint_ir",
                 model_spec=model_spec,
@@ -1270,7 +1331,11 @@ def main() -> None:  # pragma: no cover
             name = model_spec["name"]
             _runs = {
                 m: next(
-                    (r["cases"] for r in gsm8k_paired_runs if r["model_name"] == name and r["mode"] == m),
+                    (
+                        r["cases"]
+                        for r in gsm8k_paired_runs
+                        if r["model_name"] == name and r["mode"] == m
+                    ),
                     [],
                 )
                 for m in MODE_ORDER
@@ -1286,7 +1351,11 @@ def main() -> None:  # pragma: no cover
 
             _ir_runs = {
                 m: next(
-                    (r["cases"] for r in constraint_ir_paired_runs if r["model_name"] == name and r["mode"] == m),
+                    (
+                        r["cases"]
+                        for r in constraint_ir_paired_runs
+                        if r["model_name"] == name and r["mode"] == m
+                    ),
                     [],
                 )
                 for m in MODE_ORDER
@@ -1315,7 +1384,11 @@ def main() -> None:  # pragma: no cover
 
         _bir = BatchedInferenceRunner(_stage_case, batch_size=8)
         _bir.run_batch([str(c.get("case_id", i)) for i, c in enumerate(gsm8k_cohort)])
-        throughput_report = {"target_seconds_per_case": 3.0, "per_model": {}, "batch_log": _bir.batch_log}
+        throughput_report = {
+            "target_seconds_per_case": 3.0,
+            "per_model": {},
+            "batch_log": _bir.batch_log,
+        }
 
     # ------------------------------------------------------------------
     # Route summaries
@@ -1331,8 +1404,8 @@ def main() -> None:  # pragma: no cover
         constraint_ir_statistics=constraint_ir_statistics,
         gsm8k_route_summary=gsm8k_route_summary,
         constraint_ir_route_summary=constraint_ir_route_summary,
-        exp247_cells_completed=1,   # only 18/200 gsm8k Qwen baseline was done
-        exp247_cells_total=12,      # 2 models × 3 modes × 2 benchmarks
+        exp247_cells_completed=1,  # only 18/200 gsm8k Qwen baseline was done
+        exp247_cells_total=12,  # 2 models × 3 modes × 2 benchmarks
     )
 
     finished_at = utc_now()
@@ -1366,7 +1439,9 @@ def main() -> None:  # pragma: no cover
 
     write_artifact(output_path, payload)
     print(f"[Exp 260] Artifact written to {output_path}")
-    print(f"[Exp 260] Runtime: {runtime_seconds:.1f}s  inference_mode={inference_mode}  gpu_fallback={gpu_fallback}")
+    print(
+        f"[Exp 260] Runtime: {runtime_seconds:.1f}s  inference_mode={inference_mode}  gpu_fallback={gpu_fallback}"
+    )
     _watchdog.stop()
     _tmpl.assert_deliverable_written()
 
@@ -1382,6 +1457,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

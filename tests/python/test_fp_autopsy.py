@@ -357,9 +357,7 @@ def test_load_broken_cases_aggregate_only_returns_empty() -> None:
     data = {
         "experiment": 316,
         "per_model_results": {
-            "Qwen3.5-0.8B": {
-                "baseline": {"number_swap": {"accuracy": 0.245, "n_total": 200}}
-            }
+            "Qwen3.5-0.8B": {"baseline": {"number_swap": {"accuracy": 0.245, "n_total": 200}}}
         },
         "summary_table": [],
     }

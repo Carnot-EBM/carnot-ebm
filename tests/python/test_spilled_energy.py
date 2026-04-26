@@ -322,8 +322,9 @@ def test_spilled_energy_detector_score_from_text_different_texts() -> None:
 
     # Different inputs should produce different hash-derived values
     # (not guaranteed for every pair, but almost certain for these two)
-    assert result_a.mean_spilled != pytest.approx(result_b.mean_spilled) or \
-           result_a.max_spilled != pytest.approx(result_b.max_spilled)
+    assert result_a.mean_spilled != pytest.approx(
+        result_b.mean_spilled
+    ) or result_a.max_spilled != pytest.approx(result_b.max_spilled)
 
 
 def test_spilled_energy_detector_score_from_text_empty_per_token() -> None:

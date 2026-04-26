@@ -44,6 +44,7 @@ if str(_REPO) not in sys.path:
 
 from scripts.experiment_template import ExperimentTemplate  # noqa: E402
 from python.carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: E402
+import contextlib
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -78,6 +79,7 @@ ENERGY_TOLERANCE_FRACTION = 0.20
 # Step 1: Check whether vitis_hls is available
 # ---------------------------------------------------------------------------
 
+
 def check_vitis_hls() -> tuple[bool, str]:
     """Check whether vitis_hls is installed on this host.
 
@@ -95,7 +97,10 @@ def check_vitis_hls() -> tuple[bool, str]:
         timeout=10,
     )
     if which_result.returncode != 0:
-        return False, "vitis_hls not found on PATH — install AMD Vitis 2024.2 for standalone vitis_hls"
+        return (
+            False,
+            "vitis_hls not found on PATH — install AMD Vitis 2024.2 for standalone vitis_hls",
+        )
 
     # Found on PATH, get version
     try:
@@ -115,6 +120,7 @@ def check_vitis_hls() -> tuple[bool, str]:
 # Step 2: Compile the HLS C++ kernel with g++
 # ---------------------------------------------------------------------------
 
+
 def compile_hls_cpp() -> tuple[bool, str]:
     """Compile ising_sampler_hls.cpp as plain C++ using g++.
 
@@ -129,9 +135,12 @@ def compile_hls_cpp() -> tuple[bool, str]:
         return False, f"HLS C++ source not found: {HLS_CPP_PATH}"
 
     cmd = [
-        "g++", "-O2", "-std=c++17",
+        "g++",
+        "-O2",
+        "-std=c++17",
         str(HLS_CPP_PATH),
-        "-o", str(TEST_BINARY),
+        "-o",
+        str(TEST_BINARY),
         "-lm",  # link libm for expf / fabsf
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
@@ -143,6 +152,7 @@ def compile_hls_cpp() -> tuple[bool, str]:
 # ---------------------------------------------------------------------------
 # Step 3: Run the compiled CPU simulation and capture energy
 # ---------------------------------------------------------------------------
+
 
 def run_cpu_simulation() -> tuple[bool, float | None, str]:
     """Run the compiled ising_sampler_hls binary (CPU simulation).
@@ -173,10 +183,8 @@ def run_cpu_simulation() -> tuple[bool, float | None, str]:
         energy: float | None = None
         for line in output.splitlines():
             if line.startswith("Final energy:"):
-                try:
+                with contextlib.suppress(IndexError, ValueError):
                     energy = float(line.split(":")[1].strip())
-                except (IndexError, ValueError):
-                    pass
 
         return binary_passed, energy, output[:1000]
     except subprocess.TimeoutExpired:
@@ -188,6 +196,7 @@ def run_cpu_simulation() -> tuple[bool, float | None, str]:
 # ---------------------------------------------------------------------------
 # Step 4: Compare C++ energy against Python reference
 # ---------------------------------------------------------------------------
+
 
 def compute_energy_delta_pct(cpp_energy: float | None) -> float | None:
     """Return percentage difference between C++ and Python reference energies.
@@ -210,6 +219,7 @@ def compute_energy_delta_pct(cpp_energy: float | None) -> float | None:
 # ---------------------------------------------------------------------------
 # Step 5: Attempt Vitis HLS synthesis (only if vitis_hls found)
 # ---------------------------------------------------------------------------
+
 
 def attempt_hls_synthesis() -> tuple[bool, str]:
     """Run vitis_hls -f synth_ising_hls.tcl and return (success, synthesis_result).
@@ -246,6 +256,7 @@ def attempt_hls_synthesis() -> tuple[bool, str]:
 # ---------------------------------------------------------------------------
 # Main experiment logic
 # ---------------------------------------------------------------------------
+
 
 def run_experiment(tmpl: ExperimentTemplate) -> dict:
     """Execute all experiment steps and return the result payload.
@@ -324,6 +335,7 @@ def run_experiment(tmpl: ExperimentTemplate) -> dict:
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Experiment 750 entry point.

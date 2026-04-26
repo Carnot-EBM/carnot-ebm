@@ -285,9 +285,7 @@ def main() -> None:
     with ExperimentTimeoutWatchdog(616, timeout_minutes=40, result_path=result_path):
         llm_caller, llm_mode = _build_llm_caller()
 
-        incorrect_responses, correct_responses = _load_live_pairs(
-            n_incorrect=25, n_correct=10
-        )
+        incorrect_responses, correct_responses = _load_live_pairs(n_incorrect=25, n_correct=10)
 
         strategy_results = _run_strategy_benchmark(
             incorrect_responses, correct_responses, llm_caller

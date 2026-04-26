@@ -101,9 +101,7 @@ class TestEvictGpuVram:
 
     def test_nvidia_smi_unavailable_returns_correct_verdict(self) -> None:
         """REQ-LOADER-012: when nvidia-smi is missing, return nvidia_smi_unavailable verdict."""
-        with patch(
-            "carnot.pipeline.gemma_isolation._query_nvidia_smi", return_value=None
-        ):
+        with patch("carnot.pipeline.gemma_isolation._query_nvidia_smi", return_value=None):
             result = evict_gpu_vram(gpu_index=1)
 
         assert result.honest_verdict == "nvidia_smi_unavailable"
@@ -117,20 +115,22 @@ class TestEvictGpuVram:
         # nvidia-smi calls: (1) availability check, (2) vram_before, (3) vram_after
         # also _get_vram_used_mb is called, and _get_compute_pids for the pkill sweep
         smi_side_effects = [
-            "400\n",   # availability check (memory.used)
-            "400\n",   # _get_vram_used_mb (vram_before)
-            "",        # _get_compute_pids (no residual pids after primary kill)
-            "200\n",   # _get_vram_used_mb (vram_after)
+            "400\n",  # availability check (memory.used)
+            "400\n",  # _get_vram_used_mb (vram_before)
+            "",  # _get_compute_pids (no residual pids after primary kill)
+            "200\n",  # _get_vram_used_mb (vram_after)
         ]
 
-        with patch(
-            "carnot.pipeline.gemma_isolation._query_nvidia_smi",
-            side_effect=smi_side_effects,
-        ), patch(
-            "carnot.pipeline.gemma_isolation.kill_gpu_zombies",
-            return_value=zombie_result,
-        ), patch(
-            "carnot.pipeline.gemma_isolation.time.sleep"
+        with (
+            patch(
+                "carnot.pipeline.gemma_isolation._query_nvidia_smi",
+                side_effect=smi_side_effects,
+            ),
+            patch(
+                "carnot.pipeline.gemma_isolation.kill_gpu_zombies",
+                return_value=zombie_result,
+            ),
+            patch("carnot.pipeline.gemma_isolation.time.sleep"),
         ):
             result = evict_gpu_vram(gpu_index=1)
 
@@ -146,18 +146,20 @@ class TestEvictGpuVram:
         smi_side_effects = [
             "16000\n",  # availability check
             "16000\n",  # vram_before
-            "",         # compute pids (none)
-            "600\n",    # vram_after (still above 500 MB)
+            "",  # compute pids (none)
+            "600\n",  # vram_after (still above 500 MB)
         ]
 
-        with patch(
-            "carnot.pipeline.gemma_isolation._query_nvidia_smi",
-            side_effect=smi_side_effects,
-        ), patch(
-            "carnot.pipeline.gemma_isolation.kill_gpu_zombies",
-            return_value=zombie_result,
-        ), patch(
-            "carnot.pipeline.gemma_isolation.time.sleep"
+        with (
+            patch(
+                "carnot.pipeline.gemma_isolation._query_nvidia_smi",
+                side_effect=smi_side_effects,
+            ),
+            patch(
+                "carnot.pipeline.gemma_isolation.kill_gpu_zombies",
+                return_value=zombie_result,
+            ),
+            patch("carnot.pipeline.gemma_isolation.time.sleep"),
         ):
             result = evict_gpu_vram(gpu_index=1)
 
@@ -172,24 +174,24 @@ class TestEvictGpuVram:
         residual_pid = 99999
         # smi calls: availability, vram_before, compute_pids (residual pid found), vram_after
         smi_side_effects = [
-            "15000\n",           # availability check
-            "15000\n",           # vram_before
-            f"{residual_pid}\n", # _get_compute_pids — one residual pid
-            "100\n",             # vram_after — now clear
+            "15000\n",  # availability check
+            "15000\n",  # vram_before
+            f"{residual_pid}\n",  # _get_compute_pids — one residual pid
+            "100\n",  # vram_after — now clear
         ]
 
-        with patch(
-            "carnot.pipeline.gemma_isolation._query_nvidia_smi",
-            side_effect=smi_side_effects,
-        ), patch(
-            "carnot.pipeline.gemma_isolation.kill_gpu_zombies",
-            return_value=zombie_result,
-        ), patch(
-            "carnot.pipeline.gemma_isolation.os.kill"
-        ) as mock_kill, patch(
-            "carnot.pipeline.gemma_isolation.os.getpid", return_value=1
-        ), patch(
-            "carnot.pipeline.gemma_isolation.time.sleep"
+        with (
+            patch(
+                "carnot.pipeline.gemma_isolation._query_nvidia_smi",
+                side_effect=smi_side_effects,
+            ),
+            patch(
+                "carnot.pipeline.gemma_isolation.kill_gpu_zombies",
+                return_value=zombie_result,
+            ),
+            patch("carnot.pipeline.gemma_isolation.os.kill") as mock_kill,
+            patch("carnot.pipeline.gemma_isolation.os.getpid", return_value=1),
+            patch("carnot.pipeline.gemma_isolation.time.sleep"),
         ):
             result = evict_gpu_vram(gpu_index=1)
 
@@ -210,16 +212,17 @@ class TestEvictGpuVram:
             "50\n",
         ]
 
-        with patch(
-            "carnot.pipeline.gemma_isolation._query_nvidia_smi",
-            side_effect=smi_side_effects,
-        ), patch(
-            "carnot.pipeline.gemma_isolation.kill_gpu_zombies",
-            return_value=zombie_result,
-        ), patch(
-            "carnot.pipeline.gemma_isolation.os.kill"
-        ) as mock_kill, patch(
-            "carnot.pipeline.gemma_isolation.time.sleep"
+        with (
+            patch(
+                "carnot.pipeline.gemma_isolation._query_nvidia_smi",
+                side_effect=smi_side_effects,
+            ),
+            patch(
+                "carnot.pipeline.gemma_isolation.kill_gpu_zombies",
+                return_value=zombie_result,
+            ),
+            patch("carnot.pipeline.gemma_isolation.os.kill") as mock_kill,
+            patch("carnot.pipeline.gemma_isolation.time.sleep"),
         ):
             result = evict_gpu_vram(gpu_index=1)
 
@@ -274,12 +277,15 @@ class TestLoadGemma4OnGpu1:
         mock_loader = MagicMock()
         mock_loader_cls = MagicMock(return_value=mock_loader)
 
-        with patch(
-            "carnot.pipeline.gemma_isolation.evict_gpu_vram",
-            return_value=cleared_eviction,
-        ), patch(
-            "carnot.pipeline.gemma_isolation.GemmaTransformersLoader",
-            mock_loader_cls,
+        with (
+            patch(
+                "carnot.pipeline.gemma_isolation.evict_gpu_vram",
+                return_value=cleared_eviction,
+            ),
+            patch(
+                "carnot.pipeline.gemma_isolation.GemmaTransformersLoader",
+                mock_loader_cls,
+            ),
         ):
             result = load_gemma4_on_gpu1("google/gemma-4-E4B-it")
 
@@ -307,12 +313,15 @@ class TestLoadGemma4OnGpu1:
 
         mock_loader = MagicMock()
 
-        with patch(
-            "carnot.pipeline.gemma_isolation.evict_gpu_vram",
-            return_value=cleared_eviction,
-        ), patch(
-            "carnot.pipeline.gemma_isolation.GemmaTransformersLoader",
-            return_value=mock_loader,
+        with (
+            patch(
+                "carnot.pipeline.gemma_isolation.evict_gpu_vram",
+                return_value=cleared_eviction,
+            ),
+            patch(
+                "carnot.pipeline.gemma_isolation.GemmaTransformersLoader",
+                return_value=mock_loader,
+            ),
         ):
             result = load_gemma4_on_gpu1("google/gemma-4-E4B-it")
 
@@ -334,12 +343,15 @@ class TestLoadGemma4OnGpu1:
         mock_loader = MagicMock()
         mock_loader.load.side_effect = RuntimeError("CUDA OOM simulated")
 
-        with patch(
-            "carnot.pipeline.gemma_isolation.evict_gpu_vram",
-            return_value=cleared_eviction,
-        ), patch(
-            "carnot.pipeline.gemma_isolation.GemmaTransformersLoader",
-            return_value=mock_loader,
+        with (
+            patch(
+                "carnot.pipeline.gemma_isolation.evict_gpu_vram",
+                return_value=cleared_eviction,
+            ),
+            patch(
+                "carnot.pipeline.gemma_isolation.GemmaTransformersLoader",
+                return_value=mock_loader,
+            ),
         ):
             result = load_gemma4_on_gpu1("google/gemma-4-E4B-it")
 
@@ -371,8 +383,7 @@ class TestExperiment795Main:
 
         # Mock question loader to avoid network
         fake_questions = [
-            {"question": f"What is {i} + {i}?", "answer": str(i * 2)}
-            for i in range(10)
+            {"question": f"What is {i} + {i}?", "answer": str(i * 2)} for i in range(10)
         ]
 
         generate_responses = generate_responses or ["The answer is 42."] * 10
@@ -387,40 +398,44 @@ class TestExperiment795Main:
 
         env = {"CARNOT_FORCE_LIVE": "1", **env_overrides}
 
-        with patch.dict(os.environ, env), patch.object(
-            exp795, "_REPO_ROOT", tmp_path
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.apply_env_autofix"
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.kill_gpu_zombies",
-            return_value=zombie_mock,
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.evict_gpu_vram",
-            return_value=eviction_result,
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.load_gemma4_on_gpu1",
-            return_value=load_result_with_loader,
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4._load_gsm8k_questions",
-            return_value=fake_questions,
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.GemmaTransformersLoader"
-                ".is_valid_output",
-            side_effect=lambda t: bool(t and t.strip()),
-        ), patch(
-            "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__enter__",
-            return_value=None,
-        ), patch(
-            "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__exit__",
-            return_value=False,
+        with (
+            patch.dict(os.environ, env),
+            patch.object(exp795, "_REPO_ROOT", tmp_path),
+            patch("scripts.experiment_795_gemma4_oom_fix_v4.apply_env_autofix"),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4.kill_gpu_zombies",
+                return_value=zombie_mock,
+            ),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4.evict_gpu_vram",
+                return_value=eviction_result,
+            ),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4.load_gemma4_on_gpu1",
+                return_value=load_result_with_loader,
+            ),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4._load_gsm8k_questions",
+                return_value=fake_questions,
+            ),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4.GemmaTransformersLoader.is_valid_output",
+                side_effect=lambda t: bool(t and t.strip()),
+            ),
+            patch(
+                "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__enter__",
+                return_value=None,
+            ),
+            patch(
+                "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__exit__",
+                return_value=False,
+            ),
         ):
             # Patch deliverable path in template
-            with patch.object(
-                exp795.ExperimentTemplate, "assert_deliverable_written"
-            ), patch.object(
-                exp795.ExperimentTemplate, "check_exclusion_manifest"
-            ), patch.object(
-                exp795.ExperimentTemplate, "checkpoint_save"
+            with (
+                patch.object(exp795.ExperimentTemplate, "assert_deliverable_written"),
+                patch.object(exp795.ExperimentTemplate, "check_exclusion_manifest"),
+                patch.object(exp795.ExperimentTemplate, "checkpoint_save"),
             ):
                 exp795.main()
 
@@ -439,21 +454,22 @@ class TestExperiment795Main:
         results_dir = tmp_path / "results"
         results_dir.mkdir(parents=True, exist_ok=True)
 
-        with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "0"}), patch.object(
-            exp795, "_REPO_ROOT", tmp_path
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.apply_env_autofix"
-        ), patch(
-            "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__enter__",
-            return_value=None,
-        ), patch(
-            "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__exit__",
-            return_value=False,
+        with (
+            patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "0"}),
+            patch.object(exp795, "_REPO_ROOT", tmp_path),
+            patch("scripts.experiment_795_gemma4_oom_fix_v4.apply_env_autofix"),
+            patch(
+                "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__enter__",
+                return_value=None,
+            ),
+            patch(
+                "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__exit__",
+                return_value=False,
+            ),
         ):
-            with patch.object(
-                exp795.ExperimentTemplate, "assert_deliverable_written"
-            ), patch.object(
-                exp795.ExperimentTemplate, "check_exclusion_manifest"
+            with (
+                patch.object(exp795.ExperimentTemplate, "assert_deliverable_written"),
+                patch.object(exp795.ExperimentTemplate, "check_exclusion_manifest"),
             ):
                 exp795.main()
 
@@ -481,27 +497,30 @@ class TestExperiment795Main:
         )
         zombie_mock = _make_zombie_result(pids_killed=[])
 
-        with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}), patch.object(
-            exp795, "_REPO_ROOT", tmp_path
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.apply_env_autofix"
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.kill_gpu_zombies",
-            return_value=zombie_mock,
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.evict_gpu_vram",
-            return_value=failed_eviction,
-        ), patch(
-            "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__enter__",
-            return_value=None,
-        ), patch(
-            "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__exit__",
-            return_value=False,
+        with (
+            patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}),
+            patch.object(exp795, "_REPO_ROOT", tmp_path),
+            patch("scripts.experiment_795_gemma4_oom_fix_v4.apply_env_autofix"),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4.kill_gpu_zombies",
+                return_value=zombie_mock,
+            ),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4.evict_gpu_vram",
+                return_value=failed_eviction,
+            ),
+            patch(
+                "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__enter__",
+                return_value=None,
+            ),
+            patch(
+                "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__exit__",
+                return_value=False,
+            ),
         ):
-            with patch.object(
-                exp795.ExperimentTemplate, "assert_deliverable_written"
-            ), patch.object(
-                exp795.ExperimentTemplate, "check_exclusion_manifest"
+            with (
+                patch.object(exp795.ExperimentTemplate, "assert_deliverable_written"),
+                patch.object(exp795.ExperimentTemplate, "check_exclusion_manifest"),
             ):
                 exp795.main()
 
@@ -546,43 +565,46 @@ class TestExperiment795Main:
         }
 
         fake_questions = [
-            {"question": f"What is {i}+{i}?", "answer": str(i * 2)}
-            for i in range(10)
+            {"question": f"What is {i}+{i}?", "answer": str(i * 2)} for i in range(10)
         ]
 
-        with patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}), patch.object(
-            exp795, "_REPO_ROOT", tmp_path
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.apply_env_autofix"
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.kill_gpu_zombies",
-            return_value=zombie_mock,
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.evict_gpu_vram",
-            return_value=cleared_eviction,
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.load_gemma4_on_gpu1",
-            return_value=load_ok,
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4._load_gsm8k_questions",
-            return_value=fake_questions,
-        ), patch(
-            "scripts.experiment_795_gemma4_oom_fix_v4.GemmaTransformersLoader"
-                ".is_valid_output",
-            return_value=True,
-        ), patch(
-            "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__enter__",
-            return_value=None,
-        ), patch(
-            "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__exit__",
-            return_value=False,
+        with (
+            patch.dict(os.environ, {"CARNOT_FORCE_LIVE": "1"}),
+            patch.object(exp795, "_REPO_ROOT", tmp_path),
+            patch("scripts.experiment_795_gemma4_oom_fix_v4.apply_env_autofix"),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4.kill_gpu_zombies",
+                return_value=zombie_mock,
+            ),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4.evict_gpu_vram",
+                return_value=cleared_eviction,
+            ),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4.load_gemma4_on_gpu1",
+                return_value=load_ok,
+            ),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4._load_gsm8k_questions",
+                return_value=fake_questions,
+            ),
+            patch(
+                "scripts.experiment_795_gemma4_oom_fix_v4.GemmaTransformersLoader.is_valid_output",
+                return_value=True,
+            ),
+            patch(
+                "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__enter__",
+                return_value=None,
+            ),
+            patch(
+                "carnot.pipeline.experiment_watchdog.ExperimentTimeoutWatchdog.__exit__",
+                return_value=False,
+            ),
         ):
-            with patch.object(
-                exp795.ExperimentTemplate, "assert_deliverable_written"
-            ), patch.object(
-                exp795.ExperimentTemplate, "check_exclusion_manifest"
-            ), patch.object(
-                exp795.ExperimentTemplate, "checkpoint_save"
+            with (
+                patch.object(exp795.ExperimentTemplate, "assert_deliverable_written"),
+                patch.object(exp795.ExperimentTemplate, "check_exclusion_manifest"),
+                patch.object(exp795.ExperimentTemplate, "checkpoint_save"),
             ):
                 exp795.main()
 

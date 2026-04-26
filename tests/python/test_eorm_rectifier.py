@@ -21,8 +21,9 @@ from carnot.pipeline.eorm_rectifier import EORMAdaptiveRectifier, RectifierResul
 
 def _make_model() -> EORMModel:
     """Create a tiny EORMModel for fast CPU tests."""
-    return EORMModel(embed_dim=32, n_heads=4, n_layers=1, max_seq_len=64, vocab_size=512,
-                     key=jrandom.PRNGKey(42))
+    return EORMModel(
+        embed_dim=32, n_heads=4, n_layers=1, max_seq_len=64, vocab_size=512, key=jrandom.PRNGKey(42)
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -208,8 +209,9 @@ class TestEvaluate:
         questions = [{"question": "q", "answer": "42"}]
 
         # is_correct_fn that always returns True
-        result = rectifier.evaluate(questions, lambda q: "wrong",
-                                    is_correct_fn=lambda resp, gold: True)
+        result = rectifier.evaluate(
+            questions, lambda q: "wrong", is_correct_fn=lambda resp, gold: True
+        )
         assert result.baseline_accuracy == 1.0
         assert result.rectified_accuracy == 1.0
 

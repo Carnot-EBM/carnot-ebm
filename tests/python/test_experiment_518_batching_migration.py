@@ -216,10 +216,7 @@ class TestFindSimpleLoop:
     def test_complex_body_not_matched(self):
         # Multi-statement body (3 lines) should NOT match
         content = (
-            "for q in questions:\n"
-            "    ans = infer(q)\n"
-            "    results.append(ans)\n"
-            "    count += 1\n"
+            "for q in questions:\n    ans = infer(q)\n    results.append(ans)\n    count += 1\n"
         )
         m = exp518.find_simple_loop(content)
         assert m is None
@@ -229,9 +226,7 @@ class TestFindSimpleLoop:
         assert exp518.find_simple_loop(content) is None
 
     def test_different_var_names(self):
-        content = (
-            "for prob in problems:\n" "    result = run_model(prob)\n" "    output.append(result)\n"
-        )
+        content = "for prob in problems:\n    result = run_model(prob)\n    output.append(result)\n"
         m = exp518.find_simple_loop(content)
         assert m is not None
         assert m.group("var") == "prob"
@@ -252,7 +247,7 @@ class TestBuildBirReplacement:
         return m
 
     def test_replacement_contains_bir(self):
-        content = "for q in questions:\n" "    r = infer(q)\n" "    res.append(r)\n"
+        content = "for q in questions:\n    r = infer(q)\n    res.append(r)\n"
         m = self._make_match(content)
         rep = exp518.build_bir_replacement(m)
         assert "BatchedInferenceRunner" in rep
@@ -262,7 +257,7 @@ class TestBuildBirReplacement:
         assert "res" in rep
 
     def test_replacement_three_lines(self):
-        content = "for q in questions:\n" "    r = fn(q)\n" "    out.append(r)\n"
+        content = "for q in questions:\n    r = fn(q)\n    out.append(r)\n"
         m = self._make_match(content)
         rep = exp518.build_bir_replacement(m)
         # The replacement is exactly 3 lines
@@ -270,7 +265,7 @@ class TestBuildBirReplacement:
         assert len(lines) == 3
 
     def test_indentation_preserved(self):
-        content = "    for q in questions:\n" "        r = fn(q)\n" "        out.append(r)\n"
+        content = "    for q in questions:\n        r = fn(q)\n        out.append(r)\n"
         m = self._make_match(content)
         rep = exp518.build_bir_replacement(m)
         # Each replacement line should start with the same 4-space indent
@@ -287,14 +282,14 @@ class TestEnsureBirImport:
     """ensure_bir_import injects the import exactly once."""
 
     def test_already_imported_noop(self):
-        content = "from experiment_template import BatchedInferenceRunner\n" "x = 1\n"
+        content = "from experiment_template import BatchedInferenceRunner\nx = 1\n"
         result = exp518.ensure_bir_import(content)
         # Should be unchanged when BatchedInferenceRunner is already present
         assert result == content
         assert result.count("BatchedInferenceRunner") == 1
 
     def test_inserts_after_experiment_template_import(self):
-        content = "from experiment_template import ExperimentTemplate\n" "x = 1\n"
+        content = "from experiment_template import ExperimentTemplate\nx = 1\n"
         result = exp518.ensure_bir_import(content)
         # BatchedInferenceRunner import should appear right after the existing import
         lines = result.splitlines()
@@ -343,10 +338,7 @@ class TestAttemptScriptMigration:
         # Script with a complex loop (no match) → no_simple_loop_found
         script = tmp_path / "experiment_999_complex.py"
         script.write_text(
-            "for q in questions:\n"
-            "    ans = infer(q)\n"
-            "    log.info(ans)\n"
-            "    results.append(ans)\n",
+            "for q in questions:\n    ans = infer(q)\n    log.info(ans)\n    results.append(ans)\n",
             encoding="utf-8",
         )
         result = exp518.attempt_script_migration(str(script))

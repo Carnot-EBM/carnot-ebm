@@ -79,7 +79,7 @@ class TestGetAvailableGb:
 
     def test_returns_real_value_when_pynvml_available(self):
         # Simulate pynvml returning 12 GiB free
-        free_bytes = int(12.0 * 1024 ** 3)
+        free_bytes = int(12.0 * 1024**3)
         mock_pynvml = MagicMock()
         mock_pynvml.nvmlDeviceGetMemoryInfo.return_value = MagicMock(free=free_bytes)
 
@@ -210,7 +210,7 @@ class TestSequentialLoadGate:
         with patch("carnot.pipeline.jit_vram_check.time.sleep"):
             results = checker.sequential_load_gate(specs)
 
-        assert results[0].is_cleared is True   # 15 >= 10
+        assert results[0].is_cleared is True  # 15 >= 10
         assert results[1].is_cleared is False  # 7 < 10 on both attempts
 
 

@@ -274,9 +274,9 @@ class TestPredictViolationProb:
         hs_orthogonal = {-2: b, -1: c}
         p_halluc = probe.predict_violation_prob(hs_orthogonal)
 
-        assert (
-            p_halluc > p_correct
-        ), f"Hallucinated score {p_halluc:.3f} should exceed correct score {p_correct:.3f}"
+        assert p_halluc > p_correct, (
+            f"Hallucinated score {p_halluc:.3f} should exceed correct score {p_correct:.3f}"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -426,9 +426,9 @@ class TestGSM8KTripleGeneration:
         """
         triples = self.generate_gsm8k_triples(n=25, seed=42)
         for t in triples:
-            assert (
-                t["correct"] != t["hallucinated"]
-            ), f"correct and hallucinated are identical for: {t['question']}"
+            assert t["correct"] != t["hallucinated"], (
+                f"correct and hallucinated are identical for: {t['question']}"
+            )
 
     def test_reproducible_with_same_seed(self) -> None:
         """generate_gsm8k_triples with the same seed produces identical output.

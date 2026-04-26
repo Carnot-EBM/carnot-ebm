@@ -78,9 +78,7 @@ def _make_repo_root(tmp_path: Path) -> Path:
             }
         ],
     }
-    (root / "scripts" / "conductor_exclusion_manifest.json").write_text(
-        json.dumps(manifest)
-    )
+    (root / "scripts" / "conductor_exclusion_manifest.json").write_text(json.dumps(manifest))
     return root
 
 

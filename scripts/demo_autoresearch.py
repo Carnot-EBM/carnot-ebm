@@ -25,8 +25,8 @@
 Spec: FR-11, SCENARIO-AUTO-001, SCENARIO-AUTO-002, SCENARIO-AUTO-005
 """
 
-import sys
 import os
+import sys
 
 # Add the Python package to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
@@ -54,7 +54,7 @@ def create_initial_baselines() -> BaselineRecord:
     # Baseline: Langevin with step_size=0.01 on DoubleWell
     record.benchmarks["double_well"] = BenchmarkMetrics(
         benchmark_name="double_well",
-        final_energy=0.05,      # decent but not great
+        final_energy=0.05,  # decent but not great
         convergence_steps=5000,
         wall_clock_seconds=2.0,
     )
@@ -62,7 +62,7 @@ def create_initial_baselines() -> BaselineRecord:
     # Baseline: Langevin with step_size=0.01 on Rosenbrock
     record.benchmarks["rosenbrock"] = BenchmarkMetrics(
         benchmark_name="rosenbrock",
-        final_energy=0.5,       # stuck in the valley
+        final_energy=0.5,  # stuck in the valley
         convergence_steps=10000,
         wall_clock_seconds=5.0,
     )
@@ -112,7 +112,6 @@ def run(benchmark_data):
     }
 ''',
         ),
-
         # --- Hypothesis 2: Much larger step size (should fail — diverges) ---
         (
             "Langevin step_size=0.5 (too aggressive)",
@@ -134,7 +133,6 @@ def run(benchmark_data):
     }
 ''',
         ),
-
         # --- Hypothesis 3: Annealed step size (should improve both) ---
         (
             "Annealed Langevin: step_size 0.1 -> 0.001 over 10k steps",
@@ -155,7 +153,6 @@ def run(benchmark_data):
     }
 ''',
         ),
-
         # --- Hypothesis 4: Crashes (demonstrates error handling) ---
         (
             "Buggy hypothesis that crashes",
@@ -166,7 +163,6 @@ def run(benchmark_data):
     return {"double_well": {"final_energy": -999.0}}
 ''',
         ),
-
         # --- Hypothesis 5: Tries to import os (demonstrates safety) ---
         (
             "Malicious hypothesis trying filesystem access",
@@ -214,9 +210,11 @@ def print_results(result):
     print("-" * 70)
     if result.final_baselines:
         for name, metrics in sorted(result.final_baselines.benchmarks.items()):
-            print(f"  {name}: energy={metrics.final_energy:.4f}, "
-                  f"steps={metrics.convergence_steps}, "
-                  f"time={metrics.wall_clock_seconds:.1f}s")
+            print(
+                f"  {name}: energy={metrics.final_energy:.4f}, "
+                f"steps={metrics.convergence_steps}, "
+                f"time={metrics.wall_clock_seconds:.1f}s"
+            )
     print()
 
 
@@ -240,7 +238,7 @@ def main() -> int:
     print(f"STEP 2: Evaluating {len(hypotheses)} hypotheses")
     print("=" * 70)
     for i, (desc, _) in enumerate(hypotheses):
-        print(f"  [{i+1}] {desc}")
+        print(f"  [{i + 1}] {desc}")
     print()
 
     # Step 3: Run the autoresearch loop
@@ -270,12 +268,16 @@ def main() -> int:
         final_rb = result.final_baselines.benchmarks.get("rosenbrock")
         if final_dw:
             improvement = (1 - final_dw.final_energy / original_dw) * 100
-            print(f"  DoubleWell:  {original_dw} → {final_dw.final_energy:.4f}  "
-                  f"({improvement:+.1f}% improvement)")
+            print(
+                f"  DoubleWell:  {original_dw} → {final_dw.final_energy:.4f}  "
+                f"({improvement:+.1f}% improvement)"
+            )
         if final_rb:
             improvement = (1 - final_rb.final_energy / original_rb) * 100
-            print(f"  Rosenbrock:  {original_rb} → {final_rb.final_energy:.4f}  "
-                  f"({improvement:+.1f}% improvement)")
+            print(
+                f"  Rosenbrock:  {original_rb} → {final_rb.final_energy:.4f}  "
+                f"({improvement:+.1f}% improvement)"
+            )
 
     print()
     print("  The energy function served as the objective judge —")

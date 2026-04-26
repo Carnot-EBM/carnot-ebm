@@ -55,10 +55,8 @@ from __future__ import annotations
 
 import io
 import re
-import sys
-from contextlib import redirect_stdout
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable, Optional
 
 # ---------------------------------------------------------------------------
 # Z3FormalizationResult dataclass
@@ -110,7 +108,7 @@ class Z3FormalizationResult:
     is_sat: bool = field(init=False)
     formalization_mode: str  # "llm" | "ci_stub"
     source_response_length: int
-    error_message: Optional[str] = None
+    error_message: str | None = None
 
     def __post_init__(self) -> None:
         # is_sat is derived from z3_result, not supplied by the caller.
@@ -213,13 +211,7 @@ _ASSERTION_RE = re.compile(r"\.add\(")
 
 # CI stub: a minimal valid Z3 program that always returns "sat".
 # Used when llm_caller is None so tests and CI run without any LLM.
-_CI_STUB_Z3_CODE = (
-    "import z3\n"
-    "s = z3.Solver()\n"
-    "x = z3.Int('x')\n"
-    "s.add(x >= 0)\n"
-    "print(s.check())\n"
-)
+_CI_STUB_Z3_CODE = "import z3\ns = z3.Solver()\nx = z3.Int('x')\ns.add(x >= 0)\nprint(s.check())\n"
 
 
 def _make_restricted_import(z3_module: object) -> Callable:
@@ -258,7 +250,7 @@ def _make_restricted_import(z3_module: object) -> Callable:
     return _restricted_import
 
 
-def _exec_z3_snippet(code: str) -> tuple[str, Optional[str]]:
+def _exec_z3_snippet(code: str) -> tuple[str, str | None]:
     """Execute a Z3 Python snippet in a restricted exec() sandbox.
 
     **Detailed explanation for engineers:**
@@ -384,7 +376,7 @@ class LLMz3Formalizer:
 
     def __init__(
         self,
-        llm_caller: Optional[LLMCallerFn] = None,
+        llm_caller: LLMCallerFn | None = None,
         model_id: str = "ci_stub",
         max_iterations: int = 2,
     ) -> None:
@@ -398,7 +390,7 @@ class LLMz3Formalizer:
         self._llm_caller = llm_caller
         self._model_id = model_id
         self._max_iterations = max(1, max_iterations)
-        self.last_result: Optional[Z3FormalizationResult] = None
+        self.last_result: Z3FormalizationResult | None = None
 
     def formalize(self, question: str, response: str) -> Z3FormalizationResult:
         """Formalize arithmetic in a response into a Z3FormalizationResult.
@@ -454,8 +446,8 @@ class LLMz3Formalizer:
         # --- LLM formalization path ---
         z3_code = ""
         z3_result = "unknown"
-        error_msg: Optional[str] = None
-        last_error: Optional[str] = None
+        error_msg: str | None = None
+        last_error: str | None = None
 
         for iteration in range(self._max_iterations):
             # Build prompt, optionally appending last error for self-correction.

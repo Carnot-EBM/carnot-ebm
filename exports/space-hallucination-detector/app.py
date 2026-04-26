@@ -7,8 +7,6 @@ Upload a safetensors file or generate activations from a local model.
 from __future__ import annotations
 
 import json
-import os
-import tempfile
 
 import gradio as gr
 import numpy as np
@@ -64,8 +62,6 @@ def load_ebm_model(model_id: str):
     """Load a pre-trained EBM from HuggingFace."""
     from huggingface_hub import hf_hub_download
     from safetensors.numpy import load_file
-    import jax.numpy as jnp
-    import jax.random as jrandom
 
     # Download model files
     config_path = hf_hub_download(f"Carnot-EBM/{model_id}", "config.json")
@@ -83,7 +79,6 @@ def score_activations(model_id: str, activations_file, json_input: str) -> str:
     """Score activation vectors and return results."""
     try:
         import jax.numpy as jnp
-        import jax.random as jrandom
 
         # Load EBM
         config, weights = load_ebm_model(model_id)
@@ -108,6 +103,7 @@ def score_activations(model_id: str, activations_file, json_input: str) -> str:
 
         if activations_file is not None:
             from safetensors.numpy import load_file
+
             data = load_file(activations_file.name)
             activations = data["activations"]
             labels = data.get("labels")
@@ -118,7 +114,7 @@ def score_activations(model_id: str, activations_file, json_input: str) -> str:
             elif isinstance(parsed, dict) and "activations" in parsed:
                 activations = np.array(parsed["activations"], dtype=np.float32)
             else:
-                return "Error: JSON must be a list of vectors or {\"activations\": [...]}"
+                return 'Error: JSON must be a list of vectors or {"activations": [...]}'
         else:
             return "Please upload a safetensors file or paste activation vectors as JSON."
 
@@ -141,14 +137,14 @@ def score_activations(model_id: str, activations_file, json_input: str) -> str:
 
         # Build results
         lines = []
-        lines.append(f"## Results")
-        lines.append(f"")
+        lines.append("## Results")
+        lines.append("")
         lines.append(f"**Model:** {model_id}")
         lines.append(f"**Source LLM:** {MODELS[model_id]['source']}")
         lines.append(f"**EBM Accuracy:** {MODELS[model_id]['accuracy']}%")
-        lines.append(f"")
-        lines.append(f"| Metric | Value |")
-        lines.append(f"|--------|-------|")
+        lines.append("")
+        lines.append("| Metric | Value |")
+        lines.append("|--------|-------|")
         lines.append(f"| Tokens scored | {n_tokens} |")
         lines.append(f"| Mean energy | {mean_energy:.4f} |")
         lines.append(f"| Std energy | {std_energy:.4f} |")
@@ -167,19 +163,19 @@ def score_activations(model_id: str, activations_file, json_input: str) -> str:
                 lines.append(f"| Correct tokens | {len(correct_e)} |")
                 lines.append(f"| Wrong tokens | {len(wrong_e)} |")
 
-        lines.append(f"")
-        lines.append(f"### Interpretation")
-        lines.append(f"")
-        lines.append(f"- **Lower energy** = model activations look like correct answers")
-        lines.append(f"- **Higher energy** = model activations look like hallucinated answers")
-        lines.append(f"- The threshold between correct and hallucinated is data-dependent")
+        lines.append("")
+        lines.append("### Interpretation")
+        lines.append("")
+        lines.append("- **Lower energy** = model activations look like correct answers")
+        lines.append("- **Higher energy** = model activations look like hallucinated answers")
+        lines.append("- The threshold between correct and hallucinated is data-dependent")
 
         # Show per-token energy distribution
-        lines.append(f"")
-        lines.append(f"### Per-Token Energies (first 20)")
-        lines.append(f"")
-        lines.append(f"| Token # | Energy | Assessment |")
-        lines.append(f"|---------|--------|-----------|")
+        lines.append("")
+        lines.append("### Per-Token Energies (first 20)")
+        lines.append("")
+        lines.append("| Token # | Energy | Assessment |")
+        lines.append("|---------|--------|-----------|")
         for i in range(min(20, n_tokens)):
             assessment = "likely correct" if energies[i] < mean_energy else "possibly hallucinated"
             label_str = ""
@@ -231,7 +227,7 @@ with gr.Blocks(
 
             json_input = gr.Textbox(
                 label="Or paste activation vectors as JSON",
-                placeholder='[[0.1, 0.2, ...], [0.3, 0.4, ...]]',
+                placeholder="[[0.1, 0.2, ...], [0.3, 0.4, ...]]",
                 lines=5,
             )
 

@@ -325,11 +325,13 @@ def _build_gsm8k_questions(n: int, seed: int) -> list[dict[str, Any]]:
         # E.g., answer=12 → last digit "2" → ASCII 50.
         answer_char = str(answer)[-1]
         answer_token_id = ord(answer_char)  # in range [48, 57]
-        questions.append({
-            "question": question,
-            "answer": answer,
-            "answer_token_id": answer_token_id,
-        })
+        questions.append(
+            {
+                "question": question,
+                "answer": answer,
+                "answer_token_id": answer_token_id,
+            }
+        )
     return questions
 
 
@@ -462,8 +464,9 @@ def main() -> None:
     print("\n[1/3] Building KAN energy function ...")
     kan = _build_kan_model(seed=140)
     grad_fn = _jit_grad_energy(kan)
-    print(f"      KAN: input_dim={KAN_INPUT_DIM}, n_edges={len(kan.edges)}, "
-          f"n_params={kan.n_params}")
+    print(
+        f"      KAN: input_dim={KAN_INPUT_DIM}, n_edges={len(kan.edges)}, n_params={kan.n_params}"
+    )
 
     # Trigger JIT compilation with a dummy call.
     dummy_x = jnp.zeros(KAN_INPUT_DIM)
@@ -474,8 +477,9 @@ def main() -> None:
     # -----------------------------------------------------------------------
     # Part 1: Latency benchmark.
     # -----------------------------------------------------------------------
-    print(f"\n[2/3] Latency benchmark ({WARMUP_ITERS} warm-up, "
-          f"{MEASURE_ITERS} timed iterations) ...")
+    print(
+        f"\n[2/3] Latency benchmark ({WARMUP_ITERS} warm-up, {MEASURE_ITERS} timed iterations) ..."
+    )
 
     latency_results: list[dict[str, Any]] = []
     key = jrandom.PRNGKey(140)
@@ -486,8 +490,7 @@ def main() -> None:
         result = benchmark_projection_latency(kan, grad_fn, batch_size, subkey)
         latency_results.append(result)
         print(
-            f"total p50={result['total']['p50_ms']:.3f} ms  "
-            f"p99={result['total']['p99_ms']:.3f} ms"
+            f"total p50={result['total']['p50_ms']:.3f} ms  p99={result['total']['p99_ms']:.3f} ms"
         )
 
     # -----------------------------------------------------------------------
@@ -523,7 +526,9 @@ def main() -> None:
     print(f"\nAccuracy comparison (GSM8K, n={N_GSM8K}):")
     print(f"  Baseline:   {baseline_acc:.3f}")
     print(f"  Penalty:    {penalty_acc:.3f}  (Δ={penalty_acc - baseline_acc:+.3f} vs baseline)")
-    print(f"  Projection: {projection_acc:.3f}  (Δ={projection_acc - baseline_acc:+.3f} vs baseline)")
+    print(
+        f"  Projection: {projection_acc:.3f}  (Δ={projection_acc - baseline_acc:+.3f} vs baseline)"
+    )
 
     # -----------------------------------------------------------------------
     # Overhead comparison: projection vs penalty.

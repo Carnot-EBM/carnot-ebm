@@ -139,8 +139,8 @@ class TestPublishableHasNonzeroTp:
             "mean_auroc": 0.9585,
             "per_dataset_cm": {
                 "hackaprompt": {"tp": 0, "fp": 0, "tn": 250, "fn": 250},
-                "bipia":       {"tp": 0, "fp": 0, "tn": 200, "fn": 200},
-                "synthetic":   {"tp": 0, "fp": 0, "tn": 100, "fn": 100},
+                "bipia": {"tp": 0, "fp": 0, "tn": 200, "fn": 200},
+                "synthetic": {"tp": 0, "fp": 0, "tn": 100, "fn": 100},
             },
         }
         result = check_publishable_has_nonzero_tp(artifact)
@@ -316,7 +316,8 @@ class TestRunInvariants:
         """Exp 690 actual numbers — all invariants pass."""
         artifact = {
             "honest_verdict": "distillation_corpus_built_classifier_trained_auroc_below_threshold",
-            "n_train": 160, "n_test": 40,
+            "n_train": 160,
+            "n_test": 40,
             "teacher_inference_duration_s": 6256.2,
         }
         assert run_invariants(artifact) == []
@@ -329,8 +330,8 @@ class TestRunInvariants:
             "mean_cross_dataset_auroc": 0.9585,
             "per_dataset_cm": {
                 "hackaprompt": {"tp": 0, "fp": 0, "tn": 250, "fn": 250},
-                "bipia":       {"tp": 0, "fp": 0, "tn": 200, "fn": 200},
-                "synthetic":   {"tp": 0, "fp": 0, "tn": 100, "fn": 100},
+                "bipia": {"tp": 0, "fp": 0, "tn": 200, "fn": 200},
+                "synthetic": {"tp": 0, "fp": 0, "tn": 100, "fn": 100},
             },
         }
         violations = run_invariants(artifact)

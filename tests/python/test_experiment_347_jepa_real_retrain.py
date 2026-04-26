@@ -149,7 +149,11 @@ class TestExtractViolationPairsLive:
 
     def test_single_word_response_does_not_crash(self):
         # Edge case: 1-word response; prefix must have at least 1 word
-        live = {"responses": [{"question_id": "q0", "model_id": "m", "response": "yes", "correct": True}]}
+        live = {
+            "responses": [
+                {"question_id": "q0", "model_id": "m", "response": "yes", "correct": True}
+            ]
+        }
         pairs = extract_violation_pairs(live, prefix_fraction=0.5)
         assert len(pairs) == 1
         assert pairs[0].partial_response == "yes"
@@ -370,16 +374,12 @@ class TestEvaluateAucRoc:
 
     def test_all_violations_returns_half(self):
         retrainer = JEPARetrainer(_make_jepa_model())
-        pairs = [
-            ViolationPair("x", "x y", True, "m", f"q{i}") for i in range(5)
-        ]
+        pairs = [ViolationPair("x", "x y", True, "m", f"q{i}") for i in range(5)]
         assert retrainer.evaluate_auc_roc(pairs) == 0.5
 
     def test_all_non_violations_returns_half(self):
         retrainer = JEPARetrainer(_make_jepa_model())
-        pairs = [
-            ViolationPair("x", "x y", False, "m", f"q{i}") for i in range(5)
-        ]
+        pairs = [ViolationPair("x", "x y", False, "m", f"q{i}") for i in range(5)]
         assert retrainer.evaluate_auc_roc(pairs) == 0.5
 
     def test_auc_in_range(self):

@@ -314,9 +314,12 @@ def attempt_ort_source_build(
         print(f"  Cloning onnxruntime {ORT_GIT_TAG} to {build_dir} ...")
         clone_result = subprocess.run(
             [
-                "git", "clone",
-                "--depth", "1",
-                "--branch", ORT_GIT_TAG,
+                "git",
+                "clone",
+                "--depth",
+                "1",
+                "--branch",
+                ORT_GIT_TAG,
                 ORT_GIT_URL,
                 str(build_dir),
             ],
@@ -343,8 +346,10 @@ def attempt_ort_source_build(
     cmake_build_dir.mkdir(exist_ok=True)
 
     cmake_cmd = [
-        "cmake", str(build_dir),
-        "-G", "Ninja",
+        "cmake",
+        str(build_dir),
+        "-G",
+        "Ninja",
         "-DCMAKE_BUILD_TYPE=Release",
         "-DONNXRUNTIME_USE_VITISAI=ON",
         f"-DONNXRUNTIME_VITISAI_EP_LIBRARY_PATH={_XRT_DIR.parent / 'vart' / 'vitisai'}",
@@ -493,8 +498,7 @@ def _build_next_steps(
                 "OR  sudo apt install libopenblas-dev  (Debian/Ubuntu)"
             )
         steps.append(
-            "Then re-run: JAX_PLATFORMS=cpu .venv/bin/python "
-            "scripts/experiment_335_npu_build.py"
+            "Then re-run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_335_npu_build.py"
         )
     elif verdict == "timeout":
         steps.append(
@@ -546,8 +550,7 @@ def _update_hardware_wishlist(
         lines.append(f"  - openblas: {openblas_s} (was missing in Exp 314)")
         if not ps.get("ninja_available"):
             lines.append(
-                "  - Install ninja: "
-                "`sudo pacman -S ninja  OR  sudo apt install ninja-build`"
+                "  - Install ninja: `sudo pacman -S ninja  OR  sudo apt install ninja-build`"
             )
         if not ps.get("openblas_available"):
             lines.append(

@@ -113,9 +113,7 @@ class CompressedMemoryBank:
             else:
                 # Uniform stride: take every n/k-th element (floor-indexed).
                 step = n / k_effective
-                new_centroids = [
-                    session_violations[int(i * step)] for i in range(k_effective)
-                ]
+                new_centroids = [session_violations[int(i * step)] for i in range(k_effective)]
             self._centroids = new_centroids
 
         elapsed_ms = (time.perf_counter() - t0) * 1000.0

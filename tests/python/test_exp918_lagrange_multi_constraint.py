@@ -35,6 +35,7 @@ from scripts.experiment_918_lagrange_forgetting_multi_constraint import (  # noq
 # REQ-SELF-007-1: corpus is non-degenerate at first measurement interval
 # ---------------------------------------------------------------------------
 
+
 def test_initial_entropy_is_non_degenerate():
     """8-constraint heterogeneous corpus must have entropy > 0.1 at step 20.
 
@@ -72,6 +73,7 @@ def test_initial_entropy_near_maximum():
 # REQ-SELF-007-3: decay and no-decay diverge by step 100
 # ---------------------------------------------------------------------------
 
+
 def test_decay_and_baseline_weights_differ_at_step_100():
     """Forgetting lambda > 0 must produce different weight distributions than lambda=0.
 
@@ -94,6 +96,7 @@ def test_decay_and_baseline_weights_differ_at_step_100():
 # SCENARIO-SELF-007: decay updater entropy > 0.5 nats at step 100
 # ---------------------------------------------------------------------------
 
+
 def test_decay_entropy_above_floor_at_step_100():
     """Decay updater weight_entropy must be > 0.5 nats at step 100.
 
@@ -114,6 +117,7 @@ def test_decay_entropy_above_floor_at_step_100():
 # ---------------------------------------------------------------------------
 # Verdict computation: non-degenerate corpus -> verdict not 'degenerate_again_retire'
 # ---------------------------------------------------------------------------
+
 
 def test_verdict_is_not_degenerate():
     """With a heterogeneous 8-constraint corpus, verdict must not be 'degenerate_again_retire'.
@@ -149,6 +153,7 @@ def test_verdict_is_improvement():
 # _make_updater: sanity check that pre-registration gives equal weights
 # ---------------------------------------------------------------------------
 
+
 def test_make_updater_registers_all_constraints():
     """_make_updater must register all 8 constraints from CONSTRAINTS dict.
 
@@ -176,6 +181,7 @@ def test_make_updater_initial_entropy_non_zero():
 # ---------------------------------------------------------------------------
 # Corpus constants sanity checks
 # ---------------------------------------------------------------------------
+
 
 def test_eight_constraint_types():
     """CONSTRAINTS dict must have exactly 8 entries.

@@ -28,6 +28,7 @@ from carnot.stores.memory_bank_compressor import MemoryBankCompressor
 # MemoryBankCompressor tests
 # ---------------------------------------------------------------------------
 
+
 class TestMemoryBankCompressor:
     """REQ-STORE-020: MemoryBankCompressor compress() contract."""
 
@@ -101,6 +102,7 @@ class TestMemoryBankCompressor:
 # ---------------------------------------------------------------------------
 # EmbeddingConstraintStore tests
 # ---------------------------------------------------------------------------
+
 
 class TestEmbeddingConstraintStore:
     """REQ-STORE-010, REQ-STORE-011, REQ-STORE-020."""
@@ -201,6 +203,7 @@ class TestEmbeddingConstraintStore:
 # ---------------------------------------------------------------------------
 # SCENARIO-STORE-030: full AUROC benchmark
 # ---------------------------------------------------------------------------
+
 
 class TestAUROCBenchmark:
     """SCENARIO-STORE-030: Compression preserves retrieval AUROC > 0.75."""

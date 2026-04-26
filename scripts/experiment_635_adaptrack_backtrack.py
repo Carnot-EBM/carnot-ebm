@@ -121,9 +121,7 @@ def main() -> None:
     # Load corpus
     # -----------------------------------------------------------------------
     corpus_path = _REPO_ROOT / "results" / "live_pairs_578.json"
-    incorrect_responses, correct_responses = load_corpus(
-        corpus_path, n_incorrect=25, n_correct=10
-    )
+    incorrect_responses, correct_responses = load_corpus(corpus_path, n_incorrect=25, n_correct=10)
     _log.info(
         "Loaded %d incorrect and %d correct responses",
         len(incorrect_responses),
@@ -175,13 +173,10 @@ def main() -> None:
     mean_backtracks_per_response = total_backtracks / total_responses
 
     adaptrack_improves_recall = adaptrack_recall > interwhen_baseline
-    honest_verdict = (
-        "adaptrack_improves" if adaptrack_improves_recall else "adaptrack_comparable"
-    )
+    honest_verdict = "adaptrack_improves" if adaptrack_improves_recall else "adaptrack_comparable"
 
     _log.info(
-        "adaptrack_recall=%.4f  adaptrack_fp_rate=%.4f  "
-        "interwhen_baseline=%.4f  improves=%s",
+        "adaptrack_recall=%.4f  adaptrack_fp_rate=%.4f  interwhen_baseline=%.4f  improves=%s",
         adaptrack_recall,
         adaptrack_fp_rate,
         interwhen_baseline,
@@ -211,6 +206,7 @@ def main() -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w") as f:
         import json as _json
+
         _json.dump(artifact, f, indent=2)
 
     tmpl.assert_deliverable_written()

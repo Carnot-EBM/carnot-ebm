@@ -48,36 +48,34 @@ from __future__ import annotations
 
 import ast
 import io
-import json
 import signal
-import sys
 import time
 import traceback
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any
-
 
 # Modules that hypotheses are NOT allowed to import.
 # These provide filesystem access, network access, process spawning, or other
 # capabilities that untrusted code should never have.
-BLOCKED_MODULES = frozenset({
-    "os",            # filesystem operations, environment variables
-    "subprocess",    # spawning external processes
-    "socket",        # raw network access
-    "shutil",        # file/directory operations (copy, move, delete)
-    "ctypes",        # foreign function interface (can call arbitrary C code)
-    "multiprocessing",  # spawning processes
-    "threading",     # spawning threads (could bypass timeout)
-    "http",          # HTTP server/client
-    "urllib",        # URL handling and network requests
-    "requests",      # popular HTTP library
-    "pathlib",       # filesystem path operations
-    "tempfile",      # temporary file creation
-    "signal",        # signal handling (could disable our timeout)
-    "importlib",     # dynamic imports (could bypass our blocklist)
-})
+BLOCKED_MODULES = frozenset(
+    {
+        "os",  # filesystem operations, environment variables
+        "subprocess",  # spawning external processes
+        "socket",  # raw network access
+        "shutil",  # file/directory operations (copy, move, delete)
+        "ctypes",  # foreign function interface (can call arbitrary C code)
+        "multiprocessing",  # spawning processes
+        "threading",  # spawning threads (could bypass timeout)
+        "http",  # HTTP server/client
+        "urllib",  # URL handling and network requests
+        "requests",  # popular HTTP library
+        "pathlib",  # filesystem path operations
+        "tempfile",  # temporary file creation
+        "signal",  # signal handling (could disable our timeout)
+        "importlib",  # dynamic imports (could bypass our blocklist)
+    }
+)
 
 
 @dataclass

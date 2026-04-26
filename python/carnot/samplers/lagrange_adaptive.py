@@ -165,9 +165,7 @@ class LagrangeAdaptiveIsingConstraints:
             "per_constraint_violation_rates": per_constraint_vr,
         }
 
-    def _count_violations(
-        self, samples: np.ndarray, constraints: list[dict]
-    ) -> np.ndarray:
+    def _count_violations(self, samples: np.ndarray, constraints: list[dict]) -> np.ndarray:
         """Count total constraint violations per sample.
 
         **Detailed explanation:**

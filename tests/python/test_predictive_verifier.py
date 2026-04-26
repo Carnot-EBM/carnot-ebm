@@ -34,12 +34,10 @@ from carnot.pipeline.predictive_verifier import (
 
 _SPARSE_RESPONSE = "The answer is 42."
 _NUMERIC_RESPONSE = (
-    '{"final_answer": 230, "claims": ['
-    '"55 * 4 = 220.", "45 * 10 = 450.", "450 - 220 = 230."]}'
+    '{"final_answer": 230, "claims": ["55 * 4 = 220.", "45 * 10 = 450.", "450 - 220 = 230."]}'
 )
 _ARITHMETIC_RESPONSE = (
-    "First, 55 + 45 = 100. Then 100 * 4 = 400. "
-    "So 400 - 170 = 230. Divide: 230 / 2 = 115."
+    "First, 55 + 45 = 100. Then 100 * 4 = 400. So 400 - 170 = 230. Divide: 230 / 2 = 115."
 )
 
 

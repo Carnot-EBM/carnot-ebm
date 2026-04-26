@@ -46,13 +46,15 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 import jax
 import jax.numpy as jnp
 import numpy as np
 import optax
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # Type alias for the four supported compliance domains.
 ComplianceDomain = Literal["financial", "medical", "legal", "general"]
@@ -123,7 +125,8 @@ _DOMAIN_KEYWORDS: dict[str, list[str]] = {
 # General domain = union of all domain keywords (for cross-domain screening).
 _DOMAIN_KEYWORDS["general"] = list(
     dict.fromkeys(
-        kw for kws in [
+        kw
+        for kws in [
             _DOMAIN_KEYWORDS["financial"],
             _DOMAIN_KEYWORDS["medical"],
             _DOMAIN_KEYWORDS["legal"],
@@ -299,9 +302,7 @@ def _compliance_energy(
     hidden_norm = jnp.tanh(hidden / (n_features + 1e-8))  # (n_hidden,)
 
     # Layer 2: output energy via per-hidden-unit splines.
-    energies = _bspline_eval_batch(
-        hidden_norm, output_ctrl, n_knots, degree
-    )  # (n_hidden,)
+    energies = _bspline_eval_batch(hidden_norm, output_ctrl, n_knots, degree)  # (n_hidden,)
 
     return jnp.sum(energies)
 
@@ -418,9 +419,9 @@ class ComplianceEnergyChecker:
             -0.1, 0.1, (n_hidden, n_features, self._n_ctrl)
         ).astype(np.float32)
         # output_ctrl[k, :] = spline control points for output from hidden unit k.
-        self.output_ctrl: np.ndarray = rng.uniform(
-            -0.1, 0.1, (n_hidden, self._n_ctrl)
-        ).astype(np.float32)
+        self.output_ctrl: np.ndarray = rng.uniform(-0.1, 0.1, (n_hidden, self._n_ctrl)).astype(
+            np.float32
+        )
 
     def _energy_from_features(
         self,
@@ -538,9 +539,13 @@ class ComplianceEnergyChecker:
 
             def single_energy(f: jnp.ndarray) -> jnp.ndarray:
                 return _compliance_energy(
-                    f, ec_p, oc_p,
-                    self._N_KNOTS, self._DEGREE,
-                    self.n_features, self.n_hidden,
+                    f,
+                    ec_p,
+                    oc_p,
+                    self._N_KNOTS,
+                    self._DEGREE,
+                    self.n_features,
+                    self.n_hidden,
                 )
 
             e_comp = jax.vmap(single_energy)(comp_arr)
@@ -549,7 +554,7 @@ class ComplianceEnergyChecker:
             # Contrastive objective: compliant low, violation high.
             contrastive = jnp.mean(e_comp) - jnp.mean(e_viol)
             # L2 regularisation prevents energy from diverging to -∞.
-            reg = 1e-3 * (jnp.sum(ec_p ** 2) + jnp.sum(oc_p ** 2))
+            reg = 1e-3 * (jnp.sum(ec_p**2) + jnp.sum(oc_p**2))
             return contrastive + reg
 
         optimizer = optax.adam(lr)
@@ -645,7 +650,7 @@ class ComplianceEnergyChecker:
             json.dump(meta, fh, indent=2)
 
     @classmethod
-    def load(cls, path: str | Path) -> "ComplianceEnergyChecker":
+    def load(cls, path: str | Path) -> ComplianceEnergyChecker:
         """Load a ComplianceEnergyChecker from a saved checkpoint.
 
         Args:

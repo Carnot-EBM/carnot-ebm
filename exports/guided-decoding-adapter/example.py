@@ -5,11 +5,12 @@ Run from the carnot repo root:
 """
 
 import os
+
 os.environ.setdefault("JAX_PLATFORMS", "cpu")
 
 from unittest.mock import MagicMock
-import torch
 
+import torch
 from carnot.inference.guided_decoding import GuidedDecoder
 
 # Load adapter from this directory (local usage)
@@ -23,11 +24,15 @@ decoder = GuidedDecoder.from_pretrained("exports/guided-decoding-adapter")
 #   tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen3.5-0.8B")
 step = [0]
 
+
 def _forward(input_ids):
     logits = torch.zeros(1, input_ids.shape[1], 10)
     logits[0, -1, 1 if step[0] >= 3 else 0] = 10.0  # EOS after 3 tokens
     step[0] += 1
-    out = MagicMock(); out.logits = logits; return out
+    out = MagicMock()
+    out.logits = logits
+    return out
+
 
 model = MagicMock()
 model.side_effect = _forward
@@ -40,5 +45,7 @@ tokenizer.decode = MagicMock(side_effect=lambda ids, **kw: "" if ids.item() == 1
 
 result = decoder.generate(model, tokenizer, "What is 47 + 28?")
 print("Generated:", result.text)
-print(f"Tokens: {result.tokens_generated}  Checks: {result.energy_checks}  "
-      f"Mean penalty: {result.mean_penalty:.3f}  Latency: {result.latency_seconds*1000:.1f}ms")
+print(
+    f"Tokens: {result.tokens_generated}  Checks: {result.energy_checks}  "
+    f"Mean penalty: {result.mean_penalty:.3f}  Latency: {result.latency_seconds * 1000:.1f}ms"
+)

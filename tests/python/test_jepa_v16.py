@@ -67,7 +67,7 @@ class TestInfoNCELoss:
         dim = 32
         anchor = np.ones(dim, dtype=np.float32) / np.sqrt(dim)
         positive = np.ones(dim, dtype=np.float32) / np.sqrt(dim)  # identical to anchor
-        neg = -np.ones(dim, dtype=np.float32) / np.sqrt(dim)      # antipodal
+        neg = -np.ones(dim, dtype=np.float32) / np.sqrt(dim)  # antipodal
         loss = loss_fn.compute(anchor, positive, [neg])
         # With temp=0.07, sim(a,p)=1.0/0.07≈14.3 and sim(a,neg)=-14.3 — softmax ≈ 1.0 → loss ≈ 0.
         assert loss < 0.01
@@ -83,9 +83,13 @@ class TestInfoNCELoss:
         rng = np.random.default_rng(2)
         anchors = [rng.standard_normal(EMBED_DIM).astype(np.float32) for _ in range(4)]
         positives = [rng.standard_normal(EMBED_DIM).astype(np.float32) for _ in range(4)]
-        negatives_list = [[rng.standard_normal(EMBED_DIM).astype(np.float32) for _ in range(2)] for _ in range(4)]
+        negatives_list = [
+            [rng.standard_normal(EMBED_DIM).astype(np.float32) for _ in range(2)] for _ in range(4)
+        ]
         batch = loss_fn.batch_loss(anchors, positives, negatives_list)
-        individual = [loss_fn.compute(a, p, ns) for a, p, ns in zip(anchors, positives, negatives_list)]
+        individual = [
+            loss_fn.compute(a, p, ns) for a, p, ns in zip(anchors, positives, negatives_list)
+        ]
         assert abs(batch - float(np.mean(individual))) < 1e-6
 
     def test_temperature_zero_raises(self):
@@ -122,12 +126,14 @@ class TestBuildV16TrainingData:
         for q_idx in range(n_questions):
             q = f"Question {q_idx}: how many apples?"
             for s_idx in range(steps_per_q):
-                pairs.append({
-                    "question": q,
-                    "step_text": f"Step {s_idx} for Q{q_idx}: compute {s_idx * 2}.",
-                    "step_correct": s_idx % 2 == 0,  # even steps = correct
-                    "z3_verdict": "sat",
-                })
+                pairs.append(
+                    {
+                        "question": q,
+                        "step_text": f"Step {s_idx} for Q{q_idx}: compute {s_idx * 2}.",
+                        "step_correct": s_idx % 2 == 0,  # even steps = correct
+                        "z3_verdict": "sat",
+                    }
+                )
         return pairs
 
     def test_returns_list_of_triplets(self):
@@ -210,11 +216,13 @@ class TestCascadeUnblock:
             ]
         }
         if with_jepa_block:
-            manifest["excluded"].append({
-                "experiment_id": "jepa_v15_cascade",
-                "completed_milestone": "2026.04.53",
-                "reason": "ood_auc_below_random_blocked_until_v16",
-            })
+            manifest["excluded"].append(
+                {
+                    "experiment_id": "jepa_v15_cascade",
+                    "completed_milestone": "2026.04.53",
+                    "reason": "ood_auc_below_random_blocked_until_v16",
+                }
+            )
         return manifest
 
     def test_removes_block_when_auc_target_met(self, tmp_path):
@@ -278,11 +286,14 @@ class TestJEPAv16:
         """train() returns a dict with train_losses key. Spec: REQ-LEARN-053."""
         model = JEPAv16(seed=0)
         rng = np.random.default_rng(0)
-        triplets = [{
-            "anchor": rng.standard_normal(EMBED_DIM).astype(np.float32),
-            "positive": rng.standard_normal(EMBED_DIM).astype(np.float32),
-            "negatives": [rng.standard_normal(EMBED_DIM).astype(np.float32)],
-        } for _ in range(5)]
+        triplets = [
+            {
+                "anchor": rng.standard_normal(EMBED_DIM).astype(np.float32),
+                "positive": rng.standard_normal(EMBED_DIM).astype(np.float32),
+                "negatives": [rng.standard_normal(EMBED_DIM).astype(np.float32)],
+            }
+            for _ in range(5)
+        ]
         log = model.train(triplets, n_epochs=5)
         assert "train_losses" in log
         assert len(log["train_losses"]) == 5

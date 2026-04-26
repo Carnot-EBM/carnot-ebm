@@ -60,9 +60,7 @@ def _write_679(tmp_path: Path, **overrides: object) -> None:
         "retro_033_validated": True,
     }
     data.update(overrides)
-    (tmp_path / "results" / "experiment_679_vr_200q_scale.json").write_text(
-        json.dumps(data)
-    )
+    (tmp_path / "results" / "experiment_679_vr_200q_scale.json").write_text(json.dumps(data))
 
 
 def _write_694(tmp_path: Path, **overrides: object) -> None:
@@ -75,9 +73,7 @@ def _write_694(tmp_path: Path, **overrides: object) -> None:
         "gemma_signed_improvement": -0.8,
     }
     data.update(overrides)
-    (tmp_path / "results" / "experiment_694_vr_cross_model.json").write_text(
-        json.dumps(data)
-    )
+    (tmp_path / "results" / "experiment_694_vr_cross_model.json").write_text(json.dumps(data))
 
 
 def _write_691(tmp_path: Path, **overrides: object) -> None:
@@ -105,9 +101,16 @@ def _minimal_all_results(tmp_path: Path) -> None:
         "experiment_680_humaneval_vr",
     ]:
         (tmp_path / "results" / f"{name}.json").write_text(
-            json.dumps({"honest_verdict": "test", "true_ood_auc": 0.47, "v16_ood_auc": 0.47,
-                        "ood_auc_delta": 0.0, "cross_model_delta": -1.8,
-                        "gemma_signed_improvement": -0.8})
+            json.dumps(
+                {
+                    "honest_verdict": "test",
+                    "true_ood_auc": 0.47,
+                    "v16_ood_auc": 0.47,
+                    "ood_auc_delta": 0.0,
+                    "cross_model_delta": -1.8,
+                    "gemma_signed_improvement": -0.8,
+                }
+            )
         )
 
 
@@ -414,9 +417,20 @@ class TestWriteModelCard:
 
         Spec: REQ-PUBLISH-002
         """
-        table = [{"metric": "VR signed_improvement (200q GSM8K, Qwen3.5-0.8B)", "value": 1.0,
-                   "source_exp": 679, "inference_mode": "live_gpu", "provenance_valid": True}]
-        exp694 = {"cross_model_delta": -1.8, "grammar_recall": 0.0, "gemma_signed_improvement": -0.8}
+        table = [
+            {
+                "metric": "VR signed_improvement (200q GSM8K, Qwen3.5-0.8B)",
+                "value": 1.0,
+                "source_exp": 679,
+                "inference_mode": "live_gpu",
+                "provenance_valid": True,
+            }
+        ]
+        exp694 = {
+            "cross_model_delta": -1.8,
+            "grammar_recall": 0.0,
+            "gemma_signed_improvement": -0.8,
+        }
         exp691 = {"mean_auroc": 0.9585}
         write_model_card(tmp_repo, table, [], exp694, exp691)
         card_path = tmp_repo / MODEL_CARD_PATH

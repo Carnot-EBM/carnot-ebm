@@ -20,7 +20,7 @@
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -33,6 +33,7 @@ MILESTONE_PREREQS = os.path.join(REPO_ROOT, "MILESTONE_PREREQS.md")
 # ---------------------------------------------------------------------------
 # Load experiment results
 # ---------------------------------------------------------------------------
+
 
 def _load(exp_id: int, filename: str) -> dict:
     """Load a JSON result file; return empty dict on missing file."""
@@ -61,10 +62,7 @@ EXPERIMENTS = {
 # Verdicts
 # ---------------------------------------------------------------------------
 
-VERDICTS = {
-    exp_id: data.get("honest_verdict", "unknown")
-    for exp_id, data in EXPERIMENTS.items()
-}
+VERDICTS = {exp_id: data.get("honest_verdict", "unknown") for exp_id, data in EXPERIMENTS.items()}
 
 # ---------------------------------------------------------------------------
 # Success Criteria Evaluation
@@ -72,6 +70,7 @@ VERDICTS = {
 # Each criterion is a tuple:
 #   (criterion_name, experiment_id_or_ids, target_description, met_bool, actual_value)
 # ---------------------------------------------------------------------------
+
 
 def _eval_criteria():
     """Evaluate each success criterion and return a list of dicts plus total met count.
@@ -85,53 +84,63 @@ def _eval_criteria():
 
     # 1. injection_field_fixed
     dr = EXPERIMENTS[819].get("discrimination_rate", 0.0)
-    criteria.append({
-        "criterion": "injection_field_fixed",
-        "experiment": 819,
-        "target": "discrimination_rate >= 0.8",
-        "met": dr >= 0.8,
-        "actual_value": dr,
-    })
+    criteria.append(
+        {
+            "criterion": "injection_field_fixed",
+            "experiment": 819,
+            "target": "discrimination_rate >= 0.8",
+            "met": dr >= 0.8,
+            "actual_value": dr,
+        }
+    )
 
     # 2. gguf_import_fixed
     v820 = VERDICTS[820]
-    criteria.append({
-        "criterion": "gguf_import_fixed",
-        "experiment": 820,
-        "target": "honest_verdict != still_blocked",
-        "met": v820 != "still_blocked",
-        "actual_value": v820,
-    })
+    criteria.append(
+        {
+            "criterion": "gguf_import_fixed",
+            "experiment": 820,
+            "target": "honest_verdict != still_blocked",
+            "met": v820 != "still_blocked",
+            "actual_value": v820,
+        }
+    )
 
     # 3. constraint_addition_works_live
     delta_overall = EXPERIMENTS[821].get("delta_overall", 0.0)
-    criteria.append({
-        "criterion": "constraint_addition_works_live",
-        "experiment": 821,
-        "target": "delta_overall > 0",
-        "met": delta_overall is not None and delta_overall > 0,
-        "actual_value": delta_overall,
-    })
+    criteria.append(
+        {
+            "criterion": "constraint_addition_works_live",
+            "experiment": 821,
+            "target": "delta_overall > 0",
+            "met": delta_overall is not None and delta_overall > 0,
+            "actual_value": delta_overall,
+        }
+    )
 
     # 4. arbiter_correct
     acc_overall = EXPERIMENTS[822].get("accuracy_overall", 0.0)
-    criteria.append({
-        "criterion": "arbiter_correct",
-        "experiment": 822,
-        "target": "accuracy_overall >= 0.80",
-        "met": acc_overall >= 0.80,
-        "actual_value": acc_overall,
-    })
+    criteria.append(
+        {
+            "criterion": "arbiter_correct",
+            "experiment": 822,
+            "target": "accuracy_overall >= 0.80",
+            "met": acc_overall >= 0.80,
+            "actual_value": acc_overall,
+        }
+    )
 
     # 5. tier1_relay_works_live
     delta_s1_s5 = EXPERIMENTS[823].get("delta_s1_to_s5", None)
-    criteria.append({
-        "criterion": "tier1_relay_works_live",
-        "experiment": 823,
-        "target": "delta_s1_to_s5 > 0",
-        "met": delta_s1_s5 is not None and delta_s1_s5 > 0,
-        "actual_value": delta_s1_s5,
-    })
+    criteria.append(
+        {
+            "criterion": "tier1_relay_works_live",
+            "experiment": 823,
+            "target": "delta_s1_to_s5 > 0",
+            "met": delta_s1_s5 is not None and delta_s1_s5 > 0,
+            "actual_value": delta_s1_s5,
+        }
+    )
 
     # 6. jepa_v23_viable (joint Exps 824 + 825)
     # Exp 824 trains with ood_auc=0.811; Exp 825 cross-domain eval returns
@@ -140,59 +149,69 @@ def _eval_criteria():
     # in Exp 825.  Exp 824 alone is not sufficient: training-set AUC does not
     # prove generalization.
     ood_auc_825 = EXPERIMENTS[825].get("overall_ood_auc", 0.0)
-    criteria.append({
-        "criterion": "jepa_v23_viable",
-        "experiment": "824+825",
-        "target": "ood_auc >= 0.65 (cross-domain, Exp 825)",
-        "met": ood_auc_825 >= 0.65,
-        "actual_value": ood_auc_825,
-    })
+    criteria.append(
+        {
+            "criterion": "jepa_v23_viable",
+            "experiment": "824+825",
+            "target": "ood_auc >= 0.65 (cross-domain, Exp 825)",
+            "met": ood_auc_825 >= 0.65,
+            "actual_value": ood_auc_825,
+        }
+    )
 
     # 7. cross_domain_at_baseline
     deg_max = EXPERIMENTS[826].get("cross_domain_degradation_max", 1.0)
-    criteria.append({
-        "criterion": "cross_domain_at_baseline",
-        "experiment": 826,
-        "target": "degradation <= 0.08 (8%)",
-        "met": deg_max <= 0.08,
-        "actual_value": deg_max,
-    })
+    criteria.append(
+        {
+            "criterion": "cross_domain_at_baseline",
+            "experiment": 826,
+            "target": "degradation <= 0.08 (8%)",
+            "met": deg_max <= 0.08,
+            "actual_value": deg_max,
+        }
+    )
 
     # 8. bitstream_or_synthesis_clean
     bitstream_ok = EXPERIMENTS[827].get("ice40_bitstream_generated", False)
     xilinx_ok = EXPERIMENTS[827].get("xilinx_synthesis_clean", False)
-    criteria.append({
-        "criterion": "bitstream_or_synthesis_clean",
-        "experiment": 827,
-        "target": "any clean synthesis (iCE40 bitstream or Xilinx clean)",
-        "met": bitstream_ok or xilinx_ok,
-        "actual_value": {
-            "ice40_bitstream_generated": bitstream_ok,
-            "xilinx_synthesis_clean": xilinx_ok,
-        },
-    })
+    criteria.append(
+        {
+            "criterion": "bitstream_or_synthesis_clean",
+            "experiment": 827,
+            "target": "any clean synthesis (iCE40 bitstream or Xilinx clean)",
+            "met": bitstream_ok or xilinx_ok,
+            "actual_value": {
+                "ice40_bitstream_generated": bitstream_ok,
+                "xilinx_synthesis_clean": xilinx_ok,
+            },
+        }
+    )
 
     # 9. probe_viable
     probe_auc = EXPERIMENTS[828].get("probe_auc", 0.0)
     latency_ms = EXPERIMENTS[828].get("latency_ms", 999.0)
-    criteria.append({
-        "criterion": "probe_viable",
-        "experiment": 828,
-        "target": "AUC >= 0.85 AND latency < 1ms",
-        "met": probe_auc >= 0.85 and latency_ms < 1.0,
-        "actual_value": {"probe_auc": probe_auc, "latency_ms": latency_ms},
-    })
+    criteria.append(
+        {
+            "criterion": "probe_viable",
+            "experiment": 828,
+            "target": "AUC >= 0.85 AND latency < 1ms",
+            "met": probe_auc >= 0.85 and latency_ms < 1.0,
+            "actual_value": {"probe_auc": probe_auc, "latency_ms": latency_ms},
+        }
+    )
 
     # 10. hf_publish_success
     n_existing = EXPERIMENTS[829].get("n_existing", 0)
     n_after = EXPERIMENTS[829].get("n_after", 0)
-    criteria.append({
-        "criterion": "hf_publish_success",
-        "experiment": 829,
-        "target": "n_after > n_existing",
-        "met": n_after > n_existing,
-        "actual_value": {"n_existing": n_existing, "n_after": n_after},
-    })
+    criteria.append(
+        {
+            "criterion": "hf_publish_success",
+            "experiment": 829,
+            "target": "n_after > n_existing",
+            "met": n_after > n_existing,
+            "actual_value": {"n_existing": n_existing, "n_after": n_after},
+        }
+    )
 
     n_met = sum(1 for c in criteria if c["met"])
     return criteria, n_met
@@ -212,7 +231,7 @@ def _eval_criteria():
 
 RETROS_CLOSED = [
     "RETRO-ISING-INJECTION-NO-DISCRIMINATION",  # Exp 819: discrimination_rate=1.0, retro_injection_closed=True
-    "RETRO-GGUF-CACHE-IMPORT",                  # Exp 820: import_fixed_repair_positive, live repair delta=+14
+    "RETRO-GGUF-CACHE-IMPORT",  # Exp 820: import_fixed_repair_positive, live repair delta=+14
 ]
 
 RETROS_OPENED = [
@@ -348,8 +367,9 @@ IMPROVEMENTS = [
 # Main
 # ---------------------------------------------------------------------------
 
+
 def main():
-    started_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    started_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
     criteria, n_met = _eval_criteria()
 
@@ -361,7 +381,7 @@ def main():
     else:
         honest_verdict = "retro_63_blocked"
 
-    finished_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    finished_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
     artifact = {
         "schema": "carnot.operational_retro.v38",
@@ -421,8 +441,7 @@ def _update_milestone_prereqs(artifact: dict) -> None:
         return
 
     immediate_items = [
-        item for item in artifact["improvements_suggested"]
-        if item["priority"] == "IMMEDIATE"
+        item for item in artifact["improvements_suggested"] if item["priority"] == "IMMEDIATE"
     ]
 
     rows = []
@@ -442,8 +461,8 @@ def _update_milestone_prereqs(artifact: dict) -> None:
 All IMMEDIATE-class actions from the .63 retro (results/experiment_830_milestone_retro_2026_04_63.json)
 must be verified before the research conductor runs any .64 experiments.
 
-Source retro honest_verdict: **{artifact['honest_verdict']}**
-n_criteria_met: {artifact['n_criteria_met']}/{artifact['n_criteria_total']}
+Source retro honest_verdict: **{artifact["honest_verdict"]}**
+n_criteria_met: {artifact["n_criteria_met"]}/{artifact["n_criteria_total"]}
 
 Mark each item as one of:
 - `pending` — not yet verified; conductor MUST NOT run experiments until resolved

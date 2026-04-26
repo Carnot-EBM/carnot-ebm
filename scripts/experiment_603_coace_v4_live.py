@@ -103,7 +103,7 @@ ERROR_TYPE_CATALOG: dict[str, int] = {
 # ---------------------------------------------------------------------------
 
 
-def _build_llm_caller() -> tuple[Optional[Any], str]:
+def _build_llm_caller() -> tuple[Any | None, str]:
     """Try to build a Qwen3.5-0.8B CPU inference callable.
 
     Returns (callable, llm_mode_str).  If setup fails, returns (None, 'ci_stub_regex_only').
@@ -135,7 +135,7 @@ def _build_llm_caller() -> tuple[Optional[Any], str]:
                     do_sample=False,
                     pad_token_id=tokenizer.eos_token_id,
                 )
-            tokens = out[0][inputs["input_ids"].shape[1]:]
+            tokens = out[0][inputs["input_ids"].shape[1] :]
             return tokenizer.decode(tokens, skip_special_tokens=True)
 
         return _call, f"qwen3_5_0_8b_cpu"
@@ -196,13 +196,15 @@ def main() -> None:
         if v4_found:
             v4_tp += 1
 
-        per_q_flags.append({
-            "question_index": item.get("question_index"),
-            "model": item.get("model"),
-            "is_correct": False,
-            "v3_violation_found": v3_found,
-            "v4_violation_found": v4_found,
-        })
+        per_q_flags.append(
+            {
+                "question_index": item.get("question_index"),
+                "model": item.get("model"),
+                "is_correct": False,
+                "v3_violation_found": v3_found,
+                "v4_violation_found": v4_found,
+            }
+        )
 
     # --- Evaluate on 10 correct responses (false positive test) ---
     v4_fp = 0
@@ -220,9 +222,7 @@ def main() -> None:
     v4_recall = v4_tp / n
     v4_tp_rate = v4_recall
     v4_fp_rate = v4_fp / n_fp_test if n_fp_test > 0 else 0.0
-    v4_precision = (
-        v4_tp / (v4_tp + v4_fp) if (v4_tp + v4_fp) > 0 else 0.0
-    )
+    v4_precision = v4_tp / (v4_tp + v4_fp) if (v4_tp + v4_fp) > 0 else 0.0
     recall_improvement = v4_recall - v3_recall
 
     gate_open = v4_recall >= 0.20

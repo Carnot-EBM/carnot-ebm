@@ -28,7 +28,6 @@ Spec: REQ-CORE-001, REQ-CORE-003, REQ-CORE-004
 from __future__ import annotations
 
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -38,9 +37,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "python"))
 import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
-from safetensors.numpy import save_file
-
 from carnot.models.kan import KANConfig, KANEnergyFunction
+from safetensors.numpy import save_file
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -54,11 +52,11 @@ OUTPUT_DIR = REPO_ROOT / "models" / "constraint-verifier-v2"
 # ---------------------------------------------------------------------------
 
 KAN_CONFIG = KANConfig(
-    input_dim=20,       # 20-feature projection of constraint vectors (Exp 109)
-    num_knots=10,       # Default cubic B-spline knot count
-    degree=3,           # Cubic splines
-    sparse=True,        # Use sparse edge connectivity
-    edge_density=0.5,   # Keep 50% of possible edges (10-node graph: 45 possible edges)
+    input_dim=20,  # 20-feature projection of constraint vectors (Exp 109)
+    num_knots=10,  # Default cubic B-spline knot count
+    degree=3,  # Cubic splines
+    sparse=True,  # Use sparse edge connectivity
+    edge_density=0.5,  # Keep 50% of possible edges (10-node graph: 45 possible edges)
 )
 
 # Reproducible seed — same as used in Exp 108 default init
@@ -107,7 +105,7 @@ def extract_kan_parameters(model: KANEnergyFunction) -> dict[str, np.ndarray]:
     """
     params: dict[str, np.ndarray] = {}
 
-    for idx, (edge, spline) in enumerate(model.edge_splines.items()):
+    for idx, (_edge, spline) in enumerate(model.edge_splines.items()):
         key = f"edge_{idx}_cp"
         params[key] = np.asarray(spline.params.control_points)
 
@@ -317,7 +315,9 @@ def main() -> None:
     print("[2/5] Smoke testing energy function...")
     x_test = jnp.ones(KAN_CONFIG.input_dim)
     energy_val = float(model.energy(x_test))
-    print(f"  Energy for all-ones input: {energy_val:.4f}  (finite: {jnp.isfinite(jnp.array(energy_val))})")
+    print(
+        f"  Energy for all-ones input: {energy_val:.4f}  (finite: {jnp.isfinite(jnp.array(energy_val))})"
+    )
     assert jnp.isfinite(jnp.array(energy_val)), "Energy must be finite!"
 
     # Batch test

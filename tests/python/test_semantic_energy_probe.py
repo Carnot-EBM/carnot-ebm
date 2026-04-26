@@ -273,8 +273,13 @@ class TestAdvisoryNoShortCircuit:
         assert result.certificate["tier_0f_semantic_energy"]["is_unstable"] is True
         # The pipeline still computed constraints (not short-circuited by the probe)
         # mode should be FULL or another valid tier mode — not a probe-short-circuit mode
-        assert result.mode in ("FULL", "NUP_PROBE_FAST_PATH", "THINK_PROBE_FAST_PATH",
-                               "FAST_PATH", "RUST")
+        assert result.mode in (
+            "FULL",
+            "NUP_PROBE_FAST_PATH",
+            "THINK_PROBE_FAST_PATH",
+            "FAST_PATH",
+            "RUST",
+        )
 
 
 # ---------------------------------------------------------------------------

@@ -132,12 +132,14 @@ def _make_fover_pairs(n: int = 10, correct_fraction: float = 0.5) -> list[dict]:
     pairs = []
     for i in range(n):
         label = "correct" if i < int(n * correct_fraction) else "incorrect"
-        pairs.append({
-            "question_id": str(i),
-            "step_text": f"step {i}",
-            "label": label,
-            "confidence": 0.9,
-        })
+        pairs.append(
+            {
+                "question_id": str(i),
+                "step_text": f"step {i}",
+                "label": label,
+                "confidence": 0.9,
+            }
+        )
     return pairs
 
 
@@ -147,9 +149,7 @@ class TestCalibrate:
     def test_calibrate_returns_ias_gate_calibration(self):
         """SCENARIO-VERIFY-200: calibrate returns IASGateCalibration instance."""
         pairs = _make_fover_pairs(n=20, correct_fraction=0.5)
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(pairs, f)
             tmp_path = f.name
         try:
@@ -161,9 +161,7 @@ class TestCalibrate:
     def test_calibrate_n_equals_pair_count(self):
         """SCENARIO-VERIFY-200: calibrated_from_n == number of pairs in file."""
         pairs = _make_fover_pairs(n=57)
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(pairs, f)
             tmp_path = f.name
         try:
@@ -175,9 +173,7 @@ class TestCalibrate:
     def test_calibrate_thresholds_in_unit_interval(self):
         """All calibrated thresholds are in [0, 1]."""
         pairs = _make_fover_pairs(n=20, correct_fraction=0.4)
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(pairs, f)
             tmp_path = f.name
         try:
@@ -197,9 +193,7 @@ class TestCalibrate:
         # 50% incorrect with confidence=0.9 → symcode/causal have 0.0 for those
         # but structured always uses confidence.
         pairs = _make_fover_pairs(n=20, correct_fraction=0.5)
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(pairs, f)
             tmp_path = f.name
         try:
@@ -218,9 +212,7 @@ class TestCalibrate:
             {"question_id": str(i), "step_text": f"s{i}", "label": "correct", "confidence": 1.0}
             for i in range(10)
         ]
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(pairs, f)
             tmp_path = f.name
         try:
@@ -234,6 +226,7 @@ class TestCalibrate:
     def test_calibrate_real_fover_pairs(self, tmp_path):
         """SCENARIO-VERIFY-200: calibrate works on the actual 57-pair live FOVER file."""
         import pathlib
+
         repo_root = pathlib.Path(__file__).resolve().parents[2]
         fover_path = repo_root / "results" / "fover_labeled_steps_live.json"
         if not fover_path.exists():
@@ -298,6 +291,7 @@ class TestAdaptiveGateOpen:
         synthetic calibration where causal_threshold < 0.36 to validate the logic.
         """
         import pathlib
+
         repo_root = pathlib.Path(__file__).resolve().parents[2]
         fover_path = repo_root / "results" / "fover_labeled_steps_live.json"
         if fover_path.exists():
@@ -307,7 +301,7 @@ class TestAdaptiveGateOpen:
             cal = IASGateCalibration(
                 symcode_threshold=0.05,
                 structured_threshold=0.80,  # structured=0.20 won't pass
-                causal_threshold=0.05,      # causal=0.36 >> 0.05 → passes
+                causal_threshold=0.05,  # causal=0.36 >> 0.05 → passes
                 calibrated_from_n=57,
             )
 
@@ -330,6 +324,4 @@ class TestAdaptiveGateOpen:
     def test_gate_just_below_threshold_is_closed(self):
         """Boundary: recall just below threshold → gate stays closed."""
         cal = self._make_cal(sym=0.30, struct=0.30, causal=0.30)
-        assert (
-            adaptive_gate_open(cal, symcode=0.2999, structured=0.2999, causal=0.2999) is False
-        )
+        assert adaptive_gate_open(cal, symcode=0.2999, structured=0.2999, causal=0.2999) is False

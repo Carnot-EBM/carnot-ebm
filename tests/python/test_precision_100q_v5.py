@@ -14,7 +14,9 @@ import pytest
 from carnot.pipeline.precision_100q_v5_result import Precision100qV5Result
 
 
-def _make(pre: float = 0.60, post: float = 0.65, n: int = 100, gpu_id: int = 0) -> Precision100qV5Result:
+def _make(
+    pre: float = 0.60, post: float = 0.65, n: int = 100, gpu_id: int = 0
+) -> Precision100qV5Result:
     return Precision100qV5Result(
         model_id="TestModel",
         pre_accuracy=pre,
@@ -96,8 +98,13 @@ class TestPrecision100qV5ResultWilsonCI:
     def test_ci_95_wilson_n_guard_no_zerodiv(self):
         # n=0 must not raise ZeroDivisionError (guarded by max(n,1))
         r = Precision100qV5Result(
-            model_id="m", pre_accuracy=0.5, post_accuracy=0.5,
-            n=0, extractor_used="none", inference_mode="synthetic", gpu_id=0,
+            model_id="m",
+            pre_accuracy=0.5,
+            post_accuracy=0.5,
+            n=0,
+            extractor_used="none",
+            inference_mode="synthetic",
+            gpu_id=0,
         )
         lo, hi = r.ci_95_wilson
         assert 0.0 <= lo <= hi <= 1.0
@@ -109,9 +116,18 @@ class TestPrecision100qV5ResultToDict:
     def test_to_dict_keys_present(self):
         r = _make()
         d = r.to_dict()
-        for key in ("model_id", "pre_accuracy", "post_accuracy", "n",
-                    "extractor_used", "inference_mode", "gpu_id",
-                    "signed_improvement", "ci_95_wilson", "is_positive"):
+        for key in (
+            "model_id",
+            "pre_accuracy",
+            "post_accuracy",
+            "n",
+            "extractor_used",
+            "inference_mode",
+            "gpu_id",
+            "signed_improvement",
+            "ci_95_wilson",
+            "is_positive",
+        ):
             assert key in d, f"Missing key: {key}"
 
     def test_to_dict_gpu_id_recorded(self):

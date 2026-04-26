@@ -43,9 +43,24 @@ from experiment_template import ExperimentTemplate  # noqa: E402
 # ---------------------------------------------------------------------------
 
 _CORRECT_VOCABULARY = [
-    "compute", "sum", "total", "divide", "multiply", "equals",
-    "result", "therefore", "hence", "calculate", "value", "step",
-    "apply", "formula", "obtain", "thus", "check", "verify",
+    "compute",
+    "sum",
+    "total",
+    "divide",
+    "multiply",
+    "equals",
+    "result",
+    "therefore",
+    "hence",
+    "calculate",
+    "value",
+    "step",
+    "apply",
+    "formula",
+    "obtain",
+    "thus",
+    "check",
+    "verify",
 ]
 
 _HALLUCINATION_EXTRA_VOCABULARIES = [
@@ -71,6 +86,7 @@ def _make_correct_chain(chain_idx: int, n_steps: int = 4) -> list[str]:
         List of step strings (one per step).
     """
     import random
+
     rng = random.Random(chain_idx * 7 + 1)
     steps = []
     for step_i in range(n_steps):
@@ -96,22 +112,29 @@ def _make_hallucinating_chain(chain_idx: int, n_steps: int = 4) -> list[str]:
         List of step strings with growing vocabulary diffuseness.
     """
     import random
+
     rng = random.Random(chain_idx * 13 + 3)
-    extra_vocab = _HALLUCINATION_EXTRA_VOCABULARIES[chain_idx % len(_HALLUCINATION_EXTRA_VOCABULARIES)]
+    extra_vocab = _HALLUCINATION_EXTRA_VOCABULARIES[
+        chain_idx % len(_HALLUCINATION_EXTRA_VOCABULARIES)
+    ]
     steps = []
     for step_i in range(n_steps):
         # Mix in growing fraction of hallucination vocabulary as steps progress.
         core_words = rng.choices(_CORRECT_VOCABULARY, k=3)
         # More extra words in later steps (simulating drifting hallucination).
         n_extra = step_i + 3
-        extra_words = rng.choices(extra_vocab + [f"token{rng.randint(0, 50)}" for _ in range(20)],
-                                  k=n_extra)
+        extra_words = rng.choices(
+            extra_vocab + [f"token{rng.randint(0, 50)}" for _ in range(20)], k=n_extra
+        )
         all_words = core_words + extra_words
         rng.shuffle(all_words)
         # Longer step text = more unique tokens = flatter spectrum.
-        step = (f"Step {step_i + 1}: " + " ".join(all_words)
-                + f" furthermore {' '.join(rng.choices(extra_vocab, k=2))} "
-                + f"therefore unique{chain_idx}_{step_i} result.")
+        step = (
+            f"Step {step_i + 1}: "
+            + " ".join(all_words)
+            + f" furthermore {' '.join(rng.choices(extra_vocab, k=2))} "
+            + f"therefore unique{chain_idx}_{step_i} result."
+        )
         steps.append(step)
     return steps
 
@@ -146,7 +169,7 @@ def main() -> None:
     train_correct = all_correct[:20]
     train_halluc = all_halluc[:20]
     eval_correct = all_correct[20:25]  # 5 chains
-    eval_halluc = all_halluc[20:25]    # 5 chains
+    eval_halluc = all_halluc[20:25]  # 5 chains
 
     probe = SpectralAttentionProbe(window=3, n_eigenvalues=10, threshold=2.0)
     probe.train(train_correct, train_halluc)
@@ -169,7 +192,7 @@ def main() -> None:
 
     for i in range(n_advisory):
         # Alternate between correct (even) and hallucinating (odd) chains.
-        is_halluc = (i % 2 == 1)
+        is_halluc = i % 2 == 1
         if is_halluc:
             steps = _make_hallucinating_chain(i)
         else:
@@ -179,24 +202,33 @@ def main() -> None:
         response = "\n".join(steps)
         question = f"Synthetic question {i}: compute value_{i}?"
 
-        result = pipeline.verify(question, response, domain="arithmetic",
-                                 tracker=None, jepa_predictor=None,
-                                 jepa_threshold=0.5, think_probe=None,
-                                 hallufield_detector=None, semantic_energy_probe=None,
-                                 embedding_constraint_store=None,
-                                 ising_constraint_injector=None)
+        result = pipeline.verify(
+            question,
+            response,
+            domain="arithmetic",
+            tracker=None,
+            jepa_predictor=None,
+            jepa_threshold=0.5,
+            think_probe=None,
+            hallufield_detector=None,
+            semantic_energy_probe=None,
+            embedding_constraint_store=None,
+            ising_constraint_injector=None,
+        )
 
         if result.spectral_diffuse:
             advisory_diffuse_count += 1
         if "tier_0h_spectral" in result.certificate:
             certificate_populated = True
 
-        sample_results.append({
-            "question_idx": i,
-            "is_halluc": is_halluc,
-            "spectral_diffuse": result.spectral_diffuse,
-            "spectral_entropy_mean": result.spectral_entropy_mean,
-        })
+        sample_results.append(
+            {
+                "question_idx": i,
+                "is_halluc": is_halluc,
+                "spectral_diffuse": result.spectral_diffuse,
+                "spectral_entropy_mean": result.spectral_entropy_mean,
+            }
+        )
 
     advisory_signal_rate = advisory_diffuse_count / n_advisory
 
@@ -232,12 +264,15 @@ def main() -> None:
     )
 
     import json
+
     os.makedirs("results", exist_ok=True)
     with open("results/experiment_885_spectral_attention_probe.json", "w") as f:
         json.dump(artifact, f, indent=2)
 
-    print(f"probe_auc={probe_auc:.4f}  advisory_signal_rate={advisory_signal_rate:.4f}  "
-          f"honest_verdict={honest_verdict}")
+    print(
+        f"probe_auc={probe_auc:.4f}  advisory_signal_rate={advisory_signal_rate:.4f}  "
+        f"honest_verdict={honest_verdict}"
+    )
 
     tmpl.assert_deliverable_written()
 

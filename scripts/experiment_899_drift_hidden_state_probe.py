@@ -126,10 +126,9 @@ def _build_synthetic_ood_pairs() -> list[dict]:
         "7 * 3 = 24. Let me verify: 7 * 3 = 24.",
         "100 / 5 = 25. The answer is 25.",
     ]
-    pairs = (
-        [{"text": t, "label": 0} for t in correct_pairs]
-        + [{"text": t, "label": 1} for t in wrong_pairs]
-    )
+    pairs = [{"text": t, "label": 0} for t in correct_pairs] + [
+        {"text": t, "label": 1} for t in wrong_pairs
+    ]
     return pairs
 
 
@@ -147,10 +146,14 @@ def main() -> None:
         eval_pairs = train_pairs[-10:]
         train_pairs = train_pairs[:-10]
 
-    label_counts = {0: sum(1 for p in train_pairs if p["label"] == 0),
-                    1: sum(1 for p in train_pairs if p["label"] == 1)}
-    print(f"  Train: {len(train_pairs)} pairs (truthful={label_counts[0]}, "
-          f"hallucinating={label_counts[1]})")
+    label_counts = {
+        0: sum(1 for p in train_pairs if p["label"] == 0),
+        1: sum(1 for p in train_pairs if p["label"] == 1),
+    }
+    print(
+        f"  Train: {len(train_pairs)} pairs (truthful={label_counts[0]}, "
+        f"hallucinating={label_counts[1]})"
+    )
     print(f"  Eval:  {len(eval_pairs)} pairs")
 
     from carnot.probes.drift_probe import DRIFTProbe

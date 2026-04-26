@@ -60,11 +60,13 @@ Spec: REQ-LEARN-065, REQ-LEARN-066, REQ-LEARN-068, REQ-LEARN-069,
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Callable, Optional
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-import jax.numpy as jnp
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
+    import jax.numpy as jnp
 
 # ---------------------------------------------------------------------------
 # JEPACPMIPair dataclass
@@ -106,7 +108,7 @@ class JEPACPMIPair:
     question_id: str
     correct_embeddings: list  # list[jnp.ndarray]
     incorrect_embeddings: list  # list[jnp.ndarray]
-    hard_negative_step_idx: Optional[int]
+    hard_negative_step_idx: int | None
     pair_quality: float
 
 
@@ -350,20 +352,26 @@ class JEPACPMIPairBuilder:
             # Best correct = most steps (most detailed chain).
             best_correct = max(
                 correct_entries,
-                key=lambda e: len(e.cot_steps if hasattr(e, "cot_steps") else e.get("cot_steps", [])),
+                key=lambda e: len(
+                    e.cot_steps if hasattr(e, "cot_steps") else e.get("cot_steps", [])
+                ),
             )
             # Hardest incorrect = most steps (most elaborate wrong reasoning).
             hardest_incorrect = max(
                 incorrect_entries,
-                key=lambda e: len(e.cot_steps if hasattr(e, "cot_steps") else e.get("cot_steps", [])),
+                key=lambda e: len(
+                    e.cot_steps if hasattr(e, "cot_steps") else e.get("cot_steps", [])
+                ),
             )
 
             correct_steps = (
-                best_correct.cot_steps if hasattr(best_correct, "cot_steps")
+                best_correct.cot_steps
+                if hasattr(best_correct, "cot_steps")
                 else best_correct.get("cot_steps", [])
             )
             incorrect_steps = (
-                hardest_incorrect.cot_steps if hasattr(hardest_incorrect, "cot_steps")
+                hardest_incorrect.cot_steps
+                if hasattr(hardest_incorrect, "cot_steps")
                 else hardest_incorrect.get("cot_steps", [])
             )
 
@@ -534,16 +542,14 @@ class PROGRSCentering:
         from collections import defaultdict
 
         group_gaps: dict[str, list[float]] = defaultdict(list)
-        for pair, gap in zip(pairs, raw_gaps):
+        for pair, gap in zip(pairs, raw_gaps, strict=False):
             group_gaps[pair.question_id].append(gap)
 
-        group_mean: dict[str, float] = {
-            qid: sum(gs) / len(gs) for qid, gs in group_gaps.items()
-        }
+        group_mean: dict[str, float] = {qid: sum(gs) / len(gs) for qid, gs in group_gaps.items()}
 
         # Center each gap by its group mean.
         centered: list[tuple[JEPACPMIPair, float]] = []
-        for pair, gap in zip(pairs, raw_gaps):
+        for pair, gap in zip(pairs, raw_gaps, strict=False):
             centered_gap = gap - group_mean[pair.question_id]
             centered.append((pair, centered_gap))
 

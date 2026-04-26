@@ -179,9 +179,7 @@ def test_provenance_traces_to_case_memory_entries():
     for template in result.templates:
         for prov in template.provenance:
             for cid in prov.source_case_ids:
-                assert cid in all_case_ids, (
-                    f"Provenance case_id {cid!r} not found in case memory"
-                )
+                assert cid in all_case_ids, f"Provenance case_id {cid!r} not found in case memory"
 
 
 def test_provenance_experiment_number_preserved():

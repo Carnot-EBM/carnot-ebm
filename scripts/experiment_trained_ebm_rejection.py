@@ -24,19 +24,34 @@ logger = logging.getLogger(__name__)
 
 # Same calibration set as scaled experiment
 CALIBRATION_QA = [
-    ("What is 2+3?", "5"), ("What is 7*8?", "56"), ("What is 100/4?", "25"),
-    ("What is 15-9?", "6"), ("What is 3^3?", "27"), ("What is 50+50?", "100"),
-    ("What is 12*12?", "144"), ("What is 81/9?", "9"), ("What is 1000-1?", "999"),
+    ("What is 2+3?", "5"),
+    ("What is 7*8?", "56"),
+    ("What is 100/4?", "25"),
+    ("What is 15-9?", "6"),
+    ("What is 3^3?", "27"),
+    ("What is 50+50?", "100"),
+    ("What is 12*12?", "144"),
+    ("What is 81/9?", "9"),
+    ("What is 1000-1?", "999"),
     ("What is 2^10?", "1024"),
-    ("What is the square root of 169?", "13"), ("What is 17*19?", "323"),
-    ("What is 256/16?", "16"), ("What is 99*99?", "9801"),
-    ("What is the cube root of 27?", "3"), ("What is 7! (7 factorial)?", "5040"),
-    ("What is 2^16?", "65536"), ("What is 1+2+3+4+5+6+7+8+9+10?", "55"),
-    ("What is 37*43?", "1591"), ("What is 123*456?", "56088"),
-    ("What is the 20th prime number?", "71"), ("What is 11! (11 factorial)?", "39916800"),
-    ("What is 2^20?", "1048576"), ("What is the square root of 1764?", "42"),
-    ("What is 97*103?", "9991"), ("What is 19^2?", "361"),
-    ("What is 23*29?", "667"), ("What is the 12th Fibonacci number?", "144"),
+    ("What is the square root of 169?", "13"),
+    ("What is 17*19?", "323"),
+    ("What is 256/16?", "16"),
+    ("What is 99*99?", "9801"),
+    ("What is the cube root of 27?", "3"),
+    ("What is 7! (7 factorial)?", "5040"),
+    ("What is 2^16?", "65536"),
+    ("What is 1+2+3+4+5+6+7+8+9+10?", "55"),
+    ("What is 37*43?", "1591"),
+    ("What is 123*456?", "56088"),
+    ("What is the 20th prime number?", "71"),
+    ("What is 11! (11 factorial)?", "39916800"),
+    ("What is 2^20?", "1048576"),
+    ("What is the square root of 1764?", "42"),
+    ("What is 97*103?", "9991"),
+    ("What is 19^2?", "361"),
+    ("What is 23*29?", "667"),
+    ("What is the 12th Fibonacci number?", "144"),
     ("What is the capital of Germany?", "Berlin"),
     ("What is the capital of Japan?", "Tokyo"),
     ("What is the capital of Italy?", "Rome"),
@@ -145,7 +160,9 @@ def extract_gen_activations(model, tokenizer, question, do_sample=False, tempera
     with torch.no_grad():
         outputs = model.generate(**inputs, **gen_kwargs)
 
-    response = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+    response = tokenizer.decode(
+        outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+    )
 
     prompt_len = inputs["input_ids"].shape[1]
     full_seq = outputs[0].unsqueeze(0)
@@ -154,7 +171,7 @@ def extract_gen_activations(model, tokenizer, question, do_sample=False, tempera
         hs = hidden_out.hidden_states
 
     gen_last = hs[-1][0, prompt_len:, :].mean(dim=0).float().numpy()
-    gen_mid = hs[len(hs)//2][0, prompt_len:, :].mean(dim=0).float().numpy()
+    gen_mid = hs[len(hs) // 2][0, prompt_len:, :].mean(dim=0).float().numpy()
     act = jnp.concatenate([jnp.array(gen_last), jnp.array(gen_mid)])
 
     return response, act
@@ -176,7 +193,9 @@ def main() -> int:
     start = time.time()
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     llm = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True, output_hidden_states=True,
+        model_name,
+        trust_remote_code=True,
+        output_hidden_states=True,
     )
     llm.eval()
     print(f"Loaded in {time.time() - start:.1f}s")
@@ -196,8 +215,10 @@ def main() -> int:
             hallucinated_acts.append(act)
 
         if (i + 1) % 20 == 0:
-            print(f"  {i+1}/{len(CALIBRATION_QA)}... "
-                  f"({cal_correct} correct, {i+1-cal_correct} hallucinated)")
+            print(
+                f"  {i + 1}/{len(CALIBRATION_QA)}... "
+                f"({cal_correct} correct, {i + 1 - cal_correct} hallucinated)"
+            )
 
     n_correct = len(correct_acts)
     n_hallucinated = len(hallucinated_acts)
@@ -272,7 +293,9 @@ def main() -> int:
     mean_c = sum(correct_energies) / len(correct_energies)
     mean_h = sum(hall_energies) / len(hall_energies)
     gap = mean_h - mean_c
-    print(f"  Calibration: correct_energy={mean_c:.2f}, hallucinated_energy={mean_h:.2f}, gap={gap:.2f}")
+    print(
+        f"  Calibration: correct_energy={mean_c:.2f}, hallucinated_energy={mean_h:.2f}, gap={gap:.2f}"
+    )
 
     # Classification accuracy on calibration set
     threshold = (mean_c + mean_h) / 2
@@ -299,7 +322,11 @@ def main() -> int:
         candidates = []
         for c in range(N_CANDIDATES):
             response, act = extract_gen_activations(
-                llm, tokenizer, q, do_sample=True, temperature=0.8,
+                llm,
+                tokenizer,
+                q,
+                do_sample=True,
+                temperature=0.8,
             )
             energy = float(ebm.energy(act))
             candidates.append((response, energy, check_answer(response, expected)))
@@ -322,9 +349,9 @@ def main() -> int:
     fixes = sum(1 for g, r in zip(greedy_results, rejection_results) if not g and r)
     regressions = sum(1 for g, r in zip(greedy_results, rejection_results) if g and not r)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("RESULTS")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  EBM architecture: Gibbs [2048→256→64→1], NCE-trained")
     print(f"  Calibration: {min_n} correct + {min_n} hallucinated, gap={gap:.2f}")
     print(f"  Calibration accuracy: {cal_acc:.0%}")
@@ -334,8 +361,10 @@ def main() -> int:
     improvement = rejection_acc - greedy_acc
     print(f"  Improvement:        {'+' if improvement >= 0 else ''}{improvement:.0%}")
     print(f"")
-    print(f"  Fixes: {fixes}, Regressions: {regressions}, Net: {'+' if fixes>=regressions else ''}{fixes-regressions}")
-    print(f"{'='*60}")
+    print(
+        f"  Fixes: {fixes}, Regressions: {regressions}, Net: {'+' if fixes >= regressions else ''}{fixes - regressions}"
+    )
+    print(f"{'=' * 60}")
 
     if improvement > 0:
         print("SUCCESS: Trained EBM improves LLM accuracy via rejection sampling!")

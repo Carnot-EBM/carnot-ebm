@@ -135,7 +135,7 @@ def _quadratic_energy(x: jax.Array) -> float:
     In production this would be a trained IsingEBM.energy() call.  For wiring
     validation we just need a callable that returns a scalar float.
     """
-    return float(jnp.sum(x ** 2))
+    return float(jnp.sum(x**2))
 
 
 basin_detector = HallucinationBasinDetector(
@@ -174,7 +174,7 @@ pipeline = ThreeTierPipeline(
     sink_probe=SinkProbe(threshold=0.3),
     eorm_model=eorm_model,
     ising_pipeline=_counting_ising_stub,
-    sink_threshold=0.99,   # very high — SinkProbe almost never clears
+    sink_threshold=0.99,  # very high — SinkProbe almost never clears
     eorm_threshold=-999.0,  # very low — EORM almost never clears
     nup_probe_v4=nup_probe,
     nup_probe_threshold=0.0,
@@ -188,9 +188,7 @@ pipeline = ThreeTierPipeline(
 
 print("[530] Creating 50 synthetic responses…")
 
-correct_responses = [
-    f"The answer is {i * 2} because {i} * 2 = {i * 2}." for i in range(1, 26)
-]
+correct_responses = [f"The answer is {i * 2} because {i} * 2 = {i * 2}." for i in range(1, 26)]
 wrong_responses = [
     f"The answer is {i * 2 + 1} because {i} * 2 = {i * 2 + 1}." for i in range(1, 26)
 ]
@@ -199,9 +197,7 @@ wrong_responses = [
 # Using near-zero hidden states so perturbation noise is small relative to norm,
 # making basin_risk_score close to 0.5 (the boundary).
 _rng = jr.PRNGKey(7)
-hidden_states_correct = [
-    jr.normal(jr.fold_in(_rng, i), shape=(3, 16)) * 0.01 for i in range(25)
-]
+hidden_states_correct = [jr.normal(jr.fold_in(_rng, i), shape=(3, 16)) * 0.01 for i in range(25)]
 hidden_states_wrong = [
     jr.normal(jr.fold_in(_rng, i + 100), shape=(3, 16)) * 0.01 for i in range(25)
 ]

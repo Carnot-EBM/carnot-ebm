@@ -40,32 +40,27 @@ Spec: REQ-EORM-008, REQ-EORM-009, REQ-EORM-010,
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
 
+from carnot.models.ebm_cot_calibrator import (
+    _auc_roc,
+    _energy_from_pooled,
+    _forward_get_pooled,
+)
 from carnot.models.eorm import (
+    _SEP_ID,
     CoTEnergyInput,
     EORMModel,
     _make_token_sequence,
-    _SEP_ID,
 )
-from carnot.models.ebm_cot_calibrator import (
-    _forward_get_pooled,
-    _energy_from_pooled,
-    _auc_roc,
-)
-
-if TYPE_CHECKING:
-    pass
-
 
 # ---------------------------------------------------------------------------
 # EPCouplingUpdate
 # ---------------------------------------------------------------------------
+
 
 class EPCouplingUpdate:
     """Equilibrium Propagation coupling update for the EORM readout layer.
@@ -200,6 +195,7 @@ class EPCouplingUpdate:
 # SyntheticCoTPairGenerator
 # ---------------------------------------------------------------------------
 
+
 class SyntheticCoTPairGenerator:
     """Generate synthetic (cot_text, is_correct) pairs for data augmentation.
 
@@ -292,6 +288,7 @@ class SyntheticCoTPairGenerator:
 # ---------------------------------------------------------------------------
 # EBMCoTCalibratorV3
 # ---------------------------------------------------------------------------
+
 
 class EBMCoTCalibratorV3:
     """EBMCoT calibrator v3: 50 Langevin steps + EP coupling update.
@@ -463,7 +460,7 @@ class EBMCoTCalibratorV3:
 
         scores = []
         labels = []
-        free_hiddens = []   # collect for EP free phase
+        free_hiddens = []  # collect for EP free phase
         clamped_hiddens = []  # collect for EP clamped phase
 
         for ex in examples:
@@ -501,7 +498,7 @@ class EBMCoTCalibratorV3:
 
         # Apply EP coupling update if configured and we have both phases
         if self.ep_update is not None and len(clamped_hiddens) > 0:
-            free_matrix = jnp.array(np.stack(free_hiddens))      # (n, d)
+            free_matrix = jnp.array(np.stack(free_hiddens))  # (n, d)
             clamped_matrix = jnp.array(np.stack(clamped_hiddens))  # (m, d)
 
             # EP update treats out_weight as a 1D coupling vector.
@@ -511,8 +508,8 @@ class EBMCoTCalibratorV3:
             # require a full n×n coupling matrix between all hidden units;
             # here we adapt only the readout weights using the diagonal signal.
             old_w = self.eorm.params["out_weight"]  # (d,)
-            free_corr_diag = jnp.mean(free_matrix ** 2, axis=0)       # (d,)
-            clamped_corr_diag = jnp.mean(clamped_matrix ** 2, axis=0)  # (d,)
+            free_corr_diag = jnp.mean(free_matrix**2, axis=0)  # (d,)
+            clamped_corr_diag = jnp.mean(clamped_matrix**2, axis=0)  # (d,)
             delta_w = self.ep_update.learning_rate * (free_corr_diag - clamped_corr_diag)
             self.eorm.params = {
                 **self.eorm.params,

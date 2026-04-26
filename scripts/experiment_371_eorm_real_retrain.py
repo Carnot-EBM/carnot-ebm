@@ -78,15 +78,15 @@ REAL_DATA_THRESHOLD = 50
 
 # Training hyperparameters — match Exp 359 for comparability
 TRAIN_SPLIT = 0.8
-N_EPOCHS_CI = 50       # CPU / CI mode (fast; enough to demonstrate convergence)
-N_EPOCHS_LIVE = 200    # when CARNOT_FORCE_LIVE=1 (more thorough, matches original intent)
+N_EPOCHS_CI = 50  # CPU / CI mode (fast; enough to demonstrate convergence)
+N_EPOCHS_LIVE = 200  # when CARNOT_FORCE_LIVE=1 (more thorough, matches original intent)
 BATCH_SIZE = 16
 LR = 1e-4
 MARGIN = 1.0
 
 # Corpus caps
 MAX_REAL = 300
-MAX_SYNTHETIC = 50     # fewer synthetic than Exp 359 — real data is now plentiful
+MAX_SYNTHETIC = 50  # fewer synthetic than Exp 359 — real data is now plentiful
 
 # EORM architecture — match Exp 346/359 defaults for comparable parameter count
 EMBED_DIM = 128
@@ -132,7 +132,7 @@ def _evaluate_eorm_auc(model: EORMModel, pairs: list[ViolationPair]) -> float:
             response_text=p.full_response,
         )
         energy = model.energy(cot)
-        scores.append(-energy)                    # negate: high score = predicted violation
+        scores.append(-energy)  # negate: high score = predicted violation
         labels.append(1 if p.has_violation else 0)
 
     n_pos = sum(labels)
@@ -272,7 +272,8 @@ def _load_or_build_eorm_model(baseline_path: Path) -> EORMModel:
     )
     _log.info(
         "Built fresh EORMModel (embed_dim=%d, n_layers=%d, seed=346)",
-        EMBED_DIM, N_LAYERS,
+        EMBED_DIM,
+        N_LAYERS,
     )
     return model
 
@@ -330,7 +331,8 @@ def run_experiment(
         _log.warning(
             "Only %d real pairs found (minimum %d). "
             "Exps 368/369/370 results not yet available — producing blocked artifact.",
-            n_real, REAL_DATA_THRESHOLD,
+            n_real,
+            REAL_DATA_THRESHOLD,
         )
         artifact = tmpl.build_result(
             {
@@ -355,7 +357,10 @@ def run_experiment(
     n_synthetic_used = len(corpus) - min(n_real, MAX_REAL)
     _log.info(
         "Corpus: %d total pairs (%d real capped at %d, %d synthetic)",
-        len(corpus), n_real, MAX_REAL, n_synthetic_used,
+        len(corpus),
+        n_real,
+        MAX_REAL,
+        n_synthetic_used,
     )
 
     # ---- 4. Train / test split (80/20, no shuffle for reproducibility) ----
@@ -377,7 +382,9 @@ def run_experiment(
     n_epochs = N_EPOCHS_LIVE if force_live else N_EPOCHS_CI
     _log.info(
         "Training %d epochs on %d contrastive triples (from %d train pairs)",
-        n_epochs, len(triples), len(train_pairs),
+        n_epochs,
+        len(triples),
+        len(train_pairs),
     )
 
     trainer = EORMTrainer(model, lr=LR, margin=MARGIN)

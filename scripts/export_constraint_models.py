@@ -27,7 +27,6 @@ Spec: REQ-VERIFY-002, FR-11
 from __future__ import annotations
 
 import json
-import os
 import sys
 import time
 from pathlib import Path
@@ -43,6 +42,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 # ---------------------------------------------------------------------------
 # Feature encoding (200 binary features, from Exp 62)
 # ---------------------------------------------------------------------------
+
 
 def encode_answer(question: str, answer: str) -> np.ndarray:
     """Encode a (question, answer) pair as a 200-dim binary feature vector.
@@ -65,6 +65,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     """
     try:
         from experiment_62_domain_constraint_learning import encode_answer as _enc
+
         return _enc(question, answer)
     except ImportError:
         # Fallback: minimal inline implementation for environments where
@@ -93,18 +94,19 @@ def _encode_answer_fallback(question: str, answer: str) -> np.ndarray:
 
     # --- Numeric features (20) ---
     import re
-    q_nums = re.findall(r'\d+', question)
-    a_nums = re.findall(r'\d+', answer)
-    features.append(1.0 if q_nums else 0.0)           # f0: question has number
-    features.append(1.0 if a_nums else 0.0)            # f1: answer has number
-    features.append(1.0 if len(q_nums) >= 2 else 0.0) # f2: >=2 numbers in q
-    features.append(1.0 if len(a_nums) >= 2 else 0.0) # f3: >=2 numbers in a
-    features.append(1.0 if "+" in combined else 0.0)   # f4: plus sign
-    features.append(1.0 if "*" in combined else 0.0)   # f5: multiply
-    features.append(1.0 if "-" in combined else 0.0)   # f6: minus
-    features.append(1.0 if "/" in combined else 0.0)   # f7: divide
-    features.append(1.0 if "=" in combined else 0.0)   # f8: equals
-    features.append(1.0 if "mod" in combined else 0.0) # f9: modular
+
+    q_nums = re.findall(r"\d+", question)
+    a_nums = re.findall(r"\d+", answer)
+    features.append(1.0 if q_nums else 0.0)  # f0: question has number
+    features.append(1.0 if a_nums else 0.0)  # f1: answer has number
+    features.append(1.0 if len(q_nums) >= 2 else 0.0)  # f2: >=2 numbers in q
+    features.append(1.0 if len(a_nums) >= 2 else 0.0)  # f3: >=2 numbers in a
+    features.append(1.0 if "+" in combined else 0.0)  # f4: plus sign
+    features.append(1.0 if "*" in combined else 0.0)  # f5: multiply
+    features.append(1.0 if "-" in combined else 0.0)  # f6: minus
+    features.append(1.0 if "/" in combined else 0.0)  # f7: divide
+    features.append(1.0 if "=" in combined else 0.0)  # f8: equals
+    features.append(1.0 if "mod" in combined else 0.0)  # f9: modular
     # f10-f19: digit frequency bands
     for digit in "0123456789":
         features.append(1.0 if digit in combined else 0.0)
@@ -113,57 +115,57 @@ def _encode_answer_fallback(question: str, answer: str) -> np.ndarray:
     n_words_q = len(q_words)
     n_words_a = len(a_words)
     n_chars_a = len(answer)
-    features.append(1.0 if n_words_q <= 5 else 0.0)     # f20: short question
-    features.append(1.0 if 5 < n_words_q <= 15 else 0.0)# f21: medium q
-    features.append(1.0 if n_words_q > 15 else 0.0)     # f22: long question
-    features.append(1.0 if n_words_a <= 5 else 0.0)     # f23: short answer
-    features.append(1.0 if 5 < n_words_a <= 20 else 0.0)# f24: medium answer
-    features.append(1.0 if n_words_a > 20 else 0.0)     # f25: long answer
-    features.append(1.0 if n_chars_a <= 30 else 0.0)    # f26: very short chars
+    features.append(1.0 if n_words_q <= 5 else 0.0)  # f20: short question
+    features.append(1.0 if 5 < n_words_q <= 15 else 0.0)  # f21: medium q
+    features.append(1.0 if n_words_q > 15 else 0.0)  # f22: long question
+    features.append(1.0 if n_words_a <= 5 else 0.0)  # f23: short answer
+    features.append(1.0 if 5 < n_words_a <= 20 else 0.0)  # f24: medium answer
+    features.append(1.0 if n_words_a > 20 else 0.0)  # f25: long answer
+    features.append(1.0 if n_chars_a <= 30 else 0.0)  # f26: very short chars
     features.append(1.0 if 30 < n_chars_a <= 100 else 0.0)  # f27
-    features.append(1.0 if 100 < n_chars_a <= 200 else 0.0) # f28
-    features.append(1.0 if n_chars_a > 200 else 0.0)    # f29
+    features.append(1.0 if 100 < n_chars_a <= 200 else 0.0)  # f28
+    features.append(1.0 if n_chars_a > 200 else 0.0)  # f29
     # Punctuation
-    features.append(1.0 if "." in answer else 0.0)      # f30: period
-    features.append(1.0 if "," in answer else 0.0)      # f31: comma
-    features.append(1.0 if "?" in answer else 0.0)      # f32: question mark
-    features.append(1.0 if "!" in answer else 0.0)      # f33
-    features.append(1.0 if ":" in answer else 0.0)      # f34
-    features.append(1.0 if ";" in answer else 0.0)      # f35
-    features.append(1.0 if "(" in answer else 0.0)      # f36
-    features.append(1.0 if "def " in answer else 0.0)   # f37: function def
-    features.append(1.0 if "return" in answer else 0.0) # f38
-    features.append(1.0 if "\n" in answer else 0.0)     # f39: multiline
+    features.append(1.0 if "." in answer else 0.0)  # f30: period
+    features.append(1.0 if "," in answer else 0.0)  # f31: comma
+    features.append(1.0 if "?" in answer else 0.0)  # f32: question mark
+    features.append(1.0 if "!" in answer else 0.0)  # f33
+    features.append(1.0 if ":" in answer else 0.0)  # f34
+    features.append(1.0 if ";" in answer else 0.0)  # f35
+    features.append(1.0 if "(" in answer else 0.0)  # f36
+    features.append(1.0 if "def " in answer else 0.0)  # f37: function def
+    features.append(1.0 if "return" in answer else 0.0)  # f38
+    features.append(1.0 if "\n" in answer else 0.0)  # f39: multiline
     # Word-level features
     features.append(1.0 if "the answer is" in a_lower else 0.0)  # f40
-    features.append(1.0 if "therefore" in a_lower else 0.0)       # f41
-    features.append(1.0 if "because" in a_lower else 0.0)         # f42
-    features.append(1.0 if "follows" in a_lower else 0.0)         # f43
-    features.append(1.0 if "modus" in a_lower else 0.0)           # f44 logic
-    features.append(1.0 if "ponens" in a_lower else 0.0)          # f45
-    features.append(1.0 if "tollens" in a_lower else 0.0)         # f46
-    features.append(1.0 if "syllogism" in a_lower else 0.0)       # f47
-    features.append(1.0 if "valid" in a_lower else 0.0)           # f48
-    features.append(1.0 if "invalid" in a_lower else 0.0)         # f49
+    features.append(1.0 if "therefore" in a_lower else 0.0)  # f41
+    features.append(1.0 if "because" in a_lower else 0.0)  # f42
+    features.append(1.0 if "follows" in a_lower else 0.0)  # f43
+    features.append(1.0 if "modus" in a_lower else 0.0)  # f44 logic
+    features.append(1.0 if "ponens" in a_lower else 0.0)  # f45
+    features.append(1.0 if "tollens" in a_lower else 0.0)  # f46
+    features.append(1.0 if "syllogism" in a_lower else 0.0)  # f47
+    features.append(1.0 if "valid" in a_lower else 0.0)  # f48
+    features.append(1.0 if "invalid" in a_lower else 0.0)  # f49
     # f50-f59: more structural
-    features.append(1.0 if "if" in a_lower else 0.0)              # f50
-    features.append(1.0 if "then" in a_lower else 0.0)            # f51
-    features.append(1.0 if "not" in a_lower else 0.0)             # f52
-    features.append(1.0 if "all" in a_lower else 0.0)             # f53
-    features.append(1.0 if "some" in a_lower else 0.0)            # f54
-    features.append(1.0 if "none" in a_lower else 0.0)            # f55
-    features.append(1.0 if "for" in a_lower else 0.0)             # f56
-    features.append(1.0 if "range" in a_lower else 0.0)           # f57
-    features.append(1.0 if "total" in a_lower else 0.0)           # f58
-    features.append(1.0 if "result" in a_lower else 0.0)          # f59
+    features.append(1.0 if "if" in a_lower else 0.0)  # f50
+    features.append(1.0 if "then" in a_lower else 0.0)  # f51
+    features.append(1.0 if "not" in a_lower else 0.0)  # f52
+    features.append(1.0 if "all" in a_lower else 0.0)  # f53
+    features.append(1.0 if "some" in a_lower else 0.0)  # f54
+    features.append(1.0 if "none" in a_lower else 0.0)  # f55
+    features.append(1.0 if "for" in a_lower else 0.0)  # f56
+    features.append(1.0 if "range" in a_lower else 0.0)  # f57
+    features.append(1.0 if "total" in a_lower else 0.0)  # f58
+    features.append(1.0 if "result" in a_lower else 0.0)  # f59
 
     # --- Domain-specific features (80): f60-f139 ---
     # Arithmetic-domain indicators
-    features.append(1.0 if "what is" in q_lower and "+" in q_lower else 0.0)   # f60
-    features.append(1.0 if "what is" in q_lower and "*" in q_lower else 0.0)   # f61
-    features.append(1.0 if "mod" in q_lower else 0.0)                           # f62
-    features.append(1.0 if len(a_nums) == 1 else 0.0)                          # f63: single num answer
-    features.append(1.0 if len(a_nums) == 0 and len(q_nums) > 0 else 0.0)      # f64: no num in answer
+    features.append(1.0 if "what is" in q_lower and "+" in q_lower else 0.0)  # f60
+    features.append(1.0 if "what is" in q_lower and "*" in q_lower else 0.0)  # f61
+    features.append(1.0 if "mod" in q_lower else 0.0)  # f62
+    features.append(1.0 if len(a_nums) == 1 else 0.0)  # f63: single num answer
+    features.append(1.0 if len(a_nums) == 0 and len(q_nums) > 0 else 0.0)  # f64: no num in answer
     # Arithmetic consistency: does answer num match sum/product?
     has_arith_match = 0.0
     if q_nums and a_nums and "+" in question:
@@ -176,42 +178,42 @@ def _encode_answer_fallback(question: str, answer: str) -> np.ndarray:
     features.append(has_arith_match)  # f65
 
     # Logic-domain indicators
-    features.append(1.0 if "if all" in q_lower else 0.0)         # f66
-    features.append(1.0 if "what follows" in q_lower else 0.0)    # f67
-    features.append(1.0 if "are not" in q_lower else 0.0)         # f68
-    features.append(1.0 if "either" in q_lower else 0.0)          # f69
-    features.append(1.0 if "necessarily" in q_lower else 0.0)     # f70
-    features.append(1.0 if "follows by" in a_lower else 0.0)      # f71
-    features.append(1.0 if "does not mean" in a_lower else 0.0)   # f72
-    features.append(1.0 if "cannot conclude" in a_lower else 0.0) # f73
-    features.append(1.0 if "this follows" in a_lower else 0.0)    # f74
-    features.append(1.0 if "no." in a_lower else 0.0)             # f75
-    features.append(1.0 if "yes." in a_lower else 0.0)            # f76
-    features.append(1.0 if "disjunctive" in a_lower else 0.0)     # f77
-    features.append(1.0 if "affirming" in a_lower else 0.0)       # f78
-    features.append(1.0 if "consequent" in a_lower else 0.0)      # f79
+    features.append(1.0 if "if all" in q_lower else 0.0)  # f66
+    features.append(1.0 if "what follows" in q_lower else 0.0)  # f67
+    features.append(1.0 if "are not" in q_lower else 0.0)  # f68
+    features.append(1.0 if "either" in q_lower else 0.0)  # f69
+    features.append(1.0 if "necessarily" in q_lower else 0.0)  # f70
+    features.append(1.0 if "follows by" in a_lower else 0.0)  # f71
+    features.append(1.0 if "does not mean" in a_lower else 0.0)  # f72
+    features.append(1.0 if "cannot conclude" in a_lower else 0.0)  # f73
+    features.append(1.0 if "this follows" in a_lower else 0.0)  # f74
+    features.append(1.0 if "no." in a_lower else 0.0)  # f75
+    features.append(1.0 if "yes." in a_lower else 0.0)  # f76
+    features.append(1.0 if "disjunctive" in a_lower else 0.0)  # f77
+    features.append(1.0 if "affirming" in a_lower else 0.0)  # f78
+    features.append(1.0 if "consequent" in a_lower else 0.0)  # f79
 
     # Code-domain indicators
-    features.append(1.0 if "def " in answer else 0.0)              # f80
-    features.append(1.0 if "return " in answer else 0.0)           # f81
-    features.append(1.0 if "for i in" in answer else 0.0)          # f82
-    features.append(1.0 if "range(" in answer else 0.0)            # f83
-    features.append(1.0 if "if not" in answer else 0.0)            # f84: edge case
-    features.append(1.0 if "None" in answer else 0.0)              # f85
-    features.append(1.0 if "while" in answer else 0.0)             # f86
-    features.append(1.0 if "append" in answer else 0.0)            # f87
-    features.append(1.0 if "extend" in answer else 0.0)            # f88
-    features.append(1.0 if "sorted(" in answer else 0.0)           # f89: usually wrong
-    features.append(1.0 if "== target" in answer else 0.0)         # f90 binary search
-    features.append(1.0 if "lo = mid" in answer else 0.0)          # f91: bug pattern
-    features.append(1.0 if "lo = mid + 1" in answer else 0.0)      # f92: correct
-    features.append(1.0 if "hi = mid - 1" in answer else 0.0)      # f93: correct
-    features.append(1.0 if "isinstance" in answer else 0.0)        # f94: flatten
-    features.append(1.0 if "[::-1]" in answer else 0.0)            # f95: palindrome
-    features.append(1.0 if "lower()" in answer else 0.0)           # f96
-    features.append(1.0 if "n + 1" in answer else 0.0)             # f97: correct range
-    features.append(1.0 if "n)" in answer and "n + 1" not in answer else 0.0) # f98: off-by-one
-    features.append(1.0 if "lst[0]" in answer else 0.0)            # f99: correct find_max init
+    features.append(1.0 if "def " in answer else 0.0)  # f80
+    features.append(1.0 if "return " in answer else 0.0)  # f81
+    features.append(1.0 if "for i in" in answer else 0.0)  # f82
+    features.append(1.0 if "range(" in answer else 0.0)  # f83
+    features.append(1.0 if "if not" in answer else 0.0)  # f84: edge case
+    features.append(1.0 if "None" in answer else 0.0)  # f85
+    features.append(1.0 if "while" in answer else 0.0)  # f86
+    features.append(1.0 if "append" in answer else 0.0)  # f87
+    features.append(1.0 if "extend" in answer else 0.0)  # f88
+    features.append(1.0 if "sorted(" in answer else 0.0)  # f89: usually wrong
+    features.append(1.0 if "== target" in answer else 0.0)  # f90 binary search
+    features.append(1.0 if "lo = mid" in answer else 0.0)  # f91: bug pattern
+    features.append(1.0 if "lo = mid + 1" in answer else 0.0)  # f92: correct
+    features.append(1.0 if "hi = mid - 1" in answer else 0.0)  # f93: correct
+    features.append(1.0 if "isinstance" in answer else 0.0)  # f94: flatten
+    features.append(1.0 if "[::-1]" in answer else 0.0)  # f95: palindrome
+    features.append(1.0 if "lower()" in answer else 0.0)  # f96
+    features.append(1.0 if "n + 1" in answer else 0.0)  # f97: correct range
+    features.append(1.0 if "n)" in answer and "n + 1" not in answer else 0.0)  # f98: off-by-one
+    features.append(1.0 if "lst[0]" in answer else 0.0)  # f99: correct find_max init
 
     # f100-f139: additional domain features (pad to maintain structure)
     for _ in range(40):
@@ -243,6 +245,7 @@ def _encode_answer_fallback(question: str, answer: str) -> np.ndarray:
 # ---------------------------------------------------------------------------
 # Training data generation (same generators as Exp 89)
 # ---------------------------------------------------------------------------
+
 
 def generate_arithmetic_pairs(n: int, rng: np.random.Generator) -> list[tuple[str, str, str]]:
     """Generate (question, correct, wrong) arithmetic pairs.
@@ -283,7 +286,9 @@ def generate_arithmetic_pairs(n: int, rng: np.random.Generator) -> list[tuple[st
             wrong = correct + 1
         if wrong < 0:
             wrong = correct + abs(wrong - correct) + 1
-        pairs.append((f"What is {a} + {b}?", f"The answer is {correct}.", f"The answer is {wrong}."))
+        pairs.append(
+            (f"What is {a} + {b}?", f"The answer is {correct}.", f"The answer is {wrong}.")
+        )
     remainder = max(0, remainder - 1)
 
     # Multiplication
@@ -302,7 +307,9 @@ def generate_arithmetic_pairs(n: int, rng: np.random.Generator) -> list[tuple[st
             wrong = correct + 1
         if wrong < 0:
             wrong = abs(wrong)
-        pairs.append((f"What is {a} * {b}?", f"The answer is {correct}.", f"The answer is {wrong}."))
+        pairs.append(
+            (f"What is {a} * {b}?", f"The answer is {correct}.", f"The answer is {wrong}.")
+        )
     remainder = max(0, remainder - 1)
 
     # Modular arithmetic
@@ -315,20 +322,56 @@ def generate_arithmetic_pairs(n: int, rng: np.random.Generator) -> list[tuple[st
             wrong = correct + 1
         if wrong < 0:
             wrong = abs(wrong)
-        pairs.append((f"What is {a} mod {b}?", f"The answer is {correct}.", f"The answer is {wrong}."))
+        pairs.append(
+            (f"What is {a} mod {b}?", f"The answer is {correct}.", f"The answer is {wrong}.")
+        )
 
     return pairs[:n]
 
 
 _SUBJECTS = [
-    "cats", "dogs", "birds", "fish", "trees", "rocks", "stars", "clouds",
-    "rivers", "mountains", "students", "teachers", "engineers", "doctors",
-    "planets", "atoms", "cells", "waves", "crystals", "robots",
+    "cats",
+    "dogs",
+    "birds",
+    "fish",
+    "trees",
+    "rocks",
+    "stars",
+    "clouds",
+    "rivers",
+    "mountains",
+    "students",
+    "teachers",
+    "engineers",
+    "doctors",
+    "planets",
+    "atoms",
+    "cells",
+    "waves",
+    "crystals",
+    "robots",
 ]
 _PREDICATES = [
-    "mortal", "alive", "visible", "heavy", "bright", "fast", "old",
-    "complex", "natural", "rare", "symmetric", "stable", "dense", "warm",
-    "soluble", "magnetic", "elastic", "transparent", "finite", "periodic",
+    "mortal",
+    "alive",
+    "visible",
+    "heavy",
+    "bright",
+    "fast",
+    "old",
+    "complex",
+    "natural",
+    "rare",
+    "symmetric",
+    "stable",
+    "dense",
+    "warm",
+    "soluble",
+    "magnetic",
+    "elastic",
+    "transparent",
+    "finite",
+    "periodic",
 ]
 
 
@@ -471,10 +514,7 @@ def _code_templates() -> list:
     def factorial(param, rng):
         n = param
         correct = (
-            "def factorial(n):\n"
-            "    if n == 0:\n"
-            "        return 1\n"
-            "    return n * factorial(n - 1)"
+            "def factorial(n):\n    if n == 0:\n        return 1\n    return n * factorial(n - 1)"
         )
         wrong = (
             "def factorial(n):\n"
@@ -482,7 +522,11 @@ def _code_templates() -> list:
             "        return 1\n"
             "    return n * factorial(n - 1)"
         )
-        return f"Write a recursive factorial function. factorial({n}) = {__import__('math').factorial(n)}.", correct, wrong
+        return (
+            f"Write a recursive factorial function. factorial({n}) = {__import__('math').factorial(n)}.",
+            correct,
+            wrong,
+        )
 
     def reverse_string(param, rng):
         correct = "def reverse_string(s):\n    return s[::-1]"
@@ -490,10 +534,7 @@ def _code_templates() -> list:
         return "Write a function that reverses a string.", correct, wrong
 
     def count_vowels(param, rng):
-        correct = (
-            "def count_vowels(s):\n"
-            "    return sum(1 for c in s.lower() if c in 'aeiou')"
-        )
+        correct = "def count_vowels(s):\n    return sum(1 for c in s.lower() if c in 'aeiou')"
         wrong = (
             "def count_vowels(s):\n"
             "    return sum(1 for c in s if c in 'aeiou')"  # misses uppercase
@@ -501,7 +542,6 @@ def _code_templates() -> list:
         return "Write a function that counts vowels (a,e,i,o,u) in a string.", correct, wrong
 
     def fibonacci(param, rng):
-        n = param
         correct = (
             "def fibonacci(n):\n"
             "    if n <= 0:\n"
@@ -516,7 +556,7 @@ def _code_templates() -> list:
             "        return 1\n"
             "    return fibonacci(n - 1) + fibonacci(n - 2)"
         )
-        return f"Write a recursive function that returns the nth Fibonacci number.", correct, wrong
+        return "Write a recursive function that returns the nth Fibonacci number.", correct, wrong
 
     def binary_search(param, rng):
         correct = (
@@ -545,7 +585,11 @@ def _code_templates() -> list:
             "            hi = mid\n"
             "    return -1"
         )
-        return "Write a binary search that returns the index of target in a sorted list.", correct, wrong
+        return (
+            "Write a binary search that returns the index of target in a sorted list.",
+            correct,
+            wrong,
+        )
 
     def is_palindrome(param, rng):
         correct = (
@@ -584,14 +628,23 @@ def _code_templates() -> list:
         return "Write a function that flattens a nested list.", correct, wrong
 
     return [
-        sum_range, find_max, is_even, factorial, reverse_string,
-        count_vowels, fibonacci, binary_search, is_palindrome, flatten_list,
+        sum_range,
+        find_max,
+        is_even,
+        factorial,
+        reverse_string,
+        count_vowels,
+        fibonacci,
+        binary_search,
+        is_palindrome,
+        flatten_list,
     ]
 
 
 # ---------------------------------------------------------------------------
 # Discriminative CD training (identical to Exp 89)
 # ---------------------------------------------------------------------------
+
 
 def train_discriminative_cd(
     correct_vectors: np.ndarray,
@@ -685,9 +738,7 @@ def train_discriminative_cd(
     return biases, J
 
 
-def _compute_energies(
-    vectors: np.ndarray, biases: np.ndarray, J: np.ndarray
-) -> np.ndarray:
+def _compute_energies(vectors: np.ndarray, biases: np.ndarray, J: np.ndarray) -> np.ndarray:
     """Compute Ising energy E(s) = -(b^T s + s^T J s) for each sample."""
     spins = 2.0 * vectors - 1.0
     bias_term = spins @ biases
@@ -725,7 +776,7 @@ def compute_auroc(
     chunk_size = 256
     for i in range(0, n_c, chunk_size):
         chunk = e_c[i : i + chunk_size, np.newaxis]  # (chunk, 1)
-        diff = chunk - e_w[np.newaxis, :]             # (chunk, n_w)
+        diff = chunk - e_w[np.newaxis, :]  # (chunk, n_w)
         concordant += int(np.sum(diff < 0))
         tied += int(np.sum(diff == 0))
 
@@ -735,6 +786,7 @@ def compute_auroc(
 # ---------------------------------------------------------------------------
 # Main export routine
 # ---------------------------------------------------------------------------
+
 
 def export_domain_model(
     domain: str,
@@ -771,12 +823,8 @@ def export_domain_model(
     # --- Step 1: Encode features ---
     print(f"  Encoding {n} pairs as 200-dim binary feature vectors...")
     t0 = time.perf_counter()
-    correct_features = np.array(
-        [encode_answer(q, c) for (q, c, w) in pairs], dtype=np.float32
-    )
-    wrong_features = np.array(
-        [encode_answer(q, w) for (q, c, w) in pairs], dtype=np.float32
-    )
+    correct_features = np.array([encode_answer(q, c) for (q, c, w) in pairs], dtype=np.float32)
+    wrong_features = np.array([encode_answer(q, w) for (q, c, w) in pairs], dtype=np.float32)
     print(f"  Encoding done in {time.perf_counter() - t0:.1f}s, shape={correct_features.shape}")
 
     # --- Step 2: Train/test split (80/20) ---
@@ -792,9 +840,14 @@ def export_domain_model(
     print(f"  Training Ising (d=200, n_train={n_train}, lr=0.01, L1=0.0, epochs=300)...")
     t0 = time.perf_counter()
     biases, J = train_discriminative_cd(
-        correct_train, wrong_train,
-        n_epochs=300, lr=0.01, l1_lambda=0.0, weight_decay=0.005,
-        seed=42, verbose=verbose,
+        correct_train,
+        wrong_train,
+        n_epochs=300,
+        lr=0.01,
+        l1_lambda=0.0,
+        weight_decay=0.005,
+        seed=42,
+        verbose=verbose,
     )
     elapsed = time.perf_counter() - t0
     print(f"  Training done in {elapsed:.1f}s")
@@ -851,6 +904,7 @@ def export_domain_model(
     out_dir.mkdir(parents=True, exist_ok=True)
 
     from safetensors.numpy import save_file
+
     tensors = {
         "coupling": np.ascontiguousarray(J),
         "bias": np.ascontiguousarray(biases),
@@ -880,9 +934,9 @@ def main() -> int:
 
     # Exp 89 reference results (domain-specific models, best HP: lr=0.01, L1=0)
     exp89 = {
-        "arithmetic": {"auroc": 1.0,    "accuracy": 1.0,  "n_test": 29},
-        "logic":      {"auroc": 1.0,    "accuracy": 1.0,  "n_test": 31},
-        "code":       {"auroc": 0.9096, "accuracy": 0.88, "n_test": 25},
+        "arithmetic": {"auroc": 1.0, "accuracy": 1.0, "n_test": 29},
+        "logic": {"auroc": 1.0, "accuracy": 1.0, "n_test": 31},
+        "code": {"auroc": 0.9096, "accuracy": 0.88, "n_test": 25},
     }
 
     # Generate training data (500 pairs per domain = more than Exp 89's 200,
@@ -891,8 +945,8 @@ def main() -> int:
     print(f"Generating {n_per_domain} pairs per domain...")
     datasets = {
         "arithmetic": generate_arithmetic_pairs(n_per_domain, rng),
-        "logic":      generate_logic_pairs(n_per_domain, rng),
-        "code":       generate_code_pairs(n_per_domain, rng),
+        "logic": generate_logic_pairs(n_per_domain, rng),
+        "code": generate_code_pairs(n_per_domain, rng),
     }
 
     start = time.perf_counter()

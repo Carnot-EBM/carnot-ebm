@@ -27,7 +27,7 @@ import logging
 import subprocess
 import time
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 logger = logging.getLogger("gpu-monitor")
@@ -38,6 +38,7 @@ logger = logging.getLogger("gpu-monitor")
 @dataclass
 class GPUInfo:
     """Snapshot of a single GPU's state."""
+
     index: int
     name: str
     total_mb: int
@@ -50,6 +51,7 @@ class GPUInfo:
 @dataclass
 class GPUProcess:
     """A process using GPU memory."""
+
     pid: int
     gpu_index: int
     used_mb: int
@@ -62,6 +64,7 @@ class GPUProcess:
 @dataclass
 class MonitorReport:
     """Full GPU monitoring report."""
+
     timestamp: str
     gpus: list[GPUInfo] = field(default_factory=list)
     processes: list[GPUProcess] = field(default_factory=list)
@@ -80,7 +83,9 @@ def _run_smi(query: str, fmt: str = "csv,noheader,nounits") -> list[str]:
     try:
         result = subprocess.run(
             ["nvidia-smi", f"--query-gpu={query}", f"--format={fmt}"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         if result.returncode != 0:
             return []
@@ -94,7 +99,9 @@ def _run_smi_compute(query: str, fmt: str = "csv,noheader,nounits") -> list[str]
     try:
         result = subprocess.run(
             ["nvidia-smi", f"--query-compute-apps={query}", f"--format={fmt}"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         if result.returncode != 0:
             return []
@@ -105,20 +112,24 @@ def _run_smi_compute(query: str, fmt: str = "csv,noheader,nounits") -> list[str]
 
 def get_gpu_info() -> list[GPUInfo]:
     """Query all GPUs and return their current state."""
-    lines = _run_smi("index,name,memory.total,memory.used,memory.free,utilization.gpu,temperature.gpu")
+    lines = _run_smi(
+        "index,name,memory.total,memory.used,memory.free,utilization.gpu,temperature.gpu"
+    )
     gpus = []
     for line in lines:
         parts = [p.strip() for p in line.split(",")]
         if len(parts) >= 7:
-            gpus.append(GPUInfo(
-                index=int(parts[0]),
-                name=parts[1],
-                total_mb=int(parts[2]),
-                used_mb=int(parts[3]),
-                free_mb=int(parts[4]),
-                utilization_pct=int(parts[5]),
-                temperature_c=int(parts[6]),
-            ))
+            gpus.append(
+                GPUInfo(
+                    index=int(parts[0]),
+                    name=parts[1],
+                    total_mb=int(parts[2]),
+                    used_mb=int(parts[3]),
+                    free_mb=int(parts[4]),
+                    utilization_pct=int(parts[5]),
+                    temperature_c=int(parts[6]),
+                )
+            )
     return gpus
 
 
@@ -158,14 +169,16 @@ def get_gpu_processes() -> list[GPUProcess]:
             except (FileNotFoundError, IndexError, ValueError):
                 pass
 
-            processes.append(GPUProcess(
-                pid=pid,
-                gpu_index=gpu_idx,
-                used_mb=used_mb,
-                command=command,
-                cpu_time_seconds=round(cpu_time, 1),
-                wall_time_seconds=round(wall_time, 1),
-            ))
+            processes.append(
+                GPUProcess(
+                    pid=pid,
+                    gpu_index=gpu_idx,
+                    used_mb=used_mb,
+                    command=command,
+                    cpu_time_seconds=round(cpu_time, 1),
+                    wall_time_seconds=round(wall_time, 1),
+                )
+            )
 
     return processes
 
@@ -173,8 +186,9 @@ def get_gpu_processes() -> list[GPUProcess]:
 # ── Analysis ─────────────────────────────────────────────────────────────────
 
 
-def detect_zombies(processes: list[GPUProcess], idle_threshold_min: float = 10.0,
-                   min_vram_mb: int = 1024) -> list[GPUProcess]:
+def detect_zombies(
+    processes: list[GPUProcess], idle_threshold_min: float = 10.0, min_vram_mb: int = 1024
+) -> list[GPUProcess]:
     """Detect GPU processes that appear idle but hold significant VRAM.
 
     A process is considered a zombie if:
@@ -239,8 +253,7 @@ def generate_suggestions(gpus: list[GPUInfo], processes: list[GPUProcess]) -> li
             )
 
     # Check for batching opportunity
-    single_inference = [p for p in processes if "python" in p.command.lower()
-                        and p.used_mb > 500]
+    single_inference = [p for p in processes if "python" in p.command.lower() and p.used_mb > 500]
     if len(single_inference) == 1:
         suggestions.append(
             "Single Python inference process detected. Batch multiple questions "
@@ -270,7 +283,7 @@ def generate_report() -> MonitorReport:
     suggestions = generate_suggestions(gpus, processes)
 
     return MonitorReport(
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
         gpus=gpus,
         processes=processes,
         warnings=warnings,
@@ -328,15 +341,26 @@ def kill_zombies(report: MonitorReport, dry_run: bool = True) -> list[int]:
         if not proc.is_zombie:
             continue
         if dry_run:
-            logger.info("DRY RUN: Would kill PID %d (%s, %dMB on GPU %d)",
-                        proc.pid, proc.command, proc.used_mb, proc.gpu_index)
+            logger.info(
+                "DRY RUN: Would kill PID %d (%s, %dMB on GPU %d)",
+                proc.pid,
+                proc.command,
+                proc.used_mb,
+                proc.gpu_index,
+            )
         else:
-            import signal
             import os
+            import signal
+
             try:
                 os.kill(proc.pid, signal.SIGTERM)
-                logger.info("Killed PID %d (%s, freed ~%dMB on GPU %d)",
-                            proc.pid, proc.command, proc.used_mb, proc.gpu_index)
+                logger.info(
+                    "Killed PID %d (%s, freed ~%dMB on GPU %d)",
+                    proc.pid,
+                    proc.command,
+                    proc.used_mb,
+                    proc.gpu_index,
+                )
                 killed.append(proc.pid)
             except ProcessLookupError:
                 pass

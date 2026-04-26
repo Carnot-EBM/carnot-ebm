@@ -65,8 +65,8 @@ def _build_pipeline(*, wire: bool = True) -> tuple[ThreeTierPipeline, _CountingI
         sink_probe=sink_probe,
         eorm_model=eorm_stub,
         ising_pipeline=ising_stub,
-        sink_threshold=0.99,   # never fires in tests
-        eorm_threshold=0.5,    # stub returns 0.9, never clears
+        sink_threshold=0.99,  # never fires in tests
+        eorm_threshold=0.5,  # stub returns 0.9, never clears
     )
     if wire:
         verifier = DraftConditionedVerifier(
@@ -88,9 +88,7 @@ class TestWireTier28:
     def test_wire_does_not_raise(self) -> None:
         """wire_tier_28 MUST not raise when called with a valid verifier."""
         pipeline, _ = _build_pipeline(wire=False)
-        verifier = DraftConditionedVerifier(
-            draft_runner=_FixedDraftRunner(), ising_sampler=None
-        )
+        verifier = DraftConditionedVerifier(draft_runner=_FixedDraftRunner(), ising_sampler=None)
         pipeline.wire_tier_28(verifier)  # should not raise
 
     def test_advisory_none_before_verify(self) -> None:

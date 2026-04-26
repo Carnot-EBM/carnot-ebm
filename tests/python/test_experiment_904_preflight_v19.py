@@ -19,6 +19,7 @@ from pathlib import Path
 import pytest
 
 import sys
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from experiment_904_preflight_v19 import (  # noqa: E402
@@ -282,9 +283,7 @@ class TestRunPreflightOutput:
             "wall_time_minutes": 13.9255,
             "experiments_in_milestone": 11,
         }
-        (tmp_path / "results" / "operational_retro_2026_04_69.json").write_text(
-            json.dumps(retro)
-        )
+        (tmp_path / "results" / "operational_retro_2026_04_69.json").write_text(json.dumps(retro))
         (tmp_path / "ops").mkdir()
         (tmp_path / "ops" / "known-issues.md").write_text("# Known Issues\n")
         return tmp_path

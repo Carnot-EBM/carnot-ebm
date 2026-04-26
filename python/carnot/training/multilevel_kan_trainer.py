@@ -32,12 +32,10 @@ Spec: REQ-SAMPLE-038, SCENARIO-SAMPLE-063, SCENARIO-SAMPLE-064
 
 from __future__ import annotations
 
+import jax.numpy as jnp
 import numpy as np
 
-import jax.numpy as jnp
-
 from carnot.models.kaem_energy import KAEMEnergy, UnivariateKAEMLayer
-
 
 # ---------------------------------------------------------------------------
 # KnotRefinementInterpolator

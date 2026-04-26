@@ -50,7 +50,8 @@ def logit_lens_analysis(
     print(f"Loading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         torch_dtype=torch.float16 if device == "cuda" else None,
     )
@@ -60,14 +61,14 @@ def logit_lens_analysis(
 
     # Get the unembedding matrix (lm_head weights)
     # This projects hidden states → vocabulary logits
-    if hasattr(model, 'lm_head'):
+    if hasattr(model, "lm_head"):
         unembed = model.lm_head.weight.data  # (vocab_size, hidden_dim)
-    elif hasattr(model, 'embed_out'):
+    elif hasattr(model, "embed_out"):
         unembed = model.embed_out.weight.data
     else:
         # Try to find it
         for name, param in model.named_parameters():
-            if 'lm_head' in name or 'embed_out' in name:
+            if "lm_head" in name or "embed_out" in name:
                 unembed = param.data
                 break
         else:
@@ -75,7 +76,7 @@ def logit_lens_analysis(
             return {}
 
     print(f"  Unembedding shape: {unembed.shape}")  # (vocab_size, hidden_dim)
-    n_layers = len([n for n, _ in model.named_modules() if 'layers.' in n and n.endswith('.mlp')])
+    n_layers = len([n for n, _ in model.named_modules() if "layers." in n and n.endswith(".mlp")])
     print(f"  Layers: ~{n_layers}")
 
     ds = load_dataset("truthful_qa", "generation")
@@ -96,7 +97,9 @@ def logit_lens_analysis(
         prompt = f"Answer briefly and factually in one sentence. {question}"
         messages = [{"role": "user", "content": prompt}]
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
         inputs = tokenizer(text, return_tensors="pt")
@@ -105,8 +108,9 @@ def logit_lens_analysis(
         prompt_len = inputs["input_ids"].shape[1]
 
         with torch.no_grad():
-            outputs = model.generate(**inputs, max_new_tokens=80, do_sample=False,
-                                     pad_token_id=tokenizer.eos_token_id)
+            outputs = model.generate(
+                **inputs, max_new_tokens=80, do_sample=False, pad_token_id=tokenizer.eos_token_id
+            )
 
         gen_ids = outputs[0, prompt_len:]
         response = tokenizer.decode(gen_ids, skip_special_tokens=True)
@@ -114,7 +118,10 @@ def logit_lens_analysis(
             response = response.split("</think>")[-1].strip()
 
         is_correct = check_truthfulqa_answer(
-            response, correct_answers, incorrect_answers, best_answer,
+            response,
+            correct_answers,
+            incorrect_answers,
+            best_answer,
         )
         if is_correct:
             n_correct += 1
@@ -132,13 +139,13 @@ def logit_lens_analysis(
         # Process one layer at a time to avoid GPU OOM on large vocab projections
         # Pre-compute per-layer features for all generated tokens
         all_layer_preds = []  # (n_hs,) lists of (n_gen,) top tokens
-        all_layer_ents = []   # (n_hs,) lists of (n_gen,) entropies
+        all_layer_ents = []  # (n_hs,) lists of (n_gen,) entropies
         all_layer_ranks = []  # (n_hs,) lists of (n_gen,) ranks
 
         with torch.no_grad():
             actual_ids = gen_ids[:n_gen].to(device)
             for layer_idx in range(n_hs):
-                h = hs[layer_idx][0, prompt_len:prompt_len + n_gen, :]  # (n_gen, hidden_dim)
+                h = hs[layer_idx][0, prompt_len : prompt_len + n_gen, :]  # (n_gen, hidden_dim)
                 logits = h.float() @ unembed.float().T  # (n_gen, vocab_size)
                 probs = torch.softmax(logits, dim=-1)
                 all_layer_preds.append(logits.argmax(dim=-1).cpu().tolist())
@@ -173,9 +180,9 @@ def logit_lens_analysis(
             convergence_frac = convergence / n_hs
 
             # 3. Entropy trajectory: does entropy decrease monotonically?
-            early_entropy = np.mean(layer_entropies[:n_hs // 3])
-            mid_entropy = np.mean(layer_entropies[n_hs // 3: 2 * n_hs // 3])
-            late_entropy = np.mean(layer_entropies[2 * n_hs // 3:])
+            early_entropy = np.mean(layer_entropies[: n_hs // 3])
+            mid_entropy = np.mean(layer_entropies[n_hs // 3 : 2 * n_hs // 3])
+            late_entropy = np.mean(layer_entropies[2 * n_hs // 3 :])
             entropy_drop = early_entropy - late_entropy
 
             # 4. Rank stability: how stable is the actual token's rank across layers?
@@ -184,7 +191,9 @@ def logit_lens_analysis(
             final_rank = layer_ranks_of_actual[-1]
 
             # 5. Number of "mind changes": how many times does the top prediction change?
-            mind_changes = sum(1 for i in range(1, n_hs) if layer_predictions[i] != layer_predictions[i - 1])
+            mind_changes = sum(
+                1 for i in range(1, n_hs) if layer_predictions[i] != layer_predictions[i - 1]
+            )
 
             features = {
                 "agreement": agreement,
@@ -205,8 +214,10 @@ def logit_lens_analysis(
                 wrong_features.append(features)
 
         if (qi + 1) % 50 == 0:
-            print(f"  [{qi+1:3d}/{n_questions}] correct={n_correct} wrong={n_wrong} "
-                  f"tokens: {len(correct_features)}c/{len(wrong_features)}w")
+            print(
+                f"  [{qi + 1:3d}/{n_questions}] correct={n_correct} wrong={n_wrong} "
+                f"tokens: {len(correct_features)}c/{len(wrong_features)}w"
+            )
 
     del model, tokenizer
     if device == "cuda":
@@ -241,8 +252,16 @@ def main() -> int:
     print(f"\nCollected: {len(correct)} correct tokens, {len(wrong)} wrong tokens ({elapsed:.0f}s)")
 
     # Compare each feature between correct and wrong
-    features = ["agreement", "convergence_frac", "entropy_drop", "mind_changes",
-                 "early_entropy", "late_entropy", "rank_std", "mean_rank"]
+    features = [
+        "agreement",
+        "convergence_frac",
+        "entropy_drop",
+        "mind_changes",
+        "early_entropy",
+        "late_entropy",
+        "rank_std",
+        "mean_rank",
+    ]
 
     sep = "=" * 70
     print(f"\n{sep}")
@@ -276,7 +295,9 @@ def main() -> int:
 
         detection_results[feat] = acc
         marker = " ***" if acc > 0.6 else ""
-        print(f"  {feat:23s} {c_mean:>10.4f} {w_mean:>10.4f} {delta:>+10.4f} {direction:>12s}  {acc:.1%}{marker}")
+        print(
+            f"  {feat:23s} {c_mean:>10.4f} {w_mean:>10.4f} {delta:>+10.4f} {direction:>12s}  {acc:.1%}{marker}"
+        )
 
     # Best feature
     best_feat = max(detection_results, key=detection_results.get)

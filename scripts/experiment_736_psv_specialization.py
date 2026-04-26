@@ -126,8 +126,7 @@ def _make_math_algebra_questions(n: int) -> list[str]:
         a = i + 2
         b = i * 3 + 5
         questions.append(
-            f"MATH-ALG-{i}: Solve for x: {a}*x + {b} = {a * (i + 1) + b}. "
-            f"What is the value of x?"
+            f"MATH-ALG-{i}: Solve for x: {a}*x + {b} = {a * (i + 1) + b}. What is the value of x?"
         )
     return questions
 
@@ -404,9 +403,9 @@ def run_experiment(repo_root: Path | None = None) -> dict:
     # Condition B (DOMAIN DIVERSITY): GSM8K(10) + MATH-Algebra(5) + ARC(5)
     # ------------------------------------------------------------------
     _log.info("Building Condition B: domain-diverse rotating pool...")
-    gsm8k_b = _make_gsm8k_questions(0, 30)        # 30 GSM8K questions to sample from
-    algebra_b = _make_math_algebra_questions(15)    # 15 algebra questions to sample from
-    arc_b = _make_arc_challenge_questions(15)       # 15 ARC questions to sample from
+    gsm8k_b = _make_gsm8k_questions(0, 30)  # 30 GSM8K questions to sample from
+    algebra_b = _make_math_algebra_questions(15)  # 15 algebra questions to sample from
+    arc_b = _make_arc_challenge_questions(15)  # 15 ARC questions to sample from
     inf_b, ver_b = _make_synthetic_fns_multidomain(gsm8k_b, algebra_b, arc_b)
     questions_b: list[list[str]] = []
     for _ in range(_N_ITERATIONS):
@@ -422,7 +421,7 @@ def run_experiment(repo_root: Path | None = None) -> dict:
     # Condition C (DOMAIN-GENERIC VERIFIER): held-out GSM8K 100-199
     # ------------------------------------------------------------------
     _log.info("Building Condition C: domain-generic verifier on GSM8K held-out 100-199...")
-    gsm8k_c = _make_gsm8k_questions(100, 200)   # 100 held-out questions
+    gsm8k_c = _make_gsm8k_questions(100, 200)  # 100 held-out questions
     inf_c, ver_c = _make_synthetic_fns_generic_verifier(gsm8k_c)
     # Fixed pool — 20 questions per iteration from the 100-question held-out set.
     questions_c: list[list[str]] = []

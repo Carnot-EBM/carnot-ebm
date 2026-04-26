@@ -85,8 +85,10 @@ def _ising_stub_wrong(response: str, question: str) -> tuple[bool, float]:
 
 def _ising_stub_energy(energy: float):
     """Return an ising stub that returns (True, energy)."""
+
     def _stub(response: str, question: str) -> tuple[bool, float]:
         return (True, energy)
+
     return _stub
 
 
@@ -389,23 +391,20 @@ class TestBenchmarkSkipRates:
         """n responses that will be cleared by SinkProbe (high sink attn)."""
         attn = _high_sink_attn(sink_mass=0.9)
         return [
-            {"response": f"resp_{i}", "question": "q", "attention_matrix": attn}
-            for i in range(n)
+            {"response": f"resp_{i}", "question": "q", "attention_matrix": attn} for i in range(n)
         ]
 
     def _make_responses_no_attn_low_eorm(self, n: int) -> list[dict]:
         """n responses with no attention_matrix; cleared by EORM (eorm_threshold=999)."""
         return [
-            {"response": f"resp_{i}", "question": "q", "attention_matrix": None}
-            for i in range(n)
+            {"response": f"resp_{i}", "question": "q", "attention_matrix": None} for i in range(n)
         ]
 
     def _make_responses_reach_ising(self, n: int) -> list[dict]:
         """n responses that reach Ising: uniform attn (low sink) + high eorm threshold."""
         attn = _uniform_attn()
         return [
-            {"response": f"resp_{i}", "question": "q", "attention_matrix": attn}
-            for i in range(n)
+            {"response": f"resp_{i}", "question": "q", "attention_matrix": attn} for i in range(n)
         ]
 
     def test_all_cleared_by_sink_probe(self):
@@ -441,10 +440,7 @@ class TestBenchmarkSkipRates:
     def test_mixed_tiers(self):
         """5 high-sink (cleared by T1) + 5 no-attn (cleared by EORM) = total_skip_rate=1.0."""
         pipeline = _make_pipeline(sink_threshold=0.3, eorm_threshold=999.0)
-        responses = (
-            self._make_responses_high_sink(5)
-            + self._make_responses_no_attn_low_eorm(5)
-        )
+        responses = self._make_responses_high_sink(5) + self._make_responses_no_attn_low_eorm(5)
         labels = [True] * 10
         result = pipeline.benchmark(responses, labels)
         assert result.skip_rate_sink_probe == pytest.approx(0.5, abs=1e-6)
@@ -456,10 +452,9 @@ class TestBenchmarkSkipRates:
         pipeline = _make_pipeline(sink_threshold=0.3, eorm_threshold=-999.0)
         attn_high = _high_sink_attn(sink_mass=0.9)
         attn_low = _uniform_attn()
-        responses = (
-            [{"response": f"r{i}", "question": "q", "attention_matrix": attn_high} for i in range(4)]
-            + [{"response": f"r{i}", "question": "q", "attention_matrix": attn_low} for i in range(6)]
-        )
+        responses = [
+            {"response": f"r{i}", "question": "q", "attention_matrix": attn_high} for i in range(4)
+        ] + [{"response": f"r{i}", "question": "q", "attention_matrix": attn_low} for i in range(6)]
         labels = [True] * 10
         result = pipeline.benchmark(responses, labels)
         assert result.skip_rate_sink_probe == pytest.approx(0.4, abs=1e-6)
@@ -491,8 +486,7 @@ class TestBenchmarkFNRate:
         attn_high = _high_sink_attn(sink_mass=0.9)
         # 3 wrong responses that SinkProbe will incorrectly clear
         responses = [
-            {"response": "r", "question": "q", "attention_matrix": attn_high}
-            for _ in range(3)
+            {"response": "r", "question": "q", "attention_matrix": attn_high} for _ in range(3)
         ]
         labels = [False, False, False]
         result = pipeline.benchmark(responses, labels)
@@ -505,8 +499,7 @@ class TestBenchmarkFNRate:
         pipeline = _make_pipeline(sink_threshold=0.99, eorm_threshold=-999.0)
         attn_low = _uniform_attn()
         responses = [
-            {"response": "r", "question": "q", "attention_matrix": attn_low}
-            for _ in range(5)
+            {"response": "r", "question": "q", "attention_matrix": attn_low} for _ in range(5)
         ]
         labels = [False] * 5
         result = pipeline.benchmark(responses, labels)
@@ -518,10 +511,9 @@ class TestBenchmarkFNRate:
         pipeline = _make_pipeline(sink_threshold=0.3, eorm_threshold=-999.0)
         attn_high = _high_sink_attn(sink_mass=0.9)
         attn_low = _uniform_attn()
-        responses = (
-            [{"response": "r", "question": "q", "attention_matrix": attn_high} for _ in range(2)]
-            + [{"response": "r", "question": "q", "attention_matrix": attn_low} for _ in range(3)]
-        )
+        responses = [
+            {"response": "r", "question": "q", "attention_matrix": attn_high} for _ in range(2)
+        ] + [{"response": "r", "question": "q", "attention_matrix": attn_low} for _ in range(3)]
         labels = [False] * 5
         result = pipeline.benchmark(responses, labels)
         assert result.fn_rate == pytest.approx(0.4, abs=1e-6)
@@ -529,10 +521,7 @@ class TestBenchmarkFNRate:
     def test_wrong_cleared_by_eorm_counted_as_fn(self):
         """Wrong responses cleared by EORM are also false negatives."""
         pipeline = _make_pipeline(sink_threshold=0.99, eorm_threshold=999.0)
-        responses = [
-            {"response": "r", "question": "q", "attention_matrix": None}
-            for _ in range(4)
-        ]
+        responses = [{"response": "r", "question": "q", "attention_matrix": None} for _ in range(4)]
         labels = [False] * 4
         result = pipeline.benchmark(responses, labels)
         # All cleared by EORM (no attn, threshold=999) → fn_rate=1.0
@@ -551,8 +540,7 @@ class TestBenchmarkThroughput:
         """throughput_qps must be > 0 for a non-empty input."""
         pipeline = _make_pipeline()
         responses = [
-            {"response": "r", "question": "q", "attention_matrix": None}
-            for _ in range(20)
+            {"response": "r", "question": "q", "attention_matrix": None} for _ in range(20)
         ]
         labels = [True] * 20
         result = pipeline.benchmark(responses, labels)
@@ -577,14 +565,11 @@ class TestBenchmarkThroughput:
         pipeline = _make_pipeline(sink_threshold=0.3, eorm_threshold=-999.0)
         attn_high = _high_sink_attn()
         responses = [
-            {"response": "r", "question": "q", "attention_matrix": attn_high}
-            for _ in range(10)
+            {"response": "r", "question": "q", "attention_matrix": attn_high} for _ in range(10)
         ]
         labels = [True] * 10
         result = pipeline.benchmark(responses, labels)
-        assert result.ising_calls_saved_pct == pytest.approx(
-            result.total_skip_rate * 100, abs=1e-6
-        )
+        assert result.ising_calls_saved_pct == pytest.approx(result.total_skip_rate * 100, abs=1e-6)
 
 
 # ---------------------------------------------------------------------------
@@ -766,9 +751,7 @@ class TestTier0cNUPProbeV4:
             nup_probe_v4=nup,
             nup_probe_threshold=0.0,
         )
-        verified, tier_used, energy = pipeline.verify(
-            "The answer is 42.", attention_matrix=None
-        )
+        verified, tier_used, energy = pipeline.verify("The answer is 42.", attention_matrix=None)
         assert tier_used == "nup_probe_v4"
         assert verified is True
         assert energy <= 0.0
@@ -818,7 +801,7 @@ class TestTier0cNUPProbeV4:
 
 def _quadratic_energy(x: jnp.ndarray) -> float:
     """Simple quadratic energy proxy for CI tests: E(x) = sum(x^2)."""
-    return float(jnp.sum(x ** 2))
+    return float(jnp.sum(x**2))
 
 
 def _make_basin_pipeline(basin_threshold: float = 0.5) -> ThreeTierPipeline:

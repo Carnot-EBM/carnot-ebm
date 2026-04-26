@@ -33,6 +33,7 @@ _OVERALL_OOD_GATE = 0.65
 # of which artifact is on disk.
 # ---------------------------------------------------------------------------
 
+
 def _evaluate_deployment_gate(min_domain_auc: float, overall_ood_auc: float) -> dict:
     """
     Evaluate whether a JEPA checkpoint clears the Tier 3.5 deployment gate.
@@ -65,6 +66,7 @@ def _evaluate_deployment_gate(min_domain_auc: float, overall_ood_auc: float) -> 
 # ---------------------------------------------------------------------------
 # REQ-LEARN-015 / FR-11: blocked path — min_domain_auc below gate
 # ---------------------------------------------------------------------------
+
 
 class TestBlockedIfBelowGate:
     """Verify that gate logic correctly blocks deployment when min_domain_auc < 0.50."""
@@ -119,6 +121,7 @@ class TestBlockedIfBelowGate:
 # REQ-LEARN-015 / FR-11: deployment path — both gates pass
 # ---------------------------------------------------------------------------
 
+
 class TestTier35DeployedInPipeline:
     """Verify gate logic produces tier35_deployed=True when both gates clear."""
 
@@ -144,6 +147,7 @@ class TestTier35DeployedInPipeline:
 # ---------------------------------------------------------------------------
 # SVAMP coverage flag — should be True in all JEPAPredictions when deployed
 # ---------------------------------------------------------------------------
+
 
 class TestSvampCoverageFlag:
     """
@@ -186,6 +190,7 @@ class TestSvampCoverageFlag:
 # ---------------------------------------------------------------------------
 # Domain accuracy test — gate: 30/40 steps (75%) correctly labelled
 # ---------------------------------------------------------------------------
+
 
 class TestDomainAccuracy:
     """
@@ -233,6 +238,7 @@ class TestDomainAccuracy:
 # ---------------------------------------------------------------------------
 # Artifact integrity: Exp 845 deliverable JSON
 # ---------------------------------------------------------------------------
+
 
 class TestExp845Artifact:
     """Verify the written Exp 845 artifact has the required schema and values."""

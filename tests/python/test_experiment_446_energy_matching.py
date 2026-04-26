@@ -170,8 +170,9 @@ class TestSampleLangevin:
     def test_noise_scale_zero_equals_gradient_descent(self) -> None:
         """REQ-KONA-002: With noise_scale=0, Langevin reduces to gradient descent."""
         model = fit_continuous_ebm(_make_sparse_ising(n=5))
-        x_langevin = sample_langevin(model, n_steps=100, lr=0.01, noise_scale=0.0,
-                                     temp_schedule="constant", seed=42)
+        x_langevin = sample_langevin(
+            model, n_steps=100, lr=0.01, noise_scale=0.0, temp_schedule="constant", seed=42
+        )
         # Also run gradient descent from the same Gaussian init (not same as uniform)
         # Just verify output is in valid range (convergence behavior differs due to init)
         assert x_langevin.shape == (5,)
@@ -391,9 +392,11 @@ class TestLangevinVsIsingIntegration:
 
         sign_agreements = []
         for seed in range(5):
-            x = sample_langevin(model, n_steps=2000, lr=0.005, noise_scale=0.1,
-                                 temp_schedule="cosine", seed=seed)
+            x = sample_langevin(
+                model, n_steps=2000, lr=0.005, noise_scale=0.1, temp_schedule="cosine", seed=seed
+            )
             from carnot.phase3.continuous_ebm import compare_minima
+
             cmp = compare_minima(ground_state, x)
             sign_agreements.append(cmp["sign_agreement"])
 
@@ -419,9 +422,7 @@ class TestEnergyMatchingIntegration:
 
         # Sample multiple Gaussian inits and average their energy
         rng = np.random.default_rng(0)
-        init_energies = [
-            _energy(model, np.tanh(rng.standard_normal(10))) for _ in range(20)
-        ]
+        init_energies = [_energy(model, np.tanh(rng.standard_normal(10))) for _ in range(20)]
         mean_init_energy = float(np.mean(init_energies))
 
         x = sample_energy_matching(model, n_steps=500, n_flow_steps=10, seed=0)

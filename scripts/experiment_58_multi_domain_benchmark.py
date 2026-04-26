@@ -65,6 +65,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 # 1. Question generation — 100 questions per domain, each with ground truth
 # ---------------------------------------------------------------------------
 
+
 def _extract_number(text: str) -> float | None:
     """Pull the last number from a string (usually the final answer).
 
@@ -119,12 +120,14 @@ def generate_arithmetic_questions(n: int = 100, seed: int = 58) -> list[dict[str
             a = rng.randint(10, 999)
             b = rng.randint(10, 999)
         answer = op_fn(a, b)
-        questions.append({
-            "domain": "arithmetic",
-            "question": f"What is {a} {op_sym} {b}?",
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": f"What is {a} {op_sym} {b}?",
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+            }
+        )
 
     # --- 30 multi-step expressions ---
     for i in range(30):
@@ -141,12 +144,14 @@ def generate_arithmetic_questions(n: int = 100, seed: int = 58) -> list[dict[str
         else:
             question = f"What is {a} + {b} - {c}?"
             answer = a + b - c
-        questions.append({
-            "domain": "arithmetic",
-            "question": question,
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": question,
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+            }
+        )
 
     # --- 30 word problems ---
     templates = [
@@ -172,12 +177,14 @@ def generate_arithmetic_questions(n: int = 100, seed: int = 58) -> list[dict[str
         c = rng.randint(1, a // 2)
         answer = fn(a, b, c)
         question = tmpl.format(a=a, b=b, c=c)
-        questions.append({
-            "domain": "arithmetic",
-            "question": question,
-            "ground_truth": str(answer),
-            "check_answer": _make_number_checker(answer),
-        })
+        questions.append(
+            {
+                "domain": "arithmetic",
+                "question": question,
+                "ground_truth": str(answer),
+                "check_answer": _make_number_checker(answer),
+            }
+        )
 
     return questions[:n]
 
@@ -191,11 +198,13 @@ def _make_number_checker(expected: int | float) -> Any:
         each expected value. The checker extracts the last number from the
         response text and compares it to the expected value.
     """
+
     def checker(ans: str) -> bool:
         extracted = _extract_number(ans)
         if extracted is None:
             return False
         return int(extracted) == int(expected)
+
     return checker
 
 
@@ -262,7 +271,11 @@ def generate_code_questions(n: int = 100, seed: int = 58) -> list[dict[str, Any]
         ("find the ceiling of a division without math.ceil", ["ceil", "//", "+"], None),
         ("check if a year is a leap year", ["leap", "% 4", "% 100", "% 400"], None),
         ("compute the digital root of a number", ["digital", "root", "while", "%"], None),
-        ("convert temperature from Celsius to Fahrenheit", ["celsius", "fahrenheit", "* 9", "/ 5"], None),
+        (
+            "convert temperature from Celsius to Fahrenheit",
+            ["celsius", "fahrenheit", "* 9", "/ 5"],
+            None,
+        ),
         ("find the number of trailing zeros in n!", ["trailing", "zero", "// 5"], None),
         ("compute the integer square root", ["sqrt", "isqrt", "**"], None),
         ("check if two numbers are coprime (GCD=1)", ["gcd", "coprime", "== 1"], None),
@@ -302,7 +315,11 @@ def generate_code_questions(n: int = 100, seed: int = 58) -> list[dict[str, Any]
         ("implement selection sort", ["selection", "sort", "min"], None),
         ("implement linear search", ["linear", "search", "for"], None),
         ("implement merge sort", ["merge", "sort", "mid", "left", "right"], None),
-        ("find two numbers that sum to target (two sum)", ["two", "sum", "target", "dict", "hash"], None),
+        (
+            "find two numbers that sum to target (two sum)",
+            ["two", "sum", "target", "dict", "hash"],
+            None,
+        ),
         ("check if parentheses are balanced", ["balanced", "stack", "(", ")"], None),
         ("implement a stack using a list", ["stack", "push", "pop", "append"], None),
         ("implement a queue using a list", ["queue", "enqueue", "dequeue", "append"], None),
@@ -320,26 +337,34 @@ def generate_code_questions(n: int = 100, seed: int = 58) -> list[dict[str, Any]
         ("generate Pascal's triangle row n", ["pascal", "triangle", "row"], None),
         ("find missing number in range 1..n", ["missing", "sum", "n*(n+1)//2", "xor"], None),
         ("implement matrix multiplication", ["matrix", "multiply", "dot", "sum"], None),
-        ("find the longest increasing subsequence length", ["longest", "increasing", "subsequence", "dp"], None),
+        (
+            "find the longest increasing subsequence length",
+            ["longest", "increasing", "subsequence", "dp"],
+            None,
+        ),
     ]
 
     rng = random.Random(seed)
-    selected = code_templates[:n] if len(code_templates) >= n else (
-        code_templates * (n // len(code_templates) + 1)
-    )[:n]
+    selected = (
+        code_templates[:n]
+        if len(code_templates) >= n
+        else (code_templates * (n // len(code_templates) + 1))[:n]
+    )
     rng.shuffle(selected)
 
     questions: list[dict[str, Any]] = []
     for desc, keywords, test_cases in selected:
         # Build check_answer: response must contain 'def ' and at least one keyword.
-        questions.append({
-            "domain": "code",
-            "question": f"Write a Python function to {desc}.",
-            "ground_truth": f"def {desc.split()[0]}",
-            "keywords": keywords,
-            "test_cases": test_cases,
-            "check_answer": _make_code_checker(keywords),
-        })
+        questions.append(
+            {
+                "domain": "code",
+                "question": f"Write a Python function to {desc}.",
+                "ground_truth": f"def {desc.split()[0]}",
+                "keywords": keywords,
+                "test_cases": test_cases,
+                "check_answer": _make_code_checker(keywords),
+            }
+        )
 
     return questions[:n]
 
@@ -358,11 +383,13 @@ def _make_code_checker(keywords: list[str]) -> Any:
         The constraint verification layer (Mode B/C) does deeper analysis
         via AST parsing and test execution.
     """
+
     def checker(ans: str) -> bool:
         if "def " not in ans:
             return False
         ans_lower = ans.lower()
         return any(kw.lower() in ans_lower for kw in keywords)
+
     return checker
 
 
@@ -384,15 +411,29 @@ def generate_logic_questions(n: int = 100, seed: int = 58) -> list[dict[str, Any
 
     # --- 35 valid syllogisms (answer: yes) ---
     categories = [
-        ("mammals", "animals"), ("dogs", "mammals"), ("birds", "animals"),
-        ("roses", "flowers"), ("oaks", "trees"), ("salmon", "fish"),
-        ("apples", "fruits"), ("cars", "vehicles"), ("novels", "books"),
-        ("triangles", "shapes"), ("violins", "instruments"), ("gold", "metals"),
+        ("mammals", "animals"),
+        ("dogs", "mammals"),
+        ("birds", "animals"),
+        ("roses", "flowers"),
+        ("oaks", "trees"),
+        ("salmon", "fish"),
+        ("apples", "fruits"),
+        ("cars", "vehicles"),
+        ("novels", "books"),
+        ("triangles", "shapes"),
+        ("violins", "instruments"),
+        ("gold", "metals"),
     ]
     instances = [
-        ("Rex", "dogs"), ("Tweety", "birds"), ("Nemo", "salmon"),
-        ("Bessie", "mammals"), ("Fido", "dogs"), ("Polly", "birds"),
-        ("Spot", "dogs"), ("Flipper", "mammals"), ("Garfield", "mammals"),
+        ("Rex", "dogs"),
+        ("Tweety", "birds"),
+        ("Nemo", "salmon"),
+        ("Bessie", "mammals"),
+        ("Fido", "dogs"),
+        ("Polly", "birds"),
+        ("Spot", "dogs"),
+        ("Flipper", "mammals"),
+        ("Garfield", "mammals"),
     ]
     for i in range(35):
         cat, supercat = categories[i % len(categories)]
@@ -405,12 +446,14 @@ def generate_logic_questions(n: int = 100, seed: int = 58) -> list[dict[str, Any
             f"All {cat} are {supercat}. {inst_name} is a {inst_cat}. "
             f"Is {inst_name} a {supercat}? Answer yes or no."
         )
-        questions.append({
-            "domain": "logic",
-            "question": question,
-            "ground_truth": "yes",
-            "check_answer": lambda ans, _q=question: "yes" in ans.lower(),
-        })
+        questions.append(
+            {
+                "domain": "logic",
+                "question": question,
+                "ground_truth": "yes",
+                "check_answer": lambda ans, _q=question: "yes" in ans.lower(),
+            }
+        )
 
     # --- 25 invalid syllogisms (answer: no) ---
     # "All X are Y. Z is Y. Is Z an X?" (affirming the consequent — invalid)
@@ -421,12 +464,14 @@ def generate_logic_questions(n: int = 100, seed: int = 58) -> list[dict[str, Any
             f"All {cat} are {supercat}. {inst_name} is a {supercat}. "
             f"Is {inst_name} necessarily a {cat}? Answer yes or no."
         )
-        questions.append({
-            "domain": "logic",
-            "question": question,
-            "ground_truth": "no",
-            "check_answer": lambda ans, _q=question: "no" in ans.lower(),
-        })
+        questions.append(
+            {
+                "domain": "logic",
+                "question": question,
+                "ground_truth": "no",
+                "check_answer": lambda ans, _q=question: "no" in ans.lower(),
+            }
+        )
 
     # --- 20 modus ponens / modus tollens ---
     propositions = [
@@ -440,26 +485,24 @@ def generate_logic_questions(n: int = 100, seed: int = 58) -> list[dict[str, Any
         p, q = propositions[i % len(propositions)]
         if i % 2 == 0:
             # Modus ponens: P→Q, P, therefore Q? (yes)
-            question = (
-                f"If {p}, then {q}. {p.capitalize()}. "
-                f"Does {q}? Answer yes or no."
-            )
+            question = f"If {p}, then {q}. {p.capitalize()}. Does {q}? Answer yes or no."
             expected = "yes"
             check = lambda ans, _e=expected: _e in ans.lower()
         else:
             # Modus tollens: P→Q, not Q, therefore not P? (yes, P is false)
             question = (
-                f"If {p}, then {q}. {q.capitalize()} did NOT happen. "
-                f"Did {p}? Answer yes or no."
+                f"If {p}, then {q}. {q.capitalize()} did NOT happen. Did {p}? Answer yes or no."
             )
             expected = "no"
             check = lambda ans, _e=expected: _e in ans.lower()
-        questions.append({
-            "domain": "logic",
-            "question": question,
-            "ground_truth": expected,
-            "check_answer": check,
-        })
+        questions.append(
+            {
+                "domain": "logic",
+                "question": question,
+                "ground_truth": expected,
+                "check_answer": check,
+            }
+        )
 
     # --- 20 contradiction detection ---
     for i in range(20):
@@ -471,12 +514,14 @@ def generate_logic_questions(n: int = 100, seed: int = 58) -> list[dict[str, Any
                 f"Statement B: 'Some {cat} are not {supercat}.' "
                 f"Are these statements consistent? Answer yes or no."
             )
-            questions.append({
-                "domain": "logic",
-                "question": question,
-                "ground_truth": "no",
-                "check_answer": lambda ans, _q=question: "no" in ans.lower(),
-            })
+            questions.append(
+                {
+                    "domain": "logic",
+                    "question": question,
+                    "ground_truth": "no",
+                    "check_answer": lambda ans, _q=question: "no" in ans.lower(),
+                }
+            )
         else:
             # No contradiction.
             cat, supercat = categories[i % len(categories)]
@@ -485,12 +530,14 @@ def generate_logic_questions(n: int = 100, seed: int = 58) -> list[dict[str, Any
                 f"Statement B: 'Some {cat} are not {supercat}.' "
                 f"Are these statements consistent? Answer yes or no."
             )
-            questions.append({
-                "domain": "logic",
-                "question": question,
-                "ground_truth": "yes",
-                "check_answer": lambda ans, _q=question: "yes" in ans.lower(),
-            })
+            questions.append(
+                {
+                    "domain": "logic",
+                    "question": question,
+                    "ground_truth": "yes",
+                    "check_answer": lambda ans, _q=question: "yes" in ans.lower(),
+                }
+            )
 
     rng.shuffle(questions)
     return questions[:n]
@@ -543,7 +590,11 @@ def generate_factual_questions(n: int = 100, seed: int = 58) -> list[dict[str, A
         ("What is the capital of Switzerland?", "Bern", ["bern"]),
         ("What is the capital of Portugal?", "Lisbon", ["lisbon"]),
         # --- Physical constants (15) ---
-        ("What is the speed of light in meters per second (approximately)?", "299792458", ["299792458", "3e8", "300000000", "3 ×"]),
+        (
+            "What is the speed of light in meters per second (approximately)?",
+            "299792458",
+            ["299792458", "3e8", "300000000", "3 ×"],
+        ),
         ("What is the value of pi to two decimal places?", "3.14", ["3.14"]),
         ("What is the value of Euler's number e to two decimal places?", "2.72", ["2.72", "2.71"]),
         ("What is absolute zero in Celsius?", "-273.15", ["-273"]),
@@ -611,7 +662,11 @@ def generate_factual_questions(n: int = 100, seed: int = 58) -> list[dict[str, A
         ("What river flows through Cairo?", "Nile", ["nile"]),
         ("What is the capital of the United States?", "Washington, D.C.", ["washington"]),
         ("Which country has the most time zones?", "France", ["france"]),
-        ("What is the most spoken language in the world by native speakers?", "Mandarin Chinese", ["mandarin", "chinese"]),
+        (
+            "What is the most spoken language in the world by native speakers?",
+            "Mandarin Chinese",
+            ["mandarin", "chinese"],
+        ),
         ("What is the currency of Japan?", "Yen", ["yen"]),
         ("What is the currency of the United Kingdom?", "Pound sterling", ["pound"]),
         ("What is the currency of the European Union?", "Euro", ["euro"]),
@@ -626,12 +681,14 @@ def generate_factual_questions(n: int = 100, seed: int = 58) -> list[dict[str, A
 
     questions: list[dict[str, Any]] = []
     for q_text, gt, kws in factual_bank:
-        questions.append({
-            "domain": "factual",
-            "question": q_text,
-            "ground_truth": gt,
-            "check_answer": _make_keyword_checker(kws),
-        })
+        questions.append(
+            {
+                "domain": "factual",
+                "question": q_text,
+                "ground_truth": gt,
+                "check_answer": _make_keyword_checker(kws),
+            }
+        )
     return questions[:n]
 
 
@@ -644,9 +701,11 @@ def _make_keyword_checker(keywords: list[str]) -> Any:
         Multiple keywords allow for alternate spellings or formats
         (e.g., "naypyidaw" or "nay pyi taw").
     """
+
     def checker(ans: str) -> bool:
         ans_lower = ans.lower()
         return any(kw.lower() in ans_lower for kw in keywords)
+
     return checker
 
 
@@ -692,20 +751,21 @@ def generate_scheduling_questions(n: int = 100, seed: int = 58) -> list[dict[str
         answer = "yes" if can_schedule else "no"
 
         conflict_str = "; ".join(
-            f"Meeting {a} and Meeting {b} cannot overlap"
-            for a, b in conflicts
+            f"Meeting {a} and Meeting {b} cannot overlap" for a, b in conflicts
         )
         question = (
             f"You have {n_meetings} meetings to schedule in {n_slots} time slots. "
             f"Constraints: {conflict_str}. "
             f"Can all meetings be scheduled without conflicts? Answer yes or no."
         )
-        questions.append({
-            "domain": "scheduling",
-            "question": question,
-            "ground_truth": answer,
-            "check_answer": _make_keyword_checker([answer]),
-        })
+        questions.append(
+            {
+                "domain": "scheduling",
+                "question": question,
+                "ground_truth": answer,
+                "check_answer": _make_keyword_checker([answer]),
+            }
+        )
 
     # --- 30 task dependency ordering questions ---
     for i in range(30):
@@ -735,12 +795,14 @@ def generate_scheduling_questions(n: int = 100, seed: int = 58) -> list[dict[str
                 _compute_depth(t, adj, depth)
         longest = max(depth.values()) if depth else 1
 
-        questions.append({
-            "domain": "scheduling",
-            "question": question,
-            "ground_truth": str(longest),
-            "check_answer": _make_number_checker(longest),
-        })
+        questions.append(
+            {
+                "domain": "scheduling",
+                "question": question,
+                "ground_truth": str(longest),
+                "check_answer": _make_number_checker(longest),
+            }
+        )
 
     # --- 30 resource allocation questions ---
     for i in range(30):
@@ -751,20 +813,20 @@ def generate_scheduling_questions(n: int = 100, seed: int = 58) -> list[dict[str
         fits = total_demand <= capacity
         answer = "yes" if fits else "no"
 
-        demand_str = ", ".join(
-            f"Task {j + 1} needs {d} units" for j, d in enumerate(demands)
-        )
+        demand_str = ", ".join(f"Task {j + 1} needs {d} units" for j, d in enumerate(demands))
         question = (
             f"A server has {capacity} units of capacity. "
             f"Tasks: {demand_str}. "
             f"Can all tasks run simultaneously? Answer yes or no."
         )
-        questions.append({
-            "domain": "scheduling",
-            "question": question,
-            "ground_truth": answer,
-            "check_answer": _make_keyword_checker([answer]),
-        })
+        questions.append(
+            {
+                "domain": "scheduling",
+                "question": question,
+                "ground_truth": answer,
+                "check_answer": _make_keyword_checker([answer]),
+            }
+        )
 
     rng.shuffle(questions)
     return questions[:n]
@@ -798,6 +860,7 @@ def _compute_depth(
 # 2. LLM interaction — load model, generate, simulate fallback
 # ---------------------------------------------------------------------------
 
+
 def load_llm() -> tuple[Any, Any, str, bool]:
     """Attempt to load Qwen3.5-0.8B; return (tokenizer, model, device, success).
 
@@ -825,10 +888,12 @@ def load_llm() -> tuple[Any, Any, str, bool]:
             try:
                 print(f"  Loading {model_name} on {device}...")
                 tokenizer = AutoTokenizer.from_pretrained(
-                    model_name, trust_remote_code=True,
+                    model_name,
+                    trust_remote_code=True,
                 )
                 model = AutoModelForCausalLM.from_pretrained(
-                    model_name, trust_remote_code=True,
+                    model_name,
+                    trust_remote_code=True,
                     dtype=torch.float16 if device == "cuda" else None,
                 )
                 if device == "cuda":
@@ -903,12 +968,16 @@ def generate_with_llm(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
         )
 
     inputs = tokenizer(text, return_tensors="pt")
@@ -924,7 +993,7 @@ def generate_with_llm(
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:],
+        outputs[0, inputs["input_ids"].shape[1] :],
         skip_special_tokens=True,
     )
 
@@ -970,7 +1039,7 @@ def simulate_response(
     base_error = error_rates.get(domain, 0.2)
 
     # On repair iterations, reduce error rate (simulate improvement).
-    effective_error = base_error * (0.4 ** iteration)
+    effective_error = base_error * (0.4**iteration)
 
     is_correct = rng.random() > effective_error
 
@@ -1034,6 +1103,7 @@ def simulate_response(
 # 3. Constraint extraction and verification
 # ---------------------------------------------------------------------------
 
+
 def build_prompt(question: str, domain: str) -> str:
     """Build a domain-specific prompt for the LLM.
 
@@ -1049,10 +1119,7 @@ def build_prompt(question: str, domain: str) -> str:
             f"Format:\nAnswer: <number>"
         )
     elif domain == "code":
-        return (
-            f"Question: {question}\n"
-            f"Write ONLY the Python function. No explanation."
-        )
+        return f"Question: {question}\nWrite ONLY the Python function. No explanation."
     elif domain == "logic":
         return (
             f"Question: {question}\n"
@@ -1067,9 +1134,7 @@ def build_prompt(question: str, domain: str) -> str:
         )
     else:  # factual
         return (
-            f"Question: {question}\n"
-            f"Give a short, direct factual answer.\n"
-            f"Format:\nAnswer: <answer>"
+            f"Question: {question}\nGive a short, direct factual answer.\nFormat:\nAnswer: <answer>"
         )
 
 
@@ -1127,25 +1192,39 @@ def _extract_scheduling_constraints(response: str, question: str) -> list[dict]:
     resp_lower = response.lower()
 
     # Check if response contains an answer.
-    has_answer = ("yes" in resp_lower or "no" in resp_lower or
-                  bool(re.search(r"\d+", response)))
+    has_answer = "yes" in resp_lower or "no" in resp_lower or bool(re.search(r"\d+", response))
 
-    constraints.append({
-        "type": "scheduling_format",
-        "description": "Response contains a clear answer",
-        "satisfied": has_answer,
-    })
+    constraints.append(
+        {
+            "type": "scheduling_format",
+            "description": "Response contains a clear answer",
+            "satisfied": has_answer,
+        }
+    )
 
     # Check for reasoning about constraints.
-    has_reasoning = any(kw in resp_lower for kw in [
-        "conflict", "constraint", "overlap", "capacity", "depend",
-        "before", "after", "parallel", "sequential", "slot",
-    ])
-    constraints.append({
-        "type": "scheduling_reasoning",
-        "description": "Response shows constraint reasoning",
-        "satisfied": has_reasoning,
-    })
+    has_reasoning = any(
+        kw in resp_lower
+        for kw in [
+            "conflict",
+            "constraint",
+            "overlap",
+            "capacity",
+            "depend",
+            "before",
+            "after",
+            "parallel",
+            "sequential",
+            "slot",
+        ]
+    )
+    constraints.append(
+        {
+            "type": "scheduling_reasoning",
+            "description": "Response shows constraint reasoning",
+            "satisfied": has_reasoning,
+        }
+    )
 
     return constraints
 
@@ -1190,6 +1269,7 @@ def format_violations(constraints: list[dict], domain: str) -> str:
 # ---------------------------------------------------------------------------
 # 4. The three benchmark modes
 # ---------------------------------------------------------------------------
+
 
 def run_baseline(
     question: dict[str, Any],
@@ -1377,6 +1457,7 @@ def run_verify_repair(
 # 5. Main benchmark
 # ---------------------------------------------------------------------------
 
+
 def main() -> int:
     """Run the full 500-question multi-domain benchmark."""
     print("=" * 78)
@@ -1415,9 +1496,7 @@ def main() -> int:
     modes = ["baseline", "verify_only", "verify_repair"]
 
     # Results: domain -> mode -> list of result dicts
-    results: dict[str, dict[str, list[dict]]] = {
-        d: {m: [] for m in modes} for d in domains
-    }
+    results: dict[str, dict[str, list[dict]]] = {d: {m: [] for m in modes} for d in domains}
 
     for domain in domains:
         questions = all_questions[domain]
@@ -1432,22 +1511,35 @@ def main() -> int:
 
             # Mode A: Baseline.
             r_a = run_baseline(
-                q, tokenizer=tokenizer, model=model, device=device,
-                use_live_llm=use_live_llm, sim_rng=sim_rng_a,
+                q,
+                tokenizer=tokenizer,
+                model=model,
+                device=device,
+                use_live_llm=use_live_llm,
+                sim_rng=sim_rng_a,
             )
             results[domain]["baseline"].append(r_a)
 
             # Mode B: Verify-only.
             r_b = run_verify_only(
-                q, tokenizer=tokenizer, model=model, device=device,
-                use_live_llm=use_live_llm, sim_rng=sim_rng_b,
+                q,
+                tokenizer=tokenizer,
+                model=model,
+                device=device,
+                use_live_llm=use_live_llm,
+                sim_rng=sim_rng_b,
             )
             results[domain]["verify_only"].append(r_b)
 
             # Mode C: Verify-repair.
             r_c = run_verify_repair(
-                q, tokenizer=tokenizer, model=model, device=device,
-                use_live_llm=use_live_llm, sim_rng=sim_rng_c, max_iters=3,
+                q,
+                tokenizer=tokenizer,
+                model=model,
+                device=device,
+                use_live_llm=use_live_llm,
+                sim_rng=sim_rng_c,
+                max_iters=3,
             )
             results[domain]["verify_repair"].append(r_c)
 
@@ -1459,6 +1551,7 @@ def main() -> int:
     if use_live_llm:
         del model, tokenizer
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
         gc.collect()
@@ -1468,19 +1561,28 @@ def main() -> int:
     sep = "=" * 78
 
     print(f"\n{sep}")
-    print(f"EXPERIMENT 58 RESULTS ({elapsed:.1f}s) "
-          f"[{'LIVE LLM' if use_live_llm else 'SIMULATED'}]")
+    print(f"EXPERIMENT 58 RESULTS ({elapsed:.1f}s) [{'LIVE LLM' if use_live_llm else 'SIMULATED'}]")
     print(sep)
 
     # --- Results table: domain x mode x metric ---
-    print(f"\n  {'Domain':<12s} {'Mode':<16s} {'Accuracy':>10s} {'Halluc%':>9s} "
-          f"{'RepairOK':>10s} {'AvgEnergy':>10s} {'AvgConstr':>10s} {'Time(s)':>9s}")
+    print(
+        f"\n  {'Domain':<12s} {'Mode':<16s} {'Accuracy':>10s} {'Halluc%':>9s} "
+        f"{'RepairOK':>10s} {'AvgEnergy':>10s} {'AvgConstr':>10s} {'Time(s)':>9s}"
+    )
     print(f"  {'-' * 88}")
 
-    grand_totals: dict[str, dict[str, float]] = {m: {
-        "correct": 0, "total": 0, "repairs_ok": 0, "repairs_attempted": 0,
-        "energy": 0.0, "constraints": 0, "time": 0.0,
-    } for m in modes}
+    grand_totals: dict[str, dict[str, float]] = {
+        m: {
+            "correct": 0,
+            "total": 0,
+            "repairs_ok": 0,
+            "repairs_attempted": 0,
+            "energy": 0.0,
+            "constraints": 0,
+            "time": 0.0,
+        }
+        for m in modes
+    }
 
     mode_labels = {
         "baseline": "A. Baseline",
@@ -1504,16 +1606,20 @@ def main() -> int:
             if mode == "verify_repair":
                 n_repairs_attempted = sum(1 for r in rs if r["n_repairs"] > 0)
                 n_repairs_ok = sum(1 for r in rs if r.get("repaired", False))
-                repair_str = f"{n_repairs_ok}/{n_repairs_attempted}" if n_repairs_attempted > 0 else "n/a"
+                repair_str = (
+                    f"{n_repairs_ok}/{n_repairs_attempted}" if n_repairs_attempted > 0 else "n/a"
+                )
             else:
                 n_repairs_attempted = 0
                 n_repairs_ok = 0
                 repair_str = "n/a"
 
-            print(f"  {domain:<12s} {mode_labels[mode]:<16s} "
-                  f"{n_correct}/{n_total:>6} {halluc_rate:>8.1%} "
-                  f"{repair_str:>10s} {avg_energy:>10.2f} "
-                  f"{avg_constraints:>10.1f} {total_time:>9.2f}")
+            print(
+                f"  {domain:<12s} {mode_labels[mode]:<16s} "
+                f"{n_correct}/{n_total:>6} {halluc_rate:>8.1%} "
+                f"{repair_str:>10s} {avg_energy:>10.2f} "
+                f"{avg_constraints:>10.1f} {total_time:>9.2f}"
+            )
 
             # Accumulate grand totals.
             grand_totals[mode]["correct"] += n_correct
@@ -1547,10 +1653,12 @@ def main() -> int:
         else:
             repair_str = "n/a"
 
-        print(f"  {'OVERALL':<12s} {mode_labels[mode]:<16s} "
-              f"{n_c}/{n_t:>6} {halluc:>8.1%} "
-              f"{repair_str:>10s} {avg_e:>10.2f} "
-              f"{avg_con:>10.1f} {total_time:>9.2f}")
+        print(
+            f"  {'OVERALL':<12s} {mode_labels[mode]:<16s} "
+            f"{n_c}/{n_t:>6} {halluc:>8.1%} "
+            f"{repair_str:>10s} {avg_e:>10.2f} "
+            f"{avg_con:>10.1f} {total_time:>9.2f}"
+        )
 
     # --- Hallucination detection metrics (Mode B) ---
     print(f"\n  Hallucination Detection (Mode B — Verify-only):")
@@ -1582,12 +1690,14 @@ def main() -> int:
     improvement = repair_correct - baseline_correct
     total_qs = int(grand_totals["baseline"]["total"])
 
-    print(f"    Baseline accuracy:      {baseline_correct}/{total_qs} "
-          f"({baseline_correct / total_qs:.1%})")
-    print(f"    After verify-repair:    {repair_correct}/{total_qs} "
-          f"({repair_correct / total_qs:.1%})")
-    print(f"    Improvement:            +{improvement} questions "
-          f"(+{improvement / total_qs:.1%})")
+    print(
+        f"    Baseline accuracy:      {baseline_correct}/{total_qs} "
+        f"({baseline_correct / total_qs:.1%})"
+    )
+    print(
+        f"    After verify-repair:    {repair_correct}/{total_qs} ({repair_correct / total_qs:.1%})"
+    )
+    print(f"    Improvement:            +{improvement} questions (+{improvement / total_qs:.1%})")
 
     all_repair = []
     for domain in domains:
@@ -1602,18 +1712,20 @@ def main() -> int:
     # --- Verdict ---
     print(f"\n  {'=' * 78}")
     if improvement > 0:
-        print(f"  VERDICT: Verify-repair loop improved accuracy by +{improvement} "
-              f"questions across {total_qs}.")
+        print(
+            f"  VERDICT: Verify-repair loop improved accuracy by +{improvement} "
+            f"questions across {total_qs}."
+        )
         print(f"  EBM constraint verification successfully guides LLM toward correct answers.")
     elif improvement == 0 and baseline_correct == total_qs:
-        print(f"  VERDICT: LLM was already perfect on all {total_qs} questions — "
-              f"no repair needed.")
+        print(f"  VERDICT: LLM was already perfect on all {total_qs} questions — no repair needed.")
     elif improvement == 0:
-        print(f"  VERDICT: Repair loop did not improve overall accuracy. "
-              f"Constraint coverage may need expansion.")
+        print(
+            f"  VERDICT: Repair loop did not improve overall accuracy. "
+            f"Constraint coverage may need expansion."
+        )
     else:
-        print(f"  VERDICT: Repair loop decreased accuracy by {-improvement}. "
-              f"Investigation needed.")
+        print(f"  VERDICT: Repair loop decreased accuracy by {-improvement}. Investigation needed.")
 
     print(f"\n  Architecture: LLM -> Carnot Ising verify -> NL feedback -> LLM repair")
     print(f"  Constraint layer is deterministic — no hallucination in verification.")

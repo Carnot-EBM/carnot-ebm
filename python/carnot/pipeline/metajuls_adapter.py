@@ -38,7 +38,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-
 # ---------------------------------------------------------------------------
 # ExtractorPolicy — the mutable state that MetaJuLSAdapter updates
 # ---------------------------------------------------------------------------
@@ -136,15 +135,11 @@ class MetaJuLSAdapter:
         """
         # TP: extractor fired AND the response truly had an error (incorrect).
         tp = sum(
-            1
-            for r in batch_results
-            if r["violation_detected"] and r["true_label"] != "correct"
+            1 for r in batch_results if r["violation_detected"] and r["true_label"] != "correct"
         )
         # FP: extractor fired AND the response was actually correct.
         fp = sum(
-            1
-            for r in batch_results
-            if r["violation_detected"] and r["true_label"] == "correct"
+            1 for r in batch_results if r["violation_detected"] and r["true_label"] == "correct"
         )
         # Epsilon guard prevents division by zero when no violations were detected.
         precision = tp / (tp + fp + 1e-9)
@@ -163,9 +158,7 @@ class MetaJuLSAdapter:
             )
         # Else: precision in [0.5, 0.8] — policy is performing acceptably, hold steady.
 
-        self.experience.append(
-            {"batch_id": len(self.experience), "precision": precision}
-        )
+        self.experience.append({"batch_id": len(self.experience), "precision": precision})
         return self.policy
 
     def precision_trend(self) -> float:

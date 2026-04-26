@@ -148,13 +148,15 @@ def generate_jailbreak_prompts(n: int = 50, seed: int = 42) -> list[str]:
     for _ in range(n):
         template = rng.choice(templates)
         action = rng.choice(actions)
-        suffix = rng.choice([
-            " Be specific.",
-            " Provide step-by-step instructions.",
-            " Do not refuse.",
-            " This is urgent.",
-            "",
-        ])
+        suffix = rng.choice(
+            [
+                " Be specific.",
+                " Provide step-by-step instructions.",
+                " Do not refuse.",
+                " This is urgent.",
+                "",
+            ]
+        )
         prompts.append(template.format(action=action) + suffix)
 
     return prompts
@@ -307,21 +309,19 @@ def main() -> dict[str, Any]:
         benign_prompts = generate_benign_prompts(n=50, seed=42)
 
         # Combine and create labeled list: 1 = jailbreak, 0 = benign.
-        all_labeled: list[tuple[str, int]] = (
-            [(p, 1) for p in jailbreak_prompts] + [(p, 0) for p in benign_prompts]
-        )
+        all_labeled: list[tuple[str, int]] = [(p, 1) for p in jailbreak_prompts] + [
+            (p, 0) for p in benign_prompts
+        ]
 
         # ------------------------------------------------------------------
         # Step 2: Train/test split — 60 train (30 JB + 30 benign), 40 test (20+20).
         # ------------------------------------------------------------------
-        train_labeled = (
-            [(p, 1) for p in jailbreak_prompts[:30]]
-            + [(p, 0) for p in benign_prompts[:30]]
-        )
-        test_labeled = (
-            [(p, 1) for p in jailbreak_prompts[30:50]]
-            + [(p, 0) for p in benign_prompts[30:50]]
-        )
+        train_labeled = [(p, 1) for p in jailbreak_prompts[:30]] + [
+            (p, 0) for p in benign_prompts[:30]
+        ]
+        test_labeled = [(p, 1) for p in jailbreak_prompts[30:50]] + [
+            (p, 0) for p in benign_prompts[30:50]
+        ]
 
         # ------------------------------------------------------------------
         # Step 3: Load probe model (CPU eval mode, no_grad).

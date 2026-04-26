@@ -238,9 +238,15 @@ class TestNUPProbeV2:
         probe = NUPProbeV2()
         pairs = [
             {"step_text": "2 + 2 = 4", "label": "correct"},
-            {"step_text": "The answer is 42 or maybe something else entirely", "label": "incorrect"},
+            {
+                "step_text": "The answer is 42 or maybe something else entirely",
+                "label": "incorrect",
+            },
             {"step_text": "x = 3", "label": "correct"},
-            {"step_text": "unknown complex reasoning with many possibilities", "label": "incorrect"},
+            {
+                "step_text": "unknown complex reasoning with many possibilities",
+                "label": "incorrect",
+            },
         ]
         auc = probe.evaluate_auc(pairs)
         assert isinstance(auc, float)
@@ -275,7 +281,10 @@ class TestNUPProbeV2:
         probe = NUPProbeV2()
         pairs = [
             {"step_text": "2+2=4", "label": True},
-            {"step_text": "complex multi-symbol expression yielding uncertain answer", "label": False},
+            {
+                "step_text": "complex multi-symbol expression yielding uncertain answer",
+                "label": False,
+            },
         ]
         auc = probe.evaluate_auc(pairs)
         assert 0.0 <= auc <= 1.0

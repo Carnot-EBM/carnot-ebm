@@ -27,6 +27,7 @@ from typing import Any
 # Module loading helper
 # ---------------------------------------------------------------------------
 
+
 def _load_module() -> Any:
     """Load experiment_281_apple_adversarial_dataset without executing main()."""
     repo_root = Path(__file__).resolve().parents[2]
@@ -49,6 +50,7 @@ def _extract_numbers(text: str) -> set[int]:
 # Row count
 # ===========================================================================
 
+
 # REQ-VERIFY-063 — dataset must have 200 × 2 = 400 rows
 def test_generate_dataset_row_count() -> None:
     """SCENARIO-VERIFY-078: generator produces exactly 400 rows (200 × 2 variants)."""
@@ -60,6 +62,7 @@ def test_generate_dataset_row_count() -> None:
 # ===========================================================================
 # Both variant types present
 # ===========================================================================
+
 
 # REQ-VERIFY-063
 def test_both_variant_types_present() -> None:
@@ -85,6 +88,7 @@ def test_variant_type_counts_equal() -> None:
 # ===========================================================================
 # number_swap: answer changes
 # ===========================================================================
+
 
 # REQ-VERIFY-063, SCENARIO-VERIFY-078
 def test_number_swap_changes_at_least_one_number() -> None:
@@ -116,6 +120,7 @@ def test_number_swap_changes_answer_for_majority() -> None:
 # ===========================================================================
 # irrelevant_sentence: answer preserved
 # ===========================================================================
+
 
 # REQ-VERIFY-063, SCENARIO-VERIFY-079
 def test_irrelevant_sentence_preserves_answer() -> None:
@@ -165,14 +170,20 @@ def test_irrelevant_sentence_contains_distractor_number() -> None:
 # Schema validation
 # ===========================================================================
 
+
 # REQ-VERIFY-063
 def test_row_schema() -> None:
     """REQ-VERIFY-063: every row has all required fields with correct types."""
     mod = _load_module()
     rows = mod.generate_dataset()
     required_fields = {
-        "question_id", "original_question", "original_answer",
-        "variant_type", "variant_question", "variant_answer", "provenance",
+        "question_id",
+        "original_question",
+        "original_answer",
+        "variant_type",
+        "variant_question",
+        "variant_answer",
+        "provenance",
     }
     for i, row in enumerate(rows):
         missing = required_fields - set(row.keys())
@@ -192,19 +203,19 @@ def test_row_schema() -> None:
 # No seed collision with Exp 119
 # ===========================================================================
 
+
 # REQ-VERIFY-063
 def test_no_seed_collision_with_exp119() -> None:
     """REQ-VERIFY-063: Exp 281 seeds (281_000+) do not collide with Exp 119 base (119)."""
     mod = _load_module()
     # The base seed for Exp 281 must be >= 281_000
-    assert mod.BASE_SEED >= 281_000, (
-        f"BASE_SEED={mod.BASE_SEED} collides with Exp 119 seed range"
-    )
+    assert mod.BASE_SEED >= 281_000, f"BASE_SEED={mod.BASE_SEED} collides with Exp 119 seed range"
 
 
 # ===========================================================================
 # Reproducibility
 # ===========================================================================
+
 
 # REQ-VERIFY-063
 def test_generate_dataset_is_reproducible() -> None:
@@ -218,6 +229,7 @@ def test_generate_dataset_is_reproducible() -> None:
 # ===========================================================================
 # Provenance fields
 # ===========================================================================
+
 
 # REQ-VERIFY-063
 def test_provenance_contains_experiment_id() -> None:

@@ -15,16 +15,39 @@ import pytest
 
 DELIVERABLE = Path("results/experiment_536_retro_2026_04_40.json")
 REQUIRED_FIELDS = [
-    "experiment", "schema", "milestone", "title", "run_date",
-    "started_at", "finished_at", "duration_s", "status",
-    "retro_053_resolved", "retro_033_closed", "retro_038_closed",
-    "gpu1_routing_verified", "tier0c_wired", "tier0d_wired",
-    "eorm_rectification_positive", "lowrank_kaem_viable",
-    "energy_steering_viable", "potts_viable", "fr11_live_relay",
-    "n_experiments", "n_completed", "n_timed_out", "n_deferred_to_gpu",
-    "n_missing", "total_wall_time_minutes", "average_minutes_per_experiment",
-    "retro_closure_rate", "headline_results", "new_retro_items",
-    "open_retro_items", "meta_reflection", "honest_verdict",
+    "experiment",
+    "schema",
+    "milestone",
+    "title",
+    "run_date",
+    "started_at",
+    "finished_at",
+    "duration_s",
+    "status",
+    "retro_053_resolved",
+    "retro_033_closed",
+    "retro_038_closed",
+    "gpu1_routing_verified",
+    "tier0c_wired",
+    "tier0d_wired",
+    "eorm_rectification_positive",
+    "lowrank_kaem_viable",
+    "energy_steering_viable",
+    "potts_viable",
+    "fr11_live_relay",
+    "n_experiments",
+    "n_completed",
+    "n_timed_out",
+    "n_deferred_to_gpu",
+    "n_missing",
+    "total_wall_time_minutes",
+    "average_minutes_per_experiment",
+    "retro_closure_rate",
+    "headline_results",
+    "new_retro_items",
+    "open_retro_items",
+    "meta_reflection",
+    "honest_verdict",
 ]
 
 
@@ -104,8 +127,14 @@ def test_open_retro_items_not_empty(retro):
 
 def test_meta_reflection_keys(retro):
     meta = retro["meta_reflection"]
-    for key in ("top_3_bottlenecks", "top_3_improvements_for_41", "credibility_verdict",
-                 "wall_time_note", "closures_achieved", "retro_033_miss_diagnosis"):
+    for key in (
+        "top_3_bottlenecks",
+        "top_3_improvements_for_41",
+        "credibility_verdict",
+        "wall_time_note",
+        "closures_achieved",
+        "retro_033_miss_diagnosis",
+    ):
         assert key in meta, f"Missing meta key: {key}"
 
 

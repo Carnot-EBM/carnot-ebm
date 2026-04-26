@@ -10,6 +10,7 @@ Covers:
 Spec: REQ-BENCH-010, REQ-BENCH-011, REQ-VERIFY-083, REQ-VERIFY-084,
       SCENARIO-BENCH-025, FR-12
 """
+
 from __future__ import annotations
 
 import json
@@ -47,16 +48,19 @@ from scripts.experiment_853_live_benchmark_v4 import (
 # Helpers and fixtures
 # ---------------------------------------------------------------------------
 
+
 def _make_questions(n: int = 5) -> list[dict[str, Any]]:
     """Synthetic GSM8K questions for unit testing."""
     qs = []
     for i in range(1, n + 1):
         a, b = i * 7, i * 3
-        qs.append({
-            "question": f"A store has {a} apples and gets {b} more. How many total?",
-            "answer": f"{a} + {b} = {a + b}. #### {a + b}",
-            "source": "synthetic",
-        })
+        qs.append(
+            {
+                "question": f"A store has {a} apples and gets {b} more. How many total?",
+                "answer": f"{a} + {b} = {a + b}. #### {a + b}",
+                "source": "synthetic",
+            }
+        )
     return qs
 
 
@@ -70,6 +74,7 @@ def tmp_repo(tmp_path: Path) -> Path:
 @pytest.fixture()
 def minimal_executor():
     """A minimal mock for LongRunBenchmarkExecutor that runs questions inline."""
+
     class FakeBatch:
         def __init__(self, questions, batch_id=0):
             self.questions = questions
@@ -93,6 +98,7 @@ def minimal_executor():
 # ---------------------------------------------------------------------------
 # test_env_autofix_applied_first
 # ---------------------------------------------------------------------------
+
 
 class TestEnvAutofixAppliedFirst:
     """REQ-INFRA-021: apply_env_autofix() must be called before any GPU/torch import.
@@ -154,15 +160,16 @@ class TestEnvAutofixAppliedFirst:
                     MockTmpl.return_value = inst
 
                     from scripts.experiment_853_live_benchmark_v4 import main
+
                     main()
 
                     # The diagnostic branch must call build_result with blocked status.
                     inst.build_result.assert_called_once()
                     call_kwargs = inst.build_result.call_args
-                    assert call_kwargs.kwargs.get("status") == "blocked" or (
-                        len(call_kwargs.args) > 1 and call_kwargs.args[1] == "blocked"
-                    ) or any(
-                        v == "blocked" for v in call_kwargs.kwargs.values()
+                    assert (
+                        call_kwargs.kwargs.get("status") == "blocked"
+                        or (len(call_kwargs.args) > 1 and call_kwargs.args[1] == "blocked")
+                        or any(v == "blocked" for v in call_kwargs.kwargs.values())
                     ), "Expected build_result called with status='blocked'"
 
                     inst.assert_deliverable_written.assert_called_once()
@@ -171,6 +178,7 @@ class TestEnvAutofixAppliedFirst:
 # ---------------------------------------------------------------------------
 # test_4_conditions_run
 # ---------------------------------------------------------------------------
+
 
 class TestFourConditionsRun:
     """Verify that _run_condition is exercised for each of the 4 conditions."""
@@ -195,9 +203,7 @@ class TestFourConditionsRun:
                 return [FakeBatch(qs)]
 
         tmpl = MagicMock()
-        result = _run_condition(
-            "TEST", questions, _infer, FakeExec(), tmpl, "test_prefix"
-        )
+        result = _run_condition("TEST", questions, _infer, FakeExec(), tmpl, "test_prefix")
         n_correct, accuracy, responses, modes, unstable = result
         assert isinstance(n_correct, int)
         assert 0.0 <= accuracy <= 1.0
@@ -310,6 +316,7 @@ class TestFourConditionsRun:
 # test_signed_improvement_computation
 # ---------------------------------------------------------------------------
 
+
 class TestSignedImprovementComputation:
     """Verify accuracy, signed_improvement, and verdict math."""
 
@@ -377,6 +384,7 @@ class TestSignedImprovementComputation:
 # test_simulated_verdict_when_not_live
 # ---------------------------------------------------------------------------
 
+
 class TestSimulatedVerdictWhenNotLive:
     """compute_honest_verdict must return simulated_no_verdict when majority not live."""
 
@@ -422,6 +430,7 @@ class TestSimulatedVerdictWhenNotLive:
 # test_prerequisite_checks
 # ---------------------------------------------------------------------------
 
+
 class TestPrerequisiteChecks:
     """Validate JEPA deployment and SemanticEnergyProbe viability checks."""
 
@@ -462,6 +471,7 @@ class TestPrerequisiteChecks:
 # test_load_gsm8k_questions
 # ---------------------------------------------------------------------------
 
+
 class TestLoadGsm8kQuestions:
     """_load_gsm8k_questions must work with or without HuggingFace datasets."""
 
@@ -477,19 +487,23 @@ class TestLoadGsm8kQuestions:
         ):
             with patch.dict(sys.modules, {"datasets": None}):
                 # Force the import to fail inside the function.
-                questions = _load_gsm8k_questions.__wrapped__(5) if hasattr(
-                    _load_gsm8k_questions, "__wrapped__"
-                ) else None
+                questions = (
+                    _load_gsm8k_questions.__wrapped__(5)
+                    if hasattr(_load_gsm8k_questions, "__wrapped__")
+                    else None
+                )
                 # If wrapped attribute not present, call directly with datasets mocked out.
                 if questions is None:
                     # Patch the datasets import to raise ImportError.
                     import importlib
                     import scripts.experiment_853_live_benchmark_v4 as mod853
+
                     orig = mod853._load_gsm8k_questions
                     questions = []
                     # We test the synthetic path by monkeypatching load_dataset.
                     try:
                         from unittest.mock import patch as _p
+
                         with _p("datasets.load_dataset", side_effect=ImportError):
                             questions = orig(5)
                     except Exception:
@@ -505,6 +519,7 @@ class TestLoadGsm8kQuestions:
         # Patch load_dataset to raise so we always get synthetic.
         with patch.dict(sys.modules):
             import scripts.experiment_853_live_benchmark_v4 as mod853
+
             mock_ds = MagicMock()
             mock_ds.side_effect = Exception("force synthetic")
             with patch.object(

@@ -63,8 +63,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 # 1. Question generation — 200 per domain, 5 domains = 1000 total
 # ---------------------------------------------------------------------------
 
+
 def generate_arithmetic_pairs(
-    n: int, rng: np.random.Generator,
+    n: int,
+    rng: np.random.Generator,
 ) -> list[tuple[str, str, str, str]]:
     """Generate (question, correct_answer, wrong_answer, domain) for arithmetic.
 
@@ -103,12 +105,14 @@ def generate_arithmetic_pairs(
             wrong = correct + 1
         if wrong < 0:
             wrong = correct + abs(wrong - correct) + 1
-        pairs.append((
-            f"What is {a} + {b}?",
-            f"The answer is {correct}.",
-            f"The answer is {wrong}.",
-            "arithmetic",
-        ))
+        pairs.append(
+            (
+                f"What is {a} + {b}?",
+                f"The answer is {correct}.",
+                f"The answer is {wrong}.",
+                "arithmetic",
+            )
+        )
     remainder = max(0, remainder - 1)
 
     # --- Multiplication ---
@@ -127,12 +131,14 @@ def generate_arithmetic_pairs(
             wrong = correct + 1
         if wrong < 0:
             wrong = abs(wrong)
-        pairs.append((
-            f"What is {a} * {b}?",
-            f"The answer is {correct}.",
-            f"The answer is {wrong}.",
-            "arithmetic",
-        ))
+        pairs.append(
+            (
+                f"What is {a} * {b}?",
+                f"The answer is {correct}.",
+                f"The answer is {wrong}.",
+                "arithmetic",
+            )
+        )
     remainder = max(0, remainder - 1)
 
     # --- Modular arithmetic ---
@@ -145,31 +151,68 @@ def generate_arithmetic_pairs(
             wrong = correct + 1
         if wrong < 0:
             wrong = abs(wrong)
-        pairs.append((
-            f"What is {a} mod {b}?",
-            f"The answer is {correct}.",
-            f"The answer is {wrong}.",
-            "arithmetic",
-        ))
+        pairs.append(
+            (
+                f"What is {a} mod {b}?",
+                f"The answer is {correct}.",
+                f"The answer is {wrong}.",
+                "arithmetic",
+            )
+        )
 
     return pairs[:n]
 
 
 # Template subjects/predicates for logic generation.
 _SUBJECTS = [
-    "cats", "dogs", "birds", "fish", "trees", "rocks", "stars", "clouds",
-    "rivers", "mountains", "students", "teachers", "engineers", "doctors",
-    "planets", "atoms", "cells", "waves", "crystals", "robots",
+    "cats",
+    "dogs",
+    "birds",
+    "fish",
+    "trees",
+    "rocks",
+    "stars",
+    "clouds",
+    "rivers",
+    "mountains",
+    "students",
+    "teachers",
+    "engineers",
+    "doctors",
+    "planets",
+    "atoms",
+    "cells",
+    "waves",
+    "crystals",
+    "robots",
 ]
 _PREDICATES = [
-    "mortal", "alive", "visible", "heavy", "bright", "fast", "old",
-    "complex", "natural", "rare", "symmetric", "stable", "dense", "warm",
-    "soluble", "magnetic", "elastic", "transparent", "finite", "periodic",
+    "mortal",
+    "alive",
+    "visible",
+    "heavy",
+    "bright",
+    "fast",
+    "old",
+    "complex",
+    "natural",
+    "rare",
+    "symmetric",
+    "stable",
+    "dense",
+    "warm",
+    "soluble",
+    "magnetic",
+    "elastic",
+    "transparent",
+    "finite",
+    "periodic",
 ]
 
 
 def generate_logic_pairs(
-    n: int, rng: np.random.Generator,
+    n: int,
+    rng: np.random.Generator,
 ) -> list[tuple[str, str, str, str]]:
     """Generate (question, correct_answer, wrong_answer, domain) for logic syllogisms.
 
@@ -233,7 +276,8 @@ def generate_logic_pairs(
 
 
 def generate_code_pairs(
-    n: int, rng: np.random.Generator,
+    n: int,
+    rng: np.random.Generator,
 ) -> list[tuple[str, str, str, str]]:
     """Generate (question, correct_answer, wrong_answer, domain) for code snippets.
 
@@ -262,6 +306,7 @@ def _code_templates() -> list:
         in range bounds, wrong init values, wrong operators, missing base cases,
         and incorrect string operations.
     """
+
     def sum_range(param, rng):
         n = param
         correct = (
@@ -301,23 +346,24 @@ def _code_templates() -> list:
             "            result = x\n"
             "    return result"
         )
-        return "Write a function that returns the maximum value in a list of integers.", correct, wrong
+        return (
+            "Write a function that returns the maximum value in a list of integers.",
+            correct,
+            wrong,
+        )
 
     def is_even(param, rng):
         correct = (
-            f"def is_even(n):\n"
-            f"    return n % 2 == 0\n"
-            f"# is_even({param}) returns {param % 2 == 0}"
+            f"def is_even(n):\n    return n % 2 == 0\n# is_even({param}) returns {param % 2 == 0}"
         )
         wrong = (
-            f"def is_even(n):\n"
-            f"    return n % 2 == 1\n"
-            f"# is_even({param}) returns {param % 2 == 1}"
+            f"def is_even(n):\n    return n % 2 == 1\n# is_even({param}) returns {param % 2 == 1}"
         )
         return f"Write a function that returns True if {param} is even.", correct, wrong
 
     def factorial(param, rng):
         import math
+
         n = min(param, 12)
         correct = (
             f"def factorial(n):\n"
@@ -337,14 +383,10 @@ def _code_templates() -> list:
 
     def reverse_string(param, rng):
         correct = (
-            "def reverse_string(s):\n"
-            "    return s[::-1]\n"
-            "# reverse_string('hello') returns 'olleh'"
+            "def reverse_string(s):\n    return s[::-1]\n# reverse_string('hello') returns 'olleh'"
         )
         wrong = (
-            "def reverse_string(s):\n"
-            "    return s[::1]\n"
-            "# reverse_string('hello') returns 'hello'"
+            "def reverse_string(s):\n    return s[::1]\n# reverse_string('hello') returns 'hello'"
         )
         return "Write a function that reverses a string.", correct, wrong
 
@@ -363,11 +405,13 @@ def _code_templates() -> list:
 
     def fibonacci(param, rng):
         n = min(param, 15)
+
         def fib(k):
             a, b = 0, 1
             for _ in range(k):
                 a, b = b, a + b
             return a
+
         correct = (
             f"def fibonacci(n):\n"
             f"    a, b = 0, 1\n"
@@ -384,7 +428,11 @@ def _code_templates() -> list:
             f"    return a\n"
             f"# fibonacci(0) returns 1 instead of 0"
         )
-        return f"Write a function that returns the {n}th Fibonacci number (0-indexed).", correct, wrong
+        return (
+            f"Write a function that returns the {n}th Fibonacci number (0-indexed).",
+            correct,
+            wrong,
+        )
 
     def binary_search(param, rng):
         correct = (
@@ -413,13 +461,15 @@ def _code_templates() -> list:
             "            hi = mid\n"
             "    return -1"
         )
-        return "Write a binary search that returns the index of target in a sorted list.", correct, wrong
+        return (
+            "Write a binary search that returns the index of target in a sorted list.",
+            correct,
+            wrong,
+        )
 
     def is_palindrome(param, rng):
         correct = (
-            "def is_palindrome(s):\n"
-            "    s = s.lower().replace(' ', '')\n"
-            "    return s == s[::-1]"
+            "def is_palindrome(s):\n    s = s.lower().replace(' ', '')\n    return s == s[::-1]"
         )
         wrong = (
             "def is_palindrome(s):\n"
@@ -452,13 +502,22 @@ def _code_templates() -> list:
         return "Write a function that flattens a nested list.", correct, wrong
 
     return [
-        sum_range, find_max, is_even, factorial, reverse_string,
-        count_vowels, fibonacci, binary_search, is_palindrome, flatten_list,
+        sum_range,
+        find_max,
+        is_even,
+        factorial,
+        reverse_string,
+        count_vowels,
+        fibonacci,
+        binary_search,
+        is_palindrome,
+        flatten_list,
     ]
 
 
 def generate_factual_pairs(
-    n: int, rng: np.random.Generator,
+    n: int,
+    rng: np.random.Generator,
 ) -> list[tuple[str, str, str, str]]:
     """Generate (question, correct_answer, wrong_answer, domain) for factual questions.
 
@@ -472,36 +531,152 @@ def generate_factual_pairs(
     """
     # (question, correct, wrong) triples for factual knowledge.
     factual_bank = [
-        ("What is the capital of France?", "The capital of France is Paris.", "The capital of France is Lyon."),
-        ("What is the capital of Japan?", "The capital of Japan is Tokyo.", "The capital of Japan is Osaka."),
-        ("What is the capital of Germany?", "The capital of Germany is Berlin.", "The capital of Germany is Munich."),
-        ("What is the capital of Australia?", "The capital of Australia is Canberra.", "The capital of Australia is Sydney."),
-        ("What is the capital of Brazil?", "The capital of Brazil is Brasilia.", "The capital of Brazil is Rio de Janeiro."),
-        ("What is the capital of Canada?", "The capital of Canada is Ottawa.", "The capital of Canada is Toronto."),
-        ("What is the capital of India?", "The capital of India is New Delhi.", "The capital of India is Mumbai."),
-        ("What is the capital of Italy?", "The capital of Italy is Rome.", "The capital of Italy is Milan."),
-        ("What is the capital of Spain?", "The capital of Spain is Madrid.", "The capital of Spain is Barcelona."),
-        ("What is the capital of South Korea?", "The capital of South Korea is Seoul.", "The capital of South Korea is Busan."),
-        ("What is the capital of Russia?", "The capital of Russia is Moscow.", "The capital of Russia is Saint Petersburg."),
-        ("What is the capital of Egypt?", "The capital of Egypt is Cairo.", "The capital of Egypt is Alexandria."),
-        ("What is the capital of Turkey?", "The capital of Turkey is Ankara.", "The capital of Turkey is Istanbul."),
-        ("What is the capital of Nigeria?", "The capital of Nigeria is Abuja.", "The capital of Nigeria is Lagos."),
-        ("What is the capital of South Africa?", "The capital of South Africa is Pretoria.", "The capital of South Africa is Johannesburg."),
-        ("In what year did World War II end?", "World War II ended in 1945.", "World War II ended in 1944."),
-        ("In what year did the Berlin Wall fall?", "The Berlin Wall fell in 1989.", "The Berlin Wall fell in 1991."),
-        ("In what year did humans first land on the Moon?", "Humans first landed on the Moon in 1969.", "Humans first landed on the Moon in 1968."),
-        ("In what year did Columbus reach the Americas?", "Columbus reached the Americas in 1492.", "Columbus reached the Americas in 1496."),
-        ("In what year did World War I begin?", "World War I began in 1914.", "World War I began in 1915."),
-        ("What is the largest continent by area?", "The largest continent by area is Asia.", "The largest continent by area is Africa."),
-        ("What is the longest river in the world?", "The longest river is the Nile.", "The longest river is the Amazon."),
-        ("What is the largest ocean?", "The largest ocean is the Pacific.", "The largest ocean is the Atlantic."),
-        ("What is the tallest mountain?", "The tallest mountain is Mount Everest.", "The tallest mountain is K2."),
+        (
+            "What is the capital of France?",
+            "The capital of France is Paris.",
+            "The capital of France is Lyon.",
+        ),
+        (
+            "What is the capital of Japan?",
+            "The capital of Japan is Tokyo.",
+            "The capital of Japan is Osaka.",
+        ),
+        (
+            "What is the capital of Germany?",
+            "The capital of Germany is Berlin.",
+            "The capital of Germany is Munich.",
+        ),
+        (
+            "What is the capital of Australia?",
+            "The capital of Australia is Canberra.",
+            "The capital of Australia is Sydney.",
+        ),
+        (
+            "What is the capital of Brazil?",
+            "The capital of Brazil is Brasilia.",
+            "The capital of Brazil is Rio de Janeiro.",
+        ),
+        (
+            "What is the capital of Canada?",
+            "The capital of Canada is Ottawa.",
+            "The capital of Canada is Toronto.",
+        ),
+        (
+            "What is the capital of India?",
+            "The capital of India is New Delhi.",
+            "The capital of India is Mumbai.",
+        ),
+        (
+            "What is the capital of Italy?",
+            "The capital of Italy is Rome.",
+            "The capital of Italy is Milan.",
+        ),
+        (
+            "What is the capital of Spain?",
+            "The capital of Spain is Madrid.",
+            "The capital of Spain is Barcelona.",
+        ),
+        (
+            "What is the capital of South Korea?",
+            "The capital of South Korea is Seoul.",
+            "The capital of South Korea is Busan.",
+        ),
+        (
+            "What is the capital of Russia?",
+            "The capital of Russia is Moscow.",
+            "The capital of Russia is Saint Petersburg.",
+        ),
+        (
+            "What is the capital of Egypt?",
+            "The capital of Egypt is Cairo.",
+            "The capital of Egypt is Alexandria.",
+        ),
+        (
+            "What is the capital of Turkey?",
+            "The capital of Turkey is Ankara.",
+            "The capital of Turkey is Istanbul.",
+        ),
+        (
+            "What is the capital of Nigeria?",
+            "The capital of Nigeria is Abuja.",
+            "The capital of Nigeria is Lagos.",
+        ),
+        (
+            "What is the capital of South Africa?",
+            "The capital of South Africa is Pretoria.",
+            "The capital of South Africa is Johannesburg.",
+        ),
+        (
+            "In what year did World War II end?",
+            "World War II ended in 1945.",
+            "World War II ended in 1944.",
+        ),
+        (
+            "In what year did the Berlin Wall fall?",
+            "The Berlin Wall fell in 1989.",
+            "The Berlin Wall fell in 1991.",
+        ),
+        (
+            "In what year did humans first land on the Moon?",
+            "Humans first landed on the Moon in 1969.",
+            "Humans first landed on the Moon in 1968.",
+        ),
+        (
+            "In what year did Columbus reach the Americas?",
+            "Columbus reached the Americas in 1492.",
+            "Columbus reached the Americas in 1496.",
+        ),
+        (
+            "In what year did World War I begin?",
+            "World War I began in 1914.",
+            "World War I began in 1915.",
+        ),
+        (
+            "What is the largest continent by area?",
+            "The largest continent by area is Asia.",
+            "The largest continent by area is Africa.",
+        ),
+        (
+            "What is the longest river in the world?",
+            "The longest river is the Nile.",
+            "The longest river is the Amazon.",
+        ),
+        (
+            "What is the largest ocean?",
+            "The largest ocean is the Pacific.",
+            "The largest ocean is the Atlantic.",
+        ),
+        (
+            "What is the tallest mountain?",
+            "The tallest mountain is Mount Everest.",
+            "The tallest mountain is K2.",
+        ),
         ("How many continents are there?", "There are 7 continents.", "There are 6 continents."),
-        ("What is the speed of light approximately?", "The speed of light is approximately 300000000 m/s.", "The speed of light is approximately 150000000 m/s."),
-        ("What is the value of pi to two decimal places?", "Pi is approximately 3.14.", "Pi is approximately 3.41."),
-        ("How many seconds are in an hour?", "There are 3600 seconds in an hour.", "There are 3200 seconds in an hour."),
-        ("How many bits are in a byte?", "There are 8 bits in a byte.", "There are 16 bits in a byte."),
-        ("What is absolute zero in Celsius?", "Absolute zero is -273.15 degrees Celsius.", "Absolute zero is -100 degrees Celsius."),
+        (
+            "What is the speed of light approximately?",
+            "The speed of light is approximately 300000000 m/s.",
+            "The speed of light is approximately 150000000 m/s.",
+        ),
+        (
+            "What is the value of pi to two decimal places?",
+            "Pi is approximately 3.14.",
+            "Pi is approximately 3.41.",
+        ),
+        (
+            "How many seconds are in an hour?",
+            "There are 3600 seconds in an hour.",
+            "There are 3200 seconds in an hour.",
+        ),
+        (
+            "How many bits are in a byte?",
+            "There are 8 bits in a byte.",
+            "There are 16 bits in a byte.",
+        ),
+        (
+            "What is absolute zero in Celsius?",
+            "Absolute zero is -273.15 degrees Celsius.",
+            "Absolute zero is -100 degrees Celsius.",
+        ),
     ]
 
     # Cycle and shuffle to reach n.
@@ -509,6 +684,7 @@ def generate_factual_pairs(
         factual_bank = factual_bank * (n // len(factual_bank) + 1)
     # Use a separate Python random for shuffling since we have a list.
     import random
+
     py_rng = random.Random(int(rng.integers(0, 2**31)))
     py_rng.shuffle(factual_bank)
     factual_bank = factual_bank[:n]
@@ -517,7 +693,8 @@ def generate_factual_pairs(
 
 
 def generate_scheduling_pairs(
-    n: int, rng: np.random.Generator,
+    n: int,
+    rng: np.random.Generator,
 ) -> list[tuple[str, str, str, str]]:
     """Generate (question, correct_answer, wrong_answer, domain) for scheduling.
 
@@ -556,7 +733,9 @@ def generate_scheduling_pairs(
             f"Constraints: {conflict_str}. "
             f"Can all meetings be scheduled without conflicts? Answer yes or no."
         )
-        pairs.append((question, f"The answer is {answer}.", f"The answer is {wrong_answer}.", "scheduling"))
+        pairs.append(
+            (question, f"The answer is {answer}.", f"The answer is {wrong_answer}.", "scheduling")
+        )
 
     # --- Task dependency ordering ---
     for _ in range(n // 3):
@@ -597,12 +776,14 @@ def generate_scheduling_pairs(
             f"You have {n_tasks} tasks: {dep_str}. "
             f"Minimum rounds if independent tasks run in parallel?"
         )
-        pairs.append((
-            question,
-            f"The minimum number of rounds is {longest}.",
-            f"The minimum number of rounds is {wrong_longest}.",
-            "scheduling",
-        ))
+        pairs.append(
+            (
+                question,
+                f"The minimum number of rounds is {longest}.",
+                f"The minimum number of rounds is {wrong_longest}.",
+                "scheduling",
+            )
+        )
 
     # --- Resource allocation ---
     remaining = n - 2 * (n // 3)
@@ -615,12 +796,14 @@ def generate_scheduling_pairs(
         answer = "yes" if fits else "no"
         wrong_answer = "no" if fits else "yes"
 
-        res_str = ", ".join(f"Task {i+1} needs {r} units" for i, r in enumerate(resources))
+        res_str = ", ".join(f"Task {i + 1} needs {r} units" for i, r in enumerate(resources))
         question = (
             f"You have {capacity} resource units. Tasks: {res_str}. "
             f"Can all tasks run simultaneously? Answer yes or no."
         )
-        pairs.append((question, f"The answer is {answer}.", f"The answer is {wrong_answer}.", "scheduling"))
+        pairs.append(
+            (question, f"The answer is {answer}.", f"The answer is {wrong_answer}.", "scheduling")
+        )
 
     return pairs[:n]
 
@@ -628,6 +811,7 @@ def generate_scheduling_pairs(
 # ---------------------------------------------------------------------------
 # 2. Pipeline verification — extract constraint features
 # ---------------------------------------------------------------------------
+
 
 def run_pipeline_verification(
     pairs: list[tuple[str, str, str, str]],
@@ -676,9 +860,7 @@ def run_pipeline_verification(
             entry["correct_n_constraints"] = len(vr_correct.constraints)
             entry["correct_n_violations"] = len(vr_correct.violations)
             entry["correct_energy"] = vr_correct.energy
-            entry["correct_constraint_types"] = [
-                c.constraint_type for c in vr_correct.constraints
-            ]
+            entry["correct_constraint_types"] = [c.constraint_type for c in vr_correct.constraints]
             entry["correct_satisfied"] = [
                 c.metadata.get("satisfied", None) for c in vr_correct.constraints
             ]
@@ -693,9 +875,7 @@ def run_pipeline_verification(
             entry["wrong_n_constraints"] = len(vr_wrong.constraints)
             entry["wrong_n_violations"] = len(vr_wrong.violations)
             entry["wrong_energy"] = vr_wrong.energy
-            entry["wrong_constraint_types"] = [
-                c.constraint_type for c in vr_wrong.constraints
-            ]
+            entry["wrong_constraint_types"] = [c.constraint_type for c in vr_wrong.constraints]
             entry["wrong_satisfied"] = [
                 c.metadata.get("satisfied", None) for c in vr_wrong.constraints
             ]
@@ -714,6 +894,7 @@ def run_pipeline_verification(
 # ---------------------------------------------------------------------------
 # 3. Binary feature encoding (200+ dims with constraint features)
 # ---------------------------------------------------------------------------
+
 
 def encode_answer_with_constraints(
     question: str,
@@ -776,8 +957,15 @@ def encode_answer_with_constraints(
     if verification and f"{prefix}_constraint_types" in verification:
         constraint_types = verification[f"{prefix}_constraint_types"]
     type_names = [
-        "arithmetic", "type_check", "return_type", "return_value_type",
-        "bound", "initialization", "implication", "exclusion", "factual",
+        "arithmetic",
+        "type_check",
+        "return_type",
+        "return_value_type",
+        "bound",
+        "initialization",
+        "implication",
+        "exclusion",
+        "factual",
         "quantity",
     ]
     for tname in type_names:
@@ -813,12 +1001,14 @@ def _encode_base_features(question: str, answer: str) -> np.ndarray:
     """
     # Import from Exp 62 to reuse the exact encoding.
     from experiment_62_domain_constraint_learning import encode_answer
+
     return encode_answer(question, answer)
 
 
 # ---------------------------------------------------------------------------
 # 4. Discriminative CD training (reused from Exp 62 with hyperparameter sweep)
 # ---------------------------------------------------------------------------
+
 
 def train_discriminative_cd(
     correct_vectors: np.ndarray,
@@ -921,7 +1111,7 @@ def _compute_auroc(
     tied = 0
     total = n_c * n_w
     for i in range(0, n_c, chunk_size):
-        ec_chunk = e_c[i:i + chunk_size]
+        ec_chunk = e_c[i : i + chunk_size]
         diff = e_w[None, :] - ec_chunk[:, None]
         concordant += int(np.sum(diff > 0))
         tied += int(np.sum(diff == 0))
@@ -932,8 +1122,10 @@ def _compute_auroc(
 # 5. Main experiment
 # ---------------------------------------------------------------------------
 
+
 def main() -> int:
     import jax
+
     print("=" * 70)
     print("EXPERIMENT 89: Self-Bootstrapping Ising Models from Pipeline Outputs")
     print("  Train discriminative Ising on pipeline-verified (q, correct, wrong)")
@@ -972,15 +1164,11 @@ def main() -> int:
     verification_results = run_pipeline_verification(all_pairs)
 
     # Summarize pipeline verification.
-    n_correct_verified = sum(
-        1 for v in verification_results if v.get("correct_verified") is True
-    )
-    n_wrong_detected = sum(
-        1 for v in verification_results
-        if v.get("wrong_n_violations", 0) > 0
-    )
+    n_correct_verified = sum(1 for v in verification_results if v.get("correct_verified") is True)
+    n_wrong_detected = sum(1 for v in verification_results if v.get("wrong_n_violations", 0) > 0)
     n_with_constraints = sum(
-        1 for v in verification_results
+        1
+        for v in verification_results
         if v.get("correct_n_constraints", 0) > 0 or v.get("wrong_n_constraints", 0) > 0
     )
     print(f"  Correct verified: {n_correct_verified}/{len(all_pairs)}")
@@ -1004,12 +1192,8 @@ def main() -> int:
         w = v["wrong"]
         d = v["domain"]
 
-        correct_features.append(
-            encode_answer_with_constraints(q, c, v, "correct")
-        )
-        wrong_features.append(
-            encode_answer_with_constraints(q, w, v, "wrong")
-        )
+        correct_features.append(encode_answer_with_constraints(q, c, v, "correct"))
+        wrong_features.append(encode_answer_with_constraints(q, w, v, "wrong"))
         domains.append(d)
 
     correct_all = np.array(correct_features)
@@ -1030,8 +1214,8 @@ def main() -> int:
     n_train = int(0.70 * n_total)
     n_val = int(0.15 * n_total)
     train_idx = indices[:n_train]
-    val_idx = indices[n_train:n_train + n_val]
-    test_idx = indices[n_train + n_val:]
+    val_idx = indices[n_train : n_train + n_val]
+    test_idx = indices[n_train + n_val :]
 
     correct_train = correct_all[train_idx]
     wrong_train = wrong_all[train_idx]
@@ -1068,17 +1252,21 @@ def main() -> int:
 
     for hp in hp_grid:
         b, J, _ = train_discriminative_cd(
-            correct_train, wrong_train,
-            n_epochs=hp["n_epochs"], lr=hp["lr"],
+            correct_train,
+            wrong_train,
+            n_epochs=hp["n_epochs"],
+            lr=hp["lr"],
             l1_lambda=hp["l1_lambda"],
         )
         val_auroc = _compute_auroc(correct_val, wrong_val, b, J)
         val_acc = _classification_accuracy(correct_val, wrong_val, b, J)
-        hp_results.append({
-            "label": hp["label"],
-            "val_auroc": val_auroc,
-            "val_acc": val_acc,
-        })
+        hp_results.append(
+            {
+                "label": hp["label"],
+                "val_auroc": val_auroc,
+                "val_acc": val_acc,
+            }
+        )
         print(f"    {hp['label']:25s} → val AUROC={val_auroc:.4f}  acc={val_acc:.1%}")
 
         if val_auroc > best_val_auroc:
@@ -1107,18 +1295,24 @@ def main() -> int:
             continue
         print(f"  Training {domain} model ({d_correct.shape[0]} pairs)...")
         b, J, _ = train_discriminative_cd(
-            d_correct, d_wrong,
-            n_epochs=best_hp["n_epochs"], lr=best_hp["lr"],
-            l1_lambda=best_hp["l1_lambda"], verbose=False,
+            d_correct,
+            d_wrong,
+            n_epochs=best_hp["n_epochs"],
+            lr=best_hp["lr"],
+            l1_lambda=best_hp["l1_lambda"],
+            verbose=False,
         )
         models[domain] = (b, J)
 
     # Combined model (all domains).
     print(f"  Training combined model ({correct_train.shape[0]} pairs)...")
     b_comb, J_comb, _ = train_discriminative_cd(
-        correct_train, wrong_train,
-        n_epochs=best_hp["n_epochs"], lr=best_hp["lr"],
-        l1_lambda=best_hp["l1_lambda"], verbose=True,
+        correct_train,
+        wrong_train,
+        n_epochs=best_hp["n_epochs"],
+        lr=best_hp["lr"],
+        l1_lambda=best_hp["l1_lambda"],
+        verbose=True,
     )
     models["combined"] = (b_comb, J_comb)
     print(f"  Training time: {time.time() - t0:.1f}s")
@@ -1198,17 +1392,21 @@ def main() -> int:
         sub_correct = correct_train[:size]
         sub_wrong = wrong_train[:size]
         b, J, _ = train_discriminative_cd(
-            sub_correct, sub_wrong,
-            n_epochs=best_hp["n_epochs"], lr=best_hp["lr"],
+            sub_correct,
+            sub_wrong,
+            n_epochs=best_hp["n_epochs"],
+            lr=best_hp["lr"],
             l1_lambda=best_hp["l1_lambda"],
         )
         auroc = _compute_auroc(correct_test, wrong_test, b, J)
         acc = _classification_accuracy(correct_test, wrong_test, b, J)
-        ablation_results.append({
-            "n_train": int(size),
-            "auroc": round(auroc, 4),
-            "accuracy": round(acc, 4),
-        })
+        ablation_results.append(
+            {
+                "n_train": int(size),
+                "auroc": round(auroc, 4),
+                "accuracy": round(acc, 4),
+            }
+        )
         print(f"    N={size:4d}: AUROC={auroc:.4f}  acc={acc:.1%}")
 
     results["data_efficiency_ablation"] = ablation_results
@@ -1231,8 +1429,8 @@ def main() -> int:
             continue
         n_total_checked += 1
 
-        e_c = _compute_energies(correct_all[i:i+1], b_comb, J_comb)[0]
-        e_w = _compute_energies(wrong_all[i:i+1], b_comb, J_comb)[0]
+        e_c = _compute_energies(correct_all[i : i + 1], b_comb, J_comb)[0]
+        e_w = _compute_energies(wrong_all[i : i + 1], b_comb, J_comb)[0]
         ising_correct = e_c < e_w
 
         # Pipeline says correct is verified and wrong has violations.
@@ -1276,15 +1474,21 @@ def main() -> int:
         print(f"    {hp['label']:25s}: AUROC={hp['val_auroc']:.4f}{marker}")
 
     print(f"\n  Test AUROC by domain:")
-    print(f"  {'Domain':>12s} | {'Self(domain)':>13s} | {'Self(combined)':>14s} | {'Random':>7s} | {'N_test':>6s}")
+    print(
+        f"  {'Domain':>12s} | {'Self(domain)':>13s} | {'Self(combined)':>14s} | {'Random':>7s} | {'N_test':>6s}"
+    )
     print(f"  {'-' * 65}")
     for domain in domain_names:
         r = results["per_domain"][domain]
         sd = r["self_bootstrap_domain"]
         sc = r["self_bootstrap_combined"]
-        print(f"  {domain:>12s} | {sd['auroc']:>13.4f} | {sc['auroc']:>14.4f} | {'0.5000':>7s} | {r['n_test']:>6d}")
+        print(
+            f"  {domain:>12s} | {sd['auroc']:>13.4f} | {sc['auroc']:>14.4f} | {'0.5000':>7s} | {r['n_test']:>6d}"
+        )
     print(f"  {'-' * 65}")
-    print(f"  {'OVERALL':>12s} | {'---':>13s} | {overall_auroc:>14.4f} | {'0.5000':>7s} | {len(test_idx):>6d}")
+    print(
+        f"  {'OVERALL':>12s} | {'---':>13s} | {overall_auroc:>14.4f} | {'0.5000':>7s} | {len(test_idx):>6d}"
+    )
 
     print(f"\n  Data efficiency ablation:")
     for ab in ablation_results:
@@ -1298,10 +1502,14 @@ def main() -> int:
         print(f"    The pipeline can train its own verifier from its own outputs.")
     elif overall_auroc >= 0.55:
         print(f"\n  VERDICT: ⚠️ Modest self-bootstrap signal. AUROC={overall_auroc:.4f}")
-        print(f"    Pipeline outputs carry some discriminative signal but need more data or features.")
+        print(
+            f"    Pipeline outputs carry some discriminative signal but need more data or features."
+        )
     else:
         print(f"\n  VERDICT: ❌ Self-bootstrapping not yet effective. AUROC={overall_auroc:.4f}")
-        print(f"    Pipeline verification may not provide enough structured signal for CD training.")
+        print(
+            f"    Pipeline verification may not provide enough structured signal for CD training."
+        )
 
     print(sep)
     return 0

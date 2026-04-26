@@ -59,7 +59,9 @@ class TestGetGpuMemoryPids:
 
         Spec: REQ-INFRA-055
         """
-        with patch("carnot.pipeline.gpu_zombie_killer._query_nvidia_smi", return_value="111\n222\n333\n"):
+        with patch(
+            "carnot.pipeline.gpu_zombie_killer._query_nvidia_smi", return_value="111\n222\n333\n"
+        ):
             pids = get_gpu_memory_pids(0)
         assert pids == [111, 222, 333]
 
@@ -193,8 +195,13 @@ class TestKillGpuZombies:
         smi_iter = iter(smi_calls)
 
         with (
-            patch("carnot.pipeline.gpu_zombie_killer._query_nvidia_smi", side_effect=lambda _: next(smi_iter)),
-            patch("carnot.pipeline.gpu_zombie_killer.get_gpu_memory_pids", return_value=[target_pid]),
+            patch(
+                "carnot.pipeline.gpu_zombie_killer._query_nvidia_smi",
+                side_effect=lambda _: next(smi_iter),
+            ),
+            patch(
+                "carnot.pipeline.gpu_zombie_killer.get_gpu_memory_pids", return_value=[target_pid]
+            ),
             patch("os.kill"),
             patch("time.sleep"),
         ):
@@ -214,8 +221,13 @@ class TestKillGpuZombies:
         smi_iter = iter(smi_calls)
 
         with (
-            patch("carnot.pipeline.gpu_zombie_killer._query_nvidia_smi", side_effect=lambda _: next(smi_iter)),
-            patch("carnot.pipeline.gpu_zombie_killer.get_gpu_memory_pids", return_value=[target_pid]),
+            patch(
+                "carnot.pipeline.gpu_zombie_killer._query_nvidia_smi",
+                side_effect=lambda _: next(smi_iter),
+            ),
+            patch(
+                "carnot.pipeline.gpu_zombie_killer.get_gpu_memory_pids", return_value=[target_pid]
+            ),
             patch("os.kill"),
             patch("time.sleep"),
         ):
@@ -268,7 +280,10 @@ class TestKillGpuZombies:
         smi_iter = iter(smi_calls)
 
         with (
-            patch("carnot.pipeline.gpu_zombie_killer._query_nvidia_smi", side_effect=lambda _: next(smi_iter)),
+            patch(
+                "carnot.pipeline.gpu_zombie_killer._query_nvidia_smi",
+                side_effect=lambda _: next(smi_iter),
+            ),
             patch(
                 "carnot.pipeline.gpu_zombie_killer.get_gpu_memory_pids",
                 return_value=[protected_pid, real_zombie],
@@ -316,7 +331,9 @@ class TestGPUZombieResult:
 
         Spec: REQ-INFRA-055
         """
-        r = GPUZombieResult(gpu_index=1, vram_before_mb=5000.0, vram_after_mb=200.0, vram_freed_mb=4800.0)
+        r = GPUZombieResult(
+            gpu_index=1, vram_before_mb=5000.0, vram_after_mb=200.0, vram_freed_mb=4800.0
+        )
         assert isinstance(r.vram_freed_mb, float)
         assert r.vram_freed_mb == pytest.approx(4800.0)
 
@@ -421,8 +438,13 @@ class TestKillGpuZombiesEdgeCases:
             raise OSError("no such process")
 
         with (
-            patch("carnot.pipeline.gpu_zombie_killer._query_nvidia_smi", side_effect=lambda _: next(smi_iter)),
-            patch("carnot.pipeline.gpu_zombie_killer.get_gpu_memory_pids", return_value=[target_pid]),
+            patch(
+                "carnot.pipeline.gpu_zombie_killer._query_nvidia_smi",
+                side_effect=lambda _: next(smi_iter),
+            ),
+            patch(
+                "carnot.pipeline.gpu_zombie_killer.get_gpu_memory_pids", return_value=[target_pid]
+            ),
             patch("os.kill", side_effect=raise_oserror),
             patch("time.sleep"),
         ):

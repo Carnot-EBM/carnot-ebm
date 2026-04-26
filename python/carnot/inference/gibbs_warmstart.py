@@ -22,6 +22,7 @@
 
 Spec: REQ-SAMPLE-020, SCENARIO-SAMPLE-032
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -89,9 +90,7 @@ class GibbsWarmStart:
         spins = np.where(nonzero_mask, np.sign(h), random_signs)
         return spins.astype(np.float64)
 
-    def sweep(
-        self, spins: np.ndarray, J: np.ndarray, h: np.ndarray
-    ) -> np.ndarray:
+    def sweep(self, spins: np.ndarray, J: np.ndarray, h: np.ndarray) -> np.ndarray:
         """Execute one Gibbs sweep: update every spin sequentially.
 
         For each spin i, we compute the conditional probability P(s_i = +1 | s_{-i})

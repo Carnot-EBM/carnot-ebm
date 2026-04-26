@@ -117,7 +117,9 @@ def main() -> None:
 
         _log.info(
             "Exp %d: bitfile_present=%s simulation_mode=%s",
-            EXP_ID, bitfile_present, simulation_mode,
+            EXP_ID,
+            bitfile_present,
+            simulation_mode,
         )
 
         # ------------------------------------------------------------------
@@ -134,7 +136,10 @@ def main() -> None:
 
         _log.info(
             "Exp %d: n_spins=%d sparsity=%.1f n_edges=%d",
-            EXP_ID, config.n_spins, config.sparsity, config.n_edges(),
+            EXP_ID,
+            config.n_spins,
+            config.sparsity,
+            config.n_edges(),
         )
 
         # ------------------------------------------------------------------

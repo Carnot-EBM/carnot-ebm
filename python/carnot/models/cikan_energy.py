@@ -37,7 +37,7 @@ Spec: REQ-SAMPLE-025, REQ-SAMPLE-026,
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Sequence
+from typing import TYPE_CHECKING
 
 import jax
 import jax.numpy as jnp
@@ -46,6 +46,8 @@ import numpy as np
 
 from carnot.models.kaem_energy import KAEMEnergy, UnivariateKAEMLayer
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 # ---------------------------------------------------------------------------
 # ConstraintBoundary

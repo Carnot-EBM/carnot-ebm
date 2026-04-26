@@ -45,12 +45,14 @@ Spec: REQ-SAMPLE-001
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 
-from carnot.core.energy import EnergyFunction
+if TYPE_CHECKING:
+    from carnot.core.energy import EnergyFunction
 
 
 @dataclass
@@ -191,7 +193,9 @@ class LangevinSampler:
         # deviation of the Gaussian noise added at each step.
         noise_scale = jnp.sqrt(self.step_size)
 
-        def step(carry: tuple[jax.Array, jax.Array], _: None) -> tuple[tuple[jax.Array, jax.Array], jax.Array]:
+        def step(
+            carry: tuple[jax.Array, jax.Array], _: None
+        ) -> tuple[tuple[jax.Array, jax.Array], jax.Array]:
             x, key = carry
             # Split the PRNG key: one for this step's noise, one for next step
             key, subkey = jrandom.split(key)
@@ -251,7 +255,9 @@ class LangevinSampler:
 
         noise_scale = jnp.sqrt(self.step_size)
 
-        def step(carry: tuple[jax.Array, jax.Array], _: None) -> tuple[tuple[jax.Array, jax.Array], jax.Array]:
+        def step(
+            carry: tuple[jax.Array, jax.Array], _: None
+        ) -> tuple[tuple[jax.Array, jax.Array], jax.Array]:
             x, key = carry
             key, subkey = jrandom.split(key)
             grad = energy_fn.grad_energy(x)

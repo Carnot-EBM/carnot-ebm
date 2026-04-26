@@ -142,7 +142,7 @@ def _write_json(repo_root: Path, rel_path: str, data: dict) -> None:
     os.replace(str(tmp), str(out))
 
 
-def _load_gate(repo_root: Path) -> Optional[dict]:
+def _load_gate(repo_root: Path) -> dict | None:
     """Load Exp 581 gate result.  Returns None if file is missing or unreadable.
 
     The gate_open field is the ONLY reason this experiment is allowed to consume
@@ -185,10 +185,12 @@ def _load_gsm8k_questions(start: int, end: int) -> list[dict]:
                 answer_text = f"#### {idx * 2}\n{idx} times 2 gives {idx * 2 + 1}"
             else:
                 answer_text = f"#### {idx * 3}"
-            result.append({
-                "question": f"Synthetic question {i}: What is {i} + {i}?",
-                "answer": answer_text,
-            })
+            result.append(
+                {
+                    "question": f"Synthetic question {i}: What is {i} + {i}?",
+                    "answer": answer_text,
+                }
+            )
         return result
 
 
@@ -250,7 +252,7 @@ def _run_relay_batches(
 
     q_offset = 0
     for batch_id, b_size in enumerate(batch_sizes):
-        batch_qs = questions[q_offset: q_offset + b_size]
+        batch_qs = questions[q_offset : q_offset + b_size]
         q_offset += b_size
 
         batch_violations = 0
@@ -292,7 +294,10 @@ def _run_relay_batches(
 
         _log.info(
             "Batch %d/%d: %d violations found in %d questions",
-            batch_id + 1, N_BATCHES, batch_violations, b_size,
+            batch_id + 1,
+            N_BATCHES,
+            batch_violations,
+            b_size,
         )
 
     return total_violations, total_constraints_added, batch_results
@@ -346,7 +351,7 @@ def _build_artifact(
 # ---------------------------------------------------------------------------
 
 
-def run_experiment(repo_root: Optional[Path] = None) -> dict:
+def run_experiment(repo_root: Path | None = None) -> dict:
     """Run Exp 583: FR-11 relay v3 with CoACEExtractorV2 on 25 fresh GSM8K questions.
 
     All exit paths write the deliverable JSON.  The FINAL LINE is
@@ -443,7 +448,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     questions = _load_gsm8k_questions(QUESTION_START, QUESTION_END)
     _log.info(
         "Loaded %d GSM8K questions (indices %d-%d)",
-        len(questions), QUESTION_START, QUESTION_END,
+        len(questions),
+        QUESTION_START,
+        QUESTION_END,
     )
 
     # -----------------------------------------------------------------------
@@ -463,7 +470,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
 
     _log.info(
         "RELAY COMPLETE: total_violations=%d v1_baseline=%d fr11_improved=%s",
-        total_violations, V1_VIOLATIONS, total_violations > V1_VIOLATIONS,
+        total_violations,
+        V1_VIOLATIONS,
+        total_violations > V1_VIOLATIONS,
     )
 
     # -----------------------------------------------------------------------
@@ -510,7 +519,9 @@ def main() -> None:
     verdict = artifact.get("honest_verdict", "unknown")
     _log.info(
         "Exp %d complete: honest_verdict=%s status=%s",
-        EXP_ID, verdict, artifact.get("status", "unknown"),
+        EXP_ID,
+        verdict,
+        artifact.get("status", "unknown"),
     )
 
 

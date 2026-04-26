@@ -14,27 +14,22 @@ Spec: REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-002
 from __future__ import annotations
 
 import ast
-import inspect
 import os
 import re
 import subprocess
 import sys
-import textwrap
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
 
 # Ensure the Python package is importable from the repo root.
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "python"))
 
 from carnot.pipeline.extract import (
-    AutoExtractor,
     CodeExtractor,
     ConstraintResult,
 )
-
 
 # ---------------------------------------------------------------------------
 # Data structures for the report
@@ -113,9 +108,7 @@ def analyze_file(filepath: Path, extractor: CodeExtractor) -> FileReport:
         return report
 
     report.constraints = constraints
-    report.violations = [
-        c for c in constraints if c.metadata.get("satisfied") is False
-    ]
+    report.violations = [c for c in constraints if c.metadata.get("satisfied") is False]
     return report
 
 
@@ -217,11 +210,7 @@ def check_docstring_args(filepath: Path) -> list[str]:
             continue
 
         # Extract actual parameter names (excluding 'self' and 'cls').
-        actual_params = [
-            arg.arg
-            for arg in node.args.args
-            if arg.arg not in ("self", "cls")
-        ]
+        actual_params = [arg.arg for arg in node.args.args if arg.arg not in ("self", "cls")]
 
         # Parse the Args: section from the docstring.
         documented_params = _parse_docstring_args(docstring)
@@ -247,7 +236,6 @@ def check_docstring_args(filepath: Path) -> list[str]:
                     f"{rel_path}:{node.lineno} {node.name}(): "
                     f"parameter '{ap}' in signature but missing from docstring Args"
                 )
-
 
     return issues
 
@@ -302,9 +290,7 @@ def print_report(report: DogfoodReport) -> None:
         for c in fr.constraints:
             type_counts[c.constraint_type] = type_counts.get(c.constraint_type, 0) + 1
         for v in fr.violations:
-            type_violations[v.constraint_type] = (
-                type_violations.get(v.constraint_type, 0) + 1
-            )
+            type_violations[v.constraint_type] = type_violations.get(v.constraint_type, 0) + 1
 
     if type_counts:
         print("  Constraint breakdown:")
@@ -320,7 +306,9 @@ def print_report(report: DogfoodReport) -> None:
         print("-" * 72)
         print("  FILES WITH ISSUES")
         print("-" * 72)
-        for fr in sorted(problem_files, key=lambda f: -(len(f.violations) + len(f.docstring_issues))):
+        for fr in sorted(
+            problem_files, key=lambda f: -(len(f.violations) + len(f.docstring_issues))
+        ):
             print(f"\n  {fr.path}")
             for v in fr.violations:
                 print(f"    [VIOLATION] {v.description}")
@@ -357,10 +345,7 @@ def print_report(report: DogfoodReport) -> None:
     print("-" * 72)
     if report.total_violations > 0:
         init_violations = sum(
-            1
-            for fr in report.files
-            for v in fr.violations
-            if v.constraint_type == "initialization"
+            1 for fr in report.files for v in fr.violations if v.constraint_type == "initialization"
         )
         if init_violations:
             print(

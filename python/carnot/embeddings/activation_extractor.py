@@ -47,7 +47,7 @@ Spec: REQ-INFER-014
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 import jax.numpy as jnp
 
@@ -81,8 +81,8 @@ class ActivationConfig:
 
 def extract_layer_activations(
     text: str,
-    config: Optional[ActivationConfig] = None,
-) -> Optional[dict[int, jnp.ndarray]]:
+    config: ActivationConfig | None = None,
+) -> dict[int, jnp.ndarray] | None:
     """Extract hidden-state activations from every transformer layer.
 
     **Researcher summary:**
@@ -166,10 +166,7 @@ def extract_layer_activations(
             def hook_fn(module: Any, input: Any, output: Any) -> None:
                 # Some layers return a tuple (hidden_state, attention_weights, ...);
                 # others return the tensor directly. We always want the hidden state.
-                if isinstance(output, tuple):
-                    hidden = output[0]
-                else:
-                    hidden = output
+                hidden = output[0] if isinstance(output, tuple) else output
                 activations[layer_idx] = hidden.detach().cpu().numpy()
 
             return hook_fn
@@ -194,7 +191,7 @@ def extract_layer_activations(
     return result
 
 
-def _find_transformer_layers(model: Any) -> Optional[list[Any]]:
+def _find_transformer_layers(model: Any) -> list[Any] | None:
     """Locate the list of transformer layers in a model.
 
     **Detailed explanation for engineers:**
@@ -282,7 +279,7 @@ def compute_activation_stats(
     stats: dict[int, dict[str, float]] = {}
     sorted_indices = sorted(activations.keys())
 
-    prev_mean: Optional[jnp.ndarray] = None
+    prev_mean: jnp.ndarray | None = None
 
     for layer_idx in sorted_indices:
         act = activations[layer_idx]

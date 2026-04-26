@@ -11,12 +11,10 @@ Scenario: SCENARIO-CORE-001, SCENARIO-TIER-004
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 
 import numpy as np
 import pytest
-
 from carnot.models.adaptive_kan import AdaptiveKAN, KANConstraintModel
 from carnot.models.trace_features import (
     FEATURE_DIM,
@@ -151,17 +149,13 @@ class TestExtractConstraintIrFeatures:
 
     def test_literal_majority_satisfied(self) -> None:
         """REQ-CORE-001: literal_majority_sat=1 when majority literal satisfied."""
-        case = _make_case(
-            families={"literal": ["satisfied", "satisfied", "violated"]}
-        )
+        case = _make_case(families={"literal": ["satisfied", "satisfied", "violated"]})
         feat = extract_constraint_ir_features(case)
         assert feat[0] == 1.0  # literal_family_majority_sat
 
     def test_literal_majority_not_satisfied(self) -> None:
         """REQ-CORE-001: literal_majority_sat=0 when minority literal satisfied."""
-        case = _make_case(
-            families={"literal": ["violated", "violated", "satisfied"]}
-        )
+        case = _make_case(families={"literal": ["violated", "violated", "satisfied"]})
         feat = extract_constraint_ir_features(case)
         assert feat[0] == 0.0
 
@@ -173,9 +167,7 @@ class TestExtractConstraintIrFeatures:
 
     def test_search_opt_majority(self) -> None:
         """REQ-CORE-001: search_opt_majority_sat reflects search_optimization_limited."""
-        case = _make_case(
-            families={"search_optimization_limited": ["satisfied", "satisfied"]}
-        )
+        case = _make_case(families={"search_optimization_limited": ["satisfied", "satisfied"]})
         feat = extract_constraint_ir_features(case)
         assert feat[1] == 1.0
 
@@ -499,18 +491,10 @@ def split_traces(live_traces: list[TraceRecord]) -> dict:
     train = [live_traces[i] for i in train_idx]
     test = [live_traces[i] for i in test_idx]
 
-    train_correct = np.array(
-        [r.features for r in train if r.label == 1.0], dtype=np.float32
-    )
-    train_wrong = np.array(
-        [r.features for r in train if r.label == 0.0], dtype=np.float32
-    )
-    test_correct = np.array(
-        [r.features for r in test if r.label == 1.0], dtype=np.float32
-    )
-    test_wrong = np.array(
-        [r.features for r in test if r.label == 0.0], dtype=np.float32
-    )
+    train_correct = np.array([r.features for r in train if r.label == 1.0], dtype=np.float32)
+    train_wrong = np.array([r.features for r in train if r.label == 0.0], dtype=np.float32)
+    test_correct = np.array([r.features for r in test if r.label == 1.0], dtype=np.float32)
+    test_wrong = np.array([r.features for r in test if r.label == 0.0], dtype=np.float32)
 
     # Balance training: subsample wrong to match correct count.
     n_min = min(len(train_correct), len(train_wrong))
@@ -570,9 +554,7 @@ class TestStaticKANOnLiveTraces:
             degree=2,
             seed=275,
         )
-        model.train_discriminative_cd(
-            tc, tw, n_epochs=80, lr=0.02, verbose=False
-        )
+        model.train_discriminative_cd(tc, tw, n_epochs=80, lr=0.02, verbose=False)
 
         e_correct = model.energy_batch(ec)
         e_wrong = model.energy_batch(ew)
@@ -698,9 +680,7 @@ class TestWriteExp275Results:
             degree=2,
             seed=275,
         )
-        losses_static = static_model.train_discriminative_cd(
-            tc, tw, n_epochs=80, lr=0.02
-        )
+        losses_static = static_model.train_discriminative_cd(tc, tw, n_epochs=80, lr=0.02)
         e_c_static = static_model.energy_batch(ec)
         e_w_static = static_model.energy_batch(ew)
         auroc_static = auroc_score(e_c_static, e_w_static)
@@ -713,9 +693,7 @@ class TestWriteExp275Results:
             seed=275,
             restructure_every=50,
         )
-        losses_adaptive = adaptive_model.train_discriminative_cd(
-            tc, tw, n_epochs=80, lr=0.02
-        )
+        losses_adaptive = adaptive_model.train_discriminative_cd(tc, tw, n_epochs=80, lr=0.02)
         n_params_before_amr = adaptive_model.n_params
 
         # Feed all test vectors through verify loop (triggers AMR).
@@ -782,10 +760,7 @@ class TestWriteExp275Results:
         assert loaded["experiment"] == 275
         assert loaded["static_kan"]["auroc"] > 0.5
         assert loaded["adaptive_kan"]["restructure_events"] >= 1
-        assert (
-            loaded["adaptive_kan"]["auroc_after_amr"]
-            >= loaded["static_kan"]["auroc"] - 0.05
-        ), (
+        assert loaded["adaptive_kan"]["auroc_after_amr"] >= loaded["static_kan"]["auroc"] - 0.05, (
             f"AUROC regression in results JSON: "
             f"{loaded['static_kan']['auroc']:.3f} → "
             f"{loaded['adaptive_kan']['auroc_after_amr']:.3f}"
@@ -883,9 +858,7 @@ class TestCheckpointRestore:
         # Must match exactly (within floating-point tolerance).
         assert e_orig == pytest.approx(e_restored, abs=1e-6)
 
-    def test_checkpoint_with_recent_inputs(
-        self, split_traces: dict, tmp_path: Path
-    ) -> None:
+    def test_checkpoint_with_recent_inputs(self, split_traces: dict, tmp_path: Path) -> None:
         """REQ-CORE-001: Recent inputs buffer survives checkpoint/restore."""
         tc = split_traces["train_correct"]
         tw = split_traces["train_wrong"]
@@ -914,9 +887,7 @@ class TestCheckpointRestore:
         # Buffer should be restored.
         assert len(restored._recent_inputs) == n_inputs_before
         for i in range(n_inputs_before):
-            np.testing.assert_array_equal(
-                restored._recent_inputs[i], model._recent_inputs[i]
-            )
+            np.testing.assert_array_equal(restored._recent_inputs[i], model._recent_inputs[i])
 
 
 # ---------------------------------------------------------------------------
@@ -939,7 +910,7 @@ class TestCurvatureComputation:
         curvatures = model.compute_edge_curvature(n_sample=50, h=0.01)
 
         assert len(curvatures) == len(model.edges)
-        for edge, curv in curvatures.items():
+        for _edge, curv in curvatures.items():
             assert isinstance(curv, float)
             assert curv >= 0.0
 
@@ -956,7 +927,7 @@ class TestCurvatureComputation:
         curvatures = model.compute_edge_curvature(sample_pts=sample_pts)
 
         assert len(curvatures) == len(model.edges)
-        for edge, curv in curvatures.items():
+        for _edge, curv in curvatures.items():
             assert isinstance(curv, float)
             assert curv >= 0.0
 
@@ -1030,9 +1001,7 @@ class TestVerboseTraining:
             seed=275,
         )
         # Train with verbose output.
-        losses = model.train_discriminative_cd(
-            tc, tw, n_epochs=30, lr=0.02, verbose=True
-        )
+        losses = model.train_discriminative_cd(tc, tw, n_epochs=30, lr=0.02, verbose=True)
 
         # Losses should be produced (every 25 epochs + last epoch).
         assert len(losses) == 30

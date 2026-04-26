@@ -43,8 +43,7 @@ Spec: REQ-INFRA-071, REQ-INFRA-072, SCENARIO-INFRA-081, SCENARIO-INFRA-082
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict
-
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # GPU1RoutingResult
@@ -87,7 +86,7 @@ class GPU1RoutingResult:
 # ---------------------------------------------------------------------------
 
 
-def force_cuda1_device_map(model_id: str) -> Dict[str, Any]:
+def force_cuda1_device_map(model_id: str) -> dict[str, Any]:
     """Return device_map dict that forces ALL layers of *model_id* onto cuda:1.
 
     Why not device_map='auto' or device_map=1 (integer)?

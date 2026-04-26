@@ -132,6 +132,7 @@ def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
     # Counts drift every milestone — check for presence of experiment/milestone
     # labels rather than exact numbers
     import re as _re
+
     assert _re.search(r"\d+\+?\s*experiments", readme, _re.IGNORECASE)
     assert _re.search(r"\d+\+?\s*Experiments Across", report)
     assert _re.search(r"\d+\+?\s*Experiments Across", report_html)
@@ -145,8 +146,9 @@ def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
     # intent of this assertion is preserved: the landing page MUST contain
     # at least one headline metric (a "+Npp" delta or a "N.N%" rate) that
     # only makes sense when the technical report numbers are fresh.
-    assert _re.search(r"\+\s*\d+(\.\d+)?\s*pp|\d+(\.\d+)?\s*%", index), \
+    assert _re.search(r"\+\s*\d+(\.\d+)?\s*pp|\d+(\.\d+)?\s*%", index), (
         "docs/index.html should contain at least one '+Npp' delta or 'N.N%' metric"
+    )
 
     assert "VERIFY-030" in report
     assert "VERIFY-031" in report

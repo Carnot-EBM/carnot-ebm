@@ -100,7 +100,10 @@ _SYNTHETIC_LABELED: list[dict] = [
     {"response": "8 * 7 = 65", "is_correct": False},
     {"response": "So 99 - 44 = 56.", "is_correct": False},
     # ── Correct responses (should produce 0 violations)
-    {"response": "To find the total, we add 47 plus 28, which gives us 75. The answer is 75.", "is_correct": True},
+    {
+        "response": "To find the total, we add 47 plus 28, which gives us 75. The answer is 75.",
+        "is_correct": True,
+    },
     {"response": "Subtracting 15 from 100 gives 85. So the remainder is 85.", "is_correct": True},
     {"response": "5 times 6 gives us 30. The product is 30.", "is_correct": True},
     {"response": "100 divided by 4 gives 25. Each share is 25.", "is_correct": True},

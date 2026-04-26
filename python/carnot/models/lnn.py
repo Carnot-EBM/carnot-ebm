@@ -442,16 +442,19 @@ class LiquidConstraintModel(AutoGradMixin):
 
         # Pack current MLP weights into a pytree for jax.value_and_grad
         params: tuple[jax.Array, ...] = (
-            self.W1, self.b1, self.W2_J, self.b2_J, self.W2_b, self.b2_b
+            self.W1,
+            self.b1,
+            self.W2_J,
+            self.b2_J,
+            self.W2_b,
+            self.b2_b,
         )
 
         losses: list[float] = []
         for _ in range(n_epochs):
-            loss_val, grads = jax.value_and_grad(sequence_loss)(
-                params, observations, labels
-            )
+            loss_val, grads = jax.value_and_grad(sequence_loss)(params, observations, labels)
             # Gradient descent: move params in the direction that lowers loss
-            params = tuple(p - lr * g for p, g in zip(params, grads))
+            params = tuple(p - lr * g for p, g in zip(params, grads, strict=False))
             losses.append(float(loss_val))
 
         # Store updated MLP weights back onto self

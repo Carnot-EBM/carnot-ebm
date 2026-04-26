@@ -358,10 +358,7 @@ from typing import Any  # noqa: E402
 
 
 def _make_questions(n: int) -> list[dict]:
-    return [
-        {"question": f"Question {i}?", "answer": f"#### {i * 2}"}
-        for i in range(n)
-    ]
+    return [{"question": f"Question {i}?", "answer": f"#### {i * 2}"} for i in range(n)]
 
 
 def test_run_batches_finds_violations():

@@ -169,6 +169,7 @@ def main() -> None:
     # ------------------------------------------------------------------
     sessions = SessionMemory.list_sessions(STORAGE_DIR)
     from carnot.pipeline.session_memory import _escape_model_id
+
     safe_id = _escape_model_id(MODEL_ID)
     sessions_verified = safe_id in sessions
 

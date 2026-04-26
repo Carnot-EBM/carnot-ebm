@@ -53,7 +53,9 @@ def _questions_with_carry(n: int = 10) -> list[str]:
     return [f"Calculate: {(i + 10)} × {(i + 5)} = {(i + 10) * (i + 5)}" for i in range(n)]
 
 
-def _library_with_carry_above_threshold(model_id: str = _RELAY_MODEL_ID) -> ConstraintTemplateLibrary:
+def _library_with_carry_above_threshold(
+    model_id: str = _RELAY_MODEL_ID,
+) -> ConstraintTemplateLibrary:
     """Return a library with carry_check observations above min_frequency (5)."""
     lib = ConstraintTemplateLibrary()
     lib.register_builtin_templates()
@@ -317,7 +319,9 @@ class TestCrossSessionLoading:
         questions = _questions_no_arithmetic(5)
 
         simulate_session(0, questions, prior_memory_path=None, memory_dir=str(tmp_path))
-        simulate_session(1, questions, prior_memory_path=str(tmp_path / "session_0"), memory_dir=str(tmp_path))
+        simulate_session(
+            1, questions, prior_memory_path=str(tmp_path / "session_0"), memory_dir=str(tmp_path)
+        )
 
         sm1 = SessionMemory(storage_dir=str(tmp_path / "session_1"), model_id=_RELAY_MODEL_ID)
         assert sm1.exists(), "Session 1 must have saved its state to disk"
@@ -340,8 +344,12 @@ class TestCrossSessionLoading:
         questions = _questions_no_arithmetic(10)
 
         r0 = simulate_session(0, questions, prior_memory_path=None, memory_dir=str(tmp_path))
-        r1 = simulate_session(1, questions, prior_memory_path=str(tmp_path / "session_0"), memory_dir=str(tmp_path))
-        r2 = simulate_session(2, questions, prior_memory_path=str(tmp_path / "session_1"), memory_dir=str(tmp_path))
+        r1 = simulate_session(
+            1, questions, prior_memory_path=str(tmp_path / "session_0"), memory_dir=str(tmp_path)
+        )
+        r2 = simulate_session(
+            2, questions, prior_memory_path=str(tmp_path / "session_1"), memory_dir=str(tmp_path)
+        )
 
         # All three must be valid CrossSessionResult instances
         assert r0.session_id == 0
@@ -406,8 +414,8 @@ class TestSessionMemoryRoundTrip:
         lib = ConstraintTemplateLibrary()
         lib.register_builtin_templates()
         # Put all four templates above their thresholds.
-        lib.observe_pattern("carry_check", _RELAY_MODEL_ID, count=6)       # min_freq=5
-        lib.observe_pattern("sign_check", _RELAY_MODEL_ID, count=6)        # min_freq=5
+        lib.observe_pattern("carry_check", _RELAY_MODEL_ID, count=6)  # min_freq=5
+        lib.observe_pattern("sign_check", _RELAY_MODEL_ID, count=6)  # min_freq=5
         lib.observe_pattern("unit_consistency", _RELAY_MODEL_ID, count=4)  # min_freq=3
         lib.observe_pattern("comparison_direction", _RELAY_MODEL_ID, count=6)  # min_freq=5
 
@@ -420,9 +428,12 @@ class TestSessionMemoryRoundTrip:
         loaded_lib.register_builtin_templates()
 
         active_keys = {t.pattern_key for t in loaded_lib.get_active_templates(_RELAY_MODEL_ID)}
-        assert active_keys == {"carry_check", "sign_check", "unit_consistency", "comparison_direction"}, (
-            f"Expected all 4 templates active; got {active_keys}"
-        )
+        assert active_keys == {
+            "carry_check",
+            "sign_check",
+            "unit_consistency",
+            "comparison_direction",
+        }, f"Expected all 4 templates active; got {active_keys}"
 
     def test_below_threshold_templates_not_active_after_round_trip(self, tmp_path):
         """Templates below threshold remain inactive after round-trip. (REQ-LEARN-038-1)"""
@@ -440,7 +451,9 @@ class TestSessionMemoryRoundTrip:
         loaded_lib.register_builtin_templates()
 
         active = loaded_lib.get_active_templates(_RELAY_MODEL_ID)
-        assert len(active) == 0, f"No templates should be active with only 2 observations; got {active}"
+        assert len(active) == 0, (
+            f"No templates should be active with only 2 observations; got {active}"
+        )
 
     def test_empty_library_round_trip(self, tmp_path):
         """Empty ConstraintTemplateLibrary round-trips cleanly. (REQ-LEARN-038-1)"""
@@ -471,11 +484,13 @@ class TestPublicApi:
             compute_relay_verdict,
             simulate_session,
         )
+
         assert CrossSessionResult is not None
         assert callable(simulate_session)
         assert callable(compute_relay_verdict)
 
     def test_cross_session_result_importable_from_module(self):
         from carnot.pipeline.cross_session_relay import CrossSessionResult
+
         r = CrossSessionResult(0, 5, 0.0, 0, 0)
         assert r.session_id == 0

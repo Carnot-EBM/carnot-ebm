@@ -36,9 +36,12 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from scipy.stats import pearsonr  # type: ignore[import]
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -53,6 +56,7 @@ T = TypeVar("T")
 # ---------------------------------------------------------------------------
 # Dataclasses
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class HardwareEnergyReading:
@@ -103,6 +107,7 @@ class EORMHardwareCorrelation:
 # ---------------------------------------------------------------------------
 # HardwareEnergyProbe
 # ---------------------------------------------------------------------------
+
 
 class HardwareEnergyProbe:
     """Read CPU hardware energy counters with graceful fallback.
@@ -230,6 +235,7 @@ class HardwareEnergyProbe:
 # Correlation computation
 # ---------------------------------------------------------------------------
 
+
 def compute_eorm_hardware_correlation(
     probe: HardwareEnergyProbe,
     eorm_model: Any,
@@ -267,7 +273,7 @@ def compute_eorm_hardware_correlation(
     for step_text in cot_steps:
         cot_input = CoTEnergyInput(question_text=step_text, response_text=step_text)
 
-        def _score(ci: "CoTEnergyInput" = cot_input) -> float:
+        def _score(ci: CoTEnergyInput = cot_input) -> float:
             return eorm_model.energy(ci)
 
         eorm_score, hw_delta = probe.measure_segment(_score)
@@ -287,6 +293,7 @@ def compute_eorm_hardware_correlation(
 
     # Handle NaN from constant input (mock source always returns 0.0 delta)
     import math
+
     if math.isnan(pearson_r):
         pearson_r = 0.0
     if math.isnan(p_value):

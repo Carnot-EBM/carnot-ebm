@@ -101,9 +101,7 @@ def _make_session_problems(
     for i in range(n_correct):
         n = int(rng.integers(1, 50))
         sub = int(rng.integers(1, n + 1))
-        responses.append(
-            _CORRECT_TEMPLATE.format(n=n, two_n=2 * n, sub=sub, result=2 * n - sub)
-        )
+        responses.append(_CORRECT_TEMPLATE.format(n=n, two_n=2 * n, sub=sub, result=2 * n - sub))
         labels.append(True)
 
     for i in range(n_halluc):
@@ -191,9 +189,7 @@ def _build_pipeline(
     )
 
     # Wire Tier 0g: StreamingCoTHalluDetector.
-    detector = StreamingCoTHalluDetector(
-        eorm_model=_MockEORMModel(), alpha=0.3, threshold=0.35
-    )
+    detector = StreamingCoTHalluDetector(eorm_model=_MockEORMModel(), alpha=0.3, threshold=0.35)
     pipeline.wire_tier_0g(detector)
 
     # Wire Tier 0i: HalluSAEGeometricProbe fitted on the reference steps.

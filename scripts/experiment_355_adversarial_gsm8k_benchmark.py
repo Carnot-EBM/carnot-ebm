@@ -297,16 +297,12 @@ def run_adversarial_benchmark(
     # Pass 1: standard (no repair)
     bir_std = BatchedInferenceRunner(_infer, batch_size=batch_size)
     std_results = bir_std.run_batch(original_prompts)
-    standard_correct = [
-        _is_correct(r.response, gt) for r, gt in zip(std_results, ground_truths)
-    ]
+    standard_correct = [_is_correct(r.response, gt) for r, gt in zip(std_results, ground_truths)]
 
     # Pass 2: adversarial (no repair)
     bir_adv = BatchedInferenceRunner(_infer, batch_size=batch_size)
     adv_results = bir_adv.run_batch(adversarial_prompts)
-    adversarial_correct = [
-        _is_correct(r.response, gt) for r, gt in zip(adv_results, ground_truths)
-    ]
+    adversarial_correct = [_is_correct(r.response, gt) for r, gt in zip(adv_results, ground_truths)]
 
     # Pass 3: adversarial + verify-repair
     repaired_correct = []
@@ -483,9 +479,7 @@ def main() -> None:
                 inference_mode=inference_mode,
                 model_obj=model_objects.get(spec["name"]),
             )
-            per_model_results.append(
-                _build_per_model_result(spec["name"], result, n_actual)
-            )
+            per_model_results.append(_build_per_model_result(spec["name"], result, n_actual))
     else:
         # CI-safe simulated mode
         gpu_status = {
@@ -503,16 +497,16 @@ def main() -> None:
                 batch_size=8,
                 inference_mode="simulated",
             )
-            per_model_results.append(
-                _build_per_model_result(spec["name"], result, n_actual)
-            )
+            per_model_results.append(_build_per_model_result(spec["name"], result, n_actual))
 
     # Step 7: Compute top-level verdict
     honest_verdict = _compute_top_level_verdict(per_model_results, inference_mode)
 
     # Aggregate headline metrics (average across models)
     avg_accuracy_drop = sum(m["accuracy_drop"] for m in per_model_results) / len(per_model_results)
-    avg_repair_improvement = sum(m["repair_improvement"] for m in per_model_results) / len(per_model_results)
+    avg_repair_improvement = sum(m["repair_improvement"] for m in per_model_results) / len(
+        per_model_results
+    )
 
     headline_result = {
         "honest_verdict": honest_verdict,
@@ -559,6 +553,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

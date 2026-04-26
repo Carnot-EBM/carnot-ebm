@@ -224,9 +224,7 @@ class ParallelIsingSampler:
         J = jnp.asarray(coupling_matrix, dtype=jnp.float32)
         b = jnp.asarray(biases, dtype=jnp.float32)
 
-        schedule = self.schedule or AnnealingSchedule(
-            beta_init=float(beta), beta_final=float(beta)
-        )
+        schedule = self.schedule or AnnealingSchedule(beta_init=float(beta), beta_final=float(beta))
 
         # --- Phase 1: Warmup with annealing ---
         if self.use_checkerboard:

@@ -106,7 +106,9 @@ def _measure_cpu_baseline(n_spins: int = N_SPINS, n_trials: int = 10) -> float:
     return float(sum(latencies_us) / len(latencies_us))
 
 
-def _measure_fpga_latency(bitfile_path: str, n_spins: int = N_SPINS, n_trials: int = N_TRIALS) -> float:
+def _measure_fpga_latency(
+    bitfile_path: str, n_spins: int = N_SPINS, n_trials: int = N_TRIALS
+) -> float:
     """Measure FpgaBackend sampling latency in microseconds (mean over n_trials).
 
     Why we time FpgaBackend.sample() end-to-end:
@@ -194,7 +196,7 @@ def run_experiment(
     """
     import datetime
 
-    started_at = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    started_at = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     t0 = time.perf_counter()
 
     bitfile_path = os.environ.get("CARNOT_KV260_BITFILE")
@@ -217,7 +219,9 @@ def run_experiment(
     # Hardware path or synthesis path
     # ------------------------------------------------------------------
     if bitfile_set:
-        _log.info("Exp %d: CARNOT_KV260_BITFILE=%s — attempting hardware benchmark", EXP_ID, bitfile_path)
+        _log.info(
+            "Exp %d: CARNOT_KV260_BITFILE=%s — attempting hardware benchmark", EXP_ID, bitfile_path
+        )
         try:
             hardware_latency_us = _measure_fpga_latency(
                 bitfile_path,  # type: ignore[arg-type]
@@ -227,7 +231,9 @@ def run_experiment(
             fpga_alive = hardware_latency_us < LATENCY_TARGET_US
             _log.info(
                 "Exp %d: FPGA latency = %.2f μs  fpga_alive=%s",
-                EXP_ID, hardware_latency_us, fpga_alive,
+                EXP_ID,
+                hardware_latency_us,
+                fpga_alive,
             )
         except Exception as exc:
             _log.warning("Exp %d: FPGA benchmark failed — %s", EXP_ID, exc)
@@ -258,13 +264,13 @@ def run_experiment(
     # ------------------------------------------------------------------
     # Build artifact
     # ------------------------------------------------------------------
-    finished_at = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    finished_at = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     duration_s = round(time.perf_counter() - t0, 3)
 
     artifact: dict[str, Any] = {
         "experiment": EXP_ID,
         "title": TITLE,
-        "run_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d"),
+        "run_date": datetime.datetime.now(datetime.UTC).strftime("%Y%m%d"),
         "started_at": started_at,
         "finished_at": finished_at,
         "duration_s": duration_s,

@@ -125,9 +125,7 @@ def _build_synthetic_violations(n: int = 25) -> list[ViolationPattern]:
             ViolationPattern(
                 type=family,
                 count=count,
-                example_steps=[
-                    f"synthetic_{family}_error_{i}" for i in range(min(5, count))
-                ],
+                example_steps=[f"synthetic_{family}_error_{i}" for i in range(min(5, count))],
             )
         )
     return violations
@@ -179,9 +177,7 @@ def _compute_fp_rate(
     if not patterns:
         # No patterns observed yet → no false positives possible.
         return 0.0
-    flagged = sum(
-        1 for text in correct_texts if any(p in text.lower() for p in patterns)
-    )
+    flagged = sum(1 for text in correct_texts if any(p in text.lower() for p in patterns))
     return flagged / len(correct_texts) if correct_texts else 0.0
 
 
@@ -241,6 +237,7 @@ with _watchdog:
                 if isinstance(v, dict)
             ]
         from collections import Counter  # noqa: PLC0415
+
         n_violations_found = int(_exp644.get("n_violations_found", 0) or 0)
         type_counts = Counter(t for t in raw_types if t)
         if not type_counts:

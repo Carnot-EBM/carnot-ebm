@@ -48,7 +48,9 @@ class TestBuildCorpusArtifact:
 
     def test_schema_field(self):
         # SCENARIO-DATA-018: schema must be carnot.live_corpus_v3.v1
-        art = exp615._build_corpus_artifact(100, 300, self._diversity(), "results/fover_corpus_v5.json", "live_gpu")
+        art = exp615._build_corpus_artifact(
+            100, 300, self._diversity(), "results/fover_corpus_v5.json", "live_gpu"
+        )
         assert art["schema"] == "carnot.live_corpus_v3.v1"
 
     def test_honest_verdict_corpus_expanded_at_80(self):
@@ -82,7 +84,9 @@ class TestBuildCorpusArtifact:
         assert art["inference_mode"] == "live_gpu"
 
     def test_fover_corpus_v5_path_field(self):
-        art = exp615._build_corpus_artifact(100, 300, {}, "results/fover_corpus_v5.json", "live_gpu")
+        art = exp615._build_corpus_artifact(
+            100, 300, {}, "results/fover_corpus_v5.json", "live_gpu"
+        )
         assert art["fover_corpus_v5_path"] == "results/fover_corpus_v5.json"
 
     def test_diversity_metrics_included(self):
@@ -276,11 +280,19 @@ class TestMergeLiveCorpora:
         results_dir = tmp_path / "results"
         results_dir.mkdir(parents=True)
 
-        (results_dir / "live_pairs_578.json").write_text(json.dumps([self._make_pair(10, "Qwen/Qwen3.5-0.8B")]))
-        (results_dir / "live_pairs_602.json").write_text(json.dumps([self._make_pair(20, "Qwen/Qwen3.5-0.8B")]))
+        (results_dir / "live_pairs_578.json").write_text(
+            json.dumps([self._make_pair(10, "Qwen/Qwen3.5-0.8B")])
+        )
+        (results_dir / "live_pairs_602.json").write_text(
+            json.dumps([self._make_pair(20, "Qwen/Qwen3.5-0.8B")])
+        )
 
         new_pair = self._make_pair(350, "Qwen/Qwen3.5-0.8B")
-        with patch.object(exp615, "PRIOR_LIVE_PAIR_PATHS", ["results/live_pairs_578.json", "results/live_pairs_602.json"]):
+        with patch.object(
+            exp615,
+            "PRIOR_LIVE_PAIR_PATHS",
+            ["results/live_pairs_578.json", "results/live_pairs_602.json"],
+        ):
             result = exp615._merge_live_corpora(tmp_path, [new_pair])
         assert len(result) == 3
 
@@ -356,10 +368,13 @@ class TestSelectModels:
 
     def test_fallback_when_gguf_path_nonexistent(self, tmp_path: Path):
         # When env var points to nonexistent file, falls back to small models
-        with patch.dict(os.environ, {
-            "CARNOT_GEMMA4_GGUF_PATH": str(tmp_path / "nonexistent.gguf"),
-            "CARNOT_QWEN_GGUF_PATH": str(tmp_path / "nonexistent_qwen.gguf"),
-        }):
+        with patch.dict(
+            os.environ,
+            {
+                "CARNOT_GEMMA4_GGUF_PATH": str(tmp_path / "nonexistent.gguf"),
+                "CARNOT_QWEN_GGUF_PATH": str(tmp_path / "nonexistent_qwen.gguf"),
+            },
+        ):
             qwen_id, gemma_id = exp615._select_models()
         assert qwen_id == exp615.QWEN_FALLBACK_MODEL_ID
         assert gemma_id == exp615.GEMMA_FALLBACK_MODEL_ID
@@ -371,10 +386,13 @@ class TestSelectModels:
         gemma_file.write_text("fake")
         qwen_file.write_text("fake")
 
-        with patch.dict(os.environ, {
-            "CARNOT_GEMMA4_GGUF_PATH": str(gemma_file),
-            "CARNOT_QWEN_GGUF_PATH": str(qwen_file),
-        }):
+        with patch.dict(
+            os.environ,
+            {
+                "CARNOT_GEMMA4_GGUF_PATH": str(gemma_file),
+                "CARNOT_QWEN_GGUF_PATH": str(qwen_file),
+            },
+        ):
             qwen_id, gemma_id = exp615._select_models()
         assert qwen_id == exp615.QWEN_SOTA_MODEL_ID
         assert gemma_id == exp615.GEMMA_SOTA_MODEL_ID
@@ -397,8 +415,11 @@ class TestCollectPairsForQuestion:
 
         with patch.object(exp615, "_qwen_generate", return_value="4"):
             pairs = exp615._collect_pairs_for_question(
-                self._make_q(), mock_gemma4, MagicMock(),
-                "google/gemma-4-E4B-it", "Qwen/Qwen3.5-0.8B",
+                self._make_q(),
+                mock_gemma4,
+                MagicMock(),
+                "google/gemma-4-E4B-it",
+                "Qwen/Qwen3.5-0.8B",
             )
 
         assert len(pairs) == 2
@@ -409,8 +430,11 @@ class TestCollectPairsForQuestion:
 
         with patch.object(exp615, "_qwen_generate", return_value="4"):
             pairs = exp615._collect_pairs_for_question(
-                self._make_q(), mock_gemma4, MagicMock(),
-                "google/gemma-4-E4B-it", "Qwen/Qwen3.5-0.8B",
+                self._make_q(),
+                mock_gemma4,
+                MagicMock(),
+                "google/gemma-4-E4B-it",
+                "Qwen/Qwen3.5-0.8B",
             )
 
         models = {p["model"] for p in pairs}
@@ -423,8 +447,11 @@ class TestCollectPairsForQuestion:
 
         with patch.object(exp615, "_qwen_generate", return_value="4"):
             pairs = exp615._collect_pairs_for_question(
-                self._make_q(), mock_gemma4, MagicMock(),
-                "google/gemma-4-E4B-it", "Qwen/Qwen3.5-0.8B",
+                self._make_q(),
+                mock_gemma4,
+                MagicMock(),
+                "google/gemma-4-E4B-it",
+                "Qwen/Qwen3.5-0.8B",
             )
 
         for p in pairs:
@@ -434,8 +461,11 @@ class TestCollectPairsForQuestion:
         # When gemma4 is None, a stub response is recorded rather than raising
         with patch.object(exp615, "_qwen_generate", return_value="4"):
             pairs = exp615._collect_pairs_for_question(
-                self._make_q(), None, MagicMock(),
-                "google/gemma-4-E4B-it", "Qwen/Qwen3.5-0.8B",
+                self._make_q(),
+                None,
+                MagicMock(),
+                "google/gemma-4-E4B-it",
+                "Qwen/Qwen3.5-0.8B",
             )
         gemma_pair = next(p for p in pairs if p["model"] == "google/gemma-4-E4B-it")
         assert gemma_pair["response"] == "[gemma4_not_loaded]"
@@ -445,8 +475,11 @@ class TestCollectPairsForQuestion:
         mock_gemma4 = MagicMock()
         mock_gemma4.generate.return_value = "4"
         pairs = exp615._collect_pairs_for_question(
-            self._make_q(), mock_gemma4, None,
-            "google/gemma-4-E4B-it", "Qwen/Qwen3.5-0.8B",
+            self._make_q(),
+            mock_gemma4,
+            None,
+            "google/gemma-4-E4B-it",
+            "Qwen/Qwen3.5-0.8B",
         )
         qwen_pair = next(p for p in pairs if p["model"] == "Qwen/Qwen3.5-0.8B")
         assert qwen_pair["response"] == "[qwen_not_loaded]"
@@ -456,8 +489,11 @@ class TestCollectPairsForQuestion:
         mock_gemma4.generate.return_value = "4"
         with patch.object(exp615, "_qwen_generate", return_value="4"):
             pairs = exp615._collect_pairs_for_question(
-                self._make_q(idx=375), mock_gemma4, MagicMock(),
-                "google/gemma-4-E4B-it", "Qwen/Qwen3.5-0.8B",
+                self._make_q(idx=375),
+                mock_gemma4,
+                MagicMock(),
+                "google/gemma-4-E4B-it",
+                "Qwen/Qwen3.5-0.8B",
             )
         for p in pairs:
             assert p["question_index"] == 375
@@ -469,8 +505,11 @@ class TestCollectPairsForQuestion:
 
         with patch.object(exp615, "_qwen_generate", return_value="4"):
             pairs = exp615._collect_pairs_for_question(
-                self._make_q(), mock_gemma4, MagicMock(),
-                exp615.GEMMA_SOTA_MODEL_ID, exp615.QWEN_SOTA_MODEL_ID,
+                self._make_q(),
+                mock_gemma4,
+                MagicMock(),
+                exp615.GEMMA_SOTA_MODEL_ID,
+                exp615.QWEN_SOTA_MODEL_ID,
             )
 
         models = {p["model"] for p in pairs}

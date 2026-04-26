@@ -17,13 +17,13 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 import jax
 import jax.numpy as jnp
 import jax.random as jrandom
-import numpy as np
-from safetensors.numpy import load_file
-
 from carnot.models.gibbs import GibbsConfig, GibbsModel
 from carnot.training.nce import nce_loss
+from safetensors.numpy import load_file
 
-DATA_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "token_activations_large.safetensors")
+DATA_FILE = os.path.join(
+    os.path.dirname(__file__), "..", "data", "token_activations_large.safetensors"
+)
 
 
 def main():
@@ -55,8 +55,11 @@ def main():
     ebm = GibbsModel(config, key=key)
 
     def get_params(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_params(m, p):
         m.layers = list(p["layers"])
@@ -112,7 +115,7 @@ def main():
     print(f"\n{sep}")
     print(f"RESULTS: Per-Token EBM on {activations.shape[0]} tokens")
     print(sep)
-    print(f"  Previous (1860 tokens):  cal=87.8%, test=71.8%")
+    print("  Previous (1860 tokens):  cal=87.8%, test=71.8%")
     print(f"  This run ({activations.shape[0]} tokens):")
     print(f"    Train accuracy: {train_acc:.1%}")
     print(f"    Test accuracy:  {test_acc:.1%}")

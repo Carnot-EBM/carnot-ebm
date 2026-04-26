@@ -26,7 +26,7 @@ import json
 import os
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 
 # Activate Tier 0g before importing the pipeline, so STREAMING_COT_ENABLED is True.
 # WHY here rather than in a shell env: experiments run in-process by the conductor;
@@ -41,7 +41,9 @@ from carnot.pipeline.verify_repair import VerifyRepairPipeline
 EXPERIMENT_ID = 874
 TITLE = "StreamingCoT Tier 0g Integration into VerifyRepairPipeline"
 RESULT_PATH = os.path.join(
-    os.path.dirname(__file__), "..", "results",
+    os.path.dirname(__file__),
+    "..",
+    "results",
     "experiment_874_streaming_cot_integration.json",
 )
 
@@ -97,7 +99,7 @@ for i in range(13):
 
 def run_experiment() -> dict:
     """Run all 25 synthetic questions through VerifyRepairPipeline.verify()."""
-    started_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    started_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     t0 = time.monotonic()
 
     # Force the class attribute to True so the flag works even when the module
@@ -119,15 +121,17 @@ def run_experiment() -> dict:
             domain=None,
         )
         cert = result.certificate.get("tier_0g_streaming_cot", {})
-        results.append({
-            "idx": i,
-            "expected_error": expected_error,
-            "streaming_cot_unstable": result.streaming_cot_unstable,
-            "streaming_cot_phas": result.streaming_cot_phas,
-            "n_steps": cert.get("n_steps", 0),
-            "verified": result.verified,
-            "skipped": result.skipped,
-        })
+        results.append(
+            {
+                "idx": i,
+                "expected_error": expected_error,
+                "streaming_cot_unstable": result.streaming_cot_unstable,
+                "streaming_cot_phas": result.streaming_cot_phas,
+                "n_steps": cert.get("n_steps", 0),
+                "verified": result.verified,
+                "skipped": result.skipped,
+            }
+        )
 
     # Metrics
     n_total = len(results)
@@ -155,13 +159,13 @@ def run_experiment() -> dict:
     else:
         honest_verdict = "wired_low_coverage"
 
-    finished_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    finished_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     duration_s = round(time.monotonic() - t0, 3)
 
     artifact = {
         "experiment": EXPERIMENT_ID,
         "title": TITLE,
-        "run_date": datetime.now(timezone.utc).strftime("%Y%m%d"),
+        "run_date": datetime.now(UTC).strftime("%Y%m%d"),
         "started_at": started_at,
         "finished_at": finished_at,
         "duration_s": duration_s,
@@ -175,13 +179,26 @@ def run_experiment() -> dict:
         "skip_rate": skip_rate,
         "streaming_cot_enabled": VerifyRepairPipeline.STREAMING_COT_ENABLED,
         "per_response_results": results,
-        "schema": sorted([
-            "experiment", "title", "run_date", "started_at", "finished_at",
-            "duration_s", "status", "honest_verdict",
-            "n_questions", "n_correct_responses", "n_error_responses",
-            "streaming_cot_advisory_rate", "advisory_correct_prediction_rate",
-            "skip_rate", "streaming_cot_enabled", "per_response_results",
-        ]),
+        "schema": sorted(
+            [
+                "experiment",
+                "title",
+                "run_date",
+                "started_at",
+                "finished_at",
+                "duration_s",
+                "status",
+                "honest_verdict",
+                "n_questions",
+                "n_correct_responses",
+                "n_error_responses",
+                "streaming_cot_advisory_rate",
+                "advisory_correct_prediction_rate",
+                "skip_rate",
+                "streaming_cot_enabled",
+                "per_response_results",
+            ]
+        ),
         "invariant_violations": [],
     }
     return artifact

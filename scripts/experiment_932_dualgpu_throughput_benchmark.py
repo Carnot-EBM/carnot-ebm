@@ -374,8 +374,7 @@ def main() -> None:
         f"throughput={throughput_single_qps:.1f} qps"
     )
     print(
-        f"DualGPU     wall_time_s={wall_time_dual_s:.4f}  "
-        f"throughput={throughput_dual_qps:.1f} qps"
+        f"DualGPU     wall_time_s={wall_time_dual_s:.4f}  throughput={throughput_dual_qps:.1f} qps"
     )
     print(f"observed_speedup={observed_speedup:.3f}  verdict={honest_verdict}")
 

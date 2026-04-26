@@ -31,12 +31,11 @@ Spec: REQ-LEARN-024, SCENARIO-LEARN-041, SCENARIO-LEARN-042
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import jax
 import jax.numpy as jnp
-import jax.random as jrandom
 
 if TYPE_CHECKING:
     from carnot.embeddings.jepa_energy import ContextPredictionEnergy
@@ -255,9 +254,7 @@ def _text_to_embedding(text: str, embed_dim: int = 64) -> jax.Array:
     # Compute per-word scalar: mean char code / 128
     # str.split() on a non-empty string always yields at least one non-empty token,
     # so we iterate directly without guarding for empty words.
-    word_scalars: list[float] = [
-        sum(ord(c) for c in w) / (len(w) * 128.0) for w in words
-    ]
+    word_scalars: list[float] = [sum(ord(c) for c in w) / (len(w) * 128.0) for w in words]
 
     # Aggregate: mean of per-word scalars
     mean_val = sum(word_scalars) / len(word_scalars)
@@ -313,7 +310,7 @@ class JEPARetrainer:
 
     def __init__(
         self,
-        jepa_model: "ContextPredictionEnergy",
+        jepa_model: ContextPredictionEnergy,
         lr: float = 1e-4,
     ) -> None:
         self.model = jepa_model
@@ -437,7 +434,7 @@ class JEPARetrainer:
 
             def _energy_single(x: jax.Array) -> jax.Array:
                 h = x
-                for w, b in zip(layer_weights, layer_biases):
+                for w, b in zip(layer_weights, layer_biases, strict=False):
                     h = _apply_activation(w @ h + b, activation)
                 return output_weight @ h + output_bias
 
@@ -461,9 +458,7 @@ class JEPARetrainer:
             new_layers.append((new_w, new_b))
         self.model.layers = new_layers
         self.model.output_weight = self.model.output_weight - self.lr * grad_ow
-        self.model.output_bias = float(
-            jnp.array(self.model.output_bias) - self.lr * grad_ob
-        )
+        self.model.output_bias = float(jnp.array(self.model.output_bias) - self.lr * grad_ob)
 
         return float(loss_val)
 
@@ -517,7 +512,7 @@ class JEPARetrainer:
             return 0.5
 
         # Sort by energy descending (high energy = predicts violation)
-        scored = sorted(zip(energies, labels), key=lambda x: x[0], reverse=True)
+        scored = sorted(zip(energies, labels, strict=False), key=lambda x: x[0], reverse=True)
 
         tpr_pts = [0.0]
         fpr_pts = [0.0]

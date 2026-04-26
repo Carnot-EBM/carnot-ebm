@@ -151,8 +151,14 @@ def test_held_out_questions_index_range() -> None:
 def test_held_out_questions_have_required_keys() -> None:
     """Each question dict has all expected keys."""
     qs = _make_held_out_questions()
-    required = {"index", "question", "correct_answer", "response_correct",
-                "response_incorrect", "response_no_compute"}
+    required = {
+        "index",
+        "question",
+        "correct_answer",
+        "response_correct",
+        "response_incorrect",
+        "response_no_compute",
+    }
     for q in qs:
         assert required <= set(q.keys()), f"Missing keys in question {q.get('index')}"
 
@@ -400,5 +406,9 @@ def test_main_writes_deliverable_json(tmp_path: Path, monkeypatch: pytest.Monkey
 
     assert artifact["experiment"] == 696
     assert artifact["status"] == "success"
-    valid_verdicts = {"abstention_fp_reduced", "abstention_no_improvement", "abstention_recall_collapsed"}
+    valid_verdicts = {
+        "abstention_fp_reduced",
+        "abstention_no_improvement",
+        "abstention_recall_collapsed",
+    }
     assert artifact["honest_verdict"] in valid_verdicts

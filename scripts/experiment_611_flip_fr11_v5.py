@@ -93,6 +93,7 @@ tmpl.setup()
 # Helper: load JSON result file safely
 # ---------------------------------------------------------------------------
 
+
 def _load_result(path: str) -> dict:
     """Load a JSON experiment result, returning empty dict on any failure.
 
@@ -193,6 +194,7 @@ print(
 # ---------------------------------------------------------------------------
 # Step 5: Build FLIPRepairTriple list and run calibrator
 # ---------------------------------------------------------------------------
+
 
 def _embed_fn(text: str) -> list[float]:
     """Deterministic hash projection into 128-dim space.

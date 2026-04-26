@@ -33,9 +33,7 @@ def _load_module(tmp_root: Path | None = None) -> Any:
     """Load experiment_262 script as a module, optionally overriding repo root."""
     repo_root = Path(__file__).resolve().parents[2]
     module_path = repo_root / "scripts" / "experiment_262_calibration_corpus.py"
-    spec = importlib.util.spec_from_file_location(
-        "experiment_262_calibration_corpus", module_path
-    )
+    spec = importlib.util.spec_from_file_location("experiment_262_calibration_corpus", module_path)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     if tmp_root is not None:
@@ -48,9 +46,7 @@ def _load_module(tmp_root: Path | None = None) -> Any:
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     """Read a .jsonl file into a list of dicts."""
     return [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
+        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
     ]
 
 
@@ -291,9 +287,7 @@ def test_three_prefix_fractions_per_case(tmp_path: Any) -> None:
 
     counts = Counter(row["case_id"] for row in rows)
     for case_id, cnt in counts.items():
-        assert cnt == 3, (
-            f"case_id {case_id!r} has {cnt} rows, expected 3 (one per prefix fraction)"
-        )
+        assert cnt == 3, f"case_id {case_id!r} has {cnt} rows, expected 3 (one per prefix fraction)"
 
     # Each case must have all three fractions
     from collections import defaultdict

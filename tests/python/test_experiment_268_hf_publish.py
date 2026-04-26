@@ -93,7 +93,13 @@ class TestFormalClaimVerifierModelCard:
         from scripts.experiment_268_hf_publish import build_fcv_model_card
 
         card = build_fcv_model_card()
-        for route in ("arithmetic", "comparison", "cardinality", "set_membership", "boolean_entailment"):
+        for route in (
+            "arithmetic",
+            "comparison",
+            "cardinality",
+            "set_membership",
+            "boolean_entailment",
+        ):
             assert route in card, f"Model card missing route: {route}"
 
     def test_model_card_has_abstention_policy(self) -> None:

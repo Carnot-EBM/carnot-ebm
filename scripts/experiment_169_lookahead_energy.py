@@ -76,13 +76,13 @@ from carnot.pipeline.lookahead_energy import (
 # Simulation configuration
 # ---------------------------------------------------------------------------
 
-N_QUESTIONS = 50        # TruthfulQA subset size
-N_CORRECT = 25          # Half are "correct" (low energy)
-N_WRONG = 25            # Half are "incorrect" (high energy)
-VOCAB_SIZE = 1000       # Smaller vocab for fast CPU simulation
-N_TOKENS = 20           # Tokens per generated answer
-CORRECT_PEAK_LOGIT = 8.0    # Logit advantage for the argmax token (correct)
-WRONG_NOISE_STD = 0.5       # Std of Gaussian noise for uncertain logits (wrong)
+N_QUESTIONS = 50  # TruthfulQA subset size
+N_CORRECT = 25  # Half are "correct" (low energy)
+N_WRONG = 25  # Half are "incorrect" (high energy)
+VOCAB_SIZE = 1000  # Smaller vocab for fast CPU simulation
+N_TOKENS = 20  # Tokens per generated answer
+CORRECT_PEAK_LOGIT = 8.0  # Logit advantage for the argmax token (correct)
+WRONG_NOISE_STD = 0.5  # Std of Gaussian noise for uncertain logits (wrong)
 SEED = 169
 
 # Threshold sweep for precision/recall analysis
@@ -293,16 +293,18 @@ def run_benchmark() -> dict:
         labels.append(label)
         spilled_scores.append(spilled)
         lookahead_scores.append(lookahead)
-        per_sample.append({
-            "index": i,
-            "question": question,
-            "answer_type": answer_type,
-            "label": label,
-            "spilled_energy": spilled,
-            "lookahead_energy": lookahead,
-            "spilled_satisfied": spilled_satisfied,
-            "lookahead_satisfied": lookahead_satisfied,
-        })
+        per_sample.append(
+            {
+                "index": i,
+                "question": question,
+                "answer_type": answer_type,
+                "label": label,
+                "spilled_energy": spilled,
+                "lookahead_energy": lookahead,
+                "spilled_satisfied": spilled_satisfied,
+                "lookahead_satisfied": lookahead_satisfied,
+            }
+        )
 
     # Combined signal: max of spilled and lookahead (normalized to comparable scale).
     # We normalize each to [0,1] using the max over the dataset, then take max.
@@ -372,10 +374,7 @@ def run_benchmark() -> dict:
 
     # --- Print summary ---
     print("Results:")
-    print(
-        f"  AUROC (spilled only):    {auroc_spilled:.3f}  "
-        f"(baseline from Exp 157)"
-    )
+    print(f"  AUROC (spilled only):    {auroc_spilled:.3f}  (baseline from Exp 157)")
     print(
         f"  AUROC (lookahead only):  {auroc_lookahead:.3f}  "
         f"(target >{target_lookahead}, "
@@ -389,19 +388,17 @@ def run_benchmark() -> dict:
     print()
     print(f"  Precision @ spilled threshold {DEFAULT_SPILLED_THRESHOLD}:   {prec_spilled:.3f}")
     print(f"  Recall    @ spilled threshold {DEFAULT_SPILLED_THRESHOLD}:   {rec_spilled:.3f}")
-    print(
-        f"  Precision @ lookahead threshold {DEFAULT_LOOKAHEAD_THRESHOLD}: {prec_lookahead:.3f}"
-    )
-    print(
-        f"  Recall    @ lookahead threshold {DEFAULT_LOOKAHEAD_THRESHOLD}: {rec_lookahead:.3f}"
-    )
+    print(f"  Precision @ lookahead threshold {DEFAULT_LOOKAHEAD_THRESHOLD}: {prec_lookahead:.3f}")
+    print(f"  Recall    @ lookahead threshold {DEFAULT_LOOKAHEAD_THRESHOLD}: {rec_lookahead:.3f}")
     print()
     print(f"  Mean lookahead energy (correct answers): {mean_correct_la:.4f} nats/token")
     print(f"  Mean lookahead energy (wrong answers):   {mean_wrong_la:.4f} nats/token")
     print()
     print("Threshold sweep (lookahead):")
     for row in threshold_sweep:
-        print(f"  thr={row['threshold']:.1f}: precision={row['precision']:.3f} recall={row['recall']:.3f}")
+        print(
+            f"  thr={row['threshold']:.1f}: precision={row['precision']:.3f} recall={row['recall']:.3f}"
+        )
 
     return results_dict
 

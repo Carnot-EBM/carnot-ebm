@@ -408,9 +408,17 @@ class TestRunExperimentSchema:
         """
         results = self._run_full_experiment()
         required = {
-            "workflow_index", "topic", "n_steps_run", "injection_step",
-            "violation_detected", "rollback_performed", "rollback_success",
-            "steps_preserved", "verified_facts_before", "verified_facts_after", "error",
+            "workflow_index",
+            "topic",
+            "n_steps_run",
+            "injection_step",
+            "violation_detected",
+            "rollback_performed",
+            "rollback_success",
+            "steps_preserved",
+            "verified_facts_before",
+            "verified_facts_after",
+            "error",
         }
         for i, trial in enumerate(results["trials"]):
             missing = required - set(trial.keys())

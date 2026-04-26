@@ -262,9 +262,7 @@ def live_result() -> dict[str, Any]:
     This prevents spurious CI failures when Exp 328 has not been executed.
     """
     if not _LIVE_RESULT_PATH.exists():
-        pytest.skip(
-            f"Exp 328 artifact not found at {_LIVE_RESULT_PATH}; run Exp 328 first"
-        )
+        pytest.skip(f"Exp 328 artifact not found at {_LIVE_RESULT_PATH}; run Exp 328 first")
     with _LIVE_RESULT_PATH.open("r", encoding="utf-8") as fh:
         return json.load(fh)
 
@@ -444,22 +442,31 @@ class TestCompareToSimulated:
 
     def test_multiple_variants(self) -> None:
         """REQ-BENCH-002: divergence is computed for each corpus_variant independently."""
+
         # Build multi-variant per_model_results manually
         def pmr_multi(acc_all: float, acc_swap: float) -> dict[str, Any]:
             return {
                 "M": {
                     "baseline": {
                         "all": {
-                            "model_name": "M", "mode": "baseline",
-                            "corpus_variant": "all", "accuracy": acc_all,
-                            "ci_lower": 0.0, "ci_upper": 1.0,
-                            "n_correct": int(acc_all * 100), "n_total": 100,
+                            "model_name": "M",
+                            "mode": "baseline",
+                            "corpus_variant": "all",
+                            "accuracy": acc_all,
+                            "ci_lower": 0.0,
+                            "ci_upper": 1.0,
+                            "n_correct": int(acc_all * 100),
+                            "n_total": 100,
                         },
                         "number_swap": {
-                            "model_name": "M", "mode": "baseline",
-                            "corpus_variant": "number_swap", "accuracy": acc_swap,
-                            "ci_lower": 0.0, "ci_upper": 1.0,
-                            "n_correct": int(acc_swap * 100), "n_total": 100,
+                            "model_name": "M",
+                            "mode": "baseline",
+                            "corpus_variant": "number_swap",
+                            "accuracy": acc_swap,
+                            "ci_lower": 0.0,
+                            "ci_upper": 1.0,
+                            "n_correct": int(acc_swap * 100),
+                            "n_total": 100,
                         },
                     }
                 }
@@ -522,9 +529,7 @@ class TestCompareToPublishedBaseline:
 
     def test_empty_result_returns_empty(self) -> None:
         """REQ-BENCH-002: empty per_model_results returns empty deviations."""
-        deviations = compare_to_published_baseline(
-            {"per_model_results": {}}, PUBLISHED_BASELINES
-        )
+        deviations = compare_to_published_baseline({"per_model_results": {}}, PUBLISHED_BASELINES)
         assert deviations == {}
 
 

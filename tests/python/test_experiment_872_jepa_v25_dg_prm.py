@@ -76,12 +76,14 @@ class TestDomainReweightedLossWeights:
         for domain, n in domain_sizes.items():
             d_idx = DOMAIN_NAMES.index(domain) if domain in DOMAIN_NAMES else 0
             for i in range(n):
-                corpus.append({
-                    "text": f"sample {i} for {domain}",
-                    "label": i % 2,
-                    "domain": domain,
-                    "domain_idx": d_idx,
-                })
+                corpus.append(
+                    {
+                        "text": f"sample {i} for {domain}",
+                        "label": i % 2,
+                        "domain": domain,
+                        "domain_idx": d_idx,
+                    }
+                )
         return corpus
 
     def test_weights_sum_to_one(self) -> None:
@@ -210,6 +212,7 @@ class TestDomainReweightedLossWeightedLoss:
         Traces to: REQ-LEARN-050
         """
         import optax as _optax
+
         loss_fn = DomainReweightedLoss()
         logits = jnp.array([1.0, -1.0, 0.5, -0.5])
         labels = jnp.array([1.0, 0.0, 1.0, 0.0])
@@ -499,18 +502,22 @@ class TestTrainJepaV25Integration:
         corpus = []
         for d_idx, domain in enumerate(DOMAIN_NAMES):
             for i in range(4):
-                corpus.append({
-                    "text": f"Correct reasoning step {i} for {domain}.",
-                    "label": 1,
-                    "domain": domain,
-                    "domain_idx": d_idx,
-                })
-                corpus.append({
-                    "text": f"Incorrect wrong step {i} in {domain} with error.",
-                    "label": 0,
-                    "domain": domain,
-                    "domain_idx": d_idx,
-                })
+                corpus.append(
+                    {
+                        "text": f"Correct reasoning step {i} for {domain}.",
+                        "label": 1,
+                        "domain": domain,
+                        "domain_idx": d_idx,
+                    }
+                )
+                corpus.append(
+                    {
+                        "text": f"Incorrect wrong step {i} in {domain} with error.",
+                        "label": 0,
+                        "domain": domain,
+                        "domain_idx": d_idx,
+                    }
+                )
         return corpus
 
     def test_returns_params_and_log(self) -> None:
@@ -524,7 +531,14 @@ class TestTrainJepaV25Integration:
         """Training log must have: train_losses, val_losses, auc_per_domain, n_train, n_val, domain_weights."""
         corpus = self._make_mini_corpus()
         _, log = train_jepa_v25(corpus, n_epochs=3, batch_size=8)
-        for key in ("train_losses", "val_losses", "auc_per_domain", "n_train", "n_val", "domain_weights"):
+        for key in (
+            "train_losses",
+            "val_losses",
+            "auc_per_domain",
+            "n_train",
+            "n_val",
+            "domain_weights",
+        ):
             assert key in log, f"Missing key: {key}"
 
     def test_loss_decreases_over_training(self) -> None:
@@ -599,7 +613,9 @@ class TestBuildTriplets:
     def test_returns_three_arrays(self) -> None:
         """_build_triplets must return exactly 3 arrays."""
         X, labels, domains = self._simple_data()
-        assert len(_build_triplets(X, labels, domains, _init_v25_params(jax.random.PRNGKey(0)))) == 3
+        assert (
+            len(_build_triplets(X, labels, domains, _init_v25_params(jax.random.PRNGKey(0)))) == 3
+        )
 
     def test_delta_weights_clamped(self) -> None:
         """All ΔEnergy weights must be in [DELTA_ENERGY_MIN, DELTA_ENERGY_MAX]."""
@@ -637,8 +653,16 @@ class TestDeliverableArtifact:
     def test_required_schema_fields_present(self) -> None:
         """All base REQUIRED_RESULT_FIELDS must be present."""
         d = self._load()
-        for field in ("experiment", "schema", "run_date", "started_at",
-                      "finished_at", "duration_s", "status", "title"):
+        for field in (
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ):
             assert field in d, f"Missing: {field}"
 
     def test_experiment_id(self) -> None:

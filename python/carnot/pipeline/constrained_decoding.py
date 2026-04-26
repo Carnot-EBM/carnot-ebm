@@ -36,10 +36,6 @@ Spec: REQ-VERIFY-147, SCENARIO-VERIFY-175, SCENARIO-VERIFY-176
 from __future__ import annotations
 
 import ast
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from carnot.pipeline.extract import CodeExtractor
 
 # These error message fragments appear at end-of-file only — the parse is
 # incomplete but not yet broken. Any SyntaxError whose message contains one
@@ -169,12 +165,7 @@ class ASTValidator:
 
         # Step 3: Explicit recoverable-fragment messages override "in the middle"
         # — e.g., "was never closed" can appear for multi-line unterminated strings.
-        for frag in _RECOVERABLE_FRAGMENTS:
-            if frag.lower() in msg:
-                return True
-
-        # Step 4: Error is clearly in the middle of the source — irrecoverable.
-        return False
+        return any(frag.lower() in msg for frag in _RECOVERABLE_FRAGMENTS)
 
     def would_be_valid(self, partial_code: str, candidate_token: str) -> bool:
         """Return True if appending candidate_token keeps the parse recoverable.
@@ -190,9 +181,7 @@ class ASTValidator:
         combined = partial_code + candidate_token
         return self.is_recoverable_partial(combined)
 
-    def filter_invalid_tokens(
-        self, partial_code: str, candidate_tokens: list[str]
-    ) -> list[str]:
+    def filter_invalid_tokens(self, partial_code: str, candidate_tokens: list[str]) -> list[str]:
         """Return only tokens that produce recoverable partial parses when appended.
 
         **Detailed explanation for engineers:**
@@ -211,10 +200,7 @@ class ASTValidator:
         Returns:
             Subset of candidate_tokens that are syntactically safe to append.
         """
-        return [
-            tok for tok in candidate_tokens
-            if self.would_be_valid(partial_code, tok)
-        ]
+        return [tok for tok in candidate_tokens if self.would_be_valid(partial_code, tok)]
 
 
 class ConstrainedDecodingPreFilter:

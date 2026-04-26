@@ -26,9 +26,11 @@ from __future__ import annotations
 
 import enum
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
-from carnot.pipeline.extract import ConstraintResult
-from carnot.pipeline.verify_repair import VerificationResult, VerifyRepairPipeline
+if TYPE_CHECKING:
+    from carnot.pipeline.extract import ConstraintResult
+    from carnot.pipeline.verify_repair import VerificationResult, VerifyRepairPipeline
 
 
 class FactStatus(enum.Enum):
@@ -167,9 +169,7 @@ class ConstraintState:
 
         Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
         """
-        return [
-            f.constraint for f in self.facts.values() if f.constraint is not None
-        ]
+        return [f.constraint for f in self.facts.values() if f.constraint is not None]
 
     def snapshot(self) -> dict:
         """Produce a JSON-serializable snapshot of current state.

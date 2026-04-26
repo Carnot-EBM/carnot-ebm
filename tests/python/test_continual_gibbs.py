@@ -85,17 +85,13 @@ class TestContinualGibbsModelConstruction:
 
     def test_creation_default_key(self) -> None:
         """REQ-CORE-001: model creates without explicit key (uses default seed 0)."""
-        config = ContinualGibbsConfig(
-            gibbs=GibbsConfig(input_dim=8, hidden_dims=[4])
-        )
+        config = ContinualGibbsConfig(gibbs=GibbsConfig(input_dim=8, hidden_dims=[4]))
         model = ContinualGibbsModel(config)
         assert model.input_dim == 8
 
     def test_inherits_energy_function_protocol(self) -> None:
         """REQ-CORE-002: ContinualGibbsModel satisfies EnergyFunction protocol."""
-        config = ContinualGibbsConfig(
-            gibbs=GibbsConfig(input_dim=6, hidden_dims=[4])
-        )
+        config = ContinualGibbsConfig(gibbs=GibbsConfig(input_dim=6, hidden_dims=[4]))
         model = ContinualGibbsModel(config)
         assert isinstance(model, EnergyFunction)
 
@@ -201,9 +197,7 @@ class TestOrthogonalUpdates:
 
         for i, g in enumerate(model.gradient_buffer):
             norm = float(jnp.linalg.norm(g))
-            assert abs(norm - 1.0) < 1e-5, (
-                f"gradient_buffer[{i}] has norm {norm}, expected 1.0"
-            )
+            assert abs(norm - 1.0) < 1e-5, f"gradient_buffer[{i}] has norm {norm}, expected 1.0"
 
     def test_consecutive_buffer_entries_are_orthogonal(self) -> None:
         """REQ-CORE-001: Gram-Schmidt ensures gradient buffer entries are orthogonal.
@@ -298,9 +292,7 @@ class TestEnergyAndGradient:
 
     def test_energy_finite_before_update(self) -> None:
         """SCENARIO-CORE-001: energy is finite before any update_step."""
-        config = ContinualGibbsConfig(
-            gibbs=GibbsConfig(input_dim=8, hidden_dims=[4])
-        )
+        config = ContinualGibbsConfig(gibbs=GibbsConfig(input_dim=8, hidden_dims=[4]))
         model = ContinualGibbsModel(config, key=jrandom.PRNGKey(0))
         x = jrandom.normal(jrandom.PRNGKey(1), (8,))
         e = model.energy(x)
@@ -341,9 +333,7 @@ class TestEnergyAndGradient:
 
     def test_energy_batch_correct_shape(self) -> None:
         """SCENARIO-CORE-001: energy_batch returns correct shape."""
-        config = ContinualGibbsConfig(
-            gibbs=GibbsConfig(input_dim=8, hidden_dims=[4])
-        )
+        config = ContinualGibbsConfig(gibbs=GibbsConfig(input_dim=8, hidden_dims=[4]))
         model = ContinualGibbsModel(config, key=jrandom.PRNGKey(0))
         xs = jrandom.normal(jrandom.PRNGKey(1), (5, 8))
         energies = model.energy_batch(xs)
@@ -379,9 +369,7 @@ class TestDiagnosticHelpers:
 
     def test_gradient_buffer_size_zero_initially(self) -> None:
         """REQ-CORE-001: gradient_buffer_size() returns 0 before any update."""
-        config = ContinualGibbsConfig(
-            gibbs=GibbsConfig(input_dim=8, hidden_dims=[4])
-        )
+        config = ContinualGibbsConfig(gibbs=GibbsConfig(input_dim=8, hidden_dims=[4]))
         model = ContinualGibbsModel(config)
         assert model.gradient_buffer_size() == 0
 
@@ -400,15 +388,11 @@ class TestDiagnosticHelpers:
             model.update_step(x, step_idx)
 
         residual = model.orthogonality_residual(0, 1)
-        assert residual < 0.01, (
-            f"Steps 0 and 1 should be orthogonal, got residual={residual:.6f}"
-        )
+        assert residual < 0.01, f"Steps 0 and 1 should be orthogonal, got residual={residual:.6f}"
 
     def test_orthogonality_residual_index_error(self) -> None:
         """REQ-CORE-001: orthogonality_residual raises IndexError for out-of-range index."""
-        config = ContinualGibbsConfig(
-            gibbs=GibbsConfig(input_dim=8, hidden_dims=[4])
-        )
+        config = ContinualGibbsConfig(gibbs=GibbsConfig(input_dim=8, hidden_dims=[4]))
         model = ContinualGibbsModel(config)
         x = jrandom.normal(jrandom.PRNGKey(1), (8,))
         model.update_step(x, 0)

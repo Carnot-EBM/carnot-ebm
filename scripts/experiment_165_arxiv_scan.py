@@ -49,7 +49,7 @@ import time
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Any
 
 # ---------------------------------------------------------------------------
@@ -160,7 +160,7 @@ RELEVANCE_TERMS: list[tuple[str, float]] = [
     ("sampling", 1.5),
     ("continual learning", 2.0),
     ("language model", 2.0),
-    ("hallucination", 2.5),       # boosted: direct Carnot goal
+    ("hallucination", 2.5),  # boosted: direct Carnot goal
     ("safetensors", 1.5),
     ("jax", 1.5),
     ("differentiable", 1.5),
@@ -170,14 +170,14 @@ RELEVANCE_TERMS: list[tuple[str, float]] = [
     ("stochastic", 1.5),
     ("annealing", 1.5),
     ("belief propagation", 2.0),
-    ("jepa", 3.0),                # new milestone theme
-    ("joint embedding", 2.5),     # new milestone theme
+    ("jepa", 3.0),  # new milestone theme
+    ("joint embedding", 2.5),  # new milestone theme
     ("orthogonal projection", 2.5),  # new milestone theme
-    ("knowledge graph", 2.0),     # new milestone theme
-    ("factual", 2.0),             # new milestone theme
+    ("knowledge graph", 2.0),  # new milestone theme
+    ("factual", 2.0),  # new milestone theme
     ("catastrophic forgetting", 2.0),  # new milestone theme
-    ("repair", 1.5),              # constraint repair
-    ("fast-path", 2.0),           # JEPA fast-path
+    ("repair", 1.5),  # constraint repair
+    ("fast-path", 2.0),  # JEPA fast-path
 ]
 
 
@@ -274,9 +274,7 @@ def fetch_arxiv(query: str, max_results: int = MAX_PER_QUERY) -> list[dict[str, 
                 authors.append(name_el.text.strip())
 
         categories: list[str] = []
-        for cat_el in entry.findall(
-            "{http://arxiv.org/schemas/atom}primary_category", {}
-        ):
+        for cat_el in entry.findall("{http://arxiv.org/schemas/atom}primary_category", {}):
             term = cat_el.get("term", "")
             if term:
                 categories.append(term)
@@ -325,10 +323,8 @@ def score_paper(paper: dict[str, Any]) -> float:
 
     # Recency bonus
     try:
-        pub_date = datetime.strptime(paper["published"], "%Y-%m-%d").replace(
-            tzinfo=timezone.utc
-        )
-        now = datetime.now(tz=timezone.utc)
+        pub_date = datetime.strptime(paper["published"], "%Y-%m-%d").replace(tzinfo=UTC)
+        now = datetime.now(tz=UTC)
         age_days = (now - pub_date).days
         if age_days <= 30:
             score += 1.0
@@ -661,7 +657,7 @@ def run_scan() -> dict[str, Any]:
     """
     print("=" * 70)
     print("Experiment 165: ArXiv Research Scan")
-    print(f"Scan date: {datetime.now(tz=timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
+    print(f"Scan date: {datetime.now(tz=UTC).strftime('%Y-%m-%d %H:%M UTC')}")
     print(f"Earliest date filter: {EARLIEST_DATE}")
     print(f"Max papers per query: {MAX_PER_QUERY}, Max total: {MAX_PAPERS}")
     print("=" * 70)
@@ -743,7 +739,7 @@ def run_scan() -> dict[str, Any]:
 
     return {
         "experiment": "Exp 165",
-        "scan_date": datetime.now(tz=timezone.utc).isoformat(),
+        "scan_date": datetime.now(tz=UTC).isoformat(),
         "earliest_date_filter": EARLIEST_DATE,
         "queries_run": [q["tag"] for q in QUERIES],
         "total_fetched_unique": len(all_papers),
@@ -798,9 +794,7 @@ def update_references(results: dict[str, Any]) -> None:
 
         proposed_exp_md = ""
         if paper["proposed_experiment"]:
-            proposed_exp_md = (
-                f"\n- **Proposed experiment:** {paper['proposed_experiment']}"
-            )
+            proposed_exp_md = f"\n- **Proposed experiment:** {paper['proposed_experiment']}"
 
         entry = (
             f"\n### {paper['title']}\n"
@@ -840,10 +834,7 @@ def update_references(results: dict[str, Any]) -> None:
     with open(REFERENCES_PATH, "a", encoding="utf-8") as fh:
         fh.write(append_block)
 
-    print(
-        f"Appended {len(new_entries)} new paper(s) + milestone section "
-        f"to {REFERENCES_PATH}"
-    )
+    print(f"Appended {len(new_entries)} new paper(s) + milestone section to {REFERENCES_PATH}")
 
 
 def print_summary(results: dict[str, Any]) -> None:

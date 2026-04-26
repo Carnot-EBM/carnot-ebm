@@ -33,8 +33,12 @@ from carnot.inference.jepa_cpmi_pairs import JEPACPMIPair
 def _make_pair(question_id: str, n_correct: int = 2, n_incorrect: int = 2) -> JEPACPMIPair:
     """Build a minimal JEPACPMIPair with random embeddings for testing."""
     rng = np.random.RandomState(hash(question_id) % (2**31))
-    correct_embs = [jnp.array(rng.randn(exp580.EMBED_DIM).astype(np.float32)) for _ in range(n_correct)]
-    incorrect_embs = [jnp.array(rng.randn(exp580.EMBED_DIM).astype(np.float32)) for _ in range(n_incorrect)]
+    correct_embs = [
+        jnp.array(rng.randn(exp580.EMBED_DIM).astype(np.float32)) for _ in range(n_correct)
+    ]
+    incorrect_embs = [
+        jnp.array(rng.randn(exp580.EMBED_DIM).astype(np.float32)) for _ in range(n_incorrect)
+    ]
     return JEPACPMIPair(
         question_id=question_id,
         correct_embeddings=correct_embs,
@@ -53,23 +57,27 @@ def _make_corpus(n_correct: int = 4, n_incorrect: int = 4) -> list[dict]:
     """Build a minimal synthetic FOVER corpus with paired correct/incorrect entries."""
     entries = []
     for i in range(n_correct):
-        entries.append({
-            "question": f"Q{i}",
-            "response": f"Correct {i}",
-            "model_id": f"model_{i}",
-            "is_correct": True,
-            "constraint_types": ["correct", "correct"],
-            "cot_steps": [{"step_text": f"Step {i} ok"}],
-        })
+        entries.append(
+            {
+                "question": f"Q{i}",
+                "response": f"Correct {i}",
+                "model_id": f"model_{i}",
+                "is_correct": True,
+                "constraint_types": ["correct", "correct"],
+                "cot_steps": [{"step_text": f"Step {i} ok"}],
+            }
+        )
     for i in range(n_incorrect):
-        entries.append({
-            "question": f"Q{i}",   # Same question — forms a contrastive pair
-            "response": f"Wrong {i}",
-            "model_id": f"model_{i}_w",
-            "is_correct": False,
-            "constraint_types": ["incorrect", "incorrect"],
-            "cot_steps": [{"step_text": f"Step {i} wrong"}],
-        })
+        entries.append(
+            {
+                "question": f"Q{i}",  # Same question — forms a contrastive pair
+                "response": f"Wrong {i}",
+                "model_id": f"model_{i}_w",
+                "is_correct": False,
+                "constraint_types": ["incorrect", "incorrect"],
+                "cot_steps": [{"step_text": f"Step {i} wrong"}],
+            }
+        )
     return entries
 
 
@@ -114,6 +122,7 @@ class TestInitParams:
 
     def test_param_shapes(self):
         import jax.random as jrandom
+
         params = exp580._init_params(jrandom.PRNGKey(0), embed_dim=128)
         assert params["w1"].shape == (128, 128)
         assert params["b1"].shape == (128,)
@@ -122,6 +131,7 @@ class TestInitParams:
 
     def test_different_seeds_differ(self):
         import jax.random as jrandom
+
         p1 = exp580._init_params(jrandom.PRNGKey(0))
         p2 = exp580._init_params(jrandom.PRNGKey(99))
         assert float(jnp.sum(jnp.abs(p1["w1"] - p2["w1"]))) > 0.0
@@ -137,6 +147,7 @@ class TestModelFn:
 
     def test_returns_float(self):
         import jax.random as jrandom
+
         params = exp580._init_params(jrandom.PRNGKey(0))
         emb = jnp.ones(exp580.EMBED_DIM)
         result = exp580._model_fn(params, emb)
@@ -145,6 +156,7 @@ class TestModelFn:
     def test_can_exceed_unit_range(self):
         # No sigmoid -> energy can be > 1 or < 0 (needed for margin loss to work)
         import jax.random as jrandom
+
         # Large weights to push output outside [0,1]
         params = exp580._init_params(jrandom.PRNGKey(0))
         # Scale w1 weights to force extreme output
@@ -203,12 +215,14 @@ class TestEvaluateAucFromPairs:
 
     def test_returns_half_on_empty(self):
         import jax.random as jrandom
+
         params = exp580._init_params(jrandom.PRNGKey(0))
         auc = exp580._evaluate_auc_from_pairs(params, [])
         assert auc == pytest.approx(0.5)
 
     def test_returns_float_in_01(self):
         import jax.random as jrandom
+
         params = exp580._init_params(jrandom.PRNGKey(7))
         pairs = _make_pairs(5)
         auc = exp580._evaluate_auc_from_pairs(params, pairs)
@@ -226,12 +240,14 @@ class TestComputeContrastiveLossJax:
 
     def test_empty_pairs_returns_zero(self):
         import jax.random as jrandom
+
         params = exp580._init_params(jrandom.PRNGKey(0))
         loss = exp580._compute_contrastive_loss_jax(params, [], margin=1.0)
         assert float(loss) == pytest.approx(0.0)
 
     def test_loss_non_negative(self):
         import jax.random as jrandom
+
         params = exp580._init_params(jrandom.PRNGKey(1))
         pairs = _make_pairs(3)
         loss = exp580._compute_contrastive_loss_jax(params, pairs, margin=1.0)
@@ -267,6 +283,7 @@ class TestSaveModelSafetensors:
 
     def test_saves_file(self, tmp_path):
         import jax.random as jrandom
+
         params = exp580._init_params(jrandom.PRNGKey(3))
         out = tmp_path / "model_v11.safetensors"
         exp580.save_model_safetensors(params, out)
@@ -276,6 +293,7 @@ class TestSaveModelSafetensors:
     def test_saved_file_loadable(self, tmp_path):
         import jax.random as jrandom
         from safetensors.numpy import load_file
+
         params = exp580._init_params(jrandom.PRNGKey(4))
         out = tmp_path / "model_v11.safetensors"
         exp580.save_model_safetensors(params, out)
@@ -295,8 +313,12 @@ class TestTrainJepaV11:
         train_pairs = _make_pairs(6)
         val_pairs = _make_pairs(2)
         result = exp580.train_jepa_v11(
-            train_pairs=train_pairs, val_pairs=val_pairs,
-            margin=1.0, n_epochs=10, eval_every=5, seed=42,
+            train_pairs=train_pairs,
+            val_pairs=val_pairs,
+            margin=1.0,
+            n_epochs=10,
+            eval_every=5,
+            seed=42,
         )
         assert len(result) == 4
 
@@ -304,8 +326,12 @@ class TestTrainJepaV11:
         train_pairs = _make_pairs(6)
         val_pairs = _make_pairs(2)
         _, best_auc, best_epoch, eval_log = exp580.train_jepa_v11(
-            train_pairs=train_pairs, val_pairs=val_pairs,
-            margin=1.0, n_epochs=10, eval_every=5, seed=42,
+            train_pairs=train_pairs,
+            val_pairs=val_pairs,
+            margin=1.0,
+            n_epochs=10,
+            eval_every=5,
+            seed=42,
         )
         assert best_epoch > 0
         assert 0.0 <= best_auc <= 1.0
@@ -314,8 +340,12 @@ class TestTrainJepaV11:
         train_pairs = _make_pairs(6)
         val_pairs = _make_pairs(2)
         _, _, _, eval_log = exp580.train_jepa_v11(
-            train_pairs=train_pairs, val_pairs=val_pairs,
-            margin=1.0, n_epochs=10, eval_every=5, seed=42,
+            train_pairs=train_pairs,
+            val_pairs=val_pairs,
+            margin=1.0,
+            n_epochs=10,
+            eval_every=5,
+            seed=42,
         )
         assert len(eval_log) == 2
         assert "epoch" in eval_log[0]
@@ -326,8 +356,12 @@ class TestTrainJepaV11:
         train_pairs = _make_pairs(4)
         val_pairs = _make_pairs(2)
         best_params, _, _, _ = exp580.train_jepa_v11(
-            train_pairs=train_pairs, val_pairs=val_pairs,
-            margin=1.0, n_epochs=5, eval_every=5, seed=0,
+            train_pairs=train_pairs,
+            val_pairs=val_pairs,
+            margin=1.0,
+            n_epochs=5,
+            eval_every=5,
+            seed=0,
         )
         assert set(best_params.keys()) == {"w1", "b1", "w2", "b2"}
 
@@ -354,8 +388,10 @@ class TestMain:
         class _NoopWatchdog:
             def __init__(self, *a, **kw):
                 pass
+
             def __enter__(self):
                 return self
+
             def __exit__(self, *a):
                 pass
 
@@ -400,8 +436,12 @@ class TestMain:
         train_pairs = _make_pairs(6)
         val_pairs = _make_pairs(2)
         best_params, v11_auc, best_epoch, eval_log = exp580.train_jepa_v11(
-            train_pairs=train_pairs, val_pairs=val_pairs,
-            margin=1.0, n_epochs=10, eval_every=5, seed=42,
+            train_pairs=train_pairs,
+            val_pairs=val_pairs,
+            margin=1.0,
+            n_epochs=10,
+            eval_every=5,
+            seed=42,
         )
         auc_improvement = v11_auc - exp580.V10_AUC
         retro_resolved = v11_auc > 0.5
@@ -449,14 +489,21 @@ class TestMain:
         import carnot.pipeline.experiment_watchdog as ew_mod
 
         class _NoopWatchdog:
-            def __init__(self, *a, **kw): pass
-            def __enter__(self): return self
-            def __exit__(self, *a): pass
+            def __init__(self, *a, **kw):
+                pass
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                pass
 
         with (
             patch.object(ew_mod, "ExperimentTimeoutWatchdog", _NoopWatchdog),
             patch.object(exp580.ExperimentTemplate, "setup", lambda self: None),
-            patch.object(exp580.ExperimentTemplate, "assert_deliverable_written", lambda self: None),
+            patch.object(
+                exp580.ExperimentTemplate, "assert_deliverable_written", lambda self: None
+            ),
             patch.object(exp580, "_REPO_ROOT", new=tmp_path),
             patch.object(exp580, "CORPUS_V3_PATH", new=tmp_path / "no_v3.json"),
             patch.object(exp580, "CORPUS_V2_PATH", new=corpus_file),

@@ -47,6 +47,7 @@ from python.carnot.models.symbolic_kan import SymbolicKANConfig, SymbolicKANMode
 # Synthetic data generation
 # ---------------------------------------------------------------------------
 
+
 def _make_feature_vector(
     a: float,
     b: float,
@@ -95,9 +96,24 @@ def _make_feature_vector(
     eq_flag = 1.0 if claimed == correct else 0.0
 
     return np.array(
-        [a_n, b_n, c_n, k_n, delta_n, sign_delta, abs_delta,
-         is_add, is_mul, is_cmp, claimed_pos, correct_pos,
-         prod, summ, diff, eq_flag],
+        [
+            a_n,
+            b_n,
+            c_n,
+            k_n,
+            delta_n,
+            sign_delta,
+            abs_delta,
+            is_add,
+            is_mul,
+            is_cmp,
+            claimed_pos,
+            correct_pos,
+            prod,
+            summ,
+            diff,
+            eq_flag,
+        ],
         dtype=np.float32,
     )
 
@@ -143,6 +159,7 @@ def generate_synthetic_pairs(n: int = 200, seed: int = 42) -> tuple[np.ndarray, 
 # ---------------------------------------------------------------------------
 # AUC computation (ROC)
 # ---------------------------------------------------------------------------
+
 
 def compute_auc(
     model: SymbolicKANModel,
@@ -203,6 +220,7 @@ def compute_auc(
 # Interpretability examples
 # ---------------------------------------------------------------------------
 
+
 def make_interpretability_examples(
     model: SymbolicKANModel,
     xs_correct: np.ndarray,
@@ -232,22 +250,25 @@ def make_interpretability_examples(
             xi = xs_incorrect[0]
 
             from python.carnot.models.symbolic_kan import VOCAB
+
             sym_fn = VOCAB[label]
-            examples.append({
-                "node": node_idx,
-                "label": label,
-                "description": desc,
-                "correct_sample": {
-                    "feat_i1": float(xc[i1]),
-                    "feat_i2": float(xc[i2]),
-                    "symbolic_output": float(sym_fn(float(xc[i1]), float(xc[i2]))),
-                },
-                "incorrect_sample": {
-                    "feat_i1": float(xi[i1]),
-                    "feat_i2": float(xi[i2]),
-                    "symbolic_output": float(sym_fn(float(xi[i1]), float(xi[i2]))),
-                },
-            })
+            examples.append(
+                {
+                    "node": node_idx,
+                    "label": label,
+                    "description": desc,
+                    "correct_sample": {
+                        "feat_i1": float(xc[i1]),
+                        "feat_i2": float(xc[i2]),
+                        "symbolic_output": float(sym_fn(float(xc[i1]), float(xc[i2]))),
+                    },
+                    "incorrect_sample": {
+                        "feat_i1": float(xi[i1]),
+                        "feat_i2": float(xi[i2]),
+                        "symbolic_output": float(sym_fn(float(xi[i1]), float(xi[i2]))),
+                    },
+                }
+            )
 
     return examples
 
@@ -255,6 +276,7 @@ def make_interpretability_examples(
 # ---------------------------------------------------------------------------
 # Main experiment
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Experiment 937: Symbolic-KAN vs standard KAN AUC comparison."""
@@ -302,9 +324,7 @@ def main() -> None:
 
         top_labels = model.top_labels()
         label_counts = model.label_counts()
-        interp_examples = make_interpretability_examples(
-            model, xs_correct_eval, xs_incorrect_eval
-        )
+        interp_examples = make_interpretability_examples(model, xs_correct_eval, xs_incorrect_eval)
 
     if auc_symbolic > 0.70:
         honest_verdict = "symbolic_kan_viable"
@@ -313,37 +333,42 @@ def main() -> None:
     else:
         honest_verdict = "symbolic_kan_no_improvement"
 
-    result = tmpl.build_result({
-        "auc_standard": auc_standard,
-        "auc_symbolic": round(auc_symbolic, 4),
-        "delta_auc": round(delta_auc, 4),
-        "honest_verdict": honest_verdict,
-        "top_symbolic_labels": top_labels,
-        "label_counts": label_counts,
-        "interpretability_examples": interp_examples,
-        "final_train_loss": round(loss_history[-1], 4) if loss_history else None,
-        "n_train_pairs": 160,
-        "n_eval_pairs": 40,
-        "n_epochs": 60,
-        "symbolic_kan_config": {
-            "input_dim": config.input_dim,
-            "n_nodes": config.n_nodes,
-            "label_update_interval": config.label_update_interval,
-            "residual_amp": config.residual_amp,
-            "lr": config.lr,
+    result = tmpl.build_result(
+        {
+            "auc_standard": auc_standard,
+            "auc_symbolic": round(auc_symbolic, 4),
+            "delta_auc": round(delta_auc, 4),
+            "honest_verdict": honest_verdict,
+            "top_symbolic_labels": top_labels,
+            "label_counts": label_counts,
+            "interpretability_examples": interp_examples,
+            "final_train_loss": round(loss_history[-1], 4) if loss_history else None,
+            "n_train_pairs": 160,
+            "n_eval_pairs": 40,
+            "n_epochs": 60,
+            "symbolic_kan_config": {
+                "input_dim": config.input_dim,
+                "n_nodes": config.n_nodes,
+                "label_update_interval": config.label_update_interval,
+                "residual_amp": config.residual_amp,
+                "lr": config.lr,
+            },
+            "baseline_exp": 910,
+            "models_used": ["synthetic_embeddings_cpu_only"],
+            "tier": "FR-11 Tier 4",
         },
-        "baseline_exp": 910,
-        "models_used": ["synthetic_embeddings_cpu_only"],
-        "tier": "FR-11 Tier 4",
-    }, status="success")
+        status="success",
+    )
 
     deliverable_path = "results/experiment_937_symbolic_kan_constraint_verifier.json"
     os.makedirs("results", exist_ok=True)
     with open(deliverable_path, "w") as f:
         json.dump(result, f, indent=2)
 
-    print(f"[Exp 937] auc_symbolic={auc_symbolic:.4f}  auc_standard={auc_standard:.4f}  "
-          f"delta={delta_auc:+.4f}  verdict={honest_verdict}")
+    print(
+        f"[Exp 937] auc_symbolic={auc_symbolic:.4f}  auc_standard={auc_standard:.4f}  "
+        f"delta={delta_auc:+.4f}  verdict={honest_verdict}"
+    )
     print(f"[Exp 937] top_labels={top_labels}")
     print(f"[Exp 937] Written: {deliverable_path}")
 

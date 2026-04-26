@@ -364,17 +364,13 @@ class TestCheckPrereqsSubprocess:
 
     def test_zero_exit_code_means_present(self, tmp_path: Path) -> None:
         """SCENARIO-INFRA-010: check command exiting 0 means package is present."""
-        registry = self._registry_from_md(
-            "| truepkg | true | n/a | n/a | all |\n", tmp_path
-        )
+        registry = self._registry_from_md("| truepkg | true | n/a | n/a | all |\n", tmp_path)
         missing = registry.check_prereqs()
         assert "truepkg" not in missing
 
     def test_nonzero_exit_code_means_missing(self, tmp_path: Path) -> None:
         """SCENARIO-INFRA-010: check command exiting non-zero means package is missing."""
-        registry = self._registry_from_md(
-            "| falsepkg | false | n/a | n/a | all |\n", tmp_path
-        )
+        registry = self._registry_from_md("| falsepkg | false | n/a | n/a | all |\n", tmp_path)
         missing = registry.check_prereqs()
         assert "falsepkg" in missing
 
@@ -437,8 +433,7 @@ class TestCheckPrereqsSubprocess:
     def test_returns_empty_list_when_all_present(self, tmp_path: Path) -> None:
         """SCENARIO-INFRA-010: returns [] when all check commands exit 0."""
         registry = self._registry_from_md(
-            "| truepkg1 | true | n/a | n/a | all |\n"
-            "| truepkg2 | true | n/a | n/a | all |\n",
+            "| truepkg1 | true | n/a | n/a | all |\n| truepkg2 | true | n/a | n/a | all |\n",
             tmp_path,
         )
         missing = registry.check_prereqs()
@@ -446,9 +441,7 @@ class TestCheckPrereqsSubprocess:
 
     def test_returns_list_type(self, tmp_path: Path) -> None:
         """SCENARIO-INFRA-010: return type is always list."""
-        registry = self._registry_from_md(
-            "| truepkg | true | n/a | n/a | all |\n", tmp_path
-        )
+        registry = self._registry_from_md("| truepkg | true | n/a | n/a | all |\n", tmp_path)
         result = registry.check_prereqs()
         assert isinstance(result, list)
 
@@ -477,7 +470,9 @@ class TestIsPresent:
         from carnot.pipeline.host_prereq_registry import HostPrereqRegistry
 
         md = tmp_path / "empty.md"
-        md.write_text("| Package | Check Command | Install (Arch) | Install (Debian) | Required For |\n")
+        md.write_text(
+            "| Package | Check Command | Install (Arch) | Install (Debian) | Required For |\n"
+        )
         return HostPrereqRegistry(registry_path=md)
 
     def test_true_command_returns_present(self, tmp_path: Path) -> None:
@@ -553,14 +548,9 @@ class TestDualGpuAutoAssignment:
         )
 
     def _make_specs(self, n: int = 2) -> list[dict[str, Any]]:
-        return [
-            {"name": f"Model{i}", "hf_id": f"org/model{i}", "gpu": 0}
-            for i in range(n)
-        ]
+        return [{"name": f"Model{i}", "hf_id": f"org/model{i}", "gpu": 0} for i in range(n)]
 
-    def test_dual_gpu_auto_assigned_key_present_live_two_models(
-        self, tmp_path: Path
-    ) -> None:
+    def test_dual_gpu_auto_assigned_key_present_live_two_models(self, tmp_path: Path) -> None:
         """SCENARIO-INFRA-011: dual_gpu_auto_assigned key must be in result dict."""
         tmpl = self._make_template(tmp_path)
         specs = self._make_specs(2)
@@ -590,9 +580,7 @@ class TestDualGpuAutoAssignment:
         assert specs[1]["gpu"] == 1
         assert result["dual_gpu_auto_assigned"] is True
 
-    def test_two_models_one_gpu_all_assigned_to_zero(
-        self, tmp_path: Path, caplog
-    ) -> None:
+    def test_two_models_one_gpu_all_assigned_to_zero(self, tmp_path: Path, caplog) -> None:
         """SCENARIO-INFRA-011: with 1 GPU, all models assigned to GPU 0, RETRO-004 warning logged."""
         tmpl = self._make_template(tmp_path)
         specs = self._make_specs(2)
@@ -689,9 +677,7 @@ class TestDualGpuAutoAssignment:
         result = tmpl.setup_gpu(specs, prewarm_fn=self._make_prewarm_fn())
         assert "prewarm_time_s" in result
 
-    def test_gpu_count_detection_failure_falls_back_to_one(
-        self, tmp_path: Path
-    ) -> None:
+    def test_gpu_count_detection_failure_falls_back_to_one(self, tmp_path: Path) -> None:
         """SCENARIO-INFRA-011: if _get_gpu_count raises, falls back to 1 GPU (conservative)."""
         tmpl = self._make_template(tmp_path)
         specs = self._make_specs(2)

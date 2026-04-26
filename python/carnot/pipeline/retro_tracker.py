@@ -135,7 +135,7 @@ class RetroItemTracker:
         return {"items": [dict(item) for item in self._items]}
 
     @classmethod
-    def from_dict(cls, d: dict[str, Any]) -> "RetroItemTracker":
+    def from_dict(cls, d: dict[str, Any]) -> RetroItemTracker:
         """Restore a tracker from a dict produced by ``to_dict()``.
 
         Parameters

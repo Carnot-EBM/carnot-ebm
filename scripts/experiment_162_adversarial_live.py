@@ -94,15 +94,15 @@ ADVERSARIAL_DATA_PATH = RESULTS_DIR / "adversarial_gsm8k_data.json"
 # ---------------------------------------------------------------------------
 # Degradation multipliers from Apple paper for ~1B models (same as Exp 147).
 VARIANTS: list[tuple[str, str, float]] = [
-    ("control",             "Control (standard)",   1.0),
-    ("number_swapped",      "Number-swapped",        1.8),
-    ("irrelevant_injected", "Irrelevant-injected",   1.5),
-    ("combined",            "Combined adversarial",  2.2),
+    ("control", "Control (standard)", 1.0),
+    ("number_swapped", "Number-swapped", 1.8),
+    ("irrelevant_injected", "Irrelevant-injected", 1.5),
+    ("combined", "Combined adversarial", 2.2),
 ]
 
 MODES: list[tuple[str, str]] = [
-    ("baseline",      "Baseline (no verification)"),
-    ("verify",        "Verify-only (flag, no repair)"),
+    ("baseline", "Baseline (no verification)"),
+    ("verify", "Verify-only (flag, no repair)"),
     ("verify_repair", "Verify-repair (up to 3 iters)"),
 ]
 
@@ -171,9 +171,12 @@ def load_adversarial_data() -> dict[str, list[dict[str, Any]]]:
     print("  adversarial_gsm8k_data.json not found — regenerating via Exp 119 logic...")
     try:
         import subprocess
+
         result = subprocess.run(
             [sys.executable, str(REPO_ROOT / "scripts/experiment_119_adversarial_gsm8k.py")],
-            capture_output=True, text=True, timeout=120,
+            capture_output=True,
+            text=True,
+            timeout=120,
         )
         if result.returncode == 0 and ADVERSARIAL_DATA_PATH.exists():
             print("  Regenerated successfully.")
@@ -397,9 +400,7 @@ def simulate_baseline_response(
                 )
 
     # Non-NoOp errors.
-    error_type = rng.choices(
-        ["arithmetic", "logic", "reading"], weights=[50, 35, 15], k=1
-    )[0]
+    error_type = rng.choices(["arithmetic", "logic", "reading"], weights=[50, 35, 15], k=1)[0]
 
     if error_type == "arithmetic":
         # Wrong arithmetic step — Ising will catch this and trigger repair.
@@ -417,18 +418,11 @@ def simulate_baseline_response(
         # No incorrect arithmetic steps — Ising passes this.
         offset = rng.choice([-20, -10, -5, 5, 10, 20])
         wrong = gt + offset
-        return (
-            f"Let me work through this.\n"
-            f"The result is {wrong}.\n"
-            f"Answer: {wrong}"
-        )
+        return f"Let me work through this.\nThe result is {wrong}.\nAnswer: {wrong}"
 
     # Reading comprehension: wildly wrong.
     wrong = gt * rng.choice([2, 3]) + rng.randint(-50, 50)
-    return (
-        f"I think the answer is {wrong}.\n"
-        f"Answer: {wrong}"
-    )
+    return f"I think the answer is {wrong}.\nAnswer: {wrong}"
 
 
 # ---------------------------------------------------------------------------
@@ -487,9 +481,7 @@ def simulate_ising_verify(response: str, error_type: str | None) -> dict[str, An
             except ZeroDivisionError:
                 continue
             if abs(claimed - correct_val) > 0.01:
-                violations.append(
-                    f"{a} {op} {b} = {claimed} (correct: {correct_val:.0f})"
-                )
+                violations.append(f"{a} {op} {b} = {claimed} (correct: {correct_val:.0f})")
 
     energy = len(violations) * 1.2 if violations else 0.0
 
@@ -589,10 +581,12 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
         try:
             print(f"    Loading {model_name} on {device}...")
             tokenizer = AutoTokenizer.from_pretrained(
-                model_name, trust_remote_code=trust,
+                model_name,
+                trust_remote_code=trust,
             )
             model = AutoModelForCausalLM.from_pretrained(
-                model_name, trust_remote_code=trust,
+                model_name,
+                trust_remote_code=trust,
                 torch_dtype=torch.float16 if device == "cuda" else None,
             )
             if device == "cuda":
@@ -605,7 +599,9 @@ def load_model(config: dict[str, Any]) -> tuple[Any, Any, str, bool]:
                 test_input = {k: v.cuda() for k, v in test_input.items()}
             with torch.no_grad():
                 _ = model.generate(
-                    **test_input, max_new_tokens=4, do_sample=False,
+                    **test_input,
+                    max_new_tokens=4,
+                    do_sample=False,
                     pad_token_id=tokenizer.eos_token_id,
                 )
             print(f"    Loaded {model_name} successfully.")
@@ -638,13 +634,17 @@ def generate_response_live(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             text = prompt
@@ -662,7 +662,7 @@ def generate_response_live(
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:],
+        outputs[0, inputs["input_ids"].shape[1] :],
         skip_special_tokens=True,
     )
 
@@ -678,6 +678,7 @@ def unload_model(model: Any, tokenizer: Any, device: str) -> None:
     del model, tokenizer
     try:
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
     except ImportError:
@@ -731,7 +732,12 @@ def evaluate_item(
         baseline_response = generate_response_live(prompt, tokenizer, model_obj, device)
     else:
         baseline_response = simulate_baseline_response(
-            item, model_name, base_error_rate, variant_key, multiplier, sim_rng,
+            item,
+            model_name,
+            base_error_rate,
+            variant_key,
+            multiplier,
+            sim_rng,
         )
 
     extracted = extract_final_number(baseline_response)
@@ -754,13 +760,17 @@ def evaluate_item(
     t2 = time.time()
     if verify_result["verified"]:
         repair_result: dict[str, Any] = {
-            "repaired": False, "n_iters": 0,
-            "final_correct": baseline_correct, "iteration_history": [],
+            "repaired": False,
+            "n_iters": 0,
+            "final_correct": baseline_correct,
+            "iteration_history": [],
         }
         vr_correct = baseline_correct
     else:
         repair_result = simulate_repair(
-            item, error_type or "logic_error", repair_rng,
+            item,
+            error_type or "logic_error",
+            repair_rng,
         )
         vr_correct = repair_result["final_correct"]
     repair_time = time.time() - t2
@@ -812,10 +822,7 @@ def bootstrap_ci(
     arr = np.array(correct_flags, dtype=float)
     n = len(arr)
     rng = np.random.default_rng(seed)
-    sample_means = np.array([
-        arr[rng.integers(0, n, size=n)].mean()
-        for _ in range(n_resamples)
-    ])
+    sample_means = np.array([arr[rng.integers(0, n, size=n)].mean() for _ in range(n_resamples)])
     alpha = 1.0 - confidence
     return (
         float(np.percentile(sample_means, 100 * alpha / 2)),
@@ -949,10 +956,7 @@ def permutation_test_hypothesis(
             f"at p<0.05 (p={p_value:.4f})."
         )
     else:
-        interp = (
-            f"Hypothesis NOT supported: adversarial delta ≤ control delta "
-            f"(p={p_value:.4f})."
-        )
+        interp = f"Hypothesis NOT supported: adversarial delta ≤ control delta (p={p_value:.4f})."
 
     return {
         "observed_stat": round(observed_stat, 4),
@@ -1007,10 +1011,7 @@ def compute_variant_metrics(
     def acc_metrics(flags: list[bool]) -> dict[str, Any]:
         acc = sum(flags) / n if n > 0 else 0.0
         ci_lo, ci_hi = bootstrap_ci(flags)
-        drop = (
-            (control_baseline_acc - acc) * 100.0
-            if control_baseline_acc is not None else None
-        )
+        drop = (control_baseline_acc - acc) * 100.0 if control_baseline_acc is not None else None
         return {
             "accuracy": round(acc, 4),
             "accuracy_pct": round(acc * 100, 2),
@@ -1026,9 +1027,7 @@ def compute_variant_metrics(
     baseline_acc = baseline_m["accuracy"]
     vr_acc = vr_m["accuracy"]
     delta_pp = round((vr_acc - baseline_acc) * 100.0, 2)
-    verify_m["delta_pp_vs_baseline"] = round(
-        (verify_m["accuracy"] - baseline_acc) * 100.0, 2
-    )
+    verify_m["delta_pp_vs_baseline"] = round((verify_m["accuracy"] - baseline_acc) * 100.0, 2)
     vr_m["delta_pp_vs_baseline"] = delta_pp
 
     n_abstained = sum(r["verify"]["abstained"] for r in item_results)
@@ -1036,14 +1035,15 @@ def compute_variant_metrics(
     verify_m["n_abstained"] = n_abstained
     verify_m["abstention_rate"] = round(n_abstained / n, 4) if n > 0 else 0.0
     verified_correct = sum(
-        1 for r in item_results
-        if not r["verify"]["abstained"] and r["baseline"]["correct"]
+        1 for r in item_results if not r["verify"]["abstained"] and r["baseline"]["correct"]
     )
     verify_m["precision"] = round(verified_correct / n_verified, 4) if n_verified > 0 else 0.0
 
     error_types = [
-        "arithmetic_error", "irrelevant_number_error",
-        "logic_error", "reading_comprehension_error",
+        "arithmetic_error",
+        "irrelevant_number_error",
+        "logic_error",
+        "reading_comprehension_error",
     ]
     error_counts: dict[str, int] = {et: 0 for et in error_types}
     for r in item_results:
@@ -1059,16 +1059,15 @@ def compute_variant_metrics(
     # These items have error_type == "irrelevant_number_error" but verify["verified"]=True.
     irrel_total = error_counts.get("irrelevant_number_error", 0)
     irrel_passed_ising = sum(
-        1 for r in item_results
-        if r.get("error_type") == "irrelevant_number_error"
-        and r["verify"]["verified"]
+        1
+        for r in item_results
+        if r.get("error_type") == "irrelevant_number_error" and r["verify"]["verified"]
     )
     irrel_pass_rate = round(irrel_passed_ising / irrel_total, 4) if irrel_total > 0 else None
 
     # Count items improved by verify-repair (correct in VR, wrong in baseline).
     n_improved_by_vr = sum(
-        1 for r in item_results
-        if r["verify_repair"]["correct"] and not r["baseline"]["correct"]
+        1 for r in item_results if r["verify_repair"]["correct"] and not r["baseline"]["correct"]
     )
 
     return {
@@ -1142,7 +1141,9 @@ def compute_adversarial_ratio(
         "interpretation": (
             f"Verify-repair is {pooled_ratio:.2f}× more beneficial on adversarial "
             f"inputs than on standard control inputs."
-        ) if pooled_ratio is not None else "Insufficient data.",
+        )
+        if pooled_ratio is not None
+        else "Insufficient data.",
     }
 
 
@@ -1185,7 +1186,8 @@ def check_exp122_replication(all_model_results: dict[str, Any]) -> dict[str, Any
     observed = round(total_passed / total_irrel, 4) if total_irrel > 0 else None
     matches = (
         abs(observed - exp122_reference) < 0.10  # within 10pp of the reference
-        if observed is not None else False
+        if observed is not None
+        else False
     )
 
     return {
@@ -1198,7 +1200,9 @@ def check_exp122_replication(all_model_results: dict[str, Any]) -> dict[str, Any
             f"Observed {observed:.1%} pass-through rate for irrelevant-number errors "
             f"vs. Exp 122 reference of {exp122_reference:.1%}. "
             + ("Replicates." if matches else "DEVIATION — investigate simulation.")
-        ) if observed is not None else "No irrelevant-number errors observed.",
+        )
+        if observed is not None
+        else "No irrelevant-number errors observed.",
     }
 
 
@@ -1253,8 +1257,10 @@ def run_experiment() -> dict[str, Any]:
         if use_live:
             print(f"  Live model loaded on {device}.")
         else:
-            print(f"  Live model unavailable — using adversarial simulation "
-                  f"(Apple-calibrated error rates).")
+            print(
+                f"  Live model unavailable — using adversarial simulation "
+                f"(Apple-calibrated error rates)."
+            )
 
         # Seeds: match Exp 120/121/147 conventions for cross-experiment comparability.
         sim_seed = sum(ord(c) for c in model_name) + 120
@@ -1275,12 +1281,19 @@ def run_experiment() -> dict[str, Any]:
 
             for i, item in enumerate(items):
                 if (i + 1) % 50 == 0:
-                    print(f"    [{i+1}/{n}] {time.time()-t_var:.1f}s elapsed...")
+                    print(f"    [{i + 1}/{n}] {time.time() - t_var:.1f}s elapsed...")
                 result = evaluate_item(
-                    item, variant_key, multiplier,
-                    model_name, base_error_rate,
-                    tokenizer, model_obj, device, use_live,
-                    sim_rng, repair_rng,
+                    item,
+                    variant_key,
+                    multiplier,
+                    model_name,
+                    base_error_rate,
+                    tokenizer,
+                    model_obj,
+                    device,
+                    use_live,
+                    sim_rng,
+                    repair_rng,
                 )
                 item_results.append(result)
 
@@ -1297,8 +1310,11 @@ def run_experiment() -> dict[str, Any]:
             delta = metrics["improvement_delta_pp"]
             print(
                 f"    Baseline: {b['accuracy_pct']:.1f}%"
-                + (f" (drop: {b['accuracy_drop_pp']:+.1f}pp vs ctrl)"
-                   if b["accuracy_drop_pp"] is not None else "")
+                + (
+                    f" (drop: {b['accuracy_drop_pp']:+.1f}pp vs ctrl)"
+                    if b["accuracy_drop_pp"] is not None
+                    else ""
+                )
                 + f"  →  VR: {vr['accuracy_pct']:.1f}%"
                 + f"  Δ={delta:+.1f}pp"
                 + f"  [{t_var_elapsed:.1f}s]"
@@ -1334,11 +1350,13 @@ def run_experiment() -> dict[str, Any]:
             model_variant_results[vk]["metrics"]["improvement_delta_pp"]
             for vk in ("number_swapped", "irrelevant_injected", "combined")
         ]
-        hypothesis_data.append({
-            "model": model_name,
-            "control_delta": ctrl_delta,
-            "adversarial_deltas": adv_deltas,
-        })
+        hypothesis_data.append(
+            {
+                "model": model_name,
+                "control_delta": ctrl_delta,
+                "adversarial_deltas": adv_deltas,
+            }
+        )
 
         if use_live:
             unload_model(model_obj, tokenizer, device)
@@ -1363,9 +1381,7 @@ def run_experiment() -> dict[str, Any]:
 
     # (a) Permutation test on improvement deltas.
     all_ctrl_deltas = [d["control_delta"] for d in hypothesis_data]
-    all_adv_deltas = [
-        delta for d in hypothesis_data for delta in d["adversarial_deltas"]
-    ]
+    all_adv_deltas = [delta for d in hypothesis_data for delta in d["adversarial_deltas"]]
     perm_result = permutation_test_hypothesis(all_ctrl_deltas, all_adv_deltas)
 
     # (b) Two-proportion z-test on per-question improvement counts.
@@ -1388,11 +1404,17 @@ def run_experiment() -> dict[str, Any]:
     # (d) Exp 122 replication.
     exp122_check = check_exp122_replication(all_model_results)
 
-    print(f"  Permutation test: p={perm_result['p_value']:.4f} "
-          f"({'SIGNIFICANT' if perm_result['significant_p05'] else 'not sig'})")
-    print(f"  Z-test:           p={ztest_result['p_value']:.4f} "
-          f"({'SIGNIFICANT' if ztest_result['significant_p05'] else 'not sig'})")
-    print(f"  Convergent sig:   {'YES — HYPOTHESIS CONFIRMED' if statistical_significance else 'NO'}")
+    print(
+        f"  Permutation test: p={perm_result['p_value']:.4f} "
+        f"({'SIGNIFICANT' if perm_result['significant_p05'] else 'not sig'})"
+    )
+    print(
+        f"  Z-test:           p={ztest_result['p_value']:.4f} "
+        f"({'SIGNIFICANT' if ztest_result['significant_p05'] else 'not sig'})"
+    )
+    print(
+        f"  Convergent sig:   {'YES — HYPOTHESIS CONFIRMED' if statistical_significance else 'NO'}"
+    )
     print(f"  Adv/ctrl ratio:   {adversarial_ratio['pooled_ratio']:.2f}×")
     print(f"  Exp 122 check:    {exp122_check['interpretation']}")
     print()
@@ -1409,8 +1431,10 @@ def run_experiment() -> dict[str, Any]:
                 "baseline_pct": m["baseline"]["accuracy_pct"],
                 "verify_repair_pct": m["verify_repair"]["accuracy_pct"],
                 "delta_pp": m["improvement_delta_pp"],
-                "ci_95": [m["verify_repair"]["ci_95_lo"] * 100,
-                          m["verify_repair"]["ci_95_hi"] * 100],
+                "ci_95": [
+                    m["verify_repair"]["ci_95_lo"] * 100,
+                    m["verify_repair"]["ci_95_hi"] * 100,
+                ],
             }
 
     improvement_deltas: dict[str, Any] = {}
@@ -1458,10 +1482,12 @@ def run_experiment() -> dict[str, Any]:
         "ci_95": {
             model_name: {
                 vk: [
-                    all_model_results[model_name]["variants"][vk]["metrics"]
-                        ["verify_repair"]["ci_95_lo"],
-                    all_model_results[model_name]["variants"][vk]["metrics"]
-                        ["verify_repair"]["ci_95_hi"],
+                    all_model_results[model_name]["variants"][vk]["metrics"]["verify_repair"][
+                        "ci_95_lo"
+                    ],
+                    all_model_results[model_name]["variants"][vk]["metrics"]["verify_repair"][
+                        "ci_95_hi"
+                    ],
                 ]
                 for vk, _, _ in VARIANTS
             }
@@ -1507,7 +1533,7 @@ def print_results_table(results: dict[str, Any]) -> None:
     for model_name in models:
         mdata = results["models"][model_name]
         for mode_key, mode_label in [("baseline", "Baseline"), ("verify_repair", "→ VR")]:
-            row = f"  {(model_name[:18]+' '+mode_label[:5]):<24}"
+            row = f"  {(model_name[:18] + ' ' + mode_label[:5]):<24}"
             for vk in variant_keys:
                 m = mdata["variants"][vk]["metrics"]
                 acc = m[mode_key]["accuracy_pct"]
@@ -1551,7 +1577,7 @@ def print_results_table(results: dict[str, Any]) -> None:
             f"    {'Variant':<24} {'Arith(↑)':>9} {'Irrel(∅)':>9} "
             f"{'Logic(∅)':>9} {'Read(∅)':>9} {'%Catch':>8} {'IrrelPass':>10}"
         )
-        print(f"    {'-'*82}")
+        print(f"    {'-' * 82}")
         mdata = results["models"][model_name]
         for vk in variant_keys:
             m = mdata["variants"][vk]["metrics"]
@@ -1577,14 +1603,18 @@ def print_results_table(results: dict[str, Any]) -> None:
     zt = results["hypothesis_test_ztest"]
     print(f"  Permutation test (N={pt['n_permutations']:,}):")
     print(f"    Observed stat (mean adv Δ − ctrl Δ): {pt['observed_stat']:+.2f} pp")
-    print(f"    p-value:  {pt['p_value']:.4f}  {'SIGNIFICANT p<0.05' if pt['significant_p05'] else 'not significant'}")
+    print(
+        f"    p-value:  {pt['p_value']:.4f}  {'SIGNIFICANT p<0.05' if pt['significant_p05'] else 'not significant'}"
+    )
     print(f"    {pt['interpretation']}")
     print()
     print(f"  Two-proportion z-test (VR improvement rate: ctrl vs. adversarial):")
     print(f"    Control improvement rate:     {zt['p1_improvement_rate']:.3f}")
     print(f"    Adversarial improvement rate: {zt['p2_improvement_rate']:.3f}")
     print(f"    z-statistic: {zt['z_stat']:.4f}")
-    print(f"    p-value:     {zt['p_value']:.4f}  {'SIGNIFICANT p<0.05' if zt['significant_p05'] else 'not significant'}")
+    print(
+        f"    p-value:     {zt['p_value']:.4f}  {'SIGNIFICANT p<0.05' if zt['significant_p05'] else 'not significant'}"
+    )
     print()
     sig = results["statistical_significance"]
     print(f"  CONVERGENT SIGNIFICANCE (both tests p<0.05): {'YES' if sig else 'NO'}")
@@ -1608,7 +1638,11 @@ def print_results_table(results: dict[str, Any]) -> None:
     print(SEP)
     e122 = results["exp122_replication"]
     print(f"  Reference (Exp 122): {e122['exp122_reference_rate']:.1%} pass-through rate")
-    print(f"  Observed:            {e122['observed_pass_rate']:.1%}" if e122["observed_pass_rate"] else "  Observed: N/A")
+    print(
+        f"  Observed:            {e122['observed_pass_rate']:.1%}"
+        if e122["observed_pass_rate"]
+        else "  Observed: N/A"
+    )
     print(f"  Total irrel errors:  {e122['total_irrelevant_errors']}")
     print(f"  Passed Ising:        {e122['total_passed_ising']}")
     print(f"  Replicates Exp 122:  {'YES' if e122['matches_exp122'] else 'NO'}")

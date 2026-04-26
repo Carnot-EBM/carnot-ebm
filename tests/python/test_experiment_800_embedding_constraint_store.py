@@ -6,6 +6,7 @@ correctly bootstraps from legacy CaseMemory pattern dicts.
 
 Spec: REQ-LEARN-057, REQ-LEARN-058, REQ-LEARN-059, SCENARIO-LEARN-098
 """
+
 from __future__ import annotations
 
 import math
@@ -84,7 +85,9 @@ class TestConstraintSPOTuple:
     def test_embedding_field_accepts_list(self) -> None:
         """embedding field must accept a list[float] (populated after store())."""
         spo = ConstraintSPOTuple(
-            subject="x", predicate="y", object="z",
+            subject="x",
+            predicate="y",
+            object="z",
             embedding=[0.1, -0.2, 0.3],
             source_violation_type="unit",
         )
@@ -110,8 +113,11 @@ class TestOrthogonalize:
 
         # Store first constraint — gets L2-normalized but not projected (store is empty).
         spo1 = ConstraintSPOTuple(
-            subject="arithmetic_carry", predicate="violates", object="carry_propagation",
-            embedding=None, source_violation_type="carry",
+            subject="arithmetic_carry",
+            predicate="violates",
+            object="carry_propagation",
+            embedding=None,
+            source_violation_type="carry",
         )
         store.store(spo1)
         assert spo1.embedding is not None
@@ -119,8 +125,11 @@ class TestOrthogonalize:
 
         # Store second constraint — should be projected out of e1's direction.
         spo2 = ConstraintSPOTuple(
-            subject="numeric_sign", predicate="violates", object="sign_preservation",
-            embedding=None, source_violation_type="sign",
+            subject="numeric_sign",
+            predicate="violates",
+            object="sign_preservation",
+            embedding=None,
+            source_violation_type="sign",
         )
         store.store(spo2)
         assert spo2.embedding is not None
@@ -134,8 +143,11 @@ class TestOrthogonalize:
         """The orthogonalized embedding must be L2-normalized (norm ≈ 1.0)."""
         store = _make_store()
         spo = ConstraintSPOTuple(
-            subject="unit_label", predicate="violates", object="unit_consistency",
-            embedding=None, source_violation_type="unit",
+            subject="unit_label",
+            predicate="violates",
+            object="unit_consistency",
+            embedding=None,
+            source_violation_type="unit",
         )
         store.store(spo)
         assert spo.embedding is not None
@@ -169,8 +181,11 @@ class TestRetrieve:
         store = _make_store()
         for vtype in ["carry", "sign", "unit", "comparison", "causal"]:
             spo = ConstraintSPOTuple(
-                subject=vtype, predicate="violates", object=f"{vtype}_rule",
-                embedding=None, source_violation_type=vtype,
+                subject=vtype,
+                predicate="violates",
+                object=f"{vtype}_rule",
+                embedding=None,
+                source_violation_type=vtype,
             )
             store.store(spo)
 
@@ -181,8 +196,11 @@ class TestRetrieve:
         """retrieve() must return ConstraintSPOTuple objects."""
         store = _make_store()
         spo = ConstraintSPOTuple(
-            subject="arithmetic_carry", predicate="violates", object="carry_propagation",
-            embedding=None, source_violation_type="carry",
+            subject="arithmetic_carry",
+            predicate="violates",
+            object="carry_propagation",
+            embedding=None,
+            source_violation_type="carry",
         )
         store.store(spo)
         results = store.retrieve("carry error query", top_k=1)
@@ -201,8 +219,11 @@ class TestRetrieve:
         assert store.retrieval_auc([], []) == 0.0
         # Store has entries but queries is empty
         spo = ConstraintSPOTuple(
-            subject="s", predicate="p", object="o",
-            embedding=None, source_violation_type="carry",
+            subject="s",
+            predicate="p",
+            object="o",
+            embedding=None,
+            source_violation_type="carry",
         )
         store.store(spo)
         assert store.retrieval_auc([], []) == 0.0
@@ -211,8 +232,11 @@ class TestRetrieve:
         """When there is only one stored constraint, all queries must retrieve it (AUC=1.0)."""
         store = _make_store()
         spo = ConstraintSPOTuple(
-            subject="arithmetic_carry", predicate="violates", object="carry_propagation",
-            embedding=None, source_violation_type="carry",
+            subject="arithmetic_carry",
+            predicate="violates",
+            object="carry_propagation",
+            embedding=None,
+            source_violation_type="carry",
         )
         store.store(spo)
         # With only one entry in store, every query retrieves it → AUC = 1.0

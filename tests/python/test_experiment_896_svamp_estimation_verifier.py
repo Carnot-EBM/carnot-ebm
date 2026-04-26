@@ -34,6 +34,7 @@ def ev() -> EstimationVerifier:
 # REQ-VER-085-1: number extraction
 # ---------------------------------------------------------------------------
 
+
 class TestExtractNumbers:
     """REQ-VER-085-1: Numbers extracted from question text."""
 
@@ -54,6 +55,7 @@ class TestExtractNumbers:
 # ---------------------------------------------------------------------------
 # REQ-VER-085-2: operation detection
 # ---------------------------------------------------------------------------
+
 
 class TestOperationDetection:
     """REQ-VER-085-2: Operation type detected from keywords."""
@@ -86,6 +88,7 @@ class TestOperationDetection:
 # ---------------------------------------------------------------------------
 # REQ-VER-085-3: plausible range computation
 # ---------------------------------------------------------------------------
+
 
 class TestPlausibleRange:
     """REQ-VER-085-3: Plausible range correct per operation type."""
@@ -127,6 +130,7 @@ class TestPlausibleRange:
 # REQ-VER-085-4: answer extraction
 # ---------------------------------------------------------------------------
 
+
 class TestAnswerExtraction:
     """REQ-VER-085-4: Answer extracted from various response patterns."""
 
@@ -155,6 +159,7 @@ class TestAnswerExtraction:
 # REQ-VER-085-5: confidence values
 # ---------------------------------------------------------------------------
 
+
 class TestConfidence:
     """REQ-VER-085-5: confidence=1.0 when answer found, 0.5 when not."""
 
@@ -170,6 +175,7 @@ class TestConfidence:
 # ---------------------------------------------------------------------------
 # REQ-VER-085-6: label_pair with ground_truth
 # ---------------------------------------------------------------------------
+
 
 class TestLabelPairWithGroundTruth:
     """REQ-VER-085-6: label_pair uses ground_truth for exact match (tol=0.01)."""
@@ -221,6 +227,7 @@ class TestLabelPairWithGroundTruth:
 # REQ-VER-085-7: label_pair without ground_truth uses in_range
 # ---------------------------------------------------------------------------
 
+
 class TestLabelPairWithoutGroundTruth:
     """REQ-VER-085-7: Without ground_truth, label_pair uses in_range."""
 
@@ -251,6 +258,7 @@ class TestLabelPairWithoutGroundTruth:
 # ---------------------------------------------------------------------------
 # SCENARIO-VER-085: canonical scenario from the spec
 # ---------------------------------------------------------------------------
+
 
 class TestScenarioVer085:
     """SCENARIO-VER-085: full addition scenario as specified in spec.

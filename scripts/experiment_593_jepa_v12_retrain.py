@@ -275,15 +275,16 @@ def _compute_progrs_loss_jax(
     def _chain_e(embeddings: list) -> jnp.ndarray:
         if not embeddings:
             return jnp.array(0.0)
-        scores = jnp.stack([
-            (params["w2"] @ jax.nn.silu(params["w1"] @ emb + params["b1"]) + params["b2"])[0]
-            for emb in embeddings
-        ])
+        scores = jnp.stack(
+            [
+                (params["w2"] @ jax.nn.silu(params["w1"] @ emb + params["b1"]) + params["b2"])[0]
+                for emb in embeddings
+            ]
+        )
         return jnp.mean(scores)
 
     raw_gaps = [
-        _chain_e(p.incorrect_embeddings) - _chain_e(p.correct_embeddings)
-        for p in train_pairs
+        _chain_e(p.incorrect_embeddings) - _chain_e(p.correct_embeddings) for p in train_pairs
     ]
 
     # Group gaps by question_id and compute group means.
@@ -352,9 +353,7 @@ def train_jepa_v12(
             loss_val = float(_loss_fn(params))
             val_auc = _evaluate_auc(params, val_pairs)
             eval_log.append({"epoch": epoch, "val_auc": val_auc, "loss": loss_val})
-            _log.info(
-                "Epoch %d/%d  loss=%.4f  val_auc=%.4f", epoch, n_epochs, loss_val, val_auc
-            )
+            _log.info("Epoch %d/%d  loss=%.4f  val_auc=%.4f", epoch, n_epochs, loss_val, val_auc)
             if val_auc > best_val_auc:
                 best_val_auc = val_auc
                 best_epoch = epoch
@@ -382,7 +381,6 @@ def main() -> None:
     """Run Exp 593: JEPA v12 live corpus retrain with PROGRS outcome-centered CPMI."""
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=40):
-
         tmpl = ExperimentTemplate(
             exp_id=EXP_ID,
             title=EXP_TITLE,
@@ -445,7 +443,10 @@ def main() -> None:
             n_synthetic_pairs = len(synthetic)
 
         _log.info(
-            "Total pairs: %d (%d real, %d synthetic)", len(all_pairs), n_real_pairs, n_synthetic_pairs
+            "Total pairs: %d (%d real, %d synthetic)",
+            len(all_pairs),
+            n_real_pairs,
+            n_synthetic_pairs,
         )
 
         # ------------------------------------------------------------------
@@ -482,7 +483,10 @@ def main() -> None:
 
         _log.info(
             "v11_auc=%.4f (9 pairs)  v12_val_auc=%.4f (%d real pairs)  verdict=%s",
-            V11_AUC, v12_val_auc, n_real_pairs, honest_verdict,
+            V11_AUC,
+            v12_val_auc,
+            n_real_pairs,
+            honest_verdict,
         )
 
         # ------------------------------------------------------------------
@@ -492,9 +496,7 @@ def main() -> None:
             _save_model_safetensors(best_params, _REPO_ROOT / MODEL_DELIVERABLE)
             _log.info("Model saved (val_auc=%.4f >= 0.70)", v12_val_auc)
         else:
-            _log.info(
-                "Model NOT saved (val_auc=%.4f < 0.70) — threshold not met", v12_val_auc
-            )
+            _log.info("Model NOT saved (val_auc=%.4f < 0.70) — threshold not met", v12_val_auc)
 
         # ------------------------------------------------------------------
         # Write result artifact

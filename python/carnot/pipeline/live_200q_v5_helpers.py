@@ -24,7 +24,6 @@ Spec: REQ-BENCH-016, SCENARIO-BENCH-035, SCENARIO-BENCH-036
 from __future__ import annotations
 
 import math
-from typing import Tuple
 
 __all__ = [
     "compute_wilson_ci",
@@ -36,7 +35,7 @@ def compute_wilson_ci(
     n_successes: int,
     n_total: int,
     confidence: float = 0.95,
-) -> Tuple[float, float]:
+) -> tuple[float, float]:
     """Compute Wilson score confidence interval for an observed proportion.
 
     Wilson CI is the preferred method for bounded proportions because it remains

@@ -148,6 +148,7 @@ def test_sae_params_frozen(sae_and_params):
     sae, params = sae_and_params
     # Take a copy of the encoder weight to compare
     import jax
+
     enc_weight_before = jax.device_get(params["params"]["encoder"]["kernel"]).copy()
 
     jepa = JEPAHalluSAEv16(sae=sae, sae_params=params, seed=42)

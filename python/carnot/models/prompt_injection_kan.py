@@ -49,13 +49,15 @@ from carnot.models.prompt_injection_features import encode_prompt_injection
 
 # Honest-verdict enum — all five values that REQ-SAFE-009 requires.
 # These appear verbatim in result JSONs; changing them breaks retrospective parsing.
-HONEST_VERDICT_VALUES: frozenset[str] = frozenset({
-    "distillation_corpus_built_classifier_trained_auroc_met",
-    "distillation_corpus_built_classifier_trained_auroc_below_threshold",
-    "distillation_corpus_built_classifier_not_trained",
-    "distillation_corpus_not_built",
-    "blocked_on_dependency",
-})
+HONEST_VERDICT_VALUES: frozenset[str] = frozenset(
+    {
+        "distillation_corpus_built_classifier_trained_auroc_met",
+        "distillation_corpus_built_classifier_trained_auroc_below_threshold",
+        "distillation_corpus_built_classifier_not_trained",
+        "distillation_corpus_not_built",
+        "blocked_on_dependency",
+    }
+)
 
 
 @dataclass
@@ -253,9 +255,9 @@ class PromptInjectionEnergyChecker:
         self.edge_ctrl: np.ndarray = rng.uniform(
             -0.1, 0.1, (n_hidden, n_features, self._n_ctrl)
         ).astype(np.float32)
-        self.output_ctrl: np.ndarray = rng.uniform(
-            -0.1, 0.1, (n_hidden, self._n_ctrl)
-        ).astype(np.float32)
+        self.output_ctrl: np.ndarray = rng.uniform(-0.1, 0.1, (n_hidden, self._n_ctrl)).astype(
+            np.float32
+        )
 
     def _energy_from_features(
         self,
@@ -271,9 +273,13 @@ class PromptInjectionEnergyChecker:
         ec = jnp.array(self.edge_ctrl) if edge_ctrl is None else edge_ctrl
         oc = jnp.array(self.output_ctrl) if output_ctrl is None else output_ctrl
         return _injection_energy(
-            features, ec, oc,
-            self._N_KNOTS, self._DEGREE,
-            self.n_features, self.n_hidden,
+            features,
+            ec,
+            oc,
+            self._N_KNOTS,
+            self._DEGREE,
+            self.n_features,
+            self.n_hidden,
         )
 
     def energy(self, text: str) -> float:
@@ -343,11 +349,13 @@ class PromptInjectionEnergyChecker:
         """
         inj_feats = [
             encode_prompt_injection(ex.text, self.n_features)
-            for ex in examples if ex.label == "injection"
+            for ex in examples
+            if ex.label == "injection"
         ]
         ben_feats = [
             encode_prompt_injection(ex.text, self.n_features)
-            for ex in examples if ex.label == "benign"
+            for ex in examples
+            if ex.label == "benign"
         ]
 
         if not inj_feats or not ben_feats:
@@ -365,9 +373,13 @@ class PromptInjectionEnergyChecker:
 
             def single_energy(f: jnp.ndarray) -> jnp.ndarray:
                 return _injection_energy(
-                    f, ec_p, oc_p,
-                    self._N_KNOTS, self._DEGREE,
-                    self.n_features, self.n_hidden,
+                    f,
+                    ec_p,
+                    oc_p,
+                    self._N_KNOTS,
+                    self._DEGREE,
+                    self.n_features,
+                    self.n_hidden,
                 )
 
             e_ben = jax.vmap(single_energy)(ben_arr)
@@ -375,7 +387,7 @@ class PromptInjectionEnergyChecker:
 
             # Contrastive: push benign low, injection high.
             contrastive = jnp.mean(e_ben) - jnp.mean(e_inj)
-            reg = 1e-3 * (jnp.sum(ec_p ** 2) + jnp.sum(oc_p ** 2))
+            reg = 1e-3 * (jnp.sum(ec_p**2) + jnp.sum(oc_p**2))
             return contrastive + reg
 
         # Cosine decay schedule from lr to 0 over n_epochs steps.
@@ -476,7 +488,7 @@ class PromptInjectionEnergyChecker:
             json.dump(data, fh, indent=2)
 
     @classmethod
-    def load(cls, path: str | Path) -> "PromptInjectionEnergyChecker":
+    def load(cls, path: str | Path) -> PromptInjectionEnergyChecker:
         """Load a PromptInjectionEnergyChecker from a saved JSON checkpoint.
 
         Args:
@@ -546,11 +558,13 @@ class PromptInjectionEnergyCheckerV2(PromptInjectionEnergyChecker):
         """
         inj_feats = [
             encode_prompt_injection(ex.text, self.n_features)
-            for ex in examples if ex.label == "injection"
+            for ex in examples
+            if ex.label == "injection"
         ]
         ben_feats = [
             encode_prompt_injection(ex.text, self.n_features)
-            for ex in examples if ex.label == "benign"
+            for ex in examples
+            if ex.label == "benign"
         ]
 
         if not inj_feats or not ben_feats:
@@ -570,16 +584,20 @@ class PromptInjectionEnergyCheckerV2(PromptInjectionEnergyChecker):
 
             def single_energy(f: jnp.ndarray) -> jnp.ndarray:
                 return _injection_energy(
-                    f, ec_p, oc_p,
-                    self._N_KNOTS, self._DEGREE,
-                    self.n_features, self.n_hidden,
+                    f,
+                    ec_p,
+                    oc_p,
+                    self._N_KNOTS,
+                    self._DEGREE,
+                    self.n_features,
+                    self.n_hidden,
                 )
 
             e_ben = jax.vmap(single_energy)(ben_arr)
             e_inj = jax.vmap(single_energy)(inj_arr)
 
             contrastive = jnp.mean(e_ben) - jnp.mean(e_inj)
-            reg = weight_decay * (jnp.sum(ec_p ** 2) + jnp.sum(oc_p ** 2))
+            reg = weight_decay * (jnp.sum(ec_p**2) + jnp.sum(oc_p**2))
             return contrastive + reg
 
         # Mini-batch training: compile the loss function once for a fixed batch
@@ -607,16 +625,20 @@ class PromptInjectionEnergyCheckerV2(PromptInjectionEnergyChecker):
 
             def single_energy(f: jnp.ndarray) -> jnp.ndarray:
                 return _injection_energy(
-                    f, ec_p, oc_p,
-                    self._N_KNOTS, self._DEGREE,
-                    self.n_features, self.n_hidden,
+                    f,
+                    ec_p,
+                    oc_p,
+                    self._N_KNOTS,
+                    self._DEGREE,
+                    self.n_features,
+                    self.n_hidden,
                 )
 
             e_ben = jax.vmap(single_energy)(ben_b)
             e_inj = jax.vmap(single_energy)(inj_b)
 
             contrastive = jnp.mean(e_ben) - jnp.mean(e_inj)
-            reg = weight_decay * (jnp.sum(ec_p ** 2) + jnp.sum(oc_p ** 2))
+            reg = weight_decay * (jnp.sum(ec_p**2) + jnp.sum(oc_p**2))
             return contrastive + reg
 
         grad_fn = jax.jit(jax.value_and_grad(batch_loss))

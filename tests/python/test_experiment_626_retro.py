@@ -101,11 +101,13 @@ def _write_fake_results(
 
     # exp614 — DualGPU exclusion manifest
     (results_dir / "experiment_614_exclusion_manifest_dualgpu.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 3.662,
-            "gpu1_utilization_confirmed": gpu1_utilization_confirmed,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 3.662,
+                "gpu1_utilization_confirmed": gpu1_utilization_confirmed,
+            }
+        )
     )
     # exp615 — live corpus v3
     (results_dir / "experiment_615_live_corpus_v3.json").write_text(
@@ -113,13 +115,15 @@ def _write_fake_results(
     )
     # exp616 — LLMAsExtractorV1
     (results_dir / "experiment_616_llm_extractor_v1.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.0,
-            "v1_recall": v1_recall_616,
-            "gate_open": gate_open_616,
-            "retro_070_resolved": retro_070_resolved,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.0,
+                "v1_recall": v1_recall_616,
+                "gate_open": gate_open_616,
+                "retro_070_resolved": retro_070_resolved,
+            }
+        )
     )
     # exp617 — extractor diagnostic v5 (timed out — best_extractor absent unless overridden)
     exp617_data: dict = {"status": "timed_out"}
@@ -131,75 +135,91 @@ def _write_fake_results(
     )
     # exp618 — JEPA v13 CAPO
     (results_dir / "experiment_618_jepa_v13_capo.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 119.153,
-            "v13_ood_auc": v13_ood_auc,
-            "v13_ece": v13_ece,
-            "calibration_improved": calibration_improved,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 119.153,
+                "v13_ood_auc": v13_ood_auc,
+                "v13_ece": v13_ece,
+                "calibration_improved": calibration_improved,
+            }
+        )
     )
     # exp619 — SymCode DSVD
     (results_dir / "experiment_619_dsvd_symcode.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.004,
-            "symcode_live_auc": symcode_live_auc,
-            "retro_069_resolved": retro_069_resolved,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.004,
+                "symcode_live_auc": symcode_live_auc,
+                "retro_069_resolved": retro_069_resolved,
+            }
+        )
     )
     # exp620 — live VR attempt #15
     (results_dir / "experiment_620_live_vr_attempt_15.json").write_text(
-        json.dumps({
-            "status": "blocked" if not retro_033_resolved else "success",
-            "duration_s": 0.0,
-            "gate_open": retro_033_resolved,
-            "signed_improvement": signed_improvement,
-            "retro_033_resolved": retro_033_resolved,
-        })
+        json.dumps(
+            {
+                "status": "blocked" if not retro_033_resolved else "success",
+                "duration_s": 0.0,
+                "gate_open": retro_033_resolved,
+                "signed_improvement": signed_improvement,
+                "retro_033_resolved": retro_033_resolved,
+            }
+        )
     )
     # exp621 — MetaJuLS adaptation
     (results_dir / "experiment_621_metajuls_adaptation.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.012,
-            "adaptation_effective": adaptation_effective,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.012,
+                "adaptation_effective": adaptation_effective,
+            }
+        )
     )
     # exp622 — NUP v6 cascade
     (results_dir / "experiment_622_nup_v6_cascade.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.14,
-            "nup_v6_wired": nup_v6_wired,
-            "cascade_latency_ms": cascade_latency_ms,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.14,
+                "nup_v6_wired": nup_v6_wired,
+                "cascade_latency_ms": cascade_latency_ms,
+            }
+        )
     )
     # exp623 — TRUST agents
     (results_dir / "experiment_623_trust_agents.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.006,
-            "trust_recall": trust_recall,
-            "best_extractor": best_extractor_623,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.006,
+                "trust_recall": trust_recall,
+                "best_extractor": best_extractor_623,
+            }
+        )
     )
     # exp624 — KV260 Vivado v2
     (results_dir / "experiment_624_kv260_vivado_v2.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 2.545,
-            "synthesis_succeeded": synthesis_succeeded,
-            "simulation_validated": simulation_validated,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 2.545,
+                "synthesis_succeeded": synthesis_succeeded,
+                "simulation_validated": simulation_validated,
+            }
+        )
     )
     # exp625 — FR-11 relay
     (results_dir / "experiment_625_tier1_fr11_relay.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.0,
-            "fr11_real_violations_confirmed": fr11_real_violations_confirmed,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.0,
+                "fr11_real_violations_confirmed": fr11_real_violations_confirmed,
+            }
+        )
     )
 
 
@@ -218,9 +238,7 @@ def test_retro_033_not_resolved_when_blocked(
     assert retro["retro_033_resolved"] is False
 
 
-def test_retro_033_resolved_when_flag_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_033_resolved_when_flag_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_033_resolved is True when Exp 620 sets retro_033_resolved=True."""
     _write_fake_results(tmp_path, retro_033_resolved=True, signed_improvement=0.05)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -228,9 +246,7 @@ def test_retro_033_resolved_when_flag_set(
     assert retro["retro_033_resolved"] is True
 
 
-def test_retro_069_resolved_from_exp619(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_069_resolved_from_exp619(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_069_resolved is True when Exp 619 sets retro_069_resolved=True."""
     _write_fake_results(tmp_path, symcode_live_auc=0.804, retro_069_resolved=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -239,9 +255,7 @@ def test_retro_069_resolved_from_exp619(
     assert retro["symcode_live_auc"] == pytest.approx(0.804, abs=1e-6)
 
 
-def test_retro_069_not_resolved_when_false(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_069_not_resolved_when_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_069_resolved is False when Exp 619 does not set the flag."""
     _write_fake_results(tmp_path, symcode_live_auc=0.30, retro_069_resolved=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -260,9 +274,7 @@ def test_retro_070_not_resolved_when_recall_low(
     assert retro["v1_recall"] == pytest.approx(0.04, abs=1e-6)
 
 
-def test_retro_070_resolved_when_flag_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_070_resolved_when_flag_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_070_resolved is True when Exp 616 sets retro_070_resolved=True."""
     _write_fake_results(tmp_path, v1_recall_616=0.25, retro_070_resolved=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -270,9 +282,7 @@ def test_retro_070_resolved_when_flag_set(
     assert retro["retro_070_resolved"] is True
 
 
-def test_nup_v6_deployed_from_exp622(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_nup_v6_deployed_from_exp622(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """nup_v6_deployed is True when Exp 622 sets nup_v6_wired=True."""
     _write_fake_results(tmp_path, nup_v6_wired=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -280,9 +290,7 @@ def test_nup_v6_deployed_from_exp622(
     assert retro["nup_v6_deployed"] is True
 
 
-def test_nup_v6_not_deployed_when_false(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_nup_v6_not_deployed_when_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """nup_v6_deployed is False when Exp 622 does not set nup_v6_wired."""
     _write_fake_results(tmp_path, nup_v6_wired=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -290,9 +298,7 @@ def test_nup_v6_not_deployed_when_false(
     assert retro["nup_v6_deployed"] is False
 
 
-def test_fr11_confirmed_from_exp625(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fr11_confirmed_from_exp625(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """fr11_confirmed is True when Exp 625 fr11_real_violations_confirmed=True."""
     _write_fake_results(tmp_path, fr11_real_violations_confirmed=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -300,9 +306,7 @@ def test_fr11_confirmed_from_exp625(
     assert retro["fr11_confirmed"] is True
 
 
-def test_fr11_not_confirmed_when_false(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fr11_not_confirmed_when_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """fr11_confirmed is False when Exp 625 fr11_real_violations_confirmed=False."""
     _write_fake_results(tmp_path, fr11_real_violations_confirmed=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -310,9 +314,7 @@ def test_fr11_not_confirmed_when_false(
     assert retro["fr11_confirmed"] is False
 
 
-def test_jepa_v13_calibrated_from_exp618(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_jepa_v13_calibrated_from_exp618(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """jepa_v13_calibrated is True when Exp 618 sets calibration_improved=True."""
     _write_fake_results(tmp_path, calibration_improved=True, v13_ece=0.08)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -331,9 +333,7 @@ def test_jepa_v13_not_calibrated_when_ece_high(
     assert retro["v13_ece"] == pytest.approx(0.2073, abs=1e-4)
 
 
-def test_adaptation_effective_from_exp621(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_adaptation_effective_from_exp621(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """adaptation_effective is True when Exp 621 sets adaptation_effective=True."""
     _write_fake_results(tmp_path, adaptation_effective=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -371,9 +371,7 @@ def test_best_extractor_set_when_exp617_has_field(
     assert retro["best_extractor"] == "llm_v1"
 
 
-def test_dualgpu_confirmed_false(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_dualgpu_confirmed_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """dualgpu_confirmed is False when Exp 614 gpu1_utilization_confirmed=False."""
     _write_fake_results(tmp_path, gpu1_utilization_confirmed=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -381,9 +379,7 @@ def test_dualgpu_confirmed_false(
     assert retro["dualgpu_confirmed"] is False
 
 
-def test_dualgpu_confirmed_true(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_dualgpu_confirmed_true(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """dualgpu_confirmed is True when Exp 614 gpu1_utilization_confirmed=True."""
     _write_fake_results(tmp_path, gpu1_utilization_confirmed=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -391,9 +387,7 @@ def test_dualgpu_confirmed_true(
     assert retro["dualgpu_confirmed"] is True
 
 
-def test_simulation_validated_from_exp624(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_simulation_validated_from_exp624(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """simulation_validated reflects Exp 624 simulation_validated field."""
     _write_fake_results(tmp_path, simulation_validated=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -446,9 +440,7 @@ def test_honest_verdict_symcode_closed_only(
     assert retro["honest_verdict"] == "symcode_closed_recall_still_blocked"
 
 
-def test_honest_verdict_no_retros_closed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_honest_verdict_no_retros_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """honest_verdict='no_retros_closed' when nothing is resolved."""
     _write_fake_results(
         tmp_path,
@@ -466,9 +458,7 @@ def test_honest_verdict_no_retros_closed(
 # ---------------------------------------------------------------------------
 
 
-def test_closure_rate_one_over_eleven(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_closure_rate_one_over_eleven(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Closure rate = 1/11 when only RETRO-069 is resolved."""
     _write_fake_results(tmp_path, retro_069_resolved=True, gpu1_utilization_confirmed=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -548,9 +538,7 @@ def test_retro_071_not_added_when_dualgpu_confirmed(
     assert "RETRO-071" not in ids
 
 
-def test_new_retro_item_structure(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_new_retro_item_structure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Each new_retro_item has id, title, carry_count, description, priority fields."""
     _write_fake_results(tmp_path, gpu1_utilization_confirmed=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -627,9 +615,7 @@ def test_top_priority_jepa_v14_always_present(
     assert "JEPA v14" in second or "ORACLE" in second
 
 
-def test_top_priority_kv260_always_present(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_top_priority_kv260_always_present(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """KV260 FPGA synthesis is always the third priority."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -643,9 +629,7 @@ def test_top_priority_kv260_always_present(
 # ---------------------------------------------------------------------------
 
 
-def test_n_experiments_is_thirteen(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_n_experiments_is_thirteen(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_experiments_run = 13 when all 12 upstream files exist plus this retro."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -653,9 +637,7 @@ def test_n_experiments_is_thirteen(
     assert retro["n_experiments_run"] == 13
 
 
-def test_n_not_run_zero_when_all_present(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_n_not_run_zero_when_all_present(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_not_run = 0 when all upstream result files are present."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -686,9 +668,7 @@ def test_mean_time_min_is_wall_time_over_n_experiments(
     assert retro["mean_time_min"] == pytest.approx(expected, abs=1e-6)
 
 
-def test_schema_and_milestone_fields(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_schema_and_milestone_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Schema and milestone fields are set to the expected v22 values."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -702,9 +682,7 @@ def test_schema_and_milestone_fields(
 # ---------------------------------------------------------------------------
 
 
-def test_main_writes_deliverable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_writes_deliverable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """main() writes a valid JSON artifact at DELIVERABLE path with all required fields."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -718,8 +696,14 @@ def test_main_writes_deliverable(
     artifact = json.loads(deliverable.read_text())
 
     required_fields = [
-        "experiment", "title", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "schema",
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "schema",
         "retro_033_resolved",
         "retro_069_resolved",
         "retro_070_resolved",

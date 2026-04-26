@@ -27,6 +27,7 @@ from carnot.pipeline.dsvd_live_trainer import (
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_adapter() -> DSVDAdapter:
     probe = DSVDLinearProbe(hidden_dim=64)
     return DSVDAdapter(probe, violation_threshold=0.5)
@@ -46,6 +47,7 @@ def _make_pair(is_correct: bool, T: int = 64, D: int = 128) -> DSVDLiveTrainPair
 # DSVDLiveTrainPair
 # ---------------------------------------------------------------------------
 
+
 class TestDSVDLiveTrainPair:
     def test_fields_correct(self):
         # REQ-VERIFY-130-1
@@ -58,7 +60,9 @@ class TestDSVDLiveTrainPair:
 
     def test_custom_window_size(self):
         hidden = jnp.ones((64, 128))
-        pair = DSVDLiveTrainPair(hidden_states=hidden, response="r", is_correct=False, window_size=16)
+        pair = DSVDLiveTrainPair(
+            hidden_states=hidden, response="r", is_correct=False, window_size=16
+        )
         assert pair.window_size == 16
 
     def test_is_correct_false(self):
@@ -69,6 +73,7 @@ class TestDSVDLiveTrainPair:
 # ---------------------------------------------------------------------------
 # TemporalWindowLabeler — SCENARIO-VERIFY-165
 # ---------------------------------------------------------------------------
+
 
 class TestTemporalWindowLabeler:
     def test_default_window_size(self):
@@ -94,7 +99,7 @@ class TestTemporalWindowLabeler:
         pair = _make_pair(is_correct=False, T=96, D=64)
         labeled = labeler.label_windows(pair)
         assert len(labeled) == 3
-        assert labeled[0][1] is True   # early window — normal reasoning
+        assert labeled[0][1] is True  # early window — normal reasoning
         assert labeled[1][1] is False  # second-to-last — violation forming
         assert labeled[2][1] is False  # last window — violation confirmed
 
@@ -140,6 +145,7 @@ class TestTemporalWindowLabeler:
 # ---------------------------------------------------------------------------
 # DSVDLiveTrainer.build_training_pairs — SCENARIO-VERIFY-163
 # ---------------------------------------------------------------------------
+
 
 class TestDSVDLiveTrainerBuildPairs:
     def _write_corpus(self, entries: list, tmp_path: Path) -> str:
@@ -215,16 +221,19 @@ class TestDSVDLiveTrainerBuildPairs:
 # DSVDLiveTrainer.train — SCENARIO-VERIFY-164
 # ---------------------------------------------------------------------------
 
+
 class TestDSVDLiveTrainerTrain:
     def _make_pairs(self, n: int) -> list[DSVDLiveTrainPair]:
         pairs = []
         for i in range(n):
-            is_correct = (i % 2 == 0)
-            pairs.append(DSVDLiveTrainPair(
-                hidden_states=jnp.ones((64, 128)) * (1.0 if is_correct else 0.0),
-                response=f"step {i}: 3 + 4 = 7 and result is {i}",
-                is_correct=is_correct,
-            ))
+            is_correct = i % 2 == 0
+            pairs.append(
+                DSVDLiveTrainPair(
+                    hidden_states=jnp.ones((64, 128)) * (1.0 if is_correct else 0.0),
+                    response=f"step {i}: 3 + 4 = 7 and result is {i}",
+                    is_correct=is_correct,
+                )
+            )
         return pairs
 
     def test_returns_float_in_unit_interval(self):
@@ -279,6 +288,7 @@ class TestDSVDLiveTrainerTrain:
 # DSVDLiveTrainer._compute_auc
 # ---------------------------------------------------------------------------
 
+
 class TestComputeAUC:
     def test_empty_pairs(self):
         trainer = DSVDLiveTrainer(_make_adapter())
@@ -321,9 +331,11 @@ class TestComputeAUC:
 # __init__ export — REQ-VERIFY-130-4
 # ---------------------------------------------------------------------------
 
+
 class TestPipelineExports:
     def test_exported_from_pipeline(self):
         from carnot.pipeline import DSVDLiveTrainPair, DSVDLiveTrainer, TemporalWindowLabeler
+
         assert DSVDLiveTrainPair is not None
         assert DSVDLiveTrainer is not None
         assert TemporalWindowLabeler is not None

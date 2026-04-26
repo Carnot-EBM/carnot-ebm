@@ -160,6 +160,7 @@ class TestSave:
     def test_saved_at_is_iso8601_utc(self, tmp_path):
         # Spec: REQ-LEARN-020-2
         import re
+
         sm = SessionMemory(str(tmp_path), "test-model")
         sm.save(_make_case_memory(), _make_library_with_observation(), _make_tracker_with_fp())
         payload = json.loads(sm._state_path().read_text())
@@ -361,6 +362,7 @@ class TestVerifyRepairPipelineSessionMemory:
     def test_pipeline_accepts_session_memory_param(self, tmp_path):
         # Spec: REQ-LEARN-021-2
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         sm = SessionMemory(str(tmp_path), "test-model")
         pipeline = VerifyRepairPipeline(session_memory=sm)
         assert pipeline._session_memory is sm
@@ -368,6 +370,7 @@ class TestVerifyRepairPipelineSessionMemory:
     def test_pipeline_close_saves_state_when_session_memory_set(self, tmp_path):
         # Spec: REQ-LEARN-021-3
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         sm = SessionMemory(str(tmp_path), "test-model")
         pipeline = VerifyRepairPipeline(session_memory=sm)
         assert not sm.exists()
@@ -377,12 +380,14 @@ class TestVerifyRepairPipelineSessionMemory:
     def test_pipeline_close_is_noop_without_session_memory(self):
         # Spec: REQ-LEARN-021-3
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         pipeline = VerifyRepairPipeline()
         pipeline.close()  # must not raise
 
     def test_pipeline_loads_existing_state_on_init(self, tmp_path):
         # Spec: REQ-LEARN-021-2
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         # Pre-save some state
         sm_writer = SessionMemory(str(tmp_path), "test-model")
         cm = _make_case_memory(5)
@@ -398,5 +403,6 @@ class TestVerifyRepairPipelineSessionMemory:
     def test_pipeline_default_has_no_session_memory(self):
         # Spec: REQ-LEARN-021-2 — additive only, default is None
         from carnot.pipeline.verify_repair import VerifyRepairPipeline
+
         pipeline = VerifyRepairPipeline()
         assert pipeline._session_memory is None

@@ -21,6 +21,7 @@ from carnot.pipeline.adaptive_gate import ModelAdaptiveThresholdGate
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _gate(tmp_path: Path) -> ModelAdaptiveThresholdGate:
     """Return a fresh gate backed by a temp state file."""
     return ModelAdaptiveThresholdGate(state_file=tmp_path / "gate_state.json")

@@ -64,9 +64,9 @@ def test_10_session_loop_produces_10_precision_values(tmp_path):
     Spec: REQ-FR11-009-1, SCENARIO-FR11-009
     """
     result = _run_sim(tmp_path)
-    assert (
-        len(result["precision_series"]) == N_SESSIONS
-    ), f"Expected {N_SESSIONS} precision values, got {len(result['precision_series'])}"
+    assert len(result["precision_series"]) == N_SESSIONS, (
+        f"Expected {N_SESSIONS} precision values, got {len(result['precision_series'])}"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -160,9 +160,9 @@ def test_honest_verdict_monotonic_gain(tmp_path):
     # The synthetic simulation is designed so that precision rises with session index.
     # If it is monotonically non-decreasing and no plateau, the verdict should match.
     if result["is_monotonically_non_decreasing"] and result["plateau_session"] is None:
-        assert (
-            result["honest_verdict"] == "tier2_memory_monotonic_gain"
-        ), f"Expected 'tier2_memory_monotonic_gain', got '{result['honest_verdict']}'"
+        assert result["honest_verdict"] == "tier2_memory_monotonic_gain", (
+            f"Expected 'tier2_memory_monotonic_gain', got '{result['honest_verdict']}'"
+        )
     else:
         # Plateau or regression cases are also valid outcomes
         assert result["honest_verdict"] in (
@@ -203,9 +203,9 @@ def test_honest_verdict_plateau():
     else:
         verdict = "tier2_memory_monotonic_gain"
 
-    assert (
-        verdict == "tier2_memory_plateau_at_s4"
-    ), f"Expected 'tier2_memory_plateau_at_s4', got '{verdict}'"
+    assert verdict == "tier2_memory_plateau_at_s4", (
+        f"Expected 'tier2_memory_plateau_at_s4', got '{verdict}'"
+    )
 
 
 def test_honest_verdict_regression():
@@ -240,9 +240,9 @@ def test_honest_verdict_regression():
     else:
         verdict = "tier2_memory_monotonic_gain"
 
-    assert (
-        verdict == "tier2_memory_regression"
-    ), f"Expected 'tier2_memory_regression', got '{verdict}'"
+    assert verdict == "tier2_memory_regression", (
+        f"Expected 'tier2_memory_regression', got '{verdict}'"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -257,8 +257,7 @@ def test_templates_replayed_s1_is_zero(tmp_path):
     """
     result = _run_sim(tmp_path)
     assert result["templates_replayed_per_session"][0] == 0, (
-        f"S1 should have 0 replays (cold start), got "
-        f"{result['templates_replayed_per_session'][0]}"
+        f"S1 should have 0 replays (cold start), got {result['templates_replayed_per_session'][0]}"
     )
 
 
@@ -273,6 +272,6 @@ def test_templates_replayed_s2_through_s10_gt_zero(tmp_path):
     # S1 is index 0; S2-S10 are indices 1-9
     for i in range(1, N_SESSIONS):
         assert replayed[i] > 0, (
-            f"Session S{i+1} (index {i}) should have templates_replayed > 0, got {replayed[i]}. "
+            f"Session S{i + 1} (index {i}) should have templates_replayed > 0, got {replayed[i]}. "
             f"Full series: {replayed}"
         )

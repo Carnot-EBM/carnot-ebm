@@ -35,7 +35,6 @@ from __future__ import annotations
 
 import jax.numpy as jnp
 
-
 # ---------------------------------------------------------------------------
 # Injection pattern vocabulary
 # ---------------------------------------------------------------------------
@@ -44,18 +43,18 @@ import jax.numpy as jnp
 # to confuse the model into treating injected text as system-level instructions.
 # These map to OWASP LLM-01 category 6 (instruction smuggling via delimiters).
 _DELIMITER_PATTERNS: list[str] = [
-    "```",           # code fence — used to smuggle role-switch instructions
-    "[inst]",        # llama-2 instruction marker (case-insensitive match)
-    "[/inst]",       # llama-2 end-of-instruction marker
-    "<|system|>",    # chatml system turn marker
+    "```",  # code fence — used to smuggle role-switch instructions
+    "[inst]",  # llama-2 instruction marker (case-insensitive match)
+    "[/inst]",  # llama-2 end-of-instruction marker
+    "<|system|>",  # chatml system turn marker
     "<|im_start|>",  # chatml turn start marker
-    "</s>",          # end-of-sequence token in text
-    "<<sys>>",       # alpaca system marker variant
-    "<</sys>>",      # alpaca system marker close variant
-    "===",           # horizontal rule used to fake section breaks
-    "---",           # markdown horizontal rule used to separate injected context
-    "<system>",      # html-style system tag used in indirect injection
-    "</system>",     # html-style system tag close
+    "</s>",  # end-of-sequence token in text
+    "<<sys>>",  # alpaca system marker variant
+    "<</sys>>",  # alpaca system marker close variant
+    "===",  # horizontal rule used to fake section breaks
+    "---",  # markdown horizontal rule used to separate injected context
+    "<system>",  # html-style system tag used in indirect injection
+    "</system>",  # html-style system tag close
 ]
 
 # Role-override and bypass keywords — terms that appear in injection attacks.
@@ -63,31 +62,31 @@ _DELIMITER_PATTERNS: list[str] = [
 # triggers "ignore" even when the attack spreads keywords across multiple words.
 # Maps to OWASP LLM-01 categories 1 (direct injection), 3 (persona jailbreak).
 _ROLE_OVERRIDE_KEYWORDS: list[str] = [
-    "ignore",             # "ignore previous/all/your instructions" — canonical attack verb
-    "disregard",          # synonym for ignore ("disregard all guidelines")
-    "forget",             # "forget your training/instructions"
-    "override",           # "override your guidelines/safety"
-    "you are now",        # persona switch: "you are now DAN/an AI without restrictions"
-    "act as",             # persona switch: "act as an unrestricted AI"
-    "pretend",            # persona framing: "pretend you have no restrictions"
-    "roleplay",           # roleplay framing for bypass
-    "jailbreak",          # explicit jailbreak keyword
-    "unrestricted",       # "unrestricted AI / respond without restrictions"
-    "no restriction",     # "no restrictions / without restriction" (substring covers both)
-    "dan ",               # "DAN" (Do Anything Now) jailbreak (space avoids "dance")
+    "ignore",  # "ignore previous/all/your instructions" — canonical attack verb
+    "disregard",  # synonym for ignore ("disregard all guidelines")
+    "forget",  # "forget your training/instructions"
+    "override",  # "override your guidelines/safety"
+    "you are now",  # persona switch: "you are now DAN/an AI without restrictions"
+    "act as",  # persona switch: "act as an unrestricted AI"
+    "pretend",  # persona framing: "pretend you have no restrictions"
+    "roleplay",  # roleplay framing for bypass
+    "jailbreak",  # explicit jailbreak keyword
+    "unrestricted",  # "unrestricted AI / respond without restrictions"
+    "no restriction",  # "no restrictions / without restriction" (substring covers both)
+    "dan ",  # "DAN" (Do Anything Now) jailbreak (space avoids "dance")
 ]
 
 # Exfiltration and leakage keywords — patterns used to extract the system
 # prompt or confidential instructions from the model.
 # Maps to OWASP LLM-01 category 5 (prompt leakage).
 _EXFILTRATION_KEYWORDS: list[str] = [
-    "system prompt",         # direct request for system prompt text
-    "your instructions",     # "what are your instructions?"
-    "confidential",          # "reveal your confidential instructions"
-    "reveal",                # exfiltration verb
-    "exfiltrate",            # explicit exfiltration command
-    "repeat verbatim",       # "repeat your system prompt verbatim"
-    "show me your",          # "show me your system message"
+    "system prompt",  # direct request for system prompt text
+    "your instructions",  # "what are your instructions?"
+    "confidential",  # "reveal your confidential instructions"
+    "reveal",  # exfiltration verb
+    "exfiltrate",  # explicit exfiltration command
+    "repeat verbatim",  # "repeat your system prompt verbatim"
+    "show me your",  # "show me your system message"
     "initial instructions",  # "what were your initial instructions?"
 ]
 

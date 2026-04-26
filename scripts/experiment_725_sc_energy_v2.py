@@ -155,9 +155,7 @@ def load_fover_v2_chains(
         z3_label, pddl_label = derive_labels(pair)
         consensus = strict_consensus_label(z3_label, pddl_label)
         if consensus == 1:
-            by_q[pair["question"]].append(
-                (pair.get("step_index", 0), pair["step_text"])
-            )
+            by_q[pair["question"]].append((pair.get("step_index", 0), pair["step_text"]))
             n_kept += 1
         else:
             n_rejected += 1
@@ -303,8 +301,8 @@ def main() -> None:
         # ------------------------------------------------------------------
         # 2. Load FoVer v2 with strict dual-label consensus filtering
         # ------------------------------------------------------------------
-        chains, n_total_pairs, n_consensus_pairs, n_rejected_pairs = (
-            load_fover_v2_chains(FOVER_V2_PATH)
+        chains, n_total_pairs, n_consensus_pairs, n_rejected_pairs = load_fover_v2_chains(
+            FOVER_V2_PATH
         )
         n_questions = len(chains)
         print(
@@ -333,9 +331,7 @@ def main() -> None:
         # ------------------------------------------------------------------
         con_train, inc_train = build_contrastive_pairs(train_chains, rng)
         con_eval, inc_eval = build_contrastive_pairs(eval_chains, rng)
-        print(
-            f"Train: {len(con_train)} pairs | OOD eval: {len(con_eval)} pairs"
-        )
+        print(f"Train: {len(con_train)} pairs | OOD eval: {len(con_eval)} pairs")
 
         # ------------------------------------------------------------------
         # 5. Train SetConsistencyVerifier on FoVer v2 strict consensus pairs

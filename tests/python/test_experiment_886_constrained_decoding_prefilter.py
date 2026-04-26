@@ -22,11 +22,13 @@ import pytest
 
 def _make_validator():
     from carnot.pipeline.constrained_decoding import ASTValidator
+
     return ASTValidator()
 
 
 def _make_pre_filter():
     from carnot.pipeline.constrained_decoding import ASTValidator, ConstrainedDecodingPreFilter
+
     return ConstrainedDecodingPreFilter(ASTValidator())
 
 
@@ -258,6 +260,7 @@ class TestConstrainedDecodingPreFilterApply:
 
         class AlwaysInvalidValidator(ASTValidator):
             """Test double: always says tokens are irrecoverable."""
+
             def filter_invalid_tokens(self, partial_code, candidate_tokens):
                 return []  # filter everything out
 

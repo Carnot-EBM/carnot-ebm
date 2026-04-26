@@ -187,8 +187,7 @@ def run_experiment() -> dict:
     # --- Step e: live GPU load attempt ---
     if force_live and n_gpus >= 2:
         _log.info(
-            "Step e: live GPU detected — attempting to load %s on GPU1 "
-            "with explicit device_map=%s",
+            "Step e: live GPU detected — attempting to load %s on GPU1 with explicit device_map=%s",
             _GPU1_TEST_MODEL_ID,
             gpu1_device_map_str,
         )
@@ -248,9 +247,7 @@ def run_experiment() -> dict:
             "baseline_gpu1_vram_mb": baseline_health.gpu1_vram_mb,
             "baseline_gpu1_util_pct": baseline_health.gpu1_util_pct,
             "baseline_gpu1_is_zombie": baseline_health.gpu1_is_zombie,
-            "zombie_fix_strategy": {
-                mid: str(dm) for mid, dm in strategy.items()
-            },
+            "zombie_fix_strategy": {mid: str(dm) for mid, dm in strategy.items()},
             "env_autofix": {
                 "gpu_detected": _autofix_result.gpu_detected,
                 "auto_fix_applied": _autofix_result.auto_fix_applied,
@@ -282,8 +279,7 @@ def main() -> None:
         artifact = run_experiment()
 
     _log.info(
-        "Exp %d complete: honest_verdict=%s fix_applied=%s n_gpus=%d "
-        "post_fix_gpu1_util=%s",
+        "Exp %d complete: honest_verdict=%s fix_applied=%s n_gpus=%d post_fix_gpu1_util=%s",
         EXP_ID,
         artifact.get("honest_verdict"),
         artifact.get("fix_applied"),

@@ -78,9 +78,9 @@ class TestTotalLutEstimate:
         # Primary analysis: N=8, n_hidden=16, n_knots=10, luts=10
         analyzer = KANHardwareAnalyzer(n_inputs=8, n_hidden=16, n_knots=10, luts_per_segment=10)
         result = analyzer.total_lut_estimate()
-        assert result["layer1_luts"] == 8 * 16 * 10 * 10   # 12800
-        assert result["layer2_luts"] == 16 * 1 * 10 * 10   # 1600
-        assert result["total_luts"] == 12800 + 1600         # 14400
+        assert result["layer1_luts"] == 8 * 16 * 10 * 10  # 12800
+        assert result["layer2_luts"] == 16 * 1 * 10 * 10  # 1600
+        assert result["total_luts"] == 12800 + 1600  # 14400
         assert result["ice40_hx8k_budget"] == 7680
         assert result["within_budget"] is False  # 14400 > 7680
 

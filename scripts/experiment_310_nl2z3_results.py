@@ -178,9 +178,7 @@ def main() -> None:
     _RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     _OUTPUT_PATH.write_text(json.dumps(artifact, indent=2))
     print(f"[Exp 310] Done in {total_s:.1f}s. Results: {_OUTPUT_PATH}")
-    print(
-        f"[Exp 310] sat={n_sat}, unsat={n_unsat}, unknown={n_unknown}, error={n_error}"
-    )
+    print(f"[Exp 310] sat={n_sat}, unsat={n_unsat}, unknown={n_unknown}, error={n_error}")
 
 
 if __name__ == "__main__":

@@ -30,6 +30,7 @@ DOCS_DIR = ROOT / "docs"
 
 # ── Bootstrap helper ───────────────────────────────────────────────────────────
 
+
 def bootstrap_ci(values: list[float], n_boot: int = 2000, ci: float = 0.95) -> tuple[float, float]:
     """
     Return (lo, hi) bootstrap confidence interval for the mean of *values*.
@@ -53,6 +54,7 @@ def bootstrap_ci(values: list[float], n_boot: int = 2000, ci: float = 0.95) -> t
 
 
 # ── Load experiment results ────────────────────────────────────────────────────
+
 
 def load_json(name: str) -> dict:
     path = RESULTS_DIR / name
@@ -89,28 +91,38 @@ def build_per_variant_table(exp120: dict, exp121: dict) -> list[dict]:
         for variant in VARIANTS:
             v120 = m120.get("variants", {}).get(variant, {}).get("metrics", {})
             v121 = m121.get("variants", {}).get(variant, {}).get("metrics", {})
-            rows.append({
-                "model": model_key,
-                "variant": variant,
-                "variant_label": VARIANT_LABELS[variant],
-                # Exp 120 published baseline
-                "baseline_acc_pct": v120.get("accuracy_pct"),
-                "baseline_ci_lo": v120.get("ci_95_lo"),
-                "baseline_ci_hi": v120.get("ci_95_hi"),
-                # Exp 121 repair accuracy
-                "repair_acc_pct": v121.get("repair_accuracy_pct"),
-                "repair_ci_lo": v121.get("repair_ci", [None, None])[0] if isinstance(v121.get("repair_ci"), list) else None,
-                "repair_ci_hi": v121.get("repair_ci", [None, None])[1] if isinstance(v121.get("repair_ci"), list) else None,
-                # Delta
-                "delta_pp": v121.get("improvement_delta_pp"),
-                "delta_ci_lo": v121.get("improvement_delta_ci", [None, None])[0] if isinstance(v121.get("improvement_delta_ci"), list) else None,
-                "delta_ci_hi": v121.get("improvement_delta_ci", [None, None])[1] if isinstance(v121.get("improvement_delta_ci"), list) else None,
-                # Supporting stats
-                "n_repair_triggered": v121.get("n_repair_triggered"),
-                "abstain_rate_pct": v121.get("abstain_rate_pct"),
-                "arithmetic_error_fraction": v121.get("arithmetic_error_fraction"),
-                "constraint_coverage_pct": v121.get("constraint_coverage_pct"),
-            })
+            rows.append(
+                {
+                    "model": model_key,
+                    "variant": variant,
+                    "variant_label": VARIANT_LABELS[variant],
+                    # Exp 120 published baseline
+                    "baseline_acc_pct": v120.get("accuracy_pct"),
+                    "baseline_ci_lo": v120.get("ci_95_lo"),
+                    "baseline_ci_hi": v120.get("ci_95_hi"),
+                    # Exp 121 repair accuracy
+                    "repair_acc_pct": v121.get("repair_accuracy_pct"),
+                    "repair_ci_lo": v121.get("repair_ci", [None, None])[0]
+                    if isinstance(v121.get("repair_ci"), list)
+                    else None,
+                    "repair_ci_hi": v121.get("repair_ci", [None, None])[1]
+                    if isinstance(v121.get("repair_ci"), list)
+                    else None,
+                    # Delta
+                    "delta_pp": v121.get("improvement_delta_pp"),
+                    "delta_ci_lo": v121.get("improvement_delta_ci", [None, None])[0]
+                    if isinstance(v121.get("improvement_delta_ci"), list)
+                    else None,
+                    "delta_ci_hi": v121.get("improvement_delta_ci", [None, None])[1]
+                    if isinstance(v121.get("improvement_delta_ci"), list)
+                    else None,
+                    # Supporting stats
+                    "n_repair_triggered": v121.get("n_repair_triggered"),
+                    "abstain_rate_pct": v121.get("abstain_rate_pct"),
+                    "arithmetic_error_fraction": v121.get("arithmetic_error_fraction"),
+                    "constraint_coverage_pct": v121.get("constraint_coverage_pct"),
+                }
+            )
     return rows
 
 
@@ -124,30 +136,48 @@ def build_per_mode_table(exp121: dict) -> list[dict]:
         m121 = exp121["models"].get(model_key, {})
         for variant in VARIANTS:
             v = m121.get("variants", {}).get(variant, {}).get("metrics", {})
-            rows.append({
-                "model": model_key,
-                "variant": variant,
-                "mode": "baseline",
-                "accuracy_pct": v.get("baseline_accuracy_pct"),
-                "ci_lo": v.get("baseline_ci", [None, None])[0] if isinstance(v.get("baseline_ci"), list) else None,
-                "ci_hi": v.get("baseline_ci", [None, None])[1] if isinstance(v.get("baseline_ci"), list) else None,
-            })
-            rows.append({
-                "model": model_key,
-                "variant": variant,
-                "mode": "verify-only",
-                "accuracy_pct": v.get("verify_only_accuracy_pct"),
-                "ci_lo": v.get("verify_only_ci", [None, None])[0] if isinstance(v.get("verify_only_ci"), list) else None,
-                "ci_hi": v.get("verify_only_ci", [None, None])[1] if isinstance(v.get("verify_only_ci"), list) else None,
-            })
-            rows.append({
-                "model": model_key,
-                "variant": variant,
-                "mode": "verify-repair",
-                "accuracy_pct": v.get("repair_accuracy_pct"),
-                "ci_lo": v.get("repair_ci", [None, None])[0] if isinstance(v.get("repair_ci"), list) else None,
-                "ci_hi": v.get("repair_ci", [None, None])[1] if isinstance(v.get("repair_ci"), list) else None,
-            })
+            rows.append(
+                {
+                    "model": model_key,
+                    "variant": variant,
+                    "mode": "baseline",
+                    "accuracy_pct": v.get("baseline_accuracy_pct"),
+                    "ci_lo": v.get("baseline_ci", [None, None])[0]
+                    if isinstance(v.get("baseline_ci"), list)
+                    else None,
+                    "ci_hi": v.get("baseline_ci", [None, None])[1]
+                    if isinstance(v.get("baseline_ci"), list)
+                    else None,
+                }
+            )
+            rows.append(
+                {
+                    "model": model_key,
+                    "variant": variant,
+                    "mode": "verify-only",
+                    "accuracy_pct": v.get("verify_only_accuracy_pct"),
+                    "ci_lo": v.get("verify_only_ci", [None, None])[0]
+                    if isinstance(v.get("verify_only_ci"), list)
+                    else None,
+                    "ci_hi": v.get("verify_only_ci", [None, None])[1]
+                    if isinstance(v.get("verify_only_ci"), list)
+                    else None,
+                }
+            )
+            rows.append(
+                {
+                    "model": model_key,
+                    "variant": variant,
+                    "mode": "verify-repair",
+                    "accuracy_pct": v.get("repair_accuracy_pct"),
+                    "ci_lo": v.get("repair_ci", [None, None])[0]
+                    if isinstance(v.get("repair_ci"), list)
+                    else None,
+                    "ci_hi": v.get("repair_ci", [None, None])[1]
+                    if isinstance(v.get("repair_ci"), list)
+                    else None,
+                }
+            )
     return rows
 
 
@@ -160,24 +190,38 @@ def build_per_model_summary(exp121: dict) -> list[dict]:
         m121 = exp121["models"].get(model_key, {})
         hyp = m121.get("hypothesis_test", {})
         all_deltas = list(hyp.get("per_variant_delta", {}).values())
-        adv_deltas = [hyp.get("per_variant_delta", {}).get(v) for v in ADV_VARIANTS if hyp.get("per_variant_delta", {}).get(v) is not None]
+        adv_deltas = [
+            hyp.get("per_variant_delta", {}).get(v)
+            for v in ADV_VARIANTS
+            if hyp.get("per_variant_delta", {}).get(v) is not None
+        ]
         ctrl_delta = hyp.get("control_mean_delta")
         all_ci = bootstrap_ci(all_deltas) if all_deltas else (None, None)
         adv_ci = bootstrap_ci(adv_deltas) if adv_deltas else (None, None)
-        rows.append({
-            "model": model_key,
-            "control_delta_pp": round(ctrl_delta * 100, 1) if ctrl_delta is not None else None,
-            "adversarial_mean_delta_pp": round(hyp.get("adversarial_mean_delta", 0) * 100, 1),
-            "all_variants_mean_delta_pp": round(sum(all_deltas) / len(all_deltas) * 100, 1) if all_deltas else None,
-            "all_variants_ci_lo_pp": round(all_ci[0] * 100, 1) if all_ci[0] is not None else None,
-            "all_variants_ci_hi_pp": round(all_ci[1] * 100, 1) if all_ci[1] is not None else None,
-            "adv_only_mean_delta_pp": round(sum(adv_deltas) / len(adv_deltas) * 100, 1) if adv_deltas else None,
-            "adv_only_ci_lo_pp": round(adv_ci[0] * 100, 1) if adv_ci[0] is not None else None,
-            "adv_only_ci_hi_pp": round(adv_ci[1] * 100, 1) if adv_ci[1] is not None else None,
-            "hypothesis_p_value": hyp.get("p_value"),
-            "hypothesis_supported_p05": hyp.get("reject_null_p05"),
-            "interpretation": hyp.get("interpretation"),
-        })
+        rows.append(
+            {
+                "model": model_key,
+                "control_delta_pp": round(ctrl_delta * 100, 1) if ctrl_delta is not None else None,
+                "adversarial_mean_delta_pp": round(hyp.get("adversarial_mean_delta", 0) * 100, 1),
+                "all_variants_mean_delta_pp": round(sum(all_deltas) / len(all_deltas) * 100, 1)
+                if all_deltas
+                else None,
+                "all_variants_ci_lo_pp": round(all_ci[0] * 100, 1)
+                if all_ci[0] is not None
+                else None,
+                "all_variants_ci_hi_pp": round(all_ci[1] * 100, 1)
+                if all_ci[1] is not None
+                else None,
+                "adv_only_mean_delta_pp": round(sum(adv_deltas) / len(adv_deltas) * 100, 1)
+                if adv_deltas
+                else None,
+                "adv_only_ci_lo_pp": round(adv_ci[0] * 100, 1) if adv_ci[0] is not None else None,
+                "adv_only_ci_hi_pp": round(adv_ci[1] * 100, 1) if adv_ci[1] is not None else None,
+                "hypothesis_p_value": hyp.get("p_value"),
+                "hypothesis_supported_p05": hyp.get("reject_null_p05"),
+                "interpretation": hyp.get("interpretation"),
+            }
+        )
     return rows
 
 
@@ -215,6 +259,7 @@ def compute_bootstrap_deltas(exp121: dict) -> dict:
 
 # ── Format tables as Markdown ──────────────────────────────────────────────────
 
+
 def fmt(val, decimals: int = 1, suffix: str = "") -> str:
     """Format a number, returning '—' for None."""
     if val is None:
@@ -250,23 +295,29 @@ def render_per_variant_table(rows: list[dict]) -> str:
     by_key = {(r["model"], r["variant"]): r for r in rows}
     headers = [
         "Variant",
-        "Qwen3.5 Baseline", "Qwen3.5 Repair", "Qwen3.5 Δ (pp)",
-        "Gemma4 Baseline", "Gemma4 Repair", "Gemma4 Δ (pp)",
+        "Qwen3.5 Baseline",
+        "Qwen3.5 Repair",
+        "Qwen3.5 Δ (pp)",
+        "Gemma4 Baseline",
+        "Gemma4 Repair",
+        "Gemma4 Δ (pp)",
     ]
     table_rows = []
     for variant in VARIANTS:
         q = by_key.get(("Qwen3.5-0.8B", variant), {})
         g = by_key.get(("Gemma4-E4B-it", variant), {})
         label = VARIANT_LABELS[variant]
-        table_rows.append([
-            label,
-            f"{fmt(q.get('baseline_acc_pct'))}% [{pct(q.get('baseline_ci_lo'))}–{pct(q.get('baseline_ci_hi'))}]",
-            f"{fmt(q.get('repair_acc_pct'))}%",
-            f"**+{fmt(q.get('delta_pp'))}**",
-            f"{fmt(g.get('baseline_acc_pct'))}% [{pct(g.get('baseline_ci_lo'))}–{pct(g.get('baseline_ci_hi'))}]",
-            f"{fmt(g.get('repair_acc_pct'))}%",
-            f"**+{fmt(g.get('delta_pp'))}**",
-        ])
+        table_rows.append(
+            [
+                label,
+                f"{fmt(q.get('baseline_acc_pct'))}% [{pct(q.get('baseline_ci_lo'))}–{pct(q.get('baseline_ci_hi'))}]",
+                f"{fmt(q.get('repair_acc_pct'))}%",
+                f"**+{fmt(q.get('delta_pp'))}**",
+                f"{fmt(g.get('baseline_acc_pct'))}% [{pct(g.get('baseline_ci_lo'))}–{pct(g.get('baseline_ci_hi'))}]",
+                f"{fmt(g.get('repair_acc_pct'))}%",
+                f"**+{fmt(g.get('delta_pp'))}**",
+            ]
+        )
     return md_table(headers, table_rows)
 
 
@@ -281,13 +332,15 @@ def render_per_mode_table(rows: list[dict]) -> str:
             b = by_key.get((model, variant, "baseline"), {})
             v = by_key.get((model, variant, "verify-only"), {})
             r = by_key.get((model, variant, "verify-repair"), {})
-            table_rows.append([
-                model,
-                VARIANT_LABELS[variant],
-                fmt(b.get("accuracy_pct")),
-                fmt(v.get("accuracy_pct")),
-                fmt(r.get("accuracy_pct")),
-            ])
+            table_rows.append(
+                [
+                    model,
+                    VARIANT_LABELS[variant],
+                    fmt(b.get("accuracy_pct")),
+                    fmt(v.get("accuracy_pct")),
+                    fmt(r.get("accuracy_pct")),
+                ]
+            )
     return md_table(headers, table_rows)
 
 
@@ -327,24 +380,34 @@ def render_model_summary_table(rows: list[dict], bootstrap_deltas: dict | None =
 def render_error_taxonomy_table(exp122: dict) -> str:
     """Render error detection rates from Exp 122 analysis_2_carnot_detection."""
     det = exp122.get("analysis_2_carnot_detection", {})
-    headers = ["Error Type", "Instances", "Ising Detects", "Detection Rate", "Repair Rate", "Catchable?"]
+    headers = [
+        "Error Type",
+        "Instances",
+        "Ising Detects",
+        "Detection Rate",
+        "Repair Rate",
+        "Catchable?",
+    ]
     table_rows = []
     for etype, data in det.items():
         if etype.startswith("_"):
             continue
         label = etype.replace("_", " ").title()
-        table_rows.append([
-            label,
-            fmt(data.get("n_instances"), 0),
-            fmt(data.get("n_detected_by_ising"), 0),
-            f"{fmt(data.get('detection_rate_pct'))}%",
-            f"{fmt(data.get('repair_rate_given_detected_pct'))}%",
-            "Yes" if data.get("is_catchable_by_ising") else "No",
-        ])
+        table_rows.append(
+            [
+                label,
+                fmt(data.get("n_instances"), 0),
+                fmt(data.get("n_detected_by_ising"), 0),
+                f"{fmt(data.get('detection_rate_pct'))}%",
+                f"{fmt(data.get('repair_rate_given_detected_pct'))}%",
+                "Yes" if data.get("is_catchable_by_ising") else "No",
+            ]
+        )
     return md_table(headers, table_rows)
 
 
 # ── Build the Adversarial Robustness report section ───────────────────────────
+
 
 def build_report_section(
     per_variant_rows: list[dict],
@@ -380,7 +443,7 @@ def build_report_section(
 
 ## 18. Adversarial Robustness (Experiments 120–122)
 
-*Added {__import__('datetime').date.today().isoformat()}. These experiments extend the GSM8K verify-repair
+*Added {__import__("datetime").date.today().isoformat()}. These experiments extend the GSM8K verify-repair
 benchmark to adversarially perturbed inputs and characterise WHY the Carnot pipeline improves.*
 
 ### 18.1 Experimental Design
@@ -458,12 +521,12 @@ that Ising cannot catch.
 
 {render_model_summary_table(model_summary_rows, bootstrap_deltas)}
 
-**Qwen3.5-0.8B:** The adversarial mean improvement delta ({vs.get('number_swapped', {}).get('avg_improvement_delta_pp', '?'):.1f} pp for number-swapped alone,
-{q_boot.get('mean_adv_minus_control_pp', '?'):.1f} pp average excess over control) is
-statistically significant at p<0.05 (p={qwen_p:.3f}).  Bootstrap CI on (adv − ctrl): [{q_boot.get('ci_95_lo_pp', '?'):.1f}, {q_boot.get('ci_95_hi_pp', '?'):.1f}] pp.
+**Qwen3.5-0.8B:** The adversarial mean improvement delta ({vs.get("number_swapped", {}).get("avg_improvement_delta_pp", "?"):.1f} pp for number-swapped alone,
+{q_boot.get("mean_adv_minus_control_pp", "?"):.1f} pp average excess over control) is
+statistically significant at p<0.05 (p={qwen_p:.3f}).  Bootstrap CI on (adv − ctrl): [{q_boot.get("ci_95_lo_pp", "?"):.1f}, {q_boot.get("ci_95_hi_pp", "?"):.1f}] pp.
 
 **Gemma4-E4B-it:** The effect is positive but smaller and does not reach p<0.05 (p={gemma_p:.3f}).
-Bootstrap CI on (adv − ctrl): [{g_boot.get('ci_95_lo_pp', '?'):.1f}, {g_boot.get('ci_95_hi_pp', '?'):.1f}] pp.
+Bootstrap CI on (adv − ctrl): [{g_boot.get("ci_95_lo_pp", "?"):.1f}, {g_boot.get("ci_95_hi_pp", "?"):.1f}] pp.
 
 **Interpretation:** The hypothesis is **supported for Qwen3.5-0.8B** and shows positive direction for
 Gemma4-E4B-it.  The mechanism is clear: adversarial perturbations that inject or scramble numbers
@@ -535,6 +598,7 @@ amplify, while being transparent about the 67% of errors that require richer sem
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 
+
 def main() -> None:
     print("=" * 70)
     print("Experiment 131: Adversarial Robustness Writeup")
@@ -563,9 +627,11 @@ def main() -> None:
     print("\n[3] Computing bootstrap CIs ...")
     bootstrap_deltas = compute_bootstrap_deltas(exp121)
     for model, bd in bootstrap_deltas.items():
-        print(f"    {model}: adv−ctrl = {bd['mean_adv_minus_control_pp']:+.1f} pp  "
-              f"[{bd['ci_95_lo_pp']:.1f}, {bd['ci_95_hi_pp']:.1f}]  "
-              f"CI_excludes_zero={bd['ci_excludes_zero']}")
+        print(
+            f"    {model}: adv−ctrl = {bd['mean_adv_minus_control_pp']:+.1f} pp  "
+            f"[{bd['ci_95_lo_pp']:.1f}, {bd['ci_95_hi_pp']:.1f}]  "
+            f"CI_excludes_zero={bd['ci_excludes_zero']}"
+        )
 
     # 4. Answer the key question
     print("\n[4] Key question: Is improvement LARGER on adversarial variants?")
@@ -588,8 +654,12 @@ def main() -> None:
     # 6. Build report section
     print("\n[6] Building report section ...")
     report_section = build_report_section(
-        per_variant_rows, per_mode_rows, model_summary_rows,
-        bootstrap_deltas, exp121, exp122,
+        per_variant_rows,
+        per_mode_rows,
+        model_summary_rows,
+        bootstrap_deltas,
+        exp121,
+        exp122,
     )
 
     # 7. Append to technical-report.md
@@ -608,10 +678,15 @@ def main() -> None:
         idx = existing.index(SECTION_MARKER)
         # Find the next ## heading after the section (if any) to know where it ends
         # Search from the line after SECTION_MARKER
-        rest = existing[idx + len(SECTION_MARKER):]
+        rest = existing[idx + len(SECTION_MARKER) :]
         next_h2 = rest.find("\n## ")
         if next_h2 >= 0:
-            new_content = existing[:idx] + report_section + "\n" + existing[idx + len(SECTION_MARKER) + next_h2:]
+            new_content = (
+                existing[:idx]
+                + report_section
+                + "\n"
+                + existing[idx + len(SECTION_MARKER) + next_h2 :]
+            )
         else:
             new_content = existing[:idx] + report_section + "\n"
         print("    Section 18 already existed — replacing.")

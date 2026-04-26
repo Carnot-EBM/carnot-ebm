@@ -255,7 +255,9 @@ class TestMain:
         assert "ACTION REQUIRED" in out
 
     def test_main_no_action_required_when_auto_fix_applied(self, tmp_path, capsys):
-        autofix = _make_autofix_result(gpu_detected=True, auto_fix_applied=True, final_env_value="1")
+        autofix = _make_autofix_result(
+            gpu_detected=True, auto_fix_applied=True, final_env_value="1"
+        )
         preflight = _make_preflight_result(honest_verdict="env_not_propagating")
         art = _make_env_autofix_art("auto_fix_applied", True)
         (tmp_path / "results").mkdir(parents=True, exist_ok=True)
@@ -293,7 +295,9 @@ class TestMain:
         assert "ACTION REQUIRED" not in out
 
     def test_main_retro_022_resolved_in_artifact(self, tmp_path, capsys):
-        autofix = _make_autofix_result(gpu_detected=True, auto_fix_applied=True, final_env_value="1")
+        autofix = _make_autofix_result(
+            gpu_detected=True, auto_fix_applied=True, final_env_value="1"
+        )
         preflight = _make_preflight_result()
         art = _make_env_autofix_art("auto_fix_applied", True)
         (tmp_path / "results").mkdir(parents=True, exist_ok=True)
@@ -351,9 +355,18 @@ class TestMain:
             result = _mod.main()
 
         required = {
-            "experiment", "title", "run_date", "started_at", "finished_at",
-            "duration_s", "status", "honest_verdict", "retro_022_resolved",
-            "auto_fix_applied", "gpu_detected", "n_corrupt_files_remaining",
+            "experiment",
+            "title",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "honest_verdict",
+            "retro_022_resolved",
+            "auto_fix_applied",
+            "gpu_detected",
+            "n_corrupt_files_remaining",
         }
         assert required.issubset(result.keys())
         assert result["experiment"] == 413

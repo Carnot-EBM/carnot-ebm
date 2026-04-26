@@ -175,7 +175,7 @@ def load_exp554_fp_patterns(path: Path) -> list[ViolationPattern]:
         extractor_name = extractor_result.get("extractor_name", result_key)
         for i, flag in enumerate(flags):
             cell = flag.get("cell", "")
-            step_text = f"exp554_{extractor_name}_q{i+1}"
+            step_text = f"exp554_{extractor_name}_q{i + 1}"
             if cell == "FN":
                 fn_steps.append(step_text)
             elif cell == "FP":
@@ -323,9 +323,12 @@ def run_session(
                 "is_correct": is_correct,
                 "violation_found": violation_found,
                 "cell": (
-                    "FP" if (violation_found and is_correct)
-                    else "TP" if (violation_found and not is_correct)
-                    else "FN" if (not violation_found and not is_correct)
+                    "FP"
+                    if (violation_found and is_correct)
+                    else "TP"
+                    if (violation_found and not is_correct)
+                    else "FN"
+                    if (not violation_found and not is_correct)
                     else "TN"
                 ),
             }
@@ -347,9 +350,7 @@ def main() -> None:
     # ------------------------------------------------------------------
     exp554_patterns = load_exp554_fp_patterns(EXP554_PATH)
     if not exp554_patterns:
-        _log.error(
-            "Exp 554 FP patterns unavailable — cannot run FR-11 real-data relay."
-        )
+        _log.error("Exp 554 FP patterns unavailable — cannot run FR-11 real-data relay.")
         artifact = tmpl.build_result(
             {
                 "schema": "carnot.selflearn_relay.v3",
@@ -443,9 +444,7 @@ def main() -> None:
     # ------------------------------------------------------------------
     _log.info("Session 2: extended constraints, constraint_memory active")
     extended_pipeline = VerifyRepairPipeline(model=None, constraint_memory=cam)
-    session2_fp_rate, session2_tp_rate, session2_details = run_session(
-        corpus, extended_pipeline
-    )
+    session2_fp_rate, session2_tp_rate, session2_details = run_session(corpus, extended_pipeline)
     _log.info(
         "Session 2 done — fp_rate=%.3f, tp_rate=%.3f",
         session2_fp_rate,

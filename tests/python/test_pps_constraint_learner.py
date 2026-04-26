@@ -182,9 +182,9 @@ class TestPPSConstraintLearner:
         learner.fit_domain(ConstraintDomain.ARITHMETIC, ["carry", "carry", "sign", "carry"])
 
         # CODE and LOGICAL must be bit-for-bit unchanged.
-        assert np.array_equal(
-            learner._partitions[ConstraintDomain.CODE].weights, code_before
-        ), "CODE partition must not change when ARITHMETIC is trained"
+        assert np.array_equal(learner._partitions[ConstraintDomain.CODE].weights, code_before), (
+            "CODE partition must not change when ARITHMETIC is trained"
+        )
         assert np.array_equal(
             learner._partitions[ConstraintDomain.LOGICAL].weights, logical_before
         ), "LOGICAL partition must not change when ARITHMETIC is trained"
@@ -207,9 +207,7 @@ class TestPPSConstraintLearner:
         assert np.array_equal(
             learner._partitions[ConstraintDomain.ARITHMETIC].weights, arith_before
         )
-        assert np.array_equal(
-            learner._partitions[ConstraintDomain.LOGICAL].weights, logical_before
-        )
+        assert np.array_equal(learner._partitions[ConstraintDomain.LOGICAL].weights, logical_before)
 
     def test_generate_boundary_violations_returns_n_strings(self):
         """SCENARIO-SELFLEARN-017: generate_boundary_violations returns n strings."""

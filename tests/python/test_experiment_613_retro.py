@@ -103,11 +103,13 @@ def _write_fake_results(
     )
     # exp601 — exclusion manifest verification
     (results_dir / "experiment_601_exclusion_manifest_verification.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 6.685,
-            "retro_067_resolved": retro_067_resolved,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 6.685,
+                "retro_067_resolved": retro_067_resolved,
+            }
+        )
     )
     # exp602 — live corpus expansion
     (results_dir / "experiment_602_live_corpus_v2.json").write_text(
@@ -115,23 +117,27 @@ def _write_fake_results(
     )
     # exp603 — CoACEV4 live
     (results_dir / "experiment_603_coace_v4_live.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 938.48,
-            "v4_recall": v4_recall,
-            "gate_open": False,
-            "retro_068_resolved": retro_068_resolved_flag,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 938.48,
+                "v4_recall": v4_recall,
+                "gate_open": False,
+                "retro_068_resolved": retro_068_resolved_flag,
+            }
+        )
     )
     # exp604 — DSVD live fine-tuning
     (results_dir / "experiment_604_dsvd_live_finetuning.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.403,
-            "post_finetune_val_auc": post_finetune_val_auc,
-            "gate_open": False,
-            "retro_069_resolved": retro_069_resolved_flag,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.403,
+                "post_finetune_val_auc": post_finetune_val_auc,
+                "gate_open": False,
+                "retro_069_resolved": retro_069_resolved_flag,
+            }
+        )
     )
     # exp605 — extractor diagnostic v4
     (results_dir / "experiment_605_extractor_diagnostic_v4.json").write_text(
@@ -143,55 +149,67 @@ def _write_fake_results(
     )
     # exp607 — JEPA v12 OOD
     (results_dir / "experiment_607_jepa_v12_ood.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 19.904,
-            "v12_ood_auc": v12_ood_auc,
-            "fr11_generalization_confirmed": fr11_generalization_confirmed,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 19.904,
+                "v12_ood_auc": v12_ood_auc,
+                "fr11_generalization_confirmed": fr11_generalization_confirmed,
+            }
+        )
     )
     # exp608 — NUP Probe v6
     (results_dir / "experiment_608_nup_probe_v6.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 7.516,
-            "v6_val_auc": v6_val_auc,
-            "retro_049_resolved": retro_049_resolved,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 7.516,
+                "v6_val_auc": v6_val_auc,
+                "retro_049_resolved": retro_049_resolved,
+            }
+        )
     )
     # exp609 — live VR CoACEV4
     (results_dir / "experiment_609_live_vr_coace_v4.json").write_text(
-        json.dumps({
-            "status": "blocked" if not retro_033_resolved else "success",
-            "duration_s": 0.0,
-            "signed_improvement": signed_improvement,
-            "retro_033_resolved": retro_033_resolved,
-        })
+        json.dumps(
+            {
+                "status": "blocked" if not retro_033_resolved else "success",
+                "duration_s": 0.0,
+                "signed_improvement": signed_improvement,
+                "retro_033_resolved": retro_033_resolved,
+            }
+        )
     )
     # exp610 — D-Wave wire-in
     (results_dir / "experiment_610_dwave_wire_in.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 24.813,
-            "dwave_backend_registered": dwave_backend_registered,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 24.813,
+                "dwave_backend_registered": dwave_backend_registered,
+            }
+        )
     )
     # exp611 — FR-11 real violations v5
     (results_dir / "experiment_611_flip_fr11_v5.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.0,
-            "fr11_real_violations_confirmed": fr11_real_violations_confirmed,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.0,
+                "fr11_real_violations_confirmed": fr11_real_violations_confirmed,
+            }
+        )
     )
     # exp612 — FACT-E p-bit
     (results_dir / "experiment_612_fact_e_pbit.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.002,
-            "probe_viable": probe_viable,
-            "synchronous_rtl_created": synchronous_rtl_created,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.002,
+                "probe_viable": probe_viable,
+                "synchronous_rtl_created": synchronous_rtl_created,
+            }
+        )
     )
 
 
@@ -210,9 +228,7 @@ def test_retro_033_not_resolved_when_blocked(
     assert retro["retro_033_resolved"] is False
 
 
-def test_retro_033_resolved_when_flag_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_033_resolved_when_flag_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_033_resolved is True when Exp 609 sets retro_033_resolved=True."""
     _write_fake_results(tmp_path, retro_033_resolved=True, signed_improvement=0.05)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -230,9 +246,7 @@ def test_retro_049_resolved_when_nup_v6_auc_high(
     assert retro["retro_049_resolved"] is True
 
 
-def test_retro_049_not_resolved_when_false(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_049_not_resolved_when_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_049_resolved is False when Exp 608 does not set the flag."""
     _write_fake_results(tmp_path, retro_049_resolved=False, v6_val_auc=0.739)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -240,9 +254,7 @@ def test_retro_049_not_resolved_when_false(
     assert retro["retro_049_resolved"] is False
 
 
-def test_retro_067_resolved_from_exp601(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_067_resolved_from_exp601(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_067_resolved is True when Exp 601 sets retro_067_resolved=True."""
     _write_fake_results(tmp_path, retro_067_resolved=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -251,9 +263,7 @@ def test_retro_067_resolved_from_exp601(
     assert retro["manifest_verified"] is True
 
 
-def test_retro_067_not_resolved_when_false(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_067_not_resolved_when_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_067_resolved is False when Exp 601 does not set the flag."""
     _write_fake_results(tmp_path, retro_067_resolved=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -273,9 +283,7 @@ def test_retro_068_not_resolved_when_recall_low(
     assert retro["coace_v4_recall"] == pytest.approx(0.04, abs=1e-6)
 
 
-def test_retro_068_resolved_when_flag_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_068_resolved_when_flag_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_068_resolved is True when Exp 603 sets retro_068_resolved=True."""
     _write_fake_results(tmp_path, v4_recall=0.25, retro_068_resolved_flag=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -294,9 +302,7 @@ def test_retro_069_not_resolved_when_auc_low(
     assert retro["dsvd_live_auc"] == pytest.approx(0.158, abs=1e-6)
 
 
-def test_retro_069_resolved_when_flag_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_069_resolved_when_flag_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_069_resolved is True when Exp 604 sets retro_069_resolved=True."""
     _write_fake_results(tmp_path, post_finetune_val_auc=0.85, retro_069_resolved_flag=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -304,9 +310,7 @@ def test_retro_069_resolved_when_flag_set(
     assert retro["retro_069_resolved"] is True
 
 
-def test_fr11_confirmed_from_exp607(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fr11_confirmed_from_exp607(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """fr11_confirmed is True when Exp 607 sets fr11_generalization_confirmed=True."""
     _write_fake_results(
         tmp_path, fr11_generalization_confirmed=True, fr11_real_violations_confirmed=False
@@ -340,9 +344,7 @@ def test_fr11_not_confirmed_when_both_false(
     assert retro["fr11_confirmed"] is False
 
 
-def test_dwave_wired_from_exp610(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_dwave_wired_from_exp610(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """dwave_wired is True when Exp 610 sets dwave_backend_registered=True."""
     _write_fake_results(tmp_path, dwave_backend_registered=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -350,9 +352,7 @@ def test_dwave_wired_from_exp610(
     assert retro["dwave_wired"] is True
 
 
-def test_dwave_not_wired_when_false(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_dwave_not_wired_when_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """dwave_wired is False when Exp 610 does not register D-Wave backend."""
     _write_fake_results(tmp_path, dwave_backend_registered=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -390,9 +390,7 @@ def test_corpus_expanded_at_exact_threshold(
     assert retro["corpus_expanded"] is True
 
 
-def test_nup_v6_auc_reflects_exp608(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_nup_v6_auc_reflects_exp608(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """nup_v6_auc reflects Exp 608's v6_val_auc field."""
     _write_fake_results(tmp_path, v6_val_auc=0.9642857142857143)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -400,9 +398,7 @@ def test_nup_v6_auc_reflects_exp608(
     assert retro["nup_v6_auc"] == pytest.approx(0.9642857142857143, abs=1e-6)
 
 
-def test_fpga_rtl_created_from_exp612(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fpga_rtl_created_from_exp612(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """fpga_rtl_created is True when Exp 612 sets synchronous_rtl_created=True."""
     _write_fake_results(tmp_path, synchronous_rtl_created=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -440,9 +436,7 @@ def test_honest_verdict_probe_and_manifest_closed(
     assert retro["honest_verdict"] == "probe_and_manifest_closed_recall_still_blocked"
 
 
-def test_honest_verdict_partial_progress(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_honest_verdict_partial_progress(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """honest_verdict='partial_progress_recall_still_blocked' when only one of 049/067 resolved."""
     _write_fake_results(
         tmp_path,
@@ -455,9 +449,7 @@ def test_honest_verdict_partial_progress(
     assert retro["honest_verdict"] == "partial_progress_recall_still_blocked"
 
 
-def test_honest_verdict_no_retros_closed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_honest_verdict_no_retros_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """honest_verdict='no_retros_closed' when nothing is resolved."""
     _write_fake_results(
         tmp_path,
@@ -475,9 +467,7 @@ def test_honest_verdict_no_retros_closed(
 # ---------------------------------------------------------------------------
 
 
-def test_closure_rate_two_over_twelve(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_closure_rate_two_over_twelve(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Closure rate = 2/12 when RETRO-049 and RETRO-067 are resolved."""
     _write_fake_results(tmp_path, retro_049_resolved=True, retro_067_resolved=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -561,9 +551,7 @@ def test_retro_070_not_added_when_033_resolved(
     assert "RETRO-070" not in ids
 
 
-def test_new_retro_item_structure(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_new_retro_item_structure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Each new_retro_item has id, title, carry_count, description, priority fields."""
     _write_fake_results(tmp_path, retro_033_resolved=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -618,9 +606,7 @@ def test_top_priority_scale_200q_when_033_resolved(
 # ---------------------------------------------------------------------------
 
 
-def test_n_experiments_is_fourteen(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_n_experiments_is_fourteen(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_experiments_run = 14 when all 13 upstream files exist plus this retro."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -628,9 +614,7 @@ def test_n_experiments_is_fourteen(
     assert retro["n_experiments_run"] == 14
 
 
-def test_n_not_run_zero_when_all_present(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_n_not_run_zero_when_all_present(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_not_run = 0 when all upstream result files are present."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -661,9 +645,7 @@ def test_mean_time_min_is_wall_time_over_n_experiments(
     assert retro["mean_time_min"] == pytest.approx(expected, abs=1e-6)
 
 
-def test_schema_and_milestone_fields(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_schema_and_milestone_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Schema and milestone fields are set to the expected v21 values."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -677,9 +659,7 @@ def test_schema_and_milestone_fields(
 # ---------------------------------------------------------------------------
 
 
-def test_main_writes_deliverable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_writes_deliverable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """main() writes a valid JSON artifact at DELIVERABLE path with all required fields."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -693,8 +673,14 @@ def test_main_writes_deliverable(
     artifact = json.loads(deliverable.read_text())
 
     required_fields = [
-        "experiment", "title", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "schema",
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "schema",
         "retro_033_resolved",
         "retro_049_resolved",
         "retro_067_resolved",

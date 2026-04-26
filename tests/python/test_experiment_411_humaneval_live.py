@@ -182,9 +182,7 @@ class TestLoadPreflight:
         preflight_dir = tmp_path / "results"
         preflight_dir.mkdir()
         preflight_file = preflight_dir / "experiment_404_preflight_v2.json"
-        preflight_file.write_text(
-            json.dumps({"honest_verdict": "env_not_propagating"})
-        )
+        preflight_file.write_text(json.dumps({"honest_verdict": "env_not_propagating"}))
         result = _load_preflight(tmp_path)
         assert result["honest_verdict"] == "env_not_propagating"
 
@@ -246,9 +244,7 @@ class TestMain:
       Success — all gates pass → success artifact
     """
 
-    def _write_fake_preflight(
-        self, tmp_path: Path, verdict: str = "gpu_confirmed_live"
-    ) -> None:
+    def _write_fake_preflight(self, tmp_path: Path, verdict: str = "gpu_confirmed_live") -> None:
         """Write a minimal preflight JSON to tmp_path/results/."""
         results_dir = tmp_path / "results"
         results_dir.mkdir(parents=True, exist_ok=True)
@@ -295,6 +291,7 @@ class TestMain:
 
         # ---- LiveGPUGate.require_live_or_blocked ----
         if gate_blocked:
+
             def _fake_gate(tmpl: Any, model_ids: Any) -> dict[str, Any]:
                 return tmpl.build_result(
                     {
@@ -313,9 +310,7 @@ class TestMain:
         else:
             _fake_gate = lambda tmpl, model_ids: None  # gate passes
 
-        monkeypatch.setattr(
-            _mod.LiveGPUGate, "require_live_or_blocked", staticmethod(_fake_gate)
-        )
+        monkeypatch.setattr(_mod.LiveGPUGate, "require_live_or_blocked", staticmethod(_fake_gate))
 
         # ---- setup_gpu ----
         def _fake_setup_gpu(self_obj: Any, model_specs: Any, **kw: Any) -> dict[str, Any]:
@@ -349,9 +344,7 @@ class TestMain:
         monkeypatch.setattr(
             _mod,
             "_load_problems",
-            lambda: (
-                problems_override if problems_override is not None else _MINI_PROBLEMS
-            ),
+            lambda: problems_override if problems_override is not None else _MINI_PROBLEMS,
         )
 
         # ---- _process_problem ----
@@ -372,43 +365,33 @@ class TestMain:
     def test_preflight_missing_produces_blocked(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        artifact = self._run_main(
-            tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False)
         assert artifact["status"] == "blocked"
         assert artifact["honest_verdict"] == "blocked"
 
     def test_preflight_missing_blocked_reason_present(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        artifact = self._run_main(
-            tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False)
         assert "blocked_reason" in artifact
 
     def test_preflight_missing_n_problems_zero(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        artifact = self._run_main(
-            tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False)
         assert artifact["n_problems"] == 0
 
     def test_preflight_missing_signed_improvement_zero(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        artifact = self._run_main(
-            tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False)
         assert artifact["signed_improvement"] == 0.0
 
     def test_preflight_missing_preflight_verdict_in_artifact(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """The artifact must record the preflight_verdict so it is auditable."""
-        artifact = self._run_main(
-            tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False)
         assert artifact.get("preflight_verdict") == "missing"
 
     # -- Gate 0b: preflight corrupt --
@@ -416,17 +399,13 @@ class TestMain:
     def test_preflight_corrupt_produces_blocked(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        artifact = self._run_main(
-            tmp_path, monkeypatch, preflight_corrupt=True, gate_blocked=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, preflight_corrupt=True, gate_blocked=False)
         assert artifact["status"] == "blocked"
 
     def test_preflight_corrupt_preflight_verdict_in_artifact(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        artifact = self._run_main(
-            tmp_path, monkeypatch, preflight_corrupt=True, gate_blocked=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, preflight_corrupt=True, gate_blocked=False)
         assert artifact.get("preflight_verdict") == "corrupt"
 
     # -- Gate 0c: preflight verdict != gpu_confirmed_live --
@@ -470,9 +449,7 @@ class TestMain:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """Even the preflight-blocked artifact must carry the correct experiment ID."""
-        artifact = self._run_main(
-            tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False
-        )
+        artifact = self._run_main(tmp_path, monkeypatch, preflight_missing=True, gate_blocked=False)
         assert artifact["experiment"] == 411
 
     # -- Gate 0 passes — Gate 1: LiveGPUGate blocks --
@@ -574,9 +551,7 @@ class TestMain:
         )
         assert artifact["inference_mode"] == "live_gpu"
 
-    def test_success_status_success(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_success_status_success(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         artifact = self._run_main(
             tmp_path,
             monkeypatch,
@@ -587,9 +562,7 @@ class TestMain:
         )
         assert artifact["status"] == "success"
 
-    def test_success_schema_v2(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_success_schema_v2(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         artifact = self._run_main(
             tmp_path,
             monkeypatch,
@@ -676,9 +649,7 @@ class TestMain:
         """When repair fixes some problems, honest_verdict = code_verification_positive."""
         from experiment_369_humaneval_live import HumanEvalResult369
 
-        def _failing_then_repaired(
-            p: Any, tok: Any, mod: Any, dev: Any
-        ) -> HumanEvalResult369:
+        def _failing_then_repaired(p: Any, tok: Any, mod: Any, dev: Any) -> HumanEvalResult369:
             return HumanEvalResult369(
                 problem_id=p["task_id"],
                 generated_code="def f(): return 0",
@@ -694,9 +665,7 @@ class TestMain:
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "0")
 
         self._write_fake_preflight(tmp_path, "gpu_confirmed_live")
-        monkeypatch.setattr(
-            _mod, "_load_preflight", lambda repo_root=None: _GOOD_PREFLIGHT
-        )
+        monkeypatch.setattr(_mod, "_load_preflight", lambda repo_root=None: _GOOD_PREFLIGHT)
         monkeypatch.setattr(_mod, "_REPO_ROOT", tmp_path)
         monkeypatch.setattr(
             _mod.LiveGPUGate,
@@ -791,9 +760,7 @@ class TestMain:
             checkpoint_calls.append(step)
             original_checkpoint_save(self_obj, partial, step=step)
 
-        monkeypatch.setattr(
-            _mod.ExperimentTemplate, "checkpoint_save", _tracking_checkpoint
-        )
+        monkeypatch.setattr(_mod.ExperimentTemplate, "checkpoint_save", _tracking_checkpoint)
 
         self._run_main(
             tmp_path,
@@ -842,9 +809,7 @@ class TestMain:
 
         monkeypatch.setenv("CARNOT_REPO_ROOT", str(tmp_path))
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "0")
-        monkeypatch.setattr(
-            _mod, "_load_preflight", lambda repo_root=None: _GOOD_PREFLIGHT
-        )
+        monkeypatch.setattr(_mod, "_load_preflight", lambda repo_root=None: _GOOD_PREFLIGHT)
         monkeypatch.setattr(_mod, "_REPO_ROOT", tmp_path)
 
         def _fake_gate(tmpl: Any, model_ids: Any) -> dict[str, Any]:
@@ -863,9 +828,7 @@ class TestMain:
                 status="blocked",
             )
 
-        monkeypatch.setattr(
-            _mod.LiveGPUGate, "require_live_or_blocked", staticmethod(_fake_gate)
-        )
+        monkeypatch.setattr(_mod.LiveGPUGate, "require_live_or_blocked", staticmethod(_fake_gate))
         monkeypatch.setattr(_mod, "_process_problem", _tracking_process)
 
         _mod.main()

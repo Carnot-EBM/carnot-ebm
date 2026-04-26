@@ -36,6 +36,7 @@ def test_experiment_module_importable() -> None:
     Spec: REQ-VERIFY-092
     """
     import scripts.experiment_433_spilled_energy as mod  # noqa: F401
+
     assert mod is not None
 
 

@@ -59,6 +59,7 @@ class TestCheckNinjaAvailable:
 
     def test_returns_true_when_ninja_found(self):
         """ninja on PATH → True."""
+
         def fake_run(cmd, **kw):
             if cmd == ["which", "ninja"]:
                 r = mock.MagicMock()
@@ -75,6 +76,7 @@ class TestCheckNinjaAvailable:
 
     def test_returns_true_when_ninja_build_found(self):
         """ninja not found but ninja-build is → True."""
+
         def fake_run(cmd, **kw):
             if cmd == ["which", "ninja-build"]:
                 r = mock.MagicMock()
@@ -91,6 +93,7 @@ class TestCheckNinjaAvailable:
 
     def test_returns_false_when_neither_found(self):
         """Neither ninja nor ninja-build on PATH → False."""
+
         def fake_run(cmd, **kw):
             r = mock.MagicMock()
             r.returncode = 1
@@ -115,6 +118,7 @@ class TestCheckNinjaAvailable:
 
     def test_returns_false_when_stdout_empty(self):
         """which exits 0 but stdout empty → treated as not found."""
+
         def fake_run(cmd, **kw):
             r = mock.MagicMock()
             r.returncode = 0
@@ -135,6 +139,7 @@ class TestCheckOpenblasAvailable:
 
     def test_returns_true_via_ldconfig(self):
         """ldconfig -p output contains 'openblas' → True."""
+
         def fake_run(cmd, **kw):
             if cmd == ["ldconfig", "-p"]:
                 r = mock.MagicMock()
@@ -205,16 +210,21 @@ class TestCheckOpenblasAvailable:
             with mock.patch.object(
                 Path,
                 "exists",
-                lambda self: str(self) in (
-                    "/usr/lib/libopenblas.so",
-                    "/usr/lib/x86_64-linux-gnu/libopenblas.so",
-                    "/usr/local/lib/libopenblas.so",
-                ) and str(self) == "/usr/lib/libopenblas.so",
+                lambda self: (
+                    str(self)
+                    in (
+                        "/usr/lib/libopenblas.so",
+                        "/usr/lib/x86_64-linux-gnu/libopenblas.so",
+                        "/usr/local/lib/libopenblas.so",
+                    )
+                    and str(self) == "/usr/lib/libopenblas.so"
+                ),
             ):
                 assert _mod.check_openblas_available() is True
 
     def test_returns_false_when_nothing_found(self):
         """All checks fail → False."""
+
         def fake_run(cmd, **kw):
             r = mock.MagicMock()
             r.returncode = 1
@@ -254,9 +264,12 @@ class TestCheckIronToolchainAvailable:
         fake_mod = types.ModuleType("mlir_aie")
         with mock.patch.dict(sys.modules, {"mlir_aie": fake_mod}):
             # Remove aie from modules to avoid interference
-            with mock.patch("importlib.import_module", side_effect=lambda name: {
-                "mlir_aie": fake_mod,
-            }[name]):
+            with mock.patch(
+                "importlib.import_module",
+                side_effect=lambda name: {
+                    "mlir_aie": fake_mod,
+                }[name],
+            ):
                 result = _mod.check_iron_toolchain_available()
         assert result is True
 
@@ -276,6 +289,7 @@ class TestCheckIronToolchainAvailable:
 
     def test_returns_false_when_neither_importable(self):
         """Both mlir_aie and aie fail → False."""
+
         def fake_import(name):
             raise ImportError(name)
 
@@ -337,7 +351,9 @@ class TestNPUPrereqResult:
         assert p.xdna_driver is True
 
     def test_all_false(self):
-        p = _mod.NPUPrereqResult(ninja=False, openblas=False, iron_toolchain=False, xdna_driver=False)
+        p = _mod.NPUPrereqResult(
+            ninja=False, openblas=False, iron_toolchain=False, xdna_driver=False
+        )
         assert p.ninja is False
         assert p.openblas is False
 
@@ -393,8 +409,15 @@ class TestBuildNpuResult:
     def test_result_contains_required_fields(self):
         prereqs = self._prereqs()
         result = _mod.build_npu_result(prereqs, vitisai_path_blocked=True, iron_viable=False)
-        required = {"schema", "experiment", "run_date", "honest_verdict", "prereqs",
-                    "vitisai_path_blocked", "iron_viable"}
+        required = {
+            "schema",
+            "experiment",
+            "run_date",
+            "honest_verdict",
+            "prereqs",
+            "vitisai_path_blocked",
+            "iron_viable",
+        }
         assert required.issubset(result.keys())
 
     def test_prereqs_embedded_as_dict(self):
@@ -462,6 +485,7 @@ class TestAttemptIronGemmDispatch:
 
     def test_returns_error_when_import_fails(self):
         """mlir_aie not importable → ok=False with error."""
+
         def fake_import(name, *a, **kw):
             raise ImportError("no mlir_aie")
 
@@ -538,7 +562,9 @@ class TestAttemptVitisaiBuild:
             result = _mod._attempt_vitisai_build()
         assert result["attempted"] is False
         assert result["succeeded"] is False
-        assert "import_failed" in result["build_step"] or "import" in result["error_summary"].lower()
+        assert (
+            "import_failed" in result["build_step"] or "import" in result["error_summary"].lower()
+        )
 
     def test_returns_not_attempted_when_prereqs_missing(self, tmp_path):
         """_check_source_build_prereqs returns non-empty list → attempted=False."""
@@ -631,9 +657,13 @@ class TestMainSmoke:
         with mock.patch.object(_mod, "RESULT_PATH", result_file):
             with mock.patch.object(_mod, "check_ninja_available", return_value=False):
                 with mock.patch.object(_mod, "check_openblas_available", return_value=False):
-                    with mock.patch.object(_mod, "check_iron_toolchain_available", return_value=False):
+                    with mock.patch.object(
+                        _mod, "check_iron_toolchain_available", return_value=False
+                    ):
                         with mock.patch.object(_mod, "check_xdna_driver_loaded", return_value=True):
-                            with mock.patch("python.carnot.pipeline.env_autofix.apply_env_autofix") as mock_fix:
+                            with mock.patch(
+                                "python.carnot.pipeline.env_autofix.apply_env_autofix"
+                            ) as mock_fix:
                                 mock_fix.return_value = mock.MagicMock(
                                     gpu_detected=False, auto_fix_applied=False
                                 )
@@ -663,10 +693,16 @@ class TestMainSmoke:
         with mock.patch.object(_mod, "RESULT_PATH", result_file):
             with mock.patch.object(_mod, "check_ninja_available", return_value=False):
                 with mock.patch.object(_mod, "check_openblas_available", return_value=False):
-                    with mock.patch.object(_mod, "check_iron_toolchain_available", return_value=True):
+                    with mock.patch.object(
+                        _mod, "check_iron_toolchain_available", return_value=True
+                    ):
                         with mock.patch.object(_mod, "check_xdna_driver_loaded", return_value=True):
-                            with mock.patch.object(_mod, "_attempt_iron_gemm_dispatch", return_value=iron_result):
-                                with mock.patch("python.carnot.pipeline.env_autofix.apply_env_autofix") as mock_fix:
+                            with mock.patch.object(
+                                _mod, "_attempt_iron_gemm_dispatch", return_value=iron_result
+                            ):
+                                with mock.patch(
+                                    "python.carnot.pipeline.env_autofix.apply_env_autofix"
+                                ) as mock_fix:
                                     mock_fix.return_value = mock.MagicMock(
                                         gpu_detected=False, auto_fix_applied=False
                                     )
@@ -692,11 +728,27 @@ class TestMainSmoke:
         with mock.patch.object(_mod, "RESULT_PATH", result_file):
             with mock.patch.object(_mod, "check_ninja_available", return_value=True):
                 with mock.patch.object(_mod, "check_openblas_available", return_value=True):
-                    with mock.patch.object(_mod, "check_iron_toolchain_available", return_value=False):
+                    with mock.patch.object(
+                        _mod, "check_iron_toolchain_available", return_value=False
+                    ):
                         with mock.patch.object(_mod, "check_xdna_driver_loaded", return_value=True):
-                            with mock.patch.object(_mod, "_attempt_vitisai_build", return_value=vitisai_result):
-                                with mock.patch.object(_mod, "_attempt_iron_gemm_dispatch", return_value={"ok": False, "latency_us": None, "speedup_vs_cpu": None, "error": "no mlir_aie", "approach": "iron_import_failed"}):
-                                    with mock.patch("python.carnot.pipeline.env_autofix.apply_env_autofix") as mock_fix:
+                            with mock.patch.object(
+                                _mod, "_attempt_vitisai_build", return_value=vitisai_result
+                            ):
+                                with mock.patch.object(
+                                    _mod,
+                                    "_attempt_iron_gemm_dispatch",
+                                    return_value={
+                                        "ok": False,
+                                        "latency_us": None,
+                                        "speedup_vs_cpu": None,
+                                        "error": "no mlir_aie",
+                                        "approach": "iron_import_failed",
+                                    },
+                                ):
+                                    with mock.patch(
+                                        "python.carnot.pipeline.env_autofix.apply_env_autofix"
+                                    ) as mock_fix:
                                         mock_fix.return_value = mock.MagicMock(
                                             gpu_detected=False, auto_fix_applied=False
                                         )
@@ -713,9 +765,15 @@ class TestMainSmoke:
         with mock.patch.object(_mod, "RESULT_PATH", result_file):
             with mock.patch.object(_mod, "check_ninja_available", return_value=False):
                 with mock.patch.object(_mod, "check_openblas_available", return_value=False):
-                    with mock.patch.object(_mod, "check_iron_toolchain_available", return_value=False):
-                        with mock.patch.object(_mod, "check_xdna_driver_loaded", return_value=False):
-                            with mock.patch("python.carnot.pipeline.env_autofix.apply_env_autofix") as mock_fix:
+                    with mock.patch.object(
+                        _mod, "check_iron_toolchain_available", return_value=False
+                    ):
+                        with mock.patch.object(
+                            _mod, "check_xdna_driver_loaded", return_value=False
+                        ):
+                            with mock.patch(
+                                "python.carnot.pipeline.env_autofix.apply_env_autofix"
+                            ) as mock_fix:
                                 mock_fix.return_value = mock.MagicMock(
                                     gpu_detected=False, auto_fix_applied=False
                                 )
@@ -748,9 +806,15 @@ class TestMainSmoke:
         with mock.patch.object(_mod, "RESULT_PATH", result_file):
             with mock.patch.object(_mod, "check_ninja_available", return_value=False):
                 with mock.patch.object(_mod, "check_openblas_available", return_value=False):
-                    with mock.patch.object(_mod, "check_iron_toolchain_available", return_value=False):
-                        with mock.patch.object(_mod, "check_xdna_driver_loaded", return_value=False):
-                            with mock.patch("python.carnot.pipeline.env_autofix.apply_env_autofix") as mock_fix:
+                    with mock.patch.object(
+                        _mod, "check_iron_toolchain_available", return_value=False
+                    ):
+                        with mock.patch.object(
+                            _mod, "check_xdna_driver_loaded", return_value=False
+                        ):
+                            with mock.patch(
+                                "python.carnot.pipeline.env_autofix.apply_env_autofix"
+                            ) as mock_fix:
                                 mock_fix.return_value = mock.MagicMock(
                                     gpu_detected=False, auto_fix_applied=False
                                 )
@@ -770,9 +834,15 @@ class TestMainSmoke:
         with mock.patch.object(_mod, "RESULT_PATH", result_file):
             with mock.patch.object(_mod, "check_ninja_available", return_value=False):
                 with mock.patch.object(_mod, "check_openblas_available", return_value=False):
-                    with mock.patch.object(_mod, "check_iron_toolchain_available", return_value=False):
-                        with mock.patch.object(_mod, "check_xdna_driver_loaded", return_value=False):
-                            with mock.patch("python.carnot.pipeline.env_autofix.apply_env_autofix") as mock_fix:
+                    with mock.patch.object(
+                        _mod, "check_iron_toolchain_available", return_value=False
+                    ):
+                        with mock.patch.object(
+                            _mod, "check_xdna_driver_loaded", return_value=False
+                        ):
+                            with mock.patch(
+                                "python.carnot.pipeline.env_autofix.apply_env_autofix"
+                            ) as mock_fix:
                                 mock_fix.return_value = mock.MagicMock(
                                     gpu_detected=False, auto_fix_applied=False
                                 )

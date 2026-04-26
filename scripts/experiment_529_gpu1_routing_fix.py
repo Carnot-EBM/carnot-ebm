@@ -57,10 +57,7 @@ TITLE = "GPU1 Routing Fix"
 QWEN_HF_ID = "Qwen/Qwen2.5-0.5B"
 
 # 20 short arithmetic prompts used for the inference load test.
-_INFERENCE_PROMPTS = [
-    f"Answer: {i} + {i} ="
-    for i in range(20)
-]
+_INFERENCE_PROMPTS = [f"Answer: {i} + {i} =" for i in range(20)]
 
 
 def _write_result(repo_root: Path, artifact: dict) -> None:
@@ -280,9 +277,7 @@ def main() -> None:
         sampler_thread.join(timeout=5.0)
 
         gpu1_pct = float(sum(util_samples) / len(util_samples)) if util_samples else 0.0
-        _log.info(
-            "GPU 1 mean compute pct: %.1f%% (over %d samples)", gpu1_pct, len(util_samples)
-        )
+        _log.info("GPU 1 mean compute pct: %.1f%% (over %d samples)", gpu1_pct, len(util_samples))
 
         routing_verified = gpu1_pct > 10.0
         if routing_verified:

@@ -37,11 +37,14 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from carnot.pipeline.live_gpu_diagnostic import diagnose_live_gpu
 from carnot.pipeline.live_gpu_gate import LiveGPUGate
 from carnot.pipeline.smoke_test import run_smoke_test
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 _log = logging.getLogger(__name__)
 
@@ -187,16 +190,11 @@ def run_gpu_preflight(
                     smoke_test_passed = True
                     model_ids_loadable.append(mid)
             except Exception as exc:
-                _log.warning(
-                    "run_gpu_preflight: smoke test for %s raised: %s", mid, exc
-                )
+                _log.warning("run_gpu_preflight: smoke test for %s raised: %s", mid, exc)
 
     # --- Compute summary fields ---
     retro_019_resolved = (
-        env_var_set
-        and subprocess_inherits_env
-        and is_live_capable
-        and smoke_test_passed
+        env_var_set and subprocess_inherits_env and is_live_capable and smoke_test_passed
     )
 
     honest_verdict = _compute_honest_verdict(

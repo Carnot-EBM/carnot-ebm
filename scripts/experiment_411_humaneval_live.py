@@ -226,8 +226,7 @@ def main() -> None:
             "inference_mode": "blocked",
             "honest_verdict": "blocked",
             "blocked_reason": (
-                f"Exp 404 preflight verdict is {preflight_verdict!r}; "
-                "expected 'gpu_confirmed_live'"
+                f"Exp 404 preflight verdict is {preflight_verdict!r}; expected 'gpu_confirmed_live'"
             ),
             "preflight_verdict": preflight_verdict,
             "n_problems": 0,
@@ -262,18 +261,14 @@ def main() -> None:
     # ---------------------------------------------------------------------------
     blocked = LiveGPUGate.require_live_or_blocked(tmpl, _MODEL_IDS)
     if blocked is not None:
-        _log.error(
-            "LiveGPUGate blocked Exp 411 — writing blocked artifact and exiting."
-        )
+        _log.error("LiveGPUGate blocked Exp 411 — writing blocked artifact and exiting.")
         _write_artifact(tmpl, blocked)
         return
 
     # ---------------------------------------------------------------------------
     # Gate 2: GPU pre-warm via ExperimentTemplate.setup_gpu() (Exp 294 pattern).
     # ---------------------------------------------------------------------------
-    gpu_status = tmpl.setup_gpu(
-        [{"name": "Gemma4-E4B-it", "hf_id": _MODEL_IDS[0], "gpu": 0}]
-    )
+    gpu_status = tmpl.setup_gpu([{"name": "Gemma4-E4B-it", "hf_id": _MODEL_IDS[0], "gpu": 0}])
     if not gpu_status["all_healthy"]:
         _log.error(
             "setup_gpu reports unhealthy — writing blocked artifact.  models=%s",
@@ -303,9 +298,7 @@ def main() -> None:
     # ---------------------------------------------------------------------------
     # Gate 3: Load model weights (tokenizer + causal LM).
     # ---------------------------------------------------------------------------
-    tokenizer, model, device, ok = _load_model_pipeline(
-        hf_id=_MODEL_IDS[0], device=0
-    )
+    tokenizer, model, device, ok = _load_model_pipeline(hf_id=_MODEL_IDS[0], device=0)
     if not ok:
         _log.error("_load_model_pipeline failed — writing blocked artifact.")
         artifact = tmpl.build_result(
@@ -395,7 +388,7 @@ def _utc_now() -> str:
     """
     import datetime
 
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _utc_date() -> str:
@@ -408,7 +401,7 @@ def _utc_date() -> str:
     """
     import datetime
 
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
+    return datetime.datetime.now(datetime.UTC).strftime("%Y%m%d")
 
 
 if __name__ == "__main__":
@@ -422,6 +415,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

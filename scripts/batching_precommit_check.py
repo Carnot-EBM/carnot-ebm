@@ -84,19 +84,16 @@ def main() -> int:
 
     # Filter to scripts/*.py only — experiment scripts are the target of the standard.
     # Library code in python/carnot/ and test code are excluded.
-    staged_scripts = [
-        f for f in all_staged
-        if f.startswith("scripts/") and f.endswith(".py")
-    ]
+    staged_scripts = [f for f in all_staged if f.startswith("scripts/") and f.endswith(".py")]
 
     if not staged_scripts:
         # No experiment scripts staged — nothing to check.
         return 0
 
     scripts_dir = str(_repo_root / "scripts")
-    runner = BatchingHookRunner(scripts_dir=scripts_dir, staged_files=[
-        str(_repo_root / sf) for sf in staged_scripts
-    ])
+    runner = BatchingHookRunner(
+        scripts_dir=scripts_dir, staged_files=[str(_repo_root / sf) for sf in staged_scripts]
+    )
 
     violations = runner.run(raise_on_violation=True)
 

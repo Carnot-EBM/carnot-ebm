@@ -98,28 +98,32 @@ correct_sample = correct_all[:N_CORRECT]
 
 # Pad with synthetic if the corpus is smaller than expected.
 _SYNTHETIC_INCORRECT = [
-    f"Janet has {10+i} apples and gives away {3+i}. She then buys {2+i} more. "
+    f"Janet has {10 + i} apples and gives away {3 + i}. She then buys {2 + i} more. "
     f"How many apples does she have now?"
     for i in range(N_INCORRECT)
 ]
 _SYNTHETIC_CORRECT = [
-    f"A bag has {5+i} red balls and {3+i} blue balls. How many balls total?"
+    f"A bag has {5 + i} red balls and {3 + i} blue balls. How many balls total?"
     for i in range(N_CORRECT)
 ]
 
 while len(incorrect_sample) < N_INCORRECT:
     idx = len(incorrect_sample)
-    incorrect_sample.append({
-        "response": _SYNTHETIC_INCORRECT[idx],
-        "is_correct": False,
-    })
+    incorrect_sample.append(
+        {
+            "response": _SYNTHETIC_INCORRECT[idx],
+            "is_correct": False,
+        }
+    )
 
 while len(correct_sample) < N_CORRECT:
     idx = len(correct_sample)
-    correct_sample.append({
-        "response": _SYNTHETIC_CORRECT[idx],
-        "is_correct": True,
-    })
+    correct_sample.append(
+        {
+            "response": _SYNTHETIC_CORRECT[idx],
+            "is_correct": True,
+        }
+    )
 
 # ---------------------------------------------------------------------------
 # Run CausalReasoningVerifier on each response
@@ -157,9 +161,7 @@ n_causal_break = sum(1 for r in all_step_results if r.violation_type == "causal_
 n_arithmetic = sum(1 for r in all_step_results if r.violation_type == "arithmetic")
 
 causal_improvement = causal_recall > SYMCODE_BASELINE
-honest_verdict = (
-    "causal_improves" if causal_improvement else "causal_no_improvement"
-)
+honest_verdict = "causal_improves" if causal_improvement else "causal_no_improvement"
 
 # ---------------------------------------------------------------------------
 # Build and write artifact

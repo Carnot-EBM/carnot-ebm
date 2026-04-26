@@ -47,7 +47,9 @@ class TestBuildCorpusArtifact:
 
     def test_schema_field(self):
         # SCENARIO-DATA-020: schema must be carnot.live_corpus_v2.v1
-        art = exp602._build_corpus_artifact(100, 300, self._diversity(), "results/fover_corpus_v4.json", "live_gpu")
+        art = exp602._build_corpus_artifact(
+            100, 300, self._diversity(), "results/fover_corpus_v4.json", "live_gpu"
+        )
         assert art["schema"] == "carnot.live_corpus_v2.v1"
 
     def test_honest_verdict_corpus_expanded_at_80(self):
@@ -81,7 +83,9 @@ class TestBuildCorpusArtifact:
         assert art["inference_mode"] == "live_gpu"
 
     def test_fover_corpus_v4_path_field(self):
-        art = exp602._build_corpus_artifact(100, 300, {}, "results/fover_corpus_v4.json", "live_gpu")
+        art = exp602._build_corpus_artifact(
+            100, 300, {}, "results/fover_corpus_v4.json", "live_gpu"
+        )
         assert art["fover_corpus_v4_path"] == "results/fover_corpus_v4.json"
 
     def test_diversity_metrics_included(self):
@@ -366,6 +370,8 @@ class TestCollectPairsForQuestion:
         mock_gemma4 = MagicMock()
         mock_gemma4.generate.return_value = "4"
         with patch.object(exp602, "_qwen_generate", return_value="4"):
-            pairs = exp602._collect_pairs_for_question(self._make_q(idx=275), mock_gemma4, MagicMock())
+            pairs = exp602._collect_pairs_for_question(
+                self._make_q(idx=275), mock_gemma4, MagicMock()
+            )
         for p in pairs:
             assert p["question_index"] == 275

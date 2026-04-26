@@ -159,17 +159,17 @@ def _load_gsm8k_200q(seed: int = DATASET_SEED) -> list[dict]:
         a = rng.randint(10, 200)
         b = rng.randint(1, 100)
         c = a + b
-        synthetic.append({
-            "question": (
-                f"Janet has {a} apples and receives {b} more.  "
-                f"How many apples does she have?"
-            ),
-            "answer": (
-                f"She starts with {a} and gets {b} more, so "
-                f"{a} plus {b} gives {c}.  #### {c}"
-            ),
-            "source": "synthetic",
-        })
+        synthetic.append(
+            {
+                "question": (
+                    f"Janet has {a} apples and receives {b} more.  How many apples does she have?"
+                ),
+                "answer": (
+                    f"She starts with {a} and gets {b} more, so {a} plus {b} gives {c}.  #### {c}"
+                ),
+                "source": "synthetic",
+            }
+        )
     _log.info("Using %d synthetic questions (real dataset unavailable)", len(synthetic))
     return synthetic
 
@@ -280,17 +280,23 @@ def _run_model_200q(
         if correct:
             n_correct_pipe += 1
 
-        cot_pairs.append({
-            "model": model_name,
-            "question": q["question"],
-            "cot_text": resp,
-            "correct": correct,
-        })
+        cot_pairs.append(
+            {
+                "model": model_name,
+                "question": q["question"],
+                "cot_text": resp,
+                "correct": correct,
+            }
+        )
 
     post_acc = n_correct_pipe / max(len(questions), 1)
     _log.info(
         "[%s] PIPELINE: %d/%d (%.4f) delta=%.4f",
-        model_name, n_correct_pipe, len(questions), post_acc, post_acc - pre_acc,
+        model_name,
+        n_correct_pipe,
+        len(questions),
+        post_acc,
+        post_acc - pre_acc,
     )
 
     return Live200qResult(
@@ -379,6 +385,7 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
     # ------------------------------------------------------------------
     try:
         import torch
+
         n_gpus = torch.cuda.device_count()
     except Exception:
         n_gpus = 0
@@ -515,9 +522,7 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
     any_stat_positive = (
         gemma4_result.is_statistically_positive or qwen_result.is_statistically_positive
     )
-    any_signed_positive = (
-        gemma4_result.signed_improvement > 0 or qwen_result.signed_improvement > 0
-    )
+    any_signed_positive = gemma4_result.signed_improvement > 0 or qwen_result.signed_improvement > 0
 
     if any_stat_positive:
         honest_verdict = "credible_positive"

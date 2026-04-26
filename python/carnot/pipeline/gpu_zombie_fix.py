@@ -34,8 +34,6 @@ Spec: REQ-INFRA-029, REQ-INFRA-030,
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
-
 
 # ---------------------------------------------------------------------------
 # ZombieFixResult
@@ -81,7 +79,7 @@ class ZombieFixResult:
     gpu0_device_map: str
     gpu1_device_map: str
     fix_applied: bool
-    post_fix_gpu1_util_pct: Optional[float]
+    post_fix_gpu1_util_pct: float | None
     honest_verdict: str
 
 

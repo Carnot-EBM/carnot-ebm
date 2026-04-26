@@ -89,26 +89,26 @@ SVAMP_QUESTIONS: list[str] = [
 
 # Ground-truth correct answers (one per question, same order).
 SVAMP_CORRECT_ANSWERS: list[float] = [
-    9.0,   # 15 - 6
+    9.0,  # 15 - 6
     13.0,  # 8 + 5
     15.0,  # 24 - 9
     18.0,  # 30 - 12
     28.0,  # 7 * 4
     12.0,  # 18 - 6
     56.0,  # 5*12 - 4
-    5.0,   # 40 / 8
+    5.0,  # 40 / 8
     15.0,  # 3 * 5
     15.0,  # 22 - 7
-    9.0,   # 14 - 5
+    9.0,  # 14 - 5
     30.0,  # 60 / 2
     30.0,  # 50 - 20
-    4.0,   # 36 / 9
+    4.0,  # 36 / 9
     65.0,  # 100 - 35
-    9.0,   # 12 - 3
+    9.0,  # 12 - 3
     15.0,  # 25 - 10
     12.0,  # 4 * 3
     90.0,  # 9 * 10
-    8.0,   # 48 / 6
+    8.0,  # 48 / 6
 ]
 
 # Mixed response corpus.
@@ -134,11 +134,11 @@ SVAMP_RESPONSES: list[str] = [
     "Each friend gets 4 stickers.",
     "65 liters remain in the tank.",
     # Wrong (Q15-Q19): catastrophically wrong answers off by orders of magnitude.
-    "Emma has 129 pencils.",          # Q15: correct=9, wrong=129 (>10x off)
-    "150 pupils attend class.",       # Q16: correct=15, wrong=150 (10x off)
+    "Emma has 129 pencils.",  # Q15: correct=9, wrong=129 (>10x off)
+    "150 pupils attend class.",  # Q16: correct=15, wrong=150 (10x off)
     "The recipe needs 1200 cups of flour.",  # Q17: correct=12, wrong=1200 (100x off)
-    "The total value is 9000 cents.", # Q18: correct=90, wrong=9000 (100x off)
-    "There are 4800 flowers per row.",# Q19: correct=8, wrong=4800 (600x off)
+    "The total value is 9000 cents.",  # Q18: correct=90, wrong=9000 (100x off)
+    "There are 4800 flowers per row.",  # Q19: correct=8, wrong=4800 (600x off)
 ]
 
 # Whether each response is correct (used as ground-truth label for AUC).
@@ -196,6 +196,7 @@ def _compute_auc(y_true: list[int], y_score: list[float]) -> float:
         return 0.5
     try:
         from sklearn.metrics import roc_auc_score  # type: ignore[import]
+
         return float(roc_auc_score(y_true, y_score))
     except Exception:
         # Manual Wilcoxon-Mann-Whitney AUC estimator.
@@ -204,9 +205,7 @@ def _compute_auc(y_true: list[int], y_score: list[float]) -> float:
         if not positives or not negatives:
             return 0.5
         concordant = sum(
-            1.0 if p > n else (0.5 if p == n else 0.0)
-            for p in positives
-            for n in negatives
+            1.0 if p > n else (0.5 if p == n else 0.0) for p in positives for n in negatives
         )
         return concordant / (len(positives) * len(negatives))
 
@@ -263,16 +262,18 @@ def run_experiment() -> dict[str, Any]:
         result = ev.verify(question, response)
         vp = 0.0 if result["in_range"] else 1.0
         violation_probs.append(vp)
-        ev_results.append({
-            "question": question,
-            "response": response,
-            "operation_type": result["operation_type"],
-            "plausible_range": result["plausible_range"],
-            "extracted_answer": result["extracted_answer"],
-            "in_range": result["in_range"],
-            "violation_prob": vp,
-            "confidence": result["confidence"],
-        })
+        ev_results.append(
+            {
+                "question": question,
+                "response": response,
+                "operation_type": result["operation_type"],
+                "plausible_range": result["plausible_range"],
+                "extracted_answer": result["extracted_answer"],
+                "in_range": result["in_range"],
+                "violation_prob": vp,
+                "confidence": result["confidence"],
+            }
+        )
 
     # AUC: y_true=is_correct, y_score=(1-violation_prob) so higher score = more correct.
     y_true = list(SVAMP_IS_CORRECT)

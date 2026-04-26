@@ -26,6 +26,7 @@ from python.carnot.samplers.synchronous_pimi import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def n8_sampler() -> SynchronousPIMISampler:
     """Standard N=8 ferromagnetic ring+chord sampler for benchmarks."""
@@ -37,6 +38,7 @@ def n8_sampler() -> SynchronousPIMISampler:
 # ---------------------------------------------------------------------------
 # REQ-HW-036: sample_once uses s_current (not s_new) for ALL j
 # ---------------------------------------------------------------------------
+
 
 class TestSampleOnceParallelProperty:
     """SCENARIO-HW-036-A: Verify true parallel (synchronous) update semantics.
@@ -74,8 +76,10 @@ class TestSampleOnceParallelProperty:
 
         # h_ema must match h_local computed from s_input, regardless of what s_new is
         np.testing.assert_allclose(
-            sampler.h_ema, h_ema_expected, rtol=1e-9,
-            err_msg="h_ema must reflect h_local from s_current (pre-flip snapshot)"
+            sampler.h_ema,
+            h_ema_expected,
+            rtol=1e-9,
+            err_msg="h_ema must reflect h_local from s_current (pre-flip snapshot)",
         )
 
     def test_s_new_not_fed_back_into_field_computation(self):
@@ -108,8 +112,10 @@ class TestSampleOnceParallelProperty:
         expected_h_ema = (1.0 - 0.5) * expected_h_local  # alpha=0.5, h_ema_init=0
 
         np.testing.assert_allclose(
-            sampler.h_ema, expected_h_ema, rtol=1e-9,
-            err_msg="h_ema must reflect h_local computed from s_current, not from s_new"
+            sampler.h_ema,
+            expected_h_ema,
+            rtol=1e-9,
+            err_msg="h_ema must reflect h_local computed from s_current, not from s_new",
         )
 
     def test_all_spins_update_simultaneously_not_sequentially(self):
@@ -152,14 +158,16 @@ class TestSampleOnceParallelProperty:
         actual_s_new = sampler.sample_once_seeded(s_current, rng2)
 
         np.testing.assert_array_equal(
-            actual_s_new, expected_s_new,
-            err_msg="Parallel flip decisions must match manual computation from same snapshot"
+            actual_s_new,
+            expected_s_new,
+            err_msg="Parallel flip decisions must match manual computation from same snapshot",
         )
 
 
 # ---------------------------------------------------------------------------
 # REQ-HW-036: EMA update correctness
 # ---------------------------------------------------------------------------
+
 
 class TestEMAUpdate:
     """SCENARIO-HW-036-B: EMA update uses alpha * h_ema_prev + (1-alpha) * h_local."""
@@ -226,6 +234,7 @@ class TestEMAUpdate:
 # REQ-HW-036: Energy function correctness
 # ---------------------------------------------------------------------------
 
+
 class TestEnergy:
     """SCENARIO-HW-036-C: Energy E(s) = -0.5 * s^T J s - h^T s."""
 
@@ -259,35 +268,31 @@ class TestEnergy:
 # REQ-HW-036: Convergence measurement
 # ---------------------------------------------------------------------------
 
+
 class TestMeasureConvergence:
     """SCENARIO-HW-036-D: measure_convergence() returns mean sweeps over n_trials."""
 
     def test_convergence_returns_int(self, n8_sampler):
         """measure_convergence() must return an integer."""
-        result = n8_sampler.measure_convergence(
-            n_trials=5, target_energy=-3.0, max_sweeps=400
-        )
+        result = n8_sampler.measure_convergence(n_trials=5, target_energy=-3.0, max_sweeps=400)
         assert isinstance(result, int)
 
     def test_convergence_bounded_by_max_sweeps(self, n8_sampler):
         """Convergence cannot exceed max_sweeps."""
         max_s = 50
-        result = n8_sampler.measure_convergence(
-            n_trials=10, target_energy=-100.0, max_sweeps=max_s
-        )
+        result = n8_sampler.measure_convergence(n_trials=10, target_energy=-100.0, max_sweeps=max_s)
         assert result <= max_s
 
     def test_easy_problem_converges_fast(self, n8_sampler):
         """N=8 ferromagnetic problem should converge in < 20 sweeps on average."""
-        result = n8_sampler.measure_convergence(
-            n_trials=20, target_energy=-3.0, max_sweeps=200
-        )
+        result = n8_sampler.measure_convergence(n_trials=20, target_energy=-3.0, max_sweeps=200)
         assert result < 20
 
 
 # ---------------------------------------------------------------------------
 # REQ-HW-036: Sweeps reduction computation vs Exp 876 baseline
 # ---------------------------------------------------------------------------
+
 
 class TestSweepsReduction:
     """SCENARIO-HW-036-E: sweeps_reduction = baseline_sweeps / parallel_sweeps."""
@@ -327,6 +332,7 @@ class TestSweepsReduction:
 # ---------------------------------------------------------------------------
 # REQ-HW-036: sample_once() (non-seeded) and run()
 # ---------------------------------------------------------------------------
+
 
 class TestSampleOnceAndRun:
     """SCENARIO-HW-036-I: sample_once() and run() produce valid spin configurations."""
@@ -381,6 +387,7 @@ class TestSampleOnceAndRun:
 # REQ-HW-036: pimi_alpha_sweep helper
 # ---------------------------------------------------------------------------
 
+
 class TestPimiAlphaSweep:
     """SCENARIO-HW-036-F: pimi_alpha_sweep() returns a dict keyed by str(alpha)."""
 
@@ -410,6 +417,7 @@ class TestPimiAlphaSweep:
 # ---------------------------------------------------------------------------
 # REQ-HW-036: make_n8_coupling_matrix correctness
 # ---------------------------------------------------------------------------
+
 
 class TestMakeN8CouplingMatrix:
     """SCENARIO-HW-036-G: N=8 coupling matrix has correct ring+chord topology."""
@@ -443,25 +451,37 @@ class TestMakeN8CouplingMatrix:
 # REQ-HW-036: Deliverable JSON exists and is valid
 # ---------------------------------------------------------------------------
 
+
 class TestDeliverableJSON:
     """SCENARIO-HW-036-H: results/experiment_889_ice40_pimi_v3_parallel.json validity."""
 
     DELIVERABLE = Path("results/experiment_889_ice40_pimi_v3_parallel.json")
 
     REQUIRED_FIELDS = [
-        "experiment", "title", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "honest_verdict",
-        "parallel_sweeps", "checkerboard_sweeps", "sweeps_reduction",
-        "best_alpha", "lut_count", "synthesis_clean",
-        "n_spins", "n_trials", "energy_threshold", "max_sweeps",
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "honest_verdict",
+        "parallel_sweeps",
+        "checkerboard_sweeps",
+        "sweeps_reduction",
+        "best_alpha",
+        "lut_count",
+        "synthesis_clean",
+        "n_spins",
+        "n_trials",
+        "energy_threshold",
+        "max_sweeps",
         "alpha_sweep_pimi",
     ]
 
     def test_deliverable_exists(self):
         """The experiment result file must exist."""
-        assert self.DELIVERABLE.exists(), (
-            f"Deliverable not found: {self.DELIVERABLE}"
-        )
+        assert self.DELIVERABLE.exists(), f"Deliverable not found: {self.DELIVERABLE}"
 
     def test_deliverable_is_valid_json(self):
         """The deliverable must be parseable JSON."""

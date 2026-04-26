@@ -60,7 +60,8 @@ class TestIsValidPython:
     def test_multiline_valid_python_returns_true(self, tmp_path: Path) -> None:
         # Multi-line valid module must be accepted
         f = tmp_path / "big.py"
-        f.write_text(textwrap.dedent("""\
+        f.write_text(
+            textwrap.dedent("""\
             from dataclasses import dataclass
 
             @dataclass
@@ -70,7 +71,8 @@ class TestIsValidPython:
 
             def compute(a: int, b: int) -> int:
                 return a + b
-        """))
+        """)
+        )
         assert DeliverableContentValidator.is_valid_python(str(f)) is True
 
     def test_unicode_decode_error_returns_false(self, tmp_path: Path) -> None:

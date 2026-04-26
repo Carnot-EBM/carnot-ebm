@@ -48,8 +48,7 @@ Spec: REQ-SELFLEARN-021, REQ-SELFLEARN-022,
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-
+from dataclasses import dataclass
 
 # ---------------------------------------------------------------------------
 # ViolationSurprise
@@ -187,12 +186,8 @@ class SuRePriorityReplay:
             domain: The constraint domain string.
             energy: The EBM energy to incorporate into the running mean.
         """
-        self._domain_energy_sums[domain] = (
-            self._domain_energy_sums.get(domain, 0.0) + energy
-        )
-        self._domain_energy_counts[domain] = (
-            self._domain_energy_counts.get(domain, 0) + 1
-        )
+        self._domain_energy_sums[domain] = self._domain_energy_sums.get(domain, 0.0) + energy
+        self._domain_energy_counts[domain] = self._domain_energy_counts.get(domain, 0) + 1
 
     def _domain_mean(self, domain: str) -> float:
         """Return the current running mean energy for a domain.
@@ -257,9 +252,7 @@ class SuRePriorityReplay:
         if not self._buffer:
             return []
 
-        sorted_items = sorted(
-            self._buffer, key=lambda item: item.surprise_score, reverse=True
-        )
+        sorted_items = sorted(self._buffer, key=lambda item: item.surprise_score, reverse=True)
         top_n = sorted_items[:n]
         return [item.violation for item in top_n]
 

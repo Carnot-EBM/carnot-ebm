@@ -341,6 +341,7 @@ def build_balanced_corpus() -> list[dict[str, Any]]:
 # Text embedding (hash-projection — same as v24 for comparability)
 # ---------------------------------------------------------------------------
 
+
 def _embed_text(text: str, dim: int = EMBED_DIM, seed: int = 42) -> np.ndarray:
     """Convert text to a fixed-dimensional embedding using a hash-based projection.
 
@@ -375,6 +376,7 @@ def _embed_text(text: str, dim: int = EMBED_DIM, seed: int = 42) -> np.ndarray:
 # JEPA v25 model: same dual-head architecture as v24
 # ---------------------------------------------------------------------------
 
+
 def _init_v25_params(key: jax.Array) -> dict[str, jax.Array]:
     """Initialise v25 dual-head MLP parameters with He (Kaiming) initialisation.
 
@@ -400,9 +402,7 @@ def _init_v25_params(key: jax.Array) -> dict[str, jax.Array]:
     }
 
 
-def _forward_v25(
-    params: dict[str, jax.Array], x: jax.Array
-) -> tuple[jax.Array, jax.Array]:
+def _forward_v25(params: dict[str, jax.Array], x: jax.Array) -> tuple[jax.Array, jax.Array]:
     """Forward pass: shared trunk → correctness prob + domain softmax.
 
     Returns:
@@ -457,9 +457,7 @@ def _compute_loss_v25(
 
     # 1. DomainReweightedLoss BCE (automatic count-based weights)
     corr_logit_sq = corr_prob.squeeze(-1)
-    bce_per_sample = optax.sigmoid_binary_cross_entropy(
-        corr_logit_sq, y_corr.squeeze(-1)
-    )
+    bce_per_sample = optax.sigmoid_binary_cross_entropy(corr_logit_sq, y_corr.squeeze(-1))
     sample_weights = domain_weight_arr[y_dom]
     corr_loss = jnp.mean(bce_per_sample * sample_weights)
 
@@ -529,6 +527,7 @@ def _build_triplets(
 # ---------------------------------------------------------------------------
 # Main training function
 # ---------------------------------------------------------------------------
+
 
 def train_jepa_v25(
     pairs: list[dict[str, Any]],
@@ -665,9 +664,9 @@ def train_jepa_v25(
                 jnp.asarray(Y_corr_val),
                 jnp.asarray(Y_dom_val),
                 domain_weight_arr,
-                jnp.asarray(x_pos[:min(len(x_pos), len(X_val))]),
-                jnp.asarray(x_neg[:min(len(x_neg), len(X_val))]),
-                jnp.asarray(delta_weights[:min(len(delta_weights), len(X_val))]),
+                jnp.asarray(x_pos[: min(len(x_pos), len(X_val))]),
+                jnp.asarray(x_neg[: min(len(x_neg), len(X_val))]),
+                jnp.asarray(delta_weights[: min(len(delta_weights), len(X_val))]),
             )
         )
         val_losses.append(val_loss_val)
@@ -714,6 +713,7 @@ def train_jepa_v25(
 # Verdict logic
 # ---------------------------------------------------------------------------
 
+
 def compute_honest_verdict(
     in_dist_auc: float,
     ood_auc: float,
@@ -749,6 +749,7 @@ def compute_honest_verdict(
 # Main
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """Run Experiment 872: JEPA v25 DomainReweightedLoss + 40-pair SVAMP corpus."""
     tmpl = ExperimentTemplate(
@@ -781,9 +782,7 @@ def main() -> None:
 
     # --- Train ---
     with tmpl.phase("training", n_epochs=N_EPOCHS, n_pairs=len(corpus)):
-        params, train_log = train_jepa_v25(
-            corpus, n_epochs=N_EPOCHS, use_domain_reweighting=True
-        )
+        params, train_log = train_jepa_v25(corpus, n_epochs=N_EPOCHS, use_domain_reweighting=True)
         tmpl.checkpoint_save({"model_trained": True}, step=N_EPOCHS)
 
     # --- Extract metrics ---
@@ -817,9 +816,7 @@ def main() -> None:
             "final_train_loss": (
                 train_log["train_losses"][-1] if train_log["train_losses"] else None
             ),
-            "final_val_loss": (
-                train_log["val_losses"][-1] if train_log["val_losses"] else None
-            ),
+            "final_val_loss": (train_log["val_losses"][-1] if train_log["val_losses"] else None),
             "model_path": "results/jepa_predictor_v25.safetensors",
             "corpus_composition": corpus_composition,
             "svamp_v24_baseline_auc": 0.0,

@@ -60,21 +60,21 @@ Spec: REQ-LEARN-026, REQ-LEARN-027,
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
 from carnot.models.eorm import CoTEnergyInput, EORMModel
-from carnot.pipeline.adaptive_thresholds import PerModelFPTracker
-from carnot.pipeline.constraint_addition_engine import ConstraintAdditionEngine
 from carnot.pipeline.constraint_template_library import (
     CaseMemoryTemplateWiring,
     ConstraintTemplateLibrary,
 )
-from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
 
 if TYPE_CHECKING:
     from carnot.models.vjepa_predictor import VariationalJEPAPredictor
+    from carnot.pipeline.adaptive_thresholds import PerModelFPTracker
+    from carnot.pipeline.constraint_addition_engine import ConstraintAdditionEngine
     from carnot.pipeline.memory_compression import CompressedMemoryBank
+    from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
     from carnot.verify.lagrange_ising import LagrangeAdaptiveIsing
 
 
@@ -173,8 +173,8 @@ def _compute_auc_roc(energies: list[float], ground_truth: list[bool]) -> float:
     # Flip: lower energy → higher score → predicts True
     scores = [-e for e in energies]
 
-    pos = [s for s, g in zip(scores, ground_truth) if g]
-    neg = [s for s, g in zip(scores, ground_truth) if not g]
+    pos = [s for s, g in zip(scores, ground_truth, strict=False) if g]
+    neg = [s for s, g in zip(scores, ground_truth, strict=False) if not g]
 
     if not pos or not neg:
         # AUC is undefined when one class is absent — return random baseline.
@@ -276,9 +276,9 @@ class SelfLearningRelay:
         fp_tracker: PerModelFPTracker,
         eorm_model: EORMModel,
         constraint_addition_engine: ConstraintAdditionEngine | None = None,
-        lagrange_ising: "LagrangeAdaptiveIsing | None" = None,
-        compressed_memory: "CompressedMemoryBank | None" = None,
-        vjepa_predictor: "VariationalJEPAPredictor | None" = None,
+        lagrange_ising: LagrangeAdaptiveIsing | None = None,
+        compressed_memory: CompressedMemoryBank | None = None,
+        vjepa_predictor: VariationalJEPAPredictor | None = None,
     ) -> None:
         self._pipeline = pipeline
         self._template_library = template_library
@@ -486,7 +486,7 @@ class SelfLearningRelay:
         # Collect per-question violation metadata for CompressedMemoryBank.
         session_violations: list[dict] = []
 
-        for i, (question, is_correct) in enumerate(zip(questions, ground_truth)):
+        for i, (question, is_correct) in enumerate(zip(questions, ground_truth, strict=False)):
             # ----------------------------------------------------------------
             # Curriculum diversity check (REQ-PSV-016): record this question
             # in the recent-samples window regardless of diversity outcome.
@@ -619,9 +619,7 @@ class SelfLearningRelay:
         self._total_questions += n_questions
         batch_accuracy = n_correct / n_questions if n_questions > 0 else 0.0
         cumulative_accuracy = (
-            self._total_correct / self._total_questions
-            if self._total_questions > 0
-            else 0.0
+            self._total_correct / self._total_questions if self._total_questions > 0 else 0.0
         )
 
         # REQ-LEARN-058: compress the session's violation records into the memory bank.
@@ -637,8 +635,8 @@ class SelfLearningRelay:
         # constraints that future sessions will check.
         constraints_added_this_batch = 0
         if self._constraint_addition_engine is not None:
-            constraints_added_this_batch = (
-                self._constraint_addition_engine.inject_into_pipeline(self._pipeline)
+            constraints_added_this_batch = self._constraint_addition_engine.inject_into_pipeline(
+                self._pipeline
             )
             self._cumulative_constraints_added += constraints_added_this_batch
 

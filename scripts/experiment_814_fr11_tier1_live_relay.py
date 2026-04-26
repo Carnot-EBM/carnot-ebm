@@ -25,6 +25,7 @@
 
 Spec: REQ-LEARN-814-001, SCENARIO-LEARN-814-001
 """
+
 from __future__ import annotations
 
 import json
@@ -341,9 +342,7 @@ def main() -> None:
         session_details: list[dict] = []
 
         for session_idx in range(N_SESSIONS):
-            session_result = run_synthetic_session(
-                store, injector, session_idx, N_QUESTIONS
-            )
+            session_result = run_synthetic_session(store, injector, session_idx, N_QUESTIONS)
             tp = session_result["tp"]
             fp = session_result["fp"]
             violations = session_result["violations"]
@@ -354,9 +353,9 @@ def main() -> None:
 
             # Capacity-constrained update: only update high-variance constraints
             retrieval_variances = compute_retrieval_variances(store, queries_used)
-            top_k_types = sorted(
-                retrieval_variances, key=lambda t: -retrieval_variances[t]
-            )[:TOP_K_UPDATE]
+            top_k_types = sorted(retrieval_variances, key=lambda t: -retrieval_variances[t])[
+                :TOP_K_UPDATE
+            ]
             n_added = selective_update(store, violations, top_k_types)
 
             session_details.append(

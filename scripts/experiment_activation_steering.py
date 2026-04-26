@@ -61,7 +61,9 @@ def main() -> int:
     print(f"Loading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True, output_hidden_states=True,
+        model_name,
+        trust_remote_code=True,
+        output_hidden_states=True,
     )
     model.eval()
 
@@ -75,7 +77,9 @@ def main() -> int:
         inputs = tokenizer(prompt, return_tensors="pt")
         with torch.no_grad():
             outputs = model.generate(**inputs, max_new_tokens=20, do_sample=False)
-        response = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        response = tokenizer.decode(
+            outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+        )
 
         # Get activations from generated tokens
         prompt_len = inputs["input_ids"].shape[1]
@@ -102,10 +106,13 @@ def main() -> int:
     # Phase 2: Find hallucination direction
     print("\n--- Phase 2: Hallucination direction ---")
     from carnot.embeddings.hallucination_direction import (
-        HallucinationDirectionConfig, find_hallucination_direction,
+        HallucinationDirectionConfig,
+        find_hallucination_direction,
     )
+
     direction_jax = find_hallucination_direction(
-        jnp.stack(correct_acts), jnp.stack(wrong_acts),
+        jnp.stack(correct_acts),
+        jnp.stack(wrong_acts),
         HallucinationDirectionConfig(normalize=True),
     )
     direction_torch = torch.tensor(direction_jax.tolist(), dtype=torch.float32)
@@ -114,9 +121,9 @@ def main() -> int:
     # Phase 3: Find best layers for steering
     print("\n--- Phase 3: Finding steerable layers ---")
     # Get number of layers
-    if hasattr(model.model, 'layers'):
+    if hasattr(model.model, "layers"):
         n_layers = len(model.model.layers)
-    elif hasattr(model.transformer, 'h'):
+    elif hasattr(model.transformer, "h"):
         n_layers = len(model.transformer.h)
     else:
         n_layers = model.config.num_hidden_layers
@@ -137,18 +144,20 @@ def main() -> int:
 
         # Get perturbed logits
         hook_handle = None
+
         def make_hook(direction, alpha=1.0):
             def hook_fn(module, input, output):
                 if isinstance(output, tuple):
                     hidden = output[0]
                     orig_dtype = hidden.dtype
-                    d = direction[:hidden.shape[-1]].to(device=hidden.device).float()
+                    d = direction[: hidden.shape[-1]].to(device=hidden.device).float()
                     modified = (hidden.float() + alpha * d).to(orig_dtype)
                     return (modified,) + output[1:]
                 return output
+
             return hook_fn
 
-        if hasattr(model.model, 'layers'):
+        if hasattr(model.model, "layers"):
             hook_handle = model.model.layers[layer_idx].register_forward_hook(
                 make_hook(direction_torch, alpha=2.0)
             )
@@ -177,7 +186,7 @@ def main() -> int:
         # Register hooks on best layers
         handles = []
         for layer_idx in best_layers:
-            if hasattr(model.model, 'layers'):
+            if hasattr(model.model, "layers"):
                 h = model.model.layers[layer_idx].register_forward_hook(
                     make_hook(direction_torch, alpha=-1.0)  # SUBTRACT direction
                 )
@@ -185,7 +194,9 @@ def main() -> int:
 
         with torch.no_grad():
             outputs = model.generate(**inputs, max_new_tokens=20, do_sample=False)
-        response = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        response = tokenizer.decode(
+            outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+        )
 
         for h in handles:
             h.remove()
@@ -196,22 +207,24 @@ def main() -> int:
         g_icon = "✓" if greedy_results[qi] else "✗"
         s_icon = "✓" if correct else "✗"
         tag = ""
-        if correct and not greedy_results[qi]: tag = " ★ FIXED"
-        elif not correct and greedy_results[qi]: tag = " ✖ REG"
+        if correct and not greedy_results[qi]:
+            tag = " ★ FIXED"
+        elif not correct and greedy_results[qi]:
+            tag = " ✖ REG"
         print(f"  [{g_icon}→{s_icon}] {q[:40]}...{tag}")
 
     steered_acc = sum(steered_results) / len(steered_results)
     fixes = sum(1 for g, s in zip(greedy_results, steered_results) if not g and s)
     regressions = sum(1 for g, s in zip(greedy_results, steered_results) if g and not s)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("RESULTS")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  Greedy:   {sum(greedy_results)}/{len(QUESTIONS)} ({greedy_acc:.0%})")
     print(f"  Steered:  {sum(steered_results)}/{len(QUESTIONS)} ({steered_acc:.0%})")
     print(f"  Δ:        {'+' if steered_acc >= greedy_acc else ''}{steered_acc - greedy_acc:.0%}")
     print(f"  Fixes: {fixes}, Regressions: {regressions}, Net: {fixes - regressions}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     if steered_acc > greedy_acc:
         print("SUCCESS: In-generation steering improves accuracy!")

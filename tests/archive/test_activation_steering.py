@@ -10,22 +10,18 @@ from unittest.mock import MagicMock, patch
 import jax.numpy as jnp
 import numpy as np
 import pytest
-
 from carnot.embeddings.activation_steering import (
     SteeringConfig,
     calibrate_alpha,
     steered_generate,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers: build mock model for generation
 # ---------------------------------------------------------------------------
 
 
-def _build_generation_mocks(
-    num_layers: int = 3, hidden_dim: int = 8, seq_len: int = 4
-):
+def _build_generation_mocks(num_layers: int = 3, hidden_dim: int = 8, seq_len: int = 4):
     """Build mocks supporting model.generate() with hookable layers.
 
     REQ-INFER-015: Mocked transformer for activation steering tests.
@@ -150,7 +146,10 @@ class TestSteeredGenerate:
 
         with patch.dict("sys.modules", {"torch": mock_torch}):
             result = steered_generate(
-                model, tokenizer, "prompt", direction,
+                model,
+                tokenizer,
+                "prompt",
+                direction,
                 SteeringConfig(layer_indices=[0]),
             )
 
@@ -190,18 +189,18 @@ class TestSteeredGenerate:
         direction = jnp.ones(8)
         config = SteeringConfig(layer_indices=[0])
 
-        with patch.dict(
-            "sys.modules",
-            {"torch": mock_torch, "transformers": mock_transformers},
+        with (
+            patch.dict(
+                "sys.modules",
+                {"torch": mock_torch, "transformers": mock_transformers},
+            ),
+            pytest.raises(RuntimeError, match="GPU OOM"),
         ):
-            with pytest.raises(RuntimeError, match="GPU OOM"):
-                steered_generate(model, tokenizer, "prompt", direction, config)
+            steered_generate(model, tokenizer, "prompt", direction, config)
 
     def test_skips_out_of_range_layers(self) -> None:
         """REQ-INFER-015: Layers beyond model size are silently skipped."""
-        mock_torch, mock_transformers, model, tokenizer = _build_generation_mocks(
-            num_layers=2
-        )
+        mock_torch, mock_transformers, model, tokenizer = _build_generation_mocks(num_layers=2)
         direction = jnp.ones(8)
         config = SteeringConfig(layer_indices=[0, 99])
 
@@ -249,9 +248,7 @@ class TestCalibrateAlpha:
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            result = calibrate_alpha(
-                model, tokenizer, qa_pairs, [0], direction
-            )
+            result = calibrate_alpha(model, tokenizer, qa_pairs, [0], direction)
 
         assert result is not None
         assert isinstance(result, float)
@@ -269,7 +266,11 @@ class TestCalibrateAlpha:
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
             result = calibrate_alpha(
-                model, tokenizer, qa_pairs, [0], direction,
+                model,
+                tokenizer,
+                qa_pairs,
+                [0],
+                direction,
                 alphas=[0.1, 1.0, 5.0],
             )
 
@@ -286,9 +287,7 @@ class TestCalibrateAlpha:
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            result = calibrate_alpha(
-                model, tokenizer, [("q", "42")], [0], direction
-            )
+            result = calibrate_alpha(model, tokenizer, [("q", "42")], [0], direction)
 
         assert result is not None
         # With default alphas [0.1, 0.5, 1.0, 2.0, 5.0] and all matching,
@@ -305,7 +304,11 @@ class TestCalibrateAlpha:
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
             result = calibrate_alpha(
-                model, tokenizer, [("q", "42")], [0], direction,
+                model,
+                tokenizer,
+                [("q", "42")],
+                [0],
+                direction,
                 alphas=[5.0, 1.0, 0.1],
             )
 
@@ -324,9 +327,7 @@ class TestCalibrateAlpha:
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            result = calibrate_alpha(
-                model, tokenizer, [], [0], direction, alphas=[0.5, 1.0]
-            )
+            result = calibrate_alpha(model, tokenizer, [], [0], direction, alphas=[0.5, 1.0])
 
         assert result == 0.5
 
@@ -342,7 +343,11 @@ class TestCalibrateAlpha:
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
             result = calibrate_alpha(
-                model, tokenizer, [("q", "the answer")], [0], direction,
+                model,
+                tokenizer,
+                [("q", "the answer")],
+                [0],
+                direction,
                 alphas=[1.0],
             )
 

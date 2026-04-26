@@ -74,7 +74,9 @@ MODEL_HF_ID = "Qwen/Qwen3.5-0.8B"
 DELIVERABLE = "results/experiment_673_dualgpu_v3.json"
 
 # The two questions — simple so they complete quickly and still exercise the GPU.
-QUESTION_0 = "Solve step by step: If a train travels at 60 mph for 2.5 hours, how far does it travel?"
+QUESTION_0 = (
+    "Solve step by step: If a train travels at 60 mph for 2.5 hours, how far does it travel?"
+)
 QUESTION_1 = "Solve step by step: A rectangle has length 12 cm and width 8 cm. What is its area?"
 
 VALID_VERDICTS = frozenset({"dualgpu_confirmed", "dualgpu_partial", "dualgpu_blocked"})
@@ -84,7 +86,9 @@ VALID_VERDICTS = frozenset({"dualgpu_confirmed", "dualgpu_partial", "dualgpu_blo
 # ---------------------------------------------------------------------------
 
 
-def _poll_gpu1_util(readings: list[float], stop_event: threading.Event, interval_s: float = 2.0) -> None:
+def _poll_gpu1_util(
+    readings: list[float], stop_event: threading.Event, interval_s: float = 2.0
+) -> None:
     """Background thread: poll GPU1 compute utilization via pynvml every interval_s seconds.
 
     Why pynvml instead of nvidia-smi: pynvml queries the NVML C library directly,
@@ -176,7 +180,7 @@ def run_inference(
         )
     latency_s = time.perf_counter() - t0
     # Decode only the newly-generated tokens (not the prompt).
-    new_ids = output_ids[0][inputs["input_ids"].shape[1]:]
+    new_ids = output_ids[0][inputs["input_ids"].shape[1] :]
     response = tokenizer.decode(new_ids, skip_special_tokens=True)
     return {
         "gpu_id": gpu_id,
@@ -206,8 +210,9 @@ def main() -> None:
     tmpl.setup()
 
     # --- 2. Watchdog: hard cap at 45 minutes (generous for a small model) ---
-    with ExperimentTimeoutWatchdog(673, timeout_minutes=45, result_path=str(_REPO_ROOT / DELIVERABLE)):
-
+    with ExperimentTimeoutWatchdog(
+        673, timeout_minutes=45, result_path=str(_REPO_ROOT / DELIVERABLE)
+    ):
         # --- 3. GPU gate: CARNOT_FORCE_LIVE=1 required ---
         force_live = os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
         if not force_live:
@@ -346,7 +351,9 @@ def main() -> None:
         if gpu0_latency_s is not None and gpu1_latency_s is not None:
             parallel_time = max(gpu0_latency_s, gpu1_latency_s)
             sequential_time = gpu0_latency_s + gpu1_latency_s
-            throughput_ratio = round(sequential_time / parallel_time, 3) if parallel_time > 0 else None
+            throughput_ratio = (
+                round(sequential_time / parallel_time, 3) if parallel_time > 0 else None
+            )
         else:
             throughput_ratio = None
 

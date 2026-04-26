@@ -10,6 +10,7 @@ Covers:
 
 Spec: REQ-BENCH-060, REQ-BENCH-061, SCENARIO-BENCH-084, SCENARIO-BENCH-085
 """
+
 from __future__ import annotations
 
 import json

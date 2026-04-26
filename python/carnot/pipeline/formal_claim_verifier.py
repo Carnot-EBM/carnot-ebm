@@ -200,7 +200,7 @@ def _check_arithmetic(claim: FormalClaim) -> tuple[str, str | None]:
         return "supported", None
 
     # Compute what the most likely correct result is (subtraction is most common)
-    expected = a - b
+    a - b
     detail = f"claimed={claimed!r} but arithmetic on operands {a!r},{b!r} does not match; expected one of {sorted(set(candidates))!r}"
     return "violated", detail
 
@@ -304,7 +304,6 @@ def _check_set_membership(claim: FormalClaim) -> tuple[str, str | None]:
         return "abstain", None
 
     return "abstain", None
-
 
 
 # Recognized attribute types for boolean entailment claims.

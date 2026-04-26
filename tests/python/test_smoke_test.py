@@ -191,12 +191,15 @@ class TestRunSmokeTestLiveMode:
         mock_diag = MagicMock()
         mock_diag.failure_reason = "CUDA not available"
 
-        with patch(
-            "carnot.pipeline.smoke_test._prewarm_model",
-            unhealthy_prewarm,
-        ), patch(
-            "carnot.pipeline.live_gpu_diagnostic.diagnose_live_gpu",
-            return_value=mock_diag,
+        with (
+            patch(
+                "carnot.pipeline.smoke_test._prewarm_model",
+                unhealthy_prewarm,
+            ),
+            patch(
+                "carnot.pipeline.live_gpu_diagnostic.diagnose_live_gpu",
+                return_value=mock_diag,
+            ),
         ):
             with pytest.raises(RuntimeError, match="Live GPU required"):
                 run_smoke_test("google/gemma-4-E4B-it", n_questions=5)
@@ -215,12 +218,16 @@ class TestRunSmokeTestLiveMode:
         }
         mock_monitor_cls = MagicMock(return_value=mock_monitor_instance)
 
-        with patch("carnot.pipeline.smoke_test._prewarm_model", healthy_prewarm), patch(
-            "carnot.pipeline.smoke_test._load_model_for_smoke_test",
-            return_value=mock_model,
-        ), patch(
-            "carnot.pipeline.dual_gpu_monitor.DualGPUMonitor",
-            mock_monitor_cls,
+        with (
+            patch("carnot.pipeline.smoke_test._prewarm_model", healthy_prewarm),
+            patch(
+                "carnot.pipeline.smoke_test._load_model_for_smoke_test",
+                return_value=mock_model,
+            ),
+            patch(
+                "carnot.pipeline.dual_gpu_monitor.DualGPUMonitor",
+                mock_monitor_cls,
+            ),
         ):
             result = run_smoke_test("google/gemma-4-E4B-it", n_questions=2)
 
@@ -244,12 +251,16 @@ class TestRunSmokeTestLiveMode:
             "idle_gpus": [],
         }
 
-        with patch("carnot.pipeline.smoke_test._prewarm_model", healthy_prewarm), patch(
-            "carnot.pipeline.smoke_test._load_model_for_smoke_test",
-            return_value=mock_model,
-        ), patch(
-            "carnot.pipeline.dual_gpu_monitor.DualGPUMonitor",
-            return_value=mock_monitor_instance,
+        with (
+            patch("carnot.pipeline.smoke_test._prewarm_model", healthy_prewarm),
+            patch(
+                "carnot.pipeline.smoke_test._load_model_for_smoke_test",
+                return_value=mock_model,
+            ),
+            patch(
+                "carnot.pipeline.dual_gpu_monitor.DualGPUMonitor",
+                return_value=mock_monitor_instance,
+            ),
         ):
             result = run_smoke_test("google/gemma-4-E4B-it", n_questions=3)
 
@@ -267,12 +278,16 @@ class TestRunSmokeTestLiveMode:
             "idle_gpus": [],
         }
 
-        with patch("carnot.pipeline.smoke_test._prewarm_model", healthy_prewarm), patch(
-            "carnot.pipeline.smoke_test._load_model_for_smoke_test",
-            side_effect=RuntimeError("model load failed"),
-        ), patch(
-            "carnot.pipeline.dual_gpu_monitor.DualGPUMonitor",
-            return_value=mock_monitor_instance,
+        with (
+            patch("carnot.pipeline.smoke_test._prewarm_model", healthy_prewarm),
+            patch(
+                "carnot.pipeline.smoke_test._load_model_for_smoke_test",
+                side_effect=RuntimeError("model load failed"),
+            ),
+            patch(
+                "carnot.pipeline.dual_gpu_monitor.DualGPUMonitor",
+                return_value=mock_monitor_instance,
+            ),
         ):
             with pytest.raises(RuntimeError):
                 run_smoke_test("google/gemma-4-E4B-it", n_questions=2)

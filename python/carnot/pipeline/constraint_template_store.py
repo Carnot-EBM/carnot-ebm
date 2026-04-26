@@ -33,7 +33,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-
 # ---------------------------------------------------------------------------
 # ConstraintTemplate dataclass
 # ---------------------------------------------------------------------------
@@ -136,10 +135,7 @@ class _ViolationAccumulator:
     def top_keywords(self, n: int = 10) -> list[str]:
         """Return the n most frequently observed keywords, sorted by frequency desc."""
         return [
-            kw
-            for kw, _ in sorted(
-                self.keyword_counts.items(), key=lambda kv: (-kv[1], kv[0])
-            )[:n]
+            kw for kw, _ in sorted(self.keyword_counts.items(), key=lambda kv: (-kv[1], kv[0]))[:n]
         ]
 
 
@@ -374,9 +370,7 @@ class ConstraintTemplateStore:
                 }
                 for vtype, acc in sorted(self._accumulators.items())
             },
-            "distilled_templates": [
-                t.to_dict() for t in (self._distilled or [])
-            ],
+            "distilled_templates": [t.to_dict() for t in (self._distilled or [])],
         }
         Path(path).write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
 

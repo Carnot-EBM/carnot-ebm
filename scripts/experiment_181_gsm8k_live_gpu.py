@@ -99,7 +99,7 @@ _N_GPUS = torch.cuda.device_count()
 print(f"CUDA available: {_N_GPUS} GPU(s) detected.")
 for _i in range(_N_GPUS):
     _name = torch.cuda.get_device_name(_i)
-    _vram = torch.cuda.get_device_properties(_i).total_memory / 1024 ** 2
+    _vram = torch.cuda.get_device_properties(_i).total_memory / 1024**2
     print(f"  GPU {_i}: {_name} ({_vram:.0f} MB VRAM)")
 
 # ---------------------------------------------------------------------------
@@ -183,7 +183,8 @@ def load_model_on_gpu(
         t_load = time.perf_counter()
         try:
             tokenizer = AutoTokenizer.from_pretrained(
-                model_id, trust_remote_code=True,
+                model_id,
+                trust_remote_code=True,
             )
             # device_map={"": device_index} routes all layers to the target GPU.
             # This is the correct multi-GPU fix identified in Exp 180.
@@ -195,9 +196,11 @@ def load_model_on_gpu(
             )
             model.eval()
             load_time = time.perf_counter() - t_load
-            vram_mb = torch.cuda.memory_allocated(device_index) / 1024 ** 2
-            print(f"  Loaded {model_id} in {load_time:.2f}s | "
-                  f"VRAM GPU{device_index}: {vram_mb:.0f} MB")
+            vram_mb = torch.cuda.memory_allocated(device_index) / 1024**2
+            print(
+                f"  Loaded {model_id} in {load_time:.2f}s | "
+                f"VRAM GPU{device_index}: {vram_mb:.0f} MB"
+            )
 
             # Smoke test with a trivial prompt.
             _smoke = _generate_on_device(model, tokenizer, "1+1=", 8, device_str)
@@ -226,7 +229,7 @@ def unload_model(model: Any, tokenizer: Any, device_index: int) -> None:
     del model, tokenizer
     gc.collect()
     torch.cuda.empty_cache()
-    vram_after = torch.cuda.memory_allocated(device_index) / 1024 ** 2
+    vram_after = torch.cuda.memory_allocated(device_index) / 1024**2
     print(f"  Unloaded model. GPU{device_index} VRAM now: {vram_after:.0f} MB")
 
 
@@ -264,13 +267,17 @@ def _generate_on_device(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         try:
             text = tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True,
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
             )
         except Exception:
             text = prompt
@@ -290,7 +297,8 @@ def _generate_on_device(
         )
 
     response = tokenizer.decode(
-        outputs[0, input_len:], skip_special_tokens=True,
+        outputs[0, input_len:],
+        skip_special_tokens=True,
     )
 
     # Qwen3 chain-of-thought stripping.
@@ -358,13 +366,15 @@ def load_gsm8k_questions() -> list[dict[str, Any]]:
         gt = _extract_gsm8k_answer(ex["answer"])
         if gt is None:
             continue
-        questions.append({
-            "question": ex["question"],
-            "ground_truth": gt,
-            "answer_text": ex["answer"],
-            "source": "gsm8k",
-            "idx": idx,
-        })
+        questions.append(
+            {
+                "question": ex["question"],
+                "ground_truth": gt,
+                "answer_text": ex["answer"],
+                "source": "gsm8k",
+                "idx": idx,
+            }
+        )
 
     print(f"  Parsed {len(questions)} questions with valid numeric answers.")
     return questions
@@ -471,12 +481,14 @@ def extract_arithmetic_steps(response: str) -> list[dict[str, Any]]:
                 correct = int(correct)
 
         satisfied = abs(float(claimed) - float(correct)) < 0.01
-        steps.append({
-            "expression": f"{a} {op} {b}",
-            "claimed": claimed,
-            "correct": correct,
-            "satisfied": satisfied,
-        })
+        steps.append(
+            {
+                "expression": f"{a} {op} {b}",
+                "claimed": claimed,
+                "correct": correct,
+                "satisfied": satisfied,
+            }
+        )
 
     return steps
 
@@ -501,8 +513,7 @@ def format_violations(arith_steps: list[dict[str, Any]]) -> str:
         )
     lines += [
         "",
-        "Please recalculate step by step, fixing these errors. "
-        "Give the final answer as a number.",
+        "Please recalculate step by step, fixing these errors. Give the final answer as a number.",
     ]
     return "\n".join(lines)
 
@@ -892,7 +903,7 @@ def main() -> int:
         load_t0 = time.time()
         tokenizer, model_obj, actual_device = load_model_on_gpu(config)
         load_time = time.time() - load_t0
-        vram_mb = torch.cuda.memory_allocated(device_index) / 1024 ** 2
+        vram_mb = torch.cuda.memory_allocated(device_index) / 1024**2
 
         model_metadata[model_name] = {
             "hf_id": config["hf_id"],
@@ -932,8 +943,8 @@ def main() -> int:
                 eta_m = (elapsed_m / max(done_so_far - completed, 1)) * (n_questions - done_so_far)
                 print(
                     f"  [{model_name}] {total_done}/{n_questions} | "
-                    f"baseline {n_b/total_done:.1%} | "
-                    f"repair {n_r/total_done:.1%} | "
+                    f"baseline {n_b / total_done:.1%} | "
+                    f"repair {n_r / total_done:.1%} | "
                     f"{elapsed_m:.1f}min elapsed | ETA {eta_m:.0f}min"
                 )
 
@@ -959,9 +970,7 @@ def main() -> int:
         base_acc, base_lo, base_hi = bootstrap_ci(base_flags, seed=seed_base)
         verify_acc, verify_lo, verify_hi = bootstrap_ci(verify_flags, seed=seed_base + 1)
         repair_acc, repair_lo, repair_hi = bootstrap_ci(repair_flags, seed=seed_base + 2)
-        delta, delta_lo, delta_hi = bootstrap_delta_ci(
-            base_flags, repair_flags, seed=seed_base + 3
-        )
+        delta, delta_lo, delta_hi = bootstrap_delta_ci(base_flags, repair_flags, seed=seed_base + 3)
 
         # Repair-specific metrics.
         n_repaired = sum(1 for r in mode_results["verify_repair"] if r.get("repaired", False))
@@ -997,15 +1006,21 @@ def main() -> int:
         }
 
         # Print model summary.
-        print(f"\n  {model_name} RESULTS ({model_elapsed:.1f}s = {model_elapsed/60:.1f}min):")
-        print(f"    Baseline:      {int(sum(base_flags))}/{n_questions} "
-              f"({base_acc:.1%} [{base_lo:.1%}, {base_hi:.1%}])")
-        print(f"    Verify-only:   {int(sum(verify_flags))}/{n_questions} "
-              f"({verify_acc:.1%} [{verify_lo:.1%}, {verify_hi:.1%}])")
-        print(f"    Verify+Repair: {int(sum(repair_flags))}/{n_questions} "
-              f"({repair_acc:.1%} [{repair_lo:.1%}, {repair_hi:.1%}])")
+        print(f"\n  {model_name} RESULTS ({model_elapsed:.1f}s = {model_elapsed / 60:.1f}min):")
+        print(
+            f"    Baseline:      {int(sum(base_flags))}/{n_questions} "
+            f"({base_acc:.1%} [{base_lo:.1%}, {base_hi:.1%}])"
+        )
+        print(
+            f"    Verify-only:   {int(sum(verify_flags))}/{n_questions} "
+            f"({verify_acc:.1%} [{verify_lo:.1%}, {verify_hi:.1%}])"
+        )
+        print(
+            f"    Verify+Repair: {int(sum(repair_flags))}/{n_questions} "
+            f"({repair_acc:.1%} [{repair_lo:.1%}, {repair_hi:.1%}])"
+        )
         print(f"    Δ (repair-baseline): {delta:+.1%} [{delta_lo:+.1%}, {delta_hi:+.1%}]")
-        print(f"    Questions repaired: {n_repaired} ({n_repaired/n_questions:.1%})")
+        print(f"    Questions repaired: {n_repaired} ({n_repaired / n_questions:.1%})")
 
         # Free VRAM before loading next model.
         unload_model(model_obj, tokenizer, device_index)
@@ -1053,7 +1068,7 @@ def main() -> int:
     print(f"\n  Results saved to {results_path}")
 
     # --- Final summary ---
-    print(f"\n[4/4] FINAL RESULTS ({total_elapsed:.1f}s = {total_elapsed/3600:.2f}h)")
+    print(f"\n[4/4] FINAL RESULTS ({total_elapsed:.1f}s = {total_elapsed / 3600:.2f}h)")
     print(sep)
     print(f"  Dataset: REAL GSM8K (N={n_questions})")
     print(f"  Inference: LIVE GPU (RTX 3090)")
@@ -1072,9 +1087,9 @@ def main() -> int:
         d_hi = stats["ci_delta_upper"]
         print(
             f"  {model_name:<22s} "
-            f"{b['accuracy']:>6.1%}±{(b['ci_upper']-b['ci_lower'])/2:>4.1%}  "
-            f"{v['accuracy']:>6.1%}±{(v['ci_upper']-v['ci_lower'])/2:>4.1%}  "
-            f"{r['accuracy']:>6.1%}±{(r['ci_upper']-r['ci_lower'])/2:>4.1%}  "
+            f"{b['accuracy']:>6.1%}±{(b['ci_upper'] - b['ci_lower']) / 2:>4.1%}  "
+            f"{v['accuracy']:>6.1%}±{(v['ci_upper'] - v['ci_lower']) / 2:>4.1%}  "
+            f"{r['accuracy']:>6.1%}±{(r['ci_upper'] - r['ci_lower']) / 2:>4.1%}  "
             f"{d:>+6.1%} [{d_lo:+.1%},{d_hi:+.1%}]"
         )
 

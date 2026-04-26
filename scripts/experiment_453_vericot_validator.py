@@ -154,8 +154,12 @@ def run_vericot_validator(samples: list[str]) -> int:
     total = 0
     for i, sample in enumerate(samples):
         violations = validator.detect_violations(sample)
-        _log.info("VeriCoT sample %d: %d violations (steps: %s)", i, len(violations),
-                  [v.status for v in violations])
+        _log.info(
+            "VeriCoT sample %d: %d violations (steps: %s)",
+            i,
+            len(violations),
+            [v.status for v in violations],
+        )
         total += len(violations)
     return total
 
@@ -172,8 +176,12 @@ def main() -> None:
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=TIMEOUT_MINUTES):
         _log.info("=== Exp %d: %s ===", EXP_ID, TITLE)
-        _log.info("Samples: %d total (%d correct, %d wrong)",
-                  len(ALL_SAMPLES), len(CORRECT_SAMPLES), len(WRONG_SAMPLES))
+        _log.info(
+            "Samples: %d total (%d correct, %d wrong)",
+            len(ALL_SAMPLES),
+            len(CORRECT_SAMPLES),
+            len(WRONG_SAMPLES),
+        )
 
         # --- Baseline: ArithmeticExtractor ---
         _log.info("--- Running ArithmeticExtractor baseline ---")
@@ -194,20 +202,23 @@ def main() -> None:
         else:
             honest_verdict = "no_improvement"
 
-        artifact = tmpl.build_result({
-            "schema": "carnot.vericot_validator.v1",
-            "n_samples": n_total,
-            "n_correct_samples": len(CORRECT_SAMPLES),
-            "n_wrong_samples": len(WRONG_SAMPLES),
-            "baseline_extractor": "ArithmeticExtractor",
-            "vericot_extractor": "VeriCoTStepValidator(use_mock=True)",
-            "baseline_detected": baseline_detected,
-            "vericot_detected": vericot_detected,
-            "improvement_rate": improvement_rate,
-            "honest_verdict": honest_verdict,
-            "use_mock": True,
-            "requires_gpu": False,
-        }, status="success")
+        artifact = tmpl.build_result(
+            {
+                "schema": "carnot.vericot_validator.v1",
+                "n_samples": n_total,
+                "n_correct_samples": len(CORRECT_SAMPLES),
+                "n_wrong_samples": len(WRONG_SAMPLES),
+                "baseline_extractor": "ArithmeticExtractor",
+                "vericot_extractor": "VeriCoTStepValidator(use_mock=True)",
+                "baseline_detected": baseline_detected,
+                "vericot_detected": vericot_detected,
+                "improvement_rate": improvement_rate,
+                "honest_verdict": honest_verdict,
+                "use_mock": True,
+                "requires_gpu": False,
+            },
+            status="success",
+        )
 
         writer = AtomicResultWriter(str(output_path))
         writer.write(artifact)

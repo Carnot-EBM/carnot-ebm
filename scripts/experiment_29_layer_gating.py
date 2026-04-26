@@ -46,7 +46,8 @@ def collect_all_layers(n_questions: int = 200) -> tuple[dict[int, np.ndarray], n
     print(f"Loading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         torch_dtype=torch.float16 if device == "cuda" else None,
     )
@@ -74,7 +75,9 @@ def collect_all_layers(n_questions: int = 200) -> tuple[dict[int, np.ndarray], n
         prompt = f"Answer briefly and factually in one sentence. {question}"
         messages = [{"role": "user", "content": prompt}]
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
         inputs = tokenizer(text, return_tensors="pt")
@@ -83,14 +86,17 @@ def collect_all_layers(n_questions: int = 200) -> tuple[dict[int, np.ndarray], n
         prompt_len = inputs["input_ids"].shape[1]
 
         with torch.no_grad():
-            outputs = model.generate(**inputs, max_new_tokens=80, do_sample=False,
-                                     pad_token_id=tokenizer.eos_token_id)
+            outputs = model.generate(
+                **inputs, max_new_tokens=80, do_sample=False, pad_token_id=tokenizer.eos_token_id
+            )
 
         gen_ids = outputs[0, prompt_len:]
         response = tokenizer.decode(gen_ids, skip_special_tokens=True)
         if "</think>" in response:
             response = response.split("</think>")[-1].strip()
-        is_correct = check_truthfulqa_answer(response, correct_answers, incorrect_answers, best_answer)
+        is_correct = check_truthfulqa_answer(
+            response, correct_answers, incorrect_answers, best_answer
+        )
 
         if is_correct:
             n_correct += 1
@@ -111,24 +117,35 @@ def collect_all_layers(n_questions: int = 200) -> tuple[dict[int, np.ndarray], n
             all_labels.append(1 if is_correct else 0)
 
         if (qi + 1) % 50 == 0:
-            print(f"  [{qi+1:3d}/{n_questions}] correct={n_correct} wrong={n_wrong} "
-                  f"({n_correct/(qi+1)*100:.0f}%) tokens={len(all_labels)}")
+            print(
+                f"  [{qi + 1:3d}/{n_questions}] correct={n_correct} wrong={n_wrong} "
+                f"({n_correct / (qi + 1) * 100:.0f}%) tokens={len(all_labels)}"
+            )
 
     del model, tokenizer
     if device == "cuda":
         torch.cuda.empty_cache()
     gc.collect()
 
-    layer_arrays = {l: np.array(tokens, dtype=np.float32) for l, tokens in layer_tokens.items() if tokens}
+    layer_arrays = {
+        l: np.array(tokens, dtype=np.float32) for l, tokens in layer_tokens.items() if tokens
+    }
     labels = np.array(all_labels, dtype=np.int32)
-    print(f"  Collected: {len(labels)} tokens from {len(layer_arrays)} layers, "
-          f"{n_correct} correct, {n_wrong} wrong")
+    print(
+        f"  Collected: {len(labels)} tokens from {len(layer_arrays)} layers, "
+        f"{n_correct} correct, {n_wrong} wrong"
+    )
 
     return layer_arrays, labels, hidden_dim
 
 
-def train_ebm_and_eval(activations: np.ndarray, labels: np.ndarray, input_dim: int,
-                       label: str, hidden_dims: list[int] | None = None):
+def train_ebm_and_eval(
+    activations: np.ndarray,
+    labels: np.ndarray,
+    input_dim: int,
+    label: str,
+    hidden_dims: list[int] | None = None,
+):
     """Train EBM, evaluate, measure size and speed."""
     import jax
     import jax.numpy as jnp
@@ -165,8 +182,11 @@ def train_ebm_and_eval(activations: np.ndarray, labels: np.ndarray, input_dim: i
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -190,7 +210,9 @@ def train_ebm_and_eval(activations: np.ndarray, labels: np.ndarray, input_dim: i
     train_time = time.time() - train_start
 
     # Count parameters
-    n_params = sum(w.size + b.size for w, b in ebm.layers) + ebm.output_weight.size + ebm.output_bias.size
+    n_params = (
+        sum(w.size + b.size for w, b in ebm.layers) + ebm.output_weight.size + ebm.output_bias.size
+    )
 
     # Evaluate
     n_eval = min(300, len(vc))
@@ -205,8 +227,10 @@ def train_ebm_and_eval(activations: np.ndarray, labels: np.ndarray, input_dim: i
     acc = (tp + tn) / (len(ce) + len(we))
     gap = np.mean(we) - np.mean(ce)
 
-    print(f"  {label}: test={acc:.1%}, gap={gap:.4f}, params={n_params:,}, "
-          f"train={train_time:.1f}s, infer={infer_time:.2f}ms/tok")
+    print(
+        f"  {label}: test={acc:.1%}, gap={gap:.4f}, params={n_params:,}, "
+        f"train={train_time:.1f}s, infer={infer_time:.2f}ms/tok"
+    )
     return acc, gap, n_params, infer_time
 
 
@@ -249,8 +273,11 @@ def learned_gating(layer_arrays: dict[int, np.ndarray], labels: np.ndarray, hidd
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -287,7 +314,9 @@ def learned_gating(layer_arrays: dict[int, np.ndarray], labels: np.ndarray, hidd
     # Show learned gate weights
     gate_weights = jax.nn.softmax(gate_logits)
     top_layers = sorted(range(n_layers), key=lambda i: float(gate_weights[i]), reverse=True)[:5]
-    print(f"  Top 5 gate weights: {', '.join(f'L{l}={float(gate_weights[l]):.3f}' for l in top_layers)}")
+    print(
+        f"  Top 5 gate weights: {', '.join(f'L{l}={float(gate_weights[l]):.3f}' for l in top_layers)}"
+    )
 
     # Evaluate
     n_eval = min(300, len(vc_s))
@@ -305,10 +334,17 @@ def learned_gating(layer_arrays: dict[int, np.ndarray], labels: np.ndarray, hidd
     acc = (tp + tn) / (len(ce) + len(we))
     gap = np.mean(we) - np.mean(ce)
 
-    n_params = sum(w.size + b.size for w, b in ebm.layers) + ebm.output_weight.size + ebm.output_bias.size + n_layers
+    n_params = (
+        sum(w.size + b.size for w, b in ebm.layers)
+        + ebm.output_weight.size
+        + ebm.output_bias.size
+        + n_layers
+    )
 
-    print(f"  Learned gating: test={acc:.1%}, gap={gap:.4f}, params={n_params:,}, "
-          f"train={train_time:.1f}s, infer={infer_time:.2f}ms/tok")
+    print(
+        f"  Learned gating: test={acc:.1%}, gap={gap:.4f}, params={n_params:,}, "
+        f"train={train_time:.1f}s, infer={infer_time:.2f}ms/tok"
+    )
     return acc, gap, n_params, infer_time, gate_weights
 
 
@@ -328,27 +364,31 @@ def main() -> int:
     print(f"\n--- Approach 1: Last Layer Only (baseline) ---")
     last = layer_arrays[n_layers - 1]
     a1_acc, a1_gap, a1_params, a1_speed = train_ebm_and_eval(
-        last, labels, hidden_dim, "Last layer (L24)")
+        last, labels, hidden_dim, "Last layer (L24)"
+    )
 
     print(f"\n--- Approach 2: All Layers Concatenated ---")
     all_concat = np.concatenate([layer_arrays[l] for l in sorted(layer_arrays.keys())], axis=1)
     concat_dim = hidden_dim * n_layers
     print(f"  Concat dim: {concat_dim}")
     a2_acc, a2_gap, a2_params, a2_speed = train_ebm_and_eval(
-        all_concat, labels, concat_dim, "All layers concat",
-        hidden_dims=[1024, 256])
+        all_concat, labels, concat_dim, "All layers concat", hidden_dims=[1024, 256]
+    )
 
     print(f"\n--- Approach 3: Best-3 Layers Concat (early+mid+late) ---")
     # layers 4, 12, 24 (or equivalent fractions of 25 layers)
     early, mid, late = 4, 12, n_layers - 1
-    three_concat = np.concatenate([layer_arrays[early], layer_arrays[mid], layer_arrays[late]], axis=1)
+    three_concat = np.concatenate(
+        [layer_arrays[early], layer_arrays[mid], layer_arrays[late]], axis=1
+    )
     a3_acc, a3_gap, a3_params, a3_speed = train_ebm_and_eval(
-        three_concat, labels, hidden_dim * 3, "3-layer concat (4+12+24)",
-        hidden_dims=[512, 128])
+        three_concat, labels, hidden_dim * 3, "3-layer concat (4+12+24)", hidden_dims=[512, 128]
+    )
 
     print(f"\n--- Approach 4: Learned Layer Gating ---")
     a4_acc, a4_gap, a4_params, a4_speed, gate_weights = learned_gating(
-        layer_arrays, labels, hidden_dim)
+        layer_arrays, labels, hidden_dim
+    )
 
     # Summary
     elapsed = time.time() - start

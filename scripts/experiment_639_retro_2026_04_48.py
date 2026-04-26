@@ -242,12 +242,8 @@ def compute_retro() -> dict:
     # No new RETROs to open: RETRO-071 was already opened in .47; DualGPU blocked by
     # missing HF weights (model load infra issue), not a new architectural problem.
     n_new_retros = 0
-    open_retro_count = (
-        len(_RETROS_OPEN_AT_MILESTONE_START) - n_closed_this_milestone + n_new_retros
-    )
-    retro_closure_rate = round(
-        n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3
-    )
+    open_retro_count = len(_RETROS_OPEN_AT_MILESTONE_START) - n_closed_this_milestone + n_new_retros
+    retro_closure_rate = round(n_closed_this_milestone / len(_RETROS_OPEN_AT_MILESTONE_START), 3)
 
     # --- Honest verdict -------------------------------------------------------
     if retro_033_resolved:
@@ -262,119 +258,141 @@ def compute_retro() -> dict:
     # --- Open RETRO carry-forward items ----------------------------------------
     open_retro_items: list[dict] = []
 
-    open_retro_items.append({
-        "id": "RETRO-031",
-        "title": "Partial carry — closure status unverified",
-        "carry_count": ">=6",
-        "action_required": "Verify closure in result files before .49 planning",
-    })
+    open_retro_items.append(
+        {
+            "id": "RETRO-031",
+            "title": "Partial carry — closure status unverified",
+            "carry_count": ">=6",
+            "action_required": "Verify closure in result files before .49 planning",
+        }
+    )
 
     if not retro_033_resolved:
-        open_retro_items.append({
-            "id": "RETRO-033",
-            "title": "Live 25q verify-repair precision — 16 attempts, still not closed",
-            "carry_count": ">=16",
-            "action_required": (
-                "Blocked: gate_open=False (interwhen_recall=12%).  Sixteen zero-positive "
-                "attempts confirm that no extractor variant can cross the live/offline gap "
-                "without mid-generation monitoring.  Do NOT schedule attempt #17 until "
-                "interwhen recall >= 30%.  HERMES tool-augmented loop (Exp 633) reduces "
-                "FP rate but does not yet improve recall enough to open the gate."
-            ),
-        })
+        open_retro_items.append(
+            {
+                "id": "RETRO-033",
+                "title": "Live 25q verify-repair precision — 16 attempts, still not closed",
+                "carry_count": ">=16",
+                "action_required": (
+                    "Blocked: gate_open=False (interwhen_recall=12%).  Sixteen zero-positive "
+                    "attempts confirm that no extractor variant can cross the live/offline gap "
+                    "without mid-generation monitoring.  Do NOT schedule attempt #17 until "
+                    "interwhen recall >= 30%.  HERMES tool-augmented loop (Exp 633) reduces "
+                    "FP rate but does not yet improve recall enough to open the gate."
+                ),
+            }
+        )
 
-    open_retro_items.append({
-        "id": "RETRO-038",
-        "title": "Live 200q VeriCoT+Wilson CI — still not closed",
-        "carry_count": ">=11",
-        "action_required": "Same root cause as RETRO-033. Block until recall > 30%.",
-    })
+    open_retro_items.append(
+        {
+            "id": "RETRO-038",
+            "title": "Live 200q VeriCoT+Wilson CI — still not closed",
+            "carry_count": ">=11",
+            "action_required": "Same root cause as RETRO-033. Block until recall > 30%.",
+        }
+    )
 
     if not retro_057_resolved:
-        open_retro_items.append({
-            "id": "RETRO-057",
-            "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+        open_retro_items.append(
+            {
+                "id": "RETRO-057",
+                "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+                "carry_count": ">=5",
+                "action_required": (
+                    "Exp 637 sparse_vs_dense_error=0.429 — far outside 5% threshold.  "
+                    "Sparse-only redesign insufficient; try multilevel + sparse combined approach."
+                ),
+            }
+        )
+
+    open_retro_items.append(
+        {
+            "id": "RETRO-060",
+            "title": "JEPA architecturally anti-correlated — superseded by RETRO-063",
             "carry_count": ">=5",
             "action_required": (
-                "Exp 637 sparse_vs_dense_error=0.429 — far outside 5% threshold.  "
-                "Sparse-only redesign insufficient; try multilevel + sparse combined approach."
+                "JEPA v14 OOD AUC=0.912 confirms architecture is sound.  Calibration (ECE) "
+                "remains open — v14_ece=0.132 vs threshold 0.10.  Temperature scaling (Platt) "
+                "is the next calibration attempt."
             ),
-        })
+        }
+    )
 
-    open_retro_items.append({
-        "id": "RETRO-060",
-        "title": "JEPA architecturally anti-correlated — superseded by RETRO-063",
-        "carry_count": ">=5",
-        "action_required": (
-            "JEPA v14 OOD AUC=0.912 confirms architecture is sound.  Calibration (ECE) "
-            "remains open — v14_ece=0.132 vs threshold 0.10.  Temperature scaling (Platt) "
-            "is the next calibration attempt."
-        ),
-    })
+    open_retro_items.append(
+        {
+            "id": "RETRO-064",
+            "title": "CoACE recall 4% on live data — pipeline accuracy lift undetectable",
+            "carry_count": ">=5",
+            "action_required": (
+                "interwhen_recall=0.12 (Exp 629), hermes_recall=0.12 (Exp 633).  Neither "
+                "standalone nor HERMES-augmented extractor crosses the 20% gate.  HERMES v2 "
+                "with live generation loop is the next intervention."
+            ),
+        }
+    )
 
-    open_retro_items.append({
-        "id": "RETRO-064",
-        "title": "CoACE recall 4% on live data — pipeline accuracy lift undetectable",
-        "carry_count": ">=5",
-        "action_required": (
-            "interwhen_recall=0.12 (Exp 629), hermes_recall=0.12 (Exp 633).  Neither "
-            "standalone nor HERMES-augmented extractor crosses the 20% gate.  HERMES v2 "
-            "with live generation loop is the next intervention."
-        ),
-    })
+    open_retro_items.append(
+        {
+            "id": "RETRO-065",
+            "title": "RAPL unavailable — hardware energy calibration blocked",
+            "carry_count": ">=5",
+            "action_required": "Need Intel RAPL or AMD Energy driver on test machine",
+        }
+    )
 
-    open_retro_items.append({
-        "id": "RETRO-065",
-        "title": "RAPL unavailable — hardware energy calibration blocked",
-        "carry_count": ">=5",
-        "action_required": "Need Intel RAPL or AMD Energy driver on test machine",
-    })
+    open_retro_items.append(
+        {
+            "id": "RETRO-066",
+            "title": "CoACE offline/live distribution gap — extractor redesign unresolved",
+            "carry_count": ">=4",
+            "action_required": (
+                "interwhen+HERMES recall=0.12 cannot close the gap.  ORACLE data elicitation "
+                "(arXiv 2603.21140) is the only identified path to a training corpus that "
+                "matches live output distribution."
+            ),
+        }
+    )
 
-    open_retro_items.append({
-        "id": "RETRO-066",
-        "title": "CoACE offline/live distribution gap — extractor redesign unresolved",
-        "carry_count": ">=4",
-        "action_required": (
-            "interwhen+HERMES recall=0.12 cannot close the gap.  ORACLE data elicitation "
-            "(arXiv 2603.21140) is the only identified path to a training corpus that "
-            "matches live output distribution."
-        ),
-    })
-
-    open_retro_items.append({
-        "id": "RETRO-068",
-        "title": "LLMAsExtractorV1 live recall 4-12% — below 20% gate threshold",
-        "carry_count": ">=3",
-        "action_required": (
-            "Gate recall >= 20%.  Current: interwhen_recall=0.12 (Exp 629).  "
-            "HERMES tool-augmented step boundary is the next architectural intervention."
-        ),
-    })
+    open_retro_items.append(
+        {
+            "id": "RETRO-068",
+            "title": "LLMAsExtractorV1 live recall 4-12% — below 20% gate threshold",
+            "carry_count": ">=3",
+            "action_required": (
+                "Gate recall >= 20%.  Current: interwhen_recall=0.12 (Exp 629).  "
+                "HERMES tool-augmented step boundary is the next architectural intervention."
+            ),
+        }
+    )
 
     if not retro_070_resolved:
-        open_retro_items.append({
-            "id": "RETRO-070",
-            "title": "interwhen recall still below 20% — HERMES tool-augmented pipeline next",
-            "carry_count": 2,
-            "action_required": (
-                "Exp 629 interwhen_recall_primary=0.12 — gate_open=False.  HERMES v1 "
-                "reduces FP rate (0.20 vs 0.40) but does not lift recall.  Build "
-                "HermesVerifierAdapter v2 with live generation loop: step-generation → "
-                "SymCodeVerifier prover → feedback injection before next token."
-            ),
-        })
+        open_retro_items.append(
+            {
+                "id": "RETRO-070",
+                "title": "interwhen recall still below 20% — HERMES tool-augmented pipeline next",
+                "carry_count": 2,
+                "action_required": (
+                    "Exp 629 interwhen_recall_primary=0.12 — gate_open=False.  HERMES v1 "
+                    "reduces FP rate (0.20 vs 0.40) but does not lift recall.  Build "
+                    "HermesVerifierAdapter v2 with live generation loop: step-generation → "
+                    "SymCodeVerifier prover → feedback injection before next token."
+                ),
+            }
+        )
 
     if not retro_071_resolved:
-        open_retro_items.append({
-            "id": "RETRO-071",
-            "title": "DualGPU 13B proof blocked by missing HF model weights",
-            "carry_count": 1,
-            "action_required": (
-                "Exp 632 GPUs present (2x RTX 3090) but model load failed — HF weights "
-                "not cached in CI.  Re-run with HF_HOME pointing to pre-downloaded "
-                "Qwen2.5-7B-Instruct or Qwen2.5-14B-Instruct weights."
-            ),
-        })
+        open_retro_items.append(
+            {
+                "id": "RETRO-071",
+                "title": "DualGPU 13B proof blocked by missing HF model weights",
+                "carry_count": 1,
+                "action_required": (
+                    "Exp 632 GPUs present (2x RTX 3090) but model load failed — HF weights "
+                    "not cached in CI.  Re-run with HF_HOME pointing to pre-downloaded "
+                    "Qwen2.5-7B-Instruct or Qwen2.5-14B-Instruct weights."
+                ),
+            }
+        )
 
     # --- Open RETRO carry-forward for items not yet resolved but not explicitly listed above
     # RETRO-038, RETRO-060, RETRO-064, RETRO-065, RETRO-066, RETRO-068 already added above.
@@ -389,9 +407,7 @@ def compute_retro() -> dict:
             "Scale to 200q Wilson CI (RETRO-038). Use winning extractor at scale."
         )
     elif retro_070_resolved:
-        top_priorities_for_49.append(
-            "interwhen recall crosses 20%. Run VR #17 immediately."
-        )
+        top_priorities_for_49.append("interwhen recall crosses 20%. Run VR #17 immediately.")
     else:
         top_priorities_for_49.append(
             "RETRO-070 still open — implement HERMES tool-augmented full pipeline: "

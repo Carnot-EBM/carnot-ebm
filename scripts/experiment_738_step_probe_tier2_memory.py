@@ -39,6 +39,7 @@ import sys
 import tempfile
 
 import numpy as np
+from datetime import UTC
 
 # ---------------------------------------------------------------------------
 # Path setup: allow importing from scripts/ and project root
@@ -148,7 +149,9 @@ def _run_step_probe(query_auc_baseline: float) -> dict:
     labels = np.array([1.0 if i % 2 == 0 else 0.0 for i in range(n_total)], dtype=np.float32)
 
     # Step-level states: 3 steps per sample (3 sentences of CoT).
-    states = _synthetic_step_states(n_total, n_steps=3, hidden_dim=hidden_dim, rng=rng, labels=labels)
+    states = _synthetic_step_states(
+        n_total, n_steps=3, hidden_dim=hidden_dim, rng=rng, labels=labels
+    )
 
     # OOD split: last 160 items for evaluation, first 640 for training.
     train_states, val_states = states[:640], states[640:]
@@ -220,7 +223,7 @@ def _simulate_session(
     n_violations = 0
     n_flagged = 0
     for i in range(n_questions):
-        is_carry_violation = (i % 3 == 0)
+        is_carry_violation = i % 3 == 0
         if is_carry_violation:
             ev = ViolationEvent(
                 query_id=f"q_{i:03d}",
@@ -229,7 +232,7 @@ def _simulate_session(
                 probe_confidence=0.85,
                 constraint_type="carry_check",
                 question_domain="arithmetic",
-                timestamp=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                timestamp=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
             )
             session_memory.on_violation(ev, template_lib)
             n_violations += 1
@@ -356,7 +359,9 @@ def main() -> None:
     except (FileNotFoundError, json.JSONDecodeError, ValueError):
         query_auc_baseline = 0.992812  # fallback to known Exp 732 value
 
-    with ExperimentTimeoutWatchdog(738, timeout_minutes=120, result_path=str(_REPO_ROOT / _DELIVERABLE)):
+    with ExperimentTimeoutWatchdog(
+        738, timeout_minutes=120, result_path=str(_REPO_ROOT / _DELIVERABLE)
+    ):
         # Part 1: step-level probe.
         probe_metrics = _run_step_probe(query_auc_baseline)
 

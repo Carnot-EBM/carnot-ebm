@@ -39,6 +39,7 @@ import pytest
 # Bootstrap sys.path so scripts.* and carnot.* resolve.
 # ---------------------------------------------------------------------------
 import sys
+
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
@@ -160,9 +161,7 @@ def _write_preflight(tmp_path: Path, verdict: str | None) -> None:
     data: dict = {"experiment": 390, "status": "complete"}
     if verdict is not None:
         data["honest_verdict"] = verdict
-    (preflight_dir / "experiment_390_gpu_preflight.json").write_text(
-        json.dumps(data)
-    )
+    (preflight_dir / "experiment_390_gpu_preflight.json").write_text(json.dumps(data))
 
 
 def _run_main_success(tmp_path: Path) -> dict:
@@ -178,9 +177,7 @@ def _run_main_success(tmp_path: Path) -> dict:
         "scripts.experiment_394_precision_live.LiveGPUGate.require_live_or_blocked",
         return_value=None,
     ):
-        with patch(
-            "scripts.experiment_394_precision_live.ExperimentTemplate"
-        ) as MockTmpl:
+        with patch("scripts.experiment_394_precision_live.ExperimentTemplate") as MockTmpl:
             tmpl_instance = ExperimentTemplate(
                 exp_id=exp394.EXP_ID,
                 title=exp394.EXP_TITLE,
@@ -338,9 +335,7 @@ class TestMainPreflightBlocked:
         """When Exp 390 verdict is not gpu_confirmed_live, main() writes blocked."""
         _write_preflight(tmp_path, "blocked")
 
-        with patch(
-            "scripts.experiment_394_precision_live.ExperimentTemplate"
-        ) as MockTmpl:
+        with patch("scripts.experiment_394_precision_live.ExperimentTemplate") as MockTmpl:
             tmpl_instance = ExperimentTemplate(
                 exp_id=exp394.EXP_ID,
                 title=exp394.EXP_TITLE,
@@ -365,9 +360,7 @@ class TestMainPreflightBlocked:
         """When Exp 390 verdict key is absent, main() writes blocked artifact."""
         _write_preflight(tmp_path, None)  # writes file without honest_verdict key
 
-        with patch(
-            "scripts.experiment_394_precision_live.ExperimentTemplate"
-        ) as MockTmpl:
+        with patch("scripts.experiment_394_precision_live.ExperimentTemplate") as MockTmpl:
             tmpl_instance = ExperimentTemplate(
                 exp_id=exp394.EXP_ID,
                 title=exp394.EXP_TITLE,
@@ -388,9 +381,7 @@ class TestMainPreflightBlocked:
         """When Exp 390 preflight file is absent entirely, main() writes blocked."""
         # Do NOT write any preflight file.
 
-        with patch(
-            "scripts.experiment_394_precision_live.ExperimentTemplate"
-        ) as MockTmpl:
+        with patch("scripts.experiment_394_precision_live.ExperimentTemplate") as MockTmpl:
             tmpl_instance = ExperimentTemplate(
                 exp_id=exp394.EXP_ID,
                 title=exp394.EXP_TITLE,
@@ -425,9 +416,7 @@ class TestMainGateBlocked:
             "scripts.experiment_394_precision_live.LiveGPUGate.require_live_or_blocked",
             return_value=blocked_artifact,
         ):
-            with patch(
-                "scripts.experiment_394_precision_live.ExperimentTemplate"
-            ) as MockTmpl:
+            with patch("scripts.experiment_394_precision_live.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=exp394.EXP_ID,
                     title=exp394.EXP_TITLE,
@@ -453,9 +442,7 @@ class TestMainGateBlocked:
             "scripts.experiment_394_precision_live.LiveGPUGate.require_live_or_blocked",
             return_value=None,
         ):
-            with patch(
-                "scripts.experiment_394_precision_live.ExperimentTemplate"
-            ) as MockTmpl:
+            with patch("scripts.experiment_394_precision_live.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=exp394.EXP_ID,
                     title=exp394.EXP_TITLE,
@@ -481,9 +468,7 @@ class TestMainGateBlocked:
             "scripts.experiment_394_precision_live.LiveGPUGate.require_live_or_blocked",
             return_value=None,
         ):
-            with patch(
-                "scripts.experiment_394_precision_live.ExperimentTemplate"
-            ) as MockTmpl:
+            with patch("scripts.experiment_394_precision_live.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=exp394.EXP_ID,
                     title=exp394.EXP_TITLE,
@@ -565,9 +550,7 @@ class TestMainSuccess:
             "scripts.experiment_394_precision_live.LiveGPUGate.require_live_or_blocked",
             return_value=None,
         ):
-            with patch(
-                "scripts.experiment_394_precision_live.ExperimentTemplate"
-            ) as MockTmpl:
+            with patch("scripts.experiment_394_precision_live.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=exp394.EXP_ID,
                     title=exp394.EXP_TITLE,
@@ -578,9 +561,7 @@ class TestMainSuccess:
                 tmpl_instance.setup_gpu = MagicMock(return_value=_healthy_gpu_status())
                 MockTmpl.return_value = tmpl_instance
 
-                with patch.object(
-                    exp394, "load_gsm8k_questions", return_value=small_questions
-                ):
+                with patch.object(exp394, "load_gsm8k_questions", return_value=small_questions):
                     with patch(
                         "scripts.experiment_394_precision_live._load_model_pipeline",
                         return_value=mock_model,
@@ -616,9 +597,7 @@ class TestMainSuccess:
             "scripts.experiment_394_precision_live.LiveGPUGate.require_live_or_blocked",
             return_value=None,
         ):
-            with patch(
-                "scripts.experiment_394_precision_live.ExperimentTemplate"
-            ) as MockTmpl:
+            with patch("scripts.experiment_394_precision_live.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=exp394.EXP_ID,
                     title=exp394.EXP_TITLE,
@@ -629,9 +608,7 @@ class TestMainSuccess:
                 tmpl_instance.setup_gpu = MagicMock(return_value=_healthy_gpu_status())
                 MockTmpl.return_value = tmpl_instance
 
-                with patch.object(
-                    exp394, "load_gsm8k_questions", return_value=small_questions
-                ):
+                with patch.object(exp394, "load_gsm8k_questions", return_value=small_questions):
                     with patch(
                         "scripts.experiment_394_precision_live._load_model_pipeline",
                         return_value=mock_model,

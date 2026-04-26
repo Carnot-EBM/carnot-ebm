@@ -65,9 +65,7 @@ class TestComputeExpressionConfidence:
     # SCENARIO-VERIFY-110
     def test_approximately_language_low_confidence(self) -> None:
         """SCENARIO-VERIFY-110: 'approximately 150' → score <= 0.40."""
-        score = compute_expression_confidence(
-            "the intermediate result is approximately 150"
-        )
+        score = compute_expression_confidence("the intermediate result is approximately 150")
         assert score <= 0.40, f"Expected <= 0.40, got {score}"
 
     def test_about_language_low_confidence(self) -> None:
@@ -198,9 +196,10 @@ class TestComputeEnergyVarianceConfidence:
     def test_monotone_in_variance(self) -> None:
         """Higher variance → lower confidence (monotone relationship)."""
         low_var = [2.0, 2.01, 1.99, 2.005]  # near-zero variance
-        high_var = [1.0, 4.0, 0.5, 5.0]     # high variance
-        assert compute_energy_variance_confidence(low_var) > \
-               compute_energy_variance_confidence(high_var)
+        high_var = [1.0, 4.0, 0.5, 5.0]  # high variance
+        assert compute_energy_variance_confidence(low_var) > compute_energy_variance_confidence(
+            high_var
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -337,9 +336,7 @@ class TestConfidenceWeightedRepair:
         cwr = ConfidenceWeightedRepair(pipeline=pipeline, n_samples=3, min_confidence=0.8)
 
         # Patch energy variance to return high-variance (low confidence) energies
-        with patch.object(
-            cwr, "_sample_energies", return_value=[0.1, 8.0, 0.05, 7.0, 0.2]
-        ):
+        with patch.object(cwr, "_sample_energies", return_value=[0.1, 8.0, 0.05, 7.0, 0.2]):
             result = cwr.repair("What is 150?", "approximately 150", domain=None)
 
         assert result.violations_found == 1
@@ -358,9 +355,7 @@ class TestConfidenceWeightedRepair:
         cwr = ConfidenceWeightedRepair(pipeline=pipeline, n_samples=3, min_confidence=0.8)
 
         # Patch energy variance to return low-variance (high confidence) energies
-        with patch.object(
-            cwr, "_sample_energies", return_value=[2.0, 2.1, 1.9]
-        ):
+        with patch.object(cwr, "_sample_energies", return_value=[2.0, 2.1, 1.9]):
             result = cwr.repair("What is 47+28?", "76", domain=None)
 
         assert result.violations_found == 1
@@ -384,9 +379,7 @@ class TestConfidenceWeightedRepair:
 
     def test_multiple_violations_counts_above_threshold_correctly(self) -> None:
         """Multiple violations: only the exact arithmetic one exceeds threshold."""
-        pipeline = self._make_mock_pipeline(
-            violations=["47+28=76", "approximately 150"]
-        )
+        pipeline = self._make_mock_pipeline(violations=["47+28=76", "approximately 150"])
         repair_result = MagicMock()
         repair_result.repaired = True
         pipeline.verify_and_repair_confident.return_value = repair_result

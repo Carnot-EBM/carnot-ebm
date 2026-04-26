@@ -61,7 +61,9 @@ def _monitor_gpus(readings: list, stop_event: threading.Event, interval_s: float
                 stderr=subprocess.DEVNULL,
                 timeout=5,
             )
-            util_vals = [int(line.strip()) for line in out.decode().strip().splitlines() if line.strip()]
+            util_vals = [
+                int(line.strip()) for line in out.decode().strip().splitlines() if line.strip()
+            ]
             if util_vals:
                 readings.append(util_vals)
         except Exception:
@@ -85,6 +87,7 @@ def _build_eorm_train_fn(device: str):
     'device' is stored in the result for artifact provenance but does not
     affect JAX dispatch (JAX uses its own device placement).
     """
+
     def eorm_train_fn() -> dict:
         from carnot.models.eorm import EORMModel, EORMTrainer, CoTEnergyInput  # noqa: PLC0415
 
@@ -92,10 +95,7 @@ def _build_eorm_train_fn(device: str):
         trainer = EORMTrainer(model, lr=1e-4, margin=1.0)
 
         # 50 synthetic training steps — proves the training loop runs on the device.
-        pairs = [
-            ("The answer is 4.", "The answer is 5.", f"What is 2+{i}?")
-            for i in range(50)
-        ]
+        pairs = [("The answer is 4.", "The answer is 5.", f"What is 2+{i}?") for i in range(50)]
         total_loss = 0.0
         for correct, incorrect, question in pairs:
             total_loss += trainer.train_step(correct, incorrect, question)
@@ -116,6 +116,7 @@ def _build_jepa_train_fn(device: str):
       and trained via JEPARetrainer in carnot.embeddings.jepa_retrain.
       This function runs the same retraining pattern used by Exp 340/522/535/543.
     """
+
     def jepa_train_fn() -> dict:
         from carnot.embeddings.jepa_energy import ContextPredictionEnergy, JEPAEnergyConfig  # noqa: PLC0415
         from carnot.embeddings.jepa_retrain import JEPARetrainer, ViolationPair  # noqa: PLC0415
@@ -187,6 +188,7 @@ def main() -> None:
     # --- GPU detection ---
     try:
         import torch  # noqa: PLC0415
+
         n_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
     except Exception:
         n_gpus = 0
@@ -220,7 +222,9 @@ def main() -> None:
     eorm_device = "cuda:0"
     jepa_device = "cuda:1" if dualgpu_mode else "cuda:0"
 
-    print(f"[Exp 664] n_gpus={n_gpus}, dualgpu_mode={dualgpu_mode}, single_gpu_mode={single_gpu_mode}")
+    print(
+        f"[Exp 664] n_gpus={n_gpus}, dualgpu_mode={dualgpu_mode}, single_gpu_mode={single_gpu_mode}"
+    )
     print(f"[Exp 664] EORM → {eorm_device}, JEPA → {jepa_device}")
 
     # --- GPU utilization monitor ---

@@ -359,16 +359,12 @@ class TestRunExperiment330Schema:
         result = self._get_dry_run_result(tmp_path, _make_exp328_results())
         assert "joint_placeholder_created" in result
 
-    def test_live_benchmark_embedded_true_when_exp328_present(
-        self, tmp_path: Path
-    ) -> None:
+    def test_live_benchmark_embedded_true_when_exp328_present(self, tmp_path: Path) -> None:
         """live_benchmark_embedded must be True when Exp 328 results are available."""
         result = self._get_dry_run_result(tmp_path, _make_exp328_results())
         assert result.get("live_benchmark_embedded") is True
 
-    def test_live_benchmark_embedded_false_when_exp328_absent(
-        self, tmp_path: Path
-    ) -> None:
+    def test_live_benchmark_embedded_false_when_exp328_absent(self, tmp_path: Path) -> None:
         """live_benchmark_embedded must be False when Exp 328 results are absent."""
         result = self._get_dry_run_result(tmp_path, exp328_data=None)
         assert result.get("live_benchmark_embedded") is False

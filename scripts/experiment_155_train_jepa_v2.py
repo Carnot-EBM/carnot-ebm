@@ -64,11 +64,11 @@ V2_MODEL_PATH = Path("results/jepa_predictor_v2.safetensors")
 RESULTS_PATH = Path("results/experiment_155_results.json")
 
 # Training config for Exp 155
-N_EPOCHS = 100          # doubled from Exp 144's 50
-LR = 1e-3               # same learning rate
-BATCH_SIZE = 64         # same batch size
-VAL_FRACTION = 0.2      # same val fraction
-SEED = 42               # reproducibility
+N_EPOCHS = 100  # doubled from Exp 144's 50
+LR = 1e-3  # same learning rate
+BATCH_SIZE = 64  # same batch size
+VAL_FRACTION = 0.2  # same val fraction
+SEED = 42  # reproducibility
 EARLY_STOP_PATIENCE = 15  # stop if val AUROC doesn't improve for N epochs
 
 # Exp 144 v1 reference results (for comparison table)
@@ -115,31 +115,31 @@ _CODE_CORRECT_TEMPLATES = [
 
 _CODE_BUGGY_TEMPLATES = [
     # Syntax/logic errors introduced
-    "def sort_list(items):\n    return sorted(items\n",                               # missing closing paren
+    "def sort_list(items):\n    return sorted(items\n",  # missing closing paren
     "def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = lo + hi // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1\n",  # operator precedence bug
-    "def find_max(nums):\n    return min(nums)\n",                                    # wrong function
-    "def count_evens(nums):\n    return sum(1 for n in nums if n % 2 == 1)\n",       # off-by-one in modulo
-    "def reverse_string(s):\n    return s[::1]\n",                                   # wrong step
-    "def is_palindrome(s):\n    return s == reversed(s)\n",                          # reversed returns iterator
-    "def flatten(lst):\n    return [x for sub in lst for x in lst]\n",               # inner loop wrong var
-    "def unique(items):\n    return list(set(items, items))\n",                      # extra arg to set
+    "def find_max(nums):\n    return min(nums)\n",  # wrong function
+    "def count_evens(nums):\n    return sum(1 for n in nums if n % 2 == 1)\n",  # off-by-one in modulo
+    "def reverse_string(s):\n    return s[::1]\n",  # wrong step
+    "def is_palindrome(s):\n    return s == reversed(s)\n",  # reversed returns iterator
+    "def flatten(lst):\n    return [x for sub in lst for x in lst]\n",  # inner loop wrong var
+    "def unique(items):\n    return list(set(items, items))\n",  # extra arg to set
     "def factorial(n):\n    if n <= 1:\n        return 0\n    return n * factorial(n - 1)\n",  # base case bug
     "def fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = a + b, a\n",  # swap wrong direction
-    "def gcd(a, b):\n    while b:\n        a, b = b, b % a\n    return a\n",         # a and b swapped in mod
+    "def gcd(a, b):\n    while b:\n        a, b = b, b % a\n    return a\n",  # a and b swapped in mod
     "def is_prime(n):\n    if n < 2:\n        return True\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n",  # base case inverted
-    "def sum_digits(n):\n    return sum(d for d in str(abs(n)))\n",                  # missing int() conversion
-    "def count_words(text):\n    return len(text)\n",                                # counts chars not words
-    "def to_uppercase(s):\n    return s.lower()\n",                                  # wrong method
+    "def sum_digits(n):\n    return sum(d for d in str(abs(n)))\n",  # missing int() conversion
+    "def count_words(text):\n    return len(text)\n",  # counts chars not words
+    "def to_uppercase(s):\n    return s.lower()\n",  # wrong method
     "def remove_duplicates(lst):\n    seen = set()\n    return [x for x in lst if x in seen or seen.add(x)]\n",  # condition inverted
-    "def zip_lists(a, b):\n    return list(zip(a))\n",                               # missing arg
-    "def mean(nums):\n    return sum(nums) / len(nums) - 1\n",                       # off-by-one
-    "def clamp(x, lo, hi):\n    return min(lo, max(hi, x))\n",                      # min/max swapped
+    "def zip_lists(a, b):\n    return list(zip(a))\n",  # missing arg
+    "def mean(nums):\n    return sum(nums) / len(nums) - 1\n",  # off-by-one
+    "def clamp(x, lo, hi):\n    return min(lo, max(hi, x))\n",  # min/max swapped
     "def is_sorted(lst):\n    return all(lst[i] < lst[i+1] for i in range(len(lst)-1))\n",  # strict vs non-strict
-    "def head(lst):\n    return lst[-1] if lst else None\n",                         # -1 instead of 0
-    "def tail(lst):\n    return lst[:-1]\n",                                         # drops last not first
-    "def dot_product(a, b):\n    return sum(x + y for x, y in zip(a, b))\n",        # addition instead of multiply
-    "def chunk(lst, n):\n    return [lst[i:i+n] for i in range(0, len(lst))]\n",    # missing step
-    "def safe_divide(a, b):\n    return a / b if b == 0 else None\n",               # condition inverted
+    "def head(lst):\n    return lst[-1] if lst else None\n",  # -1 instead of 0
+    "def tail(lst):\n    return lst[:-1]\n",  # drops last not first
+    "def dot_product(a, b):\n    return sum(x + y for x, y in zip(a, b))\n",  # addition instead of multiply
+    "def chunk(lst, n):\n    return [lst[i:i+n] for i in range(0, len(lst))]\n",  # missing step
+    "def safe_divide(a, b):\n    return a / b if b == 0 else None\n",  # condition inverted
 ]
 
 # Logic domain: syllogism / propositional reasoning snippets
@@ -173,29 +173,29 @@ _LOGIC_VALID_TEMPLATES = [
 
 _LOGIC_INVALID_TEMPLATES = [
     # Formal fallacies
-    "All mammals are warm-blooded. A snake is warm-blooded. Therefore, a snake is a mammal.",   # affirming the consequent
-    "If it rains, the ground gets wet. The ground is wet. Therefore, it rained.",               # affirming the consequent
-    "All prime numbers greater than 2 are odd. 9 is odd. Therefore, 9 is prime.",              # converse error
+    "All mammals are warm-blooded. A snake is warm-blooded. Therefore, a snake is a mammal.",  # affirming the consequent
+    "If it rains, the ground gets wet. The ground is wet. Therefore, it rained.",  # affirming the consequent
+    "All prime numbers greater than 2 are odd. 9 is odd. Therefore, 9 is prime.",  # converse error
     "No reptiles are warm-blooded. No snakes are warm-blooded. Therefore, all snakes are reptiles.",  # undistributed middle
     "If a number is divisible by 4, it is divisible by 2. 6 is divisible by 2. Therefore, 6 is divisible by 4.",  # converse
-    "All squares are rectangles. Shape S is a rectangle. Therefore, shape S is a square.",      # converse error
-    "If P then Q. Q is true. Therefore, P is true.",                                           # affirming consequent
-    "Either it is day or it is night. It is day. Therefore, it is not night.",                 # false exclusion (can be twilight)
-    "All birds have wings. Bats have wings. Therefore, bats are birds.",                        # undistributed middle
+    "All squares are rectangles. Shape S is a rectangle. Therefore, shape S is a square.",  # converse error
+    "If P then Q. Q is true. Therefore, P is true.",  # affirming consequent
+    "Either it is day or it is night. It is day. Therefore, it is not night.",  # false exclusion (can be twilight)
+    "All birds have wings. Bats have wings. Therefore, bats are birds.",  # undistributed middle
     "All equilateral triangles are equiangular. Triangle T is equiangular. Therefore, T is equilateral.",  # converse
-    "No fish can live on land. Dolphins cannot live on land. Therefore, dolphins are fish.",    # converse
-    "All integers are rational. 0.5 is rational. Therefore, 0.5 is an integer.",               # converse error
-    "If X > Y and Y > Z, then X > Z. We know X > Z. Therefore, X > Y.",                       # affirming consequent
-    "All even numbers are divisible by 2. 9 is divisible by 3. Therefore, 9 is even.",        # non sequitur
+    "No fish can live on land. Dolphins cannot live on land. Therefore, dolphins are fish.",  # converse
+    "All integers are rational. 0.5 is rational. Therefore, 0.5 is an integer.",  # converse error
+    "If X > Y and Y > Z, then X > Z. We know X > Z. Therefore, X > Y.",  # affirming consequent
+    "All even numbers are divisible by 2. 9 is divisible by 3. Therefore, 9 is even.",  # non sequitur
     "If the battery is dead, the car won't start. The car won't start. Therefore, the battery is dead.",  # affirming consequent
-    "All humans are mortal. All dogs are mortal. Therefore, all dogs are humans.",              # undistributed middle
-    "If a set is finite, it has a maximum. Set S has a maximum. Therefore, S is finite.",      # affirming consequent
+    "All humans are mortal. All dogs are mortal. Therefore, all dogs are humans.",  # undistributed middle
+    "If a set is finite, it has a maximum. Set S has a maximum. Therefore, S is finite.",  # affirming consequent
     "No perfect squares are negative. -4 is not a perfect square. Therefore, -4 is negative.",  # denying antecedent
-    "If A implies B, then B implies A. A implies B. Therefore, B implies A.",                  # converse fallacy
+    "If A implies B, then B implies A. A implies B. Therefore, B implies A.",  # converse fallacy
     "All equilateral triangles are isosceles. Triangle T is isosceles. Therefore, T is equilateral.",  # converse
-    "If it is freezing, water turns to ice. Water is ice. Therefore, it is freezing.",         # affirming consequent
+    "If it is freezing, water turns to ice. Water is ice. Therefore, it is freezing.",  # affirming consequent
     "All prime factors of 12 are less than 12. 7 is less than 12. Therefore, 7 is a prime factor of 12.",  # converse
-    "Either the door is open or closed. The door is open. Therefore, it is not closed.",       # incorrect disjunction exclusive
+    "Either the door is open or closed. The door is open. Therefore, it is not closed.",  # incorrect disjunction exclusive
     "All multiples of 3 are multiples of 6. 9 is a multiple of 3. Therefore, 9 is a multiple of 6.",  # false premise
     "If a function is differentiable, it is continuous. f is continuous. Therefore, f is differentiable.",  # affirming consequent
 ]
@@ -229,11 +229,11 @@ def _detect_code_violation(code_text: str) -> bool:
     # - Wrong function: min instead of max in find_max
     # - Wrong base case returns wrong value
     bad_patterns = [
-        "[::1]",          # non-reversing slice step
-        "return min(",    # find_max using min
+        "[::1]",  # non-reversing slice step
+        "return min(",  # find_max using min
         "return 0\n    return n",  # factorial base case returns 0
-        "x + y for x, y",          # dot product using addition
-        "a, b = a + b, a",         # fibonacci direction reversed
+        "x + y for x, y",  # dot product using addition
+        "a, b = a + b, a",  # fibonacci direction reversed
     ]
     return any(pat in code_text for pat in bad_patterns)
 
@@ -334,7 +334,7 @@ def _generate_v2_pairs(rng: np.random.RandomState) -> list[dict]:
             text_len = len(full_text)
             for ratio in prefix_ratios:
                 # Use a prefix of the text at the given ratio
-                prefix = full_text[:max(1, int(text_len * ratio))]
+                prefix = full_text[: max(1, int(text_len * ratio))]
                 emb = embedder.encode(prefix)
                 pairs.append(
                     {
@@ -365,7 +365,7 @@ def _generate_v2_pairs(rng: np.random.RandomState) -> list[dict]:
             full_text = tmpl
             text_len = len(full_text)
             for ratio in prefix_ratios:
-                prefix = full_text[:max(1, int(text_len * ratio))]
+                prefix = full_text[: max(1, int(text_len * ratio))]
                 emb = embedder.encode(prefix)
                 pairs.append(
                     {
@@ -719,7 +719,7 @@ def train_v2(
         if (epoch + 1) % 10 == 0:
             auroc_str = ", ".join(f"{d}={v:.3f}" for d, v in zip(DOMAINS, auroc_vals))
             print(
-                f"  Epoch {epoch+1:3d}/{n_epochs}: "
+                f"  Epoch {epoch + 1:3d}/{n_epochs}: "
                 f"train_loss={train_losses[-1]:.4f}, "
                 f"val_loss={val_losses[-1]:.4f}, "
                 f"val_auroc=[{auroc_str}], macro={macro_auroc:.4f}"
@@ -727,7 +727,7 @@ def train_v2(
 
         if no_improve_count >= patience:
             print(
-                f"\n  Early stopping at epoch {epoch+1} "
+                f"\n  Early stopping at epoch {epoch + 1} "
                 f"(no improvement for {patience} epochs). "
                 f"Best epoch: {best_epoch}, best val AUROC: {best_val_auroc:.4f}"
             )
@@ -838,7 +838,7 @@ def print_comparison_table(v1_metrics: dict, v2_metrics: dict) -> None:
     print("COMPARISON: Exp 144 (v1) vs Exp 155 (v2)")
     print("=" * 65)
     print(f"  {'Domain':<12}  {'v1 AUROC':>10}  {'v2 AUROC':>10}  {'Delta':>8}")
-    print(f"  {'-'*12}  {'-'*10}  {'-'*10}  {'-'*8}")
+    print(f"  {'-' * 12}  {'-' * 10}  {'-' * 10}  {'-' * 8}")
 
     for domain in DOMAINS:
         v1_a = v1_metrics.get("per_domain", {}).get(domain, V1_REFERENCE.get(domain, 0.5))
@@ -884,7 +884,7 @@ def print_detailed_metrics(label: str, metrics: dict) -> None:
 
     print(f"\n--- {label} Validation Metrics (threshold=0.5) ---")
     print(f"  {'Domain':<12}  {'AUROC':>8}  {'Precision':>10}  {'Recall':>8}")
-    print(f"  {'-'*12}  {'-'*8}  {'-'*10}  {'-'*8}")
+    print(f"  {'-' * 12}  {'-' * 8}  {'-' * 10}  {'-' * 8}")
     for domain in DOMAINS:
         print(
             f"  {domain:<12}  {auroc[domain]:>8.4f}  {prec[domain]:>10.4f}  {recall[domain]:>8.4f}"
@@ -976,7 +976,9 @@ def main() -> None:
     print(f"    Epochs run: {train_log['total_epochs_run']}")
     print(f"    Best epoch: {train_log['best_epoch']}")
     print(f"    Best val macro AUROC: {train_log['best_val_auroc']:.4f}")
-    print(f"    Train loss: {train_log['train_losses'][0]:.4f} → {train_log['train_losses'][-1]:.4f}")
+    print(
+        f"    Train loss: {train_log['train_losses'][0]:.4f} → {train_log['train_losses'][-1]:.4f}"
+    )
     print(f"    Val   loss: {train_log['val_losses'][0]:.4f} → {train_log['val_losses'][-1]:.4f}")
 
     # --- Step 4: Evaluate v2 ---
@@ -1019,8 +1021,7 @@ def main() -> None:
     x_check = jnp.ones((EMBED_DIM,), dtype=jnp.float32)
     p_orig = predictor_v2.predict(x_check)
     p_load = loaded_v2.predict(x_check)
-    assert all(abs(p_orig[d] - p_load[d]) < 1e-5 for d in DOMAINS), \
-        "Round-trip load mismatch!"
+    assert all(abs(p_orig[d] - p_load[d]) < 1e-5 for d in DOMAINS), "Round-trip load mismatch!"
     print("Round-trip load verified ✓")
 
     # --- Step 6: Save results JSON ---

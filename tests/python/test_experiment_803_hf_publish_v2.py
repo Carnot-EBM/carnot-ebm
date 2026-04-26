@@ -87,8 +87,10 @@ class TestHonestVerdictMapping:
         _setup_sops_doc(tmp_path)
         fake = _make_fake_tmpl(tmp_path)
 
-        with patch.object(mod, "get_hf_token", return_value="hf_tok"), \
-             patch.object(mod, "find_hf_cli", return_value=None):
+        with (
+            patch.object(mod, "get_hf_token", return_value="hf_tok"),
+            patch.object(mod, "find_hf_cli", return_value=None),
+        ):
             result = mod.run_experiment(fake)
 
         assert result["honest_verdict"] == "hf_cli_not_installed"
@@ -99,8 +101,10 @@ class TestHonestVerdictMapping:
         _setup_sops_doc(tmp_path)
         fake = _make_fake_tmpl(tmp_path)
 
-        with patch.object(mod, "get_hf_token", return_value=None), \
-             patch.object(mod, "find_hf_cli", return_value="hf"):
+        with (
+            patch.object(mod, "get_hf_token", return_value=None),
+            patch.object(mod, "find_hf_cli", return_value="hf"),
+        ):
             result = mod.run_experiment(fake)
 
         assert result["honest_verdict"] == "hf_auth_documented"
@@ -112,9 +116,11 @@ class TestHonestVerdictMapping:
         _setup_sops_doc(tmp_path)
         fake = _make_fake_tmpl(tmp_path)
 
-        with patch.object(mod, "get_hf_token", return_value="hf_tok"), \
-             patch.object(mod, "find_hf_cli", return_value="hf"), \
-             patch.object(mod, "check_hf_auth", return_value=(False, "")):
+        with (
+            patch.object(mod, "get_hf_token", return_value="hf_tok"),
+            patch.object(mod, "find_hf_cli", return_value="hf"),
+            patch.object(mod, "check_hf_auth", return_value=(False, "")),
+        ):
             result = mod.run_experiment(fake)
 
         assert result["honest_verdict"] == "hf_auth_documented"
@@ -126,11 +132,16 @@ class TestHonestVerdictMapping:
         _setup_sops_doc(tmp_path)
         fake = _make_fake_tmpl(tmp_path)
 
-        with patch.object(mod, "get_hf_token", return_value="hf_tok"), \
-             patch.object(mod, "find_hf_cli", return_value="hf"), \
-             patch.object(mod, "check_hf_auth", return_value=(True, "testuser")), \
-             patch.object(mod, "attempt_readme_update",
-                          return_value=(True, "https://huggingface.co/Carnot-EBM/carnot-ising-sampler-v1")):
+        with (
+            patch.object(mod, "get_hf_token", return_value="hf_tok"),
+            patch.object(mod, "find_hf_cli", return_value="hf"),
+            patch.object(mod, "check_hf_auth", return_value=(True, "testuser")),
+            patch.object(
+                mod,
+                "attempt_readme_update",
+                return_value=(True, "https://huggingface.co/Carnot-EBM/carnot-ising-sampler-v1"),
+            ),
+        ):
             result = mod.run_experiment(fake)
 
         assert result["honest_verdict"] == "hf_models_published"
@@ -142,10 +153,12 @@ class TestHonestVerdictMapping:
         _setup_sops_doc(tmp_path)
         fake = _make_fake_tmpl(tmp_path)
 
-        with patch.object(mod, "get_hf_token", return_value="hf_tok"), \
-             patch.object(mod, "find_hf_cli", return_value="hf"), \
-             patch.object(mod, "check_hf_auth", return_value=(True, "testuser")), \
-             patch.object(mod, "attempt_readme_update", return_value=(False, "repo not found")):
+        with (
+            patch.object(mod, "get_hf_token", return_value="hf_tok"),
+            patch.object(mod, "find_hf_cli", return_value="hf"),
+            patch.object(mod, "check_hf_auth", return_value=(True, "testuser")),
+            patch.object(mod, "attempt_readme_update", return_value=(False, "repo not found")),
+        ):
             result = mod.run_experiment(fake)
 
         assert result["honest_verdict"] == "hf_auth_documented"
@@ -157,8 +170,10 @@ class TestHonestVerdictMapping:
         _setup_sops_doc(tmp_path)
         fake = _make_fake_tmpl(tmp_path)
 
-        with patch.object(mod, "get_hf_token", return_value=None), \
-             patch.object(mod, "find_hf_cli", return_value="hf"):
+        with (
+            patch.object(mod, "get_hf_token", return_value=None),
+            patch.object(mod, "find_hf_cli", return_value="hf"),
+        ):
             result = mod.run_experiment(fake)
 
         assert result["sops_doc_written"] is True

@@ -300,6 +300,7 @@ def _evaluate_case(case: dict, min_confidence: float = 0.8) -> dict:
     # High expression confidence → low-jitter stable energies (consistent signal).
     # Low expression confidence → high-jitter unstable energies (uncertain signal).
     import math
+
     base = expr_conf * 4.0
     jitter_scale = (1.0 - expr_conf) * 3.0
     energies = [base + jitter_scale * math.sin(float(i + 1) * 1.1) for i in range(5)]

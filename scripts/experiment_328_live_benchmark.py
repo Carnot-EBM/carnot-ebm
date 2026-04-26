@@ -181,7 +181,7 @@ def _utc_now() -> str:
     """Return current UTC timestamp in ISO-8601 format."""
     import datetime
 
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _run_date() -> str:
@@ -215,8 +215,11 @@ def _get_gpu_diagnostics() -> dict[str, Any]:
     # Raw nvidia-smi summary
     try:
         result = subprocess.run(
-            ["nvidia-smi", "--query-gpu=index,name,memory.total,memory.free,memory.used,utilization.gpu",
-             "--format=csv,noheader"],
+            [
+                "nvidia-smi",
+                "--query-gpu=index,name,memory.total,memory.free,memory.used,utilization.gpu",
+                "--format=csv,noheader",
+            ],
             capture_output=True,
             text=True,
             timeout=15,
@@ -340,13 +343,27 @@ def run_experiment_328() -> dict[str, Any]:
                 existing = json.load(fh)
             if existing.get("inference_mode") == "live_gpu":
                 print("[Exp 328] REUSE: Valid live_gpu result exists — skipping re-run.")
-                qwen_acc = existing.get("per_model_results", {}).get("Qwen3.5-0.8B", {}).get("baseline", {}).get("all", {}).get("accuracy", "N/A")
-                gem_acc = existing.get("per_model_results", {}).get("Gemma4-E4B-it", {}).get("baseline", {}).get("all", {}).get("accuracy", "N/A")
+                qwen_acc = (
+                    existing.get("per_model_results", {})
+                    .get("Qwen3.5-0.8B", {})
+                    .get("baseline", {})
+                    .get("all", {})
+                    .get("accuracy", "N/A")
+                )
+                gem_acc = (
+                    existing.get("per_model_results", {})
+                    .get("Gemma4-E4B-it", {})
+                    .get("baseline", {})
+                    .get("all", {})
+                    .get("accuracy", "N/A")
+                )
                 print(f"[Exp 328]   Qwen3.5-0.8B GSM8K baseline={qwen_acc}")
                 print(f"[Exp 328]   Gemma4-E4B-it GSM8K baseline={gem_acc}")
                 need_run = False
             else:
-                print(f"[Exp 328] Existing inference_mode={existing.get('inference_mode')!r} — re-running.")
+                print(
+                    f"[Exp 328] Existing inference_mode={existing.get('inference_mode')!r} — re-running."
+                )
         except Exception as exc:
             print(f"[Exp 328] Could not read existing result ({exc}) — re-running.")
     else:
@@ -380,7 +397,9 @@ def run_experiment_328() -> dict[str, Any]:
                 print(f"  {line}")
             if proc.returncode != 0:
                 reason = f"Benchmark exited rc={proc.returncode}"
-                artifact = _build_blocked_artifact(t0, reason, gpu_diagnostics, (stderr or "")[-2000:])
+                artifact = _build_blocked_artifact(
+                    t0, reason, gpu_diagnostics, (stderr or "")[-2000:]
+                )
                 artifact["stdout_excerpt"] = (stdout or "")[-2000:]
                 return artifact
         except subprocess.TimeoutExpired:
@@ -408,7 +427,9 @@ def run_experiment_328() -> dict[str, Any]:
             "GPU pre-warm likely failed. See stdout/stderr above for root cause."
         )
         print(f"[Exp 328] BLOCKED: {reason}")
-        artifact = _build_blocked_artifact(t0, reason, gpu_diagnostics, stderr[-2000:] if stderr else "")
+        artifact = _build_blocked_artifact(
+            t0, reason, gpu_diagnostics, stderr[-2000:] if stderr else ""
+        )
         artifact["fallback_result_path"] = LIVE_OUTPUT
         artifact["fallback_inference_mode"] = inference_mode
         # Preserve stdout so the operator can see what went wrong

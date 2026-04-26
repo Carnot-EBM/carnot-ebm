@@ -73,9 +73,7 @@ import numpy as np
 _ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_ROOT / "python"))
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -83,20 +81,52 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 _SUBJECTS = [
-    "cats", "dogs", "birds", "fish", "trees", "rocks", "stars", "clouds",
-    "rivers", "mountains", "students", "teachers", "engineers", "doctors",
-    "planets", "atoms", "cells", "waves", "crystals", "robots",
+    "cats",
+    "dogs",
+    "birds",
+    "fish",
+    "trees",
+    "rocks",
+    "stars",
+    "clouds",
+    "rivers",
+    "mountains",
+    "students",
+    "teachers",
+    "engineers",
+    "doctors",
+    "planets",
+    "atoms",
+    "cells",
+    "waves",
+    "crystals",
+    "robots",
 ]
 _PREDICATES = [
-    "mortal", "alive", "visible", "heavy", "bright", "fast", "old",
-    "complex", "natural", "rare", "symmetric", "stable", "dense", "warm",
-    "soluble", "magnetic", "elastic", "transparent", "finite", "periodic",
+    "mortal",
+    "alive",
+    "visible",
+    "heavy",
+    "bright",
+    "fast",
+    "old",
+    "complex",
+    "natural",
+    "rare",
+    "symmetric",
+    "stable",
+    "dense",
+    "warm",
+    "soluble",
+    "magnetic",
+    "elastic",
+    "transparent",
+    "finite",
+    "periodic",
 ]
 
 
-def generate_arithmetic_triples(
-    n: int, rng: np.random.Generator
-) -> list[tuple[str, str, str]]:
+def generate_arithmetic_triples(n: int, rng: np.random.Generator) -> list[tuple[str, str, str]]:
     """Generate (question, correct_answer, wrong_answer) for arithmetic.
 
     Three sub-types: addition, multiplication, modulo (equal thirds).
@@ -172,9 +202,7 @@ def generate_arithmetic_triples(
     return triples[:n]
 
 
-def generate_logic_triples(
-    n: int, rng: np.random.Generator
-) -> list[tuple[str, str, str]]:
+def generate_logic_triples(n: int, rng: np.random.Generator) -> list[tuple[str, str, str]]:
     """Generate (question, correct_answer, wrong_answer) for logic syllogisms.
 
     Four syllogism types: modus ponens, modus tollens, disjunctive syllogism,
@@ -234,7 +262,9 @@ def generate_logic_triples(
     for _ in range(per_type):
         s, p, s2, p2 = pick_pair(rng)
         question = f"If all {s} are {p}, and {s2} are {p}, are {s2} necessarily {s}?"
-        correct = f"No. {s2} being {p} does not mean {s2} are {s}. This is affirming the consequent."
+        correct = (
+            f"No. {s2} being {p} does not mean {s2} are {s}. This is affirming the consequent."
+        )
         wrong = f"Yes. Since all {s} are {p} and {s2} are {p}, {s2} must be {s}."
         triples.append((question, correct, wrong))
 
@@ -244,6 +274,7 @@ def generate_logic_triples(
 # ---------------------------------------------------------------------------
 # Feature encoding: 200-dim binary (identical to Exp 109 / Exp 62)
 # ---------------------------------------------------------------------------
+
 
 def encode_answer(question: str, answer: str) -> np.ndarray:
     """Encode a (question, answer) pair as a 200-dim binary feature vector.
@@ -265,9 +296,9 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     """
     features: list[int] = []
 
-    q_numbers = [int(x) for x in re.findall(r'\d+', question)]
-    a_numbers = [int(x) for x in re.findall(r'\d+', answer)]
-    a_digits = re.findall(r'\d', answer)
+    q_numbers = [int(x) for x in re.findall(r"\d+", question)]
+    a_numbers = [int(x) for x in re.findall(r"\d+", answer)]
+    a_digits = re.findall(r"\d", answer)
 
     features.append(1 if a_numbers else 0)
     n_nums = len(a_numbers)
@@ -300,7 +331,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     assert len(features) == 20
 
     words = answer.split()
-    sentences = [s.strip() for s in re.split(r'[.!?]+', answer) if s.strip()]
+    sentences = [s.strip() for s in re.split(r"[.!?]+", answer) if s.strip()]
     n_words = len(words)
     n_sentences = len(sentences)
     wc_bounds = [2, 5, 10, 15, 20, 30, 50, 100]
@@ -401,13 +432,31 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features.append(1 if "guaranteed" in lower_answer else 0)
     features.append(1 if "invalid" in lower_answer else 0)
     features.append(1 if "valid" in lower_answer and "invalid" not in lower_answer else 0)
-    bigrams = [f"{words[i]} {words[i+1]}" for i in range(len(words) - 1)] if len(words) > 1 else []
+    bigrams = (
+        [f"{words[i]} {words[i + 1]}" for i in range(len(words) - 1)] if len(words) > 1 else []
+    )
     bigram_lower = [b.lower() for b in bigrams]
     target_bigrams = [
-        "the answer", "answer is", "is not", "not the", "does not",
-        "this follows", "follows by", "by modus", "n +", "+ 1",
-        "return total", "return result", "for i", "in range", "if not",
-        "not lst", "lst 0", "== 0", "== 1", "def ",
+        "the answer",
+        "answer is",
+        "is not",
+        "not the",
+        "does not",
+        "this follows",
+        "follows by",
+        "by modus",
+        "n +",
+        "+ 1",
+        "return total",
+        "return result",
+        "for i",
+        "in range",
+        "if not",
+        "not lst",
+        "lst 0",
+        "== 0",
+        "== 1",
+        "def ",
     ]
     for tb in target_bigrams:
         features.append(1 if any(tb in b for b in bigram_lower) else 0)
@@ -462,7 +511,18 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     q_words_set = set(lower_question.split())
     a_words_set = set(lower_answer.split())
     shared_content_words = q_words_set & a_words_set - {
-        "a", "an", "the", "is", "are", "what", "if", "and", "or", "in", "of", "to"
+        "a",
+        "an",
+        "the",
+        "is",
+        "are",
+        "what",
+        "if",
+        "and",
+        "or",
+        "in",
+        "of",
+        "to",
     }
     features.append(1 if len(shared_content_words) > 2 else 0)
     features.append(1 if len(shared_content_words) > 5 else 0)
@@ -473,21 +533,23 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features.append(1 if "disjunctive" in lower_answer else 0)
     features.append(1 if "eliminate" in lower_answer or "eliminated" in lower_answer else 0)
     features.append(
-        1 if "the answer is" in lower_answer
-        and ("+" in question or "*" in question or "mod" in question) else 0
+        1
+        if "the answer is" in lower_answer
+        and ("+" in question or "*" in question or "mod" in question)
+        else 0
     )
     features.append(
-        1 if ("follows" in lower_answer or "cannot" in lower_answer)
-        and ("if " in lower_question) else 0
+        1
+        if ("follows" in lower_answer or "cannot" in lower_answer) and ("if " in lower_question)
+        else 0
     )
     features.append(1 if "def " in answer and "return" in answer and ":\n" in answer else 0)
     features.append(1 if "write" in lower_question and "def " in answer else 0)
+    features.append(1 if "what is" in lower_question and any(c.isdigit() for c in answer) else 0)
     features.append(
-        1 if "what is" in lower_question and any(c.isdigit() for c in answer) else 0
-    )
-    features.append(
-        1 if "what follows" in lower_question
-        and ("follows" in lower_answer or "not" in lower_answer) else 0
+        1
+        if "what follows" in lower_question and ("follows" in lower_answer or "not" in lower_answer)
+        else 0
     )
     features.append(1 if n_words > 3 else 0)
     features.append(1 if not answer.endswith(" ") else 0)
@@ -502,7 +564,7 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
     features.append(1 if a_q_ratio > 2.0 else 0)
     features.append(1 if a_q_ratio < 0.5 else 0)
     features.append(1 if "^" in answer or "**" in answer else 0)
-    features.append(1 if re.search(r'\[.*\]', answer) else 0)
+    features.append(1 if re.search(r"\[.*\]", answer) else 0)
     first_word = words[0].lower() if words else ""
     features.append(1 if first_word in ("def", "the", "all", "no", "yes", "some") else 0)
     features.append(1 if ">=" in answer or "<=" in answer or "!=" in answer else 0)
@@ -532,9 +594,8 @@ def encode_answer(question: str, answer: str) -> np.ndarray:
 # Ising training for feature selection (from Exp 109)
 # ---------------------------------------------------------------------------
 
-def compute_energies_ising(
-    vectors: np.ndarray, biases: np.ndarray, J: np.ndarray
-) -> np.ndarray:
+
+def compute_energies_ising(vectors: np.ndarray, biases: np.ndarray, J: np.ndarray) -> np.ndarray:
     """Ising energy per sample: E(s) = -(b^T s + s^T J s), s in {-1, +1}.
 
     Args:
@@ -588,13 +649,9 @@ def train_ising_discriminative_cd(
     correct_spins = 2.0 * correct_vectors - 1.0
     wrong_spins = 2.0 * wrong_vectors - 1.0
     pos_bias_moments = np.mean(correct_spins, axis=0)
-    pos_weight_moments = np.mean(
-        np.einsum("bi,bj->bij", correct_spins, correct_spins), axis=0
-    )
+    pos_weight_moments = np.mean(np.einsum("bi,bj->bij", correct_spins, correct_spins), axis=0)
     neg_bias_moments = np.mean(wrong_spins, axis=0)
-    neg_weight_moments = np.mean(
-        np.einsum("bi,bj->bij", wrong_spins, wrong_spins), axis=0
-    )
+    neg_weight_moments = np.mean(np.einsum("bi,bj->bij", wrong_spins, wrong_spins), axis=0)
 
     grad_b = -beta * (pos_bias_moments - neg_bias_moments)
     grad_J = -beta * (pos_weight_moments - neg_weight_moments)
@@ -616,9 +673,7 @@ def train_ising_discriminative_cd(
     return biases, J, losses
 
 
-def select_top_features(
-    biases: np.ndarray, J: np.ndarray, k: int
-) -> list[int]:
+def select_top_features(biases: np.ndarray, J: np.ndarray, k: int) -> list[int]:
     """Select top-k features by total coupling strength (row-sum of |J| + |b|).
 
     Features with large total coupling are the most discriminative — they
@@ -640,6 +695,7 @@ def select_top_features(
 # AUROC computation
 # ---------------------------------------------------------------------------
 
+
 def auroc_from_energies(e_correct: np.ndarray, e_wrong: np.ndarray) -> float:
     """AUROC via Wilcoxon-Mann-Whitney: P(E_correct < E_wrong).
 
@@ -659,7 +715,7 @@ def auroc_from_energies(e_correct: np.ndarray, e_wrong: np.ndarray) -> float:
     tied = 0
     chunk = 500
     for i in range(0, n_c, chunk):
-        ec = e_correct[i:i + chunk]
+        ec = e_correct[i : i + chunk]
         diff = e_wrong[None, :] - ec[:, None]
         concordant += int(np.sum(diff > 0))
         tied += int(np.sum(diff == 0))
@@ -669,6 +725,7 @@ def auroc_from_energies(e_correct: np.ndarray, e_wrong: np.ndarray) -> float:
 # ---------------------------------------------------------------------------
 # KANConstraintModel: discriminative KAN with adaptive mesh refinement
 # ---------------------------------------------------------------------------
+
 
 class KANConstraintModel:
     """Discriminative KAN for constraint verification with adaptive mesh refinement.
@@ -719,11 +776,7 @@ class KANConstraintModel:
 
         if edges is None:
             # Fully connected graph over input_dim nodes.
-            edges = [
-                (i, j)
-                for i in range(input_dim)
-                for j in range(i + 1, input_dim)
-            ]
+            edges = [(i, j) for i in range(input_dim) for j in range(i + 1, input_dim)]
         self.edges: list[tuple[int, int]] = edges
 
         # Edge control points — small random init near zero.
@@ -835,9 +888,7 @@ class KANConstraintModel:
         Returns:
             Energy values, shape (n,), dtype float32.
         """
-        return np.array(
-            [self.energy_single(xs[i]) for i in range(len(xs))], dtype=np.float32
-        )
+        return np.array([self.energy_single(xs[i]) for i in range(len(xs))], dtype=np.float32)
 
     # ------------------------------------------------------------------
     # Adaptive mesh refinement
@@ -925,11 +976,13 @@ class KANConstraintModel:
 
         # Insert after index `left`: new_ctrl = ctrl[0..left] + [new_val] + ctrl[left+1..]
         # This places the new knot between the existing knots at left and left+1.
-        new_ctrl = np.concatenate([
-            ctrl[:left + 1],
-            np.array([new_val], dtype=np.float32),
-            ctrl[left + 1:],
-        ])
+        new_ctrl = np.concatenate(
+            [
+                ctrl[: left + 1],
+                np.array([new_val], dtype=np.float32),
+                ctrl[left + 1 :],
+            ]
+        )
         self.edge_control_pts[edge] = new_ctrl
         self._edge_n_ctrl[edge] = len(new_ctrl)
 
@@ -961,11 +1014,13 @@ class KANConstraintModel:
         # Replace ctrl[merge_idx] with the average, remove ctrl[merge_idx + 1].
         # The merged interval is wider but the control point value is smoothed.
         merged_val = (ctrl[merge_idx] + ctrl[merge_idx + 1]) / 2.0
-        new_ctrl = np.concatenate([
-            ctrl[:merge_idx],
-            np.array([merged_val], dtype=np.float32),
-            ctrl[merge_idx + 2:],
-        ])
+        new_ctrl = np.concatenate(
+            [
+                ctrl[:merge_idx],
+                np.array([merged_val], dtype=np.float32),
+                ctrl[merge_idx + 2 :],
+            ]
+        )
         self.edge_control_pts[edge] = new_ctrl
         self._edge_n_ctrl[edge] = len(new_ctrl)
         return True
@@ -1103,7 +1158,7 @@ class KANConstraintModel:
             epoch_gaps = []
 
             for batch_start in range(0, n, batch_size):
-                batch_idx = perm[batch_start:batch_start + batch_size]
+                batch_idx = perm[batch_start : batch_start + batch_size]
                 b_correct = correct_vectors[batch_idx]
                 b_wrong = wrong_vectors[batch_idx]
                 bs = len(batch_idx)
@@ -1128,23 +1183,22 @@ class KANConstraintModel:
 
                     ec = self.energy_single(xc)
                     ew = self.energy_single(xw)
-                    gap_sum += (ew - ec)
+                    gap_sum += ew - ec
 
                     # Edge spline gradients.
                     # We want ctrl -= lr * (grad_correct - grad_wrong).
                     # grad_correct = dE_correct/d_ctrl = [basis_k(z_c)]
                     # grad_wrong   = dE_wrong/d_ctrl   = [basis_k(z_w)]
                     # Combined: accumulate (basis_k(z_c) - basis_k(z_w)).
-                    for (i, j) in self.edges:
+                    for i, j in self.edges:
                         ctrl = self.edge_control_pts[(i, j)]
                         n_ctrl_e = len(ctrl)
                         z_c = float(sc[i] * sc[j])
                         z_w = float(sw[i] * sw[j])
                         for k in range(n_ctrl_e):
-                            edge_grad_acc[(i, j)][k] += (
-                                self._basis_k(z_c, k, n_ctrl_e)
-                                - self._basis_k(z_w, k, n_ctrl_e)
-                            )
+                            edge_grad_acc[(i, j)][k] += self._basis_k(
+                                z_c, k, n_ctrl_e
+                            ) - self._basis_k(z_w, k, n_ctrl_e)
 
                     # Bias spline gradients.
                     for i in range(self.input_dim):
@@ -1153,21 +1207,18 @@ class KANConstraintModel:
                         z_c_i = float(sc[i])
                         z_w_i = float(sw[i])
                         for k in range(n_ctrl_b):
-                            bias_grad_acc[i][k] += (
-                                self._basis_k(z_c_i, k, n_ctrl_b)
-                                - self._basis_k(z_w_i, k, n_ctrl_b)
-                            )
+                            bias_grad_acc[i][k] += self._basis_k(
+                                z_c_i, k, n_ctrl_b
+                            ) - self._basis_k(z_w_i, k, n_ctrl_b)
 
                 # Apply gradient update with weight decay.
-                for (i, j) in self.edges:
+                for i, j in self.edges:
                     self.edge_control_pts[(i, j)] -= lr * (
-                        edge_grad_acc[(i, j)] / bs
-                        + weight_decay * self.edge_control_pts[(i, j)]
+                        edge_grad_acc[(i, j)] / bs + weight_decay * self.edge_control_pts[(i, j)]
                     )
                 for i in range(self.input_dim):
                     self.bias_control_pts[i] -= lr * (
-                        bias_grad_acc[i] / bs
-                        + weight_decay * self.bias_control_pts[i]
+                        bias_grad_acc[i] / bs + weight_decay * self.bias_control_pts[i]
                     )
 
                 epoch_gaps.append(gap_sum / bs)
@@ -1175,9 +1226,7 @@ class KANConstraintModel:
             mean_gap = float(np.mean(epoch_gaps))
             losses.append(mean_gap)
             if verbose and (epoch % 25 == 0 or epoch == n_epochs - 1):
-                logger.info(
-                    f"    KAN epoch {epoch:3d}/{n_epochs}: gap={mean_gap:+.4f}"
-                )
+                logger.info(f"    KAN epoch {epoch:3d}/{n_epochs}: gap={mean_gap:+.4f}")
 
         return losses
 
@@ -1221,12 +1270,10 @@ class KANConstraintModel:
                 "p75": float(np.percentile(values, 75)),
             },
             "top_edges": [
-                {"edge": list(e), "curvature": float(c)}
-                for e, c in sorted_edges[:top_k]
+                {"edge": list(e), "curvature": float(c)} for e, c in sorted_edges[:top_k]
             ],
             "bottom_edges": [
-                {"edge": list(e), "curvature": float(c)}
-                for e, c in sorted_edges[-top_k:]
+                {"edge": list(e), "curvature": float(c)} for e, c in sorted_edges[-top_k:]
             ],
         }
 
@@ -1267,6 +1314,7 @@ def describe_edge(feat_idx_i: int, feat_idx_j: int) -> str:
 # Bootstrap CI for AUROC
 # ---------------------------------------------------------------------------
 
+
 def bootstrap_auroc_ci(
     e_correct: np.ndarray,
     e_wrong: np.ndarray,
@@ -1304,6 +1352,7 @@ def bootstrap_auroc_ci(
 # ---------------------------------------------------------------------------
 # Main experiment
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Experiment 153: KAN Adaptive Mesh Refinement."""
@@ -1348,7 +1397,7 @@ def main() -> None:
             domain_labels.append(domain)
 
     correct_200 = np.stack(all_correct)  # (200, 200)
-    wrong_200 = np.stack(all_wrong)      # (200, 200)
+    wrong_200 = np.stack(all_wrong)  # (200, 200)
     logger.info(f"  Encoded {len(correct_200)} pairs, shape {correct_200.shape}")
     logger.info(f"  ({time.time() - t0:.1f}s)")
 
@@ -1384,16 +1433,14 @@ def main() -> None:
     # Step 4: Project to top-20 features
     # -----------------------------------------------------------------------
     correct_20 = correct_200[:, top_features]  # (200, 20)
-    wrong_20 = wrong_200[:, top_features]       # (200, 20)
+    wrong_20 = wrong_200[:, top_features]  # (200, 20)
 
     correct_train = correct_20[train_idx]  # (160, 20)
-    wrong_train = wrong_20[train_idx]      # (160, 20)
-    correct_test = correct_20[test_idx]    # (40, 20)
-    wrong_test = wrong_20[test_idx]        # (40, 20)
+    wrong_train = wrong_20[train_idx]  # (160, 20)
+    correct_test = correct_20[test_idx]  # (40, 20)
+    wrong_test = wrong_20[test_idx]  # (40, 20)
 
-    logger.info(
-        f"\n  Train: {len(correct_train)} pairs | Test: {len(correct_test)} pairs"
-    )
+    logger.info(f"\n  Train: {len(correct_train)} pairs | Test: {len(correct_test)} pairs")
 
     # -----------------------------------------------------------------------
     # Step 5: Train KAN baseline (100 epochs)
@@ -1417,8 +1464,7 @@ def main() -> None:
     params_before = kan.param_count()
     n_edges = len(kan.edges)
     logger.info(
-        f"  KAN: input_dim={N_FEATURES}, edges={n_edges}, "
-        f"num_knots={NUM_KNOTS}, degree={DEGREE}"
+        f"  KAN: input_dim={N_FEATURES}, edges={n_edges}, num_knots={NUM_KNOTS}, degree={DEGREE}"
     )
     logger.info(f"  Initial param count: {params_before}")
     logger.info(
@@ -1427,7 +1473,8 @@ def main() -> None:
     )
 
     losses_baseline = kan.train_discriminative_cd(
-        correct_train, wrong_train,
+        correct_train,
+        wrong_train,
         n_epochs=100,
         lr=0.01,
         weight_decay=0.001,
@@ -1449,9 +1496,7 @@ def main() -> None:
     )
 
     energy_gap_before = float(np.mean(e_wrong_before) - np.mean(e_correct_before))
-    logger.info(
-        f"  AUROC before: {auroc_before:.4f} [{ci_lo_before:.4f}, {ci_hi_before:.4f}]"
-    )
+    logger.info(f"  AUROC before: {auroc_before:.4f} [{ci_lo_before:.4f}, {ci_hi_before:.4f}]")
     logger.info(f"  Energy gap before: {energy_gap_before:+.4f}")
     logger.info(f"  Params before: {params_before}")
     logger.info(f"  ({time.time() - t0:.1f}s)")
@@ -1519,7 +1564,8 @@ def main() -> None:
     t0 = time.time()
 
     losses_finetune = kan.train_discriminative_cd(
-        correct_train, wrong_train,
+        correct_train,
+        wrong_train,
         n_epochs=10,
         lr=0.005,  # smaller lr for fine-tuning
         weight_decay=0.001,
@@ -1545,9 +1591,7 @@ def main() -> None:
     )
 
     energy_gap_after = float(np.mean(e_wrong_after) - np.mean(e_correct_after))
-    logger.info(
-        f"  AUROC after:  {auroc_after:.4f} [{ci_lo_after:.4f}, {ci_hi_after:.4f}]"
-    )
+    logger.info(f"  AUROC after:  {auroc_after:.4f} [{ci_lo_after:.4f}, {ci_hi_after:.4f}]")
     logger.info(f"  Energy gap after: {energy_gap_after:+.4f}")
     logger.info(f"  Params after: {params_after}")
     logger.info(f"  ({time.time() - t0:.1f}s)")
@@ -1592,14 +1636,8 @@ def main() -> None:
         else:
             unchanged_edges.append(entry)
 
-    logger.info(
-        f"  Gained knots: {len(gained_edges)} edges "
-        f"(curvature > {high_thresh:.6f})"
-    )
-    logger.info(
-        f"  Lost knots:   {len(lost_edges)} edges "
-        f"(curvature < {low_thresh:.6f})"
-    )
+    logger.info(f"  Gained knots: {len(gained_edges)} edges (curvature > {high_thresh:.6f})")
+    logger.info(f"  Lost knots:   {len(lost_edges)} edges (curvature < {low_thresh:.6f})")
     logger.info(f"  Unchanged:    {len(unchanged_edges)} edges")
 
     # Show semantic analysis of high-curvature edges.
@@ -1631,10 +1669,14 @@ def main() -> None:
     logger.info("=" * 70)
     logger.info(f"  AUROC before refinement:  {auroc_before:.4f}")
     logger.info(f"  AUROC after refinement:   {auroc_after:.4f}")
-    logger.info(f"  AUROC delta:              {auroc_delta:+.4f} ({'✓' if target_auroc_met else '✗'} target >= -0.01)")
+    logger.info(
+        f"  AUROC delta:              {auroc_delta:+.4f} ({'✓' if target_auroc_met else '✗'} target >= -0.01)"
+    )
     logger.info(f"  Params before:            {params_before}")
     logger.info(f"  Params after:             {params_after}")
-    logger.info(f"  Param delta:              {params_after - params_before:+d} ({param_delta_pct:+.1f}%)")
+    logger.info(
+        f"  Param delta:              {params_after - params_before:+d} ({param_delta_pct:+.1f}%)"
+    )
     logger.info(f"  Param target met:         {'YES' if target_param_met else 'NO'} (target ±20%)")
     logger.info(f"  Knots added:              {added_knots} edges")
     logger.info(f"  Knots removed:            {removed_knots} edges")
@@ -1692,9 +1734,7 @@ def main() -> None:
         "curvature_analysis": {
             "before": curv_summary_before,
             "after": curv_summary_after,
-            "n_ctrl_distribution_after": {
-                str(k): v for k, v in n_ctrl_distribution.items()
-            },
+            "n_ctrl_distribution_after": {str(k): v for k, v in n_ctrl_distribution.items()},
             "gained_knots_count": len(gained_edges),
             "lost_knots_count": len(lost_edges),
             "unchanged_count": len(unchanged_edges),

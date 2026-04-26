@@ -53,12 +53,8 @@ from __future__ import annotations
 
 import math
 import re
-from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
-
-if TYPE_CHECKING:
-    pass
-
+from dataclasses import dataclass
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # Regex patterns for expression specificity scoring
@@ -66,9 +62,7 @@ if TYPE_CHECKING:
 
 # Matches "a OP b = c" where OP is +, -, *, /, and a, b, c are numbers.
 # This is the canonical "exact arithmetic expression" shape.
-_EXACT_ARITHMETIC_RE = re.compile(
-    r"\d+\s*[+\-*/]\s*\d+\s*=\s*\d+"
-)
+_EXACT_ARITHMETIC_RE = re.compile(r"\d+\s*[+\-*/]\s*\d+\s*=\s*\d+")
 
 # Approximate language markers — lower the confidence score.
 _APPROXIMATE_MARKERS_RE = re.compile(
@@ -409,10 +403,7 @@ class ConfidenceWeightedRepair:
         raw_constraints = self._pipeline._extractor.extract(response, domain or "auto")
 
         # Filter to violated constraints only (satisfied=False in metadata).
-        violations = [
-            c for c in raw_constraints
-            if not c.metadata.get("satisfied", True)
-        ]
+        violations = [c for c in raw_constraints if not c.metadata.get("satisfied", True)]
 
         violations_found = len(violations)
 

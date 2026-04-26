@@ -82,8 +82,8 @@ COHORT_SOURCE = RESULTS_DIR / "experiment_219_results.json"
 # ---------------------------------------------------------------------------
 # Experiment parameters
 # ---------------------------------------------------------------------------
-BASE_SEED = 281_000   # number_swap seeds: BASE_SEED + i
-IRREL_SEED_OFFSET = 500   # irrelevant_sentence seeds: BASE_SEED + IRREL_SEED_OFFSET + i
+BASE_SEED = 281_000  # number_swap seeds: BASE_SEED + i
+IRREL_SEED_OFFSET = 500  # irrelevant_sentence seeds: BASE_SEED + IRREL_SEED_OFFSET + i
 
 # Scale factors used for number_swap (all > 1 so answers always change)
 SCALE_CHOICES = [2, 3, 4, 5]
@@ -100,17 +100,42 @@ _INT_RE = re.compile(r"(?<![/\d])(\d+)(?![/\d])")
 # Word-form numbers that commonly appear in GSM8K questions, ordered longest
 # first so multi-word forms (twenty-one) are matched before their components.
 _WORD_NUMS: list[tuple[str, int]] = [
-    ("twenty-five", 25), ("twenty-four", 24), ("twenty-three", 23),
-    ("twenty-two", 22), ("twenty-one", 21), ("twenty", 20),
-    ("thirty", 30), ("forty", 40), ("fifty", 50),
-    ("sixty", 60), ("seventy", 70), ("eighty", 80), ("ninety", 90),
-    ("hundred", 100), ("thousand", 1000),
-    ("twelve", 12), ("eleven", 11), ("fifteen", 15), ("sixteen", 16),
-    ("seventeen", 17), ("eighteen", 18), ("nineteen", 19),
-    ("thirteen", 13), ("fourteen", 14),
-    ("ten", 10), ("nine", 9), ("eight", 8), ("seven", 7), ("six", 6),
-    ("five", 5), ("four", 4), ("three", 3), ("two", 2), ("one", 1),
-    ("dozen", 12), ("half", 2),  # "half" → scale doubles it
+    ("twenty-five", 25),
+    ("twenty-four", 24),
+    ("twenty-three", 23),
+    ("twenty-two", 22),
+    ("twenty-one", 21),
+    ("twenty", 20),
+    ("thirty", 30),
+    ("forty", 40),
+    ("fifty", 50),
+    ("sixty", 60),
+    ("seventy", 70),
+    ("eighty", 80),
+    ("ninety", 90),
+    ("hundred", 100),
+    ("thousand", 1000),
+    ("twelve", 12),
+    ("eleven", 11),
+    ("fifteen", 15),
+    ("sixteen", 16),
+    ("seventeen", 17),
+    ("eighteen", 18),
+    ("nineteen", 19),
+    ("thirteen", 13),
+    ("fourteen", 14),
+    ("ten", 10),
+    ("nine", 9),
+    ("eight", 8),
+    ("seven", 7),
+    ("six", 6),
+    ("five", 5),
+    ("four", 4),
+    ("three", 3),
+    ("two", 2),
+    ("one", 1),
+    ("dozen", 12),
+    ("half", 2),  # "half" → scale doubles it
 ]
 
 
@@ -127,6 +152,7 @@ def _replace_integers_with_scale(text: str, scale: int) -> str:
     Returns:
         Modified text with all standalone integers and number words scaled.
     """
+
     # --- Step 1: replace digit integers (skip fractions) ---
     def _int_replacer(m: re.Match[str]) -> str:
         return str(int(m.group(1)) * scale)
@@ -195,7 +221,7 @@ def _generate_irrelevant_sentence(rng: random.Random, exclude_numbers: set[int])
     while candidate in exclude_numbers:
         candidate += rng.randint(1, 7)
         if candidate in seen:
-            candidate += 11   # break potential cycle
+            candidate += 11  # break potential cycle
         seen.add(candidate)
 
     # Substitute the number into the template
@@ -243,6 +269,7 @@ def _inject_irrelevant_sentence(question: str, rng: random.Random) -> str:
 # Cohort loading
 # ===========================================================================
 
+
 def _load_cohort() -> list[dict[str, Any]]:
     """Load the 200-question cohort from experiment_219_results.json.
 
@@ -262,6 +289,7 @@ def _load_cohort() -> list[dict[str, Any]]:
 # ===========================================================================
 # Variant generators
 # ===========================================================================
+
 
 def _make_number_swap_row(
     case: dict[str, Any],
@@ -367,6 +395,7 @@ def _make_irrelevant_sentence_row(
 # ===========================================================================
 # Main dataset generation
 # ===========================================================================
+
 
 def generate_dataset() -> list[dict[str, Any]]:
     """Generate the full 400-row adversarial dataset from the Exp 219 cohort.
@@ -488,6 +517,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

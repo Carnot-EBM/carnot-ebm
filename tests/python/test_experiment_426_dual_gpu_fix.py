@@ -87,6 +87,7 @@ _RETRO_DATA = {
 
 def _make_autofix_result(gpu_detected=False, auto_fix_applied=False):
     from carnot.pipeline.env_autofix import EnvironmentAutoFix
+
     return EnvironmentAutoFix(
         gpu_detected=gpu_detected,
         carnot_force_live_was_set=False,

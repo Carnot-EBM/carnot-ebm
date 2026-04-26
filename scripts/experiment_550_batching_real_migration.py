@@ -174,14 +174,18 @@ def main() -> None:
         record = _check_bir_present(script_name, _REPO_ROOT)
         verification_records.append(record)
         status_str = "PASS" if record["migrated"] else "FAIL"
-        print(f"[Exp 550] {status_str}: {record['path']}  grep={record['present_grep']}  ast={record['present_ast']}")
+        print(
+            f"[Exp 550] {status_str}: {record['path']}  grep={record['present_grep']}  ast={record['present_ast']}"
+        )
 
     scripts_migrated = [r["script"] for r in verification_records if r["migrated"]]
     scripts_missing = [r["script"] for r in verification_records if not r["migrated"]]
 
     all_migrated = len(scripts_missing) == 0
 
-    honest_verdict = "batching_migration_complete" if all_migrated else "batching_migration_incomplete"
+    honest_verdict = (
+        "batching_migration_complete" if all_migrated else "batching_migration_incomplete"
+    )
     status = "success" if all_migrated else "blocked"
 
     print(f"[Exp 550] scripts_migrated={scripts_migrated}")

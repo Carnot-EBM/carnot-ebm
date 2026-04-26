@@ -27,6 +27,7 @@ from carnot.models.ebm_cot_calibrator_v3 import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def small_eorm() -> EORMModel:
     """Tiny EORMModel for fast CPU tests (embed_dim=32, 2 heads, 1 layer)."""
@@ -48,6 +49,7 @@ def v3_calibrator(small_eorm: EORMModel) -> EBMCoTCalibratorV3:
 # ---------------------------------------------------------------------------
 # EPCouplingUpdate tests
 # ---------------------------------------------------------------------------
+
 
 class TestEPCouplingUpdate:
     """Tests for EPCouplingUpdate — REQ-EORM-009, SCENARIO-EORM-012."""
@@ -130,6 +132,7 @@ class TestEPCouplingUpdate:
 # SyntheticCoTPairGenerator tests
 # ---------------------------------------------------------------------------
 
+
 class TestSyntheticCoTPairGenerator:
     """Tests for SyntheticCoTPairGenerator — REQ-EORM-010."""
 
@@ -178,6 +181,7 @@ class TestSyntheticCoTPairGenerator:
 # EBMCoTCalibratorV3.__init__ tests
 # ---------------------------------------------------------------------------
 
+
 class TestEBMCoTCalibratorV3Init:
     """Tests for EBMCoTCalibratorV3 init — REQ-EORM-008."""
 
@@ -215,6 +219,7 @@ class TestEBMCoTCalibratorV3Init:
 # ---------------------------------------------------------------------------
 # EBMCoTCalibratorV3.calibrate_hidden tests
 # ---------------------------------------------------------------------------
+
 
 class TestEBMCoTCalibratorV3CalibrateHidden:
     """Tests for calibrate_hidden — REQ-EORM-008, SCENARIO-EORM-013."""
@@ -283,6 +288,7 @@ class TestEBMCoTCalibratorV3CalibrateHidden:
 # EBMCoTCalibratorV3.score tests
 # ---------------------------------------------------------------------------
 
+
 class TestEBMCoTCalibratorV3Score:
     """Tests for score() — REQ-EORM-008."""
 
@@ -311,6 +317,7 @@ class TestEBMCoTCalibratorV3Score:
 # EBMCoTCalibratorV3.calibrated_auc tests
 # ---------------------------------------------------------------------------
 
+
 class TestEBMCoTCalibratorV3CalibratedAuc:
     """Tests for calibrated_auc() — REQ-EORM-008, SCENARIO-EORM-014."""
 
@@ -318,17 +325,21 @@ class TestEBMCoTCalibratorV3CalibratedAuc:
         """Build n synthetic labeled CoT pairs."""
         examples = []
         for i in range(n // 2):
-            examples.append({
-                "question_text": f"Question {i}",
-                "response_text": f"correct answer {i}",
-                "label": 1,
-            })
+            examples.append(
+                {
+                    "question_text": f"Question {i}",
+                    "response_text": f"correct answer {i}",
+                    "label": 1,
+                }
+            )
         for i in range(n // 2):
-            examples.append({
-                "question_text": f"Question {i}",
-                "response_text": f"wrong answer {i}",
-                "label": 0,
-            })
+            examples.append(
+                {
+                    "question_text": f"Question {i}",
+                    "response_text": f"wrong answer {i}",
+                    "label": 0,
+                }
+            )
         return examples
 
     def test_auc_in_range(self, v3_calibrator: EBMCoTCalibratorV3) -> None:
@@ -400,20 +411,24 @@ class TestEBMCoTCalibratorV3CalibratedAuc:
 # Public API import test
 # ---------------------------------------------------------------------------
 
+
 class TestPublicExport:
     """All v3 classes exported from carnot.models."""
 
     def test_import_v3(self) -> None:
         """EBMCoTCalibratorV3 accessible from carnot.models."""
         from carnot.models import EBMCoTCalibratorV3 as C
+
         assert C is EBMCoTCalibratorV3
 
     def test_import_ep(self) -> None:
         """EPCouplingUpdate accessible from carnot.models."""
         from carnot.models import EPCouplingUpdate as E
+
         assert E is EPCouplingUpdate
 
     def test_import_gen(self) -> None:
         """SyntheticCoTPairGenerator accessible from carnot.models."""
         from carnot.models import SyntheticCoTPairGenerator as G
+
         assert G is SyntheticCoTPairGenerator

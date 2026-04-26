@@ -83,13 +83,15 @@ def main() -> int:
         description="Check invariants on one or more experiment result JSONs.",
     )
     parser.add_argument(
-        "patterns", nargs="+",
+        "patterns",
+        nargs="+",
         help="Paths or glob patterns for result JSONs.",
     )
     parser.add_argument(
-        "--report", default=None,
+        "--report",
+        default=None,
         help="Optional path to write the JSON report.  Defaults to "
-             "results/invariant_check_report.json when violations are found.",
+        "results/invariant_check_report.json when violations are found.",
     )
     args = parser.parse_args()
 
@@ -110,11 +112,13 @@ def main() -> int:
         artifact = _load_artifact(path)
         if artifact is None:
             print(f"  ? {path}: could not parse as JSON (skipped)")
-            report["per_file"].append({
-                "path": str(path),
-                "parseable": False,
-                "violations": [],
-            })
+            report["per_file"].append(
+                {
+                    "path": str(path),
+                    "parseable": False,
+                    "violations": [],
+                }
+            )
             continue
         violations = run_invariants(artifact)
         entry: dict[str, Any] = {
@@ -137,12 +141,16 @@ def main() -> int:
     )
 
     if report["total_violations"] > 0 or args.report is not None:
-        out_path = Path(args.report) if args.report else (
-            _REPO_ROOT / "results" / "invariant_check_report.json"
+        out_path = (
+            Path(args.report)
+            if args.report
+            else (_REPO_ROOT / "results" / "invariant_check_report.json")
         )
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(report, indent=2))
-        print(f"Report written to {out_path.relative_to(_REPO_ROOT) if out_path.is_relative_to(_REPO_ROOT) else out_path}")
+        print(
+            f"Report written to {out_path.relative_to(_REPO_ROOT) if out_path.is_relative_to(_REPO_ROOT) else out_path}"
+        )
 
     return 1 if report["total_violations"] > 0 else 0
 

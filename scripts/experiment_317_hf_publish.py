@@ -79,6 +79,7 @@ def _make_hf_api() -> Any:
     huggingface_hub at module load time.
     """
     from huggingface_hub import HfApi  # type: ignore[import-untyped]
+
     return HfApi()
 
 
@@ -173,10 +174,13 @@ def build_phase1_readme_patch(exp316_results: dict[str, Any] | None = None) -> s
                 n = stats.get("n_total", 0)
                 rows.append(f"| {model_name} | {acc:.1%} | [{ci_lo:.1%}, {ci_hi:.1%}] | {n} |")
             if rows:
-                table = "\n".join([
-                    "| Model | GSM8K Accuracy | 95% CI | N |",
-                    "|-------|:--------------:|:------:|:---:|",
-                ] + rows)
+                table = "\n".join(
+                    [
+                        "| Model | GSM8K Accuracy | 95% CI | N |",
+                        "|-------|:--------------:|:------:|:---:|",
+                    ]
+                    + rows
+                )
                 n_gsm8k = exp316_results.get("n_gsm8k", "?")
                 n_humaneval = exp316_results.get("n_humaneval", "?")
                 benchmark_section = f"""
@@ -346,10 +350,13 @@ def build_fcv_readme_with_exp316(
         n = stats.get("n_total", 0)
         rows.append(f"| {model_name} | {acc:.1%} | [{ci_lo:.1%}, {ci_hi:.1%}] | {n} |")
 
-    table = "\n".join([
-        "| Model | GSM8K Baseline Accuracy | 95% CI | N |",
-        "|-------|:-----------------------:|:------:|:---:|",
-    ] + rows)
+    table = "\n".join(
+        [
+            "| Model | GSM8K Baseline Accuracy | 95% CI | N |",
+            "|-------|:-----------------------:|:------:|:---:|",
+        ]
+        + rows
+    )
 
     n_gsm8k = exp316_results.get("n_gsm8k", "?")
     n_humaneval = exp316_results.get("n_humaneval", "?")
@@ -435,6 +442,7 @@ def model_card_update(
     # Upload updated README
     try:
         import tempfile
+
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".md", delete=False, encoding="utf-8"
         ) as tf:
@@ -579,6 +587,7 @@ def run_experiment_317(
         if updated_fcv != existing_fcv:
             if not dry_run:
                 import tempfile
+
                 with tempfile.NamedTemporaryFile(
                     mode="w", suffix=".md", delete=False, encoding="utf-8"
                 ) as tf:
@@ -629,6 +638,7 @@ def run_experiment_317(
         else:
             if not dry_run:
                 import tempfile
+
                 with tempfile.NamedTemporaryFile(
                     mode="w", suffix=".md", delete=False, encoding="utf-8"
                 ) as tf:

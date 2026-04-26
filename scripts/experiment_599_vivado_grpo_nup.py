@@ -210,7 +210,9 @@ artifact = tmpl.build_result(
     },
     status="success",
 )
-AtomicResultWriter(str(_REPO_ROOT / "results" / "experiment_599_vivado_grpo_nup.json")).write(artifact)
+AtomicResultWriter(str(_REPO_ROOT / "results" / "experiment_599_vivado_grpo_nup.json")).write(
+    artifact
+)
 
 # ---------------------------------------------------------------------------
 # Step 6: FINAL LINE — assert deliverable written

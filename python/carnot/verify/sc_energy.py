@@ -32,12 +32,10 @@ Spec: REQ-VERIFY-149, REQ-VERIFY-150, REQ-VERIFY-151,
 from __future__ import annotations
 
 import re
-from typing import List
 
 import jax
 import jax.numpy as jnp
 import optax
-
 
 # ---------------------------------------------------------------------------
 # Text encoding helpers
@@ -62,7 +60,7 @@ _HIDDEN: int = 64
 _MARGIN: float = 1.0
 
 
-def _tokenize(text: str) -> List[str]:
+def _tokenize(text: str) -> list[str]:
     """Extract numeric and operator tokens from a CoT step string.
 
     Why tokens rather than word-level features: GSM8K reasoning steps are almost
@@ -153,7 +151,7 @@ def _mlp_energy(params: dict, set_embedding: jnp.ndarray) -> jnp.ndarray:
     return (h @ params["w2"] + params["b2"]).squeeze()
 
 
-def _set_embedding(steps: List[str]) -> jnp.ndarray:
+def _set_embedding(steps: list[str]) -> jnp.ndarray:
     """Mean-pool the per-step embeddings into a single set representation.
 
     Mean-pooling is order-invariant, which is exactly what we want for a SET
@@ -167,7 +165,7 @@ def _set_embedding(steps: List[str]) -> jnp.ndarray:
 
 def _hinge_contrastive_loss(
     params: dict,
-    consistent_embeddings: jnp.ndarray,   # (B, VOCAB_SIZE)
+    consistent_embeddings: jnp.ndarray,  # (B, VOCAB_SIZE)
     inconsistent_embeddings: jnp.ndarray,  # (B, VOCAB_SIZE)
     margin: float = _MARGIN,
 ) -> jnp.ndarray:
@@ -264,7 +262,7 @@ class SetConsistencyVerifier:
         """
         return _encode_step(step_text)
 
-    def energy(self, steps: List[str]) -> float:
+    def energy(self, steps: list[str]) -> float:
         """Global consistency energy for a set of CoT steps.
 
         Low energy means the steps look mutually consistent.
@@ -293,8 +291,8 @@ class SetConsistencyVerifier:
 
     def contrastive_loss(
         self,
-        consistent_sets: List[List[str]],
-        inconsistent_sets: List[List[str]],
+        consistent_sets: list[list[str]],
+        inconsistent_sets: list[list[str]],
     ) -> float:
         """Hinge contrastive loss on a pair of batches.
 
@@ -324,8 +322,8 @@ class SetConsistencyVerifier:
 
     def train(
         self,
-        consistent_sets: List[List[str]],
-        inconsistent_sets: List[List[str]],
+        consistent_sets: list[list[str]],
+        inconsistent_sets: list[list[str]],
         n_epochs: int = 50,
         lr: float = 1e-3,
     ) -> None:
@@ -355,9 +353,7 @@ class SetConsistencyVerifier:
         optimizer = optax.adam(lr)
         opt_state = optimizer.init(self._params)
 
-        loss_fn = jax.jit(
-            lambda p: _hinge_contrastive_loss(p, con_embs, inc_embs)
-        )
+        loss_fn = jax.jit(lambda p: _hinge_contrastive_loss(p, con_embs, inc_embs))
         grad_fn = jax.jit(jax.grad(loss_fn))
 
         for _ in range(n_epochs):
@@ -365,7 +361,7 @@ class SetConsistencyVerifier:
             updates, opt_state = optimizer.update(grads, opt_state)
             self._params = optax.apply_updates(self._params, updates)
 
-    def score_set(self, steps: List[str]) -> float:
+    def score_set(self, steps: list[str]) -> float:
         """Alias for energy() with a more intuitive name for pipeline callers.
 
         Higher score = more likely to be inconsistent.

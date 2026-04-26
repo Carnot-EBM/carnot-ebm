@@ -58,8 +58,8 @@ _VITISAI_SETUP_INSTRUCTIONS = (
     "  2. Install Vitis AI runtime from https://github.com/amd/RyzenAI-SW\n"
     "     (follow the NPU EP quickstart for your OS/kernel version)\n"
     "  3. Set XLNX_VART_FIRMWARE to the NPU firmware binary path.\n"
-    "  4. Verify: python -c \"import onnxruntime; "
-    "print(onnxruntime.get_available_providers())\"\n"
+    '  4. Verify: python -c "import onnxruntime; '
+    'print(onnxruntime.get_available_providers())"\n'
     "     Expected: [..., 'VitisAIExecutionProvider', ...]"
 )
 
@@ -94,9 +94,7 @@ def main() -> None:
         else:
             honest_verdict = "npu_not_available"
 
-        setup_instructions = (
-            _VITISAI_SETUP_INSTRUCTIONS if not result.npu_available else None
-        )
+        setup_instructions = _VITISAI_SETUP_INSTRUCTIONS if not result.npu_available else None
 
         artifact = tmpl.build_result(
             {

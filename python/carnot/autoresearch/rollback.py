@@ -37,12 +37,14 @@ from __future__ import annotations
 import logging
 import subprocess
 import time
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any, Callable
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
-from carnot.autoresearch.baselines import BaselineRecord
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 
@@ -231,16 +233,18 @@ def monitor_and_rollback(
 
             # --- Log the regression ---
             if experiment_log is not None:
-                experiment_log.append(ExperimentEntry(
-                    id=f"rollback-{hypothesis_id}",
-                    timestamp=datetime.now(timezone.utc).isoformat(),
-                    hypothesis_code="",
-                    hypothesis_description=f"Rollback of {hypothesis_id}",
-                    sandbox_success=False,
-                    eval_verdict="FAIL",
-                    eval_reason=f"Production regression: energy {current_energy:.4f} > threshold {max_allowed_energy:.4f}",
-                    outcome="rejected",
-                ))
+                experiment_log.append(
+                    ExperimentEntry(
+                        id=f"rollback-{hypothesis_id}",
+                        timestamp=datetime.now(UTC).isoformat(),
+                        hypothesis_code="",
+                        hypothesis_description=f"Rollback of {hypothesis_id}",
+                        sandbox_success=False,
+                        eval_verdict="FAIL",
+                        eval_reason=f"Production regression: energy {current_energy:.4f} > threshold {max_allowed_energy:.4f}",
+                        outcome="rejected",
+                    )
+                )
 
             return RollbackResult(
                 stable=False,

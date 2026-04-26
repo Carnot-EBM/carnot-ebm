@@ -20,7 +20,9 @@ import numpy as np
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
 QA_DATASET = os.path.join(os.path.dirname(__file__), "..", "data", "qa_dataset_1000.json")
-OUTPUT = os.path.join(os.path.dirname(__file__), "..", "data", "token_activations_large.safetensors")
+OUTPUT = os.path.join(
+    os.path.dirname(__file__), "..", "data", "token_activations_large.safetensors"
+)
 
 
 def check_answer(response: str, expected: str) -> bool:
@@ -48,14 +50,15 @@ def main() -> int:
     start = time.time()
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         dtype=torch.float16 if device == "cuda" else None,
     )
     if device == "cuda":
         model = model.cuda()
     model.eval()
-    print(f"Loaded in {time.time()-start:.1f}s")
+    print(f"Loaded in {time.time() - start:.1f}s")
 
     # Collect activations
     all_token_ids = []
@@ -78,7 +81,9 @@ def main() -> int:
 
         with torch.no_grad():
             outputs = model.generate(
-                **inputs, max_new_tokens=20, do_sample=False,
+                **inputs,
+                max_new_tokens=20,
+                do_sample=False,
             )
 
         generated_ids = outputs[0, prompt_len:]
@@ -107,19 +112,21 @@ def main() -> int:
 
         if (qi + 1) % 50 == 0:
             total = len(all_token_ids)
-            print(f"  [{qi+1:4d}/{len(qa_pairs)}] "
-                  f"tokens={total:6d} "
-                  f"correct={n_correct} wrong={n_wrong} "
-                  f"({n_correct/(qi+1)*100:.0f}%)")
+            print(
+                f"  [{qi + 1:4d}/{len(qa_pairs)}] "
+                f"tokens={total:6d} "
+                f"correct={n_correct} wrong={n_wrong} "
+                f"({n_correct / (qi + 1) * 100:.0f}%)"
+            )
 
     # Save
     total_tokens = len(all_token_ids)
     act_dim = all_activations[0].shape[0] if all_activations else 0
 
-    print(f"\n{'='*60}")
-    print(f"Collection complete:")
+    print(f"\n{'=' * 60}")
+    print("Collection complete:")
     print(f"  Questions: {len(qa_pairs)}")
-    print(f"  Model accuracy: {n_correct}/{len(qa_pairs)} ({n_correct/len(qa_pairs)*100:.0f}%)")
+    print(f"  Model accuracy: {n_correct}/{len(qa_pairs)} ({n_correct / len(qa_pairs) * 100:.0f}%)")
     print(f"  Total tokens: {total_tokens}")
     print(f"  Activation dim: {act_dim}")
     print(f"  Correct tokens: {sum(all_labels)}")
@@ -136,7 +143,7 @@ def main() -> int:
     )
     print(f"  Saved to: {OUTPUT}")
     print(f"  File size: {os.path.getsize(OUTPUT) / 1e6:.1f} MB")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     return 0
 

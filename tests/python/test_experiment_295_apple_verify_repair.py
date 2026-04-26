@@ -184,18 +184,13 @@ def test_run_all_produces_12_cells(tmp_path: Path) -> None:
     results = runner.run_all()
 
     expected_cells = [
-        (model["name"], mode, vt)
-        for model in two_specs
-        for mode in MODES
-        for vt in VARIANT_TYPES
+        (model["name"], mode, vt) for model in two_specs for mode in MODES for vt in VARIANT_TYPES
     ]
     assert len(expected_cells) == 12
 
     for model_name, mode, vt in expected_cells:
         cell = results.get(model_name, {}).get(mode, {}).get(vt)
-        assert cell is not None, (
-            f"Missing cell ({model_name!r}, {mode!r}, {vt!r}) in results"
-        )
+        assert cell is not None, f"Missing cell ({model_name!r}, {mode!r}, {vt!r}) in results"
         for field in ("correct", "total", "accuracy", "violation_detected_count", "repaired_count"):
             assert field in cell, f"Cell missing field {field!r}: {cell}"
 
@@ -534,21 +529,23 @@ def test_checkpoint_resume_skips_completed(tmp_path: Path) -> None:
         f"__{_mod.safe_slug('number_swap')}.json"
     )
     ckpt_file.write_text(
-        json.dumps({
-            "model_name": model_name,
-            "mode": "baseline",
-            "variant_type": "number_swap",
-            "completed": {
-                "gsm8k-001": {
-                    "correct": True,
-                    "response": "10",
-                    "violation_detected": False,
-                    "repaired": False,
-                    "pre_warm_verified": False,
-                    "logit_path": None,
-                }
-            },
-        }),
+        json.dumps(
+            {
+                "model_name": model_name,
+                "mode": "baseline",
+                "variant_type": "number_swap",
+                "completed": {
+                    "gsm8k-001": {
+                        "correct": True,
+                        "response": "10",
+                        "violation_detected": False,
+                        "repaired": False,
+                        "pre_warm_verified": False,
+                        "logit_path": None,
+                    }
+                },
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -582,15 +579,17 @@ def test_logit_files_saved_at_fractions(tmp_path: Path) -> None:
     """SCENARIO-VERIFY-106: .npy logit files are saved at each prefix fraction."""
     four_ns_rows = []
     for i in range(4):
-        four_ns_rows.append({
-            "question_id": f"gsm8k-{i:03d}",
-            "original_question": f"Q{i}: What is {i}+1?",
-            "original_answer": i + 1,
-            "variant_type": "number_swap",
-            "variant_question": f"Q{i} scaled: What is {i*2}+2?",
-            "variant_answer": (i + 1) * 2,
-            "provenance": {},
-        })
+        four_ns_rows.append(
+            {
+                "question_id": f"gsm8k-{i:03d}",
+                "original_question": f"Q{i}: What is {i}+1?",
+                "original_answer": i + 1,
+                "variant_type": "number_swap",
+                "variant_question": f"Q{i} scaled: What is {i * 2}+2?",
+                "variant_answer": (i + 1) * 2,
+                "provenance": {},
+            }
+        )
 
     logit_dir = tmp_path / "logits"
     logit_dir.mkdir()
@@ -750,9 +749,17 @@ def test_per_question_record_required_fields(tmp_path: Path) -> None:
         model_name=MODEL_SPECS[0]["name"], mode="baseline", variant_type="number_swap"
     )
     required = {
-        "question_id", "mode", "variant_type", "model", "correct",
-        "violation_detected", "repaired", "logit_path",
-        "semantic_grounding_fired", "formal_claim_fired", "pre_warm_verified",
+        "question_id",
+        "mode",
+        "variant_type",
+        "model",
+        "correct",
+        "violation_detected",
+        "repaired",
+        "logit_path",
+        "semantic_grounding_fired",
+        "formal_claim_fired",
+        "pre_warm_verified",
     }
     for rec in records:
         for field in required:

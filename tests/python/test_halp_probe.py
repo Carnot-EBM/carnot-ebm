@@ -93,6 +93,7 @@ class TestExtractFeatures:
         probe = HALPProbe(n_features=4)
         feats = probe._extract_features("")
         import jax.numpy as jnp
+
         assert float(jnp.sum(feats)) == 0.0
 
     def test_word_length_normalised(self) -> None:
@@ -102,6 +103,7 @@ class TestExtractFeatures:
         # Single 10-character word -> last slot gets 10/20 = 0.5
         feats = probe._extract_features("helloworld")
         import jax.numpy as jnp
+
         assert abs(float(feats[-1]) - 0.5) < 1e-5
 
     def test_more_words_than_features(self) -> None:
@@ -111,6 +113,7 @@ class TestExtractFeatures:
         # Three words; only last 2 should contribute
         feats = probe._extract_features("a bb ccc")
         import jax.numpy as jnp
+
         # Slot 0 = 'bb' (len=2 -> 0.1), slot 1 = 'ccc' (len=3 -> 0.15)
         assert abs(float(feats[0]) - 2.0 / 20.0) < 1e-5
         assert abs(float(feats[1]) - 3.0 / 20.0) < 1e-5
@@ -121,6 +124,7 @@ class TestExtractFeatures:
         probe = HALPProbe(n_features=8)
         feats = probe._extract_features("hi")  # one word, len=2
         import jax.numpy as jnp
+
         # All slots except the last should be zero
         assert float(jnp.sum(feats[:-1])) == 0.0
         assert abs(float(feats[-1]) - 2.0 / 20.0) < 1e-5
@@ -209,6 +213,7 @@ class TestHALPProbePredict:
         """Untrained probe uses feature mean as score (SCENARIO-VERIFY-210)."""
         # SCENARIO-VERIFY-210
         import jax.numpy as jnp
+
         probe = HALPProbe(n_features=4)
         q = "what is two plus two"
         feats = probe._extract_features(q)
@@ -235,6 +240,7 @@ class TestHALPProbePredict:
         # REQ-VERIFY-155-3, REQ-VERIFY-155-4, SCENARIO-VERIFY-209
         import jax
         import jax.numpy as jnp
+
         probe = HALPProbe(n_features=4)
         probe.train(["hello", "world example test"], [0, 1])
         q = "test query"
@@ -259,5 +265,6 @@ class TestExports:
         # REQ-VERIFY-155-6
         from carnot.pipeline import HALPProbe as HP
         from carnot.pipeline import HALPProbeResult as HPR
+
         assert HP is HALPProbe
         assert HPR is HALPProbeResult

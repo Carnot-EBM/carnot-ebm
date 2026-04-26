@@ -318,18 +318,20 @@ def build_synthetic_corpus(
 
         for frac in PREFIX_FRACTIONS:
             features = extract_apple_features(logits, prefix_fraction=frac, variant_type=variant)
-            rows.append(AppleFeatureRow(
-                case_id=f"synthetic_{i:04d}_{variant}",
-                prefix_fraction=frac,
-                variant_type=variant,
-                features=features,
-                violation_label=violation,
-                metadata={
-                    "synthetic_training": True,
-                    "experiment": EXPERIMENT_ID,
-                    "source": "synthetic_fallback",
-                },
-            ))
+            rows.append(
+                AppleFeatureRow(
+                    case_id=f"synthetic_{i:04d}_{variant}",
+                    prefix_fraction=frac,
+                    variant_type=variant,
+                    features=features,
+                    violation_label=violation,
+                    metadata={
+                        "synthetic_training": True,
+                        "experiment": EXPERIMENT_ID,
+                        "source": "synthetic_fallback",
+                    },
+                )
+            )
 
     return rows
 
@@ -470,7 +472,7 @@ def compute_conformal_intervals(
 
     probs = np.asarray(probs, dtype=np.float64)
     labels = np.asarray(labels, dtype=np.float64)
-    gate_fires = (probs >= threshold)
+    gate_fires = probs >= threshold
 
     positives = labels == 1.0
     negatives = labels == 0.0
@@ -606,7 +608,7 @@ def retrain_gate(
     operating_threshold = _find_operating_threshold(calibrated_probs, y_holdout)
 
     # Gate predictions at operating threshold.
-    gate_fires = (calibrated_probs >= operating_threshold)
+    gate_fires = calibrated_probs >= operating_threshold
 
     # Fast-path hit rate: gate says "probably fine" (does NOT fire).
     fast_path_mask = ~gate_fires
@@ -695,7 +697,7 @@ def _find_operating_threshold(
     best_fast_path_rate = -1.0
 
     for thr in np.linspace(0.0, 1.0, 101):
-        fires = (probs >= thr)
+        fires = probs >= thr
         tp_rate = float((fires & pos).sum()) / max(n_pos, 1)
         fp_rate = float((fires & neg).sum()) / max(n_neg, 1)
         fast_path_rate = float((~fires).sum()) / max(len(probs), 1)
@@ -825,7 +827,9 @@ def _load_logits_from_exp282_283(data_dir: Path) -> list[AppleFeatureRow] | None
 
     Spec: REQ-JEPA-003
     """
-    npy_files = sorted(data_dir.glob("logits_282_*.npy")) + sorted(data_dir.glob("logits_283_*.npy"))
+    npy_files = sorted(data_dir.glob("logits_282_*.npy")) + sorted(
+        data_dir.glob("logits_283_*.npy")
+    )
     if not npy_files:
         return None
 
@@ -853,18 +857,20 @@ def _load_logits_from_exp282_283(data_dir: Path) -> list[AppleFeatureRow] | None
         case_id = npy_path.stem
         for frac in PREFIX_FRACTIONS:
             features = extract_apple_features(logits, prefix_fraction=frac, variant_type=variant)
-            rows.append(AppleFeatureRow(
-                case_id=case_id,
-                prefix_fraction=frac,
-                variant_type=variant,
-                features=features,
-                violation_label=violation,
-                metadata={
-                    "synthetic_training": False,
-                    "experiment": EXPERIMENT_ID,
-                    "source": str(npy_path),
-                },
-            ))
+            rows.append(
+                AppleFeatureRow(
+                    case_id=case_id,
+                    prefix_fraction=frac,
+                    variant_type=variant,
+                    features=features,
+                    violation_label=violation,
+                    metadata={
+                        "synthetic_training": False,
+                        "experiment": EXPERIMENT_ID,
+                        "source": str(npy_path),
+                    },
+                )
+            )
 
     return rows if rows else None
 
@@ -1014,7 +1020,7 @@ def _export_gate_onnx(retrain_result: dict[str, Any], path: Path) -> None:
 
         # Encode the logistic regression as a ONNX MatMul+Add+Sigmoid graph.
         if lr is not None and hasattr(lr, "coef_"):
-            w = lr.coef_.astype(np.float32)        # (1, n_features)
+            w = lr.coef_.astype(np.float32)  # (1, n_features)
             b = np.array([lr.intercept_[0]], dtype=np.float32)  # (1,)
         else:
             # Default zero weights as fallback.
@@ -1082,8 +1088,10 @@ def main() -> None:
     ci = result["conformal_intervals"]
     print(f"  TP 90% CI: [{ci['tp_interval'][0]:.3f}, {ci['tp_interval'][1]:.3f}]")
     print(f"  FP 90% CI: [{ci['fp_interval'][0]:.3f}, {ci['fp_interval'][1]:.3f}]")
-    print(f"  A/B fast-path: calibrated={result['ab_test']['fast_path_rate_calibrated']:.3f}, "
-          f"uncalibrated={result['ab_test']['fast_path_rate_uncalibrated']:.3f}")
+    print(
+        f"  A/B fast-path: calibrated={result['ab_test']['fast_path_rate_calibrated']:.3f}, "
+        f"uncalibrated={result['ab_test']['fast_path_rate_uncalibrated']:.3f}"
+    )
     print(f"\n  >>> {result['targets_verdict']} <<<")
     print(f"  Results: {result['onnx_path']}")
 

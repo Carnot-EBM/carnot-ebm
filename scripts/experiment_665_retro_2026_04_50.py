@@ -199,9 +199,7 @@ def compute_retro() -> dict:
     detection_rate_on_forced: float = float(exp653.get("detection_rate_on_forced", 0.0))
 
     # Exp 654: HERMES v2 structured recall on 25-question live sample.
-    hermes_v2_structured_recall: float = float(
-        exp654.get("hermes_v2_structured_recall", 0.0)
-    )
+    hermes_v2_structured_recall: float = float(exp654.get("hermes_v2_structured_recall", 0.0))
 
     # Exp 655: Ensemble gate status — recall across all extractors combined.
     ensemble_recall: float = float(exp655.get("ensemble_recall", 0.0))
@@ -222,15 +220,11 @@ def compute_retro() -> dict:
     specguard_auc: float = float(exp658.get("specguard_auc", 0.0))
 
     # Exp 659: FR-11 cross-session relay confirmation.
-    fr11_real_violations_confirmed: bool = bool(
-        exp659.get("fr11_real_violations_confirmed", False)
-    )
+    fr11_real_violations_confirmed: bool = bool(exp659.get("fr11_real_violations_confirmed", False))
 
     # Exp 660: LSEBMCL forgetting rate.
     forgetting_rate: float = float(exp660.get("forgetting_rate", 1.0))
-    lsebmcl_no_forgetting: bool = bool(
-        exp660.get("lsebmcl_no_forgetting", forgetting_rate < 0.05)
-    )
+    lsebmcl_no_forgetting: bool = bool(exp660.get("lsebmcl_no_forgetting", forgetting_rate < 0.05))
 
     # Exp 661: KV260 FPGA hardware latency — absent if benchmark timed out.
     hardware_latency_us_raw = exp661.get("hardware_latency_us")
@@ -301,9 +295,7 @@ def compute_retro() -> dict:
 
     # --- RETRO status updates (per task spec) ----------------------------
     # RETRO-033: VR #18 blocked because gate closed (not even attempted).
-    retro_033_status = (
-        "resolved" if retro_033_resolved else "attempt_18_failed_open"
-    )
+    retro_033_status = "resolved" if retro_033_resolved else "attempt_18_failed_open"
     # RETRO-057: No .50 action taken; filed for .51 multilevel redesign.
     retro_057_status = "filed_for_51_multilevel_needed"
     # RETRO-070: requires BOTH equation_forcer_parses_100pct AND hermes_v2 recall >= 0.30.
@@ -434,9 +426,13 @@ def main() -> None:
     out_path.write_text(json.dumps(artifact, indent=2))
 
     print(f"[Exp {EXP_ID}] honest_verdict={artifact['honest_verdict']}")
-    print(f"[Exp {EXP_ID}] n_criteria_met={artifact['n_criteria_met']}/{artifact['n_criteria_total']}")
+    print(
+        f"[Exp {EXP_ID}] n_criteria_met={artifact['n_criteria_met']}/{artifact['n_criteria_total']}"
+    )
     print(f"[Exp {EXP_ID}] milestone_success_rate={artifact['milestone_success_rate']}")
-    print(f"[Exp {EXP_ID}] wall_time_50={artifact['wall_time_50']} min (delta={artifact['wall_time_delta']} min)")
+    print(
+        f"[Exp {EXP_ID}] wall_time_50={artifact['wall_time_50']} min (delta={artifact['wall_time_delta']} min)"
+    )
     print(f"[Exp {EXP_ID}] open_retros_for_51={artifact['open_retros_for_51']}")
     print(f"[Exp {EXP_ID}] Deliverable: {DELIVERABLE}")
 

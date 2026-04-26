@@ -21,14 +21,16 @@ Spec: REQ-LEARN-056, REQ-LEARN-057, SCENARIO-LEARN-088, SCENARIO-LEARN-089
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List, Tuple
+from typing import TYPE_CHECKING
 
-from carnot.embeddings.jepa_retrain import ViolationPair
 from carnot.models.jepa_retrain_v6 import (
     _load_pairs_from_file,
     compute_held_out_split,
     violation_pairs_to_trainer_dicts,
 )
+
+if TYPE_CHECKING:
+    from carnot.embeddings.jepa_retrain import ViolationPair
 
 __all__ = [
     "load_v8_cot_corpus",
@@ -48,7 +50,7 @@ LAMBDA_REG_V8: float = 0.1
 def load_v8_cot_corpus(
     expanded_path: str,
     live_fallback_path: str,
-) -> Tuple[List[ViolationPair], str]:
+) -> tuple[list[ViolationPair], str]:
     """Load the best available CoT corpus for v8 training with cascading fallback.
 
     **Priority order (FR-11 honesty contract):**

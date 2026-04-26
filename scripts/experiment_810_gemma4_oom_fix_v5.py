@@ -89,10 +89,7 @@ def _load_gsm8k_questions(n: int, seed: int) -> list[dict[str, Any]]:
         rng = random.Random(seed)
         rng.shuffle(indices)
         selected = indices[:n]
-        return [
-            {"question": ds[i]["question"], "answer": ds[i]["answer"]}
-            for i in selected
-        ]
+        return [{"question": ds[i]["question"], "answer": ds[i]["answer"]} for i in selected]
     except Exception as exc:
         _log.warning("Could not load GSM8K (%s) — using synthetic fallback", exc)
         rng = random.Random(seed)
@@ -281,7 +278,9 @@ def main() -> None:
         # Step 6: run N_QUESTIONS GSM8K questions and count valid responses.
         loader: GemmaTransformersLoader = load_result["loader"]
         questions = _load_gsm8k_questions(N_QUESTIONS, SEED)
-        _log.info("Step 6: running %d GSM8K questions on Gemma4 (cuda:%d)", len(questions), GPU_INDEX)
+        _log.info(
+            "Step 6: running %d GSM8K questions on Gemma4 (cuda:%d)", len(questions), GPU_INDEX
+        )
 
         responses: list[str] = []
         n_valid_responses = 0

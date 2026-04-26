@@ -193,17 +193,17 @@ def compute_retro() -> dict:
     n_not_run: int = sum(1 for r in results.values() if not r)
     # Adjust n_experiments_run downward for experiments that never ran.
     n_experiments_run = n_experiments_run - n_not_run
-    mean_time_min: float = round(
-        total_wall_time_minutes / max(n_experiments_run, 1), 3
-    )
+    mean_time_min: float = round(total_wall_time_minutes / max(n_experiments_run, 1), 3)
 
     # --- RETRO closure accounting ----------------------------------------
     # RETRO-070 closed if retro_070_resolved.
     # RETRO-060 closed if jepa_v14_calibrated (calibration was the action required).
-    n_closed_this_milestone: int = sum([
-        retro_070_resolved,
-        jepa_v14_calibrated,  # closes RETRO-060
-    ])
+    n_closed_this_milestone: int = sum(
+        [
+            retro_070_resolved,
+            jepa_v14_calibrated,  # closes RETRO-060
+        ]
+    )
     n_new_retros: int = 0  # no new RETROs opened in .49
 
     open_retro_count: int = (
@@ -228,115 +228,137 @@ def compute_retro() -> dict:
     # --- Open RETRO carry-forward ----------------------------------------
     open_retro_items: list[dict] = []
 
-    open_retro_items.append({
-        "id": "RETRO-031",
-        "title": "Partial carry — closure status unverified",
-        "carry_count": ">=7",
-        "action_required": "Verify closure in result files before .50 planning.",
-    })
+    open_retro_items.append(
+        {
+            "id": "RETRO-031",
+            "title": "Partial carry — closure status unverified",
+            "carry_count": ">=7",
+            "action_required": "Verify closure in result files before .50 planning.",
+        }
+    )
 
     if not retro_033_resolved:
-        open_retro_items.append({
-            "id": "RETRO-033",
-            "title": "Live 25q verify-repair precision — 17 attempts, still not closed",
-            "carry_count": ">=17",
-            "action_required": (
-                "RETRO-033 carry: attempt #17 failed. "
-                "Upgrade gate to 35% recall before attempt #18. "
-                "Explore AST-level code extraction (not regex or LLM prompt)."
-            ),
-        })
+        open_retro_items.append(
+            {
+                "id": "RETRO-033",
+                "title": "Live 25q verify-repair precision — 17 attempts, still not closed",
+                "carry_count": ">=17",
+                "action_required": (
+                    "RETRO-033 carry: attempt #17 failed. "
+                    "Upgrade gate to 35% recall before attempt #18. "
+                    "Explore AST-level code extraction (not regex or LLM prompt)."
+                ),
+            }
+        )
 
-    open_retro_items.append({
-        "id": "RETRO-038",
-        "title": "Live 200q VeriCoT+Wilson CI — still not closed",
-        "carry_count": ">=12",
-        "action_required": "Same root cause as RETRO-033. Block until VR produces signed_improvement > 0.",
-    })
+    open_retro_items.append(
+        {
+            "id": "RETRO-038",
+            "title": "Live 200q VeriCoT+Wilson CI — still not closed",
+            "carry_count": ">=12",
+            "action_required": "Same root cause as RETRO-033. Block until VR produces signed_improvement > 0.",
+        }
+    )
 
     if not retro_057_resolved:
-        open_retro_items.append({
-            "id": "RETRO-057",
-            "title": "LowRankKAEM energy accuracy outside 5% tolerance",
-            "carry_count": ">=6",
-            "action_required": (
-                "RETRO-057 carry: try top_k=1.0 (dense sparse baseline). "
-                f"Exp 650 multilevel_sparse_vs_dense_error={multilevel_sparse_vs_dense_error:.2f} "
-                "— far outside 5% threshold.  Multilevel approach worsened accuracy."
-            ),
-        })
+        open_retro_items.append(
+            {
+                "id": "RETRO-057",
+                "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+                "carry_count": ">=6",
+                "action_required": (
+                    "RETRO-057 carry: try top_k=1.0 (dense sparse baseline). "
+                    f"Exp 650 multilevel_sparse_vs_dense_error={multilevel_sparse_vs_dense_error:.2f} "
+                    "— far outside 5% threshold.  Multilevel approach worsened accuracy."
+                ),
+            }
+        )
 
     # RETRO-060 is closed if jepa_v14_calibrated; otherwise carry.
     if not jepa_v14_calibrated:
-        open_retro_items.append({
-            "id": "RETRO-060",
-            "title": "JEPA calibration ECE still above 0.10 threshold",
+        open_retro_items.append(
+            {
+                "id": "RETRO-060",
+                "title": "JEPA calibration ECE still above 0.10 threshold",
+                "carry_count": ">=6",
+                "action_required": (
+                    f"ece_after={ece_after:.4f} — try isotonic regression calibration "
+                    "(non-parametric, monotone). Platt scaling was insufficient."
+                ),
+            }
+        )
+
+    open_retro_items.append(
+        {
+            "id": "RETRO-064",
+            "title": "CoACE recall 4% on live data — pipeline accuracy lift undetectable",
             "carry_count": ">=6",
             "action_required": (
-                f"ece_after={ece_after:.4f} — try isotonic regression calibration "
-                "(non-parametric, monotone). Platt scaling was insufficient."
+                f"ensemble_recall={ensemble_recall:.2f} (Exp 643).  "
+                "Causal verifier crossed the 30% gate.  RETRO-033 VR #17 still blocked by CI stub."
             ),
-        })
+        }
+    )
 
-    open_retro_items.append({
-        "id": "RETRO-064",
-        "title": "CoACE recall 4% on live data — pipeline accuracy lift undetectable",
-        "carry_count": ">=6",
-        "action_required": (
-            f"ensemble_recall={ensemble_recall:.2f} (Exp 643).  "
-            "Causal verifier crossed the 30% gate.  RETRO-033 VR #17 still blocked by CI stub."
-        ),
-    })
+    open_retro_items.append(
+        {
+            "id": "RETRO-065",
+            "title": "RAPL unavailable — hardware energy calibration blocked",
+            "carry_count": ">=6",
+            "action_required": "Need Intel RAPL or AMD Energy driver on test machine.",
+        }
+    )
 
-    open_retro_items.append({
-        "id": "RETRO-065",
-        "title": "RAPL unavailable — hardware energy calibration blocked",
-        "carry_count": ">=6",
-        "action_required": "Need Intel RAPL or AMD Energy driver on test machine.",
-    })
+    open_retro_items.append(
+        {
+            "id": "RETRO-066",
+            "title": "CoACE offline/live distribution gap — extractor redesign unresolved",
+            "carry_count": ">=5",
+            "action_required": (
+                "ORACLE data elicitation (arXiv 2603.21140) is the only identified path "
+                "to a training corpus that matches live output distribution."
+            ),
+        }
+    )
 
-    open_retro_items.append({
-        "id": "RETRO-066",
-        "title": "CoACE offline/live distribution gap — extractor redesign unresolved",
-        "carry_count": ">=5",
-        "action_required": (
-            "ORACLE data elicitation (arXiv 2603.21140) is the only identified path "
-            "to a training corpus that matches live output distribution."
-        ),
-    })
-
-    open_retro_items.append({
-        "id": "RETRO-068",
-        "title": "LLMAsExtractorV1 live recall 4-12% — below 20% gate threshold",
-        "carry_count": ">=4",
-        "action_required": (
-            "Gate recall >= 20%.  Ensemble recall=0.36 (Exp 643) uses causal verifier; "
-            "HERMES v2 alone recall=0.0 in Exp 641 (CI stub mode)."
-        ),
-    })
+    open_retro_items.append(
+        {
+            "id": "RETRO-068",
+            "title": "LLMAsExtractorV1 live recall 4-12% — below 20% gate threshold",
+            "carry_count": ">=4",
+            "action_required": (
+                "Gate recall >= 20%.  Ensemble recall=0.36 (Exp 643) uses causal verifier; "
+                "HERMES v2 alone recall=0.0 in Exp 641 (CI stub mode)."
+            ),
+        }
+    )
 
     if not retro_070_resolved:
-        open_retro_items.append({
-            "id": "RETRO-070",
-            "title": "interwhen recall still below 20% — HERMES tool-augmented pipeline next",
-            "carry_count": 3,
-            "action_required": (
-                "RETRO-070 carry: ensemble recall still below 30%. "
-                "Try forced structured-format generation: prompt model to write equations explicitly."
-            ),
-        })
+        open_retro_items.append(
+            {
+                "id": "RETRO-070",
+                "title": "interwhen recall still below 20% — HERMES tool-augmented pipeline next",
+                "carry_count": 3,
+                "action_required": (
+                    "RETRO-070 carry: ensemble recall still below 30%. "
+                    "Try forced structured-format generation: prompt model to write equations explicitly."
+                ),
+            }
+        )
 
     if not retro_071_resolved:
-        open_retro_items.append({
-            "id": "RETRO-071",
-            "title": "DualGPU 13B proof blocked by missing HF model weights",
-            "carry_count": 2,
-            "action_required": (
-                "RETRO-071 carry: pre-cache Qwen2.5-7B-Instruct weights, retry. "
-                "Run: huggingface-cli download Qwen/Qwen2.5-7B-Instruct "
-                "--local-dir ~/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B-Instruct"
-            ),
-        })
+        open_retro_items.append(
+            {
+                "id": "RETRO-071",
+                "title": "DualGPU 13B proof blocked by missing HF model weights",
+                "carry_count": 2,
+                "action_required": (
+                    "RETRO-071 carry: pre-cache Qwen2.5-7B-Instruct weights, retry. "
+                    "Run: huggingface-cli download Qwen/Qwen2.5-7B-Instruct "
+                    "--local-dir ~/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B-Instruct"
+                ),
+            }
+        )
 
     new_retro_items: list[dict] = []
 
@@ -359,9 +381,7 @@ def compute_retro() -> dict:
     )
 
     if not jepa_v14_calibrated:
-        top_priorities_for_50.append(
-            "Try isotonic regression calibration (non-parametric)."
-        )
+        top_priorities_for_50.append("Try isotonic regression calibration (non-parametric).")
     else:
         top_priorities_for_50.append(
             "Deploy JEPA v14 + Platt in cascade. Measure wall-clock throughput."

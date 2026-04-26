@@ -18,7 +18,7 @@ planner can read it as a required-reading checkpoint.
 
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 
 
 def build_preflight_artifact() -> dict:
@@ -35,7 +35,7 @@ def build_preflight_artifact() -> dict:
         "milestone": "2026.04.72",
         "preflight_version": 21,
         "run_date": "20260426",
-        "started_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "started_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         # --- .71 summary ---
         "predecessor_milestone": "2026.04.71",
         "predecessor_criteria_met": 2,
@@ -81,7 +81,7 @@ def build_preflight_artifact() -> dict:
 
 def main() -> int:
     artifact = build_preflight_artifact()
-    artifact["finished_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    artifact["finished_at"] = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     output_path = "results/experiment_929_preflight_v21.json"
     with open(output_path, "w") as f:
@@ -89,7 +89,9 @@ def main() -> int:
         f.write("\n")
 
     print(f"Wrote {output_path}")
-    print(f"  predecessor_criteria_met: {artifact['predecessor_criteria_met']}/{artifact['predecessor_criteria_total']}")
+    print(
+        f"  predecessor_criteria_met: {artifact['predecessor_criteria_met']}/{artifact['predecessor_criteria_total']}"
+    )
     print(f"  root_cause: {artifact['predecessor_root_cause']}")
     print(f"  retro_lagrange_entropy_closed: {artifact['retro_lagrange_entropy_closed']}")
     print(f"  open_retros: {len(artifact['open_retros'])}")

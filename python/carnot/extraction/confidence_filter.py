@@ -46,7 +46,6 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
-
 # ---------------------------------------------------------------------------
 # ViolationConfidence — one violation with its confidence score
 # ---------------------------------------------------------------------------
@@ -256,9 +255,7 @@ class ConfidenceWeightedExtractor:
           SCENARIO-EXTRACT-058, SCENARIO-EXTRACT-059, SCENARIO-EXTRACT-060
     """
 
-    def __init__(
-        self, base_extractor: BaseExtractor, confidence_threshold: float = 0.7
-    ) -> None:
+    def __init__(self, base_extractor: BaseExtractor, confidence_threshold: float = 0.7) -> None:
         self.base_extractor = base_extractor
         self.confidence_threshold = confidence_threshold
 
@@ -297,9 +294,7 @@ class ConfidenceWeightedExtractor:
             )
         return result
 
-    def above_threshold(
-        self, violations: list[ViolationConfidence]
-    ) -> list[ViolationConfidence]:
+    def above_threshold(self, violations: list[ViolationConfidence]) -> list[ViolationConfidence]:
         """Return only violations whose confidence_score >= confidence_threshold.
 
         This is the gate that prevents low-confidence noise from triggering repair.

@@ -39,7 +39,9 @@ def test_rust_fallback_when_extension_missing() -> None:
 
     try:
         # Patch the import so that `from carnot._rust import ...` raises ImportError
-        original_import = __builtins__.__import__ if hasattr(__builtins__, "__import__") else __import__
+        original_import = (
+            __builtins__.__import__ if hasattr(__builtins__, "__import__") else __import__
+        )
 
         def _fake_import(name: str, *args, **kwargs):  # type: ignore[no-untyped-def]
             if name == "carnot._rust":

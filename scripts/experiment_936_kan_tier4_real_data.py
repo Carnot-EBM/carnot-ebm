@@ -98,24 +98,28 @@ def _extract_features(text: str) -> np.ndarray:
     feats = np.zeros(16, dtype=np.float32)
 
     # Bits 0-7: correct-answer structural indicators
-    feats[0] = float(bool(re.search(r'\d+', t)))                     # any digit present
-    feats[1] = float(bool(re.search(r'[+\-*/÷×]', t)))               # arithmetic operator
-    feats[2] = float(bool(re.search(r'\btherefore\b|\bthus\b|\bso\b', t)))  # conclusion word
-    feats[3] = float(bool(re.search(r'=\s*\d', t)))                  # equation with result
-    feats[4] = float(bool(re.search(r'\b(kg|km|m|cm|hrs?|min|dollars?|\$|%)\b', t)))  # units
-    feats[5] = float(bool(re.search(r'\btotal\b|\bresult\b|\banswer\b', t)))  # result word
-    feats[6] = float(bool(re.search(r'\d+\s*=\s*\d+', t)))           # numeric equality
-    feats[7] = float(bool(re.search(r'\d+\.\d+', t)))                # decimal number
+    feats[0] = float(bool(re.search(r"\d+", t)))  # any digit present
+    feats[1] = float(bool(re.search(r"[+\-*/÷×]", t)))  # arithmetic operator
+    feats[2] = float(bool(re.search(r"\btherefore\b|\bthus\b|\bso\b", t)))  # conclusion word
+    feats[3] = float(bool(re.search(r"=\s*\d", t)))  # equation with result
+    feats[4] = float(bool(re.search(r"\b(kg|km|m|cm|hrs?|min|dollars?|\$|%)\b", t)))  # units
+    feats[5] = float(bool(re.search(r"\btotal\b|\bresult\b|\banswer\b", t)))  # result word
+    feats[6] = float(bool(re.search(r"\d+\s*=\s*\d+", t)))  # numeric equality
+    feats[7] = float(bool(re.search(r"\d+\.\d+", t)))  # decimal number
 
     # Bits 8-15: wrong-answer noise indicators
-    feats[8] = float(bool(re.search(r'\bnot\b|\bno\b|\bnever\b|\bcannot\b', t)))    # negation
-    feats[9] = float(bool(re.search(r'\bif\b|\bmight\b|\bcould\b|\bmaybe\b', t)))   # hedging
-    feats[10] = float(t.count('?') > 1)                               # multiple question marks
-    feats[11] = float(bool(re.search(r'\bpartially\b|\bincomplete\b|\bunfinished\b', t)))
-    feats[12] = float(bool(re.search(r'\bbut\b.*\bhowever\b|\bhowever\b.*\bbut\b', t)))  # contradiction
-    feats[13] = float(not bool(re.search(r'\d', t)))                  # no digits at all
-    feats[14] = float(len(t) > 500)                                   # very long run-on
-    feats[15] = float(not bool(re.search(r'\btherefore\b|\bthus\b|\btotal\b|\banswer\b', t)))  # no conclusion
+    feats[8] = float(bool(re.search(r"\bnot\b|\bno\b|\bnever\b|\bcannot\b", t)))  # negation
+    feats[9] = float(bool(re.search(r"\bif\b|\bmight\b|\bcould\b|\bmaybe\b", t)))  # hedging
+    feats[10] = float(t.count("?") > 1)  # multiple question marks
+    feats[11] = float(bool(re.search(r"\bpartially\b|\bincomplete\b|\bunfinished\b", t)))
+    feats[12] = float(
+        bool(re.search(r"\bbut\b.*\bhowever\b|\bhowever\b.*\bbut\b", t))
+    )  # contradiction
+    feats[13] = float(not bool(re.search(r"\d", t)))  # no digits at all
+    feats[14] = float(len(t) > 500)  # very long run-on
+    feats[15] = float(
+        not bool(re.search(r"\btherefore\b|\bthus\b|\btotal\b|\banswer\b", t))
+    )  # no conclusion
 
     return feats
 
@@ -148,7 +152,9 @@ def _load_real_fover_pairs(path: str) -> tuple[list[np.ndarray], list[np.ndarray
     return correct_embs, incorrect_embs
 
 
-def _make_synthetic_fallback(n_samples: int, input_dim: int, seed: int) -> tuple[np.ndarray, np.ndarray]:
+def _make_synthetic_fallback(
+    n_samples: int, input_dim: int, seed: int
+) -> tuple[np.ndarray, np.ndarray]:
     """Generate synthetic embeddings as fallback when real data is insufficient.
 
     Replicates Exp 910 synthetic generation exactly so results are comparable.
@@ -213,14 +219,8 @@ def _run_kan_eval(kan: KANModel, correct_embs: np.ndarray, wrong_embs: np.ndarra
     """
     import jax.numpy as jnp
 
-    e_correct = np.array([
-        float(kan.energy(jnp.array(x, dtype=jnp.float32)))
-        for x in correct_embs
-    ])
-    e_wrong = np.array([
-        float(kan.energy(jnp.array(x, dtype=jnp.float32)))
-        for x in wrong_embs
-    ])
+    e_correct = np.array([float(kan.energy(jnp.array(x, dtype=jnp.float32))) for x in correct_embs])
+    e_wrong = np.array([float(kan.energy(jnp.array(x, dtype=jnp.float32))) for x in wrong_embs])
     return _compute_auc(e_correct, e_wrong)
 
 
@@ -284,7 +284,9 @@ def main() -> None:
         inference_mode = "real_fover_data"
         correct_embs = np.stack(correct_list, axis=0)
         wrong_embs = np.stack(incorrect_list, axis=0)
-        print(f"Using real FoVer data: {len(correct_list)} correct, {len(incorrect_list)} incorrect")
+        print(
+            f"Using real FoVer data: {len(correct_list)} correct, {len(incorrect_list)} incorrect"
+        )
     else:
         print(f"Real pairs={n_real} < {MIN_REAL_PAIRS}, using synthetic fallback")
         correct_embs, wrong_embs = _make_synthetic_fallback(50, INPUT_DIM, SEED)
@@ -292,9 +294,7 @@ def main() -> None:
     # -----------------------------------------------------------------------
     # 80/20 train/test split
     # -----------------------------------------------------------------------
-    c_train, c_test, w_train, w_test = _train_split(
-        correct_embs, wrong_embs, TRAIN_FRAC, SEED
-    )
+    c_train, c_test, w_train, w_test = _train_split(correct_embs, wrong_embs, TRAIN_FRAC, SEED)
 
     # -----------------------------------------------------------------------
     # Build KANModel (small, CPU, same config as Exp 910)

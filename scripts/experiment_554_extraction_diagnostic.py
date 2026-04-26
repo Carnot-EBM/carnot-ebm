@@ -133,7 +133,9 @@ def _load_labeled_responses() -> list[dict]:
         "25% of 80 is 20. The tip is $20.",
     ]
     for t in correct_templates:
-        synthetic.append({"response": t, "is_correct": True, "question": "", "model_id": "synthetic"})
+        synthetic.append(
+            {"response": t, "is_correct": True, "question": "", "model_id": "synthetic"}
+        )
 
     # Incorrect responses: plausible but wrong arithmetic
     incorrect_templates = [
@@ -154,12 +156,16 @@ def _load_labeled_responses() -> list[dict]:
         "10% of 200 is 21. Fee is $21.",
     ]
     for t in incorrect_templates:
-        synthetic.append({"response": t, "is_correct": False, "question": "", "model_id": "synthetic"})
+        synthetic.append(
+            {"response": t, "is_correct": False, "question": "", "model_id": "synthetic"}
+        )
 
     return synthetic
 
 
-def _classify_root_cause(vericot_fp: float, vericot_tp: float, vprm_fp: float, vprm_tp: float) -> str:
+def _classify_root_cause(
+    vericot_fp: float, vericot_tp: float, vprm_fp: float, vprm_tp: float
+) -> str:
     """Classify the most likely root cause from FP/TP rates.
 
     Decision rules (in priority order):
@@ -242,7 +248,9 @@ def run_experiment() -> None:
         def _precision(tp: int, fp: int) -> float:
             return tp / (tp + fp) if (tp + fp) > 0 else 0.0
 
-        vericot_precision = _precision(vericot_result.n_true_positive, vericot_result.n_false_positive)
+        vericot_precision = _precision(
+            vericot_result.n_true_positive, vericot_result.n_false_positive
+        )
         vprm_precision = _precision(vprm_result.n_true_positive, vprm_result.n_false_positive)
 
         # Step 8: Build main artifact.
@@ -252,9 +260,9 @@ def run_experiment() -> None:
                 "n_responses_analyzed": n_responses,
                 "n_correct_responses": n_correct,
                 "n_incorrect_responses": n_incorrect,
-                "source": EXP538_COT_PAIRS if (
-                    (_REPO_ROOT / EXP538_COT_PAIRS).exists()
-                ) else "synthetic_fallback",
+                "source": EXP538_COT_PAIRS
+                if ((_REPO_ROOT / EXP538_COT_PAIRS).exists())
+                else "synthetic_fallback",
                 "vericot_result": {
                     "tp_rate": vericot_result.tp_rate,
                     "fp_rate": vericot_result.fp_rate,

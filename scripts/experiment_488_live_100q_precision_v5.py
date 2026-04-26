@@ -145,11 +145,13 @@ def _load_gsm8k_questions(n: int, seed: int) -> list[dict]:
     for i in range(1, n + 1):
         a, b = i * 3, i * 2
         c = a + b
-        synthetic.append({
-            "question": f"Janet has {a} apples and receives {b} more. How many does she have?",
-            "answer": f"She starts with {a} and gets {b} more, so {a} + {b} = {c}. #### {c}",
-            "source": "synthetic",
-        })
+        synthetic.append(
+            {
+                "question": f"Janet has {a} apples and receives {b} more. How many does she have?",
+                "answer": f"She starts with {a} and gets {b} more, so {a} + {b} = {c}. #### {c}",
+                "source": "synthetic",
+            }
+        )
     _log.info("Using %d synthetic GSM8K questions (real dataset unavailable)", n)
     return synthetic
 
@@ -236,7 +238,11 @@ def _run_model_benchmark(
     pre_accuracy = n_correct_baseline / max(len(questions), 1)
     _log.info(
         "[%s cuda:%d] BASELINE: %d/%d correct (%.4f)",
-        model_name, gpu_id, n_correct_baseline, len(questions), pre_accuracy,
+        model_name,
+        gpu_id,
+        n_correct_baseline,
+        len(questions),
+        pre_accuracy,
     )
 
     # Pass 2: PIPELINE with verify-repair
@@ -266,9 +272,13 @@ def _run_model_benchmark(
     extractor_used = extractor.extractor_names_used(all_violations_seen)
     _log.info(
         "[%s cuda:%d] PIPELINE: %d/%d correct (%.4f) delta=%.4f extractor=%s",
-        model_name, gpu_id,
-        n_correct_pipeline, len(questions), post_accuracy,
-        post_accuracy - pre_accuracy, extractor_used,
+        model_name,
+        gpu_id,
+        n_correct_pipeline,
+        len(questions),
+        post_accuracy,
+        post_accuracy - pre_accuracy,
+        extractor_used,
     )
 
     return Precision100qV5Result(
@@ -394,7 +404,9 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
 
     # Extract per-model device assignments
     gemma_spec = next(s for s in assigned_specs if "gemma" in s["name"].lower())
-    qwen_spec = next(s for s in assigned_specs if "qwen" in s["name"].lower() or "Qwen" in s["name"])
+    qwen_spec = next(
+        s for s in assigned_specs if "qwen" in s["name"].lower() or "Qwen" in s["name"]
+    )
     gemma_gpu = gemma_spec.get("gpu", 0)
     qwen_gpu = qwen_spec.get("gpu", 1)
     gemma_device_map = gemma_spec.get("device_map", {"": f"cuda:{gemma_gpu}"})
@@ -402,7 +414,9 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
 
     _log.info(
         "DualGPUHarness: gemma4→cuda:%d, qwen→cuda:%d (eligible=%s)",
-        gemma_gpu, qwen_gpu, harness.is_eligible,
+        gemma_gpu,
+        qwen_gpu,
+        harness.is_eligible,
     )
 
     # ------------------------------------------------------------------
@@ -497,13 +511,23 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
 
     _log.info("=== Running Gemma4-E4B-it benchmark (cuda:%d, %dq) ===", gemma_gpu, len(questions))
     gemma4_result = _run_model_benchmark(
-        "Gemma4-E4B-it", gemma_gpu, gemma_fn, extractor, questions, collector,
+        "Gemma4-E4B-it",
+        gemma_gpu,
+        gemma_fn,
+        extractor,
+        questions,
+        collector,
     )
     tmpl.checkpoint_save(gemma4_result.to_dict(), step=1)
 
     _log.info("=== Running Qwen3.5-0.8B benchmark (cuda:%d, %dq) ===", qwen_gpu, len(questions))
     qwen_result = _run_model_benchmark(
-        "Qwen3.5-0.8B", qwen_gpu, qwen_fn, extractor, questions, collector,
+        "Qwen3.5-0.8B",
+        qwen_gpu,
+        qwen_fn,
+        extractor,
+        questions,
+        collector,
     )
     tmpl.checkpoint_save(qwen_result.to_dict(), step=2)
 
@@ -574,7 +598,9 @@ def main() -> None:
     verdict = artifact.get("honest_verdict", "unknown")
     _log.info(
         "Exp %d complete: honest_verdict=%s status=%s",
-        EXP_ID, verdict, artifact.get("status", "unknown"),
+        EXP_ID,
+        verdict,
+        artifact.get("status", "unknown"),
     )
 
 

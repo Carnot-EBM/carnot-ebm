@@ -106,7 +106,9 @@ class TestLoadEormModel:
 
         # Create and save a minimal model to a temp path.
         key = jr.PRNGKey(0)
-        model = EORMModel(embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key)
+        model = EORMModel(
+            embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key
+        )
         ckpt_path = tmp_path / "eorm_model_371_real.safetensors"
         model.save(str(ckpt_path))
 
@@ -122,7 +124,9 @@ class TestLoadEormModel:
         import jax.random as jr
 
         key = jr.PRNGKey(1)
-        model = EORMModel(embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key)
+        model = EORMModel(
+            embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key
+        )
         ckpt_path = tmp_path / "eorm_model_359_real.safetensors"
         model.save(str(ckpt_path))
 
@@ -177,10 +181,7 @@ class TestLoadGsm8kQuestions:
 
     def test_success(self) -> None:
         """Returns (questions, answers) lists of length n."""
-        rows = [
-            {"question": f"Q{i}", "answer": f"Step 1. #### {i}"}
-            for i in range(10)
-        ]
+        rows = [{"question": f"Q{i}", "answer": f"Step 1. #### {i}"} for i in range(10)]
 
         class _FakeDataset:
             def __len__(self) -> int:
@@ -282,7 +283,9 @@ class TestBuildComponents:
         import jax.random as jr
 
         key = jr.PRNGKey(0)
-        eorm = EORMModel(embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key)
+        eorm = EORMModel(
+            embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key
+        )
         pipeline, library, tracker = build_components(eorm, seed=42)
 
         assert isinstance(pipeline, ThreeTierPipeline)
@@ -294,7 +297,9 @@ class TestBuildComponents:
         import jax.random as jr
 
         key = jr.PRNGKey(1)
-        eorm = EORMModel(embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key)
+        eorm = EORMModel(
+            embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key
+        )
         _, library, _ = build_components(eorm, seed=1)
         # Should have 4 built-in templates registered.
         assert len(library._templates) >= 4
@@ -413,7 +418,10 @@ class TestLoadModelPipeline:
             _load_model_pipeline("some/custom-model")
 
         call_kwargs = mock_transformers.pipeline.call_args
-        assert "some/custom-model" in call_kwargs[0] or call_kwargs[1].get("model") == "some/custom-model"
+        assert (
+            "some/custom-model" in call_kwargs[0]
+            or call_kwargs[1].get("model") == "some/custom-model"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -478,14 +486,20 @@ class TestMain:
         mock_tmpl.build_result.return_value = {"honest_verdict": "blocked"}
 
         with patch.object(_mod, "ExperimentTemplate", return_value=mock_tmpl):
-            with patch.object(_mod, "load_eorm_model", return_value=(MagicMock(), "synthetic_fallback")):
-                with patch.object(_mod, "load_gsm8k_questions", side_effect=ImportError("datasets")):
+            with patch.object(
+                _mod, "load_eorm_model", return_value=(MagicMock(), "synthetic_fallback")
+            ):
+                with patch.object(
+                    _mod, "load_gsm8k_questions", side_effect=ImportError("datasets")
+                ):
                     _mod.main()
 
         out = tmp_path / "results" / "experiment_374_self_learning_relay_live.json"
         assert out.exists()
 
-    def test_blocked_model_load_fails(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_blocked_model_load_fails(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() writes blocked artifact when model pipeline load fails."""
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "1")
 
@@ -495,15 +509,23 @@ class TestMain:
         mock_tmpl.build_result.return_value = {"honest_verdict": "blocked"}
 
         with patch.object(_mod, "ExperimentTemplate", return_value=mock_tmpl):
-            with patch.object(_mod, "load_eorm_model", return_value=(MagicMock(), "synthetic_fallback")):
-                with patch.object(_mod, "load_gsm8k_questions", return_value=(["Q"] * 100, ["1"] * 100)):
-                    with patch.object(_mod, "_load_model_pipeline", side_effect=ImportError("transformers")):
+            with patch.object(
+                _mod, "load_eorm_model", return_value=(MagicMock(), "synthetic_fallback")
+            ):
+                with patch.object(
+                    _mod, "load_gsm8k_questions", return_value=(["Q"] * 100, ["1"] * 100)
+                ):
+                    with patch.object(
+                        _mod, "_load_model_pipeline", side_effect=ImportError("transformers")
+                    ):
                         _mod.main()
 
         out = tmp_path / "results" / "experiment_374_self_learning_relay_live.json"
         assert out.exists()
 
-    def test_success_learning_confirmed(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_success_learning_confirmed(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() writes learning_confirmed artifact on successful live run with improvement."""
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "1")
 
@@ -511,26 +533,29 @@ class TestMain:
         import jax.random as jr
 
         key = jr.PRNGKey(42)
-        eorm = EORMModel(embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key)
+        eorm = EORMModel(
+            embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key
+        )
 
         # Ground truth engineered for improvement: batch 0 lower, batch 3 higher.
         # 100 questions across 4 batches of 25.
         # Batch 0: 10/25 correct; Batch 3: 20/25 correct → improved=True.
         gt_all: list[bool] = (
-            [True] * 10 + [False] * 15  # batch 0: 0.40
-            + [True] * 13 + [False] * 12  # batch 1: 0.52
-            + [True] * 16 + [False] * 9   # batch 2: 0.64
-            + [True] * 20 + [False] * 5   # batch 3: 0.80
+            [True] * 10
+            + [False] * 15  # batch 0: 0.40
+            + [True] * 13
+            + [False] * 12  # batch 1: 0.52
+            + [True] * 16
+            + [False] * 9  # batch 2: 0.64
+            + [True] * 20
+            + [False] * 5  # batch 3: 0.80
         )
         assert len(gt_all) == 100
 
         # refs: "1" for correct positions, "99" for wrong positions.
         # pipeline_fn is called as list[str]->list[str] (single-element list per question).
         questions_all = [f"Q{i}" for i in range(100)]
-        answers_all = [
-            "1" if gt_all[i] else "99"
-            for i in range(100)
-        ]
+        answers_all = ["1" if gt_all[i] else "99" for i in range(100)]
 
         def _mock_infer(prompts: list[str]) -> list[str]:
             # Return "1" for every prompt; is_correct_answer("1", ref) depends on ref.
@@ -552,7 +577,9 @@ class TestMain:
 
         with patch.object(_mod, "ExperimentTemplate", return_value=mock_tmpl):
             with patch.object(_mod, "load_eorm_model", return_value=(eorm, "synthetic_fallback")):
-                with patch.object(_mod, "load_gsm8k_questions", return_value=(questions_all, answers_all)):
+                with patch.object(
+                    _mod, "load_gsm8k_questions", return_value=(questions_all, answers_all)
+                ):
                     with patch.object(_mod, "_load_model_pipeline", return_value=_mock_infer):
                         _mod.main()
 
@@ -590,14 +617,20 @@ class TestMain:
         import jax.random as jr
 
         key = jr.PRNGKey(7)
-        eorm = EORMModel(embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key)
+        eorm = EORMModel(
+            embed_dim=32, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64, key=key
+        )
 
         # Batch 0: 20/25 correct; Batch 3: 10/25 correct → improved=False.
         gt_all: list[bool] = (
-            [True] * 20 + [False] * 5   # batch 0: 0.80
-            + [True] * 15 + [False] * 10  # batch 1: 0.60
-            + [True] * 12 + [False] * 13  # batch 2: 0.48
-            + [True] * 10 + [False] * 15  # batch 3: 0.40
+            [True] * 20
+            + [False] * 5  # batch 0: 0.80
+            + [True] * 15
+            + [False] * 10  # batch 1: 0.60
+            + [True] * 12
+            + [False] * 13  # batch 2: 0.48
+            + [True] * 10
+            + [False] * 15  # batch 3: 0.40
         )
         assert len(gt_all) == 100
 
@@ -619,7 +652,9 @@ class TestMain:
 
         with patch.object(_mod, "ExperimentTemplate", return_value=mock_tmpl):
             with patch.object(_mod, "load_eorm_model", return_value=(eorm, "exp359_real")):
-                with patch.object(_mod, "load_gsm8k_questions", return_value=(questions_all, answers_all)):
+                with patch.object(
+                    _mod, "load_gsm8k_questions", return_value=(questions_all, answers_all)
+                ):
                     with patch.object(_mod, "_load_model_pipeline", return_value=_mock_infer):
                         _mod.main()
 

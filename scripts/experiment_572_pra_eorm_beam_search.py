@@ -99,6 +99,7 @@ PROBLEMS = [
 # CI-safe EORM mock
 # ---------------------------------------------------------------------------
 
+
 class _MockEORMModel:
     """CI-safe EORM mock: returns deterministic energy based on text hash.
 
@@ -147,6 +148,7 @@ class _MockEORMModel:
 # Candidate generation
 # ---------------------------------------------------------------------------
 
+
 def _make_generate_fn(problem: str) -> object:
     """Build a synthetic generate_fn for one arithmetic problem.
 
@@ -168,6 +170,7 @@ def _make_generate_fn(problem: str) -> object:
     """
     # Extract numbers from problem for synthetic candidates
     import re
+
     nums = re.findall(r"\d+", problem)
     a = int(nums[0]) if nums else 3
     b = int(nums[1]) if len(nums) > 1 else 5
@@ -179,7 +182,7 @@ def _make_generate_fn(problem: str) -> object:
             return [
                 f"Let x = {a} and y = {b}",  # no =, greedy picks this
                 f"The first number is {a} = given",  # has =
-                f"Operands: {a} and {b}",      # no =
+                f"Operands: {a} and {b}",  # no =
             ]
         else:
             # Second step: compute answer
@@ -188,8 +191,8 @@ def _make_generate_fn(problem: str) -> object:
             except Exception:
                 answer = a + b
             return [
-                "Now I add them together",           # no =, greedy picks this
-                f"Result = {answer}",                # has =, beam picks this
+                "Now I add them together",  # no =, greedy picks this
+                f"Result = {answer}",  # has =, beam picks this
                 "The computation follows naturally",  # no =
             ]
 
@@ -199,6 +202,7 @@ def _make_generate_fn(problem: str) -> object:
 # ---------------------------------------------------------------------------
 # Experiment
 # ---------------------------------------------------------------------------
+
 
 def _try_load_real_eorm() -> object | None:
     """Attempt to load a real EORM model from the latest checkpoint.
@@ -215,6 +219,7 @@ def _try_load_real_eorm() -> object | None:
         if not model_path:
             return None
         from carnot.models.eorm import EORMModel  # noqa: PLC0415
+
         model = EORMModel.load(model_path)
         _log.info("Loaded real EORM from %s", model_path)
         return model
@@ -263,15 +268,17 @@ def main() -> None:
         total_baseline_violations += result.baseline_violation_rate
         total_beam_violations += result.beam_violation_rate
 
-        problem_results.append({
-            "problem_idx": idx,
-            "question": problem,
-            "n_steps": result.n_steps,
-            "n_beams_explored": result.n_beams_explored,
-            "baseline_violation_rate": result.baseline_violation_rate,
-            "beam_violation_rate": result.beam_violation_rate,
-            "improvement": result.improvement,
-        })
+        problem_results.append(
+            {
+                "problem_idx": idx,
+                "question": problem,
+                "n_steps": result.n_steps,
+                "n_beams_explored": result.n_beams_explored,
+                "baseline_violation_rate": result.baseline_violation_rate,
+                "beam_violation_rate": result.beam_violation_rate,
+                "improvement": result.improvement,
+            }
+        )
         _log.info(
             "Problem %2d: baseline_vr=%.3f  beam_vr=%.3f  improvement=%.3f",
             idx,

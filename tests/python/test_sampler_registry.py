@@ -65,9 +65,7 @@ def test_get_sampler_backend_default_is_cpu(monkeypatch: pytest.MonkeyPatch) -> 
     from carnot.samplers import get_sampler_backend
 
     instance = get_sampler_backend()
-    assert isinstance(instance, CpuBackend), (
-        f"Expected CpuBackend, got {type(instance).__name__}"
-    )
+    assert isinstance(instance, CpuBackend), f"Expected CpuBackend, got {type(instance).__name__}"
 
 
 # ---------------------------------------------------------------------------
@@ -100,9 +98,7 @@ def test_get_sampler_backend_cpu_by_name() -> None:
     from carnot.samplers import get_sampler_backend
 
     instance = get_sampler_backend("cpu")
-    assert isinstance(instance, CpuBackend), (
-        f"Expected CpuBackend, got {type(instance).__name__}"
-    )
+    assert isinstance(instance, CpuBackend), f"Expected CpuBackend, got {type(instance).__name__}"
 
 
 # ---------------------------------------------------------------------------
@@ -159,8 +155,6 @@ def test_exports_visible_from_carnot_samplers() -> None:
     assert hasattr(samplers, "get_sampler_backend"), (
         "carnot.samplers must export get_sampler_backend"
     )
-    assert hasattr(samplers, "backend_registry"), (
-        "carnot.samplers must export backend_registry"
-    )
+    assert hasattr(samplers, "backend_registry"), "carnot.samplers must export backend_registry"
     assert callable(samplers.get_sampler_backend)
     assert isinstance(samplers.backend_registry, dict)

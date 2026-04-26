@@ -27,7 +27,7 @@ import subprocess
 import sys
 import tempfile
 import textwrap
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -91,6 +91,7 @@ def ensure_huggingface_hub() -> None:
     """Install huggingface_hub into the active venv if it is not importable."""
     try:
         import huggingface_hub  # noqa: F401
+
         print("[HF] huggingface_hub already installed.")
     except ImportError:
         print("[HF] Installing huggingface_hub …")
@@ -101,6 +102,7 @@ def ensure_huggingface_hub() -> None:
             shell=isinstance(pip_cmd, str),
         )
         import huggingface_hub  # noqa: F401 — re-check after install
+
         print("[HF] huggingface_hub installed successfully.")
 
 
@@ -164,7 +166,9 @@ def upload_constraint_models(api) -> list[dict]:
 
         if not domain_dir.exists():
             print(f"[HF] ✗ Directory not found: {domain_dir}")
-            results.append({"repo_id": repo_id, "status": "skipped", "reason": "directory not found"})
+            results.append(
+                {"repo_id": repo_id, "status": "skipped", "reason": "directory not found"}
+            )
             continue
 
         try:
@@ -332,6 +336,7 @@ def upload_jepa_v2(api) -> dict:
 
     # Copy weights (do not modify the original)
     import shutil
+
     shutil.copy2(JEPA_V2_WEIGHTS, card_weights)
 
     # Write model card
@@ -530,7 +535,7 @@ def write_results(payload: dict) -> None:
 def main() -> int:
     """Return 0 on success, 1 on dry-run (unauthenticated)."""
     print("=== Experiment 164: HuggingFace Publishing ===")
-    print(f"Timestamp: {datetime.now(timezone.utc).isoformat()}")
+    print(f"Timestamp: {datetime.now(UTC).isoformat()}")
     print()
 
     # ── Step 0: ensure the library is importable ──────────────────────────
@@ -550,11 +555,10 @@ def main() -> int:
             with open(JEPA_EXP155_RESULTS) as f:
                 exp155 = json.load(f)
         JEPA_CARD_DIR.mkdir(parents=True, exist_ok=True)
-        (JEPA_CARD_DIR / "README.md").write_text(
-            _build_jepa_card(exp155), encoding="utf-8"
-        )
+        (JEPA_CARD_DIR / "README.md").write_text(_build_jepa_card(exp155), encoding="utf-8")
         if JEPA_V2_WEIGHTS.exists():
             import shutil
+
             shutil.copy2(JEPA_V2_WEIGHTS, JEPA_CARD_DIR / "jepa_predictor_v2.safetensors")
             print(f"[HF] JEPA card dir prepared at {JEPA_CARD_DIR}")
 
@@ -563,7 +567,7 @@ def main() -> int:
         write_results(
             {
                 "experiment": 164,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "mode": "dry_run",
                 "reason": auth_info,
                 "upload_script": str(UPLOAD_SCRIPT_PATH),
@@ -609,24 +613,19 @@ def main() -> int:
     write_results(
         {
             "experiment": 164,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "mode": "live",
             "authenticated_as": auth_info,
-            "uploads": [
-                {**u, "verify": v}
-                for u, v in zip(all_uploads, all_verifies)
-            ] + [
-                u for u in all_uploads[len(all_verifies):]  # any without verify
+            "uploads": [{**u, "verify": v} for u, v in zip(all_uploads, all_verifies)]
+            + [
+                u
+                for u in all_uploads[len(all_verifies) :]  # any without verify
             ],
             "readme_updates": readme_update_results,
             "summary": {
                 "total_uploads": len(all_uploads),
-                "successful_uploads": sum(
-                    1 for u in all_uploads if u.get("status") == "uploaded"
-                ),
-                "failed_uploads": sum(
-                    1 for u in all_uploads if u.get("status") == "failed"
-                ),
+                "successful_uploads": sum(1 for u in all_uploads if u.get("status") == "uploaded"),
+                "failed_uploads": sum(1 for u in all_uploads if u.get("status") == "failed"),
                 "readme_updates_applied": sum(
                     1 for r in readme_update_results if r.get("status") == "updated"
                 ),
@@ -645,7 +644,9 @@ def main() -> int:
     n_ok = sum(1 for u in all_uploads if u.get("status") == "uploaded")
     n_fail = sum(1 for u in all_uploads if u.get("status") == "failed")
     print(f"Uploads: {n_ok} succeeded, {n_fail} failed")
-    n_readme_ok = sum(1 for r in readme_update_results if r.get("status") in ("updated", "already_updated"))
+    n_readme_ok = sum(
+        1 for r in readme_update_results if r.get("status") in ("updated", "already_updated")
+    )
     print(f"README updates: {n_readme_ok}/{len(readme_update_results)} models processed")
     return 0 if n_fail == 0 else 1
 

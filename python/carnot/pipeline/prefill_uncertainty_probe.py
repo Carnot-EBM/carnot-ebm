@@ -58,7 +58,6 @@ from dataclasses import dataclass
 
 import numpy as np
 
-
 # ---------------------------------------------------------------------------
 # Core data type
 # ---------------------------------------------------------------------------
@@ -252,13 +251,13 @@ def compute_prompt_uncertainty(
     # Numerically stable softmax via log-sum-exp trick.
     # ---------------------------------------------------------------------------
     max_logit = float(np.max(logits))
-    shifted = logits - max_logit                     # prevent overflow in exp()
+    shifted = logits - max_logit  # prevent overflow in exp()
     exp_shifted = np.exp(shifted)
     sum_exp = float(np.sum(exp_shifted))
-    log_sum_exp = math.log(sum_exp)                  # = log(sum(exp(logits - max)))
+    log_sum_exp = math.log(sum_exp)  # = log(sum(exp(logits - max)))
     # log_probs[i] = logit[i] - max_logit - log(sum_exp(shifted))
-    log_probs = shifted - log_sum_exp                # shape (V,)
-    probs = np.exp(log_probs)                        # shape (V,); sums to 1
+    log_probs = shifted - log_sum_exp  # shape (V,)
+    probs = np.exp(log_probs)  # shape (V,); sums to 1
 
     # ---------------------------------------------------------------------------
     # Shannon entropy: H = −sum(p * log(p)), with 0·log(0) → 0.
@@ -273,7 +272,7 @@ def compute_prompt_uncertainty(
         # Only one token → always deterministic, entropy = 0.
         uncertainty_score = 0.0
     else:
-        max_entropy = math.log(float(vocab_size))   # log(V) in nats
+        max_entropy = math.log(float(vocab_size))  # log(V) in nats
         uncertainty_score = entropy_nats / max_entropy
 
     # Clamp to [0, 1] to guard against floating-point rounding at the boundary.
@@ -283,7 +282,7 @@ def compute_prompt_uncertainty(
     # Conjugate bound proxies from logit statistics.
     # ---------------------------------------------------------------------------
     # input_norm proxy: RMS of the logit vector (scale of model's "attention").
-    rms_logits = float(np.sqrt(np.mean(logits ** 2))) if vocab_size > 0 else 0.0
+    rms_logits = float(np.sqrt(np.mean(logits**2))) if vocab_size > 0 else 0.0
     # gradient_norm proxy: std of the logit vector (spread = sensitivity signal).
     std_logits = float(np.std(logits)) if vocab_size > 0 else 0.0
     conjugate = compute_conjugate_bound(rms_logits, std_logits)

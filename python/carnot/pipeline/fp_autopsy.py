@@ -49,16 +49,15 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from typing import Any
-
 
 # ---------------------------------------------------------------------------
 # FPCategory — the five root-cause buckets
 # ---------------------------------------------------------------------------
 
 
-class FPCategory(str, Enum):
+class FPCategory(StrEnum):
     """Root-cause category for a broken verify-repair case (FP = false positive).
 
     **Detailed explanation for engineers:**

@@ -22,6 +22,7 @@
 
 Spec: REQ-LEARN-057, REQ-LEARN-058, REQ-LEARN-059, SCENARIO-LEARN-098
 """
+
 from __future__ import annotations
 
 import json
@@ -66,6 +67,7 @@ tmpl.setup()
 # ---------------------------------------------------------------------------
 # Test query bank — 10 queries per constraint type (50 total)
 # ---------------------------------------------------------------------------
+
 
 def _build_queries() -> tuple[list[str], list[str]]:
     """Build 50 (query, label) pairs for retrieval_auc evaluation.
@@ -171,9 +173,7 @@ def _run_store(apply_orthogonalization: bool) -> tuple[EmbeddingConstraintStore,
 
     # Bootstrap from the five canonical violation-type patterns.
     # This mirrors what would happen if CaseMemory had accumulated these patterns.
-    store.from_casememory_patterns(
-        {"carry": 4, "sign": 4, "unit": 4, "comparison": 4, "causal": 4}
-    )
+    store.from_casememory_patterns({"carry": 4, "sign": 4, "unit": 4, "comparison": 4, "causal": 4})
 
     queries, labels = _build_queries()
     auc = store.retrieval_auc(queries, labels)

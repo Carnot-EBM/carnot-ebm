@@ -48,7 +48,8 @@ def collect_multilayer_activations(
     print(f"Loading {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         torch_dtype=torch.float16 if device == "cuda" else None,
     )
@@ -73,9 +74,13 @@ def collect_multilayer_activations(
         incorrect_answers = example["incorrect_answers"]
         best_answer = example.get("best_answer", "")
 
-        messages = [{"role": "user", "content": f"Answer briefly and factually in one sentence. {question}"}]
+        messages = [
+            {"role": "user", "content": f"Answer briefly and factually in one sentence. {question}"}
+        ]
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
         inputs = tokenizer(text, return_tensors="pt")
@@ -84,15 +89,18 @@ def collect_multilayer_activations(
         prompt_len = inputs["input_ids"].shape[1]
 
         with torch.no_grad():
-            outputs = model.generate(**inputs, max_new_tokens=80, do_sample=False,
-                                     pad_token_id=tokenizer.eos_token_id)
+            outputs = model.generate(
+                **inputs, max_new_tokens=80, do_sample=False, pad_token_id=tokenizer.eos_token_id
+            )
 
         gen_ids = outputs[0, prompt_len:]
         response = tokenizer.decode(gen_ids, skip_special_tokens=True)
         if "</think>" in response:
             response = response.split("</think>")[-1].strip()
 
-        is_correct = check_truthfulqa_answer(response, correct_answers, incorrect_answers, best_answer)
+        is_correct = check_truthfulqa_answer(
+            response, correct_answers, incorrect_answers, best_answer
+        )
         if is_correct:
             n_correct += 1
         else:
@@ -114,8 +122,10 @@ def collect_multilayer_activations(
             all_labels.append(1 if is_correct else 0)
 
         if (qi + 1) % 50 == 0:
-            print(f"  [{qi+1:3d}/{n_questions}] correct={n_correct} wrong={n_wrong} "
-                  f"({n_correct/(qi+1)*100:.0f}%) tokens={len(all_labels)}")
+            print(
+                f"  [{qi + 1:3d}/{n_questions}] correct={n_correct} wrong={n_wrong} "
+                f"({n_correct / (qi + 1) * 100:.0f}%) tokens={len(all_labels)}"
+            )
 
     del model, tokenizer
     if device == "cuda":
@@ -164,8 +174,11 @@ def train_and_eval(activations: np.ndarray, labels: np.ndarray, input_dim: int, 
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -241,7 +254,9 @@ def main() -> int:
     results["three_layers"] = acc
 
     # 5. Four layers (0 + 4 + 12 + 24 → 4096-dim)
-    four = np.concatenate([layer_arrays[0], layer_arrays[4], layer_arrays[12], layer_arrays[24]], axis=1)
+    four = np.concatenate(
+        [layer_arrays[0], layer_arrays[4], layer_arrays[12], layer_arrays[24]], axis=1
+    )
     acc, gap = train_and_eval(four, labels, hidden_dim * 4, "Layers 0+4+12+24 concat (4096-dim)")
     results["four_layers"] = acc
 

@@ -148,7 +148,13 @@ class TestMakeProbePairs:
     def test_correct_entries_get_label_0(self) -> None:
         # All correct entries should have label=0 (correct → probe should output low score)
         entries = [
-            {"question": "q", "response": "r", "model_id": "t", "is_correct": True, "constraint_types": []}
+            {
+                "question": "q",
+                "response": "r",
+                "model_id": "t",
+                "is_correct": True,
+                "constraint_types": [],
+            }
             for _ in range(10)
         ]
         pairs = _make_probe_pairs(entries, hidden_size=32, seed=5)
@@ -157,7 +163,13 @@ class TestMakeProbePairs:
 
     def test_incorrect_entries_get_label_1(self) -> None:
         entries = [
-            {"question": "q", "response": "r", "model_id": "t", "is_correct": False, "constraint_types": []}
+            {
+                "question": "q",
+                "response": "r",
+                "model_id": "t",
+                "is_correct": False,
+                "constraint_types": [],
+            }
             for _ in range(10)
         ]
         pairs = _make_probe_pairs(entries, hidden_size=32, seed=5)

@@ -139,7 +139,15 @@ CORPUS: list[tuple[str, bool]] = CORRECT_SNIPPETS + HALLUCINATED_SNIPPETS
 
 # Modules to introspect for the KnowledgeBase.
 MODULES_TO_INTROSPECT = [
-    "os", "sys", "json", "re", "math", "random", "collections", "itertools", "functools",
+    "os",
+    "sys",
+    "json",
+    "re",
+    "math",
+    "random",
+    "collections",
+    "itertools",
+    "functools",
 ]
 
 
@@ -162,9 +170,9 @@ def run_evaluation() -> dict:
             "n_hallucinated_snippets": n_hallucinated,
         }
 
-    tp = 0   # hallucinated snippet correctly flagged
-    fp = 0   # correct snippet incorrectly flagged (false positive — must be 0!)
-    fn = 0   # hallucinated snippet not flagged (false negative)
+    tp = 0  # hallucinated snippet correctly flagged
+    fp = 0  # correct snippet incorrectly flagged (false positive — must be 0!)
+    fn = 0  # hallucinated snippet not flagged (false negative)
 
     violations_per_snippet: list[dict] = []
 
@@ -172,22 +180,24 @@ def run_evaluation() -> dict:
         violations = verifier.verify(code)
         violation_detected = len(violations) > 0
 
-        violations_per_snippet.append({
-            "code_preview": code[:60].replace("\n", " "),
-            "label": "correct" if is_correct else "hallucinated",
-            "violations": [
-                {"module": v.module, "attr": v.attr, "violation_type": v.violation_type}
-                for v in violations
-            ],
-            "violation_detected": violation_detected,
-        })
+        violations_per_snippet.append(
+            {
+                "code_preview": code[:60].replace("\n", " "),
+                "label": "correct" if is_correct else "hallucinated",
+                "violations": [
+                    {"module": v.module, "attr": v.attr, "violation_type": v.violation_type}
+                    for v in violations
+                ],
+                "violation_detected": violation_detected,
+            }
+        )
 
         if is_correct and violation_detected:
-            fp += 1   # false positive: correct code wrongly flagged
+            fp += 1  # false positive: correct code wrongly flagged
         elif not is_correct and violation_detected:
-            tp += 1   # true positive: hallucination correctly caught
+            tp += 1  # true positive: hallucination correctly caught
         elif not is_correct and not violation_detected:
-            fn += 1   # false negative: hallucination missed
+            fn += 1  # false negative: hallucination missed
 
     precision = tp / (tp + fp) if (tp + fp) > 0 else 1.0
     recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
@@ -201,7 +211,7 @@ def run_evaluation() -> dict:
     elif recall >= 0.75:
         honest_verdict = "tier0d_viable"
     else:
-        honest_verdict = "tier0d_partial"            # safe but incomplete
+        honest_verdict = "tier0d_partial"  # safe but incomplete
 
     tier0d_deployed = precision == 1.0 and recall >= 0.75
 
@@ -223,6 +233,7 @@ def run_evaluation() -> dict:
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     tmpl = ExperimentTemplate(
@@ -252,8 +263,10 @@ def main() -> None:
         with open(out_path, "w") as fh:
             json.dump(artifact, fh, indent=2)
 
-        print(f"precision={metrics['precision']:.4f}  recall={metrics['recall']:.4f}  "
-              f"f1={metrics['f1']:.4f}  honest_verdict={metrics['honest_verdict']}")
+        print(
+            f"precision={metrics['precision']:.4f}  recall={metrics['recall']:.4f}  "
+            f"f1={metrics['f1']:.4f}  honest_verdict={metrics['honest_verdict']}"
+        )
         print(f"Artifact written: {out_path}")
 
     tmpl.assert_deliverable_written()

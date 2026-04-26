@@ -99,7 +99,9 @@ def main() -> None:
 
             smi_result = subprocess.run(
                 ["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits", "-i 0"],
-                capture_output=True, text=True, timeout=30,
+                capture_output=True,
+                text=True,
+                timeout=30,
             )
             gpu0_vram_used_mb_before = float(smi_result.stdout.strip().splitlines()[0])
         except Exception:
@@ -124,7 +126,9 @@ def main() -> None:
         try:
             smi_after = subprocess.run(
                 ["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits", "-i 0"],
-                capture_output=True, text=True, timeout=30,
+                capture_output=True,
+                text=True,
+                timeout=30,
             )
             gpu0_vram_used_mb_after = float(smi_after.stdout.strip().splitlines()[0])
         except Exception:
@@ -136,8 +140,7 @@ def main() -> None:
         try:
             setup_gpu_source = inspect.getsource(ExperimentTemplate.setup_gpu)
             setup_gpu_wired = (
-                "kill_gpu_zombies" in setup_gpu_source
-                and "zombie_kill_result" in setup_gpu_source
+                "kill_gpu_zombies" in setup_gpu_source and "zombie_kill_result" in setup_gpu_source
             )
         except Exception:
             setup_gpu_wired = False

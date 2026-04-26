@@ -112,8 +112,15 @@ class TestHypothesisA:
     def test_returns_required_keys(self):
         # Spec: REQ-PSV-013-1
         result = self.diag.test_hypothesis_a()
-        for key in ("fp_rates", "fp_at_step_0", "fp_at_step_10", "fp_at_step_20",
-                    "fp_at_step_29", "slope", "confirmed"):
+        for key in (
+            "fp_rates",
+            "fp_at_step_0",
+            "fp_at_step_10",
+            "fp_at_step_20",
+            "fp_at_step_29",
+            "slope",
+            "confirmed",
+        ):
             assert key in result, f"Missing key: {key}"
 
     def test_fp_rates_length(self):
@@ -170,8 +177,15 @@ class TestHypothesisB:
 
     def test_returns_required_keys(self):
         result = self.diag.test_hypothesis_b()
-        for key in ("fp_rates", "fp_at_step_0", "fp_at_step_10", "fp_at_step_20",
-                    "fp_at_step_29", "slope", "confirmed"):
+        for key in (
+            "fp_rates",
+            "fp_at_step_0",
+            "fp_at_step_10",
+            "fp_at_step_20",
+            "fp_at_step_29",
+            "slope",
+            "confirmed",
+        ):
             assert key in result
 
     def test_fp_rates_length(self):
@@ -221,8 +235,15 @@ class TestHypothesisC:
 
     def test_returns_required_keys(self):
         result = self.diag.test_hypothesis_c()
-        for key in ("fp_rates", "fp_at_step_0", "fp_at_step_10", "fp_at_step_20",
-                    "fp_at_step_29", "slope", "confirmed"):
+        for key in (
+            "fp_rates",
+            "fp_at_step_0",
+            "fp_at_step_10",
+            "fp_at_step_20",
+            "fp_at_step_29",
+            "slope",
+            "confirmed",
+        ):
             assert key in result
 
     def test_fp_rates_length(self):
@@ -323,11 +344,13 @@ class TestDiagnose:
         # So we expect multiple_hypotheses
         d = PSVDiagnostic(seed=42, n_steps=30)
         result = d.diagnose()
-        n_confirmed = sum([
-            result.hypothesis_a_confirmed,
-            result.hypothesis_b_confirmed,
-            result.hypothesis_c_confirmed,
-        ])
+        n_confirmed = sum(
+            [
+                result.hypothesis_a_confirmed,
+                result.hypothesis_b_confirmed,
+                result.hypothesis_c_confirmed,
+            ]
+        )
         if n_confirmed >= 2:
             assert result.primary_hypothesis == "multiple_hypotheses"
 
@@ -339,14 +362,17 @@ class TestDiagnose:
                 r = super().test_hypothesis_a()
                 r["confirmed"] = True
                 return r
+
             def test_hypothesis_b(self):
                 r = super().test_hypothesis_b()
                 r["confirmed"] = False
                 return r
+
             def test_hypothesis_c(self):
                 r = super().test_hypothesis_c()
                 r["confirmed"] = False
                 return r
+
         result = _SingleADiagnostic(seed=42, n_steps=10).diagnose()
         assert result.primary_hypothesis == "hypothesis_a_confirmed"
         assert result.hypothesis_a_confirmed is True
@@ -358,14 +384,17 @@ class TestDiagnose:
                 r = super().test_hypothesis_a()
                 r["confirmed"] = False
                 return r
+
             def test_hypothesis_b(self):
                 r = super().test_hypothesis_b()
                 r["confirmed"] = False
                 return r
+
             def test_hypothesis_c(self):
                 r = super().test_hypothesis_c()
                 r["confirmed"] = False
                 return r
+
         result = _NoneConfirmedDiagnostic(seed=42, n_steps=10).diagnose()
         assert result.primary_hypothesis == "diagnosis_inconclusive"
 
@@ -375,14 +404,17 @@ class TestDiagnose:
                 r = super().test_hypothesis_a()
                 r["confirmed"] = False
                 return r
+
             def test_hypothesis_b(self):
                 r = super().test_hypothesis_b()
                 r["confirmed"] = True
                 return r
+
             def test_hypothesis_c(self):
                 r = super().test_hypothesis_c()
                 r["confirmed"] = False
                 return r
+
         result = _OnlyBDiagnostic(seed=42, n_steps=10).diagnose()
         assert result.primary_hypothesis == "hypothesis_b_confirmed"
 
@@ -392,14 +424,17 @@ class TestDiagnose:
                 r = super().test_hypothesis_a()
                 r["confirmed"] = False
                 return r
+
             def test_hypothesis_b(self):
                 r = super().test_hypothesis_b()
                 r["confirmed"] = False
                 return r
+
             def test_hypothesis_c(self):
                 r = super().test_hypothesis_c()
                 r["confirmed"] = True
                 return r
+
         result = _OnlyCDiagnostic(seed=42, n_steps=10).diagnose()
         assert result.primary_hypothesis == "hypothesis_c_confirmed"
 

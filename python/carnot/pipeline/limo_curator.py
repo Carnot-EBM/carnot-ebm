@@ -36,7 +36,6 @@ import json
 from pathlib import Path
 from typing import NamedTuple
 
-
 # ---------------------------------------------------------------------------
 # Data types
 # ---------------------------------------------------------------------------
@@ -332,18 +331,66 @@ def _make_humaneval_pairs(n: int) -> list[CuratedPair]:
         be able to identify the incorrect calculation in both domains.
     """
     templates = [
-        ("def add(a, b): return a + b; add(3, 4)", "The function returns 3 + 4 = 7.", "The function returns 3 + 4 = 8."),
-        ("def mul(a, b): return a * b; mul(6, 7)", "The function returns 6 * 7 = 42.", "The function returns 6 * 7 = 43."),
-        ("def sub(a, b): return a - b; sub(10, 3)", "The function returns 10 - 3 = 7.", "The function returns 10 - 3 = 8."),
-        ("def div(a, b): return a / b; div(15, 3)", "The function returns 15 / 3 = 5.", "The function returns 15 / 3 = 6."),
-        ("def square(n): return n * n; square(5)", "The function returns 5 * 5 = 25.", "The function returns 5 * 5 = 26."),
-        ("def cube(n): return n ** 3; cube(3)", "The function returns 3 ** 3 = 27.", "The function returns 3 ** 3 = 28."),
-        ("def half(n): return n // 2; half(8)", "The function returns 8 // 2 = 4.", "The function returns 8 // 2 = 5."),
-        ("def double(n): return 2 * n; double(9)", "The function returns 2 * 9 = 18.", "The function returns 2 * 9 = 19."),
-        ("def mod(a, b): return a % b; mod(10, 3)", "The function returns 10 % 3 = 1.", "The function returns 10 % 3 = 2."),
-        ("def power(a, b): return a ** b; power(2, 8)", "The function returns 2 ** 8 = 256.", "The function returns 2 ** 8 = 255."),
-        ("def avg(a, b): return (a + b) / 2; avg(4, 6)", "The function returns (4 + 6) / 2 = 5.", "The function returns (4 + 6) / 2 = 4."),
-        ("def min2(a, b): return a if a < b else b; min2(3, 7)", "The minimum is 3.", "The minimum is 7."),
+        (
+            "def add(a, b): return a + b; add(3, 4)",
+            "The function returns 3 + 4 = 7.",
+            "The function returns 3 + 4 = 8.",
+        ),
+        (
+            "def mul(a, b): return a * b; mul(6, 7)",
+            "The function returns 6 * 7 = 42.",
+            "The function returns 6 * 7 = 43.",
+        ),
+        (
+            "def sub(a, b): return a - b; sub(10, 3)",
+            "The function returns 10 - 3 = 7.",
+            "The function returns 10 - 3 = 8.",
+        ),
+        (
+            "def div(a, b): return a / b; div(15, 3)",
+            "The function returns 15 / 3 = 5.",
+            "The function returns 15 / 3 = 6.",
+        ),
+        (
+            "def square(n): return n * n; square(5)",
+            "The function returns 5 * 5 = 25.",
+            "The function returns 5 * 5 = 26.",
+        ),
+        (
+            "def cube(n): return n ** 3; cube(3)",
+            "The function returns 3 ** 3 = 27.",
+            "The function returns 3 ** 3 = 28.",
+        ),
+        (
+            "def half(n): return n // 2; half(8)",
+            "The function returns 8 // 2 = 4.",
+            "The function returns 8 // 2 = 5.",
+        ),
+        (
+            "def double(n): return 2 * n; double(9)",
+            "The function returns 2 * 9 = 18.",
+            "The function returns 2 * 9 = 19.",
+        ),
+        (
+            "def mod(a, b): return a % b; mod(10, 3)",
+            "The function returns 10 % 3 = 1.",
+            "The function returns 10 % 3 = 2.",
+        ),
+        (
+            "def power(a, b): return a ** b; power(2, 8)",
+            "The function returns 2 ** 8 = 256.",
+            "The function returns 2 ** 8 = 255.",
+        ),
+        (
+            "def avg(a, b): return (a + b) / 2; avg(4, 6)",
+            "The function returns (4 + 6) / 2 = 5.",
+            "The function returns (4 + 6) / 2 = 4.",
+        ),
+        (
+            "def min2(a, b): return a if a < b else b; min2(3, 7)",
+            "The minimum is 3.",
+            "The minimum is 7.",
+        ),
     ]
     pairs: list[CuratedPair] = []
     for i in range(min(n, len(templates))):
@@ -374,18 +421,54 @@ def _make_svamp_pairs(n: int) -> list[CuratedPair]:
         distribution helps the model generalise beyond GSM8K surface patterns.
     """
     templates = [
-        ("There are 5 apples and 3 oranges.", "Total fruit = 5 + 3 = 8.", "Total fruit = 5 + 3 = 9."),
-        ("A train travels 60 km/h for 3 hours.", "Distance = 60 * 3 = 180 km.", "Distance = 60 * 3 = 190 km."),
-        ("Tom has 12 candies. He gives 4 to Jane.", "Remaining = 12 - 4 = 8.", "Remaining = 12 - 4 = 7."),
-        ("Each box holds 6 items. There are 7 boxes.", "Total items = 6 * 7 = 42.", "Total items = 6 * 7 = 43."),
-        ("A store sold 24 books over 4 days equally.", "Books per day = 24 / 4 = 6.", "Books per day = 24 / 4 = 5."),
-        ("Maria earns $15 per hour and works 8 hours.", "Total = 15 * 8 = $120.", "Total = 15 * 8 = $125."),
+        (
+            "There are 5 apples and 3 oranges.",
+            "Total fruit = 5 + 3 = 8.",
+            "Total fruit = 5 + 3 = 9.",
+        ),
+        (
+            "A train travels 60 km/h for 3 hours.",
+            "Distance = 60 * 3 = 180 km.",
+            "Distance = 60 * 3 = 190 km.",
+        ),
+        (
+            "Tom has 12 candies. He gives 4 to Jane.",
+            "Remaining = 12 - 4 = 8.",
+            "Remaining = 12 - 4 = 7.",
+        ),
+        (
+            "Each box holds 6 items. There are 7 boxes.",
+            "Total items = 6 * 7 = 42.",
+            "Total items = 6 * 7 = 43.",
+        ),
+        (
+            "A store sold 24 books over 4 days equally.",
+            "Books per day = 24 / 4 = 6.",
+            "Books per day = 24 / 4 = 5.",
+        ),
+        (
+            "Maria earns $15 per hour and works 8 hours.",
+            "Total = 15 * 8 = $120.",
+            "Total = 15 * 8 = $125.",
+        ),
         ("A rectangle is 9 cm by 4 cm.", "Area = 9 * 4 = 36 sq cm.", "Area = 9 * 4 = 34 sq cm."),
         ("There are 3 groups of 11 students.", "Total = 3 * 11 = 33.", "Total = 3 * 11 = 32."),
-        ("A bus had 40 passengers. 15 got off.", "Remaining = 40 - 15 = 25.", "Remaining = 40 - 15 = 24."),
+        (
+            "A bus had 40 passengers. 15 got off.",
+            "Remaining = 40 - 15 = 25.",
+            "Remaining = 40 - 15 = 24.",
+        ),
         ("Sam ran 5 km per day for 6 days.", "Total = 5 * 6 = 30 km.", "Total = 5 * 6 = 31 km."),
-        ("A pond has 100 fish. 37 are caught.", "Remaining = 100 - 37 = 63.", "Remaining = 100 - 37 = 64."),
-        ("Each row has 8 seats. There are 9 rows.", "Total seats = 8 * 9 = 72.", "Total seats = 8 * 9 = 73."),
+        (
+            "A pond has 100 fish. 37 are caught.",
+            "Remaining = 100 - 37 = 63.",
+            "Remaining = 100 - 37 = 64.",
+        ),
+        (
+            "Each row has 8 seats. There are 9 rows.",
+            "Total seats = 8 * 9 = 72.",
+            "Total seats = 8 * 9 = 73.",
+        ),
     ]
     pairs: list[CuratedPair] = []
     for i in range(min(n, len(templates))):

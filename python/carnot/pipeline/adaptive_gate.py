@@ -35,6 +35,7 @@ Spec: REQ-VERIFY-146, REQ-VERIFY-147, SCENARIO-VERIFY-146, SCENARIO-VERIFY-147
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import tempfile
@@ -117,19 +118,15 @@ class ModelAdaptiveThresholdGate:
         """
         self.state_file.parent.mkdir(parents=True, exist_ok=True)
         # Write to a sibling temp file then atomically rename.
-        fd, tmp_path = tempfile.mkstemp(
-            dir=self.state_file.parent, suffix=".tmp"
-        )
+        fd, tmp_path = tempfile.mkstemp(dir=self.state_file.parent, suffix=".tmp")
         try:
             with os.fdopen(fd, "w") as fh:
                 json.dump(self.state, fh, indent=2)
             os.replace(tmp_path, self.state_file)
         except Exception:
             # Clean up the temp file if anything went wrong.
-            try:
+            with contextlib.suppress(OSError):
                 os.unlink(tmp_path)
-            except OSError:
-                pass
             raise
 
     def load(self) -> None:

@@ -42,7 +42,10 @@ from experiment_894_vjepa_streaming_filter import (
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _make_processor(violation_prob: float, threshold: float = 0.75, penalty_scale: float = 2.0) -> VJEPAStreamingLogitsProcessor:
+
+def _make_processor(
+    violation_prob: float, threshold: float = 0.75, penalty_scale: float = 2.0
+) -> VJEPAStreamingLogitsProcessor:
     """Build a VJEPAStreamingLogitsProcessor whose VJEPA always returns violation_prob."""
     vjepa = MagicMock()
     tokenizer = MagicMock()
@@ -62,6 +65,7 @@ def _make_processor(violation_prob: float, threshold: float = 0.75, penalty_scal
 def _make_tensors(logit_value: float = 1.0, batch: int = 1, vocab: int = 10):
     """Return mock (input_ids, scores) tensors using a float list stand-in."""
     import torch
+
     input_ids = torch.zeros((batch, 5), dtype=torch.long)
     scores = torch.full((batch, vocab), logit_value)
     return input_ids, scores
@@ -71,12 +75,14 @@ def _make_tensors(logit_value: float = 1.0, batch: int = 1, vocab: int = 10):
 # REQ-VERIFY-177-1: scores unchanged when below threshold
 # ---------------------------------------------------------------------------
 
+
 class TestScoresUnchangedBelowThreshold:
     """REQ-VERIFY-177-1 — no penalty when violation_prob <= threshold."""
 
     def test_scores_unchanged_at_zero_violation(self):
         """violation_prob=0.0 should never trigger penalty."""
         import torch
+
         processor = _make_processor(violation_prob=0.0)
         input_ids, scores = _make_tensors(logit_value=4.0)
         result = processor(input_ids, scores)
@@ -85,6 +91,7 @@ class TestScoresUnchangedBelowThreshold:
     def test_scores_unchanged_exactly_at_threshold(self):
         """violation_prob == threshold is NOT strictly > threshold; no penalty."""
         import torch
+
         processor = _make_processor(violation_prob=0.75, threshold=0.75)
         input_ids, scores = _make_tensors(logit_value=3.0)
         result = processor(input_ids, scores)
@@ -103,12 +110,14 @@ class TestScoresUnchangedBelowThreshold:
 # REQ-VERIFY-177-2: scores divided when above threshold
 # ---------------------------------------------------------------------------
 
+
 class TestScoresDividedAboveThreshold:
     """REQ-VERIFY-177-2 — logits divided by penalty_scale when threshold exceeded."""
 
     def test_scores_divided_by_penalty_scale(self):
         """violation_prob=0.9 > 0.75: scores / 2.0."""
         import torch
+
         processor = _make_processor(violation_prob=0.9, penalty_scale=2.0)
         input_ids, scores = _make_tensors(logit_value=4.0)
         result = processor(input_ids, scores)
@@ -118,6 +127,7 @@ class TestScoresDividedAboveThreshold:
     def test_custom_penalty_scale_applied(self):
         """penalty_scale=3.0 should divide by 3.0."""
         import torch
+
         processor = _make_processor(violation_prob=0.9, penalty_scale=3.0)
         input_ids, scores = _make_tensors(logit_value=9.0)
         result = processor(input_ids, scores)
@@ -127,6 +137,7 @@ class TestScoresDividedAboveThreshold:
     def test_just_above_threshold_triggers_penalty(self):
         """0.751 > 0.75 should trigger penalty."""
         import torch
+
         processor = _make_processor(violation_prob=0.751, threshold=0.75)
         input_ids, scores = _make_tensors(logit_value=2.0)
         result = processor(input_ids, scores)
@@ -137,6 +148,7 @@ class TestScoresDividedAboveThreshold:
 # ---------------------------------------------------------------------------
 # REQ-VERIFY-177-3: applied_count increments exactly on each trigger
 # ---------------------------------------------------------------------------
+
 
 class TestAppliedCount:
     """REQ-VERIFY-177-3 — applied_count is accurate."""
@@ -158,6 +170,7 @@ class TestAppliedCount:
     def test_applied_count_mixed_calls(self):
         """3 above-threshold calls and 2 below: applied_count == 3."""
         import torch
+
         high_proc = _make_processor(violation_prob=0.9)
         low_proc = _make_processor(violation_prob=0.1)
         input_ids, scores = _make_tensors()
@@ -174,6 +187,7 @@ class TestAppliedCount:
 # REQ-VERIFY-177-4: default constructor arguments
 # ---------------------------------------------------------------------------
 
+
 class TestDefaultConstructorArguments:
     """REQ-VERIFY-177-4 — constructable with just vjepa and tokenizer."""
 
@@ -189,6 +203,7 @@ class TestDefaultConstructorArguments:
 # ---------------------------------------------------------------------------
 # assign_honest_verdict
 # ---------------------------------------------------------------------------
+
 
 class TestAssignHonestVerdict:
     """assign_honest_verdict maps outcomes correctly."""
@@ -209,6 +224,7 @@ class TestAssignHonestVerdict:
 # ---------------------------------------------------------------------------
 # _extract_numeric_answer and _is_correct
 # ---------------------------------------------------------------------------
+
 
 class TestExtractNumericAnswer:
     """_extract_numeric_answer handles multiple formats."""

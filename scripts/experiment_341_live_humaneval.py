@@ -198,14 +198,10 @@ def build_humaneval_artifact(
     headline_improvement = round(pass_at_1_after - pass_at_1, 6)
 
     n_repaired = sum(1 for r in results if r.repair_attempted)
-    n_repair_succeeded = sum(
-        1 for r in results if r.repair_attempted and r.final_passed_tests
-    )
+    n_repair_succeeded = sum(1 for r in results if r.repair_attempted and r.final_passed_tests)
     total_violations = sum(r.violations_found for r in results)
 
-    headline_label = (
-        "code_verification_positive" if headline_improvement > 0 else "no_improvement"
-    )
+    headline_label = "code_verification_positive" if headline_improvement > 0 else "no_improvement"
 
     return {
         "humaneval_schema": "carnot.humaneval_benchmark.v1",
@@ -266,9 +262,7 @@ def _load_problems() -> list[dict[str, Any]]:
         return _manual_problems()
 
 
-def _parse_official_tests(
-    test_str: str, entry_point: str
-) -> list[tuple[list[Any], Any]]:
+def _parse_official_tests(test_str: str, entry_point: str) -> list[tuple[list[Any], Any]]:
     """Parse HumanEval assert-style test strings into (args, expected) pairs.
 
     **Detailed explanation for engineers:**
@@ -285,9 +279,7 @@ def _parse_official_tests(
         line = line.strip()
         if not line.startswith("assert"):
             continue
-        match = re.match(
-            r"assert\s+candidate\((.+?)\)\s*==\s*(.+?)(?:\s*$|\s*,)", line
-        )
+        match = re.match(r"assert\s+candidate\((.+?)\)\s*==\s*(.+?)(?:\s*$|\s*,)", line)
         if match:
             try:
                 args = eval(f"[{match.group(1)}]")  # noqa: S307
@@ -318,321 +310,460 @@ def _manual_problems() -> list[dict[str, Any]]:
 
     raw = [
         # (task_id, entry_point, prompt_body, canonical, test_cases)
-        ("HumanEval/0", "has_close_elements",
-         "def has_close_elements(numbers: list, threshold: float) -> bool:\n"
-         "    \"\"\"Check if any two numbers in list are closer than threshold.\"\"\"\n",
-         "    for i in range(len(numbers)):\n        for j in range(i+1, len(numbers)):\n"
-         "            if abs(numbers[i]-numbers[j]) < threshold:\n                return True\n"
-         "    return False\n",
-         [([[1.0, 2.0, 3.9, 4.0], 0.5], True), ([[1.0, 2.0, 3.9, 4.0], 0.05], False)]),
-        ("HumanEval/1", "separate_paren_groups",
-         "def separate_paren_groups(paren_string: str) -> list:\n"
-         "    \"\"\"Separate groups of nested parentheses.\"\"\"\n",
-         "    result, depth, current = [], 0, ''\n"
-         "    for c in paren_string:\n        if c == '(':\n            depth += 1\n"
-         "            current += c\n        elif c == ')':\n            current += c\n"
-         "            depth -= 1\n            if depth == 0:\n"
-         "                result.append(current)\n                current = ''\n"
-         "    return result\n",
-         [(["(()()) ((())) () ((())()())"], ["(()())", "((()))", "()", "((())()())"])]),
-        ("HumanEval/2", "truncate_number",
-         "def truncate_number(number: float) -> float:\n"
-         "    \"\"\"Return the decimal part of a float.\"\"\"\n",
-         "    return number % 1.0\n",
-         [([3.5], 0.5), ([1.25], 0.25)]),
-        ("HumanEval/3", "below_zero",
-         "def below_zero(operations: list) -> bool:\n"
-         "    \"\"\"Return True if account balance ever goes below zero.\"\"\"\n",
-         "    balance = 0\n    for op in operations:\n        balance += op\n"
-         "        if balance < 0:\n            return True\n    return False\n",
-         [([[1, 2, -4, 5]], True), ([[1, 2, 3]], False)]),
-        ("HumanEval/4", "mean_absolute_deviation",
-         "def mean_absolute_deviation(numbers: list) -> float:\n"
-         "    \"\"\"Return mean absolute deviation from the mean.\"\"\"\n",
-         "    mean = sum(numbers) / len(numbers)\n"
-         "    return sum(abs(x - mean) for x in numbers) / len(numbers)\n",
-         [([[1.0, 2.0, 3.0, 4.0]], 1.0)]),
-        ("HumanEval/5", "intersperse",
-         "def intersperse(numbers: list, delimiter: int) -> list:\n"
-         "    \"\"\"Insert delimiter between elements.\"\"\"\n",
-         "    result = []\n    for i, n in enumerate(numbers):\n"
-         "        result.append(n)\n        if i < len(numbers)-1:\n"
-         "            result.append(delimiter)\n    return result\n",
-         [([[1, 2, 3], 4], [1, 4, 2, 4, 3])]),
-        ("HumanEval/6", "parse_nested_parens",
-         "def parse_nested_parens(paren_string: str) -> list:\n"
-         "    \"\"\"Return max nesting depth for each paren group.\"\"\"\n",
-         "    groups = paren_string.split()\n    result = []\n"
-         "    for g in groups:\n        depth = max_depth = 0\n"
-         "        for c in g:\n            if c == '(':\n                depth += 1\n"
-         "                max_depth = max(max_depth, depth)\n"
-         "            elif c == ')':\n                depth -= 1\n"
-         "        result.append(max_depth)\n    return result\n",
-         [(["(()()) ((())) ()"], [2, 3, 1])]),
-        ("HumanEval/7", "filter_by_substring",
-         "def filter_by_substring(strings: list, substring: str) -> list:\n"
-         "    \"\"\"Filter strings containing a given substring.\"\"\"\n",
-         "    return [s for s in strings if substring in s]\n",
-         [([["abc", "def", "abx", "xyz"], "ab"], ["abc", "abx"])]),
-        ("HumanEval/8", "sum_product",
-         "def sum_product(numbers: list) -> tuple:\n"
-         "    \"\"\"Return (sum, product) of all integers in list.\"\"\"\n",
-         "    s, p = 0, 1\n    for n in numbers:\n        s += n; p *= n\n"
-         "    return (s, p)\n",
-         [([[1, 2, 3, 4]], (10, 24)), ([[]], (0, 1))]),
-        ("HumanEval/9", "rolling_max",
-         "def rolling_max(numbers: list) -> list:\n"
-         "    \"\"\"Return rolling max of list.\"\"\"\n",
-         "    result, cur = [], None\n    for n in numbers:\n"
-         "        cur = n if cur is None else max(cur, n)\n        result.append(cur)\n"
-         "    return result\n",
-         [([[3, 1, 2, 4]], [3, 3, 3, 4])]),
-        ("HumanEval/10", "make_palindrome",
-         "def make_palindrome(string: str) -> str:\n"
-         "    \"\"\"Find the shortest palindrome that begins with a supplied string.\"\"\"\n",
-         "    for i in range(len(string)):\n        suffix = string[i:]\n"
-         "        if suffix == suffix[::-1]:\n            return string + string[:i][::-1]\n"
-         "    return string + string[:-1][::-1]\n",
-         [(["cat"], "catac"), (["cata"], "catac")]),
-        ("HumanEval/11", "string_xor",
-         "def string_xor(a: str, b: str) -> str:\n"
-         "    \"\"\"XOR two binary strings.\"\"\"\n",
-         "    return ''.join('0' if x == y else '1' for x, y in zip(a, b))\n",
-         [(["010", "110"], "100")]),
-        ("HumanEval/12", "longest",
-         "def longest(strings: list) -> str:\n"
-         "    \"\"\"Return the longest string (None if empty list).\"\"\"\n",
-         "    if not strings:\n        return None\n"
-         "    return max(strings, key=len)\n",
-         [([["a", "bb", "ccc"]], "ccc"), ([[]], None)]),
-        ("HumanEval/13", "greatest_common_divisor",
-         "def greatest_common_divisor(a: int, b: int) -> int:\n"
-         "    \"\"\"Return GCD of two integers.\"\"\"\n",
-         "    while b:\n        a, b = b, a % b\n    return a\n",
-         [([3, 5], 1), ([25, 15], 5)]),
-        ("HumanEval/14", "all_prefixes",
-         "def all_prefixes(string: str) -> list:\n"
-         "    \"\"\"Return list of all prefixes of input string.\"\"\"\n",
-         "    return [string[:i+1] for i in range(len(string))]\n",
-         [(["abc"], ["a", "ab", "abc"])]),
-        ("HumanEval/15", "string_sequence",
-         "def string_sequence(n: int) -> str:\n"
-         "    \"\"\"Return space-delimited string of numbers from 0 to n.\"\"\"\n",
-         "    return ' '.join(str(i) for i in range(n+1))\n",
-         [([5], "0 1 2 3 4 5")]),
-        ("HumanEval/16", "count_distinct_characters",
-         "def count_distinct_characters(string: str) -> int:\n"
-         "    \"\"\"Return number of distinct characters (case-insensitive).\"\"\"\n",
-         "    return len(set(string.lower()))\n",
-         [(["xyzXYZ"], 3), (["Jerry"], 4)]),
-        ("HumanEval/17", "parse_music",
-         "def parse_music(music_string: str) -> list:\n"
-         "    \"\"\"Parse music note durations from string.\"\"\"\n",
-         "    note_map = {'o': 4, 'o|': 2, '.|': 1}\n"
-         "    return [note_map[n] for n in music_string.split() if n in note_map]\n",
-         [(["o o| .| o|"], [4, 2, 1, 2])]),
-        ("HumanEval/18", "how_many_times",
-         "def how_many_times(string: str, substring: str) -> int:\n"
-         "    \"\"\"Count overlapping occurrences of substring in string.\"\"\"\n",
-         "    count = 0\n    for i in range(len(string) - len(substring) + 1):\n"
-         "        if string[i:i+len(substring)] == substring:\n            count += 1\n"
-         "    return count\n",
-         [(["", "x"], 0), (["aaaa", "aa"], 3)]),
-        ("HumanEval/19", "sort_numbers",
-         "def sort_numbers(numbers: str) -> str:\n"
-         "    \"\"\"Sort space-delimited number words.\"\"\"\n",
-         "    order = ['zero','one','two','three','four','five','six','seven','eight','nine']\n"
-         "    return ' '.join(sorted(numbers.split(), key=lambda x: order.index(x)))\n",
-         [(["three one five"], "one three five")]),
-        ("HumanEval/20", "find_closest_elements",
-         "def find_closest_elements(numbers: list) -> tuple:\n"
-         "    \"\"\"Return pair of closest elements from sorted list.\"\"\"\n",
-         "    closest = None\n    min_diff = float('inf')\n"
-         "    for i in range(len(numbers)-1):\n"
-         "        diff = numbers[i+1] - numbers[i]\n"
-         "        if diff < min_diff:\n            min_diff = diff\n"
-         "            closest = (numbers[i], numbers[i+1])\n"
-         "    return closest\n",
-         [([[1.0, 2.0, 3.5, 3.9, 5.0]], (3.5, 3.9))]),
-        ("HumanEval/21", "rescale_to_unit",
-         "def rescale_to_unit(numbers: list) -> list:\n"
-         "    \"\"\"Rescale list to [0, 1].\"\"\"\n",
-         "    mn, mx = min(numbers), max(numbers)\n"
-         "    return [(x - mn) / (mx - mn) for x in numbers]\n",
-         [([[1.0, 2.0, 3.0, 4.0, 5.0]], [0.0, 0.25, 0.5, 0.75, 1.0])]),
-        ("HumanEval/22", "filter_integers",
-         "def filter_integers(values: list) -> list:\n"
-         "    \"\"\"Keep only integers from mixed list.\"\"\"\n",
-         "    return [x for x in values if isinstance(x, int)]\n",
-         [([[1, 2.0, 'a', 3]], [1, 3])]),
-        ("HumanEval/23", "strlen",
-         "def strlen(string: str) -> int:\n"
-         "    \"\"\"Return length of string.\"\"\"\n",
-         "    return len(string)\n",
-         [([""], 0), (["x"], 1)]),
-        ("HumanEval/24", "largest_divisor",
-         "def largest_divisor(n: int) -> int:\n"
-         "    \"\"\"Return largest divisor of n less than n.\"\"\"\n",
-         "    for i in range(n-1, 0, -1):\n        if n % i == 0:\n            return i\n"
-         "    return 1\n",
-         [([15], 5), ([100], 50)]),
-        ("HumanEval/25", "factorize",
-         "def factorize(n: int) -> list:\n"
-         "    \"\"\"Return prime factorization.\"\"\"\n",
-         "    factors = []\n    d = 2\n    while d * d <= n:\n"
-         "        while n % d == 0:\n            factors.append(d); n //= d\n        d += 1\n"
-         "    if n > 1:\n        factors.append(n)\n    return factors\n",
-         [([8], [2, 2, 2]), ([25], [5, 5])]),
-        ("HumanEval/26", "remove_duplicates",
-         "def remove_duplicates(numbers: list) -> list:\n"
-         "    \"\"\"Remove elements that appear more than once.\"\"\"\n",
-         "    from collections import Counter\n    c = Counter(numbers)\n"
-         "    return [x for x in numbers if c[x] == 1]\n",
-         [([[1, 2, 3, 2, 4]], [1, 3, 4])]),
-        ("HumanEval/27", "flip_case",
-         "def flip_case(string: str) -> str:\n"
-         "    \"\"\"Flip uppercase to lowercase and vice versa.\"\"\"\n",
-         "    return string.swapcase()\n",
-         [(["Hello"], "hELLO")]),
-        ("HumanEval/28", "concatenate",
-         "def concatenate(strings: list) -> str:\n"
-         "    \"\"\"Concatenate list of strings.\"\"\"\n",
-         "    return ''.join(strings)\n",
-         [([["a", "b", "c"]], "abc"), ([[]], "")]),
-        ("HumanEval/29", "filter_by_prefix",
-         "def filter_by_prefix(strings: list, prefix: str) -> list:\n"
-         "    \"\"\"Keep strings starting with given prefix.\"\"\"\n",
-         "    return [s for s in strings if s.startswith(prefix)]\n",
-         [([["abc", "bcd", "axy"], "a"], ["abc", "axy"])]),
-        ("HumanEval/30", "get_positive",
-         "def get_positive(l: list) -> list:\n"
-         "    \"\"\"Return only positive numbers from list.\"\"\"\n",
-         "    return [x for x in l if x > 0]\n",
-         [([[-1, 2, -4, 5, 6]], [2, 5, 6])]),
-        ("HumanEval/31", "is_prime",
-         "def is_prime(n: int) -> bool:\n"
-         "    \"\"\"Return True if n is prime.\"\"\"\n",
-         "    if n < 2:\n        return False\n    for i in range(2, int(n**0.5)+1):\n"
-         "        if n % i == 0:\n            return False\n    return True\n",
-         [([6], False), ([101], True)]),
-        ("HumanEval/32", "find_zero",
-         "def find_zero(xs: list) -> float:\n"
-         "    \"\"\"Find zero of polynomial via bisection (simplified).\"\"\"\n",
-         "    def poly(x):\n        return sum(c * x**i for i, c in enumerate(xs))\n"
-         "    lo, hi = -1e6, 1e6\n"
-         "    for _ in range(100):\n        mid = (lo + hi) / 2\n"
-         "        if poly(mid) * poly(lo) <= 0:\n            hi = mid\n"
-         "        else:\n            lo = mid\n    return round((lo + hi) / 2, 2)\n",
-         [([[-6, 11, -6, 1]], 1.0)]),
-        ("HumanEval/33", "sort_third",
-         "def sort_third(l: list) -> list:\n"
-         "    \"\"\"Sort every third element in place.\"\"\"\n",
-         "    thirds = sorted(l[i] for i in range(0, len(l), 3))\n"
-         "    result = l[:]\n"
-         "    for i, idx in enumerate(range(0, len(l), 3)):\n        result[idx] = thirds[i]\n"
-         "    return result\n",
-         [([[1, 2, 3]], [1, 2, 3]), ([[5, 6, 3, 4, 8, 9, 2]], [2, 6, 3, 4, 8, 9, 5])]),
-        ("HumanEval/34", "unique",
-         "def unique(l: list) -> list:\n"
-         "    \"\"\"Return sorted unique elements.\"\"\"\n",
-         "    return sorted(set(l))\n",
-         [([[5, 3, 5, 2, 3]], [2, 3, 5])]),
-        ("HumanEval/35", "max_element",
-         "def max_element(l: list) -> int:\n"
-         "    \"\"\"Return maximum element of list.\"\"\"\n",
-         "    return max(l)\n",
-         [([[3, 1, 2]], 3)]),
-        ("HumanEval/36", "fizz_buzz",
-         "def fizz_buzz(n: int) -> int:\n"
-         "    \"\"\"Count '7's in numbers 1..n divisible by 11 or 13.\"\"\"\n",
-         "    count = 0\n    for i in range(1, n+1):\n"
-         "        if i % 11 == 0 or i % 13 == 0:\n"
-         "            count += str(i).count('7')\n    return count\n",
-         [([50], 0), ([78], 3)]),
-        ("HumanEval/37", "sort_even",
-         "def sort_even(l: list) -> list:\n"
-         "    \"\"\"Sort even-indexed elements, leave odd unchanged.\"\"\"\n",
-         "    evens = sorted(l[i] for i in range(0, len(l), 2))\n"
-         "    result = l[:]\n"
-         "    for i, idx in enumerate(range(0, len(l), 2)):\n        result[idx] = evens[i]\n"
-         "    return result\n",
-         [([[1, 2, 3]], [1, 2, 3]), ([[5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10]], [-10, 3, -5, 2, -3, 3, 5, 0, 9, 1, 123])]),
-        ("HumanEval/38", "encode_cyclic",
-         "def encode_cyclic(s: str) -> str:\n"
-         "    \"\"\"Cyclic shift groups of 3 chars.\"\"\"\n",
-         "    groups = [s[i:i+3] for i in range(0, len(s), 3)]\n"
-         "    groups = [g[1:]+g[0] if len(g) == 3 else g for g in groups]\n"
-         "    return ''.join(groups)\n",
-         [(["abc"], "bca")]),
-        ("HumanEval/39", "prime_fib",
-         "def prime_fib(n: int) -> int:\n"
-         "    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n",
-         "    def is_prime(x):\n        if x < 2: return False\n"
-         "        return all(x % i != 0 for i in range(2, int(x**0.5)+1))\n"
-         "    a, b, count = 1, 1, 0\n"
-         "    while True:\n        a, b = b, a+b\n"
-         "        if is_prime(a):\n            count += 1\n"
-         "            if count == n:\n                return a\n",
-         [([1], 2), ([3], 5)]),
-        ("HumanEval/40", "triples_sum_to_zero",
-         "def triples_sum_to_zero(l: list) -> bool:\n"
-         "    \"\"\"Return True if any 3 elements sum to zero.\"\"\"\n",
-         "    n = len(l)\n    for i in range(n-2):\n"
-         "        for j in range(i+1, n-1):\n            for k in range(j+1, n):\n"
-         "                if l[i]+l[j]+l[k] == 0:\n                    return True\n"
-         "    return False\n",
-         [([[1, 3, 5, 0]], False), ([[1, 3, -2, 1]], True)]),
-        ("HumanEval/41", "car_race_collision",
-         "def car_race_collision(n: int) -> int:\n"
-         "    \"\"\"Return number of collisions between n cars in each direction.\"\"\"\n",
-         "    return n * n\n",
-         [([2], 4), ([3], 9)]),
-        ("HumanEval/42", "incr_list",
-         "def incr_list(l: list) -> list:\n"
-         "    \"\"\"Increment each element by 1.\"\"\"\n",
-         "    return [x + 1 for x in l]\n",
-         [([[1, 2, 3]], [2, 3, 4])]),
-        ("HumanEval/43", "pairs_sum_to_zero",
-         "def pairs_sum_to_zero(l: list) -> bool:\n"
-         "    \"\"\"Return True if any two distinct elements sum to zero.\"\"\"\n",
-         "    seen = set()\n    for x in l:\n        if -x in seen:\n            return True\n"
-         "        seen.add(x)\n    return False\n",
-         [([[1, 3, -2, 1]], False), ([[1, 2, 3, -2]], True)]),
-        ("HumanEval/44", "change_base",
-         "def change_base(x: int, base: int) -> str:\n"
-         "    \"\"\"Convert integer x to given base (base < 10).\"\"\"\n",
-         "    digits = ''\n    while x > 0:\n        digits = str(x % base) + digits; x //= base\n"
-         "    return digits or '0'\n",
-         [([8, 3], "22"), ([7, 2], "111")]),
-        ("HumanEval/45", "triangle_area",
-         "def triangle_area(a: float, h: float) -> float:\n"
-         "    \"\"\"Compute area of triangle with base a and height h.\"\"\"\n",
-         "    return 0.5 * a * h\n",
-         [([5, 3], 7.5)]),
-        ("HumanEval/46", "fib4",
-         "def fib4(n: int) -> int:\n"
-         "    \"\"\"Compute n-th element of fib4 sequence (0,0,2,0,...).\"\"\"\n",
-         "    if n < 4:\n        return [0, 0, 2, 0][n]\n"
-         "    a, b, c, d = 0, 0, 2, 0\n    for _ in range(n - 3):\n"
-         "        a, b, c, d = b, c, d, a + b + c + d\n    return d\n",
-         [([5], 4), ([8], 28)]),
-        ("HumanEval/47", "median",
-         "def median(l: list) -> float:\n"
-         "    \"\"\"Return median of list.\"\"\"\n",
-         "    s = sorted(l)\n    n = len(s)\n"
-         "    return s[n//2] if n % 2 else (s[n//2-1]+s[n//2])/2\n",
-         [([[3, 1, 2, 4, 5]], 3), ([[1, 2, 2, 4, 5]], 2)]),
-        ("HumanEval/48", "is_palindrome",
-         "def is_palindrome(text: str) -> bool:\n"
-         "    \"\"\"Check if string is a palindrome.\"\"\"\n",
-         "    return text == text[::-1]\n",
-         [(["kayak"], True), (["hello"], False)]),
-        ("HumanEval/49", "modp",
-         "def modp(n: int, p: int) -> int:\n"
-         "    \"\"\"Return 2^n mod p.\"\"\"\n",
-         "    result = 1\n    for _ in range(n):\n        result = (result * 2) % p\n"
-         "    return result\n",
-         [([3, 5], 3), ([1101, 101], 2)]),
+        (
+            "HumanEval/0",
+            "has_close_elements",
+            "def has_close_elements(numbers: list, threshold: float) -> bool:\n"
+            '    """Check if any two numbers in list are closer than threshold."""\n',
+            "    for i in range(len(numbers)):\n        for j in range(i+1, len(numbers)):\n"
+            "            if abs(numbers[i]-numbers[j]) < threshold:\n                return True\n"
+            "    return False\n",
+            [([[1.0, 2.0, 3.9, 4.0], 0.5], True), ([[1.0, 2.0, 3.9, 4.0], 0.05], False)],
+        ),
+        (
+            "HumanEval/1",
+            "separate_paren_groups",
+            "def separate_paren_groups(paren_string: str) -> list:\n"
+            '    """Separate groups of nested parentheses."""\n',
+            "    result, depth, current = [], 0, ''\n"
+            "    for c in paren_string:\n        if c == '(':\n            depth += 1\n"
+            "            current += c\n        elif c == ')':\n            current += c\n"
+            "            depth -= 1\n            if depth == 0:\n"
+            "                result.append(current)\n                current = ''\n"
+            "    return result\n",
+            [(["(()()) ((())) () ((())()())"], ["(()())", "((()))", "()", "((())()())"])],
+        ),
+        (
+            "HumanEval/2",
+            "truncate_number",
+            "def truncate_number(number: float) -> float:\n"
+            '    """Return the decimal part of a float."""\n',
+            "    return number % 1.0\n",
+            [([3.5], 0.5), ([1.25], 0.25)],
+        ),
+        (
+            "HumanEval/3",
+            "below_zero",
+            "def below_zero(operations: list) -> bool:\n"
+            '    """Return True if account balance ever goes below zero."""\n',
+            "    balance = 0\n    for op in operations:\n        balance += op\n"
+            "        if balance < 0:\n            return True\n    return False\n",
+            [([[1, 2, -4, 5]], True), ([[1, 2, 3]], False)],
+        ),
+        (
+            "HumanEval/4",
+            "mean_absolute_deviation",
+            "def mean_absolute_deviation(numbers: list) -> float:\n"
+            '    """Return mean absolute deviation from the mean."""\n',
+            "    mean = sum(numbers) / len(numbers)\n"
+            "    return sum(abs(x - mean) for x in numbers) / len(numbers)\n",
+            [([[1.0, 2.0, 3.0, 4.0]], 1.0)],
+        ),
+        (
+            "HumanEval/5",
+            "intersperse",
+            "def intersperse(numbers: list, delimiter: int) -> list:\n"
+            '    """Insert delimiter between elements."""\n',
+            "    result = []\n    for i, n in enumerate(numbers):\n"
+            "        result.append(n)\n        if i < len(numbers)-1:\n"
+            "            result.append(delimiter)\n    return result\n",
+            [([[1, 2, 3], 4], [1, 4, 2, 4, 3])],
+        ),
+        (
+            "HumanEval/6",
+            "parse_nested_parens",
+            "def parse_nested_parens(paren_string: str) -> list:\n"
+            '    """Return max nesting depth for each paren group."""\n',
+            "    groups = paren_string.split()\n    result = []\n"
+            "    for g in groups:\n        depth = max_depth = 0\n"
+            "        for c in g:\n            if c == '(':\n                depth += 1\n"
+            "                max_depth = max(max_depth, depth)\n"
+            "            elif c == ')':\n                depth -= 1\n"
+            "        result.append(max_depth)\n    return result\n",
+            [(["(()()) ((())) ()"], [2, 3, 1])],
+        ),
+        (
+            "HumanEval/7",
+            "filter_by_substring",
+            "def filter_by_substring(strings: list, substring: str) -> list:\n"
+            '    """Filter strings containing a given substring."""\n',
+            "    return [s for s in strings if substring in s]\n",
+            [([["abc", "def", "abx", "xyz"], "ab"], ["abc", "abx"])],
+        ),
+        (
+            "HumanEval/8",
+            "sum_product",
+            "def sum_product(numbers: list) -> tuple:\n"
+            '    """Return (sum, product) of all integers in list."""\n',
+            "    s, p = 0, 1\n    for n in numbers:\n        s += n; p *= n\n    return (s, p)\n",
+            [([[1, 2, 3, 4]], (10, 24)), ([[]], (0, 1))],
+        ),
+        (
+            "HumanEval/9",
+            "rolling_max",
+            'def rolling_max(numbers: list) -> list:\n    """Return rolling max of list."""\n',
+            "    result, cur = [], None\n    for n in numbers:\n"
+            "        cur = n if cur is None else max(cur, n)\n        result.append(cur)\n"
+            "    return result\n",
+            [([[3, 1, 2, 4]], [3, 3, 3, 4])],
+        ),
+        (
+            "HumanEval/10",
+            "make_palindrome",
+            "def make_palindrome(string: str) -> str:\n"
+            '    """Find the shortest palindrome that begins with a supplied string."""\n',
+            "    for i in range(len(string)):\n        suffix = string[i:]\n"
+            "        if suffix == suffix[::-1]:\n            return string + string[:i][::-1]\n"
+            "    return string + string[:-1][::-1]\n",
+            [(["cat"], "catac"), (["cata"], "catac")],
+        ),
+        (
+            "HumanEval/11",
+            "string_xor",
+            'def string_xor(a: str, b: str) -> str:\n    """XOR two binary strings."""\n',
+            "    return ''.join('0' if x == y else '1' for x, y in zip(a, b))\n",
+            [(["010", "110"], "100")],
+        ),
+        (
+            "HumanEval/12",
+            "longest",
+            "def longest(strings: list) -> str:\n"
+            '    """Return the longest string (None if empty list)."""\n',
+            "    if not strings:\n        return None\n    return max(strings, key=len)\n",
+            [([["a", "bb", "ccc"]], "ccc"), ([[]], None)],
+        ),
+        (
+            "HumanEval/13",
+            "greatest_common_divisor",
+            "def greatest_common_divisor(a: int, b: int) -> int:\n"
+            '    """Return GCD of two integers."""\n',
+            "    while b:\n        a, b = b, a % b\n    return a\n",
+            [([3, 5], 1), ([25, 15], 5)],
+        ),
+        (
+            "HumanEval/14",
+            "all_prefixes",
+            "def all_prefixes(string: str) -> list:\n"
+            '    """Return list of all prefixes of input string."""\n',
+            "    return [string[:i+1] for i in range(len(string))]\n",
+            [(["abc"], ["a", "ab", "abc"])],
+        ),
+        (
+            "HumanEval/15",
+            "string_sequence",
+            "def string_sequence(n: int) -> str:\n"
+            '    """Return space-delimited string of numbers from 0 to n."""\n',
+            "    return ' '.join(str(i) for i in range(n+1))\n",
+            [([5], "0 1 2 3 4 5")],
+        ),
+        (
+            "HumanEval/16",
+            "count_distinct_characters",
+            "def count_distinct_characters(string: str) -> int:\n"
+            '    """Return number of distinct characters (case-insensitive)."""\n',
+            "    return len(set(string.lower()))\n",
+            [(["xyzXYZ"], 3), (["Jerry"], 4)],
+        ),
+        (
+            "HumanEval/17",
+            "parse_music",
+            "def parse_music(music_string: str) -> list:\n"
+            '    """Parse music note durations from string."""\n',
+            "    note_map = {'o': 4, 'o|': 2, '.|': 1}\n"
+            "    return [note_map[n] for n in music_string.split() if n in note_map]\n",
+            [(["o o| .| o|"], [4, 2, 1, 2])],
+        ),
+        (
+            "HumanEval/18",
+            "how_many_times",
+            "def how_many_times(string: str, substring: str) -> int:\n"
+            '    """Count overlapping occurrences of substring in string."""\n',
+            "    count = 0\n    for i in range(len(string) - len(substring) + 1):\n"
+            "        if string[i:i+len(substring)] == substring:\n            count += 1\n"
+            "    return count\n",
+            [(["", "x"], 0), (["aaaa", "aa"], 3)],
+        ),
+        (
+            "HumanEval/19",
+            "sort_numbers",
+            "def sort_numbers(numbers: str) -> str:\n"
+            '    """Sort space-delimited number words."""\n',
+            "    order = ['zero','one','two','three','four','five','six','seven','eight','nine']\n"
+            "    return ' '.join(sorted(numbers.split(), key=lambda x: order.index(x)))\n",
+            [(["three one five"], "one three five")],
+        ),
+        (
+            "HumanEval/20",
+            "find_closest_elements",
+            "def find_closest_elements(numbers: list) -> tuple:\n"
+            '    """Return pair of closest elements from sorted list."""\n',
+            "    closest = None\n    min_diff = float('inf')\n"
+            "    for i in range(len(numbers)-1):\n"
+            "        diff = numbers[i+1] - numbers[i]\n"
+            "        if diff < min_diff:\n            min_diff = diff\n"
+            "            closest = (numbers[i], numbers[i+1])\n"
+            "    return closest\n",
+            [([[1.0, 2.0, 3.5, 3.9, 5.0]], (3.5, 3.9))],
+        ),
+        (
+            "HumanEval/21",
+            "rescale_to_unit",
+            'def rescale_to_unit(numbers: list) -> list:\n    """Rescale list to [0, 1]."""\n',
+            "    mn, mx = min(numbers), max(numbers)\n"
+            "    return [(x - mn) / (mx - mn) for x in numbers]\n",
+            [([[1.0, 2.0, 3.0, 4.0, 5.0]], [0.0, 0.25, 0.5, 0.75, 1.0])],
+        ),
+        (
+            "HumanEval/22",
+            "filter_integers",
+            "def filter_integers(values: list) -> list:\n"
+            '    """Keep only integers from mixed list."""\n',
+            "    return [x for x in values if isinstance(x, int)]\n",
+            [([[1, 2.0, "a", 3]], [1, 3])],
+        ),
+        (
+            "HumanEval/23",
+            "strlen",
+            'def strlen(string: str) -> int:\n    """Return length of string."""\n',
+            "    return len(string)\n",
+            [([""], 0), (["x"], 1)],
+        ),
+        (
+            "HumanEval/24",
+            "largest_divisor",
+            "def largest_divisor(n: int) -> int:\n"
+            '    """Return largest divisor of n less than n."""\n',
+            "    for i in range(n-1, 0, -1):\n        if n % i == 0:\n            return i\n"
+            "    return 1\n",
+            [([15], 5), ([100], 50)],
+        ),
+        (
+            "HumanEval/25",
+            "factorize",
+            'def factorize(n: int) -> list:\n    """Return prime factorization."""\n',
+            "    factors = []\n    d = 2\n    while d * d <= n:\n"
+            "        while n % d == 0:\n            factors.append(d); n //= d\n        d += 1\n"
+            "    if n > 1:\n        factors.append(n)\n    return factors\n",
+            [([8], [2, 2, 2]), ([25], [5, 5])],
+        ),
+        (
+            "HumanEval/26",
+            "remove_duplicates",
+            "def remove_duplicates(numbers: list) -> list:\n"
+            '    """Remove elements that appear more than once."""\n',
+            "    from collections import Counter\n    c = Counter(numbers)\n"
+            "    return [x for x in numbers if c[x] == 1]\n",
+            [([[1, 2, 3, 2, 4]], [1, 3, 4])],
+        ),
+        (
+            "HumanEval/27",
+            "flip_case",
+            "def flip_case(string: str) -> str:\n"
+            '    """Flip uppercase to lowercase and vice versa."""\n',
+            "    return string.swapcase()\n",
+            [(["Hello"], "hELLO")],
+        ),
+        (
+            "HumanEval/28",
+            "concatenate",
+            'def concatenate(strings: list) -> str:\n    """Concatenate list of strings."""\n',
+            "    return ''.join(strings)\n",
+            [([["a", "b", "c"]], "abc"), ([[]], "")],
+        ),
+        (
+            "HumanEval/29",
+            "filter_by_prefix",
+            "def filter_by_prefix(strings: list, prefix: str) -> list:\n"
+            '    """Keep strings starting with given prefix."""\n',
+            "    return [s for s in strings if s.startswith(prefix)]\n",
+            [([["abc", "bcd", "axy"], "a"], ["abc", "axy"])],
+        ),
+        (
+            "HumanEval/30",
+            "get_positive",
+            "def get_positive(l: list) -> list:\n"
+            '    """Return only positive numbers from list."""\n',
+            "    return [x for x in l if x > 0]\n",
+            [([[-1, 2, -4, 5, 6]], [2, 5, 6])],
+        ),
+        (
+            "HumanEval/31",
+            "is_prime",
+            'def is_prime(n: int) -> bool:\n    """Return True if n is prime."""\n',
+            "    if n < 2:\n        return False\n    for i in range(2, int(n**0.5)+1):\n"
+            "        if n % i == 0:\n            return False\n    return True\n",
+            [([6], False), ([101], True)],
+        ),
+        (
+            "HumanEval/32",
+            "find_zero",
+            "def find_zero(xs: list) -> float:\n"
+            '    """Find zero of polynomial via bisection (simplified)."""\n',
+            "    def poly(x):\n        return sum(c * x**i for i, c in enumerate(xs))\n"
+            "    lo, hi = -1e6, 1e6\n"
+            "    for _ in range(100):\n        mid = (lo + hi) / 2\n"
+            "        if poly(mid) * poly(lo) <= 0:\n            hi = mid\n"
+            "        else:\n            lo = mid\n    return round((lo + hi) / 2, 2)\n",
+            [([[-6, 11, -6, 1]], 1.0)],
+        ),
+        (
+            "HumanEval/33",
+            "sort_third",
+            'def sort_third(l: list) -> list:\n    """Sort every third element in place."""\n',
+            "    thirds = sorted(l[i] for i in range(0, len(l), 3))\n"
+            "    result = l[:]\n"
+            "    for i, idx in enumerate(range(0, len(l), 3)):\n        result[idx] = thirds[i]\n"
+            "    return result\n",
+            [([[1, 2, 3]], [1, 2, 3]), ([[5, 6, 3, 4, 8, 9, 2]], [2, 6, 3, 4, 8, 9, 5])],
+        ),
+        (
+            "HumanEval/34",
+            "unique",
+            'def unique(l: list) -> list:\n    """Return sorted unique elements."""\n',
+            "    return sorted(set(l))\n",
+            [([[5, 3, 5, 2, 3]], [2, 3, 5])],
+        ),
+        (
+            "HumanEval/35",
+            "max_element",
+            'def max_element(l: list) -> int:\n    """Return maximum element of list."""\n',
+            "    return max(l)\n",
+            [([[3, 1, 2]], 3)],
+        ),
+        (
+            "HumanEval/36",
+            "fizz_buzz",
+            "def fizz_buzz(n: int) -> int:\n"
+            '    """Count \'7\'s in numbers 1..n divisible by 11 or 13."""\n',
+            "    count = 0\n    for i in range(1, n+1):\n"
+            "        if i % 11 == 0 or i % 13 == 0:\n"
+            "            count += str(i).count('7')\n    return count\n",
+            [([50], 0), ([78], 3)],
+        ),
+        (
+            "HumanEval/37",
+            "sort_even",
+            "def sort_even(l: list) -> list:\n"
+            '    """Sort even-indexed elements, leave odd unchanged."""\n',
+            "    evens = sorted(l[i] for i in range(0, len(l), 2))\n"
+            "    result = l[:]\n"
+            "    for i, idx in enumerate(range(0, len(l), 2)):\n        result[idx] = evens[i]\n"
+            "    return result\n",
+            [
+                ([[1, 2, 3]], [1, 2, 3]),
+                (
+                    [[5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10]],
+                    [-10, 3, -5, 2, -3, 3, 5, 0, 9, 1, 123],
+                ),
+            ],
+        ),
+        (
+            "HumanEval/38",
+            "encode_cyclic",
+            'def encode_cyclic(s: str) -> str:\n    """Cyclic shift groups of 3 chars."""\n',
+            "    groups = [s[i:i+3] for i in range(0, len(s), 3)]\n"
+            "    groups = [g[1:]+g[0] if len(g) == 3 else g for g in groups]\n"
+            "    return ''.join(groups)\n",
+            [(["abc"], "bca")],
+        ),
+        (
+            "HumanEval/39",
+            "prime_fib",
+            "def prime_fib(n: int) -> int:\n"
+            '    """Return n-th Fibonacci number that is also prime."""\n',
+            "    def is_prime(x):\n        if x < 2: return False\n"
+            "        return all(x % i != 0 for i in range(2, int(x**0.5)+1))\n"
+            "    a, b, count = 1, 1, 0\n"
+            "    while True:\n        a, b = b, a+b\n"
+            "        if is_prime(a):\n            count += 1\n"
+            "            if count == n:\n                return a\n",
+            [([1], 2), ([3], 5)],
+        ),
+        (
+            "HumanEval/40",
+            "triples_sum_to_zero",
+            "def triples_sum_to_zero(l: list) -> bool:\n"
+            '    """Return True if any 3 elements sum to zero."""\n',
+            "    n = len(l)\n    for i in range(n-2):\n"
+            "        for j in range(i+1, n-1):\n            for k in range(j+1, n):\n"
+            "                if l[i]+l[j]+l[k] == 0:\n                    return True\n"
+            "    return False\n",
+            [([[1, 3, 5, 0]], False), ([[1, 3, -2, 1]], True)],
+        ),
+        (
+            "HumanEval/41",
+            "car_race_collision",
+            "def car_race_collision(n: int) -> int:\n"
+            '    """Return number of collisions between n cars in each direction."""\n',
+            "    return n * n\n",
+            [([2], 4), ([3], 9)],
+        ),
+        (
+            "HumanEval/42",
+            "incr_list",
+            'def incr_list(l: list) -> list:\n    """Increment each element by 1."""\n',
+            "    return [x + 1 for x in l]\n",
+            [([[1, 2, 3]], [2, 3, 4])],
+        ),
+        (
+            "HumanEval/43",
+            "pairs_sum_to_zero",
+            "def pairs_sum_to_zero(l: list) -> bool:\n"
+            '    """Return True if any two distinct elements sum to zero."""\n',
+            "    seen = set()\n    for x in l:\n        if -x in seen:\n            return True\n"
+            "        seen.add(x)\n    return False\n",
+            [([[1, 3, -2, 1]], False), ([[1, 2, 3, -2]], True)],
+        ),
+        (
+            "HumanEval/44",
+            "change_base",
+            "def change_base(x: int, base: int) -> str:\n"
+            '    """Convert integer x to given base (base < 10)."""\n',
+            "    digits = ''\n    while x > 0:\n        digits = str(x % base) + digits; x //= base\n"
+            "    return digits or '0'\n",
+            [([8, 3], "22"), ([7, 2], "111")],
+        ),
+        (
+            "HumanEval/45",
+            "triangle_area",
+            "def triangle_area(a: float, h: float) -> float:\n"
+            '    """Compute area of triangle with base a and height h."""\n',
+            "    return 0.5 * a * h\n",
+            [([5, 3], 7.5)],
+        ),
+        (
+            "HumanEval/46",
+            "fib4",
+            "def fib4(n: int) -> int:\n"
+            '    """Compute n-th element of fib4 sequence (0,0,2,0,...)."""\n',
+            "    if n < 4:\n        return [0, 0, 2, 0][n]\n"
+            "    a, b, c, d = 0, 0, 2, 0\n    for _ in range(n - 3):\n"
+            "        a, b, c, d = b, c, d, a + b + c + d\n    return d\n",
+            [([5], 4), ([8], 28)],
+        ),
+        (
+            "HumanEval/47",
+            "median",
+            'def median(l: list) -> float:\n    """Return median of list."""\n',
+            "    s = sorted(l)\n    n = len(s)\n"
+            "    return s[n//2] if n % 2 else (s[n//2-1]+s[n//2])/2\n",
+            [([[3, 1, 2, 4, 5]], 3), ([[1, 2, 2, 4, 5]], 2)],
+        ),
+        (
+            "HumanEval/48",
+            "is_palindrome",
+            'def is_palindrome(text: str) -> bool:\n    """Check if string is a palindrome."""\n',
+            "    return text == text[::-1]\n",
+            [(["kayak"], True), (["hello"], False)],
+        ),
+        (
+            "HumanEval/49",
+            "modp",
+            'def modp(n: int, p: int) -> int:\n    """Return 2^n mod p."""\n',
+            "    result = 1\n    for _ in range(n):\n        result = (result * 2) % p\n"
+            "    return result\n",
+            [([3, 5], 3), ([1101, 101], 2)],
+        ),
     ]
 
     for task_id, entry_point, prompt_body, canonical_body, case_groups in raw:
@@ -736,7 +867,12 @@ def _simulated_solution(problem: dict[str, Any], *, rng: Any) -> str:
         lines = canonical.split("\n")
         for i, line in enumerate(lines):
             stripped = line.lstrip()
-            if stripped.startswith("return ") and not stripped.startswith("return True") and not stripped.startswith("return False") and not stripped.startswith("return None"):
+            if (
+                stripped.startswith("return ")
+                and not stripped.startswith("return True")
+                and not stripped.startswith("return False")
+                and not stripped.startswith("return None")
+            ):
                 indent = line[: len(line) - len(stripped)]
                 # Insert a "+1" into the return value to create a wrong-answer bug
                 buggy = stripped.replace("return ", "return 1 + (", 1) + ")"
@@ -769,7 +905,7 @@ def _load_live_model() -> tuple[Any, Any, Any, bool]:
         model = AutoModelForCausalLM.from_pretrained(
             hf_id,
             torch_dtype=torch.float16 if device == "cuda" else torch.float32,
-            device_map={'': 'cuda:0'},
+            device_map={"": "cuda:0"},
         )
         model.eval()
         return tokenizer, model, device, True
@@ -805,7 +941,9 @@ def _generate_code_live(
             do_sample=False,
             pad_token_id=tokenizer.eos_token_id,
         )
-    response = tokenizer.decode(output_ids[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True)
+    response = tokenizer.decode(
+        output_ids[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+    )
     return problem["prompt"] + _extract_code(response)
 
 
@@ -875,11 +1013,7 @@ def _process_problem(
 
         extractor = CodeExtractor()
         constraints = extractor.extract(generated_code, domain="code")
-        violations_found = sum(
-            1
-            for c in constraints
-            if c.metadata.get("satisfied") is False
-        )
+        violations_found = sum(1 for c in constraints if c.metadata.get("satisfied") is False)
 
         pipeline = VerifyRepairPipeline(
             model=None,
@@ -1044,6 +1178,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

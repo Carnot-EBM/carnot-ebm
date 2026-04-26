@@ -106,10 +106,10 @@ OUTPUT_PATH = RESULTS_DIR / "experiment_134_results.json"
 # Experiment parameters
 # ---------------------------------------------------------------------------
 
-TOTAL_QUESTIONS = 500    # Total stream length
-BATCH_SIZE = 50          # Measure accuracy per this many questions
-UPDATE_EVERY = 50        # Update adaptive weights every N questions
-RANDOM_SEED = 134        # Reproducibility seed
+TOTAL_QUESTIONS = 500  # Total stream length
+BATCH_SIZE = 50  # Measure accuracy per this many questions
+UPDATE_EVERY = 50  # Update adaptive weights every N questions
+RANDOM_SEED = 134  # Reproducibility seed
 CORRECT_FRACTION = 0.60  # Fraction of responses that are correct
 
 # Heuristic extractor noise parameters.
@@ -155,9 +155,7 @@ class NoisyHeuristicExtractor:
     def supported_domains(self) -> list[str]:
         return ["heuristic"]
 
-    def extract(
-        self, text: str, domain: str | None = None
-    ) -> list["ConstraintResult"]:
+    def extract(self, text: str, domain: str | None = None) -> list["ConstraintResult"]:
         if domain is not None and domain not in self.supported_domains:
             return []
 
@@ -204,6 +202,7 @@ class CombinedExtractor:
 
     def __init__(self) -> None:
         from carnot.pipeline.extract import ArithmeticExtractor
+
         self._arith = ArithmeticExtractor()
         self._heuristic = NoisyHeuristicExtractor()
 
@@ -211,9 +210,7 @@ class CombinedExtractor:
     def supported_domains(self) -> list[str]:
         return ["arithmetic", "heuristic"]
 
-    def extract(
-        self, text: str, domain: str | None = None
-    ) -> list["ConstraintResult"]:
+    def extract(self, text: str, domain: str | None = None) -> list["ConstraintResult"]:
         results = self._arith.extract(text, domain="arithmetic")
         results += self._heuristic.extract(text, domain=None)
         return results
@@ -295,10 +292,7 @@ def generate_questions(n: int, seed: int) -> list[tuple[str, str, bool]]:
                 claimed = correct_ans + 1
 
         # Embed arithmetic equation (ArithmeticExtractor parses "a + b = c" or "a - b = c").
-        response_base = (
-            f"We compute {a} {op_sym} {b} = {claimed}. "
-            f"The answer is {claimed}."
-        )
+        response_base = f"We compute {a} {op_sym} {b} = {claimed}. The answer is {claimed}."
 
         # Embed heuristic signal (NoisyHeuristicExtractor reads this).
         if is_correct:
@@ -444,6 +438,7 @@ def update_tracker_gt(
 @dataclass
 class BatchRecord:
     """Per-batch accuracy results for one experiment condition."""
+
     batch: int
     q_start: int
     q_end: int
@@ -596,7 +591,7 @@ def run_experiment() -> dict[str, Any]:
         batch_records.append(rec)
 
         print(
-            f"{batch_idx+1:>5}  {batch_start+1:>4}-{batch_start+BATCH_SIZE:<4}  "
+            f"{batch_idx + 1:>5}  {batch_start + 1:>4}-{batch_start + BATCH_SIZE:<4}  "
             f"{fixed_acc:>7.1%}  {adaptive_acc:>9.1%}  {delta:>+7.1%}  "
             f"{arith_w:>8.4f}  {heur_w:>8.4f}  {weight_update_count:>7}"
         )
@@ -621,7 +616,7 @@ def run_experiment() -> dict[str, Any]:
     print(f"  Adaptive overall accuracy : {adaptive_overall:.1%}")
     print(f"  Overall delta             : {overall_delta:+.1%}")
     print()
-    print(f"  At question 200 (batch {milestone_idx+1}):")
+    print(f"  At question 200 (batch {milestone_idx + 1}):")
     print(f"    Fixed    accuracy : {m.fixed_accuracy:.1%}")
     print(f"    Adaptive accuracy : {m.adaptive_accuracy:.1%}")
     print(f"    Delta             : {m.delta:+.1%}")
@@ -649,8 +644,10 @@ def run_experiment() -> dict[str, Any]:
         print()
         print(f"  Theoretical score for correct+heuristic false (adaptive):")
         print(f"    arith_precision={arith_prec:.3f}, heuristic_precision={heur_prec:.3f}")
-        print(f"    score = {arith_prec:.3f}/{arith_prec+heur_prec:.3f} = {predicted_score:.3f}")
-        print(f"    vs threshold {SOFT_THRESHOLD} → {'PASS' if predicted_score >= SOFT_THRESHOLD else 'FAIL'}")
+        print(f"    score = {arith_prec:.3f}/{arith_prec + heur_prec:.3f} = {predicted_score:.3f}")
+        print(
+            f"    vs threshold {SOFT_THRESHOLD} → {'PASS' if predicted_score >= SOFT_THRESHOLD else 'FAIL'}"
+        )
 
     summary: dict[str, Any] = {
         "total_questions": TOTAL_QUESTIONS,

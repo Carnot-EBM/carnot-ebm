@@ -20,7 +20,6 @@ import logging
 import os
 import re
 import sys
-import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
@@ -145,7 +144,9 @@ def verify_code(code: str, task: dict) -> dict:
 
     # Build energy function from test cases
     energy = build_code_energy(
-        code, func_name, test_cases,
+        code,
+        func_name,
+        test_cases,
         expected_type=expected_type,
     )
 
@@ -162,13 +163,15 @@ def verify_code(code: str, task: dict) -> dict:
     for args, expected in test_cases:
         actual, error = safe_exec_function(code, func_name, args)
         passed = error is None and actual == expected
-        test_results.append({
-            "input": args,
-            "expected": expected,
-            "actual": actual,
-            "error": str(error) if error else None,
-            "passed": passed,
-        })
+        test_results.append(
+            {
+                "input": args,
+                "expected": expected,
+                "actual": actual,
+                "error": str(error) if error else None,
+                "passed": passed,
+            }
+        )
 
     n_passed = sum(1 for t in test_results if t["passed"])
     return {
@@ -269,18 +272,16 @@ def main() -> int:
 
     results = []
     for i, task in enumerate(TASKS):
-        print(f"\n{'─'*60}")
-        print(f"Task {i+1}/{len(TASKS)}: {task['func_name']}")
-        print(f"{'─'*60}")
+        print(f"\n{'─' * 60}")
+        print(f"Task {i + 1}/{len(TASKS)}: {task['func_name']}")
+        print(f"{'─' * 60}")
         print(f"  Prompt: {task['description'][:80]}...")
 
         # Get code from LLM
         try:
-            raw_response = ask_llm_for_code(
-                args.api_base, args.model, args.api_key, task
-            )
+            raw_response = ask_llm_for_code(args.api_base, args.model, args.api_key, task)
             code = extract_code(raw_response)
-            print(f"\n  LLM Code:")
+            print("\n  LLM Code:")
             for line in code.split("\n"):
                 print(f"    {line}")
         except Exception as e:
@@ -291,7 +292,7 @@ def main() -> int:
         # Verify
         try:
             vr = verify_code(code, task)
-            print(f"\n  Verification:")
+            print("\n  Verification:")
             print(f"    Tests passed: {vr['n_passed']}/{vr['n_total']}")
             print(f"    Energy: {vr['total_energy']:.4f}")
             print(f"    Verified: {vr['verified']}")
@@ -299,29 +300,34 @@ def main() -> int:
             # Show failed tests
             for tr in vr["test_results"]:
                 if not tr["passed"]:
-                    print(f"    FAIL: {task['func_name']}{tr['input']} "
-                          f"expected {tr['expected']}, got {tr['actual']}"
-                          f"{' (error: ' + tr['error'] + ')' if tr['error'] else ''}")
+                    print(
+                        f"    FAIL: {task['func_name']}{tr['input']} "
+                        f"expected {tr['expected']}, got {tr['actual']}"
+                        f"{' (error: ' + tr['error'] + ')' if tr['error'] else ''}"
+                    )
 
-            results.append({
-                "task": task["func_name"],
-                "status": "ok",
-                "n_passed": vr["n_passed"],
-                "n_total": vr["n_total"],
-                "verified": vr["verified"],
-                "energy": vr["total_energy"],
-            })
+            results.append(
+                {
+                    "task": task["func_name"],
+                    "status": "ok",
+                    "n_passed": vr["n_passed"],
+                    "n_total": vr["n_total"],
+                    "verified": vr["verified"],
+                    "energy": vr["total_energy"],
+                }
+            )
         except Exception as e:
             print(f"  Verification Error: {e}")
             import traceback
+
             traceback.print_exc()
             results.append({"task": task["func_name"], "status": "verify_error"})
 
     # Summary
     ok_results = [r for r in results if r["status"] == "ok"]
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"SUMMARY ({len(ok_results)}/{len(TASKS)} tasks completed)")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     if ok_results:
         all_correct = sum(1 for r in ok_results if r["verified"])
@@ -332,15 +338,17 @@ def main() -> int:
         print(f"  Total test cases passed: {passed_tests}/{total_tests}")
         print(f"  Average energy: {sum(r['energy'] for r in ok_results) / len(ok_results):.4f}")
 
-        print(f"\n  Per-function:")
+        print("\n  Per-function:")
         for r in ok_results:
             icon = "✓" if r["verified"] else "✗"
-            print(f"    {icon} {r['task']}: {r['n_passed']}/{r['n_total']} tests, energy={r['energy']:.4f}")
+            print(
+                f"    {icon} {r['task']}: {r['n_passed']}/{r['n_total']} tests, energy={r['energy']:.4f}"
+            )
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("EBM verification provides deterministic correctness checks")
     print("that the LLM cannot provide about its own output.")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     return 0
 

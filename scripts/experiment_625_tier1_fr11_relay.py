@@ -114,9 +114,7 @@ def _build_synthetic_violations(n: int = 25) -> list[ViolationPattern]:
             ViolationPattern(
                 type=family,
                 count=count,
-                example_steps=[
-                    f"synthetic_{family}_error_{i}" for i in range(min(5, count))
-                ],
+                example_steps=[f"synthetic_{family}_error_{i}" for i in range(min(5, count))],
             )
         )
     return violations
@@ -147,9 +145,7 @@ def _compute_fp_rate(
     if not patterns:
         # No patterns observed yet → no false positives possible.
         return 0.0
-    flagged = sum(
-        1 for text in correct_texts if any(p in text.lower() for p in patterns)
-    )
+    flagged = sum(1 for text in correct_texts if any(p in text.lower() for p in patterns))
     return flagged / len(correct_texts) if correct_texts else 0.0
 
 
@@ -209,13 +205,16 @@ with _watchdog:
             ]
         # Build ViolationPattern objects from the raw type list.
         from collections import Counter  # noqa: PLC0415
+
         type_counts = Counter(t for t in raw_types if t)
         if not type_counts:
             # Fall back to n_violations_found count split across carry/sign.
             half = max(1, _n_violations_found // 2)
             type_counts = Counter({"carry": half, "sign": _n_violations_found - half})
         violations: list[ViolationPattern] = [
-            ViolationPattern(type=t, count=c, example_steps=[f"live_{t}_{i}" for i in range(min(5, c))])
+            ViolationPattern(
+                type=t, count=c, example_steps=[f"live_{t}_{i}" for i in range(min(5, c))]
+            )
             for t, c in type_counts.items()
         ]
         constraints_added = monitor.add_from_memory(violations, final_correct=False, use_hisr=False)

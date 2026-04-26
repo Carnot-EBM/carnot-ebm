@@ -82,15 +82,17 @@ def _build_synthetic_responses(n: int) -> tuple[list[dict], list[bool]]:
     ground_truth = []
     for i in range(n):
         is_correct = i < correct_half
-        responses.append({
-            "question": f"Synthetic question {i}",
-            "response": (
-                f"The answer is {i * 2} because {i} + {i} = {i * 2}."
-                if is_correct
-                else f"The answer is {i * 3} because I multiplied incorrectly."
-            ),
-            "attention_matrix": None,  # Skip Tier 1 in CI (no attention matrix)
-        })
+        responses.append(
+            {
+                "question": f"Synthetic question {i}",
+                "response": (
+                    f"The answer is {i * 2} because {i} + {i} = {i * 2}."
+                    if is_correct
+                    else f"The answer is {i * 3} because I multiplied incorrectly."
+                ),
+                "attention_matrix": None,  # Skip Tier 1 in CI (no attention matrix)
+            }
+        )
         ground_truth.append(is_correct)
     return responses, ground_truth
 

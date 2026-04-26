@@ -46,9 +46,7 @@ Spec: REQ-LEARN-036, REQ-LEARN-037, REQ-LEARN-038,
 
 from __future__ import annotations
 
-import math
-from dataclasses import dataclass, field
-
+from dataclasses import dataclass
 
 # ---------------------------------------------------------------------------
 # EnergyMagnitudeBuffer
@@ -226,8 +224,7 @@ class EnergyMagnitudeReplay:
     ) -> None:
         self.k = k
         self._states: dict[str, _DomainState] = {
-            d: _DomainState(buffer=EnergyMagnitudeBuffer(d, max_size=buffer_size))
-            for d in domains
+            d: _DomainState(buffer=EnergyMagnitudeBuffer(d, max_size=buffer_size)) for d in domains
         }
 
     def add_violation(self, domain: str, violation: dict, energy: float) -> None:

@@ -85,28 +85,58 @@ class TestClassifyModernization:
     """classify_modernization must return correct tier based on marker count."""
 
     def test_missing_script(self) -> None:
-        audit = {"script_exists": False, "env_autofix": False, "watchdog": False,
-                 "template": False, "batched_runner": False, "assert_deliverable": False}
+        audit = {
+            "script_exists": False,
+            "env_autofix": False,
+            "watchdog": False,
+            "template": False,
+            "batched_runner": False,
+            "assert_deliverable": False,
+        }
         assert classify_modernization(audit) == "missing"
 
     def test_fully_modern_all_four(self) -> None:
-        audit = {"script_exists": True, "env_autofix": True, "watchdog": True,
-                 "template": True, "batched_runner": False, "assert_deliverable": True}
+        audit = {
+            "script_exists": True,
+            "env_autofix": True,
+            "watchdog": True,
+            "template": True,
+            "batched_runner": False,
+            "assert_deliverable": True,
+        }
         assert classify_modernization(audit) == "fully_modern"
 
     def test_mostly_modern_three(self) -> None:
-        audit = {"script_exists": True, "env_autofix": True, "watchdog": True,
-                 "template": False, "batched_runner": False, "assert_deliverable": True}
+        audit = {
+            "script_exists": True,
+            "env_autofix": True,
+            "watchdog": True,
+            "template": False,
+            "batched_runner": False,
+            "assert_deliverable": True,
+        }
         assert classify_modernization(audit) == "mostly_modern"
 
     def test_partial_two(self) -> None:
-        audit = {"script_exists": True, "env_autofix": True, "watchdog": True,
-                 "template": False, "batched_runner": False, "assert_deliverable": False}
+        audit = {
+            "script_exists": True,
+            "env_autofix": True,
+            "watchdog": True,
+            "template": False,
+            "batched_runner": False,
+            "assert_deliverable": False,
+        }
         assert classify_modernization(audit) == "partial"
 
     def test_legacy_zero(self) -> None:
-        audit = {"script_exists": True, "env_autofix": False, "watchdog": False,
-                 "template": False, "batched_runner": False, "assert_deliverable": False}
+        audit = {
+            "script_exists": True,
+            "env_autofix": False,
+            "watchdog": False,
+            "template": False,
+            "batched_runner": False,
+            "assert_deliverable": False,
+        }
         assert classify_modernization(audit) == "legacy"
 
 
@@ -149,7 +179,9 @@ class TestEstimateSavingsPct:
 class TestMain:
     """main() must write a valid artifact with all required schema fields."""
 
-    def test_main_writes_valid_artifact(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_main_writes_valid_artifact(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         from scripts.experiment_547_legacy_modernization import main
         from scripts.experiment_template import ExperimentTemplate
 
@@ -165,24 +197,26 @@ class TestMain:
                 )
                 self.checkpoint = None
                 import time as _t
+
                 self._t0 = _t.perf_counter()
 
         monkeypatch.setattr(
             "scripts.experiment_547_legacy_modernization.ExperimentTemplate", FastTemplate
         )
-        monkeypatch.setattr(
-            "scripts.experiment_547_legacy_modernization._REPO_ROOT", tmp_path
-        )
+        monkeypatch.setattr("scripts.experiment_547_legacy_modernization._REPO_ROOT", tmp_path)
 
         # Copy the real scripts into tmp_path so audit_script can find them
         import shutil
+
         (tmp_path / "scripts").mkdir(parents=True, exist_ok=True)
         for target in _AUDIT_TARGETS:
             real_path = _REPO_ROOT / target["script"]
             if real_path.exists():
                 shutil.copy(real_path, tmp_path / target["script"])
 
-        with patch("scripts.experiment_547_legacy_modernization.ExperimentTimeoutWatchdog") as MockWD:
+        with patch(
+            "scripts.experiment_547_legacy_modernization.ExperimentTimeoutWatchdog"
+        ) as MockWD:
             MockWD.return_value.start.return_value = None
             MockWD.return_value.stop.return_value = None
             main()
@@ -192,8 +226,16 @@ class TestMain:
         data = json.loads(out.read_text())
 
         # Required fields from REQUIRED_RESULT_FIELDS
-        for field in ["experiment", "schema", "run_date", "started_at", "finished_at",
-                      "duration_s", "status", "title"]:
+        for field in [
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ]:
             assert field in data, f"Missing required field: {field}"
 
         # Exp 547-specific fields
@@ -222,14 +264,13 @@ class TestMain:
                 )
                 self.checkpoint = None
                 import time as _t
+
                 self._t0 = _t.perf_counter()
 
         monkeypatch.setattr(
             "scripts.experiment_547_legacy_modernization.ExperimentTemplate", FastTemplate
         )
-        monkeypatch.setattr(
-            "scripts.experiment_547_legacy_modernization._REPO_ROOT", tmp_path
-        )
+        monkeypatch.setattr("scripts.experiment_547_legacy_modernization._REPO_ROOT", tmp_path)
 
         # Create fake "fully modern" scripts in tmp_path
         (tmp_path / "scripts").mkdir(parents=True, exist_ok=True)
@@ -242,7 +283,9 @@ class TestMain:
         for target in _AUDIT_TARGETS:
             (tmp_path / target["script"]).write_text(modern_content)
 
-        with patch("scripts.experiment_547_legacy_modernization.ExperimentTimeoutWatchdog") as MockWD:
+        with patch(
+            "scripts.experiment_547_legacy_modernization.ExperimentTimeoutWatchdog"
+        ) as MockWD:
             MockWD.return_value.start.return_value = None
             MockWD.return_value.stop.return_value = None
             main()

@@ -154,20 +154,14 @@ def analyze_failing_steps(
     would suggest we need more HumanEval-style contrastive pairs.
     """
     # Filter to the worst domain prefix (e.g. "humaneval_" or "arc_").
-    domain_certs = [
-        c for c in certificates if c["step_id"].startswith(worst_domain)
-    ]
+    domain_certs = [c for c in certificates if c["step_id"].startswith(worst_domain)]
     # Sort by energy delta descending (most-wrong first).
-    domain_certs_sorted = sorted(
-        domain_certs, key=lambda c: c["jepa_energy_delta"], reverse=True
-    )
+    domain_certs_sorted = sorted(domain_certs, key=lambda c: c["jepa_energy_delta"], reverse=True)
     top_steps = [c["step_id"] for c in domain_certs_sorted[:top_n]]
     constraint_type_counts: Counter = Counter(
         c["constraint_type"] for c in domain_certs_sorted[:top_n]
     )
-    most_common = (
-        constraint_type_counts.most_common(1)[0][0] if constraint_type_counts else None
-    )
+    most_common = constraint_type_counts.most_common(1)[0][0] if constraint_type_counts else None
     return {
         "top_steps": top_steps,
         "constraint_type_counts": dict(constraint_type_counts),

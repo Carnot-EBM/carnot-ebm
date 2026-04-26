@@ -185,7 +185,7 @@ def _build_llm_caller(force_live: bool):
             if out and isinstance(out, list):
                 generated = out[0].get("generated_text", "")
                 if generated.startswith(prompt):
-                    generated = generated[len(prompt):]
+                    generated = generated[len(prompt) :]
                 return generated.strip()
             return ""
 

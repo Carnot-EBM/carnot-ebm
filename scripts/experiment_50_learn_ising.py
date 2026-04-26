@@ -133,9 +133,7 @@ def train_ising_cd(
         # Convert to {-1,+1}.
         spins_model = 2.0 * model_samples.astype(jnp.float32) - 1.0
         neg_bias_moments = jnp.mean(spins_model, axis=0)
-        neg_weight_moments = jnp.mean(
-            jnp.einsum("bi,bj->bij", spins_model, spins_model), axis=0
-        )
+        neg_weight_moments = jnp.mean(jnp.einsum("bi,bj->bij", spins_model, spins_model), axis=0)
 
         # Gradient update (CD rule).
         grad_b = -beta * (pos_bias_moments - neg_bias_moments)
@@ -171,13 +169,17 @@ def evaluate_model(
     from experiment_39_thrml_sat import check_assignment
 
     sampler = ParallelIsingSampler(
-        n_warmup=500, n_samples=100, steps_per_sample=20,
+        n_warmup=500,
+        n_samples=100,
+        steps_per_sample=20,
         use_checkerboard=True,
     )
 
     samples = sampler.sample(
         jrandom.PRNGKey(999),
-        jnp.array(biases), jnp.array(J), beta=beta,
+        jnp.array(biases),
+        jnp.array(J),
+        beta=beta,
     )
 
     sat_counts = []
@@ -204,6 +206,7 @@ def evaluate_model(
 
 def main() -> int:
     import jax
+
     print("=" * 70)
     print("EXPERIMENT 50: Learn Ising Couplings from SAT Data")
     print("  Contrastive Divergence training on satisfying assignments")
@@ -227,13 +230,16 @@ def main() -> int:
 
     # Random baseline: sample and check.
     from experiment_39_thrml_sat import check_assignment
+
     rng = np.random.default_rng(42)
     rand_sats = []
     for _ in range(100):
         ra = {i + 1: bool(rng.choice([True, False])) for i in range(n_vars)}
         sat, _ = check_assignment(clauses, ra)
         rand_sats.append(sat)
-    print(f"  Random baseline: {np.mean(rand_sats)/n_clauses*100:.1f}% mean, {max(rand_sats)}/{n_clauses} best")
+    print(
+        f"  Random baseline: {np.mean(rand_sats) / n_clauses * 100:.1f}% mean, {max(rand_sats)}/{n_clauses} best"
+    )
 
     # Train the Ising model.
     print(f"\n--- Training Ising model (CD-1, 100 epochs) ---")
@@ -251,9 +257,12 @@ def main() -> int:
     # Also test on a DIFFERENT random instance (generalization).
     print(f"\n--- Generalization test (new SAT instance, same structure) ---")
     from experiment_39_thrml_sat import random_3sat
+
     clauses_new = random_3sat(n_vars, n_clauses, seed=99)
     result_gen = evaluate_model(biases, J, clauses_new, n_vars, beta=2.0)
-    print(f"  Best SAT: {result_gen['best_sat']}/{result_gen['n_clauses']} ({result_gen['best_pct']:.1f}%)")
+    print(
+        f"  Best SAT: {result_gen['best_sat']}/{result_gen['n_clauses']} ({result_gen['best_pct']:.1f}%)"
+    )
     print(f"  Mean SAT: {result_gen['mean_pct']:.1f}%")
 
     # Summary.
@@ -264,8 +273,10 @@ def main() -> int:
     print(sep)
     print(f"  Training data: {data.shape[0]} satisfying assignments")
     print(f"  Final recon error: {losses[-1]:.6f}")
-    print(f"  Trained model SAT quality: {result['mean_pct']:.1f}% mean, {result['best_pct']:.1f}% best")
-    print(f"  Random baseline:           {np.mean(rand_sats)/n_clauses*100:.1f}% mean")
+    print(
+        f"  Trained model SAT quality: {result['mean_pct']:.1f}% mean, {result['best_pct']:.1f}% best"
+    )
+    print(f"  Random baseline:           {np.mean(rand_sats) / n_clauses * 100:.1f}% mean")
     print(f"  Generalization:            {result_gen['mean_pct']:.1f}% mean")
 
     improvement = result["mean_pct"] - np.mean(rand_sats) / n_clauses * 100

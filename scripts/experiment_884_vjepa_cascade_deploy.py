@@ -80,6 +80,7 @@ N_HELDOUT_SVAMP = 10
 # Gate check
 # ---------------------------------------------------------------------------
 
+
 def check_gate(result_path: Path = EXP_883_RESULT_PATH) -> dict[str, Any]:
     """Read Exp 883 artifact and verify ood_auc > 0.60.
 
@@ -116,9 +117,7 @@ def check_gate(result_path: Path = EXP_883_RESULT_PATH) -> dict[str, Any]:
             blocked_by="exp883_ood_auc_below_0.60",
             exp883_ood_auc=ood_auc,
         )
-        raise SystemExit(
-            f"Exp 884 blocked: Exp 883 ood_auc={ood_auc:.4f} <= 0.60"
-        )
+        raise SystemExit(f"Exp 884 blocked: Exp 883 ood_auc={ood_auc:.4f} <= 0.60")
 
     return exp883
 
@@ -151,6 +150,7 @@ def _write_blocked_artifact(
 # Corpus builders (re-uses Exp 883 patterns, different seeds for held-out)
 # ---------------------------------------------------------------------------
 
+
 def generate_fover_raw() -> list[dict[str, Any]]:
     """Return the canonical 57-pair FoVer synthetic corpus (seed=42, same as Exp 883).
 
@@ -173,10 +173,14 @@ def generate_fover_raw() -> list[dict[str, Any]]:
         for si in range(n_steps):
             if si == error_step:
                 wrong = a + b + rng.randint(1, 5)
-                text = f"step {si+1} compute {a} plus {b} equals {wrong} arithmetic error incorrect"
+                text = (
+                    f"step {si + 1} compute {a} plus {b} equals {wrong} arithmetic error incorrect"
+                )
                 label = "incorrect"
             else:
-                text = f"step {si+1} evaluate expression {a} times {b} equals {a*b} correct result"
+                text = (
+                    f"step {si + 1} evaluate expression {a} times {b} equals {a * b} correct result"
+                )
                 label = "correct"
             pairs.append({"question_id": qid, "step_text": text, "label": label, "domain": "fover"})
     return pairs[:57]
@@ -207,19 +211,25 @@ def generate_gsm8k_train(n_steps: int = 89, seed: int = 42) -> list[dict[str, An
         for si in range(n_problem_steps):
             if si == error_step:
                 wrong = a + b + rng.randint(1, 4)
-                text = f"step {si+1} add {a} plus {b} gives {wrong} but that is wrong arithmetic error"
+                text = f"step {si + 1} add {a} plus {b} gives {wrong} but that is wrong arithmetic error"
                 label = "incorrect"
             else:
-                text = f"step {si+1} multiply {a} by {b} result is {a*b} correct gsm8k arithmetic"
+                text = (
+                    f"step {si + 1} multiply {a} by {b} result is {a * b} correct gsm8k arithmetic"
+                )
                 label = "correct"
-            pairs.append({"question_id": qid, "step_text": text, "label": label, "domain": "gsm8k_synthetic"})
+            pairs.append(
+                {"question_id": qid, "step_text": text, "label": label, "domain": "gsm8k_synthetic"}
+            )
         prob_idx += 1
         if len(pairs) >= n_steps or prob_idx > 500:
             break
     return pairs[:n_steps]
 
 
-def generate_arc_heldout(n_steps: int = N_HELDOUT_ARC, seed: int = HELDOUT_SEED) -> list[dict[str, Any]]:
+def generate_arc_heldout(
+    n_steps: int = N_HELDOUT_ARC, seed: int = HELDOUT_SEED
+) -> list[dict[str, Any]]:
     """Generate held-out ARC-style reasoning steps with a new seed (unseen in Exp 883).
 
     The held-out seed (999) produces entirely different question texts from the
@@ -244,12 +254,16 @@ def generate_arc_heldout(n_steps: int = N_HELDOUT_ARC, seed: int = HELDOUT_SEED)
         topic = rng.choice(topics)
         for si in range(n_problem_steps):
             if si == error_step:
-                text = f"step {si+1} {topic} reasoning incorrect conclusion logical error wrong science"
+                text = f"step {si + 1} {topic} reasoning incorrect conclusion logical error wrong science"
                 label = "incorrect"
             else:
-                text = f"step {si+1} {topic} scientific principle applies correctly valid reasoning"
+                text = (
+                    f"step {si + 1} {topic} scientific principle applies correctly valid reasoning"
+                )
                 label = "correct"
-            pairs.append({"question_id": qid, "step_text": text, "label": label, "domain": "arc_heldout"})
+            pairs.append(
+                {"question_id": qid, "step_text": text, "label": label, "domain": "arc_heldout"}
+            )
         prob_idx += 1
         if len(pairs) >= n_steps or prob_idx > 500:
             break
@@ -258,7 +272,9 @@ def generate_arc_heldout(n_steps: int = N_HELDOUT_ARC, seed: int = HELDOUT_SEED)
     return pairs
 
 
-def generate_svamp_heldout(n_steps: int = N_HELDOUT_SVAMP, seed: int = HELDOUT_SEED) -> list[dict[str, Any]]:
+def generate_svamp_heldout(
+    n_steps: int = N_HELDOUT_SVAMP, seed: int = HELDOUT_SEED
+) -> list[dict[str, Any]]:
     """Generate held-out SVAMP-style word-problem steps with a new seed.
 
     Uses seed=999 (vs Exp 883's seed=42+2000=2042) to produce different names,
@@ -288,17 +304,19 @@ def generate_svamp_heldout(n_steps: int = N_HELDOUT_SVAMP, seed: int = HELDOUT_S
             if si == error_step:
                 wrong = qty + extra + rng.randint(2, 6)
                 text = (
-                    f"step {si+1} {name} had {qty} {obj} and got {extra} more "
+                    f"step {si + 1} {name} had {qty} {obj} and got {extra} more "
                     f"total is {wrong} word problem arithmetic error wrong"
                 )
                 label = "incorrect"
             else:
                 text = (
-                    f"step {si+1} {name} counted {qty} {obj} "
+                    f"step {si + 1} {name} counted {qty} {obj} "
                     f"total confirmed {qty} correct word problem"
                 )
                 label = "correct"
-            pairs.append({"question_id": qid, "step_text": text, "label": label, "domain": "svamp_heldout"})
+            pairs.append(
+                {"question_id": qid, "step_text": text, "label": label, "domain": "svamp_heldout"}
+            )
         prob_idx += 1
         if len(pairs) >= n_steps or prob_idx > 500:
             break
@@ -309,6 +327,7 @@ def generate_svamp_heldout(n_steps: int = N_HELDOUT_SVAMP, seed: int = HELDOUT_S
 # ---------------------------------------------------------------------------
 # Training helpers (identical to Exp 883 to reproduce equivalent weights)
 # ---------------------------------------------------------------------------
+
 
 def _make_domain_weight_vector(
     domain_weights: dict[str, float],
@@ -369,7 +388,9 @@ def train_vjepa_v2(
         lv_q = jnp.clip(lv_q, -10.0, 2.0)
         prior_lv = jnp.clip(prior_lv, -10.0, 2.0)
         kl = -0.5 * jnp.sum(
-            1.0 + lv_q - prior_lv
+            1.0
+            + lv_q
+            - prior_lv
             - (mu_q - prior_mu) ** 2 / jnp.exp(prior_lv)
             - jnp.exp(lv_q) / jnp.exp(prior_lv),
             axis=-1,
@@ -429,6 +450,7 @@ def evaluate_on_heldout(
 # Safetensors save/load helpers
 # ---------------------------------------------------------------------------
 
+
 def save_model_safetensors(model: VariationalJEPAPredictor, path: Path) -> None:
     """Persist all model parameters to safetensors format.
 
@@ -440,6 +462,7 @@ def save_model_safetensors(model: VariationalJEPAPredictor, path: Path) -> None:
         path:  Destination file path (will be created/overwritten).
     """
     from safetensors.numpy import save_file as st_save
+
     params = model.get_all_params()
     np_params = {k: np.array(v) for k, v in params.items()}
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -449,6 +472,7 @@ def save_model_safetensors(model: VariationalJEPAPredictor, path: Path) -> None:
 # ---------------------------------------------------------------------------
 # Architecture.md updater
 # ---------------------------------------------------------------------------
+
 
 def update_architecture_tier2(
     arch_path: Path,
@@ -509,6 +533,7 @@ def update_architecture_tier2(
 # Honest verdict
 # ---------------------------------------------------------------------------
 
+
 def assign_honest_verdict(
     cascade_deployed: bool,
     final_ood_auc: float,
@@ -533,6 +558,7 @@ def assign_honest_verdict(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def run_experiment() -> dict[str, Any]:
     """Execute Exp 884: gate check → train → save → eval → deploy → artifact.
@@ -568,9 +594,7 @@ def run_experiment() -> dict[str, Any]:
     # ------------------------------------------------------------------
     # 3. Train VJEPA v2 (200 epochs, same as Exp 883)
     # ------------------------------------------------------------------
-    model = VariationalJEPAPredictor(
-        in_dim=VOCAB_SIZE, context_dim=VOCAB_SIZE, latent_dim=32
-    )
+    model = VariationalJEPAPredictor(in_dim=VOCAB_SIZE, context_dim=VOCAB_SIZE, latent_dim=32)
     epoch_losses, kl_magnitudes = train_vjepa_v2(
         model, train_corpus, domain_names, n_epochs=200, lr=1e-3, seed=0
     )
@@ -652,9 +676,15 @@ def run_experiment() -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 REQUIRED_RESULT_FIELDS = {
-    "experiment", "schema", "run_date", "honest_verdict",
-    "cascade_deployed", "final_ood_auc", "retro_jepa_ood_closed",
-    "retro_jepa_ood_partially_closed", "model_version",
+    "experiment",
+    "schema",
+    "run_date",
+    "honest_verdict",
+    "cascade_deployed",
+    "final_ood_auc",
+    "retro_jepa_ood_closed",
+    "retro_jepa_ood_partially_closed",
+    "model_version",
 }
 
 

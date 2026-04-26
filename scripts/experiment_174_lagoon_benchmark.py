@@ -88,18 +88,18 @@ from carnot.samplers.parallel_ising import ParallelIsingSampler
 # Benchmark configuration
 # ---------------------------------------------------------------------------
 
-N_INSTANCES = 20       # number of problem instances per type
-SAT_N_VARS = 200       # variables in Max-3-SAT instances
-SAT_N_CLAUSES = 150    # clauses per SAT instance
+N_INSTANCES = 20  # number of problem instances per type
+SAT_N_VARS = 200  # variables in Max-3-SAT instances
+SAT_N_CLAUSES = 150  # clauses per SAT instance
 SAT_MAX_VIOLATIONS = 30  # hard constraint: at most this many violated clauses
 
-SCHED_N_JOBS = 10      # jobs in scheduling instances
-SCHED_N_SLOTS = 5      # time slots in scheduling instances
+SCHED_N_JOBS = 10  # jobs in scheduling instances
+SCHED_N_SLOTS = 5  # time slots in scheduling instances
 
-LAGOON_N_STEPS = 150   # warmup Gibbs sweeps for LagONN
+LAGOON_N_STEPS = 150  # warmup Gibbs sweeps for LagONN
 LAGOON_N_SAMPLES = 30  # samples to collect
-LAGOON_BETA = 5.0      # inverse temperature
-LAGOON_LR = 0.05       # dual-ascent learning rate
+LAGOON_BETA = 5.0  # inverse temperature
+LAGOON_LR = 0.05  # dual-ascent learning rate
 
 BASELINE_N_STEPS = 150  # same warmup for fair comparison with lr=0 (no λ update)
 BASELINE_N_SAMPLES = 30
@@ -209,7 +209,9 @@ def main() -> None:
     print(f"Instances per type: {N_INSTANCES}")
     print(f"SAT: {SAT_N_VARS} vars, {SAT_N_CLAUSES} clauses, max {SAT_MAX_VIOLATIONS} violations")
     print(f"Scheduling: {SCHED_N_JOBS} jobs × {SCHED_N_SLOTS} slots")
-    print(f"LagONN steps: {LAGOON_N_STEPS} warmup + {LAGOON_N_SAMPLES} samples, β={LAGOON_BETA}, lr={LAGOON_LR}")
+    print(
+        f"LagONN steps: {LAGOON_N_STEPS} warmup + {LAGOON_N_SAMPLES} samples, β={LAGOON_BETA}, lr={LAGOON_LR}"
+    )
     print()
 
     all_results: list[dict] = []

@@ -11,7 +11,6 @@ import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
 import pytest
-
 from carnot.embeddings.concept_vectors import (
     CONCEPT_PROMPTS,
     _compute_contrastive_vectors,
@@ -19,7 +18,6 @@ from carnot.embeddings.concept_vectors import (
     concept_energy,
     find_concept_vectors,
 )
-
 
 # ---------------------------------------------------------------------------
 # CONCEPT_PROMPTS tests
@@ -204,16 +202,12 @@ class TestBestConceptForDetection:
     def test_empty_correct_acts_raises(self) -> None:
         """REQ-INFER-016: Empty correct_acts raises ValueError."""
         with pytest.raises(ValueError, match="correct_acts must not be empty"):
-            best_concept_for_detection(
-                {"a": jnp.ones(4)}, [], [jnp.ones(4)]
-            )
+            best_concept_for_detection({"a": jnp.ones(4)}, [], [jnp.ones(4)])
 
     def test_empty_hallucinated_acts_raises(self) -> None:
         """REQ-INFER-016: Empty hallucinated_acts raises ValueError."""
         with pytest.raises(ValueError, match="hallucinated_acts must not be empty"):
-            best_concept_for_detection(
-                {"a": jnp.ones(4)}, [jnp.ones(4)], []
-            )
+            best_concept_for_detection({"a": jnp.ones(4)}, [jnp.ones(4)], [])
 
     def test_single_concept_returns_it(self) -> None:
         """REQ-INFER-016: Single concept always returns that concept."""
@@ -290,9 +284,11 @@ class TestFindConceptVectors:
         def fake_forward(**kwargs):
             for i, (layer_mod, hooks) in enumerate(fake_layers):
                 # Use different random state per concept to get varied activations.
-                fake_hidden = np.random.RandomState(call_count[0] * 10 + i).randn(
-                    1, seq_len, hidden_dim
-                ).astype(np.float32)
+                fake_hidden = (
+                    np.random.RandomState(call_count[0] * 10 + i)
+                    .randn(1, seq_len, hidden_dim)
+                    .astype(np.float32)
+                )
 
                 class FakeOutput:
                     def __init__(self, data):
@@ -351,25 +347,22 @@ class TestFindConceptVectors:
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            result = find_concept_vectors(
-                model, tokenizer, concept_prompts=prompts, n_samples=2
-            )
+            result = find_concept_vectors(model, tokenizer, concept_prompts=prompts, n_samples=2)
 
         assert result is not None
         assert set(result.keys()) == {"a", "b"}
 
     def test_vectors_have_correct_shape(self) -> None:
         """REQ-INFER-016: Each concept vector has shape (hidden_dim,)."""
-        mock_torch, mock_transformers, model, tokenizer = self._build_concept_mocks(
-            hidden_dim=16
-        )
+        mock_torch, mock_transformers, model, tokenizer = self._build_concept_mocks(hidden_dim=16)
 
         with patch.dict(
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
             result = find_concept_vectors(
-                model, tokenizer,
+                model,
+                tokenizer,
                 concept_prompts={"c": "prompt"},
                 n_samples=3,
             )
@@ -385,9 +378,7 @@ class TestFindConceptVectors:
             "sys.modules",
             {"torch": mock_torch, "transformers": mock_transformers},
         ):
-            result = find_concept_vectors(
-                model, tokenizer, concept_prompts=None, n_samples=1
-            )
+            result = find_concept_vectors(model, tokenizer, concept_prompts=None, n_samples=1)
 
         assert result is not None
         # Should have all default concept keys.
@@ -398,19 +389,22 @@ class TestFindConceptVectors:
         mock_torch, mock_transformers, model, tokenizer = self._build_concept_mocks()
 
         # Make extract_layer_activations always return None.
-        with patch.dict(
-            "sys.modules",
-            {"torch": mock_torch, "transformers": mock_transformers},
-        ):
-            with patch(
+        with (
+            patch.dict(
+                "sys.modules",
+                {"torch": mock_torch, "transformers": mock_transformers},
+            ),
+            patch(
                 "carnot.embeddings.activation_extractor.extract_layer_activations",
                 return_value=None,
-            ):
-                result = find_concept_vectors(
-                    model, tokenizer,
-                    concept_prompts={"x": "prompt"},
-                    n_samples=2,
-                )
+            ),
+        ):
+            result = find_concept_vectors(
+                model,
+                tokenizer,
+                concept_prompts={"x": "prompt"},
+                n_samples=2,
+            )
 
         assert result is None
 

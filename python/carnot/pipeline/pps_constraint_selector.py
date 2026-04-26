@@ -41,7 +41,6 @@ from collections import deque
 
 import numpy as np
 
-
 # ---------------------------------------------------------------------------
 # CouplingVarianceTracker
 # ---------------------------------------------------------------------------
@@ -81,9 +80,7 @@ class CouplingVarianceTracker:
         self.n_couplings = n_couplings
         self.window_size = window_size
         # One deque per coupling, each holding the last window_size contributions.
-        self._windows: list[deque[float]] = [
-            deque(maxlen=window_size) for _ in range(n_couplings)
-        ]
+        self._windows: list[deque[float]] = [deque(maxlen=window_size) for _ in range(n_couplings)]
 
     def update(self, coupling_contributions: np.ndarray) -> None:
         """Record the energy contribution of each coupling for one question.

@@ -25,6 +25,7 @@ from experiment_template import EnvPropagationGuard, ExperimentTemplate  # noqa:
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _patched_guard(tmp_path: Path):
     """Context manager: redirect EnvPropagationGuard to a temp file."""
     return patch.object(EnvPropagationGuard, "_path", tmp_path / "session_env")
@@ -33,6 +34,7 @@ def _patched_guard(tmp_path: Path):
 # ---------------------------------------------------------------------------
 # EnvPropagationGuard.write_session_env
 # ---------------------------------------------------------------------------
+
 
 class TestWriteSessionEnv:
     """REQ-INFRA-070: write_session_env() writes KEY=VALUE lines."""
@@ -74,6 +76,7 @@ class TestWriteSessionEnv:
 # ---------------------------------------------------------------------------
 # EnvPropagationGuard.load_session_env
 # ---------------------------------------------------------------------------
+
 
 class TestLoadSessionEnv:
     """REQ-INFRA-070: load_session_env() applies vars to os.environ."""
@@ -129,6 +132,7 @@ class TestLoadSessionEnv:
 # ExperimentTemplate.assert_live_env_if_gpu
 # ---------------------------------------------------------------------------
 
+
 class TestAssertLiveEnvIfGpu:
     """REQ-INFRA-070: assert_live_env_if_gpu() raises for GPU experiments without env var."""
 
@@ -137,8 +141,11 @@ class TestAssertLiveEnvIfGpu:
         saved = os.environ.pop("CARNOT_FORCE_LIVE", None)
         try:
             tmpl = ExperimentTemplate(
-                855, "test", "results/test_855.json",
-                requires_gpu=True, repo_root=tmp_path,
+                855,
+                "test",
+                "results/test_855.json",
+                requires_gpu=True,
+                repo_root=tmp_path,
             )
             # Override the session file path so load_session_env finds nothing
             with _patched_guard(tmp_path):
@@ -157,8 +164,11 @@ class TestAssertLiveEnvIfGpu:
         os.environ["CARNOT_FORCE_LIVE"] = "1"
         try:
             tmpl = ExperimentTemplate(
-                855, "test", "results/test_855.json",
-                requires_gpu=True, repo_root=tmp_path,
+                855,
+                "test",
+                "results/test_855.json",
+                requires_gpu=True,
+                repo_root=tmp_path,
             )
             # Should not raise
             tmpl.assert_live_env_if_gpu()
@@ -170,8 +180,11 @@ class TestAssertLiveEnvIfGpu:
         saved = os.environ.pop("CARNOT_FORCE_LIVE", None)
         try:
             tmpl = ExperimentTemplate(
-                855, "test", "results/test_855.json",
-                requires_gpu=False, repo_root=tmp_path,
+                855,
+                "test",
+                "results/test_855.json",
+                requires_gpu=False,
+                repo_root=tmp_path,
             )
             # Must not raise even without the env var
             tmpl.assert_live_env_if_gpu()
@@ -184,6 +197,7 @@ class TestAssertLiveEnvIfGpu:
 # ExperimentTemplate.apply_env_autofix
 # ---------------------------------------------------------------------------
 
+
 class TestApplyEnvAutofix:
     """REQ-INFRA-070: apply_env_autofix() sets env AND writes to session file."""
 
@@ -193,8 +207,11 @@ class TestApplyEnvAutofix:
         try:
             with _patched_guard(tmp_path):
                 tmpl = ExperimentTemplate(
-                    855, "test", "results/test_855.json",
-                    requires_gpu=False, repo_root=tmp_path,
+                    855,
+                    "test",
+                    "results/test_855.json",
+                    requires_gpu=False,
+                    repo_root=tmp_path,
                 )
                 os.environ.pop("CARNOT_FORCE_LIVE", None)
                 tmpl.apply_env_autofix()
@@ -209,8 +226,11 @@ class TestApplyEnvAutofix:
         """apply_env_autofix writes CARNOT_FORCE_LIVE to the session env file."""
         with _patched_guard(tmp_path):
             tmpl = ExperimentTemplate(
-                855, "test", "results/test_855.json",
-                requires_gpu=False, repo_root=tmp_path,
+                855,
+                "test",
+                "results/test_855.json",
+                requires_gpu=False,
+                repo_root=tmp_path,
             )
             tmpl.apply_env_autofix()
             content = EnvPropagationGuard._path.read_text()
@@ -220,6 +240,7 @@ class TestApplyEnvAutofix:
 # ---------------------------------------------------------------------------
 # ExperimentTemplate.__init__ sources session env
 # ---------------------------------------------------------------------------
+
 
 class TestInitSourcesSessionEnv:
     """SCENARIO-INFRA-080: __init__ loads session env before anything else."""
@@ -232,8 +253,11 @@ class TestInitSourcesSessionEnv:
             try:
                 # Construction must load the var
                 ExperimentTemplate(
-                    855, "test", "results/test_855.json",
-                    requires_gpu=False, repo_root=tmp_path,
+                    855,
+                    "test",
+                    "results/test_855.json",
+                    requires_gpu=False,
+                    repo_root=tmp_path,
                 )
                 assert os.environ.get("_TEST_INIT_LOAD") == "yes"
             finally:

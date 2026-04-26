@@ -519,10 +519,12 @@ def main() -> None:
     """
     # Step 0: env autofix BEFORE any heavy import (RETRO-022, RETRO-053)
     from carnot.pipeline.env_autofix import apply_env_autofix  # noqa: PLC0415
+
     apply_env_autofix()
 
     # Step 1: watchdog — 90-minute hard cap
     from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: PLC0415
+
     _watchdog = ExperimentTimeoutWatchdog(
         EXP_ID,
         timeout_minutes=90,
@@ -546,8 +548,9 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
     from carnot.pipeline.atomic_writer import AtomicResultWriter  # noqa: PLC0415
 
     import datetime
+
     t_start = time.time()
-    started_at = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    started_at = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     run_date = "20260422"
 
     tmpl = ExperimentTemplate(
@@ -573,23 +576,26 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
     # GPU gate: CARNOT_FORCE_LIVE=1 required (REQ-VERIFY-158-4)
     # ------------------------------------------------------------------
     if os.environ.get("CARNOT_FORCE_LIVE") != "1":
-        _write_and_exit(_build_blocked_artifact(
-            "CARNOT_FORCE_LIVE=1 not set — live GPU required for code VR"
-        ))
+        _write_and_exit(
+            _build_blocked_artifact("CARNOT_FORCE_LIVE=1 not set — live GPU required for code VR")
+        )
 
     # ------------------------------------------------------------------
     # GPU hardware presence check
     # ------------------------------------------------------------------
     try:
         import torch as _tc  # noqa: PLC0415
+
         if not _tc.cuda.is_available():
-            _write_and_exit(_build_blocked_artifact(
-                "torch.cuda.is_available() returned False — no GPU detected"
-            ))
+            _write_and_exit(
+                _build_blocked_artifact(
+                    "torch.cuda.is_available() returned False — no GPU detected"
+                )
+            )
     except ImportError:
-        _write_and_exit(_build_blocked_artifact(
-            "torch not installed — cannot confirm GPU hardware"
-        ))
+        _write_and_exit(
+            _build_blocked_artifact("torch not installed — cannot confirm GPU hardware")
+        )
 
     inference_mode = "live_gpu"
 
@@ -624,11 +630,9 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
         )
         inputs = _hf_tokenizer(text, return_tensors="pt").to(_hf_model.device)
         with torch.no_grad():
-            outputs = _hf_model.generate(
-                **inputs, max_new_tokens=512, do_sample=False
-            )
+            outputs = _hf_model.generate(**inputs, max_new_tokens=512, do_sample=False)
         return _hf_tokenizer.decode(
-            outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True
+            outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
         )
 
     # ------------------------------------------------------------------
@@ -664,9 +668,7 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
         if not post_pass and assert_pairs:
             total_repair_attempts += 1
             # Describe which assertions were found and ask for a fix
-            assert_summary = "\n".join(
-                f"  # ASSERT: {var} == {val}" for var, val in assert_pairs
-            )
+            assert_summary = "\n".join(f"  # ASSERT: {var} == {val}" for var, val in assert_pairs)
             repair_prompt = (
                 f"{prompt}\n\n"
                 f"Your previous attempt had assertion annotations:\n{assert_summary}\n\n"
@@ -682,14 +684,16 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
         if post_pass:
             n_post_pass += 1
 
-        problem_results.append({
-            "problem_idx": i,
-            "entry_point": problem["entry_point"],
-            "baseline_pass": baseline_pass,
-            "post_pass": post_pass,
-            "assert_comments": len(assert_pairs),
-            "repaired": repaired,
-        })
+        problem_results.append(
+            {
+                "problem_idx": i,
+                "entry_point": problem["entry_point"],
+                "baseline_pass": baseline_pass,
+                "post_pass": post_pass,
+                "assert_comments": len(assert_pairs),
+                "repaired": repaired,
+            }
+        )
 
     # ------------------------------------------------------------------
     # Aggregate metrics
@@ -699,9 +703,11 @@ def _run_inner(_watchdog) -> None:  # noqa: ANN001
     signed_improvement = post_pass_at_1 - baseline_pass_at_1
     honest_verdict = compute_honest_verdict_680(signed_improvement, inference_mode)
 
-    finished_at = __import__("datetime").datetime.now(
-        __import__("datetime").timezone.utc
-    ).strftime("%Y-%m-%dT%H:%M:%SZ")
+    finished_at = (
+        __import__("datetime")
+        .datetime.now(__import__("datetime").timezone.utc)
+        .strftime("%Y-%m-%dT%H:%M:%SZ")
+    )
     duration_s = time.time() - t_start
 
     artifact = {

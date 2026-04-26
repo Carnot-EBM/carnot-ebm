@@ -26,6 +26,7 @@ from carnot.models.ebm_cot_calibrator import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def small_eorm() -> EORMModel:
     """A tiny EORMModel for fast CPU tests (embed_dim=32, 2 heads, 1 layer)."""
@@ -41,6 +42,7 @@ def calibrator(small_eorm: EORMModel) -> EBMCoTCalibrator:
 # ---------------------------------------------------------------------------
 # _forward_get_pooled
 # ---------------------------------------------------------------------------
+
 
 class TestForwardGetPooled:
     """Tests for _forward_get_pooled helper."""
@@ -61,6 +63,7 @@ class TestForwardGetPooled:
 # _energy_from_pooled
 # ---------------------------------------------------------------------------
 
+
 class TestEnergyFromPooled:
     """Tests for _energy_from_pooled helper."""
 
@@ -74,14 +77,19 @@ class TestEnergyFromPooled:
         """Energy from pooled + readout matches EORMModel.energy() output."""
         cot = CoTEnergyInput(question_text="What is 2+2?", response_text="It is 4.")
         from carnot.models.eorm import _make_token_sequence, _SEP_ID
+
         token_ids = _make_token_sequence(
-            cot.question_text, cot.response_text,
-            small_eorm.max_seq_len, small_eorm.vocab_size,
+            cot.question_text,
+            cot.response_text,
+            small_eorm.max_seq_len,
+            small_eorm.vocab_size,
         ) or [_SEP_ID]
         pooled = _forward_get_pooled(small_eorm.params, token_ids, small_eorm.n_heads)
-        e_from_pooled = float(_energy_from_pooled(
-            pooled, small_eorm.params["out_weight"], small_eorm.params["out_bias"]
-        ))
+        e_from_pooled = float(
+            _energy_from_pooled(
+                pooled, small_eorm.params["out_weight"], small_eorm.params["out_bias"]
+            )
+        )
         e_direct = small_eorm.energy(cot)
         assert abs(e_from_pooled - e_direct) < 1e-5
 
@@ -89,6 +97,7 @@ class TestEnergyFromPooled:
 # ---------------------------------------------------------------------------
 # EBMCoTCalibrator.__init__ and defaults
 # ---------------------------------------------------------------------------
+
 
 class TestEBMCoTCalibratorInit:
     """Tests for REQ-EORM-007: n_langevin_steps configurable, default 10."""
@@ -117,6 +126,7 @@ class TestEBMCoTCalibratorInit:
 # ---------------------------------------------------------------------------
 # calibrate_hidden
 # ---------------------------------------------------------------------------
+
 
 class TestCalibrateHidden:
     """Tests for EBMCoTCalibrator.calibrate_hidden — REQ-EORM-005."""
@@ -169,7 +179,9 @@ class TestCalibrateHidden:
         h_cal = cal.calibrate_hidden(h)
         assert jnp.allclose(h, h_cal)
 
-    def test_key_advances_across_calls(self, calibrator: EBMCoTCalibrator, small_eorm: EORMModel) -> None:
+    def test_key_advances_across_calls(
+        self, calibrator: EBMCoTCalibrator, small_eorm: EORMModel
+    ) -> None:
         """Each call to calibrate_hidden advances the PRNG key (different noise)."""
         h = jnp.ones(small_eorm.embed_dim)
         key_before = calibrator._key
@@ -182,6 +194,7 @@ class TestCalibrateHidden:
 # score
 # ---------------------------------------------------------------------------
 
+
 class TestScore:
     """Tests for EBMCoTCalibrator.score — REQ-EORM-005."""
 
@@ -191,7 +204,9 @@ class TestScore:
         result = calibrator.score(cot)
         assert isinstance(result, float)
 
-    def test_different_from_uncalibrated(self, calibrator: EBMCoTCalibrator, small_eorm: EORMModel) -> None:
+    def test_different_from_uncalibrated(
+        self, calibrator: EBMCoTCalibrator, small_eorm: EORMModel
+    ) -> None:
         """Calibrated score differs from uncalibrated EORM energy."""
         cot = CoTEnergyInput(question_text="What is 3*3?", response_text="It is 9.")
         e_uncal = small_eorm.energy(cot)
@@ -210,6 +225,7 @@ class TestScore:
 # calibrated_auc
 # ---------------------------------------------------------------------------
 
+
 class TestCalibratedAuc:
     """Tests for EBMCoTCalibrator.calibrated_auc — REQ-EORM-006.
 
@@ -227,17 +243,21 @@ class TestCalibratedAuc:
         """
         examples = []
         for i in range(n // 2):
-            examples.append({
-                "question_text": f"Question {i}",
-                "response_text": f"correct answer {i}",
-                "label": 1,
-            })
+            examples.append(
+                {
+                    "question_text": f"Question {i}",
+                    "response_text": f"correct answer {i}",
+                    "label": 1,
+                }
+            )
         for i in range(n // 2):
-            examples.append({
-                "question_text": f"Question {i}",
-                "response_text": f"wrong answer {i}",
-                "label": 0,
-            })
+            examples.append(
+                {
+                    "question_text": f"Question {i}",
+                    "response_text": f"wrong answer {i}",
+                    "label": 0,
+                }
+            )
         return examples
 
     def _baseline_auc(self, eorm: EORMModel, examples: list[dict]) -> float:
@@ -297,6 +317,7 @@ class TestCalibratedAuc:
 # _auc_roc helper
 # ---------------------------------------------------------------------------
 
+
 class TestAucRoc:
     """Tests for the _auc_roc helper function."""
 
@@ -339,10 +360,12 @@ class TestAucRoc:
 # Import from carnot.models (public API)
 # ---------------------------------------------------------------------------
 
+
 class TestPublicExport:
     """EBMCoTCalibrator is accessible from carnot.models."""
 
     def test_import(self) -> None:
         """EBMCoTCalibrator can be imported from carnot.models."""
         from carnot.models import EBMCoTCalibrator as Cal
+
         assert Cal is EBMCoTCalibrator

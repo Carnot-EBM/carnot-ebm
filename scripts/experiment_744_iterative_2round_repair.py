@@ -24,6 +24,7 @@
 
 Spec: REQ-CODE-031, REQ-CODE-032, SCENARIO-CODE-029, SCENARIO-CODE-030
 """
+
 from __future__ import annotations
 
 import json
@@ -81,7 +82,10 @@ _HUMANEVAL_SUBSET: list[dict[str, Any]] = [
         "prompt": 'def separate_paren_groups(paren_string: str) -> list:\n    """Input is a string of multiple groups of nested parentheses.\n    Return a list of separate strings with each group.\n    >>> separate_paren_groups("( ) (( )) (( )( ))")\n    [\'()\', \'(())\', \'(()())\'] \n    """\n',
         "entry_point": "separate_paren_groups",
         "test_cases": [
-            {"call": "separate_paren_groups('( ) (( )) (( )( ))')", "expected": ["()", "(())", "(()())"]},
+            {
+                "call": "separate_paren_groups('( ) (( )) (( )( ))')",
+                "expected": ["()", "(())", "(()())"],
+            },
         ],
     },
     {
@@ -119,15 +123,21 @@ _HUMANEVAL_SUBSET: list[dict[str, Any]] = [
         "prompt": 'def parse_nested_parens(paren_string: str) -> list:\n    """Return a list with the max nesting depth of each paren group.\n    >>> parse_nested_parens("(()()) ((())) () ((())()())")\n    [2, 3, 1, 3]\n    """\n',
         "entry_point": "parse_nested_parens",
         "test_cases": [
-            {"call": "parse_nested_parens('(()()) ((())) () ((())()())')", "expected": [2, 3, 1, 3]},
+            {
+                "call": "parse_nested_parens('(()()) ((())) () ((())()())')",
+                "expected": [2, 3, 1, 3],
+            },
         ],
     },
     {
-        "prompt": 'def filter_by_substring(strings: list, substring: str) -> list:\n    """Filter a list of strings to only those containing the given substring.\n    >>> filter_by_substring([], \'a\')\n    []\n    >>> filter_by_substring([\'abc\', \'bacd\', \'cde\', \'array\'], \'a\')\n    [\'abc\', \'bacd\', \'array\']\n    """\n',
+        "prompt": "def filter_by_substring(strings: list, substring: str) -> list:\n    \"\"\"Filter a list of strings to only those containing the given substring.\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\n",
         "entry_point": "filter_by_substring",
         "test_cases": [
             {"call": "filter_by_substring([], 'a')", "expected": []},
-            {"call": "filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')", "expected": ["abc", "bacd", "array"]},
+            {
+                "call": "filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')",
+                "expected": ["abc", "bacd", "array"],
+            },
         ],
     },
     {
@@ -146,7 +156,7 @@ _HUMANEVAL_SUBSET: list[dict[str, Any]] = [
         ],
     },
     {
-        "prompt": 'def is_palindrome(string: str) -> bool:\n    """Test if given string is a palindrome.\n    >>> is_palindrome(\'\"\')\n    True\n    >>> is_palindrome(\'aba\')\n    True\n    >>> is_palindrome(\'zbcd\')\n    False\n    """\n',
+        "prompt": 'def is_palindrome(string: str) -> bool:\n    """Test if given string is a palindrome.\n    >>> is_palindrome(\'"\')\n    True\n    >>> is_palindrome(\'aba\')\n    True\n    >>> is_palindrome(\'zbcd\')\n    False\n    """\n',
         "entry_point": "is_palindrome",
         "test_cases": [
             {"call": "is_palindrome('')", "expected": True},
@@ -155,7 +165,7 @@ _HUMANEVAL_SUBSET: list[dict[str, Any]] = [
         ],
     },
     {
-        "prompt": 'def make_palindrome(string: str) -> str:\n    """Find the shortest palindrome that begins with a supplied string.\n    >>> make_palindrome(\'\')\n    \'\'\n    >>> make_palindrome(\'cat\')\n    \'catac\'\n    >>> make_palindrome(\'cata\')\n    \'catac\'\n    """\n',
+        "prompt": "def make_palindrome(string: str) -> str:\n    \"\"\"Find the shortest palindrome that begins with a supplied string.\n    >>> make_palindrome('')\n    ''\n    >>> make_palindrome('cat')\n    'catac'\n    >>> make_palindrome('cata')\n    'catac'\n    \"\"\"\n",
         "entry_point": "make_palindrome",
         "test_cases": [
             {"call": "make_palindrome('')", "expected": ""},
@@ -163,14 +173,14 @@ _HUMANEVAL_SUBSET: list[dict[str, Any]] = [
         ],
     },
     {
-        "prompt": 'def string_xor(a: str, b: str) -> str:\n    """Perform binary XOR on two strings, each containing \'0\' or \'1\'.\n    >>> string_xor(\'010\', \'110\')\n    \'100\'\n    """\n',
+        "prompt": "def string_xor(a: str, b: str) -> str:\n    \"\"\"Perform binary XOR on two strings, each containing '0' or '1'.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n",
         "entry_point": "string_xor",
         "test_cases": [
             {"call": "string_xor('010', '110')", "expected": "100"},
         ],
     },
     {
-        "prompt": 'def longest(strings: list):\n    """Return the longest string or None if the list is empty.\n    >>> longest([])\n    >>> longest([\'a\', \'b\', \'c\'])\n    \'a\'\n    >>> longest([\'a\', \'bb\', \'ccc\'])\n    \'ccc\'\n    """\n',
+        "prompt": "def longest(strings: list):\n    \"\"\"Return the longest string or None if the list is empty.\n    >>> longest([])\n    >>> longest(['a', 'b', 'c'])\n    'a'\n    >>> longest(['a', 'bb', 'ccc'])\n    'ccc'\n    \"\"\"\n",
         "entry_point": "longest",
         "test_cases": [
             {"call": "longest([])", "expected": None},
@@ -186,7 +196,7 @@ _HUMANEVAL_SUBSET: list[dict[str, Any]] = [
         ],
     },
     {
-        "prompt": 'def all_prefixes(string: str) -> list:\n    """Return a list of all prefixes from shortest to longest.\n    >>> all_prefixes(\'abc\')\n    [\'a\', \'ab\', \'abc\']\n    """\n',
+        "prompt": "def all_prefixes(string: str) -> list:\n    \"\"\"Return a list of all prefixes from shortest to longest.\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\n",
         "entry_point": "all_prefixes",
         "test_cases": [
             {"call": "all_prefixes('abc')", "expected": ["a", "ab", "abc"]},
@@ -209,14 +219,17 @@ _HUMANEVAL_SUBSET: list[dict[str, Any]] = [
         ],
     },
     {
-        "prompt": 'def parse_music(music_string: str) -> list:\n    """Parse ASCII music notes: \'o\'=4 beats, \'o|\'=2 beats, \'.|\'=1 beat.\n    >>> parse_music(\'o o| .| o| o| .| .| .| .| o o\')\n    [4, 2, 1, 2, 2, 1, 1, 1, 1, 4, 4]\n    """\n',
+        "prompt": "def parse_music(music_string: str) -> list:\n    \"\"\"Parse ASCII music notes: 'o'=4 beats, 'o|'=2 beats, '.|'=1 beat.\n    >>> parse_music('o o| .| o| o| .| .| .| .| o o')\n    [4, 2, 1, 2, 2, 1, 1, 1, 1, 4, 4]\n    \"\"\"\n",
         "entry_point": "parse_music",
         "test_cases": [
-            {"call": "parse_music('o o| .| o| o| .| .| .| .| o o')", "expected": [4, 2, 1, 2, 2, 1, 1, 1, 1, 4, 4]},
+            {
+                "call": "parse_music('o o| .| o| o| .| .| .| .| o o')",
+                "expected": [4, 2, 1, 2, 2, 1, 1, 1, 1, 4, 4],
+            },
         ],
     },
     {
-        "prompt": 'def how_many_times(string: str, substring: str) -> int:\n    """Return how many times a substring can be found in a string (including overlapping).\n    >>> how_many_times(\'\', \'a\')\n    0\n    >>> how_many_times(\'aaa\', \'a\')\n    3\n    >>> how_many_times(\'aaaa\', \'aa\')\n    3\n    """\n',
+        "prompt": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\"Return how many times a substring can be found in a string (including overlapping).\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3\n    \"\"\"\n",
         "entry_point": "how_many_times",
         "test_cases": [
             {"call": "how_many_times('', 'a')", "expected": 0},
@@ -235,14 +248,20 @@ _HUMANEVAL_SUBSET: list[dict[str, Any]] = [
         "prompt": 'def find_closest_elements(numbers: list) -> tuple:\n    """Find the two closest elements in a list.\n    >>> find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.2])\n    (2.0, 2.2)\n    """\n',
         "entry_point": "find_closest_elements",
         "test_cases": [
-            {"call": "find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.2])", "expected": (2.0, 2.2)},
+            {
+                "call": "find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.2])",
+                "expected": (2.0, 2.2),
+            },
         ],
     },
     {
         "prompt": 'def rescale_to_unit(numbers: list) -> list:\n    """Rescale a list of numbers so min=0 and max=1.\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    """\n',
         "entry_point": "rescale_to_unit",
         "test_cases": [
-            {"call": "rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])", "expected": [0.0, 0.25, 0.5, 0.75, 1.0]},
+            {
+                "call": "rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])",
+                "expected": [0.0, 0.25, 0.5, 0.75, 1.0],
+            },
         ],
     },
     {
@@ -293,7 +312,7 @@ _HUMANEVAL_SUBSET: list[dict[str, Any]] = [
         ],
     },
     {
-        "prompt": 'def concatenate(strings: list) -> str:\n    """Concatenate a list of strings.\n    >>> concatenate([])\n    \'\'\n    >>> concatenate([\'a\', \'b\', \'c\'])\n    \'abc\'\n    """\n',
+        "prompt": "def concatenate(strings: list) -> str:\n    \"\"\"Concatenate a list of strings.\n    >>> concatenate([])\n    ''\n    >>> concatenate(['a', 'b', 'c'])\n    'abc'\n    \"\"\"\n",
         "entry_point": "concatenate",
         "test_cases": [
             {"call": "concatenate([])", "expected": ""},
@@ -301,11 +320,14 @@ _HUMANEVAL_SUBSET: list[dict[str, Any]] = [
         ],
     },
     {
-        "prompt": 'def filter_by_prefix(strings: list, prefix: str) -> list:\n    """Filter a list to only strings that start with the given prefix.\n    >>> filter_by_prefix([], \'a\')\n    []\n    >>> filter_by_prefix([\'abc\', \'bcd\', \'cde\', \'array\'], \'a\')\n    [\'abc\', \'array\']\n    """\n',
+        "prompt": "def filter_by_prefix(strings: list, prefix: str) -> list:\n    \"\"\"Filter a list to only strings that start with the given prefix.\n    >>> filter_by_prefix([], 'a')\n    []\n    >>> filter_by_prefix(['abc', 'bcd', 'cde', 'array'], 'a')\n    ['abc', 'array']\n    \"\"\"\n",
         "entry_point": "filter_by_prefix",
         "test_cases": [
             {"call": "filter_by_prefix([], 'a')", "expected": []},
-            {"call": "filter_by_prefix(['abc', 'bcd', 'cde', 'array'], 'a')", "expected": ["abc", "array"]},
+            {
+                "call": "filter_by_prefix(['abc', 'bcd', 'cde', 'array'], 'a')",
+                "expected": ["abc", "array"],
+            },
         ],
     },
     {
@@ -409,7 +431,10 @@ _HUMANEVAL_SUBSET: list[dict[str, Any]] = [
         "entry_point": "incr_list",
         "test_cases": [
             {"call": "incr_list([1, 2, 3])", "expected": [2, 3, 4]},
-            {"call": "incr_list([5, 2, 5, 2, 3, 3, 9, 0, 123])", "expected": [6, 3, 6, 3, 4, 4, 10, 1, 124]},
+            {
+                "call": "incr_list([5, 2, 5, 2, 3, 3, 9, 0, 123])",
+                "expected": [6, 3, 6, 3, 4, 4, 10, 1, 124],
+            },
         ],
     },
     {
@@ -512,7 +537,11 @@ def compute_pass_rates(results: list[TwoRoundResult]) -> dict[str, float]:
     pass0 = sum(1 for r in results if r.round0_pass) / n
     pass1 = sum(1 for r in results if r.round0_pass or r.round1_pass) / n
     pass2 = sum(1 for r in results if r.round0_pass or r.round1_pass or r.round2_pass) / n
-    return {"pass_round0": round(pass0, 4), "pass_round1": round(pass1, 4), "pass_round2": round(pass2, 4)}
+    return {
+        "pass_round0": round(pass0, 4),
+        "pass_round1": round(pass1, 4),
+        "pass_round2": round(pass2, 4),
+    }
 
 
 def compute_error_type_breakdown(results: list[TwoRoundResult]) -> dict[str, dict[str, int]]:
@@ -593,7 +622,7 @@ def _build_qwen_caller(model_name: str = "Qwen/Qwen3.5-0.8B", gpu_id: int = 0):
                 pad_token_id=tokenizer.eos_token_id,
             )
         # Decode only the newly generated tokens (not the prompt).
-        generated_ids = output[0][inputs["input_ids"].shape[1]:]
+        generated_ids = output[0][inputs["input_ids"].shape[1] :]
         return tokenizer.decode(generated_ids, skip_special_tokens=True)
 
     return _call
@@ -616,7 +645,6 @@ def main() -> None:
     tmpl.check_exclusion_manifest()
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=90, result_path=DELIVERABLE):
-
         # --- Guard: CARNOT_FORCE_LIVE=1 required for live GPU inference ---
         if not FORCE_LIVE:
             artifact = tmpl.build_result(
@@ -693,15 +721,17 @@ def main() -> None:
             """Wrap _run_single for BatchedInferenceRunner's string-based interface."""
             problem_dict = json.loads(problem_json)
             result = _run_single(problem_dict)
-            return json.dumps({
-                "round0_pass": result.round0_pass,
-                "round1_pass": result.round1_pass,
-                "round2_pass": result.round2_pass,
-                "round0_code": result.round0_code,
-                "round1_code": result.round1_code,
-                "round2_code": result.round2_code,
-                "error_types": result.error_types,
-            })
+            return json.dumps(
+                {
+                    "round0_pass": result.round0_pass,
+                    "round1_pass": result.round1_pass,
+                    "round2_pass": result.round2_pass,
+                    "round0_code": result.round0_code,
+                    "round1_code": result.round1_code,
+                    "round2_code": result.round2_code,
+                    "error_types": result.error_types,
+                }
+            )
 
         problem_jsons = [json.dumps(p) for p in problems_to_run]
         bir = BatchedInferenceRunner(_run_single_str, batch_size=8)
@@ -709,20 +739,30 @@ def main() -> None:
 
         for ir in batch_results:
             if ir.timed_out or not ir.response:
-                all_results.append(TwoRoundResult(
-                    round0_pass=False, round1_pass=False, round2_pass=False,
-                    round0_code="", round1_code="", round2_code="",
-                    error_types=["timeout"],
-                ))
+                all_results.append(
+                    TwoRoundResult(
+                        round0_pass=False,
+                        round1_pass=False,
+                        round2_pass=False,
+                        round0_code="",
+                        round1_code="",
+                        round2_code="",
+                        error_types=["timeout"],
+                    )
+                )
             else:
                 try:
                     d = json.loads(ir.response)
                     all_results.append(TwoRoundResult(**d))
                 except Exception:
-                    all_results.append(TwoRoundResult(
-                        round0_pass=False, round1_pass=False, round2_pass=False,
-                        error_types=["other"],
-                    ))
+                    all_results.append(
+                        TwoRoundResult(
+                            round0_pass=False,
+                            round1_pass=False,
+                            round2_pass=False,
+                            error_types=["other"],
+                        )
+                    )
 
             if len(all_results) % 10 == 0:
                 tmpl.checkpoint_save(

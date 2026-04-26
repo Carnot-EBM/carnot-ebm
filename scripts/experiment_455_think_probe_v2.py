@@ -105,12 +105,8 @@ def _build_50_questions() -> list[str]:
         tmpl_correct = _CORRECT_TEMPLATES[i % len(_CORRECT_TEMPLATES)]
         tmpl_wrong = _WRONG_TEMPLATES[i % len(_WRONG_TEMPLATES)]
 
-        questions.append(
-            tmpl_correct.format(a=a, b=b, n=n_add, wrong=wrong_add)
-        )
-        questions.append(
-            tmpl_wrong.format(a=a, b=b, n=n_mul, wrong=wrong_add)
-        )
+        questions.append(tmpl_correct.format(a=a, b=b, n=n_add, wrong=wrong_add))
+        questions.append(tmpl_wrong.format(a=a, b=b, n=n_mul, wrong=wrong_add))
 
     return questions[:N_QUESTIONS]
 
@@ -181,12 +177,14 @@ def _build_artifact(
 
 def _run_date() -> str:
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
+
+    return datetime.datetime.now(datetime.UTC).strftime("%Y%m%d")
 
 
 def _utc_now() -> str:
     import datetime
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 # ---------------------------------------------------------------------------

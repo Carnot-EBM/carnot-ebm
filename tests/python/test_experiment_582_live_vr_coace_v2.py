@@ -144,6 +144,7 @@ class TestRunPerQuestion:
 
     def _make_extractor(self):
         from carnot.extraction.coace_extractor_v2 import CoACEExtractorV2
+
         return CoACEExtractorV2()
 
     def test_no_violations_baseline_equals_pipeline(self):
@@ -201,8 +202,12 @@ class TestRunPerQuestion:
         questions = [{"question": "q", "answer": "#### 0"}]
         stats = exp582._run_per_question(extractor, lambda p: "answer is 0", questions)
         for field in (
-            "baseline_accuracy", "pipeline_accuracy", "n_violations_found",
-            "n_repairs_applied", "n_repairs_improved", "per_question",
+            "baseline_accuracy",
+            "pipeline_accuracy",
+            "n_violations_found",
+            "n_repairs_applied",
+            "n_repairs_improved",
+            "per_question",
         ):
             assert field in stats, f"Missing field: {field}"
 

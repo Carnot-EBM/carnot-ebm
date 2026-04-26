@@ -269,9 +269,7 @@ def _run_main(tmp_path: Path, extra_patches: list | None = None, gpu_health=None
     with ExitStack() as stack:
         for cm in patches:
             stack.enter_context(cm)
-        stack.enter_context(
-            patch.object(exp427, "_write_artifact", side_effect=fake_write)
-        )
+        stack.enter_context(patch.object(exp427, "_write_artifact", side_effect=fake_write))
         exp427.main()
 
     return written.get("artifact", {})
@@ -301,9 +299,11 @@ class TestMainConfirmPath:
         def fake_write(tmpl, artifact):
             written["artifact"] = artifact
 
-        with _patch_repo_root(tmp_path), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"), \
-             patch.object(exp427, "_write_artifact", side_effect=fake_write):
+        with (
+            _patch_repo_root(tmp_path),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+            patch.object(exp427, "_write_artifact", side_effect=fake_write),
+        ):
             exp427.main()
 
         assert written["artifact"]["experiment"] == 427
@@ -324,9 +324,11 @@ class TestMainConfirmPath:
         def fake_write(tmpl, artifact):
             written["artifact"] = artifact
 
-        with _patch_repo_root(tmp_path), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"), \
-             patch.object(exp427, "_write_artifact", side_effect=fake_write):
+        with (
+            _patch_repo_root(tmp_path),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+            patch.object(exp427, "_write_artifact", side_effect=fake_write),
+        ):
             exp427.main()
 
         assert written["artifact"]["confirmed_from"] == 419
@@ -351,9 +353,11 @@ class TestMainRerunPath:
         def fake_write(tmpl, artifact):
             written["artifact"] = artifact
 
-        with _patch_repo_root(tmp_path), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"), \
-             patch.object(exp427, "_write_artifact", side_effect=fake_write):
+        with (
+            _patch_repo_root(tmp_path),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+            patch.object(exp427, "_write_artifact", side_effect=fake_write),
+        ):
             exp427.main()
 
         assert written["artifact"]["honest_verdict"] == "blocked"
@@ -366,18 +370,23 @@ class TestMainRerunPath:
         def fake_write(tmpl, artifact):
             written["artifact"] = artifact
 
-        with _patch_repo_root(tmp_path), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"), \
-             patch.object(exp427, "_write_artifact", side_effect=fake_write):
+        with (
+            _patch_repo_root(tmp_path),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+            patch.object(exp427, "_write_artifact", side_effect=fake_write),
+        ):
             exp427.main()
 
         assert written["artifact"]["honest_verdict"] == "blocked"
 
-    @pytest.mark.parametrize("verdict", [
-        "gpu_confirmed_live",
-        "auto_fix_applied",
-        "gpu_detected_env_was_correct",
-    ])
+    @pytest.mark.parametrize(
+        "verdict",
+        [
+            "gpu_confirmed_live",
+            "auto_fix_applied",
+            "gpu_detected_env_was_correct",
+        ],
+    )
     def test_gate0_all_allowed_verdicts_pass(self, tmp_path, verdict):
         """All three Gate 0 allowed verdicts must proceed past the gate."""
         _write_exp419(tmp_path, {"status": "partial"})
@@ -394,23 +403,28 @@ class TestMainRerunPath:
         def fake_write(tmpl, artifact):
             written["artifact"] = artifact
 
-        with _patch_repo_root(tmp_path), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"), \
-             patch(
-                 "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
-                 return_value={"status": "blocked"},
-             ), \
-             patch.object(exp427, "_write_artifact", side_effect=fake_write):
+        with (
+            _patch_repo_root(tmp_path),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+            patch(
+                "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
+                return_value={"status": "blocked"},
+            ),
+            patch.object(exp427, "_write_artifact", side_effect=fake_write),
+        ):
             exp427.main()
 
         assert written["artifact"]["honest_verdict"] == "blocked"
 
     def test_gpu1_zombie_logs_warning_but_continues(self, tmp_path, caplog):
         import logging
+
         _write_exp419(tmp_path, {"status": "partial"})
         _write_exp413(tmp_path, "auto_fix_applied")
 
-        with caplog.at_level(logging.WARNING, logger="scripts.experiment_427_precision_live_confirmed"):
+        with caplog.at_level(
+            logging.WARNING, logger="scripts.experiment_427_precision_live_confirmed"
+        ):
             art = _run_main(tmp_path, gpu_health=_ZOMBIE_HEALTH)
 
         zombie_warned = any("zombie" in r.message.lower() for r in caplog.records)
@@ -420,10 +434,13 @@ class TestMainRerunPath:
 
     def test_temperature_warning_logs_warning_but_continues(self, tmp_path, caplog):
         import logging
+
         _write_exp419(tmp_path, {"status": "partial"})
         _write_exp413(tmp_path, "auto_fix_applied")
 
-        with caplog.at_level(logging.WARNING, logger="scripts.experiment_427_precision_live_confirmed"):
+        with caplog.at_level(
+            logging.WARNING, logger="scripts.experiment_427_precision_live_confirmed"
+        ):
             art = _run_main(tmp_path, gpu_health=_THERMAL_HEALTH)
 
         thermal_warned = any("temperature" in r.message.lower() for r in caplog.records)
@@ -438,21 +455,23 @@ class TestMainRerunPath:
         def fake_write(tmpl, artifact):
             written["artifact"] = artifact
 
-        with _patch_repo_root(tmp_path), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"), \
-             patch(
-                 "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
-                 return_value=None,
-             ), \
-             patch(
-                 "scripts.experiment_427_precision_live_confirmed.check_dual_gpu_health",
-                 return_value=_CI_HEALTH,
-             ), \
-             patch(
-                 "scripts.experiment_template.ExperimentTemplate.setup_gpu",
-                 return_value={"all_healthy": False, "models": []},
-             ), \
-             patch.object(exp427, "_write_artifact", side_effect=fake_write):
+        with (
+            _patch_repo_root(tmp_path),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+            patch(
+                "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
+                return_value=None,
+            ),
+            patch(
+                "scripts.experiment_427_precision_live_confirmed.check_dual_gpu_health",
+                return_value=_CI_HEALTH,
+            ),
+            patch(
+                "scripts.experiment_template.ExperimentTemplate.setup_gpu",
+                return_value={"all_healthy": False, "models": []},
+            ),
+            patch.object(exp427, "_write_artifact", side_effect=fake_write),
+        ):
             exp427.main()
 
         assert written["artifact"]["honest_verdict"] == "blocked"
@@ -466,25 +485,27 @@ class TestMainRerunPath:
         def fake_write(tmpl, artifact):
             written["artifact"] = artifact
 
-        with _patch_repo_root(tmp_path), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"), \
-             patch(
-                 "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
-                 return_value=None,
-             ), \
-             patch(
-                 "carnot.pipeline.dual_gpu_health.check_dual_gpu_health",
-                 return_value=_CI_HEALTH,
-             ), \
-             patch(
-                 "scripts.experiment_template.ExperimentTemplate.setup_gpu",
-                 return_value={"all_healthy": True, "models": []},
-             ), \
-             patch(
-                 "scripts.experiment_427_precision_live_confirmed._load_model_pipeline",
-                 side_effect=RuntimeError("GPU OOM"),
-             ), \
-             patch.object(exp427, "_write_artifact", side_effect=fake_write):
+        with (
+            _patch_repo_root(tmp_path),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+            patch(
+                "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
+                return_value=None,
+            ),
+            patch(
+                "carnot.pipeline.dual_gpu_health.check_dual_gpu_health",
+                return_value=_CI_HEALTH,
+            ),
+            patch(
+                "scripts.experiment_template.ExperimentTemplate.setup_gpu",
+                return_value={"all_healthy": True, "models": []},
+            ),
+            patch(
+                "scripts.experiment_427_precision_live_confirmed._load_model_pipeline",
+                side_effect=RuntimeError("GPU OOM"),
+            ),
+            patch.object(exp427, "_write_artifact", side_effect=fake_write),
+        ):
             exp427.main()
 
         assert written["artifact"]["honest_verdict"] == "blocked"

@@ -65,7 +65,13 @@ TASKS = [
     {
         "question": "Write a Python function called fizzbuzz(n) that returns 'Fizz' if n is divisible by 3, 'Buzz' if by 5, 'FizzBuzz' if by both, else the number as a string.",
         "func_name": "fizzbuzz",
-        "test_cases": [((3,), "Fizz"), ((5,), "Buzz"), ((15,), "FizzBuzz"), ((7,), "7"), ((1,), "1")],
+        "test_cases": [
+            ((3,), "Fizz"),
+            ((5,), "Buzz"),
+            ((15,), "FizzBuzz"),
+            ((7,), "7"),
+            ((1,), "1"),
+        ],
     },
     {
         "question": "Write a Python function called flatten(lst) that takes a nested list and returns a flat list.",
@@ -80,7 +86,12 @@ TASKS = [
     {
         "question": "Write a Python function called binary_search(arr, target) that returns the index of target in sorted arr, or -1 if not found.",
         "func_name": "binary_search",
-        "test_cases": [(([1, 3, 5, 7, 9], 5), 2), (([1, 3, 5], 4), -1), (([], 1), -1), (([1], 1), 0)],
+        "test_cases": [
+            (([1, 3, 5, 7, 9], 5), 2),
+            (([1, 3, 5], 4), -1),
+            (([], 1), -1),
+            (([1], 1), 0),
+        ],
     },
 ]
 
@@ -99,7 +110,8 @@ def generate_with_logprobs(model, tokenizer, prompt, do_sample=False, temperatur
 
     with torch.no_grad():
         outputs = model.generate(
-            **inputs, **gen_kwargs,
+            **inputs,
+            **gen_kwargs,
             return_dict_in_generate=True,
             output_scores=True,
         )
@@ -174,8 +186,8 @@ def main() -> int:
         tests = task["test_cases"]
         prompt = f"{system}\n\n{q}"
 
-        print(f"\n{'─'*60}")
-        print(f"Task {task_idx+1}/{len(TASKS)}: {fn}")
+        print(f"\n{'─' * 60}")
+        print(f"Task {task_idx + 1}/{len(TASKS)}: {fn}")
 
         # Greedy
         code, lp = generate_with_logprobs(model, tokenizer, prompt)
@@ -189,20 +201,26 @@ def main() -> int:
         candidates = []
         for c in range(N_CANDIDATES):
             code_c, lp_c = generate_with_logprobs(
-                model, tokenizer, prompt, do_sample=True, temperature=0.8,
+                model,
+                tokenizer,
+                prompt,
+                do_sample=True,
+                temperature=0.8,
             )
             n_pass_c, n_total_c = run_tests(code_c, fn, tests)
             n_fail = n_total_c - n_pass_c
             composite_score = -lp_c + TEST_FAILURE_PENALTY * n_fail
-            candidates.append({
-                "code": code_c,
-                "logprob": lp_c,
-                "n_pass": n_pass_c,
-                "n_total": n_total_c,
-                "n_fail": n_fail,
-                "composite": composite_score,
-                "all_pass": n_pass_c == n_total_c,
-            })
+            candidates.append(
+                {
+                    "code": code_c,
+                    "logprob": lp_c,
+                    "n_pass": n_pass_c,
+                    "n_total": n_total_c,
+                    "n_fail": n_fail,
+                    "composite": composite_score,
+                    "all_pass": n_pass_c == n_total_c,
+                }
+            )
 
         # Logprob-only: pick highest logprob
         best_lp = max(candidates, key=lambda c: c["logprob"])
@@ -225,9 +243,15 @@ def main() -> int:
         c_icon = "✓" if comp_ok else "✗"
 
         any_pass = sum(1 for c in candidates if c["all_pass"])
-        print(f"  Logprob-best:    [{lp_icon}] {best_lp['n_pass']}/{best_lp['n_total']}, lp={best_lp['logprob']:.2f}")
-        print(f"  Structural-best: [{s_icon}] {best_struct['n_pass']}/{best_struct['n_total']}, lp={best_struct['logprob']:.2f}")
-        print(f"  Composite-best:  [{c_icon}] {best_comp['n_pass']}/{best_comp['n_total']}, lp={best_comp['logprob']:.2f}, score={best_comp['composite']:.2f}")
+        print(
+            f"  Logprob-best:    [{lp_icon}] {best_lp['n_pass']}/{best_lp['n_total']}, lp={best_lp['logprob']:.2f}"
+        )
+        print(
+            f"  Structural-best: [{s_icon}] {best_struct['n_pass']}/{best_struct['n_total']}, lp={best_struct['logprob']:.2f}"
+        )
+        print(
+            f"  Composite-best:  [{c_icon}] {best_comp['n_pass']}/{best_comp['n_total']}, lp={best_comp['logprob']:.2f}, score={best_comp['composite']:.2f}"
+        )
         print(f"  Oracle: {any_pass}/{N_CANDIDATES} candidates pass all tests")
 
     # Summary
@@ -237,16 +261,16 @@ def main() -> int:
     s_acc = sum(structural_passed) / n
     c_acc = sum(composite_passed) / n
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("RESULTS")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  {'Approach':<20} {'Correct':>8} {'Accuracy':>10}")
-    print(f"  {'─'*40}")
+    print(f"  {'─' * 40}")
     print(f"  {'Greedy':<20} {sum(greedy_passed):>5}/{n}   {g_acc:>8.0%}")
     print(f"  {'Logprob-only':<20} {sum(logprob_passed):>5}/{n}   {l_acc:>8.0%}")
     print(f"  {'Structural-only':<20} {sum(structural_passed):>5}/{n}   {s_acc:>8.0%}")
     print(f"  {'Composite (married)':<20} {sum(composite_passed):>5}/{n}   {c_acc:>8.0%}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     best_approach = max(
         [("Greedy", g_acc), ("Logprob", l_acc), ("Structural", s_acc), ("Composite", c_acc)],

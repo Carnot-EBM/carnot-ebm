@@ -86,9 +86,7 @@ _VENV_NPU = _REPO_ROOT / ".venv-npu"
 
 # RyzenAI-SW pre-built library paths
 _RYZEN_AI_SW = Path.home() / "github.com" / "amd" / "RyzenAI-SW"
-_VITISAI_SO_DIR = (
-    _RYZEN_AI_SW / "Ryzen-AI-CVML-Library" / "linux" / "onnx" / "ryzen14"
-)
+_VITISAI_SO_DIR = _RYZEN_AI_SW / "Ryzen-AI-CVML-Library" / "linux" / "onnx" / "ryzen14"
 
 # ONNX model: prefer Exp 291 result, fall back to Exp 146
 _ONNX_291 = _RESULTS_DIR / "jepa_predictor_291.onnx"
@@ -254,9 +252,7 @@ def _check_source_build_prereqs() -> list[str]:
 
     vitisai_so = _VITISAI_SO_DIR / "libonnxruntime_providers_vitisai.so"
     if not vitisai_so.exists():
-        missing.append(
-            f"libonnxruntime_providers_vitisai.so missing at {_VITISAI_SO_DIR}"
-        )
+        missing.append(f"libonnxruntime_providers_vitisai.so missing at {_VITISAI_SO_DIR}")
 
     return missing
 
@@ -295,8 +291,11 @@ def _ensure_ort_1201_in_venv() -> tuple[bool, str]:
     # Check current version
     try:
         r = subprocess.run(
-            [str(_VENV_NPU / "bin" / "python"), "-c",
-             "import onnxruntime; print(onnxruntime.__version__)"],
+            [
+                str(_VENV_NPU / "bin" / "python"),
+                "-c",
+                "import onnxruntime; print(onnxruntime.__version__)",
+            ],
             capture_output=True,
             text=True,
             timeout=15,
@@ -308,12 +307,18 @@ def _ensure_ort_1201_in_venv() -> tuple[bool, str]:
         return False, "timeout checking onnxruntime version"
 
     # Downgrade/install 1.20.1
-    print(f"  Installing onnxruntime=={ORT_TARGET_VERSION} in .venv-npu "
-          f"(current: {current_ver})...")
+    print(
+        f"  Installing onnxruntime=={ORT_TARGET_VERSION} in .venv-npu (current: {current_ver})..."
+    )
     try:
         r = subprocess.run(
-            [str(venv_pip), "install", f"onnxruntime=={ORT_TARGET_VERSION}",
-             "--force-reinstall", "--quiet"],
+            [
+                str(venv_pip),
+                "install",
+                f"onnxruntime=={ORT_TARGET_VERSION}",
+                "--force-reinstall",
+                "--quiet",
+            ],
             capture_output=True,
             text=True,
             timeout=300,  # 5-minute timeout for pip install
@@ -481,7 +486,9 @@ print(json.dumps({{
         )
         stdout = result.stdout.strip()
         if not stdout:
-            return {"path_a_error": f"No stdout from pre-built path subprocess. stderr: {result.stderr[:500]}"}
+            return {
+                "path_a_error": f"No stdout from pre-built path subprocess. stderr: {result.stderr[:500]}"
+            }
         data = json.loads(stdout)
         if data.get("ok"):
             return data
@@ -706,26 +713,24 @@ def main() -> None:
 
     # --- Collect hardware info ---
     npu_hw = _collect_npu_hardware_info()
-    print(f"  NPU hardware: amdxdna_loaded={npu_hw['amdxdna_driver_loaded']}, "
-          f"xrt={npu_hw['xrt_version']}, vitisai_so={npu_hw['vitisai_so_present']}")
+    print(
+        f"  NPU hardware: amdxdna_loaded={npu_hw['amdxdna_driver_loaded']}, "
+        f"xrt={npu_hw['xrt_version']}, vitisai_so={npu_hw['vitisai_so_present']}"
+    )
 
     # --- Select ONNX model ---
     onnx_model = _select_onnx_model()
     if onnx_model is None:
         result_doc = {
             "experiment": EXPERIMENT,
-            "description": (
-                "AMD XDNA NPU VitisAI EP benchmark — blocked: no ONNX model found"
-            ),
+            "description": ("AMD XDNA NPU VitisAI EP benchmark — blocked: no ONNX model found"),
             "run_date": RUN_DATE,
             "execution_path": "blocked",
             "cpu_ort_baseline_us": CPU_ORT_BASELINE_US,
             "onnx_model_used": "none",
             "npu_hardware_info": npu_hw,
             "result": {
-                "missing_prereqs": [
-                    f"ONNX model not found: tried {_ONNX_291} and {_ONNX_146}"
-                ],
+                "missing_prereqs": [f"ONNX model not found: tried {_ONNX_291} and {_ONNX_146}"],
                 "next_action": (
                     "Run Exp 291 or Exp 146 first to generate the ONNX model. "
                     "Command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_291_jepa_predictor_retrain.py"
@@ -735,9 +740,7 @@ def main() -> None:
             },
             "honest_verdict": {
                 "explanation": "ONNX model missing — cannot benchmark NPU inference.",
-                "recommended_next_steps": [
-                    "Run Exp 291 to generate jepa_predictor_291.onnx"
-                ],
+                "recommended_next_steps": ["Run Exp 291 to generate jepa_predictor_291.onnx"],
             },
         }
         _OUTPUT_FILE.write_text(json.dumps(result_doc, indent=2))
@@ -760,8 +763,10 @@ def main() -> None:
         actually_on_npu = any("VitisAI" in p for p in providers_used)
         if not actually_on_npu:
             # ORT fell back to CPU — not a real NPU result
-            print(f"  Path A: ORT fell back to CPU (providers: {providers_used}). "
-                  "VitisAI EP not used — treating as blocked.")
+            print(
+                f"  Path A: ORT fell back to CPU (providers: {providers_used}). "
+                "VitisAI EP not used — treating as blocked."
+            )
         else:
             print(f"  Path A SUCCESS: {latency_us:.3f} µs/call, {speedup:.2f}× vs CPU ORT")
             result_doc = {
@@ -826,9 +831,7 @@ def main() -> None:
         elif any("cmake" in p for p in missing_prereqs):
             next_action = "Install cmake ≥ 3.26 and re-run this script."
         else:
-            next_action = (
-                f"Resolve missing prerequisites and re-run. Missing: {missing_prereqs}"
-            )
+            next_action = f"Resolve missing prerequisites and re-run. Missing: {missing_prereqs}"
 
         result_doc = {
             "experiment": EXPERIMENT,
@@ -886,9 +889,7 @@ def main() -> None:
             "npu_hardware_info": npu_hw,
             "result": {
                 "npu_latency_us": round(latency_us, 3),
-                "npu_throughput_calls_per_sec": round(
-                    build_result["throughput_calls_per_sec"], 1
-                ),
+                "npu_throughput_calls_per_sec": round(build_result["throughput_calls_per_sec"], 1),
                 "speedup_vs_cpu_ort": round(speedup, 4),
                 "timed_calls": build_result["timed_calls"],
                 "providers_used": providers_used,

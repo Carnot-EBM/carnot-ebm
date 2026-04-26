@@ -22,6 +22,7 @@ from pathlib import Path
 # Data model
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class Experiment:
     number: int
@@ -41,10 +42,10 @@ class Experiment:
 #   | 1 | SAT verify-and-repair (random) | check +91.6% energy reduction | ...
 # Also matches row 14 which is outside the table block.
 _ROW_RE = re.compile(
-    r"\|\s*(\d+)\s*\|"           # experiment number
-    r"\s*(.+?)\s*\|"             # experiment name
-    r"\s*([^\|]+?)\s*\|"         # result column (icon + text)
-    r"\s*(.+?)\s*\|",            # key learning
+    r"\|\s*(\d+)\s*\|"  # experiment number
+    r"\s*(.+?)\s*\|"  # experiment name
+    r"\s*([^\|]+?)\s*\|"  # result column (icon + text)
+    r"\s*(.+?)\s*\|",  # key learning
 )
 
 # Matches delta patterns like "+20%", "-12%", "+10%", "net zero", "+91.6%"
@@ -105,7 +106,9 @@ def _bar_color(icon: str) -> str:
     return _ICON_MAP.get(icon, _ICON_MAP["warn"])[1]
 
 
-def _svg_bar_chart(experiments: list[Experiment], width: int = 700, bar_h: int = 28, gap: int = 6) -> str:
+def _svg_bar_chart(
+    experiments: list[Experiment], width: int = 700, bar_h: int = 28, gap: int = 6
+) -> str:
     """Generate an SVG bar chart of accuracy deltas."""
     # Only include experiments that have a numeric delta
     items = [(e.number, e.name, e.delta, e.result_icon) for e in experiments if e.delta is not None]
@@ -118,34 +121,41 @@ def _svg_bar_chart(experiments: list[Experiment], width: int = 700, bar_h: int =
     scale = (mid_x - 80) / max_abs  # leave room for labels
 
     lines: list[str] = []
-    lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{chart_h}" '
-                 f'style="font-family:monospace;font-size:13px;">')
+    lines.append(
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{chart_h}" '
+        f'style="font-family:monospace;font-size:13px;">'
+    )
     # Zero line
-    lines.append(f'<line x1="{mid_x}" y1="0" x2="{mid_x}" y2="{chart_h}" '
-                 f'stroke="#666" stroke-dasharray="4"/>')
+    lines.append(
+        f'<line x1="{mid_x}" y1="0" x2="{mid_x}" y2="{chart_h}" '
+        f'stroke="#666" stroke-dasharray="4"/>'
+    )
 
     for i, (num, name, delta, icon) in enumerate(items):
         y = i * (bar_h + gap) + 10
         bar_w = abs(delta) * scale
         color = _bar_color(icon)
-        if delta >= 0:
-            x = mid_x
-        else:
-            x = mid_x - bar_w
+        x = mid_x if delta >= 0 else mid_x - bar_w
 
         # Bar
-        lines.append(f'<rect x="{x:.1f}" y="{y}" width="{bar_w:.1f}" height="{bar_h}" '
-                     f'fill="{color}" opacity="0.8" rx="3"/>')
+        lines.append(
+            f'<rect x="{x:.1f}" y="{y}" width="{bar_w:.1f}" height="{bar_h}" '
+            f'fill="{color}" opacity="0.8" rx="3"/>'
+        )
         # Label left of bar: experiment number + short name
         short = html.escape(name[:30])
-        lines.append(f'<text x="{mid_x - 5}" y="{y + bar_h - 8}" text-anchor="end" '
-                     f'fill="#ccc" font-size="11">#{num} {short}</text>')
+        lines.append(
+            f'<text x="{mid_x - 5}" y="{y + bar_h - 8}" text-anchor="end" '
+            f'fill="#ccc" font-size="11">#{num} {short}</text>'
+        )
         # Value label
         sign = "+" if delta > 0 else ""
         val_x = (mid_x + bar_w + 5) if delta >= 0 else (mid_x - bar_w - 5)
         anchor = "start" if delta >= 0 else "end"
-        lines.append(f'<text x="{val_x:.1f}" y="{y + bar_h - 8}" text-anchor="{anchor}" '
-                     f'fill="#eee">{sign}{delta:.0f}%</text>')
+        lines.append(
+            f'<text x="{val_x:.1f}" y="{y + bar_h - 8}" text-anchor="{anchor}" '
+            f'fill="#eee">{sign}{delta:.0f}%</text>'
+        )
 
     lines.append("</svg>")
     return "\n".join(lines)
@@ -158,8 +168,7 @@ def _timeline_html(experiments: list[Experiment]) -> str:
         icon_html, color = _ICON_MAP.get(e.result_icon, _ICON_MAP["warn"])
         tooltip = html.escape(f"#{e.number}: {e.name} — {e.result_text}")
         dots.append(
-            f'<span class="dot" style="background:{color};" title="{tooltip}">'
-            f'{e.number}</span>'
+            f'<span class="dot" style="background:{color};" title="{tooltip}">{e.number}</span>'
         )
     return '<div class="timeline">' + "".join(dots) + "</div>"
 
@@ -178,7 +187,7 @@ def _table_html(experiments: list[Experiment]) -> str:
             f"<td>{e.number}</td>"
             f"<td>{icon_html}</td>"
             f"<td>{html.escape(e.name)}</td>"
-            f"<td class=\"mono\">{delta_str}</td>"
+            f'<td class="mono">{delta_str}</td>'
             f"<td>{html.escape(e.result_text)}</td>"
             f"<td>{html.escape(e.key_learning)}</td>"
             f"</tr>"
@@ -246,15 +255,15 @@ def generate_html(experiments: list[Experiment]) -> str:
 
 <div class="stats">
   <div class="stat">
-    <div class="stat-value" style="color:var(--green)">{sum(1 for e in experiments if e.result_icon == 'pass')}</div>
+    <div class="stat-value" style="color:var(--green)">{sum(1 for e in experiments if e.result_icon == "pass")}</div>
     <div class="stat-label">Passed</div>
   </div>
   <div class="stat">
-    <div class="stat-value" style="color:var(--yellow)">{sum(1 for e in experiments if e.result_icon == 'warn')}</div>
+    <div class="stat-value" style="color:var(--yellow)">{sum(1 for e in experiments if e.result_icon == "warn")}</div>
     <div class="stat-label">Partial</div>
   </div>
   <div class="stat">
-    <div class="stat-value" style="color:var(--red)">{sum(1 for e in experiments if e.result_icon == 'fail')}</div>
+    <div class="stat-value" style="color:var(--red)">{sum(1 for e in experiments if e.result_icon == "fail")}</div>
     <div class="stat-label">Failed</div>
   </div>
   <div class="stat">
@@ -294,6 +303,7 @@ def generate_html(experiments: list[Experiment]) -> str:
 # Main
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     repo_root = Path(__file__).resolve().parent.parent
     log_path = repo_root / "ops" / "experiment-log.md"
@@ -312,9 +322,11 @@ def main() -> None:
     print(f"Dashboard generated: {out_path}")
     print(f"  {len(experiments)} experiments parsed")
     passed = sum(1 for e in experiments if e.result_icon == "pass")
-    print(f"  {passed} passed, "
-          f"{sum(1 for e in experiments if e.result_icon == 'warn')} partial, "
-          f"{sum(1 for e in experiments if e.result_icon == 'fail')} failed")
+    print(
+        f"  {passed} passed, "
+        f"{sum(1 for e in experiments if e.result_icon == 'warn')} partial, "
+        f"{sum(1 for e in experiments if e.result_icon == 'fail')} failed"
+    )
 
 
 if __name__ == "__main__":

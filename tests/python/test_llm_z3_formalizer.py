@@ -210,13 +210,7 @@ class TestExecZ3Snippet:
 
     def test_sat_code_returns_sat(self) -> None:
         """SCENARIO-EXTRACT-041: consistent constraints → 'sat'."""
-        code = (
-            "import z3\n"
-            "s = z3.Solver()\n"
-            "x = z3.Int('x')\n"
-            "s.add(x == 5)\n"
-            "print(s.check())\n"
-        )
+        code = "import z3\ns = z3.Solver()\nx = z3.Int('x')\ns.add(x == 5)\nprint(s.check())\n"
         result, err = _exec_z3_snippet(code)
         assert result == "sat"
         assert err is None
@@ -305,6 +299,7 @@ class TestExecZ3Snippet:
     def test_z3_not_installed_returns_error(self) -> None:
         """When z3 is not importable, _exec_z3_snippet returns ('error', message)."""
         import builtins
+
         original_import = builtins.__import__
 
         def _mock_import(name: str, *args: Any, **kwargs: Any) -> Any:
@@ -313,6 +308,7 @@ class TestExecZ3Snippet:
             return original_import(name, *args, **kwargs)
 
         import unittest.mock as mock
+
         with mock.patch("builtins.__import__", side_effect=_mock_import):
             result, err = _exec_z3_snippet("import z3\nprint('sat')")
         assert result == "error"
@@ -480,13 +476,7 @@ class TestLLMz3FormalizerLiveMode:
         the second call returns valid sat code.
         """
         broken_code = "```python\nimport os\nprint(os.getcwd())\n```"
-        good_code = (
-            "```python\n"
-            "import z3\n"
-            "s = z3.Solver()\n"
-            "print(s.check())\n"
-            "```"
-        )
+        good_code = "```python\nimport z3\ns = z3.Solver()\nprint(s.check())\n```"
         mock = MagicMock(side_effect=[broken_code, good_code])
         formalizer = LLMz3Formalizer(llm_caller=mock, max_iterations=2)
         result = formalizer.formalize("q", "r")
@@ -545,13 +535,7 @@ class TestLLMz3FormalizerLiveMode:
     def test_no_code_block_continues_to_next_iteration(self) -> None:
         """If LLM returns no code block, loop continues to next iteration."""
         no_block = "I cannot formalize this."
-        good_code = (
-            "```python\n"
-            "import z3\n"
-            "s = z3.Solver()\n"
-            "print(s.check())\n"
-            "```"
-        )
+        good_code = "```python\nimport z3\ns = z3.Solver()\nprint(s.check())\n```"
         mock = MagicMock(side_effect=[no_block, good_code])
         formalizer = LLMz3Formalizer(llm_caller=mock, max_iterations=2)
         result = formalizer.formalize("q", "r")

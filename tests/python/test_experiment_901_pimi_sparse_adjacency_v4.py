@@ -23,6 +23,7 @@ from python.carnot.samplers.synchronous_pimi import make_n8_coupling_matrix
 # REQ-HW-041: _sparsify keeps only top-k couplings per row
 # ---------------------------------------------------------------------------
 
+
 class TestSparsify:
     """SCENARIO-HW-041: _sparsify zeroes all but top-k entries per row."""
 
@@ -52,8 +53,7 @@ class TestSparsify:
         for i in range(8):
             row_nonzero = int(np.sum(sp.J_sparse[i] != 0))
             assert row_nonzero == 1, (
-                f"k=1 sparsify must keep exactly 1 coupling per row, "
-                f"row {i} has {row_nonzero}"
+                f"k=1 sparsify must keep exactly 1 coupling per row, row {i} has {row_nonzero}"
             )
 
     def test_sparsify_k2_keeps_exactly_two_per_row(self):
@@ -66,8 +66,7 @@ class TestSparsify:
         for i in range(8):
             row_nonzero = int(np.sum(sp.J_sparse[i] != 0))
             assert row_nonzero == 2, (
-                f"k=2 sparsify must keep 2 couplings per row, "
-                f"row {i} has {row_nonzero}"
+                f"k=2 sparsify must keep 2 couplings per row, row {i} has {row_nonzero}"
             )
 
     def test_sparsify_keeps_highest_magnitude_couplings(self):
@@ -124,6 +123,7 @@ class TestSparsify:
 # ---------------------------------------------------------------------------
 # REQ-HW-041: sample_once uses J_sparse (not J_dense)
 # ---------------------------------------------------------------------------
+
 
 class TestSampleOnceUsesSparseJ:
     """SCENARIO-HW-041-A: sample_once h_ema reflects J_sparse @ s_current."""
@@ -191,6 +191,7 @@ class TestSampleOnceUsesSparseJ:
 # REQ-HW-041: reset() and EMA state management
 # ---------------------------------------------------------------------------
 
+
 class TestResetAndEMA:
     """SCENARIO-HW-041-B: reset() clears h_ema; EMA accumulates correctly."""
 
@@ -216,6 +217,7 @@ class TestResetAndEMA:
 # ---------------------------------------------------------------------------
 # REQ-HW-041: energy function uses J_sparse
 # ---------------------------------------------------------------------------
+
 
 class TestEnergy:
     """SCENARIO-HW-041-C: energy uses J_sparse coupling."""
@@ -250,6 +252,7 @@ class TestEnergy:
 # REQ-HW-041: measure_convergence and run
 # ---------------------------------------------------------------------------
 
+
 class TestConvergence:
     """SCENARIO-HW-041-D: measure_convergence returns correct int mean."""
 
@@ -280,9 +283,7 @@ class TestConvergence:
         sp = SparsePIMISampler(8, J, np.zeros(8), k=3, alpha=0.5, beta=1.0)
         sweeps = sp.measure_convergence(n_trials=100, target_energy=-3.0, max_sweeps=400)
         # Must match Exp 889 dense synchronous result of 3 sweeps
-        assert sweeps == 3, (
-            f"k=3 sparse should equal dense PIMI (3 sweeps), got {sweeps}"
-        )
+        assert sweeps == 3, f"k=3 sparse should equal dense PIMI (3 sweeps), got {sweeps}"
 
     def test_run_returns_valid_state_and_energies(self):
         """run() must return (final_state, energy_trajectory) with correct shapes."""
@@ -297,6 +298,7 @@ class TestConvergence:
 # ---------------------------------------------------------------------------
 # REQ-HW-041: k sweep all give same result for ring+chord
 # ---------------------------------------------------------------------------
+
 
 class TestKSweepRingChord:
     """SCENARIO-HW-041-E: k=3,4,5 all equal dense for ring+chord (degree=3 <= k)."""
@@ -322,6 +324,7 @@ class TestKSweepRingChord:
 # REQ-HW-041: Synthesis mock test (no tool dependency)
 # ---------------------------------------------------------------------------
 
+
 class TestSynthesisResults:
     """SCENARIO-HW-041-F: Synthesis results match expected LUT budget."""
 
@@ -340,9 +343,7 @@ class TestSynthesisResults:
 
         data = json.loads(deliverable.read_text())
         lut_count = data.get("lut_count", 0)
-        assert lut_count <= 250, (
-            f"LUT count {lut_count} exceeds 250-LUT budget for iCE40 HX8K"
-        )
+        assert lut_count <= 250, f"LUT count {lut_count} exceeds 250-LUT budget for iCE40 HX8K"
         assert lut_count > 0, "lut_count must be positive"
 
 
@@ -350,17 +351,31 @@ class TestSynthesisResults:
 # REQ-HW-041: Deliverable JSON validation
 # ---------------------------------------------------------------------------
 
+
 class TestDeliverableJSON:
     """SCENARIO-HW-041-G: results/experiment_901_pimi_sparse_adjacency_v4.json validity."""
 
     DELIVERABLE = Path("results/experiment_901_pimi_sparse_adjacency_v4.json")
 
     REQUIRED_FIELDS = [
-        "experiment", "title", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "honest_verdict",
-        "sparse_sweeps_best_k", "dense_sweeps_baseline", "sweeps_reduction",
-        "best_k", "lut_count", "synthesis_clean",
-        "n_spins", "n_trials", "energy_threshold", "max_sweeps",
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "honest_verdict",
+        "sparse_sweeps_best_k",
+        "dense_sweeps_baseline",
+        "sweeps_reduction",
+        "best_k",
+        "lut_count",
+        "synthesis_clean",
+        "n_spins",
+        "n_trials",
+        "energy_threshold",
+        "max_sweeps",
         "k_sweep_results",
     ]
 
@@ -369,9 +384,7 @@ class TestDeliverableJSON:
 
         Spec: REQ-HW-041
         """
-        assert self.DELIVERABLE.exists(), (
-            f"Deliverable not found: {self.DELIVERABLE}"
-        )
+        assert self.DELIVERABLE.exists(), f"Deliverable not found: {self.DELIVERABLE}"
 
     def test_deliverable_is_valid_json(self):
         """The deliverable must be parseable JSON.
@@ -441,6 +454,4 @@ class TestDeliverableJSON:
         data = json.loads(self.DELIVERABLE.read_text())
         k_sweep = data["k_sweep_results"]
         for k in [3, 4, 5]:
-            assert str(k) in k_sweep or k in k_sweep, (
-                f"k_sweep_results missing k={k}"
-            )
+            assert str(k) in k_sweep or k in k_sweep, f"k_sweep_results missing k={k}"

@@ -41,21 +41,18 @@ Spec: REQ-VERIFY-175, REQ-VERIFY-176
 
 from __future__ import annotations
 
-import json
 import math
-import random
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any
 
 import jax
 import jax.numpy as jnp
 import optax
 
-
 # ---------------------------------------------------------------------------
 # Encoder
 # ---------------------------------------------------------------------------
+
 
 class VariationalEncoder:
     """Maps an input feature vector to a Gaussian posterior (mu, log_var, z).
@@ -132,9 +129,7 @@ class VariationalEncoder:
         eps = jax.random.normal(key, mu.shape)
         return mu + eps * jnp.exp(0.5 * log_var)
 
-    def encode(
-        self, x: jax.Array, key: jax.Array
-    ) -> tuple[jax.Array, jax.Array, jax.Array]:
+    def encode(self, x: jax.Array, key: jax.Array) -> tuple[jax.Array, jax.Array, jax.Array]:
         """Encode input x into a sampled latent z plus posterior parameters.
 
         Args:
@@ -153,10 +148,14 @@ class VariationalEncoder:
     def get_params(self) -> dict[str, jax.Array]:
         """Return all trainable parameters as a flat dict."""
         return {
-            "w1": self.w1, "b1": self.b1,
-            "w2": self.w2, "b2": self.b2,
-            "w_mu": self.w_mu, "b_mu": self.b_mu,
-            "w_logvar": self.w_logvar, "b_logvar": self.b_logvar,
+            "w1": self.w1,
+            "b1": self.b1,
+            "w2": self.w2,
+            "b2": self.b2,
+            "w_mu": self.w_mu,
+            "b_mu": self.b_mu,
+            "w_logvar": self.w_logvar,
+            "b_logvar": self.b_logvar,
         }
 
     def set_params(self, params: dict[str, jax.Array]) -> None:
@@ -174,6 +173,7 @@ class VariationalEncoder:
 # ---------------------------------------------------------------------------
 # Prior
 # ---------------------------------------------------------------------------
+
 
 class VariationalPrior:
     """GRU-based prior p(z_t | c_{t-1}) that predicts latent state from context.
@@ -226,9 +226,7 @@ class VariationalPrior:
         self.w_logvar = jax.random.normal(k8, (self.hidden_dim, latent_dim)) * 0.01
         self.b_logvar = jnp.zeros(latent_dim)
 
-    def predict(
-        self, context: jax.Array
-    ) -> tuple[jax.Array, jax.Array]:
+    def predict(self, context: jax.Array) -> tuple[jax.Array, jax.Array]:
         """Predict prior parameters (mu, log_var) from context vector.
 
         Runs one GRU step with a zero initial hidden state to compute the prior
@@ -243,15 +241,9 @@ class VariationalPrior:
         # Zero initial hidden state (each step is predicted independently)
         h = jnp.zeros((*context.shape[:-1], self.hidden_dim))
 
-        z_gate = jax.nn.sigmoid(
-            jnp.dot(context, self.w_z) + jnp.dot(h, self.u_z) + self.b_z
-        )
-        r_gate = jax.nn.sigmoid(
-            jnp.dot(context, self.w_r) + jnp.dot(h, self.u_r) + self.b_r
-        )
-        n_gate = jnp.tanh(
-            jnp.dot(context, self.w_n) + r_gate * jnp.dot(h, self.u_n) + self.b_n
-        )
+        z_gate = jax.nn.sigmoid(jnp.dot(context, self.w_z) + jnp.dot(h, self.u_z) + self.b_z)
+        r_gate = jax.nn.sigmoid(jnp.dot(context, self.w_r) + jnp.dot(h, self.u_r) + self.b_r)
+        n_gate = jnp.tanh(jnp.dot(context, self.w_n) + r_gate * jnp.dot(h, self.u_n) + self.b_n)
         h_new = (1.0 - z_gate) * n_gate + z_gate * h
 
         prior_mu = jnp.dot(h_new, self.w_mu) + self.b_mu
@@ -261,29 +253,47 @@ class VariationalPrior:
     def get_params(self) -> dict[str, jax.Array]:
         """Return all trainable parameters as a flat dict."""
         return {
-            "w_z": self.w_z, "u_z": self.u_z, "b_z": self.b_z,
-            "w_r": self.w_r, "u_r": self.u_r, "b_r": self.b_r,
-            "w_n": self.w_n, "u_n": self.u_n, "b_n": self.b_n,
-            "w_mu": self.w_mu, "b_mu": self.b_mu,
-            "w_logvar": self.w_logvar, "b_logvar": self.b_logvar,
+            "w_z": self.w_z,
+            "u_z": self.u_z,
+            "b_z": self.b_z,
+            "w_r": self.w_r,
+            "u_r": self.u_r,
+            "b_r": self.b_r,
+            "w_n": self.w_n,
+            "u_n": self.u_n,
+            "b_n": self.b_n,
+            "w_mu": self.w_mu,
+            "b_mu": self.b_mu,
+            "w_logvar": self.w_logvar,
+            "b_logvar": self.b_logvar,
         }
 
     def set_params(self, params: dict[str, jax.Array]) -> None:
         """Load parameters from a flat dict."""
-        self.w_z = params["w_z"]; self.u_z = params["u_z"]; self.b_z = params["b_z"]
-        self.w_r = params["w_r"]; self.u_r = params["u_r"]; self.b_r = params["b_r"]
-        self.w_n = params["w_n"]; self.u_n = params["u_n"]; self.b_n = params["b_n"]
-        self.w_mu = params["w_mu"]; self.b_mu = params["b_mu"]
-        self.w_logvar = params["w_logvar"]; self.b_logvar = params["b_logvar"]
+        self.w_z = params["w_z"]
+        self.u_z = params["u_z"]
+        self.b_z = params["b_z"]
+        self.w_r = params["w_r"]
+        self.u_r = params["u_r"]
+        self.b_r = params["b_r"]
+        self.w_n = params["w_n"]
+        self.u_n = params["u_n"]
+        self.b_n = params["b_n"]
+        self.w_mu = params["w_mu"]
+        self.b_mu = params["b_mu"]
+        self.w_logvar = params["w_logvar"]
+        self.b_logvar = params["b_logvar"]
 
 
 # ---------------------------------------------------------------------------
 # Full model
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class TrainMetrics:
     """Per-epoch training metrics collected during VariationalJEPAPredictor.train()."""
+
     epoch_losses: list[float] = field(default_factory=list)
     kl_magnitudes: list[float] = field(default_factory=list)
 
@@ -378,14 +388,16 @@ class VariationalJEPAPredictor:
 
         # KL divergence per sample, summed over latent dims
         kl = -0.5 * jnp.sum(
-            1.0 + lv_q - prior_lv
+            1.0
+            + lv_q
+            - prior_lv
             - (mu_q - prior_mu) ** 2 / jnp.exp(prior_lv)
             - jnp.exp(lv_q) / jnp.exp(prior_lv),
             axis=-1,
         )  # shape: (batch,)
 
         # BCE reconstruction loss
-        probs = self._classify(z)
+        self._classify(z)
         recon_loss = optax.sigmoid_binary_cross_entropy(
             jnp.dot(z, self.w_cls).reshape(-1) + self.b_cls.reshape(-1),
             labels,
@@ -486,17 +498,13 @@ class VariationalJEPAPredictor:
         metrics = TrainMetrics()
         rng = jax.random.PRNGKey(seed)
 
-        def loss_fn(
-            p: dict[str, jax.Array], key: jax.Array
-        ) -> tuple[jax.Array, jax.Array]:
+        def loss_fn(p: dict[str, jax.Array], key: jax.Array) -> tuple[jax.Array, jax.Array]:
             self.set_all_params(p)
             return self.vjepa_loss(xs, ys, cs, key)
 
-        for epoch in range(n_epochs):
+        for _epoch in range(n_epochs):
             rng, key = jax.random.split(rng)
-            (loss_val, kl_val), grads = jax.value_and_grad(
-                loss_fn, has_aux=True
-            )(params, key)
+            (loss_val, kl_val), grads = jax.value_and_grad(loss_fn, has_aux=True)(params, key)
             updates, opt_state = optimizer.update(grads, opt_state)
             params = optax.apply_updates(params, updates)
 
@@ -536,6 +544,7 @@ def build_tfidf_features(
         (vocab_list, token_to_idx) where vocab_list has length <= vocab_size.
     """
     from collections import Counter
+
     doc_freq: Counter[str] = Counter()
     for text in corpus_texts:
         tokens = set(text.lower().split())
@@ -600,7 +609,7 @@ def prepare_corpus(
         for step in steps:
             feat = text_to_tfidf(step["step_text"], token_to_idx, vocab_size)
             if prior_feats:
-                ctx = [sum(col) / len(col) for col in zip(*prior_feats)]
+                ctx = [sum(col) / len(col) for col in zip(*prior_feats, strict=False)]
             else:
                 ctx = [0.0] * vocab_size
             label = 1 if step.get("label", "correct") == "incorrect" else 0
@@ -613,6 +622,7 @@ def prepare_corpus(
 # AUC helper
 # ---------------------------------------------------------------------------
 
+
 def compute_auc(labels: list[int], scores: list[float]) -> float:
     """Compute ROC-AUC using the trapezoidal rule.
 
@@ -620,7 +630,7 @@ def compute_auc(labels: list[int], scores: list[float]) -> float:
     Whitney statistic.  Returns 0.5 for degenerate cases (all-same label or
     empty inputs).
     """
-    pairs = sorted(zip(scores, labels), key=lambda t: -t[0])
+    pairs = sorted(zip(scores, labels, strict=False), key=lambda t: -t[0])
     n_pos = sum(labels)
     n_neg = len(labels) - n_pos
     if n_pos == 0 or n_neg == 0:

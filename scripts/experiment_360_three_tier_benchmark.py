@@ -75,8 +75,8 @@ TITLE = "Three-Tier Pipeline Benchmark: SinkProbe + EORM + Ising vs Ising-alone"
 DELIVERABLE = "results/experiment_360_three_tier_benchmark.json"
 
 N_RESPONSES = 100
-N_CORRECT = 30      # 30% correct — high sink concentration → cleared by SinkProbe
-N_WRONG = 70        # 70% wrong  — uniform attention → fall through
+N_CORRECT = 30  # 30% correct — high sink concentration → cleared by SinkProbe
+N_WRONG = 70  # 70% wrong  — uniform attention → fall through
 
 EORM_WEIGHTS_PATH = _REPO_ROOT / "results" / "eorm_model_359_real.safetensors"
 
@@ -121,19 +121,23 @@ def build_synthetic_responses(n_correct: int, n_wrong: int) -> tuple[list[dict],
     attn_uniform = _make_uniform_attn()
 
     for i in range(n_correct):
-        responses.append({
-            "response": f"The answer is {i * 3 + 1}. Step 1: multiply. Step 2: add. Final: {i * 3 + 1}.",
-            "question": f"What is {i} × 3 + 1?",
-            "attention_matrix": attn_high,
-        })
+        responses.append(
+            {
+                "response": f"The answer is {i * 3 + 1}. Step 1: multiply. Step 2: add. Final: {i * 3 + 1}.",
+                "question": f"What is {i} × 3 + 1?",
+                "attention_matrix": attn_high,
+            }
+        )
         labels.append(True)
 
     for i in range(n_wrong):
-        responses.append({
-            "response": f"The answer is {i * 5 + 99}. I think it could be various things.",
-            "question": f"What is {i} × 3 + 1?",
-            "attention_matrix": attn_uniform,
-        })
+        responses.append(
+            {
+                "response": f"The answer is {i * 5 + 99}. I think it could be various things.",
+                "question": f"What is {i} × 3 + 1?",
+                "attention_matrix": attn_uniform,
+            }
+        )
         labels.append(False)
 
     return responses, labels
@@ -249,7 +253,9 @@ def main() -> None:
     # ------------------------------------------------------------------
     # Build synthetic corpus
     # ------------------------------------------------------------------
-    print(f"[Exp360] Building {N_RESPONSES} synthetic responses ({N_CORRECT} correct, {N_WRONG} wrong)")
+    print(
+        f"[Exp360] Building {N_RESPONSES} synthetic responses ({N_CORRECT} correct, {N_WRONG} wrong)"
+    )
     responses, ground_truth = build_synthetic_responses(N_CORRECT, N_WRONG)
 
     # ------------------------------------------------------------------

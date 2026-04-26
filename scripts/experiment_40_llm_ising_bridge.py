@@ -116,12 +116,32 @@ def main() -> int:
     # Test problems of increasing difficulty
     test_cases = [
         # (n_nodes, edges, n_colors, name)
-        (4, [(0,1), (1,2), (2,3), (3,0)], 2, "4-cycle, 2 colors"),
-        (4, [(0,1), (1,2), (2,3), (3,0), (0,2)], 3, "4-node+diagonal, 3 colors"),
-        (6, [(0,1),(1,2),(2,3),(3,4),(4,5),(5,0),(0,3),(1,4),(2,5)], 3, "6-node Petersen-like, 3 colors"),
-        (8, [(i,(i+1)%8) for i in range(8)] + [(i,(i+2)%8) for i in range(8)], 3, "8-node 2-ring, 3 colors"),
-        (10, [(i,(i+1)%10) for i in range(10)] + [(i,(i+3)%10) for i in range(10)], 3, "10-node ring+skip, 3 colors"),
-        (15, [(i,j) for i in range(15) for j in range(i+1,15) if (i+j) % 3 == 0], 4, "15-node structured, 4 colors"),
+        (4, [(0, 1), (1, 2), (2, 3), (3, 0)], 2, "4-cycle, 2 colors"),
+        (4, [(0, 1), (1, 2), (2, 3), (3, 0), (0, 2)], 3, "4-node+diagonal, 3 colors"),
+        (
+            6,
+            [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 0), (0, 3), (1, 4), (2, 5)],
+            3,
+            "6-node Petersen-like, 3 colors",
+        ),
+        (
+            8,
+            [(i, (i + 1) % 8) for i in range(8)] + [(i, (i + 2) % 8) for i in range(8)],
+            3,
+            "8-node 2-ring, 3 colors",
+        ),
+        (
+            10,
+            [(i, (i + 1) % 10) for i in range(10)] + [(i, (i + 3) % 10) for i in range(10)],
+            3,
+            "10-node ring+skip, 3 colors",
+        ),
+        (
+            15,
+            [(i, j) for i in range(15) for j in range(i + 1, 15) if (i + j) % 3 == 0],
+            4,
+            "15-node structured, 4 colors",
+        ),
     ]
 
     results = []
@@ -130,7 +150,9 @@ def main() -> int:
         print(f"\n--- {name} ({n_nodes} nodes, {len(edges)} edges) ---")
 
         total_spins, ising_edges, biases, weights = graph_coloring_to_ising(
-            n_nodes, edges, n_colors,
+            n_nodes,
+            edges,
+            n_colors,
         )
 
         print(f"  Ising encoding: {total_spins} spins, {len(ising_edges)} couplings")
@@ -155,8 +177,12 @@ def main() -> int:
 
         t0 = time.time()
         samples = sample_states(
-            jrandom.PRNGKey(n_nodes + 42), program, schedule,
-            init_state, [], free_blocks,
+            jrandom.PRNGKey(n_nodes + 42),
+            program,
+            schedule,
+            init_state,
+            [],
+            free_blocks,
         )
         sample_time = time.time() - t0
 
@@ -197,16 +223,18 @@ def main() -> int:
         print(f"  Random: {rand_best}/{len(edges)} valid ({pct_rand:.0f}%)")
         print(f"  Coloring: {coloring_str}")
 
-        results.append({
-            "name": name,
-            "n_nodes": n_nodes,
-            "n_edges": len(edges),
-            "thrml_valid": best_valid,
-            "random_valid": rand_best,
-            "total_edges": len(edges),
-            "time": sample_time,
-            "perfect": best_valid == len(edges),
-        })
+        results.append(
+            {
+                "name": name,
+                "n_nodes": n_nodes,
+                "n_edges": len(edges),
+                "thrml_valid": best_valid,
+                "random_valid": rand_best,
+                "total_edges": len(edges),
+                "time": sample_time,
+                "perfect": best_valid == len(edges),
+            }
+        )
 
     # Summary
     elapsed = time.time() - start
@@ -224,7 +252,9 @@ def main() -> int:
         perfect = " PERFECT" if r["perfect"] else ""
         print(f"  {r['name']:40s} thrml={t:.0f}% rand={ra:.0f}%{perfect}")
 
-    print(f"\n  Perfect colorings: thrml={n_perfect_thrml}/{len(results)}, random={n_perfect_rand}/{len(results)}")
+    print(
+        f"\n  Perfect colorings: thrml={n_perfect_thrml}/{len(results)}, random={n_perfect_rand}/{len(results)}"
+    )
 
     mean_thrml = np.mean([r["thrml_valid"] / r["total_edges"] for r in results]) * 100
     mean_rand = np.mean([r["random_valid"] / r["total_edges"] for r in results]) * 100
@@ -234,7 +264,9 @@ def main() -> int:
     else:
         print(f"\n  VERDICT: ❌ Random wins ({mean_rand:.0f}% vs {mean_thrml:.0f}%)")
 
-    print(f"\n  This pipeline: LLM generates constraints → Ising encoding → thrml sampling → solution")
+    print(
+        f"\n  This pipeline: LLM generates constraints → Ising encoding → thrml sampling → solution"
+    )
     print(f"  On Extropic TSU: sampling would be nanoseconds instead of seconds")
     print(sep)
     return 0

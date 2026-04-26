@@ -171,14 +171,20 @@ def main() -> None:
 
     try:
         # Step 4: Build 10-variable sparse Ising (same seed as Exp 435a)
-        _log.info("Building 10-variable sparse Ising (seed=%d, density=%.2f)", ISING_SEED, COUPLING_DENSITY)
+        _log.info(
+            "Building 10-variable sparse Ising (seed=%d, density=%.2f)",
+            ISING_SEED,
+            COUPLING_DENSITY,
+        )
         ising = _build_sparse_ising(N_VARS, COUPLING_DENSITY, ISING_SEED)
 
         # Step 5: Sample Ising ground state (discrete reference)
         _log.info("Sampling Ising ground state via simulated annealing...")
         ising_ground_state = _simulated_annealing_ground_state(ising, seed=1)
-        ising_energy = float(-0.5 * ising_ground_state @ ising.coupling @ ising_ground_state
-                             - ising.bias @ ising_ground_state)
+        ising_energy = float(
+            -0.5 * ising_ground_state @ ising.coupling @ ising_ground_state
+            - ising.bias @ ising_ground_state
+        )
 
         # Step 6: Fit ContinuousEBM from Ising J/h
         model = fit_continuous_ebm(ising)
@@ -196,15 +202,21 @@ def main() -> None:
 
         _log.info(
             "gradient_descent: mean_l2=%.4f std=%.4f sign=%.3f",
-            gd["mean_l2"], gd["std_l2"], gd["mean_sign_agreement"],
+            gd["mean_l2"],
+            gd["std_l2"],
+            gd["mean_sign_agreement"],
         )
         _log.info(
             "langevin:         mean_l2=%.4f std=%.4f sign=%.3f",
-            lan["mean_l2"], lan["std_l2"], lan["mean_sign_agreement"],
+            lan["mean_l2"],
+            lan["std_l2"],
+            lan["mean_sign_agreement"],
         )
         _log.info(
             "energy_matching:  mean_l2=%.4f std=%.4f sign=%.3f",
-            em["mean_l2"], em["std_l2"], em["mean_sign_agreement"],
+            em["mean_l2"],
+            em["std_l2"],
+            em["mean_sign_agreement"],
         )
         _log.info("best_sampler: %s", best_sampler)
 
@@ -222,7 +234,9 @@ def main() -> None:
 
         _log.info(
             "honest_verdict: %s  (baseline_l2=%.4f, best_new_l2=%.4f)",
-            honest_verdict, BASELINE_L2, best_l2,
+            honest_verdict,
+            BASELINE_L2,
+            best_l2,
         )
 
         # Step 10: Build artifact

@@ -60,7 +60,6 @@ tmpl.setup()
 # --- Main logic ----------------------------------------------------------
 
 with ExperimentTimeoutWatchdog(678, timeout_minutes=15, result_path=DELIVERABLE):
-
     retirement_records: list[dict] = []
 
     for exp_id in RETIRED_IDS:

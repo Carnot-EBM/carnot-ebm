@@ -49,12 +49,12 @@ Spec: REQ-LEARN-040, REQ-LEARN-041, REQ-LEARN-042,
 from __future__ import annotations
 
 import random
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 import jax.random as jrandom
 
-from carnot.models.eorm import CoTEnergyInput, EORMModel, EORMTrainer
+from carnot.models.eorm import EORMModel, EORMTrainer
 from carnot.models.jepa_curriculum_diagnostic import _compute_auc, _pairs_to_eorm_triples
 from carnot.models.jepa_retrain_v2 import JEPAQualityAugmentor, _estimate_label_confidence
 
@@ -242,25 +242,29 @@ class JEPACurriculumTrainer:
         auc_before_s1 = _compute_auc(model, held_out)
         model = self._train_stage(model, stage1_pairs, self.n_stage1_epochs)
         auc_after_s1 = _compute_auc(model, held_out)
-        stages.append(CurriculumStageResult(
-            stage=1,
-            n_pairs=len(stage1_pairs),
-            n_epochs=self.n_stage1_epochs,
-            auc_after=auc_after_s1,
-            auc_before=auc_before_s1,
-        ))
+        stages.append(
+            CurriculumStageResult(
+                stage=1,
+                n_pairs=len(stage1_pairs),
+                n_epochs=self.n_stage1_epochs,
+                auc_after=auc_after_s1,
+                auc_before=auc_before_s1,
+            )
+        )
 
         # --- Stage 2: All pairs, no filter ---
         auc_before_s2 = auc_after_s1
         model = self._train_stage(model, train_pool, self.n_stage2_epochs)
         auc_after_s2 = _compute_auc(model, held_out)
-        stages.append(CurriculumStageResult(
-            stage=2,
-            n_pairs=len(train_pool),
-            n_epochs=self.n_stage2_epochs,
-            auc_after=auc_after_s2,
-            auc_before=auc_before_s2,
-        ))
+        stages.append(
+            CurriculumStageResult(
+                stage=2,
+                n_pairs=len(train_pool),
+                n_epochs=self.n_stage2_epochs,
+                auc_after=auc_after_s2,
+                auc_before=auc_before_s2,
+            )
+        )
 
         # --- Stage 3: EBM-guided synthetic augmentation ---
         n_total_real = len(pairs)
@@ -269,9 +273,12 @@ class JEPACurriculumTrainer:
         if n_synthetic_needed > 0:
             # Import here to avoid circular at module level
             from carnot.models.ising import IsingConfig, IsingModel
+
             ising = IsingModel(IsingConfig(input_dim=8))
             augmentor = JEPAQualityAugmentor(ising_model=ising, n_samples=n_synthetic_needed + 20)
-            synthetic_pairs = augmentor.generate_violation_pairs() + augmentor.generate_correct_pairs()
+            synthetic_pairs = (
+                augmentor.generate_violation_pairs() + augmentor.generate_correct_pairs()
+            )
             # Limit to exactly what we need
             synthetic_pairs = synthetic_pairs[:n_synthetic_needed]
         else:
@@ -281,13 +288,15 @@ class JEPACurriculumTrainer:
         auc_before_s3 = auc_after_s2
         model = self._train_stage(model, stage3_pairs, self.n_stage3_epochs)
         auc_after_s3 = _compute_auc(model, held_out)
-        stages.append(CurriculumStageResult(
-            stage=3,
-            n_pairs=len(stage3_pairs),
-            n_epochs=self.n_stage3_epochs,
-            auc_after=auc_after_s3,
-            auc_before=auc_before_s3,
-        ))
+        stages.append(
+            CurriculumStageResult(
+                stage=3,
+                n_pairs=len(stage3_pairs),
+                n_epochs=self.n_stage3_epochs,
+                auc_after=auc_after_s3,
+                auc_before=auc_before_s3,
+            )
+        )
 
         self._model = model
         return stages

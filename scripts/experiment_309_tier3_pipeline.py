@@ -82,10 +82,7 @@ the threshold to allow more skipping.
 RUN_DATE: str = "20260414"
 """Wall-clock date of this benchmark run, embedded in the artifact."""
 
-TITLE: str = (
-    "Tier 3 continuous self-learning pipeline: "
-    "online threshold adaptation with JEPA gate"
-)
+TITLE: str = "Tier 3 continuous self-learning pipeline: online threshold adaptation with JEPA gate"
 
 
 # ---------------------------------------------------------------------------
@@ -271,8 +268,7 @@ class Tier3BatchResult:
     def __post_init__(self) -> None:
         if len(self.records) != BATCH_SIZE:
             raise ValueError(
-                f"Tier3BatchResult requires exactly {BATCH_SIZE} records, "
-                f"got {len(self.records)}"
+                f"Tier3BatchResult requires exactly {BATCH_SIZE} records, got {len(self.records)}"
             )
 
     @property
@@ -361,11 +357,13 @@ def simulate_gsm8k_questions(n: int, seed: int) -> list[dict[str, Any]]:
         op_sym, op_fn = rng.choice(ops)
         answer = op_fn(a, b)
         question = f"What is {a} {op_sym} {b}?"
-        questions.append({
-            "question_id": f"q{i}",
-            "question": question,
-            "correct_answer": answer,
-        })
+        questions.append(
+            {
+                "question_id": f"q{i}",
+                "question": question,
+                "correct_answer": answer,
+            }
+        )
     return questions
 
 
@@ -473,7 +471,9 @@ def run_baseline_batch(
     per_question = []
     n_correct = 0
     for ir in ir_list:
-        entry = json.loads(ir.response) if not ir.timed_out else {"question_id": "", "correct": False}
+        entry = (
+            json.loads(ir.response) if not ir.timed_out else {"question_id": "", "correct": False}
+        )
         per_question.append({"question_id": entry["question_id"], "correct": entry["correct"]})
         if entry["correct"]:
             n_correct += 1
@@ -560,23 +560,21 @@ def run_tier3_batch(
             # Simulate Ising result: violation detected when response is wrong
             violation_detected = not correct
 
-        records.append(GateDecisionRecord(
-            question_id=q["question_id"],
-            correct=correct,
-            gate_decision=gate_decision,
-            gate_energy=gate_energy,
-            ising_ran=ising_ran,
-            violation_detected=violation_detected,
-        ))
+        records.append(
+            GateDecisionRecord(
+                question_id=q["question_id"],
+                correct=correct,
+                gate_decision=gate_decision,
+                gate_energy=gate_energy,
+                ising_ran=ising_ran,
+                violation_detected=violation_detected,
+            )
+        )
 
         # Every ADAPTER_BATCH_SIZE questions: adapt threshold and record it
         questions_processed = i + 1
         if questions_processed % ADAPTER_BATCH_SIZE == 0:
-            fp_rate = (
-                sub_batch_n_fp / sub_batch_n_skipped
-                if sub_batch_n_skipped > 0
-                else 0.0
-            )
+            fp_rate = sub_batch_n_fp / sub_batch_n_skipped if sub_batch_n_skipped > 0 else 0.0
             skip_rate = sub_batch_n_skipped / ADAPTER_BATCH_SIZE
             adapter.adapt(fp_rate=fp_rate, skip_rate=skip_rate)
             threshold_history.append(adapter.threshold)
@@ -682,8 +680,7 @@ def _load_best_threshold(repo_root: Path) -> float:
         data = json.loads(artifact_path.read_text(encoding="utf-8"))
         # Find the threshold entry that meets_target=True with highest skip_rate
         candidates = [
-            entry for entry in data.get("threshold_sweep", [])
-            if entry.get("meets_target", False)
+            entry for entry in data.get("threshold_sweep", []) if entry.get("meets_target", False)
         ]
         if candidates:
             # Pick the entry with the highest skip_rate among those meeting target
@@ -698,7 +695,9 @@ def _load_best_threshold(repo_root: Path) -> float:
             )
             return INITIAL_THRESHOLD
     except (OSError, KeyError, json.JSONDecodeError) as exc:
-        print(f"[Exp 309] Could not load Exp 308 artifact ({exc}); using default {INITIAL_THRESHOLD}.")
+        print(
+            f"[Exp 309] Could not load Exp 308 artifact ({exc}); using default {INITIAL_THRESHOLD}."
+        )
         return INITIAL_THRESHOLD
 
 

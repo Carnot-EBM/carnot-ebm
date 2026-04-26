@@ -244,17 +244,26 @@ def test_fr11_relay_none() -> None:
 
 def test_think_probe_timed_out() -> None:
     """timed_out=True → False regardless of other fields."""
-    assert mod._think_probe_viable_from_results({"timed_out": True, "think_probe_viable": True}) is False
+    assert (
+        mod._think_probe_viable_from_results({"timed_out": True, "think_probe_viable": True})
+        is False
+    )
 
 
 def test_think_probe_viable_true() -> None:
     """think_probe_viable=True and not timed out → True."""
-    assert mod._think_probe_viable_from_results({"timed_out": False, "think_probe_viable": True}) is True
+    assert (
+        mod._think_probe_viable_from_results({"timed_out": False, "think_probe_viable": True})
+        is True
+    )
 
 
 def test_think_probe_viable_false() -> None:
     """think_probe_viable=False → False."""
-    assert mod._think_probe_viable_from_results({"timed_out": False, "think_probe_viable": False}) is False
+    assert (
+        mod._think_probe_viable_from_results({"timed_out": False, "think_probe_viable": False})
+        is False
+    )
 
 
 def test_think_probe_none() -> None:
@@ -339,7 +348,9 @@ def test_kaem_faster_none() -> None:
 
 def test_cross_session_no_improvement() -> None:
     """'no_improvement' verdict → False."""
-    assert mod._cross_session_improvement_from_results({"honest_verdict": "no_improvement"}) is False
+    assert (
+        mod._cross_session_improvement_from_results({"honest_verdict": "no_improvement"}) is False
+    )
 
 
 def test_cross_session_improvement() -> None:
@@ -676,11 +687,13 @@ def test_print_success_table_scaffolding(capsys: pytest.CaptureFixture) -> None:
 def test_print_retro_items_with_items(capsys: pytest.CaptureFixture) -> None:
     """_print_retro_items prints NEW and CLOSED sections."""
     retro = mod.MilestoneRetro2026_04_33(
-        new_retro_items=[{
-            "id": "RETRO-028",
-            "severity": "high",
-            "description": "Gemma4-E4B-it returned 0.0 accuracy on GSM8K.",
-        }],
+        new_retro_items=[
+            {
+                "id": "RETRO-028",
+                "severity": "high",
+                "description": "Gemma4-E4B-it returned 0.0 accuracy on GSM8K.",
+            }
+        ],
         closed_retro_items=["RETRO-026: LongRunBenchmarkExecutor implemented."],
     )
     mod._print_retro_items(retro)
@@ -704,41 +717,96 @@ def test_print_retro_items_empty(capsys: pytest.CaptureFixture) -> None:
 
 def test_run_retro_produces_artifact(tmp_path: Path) -> None:
     """run_retro returns a dict with schema and milestone fields."""
-    stub_437 = {"experiment": 437, "status": "success", "retro_026_resolved": True,
-                 "duration_s": 0.004, "honest_verdict": "retro_026_fixed"}
-    stub_438 = {"experiment": 438, "status": "success", "fix_applied": True,
-                 "honest_verdict": "fix_applied_unverified", "duration_s": 2.694}
+    stub_437 = {
+        "experiment": 437,
+        "status": "success",
+        "retro_026_resolved": True,
+        "duration_s": 0.004,
+        "honest_verdict": "retro_026_fixed",
+    }
+    stub_438 = {
+        "experiment": 438,
+        "status": "success",
+        "fix_applied": True,
+        "honest_verdict": "fix_applied_unverified",
+        "duration_s": 2.694,
+    }
     stub_439 = {
-        "experiment": 439, "status": "success", "honest_verdict": "live_no_improvement",
-        "inference_mode": "live_gpu", "duration_s": 2812.906,
+        "experiment": 439,
+        "status": "success",
+        "honest_verdict": "live_no_improvement",
+        "inference_mode": "live_gpu",
+        "duration_s": 2812.906,
         "per_model_results": [{"model_id": "Gemma4-E4B-it", "baseline_accuracy": 0.0}],
     }
     stub_440 = {
-        "experiment": 440, "status": "success", "honest_verdict": "code_no_improvement",
-        "inference_mode": "live_gpu", "duration_s": 1008.012,
+        "experiment": 440,
+        "status": "success",
+        "honest_verdict": "code_no_improvement",
+        "inference_mode": "live_gpu",
+        "duration_s": 1008.012,
         "per_model_results": [{"model_id": "Qwen/Qwen2.5-0.5B", "pass_at_1_before": 0.0}],
     }
-    stub_441 = {"experiment": 441, "status": "success", "honest_verdict": "degradation_positive",
-                "inference_mode": "live_gpu", "duration_s": 5605.265}
-    stub_442 = {"experiment": 442, "status": "success", "honest_verdict": "real_data_labeled",
-                "duration_s": 0.084}
-    stub_443 = {"experiment": 443, "status": "success", "retro_024_closed": True,
-                "honest_verdict": "real_data_improvement", "duration_s": 1165.356}
-    stub_444 = {"experiment": 444, "timed_out": True, "elapsed_minutes": 20.001,
-                "status": "timed_out"}
-    stub_445 = {"experiment": 445, "status": "success", "honest_verdict": "repair_energy_positive",
-                "duration_s": 160.156}
-    stub_447 = {"experiment": 447, "status": "success", "honest_verdict": "no_speedup",
-                "mean_speedup": 1.29, "duration_s": 22.255}
-    stub_448 = {"experiment": 448, "status": "success", "honest_verdict": "no_improvement",
-                "duration_s": 0.249}
+    stub_441 = {
+        "experiment": 441,
+        "status": "success",
+        "honest_verdict": "degradation_positive",
+        "inference_mode": "live_gpu",
+        "duration_s": 5605.265,
+    }
+    stub_442 = {
+        "experiment": 442,
+        "status": "success",
+        "honest_verdict": "real_data_labeled",
+        "duration_s": 0.084,
+    }
+    stub_443 = {
+        "experiment": 443,
+        "status": "success",
+        "retro_024_closed": True,
+        "honest_verdict": "real_data_improvement",
+        "duration_s": 1165.356,
+    }
+    stub_444 = {
+        "experiment": 444,
+        "timed_out": True,
+        "elapsed_minutes": 20.001,
+        "status": "timed_out",
+    }
+    stub_445 = {
+        "experiment": 445,
+        "status": "success",
+        "honest_verdict": "repair_energy_positive",
+        "duration_s": 160.156,
+    }
+    stub_447 = {
+        "experiment": 447,
+        "status": "success",
+        "honest_verdict": "no_speedup",
+        "mean_speedup": 1.29,
+        "duration_s": 22.255,
+    }
+    stub_448 = {
+        "experiment": 448,
+        "status": "success",
+        "honest_verdict": "no_improvement",
+        "duration_s": 0.249,
+    }
 
     fake_paths = {k: tmp_path / f"e{k}.json" for k in mod._EXP_PATHS}
 
     for key, stub in [
-        ("437", stub_437), ("438", stub_438), ("439", stub_439), ("440", stub_440),
-        ("441", stub_441), ("442", stub_442), ("443", stub_443), ("444", stub_444),
-        ("445", stub_445), ("447", stub_447), ("448", stub_448),
+        ("437", stub_437),
+        ("438", stub_438),
+        ("439", stub_439),
+        ("440", stub_440),
+        ("441", stub_441),
+        ("442", stub_442),
+        ("443", stub_443),
+        ("444", stub_444),
+        ("445", stub_445),
+        ("447", stub_447),
+        ("448", stub_448),
     ]:
         fake_paths[key].write_text(json.dumps(stub))
     # 446 intentionally absent
@@ -770,10 +838,15 @@ def test_main_writes_output_file(tmp_path: Path) -> None:
     """main() writes the result JSON to the configured output path."""
     fake_output = tmp_path / "operational_retro_2026_04_33.json"
 
-    stub_success = {"status": "success", "duration_s": 1.0,
-                    "honest_verdict": "ok", "retro_026_resolved": False,
-                    "fix_applied": False, "retro_024_closed": False,
-                    "mean_speedup": 1.0}
+    stub_success = {
+        "status": "success",
+        "duration_s": 1.0,
+        "honest_verdict": "ok",
+        "retro_026_resolved": False,
+        "fix_applied": False,
+        "retro_024_closed": False,
+        "mean_speedup": 1.0,
+    }
 
     fake_paths = {k: tmp_path / f"e{k}.json" for k in mod._EXP_PATHS}
     for key in ("437", "438", "439", "440", "441", "442", "443", "447", "448"):

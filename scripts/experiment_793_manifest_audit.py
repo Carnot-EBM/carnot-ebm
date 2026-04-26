@@ -74,10 +74,10 @@ _RECOMMENDED_PATCH = (
     "        # REQ-INFRA-059: emit WARNING so exclusion events are auditable.\n"
     "        _excluded, _exclusion_reason = _task_is_excluded(task)\n"
     "        if _excluded:\n"
-    '            logger.warning(\n'
-    '                "EXCLUDED task \'%s\' by manifest (%s) — skipping without dispatch",\n'
+    "            logger.warning(\n"
+    "                \"EXCLUDED task '%s' by manifest (%s) — skipping without dispatch\",\n"
     '                task.get("title", "?")[:60], _exclusion_reason,\n'
-    '            )\n'
+    "            )\n"
     "            continue"
 )
 
@@ -218,9 +218,7 @@ def main() -> None:
 
         try:
             manifest_data = json.loads(manifest_path.read_text())
-            excluded_ids = [
-                e["experiment_id"] for e in manifest_data.get("excluded", [])
-            ]
+            excluded_ids = [e["experiment_id"] for e in manifest_data.get("excluded", [])]
         except Exception:
             excluded_ids = []
 

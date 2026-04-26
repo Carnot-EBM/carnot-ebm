@@ -18,19 +18,16 @@ from __future__ import annotations
 
 import json
 import sys
-import tempfile
 import types
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import numpy as np
 import pytest
-
 from carnot.inference.constraint_models import (
     ConstraintPropagationModel,
     IsingConstraintModel,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -73,8 +70,8 @@ def make_random_model(dim: int = FEATURE_DIM, seed: int = 0) -> IsingConstraintM
     rng = np.random.default_rng(seed)
     limit = float(np.sqrt(6.0 / (dim + dim)))
     J = rng.uniform(-limit, limit, (dim, dim)).astype(np.float32)
-    J = (J + J.T) / 2.0          # enforce symmetry
-    np.fill_diagonal(J, 0.0)     # zero diagonal (no self-interaction)
+    J = (J + J.T) / 2.0  # enforce symmetry
+    np.fill_diagonal(J, 0.0)  # zero diagonal (no self-interaction)
     b = rng.uniform(-0.1, 0.1, dim).astype(np.float32)
     config = {
         "domain": "test_random",
@@ -87,6 +84,7 @@ def make_random_model(dim: int = FEATURE_DIM, seed: int = 0) -> IsingConstraintM
 # ---------------------------------------------------------------------------
 # Construction and validation
 # ---------------------------------------------------------------------------
+
 
 class TestIsingConstraintModelConstruction:
     """Tests for IsingConstraintModel.__init__.
@@ -171,6 +169,7 @@ class TestIsingConstraintModelConstruction:
 # Energy computation
 # ---------------------------------------------------------------------------
 
+
 class TestEnergy:
     """Tests for IsingConstraintModel.energy().
 
@@ -228,9 +227,7 @@ class TestEnergy:
         model = make_identity_model(dim=10)
         e_ones = model.energy(np.ones(10, dtype=np.float32))
         e_zeros = model.energy(np.zeros(10, dtype=np.float32))
-        assert e_ones < e_zeros, (
-            f"Expected E(ones)={e_ones:.4f} < E(zeros)={e_zeros:.4f}"
-        )
+        assert e_ones < e_zeros, f"Expected E(ones)={e_ones:.4f} < E(zeros)={e_zeros:.4f}"
 
     def test_energy_exact_value_all_ones(self):
         """Energy for all-ones matches analytical formula -2d.
@@ -269,6 +266,7 @@ class TestEnergy:
 # Score computation
 # ---------------------------------------------------------------------------
 
+
 class TestScore:
     """Tests for IsingConstraintModel.score().
 
@@ -294,9 +292,7 @@ class TestScore:
         model = make_identity_model()
         s_ones = model.score(np.ones(FEATURE_DIM, dtype=np.float32))
         s_zeros = model.score(np.zeros(FEATURE_DIM, dtype=np.float32))
-        assert s_ones > s_zeros, (
-            f"Expected score(ones)={s_ones:.4f} > score(zeros)={s_zeros:.4f}"
-        )
+        assert s_ones > s_zeros, f"Expected score(ones)={s_ones:.4f} > score(zeros)={s_zeros:.4f}"
 
     def test_score_monotone_with_energy(self):
         """score = sigmoid(-energy) — higher energy → lower score.
@@ -353,6 +349,7 @@ class TestScore:
 # Batch energy
 # ---------------------------------------------------------------------------
 
+
 class TestEnergyBatch:
     """Tests for IsingConstraintModel.energy_batch().
 
@@ -387,10 +384,12 @@ class TestEnergyBatch:
         Spec: REQ-VERIFY-002
         """
         model = make_identity_model(dim=10)
-        X = np.stack([
-            np.ones(10, dtype=np.float32),   # correct
-            np.zeros(10, dtype=np.float32),  # wrong
-        ])
+        X = np.stack(
+            [
+                np.ones(10, dtype=np.float32),  # correct
+                np.zeros(10, dtype=np.float32),  # wrong
+            ]
+        )
         energies = model.energy_batch(X)
         # Correct (index 0) should have lower energy than wrong (index 1)
         assert energies[0] < energies[1], (
@@ -401,6 +400,7 @@ class TestEnergyBatch:
 # ---------------------------------------------------------------------------
 # Save / load round-trip
 # ---------------------------------------------------------------------------
+
 
 class TestSaveLoad:
     """Tests for save_pretrained() / from_pretrained() round-trip.
@@ -613,6 +613,7 @@ class TestSaveLoad:
 # ConstraintPropagationModel factory
 # ---------------------------------------------------------------------------
 
+
 class TestConstraintPropagationModel:
     """Tests for ConstraintPropagationModel.from_pretrained().
 
@@ -647,11 +648,7 @@ class TestConstraintPropagationModel:
 # Exported domain models
 # ---------------------------------------------------------------------------
 
-EXPORTS_ROOT = (
-    Path(__file__).parent.parent.parent
-    / "exports"
-    / "constraint-propagation-models"
-)
+EXPORTS_ROOT = Path(__file__).parent.parent.parent / "exports" / "constraint-propagation-models"
 
 
 def _domain_model_available(domain: str) -> bool:
@@ -672,9 +669,7 @@ class TestArithmeticModel:
 
     @pytest.fixture(scope="class")
     def model(self):
-        return ConstraintPropagationModel.from_pretrained(
-            str(EXPORTS_ROOT / "arithmetic")
-        )
+        return ConstraintPropagationModel.from_pretrained(str(EXPORTS_ROOT / "arithmetic"))
 
     def test_loads_successfully(self, model):
         """Arithmetic model loads without error.
@@ -722,15 +717,16 @@ class TestArithmeticModel:
         Spec: REQ-VERIFY-003, SCENARIO-VERIFY-001
         """
         # Import the encoder from the export script.
-        import sys, os
+        import sys
+
         sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
         from export_constraint_models import encode_answer
 
         x_correct = encode_answer("What is 47 + 28?", "The answer is 75.")
-        x_wrong   = encode_answer("What is 47 + 28?", "The answer is 74.")
+        x_wrong = encode_answer("What is 47 + 28?", "The answer is 74.")
 
         e_correct = model.energy(x_correct)
-        e_wrong   = model.energy(x_wrong)
+        e_wrong = model.energy(x_wrong)
 
         # Lower energy = more likely correct.
         assert e_correct < e_wrong, (
@@ -753,26 +749,22 @@ class TestArithmeticModel:
         Spec: REQ-VERIFY-002
         """
         import sys
+
         sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
         from export_constraint_models import encode_answer, generate_arithmetic_pairs
 
         rng = np.random.default_rng(0)
         pairs = generate_arithmetic_pairs(20, rng)
-        correct_vecs = np.array(
-            [encode_answer(q, c) for (q, c, w) in pairs], dtype=np.float32
-        )
-        wrong_vecs = np.array(
-            [encode_answer(q, w) for (q, c, w) in pairs], dtype=np.float32
-        )
+        correct_vecs = np.array([encode_answer(q, c) for (q, c, w) in pairs], dtype=np.float32)
+        wrong_vecs = np.array([encode_answer(q, w) for (q, c, w) in pairs], dtype=np.float32)
 
         e_correct = model.energy_batch(correct_vecs)
-        e_wrong   = model.energy_batch(wrong_vecs)
+        e_wrong = model.energy_batch(wrong_vecs)
 
         # Most correct should have lower energy than wrong
         pct_correct = float(np.mean(e_correct < e_wrong))
         assert pct_correct >= 0.7, (
-            f"Expected ≥70% of pairs to have E(correct) < E(wrong), "
-            f"got {pct_correct:.1%}"
+            f"Expected ≥70% of pairs to have E(correct) < E(wrong), got {pct_correct:.1%}"
         )
 
 
@@ -788,9 +780,7 @@ class TestLogicModel:
 
     @pytest.fixture(scope="class")
     def model(self):
-        return ConstraintPropagationModel.from_pretrained(
-            str(EXPORTS_ROOT / "logic")
-        )
+        return ConstraintPropagationModel.from_pretrained(str(EXPORTS_ROOT / "logic"))
 
     def test_loads_successfully(self, model):
         """Logic model loads without error.
@@ -812,18 +802,19 @@ class TestLogicModel:
         Spec: REQ-VERIFY-003, SCENARIO-VERIFY-001
         """
         import sys
+
         sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
         from export_constraint_models import encode_answer
 
         q = "If all cats are mortal, and all robots are cats, what follows?"
         correct = "All robots are mortal. This follows by modus ponens."
-        wrong   = "Some robots are not mortal. The premises do not guarantee this."
+        wrong = "Some robots are not mortal. The premises do not guarantee this."
 
         x_correct = encode_answer(q, correct)
-        x_wrong   = encode_answer(q, wrong)
+        x_wrong = encode_answer(q, wrong)
 
         e_correct = model.energy(x_correct)
-        e_wrong   = model.energy(x_wrong)
+        e_wrong = model.energy(x_wrong)
 
         assert e_correct < e_wrong, (
             f"Logic model should rank valid syllogism lower energy.\n"
@@ -851,9 +842,7 @@ class TestCodeModel:
 
     @pytest.fixture(scope="class")
     def model(self):
-        return ConstraintPropagationModel.from_pretrained(
-            str(EXPORTS_ROOT / "code")
-        )
+        return ConstraintPropagationModel.from_pretrained(str(EXPORTS_ROOT / "code"))
 
     def test_loads_successfully(self, model):
         """Code model loads without error.
@@ -875,6 +864,7 @@ class TestCodeModel:
         Spec: REQ-VERIFY-003, SCENARIO-VERIFY-001
         """
         import sys
+
         sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
         from export_constraint_models import encode_answer
 
@@ -895,10 +885,10 @@ class TestCodeModel:
         )
 
         x_correct = encode_answer(question, correct_code)
-        x_buggy   = encode_answer(question, buggy_code)
+        x_buggy = encode_answer(question, buggy_code)
 
         e_correct = model.energy(x_correct)
-        e_buggy   = model.energy(x_buggy)
+        e_buggy = model.energy(x_buggy)
 
         assert e_correct < e_buggy, (
             f"Code model should rank correct implementation lower energy.\n"

@@ -45,15 +45,18 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Sequence
+from enum import StrEnum
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 # ---------------------------------------------------------------------------
 # Action taxonomy
 # ---------------------------------------------------------------------------
 
-class ActionCategory(str, Enum):
+
+class ActionCategory(StrEnum):
     """Classification of a requested conductor action.
 
     ALLOWED means the conductor may execute immediately.
@@ -166,6 +169,7 @@ REQUIRES_APPROVAL_ACTIONS: tuple[str, ...] = (
 # Checker
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class ConstitutionVerdict:
     """Result of a constitution check.
@@ -231,15 +235,11 @@ class ConstitutionChecker:
     def __post_init__(self) -> None:
         # Pre-compile all patterns once for performance.
         # Flags: IGNORECASE so paths on case-insensitive filesystems match too.
-        self._compiled_forbidden = [
-            (pat, re.compile(pat, re.IGNORECASE)) for pat in self.forbidden
-        ]
+        self._compiled_forbidden = [(pat, re.compile(pat, re.IGNORECASE)) for pat in self.forbidden]
         self._compiled_requires_approval = [
             (pat, re.compile(pat, re.IGNORECASE)) for pat in self.requires_approval
         ]
-        self._compiled_allowed = [
-            (pat, re.compile(pat, re.IGNORECASE)) for pat in self.allowed
-        ]
+        self._compiled_allowed = [(pat, re.compile(pat, re.IGNORECASE)) for pat in self.allowed]
 
     def check(self, action: str) -> ConstitutionVerdict:
         """Classify *action* against the three-tier constitution.
@@ -273,7 +273,7 @@ class ConstitutionChecker:
                 return ConstitutionVerdict(
                     action=action,
                     category=ActionCategory.FORBIDDEN,
-                    reason=f"Action matches forbidden rule — conductor must not proceed.",
+                    reason="Action matches forbidden rule — conductor must not proceed.",
                     matched_rule=pat,
                 )
 
@@ -284,8 +284,7 @@ class ConstitutionChecker:
                     action=action,
                     category=ActionCategory.REQUIRES_APPROVAL,
                     reason=(
-                        "Action requires explicit human approval before the "
-                        "conductor may proceed."
+                        "Action requires explicit human approval before the conductor may proceed."
                     ),
                     matched_rule=pat,
                 )

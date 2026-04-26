@@ -166,10 +166,20 @@ class TestComputeCorroborationRate(unittest.TestCase):
     def test_sat_low_energy_corroborates(self):
         """sat + negative/zero energy also counts as corroboration."""
         certs = [
-            {"step_id": "s0", "jepa_energy_delta": -0.2, "z3_verdict": "sat",
-             "constraint_type": "arithmetic", "confidence_score": 0.8},
-            {"step_id": "s1", "jepa_energy_delta": 0.5, "z3_verdict": "unsat",
-             "constraint_type": "arithmetic", "confidence_score": 0.7},
+            {
+                "step_id": "s0",
+                "jepa_energy_delta": -0.2,
+                "z3_verdict": "sat",
+                "constraint_type": "arithmetic",
+                "confidence_score": 0.8,
+            },
+            {
+                "step_id": "s1",
+                "jepa_energy_delta": 0.5,
+                "z3_verdict": "unsat",
+                "constraint_type": "arithmetic",
+                "confidence_score": 0.7,
+            },
         ]
         rate = exp826.compute_corroboration_rate(certs)
         self.assertAlmostEqual(rate, 1.0, places=6)
@@ -177,8 +187,13 @@ class TestComputeCorroborationRate(unittest.TestCase):
     def test_sat_high_energy_does_not_corroborate(self):
         """sat + positive energy is a contradiction → does NOT corroborate."""
         certs = [
-            {"step_id": "s0", "jepa_energy_delta": 0.8, "z3_verdict": "sat",
-             "constraint_type": "arithmetic", "confidence_score": 0.8},
+            {
+                "step_id": "s0",
+                "jepa_energy_delta": 0.8,
+                "z3_verdict": "sat",
+                "constraint_type": "arithmetic",
+                "confidence_score": 0.8,
+            },
         ]
         rate = exp826.compute_corroboration_rate(certs)
         self.assertAlmostEqual(rate, 0.0, places=6)
@@ -253,7 +268,10 @@ class TestMainFlow(unittest.TestCase):
 
             with (
                 patch("experiment_826_prm_cross_domain_benchmark.ExperimentTemplate", FakeTemplate),
-                patch("experiment_826_prm_cross_domain_benchmark.ExperimentTimeoutWatchdog", MagicMock()),
+                patch(
+                    "experiment_826_prm_cross_domain_benchmark.ExperimentTimeoutWatchdog",
+                    MagicMock(),
+                ),
                 patch.object(exp826, "_REPO_ROOT", tmppath),
             ):
                 exp826.main()

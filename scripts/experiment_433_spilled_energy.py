@@ -146,9 +146,9 @@ def run_spilled_energy_benchmark(
     n_correct = sum(1 for item in corpus if item["is_correct"])
     n_hallucinated = n_total - n_correct
 
-    n_skipped = 0    # should_verify=False (pipeline would skip)
-    n_fn = 0         # hallucinated AND skipped (false negative — dangerous)
-    n_fp = 0         # correct AND verified (false positive — unnecessary overhead)
+    n_skipped = 0  # should_verify=False (pipeline would skip)
+    n_fn = 0  # hallucinated AND skipped (false negative — dangerous)
+    n_fp = 0  # correct AND verified (false positive — unnecessary overhead)
 
     per_item = []
 
@@ -260,7 +260,10 @@ def main() -> None:
 
         _log.info(
             "Exp 433: skip_rate=%.3f fn_rate=%.3f fp_rate=%.3f verdict=%s",
-            skip_rate, fn_rate, fp_rate, honest_verdict,
+            skip_rate,
+            fn_rate,
+            fp_rate,
+            honest_verdict,
         )
 
         artifact = tmpl.build_result(

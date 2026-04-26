@@ -35,9 +35,8 @@ Spec: REQ-LEARN-001, SCENARIO-LEARN-001 (Tier 1 Online Constraint Learning)
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
-
 
 # ---------------------------------------------------------------------------
 # Per-type statistics accumulator
@@ -278,7 +277,7 @@ class ConstraintTracker:
             json.dump(payload, fh, indent=2)
 
     @classmethod
-    def load(cls, path: str) -> "ConstraintTracker":
+    def load(cls, path: str) -> ConstraintTracker:
         """Restore a ConstraintTracker from a JSON file written by save().
 
         **Detailed explanation for engineers:**
@@ -296,13 +295,11 @@ class ConstraintTracker:
             OSError: If the file cannot be read.
             ValueError: If the file format is invalid or version is unsupported.
         """
-        with open(path, "r", encoding="utf-8") as fh:
+        with open(path, encoding="utf-8") as fh:
             payload = json.load(fh)
 
         if not isinstance(payload, dict) or payload.get("version") != 1:
-            raise ValueError(
-                f"Unsupported tracker file format (expected version=1): {path}"
-            )
+            raise ValueError(f"Unsupported tracker file format (expected version=1): {path}")
 
         tracker = cls()
         for ctype, raw in payload.get("stats", {}).items():
@@ -318,7 +315,7 @@ class ConstraintTracker:
     # Merging
     # -------------------------------------------------------------------
 
-    def merge(self, other: "ConstraintTracker") -> "ConstraintTracker":
+    def merge(self, other: ConstraintTracker) -> ConstraintTracker:
         """Combine statistics from two trackers into a new tracker.
 
         **Detailed explanation for engineers:**

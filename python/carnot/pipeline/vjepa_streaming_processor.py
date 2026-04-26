@@ -36,7 +36,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     import torch
 
-from python.carnot.models.vjepa_predictor import VariationalJEPAPredictor
+    from python.carnot.models.vjepa_predictor import VariationalJEPAPredictor
 
 
 class VJEPAStreamingLogitsProcessor:
@@ -107,7 +107,6 @@ class VJEPAStreamingLogitsProcessor:
 
         from python.carnot.models.vjepa_predictor import (
             VOCAB_SIZE,
-            text_to_tfidf,
         )
 
         # Build a minimal vocab on-the-fly from the text itself.
@@ -126,9 +125,9 @@ class VJEPAStreamingLogitsProcessor:
 
     def __call__(
         self,
-        input_ids: "torch.LongTensor",
-        scores: "torch.FloatTensor",
-    ) -> "torch.FloatTensor":
+        input_ids: torch.LongTensor,
+        scores: torch.FloatTensor,
+    ) -> torch.FloatTensor:
         """Apply VJEPA-guided soft penalty at each generation step.
 
         Called by HuggingFace's generate() loop before sampling.  If the

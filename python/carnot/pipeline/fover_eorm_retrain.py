@@ -33,7 +33,6 @@ from pathlib import Path
 
 import jax.numpy as jnp
 
-
 # ---------------------------------------------------------------------------
 # load_fover_pairs
 # ---------------------------------------------------------------------------
@@ -178,9 +177,7 @@ def fover_pairs_to_contrastive(
         if not text:
             return jnp.zeros(embed_dim)
         words = text.split()
-        word_scalars: list[float] = [
-            sum(ord(c) for c in w) / (len(w) * 128.0) for w in words
-        ]
+        word_scalars: list[float] = [sum(ord(c) for c in w) / (len(w) * 128.0) for w in words]
         mean_val = sum(word_scalars) / len(word_scalars)
         dims = jnp.arange(embed_dim, dtype=jnp.float32)
         freqs = (dims + 1.0) * math.pi / embed_dim
@@ -193,10 +190,7 @@ def fover_pairs_to_contrastive(
 
     for p in pairs:
         q_id = p["question_id"]
-        if q_id == "unknown" or q_id.startswith("synthetic_"):
-            key = _SHARED_POOL
-        else:
-            key = q_id
+        key = _SHARED_POOL if q_id == "unknown" or q_id.startswith("synthetic_") else q_id
 
         if p["label"] == "correct":
             correct_by_q[key].append(p["step_text"])

@@ -33,6 +33,7 @@ import pytest
 # Bootstrap sys.path so scripts.* and carnot.* resolve.
 # ---------------------------------------------------------------------------
 import sys
+
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
@@ -139,8 +140,10 @@ def _unhealthy_gpu_status() -> dict:
 
 def _mock_model_fn() -> MagicMock:
     """HuggingFace pipeline mock that returns a response containing #### 6."""
+
     def _call(prompt, max_new_tokens=512):
         return [{"generated_text": "Step 1: answer is 6.\n#### 6"}]
+
     return MagicMock(side_effect=_call)
 
 
@@ -166,9 +169,7 @@ def _run_main_success(tmp_path: Path) -> dict:
             "scripts.experiment_410_precision_live.LiveGPUGate.require_live_or_blocked",
             return_value=None,
         ):
-            with patch(
-                "scripts.experiment_410_precision_live.ExperimentTemplate"
-            ) as MockTmpl:
+            with patch("scripts.experiment_410_precision_live.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=exp410.EXP_ID,
                     title=exp410.EXP_TITLE,
@@ -179,9 +180,7 @@ def _run_main_success(tmp_path: Path) -> dict:
                 tmpl_instance.setup_gpu = MagicMock(return_value=_healthy_gpu_status())
                 MockTmpl.return_value = tmpl_instance
 
-                with patch.object(
-                    exp410, "load_gsm8k_questions", return_value=small_questions
-                ):
+                with patch.object(exp410, "load_gsm8k_questions", return_value=small_questions):
                     with patch(
                         "scripts.experiment_410_precision_live._load_model_pipeline",
                         return_value=mock_model,
@@ -346,9 +345,7 @@ class TestMainPreflightBlocked:
     def _run_main_with_verdict(self, verdict: str, tmp_path: Path) -> dict:
         """Run main() with a specific preflight verdict and return the artifact."""
         with patch.object(exp410, "load_preflight_verdict", return_value=verdict):
-            with patch(
-                "scripts.experiment_410_precision_live.ExperimentTemplate"
-            ) as MockTmpl:
+            with patch("scripts.experiment_410_precision_live.ExperimentTemplate") as MockTmpl:
                 tmpl_instance = ExperimentTemplate(
                     exp_id=exp410.EXP_ID,
                     title=exp410.EXP_TITLE,
@@ -394,9 +391,7 @@ class TestMainPreflightBlocked:
             with patch(
                 "scripts.experiment_410_precision_live.LiveGPUGate.require_live_or_blocked"
             ) as mock_gate:
-                with patch(
-                    "scripts.experiment_410_precision_live.ExperimentTemplate"
-                ) as MockTmpl:
+                with patch("scripts.experiment_410_precision_live.ExperimentTemplate") as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
                         exp_id=exp410.EXP_ID,
                         title=exp410.EXP_TITLE,
@@ -427,9 +422,7 @@ class TestMainGPUBlocked:
                 "scripts.experiment_410_precision_live.LiveGPUGate.require_live_or_blocked",
                 return_value=blocked_artifact,
             ):
-                with patch(
-                    "scripts.experiment_410_precision_live.ExperimentTemplate"
-                ) as MockTmpl:
+                with patch("scripts.experiment_410_precision_live.ExperimentTemplate") as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
                         exp_id=exp410.EXP_ID,
                         title=exp410.EXP_TITLE,
@@ -454,9 +447,7 @@ class TestMainGPUBlocked:
                 "scripts.experiment_410_precision_live.LiveGPUGate.require_live_or_blocked",
                 return_value=None,
             ):
-                with patch(
-                    "scripts.experiment_410_precision_live.ExperimentTemplate"
-                ) as MockTmpl:
+                with patch("scripts.experiment_410_precision_live.ExperimentTemplate") as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
                         exp_id=exp410.EXP_ID,
                         title=exp410.EXP_TITLE,
@@ -481,9 +472,7 @@ class TestMainGPUBlocked:
                 "scripts.experiment_410_precision_live.LiveGPUGate.require_live_or_blocked",
                 return_value=None,
             ):
-                with patch(
-                    "scripts.experiment_410_precision_live.ExperimentTemplate"
-                ) as MockTmpl:
+                with patch("scripts.experiment_410_precision_live.ExperimentTemplate") as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
                         exp_id=exp410.EXP_ID,
                         title=exp410.EXP_TITLE,
@@ -521,6 +510,7 @@ class TestMainSuccess:
     def test_artifact_has_required_fields(self, tmp_path: Path):
         """Success artifact contains all REQUIRED_RESULT_FIELDS."""
         from scripts.experiment_template import REQUIRED_RESULT_FIELDS
+
         artifact = _run_main_success(tmp_path)
         for field in REQUIRED_RESULT_FIELDS:
             assert field in artifact, f"Missing required field: {field}"
@@ -563,9 +553,7 @@ class TestMainSuccess:
                 "scripts.experiment_410_precision_live.LiveGPUGate.require_live_or_blocked",
                 return_value=None,
             ):
-                with patch(
-                    "scripts.experiment_410_precision_live.ExperimentTemplate"
-                ) as MockTmpl:
+                with patch("scripts.experiment_410_precision_live.ExperimentTemplate") as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
                         exp_id=exp410.EXP_ID,
                         title=exp410.EXP_TITLE,
@@ -576,9 +564,7 @@ class TestMainSuccess:
                     tmpl_instance.setup_gpu = MagicMock(return_value=_healthy_gpu_status())
                     MockTmpl.return_value = tmpl_instance
 
-                    with patch.object(
-                        exp410, "load_gsm8k_questions", return_value=small_questions
-                    ):
+                    with patch.object(exp410, "load_gsm8k_questions", return_value=small_questions):
                         with patch(
                             "scripts.experiment_410_precision_live._load_model_pipeline",
                             return_value=mock_model,
@@ -605,9 +591,7 @@ class TestMainSuccess:
                 "scripts.experiment_410_precision_live.LiveGPUGate.require_live_or_blocked",
                 return_value=None,
             ):
-                with patch(
-                    "scripts.experiment_410_precision_live.ExperimentTemplate"
-                ) as MockTmpl:
+                with patch("scripts.experiment_410_precision_live.ExperimentTemplate") as MockTmpl:
                     tmpl_instance = ExperimentTemplate(
                         exp_id=exp410.EXP_ID,
                         title=exp410.EXP_TITLE,
@@ -618,9 +602,7 @@ class TestMainSuccess:
                     tmpl_instance.setup_gpu = MagicMock(return_value=_healthy_gpu_status())
                     MockTmpl.return_value = tmpl_instance
 
-                    with patch.object(
-                        exp410, "load_gsm8k_questions", return_value=small_questions
-                    ):
+                    with patch.object(exp410, "load_gsm8k_questions", return_value=small_questions):
                         with patch(
                             "scripts.experiment_410_precision_live._load_model_pipeline",
                             return_value=mock_model,

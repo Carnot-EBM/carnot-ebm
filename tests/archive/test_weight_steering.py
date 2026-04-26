@@ -10,14 +10,12 @@ from unittest.mock import MagicMock, patch
 import jax.numpy as jnp
 import numpy as np
 import pytest
-
 from carnot.embeddings.weight_steering import (
     _find_output_projection,
     apply_cws,
     revert_cws,
     steered_model,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers: build mock model with weight parameters
@@ -311,10 +309,9 @@ class TestSteeredModelContextManager:
         mock_torch, model, layers, params = _build_weight_mock()
         direction = jnp.ones(8)
 
-        with pytest.raises(ValueError):
-            with patch.dict("sys.modules", {"torch": mock_torch}):
-                with steered_model(model, [0], direction, alpha=1.0):
-                    raise ValueError("test error")
+        with pytest.raises(ValueError), patch.dict("sys.modules", {"torch": mock_torch}):
+            with steered_model(model, [0], direction, alpha=1.0):
+                raise ValueError("test error")
 
         assert params[0].data.copy_called
 

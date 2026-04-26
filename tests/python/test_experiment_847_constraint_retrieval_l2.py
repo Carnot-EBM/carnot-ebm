@@ -7,6 +7,7 @@ L2-normalized embeddings; normalize queries before retrieval.
 
 Spec: REQ-VERIFY-150, SCENARIO-VERIFY-230
 """
+
 from __future__ import annotations
 
 import math
@@ -21,6 +22,7 @@ import pytest
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _l2norm(v: list[float]) -> float:
     return math.sqrt(sum(x * x for x in v))
@@ -40,11 +42,11 @@ def _cosine(a: list[float], b: list[float]) -> float:
 # Synthetic embedding factory: maps a string key to a distinct 8-dim float vector.
 # We use 8 dims for test speed; normalization logic is dimension-agnostic.
 _BASE_VECS: dict[str, list[float]] = {
-    "carry":      [0.9, 0.1, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0],
-    "sign":       [0.1, 0.9, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0],
-    "unit":       [0.1, 0.1, 0.9, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "carry": [0.9, 0.1, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "sign": [0.1, 0.9, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "unit": [0.1, 0.1, 0.9, 0.0, 0.0, 0.0, 0.0, 0.0],
     "comparison": [0.0, 0.0, 0.1, 0.9, 0.1, 0.0, 0.0, 0.0],
-    "causal":     [0.0, 0.0, 0.0, 0.1, 0.9, 0.1, 0.0, 0.0],
+    "causal": [0.0, 0.0, 0.0, 0.1, 0.9, 0.1, 0.0, 0.0],
 }
 
 # Query variants: slightly perturbed versions of each base vec (5 per type).
@@ -60,6 +62,7 @@ def _perturbed_vec(key: str, eps: float) -> list[float]:
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture()
 def store_with_mock_encoder():
     """Return an EmbeddingConstraintStore whose encoder is replaced with a
@@ -72,8 +75,8 @@ def store_with_mock_encoder():
     # Map SPO text patterns to base vectors.
     _SPO_TO_KEY = {
         "arithmetic_carry": "carry",
-        "numeric_sign":     "sign",
-        "unit_label":       "unit",
+        "numeric_sign": "sign",
+        "unit_label": "unit",
         "comparison_direction": "comparison",
         "causal_entailment": "causal",
     }
@@ -103,15 +106,16 @@ def populated_store(store_with_mock_encoder):
     """Return a store with all 5 canonical SPO constraints stored."""
     store, SPO = store_with_mock_encoder
     _SPO_ENTRIES = [
-        ("arithmetic_carry",        "violates", "carry_propagation",  "carry"),
-        ("numeric_sign",            "violates", "sign_preservation",  "sign"),
-        ("unit_label",              "violates", "unit_consistency",   "unit"),
-        ("comparison_direction",    "violates", "inequality_direction", "comparison"),
-        ("causal_entailment",       "violates", "step_causality",     "causal"),
+        ("arithmetic_carry", "violates", "carry_propagation", "carry"),
+        ("numeric_sign", "violates", "sign_preservation", "sign"),
+        ("unit_label", "violates", "unit_consistency", "unit"),
+        ("comparison_direction", "violates", "inequality_direction", "comparison"),
+        ("causal_entailment", "violates", "step_causality", "causal"),
     ]
     for subj, pred, obj, vtype in _SPO_ENTRIES:
-        spo = SPO(subject=subj, predicate=pred, object=obj, embedding=None,
-                  source_violation_type=vtype)
+        spo = SPO(
+            subject=subj, predicate=pred, object=obj, embedding=None, source_violation_type=vtype
+        )
         store.store(spo)
     return store
 
@@ -119,6 +123,7 @@ def populated_store(store_with_mock_encoder):
 # ---------------------------------------------------------------------------
 # REQ-VERIFY-150: L2-normalization on write
 # ---------------------------------------------------------------------------
+
 
 class TestL2NormAppliedOnWrite:
     """REQ-VERIFY-150: stored embeddings must be L2-unit vectors."""
@@ -136,6 +141,7 @@ class TestL2NormAppliedOnWrite:
     def test_retrieval_l2_normalized_flag_is_true(self, populated_store):
         """Class invariant: retrieval_l2_normalized must be True."""
         from python.carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
+
         assert EmbeddingConstraintStore.retrieval_l2_normalized is True
         assert populated_store.retrieval_l2_normalized is True
 
@@ -145,8 +151,13 @@ class TestL2NormAppliedOnWrite:
         # Override _encode to return a non-unit vector (norm ~2.0).
         raw_vec = [2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         store._encode = lambda text: list(raw_vec)  # type: ignore[assignment]
-        spo = SPO(subject="test", predicate="violates", object="rule",
-                  embedding=None, source_violation_type="carry")
+        spo = SPO(
+            subject="test",
+            predicate="violates",
+            object="rule",
+            embedding=None,
+            source_violation_type="carry",
+        )
         store.store(spo)
         n = _l2norm(spo.embedding or [])
         assert abs(n - 1.0) < 1e-6, f"norm after store = {n}, expected 1.0"
@@ -173,6 +184,7 @@ class TestL2NormAppliedOnWrite:
 # ---------------------------------------------------------------------------
 # REQ-VERIFY-150: L2-normalization on retrieve
 # ---------------------------------------------------------------------------
+
 
 class TestL2NormAppliedOnRetrieve:
     """REQ-VERIFY-150: query must be L2-normalized before similarity computation."""
@@ -215,6 +227,7 @@ class TestL2NormAppliedOnRetrieve:
     def test_retrieve_empty_store_returns_empty(self):
         """retrieve() on empty store must return []."""
         from python.carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
+
         store = EmbeddingConstraintStore.__new__(EmbeddingConstraintStore)
         store._store = []
         store._encoder = None
@@ -227,6 +240,7 @@ class TestL2NormAppliedOnRetrieve:
 # REQ-VERIFY-150: default cosine threshold == 0.5
 # ---------------------------------------------------------------------------
 
+
 class TestCosineThresholdLowered:
     """Default cosine_threshold in retrieve() must be <= 0.5."""
 
@@ -234,6 +248,7 @@ class TestCosineThresholdLowered:
         """retrieve() signature must have cosine_threshold default == 0.5."""
         import inspect
         from python.carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
+
         sig = inspect.signature(EmbeddingConstraintStore.retrieve)
         default = sig.parameters["cosine_threshold"].default
         assert default <= 0.5, (
@@ -264,13 +279,14 @@ class TestCosineThresholdLowered:
 # SCENARIO-VERIFY-230: retrieval AUROC > 0.80
 # ---------------------------------------------------------------------------
 
+
 class TestRetrievalAurocAboveThreshold:
     """SCENARIO-VERIFY-230: retrieval AUROC must exceed 0.80."""
 
     def _build_query_label_pairs(self) -> tuple[list[str], list[str]]:
         """25 (query, label) pairs: 5 types × 5 perturbation levels."""
         queries: list[str] = []
-        labels:  list[str] = []
+        labels: list[str] = []
         for key in _BASE_VECS:
             for eps in _QUERY_PERTURBATIONS:
                 queries.append(key)  # query text encodes to _BASE_VECS[key] + eps
@@ -300,6 +316,7 @@ class TestRetrievalAurocAboveThreshold:
     def test_retrieval_auc_empty_store(self):
         """retrieval_auc on empty store must return 0.0."""
         from python.carnot.pipeline.embedding_constraint_store import EmbeddingConstraintStore
+
         store = EmbeddingConstraintStore.__new__(EmbeddingConstraintStore)
         store._store = []
         store._encoder = None

@@ -46,11 +46,13 @@ Spec: REQ-VERIFY-107, REQ-VERIFY-108,
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable
+from typing import TYPE_CHECKING
 
 import jax
 import jax.numpy as jnp
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Result dataclass
@@ -137,7 +139,7 @@ def estimate_basin_depth(
     key = jax.random.PRNGKey(rng_seed)
     perturbed_min = float("inf")
 
-    for i in range(n_perturbations):
+    for _i in range(n_perturbations):
         key, subkey = jax.random.split(key)
         noise = perturbation_scale * jax.random.normal(subkey, shape=hidden_state.shape)
         perturbed_energy = energy_fn(hidden_state + noise)
@@ -311,7 +313,9 @@ class HallucinationBasinDetector:
         if labels is None:
             pairs = [(jnp.asarray(hs), int(lbl)) for hs, lbl in responses]
         else:
-            pairs = [(jnp.asarray(hs), int(lbl)) for hs, lbl in zip(responses, labels)]
+            pairs = [
+                (jnp.asarray(hs), int(lbl)) for hs, lbl in zip(responses, labels, strict=False)
+            ]
 
         y_true = [lbl for _, lbl in pairs]
         y_score = [self.detect(hs).basin_risk_score for hs, _ in pairs]

@@ -24,7 +24,7 @@ import json
 import os
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 import jax.numpy as jnp
@@ -56,7 +56,7 @@ KAN_CONFIG = KANConfig(
     input_dim=INPUT_DIM,
     num_knots=6,
     degree=2,
-    sparse=False,   # fully connected — only 28 edges for 8 inputs
+    sparse=False,  # fully connected — only 28 edges for 8 inputs
     edge_density=1.0,
 )
 
@@ -134,6 +134,7 @@ def _simple_sgd_finetune(kan: KANModel, inputs: list[np.ndarray], n_epochs: int,
             delta = rng.standard_normal(old_cp.shape).astype(np.float32) * lr
             new_cp = old_cp - delta  # descend
             from carnot.models.kan import BSplineParams
+
             spline.params = BSplineParams(control_points=jnp.array(new_cp))
 
         for idx, spline in enumerate(ef.bias_splines):
@@ -141,6 +142,7 @@ def _simple_sgd_finetune(kan: KANModel, inputs: list[np.ndarray], n_epochs: int,
             delta = rng.standard_normal(old_cp.shape).astype(np.float32) * lr
             new_cp = old_cp - delta
             from carnot.models.kan import BSplineParams
+
             spline.params = BSplineParams(control_points=jnp.array(new_cp))
 
 
@@ -150,7 +152,7 @@ def run_experiment() -> dict:
     Returns:
         Result artifact dict conforming to the Carnot experiment schema.
     """
-    started_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    started_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     t0 = time.time()
 
     # Step 1: corpus
@@ -201,9 +203,11 @@ def run_experiment() -> dict:
     else:
         honest_verdict = "tier4_restructuring_hurts"
 
-    knot_count_change_pct = (knot_count_after - knot_count_before) / max(knot_count_before, 1) * 100.0
+    knot_count_change_pct = (
+        (knot_count_after - knot_count_before) / max(knot_count_before, 1) * 100.0
+    )
 
-    finished_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    finished_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     duration_s = round(time.time() - t0, 3)
 
     result = {
@@ -247,10 +251,22 @@ def assert_deliverable_written() -> None:
     with open(RESULT_PATH) as f:
         data = json.load(f)
     required = [
-        "experiment", "title", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "energy_loss_before", "energy_loss_after",
-        "energy_loss_delta", "knot_count_before", "knot_count_after",
-        "knot_count_change_pct", "tier4_viable", "honest_verdict", "spec",
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "energy_loss_before",
+        "energy_loss_after",
+        "energy_loss_delta",
+        "knot_count_before",
+        "knot_count_after",
+        "knot_count_change_pct",
+        "tier4_viable",
+        "honest_verdict",
+        "spec",
     ]
     for field in required:
         assert field in data, f"Missing required field: {field}"
@@ -264,5 +280,7 @@ if __name__ == "__main__":
     print(f"Written: {RESULT_PATH}")
     print(f"honest_verdict: {result['honest_verdict']}")
     print(f"tier4_viable: {result['tier4_viable']}")
-    print(f"energy_loss_before={result['energy_loss_before']:.4f}  after={result['energy_loss_after']:.4f}  delta={result['energy_loss_delta']:.4f}")
+    print(
+        f"energy_loss_before={result['energy_loss_before']:.4f}  after={result['energy_loss_after']:.4f}  delta={result['energy_loss_delta']:.4f}"
+    )
     assert_deliverable_written()

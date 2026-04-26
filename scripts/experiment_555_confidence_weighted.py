@@ -269,7 +269,7 @@ def _identify_optimal_threshold(
     for row in sweep_results:
         t = row["threshold"]
         fp_delta = row["fp_rate"] - baseline_fp_rate  # negative = reduction
-        tp_loss = baseline_fp_rate - row["tp_rate"]   # positive = we lost TP coverage
+        tp_loss = baseline_fp_rate - row["tp_rate"]  # positive = we lost TP coverage
 
         if fp_delta < _FP_REDUCTION_TARGET:
             tp_loss_at_t = max(0.0, baseline_fp_rate - row["tp_rate"])
@@ -332,9 +332,7 @@ def run_experiment() -> None:
 
         # Compute honest verdict: was FP significantly reduced?
         # If baseline_fp_rate == 0.0, there is nothing to reduce — report honestly.
-        any_fp_reduction = any(
-            r["fp_rate"] < baseline_fp_rate for r in sweep_results
-        )
+        any_fp_reduction = any(r["fp_rate"] < baseline_fp_rate for r in sweep_results)
         fp_delta_at_optimal = -(fp_reduction)  # negative = improvement
         honest_verdict = (
             "fp_reduced_significantly"
@@ -348,9 +346,9 @@ def run_experiment() -> None:
                 "n_responses_analyzed": n_total,
                 "n_correct_responses": n_correct,
                 "n_incorrect_responses": n_incorrect,
-                "source": EXP538_COT_PAIRS if (
-                    (_REPO_ROOT / EXP538_COT_PAIRS).exists()
-                ) else "synthetic_fallback",
+                "source": EXP538_COT_PAIRS
+                if ((_REPO_ROOT / EXP538_COT_PAIRS).exists())
+                else "synthetic_fallback",
                 "baseline_fp_rate": baseline_fp_rate,
                 "baseline_source": "experiment_554_vprm_result",
                 "threshold_sweep": [

@@ -139,11 +139,20 @@ class TestBuildV9Artifact:
 
     def test_all_required_schema_keys_present(self):
         required = {
-            "schema", "inference_mode", "n_questions", "baseline_accuracy",
-            "pipeline_accuracy", "signed_improvement", "is_positive",
-            "mean_latency_s", "per_question_latencies",
-            "retro_033_closed", "retro_055_resolved",
-            "cot_pairs_written", "env_autofix_applied", "honest_verdict",
+            "schema",
+            "inference_mode",
+            "n_questions",
+            "baseline_accuracy",
+            "pipeline_accuracy",
+            "signed_improvement",
+            "is_positive",
+            "mean_latency_s",
+            "per_question_latencies",
+            "retro_033_closed",
+            "retro_055_resolved",
+            "cot_pairs_written",
+            "env_autofix_applied",
+            "honest_verdict",
         }
         art = exp538._build_v9_artifact(
             {"baseline_accuracy": 0.5, "pipeline_accuracy": 0.5, "n_questions": 25},
@@ -241,23 +250,27 @@ class TestFOVERAnnotatorIntegration:
 
     def test_fover_annotator_import_works(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         fa = FOVERAnnotator()
         assert hasattr(fa, "annotate_corpus")
         assert hasattr(fa, "to_training_pairs")
 
     def test_vericot_validator_import_works(self):
         from carnot.extraction.vericot_validator import VeriCoTStepValidator
+
         v = VeriCoTStepValidator()
         assert hasattr(v, "detect_violations")
 
     def test_fover_annotate_corpus_returns_list(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         fa = FOVERAnnotator()
         result = fa.annotate_corpus([{"response": "Step 1: 2 + 2 = 4. Step 2: done."}])
         assert isinstance(result, list)
 
     def test_fover_to_training_pairs_returns_list(self):
         from carnot.pipeline.fover_annotator import FOVERAnnotator
+
         fa = FOVERAnnotator()
         annotated = fa.annotate_corpus([{"response": "Step 1: 3 + 3 = 6."}])
         pairs = fa.to_training_pairs(annotated)

@@ -205,9 +205,7 @@ def test_generate_constraint_comparison_error() -> None:
     """
     sm = _make_session_memory({})
     engine = ConstraintAdditionEngine(sm)
-    pattern = ConstraintPattern(
-        violation_type="comparison_error", count=7, example_text="test"
-    )
+    pattern = ConstraintPattern(violation_type="comparison_error", count=7, example_text="test")
 
     result = engine.generate_constraint(pattern)
 

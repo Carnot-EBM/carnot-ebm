@@ -5,6 +5,7 @@ Each test traces to REQ-LEARN-093 or REQ-LEARN-094.
 
 Spec: REQ-LEARN-093, REQ-LEARN-094, SCENARIO-LEARN-144
 """
+
 from __future__ import annotations
 
 import sys
@@ -75,25 +76,36 @@ class TestMergeCorpusWithDomain:
 
     def test_source_domain_added_to_gsm8k_pairs(self) -> None:
         """REQ-LEARN-094: pairs from source A get source_domain='gsm8k'."""
-        pairs_a = [{"question_id": "q1", "step_text": "1 + 2 = 3", "label": "correct", "confidence": 1.0}]
+        pairs_a = [
+            {"question_id": "q1", "step_text": "1 + 2 = 3", "label": "correct", "confidence": 1.0}
+        ]
         merged = merge_corpus_with_domain(pairs_a, [], [])
         assert merged[0]["source_domain"] == "gsm8k"
 
     def test_source_domain_added_to_math500_pairs(self) -> None:
         """REQ-LEARN-094: pairs from source B get source_domain='math500'."""
-        pairs_b = [{"question_id": "m1", "step_text": "3 * 4 = 12", "label": "correct", "confidence": 1.0}]
+        pairs_b = [
+            {"question_id": "m1", "step_text": "3 * 4 = 12", "label": "correct", "confidence": 1.0}
+        ]
         merged = merge_corpus_with_domain([], pairs_b, [])
         assert merged[0]["source_domain"] == "math500"
 
     def test_source_domain_added_to_humaneval_pairs(self) -> None:
         """REQ-LEARN-094: pairs from source C get source_domain='humaneval'."""
-        pairs_c = [{"question_id": "h1", "step_text": "5 + 5 = 10", "label": "correct", "confidence": 1.0}]
+        pairs_c = [
+            {"question_id": "h1", "step_text": "5 + 5 = 10", "label": "correct", "confidence": 1.0}
+        ]
         merged = merge_corpus_with_domain([], [], pairs_c)
         assert merged[0]["source_domain"] == "humaneval"
 
     def test_all_original_fields_preserved(self) -> None:
         """REQ-LEARN-094: merging preserves all original pair fields."""
-        pair = {"question_id": "q1", "step_text": "2 + 2 = 4", "label": "correct", "confidence": 1.0}
+        pair = {
+            "question_id": "q1",
+            "step_text": "2 + 2 = 4",
+            "label": "correct",
+            "confidence": 1.0,
+        }
         merged = merge_corpus_with_domain([pair], [], [])
         assert merged[0]["question_id"] == "q1"
         assert merged[0]["step_text"] == "2 + 2 = 4"
@@ -102,9 +114,18 @@ class TestMergeCorpusWithDomain:
 
     def test_total_length_is_sum_of_all_sources(self) -> None:
         """REQ-LEARN-094: merged list length = len(A) + len(B) + len(C)."""
-        pairs_a = [{"question_id": f"a{i}", "step_text": "", "label": "correct", "confidence": 1.0} for i in range(3)]
-        pairs_b = [{"question_id": f"b{i}", "step_text": "", "label": "correct", "confidence": 1.0} for i in range(2)]
-        pairs_c = [{"question_id": f"c{i}", "step_text": "", "label": "correct", "confidence": 1.0} for i in range(4)]
+        pairs_a = [
+            {"question_id": f"a{i}", "step_text": "", "label": "correct", "confidence": 1.0}
+            for i in range(3)
+        ]
+        pairs_b = [
+            {"question_id": f"b{i}", "step_text": "", "label": "correct", "confidence": 1.0}
+            for i in range(2)
+        ]
+        pairs_c = [
+            {"question_id": f"c{i}", "step_text": "", "label": "correct", "confidence": 1.0}
+            for i in range(4)
+        ]
         merged = merge_corpus_with_domain(pairs_a, pairs_b, pairs_c)
         assert len(merged) == 9
 

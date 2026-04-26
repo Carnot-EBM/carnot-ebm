@@ -143,8 +143,7 @@ def _build_question_pool() -> list[str]:
 
         ds = load_dataset("gsm8k", "main", split="train")
         questions = [
-            ds[i]["question"]
-            for i in range(GSM8K_INDEX_START, min(GSM8K_INDEX_END + 1, len(ds)))
+            ds[i]["question"] for i in range(GSM8K_INDEX_START, min(GSM8K_INDEX_END + 1, len(ds)))
         ]
         if questions:
             return questions
@@ -204,7 +203,7 @@ def _make_live_inference_fn():
                     temperature=temperature if do_sample else 1.0,
                     pad_token_id=tokenizer.eos_token_id,
                 )
-            generated = output[0][inputs["input_ids"].shape[1]:]
+            generated = output[0][inputs["input_ids"].shape[1] :]
             return tokenizer.decode(generated, skip_special_tokens=True)
 
         return inference_fn

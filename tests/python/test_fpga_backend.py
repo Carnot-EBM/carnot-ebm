@@ -97,9 +97,7 @@ class TestSparsifyCoupling:
 
     def test_no_pruning_below_max_degree(self) -> None:
         """SCENARIO-SAMPLE-019: Dense matrix with ≤ max_degree neighbours unchanged."""
-        coupling = np.array(
-            [[0.0, 0.5, 0.3], [0.5, 0.0, 0.1], [0.3, 0.1, 0.0]], dtype=np.float32
-        )
+        coupling = np.array([[0.0, 0.5, 0.3], [0.5, 0.0, 0.1], [0.3, 0.1, 0.0]], dtype=np.float32)
         result = sparsify_coupling(coupling, max_degree=10)
         np.testing.assert_array_equal(result, coupling)
 
@@ -344,9 +342,7 @@ class TestFpgaBackendMinimizeEnergy:
         """SCENARIO-SAMPLE-019: use_lagrangian_penalty=True completes without error."""
         monkeypatch.delenv("CARNOT_KV260_BITFILE", raising=False)
         b, coupling = _ferromagnetic_problem(6)
-        backend = FpgaBackend(
-            seed=0, use_lagrangian_penalty=True, lagrangian_penalty_strength=0.5
-        )
+        backend = FpgaBackend(seed=0, use_lagrangian_penalty=True, lagrangian_penalty_strength=0.5)
         samples = backend.minimize_energy(b, coupling, n_samples=5, n_steps=100, beta=5.0)
         assert samples.shape == (5, 6)
         assert samples.dtype == bool

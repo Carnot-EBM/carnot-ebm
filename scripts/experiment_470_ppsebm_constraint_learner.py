@@ -82,15 +82,18 @@ QUESTIONS_PER_DOMAIN = 50
 #   CODE       -> dims {8, 13, 14}  (off_by_one, index_oob, missing_case)
 #   LOGICAL    -> dims {10, 11, 15} (contradiction, tautology, invalid_inference)
 DOMAIN_VIOLATIONS: dict[ConstraintDomain, list[str]] = {
-    ConstraintDomain.ARITHMETIC: [
-        "carry", "sign", "comparison_direction", "carry", "sign"
-    ] * 10,  # 50 violations: carry-heavy; hashes to dims {0, 1, 3}
-    ConstraintDomain.CODE: [
-        "off_by_one", "index_oob", "missing_case", "off_by_one", "index_oob"
-    ] * 10,  # 50 violations: off_by_one-heavy; hashes to dims {8, 13, 14}
+    ConstraintDomain.ARITHMETIC: ["carry", "sign", "comparison_direction", "carry", "sign"]
+    * 10,  # 50 violations: carry-heavy; hashes to dims {0, 1, 3}
+    ConstraintDomain.CODE: ["off_by_one", "index_oob", "missing_case", "off_by_one", "index_oob"]
+    * 10,  # 50 violations: off_by_one-heavy; hashes to dims {8, 13, 14}
     ConstraintDomain.LOGICAL: [
-        "contradiction", "tautology", "invalid_inference", "contradiction", "tautology"
-    ] * 10,  # 50 violations: contradiction-heavy; hashes to dims {10, 11, 15}
+        "contradiction",
+        "tautology",
+        "invalid_inference",
+        "contradiction",
+        "tautology",
+    ]
+    * 10,  # 50 violations: contradiction-heavy; hashes to dims {10, 11, 15}
 }
 
 # Test questions per domain: (question_text, expected_violation_type) tuples.
@@ -98,22 +101,14 @@ DOMAIN_VIOLATIONS: dict[ConstraintDomain, list[str]] = {
 # so a well-trained domain should achieve fp_rate=0.0.
 DOMAIN_TEST_QUESTIONS: dict[ConstraintDomain, list[tuple[str, str]]] = {
     ConstraintDomain.ARITHMETIC: [
-        (f"arith_q{i}", v)
-        for i, v in enumerate(
-            ["carry", "sign", "comparison_direction"] * 17
-        )
+        (f"arith_q{i}", v) for i, v in enumerate(["carry", "sign", "comparison_direction"] * 17)
     ][:QUESTIONS_PER_DOMAIN],
     ConstraintDomain.CODE: [
-        (f"code_q{i}", v)
-        for i, v in enumerate(
-            ["off_by_one", "index_oob", "missing_case"] * 17
-        )
+        (f"code_q{i}", v) for i, v in enumerate(["off_by_one", "index_oob", "missing_case"] * 17)
     ][:QUESTIONS_PER_DOMAIN],
     ConstraintDomain.LOGICAL: [
         (f"logic_q{i}", v)
-        for i, v in enumerate(
-            ["contradiction", "tautology", "invalid_inference"] * 17
-        )
+        for i, v in enumerate(["contradiction", "tautology", "invalid_inference"] * 17)
     ][:QUESTIONS_PER_DOMAIN],
 }
 

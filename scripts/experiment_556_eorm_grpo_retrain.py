@@ -99,7 +99,6 @@ def main() -> None:
 
     # Step 2: hard timeout guard
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=30):
-
         # Step 3: ExperimentTemplate scaffolding
         tmpl = ExperimentTemplate(
             exp_id=EXP_ID,
@@ -140,8 +139,11 @@ def main() -> None:
         _log.info("Corpus entries loaded: %d", n_corpus_entries)
 
         if n_corpus_entries < MIN_PAIRS:
-            _log.warning("Corpus has %d entries, need >= %d — writing blocked artifact",
-                         n_corpus_entries, MIN_PAIRS)
+            _log.warning(
+                "Corpus has %d entries, need >= %d — writing blocked artifact",
+                n_corpus_entries,
+                MIN_PAIRS,
+            )
             artifact = tmpl.build_result(
                 {
                     "schema": "carnot.eorm_grpo.v1",

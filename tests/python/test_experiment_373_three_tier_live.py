@@ -66,21 +66,25 @@ def _make_minimal_responses(n_correct: int = 10, n_wrong: int = 10) -> list[dict
     """Build a minimal list of response dicts in Exp 368 format."""
     responses = []
     for i in range(n_correct):
-        responses.append({
-            "question_id": f"q{i}",
-            "model_id": "test",
-            "response": f"The answer is {i}. Step 1: compute. Step 2: check. Final: {i}.",
-            "question": f"What is {i}?",
-            "correct": True,
-        })
+        responses.append(
+            {
+                "question_id": f"q{i}",
+                "model_id": "test",
+                "response": f"The answer is {i}. Step 1: compute. Step 2: check. Final: {i}.",
+                "question": f"What is {i}?",
+                "correct": True,
+            }
+        )
     for i in range(n_wrong):
-        responses.append({
-            "question_id": f"q{i}",
-            "model_id": "test",
-            "response": f"I think it could be {i + 99}.",
-            "question": f"What is {i}?",
-            "correct": False,
-        })
+        responses.append(
+            {
+                "question_id": f"q{i}",
+                "model_id": "test",
+                "response": f"I think it could be {i + 99}.",
+                "question": f"What is {i}?",
+                "correct": False,
+            }
+        )
     return responses
 
 
@@ -151,6 +155,7 @@ class TestCheckCuda:
                 return_value=True,
             ):
                 from scripts.experiment_373_three_tier_live import _check_cuda as fn
+
                 assert fn() is True
 
     def test_returns_false_when_cuda_unavailable(self):
@@ -163,12 +168,14 @@ class TestCheckCuda:
                 return_value=False,
             ):
                 from scripts.experiment_373_three_tier_live import _check_cuda as fn
+
                 assert fn() is False
 
     def test_returns_false_when_torch_import_fails(self):
         """When torch is not importable → _check_cuda returns False without raising."""
         # Temporarily remove torch from sys.modules to simulate absence
         import importlib
+
         with patch.dict("sys.modules", {"torch": None}):
             result = _check_cuda()
         # Should not raise; returns False
@@ -218,8 +225,12 @@ class TestLoadEormModel:
         results_dir = tmp_path / "results"
         results_dir.mkdir()
         small_model = EORMModel(
-            embed_dim=32, n_heads=4, n_layers=1,
-            max_seq_len=64, vocab_size=512, key=jrandom.PRNGKey(7)
+            embed_dim=32,
+            n_heads=4,
+            n_layers=1,
+            max_seq_len=64,
+            vocab_size=512,
+            key=jrandom.PRNGKey(7),
         )
         small_model.save(str(results_dir / "eorm_model_371_real.safetensors"))
 
@@ -240,8 +251,12 @@ class TestLoadEormModel:
 
         # Write valid 359
         small_model = EORMModel(
-            embed_dim=32, n_heads=4, n_layers=1,
-            max_seq_len=64, vocab_size=512, key=jrandom.PRNGKey(8)
+            embed_dim=32,
+            n_heads=4,
+            n_layers=1,
+            max_seq_len=64,
+            vocab_size=512,
+            key=jrandom.PRNGKey(8),
         )
         small_model.save(str(results_dir / "eorm_model_359_real.safetensors"))
 
@@ -257,8 +272,12 @@ class TestLoadEormModel:
         results_dir = tmp_path / "results"
         results_dir.mkdir()
         small_model = EORMModel(
-            embed_dim=32, n_heads=4, n_layers=1,
-            max_seq_len=64, vocab_size=512, key=jrandom.PRNGKey(9)
+            embed_dim=32,
+            n_heads=4,
+            n_layers=1,
+            max_seq_len=64,
+            vocab_size=512,
+            key=jrandom.PRNGKey(9),
         )
         small_model.save(str(results_dir / "eorm_model_359_real.safetensors"))
 
@@ -500,9 +519,7 @@ class TestCheckRealAttentionAvailable:
     def test_returns_false_on_parse_error(self, tmp_path):
         """Malformed file → False (does not raise)."""
         (tmp_path / "results").mkdir()
-        (tmp_path / "results" / "experiment_368_precision_live.json").write_text(
-            "{ bad json"
-        )
+        (tmp_path / "results" / "experiment_368_precision_live.json").write_text("{ bad json")
         assert _check_real_attention_available(tmp_path) is False
 
 
@@ -522,8 +539,13 @@ class TestRunIsingAloneBaseline:
         ]
         result = run_ising_alone_baseline(responses)
         required = {
-            "skip_rate_sink_probe", "skip_rate_eorm", "total_skip_rate",
-            "fn_rate", "throughput_qps", "ising_calls_saved_pct", "inference_mode",
+            "skip_rate_sink_probe",
+            "skip_rate_eorm",
+            "total_skip_rate",
+            "fn_rate",
+            "throughput_qps",
+            "ising_calls_saved_pct",
+            "inference_mode",
         }
         assert required <= result.keys()
 
@@ -538,9 +560,7 @@ class TestRunIsingAloneBaseline:
 
     def test_throughput_qps_is_positive(self):
         """Throughput > 0 when there are responses."""
-        responses = [
-            {"response": f"r{i}", "question": f"q{i}"} for i in range(10)
-        ]
+        responses = [{"response": f"r{i}", "question": f"q{i}"} for i in range(10)]
         result = run_ising_alone_baseline(responses)
         assert result["throughput_qps"] > 0.0
 
@@ -612,8 +632,16 @@ class TestRunExperimentBlocked:
     def test_blocked_artifact_has_required_fields(self, tmp_path):
         """Blocked artifact contains all ExperimentTemplate required fields."""
         artifact = run_experiment(repo_root=tmp_path, force_live_override=False)
-        required = ["experiment", "schema", "run_date", "started_at",
-                    "finished_at", "duration_s", "status", "title"]
+        required = [
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ]
         for field in required:
             assert field in artifact, f"Missing required field: {field}"
 
@@ -665,8 +693,16 @@ class TestRunExperimentSuccess:
     def test_success_has_required_fields(self, tmp_path):
         """Success artifact contains all ExperimentTemplate required fields."""
         artifact = run_experiment(repo_root=tmp_path, force_live_override=True)
-        required = ["experiment", "schema", "run_date", "started_at",
-                    "finished_at", "duration_s", "status", "title"]
+        required = [
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ]
         for field in required:
             assert field in artifact, f"Missing required field: {field}"
 
@@ -736,8 +772,12 @@ class TestRunExperimentSuccess:
         results_dir = tmp_path / "results"
         results_dir.mkdir()
         small_model = EORMModel(
-            embed_dim=32, n_heads=4, n_layers=1,
-            max_seq_len=64, vocab_size=512, key=jrandom.PRNGKey(0)
+            embed_dim=32,
+            n_heads=4,
+            n_layers=1,
+            max_seq_len=64,
+            vocab_size=512,
+            key=jrandom.PRNGKey(0),
         )
         small_model.save(str(results_dir / "eorm_model_371_real.safetensors"))
 

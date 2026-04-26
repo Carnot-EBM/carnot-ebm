@@ -16,6 +16,7 @@ from carnot.pipeline.symcode_verifier import SymCodeVerifier
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_monitor() -> InterWhenMonitor:
     """Create an InterWhenMonitor with CI-mode SymCodeVerifier (no LLM)."""
     return InterWhenMonitor(SymCodeVerifier(llm_caller=None))
@@ -31,6 +32,7 @@ class TestInterWhenViolation:
 
     def test_fields_accessible(self) -> None:
         from carnot.pipeline.symcode_verifier import CoTStep
+
         v = InterWhenViolation(
             sentence_index=2,
             sentence_text="47 + 28 = 65",

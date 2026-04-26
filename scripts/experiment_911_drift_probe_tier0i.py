@@ -77,56 +77,123 @@ tmpl.setup()
 # These cover the most common arithmetic patterns: sum, product, difference,
 # remainder, and word-problem aggregation.
 _GSM8K_PROBLEMS: list[dict] = [
-    {"q": "Sam has 5 apples and buys 3 more. How many apples does he have?",
-     "a": 8, "template": "Sam starts with 5 apples and gets 3 more, so 5 + 3 = {a}."},
-    {"q": "A box holds 12 crayons. 4 are broken. How many are not broken?",
-     "a": 8, "template": "12 crayons total minus 4 broken = {a} intact crayons."},
-    {"q": "Each shelf holds 6 books. There are 4 shelves. How many books total?",
-     "a": 24, "template": "6 books per shelf × 4 shelves = {a} books."},
-    {"q": "Kim ran 3 km per day for 7 days. How many km did she run?",
-     "a": 21, "template": "3 km/day × 7 days = {a} km total."},
-    {"q": "There are 30 students. 12 are girls. How many are boys?",
-     "a": 18, "template": "30 total − 12 girls = {a} boys."},
-    {"q": "A bag has 45 marbles split equally into 9 groups. Size of each group?",
-     "a": 5, "template": "45 ÷ 9 = {a} marbles per group."},
-    {"q": "Tom earns $8/hour. He works 6 hours. How much does he earn?",
-     "a": 48, "template": "8 × 6 = ${a}."},
-    {"q": "A farmer has 7 rows of 9 corn stalks. How many stalks total?",
-     "a": 63, "template": "7 × 9 = {a} stalks."},
-    {"q": "A rectangle is 11 m long and 4 m wide. What is its area?",
-     "a": 44, "template": "Area = 11 × 4 = {a} m²."},
-    {"q": "Lisa has 50 stickers. She gives 17 away. How many remain?",
-     "a": 33, "template": "50 − 17 = {a} stickers left."},
-    {"q": "A train travels 60 km/h for 3 hours. Total distance?",
-     "a": 180, "template": "60 × 3 = {a} km."},
-    {"q": "There are 8 bags with 15 candies each. Total candies?",
-     "a": 120, "template": "8 × 15 = {a} candies."},
-    {"q": "Jake saves $12 a week. How much in 5 weeks?",
-     "a": 60, "template": "12 × 5 = ${a}."},
-    {"q": "A garden has 6 rows and 8 columns of plants. How many plants?",
-     "a": 48, "template": "6 × 8 = {a} plants."},
-    {"q": "200 students. 3/4 passed. How many passed?",
-     "a": 150, "template": "200 × 3/4 = {a} students passed."},
-    {"q": "A pizza has 8 slices. 3 people eat 2 slices each. Slices left?",
-     "a": 2, "template": "8 − 3×2 = {a} slices left."},
-    {"q": "A jar holds 500 ml. You pour out 125 ml. How much remains?",
-     "a": 375, "template": "500 − 125 = {a} ml."},
-    {"q": "5 friends share $85 equally. Each person gets?",
-     "a": 17, "template": "85 ÷ 5 = ${a} each."},
-    {"q": "A rectangle perimeter is 26 m. Length 8 m. What is the width?",
-     "a": 5, "template": "Perimeter = 2(l+w) → 26=2(8+w) → w = {a} m."},
-    {"q": "Bus seats 48. 3/4 full. How many passengers?",
-     "a": 36, "template": "48 × 3/4 = {a} passengers."},
-    {"q": "A library has 240 books. 1/3 are fiction. How many fiction?",
-     "a": 80, "template": "240 ÷ 3 = {a} fiction books."},
-    {"q": "A pool holds 1500 L. It leaks 75 L/hr. Empty in how many hours?",
-     "a": 20, "template": "1500 ÷ 75 = {a} hours."},
-    {"q": "72 eggs in cartons of 12. How many cartons?",
-     "a": 6, "template": "72 ÷ 12 = {a} cartons."},
-    {"q": "A square has side 9 m. What is its area?",
-     "a": 81, "template": "9² = {a} m²."},
-    {"q": "There are 100 people. 40% are under 18. How many adults?",
-     "a": 60, "template": "100 − 40 = {a} adults."},
+    {
+        "q": "Sam has 5 apples and buys 3 more. How many apples does he have?",
+        "a": 8,
+        "template": "Sam starts with 5 apples and gets 3 more, so 5 + 3 = {a}.",
+    },
+    {
+        "q": "A box holds 12 crayons. 4 are broken. How many are not broken?",
+        "a": 8,
+        "template": "12 crayons total minus 4 broken = {a} intact crayons.",
+    },
+    {
+        "q": "Each shelf holds 6 books. There are 4 shelves. How many books total?",
+        "a": 24,
+        "template": "6 books per shelf × 4 shelves = {a} books.",
+    },
+    {
+        "q": "Kim ran 3 km per day for 7 days. How many km did she run?",
+        "a": 21,
+        "template": "3 km/day × 7 days = {a} km total.",
+    },
+    {
+        "q": "There are 30 students. 12 are girls. How many are boys?",
+        "a": 18,
+        "template": "30 total − 12 girls = {a} boys.",
+    },
+    {
+        "q": "A bag has 45 marbles split equally into 9 groups. Size of each group?",
+        "a": 5,
+        "template": "45 ÷ 9 = {a} marbles per group.",
+    },
+    {
+        "q": "Tom earns $8/hour. He works 6 hours. How much does he earn?",
+        "a": 48,
+        "template": "8 × 6 = ${a}.",
+    },
+    {
+        "q": "A farmer has 7 rows of 9 corn stalks. How many stalks total?",
+        "a": 63,
+        "template": "7 × 9 = {a} stalks.",
+    },
+    {
+        "q": "A rectangle is 11 m long and 4 m wide. What is its area?",
+        "a": 44,
+        "template": "Area = 11 × 4 = {a} m².",
+    },
+    {
+        "q": "Lisa has 50 stickers. She gives 17 away. How many remain?",
+        "a": 33,
+        "template": "50 − 17 = {a} stickers left.",
+    },
+    {
+        "q": "A train travels 60 km/h for 3 hours. Total distance?",
+        "a": 180,
+        "template": "60 × 3 = {a} km.",
+    },
+    {
+        "q": "There are 8 bags with 15 candies each. Total candies?",
+        "a": 120,
+        "template": "8 × 15 = {a} candies.",
+    },
+    {"q": "Jake saves $12 a week. How much in 5 weeks?", "a": 60, "template": "12 × 5 = ${a}."},
+    {
+        "q": "A garden has 6 rows and 8 columns of plants. How many plants?",
+        "a": 48,
+        "template": "6 × 8 = {a} plants.",
+    },
+    {
+        "q": "200 students. 3/4 passed. How many passed?",
+        "a": 150,
+        "template": "200 × 3/4 = {a} students passed.",
+    },
+    {
+        "q": "A pizza has 8 slices. 3 people eat 2 slices each. Slices left?",
+        "a": 2,
+        "template": "8 − 3×2 = {a} slices left.",
+    },
+    {
+        "q": "A jar holds 500 ml. You pour out 125 ml. How much remains?",
+        "a": 375,
+        "template": "500 − 125 = {a} ml.",
+    },
+    {
+        "q": "5 friends share $85 equally. Each person gets?",
+        "a": 17,
+        "template": "85 ÷ 5 = ${a} each.",
+    },
+    {
+        "q": "A rectangle perimeter is 26 m. Length 8 m. What is the width?",
+        "a": 5,
+        "template": "Perimeter = 2(l+w) → 26=2(8+w) → w = {a} m.",
+    },
+    {
+        "q": "Bus seats 48. 3/4 full. How many passengers?",
+        "a": 36,
+        "template": "48 × 3/4 = {a} passengers.",
+    },
+    {
+        "q": "A library has 240 books. 1/3 are fiction. How many fiction?",
+        "a": 80,
+        "template": "240 ÷ 3 = {a} fiction books.",
+    },
+    {
+        "q": "A pool holds 1500 L. It leaks 75 L/hr. Empty in how many hours?",
+        "a": 20,
+        "template": "1500 ÷ 75 = {a} hours.",
+    },
+    {
+        "q": "72 eggs in cartons of 12. How many cartons?",
+        "a": 6,
+        "template": "72 ÷ 12 = {a} cartons.",
+    },
+    {"q": "A square has side 9 m. What is its area?", "a": 81, "template": "9² = {a} m²."},
+    {
+        "q": "There are 100 people. 40% are under 18. How many adults?",
+        "a": 60,
+        "template": "100 − 40 = {a} adults.",
+    },
 ]
 
 
@@ -192,11 +259,13 @@ def generate_gsm8k_triples(n: int = 100, seed: int = 42) -> list[dict]:
     triples = []
     for i in range(n):
         prob = base[i % len(base)]
-        triples.append({
-            "question": prob["q"],
-            "correct": _make_correct_response(prob),
-            "hallucinated": _make_hallucinated_response(prob, rng),
-        })
+        triples.append(
+            {
+                "question": prob["q"],
+                "correct": _make_correct_response(prob),
+                "hallucinated": _make_hallucinated_response(prob, rng),
+            }
+        )
     return triples
 
 
@@ -313,10 +382,32 @@ def _build_synthetic_model_runner(layers: list[int], seed: int = 0):
         # We can detect "hallucinated" by checking if the text starts with
         # "Step 1: Read" AND the final integer differs from any known correct
         # answer.
-        known_correct = {8, 24, 21, 18, 5, 48, 63, 44, 33, 180, 120, 60,
-                         48, 150, 2, 375, 17, 5, 36, 80, 20, 6, 81, 60}
+        known_correct = {
+            8,
+            24,
+            21,
+            18,
+            5,
+            48,
+            63,
+            44,
+            33,
+            180,
+            120,
+            60,
+            150,
+            2,
+            375,
+            17,
+            36,
+            80,
+            20,
+            6,
+            81,
+        }
         last_line = text.strip().split("\n")[-1] if "\n" in text else text[-30:]
         import re
+
         nums = re.findall(r"\b(\d+)\b", last_line)
         is_hallucinated = False
         if nums:
@@ -478,8 +569,10 @@ def main() -> None:
 
     print(f"[exp911] ood_auc_drift={ood_auc_drift:.4f}  verdict={honest_verdict}")
     print(f"[exp911] inference_mode={inference_mode}")
-    print(f"[exp911] mean_correct_drift={mean_correct_drift:.4f}  "
-          f"mean_halluc_drift={mean_halluc_drift:.4f}")
+    print(
+        f"[exp911] mean_correct_drift={mean_correct_drift:.4f}  "
+        f"mean_halluc_drift={mean_halluc_drift:.4f}"
+    )
     print(f"[exp911] duration={duration:.2f}s  deliverable={DELIVERABLE}")
 
     tmpl.assert_deliverable_written()

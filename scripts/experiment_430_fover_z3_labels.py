@@ -39,7 +39,7 @@ import json
 import logging
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 # Call apply_env_autofix FIRST — before any other carnot imports — so GPU env
@@ -172,7 +172,7 @@ def _load_responses() -> tuple[list[dict], str]:
 
 def main() -> None:
     _log.info("Experiment %d: FOVER Z3 Step Annotation", EXPERIMENT_ID)
-    start_time = datetime.now(tz=timezone.utc)
+    start_time = datetime.now(tz=UTC)
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -195,9 +195,7 @@ def main() -> None:
         # 3. Collect statistics.
         n_responses_processed = len(annotated)
         n_steps_found = sum(len(steps) for steps in annotated)
-        n_labeled_correct = sum(
-            1 for steps in annotated for s in steps if s.z3_label == "correct"
-        )
+        n_labeled_correct = sum(1 for steps in annotated for s in steps if s.z3_label == "correct")
         n_labeled_incorrect = sum(
             1 for steps in annotated for s in steps if s.z3_label == "incorrect"
         )
@@ -230,7 +228,7 @@ def main() -> None:
         _log.info("Wrote %d training pairs to %s", len(training_pairs), LABELED_STEPS_PATH)
 
         # 5. Build artifact.
-        end_time = datetime.now(tz=timezone.utc)
+        end_time = datetime.now(tz=UTC)
         duration_s = (end_time - start_time).total_seconds()
 
         artifact = {

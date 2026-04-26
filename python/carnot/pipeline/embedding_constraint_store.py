@@ -33,14 +33,14 @@
 Spec: REQ-LEARN-057, REQ-LEARN-058, REQ-LEARN-059, SCENARIO-LEARN-098,
       REQ-VERIFY-150, SCENARIO-VERIFY-230
 """
+
 from __future__ import annotations
 
 import hashlib
 import math
 import struct
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 
 @dataclass
@@ -73,14 +73,14 @@ class ConstraintSPOTuple:
     subject: str
     predicate: str
     object: str
-    embedding: Optional[list[float]]
+    embedding: list[float] | None
     source_violation_type: str
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 def _dot(a: list[float], b: list[float]) -> float:
     """Dot product of two equal-length float lists."""
-    return sum(x * y for x, y in zip(a, b))
+    return sum(x * y for x, y in zip(a, b, strict=False))
 
 
 def _l2norm(v: list[float]) -> float:
@@ -176,6 +176,7 @@ class EmbeddingConstraintStore:
 
         try:
             from sentence_transformers import SentenceTransformer  # type: ignore[import]
+
             self._encoder = SentenceTransformer(model_name)
             self.embedding_mode = "sentence_transformer"
         except ImportError:
@@ -220,7 +221,7 @@ class EmbeddingConstraintStore:
             if denom < 1e-12:
                 continue
             proj = _dot(v, ei) / denom
-            v = [vi - proj * ej for vi, ej in zip(v, ei)]
+            v = [vi - proj * ej for vi, ej in zip(v, ei, strict=False)]
         return _normalize(v)
 
     def store(self, spo: ConstraintSPOTuple) -> None:
@@ -281,14 +282,9 @@ class EmbeddingConstraintStore:
         # Normalizing makes dot product == cosine similarity.
         qnorm = _l2norm(raw_emb)
         query_emb = [x / (qnorm + 1e-8) for x in raw_emb]
-        scored = [
-            (entry, _dot(query_emb, entry.embedding or []))
-            for entry in self._store
-        ]
+        scored = [(entry, _dot(query_emb, entry.embedding or [])) for entry in self._store]
         scored.sort(key=lambda x: x[1], reverse=True)
-        return [
-            entry for entry, sim in scored[:top_k] if sim >= cosine_threshold
-        ]
+        return [entry for entry, sim in scored[:top_k] if sim >= cosine_threshold]
 
     def retrieval_auc(self, queries: list[str], labels: list[str]) -> float:
         """Fraction of queries where top-1 retrieved constraint matches the label.
@@ -311,7 +307,7 @@ class EmbeddingConstraintStore:
         if not queries or not self._store:
             return 0.0
         correct = 0
-        for query, label in zip(queries, labels):
+        for query, label in zip(queries, labels, strict=False):
             top1 = self.retrieve(query, top_k=1)
             if top1 and top1[0].source_violation_type == label:
                 correct += 1

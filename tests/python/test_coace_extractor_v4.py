@@ -169,7 +169,9 @@ class TestGenPRMExtractorCIStub:
         # Same claim appearing twice should appear once.
         text = "7 * 1.5 = 10.5 and also 7 * 1.5 = 10.5"
         claims = self.ext.extract_claims(text)
-        matching = [c for c in claims if c.lhs_expr == "7*1.5" and c.rhs_value == pytest.approx(10.5)]
+        matching = [
+            c for c in claims if c.lhs_expr == "7*1.5" and c.rhs_value == pytest.approx(10.5)
+        ]
         assert len(matching) == 1
 
     def test_confidence_default(self):
@@ -200,9 +202,11 @@ class TestGenPRMExtractorLLMPath:
     """REQ-EXTRACT-045: GenPRMExtractor calls llm_caller and parses JSON."""
 
     def test_valid_llm_response(self):
-        json_payload = json.dumps([
-            {"lhs": "7*1.5", "rhs": 10.0, "text": "7 * 1.5 = 10.0"},
-        ])
+        json_payload = json.dumps(
+            [
+                {"lhs": "7*1.5", "rhs": 10.0, "text": "7 * 1.5 = 10.0"},
+            ]
+        )
 
         def _caller(prompt: str) -> str:
             assert "Response:" in prompt
@@ -293,7 +297,8 @@ class TestCoACEExtractorV4:
         result = v4.extract(text)
         # Should have no violations for this correct arithmetic.
         violations_from_this_eq = [
-            v for v in result.violations
+            v
+            for v in result.violations
             if "3" in v.equation.lhs_expr and "4" in v.equation.lhs_expr
         ]
         assert violations_from_this_eq == []
@@ -314,7 +319,8 @@ class TestCoACEExtractorV4:
         result = v4.extract(text)
         # Count violations with lhs_expr containing '7' and '1.5'
         matching = [
-            v for v in result.violations
+            v
+            for v in result.violations
             if "7" in v.equation.lhs_expr and "1.5" in v.equation.lhs_expr
         ]
         # Should appear exactly once despite V3 and V4 both seeing it.
@@ -349,6 +355,7 @@ class TestCoACEExtractorV4:
     def test_v4_inherits_v3(self):
         # Confirm V4 is a subclass of V3.
         from carnot.extraction.coace_extractor_v3 import CoACEExtractorV3
+
         assert issubclass(CoACEExtractorV4, CoACEExtractorV3)
 
     def test_arithmetic_claim_dataclass(self):

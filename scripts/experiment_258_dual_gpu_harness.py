@@ -79,7 +79,7 @@ def utc_now() -> str:
     """Return the current UTC timestamp in ISO-8601 format."""
     import datetime
 
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def get_repo_root() -> Path:
@@ -639,9 +639,7 @@ def write_harness_report(
     # Overall target is met only when every tracked model meets the per-case budget
     # and at least one model has been measured.
     if per_model:
-        overall_target_met: bool = all(
-            entry["target_met"] for entry in per_model.values()
-        )
+        overall_target_met: bool = all(entry["target_met"] for entry in per_model.values())
     else:
         overall_target_met = False
 
@@ -807,6 +805,7 @@ __all__ = [
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

@@ -27,6 +27,7 @@ from scripts.experiment_831_governance_preflight import (
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
+
 @pytest.fixture()
 def exp819_closed() -> dict:
     """Minimal Exp 819 artifact where RETRO-ISING is confirmed closed."""
@@ -78,6 +79,7 @@ def exp830_minimal() -> dict:
 
 
 # ── Tests for audit_retro_closures() ─────────────────────────────────────────
+
 
 class TestAuditRetroClosures:
     """REQ-INFRA-063: audit reads retro_injection_closed and honest_verdict correctly."""
@@ -135,9 +137,7 @@ class TestAuditRetroClosures:
         result = audit_retro_closures(exp819_closed, exp820_closed, exp830_with_both_open)
         assert result["experiments_completed"] == 728
 
-    def test_experiments_over_cap(
-        self, exp819_closed, exp820_closed, exp830_with_both_open
-    ):
+    def test_experiments_over_cap(self, exp819_closed, exp820_closed, exp830_with_both_open):
         """experiments_over_cap = max(0, experiments_completed - EXPERIMENT_CAP)."""
         result = audit_retro_closures(exp819_closed, exp820_closed, exp830_with_both_open)
         expected = max(0, 728 - EXPERIMENT_CAP)
@@ -158,9 +158,7 @@ class TestAuditRetroClosures:
         assert _RETRO_ISING in result["retro_source_open_retros"]
         assert _RETRO_GGUF in result["retro_source_open_retros"]
 
-    def test_cascade_retros_closed_with_ising(
-        self, exp819_closed, exp820_open, exp830_minimal
-    ):
+    def test_cascade_retros_closed_with_ising(self, exp819_closed, exp820_open, exp830_minimal):
         """When RETRO-ISING closes, its cascade dependents also appear in confirmed_closed."""
         result = audit_retro_closures(exp819_closed, exp820_open, exp830_minimal)
         # RETRO-CONSTRAINT-ZERO-DELTA and RETRO-TIER1-PLATEAU are cascade-closed.
@@ -169,6 +167,7 @@ class TestAuditRetroClosures:
 
 
 # ── Tests for update_milestone_prereqs() ─────────────────────────────────────
+
 
 class TestUpdateMilestonePrereqs:
     """SCENARIO-INFRA-071: MILESTONE_PREREQS.md updated with corrected RETRO status."""
@@ -314,6 +313,7 @@ class TestUpdateMilestonePrereqs:
 
 # ── Tests for _load_json() ────────────────────────────────────────────────────
 
+
 class TestLoadJson:
     """_load_json reads and parses a JSON file from disk."""
 
@@ -329,6 +329,7 @@ class TestLoadJson:
 
 
 # ── Tests for run_audit() ─────────────────────────────────────────────────────
+
 
 class TestRunAudit:
     """run_audit integrates _load_json, audit_retro_closures, and update_milestone_prereqs."""

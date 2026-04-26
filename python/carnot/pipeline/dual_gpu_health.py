@@ -193,14 +193,15 @@ def _derive_flags(
     # but zero compute is happening.  The strict > threshold means a freshly-
     # initialised CUDA context with ~50-200 MB is NOT classified as a zombie.
     gpu1_is_zombie = (
-        gpu1_vram > _ZOMBIE_VRAM_THRESHOLD_MB
-        and gpu1_util < _ZOMBIE_UTIL_THRESHOLD_PCT
+        gpu1_vram > _ZOMBIE_VRAM_THRESHOLD_MB and gpu1_util < _ZOMBIE_UTIL_THRESHOLD_PCT
     )
 
     # Temperature warning fires when EITHER GPU exceeds the 80C threshold.
     # We check both GPUs so that a zombie GPU1 cooking silently still triggers
     # the warning.
-    temperature_warning = gpu0_temp > _TEMP_WARNING_THRESHOLD_C or gpu1_temp > _TEMP_WARNING_THRESHOLD_C
+    temperature_warning = (
+        gpu0_temp > _TEMP_WARNING_THRESHOLD_C or gpu1_temp > _TEMP_WARNING_THRESHOLD_C
+    )
 
     # The 25% reduction (factor 0.75) is a conservative measure.  It reduces
     # GPU compute load enough to drop temperatures by ~5-8C in typical inference
@@ -245,9 +246,7 @@ def _query_nvidia_smi() -> str:
         timeout=10,
     )
     if result.returncode != 0:
-        raise RuntimeError(
-            f"nvidia-smi exited {result.returncode}: {result.stderr.strip()}"
-        )
+        raise RuntimeError(f"nvidia-smi exited {result.returncode}: {result.stderr.strip()}")
     return result.stdout
 
 
@@ -377,8 +376,8 @@ def _check_via_nvidia_smi() -> DualGPUHealthResult | None:
         return None
 
     try:
-        gpu0_util, gpu0_temp, gpu0_vram, gpu1_util, gpu1_temp, gpu1_vram = (
-            _parse_nvidia_smi_output(output)
+        gpu0_util, gpu0_temp, gpu0_vram, gpu1_util, gpu1_temp, gpu1_vram = _parse_nvidia_smi_output(
+            output
         )
         gpu1_is_zombie, temperature_warning, recommended_batch_size_factor = _derive_flags(
             gpu0_util, gpu1_util, gpu0_temp, gpu1_temp, gpu1_vram

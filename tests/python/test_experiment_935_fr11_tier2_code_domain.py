@@ -42,6 +42,7 @@ from carnot.pipeline.constraint_template_library import ConstraintTemplateLibrar
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 def _make_exp905_fixture(repaired: list[dict], failed: list[dict], baseline: list[dict]) -> dict:
     """Build a minimal Exp 905-style JSON dict for testing.
 
@@ -90,6 +91,7 @@ def _baseline_problem(task_id: str) -> dict:
 # Tests for _categorise_by_retries — REQ-LEARN-060-2
 # ---------------------------------------------------------------------------
 
+
 class TestCategoriseByRetries:
     """Spec: REQ-LEARN-060-2"""
 
@@ -118,6 +120,7 @@ class TestCategoriseByRetries:
 # Tests for _retry_strategy_for_category — REQ-LEARN-060-2
 # ---------------------------------------------------------------------------
 
+
 class TestRetryStrategyForCategory:
     """Spec: REQ-LEARN-060-2"""
 
@@ -145,6 +148,7 @@ class TestRetryStrategyForCategory:
 # ---------------------------------------------------------------------------
 # Tests for _make_code_repair_template — REQ-LEARN-060-2
 # ---------------------------------------------------------------------------
+
 
 class TestMakeCodeRepairTemplate:
     """Spec: REQ-LEARN-060-2"""
@@ -176,6 +180,7 @@ class TestMakeCodeRepairTemplate:
 # ---------------------------------------------------------------------------
 # Tests for load_exp905_patterns — REQ-LEARN-060-1
 # ---------------------------------------------------------------------------
+
 
 class TestLoadExp905Patterns:
     """Spec: REQ-LEARN-060-1"""
@@ -228,15 +233,21 @@ class TestLoadExp905Patterns:
         fp.write_text(json.dumps(fixture))
         patterns = load_exp905_patterns(fp)
         p = patterns[0]
-        for key in ("task_id", "n_retries", "energy_score_best", "error_category", "retry_strategy"):
+        for key in (
+            "task_id",
+            "n_retries",
+            "energy_score_best",
+            "error_category",
+            "retry_strategy",
+        ):
             assert key in p
 
     def test_multiple_repaired_problems(self, tmp_path):
         # REQ-LEARN-060-1: all 3 difficulty categories present in 17 Exp 905 problems
         repaired = (
             [_repaired_problem(f"HumanEval/{i}", 1) for i in range(8)]  # easy_fix
-            + [_repaired_problem(f"HumanEval/{i+100}", 2) for i in range(5)]  # medium_fix
-            + [_repaired_problem(f"HumanEval/{i+200}", 3) for i in range(4)]  # hard_fix
+            + [_repaired_problem(f"HumanEval/{i + 100}", 2) for i in range(5)]  # medium_fix
+            + [_repaired_problem(f"HumanEval/{i + 200}", 3) for i in range(4)]  # hard_fix
         )
         fixture = _make_exp905_fixture(repaired=repaired, failed=[], baseline=[])
         fp = tmp_path / "exp905.json"
@@ -251,26 +262,33 @@ class TestLoadExp905Patterns:
 # Tests for session1_populate_library — REQ-LEARN-060-2, REQ-LEARN-060-3
 # ---------------------------------------------------------------------------
 
+
 class TestSession1PopulateLibrary:
     """Spec: REQ-LEARN-060-2, REQ-LEARN-060-3"""
 
     def _make_patterns(self) -> list[dict]:
-        from scripts.experiment_935_fr11_tier2_code_domain import _categorise_by_retries, _retry_strategy_for_category
+        from scripts.experiment_935_fr11_tier2_code_domain import (
+            _categorise_by_retries,
+            _retry_strategy_for_category,
+        )
+
         raw = (
             [_repaired_problem(f"HumanEval/{i}", 1) for i in range(8)]
-            + [_repaired_problem(f"HumanEval/{i+100}", 2) for i in range(5)]
-            + [_repaired_problem(f"HumanEval/{i+200}", 3) for i in range(4)]
+            + [_repaired_problem(f"HumanEval/{i + 100}", 2) for i in range(5)]
+            + [_repaired_problem(f"HumanEval/{i + 200}", 3) for i in range(4)]
         )
         patterns = []
         for r in raw:
             cat = _categorise_by_retries(r["n_retries"])
-            patterns.append({
-                "task_id": r["task_id"],
-                "n_retries": r["n_retries"],
-                "energy_score_best": r["energy_score_best"],
-                "error_category": cat,
-                "retry_strategy": _retry_strategy_for_category(cat),
-            })
+            patterns.append(
+                {
+                    "task_id": r["task_id"],
+                    "n_retries": r["n_retries"],
+                    "energy_score_best": r["energy_score_best"],
+                    "error_category": cat,
+                    "retry_strategy": _retry_strategy_for_category(cat),
+                }
+            )
         return patterns
 
     def test_three_templates_added(self):
@@ -305,15 +323,20 @@ class TestSession1PopulateLibrary:
 # Tests for cross-session persistence — REQ-LEARN-060-4
 # ---------------------------------------------------------------------------
 
+
 class TestCrossSessionPersistence:
     """Spec: REQ-LEARN-060-4"""
 
     def _populate_library(self) -> ConstraintTemplateLibrary:
-        from scripts.experiment_935_fr11_tier2_code_domain import _categorise_by_retries, _retry_strategy_for_category
+        from scripts.experiment_935_fr11_tier2_code_domain import (
+            _categorise_by_retries,
+            _retry_strategy_for_category,
+        )
+
         raw = (
             [_repaired_problem(f"HumanEval/{i}", 1) for i in range(3)]
-            + [_repaired_problem(f"HumanEval/{i+100}", 2) for i in range(2)]
-            + [_repaired_problem(f"HumanEval/{i+200}", 3) for i in range(2)]
+            + [_repaired_problem(f"HumanEval/{i + 100}", 2) for i in range(2)]
+            + [_repaired_problem(f"HumanEval/{i + 200}", 3) for i in range(2)]
         )
         patterns = [
             {
@@ -321,7 +344,9 @@ class TestCrossSessionPersistence:
                 "n_retries": r["n_retries"],
                 "energy_score_best": r["energy_score_best"],
                 "error_category": _categorise_by_retries(r["n_retries"]),
-                "retry_strategy": _retry_strategy_for_category(_categorise_by_retries(r["n_retries"])),
+                "retry_strategy": _retry_strategy_for_category(
+                    _categorise_by_retries(r["n_retries"])
+                ),
             }
             for r in raw
         ]
@@ -341,9 +366,15 @@ class TestCrossSessionPersistence:
         d = library.to_dict()
         restored = ConstraintTemplateLibrary.from_dict(d)
         # Re-register templates (callables not serializable).
-        from scripts.experiment_935_fr11_tier2_code_domain import _make_code_repair_template, _retry_strategy_for_category
+        from scripts.experiment_935_fr11_tier2_code_domain import (
+            _make_code_repair_template,
+            _retry_strategy_for_category,
+        )
+
         for category in ("easy_fix", "medium_fix", "hard_fix"):
-            restored.add_template(_make_code_repair_template(category, _retry_strategy_for_category(category)))
+            restored.add_template(
+                _make_code_repair_template(category, _retry_strategy_for_category(category))
+            )
         # All three should be active after round-trip.
         active = restored.get_active_templates(SOURCE_MODEL_ID)
         assert len(active) == 3
@@ -362,15 +393,20 @@ class TestCrossSessionPersistence:
 # Tests for session2_replay_templates — REQ-LEARN-060-5
 # ---------------------------------------------------------------------------
 
+
 class TestSession2ReplayTemplates:
     """Spec: REQ-LEARN-060-5, SCENARIO-LEARN-104"""
 
     def _library_dict_with_active_templates(self) -> dict:
-        from scripts.experiment_935_fr11_tier2_code_domain import _categorise_by_retries, _retry_strategy_for_category
+        from scripts.experiment_935_fr11_tier2_code_domain import (
+            _categorise_by_retries,
+            _retry_strategy_for_category,
+        )
+
         raw = (
             [_repaired_problem(f"HumanEval/{i}", 1) for i in range(3)]
-            + [_repaired_problem(f"HumanEval/{i+100}", 2) for i in range(2)]
-            + [_repaired_problem(f"HumanEval/{i+200}", 3) for i in range(2)]
+            + [_repaired_problem(f"HumanEval/{i + 100}", 2) for i in range(2)]
+            + [_repaired_problem(f"HumanEval/{i + 200}", 3) for i in range(2)]
         )
         patterns = [
             {
@@ -378,7 +414,9 @@ class TestSession2ReplayTemplates:
                 "n_retries": r["n_retries"],
                 "energy_score_best": r["energy_score_best"],
                 "error_category": _categorise_by_retries(r["n_retries"]),
-                "retry_strategy": _retry_strategy_for_category(_categorise_by_retries(r["n_retries"])),
+                "retry_strategy": _retry_strategy_for_category(
+                    _categorise_by_retries(r["n_retries"])
+                ),
             }
             for r in raw
         ]
@@ -436,6 +474,7 @@ class TestSession2ReplayTemplates:
 # Integration test: end-to-end Session 1 → persist → Session 2
 # ---------------------------------------------------------------------------
 
+
 class TestEndToEnd:
     """Integration test covering the full Exp 935 pipeline.
 
@@ -448,11 +487,15 @@ class TestEndToEnd:
         Spec: REQ-LEARN-060, SCENARIO-LEARN-104
         """
         # Build fixture matching Exp 905's 17-problem structure.
-        from scripts.experiment_935_fr11_tier2_code_domain import _categorise_by_retries, _retry_strategy_for_category
+        from scripts.experiment_935_fr11_tier2_code_domain import (
+            _categorise_by_retries,
+            _retry_strategy_for_category,
+        )
+
         raw = (
             [_repaired_problem(f"HumanEval/{i}", 1) for i in range(8)]
-            + [_repaired_problem(f"HumanEval/{i+100}", 2) for i in range(5)]
-            + [_repaired_problem(f"HumanEval/{i+200}", 3) for i in range(4)]
+            + [_repaired_problem(f"HumanEval/{i + 100}", 2) for i in range(5)]
+            + [_repaired_problem(f"HumanEval/{i + 200}", 3) for i in range(4)]
         )
         fixture_path = tmp_path / "exp905.json"
         fixture_path.write_text(json.dumps(_make_exp905_fixture(raw, [], [])))

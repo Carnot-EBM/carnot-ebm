@@ -120,9 +120,7 @@ def main() -> None:
         else:
             honest_verdict = "no_speedup"
 
-        _log.info(
-            "Mean speedup: %.2fx → honest_verdict=%s", mean_speedup, honest_verdict
-        )
+        _log.info("Mean speedup: %.2fx → honest_verdict=%s", mean_speedup, honest_verdict)
 
         # ------------------------------------------------------------------
         # Write artifact

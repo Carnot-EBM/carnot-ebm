@@ -59,7 +59,7 @@ import jax.numpy as jnp
 import jax.random as jrandom
 
 from carnot.core.energy import AutoGradMixin
-from carnot.models.gibbs import GibbsConfig, _apply_activation
+from carnot.models.gibbs import _apply_activation
 
 
 @dataclass
@@ -206,9 +206,7 @@ class ContextPredictionEnergy(AutoGradMixin):
             k_w, key = jrandom.split(key)
             # Xavier uniform initialization: scale by sqrt(6 / (fan_in + fan_out))
             limit = jnp.sqrt(6.0 / (prev_dim + hidden_dim))
-            weight = jrandom.uniform(
-                k_w, (hidden_dim, prev_dim), minval=-limit, maxval=limit
-            )
+            weight = jrandom.uniform(k_w, (hidden_dim, prev_dim), minval=-limit, maxval=limit)
             bias = jnp.zeros(hidden_dim)
             self.layers.append((weight, bias))
             prev_dim = hidden_dim
@@ -254,9 +252,7 @@ class ContextPredictionEnergy(AutoGradMixin):
         """Number of input dimensions (2 * embed_dim)."""
         return 2 * self.config.embed_dim
 
-    def energy_pair(
-        self, context_emb: jax.Array, prediction_emb: jax.Array
-    ) -> jax.Array:
+    def energy_pair(self, context_emb: jax.Array, prediction_emb: jax.Array) -> jax.Array:
         """Convenience method: compute energy from separate context and prediction embeddings.
 
         **For engineers:**
@@ -418,7 +414,7 @@ def generate_jepa_training_data(
         context_embeddings.append(ctx_emb)
         prediction_embeddings.append(pred_emb)
 
-    ctx_stack = jnp.stack(context_embeddings)    # (n, embed_dim)
+    ctx_stack = jnp.stack(context_embeddings)  # (n, embed_dim)
     pred_stack = jnp.stack(prediction_embeddings)  # (n, embed_dim)
 
     # Correct pairs: context[i] + prediction[i] from the same snippet
@@ -505,7 +501,7 @@ def train_jepa_energy(
             outer scope as a constant.
         """
         h = x
-        for w, b in zip(layer_weights, layer_biases):
+        for w, b in zip(layer_weights, layer_biases, strict=False):
             h = _apply_activation(w @ h + b, activation)
         return output_weight @ h + output_bias
 
@@ -518,9 +514,7 @@ def train_jepa_energy(
     ) -> jax.Array:
         """Batched energy using vmap over the pure functional version."""
         return jax.vmap(
-            lambda x: _energy_single(
-                layer_weights, layer_biases, output_weight, output_bias, x
-            )
+            lambda x: _energy_single(layer_weights, layer_biases, output_weight, output_bias, x)
         )(xs)
 
     def _loss_fn(
@@ -649,7 +643,7 @@ def embedding_repair(
     return pred
 
 
-def _corpus_entry_to_features(entry: dict) -> "jax.Array":
+def _corpus_entry_to_features(entry: dict) -> jax.Array:
     """Convert a FOVERCorpusEntry-compatible dict to a 4-D feature vector.
 
     **For engineers:**
@@ -675,7 +669,7 @@ def _corpus_entry_to_features(entry: dict) -> "jax.Array":
     return jnp.array([frac_correct, frac_incorrect, frac_nv, norm_n], dtype=jnp.float32)
 
 
-def _leworldmodel_init_params(key: "jax.Array") -> dict:
+def _leworldmodel_init_params(key: jax.Array) -> dict:
     """Initialise LeWorldModel predictor parameters.
 
     **For engineers:**
@@ -703,9 +697,7 @@ def _leworldmodel_init_params(key: "jax.Array") -> dict:
     }
 
 
-def _leworldmodel_forward(
-    params: dict, x: "jax.Array"
-) -> tuple["jax.Array", "jax.Array"]:
+def _leworldmodel_forward(params: dict, x: jax.Array) -> tuple[jax.Array, jax.Array]:
     """Run the LeWorldModel predictor forward pass: features -> (mu, log_var).
 
     **For engineers:**
@@ -723,10 +715,10 @@ def _leworldmodel_forward(
 
 def _leworldmodel_loss(
     params: dict,
-    x: "jax.Array",
-    y: "jax.Array",
+    x: jax.Array,
+    y: jax.Array,
     lambda_kl: float,
-) -> tuple["jax.Array", "jax.Array", "jax.Array"]:
+) -> tuple[jax.Array, jax.Array, jax.Array]:
     """Compute L_total, L_pred, L_kl for a single example.
 
     **For engineers:**
@@ -742,7 +734,7 @@ def _leworldmodel_loss(
     mu, log_var = _leworldmodel_forward(params, x)
     pred_emb = jax.nn.sigmoid(mu)
     l_pred = jnp.mean((pred_emb - y) ** 2)
-    l_kl = 0.5 * jnp.sum(jnp.exp(log_var) + mu ** 2 - 1.0 - log_var)
+    l_kl = 0.5 * jnp.sum(jnp.exp(log_var) + mu**2 - 1.0 - log_var)
     l_total = l_pred + lambda_kl * l_kl
     return l_total, l_pred, l_kl
 
@@ -763,7 +755,7 @@ def _auc_from_scores(scores: list[float], labels: list[float]) -> float:
     n_neg = n - n_pos
     if n_pos == 0 or n_neg == 0:
         return 0.5
-    pairs = sorted(zip(scores, labels), key=lambda t: -t[0])
+    pairs = sorted(zip(scores, labels, strict=False), key=lambda t: -t[0])
     tp = fp = 0
     prev_tpr = prev_fpr = 0.0
     auc_val = 0.0
@@ -830,7 +822,7 @@ def train_leworldmodel(
     # Build feature matrix and label vector from corpus entries
     features = [_corpus_entry_to_features(p) for p in pairs]
     labels = [float(bool(p.get("is_correct", False))) for p in pairs]
-    X = jnp.stack(features)             # (n, 4)
+    X = jnp.stack(features)  # (n, 4)
     y = jnp.array(labels, dtype=jnp.float32)  # (n,)
 
     key = jrandom.PRNGKey(557)
@@ -839,10 +831,12 @@ def train_leworldmodel(
     optimizer = optax.adamw(learning_rate=1e-3, weight_decay=1e-4)
     opt_state = optimizer.init(params)
 
-    def _batch_loss_fn(p: dict) -> tuple["jax.Array", tuple["jax.Array", "jax.Array"]]:
+    def _batch_loss_fn(p: dict) -> tuple[jax.Array, tuple[jax.Array, jax.Array]]:
         """Mean total loss + mean component losses over all training pairs."""
-        def _single(xi: "jax.Array", yi: "jax.Array") -> tuple:
+
+        def _single(xi: jax.Array, yi: jax.Array) -> tuple:
             return _leworldmodel_loss(p, xi, yi, lambda_kl)
+
         totals, preds, kls = jax.vmap(_single)(X, y)
         return jnp.mean(totals), (jnp.mean(preds), jnp.mean(kls))
 
@@ -850,9 +844,7 @@ def train_leworldmodel(
 
     for epoch in range(200):
         # Compute gradients w.r.t. params (first output of _batch_loss_fn)
-        (total, (pred_l, kl_l)), grads = jax.value_and_grad(
-            _batch_loss_fn, has_aux=True
-        )(params)
+        (total, (pred_l, kl_l)), grads = jax.value_and_grad(_batch_loss_fn, has_aux=True)(params)
 
         updates, opt_state = optimizer.update(grads, opt_state, params)
         params = optax.apply_updates(params, updates)

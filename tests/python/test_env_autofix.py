@@ -243,7 +243,9 @@ class TestApplyEnvAutofixAutoFix:
                 with caplog.at_level(logging.WARNING, logger="carnot.pipeline.env_autofix"):
                     apply_env_autofix()
         warning_records = [r for r in caplog.records if r.levelno == logging.WARNING]
-        assert any("EnvironmentAutoFix applied CARNOT_FORCE_LIVE=1" in r.message for r in warning_records)
+        assert any(
+            "EnvironmentAutoFix applied CARNOT_FORCE_LIVE=1" in r.message for r in warning_records
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -417,9 +419,15 @@ class TestBuildEnvAutofixArtifact:
         r = self._make_result(True, False, True, "1")
         art = build_env_autofix_artifact(r, self._SAMPLE_PREFLIGHT)
         required = {
-            "schema", "honest_verdict", "retro_022_resolved",
-            "gpu_detected", "carnot_force_live_was_set", "auto_fix_applied",
-            "override_applied", "final_env_value", "preflight",
+            "schema",
+            "honest_verdict",
+            "retro_022_resolved",
+            "gpu_detected",
+            "carnot_force_live_was_set",
+            "auto_fix_applied",
+            "override_applied",
+            "final_env_value",
+            "preflight",
         }
         assert required.issubset(art.keys())
 

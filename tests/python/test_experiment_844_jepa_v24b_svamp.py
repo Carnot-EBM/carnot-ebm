@@ -140,15 +140,35 @@ class TestSvampTripletVerification:
 
     def test_bad_correct_answer_raises(self) -> None:
         """A triplet with wrong 'correct' value triggers AssertionError."""
-        bad = [{"op": "add", "a": 3, "b": 4, "correct": 999, "wrong": 8,
-                "anchor": "x", "positive": "y", "negative": "z"}]
+        bad = [
+            {
+                "op": "add",
+                "a": 3,
+                "b": 4,
+                "correct": 999,
+                "wrong": 8,
+                "anchor": "x",
+                "positive": "y",
+                "negative": "z",
+            }
+        ]
         with pytest.raises(AssertionError, match=r"anchor\+positive inconsistent"):
             verify_and_build_svamp_triplets(bad)
 
     def test_bad_wrong_answer_matches_correct_raises(self) -> None:
         """A triplet where 'wrong' accidentally equals the correct result raises."""
-        bad = [{"op": "add", "a": 3, "b": 4, "correct": 7, "wrong": 7,
-                "anchor": "x", "positive": "y", "negative": "z"}]
+        bad = [
+            {
+                "op": "add",
+                "a": 3,
+                "b": 4,
+                "correct": 7,
+                "wrong": 7,
+                "anchor": "x",
+                "positive": "y",
+                "negative": "z",
+            }
+        ]
         with pytest.raises(AssertionError, match=r"anchor\+negative is actually correct"):
             verify_and_build_svamp_triplets(bad)
 

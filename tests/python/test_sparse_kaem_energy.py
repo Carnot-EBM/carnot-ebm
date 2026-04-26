@@ -117,12 +117,14 @@ def test_sparsify_keeps_largest_magnitudes() -> None:
     Spec: REQ-SAMPLE-021-2
     """
     m = SparseKAEMEnergy(n_vars=4, n_knots=4, top_k_fraction=0.5)  # top_k=2
-    couplings = jnp.array([
-        [0.0, 0.1, 0.5, 0.3],   # top 2 = 0.5, 0.3
-        [0.8, 0.0, 0.2, 0.4],   # top 2 = 0.8, 0.4
-        [0.1, 0.9, 0.0, 0.7],   # top 2 = 0.9, 0.7
-        [0.3, 0.2, 0.6, 0.0],   # top 2 = 0.6, 0.3
-    ])
+    couplings = jnp.array(
+        [
+            [0.0, 0.1, 0.5, 0.3],  # top 2 = 0.5, 0.3
+            [0.8, 0.0, 0.2, 0.4],  # top 2 = 0.8, 0.4
+            [0.1, 0.9, 0.0, 0.7],  # top 2 = 0.9, 0.7
+            [0.3, 0.2, 0.6, 0.0],  # top 2 = 0.6, 0.3
+        ]
+    )
     sparse = m.sparsify(couplings)
     # Row 0: 0.5 and 0.3 should survive; 0.1 should be zeroed
     assert float(sparse[0, 2]) == pytest.approx(0.5)
@@ -260,6 +262,7 @@ def test_export_from_carnot_models() -> None:
     Spec: REQ-SAMPLE-021-5
     """
     from carnot.models import SparseKAEMEnergy as SparseFromModels  # noqa: PLC0415
+
     assert SparseFromModels is SparseKAEMEnergy
 
 

@@ -49,8 +49,6 @@ from __future__ import annotations
 import math
 import random
 from collections import Counter
-from typing import Dict, List, Tuple
-
 
 # ---------------------------------------------------------------------------
 # ContrastivePairLoss
@@ -106,8 +104,8 @@ class ContrastivePairLoss:
 
     def batch_loss(
         self,
-        incorrect_energies: List[float],
-        correct_energies: List[float],
+        incorrect_energies: list[float],
+        correct_energies: list[float],
     ) -> float:
         """Compute mean contrastive loss over a batch of (incorrect, correct) pairs.
 
@@ -128,10 +126,7 @@ class ContrastivePairLoss:
         if not incorrect_energies or not correct_energies:
             return 0.0
         n = min(len(incorrect_energies), len(correct_energies))
-        total = sum(
-            self.loss(incorrect_energies[i], correct_energies[i])
-            for i in range(n)
-        )
+        total = sum(self.loss(incorrect_energies[i], correct_energies[i]) for i in range(n))
         return total / n
 
 
@@ -192,17 +187,14 @@ class NUPProbeV4:
         # Weights and bias initialised to small random values.
         # Small init is important: we want the contrastive loss to drive the
         # weight geometry, not the initialisation.
-        self._weights: List[float] = [
-            (self._rng.random() - 0.5) * 0.01
-            for _ in range(energy_dim)
-        ]
+        self._weights: list[float] = [(self._rng.random() - 0.5) * 0.01 for _ in range(energy_dim)]
         self._bias: float = 0.0
 
     # ------------------------------------------------------------------
     # Embedding
     # ------------------------------------------------------------------
 
-    def encode(self, step_text: str) -> List[float]:
+    def encode(self, step_text: str) -> list[float]:
         """Embed a CoT step as a normalised character-bigram feature vector.
 
         **Detailed explanation:**
@@ -272,7 +264,7 @@ class NUPProbeV4:
         Spec: REQ-VERIFY-109
         """
         features = self.encode(step_text)
-        return sum(w * f for w, f in zip(self._weights, features)) + self._bias
+        return sum(w * f for w, f in zip(self._weights, features, strict=False)) + self._bias
 
     # ------------------------------------------------------------------
     # Training
@@ -280,10 +272,10 @@ class NUPProbeV4:
 
     def train_contrastive(
         self,
-        correct_steps: List[str],
-        incorrect_steps: List[str],
+        correct_steps: list[str],
+        incorrect_steps: list[str],
         n_epochs: int = 50,
-    ) -> Dict:
+    ) -> dict:
         """Train the probe using contrastive margin loss.
 
         **Detailed explanation:**
@@ -331,7 +323,7 @@ class NUPProbeV4:
         correct_enc = [self.encode(s) for s in correct_steps]
         incorrect_enc = [self.encode(s) for s in incorrect_steps]
 
-        loss_history: List[float] = []
+        loss_history: list[float] = []
 
         for _epoch in range(n_epochs):
             epoch_loss = 0.0
@@ -340,10 +332,10 @@ class NUPProbeV4:
             for c_enc in correct_enc:
                 for i_enc in incorrect_enc:
                     e_correct = (
-                        sum(w * f for w, f in zip(self._weights, c_enc)) + self._bias
+                        sum(w * f for w, f in zip(self._weights, c_enc, strict=False)) + self._bias
                     )
                     e_incorrect = (
-                        sum(w * f for w, f in zip(self._weights, i_enc)) + self._bias
+                        sum(w * f for w, f in zip(self._weights, i_enc, strict=False)) + self._bias
                     )
                     pair_loss = self._loss_fn.loss(e_incorrect, e_correct)
                     epoch_loss += pair_loss
@@ -353,9 +345,7 @@ class NUPProbeV4:
                         # Hinge gradient: push E(incorrect) up, E(correct) down
                         # dL/dw_j = -(i_enc[j] - c_enc[j])
                         for j in range(self.energy_dim):
-                            self._weights[j] -= (
-                                self.learning_rate * -(i_enc[j] - c_enc[j])
-                            )
+                            self._weights[j] -= self.learning_rate * -(i_enc[j] - c_enc[j])
                         self._bias -= self.learning_rate * -1.0
 
             mean_loss = epoch_loss / n_pairs if n_pairs > 0 else 0.0
@@ -366,10 +356,7 @@ class NUPProbeV4:
         # Converged if loss is near zero or loss didn't change much at the end
         converged = bool(
             final_loss < 0.05
-            or (
-                len(loss_history) >= 5
-                and abs(loss_history[-1] - loss_history[-5]) < 0.01
-            )
+            or (len(loss_history) >= 5 and abs(loss_history[-1] - loss_history[-5]) < 0.01)
         )
 
         final_auc = self.evaluate_auc(correct_steps, incorrect_steps)
@@ -387,8 +374,8 @@ class NUPProbeV4:
 
     def evaluate_auc(
         self,
-        correct_steps: List[str],
-        incorrect_steps: List[str],
+        correct_steps: list[str],
+        incorrect_steps: list[str],
     ) -> float:
         """Compute AUROC of energy scores: correct steps should have lower energy.
 
@@ -411,13 +398,13 @@ class NUPProbeV4:
         Spec: REQ-VERIFY-110, SCENARIO-VERIFY-145
         """
         n_pos = len(incorrect_steps)  # positives = incorrect
-        n_neg = len(correct_steps)    # negatives = correct
+        n_neg = len(correct_steps)  # negatives = correct
 
         if n_pos == 0 or n_neg == 0:
             return 0.5
 
         # Build scored list: (energy, is_incorrect)
-        scored: List[Tuple[float, bool]] = []
+        scored: list[tuple[float, bool]] = []
         for s in correct_steps:
             scored.append((self.score(s), False))
         for s in incorrect_steps:

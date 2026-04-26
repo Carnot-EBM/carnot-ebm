@@ -94,7 +94,10 @@ def test_main_exits_1_for_excluded(tmp_manifest: Path) -> None:
     """SCENARIO-INFRA-085: main() exits 1 when experiment_id is excluded."""
     with (
         patch.object(sys, "argv", ["conductor_session_wrapper.py", "308"]),
-        patch("conductor_session_wrapper.check_experiment", return_value=(True, "Experiment 308 excluded")),
+        patch(
+            "conductor_session_wrapper.check_experiment",
+            return_value=(True, "Experiment 308 excluded"),
+        ),
         pytest.raises(SystemExit) as exc_info,
     ):
         csw.main()

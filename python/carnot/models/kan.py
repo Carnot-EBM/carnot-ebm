@@ -36,7 +36,7 @@ Spec: REQ-CORE-001, REQ-CORE-002
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import NamedTuple
 
 import jax
@@ -132,8 +132,8 @@ class BSpline:
         left = jnp.clip(left, 0, len(params.control_points) - 2)
         right = left + 1
 
-        left_knot = knot_positions[left + degree]
-        right_knot = knot_positions[jnp.clip(left + degree + 1, 0, len(knot_positions) - 1)]
+        knot_positions[left + degree]
+        knot_positions[jnp.clip(left + degree + 1, 0, len(knot_positions) - 1)]
 
         t = scaled - jnp.floor(scaled)
         t = jnp.clip(t, 0.0, 1.0)
@@ -336,7 +336,7 @@ class KANEnergyFunction(AutoGradMixin):
         return edge_params + bias_params
 
     @classmethod
-    def from_ising(cls, ising_model, config: KANConfig | None = None) -> "KANEnergyFunction":
+    def from_ising(cls, ising_model, config: KANConfig | None = None) -> KANEnergyFunction:
         """Initialize KAN from an Ising model.
 
         Each Ising coupling J_ij becomes a linear spline matching J_ij.

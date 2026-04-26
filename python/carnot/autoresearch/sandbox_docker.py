@@ -57,12 +57,11 @@ import shutil
 import subprocess
 import tempfile
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from carnot.autoresearch.sandbox import SandboxResult
-
 
 # Default Docker image name for the sandbox
 DEFAULT_IMAGE = "carnot-sandbox:latest"

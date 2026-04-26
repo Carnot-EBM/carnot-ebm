@@ -149,10 +149,18 @@ class TestMainIntegration:
             "finished_at": "2026-04-26T00:00:00Z",
             "duration_s": 0.01,
             "status": kw.get("status", "success"),
-            "schema": sorted(list(payload.keys()) + [
-                "experiment", "title", "run_date", "started_at",
-                "finished_at", "duration_s", "status",
-            ]),
+            "schema": sorted(
+                list(payload.keys())
+                + [
+                    "experiment",
+                    "title",
+                    "run_date",
+                    "started_at",
+                    "finished_at",
+                    "duration_s",
+                    "status",
+                ]
+            ),
             **payload,
         }
 
@@ -166,7 +174,14 @@ class TestMainIntegration:
         data = json.loads(out_file.read_text())
 
         # Must contain all required fields from experiment template contract.
-        for field in ("experiment", "run_date", "started_at", "finished_at", "duration_s", "status"):
+        for field in (
+            "experiment",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+        ):
             assert field in data, f"Missing required field: {field}"
 
         # Must contain throughput and verdict fields.

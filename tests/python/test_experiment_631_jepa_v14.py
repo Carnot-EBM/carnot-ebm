@@ -175,7 +175,9 @@ def test_build_oracle_pairs_includes_correct_chains() -> None:
             False,
             [{"step_index": 0, "step_text": "vs", "label": "violated"}],
         ),
-        _make_oracle_chain("good", True, [{"step_index": 0, "step_text": "cs", "label": "correct"}]),
+        _make_oracle_chain(
+            "good", True, [{"step_index": 0, "step_text": "cs", "label": "correct"}]
+        ),
     ]
     pairs = _build_oracle_pairs(chains)
     assert len(pairs) == 2  # 1 violated + 1 correct
@@ -292,6 +294,7 @@ def test_compute_auc_single_class_returns_half() -> None:
     entries = [_make_corpus_entry(i, is_correct=False) for i in range(5)]
     # init_params with small key
     import jax.random as jrandom
+
     params = exp631._init_params(jrandom.PRNGKey(0), embed_dim=16)
     auc = _compute_auc(params, entries, embed_fn)
     assert auc == pytest.approx(0.5, abs=1e-6)
@@ -301,6 +304,7 @@ def test_compute_auc_empty_entries_returns_half() -> None:
     """Returns 0.5 when entries list is empty."""
     embed_fn = exp631._make_embed_fn(embed_dim=16, seed=0)
     import jax.random as jrandom
+
     params = exp631._init_params(jrandom.PRNGKey(0), embed_dim=16)
     auc = _compute_auc(params, [], embed_fn)
     assert auc == pytest.approx(0.5, abs=1e-6)
@@ -315,6 +319,7 @@ def test_compute_ece_empty_returns_zero() -> None:
     """Returns 0.0 when entries list is empty."""
     embed_fn = exp631._make_embed_fn(embed_dim=16, seed=0)
     import jax.random as jrandom
+
     params = exp631._init_params(jrandom.PRNGKey(0), embed_dim=16)
     ece = _compute_ece(params, [], embed_fn)
     assert ece == pytest.approx(0.0, abs=1e-6)
@@ -328,6 +333,7 @@ def test_compute_ece_returns_float() -> None:
         _make_corpus_entry(2, is_correct=False),
     ]
     import jax.random as jrandom
+
     params = exp631._init_params(jrandom.PRNGKey(0), embed_dim=16)
     ece = _compute_ece(params, entries, embed_fn)
     assert isinstance(ece, float)
@@ -342,12 +348,8 @@ def test_compute_ece_returns_float() -> None:
 def test_train_capo_returns_param_dict() -> None:
     """_train_capo returns a param dict with expected MLP keys."""
     embed_fn = exp631._make_embed_fn(embed_dim=16, seed=0)
-    entries = [
-        _make_corpus_entry(i, is_correct=(i % 2 == 0)) for i in range(10)
-    ]
-    params = _train_capo(
-        entries, embed_fn, n_epochs=2, lambda_calib=0.10, seed=0, embed_dim=16
-    )
+    entries = [_make_corpus_entry(i, is_correct=(i % 2 == 0)) for i in range(10)]
+    params = _train_capo(entries, embed_fn, n_epochs=2, lambda_calib=0.10, seed=0, embed_dim=16)
     assert set(params.keys()) == {"w1", "b1", "w2", "b2"}
     assert params["w1"].shape == (16, 16)
     assert params["w2"].shape == (1, 16)
@@ -372,6 +374,7 @@ def test_select_lambda_picks_lowest_ece_above_auc_floor() -> None:
     # Fake training returns distinguishable param dicts via different seeds.
     def fake_train(train_e, embed_f, n_epochs, lambda_calib, seed, **kw):
         import jax.random as jrandom
+
         return exp631._init_params(jrandom.PRNGKey(int(lambda_calib * 100)), embed_dim=16)
 
     # Fake AUC/ECE: lambda=0.05 -> auc=0.80, ece=0.15
@@ -400,7 +403,9 @@ def test_select_lambda_picks_lowest_ece_above_auc_floor() -> None:
         patch.object(exp631, "_compute_ece", side_effect=fake_ece),
     ):
         best_lambda, best_params = _select_lambda(
-            entries, entries, embed_fn,
+            entries,
+            entries,
+            embed_fn,
             candidates=[0.05, 0.10, 0.20],
             n_epochs=2,
             auc_floor=0.70,
@@ -422,6 +427,7 @@ def test_select_lambda_all_below_auc_floor_picks_highest_auc() -> None:
 
     def fake_train(train_e, embed_f, n_epochs, lambda_calib, seed, **kw):
         import jax.random as jrandom
+
         return exp631._init_params(jrandom.PRNGKey(0), embed_dim=16)
 
     def fake_auc(params, entries, embed_f):
@@ -440,7 +446,9 @@ def test_select_lambda_all_below_auc_floor_picks_highest_auc() -> None:
         patch.object(exp631, "_compute_ece", side_effect=fake_ece),
     ):
         best_lambda, best_params = _select_lambda(
-            entries, entries, embed_fn,
+            entries,
+            entries,
+            embed_fn,
             candidates=[0.05, 0.10, 0.20],
             n_epochs=2,
             auc_floor=0.70,
@@ -512,7 +520,8 @@ def test_main_no_corpus_writes_blocked_artifact(
     monkeypatch.setattr(exp631, "DELIVERABLE", "results/experiment_631_jepa_v14_oracle.json")
     monkeypatch.setattr(exp631, "apply_env_autofix", lambda: None)
     monkeypatch.setattr(
-        exp631, "ExperimentTimeoutWatchdog",
+        exp631,
+        "ExperimentTimeoutWatchdog",
         lambda exp_id, timeout_minutes=40: _NullCtx(),
     )
 
@@ -541,7 +550,8 @@ def test_main_fallback_corpus_writes_success_artifact(
     monkeypatch.setattr(exp631, "LAMBDA_CALIB_CANDIDATES", [0.10])
     monkeypatch.setattr(exp631, "apply_env_autofix", lambda: None)
     monkeypatch.setattr(
-        exp631, "ExperimentTimeoutWatchdog",
+        exp631,
+        "ExperimentTimeoutWatchdog",
         lambda exp_id, timeout_minutes=40: _NullCtx(),
     )
 
@@ -551,11 +561,18 @@ def test_main_fallback_corpus_writes_success_artifact(
     assert out["status"] == "success"
     assert out["corpus_source"] == "fallback"
     for field in (
-        "result_schema", "v13_ood_auc", "v13_ece",
-        "v14_in_dist_auc", "v14_ood_auc", "v14_ece",
-        "lambda_calib_selected", "n_training_pairs",
-        "calibration_improved", "ood_maintained",
-        "model_saved", "honest_verdict",
+        "result_schema",
+        "v13_ood_auc",
+        "v13_ece",
+        "v14_in_dist_auc",
+        "v14_ood_auc",
+        "v14_ece",
+        "lambda_calib_selected",
+        "n_training_pairs",
+        "calibration_improved",
+        "ood_maintained",
+        "model_saved",
+        "honest_verdict",
     ):
         assert field in out, f"Missing required field: {field}"
     assert out["result_schema"] == "carnot.jepa_v14_oracle.v1"
@@ -587,7 +604,8 @@ def test_main_oracle_fallback_when_no_violated_steps(
     monkeypatch.setattr(exp631, "LAMBDA_CALIB_CANDIDATES", [0.10])
     monkeypatch.setattr(exp631, "apply_env_autofix", lambda: None)
     monkeypatch.setattr(
-        exp631, "ExperimentTimeoutWatchdog",
+        exp631,
+        "ExperimentTimeoutWatchdog",
         lambda exp_id, timeout_minutes=40: _NullCtx(),
     )
 
@@ -599,9 +617,7 @@ def test_main_oracle_fallback_when_no_violated_steps(
     assert out["corpus_source"] == "fallback"
 
 
-def test_main_honest_verdict_logic(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_honest_verdict_logic(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """honest_verdict field reflects calibration_improved and ood_maintained flags."""
     results_dir = tmp_path / "results"
     results_dir.mkdir()
@@ -617,7 +633,8 @@ def test_main_honest_verdict_logic(
     monkeypatch.setattr(exp631, "LAMBDA_CALIB_CANDIDATES", [0.10])
     monkeypatch.setattr(exp631, "apply_env_autofix", lambda: None)
     monkeypatch.setattr(
-        exp631, "ExperimentTimeoutWatchdog",
+        exp631,
+        "ExperimentTimeoutWatchdog",
         lambda exp_id, timeout_minutes=40: _NullCtx(),
     )
 
@@ -627,8 +644,10 @@ def test_main_honest_verdict_logic(
     calib = out["calibration_improved"]
     ood = out["ood_maintained"]
     expected = (
-        "v14_calibrated_ood_maintained" if (calib and ood)
-        else "v14_calibrated_ood_dropped" if calib
+        "v14_calibrated_ood_maintained"
+        if (calib and ood)
+        else "v14_calibrated_ood_dropped"
+        if calib
         else "v14_uncalibrated"
     )
     assert out["honest_verdict"] == expected

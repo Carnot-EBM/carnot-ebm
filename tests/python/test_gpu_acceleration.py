@@ -167,9 +167,7 @@ class TestSetupGpuCpuFallback:
         assert "gpu_monitor_results" in status
         assert status["gpu_monitor_results"]["n_gpus_detected"] == 0
 
-    def test_cpu_fallback_prewarm_fn_still_called_when_provided(
-        self, tmp_path: Path
-    ) -> None:
+    def test_cpu_fallback_prewarm_fn_still_called_when_provided(self, tmp_path: Path) -> None:
         """Explicitly provided prewarm_fn is still called in CPU fallback mode.
         This preserves backward compatibility for tests that mock prewarm_fn.
         SCENARIO-VERIFY-110
@@ -517,9 +515,7 @@ class TestThreeWayBenchmark:
             clock.advance(3.0)  # 3 s per cold load
             return {"model": model_name}, {"tok": model_name}
 
-        def _cold_generate(
-            model: dict, tokenizer: dict, prompt: str, max_new_tokens: int
-        ) -> str:
+        def _cold_generate(model: dict, tokenizer: dict, prompt: str, max_new_tokens: int) -> str:
             clock.advance(0.1)  # 0.1 s per question
             return "cold"
 

@@ -53,6 +53,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 # 1. Test questions with ground truth across 4 domains
 # ---------------------------------------------------------------------------
 
+
 def get_test_questions() -> list[dict[str, Any]]:
     """Return 20 test questions (5 per domain) with ground truth.
 
@@ -131,10 +132,7 @@ def get_test_questions() -> list[dict[str, Any]]:
         },
         {
             "domain": "logic",
-            "question": (
-                "If A is true and A implies B, is B true? "
-                "Answer yes or no."
-            ),
+            "question": ("If A is true and A implies B, is B true? Answer yes or no."),
             "ground_truth": "yes",
             "check_answer": lambda ans: "yes" in ans.lower(),
         },
@@ -152,13 +150,17 @@ def get_test_questions() -> list[dict[str, Any]]:
             "domain": "code",
             "question": "Write a Python function to reverse a string.",
             "ground_truth": "def reverse",
-            "check_answer": lambda ans: "def " in ans and ("reverse" in ans.lower() or "[::-1]" in ans),
+            "check_answer": lambda ans: (
+                "def " in ans and ("reverse" in ans.lower() or "[::-1]" in ans)
+            ),
         },
         {
             "domain": "code",
             "question": "Write a Python function that returns the sum of a list of integers.",
             "ground_truth": "def sum_list",
-            "check_answer": lambda ans: "def " in ans and ("sum" in ans.lower() or "total" in ans.lower()),
+            "check_answer": lambda ans: (
+                "def " in ans and ("sum" in ans.lower() or "total" in ans.lower())
+            ),
         },
         {
             "domain": "code",
@@ -176,7 +178,9 @@ def get_test_questions() -> list[dict[str, Any]]:
             "domain": "code",
             "question": "Write a Python function that returns the factorial of n.",
             "ground_truth": "def factorial",
-            "check_answer": lambda ans: "def " in ans and ("factorial" in ans.lower() or "fact" in ans.lower()),
+            "check_answer": lambda ans: (
+                "def " in ans and ("factorial" in ans.lower() or "fact" in ans.lower())
+            ),
         },
         # --- Factual (5 questions) ---
         {
@@ -237,6 +241,7 @@ def _extract_number(text: str) -> float | None:
 # 2. LLM interaction: prompt, generate, parse
 # ---------------------------------------------------------------------------
 
+
 def build_prompt(question: str, domain: str) -> str:
     """Build a prompt that asks the LLM to answer AND list constraints.
 
@@ -275,10 +280,7 @@ def build_prompt(question: str, domain: str) -> str:
             f"Conclusion: <statement>"
         )
     elif domain == "code":
-        return (
-            f"Question: {question}\n"
-            f"Write ONLY the Python function. No explanation."
-        )
+        return f"Question: {question}\nWrite ONLY the Python function. No explanation."
     else:  # factual
         return (
             f"Question: {question}\n"
@@ -310,13 +312,17 @@ def generate_with_llm(
     messages = [{"role": "user", "content": prompt}]
     try:
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
     except TypeError:
         # Older tokenizer versions may not support enable_thinking.
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
         )
 
     inputs = tokenizer(text, return_tensors="pt")
@@ -332,7 +338,7 @@ def generate_with_llm(
         )
 
     response = tokenizer.decode(
-        outputs[0, inputs["input_ids"].shape[1]:],
+        outputs[0, inputs["input_ids"].shape[1] :],
         skip_special_tokens=True,
     )
 
@@ -346,6 +352,7 @@ def generate_with_llm(
 # ---------------------------------------------------------------------------
 # 3. Constraint extraction from LLM output (per domain)
 # ---------------------------------------------------------------------------
+
 
 def extract_arithmetic_constraints(response: str, question: str) -> list[dict]:
     """Extract arithmetic constraints from the LLM's response.
@@ -381,13 +388,15 @@ def extract_arithmetic_constraints(response: str, question: str) -> list[dict]:
             correct = None
 
         if correct is not None:
-            constraints.append({
-                "type": "arithmetic",
-                "expression": f"{a} {op} {b}",
-                "claimed": answer_num,
-                "correct": correct,
-                "satisfied": int(answer_num) == int(correct),
-            })
+            constraints.append(
+                {
+                    "type": "arithmetic",
+                    "expression": f"{a} {op} {b}",
+                    "claimed": answer_num,
+                    "correct": correct,
+                    "satisfied": int(answer_num) == int(correct),
+                }
+            )
 
     # Also look for multi-operand expressions: "A + B + C = D"
     multi_match = re.search(r"(\d+)\s*\+\s*(\d+)\s*\+\s*(\d+)", question)
@@ -396,13 +405,15 @@ def extract_arithmetic_constraints(response: str, question: str) -> list[dict]:
         b = int(multi_match.group(2))
         c = int(multi_match.group(3))
         correct = a + b + c
-        constraints.append({
-            "type": "arithmetic_multi",
-            "expression": f"{a} + {b} + {c}",
-            "claimed": answer_num,
-            "correct": correct,
-            "satisfied": int(answer_num) == int(correct),
-        })
+        constraints.append(
+            {
+                "type": "arithmetic_multi",
+                "expression": f"{a} + {b} + {c}",
+                "claimed": answer_num,
+                "correct": correct,
+                "satisfied": int(answer_num) == int(correct),
+            }
+        )
 
     return constraints
 
@@ -428,11 +439,13 @@ def extract_logic_constraints(response: str, question: str) -> list[dict]:
     gave_no = "no" in answer_lower
 
     if gave_yes or gave_no:
-        constraints.append({
-            "type": "logic_answer",
-            "answer": "yes" if gave_yes else "no",
-            "description": f"LLM answered {'yes' if gave_yes else 'no'}",
-        })
+        constraints.append(
+            {
+                "type": "logic_answer",
+                "answer": "yes" if gave_yes else "no",
+                "description": f"LLM answered {'yes' if gave_yes else 'no'}",
+            }
+        )
 
     # Use NL constraint extraction on the combined question + answer text.
     from experiment_49_nl_constraints import (
@@ -445,13 +458,15 @@ def extract_logic_constraints(response: str, question: str) -> list[dict]:
     claims = extract_claims(question)
     checked = [check_claim_against_kb(c, KNOWLEDGE_BASE) for c in claims]
     for c in checked:
-        constraints.append({
-            "type": "logic_premise",
-            "claim_type": c["claim_type"],
-            "raw": c.get("raw", ""),
-            "kb_verdict": c.get("kb_verdict", "unknown"),
-            "satisfied": c.get("kb_verdict") != "false",
-        })
+        constraints.append(
+            {
+                "type": "logic_premise",
+                "claim_type": c["claim_type"],
+                "raw": c.get("raw", ""),
+                "kb_verdict": c.get("kb_verdict", "unknown"),
+                "satisfied": c.get("kb_verdict") != "false",
+            }
+        )
 
     return constraints
 
@@ -475,11 +490,13 @@ def extract_code_constraints(response: str) -> list[dict]:
     constraints = []
 
     if not code.strip():
-        constraints.append({
-            "type": "code_parse",
-            "description": "No Python code found in response",
-            "satisfied": False,
-        })
+        constraints.append(
+            {
+                "type": "code_parse",
+                "description": "No Python code found in response",
+                "satisfied": False,
+            }
+        )
         return constraints
 
     # Try to parse the code.
@@ -487,25 +504,31 @@ def extract_code_constraints(response: str) -> list[dict]:
         extracted = code_to_constraints(code)
         verification = verify_code_constraints(code, extracted)
 
-        constraints.append({
-            "type": "code_parse",
-            "description": "Code parses successfully",
-            "satisfied": True,
-        })
+        constraints.append(
+            {
+                "type": "code_parse",
+                "description": "Code parses successfully",
+                "satisfied": True,
+            }
+        )
 
         for c in verification["constraints"]:
-            constraints.append({
-                "type": f"code_{c['kind']}",
-                "description": c["description"],
-                "satisfied": c.get("verified", c.get("satisfied", True)),
-            })
+            constraints.append(
+                {
+                    "type": f"code_{c['kind']}",
+                    "description": c["description"],
+                    "satisfied": c.get("verified", c.get("satisfied", True)),
+                }
+            )
 
     except SyntaxError as e:
-        constraints.append({
-            "type": "code_parse",
-            "description": f"Syntax error: {e}",
-            "satisfied": False,
-        })
+        constraints.append(
+            {
+                "type": "code_parse",
+                "description": f"Syntax error: {e}",
+                "satisfied": False,
+            }
+        )
 
     return constraints
 
@@ -584,21 +607,25 @@ def extract_factual_constraints(response: str, question: str) -> list[dict]:
 
     constraints = []
     for c in nl_constraints:
-        constraints.append({
-            "type": "factual_claim",
-            "claim_type": c["claim_type"],
-            "raw": c.get("raw", ""),
-            "kb_verdict": c.get("kb_verdict", "unknown"),
-            "satisfied": c.get("kb_verdict") != "false",
-        })
+        constraints.append(
+            {
+                "type": "factual_claim",
+                "claim_type": c["claim_type"],
+                "raw": c.get("raw", ""),
+                "kb_verdict": c.get("kb_verdict", "unknown"),
+                "satisfied": c.get("kb_verdict") != "false",
+            }
+        )
 
     # Add overall consistency result.
-    constraints.append({
-        "type": "factual_consistency",
-        "description": f"NL pipeline: {verification['n_claims']} claims, "
-                       f"{verification['kb_errors']} KB errors",
-        "satisfied": verification["consistent"],
-    })
+    constraints.append(
+        {
+            "type": "factual_consistency",
+            "description": f"NL pipeline: {verification['n_claims']} claims, "
+            f"{verification['kb_errors']} KB errors",
+            "satisfied": verification["consistent"],
+        }
+    )
 
     return constraints
 
@@ -606,6 +633,7 @@ def extract_factual_constraints(response: str, question: str) -> list[dict]:
 # ---------------------------------------------------------------------------
 # 4. Simulated LLM outputs (fallback when model loading fails)
 # ---------------------------------------------------------------------------
+
 
 def get_simulated_outputs() -> dict[str, str]:
     """Simulated LLM outputs for all 20 questions.
@@ -626,8 +654,7 @@ def get_simulated_outputs() -> dict[str, str]:
         "What is 23 + 19 + 8?": "Answer: 50\nConstraint: 23 + 19 + 8 = 50",
         # Logic — 4 correct, 1 wrong.
         (
-            "If all cats are mammals and Whiskers is a cat, "
-            "is Whiskers a mammal? Answer yes or no."
+            "If all cats are mammals and Whiskers is a cat, is Whiskers a mammal? Answer yes or no."
         ): "Answer: Yes\nPremises: All cats are mammals. Whiskers is a cat.\nConclusion: Whiskers is a mammal.",
         (
             "If it is raining then the ground is wet. "
@@ -638,24 +665,18 @@ def get_simulated_outputs() -> dict[str, str]:
             "Do penguins have feathers? Answer yes or no."
         ): "Answer: Yes\nPremises: All birds have feathers. Penguins are birds.\nConclusion: Penguins have feathers.",
         (
-            "If A is true and A implies B, is B true? "
-            "Answer yes or no."
+            "If A is true and A implies B, is B true? Answer yes or no."
         ): "Answer: Yes\nPremises: A is true. A implies B.\nConclusion: B is true.",
         (
             "Nothing can be both a circle and a square. "
             "Shape X is a circle. Is shape X a square? Answer yes or no."
         ): "Answer: No\nPremises: Circles and squares are mutually exclusive. X is a circle.\nConclusion: X is not a square.",
         # Code — all produce parseable functions.
-        "Write a Python function to reverse a string.":
-            "```python\ndef reverse_string(s: str) -> str:\n    return s[::-1]\n```",
-        "Write a Python function that returns the sum of a list of integers.":
-            "```python\ndef sum_list(numbers: list) -> int:\n    total = 0\n    for n in numbers:\n        total += n\n    return total\n```",
-        "Write a Python function to check if a number is even.":
-            "```python\ndef is_even(n: int) -> bool:\n    return n % 2 == 0\n```",
-        "Write a Python function to find the maximum value in a list.":
-            "```python\ndef find_max(arr: list) -> int:\n    result = arr[0]\n    for x in arr:\n        if x > result:\n            result = x\n    return result\n```",
-        "Write a Python function that returns the factorial of n.":
-            "```python\ndef factorial(n: int) -> int:\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n```",
+        "Write a Python function to reverse a string.": "```python\ndef reverse_string(s: str) -> str:\n    return s[::-1]\n```",
+        "Write a Python function that returns the sum of a list of integers.": "```python\ndef sum_list(numbers: list) -> int:\n    total = 0\n    for n in numbers:\n        total += n\n    return total\n```",
+        "Write a Python function to check if a number is even.": "```python\ndef is_even(n: int) -> bool:\n    return n % 2 == 0\n```",
+        "Write a Python function to find the maximum value in a list.": "```python\ndef find_max(arr: list) -> int:\n    result = arr[0]\n    for x in arr:\n        if x > result:\n            result = x\n    return result\n```",
+        "Write a Python function that returns the factorial of n.": "```python\ndef factorial(n: int) -> int:\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n```",
         # Factual — 4 correct, 1 wrong (hallucination).
         "What is the capital of France?": "Answer: Paris\nClaim: Paris is the capital of France.",
         "What is the capital of Japan?": "Answer: Tokyo\nClaim: Tokyo is the capital of Japan.",
@@ -668,6 +689,7 @@ def get_simulated_outputs() -> dict[str, str]:
 # ---------------------------------------------------------------------------
 # 5. Main pipeline
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     """Run the full live LLM constraint verification pipeline."""
@@ -697,10 +719,12 @@ def main() -> int:
             try:
                 print(f"\n  Loading {model_name} on {device}...")
                 tokenizer = AutoTokenizer.from_pretrained(
-                    model_name, trust_remote_code=True,
+                    model_name,
+                    trust_remote_code=True,
                 )
                 model = AutoModelForCausalLM.from_pretrained(
-                    model_name, trust_remote_code=True,
+                    model_name,
+                    trust_remote_code=True,
                     dtype=torch.float16 if device == "cuda" else None,
                 )
                 if device == "cuda":
@@ -755,23 +779,26 @@ def main() -> int:
         n_violated = sum(1 for c in constraints if c.get("satisfied") is False)
         n_unknown = n_constraints - n_satisfied - n_violated
 
-        results.append({
-            "domain": domain,
-            "question": question_text[:60],
-            "response": response[:100],
-            "answer_correct": answer_correct,
-            "ground_truth": q["ground_truth"],
-            "n_constraints": n_constraints,
-            "n_satisfied": n_satisfied,
-            "n_violated": n_violated,
-            "n_unknown": n_unknown,
-            "constraints": constraints,
-        })
+        results.append(
+            {
+                "domain": domain,
+                "question": question_text[:60],
+                "response": response[:100],
+                "answer_correct": answer_correct,
+                "ground_truth": q["ground_truth"],
+                "n_constraints": n_constraints,
+                "n_satisfied": n_satisfied,
+                "n_violated": n_violated,
+                "n_unknown": n_unknown,
+                "constraints": constraints,
+            }
+        )
 
     # --- Free LLM memory ---
     if use_live_llm:
         del model, tokenizer
         import torch
+
         if device == "cuda":
             torch.cuda.empty_cache()
         gc.collect()
@@ -788,9 +815,11 @@ def main() -> int:
         icon = "✓" if r["answer_correct"] else "✗"
         print(f"\n  [{icon}] [{r['domain']:10s}] {r['question']}")
         print(f"      Response: {r['response'][:80]}{'...' if len(r['response']) > 80 else ''}")
-        print(f"      Answer correct: {r['answer_correct']}  |  "
-              f"Constraints: {r['n_satisfied']} ok, {r['n_violated']} violated, "
-              f"{r['n_unknown']} unknown")
+        print(
+            f"      Answer correct: {r['answer_correct']}  |  "
+            f"Constraints: {r['n_satisfied']} ok, {r['n_violated']} violated, "
+            f"{r['n_unknown']} unknown"
+        )
         if r["n_violated"] > 0:
             for c in r["constraints"]:
                 if c.get("satisfied") is False:
@@ -799,8 +828,7 @@ def main() -> int:
 
     # --- Domain summary ---
     print(f"\n{sep}")
-    print(f"EXPERIMENT 56 RESULTS ({elapsed:.1f}s) "
-          f"[{'LIVE LLM' if use_live_llm else 'SIMULATED'}]")
+    print(f"EXPERIMENT 56 RESULTS ({elapsed:.1f}s) [{'LIVE LLM' if use_live_llm else 'SIMULATED'}]")
     print(sep)
 
     domains = ["arithmetic", "logic", "code", "factual"]
@@ -825,13 +853,17 @@ def main() -> int:
             "total_violated": total_violated,
         }
 
-    print(f"\n  {'Domain':12s} {'Accuracy':>10s} {'Constraints':>13s} {'Satisfied':>11s} {'Violated':>10s}")
+    print(
+        f"\n  {'Domain':12s} {'Accuracy':>10s} {'Constraints':>13s} {'Satisfied':>11s} {'Violated':>10s}"
+    )
     print(f"  {'-' * 60}")
     for domain in domains:
         s = domain_stats[domain]
         acc = f"{s['n_correct']}/{s['n_total']}"
-        print(f"  {domain:12s} {acc:>10s} {s['total_constraints']:>13d} "
-              f"{s['total_satisfied']:>11d} {s['total_violated']:>10d}")
+        print(
+            f"  {domain:12s} {acc:>10s} {s['total_constraints']:>13d} "
+            f"{s['total_satisfied']:>11d} {s['total_violated']:>10d}"
+        )
 
     # Overall.
     total_questions = len(results)
@@ -842,8 +874,10 @@ def main() -> int:
 
     print(f"  {'-' * 60}")
     overall_acc = f"{total_correct}/{total_questions}"
-    print(f"  {'OVERALL':12s} {overall_acc:>10s} {total_constraints:>13d} "
-          f"{total_satisfied:>11d} {total_violated:>10d}")
+    print(
+        f"  {'OVERALL':12s} {overall_acc:>10s} {total_constraints:>13d} "
+        f"{total_satisfied:>11d} {total_violated:>10d}"
+    )
 
     # Detection rate: how often did the constraint pipeline agree with ground truth?
     # If answer is correct and constraints are satisfied → true negative (no hallucination).

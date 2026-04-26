@@ -324,7 +324,9 @@ def run_experiment_329() -> dict[str, Any]:
                 print(f"[Exp 329]   improvement_1to3={existing.get('improvement_1to3', 'N/A')}")
                 need_run = False
             else:
-                print(f"[Exp 329] Existing inference_mode={existing.get('inference_mode')!r} — re-running.")
+                print(
+                    f"[Exp 329] Existing inference_mode={existing.get('inference_mode')!r} — re-running."
+                )
         except Exception as exc:
             print(f"[Exp 329] Could not read existing result ({exc}) — re-running.")
     else:
@@ -359,8 +361,7 @@ def run_experiment_329() -> dict[str, Any]:
             if proc.returncode != 0:
                 reason = f"Relay script exited with rc={proc.returncode}"
                 return _build_blocked_artifact(
-                    t0, started_at, reason, gpu_diagnostics,
-                    stderr[-2000:], stdout[-3000:]
+                    t0, started_at, reason, gpu_diagnostics, stderr[-2000:], stdout[-3000:]
                 )
         except subprocess.TimeoutExpired:
             reason = "Relay script timed out after 1800s"
@@ -388,8 +389,7 @@ def run_experiment_329() -> dict[str, Any]:
         )
         print(f"[Exp 329] BLOCKED: {reason}")
         artifact = _build_blocked_artifact(
-            t0, started_at, reason, gpu_diagnostics,
-            stderr[-2000:], stdout[-3000:]
+            t0, started_at, reason, gpu_diagnostics, stderr[-2000:], stdout[-3000:]
         )
         artifact["fallback_result_path"] = LIVE_RELAY_OUTPUT
         artifact["fallback_inference_mode"] = inference_mode
@@ -419,7 +419,9 @@ def run_experiment_329() -> dict[str, Any]:
         sim_jepa = simulated_result.get("jepa_skip_rate", 0.0)
         print(f"[Exp 329]   simulated improvement_1to3={sim_imp:+.4f}  live={imp_1to3:+.4f}")
         print(f"[Exp 329]   improvement_delta={simulation_comparison['improvement_delta']:+.4f}")
-        print(f"[Exp 329]   simulated jepa_skip_rate={sim_jepa:.4f}  live={jepa_skip_rate_live:.4f}")
+        print(
+            f"[Exp 329]   simulated jepa_skip_rate={sim_jepa:.4f}  live={jepa_skip_rate_live:.4f}"
+        )
     else:
         simulation_comparison = {}
         sim_jepa = None

@@ -52,7 +52,7 @@ def test_compute_confusion_perfect(exp679):
     If all injection scores are > 0.5 and all benign scores are <= 0.5, the
     confusion matrix should have TP=n_inj, FP=0, TN=n_ben, FN=0.
     """
-    scores = [0.9, 0.8, 0.1, 0.2]   # inj, inj, ben, ben
+    scores = [0.9, 0.8, 0.1, 0.2]  # inj, inj, ben, ben
     labels = [1, 1, 0, 0]
     cm = exp679._compute_confusion(scores, labels, threshold=0.5)
     assert cm == {"tp": 2, "fp": 0, "tn": 2, "fn": 0}
@@ -60,7 +60,7 @@ def test_compute_confusion_perfect(exp679):
 
 def test_compute_confusion_all_wrong(exp679):
     """REQ-SAFE-010: all predictions inverted → TP=0, FP=2, TN=0, FN=2."""
-    scores = [0.1, 0.2, 0.9, 0.8]   # low for injections, high for benign
+    scores = [0.1, 0.2, 0.9, 0.8]  # low for injections, high for benign
     labels = [1, 1, 0, 0]
     cm = exp679._compute_confusion(scores, labels, threshold=0.5)
     assert cm == {"tp": 0, "fp": 2, "tn": 0, "fn": 2}
@@ -68,7 +68,7 @@ def test_compute_confusion_all_wrong(exp679):
 
 def test_compute_confusion_mixed(exp679):
     """REQ-SAFE-010: partial accuracy produces expected CM values."""
-    scores = [0.9, 0.1, 0.9, 0.1]   # TP, FN, FP, TN
+    scores = [0.9, 0.1, 0.9, 0.1]  # TP, FN, FP, TN
     labels = [1, 1, 0, 0]
     cm = exp679._compute_confusion(scores, labels, threshold=0.5)
     assert cm == {"tp": 1, "fp": 1, "tn": 1, "fn": 1}
@@ -128,8 +128,14 @@ def test_run_blocked_schema_complete(exp679, tmp_path):
     missing_path = tmp_path / "no_weights.json"
     result = exp679.run(v1_weights_path=missing_path)
 
-    required_fields = {"experiment", "honest_verdict", "per_dataset_auroc", "mean_auroc",
-                       "per_dataset_cm", "model_card_written"}
+    required_fields = {
+        "experiment",
+        "honest_verdict",
+        "per_dataset_auroc",
+        "mean_auroc",
+        "per_dataset_cm",
+        "model_card_written",
+    }
     missing = required_fields - set(result.keys())
     assert not missing, f"Missing schema fields in blocked result: {missing}"
 
@@ -217,10 +223,9 @@ def trained_checker_v1(tmp_path_factory):
         "Write a Python function to check if a number is prime.",
     ]
 
-    examples = (
-        [InjectionExample(text=t, label="injection") for t in inj_texts]
-        + [InjectionExample(text=t, label="benign") for t in ben_texts]
-    )
+    examples = [InjectionExample(text=t, label="injection") for t in inj_texts] + [
+        InjectionExample(text=t, label="benign") for t in ben_texts
+    ]
     checker.train(examples, n_epochs=50)
 
     tmp = tmp_path_factory.mktemp("v1_weights")
@@ -281,8 +286,14 @@ def test_run_with_v1_weights(exp679, trained_checker_v1):
         exp679._load_bipia = original_bipia
 
     # Schema completeness
-    required_fields = {"experiment", "honest_verdict", "per_dataset_auroc", "mean_auroc",
-                       "per_dataset_cm", "model_card_written"}
+    required_fields = {
+        "experiment",
+        "honest_verdict",
+        "per_dataset_auroc",
+        "mean_auroc",
+        "per_dataset_cm",
+        "model_card_written",
+    }
     assert not (required_fields - set(result.keys())), "Missing schema fields"
 
     assert result["experiment"] == 679
@@ -318,8 +329,14 @@ def test_result_json_exists_and_valid():
     with open(result_path) as fh:
         result = json.load(fh)
 
-    required_fields = {"experiment", "honest_verdict", "per_dataset_auroc",
-                       "mean_auroc", "per_dataset_cm", "model_card_written"}
+    required_fields = {
+        "experiment",
+        "honest_verdict",
+        "per_dataset_auroc",
+        "mean_auroc",
+        "per_dataset_cm",
+        "model_card_written",
+    }
     missing = required_fields - set(result.keys())
     assert not missing, f"Missing fields in result JSON: {missing}"
 

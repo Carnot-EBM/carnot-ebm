@@ -10,7 +10,6 @@ import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
 import pytest
-
 from carnot.embeddings.layer_ebm import (
     LayerEBMConfig,
     LayerEBMVerifier,
@@ -22,7 +21,6 @@ from carnot.embeddings.layer_ebm import (
 from carnot.inference.learned_verifier import LearnedVerifierConfig
 from carnot.models.gibbs import GibbsModel
 from carnot.verify.constraint import ComposedEnergy
-
 
 # ---------------------------------------------------------------------------
 # Helpers: synthetic per-layer activation data
@@ -61,11 +59,11 @@ def _make_layer_activations(
         correct_list: list[jax.Array] = []
         halluc_list: list[jax.Array] = []
 
-        for i in range(n_correct):
+        for _i in range(n_correct):
             key, sk = jrandom.split(key)
             correct_list.append(jrandom.normal(sk, (hidden_dim,)) * noise_scale)
 
-        for i in range(n_halluc):
+        for _i in range(n_halluc):
             key, sk = jrandom.split(key)
             base = jrandom.normal(sk, (hidden_dim,)) * noise_scale
             if layer_idx in informative_layers:
@@ -191,7 +189,7 @@ class TestIdentifyCriticalLayers:
         for layer_idx in range(5):
             acts_c[layer_idx] = []
             acts_h[layer_idx] = []
-            for i in range(30):
+            for _i in range(30):
                 key, sk = jrandom.split(key)
                 acts_c[layer_idx].append(jrandom.normal(sk, (8,)) * 0.3)
                 key, sk = jrandom.split(key)
@@ -200,9 +198,7 @@ class TestIdentifyCriticalLayers:
                     shift = 10.0
                 elif layer_idx == 4:
                     shift = 5.0
-                acts_h[layer_idx].append(
-                    jrandom.normal(sk, (8,)) * 0.3 + shift * jnp.ones(8)
-                )
+                acts_h[layer_idx].append(jrandom.normal(sk, (8,)) * 0.3 + shift * jnp.ones(8))
 
         found = identify_critical_layers(acts_c, acts_h, top_k=2)
         assert found[0] == 2, "Highest Fisher score layer should be first"
@@ -307,9 +303,7 @@ class TestTrainLayerEBM:
         correct = jrandom.normal(key, (20, 16))
         key, sk = jrandom.split(key)
         halluc = jrandom.normal(sk, (20, 16)) + 3.0
-        config = LearnedVerifierConfig(
-            hidden_dims=[16, 8], n_epochs=10, learning_rate=0.01
-        )
+        config = LearnedVerifierConfig(hidden_dims=[16, 8], n_epochs=10, learning_rate=0.01)
         model = train_layer_ebm(correct, halluc, config)
         assert isinstance(model, GibbsModel)
         assert model.config.input_dim == 16
@@ -321,9 +315,7 @@ class TestTrainLayerEBM:
         correct = jrandom.normal(k1, (50, 8)) * 0.5
         halluc = jrandom.normal(k2, (50, 8)) * 0.5 + 3.0
 
-        config = LearnedVerifierConfig(
-            hidden_dims=[16, 8], n_epochs=200, learning_rate=0.01
-        )
+        config = LearnedVerifierConfig(hidden_dims=[16, 8], n_epochs=200, learning_rate=0.01)
         model = train_layer_ebm(correct, halluc, config)
 
         # Evaluate on held-out data.
@@ -491,9 +483,7 @@ class TestBuildLayerEBMVerifier:
         acts_c, acts_h, _ = _make_layer_activations(
             key, n_layers=6, informative_layers=(1, 3, 5), separation=5.0
         )
-        config = LayerEBMConfig(
-            top_k_layers=2, hidden_dims=[16, 8], n_epochs=10
-        )
+        config = LayerEBMConfig(top_k_layers=2, hidden_dims=[16, 8], n_epochs=10)
         verifier = build_layer_ebm_verifier(acts_c, acts_h, config)
         assert isinstance(verifier, LayerEBMVerifier)
         assert len(verifier.critical_layers) == 2
@@ -520,9 +510,7 @@ class TestBuildLayerEBMVerifier:
             informative_layers=(1, 3),
             separation=6.0,
         )
-        config = LayerEBMConfig(
-            top_k_layers=2, hidden_dims=[16, 8], n_epochs=100
-        )
+        config = LayerEBMConfig(top_k_layers=2, hidden_dims=[16, 8], n_epochs=100)
         verifier = build_layer_ebm_verifier(acts_c, acts_h, config)
 
         # Generate held-out test activations.
@@ -530,7 +518,7 @@ class TestBuildLayerEBMVerifier:
         correct_energies: list[float] = []
         halluc_energies: list[float] = []
 
-        for i in range(10):
+        for _i in range(10):
             key, sk = jrandom.split(key)
             # Correct: near origin on critical layers.
             acts_test: dict[int, jax.Array] = {}
@@ -562,9 +550,7 @@ class TestBuildLayerEBMVerifier:
         acts_c, acts_h = _make_2d_layer_activations(
             key, n_layers=4, informative_layers=(1, 3), separation=5.0
         )
-        config = LayerEBMConfig(
-            top_k_layers=2, hidden_dims=[16], n_epochs=5
-        )
+        config = LayerEBMConfig(top_k_layers=2, hidden_dims=[16], n_epochs=5)
         verifier = build_layer_ebm_verifier(acts_c, acts_h, config)
         assert isinstance(verifier, LayerEBMVerifier)
 
@@ -581,9 +567,17 @@ class TestPackageExports:
         """REQ-INFER-015: Layer EBM symbols accessible from carnot.embeddings."""
         from carnot.embeddings import (
             LayerEBMConfig as PkgConfig,
+        )
+        from carnot.embeddings import (
             LayerEBMVerifier as PkgVerifier,
+        )
+        from carnot.embeddings import (
             build_layer_ebm_verifier as pkg_build,
+        )
+        from carnot.embeddings import (
             identify_critical_layers as pkg_identify,
+        )
+        from carnot.embeddings import (
             train_layer_ebm as pkg_train,
         )
 

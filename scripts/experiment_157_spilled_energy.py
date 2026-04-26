@@ -62,13 +62,13 @@ from carnot.pipeline.extract import AutoExtractor
 # Simulation configuration
 # ---------------------------------------------------------------------------
 
-N_QUESTIONS = 50        # TruthfulQA subset size
-N_CORRECT = 25          # Half are "correct" (low spilled energy)
-N_WRONG = 25            # Half are "incorrect" (high spilled energy)
-VOCAB_SIZE = 1000       # Smaller vocab for fast CPU simulation
-N_TOKENS = 20           # Tokens per generated answer
-CORRECT_PEAK_LOGIT = 8.0    # Logit advantage for the argmax token (correct answers)
-WRONG_NOISE_STD = 0.5       # Std of Gaussian noise for uncertain logits (wrong answers)
+N_QUESTIONS = 50  # TruthfulQA subset size
+N_CORRECT = 25  # Half are "correct" (low spilled energy)
+N_WRONG = 25  # Half are "incorrect" (high spilled energy)
+VOCAB_SIZE = 1000  # Smaller vocab for fast CPU simulation
+N_TOKENS = 20  # Tokens per generated answer
+CORRECT_PEAK_LOGIT = 8.0  # Logit advantage for the argmax token (correct answers)
+WRONG_NOISE_STD = 0.5  # Std of Gaussian noise for uncertain logits (wrong answers)
 SEED = 157
 
 # Threshold sweep for precision/recall analysis
@@ -308,14 +308,16 @@ def run_benchmark() -> dict:
 
         labels.append(label)
         scores.append(spilled)
-        per_sample.append({
-            "index": i,
-            "question": question,
-            "answer_type": answer_type,
-            "label": label,
-            "spilled_energy": spilled,
-            "satisfied": satisfied,
-        })
+        per_sample.append(
+            {
+                "index": i,
+                "question": question,
+                "answer_type": answer_type,
+                "label": label,
+                "spilled_energy": spilled,
+                "satisfied": satisfied,
+            }
+        )
 
     # --- AUROC ---
     auroc = compute_auroc(labels, scores)
@@ -367,7 +369,9 @@ def run_benchmark() -> dict:
 
     # --- Print summary ---
     print(f"Results:")
-    print(f"  AUROC:                {auroc:.3f}  (target >0.60, {'✓ MET' if auroc >= 0.60 else '✗ NOT MET'})")
+    print(
+        f"  AUROC:                {auroc:.3f}  (target >0.60, {'✓ MET' if auroc >= 0.60 else '✗ NOT MET'})"
+    )
     print(f"  Precision @ {DEFAULT_SPILLED_THRESHOLD}:   {prec:.3f}")
     print(f"  Recall    @ {DEFAULT_SPILLED_THRESHOLD}:   {rec:.3f}")
     print(f"  Mean spilled (correct answers): {mean_correct:.4f}")
@@ -379,7 +383,9 @@ def run_benchmark() -> dict:
     print()
     print(f"Threshold sweep:")
     for row in threshold_sweep:
-        print(f"  thr={row['threshold']:.1f}: precision={row['precision']:.3f} recall={row['recall']:.3f}")
+        print(
+            f"  thr={row['threshold']:.1f}: precision={row['precision']:.3f} recall={row['recall']:.3f}"
+        )
 
     return results_dict
 

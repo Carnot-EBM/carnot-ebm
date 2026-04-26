@@ -62,7 +62,6 @@ Spec: REQ-EMBED-001, REQ-VERIFY-001
 from __future__ import annotations
 
 import hashlib
-import os
 import time
 from typing import Protocol, runtime_checkable
 
@@ -184,6 +183,7 @@ class MiniLMEmbedding:
         """Load the sentence-transformer model if not already loaded."""
         if self._model is None:
             from sentence_transformers import SentenceTransformer  # type: ignore[import]
+
             self._model = SentenceTransformer(self.MODEL_NAME)
         return self._model
 
@@ -488,6 +488,7 @@ class HashEmbedding:
             float32 array of shape (n_buckets,) with TF-normalized counts.
         """
         import re
+
         tokens = re.findall(r"[a-zA-Z0-9]+|[+\-*/=<>!&|^~]", text.lower())
         counts = np.zeros(self._n_buckets, dtype=np.float32)
         for tok in tokens:

@@ -55,6 +55,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 # never crashes on a missing or malformed file.
 # ---------------------------------------------------------------------------
 
+
 def _load_exp(path: str) -> dict:
     """Load one experiment result JSON.  Returns empty dict if not found.
 
@@ -72,6 +73,7 @@ def _load_exp(path: str) -> dict:
 # ---------------------------------------------------------------------------
 # Adoption assessment helpers
 # ---------------------------------------------------------------------------
+
 
 def _assess_adoption(experiments: dict) -> dict:
     """Evaluate which of the 5 non-adopted throughput items from .35 were
@@ -119,7 +121,7 @@ def _assess_adoption(experiments: dict) -> dict:
         "n_total": 5,
         "adoption_rate": n_adopted / 5,
         "verdict": (
-            f"{n_adopted}/5 throughput items adopted ({int(n_adopted/5*100)}%). "
+            f"{n_adopted}/5 throughput items adopted ({int(n_adopted / 5 * 100)}%). "
             "Dedup and handoff implemented (Exp 475). Retro budget honoured (Exps 474-481). "
             "Batching standards documented but 77 violations remain — not counted as adopted. "
             "Thermal gate still not implemented."
@@ -141,11 +143,13 @@ def _count_deferred_to_gpu(experiments: dict) -> dict:
         verdict = str(data.get("honest_verdict", ""))
         status = str(data.get("status", ""))
         if verdict in DEFERRED_VERDICTS or status in {"gpu_required"}:
-            deferred.append({
-                "exp_id": exp_id,
-                "honest_verdict": verdict,
-                "status": status,
-            })
+            deferred.append(
+                {
+                    "exp_id": exp_id,
+                    "honest_verdict": verdict,
+                    "status": status,
+                }
+            )
     return {
         "n_deferred": len(deferred),
         "deferred_list": deferred,
@@ -194,137 +198,155 @@ def _identify_new_retro_items(
     # Highest priority: GPU deferral pattern persisted despite GPUVRAMGate
     n_deferred = deferred["n_deferred"]
     if n_deferred > 0:
-        items.append((
-            "RETRO-044",
+        items.append(
             (
-                f"GPUVRAMGate failed to prevent {n_deferred} deferred_to_gpu experiments in .36. "
-                "Exp 474 implemented the gate but Exps 476, 478, 479 still deferred. "
-                "Root cause: gate checks VRAM at experiment start but zombie processes from "
-                "prior sessions consumed VRAM before the gate ran. Fix: gate must kill zombies "
-                "AND verify post-kill free VRAM before allowing GPU-required experiments to proceed. "
-                "This is the FOURTH consecutive milestone with zombie-driven GPU deferral. "
-                "Must be resolved in .37 before any GPU-required experiments are scheduled."
-            ),
-            "critical",
-            "2026.04.37",
-        ))
+                "RETRO-044",
+                (
+                    f"GPUVRAMGate failed to prevent {n_deferred} deferred_to_gpu experiments in .36. "
+                    "Exp 474 implemented the gate but Exps 476, 478, 479 still deferred. "
+                    "Root cause: gate checks VRAM at experiment start but zombie processes from "
+                    "prior sessions consumed VRAM before the gate ran. Fix: gate must kill zombies "
+                    "AND verify post-kill free VRAM before allowing GPU-required experiments to proceed. "
+                    "This is the FOURTH consecutive milestone with zombie-driven GPU deferral. "
+                    "Must be resolved in .37 before any GPU-required experiments are scheduled."
+                ),
+                "critical",
+                "2026.04.37",
+            )
+        )
 
     # Carry-forward: RETRO-033 still open (4th consecutive miss)
     if not retro_closures["retro_033_closed"]:
-        items.append((
-            "RETRO-033",
+        items.append(
             (
-                "Live 100q verify-repair positive result STILL not confirmed — four consecutive "
-                "milestone misses (.33, .34, .35, .36). Exp 476 deferred_to_gpu again. "
-                "Root cause is persistent GPU VRAM exhaustion. Blocked by RETRO-044. "
-                "Once RETRO-044 is resolved, this must be the first GPU experiment scheduled."
-            ),
-            "critical",
-            "2026.04.37",
-        ))
+                "RETRO-033",
+                (
+                    "Live 100q verify-repair positive result STILL not confirmed — four consecutive "
+                    "milestone misses (.33, .34, .35, .36). Exp 476 deferred_to_gpu again. "
+                    "Root cause is persistent GPU VRAM exhaustion. Blocked by RETRO-044. "
+                    "Once RETRO-044 is resolved, this must be the first GPU experiment scheduled."
+                ),
+                "critical",
+                "2026.04.37",
+            )
+        )
 
     # Carry-forward: RETRO-038 still open
     if not retro_closures["retro_038_closed"]:
-        items.append((
-            "RETRO-038",
+        items.append(
             (
-                "Live 200q VeriCoT+VPRM statistically significant result not confirmed. "
-                "Exp 478 blocked by CUDA OOM (14.89 GiB requested, 70 MB free on GPU 0). "
-                "Blocked by RETRO-044. Target: 200q live with p < 0.05 improvement."
-            ),
-            "high",
-            "2026.04.37",
-        ))
+                "RETRO-038",
+                (
+                    "Live 200q VeriCoT+VPRM statistically significant result not confirmed. "
+                    "Exp 478 blocked by CUDA OOM (14.89 GiB requested, 70 MB free on GPU 0). "
+                    "Blocked by RETRO-044. Target: 200q live with p < 0.05 improvement."
+                ),
+                "high",
+                "2026.04.37",
+            )
+        )
 
     # Carry-forward: RETRO-039 still open
     if not retro_closures["retro_039_closed"]:
-        items.append((
-            "RETRO-039",
+        items.append(
             (
-                "GSM-Symbolic adversarial thesis not confirmed. Exp 479 was gpu_required. "
-                "Hypothesis: adversarial prompting improves verify-repair accuracy vs standard. "
-                "Blocked by RETRO-044. Target: live run with Qwen3 + GSM-Symbolic adversarial set."
-            ),
-            "high",
-            "2026.04.37",
-        ))
+                "RETRO-039",
+                (
+                    "GSM-Symbolic adversarial thesis not confirmed. Exp 479 was gpu_required. "
+                    "Hypothesis: adversarial prompting improves verify-repair accuracy vs standard. "
+                    "Blocked by RETRO-044. Target: live run with Qwen3 + GSM-Symbolic adversarial set."
+                ),
+                "high",
+                "2026.04.37",
+            )
+        )
 
     # Carry-forward: RETRO-040 still open, AUC regressed further
     if not retro_closures["retro_040_closed"]:
         e477 = experiments.get("477", {})
         after_auc = e477.get("after_auc", "unknown")
-        items.append((
-            "RETRO-040",
+        items.append(
             (
-                f"JEPA AUC regressed from 0.401 to {after_auc} after quality-gated retrain (Exp 477). "
-                "Quality gate removed 42% of real pairs (33/57 kept) but training still degraded. "
-                "Hypothesis: real CoT pairs carry domain shift that destabilises the energy function. "
-                "Try: (a) synthetic-only augmentation until AUC stabilises, "
-                "(b) lower learning rate for fine-tuning on mixed data, "
-                "(c) curriculum: pretrain on synthetic, fine-tune on filtered real."
-            ),
-            "high",
-            "2026.04.37",
-        ))
+                "RETRO-040",
+                (
+                    f"JEPA AUC regressed from 0.401 to {after_auc} after quality-gated retrain (Exp 477). "
+                    "Quality gate removed 42% of real pairs (33/57 kept) but training still degraded. "
+                    "Hypothesis: real CoT pairs carry domain shift that destabilises the energy function. "
+                    "Try: (a) synthetic-only augmentation until AUC stabilises, "
+                    "(b) lower learning rate for fine-tuning on mixed data, "
+                    "(c) curriculum: pretrain on synthetic, fine-tune on filtered real."
+                ),
+                "high",
+                "2026.04.37",
+            )
+        )
 
     # Carry-forward: RETRO-031 still open
     if not retro_closures["retro_031_closed"]:
-        items.append((
-            "RETRO-031",
+        items.append(
             (
-                "KAEM large-nvar crossover not confirmed at n=1000 (Exp 483). "
-                "EBM advantage threshold may require n > 1000 for large variable counts. "
-                "Consider: (a) extend to n=5000, (b) change metric from crossover to AUC gap."
+                "RETRO-031",
+                (
+                    "KAEM large-nvar crossover not confirmed at n=1000 (Exp 483). "
+                    "EBM advantage threshold may require n > 1000 for large variable counts. "
+                    "Consider: (a) extend to n=5000, (b) change metric from crossover to AUC gap."
+                ),
+                "medium",
+                "2026.04.37",
+            )
+        )
+
+    # New: batching enforcement not implemented (EXP 481 documented but 77 violations remain)
+    items.append(
+        (
+            "RETRO-045",
+            (
+                "Inference batching enforcement: 77 violations remain after Exp 481 documented "
+                "the standard. Standards documented != enforcement. "
+                "Fix: (a) add pre-commit hook that fails if a harness script has sequential "
+                "for-loops over questions without BatchedInferenceRunner, "
+                "(b) CI gate via check_spec_coverage.py extension. "
+                "Target: violations reduced to 0 before end of .37."
+            ),
+            "high",
+            "2026.04.37",
+        )
+    )
+
+    # New: thermal gate still not implemented (carried from .35)
+    items.append(
+        (
+            "RETRO-046",
+            (
+                "GPU thermal throttle gate not implemented for third consecutive milestone. "
+                "RTX 3090 observed at 82 C in prior milestones. "
+                "Fix: add conductor pre-check querying nvidia-smi for GPU temperature; "
+                "pause and open RETRO item if any GPU exceeds 80 C. "
+                "Target: gate implemented and wired to conductor in .37."
             ),
             "medium",
             "2026.04.37",
-        ))
-
-    # New: batching enforcement not implemented (EXP 481 documented but 77 violations remain)
-    items.append((
-        "RETRO-045",
-        (
-            "Inference batching enforcement: 77 violations remain after Exp 481 documented "
-            "the standard. Standards documented != enforcement. "
-            "Fix: (a) add pre-commit hook that fails if a harness script has sequential "
-            "for-loops over questions without BatchedInferenceRunner, "
-            "(b) CI gate via check_spec_coverage.py extension. "
-            "Target: violations reduced to 0 before end of .37."
-        ),
-        "high",
-        "2026.04.37",
-    ))
-
-    # New: thermal gate still not implemented (carried from .35)
-    items.append((
-        "RETRO-046",
-        (
-            "GPU thermal throttle gate not implemented for third consecutive milestone. "
-            "RTX 3090 observed at 82 C in prior milestones. "
-            "Fix: add conductor pre-check querying nvidia-smi for GPU temperature; "
-            "pause and open RETRO item if any GPU exceeds 80 C. "
-            "Target: gate implemented and wired to conductor in .37."
-        ),
-        "medium",
-        "2026.04.37",
-    ))
+        )
+    )
 
     # NUP Probe below AUC threshold
     e484 = experiments.get("484", {})
     nup_auc = e484.get("auc", 0.0)
     if nup_auc < 0.700:
-        items.append((
-            "RETRO-047",
+        items.append(
             (
-                f"NUP Probe AUC = {nup_auc:.3f}, below Tier 0c viability threshold of 0.700 (Exp 484). "
-                "NUP Probe is not yet viable as a lightweight uncertainty probe for the pipeline. "
-                "Options: (a) larger training set, (b) richer feature extraction, "
-                "(c) explore alternative uncertainty signals (entropy, token probability spread). "
-                "Do not promote NUP to Tier 0c until AUC > 0.700 on held-out data."
-            ),
-            "medium",
-            "2026.04.37",
-        ))
+                "RETRO-047",
+                (
+                    f"NUP Probe AUC = {nup_auc:.3f}, below Tier 0c viability threshold of 0.700 (Exp 484). "
+                    "NUP Probe is not yet viable as a lightweight uncertainty probe for the pipeline. "
+                    "Options: (a) larger training set, (b) richer feature extraction, "
+                    "(c) explore alternative uncertainty signals (entropy, token probability spread). "
+                    "Do not promote NUP to Tier 0c until AUC > 0.700 on held-out data."
+                ),
+                "medium",
+                "2026.04.37",
+            )
+        )
 
     return items
 
@@ -349,10 +371,14 @@ def _meta_reflection(experiments: dict, adoption: dict, deferred: dict) -> dict:
     gpu1_still_idle = True  # no successful dual-GPU live run this milestone
 
     credibility_gap = (
-        "CRITICAL" if not any([
-            experiments.get("476", {}).get("retro_033_closed"),
-            experiments.get("478", {}).get("retro_038_closed"),
-        ]) else "IMPROVING"
+        "CRITICAL"
+        if not any(
+            [
+                experiments.get("476", {}).get("retro_033_closed"),
+                experiments.get("478", {}).get("retro_038_closed"),
+            ]
+        )
+        else "IMPROVING"
     )
 
     return {
@@ -434,16 +460,15 @@ def main() -> None:
 
         # How many experiments loaded successfully (non-empty, no _load_error)
         experiments_completed = sum(
-            1 for d in experiments.values()
+            1
+            for d in experiments.values()
             if d and "_load_error" not in d and d.get("status") not in (None,)
         )
 
         adoption = _assess_adoption(experiments)
         deferred = _count_deferred_to_gpu(experiments)
         retro_closures = _assess_retro_closures(experiments)
-        new_retro_items = _identify_new_retro_items(
-            retro_closures, deferred, adoption, experiments
-        )
+        new_retro_items = _identify_new_retro_items(retro_closures, deferred, adoption, experiments)
         meta = _meta_reflection(experiments, adoption, deferred)
 
         # Pull specific metric fields from their source experiments
@@ -458,9 +483,7 @@ def main() -> None:
         thesis_confirmed = bool(e479.get("thesis_confirmed", False))
 
         # live_200q_statistically_positive: Exp 478 was blocked/gpu_required
-        live_200q_statistically_positive = bool(
-            e478.get("live_200q_statistically_positive", False)
-        )
+        live_200q_statistically_positive = bool(e478.get("live_200q_statistically_positive", False))
 
         n_deferred_to_gpu = deferred["n_deferred"]
 
@@ -490,7 +513,9 @@ def main() -> None:
                     "HIGHEST PRIORITY FOR .37: GPUVRAMGate (Exp 474) implemented but "
                     f"{n_deferred_to_gpu} experiments still deferred. Gate must kill "
                     "zombie processes AND verify post-kill free VRAM before proceeding."
-                ) if gpu_vram_gate_failed else "gate_effective",
+                )
+                if gpu_vram_gate_failed
+                else "gate_effective",
                 # Metric fields
                 "jepa_auc_final": jepa_auc_final,
                 "nup_probe_auc": float(e484.get("auc", 0.0)),
@@ -522,12 +547,8 @@ def main() -> None:
                 "prior_milestone_experiments": 317,
                 "prior_milestone_adoption_rate": 0.5,
                 # Summary for conductor handoff
-                "headline_closures": [
-                    k for k, v in retro_closures.items() if v
-                ],
-                "headline_still_open": [
-                    k for k, v in retro_closures.items() if not v
-                ],
+                "headline_closures": [k for k, v in retro_closures.items() if v],
+                "headline_still_open": [k for k, v in retro_closures.items() if not v],
                 "top_priority_for_37": (
                     "RETRO-044: Fix GPUVRAMGate to kill zombies + verify post-kill VRAM. "
                     "Until resolved, RETRO-033/038/039 cannot be attempted."

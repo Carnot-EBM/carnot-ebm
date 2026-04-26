@@ -81,9 +81,24 @@ class TestLoadFoverPairs:
         data = {
             "schema": "carnot.fover_labels.v1",
             "pairs": [
-                {"question_id": "q1", "step_text": "2 + 3 = 5", "label": "correct", "confidence": 1.0},
-                {"question_id": "q1", "step_text": "2 + 3 = 6", "label": "incorrect", "confidence": 1.0},
-                {"question_id": "q2", "step_text": "fuzzy", "label": "not_verifiable", "confidence": 0.0},
+                {
+                    "question_id": "q1",
+                    "step_text": "2 + 3 = 5",
+                    "label": "correct",
+                    "confidence": 1.0,
+                },
+                {
+                    "question_id": "q1",
+                    "step_text": "2 + 3 = 6",
+                    "label": "incorrect",
+                    "confidence": 1.0,
+                },
+                {
+                    "question_id": "q2",
+                    "step_text": "fuzzy",
+                    "label": "not_verifiable",
+                    "confidence": 0.0,
+                },
             ],
         }
         p = tmp_path / "fover.json"
@@ -194,10 +209,13 @@ class TestLoadFoverPairs:
 class TestFoverPairsToContrastive:
     """Tests for fover_pairs_to_contrastive(pairs) — SCENARIO-LEARN-058."""
 
-    def _make_pair(
-        self, question_id: str, label: str, step_text: str = "text"
-    ) -> dict:
-        return {"question_id": question_id, "step_text": step_text, "label": label, "confidence": 1.0}
+    def _make_pair(self, question_id: str, label: str, step_text: str = "text") -> dict:
+        return {
+            "question_id": question_id,
+            "step_text": step_text,
+            "label": label,
+            "confidence": 1.0,
+        }
 
     def test_basic_contrastive_pair(self) -> None:
         """Two steps on same question (correct + incorrect) produce one contrastive tuple."""
@@ -356,8 +374,11 @@ class TestEvaluateEormAuc:
 
         pairs = [
             ViolationPair(
-                partial_response="x", full_response="x",
-                has_violation=True, model_id="m", question_id="q1",
+                partial_response="x",
+                full_response="x",
+                has_violation=True,
+                model_id="m",
+                question_id="q1",
             )
         ]
         assert _mod._evaluate_eorm_auc(model, pairs) == pytest.approx(0.5)
@@ -416,7 +437,14 @@ class TestFoverPairsToViolationPairs:
 
     def test_step_text_used_for_both_fields(self) -> None:
         """step_text is used as both partial_response and full_response."""
-        fover = [{"question_id": "q1", "step_text": "step text here", "label": "correct", "confidence": 1.0}]
+        fover = [
+            {
+                "question_id": "q1",
+                "step_text": "step text here",
+                "label": "correct",
+                "confidence": 1.0,
+            }
+        ]
         vps = _mod._fover_pairs_to_violation_pairs(fover)
         assert vps[0].partial_response == "step text here"
         assert vps[0].full_response == "step text here"
@@ -455,6 +483,7 @@ class TestLoadOrBuildEormModel:
     def test_builds_fresh_when_no_saved_model(self, tmp_path: Path) -> None:
         """Returns a valid EORMModel when no saved model files exist."""
         from carnot.models.eorm import EORMModel
+
         model = _mod._load_or_build_eorm_model(tmp_path)
         assert isinstance(model, EORMModel)
 
@@ -495,9 +524,13 @@ class TestBuildEormTriples:
 
     def _vp(self, q: str, has_violation: bool, text: str = "text") -> Any:
         from carnot.embeddings.jepa_retrain import ViolationPair
+
         return ViolationPair(
-            partial_response=text, full_response=text,
-            has_violation=has_violation, model_id="m", question_id=q,
+            partial_response=text,
+            full_response=text,
+            has_violation=has_violation,
+            model_id="m",
+            question_id=q,
         )
 
     def test_basic_triple_formation(self) -> None:
@@ -556,24 +589,32 @@ class TestRunExperiment:
         # Build a FOVER file with 20 real pairs (10 correct + 10 incorrect, same question)
         pairs = []
         for i in range(10):
-            pairs.append({
-                "question_id": f"q{i}",
-                "step_text": f"correct step {i}: 1 + {i} = {1 + i}",
-                "label": "correct",
-                "confidence": 1.0,
-            })
-            pairs.append({
-                "question_id": f"q{i}",
-                "step_text": f"incorrect step {i}: 1 + {i} = {2 + i}",
-                "label": "incorrect",
-                "confidence": 1.0,
-            })
+            pairs.append(
+                {
+                    "question_id": f"q{i}",
+                    "step_text": f"correct step {i}: 1 + {i} = {1 + i}",
+                    "label": "correct",
+                    "confidence": 1.0,
+                }
+            )
+            pairs.append(
+                {
+                    "question_id": f"q{i}",
+                    "step_text": f"incorrect step {i}: 1 + {i} = {2 + i}",
+                    "label": "incorrect",
+                    "confidence": 1.0,
+                }
+            )
 
         fover_file = results_dir / "fover_labeled_steps.json"
-        fover_file.write_text(json.dumps({
-            "schema": "carnot.fover_labels.v1",
-            "pairs": pairs,
-        }))
+        fover_file.write_text(
+            json.dumps(
+                {
+                    "schema": "carnot.fover_labels.v1",
+                    "pairs": pairs,
+                }
+            )
+        )
 
         artifact = _mod.run_experiment(repo_root=tmp_path)
 
@@ -581,9 +622,7 @@ class TestRunExperiment:
         assert artifact["retrain_mode"] == "real_data"
         assert artifact["n_real_pairs"] == 20
         # honest_verdict is one of the three valid values
-        assert artifact["honest_verdict"] in (
-            "real_data_improvement", "real_data_no_improvement"
-        )
+        assert artifact["honest_verdict"] in ("real_data_improvement", "real_data_no_improvement")
         assert "retro_024_closed" in artifact
 
     def test_run_experiment_artifact_fields_complete(self, tmp_path: Path) -> None:
@@ -591,11 +630,23 @@ class TestRunExperiment:
         artifact = _mod.run_experiment(repo_root=tmp_path)
 
         required_fields = {
-            "schema", "retrain_mode", "n_real_pairs",
-            "before_auc", "after_auc", "auc_improvement", "honest_verdict",
-            "retro_024_closed", "eorm_model_path", "jepa_before_auc",
-            "jepa_after_auc", "jepa_model_path", "n_contrastive_triples",
-            "n_train_pairs", "n_test_pairs", "n_eorm_epochs", "status",
+            "schema",
+            "retrain_mode",
+            "n_real_pairs",
+            "before_auc",
+            "after_auc",
+            "auc_improvement",
+            "honest_verdict",
+            "retro_024_closed",
+            "eorm_model_path",
+            "jepa_before_auc",
+            "jepa_after_auc",
+            "jepa_model_path",
+            "n_contrastive_triples",
+            "n_train_pairs",
+            "n_test_pairs",
+            "n_eorm_epochs",
+            "status",
         }
         for field in required_fields:
             assert field in artifact, f"missing required field: {field}"

@@ -221,6 +221,7 @@ def rank_experiments_by_duration(artifacts: dict[int, dict[str, Any]]) -> list[d
     Timed-out experiments use elapsed_minutes * 60 as their effective duration so
     they rank correctly even when duration_s was not updated by the watchdog.
     """
+
     def dur(item: tuple[int, dict]) -> float:
         exp_id, art = item
         if art.get("timed_out"):
@@ -356,24 +357,26 @@ def classify_retros(artifacts: dict[int, dict[str, Any]]) -> dict[str, list[Any]
     # RETRO-GGUF-CACHE-IMPORT: Exp 811 blocked on missing carnot.pipeline.gguf_cache module
     if artifacts[811].get("honest_verdict") == "blocked_model_load_failed":
         blocked_reason = artifacts[811].get("blocked_reason", "")
-        retros_opened.append({
-            "id": "RETRO-GGUF-CACHE-IMPORT",
-            "reason": (
-                f"Exp 811 blocked: '{blocked_reason}'. "
-                "RETRO-028 closure (Exp 810) was supposed to ungate SOTA GGUF code repair, "
-                "but a Python import error surfaces as the new gate: the module "
-                "'carnot.pipeline.gguf_cache' does not exist. "
-                "This is a missing module, not a model-load or VRAM issue. "
-                "The block chain has shifted from OOM → ImportError."
-            ),
-            "resolution_path": (
-                "Create carnot/pipeline/gguf_cache.py with the GGUFCacheResolver class "
-                "that Exp 811 expects. The module should locate GGUF checkpoints from the "
-                "HuggingFace cache directory (default: ~/.cache/huggingface/hub). "
-                "Estimated implementation: 1-2 hours. Once created, SOTA code repair "
-                "(Exp 811-class) is immediately unblocked."
-            ),
-        })
+        retros_opened.append(
+            {
+                "id": "RETRO-GGUF-CACHE-IMPORT",
+                "reason": (
+                    f"Exp 811 blocked: '{blocked_reason}'. "
+                    "RETRO-028 closure (Exp 810) was supposed to ungate SOTA GGUF code repair, "
+                    "but a Python import error surfaces as the new gate: the module "
+                    "'carnot.pipeline.gguf_cache' does not exist. "
+                    "This is a missing module, not a model-load or VRAM issue. "
+                    "The block chain has shifted from OOM → ImportError."
+                ),
+                "resolution_path": (
+                    "Create carnot/pipeline/gguf_cache.py with the GGUFCacheResolver class "
+                    "that Exp 811 expects. The module should locate GGUF checkpoints from the "
+                    "HuggingFace cache directory (default: ~/.cache/huggingface/hub). "
+                    "Estimated implementation: 1-2 hours. Once created, SOTA code repair "
+                    "(Exp 811-class) is immediately unblocked."
+                ),
+            }
+        )
 
     # RETRO-ISING-INJECTION-NO-DISCRIMINATION: Exp 812 energy delta identical for error and clean
     mean_delta_errors = artifacts[812].get("mean_energy_delta_pct_errors")
@@ -384,47 +387,51 @@ def classify_retros(artifacts: dict[int, dict[str, Any]]) -> dict[str, list[Any]
         and abs(mean_delta_errors - mean_delta_clean) < 0.01
         and artifacts[812].get("honest_verdict") != "injection_works"
     ):
-        retros_opened.append({
-            "id": "RETRO-ISING-INJECTION-NO-DISCRIMINATION",
-            "reason": (
-                f"Exp 812 mean_energy_delta_pct_errors={mean_delta_errors:.4f}, "
-                f"mean_energy_delta_pct_clean={mean_delta_clean:.4f} — essentially identical. "
-                "The IsingEBM coupling matrix injection lowered energy equally for BOTH "
-                "error and clean responses. A useful constraint injector must raise energy "
-                "for constraint-violating (error) responses relative to constraint-satisfying "
-                "(clean) responses. The sign/magnitude of the soft penalty is inverted or absent."
-            ),
-            "resolution_path": (
-                "In IsingConstraintInjector, invert the penalty sign for error detection: "
-                "constraint embeddings should ADD positive energy to responses that violate "
-                "the stored constraint pattern, not uniformly decrease energy for all responses. "
-                "The coupling matrix delta should have opposite sign for the error projection "
-                "vs. the clean projection. Validate that error_energy > clean_energy after injection."
-            ),
-        })
+        retros_opened.append(
+            {
+                "id": "RETRO-ISING-INJECTION-NO-DISCRIMINATION",
+                "reason": (
+                    f"Exp 812 mean_energy_delta_pct_errors={mean_delta_errors:.4f}, "
+                    f"mean_energy_delta_pct_clean={mean_delta_clean:.4f} — essentially identical. "
+                    "The IsingEBM coupling matrix injection lowered energy equally for BOTH "
+                    "error and clean responses. A useful constraint injector must raise energy "
+                    "for constraint-violating (error) responses relative to constraint-satisfying "
+                    "(clean) responses. The sign/magnitude of the soft penalty is inverted or absent."
+                ),
+                "resolution_path": (
+                    "In IsingConstraintInjector, invert the penalty sign for error detection: "
+                    "constraint embeddings should ADD positive energy to responses that violate "
+                    "the stored constraint pattern, not uniformly decrease energy for all responses. "
+                    "The coupling matrix delta should have opposite sign for the error projection "
+                    "vs. the clean projection. Validate that error_energy > clean_energy after injection."
+                ),
+            }
+        )
 
     # RETRO-ARBITER-FLAT-ENERGY: Exp 817 all energies 0.0, arbiter accuracy only 33%
     arbiter_verdict = artifacts[817].get("honest_verdict", "")
     arbiter_accuracy = artifacts[817].get("arbiter_accuracy") or 0.0
     if arbiter_verdict == "arbiter_incorrect" and arbiter_accuracy < 0.5:
-        retros_opened.append({
-            "id": "RETRO-ARBITER-FLAT-ENERGY",
-            "reason": (
-                f"Exp 817 arbiter_accuracy={arbiter_accuracy:.4f} (2/6 correct). "
-                "Inspection of all_scores shows energy=0.0 for every response in every scenario. "
-                "When all energies are identical, the arbiter defaults to list-order selection "
-                "(first response always wins). This is equivalent to random-first, not EBM ranking. "
-                "The Multi-Agent Arbiter MCP tool is wired but the EBM scorer returns flat energy."
-            ),
-            "resolution_path": (
-                "Implement a real EBM scoring function in the Multi-Agent Arbiter: "
-                "use IsingEBM or the Boltzmann model to assign non-trivial energy scores "
-                "based on response embedding similarity to known-correct constraint patterns. "
-                "The score_agent_outputs MCP tool must produce differentiated energy values "
-                "before arbiter selection has any signal. Validate on arithmetic tasks where "
-                "the correct answer has measurably lower energy than incorrect alternatives."
-            ),
-        })
+        retros_opened.append(
+            {
+                "id": "RETRO-ARBITER-FLAT-ENERGY",
+                "reason": (
+                    f"Exp 817 arbiter_accuracy={arbiter_accuracy:.4f} (2/6 correct). "
+                    "Inspection of all_scores shows energy=0.0 for every response in every scenario. "
+                    "When all energies are identical, the arbiter defaults to list-order selection "
+                    "(first response always wins). This is equivalent to random-first, not EBM ranking. "
+                    "The Multi-Agent Arbiter MCP tool is wired but the EBM scorer returns flat energy."
+                ),
+                "resolution_path": (
+                    "Implement a real EBM scoring function in the Multi-Agent Arbiter: "
+                    "use IsingEBM or the Boltzmann model to assign non-trivial energy scores "
+                    "based on response embedding similarity to known-correct constraint patterns. "
+                    "The score_agent_outputs MCP tool must produce differentiated energy values "
+                    "before arbiter selection has any signal. Validate on arithmetic tasks where "
+                    "the correct answer has measurably lower energy than incorrect alternatives."
+                ),
+            }
+        )
 
     return {
         "retros_closed": retros_closed,
@@ -444,7 +451,6 @@ _IMPROVEMENTS_63: list[str] = [
     "closed (Exp 810) — the gate has shifted from OOM to ImportError. "
     "Implement GGUFCacheResolver in 1-2 hours to immediately unblock the SOTA GGUF "
     "code repair pipeline (Exp 811-class, HumanEval 50-problem benchmark).",
-
     "CRITICAL — Fix IsingEBM injection polarity to discriminate error vs clean responses: "
     "Exp 812 shows mean_energy_delta_pct = -0.2884% for BOTH error AND clean responses. "
     "The coupling matrix injection is wired but non-discriminating. "
@@ -453,7 +459,6 @@ _IMPROVEMENTS_63: list[str] = [
     "Validate: after injection, error_energy > clean_energy for all 5 test pairs. "
     "Until this is fixed, Exp 813 (constraint addition live) and Exp 814 (FR-11 Tier 1) "
     "remain cascade-blocked.",
-
     "CRITICAL — Fix Multi-Agent Arbiter EBM scoring (all energies 0.0): "
     "Exp 817 arbiter_accuracy=33% because every response receives energy=0.0 — "
     "the arbiter picks the first response by default (list-order tiebreak). "
@@ -461,7 +466,6 @@ _IMPROVEMENTS_63: list[str] = [
     "use IsingEBM or Boltzmann embedding distance to the constraint store. "
     "A correct response should have measurably lower energy (more negative) "
     "than incorrect alternatives on arithmetic tasks.",
-
     "SHORT TERM — Push JEPA v22 RA-PRM ood_auc from 0.5 toward the 0.75 gate: "
     "Exp 809 RA-PRM improved ood_auc from 0.2 → 0.5 (+0.3 delta over Exp 808). "
     "Need +0.25 more to reach the gate. Options: "
@@ -469,13 +473,11 @@ _IMPROVEMENTS_63: list[str] = [
     "(2) Reduce rapbm_retrieved_weight from 0.4 to 0.2 to reduce soft-label noise, "
     "(3) Add a held-out validation set (held_out_auc=null in Exp 809 — never evaluated). "
     "The in-distribution AUC is 1.0 (overfitting signal); focus on OOD generalisation.",
-
     "SHORT TERM — Expand IsingEBM to N=64 for KV260 synthesis: "
     "Exp 816 completed N=32 synthesis cleanly at 3952 LUTs (synthesis_clean_n32). "
     "synthesis_n64_ok=null — N=64 was not attempted. The KV260 FPGA has capacity; "
     "N=64 doubles the representational power. Run N=64 synthesis as Exp 818-class "
     "follow-on to characterise LUT scaling before taping out.",
-
     "PROCESS — Gate SOTA code repair on carnot.pipeline.gguf_cache import check: "
     "Add an import guard at the top of all gguf-dependent scripts: "
     "'try: from carnot.pipeline import gguf_cache; except ImportError: sys.exit(blocked)'. "
@@ -485,7 +487,9 @@ _IMPROVEMENTS_63: list[str] = [
     "at the prerequisite check stage (MILESTONE_PREREQS.md pattern from Exp 806).",
 ]
 
-_ESTIMATED_TIME_SAVINGS_PCT = 30  # driven by injection polarity fix + gguf_cache (unblocks 2 chains)
+_ESTIMATED_TIME_SAVINGS_PCT = (
+    30  # driven by injection polarity fix + gguf_cache (unblocks 2 chains)
+)
 
 
 # ---------------------------------------------------------------------------
@@ -607,10 +611,7 @@ def run(deliverable: Path = _DELIVERABLE, results_dir: Path | None = None) -> di
         retros = classify_retros(artifacts)
         ranked = rank_experiments_by_duration(artifacts)
 
-        timeouts = [
-            r["exp_id"] for r in ranked
-            if artifacts[r["exp_id"]].get("timed_out")
-        ]
+        timeouts = [r["exp_id"] for r in ranked if artifacts[r["exp_id"]].get("timed_out")]
 
         retro = MilestoneRetro2026_04_62(
             milestone="2026.04.62",

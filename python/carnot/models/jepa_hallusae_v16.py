@@ -32,7 +32,6 @@ from __future__ import annotations
 from typing import Any
 
 import jax
-import jax.numpy as jnp
 import numpy as np
 
 from carnot.models.hallusal_sparse_ae import SparseAutoEncoder, extract_text_features
@@ -90,7 +89,9 @@ class JEPAHalluSAEv16:
         # MLP: SAE_DIM(512) → 128 → 64 → 1
         # He initialisation: scale = sqrt(2 / fan_in) keeps gradients well-conditioned
         # through ReLU activations at the start of training.
-        self._W1 = rng.standard_normal((self.SAE_DIM, 128)).astype(np.float32) * np.sqrt(2.0 / self.SAE_DIM)
+        self._W1 = rng.standard_normal((self.SAE_DIM, 128)).astype(np.float32) * np.sqrt(
+            2.0 / self.SAE_DIM
+        )
         self._b1 = np.zeros(128, dtype=np.float32)
         self._W2 = rng.standard_normal((128, 64)).astype(np.float32) * np.sqrt(2.0 / 128)
         self._b2 = np.zeros(64, dtype=np.float32)
@@ -197,8 +198,8 @@ class JEPAHalluSAEv16:
             Y_shuf = Y[perm]
 
             h1 = self._relu(X_shuf @ self._W1 + self._b1)  # (N, 128)
-            h2 = self._relu(h1 @ self._W2 + self._b2)       # (N, 64)
-            logits = h2 @ self._W3 + self._b3               # (N, 1)
+            h2 = self._relu(h1 @ self._W2 + self._b2)  # (N, 64)
+            logits = h2 @ self._W3 + self._b3  # (N, 1)
             preds = self._sigmoid(logits)
 
             eps = 1e-7
@@ -258,9 +259,12 @@ class JEPAHalluSAEv16:
         """
         np.savez(
             path,
-            W1=self._W1, b1=self._b1,
-            W2=self._W2, b2=self._b2,
-            W3=self._W3, b3=self._b3,
+            W1=self._W1,
+            b1=self._b1,
+            W2=self._W2,
+            b2=self._b2,
+            W3=self._W3,
+            b3=self._b3,
         )
 
     def load(self, path: str) -> None:

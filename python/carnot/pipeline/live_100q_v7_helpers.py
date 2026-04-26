@@ -31,9 +31,12 @@ import math
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any
 
 from carnot.pipeline.jit_vram_check import JITVRAMCheck  # noqa: F401 — module-level for mockability
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 _log = logging.getLogger(__name__)
 
@@ -50,7 +53,7 @@ __all__ = [
 # ---------------------------------------------------------------------------
 
 
-def wilson_ci(n_correct: int, n: int, z: float = 1.96) -> Tuple[float, float]:
+def wilson_ci(n_correct: int, n: int, z: float = 1.96) -> tuple[float, float]:
     """Compute Wilson score 95% confidence interval for a proportion.
 
     Wilson CI is preferred over the naive Wald interval because it remains
@@ -134,7 +137,7 @@ class PrecisionBenchmarkResult:
     wilson_95ci_upper: float
     signed_improvement: float
     is_positive: bool
-    cot_pairs: List[dict]
+    cot_pairs: list[dict]
 
     def to_dict(self) -> dict:
         """Return a JSON-serializable summary (excludes cot_pairs list for brevity)."""
@@ -162,7 +165,7 @@ def load_jit_gated_model(
     model_id: str,
     required_gb: float,
     device: int,
-) -> Optional[Any]:
+) -> Any | None:
     """Gate a model load through JITVRAMCheck and return the loaded model or None.
 
     This is the RETRO-051 fix applied per-model-load.  Planning-time VRAM
@@ -203,14 +206,20 @@ def load_jit_gated_model(
         _log.warning(
             "load_jit_gated_model: JIT gate BLOCKED model=%r device=%d "
             "available=%.2f GB required=%.2f GB — load aborted",
-            model_id, device, gate_result.available_gb, required_gb,
+            model_id,
+            device,
+            gate_result.available_gb,
+            required_gb,
         )
         return None
 
     _log.info(
         "load_jit_gated_model: JIT gate CLEARED model=%r device=%d "
         "available=%.2f GB required=%.2f GB — proceeding with load",
-        model_id, device, gate_result.available_gb, required_gb,
+        model_id,
+        device,
+        gate_result.available_gb,
+        required_gb,
     )
     loader = loader_factory()
     loader.load()
@@ -224,7 +233,7 @@ def load_jit_gated_model(
 _NUMBER_RE = re.compile(r"-?\d+(?:,\d{3})*(?:\.\d+)?")
 
 
-def _extract_answer(text: str) -> Optional[str]:
+def _extract_answer(text: str) -> str | None:
     """Extract the numeric final answer from a GSM8K-style response.
 
     Looks for the official '#### N' GSM8K delimiter first, then falls back to
@@ -263,7 +272,7 @@ def _extract_answer(text: str) -> Optional[str]:
         return last
 
 
-def _is_correct(response: str, gold: Optional[str]) -> bool:
+def _is_correct(response: str, gold: str | None) -> bool:
     """True when the extracted response answer matches the gold answer.
 
     Uses 0.501 tolerance to handle floating-point rounding in answers like
@@ -295,7 +304,7 @@ def _is_correct(response: str, gold: Optional[str]) -> bool:
 def run_100q_benchmark(
     inference_fn: Callable[[str], str],
     model_id: str,
-    questions: List[dict],
+    questions: list[dict],
     extractor: Any,
 ) -> PrecisionBenchmarkResult:
     """Run baseline + pipeline benchmark for one model on a question list.
@@ -342,12 +351,15 @@ def run_100q_benchmark(
     baseline_accuracy = baseline_correct / max(n, 1)
     _log.info(
         "run_100q_benchmark [%s] BASELINE: %d/%d = %.4f",
-        model_id, baseline_correct, n, baseline_accuracy,
+        model_id,
+        baseline_correct,
+        n,
+        baseline_accuracy,
     )
 
     # Pass 2: Pipeline — VeriCoT+VPRM with repair on violations
     pipeline_correct = 0
-    cot_pairs: List[dict] = []
+    cot_pairs: list[dict] = []
 
     for q in questions:
         response = inference_fn(q["question"])
@@ -366,12 +378,14 @@ def run_100q_benchmark(
         if correct:
             pipeline_correct += 1
 
-        cot_pairs.append({
-            "question": q["question"],
-            "cot_text": response,
-            "correct": correct,
-            "model_id": model_id,
-        })
+        cot_pairs.append(
+            {
+                "question": q["question"],
+                "cot_text": response,
+                "correct": correct,
+                "model_id": model_id,
+            }
+        )
 
     pipeline_accuracy = pipeline_correct / max(n, 1)
     signed_improvement = pipeline_accuracy - baseline_accuracy
@@ -379,8 +393,13 @@ def run_100q_benchmark(
 
     _log.info(
         "run_100q_benchmark [%s] PIPELINE: %d/%d = %.4f delta=%.4f CI=[%.4f, %.4f]",
-        model_id, pipeline_correct, n, pipeline_accuracy,
-        signed_improvement, ci_lower, ci_upper,
+        model_id,
+        pipeline_correct,
+        n,
+        pipeline_accuracy,
+        signed_improvement,
+        ci_lower,
+        ci_upper,
     )
 
     return PrecisionBenchmarkResult(
@@ -404,7 +423,7 @@ def run_100q_benchmark(
 
 
 def write_cot_pairs(
-    cot_pairs: List[dict],
+    cot_pairs: list[dict],
     path: str,
 ) -> int:
     """Write FOVER-format CoT pairs atomically to disk.

@@ -99,10 +99,7 @@ class TestParseSessionStartupOutput:
     def test_summary_embedded_in_longer_output(self) -> None:
         """SCENARIO-INFRA-012: parser tolerates surrounding noise lines."""
         output = (
-            "Checking nvidia-smi...\n"
-            "Found 2 GPUs\n"
-            + _summary_line(2, 0, 0, True)
-            + "\nDone.\n"
+            "Checking nvidia-smi...\nFound 2 GPUs\n" + _summary_line(2, 0, 0, True) + "\nDone.\n"
         )
         result = parse_session_startup_output(output)
         assert result["n_gpus_detected"] == 2
@@ -319,17 +316,15 @@ class TestAllHealthyRule:
     @pytest.mark.parametrize(
         "n_gpus,zombies,expected",
         [
-            (2, 0, True),   # exactly 2 GPUs, no zombies → healthy
-            (3, 0, True),   # more than 2 GPUs, no zombies → healthy
+            (2, 0, True),  # exactly 2 GPUs, no zombies → healthy
+            (3, 0, True),  # more than 2 GPUs, no zombies → healthy
             (1, 0, False),  # only 1 GPU → unhealthy
             (0, 0, False),  # no GPUs → unhealthy
             (2, 1, False),  # 2 GPUs but zombie → unhealthy
             (2, 2, False),  # 2 GPUs but 2 zombies → unhealthy
         ],
     )
-    def test_all_healthy_combinations(
-        self, n_gpus: int, zombies: int, expected: bool
-    ) -> None:
+    def test_all_healthy_combinations(self, n_gpus: int, zombies: int, expected: bool) -> None:
         """Parametrized: all_healthy follows the n_gpus>=2 AND zombies==0 rule."""
         output = _summary_line(n_gpus, zombies, 0, expected)
         result = parse_session_startup_output(output)

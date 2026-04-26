@@ -103,7 +103,9 @@ class TestSparsifiedIsingConfig:
         """SCENARIO-HARDWARE-013: same seed produces identical coupling matrix."""
         cfg1 = SparsifiedIsingConfig(n_spins=16, sparsity=0.5, seed=42)
         cfg2 = SparsifiedIsingConfig(n_spins=16, sparsity=0.5, seed=42)
-        np.testing.assert_array_equal(np.array(cfg1.coupling_matrix()), np.array(cfg2.coupling_matrix()))
+        np.testing.assert_array_equal(
+            np.array(cfg1.coupling_matrix()), np.array(cfg2.coupling_matrix())
+        )
 
     def test_different_seeds_differ(self) -> None:
         """SCENARIO-HARDWARE-013: different seeds produce different coupling matrices."""
@@ -216,10 +218,15 @@ class TestUpdateCouplings:
         os.environ["CARNOT_KV260_COUPLING_CACHE"] = str(cache_path)
         try:
             backend = FpgaBackend(simulation_mode=True)
-            J_in = np.array([[0.0, 0.5, -0.3, 0.0],
-                              [0.5, 0.0, 0.1,  0.0],
-                              [-0.3, 0.1, 0.0, 0.2],
-                              [0.0, 0.0, 0.2,  0.0]], dtype=np.float32)
+            J_in = np.array(
+                [
+                    [0.0, 0.5, -0.3, 0.0],
+                    [0.5, 0.0, 0.1, 0.0],
+                    [-0.3, 0.1, 0.0, 0.2],
+                    [0.0, 0.0, 0.2, 0.0],
+                ],
+                dtype=np.float32,
+            )
             backend.update_couplings(jnp.array(J_in))
             J_out = np.load(str(cache_path))
             np.testing.assert_allclose(J_out, J_in, atol=1e-6)
@@ -229,7 +236,9 @@ class TestUpdateCouplings:
             else:
                 os.environ["CARNOT_KV260_COUPLING_CACHE"] = old_env
 
-    def test_update_couplings_uses_atomic_rename(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_update_couplings_uses_atomic_rename(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """SCENARIO-HARDWARE-015: update_couplings uses os.rename (atomic write contract)."""
         cache_path = tmp_path / "coupling_atomic.npy"
         old_env = os.environ.get("CARNOT_KV260_COUPLING_CACHE")
@@ -295,5 +304,6 @@ class TestHardwareExports:
         """SCENARIO-HARDWARE-013: FpgaBackend and SparsifiedIsingConfig importable from carnot.hardware."""
         from carnot.hardware import FpgaBackend as FB
         from carnot.hardware import SparsifiedIsingConfig as SIC
+
         assert FB is FpgaBackend
         assert SIC is SparsifiedIsingConfig

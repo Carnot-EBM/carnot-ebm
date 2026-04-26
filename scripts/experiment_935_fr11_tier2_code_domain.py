@@ -86,6 +86,7 @@ REPLAY_PROBLEMS = [f"HumanEval/{i}" for i in range(25, 35)]
 # Code repair pattern templates
 # ---------------------------------------------------------------------------
 
+
 def _make_code_repair_template(error_type: str, retry_strategy: str) -> ConstraintTemplate:
     """Build a ConstraintTemplate for a code-domain repair pattern.
 
@@ -106,14 +107,13 @@ def _make_code_repair_template(error_type: str, retry_strategy: str) -> Constrai
         A ConstraintTemplate that, when called on any response string, emits one
         ConstraintResult describing the repair hint.
     """
+
     def template_fn(response: str) -> list[ConstraintResult]:  # noqa: ARG001
         # Always emit the hint — the pipeline decides whether to act on it.
         return [
             ConstraintResult(
                 constraint_type=f"code_repair_{error_type}",
-                description=(
-                    f"code repair hint ({error_type}): {retry_strategy}"
-                ),
+                description=(f"code repair hint ({error_type}): {retry_strategy}"),
                 metadata={
                     "error_type": error_type,
                     "retry_strategy": retry_strategy,
@@ -121,6 +121,7 @@ def _make_code_repair_template(error_type: str, retry_strategy: str) -> Constrai
                 },
             )
         ]
+
     return ConstraintTemplate(
         pattern_key=f"code_repair_{error_type}",
         description=f"Code repair pattern for '{error_type}': {retry_strategy}",
@@ -132,6 +133,7 @@ def _make_code_repair_template(error_type: str, retry_strategy: str) -> Constrai
 # ---------------------------------------------------------------------------
 # Error pattern extraction from Exp 905
 # ---------------------------------------------------------------------------
+
 
 def _categorise_by_retries(n_retries: int) -> str:
     """Map the number of retries needed into a coarse error-category label.
@@ -211,19 +213,22 @@ def load_exp905_patterns(source_path: Path) -> list[dict]:
     for result in data.get("results_per_problem", []):
         if not result["baseline_passed"] and result["repair_passed"]:
             category = _categorise_by_retries(result["n_retries"])
-            patterns.append({
-                "task_id": result["task_id"],
-                "n_retries": result["n_retries"],
-                "energy_score_best": result["energy_score_best"],
-                "error_category": category,
-                "retry_strategy": _retry_strategy_for_category(category),
-            })
+            patterns.append(
+                {
+                    "task_id": result["task_id"],
+                    "n_retries": result["n_retries"],
+                    "energy_score_best": result["energy_score_best"],
+                    "error_category": category,
+                    "retry_strategy": _retry_strategy_for_category(category),
+                }
+            )
     return patterns
 
 
 # ---------------------------------------------------------------------------
 # Session 1: populate the library from Exp 905 patterns
 # ---------------------------------------------------------------------------
+
 
 def session1_populate_library(patterns: list[dict]) -> tuple[ConstraintTemplateLibrary, int]:
     """Session 1: build a ConstraintTemplateLibrary from Exp 905 error patterns.
@@ -263,6 +268,7 @@ def session1_populate_library(patterns: list[dict]) -> tuple[ConstraintTemplateL
 # ---------------------------------------------------------------------------
 # Session 2: replay templates on new problems
 # ---------------------------------------------------------------------------
+
 
 def session2_replay_templates(
     library_dict: dict,
@@ -314,12 +320,14 @@ def session2_replay_templates(
         matched = len(constraints) > 0
         if matched:
             n_matched += 1
-        problem_results.append({
-            "task_id": task_id,
-            "template_matched": matched,
-            "n_constraints_emitted": len(constraints),
-            "constraint_types": [c.constraint_type for c in constraints],
-        })
+        problem_results.append(
+            {
+                "task_id": task_id,
+                "template_matched": matched,
+                "n_constraints_emitted": len(constraints),
+                "constraint_types": [c.constraint_type for c in constraints],
+            }
+        )
 
     n_problems = len(replay_problem_ids)
     template_match_rate = n_matched / n_problems if n_problems > 0 else 0.0
@@ -339,6 +347,7 @@ def session2_replay_templates(
 # ---------------------------------------------------------------------------
 # Main experiment
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Exp 935: Tier 2 Code Domain Memory accumulation and cross-session replay."""
@@ -397,7 +406,9 @@ def main() -> None:
         obs_before = len(library_dict.get("observations", []))
         obs_after = len(reloaded_dict.get("observations", []))
         persistence_ok = obs_before == obs_after and obs_after > 0
-        print(f"[Phase 3] Observations before/after persist: {obs_before}/{obs_after}  ok={persistence_ok}")
+        print(
+            f"[Phase 3] Observations before/after persist: {obs_before}/{obs_after}  ok={persistence_ok}"
+        )
 
     # ------------------------------------------------------------------
     # Phase 4: Session 2 — replay templates on new problems

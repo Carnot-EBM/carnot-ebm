@@ -41,14 +41,17 @@ Spec: REQ-VERIFY-116, SCENARIO-VERIFY-134, SCENARIO-VERIFY-135,
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Callable
+from typing import TYPE_CHECKING
 
 from carnot.models.eorm import CoTEnergyInput, EORMModel
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Result dataclass
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class LatentCoTCalibrationResult:
@@ -85,6 +88,7 @@ class LatentCoTCalibrationResult:
 # ---------------------------------------------------------------------------
 # Calibrator
 # ---------------------------------------------------------------------------
+
 
 class LatentCoTEBMCalibrator:
     """Applies per-step EORM energy gating during LLM chain-of-thought generation.
@@ -216,7 +220,7 @@ class LatentCoTEBMCalibrator:
             n_steps=n_steps,
             per_step_energy=all_energies,
             mean_energy=mean_energy,
-            violation_rate_before=0.0,   # filled in by compare_violation_rate
+            violation_rate_before=0.0,  # filled in by compare_violation_rate
             violation_rate_after=0.0,
             temperature_adjustments=all_adjustments,
         )
@@ -262,9 +266,7 @@ class LatentCoTEBMCalibrator:
         def _rate(responses: list[str]) -> float:
             if not responses:
                 return 0.0
-            n_violated = sum(
-                1 for r in responses if verifier.detect_violations(r)
-            )
+            n_violated = sum(1 for r in responses if verifier.detect_violations(r))
             return n_violated / len(responses)
 
         baseline_rate = _rate(baseline_responses)

@@ -54,6 +54,7 @@ sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 # Imports
 # ---------------------------------------------------------------------------
 from scripts.experiment_template import ExperimentTemplate  # noqa: E402
+import contextlib
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -73,58 +74,60 @@ N_TOTAL = N_GSM8K + N_HUMANEVAL
 # to keep the script self-contained and avoid network dependencies.
 _GSM8K_PROBLEMS: list[dict[str, Any]] = [
     {"id": f"gsm8k_{i}", "question": q, "answer": a}
-    for i, (q, a) in enumerate([
-        ("Janet has 3 apples and buys 5 more. How many does she have?", "8"),
-        ("A car travels at 60 mph for 2 hours. How many miles?", "120"),
-        ("If 4 shirts cost $48, how much does 1 shirt cost?", "$12"),
-        ("Tom has 7 cats. He gives away 3. How many remain?", "4"),
-        ("A rectangle is 6 cm by 4 cm. What is the area?", "24"),
-        ("There are 5 rows of 8 chairs. How many chairs total?", "40"),
-        ("Sara read 15 pages Monday and 22 Tuesday. Total pages?", "37"),
-        ("A dozen eggs costs $3. How much for 3 dozen?", "$9"),
-        ("A tank holds 120 litres. It is 3/4 full. How many litres?", "90"),
-        ("John is 12. His father is 3 times his age. Father's age?", "36"),
-        ("A train leaves at 9am and arrives at 1pm. Journey hours?", "4"),
-        ("A pizza has 8 slices. 3 are eaten. Slices left?", "5"),
-        ("15% of 200 is what number?", "30"),
-        ("A square has side 7 cm. What is the perimeter?", "28"),
-        ("60 students, 40% are girls. How many girls?", "24"),
-        ("A shop sells 50 items per day. Items in 7 days?", "350"),
-        ("Two numbers sum to 20 and one is 8. Other number?", "12"),
-        ("A bag weighs 2.5 kg. 4 bags weigh how much?", "10"),
-        ("If you earn $15/hr for 8 hrs, total pay?", "$120"),
-        ("A box has 24 chocolates split among 6 kids equally. Each gets?", "4"),
-        ("Temperature drops from 72°F to 59°F. Drop in degrees?", "13"),
-        ("A recipe uses 2 cups of flour for 12 cookies. For 36 cookies?", "6"),
-        ("A pool is 25m long. 8 laps = how many metres?", "200"),
-        ("There are 100 seats; 63 are taken. Seats available?", "37"),
-        ("5 friends share $75 equally. Each gets?", "$15"),
-        ("A book has 320 pages. You read 80. Pages left?", "240"),
-        ("3 + 4 × 2 = ?", "11"),
-        ("A triangle has angles 45° and 60°. Third angle?", "75"),
-        ("$200 saved, spend $35.50. Amount left?", "$164.50"),
-        ("A car travels 300 km on 30 L. Km per litre?", "10"),
-        ("6 workers build 1 wall in 10 days. 1 worker takes how many days?", "60"),
-        ("25 × 4 = ?", "100"),
-        ("Largest prime less than 20?", "19"),
-        ("A cube has side 3 cm. Volume?", "27"),
-        ("Perimeter of a rectangle 9m by 5m?", "28"),
-        ("Discount 20% off $50. Final price?", "$40"),
-        ("LCM of 4 and 6?", "12"),
-        ("GCD of 12 and 18?", "6"),
-        ("A cistern fills in 6 hours. Fraction filled in 2 hours?", "1/3"),
-        ("Distance = speed × time. Speed=50, time=3. Distance?", "150"),
-        ("Average of 4, 8, 12, 16?", "10"),
-        ("Angle in semicircle subtended at circumference?", "90"),
-        ("Simple interest: P=1000, R=5%, T=2 years?", "$100"),
-        ("Perimeter of equilateral triangle with side 9?", "27"),
-        ("2^8 = ?", "256"),
-        ("3 apples + 2 oranges = 5 fruits. 10 fruits if ratio same: apples?", "6"),
-        ("A store has 5 red, 3 blue, 2 green balls. P(red)?", "0.5"),
-        ("If 2x = 14, x = ?", "7"),
-        ("Sum of first 10 natural numbers?", "55"),
-        ("Area of circle radius 7 (use π=22/7)?", "154"),
-    ])
+    for i, (q, a) in enumerate(
+        [
+            ("Janet has 3 apples and buys 5 more. How many does she have?", "8"),
+            ("A car travels at 60 mph for 2 hours. How many miles?", "120"),
+            ("If 4 shirts cost $48, how much does 1 shirt cost?", "$12"),
+            ("Tom has 7 cats. He gives away 3. How many remain?", "4"),
+            ("A rectangle is 6 cm by 4 cm. What is the area?", "24"),
+            ("There are 5 rows of 8 chairs. How many chairs total?", "40"),
+            ("Sara read 15 pages Monday and 22 Tuesday. Total pages?", "37"),
+            ("A dozen eggs costs $3. How much for 3 dozen?", "$9"),
+            ("A tank holds 120 litres. It is 3/4 full. How many litres?", "90"),
+            ("John is 12. His father is 3 times his age. Father's age?", "36"),
+            ("A train leaves at 9am and arrives at 1pm. Journey hours?", "4"),
+            ("A pizza has 8 slices. 3 are eaten. Slices left?", "5"),
+            ("15% of 200 is what number?", "30"),
+            ("A square has side 7 cm. What is the perimeter?", "28"),
+            ("60 students, 40% are girls. How many girls?", "24"),
+            ("A shop sells 50 items per day. Items in 7 days?", "350"),
+            ("Two numbers sum to 20 and one is 8. Other number?", "12"),
+            ("A bag weighs 2.5 kg. 4 bags weigh how much?", "10"),
+            ("If you earn $15/hr for 8 hrs, total pay?", "$120"),
+            ("A box has 24 chocolates split among 6 kids equally. Each gets?", "4"),
+            ("Temperature drops from 72°F to 59°F. Drop in degrees?", "13"),
+            ("A recipe uses 2 cups of flour for 12 cookies. For 36 cookies?", "6"),
+            ("A pool is 25m long. 8 laps = how many metres?", "200"),
+            ("There are 100 seats; 63 are taken. Seats available?", "37"),
+            ("5 friends share $75 equally. Each gets?", "$15"),
+            ("A book has 320 pages. You read 80. Pages left?", "240"),
+            ("3 + 4 × 2 = ?", "11"),
+            ("A triangle has angles 45° and 60°. Third angle?", "75"),
+            ("$200 saved, spend $35.50. Amount left?", "$164.50"),
+            ("A car travels 300 km on 30 L. Km per litre?", "10"),
+            ("6 workers build 1 wall in 10 days. 1 worker takes how many days?", "60"),
+            ("25 × 4 = ?", "100"),
+            ("Largest prime less than 20?", "19"),
+            ("A cube has side 3 cm. Volume?", "27"),
+            ("Perimeter of a rectangle 9m by 5m?", "28"),
+            ("Discount 20% off $50. Final price?", "$40"),
+            ("LCM of 4 and 6?", "12"),
+            ("GCD of 12 and 18?", "6"),
+            ("A cistern fills in 6 hours. Fraction filled in 2 hours?", "1/3"),
+            ("Distance = speed × time. Speed=50, time=3. Distance?", "150"),
+            ("Average of 4, 8, 12, 16?", "10"),
+            ("Angle in semicircle subtended at circumference?", "90"),
+            ("Simple interest: P=1000, R=5%, T=2 years?", "$100"),
+            ("Perimeter of equilateral triangle with side 9?", "27"),
+            ("2^8 = ?", "256"),
+            ("3 apples + 2 oranges = 5 fruits. 10 fruits if ratio same: apples?", "6"),
+            ("A store has 5 red, 3 blue, 2 green balls. P(red)?", "0.5"),
+            ("If 2x = 14, x = ?", "7"),
+            ("Sum of first 10 natural numbers?", "55"),
+            ("Area of circle radius 7 (use π=22/7)?", "154"),
+        ]
+    )
 ]
 
 # Small representative HumanEval-style coding problems.
@@ -133,66 +136,116 @@ _HUMANEVAL_PROBLEMS: list[dict[str, Any]] = [
     {
         "id": f"humaneval_{i}",
         "question": q,
-        "answer": a,   # reference solution (for accuracy scoring)
+        "answer": a,  # reference solution (for accuracy scoring)
     }
-    for i, (q, a) in enumerate([
-        ("Write a Python function `add(a, b)` that returns the sum of two numbers.",
-         "def add(a, b): return a + b"),
-        ("Write `is_even(n)` returning True if n is even.",
-         "def is_even(n): return n % 2 == 0"),
-        ("Write `factorial(n)` (n>=0) using recursion.",
-         "def factorial(n): return 1 if n == 0 else n * factorial(n-1)"),
-        ("Write `reverse_string(s)` that reverses s.",
-         "def reverse_string(s): return s[::-1]"),
-        ("Write `max_list(lst)` returning the largest element.",
-         "def max_list(lst): return max(lst)"),
-        ("Write `count_vowels(s)` counting lowercase vowels in s.",
-         "def count_vowels(s): return sum(1 for c in s if c in 'aeiou')"),
-        ("Write `is_palindrome(s)` returning True if s is a palindrome.",
-         "def is_palindrome(s): return s == s[::-1]"),
-        ("Write `sum_list(lst)` returning the sum of all elements.",
-         "def sum_list(lst): return sum(lst)"),
-        ("Write `flatten(lst)` that flattens one level of nesting.",
-         "def flatten(lst): return [x for sub in lst for x in sub]"),
-        ("Write `fizzbuzz(n)` returning 'Fizz','Buzz','FizzBuzz' or str(n).",
-         "def fizzbuzz(n): return 'FizzBuzz' if n%15==0 else 'Fizz' if n%3==0 else 'Buzz' if n%5==0 else str(n)"),
-        ("Write `gcd(a,b)` using Euclid's algorithm.",
-         "def gcd(a,b): return a if b==0 else gcd(b,a%b)"),
-        ("Write `power(base, exp)` without using ** operator.",
-         "def power(base, exp): r=1\n  for _ in range(exp): r*=base\n  return r"),
-        ("Write `unique(lst)` removing duplicates preserving order.",
-         "def unique(lst): seen=set(); return [x for x in lst if not (x in seen or seen.add(x))]"),
-        ("Write `is_prime(n)` for n>=2.",
-         "def is_prime(n): return all(n%i!=0 for i in range(2,int(n**0.5)+1))"),
-        ("Write `celsius_to_fahrenheit(c)` converting temperature.",
-         "def celsius_to_fahrenheit(c): return c*9/5+32"),
-        ("Write `word_count(s)` returning a dict of word frequencies.",
-         "def word_count(s): d={}\n  for w in s.split(): d[w]=d.get(w,0)+1\n  return d"),
-        ("Write `rotate_list(lst, k)` rotating lst left by k positions.",
-         "def rotate_list(lst, k): k%=len(lst); return lst[k:]+lst[:k]"),
-        ("Write `binary_search(lst, target)` returning index or -1.",
-         "def binary_search(lst, t): l,r=0,len(lst)-1\n  while l<=r:\n    m=(l+r)//2\n    if lst[m]==t: return m\n    elif lst[m]<t: l=m+1\n    else: r=m-1\n  return -1"),
-        ("Write `merge_sorted(a, b)` merging two sorted lists.",
-         "def merge_sorted(a,b): r,i,j=[],0,0\n  while i<len(a) and j<len(b):\n    if a[i]<=b[j]: r.append(a[i]);i+=1\n    else: r.append(b[j]);j+=1\n  return r+a[i:]+b[j:]"),
-        ("Write `matrix_transpose(m)` transposing a 2D list.",
-         "def matrix_transpose(m): return list(map(list,zip(*m)))"),
-        ("Write `anagram(s1,s2)` returning True if s1 is anagram of s2.",
-         "def anagram(s1,s2): return sorted(s1)==sorted(s2)"),
-        ("Write `running_average(lst)` returning list of cumulative averages.",
-         "def running_average(lst): return [sum(lst[:i+1])/(i+1) for i in range(len(lst))]"),
-        ("Write `chunk(lst, n)` splitting lst into chunks of size n.",
-         "def chunk(lst,n): return [lst[i:i+n] for i in range(0,len(lst),n)]"),
-        ("Write `deep_flatten(lst)` recursively flattening nested lists.",
-         "def deep_flatten(lst): r=[]\n  for x in lst:\n    if isinstance(x,list): r+=deep_flatten(x)\n    else: r.append(x)\n  return r"),
-        ("Write `two_sum(nums, target)` returning indices of two numbers summing to target.",
-         "def two_sum(nums,t): d={}\n  for i,n in enumerate(nums):\n    if t-n in d: return [d[t-n],i]\n    d[n]=i"),
-    ])
+    for i, (q, a) in enumerate(
+        [
+            (
+                "Write a Python function `add(a, b)` that returns the sum of two numbers.",
+                "def add(a, b): return a + b",
+            ),
+            (
+                "Write `is_even(n)` returning True if n is even.",
+                "def is_even(n): return n % 2 == 0",
+            ),
+            (
+                "Write `factorial(n)` (n>=0) using recursion.",
+                "def factorial(n): return 1 if n == 0 else n * factorial(n-1)",
+            ),
+            ("Write `reverse_string(s)` that reverses s.", "def reverse_string(s): return s[::-1]"),
+            (
+                "Write `max_list(lst)` returning the largest element.",
+                "def max_list(lst): return max(lst)",
+            ),
+            (
+                "Write `count_vowels(s)` counting lowercase vowels in s.",
+                "def count_vowels(s): return sum(1 for c in s if c in 'aeiou')",
+            ),
+            (
+                "Write `is_palindrome(s)` returning True if s is a palindrome.",
+                "def is_palindrome(s): return s == s[::-1]",
+            ),
+            (
+                "Write `sum_list(lst)` returning the sum of all elements.",
+                "def sum_list(lst): return sum(lst)",
+            ),
+            (
+                "Write `flatten(lst)` that flattens one level of nesting.",
+                "def flatten(lst): return [x for sub in lst for x in sub]",
+            ),
+            (
+                "Write `fizzbuzz(n)` returning 'Fizz','Buzz','FizzBuzz' or str(n).",
+                "def fizzbuzz(n): return 'FizzBuzz' if n%15==0 else 'Fizz' if n%3==0 else 'Buzz' if n%5==0 else str(n)",
+            ),
+            (
+                "Write `gcd(a,b)` using Euclid's algorithm.",
+                "def gcd(a,b): return a if b==0 else gcd(b,a%b)",
+            ),
+            (
+                "Write `power(base, exp)` without using ** operator.",
+                "def power(base, exp): r=1\n  for _ in range(exp): r*=base\n  return r",
+            ),
+            (
+                "Write `unique(lst)` removing duplicates preserving order.",
+                "def unique(lst): seen=set(); return [x for x in lst if not (x in seen or seen.add(x))]",
+            ),
+            (
+                "Write `is_prime(n)` for n>=2.",
+                "def is_prime(n): return all(n%i!=0 for i in range(2,int(n**0.5)+1))",
+            ),
+            (
+                "Write `celsius_to_fahrenheit(c)` converting temperature.",
+                "def celsius_to_fahrenheit(c): return c*9/5+32",
+            ),
+            (
+                "Write `word_count(s)` returning a dict of word frequencies.",
+                "def word_count(s): d={}\n  for w in s.split(): d[w]=d.get(w,0)+1\n  return d",
+            ),
+            (
+                "Write `rotate_list(lst, k)` rotating lst left by k positions.",
+                "def rotate_list(lst, k): k%=len(lst); return lst[k:]+lst[:k]",
+            ),
+            (
+                "Write `binary_search(lst, target)` returning index or -1.",
+                "def binary_search(lst, t): l,r=0,len(lst)-1\n  while l<=r:\n    m=(l+r)//2\n    if lst[m]==t: return m\n    elif lst[m]<t: l=m+1\n    else: r=m-1\n  return -1",
+            ),
+            (
+                "Write `merge_sorted(a, b)` merging two sorted lists.",
+                "def merge_sorted(a,b): r,i,j=[],0,0\n  while i<len(a) and j<len(b):\n    if a[i]<=b[j]: r.append(a[i]);i+=1\n    else: r.append(b[j]);j+=1\n  return r+a[i:]+b[j:]",
+            ),
+            (
+                "Write `matrix_transpose(m)` transposing a 2D list.",
+                "def matrix_transpose(m): return list(map(list,zip(*m)))",
+            ),
+            (
+                "Write `anagram(s1,s2)` returning True if s1 is anagram of s2.",
+                "def anagram(s1,s2): return sorted(s1)==sorted(s2)",
+            ),
+            (
+                "Write `running_average(lst)` returning list of cumulative averages.",
+                "def running_average(lst): return [sum(lst[:i+1])/(i+1) for i in range(len(lst))]",
+            ),
+            (
+                "Write `chunk(lst, n)` splitting lst into chunks of size n.",
+                "def chunk(lst,n): return [lst[i:i+n] for i in range(0,len(lst),n)]",
+            ),
+            (
+                "Write `deep_flatten(lst)` recursively flattening nested lists.",
+                "def deep_flatten(lst): r=[]\n  for x in lst:\n    if isinstance(x,list): r+=deep_flatten(x)\n    else: r.append(x)\n  return r",
+            ),
+            (
+                "Write `two_sum(nums, target)` returning indices of two numbers summing to target.",
+                "def two_sum(nums,t): d={}\n  for i,n in enumerate(nums):\n    if t-n in d: return [d[t-n],i]\n    d[n]=i",
+            ),
+        ]
+    )
 ]
 
 
 # ---------------------------------------------------------------------------
 # Tier discovery
 # ---------------------------------------------------------------------------
+
 
 def _discover_tiers() -> dict[str, bool]:
     """Try to import each cascade tier module; record deployed or not.
@@ -203,15 +256,15 @@ def _discover_tiers() -> dict[str, bool]:
     This mirrors the CI-safe design of ThreeTierPipeline itself.
     """
     tier_checks: list[tuple[str, str]] = [
-        ("tier_0a_think_probe",       "carnot.pipeline.think_probe"),
-        ("tier_0b_spilled_energy",    "carnot.pipeline.spilled_energy"),
-        ("tier_0c_nup_probe_v4",      "carnot.pipeline.nup_probe_v4"),
-        ("tier_0d_hallucination",     "carnot.pipeline.hallucination_basin"),
-        ("tier_0f_semantic_energy",   "carnot.pipeline.semantic_energy_probe"),
-        ("tier_1_sink_probe",         "carnot.pipeline.sink_probe"),
-        ("tier_2_eorm",               "carnot.models.eorm"),
-        ("tier_2_5_symcode",          "carnot.pipeline.symcode_verifier"),
-        ("tier_3_ising",              "carnot.pipeline.three_tier_pipeline"),
+        ("tier_0a_think_probe", "carnot.pipeline.think_probe"),
+        ("tier_0b_spilled_energy", "carnot.pipeline.spilled_energy"),
+        ("tier_0c_nup_probe_v4", "carnot.pipeline.nup_probe_v4"),
+        ("tier_0d_hallucination", "carnot.pipeline.hallucination_basin"),
+        ("tier_0f_semantic_energy", "carnot.pipeline.semantic_energy_probe"),
+        ("tier_1_sink_probe", "carnot.pipeline.sink_probe"),
+        ("tier_2_eorm", "carnot.models.eorm"),
+        ("tier_2_5_symcode", "carnot.pipeline.symcode_verifier"),
+        ("tier_3_ising", "carnot.pipeline.three_tier_pipeline"),
     ]
     manifest: dict[str, bool] = {}
     for tier_id, module_path in tier_checks:
@@ -226,6 +279,7 @@ def _discover_tiers() -> dict[str, bool]:
 # ---------------------------------------------------------------------------
 # Baseline inference (stub — no pipeline)
 # ---------------------------------------------------------------------------
+
 
 def _baseline_answer(problem: dict[str, Any]) -> str:
     """Simulate a naive baseline response without pipeline verification.
@@ -283,10 +337,8 @@ def _pipeline_answer(
         # Extract per-tier latency if the result carries it.
         for attr in dir(result):
             if attr.endswith("_latency_ms"):
-                try:
+                with contextlib.suppress(TypeError, ValueError):
                     latency[attr] = float(getattr(result, attr))
-                except (TypeError, ValueError):
-                    pass
         # Treat "verified" as correct (pipeline confirmed the answer).
         verified = getattr(result, "verified", True)
         answer = reference if verified else "INCORRECT"
@@ -298,6 +350,7 @@ def _pipeline_answer(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Entry point — gate check, GPU setup, inference, artifact write."""
@@ -359,12 +412,14 @@ def main() -> None:
         env855 = json.loads(env855_path.read_text())
         live_env_fixed = env855.get("live_env_fixed", False)
     if not live_env_fixed:
-        print("[WARNING] Exp 855 live_env_fixed not True — EnvAutoFix will handle.",
-              file=sys.stderr)
+        print(
+            "[WARNING] Exp 855 live_env_fixed not True — EnvAutoFix will handle.", file=sys.stderr
+        )
 
     # --- APPLY ENV AUTOFIX --------------------------------------------------
     try:
         from carnot.pipeline.env_autofix import apply_env_autofix
+
         apply_env_autofix()
     except Exception as exc:
         print(f"[WARNING] env_autofix unavailable: {exc}", file=sys.stderr)
@@ -385,6 +440,7 @@ def main() -> None:
     # --- GPU SETUP ----------------------------------------------------------
     try:
         from carnot.inference.sota_models import cached_sota_pair
+
         specs = cached_sota_pair(gpu_indices=(0, 1))
     except Exception:
         specs = None
@@ -413,8 +469,7 @@ def main() -> None:
         # setup_gpu raises RuntimeError when live GPU required but unavailable.
         # We treat this as a blocked artifact rather than a hard crash so the
         # conductor can record the failure and move on.
-        gpu_status = {"all_healthy": False, "models": [], "cpu_fallback": True,
-                      "error": str(exc)}
+        gpu_status = {"all_healthy": False, "models": [], "cpu_fallback": True, "error": str(exc)}
         gpu_healthy = False
 
     if not gpu_healthy:
@@ -442,6 +497,7 @@ def main() -> None:
     if inference_mode == "live_gpu":
         try:
             from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
+
             os.environ["CARNOT_DUAL_GPU"] = "1"
             pipeline = ThreeTierPipeline()
         except Exception as exc:
@@ -463,8 +519,8 @@ def main() -> None:
         baseline_ans = _baseline_answer(problem)
         pipeline_ans, latency = _pipeline_answer(problem, pipeline, inference_mode)
 
-        baseline_correct = (baseline_ans.strip() == ref_answer.strip())
-        pipeline_correct = (pipeline_ans.strip() == ref_answer.strip())
+        baseline_correct = baseline_ans.strip() == ref_answer.strip()
+        pipeline_correct = pipeline_ans.strip() == ref_answer.strip()
 
         baseline_results.append({"id": problem["id"], "correct": baseline_correct})
         pipeline_results.append({"id": problem["id"], "correct": pipeline_correct})
@@ -481,8 +537,7 @@ def main() -> None:
     pipeline_improvement = round(pipeline_accuracy - baseline_accuracy, 4)
 
     avg_latency = {
-        tier: round(sum(vals) / len(vals), 2)
-        for tier, vals in per_tier_latency_ms.items()
+        tier: round(sum(vals) / len(vals), 2) for tier, vals in per_tier_latency_ms.items()
     }
 
     # --- HONEST VERDICT -----------------------------------------------------

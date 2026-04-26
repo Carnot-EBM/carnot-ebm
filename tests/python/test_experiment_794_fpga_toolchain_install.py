@@ -109,6 +109,7 @@ class TestCheckTools:
 
     def test_partial_presence(self):
         """yosys present but nextpnr/icepack absent — partial state is correctly captured."""
+
         def side_effect(cmd, **kwargs):
             if "yosys" in cmd:
                 m = MagicMock(returncode=0, stdout="yosys 0.38", stderr="")
@@ -281,7 +282,12 @@ class TestClassifyVerdict:
         assert verdict == "tools_installed_synthesis_clean"
 
     def test_all_present_synth_failed(self):
-        synth = {"success": False, "lut_count": None, "stderr_snippet": "ERROR", "stdout_snippet": ""}
+        synth = {
+            "success": False,
+            "lut_count": None,
+            "stderr_snippet": "ERROR",
+            "stdout_snippet": "",
+        }
         verdict = classify_verdict(self._present_tools(), False, False, synth)
         assert verdict == "tools_installed_synthesis_failed"
 

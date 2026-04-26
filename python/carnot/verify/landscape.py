@@ -47,12 +47,14 @@ Spec: REQ-VERIFY-006, SCENARIO-VERIFY-005
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import jax
 import jax.numpy as jnp
 import jax.random as jrandom
 
-from carnot.core.energy import EnergyFunction
+if TYPE_CHECKING:
+    from carnot.core.energy import EnergyFunction
 
 
 @dataclass
@@ -189,7 +191,7 @@ def certify_landscape(
     # A point is a local minimum if and only if all eigenvalues are positive.
     # "Positive" here means > tolerance (to handle numerical noise near zero).
     has_negative = min_eig < -eigenvalue_tolerance
-    has_zero = abs(min_eig) <= eigenvalue_tolerance
+    abs(min_eig) <= eigenvalue_tolerance
     all_positive = min_eig > eigenvalue_tolerance
 
     if all_positive:
@@ -214,9 +216,7 @@ def certify_landscape(
     # Perturb x in random directions with increasing radius.
     # The basin radius is the largest perturbation where the energy
     # is still higher than at x (i.e., x is still the local minimum).
-    basin_radius = _estimate_basin_radius(
-        energy_fn, x, basin_perturbations, basin_key
-    )
+    basin_radius = _estimate_basin_radius(energy_fn, x, basin_perturbations, basin_key)
 
     return LandscapeCertificate(
         is_local_minimum=is_minimum,

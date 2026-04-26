@@ -284,10 +284,7 @@ class TestBoltzmannSemanticEnergyBenchmark:
     def test_benchmark_returns_auroc_key(self):
         """benchmark() returns dict with auroc key (SCENARIO-VERIFY-136)."""
         bse = BoltzmannSemanticEnergy(n_clusters=3)
-        responses = [
-            (f"response {i}", {f"tok{j}": float(j) for j in range(5)})
-            for i in range(10)
-        ]
+        responses = [(f"response {i}", {f"tok{j}": float(j) for j in range(5)}) for i in range(10)]
         ground_truth = [True, False, True, False, True, False, True, False, True, False]
         result = bse.benchmark(responses, ground_truth)
         assert "auroc" in result

@@ -68,9 +68,9 @@ _MILESTONE_38_EXPERIMENTS = {
     "exp511": 2.0,
 }
 
-_CONDUCTOR_VRAM_GPU_GB = 9.0   # JAX-GPU mode: conductor holds ~9 GiB GPU 0
-_CONDUCTOR_VRAM_CPU_GB = 0.0   # JAX_PLATFORMS=cpu: conductor holds 0 GiB GPU
-_GPU_TOTAL_GB = 24.0            # RTX 3090 / observed in Exp 480+
+_CONDUCTOR_VRAM_GPU_GB = 9.0  # JAX-GPU mode: conductor holds ~9 GiB GPU 0
+_CONDUCTOR_VRAM_CPU_GB = 0.0  # JAX_PLATFORMS=cpu: conductor holds 0 GiB GPU
+_GPU_TOTAL_GB = 24.0  # RTX 3090 / observed in Exp 480+
 
 
 def main() -> None:
@@ -105,7 +105,9 @@ def _run(tmpl: ExperimentTemplate, guard: DeliverableGuard) -> None:
 
     _log.info(
         "GPU-routed conductor: conductor=%.1f GiB, total=%.1f GiB, available=%.1f GiB",
-        _CONDUCTOR_VRAM_GPU_GB, _GPU_TOTAL_GB, ledger.available_gb,
+        _CONDUCTOR_VRAM_GPU_GB,
+        _GPU_TOTAL_GB,
+        ledger.available_gb,
     )
 
     forecasts = ledger.check_all()
@@ -131,7 +133,11 @@ def _run(tmpl: ExperimentTemplate, guard: DeliverableGuard) -> None:
     for f in forecasts:
         _log.info(
             "  %s: feasible=%s, required=%.1f GiB, available=%.1f GiB, headroom=%.1f GiB",
-            f.exp_id, f.is_feasible, f.required_gb, f.available_gb, f.headroom_gb,
+            f.exp_id,
+            f.is_feasible,
+            f.required_gb,
+            f.available_gb,
+            f.headroom_gb,
         )
 
     artifact = tmpl.build_result(

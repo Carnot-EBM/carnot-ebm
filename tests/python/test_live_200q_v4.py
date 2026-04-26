@@ -78,8 +78,12 @@ class TestCi95Wilson:
     def test_n1_no_crash(self):
         # Guard against division by zero when n is tiny
         r = Live200qV4Result(
-            model_id="x", pre_acc=0.5, post_acc=0.5, n=1,
-            extractor_name="e", inference_mode="live_gpu",
+            model_id="x",
+            pre_acc=0.5,
+            post_acc=0.5,
+            n=1,
+            extractor_name="e",
+            inference_mode="live_gpu",
         )
         lo, hi = r.ci_95_wilson
         assert 0.0 <= lo <= hi <= 1.0
@@ -143,9 +147,15 @@ class TestIsStatisticallyPositive:
 
 class TestToDict:
     _REQUIRED_KEYS = (
-        "model_id", "pre_acc", "post_acc", "n",
-        "extractor_name", "inference_mode",
-        "signed_improvement", "ci_95_wilson", "is_statistically_positive",
+        "model_id",
+        "pre_acc",
+        "post_acc",
+        "n",
+        "extractor_name",
+        "inference_mode",
+        "signed_improvement",
+        "ci_95_wilson",
+        "is_statistically_positive",
     )
 
     def test_all_keys_present(self):

@@ -370,7 +370,13 @@ class TestArtifactSchema:
             bitfile_path=str(bitfile),
             overlay_loader=_software_overlay_factory,
         )
-        for field in ("experiment", "execution_path", "overlay_load_ms", "round_trip", "spin_state_valid"):
+        for field in (
+            "experiment",
+            "execution_path",
+            "overlay_load_ms",
+            "round_trip",
+            "spin_state_valid",
+        ):
             assert field in payload, f"Missing field: {field}"
         assert payload["experiment"] == EXPERIMENT_ID
         assert payload["execution_path"] in {"hardware", "software_model", "blocked"}

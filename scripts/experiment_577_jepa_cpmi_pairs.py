@@ -161,15 +161,17 @@ def main() -> None:
         synthetic = builder.build_synthetic_pairs(10)
         n_synthetic = len(synthetic)
         real_pairs = real_pairs + synthetic
-        _log.info("Augmented with %d synthetic pairs (real count was below min_pairs=%d).",
-                  n_synthetic, MIN_PAIRS)
+        _log.info(
+            "Augmented with %d synthetic pairs (real count was below min_pairs=%d).",
+            n_synthetic,
+            MIN_PAIRS,
+        )
 
     n_real = len(real_pairs) - n_synthetic
     total_pairs = len(real_pairs)
 
     mean_pair_quality = (
-        sum(p.pair_quality for p in real_pairs) / total_pairs
-        if total_pairs > 0 else 0.0
+        sum(p.pair_quality for p in real_pairs) / total_pairs if total_pairs > 0 else 0.0
     )
 
     # ------------------------------------------------------------------
@@ -183,9 +185,7 @@ def main() -> None:
     # ------------------------------------------------------------------
     # Build deliverable artifact
     # ------------------------------------------------------------------
-    honest_verdict = (
-        "pairs_built_sufficient" if total_pairs >= 10 else "pairs_built_insufficient"
-    )
+    honest_verdict = "pairs_built_sufficient" if total_pairs >= 10 else "pairs_built_insufficient"
 
     artifact = tmpl.build_result(
         {

@@ -93,8 +93,10 @@ try:
     _tdhop_stub = _types.ModuleType("torch._dynamo._trace_wrapped_higher_order_op")
     _tdhop_stub.TransformGetItemToIndex = type("TransformGetItemToIndex", (), {})
     _sys.modules["torch._dynamo._trace_wrapped_higher_order_op"] = _tdhop_stub
-    log.info("Injected torch._dynamo._trace_wrapped_higher_order_op stub "
-             "(triton-rocm 3.6.0 / transformers 5.5.0 compat workaround).")
+    log.info(
+        "Injected torch._dynamo._trace_wrapped_higher_order_op stub "
+        "(triton-rocm 3.6.0 / transformers 5.5.0 compat workaround)."
+    )
 
     import torch as _torch_preload  # noqa: F401
 
@@ -127,9 +129,7 @@ except Exception as _pre_exc:
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 RESULTS_FILE = REPO_ROOT / "results" / "experiment_177_results.json"
-MODEL_LOADER_PATH = (
-    REPO_ROOT / "python" / "carnot" / "inference" / "model_loader.py"
-)
+MODEL_LOADER_PATH = REPO_ROOT / "python" / "carnot" / "inference" / "model_loader.py"
 
 # ---------------------------------------------------------------------------
 # GSM8K sample questions — ground truth (integer answers)
@@ -209,8 +209,8 @@ def detect_rocm_gpus() -> dict[str, Any]:
     result: dict[str, Any] = {
         "rocminfo_available": False,
         "raw_gfx_lines": [],
-        "has_gfx1100": False,   # eGPU (RX 7900 XTX)
-        "has_gfx1150": False,   # iGPU (890M — crashes JAX)
+        "has_gfx1100": False,  # eGPU (RX 7900 XTX)
+        "has_gfx1150": False,  # iGPU (890M — crashes JAX)
         "all_gfx_ids": [],
     }
 
@@ -227,6 +227,7 @@ def detect_rocm_gpus() -> dict[str, Any]:
         result["raw_gfx_lines"] = gfx_lines
 
         import re
+
         ids = set()
         for ln in gfx_lines:
             ids.update(re.findall(r"gfx\d+", ln))
@@ -305,9 +306,7 @@ def detect_jax_devices() -> dict[str, Any]:
         devs = jax.devices()
         result["devices"] = [str(d) for d in devs]
         result["platform"] = devs[0].platform if devs else "none"
-        result["has_gpu_device"] = any(
-            d.platform in ("gpu", "rocm") for d in devs
-        )
+        result["has_gpu_device"] = any(d.platform in ("gpu", "rocm") for d in devs)
 
     except ImportError:
         log.warning("JAX not installed.")
@@ -333,7 +332,9 @@ def detect_rocm_version() -> str:
     try:
         proc = subprocess.run(
             ["rocm-smi", "--version"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         return proc.stdout.strip() or proc.stderr.strip()
     except Exception:
@@ -520,9 +521,7 @@ def inference_benchmark_cpu_vs_gpu(model_name: str) -> dict[str, Any]:
 
     # Compute speedup ratio.
     if result["cpu_p50_ms"] and result["gpu_p50_ms"] and result["gpu_p50_ms"] > 0:
-        result["speedup_ratio"] = round(
-            result["cpu_p50_ms"] / result["gpu_p50_ms"], 2
-        )
+        result["speedup_ratio"] = round(result["cpu_p50_ms"] / result["gpu_p50_ms"], 2)
         log.info("Speedup: %.2fx", result["speedup_ratio"])
 
     return result
@@ -581,13 +580,15 @@ def verify_gsm8k_live(
             output = generate(model, tokenizer, prompt, max_new_tokens=200)
         except Exception as exc:
             log.warning("[%s] GSM8K q%d generate failed: %s", label, i, exc)
-            per_q.append({
-                "question_index": i,
-                "expected": q["answer"],
-                "predicted": None,
-                "correct": False,
-                "output_snippet": str(exc)[:80],
-            })
+            per_q.append(
+                {
+                    "question_index": i,
+                    "expected": q["answer"],
+                    "predicted": None,
+                    "correct": False,
+                    "output_snippet": str(exc)[:80],
+                }
+            )
             continue
 
         predicted = _extract_integer(output)
@@ -596,15 +597,21 @@ def verify_gsm8k_live(
             correct += 1
         log.info(
             "[%s] GSM8K q%d: expected=%d predicted=%s correct=%s",
-            label, i, q["answer"], predicted, is_correct,
+            label,
+            i,
+            q["answer"],
+            predicted,
+            is_correct,
         )
-        per_q.append({
-            "question_index": i,
-            "expected": q["answer"],
-            "predicted": predicted,
-            "correct": is_correct,
-            "output_snippet": output[:120],
-        })
+        per_q.append(
+            {
+                "question_index": i,
+                "expected": q["answer"],
+                "predicted": predicted,
+                "correct": is_correct,
+                "output_snippet": output[:120],
+            }
+        )
 
     accuracy = correct / total if total else 0.0
     return {
@@ -790,8 +797,10 @@ def main() -> None:
     nvidia_present = (
         torch_info["cuda_available"]
         and torch_info["device_count"] > 0
-        and any("NVIDIA" in n or "GeForce" in n or "Quadro" in n or "Tesla" in n
-                for n in torch_info["device_names"])
+        and any(
+            "NVIDIA" in n or "GeForce" in n or "Quadro" in n or "Tesla" in n
+            for n in torch_info["device_names"]
+        )
     )
     has_egpu = rocm["has_gfx1100"] or nvidia_present
     results["has_egpu"] = has_egpu
@@ -877,9 +886,7 @@ def main() -> None:
             )
         else:
             results["live_gsm8k_accuracy"] = None
-            results["notes"].append(
-                "GPU model load for GSM8K failed; accuracy not measured."
-            )
+            results["notes"].append("GPU model load for GSM8K failed; accuracy not measured.")
 
         # Step 2d / 5: If GPU works, annotate model_loader.py
         if results["jax_gpu_works"] or (results["gpu_inference_p50_ms"] is not None):
@@ -909,12 +916,8 @@ def main() -> None:
                 "THUNDERBOLT_NOT_CONNECTED — gfx1100 RX 7900 XTX eGPU not available. "
                 "Connect Thunderbolt chassis and rerun to benchmark the target eGPU."
             )
-        results["notes"].append(
-            "Expected gfx1100 eGPU speedup: 20-40x (61.4 TFLOP/s FP16)"
-        )
-        results["notes"].append(
-            "Proceed with CARNOT_SKIP_LLM=1 for simulation-based experiments."
-        )
+        results["notes"].append("Expected gfx1100 eGPU speedup: 20-40x (61.4 TFLOP/s FP16)")
+        results["notes"].append("Proceed with CARNOT_SKIP_LLM=1 for simulation-based experiments.")
 
     # ------------------------------------------------------------------ #
     # Save results

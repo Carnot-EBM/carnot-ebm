@@ -179,13 +179,15 @@ class TestTrainJepaV17:
         """
         pairs = []
         for i in range(n):
-            pairs.append({
-                "question": f"What is {i} plus {i}?",
-                "step_text": f"The answer is {2 * i}.",
-                "step_correct": True,
-                "step_index": 0,
-                "z3_verdict": "unparseable",
-            })
+            pairs.append(
+                {
+                    "question": f"What is {i} plus {i}?",
+                    "step_text": f"The answer is {2 * i}.",
+                    "step_correct": True,
+                    "step_index": 0,
+                    "z3_verdict": "unparseable",
+                }
+            )
         return pairs
 
     def test_loss_decreases_over_epochs(self):
@@ -242,8 +244,7 @@ class TestMakeIncorrectStep:
     """Tests for _make_incorrect_step helper."""
 
     def test_injects_arithmetic_error(self):
-        """Adds a prime offset to the last integer in the step text.
-        """
+        """Adds a prime offset to the last integer in the step text."""
         step = "The answer is 42."
         result = _make_incorrect_step(step, offset_idx=0)
         # offset_idx=0 → _INCORRECT_OFFSETS[0] = 7 → 42 + 7 = 49
@@ -251,8 +252,7 @@ class TestMakeIncorrectStep:
         assert "42" not in result, f"Expected original '42' to be replaced, got: {result}"
 
     def test_fallback_for_no_integer(self):
-        """Appends '(incorrect)' when no integer is found in the step text.
-        """
+        """Appends '(incorrect)' when no integer is found in the step text."""
         step = "This step has no numbers."
         result = _make_incorrect_step(step, offset_idx=0)
         assert "(incorrect)" in result
@@ -281,7 +281,7 @@ class TestEvaluateOodAuc:
         Spec: REQ-VERIFY-140-3, SCENARIO-VERIFY-140.
         """
         # Directly test the gate logic with mock AUC values.
-        assert (0.80 >= 0.75) is True   # gate should open
+        assert (0.80 >= 0.75) is True  # gate should open
         assert (0.74 >= 0.75) is False  # gate should stay closed
         assert (0.50 >= 0.75) is False  # below threshold
 
@@ -289,6 +289,7 @@ class TestEvaluateOodAuc:
         """honest_verdict covers all three branches correctly.
         Spec: REQ-VERIFY-140-4.
         """
+
         def _verdict(auc: float) -> str:
             if auc >= 0.75:
                 return "jepa_v17_cascade_unblocked"

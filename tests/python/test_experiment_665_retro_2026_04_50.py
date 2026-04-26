@@ -205,9 +205,7 @@ def test_all_criteria_failed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
 # ---------------------------------------------------------------------------
 
 
-def test_prompt_injection_auroc_threshold(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_prompt_injection_auroc_threshold(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """AUROC exactly at 0.90 meets the criterion; 0.8999 does not."""
     base = _make_all_fail_results()
 
@@ -337,9 +335,7 @@ def test_retro_057_always_filed_for_51(tmp_path: Path, monkeypatch: pytest.Monke
     assert retro["retro_statuses"]["RETRO-057"] == "filed_for_51_multilevel_needed"
 
 
-def test_retro_070_requires_both_criteria(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_070_requires_both_criteria(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """RETRO-070 is 'resolved' only when BOTH equation_forcer and hermes recall criteria met."""
     base = _make_all_fail_results()
 
@@ -375,9 +371,7 @@ def test_honest_verdict_all_pass(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     assert retro["honest_verdict"] == "all_13_criteria_met_milestone_complete"
 
 
-def test_honest_verdict_retro_033_closed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_honest_verdict_retro_033_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """When RETRO-033 resolves but not all criteria, verdict names the closure."""
     base = _make_all_fail_results()
     base["656"]["retro_033_resolved"] = True
@@ -451,11 +445,24 @@ def test_main_writes_deliverable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 
     # Required schema fields (from ExperimentTemplate.build_result contract).
     required_fields = [
-        "experiment", "schema", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "title",
-        "n_criteria_met", "n_criteria_total", "milestone_success_rate",
-        "criteria", "wall_time_50", "wall_time_49", "wall_time_delta",
-        "wall_time_pct_change", "retro_statuses", "open_retros_for_51",
+        "experiment",
+        "schema",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "title",
+        "n_criteria_met",
+        "n_criteria_total",
+        "milestone_success_rate",
+        "criteria",
+        "wall_time_50",
+        "wall_time_49",
+        "wall_time_delta",
+        "wall_time_pct_change",
+        "retro_statuses",
+        "open_retros_for_51",
         "honest_verdict",
     ]
     for field in required_fields:

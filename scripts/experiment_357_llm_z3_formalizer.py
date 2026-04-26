@@ -278,9 +278,7 @@ def _compute_metrics(
     - fp_rate: fp / (fp + tn) — fraction of correct responses incorrectly flagged
     """
     n_total = len(results)
-    n_success = sum(
-        1 for r in results if r["z3_status"] in ("sat", "unsat")
-    )
+    n_success = sum(1 for r in results if r["z3_status"] in ("sat", "unsat"))
 
     n_error = sum(1 for r in results if r["has_error"])
     n_correct = n_total - n_error
@@ -369,17 +367,15 @@ def main() -> None:
             "n_false_positives": llm_z3_metrics["n_false_positives"],
             "fp_rate": llm_z3_metrics["fp_rate"],
             "tp_rate": llm_z3_metrics["tp_rate"],
-            "nl2z3_metrics": {
-                k: v for k, v in nl2z3_metrics.items() if k != "per_response"
-            },
-            "llm_z3_metrics": {
-                k: v for k, v in llm_z3_metrics.items() if k != "per_response"
-            },
+            "nl2z3_metrics": {k: v for k, v in nl2z3_metrics.items() if k != "per_response"},
+            "llm_z3_metrics": {k: v for k, v in llm_z3_metrics.items() if k != "per_response"},
             "note": (
                 "CI stub mode: LLMz3Formalizer returns 'sat' for all responses. "
                 "improvement_delta=1.0 reflects stub behavior, not live benchmark. "
                 "NL2Z3Extractor returns 'unknown' for all in CI (CARNOT_FORCE_LIVE not set)."
-            ) if not is_live else (
+            )
+            if not is_live
+            else (
                 "Live mode: LLMz3Formalizer used CI stub (no LLM loaded). "
                 "For true live comparison, inject a live llm_caller."
             ),

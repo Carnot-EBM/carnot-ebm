@@ -118,121 +118,201 @@ SVAMP_TRIPLETS_RAW: list[dict[str, Any]] = [
         "anchor": "There are 14 apples in a basket. 6 more are added.",
         "positive": "Total apples = 14 + 6 = 20.",
         "negative": "Total apples = 14 + 6 = 21.",
-        "op": "add", "a": 14, "b": 6, "correct": 20, "wrong": 21,
+        "op": "add",
+        "a": 14,
+        "b": 6,
+        "correct": 20,
+        "wrong": 21,
     },
     {
         "anchor": "A jar has 50 candies. 18 are eaten.",
         "positive": "Remaining candies = 50 - 18 = 32.",
         "negative": "Remaining candies = 50 - 18 = 33.",
-        "op": "sub", "a": 50, "b": 18, "correct": 32, "wrong": 33,
+        "op": "sub",
+        "a": 50,
+        "b": 18,
+        "correct": 32,
+        "wrong": 33,
     },
     {
         "anchor": "A farmer has 7 rows of corn with 9 plants each.",
         "positive": "Total plants = 7 × 9 = 63.",
         "negative": "Total plants = 7 × 9 = 62.",
-        "op": "mul", "a": 7, "b": 9, "correct": 63, "wrong": 62,
+        "op": "mul",
+        "a": 7,
+        "b": 9,
+        "correct": 63,
+        "wrong": 62,
     },
     {
         "anchor": "A bag holds 72 oranges. Shared equally among 8 friends.",
         "positive": "Each friend gets 72 ÷ 8 = 9 oranges.",
         "negative": "Each friend gets 72 ÷ 8 = 8 oranges.",
-        "op": "div", "a": 72, "b": 8, "correct": 9, "wrong": 8,
+        "op": "div",
+        "a": 72,
+        "b": 8,
+        "correct": 9,
+        "wrong": 8,
     },
     {
         "anchor": "Library has 130 books. 47 are checked out.",
         "positive": "Books remaining = 130 - 47 = 83.",
         "negative": "Books remaining = 130 - 47 = 84.",
-        "op": "sub", "a": 130, "b": 47, "correct": 83, "wrong": 84,
+        "op": "sub",
+        "a": 130,
+        "b": 47,
+        "correct": 83,
+        "wrong": 84,
     },
     {
         "anchor": "A box contains 6 packs of 12 crayons.",
         "positive": "Total crayons = 6 × 12 = 72.",
         "negative": "Total crayons = 6 × 12 = 70.",
-        "op": "mul", "a": 6, "b": 12, "correct": 72, "wrong": 70,
+        "op": "mul",
+        "a": 6,
+        "b": 12,
+        "correct": 72,
+        "wrong": 70,
     },
     {
         "anchor": "A child earns $3 per chore. Completes 11 chores.",
         "positive": "Total earnings = 3 × 11 = $33.",
         "negative": "Total earnings = 3 × 11 = $34.",
-        "op": "mul", "a": 3, "b": 11, "correct": 33, "wrong": 34,
+        "op": "mul",
+        "a": 3,
+        "b": 11,
+        "correct": 33,
+        "wrong": 34,
     },
     {
         "anchor": "A train carries 95 passengers. 28 get off.",
         "positive": "Passengers remaining = 95 - 28 = 67.",
         "negative": "Passengers remaining = 95 - 28 = 66.",
-        "op": "sub", "a": 95, "b": 28, "correct": 67, "wrong": 66,
+        "op": "sub",
+        "a": 95,
+        "b": 28,
+        "correct": 67,
+        "wrong": 66,
     },
     {
         "anchor": "A pool is filled with 240 litres across 4 equal tanks.",
         "positive": "Each tank holds 240 ÷ 4 = 60 litres.",
         "negative": "Each tank holds 240 ÷ 4 = 58 litres.",
-        "op": "div", "a": 240, "b": 4, "correct": 60, "wrong": 58,
+        "op": "div",
+        "a": 240,
+        "b": 4,
+        "correct": 60,
+        "wrong": 58,
     },
     {
         "anchor": "A shop sold 56 items on Monday and 39 items on Tuesday.",
         "positive": "Total items sold = 56 + 39 = 95.",
         "negative": "Total items sold = 56 + 39 = 96.",
-        "op": "add", "a": 56, "b": 39, "correct": 95, "wrong": 96,
+        "op": "add",
+        "a": 56,
+        "b": 39,
+        "correct": 95,
+        "wrong": 96,
     },
     {
         "anchor": "A recipe requires 4 cups of flour. Made 5 times.",
         "positive": "Total flour needed = 4 × 5 = 20 cups.",
         "negative": "Total flour needed = 4 × 5 = 18 cups.",
-        "op": "mul", "a": 4, "b": 5, "correct": 20, "wrong": 18,
+        "op": "mul",
+        "a": 4,
+        "b": 5,
+        "correct": 20,
+        "wrong": 18,
     },
     {
         "anchor": "Tom walks 8 km per day for 6 days.",
         "positive": "Total distance = 8 × 6 = 48 km.",
         "negative": "Total distance = 8 × 6 = 46 km.",
-        "op": "mul", "a": 8, "b": 6, "correct": 48, "wrong": 46,
+        "op": "mul",
+        "a": 8,
+        "b": 6,
+        "correct": 48,
+        "wrong": 46,
     },
     {
         "anchor": "A shelf had 100 jars. 37 were sold.",
         "positive": "Jars left = 100 - 37 = 63.",
         "negative": "Jars left = 100 - 37 = 62.",
-        "op": "sub", "a": 100, "b": 37, "correct": 63, "wrong": 62,
+        "op": "sub",
+        "a": 100,
+        "b": 37,
+        "correct": 63,
+        "wrong": 62,
     },
     {
         "anchor": "A class collects 180 stickers shared among 9 students equally.",
         "positive": "Each student gets 180 ÷ 9 = 20 stickers.",
         "negative": "Each student gets 180 ÷ 9 = 19 stickers.",
-        "op": "div", "a": 180, "b": 9, "correct": 20, "wrong": 19,
+        "op": "div",
+        "a": 180,
+        "b": 9,
+        "correct": 20,
+        "wrong": 19,
     },
     {
         "anchor": "A garden produces 25 tomatoes on Monday and 38 on Wednesday.",
         "positive": "Total tomatoes = 25 + 38 = 63.",
         "negative": "Total tomatoes = 25 + 38 = 64.",
-        "op": "add", "a": 25, "b": 38, "correct": 63, "wrong": 64,
+        "op": "add",
+        "a": 25,
+        "b": 38,
+        "correct": 63,
+        "wrong": 64,
     },
     {
         "anchor": "A bucket holds 15 litres. Fill 7 buckets.",
         "positive": "Total volume = 15 × 7 = 105 litres.",
         "negative": "Total volume = 15 × 7 = 104 litres.",
-        "op": "mul", "a": 15, "b": 7, "correct": 105, "wrong": 104,
+        "op": "mul",
+        "a": 15,
+        "b": 7,
+        "correct": 105,
+        "wrong": 104,
     },
     {
         "anchor": "A bookshelf has 88 books. 33 are borrowed.",
         "positive": "Books remaining = 88 - 33 = 55.",
         "negative": "Books remaining = 88 - 33 = 54.",
-        "op": "sub", "a": 88, "b": 33, "correct": 55, "wrong": 54,
+        "op": "sub",
+        "a": 88,
+        "b": 33,
+        "correct": 55,
+        "wrong": 54,
     },
     {
         "anchor": "A group of 5 children each own 13 crayons.",
         "positive": "Total crayons = 5 × 13 = 65.",
         "negative": "Total crayons = 5 × 13 = 63.",
-        "op": "mul", "a": 5, "b": 13, "correct": 65, "wrong": 63,
+        "op": "mul",
+        "a": 5,
+        "b": 13,
+        "correct": 65,
+        "wrong": 63,
     },
     {
         "anchor": "A store has 144 items in 6 equal sections.",
         "positive": "Each section has 144 ÷ 6 = 24 items.",
         "negative": "Each section has 144 ÷ 6 = 22 items.",
-        "op": "div", "a": 144, "b": 6, "correct": 24, "wrong": 22,
+        "op": "div",
+        "a": 144,
+        "b": 6,
+        "correct": 24,
+        "wrong": 22,
     },
     {
         "anchor": "Yesterday 42 visitors came to the zoo. Today 57 visitors came.",
         "positive": "Total visitors = 42 + 57 = 99.",
         "negative": "Total visitors = 42 + 57 = 100.",
-        "op": "add", "a": 42, "b": 57, "correct": 99, "wrong": 100,
+        "op": "add",
+        "a": 42,
+        "b": 57,
+        "correct": 99,
+        "wrong": 100,
     },
 ]
 
@@ -242,6 +322,7 @@ assert len(SVAMP_TRIPLETS_RAW) == 20, "Must have exactly 20 SVAMP triplets"
 # ---------------------------------------------------------------------------
 # Symbolic verification of SVAMP triplets
 # ---------------------------------------------------------------------------
+
 
 def _eval_op(op: str, a: int, b: int) -> int:
     """Evaluate arithmetic op (add/sub/mul/div) on integers.
@@ -312,12 +393,14 @@ def verify_and_build_svamp_triplets(
             f"SVAMP triplet {i}: anchor+negative is actually correct! "
             f"eval({t['op']}, {t['a']}, {t['b']}) = {result} == wrong={t['wrong']}"
         )
-        validated.append({
-            "anchor": t["anchor"],
-            "positive": t["positive"],
-            "negative": t["negative"],
-            "domain": "svamp",
-        })
+        validated.append(
+            {
+                "anchor": t["anchor"],
+                "positive": t["positive"],
+                "negative": t["negative"],
+                "domain": "svamp",
+            }
+        )
     return validated
 
 
@@ -471,6 +554,7 @@ HUMANEVAL_INCORRECT_STEPS = [
 # Domain coverage assertion (REQ-LEARN-020)
 # ---------------------------------------------------------------------------
 
+
 def assert_domain_coverage(
     n_gsm8k: int,
     n_humaneval: int,
@@ -507,9 +591,7 @@ def assert_domain_coverage(
         f"SVAMP coverage insufficient: {n_svamp} pairs (need >= {min_pairs}). "
         "DreamPRM cannot improve a domain with zero signal — add SVAMP triplets."
     )
-    assert n_arc >= min_pairs, (
-        f"ARC coverage insufficient: {n_arc} pairs (need >= {min_pairs})."
-    )
+    assert n_arc >= min_pairs, f"ARC coverage insufficient: {n_arc} pairs (need >= {min_pairs})."
     assert n_humaneval >= min_pairs, (
         f"HumanEval coverage insufficient: {n_humaneval} pairs (need >= {min_pairs})."
     )
@@ -521,6 +603,7 @@ def assert_domain_coverage(
 # ---------------------------------------------------------------------------
 # Corpus builder
 # ---------------------------------------------------------------------------
+
 
 def build_corpus_v24b(svamp_triplets: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Build the v24b corpus: Exp 834 step texts + 20 SVAMP triplets.
@@ -559,18 +642,22 @@ def build_corpus_v24b(svamp_triplets: list[dict[str, Any]]) -> list[dict[str, An
     svamp_idx = DOMAIN_NAMES.index("svamp")
     for t in svamp_triplets:
         anchor = t["anchor"]
-        pairs.append({
-            "text": anchor + " " + t["positive"],
-            "label": 1,
-            "domain": "svamp",
-            "domain_idx": svamp_idx,
-        })
-        pairs.append({
-            "text": anchor + " " + t["negative"],
-            "label": 0,
-            "domain": "svamp",
-            "domain_idx": svamp_idx,
-        })
+        pairs.append(
+            {
+                "text": anchor + " " + t["positive"],
+                "label": 1,
+                "domain": "svamp",
+                "domain_idx": svamp_idx,
+            }
+        )
+        pairs.append(
+            {
+                "text": anchor + " " + t["negative"],
+                "label": 0,
+                "domain": "svamp",
+                "domain_idx": svamp_idx,
+            }
+        )
 
     # Count pairs per domain for assertion
     counts: dict[str, int] = {d: 0 for d in DOMAIN_NAMES}
@@ -590,6 +677,7 @@ def build_corpus_v24b(svamp_triplets: list[dict[str, Any]]) -> list[dict[str, An
 # ---------------------------------------------------------------------------
 # Embedding
 # ---------------------------------------------------------------------------
+
 
 def _embed_text(text: str, dim: int = EMBED_DIM, seed: int = 42) -> np.ndarray:
     """Hash-projection text embedding identical to Exp 834.
@@ -622,6 +710,7 @@ def _embed_text(text: str, dim: int = EMBED_DIM, seed: int = 42) -> np.ndarray:
 # Model: dual-head JEPA v24b (identical architecture to v24)
 # ---------------------------------------------------------------------------
 
+
 def _init_v24b_params(key: jax.Array) -> dict[str, jax.Array]:
     """Initialise dual-head MLP: shared trunk + correctness head + domain head.
 
@@ -650,9 +739,7 @@ def _init_v24b_params(key: jax.Array) -> dict[str, jax.Array]:
     }
 
 
-def _forward_v24b(
-    params: dict[str, jax.Array], x: jax.Array
-) -> tuple[jax.Array, jax.Array]:
+def _forward_v24b(params: dict[str, jax.Array], x: jax.Array) -> tuple[jax.Array, jax.Array]:
     """Forward pass: embedding → (P(correct), P(domain)).
 
     Args:
@@ -701,9 +788,7 @@ def _compute_loss_v24b(
     """
     corr_prob, dom_prob = _forward_v24b(params, x_batch)
 
-    corr_loss_per = optax.sigmoid_binary_cross_entropy(
-        corr_prob.squeeze(-1), y_corr.squeeze(-1)
-    )
+    corr_loss_per = optax.sigmoid_binary_cross_entropy(corr_prob.squeeze(-1), y_corr.squeeze(-1))
     corr_loss = jnp.mean(corr_loss_per * dream_weights)
 
     dom_log_prob = jnp.log(jnp.clip(dom_prob, 1e-7, 1.0))
@@ -776,6 +861,7 @@ def _build_triplets_v24b(
 # ---------------------------------------------------------------------------
 # Training
 # ---------------------------------------------------------------------------
+
 
 def train_jepa_v24b(
     pairs: list[dict[str, Any]],
@@ -861,9 +947,7 @@ def train_jepa_v24b(
 
         # Rebuild triplets every 50 epochs to track current energy landscape
         if epoch % 50 == 0 and epoch > 0:
-            x_pos, x_neg, delta_weights = _build_triplets_v24b(
-                X_tr, label_tr, Y_dom_tr, params
-            )
+            x_pos, x_neg, delta_weights = _build_triplets_v24b(X_tr, label_tr, Y_dom_tr, params)
 
         epoch_loss = 0.0
         n_batches = 0
@@ -894,9 +978,9 @@ def train_jepa_v24b(
                 jnp.asarray(Y_corr_val),
                 jnp.asarray(Y_dom_val),
                 jnp.ones(len(X_val), dtype=jnp.float32),
-                jnp.asarray(x_pos[:min(len(x_pos), len(X_val))]),
-                jnp.asarray(x_neg[:min(len(x_neg), len(X_val))]),
-                jnp.asarray(delta_weights[:min(len(delta_weights), len(X_val))]),
+                jnp.asarray(x_pos[: min(len(x_pos), len(X_val))]),
+                jnp.asarray(x_neg[: min(len(x_neg), len(X_val))]),
+                jnp.asarray(delta_weights[: min(len(delta_weights), len(X_val))]),
             )
         )
         val_losses.append(val_loss_val)
@@ -940,6 +1024,7 @@ def train_jepa_v24b(
 # Verdict
 # ---------------------------------------------------------------------------
 
+
 def compute_honest_verdict_v24b(
     auc_gsm8k: float,
     auc_humaneval: float,
@@ -976,6 +1061,7 @@ def compute_honest_verdict_v24b(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Experiment 844: JEPA v24b SVAMP coverage fix and evaluation."""
@@ -1054,9 +1140,7 @@ def main() -> None:
             "final_train_loss": (
                 train_log["train_losses"][-1] if train_log["train_losses"] else None
             ),
-            "final_val_loss": (
-                train_log["val_losses"][-1] if train_log["val_losses"] else None
-            ),
+            "final_val_loss": (train_log["val_losses"][-1] if train_log["val_losses"] else None),
             "auc_svamp_v24_baseline": 0.0,
             "auc_arc_v24_baseline": 0.71875,
             "svamp_triplets_file": TRIPLETS_FILE,

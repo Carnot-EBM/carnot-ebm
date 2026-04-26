@@ -63,9 +63,7 @@ class TestExp705GateClosed:
     """
 
     def _load(self) -> dict:
-        assert _EXP_705_RESULT.exists(), (
-            f"Exp 705 deliverable missing: {_EXP_705_RESULT}"
-        )
+        assert _EXP_705_RESULT.exists(), f"Exp 705 deliverable missing: {_EXP_705_RESULT}"
         return json.loads(_EXP_705_RESULT.read_text())
 
     def test_deliverable_exists(self) -> None:
@@ -75,9 +73,7 @@ class TestExp705GateClosed:
         A missing deliverable halts the research pipeline.
         Spec: REQ-VERIFY-140.
         """
-        assert _EXP_705_RESULT.exists(), (
-            f"Deliverable not found: {_EXP_705_RESULT}"
-        )
+        assert _EXP_705_RESULT.exists(), f"Deliverable not found: {_EXP_705_RESULT}"
 
     def test_deliverable_is_valid_json(self) -> None:
         """Deliverable must be parseable JSON with no syntax errors.
@@ -251,9 +247,7 @@ class TestGateOpenCascadeWiringContract:
         gate_threshold = 0.75
         # Exp 704 result
         exp_704_auc = 0.4819
-        assert exp_704_auc < gate_threshold, (
-            "Gate must be closed for AUC=0.4819"
-        )
+        assert exp_704_auc < gate_threshold, "Gate must be closed for AUC=0.4819"
 
     def test_gate_open_requires_model_saved(self) -> None:
         """When gate would open, model_saved_path must not be None.
@@ -315,6 +309,7 @@ class TestGateOpenCascadeWiringContract:
         # We do not instantiate a real LLM — just test the signature contract.
         from python.carnot.pipeline.verify_repair import VerifyRepairPipeline
         import inspect
+
         sig = inspect.signature(VerifyRepairPipeline.__init__)
         # VerifyRepairPipeline must have a 'model' parameter (tier_2_jepa_model
         # would be added when gate opens; confirm existing init still works today).

@@ -62,6 +62,7 @@ PREV_MILESTONE_CONSECUTIVE_IMPROVEMENTS: int = 13
 # Result file discovery
 # ---------------------------------------------------------------------------
 
+
 def _result_path(repo_root: Path, exp_id: int) -> Path:
     """Return the canonical result JSON path for a given experiment ID.
 
@@ -122,6 +123,7 @@ def load_prev_retro(repo_root: Path) -> dict[str, Any]:
 # Metric computation
 # ---------------------------------------------------------------------------
 
+
 def compute_wall_time_metrics(results: dict[int, dict[str, Any]]) -> dict[str, Any]:
     """Compute wall-time totals, mean, delta, and improvement flag.
 
@@ -152,8 +154,7 @@ def compute_wall_time_metrics(results: dict[int, dict[str, Any]]) -> dict[str, A
         "wall_time_delta": delta,
         "improvement": improved,
         "consecutive_wall_time_improvements": (
-            PREV_MILESTONE_CONSECUTIVE_IMPROVEMENTS + 1 if improved
-            else 0
+            PREV_MILESTONE_CONSECUTIVE_IMPROVEMENTS + 1 if improved else 0
         ),
     }
 
@@ -161,6 +162,7 @@ def compute_wall_time_metrics(results: dict[int, dict[str, Any]]) -> dict[str, A
 # ---------------------------------------------------------------------------
 # Success criteria
 # ---------------------------------------------------------------------------
+
 
 def evaluate_success_criteria(results: dict[int, dict[str, Any]]) -> dict[str, bool]:
     """Extract and evaluate all ten milestone success gates.
@@ -199,9 +201,7 @@ def evaluate_success_criteria(results: dict[int, dict[str, Any]]) -> dict[str, b
     live_code_repair_positive = si is not None and float(si) > 0.0
 
     # Gate 6: Gemma4 threshold found (Exp 760, positive_threshold_found)
-    gemma4_positive_threshold_found = bool(
-        e.get(760, {}).get("positive_threshold_found", False)
-    )
+    gemma4_positive_threshold_found = bool(e.get(760, {}).get("positive_threshold_found", False))
 
     # Gate 7: Tier 1 constraint addition works (Exp 761, honest_verdict)
     tier1_constraint_addition_works = (
@@ -238,6 +238,7 @@ def evaluate_success_criteria(results: dict[int, dict[str, Any]]) -> dict[str, b
 # Slowest-5 ranking
 # ---------------------------------------------------------------------------
 
+
 def compute_slowest_5(results: dict[int, dict[str, Any]]) -> list[dict[str, Any]]:
     """Return the five slowest experiments sorted by duration_s descending.
 
@@ -268,6 +269,7 @@ def compute_slowest_5(results: dict[int, dict[str, Any]]) -> list[dict[str, Any]
 # RETRO management
 # ---------------------------------------------------------------------------
 
+
 def compute_retros(
     results: dict[int, dict[str, Any]],
     criteria: dict[str, bool],
@@ -293,75 +295,95 @@ def compute_retros(
     # --- Closures ---
     e756 = results.get(756, {})
     if e756.get("recovery_sustained") is True:
-        closed.append({
-            "id": "RETRO-PSV-RELAPSE",
-            "reason": "Exp 756 recovery_sustained=True. Layered ABC fix confirmed. Both window slopes negative.",
-        })
+        closed.append(
+            {
+                "id": "RETRO-PSV-RELAPSE",
+                "reason": "Exp 756 recovery_sustained=True. Layered ABC fix confirmed. Both window slopes negative.",
+            }
+        )
 
     e757 = results.get(757, {})
     if e757.get("sign_convention_fixed") is True:
-        closed.append({
-            "id": "RETRO-HLS-ENERGY",
-            "reason": "Exp 757 sign_convention_fixed=True. energy_after_fix=-6.0 == expected. No source edit needed.",
-        })
+        closed.append(
+            {
+                "id": "RETRO-HLS-ENERGY",
+                "reason": "Exp 757 sign_convention_fixed=True. energy_after_fix=-6.0 == expected. No source edit needed.",
+            }
+        )
 
     if criteria.get("manifest_enforcement_applied"):
-        closed.append({
-            "id": "RETRO-MANIFEST-ENFORCEMENT",
-            "reason": "Exp 754 patch_applied=True, exp527_excluded=True. Enforcement confirmed after 4 failed cycles.",
-        })
+        closed.append(
+            {
+                "id": "RETRO-MANIFEST-ENFORCEMENT",
+                "reason": "Exp 754 patch_applied=True, exp527_excluded=True. Enforcement confirmed after 4 failed cycles.",
+            }
+        )
 
     e754 = results.get(754, {})
     if e754.get("exp527_excluded") is True:
-        closed.append({
-            "id": "RETRO-EXP527-GOVERNANCE",
-            "reason": "Exp 754 exp527_excluded=True. Exclusion manifest includes Exp 527. Governance protocol restored.",
-        })
+        closed.append(
+            {
+                "id": "RETRO-EXP527-GOVERNANCE",
+                "reason": "Exp 754 exp527_excluded=True. Exclusion manifest includes Exp 527. Governance protocol restored.",
+            }
+        )
 
     # RETRO-CODE-REPAIR (old: blocked by env var) — resolved now that Exp 759 ran
     e759 = results.get(759, {})
     if e759.get("status") == "success":
-        closed.append({
-            "id": "RETRO-CODE-REPAIR",
-            "reason": "Exp 759 ran successfully with live GPU. Original env-var block (CARNOT_FORCE_LIVE=1) resolved. New RETRO-CODE-REPAIR-ZERO opened for zero-improvement outcome.",
-        })
+        closed.append(
+            {
+                "id": "RETRO-CODE-REPAIR",
+                "reason": "Exp 759 ran successfully with live GPU. Original env-var block (CARNOT_FORCE_LIVE=1) resolved. New RETRO-CODE-REPAIR-ZERO opened for zero-improvement outcome.",
+            }
+        )
 
     # --- New openings from gate failures ---
     si = e759.get("signed_improvement")
     if si is not None and float(si) <= 0.0:
-        opened.append({
-            "id": "RETRO-CODE-REPAIR-ZERO",
-            "reason": f"Exp 759 signed_improvement={si}. Qwen3.5-0.8B too small for HumanEval 2-round repair. Must use SOTA GGUF.",
-            "resolution_path": "Use cached_sota_pair() / Qwen3.6-35B-A3B-GGUF. Expected gain: 4.9-17.1pp HumanEval.",
-        })
+        opened.append(
+            {
+                "id": "RETRO-CODE-REPAIR-ZERO",
+                "reason": f"Exp 759 signed_improvement={si}. Qwen3.5-0.8B too small for HumanEval 2-round repair. Must use SOTA GGUF.",
+                "resolution_path": "Use cached_sota_pair() / Qwen3.6-35B-A3B-GGUF. Expected gain: 4.9-17.1pp HumanEval.",
+            }
+        )
 
     e760 = results.get(760, {})
     if e760.get("status") == "blocked":
-        opened.append({
-            "id": "RETRO-GEMMA4-LOADER",
-            "reason": "Exp 760 loader failed (inference_mode=blocked_loader_failed). Gemma4 threshold grid not executed.",
-            "resolution_path": "Diagnose llama.cpp / GGUF loader. Run loader diagnostic before scheduling Gemma4 experiments.",
-        })
+        opened.append(
+            {
+                "id": "RETRO-GEMMA4-LOADER",
+                "reason": "Exp 760 loader failed (inference_mode=blocked_loader_failed). Gemma4 threshold grid not executed.",
+                "resolution_path": "Diagnose llama.cpp / GGUF loader. Run loader diagnostic before scheduling Gemma4 experiments.",
+            }
+        )
 
     e765 = results.get(765, {})
     if e765.get("status") == "not_run":
-        opened.append({
-            "id": "RETRO-JEPA-V19-NOT-RUN",
-            "reason": "Exp 765 result file absent. ood_auc gate (>0.75) unevaluated.",
-            "resolution_path": "Schedule Exp 765 re-run as first .59 experiment.",
-        })
+        opened.append(
+            {
+                "id": "RETRO-JEPA-V19-NOT-RUN",
+                "reason": "Exp 765 result file absent. ood_auc gate (>0.75) unevaluated.",
+                "resolution_path": "Schedule Exp 765 re-run as first .59 experiment.",
+            }
+        )
 
     # --- Still open (carried from prior milestones, not addressed in .58) ---
-    still_open.append({
-        "id": "RETRO-072",
-        "reason": "Vivado/Vitis HLS absent. Yosys synthesis confirmed RTL correct. Board on-hand.",
-        "consecutive_blocked_milestones": 5,
-    })
-    still_open.append({
-        "id": "RETRO-NPU",
-        "reason": "AMD XDNA toolchain install blocked by conda env conflicts.",
-        "consecutive_blocked_milestones": 5,
-    })
+    still_open.append(
+        {
+            "id": "RETRO-072",
+            "reason": "Vivado/Vitis HLS absent. Yosys synthesis confirmed RTL correct. Board on-hand.",
+            "consecutive_blocked_milestones": 5,
+        }
+    )
+    still_open.append(
+        {
+            "id": "RETRO-NPU",
+            "reason": "AMD XDNA toolchain install blocked by conda env conflicts.",
+            "consecutive_blocked_milestones": 5,
+        }
+    )
 
     return {"closed": closed, "opened": opened, "still_open": still_open}
 
@@ -369,6 +391,7 @@ def compute_retros(
 # ---------------------------------------------------------------------------
 # Honest verdict builder
 # ---------------------------------------------------------------------------
+
 
 def build_honest_verdict(
     metrics: dict[str, Any],
@@ -401,11 +424,7 @@ def build_honest_verdict(
         "_DUAL_PATHWAY_AUROC_1pt0"
         "_AST_VERIFIER_PRECISION_1pt0"
     )
-    failures = (
-        "code_repair_zero_Qwen3pt5_0pt8B_too_small"
-        "_gemma4_loader_blocked"
-        "_jepa_v19_not_run"
-    )
+    failures = "code_repair_zero_Qwen3pt5_0pt8B_too_small_gemma4_loader_blocked_jepa_v19_not_run"
 
     return (
         f"wall_time_{direction}_{delta_abs:.0f}min_vs_57_cycle_baseline"
@@ -419,6 +438,7 @@ def build_honest_verdict(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run the Milestone 2026.04.58 retrospective and write the deliverable."""
@@ -451,36 +471,37 @@ def main() -> None:
 
         # Step 8: build artifact
         not_run = [
-            eid for eid in MILESTONE_EXP_IDS
-            if results.get(eid, {}).get("status") == "not_run"
+            eid for eid in MILESTONE_EXP_IDS if results.get(eid, {}).get("status") == "not_run"
         ]
 
-        artifact = tmpl.build_result({
-            "milestone": MILESTONE,
-            "experiment_range": EXPERIMENT_RANGE,
-            "n_experiments": metrics["n_experiments"],
-            "n_planned": metrics["n_planned"],
-            "n_not_run": metrics["n_not_run"],
-            "not_run_experiments": not_run,
-            "total_wall_time_min": metrics["total_wall_time_min"],
-            "mean_min_per_experiment": metrics["mean_min_per_experiment"],
-            "prev_milestone": "2026.04.57",
-            "prev_milestone_wall_time_min": metrics["prev_milestone_wall_time_min"],
-            "prev_milestone_wall_time_basis": (
-                "conductor_cycle_wall_time_minutes from operational_retro_2026_04_57.json"
-            ),
-            "wall_time_delta": metrics["wall_time_delta"],
-            "improvement": metrics["improvement"],
-            "consecutive_wall_time_improvements": metrics["consecutive_wall_time_improvements"],
-            "success_criteria_met": criteria,
-            "criteria_met_count": sum(1 for v in criteria.values() if v),
-            "criteria_total": len(criteria),
-            "slowest_5": slowest_5,
-            "retros_closed": retros["closed"],
-            "retros_opened": retros["opened"],
-            "retros_still_open": retros["still_open"],
-            "honest_verdict": honest_verdict,
-        })
+        artifact = tmpl.build_result(
+            {
+                "milestone": MILESTONE,
+                "experiment_range": EXPERIMENT_RANGE,
+                "n_experiments": metrics["n_experiments"],
+                "n_planned": metrics["n_planned"],
+                "n_not_run": metrics["n_not_run"],
+                "not_run_experiments": not_run,
+                "total_wall_time_min": metrics["total_wall_time_min"],
+                "mean_min_per_experiment": metrics["mean_min_per_experiment"],
+                "prev_milestone": "2026.04.57",
+                "prev_milestone_wall_time_min": metrics["prev_milestone_wall_time_min"],
+                "prev_milestone_wall_time_basis": (
+                    "conductor_cycle_wall_time_minutes from operational_retro_2026_04_57.json"
+                ),
+                "wall_time_delta": metrics["wall_time_delta"],
+                "improvement": metrics["improvement"],
+                "consecutive_wall_time_improvements": metrics["consecutive_wall_time_improvements"],
+                "success_criteria_met": criteria,
+                "criteria_met_count": sum(1 for v in criteria.values() if v),
+                "criteria_total": len(criteria),
+                "slowest_5": slowest_5,
+                "retros_closed": retros["closed"],
+                "retros_opened": retros["opened"],
+                "retros_still_open": retros["still_open"],
+                "honest_verdict": honest_verdict,
+            }
+        )
 
         # Override schema to v33 as specified by milestone design doc
         artifact["schema"] = "carnot.operational_retro.v33"

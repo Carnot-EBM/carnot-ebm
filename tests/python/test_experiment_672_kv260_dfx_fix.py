@@ -48,7 +48,9 @@ def test_deliverable_path() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_blocked_artifact_when_bitfile_not_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_blocked_artifact_when_bitfile_not_set(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """When CARNOT_KV260_BITFILE is unset, main() writes a blocked artifact and exits 0.
 
     Spec: REQ-INFRA-007 — env-gate: missing environment produces blocked status.
@@ -68,7 +70,9 @@ def test_blocked_artifact_when_bitfile_not_set(tmp_path: Path, monkeypatch: pyte
     assert data["methods_tried"] == []
 
 
-def test_blocked_artifact_when_bitfile_missing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_blocked_artifact_when_bitfile_missing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """When CARNOT_KV260_BITFILE points to a nonexistent file, writes blocked artifact.
 
     Spec: REQ-INFRA-007
@@ -192,10 +196,22 @@ def test_diagnose_protocol_error() -> None:
     Why: the operator needs to know to restart dfx-mgr, not fix file permissions.
     """
     methods = [
-        {"method_name": "dfx_mgr_client", "stderr": "Timeout, server 192.168.51.98 not responding.", "exit_code": 1},
+        {
+            "method_name": "dfx_mgr_client",
+            "stderr": "Timeout, server 192.168.51.98 not responding.",
+            "exit_code": 1,
+        },
         {"method_name": "fpgautil", "stderr": "fpgautil: command not found", "exit_code": -1},
-        {"method_name": "dd_xdevcfg", "stderr": "dd: failed to open '/dev/xdevcfg': No such file or directory", "exit_code": 1},
-        {"method_name": "sysfs_firmware_copy", "stderr": "cp: cannot create regular file '/lib/firmware/x.bit.bin': Permission denied", "exit_code": 1},
+        {
+            "method_name": "dd_xdevcfg",
+            "stderr": "dd: failed to open '/dev/xdevcfg': No such file or directory",
+            "exit_code": 1,
+        },
+        {
+            "method_name": "sysfs_firmware_copy",
+            "stderr": "cp: cannot create regular file '/lib/firmware/x.bit.bin': Permission denied",
+            "exit_code": 1,
+        },
     ]
     diag = _diagnose_failure(methods)
     assert diag == "protocol_error", f"Expected protocol_error, got: {diag}"
@@ -209,7 +225,11 @@ def test_diagnose_permission_denied() -> None:
     methods = [
         {"method_name": "dfx_mgr_client", "stderr": "permission denied", "exit_code": 1},
         {"method_name": "fpgautil", "stderr": "operation not permitted", "exit_code": 1},
-        {"method_name": "dd_xdevcfg", "stderr": "permission denied writing to /dev/xdevcfg", "exit_code": 1},
+        {
+            "method_name": "dd_xdevcfg",
+            "stderr": "permission denied writing to /dev/xdevcfg",
+            "exit_code": 1,
+        },
         {"method_name": "sysfs_firmware_copy", "stderr": "Permission denied", "exit_code": 1},
     ]
     diag = _diagnose_failure(methods)

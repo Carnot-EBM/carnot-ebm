@@ -82,9 +82,7 @@ class Z3ArithmeticExtractor:
     def supported_domains(self) -> list[str]:
         return ["arithmetic"]
 
-    def extract(
-        self, text: str, domain: str | None = None
-    ) -> list[ConstraintResult]:
+    def extract(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
         if domain is not None and domain not in self.supported_domains:
             return []
         if not text.strip():
@@ -149,9 +147,7 @@ class Z3ArithmeticExtractor:
     def _split_steps(text: str) -> list[str]:
         return [part.strip() for part in _STEP_SPLIT_PATTERN.split(text) if part.strip()]
 
-    def _extract_step_constraints(
-        self, step_text: str, step_index: int
-    ) -> list[_StepConstraint]:
+    def _extract_step_constraints(self, step_text: str, step_index: int) -> list[_StepConstraint]:
         parsed: list[_StepConstraint] = []
         for match in _EXPLICIT_PATTERN.finditer(step_text):
             parsed.append(
@@ -205,9 +201,7 @@ class Z3ArithmeticExtractor:
 
         description = f"{parsed.expression_text} = {self._format_number(claimed)}"
         if parsed.approximate:
-            description = (
-                f"{parsed.expression_text} ~= {self._format_number(claimed)}"
-            )
+            description = f"{parsed.expression_text} ~= {self._format_number(claimed)}"
         if not satisfied:
             description += f" (correct: {self._format_number(correct)})"
 
@@ -286,7 +280,7 @@ class Z3ArithmeticExtractor:
                 return numerator
             return numerator / denominator
 
-        decimal = cast(str, simplified.as_decimal(12)).rstrip("?")
+        decimal = cast("str", simplified.as_decimal(12)).rstrip("?")
         return float(decimal)
 
     @staticmethod

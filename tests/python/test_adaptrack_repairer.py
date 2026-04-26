@@ -88,6 +88,7 @@ class TestShouldBacktrack:
         # REQ-REPAIR-011-1: below threshold, backtrack probability = score / threshold.
         # With score=0.25 and threshold=0.5, p=0.5 — over 200 trials we expect ~50% True.
         import random
+
         random.seed(42)
         repairer = _make_repairer(threshold=0.5)
         results = [repairer.should_backtrack(0.25) for _ in range(200)]
@@ -188,6 +189,7 @@ class TestSimulateRepair:
     def test_violation_triggers_backtrack(self) -> None:
         # SCENARIO-REPAIR-020: wrong arithmetic → backtrack_triggered=True for that sentence.
         import random
+
         random.seed(0)
         repairer = _make_repairer(threshold=0.01)  # near-zero threshold → always backtrack
         # 47+28=75 but stated as 65 — SymCodeVerifier regex catches this.
@@ -201,6 +203,7 @@ class TestSimulateRepair:
     def test_hint_injected_in_repaired_text(self) -> None:
         # When a backtrack is triggered, the hint appears in the repaired text.
         import random
+
         random.seed(0)
         # Force backtrack by patching should_backtrack to always True.
         repairer = _make_repairer(threshold=0.0)

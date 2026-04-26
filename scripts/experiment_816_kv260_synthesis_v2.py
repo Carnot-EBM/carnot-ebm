@@ -46,6 +46,7 @@ sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 from experiment_template import ExperimentTemplate  # noqa: E402
 from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: E402
 from carnot.pipeline.env_autofix import apply_env_autofix  # noqa: E402
+import contextlib
 
 DELIVERABLE = "results/experiment_816_kv260_synthesis_v2.json"
 EXP807_ARTIFACT = "results/experiment_807_oss_cad_suite_install.json"
@@ -169,9 +170,7 @@ def _run_yosys_synth(
 
     with tempfile.NamedTemporaryFile(suffix=".ys", mode="w", delete=False) as ys_tmp:
         ys_tmp.write(
-            f"read_verilog {rtl_path}\n"
-            f"synth_ice40 -top ising_sampler_v3 -json {json_path}\n"
-            "stat\n"
+            f"read_verilog {rtl_path}\nsynth_ice40 -top ising_sampler_v3 -json {json_path}\nstat\n"
         )
         ys_path = ys_tmp.name
 
@@ -183,10 +182,8 @@ def _run_yosys_synth(
     lut_count = _parse_lut_count(combined)
 
     for p in [rtl_path, json_path, ys_path]:
-        try:
+        with contextlib.suppress(Exception):
             Path(p).unlink(missing_ok=True)
-        except Exception:
-            pass
 
     return not has_error, lut_count, combined
 
@@ -368,8 +365,10 @@ def main() -> None:
     out_path = tmpl._repo_root / DELIVERABLE
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(artifact, indent=2))
-    print(f"[Exp 816] honest_verdict={artifact.get('honest_verdict')}  "
-          f"lut_count_n32={artifact.get('lut_count_n32')}")
+    print(
+        f"[Exp 816] honest_verdict={artifact.get('honest_verdict')}  "
+        f"lut_count_n32={artifact.get('lut_count_n32')}"
+    )
 
     tmpl.assert_deliverable_written()
 

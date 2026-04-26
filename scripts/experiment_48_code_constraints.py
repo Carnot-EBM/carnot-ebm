@@ -65,6 +65,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 # 1. code_to_constraints — parse Python code into a list of constraint dicts
 # ---------------------------------------------------------------------------
 
+
 def _annotation_to_type_name(node: ast.expr) -> str | None:
     """Extract a simple type name string from an AST annotation node.
 
@@ -93,7 +94,7 @@ def _collect_assigned_names(body: list[ast.stmt]) -> set[str]:
     assigned: set[str] = set()
     for stmt in body:
         if isinstance(stmt, (ast.Assign, ast.AnnAssign)):
-            for target in (stmt.targets if isinstance(stmt, ast.Assign) else [stmt.target]):
+            for target in stmt.targets if isinstance(stmt, ast.Assign) else [stmt.target]:
                 if isinstance(target, ast.Name):
                     assigned.add(target.id)
         elif isinstance(stmt, ast.For):
@@ -165,32 +166,33 @@ def code_to_constraints(code: str) -> list[dict[str, Any]]:
                 tname = _annotation_to_type_name(arg.annotation)
                 if tname:
                     param_types[arg.arg] = tname
-                    constraints.append({
-                        "kind": "type",
-                        "function": func_name,
-                        "variable": arg.arg,
-                        "expected_type": tname,
-                        "description": (
-                            f"{func_name}(): parameter '{arg.arg}' annotated "
-                            f"as {tname}"
-                        ),
-                        "satisfied": None,  # checked at logical level
-                    })
+                    constraints.append(
+                        {
+                            "kind": "type",
+                            "function": func_name,
+                            "variable": arg.arg,
+                            "expected_type": tname,
+                            "description": (
+                                f"{func_name}(): parameter '{arg.arg}' annotated as {tname}"
+                            ),
+                            "satisfied": None,  # checked at logical level
+                        }
+                    )
 
         # --- Return type annotation ---
         return_type: str | None = None
         if node.returns:
             return_type = _annotation_to_type_name(node.returns)
             if return_type:
-                constraints.append({
-                    "kind": "return_type",
-                    "function": func_name,
-                    "expected_type": return_type,
-                    "description": (
-                        f"{func_name}() annotated to return {return_type}"
-                    ),
-                    "satisfied": None,
-                })
+                constraints.append(
+                    {
+                        "kind": "return_type",
+                        "function": func_name,
+                        "expected_type": return_type,
+                        "description": (f"{func_name}() annotated to return {return_type}"),
+                        "satisfied": None,
+                    }
+                )
 
         # --- Check return statements for type consistency ---
         for child in ast.walk(node):
@@ -200,68 +202,113 @@ def code_to_constraints(code: str) -> list[dict[str, Any]]:
                 if isinstance(child.value, ast.Constant) and return_type:
                     actual = type(child.value.value).__name__
                     consistent = _types_compatible(actual, return_type)
-                    constraints.append({
-                        "kind": "return_value_type",
-                        "function": func_name,
-                        "expected_type": return_type,
-                        "actual_type": actual,
-                        "description": (
-                            f"{func_name}() returns literal of type {actual}, "
-                            f"expected {return_type}"
-                        ),
-                        "satisfied": consistent,
-                    })
+                    constraints.append(
+                        {
+                            "kind": "return_value_type",
+                            "function": func_name,
+                            "expected_type": return_type,
+                            "actual_type": actual,
+                            "description": (
+                                f"{func_name}() returns literal of type {actual}, "
+                                f"expected {return_type}"
+                            ),
+                            "satisfied": consistent,
+                        }
+                    )
 
         # --- Loop bound constraints ---
         for child in ast.walk(node):
             if isinstance(child, ast.For) and isinstance(child.target, ast.Name):
                 loop_var = child.target.id
                 # Detect ``for <var> in range(...)`` pattern.
-                if (isinstance(child.iter, ast.Call)
-                        and isinstance(child.iter.func, ast.Name)
-                        and child.iter.func.id == "range"):
+                if (
+                    isinstance(child.iter, ast.Call)
+                    and isinstance(child.iter.func, ast.Name)
+                    and child.iter.func.id == "range"
+                ):
                     args = child.iter.args
                     if len(args) == 1:
                         # range(n) → 0 <= var < n
                         bound_desc = _expr_source(args[0])
-                        constraints.append({
-                            "kind": "loop_bound",
-                            "function": func_name,
-                            "variable": loop_var,
-                            "lower": 0,
-                            "upper_expr": bound_desc,
-                            "description": (
-                                f"{func_name}(): loop var '{loop_var}' "
-                                f"bounded by 0 <= {loop_var} < {bound_desc}"
-                            ),
-                            "satisfied": True,  # range() guarantees this
-                        })
+                        constraints.append(
+                            {
+                                "kind": "loop_bound",
+                                "function": func_name,
+                                "variable": loop_var,
+                                "lower": 0,
+                                "upper_expr": bound_desc,
+                                "description": (
+                                    f"{func_name}(): loop var '{loop_var}' "
+                                    f"bounded by 0 <= {loop_var} < {bound_desc}"
+                                ),
+                                "satisfied": True,  # range() guarantees this
+                            }
+                        )
                     elif len(args) >= 2:
                         lo_desc = _expr_source(args[0])
                         hi_desc = _expr_source(args[1])
-                        constraints.append({
-                            "kind": "loop_bound",
-                            "function": func_name,
-                            "variable": loop_var,
-                            "lower_expr": lo_desc,
-                            "upper_expr": hi_desc,
-                            "description": (
-                                f"{func_name}(): loop var '{loop_var}' "
-                                f"bounded by {lo_desc} <= {loop_var} < {hi_desc}"
-                            ),
-                            "satisfied": True,
-                        })
+                        constraints.append(
+                            {
+                                "kind": "loop_bound",
+                                "function": func_name,
+                                "variable": loop_var,
+                                "lower_expr": lo_desc,
+                                "upper_expr": hi_desc,
+                                "description": (
+                                    f"{func_name}(): loop var '{loop_var}' "
+                                    f"bounded by {lo_desc} <= {loop_var} < {hi_desc}"
+                                ),
+                                "satisfied": True,
+                            }
+                        )
 
         # --- Initialization: every used name must be assigned or a param ---
         # Built-in names and module-level names are excluded from the check.
         builtins_set = {
-            "print", "len", "range", "int", "str", "float", "bool", "list",
-            "dict", "set", "tuple", "type", "isinstance", "enumerate", "zip",
-            "map", "filter", "sorted", "reversed", "sum", "min", "max", "abs",
-            "True", "False", "None", "ValueError", "TypeError", "IndexError",
-            "KeyError", "Exception", "super", "property", "staticmethod",
-            "classmethod", "open", "input", "any", "all", "iter", "next",
-            "hasattr", "getattr", "setattr",
+            "print",
+            "len",
+            "range",
+            "int",
+            "str",
+            "float",
+            "bool",
+            "list",
+            "dict",
+            "set",
+            "tuple",
+            "type",
+            "isinstance",
+            "enumerate",
+            "zip",
+            "map",
+            "filter",
+            "sorted",
+            "reversed",
+            "sum",
+            "min",
+            "max",
+            "abs",
+            "True",
+            "False",
+            "None",
+            "ValueError",
+            "TypeError",
+            "IndexError",
+            "KeyError",
+            "Exception",
+            "super",
+            "property",
+            "staticmethod",
+            "classmethod",
+            "open",
+            "input",
+            "any",
+            "all",
+            "iter",
+            "next",
+            "hasattr",
+            "getattr",
+            "setattr",
         }
         assigned_names = param_names | _collect_assigned_names(node.body)
         used_names = _collect_used_names(node)
@@ -272,28 +319,30 @@ def code_to_constraints(code: str) -> list[dict[str, Any]]:
         uninitialized -= {"self"}
 
         for uname in sorted(uninitialized):
-            constraints.append({
-                "kind": "initialization",
-                "function": func_name,
-                "variable": uname,
-                "description": (
-                    f"{func_name}(): variable '{uname}' used but never "
-                    f"assigned or passed as parameter"
-                ),
-                "satisfied": False,
-            })
+            constraints.append(
+                {
+                    "kind": "initialization",
+                    "function": func_name,
+                    "variable": uname,
+                    "description": (
+                        f"{func_name}(): variable '{uname}' used but never "
+                        f"assigned or passed as parameter"
+                    ),
+                    "satisfied": False,
+                }
+            )
 
         # If all used names are initialized, record a positive constraint.
         if not uninitialized:
-            constraints.append({
-                "kind": "initialization",
-                "function": func_name,
-                "variable": "*",
-                "description": (
-                    f"{func_name}(): all variables properly initialized"
-                ),
-                "satisfied": True,
-            })
+            constraints.append(
+                {
+                    "kind": "initialization",
+                    "function": func_name,
+                    "variable": "*",
+                    "description": (f"{func_name}(): all variables properly initialized"),
+                    "satisfied": True,
+                }
+            )
 
     return constraints
 
@@ -312,9 +361,7 @@ def _types_compatible(actual: str, expected: str) -> bool:
     if actual == "int" and expected == "float":
         return True
     # bool is a subclass of int in Python
-    if actual == "bool" and expected in ("int", "bool"):
-        return True
-    return False
+    return bool(actual == "bool" and expected in ("int", "bool"))
 
 
 def _expr_source(node: ast.expr) -> str:
@@ -336,6 +383,7 @@ def _expr_source(node: ast.expr) -> str:
 # ---------------------------------------------------------------------------
 # 2. verify_code_constraints — verify extracted constraints
 # ---------------------------------------------------------------------------
+
 
 def verify_code_constraints(
     code: str,
@@ -510,6 +558,7 @@ def _verify_logical_via_ising(
 # 3. Test scenarios — correct and buggy code snippets
 # ---------------------------------------------------------------------------
 
+
 def get_test_scenarios() -> list[dict[str, Any]]:
     """Return test scenarios: Python code snippets with expected verdicts.
 
@@ -523,102 +572,102 @@ def get_test_scenarios() -> list[dict[str, Any]]:
         # --- CORRECT code (should PASS) ---
         {
             "name": "Simple typed function",
-            "code": '''
+            "code": """
 def add(x: int, y: int) -> int:
     return x + y
-''',
+""",
             "expected_verdict": "PASS",
             "expected_issues": [],
         },
         {
             "name": "Loop with correct bounds",
-            "code": '''
+            "code": """
 def sum_list(arr: list) -> int:
     total = 0
     for i in range(len(arr)):
         total += arr[i]
     return total
-''',
+""",
             "expected_verdict": "PASS",
             "expected_issues": [],
         },
         {
             "name": "Function returning correct literal type",
-            "code": '''
+            "code": """
 def get_count() -> int:
     return 42
-''',
+""",
             "expected_verdict": "PASS",
             "expected_issues": [],
         },
         {
             "name": "Multiple functions, all correct",
-            "code": '''
+            "code": """
 def greet(name: str) -> str:
     return "hello"
 
 def double(x: int) -> int:
     return 2
-''',
+""",
             "expected_verdict": "PASS",
             "expected_issues": [],
         },
         {
             "name": "Loop with start and stop",
-            "code": '''
+            "code": """
 def partial_sum(arr: list, start: int, end: int) -> int:
     total = 0
     for i in range(start, end):
         total += arr[i]
     return total
-''',
+""",
             "expected_verdict": "PASS",
             "expected_issues": [],
         },
         # --- BUGGY code (should FAIL) ---
         {
             "name": "Return type mismatch (str instead of int)",
-            "code": '''
+            "code": """
 def get_id() -> int:
     return "not_a_number"
-''',
+""",
             "expected_verdict": "FAIL",
             "expected_issues": ["return_value_type"],
         },
         {
             "name": "Uninitialized variable used",
-            "code": '''
+            "code": """
 def compute(x: int) -> int:
     return x + uninitialized_var
-''',
+""",
             "expected_verdict": "FAIL",
             "expected_issues": ["initialization"],
         },
         {
             "name": "Multiple uninitialized variables",
-            "code": '''
+            "code": """
 def broken(a: int) -> int:
     result = a + b + c
     return result
-''',
+""",
             "expected_verdict": "FAIL",
             "expected_issues": ["initialization"],
         },
         {
             "name": "Return bool when int expected",
-            "code": '''
+            "code": """
 def check_positive(x: int) -> str:
     return True
-''',
+""",
             "expected_verdict": "FAIL",
             "expected_issues": ["return_value_type"],
         },
         {
             "name": "Float return when str expected",
-            "code": '''
+            "code": """
 def get_name() -> str:
     return 3.14
-''',
+""",
             "expected_verdict": "FAIL",
             "expected_issues": ["return_value_type"],
         },
@@ -628,6 +677,7 @@ def get_name() -> str:
 # ---------------------------------------------------------------------------
 # 4. Main — run all scenarios and print results
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     """Run all test scenarios and print a results table."""
@@ -669,15 +719,17 @@ def main() -> int:
                 sat = "✓" if c.get("verified", c.get("satisfied")) else "✗"
                 print(f"        [{sat}] {c['description']}")
 
-        results.append({
-            "name": name,
-            "expected": expected,
-            "actual": actual,
-            "correct_detection": correct_detection,
-            "n_constraints": n_c,
-            "n_violated": n_v,
-            "details": verification,
-        })
+        results.append(
+            {
+                "name": name,
+                "expected": expected,
+                "actual": actual,
+                "correct_detection": correct_detection,
+                "n_constraints": n_c,
+                "n_violated": n_v,
+                "details": verification,
+            }
+        )
 
     # --- Summary ---
     elapsed = time.time() - start
@@ -690,18 +742,10 @@ def main() -> int:
     n_correct = sum(1 for r in results if r["correct_detection"])
     n_pass_expected = sum(1 for r in results if r["expected"] == "PASS")
     n_fail_expected = sum(1 for r in results if r["expected"] == "FAIL")
-    n_true_pos = sum(
-        1 for r in results if r["expected"] == "FAIL" and r["actual"] == "FAIL"
-    )
-    n_true_neg = sum(
-        1 for r in results if r["expected"] == "PASS" and r["actual"] == "PASS"
-    )
-    n_false_pos = sum(
-        1 for r in results if r["expected"] == "PASS" and r["actual"] == "FAIL"
-    )
-    n_false_neg = sum(
-        1 for r in results if r["expected"] == "FAIL" and r["actual"] == "PASS"
-    )
+    n_true_pos = sum(1 for r in results if r["expected"] == "FAIL" and r["actual"] == "FAIL")
+    n_true_neg = sum(1 for r in results if r["expected"] == "PASS" and r["actual"] == "PASS")
+    n_false_pos = sum(1 for r in results if r["expected"] == "PASS" and r["actual"] == "FAIL")
+    n_false_neg = sum(1 for r in results if r["expected"] == "FAIL" and r["actual"] == "PASS")
 
     print(f"  Total scenarios:                  {n_total}")
     print(f"  Correct detections:               {n_correct}/{n_total}")

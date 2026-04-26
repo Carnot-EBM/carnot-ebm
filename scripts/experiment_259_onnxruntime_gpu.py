@@ -89,8 +89,7 @@ _CORPUS: list[dict[str, Any]] = [
     },
     {
         "text": (
-            "First, 55 + 45 = 100. Then 100 * 4 = 400. "
-            "So 400 - 170 = 230. Divide: 230 / 2 = 115."
+            "First, 55 + 45 = 100. Then 100 * 4 = 400. So 400 - 170 = 230. Divide: 230 / 2 = 115."
         ),
         "domain": "arithmetic",
         "prior_confidence": 0.70,
@@ -140,6 +139,7 @@ def _gpu_memory_mb() -> float | None:
     # pynvml path (preferred — low overhead, no CUDA context required).
     try:
         import pynvml  # noqa: PLC0415
+
         pynvml.nvmlInit()
         handle = pynvml.nvmlDeviceGetHandleByIndex(0)
         info = pynvml.nvmlDeviceGetMemoryInfo(handle)
@@ -150,6 +150,7 @@ def _gpu_memory_mb() -> float | None:
     # PyTorch fallback.
     try:
         import torch  # noqa: PLC0415
+
         if torch.cuda.is_available():
             return round(torch.cuda.memory_allocated(0) / (1024 * 1024), 1)
     except Exception:
@@ -250,7 +251,9 @@ def _bench_onnx_cpu(vp: PredictiveVerifier, onnx_path: Path) -> dict[str, Any]:
             str(row["text"]),
             domain=str(row["domain"]),
             prior_confidence=float(row["prior_confidence"]),
-        ).to_array().reshape(1, FEATURE_DIM)
+        )
+        .to_array()
+        .reshape(1, FEATURE_DIM)
         for row in _CORPUS
     ]
 
@@ -348,9 +351,7 @@ def _bench_onnx_cuda(vp: PredictiveVerifier, onnx_path: Path) -> dict[str, Any]:
             "status": "blocker",
             "missing_component": "onnxruntime CUDAExecutionProvider",
             "available_providers": available,
-            "install_hint": (
-                "pip install onnxruntime-gpu  # CUDA 12 build; replaces onnxruntime"
-            ),
+            "install_hint": ("pip install onnxruntime-gpu  # CUDA 12 build; replaces onnxruntime"),
             "latency_ms": None,
             "latency_us": None,
             "throughput_calls_per_sec": None,
@@ -429,6 +430,7 @@ def main() -> None:
     # Step 1: verify CUDA EP.
     try:
         import onnxruntime as ort  # noqa: PLC0415
+
         available_providers = ort.get_available_providers()
         cuda_available = "CUDAExecutionProvider" in available_providers
         print(f"  ORT version     : {ort.__version__}")
@@ -553,9 +555,7 @@ def main() -> None:
 
         # CUDA speedup for summary (may be None if blocked).
         cuda_speedup = (
-            rec_cuda.get("speedup_vs_cpu_ort")
-            if rec_cuda.get("status") == "ok"
-            else None
+            rec_cuda.get("speedup_vs_cpu_ort") if rec_cuda.get("status") == "ok" else None
         )
 
         results: dict[str, Any] = {
@@ -617,7 +617,7 @@ def _build_verdict(
             )
         else:
             perf_desc = (
-                f"CUDA ORT is {1/speedup:.2f}× SLOWER than CPU ORT per call. "
+                f"CUDA ORT is {1 / speedup:.2f}× SLOWER than CPU ORT per call. "
                 "This is expected for a 9→1 linear gate: CUDA kernel launch overhead "
                 "dominates the ~1 µs computation.  Advantage appears at batch sizes ≥ 32. "
             )
@@ -666,7 +666,7 @@ def _print_summary(s: dict[str, Any]) -> None:
         if ratio >= 1.0:
             print(f"  CUDA speedup vs CPU ORT : {ratio:.2f}× faster")
         else:
-            print(f"  CUDA overhead vs CPU ORT: {1/ratio:.2f}× slower (kernel launch dominates)")
+            print(f"  CUDA overhead vs CPU ORT: {1 / ratio:.2f}× slower (kernel launch dominates)")
     print(f"  Paths OK     : {s['paths_ok']}")
     print(f"  Paths BLOCKED: {s['paths_blocked']}")
 

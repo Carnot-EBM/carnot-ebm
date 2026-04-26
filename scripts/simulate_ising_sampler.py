@@ -38,7 +38,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Optional
 
 import numpy as np
 
@@ -180,27 +179,28 @@ REG_CONTROL: int = 0x0000
 REG_STATUS: int = 0x0004
 REG_SPIN_COUNT: int = 0x0008
 REG_BETA_FINAL: int = 0x001C
-REG_BIAS_BASE: int = 0x1000    # 0x1000 + 4*i for spin i
-REG_ADJ_BASE: int = 0x2000     # 0x2000 + 4*(i*MAX_DEGREE + k) for spin i neighbour k
+REG_BIAS_BASE: int = 0x1000  # 0x1000 + 4*i for spin i
+REG_ADJ_BASE: int = 0x2000  # 0x2000 + 4*(i*MAX_DEGREE + k) for spin i neighbour k
 # REG_COUPL_BASE must be above the maximum adj_ram address for N=128, MAX_DEGREE=32:
 # max adj_addr = 0x2000 + 4*(128*32 - 1) = 0x2000 + 0x3FFC = 0x5FFC → base 0x6000 is safe.
-REG_COUPL_BASE: int = 0x6000   # 0x6000 + 4*(i*MAX_DEGREE + k) for spin i coupling k
+REG_COUPL_BASE: int = 0x6000  # 0x6000 + 4*(i*MAX_DEGREE + k) for spin i coupling k
 # REG_SPIN_OUT_BASE must be above coupl_ram: 0x6000 + 4*(128*32) = 0x6000 + 0x4000 = 0xA000
 REG_SPIN_OUT_BASE: int = 0xA010  # 0xA010 + 4*word for packed spin output
 
 # Control register bit positions
-CTRL_START: int = 0   # bit 0: start sampling
-CTRL_RESET: int = 1   # bit 1: reset to idle
+CTRL_START: int = 0  # bit 0: start sampling
+CTRL_RESET: int = 1  # bit 1: reset to idle
 
 # Status register bit positions
-STATUS_READY: int = 0   # bit 0: ready for configuration
-STATUS_BUSY: int = 1    # bit 1: sampling in progress
-STATUS_DONE: int = 2    # bit 2: sampling complete, results valid
+STATUS_READY: int = 0  # bit 0: ready for configuration
+STATUS_BUSY: int = 1  # bit 1: sampling in progress
+STATUS_DONE: int = 2  # bit 2: sampling complete, results valid
 
 
 # ---------------------------------------------------------------------------
 # β-schedule helpers (mirror Verilog β-step logic)
 # ---------------------------------------------------------------------------
+
 
 def compute_beta_schedule(
     n_steps: int,
@@ -251,6 +251,7 @@ def compute_beta_schedule(
 # ---------------------------------------------------------------------------
 # Main behavioral simulation class
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class IsingSimulator:
@@ -317,12 +318,8 @@ class IsingSimulator:
         """
         self.spins = np.ones(self.n_spins, dtype=np.int8)
         self.bias_q88 = np.zeros(self.n_spins, dtype=np.int16)
-        self.adj_ram = np.full(
-            (self.n_spins, self.max_degree), fill_value=-1, dtype=np.int16
-        )
-        self.coupl_q88 = np.zeros(
-            (self.n_spins, self.max_degree), dtype=np.int16
-        )
+        self.adj_ram = np.full((self.n_spins, self.max_degree), fill_value=-1, dtype=np.int16)
+        self.coupl_q88 = np.zeros((self.n_spins, self.max_degree), dtype=np.int16)
         self._lfsr = LFSR16(seed=self.lfsr_seed)
         self._done = False
         # Initialise register file
@@ -407,8 +404,8 @@ class IsingSimulator:
         elif REG_STATUS <= address < REG_SPIN_COUNT:
             # Compute live STATUS from _done flag
             if self._done:
-                return (1 << STATUS_DONE)
-            return (1 << STATUS_READY)
+                return 1 << STATUS_DONE
+            return 1 << STATUS_READY
         elif REG_SPIN_OUT_BASE <= address < REG_SPIN_OUT_BASE + 4 * 4:
             # Packed spin output: 32 spins per 32-bit word (+1 → 1, −1 → 0)
             word_idx = (address - REG_SPIN_OUT_BASE) // 4
@@ -417,7 +414,7 @@ class IsingSimulator:
             packed = 0
             for bit in range(bit_start, bit_end):
                 if self.spins[bit] == 1:
-                    packed |= (1 << (bit - bit_start))
+                    packed |= 1 << (bit - bit_start)
             return packed
         elif REG_BIAS_BASE <= address < REG_ADJ_BASE:
             i = (address - REG_BIAS_BASE) // 4
@@ -561,7 +558,7 @@ class IsingSimulator:
                 self._full_sweep(beta_q88)
 
         self._done = True
-        self._regs[REG_STATUS] = (1 << STATUS_DONE)
+        self._regs[REG_STATUS] = 1 << STATUS_DONE
         return self.spins.copy()
 
     # ------------------------------------------------------------------
@@ -572,7 +569,7 @@ class IsingSimulator:
         self,
         coupling: np.ndarray,
         bias: np.ndarray,
-        beta_max: Optional[float] = None,
+        beta_max: float | None = None,
     ) -> None:
         """Load an Ising problem into the simulator's RAM model.
 
@@ -591,9 +588,7 @@ class IsingSimulator:
         """
         n = coupling.shape[0]
         if n > self.n_spins:
-            raise ValueError(
-                f"Problem size {n} exceeds simulator capacity {self.n_spins}"
-            )
+            raise ValueError(f"Problem size {n} exceeds simulator capacity {self.n_spins}")
         if beta_max is not None:
             self.beta_max = beta_max
         # Write SPIN_COUNT and BETA_FINAL
@@ -657,6 +652,7 @@ class IsingSimulator:
 # CLI entry point for quick manual testing
 # ---------------------------------------------------------------------------
 
+
 def _build_ring_problem(n: int = 128) -> tuple[np.ndarray, np.ndarray]:
     """Build a ferromagnetic ring Ising problem (ground state: all-up).
 
@@ -678,9 +674,7 @@ def main() -> None:
     """Run a quick 128-spin ring simulation and report final energy."""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Behavioral simulation of ising_sampler_v1.v"
-    )
+    parser = argparse.ArgumentParser(description="Behavioral simulation of ising_sampler_v1.v")
     parser.add_argument("--n-spins", type=int, default=128)
     parser.add_argument("--n-steps", type=int, default=1000)
     parser.add_argument("--beta-min", type=float, default=0.1)

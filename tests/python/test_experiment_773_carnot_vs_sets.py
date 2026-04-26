@@ -118,7 +118,9 @@ def test_generate_candidates_custom_n():
     """generate_candidates respects n_candidates when custom prefixes supplied. REQ-COMPARE-001."""
     llm_fn, calls = _make_counter_llm()
     custom_prefixes = ["Prefix A:", "Prefix B:"]
-    baseline = SETSBaseline(llm_fn=llm_fn, config=SETSConfig(n_candidates=2), prefixes=custom_prefixes)
+    baseline = SETSBaseline(
+        llm_fn=llm_fn, config=SETSConfig(n_candidates=2), prefixes=custom_prefixes
+    )
     candidates = baseline.generate_candidates("Test?")
     assert len(candidates) == 2
     assert len(calls) == 2
@@ -257,7 +259,9 @@ def test_run_oracle_call_count_no_early_stop():
     # N=4 generation + 4 verification (all say No, we check all) + 1 correction = 9
     # But SETS stops verifying at first "Yes" — with all "No", it checks all N.
     llm_fn, calls = _make_counter_llm()
-    baseline = SETSBaseline(llm_fn=llm_fn, config=SETSConfig(n_candidates=4, max_correction_rounds=1))
+    baseline = SETSBaseline(
+        llm_fn=llm_fn, config=SETSConfig(n_candidates=4, max_correction_rounds=1)
+    )
     result = baseline.run("Q?")
     # 4 gen + 4 verify (all No, loop runs all) + 1 correction = 9
     assert result.n_oracle_calls == 9
@@ -268,7 +272,9 @@ def test_run_oracle_call_count_early_stop():
     # yes_on_index=0: first verification says "Yes" → skip remaining 3 verifications.
     # 4 generation + 1 verification + 1 correction = 6
     llm_fn, _ = _make_yes_llm(yes_on_index=0)
-    baseline = SETSBaseline(llm_fn=llm_fn, config=SETSConfig(n_candidates=4, max_correction_rounds=1))
+    baseline = SETSBaseline(
+        llm_fn=llm_fn, config=SETSConfig(n_candidates=4, max_correction_rounds=1)
+    )
     result = baseline.run("Q?")
     assert result.n_oracle_calls == 6
 
@@ -284,7 +290,9 @@ def test_run_candidates_populated():
 def test_run_correction_applied():
     """run() sets correction_applied=True when max_correction_rounds > 0. REQ-COMPARE-001 (c)."""
     llm_fn, _ = _make_counter_llm()
-    baseline = SETSBaseline(llm_fn=llm_fn, config=SETSConfig(n_candidates=4, max_correction_rounds=1))
+    baseline = SETSBaseline(
+        llm_fn=llm_fn, config=SETSConfig(n_candidates=4, max_correction_rounds=1)
+    )
     result = baseline.run("Q?")
     assert result.correction_applied is True
 
@@ -292,7 +300,9 @@ def test_run_correction_applied():
 def test_run_no_correction():
     """run() sets correction_applied=False when max_correction_rounds=0. REQ-COMPARE-001."""
     llm_fn, calls = _make_counter_llm()
-    baseline = SETSBaseline(llm_fn=llm_fn, config=SETSConfig(n_candidates=4, max_correction_rounds=0))
+    baseline = SETSBaseline(
+        llm_fn=llm_fn, config=SETSConfig(n_candidates=4, max_correction_rounds=0)
+    )
     result = baseline.run("Q?")
     assert result.correction_applied is False
     # 4 generation + 4 verification = 8 oracle calls (no correction)
@@ -315,7 +325,9 @@ def test_oracle_call_ratio_calculation():
 def test_oracle_call_ratio_positive():
     """oracle_call_ratio is always positive when both systems make at least one call. REQ-COMPARE-002."""
     llm_fn, _ = _make_counter_llm()
-    baseline = SETSBaseline(llm_fn=llm_fn, config=SETSConfig(n_candidates=4, max_correction_rounds=1))
+    baseline = SETSBaseline(
+        llm_fn=llm_fn, config=SETSConfig(n_candidates=4, max_correction_rounds=1)
+    )
     result = baseline.run("Q?")
     carnot_calls = 1
     ratio = result.n_oracle_calls / carnot_calls
@@ -331,6 +343,7 @@ def test_mock_llm_returns_correct_answer():
     """Mock LLM returns correct answer when question matches. REQ-COMPARE-002."""
     import sys
     from pathlib import Path
+
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.experiment_773_carnot_vs_sets import _build_mock_llm, GSM8K_QUESTIONS
 
@@ -345,6 +358,7 @@ def test_mock_llm_verification_yes_for_correct():
     """Mock LLM says Yes when answer matches expected. REQ-COMPARE-001 (b)."""
     import sys
     from pathlib import Path
+
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.experiment_773_carnot_vs_sets import _build_mock_llm, GSM8K_QUESTIONS
 
@@ -360,6 +374,7 @@ def test_mock_llm_verification_no_for_wrong():
     """Mock LLM says No when answer does not match expected. REQ-COMPARE-001 (b)."""
     import sys
     from pathlib import Path
+
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.experiment_773_carnot_vs_sets import _build_mock_llm, GSM8K_QUESTIONS
 
@@ -374,6 +389,7 @@ def test_mock_llm_correction_returns_correct():
     """Mock LLM self-correction returns correct answer. REQ-COMPARE-001 (c)."""
     import sys
     from pathlib import Path
+
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.experiment_773_carnot_vs_sets import _build_mock_llm, GSM8K_QUESTIONS
 
@@ -389,6 +405,7 @@ def test_mock_llm_unknown_question_fallback():
     """Mock LLM returns fallback '42' for unknown questions. REQ-COMPARE-002."""
     import sys
     from pathlib import Path
+
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from scripts.experiment_773_carnot_vs_sets import _build_mock_llm
 

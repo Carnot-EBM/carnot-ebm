@@ -37,7 +37,7 @@ Spec: REQ-KONA-001, REQ-KONA-002, REQ-KONA-003,
 from __future__ import annotations
 
 import datetime
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
@@ -135,7 +135,7 @@ def sample_continuous(
     x = rng.uniform(-1.0, 1.0, size=model.variables)
 
     J = model.coupling  # shape (n, n)
-    h = model.bias      # shape (n,)
+    h = model.bias  # shape (n,)
 
     for _ in range(n_steps):
         # Analytic gradient of E(x) = -0.5 x^T J x - h^T x

@@ -247,9 +247,7 @@ def run_experiment() -> None:
     # Precision: of all flagged, how many were truly incorrect?
     # n_violations_found = TP + FP; precision = TP / (TP + FP) if any flagged.
     n_flagged = coace_result.n_true_positive + coace_result.n_false_positive
-    coace_precision = (
-        coace_result.n_true_positive / n_flagged if n_flagged > 0 else 0.0
-    )
+    coace_precision = coace_result.n_true_positive / n_flagged if n_flagged > 0 else 0.0
     # Recall == tp_rate (both are TP / total_incorrect).
     coace_recall = coace_tp_rate
 

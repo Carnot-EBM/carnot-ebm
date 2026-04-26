@@ -60,22 +60,22 @@ _N_NEW_TARGET = 1000
 _N_PER_CLASS_NEW = 500
 
 # Built-in synthetic benign prompts (math + coding) used when corpus files lack examples.
-_SYNTHETIC_BENIGN = [
-    f"What is {i} + {i + 3}?" for i in range(50)
-] + [
-    f"Write a Python function that computes the factorial of {i}." for i in range(50)
-] + [
-    "Explain how a binary search tree works.",
-    "What is the capital of France?",
-    "How do you sort a list in Python?",
-    "Explain the difference between TCP and UDP.",
-    "What does the `len()` function do in Python?",
-    "Describe the quicksort algorithm.",
-    "What is a hash table?",
-    "How does gradient descent work?",
-    "What is a REST API?",
-    "Explain recursion with an example.",
-]
+_SYNTHETIC_BENIGN = (
+    [f"What is {i} + {i + 3}?" for i in range(50)]
+    + [f"Write a Python function that computes the factorial of {i}." for i in range(50)]
+    + [
+        "Explain how a binary search tree works.",
+        "What is the capital of France?",
+        "How do you sort a list in Python?",
+        "Explain the difference between TCP and UDP.",
+        "What does the `len()` function do in Python?",
+        "Describe the quicksort algorithm.",
+        "What is a hash table?",
+        "How does gradient descent work?",
+        "What is a REST API?",
+        "Explain recursion with an example.",
+    ]
+)
 
 # Built-in synthetic injection prompts (common attack patterns).
 _SYNTHETIC_INJECTION = [
@@ -171,13 +171,15 @@ def _load_v1_labeled_examples(corpus_dir: Path, log: logging.Logger) -> list[dic
         if teacher_label_int not in (0, 1):
             continue
         label_str = "injection" if teacher_label_int == 1 else "benign"
-        labeled.append({
-            "text": text,
-            "label": label_str,
-            "source": "teacher_distilled:v690",
-            "teacher_label": teacher_label_int,
-            "elapsed_s": entry.get("elapsed_s", 0.0),
-        })
+        labeled.append(
+            {
+                "text": text,
+                "label": label_str,
+                "source": "teacher_distilled:v690",
+                "teacher_label": teacher_label_int,
+                "elapsed_s": entry.get("elapsed_s", 0.0),
+            }
+        )
 
     log.info("Loaded %d v1 teacher-labeled examples from v690 cache", len(labeled))
     return labeled
@@ -278,6 +280,7 @@ def main() -> None:
     """Run Exp 710 end-to-end with a 120-minute hard stop."""
     try:
         from carnot.pipeline.env_autofix import apply_env_autofix
+
         apply_env_autofix()
     except ImportError:
         pass
@@ -292,9 +295,7 @@ def main() -> None:
     from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog
 
     DELIVERABLE = "results/experiment_710_kan_distill_v2.json"
-    V2_WEIGHTS_PATH = (
-        _REPO_ROOT / "results" / "prompt_injection_kan_v2.pt"
-    )
+    V2_WEIGHTS_PATH = _REPO_ROOT / "results" / "prompt_injection_kan_v2.pt"
     CORPUS_DIR = _REPO_ROOT / "data" / "prompt_injection_distill"
     TEACHER_CACHE_V2 = _REPO_ROOT / "results" / "prompt_injection_teacher_labels_v2.json"
 
@@ -381,19 +382,23 @@ def _run(tmpl, log, deliverable, v2_weights_path, corpus_dir, teacher_cache_v2_p
 
     # v1 teacher-labeled examples.
     for ex in v1_labeled:
-        all_examples.append(InjectionExample(
-            text=ex["text"],
-            label=ex["label"],
-            source=ex.get("source", "teacher_distilled:v690"),
-        ))
+        all_examples.append(
+            InjectionExample(
+                text=ex["text"],
+                label=ex["label"],
+                source=ex.get("source", "teacher_distilled:v690"),
+            )
+        )
 
     # New examples: teacher labels if available, else source labels.
     for item in teacher_labeled_new:
-        all_examples.append(InjectionExample(
-            text=item["text"],
-            label=item["label"],
-            source=item.get("source", "unknown"),
-        ))
+        all_examples.append(
+            InjectionExample(
+                text=item["text"],
+                label=item["label"],
+                source=item.get("source", "unknown"),
+            )
+        )
 
     n_training_examples = len(all_examples)
     log.info("Combined corpus: %d examples", n_training_examples)
@@ -520,13 +525,16 @@ def _try_teacher_inference(
         try:
             with open(cache_path) as fh:
                 existing_cache = json.load(fh)
-            log.info("Loaded %d entries from v2 teacher cache at %s", len(existing_cache), cache_path)
+            log.info(
+                "Loaded %d entries from v2 teacher cache at %s", len(existing_cache), cache_path
+            )
         except Exception as exc:
             log.warning("Failed to load v2 teacher cache: %s", exc)
 
     # Try to resolve the teacher model.
     try:
         from carnot.inference.sota_models import resolve_cached_gguf
+
         model_path = resolve_cached_gguf("unsloth/gpt-oss-safeguard-20b-GGUF", "Q4_K_M")
     except Exception as exc:
         log.info("resolve_cached_gguf unavailable (%s) — using source labels", exc)
@@ -567,11 +575,13 @@ def _try_teacher_inference(
             entry = existing_cache.get(key)
             if entry and entry.get("teacher_label") in (0, 1):
                 label_str = "injection" if entry["teacher_label"] == 1 else "benign"
-                labeled.append({
-                    "text": item["text"],
-                    "label": label_str,
-                    "source": "teacher_distilled:cached",
-                })
+                labeled.append(
+                    {
+                        "text": item["text"],
+                        "label": label_str,
+                        "source": "teacher_distilled:cached",
+                    }
+                )
                 total_from_cache += entry.get("elapsed_s", 0.0)
             else:
                 labeled.append(item)
@@ -599,7 +609,9 @@ def _try_teacher_inference(
     )
 
     total_duration_s = sum(
-        existing_cache.get(json.dumps([model_sha, hashlib.sha256(item["text"].encode()).hexdigest()[:16]]), {}).get("elapsed_s", 0.0)
+        existing_cache.get(
+            json.dumps([model_sha, hashlib.sha256(item["text"].encode()).hexdigest()[:16]]), {}
+        ).get("elapsed_s", 0.0)
         for item in new_items
     )
 
@@ -620,7 +632,9 @@ def _try_teacher_inference(
         entry = existing_cache.get(key)
         if entry and entry.get("teacher_label") in (0, 1):
             label_str = "injection" if entry["teacher_label"] == 1 else "benign"
-            labeled.append({"text": item["text"], "label": label_str, "source": "teacher_distilled:v710"})
+            labeled.append(
+                {"text": item["text"], "label": label_str, "source": "teacher_distilled:v710"}
+            )
         else:
             # Cache miss — fall back to source label.
             labeled.append(item)

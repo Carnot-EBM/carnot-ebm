@@ -261,9 +261,7 @@ class SAVeRVerifier:
         # history[0] is the initial verification before any repairs.
         initial_violations: list[str] = []
         if repair_result.history:
-            initial_violations = [
-                v.description for v in repair_result.history[0].violations
-            ]
+            initial_violations = [v.description for v in repair_result.history[0].violations]
 
         committed = repair_result.verified
         repair_attempts = repair_result.iterations

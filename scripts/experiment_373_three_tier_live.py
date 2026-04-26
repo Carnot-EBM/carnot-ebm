@@ -338,12 +338,14 @@ def _attach_attention_matrices(
         n_heads = 4
 
         attn = _make_approximate_attention(n_heads, seq_len, correct, rng)
-        result.append({
-            "response": response_text,
-            "question": question_text,
-            "attention_matrix": attn,
-            "correct": correct,
-        })
+        result.append(
+            {
+                "response": response_text,
+                "question": question_text,
+                "attention_matrix": attn,
+                "correct": correct,
+            }
+        )
 
     return result
 
@@ -427,12 +429,14 @@ def _build_fallback_responses(n: int) -> list[dict[str, Any]]:
             f"The answer is {answer}."
         )
         seq_len = max(16, min(128, len(response_text.split()) + 4))
-        responses.append({
-            "response": response_text,
-            "question": f"What is {i} × 3 + 1?",
-            "attention_matrix": _make_approximate_attention(4, seq_len, True, rng),
-            "correct": True,
-        })
+        responses.append(
+            {
+                "response": response_text,
+                "question": f"What is {i} × 3 + 1?",
+                "attention_matrix": _make_approximate_attention(4, seq_len, True, rng),
+                "correct": True,
+            }
+        )
 
     for i in range(n_wrong):
         wrong_answer = i * 5 + 99
@@ -441,12 +445,14 @@ def _build_fallback_responses(n: int) -> list[dict[str, Any]]:
             f"It could be various things depending on interpretation."
         )
         seq_len = max(16, min(128, len(response_text.split()) + 4))
-        responses.append({
-            "response": response_text,
-            "question": f"What is {i} × 3 + 1?",
-            "attention_matrix": _make_approximate_attention(4, seq_len, False, rng),
-            "correct": False,
-        })
+        responses.append(
+            {
+                "response": response_text,
+                "question": f"What is {i} × 3 + 1?",
+                "attention_matrix": _make_approximate_attention(4, seq_len, False, rng),
+                "correct": False,
+            }
+        )
 
     return responses
 

@@ -340,7 +340,7 @@ class TestAggregateTrialResults:
 
     def test_std_best_energy_multiple_trials(self):
         """SCENARIO-SAMPLE-007: std_best_energy reflects variation in best-found across trials."""
-        e1 = np.array([-10.0, -8.0])   # best = -10
+        e1 = np.array([-10.0, -8.0])  # best = -10
         e2 = np.array([-20.0, -15.0])  # best = -20
         result = aggregate_trial_results([e1, e2], ground_energy=-25.0, elapsed_list=[0.1, 0.1])
         assert result["std_best_energy"] == pytest.approx(5.0)
@@ -397,7 +397,7 @@ class TestRunOneSampler:
         call_args = mock.minimize_energy.call_args
         np.testing.assert_array_equal(call_args[0][0], b)  # biases
         np.testing.assert_array_equal(call_args[0][1], J)  # couplings
-        assert call_args[0][2] == 4    # n_samples
+        assert call_args[0][2] == 4  # n_samples
         assert call_args[0][3] == 200  # n_steps
         assert call_args[0][4] == 7.0  # beta
 
@@ -429,9 +429,7 @@ class TestPlantedProblemEnergyIntegration:
         # For a small problem (n=10), exhaustively check that the planted state
         # achieves lower energy than 500 random configurations.
         rng = np.random.default_rng(77)
-        b, J, planted, ge = make_planted_ising_problem(
-            n_spins=10, density=1.0, rng=rng
-        )
+        b, J, planted, ge = make_planted_ising_problem(n_spins=10, density=1.0, rng=rng)
         # Random samples
         rand_samples = rng.integers(0, 2, (500, 10)).astype(bool)
         rand_energies = compute_ising_energies(b, J, rand_samples)

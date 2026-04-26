@@ -358,8 +358,15 @@ class TestDeliverableSchema:
         if not path.exists():
             pytest.skip("deliverable not written yet")
         data = json.loads(path.read_text())
-        required = ["experiment", "title", "run_date", "started_at", "finished_at",
-                    "duration_s", "status"]
+        required = [
+            "experiment",
+            "title",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+        ]
         for field in required:
             assert field in data, f"Missing required field: {field}"
 

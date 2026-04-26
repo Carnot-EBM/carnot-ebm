@@ -248,9 +248,9 @@ class ChainSpec:
 
     chain_id: int
     label: str
-    chain_type: str          # "consistent" | "inconsistent"
+    chain_type: str  # "consistent" | "inconsistent"
     contradiction_type: str | None
-    steps: list[tuple[str, str]]   # [(question, response), ...]
+    steps: list[tuple[str, str]]  # [(question, response), ...]
     expected_consistent: bool
     mode_b_detectable: bool = False  # True if KB can catch a wrong claim locally
 
@@ -278,274 +278,294 @@ def _build_consistent_chains() -> list[ChainSpec]:
     chains: list[ChainSpec] = []
 
     # C1: France geography — sequential facts that all agree
-    chains.append(ChainSpec(
-        chain_id=0,
-        label="C1-France-geography",
-        chain_type="consistent",
-        contradiction_type=None,
-        steps=[
-            (
-                "What is the capital of France?",
-                "Paris is the capital of France. It has been the country's seat of government for centuries.",
-            ),
-            (
-                "What language do people speak in France?",
-                "French is the official language of France. French is spoken by the vast majority of citizens.",
-            ),
-            (
-                "What continent is France located on?",
-                "France is located in Europe. It is a founding member of the European Union.",
-            ),
-            (
-                "What currency does France use?",
-                "France uses the Euro as its currency. The Euro was adopted in 1999 when France joined the Eurozone.",
-            ),
-        ],
-        expected_consistent=True,
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=0,
+            label="C1-France-geography",
+            chain_type="consistent",
+            contradiction_type=None,
+            steps=[
+                (
+                    "What is the capital of France?",
+                    "Paris is the capital of France. It has been the country's seat of government for centuries.",
+                ),
+                (
+                    "What language do people speak in France?",
+                    "French is the official language of France. French is spoken by the vast majority of citizens.",
+                ),
+                (
+                    "What continent is France located on?",
+                    "France is located in Europe. It is a founding member of the European Union.",
+                ),
+                (
+                    "What currency does France use?",
+                    "France uses the Euro as its currency. The Euro was adopted in 1999 when France joined the Eurozone.",
+                ),
+            ],
+            expected_consistent=True,
+        )
+    )
 
     # C2: Japan geography
-    chains.append(ChainSpec(
-        chain_id=1,
-        label="C2-Japan-geography",
-        chain_type="consistent",
-        contradiction_type=None,
-        steps=[
-            (
-                "What is Japan's capital city?",
-                "Tokyo is the capital of Japan. It is one of the most densely populated cities in the world.",
-            ),
-            (
-                "What language is spoken in Japan?",
-                "Japanese is the official language of Japan. Japanese uses three writing systems: hiragana, katakana, and kanji.",
-            ),
-            (
-                "Where is Japan located geographically?",
-                "Japan is located in Asia. It is an island nation in the northwestern Pacific Ocean.",
-            ),
-            (
-                "What is Japan known for internationally?",
-                "Japan is known for its advanced technology and rich cultural heritage. Tokyo is the hub of innovation.",
-            ),
-        ],
-        expected_consistent=True,
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=1,
+            label="C2-Japan-geography",
+            chain_type="consistent",
+            contradiction_type=None,
+            steps=[
+                (
+                    "What is Japan's capital city?",
+                    "Tokyo is the capital of Japan. It is one of the most densely populated cities in the world.",
+                ),
+                (
+                    "What language is spoken in Japan?",
+                    "Japanese is the official language of Japan. Japanese uses three writing systems: hiragana, katakana, and kanji.",
+                ),
+                (
+                    "Where is Japan located geographically?",
+                    "Japan is located in Asia. It is an island nation in the northwestern Pacific Ocean.",
+                ),
+                (
+                    "What is Japan known for internationally?",
+                    "Japan is known for its advanced technology and rich cultural heritage. Tokyo is the hub of innovation.",
+                ),
+            ],
+            expected_consistent=True,
+        )
+    )
 
     # C3: Albert Einstein biography (consistent — uses correct arithmetic)
-    chains.append(ChainSpec(
-        chain_id=2,
-        label="C3-Einstein-consistent",
-        chain_type="consistent",
-        contradiction_type=None,
-        steps=[
-            (
-                "When was Albert Einstein born?",
-                "Albert Einstein was born in 1879 in Ulm, Germany.",
-            ),
-            (
-                "What is Einstein's most famous scientific contribution?",
-                "Einstein's theory of special relativity was published in 1905. It fundamentally changed our understanding of space and time.",
-            ),
-            (
-                "How old was Einstein when he published relativity?",
-                "Since Einstein was born in 1879 and published relativity in 1905, the calculation is 1879 + 26 = 1905, so he was 26 years old at publication.",
-            ),
-            (
-                "What Nobel Prize did Einstein receive?",
-                "Einstein received the Nobel Prize in Physics in 1921 for his discovery of the photoelectric effect, not for relativity.",
-            ),
-        ],
-        expected_consistent=True,
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=2,
+            label="C3-Einstein-consistent",
+            chain_type="consistent",
+            contradiction_type=None,
+            steps=[
+                (
+                    "When was Albert Einstein born?",
+                    "Albert Einstein was born in 1879 in Ulm, Germany.",
+                ),
+                (
+                    "What is Einstein's most famous scientific contribution?",
+                    "Einstein's theory of special relativity was published in 1905. It fundamentally changed our understanding of space and time.",
+                ),
+                (
+                    "How old was Einstein when he published relativity?",
+                    "Since Einstein was born in 1879 and published relativity in 1905, the calculation is 1879 + 26 = 1905, so he was 26 years old at publication.",
+                ),
+                (
+                    "What Nobel Prize did Einstein receive?",
+                    "Einstein received the Nobel Prize in Physics in 1921 for his discovery of the photoelectric effect, not for relativity.",
+                ),
+            ],
+            expected_consistent=True,
+        )
+    )
 
     # C4: Marie Curie biography
-    chains.append(ChainSpec(
-        chain_id=3,
-        label="C4-MarieCurie",
-        chain_type="consistent",
-        contradiction_type=None,
-        steps=[
-            (
-                "Where was Marie Curie born?",
-                "Marie Curie was born in Warsaw, Poland in 1867.",
-            ),
-            (
-                "What did Marie Curie discover?",
-                "Marie Curie discovered the radioactive elements radium and polonium.",
-            ),
-            (
-                "What awards did Marie Curie receive?",
-                "Marie Curie won two Nobel Prizes: one in Physics in 1903 and one in Chemistry in 1911.",
-            ),
-            (
-                "Where did Marie Curie conduct most of her research?",
-                "Marie Curie conducted most of her research in Paris, France at the Sorbonne and the Radium Institute.",
-            ),
-        ],
-        expected_consistent=True,
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=3,
+            label="C4-MarieCurie",
+            chain_type="consistent",
+            contradiction_type=None,
+            steps=[
+                (
+                    "Where was Marie Curie born?",
+                    "Marie Curie was born in Warsaw, Poland in 1867.",
+                ),
+                (
+                    "What did Marie Curie discover?",
+                    "Marie Curie discovered the radioactive elements radium and polonium.",
+                ),
+                (
+                    "What awards did Marie Curie receive?",
+                    "Marie Curie won two Nobel Prizes: one in Physics in 1903 and one in Chemistry in 1911.",
+                ),
+                (
+                    "Where did Marie Curie conduct most of her research?",
+                    "Marie Curie conducted most of her research in Paris, France at the Sorbonne and the Radium Institute.",
+                ),
+            ],
+            expected_consistent=True,
+        )
+    )
 
     # C5: Solar system
-    chains.append(ChainSpec(
-        chain_id=4,
-        label="C5-SolarSystem",
-        chain_type="consistent",
-        contradiction_type=None,
-        steps=[
-            (
-                "How many planets are in the solar system?",
-                "There are 8 planets in the solar system. They orbit the Sun in elliptical paths.",
-            ),
-            (
-                "What is the largest planet?",
-                "Jupiter is the largest planet in the solar system. It has a diameter about 11 times that of Earth.",
-            ),
-            (
-                "Which planet is closest to the Sun?",
-                "Mercury is the closest planet to the Sun. Its surface temperature varies dramatically.",
-            ),
-            (
-                "What position is Earth in the solar system?",
-                "Earth is the third planet from the Sun. It is the only known planet with life.",
-            ),
-        ],
-        expected_consistent=True,
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=4,
+            label="C5-SolarSystem",
+            chain_type="consistent",
+            contradiction_type=None,
+            steps=[
+                (
+                    "How many planets are in the solar system?",
+                    "There are 8 planets in the solar system. They orbit the Sun in elliptical paths.",
+                ),
+                (
+                    "What is the largest planet?",
+                    "Jupiter is the largest planet in the solar system. It has a diameter about 11 times that of Earth.",
+                ),
+                (
+                    "Which planet is closest to the Sun?",
+                    "Mercury is the closest planet to the Sun. Its surface temperature varies dramatically.",
+                ),
+                (
+                    "What position is Earth in the solar system?",
+                    "Earth is the third planet from the Sun. It is the only known planet with life.",
+                ),
+            ],
+            expected_consistent=True,
+        )
+    )
 
     # C6: Water chemistry
-    chains.append(ChainSpec(
-        chain_id=5,
-        label="C6-WaterChemistry",
-        chain_type="consistent",
-        contradiction_type=None,
-        steps=[
-            (
-                "What is the chemical formula for water?",
-                "The chemical formula for water is H2O. Each molecule consists of two hydrogen atoms and one oxygen atom.",
-            ),
-            (
-                "At what temperature does water boil at sea level?",
-                "Water boils at one hundred degrees Celsius at standard sea-level pressure. This is the boiling point of H2O.",
-            ),
-            (
-                "At what temperature does water freeze?",
-                "Water freezes at zero degrees Celsius under normal conditions. This is the same as the melting point of ice.",
-            ),
-            (
-                "What percentage of Earth's surface is covered by water?",
-                "Approximately seventy-one percent of Earth's surface is covered by water. Most of this is saltwater in the oceans.",
-            ),
-        ],
-        expected_consistent=True,
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=5,
+            label="C6-WaterChemistry",
+            chain_type="consistent",
+            contradiction_type=None,
+            steps=[
+                (
+                    "What is the chemical formula for water?",
+                    "The chemical formula for water is H2O. Each molecule consists of two hydrogen atoms and one oxygen atom.",
+                ),
+                (
+                    "At what temperature does water boil at sea level?",
+                    "Water boils at one hundred degrees Celsius at standard sea-level pressure. This is the boiling point of H2O.",
+                ),
+                (
+                    "At what temperature does water freeze?",
+                    "Water freezes at zero degrees Celsius under normal conditions. This is the same as the melting point of ice.",
+                ),
+                (
+                    "What percentage of Earth's surface is covered by water?",
+                    "Approximately seventy-one percent of Earth's surface is covered by water. Most of this is saltwater in the oceans.",
+                ),
+            ],
+            expected_consistent=True,
+        )
+    )
 
     # C7: Germany facts
-    chains.append(ChainSpec(
-        chain_id=6,
-        label="C7-Germany",
-        chain_type="consistent",
-        contradiction_type=None,
-        steps=[
-            (
-                "What is the capital of Germany?",
-                "Berlin is the capital of Germany. It reunified as the capital after German reunification in 1990.",
-            ),
-            (
-                "What language is spoken in Germany?",
-                "German is the official language of Germany. It is spoken by over 90 percent of the population.",
-            ),
-            (
-                "What continent is Germany on?",
-                "Germany is located in Europe, in the heart of the continent. It borders France, Poland, and other EU nations.",
-            ),
-            (
-                "What is Germany known for economically?",
-                "Germany is known for its strong industrial base and engineering. It is the largest economy in the European Union.",
-            ),
-        ],
-        expected_consistent=True,
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=6,
+            label="C7-Germany",
+            chain_type="consistent",
+            contradiction_type=None,
+            steps=[
+                (
+                    "What is the capital of Germany?",
+                    "Berlin is the capital of Germany. It reunified as the capital after German reunification in 1990.",
+                ),
+                (
+                    "What language is spoken in Germany?",
+                    "German is the official language of Germany. It is spoken by over 90 percent of the population.",
+                ),
+                (
+                    "What continent is Germany on?",
+                    "Germany is located in Europe, in the heart of the continent. It borders France, Poland, and other EU nations.",
+                ),
+                (
+                    "What is Germany known for economically?",
+                    "Germany is known for its strong industrial base and engineering. It is the largest economy in the European Union.",
+                ),
+            ],
+            expected_consistent=True,
+        )
+    )
 
     # C8: Newton's physics
-    chains.append(ChainSpec(
-        chain_id=7,
-        label="C8-NewtonPhysics",
-        chain_type="consistent",
-        contradiction_type=None,
-        steps=[
-            (
-                "Who formulated the law of universal gravitation?",
-                "Isaac Newton formulated the law of universal gravitation in the 17th century.",
-            ),
-            (
-                "What is Newton's second law of motion?",
-                "Newton's second law states that force equals mass times acceleration (F = ma).",
-            ),
-            (
-                "What mathematical field did Newton help invent?",
-                "Newton co-invented calculus independently alongside Gottfried Wilhelm Leibniz.",
-            ),
-            (
-                "What famous work did Newton publish?",
-                "Newton published Principia Mathematica in 1687, which laid the foundation for classical mechanics.",
-            ),
-        ],
-        expected_consistent=True,
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=7,
+            label="C8-NewtonPhysics",
+            chain_type="consistent",
+            contradiction_type=None,
+            steps=[
+                (
+                    "Who formulated the law of universal gravitation?",
+                    "Isaac Newton formulated the law of universal gravitation in the 17th century.",
+                ),
+                (
+                    "What is Newton's second law of motion?",
+                    "Newton's second law states that force equals mass times acceleration (F = ma).",
+                ),
+                (
+                    "What mathematical field did Newton help invent?",
+                    "Newton co-invented calculus independently alongside Gottfried Wilhelm Leibniz.",
+                ),
+                (
+                    "What famous work did Newton publish?",
+                    "Newton published Principia Mathematica in 1687, which laid the foundation for classical mechanics.",
+                ),
+            ],
+            expected_consistent=True,
+        )
+    )
 
     # C9: Amazon River
-    chains.append(ChainSpec(
-        chain_id=8,
-        label="C9-AmazonRiver",
-        chain_type="consistent",
-        contradiction_type=None,
-        steps=[
-            (
-                "What is the largest river in South America by volume?",
-                "The Amazon River is the largest river in South America by volume of water discharged.",
-            ),
-            (
-                "Which country contains most of the Amazon?",
-                "The Amazon River is located in South America, primarily flowing through Brazil.",
-            ),
-            (
-                "What ecosystem surrounds the Amazon?",
-                "The Amazon is known for the Amazon rainforest, which is the world's largest tropical rainforest.",
-            ),
-            (
-                "Where does the Amazon River end?",
-                "The Amazon River flows eastward and drains into the Atlantic Ocean near the city of Marajó.",
-            ),
-        ],
-        expected_consistent=True,
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=8,
+            label="C9-AmazonRiver",
+            chain_type="consistent",
+            contradiction_type=None,
+            steps=[
+                (
+                    "What is the largest river in South America by volume?",
+                    "The Amazon River is the largest river in South America by volume of water discharged.",
+                ),
+                (
+                    "Which country contains most of the Amazon?",
+                    "The Amazon River is located in South America, primarily flowing through Brazil.",
+                ),
+                (
+                    "What ecosystem surrounds the Amazon?",
+                    "The Amazon is known for the Amazon rainforest, which is the world's largest tropical rainforest.",
+                ),
+                (
+                    "Where does the Amazon River end?",
+                    "The Amazon River flows eastward and drains into the Atlantic Ocean near the city of Marajó.",
+                ),
+            ],
+            expected_consistent=True,
+        )
+    )
 
     # C10: Ancient Rome
-    chains.append(ChainSpec(
-        chain_id=9,
-        label="C10-AncientRome",
-        chain_type="consistent",
-        contradiction_type=None,
-        steps=[
-            (
-                "When was Rome traditionally founded?",
-                "Rome was traditionally founded in 753 BC. The Roman Kingdom was the earliest political form.",
-            ),
-            (
-                "Who was Julius Caesar?",
-                "Julius Caesar was a Roman general and statesman who played a pivotal role in transitioning Rome from a republic to an empire.",
-            ),
-            (
-                "What language did Romans speak?",
-                "Latin was the official language of Rome. Latin later evolved into the Romance languages including French, Spanish, and Italian.",
-            ),
-            (
-                "When did the Western Roman Empire fall?",
-                "The Western Roman Empire fell in 476 AD when Romulus Augustulus was deposed. This is considered the end of antiquity.",
-            ),
-        ],
-        expected_consistent=True,
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=9,
+            label="C10-AncientRome",
+            chain_type="consistent",
+            contradiction_type=None,
+            steps=[
+                (
+                    "When was Rome traditionally founded?",
+                    "Rome was traditionally founded in 753 BC. The Roman Kingdom was the earliest political form.",
+                ),
+                (
+                    "Who was Julius Caesar?",
+                    "Julius Caesar was a Roman general and statesman who played a pivotal role in transitioning Rome from a republic to an empire.",
+                ),
+                (
+                    "What language did Romans speak?",
+                    "Latin was the official language of Rome. Latin later evolved into the Romance languages including French, Spanish, and Italian.",
+                ),
+                (
+                    "When did the Western Roman Empire fall?",
+                    "The Western Roman Empire fell in 476 AD when Romulus Augustulus was deposed. This is considered the end of antiquity.",
+                ),
+            ],
+            expected_consistent=True,
+        )
+    )
 
     return chains
 
@@ -596,306 +616,326 @@ def _build_inconsistent_chains() -> list[ChainSpec]:
 
     # IC1: Widget price changes between step 1 and step 4
     # GlobalConsistencyChecker entity "widget" → value 50 (step 0) vs 75 (step 3)
-    chains.append(ChainSpec(
-        chain_id=10,
-        label="IC1-WidgetPrice-50vs75",
-        chain_type="inconsistent",
-        contradiction_type="numeric",
-        steps=[
-            (
-                "What is the price of the widget?",
-                "The widget costs $50. This is the standard listed price in our product catalogue.",
-            ),
-            (
-                "What are the widget's physical dimensions?",
-                "The widget measures 10 by 20 centimeters and weighs approximately 0.5 kilograms.",
-            ),
-            (
-                "Where is the widget manufactured?",
-                "The widget is manufactured in Germany using precision engineering techniques.",
-            ),
-            (
-                "What is the final sale price for the widget?",
-                "After reviewing our updated records, the widget costs $75. Please use this updated price.",
-            ),
-        ],
-        expected_consistent=False,
-        mode_b_detectable=False,  # Wikidata has no widget pricing data
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=10,
+            label="IC1-WidgetPrice-50vs75",
+            chain_type="inconsistent",
+            contradiction_type="numeric",
+            steps=[
+                (
+                    "What is the price of the widget?",
+                    "The widget costs $50. This is the standard listed price in our product catalogue.",
+                ),
+                (
+                    "What are the widget's physical dimensions?",
+                    "The widget measures 10 by 20 centimeters and weighs approximately 0.5 kilograms.",
+                ),
+                (
+                    "Where is the widget manufactured?",
+                    "The widget is manufactured in Germany using precision engineering techniques.",
+                ),
+                (
+                    "What is the final sale price for the widget?",
+                    "After reviewing our updated records, the widget costs $75. Please use this updated price.",
+                ),
+            ],
+            expected_consistent=False,
+            mode_b_detectable=False,  # Wikidata has no widget pricing data
+        )
+    )
 
     # IC2: Temperature reading changes between step 1 and step 4
     # GlobalConsistencyChecker entity "temperature" → value 25 (step 0) vs 32 (step 3)
-    chains.append(ChainSpec(
-        chain_id=11,
-        label="IC2-Temperature-25vs32",
-        chain_type="inconsistent",
-        contradiction_type="numeric",
-        steps=[
-            (
-                "What is the current temperature outside?",
-                "The temperature is 25 degrees today. It is a warm and pleasant day for outdoor activities.",
-            ),
-            (
-                "What is the current humidity level?",
-                "The humidity is at sixty percent. Combined with the warmth, this creates comfortable conditions.",
-            ),
-            (
-                "What was yesterday's weather like?",
-                "Yesterday was slightly cooler with intermittent clouds but no rainfall was recorded.",
-            ),
-            (
-                "Please summarize the weather report for today.",
-                "According to our latest sensor readings, the temperature is 32 degrees. Please adjust your plans accordingly.",
-            ),
-        ],
-        expected_consistent=False,
-        mode_b_detectable=False,  # Wikidata has no weather sensor data
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=11,
+            label="IC2-Temperature-25vs32",
+            chain_type="inconsistent",
+            contradiction_type="numeric",
+            steps=[
+                (
+                    "What is the current temperature outside?",
+                    "The temperature is 25 degrees today. It is a warm and pleasant day for outdoor activities.",
+                ),
+                (
+                    "What is the current humidity level?",
+                    "The humidity is at sixty percent. Combined with the warmth, this creates comfortable conditions.",
+                ),
+                (
+                    "What was yesterday's weather like?",
+                    "Yesterday was slightly cooler with intermittent clouds but no rainfall was recorded.",
+                ),
+                (
+                    "Please summarize the weather report for today.",
+                    "According to our latest sensor readings, the temperature is 32 degrees. Please adjust your plans accordingly.",
+                ),
+            ],
+            expected_consistent=False,
+            mode_b_detectable=False,  # Wikidata has no weather sensor data
+        )
+    )
 
     # IC3: City population changes between step 1 and step 3.
     # GlobalConsistencyChecker entity "city population" → 5 (step 0) vs 8 (step 2).
     # Uses "is N" verb form so the numeric extractor pattern fires:
     #   "city population is 5" → entity="city population", value=5
     #   "city population is 8" → entity="city population", value=8
-    chains.append(ChainSpec(
-        chain_id=12,
-        label="IC3-Population-5vs8million",
-        chain_type="inconsistent",
-        contradiction_type="numeric",
-        steps=[
-            (
-                "What is the population of Springfield?",
-                "The city population is 5 million residents. Springfield is one of the region's largest urban centres.",
-            ),
-            (
-                "What is Springfield primarily known for?",
-                "Springfield is known for its industrial output and its vibrant cultural scene.",
-            ),
-            (
-                "How large is the Springfield metropolitan area?",
-                "The Springfield metro spans two hundred square kilometres. The city population is 8 million residents.",
-            ),
-            (
-                "Is Springfield considered a major urban center?",
-                "Springfield is indeed a significant urban center that attracts both business and tourism.",
-            ),
-        ],
-        expected_consistent=False,
-        mode_b_detectable=False,  # Wikidata has no Springfield (fictional) data
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=12,
+            label="IC3-Population-5vs8million",
+            chain_type="inconsistent",
+            contradiction_type="numeric",
+            steps=[
+                (
+                    "What is the population of Springfield?",
+                    "The city population is 5 million residents. Springfield is one of the region's largest urban centres.",
+                ),
+                (
+                    "What is Springfield primarily known for?",
+                    "Springfield is known for its industrial output and its vibrant cultural scene.",
+                ),
+                (
+                    "How large is the Springfield metropolitan area?",
+                    "The Springfield metro spans two hundred square kilometres. The city population is 8 million residents.",
+                ),
+                (
+                    "Is Springfield considered a major urban center?",
+                    "Springfield is indeed a significant urban center that attracts both business and tourism.",
+                ),
+            ],
+            expected_consistent=False,
+            mode_b_detectable=False,  # Wikidata has no Springfield (fictional) data
+        )
+    )
 
     # IC4: Train speed changes between step 1 and step 3.
     # GlobalConsistencyChecker entity "train speed" → value 60 (step 0) vs 90 (step 2).
     # Uses "was N" verb form so the numeric extractor pattern fires:
     #   "train speed was 60" → entity="train speed", value=60
     #   "train speed was 90" → entity="train speed", value=90
-    chains.append(ChainSpec(
-        chain_id=13,
-        label="IC4-TrainSpeed-60vs90",
-        chain_type="inconsistent",
-        contradiction_type="numeric",
-        steps=[
-            (
-                "How fast does the express train travel on this route?",
-                "The train speed was 60 km/h on this particular route due to infrastructure constraints.",
-            ),
-            (
-                "How long is the total route distance?",
-                "The total route is one hundred and twenty kilometers from the origin station to the terminus.",
-            ),
-            (
-                "What is the operational speed of this train service?",
-                "After recalibration, the train speed was 90 km/h on average when accounting for scheduled stops.",
-            ),
-            (
-                "What is the estimated travel time for the full journey?",
-                "Given the route distance and typical operating conditions, the journey takes approximately two hours.",
-            ),
-        ],
-        expected_consistent=False,
-        mode_b_detectable=False,  # Wikidata has no train speed data for this route
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=13,
+            label="IC4-TrainSpeed-60vs90",
+            chain_type="inconsistent",
+            contradiction_type="numeric",
+            steps=[
+                (
+                    "How fast does the express train travel on this route?",
+                    "The train speed was 60 km/h on this particular route due to infrastructure constraints.",
+                ),
+                (
+                    "How long is the total route distance?",
+                    "The total route is one hundred and twenty kilometers from the origin station to the terminus.",
+                ),
+                (
+                    "What is the operational speed of this train service?",
+                    "After recalibration, the train speed was 90 km/h on average when accounting for scheduled stops.",
+                ),
+                (
+                    "What is the estimated travel time for the full journey?",
+                    "Given the route distance and typical operating conditions, the journey takes approximately two hours.",
+                ),
+            ],
+            expected_consistent=False,
+            mode_b_detectable=False,  # Wikidata has no train speed data for this route
+        )
+    )
 
     # --- Type B: Arithmetic contradictions (3 chains) ---
 
     # IC5: 3 + 5 = 8 in step 1, then 3 + 5 = 10 in step 4
     # GlobalConsistencyChecker key=(3, "+", 5), result 8 vs 10
-    chains.append(ChainSpec(
-        chain_id=14,
-        label="IC5-Arithmetic-3plus5",
-        chain_type="inconsistent",
-        contradiction_type="arithmetic",
-        steps=[
-            (
-                "What is the sum of 3 and 5?",
-                "The answer to this addition problem is 3 + 5 = 8. This is a fundamental arithmetic fact.",
-            ),
-            (
-                "What is the product of 3 and 5?",
-                "Three multiplied by five equals 15. Multiplication is essentially repeated addition.",
-            ),
-            (
-                "Confirm: does the order of addition matter for 3 + 5?",
-                "No, addition is commutative. Five plus three yields the same result as three plus five, both equal eight.",
-            ),
-            (
-                "Let me re-examine the addition of 3 and 5.",
-                "Upon reconsideration, I need to correct my earlier statement: 3 + 5 = 10. I apologize for the confusion.",
-            ),
-        ],
-        expected_consistent=False,
-        mode_b_detectable=False,  # ArithmeticExtractor checks within-step only; 3+5=10 is flagged locally but step 4 introduces it
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=14,
+            label="IC5-Arithmetic-3plus5",
+            chain_type="inconsistent",
+            contradiction_type="arithmetic",
+            steps=[
+                (
+                    "What is the sum of 3 and 5?",
+                    "The answer to this addition problem is 3 + 5 = 8. This is a fundamental arithmetic fact.",
+                ),
+                (
+                    "What is the product of 3 and 5?",
+                    "Three multiplied by five equals 15. Multiplication is essentially repeated addition.",
+                ),
+                (
+                    "Confirm: does the order of addition matter for 3 + 5?",
+                    "No, addition is commutative. Five plus three yields the same result as three plus five, both equal eight.",
+                ),
+                (
+                    "Let me re-examine the addition of 3 and 5.",
+                    "Upon reconsideration, I need to correct my earlier statement: 3 + 5 = 10. I apologize for the confusion.",
+                ),
+            ],
+            expected_consistent=False,
+            mode_b_detectable=False,  # ArithmeticExtractor checks within-step only; 3+5=10 is flagged locally but step 4 introduces it
+        )
+    )
 
     # IC6: 10 - 3 = 7 in step 1, then 10 - 3 = 5 in step 3
     # GlobalConsistencyChecker key=(10, "-", 3), result 7 vs 5
-    chains.append(ChainSpec(
-        chain_id=15,
-        label="IC6-Arithmetic-10minus3",
-        chain_type="inconsistent",
-        contradiction_type="arithmetic",
-        steps=[
-            (
-                "What is 10 minus 3?",
-                "The calculation is straightforward: 10 - 3 = 7. Subtraction of three from ten gives seven.",
-            ),
-            (
-                "What is 10 minus 4?",
-                "Ten minus four equals 6. This is one step further than subtracting three.",
-            ),
-            (
-                "Please recalculate 10 minus 3 using a different method.",
-                "Using an alternative counting method: starting at 10 and subtracting 3, we get 10 - 3 = 5. This is the corrected result.",
-            ),
-            (
-                "Is the subtraction result now confirmed?",
-                "Yes, the subtraction result has been noted and recorded in our calculation log.",
-            ),
-        ],
-        expected_consistent=False,
-        mode_b_detectable=False,  # Cross-step arithmetic contradiction; Mode B only checks within-step
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=15,
+            label="IC6-Arithmetic-10minus3",
+            chain_type="inconsistent",
+            contradiction_type="arithmetic",
+            steps=[
+                (
+                    "What is 10 minus 3?",
+                    "The calculation is straightforward: 10 - 3 = 7. Subtraction of three from ten gives seven.",
+                ),
+                (
+                    "What is 10 minus 4?",
+                    "Ten minus four equals 6. This is one step further than subtracting three.",
+                ),
+                (
+                    "Please recalculate 10 minus 3 using a different method.",
+                    "Using an alternative counting method: starting at 10 and subtracting 3, we get 10 - 3 = 5. This is the corrected result.",
+                ),
+                (
+                    "Is the subtraction result now confirmed?",
+                    "Yes, the subtraction result has been noted and recorded in our calculation log.",
+                ),
+            ],
+            expected_consistent=False,
+            mode_b_detectable=False,  # Cross-step arithmetic contradiction; Mode B only checks within-step
+        )
+    )
 
     # IC7: 4 + 7 = 11 in step 2, then 4 + 7 = 13 in step 4
     # GlobalConsistencyChecker key=(4, "+", 7), result 11 vs 13
-    chains.append(ChainSpec(
-        chain_id=16,
-        label="IC7-Arithmetic-4plus7",
-        chain_type="inconsistent",
-        contradiction_type="arithmetic",
-        steps=[
-            (
-                "How many items are in the inventory?",
-                "We have several categories of items to tally in the inventory system.",
-            ),
-            (
-                "How many items are in categories A and B combined?",
-                "Items in categories A and B total 4 + 7 = 11 units when combined.",
-            ),
-            (
-                "What other categories exist in the inventory?",
-                "There are additional items in categories C, D, and E, each with varying quantities.",
-            ),
-            (
-                "Recount categories A and B for accuracy.",
-                "After a thorough recount, categories A and B together total 4 + 7 = 13 units. The inventory is updated.",
-            ),
-        ],
-        expected_consistent=False,
-        mode_b_detectable=False,  # Cross-step arithmetic; 4+7=13 vs 4+7=11 across steps
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=16,
+            label="IC7-Arithmetic-4plus7",
+            chain_type="inconsistent",
+            contradiction_type="arithmetic",
+            steps=[
+                (
+                    "How many items are in the inventory?",
+                    "We have several categories of items to tally in the inventory system.",
+                ),
+                (
+                    "How many items are in categories A and B combined?",
+                    "Items in categories A and B total 4 + 7 = 11 units when combined.",
+                ),
+                (
+                    "What other categories exist in the inventory?",
+                    "There are additional items in categories C, D, and E, each with varying quantities.",
+                ),
+                (
+                    "Recount categories A and B for accuracy.",
+                    "After a thorough recount, categories A and B together total 4 + 7 = 13 units. The inventory is updated.",
+                ),
+            ],
+            expected_consistent=False,
+            mode_b_detectable=False,  # Cross-step arithmetic; 4+7=13 vs 4+7=11 across steps
+        )
+    )
 
     # --- Type C: Factual contradictions (3 chains) ---
 
     # IC8: France capital Paris (step 1) vs Berlin (step 4)
     # GlobalConsistencyChecker factual: (france, capital) = paris vs berlin
     # Mode B via FactualExtractor: "Berlin is the capital of France" → KB contradicts → local violation
-    chains.append(ChainSpec(
-        chain_id=17,
-        label="IC8-FranceCapital-ParisvsBerlin",
-        chain_type="inconsistent",
-        contradiction_type="factual",
-        steps=[
-            (
-                "What is the capital of France?",
-                "Paris is the capital of France. It has served as the seat of French government for many centuries.",
-            ),
-            (
-                "What language is spoken in France?",
-                "French is the official language of France. French is spoken by the vast majority of the population.",
-            ),
-            (
-                "What continent is France part of?",
-                "France is located in Europe. It shares borders with Germany, Spain, Italy, and other European nations.",
-            ),
-            (
-                "What is the capital city of France?",
-                "Berlin is the capital of France. It serves as the administrative and cultural center of the French Republic.",
-            ),
-        ],
-        expected_consistent=False,
-        mode_b_detectable=True,  # Wikidata contradicts "France capital Berlin" in step 4
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=17,
+            label="IC8-FranceCapital-ParisvsBerlin",
+            chain_type="inconsistent",
+            contradiction_type="factual",
+            steps=[
+                (
+                    "What is the capital of France?",
+                    "Paris is the capital of France. It has served as the seat of French government for many centuries.",
+                ),
+                (
+                    "What language is spoken in France?",
+                    "French is the official language of France. French is spoken by the vast majority of the population.",
+                ),
+                (
+                    "What continent is France part of?",
+                    "France is located in Europe. It shares borders with Germany, Spain, Italy, and other European nations.",
+                ),
+                (
+                    "What is the capital city of France?",
+                    "Berlin is the capital of France. It serves as the administrative and cultural center of the French Republic.",
+                ),
+            ],
+            expected_consistent=False,
+            mode_b_detectable=True,  # Wikidata contradicts "France capital Berlin" in step 4
+        )
+    )
 
     # IC9: Einstein born in Germany (step 1) vs Austria (step 4)
     # GlobalConsistencyChecker factual: (albert einstein, born in) = germany vs austria
     # Mode B via FactualExtractor: "Einstein born in Austria" → Wikidata P19 says Ulm (Germany) → contradiction
-    chains.append(ChainSpec(
-        chain_id=18,
-        label="IC9-EinsteinBirthplace-GermanyvsAustria",
-        chain_type="inconsistent",
-        contradiction_type="factual",
-        steps=[
-            (
-                "Where was Albert Einstein born?",
-                "Albert Einstein was born in Germany. Specifically, he was born in the city of Ulm.",
-            ),
-            (
-                "What scientific work is Einstein most famous for?",
-                "Einstein developed the theory of relativity, which fundamentally transformed our understanding of physics.",
-            ),
-            (
-                "When did Einstein live?",
-                "Einstein lived from 1879 to 1955. He spent his early years in Europe before emigrating to the United States.",
-            ),
-            (
-                "What is Einstein's national origin?",
-                "Albert Einstein was born in Austria. His Austrian heritage played a formative role in his intellectual development.",
-            ),
-        ],
-        expected_consistent=False,
-        mode_b_detectable=True,  # Wikidata P19 for Einstein is Ulm (Germany), not Austria
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=18,
+            label="IC9-EinsteinBirthplace-GermanyvsAustria",
+            chain_type="inconsistent",
+            contradiction_type="factual",
+            steps=[
+                (
+                    "Where was Albert Einstein born?",
+                    "Albert Einstein was born in Germany. Specifically, he was born in the city of Ulm.",
+                ),
+                (
+                    "What scientific work is Einstein most famous for?",
+                    "Einstein developed the theory of relativity, which fundamentally transformed our understanding of physics.",
+                ),
+                (
+                    "When did Einstein live?",
+                    "Einstein lived from 1879 to 1955. He spent his early years in Europe before emigrating to the United States.",
+                ),
+                (
+                    "What is Einstein's national origin?",
+                    "Albert Einstein was born in Austria. His Austrian heritage played a formative role in his intellectual development.",
+                ),
+            ],
+            expected_consistent=False,
+            mode_b_detectable=True,  # Wikidata P19 for Einstein is Ulm (Germany), not Austria
+        )
+    )
 
     # IC10: Japan capital Tokyo (step 1) vs Osaka (step 4)
     # GlobalConsistencyChecker factual: (japan, capital) = tokyo vs osaka
     # Mode B via FactualExtractor: "Osaka is the capital of Japan" → KB contradicts → local violation
-    chains.append(ChainSpec(
-        chain_id=19,
-        label="IC10-JapanCapital-TokyovsOsaka",
-        chain_type="inconsistent",
-        contradiction_type="factual",
-        steps=[
-            (
-                "What is the capital of Japan?",
-                "Tokyo is the capital of Japan. It is the most populous metropolitan area in the world.",
-            ),
-            (
-                "What language is spoken in Japan?",
-                "Japanese is the official language of Japan. Japanese uses multiple writing systems including kanji.",
-            ),
-            (
-                "Where is Japan located in the world?",
-                "Japan is located in Asia. It is an island nation situated in the western Pacific Ocean.",
-            ),
-            (
-                "Which city serves as Japan's national capital?",
-                "Osaka is the capital of Japan. It serves as the seat of the Japanese national government.",
-            ),
-        ],
-        expected_consistent=False,
-        mode_b_detectable=True,  # Wikidata P36 for Japan is Tokyo, not Osaka
-    ))
+    chains.append(
+        ChainSpec(
+            chain_id=19,
+            label="IC10-JapanCapital-TokyovsOsaka",
+            chain_type="inconsistent",
+            contradiction_type="factual",
+            steps=[
+                (
+                    "What is the capital of Japan?",
+                    "Tokyo is the capital of Japan. It is the most populous metropolitan area in the world.",
+                ),
+                (
+                    "What language is spoken in Japan?",
+                    "Japanese is the official language of Japan. Japanese uses multiple writing systems including kanji.",
+                ),
+                (
+                    "Where is Japan located in the world?",
+                    "Japan is located in Asia. It is an island nation situated in the western Pacific Ocean.",
+                ),
+                (
+                    "Which city serves as Japan's national capital?",
+                    "Osaka is the capital of Japan. It serves as the seat of the Japanese national government.",
+                ),
+            ],
+            expected_consistent=False,
+            mode_b_detectable=True,  # Wikidata P36 for Japan is Tokyo, not Osaka
+        )
+    )
 
     return chains
 
@@ -1080,29 +1120,31 @@ def compute_results(chain_results: list[ChainResult]) -> dict[str, Any]:
     # --- Per-chain detail ---
     per_chain = []
     for r in chain_results:
-        per_chain.append({
-            "chain_id": r.chain.chain_id,
-            "label": r.chain.label,
-            "chain_type": r.chain.chain_type,
-            "contradiction_type": r.chain.contradiction_type,
-            "expected_consistent": r.chain.expected_consistent,
-            "mode_a_detected": r.mode_a_detected,
-            "mode_b_detected": r.mode_b_detected,
-            "mode_c_detected": r.mode_c_detected,
-            "global_report_consistent": r.global_report_consistent,
-            "global_report_severity": r.global_report_severity,
-            "global_inconsistent_pairs": [
-                {
-                    "step_i": p[0],
-                    "step_j": p[1],
-                    "type": p[2],
-                    "description": p[3],
-                }
-                for p in r.global_inconsistent_pairs
-            ],
-            "mode_b_steps": r.mode_b_steps,
-            "elapsed_s": round(r.elapsed_s, 3),
-        })
+        per_chain.append(
+            {
+                "chain_id": r.chain.chain_id,
+                "label": r.chain.label,
+                "chain_type": r.chain.chain_type,
+                "contradiction_type": r.chain.contradiction_type,
+                "expected_consistent": r.chain.expected_consistent,
+                "mode_a_detected": r.mode_a_detected,
+                "mode_b_detected": r.mode_b_detected,
+                "mode_c_detected": r.mode_c_detected,
+                "global_report_consistent": r.global_report_consistent,
+                "global_report_severity": r.global_report_severity,
+                "global_inconsistent_pairs": [
+                    {
+                        "step_i": p[0],
+                        "step_j": p[1],
+                        "type": p[2],
+                        "description": p[3],
+                    }
+                    for p in r.global_inconsistent_pairs
+                ],
+                "mode_b_steps": r.mode_b_steps,
+                "elapsed_s": round(r.elapsed_s, 3),
+            }
+        )
 
     return {
         "experiment": "Exp 176 — Multi-Turn Factual Reasoning Verification",
@@ -1179,10 +1221,14 @@ def main() -> None:
     inconsistent_chains = _build_inconsistent_chains()
     all_chains = consistent_chains + inconsistent_chains
 
-    print(f"\nChains loaded: {len(consistent_chains)} consistent, {len(inconsistent_chains)} inconsistent")
-    print(f"Inconsistency types: {sum(1 for c in inconsistent_chains if c.contradiction_type == 'numeric')} numeric, "
-          f"{sum(1 for c in inconsistent_chains if c.contradiction_type == 'arithmetic')} arithmetic, "
-          f"{sum(1 for c in inconsistent_chains if c.contradiction_type == 'factual')} factual")
+    print(
+        f"\nChains loaded: {len(consistent_chains)} consistent, {len(inconsistent_chains)} inconsistent"
+    )
+    print(
+        f"Inconsistency types: {sum(1 for c in inconsistent_chains if c.contradiction_type == 'numeric')} numeric, "
+        f"{sum(1 for c in inconsistent_chains if c.contradiction_type == 'arithmetic')} arithmetic, "
+        f"{sum(1 for c in inconsistent_chains if c.contradiction_type == 'factual')} factual"
+    )
 
     # Build shared pipeline with FactualExtractor enabled.
     # _SingleArgPipeline wraps VerifyRepairPipeline so that agentic.propagate()
@@ -1198,7 +1244,7 @@ def main() -> None:
     t_total_start = time.perf_counter()
 
     for i, spec in enumerate(all_chains):
-        print(f"  [{i+1:2d}/{len(all_chains)}] {spec.label} ... ", end="", flush=True)
+        print(f"  [{i + 1:2d}/{len(all_chains)}] {spec.label} ... ", end="", flush=True)
         result = run_chain(spec, pipeline)
         chain_results.append(result)
 
@@ -1207,10 +1253,22 @@ def main() -> None:
         c = "C✓" if result.mode_c_detected else "C✗"
         g = "G✓" if not result.global_report_consistent else "G✗"
         status = "INCONS" if not spec.expected_consistent else "CONSIS"
-        correct_b = (result.mode_b_detected == (not spec.expected_consistent))
-        correct_c = (result.mode_c_detected == (not spec.expected_consistent))
-        verdict_b = "✓" if correct_b else "✗FP" if (result.mode_b_detected and spec.expected_consistent) else "✗FN"
-        verdict_c = "✓" if correct_c else "✗FP" if (result.mode_c_detected and spec.expected_consistent) else "✗FN"
+        correct_b = result.mode_b_detected == (not spec.expected_consistent)
+        correct_c = result.mode_c_detected == (not spec.expected_consistent)
+        verdict_b = (
+            "✓"
+            if correct_b
+            else "✗FP"
+            if (result.mode_b_detected and spec.expected_consistent)
+            else "✗FN"
+        )
+        verdict_c = (
+            "✓"
+            if correct_c
+            else "✗FP"
+            if (result.mode_c_detected and spec.expected_consistent)
+            else "✗FN"
+        )
         print(f"[{status}] {b}{verdict_b} {c}{verdict_c} {g} ({result.elapsed_s:.2f}s)")
 
     t_total = time.perf_counter() - t_total_start
@@ -1222,17 +1280,27 @@ def main() -> None:
     print("\n" + "=" * 72)
     print("RESULTS SUMMARY")
     print("=" * 72)
-    print(f"  Mode A detection rate:     {results['mode_a_detection']:.1%}  (baseline — 0% by construction)")
-    print(f"  Mode B detection rate:     {results['mode_b_detection']:.1%}  ({results['mode_b_n_detected']}/{results['inconsistent_chains']} inconsistent chains caught)")
-    print(f"  Mode C detection rate:     {results['mode_c_detection']:.1%}  ({results['mode_c_n_detected']}/{results['inconsistent_chains']} inconsistent chains caught)")
+    print(
+        f"  Mode A detection rate:     {results['mode_a_detection']:.1%}  (baseline — 0% by construction)"
+    )
+    print(
+        f"  Mode B detection rate:     {results['mode_b_detection']:.1%}  ({results['mode_b_n_detected']}/{results['inconsistent_chains']} inconsistent chains caught)"
+    )
+    print(
+        f"  Mode C detection rate:     {results['mode_c_detection']:.1%}  ({results['mode_c_n_detected']}/{results['inconsistent_chains']} inconsistent chains caught)"
+    )
     print(f"  False positive rate B:     {results['false_positive_rate_b']:.1%}")
     print(f"  False positive rate C:     {results['false_positive_rate_c']:.1%}")
-    print(f"  GlobalChecker added:       +{results['global_checker_added_detections']} detections beyond Mode B")
+    print(
+        f"  GlobalChecker added:       +{results['global_checker_added_detections']} detections beyond Mode B"
+    )
     print()
     print("  Per-contradiction-type breakdown:")
     for ctype, stats in results["per_type_breakdown"].items():
-        print(f"    {ctype:12s}: {stats['detected_c']}/{stats['total']} caught by C,  "
-              f"{stats['detected_b']}/{stats['total']} caught by B")
+        print(
+            f"    {ctype:12s}: {stats['detected_c']}/{stats['total']} caught by C,  "
+            f"{stats['detected_b']}/{stats['total']} caught by B"
+        )
     print()
     print(f"  Total wall-clock time: {t_total:.1f}s")
 
@@ -1247,9 +1315,11 @@ def main() -> None:
     b_rate = results["mode_b_detection"]
     c_rate = results["mode_c_detection"]
     gap = c_rate - b_rate
-    print(f"\nConclusion: GlobalConsistencyChecker closes a {gap:.1%} detection gap "
-          f"between local-only verification ({b_rate:.1%}) and full multi-turn "
-          f"verification ({c_rate:.1%}) for factual reasoning chains.")
+    print(
+        f"\nConclusion: GlobalConsistencyChecker closes a {gap:.1%} detection gap "
+        f"between local-only verification ({b_rate:.1%}) and full multi-turn "
+        f"verification ({c_rate:.1%}) for factual reasoning chains."
+    )
 
 
 if __name__ == "__main__":

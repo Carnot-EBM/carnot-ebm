@@ -188,11 +188,7 @@ def generate_code_qa(rng: random.Random) -> list[dict]:
         tmpl = templates[i % len(templates)]
         n = rng.randint(3, 12)
         is_correct = rng.random() < 0.60
-        code = (
-            tmpl["correct"].format(n=n)
-            if is_correct
-            else tmpl["wrong"].format(n=n)
-        )
+        code = tmpl["correct"].format(n=n) if is_correct else tmpl["wrong"].format(n=n)
         pairs.append(
             {
                 "question": tmpl["question"].format(n=n),
@@ -224,16 +220,52 @@ def generate_logic_qa(rng: random.Random) -> list[dict]:
         List of Q&A dicts for logic domain.
     """
     syllogisms = [
-        ("All mammals are warm-blooded. Dogs are mammals.", "Dogs are warm-blooded.", "Dogs are not warm-blooded."),
-        ("All birds have feathers. Eagles are birds.", "Eagles have feathers.", "Eagles do not have feathers."),
-        ("If it rains, the ground gets wet. It is raining.", "The ground is wet.", "The ground is not wet."),
-        ("All squares are rectangles. ABCD is a square.", "ABCD is a rectangle.", "ABCD is not a rectangle."),
+        (
+            "All mammals are warm-blooded. Dogs are mammals.",
+            "Dogs are warm-blooded.",
+            "Dogs are not warm-blooded.",
+        ),
+        (
+            "All birds have feathers. Eagles are birds.",
+            "Eagles have feathers.",
+            "Eagles do not have feathers.",
+        ),
+        (
+            "If it rains, the ground gets wet. It is raining.",
+            "The ground is wet.",
+            "The ground is not wet.",
+        ),
+        (
+            "All squares are rectangles. ABCD is a square.",
+            "ABCD is a rectangle.",
+            "ABCD is not a rectangle.",
+        ),
         ("If P then Q. P is true.", "Q is true.", "Q is false."),
-        ("All prime numbers greater than 2 are odd. 7 is prime and greater than 2.", "7 is odd.", "7 is even."),
-        ("All cats are felines. Whiskers is a cat.", "Whiskers is a feline.", "Whiskers is not a feline."),
-        ("If the battery is charged, the device works. The battery is charged.", "The device works.", "The device does not work."),
-        ("All integers divisible by 4 are divisible by 2. 12 is divisible by 4.", "12 is divisible by 2.", "12 is not divisible by 2."),
-        ("All roses are flowers. Some flowers fade quickly. Some roses are red.", "Roses are a type of flower.", "Roses are not flowers."),
+        (
+            "All prime numbers greater than 2 are odd. 7 is prime and greater than 2.",
+            "7 is odd.",
+            "7 is even.",
+        ),
+        (
+            "All cats are felines. Whiskers is a cat.",
+            "Whiskers is a feline.",
+            "Whiskers is not a feline.",
+        ),
+        (
+            "If the battery is charged, the device works. The battery is charged.",
+            "The device works.",
+            "The device does not work.",
+        ),
+        (
+            "All integers divisible by 4 are divisible by 2. 12 is divisible by 4.",
+            "12 is divisible by 2.",
+            "12 is not divisible by 2.",
+        ),
+        (
+            "All roses are flowers. Some flowers fade quickly. Some roses are red.",
+            "Roses are a type of flower.",
+            "Roses are not flowers.",
+        ),
     ]
 
     pairs = []
@@ -384,7 +416,7 @@ def run_benchmark(
             # We record ground_truth_correct as a separate field for analysis.
             reference_verified = vr.verified
 
-        decision_correct = (vr.verified == reference_verified)
+        decision_correct = vr.verified == reference_verified
 
         if took_fast_path:
             result.fast_path_count += 1
@@ -508,7 +540,7 @@ def main() -> None:
     n_correct = sum(1 for p in all_pairs if p["ground_truth_correct"])
     print(
         f"  {N_ARITHMETIC} arithmetic, {N_CODE} code, {N_LOGIC} logic  "
-        f"({n_correct}/{N_TOTAL} = {100*n_correct/N_TOTAL:.1f}% ground-truth correct)"
+        f"({n_correct}/{N_TOTAL} = {100 * n_correct / N_TOTAL:.1f}% ground-truth correct)"
     )
 
     # --- Set up pipeline (no LLM, verify-only mode) ---
@@ -533,13 +565,14 @@ def main() -> None:
     n_baseline_verified = sum(baseline_decisions)
     print(f"  Total time: {baseline_result.total_wall_time_s:.2f}s")
     print(f"  Fast-path rate: 0.0% (all slow-path)")
-    print(f"  Baseline verified: {n_baseline_verified}/{N_TOTAL} = {100*n_baseline_verified/N_TOTAL:.1f}%")
+    print(
+        f"  Baseline verified: {n_baseline_verified}/{N_TOTAL} = {100 * n_baseline_verified / N_TOTAL:.1f}%"
+    )
     # Accuracy vs ground truth.
     baseline_gt_match = sum(
-        1 for i, qa in enumerate(all_pairs)
-        if (baseline_decisions[i] == qa["ground_truth_correct"])
+        1 for i, qa in enumerate(all_pairs) if (baseline_decisions[i] == qa["ground_truth_correct"])
     )
-    print(f"  Baseline accuracy vs ground truth: {100*baseline_gt_match/N_TOTAL:.1f}%")
+    print(f"  Baseline accuracy vs ground truth: {100 * baseline_gt_match / N_TOTAL:.1f}%")
 
     # --- Mode 2 & 3: JEPA gating at each threshold ---
     gating_results = []
@@ -558,24 +591,30 @@ def main() -> None:
 
         speedup = baseline_result.total_wall_time_s / max(mode_result.total_wall_time_s, 1e-9)
         print(f"  Total time: {mode_result.total_wall_time_s:.2f}s  (speedup: {speedup:.2f}×)")
-        print(f"  Fast-path rate: {100*mode_result.fast_path_rate:.1f}%  (target ≥ {100*TARGET_FASTPATH_RATE:.0f}%)")
-        print(f"  Fast-path accuracy: {100*mode_result.fast_path_accuracy:.1f}%")
-        print(f"  Slow-path accuracy: {100*mode_result.slow_path_accuracy:.1f}%")
+        print(
+            f"  Fast-path rate: {100 * mode_result.fast_path_rate:.1f}%  (target ≥ {100 * TARGET_FASTPATH_RATE:.0f}%)"
+        )
+        print(f"  Fast-path accuracy: {100 * mode_result.fast_path_accuracy:.1f}%")
+        print(f"  Slow-path accuracy: {100 * mode_result.slow_path_accuracy:.1f}%")
 
-        baseline_accuracy = sum(
-            1 for i in range(N_TOTAL)
-            if (baseline_decisions[i] == baseline_decisions[i])
-        ) / N_TOTAL  # baseline always "correct" vs itself = 1.0
+        baseline_accuracy = (
+            sum(1 for i in range(N_TOTAL) if (baseline_decisions[i] == baseline_decisions[i]))
+            / N_TOTAL
+        )  # baseline always "correct" vs itself = 1.0
         degradation = 1.0 - mode_result.overall_accuracy
-        print(f"  Overall accuracy vs baseline: {100*mode_result.overall_accuracy:.1f}%")
-        print(f"  Accuracy degradation: {100*degradation:.2f}%  (target < {100*TARGET_MAX_DEGRADATION:.0f}%)")
+        print(f"  Overall accuracy vs baseline: {100 * mode_result.overall_accuracy:.1f}%")
+        print(
+            f"  Accuracy degradation: {100 * degradation:.2f}%  (target < {100 * TARGET_MAX_DEGRADATION:.0f}%)"
+        )
         print(f"  Fast-path errors: {len(mode_result.fast_path_errors)}")
 
         # Target check.
         fp_ok = mode_result.fast_path_rate >= TARGET_FASTPATH_RATE
         deg_ok = degradation <= TARGET_MAX_DEGRADATION
         status = "PASS" if (fp_ok and deg_ok) else "MISS"
-        print(f"  Target [{TARGET_FASTPATH_RATE*100:.0f}% fast-path, <{TARGET_MAX_DEGRADATION*100:.0f}% degradation]: {status}")
+        print(
+            f"  Target [{TARGET_FASTPATH_RATE * 100:.0f}% fast-path, <{TARGET_MAX_DEGRADATION * 100:.0f}% degradation]: {status}"
+        )
 
     # --- Error analysis ---
     print("\n--- Error Analysis (fast-path misses) ---")
@@ -590,7 +629,9 @@ def main() -> None:
             print(f"  Errors by domain: {analysis['domain_counts']}")
             print(f"  Most common error domain: {analysis.get('most_common_domain', 'N/A')}")
             print(f"  Avg JEPA max_prob at error: {analysis['avg_jepa_max_prob']:.3f}")
-            print(f"  Short-response errors (≤50 tokens): {100*analysis['short_response_fraction']:.1f}%")
+            print(
+                f"  Short-response errors (≤50 tokens): {100 * analysis['short_response_fraction']:.1f}%"
+            )
             print("  Pattern analysis:")
             if analysis.get("most_common_domain") == "arithmetic":
                 print("    → Arithmetic errors dominate: numeric patterns may be harder to detect")
@@ -614,7 +655,7 @@ def main() -> None:
         speedup = baseline_result.total_wall_time_s / max(mode_result.total_wall_time_s, 1e-9)
         print(
             f"  {mode_result.name}: {mode_result.total_wall_time_s:.3f}s  "
-            f"(speedup {speedup:.2f}×, {100*mode_result.fast_path_rate:.1f}% fast-path)"
+            f"(speedup {speedup:.2f}×, {100 * mode_result.fast_path_rate:.1f}% fast-path)"
         )
 
     # --- Save results ---
@@ -677,8 +718,8 @@ def main() -> None:
         deg_target = "✓" if degradation <= TARGET_MAX_DEGRADATION else "✗"
         print(
             f"  {mode_result.name:20s}  "
-            f"fast-path: {100*fp_rate:.1f}% {fp_target}  "
-            f"degradation: {100*degradation:.2f}% {deg_target}  "
+            f"fast-path: {100 * fp_rate:.1f}% {fp_target}  "
+            f"degradation: {100 * degradation:.2f}% {deg_target}  "
             f"speedup: {speedup:.2f}×"
         )
     print("=" * 70)

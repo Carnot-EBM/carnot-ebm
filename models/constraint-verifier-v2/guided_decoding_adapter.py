@@ -69,9 +69,7 @@ logger = logging.getLogger(__name__)
 # code contexts. They are intentionally simple heuristics. For production use,
 # replace _extract_violations with a proper verifier.
 
-_ARITHMETIC_PATTERN = re.compile(
-    r"(?:the answer is|=\s*)(\d+)", re.IGNORECASE
-)
+_ARITHMETIC_PATTERN = re.compile(r"(?:the answer is|=\s*)(\d+)", re.IGNORECASE)
 
 
 def _extract_violations_builtin(text: str) -> float:

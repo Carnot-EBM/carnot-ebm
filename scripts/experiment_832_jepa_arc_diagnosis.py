@@ -185,11 +185,7 @@ def _compute_feature_vector(model: Any, prefix: str, step: str) -> list[float]:
     # Fraction of step tokens that appear in the trained TF-IDF vocabulary.
     tokens = model._vectoriser._tokenise(step)
     vocab = model._vectoriser._vocab
-    coverage = (
-        sum(1 for t in tokens if t in vocab) / max(len(tokens), 1)
-        if tokens
-        else 0.0
-    )
+    coverage = sum(1 for t in tokens if t in vocab) / max(len(tokens), 1) if tokens else 0.0
 
     # Raw JEPA energy (cosine distance between prefix and step embeddings).
     cosine_dist = model.predict_energy(prefix, step)
@@ -478,7 +474,7 @@ def _run(tmpl: ExperimentTemplate) -> None:
                 "honest_verdict": honest_verdict,
                 "n_domains": len(diagnosis_finding),
                 "n_steps_per_domain": 20,  # 10 correct + 10 incorrect
-                "model_path": str("results/jepa_v23_limo_model.pkl"),
+                "model_path": "results/jepa_v23_limo_model.pkl",
                 "exp_824_n_arc_training_pairs": N_ARC_TRAINING_PAIRS,
                 "exp_824_auc_arc": 0.04,
                 "exp_824_auc_humaneval": 0.76,

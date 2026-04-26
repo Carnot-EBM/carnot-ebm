@@ -37,7 +37,7 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from carnot.pipeline.jit_vram_check import JITVRAMCheck
@@ -82,7 +82,7 @@ class GemmaTransformersLoader:
         self,
         model_id: str,
         device: str = "auto",
-        jit_vram_check: Optional["JITVRAMCheck"] = None,
+        jit_vram_check: JITVRAMCheck | None = None,
     ) -> None:
         # Enforce Gemma-only scope.  This loader is specifically for Gemma4; loading
         # other model families would bypass important Gemma-specific validation.
@@ -94,8 +94,8 @@ class GemmaTransformersLoader:
         self.model_id = model_id
         self.device = device
         self.jit_vram_check = jit_vram_check
-        self._model: Optional[object] = None
-        self._tokenizer: Optional[object] = None
+        self._model: object | None = None
+        self._tokenizer: object | None = None
 
     def load(self) -> None:
         """Load model and tokenizer via AutoModelForCausalLM.from_pretrained.
@@ -119,9 +119,7 @@ class GemmaTransformersLoader:
         # required_gb=15.0 is the FP16 Gemma4-E4B-it footprint.  If not cleared,
         # abort rather than crash with CUDA OOM (RETRO-051 fix).
         if self.jit_vram_check is not None:
-            vram_result = self.jit_vram_check.gate_model_load(
-                self.model_id, required_gb=15.0
-            )
+            vram_result = self.jit_vram_check.gate_model_load(self.model_id, required_gb=15.0)
             if not vram_result.is_cleared:
                 _log.warning(
                     "GemmaTransformersLoader.load(): JIT VRAM check failed — "
@@ -165,9 +163,7 @@ class GemmaTransformersLoader:
         Spec: REQ-LOADER-001
         """
         if self._model is None or self._tokenizer is None:
-            raise RuntimeError(
-                "Model not loaded. Call GemmaTransformersLoader.load() first."
-            )
+            raise RuntimeError("Model not loaded. Call GemmaTransformersLoader.load() first.")
 
         # Encode input on the model's device so we don't get device-mismatch errors.
         inputs = self._tokenizer(prompt, return_tensors="pt")

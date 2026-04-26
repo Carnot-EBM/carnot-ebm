@@ -166,9 +166,16 @@ class TestThirtyIterations:
         artifact = run_experiment(repo_root=tmp_path)
 
         required = {
-            "experiment", "status", "honest_verdict", "fp_rate_slope",
-            "condition_a_slope", "slope_delta", "iterations_run", "fp_rates",
-            "fix_applied", "gate_source",
+            "experiment",
+            "status",
+            "honest_verdict",
+            "fp_rate_slope",
+            "condition_a_slope",
+            "slope_delta",
+            "iterations_run",
+            "fp_rates",
+            "fix_applied",
+            "gate_source",
         }
         for field in required:
             assert field in artifact, f"Missing field: {field}"

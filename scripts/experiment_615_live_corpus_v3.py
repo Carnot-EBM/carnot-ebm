@@ -169,7 +169,9 @@ def _load_gsm8k_questions(start: int, end: int) -> list[dict]:
             for i in range(start, end + 1)
         ]
     except Exception as exc:
-        _log.warning("_load_gsm8k_questions: dataset load failed (%s) — using synthetic fallback", exc)
+        _log.warning(
+            "_load_gsm8k_questions: dataset load failed (%s) — using synthetic fallback", exc
+        )
         return [
             {
                 "question": f"Synthetic question {i}: What is {i} + {i * 2}?",
@@ -180,7 +182,7 @@ def _load_gsm8k_questions(start: int, end: int) -> list[dict]:
         ]
 
 
-def _load_qwen_pipeline(model_id: str, device: str) -> Optional[Any]:
+def _load_qwen_pipeline(model_id: str, device: str) -> Any | None:
     """Load a Qwen model as a HuggingFace text-generation pipeline.
 
     Tries the given model_id first.  Returns None on failure so the experiment
@@ -236,17 +238,23 @@ def _select_models() -> tuple[str, str]:
     qwen_gguf_available = os.path.exists(os.environ.get("CARNOT_QWEN_GGUF_PATH", "/nonexistent"))
 
     if gguf_path and os.path.exists(gguf_path) and qwen_gguf_available:
-        _log.info("_select_models: SOTA GGUFs detected, using %s + %s", QWEN_SOTA_MODEL_ID, GEMMA_SOTA_MODEL_ID)
+        _log.info(
+            "_select_models: SOTA GGUFs detected, using %s + %s",
+            QWEN_SOTA_MODEL_ID,
+            GEMMA_SOTA_MODEL_ID,
+        )
         return QWEN_SOTA_MODEL_ID, GEMMA_SOTA_MODEL_ID
 
-    _log.info("_select_models: falling back to %s + %s", QWEN_FALLBACK_MODEL_ID, GEMMA_FALLBACK_MODEL_ID)
+    _log.info(
+        "_select_models: falling back to %s + %s", QWEN_FALLBACK_MODEL_ID, GEMMA_FALLBACK_MODEL_ID
+    )
     return QWEN_FALLBACK_MODEL_ID, GEMMA_FALLBACK_MODEL_ID
 
 
 def _collect_pairs_for_question(
     q_dict: dict,
     gemma4: Any,
-    qwen_pipeline: Optional[Any],
+    qwen_pipeline: Any | None,
     gemma_model_id: str,
     qwen_model_id: str,
 ) -> list[dict]:
@@ -263,29 +271,31 @@ def _collect_pairs_for_question(
 
     # Gemma inference
     gemma_response = gemma4.generate(q_dict["question"]) if gemma4 else "[gemma4_not_loaded]"
-    pairs.append({
-        "question_index": q_dict["index"],
-        "question": q_dict["question"],
-        "model": gemma_model_id,
-        "response": gemma_response,
-        "is_correct": _is_correct(gemma_response, gold_answer),
-        "inference_mode": "live_gpu",
-    })
+    pairs.append(
+        {
+            "question_index": q_dict["index"],
+            "question": q_dict["question"],
+            "model": gemma_model_id,
+            "response": gemma_response,
+            "is_correct": _is_correct(gemma_response, gold_answer),
+            "inference_mode": "live_gpu",
+        }
+    )
 
     # Qwen inference
     qwen_response = (
-        _qwen_generate(qwen_pipeline, q_dict["question"])
-        if qwen_pipeline
-        else "[qwen_not_loaded]"
+        _qwen_generate(qwen_pipeline, q_dict["question"]) if qwen_pipeline else "[qwen_not_loaded]"
     )
-    pairs.append({
-        "question_index": q_dict["index"],
-        "question": q_dict["question"],
-        "model": qwen_model_id,
-        "response": qwen_response,
-        "is_correct": _is_correct(qwen_response, gold_answer),
-        "inference_mode": "live_gpu",
-    })
+    pairs.append(
+        {
+            "question_index": q_dict["index"],
+            "question": q_dict["question"],
+            "model": qwen_model_id,
+            "response": qwen_response,
+            "is_correct": _is_correct(qwen_response, gold_answer),
+            "inference_mode": "live_gpu",
+        }
+    )
 
     return pairs
 
@@ -383,9 +393,9 @@ def _build_corpus_artifact(
     n_new_pairs: int,
     n_total_corpus_v5: int,
     diversity: dict,
-    fover_corpus_v5_path: Optional[str],
+    fover_corpus_v5_path: str | None,
     inference_mode: str,
-    models_used: Optional[list[str]] = None,
+    models_used: list[str] | None = None,
 ) -> dict:
     """Assemble the standardised artifact dict for Exp 615.
 
@@ -416,7 +426,7 @@ def _build_corpus_artifact(
 # ---------------------------------------------------------------------------
 
 
-def run_experiment(repo_root: Optional[Path] = None) -> dict:
+def run_experiment(repo_root: Path | None = None) -> dict:
     """Run Exp 615: collect live pairs from GSM8K 350-449, merge into fover_corpus_v5.
 
     All exit paths (blocked, partial, success) write the deliverable JSON.
@@ -528,7 +538,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     # Resume from checkpoint if available
     checkpoint = tmpl.checkpoint_resume()
     collected_pairs: list[dict] = checkpoint.get("pairs", []) if checkpoint else []
-    done_indices: set[int] = {p["question_index"] for p in collected_pairs} if collected_pairs else set()
+    done_indices: set[int] = (
+        {p["question_index"] for p in collected_pairs} if collected_pairs else set()
+    )
 
     # Build the list of not-yet-done questions
     pending_questions = [q for q in questions if q["index"] not in done_indices]
@@ -536,9 +548,10 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     batches = executor.partition(pending_questions)
 
     for batch in batches:
+
         def make_inference_fn(
             gemma4_ref: Any,
-            qwen_ref: Optional[Any],
+            qwen_ref: Any | None,
             g_id: str,
             q_id: str,
         ) -> Any:
@@ -549,8 +562,10 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
             per question.  The closure freezes references so they don't accidentally
             capture loop variables.
             """
+
             def inference_fn(q_dict: dict) -> list[dict]:
                 return _collect_pairs_for_question(q_dict, gemma4_ref, qwen_ref, g_id, q_id)
+
             return inference_fn
 
         completed_batch = executor.run_batch(
@@ -561,7 +576,7 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         executor.save_batch(completed_batch, prefix="exp615")
 
         # Flatten results (each question produces a list of 2 pairs)
-        for result in (completed_batch.results or []):
+        for result in completed_batch.results or []:
             collected_pairs.extend(result)
 
         # Checkpoint progress after each batch
@@ -569,7 +584,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         tmpl.checkpoint_save({"pairs": collected_pairs}, step=len(done_set))
 
     # Write live_pairs_615.json (new pairs only — questions 350-449)
-    new_pairs = [p for p in collected_pairs if QUESTION_START <= p.get("question_index", -1) <= QUESTION_END]
+    new_pairs = [
+        p for p in collected_pairs if QUESTION_START <= p.get("question_index", -1) <= QUESTION_END
+    ]
     _write_json_atomic(live_pairs_path, new_pairs)
     n_new_pairs = len(new_pairs)
     _log.info("Wrote %d new live pairs to %s", n_new_pairs, live_pairs_path)
@@ -593,7 +610,9 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     }
     _write_json_atomic(fover_corpus_path, corpus_v5_payload)
     n_total_corpus_v5 = len(merged_corpus)
-    _log.info("Wrote merged fover_corpus_v5 with %d pairs to %s", n_total_corpus_v5, fover_corpus_path)
+    _log.info(
+        "Wrote merged fover_corpus_v5 with %d pairs to %s", n_total_corpus_v5, fover_corpus_path
+    )
 
     # Build main artifact
     artifact_data = _build_corpus_artifact(

@@ -71,9 +71,7 @@ class LagrangeAdaptiveIsing:
         self.lambda_init = lambda_init
         self.lambda_lr = lambda_lr
         # Per-constraint lambda weights — grow when violations accumulate.
-        self._lambdas: dict[int, float] = {
-            i: lambda_init for i in range(n_constraints)
-        }
+        self._lambdas: dict[int, float] = {i: lambda_init for i in range(n_constraints)}
         # Counters for computing violation_rate() without storing full history.
         self._violation_counts: dict[int, int] = {i: 0 for i in range(n_constraints)}
         self._update_counts: dict[int, int] = {i: 0 for i in range(n_constraints)}

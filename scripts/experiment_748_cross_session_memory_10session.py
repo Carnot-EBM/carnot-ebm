@@ -34,6 +34,7 @@
 Spec: REQ-FR11-009, REQ-FR11-010,
       SCENARIO-FR11-009, SCENARIO-FR11-010
 """
+
 from __future__ import annotations
 
 import json
@@ -262,7 +263,8 @@ def _make_synthetic_response(question: str, session_idx: int) -> str:
     # Carry-check pattern: embed a multi-digit multiplication claim
     if "×" in question or "24" in question or "36" in question or "multi" in q_lower:
         import re
-        m = re.search(r'(\d{2,})\s*[×*]\s*(\d+)', question)
+
+        m = re.search(r"(\d{2,})\s*[×*]\s*(\d+)", question)
         if m:
             a, b = int(m.group(1)), int(m.group(2))
             correct_ans = a * b
@@ -283,7 +285,8 @@ def _make_synthetic_response(question: str, session_idx: int) -> str:
     # Sign-check pattern: negative times negative
     if "(-" in question:
         import re
-        m = re.search(r'\(-(\d+)\)\s*[×*]\s*\(-(\d+)\)', question)
+
+        m = re.search(r"\(-(\d+)\)\s*[×*]\s*\(-(\d+)\)", question)
         if m:
             a, b = int(m.group(1)), int(m.group(2))
             correct_ans = a * b  # positive
@@ -291,7 +294,7 @@ def _make_synthetic_response(question: str, session_idx: int) -> str:
             if session_idx < 4:
                 claimed = -correct_ans  # wrong sign (sign error)
             else:
-                claimed = correct_ans   # correct
+                claimed = correct_ans  # correct
             return (
                 f"(-{a}) × (-{b}) = {claimed}\n"
                 f"Negative times negative gives {'positive' if claimed > 0 else 'negative'}."
@@ -308,7 +311,8 @@ def _make_synthetic_response(question: str, session_idx: int) -> str:
     # Comparison-direction pattern
     if ">" in question or ("is" in q_lower and "more" in q_lower and ">" not in question):
         import re
-        m = re.search(r'(\d+)\s+and\s+(\d+)', question)
+
+        m = re.search(r"(\d+)\s+and\s+(\d+)", question)
         if m:
             x, y = int(m.group(1)), int(m.group(2))
             if x > y:
@@ -345,7 +349,7 @@ def _evaluate_response(response: str, question: str) -> tuple[bool, bool]:
     import re
 
     # Check carry errors: find multiplication claims and verify them
-    carry_pattern = re.compile(r'(\d+)\s*[×*]\s*(\d+)\s*=\s*(\d+)')
+    carry_pattern = re.compile(r"(\d+)\s*[×*]\s*(\d+)\s*=\s*(\d+)")
     for m in carry_pattern.finditer(response):
         a, b, claimed = int(m.group(1)), int(m.group(2)), int(m.group(3))
         if a > 9 or b > 9:  # multi-digit — carry propagation applies
@@ -354,17 +358,15 @@ def _evaluate_response(response: str, question: str) -> tuple[bool, bool]:
                 return True, True  # detected a real carry error
 
     # Check sign errors: negative × negative should be positive
-    sign_pattern = re.compile(
-        r'\(\s*-\s*(\d+)\s*\)\s*[×*]\s*\(\s*-\s*(\d+)\s*\)\s*=\s*(-?\d+)'
-    )
+    sign_pattern = re.compile(r"\(\s*-\s*(\d+)\s*\)\s*[×*]\s*\(\s*-\s*(\d+)\s*\)\s*=\s*(-?\d+)")
     for m in sign_pattern.finditer(response):
         claimed = int(m.group(3))
         if claimed < 0:
             return True, True  # detected a real sign error
 
     # Check comparison direction consistency
-    gt_pattern = re.compile(r'(\d+)\s*>\s*(\d+)')
-    sub_pattern = re.compile(r'(\d+)\s*-\s*(\d+)\s*=\s*(-?\d+)')
+    gt_pattern = re.compile(r"(\d+)\s*>\s*(\d+)")
+    sub_pattern = re.compile(r"(\d+)\s*-\s*(\d+)\s*=\s*(-?\d+)")
     gt_pairs = {(int(m.group(1)), int(m.group(2))) for m in gt_pattern.finditer(response)}
     for m in sub_pattern.finditer(response):
         x, y, z = int(m.group(1)), int(m.group(2)), int(m.group(3))
@@ -500,8 +502,7 @@ def run_10_session_simulation(
 
     # --- Compute derived metrics ---
     is_monotonically_non_decreasing = all(
-        precision_series[i] >= precision_series[i - 1] - 1e-9
-        for i in range(1, N_SESSIONS)
+        precision_series[i] >= precision_series[i - 1] - 1e-9 for i in range(1, N_SESSIONS)
     )
 
     # Plateau: first session where improvement delta < 0.001
@@ -514,8 +515,7 @@ def run_10_session_simulation(
 
     # Regression: any session drops more than 0.01 below the prior
     has_regression = any(
-        precision_series[i] < precision_series[i - 1] - 0.01
-        for i in range(1, N_SESSIONS)
+        precision_series[i] < precision_series[i - 1] - 0.01 for i in range(1, N_SESSIONS)
     )
 
     # Determine honest verdict

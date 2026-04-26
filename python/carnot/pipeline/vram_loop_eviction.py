@@ -33,7 +33,6 @@ import signal
 import subprocess
 import time
 from dataclasses import dataclass, field
-from typing import Optional
 
 from carnot.pipeline.gpu_zombie_killer import kill_gpu_zombies
 
@@ -84,7 +83,7 @@ class VRAMLoopEvictionResult:
     vram_mb_per_retry: list[float] = field(default_factory=list)
     final_vram_mb: float = 0.0
     vram_cleared: bool = False
-    abort_reason: Optional[str] = None
+    abort_reason: str | None = None
     honest_verdict: str = "max_retries_exceeded"
 
 
@@ -93,7 +92,7 @@ class VRAMLoopEvictionResult:
 # ---------------------------------------------------------------------------
 
 
-def _query_nvidia_smi(args: list[str]) -> Optional[str]:
+def _query_nvidia_smi(args: list[str]) -> str | None:
     """Run nvidia-smi with *args*; return stdout string or None if unavailable.
 
     FileNotFoundError means the binary is not installed — callers treat None

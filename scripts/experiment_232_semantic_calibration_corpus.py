@@ -278,7 +278,10 @@ def answer_target_alignment_219(
     if not actual_error:
         return "aligned"
     violation_types = {str(item.get("violation_type") or "") for item in violations}
-    if "answer_target_mismatch" in violation_types or evidence_family == "question_grounding_failures":
+    if (
+        "answer_target_mismatch" in violation_types
+        or evidence_family == "question_grounding_failures"
+    ):
         return "misaligned"
     if evidence_family in {"entity_quantity_binding_errors", "unit_aggregation_errors"}:
         return "partially_aligned"
@@ -296,9 +299,7 @@ def premise_coverage_219(
     if not actual_error:
         return "complete"
     missing_count = sum(
-        1
-        for item in violations
-        if str(item.get("violation_type") or "").startswith("missing_")
+        1 for item in violations if str(item.get("violation_type") or "").startswith("missing_")
     )
     if missing_count == 0 and claim_count > 0:
         return "complete"
@@ -488,7 +489,9 @@ def build_row(
 
 
 def build_exp219_rows(payload: dict[str, Any]) -> list[dict[str, Any]]:
-    cohort_cases = {str(case["case_id"]): case for case in payload.get("cohort", {}).get("cases", [])}
+    cohort_cases = {
+        str(case["case_id"]): case for case in payload.get("cohort", {}).get("cases", [])
+    }
     repair_map: dict[tuple[str, str], bool] = {}
     for run in payload.get("paired_runs", []):
         if run.get("mode") != "verify_repair":
@@ -511,10 +514,14 @@ def build_exp219_rows(payload: dict[str, Any]) -> list[dict[str, Any]]:
             evidence_family = primary_219_evidence_family(violations)
             actual_error = not bool(case.get("correct"))
             verifier_detected = bool(case.get("flagged"))
-            gold_family = evidence_family if actual_error and evidence_family != "none" else (
-                "unlabeled_live_error" if actual_error else "none"
+            gold_family = (
+                evidence_family
+                if actual_error and evidence_family != "none"
+                else ("unlabeled_live_error" if actual_error else "none")
             )
-            prompt_clause_count = len(semantic.get("question_profile", {}).get("prompt_clauses", []))
+            prompt_clause_count = len(
+                semantic.get("question_profile", {}).get("prompt_clauses", [])
+            )
             claim_count = len(semantic.get("claims", []))
             answer_target_alignment = answer_target_alignment_219(
                 actual_error=actual_error,
@@ -594,7 +601,9 @@ def build_exp219_rows(payload: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def build_exp221_rows(payload: dict[str, Any]) -> list[dict[str, Any]]:
-    cohort_cases = {str(case["case_id"]): case for case in payload.get("cohort", {}).get("cases", [])}
+    cohort_cases = {
+        str(case["case_id"]): case for case in payload.get("cohort", {}).get("cases", [])
+    }
     repair_map: dict[tuple[str, str], bool] = {}
     for run in payload.get("paired_runs", []):
         if run.get("mode") != "verify_repair":
@@ -657,7 +666,9 @@ def build_exp221_rows(payload: dict[str, Any]) -> list[dict[str, Any]]:
                 else 0.0
             )
             score, score_components = score_prompt_row(
-                evidence_count=float(sum(item.get("status") == "violated" for item in constraint_results)),
+                evidence_count=float(
+                    sum(item.get("status") == "violated" for item in constraint_results)
+                ),
                 total_constraints=float(len(constraint_results)),
                 semantic_violation_count=float(semantic_violation_count),
                 constraint_coverage=constraint_coverage,
@@ -712,7 +723,9 @@ def build_live_calibration_rows(repo_root: Path) -> list[dict[str, Any]]:
 
 def build_follow_up_rows(repo_root: Path) -> list[dict[str, Any]]:
     exp221 = load_json(resolve_path(repo_root, SOURCE_ARTIFACTS[1]))
-    cohort_cases = {str(case["case_id"]): case for case in exp221.get("cohort", {}).get("cases", [])}
+    cohort_cases = {
+        str(case["case_id"]): case for case in exp221.get("cohort", {}).get("cases", [])
+    }
     rows: list[dict[str, Any]] = []
     for spec in FOLLOW_UP_SPECS:
         cohort = cohort_cases[str(spec["case_id"])]
@@ -806,9 +819,7 @@ def build_results(rows: list[dict[str, Any]]) -> dict[str, Any]:
             "by_benchmark": counter_dict(rows, lambda row: row["benchmark"]),
             "by_task_slice": counter_dict(rows, lambda row: row["task_slice"]),
             "by_model": counter_dict(rows, lambda row: row["model_name"]),
-            "by_outcome_bucket": counter_dict(
-                rows, lambda row: row["labels"]["outcome_bucket"]
-            ),
+            "by_outcome_bucket": counter_dict(rows, lambda row: row["labels"]["outcome_bucket"]),
             "by_gold_violation_family": counter_dict(
                 rows, lambda row: row["labels"]["gold_violation_family"]
             ),
@@ -823,7 +834,8 @@ def build_results(rows: list[dict[str, Any]]) -> dict[str, Any]:
                 }
                 == set(ALL_OUTCOMES),
                 "prompt_side_live_missing_outcomes": missing_prompt_outcomes,
-                "follow_ups_fill_prompt_gaps_only": follow_up_outcomes == set(missing_prompt_outcomes),
+                "follow_ups_fill_prompt_gaps_only": follow_up_outcomes
+                == set(missing_prompt_outcomes),
                 "has_threshold_score_fields": all(
                     "score" in row["calibration"]
                     and "score_components" in row["calibration"]

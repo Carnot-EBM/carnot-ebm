@@ -76,11 +76,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 # Constants
 # ---------------------------------------------------------------------------
 
-N_SPINS = 16        # Potts spins per constraint example
-N_EXAMPLES = 300    # Total examples: 100 per class
-N_TRAIN = 240       # 80/20 split
+N_SPINS = 16  # Potts spins per constraint example
+N_EXAMPLES = 300  # Total examples: 100 per class
+N_TRAIN = 240  # 80/20 split
 N_TEST = 60
-Q = 3               # States: 0=correct, 1=partial, 2=violated
+Q = 3  # States: 0=correct, 1=partial, 2=violated
 
 
 # ---------------------------------------------------------------------------
@@ -159,7 +159,7 @@ def _make_ising_float_config(example: jax.Array) -> jax.Array:
     violated (2) to +1.  This makes the binary split between correct (low energy)
     and not-correct (high energy) correspond to negative vs positive spin.
     """
-    return (example.astype(jnp.float32) - 1.0)  # {0,1,2} -> {-1,0,+1}
+    return example.astype(jnp.float32) - 1.0  # {0,1,2} -> {-1,0,+1}
 
 
 # ---------------------------------------------------------------------------
@@ -197,7 +197,7 @@ def _binary_auroc(scores: np.ndarray, labels: np.ndarray) -> float:
     fpr = np.concatenate([[1.0], fpr, [0.0]])
 
     # Trapezoidal integration
-    trapz = getattr(np, "trapezoid", None) or getattr(np, "trapz")
+    trapz = getattr(np, "trapezoid", None) or np.trapz
     auroc = float(trapz(tpr, fpr))
     return abs(auroc)  # abs in case of inverted ordering
 
@@ -254,8 +254,8 @@ def main() -> None:
         all_configs_ising.append(config_ising)
         all_labels.append(label)
 
-    configs_potts = jnp.stack(all_configs_potts)   # (300, 16)
-    configs_ising = jnp.stack(all_configs_ising)   # (300, 16)
+    configs_potts = jnp.stack(all_configs_potts)  # (300, 16)
+    configs_ising = jnp.stack(all_configs_ising)  # (300, 16)
     labels_np = np.array(all_labels, dtype=np.int32)
 
     # --- Train/test split (same for both models) ---
@@ -270,8 +270,8 @@ def main() -> None:
     test_labels = labels_np[test_idx]
 
     # Split train by class
-    train_correct = train_potts[:80]    # first 80 train are class 0
-    train_partial = train_potts[80:160] # next 80 train are class 1
+    train_correct = train_potts[:80]  # first 80 train are class 0
+    train_partial = train_potts[80:160]  # next 80 train are class 1
     train_violated = train_potts[160:]  # last 80 train are class 2
 
     # --- Train PottsMachineVerifier ---
@@ -349,13 +349,17 @@ def main() -> None:
 
     # --- Evaluate IsingEBM (binary AUROC: class 0 vs rest) ---
     _log.info("Exp 534: evaluating IsingEBM baseline")
-    ising_energies = np.array([float(ising_model.energy(test_ising[i])) for i in range(len(test_idx))])
+    ising_energies = np.array(
+        [float(ising_model.energy(test_ising[i])) for i in range(len(test_idx))]
+    )
     ising_bin_labels = (test_labels == 0).astype(np.int32)
     ising_binary_auroc = _binary_auroc(ising_energies, ising_bin_labels)
 
     _log.info(
         "Exp 534: potts_3class_auroc=%.4f, ising_binary_auroc=%.4f, partial_acc=%.4f",
-        potts_3class_auroc, ising_binary_auroc, partial_class_accuracy
+        potts_3class_auroc,
+        ising_binary_auroc,
+        partial_class_accuracy,
     )
 
     # --- Build artifact ---

@@ -61,6 +61,7 @@ class TestCorpusEntryToFeatures:
     def test_empty_constraint_types(self):
         """Entry with no constraint_types produces zero feature vector."""
         import jax.numpy as jnp
+
         feat = _corpus_entry_to_features({"constraint_types": []})
         assert feat.shape == (4,)
         assert float(jnp.sum(jnp.abs(feat))) < 1e-7
@@ -87,6 +88,7 @@ class TestCorpusEntryToFeatures:
     def test_missing_key_uses_empty(self):
         """Dict without constraint_types key returns zero vector."""
         import jax.numpy as jnp
+
         feat = _corpus_entry_to_features({})
         assert float(jnp.sum(jnp.abs(feat))) < 1e-7
 
@@ -120,6 +122,7 @@ class TestAucFromScores:
 
     def test_random_scores_near_0_5(self):
         import random
+
         random.seed(99)
         scores = [random.random() for _ in range(100)]
         labels = [float(i % 2) for i in range(100)]
@@ -137,11 +140,13 @@ class TestLeworldmodelInitParams:
 
     def test_all_keys_present(self):
         import jax.random as jrandom
+
         params = _leworldmodel_init_params(jrandom.PRNGKey(0))
         assert set(params.keys()) == {"w1", "b1", "w_mu", "b_mu", "w_lv", "b_lv"}
 
     def test_shapes(self):
         import jax.random as jrandom
+
         params = _leworldmodel_init_params(jrandom.PRNGKey(0))
         assert params["w1"].shape == (16, 4)
         assert params["b1"].shape == (16,)
@@ -162,6 +167,7 @@ class TestLeworldmodelForward:
     def test_returns_two_arrays(self):
         import jax.random as jrandom
         import jax.numpy as jnp
+
         params = _leworldmodel_init_params(jrandom.PRNGKey(0))
         x = jnp.zeros(4)
         mu, log_var = _leworldmodel_forward(params, x)
@@ -171,6 +177,7 @@ class TestLeworldmodelForward:
     def test_output_is_finite(self):
         import jax.random as jrandom
         import jax.numpy as jnp
+
         params = _leworldmodel_init_params(jrandom.PRNGKey(1))
         x = jnp.array([0.5, 0.3, 0.2, 0.6])
         mu, log_var = _leworldmodel_forward(params, x)
@@ -190,6 +197,7 @@ class TestLeworldmodelLoss:
         """KL divergence is always >= 0 by Gibbs inequality — SCENARIO-LEARN-077."""
         import jax.random as jrandom
         import jax.numpy as jnp
+
         for seed in range(5):
             params = _leworldmodel_init_params(jrandom.PRNGKey(seed))
             x = jnp.array([0.3, 0.4, 0.3, 0.5])
@@ -201,6 +209,7 @@ class TestLeworldmodelLoss:
         """total == pred + lambda_kl * kl — SCENARIO-LEARN-078."""
         import jax.random as jrandom
         import jax.numpy as jnp
+
         params = _leworldmodel_init_params(jrandom.PRNGKey(42))
         x = jnp.array([0.5, 0.2, 0.3, 0.4])
         y = jnp.array([0.0])
@@ -215,6 +224,7 @@ class TestLeworldmodelLoss:
         """pred_loss is MSE(sigmoid(mu), y), so range is [0, 1]."""
         import jax.random as jrandom
         import jax.numpy as jnp
+
         params = _leworldmodel_init_params(jrandom.PRNGKey(7))
         x = jnp.array([0.0, 0.0, 0.0, 0.0])
         y = jnp.array([1.0])

@@ -137,7 +137,9 @@ class TestQuasimetricRegularizer:
 class TestJEPALiveRetrainResult:
     """Spec: REQ-LEARN-041, SCENARIO-LEARN-069"""
 
-    def _make_result(self, post_auc: float = 0.850, inference_mode: str = "live") -> JEPALiveRetrainResult:
+    def _make_result(
+        self, post_auc: float = 0.850, inference_mode: str = "live"
+    ) -> JEPALiveRetrainResult:
         return JEPALiveRetrainResult(
             n_pairs_used=120,
             pre_auc=0.967,
@@ -167,16 +169,22 @@ class TestJEPALiveRetrainResult:
     def test_auc_improvement_positive_when_post_gt_pre(self):
         """auc_improvement > 0 when post_auc > pre_auc."""
         r = JEPALiveRetrainResult(
-            n_pairs_used=50, pre_auc=0.700, post_auc=0.850,
-            quasimetric_lambda=0.1, inference_mode="live",
+            n_pairs_used=50,
+            pre_auc=0.700,
+            post_auc=0.850,
+            quasimetric_lambda=0.1,
+            inference_mode="live",
         )
         assert r.auc_improvement == pytest.approx(0.150)
 
     def test_auc_improvement_negative_when_post_lt_pre(self):
         """auc_improvement < 0 when AUC degraded during retrain."""
         r = JEPALiveRetrainResult(
-            n_pairs_used=50, pre_auc=0.967, post_auc=0.850,
-            quasimetric_lambda=0.1, inference_mode="live",
+            n_pairs_used=50,
+            pre_auc=0.967,
+            post_auc=0.850,
+            quasimetric_lambda=0.1,
+            inference_mode="live",
         )
         assert r.auc_improvement == pytest.approx(-0.117, abs=1e-3)
 
@@ -216,16 +224,22 @@ class TestJEPALiveRetrainResult:
     def test_n_pairs_used_stored(self):
         """n_pairs_used is stored correctly."""
         r = JEPALiveRetrainResult(
-            n_pairs_used=42, pre_auc=0.5, post_auc=0.8,
-            quasimetric_lambda=0.1, inference_mode="live",
+            n_pairs_used=42,
+            pre_auc=0.5,
+            post_auc=0.8,
+            quasimetric_lambda=0.1,
+            inference_mode="live",
         )
         assert r.n_pairs_used == 42
 
     def test_quasimetric_lambda_stored(self):
         """quasimetric_lambda is stored and reflected in to_dict()."""
         r = JEPALiveRetrainResult(
-            n_pairs_used=10, pre_auc=0.5, post_auc=0.9,
-            quasimetric_lambda=0.25, inference_mode="live",
+            n_pairs_used=10,
+            pre_auc=0.5,
+            post_auc=0.9,
+            quasimetric_lambda=0.25,
+            inference_mode="live",
         )
         assert r.quasimetric_lambda == pytest.approx(0.25)
         assert r.to_dict()["quasimetric_lambda"] == pytest.approx(0.25)

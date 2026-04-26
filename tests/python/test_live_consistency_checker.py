@@ -490,9 +490,15 @@ class TestRunEvaluation:
         Spec: REQ-VERIFY-001
         """
         required_fields = {
-            "chain_id", "chain_type", "contradiction_type",
-            "expected_consistent", "global_detected", "severity",
-            "n_inconsistent_pairs", "inconsistent_pairs", "latency_ms",
+            "chain_id",
+            "chain_type",
+            "contradiction_type",
+            "expected_consistent",
+            "global_detected",
+            "severity",
+            "n_inconsistent_pairs",
+            "inconsistent_pairs",
+            "latency_ms",
         }
         for chain in eval_result["chains"]:
             missing = required_fields - set(chain.keys())
@@ -506,8 +512,7 @@ class TestRunEvaluation:
         for chain in eval_result["chains"]:
             if not chain["expected_consistent"]:
                 assert chain["global_detected"] is True, (
-                    f"Chain {chain['chain_id']} ({chain['contradiction_type']}) "
-                    f"was not detected"
+                    f"Chain {chain['chain_id']} ({chain['contradiction_type']}) was not detected"
                 )
 
     def test_consistent_chains_not_flagged(self, eval_result: dict) -> None:
@@ -551,6 +556,7 @@ class TestRunEvaluationWithGenerateFn:
         # Run only first seed to keep test fast
         seed = _QUESTION_SEEDS[0]
         from carnot.pipeline.live_consistency_eval import _generate_live_chain
+
         turns = _generate_live_chain(seed, stub_generate, inject=False)
 
         assert len(turns) == 4
@@ -564,11 +570,13 @@ class TestRunEvaluationWithGenerateFn:
 
         Spec: SCENARIO-VERIFY-005
         """
+
         def stub_generate(prompt: str) -> str:
             return "The apple cost is 3 dollars per unit."
 
         seed = _QUESTION_SEEDS[0]
         from carnot.pipeline.live_consistency_eval import _generate_live_chain
+
         turns = _generate_live_chain(seed, stub_generate, inject=True)
 
         # Turn 3 should contain both the consistent value AND the contradiction value
@@ -583,6 +591,7 @@ class TestRunEvaluationWithGenerateFn:
 
         Spec: SCENARIO-VERIFY-005
         """
+
         def stub_generate(prompt: str) -> str:
             # Returns text containing each seed's consistent value for a specific seed.
             # We return generic consistent text; the contradiction injection will
@@ -662,9 +671,7 @@ class TestResultsArtifact:
         Spec: REQ-VERIFY-001
         """
         fp_rate = artifact["summary"]["false_positive_rate"]
-        assert fp_rate <= 0.2, (
-            f"False positive rate {fp_rate:.2%} exceeds 20% ceiling."
-        )
+        assert fp_rate <= 0.2, f"False positive rate {fp_rate:.2%} exceeds 20% ceiling."
 
     def test_artifact_chain_count(self, artifact: dict) -> None:
         """Artifact contains exactly 20 chain entries.

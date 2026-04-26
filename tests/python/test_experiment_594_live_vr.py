@@ -160,6 +160,7 @@ class TestRunPerQuestion:
 
     def _make_extractor(self):
         from carnot.extraction.coace_extractor_v3 import CoACEExtractorV3
+
         return CoACEExtractorV3()
 
     def test_no_violations_baseline_equals_pipeline(self):
@@ -218,8 +219,12 @@ class TestRunPerQuestion:
         questions = [{"question": "q", "answer": "#### 0"}]
         stats = exp594._run_per_question(extractor, lambda p: "answer is 0", questions)
         for field in (
-            "baseline_accuracy", "pipeline_accuracy", "n_violations_found",
-            "n_repairs_attempted", "n_repairs_succeeded", "per_question",
+            "baseline_accuracy",
+            "pipeline_accuracy",
+            "n_violations_found",
+            "n_repairs_attempted",
+            "n_repairs_succeeded",
+            "per_question",
         ):
             assert field in stats, f"Missing field: {field}"
 
@@ -334,10 +339,20 @@ class TestBuildArtifact:
         tmpl, captured = self._make_tmpl()
         exp594._build_artifact(tmpl, {}, inference_mode="live_gpu")
         required_fields = [
-            "schema", "inference_mode", "n_questions", "question_indices", "extractor",
-            "v3_recall_at_gate", "baseline_accuracy", "pipeline_accuracy",
-            "signed_improvement", "n_violations_found", "n_repairs_attempted",
-            "n_repairs_succeeded", "retro_033_resolved", "honest_verdict",
+            "schema",
+            "inference_mode",
+            "n_questions",
+            "question_indices",
+            "extractor",
+            "v3_recall_at_gate",
+            "baseline_accuracy",
+            "pipeline_accuracy",
+            "signed_improvement",
+            "n_violations_found",
+            "n_repairs_attempted",
+            "n_repairs_succeeded",
+            "retro_033_resolved",
+            "honest_verdict",
         ]
         for f in required_fields:
             assert f in captured, f"Missing required field: {f}"
@@ -494,11 +509,22 @@ class TestDeliverableJson:
         path = _REPO_ROOT / "results" / "experiment_594_live_vr_coace_v3.json"
         data = json.loads(path.read_text())
         required = [
-            "schema", "inference_mode", "n_questions", "question_indices", "extractor",
-            "v3_recall_at_gate", "baseline_accuracy", "pipeline_accuracy",
-            "signed_improvement", "n_violations_found", "n_repairs_attempted",
-            "n_repairs_succeeded", "retro_033_resolved", "honest_verdict",
-            "status", "experiment",
+            "schema",
+            "inference_mode",
+            "n_questions",
+            "question_indices",
+            "extractor",
+            "v3_recall_at_gate",
+            "baseline_accuracy",
+            "pipeline_accuracy",
+            "signed_improvement",
+            "n_violations_found",
+            "n_repairs_attempted",
+            "n_repairs_succeeded",
+            "retro_033_resolved",
+            "honest_verdict",
+            "status",
+            "experiment",
         ]
         for f in required:
             assert f in data, f"Missing required field in deliverable: {f}"

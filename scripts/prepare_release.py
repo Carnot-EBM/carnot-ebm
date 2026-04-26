@@ -95,7 +95,8 @@ def check_version_file() -> CheckResult:
         if __version__ == EXPECTED_VERSION:
             return CheckResult("Version file", True, f"v{__version__}")
         return CheckResult(
-            "Version file", False,
+            "Version file",
+            False,
             f"expected {EXPECTED_VERSION!r}, got {__version__!r}",
         )
     except Exception as e:
@@ -111,7 +112,8 @@ def check_version_init() -> CheckResult:
         if carnot.__version__ == __version__:
             return CheckResult("Version init consistency", True)
         return CheckResult(
-            "Version init consistency", False,
+            "Version init consistency",
+            False,
             f"init={carnot.__version__!r} vs file={__version__!r}",
         )
     except Exception as e:
@@ -145,8 +147,18 @@ def check_imports() -> CheckResult:
 def check_unit_tests() -> CheckResult:
     """Run pytest on tests/python with coverage."""
     result = run_cmd(
-        [sys.executable, "-m", "pytest", "tests/python", "-x", "-q",
-         "--no-header", "--tb=short", "-p", "no:cacheprovider"],
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "tests/python",
+            "-x",
+            "-q",
+            "--no-header",
+            "--tb=short",
+            "-p",
+            "no:cacheprovider",
+        ],
         timeout=300,
     )
     if result.returncode == 0:
@@ -162,13 +174,21 @@ def check_unit_tests() -> CheckResult:
 
 def check_cli_verify() -> CheckResult:
     """Run 'carnot verify' on examples/math_funcs.py."""
-    result = run_cmd([
-        sys.executable, "-m", "carnot.cli",
-        "verify", "examples/math_funcs.py",
-        "--func", "gcd",
-        "--test", "(12,8):4",
-        "--test", "(7,13):1",
-    ])
+    result = run_cmd(
+        [
+            sys.executable,
+            "-m",
+            "carnot.cli",
+            "verify",
+            "examples/math_funcs.py",
+            "--func",
+            "gcd",
+            "--test",
+            "(12,8):4",
+            "--test",
+            "(7,13):1",
+        ]
+    )
     if result.returncode == 0 and "PASS" in result.stdout:
         return CheckResult("CLI verify", True, "gcd verified")
     detail = result.stderr.strip() or result.stdout.strip()
@@ -177,10 +197,15 @@ def check_cli_verify() -> CheckResult:
 
 def check_cli_score_list() -> CheckResult:
     """Run 'carnot score --list-models'."""
-    result = run_cmd([
-        sys.executable, "-m", "carnot.cli",
-        "score", "--list-models",
-    ])
+    result = run_cmd(
+        [
+            sys.executable,
+            "-m",
+            "carnot.cli",
+            "score",
+            "--list-models",
+        ]
+    )
     if result.returncode == 0 and "per-token-ebm" in result.stdout:
         return CheckResult("CLI score --list-models", True)
     detail = result.stderr.strip() or result.stdout.strip()
@@ -228,7 +253,8 @@ def check_release_notes() -> CheckResult:
     if EXPECTED_VERSION.replace("b", "-beta") in content or EXPECTED_VERSION in content:
         return CheckResult("Release notes", True)
     return CheckResult(
-        "Release notes", False,
+        "Release notes",
+        False,
         f"RELEASE_NOTES.md does not mention {EXPECTED_VERSION}",
     )
 

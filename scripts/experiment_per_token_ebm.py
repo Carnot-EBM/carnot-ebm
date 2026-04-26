@@ -40,13 +40,13 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Hyperparameters
 # ---------------------------------------------------------------------------
-PCA_DIM = 1024          # Reduce 2048-dim activations to 1024 via PCA
-HIDDEN_DIMS = [128, 32] # Gibbs hidden layers
-N_EPOCHS = 200          # NCE training epochs
-LEARNING_RATE = 0.005   # Gradient descent step size
-TRAIN_FRACTION = 0.8    # 80/20 train/test split by question
-N_CANDIDATES = 5        # Candidates per question for rejection sampling
-TEMPERATURE = 0.8       # Sampling temperature for candidate generation
+PCA_DIM = 1024  # Reduce 2048-dim activations to 1024 via PCA
+HIDDEN_DIMS = [128, 32]  # Gibbs hidden layers
+N_EPOCHS = 200  # NCE training epochs
+LEARNING_RATE = 0.005  # Gradient descent step size
+TRAIN_FRACTION = 0.8  # 80/20 train/test split by question
+N_CANDIDATES = 5  # Candidates per question for rejection sampling
+TEMPERATURE = 0.8  # Sampling temperature for candidate generation
 SEED = 42
 
 
@@ -94,7 +94,10 @@ def split_by_question(
 
     logger.info(
         "Split: %d train tokens (%d questions), %d test tokens (%d questions)",
-        train_mask.sum(), len(train_qids), test_mask.sum(), len(test_qids),
+        train_mask.sum(),
+        len(train_qids),
+        test_mask.sum(),
+        len(test_qids),
     )
     return train, test
 
@@ -114,10 +117,12 @@ def fit_pca(activations: np.ndarray, n_components: int) -> tuple[np.ndarray, np.
     # For N >> D this is efficient; for N < D we'd use the other form
     _U, _S, Vt = np.linalg.svd(centered, full_matrices=False)
     components = Vt[:n_components]
-    variance_explained = _S[:n_components] ** 2 / (_S ** 2).sum()
+    variance_explained = _S[:n_components] ** 2 / (_S**2).sum()
     logger.info(
         "PCA: %d -> %d dims, variance explained: %.1f%%",
-        activations.shape[1], n_components, 100 * variance_explained.sum(),
+        activations.shape[1],
+        n_components,
+        100 * variance_explained.sum(),
     )
     return mean, components
 
@@ -156,7 +161,9 @@ def train_ebm(
     # Balance classes for NCE: use equal number of correct and wrong tokens.
     # If imbalanced, subsample the larger class.
     min_n = min(len(correct_pca), len(wrong_pca))
-    logger.info("Balanced NCE: %d correct, %d wrong -> %d each", len(correct_pca), len(wrong_pca), min_n)
+    logger.info(
+        "Balanced NCE: %d correct, %d wrong -> %d each", len(correct_pca), len(wrong_pca), min_n
+    )
 
     rng = np.random.default_rng(SEED)
     if len(correct_pca) > min_n:
@@ -248,7 +255,7 @@ def evaluate_classification(model, project_fn, activations, labels, split_name):
     print(f"    Wrong tokens:   {wrong_mask.sum()}, mean energy: {mean_wrong:.4f}")
     print(f"    Energy gap:     {gap:.4f} ({'good' if gap > 0 else 'BAD: wrong < correct'})")
     print(f"    Threshold:      {threshold:.4f}")
-    print(f"    Accuracy:       {accuracy:.1%} ({tp+tn}/{total})")
+    print(f"    Accuracy:       {accuracy:.1%} ({tp + tn}/{total})")
 
     return {
         "accuracy": accuracy,
@@ -262,7 +269,10 @@ def evaluate_classification(model, project_fn, activations, labels, split_name):
 
 
 def evaluate_rejection_sampling(
-    model, project_fn, data, test_qids,
+    model,
+    project_fn,
+    data,
+    test_qids,
 ):
     """Rejection sampling: for each test question, score candidates by mean energy.
 
@@ -297,12 +307,14 @@ def evaluate_rejection_sampling(
         # All tokens for a question share the same label (sequence-level)
         is_correct = q_labels[0] == 1
 
-        results.append({
-            "question_id": int(qid),
-            "mean_energy": float(mean_energy),
-            "is_correct": bool(is_correct),
-            "n_tokens": len(q_acts),
-        })
+        results.append(
+            {
+                "question_id": int(qid),
+                "mean_energy": float(mean_energy),
+                "is_correct": bool(is_correct),
+                "n_tokens": len(q_acts),
+            }
+        )
 
     return results
 
@@ -312,13 +324,15 @@ def main() -> int:
     print("EXPERIMENT: Per-Token EBM for Hallucination Detection")
     print(f"Architecture: Gibbs [{PCA_DIM} -> {' -> '.join(map(str, HIDDEN_DIMS))} -> 1]")
     print(f"Training: NCE, {N_EPOCHS} epochs, lr={LEARNING_RATE}")
-    print(f"Split: {TRAIN_FRACTION:.0%} train / {1-TRAIN_FRACTION:.0%} test (by question)")
+    print(f"Split: {TRAIN_FRACTION:.0%} train / {1 - TRAIN_FRACTION:.0%} test (by question)")
     print("=" * 60)
 
     # ------------------------------------------------------------------
     # Step 1: Load per-token activations
     # ------------------------------------------------------------------
-    data_path = os.path.join(os.path.dirname(__file__), "..", "data", "token_activations.safetensors")
+    data_path = os.path.join(
+        os.path.dirname(__file__), "..", "data", "token_activations.safetensors"
+    )
     data_path = os.path.abspath(data_path)
 
     if not os.path.exists(data_path):
@@ -406,15 +420,19 @@ def main() -> int:
         print(f"\n  Correct questions: {len(correct_energies)}, mean energy: {mean_correct_q:.4f}")
         print(f"  Wrong questions:   {len(wrong_energies)}, mean energy: {mean_wrong_q:.4f}")
         print(f"  Energy gap:        {gap_q:.4f}")
-        print(f"  Question-level accuracy: {acc_q:.1%} ({tp_q+tn_q}/{total_q})")
+        print(f"  Question-level accuracy: {acc_q:.1%} ({tp_q + tn_q}/{total_q})")
 
         # Simulated rejection sampling: if we had N candidates per question,
         # the EBM would rank them by mean energy and pick the lowest.
         # Here we assess: does the energy ordering correlate with correctness?
         # A "fix" = wrong answer gets high energy (would be rejected).
         # A "regression" = correct answer gets high energy (would be wrongly rejected).
-        n_fixes = sum(1 for r in rej_results if not r["is_correct"] and r["mean_energy"] > threshold_q)
-        n_regressions = sum(1 for r in rej_results if r["is_correct"] and r["mean_energy"] > threshold_q)
+        n_fixes = sum(
+            1 for r in rej_results if not r["is_correct"] and r["mean_energy"] > threshold_q
+        )
+        n_regressions = sum(
+            1 for r in rej_results if r["is_correct"] and r["mean_energy"] > threshold_q
+        )
         print(f"  Fixes (wrong -> rejected): {n_fixes}")
         print(f"  Regressions (correct -> rejected): {n_regressions}")
         print(f"  Net improvement: {n_fixes - n_regressions:+d}")
@@ -456,7 +474,9 @@ def main() -> int:
     print("SUMMARY")
     print("=" * 60)
     print(f"  Dataset:               {n_total} tokens, {n_questions} questions")
-    print(f"  Architecture:          Gibbs [{pca_dim} -> {' -> '.join(map(str, HIDDEN_DIMS))} -> 1]")
+    print(
+        f"  Architecture:          Gibbs [{pca_dim} -> {' -> '.join(map(str, HIDDEN_DIMS))} -> 1]"
+    )
     print(f"  Training:              NCE, {N_EPOCHS} epochs, lr={LEARNING_RATE}")
     print(f"  Calibration accuracy:  {ebm_cal_acc:.1%}")
     print(f"  Test accuracy:         {ebm_test_acc:.1%}")

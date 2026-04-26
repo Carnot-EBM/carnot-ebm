@@ -90,7 +90,11 @@ def test_data_source_edu_prm_selected_when_file_exists() -> None:
     from scripts.experiment_783_jepa_v20_retrain import collect_training_data  # noqa: E402
 
     sample_items = [
-        {"step_text": f"step {i}", "label": "incorrect" if i % 2 == 0 else "correct", "confidence": 1.0}
+        {
+            "step_text": f"step {i}",
+            "label": "incorrect" if i % 2 == 0 else "correct",
+            "confidence": 1.0,
+        }
         for i in range(10)
     ]
 

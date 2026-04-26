@@ -117,8 +117,10 @@ def generate_training_data(
     top_sats = [s for s, _ in scored[:n_samples]]
     mean_pct = np.mean(top_sats) / n_clauses * 100
     best_pct = max(top_sats) / n_clauses * 100
-    print(f"    Training data: {len(data)} samples, "
-          f"mean {mean_pct:.1f}% sat, best {best_pct:.1f}% sat")
+    print(
+        f"    Training data: {len(data)} samples, "
+        f"mean {mean_pct:.1f}% sat, best {best_pct:.1f}% sat"
+    )
 
     return data
 
@@ -166,9 +168,7 @@ def train_ising_cd_l1(
     data_jax = jnp.array(data)
     spins_data = 2.0 * data_jax - 1.0  # Map {0,1} -> {-1,+1}.
     pos_bias_moments = jnp.mean(spins_data, axis=0)
-    pos_weight_moments = jnp.mean(
-        jnp.einsum("bi,bj->bij", spins_data, spins_data), axis=0
-    )
+    pos_weight_moments = jnp.mean(jnp.einsum("bi,bj->bij", spins_data, spins_data), axis=0)
 
     # Configure the sampler for the negative phase.
     sampler = ParallelIsingSampler(
@@ -190,9 +190,7 @@ def train_ising_cd_l1(
 
         spins_model = 2.0 * model_samples.astype(jnp.float32) - 1.0
         neg_bias_moments = jnp.mean(spins_model, axis=0)
-        neg_weight_moments = jnp.mean(
-            jnp.einsum("bi,bj->bij", spins_model, spins_model), axis=0
-        )
+        neg_weight_moments = jnp.mean(jnp.einsum("bi,bj->bij", spins_model, spins_model), axis=0)
 
         # CD gradient.
         grad_b = -beta * (pos_bias_moments - neg_bias_moments)
@@ -212,8 +210,7 @@ def train_ising_cd_l1(
 
         if epoch % 50 == 0 or epoch == n_epochs - 1:
             sparsity = np.mean(np.abs(J) < 0.01) * 100
-            print(f"    Epoch {epoch:3d}: recon={recon_error:.6f}, "
-                  f"sparsity={sparsity:.0f}%")
+            print(f"    Epoch {epoch:3d}: recon={recon_error:.6f}, sparsity={sparsity:.0f}%")
 
     return biases, J, losses
 
@@ -273,9 +270,11 @@ def evaluate_method(
     n_perfect = sum(1 for s in sat_counts if s == n_clauses)
 
     if label:
-        print(f"    {label:12s}: mean={mean_pct:.1f}%, "
-              f"best={best}/{n_clauses} ({best_pct:.1f}%), "
-              f"perfect={n_perfect}/{n_eval_samples}")
+        print(
+            f"    {label:12s}: mean={mean_pct:.1f}%, "
+            f"best={best}/{n_clauses} ({best_pct:.1f}%), "
+            f"perfect={n_perfect}/{n_eval_samples}"
+        )
 
     return {
         "best_sat": best,
@@ -300,8 +299,7 @@ def random_baseline(clauses: list[list[int]], n_vars: int, n_tries: int = 500) -
     mean_pct = np.mean(sat_counts) / n_clauses * 100
     best_pct = best / n_clauses * 100
 
-    print(f"    {'Random':12s}: mean={mean_pct:.1f}%, "
-          f"best={best}/{n_clauses} ({best_pct:.1f}%)")
+    print(f"    {'Random':12s}: mean={mean_pct:.1f}%, best={best}/{n_clauses} ({best_pct:.1f}%)")
 
     return {
         "best_sat": best,
@@ -327,7 +325,7 @@ def main() -> int:
     # At alpha=4.26 (phase transition), finding training data is hard.
     # We use alpha=3.5 to ensure enough satisfying assignments for CD training.
     test_cases = [
-        (50,  int(50 * 3.5)),
+        (50, int(50 * 3.5)),
         (100, int(100 * 3.5)),
         (200, int(200 * 3.5)),
     ]
@@ -337,7 +335,7 @@ def main() -> int:
     for n_vars, n_clauses in test_cases:
         sep = "-" * 70
         print(f"\n{sep}")
-        print(f"  {n_vars} vars, {n_clauses} clauses ({n_vars*n_vars} coupling params)")
+        print(f"  {n_vars} vars, {n_clauses} clauses ({n_vars * n_vars} coupling params)")
         print(sep)
 
         # Generate a held-out SAT instance for evaluation (different seed).
@@ -361,7 +359,12 @@ def main() -> int:
         # Scale learning rate down for larger problems to avoid divergence.
         lr = 0.05 / (n_vars / 50)
         biases_cd, J_cd, losses = train_ising_cd_l1(
-            data, n_epochs=200, lr=lr, beta=2.0, cd_steps=1, l1_lambda=0.001,
+            data,
+            n_epochs=200,
+            lr=lr,
+            beta=2.0,
+            cd_steps=1,
+            l1_lambda=0.001,
         )
         train_time = time.time() - t0
         print(f"    Training: {train_time:.1f}s, final recon={losses[-1]:.6f}")
@@ -373,46 +376,47 @@ def main() -> int:
         biases_hc_np = np.array(biases_hc)
         J_hc_np = np.array(J_hc)
 
-        res_cd_train = evaluate_method(
-            biases_cd, J_cd, clauses_train, n_vars, label="CD-trained")
+        res_cd_train = evaluate_method(biases_cd, J_cd, clauses_train, n_vars, label="CD-trained")
         res_hc_train = evaluate_method(
-            biases_hc_np, J_hc_np, clauses_train, n_vars, label="Hand-coded")
+            biases_hc_np, J_hc_np, clauses_train, n_vars, label="Hand-coded"
+        )
         res_rand_train = random_baseline(clauses_train, n_vars)
 
         # --- Step 4: Evaluate on held-out instance ---
         print(f"\n  [4/4] Evaluating on held-out instance (generalization)...")
         biases_hc2_vec, weights_hc2_vec, _ = sat_to_ising(clauses_eval, n_vars)
-        biases_hc2, J_hc2 = sat_to_coupling_matrix(
-            biases_hc2_vec, weights_hc2_vec, n_vars)
+        biases_hc2, J_hc2 = sat_to_coupling_matrix(biases_hc2_vec, weights_hc2_vec, n_vars)
         biases_hc2_np = np.array(biases_hc2)
         J_hc2_np = np.array(J_hc2)
 
         # CD model was trained on clauses_train — test on clauses_eval.
-        res_cd_eval = evaluate_method(
-            biases_cd, J_cd, clauses_eval, n_vars, label="CD-trained")
+        res_cd_eval = evaluate_method(biases_cd, J_cd, clauses_eval, n_vars, label="CD-trained")
         # Hand-coded uses the eval instance's own Ising mapping (oracle).
         res_hc_eval = evaluate_method(
-            biases_hc2_np, J_hc2_np, clauses_eval, n_vars, label="Hand-coded*")
+            biases_hc2_np, J_hc2_np, clauses_eval, n_vars, label="Hand-coded*"
+        )
         res_rand_eval = random_baseline(clauses_eval, n_vars)
 
-        all_results.append({
-            "n_vars": n_vars,
-            "n_clauses": n_clauses,
-            "n_params": n_vars * n_vars,
-            "data_time": data_time,
-            "train_time": train_time,
-            "final_loss": losses[-1],
-            "train": {
-                "cd": res_cd_train,
-                "handcoded": res_hc_train,
-                "random": res_rand_train,
-            },
-            "eval": {
-                "cd": res_cd_eval,
-                "handcoded": res_hc_eval,
-                "random": res_rand_eval,
-            },
-        })
+        all_results.append(
+            {
+                "n_vars": n_vars,
+                "n_clauses": n_clauses,
+                "n_params": n_vars * n_vars,
+                "data_time": data_time,
+                "train_time": train_time,
+                "final_loss": losses[-1],
+                "train": {
+                    "cd": res_cd_train,
+                    "handcoded": res_hc_train,
+                    "random": res_rand_train,
+                },
+                "eval": {
+                    "cd": res_cd_eval,
+                    "handcoded": res_hc_eval,
+                    "random": res_rand_eval,
+                },
+            }
+        )
 
     # --- Summary ---
     elapsed = time.time() - start
@@ -423,50 +427,58 @@ def main() -> int:
 
     # Training instance results.
     print(f"\n  Training Instance (same SAT used for CD training):")
-    print(f"  {'Vars':>6s} {'Params':>8s} {'CD mean':>9s} {'HC mean':>9s} "
-          f"{'Rand mean':>10s} {'CD best':>9s} {'HC best':>9s}")
-    print(f"  {'-'*60}")
+    print(
+        f"  {'Vars':>6s} {'Params':>8s} {'CD mean':>9s} {'HC mean':>9s} "
+        f"{'Rand mean':>10s} {'CD best':>9s} {'HC best':>9s}"
+    )
+    print(f"  {'-' * 60}")
     for r in all_results:
-        print(f"  {r['n_vars']:>6d} {r['n_params']:>8d} "
-              f"{r['train']['cd']['mean_pct']:>8.1f}% "
-              f"{r['train']['handcoded']['mean_pct']:>8.1f}% "
-              f"{r['train']['random']['mean_pct']:>9.1f}% "
-              f"{r['train']['cd']['best_pct']:>8.1f}% "
-              f"{r['train']['handcoded']['best_pct']:>8.1f}%")
+        print(
+            f"  {r['n_vars']:>6d} {r['n_params']:>8d} "
+            f"{r['train']['cd']['mean_pct']:>8.1f}% "
+            f"{r['train']['handcoded']['mean_pct']:>8.1f}% "
+            f"{r['train']['random']['mean_pct']:>9.1f}% "
+            f"{r['train']['cd']['best_pct']:>8.1f}% "
+            f"{r['train']['handcoded']['best_pct']:>8.1f}%"
+        )
 
     # Held-out instance results.
     print(f"\n  Held-out Instance (generalization — CD never saw this SAT):")
-    print(f"  {'Vars':>6s} {'CD mean':>9s} {'HC* mean':>10s} "
-          f"{'Rand mean':>10s} {'CD best':>9s} {'HC* best':>10s}")
-    print(f"  {'-'*56}")
+    print(
+        f"  {'Vars':>6s} {'CD mean':>9s} {'HC* mean':>10s} "
+        f"{'Rand mean':>10s} {'CD best':>9s} {'HC* best':>10s}"
+    )
+    print(f"  {'-' * 56}")
     for r in all_results:
-        print(f"  {r['n_vars']:>6d} "
-              f"{r['eval']['cd']['mean_pct']:>8.1f}% "
-              f"{r['eval']['handcoded']['mean_pct']:>9.1f}% "
-              f"{r['eval']['random']['mean_pct']:>9.1f}% "
-              f"{r['eval']['cd']['best_pct']:>8.1f}% "
-              f"{r['eval']['handcoded']['best_pct']:>9.1f}%")
+        print(
+            f"  {r['n_vars']:>6d} "
+            f"{r['eval']['cd']['mean_pct']:>8.1f}% "
+            f"{r['eval']['handcoded']['mean_pct']:>9.1f}% "
+            f"{r['eval']['random']['mean_pct']:>9.1f}% "
+            f"{r['eval']['cd']['best_pct']:>8.1f}% "
+            f"{r['eval']['handcoded']['best_pct']:>9.1f}%"
+        )
     print(f"  (* Hand-coded uses the eval instance's own Ising mapping — oracle baseline)")
 
     # Timing.
     print(f"\n  Timing:")
     for r in all_results:
-        print(f"    {r['n_vars']} vars: data={r['data_time']:.1f}s, "
-              f"train={r['train_time']:.1f}s")
+        print(f"    {r['n_vars']} vars: data={r['data_time']:.1f}s, train={r['train_time']:.1f}s")
 
     # Verdict: does CD improve over random, and how does it compare to hand-coded?
     if all_results:
         cd_advantages = []
         for r in all_results:
-            cd_over_rand = (r["train"]["cd"]["mean_pct"]
-                           - r["train"]["random"]["mean_pct"])
+            cd_over_rand = r["train"]["cd"]["mean_pct"] - r["train"]["random"]["mean_pct"]
             cd_advantages.append(cd_over_rand)
 
         mean_cd_advantage = np.mean(cd_advantages)
         scaling_trend = cd_advantages[-1] - cd_advantages[0] if len(cd_advantages) > 1 else 0
 
-        print(f"\n  CD advantage over random (training instance): "
-              f"{[f'{a:+.1f}%' for a in cd_advantages]}")
+        print(
+            f"\n  CD advantage over random (training instance): "
+            f"{[f'{a:+.1f}%' for a in cd_advantages]}"
+        )
         print(f"  Mean CD advantage: {mean_cd_advantage:+.1f}%")
 
         if mean_cd_advantage > 5:
@@ -481,7 +493,9 @@ def main() -> int:
         elif scaling_trend < -2:
             print(f"  SCALING: ❌ CD advantage shrinks with problem size ({scaling_trend:+.1f}%)")
         else:
-            print(f"  SCALING: ➡️ CD advantage roughly constant across sizes ({scaling_trend:+.1f}%)")
+            print(
+                f"  SCALING: ➡️ CD advantage roughly constant across sizes ({scaling_trend:+.1f}%)"
+            )
 
     print(sep)
     return 0

@@ -118,8 +118,7 @@ class TestRetroArtifactSchema:
         data = json.loads(RETRO_RESULT.read_text())
         for field, expected_type in self.REQUIRED_FIELDS.items():
             assert isinstance(data[field], expected_type), (
-                f"Field '{field}' should be {expected_type}, "
-                f"got {type(data[field])}"
+                f"Field '{field}' should be {expected_type}, got {type(data[field])}"
             )
 
     def test_milestone_value(self) -> None:
@@ -437,6 +436,7 @@ class TestImprovementsImplemented:
                 exp_num = int(exp_raw)
             else:
                 import re
+
                 m = re.search(r"\d+", str(exp_raw))
                 if not m:
                     continue
@@ -485,9 +485,7 @@ class TestEstimatedSpeedup:
         """SCENARIO-OPS-006: speedup must be in [0, 100]."""
         data = self._load()
         val = data["estimated_next_milestone_speedup_pct"]
-        assert 0.0 <= val <= 100.0, (
-            f"estimated_next_milestone_speedup_pct={val} out of [0, 100]"
-        )
+        assert 0.0 <= val <= 100.0, f"estimated_next_milestone_speedup_pct={val} out of [0, 100]"
 
     def test_speedup_nonzero(self) -> None:
         """SCENARIO-OPS-006: speedup must be > 0 (action items have nonzero impact)."""
@@ -539,9 +537,7 @@ class TestCarryOverFromPreviousRetro:
         """SCENARIO-OPS-007: RETRO-001 must appear in items_carried_forward or items_resolved."""
         data = self._load()
         carry = data["carry_over_from_previous_retro"]
-        all_mentioned = (
-            str(carry["items_carried_forward"]) + str(carry["items_resolved"])
-        )
+        all_mentioned = str(carry["items_carried_forward"]) + str(carry["items_resolved"])
         assert "RETRO-001" in all_mentioned, (
             "RETRO-001 not mentioned in carry_over_from_previous_retro"
         )
@@ -550,9 +546,7 @@ class TestCarryOverFromPreviousRetro:
         """SCENARIO-OPS-007: RETRO-002 must appear in items_carried_forward or items_resolved."""
         data = self._load()
         carry = data["carry_over_from_previous_retro"]
-        all_mentioned = (
-            str(carry["items_carried_forward"]) + str(carry["items_resolved"])
-        )
+        all_mentioned = str(carry["items_carried_forward"]) + str(carry["items_resolved"])
         assert "RETRO-002" in all_mentioned, (
             "RETRO-002 not mentioned in carry_over_from_previous_retro"
         )

@@ -302,6 +302,7 @@ GSM8K_RESPONSES: list[str] = [
 # FoVer labeling analysis per (question, response) pair
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class LabelingResult:
     """Per-pair FoVer labeling result.
@@ -355,8 +356,7 @@ def analyze_pair(
 
     # A step is "verifiable" if Z3 returned correct/incorrect (not not_verifiable).
     verifiable = [
-        s for s in annotated
-        if s.z3_label in ("correct", "incorrect") and s.z3_confidence > 0
+        s for s in annotated if s.z3_label in ("correct", "incorrect") and s.z3_confidence > 0
     ]
 
     labeling_successful = len(verifiable) > 0
@@ -409,6 +409,7 @@ def analyze_cohort(
 # Cohort statistics
 # ---------------------------------------------------------------------------
 
+
 def compute_cohort_stats(results: list[LabelingResult]) -> dict[str, float]:
     """Compute aggregate FoVer labeling statistics for a cohort.
 
@@ -438,9 +439,7 @@ def compute_cohort_stats(results: list[LabelingResult]) -> dict[str, float]:
 
     labeled = [r for r in results if r.label_confidence is not None]
     if labeled:
-        noise_est = sum(
-            1 for r in labeled if (r.label_confidence or 0.0) < 0.5
-        ) / len(labeled)
+        noise_est = sum(1 for r in labeled if (r.label_confidence or 0.0) < 0.5) / len(labeled)
     else:
         noise_est = 1.0  # All pairs are noise if none were labeled
 
@@ -454,6 +453,7 @@ def compute_cohort_stats(results: list[LabelingResult]) -> dict[str, float]:
 # ---------------------------------------------------------------------------
 # VJEPA AUC on labeled pairs
 # ---------------------------------------------------------------------------
+
 
 def compute_vjepa_auc_on_labeled(
     results: list[LabelingResult],
@@ -492,9 +492,7 @@ def compute_vjepa_auc_on_labeled(
     if len(labels_unique) < 2:
         return 0.5
 
-    token_to_idx = build_tfidf_features(
-        [s["step_text"] for s in raw], vocab_size=VOCAB_SIZE
-    )
+    token_to_idx = build_tfidf_features([s["step_text"] for s in raw], vocab_size=VOCAB_SIZE)
     corpus = prepare_corpus(raw, token_to_idx, vocab_size=VOCAB_SIZE)
 
     if len(corpus) < 2:
@@ -509,11 +507,13 @@ def compute_vjepa_auc_on_labeled(
 
     _key = jax.random.PRNGKey(0)
     scores = [
-        float(predictor.predict(
-            jnp.array(item["feature"], dtype=jnp.float32),
-            jnp.array(item["context"], dtype=jnp.float32),
-            _key,
-        ))
+        float(
+            predictor.predict(
+                jnp.array(item["feature"], dtype=jnp.float32),
+                jnp.array(item["context"], dtype=jnp.float32),
+                _key,
+            )
+        )
         for item in corpus
     ]
     label_ints = [item["label"] for item in corpus]
@@ -523,6 +523,7 @@ def compute_vjepa_auc_on_labeled(
 # ---------------------------------------------------------------------------
 # labeling_mismatch_confirmed gate
 # ---------------------------------------------------------------------------
+
 
 def check_mismatch_confirmed(
     mean_cot_depth_svamp: float,
@@ -555,6 +556,7 @@ def check_mismatch_confirmed(
 # honest_verdict assignment
 # ---------------------------------------------------------------------------
 
+
 def assign_honest_verdict(labeling_mismatch_confirmed: bool) -> str:
     """Map the mismatch flag to the experiment's honest verdict string.
 
@@ -576,6 +578,7 @@ def assign_honest_verdict(labeling_mismatch_confirmed: bool) -> str:
 # ---------------------------------------------------------------------------
 # Main experiment runner
 # ---------------------------------------------------------------------------
+
 
 def run_experiment() -> dict[str, Any]:
     """Execute the full SVAMP root-cause confirmation experiment.
@@ -639,6 +642,7 @@ def run_experiment() -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Deliverable guard
 # ---------------------------------------------------------------------------
+
 
 def assert_deliverable_written() -> None:
     """Assert that the result JSON was written and contains all required fields.

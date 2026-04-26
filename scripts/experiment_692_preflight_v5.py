@@ -108,9 +108,7 @@ def main() -> None:
     )
     tmpl.setup()
 
-    with ExperimentTimeoutWatchdog(_EXPERIMENT_ID, timeout_minutes=15,
-                                   result_path=_DELIVERABLE):
-
+    with ExperimentTimeoutWatchdog(_EXPERIMENT_ID, timeout_minutes=15, result_path=_DELIVERABLE):
         # Step 1: Check retirement files on disk.
         retirement_status = _check_retirement_files()
         all_retired = all(retirement_status.values())
@@ -140,7 +138,8 @@ def main() -> None:
             {
                 "retirements_added": list(_EXPECTED_RETIREMENT_IDS),
                 "retirement_files_present": retirement_status,
-                "retirements_added_this_cycle": len(_EXPECTED_RETIREMENT_IDS) - len(missing_retirements),
+                "retirements_added_this_cycle": len(_EXPECTED_RETIREMENT_IDS)
+                - len(missing_retirements),
                 "missing_retirements": missing_retirements,
                 "jepa_v15_cascade_blocked": jepa_block_in_manifest,
                 "manifest_consulted": manifest_consulted,

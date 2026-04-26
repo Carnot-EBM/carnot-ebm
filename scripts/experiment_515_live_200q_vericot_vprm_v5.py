@@ -138,11 +138,13 @@ def _load_gsm8k_questions(n: int, seed: int) -> list:
     for i in range(1, n + 1):
         a, b = i * 3, i * 2
         c = a + b
-        synthetic.append({
-            "question": f"Janet has {a} apples and receives {b} more. How many does she have?",
-            "answer": f"She starts with {a} and gets {b} more. #### {c}",
-            "source": "synthetic",
-        })
+        synthetic.append(
+            {
+                "question": f"Janet has {a} apples and receives {b} more. How many does she have?",
+                "answer": f"She starts with {a} and gets {b} more. #### {c}",
+                "source": "synthetic",
+            }
+        )
     _log.info("Using %d synthetic GSM8K fallback questions", n)
     return synthetic
 
@@ -193,7 +195,7 @@ def _write_json(repo_root: Path, rel_path: str, data: Any) -> None:
 # ---------------------------------------------------------------------------
 
 
-def run_experiment(repo_root: Optional[Path] = None) -> dict:
+def run_experiment(repo_root: Path | None = None) -> dict:
     """Run Experiment 515 and return the artifact dict.
 
     All execution paths write the deliverable JSON before returning so that
@@ -308,9 +310,11 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     def _qwen_factory() -> object:
         pipe = _load_qwen_pipeline(device=1)
         qwen_pipe_holder.append(pipe)
+
         class _Wrapper:
             def load(self) -> bool:
                 return True
+
         return _Wrapper()
 
     qwen_gate = load_jit_gated_model(
@@ -426,11 +430,16 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
         results = run_result.all_results
         if not results:
             return {
-                "model_id": model_id, "n": 0,
-                "baseline_correct": 0, "pipeline_correct": 0,
-                "baseline_accuracy": 0.0, "pipeline_accuracy": 0.0,
-                "signed_improvement": 0.0, "is_statistically_positive": False,
-                "wilson_95ci_lower": 0.0, "wilson_95ci_upper": 0.0,
+                "model_id": model_id,
+                "n": 0,
+                "baseline_correct": 0,
+                "pipeline_correct": 0,
+                "baseline_accuracy": 0.0,
+                "pipeline_accuracy": 0.0,
+                "signed_improvement": 0.0,
+                "is_statistically_positive": False,
+                "wilson_95ci_lower": 0.0,
+                "wilson_95ci_upper": 0.0,
             }
         n = len(results)
         bc = sum(1 for r in results if r.get("baseline_correct", False))
@@ -475,19 +484,23 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     # ------------------------------------------------------------------
     all_cot_pairs = []
     for r in gemma4_run.all_results:
-        all_cot_pairs.append({
-            "question": r.get("question", ""),
-            "cot_text": r.get("cot_text", ""),
-            "correct": r.get("pipeline_correct", False),
-            "model_id": "Gemma4-INT4",
-        })
+        all_cot_pairs.append(
+            {
+                "question": r.get("question", ""),
+                "cot_text": r.get("cot_text", ""),
+                "correct": r.get("pipeline_correct", False),
+                "model_id": "Gemma4-INT4",
+            }
+        )
     for r in qwen_run.all_results:
-        all_cot_pairs.append({
-            "question": r.get("question", ""),
-            "cot_text": r.get("cot_text", ""),
-            "correct": r.get("pipeline_correct", False),
-            "model_id": "Qwen3.5-0.8B",
-        })
+        all_cot_pairs.append(
+            {
+                "question": r.get("question", ""),
+                "cot_text": r.get("cot_text", ""),
+                "correct": r.get("pipeline_correct", False),
+                "model_id": "Qwen3.5-0.8B",
+            }
+        )
 
     cot_path = str(repo_root / COT_PAIRS_PATH)
     n_cot_written = write_cot_pairs(all_cot_pairs, cot_path) if all_cot_pairs else 0
@@ -533,9 +546,13 @@ def run_experiment(repo_root: Optional[Path] = None) -> dict:
     _log.info(
         "HEADLINE: honest_verdict=%s retro_038_closed=%s "
         "baseline=%.4f pipeline=%.4f delta=%.4f wilson_lo=%.4f cot_pairs=%s",
-        honest_verdict, retro_038_closed,
-        primary["baseline_accuracy"], primary["pipeline_accuracy"],
-        primary["signed_improvement"], delta_lo, cot_pairs_written,
+        honest_verdict,
+        retro_038_closed,
+        primary["baseline_accuracy"],
+        primary["pipeline_accuracy"],
+        primary["signed_improvement"],
+        delta_lo,
+        cot_pairs_written,
     )
 
     tmpl.assert_deliverable_written()
@@ -559,7 +576,9 @@ def main() -> None:
     verdict = artifact.get("honest_verdict", "unknown")
     _log.info(
         "Exp %d complete: honest_verdict=%s status=%s",
-        EXP_ID, verdict, artifact.get("status", "unknown"),
+        EXP_ID,
+        verdict,
+        artifact.get("status", "unknown"),
     )
 
 

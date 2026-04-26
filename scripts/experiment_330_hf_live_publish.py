@@ -29,6 +29,7 @@ import json
 import subprocess
 from pathlib import Path
 from typing import Any
+import contextlib
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -56,6 +57,7 @@ def _make_hf_api_330() -> Any:
     importing huggingface_hub at module load time.
     """
     from huggingface_hub import HfApi  # type: ignore[import-untyped]
+
     return HfApi()
 
 
@@ -265,8 +267,7 @@ def run_experiment_330(
                 # Extract per-model accuracy for the artifact
                 all_variant = adapted_benchmark.get("per_variant_results", {}).get("all", {})
                 exp328_baseline_accuracy = {
-                    model: stats.get("accuracy", 0.0)
-                    for model, stats in all_variant.items()
+                    model: stats.get("accuracy", 0.0) for model, stats in all_variant.items()
                 }
         except Exception:
             adapted_benchmark = None
@@ -287,8 +288,10 @@ def run_experiment_330(
     import tempfile
 
     with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".json", delete=False, dir=str(_write_path.parent)
-        if hasattr(_write_path, "parent") else "/tmp"
+        mode="w",
+        suffix=".json",
+        delete=False,
+        dir=str(_write_path.parent) if hasattr(_write_path, "parent") else "/tmp",
     ) as tf:
         tf317_path = Path(tf.name)
 
@@ -318,10 +321,8 @@ def run_experiment_330(
         )
     finally:
         _exp317_mod._EXP316_RESULTS_PATH = _orig_316_path  # type: ignore[assignment]
-        try:
+        with contextlib.suppress(Exception):
             tf317_path.unlink(missing_ok=True)
-        except Exception:
-            pass
 
     # -----------------------------------------------------------------------
     # Step 4: Count idempotency checks passed
@@ -336,9 +337,7 @@ def run_experiment_330(
 
     # Derive high-level flags from the exp317 model lists
     fcv_updated = "Carnot-EBM/carnot-formal-claim-verifier-v1" in models_updated
-    joint_placeholder_created = (
-        "Carnot-EBM/carnot-joint-constraint-v1" in models_updated
-    )
+    joint_placeholder_created = "Carnot-EBM/carnot-joint-constraint-v1" in models_updated
     # n_models_updated counts per-token EBM repos only (excludes FCV / joint)
     per_token_updated = [r for r in models_updated if "per-token-ebm" in r]
     per_token_skipped = [r for r in models_skipped if "per-token-ebm" in r]

@@ -16,6 +16,7 @@
 
 Spec: REQ-VERIFY-095, REQ-VERIFY-096, SCENARIO-VERIFY-129
 """
+
 from __future__ import annotations
 
 import json
@@ -150,9 +151,7 @@ def main() -> None:
     # --- Setup constraint store ---
     store = EmbeddingConstraintStore()
     # Bootstrap from legacy CaseMemory patterns covering carry, sign, unit, comparison, causal.
-    store.from_casememory_patterns(
-        {"carry": 4, "sign": 2, "unit": 1, "comparison": 1, "causal": 1}
-    )
+    store.from_casememory_patterns({"carry": 4, "sign": 2, "unit": 1, "comparison": 1, "causal": 1})
     n_stored = len(store._store)
 
     # --- Setup injector ---

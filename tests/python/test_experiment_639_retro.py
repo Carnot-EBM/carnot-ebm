@@ -102,12 +102,14 @@ def _write_fake_results(
 
     # exp627 — InterWhenMonitor
     (results_dir / "experiment_627_interwhen_monitor.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.026,
-            "interwhen_recall": interwhen_recall,
-            "gate_open": gate_open,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.026,
+                "interwhen_recall": interwhen_recall,
+                "gate_open": gate_open,
+            }
+        )
     )
     # exp628 — ORACLE FOVER v5
     (results_dir / "experiment_628_oracle_fover_v5.json").write_text(
@@ -115,52 +117,62 @@ def _write_fake_results(
     )
     # exp629 — InterwhenDiagnostic Gate
     (results_dir / "experiment_629_interwhen_diagnostic.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.209,
-            "interwhen_recall_primary": interwhen_recall,
-            "gate_open": gate_open,
-            "retro_070_resolved": retro_070_resolved,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.209,
+                "interwhen_recall_primary": interwhen_recall,
+                "gate_open": gate_open,
+                "retro_070_resolved": retro_070_resolved,
+            }
+        )
     )
     # exp630 — Live VR #16
     (results_dir / "experiment_630_live_vr_attempt_16.json").write_text(
-        json.dumps({
-            "status": "blocked" if not retro_033_resolved else "success",
-            "duration_s": 0.0,
-            "gate_open": retro_033_resolved,
-            "signed_improvement": signed_improvement,
-            "retro_033_resolved": retro_033_resolved,
-        })
+        json.dumps(
+            {
+                "status": "blocked" if not retro_033_resolved else "success",
+                "duration_s": 0.0,
+                "gate_open": retro_033_resolved,
+                "signed_improvement": signed_improvement,
+                "retro_033_resolved": retro_033_resolved,
+            }
+        )
     )
     # exp631 — JEPA v14 Oracle
     (results_dir / "experiment_631_jepa_v14_oracle.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 179.237,
-            "calibration_improved": calibration_improved,
-            "v14_ece": v14_ece,
-            "v14_ood_auc": v14_ood_auc,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 179.237,
+                "calibration_improved": calibration_improved,
+                "v14_ece": v14_ece,
+                "v14_ood_auc": v14_ood_auc,
+            }
+        )
     )
     # exp632 — DualGPU 13B Proof
     (results_dir / "experiment_632_dualgpu_13b_proof.json").write_text(
-        json.dumps({
-            "status": "blocked" if not dualgpu_proven else "success",
-            "duration_s": 255.0,
-            "dualgpu_proven": dualgpu_proven,
-            "retro_071_resolved": retro_071_resolved,
-        })
+        json.dumps(
+            {
+                "status": "blocked" if not dualgpu_proven else "success",
+                "duration_s": 255.0,
+                "dualgpu_proven": dualgpu_proven,
+                "retro_071_resolved": retro_071_resolved,
+            }
+        )
     )
     # exp633 — HERMES Adapter
     (results_dir / "experiment_633_hermes_adapter.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.029,
-            "hermes_improvement": hermes_improvement,
-            "hermes_recall": hermes_recall,
-            "hermes_fp_rate": hermes_fp_rate,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.029,
+                "hermes_improvement": hermes_improvement,
+                "hermes_recall": hermes_recall,
+                "hermes_fp_rate": hermes_fp_rate,
+            }
+        )
     )
     # exp634 — Multilevel KAN KAEMEnergy
     exp634_data: dict = {
@@ -170,17 +182,17 @@ def _write_fake_results(
     }
     if multilevel_wins:
         exp634_data["multilevel_wins"] = multilevel_wins
-    (results_dir / "experiment_634_multilevel_kan_kaem.json").write_text(
-        json.dumps(exp634_data)
-    )
+    (results_dir / "experiment_634_multilevel_kan_kaem.json").write_text(json.dumps(exp634_data))
     # exp635 — AdapTrack Backtrack
     (results_dir / "experiment_635_adaptrack_backtrack.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.022,
-            "adaptrack_improves_recall": adaptrack_improves_recall,
-            "adaptrack_recall": adaptrack_recall,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.022,
+                "adaptrack_improves_recall": adaptrack_improves_recall,
+                "adaptrack_recall": adaptrack_recall,
+            }
+        )
     )
     # exp636 — FPGA TCL v2
     exp636_data: dict = {
@@ -189,25 +201,27 @@ def _write_fake_results(
     }
     if tcl_v2_written is not None:
         exp636_data["tcl_v2_written"] = tcl_v2_written
-    (results_dir / "experiment_636_fpga_tcl_v2.json").write_text(
-        json.dumps(exp636_data)
-    )
+    (results_dir / "experiment_636_fpga_tcl_v2.json").write_text(json.dumps(exp636_data))
     # exp637 — LowRankKAEM Sparse
     (results_dir / "experiment_637_lowrank_kaem_sparse.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 267.365,
-            "retro_057_resolved": retro_057_resolved,
-            "sparse_vs_dense_error": sparse_vs_dense_error,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 267.365,
+                "retro_057_resolved": retro_057_resolved,
+                "sparse_vs_dense_error": sparse_vs_dense_error,
+            }
+        )
     )
     # exp638 — FR-11 Self-Learning Relay
     (results_dir / "experiment_638_tier1_fr11_relay.json").write_text(
-        json.dumps({
-            "status": "success",
-            "duration_s": 0.004,
-            "fr11_real_violations_confirmed": fr11_real_violations_confirmed,
-        })
+        json.dumps(
+            {
+                "status": "success",
+                "duration_s": 0.004,
+                "fr11_real_violations_confirmed": fr11_real_violations_confirmed,
+            }
+        )
     )
 
 
@@ -226,9 +240,7 @@ def test_retro_033_not_resolved_when_blocked(
     assert retro["retro_033_resolved"] is False
 
 
-def test_retro_033_resolved_when_flag_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_033_resolved_when_flag_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_033_resolved is True when Exp 630 sets retro_033_resolved=True."""
     _write_fake_results(tmp_path, retro_033_resolved=True, signed_improvement=0.05)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -247,9 +259,7 @@ def test_retro_070_not_resolved_when_recall_low(
     assert retro["interwhen_recall"] == pytest.approx(0.12, abs=1e-6)
 
 
-def test_retro_070_resolved_when_flag_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_070_resolved_when_flag_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_070_resolved is True when Exp 629 sets retro_070_resolved=True."""
     _write_fake_results(tmp_path, interwhen_recall=0.25, retro_070_resolved=True, gate_open=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -289,9 +299,7 @@ def test_retro_057_not_resolved_when_error_high(
     assert retro["sparse_vs_dense_error"] == pytest.approx(0.429, abs=1e-6)
 
 
-def test_retro_057_resolved_when_flag_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_retro_057_resolved_when_flag_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """retro_057_resolved is True when Exp 637 sets retro_057_resolved=True."""
     _write_fake_results(tmp_path, sparse_vs_dense_error=0.04, retro_057_resolved=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -310,9 +318,7 @@ def test_jepa_v14_not_calibrated_when_ece_high(
     assert retro["v14_ece"] == pytest.approx(0.132, abs=1e-4)
 
 
-def test_jepa_v14_calibrated_when_flag_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_jepa_v14_calibrated_when_flag_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """jepa_v14_calibrated is True when Exp 631 sets calibration_improved=True."""
     _write_fake_results(tmp_path, calibration_improved=True, v14_ece=0.08)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -320,9 +326,7 @@ def test_jepa_v14_calibrated_when_flag_set(
     assert retro["jepa_v14_calibrated"] is True
 
 
-def test_fr11_not_confirmed_when_false(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fr11_not_confirmed_when_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """fr11_confirmed is False when Exp 638 fr11_real_violations_confirmed=False."""
     _write_fake_results(tmp_path, fr11_real_violations_confirmed=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -330,9 +334,7 @@ def test_fr11_not_confirmed_when_false(
     assert retro["fr11_confirmed"] is False
 
 
-def test_fr11_confirmed_when_true(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fr11_confirmed_when_true(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """fr11_confirmed is True when Exp 638 fr11_real_violations_confirmed=True."""
     _write_fake_results(tmp_path, fr11_real_violations_confirmed=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -340,9 +342,7 @@ def test_fr11_confirmed_when_true(
     assert retro["fr11_confirmed"] is True
 
 
-def test_hermes_improves_true(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_hermes_improves_true(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """hermes_improves is True when Exp 633 hermes_improvement=True."""
     _write_fake_results(tmp_path, hermes_improvement=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -350,9 +350,7 @@ def test_hermes_improves_true(
     assert retro["hermes_improves"] is True
 
 
-def test_hermes_improves_false(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_hermes_improves_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """hermes_improves is False when Exp 633 hermes_improvement=False."""
     _write_fake_results(tmp_path, hermes_improvement=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -380,9 +378,7 @@ def test_multilevel_wins_true_via_explicit_key(
     assert retro["multilevel_wins"] is True
 
 
-def test_adaptrack_improves_false(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_adaptrack_improves_false(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """adaptrack_improves is False when Exp 635 adaptrack_improves_recall=False."""
     _write_fake_results(tmp_path, adaptrack_improves_recall=False)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -390,9 +386,7 @@ def test_adaptrack_improves_false(
     assert retro["adaptrack_improves"] is False
 
 
-def test_adaptrack_improves_true(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_adaptrack_improves_true(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """adaptrack_improves is True when Exp 635 adaptrack_improves_recall=True."""
     _write_fake_results(tmp_path, adaptrack_improves_recall=True)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -467,9 +461,7 @@ def test_honest_verdict_hermes_improved_all_retros_carry(
     assert retro["honest_verdict"] == "hermes_improved_all_retros_carry"
 
 
-def test_honest_verdict_no_retros_closed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_honest_verdict_no_retros_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """honest_verdict='no_retros_closed' when nothing is resolved and hermes doesn't improve."""
     _write_fake_results(
         tmp_path,
@@ -637,9 +629,7 @@ def test_top_priority_jepa_calibration_always_present(
     assert "JEPA" in second or "calibration" in second or "Platt" in second
 
 
-def test_top_priority_kv260_always_present(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_top_priority_kv260_always_present(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """KV260 FPGA synthesis is always the third priority."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -653,9 +643,7 @@ def test_top_priority_kv260_always_present(
 # ---------------------------------------------------------------------------
 
 
-def test_n_experiments_is_thirteen(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_n_experiments_is_thirteen(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_experiments_run = 13 when all 12 upstream files exist plus this retro."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -663,9 +651,7 @@ def test_n_experiments_is_thirteen(
     assert retro["n_experiments_run"] == 13
 
 
-def test_n_not_run_zero_when_all_present(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_n_not_run_zero_when_all_present(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """n_not_run = 0 when all upstream result files are present."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -696,9 +682,7 @@ def test_mean_time_min_is_wall_time_over_n_experiments(
     assert retro["mean_time_min"] == pytest.approx(expected, abs=1e-6)
 
 
-def test_schema_and_milestone_fields(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_schema_and_milestone_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Schema and milestone fields are set to the expected v23 values."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -712,9 +696,7 @@ def test_schema_and_milestone_fields(
 # ---------------------------------------------------------------------------
 
 
-def test_main_writes_deliverable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_writes_deliverable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """main() writes a valid JSON artifact at DELIVERABLE path with all required fields."""
     _write_fake_results(tmp_path)
     monkeypatch.setattr(retro_mod, "_REPO_ROOT", tmp_path)
@@ -728,8 +710,14 @@ def test_main_writes_deliverable(
     artifact = json.loads(deliverable.read_text())
 
     required_fields = [
-        "experiment", "title", "run_date", "started_at", "finished_at",
-        "duration_s", "status", "schema",
+        "experiment",
+        "title",
+        "run_date",
+        "started_at",
+        "finished_at",
+        "duration_s",
+        "status",
+        "schema",
         "retro_033_resolved",
         "retro_057_resolved",
         "retro_070_resolved",

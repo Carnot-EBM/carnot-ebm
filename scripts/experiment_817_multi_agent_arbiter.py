@@ -20,6 +20,7 @@
 
 Spec: REQ-AGENT-003, REQ-AGENT-004, SCENARIO-AGENT-004
 """
+
 from __future__ import annotations
 
 import json
@@ -57,18 +58,18 @@ SCENARIOS = [
     (
         "What is 47 + 28?",
         [
-            "47 + 28 = 75",   # correct
-            "47 + 28 = 76",   # off by 1
-            "47 + 28 = 70",   # off by 5
+            "47 + 28 = 75",  # correct
+            "47 + 28 = 76",  # off by 1
+            "47 + 28 = 70",  # off by 5
         ],
         0,  # expected winner: Agent A
     ),
     (
         "What is 13 + 19?",
         [
-            "13 + 19 = 33",   # wrong by 1
-            "13 + 19 = 32",   # correct
-            "13 + 19 = 25",   # wrong by 7
+            "13 + 19 = 33",  # wrong by 1
+            "13 + 19 = 32",  # correct
+            "13 + 19 = 25",  # wrong by 7
         ],
         1,  # expected winner: Agent B
     ),
@@ -84,9 +85,9 @@ SCENARIOS = [
     (
         "What is 8 * 7?",
         [
-            "8 * 7 = 56",    # correct
-            "8 * 7 = 57",    # wrong by 1
-            "8 * 7 = 48",    # wrong by 8
+            "8 * 7 = 56",  # correct
+            "8 * 7 = 57",  # wrong by 1
+            "8 * 7 = 48",  # wrong by 8
         ],
         0,  # expected winner: Agent A
     ),
@@ -102,7 +103,7 @@ SCENARIOS = [
     (
         "What is 55 + 45?",
         [
-            "55 + 45 = 95",   # wrong by 5
+            "55 + 45 = 95",  # wrong by 5
             "55 + 45 = 100",  # correct
             "55 + 45 = 102",  # wrong by 2
         ],
@@ -172,10 +173,7 @@ def main() -> None:
     else:
         honest_verdict = "arbiter_incorrect"
 
-    print(
-        f"\narbiter_accuracy={arbiter_accuracy:.2f}  "
-        f"honest_verdict={honest_verdict}"
-    )
+    print(f"\narbiter_accuracy={arbiter_accuracy:.2f}  honest_verdict={honest_verdict}")
 
     artifact = tmpl.build_result(
         {

@@ -188,28 +188,26 @@ def compute_spilled_energy(
     """
     logits = np.asarray(logits, dtype=np.float64)
     if logits.ndim != 2:
-        raise ValueError(
-            f"logits must be 2-D (T, V), got shape {logits.shape}"
-        )
+        raise ValueError(f"logits must be 2-D (T, V), got shape {logits.shape}")
     if logits.shape[0] < 1:
         raise ValueError("logits must contain at least one token (T >= 1)")
 
-    log_probs = _log_softmax(logits)        # (T, V)
-    probs = np.exp(log_probs)               # (T, V)
+    log_probs = _log_softmax(logits)  # (T, V)
+    probs = np.exp(log_probs)  # (T, V)
 
     # Shannon entropy per token: H_t = −sum_v(p_v * log_p_v)
     # Numerically: replace 0*log(0) → 0 (handled automatically since log_probs
     # is −inf where probs≈0, but probs≈0 * (−inf) → 0 via IEEE754 when probs=0).
-    entropy = -np.sum(probs * log_probs, axis=-1)   # (T,)
+    entropy = -np.sum(probs * log_probs, axis=-1)  # (T,)
 
     # Max log-prob per token (log prob of the greedy token).
-    max_log_prob = np.max(log_probs, axis=-1)        # (T,)  ≤ 0
+    max_log_prob = np.max(log_probs, axis=-1)  # (T,)  ≤ 0
 
     # Spilled energy: entropy + max_log_prob.
     # For peaked distributions both are ~0.  For flat distributions they cancel.
     # The "spill" represents probability mass that the model spread across tokens
     # beyond what the top token absorbed.
-    per_token_spilled = entropy + max_log_prob       # (T,)
+    per_token_spilled = entropy + max_log_prob  # (T,)
 
     mean_spilled = float(np.mean(per_token_spilled))
     max_spilled = float(np.max(per_token_spilled))
@@ -260,13 +258,11 @@ def compute_lookahead_energy(logits: np.ndarray) -> float:
     """
     logits = np.asarray(logits, dtype=np.float64)
     if logits.ndim != 2:
-        raise ValueError(
-            f"logits must be 2-D (T, V), got shape {logits.shape}"
-        )
+        raise ValueError(f"logits must be 2-D (T, V), got shape {logits.shape}")
     if logits.shape[0] < 1:
         raise ValueError("logits must contain at least one token (T >= 1)")
 
-    log_probs = _log_softmax(logits)         # (T, V)
+    log_probs = _log_softmax(logits)  # (T, V)
     max_log_prob = np.max(log_probs, axis=-1)  # (T,)  ≤ 0
     return float(-np.mean(max_log_prob))
 

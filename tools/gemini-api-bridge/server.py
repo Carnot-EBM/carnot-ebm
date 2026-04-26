@@ -46,12 +46,14 @@ class RequestSizeLimitMiddleware(BaseHTTPMiddleware):
         content_length = request.headers.get("content-length")
         if content_length and int(content_length) > MAX_REQUEST_BODY_BYTES:
             return Response(
-                content=json.dumps({
-                    "error": {
-                        "message": f"Request body too large (max {MAX_REQUEST_BODY_BYTES} bytes)",
-                        "type": "invalid_request_error",
+                content=json.dumps(
+                    {
+                        "error": {
+                            "message": f"Request body too large (max {MAX_REQUEST_BODY_BYTES} bytes)",
+                            "type": "invalid_request_error",
+                        }
                     }
-                }),
+                ),
                 status_code=413,
                 media_type="application/json",
             )
@@ -80,7 +82,12 @@ MODEL_MAP = {
 
 # Available "models" to list
 AVAILABLE_MODELS = [
-    {"id": "gemini-3.1-pro-preview", "object": "model", "created": 1700000000, "owned_by": "google"},
+    {
+        "id": "gemini-3.1-pro-preview",
+        "object": "model",
+        "created": 1700000000,
+        "owned_by": "google",
+    },
     {"id": "gemini-1.5-flash", "object": "model", "created": 1700000000, "owned_by": "google"},
     {"id": "gemini-1.5-pro", "object": "model", "created": 1700000000, "owned_by": "google"},
 ]
@@ -133,7 +140,7 @@ def _build_gemini_cmd(
     mcp_config: str | None = None,
 ) -> list[str]:
     """Build the gemini CLI command line."""
-    # We pass the prompt as an argument to -p. 
+    # We pass the prompt as an argument to -p.
     # Gemini CLI will execute this and exit in non-interactive mode.
     cmd = [GEMINI_BIN, "-p", prompt]
 
@@ -185,7 +192,8 @@ def _make_response(
                 "finish_reason": finish_reason,
             }
         ],
-        "usage": usage or {
+        "usage": usage
+        or {
             "prompt_tokens": 0,
             "completion_tokens": 0,
             "total_tokens": 0,
@@ -219,10 +227,12 @@ def _make_chunk(
 @app.get("/v1/models")
 async def list_models() -> JSONResponse:
     """List available models (OpenAI-compatible)."""
-    return JSONResponse({
-        "object": "list",
-        "data": AVAILABLE_MODELS,
-    })
+    return JSONResponse(
+        {
+            "object": "list",
+            "data": AVAILABLE_MODELS,
+        }
+    )
 
 
 @app.post("/v1/chat/completions", response_model=None)
@@ -365,4 +375,5 @@ async def health() -> JSONResponse:
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8081)

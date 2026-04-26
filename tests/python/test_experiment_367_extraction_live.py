@@ -41,9 +41,7 @@ from carnot.pipeline.extractor_comparison import (
 # Helpers shared across test classes
 # ---------------------------------------------------------------------------
 
-_FAKE_QUESTIONS = [
-    {"question": f"Q{i}", "response": f"R{i}"} for i in range(10)
-]
+_FAKE_QUESTIONS = [{"question": f"Q{i}", "response": f"R{i}"} for i in range(10)]
 # First 5 are wrong, last 5 are correct
 _FAKE_GT = [True] * 5 + [False] * 5
 
@@ -342,8 +340,14 @@ class TestBuildExtractorComparisonArtifact:
         artifact = build_extractor_comparison_artifact(results)
         entry = artifact["per_extractor_results"][0]
         required_keys = [
-            "extractor_name", "n_questions", "n_correct_questions", "n_wrong_questions",
-            "n_true_positives", "n_false_positives", "detection_rate", "fp_rate",
+            "extractor_name",
+            "n_questions",
+            "n_correct_questions",
+            "n_wrong_questions",
+            "n_true_positives",
+            "n_false_positives",
+            "detection_rate",
+            "fp_rate",
             "inference_mode",
         ]
         for key in required_keys:
@@ -376,6 +380,7 @@ class TestExp367Main:
     def _import_exp367(self):
         import importlib
         import scripts.experiment_367_extraction_live as mod
+
         importlib.reload(mod)
         return mod
 
@@ -385,6 +390,7 @@ class TestExp367Main:
         monkeypatch.setenv("JAX_PLATFORMS", "cpu")
 
         import scripts.experiment_367_extraction_live as exp367
+
         monkeypatch.setattr(exp367, "_REPO_ROOT", tmp_path)
 
         exp367.main()
@@ -401,6 +407,7 @@ class TestExp367Main:
 
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "0")
         import scripts.experiment_367_extraction_live as exp367
+
         monkeypatch.setattr(exp367, "_REPO_ROOT", tmp_path)
 
         exp367.main()
@@ -414,6 +421,7 @@ class TestExp367Main:
         """Blocked artifact must have experiment=367."""
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "0")
         import scripts.experiment_367_extraction_live as exp367
+
         monkeypatch.setattr(exp367, "_REPO_ROOT", tmp_path)
 
         exp367.main()
@@ -426,11 +434,14 @@ class TestExp367Main:
         """When setup_gpu() raises RuntimeError, write blocked artifact."""
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "1")
         import scripts.experiment_367_extraction_live as exp367
+
         monkeypatch.setattr(exp367, "_REPO_ROOT", tmp_path)
 
         # Patch ExperimentTemplate.setup_gpu to raise
-        with patch("scripts.experiment_367_extraction_live.ExperimentTemplate.setup_gpu",
-                   side_effect=RuntimeError("GPU unavailable")):
+        with patch(
+            "scripts.experiment_367_extraction_live.ExperimentTemplate.setup_gpu",
+            side_effect=RuntimeError("GPU unavailable"),
+        ):
             exp367.main()
 
         artifact_path = tmp_path / "results" / "experiment_367_extraction_live.json"
@@ -442,10 +453,13 @@ class TestExp367Main:
         """When setup_gpu() returns all_healthy=False, write blocked artifact."""
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "1")
         import scripts.experiment_367_extraction_live as exp367
+
         monkeypatch.setattr(exp367, "_REPO_ROOT", tmp_path)
 
-        with patch("scripts.experiment_367_extraction_live.ExperimentTemplate.setup_gpu",
-                   return_value={"all_healthy": False, "models": []}):
+        with patch(
+            "scripts.experiment_367_extraction_live.ExperimentTemplate.setup_gpu",
+            return_value={"all_healthy": False, "models": []},
+        ):
             exp367.main()
 
         artifact_path = tmp_path / "results" / "experiment_367_extraction_live.json"
@@ -456,21 +470,30 @@ class TestExp367Main:
         """When model load fails, write blocked artifact and stop."""
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "1")
         import scripts.experiment_367_extraction_live as exp367
+
         monkeypatch.setattr(exp367, "_REPO_ROOT", tmp_path)
 
-        with patch("scripts.experiment_367_extraction_live.ExperimentTemplate.setup_gpu",
-                   return_value={"all_healthy": True, "models": []}):
+        with patch(
+            "scripts.experiment_367_extraction_live.ExperimentTemplate.setup_gpu",
+            return_value={"all_healthy": True, "models": []},
+        ):
             # Patch carnot.inference.model_loader.load_model to raise
-            with patch.dict("sys.modules", {"carnot.inference.model_loader": MagicMock(
-                load_model=MagicMock(side_effect=RuntimeError("no model"))
-            )}):
+            with patch.dict(
+                "sys.modules",
+                {
+                    "carnot.inference.model_loader": MagicMock(
+                        load_model=MagicMock(side_effect=RuntimeError("no model"))
+                    )
+                },
+            ):
                 exp367.main()
 
         artifact_path = tmp_path / "results" / "experiment_367_extraction_live.json"
         artifact = json.loads(artifact_path.read_text())
         assert artifact["status"] == "blocked"
-        assert "model_load_failed" in artifact.get("honest_verdict", "") or \
-               "blocked" in artifact.get("honest_verdict", "")
+        assert "model_load_failed" in artifact.get(
+            "honest_verdict", ""
+        ) or "blocked" in artifact.get("honest_verdict", "")
 
     def test_load_gsm8k_synthetic_fallback(self, monkeypatch):
         """load_gsm8k_questions returns synthetic data when datasets unavailable."""
@@ -486,6 +509,7 @@ class TestExp367Main:
     def test_label_responses_correct(self):
         """_label_responses returns False for a correct answer."""
         import scripts.experiment_367_extraction_live as exp367
+
         questions = [{"question": "Q", "answer": "10", "response": "The answer is 10."}]
         labels = exp367._label_responses(questions)
         assert labels[0] is False
@@ -493,6 +517,7 @@ class TestExp367Main:
     def test_label_responses_wrong(self):
         """_label_responses returns True for a wrong answer."""
         import scripts.experiment_367_extraction_live as exp367
+
         questions = [{"question": "Q", "answer": "10", "response": "The answer is 9."}]
         labels = exp367._label_responses(questions)
         assert labels[0] is True
@@ -500,6 +525,7 @@ class TestExp367Main:
     def test_label_responses_no_number(self):
         """No number in response → conservatively labelled wrong."""
         import scripts.experiment_367_extraction_live as exp367
+
         questions = [{"question": "Q", "answer": "10", "response": "I don't know"}]
         labels = exp367._label_responses(questions)
         assert labels[0] is True
@@ -507,6 +533,7 @@ class TestExp367Main:
     def test_label_responses_non_numeric_answer(self):
         """Non-numeric ground truth → conservatively labelled wrong."""
         import scripts.experiment_367_extraction_live as exp367
+
         questions = [{"question": "Q", "answer": "abc", "response": "The answer is 5."}]
         labels = exp367._label_responses(questions)
         assert labels[0] is True
@@ -514,6 +541,7 @@ class TestExp367Main:
     def test_make_arithmetic_detector_returns_bool(self):
         """_make_arithmetic_detector returns a callable that returns bool."""
         import scripts.experiment_367_extraction_live as exp367
+
         fn = exp367._make_arithmetic_detector()
         result = fn("Q", "2 + 2 = 5")
         assert isinstance(result, bool)
@@ -521,6 +549,7 @@ class TestExp367Main:
     def test_make_llm_detector_stub_returns_false(self):
         """_make_llm_detector with stub extractor returns False for empty extract()."""
         import scripts.experiment_367_extraction_live as exp367
+
         stub = MagicMock()
         stub.extract.return_value = []
         fn = exp367._make_llm_detector(stub)
@@ -529,12 +558,14 @@ class TestExp367Main:
     def test_make_llm_detector_none_stub(self):
         """_make_llm_detector(None) creates a CI stub that returns False."""
         import scripts.experiment_367_extraction_live as exp367
+
         fn = exp367._make_llm_detector(None)
         assert isinstance(fn("Q", "response"), bool)
 
     def test_make_z3_detector_ci_stub_returns_bool(self):
         """_make_z3_detector with CI stub (llm_caller=None) returns bool."""
         import scripts.experiment_367_extraction_live as exp367
+
         fn = exp367._make_z3_detector(llm_caller=None)
         result = fn("Q", "some response")
         assert isinstance(result, bool)
@@ -542,6 +573,7 @@ class TestExp367Main:
     def test_simulated_response_contains_number(self):
         """_simulated_response echoes the first number from the question."""
         import scripts.experiment_367_extraction_live as exp367
+
         q = {"question": "Alice has 7 apples."}
         resp = exp367._simulated_response(q)
         assert "7" in resp
@@ -549,6 +581,7 @@ class TestExp367Main:
     def test_simulated_response_no_number_fallback(self):
         """_simulated_response returns fallback string when no number in question."""
         import scripts.experiment_367_extraction_live as exp367
+
         q = {"question": "What is the meaning of life?"}
         resp = exp367._simulated_response(q)
         assert isinstance(resp, str)
@@ -557,6 +590,7 @@ class TestExp367Main:
     def test_synthetic_gsm8k_generates_n_questions(self):
         """_synthetic_gsm8k generates exactly n deterministic questions."""
         import scripts.experiment_367_extraction_live as exp367
+
         qs = exp367._synthetic_gsm8k(8)
         assert len(qs) == 8
         for q in qs:

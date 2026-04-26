@@ -244,13 +244,14 @@ def _load_gsm8k_questions(n: int) -> list[dict]:
     for i in range(1, n + 1):
         a, b = i * 3, i * 2
         c = a + b
-        synthetic.append({
-            "question": (
-                f"Janet has {a} apples and receives {b} more.  "
-                f"How many apples does she have?"
-            ),
-            "answer": f"She starts with {a} and gets {b} more, so {a} + {b} = {c}.  #### {c}",
-        })
+        synthetic.append(
+            {
+                "question": (
+                    f"Janet has {a} apples and receives {b} more.  How many apples does she have?"
+                ),
+                "answer": f"She starts with {a} and gets {b} more, so {a} + {b} = {c}.  #### {c}",
+            }
+        )
     _log.info("Using %d synthetic GSM8K questions (real dataset unavailable)", len(synthetic))
     return synthetic[:n]
 
@@ -265,6 +266,7 @@ def _make_baseline_fn(model_pipe: object) -> Any:
 
     BASELINE: raw model output with no verification or repair.
     """
+
     def baseline_fn(q_dict: dict) -> dict:
         response = _call_model_via_pipeline(model_pipe, q_dict["question"])
         gold = _extract_gsm8k_answer(q_dict["answer"])
@@ -273,6 +275,7 @@ def _make_baseline_fn(model_pipe: object) -> Any:
             "is_correct": _is_correct(response, gold),
             "crane_hit": False,
         }
+
     return baseline_fn
 
 
@@ -282,6 +285,7 @@ def _make_crane_only_fn(model_pipe: object, crane: CRANEExtractionGate) -> Any:
     CRANE_ONLY: generate response, run CRANE arithmetic extraction, attempt
     one-shot repair if any violations are detected.
     """
+
     def crane_only_fn(q_dict: dict) -> dict:
         response = _call_model_via_pipeline(model_pipe, q_dict["question"])
         violations = crane.extract(response, "arithmetic")
@@ -299,6 +303,7 @@ def _make_crane_only_fn(model_pipe: object, crane: CRANEExtractionGate) -> Any:
             "is_correct": _is_correct(response, gold),
             "crane_hit": crane_hit,
         }
+
     return crane_only_fn
 
 
@@ -329,6 +334,7 @@ def _make_full_stack_fn(
             observing false positives, the threshold rises to 0.52, 0.54, ... causing
             repair to require higher-confidence detections.
     """
+
     def full_stack_fn(q_dict: dict) -> dict:
         response = _call_model_via_pipeline(model_pipe, q_dict["question"])
         violations = crane.extract(response, "arithmetic")
@@ -354,6 +360,7 @@ def _make_full_stack_fn(
             "is_correct": _is_correct(response, gold),
             "crane_hit": crane_hit,
         }
+
     return full_stack_fn
 
 
@@ -531,31 +538,41 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
         n_correct_baseline = sum(1 for r in baseline_raw if r.get("is_correct"))
         baseline_acc = n_correct_baseline / max(len(baseline_raw), 1)
 
-        results.append(MicroPrecisionResult(
-            model_id=model_name,
-            variant="baseline",
-            n_questions=len(baseline_raw),
-            baseline_accuracy=baseline_acc,
-            variant_accuracy=baseline_acc,
-            signed_improvement=0.0,
-            crane_detection_rate=0.0,
-            inference_mode=inference_mode,
-        ))
+        results.append(
+            MicroPrecisionResult(
+                model_id=model_name,
+                variant="baseline",
+                n_questions=len(baseline_raw),
+                baseline_accuracy=baseline_acc,
+                variant_accuracy=baseline_acc,
+                signed_improvement=0.0,
+                crane_detection_rate=0.0,
+                inference_mode=inference_mode,
+            )
+        )
 
         for q, r_dict in zip(questions, baseline_raw):
-            cot_log.append({
-                "model": model_name, "variant": "baseline",
-                "question": q.get("question", ""),
-                "response": r_dict.get("response", ""),
-                "is_correct": r_dict.get("is_correct", False),
-            })
+            cot_log.append(
+                {
+                    "model": model_name,
+                    "variant": "baseline",
+                    "question": q.get("question", ""),
+                    "response": r_dict.get("response", ""),
+                    "is_correct": r_dict.get("is_correct", False),
+                }
+            )
 
         tmpl.checkpoint_save(
             {"model": model_name, "variant": "baseline", "baseline_acc": baseline_acc},
             step=len(results),
         )
 
-        _log.info("  baseline_acc=%.4f (%d/%d correct)", baseline_acc, n_correct_baseline, len(baseline_raw))
+        _log.info(
+            "  baseline_acc=%.4f (%d/%d correct)",
+            baseline_acc,
+            n_correct_baseline,
+            len(baseline_raw),
+        )
 
         # Run CRANE_ONLY and FULL_STACK with baseline_acc as denominator
         for variant in ("crane_only", "full_stack"):
@@ -576,36 +593,47 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
             crane_rate = n_crane_hits / max(len(batch_raw), 1)
             signed_improvement = var_acc - baseline_acc
 
-            results.append(MicroPrecisionResult(
-                model_id=model_name,
-                variant=variant,
-                n_questions=len(batch_raw),
-                baseline_accuracy=baseline_acc,
-                variant_accuracy=var_acc,
-                signed_improvement=signed_improvement,
-                crane_detection_rate=crane_rate,
-                inference_mode=inference_mode,
-            ))
+            results.append(
+                MicroPrecisionResult(
+                    model_id=model_name,
+                    variant=variant,
+                    n_questions=len(batch_raw),
+                    baseline_accuracy=baseline_acc,
+                    variant_accuracy=var_acc,
+                    signed_improvement=signed_improvement,
+                    crane_detection_rate=crane_rate,
+                    inference_mode=inference_mode,
+                )
+            )
 
             for q, r_dict in zip(questions, batch_raw):
-                cot_log.append({
-                    "model": model_name, "variant": variant,
-                    "question": q.get("question", ""),
-                    "response": r_dict.get("response", ""),
-                    "is_correct": r_dict.get("is_correct", False),
-                })
+                cot_log.append(
+                    {
+                        "model": model_name,
+                        "variant": variant,
+                        "question": q.get("question", ""),
+                        "response": r_dict.get("response", ""),
+                        "is_correct": r_dict.get("is_correct", False),
+                    }
+                )
 
             tmpl.checkpoint_save(
                 {
-                    "model": model_name, "variant": variant,
-                    "var_acc": var_acc, "signed_improvement": signed_improvement,
+                    "model": model_name,
+                    "variant": variant,
+                    "var_acc": var_acc,
+                    "signed_improvement": signed_improvement,
                 },
                 step=len(results),
             )
 
             _log.info(
                 "  %s: var_acc=%.4f baseline=%.4f Δ=%.4f crane_rate=%.3f",
-                variant, var_acc, baseline_acc, signed_improvement, crane_rate,
+                variant,
+                var_acc,
+                baseline_acc,
+                signed_improvement,
+                crane_rate,
             )
 
     # ------------------------------------------------------------------

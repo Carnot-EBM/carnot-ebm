@@ -18,6 +18,7 @@ from carnot.pipeline.latent_cot_calibrator import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture()
 def eorm_model() -> EORMModel:
     """Small EORM model (embed_dim=32) for fast CPU tests."""
@@ -51,6 +52,7 @@ def _empty_generate(prompt: str, temperature_adjustments: list[float]) -> str:
 # ---------------------------------------------------------------------------
 # SCENARIO-VERIFY-134: LatentCoTCalibrationResult has correct field types
 # ---------------------------------------------------------------------------
+
 
 class TestLatentCoTCalibrationResult:
     """REQ-VERIFY-116: LatentCoTCalibrationResult dataclass has all required fields."""
@@ -87,6 +89,7 @@ class TestLatentCoTCalibrationResult:
 # SCENARIO-VERIFY-135: calibrate_generation produces non-empty metrics
 # ---------------------------------------------------------------------------
 
+
 class TestLatentCoTEBMCalibratorCalibrateGeneration:
     """REQ-VERIFY-116: calibrate_generation scores each 32-token boundary."""
 
@@ -103,13 +106,17 @@ class TestLatentCoTEBMCalibratorCalibrateGeneration:
         _, result = calibrator.calibrate_generation(prompts, _simple_generate)
         assert result.n_steps > 0
 
-    def test_per_step_energy_length_matches_n_steps(self, calibrator: LatentCoTEBMCalibrator) -> None:
+    def test_per_step_energy_length_matches_n_steps(
+        self, calibrator: LatentCoTEBMCalibrator
+    ) -> None:
         """SCENARIO-VERIFY-135: per_step_energy list length equals n_steps."""
         prompts = ["Q1?", "Q2?"]
         _, result = calibrator.calibrate_generation(prompts, _simple_generate)
         assert len(result.per_step_energy) == result.n_steps
 
-    def test_temperature_adjustments_length_matches_n_steps(self, calibrator: LatentCoTEBMCalibrator) -> None:
+    def test_temperature_adjustments_length_matches_n_steps(
+        self, calibrator: LatentCoTEBMCalibrator
+    ) -> None:
         """SCENARIO-VERIFY-135: temperature_adjustments list length equals n_steps."""
         prompts = ["Q1?"]
         _, result = calibrator.calibrate_generation(prompts, _simple_generate)
@@ -161,6 +168,7 @@ class TestLatentCoTEBMCalibratorCalibrateGeneration:
 # SCENARIO-VERIFY-136: compare_violation_rate
 # ---------------------------------------------------------------------------
 
+
 class TestCompareViolationRate:
     """REQ-VERIFY-116: compare_violation_rate returns correct dict structure."""
 
@@ -185,7 +193,9 @@ class TestCompareViolationRate:
         assert 0.0 <= result["baseline_violation_rate"] <= 1.0
         assert 0.0 <= result["calibrated_violation_rate"] <= 1.0
 
-    def test_delta_equals_calibrated_minus_baseline(self, calibrator: LatentCoTEBMCalibrator) -> None:
+    def test_delta_equals_calibrated_minus_baseline(
+        self, calibrator: LatentCoTEBMCalibrator
+    ) -> None:
         """SCENARIO-VERIFY-136: delta = calibrated_rate - baseline_rate."""
         result = calibrator.compare_violation_rate(
             calibrated_responses=["no arithmetic"],
@@ -222,6 +232,7 @@ class TestCompareViolationRate:
 # ---------------------------------------------------------------------------
 # Integration: import from carnot.pipeline
 # ---------------------------------------------------------------------------
+
 
 class TestPublicExport:
     """LatentCoTEBMCalibrator and LatentCoTCalibrationResult are exported from carnot.pipeline."""

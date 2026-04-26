@@ -41,13 +41,12 @@ Spec: REQ-SAMPLE-021, REQ-SAMPLE-022, SCENARIO-SAMPLE-035, SCENARIO-SAMPLE-036
 
 from __future__ import annotations
 
-import numpy as np
+import jax
 import jax.numpy as jnp
 import jax.random as jrandom
-import jax
+import numpy as np
 
 from carnot.models.kaem_energy import UnivariateKAEMLayer
-
 
 # ---------------------------------------------------------------------------
 # SparseKAEMEnergy
@@ -228,9 +227,7 @@ class SparseKAEMEnergy:
         Spec: REQ-SAMPLE-021-3
         """
         if data.ndim != 2 or data.shape[1] != self.n_vars:
-            raise ValueError(
-                f"data must have shape (n_data, {self.n_vars}), got {data.shape}"
-            )
+            raise ValueError(f"data must have shape (n_data, {self.n_vars}), got {data.shape}")
 
         data_np = np.array(data)
         n_data = data_np.shape[0]
@@ -238,7 +235,7 @@ class SparseKAEMEnergy:
         lr_coupling = 0.001  # smaller lr for coupling to keep it stable
         losses = []
 
-        for epoch in range(n_epochs):
+        for _epoch in range(n_epochs):
             epoch_loss = 0.0
 
             # --- Step 1: update univariate splines (same as KAEMEnergy.fit) ---
@@ -255,7 +252,7 @@ class SparseKAEMEnergy:
                     t = scaled - left_idx
 
                     grad = np.zeros(self.n_knots)
-                    grad[left_idx] = (1.0 - t)
+                    grad[left_idx] = 1.0 - t
                     grad[right_idx] = t
 
                     ctrl = jnp.array(np.array(ctrl) - lr * grad)

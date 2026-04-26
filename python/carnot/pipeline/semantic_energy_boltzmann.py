@@ -60,9 +60,7 @@ SCENARIO-VERIFY-134, SCENARIO-VERIFY-135, SCENARIO-VERIFY-136
 from __future__ import annotations
 
 import math
-import random
 from dataclasses import dataclass, field
-
 
 # ---------------------------------------------------------------------------
 # SemanticCluster dataclass
@@ -169,7 +167,7 @@ def _char_embedding(token: str, dim: int = 8) -> list[float]:
 
 def _cosine_sim(a: list[float], b: list[float]) -> float:
     """Cosine similarity between two equal-length vectors."""
-    dot = sum(x * y for x, y in zip(a, b))
+    dot = sum(x * y for x, y in zip(a, b, strict=False))
     mag_a = math.sqrt(sum(x * x for x in a))
     mag_b = math.sqrt(sum(x * x for x in b))
     denom = mag_a * mag_b
@@ -372,7 +370,7 @@ class BoltzmannSemanticEnergy:
             return 0.5  # degenerate partition function — return uninformative score
 
         normalised = [w / z for w in weights]
-        total_energy = sum(c.cluster_energy * w for c, w in zip(clusters, normalised))
+        total_energy = sum(c.cluster_energy * w for c, w in zip(clusters, normalised, strict=False))
 
         # Sigmoid maps total_energy ∈ ℝ → [0, 1]
         score = 1.0 / (1.0 + math.exp(-total_energy))
@@ -434,8 +432,8 @@ class BoltzmannSemanticEnergy:
 
         scores = [self.score(resp, logits) for resp, logits in responses]
 
-        hall_scores = [s for s, g in zip(scores, ground_truth) if not g]
-        corr_scores = [s for s, g in zip(scores, ground_truth) if g]
+        hall_scores = [s for s, g in zip(scores, ground_truth, strict=False) if not g]
+        corr_scores = [s for s, g in zip(scores, ground_truth, strict=False) if g]
 
         # Wilcoxon-Mann-Whitney AUROC: P(score_hall > score_correct)
         n_h = len(hall_scores)
@@ -443,12 +441,8 @@ class BoltzmannSemanticEnergy:
         if n_h == 0 or n_c == 0:
             auroc = 0.5
         else:
-            concordant = sum(
-                1 for h in hall_scores for c in corr_scores if h > c
-            )
-            tied = sum(
-                0.5 for h in hall_scores for c in corr_scores if h == c
-            )
+            concordant = sum(1 for h in hall_scores for c in corr_scores if h > c)
+            tied = sum(0.5 for h in hall_scores for c in corr_scores if h == c)
             auroc = (concordant + tied) / (n_h * n_c)
 
         skip_rate = sum(1 for s in scores if s > 0.5) / len(scores)

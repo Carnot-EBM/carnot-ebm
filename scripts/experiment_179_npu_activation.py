@@ -54,6 +54,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import contextlib
 
 # ---------------------------------------------------------------------------
 # 0. Session timer
@@ -73,8 +74,16 @@ def _elapsed() -> float:
 
 REPO_ROOT = Path(__file__).parent.parent
 RESULTS_DIR = REPO_ROOT / "results"
-RYZENAI_LIB_DIR = Path.home() / "github.com" / "amd" / "RyzenAI-SW" / \
-    "Ryzen-AI-CVML-Library" / "linux" / "onnx" / "ryzen14"
+RYZENAI_LIB_DIR = (
+    Path.home()
+    / "github.com"
+    / "amd"
+    / "RyzenAI-SW"
+    / "Ryzen-AI-CVML-Library"
+    / "linux"
+    / "onnx"
+    / "ryzen14"
+)
 ONNX_MODEL_PATH = RESULTS_DIR / "jepa_predictor_146.onnx"
 # v3 safetensors from Exp 167 — we'll re-export to ONNX if possible
 SAFETENSORS_V3_PATH = RESULTS_DIR / "jepa_predictor_v3.safetensors"
@@ -90,6 +99,7 @@ print(f"[Exp 179] ONNX_MODEL_PATH = {ONNX_MODEL_PATH}", flush=True)
 # ---------------------------------------------------------------------------
 # 2. Helper: detect and fix fake git symlinks
 # ---------------------------------------------------------------------------
+
 
 def _is_fake_symlink(path: Path) -> tuple[bool, str]:
     """Return (is_fake, target) if path is a text-based git symlink stub.
@@ -183,6 +193,7 @@ def fix_git_symlinks_in_dir(lib_dir: Path) -> dict[str, Any]:
 # 3. Detect hardware environment
 # ---------------------------------------------------------------------------
 
+
 def detect_hardware() -> dict[str, Any]:
     """Detect AMD XDNA NPU hardware presence.
 
@@ -192,12 +203,8 @@ def detect_hardware() -> dict[str, Any]:
         version for diagnostic reporting.
     """
     kernel_version = ""
-    try:
-        kernel_version = subprocess.check_output(
-            ["uname", "-r"], text=True
-        ).strip()
-    except Exception:
-        pass
+    with contextlib.suppress(Exception):
+        kernel_version = subprocess.check_output(["uname", "-r"], text=True).strip()
 
     dev_accel = [str(p) for p in Path("/dev").glob("accel*")]
 
@@ -226,6 +233,7 @@ def detect_hardware() -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # 4. Path B: fix AMD prebuilt symlinks and test VitisAI EP
 # ---------------------------------------------------------------------------
+
 
 def check_vitisai_ep_python_compat(venv_capi_dir: Path) -> dict[str, Any]:
     """Check Python version compatibility of the VitisAI EP in the venv.
@@ -275,12 +283,13 @@ def check_vitisai_ep_python_compat(venv_capi_dir: Path) -> dict[str, Any]:
                 lib_name = parts[0].strip()
                 # Extract version: libpython3.10.so.1.0 -> 3.10
                 import re
+
                 m = re.search(r"libpython(\d+\.\d+)", lib_name)
                 if m:
                     ep_python_required = m.group(1)
 
     running_python = f"{sys.version_info.major}.{sys.version_info.minor}"
-    compatible = (ep_python_required == running_python)
+    compatible = ep_python_required == running_python
 
     return {
         "ep_found": True,
@@ -289,7 +298,9 @@ def check_vitisai_ep_python_compat(venv_capi_dir: Path) -> dict[str, Any]:
         "running_python": running_python,
         "compatible": compatible,
         "ldd_output": ldd_output[:1000],
-        "error": None if compatible else (
+        "error": None
+        if compatible
+        else (
             f"VitisAI EP requires libpython{ep_python_required}.so.1.0 "
             f"but running Python {running_python}. "
             f"Need AMD VitisAI wheel built for Python {running_python}."
@@ -330,9 +341,14 @@ def try_path_b_prebuilt(lib_dir: Path) -> dict[str, Any]:
     )
 
     # Check Python version compatibility first
-    venv_capi_dir = Path(sys.executable).parent.parent / "lib" / \
-        f"python{sys.version_info.major}.{sys.version_info.minor}" / \
-        "site-packages" / "onnxruntime" / "capi"
+    venv_capi_dir = (
+        Path(sys.executable).parent.parent
+        / "lib"
+        / f"python{sys.version_info.major}.{sys.version_info.minor}"
+        / "site-packages"
+        / "onnxruntime"
+        / "capi"
+    )
     compat = check_vitisai_ep_python_compat(venv_capi_dir)
     print(
         f"[Exp 179]   VitisAI EP Python compat: "
@@ -394,8 +410,7 @@ def try_path_b_prebuilt(lib_dir: Path) -> dict[str, Any]:
         print(f"[Exp 179]   Provider probe exception: {exc}", flush=True)
 
     vitisai_available = (
-        providers_after is not None
-        and "VitisAIExecutionProvider" in providers_after
+        providers_after is not None and "VitisAIExecutionProvider" in providers_after
     )
 
     print(
@@ -439,6 +454,7 @@ def try_path_b_prebuilt(lib_dir: Path) -> dict[str, Any]:
 # 5. Path A: conda installation check
 # ---------------------------------------------------------------------------
 
+
 def try_path_a_conda() -> dict[str, Any]:
     """Path A: check if conda is available with onnxruntime-vitisai.
 
@@ -452,9 +468,7 @@ def try_path_a_conda() -> dict[str, Any]:
 
     conda_bin = None
     for binary in ["conda", "mamba"]:
-        result = subprocess.run(
-            ["which", binary], capture_output=True, text=True
-        )
+        result = subprocess.run(["which", binary], capture_output=True, text=True)
         if result.returncode == 0:
             conda_bin = result.stdout.strip()
             break
@@ -471,9 +485,7 @@ def try_path_a_conda() -> dict[str, Any]:
     print(f"[Exp 179]   conda found at: {conda_bin}", flush=True)
     # Check if carnot-npu env already exists with onnxruntime-vitisai
     check_script = (
-        "import onnxruntime as ort; "
-        "p = ort.get_available_providers(); "
-        "print(','.join(p))"
+        "import onnxruntime as ort; p = ort.get_available_providers(); print(','.join(p))"
     )
     try:
         result = subprocess.run(
@@ -491,7 +503,9 @@ def try_path_a_conda() -> dict[str, Any]:
                 "conda_bin": conda_bin,
                 "providers": providers,
                 "vitisai_available": vitisai_available,
-                "error": None if vitisai_available else "VitisAIExecutionProvider not in carnot-npu env",
+                "error": None
+                if vitisai_available
+                else "VitisAIExecutionProvider not in carnot-npu env",
             }
     except Exception as exc:
         pass
@@ -518,6 +532,7 @@ def try_path_a_conda() -> dict[str, Any]:
 # 6. Path C: source build check
 # ---------------------------------------------------------------------------
 
+
 def check_path_c_source() -> dict[str, Any]:
     """Path C: check if onnxruntime source build with VitisAI is feasible.
 
@@ -538,9 +553,7 @@ def check_path_c_source() -> dict[str, Any]:
         Path.home() / ".cache" / "onnxruntime",
         Path.home() / "github.com" / "microsoft" / "onnxruntime",
     ]
-    source_found = next(
-        (str(p) for p in ort_source_paths if p.exists()), None
-    )
+    source_found = next((str(p) for p in ort_source_paths if p.exists()), None)
 
     print(
         f"[Exp 179]   XRT at /opt/xilinx/xrt: {xrt_present}",
@@ -573,6 +586,7 @@ def check_path_c_source() -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # 7. NPU inference session attempt
 # ---------------------------------------------------------------------------
+
 
 def try_npu_inference(
     onnx_path: Path,
@@ -638,11 +652,13 @@ def try_npu_inference(
     cache_dir = RESULTS_DIR / "npu_cache_179"
     cache_dir.mkdir(exist_ok=True)
 
-    provider_options = [{
-        "config_file": str(vaip_config),
-        "cacheDir": str(cache_dir),
-        "cacheKey": "jepa_predictor_179",
-    }]
+    provider_options = [
+        {
+            "config_file": str(vaip_config),
+            "cacheDir": str(cache_dir),
+            "cacheKey": "jepa_predictor_179",
+        }
+    ]
 
     session = None
     session_error = None
@@ -723,6 +739,7 @@ def try_npu_inference(
 # 8. CPU baseline benchmark
 # ---------------------------------------------------------------------------
 
+
 def run_cpu_baseline(onnx_path: Path) -> dict[str, Any]:
     """Run 1000 CPU ONNX inference calls and report latency stats.
 
@@ -790,6 +807,7 @@ def run_cpu_baseline(onnx_path: Path) -> dict[str, Any]:
 # 9. Main experiment flow
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """Run the full Exp 179 NPU activation experiment."""
     import onnxruntime as ort
@@ -843,10 +861,7 @@ def main() -> None:
 
     # 9d. Re-read provider list after fix attempts
     # Use the fresh subprocess result from Path B if available
-    providers_available = (
-        path_b.get("providers_after_fix")
-        or initial_providers
-    )
+    providers_available = path_b.get("providers_after_fix") or initial_providers
 
     # 9e. NPU inference attempt (if VitisAI EP available)
     npu_result: dict[str, Any] = {}
@@ -892,7 +907,9 @@ def main() -> None:
     # Determine blocker and next step
     compat_info = path_b.get("python_compat", {})
     ep_py_required = compat_info.get("ep_python_required")
-    running_py = compat_info.get("running_python", f"{sys.version_info.major}.{sys.version_info.minor}")
+    running_py = compat_info.get(
+        "running_python", f"{sys.version_info.major}.{sys.version_info.minor}"
+    )
 
     if npu_activated and npu_result.get("success"):
         next_step = (
@@ -929,7 +946,7 @@ def main() -> None:
             next_step = (
                 f"To activate NPU: need VitisAI EP built for Python {running_py}. "
                 f"Two options: "
-                f"(A) Create Python {ep_py_required} venv: python{ep_py_required} -m venv .venv-npu-py{ep_py_required.replace('.','')}, "
+                f"(A) Create Python {ep_py_required} venv: python{ep_py_required} -m venv .venv-npu-py{ep_py_required.replace('.', '')}, "
                 f"then reinstall AMD onnxruntime wheel from ryzenai.docs.amd.com. "
                 f"(B) Get AMD wheel for Python {running_py} from ryzenai.docs.amd.com — "
                 f"AMD distributes custom onnxruntime wheels for Python 3.9-3.12. "
@@ -1014,7 +1031,9 @@ def main() -> None:
             f"Need AMD wheel for Python {running_py}.",
             f"FINDING 4: onnxruntime 1.20.1 → 1.24.4 upgrade required: "
             f"ONNX model IR version 13 needs onnxruntime ≥1.22. Upgraded in Exp 179.",
-            f"FINDING 5: CPU baseline p50={cpu_p50:.4f}ms (Exp 146: 0.0046ms — consistent)" if cpu_p50 else "FINDING 5: CPU baseline failed",
+            f"FINDING 5: CPU baseline p50={cpu_p50:.4f}ms (Exp 146: 0.0046ms — consistent)"
+            if cpu_p50
+            else "FINDING 5: CPU baseline failed",
             f"FINDING 6: XRT /opt/xilinx/xrt present={path_c.get('xrt_present', False)}, "
             f"vaip_config_npu_2_3.json present={VAIP_CONFIG_PATH.exists()}. "
             f"Hardware + config stack complete; only AMD Python {running_py} wheel missing.",
@@ -1027,19 +1046,22 @@ def main() -> None:
     print(f"\n[Exp 179] Results written to: {out_path}", flush=True)
 
     # 9j. Print summary
-    print(f"\n{'='*60}", flush=True)
+    print(f"\n{'=' * 60}", flush=True)
     print(f"[Exp 179] SUMMARY", flush=True)
-    print(f"{'='*60}", flush=True)
+    print(f"{'=' * 60}", flush=True)
     print(f"  NPU activated:       {npu_activated}", flush=True)
     print(f"  Successful path:     {successful_path or 'none'}", flush=True)
     print(f"  NPU inference:       {bool(npu_result.get('success'))}", flush=True)
     print(f"  NPU p50:             {f'{npu_p50:.4f}ms' if npu_p50 else 'N/A'}", flush=True)
     print(f"  CPU p50:             {f'{cpu_p50:.4f}ms' if cpu_p50 else 'N/A'}", flush=True)
     print(f"  Speedup:             {f'{speedup:.1f}x' if speedup else 'N/A'}", flush=True)
-    print(f"  Blocker:             {blocker_message[:120] + '...' if blocker_message and len(blocker_message) > 120 else blocker_message}", flush=True)
+    print(
+        f"  Blocker:             {blocker_message[:120] + '...' if blocker_message and len(blocker_message) > 120 else blocker_message}",
+        flush=True,
+    )
     print(f"  Next step:           {next_step[:120]}...", flush=True)
     print(f"  Elapsed:             {elapsed:.1f}s", flush=True)
-    print(f"{'='*60}", flush=True)
+    print(f"{'=' * 60}", flush=True)
 
     for finding in results["key_findings"]:
         print(f"  FINDING: {finding}", flush=True)

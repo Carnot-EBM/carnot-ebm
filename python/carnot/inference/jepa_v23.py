@@ -81,10 +81,7 @@ class _TFIDFVectoriser:
                 df[tok] += 1
         top = [tok for tok, _ in df.most_common(self.max_features)]
         self._vocab = {tok: i for i, tok in enumerate(top)}
-        self._idf = [
-            math.log((n_docs + 1.0) / (df.get(tok, 0) + 1.0)) + 1.0
-            for tok in top
-        ]
+        self._idf = [math.log((n_docs + 1.0) / (df.get(tok, 0) + 1.0)) + 1.0 for tok in top]
 
     def transform(self, text: str) -> list[float]:
         tokens = self._tokenise(text)
@@ -191,7 +188,7 @@ class TripletLoss:
 
 def _cosine_dist(u: list[float], v: list[float]) -> float:
     """Cosine distance in [0, 2]: 1 - cosine_similarity(u, v)."""
-    dot = sum(a * b for a, b in zip(u, v))
+    dot = sum(a * b for a, b in zip(u, v, strict=False))
     norm_u = math.sqrt(sum(a * a for a in u)) or 1e-10
     norm_v = math.sqrt(sum(b * b for b in v)) or 1e-10
     return 1.0 - dot / (norm_u * norm_v)
@@ -201,11 +198,8 @@ def _grad_cosine_dist_u(u: list[float], v: list[float]) -> list[float]:
     """Gradient of cosine_distance(u, v) w.r.t. u."""
     norm_u = math.sqrt(sum(a * a for a in u)) or 1e-10
     norm_v = math.sqrt(sum(b * b for b in v)) or 1e-10
-    dot = sum(a * b for a, b in zip(u, v))
-    return [
-        -v[i] / (norm_u * norm_v) + dot * u[i] / (norm_u ** 3 * norm_v)
-        for i in range(len(u))
-    ]
+    dot = sum(a * b for a, b in zip(u, v, strict=False))
+    return [-v[i] / (norm_u * norm_v) + dot * u[i] / (norm_u**3 * norm_v) for i in range(len(u))]
 
 
 def _grad_cosine_dist_v(u: list[float], v: list[float]) -> list[float]:
@@ -241,7 +235,7 @@ class JEPAv23Predictor:
         self.seed = seed
         self._vectoriser = _TFIDFVectoriser(max_features=300)
         self._w: list[list[float]] = []  # shape: (embed_dim, vocab_size)
-        self._b: list[float] = []        # shape: (embed_dim,)
+        self._b: list[float] = []  # shape: (embed_dim,)
 
     def _encode(self, text: str) -> list[float]:
         """Encode a step text to an embedding vector of size embed_dim.
@@ -279,7 +273,7 @@ class JEPAv23Predictor:
 
 
 def train_v23(
-    triples: list["CuratedPair"],
+    triples: list[CuratedPair],
     epochs: int = 100,
     lr: float = 1e-3,
     seed: int = 42,
@@ -485,9 +479,7 @@ def _compute_auc(scored: list[tuple[float, float]]) -> float:
         return 0.5
 
     # AUC = P(score(pos) > score(neg)) estimated by Wilcoxon-Mann-Whitney.
-    n_wins = sum(
-        1 for p in positives for n in negatives if p > n
-    ) + 0.5 * sum(
+    n_wins = sum(1 for p in positives for n in negatives if p > n) + 0.5 * sum(
         1 for p in positives for n in negatives if p == n
     )
     return n_wins / (len(positives) * len(negatives))

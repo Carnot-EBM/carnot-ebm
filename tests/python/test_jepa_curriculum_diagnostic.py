@@ -370,9 +370,7 @@ class TestJEPACurriculumDiagnosticSimulateRegime:
 
     def test_simulate_quality_gated_single_class(self):
         # If quality_gated removes all incorrect pairs, triples are empty → AUC=0.5
-        pairs = [
-            {"step_text": "step", "label": "correct", "confidence": 1.0}
-        ] * 10
+        pairs = [{"step_text": "step", "label": "correct", "confidence": 1.0}] * 10
         diag = JEPACurriculumDiagnostic(pairs)
         auc = diag.simulate_regime("quality_gated", n_epochs=2)
         assert 0.0 <= auc <= 1.0  # returns 0.5 due to no contrastive pairs

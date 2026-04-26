@@ -336,9 +336,7 @@ class TestLiquidConstraintModelTrain:
         W1_before = model.W1.copy()
         obs, lbl = self._make_sequences(seed=31)
         model.train(obs, lbl, n_epochs=5, lr=0.1)
-        assert not jnp.allclose(model.W1, W1_before, atol=1e-8), (
-            "W1 was not updated by train()"
-        )
+        assert not jnp.allclose(model.W1, W1_before, atol=1e-8), "W1 was not updated by train()"
 
     def test_train_does_not_affect_J0(self) -> None:
         """REQ-CORE-001: train() must not change J0 (the initial coupling prior)."""
@@ -361,9 +359,7 @@ class TestLiquidConstraintModelTrain:
         obs, lbl = self._make_sequences(n_seqs=6, seq_len=4, d=4, seed=51)
         losses = model.train(obs, lbl, n_epochs=20, lr=0.005)
         # All losses should be finite — no NaN/Inf from gradient explosion
-        assert all(jnp.isfinite(jnp.array(l)) for l in losses), (
-            f"Training diverged: {losses}"
-        )
+        assert all(jnp.isfinite(jnp.array(l)) for l in losses), f"Training diverged: {losses}"
 
     def test_step_and_train_interop(self) -> None:
         """REQ-CORE-001: After train(), step() still works and reset() restores J."""

@@ -35,10 +35,12 @@ Spec: REQ-PROBE-010, REQ-PROBE-011, SCENARIO-PROBE-020, SCENARIO-PROBE-021
 from __future__ import annotations
 
 import re
-from typing import Sequence
+from typing import TYPE_CHECKING
 
 import numpy as np
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 # ---------------------------------------------------------------------------
 # TF-IDF proxy embedder (CPU substitute for real LLM hidden states)
@@ -430,7 +432,7 @@ class MixtureOfProbes:
         g_fc1 = nn.Linear(2, 8)
         g_fc2 = nn.Linear(8, 1)
 
-        def _forward(xq: "torch.Tensor", xa: "torch.Tensor") -> "torch.Tensor":
+        def _forward(xq: torch.Tensor, xa: torch.Tensor) -> torch.Tensor:
             # Question pathway.
             q_h = torch.relu(q_fc1(xq))
             q_s = torch.sigmoid(q_fc2(q_h))  # (N, 1)
@@ -445,9 +447,12 @@ class MixtureOfProbes:
             return torch.sigmoid(g_fc2(g_h))  # (N, 1)
 
         all_params = (
-            list(q_fc1.parameters()) + list(q_fc2.parameters())
-            + list(a_fc1.parameters()) + list(a_fc2.parameters())
-            + list(g_fc1.parameters()) + list(g_fc2.parameters())
+            list(q_fc1.parameters())
+            + list(q_fc2.parameters())
+            + list(a_fc1.parameters())
+            + list(a_fc2.parameters())
+            + list(g_fc1.parameters())
+            + list(g_fc2.parameters())
         )
         optimizer = torch.optim.Adam(all_params, lr=lr)
         criterion = nn.BCELoss()

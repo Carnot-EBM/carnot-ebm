@@ -140,11 +140,13 @@ def _load_gsm8k_questions(n: int, seed: int) -> list[dict]:
     for i in range(1, n + 1):
         a, b = i * 3, i * 2
         c = a + b
-        synthetic.append({
-            "question": f"Janet has {a} apples and receives {b} more. How many apples does she have?",
-            "answer": f"She starts with {a} and gets {b} more, so {a} + {b} = {c}. #### {c}",
-            "source": "synthetic",
-        })
+        synthetic.append(
+            {
+                "question": f"Janet has {a} apples and receives {b} more. How many apples does she have?",
+                "answer": f"She starts with {a} and gets {b} more, so {a} + {b} = {c}. #### {c}",
+                "source": "synthetic",
+            }
+        )
     _log.info("Using %d synthetic GSM8K questions (real dataset unavailable)", len(synthetic))
     return synthetic
 
@@ -222,7 +224,13 @@ def _run_model_benchmark(
             n_correct_baseline += 1
 
     pre_accuracy = n_correct_baseline / max(len(questions), 1)
-    _log.info("[%s] BASELINE: %d/%d correct (%.4f)", model_name, n_correct_baseline, len(questions), pre_accuracy)
+    _log.info(
+        "[%s] BASELINE: %d/%d correct (%.4f)",
+        model_name,
+        n_correct_baseline,
+        len(questions),
+        pre_accuracy,
+    )
 
     # Pass 2: PIPELINE with verify-repair
     n_correct_pipeline = 0
@@ -251,8 +259,12 @@ def _run_model_benchmark(
     extractor_used = extractor.extractor_names_used(all_violations_seen)
     _log.info(
         "[%s] PIPELINE: %d/%d correct (%.4f) delta=%.4f extractor_used=%s",
-        model_name, n_correct_pipeline, len(questions), post_accuracy,
-        post_accuracy - pre_accuracy, extractor_used,
+        model_name,
+        n_correct_pipeline,
+        len(questions),
+        post_accuracy,
+        post_accuracy - pre_accuracy,
+        extractor_used,
     )
 
     return Precision100qV4Result(
@@ -369,6 +381,7 @@ def run_experiment(repo_root: Path | None = None) -> dict[str, Any]:
     # ------------------------------------------------------------------
     try:
         import torch
+
         n_gpus = torch.cuda.device_count()
     except Exception:
         n_gpus = 0
@@ -559,7 +572,12 @@ def main() -> None:
         artifact = run_experiment()
 
     verdict = artifact.get("honest_verdict", "unknown")
-    _log.info("Exp %d complete: honest_verdict=%s status=%s", EXP_ID, verdict, artifact.get("status", "unknown"))
+    _log.info(
+        "Exp %d complete: honest_verdict=%s status=%s",
+        EXP_ID,
+        verdict,
+        artifact.get("status", "unknown"),
+    )
 
 
 if __name__ == "__main__":

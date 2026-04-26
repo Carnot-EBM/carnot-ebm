@@ -32,7 +32,6 @@ Spec: REQ-VERIFY-143, SCENARIO-VERIFY-169, SCENARIO-VERIFY-170
 from __future__ import annotations
 
 import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 
@@ -173,14 +172,17 @@ class HalluSAEGeometricProbeV2(HalluSAEGeometricProbe):
         accel_mean = float(accel.mean())
         # Fraction of steps (t >= 1) where velocity > 0 (energy increased).
         # For T=1 there are no transitions; fraction = 0.0.
-        if T > 1:
-            monotone_increase_fraction = float((velocity[1:] > 0).mean())
-        else:
-            monotone_increase_fraction = 0.0
+        monotone_increase_fraction = float((velocity[1:] > 0).mean()) if T > 1 else 0.0
 
         return np.array(
-            [energy_mean, energy_std, peak_energy,
-             velocity_mean, accel_mean, monotone_increase_fraction],
+            [
+                energy_mean,
+                energy_std,
+                peak_energy,
+                velocity_mean,
+                accel_mean,
+                monotone_increase_fraction,
+            ],
             dtype=np.float64,
         )
 
@@ -301,12 +303,15 @@ class HalluSAEGeometricProbeV2(HalluSAEGeometricProbe):
         proba = float(self.classifier.predict_proba(feat_vec)[0, 1])
 
         feature_names = [
-            "energy_mean", "energy_std", "peak_energy",
-            "velocity_mean", "accel_mean", "monotone_increase_fraction",
+            "energy_mean",
+            "energy_std",
+            "peak_energy",
+            "velocity_mean",
+            "accel_mean",
+            "monotone_increase_fraction",
         ]
         importances = {
-            name: float(abs(self.classifier.coef_[0][i]))
-            for i, name in enumerate(feature_names)
+            name: float(abs(self.classifier.coef_[0][i])) for i, name in enumerate(feature_names)
         }
 
         return {

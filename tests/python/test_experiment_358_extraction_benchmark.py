@@ -41,9 +41,7 @@ from carnot.pipeline.extraction_benchmark import (
 # Helpers
 # ---------------------------------------------------------------------------
 
-_FAKE_QUESTIONS = [
-    {"question": f"Q{i}", "response": f"R{i}"} for i in range(10)
-]
+_FAKE_QUESTIONS = [{"question": f"Q{i}", "response": f"R{i}"} for i in range(10)]
 # First 5 are wrong, last 5 are correct
 _FAKE_GROUND_TRUTH = [True] * 5 + [False] * 5
 
@@ -194,9 +192,7 @@ class TestRunExtractionBenchmark:
     def test_mismatched_lengths_raises(self):
         """Mismatched questions / ground_truth_wrong lengths must raise ValueError."""
         with pytest.raises(ValueError, match="must equal"):
-            run_extraction_benchmark(
-                "x", _never_violates, _FAKE_QUESTIONS, [True], "simulated"
-            )
+            run_extraction_benchmark("x", _never_violates, _FAKE_QUESTIONS, [True], "simulated")
 
     def test_empty_inputs(self):
         """Empty inputs produce 0 violations and 0.0 rates."""
@@ -215,7 +211,9 @@ class TestRunExtractionBenchmark:
 class TestBuildExtractionComparisonArtifact:
     """SCENARIO-EXTRACT-043: honest_verdict and comparison artifact."""
 
-    def _make_result(self, name: str, detection: float, fp: float, mode: str) -> ExtractionBenchmarkResult:
+    def _make_result(
+        self, name: str, detection: float, fp: float, mode: str
+    ) -> ExtractionBenchmarkResult:
         return ExtractionBenchmarkResult(
             extractor_name=name,
             n_questions=10,
@@ -323,8 +321,14 @@ class TestBuildExtractionComparisonArtifact:
         artifact = build_extraction_comparison_artifact(results)
         entry = artifact["per_extractor_results"][0]
         for key in [
-            "extractor_name", "n_questions", "n_violations_found", "n_true_positives",
-            "n_false_positives", "detection_rate", "false_positive_rate", "inference_mode",
+            "extractor_name",
+            "n_questions",
+            "n_violations_found",
+            "n_true_positives",
+            "n_false_positives",
+            "detection_rate",
+            "false_positive_rate",
+            "inference_mode",
         ]:
             assert key in entry, f"Missing key: {key}"
 
@@ -373,6 +377,7 @@ class TestExp358Main:
     def _import_exp358(self):
         import importlib
         import scripts.experiment_358_extraction_benchmark as mod
+
         importlib.reload(mod)
         return mod
 
@@ -382,12 +387,10 @@ class TestExp358Main:
         monkeypatch.setenv("JAX_PLATFORMS", "cpu")
 
         import scripts.experiment_358_extraction_benchmark as exp358
+
         monkeypatch.setattr(exp358, "_REPO_ROOT", tmp_path)
         # Patch out actual GSM8K loading; return 10 synthetic questions
-        synthetic_qs = [
-            {"question": f"What is {i}+{i}?", "answer": str(i + i)}
-            for i in range(10)
-        ]
+        synthetic_qs = [{"question": f"What is {i}+{i}?", "answer": str(i + i)} for i in range(10)]
         monkeypatch.setattr(exp358, "load_gsm8k_questions", lambda n: synthetic_qs[:n])
 
         exp358.main()
@@ -404,11 +407,9 @@ class TestExp358Main:
         """Simulated mode must never produce live_gpu_llm_extractor_wins."""
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "0")
         import scripts.experiment_358_extraction_benchmark as exp358
+
         monkeypatch.setattr(exp358, "_REPO_ROOT", tmp_path)
-        synthetic_qs = [
-            {"question": f"What is {i}+{i}?", "answer": str(i + i)}
-            for i in range(10)
-        ]
+        synthetic_qs = [{"question": f"What is {i}+{i}?", "answer": str(i + i)} for i in range(10)]
         monkeypatch.setattr(exp358, "load_gsm8k_questions", lambda n: synthetic_qs[:n])
 
         exp358.main()
@@ -420,13 +421,12 @@ class TestExp358Main:
     def test_main_required_fields_present(self, tmp_path, monkeypatch):
         """Artifact must contain all REQUIRED_RESULT_FIELDS."""
         from scripts.experiment_template import REQUIRED_RESULT_FIELDS
+
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "0")
         import scripts.experiment_358_extraction_benchmark as exp358
+
         monkeypatch.setattr(exp358, "_REPO_ROOT", tmp_path)
-        synthetic_qs = [
-            {"question": f"What is {i}+{i}?", "answer": str(i + i)}
-            for i in range(10)
-        ]
+        synthetic_qs = [{"question": f"What is {i}+{i}?", "answer": str(i + i)} for i in range(10)]
         monkeypatch.setattr(exp358, "load_gsm8k_questions", lambda n: synthetic_qs[:n])
 
         exp358.main()
@@ -451,6 +451,7 @@ class TestExp358Main:
     def test_make_arithmetic_inference_fn(self):
         """_make_arithmetic_inference_fn returns a callable that detects arithmetic violations."""
         import scripts.experiment_358_extraction_benchmark as exp358
+
         fn = exp358._make_arithmetic_inference_fn()
         # Known violated arithmetic claim
         assert isinstance(fn("Q", "2 + 2 = 5"), bool)
@@ -458,6 +459,7 @@ class TestExp358Main:
     def test_make_llm_inference_fn(self):
         """_make_llm_inference_fn with a stub extractor returns a callable."""
         import scripts.experiment_358_extraction_benchmark as exp358
+
         stub_extractor = MagicMock()
         stub_extractor.extract.return_value = []
         fn = exp358._make_llm_inference_fn(stub_extractor)
@@ -467,6 +469,7 @@ class TestExp358Main:
     def test_make_z3_inference_fn(self):
         """_make_z3_inference_fn with CI-stub formalizer returns callable."""
         import scripts.experiment_358_extraction_benchmark as exp358
+
         fn = exp358._make_z3_inference_fn(llm_caller=None)
         result = fn("Q", "some response")
         assert isinstance(result, bool)
@@ -474,6 +477,7 @@ class TestExp358Main:
     def test_label_responses(self):
         """_label_responses compares final numeric answer to ground truth."""
         import scripts.experiment_358_extraction_benchmark as exp358
+
         questions = [
             {"question": "Q", "answer": "5", "response": "The answer is 5."},
             {"question": "Q", "answer": "5", "response": "The answer is 6."},
@@ -481,6 +485,6 @@ class TestExp358Main:
         ]
         labels = exp358._label_responses(questions)
         assert labels[0] is False  # correct
-        assert labels[1] is True   # wrong
+        assert labels[1] is True  # wrong
         # "no number" — answer can't be extracted → treated as wrong
         assert isinstance(labels[2], bool)

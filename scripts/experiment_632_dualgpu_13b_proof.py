@@ -77,8 +77,8 @@ def detect_gpus() -> tuple[int, float, float]:
     if n == 0:
         return 0, 0.0, 0.0
 
-    vram_0 = torch.cuda.get_device_properties(0).total_memory / (1024 ** 3)
-    vram_1 = torch.cuda.get_device_properties(1).total_memory / (1024 ** 3) if n >= 2 else 0.0
+    vram_0 = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+    vram_1 = torch.cuda.get_device_properties(1).total_memory / (1024**3) if n >= 2 else 0.0
     return n, vram_0, vram_1
 
 
@@ -96,6 +96,7 @@ def _try_transformers_auto(model_name: str) -> tuple[object | None, str | None]:
     """
     try:
         from transformers import AutoModelForCausalLM, AutoTokenizer  # noqa: PLC0415
+
         _log.info("_try_transformers_auto: loading %s with device_map=auto", model_name)
         tok = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForCausalLM.from_pretrained(
@@ -121,10 +122,15 @@ def _try_transformers_explicit(model_name: str, n_layers: int) -> tuple[object |
     """
     try:
         from transformers import AutoModelForCausalLM, AutoTokenizer  # noqa: PLC0415
+
         split = n_layers // 2
         # Build the explicit map: embed on gpu0, first half layers on gpu0,
         # second half on gpu1, norm+lm_head on gpu1.
-        device_map: dict[str, str] = {"model.embed_tokens": "cuda:0", "model.norm": "cuda:1", "lm_head": "cuda:1"}
+        device_map: dict[str, str] = {
+            "model.embed_tokens": "cuda:0",
+            "model.norm": "cuda:1",
+            "lm_head": "cuda:1",
+        }
         for i in range(n_layers):
             device_map[f"model.layers.{i}"] = "cuda:0" if i < split else "cuda:1"
         _log.info("_try_transformers_explicit: loading %s, split at layer %d", model_name, split)
@@ -151,6 +157,7 @@ def _try_llama_cpp(model_path_or_repo: str) -> tuple[object | None, str | None]:
     """
     try:
         from llama_cpp import Llama  # noqa: PLC0415
+
         _log.info("_try_llama_cpp: loading %s with tensor_split=[0.5,0.5]", model_path_or_repo)
         model = Llama(
             model_path=model_path_or_repo,
@@ -226,6 +233,7 @@ def _sample_util_pynvml(gpu_idx: int) -> float:
     """
     try:
         import pynvml  # noqa: PLC0415
+
         pynvml.nvmlInit()
         handle = pynvml.nvmlDeviceGetHandleByIndex(gpu_idx)
         rates = pynvml.nvmlDeviceGetUtilizationRates(handle)
@@ -244,6 +252,7 @@ def _sample_util_torch(gpu_idx: int) -> float:
     """
     try:
         import torch  # noqa: PLC0415
+
         return float(torch.cuda.utilization(gpu_idx))
     except Exception:
         return -1.0
@@ -265,7 +274,9 @@ def sample_utilization(gpu_idx: int) -> float:
 # ---------------------------------------------------------------------------
 
 
-def run_forward_passes(model: object, model_name: str, n_passes: int = 10) -> tuple[list[float], list[float]]:
+def run_forward_passes(
+    model: object, model_name: str, n_passes: int = 10
+) -> tuple[list[float], list[float]]:
     """Run n_passes forward passes and record GPU-0 and GPU-1 utilization after each.
 
     We use generate() rather than a raw forward() because:
@@ -282,6 +293,7 @@ def run_forward_passes(model: object, model_name: str, n_passes: int = 10) -> tu
     try:
         from transformers import AutoTokenizer  # noqa: PLC0415
         import torch  # noqa: PLC0415
+
         tok = AutoTokenizer.from_pretrained(model_name)
         prompts = ["What is the capital of France?"] * 4  # batch_size=4
         inputs = tok(prompts, return_tensors="pt", padding=True)
@@ -410,6 +422,7 @@ def run_experiment() -> dict:  # type: ignore[type-arg]
     try:
         del model
         import torch  # noqa: PLC0415
+
         torch.cuda.empty_cache()
     except Exception as exc:
         _log.warning("cleanup: %s", exc)

@@ -21,7 +21,9 @@ from carnot.samplers.parallel_dense_ising import (
 # ---------------------------------------------------------------------------
 
 
-def make_sampler(n_spins: int = 10, alpha: float = 0.3, n_steps: int = 20) -> ParallelDenseIsingInertia:
+def make_sampler(
+    n_spins: int = 10, alpha: float = 0.3, n_steps: int = 20
+) -> ParallelDenseIsingInertia:
     """Return a sampler with small default config for unit tests.
 
     Why n_steps=20 in tests: fast enough to pass in CI, enough steps to verify
@@ -338,6 +340,7 @@ class TestSampleInitState:
 def test_export_from_carnot_samplers() -> None:
     """ParallelDenseIsingInertia and Config are importable from carnot.samplers."""
     from carnot.samplers import ParallelDenseIsingConfig, ParallelDenseIsingInertia  # noqa: PLC0415
+
     cfg = ParallelDenseIsingConfig(n_spins=4)
     sampler = ParallelDenseIsingInertia(cfg)
     assert sampler.config.n_spins == 4
@@ -364,7 +367,9 @@ class TestConvergenceBenchmark:
     """
 
     @staticmethod
-    def _steps_to_stable(energy_history: list[float], window: int = 5, tol_pct: float = 0.005) -> int:
+    def _steps_to_stable(
+        energy_history: list[float], window: int = 5, tol_pct: float = 0.005
+    ) -> int:
         """Return first step where rolling std < tol_pct * |range|.
 
         Why rolling std: more robust than single-step delta for noisy energy traces.

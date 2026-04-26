@@ -5,6 +5,7 @@ from session memory error patterns and injects them additively into IsingEBM.
 
 Spec: REQ-LEARN-056, REQ-LEARN-057, SCENARIO-LEARN-100, SCENARIO-LEARN-101
 """
+
 from __future__ import annotations
 
 import json
@@ -73,8 +74,7 @@ def test_synthesize_returns_coupling_for_all_pattern_types() -> None:
     gen = IsingConstraintGenerator(model, threshold=3)
     types = ["carry_error", "sign_error", "unit_error", "comparison_error", "overflow_error"]
     patterns = [
-        ErrorPattern(pattern_type=t, count=5, example_step=f"example of {t}")
-        for t in types
+        ErrorPattern(pattern_type=t, count=5, example_step=f"example of {t}") for t in types
     ]
 
     rows = gen.synthesize_from_memory(patterns)

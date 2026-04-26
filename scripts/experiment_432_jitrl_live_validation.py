@@ -298,9 +298,7 @@ def main() -> None:
             source = "live"
             _log.info("Exp 432: loaded %d live violations", len(violations))
         else:
-            _log.warning(
-                "Exp 432: Exp 427 not available — using synthetic fallback (100 records)"
-            )
+            _log.warning("Exp 432: Exp 427 not available — using synthetic fallback (100 records)")
             violations = _generate_synthetic_violations(100)
             source = "synthetic"
 
@@ -309,9 +307,7 @@ def main() -> None:
             extra = _generate_synthetic_violations(100 - len(violations))
             violations = violations + extra
             if source == "live":
-                _log.info(
-                    "Exp 432: padded to 100 with %d synthetic records", len(extra)
-                )
+                _log.info("Exp 432: padded to 100 with %d synthetic records", len(extra))
         violations = violations[:100]
 
         warmup = violations[:50]

@@ -24,21 +24,36 @@ logger = logging.getLogger(__name__)
 # Format: (question, expected_answer_substring)
 CALIBRATION_QA = [
     # Math — easy
-    ("What is 2+3?", "5"), ("What is 7*8?", "56"), ("What is 100/4?", "25"),
-    ("What is 15-9?", "6"), ("What is 3^3?", "27"), ("What is 50+50?", "100"),
-    ("What is 12*12?", "144"), ("What is 81/9?", "9"), ("What is 1000-1?", "999"),
+    ("What is 2+3?", "5"),
+    ("What is 7*8?", "56"),
+    ("What is 100/4?", "25"),
+    ("What is 15-9?", "6"),
+    ("What is 3^3?", "27"),
+    ("What is 50+50?", "100"),
+    ("What is 12*12?", "144"),
+    ("What is 81/9?", "9"),
+    ("What is 1000-1?", "999"),
     ("What is 2^10?", "1024"),
     # Math — medium
-    ("What is the square root of 169?", "13"), ("What is 17*19?", "323"),
-    ("What is 256/16?", "16"), ("What is 99*99?", "9801"),
-    ("What is the cube root of 27?", "3"), ("What is 7! (7 factorial)?", "5040"),
-    ("What is 2^16?", "65536"), ("What is 1+2+3+4+5+6+7+8+9+10?", "55"),
+    ("What is the square root of 169?", "13"),
+    ("What is 17*19?", "323"),
+    ("What is 256/16?", "16"),
+    ("What is 99*99?", "9801"),
+    ("What is the cube root of 27?", "3"),
+    ("What is 7! (7 factorial)?", "5040"),
+    ("What is 2^16?", "65536"),
+    ("What is 1+2+3+4+5+6+7+8+9+10?", "55"),
     # Math — hard (likely hallucination)
-    ("What is 37*43?", "1591"), ("What is 123*456?", "56088"),
-    ("What is the 20th prime number?", "71"), ("What is 11! (11 factorial)?", "39916800"),
-    ("What is 2^20?", "1048576"), ("What is the square root of 1764?", "42"),
-    ("What is 97*103?", "9991"), ("What is 19^2?", "361"),
-    ("What is 23*29?", "667"), ("What is the 12th Fibonacci number?", "144"),
+    ("What is 37*43?", "1591"),
+    ("What is 123*456?", "56088"),
+    ("What is the 20th prime number?", "71"),
+    ("What is 11! (11 factorial)?", "39916800"),
+    ("What is 2^20?", "1048576"),
+    ("What is the square root of 1764?", "42"),
+    ("What is 97*103?", "9991"),
+    ("What is 19^2?", "361"),
+    ("What is 23*29?", "667"),
+    ("What is the 12th Fibonacci number?", "144"),
     # Geography — easy
     ("What is the capital of Germany?", "Berlin"),
     ("What is the capital of Japan?", "Tokyo"),
@@ -163,7 +178,9 @@ def extract_gen_activations(model, tokenizer, question, do_sample=False, tempera
     with torch.no_grad():
         outputs = model.generate(**inputs, **gen_kwargs)
 
-    response = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+    response = tokenizer.decode(
+        outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+    )
 
     # Activations from generated tokens only
     prompt_len = inputs["input_ids"].shape[1]
@@ -173,7 +190,7 @@ def extract_gen_activations(model, tokenizer, question, do_sample=False, tempera
         hs = hidden_out.hidden_states
 
     gen_last = hs[-1][0, prompt_len:, :].mean(dim=0).float().numpy()
-    gen_mid = hs[len(hs)//2][0, prompt_len:, :].mean(dim=0).float().numpy()
+    gen_mid = hs[len(hs) // 2][0, prompt_len:, :].mean(dim=0).float().numpy()
     act = jnp.concatenate([jnp.array(gen_last), jnp.array(gen_mid)])
 
     return response, act
@@ -195,7 +212,9 @@ def main() -> int:
     start = time.time()
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True, output_hidden_states=True,
+        model_name,
+        trust_remote_code=True,
+        output_hidden_states=True,
     )
     model.eval()
     print(f"Loaded in {time.time() - start:.1f}s")
@@ -215,11 +234,15 @@ def main() -> int:
             hallucinated_acts.append(act)
 
         if (i + 1) % 20 == 0:
-            print(f"  Calibrated {i+1}/{len(CALIBRATION_QA)}... "
-                  f"({cal_correct} correct, {i+1-cal_correct} hallucinated)")
+            print(
+                f"  Calibrated {i + 1}/{len(CALIBRATION_QA)}... "
+                f"({cal_correct} correct, {i + 1 - cal_correct} hallucinated)"
+            )
 
-    print(f"Calibration: {cal_correct}/{len(CALIBRATION_QA)} correct "
-          f"({100*cal_correct/len(CALIBRATION_QA):.0f}%)")
+    print(
+        f"Calibration: {cal_correct}/{len(CALIBRATION_QA)} correct "
+        f"({100 * cal_correct / len(CALIBRATION_QA):.0f}%)"
+    )
     print(f"  Correct activations: {len(correct_acts)}")
     print(f"  Hallucinated activations: {len(hallucinated_acts)}")
 
@@ -229,17 +252,21 @@ def main() -> int:
 
     # Find hallucination direction
     from carnot.embeddings.hallucination_direction import (
-        HallucinationDirectionConfig, find_hallucination_direction, hallucination_energy,
+        HallucinationDirectionConfig,
+        find_hallucination_direction,
+        hallucination_energy,
     )
+
     direction = find_hallucination_direction(
-        jnp.stack(correct_acts), jnp.stack(hallucinated_acts),
+        jnp.stack(correct_acts),
+        jnp.stack(hallucinated_acts),
         HallucinationDirectionConfig(normalize=True),
     )
 
     # Verify calibration quality: measure separation on calibration data
     cal_correct_e = [float(hallucination_energy(a, direction)) for a in correct_acts]
     cal_hall_e = [float(hallucination_energy(a, direction)) for a in hallucinated_acts]
-    cal_gap = sum(cal_hall_e)/len(cal_hall_e) - sum(cal_correct_e)/len(cal_correct_e)
+    cal_gap = sum(cal_hall_e) / len(cal_hall_e) - sum(cal_correct_e) / len(cal_correct_e)
     print(f"  Calibration energy gap: {cal_gap:.4f} ({'good' if cal_gap > 0 else 'BAD'})")
 
     # Phase 2: Test — greedy baseline
@@ -260,7 +287,11 @@ def main() -> int:
         candidates = []
         for c in range(N_CANDIDATES):
             response, act = extract_gen_activations(
-                model, tokenizer, q, do_sample=True, temperature=0.8,
+                model,
+                tokenizer,
+                q,
+                do_sample=True,
+                temperature=0.8,
             )
             energy = float(hallucination_energy(act, direction))
             candidates.append((response, energy, check_answer(response, expected)))
@@ -288,9 +319,9 @@ def main() -> int:
     fixes = sum(1 for g, r in zip(greedy_results, rejection_results) if not g and r)
     regressions = sum(1 for g, r in zip(greedy_results, rejection_results) if g and not r)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("RESULTS")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  Calibration set: {len(CALIBRATION_QA)} QA pairs")
     print(f"  Calibration gap: {cal_gap:.4f}")
     print(f"  Test set: {len(TEST_QA)} QA pairs")
@@ -303,7 +334,7 @@ def main() -> int:
     print(f"  Fixes (wrong→right): {fixes}")
     print(f"  Regressions (right→wrong): {regressions}")
     print(f"  Net: {'+' if fixes >= regressions else ''}{fixes - regressions}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     if improvement > 0:
         print("SUCCESS: Energy-ranked selection IMPROVES model accuracy!")

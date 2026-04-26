@@ -56,10 +56,10 @@ from carnot.pipeline.embedding_constraint_store import (  # noqa: E402
 DELIVERABLE = "results/experiment_809_jepa_v22_rapbm.json"
 EXP808_RESULT = "results/experiment_808_jepa_v22_retrain.json"
 OOD_GATE = 0.75  # threshold that controls PATH A vs PATH B
-RAPBM_RETRIEVED_WEIGHT = 0.4   # weight for retrieved soft labels in RA-PRM
-RAPBM_GT_WEIGHT = 1.0          # weight for ground-truth label
-K_RETRIEVE = 3                  # number of similar steps retrieved per training example
-RAPBM_EPOCHS = 80              # training epochs for RA-PRM retrain
+RAPBM_RETRIEVED_WEIGHT = 0.4  # weight for retrieved soft labels in RA-PRM
+RAPBM_GT_WEIGHT = 1.0  # weight for ground-truth label
+K_RETRIEVE = 3  # number of similar steps retrieved per training example
+RAPBM_EPOCHS = 80  # training epochs for RA-PRM retrain
 
 tmpl = ExperimentTemplate(
     809,
@@ -76,46 +76,94 @@ tmpl = ExperimentTemplate(
 # These were NOT present in fover_labeled_steps_v21_multi.json (which is GSM8K/MATH-500
 # / HumanEval only), so they constitute a genuinely unseen domain.
 _HELD_OUT_PROBLEMS: list[dict] = [
-    {"q": "If you have 5 apples and give away 2, how many remain?",
-     "steps": ["5 - 2 = 3. The answer is 3."], "label": "correct"},
-    {"q": "A train travels 60 miles per hour for 3 hours. Total distance?",
-     "steps": ["60 * 3 = 180. The answer is 180 miles."], "label": "correct"},
-    {"q": "A triangle has angles 60, 70 and 60 degrees. Is it valid?",
-     "steps": ["60 + 70 + 60 = 190 ≠ 180. Not a valid triangle."], "label": "incorrect"},
-    {"q": "What is 15% of 200?",
-     "steps": ["200 * 0.15 = 30. The answer is 30."], "label": "correct"},
-    {"q": "Solve 2x + 6 = 20.",
-     "steps": ["2x = 20 - 6 = 14. x = 7."], "label": "correct"},
-    {"q": "Convert 3.5 hours to minutes.",
-     "steps": ["3.5 * 60 = 200 minutes."], "label": "incorrect"},
-    {"q": "A box has 12 red and 8 blue balls. Fraction red?",
-     "steps": ["12 / (12 + 8) = 12/20 = 0.6. The answer is 3/5."], "label": "correct"},
-    {"q": "Area of a circle with radius 5 (π ≈ 3.14)?",
-     "steps": ["π * r^2 = 3.14 * 25 = 78.5 sq units."], "label": "correct"},
-    {"q": "If -3 + x = 10, what is x?",
-     "steps": ["x = 10 - 3 = 7. The answer is 7."], "label": "incorrect"},
-    {"q": "How many seconds in 2 hours?",
-     "steps": ["2 * 60 * 60 = 7200 seconds."], "label": "correct"},
-    {"q": "A car uses 8 litres per 100 km. Fuel for 250 km?",
-     "steps": ["8 * 250 / 100 = 20 litres."], "label": "correct"},
-    {"q": "What is the prime factorisation of 36?",
-     "steps": ["36 = 2^2 * 3^2 = 4 * 9."], "label": "correct"},
-    {"q": "A rectangle 7 cm × 4 cm. Perimeter?",
-     "steps": ["Perimeter = 2*(7+4) = 22 cm."], "label": "correct"},
-    {"q": "Divide 144 by 12.",
-     "steps": ["144 / 12 = 13. The answer is 13."], "label": "incorrect"},
-    {"q": "If a population doubles every 10 years, starting at 100, after 20 years?",
-     "steps": ["100 * 2^2 = 400."], "label": "correct"},
-    {"q": "Speed of light is ~3×10^8 m/s. Time to travel 6×10^8 m?",
-     "steps": ["t = d/v = 6e8 / 3e8 = 2 seconds."], "label": "correct"},
-    {"q": "Probability of rolling 6 on a fair die?",
-     "steps": ["P = 1/6 ≈ 0.167."], "label": "correct"},
-    {"q": "What is 2^10?",
-     "steps": ["2^10 = 1024."], "label": "correct"},
-    {"q": "A store marks up by 30% then discounts 30%. Net change?",
-     "steps": ["1.3 * 0.7 = 0.91, so a 9% net loss."], "label": "correct"},
-    {"q": "Compute the GCD of 48 and 18.",
-     "steps": ["GCD(48,18): 48=2*18+12; 18=1*12+6; 12=2*6+0. GCD=6."], "label": "correct"},
+    {
+        "q": "If you have 5 apples and give away 2, how many remain?",
+        "steps": ["5 - 2 = 3. The answer is 3."],
+        "label": "correct",
+    },
+    {
+        "q": "A train travels 60 miles per hour for 3 hours. Total distance?",
+        "steps": ["60 * 3 = 180. The answer is 180 miles."],
+        "label": "correct",
+    },
+    {
+        "q": "A triangle has angles 60, 70 and 60 degrees. Is it valid?",
+        "steps": ["60 + 70 + 60 = 190 ≠ 180. Not a valid triangle."],
+        "label": "incorrect",
+    },
+    {
+        "q": "What is 15% of 200?",
+        "steps": ["200 * 0.15 = 30. The answer is 30."],
+        "label": "correct",
+    },
+    {"q": "Solve 2x + 6 = 20.", "steps": ["2x = 20 - 6 = 14. x = 7."], "label": "correct"},
+    {
+        "q": "Convert 3.5 hours to minutes.",
+        "steps": ["3.5 * 60 = 200 minutes."],
+        "label": "incorrect",
+    },
+    {
+        "q": "A box has 12 red and 8 blue balls. Fraction red?",
+        "steps": ["12 / (12 + 8) = 12/20 = 0.6. The answer is 3/5."],
+        "label": "correct",
+    },
+    {
+        "q": "Area of a circle with radius 5 (π ≈ 3.14)?",
+        "steps": ["π * r^2 = 3.14 * 25 = 78.5 sq units."],
+        "label": "correct",
+    },
+    {
+        "q": "If -3 + x = 10, what is x?",
+        "steps": ["x = 10 - 3 = 7. The answer is 7."],
+        "label": "incorrect",
+    },
+    {
+        "q": "How many seconds in 2 hours?",
+        "steps": ["2 * 60 * 60 = 7200 seconds."],
+        "label": "correct",
+    },
+    {
+        "q": "A car uses 8 litres per 100 km. Fuel for 250 km?",
+        "steps": ["8 * 250 / 100 = 20 litres."],
+        "label": "correct",
+    },
+    {
+        "q": "What is the prime factorisation of 36?",
+        "steps": ["36 = 2^2 * 3^2 = 4 * 9."],
+        "label": "correct",
+    },
+    {
+        "q": "A rectangle 7 cm × 4 cm. Perimeter?",
+        "steps": ["Perimeter = 2*(7+4) = 22 cm."],
+        "label": "correct",
+    },
+    {"q": "Divide 144 by 12.", "steps": ["144 / 12 = 13. The answer is 13."], "label": "incorrect"},
+    {
+        "q": "If a population doubles every 10 years, starting at 100, after 20 years?",
+        "steps": ["100 * 2^2 = 400."],
+        "label": "correct",
+    },
+    {
+        "q": "Speed of light is ~3×10^8 m/s. Time to travel 6×10^8 m?",
+        "steps": ["t = d/v = 6e8 / 3e8 = 2 seconds."],
+        "label": "correct",
+    },
+    {
+        "q": "Probability of rolling 6 on a fair die?",
+        "steps": ["P = 1/6 ≈ 0.167."],
+        "label": "correct",
+    },
+    {"q": "What is 2^10?", "steps": ["2^10 = 1024."], "label": "correct"},
+    {
+        "q": "A store marks up by 30% then discounts 30%. Net change?",
+        "steps": ["1.3 * 0.7 = 0.91, so a 9% net loss."],
+        "label": "correct",
+    },
+    {
+        "q": "Compute the GCD of 48 and 18.",
+        "steps": ["GCD(48,18): 48=2*18+12; 18=1*12+6; 12=2*6+0. GCD=6."],
+        "label": "correct",
+    },
 ]
 
 
@@ -137,6 +185,7 @@ def _load_exp808_result(repo_root: Path) -> dict:
 # ---------------------------------------------------------------------------
 # PATH A helper — held-out evaluation on ARC / SVAMP problems
 # ---------------------------------------------------------------------------
+
 
 def _run_path_a(repo_root: Path) -> dict:
     """Evaluate JEPA v22 on the 20-problem held-out ARC/SVAMP benchmark.
@@ -168,6 +217,7 @@ def _run_path_a(repo_root: Path) -> dict:
     if npz_path.exists():
         try:
             import numpy as np  # noqa: PLC0415
+
             weights = np.load(str(npz_path))
             probe._w1 = weights["w1"].tolist()
             probe._b1 = weights["b1"].tolist()
@@ -199,6 +249,7 @@ def _run_path_a(repo_root: Path) -> dict:
 # ---------------------------------------------------------------------------
 # PATH B helper — RA-PRM soft-supervision retrain
 # ---------------------------------------------------------------------------
+
 
 def _build_rapbm_soft_labels(
     step_seqs: list[list[str]],
@@ -323,12 +374,28 @@ def _run_path_b(repo_root: Path, exp808_ood_auc: float) -> dict:
     else:
         # Minimal synthetic corpus for CI; not representative but exercises code paths.
         corpus = [
-            {"step_text": "3 + 4 = 7. The answer is 7.", "label": "correct", "source_domain": "gsm8k"},
-            {"step_text": "3 + 4 = 8, so the total is 8.", "label": "incorrect", "source_domain": "gsm8k"},
-            {"step_text": "Divide both sides by 0.", "label": "incorrect", "source_domain": "gsm8k"},
+            {
+                "step_text": "3 + 4 = 7. The answer is 7.",
+                "label": "correct",
+                "source_domain": "gsm8k",
+            },
+            {
+                "step_text": "3 + 4 = 8, so the total is 8.",
+                "label": "incorrect",
+                "source_domain": "gsm8k",
+            },
+            {
+                "step_text": "Divide both sides by 0.",
+                "label": "incorrect",
+                "source_domain": "gsm8k",
+            },
             {"step_text": "sqrt(9) = 3.", "label": "correct", "source_domain": "math500"},
             {"step_text": "2^3 = 9.", "label": "incorrect", "source_domain": "math500"},
-            {"step_text": "The factorial of 4 is 4! = 24.", "label": "correct", "source_domain": "humaneval"},
+            {
+                "step_text": "The factorial of 4 is 4! = 24.",
+                "label": "correct",
+                "source_domain": "humaneval",
+            },
         ]
         print("[809] WARNING: FoVer v21 corpus not found. Using synthetic fallback.")
 
@@ -352,7 +419,9 @@ def _run_path_b(repo_root: Path, exp808_ood_auc: float) -> dict:
     soft_labels = _build_rapbm_soft_labels(train_seqs, gt_labels, store)
 
     soft_label_avg = round(sum(soft_labels) / len(soft_labels), 4) if soft_labels else 0.0
-    print(f"[809] Soft label avg={soft_label_avg:.4f} (GT avg={sum(gt_labels)/len(gt_labels):.4f})")
+    print(
+        f"[809] Soft label avg={soft_label_avg:.4f} (GT avg={sum(gt_labels) / len(gt_labels):.4f})"
+    )
 
     # --- Retrain JEPA v22-rapbm ---
     probe = MultiStepJEPAv20(hidden_dim=64, n_steps=3, output_dim=1, max_vocab=500)
@@ -365,12 +434,16 @@ def _run_path_b(repo_root: Path, exp808_ood_auc: float) -> dict:
         train_scores = [probe.forward(seq) for seq in train_seqs]
         in_dist_auc = round(MultiStepJEPAv19.compute_auc(train_scores, gt_labels), 4)
 
-        epoch_checkpoints.append({
-            "epoch": ckpt_epoch,
-            "in_dist_auc": in_dist_auc,
-            "final_loss": round(train_info["final_loss"], 6),
-        })
-        print(f"[809] Epoch {ckpt_epoch}: in_dist={in_dist_auc:.4f}, loss={train_info['final_loss']:.6f}")
+        epoch_checkpoints.append(
+            {
+                "epoch": ckpt_epoch,
+                "in_dist_auc": in_dist_auc,
+                "final_loss": round(train_info["final_loss"], 6),
+            }
+        )
+        print(
+            f"[809] Epoch {ckpt_epoch}: in_dist={in_dist_auc:.4f}, loss={train_info['final_loss']:.6f}"
+        )
 
     in_dist_auc = epoch_checkpoints[-1]["in_dist_auc"]
 
@@ -378,10 +451,14 @@ def _run_path_b(repo_root: Path, exp808_ood_auc: float) -> dict:
     def _load_ood(lp: Path) -> tuple[list[list[str]], list[float]]:
         if not lp.exists():
             fallback = [
-                ("The answer is 42.", 0.0), ("3+4=8 so total is 8.", 1.0),
-                ("sqrt(25)=5.", 0.0), ("Divide both by zero.", 1.0),
-                ("x=7 because 2x=14.", 0.0), ("5! = 120.", 0.0),
-                ("Since 7 is even divide by 2.", 1.0), ("2^10=1024.", 0.0),
+                ("The answer is 42.", 0.0),
+                ("3+4=8 so total is 8.", 1.0),
+                ("sqrt(25)=5.", 0.0),
+                ("Divide both by zero.", 1.0),
+                ("x=7 because 2x=14.", 0.0),
+                ("5! = 120.", 0.0),
+                ("Since 7 is even divide by 2.", 1.0),
+                ("2^10=1024.", 0.0),
             ]
             return [[t] for t, _ in fallback], [l for _, l in fallback]
         with open(lp) as f:
@@ -395,13 +472,16 @@ def _run_path_b(repo_root: Path, exp808_ood_auc: float) -> dict:
     ood_auc = round(MultiStepJEPAv19.compute_auc(ood_scores, ood_labels), 4)
     ood_auc_delta = round(ood_auc - exp808_ood_auc, 4)
 
-    print(f"[809] OOD AUC={ood_auc:.4f} (Exp 808 baseline={exp808_ood_auc:.4f}, delta={ood_auc_delta:+.4f})")
+    print(
+        f"[809] OOD AUC={ood_auc:.4f} (Exp 808 baseline={exp808_ood_auc:.4f}, delta={ood_auc_delta:+.4f})"
+    )
 
     # --- Save model if OOD improves ---
     model_saved_path: str | None = None
     if ood_auc > exp808_ood_auc:
         try:
             import numpy as np  # noqa: PLC0415
+
             save_path = repo_root / "results/jepa_predictor_v22_rapbm.npz"
             np.savez(
                 str(save_path),
@@ -439,6 +519,7 @@ def _run_path_b(repo_root: Path, exp808_ood_auc: float) -> dict:
 # ---------------------------------------------------------------------------
 # Main experiment orchestrator
 # ---------------------------------------------------------------------------
+
 
 def run_experiment() -> dict:
     """Dispatch to PATH A or PATH B based on Exp 808 ood_auc and build deliverable."""

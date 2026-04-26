@@ -68,6 +68,7 @@ N_EPOCHS = 50
 # Encoder loading
 # ---------------------------------------------------------------------------
 
+
 def load_encoder_from_safetensors(path: Path) -> VariationalEncoder:
     """Load a VariationalEncoder from a safetensors file saved by Exp 883/877.
 
@@ -114,6 +115,7 @@ def load_encoder_from_safetensors(path: Path) -> VariationalEncoder:
 # ---------------------------------------------------------------------------
 # VJEPAPretrainedJEPA — frozen encoder + trainable linear head
 # ---------------------------------------------------------------------------
+
 
 class VJEPAPretrainedJEPA:
     """Discriminative JEPA with a frozen VJEPA v2 encoder and a trainable linear head.
@@ -249,6 +251,7 @@ class VJEPAPretrainedJEPA:
 # Data generation helpers (identical to Exp 883 for reproducibility)
 # ---------------------------------------------------------------------------
 
+
 def generate_gsm8k_synthetic(n_steps: int = 100, seed: int = 42) -> list[dict[str, Any]]:
     """Generate synthetic GSM8K-style arithmetic reasoning steps.
 
@@ -273,7 +276,9 @@ def generate_gsm8k_synthetic(n_steps: int = 100, seed: int = 42) -> list[dict[st
             else:
                 text = f"Step {step_idx + 1}: multiply {a} times {c} equals {a * c} correct arithmetic result"
                 label = "correct"
-            pairs.append({"question_id": qid, "step_text": text, "label": label, "domain": "gsm8k_synthetic"})
+            pairs.append(
+                {"question_id": qid, "step_text": text, "label": label, "domain": "gsm8k_synthetic"}
+            )
         prob_idx += 1
         if prob_idx > 1000 or len(pairs) >= n_steps:
             break
@@ -310,7 +315,9 @@ def generate_arc_synthetic(n_steps: int = 30, seed: int = 42) -> list[dict[str, 
             else:
                 text = rng.choice(templates_correct) + f" step {step_idx + 1}"
                 label = "correct"
-            pairs.append({"question_id": qid, "step_text": text, "label": label, "domain": "arc_synthetic"})
+            pairs.append(
+                {"question_id": qid, "step_text": text, "label": label, "domain": "arc_synthetic"}
+            )
         prob_idx += 1
         if prob_idx > 500 or len(pairs) >= n_steps:
             break
@@ -340,7 +347,9 @@ def generate_svamp_synthetic(n_steps: int = 20, seed: int = 42) -> list[dict[str
             else:
                 text = f"Step {step_idx + 1}: {name} counted {qty} {obj} in the basket total is {qty} correct word problem reasoning"
                 label = "correct"
-            pairs.append({"question_id": qid, "step_text": text, "label": label, "domain": "svamp_synthetic"})
+            pairs.append(
+                {"question_id": qid, "step_text": text, "label": label, "domain": "svamp_synthetic"}
+            )
         prob_idx += 1
         if prob_idx > 500 or len(pairs) >= n_steps:
             break
@@ -387,6 +396,7 @@ def evaluate_on_split(
 # ---------------------------------------------------------------------------
 # Exclusion manifest update
 # ---------------------------------------------------------------------------
+
 
 def retire_discriminative_jepa(manifest_path: Path) -> None:
     """Add discriminative JEPAPredictor to the permanent exclusion manifest.
@@ -437,6 +447,7 @@ def retire_discriminative_jepa(manifest_path: Path) -> None:
 # ---------------------------------------------------------------------------
 # Main experiment
 # ---------------------------------------------------------------------------
+
 
 def run_experiment() -> dict[str, Any]:
     """Run Exp 887: RETRO-JEPA-OOD Final Surgery.
@@ -576,9 +587,7 @@ def run_experiment() -> dict[str, Any]:
         "final_epoch_loss": round(epoch_losses[-1], 6) if epoch_losses else 0.0,
         "duration_s": duration_s,
         "spec": ["REQ-LEARN-050"],
-        "prior_failures": [
-            "exp783", "exp799", "exp804", "exp809", "exp825", "exp834", "exp872"
-        ],
+        "prior_failures": ["exp783", "exp799", "exp804", "exp809", "exp825", "exp834", "exp872"],
     }
 
     RESULT_PATH.write_text(json.dumps(artifact, indent=2))

@@ -198,10 +198,12 @@ def _load_standard_gsm8k(n: int = N_QUESTIONS) -> list[dict[str, str]]:
     for i in range(n):
         a = rng.randint(10, 99)
         b = rng.randint(1, a)
-        fallback.append({
-            "question": f"Alice has {a} items. She gives {b} away. How many does she have?",
-            "answer": f"{a} - {b} = {a - b}. #### {a - b}",
-        })
+        fallback.append(
+            {
+                "question": f"Alice has {a} items. She gives {b} away. How many does she have?",
+                "answer": f"{a} - {b} = {a - b}. #### {a - b}",
+            }
+        )
     _log.info("Using %d synthetic standard questions", len(fallback))
     return fallback
 
@@ -255,7 +257,14 @@ def _run_condition_accuracy(
     correct = sum(1 for r in result.all_results if r)
     n = len(result.all_results)
     acc = correct / n if n > 0 else 0.0
-    _log.info("[%s] correct=%d/%d acc=%.3f verdict=%s", condition_label, correct, n, acc, result.honest_verdict)
+    _log.info(
+        "[%s] correct=%d/%d acc=%.3f verdict=%s",
+        condition_label,
+        correct,
+        n,
+        acc,
+        result.honest_verdict,
+    )
     return acc
 
 
@@ -321,7 +330,12 @@ def run_experiment(repo_root: Path) -> dict:
     ledger.add_experiment("exp504_qwen", required_gb=2.0)
     forecasts = ledger.check_all()
     for forecast in forecasts:
-        _log.info("VRAMBudgetLedger: %s headroom=%.1f GB feasible=%s", forecast.exp_id, forecast.headroom_gb, forecast.is_feasible)
+        _log.info(
+            "VRAMBudgetLedger: %s headroom=%.1f GB feasible=%s",
+            forecast.exp_id,
+            forecast.headroom_gb,
+            forecast.is_feasible,
+        )
 
     # Gate 3: GPUVRAMGateV2 — kills zombie GPU processes, then verifies free VRAM >= 6 GiB
     try:
@@ -384,7 +398,9 @@ def run_experiment(repo_root: Path) -> dict:
         for p in adversarial_pairs
     ]
 
-    _log.info("Dataset: standard=%d adversarial=%d", len(standard_questions), len(adversarial_questions))
+    _log.info(
+        "Dataset: standard=%d adversarial=%d", len(standard_questions), len(adversarial_questions)
+    )
 
     # Shared extractor for all pipeline conditions
     extractor = IntegratedExtractor(

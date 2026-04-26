@@ -170,16 +170,18 @@ def _run_model_benchmark(
             return asdict(result)
         except Exception as exc:
             _log.warning("[Exp 440] problem %s error: %r", problem.get("task_id", "?"), exc)
-            return asdict(HumanEvalResult369(
-                problem_id=problem.get("task_id", "unknown"),
-                generated_code="",
-                passed_tests=False,
-                violations_found=0,
-                repair_attempted=False,
-                final_code="",
-                final_passed_tests=False,
-                pbt_bug_found=False,
-            ))
+            return asdict(
+                HumanEvalResult369(
+                    problem_id=problem.get("task_id", "unknown"),
+                    generated_code="",
+                    passed_tests=False,
+                    violations_found=0,
+                    repair_attempted=False,
+                    final_code="",
+                    final_passed_tests=False,
+                    pbt_bug_found=False,
+                )
+            )
 
     completed_batches = []
     for batch in batches:
@@ -202,8 +204,12 @@ def _run_model_benchmark(
     _log.info(
         "[Exp 440] model=%s  pass@1_before=%.3f  pass@1_after=%.3f  "
         "signed_improvement=%+.3f  pbt_bugs=%d  executor_verdict=%s",
-        model_name, pass_before, pass_after, signed_improvement,
-        pbt_bugs, long_result.honest_verdict,
+        model_name,
+        pass_before,
+        pass_after,
+        signed_improvement,
+        pbt_bugs,
+        long_result.honest_verdict,
     )
 
     return MicroHumanEvalResult(
@@ -421,8 +427,11 @@ def main() -> None:
         _log.info(
             "[Exp 440]   model=%s  pass@1_before=%.3f  pass@1_after=%.3f  "
             "signed_improvement=%+.3f  pbt_bugs=%d",
-            r.model_id, r.pass_at_1_before, r.pass_at_1_after,
-            r.signed_improvement, r.pbt_bugs_found,
+            r.model_id,
+            r.pass_at_1_before,
+            r.pass_at_1_after,
+            r.signed_improvement,
+            r.pbt_bugs_found,
         )
 
     artifact = tmpl.build_result(
@@ -430,7 +439,9 @@ def main() -> None:
             **humaneval_micro_data,
             "gate0_autofix_applied": _autofix_result.auto_fix_applied,
             "gate3_gpu1_zombie": gpu_health.gpu1_is_zombie if gpu_health is not None else False,
-            "gate3_temperature_warning": gpu_health.temperature_warning if gpu_health is not None else False,
+            "gate3_temperature_warning": gpu_health.temperature_warning
+            if gpu_health is not None
+            else False,
         },
         status="success",
     )
@@ -448,6 +459,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

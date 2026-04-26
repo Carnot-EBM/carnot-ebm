@@ -249,9 +249,7 @@ def ensure_bir_import(content: str) -> str:
         return content
 
     # Preferred anchor: existing experiment_template import line
-    anchor_re = re.compile(
-        r"(from (?:scripts\.)?experiment_template import [^\n]+\n)"
-    )
+    anchor_re = re.compile(r"(from (?:scripts\.)?experiment_template import [^\n]+\n)")
     m = anchor_re.search(content)
     if m:
         pos = m.end()
@@ -404,9 +402,7 @@ def main() -> None:
                 step=n_attempted,
             )
 
-        honest_verdict = (
-            "migration_complete" if n_migrated >= 10 else "partial_migration"
-        )
+        honest_verdict = "migration_complete" if n_migrated >= 10 else "partial_migration"
 
         artifact = tmpl.build_result(
             {

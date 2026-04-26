@@ -101,11 +101,15 @@ class TestFromTracker:
         """REQ-LEARN-002: More fires -> higher weight (log growth) for same precision."""
         tracker_small = ConstraintTracker()
         for _ in range(5):
-            tracker_small.record("arithmetic", fired=True, caught_error=True, any_error_in_batch=True)
+            tracker_small.record(
+                "arithmetic", fired=True, caught_error=True, any_error_in_batch=True
+            )
 
         tracker_large = ConstraintTracker()
         for _ in range(100):
-            tracker_large.record("arithmetic", fired=True, caught_error=True, any_error_in_batch=True)
+            tracker_large.record(
+                "arithmetic", fired=True, caught_error=True, any_error_in_batch=True
+            )
 
         w_small = AdaptiveWeighter.from_tracker(tracker_small)["arithmetic"]
         w_large = AdaptiveWeighter.from_tracker(tracker_large)["arithmetic"]

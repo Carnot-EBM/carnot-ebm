@@ -47,6 +47,7 @@ from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noq
 # Indices 225-274 are the held-out set (no overlap with Exp 679 indices 0-199).
 # ---------------------------------------------------------------------------
 
+
 def _make_held_out_questions() -> list[dict]:
     """Generate 50 synthetic GSM8K-style proxy questions (indices 225-274).
 
@@ -67,36 +68,39 @@ def _make_held_out_questions() -> list[dict]:
         idx = 225 + i
         a, b = idx % 17 + 3, idx % 13 + 5  # deterministic small integers
         answer = a * b
-        questions.append({
-            "index": idx,
-            "question": f"A box has {a} rows of {b} apples each. How many apples total?",
-            "correct_answer": answer,
-            # correct response: has COMPUTE: lines matching the arithmetic
-            "response_correct": (
-                f"Each row has {b} apples.\n"
-                f"COMPUTE: {a} * {b} = {answer}\n"
-                f"Total apples = {answer}.\n"
-                f"The answer is {answer}."
-            ),
-            # incorrect response: has COMPUTE: lines but states wrong final value
-            "response_incorrect": (
-                f"Each row has {b} apples.\n"
-                f"COMPUTE: {a} * {b} = {answer + 1}\n"
-                f"Total apples = {answer + 1}.\n"
-                f"The answer is {answer + 1}."
-            ),
-            # no-compute response: no COMPUTE: lines → symcode_confidence = 0.2
-            "response_no_compute": (
-                f"Each row has {b} apples.  There are {a} rows.  "
-                f"Total = {answer}.  The answer is {answer}."
-            ),
-        })
+        questions.append(
+            {
+                "index": idx,
+                "question": f"A box has {a} rows of {b} apples each. How many apples total?",
+                "correct_answer": answer,
+                # correct response: has COMPUTE: lines matching the arithmetic
+                "response_correct": (
+                    f"Each row has {b} apples.\n"
+                    f"COMPUTE: {a} * {b} = {answer}\n"
+                    f"Total apples = {answer}.\n"
+                    f"The answer is {answer}."
+                ),
+                # incorrect response: has COMPUTE: lines but states wrong final value
+                "response_incorrect": (
+                    f"Each row has {b} apples.\n"
+                    f"COMPUTE: {a} * {b} = {answer + 1}\n"
+                    f"Total apples = {answer + 1}.\n"
+                    f"The answer is {answer + 1}."
+                ),
+                # no-compute response: no COMPUTE: lines → symcode_confidence = 0.2
+                "response_no_compute": (
+                    f"Each row has {b} apples.  There are {a} rows.  "
+                    f"Total = {answer}.  The answer is {answer}."
+                ),
+            }
+        )
     return questions
 
 
 def _count_compute_lines(response: str) -> int:
     """Count COMPUTE: markers in a response string."""
     import re
+
     return len(re.findall(r"COMPUTE:", response))
 
 
@@ -134,6 +138,7 @@ def _is_violation(response: str, correct_answer: int) -> bool:
         True iff the response contains a wrong final answer.
     """
     import re
+
     # Look for the last number in the response — treat it as the stated answer.
     nums = re.findall(r"\d+", response)
     if not nums:
@@ -201,21 +206,23 @@ def run_experiment() -> dict:
         # Simulate: every 5th question the verifier fires on a correct answer (FP).
         if i % 5 == 0:
             response = q["response_correct"]
-            violation_detected = True   # verifier incorrectly fires
+            violation_detected = True  # verifier incorrectly fires
             actually_correct = True
         else:
             response = q["response_incorrect"]
             violation_detected = True
             actually_correct = False
 
-        per_question.append({
-            "index": i,
-            "response": response,
-            "violation_detected": violation_detected,
-            "actually_correct": actually_correct,
-            "n_compute": _count_compute_lines(response),
-            "symcode_confidence": _symcode_confidence(response, violation_detected),
-        })
+        per_question.append(
+            {
+                "index": i,
+                "response": response,
+                "violation_detected": violation_detected,
+                "actually_correct": actually_correct,
+                "n_compute": _count_compute_lines(response),
+                "symcode_confidence": _symcode_confidence(response, violation_detected),
+            }
+        )
 
     n_violations = sum(1 for r in per_question if r["violation_detected"])
     n_fp = sum(1 for r in per_question if r["violation_detected"] and r["actually_correct"])
@@ -228,8 +235,12 @@ def run_experiment() -> dict:
     thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     sweep_results = []
     for thr in thresholds:
-        abstained = [r for r in per_question if r["violation_detected"] and r["symcode_confidence"] < thr]
-        repaired = [r for r in per_question if r["violation_detected"] and r["symcode_confidence"] >= thr]
+        abstained = [
+            r for r in per_question if r["violation_detected"] and r["symcode_confidence"] < thr
+        ]
+        repaired = [
+            r for r in per_question if r["violation_detected"] and r["symcode_confidence"] >= thr
+        ]
 
         n_abstained = len(abstained)
         # FPs after abstention: FPs that were NOT abstained (i.e. FPs that still get repaired).
@@ -240,12 +251,14 @@ def run_experiment() -> dict:
         recall_at_thr = n_tp_remaining / max(n_tp, 1)
         abstention_rate_at_thr = n_abstained / max(n_violations, 1)
 
-        sweep_results.append({
-            "threshold": thr,
-            "fp_rate": fp_rate_at_thr,
-            "recall": recall_at_thr,
-            "abstention_rate": abstention_rate_at_thr,
-        })
+        sweep_results.append(
+            {
+                "threshold": thr,
+                "fp_rate": fp_rate_at_thr,
+                "recall": recall_at_thr,
+                "abstention_rate": abstention_rate_at_thr,
+            }
+        )
 
     # ------------------------------------------------------------------
     # Step 5: select best_threshold (min FP rate subject to recall > 0.5).
@@ -297,8 +310,11 @@ def main() -> None:
     )
     tmpl.setup()
 
-    with ExperimentTimeoutWatchdog(696, timeout_minutes=30,
-                                   result_path=str(_REPO_ROOT / "results" / "experiment_696_icalm_abstention.json")):
+    with ExperimentTimeoutWatchdog(
+        696,
+        timeout_minutes=30,
+        result_path=str(_REPO_ROOT / "results" / "experiment_696_icalm_abstention.json"),
+    ):
         data = run_experiment()
 
     artifact = tmpl.build_result(data, status="success")

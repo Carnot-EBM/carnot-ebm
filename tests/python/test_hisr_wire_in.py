@@ -60,9 +60,7 @@ def test_hisr_weighted_add_incorrect_chain_filters_low_signal() -> None:
     counts = monitor.get_pattern_counts()
 
     # 'unit' (index 2, score=0.33) must NOT appear.
-    assert "unit" not in counts, (
-        "unit (score=0.33) must be filtered out by HISR threshold"
-    )
+    assert "unit" not in counts, "unit (score=0.33) must be filtered out by HISR threshold"
 
     # 'carry' and 'sign' must appear (observed from indices 3 and 4).
     assert "carry" in counts, "carry (score >= 0.5) must be observed"

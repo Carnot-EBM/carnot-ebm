@@ -38,6 +38,7 @@ import os
 import sys
 import time
 from pathlib import Path
+from datetime import UTC
 
 # ---------------------------------------------------------------------------
 # Repo-root resolution (must happen before any carnot imports)
@@ -113,6 +114,7 @@ def _build_relay_stack() -> tuple:
 
     # Bind a named tmp directory so SessionMemory doesn't touch real disk during tests.
     import tempfile  # noqa: PLC0415
+
     tmp_dir = tempfile.mkdtemp(prefix="carnot_exp734_")
     session_mem = SessionMemory(storage_dir=tmp_dir, model_id="Qwen/Qwen3.5-0.8B")
 
@@ -150,7 +152,7 @@ def _synthetic_violation_event(query_idx: int) -> "object":
         probe_confidence=0.82,
         constraint_type=ctype,
         question_domain="arithmetic",
-        timestamp=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        timestamp=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
     )
 
 
@@ -230,11 +232,11 @@ def main() -> None:
         # How many pattern keys reached >= 5 observations (triggering observe_pattern)?
         # ConstraintTemplateLibrary tracks observation counts per (pattern_key, model_id)
         # in _observations dict.
-        templates_added = sum(
-            1
-            for count in template_lib._observations.values()
-            if count >= 5
-        ) if hasattr(template_lib, "_observations") else 0
+        templates_added = (
+            sum(1 for count in template_lib._observations.values() if count >= 5)
+            if hasattr(template_lib, "_observations")
+            else 0
+        )
 
         # Determine honest_verdict.
         fr11_relay_operational = relay_events_acked >= 1 and relay_latency_p99_ms < 200.0

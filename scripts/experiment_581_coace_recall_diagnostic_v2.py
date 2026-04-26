@@ -228,9 +228,7 @@ def run_experiment() -> None:
 
     v2_fp_rate = v2_result.fp_rate
     n_flagged = v2_result.n_true_positive + v2_result.n_false_positive
-    v2_precision = (
-        v2_result.n_true_positive / n_flagged if n_flagged > 0 else 0.0
-    )
+    v2_precision = v2_result.n_true_positive / n_flagged if n_flagged > 0 else 0.0
 
     retro_064_partial = v2_recall >= 0.20
     retro_064_resolved = v2_recall >= 0.30

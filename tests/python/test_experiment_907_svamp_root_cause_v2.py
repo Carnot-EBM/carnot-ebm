@@ -44,6 +44,7 @@ from scripts.experiment_893_svamp_root_cause import (  # noqa: E402
 # Corpus sanity checks (REQ-VER-085)
 # ---------------------------------------------------------------------------
 
+
 def test_question_corpus_lengths() -> None:
     """SVAMP and GSM8K question lists must each have exactly 20 entries."""
     # REQ-VER-085: n_svamp_questions and n_gsm8k_questions = 20 each.
@@ -60,6 +61,7 @@ def test_responses_match_questions() -> None:
 # ---------------------------------------------------------------------------
 # FoVer labeling analysis (REQ-VER-085)
 # ---------------------------------------------------------------------------
+
 
 def test_svamp_mean_cot_depth_is_single_step() -> None:
     """SVAMP responses must produce FoVer step depth < 2.0 (single-step structure).
@@ -129,6 +131,7 @@ def test_honest_verdict_is_investigate_when_not_confirmed() -> None:
 # VJEPA AUC (REQ-VER-085)
 # ---------------------------------------------------------------------------
 
+
 def test_svamp_vjepa_auc_is_degenerate() -> None:
     """SVAMP VJEPA AUC must be 0.5 (chance) due to all-noise FoVer labels."""
     results = analyze_cohort(SVAMP_QUESTIONS, SVAMP_RESPONSES, "svamp")
@@ -187,6 +190,7 @@ def test_compute_svamp_auc_post_filter_all_same_label() -> None:
 # ---------------------------------------------------------------------------
 # Deliverable schema validation (REQ-VER-085)
 # ---------------------------------------------------------------------------
+
 
 def test_run_experiment_returns_all_required_fields() -> None:
     """run_experiment() must return a dict containing every required schema field."""

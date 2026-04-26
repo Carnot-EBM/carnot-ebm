@@ -206,7 +206,9 @@ def _build_oracle_pairs(chains: list[dict]) -> list[dict]:
     )
     _log.info(
         "Oracle: %d incorrect chains, %d correct chains, %d violated steps",
-        len(incorrect_chains), len(correct_chains), n_violated_total,
+        len(incorrect_chains),
+        len(correct_chains),
+        n_violated_total,
     )
 
     if n_violated_total == 0:
@@ -222,20 +224,24 @@ def _build_oracle_pairs(chains: list[dict]) -> list[dict]:
                 continue
             step_text = step_label.get("step_text", "")
             # Positive: violated step in incorrect response gets label=1 (incorrect).
-            pairs.append({
-                "question": chain.get("question", ""),
-                "response": chain.get("model_response", "") + " " + step_text,
-                "is_correct": False,
-                "question_index": abs(hash(chain.get("question_id", ""))) % 10000,
-            })
+            pairs.append(
+                {
+                    "question": chain.get("question", ""),
+                    "response": chain.get("model_response", "") + " " + step_text,
+                    "is_correct": False,
+                    "question_index": abs(hash(chain.get("question_id", ""))) % 10000,
+                }
+            )
     # Add correct chains as label=0 entries for contrastive training.
     for chain in correct_chains:
-        pairs.append({
-            "question": chain.get("question", ""),
-            "response": chain.get("model_response", ""),
-            "is_correct": True,
-            "question_index": abs(hash(chain.get("question_id", ""))) % 10000,
-        })
+        pairs.append(
+            {
+                "question": chain.get("question", ""),
+                "response": chain.get("model_response", ""),
+                "is_correct": True,
+                "question_index": abs(hash(chain.get("question_id", ""))) % 10000,
+            }
+        )
 
     _log.info("Built %d oracle step-level training pairs", len(pairs))
     return pairs
@@ -347,7 +353,9 @@ def _split_entries(
 
     _log.info(
         "Split: %d train, %d in-dist test, %d OOD",
-        len(train_entries), len(test_entries), len(ood_entries),
+        len(train_entries),
+        len(test_entries),
+        len(ood_entries),
     )
     return train_entries, test_entries, ood_entries
 
@@ -469,7 +477,10 @@ def _train_capo(
             loss_val = float(loss_fn(params))
             _log.info(
                 "lambda=%.2f  epoch %d/%d  loss=%.4f",
-                lambda_calib, epoch, n_epochs, loss_val,
+                lambda_calib,
+                epoch,
+                n_epochs,
+                loss_val,
             )
             if tmpl is not None:
                 tmpl.checkpoint_save(
@@ -545,7 +556,9 @@ def _select_lambda(
 
     _log.info(
         "Selected lambda_calib=%.2f  (val_ece=%.4f  val_auc=%.4f)",
-        best_lambda, best_ece, best_auc,
+        best_lambda,
+        best_ece,
+        best_auc,
     )
     return best_lambda, best_params  # type: ignore[return-value]
 
@@ -582,7 +595,6 @@ def main() -> None:
     """Run Exp 631: JEPA v14 ORACLE calibrated retrain."""
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=40):
-
         tmpl = ExperimentTemplate(
             exp_id=EXP_ID,
             title=EXP_TITLE,
@@ -644,7 +656,10 @@ def main() -> None:
         n_training_pairs = len(train_entries)
         _log.info(
             "Corpus split: %d train, %d in-dist test, %d OOD  (source=%s)",
-            n_training_pairs, len(test_entries), len(ood_entries), corpus_source,
+            n_training_pairs,
+            len(test_entries),
+            len(ood_entries),
+            corpus_source,
         )
 
         # ------------------------------------------------------------------
@@ -652,7 +667,8 @@ def main() -> None:
         # ------------------------------------------------------------------
         _log.info(
             "Sweeping lambda_calib %s over %d epochs...",
-            LAMBDA_CALIB_CANDIDATES, N_EPOCHS,
+            LAMBDA_CALIB_CANDIDATES,
+            N_EPOCHS,
         )
         lambda_calib_selected, params = _select_lambda(
             train_entries,
@@ -684,7 +700,8 @@ def main() -> None:
         v14_ood_auc = _compute_auc(params, ood_entries, embed_fn)
         _log.info(
             "v14_ood_auc=%.4f  (v13_ood_auc=%.4f  baseline=0.868)",
-            v14_ood_auc, V13_OOD_AUC,
+            v14_ood_auc,
+            V13_OOD_AUC,
         )
 
         # ------------------------------------------------------------------
@@ -715,7 +732,11 @@ def main() -> None:
         _log.info(
             "v14_ood_auc=%.4f  v14_ece=%.4f  calibration_improved=%s  "
             "ood_maintained=%s  verdict=%s",
-            v14_ood_auc, v14_ece, calibration_improved, ood_maintained, honest_verdict,
+            v14_ood_auc,
+            v14_ece,
+            calibration_improved,
+            ood_maintained,
+            honest_verdict,
         )
 
         # ------------------------------------------------------------------

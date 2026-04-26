@@ -125,7 +125,7 @@ class TestEnsureDaemonRunning:
 
         call_results = [
             (-1, "", "connection refused"),  # initial ipfs id — not running
-            (0, '{"ID":"Qm..."}', ""),       # poll after Popen
+            (0, '{"ID":"Qm..."}', ""),  # poll after Popen
         ]
         call_iter = iter(call_results)
 
@@ -161,7 +161,7 @@ class TestEnsureDaemonRunning:
         """If ipfs init fails, returns False without starting daemon."""
         call_results = [
             (-1, "", "connection refused"),  # initial ipfs id
-            (1, "", "init error"),           # ipfs init
+            (1, "", "init error"),  # ipfs init
         ]
         call_iter = iter(call_results)
 
@@ -281,8 +281,16 @@ class TestBuildArtifact:
 
     def test_required_fields(self):
         art = self._make("ipfs_mirror_established")
-        for field in ("experiment", "schema", "run_date", "started_at", "finished_at",
-                      "duration_s", "status", "title"):
+        for field in (
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ):
             assert field in art, f"Missing required field: {field}"
 
     def test_status_success_on_established(self):
@@ -290,8 +298,12 @@ class TestBuildArtifact:
         assert art["status"] == "success"
 
     def test_status_failed_on_install_failed(self):
-        art = self._make("ipfs_install_failed", ipfs_installed=False,
-                         ipfs_cid_vjepa=None, ipfs_cid_estimation=None)
+        art = self._make(
+            "ipfs_install_failed",
+            ipfs_installed=False,
+            ipfs_cid_vjepa=None,
+            ipfs_cid_estimation=None,
+        )
         assert art["status"] == "failed"
 
     def test_gateway_url_populated(self):

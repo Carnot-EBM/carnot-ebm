@@ -88,8 +88,7 @@ _CHAINS: list[dict] = [
         "steps": [
             (
                 "Step 1: What is the total cost of items costing $3.50, $5.25, and $2.75?",
-                "Adding costs: 3.50 + 5.25 = 8.75, then 8.75 + 2.75 = 11.50. "
-                "Total cost is $11.50.",
+                "Adding costs: 3.50 + 5.25 = 8.75, then 8.75 + 2.75 = 11.50. Total cost is $11.50.",
             ),
             (
                 "Step 2: How much change from $20 after paying $11.50?",

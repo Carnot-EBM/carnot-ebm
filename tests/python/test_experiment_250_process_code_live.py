@@ -31,9 +31,7 @@ def load_module():
     if python_dir in sys.path:
         sys.path.remove(python_dir)
         removed = True
-    spec = importlib.util.spec_from_file_location(
-        "experiment_250_process_code_live", module_path
-    )
+    spec = importlib.util.spec_from_file_location("experiment_250_process_code_live", module_path)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     try:
@@ -96,7 +94,14 @@ def make_case_result(
         process_valid=process_accepted,
         right_for_wrong_reasons=right_for_wrong_reasons,
         defects=(
-            [{"kind": "outcome_correct_process_invalid", "detail": "rfwr", "step_id": None, "evidence": {}}]
+            [
+                {
+                    "kind": "outcome_correct_process_invalid",
+                    "detail": "rfwr",
+                    "step_id": None,
+                    "evidence": {},
+                }
+            ]
             if right_for_wrong_reasons
             else []
         ),
@@ -326,17 +331,34 @@ def test_build_repair_prompt_identical_format_across_models():
     module = load_module()
     case = make_case("humaneval-0")
     evaluation: dict[str, Any] = {
-        "official_tests": {"passed": False, "error_type": "AssertionError", "error_message": "fail", "stdout": ""},
+        "official_tests": {
+            "passed": False,
+            "error_type": "AssertionError",
+            "error_message": "fail",
+            "stdout": "",
+        },
         "instrumentation": {"constraint_feedback": [], "dynamic_violations": []},
-        "pbt": {"verified": False, "n_failures": 1, "violations": ["sorted order violated"], "repair_feedback": "sort output"},
+        "pbt": {
+            "verified": False,
+            "n_failures": 1,
+            "violations": ["sorted order violated"],
+            "repair_feedback": "sort output",
+        },
         "explicit_specs": {"n_violations": 0, "violations": [], "repair_hints": []},
-        "process_integrity": {"process_valid": False, "defects": [
-            {"kind": "outcome_correct_process_invalid", "detail": "rfwr", "evidence": {}}
-        ]},
+        "process_integrity": {
+            "process_valid": False,
+            "defects": [
+                {"kind": "outcome_correct_process_invalid", "detail": "rfwr", "evidence": {}}
+            ],
+        },
     }
     # Both models call the same build_repair_prompt — model name is not an argument.
-    p1 = module.build_repair_prompt(case, previous_body="    return x", evaluation=evaluation, repair_idx=0)
-    p2 = module.build_repair_prompt(case, previous_body="    return x", evaluation=evaluation, repair_idx=0)
+    p1 = module.build_repair_prompt(
+        case, previous_body="    return x", evaluation=evaluation, repair_idx=0
+    )
+    p2 = module.build_repair_prompt(
+        case, previous_body="    return x", evaluation=evaluation, repair_idx=0
+    )
     assert p1 == p2
     assert "repair attempt 1" in p1
     assert "Process-integrity findings" in p1  # Exp 250 addition
@@ -347,13 +369,20 @@ def test_build_repair_prompt_no_process_section_when_clean():
     module = load_module()
     case = make_case("humaneval-0")
     evaluation: dict[str, Any] = {
-        "official_tests": {"passed": False, "error_type": "AssertionError", "error_message": "fail", "stdout": ""},
+        "official_tests": {
+            "passed": False,
+            "error_type": "AssertionError",
+            "error_message": "fail",
+            "stdout": "",
+        },
         "instrumentation": {"constraint_feedback": [], "dynamic_violations": []},
         "pbt": {"verified": True, "n_failures": 0, "violations": [], "repair_feedback": ""},
         "explicit_specs": {"n_violations": 0, "violations": [], "repair_hints": []},
         "process_integrity": {"process_valid": True, "defects": []},
     }
-    prompt = module.build_repair_prompt(case, previous_body="    return x", evaluation=evaluation, repair_idx=0)
+    prompt = module.build_repair_prompt(
+        case, previous_body="    return x", evaluation=evaluation, repair_idx=0
+    )
     assert "Process-integrity findings" not in prompt
 
 
@@ -400,9 +429,19 @@ def make_minimal_evaluation(
     n_spec_violations: int = 0,
 ) -> dict[str, Any]:
     return {
-        "official_tests": {"passed": official_passed, "error_type": "", "error_message": "", "stdout": ""},
+        "official_tests": {
+            "passed": official_passed,
+            "error_type": "",
+            "error_message": "",
+            "stdout": "",
+        },
         "instrumentation": {},
-        "pbt": {"verified": pbt_verified, "n_failures": n_pbt_failures, "violations": [], "repair_feedback": ""},
+        "pbt": {
+            "verified": pbt_verified,
+            "n_failures": n_pbt_failures,
+            "violations": [],
+            "repair_feedback": "",
+        },
         "explicit_specs": {"n_violations": n_spec_violations, "violations": [], "repair_hints": []},
     }
 
@@ -482,8 +521,14 @@ def test_run_process_check_repair_regression_detected():
 def test_stage_flags_all_true():
     module = load_module()
     case = make_case("humaneval-0")
-    result = make_case_result(case, official_passed=True, pbt_accepted=True, spec_accepted=True,
-                              process_accepted=True, repair_accepted=True)
+    result = make_case_result(
+        case,
+        official_passed=True,
+        pbt_accepted=True,
+        spec_accepted=True,
+        process_accepted=True,
+        repair_accepted=True,
+    )
     flags = module._stage_flags(result)
     assert flags["baseline"] is True
     assert flags["official_tests_verify_only"] is True
@@ -497,8 +542,14 @@ def test_stage_flags_process_rejects_spec_passing():
     """process_aware_verify_only can be False even when spec_aware is True."""
     module = load_module()
     case = make_case("humaneval-0")
-    result = make_case_result(case, official_passed=True, pbt_accepted=True, spec_accepted=True,
-                              process_accepted=False, repair_accepted=False)
+    result = make_case_result(
+        case,
+        official_passed=True,
+        pbt_accepted=True,
+        spec_accepted=True,
+        process_accepted=False,
+        repair_accepted=False,
+    )
     flags = module._stage_flags(result)
     assert flags["spec_aware_verify_only"] is True
     assert flags["process_aware_verify_only"] is False
@@ -582,11 +633,19 @@ def test_summarize_model_results_added_rejections_over_spec():
     cases_in = [make_case(f"humaneval-{i}", dataset_idx=i) for i in range(3)]
     results = [
         # spec passes, process rejects
-        make_case_result(cases_in[0], spec_accepted=True, process_accepted=False, repair_accepted=False),
+        make_case_result(
+            cases_in[0], spec_accepted=True, process_accepted=False, repair_accepted=False
+        ),
         # both pass
         make_case_result(cases_in[1], spec_accepted=True, process_accepted=True),
         # spec rejects
-        make_case_result(cases_in[2], pbt_accepted=True, spec_accepted=False, process_accepted=False, repair_accepted=False),
+        make_case_result(
+            cases_in[2],
+            pbt_accepted=True,
+            spec_accepted=False,
+            process_accepted=False,
+            repair_accepted=False,
+        ),
     ]
     summary = module.summarize_model_results(results, n_bootstrap=100, seed=1)
     assert summary["stages"]["process_aware_verify_only"]["added_rejections_over_spec"] == 1
@@ -662,7 +721,9 @@ def test_build_artifact_payload_schema(tmp_path: Path) -> None:
             "statistics": module.summarize_model_results(results, n_bootstrap=100, seed=1),
         }
     }
-    comparison = module.build_comparison_summary(model_runs, n_bootstrap=100, seed=1, repair_budget=3)
+    comparison = module.build_comparison_summary(
+        model_runs, n_bootstrap=100, seed=1, repair_budget=3
+    )
     payload = module.build_artifact_payload(
         output_path=tmp_path / "out.json",
         cohort=cases_in,
@@ -687,8 +748,18 @@ def test_build_artifact_payload_schema(tmp_path: Path) -> None:
     )
 
     # Top-level required fields.
-    for field in ("experiment", "benchmark", "run_date", "schema", "metadata",
-                   "cohort", "model_runs", "comparison", "blockers", "run_status"):
+    for field in (
+        "experiment",
+        "benchmark",
+        "run_date",
+        "schema",
+        "metadata",
+        "cohort",
+        "model_runs",
+        "comparison",
+        "blockers",
+        "run_status",
+    ):
         assert field in payload, f"Missing field: {field}"
 
     assert payload["experiment"] == 250
@@ -712,8 +783,13 @@ def test_build_artifact_payload_partial_run_status(tmp_path: Path) -> None:
     payload = module.build_artifact_payload(
         output_path=tmp_path / "out.json",
         cohort=[],
-        cohort_meta={"source_artifact": "", "source_experiment": 238,
-                     "reference_experiment": 238, "reference_run_date": "", "case_count": 0},
+        cohort_meta={
+            "source_artifact": "",
+            "source_experiment": 238,
+            "reference_experiment": 238,
+            "reference_run_date": "",
+            "case_count": 0,
+        },
         model_runs={},
         comparison={},
         blockers=[{"model_name": "Qwen3.5-0.8B", "stage": "model_load", "error": "OOM"}],
@@ -756,14 +832,18 @@ def test_process_integrity_stats_history_ignored_in_defect_counts():
     case = make_case("humaneval-0")
     result = make_case_result(case, right_for_wrong_reasons=False)
     # Artificially add a repair-phase defect into history (not baseline).
-    result["process_flags"]["history"].append({
-        "process_valid": False,
-        "right_for_wrong_reasons": False,
-        "defects": [{"kind": "repair_stall", "detail": "stall", "step_id": None, "evidence": {}}],
-        "outcome_correct": False,
-        "process_label": "wrong_answer_wrong_process",
-        "run_date": "20260413",
-    })
+    result["process_flags"]["history"].append(
+        {
+            "process_valid": False,
+            "right_for_wrong_reasons": False,
+            "defects": [
+                {"kind": "repair_stall", "detail": "stall", "step_id": None, "evidence": {}}
+            ],
+            "outcome_correct": False,
+            "process_label": "wrong_answer_wrong_process",
+            "run_date": "20260413",
+        }
+    )
     stats = module._process_integrity_stats([result])
     # repair_stall is in history, not baseline — must NOT appear in defect_kind_counts.
     assert "repair_stall" not in stats["defect_kind_counts"]

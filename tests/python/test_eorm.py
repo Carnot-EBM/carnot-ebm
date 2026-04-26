@@ -41,6 +41,7 @@ from carnot.models.eorm import (
 # CoTEnergyInput
 # ---------------------------------------------------------------------------
 
+
 class TestCoTEnergyInput:
     """Tests for REQ-LEARN-022-1: CoTEnergyInput dataclass."""
 
@@ -59,6 +60,7 @@ class TestCoTEnergyInput:
 # ---------------------------------------------------------------------------
 # Tokenizer helpers
 # ---------------------------------------------------------------------------
+
 
 class TestTokenize:
     """Tests for _tokenize and _make_token_sequence helpers."""
@@ -115,6 +117,7 @@ class TestTokenize:
 # Layer norm
 # ---------------------------------------------------------------------------
 
+
 class TestLayerNorm:
     """Tests for _layer_norm helper."""
 
@@ -141,6 +144,7 @@ class TestLayerNorm:
 # Parameter initialization
 # ---------------------------------------------------------------------------
 
+
 class TestInitLayer:
     """Tests for _init_layer."""
 
@@ -148,10 +152,22 @@ class TestInitLayer:
         """All expected parameter keys are present."""
         lp = _init_layer(embed_dim=16, n_heads=2, key=jrandom.PRNGKey(0))
         expected = {
-            "w_q", "b_q", "w_k", "b_k", "w_v", "b_v", "w_o", "b_o",
-            "ln1_gamma", "ln1_beta",
-            "w_ff1", "b_ff1", "w_ff2", "b_ff2",
-            "ln2_gamma", "ln2_beta",
+            "w_q",
+            "b_q",
+            "w_k",
+            "b_k",
+            "w_v",
+            "b_v",
+            "w_o",
+            "b_o",
+            "ln1_gamma",
+            "ln1_beta",
+            "w_ff1",
+            "b_ff1",
+            "w_ff2",
+            "b_ff2",
+            "ln2_gamma",
+            "ln2_beta",
         }
         assert set(lp.keys()) == expected
 
@@ -196,6 +212,7 @@ class TestInitParams:
 # Transformer layer forward
 # ---------------------------------------------------------------------------
 
+
 class TestTransformerLayerForward:
     """Tests for _transformer_layer_forward."""
 
@@ -220,6 +237,7 @@ class TestTransformerLayerForward:
 # ---------------------------------------------------------------------------
 # Pure forward pass
 # ---------------------------------------------------------------------------
+
 
 class TestForward:
     """Tests for _forward pure function."""
@@ -255,6 +273,7 @@ class TestForward:
 # ---------------------------------------------------------------------------
 # Param count, flatten, unflatten
 # ---------------------------------------------------------------------------
+
 
 class TestParamHelpers:
     """Tests for _count_params, _flatten_params, _unflatten_params."""
@@ -293,6 +312,7 @@ class TestParamHelpers:
 # ---------------------------------------------------------------------------
 # EORMModel
 # ---------------------------------------------------------------------------
+
 
 class TestEORMModel:
     """Tests for REQ-LEARN-022: EORMModel."""
@@ -359,8 +379,7 @@ class TestEORMModel:
         question = "test question"
         ranked = model.rank(responses, question=question)
         energies = [
-            model.energy(CoTEnergyInput(question_text=question, response_text=r))
-            for r in responses
+            model.energy(CoTEnergyInput(question_text=question, response_text=r)) for r in responses
         ]
         ordered_energies = [energies[i] for i in ranked]
         # Non-decreasing order
@@ -375,8 +394,14 @@ class TestEORMModel:
 
     def test_save_and_load(self) -> None:
         """REQ-LEARN-022-5: saved model loads with identical parameters."""
-        model = EORMModel(embed_dim=16, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64,
-                          key=jrandom.PRNGKey(42))
+        model = EORMModel(
+            embed_dim=16,
+            n_heads=2,
+            n_layers=1,
+            max_seq_len=32,
+            vocab_size=64,
+            key=jrandom.PRNGKey(42),
+        )
         cot = CoTEnergyInput(question_text="What is 2+2?", response_text="4")
 
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -410,8 +435,14 @@ class TestEORMModel:
 
     def test_energy_different_texts_different_energies(self) -> None:
         """Different CoT texts generally produce different energies."""
-        model = EORMModel(embed_dim=32, n_heads=2, n_layers=1, max_seq_len=64, vocab_size=128,
-                          key=jrandom.PRNGKey(7))
+        model = EORMModel(
+            embed_dim=32,
+            n_heads=2,
+            n_layers=1,
+            max_seq_len=64,
+            vocab_size=128,
+            key=jrandom.PRNGKey(7),
+        )
         cot1 = CoTEnergyInput(question_text="q", response_text="correct step by step answer")
         cot2 = CoTEnergyInput(question_text="q", response_text="wrong completely different")
         e1 = model.energy(cot1)
@@ -424,12 +455,19 @@ class TestEORMModel:
 # EORMTrainer
 # ---------------------------------------------------------------------------
 
+
 class TestEORMTrainer:
     """Tests for REQ-LEARN-023: EORMTrainer."""
 
     def _small_model(self) -> EORMModel:
-        return EORMModel(embed_dim=16, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64,
-                         key=jrandom.PRNGKey(0))
+        return EORMModel(
+            embed_dim=16,
+            n_heads=2,
+            n_layers=1,
+            max_seq_len=32,
+            vocab_size=64,
+            key=jrandom.PRNGKey(0),
+        )
 
     def test_contrastive_loss_zero_when_margin_met(self) -> None:
         """SCENARIO-LEARN-040: loss is 0 when incorrect has energy > correct + margin."""
@@ -535,8 +573,14 @@ class TestEORMTrainer:
 
     def test_train_epoch_reduces_loss_over_iterations(self) -> None:
         """Loss should decrease (or stay low) after multiple epochs on a fixed pair."""
-        model = EORMModel(embed_dim=16, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64,
-                          key=jrandom.PRNGKey(123))
+        model = EORMModel(
+            embed_dim=16,
+            n_heads=2,
+            n_layers=1,
+            max_seq_len=32,
+            vocab_size=64,
+            key=jrandom.PRNGKey(123),
+        )
         trainer = EORMTrainer(model, lr=1e-2)
         pairs = [("The answer is four", "The answer is five", "What is two plus two")]
 
@@ -558,13 +602,20 @@ class TestEORMTrainer:
 # Integration: energy function is differentiable through full model
 # ---------------------------------------------------------------------------
 
+
 class TestEORMGradient:
     """Integration tests for gradient flow through the full model."""
 
     def test_gradient_of_energy_wrt_params(self) -> None:
         """Gradient of energy w.r.t. all params is finite after one step."""
-        model = EORMModel(embed_dim=16, n_heads=2, n_layers=1, max_seq_len=32, vocab_size=64,
-                          key=jrandom.PRNGKey(5))
+        model = EORMModel(
+            embed_dim=16,
+            n_heads=2,
+            n_layers=1,
+            max_seq_len=32,
+            vocab_size=64,
+            key=jrandom.PRNGKey(5),
+        )
         token_ids = _make_token_sequence("q", "a", 32, 64) or [_SEP_ID]
 
         def fn(params):

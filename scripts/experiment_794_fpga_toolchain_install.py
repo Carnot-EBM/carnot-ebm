@@ -102,10 +102,7 @@ def check_tools() -> dict[str, dict]:
         "nextpnr-ice40": _check_tool(["nextpnr-ice40", "--version"]),
         "icepack": _check_tool(["icepack", "--help"]),
     }
-    return {
-        name: {"present": present, "version": ver}
-        for name, (present, ver) in tools.items()
-    }
+    return {name: {"present": present, "version": ver} for name, (present, ver) in tools.items()}
 
 
 def attempt_pacman_install(timeout: int = 300) -> tuple[bool, str]:
@@ -182,9 +179,7 @@ def run_synthesis(verilog_src: str) -> dict:
                 total = 0
                 for mod in netlist.get("modules", {}).values():
                     cells = mod.get("cells", {})
-                    total += sum(
-                        1 for c in cells.values() if c.get("type") == "SB_LUT4"
-                    )
+                    total += sum(1 for c in cells.values() if c.get("type") == "SB_LUT4")
                 lut_count = total
             except Exception:
                 pass  # lut_count stays None; success remains True if yosys exited 0

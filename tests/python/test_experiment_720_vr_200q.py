@@ -140,8 +140,7 @@ class TestSignedImprovementFieldsPresent:
         artifact = _run_blocked_main(tmp_path)
         for field in self._CHECKPOINT_FIELDS:
             assert artifact[field] is None, (
-                f"Field '{field}' must be None in blocked artifact — "
-                f"no inference was run"
+                f"Field '{field}' must be None in blocked artifact — no inference was run"
             )
 
     def test_blocked_artifact_has_honest_verdict(self, tmp_path: Path) -> None:

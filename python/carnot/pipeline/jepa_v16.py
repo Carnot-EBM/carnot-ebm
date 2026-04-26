@@ -26,7 +26,6 @@ Spec: REQ-LEARN-053, REQ-LEARN-054, SCENARIO-LEARN-087, SCENARIO-LEARN-088, SCEN
 from __future__ import annotations
 
 import hashlib
-import json
 from pathlib import Path
 from typing import Any
 
@@ -217,7 +216,9 @@ class JEPAv16:
         self._loss_fn = InfoNCELoss(temperature=temperature)
 
         # MLP weights: He init (scale by sqrt(2 / fan_in)).
-        self._W1 = rng.standard_normal((EMBED_DIM, 64)).astype(np.float32) * np.sqrt(2.0 / EMBED_DIM)
+        self._W1 = rng.standard_normal((EMBED_DIM, 64)).astype(np.float32) * np.sqrt(
+            2.0 / EMBED_DIM
+        )
         self._b1 = np.zeros(64, dtype=np.float32)
         self._W2 = rng.standard_normal((64, 32)).astype(np.float32) * np.sqrt(2.0 / 64)
         self._b2 = np.zeros(32, dtype=np.float32)
@@ -304,16 +305,16 @@ class JEPAv16:
         train_losses: list[float] = []
         rng = np.random.default_rng(0)
 
-        for epoch in range(n_epochs):
+        for _epoch in range(n_epochs):
             perm = rng.permutation(N)
             X_shuf = X[perm]
             Y_shuf = Y[perm]
 
             # One batch per epoch (small dataset — full-batch is fine).
-            h1 = self._relu(X_shuf @ self._W1 + self._b1)         # (N, 64)
-            h2 = self._relu(h1 @ self._W2 + self._b2)              # (N, 32)
-            logits = h2 @ self._W3 + self._b3                      # (N, 1)
-            preds = self._sigmoid(logits)                           # (N, 1)
+            h1 = self._relu(X_shuf @ self._W1 + self._b1)  # (N, 64)
+            h2 = self._relu(h1 @ self._W2 + self._b2)  # (N, 32)
+            logits = h2 @ self._W3 + self._b3  # (N, 1)
+            preds = self._sigmoid(logits)  # (N, 1)
 
             # BCE loss: -mean(y*log(p) + (1-y)*log(1-p))
             eps = 1e-7
@@ -321,24 +322,24 @@ class JEPAv16:
             train_losses.append(float(bce))
 
             # Gradients — analytic BCE-through-sigmoid: d_loss/d_logit = (p - y) / N
-            d_logit = (preds - Y_shuf) / N                          # (N, 1)
+            d_logit = (preds - Y_shuf) / N  # (N, 1)
 
             # Backprop through layer 3.
-            dW3 = h2.T @ d_logit                                    # (32, 1)
+            dW3 = h2.T @ d_logit  # (32, 1)
             db3 = d_logit.sum(axis=0)
-            d_h2 = d_logit @ self._W3.T                             # (N, 32)
+            d_h2 = d_logit @ self._W3.T  # (N, 32)
 
             # ReLU gate for layer 2.
             d_h2_pre = d_h2 * (h2 > 0).astype(np.float32)
 
-            dW2 = h1.T @ d_h2_pre                                   # (64, 32)
+            dW2 = h1.T @ d_h2_pre  # (64, 32)
             db2 = d_h2_pre.sum(axis=0)
-            d_h1 = d_h2_pre @ self._W2.T                            # (N, 64)
+            d_h1 = d_h2_pre @ self._W2.T  # (N, 64)
 
             # ReLU gate for layer 1.
             d_h1_pre = d_h1 * (h1 > 0).astype(np.float32)
 
-            dW1 = X_shuf.T @ d_h1_pre                               # (EMBED_DIM, 64)
+            dW1 = X_shuf.T @ d_h1_pre  # (EMBED_DIM, 64)
             db1 = d_h1_pre.sum(axis=0)
 
             # Update weights (gradient descent).
@@ -384,9 +385,12 @@ class JEPAv16:
         """
         np.savez(
             path,
-            W1=self._W1, b1=self._b1,
-            W2=self._W2, b2=self._b2,
-            W3=self._W3, b3=self._b3,
+            W1=self._W1,
+            b1=self._b1,
+            W2=self._W2,
+            b2=self._b2,
+            W3=self._W3,
+            b3=self._b3,
             temperature=np.array([self.temperature], dtype=np.float32),
         )
 

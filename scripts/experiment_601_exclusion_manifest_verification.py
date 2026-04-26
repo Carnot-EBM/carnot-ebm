@@ -178,7 +178,9 @@ def main() -> None:
     )
     tmpl.setup()
 
-    with ExperimentTimeoutWatchdog(601, timeout_minutes=15, result_path=str(_REPO_ROOT / _RESULT_PATH)):
+    with ExperimentTimeoutWatchdog(
+        601, timeout_minutes=15, result_path=str(_REPO_ROOT / _RESULT_PATH)
+    ):
         payload = run_experiment()
 
     artifact = tmpl.build_result(

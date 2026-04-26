@@ -114,7 +114,8 @@ class TestLocalMinimumVerification:
         # Shallow bowl (small eigenvalues = wide basin)
         model_wide = QuadraticEnergy([0.1, 0.1])
         cert_wide = certify_landscape(
-            model_wide, jnp.zeros(2),
+            model_wide,
+            jnp.zeros(2),
             basin_perturbations=50,
             basin_key=jrandom.PRNGKey(0),
         )

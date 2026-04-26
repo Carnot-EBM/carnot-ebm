@@ -102,6 +102,7 @@ class TestTFIDFVectorizer:
     def test_l2_normalized(self):
         """TF-IDF vector has L2 norm <= 1 (normalized or zero)."""
         import math
+
         v = _TFIDFVectorizer(max_features=32)
         docs = ["hello world foo", "bar baz qux", "ignore instructions"]
         v.fit(docs)
@@ -219,9 +220,7 @@ class TestJailbreakDetectionKAN:
         score = detector.predict(benign)
         # We don't require score < 0.5 since the model is trained on only 40 examples;
         # we require it's not extremely high (> 0.9 would be clearly wrong)
-        assert score < 0.95, (
-            f"Benign prompt scored {score:.3f} — unexpectedly high"
-        )
+        assert score < 0.95, f"Benign prompt scored {score:.3f} — unexpectedly high"
 
     def test_is_jailbreak_threshold_respected(self):
         """is_jailbreak(threshold=X) correctly applies the threshold.
@@ -423,8 +422,15 @@ class TestExperiment775Artifact:
         data = run_experiment(tmpl)
 
         required_keys = [
-            "n_benign", "n_adversarial", "auroc", "precision", "recall",
-            "tier0h_deployed", "honest_verdict", "n_train", "n_test",
+            "n_benign",
+            "n_adversarial",
+            "auroc",
+            "precision",
+            "recall",
+            "tier0h_deployed",
+            "honest_verdict",
+            "n_train",
+            "n_test",
         ]
         for key in required_keys:
             assert key in data, f"Missing required field: {key}"

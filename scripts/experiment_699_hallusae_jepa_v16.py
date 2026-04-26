@@ -175,11 +175,7 @@ def _compute_auc(scores: list[float], labels: list[int]) -> float:
     neg = [s for s, l in zip(scores, labels) if l == 0]
     if not pos or not neg:
         return 0.5
-    count = sum(
-        1.0 if p > n else (0.5 if p == n else 0.0)
-        for p in pos
-        for n in neg
-    )
+    count = sum(1.0 if p > n else (0.5 if p == n else 0.0) for p in pos for n in neg)
     return count / (len(pos) * len(neg))
 
 
@@ -195,7 +191,10 @@ def _run(tmpl: ExperimentTemplate) -> None:
     exp698 = _load_json(results_dir / "experiment_698_jepa_v16.json")
     if exp698 is None or "v16_ood_auc" not in exp698:
         artifact = tmpl.build_result(
-            {"gate_failed": "exp698_missing_or_no_v16_ood_auc", "honest_verdict": "blocked_on_upstream_exp698"},
+            {
+                "gate_failed": "exp698_missing_or_no_v16_ood_auc",
+                "honest_verdict": "blocked_on_upstream_exp698",
+            },
             status="blocked",
         )
         (results_dir / "experiment_699_hallusae_jepa_v16.json").write_text(
@@ -207,7 +206,10 @@ def _run(tmpl: ExperimentTemplate) -> None:
     exp687 = _load_json(results_dir / "experiment_687_hallusat_sparse_ae.json")
     if exp687 is None or "hidden_dim" not in exp687:
         artifact = tmpl.build_result(
-            {"gate_failed": "exp687_missing_or_no_hidden_dim", "honest_verdict": "blocked_on_upstream_exp687"},
+            {
+                "gate_failed": "exp687_missing_or_no_hidden_dim",
+                "honest_verdict": "blocked_on_upstream_exp687",
+            },
             status="blocked",
         )
         (results_dir / "experiment_699_hallusae_jepa_v16.json").write_text(
@@ -222,7 +224,10 @@ def _run(tmpl: ExperimentTemplate) -> None:
     fover_data = _load_json(results_dir / "fover_labeled_formal_v1.json")
     if fover_data is None or "pairs" not in fover_data:
         artifact = tmpl.build_result(
-            {"gate_failed": "fover_labeled_formal_v1_missing", "honest_verdict": "blocked_on_upstream_exp698"},
+            {
+                "gate_failed": "fover_labeled_formal_v1_missing",
+                "honest_verdict": "blocked_on_upstream_exp698",
+            },
             status="blocked",
         )
         (results_dir / "experiment_699_hallusae_jepa_v16.json").write_text(
@@ -314,7 +319,9 @@ def _run(tmpl: ExperimentTemplate) -> None:
             "n_train_pairs": n_train_pairs,
             "n_ood_samples": n_ood_samples,
             "honest_verdict": honest_verdict,
-            "train_loss_final": round(train_info["train_losses"][-1], 4) if train_info["train_losses"] else None,
+            "train_loss_final": round(train_info["train_losses"][-1], 4)
+            if train_info["train_losses"]
+            else None,
         },
         status="success",
     )

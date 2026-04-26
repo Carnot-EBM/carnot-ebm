@@ -138,15 +138,13 @@ class SpeedupProfile:
         Spec: REQ-KAEM-005
         """
         if n_vars not in self.n_vars_list:
-            raise KeyError(
-                f"n_vars={n_vars} not in profiled sizes {self.n_vars_list}"
-            )
+            raise KeyError(f"n_vars={n_vars} not in profiled sizes {self.n_vars_list}")
         idx = self.n_vars_list.index(n_vars)
         kaem_ms = self.kaem_times[idx]
         mcmc_ms = self.mcmc_times[idx]
         return mcmc_ms / kaem_ms if kaem_ms > 0 else float("inf")
 
-    def crossover_n_vars(self) -> Optional[int]:
+    def crossover_n_vars(self) -> int | None:
         """Return first n_vars where speedup > 1.0, or None if KAEM never wins.
 
         Iterates n_vars_list in order and returns the first entry where
@@ -161,9 +159,7 @@ class SpeedupProfile:
 
         Spec: REQ-KAEM-006, SCENARIO-KAEM-010, SCENARIO-KAEM-011
         """
-        for n_vars, kaem_ms, mcmc_ms in zip(
-            self.n_vars_list, self.kaem_times, self.mcmc_times
-        ):
+        for n_vars, kaem_ms, mcmc_ms in zip(self.n_vars_list, self.kaem_times, self.mcmc_times):
             if kaem_ms > 0 and mcmc_ms / kaem_ms > 1.0:
                 return n_vars
         return None
@@ -303,17 +299,22 @@ def main() -> None:
             speedup = mcmc_med / kaem_med if kaem_med > 0 else float("inf")
             _log.info(
                 "  n_vars=%d → KAEM=%.1f ms (med), MCMC=%.1f ms (med), speedup=%.2fx",
-                n_vars, kaem_med, mcmc_med, speedup,
+                n_vars,
+                kaem_med,
+                mcmc_med,
+                speedup,
             )
 
             kaem_medians.append(kaem_med)
             mcmc_medians.append(mcmc_med)
-            profile_rows.append({
-                "n_vars": n_vars,
-                "kaem_ms": round(kaem_med, 3),
-                "mcmc_ms": round(mcmc_med, 3),
-                "speedup": round(speedup, 4),
-            })
+            profile_rows.append(
+                {
+                    "n_vars": n_vars,
+                    "kaem_ms": round(kaem_med, 3),
+                    "mcmc_ms": round(mcmc_med, 3),
+                    "speedup": round(speedup, 4),
+                }
+            )
 
         # --- Build SpeedupProfile and queries ---
         sp = SpeedupProfile(
@@ -333,7 +334,9 @@ def main() -> None:
 
         _log.info(
             "crossover_n_vars=%s, max_speedup=%.2fx at n_vars=%d",
-            crossover, max_s, max_n,
+            crossover,
+            max_s,
+            max_n,
         )
         _log.info("honest_verdict=%s, retro_031_resolved=%s", honest_verdict, retro_031_resolved)
 

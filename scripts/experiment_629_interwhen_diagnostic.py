@@ -155,9 +155,7 @@ def main() -> None:
 
             llm_caller = _llm
         except Exception as exc:
-            _log.warning(
-                "Could not load Qwen3.5-0.8B (%s); falling back to regex mode", exc
-            )
+            _log.warning("Could not load Qwen3.5-0.8B (%s); falling back to regex mode", exc)
 
     # Step 6: build verifier + monitor.
     verifier = SymCodeVerifier(llm_caller=llm_caller)
@@ -217,9 +215,7 @@ def main() -> None:
     interwhen_recall_extended: float | None = None
     if extended_incorrect:
         _log.info("Running extended evaluation...")
-        ext_tp, _ext_fp = run_monitor_on_set(
-            monitor, extended_incorrect, extended_correct
-        )
+        ext_tp, _ext_fp = run_monitor_on_set(monitor, extended_incorrect, extended_correct)
         n_extended = len(extended_incorrect)
         interwhen_recall_extended = ext_tp / n_extended
         _log.info(
@@ -242,9 +238,7 @@ def main() -> None:
         gate_note = "Exp 630 GATED — do not schedule without gate_open=True"
         honest_verdict = "gate_closed_do_not_retry"
 
-    _log.info(
-        "Gate decision: gate_open=%s verdict=%s", gate_open, honest_verdict
-    )
+    _log.info("Gate decision: gate_open=%s verdict=%s", gate_open, honest_verdict)
 
     # Step 11: write artifact.
     artifact = tmpl.build_result(

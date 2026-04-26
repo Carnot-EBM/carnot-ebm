@@ -119,17 +119,19 @@ def _load_gsm8k_questions(n: int = N_QUESTIONS) -> list[dict[str, Any]]:
     for i in range(1, n + 1):
         a, b = i * 7, i * 3
         c = a + b
-        synthetic.append({
-            "question": (
-                f"A store has {a} apples in the morning and receives {b} more in the afternoon.  "
-                f"How many apples does the store have at the end of the day?"
-            ),
-            "answer": (
-                f"The store starts with {a} apples.  It receives {b} more.  "
-                f"{a} + {b} = {c}.  #### {c}"
-            ),
-            "source": "synthetic",
-        })
+        synthetic.append(
+            {
+                "question": (
+                    f"A store has {a} apples in the morning and receives {b} more in the afternoon.  "
+                    f"How many apples does the store have at the end of the day?"
+                ),
+                "answer": (
+                    f"The store starts with {a} apples.  It receives {b} more.  "
+                    f"{a} + {b} = {c}.  #### {c}"
+                ),
+                "source": "synthetic",
+            }
+        )
     _log.info("Using %d synthetic GSM8K questions (real dataset unavailable)", len(synthetic))
     return synthetic
 
@@ -246,6 +248,7 @@ def _build_vr_inference_fn(base_infer_fn: Any, pipeline: Any) -> Any:
     pipeline : VerifyRepairPipeline
         Initialised pipeline with no JEPA component.
     """
+
     def _vr_infer(q_dict: dict[str, Any]) -> str:
         question = q_dict["question"]
         raw_response = base_infer_fn(q_dict)
@@ -283,10 +286,7 @@ def _score_responses(
     (n_correct, per_question_correct)
         Total correct count and a boolean mask.
     """
-    correct_mask = [
-        _is_correct(resp, q["answer"])
-        for q, resp in zip(questions, responses)
-    ]
+    correct_mask = [_is_correct(resp, q["answer"]) for q, resp in zip(questions, responses)]
     return sum(correct_mask), correct_mask
 
 
@@ -350,15 +350,21 @@ def _run_condition(
         )
         _log.info(
             "Condition %s: completed batch %d/%d (%d responses so far)",
-            condition_name, completed_batch.batch_id + 1, len(batches), len(all_responses),
+            condition_name,
+            completed_batch.batch_id + 1,
+            len(batches),
+            len(all_responses),
         )
 
-    n_correct, _ = _score_responses(questions[:len(all_responses)], all_responses)
+    n_correct, _ = _score_responses(questions[: len(all_responses)], all_responses)
     n_answered = len(all_responses)
     accuracy = n_correct / n_answered if n_answered > 0 else 0.0
     _log.info(
         "Condition %s: n_correct=%d/%d accuracy=%.4f",
-        condition_name, n_correct, n_answered, accuracy,
+        condition_name,
+        n_correct,
+        n_answered,
+        accuracy,
     )
     return n_correct, accuracy, all_responses
 
@@ -482,7 +488,9 @@ def main() -> None:
                 vr_pipeline = None
                 vr_available = False
 
-        vr_infer_fn = _build_vr_inference_fn(base_infer_fn, vr_pipeline) if vr_available else base_infer_fn
+        vr_infer_fn = (
+            _build_vr_inference_fn(base_infer_fn, vr_pipeline) if vr_available else base_infer_fn
+        )
 
         # ------------------------------------------------------------------
         # Step 6: Check JEPA deployment for FULL condition
@@ -511,7 +519,11 @@ def main() -> None:
         # ------------------------------------------------------------------
         with tmpl.phase("baseline_condition"):
             n_correct_baseline, accuracy_baseline, baseline_responses = _run_condition(
-                "BASELINE", questions, base_infer_fn, executor, tmpl,
+                "BASELINE",
+                questions,
+                base_infer_fn,
+                executor,
+                tmpl,
                 checkpoint_prefix=f"exp{EXP_ID}_baseline",
             )
 
@@ -520,7 +532,11 @@ def main() -> None:
         # ------------------------------------------------------------------
         with tmpl.phase("vr_condition"):
             n_correct_vr, accuracy_vr, vr_responses = _run_condition(
-                "VR", questions, vr_infer_fn, executor, tmpl,
+                "VR",
+                questions,
+                vr_infer_fn,
+                executor,
+                tmpl,
                 checkpoint_prefix=f"exp{EXP_ID}_vr",
             )
 
@@ -529,7 +545,11 @@ def main() -> None:
         # ------------------------------------------------------------------
         with tmpl.phase("full_condition"):
             n_correct_full, accuracy_full, full_responses = _run_condition(
-                "FULL", questions, full_infer_fn, executor, tmpl,
+                "FULL",
+                questions,
+                full_infer_fn,
+                executor,
+                tmpl,
                 checkpoint_prefix=f"exp{EXP_ID}_full",
             )
 
@@ -551,10 +571,12 @@ def main() -> None:
             honest_verdict = "simulated_no_verdict"
 
         _log.info(
-            "Results: baseline=%.4f vr=%.4f full=%.4f "
-            "signed_improvement=%.4f verdict=%s",
-            accuracy_baseline, accuracy_vr, accuracy_full,
-            signed_improvement, honest_verdict,
+            "Results: baseline=%.4f vr=%.4f full=%.4f signed_improvement=%.4f verdict=%s",
+            accuracy_baseline,
+            accuracy_vr,
+            accuracy_full,
+            signed_improvement,
+            honest_verdict,
         )
 
         # ------------------------------------------------------------------

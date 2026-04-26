@@ -79,8 +79,8 @@ def _simulate_violations(
     # Domain-specific (mean, std) energy distributions.
     domain_params = {
         "arithmetic": (1.5, 0.8),  # low mean, narrow spread
-        "code": (4.0, 2.0),        # high mean, wide spread
-        "logical": (3.0, 1.5),     # medium mean, medium spread
+        "code": (4.0, 2.0),  # high mean, wide spread
+        "logical": (3.0, 1.5),  # medium mean, medium spread
     }
 
     # 50 per-domain violations (own constraint keys only = no shared keys = isolated).

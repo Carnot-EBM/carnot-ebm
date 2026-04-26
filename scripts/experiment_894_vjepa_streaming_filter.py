@@ -58,31 +58,106 @@ EXP_884_RESULT_PATH = _ROOT / "results" / "experiment_884_vjepa_cascade_deploy.j
 # available at HuggingFace datasets, but downloading it during an experiment
 # adds latency and a potential failure mode).
 GSM8K_SAMPLE: list[dict[str, Any]] = [
-    {"question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?", "answer": 72},
-    {"question": "Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?", "answer": 10},
-    {"question": "Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?", "answer": 5},
-    {"question": "Julie is reading a 120-page book. Yesterday, she was able to read 12 pages and today, she read twice as many pages as yesterday. If she wants to read half of the remaining pages tomorrow, how many pages should she read tomorrow?", "answer": 42},
-    {"question": "James writes a 3-page letter to 2 different friends twice a week. How many pages does he write a year?", "answer": 624},
-    {"question": "Mark has a garden with flowers. He planted plants of five different colors in it. Ten of them are yellow, and there are 80% more of those in purple. There are only 25% as many green flowers as there are yellow and purple flowers. How many flowers does Mark have?", "answer": 35},
-    {"question": "Albert is wondering how much pizza he can eat in one day. He buys 2 large pizzas and 2 small pizzas. A large pizza has 16 slices and a small pizza has 8 slices. If he eats it all, how many pieces does he eat that day?", "answer": 48},
-    {"question": "Ken created a care package to send to his brother, who was away at boarding school.  Ken placed a box on a scale, and then he piled on 2 pounds of jelly beans and 5 pounds of chocolate bars.  Then he added 2 pounds of gummy worms.  He noticed the scale read 15 pounds.  How many pounds do the box's contents weigh?", "answer": 9},
-    {"question": "Alexis is applying for a new job and bought a new set of clothes to wear to the interview. She went to a department store with a budget of $200 and spent $30 on a blouse, $46 on a skirt, $38 on a pair of shoes, and $11 on accessories. How much money does Alexis have left?", "answer": 75},
-    {"question": "Tina makes $18.00 an hour. If she works more than 8 hours per shift, she is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly wage. If she works 10 hours every day for 5 days, how much money does she make?", "answer": 990},
-    {"question": "A deep-sea monster rises from the waters once every hundred years to feast on a ship and sate its hunger. Over three hundred years, it has consumed 847 people. Ships have been built larger over time, so each new ship has twice as many people as the last ship. How many people were on the ship the monster ate in the first hundred years?", "answer": 121},
-    {"question": "Tobias is buying a new pair of shoes that costs $95. He has been saving up his allowance for several weeks. He gets a $5 allowance per week. He has also been doing extra chores, which he gets paid $20 for each time he does them. He has done extra chores 3 times. How many weeks has he been saving his allowance if he just enough money to buy the shoes?", "answer": 7},
-    {"question": "Randy has 60 mango trees on his farm. He also has 5 less than half as many coconut trees as mango trees. How many trees does Randy have in all?", "answer": 85},
-    {"question": "Jasmine wants to organize her bookcases. She has 4 bookcases, each of which can have 4 shelves. She currently has 2 shelves in each bookcase. If she wants to add 2 more shelves to each bookcase, how many more shelves does she need?", "answer": 8},
-    {"question": "A baker makes chocolate muffins and peanut butter muffins. His recipes make 10 muffins each. He makes 4 chocolate muffin recipes and 5 peanut butter muffin recipes. If 10 of the muffins are accidentally burned, how many muffins does the baker have left?", "answer": 80},
-    {"question": "A restaurant makes 40 more pizzas than hotdogs every day. If the restaurant makes 60 hotdogs every day, how many pizzas and hotdogs does it make every week?", "answer": 700},
-    {"question": "Wendy's truck has a gas tank that can hold 20 gallons. She also has a car with a gas tank that holds 12 gallons. The truck's tank is 3/4 full. The car's tank is 1/2 full. If she fills them both up completely, how many gallons does she add?", "answer": 11},
-    {"question": "Adam needs a new laptop and has two choices. The first laptop is $500. The second laptop is 3 times as expensive as the first laptop. How much would Adam have to spend if he decides to buy both?", "answer": 2000},
-    {"question": "There are 25 roses in a garden. There are 40 tulips. There are 35 daisies. What percentage of flowers are not roses?", "answer": 75},
-    {"question": "Brennan was researching his school project and had to download files from the internet to his computer to use for reference. After downloading 800 files, he deleted 70% of them because they were not helpful. How many filed does he have on his computer now?", "answer": 240},
-    {"question": "A store sells pencils, pens and markers. A pencil costs $0.5, a pen costs $1 and a marker costs $2. Ana bought 20 pencils, 10 pens, and 5 markers. How much did Ana spend?", "answer": 30},
-    {"question": "The gauge on a water tank shows that the tank is 1/3 full of water. To fill the tank, 16 gallons of water are added. How many gallons of water does the tank hold when full?", "answer": 24},
-    {"question": "Lucy lost 3 kg in the first week of her diet. She lost twice that many the second week, and the third week she lost half of what she lost the second week. How many kg has she lost total in three weeks?", "answer": 12},
-    {"question": "Brinley's teacher said that she will increase the time allowed for the next test by 25 minutes. If the time for the last test was 45 minutes, how long is the time allowed for the next test?", "answer": 70},
-    {"question": "James decides to run 3 sprints 3 times a week. He runs 60 meters each sprint. How many total meters does he run a week?", "answer": 540},
+    {
+        "question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?",
+        "answer": 72,
+    },
+    {
+        "question": "Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?",
+        "answer": 10,
+    },
+    {
+        "question": "Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?",
+        "answer": 5,
+    },
+    {
+        "question": "Julie is reading a 120-page book. Yesterday, she was able to read 12 pages and today, she read twice as many pages as yesterday. If she wants to read half of the remaining pages tomorrow, how many pages should she read tomorrow?",
+        "answer": 42,
+    },
+    {
+        "question": "James writes a 3-page letter to 2 different friends twice a week. How many pages does he write a year?",
+        "answer": 624,
+    },
+    {
+        "question": "Mark has a garden with flowers. He planted plants of five different colors in it. Ten of them are yellow, and there are 80% more of those in purple. There are only 25% as many green flowers as there are yellow and purple flowers. How many flowers does Mark have?",
+        "answer": 35,
+    },
+    {
+        "question": "Albert is wondering how much pizza he can eat in one day. He buys 2 large pizzas and 2 small pizzas. A large pizza has 16 slices and a small pizza has 8 slices. If he eats it all, how many pieces does he eat that day?",
+        "answer": 48,
+    },
+    {
+        "question": "Ken created a care package to send to his brother, who was away at boarding school.  Ken placed a box on a scale, and then he piled on 2 pounds of jelly beans and 5 pounds of chocolate bars.  Then he added 2 pounds of gummy worms.  He noticed the scale read 15 pounds.  How many pounds do the box's contents weigh?",
+        "answer": 9,
+    },
+    {
+        "question": "Alexis is applying for a new job and bought a new set of clothes to wear to the interview. She went to a department store with a budget of $200 and spent $30 on a blouse, $46 on a skirt, $38 on a pair of shoes, and $11 on accessories. How much money does Alexis have left?",
+        "answer": 75,
+    },
+    {
+        "question": "Tina makes $18.00 an hour. If she works more than 8 hours per shift, she is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly wage. If she works 10 hours every day for 5 days, how much money does she make?",
+        "answer": 990,
+    },
+    {
+        "question": "A deep-sea monster rises from the waters once every hundred years to feast on a ship and sate its hunger. Over three hundred years, it has consumed 847 people. Ships have been built larger over time, so each new ship has twice as many people as the last ship. How many people were on the ship the monster ate in the first hundred years?",
+        "answer": 121,
+    },
+    {
+        "question": "Tobias is buying a new pair of shoes that costs $95. He has been saving up his allowance for several weeks. He gets a $5 allowance per week. He has also been doing extra chores, which he gets paid $20 for each time he does them. He has done extra chores 3 times. How many weeks has he been saving his allowance if he just enough money to buy the shoes?",
+        "answer": 7,
+    },
+    {
+        "question": "Randy has 60 mango trees on his farm. He also has 5 less than half as many coconut trees as mango trees. How many trees does Randy have in all?",
+        "answer": 85,
+    },
+    {
+        "question": "Jasmine wants to organize her bookcases. She has 4 bookcases, each of which can have 4 shelves. She currently has 2 shelves in each bookcase. If she wants to add 2 more shelves to each bookcase, how many more shelves does she need?",
+        "answer": 8,
+    },
+    {
+        "question": "A baker makes chocolate muffins and peanut butter muffins. His recipes make 10 muffins each. He makes 4 chocolate muffin recipes and 5 peanut butter muffin recipes. If 10 of the muffins are accidentally burned, how many muffins does the baker have left?",
+        "answer": 80,
+    },
+    {
+        "question": "A restaurant makes 40 more pizzas than hotdogs every day. If the restaurant makes 60 hotdogs every day, how many pizzas and hotdogs does it make every week?",
+        "answer": 700,
+    },
+    {
+        "question": "Wendy's truck has a gas tank that can hold 20 gallons. She also has a car with a gas tank that holds 12 gallons. The truck's tank is 3/4 full. The car's tank is 1/2 full. If she fills them both up completely, how many gallons does she add?",
+        "answer": 11,
+    },
+    {
+        "question": "Adam needs a new laptop and has two choices. The first laptop is $500. The second laptop is 3 times as expensive as the first laptop. How much would Adam have to spend if he decides to buy both?",
+        "answer": 2000,
+    },
+    {
+        "question": "There are 25 roses in a garden. There are 40 tulips. There are 35 daisies. What percentage of flowers are not roses?",
+        "answer": 75,
+    },
+    {
+        "question": "Brennan was researching his school project and had to download files from the internet to his computer to use for reference. After downloading 800 files, he deleted 70% of them because they were not helpful. How many filed does he have on his computer now?",
+        "answer": 240,
+    },
+    {
+        "question": "A store sells pencils, pens and markers. A pencil costs $0.5, a pen costs $1 and a marker costs $2. Ana bought 20 pencils, 10 pens, and 5 markers. How much did Ana spend?",
+        "answer": 30,
+    },
+    {
+        "question": "The gauge on a water tank shows that the tank is 1/3 full of water. To fill the tank, 16 gallons of water are added. How many gallons of water does the tank hold when full?",
+        "answer": 24,
+    },
+    {
+        "question": "Lucy lost 3 kg in the first week of her diet. She lost twice that many the second week, and the third week she lost half of what she lost the second week. How many kg has she lost total in three weeks?",
+        "answer": 12,
+    },
+    {
+        "question": "Brinley's teacher said that she will increase the time allowed for the next test by 25 minutes. If the time for the last test was 45 minutes, how long is the time allowed for the next test?",
+        "answer": 70,
+    },
+    {
+        "question": "James decides to run 3 sprints 3 times a week. He runs 60 meters each sprint. How many total meters does he run a week?",
+        "answer": 540,
+    },
 ]
 
 
@@ -179,7 +254,9 @@ def assign_honest_verdict(signed_improvement: int, gpu_available: bool) -> str:
     return "streaming_negative"
 
 
-def _run_generation_baseline(model: Any, tokenizer: Any, questions: list[dict[str, Any]]) -> tuple[int, float]:
+def _run_generation_baseline(
+    model: Any, tokenizer: Any, questions: list[dict[str, Any]]
+) -> tuple[int, float]:
     """Run baseline generation (no streaming filter) on all questions.
 
     Args:
@@ -206,7 +283,9 @@ def _run_generation_baseline(model: Any, tokenizer: Any, questions: list[dict[st
             )
         n_new = output.shape[1] - inputs["input_ids"].shape[1]
         total_tokens += n_new
-        generated_text = tokenizer.decode(output[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        generated_text = tokenizer.decode(
+            output[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+        )
         if _is_correct(generated_text, item["answer"]):
             correct += 1
 
@@ -245,7 +324,9 @@ def _run_generation_streaming(
                 do_sample=False,
                 logits_processor=[processor],
             )
-        generated_text = tokenizer.decode(output[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        generated_text = tokenizer.decode(
+            output[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True
+        )
         if _is_correct(generated_text, item["answer"]):
             correct += 1
 
@@ -323,6 +404,7 @@ def main() -> None:
     # Load Gemma4-E4B-it via transformers
     try:
         from transformers import AutoModelForCausalLM, AutoTokenizer
+
         tokenizer = AutoTokenizer.from_pretrained("google/gemma-4-E4B-it")
         gen_model = AutoModelForCausalLM.from_pretrained(
             "google/gemma-4-E4B-it",
@@ -341,7 +423,9 @@ def main() -> None:
 
     # Streaming run
     processor = VJEPAStreamingLogitsProcessor(vjepa, tokenizer)
-    streaming_correct, applied_count = _run_generation_streaming(gen_model, tokenizer, questions, processor)
+    streaming_correct, applied_count = _run_generation_streaming(
+        gen_model, tokenizer, questions, processor
+    )
 
     signed_improvement = streaming_correct - baseline_correct
     total_steps = max(applied_count + (25 * int(avg_tokens)), 1)

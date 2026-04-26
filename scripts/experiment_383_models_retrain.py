@@ -394,7 +394,9 @@ def run_experiment(
         # 3. 80/20 split
         n_eorm_train = max(1, int(n_eorm_pairs * TRAIN_SPLIT))
         eorm_train = eorm_real_pairs[:n_eorm_train]
-        eorm_test = eorm_real_pairs[n_eorm_train:] if n_eorm_pairs > n_eorm_train else eorm_real_pairs
+        eorm_test = (
+            eorm_real_pairs[n_eorm_train:] if n_eorm_pairs > n_eorm_train else eorm_real_pairs
+        )
 
         # 4. Evaluate before_auc
         eorm_before_auc = _evaluate_eorm_auc(eorm_model, eorm_test)
@@ -410,7 +412,9 @@ def run_experiment(
                 if (epoch + 1) % max(1, EORM_EPOCHS // 5) == 0:
                     _log.info(
                         "EORM epoch %d/%d — mean loss = %.4f",
-                        epoch + 1, EORM_EPOCHS, loss,
+                        epoch + 1,
+                        EORM_EPOCHS,
+                        loss,
                     )
         else:
             _log.warning("EORM: no contrastive triples formed; model unchanged")
@@ -463,7 +467,9 @@ def run_experiment(
         # 10. 80/20 split
         n_jepa_train = max(1, int(n_jepa_pairs * TRAIN_SPLIT))
         jepa_train = jepa_real_pairs[:n_jepa_train]
-        jepa_test = jepa_real_pairs[n_jepa_train:] if n_jepa_pairs > n_jepa_train else jepa_real_pairs
+        jepa_test = (
+            jepa_real_pairs[n_jepa_train:] if n_jepa_pairs > n_jepa_train else jepa_real_pairs
+        )
 
         # 11. Evaluate before_auc
         jepa_before_auc = retrainer.evaluate_auc_roc(jepa_test)
@@ -475,7 +481,9 @@ def run_experiment(
             if (epoch + 1) % max(1, JEPA_EPOCHS // 5) == 0:
                 _log.info(
                     "JEPA epoch %d/%d — mean loss = %.4f",
-                    epoch + 1, JEPA_EPOCHS, loss,
+                    epoch + 1,
+                    JEPA_EPOCHS,
+                    loss,
                 )
 
         # 13. Evaluate after_auc

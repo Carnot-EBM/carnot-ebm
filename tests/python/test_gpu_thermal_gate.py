@@ -304,6 +304,7 @@ class TestNoPynvml:
             if name == "pynvml":
                 raise ImportError("no module named pynvml")
             import builtins
+
             return builtins.__import__(name, *args, **kwargs)
 
         with patch("builtins.__import__", side_effect=_fake_import):

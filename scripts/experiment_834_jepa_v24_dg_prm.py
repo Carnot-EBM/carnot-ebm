@@ -356,6 +356,7 @@ def build_balanced_corpus() -> list[dict[str, Any]]:
 # Simple text → embedding (RandomProjection approximation)
 # ---------------------------------------------------------------------------
 
+
 def _embed_text(text: str, dim: int = EMBED_DIM, seed: int = 42) -> np.ndarray:
     """Convert text to a fixed-dimensional embedding using a hash-based projection.
 
@@ -397,6 +398,7 @@ def _embed_text(text: str, dim: int = EMBED_DIM, seed: int = 42) -> np.ndarray:
 # JEPA v24 model: dual-head (correctness + domain classifier)
 # ---------------------------------------------------------------------------
 
+
 def _init_v24_params(key: jax.Array) -> dict[str, jax.Array]:
     """Initialise v24 dual-head MLP parameters with He (Kaiming) initialisation.
 
@@ -432,9 +434,7 @@ def _init_v24_params(key: jax.Array) -> dict[str, jax.Array]:
     }
 
 
-def _forward_v24(
-    params: dict[str, jax.Array], x: jax.Array
-) -> tuple[jax.Array, jax.Array]:
+def _forward_v24(params: dict[str, jax.Array], x: jax.Array) -> tuple[jax.Array, jax.Array]:
     """Forward pass for the v24 dual-head model.
 
     **Detailed explanation:**
@@ -589,6 +589,7 @@ def _build_triplets(
 # Main training function
 # ---------------------------------------------------------------------------
 
+
 def train_jepa_v24(
     pairs: list[dict[str, Any]],
     n_epochs: int = N_EPOCHS,
@@ -676,9 +677,7 @@ def train_jepa_v24(
         # Rebuild triplets every 50 epochs to track current model energy
         if epoch % 50 == 0:
             label_tr = (Y_corr_tr.squeeze() > 0.5).astype(np.int32)
-            x_pos, x_neg, delta_weights = _build_triplets(
-                X_tr, label_tr, Y_dom_tr, params
-            )
+            x_pos, x_neg, delta_weights = _build_triplets(X_tr, label_tr, Y_dom_tr, params)
 
         epoch_loss = 0.0
         n_batches = 0
@@ -711,9 +710,9 @@ def train_jepa_v24(
                 jnp.asarray(Y_corr_val),
                 jnp.asarray(Y_dom_val),
                 jnp.ones(len(X_val), dtype=jnp.float32),
-                jnp.asarray(x_pos[:min(len(x_pos), len(X_val))]),
-                jnp.asarray(x_neg[:min(len(x_neg), len(X_val))]),
-                jnp.asarray(delta_weights[:min(len(delta_weights), len(X_val))]),
+                jnp.asarray(x_pos[: min(len(x_pos), len(X_val))]),
+                jnp.asarray(x_neg[: min(len(x_neg), len(X_val))]),
+                jnp.asarray(delta_weights[: min(len(delta_weights), len(X_val))]),
             )
         )
         val_losses.append(val_loss_val)
@@ -760,6 +759,7 @@ def train_jepa_v24(
 # Verdict logic
 # ---------------------------------------------------------------------------
 
+
 def compute_honest_verdict(
     auc_gsm8k: float,
     auc_humaneval: float,
@@ -800,6 +800,7 @@ def compute_honest_verdict(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Run Experiment 834: JEPA v24 DG-PRM domain-balanced training and evaluation."""
@@ -858,7 +859,9 @@ def main() -> None:
             "n_train": train_log["n_train"],
             "n_val": train_log["n_val"],
             "n_epochs": N_EPOCHS,
-            "final_train_loss": train_log["train_losses"][-1] if train_log["train_losses"] else None,
+            "final_train_loss": train_log["train_losses"][-1]
+            if train_log["train_losses"]
+            else None,
             "final_val_loss": train_log["val_losses"][-1] if train_log["val_losses"] else None,
             "arc_auc_v23_baseline": 0.04,
         },

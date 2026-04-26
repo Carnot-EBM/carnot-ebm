@@ -65,9 +65,7 @@ def main() -> None:
         gpu1_health = gpu_healths[1].to_dict() if len(gpu_healths) > 1 else None
 
         # Count zombies found (but not killed — auto_remediate=False)
-        zombie_gpu_indices = [
-            g.gpu_index for g in gpu_healths if g.is_zombie_saturated
-        ]
+        zombie_gpu_indices = [g.gpu_index for g in gpu_healths if g.is_zombie_saturated]
         zombies_found_list = chk._find_zombie_processes(zombie_gpu_indices)
         zombies_found = len(zombies_found_list)
 

@@ -39,14 +39,12 @@
 
 from __future__ import annotations
 
-import math
 import re
 from dataclasses import dataclass
 from typing import Any
 
 import jax.numpy as jnp
 import jax.random as jrandom
-
 
 # ---------------------------------------------------------------------------
 # CoTPairQuality — quality metrics for one training pair
@@ -168,14 +166,14 @@ def _estimate_arithmetic_coverage(pair: dict[str, Any]) -> float:
         #   - LaTeX:  "\( S = 20 \)", "\[ C = 4 \times 20 = 80 \]", "$10 \times 1.2 = 12$"
         #   - Mixed:  "rate is \( 0.25 \times 16 = 4 \)"
         patterns = [
-            re.compile(r"[\d\.]+\s*[+\-\*\/×÷]\s*[\d\.]"),       # plain arithmetic
-            re.compile(r"\\times\s*[\d\.]"),                        # LaTeX \times
-            re.compile(r"\\cdot\s*[\d\.]"),                         # LaTeX \cdot
-            re.compile(r"\\frac\{"),                                # LaTeX fraction
-            re.compile(r"\\\(\s*[A-Za-z\d].*?=.*?\\?\)"),          # LaTeX inline math with =
-            re.compile(r"\\\[.*?=.*?\\\]", re.DOTALL),             # LaTeX display math with =
-            re.compile(r"\$[^\$]*[+\-\*\/=][^\$]*\$"),            # $...$ inline math
-            re.compile(r"[\d\.]+\s*=\s*[\d\.]"),                   # simple equation N=M
+            re.compile(r"[\d\.]+\s*[+\-\*\/×÷]\s*[\d\.]"),  # plain arithmetic
+            re.compile(r"\\times\s*[\d\.]"),  # LaTeX \times
+            re.compile(r"\\cdot\s*[\d\.]"),  # LaTeX \cdot
+            re.compile(r"\\frac\{"),  # LaTeX fraction
+            re.compile(r"\\\(\s*[A-Za-z\d].*?=.*?\\?\)"),  # LaTeX inline math with =
+            re.compile(r"\\\[.*?=.*?\\\]", re.DOTALL),  # LaTeX display math with =
+            re.compile(r"\$[^\$]*[+\-\*\/=][^\$]*\$"),  # $...$ inline math
+            re.compile(r"[\d\.]+\s*=\s*[\d\.]"),  # simple equation N=M
         ]
         total_matches = sum(len(p.findall(text)) for p in patterns)
         # Normalise by a rough step count (split on sentence/line boundaries)
@@ -282,7 +280,10 @@ class CoTPairQualityFilter:
         accepted: list[dict[str, Any]] = []
         for pair in pairs:
             q = self.compute_quality(pair)
-            if q.arithmetic_coverage >= self.min_coverage and q.label_confidence >= self.min_confidence:
+            if (
+                q.arithmetic_coverage >= self.min_coverage
+                and q.label_confidence >= self.min_confidence
+            ):
                 accepted.append(pair)
         return accepted
 
@@ -348,7 +349,7 @@ class JEPAQualityAugmentor:
         dim = self.ising_model.config.input_dim
         configs = []
         energies = []
-        for i in range(self.n_samples):
+        for _i in range(self.n_samples):
             k, key = jrandom.split(key)
             # Ising spin: uniform {-1, +1} via sign of normal sample
             spin = jnp.sign(jrandom.normal(k, (dim,)))
@@ -387,26 +388,26 @@ class JEPAQualityAugmentor:
         configs, energies = self._sample_spin_configs(seed=1)
         mean_e = sum(energies) / max(1, len(energies))
         # Violation = above-mean energy; sort descending to get worst first
-        violation_configs = [
-            (c, e) for c, e in zip(configs, energies) if e >= mean_e
-        ]
+        violation_configs = [(c, e) for c, e in zip(configs, energies, strict=False) if e >= mean_e]
         violation_configs.sort(key=lambda x: x[1], reverse=True)
 
         pairs: list[dict[str, Any]] = []
         for i, (spin, energy) in enumerate(violation_configs):
-            pairs.append({
-                "correct": False,
-                "label": "incorrect",
-                "response": self._spin_to_text(spin),
-                "step_text": self._spin_to_text(spin),
-                "question_id": f"ising_violation_{i:04d}",
-                "model_id": "ising_sampler",
-                "source": "ebm_guided_synthetic",
-                "energy": energy,
-                "arithmetic_coverage": 0.5,  # synthetic pairs are pre-approved
-                "confidence": 1.0,            # energy function is ground truth
-                "label_confidence": 1.0,
-            })
+            pairs.append(
+                {
+                    "correct": False,
+                    "label": "incorrect",
+                    "response": self._spin_to_text(spin),
+                    "step_text": self._spin_to_text(spin),
+                    "question_id": f"ising_violation_{i:04d}",
+                    "model_id": "ising_sampler",
+                    "source": "ebm_guided_synthetic",
+                    "energy": energy,
+                    "arithmetic_coverage": 0.5,  # synthetic pairs are pre-approved
+                    "confidence": 1.0,  # energy function is ground truth
+                    "label_confidence": 1.0,
+                }
+            )
         return pairs
 
     def generate_correct_pairs(self) -> list[dict[str, Any]]:
@@ -422,26 +423,26 @@ class JEPAQualityAugmentor:
         """
         configs, energies = self._sample_spin_configs(seed=2)
         mean_e = sum(energies) / max(1, len(energies))
-        correct_configs = [
-            (c, e) for c, e in zip(configs, energies) if e < mean_e
-        ]
+        correct_configs = [(c, e) for c, e in zip(configs, energies, strict=False) if e < mean_e]
         correct_configs.sort(key=lambda x: x[1])  # ascending: lowest energy first
 
         pairs: list[dict[str, Any]] = []
         for i, (spin, energy) in enumerate(correct_configs):
-            pairs.append({
-                "correct": True,
-                "label": "correct",
-                "response": self._spin_to_text(spin),
-                "step_text": self._spin_to_text(spin),
-                "question_id": f"ising_correct_{i:04d}",
-                "model_id": "ising_sampler",
-                "source": "ebm_guided_synthetic",
-                "energy": energy,
-                "arithmetic_coverage": 0.5,
-                "confidence": 1.0,
-                "label_confidence": 1.0,
-            })
+            pairs.append(
+                {
+                    "correct": True,
+                    "label": "correct",
+                    "response": self._spin_to_text(spin),
+                    "step_text": self._spin_to_text(spin),
+                    "question_id": f"ising_correct_{i:04d}",
+                    "model_id": "ising_sampler",
+                    "source": "ebm_guided_synthetic",
+                    "energy": energy,
+                    "arithmetic_coverage": 0.5,
+                    "confidence": 1.0,
+                    "label_confidence": 1.0,
+                }
+            )
         return pairs
 
 

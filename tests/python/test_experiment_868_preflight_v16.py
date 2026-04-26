@@ -166,7 +166,9 @@ class TestWritePrereqsSection:
         content = Path(prereqs_file).read_text()
         assert "manifest_enforcer_deployed: true" in content
 
-    def test_multiple_writes_append_not_replace(self, manifest_yaml: str, prereqs_file: str) -> None:
+    def test_multiple_writes_append_not_replace(
+        self, manifest_yaml: str, prereqs_file: str
+    ) -> None:
         enforcer = ExclusionManifestEnforcer()
         enforcer.load_manifest(manifest_yaml)
         enforcer.write_prereqs_section(prereqs_file)
@@ -240,9 +242,7 @@ class TestDeliverableArtifact:
     ARTIFACT_PATH = "results/experiment_868_preflight_v16.json"
 
     def test_artifact_exists(self) -> None:
-        assert os.path.exists(self.ARTIFACT_PATH), (
-            f"Deliverable not found at {self.ARTIFACT_PATH}"
-        )
+        assert os.path.exists(self.ARTIFACT_PATH), f"Deliverable not found at {self.ARTIFACT_PATH}"
 
     def test_artifact_is_valid_json(self) -> None:
         with open(self.ARTIFACT_PATH) as f:
@@ -252,8 +252,16 @@ class TestDeliverableArtifact:
     def test_required_fields_present(self) -> None:
         with open(self.ARTIFACT_PATH) as f:
             data = json.load(f)
-        for field in ("experiment", "schema", "run_date", "started_at",
-                      "finished_at", "duration_s", "status", "title"):
+        for field in (
+            "experiment",
+            "schema",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "title",
+        ):
             assert field in data, f"Required field '{field}' missing"
 
     def test_manifest_enforcer_deployed(self) -> None:

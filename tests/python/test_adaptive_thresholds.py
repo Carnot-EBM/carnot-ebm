@@ -34,6 +34,7 @@ from carnot.pipeline.case_memory import CaseMemory, CaseRecord
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_record(model_name: str = "test_model") -> CaseRecord:
     """Build a minimal CaseRecord for testing add_trace_selective."""
     return CaseRecord.normalize(
@@ -241,6 +242,7 @@ class TestPerModelFPTrackerPersistence:
     def test_to_dict_is_json_serialisable(self) -> None:
         """to_dict output must be directly JSON-serialisable (no exotic types)."""
         import json
+
         tracker = PerModelFPTracker(min_observations=5)
         tracker.update("m", "ct", was_fp=True, was_tp=False)
         # Should not raise
@@ -274,10 +276,12 @@ class TestModelAdaptiveThresholds:
         tracker = PerModelFPTracker(min_observations=5)
         for _ in range(5):
             tracker.update("qwen3.5-0.8b", "range_check", was_fp=True, was_tp=False)
-        extractor = self._make_extractor([
-            _make_violation("range_check"),
-            _make_violation("arithmetic"),
-        ])
+        extractor = self._make_extractor(
+            [
+                _make_violation("range_check"),
+                _make_violation("arithmetic"),
+            ]
+        )
         adaptive = ModelAdaptiveThresholds(extractor, tracker)
         result = adaptive.extract("q", "r", "qwen3.5-0.8b")
         types = {v.constraint_type for v in result}
@@ -412,8 +416,9 @@ class TestCaseMemoryAddTraceSelective:
         memory = CaseMemory()
         record = _make_record()
         # contrast = abs(0.9 - 0.05) = 0.85 > 0.5
-        result = memory.add_trace_selective(record, violation_energy=0.9,
-                                            model_confidence=0.05, min_contrast=0.5)
+        result = memory.add_trace_selective(
+            record, violation_energy=0.9, model_confidence=0.05, min_contrast=0.5
+        )
         assert result is True
         assert len(memory) == 1
 
@@ -422,8 +427,9 @@ class TestCaseMemoryAddTraceSelective:
         memory = CaseMemory()
         record = _make_record()
         # contrast = abs(0.6 - 0.55) = 0.05 < 0.5
-        result = memory.add_trace_selective(record, violation_energy=0.6,
-                                            model_confidence=0.55, min_contrast=0.5)
+        result = memory.add_trace_selective(
+            record, violation_energy=0.6, model_confidence=0.55, min_contrast=0.5
+        )
         assert result is False
         assert len(memory) == 0
 
@@ -432,8 +438,9 @@ class TestCaseMemoryAddTraceSelective:
         memory = CaseMemory()
         record = _make_record()
         # contrast = abs(1.0 - 0.5) = 0.5 → NOT strictly > 0.5
-        result = memory.add_trace_selective(record, violation_energy=1.0,
-                                            model_confidence=0.5, min_contrast=0.5)
+        result = memory.add_trace_selective(
+            record, violation_energy=1.0, model_confidence=0.5, min_contrast=0.5
+        )
         assert result is False
         assert len(memory) == 0
 
@@ -445,8 +452,9 @@ class TestCaseMemoryAddTraceSelective:
         assert len(memory) == 1
         # Selective add should also add when high-contrast
         record2 = _make_record(model_name="other_model")
-        memory.add_trace_selective(record2, violation_energy=0.9,
-                                   model_confidence=0.1, min_contrast=0.5)
+        memory.add_trace_selective(
+            record2, violation_energy=0.9, model_confidence=0.1, min_contrast=0.5
+        )
         assert len(memory) == 2
 
     def test_custom_min_contrast(self) -> None:
@@ -454,8 +462,9 @@ class TestCaseMemoryAddTraceSelective:
         memory = CaseMemory()
         record = _make_record()
         # contrast = 0.3, min_contrast = 0.2 → stored
-        result = memory.add_trace_selective(record, violation_energy=0.7,
-                                            model_confidence=0.4, min_contrast=0.2)
+        result = memory.add_trace_selective(
+            record, violation_energy=0.7, model_confidence=0.4, min_contrast=0.2
+        )
         assert result is True
         assert len(memory) == 1
 
@@ -464,6 +473,7 @@ class TestCaseMemoryAddTraceSelective:
         memory = CaseMemory()
         for i in range(3):
             rec = _make_record(model_name=f"model_{i}")
-            memory.add_trace_selective(rec, violation_energy=0.95,
-                                       model_confidence=0.05, min_contrast=0.5)
+            memory.add_trace_selective(
+                rec, violation_energy=0.95, model_confidence=0.05, min_contrast=0.5
+            )
         assert len(memory) == 3

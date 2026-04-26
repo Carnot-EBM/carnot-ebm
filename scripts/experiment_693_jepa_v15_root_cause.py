@@ -88,17 +88,21 @@ H3_TOP_VAR_THRESHOLD = 0.9
 # Symbolic probing threshold (arXiv 2603.20327)
 SYMBOLIC_R2_THRESHOLD = 0.3
 
-VALID_ROOT_CAUSES = frozenset([
-    "cpmi_distribution_mismatch",
-    "pure_loss_anti_correlation",
-    "latent_collapse_small_data",
-    "unknown_requires_ablation",
-])
+VALID_ROOT_CAUSES = frozenset(
+    [
+        "cpmi_distribution_mismatch",
+        "pure_loss_anti_correlation",
+        "latent_collapse_small_data",
+        "unknown_requires_ablation",
+    ]
+)
 
-VALID_VERDICTS = frozenset([
-    "root_cause_identified_v16_specced",
-    "root_cause_ambiguous_ablation_needed",
-])
+VALID_VERDICTS = frozenset(
+    [
+        "root_cause_identified_v16_specced",
+        "root_cause_ambiguous_ablation_needed",
+    ]
+)
 
 
 # ---------------------------------------------------------------------------
@@ -337,12 +341,10 @@ def probe_h3_latent_rank(train_latents: np.ndarray) -> tuple[bool, int, float]:
 
     _U, s, _Vt = np.linalg.svd(train_latents, full_matrices=False)
     effective_rank = int((s > 0.01).sum())
-    total_var = float((s ** 2).sum())
+    total_var = float((s**2).sum())
     top_variance_pct = float(s[0] ** 2 / max(total_var, 1e-8))
 
-    h3_confirmed = (effective_rank < H3_RANK_THRESHOLD) or (
-        top_variance_pct > H3_TOP_VAR_THRESHOLD
-    )
+    h3_confirmed = (effective_rank < H3_RANK_THRESHOLD) or (top_variance_pct > H3_TOP_VAR_THRESHOLD)
     return h3_confirmed, effective_rank, top_variance_pct
 
 
@@ -417,7 +419,7 @@ def probe_symbolic_correlation(
                 continue
             lat_norm = (lat_col - lat_col.mean()) / lat_std
             corr = float(np.dot(feat_norm, lat_norm) / n)
-            r2 = corr ** 2
+            r2 = corr**2
             if r2 > max_r2:
                 max_r2 = r2
 
@@ -538,7 +540,6 @@ def main() -> None:
     result_path = str(repo_root / DELIVERABLE)
 
     with ExperimentTimeoutWatchdog(EXP_ID, timeout_minutes=30, result_path=result_path):
-
         # --- Gate 1: load JEPA v15 weights ---
         import jax.numpy as jnp  # noqa: PLC0415
         from safetensors.numpy import load_file  # noqa: PLC0415
@@ -573,10 +574,11 @@ def main() -> None:
         train_pairs = all_pairs
 
         # Build embedding texts: question + step_text concatenated
-        train_texts = [
-            str(p.get("question", "")) + " " + str(p.get("step_text", ""))
-            for p in train_pairs
-        ] if train_pairs else ["placeholder training text"]
+        train_texts = (
+            [str(p.get("question", "")) + " " + str(p.get("step_text", "")) for p in train_pairs]
+            if train_pairs
+            else ["placeholder training text"]
+        )
 
         # --- Gate 3: load OOD questions ---
         ood_rows = load_ood_questions(GSM8K_OOD_START, GSM8K_OOD_END)

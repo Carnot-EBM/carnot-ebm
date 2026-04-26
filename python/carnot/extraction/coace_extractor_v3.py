@@ -39,7 +39,6 @@ Spec: REQ-EXTRACT-040, REQ-EXTRACT-041, REQ-EXTRACT-042,
 from __future__ import annotations
 
 import re
-from typing import Optional
 
 from carnot.extraction.coace_extractor import (
     ArithmeticEquation,
@@ -166,42 +165,42 @@ _OUT_OF_PERCENT = re.compile(
 # ---------------------------------------------------------------------------
 
 _HOURS_TO_MINUTES = re.compile(
-    rf"(\d+(?:\.\d+)?)\s+hours?\s+(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
-    rf"(\d+(?:\.\d+)?)\s+minutes?",
+    r"(\d+(?:\.\d+)?)\s+hours?\s+(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
+    r"(\d+(?:\.\d+)?)\s+minutes?",
     re.IGNORECASE,
 )
 
 _DAYS_TO_HOURS = re.compile(
-    rf"(\d+(?:\.\d+)?)\s+days?\s+(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
-    rf"(\d+(?:\.\d+)?)\s+hours?",
+    r"(\d+(?:\.\d+)?)\s+days?\s+(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
+    r"(\d+(?:\.\d+)?)\s+hours?",
     re.IGNORECASE,
 )
 
 _KM_TO_METERS = re.compile(
-    rf"(\d+(?:\.\d+)?)\s+km(?:s|ilometers?)?\s+"
-    rf"(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
-    rf"(\d+(?:\.\d+)?)\s+met(?:er|re)s?",
+    r"(\d+(?:\.\d+)?)\s+km(?:s|ilometers?)?\s+"
+    r"(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
+    r"(\d+(?:\.\d+)?)\s+met(?:er|re)s?",
     re.IGNORECASE,
 )
 
 _MILES_TO_KM = re.compile(
-    rf"(\d+(?:\.\d+)?)\s+miles?\s+"
-    rf"(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
-    rf"(\d+(?:\.\d+)?)\s+(?:km|kilometer)s?",
+    r"(\d+(?:\.\d+)?)\s+miles?\s+"
+    r"(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
+    r"(\d+(?:\.\d+)?)\s+(?:km|kilometer)s?",
     re.IGNORECASE,
 )
 
 _FEET_TO_INCHES = re.compile(
-    rf"(\d+(?:\.\d+)?)\s+feet\s+"
-    rf"(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
-    rf"(\d+(?:\.\d+)?)\s+inches?",
+    r"(\d+(?:\.\d+)?)\s+feet\s+"
+    r"(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
+    r"(\d+(?:\.\d+)?)\s+inches?",
     re.IGNORECASE,
 )
 
 _WEEKS_TO_DAYS = re.compile(
-    rf"(\d+(?:\.\d+)?)\s+weeks?\s+"
-    rf"(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
-    rf"(\d+(?:\.\d+)?)\s+days?",
+    r"(\d+(?:\.\d+)?)\s+weeks?\s+"
+    r"(?:is|equals?|=|converts?\s+to|is\s+equal\s+to)\s+"
+    r"(\d+(?:\.\d+)?)\s+days?",
     re.IGNORECASE,
 )
 
@@ -244,7 +243,7 @@ _AFTER_MUL = re.compile(
 # ---------------------------------------------------------------------------
 
 
-def _num(s: str) -> Optional[float]:
+def _num(s: str) -> float | None:
     """Parse a numeric string, stripping currency markers and commas.
 
     Returns None if the string cannot be parsed as a float.  This is safer than
@@ -258,7 +257,7 @@ def _num(s: str) -> Optional[float]:
         return None
 
 
-def _make_eq(lhs: str, rhs_str: str, conf: float = 0.85) -> Optional[ArithmeticEquation]:
+def _make_eq(lhs: str, rhs_str: str, conf: float = 0.85) -> ArithmeticEquation | None:
     """Build an ArithmeticEquation only if rhs parses to a valid float.
 
     Why return Optional: if the regex captures a malformed group (e.g., partial match
@@ -528,7 +527,7 @@ def _parse_running_total_chain(text: str) -> list[ArithmeticEquation]:
             for i in range(len(candidates) - 1):
                 for j in range(i + 2, min(i + 7, len(candidates) + 1)):
                     subset = candidates[i:j]
-                    total = sum(v for v in subset if v is not None)
+                    sum(v for v in subset if v is not None)
                     lhs = "+".join(str(v) for v in subset)
                     key = (lhs, stated_val)
                     if key not in seen:
@@ -593,15 +592,14 @@ class CoACEExtractorV3(CoACEExtractorV2):
 
         # Reconstruct the set of (lhs, rhs) pairs already seen by V2 to avoid duplication.
         seen_pairs: set[tuple[str, float]] = {
-            (v.equation.lhs_expr, v.equation.rhs_value)
-            for v in v2_result.violations
+            (v.equation.lhs_expr, v.equation.rhs_value) for v in v2_result.violations
         }
         # Also scan all V2-sourced equations that were NOT violations (no-op duplicates).
         # We approximate this by re-running the V2 parsers to collect all equations.
         from carnot.extraction.coace_extractor import _parse_arithmetic_equations
         from carnot.extraction.coace_extractor_v2 import (
-            _parse_prose_arithmetic,
             _extract_chain_equations,
+            _parse_prose_arithmetic,
         )
 
         for eq in _parse_arithmetic_equations(response) + _parse_prose_arithmetic(response):

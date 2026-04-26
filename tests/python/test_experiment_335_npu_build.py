@@ -139,9 +139,7 @@ class TestCheckNinjaAvailable:
 
     def test_returns_false_on_timeout(self) -> None:
         """Returns False when the subprocess times out rather than crashing."""
-        with mock.patch(
-            "subprocess.run", side_effect=subprocess.TimeoutExpired("ninja", 5)
-        ):
+        with mock.patch("subprocess.run", side_effect=subprocess.TimeoutExpired("ninja", 5)):
             assert _mod.check_ninja_available() is False
 
     def test_calls_ninja_version(self) -> None:
@@ -761,17 +759,13 @@ class TestExp335BuildAttempted:
         bar = results_json["build_attempt_result"]
         assert isinstance(bar, dict), f"Expected dict, got: {type(bar)}"
 
-    def test_build_attempt_result_has_required_keys(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_build_attempt_result_has_required_keys(self, results_json: dict[str, Any]) -> None:
         """build_attempt_result must have success and duration_seconds."""
         bar = results_json["build_attempt_result"]
         missing = REQUIRED_BUILD_ATTEMPT_KEYS - set(bar.keys())
         assert not missing, f"build_attempt_result missing keys: {missing}"
 
-    def test_npu_inference_result_null_unless_success(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_npu_inference_result_null_unless_success(self, results_json: dict[str, Any]) -> None:
         """npu_inference_result must be None unless honest_verdict == 'inference_success'.
 
         Spec: REQ-PRED-003, SCENARIO-EXP303-D, SCENARIO-EXP303-F
@@ -780,13 +774,10 @@ class TestExp335BuildAttempted:
         nir = results_json["npu_inference_result"]
         if verdict != "inference_success":
             assert nir is None, (
-                f"Verdict {verdict!r} must not have fabricated npu_inference_result, "
-                f"got: {nir!r}"
+                f"Verdict {verdict!r} must not have fabricated npu_inference_result, got: {nir!r}"
             )
 
-    def test_prereq_changes_shows_now_available(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_prereq_changes_shows_now_available(self, results_json: dict[str, Any]) -> None:
         """When build was attempted, ninja and openblas must be 'now_available'.
 
         Spec: SCENARIO-EXP303-F
@@ -796,8 +787,7 @@ class TestExp335BuildAttempted:
             f"ninja should be 'now_available' when build was attempted, got: {chg['ninja']!r}"
         )
         assert chg["openblas"] == "now_available", (
-            f"openblas should be 'now_available' when build was attempted, "
-            f"got: {chg['openblas']!r}"
+            f"openblas should be 'now_available' when build was attempted, got: {chg['openblas']!r}"
         )
 
 
@@ -816,9 +806,7 @@ class TestExp335InferenceSuccess:
         """npu_inference_result must be a dict on inference_success path."""
         assert isinstance(results_json["npu_inference_result"], dict)
 
-    def test_inference_result_has_required_keys(
-        self, results_json: dict[str, Any]
-    ) -> None:
+    def test_inference_result_has_required_keys(self, results_json: dict[str, Any]) -> None:
         """npu_inference_result must contain all required latency fields."""
         nir = results_json["npu_inference_result"]
         missing = REQUIRED_INFERENCE_KEYS - set(nir.keys())

@@ -166,6 +166,7 @@ class TimingResult:
         std_ms: Standard deviation of latency.
         raw_ms: All individual measurements (for JSON export).
     """
+
     name: str
     n_iters: int
     p50_ms: float
@@ -187,7 +188,9 @@ class TimingResult:
         }
 
 
-def measure(fn, warmup: int = WARMUP_ITERS, iters: int = MEASURE_ITERS, name: str = "") -> TimingResult:
+def measure(
+    fn, warmup: int = WARMUP_ITERS, iters: int = MEASURE_ITERS, name: str = ""
+) -> TimingResult:
     """Run a callable with warmup + timed iterations, return latency stats.
 
     **Detailed explanation for engineers:**
@@ -273,7 +276,9 @@ def benchmark_components() -> list[TimingResult]:
     # Test input: moderate-length text with mixed constraints.
     test_text = _build_text(100)
     test_question = "What is 20 + 22?"
-    test_embedding = jnp.array(np.random.default_rng(102).standard_normal(EMBED_DIM).astype(np.float32))
+    test_embedding = jnp.array(
+        np.random.default_rng(102).standard_normal(EMBED_DIM).astype(np.float32)
+    )
     test_constraint_vec = jnp.array(
         [float(x) for x in _check_constraints(test_question, test_text)],
         dtype=jnp.float32,
@@ -306,6 +311,7 @@ def benchmark_components() -> list[TimingResult]:
     # Try real sentence-transformers if available.
     try:
         from sentence_transformers import SentenceTransformer
+
         encoder = SentenceTransformer("all-MiniLM-L6-v2")
 
         def real_embed_fn():
@@ -344,9 +350,14 @@ def benchmark_components() -> list[TimingResult]:
     relaxed_spins = jax.nn.sigmoid(10.0 * (test_constraint_vec - 0.5))
     ising_e = continuous_ising_energy(relaxed_spins, params.ising_biases, params.ising_J)
     ising_e_norm = jnp.tanh(ising_e * 0.1)
-    mlp_input = jnp.concatenate([
-        test_embedding, test_constraint_vec, relaxed_spins, ising_e_norm.reshape(1),
-    ])
+    mlp_input = jnp.concatenate(
+        [
+            test_embedding,
+            test_constraint_vec,
+            relaxed_spins,
+            ising_e_norm.reshape(1),
+        ]
+    )
 
     @jax.jit
     def mlp_fn(x):
@@ -416,14 +427,18 @@ def benchmark_scale_sweep() -> dict[str, list[dict]]:
 
         tr = measure(extract_fn, warmup=50, iters=500, name=f"extract_{n_tokens}tok")
         n_found = len(extractor.extract(text))
-        extraction_results.append({
-            "input_tokens": n_tokens,
-            "input_chars": len(text),
-            "constraints_found": n_found,
-            **tr.to_dict(),
-        })
-        print(f"  Extract {n_tokens:>5} tokens ({len(text):>5} chars): "
-              f"{tr.mean_ms:.3f}ms mean, {n_found} constraints found")
+        extraction_results.append(
+            {
+                "input_tokens": n_tokens,
+                "input_chars": len(text),
+                "constraints_found": n_found,
+                **tr.to_dict(),
+            }
+        )
+        print(
+            f"  Extract {n_tokens:>5} tokens ({len(text):>5} chars): "
+            f"{tr.mean_ms:.3f}ms mean, {n_found} constraints found"
+        )
 
     for n_constraints in CONSTRAINT_COUNTS:
         # Build Ising model and MLP sized for this constraint count.
@@ -434,7 +449,9 @@ def benchmark_scale_sweep() -> dict[str, list[dict]]:
             key=key,
         )
         constraint_vec = _build_constraint_vec(n_constraints)
-        embedding = jnp.array(np.random.default_rng(102).standard_normal(EMBED_DIM).astype(np.float32))
+        embedding = jnp.array(
+            np.random.default_rng(102).standard_normal(EMBED_DIM).astype(np.float32)
+        )
 
         # JIT the forward pass for this specific size.
         @jax.jit
@@ -448,10 +465,12 @@ def benchmark_scale_sweep() -> dict[str, list[dict]]:
             return forward_fn(params, embedding, constraint_vec).block_until_ready()
 
         tr = measure(bench_fn, warmup=50, iters=500, name=f"forward_{n_constraints}c")
-        forward_results.append({
-            "n_constraints": n_constraints,
-            **tr.to_dict(),
-        })
+        forward_results.append(
+            {
+                "n_constraints": n_constraints,
+                **tr.to_dict(),
+            }
+        )
         print(f"  Forward {n_constraints:>3} constraints: {tr.mean_ms:.3f}ms mean")
 
     # Cross-product matrix: for each (input_length, constraint_count), measure
@@ -462,10 +481,15 @@ def benchmark_scale_sweep() -> dict[str, list[dict]]:
         text = _build_text(n_tokens)
         for n_constraints in CONSTRAINT_COUNTS:
             params = init_verifier_params(
-                n_spins=n_constraints, embed_dim=EMBED_DIM, hidden_dim=64, key=key,
+                n_spins=n_constraints,
+                embed_dim=EMBED_DIM,
+                hidden_dim=64,
+                key=key,
             )
             constraint_vec = _build_constraint_vec(n_constraints)
-            embedding = jnp.array(np.random.default_rng(102).standard_normal(EMBED_DIM).astype(np.float32))
+            embedding = jnp.array(
+                np.random.default_rng(102).standard_normal(EMBED_DIM).astype(np.float32)
+            )
 
             @jax.jit
             def fwd(p, e, c):
@@ -477,12 +501,16 @@ def benchmark_scale_sweep() -> dict[str, list[dict]]:
                 extractor.extract(text)
                 return fwd(params, embedding, constraint_vec).block_until_ready()
 
-            tr = measure(combined_fn, warmup=30, iters=200, name=f"combined_{n_tokens}t_{n_constraints}c")
-            matrix_results.append({
-                "input_tokens": n_tokens,
-                "n_constraints": n_constraints,
-                **tr.to_dict(),
-            })
+            tr = measure(
+                combined_fn, warmup=30, iters=200, name=f"combined_{n_tokens}t_{n_constraints}c"
+            )
+            matrix_results.append(
+                {
+                    "input_tokens": n_tokens,
+                    "n_constraints": n_constraints,
+                    **tr.to_dict(),
+                }
+            )
 
     # Print matrix.
     header = f"  {'tokens':>8}" + "".join(f"  {nc}c" for nc in CONSTRAINT_COUNTS)
@@ -557,7 +585,9 @@ def benchmark_backends() -> list[TimingResult]:
 
     # --- Backend B: JAX JIT differentiable forward pass ---
     key = jrandom.PRNGKey(102)
-    params = init_verifier_params(n_spins=N_CONSTRAINTS, embed_dim=EMBED_DIM, hidden_dim=64, key=key)
+    params = init_verifier_params(
+        n_spins=N_CONSTRAINTS, embed_dim=EMBED_DIM, hidden_dim=64, key=key
+    )
     jit_forward = jax.jit(differentiable_verifier_forward, static_argnums=())
 
     # Pre-compute embeddings and constraint vectors for all 100 inputs.
@@ -695,10 +725,10 @@ def analyze_results(
             "fits_in_budget": budget_fraction < 0.5,
             "recommendation": (
                 "Guided decoding viable — constraint check uses "
-                f"{budget_fraction*100:.1f}% of per-token budget"
+                f"{budget_fraction * 100:.1f}% of per-token budget"
                 if budget_fraction < 0.5
                 else f"Guided decoding NOT viable at {tokens_per_second} tok/s — "
-                f"constraint check uses {budget_fraction*100:.1f}% of budget. "
+                f"constraint check uses {budget_fraction * 100:.1f}% of budget. "
                 "Consider: (1) batching every N tokens, "
                 "(2) async verification on separate thread, "
                 "(3) Rust backend for lower latency."
@@ -855,7 +885,9 @@ def save_summary_md(
 
     fb = analysis.get("fastest_backend", {})
     if fb:
-        lines.append(f"\n**Fastest**: {fb.get('name', 'N/A')} at {fb.get('per_call_ms', 0):.4f} ms/call")
+        lines.append(
+            f"\n**Fastest**: {fb.get('name', 'N/A')} at {fb.get('per_call_ms', 0):.4f} ms/call"
+        )
 
     # Generation budget.
     gb = analysis.get("generation_budget", {})
@@ -867,7 +899,7 @@ def save_summary_md(
             f"- **Target generation speed**: {gb.get('target_tokens_per_second', 50)} tokens/second",
             f"- **Budget per token**: {gb.get('budget_per_token_ms', 20):.1f} ms",
             f"- **Constraint check cost**: {gb.get('constraint_check_ms', 0):.4f} ms",
-            f"- **Budget fraction**: {gb.get('budget_fraction', 0)*100:.1f}%",
+            f"- **Budget fraction**: {gb.get('budget_fraction', 0) * 100:.1f}%",
             f"- **Fits in budget**: {'Yes' if gb.get('fits_in_budget') else 'No'}",
             "",
             f"**Recommendation**: {gb.get('recommendation', 'N/A')}",
@@ -934,7 +966,7 @@ def main() -> None:
 
     gb = analysis.get("generation_budget", {})
     if gb:
-        print(f"  Budget fraction at 50 tok/s: {gb.get('budget_fraction', 0)*100:.1f}%")
+        print(f"  Budget fraction at 50 tok/s: {gb.get('budget_fraction', 0) * 100:.1f}%")
         print(f"  Recommendation: {gb.get('recommendation', 'N/A')}")
 
     elapsed = time.time() - t_start

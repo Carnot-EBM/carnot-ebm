@@ -82,9 +82,10 @@ def main() -> None:
     env_guard_deployed = _check_env_guard_deployed()
     live_env_fixed = _check_live_env_fixed()
     prereqs_updated = (
-        (_REPO_ROOT / "MILESTONE_PREREQS.md").exists()
-        and "Milestone 2026.04.66 Pre-flight" in (_REPO_ROOT / "MILESTONE_PREREQS.md").read_text()
-    )
+        _REPO_ROOT / "MILESTONE_PREREQS.md"
+    ).exists() and "Milestone 2026.04.66 Pre-flight" in (
+        _REPO_ROOT / "MILESTONE_PREREQS.md"
+    ).read_text()
 
     open_retros = [
         "RETRO-MANIFEST-FULL-SCOPE",

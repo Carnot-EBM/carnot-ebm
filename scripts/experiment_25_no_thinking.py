@@ -52,7 +52,8 @@ def main() -> int:
 
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True,
+        model_name,
+        trust_remote_code=True,
         output_hidden_states=True,
         dtype=torch.float16 if device == "cuda" else None,
     )
@@ -81,9 +82,13 @@ def main() -> int:
         best_answer = example.get("best_answer", "")
 
         # KEY DIFFERENCE: enable_thinking=False
-        messages = [{"role": "user", "content": f"Answer briefly and factually in one sentence. {question}"}]
+        messages = [
+            {"role": "user", "content": f"Answer briefly and factually in one sentence. {question}"}
+        ]
         text = tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True,
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
             enable_thinking=False,
         )
         inputs = tokenizer(text, return_tensors="pt")
@@ -92,8 +97,9 @@ def main() -> int:
         prompt_len = inputs["input_ids"].shape[1]
 
         with torch.no_grad():
-            outputs = model.generate(**inputs, max_new_tokens=80, do_sample=False,
-                                     pad_token_id=tokenizer.eos_token_id)
+            outputs = model.generate(
+                **inputs, max_new_tokens=80, do_sample=False, pad_token_id=tokenizer.eos_token_id
+            )
 
         gen_ids = outputs[0, prompt_len:]
         response = tokenizer.decode(gen_ids, skip_special_tokens=True)
@@ -101,7 +107,9 @@ def main() -> int:
         if "</think>" in response:
             response = response.split("</think>")[-1].strip()
 
-        is_correct = check_truthfulqa_answer(response, correct_answers, incorrect_answers, best_answer)
+        is_correct = check_truthfulqa_answer(
+            response, correct_answers, incorrect_answers, best_answer
+        )
         if is_correct:
             n_correct_no_think += 1
         else:
@@ -121,18 +129,25 @@ def main() -> int:
             all_labels.append(1 if is_correct else 0)
 
         if (qi + 1) % 50 == 0:
-            print(f"  [{qi+1:3d}/{len(questions)}] "
-                  f"tokens={len(all_token_ids)} "
-                  f"correct={n_correct_no_think} wrong={n_wrong_no_think} "
-                  f"({n_correct_no_think/(qi+1)*100:.0f}%)")
+            print(
+                f"  [{qi + 1:3d}/{len(questions)}] "
+                f"tokens={len(all_token_ids)} "
+                f"correct={n_correct_no_think} wrong={n_wrong_no_think} "
+                f"({n_correct_no_think / (qi + 1) * 100:.0f}%)"
+            )
 
     n_tokens_no_think = len(all_token_ids)
     print(f"\nNo-thinking collection: {n_tokens_no_think} tokens")
-    print(f"  Accuracy: {n_correct_no_think}/{len(questions)} ({n_correct_no_think/len(questions)*100:.0f}%)")
+    print(
+        f"  Accuracy: {n_correct_no_think}/{len(questions)} ({n_correct_no_think / len(questions) * 100:.0f}%)"
+    )
 
     # Save no-thinking activations for HuggingFace export
-    nothink_file = os.path.join(os.path.dirname(__file__), "..", "data", "token_activations_qwen35_nothink.safetensors")
+    nothink_file = os.path.join(
+        os.path.dirname(__file__), "..", "data", "token_activations_qwen35_nothink.safetensors"
+    )
     from safetensors.numpy import save_file as sf_save
+
     sf_save(
         {
             "token_ids": np.array(all_token_ids, dtype=np.int32),
@@ -171,8 +186,11 @@ def main() -> int:
     ebm = GibbsModel(config, key=key)
 
     def get_p(m):
-        return {"layers": [(w, b) for w, b in m.layers],
-                "output_weight": m.output_weight, "output_bias": m.output_bias}
+        return {
+            "layers": [(w, b) for w, b in m.layers],
+            "output_weight": m.output_weight,
+            "output_bias": m.output_bias,
+        }
 
     def set_p(m, p):
         m.layers = list(p["layers"])
@@ -208,7 +226,10 @@ def main() -> int:
 
     # Load thinking-enabled activations from the merged dataset
     from safetensors.numpy import load_file
-    merged_file = os.path.join(os.path.dirname(__file__), "..", "data", "token_activations_qwen35_merged.safetensors")
+
+    merged_file = os.path.join(
+        os.path.dirname(__file__), "..", "data", "token_activations_qwen35_merged.safetensors"
+    )
 
     if os.path.exists(merged_file):
         merged = load_file(merged_file)
@@ -275,7 +296,9 @@ def main() -> int:
     print(f"    Energy gap:        {gap2:.4f}")
     print(f"")
     print(f"  WITHOUT thinking:")
-    print(f"    Model accuracy:    {n_correct_no_think}/{len(questions)} ({n_correct_no_think/len(questions)*100:.0f}%)")
+    print(
+        f"    Model accuracy:    {n_correct_no_think}/{len(questions)} ({n_correct_no_think / len(questions) * 100:.0f}%)"
+    )
     print(f"    Tokens collected:  {n_tokens_no_think}")
     print(f"    EBM test accuracy: {test_acc_no_think:.1%}")
     print(f"    Energy gap:        {gap:.4f}")

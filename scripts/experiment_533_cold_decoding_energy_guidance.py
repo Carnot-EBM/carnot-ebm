@@ -188,7 +188,9 @@ def main() -> None:
     tmpl.setup()
 
     watchdog = ExperimentTimeoutWatchdog(533, timeout_minutes=25)
-    guard = DeliverableGuard(str(_REPO_ROOT / "results" / "experiment_533_cold_decoding_energy_guidance.json"))
+    guard = DeliverableGuard(
+        str(_REPO_ROOT / "results" / "experiment_533_cold_decoding_energy_guidance.json")
+    )
 
     output_path = _REPO_ROOT / "results" / "experiment_533_cold_decoding_energy_guidance.json"
 
@@ -228,28 +230,32 @@ def main() -> None:
         unc_text = f"{prompt} {unc_word}"
         unc_viol = _count_violations(verifier, unc_text)
         unconstrained_violations += unc_viol
-        unconstrained_results.append({
-            "idx": prob["idx"],
-            "prompt": prompt,
-            "selected": unc_word,
-            "correct": str(correct),
-            "is_correct": unc_word == str(correct),
-            "violations": unc_viol,
-        })
+        unconstrained_results.append(
+            {
+                "idx": prob["idx"],
+                "prompt": prompt,
+                "selected": unc_word,
+                "correct": str(correct),
+                "is_correct": unc_word == str(correct),
+                "violations": unc_viol,
+            }
+        )
 
         # Guided: select minimum-energy continuation
         guided_word = guided_decoder.select_next(prompt, candidates)
         guided_text = f"{prompt} {guided_word}"
         guided_viol = _count_violations(verifier, guided_text)
         guided_violations += guided_viol
-        guided_results.append({
-            "idx": prob["idx"],
-            "prompt": prompt,
-            "selected": guided_word,
-            "correct": str(correct),
-            "is_correct": guided_word == str(correct),
-            "violations": guided_viol,
-        })
+        guided_results.append(
+            {
+                "idx": prob["idx"],
+                "prompt": prompt,
+                "selected": guided_word,
+                "correct": str(correct),
+                "is_correct": guided_word == str(correct),
+                "violations": guided_viol,
+            }
+        )
 
     unconstrained_violation_rate = unconstrained_violations / N_PROBLEMS
     guided_violation_rate = guided_violations / N_PROBLEMS

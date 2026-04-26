@@ -25,7 +25,6 @@ Spec: REQ-BENCH-054, REQ-BENCH-055,
 from __future__ import annotations
 
 import logging
-from typing import Dict, List, Optional, Tuple
 
 # Re-export all v7 helpers so callers only need this module.
 from carnot.pipeline.live_100q_v7_helpers import (  # noqa: F401
@@ -51,10 +50,10 @@ __all__ = [
 
 
 def build_precision_v8_artifact(
-    results: Dict,
+    results: dict,
     inference_mode: str,
-    cot_pairs_path: Optional[str],
-) -> Dict:
+    cot_pairs_path: str | None,
+) -> dict:
     """Build the v8 artifact dict from aggregated benchmark results.
 
     The artifact uses schema='carnot.live_precision.v8' and captures the RETRO-053

@@ -198,7 +198,10 @@ def main() -> None:
     _log.info("Loading FOVER corpus v2 from %s", FOVER_CORPUS_PATH)
     if not FOVER_CORPUS_PATH.exists():
         artifact = tmpl.build_result(
-            {"result_schema": "carnot.hallufield.v1", "error": f"FOVER corpus not found: {FOVER_CORPUS_PATH}"},
+            {
+                "result_schema": "carnot.hallufield.v1",
+                "error": f"FOVER corpus not found: {FOVER_CORPUS_PATH}",
+            },
             status="blocked",
         )
         with open(DELIVERABLE, "w") as f:
@@ -253,8 +256,7 @@ def main() -> None:
     tier_0e_viable = hallufield_auc > VIABILITY_THRESHOLD
 
     _log.info(
-        "Results: hallufield_auc=%.3f, spilled_energy_auc=%.3f, "
-        "tier_0e_viable=%s, n_pairs=%d",
+        "Results: hallufield_auc=%.3f, spilled_energy_auc=%.3f, tier_0e_viable=%s, n_pairs=%d",
         hallufield_auc,
         spilled_auc,
         tier_0e_viable,

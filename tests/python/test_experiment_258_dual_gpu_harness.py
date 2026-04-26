@@ -22,7 +22,9 @@ import pytest
 # Helpers to load the experiment script as a module without executing main()
 # ---------------------------------------------------------------------------
 
-_SCRIPT_PATH = Path(__file__).parent.parent.parent / "scripts" / "experiment_258_dual_gpu_harness.py"
+_SCRIPT_PATH = (
+    Path(__file__).parent.parent.parent / "scripts" / "experiment_258_dual_gpu_harness.py"
+)
 
 
 def _load_script() -> Any:
@@ -71,7 +73,9 @@ class _FakeCudaMem:
         # Express free memory in bytes; default 24 GiB per device.
         _24gib = 24 * (1024**3)
         self._free_per_device: list[int] = free_per_device or [_24gib] * device_count
-        self._empty_cache_calls: list[int] = empty_cache_calls if empty_cache_calls is not None else []
+        self._empty_cache_calls: list[int] = (
+            empty_cache_calls if empty_cache_calls is not None else []
+        )
 
     def is_available(self) -> bool:
         return self._available
@@ -162,7 +166,7 @@ class TestThroughputMeasurement:
         tm.record_batch("Qwen3.5-0.8B", n_cases=6, elapsed_seconds=12.0)
         tm.record_batch("Gemma4-E4B-it", n_cases=3, elapsed_seconds=18.0)
         report = tm.report()
-        assert report["per_model"]["Qwen3.5-0.8B"]["target_met"] is True   # 2 s/case
+        assert report["per_model"]["Qwen3.5-0.8B"]["target_met"] is True  # 2 s/case
         assert report["per_model"]["Gemma4-E4B-it"]["target_met"] is False  # 6 s/case
 
 
@@ -294,9 +298,7 @@ class TestHarnessEmptyCache:
     def test_empty_cache_calls_torch_cuda_empty_cache(self) -> None:
         """empty_cache_between_runs() invokes torch.cuda.empty_cache() exactly once."""
         calls: list[int] = []
-        harness = DualGPUBenchmarkHarness(
-            torch_module=_FakeTorch(empty_cache_calls=calls)
-        )
+        harness = DualGPUBenchmarkHarness(torch_module=_FakeTorch(empty_cache_calls=calls))
         harness.empty_cache_between_runs()
         assert len(calls) == 1
 
@@ -498,9 +500,7 @@ class TestHarnessRunSuiteMockMode:
     def test_run_suite_empties_cache_after_completion(self, tmp_path: Path) -> None:
         """run_suite() calls empty_cache_between_runs once after tasks complete."""
         cache_calls: list[int] = []
-        harness = DualGPUBenchmarkHarness(
-            torch_module=_FakeTorch(empty_cache_calls=cache_calls)
-        )
+        harness = DualGPUBenchmarkHarness(torch_module=_FakeTorch(empty_cache_calls=cache_calls))
         fake_runner = self._make_fake_runner()
 
         results = harness.run_suite(
@@ -510,7 +510,10 @@ class TestHarnessRunSuiteMockMode:
             policy={},
             max_repairs=1,
             runner=fake_runner,
-            suite_fn=lambda **kwargs: {"model_name": kwargs["model_spec"]["name"], "paired_runs": []},
+            suite_fn=lambda **kwargs: {
+                "model_name": kwargs["model_spec"]["name"],
+                "paired_runs": [],
+            },
         )
         assert len(cache_calls) >= 1
 
@@ -525,7 +528,10 @@ class TestHarnessRunSuiteMockMode:
             policy={},
             max_repairs=0,
             runner=fake_runner,
-            suite_fn=lambda **kwargs: {"model_name": kwargs["model_spec"]["name"], "paired_runs": []},
+            suite_fn=lambda **kwargs: {
+                "model_name": kwargs["model_spec"]["name"],
+                "paired_runs": [],
+            },
         )
         model_names = [r["model_name"] for r in results]
         assert "Qwen3.5-0.8B" in model_names
@@ -569,7 +575,7 @@ class TestWriteHarnessReport:
         """Overall target_met is False when at least one model misses the threshold."""
         out_path = tmp_path / "report.json"
         tm = ThroughputMeasurement()
-        tm.record_batch("Qwen3.5-0.8B", n_cases=5, elapsed_seconds=10.0)   # 2 s/case -> met
+        tm.record_batch("Qwen3.5-0.8B", n_cases=5, elapsed_seconds=10.0)  # 2 s/case -> met
         tm.record_batch("Gemma4-E4B-it", n_cases=5, elapsed_seconds=100.0)  # 20 s/case -> not met
         write_harness_report(out_path, throughput=tm, run_date="20260413")
         data = json.loads(out_path.read_text())

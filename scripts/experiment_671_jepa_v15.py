@@ -96,13 +96,15 @@ SAFETENSORS_PATH = "results/jepa_predictor_v15_real.safetensors"
 _EXP_659_PATH = _REPO_ROOT / "results" / "experiment_659_tier2_fr11_relay.json"
 _FOVER_LIVE_PATH = _REPO_ROOT / "results" / "fover_labeled_steps_live.json"
 
-VALID_VERDICTS = frozenset({
-    "jepa_v15_target_met",
-    "jepa_v15_auc_met",
-    "jepa_v15_partial",
-    "jepa_v15_no_improvement",
-    "ci_mode_synthetic",
-})
+VALID_VERDICTS = frozenset(
+    {
+        "jepa_v15_target_met",
+        "jepa_v15_auc_met",
+        "jepa_v15_partial",
+        "jepa_v15_no_improvement",
+        "ci_mode_synthetic",
+    }
+)
 
 # Training hyperparameters
 N_EPOCHS = 100
@@ -110,7 +112,7 @@ LR = 1e-3
 BATCH_SIZE = 16
 VAL_FRACTION = 0.20
 EARLY_STOP_PATIENCE = 15  # stop if val AUC does not improve for this many epochs
-N_CALIBRATION_BINS = 10   # ECE bucket count
+N_CALIBRATION_BINS = 10  # ECE bucket count
 
 
 # ---------------------------------------------------------------------------
@@ -186,11 +188,13 @@ def load_fover_live_pairs() -> list[dict]:
         qid = str(entry.get("question_id", "unknown"))
         step_text = entry.get("step_text", "")
         label = entry.get("label", "correct")
-        result.append({
-            "question_id": qid,
-            "step_text": step_text,
-            "is_correct": label == "correct",
-        })
+        result.append(
+            {
+                "question_id": qid,
+                "step_text": step_text,
+                "is_correct": label == "correct",
+            }
+        )
     return result
 
 
@@ -261,12 +265,14 @@ def build_bce_pairs(
         text = entry.get("step_text", "")
         emb = embed_fn(text)
         is_correct = entry.get("is_correct", True)
-        pairs.append({
-            "embedding": emb.tolist(),
-            "violated_arithmetic": not is_correct,
-            "violated_code": False,
-            "violated_logic": False,
-        })
+        pairs.append(
+            {
+                "embedding": emb.tolist(),
+                "violated_arithmetic": not is_correct,
+                "violated_code": False,
+                "violated_logic": False,
+            }
+        )
     return pairs
 
 
@@ -297,11 +303,13 @@ def build_cpmi_pairs(
     # Adapt FOVER entries to the format expected by JEPACPMIPairBuilder
     adapted = []
     for entry in fover_entries:
-        adapted.append({
-            "question": entry["question_id"],
-            "is_correct": entry["is_correct"],
-            "cot_steps": [{"step_text": entry.get("step_text", "")}],
-        })
+        adapted.append(
+            {
+                "question": entry["question_id"],
+                "is_correct": entry["is_correct"],
+                "cot_steps": [{"step_text": entry.get("step_text", "")}],
+            }
+        )
 
     builder = JEPACPMIPairBuilder(embed_fn=embed_fn, min_pairs=5)
     real_pairs = builder.build_pairs(adapted)
@@ -403,9 +411,7 @@ def train_cpmi_refinement(
 
     losses = []
     for _ in range(n_epochs):
-        loss, grads = jax.value_and_grad(cpmi_contrastive_loss_jax)(
-            predictor._params, cpmi_pairs
-        )
+        loss, grads = jax.value_and_grad(cpmi_contrastive_loss_jax)(predictor._params, cpmi_pairs)
         updates, opt_state = optimizer.update(grads, opt_state, predictor._params)
         predictor._params = optax.apply_updates(predictor._params, updates)
         losses.append(float(loss))
@@ -527,8 +533,10 @@ def evaluate_ood_auc(
 
     X = np.array([p["embedding"] for p in bce_pairs], dtype=np.float32)
     labels = np.array(
-        [float(p["violated_arithmetic"] or p["violated_code"] or p["violated_logic"])
-         for p in bce_pairs],
+        [
+            float(p["violated_arithmetic"] or p["violated_code"] or p["violated_logic"])
+            for p in bce_pairs
+        ],
         dtype=np.float32,
     )
 
@@ -547,10 +555,12 @@ def evaluate_ood_auc(
     y_test = labels[test_idx]
 
     # Forward pass to get energy scores
-    energies = np.array([
-        float(jnp.mean(jax.nn.sigmoid(_forward(predictor._params, jnp.asarray(x)))))
-        for x in X_test
-    ])
+    energies = np.array(
+        [
+            float(jnp.mean(jax.nn.sigmoid(_forward(predictor._params, jnp.asarray(x)))))
+            for x in X_test
+        ]
+    )
 
     if len(np.unique(y_test)) < 2:
         # Only one class in the test set — AUC is undefined, return 0.5
@@ -633,9 +643,7 @@ def main() -> None:
         # Step 3: Build CPMI contrastive pairs
         # ------------------------------------------------------------------
         if all_raw_pairs:
-            cpmi_pairs, n_real_cpmi, n_synthetic_cpmi = build_cpmi_pairs(
-                all_raw_pairs, embed_fn
-            )
+            cpmi_pairs, n_real_cpmi, n_synthetic_cpmi = build_cpmi_pairs(all_raw_pairs, embed_fn)
         else:
             # Use the builder's synthetic fallback directly
             builder = JEPACPMIPairBuilder(embed_fn=embed_fn, min_pairs=5)
@@ -666,9 +674,7 @@ def main() -> None:
         # ------------------------------------------------------------------
         # Step 5: CPMI contrastive refinement (PURE min-form loss)
         # ------------------------------------------------------------------
-        contrastive_losses = train_cpmi_refinement(
-            predictor, cpmi_pairs, n_epochs=50, lr=LR
-        )
+        contrastive_losses = train_cpmi_refinement(predictor, cpmi_pairs, n_epochs=50, lr=LR)
 
         # Also report what the Python-level PURE loss would be (for logging)
         pure_loss_fn = PUREMinFormLoss(margin=1.0)
@@ -677,29 +683,29 @@ def main() -> None:
             incorrect_chains = []
             for pair in cpmi_pairs[:5]:  # sample first 5 pairs for reporting
                 correct_scores = pure_loss_fn.compute_chain_scores(
-                    lambda emb: float(jnp.mean(jax.nn.sigmoid(
-                        _forward(predictor._params, emb)
-                    ))),
+                    lambda emb: float(jnp.mean(jax.nn.sigmoid(_forward(predictor._params, emb)))),
                     pair.correct_embeddings,
                 )
                 incorrect_scores = pure_loss_fn.compute_chain_scores(
-                    lambda emb: float(jnp.mean(jax.nn.sigmoid(
-                        _forward(predictor._params, emb)
-                    ))),
+                    lambda emb: float(jnp.mean(jax.nn.sigmoid(_forward(predictor._params, emb)))),
                     pair.incorrect_embeddings,
                 )
-                correct_chains.append(JEPAChainScore(
-                    chain_id=f"{pair.question_id}/correct",
-                    step_scores=correct_scores,
-                    min_score=min(correct_scores),
-                    is_correct=True,
-                ))
-                incorrect_chains.append(JEPAChainScore(
-                    chain_id=f"{pair.question_id}/incorrect",
-                    step_scores=incorrect_scores,
-                    min_score=min(incorrect_scores),
-                    is_correct=False,
-                ))
+                correct_chains.append(
+                    JEPAChainScore(
+                        chain_id=f"{pair.question_id}/correct",
+                        step_scores=correct_scores,
+                        min_score=min(correct_scores),
+                        is_correct=True,
+                    )
+                )
+                incorrect_chains.append(
+                    JEPAChainScore(
+                        chain_id=f"{pair.question_id}/incorrect",
+                        step_scores=incorrect_scores,
+                        min_score=min(incorrect_scores),
+                        is_correct=False,
+                    )
+                )
             reported_pure_loss = pure_loss_fn.compute_loss(correct_chains, incorrect_chains)
         else:
             reported_pure_loss = 0.0
@@ -748,7 +754,9 @@ def main() -> None:
                 "platt_temperature_T": round(platt_temp, 4),
                 "ece_post_calibration": round(ece, 4),
                 "reported_pure_loss": round(float(reported_pure_loss), 4),
-                "contrastive_loss_final": round(contrastive_losses[-1], 4) if contrastive_losses else None,
+                "contrastive_loss_final": round(contrastive_losses[-1], 4)
+                if contrastive_losses
+                else None,
                 "safetensors_path": SAFETENSORS_PATH,
                 "n_bce_train_pairs": train_log.get("n_train", 0),
                 "n_bce_val_pairs": train_log.get("n_val", 0),
@@ -783,20 +791,24 @@ def _make_synthetic_bce_pairs(embed_fn, n: int = 40) -> list[dict]:
     for i in range(n):
         if i % 2 == 0:
             text = f"Step 1: {i} + {i} = {i * 2}. Therefore the answer is {i * 2}."
-            pairs.append({
-                "embedding": embed_fn(text).tolist(),
-                "violated_arithmetic": False,
-                "violated_code": False,
-                "violated_logic": False,
-            })
+            pairs.append(
+                {
+                    "embedding": embed_fn(text).tolist(),
+                    "violated_arithmetic": False,
+                    "violated_code": False,
+                    "violated_logic": False,
+                }
+            )
         else:
             text = f"Step 1: {i} + {i} = {i * 2 + 1}. Therefore the answer is {i * 2 + 1}."
-            pairs.append({
-                "embedding": embed_fn(text).tolist(),
-                "violated_arithmetic": True,
-                "violated_code": False,
-                "violated_logic": False,
-            })
+            pairs.append(
+                {
+                    "embedding": embed_fn(text).tolist(),
+                    "violated_arithmetic": True,
+                    "violated_code": False,
+                    "violated_logic": False,
+                }
+            )
     return pairs
 
 

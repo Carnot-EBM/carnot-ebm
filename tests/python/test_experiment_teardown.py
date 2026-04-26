@@ -3,6 +3,7 @@
 Spec: REQ-INFRA-073, REQ-INFRA-074,
       SCENARIO-INFRA-083, SCENARIO-INFRA-084, SCENARIO-INFRA-085
 """
+
 from __future__ import annotations
 
 import atexit

@@ -39,14 +39,14 @@
 from __future__ import annotations
 
 import random
-from dataclasses import dataclass, field
-from typing import Callable
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import jax.numpy as jnp
-import jax.random as jrandom
-import jax
 import numpy as np
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Symbolic vocabulary
@@ -73,6 +73,7 @@ VOCAB_KEYS: list[str] = list(VOCAB.keys())
 # Simple residual spline (piecewise linear, 8-segment)
 # ---------------------------------------------------------------------------
 
+
 class ResidualSpline:
     """Learnable piecewise-linear residual correction for one input.
 
@@ -87,12 +88,12 @@ class ResidualSpline:
     REQ-MODEL-030, SCENARIO-MODEL-015.
     """
 
-    def __init__(self, n_segments: int = 8, amp: float = 0.05, rng: random.Random | None = None) -> None:
+    def __init__(
+        self, n_segments: int = 8, amp: float = 0.05, rng: random.Random | None = None
+    ) -> None:
         rng = rng or random.Random(42)
         # Control points: one per segment boundary (n_segments+1 points)
-        self.ctrl = np.array(
-            [rng.gauss(0.0, amp) for _ in range(n_segments + 1)], dtype=np.float32
-        )
+        self.ctrl = np.array([rng.gauss(0.0, amp) for _ in range(n_segments + 1)], dtype=np.float32)
         self.n_segments = n_segments
 
     def evaluate(self, x_val: float) -> float:
@@ -129,6 +130,7 @@ class ResidualSpline:
 # ---------------------------------------------------------------------------
 # SymbolicKAN node and model
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class SymbolicKANConfig:
@@ -189,7 +191,9 @@ class SymbolicKANModel:
 
         # Residual splines
         self.residuals: list[ResidualSpline] = [
-            ResidualSpline(n_segments=config.n_segments, amp=config.residual_amp, rng=random.Random(seed + i))
+            ResidualSpline(
+                n_segments=config.n_segments, amp=config.residual_amp, rng=random.Random(seed + i)
+            )
             for i in range(n)
         ]
 
@@ -245,9 +249,7 @@ class SymbolicKANModel:
         """
         return np.array([self.energy(x) for x in xs], dtype=np.float32)
 
-    def _loss_contrastive(
-        self, x_correct: np.ndarray, x_incorrect: np.ndarray
-    ) -> float:
+    def _loss_contrastive(self, x_correct: np.ndarray, x_incorrect: np.ndarray) -> float:
         """Max-margin energy loss: want E(correct) < E(incorrect).
 
         Loss = max(0, E(correct) - E(incorrect) + margin)

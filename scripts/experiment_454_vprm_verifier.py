@@ -71,16 +71,16 @@ _log = logging.getLogger(__name__)
 # 10 steps with ARITHMETIC ERRORS (ground_truth = True, violation present)
 # Written in IT-model prose (no 'a + b = c' style), so ArithmeticExtractor misses them.
 _WRONG_SAMPLES: list[str] = [
-    "we have 47 plus 28 equals 76, so the total is 76",          # correct: 75
-    "5 times 6 gives us 31, so the product is 31",              # correct: 30
-    "20% of 50 is 11, so the discount is 11",                    # correct: 10
-    "100 minus 15 gives 90, so the remainder is 90",             # correct: 85
-    "100 divided by 4 gives 26, so each share is 26",           # correct: 25
-    "3 times 9 equals 28, so the result is 28",                 # correct: 27
-    "15% of 200 equals 31, so the amount is 31",                # correct: 30
-    "50 plus 25 gives 74, so the sum is 74",                    # correct: 75
-    "subtracting 10 from 100 gives 89, so 89 remain",          # correct: 90
-    "7 multiplied by 8 equals 57, so the answer is 57",        # correct: 56
+    "we have 47 plus 28 equals 76, so the total is 76",  # correct: 75
+    "5 times 6 gives us 31, so the product is 31",  # correct: 30
+    "20% of 50 is 11, so the discount is 11",  # correct: 10
+    "100 minus 15 gives 90, so the remainder is 90",  # correct: 85
+    "100 divided by 4 gives 26, so each share is 26",  # correct: 25
+    "3 times 9 equals 28, so the result is 28",  # correct: 27
+    "15% of 200 equals 31, so the amount is 31",  # correct: 30
+    "50 plus 25 gives 74, so the sum is 74",  # correct: 75
+    "subtracting 10 from 100 gives 89, so 89 remain",  # correct: 90
+    "7 multiplied by 8 equals 57, so the answer is 57",  # correct: 56
 ]
 
 # 10 steps that are ARITHMETICALLY CORRECT (ground_truth = False, no violation)
@@ -106,6 +106,7 @@ _GROUND_TRUTH: list[bool] = [True] * 10 + [False] * 10
 # Main experiment
 # ---------------------------------------------------------------------------
 
+
 def _run_experiment(tmpl: ExperimentTemplate) -> dict:
     """Run ArithmeticExtractor and VPRMArithmeticVerifier on all 20 samples.
 
@@ -122,9 +123,7 @@ def _run_experiment(tmpl: ExperimentTemplate) -> dict:
     for sample in _ALL_SAMPLES:
         results = extractor.extract(sample)
         # A violation = any result with satisfied=False in metadata
-        has_violation = any(
-            r.metadata.get("satisfied") is False for r in results
-        )
+        has_violation = any(r.metadata.get("satisfied") is False for r in results)
         baseline_predicted.append(has_violation)
 
     baseline_f1 = VPRMArithmeticVerifier.f1_score(_GROUND_TRUTH, baseline_predicted)
@@ -138,20 +137,22 @@ def _run_experiment(tmpl: ExperimentTemplate) -> dict:
         violations = verifier.detect_violations(sample)
         has_violation = len(violations) > 0
         vprm_predicted.append(has_violation)
-        vprm_detail.append({
-            "sample": sample,
-            "violation_detected": has_violation,
-            "violations": [
-                {
-                    "rule_name": v.rule_name,
-                    "passed": v.passed,
-                    "computed_value": v.computed_value,
-                    "stated_value": v.stated_value,
-                    "error_magnitude": v.error_magnitude,
-                }
-                for v in violations
-            ],
-        })
+        vprm_detail.append(
+            {
+                "sample": sample,
+                "violation_detected": has_violation,
+                "violations": [
+                    {
+                        "rule_name": v.rule_name,
+                        "passed": v.passed,
+                        "computed_value": v.computed_value,
+                        "stated_value": v.stated_value,
+                        "error_magnitude": v.error_magnitude,
+                    }
+                    for v in violations
+                ],
+            }
+        )
 
     vprm_f1 = VPRMArithmeticVerifier.f1_score(_GROUND_TRUTH, vprm_predicted)
 
@@ -165,7 +166,10 @@ def _run_experiment(tmpl: ExperimentTemplate) -> dict:
 
     _log.info(
         "Results: baseline_f1=%.3f  vprm_f1=%.3f  improvement=%.3f  verdict=%s",
-        baseline_f1, vprm_f1, f1_improvement, honest_verdict,
+        baseline_f1,
+        vprm_f1,
+        f1_improvement,
+        honest_verdict,
     )
     _log.info("VPRM: TP=%d  FP=%d  FN=%d", tp, fp, fn)
 
@@ -210,14 +214,20 @@ def main() -> None:
                 {"error": str(exc), "schema": "carnot.vprm_verifier.v1"},
                 status="error",
             )
-            output_path = Path(__file__).resolve().parents[1] / "results" / "experiment_454_vprm_verifier.json"
+            output_path = (
+                Path(__file__).resolve().parents[1]
+                / "results"
+                / "experiment_454_vprm_verifier.json"
+            )
             output_path.parent.mkdir(parents=True, exist_ok=True)
             output_path.write_text(json.dumps(artifact, indent=2))
             sys.exit(1)
 
         artifact = tmpl.build_result(results, status="success")
 
-    output_path = Path(__file__).resolve().parents[1] / "results" / "experiment_454_vprm_verifier.json"
+    output_path = (
+        Path(__file__).resolve().parents[1] / "results" / "experiment_454_vprm_verifier.json"
+    )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(artifact, indent=2))
 

@@ -75,6 +75,7 @@ MODEL_PATH = str(_ROOT / "results" / "vjepa_predictor_v2.safetensors")
 # Synthetic pair generators (deterministic, CPU-only, no LLM needed)
 # ---------------------------------------------------------------------------
 
+
 def generate_gsm8k_synthetic(n_steps: int = 100, seed: int = 42) -> list[dict[str, Any]]:
     """Generate n_steps synthetic GSM8K-style arithmetic step pairs.
 
@@ -127,12 +128,14 @@ def generate_gsm8k_synthetic(n_steps: int = 100, seed: int = 42) -> list[dict[st
                     f"equals {a * c} correct arithmetic result"
                 )
                 label = "correct"
-            pairs.append({
-                "question_id": qid,
-                "step_text": step_text,
-                "label": label,
-                "domain": "gsm8k_synthetic",
-            })
+            pairs.append(
+                {
+                    "question_id": qid,
+                    "step_text": step_text,
+                    "label": label,
+                    "domain": "gsm8k_synthetic",
+                }
+            )
 
         prob_idx += 1
         if prob_idx > 1000:
@@ -193,12 +196,14 @@ def generate_arc_synthetic(n_steps: int = 30, seed: int = 42) -> list[dict[str, 
             else:
                 text = rng.choice(templates_correct) + f" step {step_idx + 1}"
                 label = "correct"
-            pairs.append({
-                "question_id": qid,
-                "step_text": text,
-                "label": label,
-                "domain": "arc_synthetic",
-            })
+            pairs.append(
+                {
+                    "question_id": qid,
+                    "step_text": text,
+                    "label": label,
+                    "domain": "arc_synthetic",
+                }
+            )
         prob_idx += 1
         if prob_idx > 500:
             break
@@ -252,12 +257,14 @@ def generate_svamp_synthetic(n_steps: int = 20, seed: int = 42) -> list[dict[str
                     f"total is {qty} correct word problem reasoning"
                 )
                 label = "correct"
-            pairs.append({
-                "question_id": qid,
-                "step_text": text,
-                "label": label,
-                "domain": "svamp_synthetic",
-            })
+            pairs.append(
+                {
+                    "question_id": qid,
+                    "step_text": text,
+                    "label": label,
+                    "domain": "svamp_synthetic",
+                }
+            )
         prob_idx += 1
         if prob_idx > 500:
             break
@@ -270,6 +277,7 @@ def generate_svamp_synthetic(n_steps: int = 20, seed: int = 42) -> list[dict[str
 # ---------------------------------------------------------------------------
 # Train / eval split
 # ---------------------------------------------------------------------------
+
 
 def split_by_question_id(
     corpus: list[dict[str, Any]],
@@ -306,6 +314,7 @@ def split_by_question_id(
 # ---------------------------------------------------------------------------
 # Domain-weighted VJEPA training
 # ---------------------------------------------------------------------------
+
 
 def _make_domain_weight_vector(
     domain_weights: dict[str, float],
@@ -371,8 +380,7 @@ def train_vjepa_domain_weighted(
 
     # Build domain integer indices aligned to domain_names ordering
     domain_to_idx = {d: i for i, d in enumerate(domain_names)}
-    domain_ids_np = [domain_to_idx.get(s.get("domain", domain_names[0]), 0)
-                     for s in corpus]
+    domain_ids_np = [domain_to_idx.get(s.get("domain", domain_names[0]), 0) for s in corpus]
 
     xs = jnp.array([s["feature"] for s in corpus], dtype=jnp.float32)
     cs = jnp.array([s["context"] for s in corpus], dtype=jnp.float32)
@@ -387,9 +395,7 @@ def train_vjepa_domain_weighted(
     epoch_losses: list[float] = []
     kl_magnitudes: list[float] = []
 
-    def loss_fn(
-        p: dict[str, jax.Array], key: jax.Array
-    ) -> tuple[jax.Array, jax.Array]:
+    def loss_fn(p: dict[str, jax.Array], key: jax.Array) -> tuple[jax.Array, jax.Array]:
         """Compute domain-weighted VJEPA loss.
 
         Uses the model's variational encoder + prior to get KL, then
@@ -403,7 +409,9 @@ def train_vjepa_domain_weighted(
         prior_lv = jnp.clip(prior_lv, -10.0, 2.0)
 
         kl = -0.5 * jnp.sum(
-            1.0 + lv_q - prior_lv
+            1.0
+            + lv_q
+            - prior_lv
             - (mu_q - prior_mu) ** 2 / jnp.exp(prior_lv)
             - jnp.exp(lv_q) / jnp.exp(prior_lv),
             axis=-1,
@@ -440,6 +448,7 @@ def train_vjepa_domain_weighted(
 # ---------------------------------------------------------------------------
 # Evaluation helpers
 # ---------------------------------------------------------------------------
+
 
 def evaluate_on_split(
     model: VariationalJEPAPredictor,
@@ -541,6 +550,7 @@ def compute_uncertainty_calibration(
 # Honest verdict
 # ---------------------------------------------------------------------------
 
+
 def assign_honest_verdict(
     ood_auc: float,
     kl_magnitude: float,
@@ -577,6 +587,7 @@ def assign_honest_verdict(
 # ---------------------------------------------------------------------------
 # Main experiment function
 # ---------------------------------------------------------------------------
+
 
 def run_experiment() -> dict[str, Any]:
     """Run Exp 883: VJEPA v2 expanded corpus training and evaluation.
@@ -648,9 +659,7 @@ def run_experiment() -> dict[str, Any]:
     # ------------------------------------------------------------------
     # 6. Train
     # ------------------------------------------------------------------
-    model = VariationalJEPAPredictor(
-        in_dim=VOCAB_SIZE, context_dim=VOCAB_SIZE, latent_dim=32
-    )
+    model = VariationalJEPAPredictor(in_dim=VOCAB_SIZE, context_dim=VOCAB_SIZE, latent_dim=32)
     epoch_losses, kl_magnitudes = train_vjepa_domain_weighted(
         model, train_corpus, domain_names, n_epochs=200, lr=1e-3, seed=0
     )
@@ -709,14 +718,17 @@ def run_experiment() -> dict[str, Any]:
     with RESULT_PATH.open("w") as fh:
         json.dump(artifact, fh, indent=2)
 
-    print(f"Exp 883 done: verdict={verdict}, ood_auc={artifact['ood_auc']}, "
-          f"kl={artifact['kl_magnitude']}, duration={duration_s}s")
+    print(
+        f"Exp 883 done: verdict={verdict}, ood_auc={artifact['ood_auc']}, "
+        f"kl={artifact['kl_magnitude']}, duration={duration_s}s"
+    )
     return artifact
 
 
 # ---------------------------------------------------------------------------
 # Deliverable assertion (conductor contract)
 # ---------------------------------------------------------------------------
+
 
 def assert_deliverable_written() -> None:
     """Raise AssertionError if the result JSON is missing or malformed.
@@ -725,9 +737,17 @@ def assert_deliverable_written() -> None:
     deliverable contract is satisfied.
     """
     required_fields = {
-        "experiment", "schema", "run_date", "honest_verdict",
-        "in_dist_auc", "ood_auc", "svamp_auc", "kl_magnitude",
-        "n_training_pairs", "corpus_breakdown", "model_path",
+        "experiment",
+        "schema",
+        "run_date",
+        "honest_verdict",
+        "in_dist_auc",
+        "ood_auc",
+        "svamp_auc",
+        "kl_magnitude",
+        "n_training_pairs",
+        "corpus_breakdown",
+        "model_path",
     }
     assert RESULT_PATH.exists(), f"Deliverable not written: {RESULT_PATH}"
     with RESULT_PATH.open() as fh:

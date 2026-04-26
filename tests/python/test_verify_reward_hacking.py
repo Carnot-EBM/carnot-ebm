@@ -97,9 +97,7 @@ class TestRewardHackingReport:
         assert len(report.findings) == 0
 
     def test_report_with_finding_is_not_clean(self) -> None:
-        finding = TrivialConstraintFinding(
-            constraint_type="arithmetic", fired=10, precision=0.01
-        )
+        finding = TrivialConstraintFinding(constraint_type="arithmetic", fired=10, precision=0.01)
         report = RewardHackingReport(findings=[finding])
         assert report.clean is False
 
@@ -111,9 +109,7 @@ class TestRewardHackingReport:
         assert d["findings"] == []
 
     def test_to_dict_with_findings(self) -> None:
-        finding = TrivialConstraintFinding(
-            constraint_type="x", fired=5, precision=0.0
-        )
+        finding = TrivialConstraintFinding(constraint_type="x", fired=5, precision=0.0)
         report = RewardHackingReport(findings=[finding])
         d = report.to_dict()
         assert d["clean"] is False
@@ -124,9 +120,7 @@ class TestRewardHackingReport:
         """REQ-LEARN-002: n_findings property reflects actual list length."""
         report = RewardHackingReport()
         assert len(report.findings) == 0
-        report.findings.append(
-            ZeroEnergyFinding(sequence_length=10, distinct_values=1)
-        )
+        report.findings.append(ZeroEnergyFinding(sequence_length=10, distinct_values=1))
         assert not report.clean
 
 
@@ -168,9 +162,7 @@ class TestFindingDicts:
         assert "threshold" in d
 
     def test_train_holdout_divergence_to_dict(self) -> None:
-        f = TrainHoldoutDivergenceFinding(
-            mean_train_energy=0.1, mean_holdout_energy=0.5, gap=0.4
-        )
+        f = TrainHoldoutDivergenceFinding(mean_train_energy=0.1, mean_holdout_energy=0.5, gap=0.4)
         d = f.to_dict()
         assert d["kind"] == "train_holdout_divergence"
         assert d["mean_train_energy"] == pytest.approx(0.1)
@@ -476,11 +468,13 @@ class TestAuditEnergyTrajectoryDivergence:
     def test_custom_min_gap_respected(self) -> None:
         """REQ-LEARN-002: Custom min_gap parameter applied correctly."""
         # Use varied (non-constant) sequences so zero-energy shortcut is not triggered.
-        train = [0.0, 0.01, 0.02, 0.03, 0.04]   # mean = 0.02
+        train = [0.0, 0.01, 0.02, 0.03, 0.04]  # mean = 0.02
         holdout = [0.3, 0.31, 0.32, 0.33, 0.34]  # mean = 0.32, gap = 0.30
         # With min_gap=0.5, gap=0.30 is below threshold — not flagged.
         report_strict = audit_energy_trajectory(train, holdout, min_gap=0.5)
-        div_strict = [f for f in report_strict.findings if isinstance(f, TrainHoldoutDivergenceFinding)]
+        div_strict = [
+            f for f in report_strict.findings if isinstance(f, TrainHoldoutDivergenceFinding)
+        ]
         assert len(div_strict) == 0
 
         # With min_gap=0.1, gap=0.30 exceeds threshold — flagged.

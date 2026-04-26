@@ -150,6 +150,7 @@ class TestClaimConfidence:
     def test_unparseable_operands_returns_zero(self):
         import re
         from carnot.pipeline.crane_extractor import _INLINE_EQ
+
         # Build a mock match where group("a") is non-numeric.
         # Easier to test via CRANEExtractionGate with a crafted text.
         gate = CRANEExtractionGate(min_confidence=0.0)
@@ -221,6 +222,7 @@ class TestCRANEConstraint:
 
     def test_energy_fallback_without_jax(self):
         import builtins
+
         original_import = builtins.__import__
 
         def no_jax(name, *args, **kwargs):
@@ -400,17 +402,19 @@ class TestBuildExp419Artifact:
 class TestWriteArtifact:
     def test_creates_file(self, tmp_path):
         tmpl = ExperimentTemplate(
-            exp_id=9000, title="t", deliverable="results/test_419.json",
-            repo_root=tmp_path
+            exp_id=9000, title="t", deliverable="results/test_419.json", repo_root=tmp_path
         )
         tmpl.setup()
         artifact = {"x": 1}
         exp419._write_artifact(tmpl, artifact)
-        assert (tmp_path / "results" / "test_419.json").read_text() == json.dumps({"x": 1}, indent=2)
+        assert (tmp_path / "results" / "test_419.json").read_text() == json.dumps(
+            {"x": 1}, indent=2
+        )
 
     def test_creates_parent_dirs(self, tmp_path):
         tmpl = ExperimentTemplate(
-            exp_id=9001, title="t",
+            exp_id=9001,
+            title="t",
             deliverable="results/deep/nested/test_419b.json",
             repo_root=tmp_path,
         )
@@ -442,8 +446,7 @@ class TestApplyVariantWithCrane:
         # Text with arithmetic violation.
         response = "We get 3 + 4 = 8 total."
         result = exp419._apply_variant_with_crane(
-            PipelineVariant.FULL_STACK, response, "question", "Gemma4-E4B-it",
-            crane, None
+            PipelineVariant.FULL_STACK, response, "question", "Gemma4-E4B-it", crane, None
         )
         resp, n_viol, n_rep = result
         assert resp == response
@@ -459,8 +462,7 @@ class TestApplyVariantWithCrane:
             return_value=("resp", 2, 1),
         ) as mock_av:
             result = exp419._apply_variant_with_crane(
-                PipelineVariant.FULL_STACK, "no numbers here", "q", "model",
-                crane, fake_llm
+                PipelineVariant.FULL_STACK, "no numbers here", "q", "model", crane, fake_llm
             )
         mock_av.assert_called_once()
         assert result == ("resp", 2, 1)
@@ -487,8 +489,11 @@ class TestApplyVariantWithCrane:
 
 def _make_tmpl(tmp_path: Path) -> ExperimentTemplate:
     return ExperimentTemplate(
-        exp_id=419, title="t", deliverable="results/experiment_419_precision_live.json",
-        repo_root=tmp_path, requires_gpu=True
+        exp_id=419,
+        title="t",
+        deliverable="results/experiment_419_precision_live.json",
+        repo_root=tmp_path,
+        requires_gpu=True,
     )
 
 
@@ -516,9 +521,11 @@ class TestMain:
         def fake_write(tmpl, artifact):
             written["artifact"] = artifact
 
-        with self._patch_repo_root(tmp_path), \
-             patch.object(exp419, "_write_artifact", side_effect=fake_write), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"):
+        with (
+            self._patch_repo_root(tmp_path),
+            patch.object(exp419, "_write_artifact", side_effect=fake_write),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+        ):
             exp419.main()
 
         assert written["artifact"]["honest_verdict"] == "blocked"
@@ -531,9 +538,11 @@ class TestMain:
         def fake_write(tmpl, artifact):
             written["artifact"] = artifact
 
-        with self._patch_repo_root(tmp_path), \
-             patch.object(exp419, "_write_artifact", side_effect=fake_write), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"):
+        with (
+            self._patch_repo_root(tmp_path),
+            patch.object(exp419, "_write_artifact", side_effect=fake_write),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+        ):
             exp419.main()
 
         assert written["artifact"]["honest_verdict"] == "blocked"
@@ -547,13 +556,15 @@ class TestMain:
 
         blocked_artifact = {"status": "blocked", "blocked_reason": "no GPU"}
 
-        with self._patch_repo_root(tmp_path), \
-             patch.object(exp419, "_write_artifact", side_effect=fake_write), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"), \
-             patch(
-                 "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
-                 return_value=blocked_artifact,
-             ):
+        with (
+            self._patch_repo_root(tmp_path),
+            patch.object(exp419, "_write_artifact", side_effect=fake_write),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+            patch(
+                "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
+                return_value=blocked_artifact,
+            ),
+        ):
             exp419.main()
 
         assert written["artifact"]["honest_verdict"] == "blocked"
@@ -565,17 +576,19 @@ class TestMain:
         def fake_write(tmpl, artifact):
             written["artifact"] = artifact
 
-        with self._patch_repo_root(tmp_path), \
-             patch.object(exp419, "_write_artifact", side_effect=fake_write), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"), \
-             patch(
-                 "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
-                 return_value=None,
-             ), \
-             patch(
-                 "scripts.experiment_template.ExperimentTemplate.setup_gpu",
-                 return_value={"all_healthy": False, "models": []},
-             ):
+        with (
+            self._patch_repo_root(tmp_path),
+            patch.object(exp419, "_write_artifact", side_effect=fake_write),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+            patch(
+                "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
+                return_value=None,
+            ),
+            patch(
+                "scripts.experiment_template.ExperimentTemplate.setup_gpu",
+                return_value={"all_healthy": False, "models": []},
+            ),
+        ):
             exp419.main()
 
         assert written["artifact"]["honest_verdict"] == "blocked"
@@ -588,21 +601,23 @@ class TestMain:
         def fake_write(tmpl, artifact):
             written["artifact"] = artifact
 
-        with self._patch_repo_root(tmp_path), \
-             patch.object(exp419, "_write_artifact", side_effect=fake_write), \
-             patch("scripts.experiment_template.ExperimentTemplate.setup"), \
-             patch(
-                 "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
-                 return_value=None,
-             ), \
-             patch(
-                 "scripts.experiment_template.ExperimentTemplate.setup_gpu",
-                 return_value={"all_healthy": True, "models": []},
-             ), \
-             patch(
-                 "scripts.experiment_368_precision_live._load_model_pipeline",
-                 side_effect=RuntimeError("GPU OOM"),
-             ):
+        with (
+            self._patch_repo_root(tmp_path),
+            patch.object(exp419, "_write_artifact", side_effect=fake_write),
+            patch("scripts.experiment_template.ExperimentTemplate.setup"),
+            patch(
+                "carnot.pipeline.live_gpu_gate.LiveGPUGate.require_live_or_blocked",
+                return_value=None,
+            ),
+            patch(
+                "scripts.experiment_template.ExperimentTemplate.setup_gpu",
+                return_value={"all_healthy": True, "models": []},
+            ),
+            patch(
+                "scripts.experiment_368_precision_live._load_model_pipeline",
+                side_effect=RuntimeError("GPU OOM"),
+            ),
+        ):
             exp419.main()
 
         assert written["artifact"]["honest_verdict"] == "blocked"
@@ -657,6 +672,7 @@ class TestMain:
     def _run_with_success_patches(self, tmp_path: Path):
         """Run main() with all success patches; return written artifact."""
         from contextlib import ExitStack
+
         _write_exp413(tmp_path, "auto_fix_applied")
         written = {}
 
@@ -674,6 +690,7 @@ class TestMain:
     def test_success_artifact_required_fields(self, tmp_path):
         """Artifact from a success run has all REQUIRED_RESULT_FIELDS."""
         from scripts.experiment_template import REQUIRED_RESULT_FIELDS
+
         art = self._run_with_success_patches(tmp_path)
         for field in REQUIRED_RESULT_FIELDS:
             assert field in art, f"Missing required field: {field}"
@@ -694,6 +711,7 @@ class TestMain:
     def test_llm_extractor_unavailable_logs_warning(self, tmp_path):
         """When LLMConstraintExtractor import fails, experiment continues without it."""
         from contextlib import ExitStack
+
         _write_exp413(tmp_path, "auto_fix_applied")
         written = {}
 
@@ -704,10 +722,12 @@ class TestMain:
             for cm in self._success_patches(tmp_path):
                 stack.enter_context(cm)
             stack.enter_context(patch.object(exp419, "_write_artifact", side_effect=fake_write))
-            stack.enter_context(patch(
-                "carnot.pipeline.llm_extractor.LLMConstraintExtractor",
-                side_effect=Exception("LLM init failed"),
-            ))
+            stack.enter_context(
+                patch(
+                    "carnot.pipeline.llm_extractor.LLMConstraintExtractor",
+                    side_effect=Exception("LLM init failed"),
+                )
+            )
             exp419.main()
 
         # Should still produce an artifact (CRANE-only mode).
@@ -717,6 +737,7 @@ class TestMain:
         """When headline_result is non-empty, the HEADLINE log line is emitted."""
         import logging
         from contextlib import ExitStack
+
         _write_exp413(tmp_path, "auto_fix_applied")
         written = {}
 
@@ -727,9 +748,9 @@ class TestMain:
             for cm in self._success_patches(tmp_path):
                 stack.enter_context(cm)
             stack.enter_context(patch.object(exp419, "_write_artifact", side_effect=fake_write))
-            stack.enter_context(caplog.at_level(
-                logging.INFO, logger="scripts.experiment_419_precision_live"
-            ))
+            stack.enter_context(
+                caplog.at_level(logging.INFO, logger="scripts.experiment_419_precision_live")
+            )
             exp419.main()
 
         # Headline logged — either "HEADLINE:" line or "no FULL_STACK" message.

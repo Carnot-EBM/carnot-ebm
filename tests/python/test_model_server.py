@@ -281,8 +281,7 @@ class TestModelServerBatching:
         # is ~10 s; the important guarantee is that the caller is NOT blocked
         # indefinitely.  A pre-fix run would have blocked forever.
         assert elapsed < 10.0, (
-            f"Caller was not released after worker stall "
-            f"(elapsed={elapsed:.2f}s; expected < 10.0s)"
+            f"Caller was not released after worker stall (elapsed={elapsed:.2f}s; expected < 10.0s)"
         )
 
         # Release the stalled worker so subsequent tests aren't left with a

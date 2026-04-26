@@ -131,8 +131,12 @@ class TestPrecision100qV4Result:
     def test_n_guards_against_zero(self):
         # n=0 should not raise ZeroDivisionError (guarded by max(n,1))
         r = Precision100qV4Result(
-            model_id="m", pre_accuracy=0.5, post_accuracy=0.5,
-            n=0, extractor_used="none", inference_mode="synthetic",
+            model_id="m",
+            pre_accuracy=0.5,
+            post_accuracy=0.5,
+            n=0,
+            extractor_used="none",
+            inference_mode="synthetic",
         )
         lo, hi = r.ci_95_wilson  # must not raise
         assert 0.0 <= lo <= hi <= 1.0

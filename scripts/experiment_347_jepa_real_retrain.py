@@ -59,7 +59,9 @@ _log = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 EXPERIMENT_ID = 347
-TITLE = "JEPA real-data retrain — (partial_response, violation_flag) pairs from Exp 340 live GPU data"
+TITLE = (
+    "JEPA real-data retrain — (partial_response, violation_flag) pairs from Exp 340 live GPU data"
+)
 DELIVERABLE = "results/experiment_347_jepa_real_retrain.json"
 
 EXP_340_PATH = _REPO_ROOT / "results" / "experiment_340_live_precision_benchmark.json"
@@ -68,10 +70,10 @@ SAFETENSORS_SYN_PATH = _REPO_ROOT / "results" / "jepa_predictor_347_synthetic.sa
 
 # Training config
 TRAIN_SPLIT = 0.8
-N_EPOCHS_CI = 10     # when no GPU / CI mode
-N_EPOCHS_LIVE = 30   # when CARNOT_FORCE_LIVE=1
+N_EPOCHS_CI = 10  # when no GPU / CI mode
+N_EPOCHS_LIVE = 30  # when CARNOT_FORCE_LIVE=1
 BATCH_SIZE = 8
-LR = 1e-3            # slightly higher than default to converge faster on small data
+LR = 1e-3  # slightly higher than default to converge faster on small data
 
 # JEPA model config (must match existing predictor embed_dim for fine-tuning)
 EMBED_DIM = 64
@@ -193,13 +195,9 @@ def run_experiment(
             if isinstance(raw.get("responses"), list) and len(raw["responses"]) > 0:
                 live_results = raw
                 inference_mode = "live_gpu"
-                _log.info(
-                    "Loaded %d real responses from Exp 340", len(raw["responses"])
-                )
+                _log.info("Loaded %d real responses from Exp 340", len(raw["responses"]))
             else:
-                _log.info(
-                    "Exp 340 JSON present but has no responses list — using synthetic pairs"
-                )
+                _log.info("Exp 340 JSON present but has no responses list — using synthetic pairs")
         except (json.JSONDecodeError, OSError) as exc:
             _log.warning("Could not read Exp 340 JSON: %s — using synthetic pairs", exc)
     else:
@@ -208,9 +206,7 @@ def run_experiment(
     # ---- 2. Extract violation pairs ----
     all_pairs = extract_violation_pairs(live_results, prefix_fraction=0.5)
     n_real_pairs = 0 if inference_mode == "simulated" else len(all_pairs)
-    _log.info(
-        "Extracted %d pairs (inference_mode=%s)", len(all_pairs), inference_mode
-    )
+    _log.info("Extracted %d pairs (inference_mode=%s)", len(all_pairs), inference_mode)
 
     # ---- 3. 80/20 train/test split (deterministic, no shuffle) ----
     split_idx = max(1, round(TRAIN_SPLIT * len(all_pairs)))
@@ -234,7 +230,9 @@ def run_experiment(
     _log.info("AUC before retraining: %.4f", before_auc)
 
     # ---- 6. Train ----
-    n_epochs = N_EPOCHS_LIVE if (force_live or os.environ.get("CARNOT_FORCE_LIVE") == "1") else N_EPOCHS_CI
+    n_epochs = (
+        N_EPOCHS_LIVE if (force_live or os.environ.get("CARNOT_FORCE_LIVE") == "1") else N_EPOCHS_CI
+    )
     epoch_losses: list[float] = []
 
     for epoch in range(n_epochs):
@@ -251,7 +249,12 @@ def run_experiment(
 
     # ---- 7. After AUC ----
     after_auc = retrainer.evaluate_auc_roc(test_pairs)
-    _log.info("AUC after %d epochs: %.4f (improvement: %+.4f)", n_epochs, after_auc, after_auc - before_auc)
+    _log.info(
+        "AUC after %d epochs: %.4f (improvement: %+.4f)",
+        n_epochs,
+        after_auc,
+        after_auc - before_auc,
+    )
 
     # ---- 8. Save retrained model ----
     safetensors_path = (

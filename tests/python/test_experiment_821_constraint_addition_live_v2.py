@@ -8,6 +8,7 @@ Covers:
 
 Spec: REQ-LEARN-821-001, REQ-LEARN-821-002, SCENARIO-LEARN-821-001
 """
+
 from __future__ import annotations
 
 import json
@@ -66,9 +67,7 @@ class TestExp819Gate:
         """
         missing = tmp_path / "no_such_file.json"
         tmpl = _make_tmpl()
-        with patch(
-            "scripts.experiment_821_constraint_addition_live_v2.EXP_819_PATH", missing
-        ):
+        with patch("scripts.experiment_821_constraint_addition_live_v2.EXP_819_PATH", missing):
             result = _check_exp819_gate(tmpl)
         assert result is not None, "Should return blocked artifact when file is missing"
         assert result["honest_verdict"] == "blocked_gate"
@@ -81,9 +80,7 @@ class TestExp819Gate:
         Spec: REQ-LEARN-821-001
         """
         exp819_file = tmp_path / "experiment_819.json"
-        exp819_file.write_text(
-            json.dumps({"honest_verdict": "injection_partial"})
-        )
+        exp819_file.write_text(json.dumps({"honest_verdict": "injection_partial"}))
         tmpl = _make_tmpl()
         with patch(
             "scripts.experiment_821_constraint_addition_live_v2.EXP_819_PATH",
@@ -94,17 +91,13 @@ class TestExp819Gate:
         assert result["honest_verdict"] == "blocked_gate"
         assert "injection_partial" in result["blocked_reason"]
 
-    def test_gate_passes_when_verdict_is_injection_field_fixed(
-        self, tmp_path: Path
-    ) -> None:
+    def test_gate_passes_when_verdict_is_injection_field_fixed(self, tmp_path: Path) -> None:
         """Gate returns None (proceed) when honest_verdict == 'injection_field_fixed'.
 
         Spec: REQ-LEARN-821-001
         """
         exp819_file = tmp_path / "experiment_819.json"
-        exp819_file.write_text(
-            json.dumps({"honest_verdict": "injection_field_fixed"})
-        )
+        exp819_file.write_text(json.dumps({"honest_verdict": "injection_field_fixed"}))
         tmpl = _make_tmpl()
         with patch(
             "scripts.experiment_821_constraint_addition_live_v2.EXP_819_PATH",

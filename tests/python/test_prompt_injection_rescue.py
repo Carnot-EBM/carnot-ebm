@@ -18,18 +18,21 @@ _PHASE1 = _REPO_ROOT / "results/experiment_669_phase1_corpus.json"
 _PHASE2 = _REPO_ROOT / "results/experiment_669_phase2_training.json"
 
 # Five-value enum from REQ-SAFE-009; must match HONEST_VERDICT_VALUES in prompt_injection_kan.py.
-HONEST_VERDICT_ENUM = frozenset({
-    "distillation_corpus_built_classifier_trained_auroc_met",
-    "distillation_corpus_built_classifier_trained_auroc_below_threshold",
-    "distillation_corpus_built_classifier_not_trained",
-    "distillation_corpus_not_built",
-    "blocked_on_dependency",
-})
+HONEST_VERDICT_ENUM = frozenset(
+    {
+        "distillation_corpus_built_classifier_trained_auroc_met",
+        "distillation_corpus_built_classifier_trained_auroc_below_threshold",
+        "distillation_corpus_built_classifier_not_trained",
+        "distillation_corpus_not_built",
+        "blocked_on_dependency",
+    }
+)
 
 
 # ---------------------------------------------------------------------------
 # REQ-SAFE-009: honest_verdict enum
 # ---------------------------------------------------------------------------
+
 
 class TestHonestVerdict:
     """honest_verdict must be one of the five-value enum (REQ-SAFE-009)."""
@@ -54,8 +57,15 @@ class TestHonestVerdict:
     def test_required_schema_fields_present(self) -> None:
         """All required result schema fields must be present. REQ-SAFE-007."""
         required = {
-            "experiment", "schema", "title", "run_date",
-            "started_at", "finished_at", "duration_s", "status", "honest_verdict",
+            "experiment",
+            "schema",
+            "title",
+            "run_date",
+            "started_at",
+            "finished_at",
+            "duration_s",
+            "status",
+            "honest_verdict",
         }
         with open(_DELIVERABLE) as fh:
             artifact = json.load(fh)
@@ -72,6 +82,7 @@ class TestHonestVerdict:
 # ---------------------------------------------------------------------------
 # REQ-SAFE-008: feature encoder determinism
 # ---------------------------------------------------------------------------
+
 
 class TestFeatureEncoder:
     """encode_prompt_injection must produce identical output on repeated calls. REQ-SAFE-008."""
@@ -127,6 +138,7 @@ class TestFeatureEncoder:
 # ---------------------------------------------------------------------------
 # REQ-SAFE-007: AtomicResultWriter phase writes
 # ---------------------------------------------------------------------------
+
 
 class TestAtomicPhaseWrites:
     """Phase partial artifacts must be written before training and evaluation. REQ-SAFE-007."""

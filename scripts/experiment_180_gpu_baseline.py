@@ -81,16 +81,56 @@ from carnot.inference.model_loader import load_model, generate  # noqa: E402
 _BENCH_PROMPTS_50 = [
     f"What is {a} + {b}?"
     for a, b in [
-        (17, 38), (55, 44), (123, 456), (789, 321), (1001, 999),
-        (42, 58), (100, 200), (37, 63), (250, 750), (111, 222),
-        (333, 667), (400, 600), (512, 488), (1024, 976), (2048, 952),
-        (3, 7), (15, 85), (64, 36), (128, 872), (256, 744),
-        (500, 500), (999, 1), (1000, 1000), (12, 88), (24, 76),
-        (48, 52), (96, 4), (192, 808), (384, 616), (768, 232),
-        (7, 3), (14, 86), (21, 79), (28, 72), (35, 65),
-        (49, 51), (56, 44), (63, 37), (70, 30), (77, 23),
-        (84, 16), (91, 9), (98, 2), (105, 895), (112, 888),
-        (119, 881), (126, 874), (133, 867), (140, 860), (147, 853),
+        (17, 38),
+        (55, 44),
+        (123, 456),
+        (789, 321),
+        (1001, 999),
+        (42, 58),
+        (100, 200),
+        (37, 63),
+        (250, 750),
+        (111, 222),
+        (333, 667),
+        (400, 600),
+        (512, 488),
+        (1024, 976),
+        (2048, 952),
+        (3, 7),
+        (15, 85),
+        (64, 36),
+        (128, 872),
+        (256, 744),
+        (500, 500),
+        (999, 1),
+        (1000, 1000),
+        (12, 88),
+        (24, 76),
+        (48, 52),
+        (96, 4),
+        (192, 808),
+        (384, 616),
+        (768, 232),
+        (7, 3),
+        (14, 86),
+        (21, 79),
+        (28, 72),
+        (35, 65),
+        (49, 51),
+        (56, 44),
+        (63, 37),
+        (70, 30),
+        (77, 23),
+        (84, 16),
+        (91, 9),
+        (98, 2),
+        (105, 895),
+        (112, 888),
+        (119, 881),
+        (126, 874),
+        (133, 867),
+        (140, 860),
+        (147, 853),
     ]
 ]
 
@@ -103,12 +143,12 @@ _BENCH_PROMPTS_5_CPU = _BENCH_PROMPTS_50[:5]
 
 def _vram_used_mb(device_index: int) -> float:
     """Return currently allocated VRAM in MiB for a CUDA device."""
-    return torch.cuda.memory_allocated(device_index) / 1024 ** 2
+    return torch.cuda.memory_allocated(device_index) / 1024**2
 
 
 def _vram_reserved_mb(device_index: int) -> float:
     """Return reserved (cached) VRAM in MiB for a CUDA device."""
-    return torch.cuda.memory_reserved(device_index) / 1024 ** 2
+    return torch.cuda.memory_reserved(device_index) / 1024**2
 
 
 def _benchmark_model(
@@ -177,10 +217,7 @@ def _benchmark_model(
             tokens_per_sec.append(tps)
 
             if (i + 1) % 10 == 0:
-                print(
-                    f"  [{label}] {i+1}/{len(prompts)} | "
-                    f"lat={lat_ms:.0f}ms | {tps:.1f} tok/s"
-                )
+                print(f"  [{label}] {i + 1}/{len(prompts)} | lat={lat_ms:.0f}ms | {tps:.1f} tok/s")
         except Exception as exc:
             errors.append(f"prompt {i}: {exc}")
             print(f"  [{label}] ERROR prompt {i}: {exc}")
@@ -243,7 +280,7 @@ def _load_and_benchmark_gpu(
         Dict with keys: model_name, hf_id, device, load_time_s, vram_before_mb,
         vram_after_mb, vram_delta_mb, benchmark_50q.
     """
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"[GPU {device_index}] Loading {model_name} ({hf_id})...")
 
     torch.cuda.synchronize(device_index)
@@ -270,7 +307,9 @@ def _load_and_benchmark_gpu(
 
     print(f"[GPU {device_index}] Benchmarking 50 prompts...")
     bench = _benchmark_model(
-        model, tokenizer, _BENCH_PROMPTS_50,
+        model,
+        tokenizer,
+        _BENCH_PROMPTS_50,
         label=f"GPU{device_index}/{model_name}",
         device_index=device_index,
     )
@@ -322,7 +361,9 @@ def _load_and_benchmark_cpu(
     print(f"[CPU] Loaded in {load_time_s:.1f}s")
 
     bench = _benchmark_model(
-        model_cpu, tok_cpu, _BENCH_PROMPTS_5_CPU,
+        model_cpu,
+        tok_cpu,
+        _BENCH_PROMPTS_5_CPU,
         label=f"CPU/{model_name}",
         device_index=None,
     )
@@ -338,8 +379,10 @@ def _load_and_benchmark_cpu(
 
 
 def _dual_gpu_concurrent_test(
-    model0: Any, tok0: Any,
-    model1: Any, tok1: Any,
+    model0: Any,
+    tok0: Any,
+    model1: Any,
+    tok1: Any,
 ) -> dict[str, Any]:
     """Run 10 prompts through each model concurrently using Python threads.
 
@@ -390,8 +433,10 @@ def _dual_gpu_concurrent_test(
     t_wall_start = time.perf_counter()
     t0 = threading.Thread(target=run_gpu0, daemon=True)
     t1 = threading.Thread(target=run_gpu1, daemon=True)
-    t0.start(); t1.start()
-    t0.join(); t1.join()
+    t0.start()
+    t1.start()
+    t0.join()
+    t1.join()
     total_wall_s = time.perf_counter() - t_wall_start
 
     results["total_wall_time_s"] = round(total_wall_s, 3)
@@ -404,14 +449,11 @@ def _dual_gpu_concurrent_test(
     sum_gpu1 = sum(results.get("gpu1_latencies_ms", []))
     serial_expected_s = (sum_gpu0 + sum_gpu1) / 1000.0
     results["serial_expected_s"] = round(serial_expected_s, 3)
-    results["parallelism_efficiency"] = round(
-        serial_expected_s / (total_wall_s * 2 + 1e-9), 4
-    ) if total_wall_s > 0 else None
-
-    print(
-        f"[DUAL-GPU] Done — wall={total_wall_s:.1f}s, "
-        f"serial_expected={serial_expected_s:.1f}s"
+    results["parallelism_efficiency"] = (
+        round(serial_expected_s / (total_wall_s * 2 + 1e-9), 4) if total_wall_s > 0 else None
     )
+
+    print(f"[DUAL-GPU] Done — wall={total_wall_s:.1f}s, serial_expected={serial_expected_s:.1f}s")
     return results
 
 
@@ -429,7 +471,7 @@ def main() -> None:
     print(f"CUDA device count: {torch.cuda.device_count()}")
     for i in range(torch.cuda.device_count()):
         props = torch.cuda.get_device_properties(i)
-        total_vram_mb = props.total_memory / 1024 ** 2
+        total_vram_mb = props.total_memory / 1024**2
         print(f"  GPU {i}: {props.name} — {total_vram_mb:.0f} MB VRAM total")
     print("=" * 60)
 
@@ -450,12 +492,14 @@ def main() -> None:
     # Collect device info.
     for i in range(torch.cuda.device_count()):
         props = torch.cuda.get_device_properties(i)
-        results["devices"].append({
-            "index": i,
-            "name": props.name,
-            "total_vram_mb": round(props.total_memory / 1024 ** 2, 1),
-            "compute_capability": f"{props.major}.{props.minor}",
-        })
+        results["devices"].append(
+            {
+                "index": i,
+                "name": props.name,
+                "total_vram_mb": round(props.total_memory / 1024**2, 1),
+                "compute_capability": f"{props.major}.{props.minor}",
+            }
+        )
 
     # -----------------------------------------------------------------------
     # Step 1: Load Qwen3.5-0.8B on GPU 0
@@ -526,9 +570,7 @@ def main() -> None:
         gpu_tps = results["gpu0"].get("benchmark_50q", {}).get("mean_tokens_per_sec")
         cpu_tps = cpu_qwen["benchmark_5q"].get("mean_tokens_per_sec")
         if gpu_tps and cpu_tps and cpu_tps > 0:
-            results["speedup_ratios"]["Qwen3.5-0.8B_gpu_vs_cpu"] = round(
-                gpu_tps / cpu_tps, 2
-            )
+            results["speedup_ratios"]["Qwen3.5-0.8B_gpu_vs_cpu"] = round(gpu_tps / cpu_tps, 2)
             print(
                 f"[Speedup] Qwen3.5-0.8B GPU/CPU = "
                 f"{results['speedup_ratios']['Qwen3.5-0.8B_gpu_vs_cpu']}x"
@@ -550,9 +592,7 @@ def main() -> None:
         gpu_tps = results["gpu1"].get("benchmark_50q", {}).get("mean_tokens_per_sec")
         cpu_tps = cpu_gemma["benchmark_5q"].get("mean_tokens_per_sec")
         if gpu_tps and cpu_tps and cpu_tps > 0:
-            results["speedup_ratios"]["Gemma4-E4B-it_gpu_vs_cpu"] = round(
-                gpu_tps / cpu_tps, 2
-            )
+            results["speedup_ratios"]["Gemma4-E4B-it_gpu_vs_cpu"] = round(gpu_tps / cpu_tps, 2)
             print(
                 f"[Speedup] Gemma4-E4B-it GPU/CPU = "
                 f"{results['speedup_ratios']['Gemma4-E4B-it_gpu_vs_cpu']}x"
@@ -603,6 +643,7 @@ if __name__ == "__main__":
 # this block is safe to leave in place permanently.
 try:
     from carnot.pipeline.dual_gpu_harness import DualGPUHarness as _Exp495DGH
+
     if "MODEL_SPECS" in vars():
         MODEL_SPECS = _Exp495DGH.from_env().apply(MODEL_SPECS)  # cuda:1 → model[1]
 except Exception:  # noqa: BLE001

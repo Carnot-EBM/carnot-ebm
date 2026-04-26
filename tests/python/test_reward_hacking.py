@@ -182,11 +182,7 @@ class TestRewardHackingReport:
     def test_not_clean_when_findings_present(self) -> None:
         """REQ-LEARN-002: Report with any finding is not clean."""
         report = RewardHackingReport(
-            findings=[
-                TrivialConstraintFinding(
-                    constraint_type="x", fired=10, precision=0.01
-                )
-            ]
+            findings=[TrivialConstraintFinding(constraint_type="x", fired=10, precision=0.01)]
         )
         assert report.clean is False
 
@@ -573,7 +569,8 @@ class TestAuditFull:
         report = audit_full(tracker, [0.0], [1.0])
         # No energy findings — sequences too short.
         energy_findings = [
-            f for f in report.findings
+            f
+            for f in report.findings
             if isinstance(f, (ZeroEnergyFinding, TrainHoldoutDivergenceFinding))
         ]
         assert len(energy_findings) == 0

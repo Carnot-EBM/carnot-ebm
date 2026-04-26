@@ -428,9 +428,7 @@ def evaluate_method(
     Returns a dict with method name, satisfied count, percentage, and wall time.
     """
     t0 = time.time()
-    best_s = multi_restart_solve(
-        solve_fn, biases, J, n_restarts=n_restarts, key=key, **kwargs
-    )
+    best_s = multi_restart_solve(solve_fn, biases, J, n_restarts=n_restarts, key=key, **kwargs)
     elapsed = time.time() - t0
 
     assignment = spins_to_assignment(best_s, n_vars)
@@ -492,9 +490,9 @@ def main() -> int:
 
     for n_vars, ratio in test_cases:
         n_clauses = int(n_vars * ratio)
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"  {n_vars} variables, {n_clauses} clauses (ratio={ratio})")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         # Generate SAT instance and convert to Ising.
         clauses = random_3sat(n_vars, n_clauses, seed=42 + n_vars)
@@ -518,7 +516,9 @@ def main() -> int:
             n_restarts=n_restarts,
             **gd_params,
         )
-        print(f"  Plain GD:       {r['satisfied']}/{r['total']} ({r['pct']:.1f}%) in {r['time']:.1f}s")
+        print(
+            f"  Plain GD:       {r['satisfied']}/{r['total']} ({r['pct']:.1f}%) in {r['time']:.1f}s"
+        )
         size_results["methods"].append(r)
 
         # --- Method 2: Sigmoid annealing ---
@@ -533,7 +533,9 @@ def main() -> int:
             n_restarts=n_restarts,
             **sig_params,
         )
-        print(f"  Sigmoid anneal: {r['satisfied']}/{r['total']} ({r['pct']:.1f}%) in {r['time']:.1f}s")
+        print(
+            f"  Sigmoid anneal: {r['satisfied']}/{r['total']} ({r['pct']:.1f}%) in {r['time']:.1f}s"
+        )
         size_results["methods"].append(r)
 
         # --- Method 3: Penalty term ---
@@ -548,7 +550,9 @@ def main() -> int:
             n_restarts=n_restarts,
             **pen_params,
         )
-        print(f"  Penalty:        {r['satisfied']}/{r['total']} ({r['pct']:.1f}%) in {r['time']:.1f}s")
+        print(
+            f"  Penalty:        {r['satisfied']}/{r['total']} ({r['pct']:.1f}%) in {r['time']:.1f}s"
+        )
         size_results["methods"].append(r)
 
         # --- Method 4: Straight-through ---
@@ -563,7 +567,9 @@ def main() -> int:
             n_restarts=n_restarts,
             **ste_params,
         )
-        print(f"  Straight-thru:  {r['satisfied']}/{r['total']} ({r['pct']:.1f}%) in {r['time']:.1f}s")
+        print(
+            f"  Straight-thru:  {r['satisfied']}/{r['total']} ({r['pct']:.1f}%) in {r['time']:.1f}s"
+        )
         size_results["methods"].append(r)
 
         # --- Method 5: Parallel Gibbs sampling ---
@@ -594,7 +600,9 @@ def main() -> int:
             "pct": gibbs_pct,
             "time": gibbs_time,
         }
-        print(f"  Parallel Gibbs: {gibbs_best_sat}/{n_clauses} ({gibbs_pct:.1f}%) in {gibbs_time:.1f}s")
+        print(
+            f"  Parallel Gibbs: {gibbs_best_sat}/{n_clauses} ({gibbs_pct:.1f}%) in {gibbs_time:.1f}s"
+        )
         size_results["methods"].append(gibbs_r)
 
         # --- Method 6: Random baseline ---
@@ -615,7 +623,9 @@ def main() -> int:
             "pct": rand_pct,
             "time": rand_time,
         }
-        print(f"  Random (500):   {rand_best_sat}/{n_clauses} ({rand_pct:.1f}%) in {rand_time:.1f}s")
+        print(
+            f"  Random (500):   {rand_best_sat}/{n_clauses} ({rand_pct:.1f}%) in {rand_time:.1f}s"
+        )
         size_results["methods"].append(rand_r)
 
         all_results.append(size_results)
@@ -664,7 +674,7 @@ def main() -> int:
         methods_sorted = sorted(sr["methods"], key=lambda m: -m["pct"])
         best = methods_sorted[0]
         random_pct = sr["methods"][-1]["pct"]  # Random is last
-        gibbs_pct = sr["methods"][-2]["pct"]   # Gibbs is second to last
+        gibbs_pct = sr["methods"][-2]["pct"]  # Gibbs is second to last
 
         best_continuous = max(
             (m for m in sr["methods"] if m["name"] not in ("Parallel Gibbs", "Random")),

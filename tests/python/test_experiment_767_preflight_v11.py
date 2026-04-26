@@ -137,9 +137,12 @@ class TestAddNewExclusions:
         Spec: REQ-INFRA-054, SCENARIO-INFRA-063
         """
         manifest = tmp_path / "conductor_exclusion_manifest.json"
-        self._make_manifest(manifest, [
-            {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "legacy"},
-        ])
+        self._make_manifest(
+            manifest,
+            [
+                {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "legacy"},
+            ],
+        )
         added, n_total = add_new_exclusions(manifest)
         assert set(added) == {425, 491, 603, 627}
         assert n_total == 5  # 1 existing + 4 new
@@ -155,12 +158,31 @@ class TestAddNewExclusions:
         Spec: REQ-INFRA-054
         """
         manifest = tmp_path / "conductor_exclusion_manifest.json"
-        self._make_manifest(manifest, [
-            {"experiment_id": 425, "completed_milestone": "2026.04.58", "reason": "already added"},
-            {"experiment_id": 491, "completed_milestone": "2026.04.58", "reason": "already added"},
-            {"experiment_id": 603, "completed_milestone": "2026.04.58", "reason": "already added"},
-            {"experiment_id": 627, "completed_milestone": "2026.04.58", "reason": "already added"},
-        ])
+        self._make_manifest(
+            manifest,
+            [
+                {
+                    "experiment_id": 425,
+                    "completed_milestone": "2026.04.58",
+                    "reason": "already added",
+                },
+                {
+                    "experiment_id": 491,
+                    "completed_milestone": "2026.04.58",
+                    "reason": "already added",
+                },
+                {
+                    "experiment_id": 603,
+                    "completed_milestone": "2026.04.58",
+                    "reason": "already added",
+                },
+                {
+                    "experiment_id": 627,
+                    "completed_milestone": "2026.04.58",
+                    "reason": "already added",
+                },
+            ],
+        )
         added, n_total = add_new_exclusions(manifest)
         assert added == []
         assert n_total == 4  # No duplicates added
@@ -171,9 +193,16 @@ class TestAddNewExclusions:
         Spec: REQ-INFRA-054
         """
         manifest = tmp_path / "conductor_exclusion_manifest.json"
-        self._make_manifest(manifest, [
-            {"experiment_id": 425, "completed_milestone": "2026.04.58", "reason": "already added"},
-        ])
+        self._make_manifest(
+            manifest,
+            [
+                {
+                    "experiment_id": 425,
+                    "completed_milestone": "2026.04.58",
+                    "reason": "already added",
+                },
+            ],
+        )
         added, n_total = add_new_exclusions(manifest)
         assert 425 not in added
         assert set(added) == {491, 603, 627}

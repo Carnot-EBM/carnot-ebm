@@ -18,14 +18,12 @@ from pathlib import Path
 import jax.numpy as jnp
 import numpy as np
 import pytest
-
 from carnot.pipeline.jepa_predictor import (
     DOMAINS,
     EMBED_DIM,
     N_DOMAINS,
     JEPAViolationPredictor,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -277,9 +275,7 @@ class TestEnergyFunction:
     REQ-CORE-002, REQ-JEPA-001
     """
 
-    def test_implements_energy_function_protocol(
-        self, predictor: JEPAViolationPredictor
-    ) -> None:
+    def test_implements_energy_function_protocol(self, predictor: JEPAViolationPredictor) -> None:
         """REQ-CORE-002: isinstance check against EnergyFunction protocol passes."""
         from carnot.core.energy import EnergyFunction
 
@@ -310,9 +306,7 @@ class TestEnergyFunction:
         energies = predictor.energy_batch(xs)
         assert energies.shape == (5,)
 
-    def test_energy_batch_consistent_with_energy(
-        self, predictor: JEPAViolationPredictor
-    ) -> None:
+    def test_energy_batch_consistent_with_energy(self, predictor: JEPAViolationPredictor) -> None:
         """REQ-CORE-002: energy_batch()[i] == energy(xs[i]) for all i."""
         rng = np.random.RandomState(4)
         xs = jnp.asarray(rng.randn(4, EMBED_DIM).astype(np.float32))
@@ -416,9 +410,7 @@ class TestTrain:
         probs_before = predictor.predict(random_embedding)
         predictor.train(tiny_pairs, n_epochs=5, batch_size=8)
         probs_after = predictor.predict(random_embedding)
-        any_changed = any(
-            abs(probs_before[d] - probs_after[d]) > 1e-7 for d in DOMAINS
-        )
+        any_changed = any(abs(probs_before[d] - probs_after[d]) > 1e-7 for d in DOMAINS)
         assert any_changed, "Training did not update model parameters"
 
     def test_loss_decreases_over_epochs(
@@ -474,7 +466,7 @@ class TestConstants:
 
     def test_n_domains(self) -> None:
         """N_DOMAINS == len(DOMAINS)."""
-        assert N_DOMAINS == len(DOMAINS)
+        assert len(DOMAINS) == N_DOMAINS
 
     def test_domains_list(self) -> None:
         """DOMAINS contains arithmetic, code, logic in that order."""
@@ -518,9 +510,7 @@ class TestV2ModelFile:
         # Reaching here means load() succeeded — assert the predictor is usable.
         assert v2_predictor is not None
 
-    def test_v2_predict_returns_all_domains(
-        self, v2_predictor: JEPAViolationPredictor
-    ) -> None:
+    def test_v2_predict_returns_all_domains(self, v2_predictor: JEPAViolationPredictor) -> None:
         """REQ-JEPA-001: v2 predict() returns one probability per domain."""
         rng = np.random.RandomState(42)
         emb = jnp.asarray(rng.randn(EMBED_DIM).astype(np.float32))
@@ -529,9 +519,7 @@ class TestV2ModelFile:
         for domain, prob in result.items():
             assert 0.0 <= prob <= 1.0, f"Domain '{domain}' prob {prob} out of [0, 1]"
 
-    def test_v2_code_domain_non_random(
-        self, v2_predictor: JEPAViolationPredictor
-    ) -> None:
+    def test_v2_code_domain_non_random(self, v2_predictor: JEPAViolationPredictor) -> None:
         """SCENARIO-JEPA-001: v2 code predictions vary across inputs (non-constant function).
 
         A random (untrained) predictor can still vary, so we test with two
@@ -556,29 +544,23 @@ class TestV2ModelFile:
 
         # The two embeddings differ (different byte histograms for different code),
         # so the model must produce different outputs (non-constant).
-        any_different = any(
-            abs(p_correct[d] - p_buggy[d]) > 1e-6 for d in DOMAINS
-        )
+        any_different = any(abs(p_correct[d] - p_buggy[d]) > 1e-6 for d in DOMAINS)
         assert any_different, (
             "v2 model produces identical predictions for correct and buggy code — "
             "model may not have learned code signal"
         )
 
-    def test_v2_logic_domain_non_random(
-        self, v2_predictor: JEPAViolationPredictor
-    ) -> None:
+    def test_v2_logic_domain_non_random(self, v2_predictor: JEPAViolationPredictor) -> None:
         """SCENARIO-JEPA-001: v2 logic predictions vary across inputs (non-constant function).
 
         Encodes a valid syllogism and an invalid fallacy through the same
         RandomProjectionEmbedding and verifies the model's outputs differ.
         """
         valid_logic = (
-            "All mammals are warm-blooded. A dog is a mammal. "
-            "Therefore, a dog is warm-blooded."
+            "All mammals are warm-blooded. A dog is a mammal. Therefore, a dog is warm-blooded."
         )
         invalid_logic = (
-            "All mammals are warm-blooded. A snake is warm-blooded. "
-            "Therefore, a snake is a mammal."
+            "All mammals are warm-blooded. A snake is warm-blooded. Therefore, a snake is a mammal."
         )
 
         from carnot.embeddings.fast_embedding import RandomProjectionEmbedding
@@ -590,17 +572,13 @@ class TestV2ModelFile:
         p_valid = v2_predictor.predict(emb_valid)
         p_invalid = v2_predictor.predict(emb_invalid)
 
-        any_different = any(
-            abs(p_valid[d] - p_invalid[d]) > 1e-6 for d in DOMAINS
-        )
+        any_different = any(abs(p_valid[d] - p_invalid[d]) > 1e-6 for d in DOMAINS)
         assert any_different, (
             "v2 model produces identical predictions for valid and invalid logic — "
             "model may not have learned logic signal"
         )
 
-    def test_v2_energy_function_protocol(
-        self, v2_predictor: JEPAViolationPredictor
-    ) -> None:
+    def test_v2_energy_function_protocol(self, v2_predictor: JEPAViolationPredictor) -> None:
         """REQ-CORE-002: v2 model satisfies EnergyFunction protocol after loading."""
         from carnot.core.energy import EnergyFunction
 
@@ -638,9 +616,7 @@ class TestV3ModelFile:
         """
         path = self.V3_MODEL_PATH
         if not __import__("pathlib").Path(path).exists():
-            pytest.skip(
-                f"v3 model not found at {path}; run experiment_167_train_jepa_v3.py first"
-            )
+            pytest.skip(f"v3 model not found at {path}; run experiment_167_train_jepa_v3.py first")
         predictor = JEPAViolationPredictor(seed=0)
         predictor.load(path)
         return predictor
@@ -652,9 +628,7 @@ class TestV3ModelFile:
         """
         assert v3_predictor is not None
 
-    def test_v3_predict_returns_all_domains(
-        self, v3_predictor: JEPAViolationPredictor
-    ) -> None:
+    def test_v3_predict_returns_all_domains(self, v3_predictor: JEPAViolationPredictor) -> None:
         """REQ-JEPA-001: v3 predict() returns one probability per domain in [0, 1]."""
         rng = np.random.RandomState(42)
         emb = jnp.asarray(rng.randn(EMBED_DIM).astype(np.float32))
@@ -688,7 +662,7 @@ class TestV3ModelFile:
         rng_valid = np.random.RandomState(101)
         valid_emb_raw = rng_valid.randn(EMBED_DIM).astype(np.float32)
         # Bias first 40 dims (symbolic features) toward "valid" pattern
-        valid_emb_raw[:10] = 0.8   # strong connective signals
+        valid_emb_raw[:10] = 0.8  # strong connective signals
         valid_emb_raw[10:20] = 0.0  # no negation
         valid_emb_raw[20:40] = 0.3  # moderate clause depth
 
@@ -697,8 +671,8 @@ class TestV3ModelFile:
         rng_invalid = np.random.RandomState(202)
         invalid_emb_raw = rng_invalid.randn(EMBED_DIM).astype(np.float32)
         # Bias first 40 dims toward "invalid" fallacy pattern
-        invalid_emb_raw[:10] = -0.8   # weak/absent valid connectives
-        invalid_emb_raw[10:20] = 0.8   # strong negation/reversal signals
+        invalid_emb_raw[:10] = -0.8  # weak/absent valid connectives
+        invalid_emb_raw[10:20] = 0.8  # strong negation/reversal signals
         invalid_emb_raw[20:40] = -0.3  # inverted clause depth
 
         # L2-normalise both (as Exp 166 does)
@@ -736,9 +710,7 @@ class TestV3ModelFile:
             f"v3 model missing parameter keys: {required - param_keys}"
         )
 
-    def test_v3_energy_function_protocol(
-        self, v3_predictor: JEPAViolationPredictor
-    ) -> None:
+    def test_v3_energy_function_protocol(self, v3_predictor: JEPAViolationPredictor) -> None:
         """REQ-CORE-002: v3 model satisfies EnergyFunction protocol after loading."""
         from carnot.core.energy import EnergyFunction
 

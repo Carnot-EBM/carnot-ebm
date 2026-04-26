@@ -108,8 +108,10 @@ class TestJsonClaimExtractor:
 
     def _make_llm(self, response: str):
         """Build a stub llm_caller that returns a fixed string."""
+
         def llm_caller(prompt: str) -> str:
             return response
+
         return llm_caller
 
     def test_basic_claim_extracted(self):
@@ -124,10 +126,12 @@ class TestJsonClaimExtractor:
         assert claims[0].confidence == pytest.approx(0.85)
 
     def test_multiple_claims(self):
-        raw = json.dumps([
-            {"lhs": "35*20", "rhs": 700, "text": "35 hours × $20 = $700"},
-            {"lhs": "700*50", "rhs": 35000, "text": "$700/wk × 50wk = $35000"},
-        ])
+        raw = json.dumps(
+            [
+                {"lhs": "35*20", "rhs": 700, "text": "35 hours × $20 = $700"},
+                {"lhs": "700*50", "rhs": 35000, "text": "$700/wk × 50wk = $35000"},
+            ]
+        )
         extractor = JsonClaimExtractor()
         claims = extractor.extract_claims("...", self._make_llm(raw))
         assert len(claims) == 2
@@ -185,6 +189,7 @@ class TestJsonClaimExtractor:
     def test_llm_exception_returns_empty(self):
         def bad_llm(prompt: str) -> str:
             raise RuntimeError("GPU OOM")
+
         extractor = JsonClaimExtractor()
         claims = extractor.extract_claims("...", bad_llm)
         assert claims == []
@@ -208,6 +213,7 @@ class TestSymCodeExtractor:
     def _make_llm(self, response: str):
         def llm_caller(prompt: str) -> str:
             return response
+
         return llm_caller
 
     def test_correct_arithmetic_no_violation(self):
@@ -247,14 +253,13 @@ class TestSymCodeExtractor:
     def test_no_stated_result_returns_empty(self):
         # Step has no "= N" or "is N" pattern.
         extractor = SymCodeExtractor()
-        claims = extractor.extract_claims(
-            "She went to the store.", self._make_llm("3*5")
-        )
+        claims = extractor.extract_claims("She went to the store.", self._make_llm("3*5"))
         assert claims == []
 
     def test_llm_exception_returns_empty(self):
         def bad_llm(prompt: str) -> str:
             raise ValueError("timeout")
+
         extractor = SymCodeExtractor()
         claims = extractor.extract_claims("...", bad_llm)
         assert claims == []
@@ -262,25 +267,19 @@ class TestSymCodeExtractor:
     def test_markdown_fenced_code_stripped(self):
         # LLM wraps expression in code fence.
         extractor = SymCodeExtractor()
-        claims = extractor.extract_claims(
-            "Total is 100.", self._make_llm("```python\n50+50\n```")
-        )
+        claims = extractor.extract_claims("Total is 100.", self._make_llm("```python\n50+50\n```"))
         assert len(claims) == 1
         assert claims[0].lhs_expr == "50+50"
 
     def test_unevaluable_expression_returns_empty(self):
         # LLM returns something safe_eval can't handle.
         extractor = SymCodeExtractor()
-        claims = extractor.extract_claims(
-            "Result = 42.", self._make_llm("os.system('ls')")
-        )
+        claims = extractor.extract_claims("Result = 42.", self._make_llm("os.system('ls')"))
         assert claims == []
 
     def test_strategy_label(self):
         extractor = SymCodeExtractor()
-        claims = extractor.extract_claims(
-            "Cost is 25.", self._make_llm("5*5")
-        )
+        claims = extractor.extract_claims("Cost is 25.", self._make_llm("5*5"))
         if claims:
             assert claims[0].strategy == "symcode"
 
@@ -387,16 +386,22 @@ class TestLLMAsExtractorV1:
 
     def test_live_mode_unions_strategies(self):
         # LLM returns a JSON claim that StepSegmentEvalChain would miss.
-        json_raw = json.dumps([{
-            "lhs": "3*16.50",
-            "rhs": 54.50,
-            "text": "3 pairs at $16.50 each = $54.50",
-        }])
+        json_raw = json.dumps(
+            [
+                {
+                    "lhs": "3*16.50",
+                    "rhs": 54.50,
+                    "text": "3 pairs at $16.50 each = $54.50",
+                }
+            ]
+        )
+
         def llm_caller(prompt: str) -> str:
             # Return JSON claim for JsonClaimExtractor, "None" for SymCode.
             if "JSON array" in prompt:
                 return json_raw
             return "None"
+
         extractor = LLMAsExtractorV1(llm_caller=llm_caller)
         violations = extractor.extract("3 pairs of shorts at $16.50 each is $54.50 on shorts.")
         # 3*16.50 = 49.50 ≠ 54.50 → violation found by JSON strategy
@@ -406,10 +411,12 @@ class TestLLMAsExtractorV1:
     def test_live_mode_dedup(self):
         # Same claim from both JSON and chain strategies → dedup to one.
         json_raw = json.dumps([{"lhs": "3*16.50", "rhs": 54.50, "text": "test"}])
+
         def llm_caller(prompt: str) -> str:
             if "JSON array" in prompt:
                 return json_raw
             return "None"
+
         extractor = LLMAsExtractorV1(llm_caller=llm_caller)
         violations = extractor.extract("3*16.50=54.50")
         # Even if both strategies find it, dedup ensures only one.

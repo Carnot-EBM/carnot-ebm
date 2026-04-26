@@ -99,9 +99,7 @@ def main() -> None:
         }
 
         honest_verdict = (
-            "gate_open_retro_070_unblocked"
-            if result.gate_open
-            else "gate_still_closed"
+            "gate_open_retro_070_unblocked" if result.gate_open else "gate_still_closed"
         )
 
         artifact = tmpl.build_result(

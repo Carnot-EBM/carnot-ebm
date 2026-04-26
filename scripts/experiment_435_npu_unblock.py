@@ -520,9 +520,7 @@ def main() -> None:
                 missing_list.append("ninja")
             if not openblas_ok:
                 missing_list.append("openblas")
-            print(
-                f"  VitisAI EP source build BLOCKED — missing: {', '.join(missing_list)}"
-            )
+            print(f"  VitisAI EP source build BLOCKED — missing: {', '.join(missing_list)}")
             print("  (This is the 5th consecutive milestone with these packages missing.)")
 
         # ---- Step 3: IRON path (always checked) ----

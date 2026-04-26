@@ -23,12 +23,13 @@ Spec: REQ-PRED-263-001, REQ-PRED-263-002, REQ-PRED-263-003
 from __future__ import annotations
 
 import json
-import math
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Operating zone constants
@@ -115,9 +116,11 @@ def fit_calibration(
 
     # Compute raw logistic scores using the same weights as PredictiveVerifier
     # so that the x_thresholds are in the same domain as apply_calibration.
-    from carnot.pipeline.predictive_verifier import _DEFAULT_W, _DEFAULT_B  # noqa: PLC0415
+    from carnot.pipeline.predictive_verifier import _DEFAULT_B, _DEFAULT_W  # noqa: PLC0415
 
-    raw_scores = np.dot(x_array, _DEFAULT_W.astype(np.float32)) + float(_DEFAULT_B)  # shape: (n_samples,)
+    raw_scores = np.dot(x_array, _DEFAULT_W.astype(np.float32)) + float(
+        _DEFAULT_B
+    )  # shape: (n_samples,)
 
     # Apply sigmoid to convert to [0,1]
     probs = 1.0 / (1.0 + np.exp(-raw_scores))

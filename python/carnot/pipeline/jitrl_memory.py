@@ -40,9 +40,7 @@ Spec: REQ-LEARN-034,
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Dict, List
-
+from dataclasses import dataclass
 
 # ---------------------------------------------------------------------------
 # ViolationRecord
@@ -104,9 +102,9 @@ class JitRLConstraintMemory:
         self._base_threshold = base_threshold
         self._lr = lr
         # Per-domain adapted thresholds (initialised on first access)
-        self._thresholds: Dict[str, float] = {}
+        self._thresholds: dict[str, float] = {}
         # Full violation history for audit
-        self.history: List[ViolationRecord] = []
+        self.history: list[ViolationRecord] = []
 
     # ------------------------------------------------------------------
     # Public interface

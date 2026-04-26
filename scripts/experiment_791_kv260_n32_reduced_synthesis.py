@@ -121,9 +121,7 @@ def _find_nextpnr_ice40() -> tuple[bool, str]:
         timeout=120,
     )
     if rc2 == 0:
-        rc3, out3, _ = _run(
-            [sys.executable, "-m", "yowasp_nextpnr_ice40", "--version"], timeout=60
-        )
+        rc3, out3, _ = _run([sys.executable, "-m", "yowasp_nextpnr_ice40", "--version"], timeout=60)
         if rc3 == 0 or "nextpnr" in out3.lower():
             return True, f"{sys.executable} -m yowasp_nextpnr_ice40"
 
@@ -158,9 +156,7 @@ def _find_icepack() -> tuple[bool, str]:
     return False, ""
 
 
-def _run_yosys_synthesis(
-    repo_root: Path, yosys_cmd: str
-) -> tuple[bool, int | None, str]:
+def _run_yosys_synthesis(repo_root: Path, yosys_cmd: str) -> tuple[bool, int | None, str]:
     """Run Yosys synth_ice40 with N_SPINS=32, MAX_DEGREE=8 via the n32 script.
 
     The synth script uses chparam to override the module defaults at elaboration
@@ -195,9 +191,7 @@ def _run_yosys_synthesis(
     return synthesis_ok, lut_count_n32, combined
 
 
-def _run_nextpnr(
-    repo_root: Path, nextpnr_cmd: str
-) -> tuple[bool, float | None, float | None, str]:
+def _run_nextpnr(repo_root: Path, nextpnr_cmd: str) -> tuple[bool, float | None, float | None, str]:
     """Run nextpnr-ice40 place-and-route targeting the HX8K at CLOCK_MHZ MHz.
 
     We use --pcf /dev/null because we have no pin-constraint file for a generic
@@ -213,10 +207,14 @@ def _run_nextpnr(
 
     cmd = nextpnr_cmd.split() + [
         "--hx8k",
-        "--json", str(json_in),
-        "--pcf", "/dev/null",
-        "--asc", str(asc_out),
-        "--freq", str(CLOCK_MHZ),
+        "--json",
+        str(json_in),
+        "--pcf",
+        "/dev/null",
+        "--asc",
+        str(asc_out),
+        "--freq",
+        str(CLOCK_MHZ),
     ]
     rc, stdout, stderr = _run(cmd, timeout=300)
     combined = stdout + "\n" + stderr
