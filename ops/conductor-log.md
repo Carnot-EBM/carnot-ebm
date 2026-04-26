@@ -2848,3 +2848,5 @@ python/ |
 | 2026-04-26 12:28 UTC | Exp 925: KAN Tier 4 Real Data Training — AutoKnots | OK | Deliverable already exists in repo |
 | 2026-04-26 12:28 UTC | Exp 926: FR-11 Tier 2 Code Domain Memory — CaseMem | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-04-26 12:38 UTC | Exp 926: FR-11 Tier 2 Code Domain Memory — CaseMem | OK | Deliverable already exists in repo |
+| 2026-04-26 12:38 UTC | Exp 927: DraftConditioned Tier 2.8 Pipeline Integr | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-26 12:48 UTC | Exp 927: DraftConditioned Tier 2.8 Pipeline Integr | OK | Deliverable already exists in repo |
