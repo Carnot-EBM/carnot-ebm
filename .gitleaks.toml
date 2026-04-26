@@ -38,3 +38,26 @@ paths = [
 # file, so if a real `AKIA...` or `ghp_...` ever lands here, it still
 # trips.
 targetRules = ["generic-api-key"]
+
+# RETRO label "RETRO-HF-SOPS-CREDENTIAL-INJECTION" — gitleaks'
+# generic-api-key rule fires on the literal string because the
+# CREDENTIAL keyword + uppercase-with-dashes shape passes the rule's
+# heuristics. The label tracks Exp 933's work to wire SOPS-encrypted
+# HF_TOKEN injection into the conductor commit pipeline; the string
+# itself is metadata, not a secret.
+#
+# Tightly scoped to the generic-api-key rule and to the file paths
+# where this RETRO label legitimately appears, so a real HF token
+# (`hf_` + alphanumeric) still trips its dedicated rule and any
+# other generic-api-key match outside these paths still fires.
+[[allowlists]]
+description = "RETRO-HF-SOPS-CREDENTIAL-INJECTION label is not a credential"
+stopwords = []
+regexes = ['''RETRO-HF-SOPS-CREDENTIAL-INJECTION''']
+paths = [
+    '''ops/known-issues\.md''',
+    '''results/operational_retro_2026_04_.*\.json''',
+    '''results/experiment_.*_preflight_.*\.json''',
+    '''results/experiment_.*_milestone_retro.*\.json''',
+]
+targetRules = ["generic-api-key"]
