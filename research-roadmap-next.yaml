@@ -1,0 +1,948 @@
+milestone: 2026.04.70
+milestone_title: Iterative Self-Repair + DualGPU Wiring + Self-Learning Tier 4
+milestone_doc: openspec/change-proposals/research-roadmap-v70.md
+tasks:
+
+- id: exp904-preflight-v19
+  milestone: 2026.04.70
+  deliverable: results/experiment_904_preflight_v19.json
+  max_turns: 20
+  title: 'Exp 904: Pre-flight v19 — .69 Zero-Run Audit + RETRO Triage (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Milestone 2026.04.69 ran ZERO experiments. The conductor failed with
+    "Failed to load research-roadmap.yaml: 'title'" — a YAML key error caused
+    immediate skip to operational retro. All 12 Exps 892-903 never ran. The .70
+    planning agent redesigned all relevant experiments. This pre-flight audits the
+    .69 failure, formally escalates RETRO-MANIFEST-FULL-SCOPE (now 12 consecutive
+    milestones), triages all open RETROs, and gates .70 experiments.
+
+    RETRO STATUS ENTERING .70:
+    - RETRO-MANIFEST-FULL-SCOPE: 12 consecutive milestones — escalate to ops/known-issues.md
+      as CRITICAL requiring human intervention (cannot fix without modifying conductor)
+    - RETRO-SVAMP-ZERO-AUC: Exp 907+908 will address (SVAMP root cause + EstimationVerifier)
+    - RETRO-XILINX-TOOLS-UNAVAILABLE: requires human Vivado install; no .70 action
+    - RETRO-INERTIA-SWEEPS-TARGET-MISSED: Exp 914 will attempt PIMI sparse adjacency final
+
+    EXISTING CODE TO READ FIRST:
+    - logs/conductor.log — confirm .69 zero-run cause ("Failed to load research-roadmap.yaml")
+    - results/operational_retro_2026_04_69.json — .69 retro: open_retros, wall_time
+    - results/experiment_891_milestone_retro.json — .68 cycle criteria
+    - ops/exclusion_manifest.yaml — retired experiments
+    - ops/known-issues.md — existing escalations
+    - MILESTONE_PREREQS.md — prereqs structure (create if not present)
+    - openspec/change-proposals/research-roadmap-v70.md — .70 design doc
+
+    TASK: Confirm .69 zero-run root cause, escalate RETRO-MANIFEST-FULL-SCOPE formally,
+    audit all RETROs, set .70 gates.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read logs/conductor.log. Extract the exact error line causing .69 zero-run.
+       Record: zero_run_root_cause (must be 'yaml_key_error_title').
+    3. Read results/operational_retro_2026_04_69.json. Extract: n_experiments_run,
+       total_wall_minutes, open_retros list.
+    4. RETRO-MANIFEST-FULL-SCOPE formal escalation:
+       Append to ops/known-issues.md:
+       ## RETRO-MANIFEST-FULL-SCOPE: CRITICAL — Human Intervention Required (Milestone .70)
+       ExclusionManifestEnforcer pre_launch_check() is NOT wired to the conductor loop.
+       This is the 12th consecutive milestone where the manifest has not been enforced
+       mechanically. The rule in CLAUDE.md (planning-layer discipline) is the ONLY active
+       enforcement. A conductor-level hook is blocked by the 'do NOT modify
+       scripts/research_conductor.py' constraint. Action required: grant human permission
+       to modify scripts/research_conductor.py for this single wiring change.
+       Set enforcement_wired=False, escalation_milestone="2026.04.70".
+    5. Audit all 4 open RETROs. For each: record status (OPEN, TARGETED, RETIRED, HUMAN_REQUIRED).
+       - RETRO-MANIFEST-FULL-SCOPE: HUMAN_REQUIRED
+       - RETRO-SVAMP-ZERO-AUC: TARGETED (Exp 907+908)
+       - RETRO-XILINX-TOOLS-UNAVAILABLE: HUMAN_REQUIRED
+       - RETRO-INERTIA-SWEEPS-TARGET-MISSED: TARGETED (Exp 914)
+    6. Write/update MILESTONE_PREREQS.md section for .70:
+       ## Milestone 2026.04.70 Pre-flight
+       .69 zero-run root cause: yaml_key_error_title
+       Open RETROs entering .70: [list with statuses]
+       Gates:
+         Exp 906 (code repair 50q): GATED on results/experiment_905_iterative_self_repair_v1.json
+           signed_improvement > 0
+         Exp 908 (EstimationVerifier): GATED on results/experiment_907_svamp_root_cause_v2.json
+           labeling_mismatch_confirmed == True
+         Exp 914 (PIMI sparse final): ABORTS if ops/exclusion_manifest.yaml contains
+           experiment_scope matching "iCE40 PIMI research"
+    7. Build artifact:
+       {
+         milestone: "2026.04.70",
+         preflight_version: 19,
+         zero_run_root_cause: "yaml_key_error_title",
+         n_exps_run_in_69: 0,
+         open_retros: [list],
+         retro_statuses: {dict},
+         enforcement_wired: false,
+         escalation_written: true,
+         honest_verdict: "preflight_complete"
+       }
+    8. Write results/experiment_904_preflight_v19.json.
+    9. Update ops/changelog.md: one-line entry.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_904_preflight_v19.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp905-iterative-self-repair-v1
+  milestone: 2026.04.70
+  deliverable: results/experiment_905_iterative_self_repair_v1.json
+  max_turns: 50
+  prior_failures:
+    - experiment_id: exp881-code-repair-v8-gemma4-live
+      verdict: zero_constraints
+      addressed_by: >
+        Exp 881 (and 12 prior attempts) used ArithmeticExtractor with regex 'a+b=c' which
+        never matches IT model natural-language responses. The new approach (arXiv 2604.10508)
+        bypasses ArithmeticExtractor entirely: execute the generated code, feed the error
+        traceback back to the LLM as a correction prompt, retry up to 3x, then use Carnot
+        energy to select the best attempt. No constraint extraction needed.
+      retire_if_same_verdict: false
+  title: 'Exp 905: IterativeSelfRepair v1 — Execute-Feedback-Retry on 25 HumanEval Questions (GPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Code repair has failed 12+ consecutive times due to ArithmeticExtractor
+    using regex 'a+b=c' which never matches IT model natural-language responses (zero
+    constraints extracted). The new approach (arXiv 2604.10508, Iterative Self-Repair)
+    BYPASSES ArithmeticExtractor entirely. Instead: (1) generate code with LLM,
+    (2) execute it in a sandbox, (3) if error: feed traceback back to LLM as correction
+    prompt, (4) retry up to 3x, (5) Carnot energy selects best attempt.
+
+    This approach requires no constraint extraction. The execution error IS the
+    constraint signal. arXiv 2604.10508 showed +4.9pp to +17.1pp improvement on HumanEval
+    and MBPP with this technique using GPT-4 and Claude 3. We implement for local Qwen3 MoE.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_881_code_repair_v8_gemma4_live.json — last failure: zero_constraints
+    - python/carnot/verify/arithmetic_extractor.py — the broken extractor (DO NOT USE)
+    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline
+    - python/carnot/samplers/ising_sampler.py — Ising energy scorer
+    - scripts/experiment_template.py — ExperimentTemplate, BatchedInferenceRunner
+    - openspec/change-proposals/research-roadmap-v70.md — .70 Phase 1 design
+
+    TASK: Implement IterativeSelfRepair pipeline. Run on 25 HumanEval questions.
+    Use unsloth/Qwen3.6-35B-A3B-GGUF (llama.cpp, GPU). Measure signed_improvement
+    vs baseline (first-attempt pass rate).
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Create python/carnot/pipeline/iterative_self_repair.py:
+       class IterativeSelfRepair:
+         __init__(self, llm_runner, energy_scorer, max_retries: int = 3,
+                  sandbox: bool = True):
+           self.llm = llm_runner
+           self.energy = energy_scorer
+           self.max_retries = max_retries
+           self.sandbox = sandbox
+           self._attempt_log = []
+         repair(self, problem: str, test_cases: list[str]) -> RepairResult:
+           attempts = []
+           response = self.llm.generate(problem)
+           for i in range(self.max_retries + 1):
+             exec_result = self._sandbox_exec(response, test_cases)
+             score = self.energy.score(response)
+             attempts.append({"attempt": i, "response": response,
+                               "exec_passed": exec_result.passed,
+                               "exec_error": exec_result.error,
+                               "energy_score": score})
+             if exec_result.passed:
+               break
+             if i < self.max_retries:
+               correction_prompt = (
+                 f"The following code had an error:\n{response}\n\n"
+                 f"Error traceback:\n{exec_result.error}\n\n"
+                 f"Fix the code to pass the tests.")
+               response = self.llm.generate(correction_prompt)
+           best = min(attempts, key=lambda a: a["energy_score"])
+           return RepairResult(best_attempt=best, all_attempts=attempts,
+                               n_retries=len(attempts)-1)
+         _sandbox_exec(self, code: str, test_cases: list[str]) -> ExecResult:
+           Use RestrictedPython or subprocess with timeout=10s.
+           If CARNOT_USE_SANDBOX=1: use gVisor. Else: subprocess.
+           Return ExecResult(passed=bool, error=str_or_None)
+    3. Add spec entries: REQ-CODE-010 (IterativeSelfRepair pipeline),
+       SCENARIO-CODE-010 (code repair retries with execution feedback until passing or budget).
+    4. Create scripts/experiment_905_iterative_self_repair_v1.py:
+       a. tmpl = ExperimentTemplate(905, "Iterative Self-Repair v1 — 25 HumanEval GPU",
+                                     "results/experiment_905_iterative_self_repair_v1.json",
+                                     requires_gpu=True)
+       b. tmpl.setup()
+       c. MODEL_SPECS = [{"name": "Qwen3.6-35B-A3B-GGUF",
+                           "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "gpu": 0}]
+       d. gpu_status = tmpl.setup_gpu(MODEL_SPECS)
+       e. Load 25 HumanEval questions from datasets or construct representative ones
+          covering: basic functions, string manipulation, list operations, arithmetic.
+       f. Baseline: measure first-attempt pass rate (attempt 0 only, no repair).
+       g. Repair: run IterativeSelfRepair(max_retries=3) on all 25 questions.
+       h. Compute:
+          - baseline_pass_rate: fraction passing on first attempt
+          - repair_pass_rate: fraction passing after iterative repair
+          - signed_improvement: repair_pass_rate - baseline_pass_rate
+          - mean_retries_needed: mean retries for repaired-passing questions
+          - energy_selected_correctly: fraction where energy selected the passing attempt
+       i. honest_verdict logic:
+          if signed_improvement > 0.05: "improvement_significant_gate_open"
+          elif signed_improvement > 0: "improvement_marginal_gate_open"
+          else: "no_improvement_gate_blocked"
+    5. Write tests with 100% coverage. Test IterativeSelfRepair retry logic.
+       Test energy selection. Test sandbox execution. Traces to REQ-CODE-010.
+    6. Write results/experiment_905_iterative_self_repair_v1.json.
+    7. Update ops/changelog.md: one-line entry.
+    8. tmpl.assert_deliverable_written() as final line.
+
+    Run: CARNOT_USE_SANDBOX=0 .venv/bin/python scripts/experiment_905_iterative_self_repair_v1.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp906-code-repair-50q-scaleup
+  milestone: 2026.04.70
+  deliverable: results/experiment_906_code_repair_50q_scaleup.json
+  max_turns: 50
+  gated_on: "results/experiment_905_iterative_self_repair_v1.json signed_improvement > 0"
+  title: 'Exp 906: Code Repair 50q Scale-Up — IterativeSelfRepair with Gemma4 (GPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 905 confirmed IterativeSelfRepair works (signed_improvement > 0).
+    This experiment scales to 50 HumanEval questions and adds the second SOTA model
+    (unsloth/gemma-4-31B-it-GGUF) for cross-model comparison. Key research question:
+    does the energy scorer correctly select the best attempt across models?
+
+    GATE CHECK (run first): Read results/experiment_905_iterative_self_repair_v1.json.
+    If signed_improvement <= 0: write results/experiment_906_code_repair_50q_scaleup.json
+    with honest_verdict="skipped_gate_blocked_exp905_no_improvement" and exit immediately.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_905_iterative_self_repair_v1.json — gate result, signed_improvement
+    - python/carnot/pipeline/iterative_self_repair.py — IterativeSelfRepair (Exp 905)
+    - python/carnot/samplers/ising_sampler.py — Ising energy scorer
+    - scripts/experiment_template.py — ExperimentTemplate, BatchedInferenceRunner
+
+    TASK: Run IterativeSelfRepair on 50 HumanEval questions with both Qwen3.6-35B-A3B-GGUF
+    and Gemma4-31B-it-GGUF. Measure cross-model improvement and energy selection accuracy.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. GATE CHECK: read results/experiment_905_iterative_self_repair_v1.json.
+       If signed_improvement <= 0: skip (write artifact with gate_blocked=True).
+    3. tmpl = ExperimentTemplate(906, ..., requires_gpu=True). tmpl.setup().
+    4. MODEL_SPECS = [
+         {"name": "Qwen3.6-35B-A3B-GGUF", "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "gpu": 0},
+         {"name": "gemma-4-31B-it-GGUF",   "hf_id": "unsloth/gemma-4-31B-it-GGUF",   "gpu": 0}
+       ]
+    5. Load 50 HumanEval questions.
+    6. Run IterativeSelfRepair(max_retries=3) for both models.
+    7. For each question compute cross-model energy selection:
+       energy_selected_best = energy_scorer selected the model/attempt with highest pass rate
+    8. Compute aggregate metrics:
+       - qwen_repair_pass_rate, qwen_signed_improvement
+       - gemma_repair_pass_rate, gemma_signed_improvement
+       - cross_model_energy_selection_accuracy: fraction energy picked correct model
+       - combined_pass_rate (union of both models passing)
+    9. honest_verdict logic:
+       if max(qwen_signed_improvement, gemma_signed_improvement) > 0.1:
+         "strong_improvement_code_repair_milestone_achieved"
+       elif max(qwen_signed_improvement, gemma_signed_improvement) > 0:
+         "improvement_confirmed_scale_up"
+       else: "no_improvement_investigate"
+    10. Write results/experiment_906_code_repair_50q_scaleup.json.
+    11. Update ops/changelog.md: one-line entry.
+    12. tmpl.assert_deliverable_written() as final line.
+
+    Run: CARNOT_USE_SANDBOX=0 .venv/bin/python scripts/experiment_906_code_repair_50q_scaleup.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp907-svamp-root-cause-v2
+  milestone: 2026.04.70
+  deliverable: results/experiment_907_svamp_root_cause_v2.json
+  max_turns: 30
+  title: 'Exp 907: SVAMP Root Cause v2 — Confirm FoVer Labeling Mismatch (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-SVAMP-ZERO-AUC has been open since Exp 872 (svamp_auc=0.125). The
+    .69 zero-run meant Exp 893 (SVAMP root cause) never ran. The hypothesis: SVAMP
+    questions are single-step word problems with no multi-step CoT chains. FoVer
+    labeling assumes intermediate reasoning steps exist — for SVAMP they don't, so
+    all labels are noise. This experiment confirms that hypothesis with evidence.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_883_vjepa_v2_expanded_corpus.json — svamp_auc=0.125, ood_auc=0.9211
+    - python/carnot/verify/fover_labeler.py — FoVer step-labeling pipeline
+    - python/carnot/pipeline/vjepa_predictor.py — VariationalJEPAPredictor
+    - openspec/change-proposals/research-roadmap-v70.md — .70 Phase 2 design
+
+    TASK: Confirm FoVer labeling is inapplicable to SVAMP single-step word problems.
+    Measure CoT depth distribution, label noise rate, AUC comparison.
+    Gate Exp 908 on labeling_mismatch_confirmed=True.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Load 20 SVAMP questions (from tests/data/ or construct representative ones).
+    3. Run Qwen3.5-0.8B (CPU, llama.cpp) on all 20 SVAMP questions. Collect responses.
+    4. Run FoVer labeling on each (question, response) pair. Collect per pair:
+       - n_cot_steps: int
+       - labeling_successful: bool
+       - label_confidence: float or null
+    5. Run same pipeline on 20 GSM8K questions (multi-step, for comparison).
+    6. Compute for each cohort:
+       - mean_cot_depth, labeling_failure_rate, label_noise_estimate (conf < 0.5)
+    7. Run VJEPA v2 on labeled SVAMP pairs. Compute svamp_auc_post_filter.
+    8. Compute labeling_mismatch_confirmed:
+       True iff: mean_cot_depth_svamp < 2.0
+             AND mean_cot_depth_gsm8k > 4.0
+             AND labeling_failure_rate_svamp > 0.5
+    9. Add spec entries: REQ-VER-085 (EstimationVerifier for word problems),
+       SCENARIO-VER-085 (SVAMP answer in plausible arithmetic range => verified).
+    10. honest_verdict:
+        "mismatch_confirmed_gate_open" if labeling_mismatch_confirmed=True
+        "mismatch_unconfirmed_investigate_further" otherwise
+    11. Write results/experiment_907_svamp_root_cause_v2.json.
+    12. Update ops/changelog.md: one-line entry.
+    13. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_907_svamp_root_cause_v2.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp908-estimation-verifier
+  milestone: 2026.04.70
+  deliverable: results/experiment_908_estimation_verifier.json
+  max_turns: 40
+  gated_on: "results/experiment_907_svamp_root_cause_v2.json labeling_mismatch_confirmed == True"
+  title: 'Exp 908: EstimationVerifier — Range-Based Word Problem Checking (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 907 confirmed FoVer labeling is inapplicable to SVAMP single-step
+    word problems (labeling_mismatch_confirmed=True). The fix: an EstimationVerifier
+    that checks whether the LLM's numeric answer falls within a plausible arithmetic
+    range for the question, without requiring CoT step labeling.
+
+    GATE CHECK (run first): Read results/experiment_907_svamp_root_cause_v2.json.
+    If labeling_mismatch_confirmed != True: write artifact with
+    honest_verdict="skipped_gate_blocked_mismatch_not_confirmed" and exit.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_907_svamp_root_cause_v2.json — gate result, labeling stats
+    - python/carnot/verify/fover_labeler.py — FoVer (for reference; do NOT extend)
+    - python/carnot/pipeline/three_tier_pipeline.py — pipeline (for integration point)
+    - openspec/capabilities/verify/spec.md — REQ-VER-085 (added in Exp 907)
+
+    TASK: Implement EstimationVerifier. Run on 20 SVAMP questions. Measure
+    svamp_auc improvement vs FoVer baseline (0.125).
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. GATE CHECK: read Exp 907 result. Skip if gate blocked.
+    3. Create python/carnot/verify/estimation_verifier.py:
+       class EstimationVerifier:
+         __init__(self, plausibility_multiplier: float = 10.0):
+           self.multiplier = plausibility_multiplier
+         verify(self, question: str, response: str) -> VerificationResult:
+           1. Extract all numbers from question text (operands)
+           2. Compute plausible_range = [min_operand / multiplier,
+                                         max(all_operands) * all_numbers_count * multiplier]
+           3. Extract numeric answer from response (last number or "= N" pattern)
+           4. violation_prob = 0.0 if answer in plausible_range else 1.0
+           5. Return VerificationResult(violation_prob=violation_prob,
+                                        plausible_range=plausible_range,
+                                        extracted_answer=answer)
+    4. Add spec entry: SCENARIO-VER-085a (EstimationVerifier correctly ranges SVAMP questions).
+    5. Create scripts/experiment_908_estimation_verifier.py:
+       a. Load 20 SVAMP questions + correct answers.
+       b. Run Qwen3.5-0.8B (CPU) to generate responses.
+       c. Run EstimationVerifier on all (question, response) pairs.
+       d. Compute svamp_auc using EstimationVerifier.violation_prob as discriminator.
+       e. Compare: svamp_auc_estimation vs svamp_auc_fover_baseline (0.125).
+       f. signed_improvement = svamp_auc_estimation - 0.125
+       g. honest_verdict:
+          "svamp_auc_improved" if svamp_auc_estimation > 0.5 (closes RETRO-SVAMP-ZERO-AUC)
+          "svamp_auc_marginal" if svamp_auc_estimation > 0.125
+          "svamp_auc_no_improvement" if svamp_auc_estimation <= 0.125
+    6. If honest_verdict == "svamp_auc_improved":
+       Mark RETRO-SVAMP-ZERO-AUC as closed in MILESTONE_PREREQS.md and ops/changelog.md.
+    7. Write tests with 100% coverage. Test EstimationVerifier range logic.
+       Traces to REQ-VER-085, SCENARIO-VER-085.
+    8. Write results/experiment_908_estimation_verifier.json.
+    9. Update ops/changelog.md: one-line entry.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_908_estimation_verifier.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp909-lagrange-forgetting-curve
+  milestone: 2026.04.70
+  deliverable: results/experiment_909_lagrange_forgetting_curve.json
+  max_turns: 40
+  title: 'Exp 909: Lagrange Forgetting Curve — FR-11 Tier 1 Adaptive Weight Decay (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: FR-11 Self-Learning Loop Tier 1 (Lagrange multiplier weight updates) was
+    confirmed working in milestone .67. However the Lagrange weights never decay for
+    constraints that have not been violated recently. This leads to weight accumulation
+    and increased Tier 3 rejection rate over time. This experiment implements an
+    exponential forgetting curve: weights decay toward a floor between updates, modeling
+    the intuition that constraints not recently violated are less urgently enforced.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/lagrange_updater.py — LagrangeMultiplierUpdater (Tier 1)
+    - python/carnot/pipeline/constraint_memory.py — ConstraintMemory (Tier 2)
+    - results/experiment_883_vjepa_v2_expanded_corpus.json — pipeline baseline metrics
+    - openspec/capabilities/self_learning/spec.md — FR-11 requirements
+    - openspec/change-proposals/research-roadmap-v70.md — .70 Phase 3 design
+
+    TASK: Add exponential weight decay to LagrangeMultiplierUpdater. Measure impact
+    on weight distribution entropy and Tier 3 rejection rate.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read python/carnot/pipeline/lagrange_updater.py fully. Understand current
+       update rule: weight += learning_rate * constraint_violation_indicator.
+    3. Implement forgetting curve extension:
+       In LagrangeMultiplierUpdater.__init__: add decay_rate: float = 0.95 parameter.
+       In LagrangeMultiplierUpdater.update(): before the gradient step, apply:
+         self.weights *= self.decay_rate  # exponential decay toward 0
+         self.weights = np.clip(self.weights, self.weight_floor, self.weight_ceiling)
+       Add property weight_entropy -> float:
+         p = self.weights / self.weights.sum()
+         return -np.sum(p * np.log(p + 1e-10))
+    4. Add spec entries: REQ-SELF-007 (Lagrange forgetting curve reduces weight staleness),
+       SCENARIO-SELF-007 (weight entropy stays above floor after 100 update steps).
+    5. Create scripts/experiment_909_lagrange_forgetting_curve.py:
+       a. tmpl = ExperimentTemplate(909, ..., requires_gpu=False). tmpl.setup().
+       b. Construct synthetic constraint violation sequence: 100-step simulation.
+          Steps 1-50: high violation rate (violation=1 with prob 0.7).
+          Steps 51-100: low violation rate (violation=1 with prob 0.1).
+       c. Run both: baseline (no decay) and decay=0.95 LagrangeUpdater.
+       d. Measure at each 10-step interval: weight_entropy, max_weight, mean_weight,
+          tier3_rejection_rate (simulated as fraction weights > threshold).
+       e. Compute: entropy_sustained_with_decay (entropy at step 100, decay=0.95)
+                   entropy_collapse_without_decay (entropy at step 100, no decay)
+                   signed_entropy_improvement = entropy_with_decay - entropy_without_decay
+       f. honest_verdict:
+          "forgetting_curve_improves_entropy" if signed_entropy_improvement > 0.5
+          "marginal_improvement" if signed_entropy_improvement > 0
+          "no_improvement" otherwise
+    6. Write tests. Traces to REQ-SELF-007.
+    7. Write results/experiment_909_lagrange_forgetting_curve.json.
+    8. Update ops/changelog.md: one-line entry.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_909_lagrange_forgetting_curve.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp910-kan-tier4-seed
+  milestone: 2026.04.70
+  deliverable: results/experiment_910_kan_tier4_seed.json
+  max_turns: 50
+  title: 'Exp 910: KAN Tier 4 Seed — AutoKnots Adaptive Spline Grid Refinement (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: FR-11 Self-Learning Loop Tier 4 (KAN adaptive structure) has NOT STARTED.
+    The current KAN model (carnot-kan) uses fixed spline grids. The AutoKnots technique
+    (arXiv 2412.13423) enables adaptive grid refinement: add knots to high-activation
+    splines (refine where needed), halve knot count for low-activation splines (prune
+    dormant structure). This is the "structural self-improvement" tier of the self-learning
+    loop. This experiment seeds Tier 4: implements AutoKnots grid refinement and measures
+    whether it improves KAN energy discrimination on the verification task.
+
+    EXISTING CODE TO READ FIRST:
+    - crates/carnot-kan/src/lib.rs — KAN model (Rust implementation)
+    - python/carnot/models/kan.py — Python KAN wrapper (carnot.models.kan)
+    - python/carnot/pipeline/three_tier_pipeline.py — Tier 3 integration point
+    - openspec/capabilities/self_learning/spec.md — FR-11 Tier 4 requirements
+    - openspec/change-proposals/research-roadmap-v70.md — .70 Phase 3 design
+
+    TASK: Implement AutoKnots adaptive spline grid refinement for the Python KAN model.
+    Run refinement on 50 GSM8K verification examples. Measure AUC change before/after
+    refinement.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read python/carnot/models/kan.py fully. Identify:
+       - spline grid structure (knots, control points)
+       - forward pass activation magnitudes
+       - how to add/remove knots
+    3. Implement python/carnot/models/kan_autoknots.py:
+       class AutoKnotsRefiner:
+         __init__(self, kan_model, high_activation_threshold: float = 0.8,
+                  low_activation_threshold: float = 0.1, max_knots_per_spline: int = 32,
+                  min_knots_per_spline: int = 4):
+           self.model = kan_model
+           self.high_thresh = high_activation_threshold
+           self.low_thresh = low_activation_threshold
+         refine_once(self, activation_batch: np.ndarray) -> RefinementResult:
+           For each spline in kan_model:
+             1. Compute mean activation magnitude for this spline across batch
+             2. If mean > high_thresh AND n_knots < max_knots_per_spline:
+                Insert knot at midpoint between most-activated adjacent knots
+             3. If mean < low_thresh AND n_knots > min_knots_per_spline:
+                Remove the least-activated knot
+           Return RefinementResult(n_added=int, n_removed=int, splines_modified=list)
+         multi_round_refine(self, activation_batch, rounds: int = 3) -> list[RefinementResult]
+    4. Add spec entries: REQ-SELF-008 (KAN AutoKnots structural adaptation),
+       SCENARIO-SELF-008 (refinement adds knots to high-activation paths, removes from dormant).
+    5. Create scripts/experiment_910_kan_tier4_seed.py:
+       a. tmpl = ExperimentTemplate(910, ..., requires_gpu=False). tmpl.setup().
+       b. Load KAN model. Collect 50 GSM8K (question, response) embeddings.
+       c. Measure baseline AUC: run KAN on all 50, compute AUC.
+       d. Run AutoKnotsRefiner.multi_round_refine(activations, rounds=3).
+       e. Re-run KAN after refinement. Measure post_refinement_auc.
+       f. Compute: n_knots_added, n_knots_removed, signed_auc_improvement.
+       g. honest_verdict:
+          "tier4_seed_viable" if post_refinement_auc > baseline_auc
+          "tier4_seed_no_improvement" otherwise
+    6. Write tests. Traces to REQ-SELF-008.
+    7. Write results/experiment_910_kan_tier4_seed.json.
+    8. Update ops/changelog.md: one-line entry.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_910_kan_tier4_seed.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp911-drift-probe-tier0i
+  milestone: 2026.04.70
+  deliverable: results/experiment_911_drift_probe_tier0i.json
+  max_turns: 40
+  title: 'Exp 911: DRIFTProbe Tier 0i — Multi-Layer Hidden-State Hallucination Probe (GPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Tier 0 probes operate in < 50ms using cheap signal extraction. Tier 0h
+    (SinkProbe) was confirmed viable in Exp 885. The next Tier 0 probe is DRIFTProbe:
+    extract hidden-state activations from multiple transformer layers, compute drift
+    signature (how much each layer's representation changes between factual and
+    hallucinated tokens), and train a linear probe to classify hallucination.
+    This is inspired by arXiv 2604.13386 (Multi-Layer Probe Ensembling) which showed
+    that probing layer N+1 vs N captures drift signal invisible to single-layer probes.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_885_tier0h_sinkprobe_gpu.json — Tier 0h viable, probe_auc
+    - python/carnot/verify/sink_probe.py — SinkProbe (Tier 0h reference pattern)
+    - python/carnot/pipeline/three_tier_pipeline.py — Tier 0 integration point
+    - openspec/change-proposals/research-roadmap-v70.md — .70 Phase 4 design
+
+    TASK: Implement DRIFTProbe using multi-layer hidden-state drift signatures.
+    Train linear probe on 100 GSM8K examples. Measure hallucination detection AUC.
+    Target: ood_auc_drift > 0.65 for tier0i_viable verdict.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Create python/carnot/verify/drift_probe.py:
+       class DRIFTProbe:
+         __init__(self, model_runner, layers: list[int] = None, n_drift_pairs: int = 3):
+           layers default to last 4 layers of model
+         extract_drift_signature(self, hidden_states: dict[int, np.ndarray]) -> np.ndarray:
+           For each adjacent layer pair (L, L+1): compute cosine drift = 1 - cosine_sim(h_L, h_{L+1})
+           Concatenate: drift vector of shape [n_drift_pairs]
+           Return drift_signature
+         fit(self, correct_examples, hallucinated_examples) -> None:
+           Extract drift signatures for all examples.
+           Train sklearn LogisticRegression on (signature, label) pairs.
+         predict_violation_prob(self, hidden_states) -> float:
+           Return probe.predict_proba(drift_signature)[hallucinated_class]
+    3. Add spec entries: REQ-TIER0-005 (DRIFTProbe multi-layer hallucination detection),
+       SCENARIO-TIER0-005 (drift probe AUC > 0.65 on GSM8K hallucination pairs).
+    4. Create scripts/experiment_911_drift_probe_tier0i.py:
+       a. tmpl = ExperimentTemplate(911, ..., requires_gpu=True). tmpl.setup().
+       b. MODEL_SPECS = [{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]
+          (small model for hidden state extraction; full SOTA for expensive experiments)
+       c. Generate 100 GSM8K (question, correct_response, hallucinated_response) triples.
+          Hallucinated: inject wrong numerical answer while preserving reasoning style.
+       d. Extract hidden states at layers [-4, -3, -2, -1] for each response.
+       e. Fit DRIFTProbe on 80 training examples. Evaluate on 20 held-out.
+       f. Compute ood_auc_drift using sklearn roc_auc_score.
+       g. honest_verdict:
+          "tier0i_viable" if ood_auc_drift > 0.65
+          "tier0i_marginal" if ood_auc_drift > 0.55
+          "tier0i_not_viable" otherwise
+    5. Write tests. Traces to REQ-TIER0-005.
+    6. Write results/experiment_911_drift_probe_tier0i.json.
+    7. Update ops/changelog.md: one-line entry.
+    8. tmpl.assert_deliverable_written() as final line.
+
+    Run: .venv/bin/python scripts/experiment_911_drift_probe_tier0i.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp912-draft-conditioned-tier28
+  milestone: 2026.04.70
+  deliverable: results/experiment_912_draft_conditioned_tier28.json
+  max_turns: 40
+  title: 'Exp 912: DraftConditioned Verifier Tier 2.8 — Structural Constraint Injection (GPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: The pipeline currently runs: Tier 0 probes -> Tier 1 (Lagrange) -> Tier 2
+    (VJEPA) -> Tier 3 (Ising). Tier 2.8 is a new intermediate stage: generate a cheap
+    draft answer first (e.g., 50-token Qwen3.5-0.8B), extract structural constraints
+    from that draft (not via ArithmeticExtractor, but via structural pattern matching:
+    "contains_equals_sign", "final_number_extracted", "reasoning_steps_present"),
+    then inject those constraints into the Tier 3 Ising energy function before the full
+    Ising solve. This is inspired by arXiv 2603.03305 (Draft-Conditioned Constrained
+    Decoding). The draft does not need to be correct; it scaffolds the constraint structure.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_884_vjepa_cascade_deploy.json — Tier 2 deployment
+    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline
+    - python/carnot/samplers/ising_sampler.py — IsingConstraintSampler
+    - python/carnot/verify/arithmetic_extractor.py — the BROKEN extractor (do NOT use)
+    - openspec/change-proposals/research-roadmap-v70.md — .70 Phase 4 design
+
+    TASK: Implement DraftConditionedVerifier (Tier 2.8). Run on 25 GSM8K questions.
+    Measure Tier 3 Ising solve quality improvement with draft-injected constraints.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Create python/carnot/pipeline/draft_conditioned_verifier.py:
+       class DraftConditionedVerifier:
+         __init__(self, draft_runner, ising_sampler, max_draft_tokens: int = 50):
+           self.draft_runner = draft_runner  # cheap/small model
+           self.ising = ising_sampler
+         extract_structural_constraints(self, draft_text: str) -> list[dict]:
+           Extract WITHOUT ArithmeticExtractor. Use structural patterns only:
+           - "has_equals_sign": "=" in draft_text
+           - "has_numeric_answer": re.search(r'\b\d+\b', draft_text[-100:]) is not None
+           - "has_reasoning_steps": len(draft_text.split('\n')) > 3
+           - "final_number": int(re.findall(r'\b\d+\b', draft_text)[-1]) if digits else None
+           Return: [{"type": constraint_type, "value": value}, ...]
+         verify_with_draft(self, question: str, full_response: str) -> VerificationResult:
+           1. Generate draft: draft_text = draft_runner.generate(question, max_tokens=50)
+           2. constraints = extract_structural_constraints(draft_text)
+           3. energy = ising_sampler.score_with_constraints(full_response, constraints)
+           4. Return VerificationResult(energy=energy, draft_used=True, n_constraints=len(constraints))
+    3. Add spec entries: REQ-TIER28-001 (draft-conditioned constraint injection),
+       SCENARIO-TIER28-001 (draft structural constraints improve Ising solve quality).
+    4. Create scripts/experiment_912_draft_conditioned_tier28.py:
+       a. tmpl = ExperimentTemplate(912, ..., requires_gpu=True). tmpl.setup().
+       b. MODEL_SPECS = [{"name": "Qwen3.5-0.8B", ..., "gpu": 0}] (draft model)
+       c. Load 25 GSM8K questions. Generate full responses with Qwen3.5-0.8B.
+       d. Baseline: score each response with Ising (no draft constraints).
+       e. Tier 2.8: score each response with DraftConditionedVerifier.
+       f. Measure: mean_constraints_injected, energy_score_with_draft,
+                   energy_score_baseline, signed_energy_improvement.
+       g. Compute rank correlation: does draft-constrained energy rank correct answers higher?
+          auc_with_draft, auc_baseline.
+       h. honest_verdict:
+          "tier28_viable" if auc_with_draft > auc_baseline
+          "tier28_no_improvement" otherwise
+    5. Write tests. Traces to REQ-TIER28-001.
+    6. Write results/experiment_912_draft_conditioned_tier28.json.
+    7. Update ops/changelog.md: one-line entry.
+    8. tmpl.assert_deliverable_written() as final line.
+
+    Run: .venv/bin/python scripts/experiment_912_draft_conditioned_tier28.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp913-dualgpu-production-wiring
+  milestone: 2026.04.70
+  deliverable: results/experiment_913_dualgpu_production_wiring.json
+  max_turns: 30
+  title: 'Exp 913: DualGPU Production Wiring — Wire 1.979x Validated Speedup to Pipeline (GPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: DualGPURunner was validated at 1.979x throughput improvement in Exp 856.
+    It has been idle for 4 consecutive milestones (.66, .67, .68, .69) due to never
+    being wired to the production pipeline. This is a pure engineering task: wire
+    DualGPURunner to ThreeTierPipeline so that GPU experiments automatically use
+    dual-GPU parallelism when available. The speedup was already validated — this
+    experiment just connects the validated component.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_856_dual_gpu_throughput.json — 1.979x validated speedup result
+    - python/carnot/pipeline/dual_gpu_runner.py — DualGPURunner (validated but unconnected)
+    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline
+    - python/carnot/pipeline/lagrange_updater.py — Tier 1 (for dual-GPU dispatch point)
+    - openspec/change-proposals/research-roadmap-v70.md — .70 Phase 5 design
+
+    TASK: Wire DualGPURunner to ThreeTierPipeline. Add CARNOT_DUAL_GPU=1 env flag.
+    Measure end-to-end throughput on 20 questions. Confirm ~1.9x improvement.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_856_dual_gpu_throughput.json. Extract:
+       - validated_speedup: 1.979
+       - dual_gpu_interface: how DualGPURunner dispatches work
+    3. Read python/carnot/pipeline/three_tier_pipeline.py fully.
+       Identify the inference dispatch point (where LLM generates candidates).
+    4. Wire DualGPURunner to ThreeTierPipeline:
+       In ThreeTierPipeline.__init__: accept optional dual_gpu_runner parameter.
+       If CARNOT_DUAL_GPU=1 and dual_gpu_runner is not None:
+         self._runner = dual_gpu_runner
+       Else:
+         self._runner = SingleGPURunner()
+       In ThreeTierPipeline.verify(): use self._runner.generate_candidates() instead
+       of direct model call.
+    5. Add spec entries: REQ-PERF-004 (DualGPU pipeline wiring),
+       SCENARIO-PERF-004 (CARNOT_DUAL_GPU=1 enables 1.9x throughput, CARNOT_DUAL_GPU=0
+       falls back to single-GPU without performance regression).
+    6. Create scripts/experiment_913_dualgpu_production_wiring.py:
+       a. tmpl = ExperimentTemplate(913, ..., requires_gpu=True). tmpl.setup().
+       b. Load 20 GSM8K questions.
+       c. Baseline: run ThreeTierPipeline (CARNOT_DUAL_GPU=0). Record wall_time_s.
+       d. DualGPU: run ThreeTierPipeline (CARNOT_DUAL_GPU=1). Record wall_time_s.
+       e. Compute: observed_speedup = baseline_wall_time / dualgpu_wall_time.
+       f. honest_verdict:
+          "dualgpu_wired_speedup_confirmed" if observed_speedup > 1.7
+          "dualgpu_wired_partial_speedup" if observed_speedup > 1.0
+          "dualgpu_wired_no_speedup" if observed_speedup <= 1.0
+    7. Write tests. Test CARNOT_DUAL_GPU flag toggling. Traces to REQ-PERF-004.
+    8. Write results/experiment_913_dualgpu_production_wiring.json.
+    9. Update ops/changelog.md: one-line entry.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: CARNOT_DUAL_GPU=1 .venv/bin/python scripts/experiment_913_dualgpu_production_wiring.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp914-pimi-sparse-adjacency-final
+  milestone: 2026.04.70
+  deliverable: results/experiment_914_pimi_sparse_adjacency_final.json
+  max_turns: 40
+  prior_failures:
+    - experiment_id: exp889-ice40-pimi-v3-parallel
+      verdict: pimi_improved_below_5x
+      addressed_by: >
+        Exp 889 achieved 4.33x sweep reduction using parallel update (EMA-weighted
+        inertia). The 5x target was not met. The new approach: sparse adjacency matrix
+        where only the top-20% strongest couplings are active per sweep. This reduces
+        per-sweep compute and may allow larger effective N. Root cause of 4.33x plateau:
+        full adjacency means each sweep visits all N^2 couplings; sparse adjacency
+        reduces effective work per sweep allowing the 5x reduction at same N.
+      retire_if_same_verdict: true
+  title: 'Exp 914: PIMI Sparse Adjacency Final — 5x Sweep Reduction Target (CPU/FPGA-Sim)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-INERTIA-SWEEPS-TARGET-MISSED (PIMI < 5x). Exp 889 achieved 4.33x
+    using parallel update + EMA inertia weighting. The final technique to attempt:
+    sparse adjacency matrix (top-20% couplings only) which reduces per-sweep work.
+    Root cause of 4.33x plateau: full N^2 coupling matrix makes each sweep expensive;
+    sparse coupling may unlock 5x by reducing effective sweep cost.
+
+    IMPORTANT: retire_if_same_verdict=True. If this experiment also produces
+    pimi_below_target, the PIMI research scope is RETIRED to ops/exclusion_manifest.yaml
+    and RETRO-INERTIA-SWEEPS-TARGET-MISSED is closed as RETIRED.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_889_ice40_pimi_v3_parallel.json — 4.33x result, parallel config
+    - hardware/kv260/ising_pimi_v3.v — PIMI Verilog (reference; FPGA sim target)
+    - python/carnot/samplers/ising_pimi_sampler.py — PIMI Python sampler
+    - ops/exclusion_manifest.yaml — retirement record (update if retiring)
+    - openspec/change-proposals/research-roadmap-v70.md — .70 Phase 5 design
+
+    TASK: Implement sparse adjacency PIMI variant. Target 5x sweep reduction.
+    If failed again: retire scope.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Read results/experiment_889_ice40_pimi_v3_parallel.json. Confirm 4.33x.
+    3. Implement python/carnot/samplers/ising_pimi_sparse_sampler.py:
+       class PIMMISparseAdjacency:
+         __init__(self, n_spins: int, sparsity: float = 0.2, inertia_alpha: float = 0.85):
+           self.n = n_spins
+           self.sparsity = sparsity  # keep only top-sparsity fraction of couplings
+           self.alpha = inertia_alpha
+         build_sparse_J(self, J_full: np.ndarray) -> sp.csr_matrix:
+           threshold = np.percentile(np.abs(J_full), (1 - self.sparsity) * 100)
+           J_sparse = J_full.copy()
+           J_sparse[np.abs(J_sparse) < threshold] = 0
+           return sp.csr_matrix(J_sparse)
+         sweep_sparse(self, spins, J_sparse, h) -> tuple[np.ndarray, int]:
+           Only visit non-zero coupling pairs (sparse.nonzero()).
+           Return updated spins, n_flips.
+         run(self, n_sweeps: int, J_full, h) -> dict:
+           J_sparse = self.build_sparse_J(J_full)
+           Record effective_sweep_cost = J_sparse.nnz / (self.n ** 2)
+           Run n_sweeps. Return results with sweeps_reduction vs dense baseline.
+    4. Create scripts/experiment_914_pimi_sparse_adjacency_final.py:
+       a. tmpl = ExperimentTemplate(914, ..., requires_gpu=False). tmpl.setup().
+       b. Test at N=64 (matches KV260 capacity from ops/status.md).
+       c. Baseline: dense PIMI (Exp 889 config), measure sweeps to convergence.
+       d. Sparse: PIMMISparseAdjacency(sparsity=0.2), measure sweeps to convergence.
+       e. Compute: sweeps_reduction = baseline_sweeps / sparse_sweeps.
+       f. honest_verdict:
+          "pimi_target_met" if sweeps_reduction >= 5.0 (closes RETRO)
+          "pimi_improved_below_5x" if sweeps_reduction > 4.33 (incremental improvement)
+          "pimi_no_improvement" if sweeps_reduction <= 4.33 (retire scope)
+    5. RETIREMENT LOGIC (MANDATORY):
+       If honest_verdict in {"pimi_improved_below_5x", "pimi_no_improvement"}
+       AND retire_if_same_verdict triggered:
+         a. Add to ops/exclusion_manifest.yaml:
+            - experiment_scope: "iCE40 PIMI research (hardware/kv260/ising_pimi_*.v + python/carnot/samplers/*pimi*.py)"
+              reason: "retire_if_same_verdict triggered by Exp 914: all three strategies
+                       (EMA, parallel, sparse adjacency) failed to reach 5x sweep reduction.
+                       Maximum achieved: 4.33x. PIMI approach is architecturally limited."
+              retired_milestone: "2026.04.70"
+         b. Mark RETRO-INERTIA-SWEEPS-TARGET-MISSED as RETIRED in MILESTONE_PREREQS.md.
+         c. Set retro_closed_as_retired=True in artifact.
+    6. Write tests. Traces to existing PIMI REQ entries.
+    7. Write results/experiment_914_pimi_sparse_adjacency_final.json.
+    8. Update ops/changelog.md: one-line entry.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_914_pimi_sparse_adjacency_final.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp915-hf-publish-v3
+  milestone: 2026.04.70
+  deliverable: results/experiment_915_hf_publish_v3.json
+  max_turns: 20
+  title: 'Exp 915: HuggingFace Publish v3 — VJEPA v2 + EstimationVerifier Model Cards (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: VJEPA v2 (ood_auc=0.9211) and, if Exp 908 succeeded, EstimationVerifier
+    are publishable artifacts. The Carnot-EBM HuggingFace org at
+    https://huggingface.co/Carnot-EBM hosts trained models. CLAUSE: decentralization
+    rules require publishing to at least two independent channels (HF + gitea mirror).
+    This experiment publishes the VJEPA v2 checkpoint and, if available,
+    EstimationVerifier weights to HuggingFace with accurate model cards.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_884_vjepa_cascade_deploy.json — VJEPA v2 model path + weights location
+    - results/experiment_908_estimation_verifier.json — EstimationVerifier AUC (if exists)
+    - python/carnot/pipeline/vjepa_predictor.py — model architecture for card
+    - ops/status.md — current published models list
+
+    TASK: Publish VJEPA v2 model card and weights. Update ops/status.md published models.
+    Confirm gitea mirror. No live GPU required.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md (decentralization rules: rule 3 — multiple distribution channels).
+    2. Read results/experiment_884_vjepa_cascade_deploy.json. Extract model path.
+    3. Create model card: model_card_vjepa_v2.md (in project root or docs/).
+       Include: architecture, training corpus, ood_auc=0.9211, evaluation methodology,
+       limitations (CPU-only training, GSM8K/MATH corpus), intended use, decentralization note.
+       NO EMOJIS in model card per CLAUDE.md documentation standards.
+    4. Check if EstimationVerifier results exist (results/experiment_908_estimation_verifier.json).
+       If svamp_auc > 0.5: prepare EstimationVerifier model card too.
+    5. Confirm gitea mirror is configured (check git remote -v for gitea URL).
+    6. Simulate HF publish (write artifact describing what would be published):
+       {
+         models_to_publish: ["vjepa-v2", ...],
+         vjepa_ood_auc: 0.9211,
+         estimation_verifier_published: bool,
+         hf_org: "Carnot-EBM",
+         gitea_mirror_confirmed: bool,
+         model_cards_written: list,
+         honest_verdict: str
+       }
+       NOTE: If HF CLI not authenticated, set honest_verdict="publish_ready_pending_auth"
+       and document what commands to run manually.
+    7. Update ops/status.md published models section with new entries.
+    8. Write results/experiment_915_hf_publish_v3.json.
+    9. Update ops/changelog.md: one-line entry.
+    10. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_915_hf_publish_v3.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp916-milestone-retro-70
+  milestone: 2026.04.70
+  deliverable: results/experiment_916_milestone_retro.json
+  max_turns: 20
+  title: 'Exp 916: Milestone 2026.04.70 Operational Retrospective (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Milestone 2026.04.70 "Iterative Self-Repair + DualGPU Wiring +
+    Self-Learning Tier 4" is complete. This retrospective measures outcomes
+    against the 12 success criteria from the design doc, tallies improvement
+    minutes saved, and produces the operational retro for milestone planning handoff.
+
+    MILESTONE SUCCESS CRITERIA (from research-roadmap-v70.md):
+    1. code_repair_working: results/experiment_905_*.json signed_improvement > 0
+    2. code_repair_50q_scaled: results/experiment_906_*.json signed_improvement > 0
+    3. svamp_root_cause_confirmed: results/experiment_907_*.json labeling_mismatch_confirmed == True
+    4. svamp_retro_closed: results/experiment_908_*.json honest_verdict == "svamp_auc_improved"
+    5. lagrange_forgetting_works: results/experiment_909_*.json signed_entropy_improvement > 0
+    6. kan_tier4_seeded: results/experiment_910_*.json honest_verdict == "tier4_seed_viable"
+    7. drift_probe_viable: results/experiment_911_*.json honest_verdict in {"tier0i_viable", "tier0i_marginal"}
+    8. tier28_viable: results/experiment_912_*.json honest_verdict == "tier28_viable"
+    9. dualgpu_wired: results/experiment_913_*.json honest_verdict contains "dualgpu_wired"
+    10. pimi_retro_resolved: results/experiment_914_*.json honest_verdict in
+        {"pimi_target_met", "pimi_no_improvement"} (either outcome resolves retro)
+    11. hf_published: results/experiment_915_*.json honest_verdict not "skipped"
+    12. manifest_escalated: results/experiment_904_*.json escalation_written == True
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_904_preflight_v19.json through results/experiment_915_hf_publish_v3.json
+    - results/operational_retro_2026_04_69.json — prior retro baseline
+    - ops/changelog.md — full .70 changes
+    - openspec/change-proposals/research-roadmap-v70.md — .70 design doc
+    - ops/status.md — current status to update
+
+    TASK: Evaluate all 12 success criteria. Compute wall time. Update ops/status.md.
+    Identify open RETROs for .71.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md meta-reflection principle.
+    2. Read all experiment result files for .70 (Exps 904-915). Extract honest_verdicts.
+    3. Evaluate each of the 12 success criteria. Compute n_criteria_met (target: >= 8).
+    4. Compute wall_time_minutes: sum of experiment durations from artifacts.
+    5. Identify open RETROs entering .71:
+       - RETRO-MANIFEST-FULL-SCOPE: still HUMAN_REQUIRED (until human grants permission)
+       - RETRO-XILINX-TOOLS-UNAVAILABLE: still HUMAN_REQUIRED
+       - RETRO-INERTIA-SWEEPS-TARGET-MISSED: RETIRED if Exp 914 retire_if_same_verdict triggered
+       - RETRO-SVAMP-ZERO-AUC: CLOSED if Exp 908 svamp_auc_improved
+       - New RETROs: any criterion failed with no clear fix path
+    6. Meta-reflection (MANDATORY per CLAUDE.md):
+       Evaluate HOW .70 was executed, not just WHAT was produced:
+       - Did the execute-feedback approach (arXiv 2604.10508) outperform the regex approach?
+       - Did DualGPU wiring yield the expected 1.9x?
+       - Which experiments ran over max_turns?
+       - What should the .71 planner know about execution speed?
+    7. Update ops/status.md:
+       - "What's Working" section: add all confirmed capabilities from .70
+       - "What's Next" section: update with .71 priorities
+    8. Build artifact:
+       {
+         milestone: "2026.04.70",
+         n_criteria_met: int,
+         n_criteria_total: 12,
+         criteria_results: {dict of criterion_name: bool},
+         wall_time_minutes: float,
+         open_retros_entering_71: list,
+         closed_retros_this_milestone: list,
+         meta_reflection: str,
+         improvement_minutes_saved: float,
+         honest_verdict: "milestone_complete"
+       }
+    9. Write results/experiment_916_milestone_retro.json.
+    10. Update ops/changelog.md: one-line "Milestone 2026.04.70 retrospective complete."
+    11. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_916_milestone_retro.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.

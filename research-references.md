@@ -33,6 +33,84 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-26 arxiv Scan (Milestone 2026.04.70 Planning)
+
+### Iterative Self-Repair in LLM Code Generation
+- **Paper:** arXiv 2604.10508 (April 2026)
+- **What:** Investigates iterative self-repair (feeding execution errors back to the LLM for
+  correction) across 7 models (Llama 4, Qwen3 32B, Gemini 2.5) on HumanEval and MBPP. With up
+  to 5 repair attempts, self-repair universally improves pass rates: +4.9 to +17.1 pp on
+  HumanEval, +16.0 to +30.0 pp on MBPP. Most gains concentrate in the first 2 rounds. Assertion
+  errors (logical mistakes) are hardest to repair (~45%); syntax and name errors repair at much
+  higher rates.
+- **Relevance to Carnot:** Carnot's code repair has been blocked for 12+ consecutive milestones
+  because ArithmeticExtractor extracts zero constraints from Gemma4/Qwen3 IT responses. Iterative
+  self-repair bypasses constraint extraction entirely: run the generated code, capture the execution
+  error, and feed it back to the LLM for a second attempt. No ArithmeticExtractor needed. This is
+  the path to first positive HumanEval improvement. Key insight: Carnot's energy-based verification
+  can SELECT which attempt to keep (lowest energy score = best candidate), improving over naive
+  self-repair by choosing the best of N attempts, not just the last.
+- **Concrete experiment:** Exp 905 — IterativeSelfRepair v1: run Gemma4-E4B-it on 25 HumanEval
+  problems, 3 attempts each. Execute code, feed errors back to model. Use Carnot's VerifyRepairPipeline
+  to select the lowest-energy attempt. Target: signed_improvement > 0 (first in 12+ milestones).
+- **When to incorporate:** Milestone 2026.04.70 — Phase 1 (Exp 905).
+
+### LLMloop: Automated Iterative Feedback Loops for Code Generation
+- **Paper:** arXiv 2603.23613 (March 2026)
+- **What:** Framework to automatically improve LLM-generated code through compilation and execution
+  feedback loops. First loop ensures generated code compiles; second loop runs tests and feeds
+  failure traces back to the LLM. Shows consistent improvement on Java code generation benchmarks.
+- **Relevance to Carnot:** Complements arXiv 2604.10508 (iterative self-repair). The two-stage
+  feedback loop (compile first, test second) is directly applicable to HumanEval where Python
+  syntax errors and runtime errors require different remediation paths. Carnot can implement:
+  Stage 1 = AST syntax check (already have ConstrainedDecodingPreFilter), Stage 2 = execute test
+  cases + Carnot energy scoring to rank repairs.
+- **Concrete experiment:** Incorporated into Exp 905 and Exp 906 as the feedback loop structure.
+- **When to incorporate:** Milestone 2026.04.70 — folded into Exp 905/906.
+
+### AutoKnots: Adaptive Knot Allocation for Spline Interpolation
+- **Paper:** arXiv 2412.13423 (December 2025)
+- **What:** Proposes adaptive knot placement where knot locations are trained jointly with spline
+  parameters. Free-knot adaptation consistently reduces errors vs fixed grids. KAN 2 already
+  supports post-training grid refinement (nested spline spaces preserve training progress when
+  knots are added). Key insight: high-density activation regions benefit from finer knot spacing;
+  low-density regions waste parameters with fine grids.
+- **Relevance to Carnot:** Directly informs FR-11 Tier 4 KAN adaptive structure (Exp 910).
+  The "nested spline spaces" property means we can add knots to high-activation splines without
+  retraining from scratch — KAN 2-style grid refinement preserves existing learned parameters.
+  This makes Tier 4 restructuring cheap: add capacity where needed, keep everything else unchanged.
+- **Concrete experiment:** Exp 910 — FR-11 Tier 4 KAN Seed using AutoKnots-style adaptive
+  refinement: run forward pass to build activation histograms, then add knots to the top-30%
+  high-activation splines using grid refinement (not full retraining).
+- **When to incorporate:** Milestone 2026.04.70 — Phase 3 (Exp 910).
+
+### Linear Probe Accuracy Scales with Model Size and Benefits from Multi-Layer Ensembling
+- **Paper:** arXiv 2604.13386 (April 2026)
+- **What:** Shows that multi-layer probe ensembling consistently outperforms single-layer probes
+  for detecting internal model properties. Ensembling probes across layers (L4, L8, L12, L16)
+  via learned weighting improves AUROC by 3-8% vs best single layer. The weights adapt to
+  where each model stores the relevant information.
+- **Relevance to Carnot:** DRIFT probe (Exp 911) uses hidden states at 4 fixed layers. Changing
+  from per-layer cosine similarity to a learned ensemble of the 4-layer drift signatures should
+  improve probe_auc. The paper validates that multi-layer ensembling is worthwhile even for
+  lightweight linear probes. Implemented by replacing single LogisticRegression(X) where X is
+  the 3-value drift vector with LogisticRegression(X) where X = learned_weighted_ensemble(per_layer_drifts).
+- **Concrete experiment:** Incorporated into Exp 911 (DRIFT Multi-Layer Ensemble Probe).
+- **When to incorporate:** Milestone 2026.04.70 — Phase 4 (Exp 911).
+
+### Var-JEPA: Bridging Predictive and Generative Self-Supervised Learning
+- **Paper:** arXiv 2603.20111 (March 2026)
+- **What:** Formalises the JEPA framework as a deterministic latent variable model with a
+  corresponding ELBO objective. Shows JEPA and VAE are complementary: JEPA is a deterministic
+  encoder with implicit predictive prior; VAE adds explicit distributional uncertainty. Var-JEPA
+  combines both: the ELBO minimises reconstruction + KL(q(z|x) || p(z|context)), identical to
+  VJEPA's objective but derived from first principles.
+- **Relevance to Carnot:** Theoretical confirmation that Carnot's VariationalJEPAPredictor
+  (ood_auc=0.9211) is on the right architectural track. Var-JEPA's ELBO formulation provides
+  a cleaner gradient signal for SVAMP-specific retraining (Exp 908): the reconstruction term
+  forces the model to explain SVAMP response structure, while the KL term prevents OOD collapse.
+- **When to incorporate:** Theoretical basis for Exp 908 SVAMP VJEPA v3 training.
+
 ## 2026-04-25 arxiv Scan (Milestone 2026.04.67 Planning)
 
 ### VJEPA: Variational Joint Embedding Predictive Architecture as Probabilistic World Model
