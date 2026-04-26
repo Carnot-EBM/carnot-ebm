@@ -15956,3 +15956,45 @@ for this domain.
 **Then** the label is 0
 
 **Spec traces:** REQ-VER-085, Exp 896
+
+
+## REQ-TIER0-009: DRIFTProbe Hidden-State Representational Drift (Exp 899)
+
+**Status:** Implemented (Exp 899)
+
+The system SHALL provide a DRIFTProbe class that extracts hidden-state representations
+from a small LLM (Qwen/Qwen3.5-0.8B) at selected intermediate layers and trains a
+linear logistic regression probe to classify hallucinations from representational drift
+signatures (arXiv 2601.14210).
+
+- REQ-TIER0-009-1: extract_drift_signature(text) SHALL return an np.ndarray of shape
+  (len(probe_layers)-1,) containing mean-over-tokens cosine drift for each consecutive
+  layer pair, clamped to [0, 2].
+- REQ-TIER0-009-2: fit(pairs) SHALL train a sklearn LogisticRegression on drift signatures
+  extracted from the provided labeled pairs (label=1 for hallucinating, 0 for truthful).
+- REQ-TIER0-009-3: predict_proba(text) SHALL return a float in [0, 1] representing the
+  probability that the text is representationally drifted (hallucinating).
+- REQ-TIER0-009-4: is_representationally_drifted(text, threshold=0.6) SHALL return True
+  when predict_proba(text) > threshold.
+- REQ-TIER0-009-5: ThreeTierPipeline.wire_drift_probe(probe) SHALL attach a DRIFTProbe
+  so verify_extended() records is_representationally_drifted in the result dict.
+  This is advisory — it does NOT change the verified flag or tier_used.
+- REQ-TIER0-009-6: When the LLM is not loadable (no transformers installed, no model
+  weights), extract_drift_signature() SHALL return np.zeros(len(probe_layers)-1) so
+  callers always receive an array of the correct shape.
+
+### SCENARIO-TIER0-009: DRIFTProbe Signature Shape and Probe Training
+
+**Given** a DRIFTProbe initialized with probe_layers=[4, 8, 12, 16]
+**When** extract_drift_signature("any text") is called
+**Then** the result has shape (3,) — one value per consecutive layer pair
+**And** all values are in [0, 2]
+
+**When** fit(pairs) is called with 50 labeled pairs
+**Then** linear_probe is not None
+**And** predict_proba(text) returns a float in [0, 1]
+
+**When** wire_drift_probe(probe) is called on ThreeTierPipeline
+**Then** verify_extended(response) includes is_representationally_drifted in its result dict
+
+**Spec traces:** REQ-TIER0-009, Exp 899

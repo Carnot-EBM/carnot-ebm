@@ -95,6 +95,7 @@ from carnot.pipeline.nup_probe_v4 import NUPProbeV4
 from carnot.pipeline.sink_probe import SinkProbe
 from carnot.pipeline.spilled_energy import SpilledEnergyDetector, SpilledEnergyDetectorResult  # noqa: F401
 from carnot.pipeline.vg_search_scheduler import VGSearchScheduler  # noqa: F401
+from carnot.probes.drift_probe import DRIFTProbe
 from carnot.probes.hallusae_geometric_probe import HalluSAEGeometricProbe
 from carnot.probes.streaming_cot_detector import StreamingCoTHalluDetector
 from carnot.samplers.lagrange_adaptive import LagrangeAdaptiveIsingConstraints
@@ -274,6 +275,10 @@ class ThreeTierPipeline:
         # Tier 0i: HalluSAEGeometricProbe — optional TF-IDF geometry probe.
         # When set, verify_extended() measures geometric_energy and hallusae_anomalous.
         self.hallusae_probe: HalluSAEGeometricProbe | None = None
+        # Tier 0i (DRIFT variant): DRIFTProbe — optional hidden-state drift probe.
+        # When set, verify_extended() measures is_representationally_drifted.
+        # Advisory only — does not change verified outcome.  See REQ-TIER0-009.
+        self.drift_probe: DRIFTProbe | None = None
         # Tier 3 (Lagrange): LagrangeAdaptiveIsingConstraints — optional adaptive
         # Ising sampler whose lambda weights update across sessions (FR-11 loop).
         # When set, run_lagrange_session() delegates to this instance after each
@@ -310,6 +315,21 @@ class ThreeTierPipeline:
         Spec: REQ-FR11-030
         """
         self.hallusae_probe = probe
+
+    def wire_drift_probe(self, probe: DRIFTProbe) -> None:
+        """Attach a DRIFTProbe so verify_extended() runs the hidden-state drift check.
+
+        **For engineers:**
+            After wiring, verify_extended() will call probe.is_representationally_drifted()
+            on the full response text and record is_representationally_drifted in the
+            returned dict.  Advisory only — does not alter the verified flag or tier_used.
+
+        Args:
+            probe: Fitted DRIFTProbe instance (probe.fit() must have been called).
+
+        Spec: REQ-TIER0-009
+        """
+        self.drift_probe = probe
 
     def wire_lagrange(self, adaptive: LagrangeAdaptiveIsingConstraints) -> None:
         """Attach a LagrangeAdaptiveIsingConstraints for the FR-11 multi-session relay.
@@ -400,6 +420,11 @@ class ThreeTierPipeline:
             geometric_energy = self.hallusae_probe.geometric_energy(cot_steps)
             hallusae_anomalous = self.hallusae_probe.is_anomalous(cot_steps)
 
+        # Tier 0i (DRIFT): hidden-state representational drift probe.
+        is_representationally_drifted = False
+        if self.drift_probe is not None:
+            is_representationally_drifted = self.drift_probe.is_representationally_drifted(response)
+
         return {
             "verified": verified,
             "tier_used": tier_used,
@@ -407,6 +432,7 @@ class ThreeTierPipeline:
             "streaming_cot_unstable": streaming_cot_unstable,
             "geometric_energy": geometric_energy,
             "hallusae_anomalous": hallusae_anomalous,
+            "is_representationally_drifted": is_representationally_drifted,
         }
 
     def run_lagrange_session(

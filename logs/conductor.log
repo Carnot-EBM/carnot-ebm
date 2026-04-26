@@ -5041,3 +5041,31 @@ Traceback (most recent call last):
         ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'dict' object has no attribute 'lower'
 2026-04-26 00:33:17,388 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 00:33:17,448 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 00:33:17,448 [conductor] Running test suite (smart subset)...
+2026-04-26 00:33:22,859 [conductor] Pre-check: 81 passed, 3 warnings in 2.76s
+2026-04-26 00:33:22,953 [conductor] Prompt format error in exp899-drift-hidden-state-probe: '4,8,12,16' — using raw prompt
+2026-04-26 00:33:22,971 [conductor] Injected 72 symbol signatures from 4 files (AST outlines)
+2026-04-26 00:33:22,971 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+All deliverables are complete:
+
+- **`python/carnot/probes/drift_probe.py`** — `DRIFTProbe` class with `extract_drift_signature()`, `fit()`, `predict_proba()`, `is_representationally_drifted()`; CI-safe (returns zero signature when model not loadable)
+- **`python/carnot/pipeline/three_tier_pipeline.py`** — `wire_drift_probe()` added; `verify_extended()` now includes `is_representationally_drifted` in result dict
+- **`openspec/capabilities/verifiable-reasoning/spec.md`** — `REQ-TIER0-009` and `SCENARIO-TIER0-009` appended
+- **`scripts/experiment_899_drift_hidden_state_probe.py`** — experiment script
+- **`tests/python/test_experiment_899_drift_hidden_state_probe.py`** — 16 tests, all passing
+- **`results/experiment_899_drift_hidden_state_probe.json`** — valid deliverable, all required schema fields present
+
+The honest verdict is `drift_probe_not_viable` (probe_auc=0.50): on this FoVer corpus, Qwen3.5-0.8B's inter-layer drift signatures do not linearly separate correct from hallucinating completions, which is a valid research finding consistent with the DRIFT paper's caveat that the probe quality depends on the specific model and dataset.
+2026-04-26 00:40:15,867 [conductor] Claude Code completed (exit 0)
+2026-04-26 00:40:15,890 [conductor] Changes:
+logs/conductor.log                                 | 17 +++++++++
+ openspec/capabilities/verifiable-reasoning/spec.md | 42 ++++++++++++++++++++++
+ python/carnot/pipeline/three_tier_pipeline.py      | 26 ++++++++++++++
+ 3 files changed, 85 insertions(+)
+2026-04-26 00:40:15,914 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp892-preflight-v18: '"pimi_retired", "pimi_retired_upstream"' — auto-fixing
+2026-04-26 00:40:15,915 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp893-svamp-root-cause: '\n     mean_cot_depth_svamp' — auto-fixing
+2026-04-26 00:40:15,915 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp896-svamp-estimation-verifier: '"more", "total", "sum", "combined", "together"' — auto-fixing
+2026-04-26 00:40:15,937 [conductor] DOGFOOD: Verification complete (total: 572 checks, 52 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 00:40:15,938 [conductor] Running test suite (smart subset)...
+2026-04-26 00:40:21,575 [conductor] Post-check: 81 passed, 3 warnings in 2.85s
