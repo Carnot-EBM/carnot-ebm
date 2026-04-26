@@ -4321,3 +4321,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 935: FR-11 Tier 2 Code Domain Memory — CaseMemory for Code Repair Patterns (CPU) (✅ Complete) — honest_verdict=tier2_code_memory_works; results/experiment_935_fr11_tier2_code_domain.json
 - 2026-04-26: Exp 936: KAN Tier 4 Real Data — AutoKnots Adaptive Refinement on FoVer Corpus (CPU) (⚠️ Research Finding) — honest_verdict=real_data_improves_over_synthetic; results/experiment_936_kan_tier4_real_data.json
 - 2026-04-26: Exp 937: Symbolic-KAN Constraint Verifier — Discrete Symbolic Structure for Interpretability (CPU) (✅ Complete) — honest_verdict=symbolic_kan_viable; results/experiment_937_symbolic_kan_constraint_verifier.json
+- 2026-04-26: Exp 938: DraftConditioned Tier 2.8 Pipeline Integration — Wire into ThreeTierPipeline (CPU) (✅ Complete) — honest_verdict=tier28_wired; results/experiment_938_draft_conditioned_tier28_integration.json
