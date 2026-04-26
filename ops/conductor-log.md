@@ -2844,3 +2844,5 @@ python/ |
 | 2026-04-26 11:47 UTC | Exp 922: HuggingFace Publish v4 — SOPS Auth Inject | OK | Deliverable already exists in repo |
 | 2026-04-26 11:54 UTC | Exp 923: DRIFTProbe Ensemble — Multi-Layer Weighte | OK | 81 passed, 3 warnings in 2.81s |
 | 2026-04-26 12:08 UTC | Exp 924: R-PRM Step Reward Tier 2.9 — Reasoning-Dr | OK | 81 passed, 3 warnings in 2.83s |
+| 2026-04-26 12:18 UTC | Exp 925: KAN Tier 4 Real Data Training — AutoKnots | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-26 12:28 UTC | Exp 925: KAN Tier 4 Real Data Training — AutoKnots | OK | Deliverable already exists in repo |

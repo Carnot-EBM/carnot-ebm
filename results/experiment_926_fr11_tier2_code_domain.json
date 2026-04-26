@@ -1,0 +1,60 @@
+{
+  "experiment": 926,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-26",
+  "started_at": "2026-04-26T12:28:33.050725+00:00",
+  "finished_at": "2026-04-26T12:28:33.050725+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 926: FR-11 Tier 2 Code Domain Memory \u2014 CaseMemory for Code Repair Patterns (CPU)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "5 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp713-fr11-tier2-relay",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: fr11_tier2_fallback_relay"
+    },
+    {
+      "upstream": "exp814-fr11-tier1-live-relay",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_no_delta"
+    },
+    {
+      "upstream": "exp823-fr11-tier1-live-relay-v2",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate"
+    },
+    {
+      "upstream": "exp825-jepa-v23-eval-fr11-tier3",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: jepa_v23_below_random_ood"
+    },
+    {
+      "upstream": "exp837-fr11-tier1-live-relay-v3",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
