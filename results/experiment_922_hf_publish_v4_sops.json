@@ -1,0 +1,24 @@
+{
+  "experiment": 922,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-26",
+  "started_at": "2026-04-26T11:37:55.927733+00:00",
+  "finished_at": "2026-04-26T11:37:55.927733+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 922: HuggingFace Publish v4 \u2014 SOPS Auth Injection + Actual Publish (CPU)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp829-huggingface-v3-publish",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: hf_publish_success"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
