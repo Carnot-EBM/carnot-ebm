@@ -1575,3 +1575,51 @@ actively relevant.
          with lambda=0.05; but at 200 steps weight = exp(-10) ≈ 4.5e-5 < 1e-4, so they expire)
 
 **Spec traces:** REQ-FR11-007
+
+---
+
+## REQ-FR11-008: KAN Adaptive Spline Restructuring Based on Activation Density
+
+**Statement:** KANAdaptiveStructure MUST analyse per-spline activation histograms
+accumulated during a training corpus pass and restructure the KAN grid as follows:
+- Splines whose top-2 histogram bins exceed 30% of total activations (high density)
+  MUST have their num_knots doubled (clamped to 64).
+- Splines whose bottom-2 histogram bins exceed 60% of total activations (low density)
+  MUST have their num_knots halved (clamped to minimum 3).
+- All other splines remain unchanged.
+After restructuring, existing control points MUST be linearly interpolated onto the
+new knot count so the model fine-tunes from a meaningful initialisation.
+
+**Why this matters:**
+    A fixed KAN grid allocates the same resolution everywhere regardless of where
+    activations actually land during inference.  Adaptive restructuring focuses
+    parameters on high-traffic regions and reclaims parameters from low-traffic
+    regions, which should improve energy discrimination per parameter — the
+    efficiency metric that matters for Phase 2 hardware acceleration.
+
+**Acceptance criteria:**
+- `KANEnergyFunction.get_activation_density()` returns normalized histograms (sum=1)
+  for every spline that received at least 1 activation.
+- `KANAdaptiveStructure.analyze()` returns per-spline dicts with keys "density"
+  (one of "high"/"low"/"neutral") and "knot_count".
+- `KANAdaptiveStructure.restructure()` doubles num_knots for high-density splines
+  and halves for low-density splines without mutating the original KAN.
+- `KANAdaptiveStructure.evaluate_benefit()` returns energy_loss_before,
+  energy_loss_after, delta, knot_count_before, knot_count_after,
+  knot_count_change_pct.
+- Seed experiment (Exp 898) confirms tier4_viable = (energy_loss_after < energy_loss_before).
+
+**Spec traces:** Exp 898, FR-11 Tier 4
+
+---
+
+## SCENARIO-FR11-008: Restructured KAN Has Lower Energy Loss Than Original
+
+**Given** a KANModel trained for 100 epochs on 50 FoVer pairs
+**And** KANAdaptiveStructure.analyze() classifies at least one spline as high/low
+**When** KANAdaptiveStructure.restructure() is called and the result is fine-tuned
+         for 20 additional epochs on the same 50 training pairs
+**Then** KANAdaptiveStructure.evaluate_benefit() returns delta < 0 (energy_loss improves)
+**And** the honest_verdict is "tier4_viable_seed"
+
+**Spec traces:** REQ-FR11-008

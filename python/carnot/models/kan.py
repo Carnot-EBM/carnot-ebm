@@ -36,12 +36,13 @@ Spec: REQ-CORE-001, REQ-CORE-002
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import NamedTuple
 
 import jax
 import jax.numpy as jnp
 import jax.random as jrandom
+import numpy as np
 
 from carnot.core.energy import AutoGradMixin
 
@@ -204,6 +205,11 @@ class KANEnergyFunction(AutoGradMixin):
         bias_splines: List of BSpline for each node bias.
         edges: List of (i, j) edge pairs.
         input_dim: Number of input dimensions.
+        _activation_histograms: Accumulates raw activation values per spline ID
+            during forward passes so KANAdaptiveStructure can later analyse
+            which grid regions are over- or under-used.  Keyed by the spline's
+            string ID ("edge_(i,j)" or "bias_i").  Populated only when
+            enable_activation_tracking=True (set by KANAdaptiveStructure).
     """
 
     def __init__(
@@ -250,6 +256,10 @@ class KANEnergyFunction(AutoGradMixin):
                 )
             )
 
+        # Raw activation accumulation buffers.  Empty until tracking is enabled.
+        self.enable_activation_tracking: bool = False
+        self._activation_histograms: dict[str, list[float]] = {}
+
     def energy(self, x: jax.Array) -> jax.Array:
         """Compute scalar KAN energy E(x).
 
@@ -264,13 +274,59 @@ class KANEnergyFunction(AutoGradMixin):
         edge_energy = jnp.array(0.0)
         for (i, j), spline in self.edge_splines.items():
             edge_product = x[i] * x[j]
+            if self.enable_activation_tracking:
+                spline_id = f"edge_{i}_{j}"
+                if spline_id not in self._activation_histograms:
+                    self._activation_histograms[spline_id] = []
+                self._activation_histograms[spline_id].append(float(edge_product))
             edge_energy = edge_energy + spline.evaluate(edge_product)
 
         bias_energy = jnp.array(0.0)
         for i, spline in enumerate(self.bias_splines):
+            if self.enable_activation_tracking:
+                spline_id = f"bias_{i}"
+                if spline_id not in self._activation_histograms:
+                    self._activation_histograms[spline_id] = []
+                self._activation_histograms[spline_id].append(float(x[i]))
             bias_energy = bias_energy + spline.evaluate(x[i])
 
         return edge_energy + bias_energy
+
+    def get_activation_density(self, n_bins: int = 20) -> dict[str, np.ndarray]:
+        """Return per-spline activation histogram normalized to sum=1.
+
+        Runs over all accumulated activations since tracking was enabled.
+        Each histogram has n_bins bins covering [min, max] of observed activations.
+
+        Why normalized: KANAdaptiveStructure uses density fractions to decide
+        whether a spline's grid needs refinement.  Raw counts vary with corpus
+        size; fractions are corpus-size-invariant.
+
+        Args:
+            n_bins: Number of histogram bins (default 20).
+
+        Returns:
+            Dict of spline_id -> normalized histogram (shape: (n_bins,)).
+            Only includes splines with at least 1 recorded activation.
+        """
+        result: dict[str, np.ndarray] = {}
+        for spline_id, activations in self._activation_histograms.items():
+            if not activations:
+                continue
+            arr = np.array(activations, dtype=np.float32)
+            lo, hi = float(arr.min()), float(arr.max())
+            if lo == hi:
+                # All activations identical — treat as a single spike in centre bin.
+                hist = np.zeros(n_bins, dtype=np.float32)
+                hist[n_bins // 2] = 1.0
+            else:
+                hist, _ = np.histogram(arr, bins=n_bins, range=(lo, hi))
+                hist = hist.astype(np.float32)
+                total = hist.sum()
+                if total > 0:
+                    hist = hist / total
+            result[spline_id] = hist
+        return result
 
     @property
     def n_params(self) -> int:
