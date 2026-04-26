@@ -6067,3 +6067,31 @@ logs/conductor.log | 25 +++++++++++++++++++++++++
 2026-04-26 07:47:57,546 [conductor] RESEARCH STEP: Exp 923: DRIFTProbe Ensemble — Multi-Layer Weighted Ensemble (arXiv 2604.13386) (GPU)
 2026-04-26 07:47:57,546 [conductor] ============================================================
 2026-04-26 07:47:58,284 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 07:47:58,342 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 07:47:58,342 [conductor] Running test suite (smart subset)...
+2026-04-26 07:48:03,764 [conductor] Pre-check: 81 passed, 3 warnings in 2.79s
+2026-04-26 07:48:03,869 [conductor] Injected 38 symbol signatures from 3 files (AST outlines)
+2026-04-26 07:48:03,869 [conductor] Calling Claude Code (40 max turns, model: sonnet)...
+The deliverable is written and valid. The experiment ran with the real Qwen/Qwen3.5-0.8B model and produced an honest result:
+- `ood_auc_drift_ensemble = 0.5625` (real model hidden states)  
+- `ood_auc_drift_baseline = 0.565` (Exp 911)
+- `honest_verdict = "tier0i_no_improvement"` — the ensemble AUC is marginally below the baseline (float comparison: 0.5625 < 0.5650...)
+
+The ensemble architecture, grid search, and spec are correctly implemented. The real model's inter-layer drift signal is still weak — the synthetic corpus would exceed the threshold, but the real model's hidden states provide insufficient signal separation regardless of whether we use a single probe or an ensemble.
+
+**All deliverables complete:**
+- `python/carnot/verify/drift_probe_ensemble.py` — `DRIFTProbeEnsemble` class (REQ-TIER0-006)
+- `openspec/capabilities/pipeline/spec.md` — REQ-TIER0-006 + SCENARIO-TIER0-006 added
+- `scripts/experiment_923_drift_probe_ensemble.py` — experiment script
+- `tests/python/test_drift_probe_ensemble.py` — 15 tests, all passing
+- `results/experiment_923_drift_probe_ensemble.json` — valid deliverable with all schema fields
+2026-04-26 07:54:03,775 [conductor] Claude Code completed (exit 0)
+2026-04-26 07:54:03,791 [conductor] Changes:
+logs/conductor.log                     | 19 ++++++++++++++++
+ openspec/capabilities/pipeline/spec.md | 40 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
+2026-04-26 07:54:03,808 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp917-preflight-v20: '\n       "RETRO-MANIFEST-FULL-SCOPE"' — auto-fixing
+2026-04-26 07:54:03,808 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp918-lagrange-forgetting-multi-constraint: '"high_viol_prob"' — auto-fixing
+2026-04-26 07:54:03,812 [conductor] DOGFOOD: Verification complete (total: 591 checks, 53 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 07:54:03,812 [conductor] Running test suite (smart subset)...
+2026-04-26 07:54:09,378 [conductor] Post-check: 81 passed, 3 warnings in 2.81s

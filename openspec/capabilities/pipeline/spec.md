@@ -1565,6 +1565,46 @@ reasoning style,
 
 
 
+### REQ-TIER0-006: DRIFTProbeEnsemble Per-Layer Ensemble Hallucination Detection (Tier 0i)
+
+**Status:** Implemented (Exp 923)
+
+`python/carnot/verify/drift_probe_ensemble.py` implements `DRIFTProbeEnsemble`, a Tier 0i
+upgrade over DRIFTProbe (REQ-TIER0-005) that trains one LogisticRegression probe per
+adjacent layer pair and combines predictions via learned alpha weights on a held-out
+validation set.  Inspired by arXiv 2604.13386 which shows per-layer ensemble beats
+single-probe concatenation by 3-8% AUROC.
+
+**Acceptance criteria:**
+- REQ-TIER0-006-1: `fit(correct_examples, hallucinated_examples)` trains N separate
+  LogisticRegression probes (N = len(layers)-1), one per adjacent layer pair, each
+  using only that pair's cosine distance scalar as the feature.
+- REQ-TIER0-006-2: Ensemble weights alpha are learned via grid search over a 20-point
+  simplex (alpha >= 0, sum(alpha) = 1) that maximises accuracy on a 20% held-out split.
+- REQ-TIER0-006-3: `predict_violation_prob(hidden_states)` returns float in [0, 1];
+  returns 0.5 when ensemble has not been fitted.
+- REQ-TIER0-006-4: Default `layers` is `[-4, -3, -2, -1]` (last 4 layer indices, model-
+  size-agnostic).
+- REQ-TIER0-006-5: Missing layer keys produce zero drift for that pair (no crash).
+
+**Spec traces:** REQ-TIER0-006, Exp 923
+
+
+### SCENARIO-TIER0-006: DRIFTProbeEnsemble AUC > 0.65 on GSM8K Hallucination Pairs
+
+**Given** 100 GSM8K (question, correct_response, hallucinated_response) triples
+where hallucinated responses inject a wrong numerical answer while preserving reasoning style,
+**When** hidden states are extracted at the last 4 transformer layers and
+`DRIFTProbeEnsemble.fit()` is called on 80 training examples followed by
+`roc_auc_score` on 20 held-out examples,
+**Then**
+  1. `ood_auc_drift_ensemble` > 0.65 → honest_verdict = "tier0i_viable"
+  2. `ood_auc_drift_ensemble` > baseline from Exp 911 (0.565) → honest_verdict = "tier0i_improved_marginal"
+  3. Otherwise → honest_verdict = "tier0i_no_improvement"
+
+**Spec traces:** REQ-TIER0-006, SCENARIO-TIER0-006, Exp 923
+
+
 ### REQ-TIER28-001: DraftConditionedVerifier Tier 2.8 — Structural Constraint Injection
 
 **Status:** Implemented (Exp 912)
