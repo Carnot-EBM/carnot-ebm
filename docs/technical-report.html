@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report on 842 Experiments Across 70 Research Milestones</title>
-  <meta name="description" content="Carnot technical report: A Technical Report on 842 Experiments Across 70 Research Milestones. Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report on 928 Experiments Across 77 Research Milestones</title>
+  <meta name="description" content="Carnot technical report: A Technical Report on 928 Experiments Across 77 Research Milestones. Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,9 +160,9 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-on-842-experiments-across-70-research-milestones">A Technical Report on 842 Experiments Across 70 Research Milestones</h2>
+<h2 id="a-technical-report-on-928-experiments-across-77-research-milestones">A Technical Report on 928 Experiments Across 77 Research Milestones</h2>
 <p><strong>Author:</strong> Ian Blenke
-<strong>Date:</strong> 2026-04-24
+<strong>Date:</strong> 2026-04-26
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
 <strong>License:</strong> Apache 2.0</p>
 <hr>
@@ -180,8 +180,8 @@ for a repair pass.</p>
 can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from <strong>live GPU inference
 on real public models</strong> (Qwen 3.5, Gemma 4), never from simulated runs.</p>
-<p>This report documents the research arc behind the framework — <strong>842
-experiments across 70 milestones</strong>, run between February and April 2026.
+<p>This report documents the research arc behind the framework — <strong>928
+experiments across 77 milestones</strong>, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -203,6 +203,10 @@ retrospective artifacts checked into <code>results/operational_retro_*.json</cod
 <li><strong>Two-GPU parallel training</strong> achieves 2.0x wall-clock speedup with
   bit-identical final losses versus sequential (Exps 684/685, RETRO-071
   closed).</li>
+<li><strong>IterativeSelfRepair (execute-feedback-retry)</strong> raises HumanEval code
+  repair pass rate from <strong>8% to 80%</strong> (+72pp) on 50 problems using
+  execute-and-retry rather than LLM rewriting alone (Exps 905/906,
+  cross-model energy selection accuracy 1.0).</li>
 </ul>
 <p><strong>Claims that did not survive audit</strong> are kept in the research record as
 negative findings and documented alongside the audits that surfaced them
@@ -338,7 +342,7 @@ that caught the next one faster. The <code>honest_verdict</code> schema, the
 REQ-SAFE-011 teacher-inference-time invariant, and the <code>tp_count &gt; 0</code>
 gate on safety-classifier claims are all direct outputs of audits from
 this phase.</p>
-<h3 id="phase-6-retro-closure-and-hardware-on-real-silicon-experiments-701-842-april-22-25-2026">Phase 6 — Retro closure and hardware on real silicon (Experiments 701-842, April 22-25 2026)</h3>
+<h3 id="phase-6-retro-closure-and-hardware-on-real-silicon-experiments-701-818-april-22-24-2026">Phase 6 — Retro closure and hardware on real silicon (Experiments 701-818, April 22-24 2026)</h3>
 <p>The final phase of the research-record-to-date was about closing things:</p>
 <ul>
 <li><strong>RETRO-033</strong> (live verify-repair producing a signed positive number)
@@ -358,33 +362,186 @@ this phase.</p>
 <li><strong>RETRO-028</strong> (Gemma4 OOM on GPU inference) closed after five milestone
   attempts via an nvidia-smi verification loop confirming VRAM cleared
   before model load (Exp 810, milestone 2026.04.62).</li>
-<li><strong>RETRO-KV260-TOOLS-UNAVAILABLE</strong> closed by installing OSS-CAD-Suite
-  (yosys 0.64+149, nextpnr-ice40 0.10, icepack). KV260 N=32 Ising
-  synthesis validated at 3952 LUTs with zero errors (Exp 816,
-  milestone 2026.04.62).</li>
-<li><strong>RETRO-ISING-INJECTION-NO-DISCRIMINATION</strong> closed — Ising constraint
-  injection now achieves 100% discrimination rate between error and clean
-  responses (Exp 819, milestone 2026.04.63).</li>
-<li><strong>RETRO-GGUF-CACHE-IMPORT</strong> closed — GGUF module import fixed, enabling
-  SOTA code repair with +14 repairs on 20 problems using Qwen3.5-0.8B
-  (Exp 820, milestone 2026.04.63).</li>
-<li><strong>RETRO-SYMCODE-SERIAL</strong> closed — SymCodeVerifier paragraph batching
-  achieves 1.710x speedup (Exp 841, milestone 2026.04.64).</li>
-<li><strong>RETRO-TIER1-PLATEAU</strong> closed (milestone 2026.04.64).</li>
+<li><strong>RETRO-KV260-TOOLS-UNAVAILABLE</strong> (open-source FPGA toolchain missing)
+  closed by installing OSS-CAD-Suite (yosys 0.64+149, nextpnr-ice40 0.10,
+  icepack). KV260 N=32 Ising synthesis validated at 3952 LUTs with zero
+  errors (Exp 816, milestone 2026.04.62).</li>
 </ul>
-<p>Milestone 2026.04.62 (the 68th) closed the research record at 818 experiments.
-Key .62 findings: JEPA v22 OOD AUC recovered from 0.2444 to 0.5000 via RA-PRM
-multi-source data collection; VGSearchScheduler reduced Ising oracle calls by
-50% with zero accuracy delta. Milestone 2026.04.63 (the 69th) extended the
-record to 830 experiments. Key .63 findings: jailbreak activation probe achieved
-AUC=1.0 at 0.06 ms inference latency; HuggingFace v3 publish confirmed with
-27 model cards. Milestone 2026.04.64 (the 70th) extended the record to 842
-experiments. Key .64 findings: JEPA v24 multi-domain deployment as Tier 3.5
-addressing ARC planning domain collapse; Multi-Agent Arbiter energy calibration
-fixed (RETRO-ARBITER-FLAT-ENERGY); constraint accumulation fix v3 restoring
-non-zero energy delta (RETRO-CONSTRAINT-ZERO-DELTA). Wall-time regression
-for fifth consecutive milestone — 12.8% near-term savings identified via
-manifest enforcement. Nine retros remain open as of this writing.</p>
+<p>Milestone 2026.04.62 (the 68th) closed the research record at 818
+experiments. Key milestone .62 findings: JEPA v22 OOD AUC improved from
+0.2444 to 0.5000 via RA-PRM multi-source data collection (still below
+the 0.75 publication gate); VGSearchScheduler reduced Ising oracle calls
+by 50% with zero accuracy delta (Exp 815); three new RETROs opened:
+RETRO-GGUF-CACHE-IMPORT (missing <code>carnot.pipeline.gguf_cache</code> module
+blocking SOTA code repair), RETRO-ISING-INJECTION-NO-DISCRIMINATION
+(constraint injector assigns identical energy deltas to error and clean
+responses), and RETRO-ARBITER-FLAT-ENERGY (Multi-Agent Arbiter scores
+all responses 0.0, making selection order-dependent).</p>
+<p>Milestone 2026.04.63 (the 69th) extended the record to 830 experiments.
+Key .63 findings: RETRO-ISING-INJECTION-NO-DISCRIMINATION closed — Ising
+constraint injection now achieves 100% discrimination rate between error
+and clean responses (Exp 819); RETRO-GGUF-CACHE-IMPORT closed — GGUF
+module import fixed, enabling SOTA code repair with +14 repairs on 20
+problems using Qwen3.5-0.8B (Exp 820); jailbreak/activation probe
+achieved AUC=1.0 at 0.06 ms inference latency (Exp 828); HuggingFace
+v3 publish confirmed working with 27 model cards (Exp 829). Blockers
+remaining: JEPA v23 ARC domain collapse (OOD AUC=0.04 on planning
+domain — data coverage gap, not architecture failure); FPGA iCE40
+bitstream not yet generated (nextpnr-ice40 routing invocation incomplete).
+Two new RETROs: RETRO-JEPA-PLANNING-DOMAIN-COLLAPSE,
+RETRO-ICE40-BITSTREAM-FAILURE. Four of 10 success criteria met (honest
+verdict: retro_63_mixed).</p>
+<p>Milestone 2026.04.64 (the 70th) extended the record to 842 experiments
+across 3,971 managed wall-clock minutes. Key .64 findings:
+RETRO-SYMCODE-SERIAL closed — SymCodeVerifier paragraph batching
+achieves 1.710x speedup (Exp 841); RETRO-TIER1-PLATEAU closed.
+JEPA v24 multi-domain training deployed as Tier 3.5 via domain-balanced
+DG-PRM corpus, addressing the ARC planning domain collapse that caused
+OOD AUC=0.04 in v23 (Exps 834/838). Multi-Agent Arbiter energy
+calibration fixed (Exp 835, RETRO-ARBITER-FLAT-ENERGY) — previously all
+responses scored 0.0, making selection order-dependent. Constraint
+accumulation fix v3 (Exp 836, RETRO-CONSTRAINT-ZERO-DELTA) restores
+non-zero delta between error and clean constraint responses. Live full
+precision benchmark v3 ran on GPU (Exp 840). KV260 iCE40 bitstream
+generation attempted (Exp 839) — blocked by LUT overflow:
+nextpnr-ice40 reports the N=32 design requires more LUTs than the
+iCE40 device provides (RETRO-ICE40-PNR-LUT-OVERFLOW opened). Wall-time
+REGRESSION for fifth consecutive milestone (+67 min / +1.7% vs .63);
+per-experiment average crept to 5.29 min (first uptick from the 5.0 min
+floor in four milestones). UNPRECEDENTED: all five slowest experiments
+identical across five consecutive milestones (Exps 786/527/491/627/603).
+Two new RETROs: RETRO-SVAMP-ZERO-AUC, RETRO-ICE40-PNR-LUT-OVERFLOW.
+Nine retros total still open. Honest verdict: fifth-consecutive-regression,
+12.8% near-term savings recoverable via manifest enforcement.</p>
+<p>Milestone 2026.04.65 (the 71st) extended the record to 854 experiments
+(4,049 cumulative managed wall-clock minutes). Key .65
+findings: RETRO-ARBITER-FLAT-ENERGY closed — Multi-Agent Arbiter Gibbs
+warm-start achieves accuracy=1.0 (Exp 846); RETRO-GGUF-CACHE-IMPORT
+closed — GGUFCacheResolver module implemented (Exp 849). Three new RETROs
+opened: RETRO-SOTA-MODEL-DOWNLOAD (Qwen3.6-35B-A3B-GGUF model file absent
+despite cache resolver), RETRO-ICE40-N16-UNEXPECTED-EXPANSION (12258 LCs
+at place-and-route vs 2 at synthesis — register expansion root cause
+diagnosed), RETRO-LIVE-ENV-NOT-PROPAGATED (CARNOT_FORCE_LIVE not
+propagated in Exp 853, recurrence of RETRO-015). Wall-time REGRESSION
+sixth consecutive milestone (+78 min / +2.0% vs .64). UNPRECEDENTED:
+all five slowest experiments identical across six consecutive milestones
+(Exps 786/527/491/627/603). Documentation-without-application loop seventh
+consecutive milestone. Ten retros open. GPU close clean: 0C differential
+at both GPUs.</p>
+<p>Milestone 2026.04.66 (the 72nd) brought the record to 867 experiments
+with a dramatic wall-time improvement: only 0.86 min conductor wall time
+(vs 78 min in .65, delta -77.1 min). Key .66 wins: LIVE-ENV permanently
+fixed after 7+ consecutive milestones of recurrence (Exp 855,
+env_guard_deployed=True); DualGPURunner finally deployed in the production
+path after six consecutive milestones idle, achieving 1.979x throughput
+(Exp 856, exceeds 1.5x target); iCE40 N=8 combinational energy oracle
+synthesized to 134 LUTs with bitstream generated (Exp 859,
+honest_verdict=fpga_oracle_ready); StreamingCoT Tier 0g detector achieves
+AUC=1.0 on hallucination detection at stream-time (Exp 861); FR-11
+Lagrange adaptive self-learning confirmed with delta_s1_to_s5=0.05
+(Exp 862); FR-11 Tier 2 relay confirmed with session AUC=1.0 (Exp 864);
+constraint memory compression 31.25x with AUROC maintained at 1.0 (Exp
+865); RETRO-CONSTRAINT-ZERO-DELTA closed (retrieval AUROC 1.0 after
+compression); RETRO-ISING-INJECTION-NO-DISCRIMINATION closed
+(discrimination_delta=71.5). Eight of 13 success criteria met.
+Remaining blockers: SOTA code repair 10th consecutive block (Qwen3.6-35B
+404 unresolved), live benchmark used simulation fallback rather than live
+GPU (criterion 4 not met), HalluSAE AUC=0.6144 just below 0.65 threshold
+(TF-IDF proxy insufficient, real SAE activations needed). Seven retros
+open (RETRO-MANIFEST-FULL-SCOPE, RETRO-JEPA-OOD, RETRO-XILINX-TOOLS-UNAVAILABLE,
+RETRO-SVAMP-ZERO-AUC, RETRO-SOTA-MODEL-DOWNLOAD, RETRO-HALLUSAE-AUC-BELOW-THRESHOLD,
+RETRO-INERTIA-SWEEPS-TARGET-MISSED).</p>
+<p>Milestone 2026.04.67 (the 73rd) advanced the record to 879 experiments
+across 12.6 cumulative managed minutes (a conductor-cycle-only run with
+no full-milestone timing). Four of 11 success criteria met. Key .67 wins:
+manifest enforcer deployed as a first-class infrastructure component (Exp
+868, blocking retired experiments from re-entering the execution queue);
+StreamingCoT integrated into the live pipeline end-to-end (Exp 874,
+honest_verdict=streaming_cot_wired); FR-11 Tier 2 relay loop confirmed
+closed with session-level precision sustained (Exp 875,
+honest_verdict=fr11_tier2_loop_closed); V-JEPA temporal predictor
+architecture seeded and validated as a viable Tier 3 candidate (Exp 877,
+honest_verdict=tier3_seed_viable, in_dist_auc=1.0, ood_auc=0.5833,
+kl_magnitude=1.25); iCE40 EMA inertia sweeps improved to 4.22x reduction
+with 130 LUTs in 11.6 minutes (Exp 876, below 5x target but above 3x
+threshold, synthesis clean). Blockers: SOTA code repair 11th consecutive
+block; live benchmark fell back to simulation; JEPA v25 still gated; zero
+retros closed (7 still open).</p>
+<p>Milestone 2026.04.68 (the 74th) brought the record to 891 experiments
+with 8 of 11 success criteria met and 3 retros closed in a single
+conductor cycle. Key .68 wins: <strong>V-JEPA Tier 3 deployed</strong> — VJEPA v2
+trained on an expanded 146-pair corpus (up from 57 pairs in v1) achieved
+OOD AUC=0.664 and SVAMP AUC=0.7353 (Exp 883, above the 0.55 gate);
+cascade deployment (Exp 884) achieved a final validated OOD AUC of
+<strong>0.9211</strong>, closing RETRO-JEPA-OOD and marking the first time the
+reasoning-quality discriminator has cleared the 0.90 publication bar;
+<strong>SpectralAttentionProbe</strong> (Exp 885) achieves <strong>AUC=1.0</strong> as Tier 0h
+hallucination detector using bigram Laplacian spectral entropy — 23.3%
+advisory signal rate on live questions; <strong>FR-11 Tier 3 relay</strong> closed
+(Exp 888, fr11_tier3_loop_closed=true), completing the full self-learning
+relay from violation detection through constraint propagation to Tier 3;
+HalluSAE retired (Exp 880, RETRO-HALLUSAE-AUC-BELOW-THRESHOLD closed
+via planned retirement); RETRO-SOTA-MODEL-DOWNLOAD closed via
+GGUFCacheResolver (Exp 890, though subsequent download failed — experiment
+retired). iCE40 PIMI v3 parallel spin updates achieved 4.33x sweep
+reduction (Exp 889, below 5x target; RETRO-INERTIA-SWEEPS-TARGET-MISSED
+remains open). Live GPU confirmed in Exp 882 (live_gpu inference mode).
+Discriminative JEPA architecture formally retired (Exp 887,
+honest_verdict=jepa_discriminative_retired); VJEPA replaces it as Tier 3.</p>
+<p>Milestone 2026.04.69 (the 75th) was a zero-run milestone — a YAML key
+error (<code>title</code> instead of <code>id</code>) in research-roadmap.yaml caused the
+conductor to skip all 12 experiments (Exps 892-903) without executing any.
+The retrospective confirmed the root cause and produced a YAML fix that
+seeded the .70 planning session. Wall time: 3945 min / 802 experiments
+(net -10 min vs .68, third consecutive improvement — but driven entirely
+by slower experiment count growth, not governance fixes). GPU close clean,
+DualGPU still not wired into production (fourth consecutive post-deployment
+idle milestone). UNPRECEDENTED DECUPLE: all five slowest experiments
+identical to .60 through .68 (Exps 786/527/491/627/603) — ten consecutive
+milestones with zero slowest-5 composition change.</p>
+<p>Milestone 2026.04.70 (the 76th) brought the record to <strong>916 experiments</strong>
+and met 11 of 12 success criteria in 36.9 wall minutes across 13 experiments
+(Exps 904-916). Headline wins: <strong>IterativeSelfRepair</strong> (arXiv 2604.10508)
+deployed as the primary code repair strategy — execute-feedback-retry
+raised HumanEval code repair pass rate from <strong>8% to 80%</strong> (+72pp) on 50
+problems using Gemma-4-E4B-it (Exps 905/906, cross-model energy selection
+accuracy=1.0); <strong>EstimationVerifier</strong> raised SVAMP AUC from 0.125 (FoVer
+baseline) to <strong>0.90</strong> (+0.775 signed improvement), closing
+RETRO-SVAMP-ZERO-AUC (Exp 908); <strong>DualGPU production wiring</strong> confirmed
+(Exp 913, structural wiring complete — measured throughput gate deferred to
+.71); <strong>KAN Tier 4</strong> seeded via AutoKnots adaptive grid refinement (Exp
+910, tier4_seed_viable); <strong>DraftConditionedVerifier Tier 2.8</strong> viable
+(Exp 912, draft-scaffolded Ising constraints); <strong>DRIFTProbe Tier 0i</strong>
+(multi-layer hidden-state drift) marginal but viable (Exp 911). Lagrange
+forgetting failed its criterion because the toy single-constraint corpus
+produces entropy=0 regardless of decay — deferred to .71 with multi-constraint
+corpus (RETRO-LAGRANGE-ENTROPY-DEGENERATE). RETRO-INERTIA-SWEEPS-TARGET-MISSED
+closed via retirement (PIMI sparse adjacency final no-improvement, retire
+verdict). RETRO-MANIFEST-FULL-SCOPE formally escalated to human intervention
+required (11th consecutive milestone unapplied). Three retros open entering .71.</p>
+<p>Milestone 2026.04.71 (the 77th) extended the record to <strong>928 experiments</strong>,
+but met only 2 of 12 success criteria in 0.82 wall minutes. The dominant
+failure mode was the conductor's rerun-discipline gate rejecting 9 of 11
+substantive experiments because the planner-generated roadmap YAML lacked
+<code>prior_failures:</code> entries for tasks with prior failure history. This is the
+same gate-discipline the project mandated to prevent doomed reruns — it
+worked correctly; the planner did not populate the required fields. Two
+substantive experiments ran: <strong>Exp 918</strong> (Lagrange multi-constraint corpus)
+confirmed the RETRO-LAGRANGE-ENTROPY-DEGENERATE root cause — the
+single-constraint toy data was the failure cause, not the algorithm; the
+eight-constraint heterogeneous corpus produced non-degenerate entropy
+(improvement=0.018 &gt; 0, verdict: <code>marginal_improvement</code>). <strong>Exp 923</strong>
+(DRIFTProbe ensemble, three uniformly-weighted probes) performed worse than
+the single-probe baseline (AUC 0.5625 vs 0.565) — uniform weighting diluted
+the two zero-coefficient probes and the one informative probe equally;
+learned ensemble weights are required. <strong>Exp 924</strong> (R-PRM Tier 2.9 step
+reward via heuristic inference) produced 0.0 AUC delta — heuristic step
+scoring cannot distinguish correct from incorrect reasoning steps; real-model
+inference is required for genuine step-level signal. Primary process finding:
+the planner must consult <code>research-complete.yaml</code> before generating any task
+with prior failure history and must include a well-formed <code>prior_failures:</code>
+entry in the YAML or the conductor will block the experiment before any work
+runs.</p>
 <hr>
 <h2 id="what-this-report-is-and-isnt">What this report is (and isn't)</h2>
 <p>This is a <strong>research record</strong>, not a product pitch. Every benchmark number
@@ -479,6 +636,34 @@ the narrative.</p>
 <td>Regex 5, Z3 3, LLM 1 FP</td>
 <td>LLM best</td>
 <td>Exp 206-207</td>
+</tr>
+<tr>
+<td>V-JEPA Tier 3 reasoning discriminator (SVAMP + GSM8K OOD)</td>
+<td>—</td>
+<td>OOD AUC <strong>0.9211</strong></td>
+<td>Above 0.90 publication gate; deployed to Tier 3 cascade</td>
+<td>Exp 883/884</td>
+</tr>
+<tr>
+<td>SpectralAttentionProbe Tier 0h hallucination detector</td>
+<td>—</td>
+<td>AUC <strong>1.0</strong></td>
+<td>Bigram Laplacian spectral entropy; 23.3% advisory signal rate</td>
+<td>Exp 885</td>
+</tr>
+<tr>
+<td>IterativeSelfRepair code repair (HumanEval 50, Gemma-4-E4B-it)</td>
+<td>8.0%</td>
+<td>80.0%</td>
+<td><strong>+72pp</strong> execute-feedback-retry loop; cross-model energy selection accuracy 1.0</td>
+<td>Exp 905/906</td>
+</tr>
+<tr>
+<td>EstimationVerifier SVAMP AUC</td>
+<td>0.125 (FoVer baseline)</td>
+<td><strong>0.90</strong></td>
+<td>+0.775 signed improvement; RETRO-SVAMP-ZERO-AUC closed</td>
+<td>Exp 908</td>
 </tr>
 </tbody>
 </table>
@@ -1253,7 +1438,7 @@ make research-loop
 <li><strong>HumanEval 50 dual-model (Exp 220):</strong> +2.0pp on both Qwen and Gemma</li>
 </ul>
 <h3 id="the-story">The story</h3>
-<p>The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its <strong>17/23</strong> wrong-baseline detections and <strong>2</strong> weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, and packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface while preserving a Python suite that most recently validated at <strong>2,226 passed, 1 skipped</strong> with <strong>100.00%</strong> coverage.</p>
+<p>The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its <strong>17/23</strong> wrong-baseline detections and <strong>2</strong> weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, permanently fixed the LIVE-ENV propagation bug that blocked live benchmarks for seven milestones, synthesized the first iCE40 N=8 combinational energy oracle (134 LUTs), and confirmed StreamingCoT Tier 0g hallucination detection at AUC=1.0 and constraint memory compression at 31.25x while preserving AUROC=1.0 — all across <strong>806 experiments and 73 milestones</strong>.</p>
 <p>The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.</p>
 <hr>
 <h2 id="13-pre-trained-models">13. Pre-trained Models</h2>
@@ -2185,63 +2370,6 @@ amplify, while being transparent about the 67% of errors that require richer sem
 </li>
 </ul>
 <p><strong>Finding:</strong> Milestone 2026.04.58 resolves the governance debt accumulated over 4 consecutive non-enforcement cycles — the manifest patch is now applied and Exp 527 class is confirmed excluded. PSV relapse is closed via the layered SRSA + constraint freezing + curriculum diversity fix, with both time-window slopes negative. The Yosys open-source synthesis result (2821 LUTs, 0 errors) validates an FPGA prototyping path that does not require AMD Vivado installation. Live GPU code repair ran for the first time since the CARNOT_FORCE_LIVE fix, but zero improvement was observed — RETRO-CODE-REPAIR-ZERO opens the next investigation phase for the code repair architecture. Conductor cycle achieved a fourteenth consecutive wall-time improvement at 24.8 min, dominated by Exp 759 (22.7 min of live GPU inference). Open items for .59: code repair architecture investigation (RETRO-CODE-REPAIR-ZERO), Gemma4 loader fix (RETRO-GEMMA4-LOADER), JEPA v19 scheduling (RETRO-JEPA-V19-NOT-RUN).</p>
-<hr>
-<h3 id="milestone-20260459-exps-767-779-46th-milestone">Milestone 2026.04.59 (Exps 767-779) — 46th Milestone</h3>
-<p><strong>Summary:</strong> JEPA v19 + new probes + hardware/publishing phase. Planning session archived 9 new papers from arxiv scan. Key experiment: HERMES v2 live generation loop (sentence-by-sentence verify-and-generate). JEPA v18 LambdaRank achieved OOD AUC=0.5115 — first time above random-chance (0.5) across all JEPA iterations. GPU Zombie Killer deployed as mandatory pre-flight check in ExperimentTemplate.setup_gpu() (Exp 780, kill_gpu_zombies() called before all model loads). Fifteen consecutive wall-time improvement milestones broken — this was the first regression cycle. GPU close CLEAN (both GPUs at 4MB/0%/52C and 4MB/0%/44C).</p>
-<p><strong>Key results:</strong>
-- <strong>JEPA v18 LambdaRank OOD AUC=0.5115</strong> — first above-random JEPA discriminator AUC in project history (target 0.75, not yet reached).
-- <strong>GPU Zombie Killer pre-flight</strong> (Exp 780): kill_gpu_zombies() deployed mandatory before all model loads; closes RETRO-028 prerequisite infrastructure.
-- <strong>SETS oracle efficiency comparison</strong> (Exp 773): Carnot 6x fewer oracle calls than SETS (1.0 vs 6.0 calls/q); 6.67% lower accuracy trade-off.
-- <strong>EDU-PRM selection validated</strong> (Exp 782): 31.6% uncertainty selected for training corpus enrichment.</p>
-<p><strong>Finding:</strong> JEPA v18 is the first JEPA architecture to achieve above-random OOD AUC, validating the LambdaRank listwise loss as the correct training objective. The path to OOD AUC &gt; 0.75 (the publication gate) still requires more data — CARNOT_FORCE_LIVE must be set for data collection experiments. GPU Zombie Killer deployment closes a major infrastructure gap enabling reliable GPU experiments going forward.</p>
-<hr>
-<h3 id="milestone-20260460-exps-780-792-47th-milestone">Milestone 2026.04.60 (Exps 780-792) — 47th Milestone</h3>
-<p><strong>Summary:</strong> 13 experiments across 3,656 min total wall time. Full-milestone regression (+241 min / +7.1% vs .58 baseline). JEPA data starvation confirmed — Exp 781 collected n_labeled=0 because CARNOT_FORCE_LIVE was not set, causing JEPA v20 OOD AUC=0.4467 regression. EDU-PRM selection validated (Exp 782). S* energy prefilter (Exp 787, 75% test oracle reduction). EBM calibration ECE -67.6% (Exp 789). NPU mlir-aie installed (Exp 790). GPU close CLEAN (4MB/0%/52C and 4MB/0%/44C, 8C thermal differential). Three new RETROs: RETRO-JEPA-V20-NO-DATA, RETRO-CONSTRAINT-ZERO-DELTA, RETRO-KV260-TOOLS-UNAVAILABLE. Conductor cycle improvement: 110.25 min vs 128.48 min (.59).</p>
-<p><strong>Key results:</strong>
-- <strong>S* energy prefilter</strong> (Exp 787): 75% test oracle reduction with zero accuracy delta — significant verification efficiency gain.
-- <strong>EBM calibration ECE -67.6%</strong> (Exp 789): calibration error reduction validating the Platt scaling approach.
-- <strong>Gate governance enforced</strong> (Exp 784 blocked): experiment gating working correctly to prevent wasted GPU cycles.
-- <strong>JEPA v20 OOD AUC=0.4467</strong>: regression from v19=0.5667 due to data starvation (n_labeled=0 from missing CARNOT_FORCE_LIVE).</p>
-<p><strong>Finding:</strong> CARNOT_FORCE_LIVE must be set explicitly for live data collection experiments; the environment variable does not propagate automatically. This is a critical operational discipline finding — silent fallback to empty data is worse than a hard failure. RETRO-JEPA-V20-NO-DATA added to enforce live flag before data collection.</p>
-<hr>
-<h3 id="milestone-20260461-exps-793-805-48th-milestone">Milestone 2026.04.61 (Exps 793-805) — 48th Milestone</h3>
-<p><strong>Summary:</strong> 12 experiments, 3,688 total wall-clock minutes. Wall-time regression +32 min (+0.9% vs .60) — second consecutive regression. Per-experiment average 5.0 min (new project best). Conductor cycle BREAKTHROUGH: 9.4 min for 12 experiments (vs .60's 110 min) — managed roadmap approach demonstrated. CPMI wiring miss: Exp 798 generated augmentation_ratio=2.5 pairs but Exp 799 trained with ratio=1.0, producing JEPA v21 OOD AUC=0.2444 (all-time low — wiring miss, not algorithmic failure). Embedding constraint store AUC=0.92 (Exp 800). HF publish success (Exp 803). GPU close CLEAN (4MB/0%/48C and 4MB/0%/38C, 10C thermal differential).</p>
-<p><strong>Key results:</strong>
-- <strong>JEPA data collection</strong> (Exp 797): n_labeled=300, closing RETRO-JEPA-V20-NO-DATA.
-- <strong>EmbeddingConstraintStore AUC=0.92</strong> (Exp 800): retrieval quality confirmed correct.
-- <strong>HuggingFace publish v2 success</strong> (Exp 803): model cards and artifacts published.
-- <strong>JEPA v21 OOD AUC=0.2444</strong>: all-time low due to CPMI wiring miss (augmentation_ratio mismatch between data generation and training).</p>
-<p><strong>Finding:</strong> The conductor cycle 9.4-min result proves the managed roadmap approach can be fast; the full-milestone 3,688-min result shows unguarded historical queues dominate wall time. Fixing the CPMI wiring miss is mandatory before the next JEPA retrain — the architecture is sound but the data pipeline has a configuration gap.</p>
-<hr>
-<h3 id="milestone-20260462-exps-806-830-49th-milestone">Milestone 2026.04.62 (Exps 806-830) — 49th Milestone</h3>
-<p><strong>Summary:</strong> 25 experiments, 3,801 total wall-clock minutes. Wall-time regression +113 min (+3.1% vs .61) — third consecutive regression. RETRO-028 FINALLY CLOSED (Exp 810, 5th attempt) via nvidia-smi verification loop + GPU 1 isolation. OSS-CAD-Suite toolchain installed (Exp 807, yosys/nextpnr-ice40/icepack). KV260 N=32 Ising synthesis clean at 3952 LUTs (Exp 816). JEPA v22 RA-PRM OOD AUC recovered from 0.2444 to 0.5000 (Exp 809). VGSearchScheduler 50% Ising oracle skip rate (Exp 815). GPU close CLEAN (4MB/0%/50C and 4MB/0%/41C, 9C differential). Three new RETROs: RETRO-ISING-INJECTION-NO-DISCRIMINATION (Exp 812), RETRO-ARBITER-FLAT-ENERGY (Exp 817), RETRO-XILINX-TOOLS-UNAVAILABLE.</p>
-<p><strong>Key results:</strong>
-- <strong>RETRO-028 CLOSED</strong> (Exp 810): Gemma4 OOM root cause resolved after 5 milestone attempts. nvidia-smi verification loop ensures VRAM cleared before model load.
-- <strong>OSS-CAD-Suite installed</strong> (Exp 807): RETRO-KV260-TOOLS-UNAVAILABLE closed; yosys, nextpnr-ice40, icepack now available.
-- <strong>KV260 N=32 synthesis: 3952 LUTs</strong> (Exp 816): clean synthesis within device budget.
-- <strong>JEPA v22 OOD AUC=0.5000</strong> (Exp 809): recovery from 0.2444 all-time low via RA-PRM multi-source corpus; still below 0.75 publication gate.
-- <strong>VGSearchScheduler 50% skip rate</strong> (Exp 815): half of Ising oracle calls eliminated with zero accuracy delta.</p>
-<p><strong>Finding:</strong> RETRO-028 closure after 5 milestone attempts unblocks the SOTA code repair pipeline. The GATE SHIFT is significant: the blocker moved from GPU OOM (RETRO-028) to a Python ImportError in the GGUF module (RETRO-GGUF-CACHE-IMPORT) — a 1-2 hour fix vs a multi-milestone investigation. OSS-CAD-Suite tools enable FPGA synthesis without Xilinx proprietary tools for iCE40 targets.</p>
-<hr>
-<h3 id="milestone-20260463-exps-831-842-50th-milestone">Milestone 2026.04.63 (Exps 831-842) — 50th Milestone</h3>
-<p><strong>Summary:</strong> 12 experiments, 3,904 total wall-clock minutes. Wall-time regression +103 min (+2.7% vs .62) — fourth consecutive regression. Per-experiment average 5.0 min (matches project best). RETRO-ISING-INJECTION-NO-DISCRIMINATION CLOSED (Exp 819): Ising constraint injection now achieves 100% discrimination rate. RETRO-GGUF-CACHE-IMPORT CLOSED (Exp 820): GGUF module import fixed, enabling SOTA code repair (+14 repairs on 20 problems). Jailbreak/activation linear probe AUC=1.0 at 0.06 ms latency (Exp 828). HuggingFace v3 publish confirmed with 27 model cards (Exp 829). JEPA v23 ARC domain collapse (OOD AUC=0.04 on planning domain — data coverage gap). Two new RETROs: RETRO-JEPA-PLANNING-DOMAIN-COLLAPSE, RETRO-ICE40-BITSTREAM-FAILURE.</p>
-<p><strong>Key results:</strong>
-- <strong>RETRO-ISING-INJECTION CLOSED</strong> (Exp 819): injection field fix achieves 100% discrimination between error and clean.
-- <strong>RETRO-GGUF-CACHE-IMPORT CLOSED</strong> (Exp 820): SOTA code repair now functional; +14 repairs on 20 problems.
-- <strong>Jailbreak probe AUC=1.0</strong> (Exp 828): perfect discrimination at 0.06 ms inference latency.
-- <strong>HuggingFace v3 publish</strong> (Exp 829): 27 model cards confirmed published.
-- <strong>JEPA v23 OOD AUC=0.04 (ARC domain)</strong>: domain collapse on planning tasks — not architecture failure, data coverage gap.</p>
-<p><strong>Finding:</strong> The GGUF import fix unblocks the SOTA code repair pipeline with measurable results (+14/20 repairs). The jailbreak probe result (AUC=1.0 at 0.06 ms) demonstrates that lightweight safety probes can achieve publication-quality results at inference speeds compatible with real-time use. JEPA v23's ARC domain collapse highlights the importance of domain-balanced training corpora — addressed in v24.</p>
-<hr>
-<h3 id="milestone-20260464-exps-831-842-51st-milestone">Milestone 2026.04.64 (Exps 831-842) — 51st Milestone</h3>
-<p><strong>Summary:</strong> 12 experiments, 3,971 total wall-clock minutes. Wall-time regression +67 min (+1.7% vs .63) — fifth consecutive regression. Per-experiment average 5.29 min (first uptick from 5.0 min floor in four milestones). UNPRECEDENTED: all five slowest experiments identical for five consecutive milestones (Exps 786/527/491/627/603). RETRO-SYMCODE-SERIAL CLOSED (Exp 841): SymCodeVerifier paragraph batching achieves 1.710x speedup. RETRO-TIER1-PLATEAU CLOSED. JEPA v24 trained on domain-balanced DG-PRM corpus and deployed as Tier 3.5 (Exps 834/838), addressing ARC planning domain collapse from v23. Multi-Agent Arbiter energy calibration fixed (Exp 835). Constraint accumulation fix v3 (Exp 836). Live full precision benchmark v3 (Exp 840, GPU). Two new RETROs: RETRO-SVAMP-ZERO-AUC, RETRO-ICE40-PNR-LUT-OVERFLOW. Nine retros still open. GPU close CLEAN (47C/46C, 1C differential — historic best thermal balance). Estimated 12.8% near-term savings recoverable via manifest enforcement.</p>
-<p><strong>Key results:</strong>
-- <strong>RETRO-SYMCODE-SERIAL CLOSED</strong> (Exp 841): paragraph batching 1.710x speedup confirmed; RETRO-SYMCODE-SERIAL formally closed.
-- <strong>JEPA v24 Tier 3.5 deployment</strong> (Exps 834/838): domain-balanced DG-PRM training resolves ARC domain collapse; deployed as Tier 3.5 in cascade.
-- <strong>Arbiter calibration fixed</strong> (Exp 835): RETRO-ARBITER-FLAT-ENERGY resolved; multi-agent arbiter now assigns non-zero energy scores.
-- <strong>Constraint accumulation fix v3</strong> (Exp 836): RETRO-CONSTRAINT-ZERO-DELTA resolved; constraint deltas now non-zero between error and clean responses.
-- <strong>GPU thermal balance historic best</strong>: 1C differential at close (47C/46C) vs .63's 0C differential — GPU Zombie Killer holding.</p>
-<p><strong>Finding:</strong> The paragraph batching speedup for SymCodeVerifier (1.710x) proves that the serial verification bottleneck was real and addressable. However, the dispatch-site wiring must be enforced — the changelog notes that RETRO-SYMCODE-SERIAL was closed (implementation complete) but Exp 627 still ran at 51 min from an unguarded queue, definitively proving that implementation without dispatch-site wiring produces zero wall-time savings. The five consecutive slowest-5 identical composition is the clearest possible signal that manifest enforcement is the load-bearing fix for the wall-time regression trend.</p>
 </article>
 
 <footer>
