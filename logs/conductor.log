@@ -6290,3 +6290,30 @@ Both files are created and valid. Here's a summary of what was produced:
 2026-04-26 09:40:34,798 [conductor] RESEARCH STEP: Exp 929: Pre-flight v21 — .71 Audit + Gate-Check Discipline + RETRO-LAGRANGE-ENTROPY-DEGENERATE Closure (CPU)
 2026-04-26 09:40:34,798 [conductor] ============================================================
 2026-04-26 09:40:35,415 [conductor] Committing 3 dirty files as checkpoint (preserving work)
+2026-04-26 09:40:35,487 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 09:40:35,487 [conductor] Running test suite (smart subset)...
+2026-04-26 09:40:41,114 [conductor] Pre-check: 81 passed, 3 warnings in 2.85s
+2026-04-26 09:40:41,209 [conductor] Prompt format error in exp929-preflight-v21: '\n     "experiment"' — using raw prompt
+2026-04-26 09:40:41,223 [conductor] Injected 36 symbol signatures from 1 files (AST outlines)
+2026-04-26 09:40:41,223 [conductor] Calling Claude Code (20 max turns, model: sonnet)...
+Deliverable is written and valid. All steps complete:
+
+- `ops/known-issues.md` — appended RETRO-LAGRANGE-ENTROPY-DEGENERATE closure, GATE-CHECK DISCIPLINE lesson, and 5 new .71 RETROs
+- `MILESTONE_PREREQS.md` — appended .72 pre-flight section with open RETROs, gates, and root cause
+- `scripts/experiment_929_preflight_v21.py` — written and executed cleanly
+- `results/experiment_929_preflight_v21.json` — valid, `honest_verdict: preflight_complete`, all required fields present
+2026-04-26 09:42:52,146 [conductor] Claude Code completed (exit 0)
+2026-04-26 09:42:52,161 [conductor] Changes:
+MILESTONE_PREREQS.md | 23 +++++++++++++++++++++++
+ logs/conductor.log   | 13 +++++++++++++
+ ops/known-issues.md  | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 86 insertions(+)
+2026-04-26 09:42:52,180 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp929-preflight-v21: '\n     "experiment"' — auto-fixing
+2026-04-26 09:42:52,180 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp930-math-iterative-self-repair-v1: 'prev_answer' — auto-fixing
+2026-04-26 09:42:52,180 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp937-symbolic-kan-constraint-verifier: "'ADD'" — auto-fixing
+2026-04-26 09:42:52,180 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp939-sc-energy-set-consistency: 's1,' — auto-fixing
+2026-04-26 09:42:52,181 [conductor] DOGFOOD: Brace error in research-roadmap.yaml task exp940-milestone-retro-72: '\n     "experiment"' — auto-fixing
+2026-04-26 09:42:52,181 [conductor] DOGFOOD: Auto-fixed brace escaping in research-roadmap.yaml
+2026-04-26 09:42:52,184 [conductor] DOGFOOD: Verification complete (total: 594 checks, 54 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 09:42:52,184 [conductor] Running test suite (smart subset)...
+2026-04-26 09:42:57,731 [conductor] Post-check: 81 passed, 3 warnings in 2.79s

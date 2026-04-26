@@ -1,0 +1,40 @@
+{
+  "experiment": 929,
+  "title": "Milestone 2026.04.72 Pre-flight v21",
+  "milestone": "2026.04.72",
+  "preflight_version": 21,
+  "run_date": "20260426",
+  "started_at": "2026-04-26T13:42:22Z",
+  "predecessor_milestone": "2026.04.71",
+  "predecessor_criteria_met": 2,
+  "predecessor_criteria_total": 12,
+  "predecessor_root_cause": "gate_check_discipline_failure",
+  "predecessor_root_cause_detail": "7 of 12 YAML tasks lacked prior_failures fields. Conductor gate correctly blocked all 7 (Exps 917, 919, 920, 921, 922, 925, 926, 927). Planner must consult research-complete.yaml before writing any task YAML.",
+  "gate_check_lesson_documented": true,
+  "gate_check_lesson_location": "ops/known-issues.md \u00a7 GATE-CHECK DISCIPLINE",
+  "retro_lagrange_entropy_closed": true,
+  "open_retros": [
+    "RETRO-MANIFEST-FULL-SCOPE",
+    "RETRO-XILINX-TOOLS-UNAVAILABLE",
+    "RETRO-RERUN-DISCIPLINE-GATE-CASCADE",
+    "RETRO-HEURISTIC-RPRM-FLAT-SIGNAL",
+    "RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS",
+    "RETRO-HF-SOPS-CREDENTIAL-INJECTION"
+  ],
+  "retro_statuses": {
+    "RETRO-MANIFEST-FULL-SCOPE": "HUMAN_REQUIRED",
+    "RETRO-XILINX-TOOLS-UNAVAILABLE": "HUMAN_REQUIRED",
+    "RETRO-RERUN-DISCIPLINE-GATE-CASCADE": "HUMAN_REQUIRED",
+    "RETRO-HEURISTIC-RPRM-FLAT-SIGNAL": "TARGETED",
+    "RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS": "TARGETED",
+    "RETRO-HF-SOPS-CREDENTIAL-INJECTION": "HUMAN_REQUIRED",
+    "RETRO-LAGRANGE-ENTROPY-DEGENERATE": "CLOSED_BY_EXP918"
+  },
+  "milestone_72_gates": {
+    "exp_931_combined_pipeline": "GATED on Exp 930 signed_improvement > 0",
+    "exp_934_ipfs_mirror": "runs after Exp 933 regardless of HF publish verdict"
+  },
+  "honest_verdict": "preflight_complete",
+  "status": "success",
+  "finished_at": "2026-04-26T13:42:22Z"
+}

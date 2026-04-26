@@ -77,7 +77,7 @@ tasks:
          Exp 931 (combined pipeline): GATED on Exp 930 signed_improvement > 0
          Exp 934 (IPFS mirror): runs after Exp 933 regardless of HF publish verdict
     8. Build and write results/experiment_929_preflight_v21.json with:
-       {
+       (
          "experiment": 929,
          "milestone": "2026.04.72",
          "preflight_version": 21,
@@ -91,7 +91,7 @@ tasks:
            "RETRO-MANIFEST-FULL-SCOPE": "HUMAN_REQUIRED",
            "RETRO-XILINX-TOOLS-UNAVAILABLE": "HUMAN_REQUIRED",
            "RETRO-LAGRANGE-ENTROPY-DEGENERATE": "CLOSED_BY_EXP918"
-         },
+         ),
          "honest_verdict": "preflight_complete",
          "run_date": "{date}",
          "status": "success"
@@ -166,7 +166,7 @@ tasks:
           - Round 0: generate response, extract numeric answer using regex (first integer/float
             in the response that could be the answer, or answer after "=", "is", "are")
           - Check if baseline_answer == ground_truth_answer
-          - If wrong: generate repair prompt: "Your previous answer was {prev_answer}.
+          - If wrong: generate repair prompt: "Your previous answer was (prev_answer).
             The correct reasoning should lead to a different value. Please solve again carefully."
           - Repeat for up to 3 repair rounds
           - Use IsingEBM to score each response: energy = model.energy(tokenizer.encode(response))
@@ -622,8 +622,8 @@ tasks:
     1. Read CLAUDE.md. Read arXiv 2603.23854 description above carefully.
     2. Write python/carnot/models/symbolic_kan.py:
        a. Class SymbolicKAN(nn.Module) with a vocabulary of 4 symbolic operations:
-          VOCAB = {'ADD': lambda x,y: x+y, 'MUL': lambda x,y: x*y,
-                   'CMP': lambda x,y: torch.sign(x-y), 'EQ': lambda x,y: (x-y).abs()}
+          VOCAB = ('ADD': lambda x,y: x+y, 'MUL': lambda x,y: x*y,
+                   'CMP': lambda x,y: torch.sign(x-y), 'EQ': lambda x,y: (x-y).abs())
        b. Each layer has symbolic_labels: list[str] of length n_nodes, initialized randomly.
        c. Forward pass: apply the symbolic function for each node's label, plus a learnable
           residual spline correction (small amplitude to start).
@@ -723,7 +723,7 @@ tasks:
     Today's date: {date}.
 
     CONTEXT: arXiv 2503.10695 (SC-Energy, March 2026) proposes energy functions that score
-    whether a SET of statements {s1,...,sn} is internally consistent. Contrastive loss:
+    whether a SET of statements (s1,...,sn) is internally consistent. Contrastive loss:
     E(coherent_set) << E(contradictory_set). Achieves 0.89 AUROC on multi-statement consistency
     detection. This is complementary to Carnot's per-step verification: SC-Energy catches
     contradictions that span multiple statements in a single response, similar to the global
@@ -818,14 +818,14 @@ tasks:
        11. sc_energy_viable: Exp 939 auc > 0.70
        12. retro_complete: always True (this experiment)
     3. Build artifact:
-       {
+       (
          "experiment": 940,
          "milestone": "2026.04.72",
          "title": "Milestone 2026.04.72 Retrospective",
          "n_criteria_met": <count>,
          "n_criteria_total": 12,
-         "criteria_results": {<criterion: bool for each>},
-         "criteria_details": {<criterion: {experiment, verdict, measured_value, threshold, passed, note}>},
+         "criteria_results": {<criterion: bool for each>),
+         "criteria_details": (<criterion: {experiment, verdict, measured_value, threshold, passed, note)>},
          "open_retros_entering_73": [...],
          "headline_findings": [...],
          "honest_verdict": "milestone_complete",
