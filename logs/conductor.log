@@ -5594,3 +5594,25 @@ logs/conductor.log                          | 13 ++++++++
 2026-04-26 04:23:05,828 [conductor] Pushed to origin
 2026-04-26 04:23:05,828 [conductor] Running post-commit documentation reconciliation...
 2026-04-26 04:23:05,840 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='tier4_seed_viable', label='✅ Complete'
+2026-04-26 04:23:05,897 [conductor] Committed: [conductor] In-process docs for Exp 910: KAN Tier 4 Seed — AutoKnots Adaptive Sp
+2026-04-26 04:23:07,505 [conductor] Pushed to origin
+2026-04-26 04:23:07,505 [conductor] Documentation reconciliation committed (in-process)
+2026-04-26 04:23:07,506 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 04:28:07,508 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 04:33:07,511 [conductor] Sleep complete — resuming
+2026-04-26 04:33:07,512 [conductor] --- Iteration 25 ---
+2026-04-26 04:33:07,515 [conductor] ============================================================
+2026-04-26 04:33:07,515 [conductor] RESEARCH STEP: Exp 911: DRIFTProbe Tier 0i — Multi-Layer Hidden-State Hallucination Probe (GPU)
+2026-04-26 04:33:07,515 [conductor] ============================================================
+2026-04-26 04:33:08,205 [conductor] Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2081, in research_step
+    ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/failure_ledger.py", line 231, in load_from_artifacts
+    verdict = data.get("honest_verdict", "")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/in_process_doc_reconcile.py", line 142, in map_status_label
+    v = (verdict or "").lower()
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2026-04-26 04:33:08,223 [conductor] Committing 2 dirty files as checkpoint (preserving work)

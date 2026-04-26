@@ -2821,3 +2821,4 @@ python/ |
 | 2026-04-26 07:34 UTC | Exp 907: SVAMP Root Cause v2 — Confirm FoVer Label | OK | 81 passed, 3 warnings in 2.88s |
 | 2026-04-26 07:52 UTC | Exp 908: EstimationVerifier — Range-Based Word Pro | OK | 81 passed, 3 warnings in 2.93s |
 | 2026-04-26 08:07 UTC | Exp 909: Lagrange Forgetting Curve — FR-11 Tier 1  | OK | 81 passed, 3 warnings in 2.86s |
+| 2026-04-26 08:23 UTC | Exp 910: KAN Tier 4 Seed — AutoKnots Adaptive Spli | OK | 81 passed, 3 warnings in 2.89s |
