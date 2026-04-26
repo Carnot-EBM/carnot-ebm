@@ -4302,3 +4302,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 915: HuggingFace Publish v3 — VJEPA v2 + EstimationVerifier Model Cards (CPU) (✅ Complete) — honest_verdict=publish_ready_pending_auth; results/experiment_915_hf_publish_v3.json
 - 2026-04-26: Exp 916: Milestone 2026.04.70 Operational Retrospective (CPU) (✅ Complete) — honest_verdict=milestone_complete; results/experiment_916_milestone_retro.json
 - 2026-04-26: Exp 918: Lagrange Forgetting Multi-Constraint — RETRO-LAGRANGE-ENTROPY-DEGENERATE Fix (CPU) (⚠️ Research Finding) — honest_verdict=marginal_improvement; results/experiment_918_lagrange_forgetting_multi_constraint.json
+- 2026-04-26: Exp 923: DRIFTProbe Ensemble — Multi-Layer Weighted Ensemble (arXiv 2604.13386) (GPU) (⚠️ Research Finding) — honest_verdict=tier0i_no_improvement; results/experiment_923_drift_probe_ensemble.json
