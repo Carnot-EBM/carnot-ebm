@@ -4288,3 +4288,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 909: Lagrange Forgetting Curve — FR-11 Tier 1 Adaptive Weight Decay (CPU) (⚠️ Research Finding) — honest_verdict=no_improvement; results/experiment_909_lagrange_forgetting_curve.json
 - 2026-04-26: Exp 910: KAN Tier 4 Seed — AutoKnots Adaptive Spline Grid Refinement (CPU) (✅ Complete) — honest_verdict=tier4_seed_viable; results/experiment_910_kan_tier4_seed.json
 - 2026-04-26: Exp 911: DRIFTProbe Tier 0i — Multi-Layer Hidden-State Hallucination Probe (GPU) (⚠️ Research Finding) — honest_verdict=tier0i_marginal; results/experiment_911_drift_probe_tier0i.json
+- 2026-04-26: Exp 912: DraftConditioned Verifier Tier 2.8 — Structural Constraint Injection (GPU) (✅ Complete) — honest_verdict=tier28_viable; results/experiment_912_draft_conditioned_tier28.json
