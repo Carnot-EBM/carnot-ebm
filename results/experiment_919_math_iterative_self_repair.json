@@ -1,0 +1,42 @@
+{
+  "experiment": 919,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-26",
+  "started_at": "2026-04-26T10:54:34.124351+00:00",
+  "finished_at": "2026-04-26T10:54:34.124351+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 919: MathIterativeSelfRepair \u2014 Execute-Feedback on 25 GSM8K Questions (GPU)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp744-iterative-2round-repair",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: code_repair_blocked"
+    },
+    {
+      "upstream": "exp759-iterative-code-repair-live",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: code_repair_zero"
+    },
+    {
+      "upstream": "exp905-iterative-self-repair-v1",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: improvement_significant_gate_open"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
