@@ -5120,3 +5120,25 @@ logs/conductor.log                                 | 10 ++++
 2026-04-26 00:57:14,056 [conductor] Pushed to origin
 2026-04-26 00:57:14,056 [conductor] Running post-commit documentation reconciliation...
 2026-04-26 00:57:14,075 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='draft_verifier_viable', label='✅ Complete'
+2026-04-26 00:57:14,124 [conductor] Committed: [conductor] In-process docs for Exp 900: Draft-Conditioned Verifier — Tier 2.8 (
+2026-04-26 00:57:15,747 [conductor] Pushed to origin
+2026-04-26 00:57:15,747 [conductor] Documentation reconciliation committed (in-process)
+2026-04-26 00:57:15,752 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 01:02:15,753 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 01:07:15,753 [conductor] Sleep complete — resuming
+2026-04-26 01:07:15,754 [conductor] --- Iteration 14 ---
+2026-04-26 01:07:15,756 [conductor] ============================================================
+2026-04-26 01:07:15,756 [conductor] RESEARCH STEP: Exp 901: PIMI Sparse Adjacency v4 — Copy-Node Sparsification (CPU + iCE40, FINAL)
+2026-04-26 01:07:15,756 [conductor] ============================================================
+2026-04-26 01:07:16,353 [conductor] Failed-experiment rerun-discipline check raised; falling through to Sonnet (defensive)
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py", line 2081, in research_step
+    ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/failure_ledger.py", line 231, in load_from_artifacts
+    verdict = data.get("honest_verdict", "")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/in_process_doc_reconcile.py", line 142, in map_status_label
+    v = (verdict or "").lower()
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2026-04-26 01:07:16,370 [conductor] Committing 2 dirty files as checkpoint (preserving work)
