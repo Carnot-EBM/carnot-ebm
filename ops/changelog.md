@@ -4285,3 +4285,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 906: Code Repair 50q Scale-Up — IterativeSelfRepair with Gemma4 (GPU) (⚠️ Research Finding) — honest_verdict=strong_improvement_code_repair_milestone_achieved; results/experiment_906_code_repair_50q_scaleup.json
 - 2026-04-26: Exp 907: SVAMP Root Cause v2 — Confirm FoVer Labeling Mismatch (CPU) (✅ Complete) — honest_verdict=mismatch_confirmed_gate_open; results/experiment_907_svamp_root_cause_v2.json
 - 2026-04-26: Exp 908: EstimationVerifier — Range-Based Word Problem Checking (CPU) (✅ Complete) — honest_verdict=svamp_auc_improved; results/experiment_908_estimation_verifier.json
+- 2026-04-26: Exp 909: Lagrange Forgetting Curve — FR-11 Tier 1 Adaptive Weight Decay (CPU) (⚠️ Research Finding) — honest_verdict=no_improvement; results/experiment_909_lagrange_forgetting_curve.json
