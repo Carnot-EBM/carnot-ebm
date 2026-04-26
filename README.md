@@ -94,6 +94,8 @@ traceable to a checked-in experiment artifact under `results/`.
 | iCE40 N=8 combinational energy oracle | **134 LUTs**, bitstream generated | Exp 859 |
 | StreamingCoT hallucination detector (Tier 0g) | **AUC=1.0** at stream-time | Exp 861 |
 | Constraint memory bank compression | **31.25x** reduction, AUROC=1.0 maintained | Exp 865 |
+| V-JEPA Tier 3 reasoning discriminator (VJEPA v2, deployed) | **OOD AUC=0.9211** (above 0.90 publication gate) | Exp 883/884 |
+| SpectralAttentionProbe hallucination detector (Tier 0h) | **AUC=1.0**, bigram Laplacian spectral entropy | Exp 885 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -128,7 +130,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  across 806+ experiments and 73+ milestones, structured as six phases with
+  across 891 experiments and 75+ milestones, structured as six phases with
   a plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -332,7 +334,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 806 experiments across 73 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 891 experiments across 75 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

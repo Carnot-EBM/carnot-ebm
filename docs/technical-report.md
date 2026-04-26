@@ -1,9 +1,9 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 806 Experiments Across 73 Research Milestones
+## A Technical Report on 891 Experiments Across 75 Research Milestones
 
 **Author:** Ian Blenke
-**Date:** 2026-04-25
+**Date:** 2026-04-26
 **Repository:** github.com/Carnot-EBM/carnot-ebm
 **License:** Apache 2.0
 
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **806
-experiments across 73 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **891
+experiments across 75 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -339,6 +339,28 @@ threshold, synthesis clean). Blockers: SOTA code repair 11th consecutive
 block; live benchmark fell back to simulation; JEPA v25 still gated; zero
 retros closed (7 still open).
 
+Milestone 2026.04.68 (the 74th) brought the record to 818 experiments
+with 8 of 11 success criteria met and 3 retros closed in a single
+conductor cycle. Key .68 wins: **V-JEPA Tier 3 deployed** — VJEPA v2
+trained on an expanded 146-pair corpus (up from 57 pairs in v1) achieved
+OOD AUC=0.664 and SVAMP AUC=0.7353 (Exp 883, above the 0.55 gate);
+cascade deployment (Exp 884) achieved a final validated OOD AUC of
+**0.9211**, closing RETRO-JEPA-OOD and marking the first time the
+reasoning-quality discriminator has cleared the 0.90 publication bar;
+**SpectralAttentionProbe** (Exp 885) achieves **AUC=1.0** as Tier 0h
+hallucination detector using bigram Laplacian spectral entropy — 23.3%
+advisory signal rate on live questions; **FR-11 Tier 3 relay** closed
+(Exp 888, fr11_tier3_loop_closed=true), completing the full self-learning
+relay from violation detection through constraint propagation to Tier 3;
+HalluSAE retired (Exp 880, RETRO-HALLUSAE-AUC-BELOW-THRESHOLD closed
+via planned retirement); RETRO-SOTA-MODEL-DOWNLOAD closed via
+GGUFCacheResolver (Exp 890, though subsequent download failed — experiment
+retired). iCE40 PIMI v3 parallel spin updates achieved 4.33x sweep
+reduction (Exp 889, below 5x target; RETRO-INERTIA-SWEEPS-TARGET-MISSED
+remains open). Live GPU confirmed in Exp 882 (live_gpu inference mode).
+Discriminative JEPA architecture formally retired (Exp 887,
+honest_verdict=jepa_discriminative_retired); VJEPA replaces it as Tier 3.
+
 ---
 
 ## What this report is (and isn't)
@@ -372,6 +394,8 @@ All primary benchmark rows below are from live GPU inference. The replay and tra
 | Chronological replay v2 (116 cases) | 34.48%, 8 FP | 34.48%, 8 FP | Retrieval **32.1%** hit, **43.6%** precision; primary success not met | Exp 241 |
 | Live trace memory | — | 230/662 accepted | 43 patterns, 29 mature | Exp 222 |
 | Extractor comparison (100 GSM8K) | — | Regex 5, Z3 3, LLM 1 FP | LLM best | Exp 206-207 |
+| V-JEPA Tier 3 reasoning discriminator (SVAMP + GSM8K OOD) | — | OOD AUC **0.9211** | Above 0.90 publication gate; deployed to Tier 3 cascade | Exp 883/884 |
+| SpectralAttentionProbe Tier 0h hallucination detector | — | AUC **1.0** | Bigram Laplacian spectral entropy; 23.3% advisory signal rate | Exp 885 |
 
 ### Pending Validation (Not Yet Headline)
 
