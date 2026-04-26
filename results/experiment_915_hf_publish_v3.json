@@ -1,0 +1,46 @@
+{
+  "experiment": 915,
+  "schema": "carnot-experiment-v1",
+  "title": "HuggingFace Publish v3: VJEPA v2 + EstimationVerifier",
+  "run_date": "2026-04-26T09:49:03.645045+00:00",
+  "status": "success",
+  "honest_verdict": "publish_ready_pending_auth",
+  "hf_org": "Carnot-EBM",
+  "models_to_publish": [
+    "vjepa-v2",
+    "estimation-verifier-v1"
+  ],
+  "vjepa_ood_auc": 0.9211,
+  "vjepa_model_path": "/home/ianblenke/github.com/ianblenke/carnot/results/vjepa_predictor_v2.safetensors",
+  "vjepa_weights_exist": true,
+  "estimation_verifier_published": true,
+  "estimation_verifier_svamp_auc": 0.9,
+  "gitea_mirror_confirmed": true,
+  "gitea_remote_url": "ssh://git@gitea.noblehunt.org:2222/ianblenke/carnot.git",
+  "hf_authenticated": false,
+  "model_cards_written": [
+    "docs/model_card_vjepa_v2.md",
+    "docs/model_card_estimation_verifier.md"
+  ],
+  "manual_publish_commands": {
+    "authenticate": [
+      "huggingface-cli login --token <YOUR_HF_WRITE_TOKEN>"
+    ],
+    "vjepa-v2": [
+      "huggingface-cli repo create Carnot-EBM/vjepa-v2 --type model",
+      "huggingface-cli upload Carnot-EBM/vjepa-v2 /home/ianblenke/github.com/ianblenke/carnot/docs/model_card_vjepa_v2.md README.md",
+      "huggingface-cli upload Carnot-EBM/vjepa-v2 /home/ianblenke/github.com/ianblenke/carnot/results"
+    ],
+    "estimation-verifier-v1": [
+      "huggingface-cli repo create Carnot-EBM/estimation-verifier-v1 --type model",
+      "huggingface-cli upload Carnot-EBM/estimation-verifier-v1 /home/ianblenke/github.com/ianblenke/carnot/docs/model_card_estimation_verifier.md README.md",
+      "huggingface-cli upload Carnot-EBM/estimation-verifier-v1 /home/ianblenke/github.com/ianblenke/carnot/python/carnot/pipeline"
+    ]
+  },
+  "spec": [
+    "REQ-VERIFY-145",
+    "REQ-VERIFY-175",
+    "REQ-VER-085"
+  ],
+  "duration_s": 0.182382
+}
