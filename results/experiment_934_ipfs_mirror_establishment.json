@@ -1,0 +1,30 @@
+{
+  "experiment": 934,
+  "schema": "carnot-experiment-v1",
+  "title": "IPFS Mirror Establishment: VJEPA v2 + EstimationVerifier weights",
+  "run_date": "2026-04-26",
+  "started_at": "2026-04-26T15:03:12.846473+00:00",
+  "finished_at": "2026-04-26T15:03:22.209355+00:00",
+  "duration_s": 9.362882,
+  "status": "success",
+  "honest_verdict": "ipfs_mirror_established",
+  "ipfs_installed": true,
+  "ipfs_cid_vjepa": "QmTkGjpN5fYNnC3g8Gx8sPWHZJKkw8oGVDKwWT6sZbVaGN",
+  "ipfs_cid_estimation": "QmUHbhKH82TPNCaLrNcp1SQWaNjHzMSeFwnXKzHpwRmyJi",
+  "vjepa_gateway_url": "https://ipfs.io/ipfs/QmTkGjpN5fYNnC3g8Gx8sPWHZJKkw8oGVDKwWT6sZbVaGN",
+  "estimation_gateway_url": "https://ipfs.io/ipfs/QmUHbhKH82TPNCaLrNcp1SQWaNjHzMSeFwnXKzHpwRmyJi",
+  "notes": "",
+  "manual_install_steps": [
+    "sudo pacman -S kubo           # CachyOS / Arch",
+    "sudo apt install ipfs         # Debian / Ubuntu",
+    "# or: https://docs.ipfs.tech/install/",
+    "ipfs init",
+    "ipfs daemon &",
+    "ipfs add --quieter /home/ianblenke/github.com/ianblenke/carnot/results/vjepa_predictor_v2.safetensors",
+    "ipfs add --quieter -r /tmp/carnot-vjepa-v2-card"
+  ],
+  "spec": [
+    "REQ-VERIFY-145",
+    "CLAUDE.md-rule-3"
+  ]
+}
