@@ -2885,3 +2885,4 @@ python/ |
 | 2026-04-27 01:39 UTC | Exp 948: Symbolic-KAN Real FoVer Data — AUC=0.9344 | OK | 112 passed, 3 warnings in 29.36s |
 | 2026-04-27 01:57 UTC | Exp 949: Spilled Energy Tier 0 — Training-Free Hal | FAIL | Claude Code error: Error: Reached max turns (30) |
 | 2026-04-27 02:07 UTC | Exp 949: Spilled Energy Tier 0 — Training-Free Hal | OK | Deliverable already exists in repo |
+| 2026-04-27 02:17 UTC | Exp 950: E-MVL Sparsified Ising — Sparse Connectiv | OK | 99 passed, 3 warnings in 3.39s |
