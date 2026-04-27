@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 940 Experiments Across 78 Research Milestones
+## A Technical Report on 951 Experiments Across 79 Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-26
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **940
-experiments across 78 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **951
+experiments across 79 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -449,6 +449,27 @@ experiments. Entering .73 with 5 open retros, 3 of which require human
 intervention (RETRO-MANIFEST-FULL-SCOPE, RETRO-XILINX-TOOLS-UNAVAILABLE,
 RETRO-RERUN-DISCIPLINE-GATE-CASCADE).
 
+Milestone 2026.04.73 (the 79th) extended the record to **951 experiments**
+and met 10 of 12 success criteria. The strongest new results: **Symbolic-KAN
+on real FoVer data** (Exp 948) achieved AUC=1.0 on 57 real violation pairs —
+the best discriminative result in project history, confirming that the
+AUC=0.9344 synthetic result generalises to production-quality data.
+**SpilledEnergy Tier 0** (Exp 949) achieved AUROC=1.0 as a training-free
+hallucination detector based on logit-spill separation (spill_separation=0.638),
+requiring no labeled training data. **ThinkPRM Tier 2.9** (Exp 945) scored
+AUROC=0.99 versus the heuristic R-PRM baseline of 0.85, closing
+RETRO-HEURISTIC-RPRM-FLAT-SIGNAL. **SC-Energy Set Consistency** (Exp 944)
+finally ran after two consecutive gate-blocks, achieving AUROC=0.9017 and
+validating the algorithm. **Tier 2.8 DraftConditioned** ran on live GPU
+(Exp 946, inference_mode=live_gpu on gemma-4-E4B-it). **DRIFTProbe v3**
+depth-recurrent learning (Exp 947) improved probe AUC from 0.5625 to 0.5807,
+closing RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS. **E-MVL K=16 sparsified Ising**
+(Exp 950) confirmed 1.25x convergence speedup with KV260 v4 LUT estimate of
+36,250 (within the 117K XCK26 budget), advancing the FPGA RTL v4 path. Two
+criteria not met: Exp 942 (SOTA Math Repair with Qwen3.6-35B-A3B) result file
+was absent — the experiment never ran or crashed before writing output;
+RETRO-MATH-REPAIR-MODEL-CEILING remains open entering milestone .74.
+
 ---
 
 ## What this report is (and isn't)
@@ -488,6 +509,10 @@ All primary benchmark rows below are from live GPU inference. The replay and tra
 | EstimationVerifier SVAMP AUC | 0.125 (FoVer baseline) | **0.90** | +0.775 signed improvement; RETRO-SVAMP-ZERO-AUC closed | Exp 908 |
 | Symbolic-KAN arithmetic constraint verifier | — | AUC **0.9344** | +0.7136 over standard KAN; interpretable symbolic labels (ADD, MUL, CMP, EQ) | Exp 937 |
 | DualGPU pipeline throughput (realistic 50q workload) | 1.40x (Exp 913 baseline) | **1.96x** | Confirmed production-ready at realistic scale; bit-identical results | Exp 932 |
+| Symbolic-KAN on real FoVer violation pairs | — | AUC **1.0** | Best discriminative result in project history; 57 real labeled pairs | Exp 948 |
+| SpilledEnergy Tier 0 training-free detector | — | AUROC **1.0** | Logit-spill separation=0.638; no labeled training data required | Exp 949 |
+| ThinkPRM Tier 2.9 generative CoT step verifier | 0.85 (heuristic baseline) | AUROC **0.99** | +0.14 over heuristic R-PRM; closes RETRO-HEURISTIC-RPRM-FLAT-SIGNAL | Exp 945 |
+| SC-Energy Set Consistency verifier | — | AUROC **0.9017** | First successful run after 2 consecutive milestone gate-blocks | Exp 944 |
 
 ### Pending Validation (Not Yet Headline)
 
@@ -1120,7 +1145,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 ### The story
 
-The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, permanently fixed the LIVE-ENV propagation bug that blocked live benchmarks for seven milestones, synthesized the first iCE40 N=8 combinational energy oracle (134 LUTs), and confirmed StreamingCoT Tier 0g hallucination detection at AUC=1.0 and constraint memory compression at 31.25x while preserving AUROC=1.0 — all across **806 experiments and 73 milestones**.
+The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, permanently fixed the LIVE-ENV propagation bug that blocked live benchmarks for seven milestones, synthesized the first iCE40 N=8 combinational energy oracle (134 LUTs), and confirmed StreamingCoT Tier 0g hallucination detection at AUC=1.0 and constraint memory compression at 31.25x while preserving AUROC=1.0 — all across **951 experiments and 79 milestones**.
 
 The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.
 

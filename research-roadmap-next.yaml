@@ -1,873 +1,217 @@
-milestone: 2026.04.73
-milestone_title: SOTA Math Repair + SC-Energy Discipline Fix + ThinkPRM Tier 2.9 + Depth-Recurrent Drift + Symbolic-KAN Live
-milestone_doc: openspec/change-proposals/research-roadmap-v73.md
+# Translated from new-schema research-roadmap-next.yaml (planner output)
+# Original at research-roadmap-next.yaml.original-2026-04-27 for reference.
+# Translation: 'experiments' -> 'tasks', 'title' (top) -> 'milestone_title',
+# per-task 'description' -> 'prompt', added id-with-slug + deliverable + milestone
+# fields. priority/requires_gpu/max_turns/estimated_wall_time_min preserved.
+milestone: 2026.04.74
+milestone_title: Governance Surgery + Live Probe Validation + Math Repair SOTA v3 + DualGPU Wiring
+milestone_doc: openspec/change-proposals/research-roadmap-v74.md
 tasks:
-
-- id: exp941-preflight-v22
-  milestone: 2026.04.73
-  deliverable: results/experiment_941_preflight_v22.json
+- id: exp952-preflight-v23
+  milestone: 2026.04.74
+  deliverable: results/experiment_952_preflight_v23.json
+  title: "Preflight v23 \u2014 Exclusion Manifest Surgery + SOTA Pre-Download + Arxiv Scan"
+  prompt: "Three mandatory governance actions before any .74 experiment runs:\n(1) Update ops/exclusion_manifest.yaml\
+    \ \u2014 add exp786, exp627, exp603, exp641 with\n    documented retirement rationale. These have\
+    \ appeared for 4-14 consecutive\n    milestones with zero progress; further carryover is burn without\
+    \ benefit.\n(2) Pre-download SOTA GGUFs needed by .74 GPU experiments:\n    - unsloth/gemma-4-31B-it-GGUF\
+    \ (for Exp 953, 954, 959)\n    - unsloth/Qwen3.6-35B-A3B-GGUF (for Exp 953, 959)\n    - unsloth/gemma-4-26B-A4B-it-GGUF\
+    \ (for Exp 959)\n    Download to ~/.cache/huggingface/hub/ and verify file sizes. Write a\n    sota_preflight_status\
+    \ artifact noting which models are ready.\n(3) Add 3 new arxiv papers to research-references.md if\
+    \ not already present:\n    - arXiv 2502.11250 (Uncertainty-Aware Step Verification via CoT Entropy)\n\
+    \    - arXiv 2604.20701 (Divide-and-Conquer NN Surrogates for Sparse Ising)\n    - arXiv 2602.17750\
+    \ (iCKANs: Constitutive KANs with symbolic regression)\nWrite result artifact at results/experiment_952_preflight_v23.json\
+    \ with fields:\n  manifest_entries_added: [list of experiment IDs]\n  sota_models_ready: {model_name:\
+    \ bool}\n  arxiv_papers_filed: [list]\n  honest_verdict: \"preflight_complete\" | \"preflight_partial\"\
+    \n\n\nExpected result schema:\narxiv_papers_filed: list\nhonest_verdict: str\nmanifest_entries_added:\
+    \ list\nsota_models_ready: dict\n"
+  priority: critical
+  requires_gpu: false
   max_turns: 20
-  prior_failures:
-    - experiment_id: exp929-preflight-v21
-      verdict: preflight_complete
-      addressed_by: "Exp 929 was the .72 preflight. This is the .73 preflight with new criteria, SOTA model download, and SC-Energy prior_failures audit."
-      retire_if_same_verdict: false
-  title: 'Exp 941: Pre-flight v22 — .72 Audit + SOTA Model Download + SC-Energy Audit + New Papers (CPU)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Milestone 2026.04.72 met 10/12 criteria. Two failures: (1) math repair zero
-    improvement (RETRO-MATH-REPAIR-MODEL-CEILING — E4B model ceiling, SOTA model required);
-    (2) SC-Energy blocked again (RETRO-SC-ENERGY-GATE-DISCIPLINE — 8 prior_failures missing).
-    This pre-flight: audits .72 results, downloads the SOTA GGUF model for Exp 942, audits
-    all prior SC-energy experiments so Exp 944 can pass gate-check, files new papers to
-    research-references.md.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_940_milestone_retro_72.json — .72 criteria (10/12)
-    - results/experiment_930_math_iterative_self_repair_v1.json — math_repair_zero verdict
-    - results/experiment_939_sc_energy_set_consistency.json — blocked_gate_check_failed
-    - ops/known-issues.md — open RETROs entering .73
-    - MILESTONE_PREREQS.md — prereq structure
-    - openspec/change-proposals/research-roadmap-v73.md — .73 design doc
-
-    TASK: Audit .72 results, verify SOTA model availability for Exp 942, document all
-    SC-energy prior experiments, file new papers, set .73 gates.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Read results/experiment_940_milestone_retro_72.json. Extract n_criteria_met (10),
-       open_retros_entering_73.
-    3. SOTA MODEL CHECK for Exp 942:
-       Check if any of the following GGUF files exist:
-       - models/Qwen3.6-35B-A3B/ or ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/
-       - models/gemma-4-31B-it/ or ~/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/
-       - models/gemma-4-26B-A4B-it/ or ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/
-       If none found: attempt to download via huggingface_hub.snapshot_download() for the
-       smallest viable model (gemma-4-26B-A4B-it-GGUF Q4_K_M). Record sota_model_downloaded=bool
-       and sota_model_path.
-    4. SC-ENERGY AUDIT — document all 8 prior SC-energy experiments:
-       Append to ops/known-issues.md:
-       ## SC-ENERGY PRIOR EXPERIMENTS (for Exp 944 prior_failures reference)
-       List all 8 with their verdicts from the result JSON files:
-       - Exp 506: semantic_energy_no_improvement (Semantic Energy Tier 0d)
-       - Exp 509: energy_magnitude_wins (PPSEBM Energy Magnitude Replay, adjacent domain)
-       - Exp 533: no_violation_reduction (COLD Decoding Energy Guidance, adjacent domain)
-       - Exp 711: tier_29_below_threshold (SC-Energy SetConsistencyVerifier Tier 2.9)
-       - Exp 725: sc_energy_v2_below_threshold (SC-Energy v2 FoVer v2 Dual Labels)
-       - Exp 772: semantic_energy_below_baseline (SemanticEnergyProbe Tier 0g)
-       - Exp 787: energy_prefilter_efficient (S* Energy Pre-Ranking, adjacent domain)
-       - Exp 939: blocked_gate_check_failed (SC-Energy Set Consistency Networks)
-    5. Update MILESTONE_PREREQS.md:
-       ## Milestone 2026.04.73 Pre-flight
-       .72 criteria met: 10/12
-       .72 root_cause_of_failures: RETRO-MATH-REPAIR-MODEL-CEILING + RETRO-SC-ENERGY-GATE-DISCIPLINE
-       Open RETROs entering .73: [RETRO-MANIFEST-FULL-SCOPE, RETRO-XILINX-TOOLS-UNAVAILABLE,
-         RETRO-RERUN-DISCIPLINE-GATE-CASCADE, RETRO-HEURISTIC-RPRM-FLAT-SIGNAL,
-         RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS, RETRO-MATH-REPAIR-MODEL-CEILING,
-         RETRO-SC-ENERGY-GATE-DISCIPLINE]
-       Gates:
-         Exp 943 (scratchpad): GATED on Exp 942 signed_improvement > 0
-    6. Update ops/known-issues.md: add entry for RETRO-MATH-REPAIR-MODEL-CEILING and
-       RETRO-SC-ENERGY-GATE-DISCIPLINE (if not already present).
-    7. Build and write results/experiment_941_preflight_v22.json with fields:
-       experiment, milestone="2026.04.73", preflight_version=22,
-       predecessor_criteria_met=10, predecessor_criteria_total=12,
-       sota_model_path (string or null), sota_model_downloaded (bool),
-       sc_energy_audit_complete=true,
-       open_retros=[...],
-       honest_verdict="preflight_complete",
-       run_date, status="success"
-    8. Update ops/changelog.md: one-line entry for Exp 941.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_941_preflight_v22.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp942-math-repair-sota-v2
-  milestone: 2026.04.73
-  deliverable: results/experiment_942_math_repair_sota_v2.json
+  estimated_wall_time_min: 20
+- id: exp953-math-repair-sota-v3
+  milestone: 2026.04.74
+  deliverable: results/experiment_953_math_repair_sota_v3.json
+  title: "Math Repair SOTA v3 \u2014 Gemma4-31B with Result-Write Guard"
+  prompt: "Run IterativeSelfRepair on 50 GSM8K math problems using Gemma4-31B-it GGUF\n(or Qwen3.6-35B-A3B\
+    \ if Gemma4-31B not ready). MANDATORY structure:\n  try:\n    [experiment code]\n    write success\
+    \ artifact\n  except Exception as e:\n    write partial artifact with status=blocked, stall_details=str(e)\n\
+    \    raise\nThis ensures a result file always exists regardless of exit mode.\nPrimary metric: pass@1\
+    \ accuracy before vs after repair (should be >0 delta\nfor SOTA model vs 0.0 for E4B). Secondary:\
+    \ number of successful repairs / total.\nIf delta=0 again with SOTA model: write honest_verdict=sota_ceiling_confirmed\n\
+    and retire the entire math-repair-iterative-self-repair experiment line.\nUse MODEL_SPECS with unsloth/gemma-4-31B-it-GGUF\
+    \ as primary, unsloth/Qwen3.6-35B-A3B-GGUF\nas fallback. Pre-warm GPU via tmpl.setup_gpu(MODEL_SPECS)\
+    \ before timed inference.\n\n\nExpected result schema:\nbaseline_accuracy: float\nhonest_verdict:\
+    \ str\nmodel_used: str\nn_problems: int\nrepair_accuracy: float\nrepair_delta: float\n"
+  priority: critical
+  requires_gpu: true
   max_turns: 50
-  prior_failures:
-    - experiment_id: exp930-math-iterative-self-repair-v1
-      verdict: math_repair_zero
-      addressed_by: "Exp 930 used gemma-4-E4B-it which has a 12% GSM8K baseline — no room for repair signal. signed_improvement=0.0. Algorithm is correct; model is wrong. This experiment uses a SOTA GGUF model (Qwen3.6-35B-A3B-GGUF or gemma-4-31B-it-GGUF) with ~75% GSM8K baseline, giving repair 63+ percentage points of room."
-      retire_if_same_verdict: false
-    - experiment_id: exp919-math-iterative-self-repair
-      verdict: blocked_gate_check_failed
-      addressed_by: "Exp 919 was blocked only because the YAML task lacked prior_failures entries. There was no algorithm failure. This version includes all required prior_failures."
-      retire_if_same_verdict: false
-    - experiment_id: exp759-iterative-code-repair-live
-      verdict: code_repair_zero
-      addressed_by: "Exp 759 failed because Qwen3.5-0.8B (0.8B params) was too small. This experiment uses a SOTA model with >70% GSM8K baseline."
-      retire_if_same_verdict: true
-  title: 'Exp 942: Math Iterative Self-Repair v2 — SOTA GGUF Model (Qwen3.6-35B or Gemma4-31B), 25 GSM8K (GPU, CARNOT_FORCE_LIVE=1)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exp 905 proved IterativeSelfRepair works for HumanEval code: 4% → 72% (+68pp)
-    with Gemma4-E4B-it via GemmaTransformersLoader (live GPU). Exp 930 extended to GSM8K math
-    but got zero improvement: baseline=12%, repair=12%, signed_improvement=0.0. Root cause:
-    E4B model capability ceiling — 12% baseline leaves no room for improvement signal.
-    arXiv 2604.17121 additionally explains that internal state feedback (retry without external
-    grounding) cannot work for math because computed state propagates into deep layers and is
-    not retrievable in the next forward pass. This experiment uses a SOTA GGUF model
-    (Qwen3.6-35B-A3B-GGUF or gemma-4-31B-it-GGUF) with ~70-80% GSM8K baseline, giving
-    repair substantial room to improve.
-
-    MANDATORY: Experiment must use at least one SOTA model from CLAUDE.md:
-    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE)
-    - unsloth/gemma-4-31B-it-GGUF (flagship dense)
-    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE)
-    Do NOT use gemma-4-E4B-it (proven too small in Exp 930, RETRO-MATH-REPAIR-MODEL-CEILING).
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_941_preflight_v22.json — sota_model_path (use this if set)
-    - scripts/experiment_930_math_iterative_self_repair_v1.py — math repair implementation to extend
-    - results/experiment_930_math_iterative_self_repair_v1.json — baseline 12%, repair 12%, signed=0
-    - scripts/experiment_905_iterative_self_repair_v1.py — working code repair (for structure)
-    - python/carnot/pipeline/gemma_loader.py — GemmaTransformersLoader
-    - scripts/experiment_template.py — ExperimentTemplate with setup_gpu()
-    - python/carnot/models/ising.py — IsingEBM for energy scoring
-
-    TASK: Implement math iterative self-repair with a SOTA GGUF model on 25 GSM8K questions.
-    Report: baseline_accuracy, repair_accuracy, signed_improvement.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md.
-    2. Read results/experiment_941_preflight_v22.json for sota_model_path.
-    3. Write scripts/experiment_942_math_repair_sota_v2.py:
-       a. ExperimentTemplate(942, "Math Repair SOTA v2",
-              "results/experiment_942_math_repair_sota_v2.json", requires_gpu=True)
-          tmpl.setup()
-       b. Determine model to use (priority order):
-          1. sota_model_path from Exp 941 preflight (if set and file exists)
-          2. resolve_cached_gguf("unsloth/gemma-4-26B-A4B-it-GGUF") — smallest SOTA
-          3. resolve_cached_gguf("unsloth/gemma-4-31B-it-GGUF")
-          4. resolve_cached_gguf("unsloth/Qwen3.6-35B-A3B-GGUF")
-          If no SOTA model found: write artifact with honest_verdict='sota_model_not_found',
-          model_checked=[...], and exit. Do NOT fall back to E4B.
-       c. Load model via llama.cpp (for GGUF) with n_gpu_layers=-1 (all layers on GPU).
-          Use ExperimentTemplate.setup_gpu() for GPU health check first.
-       d. Load first 25 GSM8K test questions (datasets library or hardcoded list).
-       e. For each question:
-          - Round 0: generate response, extract final numeric answer with regex
-          - Check if baseline_answer == ground_truth
-          - Record baseline result
-          - If wrong (up to 3 repair rounds):
-            Build repair prompt: "Your previous answer to this question was [prev_answer].
-            Please solve again carefully, showing all arithmetic steps explicitly."
-            Generate new response, extract answer, check against ground truth.
-          - Use IsingEBM to score all responses (including baseline), select lowest-energy
-            as the final answer (energy_selection_step)
-          - Record: baseline_passed, repair_passed, final_passed, n_retries, best_energy
-       f. Compute: baseline_accuracy, repair_accuracy, final_accuracy (energy-selected),
-          signed_improvement = final_accuracy - baseline_accuracy
-       g. honest_verdict:
-          'math_repair_significant' if signed_improvement > 0.10
-          'math_repair_marginal' if 0 < signed_improvement <= 0.10
-          'math_repair_zero' if signed_improvement == 0
-          'math_repair_negative' if signed_improvement < 0
-          'sota_model_not_found' if no SOTA model available
-       h. Include: inference_mode='live_gpu', model_id (actual model used), baseline_accuracy,
-          repair_accuracy, final_accuracy, signed_improvement.
-    4. Write tests in tests/python/test_experiment_942_math_repair_sota.py (100% coverage).
-       Mock the GGUF loader and IsingEBM. Test: answer extraction, repair loop, energy selection,
-       honest_verdict assignment, sota_model_not_found path.
-    5. Add spec entries: REQ-VER-030 (SOTA math repair), SCENARIO-VER-030 (GSM8K SOTA repair loop)
-       to openspec/capabilities/verify/spec.md.
-    6. Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_942_math_repair_sota_v2.py
-    7. Update ops/changelog.md.
-    8. Verify results/experiment_942_math_repair_sota_v2.json contains inference_mode and signed_improvement.
-
-    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_942_math_repair_sota_v2.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp943-math-repair-external-scratchpad
-  milestone: 2026.04.73
-  deliverable: results/experiment_943_math_repair_external_scratchpad.json
+  estimated_wall_time_min: 90
+- id: exp954-fast
+  milestone: 2026.04.74
+  deliverable: results/experiment_954_fast.json
+  title: "Fast-Path Probe Live GPU Validation \u2014 SpilledEnergy + ThinkPRM + DRIFTProbe"
+  prompt: "Validate three CPU-proven probes against real live Gemma4-31B responses on the ROCm GPU.\n\
+    CLAUSE.md mandate: \"All headline results must have live GPU provenance.\"\nExp 949 (SpilledEnergy\
+    \ AUROC=1.0), Exp 945 (ThinkPRM AUROC=0.99), Exp 947\n(DRIFTProbe v3 probe_auc=0.5807) \u2014 all\
+    \ CPU only.\nProtocol:\n  1. Load Gemma4-31B-it-GGUF on ROCm GPU (sg render -c '...')\n  2. Generate\
+    \ 100 real responses to factual questions with deliberate errors injected\n  3. Run SpilledEnergy\
+    \ (logit chain-rule energy) on these real responses\n  4. Run ThinkPRM CoT verification step on these\
+    \ real responses\n  5. Run DRIFTProbe v3 (depth-recurrent attention pooling) on these real responses\n\
+    \  6. Compute AUROC for each probe vs ground-truth error labels\nAcceptance thresholds (from Gap 2\
+    \ analysis):\n  - SpilledEnergy AUROC >= 0.80 (degradation from 1.0 expected on real data)\n  - ThinkPRM\
+    \ AUROC >= 0.85 (degradation from 0.99 expected on real data)\n  - DRIFTProbe AUROC >= 0.55 (marginal\
+    \ acceptable given 0.5807 CPU baseline)\nUse unsloth/gemma-4-31B-it-GGUF. Pre-warm via tmpl.setup_gpu(MODEL_SPECS).\n\
+    \n\nExpected result schema:\ndriftprobe_auroc: float\nhonest_verdict: str\nmodel_used: str\nn_responses:\
+    \ int\nspilled_energy_auroc: float\nthinkprm_auroc: float\n"
+  priority: high
+  requires_gpu: true
   max_turns: 30
-  gated_on:
-    - upstream: exp942-math-repair-sota-v2
-      artifact_field: signed_improvement
-      op: '>'
-      value: 0.0
-  prior_failures:
-    - experiment_id: exp942-math-repair-sota-v2
-      verdict: pending
-      addressed_by: "Exp 942 is the upstream prerequisite. This experiment is GATED on Exp 942 signed_improvement > 0. If Exp 942 shows no improvement, this experiment does not run."
-      retire_if_same_verdict: false
-    - experiment_id: exp930-math-iterative-self-repair-v1
-      verdict: math_repair_zero
-      addressed_by: "Exp 930 failed because E4B model has 12% baseline and because internal state feedback does not work for math (arXiv 2604.17121). This experiment addresses the second root cause: external scratchpad that re-feeds prior error text at the input layer, grounding the next attempt externally."
-      retire_if_same_verdict: false
-  title: 'Exp 943: Math Repair + External Scratchpad — Re-feed Prior Errors as Input (CPU/GPU, GATED on Exp 942 signed_improvement > 0)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: arXiv 2604.17121 (Topological Trouble with Transformers) explains WHY code repair
-    works (+68pp, Exp 905) but math repair with internal retry does not (Exp 930 = 0pp):
-    execution tracebacks provide EXTERNAL state feedback that re-enters the model at the input
-    layer. Math retry without external grounding loses the error state into deep layers.
-    The architecturally-aligned fix for math is an EXTERNAL SCRATCHPAD: after each wrong
-    attempt, extract the erroneous reasoning steps, include them verbatim in the next prompt
-    as "Previous attempt contained these errors: [errors]". This mirrors the code repair
-    execution traceback path exactly — external state re-fed at the input layer.
-
-    GATE: This experiment is GATED on Exp 942 signed_improvement > 0. If Exp 942 found no
-    improvement with the SOTA model, this experiment outputs honest_verdict='gated_upstream_no_improvement'.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_942_math_repair_sota_v2.json — upstream gate: signed_improvement field
-    - scripts/experiment_942_math_repair_sota_v2.py — base implementation to extend
-    - python/carnot/models/ising.py — IsingEBM for energy scoring
-
-    TASK: Extend Exp 942 with external scratchpad: extract wrong reasoning steps after each
-    failed attempt and feed them back as input context. Compare: scratchpad_accuracy vs
-    Exp 942 repair_accuracy.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md.
-    2. Check results/experiment_942_math_repair_sota_v2.json:
-       - If signed_improvement <= 0 OR honest_verdict == 'sota_model_not_found':
-         Write artifact with honest_verdict='gated_upstream_no_improvement' and exit.
-    3. Write scripts/experiment_943_math_repair_external_scratchpad.py:
-       a. Load same 25 GSM8K questions as Exp 942. Load same SOTA model.
-       b. For each question:
-          - Round 0: generate response, extract answer
-          - If wrong: extract erroneous steps: use regex to find arithmetic expressions in
-            the response that compute to wrong values (e.g., "47+28=76" when 47+28=75)
-          - Round 1: prompt = "Previous attempt (included for context):\n[prev_response]\n
-            The answer [prev_answer] was wrong. The above reasoning contained errors.
-            Solve the problem again from scratch using only correct arithmetic steps."
-          - Round 2: prompt includes Round 0 AND Round 1 errors as scratchpad context.
-          - Repeat for up to 3 rounds.
-          - Use IsingEBM to select lowest-energy attempt as final answer.
-          - Record: scratchpad_passed, n_retries, scratchpad_accuracy
-       c. Compare: scratchpad_accuracy vs repair_accuracy (from Exp 942 result JSON).
-       d. honest_verdict:
-          'scratchpad_improves' if scratchpad_accuracy > repair_accuracy_942
-          'scratchpad_comparable' if |delta| < 0.05
-          'scratchpad_worse' if scratchpad_accuracy < repair_accuracy_942
-          'gated_upstream_no_improvement' if gate failed
-    4. Write tests (100% coverage). Mock model and scratchpad extraction.
-    5. Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_943_math_repair_external_scratchpad.py
-    6. Update ops/changelog.md.
-
-    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_943_math_repair_external_scratchpad.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp944-sc-energy-set-consistency-v2
-  milestone: 2026.04.73
-  deliverable: results/experiment_944_sc_energy_set_consistency_v2.json
+  estimated_wall_time_min: 60
+- id: exp955-triple-integration
+  milestone: 2026.04.74
+  deliverable: results/experiment_955_triple_integration.json
+  title: "Triple Integration \u2014 SC-Energy + SpilledEnergy + ThinkPRM into ThreeTierPipeline"
+  prompt: "Wire three validated probes into ThreeTierPipeline as production Tier components:\n  - SpilledEnergy\
+    \ (arXiv 2602.18671) as Tier 0 fast reject (training-free, logit-based)\n  - ThinkPRM (arXiv 2504.16828)\
+    \ as Tier 2.9 CoT step verifier (generative, slow)\n  - SC-Energy (arXiv 2503.10695) as Tier 3 set-level\
+    \ consistency energy (EBM-based)\nIntegration architecture:\n  Tier 0 (SpilledEnergy) \u2192 fast,\
+    \ runs on every response, rejects obvious errors\n  Tier 2.9 (ThinkPRM) \u2192 medium, runs when Tier\
+    \ 0 uncertain, verifies reasoning steps\n  Tier 3 (SC-Energy) \u2192 slow, runs when Tier 2.9 uncertain,\
+    \ energy-based set consistency\nRequired: end-to-end integration test with synthetic input showing\
+    \ all three tiers\nactivate in cascade. Write artifacts at results/experiment_955_triple_integration.json.\n\
+    honest_verdict should be \"triple_integration_viable\" if all three tiers wire without\nimport errors\
+    \ and the cascade test passes.\n\n\nExpected result schema:\ncascade_test_passed: bool\nhonest_verdict:\
+    \ str\ntier0_wired: bool\ntier29_wired: bool\ntier3_wired: bool\n"
+  priority: high
+  requires_gpu: false
   max_turns: 50
-  prior_failures:
-    - experiment_id: exp939-sc-energy-set-consistency
-      verdict: blocked_gate_check_failed
-      addressed_by: "Exp 939 was blocked because the YAML task lacked prior_failures for 7 prior SC-energy experiments (506, 509, 533, 711, 725, 772, 787). This version documents all 8 prior experiments (adding Exp 939 itself). The SC-Energy algorithm from arXiv 2503.10695 has never actually run — this must be the run that executes."
-      retire_if_same_verdict: false
-    - experiment_id: exp711-sc-energy-setconsistency
-      verdict: tier_29_below_threshold
-      addressed_by: "Exp 711 was SC-Energy SetConsistencyVerifier Tier 2.9 — AUC below threshold on that corpus. This experiment uses the arXiv 2503.10695 architecture (set-level contrastive energy, permutation-invariant pooling), which is different from Exp 711's implementation. The contrastive loss trains E(coherent_set) << E(contradictory_set) explicitly."
-      retire_if_same_verdict: false
-    - experiment_id: exp725-sc-energy-v2-fover
-      verdict: sc_energy_v2_below_threshold
-      addressed_by: "Exp 725 was SC-Energy v2 with FoVer v2 dual labels (Z3 + PDDL). This experiment uses a simpler, cleaner contrastive corpus: coherent_set from single GSM8K solution steps, contradictory_set from mixed solutions (guaranteed contradiction). Simpler training signal should give cleaner gradient."
-      retire_if_same_verdict: false
-    - experiment_id: exp506-semantic-energy-tier0d
-      verdict: semantic_energy_no_improvement
-      addressed_by: "Exp 506 was Semantic Energy Tier 0d — a single-statement semantic energy scorer. Different architecture: SC-Energy scores SETS of statements for internal consistency. The set-level contrastive approach is structurally distinct from per-statement energy."
-      retire_if_same_verdict: false
-    - experiment_id: exp509-ppsebm-energy-magnitude-replay
-      verdict: energy_magnitude_wins
-      addressed_by: "Exp 509 was PPSEBM Energy Magnitude Replay — per-position sequence EBM, not set consistency. Adjacent domain only. SC-Energy's contrastive set-level loss is architecturally distinct."
-      retire_if_same_verdict: false
-    - experiment_id: exp533-cold-decoding-energy-guidance
-      verdict: no_violation_reduction
-      addressed_by: "Exp 533 was COLD Decoding Energy Guidance — energy-guided token generation, not set consistency verification. Different task and architecture. SC-Energy verifies whether a completed set of statements is coherent."
-      retire_if_same_verdict: false
-    - experiment_id: exp772-semantic-energy-probe
-      verdict: semantic_energy_below_baseline
-      addressed_by: "Exp 772 was SemanticEnergyProbe Tier 0g — arXiv 2508.14496 approach (per-token semantic energy from logits). Different from SC-Energy: SC-Energy uses set-level contrastive training on (coherent, contradictory) pairs, not per-token logit energy."
-      retire_if_same_verdict: false
-    - experiment_id: exp787-s-star-energy-prefilter
-      verdict: energy_prefilter_efficient
-      addressed_by: "Exp 787 was S* Energy Pre-Ranking for code candidate selection. Adjacent domain (energy-based ranking). SC-Energy's task is set-level coherence verification, not candidate ranking. These are complementary, not redundant."
-      retire_if_same_verdict: false
-  title: 'Exp 944: SC-Energy Set Consistency v2 — All 8 Prior Failures Documented, Must Actually Run (CPU)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: arXiv 2503.10695 (SC-Energy) proposes energy functions that score whether a SET
-    of statements (s1,...,sn) is internally consistent. Contrastive loss:
-    E(coherent_set) << E(contradictory_set). Achieves AUROC=0.89 on multi-statement consistency
-    benchmarks. Exp 939 was blocked for the SECOND consecutive milestone by gate-discipline
-    failure — YAML lacked prior_failures for 7 prior SC-energy experiments. This version
-    documents all 8 prior experiments and MUST ACTUALLY RUN. The SC-Energy algorithm has
-    never executed in this project — the block was a planner error, not an algorithm failure.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/models/ising.py — Ising EBM reference architecture
-    - python/carnot/pipeline/global_consistency_checker.py — rule-based baseline (100% detection)
-    - python/carnot/models/kan.py — KAN energy architecture
-    - scripts/experiment_template.py — ExperimentTemplate
-    - results/experiment_711_sc_energy_setconsistency.json — prior attempt verdict
-    - results/experiment_939_sc_energy_set_consistency.json — blocked_gate_check_failed
-
-    TASK: Implement SC-Energy set consistency verifier. Train on synthetic contradictory sets.
-    Measure AUC vs rule-based baseline. Target: AUC > 0.70.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md.
-    2. Write python/carnot/models/sc_energy.py (or extend if it exists from Exp 939 scaffold):
-       a. Class SCEnergyModel with set-level energy function:
-          Input: list[str] of statements from a reasoning chain.
-          Architecture: embed each statement via TF-IDF or sentence-transformers BGE-small,
-          aggregate with mean pooling (permutation-invariant), pass through 2-layer MLP to
-          produce scalar energy.
-       b. Training: contrastive loss on (coherent_set, contradictory_set) pairs.
-          coherent_set: consecutive steps from a correct GSM8K solution.
-          contradictory_set: mix steps from two different GSM8K problems (guaranteed contradiction
-          because they reference different quantities).
-       c. If python/carnot/models/sc_energy.py already exists with a working implementation,
-          re-use it — do NOT rewrite. Read it first.
-       d. Add spec entries if not present: REQ-MODEL-031 (SCEnergyModel set-level energy),
-          SCENARIO-MODEL-016 (coherent vs contradictory set discrimination).
-    3. Write scripts/experiment_944_sc_energy_set_consistency_v2.py:
-       a. ExperimentTemplate(944, "SC-Energy Set Consistency v2",
-              "results/experiment_944_sc_energy_set_consistency_v2.json", requires_gpu=False)
-          tmpl.setup()
-       b. Generate 200 coherent sets + 200 contradictory sets from GSM8K step data.
-          Coherent: 3-5 consecutive steps from a single GSM8K solution.
-          Contradictory: randomly mix steps from 2 different GSM8K problems.
-       c. Train SCEnergyModel on 320 pairs (80/20 split), 50 epochs.
-       d. Evaluate: AUROC on held-out 80 pairs.
-       e. Compare to rule-based global consistency checker (Exp 172: 100% on synthetic —
-          but rule-based can only check arithmetic equality, not semantic contradiction).
-       f. honest_verdict:
-          'sc_energy_viable' if auroc > 0.70
-          'sc_energy_marginal' if 0.60 < auroc <= 0.70
-          'sc_energy_no_improvement' if auroc <= 0.60
-    4. Write tests in tests/python/test_experiment_944_sc_energy_v2.py (100% coverage).
-       100% spec coverage: all tests reference REQ-MODEL-031 or SCENARIO-MODEL-016.
-    5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_944_sc_energy_set_consistency_v2.py
-    6. Update research-references.md: confirm SC-Energy entry (arXiv 2503.10695) exists.
-    7. Update ops/changelog.md.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_944_sc_energy_set_consistency_v2.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp945-thinkprm-tier29
-  milestone: 2026.04.73
-  deliverable: results/experiment_945_thinkprm_tier29.json
+  estimated_wall_time_min: 60
+- id: exp956-dualgpu-verifyrepairpipeline-wiring
+  milestone: 2026.04.74
+  deliverable: results/experiment_956_dualgpu_verifyrepairpipeline_wiring.json
+  title: "DualGPU VerifyRepairPipeline Wiring \u2014 Production Integration"
+  prompt: "Wire DualGPURunner (already benchmarked at 1.96x in Exp 932) into VerifyRepairPipeline\nas\
+    \ the default execution path when two GPUs are detected.\nImplementation:\n  1. Read the existing\
+    \ DualGPURunner implementation from Exp 932\n  2. Add GPU detection to VerifyRepairPipeline.__init__:\n\
+    \     if torch.cuda.device_count() >= 2: self.runner = DualGPURunner()\n     else: self.runner = SingleGPURunner()\n\
+    \  3. Add integration test: run pipeline on 20 real inputs with 2-GPU configuration,\n     verify\
+    \ throughput >= 1.5x vs single GPU baseline\n  4. Add docstring explaining WHY: \"DualGPU is used\
+    \ when available because Exp 932\n     showed 1.96x throughput at realistic batch sizes; the single-GPU\
+    \ path is\n     preserved for machines with one GPU or when debugging.\"\nIf throughput in production\
+    \ pipeline is NOT >= 1.5x:\n  - Write honest_verdict=dualgpu_wired_below_target with measured_speedup\n\
+    \  - Do NOT re-propose DualGPU optimization \u2014 retire the optimization track\nMANDATORY: add Exp\
+    \ 641 (which is the DualGPU gate cascade blocker) to exclusion\nmanifest entry noting that Exp 956\
+    \ production wiring closes the underlying gap.\n\n\nExpected result schema:\nhonest_verdict: str\n\
+    integration_test_passed: bool\nmeasured_speedup: float\npipeline_wired: bool\n"
+  priority: high
+  requires_gpu: true
   max_turns: 50
-  prior_failures:
-    - experiment_id: exp924-rprm-step-reward-tier29
-      verdict: tier_29_below_threshold
-      addressed_by: "Exp 924 (R-PRM Tier 2.9) used HEURISTIC rule-based explanations before scoring. AUC delta=0 because rules provide no gradient signal. arXiv 2504.16828 (ThinkPRM) proves model-generated CoT explanations are required — the model must reason about WHY a step is wrong before scoring it, not just apply rules. This experiment implements ThinkPRM: pass each step to the LLM with 'verify this step and explain why' before scoring."
-      retire_if_same_verdict: false
-  title: 'Exp 945: ThinkPRM Tier 2.9 — Generative CoT Step Verification (arXiv 2504.16828) (CPU)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exp 924 (R-PRM Tier 2.9) produced AUC delta=0 because it used HEURISTIC
-    rule-based explanations ("arithmetic error", "unit mismatch") before scoring each step.
-    arXiv 2504.16828 (ThinkPRM) proves that the explanations must be MODEL-GENERATED:
-    the verifier LLM must generate a chain-of-thought explaining why a step is correct or
-    incorrect, then output CORRECT/INCORRECT. With model-generated CoT, ThinkPRM outperforms
-    discriminative PRMs using only 1% of labels: +8% on GPQA-Diamond, +4.5% on LiveCodeBench,
-    +7.2% over LLM-as-a-Judge under equivalent token budgets.
-
-    This experiment implements ThinkPRM for Carnot:
-    - Input: a reasoning step from a GSM8K solution (e.g., "47 + 28 = 76")
-    - Prompt: "Verify the following reasoning step. Generate a step-by-step explanation of
-      whether this step is mathematically correct. Then output VERDICT: CORRECT or VERDICT: INCORRECT."
-    - Parse P(CORRECT) from the output token probabilities or the VERDICT: text
-    - Use P(CORRECT) as the step-level reward score, replacing Ising energy for this tier
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/think_probe.py — CarnotThinkProbe (similar approach for full responses)
-    - results/experiment_924_rprm_step_reward_tier29.json — prior heuristic AUC
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline integration point
-    - scripts/experiment_template.py — ExperimentTemplate
-
-    TASK: Implement ThinkPRM-style generative step verifier. Measure AUROC on synthetic
-    GSM8K step corpus. Compare to Exp 924 heuristic baseline and Exp 506/772 semantic energy.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md.
-    2. Write python/carnot/pipeline/thinkprm_verifier.py:
-       a. Class ThinkPRMVerifier:
-          - __init__(self, llm_caller=None, confidence_threshold=0.8)
-          - verify_step(self, step_text: str, context: str = "") -> ThinkPRMResult
-            * If llm_caller is None: return CI stub with verdict="uncertain", confidence=0.5
-            * If llm_caller set: build prompt, call LLM, parse VERDICT: CORRECT/INCORRECT
-              from output. If ambiguous: return uncertain.
-          - ThinkPRMResult: step_text, verdict (Literal["correct","incorrect","uncertain"]),
-            confidence (float 0-1), reasoning_steps (str), latency_ms (float)
-          - batch_verify(self, steps: list[str]) -> list[ThinkPRMResult]
-       b. Add spec entries: REQ-VERIFY-098 (ThinkPRM generative step verifier),
-          SCENARIO-VERIFY-130 (ThinkPRM verify step with CoT).
-    3. Write scripts/experiment_945_thinkprm_tier29.py:
-       a. ExperimentTemplate(945, ...) — CPU, no GPU (CI stub mode for most tests).
-       b. Generate synthetic step corpus:
-          - 50 correct steps: "X + Y = Z" where Z = X + Y
-          - 50 incorrect steps: "X + Y = Z" where Z ≠ X + Y (off-by-1 to off-by-50)
-          - 20 ambiguous steps: "The result is approximately N" (no clear right/wrong)
-       c. Run ThinkPRMVerifier.batch_verify() on all 120 steps.
-          CI mode: use the LLM caller stub that returns deterministic verdicts based on
-          whether the step contains an arithmetic error (regex check for X + Y = wrong_Z).
-       d. Compute AUROC on correct vs incorrect steps (ignore ambiguous).
-       e. Compare to prior heuristic AUC from Exp 924 result JSON.
-       f. honest_verdict:
-          'thinkprm_viable' if auroc > 0.70 and > heuristic_auc_924
-          'thinkprm_marginal' if 0.60 < auroc <= 0.70
-          'thinkprm_no_improvement' if auroc <= heuristic_auc_924
-    4. Write tests in tests/python/test_thinkprm_verifier.py (100% coverage of thinkprm_verifier.py).
-       100% spec coverage: all tests reference REQ-VERIFY-098 or SCENARIO-VERIFY-130.
-    5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_945_thinkprm_tier29.py
-    6. Update ops/changelog.md.
-    7. Note: Update openspec/capabilities/verify/spec.md with REQ-VERIFY-098/SCENARIO-VERIFY-130.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_945_thinkprm_tier29.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp946-tier28-live-gpu-validation
-  milestone: 2026.04.73
-  deliverable: results/experiment_946_tier28_live_gpu_validation.json
+  estimated_wall_time_min: 90
+- id: exp957-fr
+  milestone: 2026.04.74
+  deliverable: results/experiment_957_fr.json
+  title: "FR-11 JEPA v23 \u2014 SC-Energy Coherence Labels as Training Signal"
+  prompt: "FR-11 (autonomous self-learning loop) JEPA has stalled below OOD AUC=0.75 across\nv17-v22 (6\
+    \ consecutive milestones). Root cause: self-supervised loss lacks\ndiscriminative gradient toward\
+    \ OOD boundary.\nJEPA v23 approach:\n  1. Load JEPA v22 checkpoint as starting point\n  2. Compute\
+    \ SC-Energy coherence scores for training examples (from Exp 944 model)\n  3. Add auxiliary classification\
+    \ loss: predict SC-Energy coherence bucket (high/low)\n     from JEPA latent representation. Loss\
+    \ weight: 0.3 (auxiliary) / 0.7 (world model)\n  4. Train for 50 epochs on JAX with CPU\n  5. Evaluate\
+    \ OOD AUC on held-out set (same protocol as v17-v22)\nIf OOD AUC > 0.75: honest_verdict = jepa_v23_ood_viable.\
+    \ Close FR-11 RETRO.\nIf OOD AUC <= 0.75 (same verdict as v17-v22): honest_verdict = jepa_retired.\n\
+    \  Add JEPA-v17-v22-all-ooe-below-target to exclusion manifest.\n  Write FR-11 status: \"JEPA approach\
+    \ to OOD detection not viable after 7 attempts.\n  Alternative: use SC-Energy directly as the OOD\
+    \ detector (AUROC=0.9017).\"\nUse JAX_PLATFORMS=cpu for reproducibility (per CLAUDE.md).\n\n\nExpected\
+    \ result schema:\nauxiliary_loss_weight: float\nepochs_trained: int\nhonest_verdict: str\nood_auc:\
+    \ float\n"
+  priority: medium
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 120
+- id: exp958-kv260-v4-rtl
+  milestone: 2026.04.74
+  deliverable: results/experiment_958_kv260_v4_rtl.json
+  title: "KV260 v4 RTL \u2014 Sparse E-MVL Ising Sampler Implementation"
+  prompt: "Implement the Sparse E-MVL Ising Sampler v4 in synthesizable VHDL or Verilog\nfollowing the\
+    \ spec at hardware/kv260/ising_sampler_v4_spec.md.\nImplementation steps:\n  1. Read the v4 spec entirely\
+    \ before writing any RTL\n  2. Implement the sparse coupling matrix (K=16 nonzero couplings per spin,\
+    \ N=128)\n     using block RAM with address-indexed coupling lists\n  3. Implement the Metropolis-Hastings\
+    \ acceptance logic in RTL\n  4. Implement the random number generator (LFSR-based per spec)\n  5.\
+    \ Run yosys synthesis: yosys -p \"synth_xilinx -flatten -top ising_sampler_v4\" design.v\n  6. Verify\
+    \ LUT count is within 36,250 estimate (+/- 20% tolerance)\n  7. Run iverilog simulation with testbench\
+    \ verifying basic Ising distribution shape\nhonest_verdict options:\n  \"rtl_synthesizes_within_budget\"\
+    \ \u2014 yosys passes, LUT count <= 43,500 (36,250 * 1.2)\n  \"rtl_synthesizes_over_budget\" \u2014\
+    \ yosys passes but LUT count exceeds budget\n  \"rtl_synthesis_fails\" \u2014 yosys reports errors\n\
+    \  \"rtl_not_written\" \u2014 implementation did not complete (write with stall_details)\nUse OSS-CAD-Suite\
+    \ tools available via PATH after installation at research-hardware-wishlist.md.\n\n\nExpected result\
+    \ schema:\nhonest_verdict: str\nlut_budget: int\nlut_count: int\nsimulation_passes: bool\nyosys_passes:\
+    \ bool\n"
+  priority: medium
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 120
+- id: exp959-iterativeselfrepair-100q-scale
+  milestone: 2026.04.74
+  deliverable: results/experiment_959_iterativeselfrepair_100q_scale.json
+  title: IterativeSelfRepair 100q Scale-Up + DebugRepair Hypothesis Step
+  prompt: "Scale IterativeSelfRepair from 25q (Exp 905) to 100q AND add the DebugRepair\nhypothesis step\
+    \ from arXiv 2604.19305.\nDebugRepair hypothesis step: before generating a repair, generate a hypothesis\n\
+    about WHY the initial response is wrong. The hypothesis is fed into the repair\nprompt as context:\
+    \ \"My diagnosis of the error: {hypothesis}. Now generate a\ncorrected response.\" arXiv 2604.19305\
+    \ reports +8.2pp HumanEval with this step.\nMODEL_SPECS:\n  primary: unsloth/gemma-4-31B-it-GGUF\n\
+    \  fallback: unsloth/Qwen3.6-35B-A3B-GGUF\nDomains: code (100 HumanEval problems) + math (50 GSM8K\
+    \ problems).\nMetrics:\n  - code_pass_at_1_before, code_pass_at_1_after, code_repair_delta\n  - math_pass_at_1_before,\
+    \ math_pass_at_1_after, math_repair_delta\n  - hypothesis_contribution: AUC(with_hypothesis) - AUC(without_hypothesis)\n\
+    Use BatchedInferenceRunner with batch_size=8. Pre-warm GPU via tmpl.setup_gpu().\nhonest_verdict =\
+    \ \"iterative_repair_100q_viable\" if either domain shows delta > 0.\n\n\nExpected result schema:\n\
+    code_repair_delta: float\nhonest_verdict: str\nhypothesis_contribution: float\nmath_repair_delta:\
+    \ float\nmodel_used: str\nn_problems_code: int\nn_problems_math: int\n"
+  priority: medium
+  requires_gpu: true
+  max_turns: 50
+  estimated_wall_time_min: 120
+- id: exp960-symbolic
+  milestone: 2026.04.74
+  deliverable: results/experiment_960_symbolic.json
+  title: Symbolic-KAN v2 Pipeline Deploy + HuggingFace Publish
+  prompt: "Deploy the Symbolic-KAN model (proven at AUC=1.0 in Exp 948) to:\n  (a) Production ThreeTierPipeline\
+    \ as the default Tier 3 verifier\n  (b) HuggingFace Hub at huggingface.co/Carnot-EBM with model card\n\
+    \  (c) IPFS mirror (dual-distribution per CLAUDE.md rule 3)\nImplementation steps:\n  1. Load the\
+    \ Symbolic-KAN checkpoint from Exp 948 results\n  2. Register it as a Tier 3 verifier in ThreeTierPipeline\n\
+    \  3. Write a brief integration test: 5 real FoVer examples, AUC must be >= 0.90\n  4. Push model\
+    \ + config + README to huggingface.co/Carnot-EBM/symbolic-kan-v2\n     using huggingface_hub Python\
+    \ client\n  5. Pin to IPFS: ipfs add -r symbolic_kan_v2_model/\n  6. Record IPFS CID in model card\
+    \ and in ops/changelog.md\nModel card must be emoji-free (per CLAUDE.md no-emoji rule) and include:\n\
+    \  - AUC=1.0 on 57 real FoVer pairs provenance (Exp 948)\n  - Training set size and violation types\n\
+    \  - Intended use: Carnot ThreeTierPipeline Tier 3 verifier\n  - Limitations: validated on FoVer violation\
+    \ types only; may not generalize\nhonest_verdict = \"symbolic_kan_deployed\" if HF push succeeds and\
+    \ integration test passes.\n\n\nExpected result schema:\nhf_repo_url: str\nhonest_verdict: str\nintegration_test_auc:\
+    \ float\nipfs_cid: str\npipeline_registered: bool\n"
+  priority: medium
+  requires_gpu: false
   max_turns: 30
-  prior_failures:
-    - experiment_id: exp938-draft-conditioned-tier28-integration
-      verdict: tier28_wired
-      addressed_by: "Exp 938 confirmed Tier 2.8 DraftConditioned wired into ThreeTierPipeline: 20/20 synthetic CPU questions activated tier28, AUC=1.0 on synthetic data. However, inference_mode was CPU synthetic — live GPU validation was deferred. This experiment runs the same 20 questions through ThreeTierPipeline with Gemma4-E4B-it live GPU inference (CARNOT_FORCE_LIVE=1) to confirm AUC holds on real model outputs."
-      retire_if_same_verdict: false
-  title: 'Exp 946: Tier 2.8 DraftConditioned Live GPU Validation — Confirm Synthetic AUC=1.0 on Real Inference (GPU, CARNOT_FORCE_LIVE=1)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exp 938 proved DraftConditionedVerifier wired into ThreeTierPipeline between
-    Tier 2.7 and Tier 3. Result: 20/20 synthetic questions activated tier28, AUC=1.0 on
-    CPU synthetic data. The milestone .72 retro flagged: "CPU synthetic mode; live GPU test
-    deferred to next milestone." This experiment validates that the wiring holds when real
-    Gemma4-E4B-it inference is used (CARNOT_FORCE_LIVE=1), as real model outputs are
-    structurally different from synthetic ones and may produce different Tier 2.7 uncertainty
-    patterns that trigger Tier 2.8 activation differently.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_938_draft_conditioned_tier28_integration.json — tier28_wired, AUC=1.0
-    - python/carnot/pipeline/draft_conditioned_verifier.py — DraftConditionedVerifier
-    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline with Tier 2.8 wiring
-    - python/carnot/pipeline/gemma_loader.py — GemmaTransformersLoader
-    - scripts/experiment_template.py — ExperimentTemplate
-
-    TASK: Run ThreeTierPipeline with Tier 2.8 on 20 real Gemma4-E4B-it live responses.
-    Confirm: inference_mode='live_gpu', tier28_activation_count, end_to_end_auc.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md.
-    2. Write scripts/experiment_946_tier28_live_gpu_validation.py:
-       a. ExperimentTemplate(946, "Tier 2.8 Live GPU Validation",
-              "results/experiment_946_tier28_live_gpu_validation.json", requires_gpu=True)
-          tmpl.setup()
-       b. Hard gate: if CARNOT_FORCE_LIVE != '1': write artifact with
-          honest_verdict='blocked_no_live_gpu' and exit.
-       c. Load Gemma4-E4B-it via GemmaTransformersLoader. Run GPU health check.
-       d. Generate 20 GSM8K questions (same 25 as Exp 942 first 20, or hardcoded).
-          For each question: generate response via live model inference.
-       e. Run each response through ThreeTierPipeline with Tier 2.8 enabled:
-          pipeline = ThreeTierPipeline()
-          Verify Tier 2.8 (DraftConditionedVerifier) is wired in (assert it exists).
-          result = pipeline.verify(question, response)
-          Record: tier28_activated (bool), tier28_energy_delta, final_energy, tier_path.
-       f. Compute: tier28_activation_count/20, mean_tier28_energy_delta,
-          end_to_end_auroc (if ground_truth available, else compute accuracy).
-       g. honest_verdict:
-          'tier28_live_validated' if tier28_activation_count >= 5 and inference_mode='live_gpu'
-          'tier28_live_not_activated' if tier28_activation_count < 5 (gate threshold too high)
-          'blocked_no_live_gpu' if CARNOT_FORCE_LIVE not set
-    3. Write tests (100% coverage). Mock GemmaTransformersLoader for CI.
-    4. Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_946_tier28_live_gpu_validation.py
-    5. Update ops/changelog.md.
-
-    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_946_tier28_live_gpu_validation.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp947-driftprobe-v3-depth-recurrent
-  milestone: 2026.04.73
-  deliverable: results/experiment_947_driftprobe_v3_depth_recurrent.json
-  max_turns: 50
-  prior_failures:
-    - experiment_id: exp923-driftprobe-ensemble
-      verdict: tier0i_no_improvement
-      addressed_by: "Exp 923 (DRIFTProbeEnsemble) used UNIFORM weights across 4 hidden layers — AUC delta was negative (uniform weights hurt OOD AUC). RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS. arXiv 2604.17121 explains root cause: state is not localized in any single layer — it propagates to deeper layers as new inputs arrive. Uniform weights treat all layers equally when some layers carry far more relevant state. This experiment uses ATTENTION POOLING (learned per-layer weights) across ALL hidden layers rather than uniform weighting of 4 fixed layers."
-      retire_if_same_verdict: false
-    - experiment_id: exp911-driftprobe-tier0i
-      verdict: tier0i_marginal
-      addressed_by: "Exp 911 was DRIFTProbe Tier 0i using multi-layer hidden-state drift. Result: tier0i_marginal — only marginal improvement over single-layer. Root cause: even multi-layer with uniform weights doesn't localize state properly. The fix is learned attention pooling over the full layer stack (depth-recurrent)."
-      retire_if_same_verdict: false
-  title: 'Exp 947: DRIFTProbe v3 Depth-Recurrent — Learned Attention Pooling Over All Layers (CPU)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: arXiv 2604.17121 (Topological Trouble with Transformers, April 2026) proves
-    that state in feedforward transformers is not localized — it propagates deeper as new
-    inputs arrive. Single-layer probes (Exp 911: tier0i_marginal) and uniform-weighted
-    multi-layer ensembles (Exp 923: tier0i_no_improvement, RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS)
-    both fail because they either read the wrong layer or weight all layers equally.
-    The architecturally-aligned fix is DEPTH-RECURRENT probing: attend over the full layer
-    stack with LEARNED per-layer weights (attention pooling), so the model can discover which
-    layers contain drift-relevant state for this particular input.
-    arXiv 2604.13386 (Multi-Layer Probe, April 2026) validates: multi-layer probe ensembling
-    with learned weights consistently improves AUROC by 3-8% vs best single layer.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/drift_probe.py — existing DRIFTProbe implementation
-    - results/experiment_911_drift_probe_tier0i.json — tier0i_marginal result
-    - results/experiment_923_drift_probe_ensemble.json — tier0i_no_improvement, uniform weights
-    - scripts/experiment_template.py — ExperimentTemplate
-
-    TASK: Implement DRIFTProbe v3 with learned attention pooling over all hidden layers.
-    Compare probe_auc to Exp 923 (uniform weights, tier0i_no_improvement baseline).
-    Target: probe_auc > 0.50 (above random — prior result was degraded below 0.50).
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md.
-    2. Write python/carnot/pipeline/drift_probe_v3.py:
-       a. Class DRIFTProbeV3:
-          - Accepts hidden_states: list of layer activations (list[np.ndarray], shape [seq, hidden])
-          - Per-layer drift computation: mean cosine drift between adjacent token positions
-            per layer (same as Exp 911/923 but now for ALL layers)
-          - Attention pooling layer: small MLP (hidden_dim=32, 2 layers) that takes the
-            N-dimensional per-layer drift vector and outputs scalar "drift score"
-          - Alternatively: softmax attention over per-layer drift scalars (learned temperature)
-          - fit(X_layers, y_labels): train attention weights on labeled (hidden_states, correct/incorrect) pairs
-          - predict_proba(X_layers): return P(incorrect) via attention-pooled drift score
-       b. Add spec entries: REQ-PROBE-010 (DRIFTProbe v3 depth-recurrent), SCENARIO-PROBE-015
-          (attention pooling across layer stack).
-    3. Write scripts/experiment_947_driftprobe_v3_depth_recurrent.py:
-       a. ExperimentTemplate(947, ...) — CPU, no GPU.
-       b. Generate synthetic hidden state data:
-          For 100 "correct" responses: hidden states with small layer-to-layer drift
-          For 100 "incorrect" responses: hidden states with large drift at some layers
-          (simulate by adding Gaussian noise to alternating layers for incorrect ones)
-       c. Train DRIFTProbeV3 on 160 pairs, evaluate on 40 (80/20 split).
-       d. Compare AUROC to Exp 923 baseline (extract from result JSON).
-       e. Log: per-layer attention weights (which layers got highest weight?),
-          probe_auc, baseline_auc_923, delta_auc.
-       f. honest_verdict:
-          'depth_recurrent_improves' if probe_auc > baseline_auc_923 and probe_auc > 0.50
-          'depth_recurrent_marginal' if probe_auc > 0.50 but not > baseline_auc_923
-          'depth_recurrent_no_improvement' if probe_auc <= 0.50
-    4. Write tests in tests/python/test_drift_probe_v3.py (100% coverage of drift_probe_v3.py).
-       100% spec coverage: all tests reference REQ-PROBE-010 or SCENARIO-PROBE-015.
-    5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_947_driftprobe_v3_depth_recurrent.py
-    6. Update ops/changelog.md.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_947_driftprobe_v3_depth_recurrent.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp948-symbolic-kan-real-fover
-  milestone: 2026.04.73
-  deliverable: results/experiment_948_symbolic_kan_real_fover.json
-  max_turns: 50
-  prior_failures:
-    - experiment_id: exp937-symbolic-kan-constraint-verifier
-      verdict: symbolic_kan_viable
-      addressed_by: "Exp 937 achieved AUC=0.9344 on SYNTHETIC data (200 generated violation pairs). This experiment applies the same Symbolic-KAN architecture to REAL FoVer-labeled violation pairs from live GPU inference. Different from Exp 937: real data (57 labeled pairs from Exp 442 + Exp 905 code repair outcomes), not synthetic. Tests whether symbolic structure generalizes better than standard KAN on small real datasets."
-      retire_if_same_verdict: false
-    - experiment_id: exp936-kan-tier4-real-data
-      verdict: real_data_improves_over_synthetic
-      addressed_by: "Exp 936 used STANDARD KAN on real FoVer data and found degradation within the run (baseline AUC 0.514, post-refinement 0.333) — standard KAN lacks semantic structure to generalize on 57 pairs. Symbolic-KAN encodes constraint types (ADD, MUL, CMP, EQ) which are semantically grounded in arithmetic, giving it a structural advantage on small datasets."
-      retire_if_same_verdict: false
-  title: 'Exp 948: Symbolic-KAN Real FoVer Data — AUC=0.9344 Architecture on Real Violation Pairs (CPU)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exp 937 proved Symbolic-KAN achieves AUC=0.9344 on SYNTHETIC arithmetic violations
-    (delta +0.7136 over standard KAN). Exp 936 applied standard KAN to real FoVer data (57 pairs)
-    and found degradation — standard KAN overfits or underfits on 57 real examples. Hypothesis:
-    Symbolic-KAN's discrete structure (ADD, MUL, CMP, EQ node labels) provides built-in
-    inductive bias for arithmetic that generalizes better on small real datasets. This experiment
-    applies the Exp 937 Symbolic-KAN to the real FoVer corpus from Exp 442 (57 labeled pairs)
-    and any additional pairs from Exp 905 code repair outcomes.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/models/symbolic_kan.py — SymbolicKAN implementation from Exp 937
-    - results/experiment_937_symbolic_kan_constraint_verifier.json — AUC=0.9344 synthetic
-    - results/experiment_442_fover_live_annotation.json — 57 real labeled pairs
-    - results/fover_labeled_steps_live.json — actual (step_text, correct/incorrect) pairs
-    - results/experiment_905_iterative_self_repair_v1.json — code repair outcomes (extra pairs)
-    - results/experiment_936_kan_tier4_real_data.json — standard KAN real data result
-
-    TASK: Train SymbolicKAN on real FoVer pairs. Compare to Exp 937 synthetic AUC and
-    Exp 936 standard KAN real AUC. Target: AUC > 0.70 on real data.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md.
-    2. Write scripts/experiment_948_symbolic_kan_real_fover.py:
-       a. ExperimentTemplate(948, "Symbolic-KAN Real FoVer",
-              "results/experiment_948_symbolic_kan_real_fover.json", requires_gpu=False)
-          tmpl.setup()
-       b. Load real FoVer data:
-          - Primary: results/fover_labeled_steps_live.json (from Exp 442, 57 pairs)
-          - Supplement: Exp 905 repair outcomes (baseline_passed/repair_passed) if compatible
-          - If fewer than 20 real pairs: synthetic fallback + set inference_mode='synthetic_fallback'
-          - If >= 20: set inference_mode='real_fover_data'
-       c. Load SymbolicKAN from python/carnot/models/symbolic_kan.py.
-          If class not found: re-implement the core from Exp 937 (VOCAB 4 ops + residual spline).
-       d. Prepare features: for each (step_text, label) pair, encode step_text as feature
-          vector (same encoding as Exp 937 — TF-IDF or arithmetic extraction: operand values,
-          operator type, result value).
-       e. Train on 80% of pairs, evaluate on 20%.
-       f. Compare:
-          - auc_symbolic_real (this experiment)
-          - auc_symbolic_synthetic = 0.9344 (Exp 937 result)
-          - auc_standard_real (from Exp 936 post-refinement)
-       g. Report top_symbolic_labels (which node types dominated on real data).
-       h. honest_verdict:
-          'symbolic_kan_real_viable' if auc_symbolic_real > 0.70
-          'symbolic_kan_real_marginal' if 0.60 < auc_symbolic_real <= 0.70
-          'symbolic_kan_real_degraded' if auc_symbolic_real <= 0.60
-          'symbolic_kan_synthetic_fallback' if inference_mode='synthetic_fallback'
-    3. Write tests (100% coverage). 100% spec coverage.
-    4. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_948_symbolic_kan_real_fover.py
-    5. Update ops/changelog.md.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_948_symbolic_kan_real_fover.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp949-spilled-energy-tier0
-  milestone: 2026.04.73
-  deliverable: results/experiment_949_spilled_energy_tier0.json
-  max_turns: 30
-  prior_failures:
-    - experiment_id: exp433-spilled-energy-detector
-      verdict: not_run
-      addressed_by: "Exp 433 added a SpilledEnergyDetector module to ThreeTierPipeline as Tier 0 pre-filter, but the result JSON was never written (RETRO-027: silent experiment drop). The module existence is uncertain. This experiment implements the TRAINING-FREE variant from arXiv 2602.18671 which uses chain-rule probability spill from logits — different from any prior detector module. No model training required."
-      retire_if_same_verdict: false
-    - experiment_id: exp787-s-star-energy-prefilter
-      verdict: energy_prefilter_efficient
-      addressed_by: "Exp 787 was S* energy pre-ranking for code candidate selection — used a trained scoring model to rank candidates. Different task: this experiment computes energy spill directly from LLM logits (training-free), not from a trained energy model. Spilled energy = sum of token log-probs that exceed the marginal chain-rule expectation."
-      retire_if_same_verdict: false
-  title: 'Exp 949: Spilled Energy Tier 0 — Training-Free Hallucination Detection via Logit Spill (CPU)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: arXiv 2602.18671 ("Spilled Energy in Large Language Models") proposes a training-free
-    hallucination detector that works directly from LLM logits. Key insight: when an LLM generates
-    a hallucination, it places probability mass on tokens beyond what the chain rule of probability
-    would justify given the context. This "spilled energy" is computed as:
-    spill(t) = max(0, log_prob(token_t | context) - expected_log_prob_from_context)
-    High spill → likely hallucination. No training required — just a forward pass through the LLM.
-    The paper reports good generalization across tasks and LLMs.
-
-    For Carnot: use as a fast Tier 0 pre-filter. If spilled energy exceeds threshold, route to
-    full Ising verification. If spilled energy is low, skip verification (fast path). This
-    complements the ThinkProbe (Exp 444) which uses a generative LLM call — spilled energy
-    uses only the existing logits from the generation step (zero additional cost).
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/think_probe.py — ThinkProbe (generative fast-path, Exp 444)
-    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline for Tier 0 integration
-    - scripts/experiment_template.py — ExperimentTemplate
-
-    TASK: Implement SpilledEnergyDetector (training-free). Measure AUROC on synthetic corpus
-    with mock logits. Target: AUROC > 0.60 (low bar — this is a zero-training baseline).
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md.
-    2. Write python/carnot/pipeline/spilled_energy_detector.py:
-       a. Class SpilledEnergyDetector:
-          - compute_spill(log_probs: list[float], context_entropy: float) -> float
-            * For each token: spill_t = max(0, log_prob_t - (-context_entropy))
-              (context_entropy approximates the expected log prob from context)
-            * Total spill = sum(spill_t) / len(log_probs)
-          - flag_response(spill_score: float, threshold: float = 0.5) -> bool
-            * Returns True if should run full Ising verification
-          - benchmark(responses_with_logits, labels) -> SpilledEnergyResult
-            * Computes spill for each response, AUROC, optimal_threshold
-       b. SpilledEnergyResult: auroc, optimal_threshold, skip_rate (fraction below threshold),
-          fn_rate (fraction of errors missed by skip), honest_verdict.
-       c. Add spec entries: REQ-PROBE-011 (SpilledEnergyDetector training-free Tier 0),
-          SCENARIO-PROBE-016 (spill detection on correct vs hallucinated responses).
-    3. Write scripts/experiment_949_spilled_energy_tier0.py:
-       a. ExperimentTemplate(949, ...) — CPU, no GPU.
-       b. Generate synthetic corpus of 200 responses with mock logits:
-          Correct responses: smooth log_probs, mean -2.0, std 0.5 (consistent with context)
-          Hallucinated responses: spiky log_probs with occasional high-prob tokens that
-          contradict context (mean -1.5, std 2.0, with some values near 0)
-       c. Compute spilled energy for all 200 responses.
-       d. Evaluate AUROC (correct vs hallucinated), optimal threshold.
-       e. honest_verdict:
-          'spilled_energy_viable' if auroc > 0.60
-          'spilled_energy_marginal' if 0.50 < auroc <= 0.60
-          'spilled_energy_below_random' if auroc <= 0.50
-    4. Write tests in tests/python/test_spilled_energy_detector.py (100% coverage).
-       100% spec coverage: tests reference REQ-PROBE-011 / SCENARIO-PROBE-016.
-    5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_949_spilled_energy_tier0.py
-    6. Update ops/changelog.md.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_949_spilled_energy_tier0.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp950-emvl-sparsified-ising
-  milestone: 2026.04.73
-  deliverable: results/experiment_950_emvl_sparsified_ising.json
-  max_turns: 30
-  prior_failures:
-    - experiment_id: exp648-parallel-ising-inertia
-      verdict: inertia_comparable_no_clear_win
-      addressed_by: "Exp 648 added per-spin inertia (EMA dynamics) to the Ising sampler — result: comparable to baseline at alpha=0.5, no clear win because Python float simulation doesn't reproduce FPGA fixed-point gains. This experiment adds SPARSE CONNECTIVITY (E-MVL pattern, arXiv 2604.04606) orthogonally — sparse connections reduce the O(N^2) coupling cost to O(N log N), directly cutting LUT count for KV260 RTL. Independent improvement from inertia, can combine with v3 spec."
-      retire_if_same_verdict: false
-  title: 'Exp 950: E-MVL Sparsified Ising — Sparse Connectivity for KV260 RTL Optimization (CPU)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: arXiv 2604.04606 (E-MVL: extraction-type majority voting logic, April 2026)
-    achieves ~6x speedup over simulated annealing on FPGA by sparsifying spin connectivity.
-    Key insight: instead of computing E_i = sum_j(J_ij * s_j) for ALL j (O(N^2)), E-MVL
-    computes only the majority vote over K nearest neighbors (K << N, O(N*K)).
-    For KV260 RTL: the N=128 dense Ising sampler overflowed at 290K LUTs (vs 117K budget).
-    Sparse connectivity (K=16 neighbors instead of N=128) would reduce the per-spin coupling
-    logic from 128 multipliers to 16 — cutting LUT count by ~8x. This would bring N=128
-    within the XCK26 budget without needing to reduce N.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/models/ising.py — IsingEBM (dense coupling)
-    - hardware/kv260/ising_sampler_v3_spec.md — v3 RTL spec (inertia + dense)
-    - results/experiment_648_parallel_ising_inertia.json — inertia_comparable_no_clear_win
-    - results/experiment_585_kv260_live_benchmark_v3.json — blocked_no_bitfile (LUT overflow)
-
-    TASK: Implement sparse Ising sampler (E-MVL pattern) in Python. Compare convergence and
-    AUC vs dense Ising. Write RTL spec update for v4 (sparse + inertia combined).
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md.
-    2. Write python/carnot/models/sparse_ising.py:
-       a. Class SparseIsingEBM(IsingEBM):
-          - __init__(self, n_vars, n_neighbors=16): creates sparse coupling matrix J_sparse
-            of shape (n_vars, n_neighbors) — each spin connected to K neighbors only
-          - _build_sparse_neighbors(self, n_vars, n_neighbors): random K-regular graph
-            (each spin has exactly K neighbors, symmetric)
-          - energy(self, spins): compute E = -sum_i(sum_(j in neighbors(i)) J_ij * s_i * s_j) / 2
-          - sample_gibbs(self, n_steps): Gibbs sampling using only K-neighbor sum
-          - compare_with_dense(self, n_trials=10): benchmark sparse vs dense convergence
-       b. E-MVL majority vote rule: for each spin i, new_s_i = sign(sum_(j in neighbors(i)) J_ij * s_j)
-          (majority vote over K neighbors instead of Gibbs probability)
-       c. Add spec entries: REQ-SAMPLE-020 (SparseIsingEBM K-regular graph),
-          SCENARIO-SAMPLE-035 (sparse vs dense convergence comparison).
-    3. Write scripts/experiment_950_emvl_sparsified_ising.py:
-       a. ExperimentTemplate(950, ...) — CPU, no GPU.
-       b. Test at n_vars=64 (KV260 current default), K=[8, 16, 32]:
-          For each K: measure convergence speed (steps to reach low energy) and AUC
-          on synthetic constraint verification vs dense Ising baseline.
-       c. Compute speedup_ratio = steps_dense / steps_sparse_K16.
-       d. Write hardware/kv260/ising_sampler_v4_spec.md (RTL update):
-          - Inherit from v3 spec (inertia dynamics, EMA per-spin)
-          - Add: sparse coupling (K=16 neighbors per spin, random K-regular graph)
-          - LUT estimate: 16 multipliers × 16-bit × N spins vs 128 × N dense
-          - Expected LUT count at N=128: ~290K × (16/128) = ~36K LUTs (well within 117K budget)
-       e. honest_verdict:
-          'emvl_speedup_confirmed' if speedup_ratio >= 1.5x (convergence steps)
-          'emvl_comparable' if 0.8 < speedup_ratio < 1.5
-          'emvl_slower' if speedup_ratio < 0.8
-    4. Write tests (100% coverage). 100% spec coverage.
-    5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_950_emvl_sparsified_ising.py
-    6. Update research-hardware-wishlist.md: add E-MVL section for KV260 v4 RTL plan.
-    7. Update ops/changelog.md.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_950_emvl_sparsified_ising.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp951-milestone-retro-73
-  milestone: 2026.04.73
-  deliverable: results/experiment_951_milestone_retro_73.json
+  estimated_wall_time_min: 45
+- id: exp961-milestone-2026-04-74-retrospective
+  milestone: 2026.04.74
+  deliverable: results/experiment_961_milestone_2026_04_74_retrospective.json
+  title: Milestone 2026.04.74 Retrospective
+  prompt: "Retrospective for Milestone 2026.04.74. Read all result artifacts for Exps 952-960.\nEvaluate\
+    \ against the 10 success criteria defined in the milestone proposal\n(openspec/change-proposals/research-roadmap-v74.md).\n\
+    Criteria (pass/fail for each):\n  1. Exclusion manifest updated with 786/627/603/641 (Exp 952)\n \
+    \ 2. SOTA models pre-downloaded before GPU experiments (Exp 952)\n  3. Math repair SOTA v3 wrote result\
+    \ file (Exp 953, any verdict acceptable)\n  4. SpilledEnergy AUROC >= 0.80 on live GPU (Exp 954)\n\
+    \  5. ThinkPRM AUROC >= 0.85 on live GPU (Exp 954)\n  6. Three-tier pipeline integration verified\
+    \ E2E (Exp 955)\n  7. DualGPU production wiring validated >= 1.5x (Exp 956)\n  8. JEPA v23 OOD AUC\
+    \ > 0.75 OR FR-11 officially retired (Exp 957)\n  9. KV260 v4 RTL synthesizes without errors (Exp\
+    \ 958)\n  10. Symbolic-KAN published to HuggingFace + deployed to Tier 3 (Exp 960)\nAdditional retrospective\
+    \ questions:\n  - Which experiments took longest (wall time vs estimate)?\n  - Did any experiment\
+    \ repeat a prior failure with the same root cause?\n  - Are there new experiments that should be added\
+    \ to exclusion manifest?\n  - What are the three biggest gaps entering .75?\nWrite results to results/experiment_961_milestone_retro_74.json.\n\
+    Update ops/changelog.md with milestone summary.\nUpdate ops/status.md with \"What's Working\" and\
+    \ \"What's Next\" for .75.\n\n\nExpected result schema:\nbiggest_gaps_75: list\ncriteria_met: int\n\
+    criteria_results: dict\ncriteria_total: int\nhonest_verdict: str\nnew_exclusion_candidates: list\n"
+  priority: mandatory
+  requires_gpu: false
   max_turns: 20
-  prior_failures:
-    - experiment_id: exp940-milestone-retro-72
-      verdict: milestone_complete
-      addressed_by: "Exp 940 was the .72 retrospective. This is the .73 retrospective with different criteria and results."
-      retire_if_same_verdict: false
-  title: 'Exp 951: Milestone 2026.04.73 Retrospective (CPU)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Milestone 2026.04.73 ran experiments 941-950. Read all 10 result JSON files and
-    produce the milestone retrospective.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_941_preflight_v22.json
-    - results/experiment_942_math_repair_sota_v2.json
-    - results/experiment_943_math_repair_external_scratchpad.json
-    - results/experiment_944_sc_energy_set_consistency_v2.json
-    - results/experiment_945_thinkprm_tier29.json
-    - results/experiment_946_tier28_live_gpu_validation.json
-    - results/experiment_947_driftprobe_v3_depth_recurrent.json
-    - results/experiment_948_symbolic_kan_real_fover.json
-    - results/experiment_949_spilled_energy_tier0.json
-    - results/experiment_950_emvl_sparsified_ising.json
-    - openspec/change-proposals/research-roadmap-v73.md — success criteria
-
-    TASK: Read all results, evaluate 12 success criteria, produce retro artifact.
-
-    CONCRETE STEPS:
-    1. Read each result JSON. Extract honest_verdict and key metrics.
-    2. Evaluate 12 success criteria from research-roadmap-v73.md:
-       1. preflight_complete: Exp 941 honest_verdict == 'preflight_complete'
-       2. math_repair_sota_working: Exp 942 signed_improvement > 0
-       3. math_repair_scratchpad_viable: Exp 943 honest_verdict in
-          ('scratchpad_improves', 'scratchpad_comparable', 'gated_upstream_no_improvement')
-       4. sc_energy_actually_ran: Exp 944 honest_verdict != 'blocked_gate_check_failed'
-       5. thinkprm_tier29_viable: Exp 945 auroc > 0
-       6. tier28_live_gpu_confirmed: Exp 946 inference_mode == 'live_gpu' OR honest_verdict
-          == 'blocked_no_live_gpu' (graceful block)
-       7. drift_depth_recurrent_improves: Exp 947 probe_auc > 0.50
-       8. symbolic_kan_real_fover: Exp 948 auc_symbolic_real > 0.60 (or synthetic_fallback OK)
-       9. spilled_energy_viable: Exp 949 auroc > 0.60
-       10. emvl_speedup_confirmed: Exp 950 honest_verdict in ('emvl_speedup_confirmed',
-           'emvl_comparable') — RTL v4 spec written
-       11. research_references_updated: Exp 941 new_papers_filed >= 4 OR hardcode True
-           (papers were filed in planning step, not pre-flight)
-       12. retro_complete: always True
-    3. Build artifact:
-       (
-         "experiment": 951,
-         "milestone": "2026.04.73",
-         "title": "Milestone 2026.04.73 Retrospective",
-         "n_criteria_met": <count>,
-         "n_criteria_total": 12,
-         "criteria_results": (<criterion: bool>),
-         "criteria_details": (<criterion: (experiment, verdict, measured_value, threshold, passed, note)>),
-         "open_retros_entering_74": [...],
-         "headline_findings": [...],
-         "honest_verdict": "milestone_complete",
-         "run_date": "<date>",
-         "status": "success"
-       )
-    4. Update ops/status.md — add .73 results section (do NOT remove existing content).
-    5. Update ops/changelog.md — one-line summary.
-    6. Write results/experiment_951_milestone_retro_73.json.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_951_milestone_retro_73.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  estimated_wall_time_min: 20

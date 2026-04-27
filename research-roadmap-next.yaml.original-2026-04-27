@@ -1,0 +1,535 @@
+milestone: "2026.04.74"
+title: "Governance Surgery + Live Probe Validation + Math Repair SOTA v3 + DualGPU Wiring"
+description: |
+  Milestone .73 produced three historically strong results (Symbolic-KAN AUC=1.0,
+  SpilledEnergy AUROC=1.0, ThinkPRM AUROC=0.99) but all are CPU/synthetic only.
+  Exp 942 (SOTA math repair) never ran. Exp 786/627/603/641 have appeared for 4-14
+  consecutive milestones without result. DualGPU has been idle for 8 milestones post-
+  benchmark. .74 fixes all four structural issues before adding new research.
+based_on_milestone: "2026.04.73"
+experiments:
+
+  - id: exp952
+    title: "Preflight v23 — Exclusion Manifest Surgery + SOTA Pre-Download + Arxiv Scan"
+    priority: critical
+    requires_gpu: false
+    max_turns: 20
+    estimated_wall_time_min: 20
+    description: |
+      Three mandatory governance actions before any .74 experiment runs:
+      (1) Update ops/exclusion_manifest.yaml — add exp786, exp627, exp603, exp641 with
+          documented retirement rationale. These have appeared for 4-14 consecutive
+          milestones with zero progress; further carryover is burn without benefit.
+      (2) Pre-download SOTA GGUFs needed by .74 GPU experiments:
+          - unsloth/gemma-4-31B-it-GGUF (for Exp 953, 954, 959)
+          - unsloth/Qwen3.6-35B-A3B-GGUF (for Exp 953, 959)
+          - unsloth/gemma-4-26B-A4B-it-GGUF (for Exp 959)
+          Download to ~/.cache/huggingface/hub/ and verify file sizes. Write a
+          sota_preflight_status artifact noting which models are ready.
+      (3) Add 3 new arxiv papers to research-references.md if not already present:
+          - arXiv 2502.11250 (Uncertainty-Aware Step Verification via CoT Entropy)
+          - arXiv 2604.20701 (Divide-and-Conquer NN Surrogates for Sparse Ising)
+          - arXiv 2602.17750 (iCKANs: Constitutive KANs with symbolic regression)
+      Write result artifact at results/experiment_952_preflight_v23.json with fields:
+        manifest_entries_added: [list of experiment IDs]
+        sota_models_ready: {model_name: bool}
+        arxiv_papers_filed: [list]
+        honest_verdict: "preflight_complete" | "preflight_partial"
+    result_schema:
+      honest_verdict: str
+      manifest_entries_added: list
+      sota_models_ready: dict
+      arxiv_papers_filed: list
+
+  - id: exp953
+    title: "Math Repair SOTA v3 — Gemma4-31B with Result-Write Guard"
+    priority: critical
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 90
+    gated_on:
+      - experiment_id: exp952
+        field: honest_verdict
+        operator: eq
+        value: "preflight_complete"
+        rationale: "SOTA model must be pre-downloaded or experiment will time out before
+                    writing a result file — same failure mode as Exp 942."
+    prior_failures:
+      - experiment_id: exp942-sota-math-repair-v2
+        verdict: missing_result_file
+        diagnosed_root_cause: "Experiment exited before writing result file; likely GGUF
+          download timed out (30+ min for 20GB model). No error artifact written."
+        addressed_by: "Exp 952 pre-downloads the model. Exp 953 adds a try/finally
+          result-write guard: on any exception, write a partial artifact with
+          status=blocked and stall_details before exit."
+        retire_if_same_verdict: true
+      - experiment_id: exp930-math-repair-e4b
+        verdict: math_repair_zero
+        diagnosed_root_cause: "gemma-4-E4B-it has 12% GSM8K baseline — no repair margin.
+          Model capability ceiling confirmed."
+        addressed_by: "Exp 953 uses Gemma4-31B (~75% GSM8K baseline) or Qwen3.6-35B
+          (~80% baseline), pre-downloaded via Exp 952."
+        retire_if_same_verdict: true
+      - experiment_id: exp919-math-repair-gate-blocked
+        verdict: blocked_gate_not_met
+        diagnosed_root_cause: "Gate condition from prior SC-Energy experiment not met;
+          gate was incorrectly applied to math repair."
+        addressed_by: "Exp 953 has no SC-Energy gate — math repair is independent."
+        retire_if_same_verdict: false
+    description: |
+      Run IterativeSelfRepair on 50 GSM8K math problems using Gemma4-31B-it GGUF
+      (or Qwen3.6-35B-A3B if Gemma4-31B not ready). MANDATORY structure:
+        try:
+          [experiment code]
+          write success artifact
+        except Exception as e:
+          write partial artifact with status=blocked, stall_details=str(e)
+          raise
+      This ensures a result file always exists regardless of exit mode.
+      Primary metric: pass@1 accuracy before vs after repair (should be >0 delta
+      for SOTA model vs 0.0 for E4B). Secondary: number of successful repairs / total.
+      If delta=0 again with SOTA model: write honest_verdict=sota_ceiling_confirmed
+      and retire the entire math-repair-iterative-self-repair experiment line.
+      Use MODEL_SPECS with unsloth/gemma-4-31B-it-GGUF as primary, unsloth/Qwen3.6-35B-A3B-GGUF
+      as fallback. Pre-warm GPU via tmpl.setup_gpu(MODEL_SPECS) before timed inference.
+    result_schema:
+      honest_verdict: str
+      baseline_accuracy: float
+      repair_accuracy: float
+      repair_delta: float
+      n_problems: int
+      model_used: str
+
+  - id: exp954
+    title: "Fast-Path Probe Live GPU Validation — SpilledEnergy + ThinkPRM + DRIFTProbe"
+    priority: high
+    requires_gpu: true
+    max_turns: 30
+    estimated_wall_time_min: 60
+    gated_on:
+      - experiment_id: exp949
+        field: honest_verdict
+        operator: in
+        value: ["spilled_energy_viable"]
+        rationale: "SpilledEnergy CPU result must be established before GPU validation."
+      - experiment_id: exp945
+        field: honest_verdict
+        operator: in
+        value: ["thinkprm_viable"]
+        rationale: "ThinkPRM CPU result must be established before GPU validation."
+      - experiment_id: exp947
+        field: honest_verdict
+        operator: in
+        value: ["depth_recurrent_improves", "depth_recurrent_marginal"]
+        rationale: "DRIFTProbe v3 CPU result must be established before GPU validation."
+    description: |
+      Validate three CPU-proven probes against real live Gemma4-31B responses on the ROCm GPU.
+      CLAUSE.md mandate: "All headline results must have live GPU provenance."
+      Exp 949 (SpilledEnergy AUROC=1.0), Exp 945 (ThinkPRM AUROC=0.99), Exp 947
+      (DRIFTProbe v3 probe_auc=0.5807) — all CPU only.
+      Protocol:
+        1. Load Gemma4-31B-it-GGUF on ROCm GPU (sg render -c '...')
+        2. Generate 100 real responses to factual questions with deliberate errors injected
+        3. Run SpilledEnergy (logit chain-rule energy) on these real responses
+        4. Run ThinkPRM CoT verification step on these real responses
+        5. Run DRIFTProbe v3 (depth-recurrent attention pooling) on these real responses
+        6. Compute AUROC for each probe vs ground-truth error labels
+      Acceptance thresholds (from Gap 2 analysis):
+        - SpilledEnergy AUROC >= 0.80 (degradation from 1.0 expected on real data)
+        - ThinkPRM AUROC >= 0.85 (degradation from 0.99 expected on real data)
+        - DRIFTProbe AUROC >= 0.55 (marginal acceptable given 0.5807 CPU baseline)
+      Use unsloth/gemma-4-31B-it-GGUF. Pre-warm via tmpl.setup_gpu(MODEL_SPECS).
+    result_schema:
+      honest_verdict: str
+      spilled_energy_auroc: float
+      thinkprm_auroc: float
+      driftprobe_auroc: float
+      n_responses: int
+      model_used: str
+
+  - id: exp955
+    title: "Triple Integration — SC-Energy + SpilledEnergy + ThinkPRM into ThreeTierPipeline"
+    priority: high
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 60
+    gated_on:
+      - experiment_id: exp944
+        field: honest_verdict
+        operator: in
+        value: ["sc_energy_viable"]
+        rationale: "SC-Energy must be CPU-validated before pipeline integration."
+    description: |
+      Wire three validated probes into ThreeTierPipeline as production Tier components:
+        - SpilledEnergy (arXiv 2602.18671) as Tier 0 fast reject (training-free, logit-based)
+        - ThinkPRM (arXiv 2504.16828) as Tier 2.9 CoT step verifier (generative, slow)
+        - SC-Energy (arXiv 2503.10695) as Tier 3 set-level consistency energy (EBM-based)
+      Integration architecture:
+        Tier 0 (SpilledEnergy) → fast, runs on every response, rejects obvious errors
+        Tier 2.9 (ThinkPRM) → medium, runs when Tier 0 uncertain, verifies reasoning steps
+        Tier 3 (SC-Energy) → slow, runs when Tier 2.9 uncertain, energy-based set consistency
+      Required: end-to-end integration test with synthetic input showing all three tiers
+      activate in cascade. Write artifacts at results/experiment_955_triple_integration.json.
+      honest_verdict should be "triple_integration_viable" if all three tiers wire without
+      import errors and the cascade test passes.
+    result_schema:
+      honest_verdict: str
+      tier0_wired: bool
+      tier29_wired: bool
+      tier3_wired: bool
+      cascade_test_passed: bool
+
+  - id: exp956
+    title: "DualGPU VerifyRepairPipeline Wiring — Production Integration"
+    priority: high
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 90
+    prior_failures:
+      - experiment_id: exp932-dualgpu-benchmark
+        verdict: dualgpu_benchmark_valid
+        diagnosed_root_cause: "Exp 932 benchmarked DualGPU at 1.96x throughput on realistic
+          workload (Milestone .72) but only as a standalone benchmark, never wired into
+          VerifyRepairPipeline. 8 consecutive milestones of idle deployment."
+        addressed_by: "Exp 956 specifically targets production wiring, not benchmarking.
+          Success criterion is VerifyRepairPipeline using DualGPURunner by default when
+          two GPUs are detected, with verified throughput >= 1.5x vs single GPU."
+        retire_if_same_verdict: false
+    description: |
+      Wire DualGPURunner (already benchmarked at 1.96x in Exp 932) into VerifyRepairPipeline
+      as the default execution path when two GPUs are detected.
+      Implementation:
+        1. Read the existing DualGPURunner implementation from Exp 932
+        2. Add GPU detection to VerifyRepairPipeline.__init__:
+           if torch.cuda.device_count() >= 2: self.runner = DualGPURunner()
+           else: self.runner = SingleGPURunner()
+        3. Add integration test: run pipeline on 20 real inputs with 2-GPU configuration,
+           verify throughput >= 1.5x vs single GPU baseline
+        4. Add docstring explaining WHY: "DualGPU is used when available because Exp 932
+           showed 1.96x throughput at realistic batch sizes; the single-GPU path is
+           preserved for machines with one GPU or when debugging."
+      If throughput in production pipeline is NOT >= 1.5x:
+        - Write honest_verdict=dualgpu_wired_below_target with measured_speedup
+        - Do NOT re-propose DualGPU optimization — retire the optimization track
+      MANDATORY: add Exp 641 (which is the DualGPU gate cascade blocker) to exclusion
+      manifest entry noting that Exp 956 production wiring closes the underlying gap.
+    result_schema:
+      honest_verdict: str
+      measured_speedup: float
+      pipeline_wired: bool
+      integration_test_passed: bool
+
+  - id: exp957
+    title: "FR-11 JEPA v23 — SC-Energy Coherence Labels as Training Signal"
+    priority: medium
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 120
+    gated_on:
+      - experiment_id: exp944
+        field: honest_verdict
+        operator: in
+        value: ["sc_energy_viable"]
+        rationale: "SC-Energy must produce reliable coherence scores to serve as
+                    training labels for JEPA. If SC-Energy is not viable, the
+                    coherence labels are noise — JEPA training would not converge."
+    prior_failures:
+      - experiment_id: exp-jepa-v17-through-v22
+        verdict: jepa_ood_below_target
+        diagnosed_root_cause: "Self-supervised forward-world-model loss provides
+          insufficient gradient signal to separate in-distribution from OOD.
+          The model learns to predict future states well but does not learn a
+          discriminative boundary between valid and invalid reasoning chains."
+        addressed_by: "JEPA v23 adds SC-Energy coherence scores (AUROC=0.9017, Exp 944)
+          as auxiliary training supervision. This provides direct gradient signal toward
+          the OOD detection objective: low SC-Energy coherence = likely OOD. The auxiliary
+          loss is weighted at 0.3 (primary: 0.7 forward-model loss) to preserve the
+          world-model structure while shaping the latent space."
+        retire_if_same_verdict: true
+    description: |
+      FR-11 (autonomous self-learning loop) JEPA has stalled below OOD AUC=0.75 across
+      v17-v22 (6 consecutive milestones). Root cause: self-supervised loss lacks
+      discriminative gradient toward OOD boundary.
+      JEPA v23 approach:
+        1. Load JEPA v22 checkpoint as starting point
+        2. Compute SC-Energy coherence scores for training examples (from Exp 944 model)
+        3. Add auxiliary classification loss: predict SC-Energy coherence bucket (high/low)
+           from JEPA latent representation. Loss weight: 0.3 (auxiliary) / 0.7 (world model)
+        4. Train for 50 epochs on JAX with CPU
+        5. Evaluate OOD AUC on held-out set (same protocol as v17-v22)
+      If OOD AUC > 0.75: honest_verdict = jepa_v23_ood_viable. Close FR-11 RETRO.
+      If OOD AUC <= 0.75 (same verdict as v17-v22): honest_verdict = jepa_retired.
+        Add JEPA-v17-v22-all-ooe-below-target to exclusion manifest.
+        Write FR-11 status: "JEPA approach to OOD detection not viable after 7 attempts.
+        Alternative: use SC-Energy directly as the OOD detector (AUROC=0.9017)."
+      Use JAX_PLATFORMS=cpu for reproducibility (per CLAUDE.md).
+    result_schema:
+      honest_verdict: str
+      ood_auc: float
+      auxiliary_loss_weight: float
+      epochs_trained: int
+
+  - id: exp958
+    title: "KV260 v4 RTL — Sparse E-MVL Ising Sampler Implementation"
+    priority: medium
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 120
+    gated_on:
+      - experiment_id: exp950
+        field: honest_verdict
+        operator: in
+        value: ["emvl_comparable"]
+        rationale: "v4 RTL spec was written in Exp 950. Implementation must follow
+                    the spec at hardware/kv260/ising_sampler_v4_spec.md."
+    prior_failures:
+      - experiment_id: exp950-emvl-sparsified-ising
+        verdict: emvl_comparable
+        diagnosed_root_cause: "Exp 950 wrote the v4 RTL spec but did not implement RTL.
+          Result was spec + software simulation only. No VHDL/Verilog was written."
+        addressed_by: "Exp 958 implements the RTL per the written spec. OSS-CAD-Suite
+          is confirmed installed (from research-hardware-wishlist.md). KV260 board arrived
+          2026-04-20. This is the first implementation attempt after spec was written."
+        retire_if_same_verdict: false
+      - experiment_id: exp585-kv260-bitfile-blocked
+        verdict: blocked_no_bitfile
+        diagnosed_root_cause: "Vivado not available; could not generate bitfile."
+        addressed_by: "Exp 958 uses OSS-CAD-Suite (yosys + nextpnr-xilinx) instead of
+          Vivado. Target: synthesizable RTL + yosys synthesis passing, NOT full bitfile.
+          Bitfile generation deferred to Exp 959+."
+        retire_if_same_verdict: false
+      - experiment_id: exp624-ising-simulation-only
+        verdict: simulation_only
+        diagnosed_root_cause: "RTL simulation passed but no synthesis target."
+        addressed_by: "Exp 958 targets yosys synthesis with LUT count verification
+          against the 36,250 LUT estimate from Exp 950 (within KV260 117K budget)."
+        retire_if_same_verdict: false
+    description: |
+      Implement the Sparse E-MVL Ising Sampler v4 in synthesizable VHDL or Verilog
+      following the spec at hardware/kv260/ising_sampler_v4_spec.md.
+      Implementation steps:
+        1. Read the v4 spec entirely before writing any RTL
+        2. Implement the sparse coupling matrix (K=16 nonzero couplings per spin, N=128)
+           using block RAM with address-indexed coupling lists
+        3. Implement the Metropolis-Hastings acceptance logic in RTL
+        4. Implement the random number generator (LFSR-based per spec)
+        5. Run yosys synthesis: yosys -p "synth_xilinx -flatten -top ising_sampler_v4" design.v
+        6. Verify LUT count is within 36,250 estimate (+/- 20% tolerance)
+        7. Run iverilog simulation with testbench verifying basic Ising distribution shape
+      honest_verdict options:
+        "rtl_synthesizes_within_budget" — yosys passes, LUT count <= 43,500 (36,250 * 1.2)
+        "rtl_synthesizes_over_budget" — yosys passes but LUT count exceeds budget
+        "rtl_synthesis_fails" — yosys reports errors
+        "rtl_not_written" — implementation did not complete (write with stall_details)
+      Use OSS-CAD-Suite tools available via PATH after installation at research-hardware-wishlist.md.
+    result_schema:
+      honest_verdict: str
+      lut_count: int
+      lut_budget: int
+      yosys_passes: bool
+      simulation_passes: bool
+
+  - id: exp959
+    title: "IterativeSelfRepair 100q Scale-Up + DebugRepair Hypothesis Step"
+    priority: medium
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    gated_on:
+      - experiment_id: exp952
+        field: honest_verdict
+        operator: in
+        value: ["preflight_complete"]
+        rationale: "SOTA model must be pre-downloaded. Exp 906 burned 30+ min on SOTA
+                    download within timed GPU experiment; cannot repeat."
+    prior_failures:
+      - experiment_id: exp906-iterative-repair-slow-sota-download
+        verdict: slow_sota_download
+        diagnosed_root_cause: "SOTA model was not pre-cached; download took 30+ min
+          during timed experiment, eating into wall time budget."
+        addressed_by: "Exp 952 pre-downloads all SOTA models. Exp 959 gates on
+          exp952 confirming soma_models_ready=true."
+        retire_if_same_verdict: false
+      - experiment_id: exp905-iterative-repair-25q-baseline
+        verdict: repair_viable
+        diagnosed_root_cause: "25q scale-up only; no DebugRepair hypothesis step.
+          Not a failure — Exp 959 extends to 100q and adds DebugRepair."
+        addressed_by: "Exp 959 scales to 100q (4x scale-up) and adds DebugRepair
+          hypothesis step from arXiv 2604.19305 (+8.2pp HumanEval vs standard repair)."
+        retire_if_same_verdict: false
+    description: |
+      Scale IterativeSelfRepair from 25q (Exp 905) to 100q AND add the DebugRepair
+      hypothesis step from arXiv 2604.19305.
+      DebugRepair hypothesis step: before generating a repair, generate a hypothesis
+      about WHY the initial response is wrong. The hypothesis is fed into the repair
+      prompt as context: "My diagnosis of the error: {hypothesis}. Now generate a
+      corrected response." arXiv 2604.19305 reports +8.2pp HumanEval with this step.
+      MODEL_SPECS:
+        primary: unsloth/gemma-4-31B-it-GGUF
+        fallback: unsloth/Qwen3.6-35B-A3B-GGUF
+      Domains: code (100 HumanEval problems) + math (50 GSM8K problems).
+      Metrics:
+        - code_pass_at_1_before, code_pass_at_1_after, code_repair_delta
+        - math_pass_at_1_before, math_pass_at_1_after, math_repair_delta
+        - hypothesis_contribution: AUC(with_hypothesis) - AUC(without_hypothesis)
+      Use BatchedInferenceRunner with batch_size=8. Pre-warm GPU via tmpl.setup_gpu().
+      honest_verdict = "iterative_repair_100q_viable" if either domain shows delta > 0.
+    result_schema:
+      honest_verdict: str
+      code_repair_delta: float
+      math_repair_delta: float
+      hypothesis_contribution: float
+      n_problems_code: int
+      n_problems_math: int
+      model_used: str
+
+  - id: exp960
+    title: "Symbolic-KAN v2 Pipeline Deploy + HuggingFace Publish"
+    priority: medium
+    requires_gpu: false
+    max_turns: 30
+    estimated_wall_time_min: 45
+    gated_on:
+      - experiment_id: exp948
+        field: honest_verdict
+        operator: in
+        value: ["symbolic_kan_real_viable"]
+        rationale: "Symbolic-KAN AUC=1.0 on real FoVer data (Exp 948) must be confirmed
+                    before deploying to production. Cannot deploy a model that has not
+                    proven its discriminative capability on real data."
+    prior_failures:
+      - experiment_id: exp937-symbolic-kan-synthetic
+        verdict: symbolic_kan_synthetic_viable
+        diagnosed_root_cause: "Exp 937 validated Symbolic-KAN on SYNTHETIC arithmetic
+          violations only (AUC=0.9344). Not a failure per se; Exp 948 was the planned
+          real-data follow-up."
+        addressed_by: "Exp 948 confirmed AUC=1.0 on 57 real FoVer pairs. Exp 960
+          deploys this proven model."
+        retire_if_same_verdict: false
+    description: |
+      Deploy the Symbolic-KAN model (proven at AUC=1.0 in Exp 948) to:
+        (a) Production ThreeTierPipeline as the default Tier 3 verifier
+        (b) HuggingFace Hub at huggingface.co/Carnot-EBM with model card
+        (c) IPFS mirror (dual-distribution per CLAUDE.md rule 3)
+      Implementation steps:
+        1. Load the Symbolic-KAN checkpoint from Exp 948 results
+        2. Register it as a Tier 3 verifier in ThreeTierPipeline
+        3. Write a brief integration test: 5 real FoVer examples, AUC must be >= 0.90
+        4. Push model + config + README to huggingface.co/Carnot-EBM/symbolic-kan-v2
+           using huggingface_hub Python client
+        5. Pin to IPFS: ipfs add -r symbolic_kan_v2_model/
+        6. Record IPFS CID in model card and in ops/changelog.md
+      Model card must be emoji-free (per CLAUDE.md no-emoji rule) and include:
+        - AUC=1.0 on 57 real FoVer pairs provenance (Exp 948)
+        - Training set size and violation types
+        - Intended use: Carnot ThreeTierPipeline Tier 3 verifier
+        - Limitations: validated on FoVer violation types only; may not generalize
+      honest_verdict = "symbolic_kan_deployed" if HF push succeeds and integration test passes.
+    result_schema:
+      honest_verdict: str
+      hf_repo_url: str
+      ipfs_cid: str
+      integration_test_auc: float
+      pipeline_registered: bool
+
+  - id: exp961
+    title: "Milestone 2026.04.74 Retrospective"
+    priority: mandatory
+    requires_gpu: false
+    max_turns: 20
+    estimated_wall_time_min: 20
+    description: |
+      Retrospective for Milestone 2026.04.74. Read all result artifacts for Exps 952-960.
+      Evaluate against the 10 success criteria defined in the milestone proposal
+      (openspec/change-proposals/research-roadmap-v74.md).
+      Criteria (pass/fail for each):
+        1. Exclusion manifest updated with 786/627/603/641 (Exp 952)
+        2. SOTA models pre-downloaded before GPU experiments (Exp 952)
+        3. Math repair SOTA v3 wrote result file (Exp 953, any verdict acceptable)
+        4. SpilledEnergy AUROC >= 0.80 on live GPU (Exp 954)
+        5. ThinkPRM AUROC >= 0.85 on live GPU (Exp 954)
+        6. Three-tier pipeline integration verified E2E (Exp 955)
+        7. DualGPU production wiring validated >= 1.5x (Exp 956)
+        8. JEPA v23 OOD AUC > 0.75 OR FR-11 officially retired (Exp 957)
+        9. KV260 v4 RTL synthesizes without errors (Exp 958)
+        10. Symbolic-KAN published to HuggingFace + deployed to Tier 3 (Exp 960)
+      Additional retrospective questions:
+        - Which experiments took longest (wall time vs estimate)?
+        - Did any experiment repeat a prior failure with the same root cause?
+        - Are there new experiments that should be added to exclusion manifest?
+        - What are the three biggest gaps entering .75?
+      Write results to results/experiment_961_milestone_retro_74.json.
+      Update ops/changelog.md with milestone summary.
+      Update ops/status.md with "What's Working" and "What's Next" for .75.
+    result_schema:
+      honest_verdict: str
+      criteria_met: int
+      criteria_total: int
+      criteria_results: dict
+      biggest_gaps_75: list
+      new_exclusion_candidates: list
+
+success_criteria:
+  minimum_passing: 8
+  total: 10
+  criteria:
+    - id: 1
+      description: "Exclusion manifest updated: 786, 627, 603, 641 all added"
+      experiment: exp952
+    - id: 2
+      description: "SOTA GGUF models pre-downloaded before any GPU experiment"
+      experiment: exp952
+    - id: 3
+      description: "Math repair SOTA v3 runs to completion AND writes result file (any verdict)"
+      experiment: exp953
+    - id: 4
+      description: "SpilledEnergy AUROC >= 0.80 on live GPU with real model responses"
+      experiment: exp954
+    - id: 5
+      description: "ThinkPRM AUROC >= 0.85 on live GPU with real model responses"
+      experiment: exp954
+    - id: 6
+      description: "Three-tier pipeline integration verified E2E (SC-Energy + SpilledEnergy + ThinkPRM)"
+      experiment: exp955
+    - id: 7
+      description: "DualGPU production wiring validated with real pipeline throughput >= 1.5x"
+      experiment: exp956
+    - id: 8
+      description: "JEPA v23 OOD AUC > 0.75 OR FR-11 officially retired with documented root cause"
+      experiment: exp957
+    - id: 9
+      description: "KV260 v4 RTL synthesizes without errors under yosys"
+      experiment: exp958
+    - id: 10
+      description: "Symbolic-KAN model published to HuggingFace AND deployed to production Tier 3"
+      experiment: exp960
+
+governance_actions:
+  exclusion_manifest_additions:
+    - experiment_id: exp786-scope-carryover
+      reason: "14 consecutive milestone appearances; no result in 14 runs; technique plateau"
+      added_milestone: "2026.04.74"
+    - experiment_id: exp627-scope-carryover
+      reason: "14 consecutive milestone appearances; no result in 14 runs; technique plateau"
+      added_milestone: "2026.04.74"
+    - experiment_id: exp603-scope-carryover
+      reason: "14 consecutive milestone appearances; no result in 14 runs; technique plateau"
+      added_milestone: "2026.04.74"
+    - experiment_id: exp641-dualgpu-gate-cascade
+      reason: "4 consecutive milestones past mandatory gate; gate conditions will never be met
+               without explicit wiring experiment (Exp 956)"
+      added_milestone: "2026.04.74"
+
+retro_closures_expected:
+  - retro_id: RETRO-MANIFEST-FULL-SCOPE
+    closes_via: exp952
+    condition: manifest updated with 786/627/603/641
+  - retro_id: RETRO-MATH-REPAIR-MODEL-CEILING
+    closes_via: exp953
+    condition: result file written (any verdict acceptable)
+  - retro_id: RETRO-PROBE-SYNTHETIC-ONLY
+    closes_via: exp954
+    condition: live GPU AUROC confirmed for SpilledEnergy and ThinkPRM
+  - retro_id: RETRO-DUALGPU-IDLE
+    closes_via: exp956
+    condition: production wiring validated with throughput >= 1.5x

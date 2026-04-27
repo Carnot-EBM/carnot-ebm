@@ -4806,3 +4806,66 @@ thermodynamic computing Ising FPGA
 - **Concrete experiment:** Consider for future milestone — energy-guided adaptive decoding
   combining AdaDec trigger with Carnot IsingEBM reranker.
 - **When to incorporate:** Future milestone after ThinkPRM Tier 2.9 is established.
+
+### Uncertainty-Aware Step Verification via CoT Entropy
+- **Paper:** arXiv 2502.11250 (Feb 2025)
+- **What:** Proposes augmenting generative process reward models (PRMs) with uncertainty
+  quantification by measuring entropy over chain-of-thought verification tokens. When the
+  verifier's own reasoning is high-entropy (uncertain), the step score is down-weighted and
+  flagged for review. Achieves AUROC improvement of 0.04 on MATH step-level benchmarks vs
+  ThinkPRM baseline by abstaining on ambiguous steps rather than forcing a verdict. The key
+  insight: a verifier that knows when it does NOT know is more useful than one that always
+  guesses. CoT entropy is measurable without additional supervision.
+- **Relevance to Carnot:** ThinkPRM Tier 2.9 (Exp 945, AUROC=0.99) generates verification
+  CoTs but does not quantify its own uncertainty. Adding CoT-entropy UQ to the Tier 2.9
+  path could raise precision further by flagging low-confidence verdicts for escalation to
+  Tier 3 (EBM-based) rather than making high-stakes decisions with marginal signal. The
+  uncertainty signal also feeds naturally into Carnot's energy-based repair: if the verifier
+  is uncertain, run an Ising MCMC repair rather than just rejecting.
+- **Concrete experiment:** Milestone 2026.04.75+ — integrate CoT-entropy uncertainty
+  into ThinkPRM Tier 2.9 after live GPU validation (Exp 954) establishes a baseline.
+- **When to incorporate:** Milestone 2026.04.75 (ThinkPRM live baseline must come first via Exp 954).
+
+### Divide-and-Conquer Neural Network Surrogates for Sparse Ising Sampling
+- **Paper:** arXiv 2604.20701 (Apr 2026)
+- **What:** Trains lightweight neural network surrogates to approximate sparse Ising energy
+  landscapes, then uses divide-and-conquer decomposition to split a large sparse Ising problem
+  into overlapping subproblems that each fit the surrogate's capacity. Achieves 20x MCMC
+  speedup on sparse Ising problems (N=256, K=8 nonzero couplings per spin) vs standard MCMC
+  with <0.5% distribution divergence (KL). The key insight: sparse coupling structure means
+  subproblems are mostly independent; a small NN can approximate the marginal energy of each
+  subproblem, and the decomposition recovers the joint without exponential blowup.
+- **Relevance to Carnot:** Carnot's Ising sampler bottleneck (identified in E-MVL Exp 950)
+  is primarily the O(N^2) dense coupling matrix. The divide-and-conquer approach maps
+  directly to the E-MVL sparsified Ising (K=16) architecture — sparsity is already a design
+  requirement of the v4 RTL spec (hardware/kv260/ising_sampler_v4_spec.md). On CPU/GPU,
+  the 20x speedup would cut the current ~40ms Ising sample time to ~2ms, enabling real-time
+  verification within LLM token generation latency. On KV260 FPGA, the NN surrogate could
+  be implemented as a small fixed-point MLP.
+- **Concrete experiment:** Consider for Milestone 2026.04.75+ after KV260 v4 RTL implementation
+  (Exp 958) establishes the sparse baseline — NN surrogate can then be evaluated as a software
+  complement to the hardware accelerator.
+- **When to incorporate:** Milestone 2026.04.75 (Exp 958 KV260 v4 RTL must come first for baseline).
+
+### iCKANs: Inelastic Constitutive KANs with Symbolic Regression
+- **Paper:** arXiv 2602.17750 (Feb 2026)
+- **What:** Extends Kolmogorov-Arnold Networks (KANs) to learn inelastic constitutive
+  relationships in physical materials modelling. Uses symbolic regression on the learned
+  KAN activation functions to recover closed-form constitutive equations from experimental
+  stress-strain data. The key contribution is regularization for physical plausibility:
+  thermodynamic consistency constraints (positive dissipation, convexity) are enforced as
+  soft penalties during KAN training, which guides symbolic regression toward physically
+  meaningful formulae. AUC-equivalent: recovered equations have <2% RMS error on held-out
+  data while being interpretable symbolic expressions.
+- **Relevance to Carnot:** Carnot's Symbolic-KAN (Exp 948, AUC=1.0 on 57 real FoVer pairs)
+  uses B-spline activations without physics regularization. The iCKAN approach maps to
+  logical-constraint regularization for Carnot's case: instead of thermodynamic consistency,
+  enforce monotonicity (higher violation severity → higher energy), convexity (energy
+  increases away from the constraint manifold), and symbolic parsimony (prefer shorter
+  formulae that generalize better). These regularizers address the known failure mode where
+  KANs overfit on small real-data sets (57 pairs is borderline). The iCKAN pattern also
+  provides a path to symbolic-form EBM energy functions — energy(x) = f(x) where f is a
+  discovered closed-form formula, enabling hardware-acceleratable energy computation.
+- **Concrete experiment:** Milestone 2026.04.75 — iCKAN regularization for Symbolic-KAN
+  Tier 3.1 after pipeline deployment (Exp 960) establishes the unregularized baseline.
+- **When to incorporate:** Milestone 2026.04.75 (Exp 960 Symbolic-KAN deploy must come first).
