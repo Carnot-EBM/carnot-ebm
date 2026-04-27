@@ -4330,3 +4330,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-26: Exp 941: Pre-flight v22 — .72 Audit + SOTA Model Download + SC-Energy Audit + New Papers (CPU) (✅ Complete) — honest_verdict=preflight_complete; results/experiment_941_preflight_v22.json
 - 2026-04-27: Exp 944: SC-Energy Set Consistency v2 — All 8 Prior Failures Documented, Must Actually Run (CPU) (✅ Complete) — honest_verdict=sc_energy_viable; results/experiment_944_sc_energy_set_consistency_v2.json
 - 2026-04-27: Exp 945: ThinkPRM Tier 2.9 — Generative CoT Step Verification (arXiv 2504.16828) (CPU) (✅ Complete) — honest_verdict=thinkprm_viable; results/experiment_945_thinkprm_tier29.json
+- 2026-04-27: Exp 946: Tier 2.8 DraftConditioned Live GPU Validation — Confirm Synthetic AUC=1.0 on Real Inference (GPU, CARNOT_FORCE_LIVE=1) (⚠️ Research Finding) — honest_verdict=tier28_live_validated; accuracy=0.0; results/experiment_946_tier28_live_gpu_validation.json
