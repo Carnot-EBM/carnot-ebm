@@ -1,0 +1,60 @@
+{
+  "experiment": 957,
+  "title": "JEPA v23 SC-Energy Auxiliary Loss",
+  "run_date": "20260427",
+  "started_at": "2026-04-27T07:29:24Z",
+  "finished_at": "2026-04-27T07:37:16Z",
+  "duration_s": 471.953,
+  "status": "success",
+  "honest_verdict": "jepa_retired",
+  "ood_auc": 0.2812,
+  "auxiliary_loss_weight": 0.3,
+  "epochs_trained": 50,
+  "v22_checkpoint_loaded": true,
+  "final_loss": 0.001561,
+  "final_main_loss": 0.0,
+  "final_aux_loss": 0.005203,
+  "n_train": 640,
+  "ood_gate": 0.75,
+  "sc_energy_auroc_exp944": 0.9017,
+  "prior_failures": [
+    {
+      "experiment_id": "jepa_v17",
+      "verdict": "below_random",
+      "addressed_by": "v23 adds auxiliary coherence-bucket head from SC-Energy"
+    },
+    {
+      "experiment_id": "jepa_v18_to_v22",
+      "verdict": "ood_auc_below_0.75",
+      "addressed_by": "SC-Energy auxiliary gradient steers latent space toward OOD boundary"
+    }
+  ],
+  "retire_if_same_verdict": true,
+  "alternative_ood_detector": "SC-Energy direct (Exp 944 AUROC=0.9017)",
+  "architecture_note": "TF-IDF + 2-layer MLP with dual heads: main (violation) + aux (SC-Energy coherence bucket). Loss = 0.7*main_BCE + 0.3*aux_BCE. No GPU required.",
+  "schema": [
+    "alternative_ood_detector",
+    "architecture_note",
+    "auxiliary_loss_weight",
+    "duration_s",
+    "epochs_trained",
+    "experiment",
+    "final_aux_loss",
+    "final_loss",
+    "final_main_loss",
+    "finished_at",
+    "honest_verdict",
+    "n_train",
+    "ood_auc",
+    "ood_gate",
+    "prior_failures",
+    "retire_if_same_verdict",
+    "run_date",
+    "sc_energy_auroc_exp944",
+    "started_at",
+    "status",
+    "title",
+    "v22_checkpoint_loaded"
+  ],
+  "invariant_violations": []
+}
