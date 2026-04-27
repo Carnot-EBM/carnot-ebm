@@ -1,0 +1,70 @@
+{
+  "experiment": 947,
+  "title": "DRIFTProbe v3 \u2014 Depth-Recurrent Attention Pooling (CPU, Synthetic)",
+  "run_date": "20260427",
+  "started_at": "2026-04-27T01:04:18Z",
+  "finished_at": "2026-04-27T01:04:19Z",
+  "duration_s": 0.202,
+  "status": "success",
+  "phase_timings_s": [
+    {
+      "name": "generate_synthetic_data",
+      "elapsed_s": 0.101
+    },
+    {
+      "name": "train_probe",
+      "elapsed_s": 0.085
+    },
+    {
+      "name": "evaluate_probe",
+      "elapsed_s": 0.014
+    }
+  ],
+  "probe_auc": 0.5807,
+  "baseline_auc_923": 0.5625,
+  "delta_auc": 0.0182,
+  "honest_verdict": "depth_recurrent_improves",
+  "n_layers": 12,
+  "n_train": 160,
+  "n_eval": 40,
+  "n_correct_total": 100,
+  "n_incorrect_total": 100,
+  "layer_attention_weights": [
+    0.07398120313882828,
+    0.06595980376005173,
+    0.06312533468008041,
+    0.07821492850780487,
+    0.0970703512430191,
+    0.08694969862699509,
+    0.07489816099405289,
+    0.11441035568714142,
+    0.07172365486621857,
+    0.09037835896015167,
+    0.0955594927072525,
+    0.0877285748720169
+  ],
+  "inference_mode": "synthetic_cpu",
+  "decision_class": "detect",
+  "schema": [
+    "baseline_auc_923",
+    "decision_class",
+    "delta_auc",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "inference_mode",
+    "layer_attention_weights",
+    "n_correct_total",
+    "n_eval",
+    "n_incorrect_total",
+    "n_layers",
+    "n_train",
+    "phase_timings_s",
+    "probe_auc",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ]
+}
