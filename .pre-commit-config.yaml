@@ -80,9 +80,23 @@ repos:
         types: [python]
         pass_filenames: false
 
-      # Python test coverage enforcement
+      # Python test coverage enforcement — manual stage only.
+      #
+      # Originally ran on every commit, but the .73 milestone surfaced
+      # the conductor-incompatibility: each conductor commit blocks for
+      # 10+ min on this hook, and pytest-xdist's multiprocessing leaves
+      # zombie workers if it's killed mid-run (contributed to the
+      # 2026-04-26 swap-saturation incident — see
+      # `openspec/change-proposals/conductor-process-isolation.md`).
+      #
+      # Coverage is now CI-only — see `.github/workflows/ci.yml`'s
+      # `python-test` job. Run locally with:
+      #   pre-commit run --hook-stage manual pytest-coverage
+      # or
+      #   .venv/bin/pytest tests/python --cov=python/carnot --cov-fail-under=100
       - id: pytest-coverage
-        name: pytest (100% coverage)
+        name: pytest (100% coverage) — manual / CI-only
+        stages: [manual]
         entry: .venv/bin/pytest tests/python --cov=python/carnot --cov-report=term-missing --cov-fail-under=100
         language: system
         types: [python]

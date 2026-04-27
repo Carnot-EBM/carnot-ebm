@@ -1478,3 +1478,30 @@ When: sparsify(coupling) is called with top_k=2.
 Then: Each row has at most top_k non-zero entries, corresponding to the largest magnitudes.
 
 **Implementation Status:** Implemented (Exp 637)
+
+## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
+
+SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
+a scalar energy to a list of natural-language statements. Architecture: TF-IDF embedding
+per statement, mean pooling, 2-layer MLP to scalar energy. Training: contrastive loss
+pushing E(coherent_set) << E(contradictory_set). Trained model SHALL achieve AUROC > 0.60
+on held-out coherent vs contradictory set pairs derived from GSM8K solutions.
+
+- REQ-MODEL-031-1: energy(statements) SHALL accept a list of strings and return a scalar float.
+- REQ-MODEL-031-2: The energy function SHALL be permutation-invariant (mean pooling).
+- REQ-MODEL-031-3: TFIDFEmbedder SHALL be fittable on a corpus and embeddable per statement.
+- REQ-MODEL-031-4: train() SHALL accept coherent_sets and contradictory_sets of equal length
+  and return per-epoch loss history.
+- REQ-MODEL-031-5: SCEnergyModel SHALL be importable from carnot.models.sc_energy.
+
+**Implementation Status:** Implemented (Exp 944)
+
+### SCENARIO-MODEL-016: Coherent vs Contradictory Set Discrimination
+
+Given: A fitted SCEnergyModel trained on GSM8K-derived coherent/contradictory pairs.
+When: energy() is called on coherent_set (same-problem steps) vs contradictory_set
+      (cross-problem mixed steps).
+Then: The model assigns lower mean energy to coherent sets than contradictory sets,
+      achieving AUROC > 0.60 on held-out pairs.
+
+**Implementation Status:** Implemented (Exp 944)

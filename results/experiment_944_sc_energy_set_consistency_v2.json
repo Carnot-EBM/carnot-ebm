@@ -1,0 +1,102 @@
+{
+  "experiment": 944,
+  "title": "SC-Energy Set Consistency v2",
+  "run_date": "20260426",
+  "started_at": "2026-04-26T23:58:54Z",
+  "finished_at": "2026-04-26T23:59:17Z",
+  "duration_s": 23.052,
+  "status": "success",
+  "phase_timings_s": [
+    {
+      "name": "data_generation",
+      "elapsed_s": 0.002
+    },
+    {
+      "name": "embedder_fit",
+      "elapsed_s": 0.004
+    },
+    {
+      "name": "model_training",
+      "elapsed_s": 23.028
+    },
+    {
+      "name": "evaluation",
+      "elapsed_s": 0.017
+    }
+  ],
+  "honest_verdict": "sc_energy_viable",
+  "sc_energy_auroc": 0.9017,
+  "rule_based_auroc": 1.0,
+  "train_pairs": 320,
+  "test_pairs": 160,
+  "n_epochs": 50,
+  "final_mean_loss_last5": 0.155615,
+  "loss_history_first5": [
+    0.980768,
+    0.936947,
+    0.877107,
+    0.801896,
+    0.729904
+  ],
+  "loss_history_last5": [
+    0.158624,
+    0.156157,
+    0.15703,
+    0.15389,
+    0.152374
+  ],
+  "embed_dim": 512,
+  "hidden_dim": 64,
+  "prior_failures": [
+    {
+      "experiment_id": "exp506-semantic-energy-tier0d",
+      "verdict": "semantic_energy_no_improvement",
+      "addressed_by": "Different architecture \u2014 single-statement scoring, not set-level. SC-Energy is fundamentally set-level."
+    },
+    {
+      "experiment_id": "exp509-ppsebm-energy-magnitude-replay",
+      "verdict": "energy_magnitude_wins",
+      "addressed_by": "Energy magnitude study, not set-level consistency. Orthogonal research direction."
+    },
+    {
+      "experiment_id": "exp533-cold-decoding-energy-guidance",
+      "verdict": "no_violation_reduction",
+      "addressed_by": "Cold decoding guidance, not contrastive set-level training. Different approach."
+    },
+    {
+      "experiment_id": "exp711-sc-energy-setconsistency",
+      "verdict": "blocked (implementation never ran)",
+      "addressed_by": "Scaffold existed but was never executed due to gate block. This experiment is the first actual run."
+    },
+    {
+      "experiment_id": "exp939-sc-energy-set-consistency",
+      "verdict": "blocked_gate_check_failed",
+      "addressed_by": "Planner error: YAML lacked prior_failures field for 7 prior experiments. Fixed here with full documentation."
+    }
+  ],
+  "architecture_note": "TF-IDF (max_features=512) + mean-pool + 2-layer MLP. Permutation-invariant. No GPU required.",
+  "schema": [
+    "architecture_note",
+    "duration_s",
+    "embed_dim",
+    "experiment",
+    "final_mean_loss_last5",
+    "finished_at",
+    "hidden_dim",
+    "honest_verdict",
+    "loss_history_first5",
+    "loss_history_last5",
+    "n_epochs",
+    "phase_timings_s",
+    "prior_failures",
+    "rule_based_auroc",
+    "run_date",
+    "sc_energy_auroc",
+    "started_at",
+    "status",
+    "test_pairs",
+    "title",
+    "train_pairs"
+  ],
+  "invariant_violations": []
+}
