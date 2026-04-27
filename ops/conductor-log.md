@@ -2898,3 +2898,5 @@ python/ |
 | 2026-04-27 06:53 UTC | Fast-Path Probe Live GPU Validation — SpilledEnerg | SKIP | Pre-tests failing, self-heal failed: "EnvPropagationGuard failed to load CARNOT_ |
 | 2026-04-27 07:04 UTC | Triple Integration — SC-Energy + SpilledEnergy + T | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-04-27 07:14 UTC | Triple Integration — SC-Energy + SpilledEnergy + T | OK | Deliverable already exists in repo |
+| 2026-04-27 07:14 UTC | DualGPU VerifyRepairPipeline Wiring — Production I | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-27 07:24 UTC | DualGPU VerifyRepairPipeline Wiring — Production I | OK | Deliverable already exists in repo |
