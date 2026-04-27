@@ -1,0 +1,33 @@
+{
+  "experiment": 958,
+  "title": "KV260 Ising Sampler v4 RTL — Sparse E-MVL (N=128, K=16)",
+  "run_date": "2026-04-27T08:02:38Z",
+  "schema": "ising_rtl_v1",
+  "duration_s": 750,
+  "honest_verdict": "rtl_synthesizes_within_budget",
+  "lut_budget": 43500,
+  "lut_count": 27136,
+  "simulation_passes": true,
+  "yosys_passes": true,
+  "notes": {
+    "lut_cells_detail": "27136 LUT2 cells (synth_xilinx primitive count); yosys LC estimate 13568 (two LUT2 per LUT6)",
+    "carry4_cells": 8192,
+    "flipflops": 2177,
+    "synthesis_tool": "yosys 0.64+149 synth_xilinx -flatten",
+    "simulation_tool": "iverilog + vvp, 4/4 checks passed",
+    "sim_checks": [
+      "valid asserts after reset",
+      "s_out nonzero after 200 sweeps",
+      "ferromagnetic convergence (128/128 spins aligned +1)",
+      "valid remains asserted"
+    ],
+    "lut_budget_basis": "36250 spec estimate * 1.2 tolerance = 43500",
+    "spec_estimate_vs_actual": "Spec estimated 36250; actual 27136 (25% under estimate — sparse coupling implemented as distributed LUT-RAM rather than BRAM; coupling storage is in the LUT count but combinatorial read pattern precluded BRAM inference)",
+    "rtl_file": "hardware/kv260/ising_sampler_v4.v",
+    "tb_file": "hardware/kv260/ising_sampler_v4_tb.v",
+    "emvl_rule": "sign(h_ema_new) — deterministic majority vote, no sigmoid LUT",
+    "ema_alpha": 0.5,
+    "topology": "ferromagnetic ring (default), overwritable via AXI",
+    "decentralization": "fully open-source toolchain (yosys OSS-CAD-Suite + iverilog), no closed-source tools required"
+  }
+}
