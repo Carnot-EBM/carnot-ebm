@@ -2901,3 +2901,4 @@ python/ |
 | 2026-04-27 07:14 UTC | DualGPU VerifyRepairPipeline Wiring — Production I | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-04-27 07:24 UTC | DualGPU VerifyRepairPipeline Wiring — Production I | OK | Deliverable already exists in repo |
 | 2026-04-27 07:39 UTC | FR-11 JEPA v23 — SC-Energy Coherence Labels as Tra | OK | 81 passed, 3 warnings in 6.14s |
+| 2026-04-27 08:04 UTC | KV260 v4 RTL — Sparse E-MVL Ising Sampler Implemen | OK | 81 passed, 3 warnings in 4.11s |
