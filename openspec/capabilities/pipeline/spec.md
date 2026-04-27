@@ -613,6 +613,37 @@ The TF-IDF proxy is used for offline/text-only evaluation; real logits provide t
 - `SemanticCluster().group_by_semantics(responses)` partitions all responses into clusters.
 - Every test in `tests/python/test_experiment_772_semantic_energy_probe.py` passes.
 
+### REQ-PROBE-010: DRIFTProbe v3 Depth-Recurrent Attention Pooling
+
+`DRIFTProbeV3` MUST accept a list of per-layer hidden-state activations
+(shape [seq_len, hidden_dim] per layer), compute per-layer cosine drift scalars,
+and pass the resulting N-dimensional layer-drift profile through a learned 2-layer MLP
+(hidden_dim=32) that outputs a single scalar P(incorrect).  The probe MUST expose
+`fit(X_layers, y_labels)` and `predict_proba(X_layers)` with scikit-learn-compatible
+semantics, plus `layer_attention_weights()` returning normalised per-layer importances.
+
+**Acceptance criteria:**
+- `fit()` trains MLP weights on labeled (hidden_states, is_incorrect) pairs.
+- `predict_proba()` raises RuntimeError if called before `fit()`.
+- `layer_attention_weights()` returns a non-negative array summing to 1.
+- Probe AUROC on synthetic data with heterogeneous per-layer noise MUST exceed 0.50.
+
+**Motivation:** arXiv 2604.17121 proves transformer state is non-local; arXiv 2604.13386
+validates that learned per-layer weights improve AUROC 3-8% vs uniform weights.
+
+**Implementation Status:** Implemented — Exp 947 (drift_probe_v3.py, DRIFTProbeV3)
+
+### SCENARIO-PROBE-015: Attention Pooling Learns Drift-Relevant Layer Weights
+
+**Given** 160 synthetic (correct, incorrect) pairs where incorrect responses have large
+drift injected at alternating layers
+**When** `DRIFTProbeV3().fit(X_train, y_train)` is called and
+`predict_proba(X_test)` is evaluated on 40 held-out pairs
+**Then** `roc_auc_score(y_test, proba)` > 0.50 (above-random discrimination)
+AND `layer_attention_weights()` shows non-uniform weights (some layers weighted higher)
+
+**Spec traces:** REQ-PROBE-010
+
 ### REQ-PROBE-021: Tier 0g Advisory Flag
 
 `SemanticEnergyProbe` MUST report `semantic_energy_score` and `is_high_energy=True` when
