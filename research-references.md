@@ -4869,3 +4869,73 @@ thermodynamic computing Ising FPGA
 - **Concrete experiment:** Milestone 2026.04.75 — iCKAN regularization for Symbolic-KAN
   Tier 3.1 after pipeline deployment (Exp 960) establishes the unregularized baseline.
 - **When to incorporate:** Milestone 2026.04.75 (Exp 960 Symbolic-KAN deploy must come first).
+
+## 2026-04-27 arxiv Scan (Milestone 2026.04.75 Planning)
+
+### Optimal Abstractions for Verifying Properties of KANs (KAN-MILP)
+- **Paper:** arXiv 2602.06737 (February 2026)
+- **What:** Creates mathematical abstractions by replacing each KAN unit with a piecewise affine
+  (PWA) function and encodes the verification problem as a Mixed Integer Linear Program (MILP).
+  Dynamic programming at the unit level combined with knapsack optimization across the network
+  finds the minimum number of PWA pieces needed for accurate abstractions. Uses Python 3.11 +
+  Gurobi 12.0.1. Verified safety properties (input-output bounds, monotonicity, convexity)
+  for KAN models trained on standard benchmarks; upfront analysis amortized over many queries.
+- **Relevance to Carnot:** Carnot's KAN energy tier (KAEMEnergy, Symbolic-KAN) is a trust-critical
+  component — a subtle spline bug could produce incorrect energy scores (high energy = correct,
+  low energy = wrong) without any observable test failure. MILP-based KAN verification could
+  catch three classes of Carnot bugs that standard testing misses: (a) monotonicity violations
+  (energy should increase with violation severity), (b) convexity violations (energy landscape
+  should be smooth near constraint boundaries), and (c) output-range violations (Ising energy
+  should stay in [-N, N] for N spins). Verification overhead is one-time (analysis phase),
+  then query-time is unchanged. Hardware path: MILP is CPU-bound; piecewise-affine abstraction
+  is FPGA-native (already the structure of KAEMEnergy's bisection sampling).
+- **Concrete experiment:** Exp 972 (Milestone 2026.04.75) — KAN Formal Verification via MILP:
+  apply the PWA abstraction method to Carnot's UnivariateKAEMLayer and Symbolic-KAN checkpoint.
+  Check: (1) monotonicity of energy w.r.t. violation indicator input, (2) output range bounds,
+  (3) convexity near the constraint boundary hyperplane. Report: n_properties_verified,
+  n_violations_found, verification_time_s.
+- **When to incorporate:** Milestone 2026.04.75 (Phase 4 — after Symbolic-KAN deployed in Exp 968).
+
+### PPSEBM: Progressive Parameter Selection EBM for Continual Learning
+- **Paper:** arXiv 2512.15658 (December 2025)
+- **What:** Integrates an Energy-Based Model (EBM) with Progressive Parameter Selection (PPS)
+  to prevent catastrophic forgetting in continual NLP learning. PPS allocates distinct,
+  task-specific parameter subsets for each new task; the EBM generates pseudo-samples from
+  prior tasks to guide parameter selection. Outperforms state-of-the-art continual learning
+  baselines across NLP benchmarks. Accepted IEEE International Conference on Big Data 2025.
+- **Relevance to Carnot:** Carnot's Tier 2 cross-session memory (Exp 748) plateaus at session 2
+  — no new templates added after the initial session, and Tier 2.1 JEPAReasonerProbe also
+  stalled. Root cause: the constraint memory store does not distinguish which parameters are
+  relevant to new vs old constraint types, leading to interference and saturation. PPSEBM's
+  progressive parameter selection directly addresses this: when a new constraint type is
+  detected (e.g., "arithmetic carry-forward errors"), allocate a fresh parameter slice to it
+  rather than overwriting the existing constraint memory. EBM pseudo-sample generation ensures
+  old constraint patterns are retained while new ones are learned. This is the architectural
+  fix for the 10-session plateau seen in Exp 748 and 761.
+- **Concrete experiment:** Exp 970 (Milestone 2026.04.75) — PPSEBM Tier 2 Cross-Session Memory:
+  implement progressive parameter selection in EmbeddingConstraintStore. Each new dominant
+  constraint category (detected by TF-IDF cluster shift) gets a fresh parameter group. EBM
+  generates replay pseudo-samples from prior parameter groups. Run 10-session relay. Target:
+  non-zero new templates added in sessions 3-10 (vs zero in Exps 748/761).
+- **When to incorporate:** Milestone 2026.04.75 (mandatory self-learning experiment per research-program.md).
+
+### ALERT: Zero-Shot Jailbreak Detection via Internal Discrepancy Amplification
+- **Paper:** arXiv 2601.03600 (January 2026)
+- **What:** Zero-shot jailbreak detector using two complementary classifiers on amplified latent
+  representations. No labeled jailbreak examples needed at training time: the method amplifies
+  the discrepancy between a model's internal "safe" and "unsafe" representations via contrastive
+  perturbation, then trains two independent classifiers on these amplified signals. Achieves
+  competitive detection on standard jailbreak benchmarks without any attack-specific training.
+- **Relevance to Carnot:** Carnot's Product Roadmap Tier B includes "Safety/Jailbreak Classifier"
+  (research-program.md: 2-3 experiments). ALERT's zero-shot approach maps directly onto
+  Carnot's energy architecture: the "discrepancy between internal representations" IS an energy
+  gap — low discrepancy energy = safe output, high discrepancy energy = jailbreak attempt.
+  Key advantage: ALERT's training-free property means Carnot can deploy a jailbreak classifier
+  using only the existing Ising/KAN stack, without needing labeled jailbreak training data.
+  The two complementary classifiers align with Carnot's cascade (Tier 0 fast + Tier 3 slow).
+  This is the foundation for the Tier B safety product, distilled into a small KAN model.
+- **Concrete experiment:** Future milestone (2026.04.76+) — Safety/Jailbreak KAN Classifier:
+  implement ALERT's discrepancy amplification using Carnot's EmbeddingConstraintStore latent
+  space. Train a KAN energy function on the amplified discrepancy signal. Target: AUC > 0.85
+  on public jailbreak benchmarks (AdvBench, JailbreakBench) without labeled training data.
+- **When to incorporate:** Milestone 2026.04.76 (after ThreeTierPipeline is fully deployed in .75).

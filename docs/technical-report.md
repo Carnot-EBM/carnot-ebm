@@ -1,9 +1,9 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 951 Experiments Across 79 Research Milestones
+## A Technical Report on 961 Experiments Across 80 Research Milestones
 
 **Author:** Ian Blenke
-**Date:** 2026-04-26
+**Date:** 2026-04-27
 **Repository:** github.com/Carnot-EBM/carnot-ebm
 **License:** Apache 2.0
 
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **951
-experiments across 79 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **961
+experiments across 80 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -469,6 +469,24 @@ closing RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS. **E-MVL K=16 sparsified Ising**
 criteria not met: Exp 942 (SOTA Math Repair with Qwen3.6-35B-A3B) result file
 was absent — the experiment never ran or crashed before writing output;
 RETRO-MATH-REPAIR-MODEL-CEILING remains open entering milestone .74.
+
+Milestone 2026.04.74 (the 80th) extended the record to **961 experiments**
+and addressed the KV260 FPGA RTL v4 synthesis track plus JEPA retirement.
+**KV260 Ising Sampler v4 RTL** (Exp 958) synthesized the sparse E-MVL
+design (N=128, K=16) with yosys synth_xilinx, producing 27,136 LUT2 cells —
+62% of the 43,500-cell budget — and passed all four iverilog simulation checks
+(valid asserts after reset, non-zero spin state, ferromagnetic convergence at
+128/128 spins, valid asserted throughout). The sparse E-MVL coupling is
+implemented as distributed LUT-RAM rather than BRAM, keeping the LUT count
+25% under the spec estimate of 36,250. **FR-11 JEPA v23** (Exp 957) was
+formally retired: adding SC-Energy coherence labels as auxiliary loss produced
+OOD AUC=0.2812, below the 0.75 gate, after 23 consecutive training variants
+failed to exceed the threshold. The JEPA discriminator line is now in the
+exclusion manifest. Most milestone .74 experiments were blocked by the
+doomed-rerun-discipline gate (12 prior failures for the retrospective task
+alone), yielding only the two substantive deliverables above. RETRO-MATH-
+REPAIR-MODEL-CEILING (SOTA model timeout on 3 attempts) and the gate-cascade
+blocking most planned tasks remain open entering the next planning cycle.
 
 ---
 
@@ -1145,7 +1163,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 ### The story
 
-The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, permanently fixed the LIVE-ENV propagation bug that blocked live benchmarks for seven milestones, synthesized the first iCE40 N=8 combinational energy oracle (134 LUTs), and confirmed StreamingCoT Tier 0g hallucination detection at AUC=1.0 and constraint memory compression at 31.25x while preserving AUROC=1.0 — all across **951 experiments and 79 milestones**.
+The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, permanently fixed the LIVE-ENV propagation bug that blocked live benchmarks for seven milestones, synthesized the first iCE40 N=8 combinational energy oracle (134 LUTs), and confirmed StreamingCoT Tier 0g hallucination detection at AUC=1.0 and constraint memory compression at 31.25x while preserving AUROC=1.0 — all across **961 experiments and 80 milestones**.
 
 The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.
 

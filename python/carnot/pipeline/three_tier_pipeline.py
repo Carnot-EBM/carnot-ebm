@@ -953,6 +953,76 @@ def build_three_tier_artifact(result: ThreeTierPipelineResult) -> dict[str, Any]
 # ---------------------------------------------------------------------------
 
 
+class SCEnergyEnergyAdapter:
+    """Adapt SCEnergyModel to the EORMModel.energy() interface for Tier 2.
+
+    **Why this adapter exists:**
+        ThreeTierPipeline.verify() calls self.eorm_model.energy(cot_input).
+        SCEnergyModel exposes predict_coherent_score(statements) → float in [0,1]
+        where higher = more coherent (opposite polarity to EORM energy where lower
+        = better).  This adapter inverts: energy = 1.0 - coherence_score so that
+        the existing threshold logic (energy < eorm_threshold → clear response)
+        works correctly with no changes to the pipeline core.
+
+        Polarity:
+            coherence_score > sc_threshold → coherent → should skip Tier 3
+            energy = 1.0 - coherence_score < 1.0 - sc_threshold → EORM threshold
+        Set ThreeTierPipeline(eorm_threshold = 1.0 - sc_threshold) so that
+        coherent responses satisfy effective_energy < eorm_threshold.
+
+    **How to split a response into statements:**
+        SC-Energy takes a *list* of statements.  We split the (question + response)
+        text into non-empty lines, each treated as one statement.  This heuristic
+        matches how SC-Energy's training corpus constructed coherent sets from
+        consecutive GSM8K solution steps.
+
+    Args:
+        model:        Trained SCEnergyModel instance with .embedder set.
+        sc_threshold: Coherence score above which a response is considered coherent.
+                      Used only for documentation; the actual cutoff is governed by
+                      eorm_threshold in ThreeTierPipeline.
+
+    Spec: REQ-VERIFY-088, REQ-MODEL-031
+    """
+
+    def __init__(self, model: Any, sc_threshold: float = 0.75) -> None:
+        self.model = model
+        self.sc_threshold = sc_threshold
+
+    @staticmethod
+    def _split_statements(text: str) -> list[str]:
+        """Split a block of text into non-empty statement lines.
+
+        Falls back to treating the whole text as a single statement when it
+        contains no newlines (e.g., single-sentence responses).  SC-Energy
+        can handle a list of length 1; it just mean-pools one vector.
+        """
+        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+        return lines if lines else [text]
+
+    def energy(self, cot_input: CoTEnergyInput) -> float:
+        """Score (question, response) pair; return inverted coherence score as energy.
+
+        Energy semantics (lower = better, coherent responses should be cleared):
+            coherent   → coherence_score > sc_threshold → energy < (1 - sc_threshold)
+            incoherent → coherence_score ≤ sc_threshold → energy ≥ (1 - sc_threshold)
+
+        Args:
+            cot_input: CoTEnergyInput with question_text and response_text fields.
+
+        Returns:
+            Float in [0, 1].  Values below (1 - sc_threshold) indicate a coherent
+            response that should be cleared at Tier 2, avoiding Tier 3 Ising.
+
+        Spec: REQ-MODEL-031, SCENARIO-MODEL-016
+        """
+        combined = cot_input.question_text + "\n" + cot_input.response_text
+        statements = self._split_statements(combined)
+        coherence_score = self.model.predict_coherent_score(statements)
+        # Invert: high coherence → low energy (clears Tier 2 threshold check)
+        return 1.0 - coherence_score
+
+
 class VJEPAv2EnergyAdapter:
     """Adapt VariationalJEPAPredictor to the EORMModel.energy() interface for Tier 2.
 
