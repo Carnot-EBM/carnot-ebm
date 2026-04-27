@@ -2893,3 +2893,5 @@ python/ |
 | 2026-04-27 04:05 UTC | Preflight v23 — Exclusion Manifest Surgery + SOTA  | OK | 81 passed, 3 warnings in 2.91s |
 | 2026-04-27 04:15 UTC | Math Repair SOTA v3 — Gemma4-31B with Result-Write | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-04-27 04:25 UTC | Math Repair SOTA v3 — Gemma4-31B with Result-Write | OK | Deliverable already exists in repo |
+| 2026-04-27 04:33 UTC | Fast-Path Probe Live GPU Validation — SpilledEnerg | FAIL | Claude Code error: Error: Reached max turns (30) |
+| 2026-04-27 05:43 UTC | Fast-Path Probe Live GPU Validation — SpilledEnerg | SKIP | Pre-tests failing, self-heal failed: "EnvPropagationGuard failed to load CARNOT_ |

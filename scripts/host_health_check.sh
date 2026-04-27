@@ -28,7 +28,7 @@ set -u
 readonly SWAP_GB_ALERT=60            # well below incident's 123 GB; above legitimate working-set residual (~40 GB)
 readonly SWAP_GB_CRITICAL=90         # must-act-immediately tier
 readonly ORPHAN_EXP_ALERT=2          # one in flight is normal; two is suspect
-readonly ORPHAN_PYTEST_ALERT=2       # same shape
+readonly ORPHAN_PYTEST_ALERT=5       # conductor's active Sonnet routinely runs 2-4 pytest concurrently (pre-check + experiment-internal); alert above 5 distinguishes from runaway accumulation
 readonly ZOMBIE_ALERT=50             # incident hit 161; alert well below that
 
 swap_gb=$(free -g | awk '/^Swap:/ {print $3}')
