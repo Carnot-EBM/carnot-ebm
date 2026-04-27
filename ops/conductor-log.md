@@ -2920,3 +2920,4 @@ python/ |
 | 2026-04-27 12:02 UTC | SC-Energy Production OOD Detector — Wire as Tier 2 | FAIL | Claude Code error: Error: Reached max turns (30) |
 | 2026-04-27 13:12 UTC | SC-Energy Production OOD Detector — Wire as Tier 2 | SKIP | Pre-tests failing, self-heal failed: 3 failed, 160 passed, 3 warnings in 24.02s |
 | 2026-04-27 14:23 UTC | SC-Energy Production OOD Detector — Wire as Tier 2 | SKIP | Pre-tests failing, self-heal failed: 3 failed, 160 passed, 3 warnings in 24.49s |
+| 2026-04-27 14:59 UTC | PPSEBM Tier 2 Cross-Session Memory — Progressive P | SKIP | Pre-tests failing, self-heal failed: 3 failed, 168 passed, 7 warnings in 25.35s |
