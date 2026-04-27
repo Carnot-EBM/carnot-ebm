@@ -68,6 +68,36 @@ The per-question latency overhead added by the JEPA v18 Tier 2 scorer MUST be le
 **When** `evaluate_auc(eval_groups)` is called on 50 held-out GSM8K groups
 **Then** the returned float is in [0, 1]
 
+### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
+
+`SparseIsingEBM` MUST implement a K-regular sparse connectivity graph where each spin
+has exactly `n_neighbors` neighbors, no spin is its own neighbor, and all neighbor
+indices are valid spin indices in `[0, n_vars)`. The sparse energy computation MUST
+use only K-neighbor sums (O(N*K) instead of O(N^2)) and produce a scalar matching
+the manual sparse sum formula:
+    E(s) = -0.5 * sum_i sum_{j in nbrs(i)} J_sparse[i,k] * s_i * s_j - b^T s
+
+**Acceptance criteria:**
+- `SparseIsingEBM(n_vars=64, n_neighbors=16)` constructs without error.
+- `neighbor_idx.shape == (n_vars, n_neighbors)` with integer dtype.
+- `J_sparse.shape == (n_vars, n_neighbors)` with float dtype.
+- No self-loops: `i not in neighbor_idx[i]` for all i.
+- `energy(spins)` matches manual computation within 1e-4.
+- `ValueError` raised when `n_neighbors >= n_vars` or `n_neighbors < 2` or odd.
+
+### SCENARIO-SAMPLE-035: Sparse vs Dense Convergence Comparison
+
+**Given** a `SparseIsingEBM` with `n_vars=64` and `n_neighbors=16`
+**When** `compare_with_dense(n_trials=10)` is called
+**Then** the result dict contains keys `steps_dense_mean`, `steps_sparse_gibbs_mean`,
+`steps_emvl_mean`, `speedup_ratio_emvl_vs_dense`, `speedup_ratio_gibbs_vs_dense`,
+all values are finite, and all step counts are non-negative.
+
+**Given** `energy_trajectory(n_steps, sampler="emvl")` is called
+**Then** the returned list has length `n_steps + 1` and all values are finite.
+
+**Spec traces:** REQ-SAMPLE-020
+
 **Spec traces:** REQ-INFRA-044
 
 ### REQ-INFRA-046: EORM Confidence Gate for Tier 3 Ising Skip
@@ -1804,3 +1834,57 @@ GSM8K step corpus (AUROC 0.99 vs heuristic baseline 0.85, delta=+0.14).
 **Then** result.verdict == 'uncertain' and result.confidence == 0.5
 
 **Spec traces:** REQ-VERIFY-098, Exp 945
+
+### REQ-PROBE-022: SpilledEnergyDetector Training-Free Tier 0 Pre-filter
+
+SpilledEnergyDetector MUST compute per-response "spilled energy" from LLM token
+log-probabilities with zero additional inference cost (no secondary model call, no
+training required).  It MUST expose `compute_spill()`, `flag_response()`, and
+`benchmark()` methods.  The `benchmark()` method MUST return a `SpilledEnergyResult`
+with `auroc`, `optimal_threshold`, `skip_rate`, `fn_rate`, and `honest_verdict` fields.
+
+**Rationale:** arXiv 2602.18671 shows that hallucinations produce tokens whose
+log-probability exceeds the contextual expectation (high entropy context + overconfident
+token = "spilled energy").  Using only the existing generation logits makes this
+pre-filter zero-cost compared to ThinkProbe (~50–200 ms secondary LLM call).
+
+**Acceptance criteria:**
+- `compute_spill(log_probs, context_entropy)` returns 0.0 when all tokens are at
+  or below the expected log_p (no spill).
+- `compute_spill([-0.5, -0.5, -0.5], 2.0)` returns ≈ 1.5 (each token 1.5 nats above
+  expectation).
+- `flag_response(score, threshold)` returns True iff score >= threshold.
+- `benchmark(corpus, labels)` returns auroc > 0.60 on a synthetic corpus where
+  hallucinated responses have higher mean log_p than correct responses
+  (Exp 949 achieves auroc=1.0 with full separation).
+
+**Spec traces:** Exp 949
+
+## Scenarios
+
+### SCENARIO-PROBE-022: Spill Computation on Correct vs Hallucinated Mock Responses
+
+**Given** a SpilledEnergyDetector with context_entropy=2.0
+**When** compute_spill is called with:
+  - correct tokens: log_probs=[-2.0, -2.0, -2.0] (at expectation)
+  - hallucinated tokens: log_probs=[-0.5, -0.5, -0.5] (above expectation)
+**Then**
+  - correct spill = 0.0
+  - hallucinated spill = 1.5
+  - hallucinated spill >> correct spill (clear separation)
+
+**Spec traces:** REQ-PROBE-022
+
+### SCENARIO-PROBE-023: Benchmark AUROC and Honest Verdict on Synthetic Corpus
+
+**Given** a SpilledEnergyDetector and 200 synthetic responses (100 correct, 100 hallucinated)
+  where hallucinated responses have log_probs drawn from N(-1.5, 2.0) and correct from N(-2.0, 0.5)
+  with context_entropy=2.0 for all responses
+**When** benchmark(responses, labels) is called
+**Then**
+  - auroc > 0.60
+  - honest_verdict == 'spilled_energy_viable'
+  - skip_rate in [0.0, 1.0]
+  - fn_rate in [0.0, 1.0]
+
+**Spec traces:** REQ-PROBE-022

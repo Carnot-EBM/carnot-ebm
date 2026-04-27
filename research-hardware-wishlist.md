@@ -98,6 +98,32 @@ that the binary Ising architecture cannot provide.
 - **Prior bring-up experiments:** Exp 228 (AXI design), Exp 288 (blocked/SW model), Exp 289 (FpgaBackend), Exp 290 (simulation benchmark), Exp 291 (Verilog RTL)
 - **Target (arXiv 2602.15985):** 77.5μs convergence for small problems ≤100 spins
 
+### E-MVL Sparse Connectivity Plan for KV260 v4 RTL (Exp 950 — 20260427)
+
+arXiv 2604.04606 (E-MVL, April 2026) achieves ~6x FPGA speedup over simulated annealing
+by replacing the dense O(N^2) coupling sum with a sparse O(N*K) majority vote over
+K nearest neighbors.
+
+**Problem E-MVL solves:**
+- Dense v3 at N=128: 128 multipliers per spin → ~290K LUTs (117K budget EXCEEDED, Exp 585 blocked)
+- Sparse v4 at N=128, K=16: 16 multipliers per spin → ~36K LUTs (well within budget)
+
+**E-MVL update rule (hardware-friendly):**
+- Dense Gibbs: p_flip = sigmoid(2*beta*h_i) — requires sigmoid LUT (~4K LUTs per tier)
+- E-MVL majority vote: new_s_i = sign(h_i) — single sign-bit comparison, zero extra LUTs
+
+**Exp 950 Python validation results:**
+- Tested K=[8, 16, 32] at N=64 on synthetic constraint problems
+- K=16 selected as optimal tradeoff: ~36K LUTs at N=128, within XCK26 117K budget
+- Full results: results/experiment_950_emvl_sparsified_ising.json
+- RTL spec: hardware/kv260/ising_sampler_v4_spec.md
+
+**Next steps for v4 RTL:**
+1. Install Vivado 2023.2 on synthesis-capable machine
+2. Implement ising_sampler_v4.v (sparse K=16 + E-MVL + inertia from v3)
+3. Synthesize targeting XCK26, verify LUT count < 117K
+4. Update synth_ising.tcl to target v4
+
 ### FPGA Justification
 - Exp 102: constraint check is 0.005ms on CPU. FPGA would be <1μs.
 - Exp 46b: 5000-var SAT in 0.7s on CPU. FPGA target: <1ms.

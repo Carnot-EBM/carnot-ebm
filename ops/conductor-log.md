@@ -2883,3 +2883,5 @@ python/ |
 | 2026-04-27 01:04 UTC | Exp 947: DRIFTProbe v3 Depth-Recurrent — Learned A | OK | 81 passed, 3 warnings in 5.90s |
 | 2026-04-27 01:27 UTC | Exp 948: Symbolic-KAN Real FoVer Data — AUC=0.9344 | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-27 01:39 UTC | Exp 948: Symbolic-KAN Real FoVer Data — AUC=0.9344 | OK | 112 passed, 3 warnings in 29.36s |
+| 2026-04-27 01:57 UTC | Exp 949: Spilled Energy Tier 0 — Training-Free Hal | FAIL | Claude Code error: Error: Reached max turns (30) |
+| 2026-04-27 02:07 UTC | Exp 949: Spilled Energy Tier 0 — Training-Free Hal | OK | Deliverable already exists in repo |
