@@ -2890,3 +2890,4 @@ python/ |
 | 2026-04-27 02:40 UTC | Milestone 2026.04.73 activated | OK | 11 tasks queued |
 | 2026-04-27 03:11 UTC | Plan milestone 2026.04.74 | OK | 0 tasks proposed |
 | 2026-04-27 03:53 UTC | Milestone 2026.04.74 activated | OK | 10 tasks queued |
+| 2026-04-27 04:05 UTC | Preflight v23 — Exclusion Manifest Surgery + SOTA  | OK | 81 passed, 3 warnings in 2.91s |

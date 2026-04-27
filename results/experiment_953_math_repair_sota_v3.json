@@ -1,0 +1,69 @@
+{
+  "experiment": 953,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-27",
+  "started_at": "2026-04-27T04:15:50.399015+00:00",
+  "finished_at": "2026-04-27T04:15:50.399015+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Math Repair SOTA v3 \u2014 Gemma4-31B with Result-Write Guard",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "6 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp759-iterative-code-repair-live",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: code_repair_zero"
+    },
+    {
+      "upstream": "exp881-code-repair-v8-gemma4",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: zero_constraints"
+    },
+    {
+      "upstream": "exp895-code-repair-50q-scaleup",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_881_not_met"
+    },
+    {
+      "upstream": "exp906-code-repair-50q-scaleup",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: strong_improvement_code_repair_milestone_achieved"
+    },
+    {
+      "upstream": "exp920-combined-estimation-math-repair",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp943-math-repair-external-scratchpad",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
