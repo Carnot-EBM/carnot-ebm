@@ -1,6 +1,13 @@
 # Conductor supervisor: external observer + automated recovery
 
-**Status:** Draft change proposal.
+**Status:** Draft change proposal. **REQUESTED FOR MILESTONE 2026.04.77.**
+The 2026-04-27 session demonstrated that the operator role of "manual
+watchdog for the conductor" is unsustainable — over a 24h window the
+operator had to manually reap orphans, kill runaway Sonnets, recover
+from broken log handles, translate schema-mismatched planner output,
+and commit accumulated work that the conductor's own commit pipeline
+failed to push. Every one of those failure modes is in scope for this
+proposal. .76 did not pick this up; .77 should.
 **Origin:** 2026-04-27 root-cause analysis after a multi-hour overnight
   session where the conductor accumulated three independent failure
   modes — broken log handle, schema-mismatch on a planner output, and
