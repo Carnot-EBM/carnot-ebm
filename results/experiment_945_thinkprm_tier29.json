@@ -1,0 +1,161 @@
+{
+  "experiment": 945,
+  "title": "ThinkPRM Tier 2.9 \u2014 Generative Step Verifier vs Heuristic Baseline",
+  "run_date": "20260427",
+  "started_at": "2026-04-27T00:26:17Z",
+  "finished_at": "2026-04-27T00:26:17Z",
+  "duration_s": 0.002,
+  "status": "success",
+  "phase_timings_s": [
+    {
+      "name": "generate_corpus",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "load_baseline",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "thinkprm_batch_verify",
+      "elapsed_s": 0.001
+    },
+    {
+      "name": "compute_auroc",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "honest_verdict",
+      "elapsed_s": 0.0
+    }
+  ],
+  "thinkprm_auroc": 0.99,
+  "heuristic_auc_924": 0.85,
+  "auc_delta": 0.14,
+  "honest_verdict": "thinkprm_viable",
+  "corpus_size": 120,
+  "n_correct": 50,
+  "n_incorrect": 50,
+  "n_ambiguous": 20,
+  "n_auroc_evaluated": 100,
+  "sample_results": [
+    {
+      "idx": 0,
+      "step": "10 + 7 = 17",
+      "label": "correct",
+      "verdict": "correct",
+      "confidence": 0.95,
+      "auroc_score": 0.95,
+      "latency_ms": 0.033482996514067054
+    },
+    {
+      "idx": 1,
+      "step": "13 + 9 = 22",
+      "label": "correct",
+      "verdict": "correct",
+      "confidence": 0.95,
+      "auroc_score": 0.95,
+      "latency_ms": 0.014396995538845658
+    },
+    {
+      "idx": 2,
+      "step": "16 + 11 = 27",
+      "label": "correct",
+      "verdict": "correct",
+      "confidence": 0.95,
+      "auroc_score": 0.95,
+      "latency_ms": 0.012182019418105483
+    },
+    {
+      "idx": 3,
+      "step": "19 + 13 = 32",
+      "label": "correct",
+      "verdict": "correct",
+      "confidence": 0.95,
+      "auroc_score": 0.95,
+      "latency_ms": 0.007854978321120143
+    },
+    {
+      "idx": 4,
+      "step": "22 + 15 = 37",
+      "label": "correct",
+      "verdict": "correct",
+      "confidence": 0.95,
+      "auroc_score": 0.95,
+      "latency_ms": 0.007633992936462164
+    },
+    {
+      "idx": 5,
+      "step": "25 + 17 = 42",
+      "label": "correct",
+      "verdict": "correct",
+      "confidence": 0.95,
+      "auroc_score": 0.95,
+      "latency_ms": 0.007252994691953063
+    },
+    {
+      "idx": 6,
+      "step": "28 + 19 = 47",
+      "label": "correct",
+      "verdict": "correct",
+      "confidence": 0.95,
+      "auroc_score": 0.95,
+      "latency_ms": 0.007683993317186832
+    },
+    {
+      "idx": 7,
+      "step": "31 + 21 = 52",
+      "label": "correct",
+      "verdict": "correct",
+      "confidence": 0.95,
+      "auroc_score": 0.95,
+      "latency_ms": 0.007383991032838821
+    },
+    {
+      "idx": 8,
+      "step": "34 + 23 = 57",
+      "label": "correct",
+      "verdict": "correct",
+      "confidence": 0.95,
+      "auroc_score": 0.95,
+      "latency_ms": 0.00733401975594461
+    },
+    {
+      "idx": 9,
+      "step": "37 + 25 = 62",
+      "label": "correct",
+      "verdict": "correct",
+      "confidence": 0.95,
+      "auroc_score": 0.95,
+      "latency_ms": 0.007583992555737495
+    }
+  ],
+  "method": "ThinkPRM generative CoT step verifier (CI arithmetic stub)",
+  "reference": "arXiv 2504.16828 (ThinkPRM)",
+  "spec": [
+    "REQ-VERIFY-098",
+    "SCENARIO-VERIFY-130"
+  ],
+  "schema": [
+    "auc_delta",
+    "corpus_size",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "heuristic_auc_924",
+    "honest_verdict",
+    "method",
+    "n_ambiguous",
+    "n_auroc_evaluated",
+    "n_correct",
+    "n_incorrect",
+    "phase_timings_s",
+    "reference",
+    "run_date",
+    "sample_results",
+    "spec",
+    "started_at",
+    "status",
+    "thinkprm_auroc",
+    "title"
+  ]
+}
