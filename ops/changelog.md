@@ -4348,3 +4348,6 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-27: KV260 v4 RTL — Sparse E-MVL Ising Sampler Implementation (⚠️ Research Finding) — honest_verdict=rtl_synthesizes_within_budget; lut_count=27136; results/experiment_958_kv260_v4_rtl.json
 - 2026-04-27: Math Repair SOTA v3 — Retry with Prior-Failures + External Scratchpad (✅ Complete) — honest_verdict=sota_ceiling_confirmed; repair_delta=0.0; results/experiment_963_math_repair_sota_v3_retry.json
 - 2026-04-27: IterativeSelfRepair 100q + DebugRepair Hypothesis Step (Retry of Exp 959) (✅ Complete) — honest_verdict=iterative_repair_100q_viable; results/experiment_967_iterativeselfrepair_100q_debugrepair.json
+- 2026-04-27: PPSEBM Tier 2 Cross-Session Memory — Progressive Parameters Fix for Plateau (⚠️ Research Finding) — honest_verdict=ppsebm_plateau_broken; results/experiment_970_ppsebm_tier2_crosssession_memory.json
+- 2026-04-27: KAN Formal Verification via MILP — Property Checking for Energy Functions (⚠️ Research Finding) — honest_verdict=kan_violations_found; results/experiment_972_kan_milp_formal_verification.json
+- 2026-04-27: Milestone 2026.04.75 Retrospective (⚠️ Research Finding) — honest_verdict=partial_milestone_primary_criterion_met; results/experiment_973_milestone_retro_75.json

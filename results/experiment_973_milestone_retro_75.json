@@ -1,0 +1,147 @@
+{
+  "experiment": 973,
+  "title": "Milestone 2026.04.75 Retrospective",
+  "run_date": "20260427",
+  "started_at": "2026-04-27T15:57:37Z",
+  "finished_at": "2026-04-27T16:00:00Z",
+  "duration_s": 143,
+  "status": "success",
+  "honest_verdict": "partial_milestone_primary_criterion_met",
+  "criteria_results": {
+    "1": true,
+    "2": true,
+    "3": false,
+    "4": false,
+    "5": false,
+    "6": false,
+    "7": false,
+    "8": false,
+    "9": true,
+    "10": true
+  },
+  "criteria_met": 4,
+  "criteria_total": 10,
+  "prior_failures_blocks": 0,
+  "criteria_detail": {
+    "1_zero_prior_failures_blocks": {
+      "result": true,
+      "evidence": "No DOOMED_RERUN_BLOCK entries appear in conductor-log.md after milestone .75 activation at 2026-04-27T09:17Z. Six DOOMED_RERUN_BLOCK entries at 04:15-08:34 UTC belong to .74 tail runs, not .75. PRIMARY SUCCESS CRITERION MET."
+    },
+    "2_exp963_result_file": {
+      "result": true,
+      "evidence": "results/experiment_963_math_repair_sota_v3_retry.json exists; status=success; honest_verdict=sota_ceiling_confirmed. NOTE: ran with model_used=stub (stub model, not SOTA Gemma4-31B). Baseline and repair accuracy both 4.2% (2/48 correct), delta=0.0. Result file present as required but stub model limits conclusions.",
+      "caveat": "sota_ceiling_confirmed verdict with stub model means we confirmed the stub hits the same ceiling, not that Gemma4-31B was evaluated. Prior_failures documented correctly."
+    },
+    "3_spilledenergy_auroc_0_70_live_gpu": {
+      "result": false,
+      "evidence": "results/experiment_964_fast_path_probe_live_gpu.json does not exist. Conductor log shows two SKIP entries at 05:43 and 06:53 UTC: 'Pre-tests failing, self-heal failed: EnvPropagationGuard failed to load CARNOT_ ...'  Environment variable propagation failure blocked all live GPU experiments before .75 activation."
+    },
+    "4_thinkprm_auroc_0_80_live_gpu": {
+      "result": false,
+      "evidence": "Same as criterion 3 — Exp 964 file missing due to EnvPropagationGuard failure. ThinkPRM AUROC cannot be evaluated without a live GPU run."
+    },
+    "5_triple_integration_e2e": {
+      "result": false,
+      "evidence": "results/experiment_965_triple_integration.json does not exist. Conductor log shows DOOMED_RERUN_BLOCK at 07:04 (still in .74 tail) followed by 'Deliverable already exists in repo' at 07:14 — referencing an earlier-milestone deliverable, not a fresh .75 result. No .75-stamped Triple Integration experiment was run."
+    },
+    "6_dualgpu_throughput_1_5x": {
+      "result": false,
+      "evidence": "results/experiment_966_dualgpu_verifyrepairpipeline_wiring.json does not exist. Same pattern as Exp 965: DOOMED_RERUN_BLOCK in .74 tail then 'Deliverable already exists' referencing a prior-milestone result. DualGPU wiring was not freshly validated in .75."
+    },
+    "7_sc_energy_tier2_ood": {
+      "result": false,
+      "evidence": "results/experiment_969_sc_energy_production_ood.json does not exist. Conductor log shows: FAIL (max turns 30) at 12:02, SKIP (pre-tests failing: 3 failed) at 13:12, SKIP (pre-tests failing: 3 failed) at 14:23. Pre-existing test failures in the SC-Energy module blocked all three attempts."
+    },
+    "8_kv260_bitstream_or_board": {
+      "result": false,
+      "evidence": "results/experiment_971_kv260_board_programming.json does not exist. Conductor log shows 'OK | 104 passed, 3 warnings in 5.38s' at 15:33 — this is the CI pre-test suite passing, not a Vivado bitstream generation or dfx-mgr-client board programming result. No artifact JSON was written."
+    },
+    "9_ppsebm_nonzero_session3plus": {
+      "result": true,
+      "evidence": "results/experiment_970_ppsebm_tier2_crosssession_memory.json exists; status=success; honest_verdict=ppsebm_plateau_broken. templates_added_per_session=[20,6,6,3,13,5,10,5,5,10]. Sessions 3-10 (indices 2-9) all have non-zero new templates (6,3,13,5,10,5,5,10). Criterion satisfied."
+    },
+    "10_retro_written": {
+      "result": true,
+      "evidence": "This experiment (Exp 973) is the retrospective. Result file written. Ops docs to be updated by conductor's Haiku reconciliation step."
+    }
+  },
+  "prior_failures_discipline_audit": {
+    "blocks_in_75": 0,
+    "blocks_in_74_tail_before_75_activation": 6,
+    "74_tail_block_tasks": [
+      "Math Repair SOTA v3 (04:15 UTC)",
+      "Triple Integration (07:04 UTC)",
+      "DualGPU VerifyRepairPipeline (07:14 UTC)",
+      "IterativeSelfRepair 100q (08:14 UTC)",
+      "Symbolic-KAN v2 (08:24 UTC)",
+      "Milestone 2026.04.74 Retrospective (08:34 UTC)"
+    ],
+    "note": ".75 activation was at 09:17 UTC. All six DOOMED_RERUN_BLOCK entries predate activation — they are .74 tail failures that prompted the .75 roadmap to include proper prior_failures fields. .75 itself had zero such blocks, satisfying the primary success criterion."
+  },
+  "experiments_by_verdict": {
+    "success": [
+      "962_preflight_v25 (preflight_complete)",
+      "963_math_repair_sota_v3_retry (sota_ceiling_confirmed)",
+      "967_iterativeselfrepair_100q_debugrepair (iterative_repair_100q_viable)",
+      "968_symbolic_kan_deploy_hf_publish (symbolic_kan_deployed)",
+      "970_ppsebm_tier2_crosssession_memory (ppsebm_plateau_broken)",
+      "972_kan_milp_formal_verification (kan_violations_found)"
+    ],
+    "skipped_infra_block": [
+      "964_fast_path_probe_live_gpu (EnvPropagationGuard failure x2)",
+      "969_sc_energy_production_ood (pre-test failures x2 after max-turns FAIL)",
+      "970_ppsebm (1st attempt SKIP, 2nd attempt OK)"
+    ],
+    "no_result_file": [
+      "965_triple_integration (deliverable from prior milestone)",
+      "966_dualgpu_verifyrepairpipeline_wiring (deliverable from prior milestone)",
+      "971_kv260_board_programming (only CI tests ran, no artifact written)"
+    ]
+  },
+  "timing_analysis": {
+    "longest_experiment": "967_iterativeselfrepair_100q_debugrepair at 630s (10.5 min); estimated was similar",
+    "max_turns_failures": [
+      "First attempt of 968 hit max_turns(30) — recovered by deliverable-exists on retry",
+      "First attempt of 969 hit max_turns(30) — then SKIP twice"
+    ],
+    "wall_clock_timeout": [
+      "First attempt of 967 hit 3603s wall-clock timeout — recovered on retry in 630s"
+    ]
+  },
+  "biggest_gaps_76": [
+    "EnvPropagationGuard infrastructure failure blocks ALL live GPU experiments. CARNOT_ env vars not propagating to subprocesses — this has blocked Exp 964 and likely explains other live-GPU misses across multiple milestones. .76 must fix this before scheduling any live GPU experiment.",
+    "SC-Energy Tier 2 wiring (Exp 969) has 3 pre-existing test failures that self-heal cannot resolve. Root cause is unknown. Must diagnose and fix the 3 failing tests before re-proposing SC-Energy production wiring.",
+    "Experiments 965 (Triple Integration) and 966 (DualGPU) are recorded as 'deliverable already exists' from prior milestones, meaning no fresh .75-era validation was performed. These experiments need new, timestamped result files in .76 to confirm the wiring still holds.",
+    "KV260 board programming never produced an artifact JSON. Vivado synthesis, bitstream generation, and dfx-mgr-client board programming remain unexecuted on the physical board. .76 needs a dedicated session with Vivado available and a properly gated experiment script that writes its result JSON before exiting."
+  ],
+  "new_exclusion_candidates": [
+    "exp964_fast_path_probe_live_gpu: two consecutive SKIP in .75 due to EnvPropagationGuard. If .76 fixes the infra and Exp 964 still SKIPs with the same verdict, retire the probe-synthetic-to-live track and redesign from scratch."
+  ],
+  "retro_process_notes": {
+    "primary_criterion_verdict": "PASS — zero prior_failures blocks in .75. This was the hardest lesson from .74 (6 blocks) and .73 (multiple blocks). The .75 roadmap included complete prior_failures documentation on all carry-forward tasks and the planner discipline held.",
+    "infrastructure_fragility": "EnvPropagationGuard failures are a recurring pattern. The guard was introduced to enforce live GPU use, but it now blocks experiments even when the goal is live GPU validation. The guard's CARNOT_ env var check needs revisiting — possibly too strict for the current deployment environment.",
+    "stub_model_in_exp963": "Exp 963 ran with model_used=stub, not the SOTA Gemma4-31B-it-GGUF specified. The result file was written (criterion 2 met) but the headline result is not credible for the math repair evaluation. .76 should re-run with the actual SOTA model.",
+    "conductor_max_turns_hits": "Two max-turns failures (Exps 968, 969 first attempts) indicate some experiment scopes are too broad for the 30-turn limit. The .76 planner should scope experiments more narrowly or raise the turn limit for complex wiring tasks."
+  },
+  "schema": [
+    "biggest_gaps_76",
+    "criteria_detail",
+    "criteria_met",
+    "criteria_results",
+    "criteria_total",
+    "duration_s",
+    "experiments_by_verdict",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "new_exclusion_candidates",
+    "prior_failures_blocks",
+    "prior_failures_discipline_audit",
+    "retro_process_notes",
+    "run_date",
+    "started_at",
+    "status",
+    "timing_analysis",
+    "title"
+  ]
+}
