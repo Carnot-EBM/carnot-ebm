@@ -2921,3 +2921,7 @@ python/ |
 | 2026-04-27 13:12 UTC | SC-Energy Production OOD Detector — Wire as Tier 2 | SKIP | Pre-tests failing, self-heal failed: 3 failed, 160 passed, 3 warnings in 24.02s |
 | 2026-04-27 14:23 UTC | SC-Energy Production OOD Detector — Wire as Tier 2 | SKIP | Pre-tests failing, self-heal failed: 3 failed, 160 passed, 3 warnings in 24.49s |
 | 2026-04-27 14:59 UTC | PPSEBM Tier 2 Cross-Session Memory — Progressive P | SKIP | Pre-tests failing, self-heal failed: 3 failed, 168 passed, 7 warnings in 25.35s |
+| 2026-04-27 15:13 UTC | PPSEBM Tier 2 Cross-Session Memory — Progressive P | OK | 81 passed, 3 warnings in 2.93s |
+| 2026-04-27 15:33 UTC | KV260 v4 FPGA Board Programming — Bitstream + Hard | OK | 104 passed, 3 warnings in 5.38s |
+| 2026-04-27 15:47 UTC | KAN Formal Verification via MILP — Property Checki | OK | 122 passed, 1 skipped, 3 warnings in 3.72s |
+| 2026-04-27 16:01 UTC | Milestone 2026.04.75 Retrospective | OK | 139 passed, 1 skipped, 3 warnings in 4.68s |
