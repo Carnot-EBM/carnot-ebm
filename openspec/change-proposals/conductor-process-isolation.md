@@ -281,6 +281,69 @@ spawned subagent process groups are dead within 30 sec. Without
 `--reap-orphans`, the conductor logs the orphans it detected and
 the operator can decide.
 
+### Exp F — Host-health pre-flight check at iteration start
+
+**Deliverable:**
+new module `python/carnot/conductor/host_health.py` with
+`check_and_log()` returning `(status, reasons)` +
+edits to `scripts/research_conductor.py:research_step()` to call
+`check_and_log()` after the existing `preflight_gpu_reap()` and
+gate the rest of the iteration on the result +
+`tests/python/test_conductor_host_health.py` +
+`results/experiment_<N>_conductor_host_health.json`.
+
+**What it does:**
+
+The 2026-04-26 swap-saturation incident was visible through `free -g`
+and `pgrep` for ~99 minutes before any process noticed. The conductor
+was actively running iterations during that window — it should have
+seen the host degrading and refused to add load.
+
+This experiment merges the standalone `scripts/host_health_check.sh`
+shipped during the incident response into the conductor's
+iteration-start sequence, alongside the existing
+`preflight_gpu_reap()`:
+
+```python
+def research_step(...):
+    # Existing pre-flight (GPU process reaper)
+    preflight_gpu_reap()
+
+    # New: host-health pre-flight
+    from carnot.conductor.host_health import check_and_log
+    health_status, reasons = check_and_log(logger)
+    if health_status == "CRITICAL":
+        # Kill known-orphan candidates (Exp E orphan-tracker entries
+        # whose conductor_pid is dead), then back off
+        from carnot.conductor.orphan_tracker import kill_orphans
+        kill_orphans(force=True)
+        time.sleep(60)
+        return False  # skip this iteration
+    elif health_status == "ALERT":
+        logger.warning("Host health ALERT: %s — proceeding cautiously", reasons)
+        # No subagent kill; just longer cooldown before next spawn
+
+    # Continue with the rest of research_step
+    ...
+```
+
+The host_health module wraps the same checks the standalone shell
+script does (swap GB, orphan experiment count, orphan pytest count,
+zombie count) plus the leak-symptoms-required logic (high swap is
+ALERT only when paired with orphans or zombies > 10).
+
+**Acceptance:**
+  - During milestone runs, the conductor emits a host-health log
+    line every iteration (similar to the GPU reaper's existing
+    log line). The standalone ScheduleWakeup-driven check shipped
+    today becomes redundant and is removed.
+  - When the orphan-pytest pattern recurs, the conductor detects
+    it within one iteration (10 min) instead of needing an
+    operator-attended periodic check.
+  - CRITICAL conditions trigger the orphan-tracker's kill path
+    (Exp E) automatically — no operator action required for
+    the cleanup.
+
 ## Non-goals
 
 - **Not building a process supervisor.** The conductor stays the
