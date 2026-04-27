@@ -1,0 +1,78 @@
+{
+  "experiment": 956,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-27",
+  "started_at": "2026-04-27T07:14:04.761136+00:00",
+  "finished_at": "2026-04-27T07:14:04.761136+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "DualGPU VerifyRepairPipeline Wiring \u2014 Production Integration",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "7 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp632-dualgpu-13b-proof",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u274c Failed: dualgpu_model_load_failed"
+    },
+    {
+      "upstream": "exp649-dualgpu-13b-v2",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: model_not_cached"
+    },
+    {
+      "upstream": "exp685-dualgpu-eorm-jepa",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: dualgpu_retrain_success"
+    },
+    {
+      "upstream": "exp746-dualgpu-eorm-jepa-retrain",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: dualgpu_retrain_validated"
+    },
+    {
+      "upstream": "exp913-dualgpu-production-wiring",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: dualgpu_wired_partial_speedup"
+    },
+    {
+      "upstream": "exp921-dualgpu-throughput-benchmark",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp931-combined-math-estimation-pipeline",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

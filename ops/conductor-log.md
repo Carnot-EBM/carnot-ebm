@@ -2896,3 +2896,5 @@ python/ |
 | 2026-04-27 04:33 UTC | Fast-Path Probe Live GPU Validation — SpilledEnerg | FAIL | Claude Code error: Error: Reached max turns (30) |
 | 2026-04-27 05:43 UTC | Fast-Path Probe Live GPU Validation — SpilledEnerg | SKIP | Pre-tests failing, self-heal failed: "EnvPropagationGuard failed to load CARNOT_ |
 | 2026-04-27 06:53 UTC | Fast-Path Probe Live GPU Validation — SpilledEnerg | SKIP | Pre-tests failing, self-heal failed: "EnvPropagationGuard failed to load CARNOT_ |
+| 2026-04-27 07:04 UTC | Triple Integration — SC-Energy + SpilledEnergy + T | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-27 07:14 UTC | Triple Integration — SC-Energy + SpilledEnergy + T | OK | Deliverable already exists in repo |
