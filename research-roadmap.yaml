@@ -21,8 +21,8 @@ tasks:
     \ not already present:\n    - arXiv 2502.11250 (Uncertainty-Aware Step Verification via CoT Entropy)\n\
     \    - arXiv 2604.20701 (Divide-and-Conquer NN Surrogates for Sparse Ising)\n    - arXiv 2602.17750\
     \ (iCKANs: Constitutive KANs with symbolic regression)\nWrite result artifact at results/experiment_952_preflight_v23.json\
-    \ with fields:\n  manifest_entries_added: [list of experiment IDs]\n  sota_models_ready: {model_name:\
-    \ bool}\n  arxiv_papers_filed: [list]\n  honest_verdict: \"preflight_complete\" | \"preflight_partial\"\
+    \ with fields:\n  manifest_entries_added: [list of experiment IDs]\n  sota_models_ready: (model_name:\
+    \ bool)\n  arxiv_papers_filed: [list]\n  honest_verdict: \"preflight_complete\" | \"preflight_partial\"\
     \n\n\nExpected result schema:\narxiv_papers_filed: list\nhonest_verdict: str\nmanifest_entries_added:\
     \ list\nsota_models_ready: dict\n"
   priority: critical
@@ -158,7 +158,7 @@ tasks:
   prompt: "Scale IterativeSelfRepair from 25q (Exp 905) to 100q AND add the DebugRepair\nhypothesis step\
     \ from arXiv 2604.19305.\nDebugRepair hypothesis step: before generating a repair, generate a hypothesis\n\
     about WHY the initial response is wrong. The hypothesis is fed into the repair\nprompt as context:\
-    \ \"My diagnosis of the error: {hypothesis}. Now generate a\ncorrected response.\" arXiv 2604.19305\
+    \ \"My diagnosis of the error: (hypothesis). Now generate a\ncorrected response.\" arXiv 2604.19305\
     \ reports +8.2pp HumanEval with this step.\nMODEL_SPECS:\n  primary: unsloth/gemma-4-31B-it-GGUF\n\
     \  fallback: unsloth/Qwen3.6-35B-A3B-GGUF\nDomains: code (100 HumanEval problems) + math (50 GSM8K\
     \ problems).\nMetrics:\n  - code_pass_at_1_before, code_pass_at_1_after, code_repair_delta\n  - math_pass_at_1_before,\

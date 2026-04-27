@@ -113,3 +113,22 @@ retired_experiments:
     KV260 FPGA track remains viable but PIMI specifically is retired.
   retired_milestone: "2026.04.70"
   experiment_ids: [860, 876, 889, 901, 914]
+
+# Added by Exp 952 preflight — governance retirement for persistent zero-progress carryovers
+- experiment_id: 786
+  completed_milestone: "2026.04.74"
+  reason: |
+    Gemma4 OOM Fix v3 + VR Threshold Grid has appeared for 4+ consecutive milestones with
+    honest_verdict=blocked_no_live_gpu. Root cause: no live GPU available during conductor
+    runs. The OOM fix scope is superseded by the SOTA GGUF pre-download preflight (Exp 952).
+    Retired to prevent continued wall-time burn with zero research value.
+  retire_if_same_verdict: true
+
+- experiment_id: 641
+  completed_milestone: "2026.04.74"
+  reason: |
+    HermesVerifierAdapter v2 Live Step-by-Step Generation Loop returned hermes_v2_no_improvement
+    verdict. RETRO-070 critical path was 14+ consecutive milestone carryovers with no improvement
+    signal. The Hermes v2 live-loop approach is superseded by paragraph-boundary batching
+    (Exp 841) and the VJEPA/DualGPU migration. Retired to free conductor capacity.
+  retire_if_same_verdict: true
