@@ -97,8 +97,10 @@ Not content itself, but signals to prioritise what to read next.
   explicit logical rules. SC-Energy provides a learned alternative that generalizes across domains
   without hand-crafted rules. Complementary to per-step verification — catches contradictions
   spanning multiple statements.
-- **Concrete experiment:** Exp 939 — SC-Energy Set Consistency Verifier (Milestone 2026.04.72, Phase 4).
-- **When to incorporate:** Milestone 2026.04.72 — Phase 4.
+- **Concrete experiment:** Exp 944 — SC-Energy Set Consistency v2. AUROC=0.9017 on GSM8K-derived
+  coherent vs contradictory sets. Verdict: sc_energy_viable. First actual run of SC-Energy in
+  this project (Exp 939 was blocked by gate-check failure, not algorithmic failure).
+- **Status:** Implemented. SCEnergyModel in python/carnot/models/sc_energy.py.
 
 ### GRPO-VPS: Verifiable Process Supervision for Reasoning
 - **Paper:** arXiv 2604.20659 (April 2026)
