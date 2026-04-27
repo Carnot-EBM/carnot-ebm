@@ -262,9 +262,9 @@ def main() -> int:
 
         print(f"\n  Avg GPU vs thrml speedup: {avg_gpu_speedup:.0f}x")
         print(
-            f"  Max GPU vs thrml speedup: {max_gpu_speedup:.0f}x (at {max(results, key=lambda r: r[
-                    'gpu_speedup'
-                ])['n_vars']} vars)"
+            f"  Max GPU vs thrml speedup: {max_gpu_speedup:.0f}x (at {
+                max(results, key=lambda r: r['gpu_speedup'])['n_vars']
+            } vars)"
         )
         print(f"  Avg GPU vs CPU speedup:   {avg_gpu_vs_cpu:.1f}x")
         print(f"  GPU avg quality:   {gpu_quality * 100:.1f}%")
@@ -284,9 +284,9 @@ def main() -> int:
 
         print(f"\n  Avg speedup: {avg_speedup:.1f}x")
         print(
-            f"  Max speedup: {max_speedup:.1f}x (at {max(results, key=lambda r: r[
-                    'cpu_speedup'
-                ])['n_vars']} vars)"
+            f"  Max speedup: {max_speedup:.1f}x (at {
+                max(results, key=lambda r: r['cpu_speedup'])['n_vars']
+            } vars)"
         )
         print(f"  Parallel avg quality: {par_quality * 100:.1f}%")
         print(f"  thrml avg quality:    {thrml_quality * 100:.1f}%")
