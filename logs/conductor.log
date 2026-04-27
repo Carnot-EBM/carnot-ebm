@@ -7038,3 +7038,29 @@ cargo check.....................
 2026-04-26 22:27:21,798 [conductor] RESEARCH STEP: Exp 951: Milestone 2026.04.73 Retrospective (CPU)
 2026-04-26 22:27:21,798 [conductor] ============================================================
 2026-04-26 22:27:22,538 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 22:27:22,826 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 22:27:22,826 [conductor] Running test suite (smart subset)...
+2026-04-26 22:27:29,245 [conductor] Pre-check: 81 passed, 3 warnings in 3.40s
+2026-04-26 22:27:29,423 [conductor] Injected 37 symbol signatures from 1 files (AST outlines)
+2026-04-26 22:27:29,423 [conductor] Calling Claude Code (20 max turns, model: sonnet)...
+Deliverable written. Summary:
+
+**`results/experiment_951_milestone_retro_73.json`** — 10/12 criteria met.
+
+**Passed (10):** preflight_complete, sc_energy_actually_ran, thinkprm_tier29_viable, tier28_live_gpu_confirmed, drift_depth_recurrent_improves, symbolic_kan_real_fover, spilled_energy_viable, emvl_speedup_confirmed, research_references_updated, retro_complete.
+
+**Failed (2):** `math_repair_sota_working` (Exp 942 result file missing — never ran), `math_repair_scratchpad_viable` (Exp 943 correctly gate-blocked by missing upstream artifact).
+
+**RETROs closed in .73:** RETRO-HEURISTIC-RPRM-FLAT-SIGNAL, RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS, RETRO-SC-ENERGY-GATE-DISCIPLINE. RETRO-MATH-REPAIR-MODEL-CEILING remains open entering .74.
+2026-04-26 22:30:08,518 [conductor] Claude Code completed (exit 0)
+2026-04-26 22:30:08,533 [conductor] Changes:
+logs/conductor.log | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+2026-04-26 22:30:08,586 [conductor] DOGFOOD: Verification complete (total: 611 checks, 60 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 22:30:08,587 [conductor] Running test suite (smart subset)...
+2026-04-26 22:30:15,086 [conductor] Post-check: 81 passed, 3 warnings in 3.35s
+2026-04-26 22:30:20,139 [conductor] Commit failed: Detect hardcoded secrets.....................................................Passed
+rustfmt..................................................(no files to check)Skipped
+cargo check.....................
+2026-04-26 22:30:20,140 [conductor] Running post-commit documentation reconciliation...
+2026-04-26 22:30:20,149 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='milestone_complete', label='✅ Complete'
