@@ -1,0 +1,68 @@
+{
+  "experiment": 962,
+  "title": "Preflight v25 \u2014 Exp906 Root Cause + Exp954 Audit + SOTA Model Verify + Manifest Check",
+  "run_date": "20260427",
+  "started_at": "2026-04-27T09:30:01Z",
+  "finished_at": "2026-04-27T09:30:01Z",
+  "status": "success",
+  "honest_verdict": "preflight_complete",
+  "exp906_root_cause": "50q_scale_x_per_question_latency: experiment ran 2-model x 50-problem sequential inference loop (~1605s pure compute) on fallback E4B model. Conductor overhead adds ~8 min for total ~35 min wall time. Not a model-download issue (inference_mode=fallback_transformers_only). Not a repair-loop overrun (12/50 problems hit max_retries=3, bounded). Root cause (c): cumulative latency across 50q scale is inherent to scope.",
+  "exp906_root_cause_class": "c_50q_scale_x_per_question_latency",
+  "exp906_fix_applied": "CARNOT_EXPERIMENT_TIMEOUT_MINUTES=40 documented as required env var for Exp 906 and successors. Experiment completed successfully in the 2026.04.74 run (strong_improvement_code_repair_milestone_achieved); not retired \u2014 root cause is manageable with correct timeout budget.",
+  "exp906_details": {
+    "found": true,
+    "result_file": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_906_code_repair_50q_scaleup.json",
+    "duration_s": 1605.274,
+    "duration_min": 26.8,
+    "inference_mode": "fallback_transformers_only",
+    "models_used": [
+      "google/gemma-4-E4B-it"
+    ],
+    "n_problems": 50,
+    "mean_per_problem_s": 15.9,
+    "n_max_retries_hit": 12,
+    "honest_verdict_from_result": "strong_improvement_code_repair_milestone_achieved",
+    "root_cause": "50q_scale_x_per_question_latency: experiment ran 2-model x 50-problem sequential inference loop (~1605s pure compute) on fallback E4B model. Conductor overhead adds ~8 min for total ~35 min wall time. Not a model-download issue (inference_mode=fallback_transformers_only). Not a repair-loop overrun (12/50 problems hit max_retries=3, bounded). Root cause (c): cumulative latency across 50q scale is inherent to scope.",
+    "root_cause_class": "c_50q_scale_x_per_question_latency",
+    "fix_applied": "CARNOT_EXPERIMENT_TIMEOUT_MINUTES=40 documented as required env var for Exp 906 and successors. Experiment completed successfully in the 2026.04.74 run (strong_improvement_code_repair_milestone_achieved); not retired \u2014 root cause is manageable with correct timeout budget."
+  },
+  "exp954_never_launched": true,
+  "sota_models_ready": {
+    "unsloth/gemma-4-31B-it-GGUF": true,
+    "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+    "unsloth/gemma-4-26B-A4B-it-GGUF": true
+  },
+  "sota_all_ready": true,
+  "manifest_verified": true,
+  "manifest_entries_found": [
+    786,
+    627,
+    603,
+    641
+  ],
+  "manifest_entries_required": [
+    786,
+    627,
+    603,
+    641
+  ],
+  "schema": [
+    "exp906_details",
+    "exp906_fix_applied",
+    "exp906_root_cause",
+    "exp906_root_cause_class",
+    "exp954_never_launched",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "manifest_entries_found",
+    "manifest_entries_required",
+    "manifest_verified",
+    "run_date",
+    "sota_all_ready",
+    "sota_models_ready",
+    "started_at",
+    "status",
+    "title"
+  ]
+}

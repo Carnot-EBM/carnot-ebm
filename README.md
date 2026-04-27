@@ -104,6 +104,7 @@ traceable to a checked-in experiment artifact under `results/`.
 | SpilledEnergy Tier 0 training-free hallucination detector | **AUROC=1.0**, spill_separation=0.638 | Exp 949 |
 | ThinkPRM Tier 2.9 generative CoT step verification | **AUROC=0.99** vs heuristic R-PRM baseline 0.85 (+0.14) | Exp 945 |
 | SC-Energy Set Consistency verification | **AUROC=0.9017** | Exp 944 |
+| KV260 Ising Sampler v4 RTL (N=128, K=16, sparse E-MVL, yosys synthesis) | **27,136 LUTs** (62% of 43,500 budget); 4/4 sim checks passed | Exp 958 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -138,7 +139,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  across 951 experiments and 79 milestones, structured as six phases with
+  across 961 experiments and 80 milestones, structured as six phases with
   a plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -342,7 +343,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 951 experiments across 79 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 961 experiments across 80 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

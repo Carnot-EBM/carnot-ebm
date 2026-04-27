@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-27 Milestone 2026.04.75 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-27T08:51:26Z | 2026-04-27T09:07:14Z | Planned milestone 2026.04.75 "Prior-Failures Recovery + DualGPU Wire + SC-Energy OOD + KV260 Board Programming". Read 10 project files + all .74 experiment result JSONs (952-961). Root cause of .74 failure: 7/10 experiments blocked by missing prior_failures fields in YAML; conductor gate-checker correctly blocked all 7. JEPA permanently retired (Exp 957, OOD AUC=0.2812; 7 consecutive versions v17-v23 below 0.75 gate). SC-Energy (AUROC=0.9017) designated Tier 2 replacement. Exp 954 (Fast-Path Probe) never launched — likely queue runner stopped after consecutive blocks. KV260 v4 RTL synthesized (27136 LUTs, Exp 958). Arxiv scan: 3 new papers added to research-references.md (arXiv 2602.06737 KAN MILP Verification → Exp 972, arXiv 2512.15658 PPSEBM Continual Learning → Exp 970, arXiv 2601.03600 ALERT Jailbreak Detection → deferred to .76). Identified 3 biggest gaps: (1) prior-failures planner discipline failure causing 70% block rate; (2) SC-Energy must replace JEPA as Tier 2; (3) KV260 RTL done but board not programmed. Wrote openspec/change-proposals/research-roadmap-v75.md (12 experiments Exps 962-973, dependency graph, 10 success criteria 8/10 to pass, RETRO closures). Wrote research-roadmap-next.yaml (12 tasks all with complete prior_failures fields — the critical fix from .74). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~130k |
+
+---
+
 ## Session: 2026-04-26 Milestone 2026.04.72 Planning
 
 ### Turn Log

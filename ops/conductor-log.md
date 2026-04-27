@@ -2906,3 +2906,16 @@ python/ |
 | 2026-04-27 08:24 UTC | IterativeSelfRepair 100q Scale-Up + DebugRepair Hy | OK | Deliverable already exists in repo |
 | 2026-04-27 08:24 UTC | Symbolic-KAN v2 Pipeline Deploy + HuggingFace Publ | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-04-27 08:34 UTC | Symbolic-KAN v2 Pipeline Deploy + HuggingFace Publ | OK | Deliverable already exists in repo |
+| 2026-04-27 08:34 UTC | Milestone 2026.04.74 Retrospective | DOOMED_RERUN_BLOCK | 12 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-04-27 08:44 UTC | Milestone 2026.04.74 Retrospective | OK | Deliverable already exists in repo |
+| 2026-04-27 09:07 UTC | Plan milestone 2026.04.75 | OK | 12 tasks proposed |
+| 2026-04-27 09:17 UTC | Milestone 2026.04.75 activated | OK | 12 tasks queued |
+| 2026-04-27 09:31 UTC | Preflight v25 — Exp 906 Diagnosis + .74 Block Audi | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-04-27 09:41 UTC | Preflight v25 — Exp 906 Diagnosis + .74 Block Audi | OK | Deliverable already exists in repo |
+| 2026-04-27 09:51 UTC | Math Repair SOTA v3 — Retry with Prior-Failures +  | OK | 91 passed, 3 warnings in 3.44s |
+| 2026-04-27 11:01 UTC | IterativeSelfRepair 100q + DebugRepair Hypothesis  | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
+| 2026-04-27 11:23 UTC | IterativeSelfRepair 100q + DebugRepair Hypothesis  | OK | 139 passed, 3 warnings in 3.66s |
+| 2026-04-27 11:39 UTC | Symbolic-KAN v2 Deploy + HuggingFace Publish (Retr | FAIL | Claude Code error: Error: Reached max turns (30) |
+| 2026-04-27 11:49 UTC | Symbolic-KAN v2 Deploy + HuggingFace Publish (Retr | OK | Deliverable already exists in repo |
+| 2026-04-27 12:02 UTC | SC-Energy Production OOD Detector — Wire as Tier 2 | FAIL | Claude Code error: Error: Reached max turns (30) |
+| 2026-04-27 13:12 UTC | SC-Energy Production OOD Detector — Wire as Tier 2 | SKIP | Pre-tests failing, self-heal failed: 3 failed, 160 passed, 3 warnings in 24.02s |
