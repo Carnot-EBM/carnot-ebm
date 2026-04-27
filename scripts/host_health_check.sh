@@ -13,7 +13,11 @@
 # ScheduleWakeup or a cron and surface a single line that's easy to
 # decide on.
 
-set -euo pipefail
+# Note on shell options: we deliberately do NOT use `set -e` or pipefail.
+# The pgrep calls below return non-zero when there are no matching
+# processes (the OK case), and pipefail would mistakenly treat that as
+# a script failure. We do `set -u` for unset-variable safety.
+set -u
 
 # Thresholds tuned against the 2026-04-26 incident peak:
 #   - swap reached 123 GB / 143 GB total (86%)
