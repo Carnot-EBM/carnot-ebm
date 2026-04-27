@@ -1,6 +1,52 @@
 # Carnot — Known Issues
 
-**Last Updated:** 2026-04-18
+**Last Updated:** 2026-04-27
+
+## NEXT-MILESTONE PRIORITIES (.77 planner, please pick these up)
+
+The 2026-04-27 24-hour session demonstrated that the conductor's
+operator-attention burden is unsustainable — the operator had to
+manually:
+  - reap orphan process trees (~1 every hour)
+  - SIGTERM runaway Sonnets that spawned duplicate experiment
+    invocations (twice in 4 hours)
+  - recover from broken `logs/conductor.log` write handles (~4
+    occurrences in the session)
+  - translate a schema-mismatched planner output (.74 would have
+    gone stillborn exactly like .69 without intervention)
+  - manually commit ~3 hours of accumulated conductor work that the
+    conductor's own commit pipeline failed to push (twice — 35-file
+    and 14-file commits)
+
+Two proposals exist that scope durable fixes for these patterns:
+
+  - **`openspec/change-proposals/conductor-supervisor.md`** (4 exps)
+    — external observer with heartbeat watchdog, claimed-vs-actual
+    state reconciliation, bounded auto-recovery whitelist (orphan
+    reap, conductor restart, log-handle reset), conductor-side
+    SIGUSR1 log-reopen handler. Catches every "conductor running but
+    something's wrong" failure mode that requires manual operator
+    attention today.
+
+  - **`openspec/change-proposals/roadmap-schema-validation.md`**
+    (3 exps) — Pydantic ResearchTask + Roadmap models validated at
+    planner output (re-prompt on failure) and at activation (refuse
+    to overwrite the active roadmap with malformed YAML). Prevents
+    the once-per-month schema-drift stillborn-milestone pattern.
+
+  - Bonus: **`openspec/change-proposals/conductor-otel-tracing.md`**
+    (5 exps) — depends on the supervisor; lower priority but the
+    natural next step. Puts every conductor iteration + subagent
+    spawn into Victoria Trace so the seven incident shapes from this
+    session each become single-trace queries.
+
+The `flock` single-run guard from `conductor-process-isolation.md`
+Exp B was direct-shipped on 2026-04-27 (commit 1b254b87) because of
+the operational urgency. The supervisor + schema-validation work is
+the natural next layer; the .77 planner should treat them as
+candidate top picks.
+
+## Original known-issues
 
 | # | Issue | Severity | Workaround |
 |---|-------|----------|------------|

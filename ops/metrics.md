@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-27 Milestone 2026.04.76 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-27T16:19:23Z | 2026-04-27T16:27:13Z | Planned milestone 2026.04.76 "EnvPropagation Fix + Production Tier 2 Deployment + KAN Repair". Read 10 project files + .75 experiment result JSONs (962-973) + operational retro JSON. .75 completed 4/10 criteria: math repair RETIRED (sota_ceiling), code repair 100q +10% viable, Symbolic-KAN deployed HF+IPFS, PPSEBM plateau broken CPU. Five experiments never produced results (964/965/966/969/971) due to EnvPropagationGuard failure and "deliverable already exists" shortcuts. Three biggest gaps: (1) EnvPropagationGuard blocks ALL live GPU — root cause of 5 missing experiment results; (2) SC-Energy Tier 2 has 3 test failures blocking deployment; (3) KV260 board still never programmed (7 milestones after arrival). Arxiv scan: 3 new papers added to research-references.md (arXiv 2512.02323 LSB Parallelizable Boltzmann Sampler, arXiv 2505.15960 Generalizable PRM via formal annotations, Nature Comms 2025 Thermodynamic SPU). Wrote openspec/change-proposals/research-roadmap-v76.md (12 experiments Exps 974-985, 10 success criteria, dependency graph). Wrote research-roadmap-next.yaml (12 tasks with all prior_failures fields, gated_on fields, max_turns). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~140k |
+
+---
+
 ## Session: 2026-04-27 Milestone 2026.04.75 Planning
 
 ### Turn Log

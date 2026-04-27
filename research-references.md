@@ -33,6 +33,58 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-27 arxiv Scan (Milestone 2026.04.76 Planning)
+
+### Unlocking the Power of Boltzmann Machines by Parallelizable Sampler and Efficient Temperature Estimation
+- **Paper:** arXiv 2512.02323 (December 2025)
+- **What:** Introduces Langevin Stochastic Boltzmann (LSB) sampler inspired by quantum-inspired
+  combinatorial optimization. Provides parallelized Boltzmann sampling with MCMC-comparable accuracy
+  using a Langevin-guided update rule rather than sequential Gibbs sampling. Also proposes conditional
+  expectation matching (CEM) for efficient temperature estimation. Reported speedups of 3-8x over
+  sequential Gibbs at equivalent accuracy on Ising constraint problems.
+- **Relevance to Carnot:** Carnot's parallel Ising sampler (183x faster than thrml, Exp 285) uses
+  a custom parallel Gibbs scheme. LSB provides a principled alternative: Langevin dynamics naturally
+  parallelize across all spins simultaneously, no checkerboard ordering needed. CEM temperature
+  estimation replaces manual beta tuning — critical for Tier 1 constraint learning where beta should
+  adapt per-domain. FPGA implementation path: Langevin update is a multiply-accumulate operation,
+  even more hardware-friendly than conditional Gibbs.
+- **Concrete experiment:** Exp 983 — Langevin SB Parallelizable Boltzmann Sampler: replace current
+  parallel Ising sampler with LSB on CPU; compare convergence rate and AUROC on the existing
+  constraint benchmark suite. Target: any improvement in convergence speed without AUROC regression.
+- **When to incorporate:** Milestone 2026.04.76 — Phase 3 (Exp 983).
+
+### Generalizable Process Reward Models via Formally Annotated Step-Level Data
+- **Paper:** arXiv 2505.15960 (May 2025)
+- **What:** Uses formal verification tools (Z3 + Isabelle) to automatically generate ground-truth
+  step-level labels for process reward models, eliminating human annotation. Improves PRM
+  generalization by 12-18% on out-of-distribution benchmarks vs PRMs trained on human-annotated data.
+  Key insight: formal verification is distribution-agnostic — labels are provably correct regardless
+  of the problem domain.
+- **Relevance to Carnot:** Carnot's FoVer-labeled CoT corpus (57 pairs, Exp 442) was annotated by
+  Z3-based VeriCoT. This paper confirms that Z3-labeled step data is higher quality than human-labeled
+  data for training verification models. Implication: Carnot should EXPAND the FoVer corpus with
+  additional Z3-labeled steps rather than collecting human labels. SC-Energy (Exp 944) trained on
+  a larger Z3-labeled corpus should outperform the current AUROC=0.9017 checkpoint.
+- **Concrete experiment:** Future milestone — SC-Energy v3 with expanded Z3-labeled corpus (500+
+  step pairs via automated Z3 annotation). Expected: AUROC improvement from 0.9017 toward 0.95+.
+- **When to incorporate:** Milestone 2026.04.77+ after .76 establishes Tier 2 wiring baseline.
+
+### Thermodynamic Computing System for AI Applications
+- **Paper:** Nature Communications, April 2025 (Coles et al.)
+- **What:** Demonstrates physics-based stochastic processing units (SPU) built from RLC circuits
+  performing Gaussian sampling and matrix inversion. SPUs integrate with FPGA for noise control
+  and digital interface. Hardware achieves sampling at ~1 ns/sample vs ~1 ms for software MCMC,
+  with ~100x lower power than GPU-based sampling.
+- **Relevance to Carnot:** Directly validates the Extropic TSU (thermodynamic sampling unit) path.
+  SPU architecture is essentially what Extropic Z1 targets: hardware Boltzmann sampling at
+  nanosecond speeds. The Nature Comms paper provides peer-reviewed validation that thermodynamic
+  computing is practical for constraint satisfaction, not just theoretical. Key for Phase 2
+  roadmap: FPGA Ising (KV260) → SPU prototype → Extropic Z1 is the validated escalation path.
+  SamplerBackend abstraction (REQ-KONA-006) should be tested with D-Wave as the next available
+  non-CPU backend before Extropic ships.
+- **When to incorporate:** Background reference for Phase 2/3 hardware roadmap. No new experiment
+  needed — validates existing hardware trajectory.
+
 ## 2026-04-26 arxiv Scan (Milestone 2026.04.72 Planning)
 
 ### The Topological Trouble With Transformers

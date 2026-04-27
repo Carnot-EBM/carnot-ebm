@@ -1,6 +1,13 @@
 # Roadmap schema validation: structural contract for planner output
 
-**Status:** Draft change proposal.
+**Status:** Draft change proposal. **REQUESTED FOR MILESTONE 2026.04.77.**
+The pattern that triggered the proposal recurred on 2026-04-27 when
+the .74 planner emitted a roadmap with `experiments:` instead of
+`tasks:` and other field renames; an operator had to manually
+translate the YAML before activation or .74 would have gone stillborn
+exactly like .69. Two stillborn-milestone-prevented incidents in
+under two weeks is enough evidence that the bare-lookup contract
+needs Pydantic enforcement.
 **Origin:** User question 2026-04-25 in response to milestone 2026.04.69
   going stillborn. The .69 planning agent (Sonnet, 50-turn) wrote
   `research-roadmap-next.yaml` with 12 tasks but omitted the `title:`

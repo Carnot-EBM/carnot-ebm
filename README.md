@@ -105,6 +105,9 @@ traceable to a checked-in experiment artifact under `results/`.
 | ThinkPRM Tier 2.9 generative CoT step verification | **AUROC=0.99** vs heuristic R-PRM baseline 0.85 (+0.14) | Exp 945 |
 | SC-Energy Set Consistency verification | **AUROC=0.9017** | Exp 944 |
 | KV260 Ising Sampler v4 RTL (N=128, K=16, sparse E-MVL, yosys synthesis) | **27,136 LUTs** (62% of 43,500 budget); 4/4 sim checks passed | Exp 958 |
+| Symbolic-KAN v2 production deployment + HuggingFace + IPFS dual distribution | **AUC=1.0** integration test; model live at huggingface.co/Carnot-EBM/symbolic-kan-v2 | Exp 968 |
+| PPSEBM cross-session memory (arXiv 2512.15658) | **Plateau broken**: 9/10 sessions add templates; cluster count 20 → 83 | Exp 970 |
+| KAN-MILP formal property verification (monotonicity, output range, boundary) | **3 properties verified** via MILP; 11 violations found in untrained model | Exp 972 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -139,7 +142,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  across 961 experiments and 80 milestones, structured as six phases with
+  across 973 experiments and 81 milestones, structured as six phases with
   a plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.

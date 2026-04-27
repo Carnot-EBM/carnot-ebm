@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 961 Experiments Across 80 Research Milestones
+## A Technical Report on 973 Experiments Across 81 Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-27
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **961
-experiments across 80 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **973
+experiments across 81 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -487,6 +487,30 @@ doomed-rerun-discipline gate (12 prior failures for the retrospective task
 alone), yielding only the two substantive deliverables above. RETRO-MATH-
 REPAIR-MODEL-CEILING (SOTA model timeout on 3 attempts) and the gate-cascade
 blocking most planned tasks remain open entering the next planning cycle.
+
+Milestone 2026.04.75 (the 81st) extended the record to **973 experiments**
+and completed the Symbolic-KAN production deployment, PPSEBM cross-session
+learning, and KAN formal verification tracks. **Symbolic-KAN v2** (Exp 968)
+was registered into the ThreeTierPipeline and published simultaneously to
+HuggingFace (huggingface.co/Carnot-EBM/symbolic-kan-v2) and IPFS
+(CID: QmY2pZEFzH1bD2LMWLWMEEHAJUKZgSZhe7VbiryYecCjuF), satisfying the
+distribution-mirroring rule — AUC=1.0 on the integration test confirms
+end-to-end pipeline registration. **PPSEBM cross-session memory** (Exp 970,
+arXiv 2512.15658) broke the plateau that had stalled template accumulation at
+session 2 since Exp 748: 9 of 10 sessions added new templates, growing the
+cluster count from 20 to 83 across the 10-session run (plateau_broken=True);
+the progressive parameter selection approach prevents the early saturation seen
+in the simple cosine-distance baseline. **KAN-MILP formal property
+verification** (Exp 972) established a new formal-methods track for the
+project: MILP constraints on KAN spline knots verified three correctness
+properties (monotonicity, output range, boundary conditions), exposing 11
+violations in an untrained model — the first application of formal
+verification to EBM architectures in this project. On the negative side,
+**math repair SOTA ceiling** was confirmed (Exp 963): even with the external
+scratchpad technique applied to Gemma-4-31B, repair delta remained 0.0 at
+4.2% baseline on GSM8K — a clean honest negative that retires the
+scratchpad-repair hypothesis and defers math repair improvement to a future
+architecture change.
 
 ---
 
