@@ -2880,3 +2880,4 @@ python/ |
 | 2026-04-27 00:10 UTC | Exp 944: SC-Energy Set Consistency v2 — All 8 Prio | OK | 81 passed, 3 warnings in 2.92s |
 | 2026-04-27 00:27 UTC | Exp 945: ThinkPRM Tier 2.9 — Generative CoT Step V | OK | 81 passed, 3 warnings in 5.32s |
 | 2026-04-27 00:48 UTC | Exp 946: Tier 2.8 DraftConditioned Live GPU Valida | OK | 81 passed, 3 warnings in 5.89s |
+| 2026-04-27 01:04 UTC | Exp 947: DRIFTProbe v3 Depth-Recurrent — Learned A | OK | 81 passed, 3 warnings in 5.90s |
