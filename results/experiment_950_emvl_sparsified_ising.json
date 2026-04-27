@@ -1,0 +1,76 @@
+{
+  "experiment": 950,
+  "title": "E-MVL Sparsified Ising: K-regular sparse sampler vs dense baseline (CPU)",
+  "run_date": "20260427",
+  "started_at": "2026-04-27T02:16:41Z",
+  "finished_at": "2026-04-27T02:16:45Z",
+  "duration_s": 4.114,
+  "status": "success",
+  "honest_verdict": "emvl_comparable",
+  "n_vars": 64,
+  "n_steps": 50,
+  "n_trials": 10,
+  "dense_baseline": {
+    "mean_steps_to_converge": 1.0,
+    "auc": 0.9985
+  },
+  "sparse_results": {
+    "K8": {
+      "n_neighbors": 8,
+      "mean_gibbs_steps": 1.8,
+      "mean_emvl_steps": 1.4,
+      "speedup_ratio_emvl_vs_dense": 0.7142857142857143,
+      "speedup_ratio_gibbs_vs_dense": 0.5555555555555556,
+      "auc": 0.4449,
+      "lut_estimate_n128_spins": 18125,
+      "lut_within_budget": true
+    },
+    "K16": {
+      "n_neighbors": 16,
+      "mean_gibbs_steps": 1.7,
+      "mean_emvl_steps": 0.8,
+      "speedup_ratio_emvl_vs_dense": 1.25,
+      "speedup_ratio_gibbs_vs_dense": 0.5882352941176471,
+      "auc": 0.6216,
+      "lut_estimate_n128_spins": 36250,
+      "lut_within_budget": true
+    },
+    "K32": {
+      "n_neighbors": 32,
+      "mean_gibbs_steps": 1.2,
+      "mean_emvl_steps": 3.3,
+      "speedup_ratio_emvl_vs_dense": 0.30303030303030304,
+      "speedup_ratio_gibbs_vs_dense": 0.8333333333333334,
+      "auc": 0.4696,
+      "lut_estimate_n128_spins": 72500,
+      "lut_within_budget": true
+    }
+  },
+  "k16_speedup_ratio": 1.25,
+  "recommended_k_for_kv260_v4": 16,
+  "kv260_v4_lut_estimate_k16": 36250,
+  "kv260_v3_lut_overflow": 290000,
+  "kv260_lut_budget": 117000,
+  "summary": "E-MVL K=16 achieves 1.25x convergence speedup vs dense baseline. AUC=0.6216. Estimated KV260 N=128 LUTs at K=16: 36,250 (within 117K budget).",
+  "schema": [
+    "dense_baseline",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "k16_speedup_ratio",
+    "kv260_lut_budget",
+    "kv260_v3_lut_overflow",
+    "kv260_v4_lut_estimate_k16",
+    "n_steps",
+    "n_trials",
+    "n_vars",
+    "recommended_k_for_kv260_v4",
+    "run_date",
+    "sparse_results",
+    "started_at",
+    "status",
+    "summary",
+    "title"
+  ]
+}

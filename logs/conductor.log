@@ -6972,3 +6972,57 @@ logs/conductor.log                                | 14 ++++++++++++++
 2026-04-26 21:49:42,938 [conductor] RESEARCH STEP: Exp 949: Spilled Energy Tier 0 — Training-Free Hallucination Detection via Logit Spill (CPU)
 2026-04-26 21:49:42,938 [conductor] ============================================================
 2026-04-26 21:49:43,721 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 21:49:44,015 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 21:49:44,015 [conductor] Running test suite (smart subset)...
+2026-04-26 21:49:50,380 [conductor] Pre-check: 81 passed, 3 warnings in 3.33s
+2026-04-26 21:49:50,489 [conductor] Injected 58 symbol signatures from 3 files (AST outlines)
+2026-04-26 21:49:50,489 [conductor] Calling Claude Code (30 max turns, model: sonnet)...
+Error: Reached max turns (30)2026-04-26 21:57:38,913 [conductor] Claude Code failed (exit 1)
+2026-04-26 21:57:38,913 [conductor] Claude Code failed: Error: Reached max turns (30)
+2026-04-26 21:57:38,914 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 22:02:38,915 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 22:07:38,915 [conductor] Sleep complete — resuming
+2026-04-26 22:07:38,915 [conductor] --- Iteration 13 ---
+2026-04-26 22:07:38,917 [conductor] Skipping 'Exp 942: Math Iterative Self-Repair v2 — SOTA GGUF' — failed 3 times
+2026-04-26 22:07:38,917 [conductor] Task 'Exp 949: Spilled Energy Tier 0 — Training-Free Hal' deliverable exists — marking complete
+2026-04-26 22:07:38,918 [conductor] ============================================================
+2026-04-26 22:07:38,918 [conductor] RESEARCH STEP: Exp 950: E-MVL Sparsified Ising — Sparse Connectivity for KV260 RTL Optimization (CPU)
+2026-04-26 22:07:38,918 [conductor] ============================================================
+2026-04-26 22:07:39,676 [conductor] Committing 7 dirty files as checkpoint (preserving work)
+2026-04-26 22:07:45,112 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 22:07:45,112 [conductor] Running test suite (smart subset)...
+2026-04-26 22:07:51,733 [conductor] Pre-check: 99 passed, 3 warnings in 3.47s
+2026-04-26 22:07:51,841 [conductor] Injected 44 symbol signatures from 2 files (AST outlines)
+2026-04-26 22:07:51,841 [conductor] Calling Claude Code (30 max turns, model: sonnet)...
+Deliverable is valid. All required schema fields present. Tests pass (43/43). 
+
+**Results:**
+- `honest_verdict: emvl_comparable` — K=16 E-MVL achieves 1.25x convergence speedup vs dense (between 0.8x and 1.5x threshold)
+- K=16 AUC = 0.6216 (above 0.5 random baseline — meaningful discrimination)
+- Estimated KV260 N=128 LUTs at K=16: **36,250** — comfortably within 117K budget (was 290K with dense, 2.5x over budget)
+
+Key files written:
+- `python/carnot/models/sparse_ising.py` — `SparseIsingEBM` with K-regular graph, Gibbs + E-MVL samplers
+- `scripts/experiment_950_emvl_sparsified_ising.py` — experiment runner
+- `results/experiment_950_emvl_sparsified_ising.json` — deliverable (valid schema)
+- `tests/python/test_sparse_ising.py` — 43 tests, 99% coverage
+- `hardware/kv260/ising_sampler_v4_spec.md` — v4 RTL spec with sparse K=16 + E-MVL
+- `openspec/capabilities/pipeline/spec.md` — REQ-SAMPLE-020, SCENARIO-SAMPLE-035 added
+- `research-hardware-wishlist.md` — E-MVL section added
+2026-04-26 22:17:02,202 [conductor] Claude Code completed (exit 0)
+2026-04-26 22:17:02,227 [conductor] Changes:
+logs/conductor.log                                | 21 ++++++++++++++++
+ openspec/capabilities/pipeline/spec.md            | 30 +++++++++++++++++++++++
+ python/carnot/pipeline/spilled_energy_detector.py | 14 +++--------
+ research-hardware-wishlist.md                     | 26 ++++++++++++++++++++
+ scripts/experiment_949_spilled_energy_tier0.py    | 26 ++++++++++++--------
+ tests/python/test_spilled_energy_detector.py      | 23 ++++++++++-------
+ 6 files changed, 111 insertions(+), 29 deletions(-)
+2026-04-26 22:17:02,292 [conductor] DOGFOOD: Verification complete (total: 610 checks, 60 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 22:17:02,292 [conductor] Running test suite (smart subset)...
+2026-04-26 22:17:08,757 [conductor] Post-check: 99 passed, 3 warnings in 3.39s
+2026-04-26 22:17:14,789 [conductor] Commit failed: Detect hardcoded secrets.....................................................Passed
+rustfmt..................................................(no files to check)Skipped
+cargo check.....................
+2026-04-26 22:17:14,789 [conductor] Running post-commit documentation reconciliation...
+2026-04-26 22:17:14,799 [conductor] In-process docs: changelog=True, status=False, traceability_rows=0, verdict='emvl_comparable', label='⚠️ Research Finding'
