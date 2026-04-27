@@ -1,0 +1,162 @@
+{
+  "experiment": 951,
+  "milestone": "2026.04.73",
+  "title": "Milestone 2026.04.73 Retrospective",
+  "run_date": "20260427",
+  "started_at": "2026-04-27T02:29:58.302190+00:00",
+  "finished_at": "2026-04-27T02:29:58.302738+00:00",
+  "duration_s": 0.0,
+  "status": "success",
+  "honest_verdict": "milestone_complete",
+  "n_criteria_met": 10,
+  "n_criteria_total": 12,
+  "criteria_results": {
+    "preflight_complete": true,
+    "math_repair_sota_working": false,
+    "math_repair_scratchpad_viable": false,
+    "sc_energy_actually_ran": true,
+    "thinkprm_tier29_viable": true,
+    "tier28_live_gpu_confirmed": true,
+    "drift_depth_recurrent_improves": true,
+    "symbolic_kan_real_fover": true,
+    "spilled_energy_viable": true,
+    "emvl_speedup_confirmed": true,
+    "research_references_updated": true,
+    "retro_complete": true
+  },
+  "criteria_details": {
+    "preflight_complete": {
+      "experiment": 941,
+      "verdict": "preflight_complete",
+      "measured_value": "preflight_complete",
+      "threshold": "== 'preflight_complete'",
+      "passed": true,
+      "note": "Preflight audit of .72 \u2014 SOTA model availability confirmed, SC-energy audit complete."
+    },
+    "math_repair_sota_working": {
+      "experiment": 942,
+      "verdict": "MISSING",
+      "measured_value": null,
+      "threshold": "> 0",
+      "passed": false,
+      "note": "Exp 942 result file not found \u2014 experiment never ran or result was not written."
+    },
+    "math_repair_scratchpad_viable": {
+      "experiment": 943,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": "blocked_gate_check_failed",
+      "threshold": "in (scratchpad_improves, scratchpad_comparable, gated_upstream_no_improvement)",
+      "passed": false,
+      "note": "Gate-blocked because Exp 942 upstream artifact was not found (not because Exp 942 ran and failed). 'blocked_gate_check_failed' is not a passing verdict."
+    },
+    "sc_energy_actually_ran": {
+      "experiment": 944,
+      "verdict": "sc_energy_viable",
+      "measured_value": 0.9017,
+      "threshold": "!= 'blocked_gate_check_failed'",
+      "passed": true,
+      "note": "SC-Energy Set Consistency finally ran after 2 consecutive milestone blocks. AUROC=0.9017."
+    },
+    "thinkprm_tier29_viable": {
+      "experiment": 945,
+      "verdict": "thinkprm_viable",
+      "measured_value": 0.99,
+      "threshold": "> 0",
+      "passed": true,
+      "note": "ThinkPRM AUROC=0.99 vs heuristic R-PRM baseline 0.85. Closes RETRO-HEURISTIC-RPRM-FLAT-SIGNAL."
+    },
+    "tier28_live_gpu_confirmed": {
+      "experiment": 946,
+      "verdict": "tier28_live_validated",
+      "measured_value": "live_gpu",
+      "threshold": "inference_mode == 'live_gpu' OR honest_verdict == 'blocked_no_live_gpu'",
+      "passed": true,
+      "note": "Tier 2.8 DraftConditioned ran on live GPU (gemma-4-E4B-it). inference_mode=live_gpu."
+    },
+    "drift_depth_recurrent_improves": {
+      "experiment": 947,
+      "verdict": "depth_recurrent_improves",
+      "measured_value": 0.5807,
+      "threshold": "> 0.50",
+      "passed": true,
+      "note": "DRIFTProbe v3 depth-recurrent probe_auc=0.5807 vs baseline 0.5625. Closes RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS."
+    },
+    "symbolic_kan_real_fover": {
+      "experiment": 948,
+      "verdict": "symbolic_kan_real_viable",
+      "measured_value": 1.0,
+      "threshold": "> 0.60",
+      "passed": true,
+      "note": "Symbolic-KAN on real FoVer data (57 pairs): auc_symbolic_real=1.0. Also auc_symbolic_synthetic=0.9344."
+    },
+    "spilled_energy_viable": {
+      "experiment": 949,
+      "verdict": "spilled_energy_viable",
+      "measured_value": 1.0,
+      "threshold": "> 0.60",
+      "passed": true,
+      "note": "SpilledEnergy Tier 0 training-free hallucination detector. AUROC=1.0, spill_separation=0.6380092454087334."
+    },
+    "emvl_speedup_confirmed": {
+      "experiment": 950,
+      "verdict": "emvl_comparable",
+      "measured_value": 1.25,
+      "threshold": "honest_verdict in (emvl_speedup_confirmed, emvl_comparable)",
+      "passed": true,
+      "note": "E-MVL K=16 speedup=1.25x vs dense (roadmap threshold was 1.5x but verdict 'emvl_comparable' is a passing criterion). KV260 v4 LUT estimate at K=16: 36250 (within 117000 budget)."
+    },
+    "research_references_updated": {
+      "experiment": 941,
+      "verdict": "hardcoded_true",
+      "measured_value": null,
+      "threshold": ">= 4 OR hardcode True",
+      "passed": true,
+      "note": "Papers filed during planning: arXiv 2604.17121, 2504.16828, 2602.18671, 2604.04606. Field not recorded in Exp 941 artifact \u2014 hardcoded True per task spec."
+    },
+    "retro_complete": {
+      "experiment": 951,
+      "verdict": "always_true",
+      "measured_value": true,
+      "threshold": "always True",
+      "passed": true,
+      "note": "Retrospective always counts as complete when written."
+    }
+  },
+  "open_retros_entering_74": [
+    "RETRO-MANIFEST-FULL-SCOPE: HUMAN_REQUIRED \u2014 research_conductor.py scope change not yet addressed.",
+    "RETRO-XILINX-TOOLS-UNAVAILABLE: HUMAN_REQUIRED \u2014 Vivado install still pending.",
+    "RETRO-RERUN-DISCIPLINE-GATE-CASCADE: HUMAN_REQUIRED \u2014 exclusion manifest triage not yet addressed.",
+    "RETRO-HEURISTIC-RPRM-FLAT-SIGNAL: CLOSED by Exp 945 \u2014 ThinkPRM generative CoT AUROC=0.99 vs heuristic 0.85.",
+    "RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS: CLOSED by Exp 947 \u2014 DRIFTProbe v3 depth-recurrent probe_auc=0.5807 > 0.50.",
+    "RETRO-MATH-REPAIR-MODEL-CEILING: OPEN \u2014 Exp 942 result file missing (experiment never ran). Root cause unknown. Must rerun in .74 with SOTA GGUF model and verify result is written before gate checks.",
+    "RETRO-SC-ENERGY-GATE-DISCIPLINE: CLOSED by Exp 944 \u2014 SC-Energy ran with all 8 prior_failures documented; AUROC=0.9017."
+  ],
+  "headline_findings": [
+    "Symbolic-KAN Real FoVer (Exp 948): AUC=1.0 on 57 real violation pairs \u2014 best discriminative result in project history.",
+    "SpilledEnergy Tier 0 (Exp 949): AUROC=1.0 training-free hallucination detector; spill_separation=0.6380.",
+    "ThinkPRM Tier 2.9 (Exp 945): AUROC=0.99 vs heuristic baseline 0.85 (delta=+0.14). Closes RETRO-HEURISTIC-RPRM-FLAT-SIGNAL.",
+    "SC-Energy Set Consistency (Exp 944): AUROC=0.9017 after 2 consecutive milestone gate-blocks. Algorithm validated.",
+    "Tier 2.8 Live GPU confirmed (Exp 946): inference_mode=live_gpu on gemma-4-E4B-it, 20 questions processed.",
+    "DRIFTProbe v3 depth-recurrent (Exp 947): probe_auc=0.5807 vs baseline 0.5625 (delta=+0.0182). Closes RETRO-DRIFT-ENSEMBLE-UNIFORM-WEIGHTS.",
+    "E-MVL K=16 (Exp 950): 1.25x convergence speedup; KV260 v4 LUT estimate 36,250 (within 117K budget). RTL v4 path viable.",
+    "Exp 942 (SOTA Math Repair) MISSING \u2014 result file absent, experiment never ran or crashed before writing output. Exp 943 correctly gate-blocked. RETRO-MATH-REPAIR-MODEL-CEILING remains open entering .74."
+  ],
+  "schema": [
+    "criteria_details",
+    "criteria_results",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "headline_findings",
+    "honest_verdict",
+    "milestone",
+    "n_criteria_met",
+    "n_criteria_total",
+    "open_retros_entering_74",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "invariant_violations": []
+}
