@@ -2904,3 +2904,5 @@ python/ |
 | 2026-04-27 08:04 UTC | KV260 v4 RTL — Sparse E-MVL Ising Sampler Implemen | OK | 81 passed, 3 warnings in 4.11s |
 | 2026-04-27 08:14 UTC | IterativeSelfRepair 100q Scale-Up + DebugRepair Hy | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-04-27 08:24 UTC | IterativeSelfRepair 100q Scale-Up + DebugRepair Hy | OK | Deliverable already exists in repo |
+| 2026-04-27 08:24 UTC | Symbolic-KAN v2 Pipeline Deploy + HuggingFace Publ | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-27 08:34 UTC | Symbolic-KAN v2 Pipeline Deploy + HuggingFace Publ | OK | Deliverable already exists in repo |
