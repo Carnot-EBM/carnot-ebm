@@ -2877,3 +2877,4 @@ python/ |
 | 2026-04-26 23:25 UTC | Exp 942: Math Iterative Self-Repair v2 — SOTA GGUF | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
 | 2026-04-26 23:41 UTC | Exp 943: Math Repair + External Scratchpad — Re-fe | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp942-math-repair-sota-v2.signed_improvem |
 | 2026-04-26 23:51 UTC | Exp 943: Math Repair + External Scratchpad — Re-fe | OK | Deliverable already exists in repo |
+| 2026-04-27 00:10 UTC | Exp 944: SC-Energy Set Consistency v2 — All 8 Prio | OK | 81 passed, 3 warnings in 2.92s |
