@@ -25,7 +25,8 @@ set -u
 #   - 161 defunct multiprocessing zombies
 # The thresholds below catch the situation while it is still building, before
 # the host becomes unresponsive.
-readonly SWAP_GB_ALERT=30
+readonly SWAP_GB_ALERT=60            # well below incident's 123 GB; above legitimate working-set residual (~40 GB)
+readonly SWAP_GB_CRITICAL=90         # must-act-immediately tier
 readonly ORPHAN_EXP_ALERT=2          # one in flight is normal; two is suspect
 readonly ORPHAN_PYTEST_ALERT=2       # same shape
 readonly ZOMBIE_ALERT=50             # incident hit 161; alert well below that
@@ -38,8 +39,13 @@ orphan_pytest=$(pgrep -af 'pytest.*tests/python' 2>/dev/null \
 zombie_count=$(ps -e -o stat= | awk '$1 ~ /^Z/' | wc -l)
 
 reasons=()
-if [ "$swap_gb" -gt "$SWAP_GB_ALERT" ]; then
-    reasons+=("swap=${swap_gb}GB>${SWAP_GB_ALERT}")
+if [ "$swap_gb" -gt "$SWAP_GB_CRITICAL" ]; then
+    reasons+=("swap=${swap_gb}GB>${SWAP_GB_CRITICAL}_CRITICAL")
+elif [ "$swap_gb" -gt "$SWAP_GB_ALERT" ] && { [ "$orphan_exp" -gt 0 ] || [ "$orphan_pytest" -gt 0 ] || [ "$zombie_count" -gt 10 ]; }; then
+    # High swap is concerning only when paired with leak symptoms (orphans
+    # or zombie buildup). Solo swap above ALERT but below CRITICAL is the
+    # legitimate post-conductor-warmup working set, not an incident.
+    reasons+=("swap=${swap_gb}GB>${SWAP_GB_ALERT}_WITH_LEAK_SYMPTOMS")
 fi
 if [ "$orphan_exp" -gt "$ORPHAN_EXP_ALERT" ]; then
     reasons+=("orphan_experiments=${orphan_exp}>${ORPHAN_EXP_ALERT}")
