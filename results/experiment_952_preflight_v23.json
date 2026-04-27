@@ -1,0 +1,32 @@
+{
+  "experiment": 952,
+  "title": "Preflight v23 — Exclusion Manifest + SOTA GGUF Pre-download + ArXiv Filing",
+  "run_date": "2026-04-27T04:05:16Z",
+  "schema": "preflight_v1",
+  "duration_s": 63,
+  "manifest_entries_added": ["exp786", "exp641"],
+  "manifest_entries_already_present": ["exp627", "exp603"],
+  "sota_models_ready": {
+    "unsloth/gemma-4-31B-it-GGUF": true,
+    "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+    "unsloth/gemma-4-26B-A4B-it-GGUF": true
+  },
+  "sota_model_sizes_gb": {
+    "unsloth/gemma-4-31B-it-GGUF": 431,
+    "unsloth/Qwen3.6-35B-A3B-GGUF": 495,
+    "unsloth/gemma-4-26B-A4B-it-GGUF": 375
+  },
+  "arxiv_papers_filed": [
+    "arXiv 2502.11250 (Uncertainty-Aware Step Verification via CoT Entropy)",
+    "arXiv 2604.20701 (Divide-and-Conquer NN Surrogates for Sparse Ising)",
+    "arXiv 2602.17750 (iCKANs: Constitutive KANs with symbolic regression)"
+  ],
+  "arxiv_papers_status": "all_already_present_in_research-references.md",
+  "exclusion_manifest_notes": {
+    "exp786": "retired — blocked_no_live_gpu 4+ milestones; superseded by SOTA GGUF preflight",
+    "exp641": "retired — hermes_v2_no_improvement; superseded by paragraph-boundary batching (Exp 841)",
+    "exp627": "already_present — retired 2026.04.58 (serial loop superseded by Exp 841)",
+    "exp603": "already_present — retired 2026.04.58 (CoACEExtractorV4 superseded by DualGPU)"
+  },
+  "honest_verdict": "preflight_complete"
+}
