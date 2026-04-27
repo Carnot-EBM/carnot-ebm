@@ -818,9 +818,41 @@ class ExperimentTemplate:
         safe to call multiple times.
 
         Side effects:
+        - Acquires a flock-based single-run guard so duplicate launches
+          of the same experiment script (e.g., a confused subagent retry)
+          fail fast instead of stacking memory + GPU pressure.
         - Creates ``results/`` and ``results/checkpoints/experiment_<id>/`` dirs.
         - Populates ``self.checkpoint`` if a checkpoint file is present.
+
+        Raises
+        ------
+        SystemExit
+            If another instance of the same experiment script is already
+            running (``SingleRunHeld``). Soft-exit with code 0 — the OTHER
+            holder will write the artifact, so this attempt does not
+            write a blocked artifact (which would confuse the conductor's
+            deliverable-existence check).
         """
+        # REQ-INFRA-072: single-run guard. The 2026-04-26 swap-saturation
+        # incident and the 2026-04-27 runaway-Sonnet incidents both came
+        # from concurrent launches of the same experiment script. flock
+        # at the entry point fails the second launch immediately rather
+        # than letting both stack memory + GPU pressure. The lock is
+        # released on process exit (kernel releases flock on death).
+        from carnot.conductor import SingleRunHeld, acquire as _acquire_single_run
+        try:
+            self._single_run_lock_cm = _acquire_single_run(f"experiment_{self.exp_id}")
+            self._single_run_lock_cm.__enter__()
+        except SingleRunHeld:
+            import sys
+            print(
+                f"experiment_{self.exp_id}: another instance is already running; "
+                f"this attempt is exiting cleanly per the single-run guard. "
+                f"The other instance will produce the artifact at {self.deliverable}.",
+                file=sys.stderr,
+            )
+            sys.exit(0)
+
         # REQ-INFRA-070: assert CARNOT_FORCE_LIVE is set for GPU experiments
         # BEFORE kill_gpu_zombies() or any GPU work starts.
         self.assert_live_env_if_gpu()
