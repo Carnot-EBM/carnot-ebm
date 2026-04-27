@@ -6918,3 +6918,41 @@ cargo check.....................
 2026-04-26 21:14:57,252 [conductor] RESEARCH STEP: Exp 948: Symbolic-KAN Real FoVer Data — AUC=0.9344 Architecture on Real Violation Pairs (CPU)
 2026-04-26 21:14:57,252 [conductor] ============================================================
 2026-04-26 21:15:15,892 [conductor] Committing 2 dirty files as checkpoint (preserving work)
+2026-04-26 21:15:16,226 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 21:15:16,226 [conductor] Running test suite (smart subset)...
+2026-04-26 21:15:27,418 [conductor] Pre-check: 81 passed, 3 warnings in 6.57s
+2026-04-26 21:15:27,629 [conductor] Injected 71 symbol signatures from 3 files (AST outlines)
+2026-04-26 21:15:27,630 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Error: Reached max turns (50)2026-04-26 21:27:10,847 [conductor] Claude Code failed (exit 1)
+2026-04-26 21:27:10,847 [conductor] Claude Code failed: Error: Reached max turns (50)
+2026-04-26 21:27:10,850 [conductor] Sleeping 10 minutes (chunked 60s ticks)...
+2026-04-26 21:32:10,852 [conductor] ...sleeping, 5/10 min elapsed
+2026-04-26 21:37:10,853 [conductor] Sleep complete — resuming
+2026-04-26 21:37:10,853 [conductor] --- Iteration 11 ---
+2026-04-26 21:37:10,856 [conductor] Skipping 'Exp 942: Math Iterative Self-Repair v2 — SOTA GGUF' — failed 3 times
+2026-04-26 21:37:10,857 [conductor] ============================================================
+2026-04-26 21:37:10,857 [conductor] RESEARCH STEP: Exp 948: Symbolic-KAN Real FoVer Data — AUC=0.9344 Architecture on Real Violation Pairs (CPU)
+2026-04-26 21:37:10,857 [conductor] ============================================================
+2026-04-26 21:37:11,532 [conductor] Committing 7 dirty files as checkpoint (preserving work)
+2026-04-26 21:37:16,798 [conductor] Pre-flight reaper: nothing to kill (verdict=reap_complete)
+2026-04-26 21:37:16,798 [conductor] Running test suite (smart subset)...
+2026-04-26 21:37:49,523 [conductor] Pre-check: 112 passed, 3 warnings in 28.43s
+2026-04-26 21:37:49,647 [conductor] Injected 95 symbol signatures from 6 files (AST outlines)
+2026-04-26 21:37:49,648 [conductor] Calling Claude Code (50 max turns, model: sonnet)...
+Done. Exp 948 completed in ~62 seconds:
+
+- **AUC symbolic real: 1.0000** (target was >0.70) — `symbolic_kan_real_viable`
+- delta vs standard KAN (Exp 936): **+0.4861**
+- delta vs synthetic baseline (Exp 937): **+0.0656**
+- Top symbolic labels: CMP, MUL, EQ, ADD
+- All 31 tests pass
+- Deliverable: `results/experiment_948_symbolic_kan_real_fover.json`
+2026-04-26 21:39:00,562 [conductor] Claude Code completed (exit 0)
+2026-04-26 21:39:00,580 [conductor] Changes:
+logs/conductor.log                                | 14 ++++++++++++++
+ scripts/experiment_948_symbolic_kan_real_fover.py |  4 +++-
+ tests/python/test_experiment_948.py               |  4 +++-
+ 3 files changed, 20 insertions(+), 2 deletions(-)
+2026-04-26 21:39:00,615 [conductor] DOGFOOD: Verification complete (total: 609 checks, 60 brace fixes, 0 code/0 z3/0 llm violations)
+2026-04-26 21:39:00,615 [conductor] Running test suite (smart subset)...
+2026-04-26 21:39:34,281 [conductor] Post-check: 112 passed, 3 warnings in 29.36s

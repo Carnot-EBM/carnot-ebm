@@ -1,0 +1,113 @@
+{
+  "experiment": 948,
+  "title": "Symbolic-KAN Real FoVer",
+  "run_date": "20260427",
+  "started_at": "2026-04-27T01:38:12Z",
+  "finished_at": "2026-04-27T01:38:19Z",
+  "duration_s": 6.997,
+  "status": "success",
+  "inference_mode": "real_fover_data",
+  "n_real_pairs": 57,
+  "n_correct_raw": 30,
+  "n_incorrect_raw": 27,
+  "n_train_pairs": 24,
+  "n_eval_pairs": 6,
+  "n_epochs": 60,
+  "auc_symbolic_real": 1.0,
+  "auc_symbolic_synthetic": 0.9344,
+  "auc_standard_real": 0.5139,
+  "delta_vs_standard_real": 0.4861,
+  "delta_vs_synthetic": 0.06559999999999999,
+  "honest_verdict": "symbolic_kan_real_viable",
+  "top_symbolic_labels": [
+    "CMP",
+    "MUL",
+    "EQ",
+    "ADD"
+  ],
+  "label_counts": {
+    "ADD": 1,
+    "MUL": 2,
+    "CMP": 3,
+    "EQ": 2
+  },
+  "interpretability_examples": [
+    {
+      "node": 0,
+      "label": "CMP",
+      "description": "Node 0 [CMP]: checks ordering direction: sign(features[6] - features[14])"
+    },
+    {
+      "node": 1,
+      "label": "CMP",
+      "description": "Node 1 [CMP]: checks ordering direction: sign(features[8] - features[11])"
+    },
+    {
+      "node": 2,
+      "label": "ADD",
+      "description": "Node 2 [ADD]: checks whether features[2] + features[1] is consistent"
+    },
+    {
+      "node": 3,
+      "label": "CMP",
+      "description": "Node 3 [CMP]: checks ordering direction: sign(features[7] - features[3])"
+    },
+    {
+      "node": 4,
+      "label": "MUL",
+      "description": "Node 4 [MUL]: checks whether features[0] * features[6] is consistent"
+    },
+    {
+      "node": 5,
+      "label": "EQ",
+      "description": "Node 5 [EQ]: checks equality: |features[11] - features[5]| (low = equal)"
+    },
+    {
+      "node": 6,
+      "label": "EQ",
+      "description": "Node 6 [EQ]: checks equality: |features[8] - features[0]| (low = equal)"
+    },
+    {
+      "node": 7,
+      "label": "MUL",
+      "description": "Node 7 [MUL]: checks whether features[10] * features[14] is consistent"
+    }
+  ],
+  "final_train_loss": 0.01762097423732707,
+  "symbolic_kan_config": {
+    "input_dim": 16,
+    "n_nodes": 8,
+    "label_update_interval": 10,
+    "residual_amp": 0.05,
+    "lr": 0.01,
+    "n_segments": 8
+  },
+  "schema": [
+    "auc_standard_real",
+    "auc_symbolic_real",
+    "auc_symbolic_synthetic",
+    "delta_vs_standard_real",
+    "delta_vs_synthetic",
+    "duration_s",
+    "experiment",
+    "final_train_loss",
+    "finished_at",
+    "honest_verdict",
+    "inference_mode",
+    "interpretability_examples",
+    "label_counts",
+    "n_correct_raw",
+    "n_epochs",
+    "n_eval_pairs",
+    "n_incorrect_raw",
+    "n_real_pairs",
+    "n_train_pairs",
+    "run_date",
+    "started_at",
+    "status",
+    "symbolic_kan_config",
+    "title",
+    "top_symbolic_labels"
+  ],
+  "invariant_violations": []
+}
