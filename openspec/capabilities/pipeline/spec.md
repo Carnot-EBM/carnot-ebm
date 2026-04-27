@@ -1723,3 +1723,53 @@ and a DraftConditionedVerifier wired via wire_tier_28(),
   5. `honest_verdict == "tier28_wiring_failed"` if wire_tier_28() raises.
 
 **Spec traces:** REQ-PIPE-025, SCENARIO-PIPE-010, Exp 938
+
+
+### REQ-VERIFY-098: ThinkPRM Generative Step Verifier
+
+The pipeline MUST provide a ThinkPRMVerifier component that accepts a reasoning step
+string and returns a step-level verdict (correct/incorrect/uncertain) derived from
+a model-generated chain-of-thought explanation, NOT a heuristic rule.
+
+The verifier MUST:
+1. Build a 3-step CoT verification prompt (extract claim, check arithmetic/logic, state verdict).
+2. Call an LLM to generate the CoT before emitting VERDICT: CORRECT or VERDICT: INCORRECT.
+3. Parse the LAST occurrence of VERDICT: CORRECT/INCORRECT from the LLM output.
+4. Return verdict='uncertain' (confidence=0.5) when no VERDICT line is found.
+5. Operate in CI stub mode (llm_caller=None) without loading any model.
+6. Support batch_verify(steps) returning results in input order.
+
+Motivation: Exp 924 showed AUC delta=0 using heuristic rule-based explanations.
+arXiv 2504.16828 (ThinkPRM) proves model-generated CoT achieves +8% on GPQA-Diamond
+vs discriminative PRM using only 1% of labels. Exp 945 validates this on synthetic
+GSM8K step corpus (AUROC 0.99 vs heuristic baseline 0.85, delta=+0.14).
+
+**Acceptance criteria:**
+- `ThinkPRMVerifier().verify_step("3+4=7")` returns ThinkPRMResult with verdict='uncertain' (CI stub).
+- With arithmetic-checking llm_caller, verify_step("3+4=7") returns verdict='correct'.
+- With arithmetic-checking llm_caller, verify_step("3+4=8") returns verdict='incorrect'.
+- AUROC on 100-step correct/incorrect corpus > 0.70.
+
+**Spec traces:** Exp 924 (baseline), Exp 945 (ThinkPRM), arXiv 2504.16828
+
+
+### SCENARIO-VERIFY-130: ThinkPRM Verify Step with CoT
+
+**Given** a ThinkPRMVerifier with a stub LLM caller that returns "VERDICT: CORRECT"
+**When** verify_step("10 + 5 = 15") is called
+**Then**
+  1. result.verdict == 'correct'
+  2. result.confidence == 0.95
+  3. result.step_text == "10 + 5 = 15"
+  4. result.reasoning_steps contains the LLM output
+  5. result.latency_ms >= 0.0
+
+**Given** a ThinkPRMVerifier with a stub LLM caller that returns "VERDICT: INCORRECT"
+**When** verify_step("10 + 5 = 16") is called
+**Then** result.verdict == 'incorrect' and result.confidence == 0.95
+
+**Given** a ThinkPRMVerifier with llm_caller=None (CI stub)
+**When** verify_step("any step") is called
+**Then** result.verdict == 'uncertain' and result.confidence == 0.5
+
+**Spec traces:** REQ-VERIFY-098, Exp 945
