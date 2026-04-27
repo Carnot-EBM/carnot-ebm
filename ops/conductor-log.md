@@ -2891,3 +2891,5 @@ python/ |
 | 2026-04-27 03:11 UTC | Plan milestone 2026.04.74 | OK | 0 tasks proposed |
 | 2026-04-27 03:53 UTC | Milestone 2026.04.74 activated | OK | 10 tasks queued |
 | 2026-04-27 04:05 UTC | Preflight v23 — Exclusion Manifest Surgery + SOTA  | OK | 81 passed, 3 warnings in 2.91s |
+| 2026-04-27 04:15 UTC | Math Repair SOTA v3 — Gemma4-31B with Result-Write | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-27 04:25 UTC | Math Repair SOTA v3 — Gemma4-31B with Result-Write | OK | Deliverable already exists in repo |
