@@ -4341,3 +4341,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-27: Exp 951: Milestone 2026.04.73 Retrospective (CPU) (✅ Complete) — honest_verdict=milestone_complete; results/experiment_951_milestone_retro_73.json
 - 2026-04-27: Preflight v23 — Exclusion Manifest Surgery + SOTA Pre-Download + Arxiv Scan (✅ Complete) — honest_verdict=preflight_complete; results/experiment_952_preflight_v23.json
 - 2026-04-27: FR-11 JEPA v23 — SC-Energy Coherence Labels as Training Signal (⚠️ Research Finding) — honest_verdict=jepa_retired; ood_auc=0.2812; results/experiment_957_fr.json
+- 2026-04-27: KV260 v4 RTL — Sparse E-MVL Ising Sampler Implementation (⚠️ Research Finding) — honest_verdict=rtl_synthesizes_within_budget; lut_count=27136; results/experiment_958_kv260_v4_rtl.json
