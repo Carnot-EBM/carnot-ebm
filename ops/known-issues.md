@@ -1,8 +1,58 @@
 # Carnot — Known Issues
 
-**Last Updated:** 2026-04-27
+**Last Updated:** 2026-04-28
 
-## NEXT-MILESTONE PRIORITIES (.77 planner, please pick these up)
+## MANDATORY-NEXT-MILESTONE PRIORITIES (.80 planner — hard pickup per CLAUDE.md)
+
+Per the **CLAUDE.md "Overdue-Priority Forcing Function"** rule, any priority
+pending 3+ consecutive milestones MUST be picked up by the next planner.
+The following entries pass that threshold and are mandatory for the .80
+roadmap:
+
+  - **`openspec/change-proposals/conductor-supervisor.md`** (4 exps,
+    pending since .77 — **3 milestones overdue**) — external observer
+    process catching log-handle severance, claimed-vs-actual state
+    drift, conductor wedge, and bounded auto-recovery whitelist. Single
+    biggest unblock for unattended operation.
+
+  - **`openspec/change-proposals/roadmap-schema-validation.md`**
+    (3 exps, pending since .77 — **3 milestones overdue**) — Pydantic
+    enforcement at planner output + activation. Prevents the schema-
+    drift stillborn-milestone pattern (.69, .74).
+
+  - **`openspec/change-proposals/eval-metrics-canonical-and-self-heal-production-bug-detector.md`**
+    (4 exps, drafted 2026-04-28; partial work shipped already) — fixes
+    the AUROC-bug class structurally. Migrates per-experiment metric
+    helpers to canonical `carnot.eval.metrics` + adds production-bug
+    detector to conductor self-heal + provenance tagging. The 2026-04-28
+    inverted-AUROC discovery would have been impossible with this
+    discipline in place. **Pre-shipped components:**
+      - ✅ `python/carnot/eval/metrics.py` (15 tests + sklearn x-val)
+      - ✅ `scripts/audit_metric_provenance.py`
+      - ✅ `scripts/conductor_commit_watchdog.sh`
+      - ✅ `experiment_template.py:build_result(metrics_used=...)`
+      - ✅ AUROC fixes in exp995 + exp1003
+
+  - Bonus (pending since .77, **3 milestones overdue**):
+    **`openspec/change-proposals/conductor-otel-tracing.md`** (5 exps)
+    — depends on the supervisor; lower priority but the natural next
+    step.
+
+## Operational watchdog scripts (newly shipped 2026-04-28)
+
+Run these between conductor-supervisor landing:
+
+  - `bash scripts/conductor_commit_watchdog.sh` — periodic check for
+    stuck commits. With `AUTO_COMMIT=1`, attempts last-resort
+    `git commit --no-verify` after $STALE_MIN minutes (default 60).
+    Schedule via cron / systemd-timer.
+
+  - `python3 scripts/audit_metric_provenance.py` — walk
+    `results/experiment_*.json`, list deliverables by metrics
+    provenance. With `--flag-buggy func:version`, surfaces deliverables
+    using a known-bad implementation for retrospective re-evaluation.
+
+## NEXT-MILESTONE PRIORITIES (.77 planner — historical, see MANDATORY above)
 
 The 2026-04-27 24-hour session demonstrated that the conductor's
 operator-attention burden is unsustainable — the operator had to
@@ -45,6 +95,36 @@ Exp B was direct-shipped on 2026-04-27 (commit 1b254b87) because of
 the operational urgency. The supervisor + schema-validation work is
 the natural next layer; the .77 planner should treat them as
 candidate top picks.
+
+## PHASE 2 PRIORITY (.78+ planner)
+
+  - **`openspec/change-proposals/continuous-to-ising-transpiler.md`**
+    (6 exps) — Phase 1 → Phase 2 bridge. Takes a trained verifier
+    `state_dict` + a `HardwareSpec` and emits an `IsingSpec(J, h, ψ)`
+    deployable to KV260, ECP5/Nexus, future XTR-0, or future photonic
+    SLM. Origin: 2026-04-27 Deep Think exchange (4 rounds) producing
+    the Continuous ε-Ising-Rank Theorem + Split-Verifier + Native
+    Thermodynamic Distillation (PT-PCD with Gray-code encoding). The
+    KV260 board has been on-hand since 2026-04-20.
+
+## EXP 980 RE-SCOPING (.77 or .78 planner)
+
+  - Exp 980 in .76 is currently scoped as "repair 11 monotonicity and
+    boundary violations in KAEMEnergy." Under the **SOS-Integrated
+    KAN** insight (Deep Think 2026-04-27), this framing is wrong.
+    Standard monotonic-spline parameterizations are sufficient but
+    not necessary, restricting expressivity. The fix is to push the
+    constraint into derivative-space and analytically integrate:
+    parameterize ψ'(x) as a Sum of Squares of B-splines (V ∈ ℝ^{N×M}
+    unconstrained, M ≥ 2 for Burer-Monteiro stability), then integrate
+    to ψ(x) = c² + Σ_{i,j} (V V^T)_{i,j} Φ_{i,j}(x). Monotonicity and
+    non-negativity become **type-level invariants** of the AST
+    `Add(Square(c), Integral(SumOfSquares(Splines)))`, not numerical
+    properties to verify. MILP verification reduces to type-checking;
+    the post-hoc repair subsystem is eliminated. Drop-in compatible
+    at p=1 (hat functions → C¹ piecewise cubic splines, same
+    computational profile as standard KANs). See
+    `memory/project_sos_integrated_kan.md` for full detail.
 
 ## Original known-issues
 

@@ -326,6 +326,111 @@ class EnvPropagationGuard:
                     applied[key] = val
         return applied
 
+    # ------------------------------------------------------------------
+    # Session-boundary-persistent state file (REQ-INFRA-080)
+    # ------------------------------------------------------------------
+
+    STATE_FILE: Path = Path.home() / ".carnot" / "conductor_state.sh"
+    """Shell-sourceable state file persisted across conductor session boundaries.
+
+    Why ~/.carnot/conductor_state.sh and not ~/.carnot_session_env:
+        The conductor launches each claude -p experiment in a fresh process tree
+        that does not inherit the parent's environment.  ~/.carnot_session_env
+        handles the intra-session case (same conductor run), but the STATE_FILE
+        handles the INTER-session case: a state written by session N is read at
+        startup of session N+1, so CARNOT_FORCE_LIVE=1 survives a full conductor
+        restart.  The shell `export KEY=VALUE` syntax lets operators also source
+        this file directly in their shell profile for manual debugging.
+    """
+
+    @classmethod
+    def propagate(cls) -> dict[str, str]:
+        """Load CARNOT_*, ROCM_*, and HSA_* vars into the current process from all sources.
+
+        Sources (applied in order, later sources win):
+        1. STATE_FILE (~/.carnot/conductor_state.sh) — inter-session persistence.
+        2. ~/.carnot_session_env — intra-session persistence (written by prior calls).
+        3. os.environ — explicit shell exports always win over persisted values.
+
+        Additionally unconditionally sets CARNOT_FORCE_LIVE=1 (the persistent fix
+        for RETRO-015 recurrence: env vars not propagated to conductor subprocesses).
+
+        Returns
+        -------
+        dict[str, str]
+            All CARNOT_*, ROCM_*, and HSA_* vars now present in os.environ after
+            propagation, including vars that were already set.
+
+        Spec: REQ-INFRA-080, SCENARIO-INFRA-090
+        """
+        # Step 1: source STATE_FILE if it exists — inter-session persistence
+        if cls.STATE_FILE.exists():
+            for raw_line in cls.STATE_FILE.read_text().splitlines():
+                line = raw_line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                # Strip leading 'export ' if present
+                if line.startswith("export "):
+                    line = line[len("export ") :]
+                if "=" in line:
+                    k, _, v = line.partition("=")
+                    key = k.strip()
+                    val = v.strip().strip('"').strip("'")
+                    # STATE_FILE wins over nothing but loses to explicit shell exports
+                    if key not in os.environ:
+                        os.environ[key] = val
+
+        # Step 2: source ~/.carnot_session_env — intra-session persistence
+        cls.load_session_env()
+
+        # Step 3: unconditionally set CARNOT_FORCE_LIVE=1 — persistent fix for
+        # RETRO-015 recurrence.  This is the one var that MUST always be present
+        # when the conductor launches GPU experiments.
+        os.environ["CARNOT_FORCE_LIVE"] = "1"
+
+        # Collect all propagated vars for the return value / artifact
+        propagated = {
+            k: v for k, v in os.environ.items() if k.startswith(("CARNOT_", "ROCM_", "HSA_"))
+        }
+        _log.info(
+            "EnvPropagationGuard.propagate(): %d vars in scope: %s",
+            len(propagated),
+            sorted(propagated.keys()),
+        )
+        return propagated
+
+    @classmethod
+    def write_state_file(cls) -> None:
+        """Persist all current CARNOT_* vars to ~/.carnot/conductor_state.sh.
+
+        Always includes CARNOT_FORCE_LIVE=1 even if not in os.environ, so
+        the next conductor session starts with the correct gate value.
+
+        Creates ~/.carnot/ if it does not exist.
+
+        Spec: REQ-INFRA-081, SCENARIO-INFRA-091
+        """
+        cls.STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+        # Collect CARNOT_* vars from the current environment
+        vars_to_write: dict[str, str] = {
+            k: v for k, v in os.environ.items() if k.startswith("CARNOT_")
+        }
+        # Unconditionally ensure CARNOT_FORCE_LIVE=1 — the persistent fix
+        vars_to_write["CARNOT_FORCE_LIVE"] = "1"
+
+        lines = ["#!/bin/sh", "# Carnot conductor state — auto-generated, do not edit by hand.", ""]
+        for key in sorted(vars_to_write):
+            val = vars_to_write[key]
+            lines.append(f"export {key}={val}")
+        lines.append("")  # trailing newline
+        cls.STATE_FILE.write_text("\n".join(lines))
+        _log.info(
+            "EnvPropagationGuard.write_state_file(): wrote %d vars to %s",
+            len(vars_to_write),
+            cls.STATE_FILE,
+        )
+
 
 # ---------------------------------------------------------------------------
 # InferenceResult
@@ -840,11 +945,13 @@ class ExperimentTemplate:
         # than letting both stack memory + GPU pressure. The lock is
         # released on process exit (kernel releases flock on death).
         from carnot.conductor import SingleRunHeld, acquire as _acquire_single_run
+
         try:
             self._single_run_lock_cm = _acquire_single_run(f"experiment_{self.exp_id}")
             self._single_run_lock_cm.__enter__()
         except SingleRunHeld:
             import sys
+
             print(
                 f"experiment_{self.exp_id}: another instance is already running; "
                 f"this attempt is exiting cleanly per the single-run guard. "
@@ -1563,6 +1670,7 @@ class ExperimentTemplate:
         status: str,
         cost_usd: float | None = None,
         decision_class: str | list[str] | None = None,
+        metrics_used: list[str] | None = None,
         **extra_fields: Any,
     ) -> dict[str, Any]:
         """Build a standardised result artifact with all required fields.
@@ -1635,6 +1743,27 @@ class ExperimentTemplate:
         # the raw list) without losing the raw data.
         if self._phase_timings:
             result["phase_timings_s"] = list(self._phase_timings)
+
+        # Metrics provenance — ties published numbers to the canonical
+        # implementation that produced them. When a bug is found in a
+        # metric helper (see 2026-04-28 inverted-AUROC retroactive
+        # correction), the audit script `scripts/audit_metric_provenance.py`
+        # walks `results/experiment_*.json` and lists deliverables tagged
+        # with the now-known-buggy version. Without this field, every bug
+        # discovery requires a manual grep+interpret pass.
+        if metrics_used is not None:
+            try:
+                from carnot.eval import __version__ as _eval_version
+                result["metrics_provenance"] = {
+                    m: f"carnot.eval.metrics.{m}:v{_eval_version}"
+                    for m in metrics_used
+                }
+            except ImportError:
+                # Bare venv without carnot.eval available — record name only
+                result["metrics_provenance"] = {
+                    m: f"carnot.eval.metrics.{m}:v?"
+                    for m in metrics_used
+                }
 
         # Merge extra_fields first (lower priority), then data (higher priority)
         result.update(extra_fields)

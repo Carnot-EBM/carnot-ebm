@@ -1,0 +1,175 @@
+{
+  "schema": "carnot.operational_retro.v53",
+  "retro_type": "full_milestone_augmented",
+  "milestone": "2026.04.77",
+  "generated_at": "2026-04-28T01:00:22Z",
+  "total_wall_time_minutes": 3064,
+  "experiments_completed": 626,
+  "avg_minutes_per_experiment": 4.89,
+  "prior_milestone_wall_time": 3199,
+  "wall_time_delta_minutes": -135,
+  "wall_time_delta_pct": -4.22,
+  "vs_58_baseline_minutes": 3415,
+  "below_baseline_by_minutes": 351,
+  "below_baseline_pct": 10.28,
+  "streak_note": "SIXTH CONSECUTIVE WALL-TIME IMPROVEMENT: -135 min (-4.22%) vs .76 (3199 min). Third consecutive milestone BELOW the .58 baseline (3064 vs 3415, -351 min, -10.28%). Improvement is STILL NOT STRUCTURAL — count-driven: 648 → 626 experiments (-22 at 4.89 min/exp = ~108 min volume savings). Underlying per-experiment latency unchanged.",
+  "experiments_count": 626,
+  "count_cap": 700,
+  "count_over_cap": -74,
+  "count_note": "626 experiments — THIRD CONSECUTIVE MILESTONE UNDER 700 CAP. -74 below cap. Count discipline improving.",
+  "criteria_met": 3,
+  "criteria_total": 10,
+  "criteria_pass_rate_pct": 30,
+  "criteria_note": "3/10 criteria met. Milestone failed primary research objectives due to single-field gate schema mismatch cascading 7 downstream blocks from Exp 987.",
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment_id": "exp786",
+      "title": "Gemma4 OOM Fix v3 + VR Threshold Grid",
+      "duration_minutes": 77,
+      "consecutive_appearances": 18,
+      "status": "LEGACY_CARRYOVER_18TH_CONSECUTIVE",
+      "note": "Eighteenth consecutive slow-5 appearance. Exclusion manifest entries for 786 confirmed missing in Exp 986 preflight (YAML field not found). Cumulative waste across 18 milestones: ~1,386 min (23.1 hours). Zero research value contributed in any appearance after RETRO-028 closed."
+    },
+    {
+      "rank": 2,
+      "experiment_id": "exp627",
+      "title": "InterWhen Mid-Generation Monitor — SymCodeVerifier",
+      "duration_minutes": 51,
+      "consecutive_appearances": 18,
+      "status": "LEGACY_CARRYOVER_18TH_CONSECUTIVE",
+      "note": "Eighteenth consecutive slow-5 appearance. Paragraph serialization bottleneck documented in RETRO-SYMCODE-SERIAL; implementation closed but manifest enforcement not applied. Cumulative waste ~918 min (15.3 hours)."
+    },
+    {
+      "rank": 3,
+      "experiment_id": "exp641",
+      "title": "HermesVerifierAdapter v2 — LIVE Step-by-Step Generation",
+      "duration_minutes": 42,
+      "consecutive_appearances": 8,
+      "consecutive_past_mandatory_gate": 5,
+      "status": "LEGACY_CARRYOVER_FIVE_PAST_MANDATORY_GATE",
+      "note": "Eighth consecutive slow-5 appearance, five milestones past the CLAUDE.md three-consecutive mandatory gate. No diagnosed root cause documentation produced across any of the eight appearances. Must be added to exclusion manifest immediately."
+    },
+    {
+      "rank": 4,
+      "experiment_id": "exp906",
+      "title": "Code Repair 50q Scale-Up — IterativeSelfRepair with Gemma4",
+      "duration_minutes": 35,
+      "consecutive_appearances": 5,
+      "consecutive_past_mandatory_gate": 2,
+      "status": "LEGACY_CARRYOVER_TWO_PAST_MANDATORY_GATE",
+      "note": "Fifth consecutive slow-5 appearance, two milestones past mandatory gate. SOTA GGUF pre-download overhead probable cause; repair loop timeout overrun a contributing factor. Pre-download must precede experiment launch."
+    },
+    {
+      "rank": 5,
+      "experiment_id": "exp668",
+      "title": "Live VR Attempt #18 v2 — First RETRO-033 Attempt with Structured Forcing",
+      "duration_minutes": 34,
+      "consecutive_appearances": 1,
+      "status": "NEW_ENTRANT",
+      "note": "New entrant at rank 5 (replaced Exp 603 which exited slowest-5). VR structured forcing involves multiple live model calls; duration expected but could be bounded with stricter per-attempt timeout."
+    }
+  ],
+  "bottlenecks_identified": [
+    "GATE SCHEMA CONTRACT MISMATCH (CRITICAL): Exp 987 succeeded functionally but emitted 'subprocess_propagation_ok' instead of 'env_propagation_persistent' in its artifact. Downstream gate configs checked 'env_propagation_persistent == True', received None, and blocked all 7 dependent experiments (criteria 2-6, 9, and Exp 994). This is the THIRD CONSECUTIVE MILESTONE with a single-upstream-artifact cascade block (.75: Exp 975 no artifact at all; .76: same; .77: wrong field name). Pattern: gate contracts not validated at design time against the artifact schema the upstream experiment actually writes.",
+    "LEGACY SLOW-5 CARRYOVERS — EXCLUSION MANIFEST UNAPPLIED (19TH CONSECUTIVE): Exps 786/627/641 remain in the slowest-5 for the 18th consecutive milestone despite retirement recommendations in every prior retro. Exp 986 preflight confirmed exclusion manifest entries are MISSING (YAML field not found). Cumulative waste across 18 milestones: ~2,304 min (38.4 hours). This is the dominant structural bottleneck. The fix is known, the manifest infrastructure exists, the change requires one YAML edit and a conductor restart.",
+    "DUALGPU IDLE — 12TH CONSECUTIVE MILESTONE: Both RTX 3090s (24 GB each) closed at 0% utilization (52C/52C). DualGPURunner was deployed in .66 (Exp 856, 1.979x throughput confirmed). It has never been wired into the production VerifyRepairPipeline. Cumulative foregone savings: ~720 min (12 hours) since deployment. At 626 experiments/milestone, parallel GPU utilization would reduce the GPU-bound subset duration by ~1.96x.",
+    "PLANNER PRIOR_FAILURES DISCIPLINE FAILURE: Exps 996 (GS-KAN) and 997 (NK Optimizer KAEM) were blocked by the conductor's rerun guard because the roadmap YAML lacked 'prior_failures' entries for tasks with documented failure histories. The conductor's mechanical enforcement is working correctly — but two milestone slots were consumed by experiments that were blocked at launch rather than producing results. The CLAUDE.md rule requiring prior_failures fields for re-proposed tasks must be applied at YAML authoring time, not discovered at conductor launch.",
+    "IMPROVEMENT IS NOT STRUCTURAL — COUNT-DRIVEN: The sixth consecutive improvement (-135 min, -4.22%) is accounted for almost entirely by the 22-experiment count reduction (-22 at 4.89 min/exp ≈ 108 min volume savings). No governance fix (manifest enforcement, DualGPU wiring, timeout caps) was applied. If experiment count stabilises or rises, the improvement streak will stall immediately.",
+    "KV260 SSH ACCESS BLOCKS FPGA FIRST LIGHT: Board discovered at 192.168.51.98 (confirmed across Exps 982, 993). Bitstream is ready (KV260 v4 RTL from .74). SCP transfer fails; board cannot be programmed autonomously. This is a human-action prerequisite (SSH key exchange from conductor host to kria@192.168.51.98), not a research task. It is blocking a milestone criterion that has been pending since the board arrived in .74.",
+    "EXP 998 ARXIV SCAN MISSING: Exp 998 produced no result artifact. Experiment either did not run or failed without a try/finally guard emitting a partial artifact. The try/finally mandate from CLAUDE.md is not universally enforced in experiment scripts.",
+    "COMPOSITION FREEZE RESUMED: Slowest-5 composition unchanged from .76 (Exps 786/627/641/906 + new entrant Exp 668 replacing Exp 603). Three legacy carryovers (786/627/641) maintain the 18-milestone appearance streak. The entry of Exp 668 (new research experiment) rather than structural governance action is what changed rank 5, not improvement in root causes."
+  ],
+  "improvements_suggested": [
+    "GATE SCHEMA CONTRACT VALIDATION (immediate, high impact): Add a pre-launch check that compares each gate config's field path against the upstream experiment's declared artifact schema. Experiments must declare their output fields in a machine-readable schema block. The conductor rejects any gate config that references an undeclared field. Cost: ~2 hours of tooling; saves an entire milestone of blocked experiments per occurrence.",
+    "APPLY EXCLUSION MANIFEST FOR EXP 786/627/641 NOW: The manifest infrastructure exists. Exp 986 preflight confirmed entries are missing due to a YAML field lookup error. Fix the YAML field lookup and add entries for 786, 627, 641 before .78. This single change recovers 77+51+42 = 170 min/milestone (5.5% of total wall time) with zero research cost.",
+    "ADD EXP 906 TO MANDATORY EXCLUSION OR ROOT-CAUSE IT: Exp 906 is two milestones past the CLAUDE.md mandatory gate. Either (a) diagnose the SOTA GGUF pre-download root cause and implement pre-download before experiment launch, or (b) add 906 to exclusion manifest. Do not run in .78 without one of these actions completed.",
+    "WIRE DUALGPU INTO PRODUCTION PIPELINE: DualGPURunner has been idle for 12 consecutive milestones since deployment. Assign this as a dedicated, gated, no-research-dependency task in .78. At 1.96x throughput on GPU-bound experiments (~30% of total), this recovers ~60 min/milestone. No new tooling required — the runner is already implemented.",
+    "KV260 SSH KEY EXCHANGE (human action before .78 planning): Enable key-based SSH from the conductor host to kria@192.168.51.98. This unblocks FPGA first light, which has been one experiment away for three milestones. Treat as a human prerequisite to complete before the .78 milestone launches, not a research experiment.",
+    "FIX EXP 987 ARTIFACT FIELD NAME: Add 'env_propagation_persistent: true' to Exp 987's output artifact (or update .78 gate configs to use 'subprocess_propagation_ok' which IS set). This retroactively unblocks criteria 2-6 and 9 for .77 context and ensures .78 gates are not blocked by the same mismatch.",
+    "ADD PRIOR_FAILURES FOR GSKAN AND NK OPTIMIZER BEFORE .78 YAML IS AUTHORED: Exps 996 and 997 were blocked by missing prior_failures entries. The .78 planner must audit research-complete.yaml for all proposed tasks and add prior_failures entries before the YAML is submitted to the conductor.",
+    "ENFORCE TRY/FINALLY IN ALL EXPERIMENT SCRIPTS: Exp 998 produced no artifact. A try/finally guard must wrap every experiment's main() that writes artifacts, emitting at minimum a partial/blocked artifact with honest_verdict on any exception. Add this as a pre-commit hook check or experiment template enforcement.",
+    "SET HARD EXPERIMENT COUNT CAP AT 620: Current count (626) is below the 700 cap but only marginally. A hard cap of 620 provides headroom for planner prior_failures blocks without blowing the cap. Conductor should refuse to queue more than 620 experiments per milestone.",
+    "BATCH DOCUMENT RECONCILIATION PASSES: Doc reconciliation runs scattered through the milestone add overhead. Batch all doc updates into two passes: one at milestone start (status snapshot) and one at milestone close (retro + changelog). Estimated savings: 15-20 min/milestone."
+  ],
+  "estimated_time_savings_pct": 11.6,
+  "estimated_time_savings_minutes": 355,
+  "time_savings_breakdown": {
+    "retire_786_627_641_to_manifest": 170,
+    "dualgpu_wiring": 60,
+    "gate_schema_contract_fix_prevents_cascade_block": 50,
+    "exp906_root_cause_or_manifest": 35,
+    "prior_failures_enforcement": 20,
+    "try_finally_prevents_missing_artifacts": 10,
+    "doc_reconciliation_batching": 10
+  },
+  "structural_savings_pct": 30,
+  "structural_savings_note": "Full structural savings (30%) require: exclusion manifest enforcement, DualGPU production wiring, gate schema contract validation, hard count cap, model pre-download pipeline. These are all known, designed, and unimplemented. No new research required.",
+  "gpu_state_at_close": {
+    "gpu0_model": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_mb": 4,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_utilization_pct": 0,
+    "gpu0_temp_c": 52,
+    "gpu1_model": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_mb": 4,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_utilization_pct": 0,
+    "gpu1_temp_c": 52,
+    "temp_differential_c": 0,
+    "close_status": "CLEAN",
+    "consecutive_clean_closes": 13,
+    "zombie_process_detected": false,
+    "zombie_note": "No zombie processes at close. GPU Zombie Killer stable. 4 MB residual is normal driver overhead, not an orphan process."
+  },
+  "dualgpu_status": {
+    "deployed_milestone": "2026.04.66",
+    "deployed_experiment": "exp856",
+    "confirmed_throughput_multiplier": 1.979,
+    "consecutive_idle_milestones": 12,
+    "cumulative_foregone_savings_minutes": 720,
+    "wired_to_production": false
+  },
+  "exclusion_manifest_status": {
+    "entries_missing": ["exp786", "exp627", "exp641"],
+    "entries_confirmed_missing_in": "exp986_preflight",
+    "consecutive_milestones_unapplied": 18,
+    "cumulative_slow5_waste_minutes": 2304,
+    "fix_action": "Fix YAML field lookup in exclusion manifest loader; add exp786/exp627/exp641 entries"
+  },
+  "cascade_block_analysis": {
+    "root_cause_experiment": "exp987",
+    "root_cause": "Artifact field 'env_propagation_persistent' not emitted; downstream gates expected True, received None",
+    "experiments_blocked": ["exp988", "exp989", "exp990", "exp991", "exp994"],
+    "criteria_blocked": [2, 3, 4, 5, 6, 9],
+    "functional_success": true,
+    "integration_success": false,
+    "consecutive_milestone_cascade_blocks": 3,
+    "pattern_note": ".75: Exp 975 no artifact at all; .76: Exp 975 same; .77: Exp 987 wrong field name. Single upstream failure cascading to 7+ blocks is the primary research throughput killer."
+  },
+  "retros_open": [
+    "RETRO-MANIFEST-FULL-SCOPE (exp786/627/641 absent from manifest — 18th consecutive milestone)",
+    "RETRO-EXP641-HERMES-UNDIAGNOSED (8 appearances past mandatory gate with zero root-cause documentation)",
+    "RETRO-EXP906-CODE-REPAIR-SCALE (5 appearances, 2 past mandatory gate; SOTA GGUF pre-download root cause unresolved)",
+    "RETRO-DUALGPU-PRODUCTION-WIRING (deployed .66, idle 12 consecutive milestones)",
+    "RETRO-GATE-SCHEMA-CONTRACT (3 consecutive cascade-block milestones; no design-time validation)"
+  ],
+  "carry_forwards_78": [
+    "SC-Energy Tier 2 deployment — gate schema fix required first (Exp 988 scope)",
+    "DualGPU fresh timestamp validation (Exp 989 scope)",
+    "Triple Integration E2E (Exp 990 scope)",
+    "SpilledEnergy live GPU AUROC >= 0.70 (Exp 991 scope)",
+    "PPSEBM live relay (Exp 994 scope)",
+    "GS-KAN energy tier — prior_failures required in YAML (Exp 996 scope)",
+    "NK Optimizer KAEM energy — prior_failures required in YAML (Exp 997 scope)",
+    "KV260 FPGA first light — human SSH key exchange prerequisite must complete before .78 launches"
+  ],
+  "milestone_bright_spots": [
+    "Exp 987: EnvPropagationGuard verified — state file persists across session boundaries, subprocess propagation confirmed, RETRO-015 closed",
+    "Exp 992: KAN MILP violations eliminated — 11 violations (7 monotonicity + 4 boundary) fixed via isotonic projection; 1.89x speedup; succeeded because it had no upstream gate dependencies",
+    "Exp 993: KV260 board discovered at 192.168.51.98 — IP confirmed across two milestones; bitstream ready; only SSH key exchange blocks first light",
+    "Exp 995: PCIB Tier 0f clean negative — AUROC 0.532 (below 0.70 threshold) cleanly closes the text-statistical hallucination proxy research question; NUP probe at 0.964 dominates; PCIB needs logit access",
+    "Sixth consecutive wall-time improvement (-135 min, -4.22%); third consecutive milestone below .58 baseline (3064 vs 3415, -10.28%); count discipline holding at 626 (74 below cap)"
+  ],
+  "honest_verdict": "full_milestone_SIXTH_CONSECUTIVE_IMPROVEMENT_minus135min_minus4pt22pct_THIRD_CONSECUTIVE_BELOW_58_BASELINE_3064min_vs_3415min_minus351min_minus10pt28pct_COUNT_DRIVEN_648_to_626_NOT_STRUCTURAL_3_of_10_CRITERIA_MET_CASCADE_BLOCK_THIRD_CONSECUTIVE_GATE_SCHEMA_MISMATCH_EXP987_WRONG_FIELD_NAME_7_EXPERIMENTS_BLOCKED_THREE_LEGACY_CARRYOVERS_18TH_CONSECUTIVE_786_627_641_MANIFEST_UNAPPLIED_18TH_EXP641_FIFTH_PAST_MANDATORY_GATE_EXP906_SECOND_PAST_MANDATORY_GATE_DUALGPU_12TH_CONSECUTIVE_IDLE_720min_FOREGONE_KV260_SSH_BLOCKED_HUMAN_ACTION_REQUIRED_GPU_CLEAN_0C_13TH_CONSECUTIVE_52C_11pt6pct_near_term_355min_30pct_structural"
+}

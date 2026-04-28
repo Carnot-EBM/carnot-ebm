@@ -1,0 +1,43 @@
+{
+  "experiment": "exp983-langevin-sb-boltzmann-sampler",
+  "run_date": "2026-04-27T20:18:08Z",
+  "schema_version": "1.0",
+  "lsb_convergence_iterations": [
+    50,
+    50,
+    50,
+    50,
+    50
+  ],
+  "ising_convergence_iterations": [
+    50,
+    50,
+    50,
+    50,
+    50
+  ],
+  "lsb_wall_time_s": 1.308201,
+  "ising_wall_time_s": 1.526836,
+  "lsb_speedup_ratio": 1.1671,
+  "lsb_set_as_default": true,
+  "unit_tests_pass": true,
+  "honest_verdict": "lsb_faster_set_default",
+  "benchmark_params": {
+    "n_problems": 5,
+    "problem_sizes": [
+      20,
+      40,
+      80,
+      60,
+      100
+    ],
+    "beta": 8.0,
+    "n_samples": 30,
+    "n_warmup": 300,
+    "steps_per_sample": 10,
+    "target_energy_fraction": 0.5,
+    "lsb_lr": 0.05,
+    "lsb_use_cem": true
+  },
+  "reference": "arXiv 2512.02323 -- Langevin Stochastic Boltzmann sampling"
+}

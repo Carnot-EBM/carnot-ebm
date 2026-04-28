@@ -108,6 +108,8 @@ traceable to a checked-in experiment artifact under `results/`.
 | Symbolic-KAN v2 production deployment + HuggingFace + IPFS dual distribution | **AUC=1.0** integration test; model live at huggingface.co/Carnot-EBM/symbolic-kan-v2 | Exp 968 |
 | PPSEBM cross-session memory (arXiv 2512.15658) | **Plateau broken**: 9/10 sessions add templates; cluster count 20 → 83 | Exp 970 |
 | KAN-MILP formal property verification (monotonicity, output range, boundary) | **3 properties verified** via MILP; 11 violations found in untrained model | Exp 972 |
+| KAN-MILP monotonicity enforcement (isotonic projection fix) | **11 violations eliminated**; 1.89x inference speedup post-fix; zero violations in production model | Exp 992 |
+| SC-Energy Tier 2 production wiring as OOD detector | **143 tests, 0 failures**; `SCEnergyEnergyAdapter` replaces VJEPA v2 as default Tier 2 (VJEPA retained as fallback) | Exp 1001 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -142,7 +144,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  across 973 experiments and 81 milestones, structured as six phases with
+  across 1,011 experiments and 84 milestones, structured as six phases with
   a plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,
   hardware track, and Phase 3 (Kona-parity foundation-model) direction.
@@ -346,7 +348,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 961 experiments across 80 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 999 experiments across 83 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

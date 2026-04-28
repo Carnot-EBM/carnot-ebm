@@ -33,6 +33,278 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-28 arxiv Scan (Milestone 2026.04.79 Planning)
+
+### Multilevel Training for Kolmogorov-Arnold Networks
+- **Paper:** arXiv 2603.04827 (March 2026)
+- **What:** Achieves orders-of-magnitude accuracy improvements through multilevel training with
+  spline knot refinement — coarser grids first, then progressively refined. Particularly
+  effective for physics-informed problems and small datasets. Compatible with existing KAN 2.0
+  spline activations.
+- **Relevance to Carnot:** Carnot's KAEMEnergy and GS-KAN energy tier are trained on small
+  FoVer corpora (57–500 pairs). Multilevel training should reduce epochs-to-convergence by
+  reducing early-training instability. Combines naturally with the Newton-Kaczmarz optimizer
+  (arXiv 2512.18921): NK handles second-order convergence while multilevel handles grid structure.
+  Together they could reduce KAN training overhead from ~15 min to ~2 min per experiment, directly
+  improving autoresearch iteration speed.
+- **Concrete experiment:** Milestone 2026.04.79+ — Integrate multilevel training into
+  KAEMEnergy.fit() with three grid levels (G=4→8→16). Compare epochs-to-AUC-0.95 vs
+  single-level G=10 training. Target: 3x or more convergence speedup on 57-pair FoVer corpus.
+- **When to incorporate:** Milestone 2026.04.79 (Exp 1021, NK-KAEMEnergy + Multilevel).
+
+### Hardware-Oriented Inference Complexity of Kolmogorov-Arnold Networks
+- **Paper:** arXiv 2604.03345 (April 2026)
+- **What:** Derives platform-independent complexity metrics for KAN hardware: Rational
+  Multiplications (RM), Bit Operations Per weight (BOP), and Normalized Activation Bit
+  Sparsity (NABS). Validated on FPGA implementations. Provides closed-form formulas for
+  estimating KAN LUT, DSP, and BRAM usage from architecture hyperparameters without needing
+  synthesis.
+- **Relevance to Carnot:** Carnot's KV260 FPGA target has a hard 117K LUT budget. The current
+  approach to LUT estimation is heuristic (param_count × multiplier). This paper provides
+  architecture-level formulas: LUT ≈ RM × bits_per_weight, where RM = n_inputs × n_hidden ×
+  G (grid points). For KAEMEnergy(n=64, h=8, G=10): RM = 64×8×10 = 5120 rational mults. At
+  16-bit precision, estimated LUT ≈ 5120×16 = 82K — just under the 117K budget. For GS-KAN
+  with shared parent (G=1 per edge, N_transforms=1): RM = 64×8×1 = 512, LUT ≈ 8K — very
+  comfortable fit. This paper lets us derive GS-KAN's architectural advantage analytically.
+- **Concrete experiment:** Milestone 2026.04.79 — Add RM/BOP/NABS computation to GS-KAN v3
+  experiment (Exp 1019). Compare KAEMEnergy vs GS-KAN on hardware complexity metrics, not just
+  parameter count. Target: GS-KAN RM < 20% of KAEMEnergy RM while maintaining AUROC ≥ baseline.
+- **When to incorporate:** Milestone 2026.04.79 (Exp 1019, GS-KAN v3).
+
+### Digitally Optimized Initializations for Fast Thermodynamic Computing
+- **Paper:** arXiv 2603.24183 (March 2026)
+- **What:** Uses digital processors to compute Mpemba-optimized initializations for thermodynamic
+  computing hardware. The "Mpemba effect" for spin systems: starting from a specific correlated
+  initial state reaches the target equilibrium faster than random initialization, suppressing
+  slow relaxation modes. Demonstrates 2-5x convergence speedup on hardware Ising machines without
+  changing the hardware itself.
+- **Relevance to Carnot:** Carnot's ALMC-ODE annealed sampler (arXiv 2604.20052) and KV260 FPGA
+  Ising sampler both use random initialization, which causes slow convergence on large spin counts
+  (the primary reason SpilledEnergy AUROC was 0.5 on live data — insufficient annealing steps).
+  Mpemba initialization is purely digital (compute on CPU, upload to FPGA/sampler) and requires
+  no hardware changes. For the KV260, this means: compute the Mpemba-optimal initial configuration
+  on CPU (from the mean-field equations), AXI-upload it to the Ising core instead of random init.
+  Expected convergence: 2-5x faster per constraint check, which translates to 2-5x lower latency
+  or 2-5x more samples in the same budget.
+- **Concrete experiment:** Milestone 2026.04.79 — Add Mpemba initialization to ALMCODESampler
+  (Exp 1020). Compute mean-field equilibrium as warm start, compare convergence steps vs random
+  init. Target: convergence steps < 50% of random-init baseline on bimodal problem.
+- **When to incorporate:** Milestone 2026.04.79 (Exp 1020, ALMC-ODE v2).
+
+### Self-Distilled Reasoner: On-Policy Self-Distillation for LLMs
+- **Paper:** arXiv 2601.18734 (January 2026)
+- **What:** Single LLM acts as both teacher (conditioned on verified reasoning traces) and student
+  (standard context). Achieves self-improvement with only 1% of the process labels required by
+  standard PRMs. Superior token efficiency compared to RLVR alone. Key mechanism: the "teacher"
+  mode sees verification outcomes (correct/incorrect step labels) that the "student" mode does not.
+- **Relevance to Carnot:** Energy-Selection SSD (FR-11 mandatory self-learning) is Carnot's
+  version: the "teacher" is the energy function selecting high-confidence outputs. This paper
+  provides a complementary mechanism: use Carnot's step-level FoVer labels as the "teacher"
+  conditioning signal rather than just energy thresholds. Combining Self-Distilled Reasoner's
+  label-conditioned distillation with Energy-Selection SSD's energy filter creates a richer
+  self-improvement signal: (1) energy threshold removes low-confidence outputs, (2) step labels
+  condition the teacher on WHICH steps were verified correct. This may close FR-11 more
+  thoroughly than either approach alone.
+- **Concrete experiment:** Milestone 2026.04.79 — Include Self-Distilled Reasoner as a comparison
+  baseline in Energy-Selection SSD v2 (Exp 1015). Measure: energy-only filter vs label-conditioned
+  filter vs combined. If combined approach outperforms energy-only, document as FR-11 closure path.
+- **When to incorporate:** Milestone 2026.04.79 (Exp 1015, Energy-Selection SSD v2).
+
+### Necessary and Sufficient Conditions for Universality of KAN
+- **Paper:** arXiv 2604.23765 (April 2026)
+- **What:** Proves that a single non-affine function suffices for universal approximation in deep
+  KANs (more than one hidden layer). Provides tight lower bounds on the number of hidden units
+  required for universality. Resolves a theoretical gap in prior KAN universality results.
+- **Relevance to Carnot:** Carnot's KAEMEnergy uses KAN as a universal verifier for constraint
+  satisfaction. This paper provides formal guarantees: a 2-layer KAN with a single non-affine
+  activation CAN represent any constraint energy function. This is the theoretical underpinning
+  for why KAN is a valid energy tier architecture (not just empirically observed — provably
+  sufficient). The lower bound on hidden units provides a principled way to set n_hidden in
+  KAEMEnergy: for FoVer's 57-pair corpus with ~10 effective constraint types, the bound
+  suggests n_hidden ≥ 8 is sufficient for universality.
+- **When to incorporate:** Background reference. Cite in spec update when adding REQ-SAMPLE-020+
+  (GS-KAN and NK variants). No new experiment needed — validates existing architecture.
+
+### LagONN: Lagrange Oscillatory Neural Networks for Constraint Satisfaction
+- **Paper:** arXiv 2505.07179 (May 2025)
+- **What:** Introduces additional oscillators as Lagrange multipliers to guide Hopfield-style
+  networks toward feasible regions in the energy landscape. Avoids infeasible attractors by
+  augmenting the energy function with constraint-penalty terms that adapt at runtime. Key
+  advantage over standard penalty methods: oscillators provide continuous feedback, not
+  step-function penalties — gentler landscape modification.
+- **Relevance to Carnot:** PPSEBM (Progressive Penalty Self-Evolving Boltzmann Machine) already
+  uses an adversarial penalty mechanism. LagONN's oscillatory Lagrange approach could improve
+  PPSEBM's ability to escape infeasible constraint configurations. More importantly: for the
+  FoVer constraint corpus, LagONN's "infeasibility detection via oscillator phase" is structurally
+  identical to Carnot's RETRO-CONSTRAINT-ZERO-DELTA root cause — when constraints are orthogonal
+  (semantically non-overlapping), the penalty landscape is flat. LagONN's Lagrange oscillators
+  explicitly handle this case by adding feedback when delta=0.
+- **Concrete experiment:** Consider for Milestone 2026.04.80+ — LagONN-inspired PPSEBM: add
+  Lagrange oscillators to PPSEBM's constraint penalty mechanism to handle the zero-delta case.
+  Target: PPSEBM sessions_with_new_templates > 3 on heterogeneous constraint corpus.
+- **When to incorporate:** Milestone 2026.04.80 (after PPSEBM v4 validates baseline).
+
+## 2026-04-27 user-flagged Apple Research
+
+### SSD: Embarrassingly Simple Self-Distillation Improves Code Generation
+- **Paper:** arXiv 2604.01193 (April 2026)
+- **Authors:** Ruixiang Zhang, Richard He Bai, Huangjie Zheng, Navdeep Jaitly, Ronan Collobert,
+  Yizhe Zhang (Apple Research).
+- **What:** Sample model's own outputs under specific temperature + truncation settings, then
+  apply standard SFT on those samples. No external verifier, no teacher model, no RL. Headline
+  result: Qwen3-30B-Instruct improves from 42.4% to 55.3% pass@1 on LiveCodeBench v6 — a 12.9-pp
+  jump from self-distillation alone. Mechanism framed as resolving a "precision-exploration
+  conflict in LLM decoding": suppress distractor tails where precision matters, preserve diversity
+  where exploration matters. Generalizes across Qwen and Llama at 4B/8B/30B, instruct and thinking
+  variants, with gains concentrating on harder problems.
+- **Relevance to Carnot:** Adversarial baseline AND complementary technique.
+  - **Adversarial:** Anywhere we report "Carnot improves the base model by X pp on math/code,"
+    we should also measure "SSD-improved base model alone vs. SSD + Carnot." A 12.9-pp jump from
+    SSD alone means our claimed deltas may be partially recoverable without verification. Failing
+    to separate the two lets us over-claim Carnot's contribution.
+  - **Complementary:** SSD reshapes the *generator* distribution; Carnot adds a *verifier* on top.
+    The two stack — SSD-improved generator + energy verification + repair could plausibly hit
+    higher numbers than either alone.
+  - **Cascade structural map:** SSD's "suppress distractor tails / preserve exploration diversity"
+    is what our Tier 0/1/2/3/4 cascade does at inference time via energy verification. SSD does
+    it at training time via temperature-truncation distillation.
+  - **FR-11 + Energy-Selection SSD opportunity:** FR-11 already crawls cross-session memory of
+    cascade verdicts. A Carnot-native SSD variant would distill the generator on outputs that
+    Carnot's *energy function* marks as high-confidence-correct — using the energy function as
+    the SSD selection filter rather than just temperature/truncation. More principled signal
+    than the SSD paper has access to.
+  - **Math-repair ceiling re-think:** Exps 942/953/963 hit ceilings on SVAMP/GSM8K. Some of that
+    may be a generator-distribution problem, not a repair-mechanism problem. Distilling our SOTA
+    generators (Qwen3.6-35B-A3B, Gemma-4-31B/26B-A4B) before running repair could partially
+    close the gap.
+- **Caveats / unknowns:**
+  - "Specific temperature and truncation settings" — abstract doesn't disclose them. Reproducing
+    requires the full paper.
+  - Single benchmark (LiveCodeBench), single-domain (code). Whether the result generalizes to
+    SVAMP/GSM8K/FoVer math reasoning is empirically open.
+  - SSD-improved models may need Carnot *more*, not less: if SSD over-fits to "model-confident"
+    patterns, hallucination on out-of-distribution inputs could *increase* — exactly where our
+    verification has highest value.
+  - No error bars reported in the abstract; multi-seed validation needed before trusting the
+    42.4 → 55.3 number as settled.
+- **Three concrete operational next steps** (filed for .78 or later):
+  1. Add SSD baseline to the eval pipeline. New experiment: base model vs SSD-distilled vs
+     SSD + Carnot, on a held-out math benchmark. Without this comparison our pp-improvement
+     numbers are ambiguous.
+  2. **FR-11 + Energy-Selection SSD experiment.** Use Carnot's energy function as the SSD filter,
+     not temperature/truncation. Train on cascade-high-confidence outputs, evaluate on held-out
+     hallucination corpus.
+  3. **Math-repair re-think for Phase 1.** Before declaring SVAMP/GSM8K a "ceiling," distill the
+     SOTA-tier generators (Qwen3.6-35B, Gemma-4-31B) on their own correct samples and re-measure.
+
+## 2026-04-27 arxiv Scan (Milestone 2026.04.76 Conductor Scan)
+
+### PCIB: Predictive Coding and Information Bottleneck for Hallucination Detection
+- **Paper:** arXiv 2601.15652 (January 2026)
+- **What:** Combines neuroscience-inspired Predictive Coding signals (surprise against internal priors)
+  with Information Bottleneck theory to detect LLM hallucinations. Achieves 0.8669 AUROC using a
+  <1M parameter classifier trained on 75x less data and running 1000x faster than LLM-judge baselines.
+  Introduces a "Falsifiability Score" that detects when the model states confident claims that contradict
+  the source context — a signal unavailable from token-probability alone.
+- **Relevance to Carnot:** The predictive coding surprise signal is structurally identical to Carnot's
+  energy: a low-surprise (low-energy) token fits the constraint manifold; a high-surprise token is an
+  anomaly. The Falsifiability Score maps directly onto Carnot's Phase 1 goal — detecting outputs that
+  are confident AND wrong. Key advantage over entropy-based detectors (Semantic Entropy, arXiv 2508.14496):
+  PCIB is interpretable (signals have causal explanations), operates without a retrieval corpus, and is
+  fast enough for inline deployment at inference time. The paper's negative finding — "Rationalization
+  signal fails to distinguish hallucinations" — confirms that asking the model to explain itself is not
+  a reliable verification strategy, validating Carnot's energy-grounded (rather than self-report-grounded)
+  approach.
+- **Concrete experiment:** Milestone 2026.04.77+ — PCIB signals as EBM input features: extract
+  entity-focused uptake and falsifiability scores from a local Gemma4-E4B-it model, train a KAN energy
+  function on these features, compare AUROC vs raw embedding baseline (Exp 442/944 corpus).
+- **When to incorporate:** Milestone 2026.04.77 (after ThreeTierPipeline baseline from .75/.76).
+
+### Concurrent KAN Training via Disjoint Datasets with FPGA Parallelization
+- **Paper:** arXiv 2512.18921 (December 2025)
+- **What:** Presents three acceleration techniques for KAN training under the Newton-Kaczmarz (NK)
+  optimizer: (1) a pre-training initialization aligned with NK's update structure, (2) disjoint dataset
+  training with model merging (trains on separate data subsets independently then combines), and (3) FPGA
+  hardware parallelization of basis function evaluation. Reports KANs training "more than 40 times faster
+  than neural networks" at equivalent accuracy on CPU; FPGA implementation is fully reproducible with
+  open-source code.
+- **Relevance to Carnot:** Carnot's KAEMEnergy (KAN-based energy tier) is trained offline and then
+  deployed on KV260 FPGA for inference. This paper provides two complementary benefits: (a) the 40x CPU
+  speedup directly reduces experiment iteration time for training new constraint-type KANs in the
+  autoresearch loop — each experiment currently spends ~15min on KAN training overhead; (b) the FPGA
+  parallelization technique directly informs the KV260 v4 RTL design for KAN inference (hardware/kv260/)
+  — the disjoint-dataset merging is the software analogue of the hardware's pipelined basis evaluation.
+  The NK convergence is also more suitable than Adam for Carnot's small-N constraint datasets (57-500
+  pairs), where second-order methods are not dominated by stochastic gradient noise.
+- **Concrete experiment:** Milestone 2026.04.77+ — NK-trained KAEMEnergy: replace Adam optimizer with
+  Newton-Kaczmarz in KAN energy training (Exp 936/948 pipeline). Compare training time and AUROC on the
+  57-pair FoVer corpus and 500-pair Z3-expanded corpus (from arXiv 2505.15960 expansion plan).
+- **When to incorporate:** Milestone 2026.04.77 (requires Z3-expanded corpus from .76 Exp 983 first).
+
+### Scaling Laws for Gaussian Kolmogorov-Arnold Networks
+- **Paper:** arXiv 2604.21174 (April 2026)
+- **What:** Derives a principled operating interval ε ∈ [1/(G-1), 2/(G-1)] for the Gaussian scale
+  parameter in FastKAN/Gaussian KANs, validated across function approximation and physics-informed
+  problems. Shows that the first-layer scale determines distinguishability of inputs and cannot be
+  recovered by later layers — positioning scale selection as a design-time rather than training-time
+  decision. Demonstrates Gaussian KANs are competitive with Chebyshev KANs when properly scaled.
+- **Relevance to Carnot:** Carnot's KAEMEnergy uses B-spline activations (standard KAN 2.0). Gaussian
+  KANs are already implemented in the carnot-kan crate as an alternative backend (FastKAN path). This
+  paper fills the missing design rule: previously, the Gaussian scale parameter was set heuristically
+  or grid-searched. With the ε ∈ [1/(G-1), 2/(G-1)] rule, Carnot can initialize the Gaussian KAN
+  energy tier analytically based on the number of grid points G, eliminating scale-search overhead
+  from the autoresearch loop. The physics-informed problem results (PDEs) are directly analogous to
+  Carnot's constraint satisfaction setting where the energy landscape must conform to known invariants.
+- **Concrete experiment:** Milestone 2026.04.77+ — Apply the ε design rule to Gaussian KAEMEnergy
+  initialization. Compare convergence speed (epochs to AUC=0.95) vs B-spline KAN on 57-pair FoVer
+  corpus. Hypothesis: Gaussian KAN reaches target AUC 2-3x faster with analytic scale initialization
+  vs grid search or B-spline default.
+- **When to incorporate:** Milestone 2026.04.77 (combinable with NK optimizer experiment above).
+
+### Quantum Annealing Algorithms for Estimating Ising Partition Functions
+- **Paper:** arXiv 2504.21666 (April 2025)
+- **What:** Introduces a quantum protocol combining reverse quantum annealing with optimized
+  nonequilibrium initial distributions to estimate Ising partition functions. Dramatically reduces
+  estimator variance compared to classical Jarzynski equality approaches, improving performance
+  scaling "from ~8.5 to ~0.5" on spin glass benchmarks. Near-term feasibility demonstrated on
+  superconducting qubits and trapped ion platforms without requiring strict adiabatic conditions.
+- **Relevance to Carnot:** Partition function estimation is the foundation of thermodynamic computing's
+  energy calibration: the inverse temperature β in Carnot's Ising sampler is calibrated by estimating
+  the partition function Z(β). Currently, Carnot uses heuristic temperature schedules (simulated
+  annealing). This paper provides a quantum path to exact Z estimation, relevant to Phase 2 when
+  Carnot integrates D-Wave or Pasqal neutral-atom hardware (already in hardware wishlist). More
+  immediately: the reverse annealing + optimized initialization pattern is implementable on classical
+  hardware as an improved initialization strategy for the KV260 FPGA Ising sampler (currently uses
+  random initialization, which is the main cause of slow convergence on large spin counts).
+- **Concrete experiment:** Consider for Milestone 2026.04.78+ after KV260 v4 RTL is validated.
+  Classical analogue: implement reverse annealing initialization (start from a warm state near the
+  expected optimum rather than random) in Python Ising sampler, measure convergence time reduction.
+- **When to incorporate:** Milestone 2026.04.78 (Phase 2 hardware track, after KV260 v4 RTL).
+
+### GS-KAN: Parameter-Efficient KANs via Sprecher-Type Shared Basis Functions
+- **Paper:** arXiv 2512.09084 (December 2025)
+- **What:** Proposes GS-KAN, a parameter-efficient variant of Kolmogorov-Arnold Networks that
+  maintains a single shared parent function per layer and constructs edge-specific functions via
+  learnable linear transformations. Directly inspired by David Sprecher's constructive proof of
+  the Kolmogorov superposition theorem. Enables KAN deployment in high-dimensional settings where
+  standard per-edge parameterization causes parameter explosion. Outperforms MLPs on high-dimensional
+  classification while maintaining competitive function approximation accuracy.
+- **Relevance to Carnot:** Carnot's KV260 FPGA target (117K LUTs, 216 BRAM tiles) has strict
+  parameter memory budgets. Standard KAEMEnergy with G=10 grid points × N inputs × hidden units
+  already pushes the BRAM budget (see KV260 LUT overflow RETRO-072). GS-KAN's shared parent function
+  approach reduces KAN memory by roughly N_edges / 1 per layer — for a 2-layer KAN with 64 inputs
+  and 8 hidden units, this is an ~8x reduction in basis storage. Combined with the Newton-Kaczmarz
+  training (arXiv 2512.18921), GS-KAN provides both the parameter reduction needed for KV260 fit
+  AND the training speed needed for autoresearch iteration. The Sprecher construction also provides
+  a formal justification for why KANs generalize well on small Carnot datasets: the shared parent
+  function is a universal approximator that the linear transformations specialize — not an overfit
+  per-example memorization.
+- **Concrete experiment:** Milestone 2026.04.77+ — GS-KAN energy tier: implement GS-KAN in
+  python/carnot/models/kan.py as an alternative to standard KAN 2.0 energy tier. Train on FoVer
+  57-pair corpus. Compare: (a) AUROC vs standard KAN, (b) parameter count, (c) estimated LUT usage
+  via synthesis report. Target: AUROC parity with <50% of standard KAN's parameter count.
+- **When to incorporate:** Milestone 2026.04.77 (KV260 memory budget is a hard constraint from .75).
+
 ## 2026-04-27 arxiv Scan (Milestone 2026.04.76 Planning)
 
 ### Unlocking the Power of Boltzmann Machines by Parallelizable Sampler and Efficient Temperature Estimation
@@ -4991,3 +5263,148 @@ thermodynamic computing Ising FPGA
   space. Train a KAN energy function on the amplified discrepancy signal. Target: AUC > 0.85
   on public jailbreak benchmarks (AdvBench, JailbreakBench) without labeled training data.
 - **When to incorporate:** Milestone 2026.04.76 (after ThreeTierPipeline is fully deployed in .75).
+
+## 2026-04-27 arxiv Scan (Milestone 2026.04.77 Planning)
+
+### HalluSAE: Detecting Hallucinations via Sparse Auto-Encoders and Phase-Transition Energy Landscapes
+- **Paper:** arXiv 2604.16430 (April 2026)
+- **What:** Phase-transition-inspired framework that models hallucination detection as a critical
+  shift in latent dynamics. Uses potential energy landscapes derived from Sparse Autoencoder (SAE)
+  features to identify hallucination-prone activations through three stages: Potential Energy
+  Phase Zone Localization, Hallucination Feature Attribution, and Causal Detection. The potential
+  energy landscape identifies layer-wise regions where the model's internal state is near a phase
+  boundary — a precursor to hallucination.
+- **Relevance to Carnot:** This is a direct energy-based interpretation of the SAE hallucination
+  signal that Carnot attempted in Exps 863/878 (HalluSAEGeometricProbe, retired at AUC=0.45).
+  The phase-transition framing may explain the prior failure: Carnot used geometric (distance-based)
+  energy, but the paper uses potential energy derived from SAE feature activation patterns —
+  different signal entirely. The SAE phase-zone localization is a new Tier 0 probe candidate
+  that does not repeat the retired HalluSAE geometry approach.
+- **Concrete experiment:** Milestone 2026.04.78+ — HalluSAE Phase-Energy Tier 0g: extract SAE
+  features from the live Gemma4 model using eleutherai/sae-lens, compute potential energy via
+  feature activation patterns (not geometry), compare AUROC vs existing Tier 0 probes. Target
+  AUC > 0.65 (retired approach floor). This is NOT a rerun of retired Exps 863/878 — different
+  signal source (SAE feature energy vs geometric probe).
+- **Prior failure:** Exps 863/878 (HalluSAEGeometricProbe) retired with below_v1 verdict. Root
+  cause: geometry-based energy (Euclidean distance) is insensitive to SAE feature activation
+  patterns. New approach uses potential energy from feature activation — structurally different.
+- **When to incorporate:** Milestone 2026.04.78 (after SAE infrastructure from Tier 0 probes
+  is established in .77).
+
+### DiffuTruth: Non-Equilibrium Thermodynamics for LLM Hallucination Detection
+- **Paper:** arXiv 2602.11364 (February 2026)
+- **What:** DiffuTruth reconceptualizes fact verification via non-equilibrium thermodynamics.
+  Factual truths are modeled as stable attractors on a generative manifold; hallucinations are
+  unstable regions. The key metric is a "Semantic Energy" computed from diffusion model
+  likelihoods — claims with low semantic energy are stable (factual), claims with high semantic
+  energy are unstable (hallucinated). Training-free: uses a pre-trained diffusion LM without
+  fine-tuning. Reports AUROC 0.70+ on fact verification benchmarks.
+- **Relevance to Carnot:** DiffuTruth's Semantic Energy metric is structurally identical to
+  Carnot's constraint energy: low energy = constraint satisfied (claim is factual), high energy
+  = constraint violated (claim is hallucinated). The key novelty is using a diffusion model's
+  generative energy as the verification oracle rather than a discriminative classifier. This
+  is relevant to Carnot's Phase 3 vision: an EBM that directly evaluates factual consistency.
+  More immediately: DiffuTruth's training-free property means it can be integrated as a
+  Tier 0 probe using a locally-hosted diffusion LM without any additional labeled data.
+- **Concrete experiment:** Milestone 2026.04.78+ — DiffuTruth Semantic Energy Tier 0h: integrate
+  DiffuTruth's likelihood-based energy computation using a local diffusion LM (e.g., from
+  HuggingFace Diffusers). Compare AUROC vs Tier 0b (NUP Probe, AUC=1.0 on synthetic) on the
+  FOVER live corpus (57 pairs). Target: AUROC improvement as an additive signal to the cascade.
+- **When to incorporate:** Milestone 2026.04.78+ (requires diffusion LM infrastructure).
+
+### Stochastic Attention via Langevin Dynamics on the Modern Hopfield Energy
+- **Paper:** arXiv 2603.06875 (March 2026)
+- **What:** Proves that attention computation is exactly one gradient descent step on a classical
+  Modern Hopfield energy function. Derives stochastic attention as Langevin sampling on this
+  energy: temperature parameter controls the tradeoff between exact memory retrieval (low
+  temperature → deterministic attention) and exploratory generation (high temperature →
+  stochastic attention). Provides a unified energy-based framework for both attention and MCMC.
+- **Relevance to Carnot:** This is the missing theoretical bridge between Carnot's MCMC-based
+  Ising/KAN energy evaluation and transformer attention mechanisms. The key insight: if
+  attention IS an energy function evaluation, then Carnot can directly replace standard
+  attention with a constrained-energy attention — one that minimizes constraint energy during
+  the forward pass rather than just post-hoc. This opens a path to Phase 3 guided decoding:
+  instead of checking constraints after generation, use the constraint energy as the attention
+  energy during generation. Langevin temperature parameter maps to Carnot's beta (inverse temp).
+- **Concrete experiment:** Milestone 2026.04.79+ — Energy-Attention Bridge: wire Carnot's IsingEBM
+  energy into the Hopfield attention energy formulation. Compare constraint satisfaction rate
+  (% responses with zero violations) for standard attention vs energy-guided attention on 50
+  GSM8K questions using Gemma4-E4B-it. This is the first experiment toward Phase 3 guided
+  decoding that doesn't require a separate post-hoc repair step.
+- **When to incorporate:** Milestone 2026.04.79+ (Phase 3 research track, after live pipeline
+  baseline confirmed in .77).
+
+### Annealed Langevin Monte Carlo for Multimodal Energy Landscapes
+- **Paper:** arXiv 2604.20052 (April 2026)
+- **What:** ALMC-ODE provides a principled alternative to standard MCMC for high-dimensional
+  multimodal distributions where energy barriers prevent gradient-based samplers from escaping
+  local minima. Combines annealed importance sampling with Langevin dynamics via an ODE
+  formulation, achieving reliable mixing across energy barriers. Demonstrated on Bayesian
+  inference problems with isolated modes.
+- **Relevance to Carnot:** Carnot's Langevin SB sampler (Exp 983, LSB, now the default) uses
+  parallelized Langevin dynamics but does not explicitly handle multimodal energy landscapes.
+  For constraint problems with multiple valid configurations (e.g., GSM8K problems with
+  multiple valid intermediate calculation paths), the sampler may get stuck in a local minimum.
+  ALMC-ODE's annealing schedule directly addresses this: gradually raising the temperature
+  allows the sampler to escape false minima while lowering it converges to the true constraint-
+  satisfying configuration. Relevant to KV260 RTL: the annealing schedule is hardware-native
+  (simple counter-driven temperature decay).
+- **Concrete experiment:** Milestone 2026.04.78+ — ALMC-ODE Sampler: add annealed temperature
+  schedule to the LSB sampler (Exp 983 default). Compare convergence on multi-modal constraint
+  problems (arithmetic problems with multiple valid intermediate steps). Target: AUC improvement
+  on the 57-pair FoVer corpus where multiple reasoning paths are equally valid.
+- **When to incorporate:** Milestone 2026.04.78 (after LSB sampler is validated in production
+  from .76/.77).
+
+## 2026-04-28 arxiv Scan (Milestone 2026.04.78 Planning)
+
+### Process Reward Models That Think (ThinkPRM)
+- **Paper:** arXiv 2504.16828 (April 2026)
+- **Authors:** Lightman et al., MIT / Harvard
+- **What:** Trains data-efficient process reward models (PRMs) that verify intermediate
+  reasoning steps by generating explicit verification chain-of-thought (CoT). Rather than
+  requiring expensive step-level discriminative supervision (PRM800K), ThinkPRM leverages
+  long-CoT models to reason about whether each step is correct. Achieves 1% of PRM800K's
+  training data requirement while outperforming discriminative PRMs on ProcessBench, MATH-500,
+  and AIME '24. Out-of-domain gains: +8% on GPQA-Diamond, +4.5% on LiveCodeBench vs
+  LLM-as-a-Judge at equal compute budget.
+- **Relevance to Carnot:** Carnot's ThinkProbe (Exp 444, Tier 0a) already implements a
+  3-step CoT pre-filter that asks a small model to reason about whether a response is
+  correct before Ising verification. ThinkPRM validates and extends this: the "generation
+  chain-of-thought" verification pattern is equivalent to Carnot's CarnotThinkProbe but
+  with a trained verifier instead of a prompted one. Concrete implications: (1) Carnot should
+  train ThinkPRM-style on the 57-pair FoVer corpus to produce a trained step-verifier rather
+  than relying on zero-shot prompting. (2) ThinkPRM's 8% GPQA-Diamond gain on out-of-domain
+  evaluation is the type of generalization Carnot needs: our 57-pair FoVer corpus is in-domain
+  math; we want a verifier that generalizes to code, logic, planning. (3) The +4.5% on
+  LiveCodeBench shows ThinkPRM adds value ON TOP of strong base models — exactly the
+  Carnot-adds-value-on-top-of-SOTA claim we need evidence for.
+- **Concrete experiment:** Milestone 2026.04.78 — ThinkPRM-Verified CoT Step Scorer: train a
+  small Gemma4/Qwen3.6-based step verifier on FoVer pairs using ThinkPRM's CoT-generation
+  approach. Compare to CarnotThinkProbe zero-shot baseline on the 57-pair corpus. Metric: AUC
+  for step-level violation detection. Target: ThinkPRM-trained probe beats zero-shot probe.
+- **When to incorporate:** Milestone 2026.04.78 (Phase 3 — new research).
+
+### Beyond Outcome Verification: Verifiable Process Reward Models for Structured Reasoning
+- **Paper:** arXiv 2601.17223 (January 2026)
+- **Authors:** Anon submission
+- **What:** Introduces Verifiable Process Reward Models (VPRMs) — a reinforcement learning
+  framework where intermediate reasoning steps are verified by deterministic, rule-based
+  verifiers rather than neural judges. Applied to medical evidence synthesis where
+  guideline-defined criteria enable programmatic step verification. Achieves +20% F1 vs
+  SOTA, +6.5% improvement vs outcome-only verification. Key contribution: shows that
+  interpretable, auditable rule verification outperforms neural reward modeling when formal
+  rules can be expressed.
+- **Relevance to Carnot:** Carnot's existing VPRM arithmetic verifier (Exp 454, F1=1.0 vs
+  baseline=0.0) implements exactly this principle for arithmetic steps. VPRMs (arXiv 2601.17223)
+  validates the approach on a richer domain (medical reasoning) and provides a general
+  framework for extending to logic, code, and planning. The "rule-based verifier" is the
+  formal analogue of Carnot's Z3-backed VeriCoTStepValidator (Exp 453) — the paper
+  provides the formal RL integration missing from Carnot's current pipeline. The +6.5% vs
+  outcome-only verification is exactly what Carnot should be measuring: does step-level
+  constraint verification beat outcome-only (whole-response) checking?
+- **Concrete experiment:** Milestone 2026.04.78 — VPRM Rule-Based Step Verifier: extend
+  Exp 454's VPRMArithmeticVerifier to 6+ rule families (arithmetic, comparison, unit
+  consistency, logical entailment, code correctness, factual grounding). Evaluate on the
+  57-pair FoVer corpus with per-step labels. Target: F1 >= 0.90 on step-level verification.
+- **When to incorporate:** Milestone 2026.04.78 (Phase 3 — extends proven Exp 454 pattern).

@@ -1,0 +1,24 @@
+{
+  "experiment": 1011,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-28",
+  "started_at": "2026-04-28T09:08:16.667031+00:00",
+  "finished_at": "2026-04-28T09:08:16.667031+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "ALMC-ODE Annealed Sampler \u2014 Multimodal Energy Landscape Convergence (arXiv 2604.20052)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp983-langevin-sb-boltzmann-sampler",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: lsb_faster_set_default"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

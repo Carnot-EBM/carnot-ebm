@@ -1,0 +1,32 @@
+{
+  "experiment": 995,
+  "title": "PCIB Hallucination Probe \u2014 Tier 0f",
+  "run_date": "2026-04-27",
+  "started_at": "2026-04-27T23:28:42.297284+00:00",
+  "finished_at": "2026-04-27T23:28:47.142950+00:00",
+  "duration_s": 4.85,
+  "status": "success",
+  "schema": "experiment_result_v1",
+  "honest_verdict": "tier0f_below_threshold",
+  "pcib_auroc": 0.5321,
+  "vs_nup_probe_auroc": 0.964,
+  "tier0f_wired": false,
+  "pcib_loo_lr_auroc": 0.3667,
+  "pcib_best_linear_auroc": 0.5321,
+  "per_signal_aurocs": {
+    "entity_uptake": 0.3185,
+    "falsifiability_score": 0.5321,
+    "combined_score": 0.3728
+  },
+  "n_pairs": 57,
+  "n_correct": 30,
+  "n_incorrect": 27,
+  "feature_names": [
+    "entity_uptake",
+    "falsifiability_score",
+    "combined_score"
+  ],
+  "corpus_path": "results/fover_labeled_steps_live.json",
+  "inference_mode": "text_statistical_approximation",
+  "notes": "PCIBProbe uses text-statistical proxies for entity-uptake and falsifiability-score without LLM logits. Full PCIB (arXiv 2601.15652) requires per-token logits; this implementation is a Tier 0f approximation suitable for sub-millisecond fast-path filtering."
+}

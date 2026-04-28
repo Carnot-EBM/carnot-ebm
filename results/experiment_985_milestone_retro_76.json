@@ -1,0 +1,67 @@
+{
+  "experiment": 985,
+  "title": "Milestone 2026.04.76 Operational Retrospective",
+  "run_date": "2026-04-27T20:44:00Z",
+  "schema": "milestone_retro_v1",
+  "milestone": "2026.04.76",
+  "criteria_results": {
+    "1": false,
+    "2": false,
+    "3": false,
+    "4": false,
+    "5": false,
+    "6": false,
+    "7": false,
+    "8": true,
+    "9": false,
+    "10": true
+  },
+  "criteria_details": {
+    "1": "EnvPropagationGuard (Exp 975): NO ARTIFACT. Exp 975 never produced a result file. Root cause of cascade failure for criteria 2-6, 9.",
+    "2": "SC-Energy Tier 2 test failures (Exp 976): blocked_gate_check_failed — upstream exp975-env-propagation-guard artifact not found.",
+    "3": "SC-Energy wired as Tier 2 (Exp 976): same block as criterion 2.",
+    "4": "DualGPU fresh result (Exp 977): blocked_gate_check_failed — upstream exp975-env-propagation-guard artifact not found.",
+    "5": "Triple Integration E2E (Exp 978): blocked_gate_check_failed — upstream exp976-sc-energy-tier2-v2.tier2_wired=None.",
+    "6": "SpilledEnergy AUROC >= 0.70 (Exp 979): blocked_gate_check_failed — upstream exp975-env-propagation-guard artifact not found.",
+    "7": "KAN MILP violations == 0 (Exp 980): blocked_gate_check_failed — gate check bug: unknown op '' when evaluating exp972-kan-milp-formal-verification.n_violations_found (actual=11, expected=0). Gate config error, not the experiment itself.",
+    "8": "KV260 bitstream generated (Exp 982): PASSED. bitstream_generated=true, vivado_path=/tools/Xilinx/2025.2.1/Vivado, board_programmed=false (kv260.local unreachable), cpu_baseline_latency_us=12.83, duration_s=2342.",
+    "9": "PPSEBM live GPU relay (Exp 981): blocked_gate_check_failed — upstream exp975-env-propagation-guard artifact not found.",
+    "10": "Retrospective written (Exp 985): PASSED. This artifact. ops/ updates deferred to conductor Haiku reconciler per STOP-WHEN-DONE rule."
+  },
+  "criteria_met": 2,
+  "criteria_total": 10,
+  "additional_results": {
+    "exp974_preflight": "success — manifest synced, conductor IDs added [786, 641], exp906 root cause diagnosed (50q_scale_latency), SOTA models ready",
+    "exp983_lsb_sampler": "success — LSB 1.17x faster than Ising baseline, set as default sampler, unit tests pass",
+    "exp984_arxiv_scan": "success — 5 papers added to research-references.md covering EBM hallucination detection, KAN efficiency, quantum Ising sampling"
+  },
+  "slowest5_composition_changed": true,
+  "slowest5_note": "Legacy carryovers (Exp 786, 627, 603, 641, 906) all excluded by conductor manifest in .76 — none appeared in the milestone experiment set. .76 slowest experiments by wall time: Exp 982 (2342s KV260 synthesis), Exp 984 (265s arxiv scan), Exp 974 (preflight). Composition is entirely new; the chronic governance carryovers are no longer in the active run set.",
+  "prior_failures_blocks": 0,
+  "prior_failures_note": "Zero prior_failures discipline violations. All blocks were upstream-artifact gate checks (conductor_pre_gate layer), not CLAUDE.md no-doomed-rerun discipline triggers. Gate blocks are mechanically correct behavior; the cause is Exp 975's non-completion, not planner discipline failure.",
+  "root_cause_cascade": "Exp 975 (EnvPropagationGuard) produced no artifact — the same pattern as Exp 971 in .75 (KV260 board programming produced no artifact JSON due to missing try/finally guard). Exps 976, 977, 979, 981 gated directly on exp975 honest_verdict == 'env_propagation_fixed'. Exp 978 gated on Exp 976. This single missing artifact caused 6 of 10 criteria to fail. The EnvPropagationGuard fix — the entire purpose of .76 Phase 0 — was never executed.",
+  "gate_bug_identified": {
+    "experiment": 980,
+    "issue": "Gate check uses op='' (empty string) to compare exp972-kan-milp-formal-verification.n_violations_found against expected=0. The conductor evaluator reports 'unknown op' and fails the gate, blocking the fix experiment even though this experiment (KAN MILP Fix) is listed as INDEPENDENT in the dependency graph.",
+    "action_required": "Fix gate check configuration for Exp 980: op should be '==' or 'lte' or equivalent. This is a roadmap YAML config bug, not a code bug in the experiment itself."
+  },
+  "biggest_gaps_77": [
+    "EnvPropagationGuard (Exp 975) never completed: CARNOT_ env vars still not propagating to subprocesses. All live GPU experiments (SC-Energy Tier 2, DualGPU, SpilledEnergy AUROC, PPSEBM relay) remain blocked. This MUST be the first experiment in .77 with no upstream gate — produce the artifact or the cascade repeats.",
+    "6 of 10 .76 success criteria carry forward unexecuted: SC-Energy Tier 2 wiring (criteria 2-3), DualGPU fresh validation (4), Triple Integration E2E (5), SpilledEnergy AUROC >= 0.70 (6), PPSEBM live GPU relay (9). These are not new failures — they are .76 failures added to .75's failures. The pipeline has not advanced at all for live GPU work in two consecutive milestones.",
+    "KAN MILP violations (11 found Exp 972) still unfixed after two milestones: Exp 980 was blocked by a gate check config bug (op=''). The 11 monotonicity and boundary violations in KAEMEnergy remain in production. The gate bug must be fixed in the roadmap YAML before .77 runs Exp 980."
+  ],
+  "new_exclusion_candidates": [],
+  "new_exclusion_note": "No new exclusion candidates from .76. Failures were infrastructure-cascade from missing Exp 975 artifact (not experiment quality failures). Exp 975 non-completion follows the same missing-try/finally pattern as Exp 971 — a conductor artifact-write guard issue, not a doomed experiment. The legacy exclusion manifest (603, 627, 641, 786) already covers prior governance failures; no new entries warranted from this milestone.",
+  "milestone_successes": [
+    "KV260 bitstream generated for first time in project history (Exp 982): Vivado 2025.2.1 synthesis complete, bitstream at output/carnot_ising_v4_bd/carnot_ising_v4.bit, implementation_passes=true. Board unreachable (kv260.local DNS/network issue) but bitstream is ready for when board is accessible.",
+    "Langevin SB sampler deployed as default (Exp 983): 1.17x speedup over Ising baseline, arXiv 2512.02323 algorithm implemented and validated. First new default sampler in multiple milestones.",
+    "arxiv scan added 5 new references (Exp 984): EBM hallucination detection (2601.15652), KAN FPGA parallelization (2512.18921), Gaussian KAN scaling (2604.21174), quantum Ising partition (2504.21666), GS-KAN parameter efficiency (2512.09084).",
+    "Exp 974 preflight complete: manifest synced, SOTA models confirmed ready, Exp 906 root cause documented (50q_scale_x_per_question_latency), conductor IDs updated for legacy carryovers."
+  ],
+  "process_observations": [
+    "Missing try/finally in experiment scripts causes non-artifact production — same root cause as Exp 971 in .75. A conductor pre-launch check that verifies the script contains artifact-write logic before running would catch this class of failure.",
+    "Gate check config bug (op='') blocked an independent experiment (Exp 980) that had no upstream dependency. Roadmap YAML validation at load time would catch unknown ops before the milestone runs.",
+    "The .76 roadmap correctly identified the dependency chain (Exp 975 → 976 → 978 → 979 → 981) but did not protect against the case where Exp 975 itself fails silently without writing an artifact. A post-experiment artifact-existence check should fail loudly and halt the milestone rather than proceeding to gate-blocked downstream experiments."
+  ],
+  "honest_verdict": "milestone_failed_2_of_10_criteria_exp975_no_artifact_cascade_blocked_6_experiments_kv260_bitstream_generated_lsb_default_sampler_deployed_retro_complete_envpropagation_critical_blocker_carries_to_77"
+}
