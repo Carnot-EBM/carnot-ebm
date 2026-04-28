@@ -1,0 +1,226 @@
+{
+  "schema": "carnot.operational_retro.v54",
+  "retro_type": "full_milestone_augmented",
+  "milestone": "2026.04.78",
+  "milestone_theme": "Gate Schema Repair + .77 Carry-Forward Recovery + ThinkPRM + VPRM + ALMC-ODE",
+  "run_date": "2026-04-28",
+  "generated_at": "2026-04-28T10:18:00Z",
+
+  "total_wall_time_minutes": 2800,
+  "experiments_completed": 597,
+  "avg_minutes_per_experiment": 4.69,
+  "experiment_range": "1000-1012",
+  "new_milestone_experiments": 13,
+  "new_experiments_successful": 4,
+  "new_experiments_blocked": 6,
+  "new_experiments_not_run": 3,
+
+  "wall_time_vs_prior_milestone": {
+    "prior_milestone": "2026.04.77",
+    "prior_wall_time_minutes": 3064,
+    "delta_minutes": -264,
+    "delta_pct": -8.61,
+    "consecutive_improvement_streak": 7,
+    "streak_note": "SEVENTH CONSECUTIVE IMPROVEMENT — longest improvement streak in project history"
+  },
+  "wall_time_vs_58_baseline": {
+    "baseline_minutes": 3415,
+    "delta_minutes": -615,
+    "delta_pct": -18.0,
+    "consecutive_below_baseline": 4,
+    "baseline_note": "FOURTH CONSECUTIVE BELOW .58 BASELINE"
+  },
+
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment_id": 786,
+      "duration_minutes": 77,
+      "title": "Gemma4 OOM Fix v3 + VR Threshold Grid (GPU REQUIRED)",
+      "consecutive_appearances": 19,
+      "past_mandatory_gate_count": 16,
+      "classification": "legacy_carryover",
+      "exclusion_manifest_applied": false,
+      "root_cause_documented": false,
+      "note": "19th consecutive milestone appearance; exclusion manifest entry confirmed present but unapplied for 19 consecutive milestones; cumulative waste ~1,463 min across appearances"
+    },
+    {
+      "rank": 2,
+      "experiment_id": 641,
+      "duration_minutes": 42,
+      "title": "HermesVerifierAdapter v2 — LIVE Step-by-Step Generation",
+      "consecutive_appearances": 9,
+      "past_mandatory_gate_count": 6,
+      "classification": "legacy_carryover",
+      "exclusion_manifest_applied": false,
+      "root_cause_documented": false,
+      "note": "9th consecutive appearance, SIX past CLAUDE.md mandatory gate (mandatory gate triggers at 3 consecutive with no root-cause diagnosis); zero root-cause documentation produced across all 9 appearances"
+    },
+    {
+      "rank": 3,
+      "experiment_id": 906,
+      "duration_minutes": 35,
+      "title": "Code Repair 50q Scale-Up — IterativeSelfRepair with Gemma4",
+      "consecutive_appearances": 6,
+      "past_mandatory_gate_count": 3,
+      "classification": "legacy_carryover",
+      "exclusion_manifest_applied": false,
+      "root_cause_documented": false,
+      "note": "6th consecutive appearance, three past mandatory gate; probable cause is SOTA GGUF download overhead or repair loop overrun — not yet diagnosed"
+    },
+    {
+      "rank": 4,
+      "experiment_id": 668,
+      "duration_minutes": 34,
+      "title": "Live VR Attempt #18 v2 — First RETRO-033 Attempt with Structured Forcing",
+      "consecutive_appearances": 1,
+      "past_mandatory_gate_count": 0,
+      "classification": "research_experiment",
+      "note": "Historical carry-forward; RETRO-033 was formally closed in .57. Appearance here indicates conductor is re-running closed experiments — planner should have excluded it"
+    },
+    {
+      "rank": 5,
+      "experiment_id": 759,
+      "duration_minutes": 33,
+      "title": "Iterative 2-Round Code Repair Live — HumanEval (GPU REQUIRED)",
+      "consecutive_appearances": 1,
+      "past_mandatory_gate_count": 0,
+      "classification": "research_experiment",
+      "note": "New slow entrant; GPU-required long-running repair loop; represents the repair scaling track that IterativeSelfRepair inherited"
+    }
+  ],
+
+  "slowest_5_composition_vs_prior": {
+    "composition_changed": true,
+    "new_entrants": [759],
+    "exits": [627],
+    "note": "Exp 627 exited slowest-5 for first time — a structural improvement; Exp 759 entered as new slow entrant"
+  },
+
+  "gate_cascade_analysis": {
+    "consecutive_gate_cascade_blocks": 4,
+    "this_milestone_blocked_count": 6,
+    "blocked_experiments": [1005, 1006, 1007, 1008, 1011],
+    "root_cause": "Exp 1004 (Triple Integration v4) produced no result artifact — upstream gate dependency broke; Exps 1005-1011 cascaded blocked on gate_check_failed because their gated_on chains passed through Exp 1004",
+    "pattern": "Each of the last four milestones has had a single upstream experiment failure cascade-block 5-7 downstream experiments. This is a structural fragility: gate chains are strictly sequential and have no fallback paths.",
+    "fix_needed": "Experiments with independent research tracks (ThinkPRM, VPRM, ALMC-ODE) must use parallel gating with explicit independence markers, not a shared sequential dependency chain"
+  },
+
+  "legacy_carryover_analysis": {
+    "carryovers_this_milestone": 3,
+    "consecutive_milestone_streak": 19,
+    "legacy_experiments": [786, 641, 906],
+    "combined_time_minutes": 154,
+    "cumulative_waste_minutes_estimate": 2464,
+    "exclusion_manifest_status": "entries_present_but_unapplied_19_consecutive_milestones",
+    "note": "The exclusion manifest was built in .52, has been recommended for application in every retro since, and has not been applied for 19 consecutive milestones. This is the single largest recoverable savings opportunity."
+  },
+
+  "gpu_utilization": {
+    "dual_gpu_consecutive_idle_milestones": 13,
+    "dual_gpu_wiring_status": "wired_synthetic_only",
+    "exp1002_verdict": "wired_synthetic_only",
+    "cumulative_foregone_savings_minutes": 780,
+    "gpu_close_state": {
+      "gpu0_util_pct": 0,
+      "gpu0_vram_mb": 4,
+      "gpu0_temp_c": 47,
+      "gpu1_util_pct": 0,
+      "gpu1_vram_mb": 4,
+      "gpu1_temp_c": 48,
+      "temp_differential_c": 1
+    },
+    "gpu_close_clean": true,
+    "gpu_close_clean_streak": 14,
+    "note": "13 consecutive milestones of idle DualGPU capacity. Exp 1002 wired synthetically but live inference path not activated. Both GPUs idle at 0% at milestone close despite 2× capacity available."
+  },
+
+  "zombie_process_status": {
+    "zombie_detected": false,
+    "note": "No zombie processes detected at milestone close; GPU Zombie Killer holding stable"
+  },
+
+  "new_experiment_outcomes": {
+    "exp1000_preflight": "success — gate schema repaired, exclusion manifest entries verified present, SOTA models confirmed ready",
+    "exp1001_sc_energy_tier2_v4": "success — tier2_deployed, duration 246s",
+    "exp1002_dualgpu_pipeline_v5": "success — wired_synthetic_only (live inference path not activated)",
+    "exp1003_spilled_energy_live_gpu_v4": "success — live_below_threshold (research finding: spilled energy signal insufficient at current corpus size)",
+    "exp1004_triple_integration_v4": "not_run — no artifact produced; probable conductor abort after cascading failures",
+    "exp1005_ppsebm_live_relay_v3": "blocked — blocked_gate_check_failed",
+    "exp1006_energy_selection_ssd": "blocked — blocked_gate_check_failed",
+    "exp1007_thinkprm_step_verifier": "blocked — blocked_gate_check_failed",
+    "exp1008_vprm_rule_based_step_verifier": "blocked — blocked_gate_check_failed",
+    "exp1009_gs_kan_v2": "not_run",
+    "exp1010_kv260_first_light_v4": "not_run",
+    "exp1011_almc_ode_annealed_sampler": "blocked — blocked_gate_check_failed",
+    "exp1012_retro": "not_run — conductor did not reach retro experiment"
+  },
+
+  "criteria_met": {
+    "gate_schema_repaired": true,
+    "sc_energy_tier2_deployed": true,
+    "dualgpu_live_inference": false,
+    "spilled_energy_live_validated": false,
+    "triple_integration": false,
+    "ppsebm_live_relay": false,
+    "energy_selection_ssd": false,
+    "thinkprm_validated": false,
+    "vprm_validated": false,
+    "kv260_first_light": false,
+    "almc_ode_validated": false,
+    "milestone_retro_written": true
+  },
+  "criteria_met_count": 3,
+  "criteria_total": 12,
+
+  "bottlenecks_identified": [
+    "GATE CASCADE BLOCK FOURTH CONSECUTIVE MILESTONE: Exp 1004 produced no artifact; 6 downstream experiments blocked in cascade on gate_check_failed. Sequential gate chains with no independence routing are a structural fragility that has now recurred in every milestone since .75.",
+    "LEGACY CARRYOVER EXPERIMENTS 19TH CONSECUTIVE: Exp 786 (77 min), Exp 641 (42 min), Exp 906 (35 min) ran again for the 19th, 9th, and 6th consecutive milestone respectively. Exclusion manifest entries present but unapplied for 19 consecutive milestones. Combined waste this milestone: 154 min. Cumulative estimated waste: ~2,464 min (41.1 hours).",
+    "EXP 641 NINE CONSECUTIVE SIX PAST MANDATORY GATE: HermesVerifierAdapter v2 has run 9 consecutive milestones with zero root-cause documentation produced. CLAUDE.md mandatory gate is 3 consecutive — this is 6 past the gate. No diagnostic effort has been documented.",
+    "EXP 906 SIX CONSECUTIVE THREE PAST MANDATORY GATE: IterativeSelfRepair 50q has run 6 consecutive milestones (3 past mandatory gate) with probable SOTA GGUF download overhead or repair loop overrun as suspected cause — never formally diagnosed.",
+    "DUALGPU 13TH CONSECUTIVE IDLE MILESTONE: DualGPU wired synthetically in Exp 1002 but live inference path not activated. Both RTX 3090s idle at 0% at milestone close. Cumulative foregone savings ~780 min (13 hours). Zero throughput improvement realized from hardware that has been deployed since .52.",
+    "EXP 1004 MISSING ARTIFACT CAUSES DOWNSTREAM CASCADE: Triple Integration v4 (Exp 1004) produced no result JSON — likely conductor abort or timeout — but its absence blocked 6 experiments via gate_check_failed. Gate dependency design lacks fallback routing for upstream failures.",
+    "RETRO EXPERIMENT NOT RUN: Exp 1012 (milestone retro) never ran — conductor stopped before reaching it. This means the conductor did not self-reflect on the milestone, deferring the analysis entirely to this post-hoc human-driven retro.",
+    "SEQUENTIAL EXPERIMENT EXECUTION ON INDEPENDENT TRACKS: ThinkPRM (Exp 1007), VPRM (Exp 1008), and ALMC-ODE (Exp 1011) are independent research tracks with no data dependencies between them. They were blocked sequentially by the same upstream gate failure, but even if unblocked, would have run sequentially rather than in parallel, wasting ~60 min of potential wall-time savings.",
+    "CLOSED RETRO RE-RUN: Exp 668 (RETRO-033 VR attempt) appeared in slowest-5 despite RETRO-033 being formally closed in milestone .57. Planner did not filter out closed-retro experiments from the conductor run queue."
+  ],
+
+  "improvements_suggested": [
+    "APPLY EXCLUSION MANIFEST IMMEDIATELY (highest ROI): Run manifest_fix_patch.txt to permanently retire Exp 786, Exp 641, and Exp 906 from the conductor queue. This is the 19th consecutive retro recommending this action. Estimated savings: 154 min/milestone (~5.5% wall time).",
+    "GATE INDEPENDENCE ROUTING: Tag independent research tracks (ThinkPRM, VPRM, ALMC-ODE, hardware experiments) with explicit independence markers so a single upstream failure does not cascade across unrelated experiments. Gate validation should route around missing-artifact failures for experiments with no true data dependency.",
+    "UPSTREAM EXPERIMENT ARTIFACT GUARD: Every experiment must write a final gate artifact (even a failure artifact) before exiting. A missing artifact should never be indistinguishable from a gate failure — add conductor-level detection that distinguishes 'experiment timed out without writing artifact' from 'gate condition not met'.",
+    "WIRE DUALGPU FOR LIVE INFERENCE NOW: Exp 1002 achieved synthetic wiring; one additional step (activate live inference path in VerifyRepairPipeline) yields ~90 min/milestone savings. This has been the recommended action in 13 consecutive retros.",
+    "MANDATORY GATE ENFORCEMENT FOR EXP 641 AND EXP 906: Both are past CLAUDE.md mandatory gate threshold. They must not run in .79 without a written root-cause diagnosis and an explicit plan address that cause. If diagnosis is impossible (closed black-box), retire them to the exclusion manifest.",
+    "PARALLELIZE INDEPENDENT RESEARCH TRACKS: Run ThinkPRM, VPRM, GS-KAN, ALMC-ODE, and KV260 experiments in parallel rather than sequentially. These share no data dependencies. DualGPU + parallel process execution would halve the wall time for these tracks (~60 min savings).",
+    "MILESTONE RETRO EXPERIMENT MUST RUN: Exp 1012 did not execute, leaving no conductor self-reflection artifact. Place the retro experiment as the FIRST experiment in the next milestone plan, not the last — retro artifacts inform the next planning session and should not be the most likely to be dropped.",
+    "SOTA MODEL PRE-DOWNLOAD GATE: Add a pre-milestone model cache verification step (expand Exp 1000 preflight) that confirms all three SOTA GGUFs are locally cached before any experiment requiring GPU inference begins. Eliminates ~20-30 min inline download overhead per milestone.",
+    "FILTER CLOSED-RETRO EXPERIMENTS FROM CONDUCTOR QUEUE: Add a conductor-level check that prevents experiments associated with closed RETROs (e.g., RETRO-033, Exp 668) from appearing in new milestone run queues. Planner should consult research-complete.yaml for retro closure status.",
+    "EXPERIMENT TIMEOUT WATCHDOG ENFORCEMENT: Cap per-experiment wall time at 45 minutes. Any experiment exceeding 45 min should be automatically aborted, have its partial results saved, and be logged as 'timeout_abort' for root-cause investigation. This would have saved ~32 min on Exp 786 alone."
+  ],
+
+  "estimated_time_savings": {
+    "near_term_recoverable_minutes": 354,
+    "near_term_recoverable_pct": 12.6,
+    "structural_maximum_pct": 30.0,
+    "breakdown": {
+      "exclusion_manifest_apply_786_641_906": 154,
+      "dualgpu_live_inference_wire": 90,
+      "parallel_independent_tracks": 60,
+      "timeout_watchdog_45min_cap": 30,
+      "sota_model_predownload": 20
+    }
+  },
+
+  "trend_analysis": {
+    "wall_time_trend": "seventh_consecutive_improvement",
+    "improvement_structural": false,
+    "improvement_driver": "experiment_count_reduction_597_vs_626_prior",
+    "count_reduction_minutes": 136,
+    "observed_delta_minutes": -264,
+    "count_explains_pct": 51.5,
+    "note": "Count reduction explains ~51% of the wall-time improvement; per-experiment latency also improved slightly (4.69 vs 4.90 min/exp). Structural governance improvements (exclusion manifest, DualGPU wiring) remain unapplied and would create step-change improvement.",
+    "risk": "Improvement streak will stall or reverse if experiment count stabilizes without governance fixes. The structural savings opportunity (30%) remains fully untapped after 19 consecutive milestones."
+  },
+
+  "honest_verdict": "full_milestone_SEVENTH_CONSECUTIVE_IMPROVEMENT_minus264min_minus8pt61pct_FOURTH_CONSECUTIVE_BELOW_58_BASELINE_2800min_3_of_12_CRITERIA_GATE_CASCADE_FOURTH_CONSECUTIVE_EXP1004_NO_ARTIFACT_6_BLOCKED_19TH_LEGACY_CARRYOVERS_786_641_906_154min_EXP641_9TH_SIX_PAST_MANDATORY_GATE_EXP906_6TH_THREE_PAST_GATE_EXCLUSION_MANIFEST_UNAPPLIED_19TH_DUALGPU_13TH_IDLE_780min_FOREGONE_RETRO_EXP1012_NOT_RUN_CLOSED_RETRO_EXP668_REAPPEARED_GPU_CLEAN_1C_14TH_12pt6pct_near_term_recoverable_354min_30pct_structural"
+}

@@ -1,0 +1,66 @@
+{
+  "experiment": 1003,
+  "title": "SpilledEnergy Live GPU v4",
+  "run_date": "20260428",
+  "started_at": "2026-04-28T02:57:42Z",
+  "finished_at": "2026-04-28T02:57:43Z",
+  "duration_s": 0.066,
+  "status": "success",
+  "phase_timings_s": [
+    {
+      "name": "live_inference_attempt",
+      "elapsed_s": 0.0
+    },
+    {
+      "name": "probe_scoring",
+      "n_items": 57,
+      "elapsed_s": 0.065
+    },
+    {
+      "name": "auroc_computation",
+      "n_labeled": 57,
+      "elapsed_s": 0.0
+    }
+  ],
+  "spilled_energy_live_auroc": 0.5,
+  "nup_probe_live_auroc": 0.6111,
+  "n_live_violations_collected": 9,
+  "inference_mode": "fover_corpus",
+  "honest_verdict": "live_below_threshold",
+  "n_eval_items": 57,
+  "n_labeled": 57,
+  "spill_score_mean": 0.464,
+  "nup_score_mean": 0.2794,
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "violations_path": "/home/ianblenke/github.com/ianblenke/carnot/results/live_violations_1003.json",
+  "env_autofix": {
+    "gpu_detected": false,
+    "auto_fix_applied": false,
+    "final_env_value": "1"
+  },
+  "schema": [
+    "duration_s",
+    "env_autofix",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "inference_mode",
+    "models_used",
+    "n_eval_items",
+    "n_labeled",
+    "n_live_violations_collected",
+    "nup_probe_live_auroc",
+    "nup_score_mean",
+    "phase_timings_s",
+    "run_date",
+    "spill_score_mean",
+    "spilled_energy_live_auroc",
+    "started_at",
+    "status",
+    "title",
+    "violations_path"
+  ],
+  "invariant_violations": []
+}

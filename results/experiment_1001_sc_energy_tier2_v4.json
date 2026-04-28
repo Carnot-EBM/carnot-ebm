@@ -1,0 +1,36 @@
+{
+  "experiment": 1001,
+  "schema": "carnot.experiment.v1",
+  "title": "SC-Energy Tier 2 v4 — Verify 0 Test Failures + Wire as Production OOD Detector",
+  "run_date": "20260428",
+  "started_at": "2026-04-28T02:05:12Z",
+  "finished_at": "2026-04-28T02:09:18Z",
+  "duration_s": 246,
+  "status": "success",
+  "test_failures_before": 0,
+  "test_failures_after": 0,
+  "tests_run": 143,
+  "tier2_wired": true,
+  "sc_energy_checkpoint": "none (trains default model on built-in 20-pair corpus; results/sc_energy_tier2.safetensors loaded if present)",
+  "tier2_implementation": "SCEnergyEnergyAdapter via load_default_tier2_model() in python/carnot/pipeline/three_tier_pipeline.py:1333",
+  "vjepa_status": "retained as explicit fallback in load_default_tier2_model() when SC-Energy init fails",
+  "test_files_verified": [
+    "tests/python/test_experiment_711_sc_energy.py",
+    "tests/python/test_experiment_725_sc_energy_v2.py",
+    "tests/python/test_experiment_944_sc_energy_v2.py",
+    "tests/python/test_experiment_969_sc_energy_production_ood.py",
+    "tests/python/test_three_tier_pipeline.py"
+  ],
+  "spec_updated": "openspec/capabilities/verifiable-reasoning/spec.md — added REQ-VERIFY-160 SC-Energy as Production Tier 2 OOD Detector",
+  "architecture_updated": "_bmad/architecture.md — Tier 2 row updated from VJEPA v2 to SC-Energy",
+  "prior_blockers": {
+    "exp988_gate_failure": "Resolved by exp1000 preflight which patched exp987 artifact field name mismatch (env_propagation_persistent was null, now true)",
+    "exp976_gate_failure": "Same root cause as exp988"
+  },
+  "findings": {
+    "sc_energy_tests_status": "All 143 SC-Energy and three-tier-pipeline tests pass with 0 failures. No fixes needed — tests were already passing when gate blocker was cleared.",
+    "wiring_status": "SC-Energy already wired as preferred Tier 2 in load_default_tier2_model() (three_tier_pipeline.py:1333). No code changes needed.",
+    "note": "The '3 pre-existing test failures' from Exp 969 context appear to have been fixed in a prior milestone. All tests green on 2026-04-28."
+  },
+  "honest_verdict": "tier2_deployed"
+}

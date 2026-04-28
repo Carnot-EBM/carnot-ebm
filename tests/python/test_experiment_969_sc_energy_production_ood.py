@@ -68,7 +68,7 @@ _COHERENT_INPUTS = [
 
 # 10 probe inputs labelled XINCOHERENT (the mock will score these <= 0.75)
 _INCOHERENT_INPUTS = [
-    f"XINCOHERENT step from problem {i}\nstep from problem {i+5}\nstep from problem {i+11}"
+    f"XINCOHERENT step from problem {i}\nstep from problem {i + 5}\nstep from problem {i + 11}"
     for i in range(10)
 ]
 
@@ -95,10 +95,12 @@ def _build_pipeline(
     Returns:
         Configured ThreeTierPipeline with SCEnergyEnergyAdapter at Tier 2.
     """
+
     class _NullSinkProbe:
         def score(self, attn, sink_positions):  # noqa: ANN001
             class _R:
                 mean_sink_score = -1.0
+
             return _R()
 
     def _ising_stub(response: str, question: str) -> tuple[bool, float]:  # noqa: ARG001
@@ -140,8 +142,12 @@ class TestSCEnergyEnergyAdapter:
         mock = _MockSCEnergyModel(high_score=0.9, low_score=0.1)
         adapter = SCEnergyEnergyAdapter(model=mock, sc_threshold=0.75)
 
-        coherent_energy = adapter.energy(CoTEnergyInput(question_text="", response_text="COHERENT step"))
-        incoherent_energy = adapter.energy(CoTEnergyInput(question_text="", response_text="INCOHERENT step"))
+        coherent_energy = adapter.energy(
+            CoTEnergyInput(question_text="", response_text="XCOHERENT step")
+        )
+        incoherent_energy = adapter.energy(
+            CoTEnergyInput(question_text="", response_text="XINCOHERENT step")
+        )
 
         assert abs(coherent_energy - (1.0 - 0.9)) < 1e-6, f"Expected 0.1, got {coherent_energy}"
         assert abs(incoherent_energy - (1.0 - 0.1)) < 1e-6, f"Expected 0.9, got {incoherent_energy}"
@@ -155,7 +161,7 @@ class TestSCEnergyEnergyAdapter:
         """
         mock = _MockSCEnergyModel(high_score=0.9)
         adapter = SCEnergyEnergyAdapter(model=mock, sc_threshold=0.75)
-        energy = adapter.energy(CoTEnergyInput(question_text="", response_text="COHERENT text"))
+        energy = adapter.energy(CoTEnergyInput(question_text="", response_text="XCOHERENT text"))
         assert energy < 0.25, f"Expected energy < 0.25 for coherent input, got {energy}"
 
     def test_incoherent_energy_above_threshold(self) -> None:
@@ -215,7 +221,9 @@ class TestSCEnergyTier2Integration:
         pipeline = _build_pipeline(_MockSCEnergyModel(), threshold=0.75)
         n_skipped = 0
         for text in _COHERENT_INPUTS:
-            _verified, tier_used, _energy = pipeline.verify(text, attention_matrix=None, question="")
+            _verified, tier_used, _energy = pipeline.verify(
+                text, attention_matrix=None, question=""
+            )
             if tier_used == "eorm":
                 n_skipped += 1
         skip_rate = n_skipped / 10
@@ -235,7 +243,9 @@ class TestSCEnergyTier2Integration:
         pipeline = _build_pipeline(_MockSCEnergyModel(), threshold=0.75)
         n_skipped = 0
         for text in _INCOHERENT_INPUTS:
-            _verified, tier_used, _energy = pipeline.verify(text, attention_matrix=None, question="")
+            _verified, tier_used, _energy = pipeline.verify(
+                text, attention_matrix=None, question=""
+            )
             if tier_used == "eorm":
                 n_skipped += 1
         skip_rate = n_skipped / 10
@@ -255,11 +265,17 @@ class TestSCEnergyTier2Integration:
         """
         pipeline = _build_pipeline(_MockSCEnergyModel(), threshold=0.75)
 
-        _v, tier_coh, _e = pipeline.verify("COHERENT reasoning chain", attention_matrix=None, question="")
+        _v, tier_coh, _e = pipeline.verify(
+            "XCOHERENT reasoning chain", attention_matrix=None, question=""
+        )
         assert tier_coh == "eorm", f"Expected tier_used='eorm' for coherent input, got '{tier_coh}'"
 
-        _v, tier_inc, _e = pipeline.verify("INCOHERENT mixed statements", attention_matrix=None, question="")
-        assert tier_inc == "ising", f"Expected tier_used='ising' for incoherent input, got '{tier_inc}'"
+        _v, tier_inc, _e = pipeline.verify(
+            "XINCOHERENT mixed statements", attention_matrix=None, question=""
+        )
+        assert tier_inc == "ising", (
+            f"Expected tier_used='ising' for incoherent input, got '{tier_inc}'"
+        )
 
     def test_threshold_boundary(self) -> None:
         """Coherence score exactly at threshold does NOT clear Tier 2.
@@ -302,18 +318,54 @@ class TestSCEnergyModelQuality:
     def small_model(self):
         """Train a small SC-Energy model on a 5-pair GSM8K-style corpus."""
         coherent_sets = [
-            ["Janet has 47 cookies", "She gives 23 to her brother", "47 minus 23 equals 24 remaining"],
-            ["A car drives 350 miles in 5 hours", "Average speed is 350 divided by 5", "Speed is 70 mph"],
-            ["A box has 144 pencils and 12 boxes exist", "Total pencils equals 12 times 144", "Total is 1728"],
-            ["Lisa earns 18 dollars per hour for 40 hours", "Weekly earnings equal 720 dollars", "Monthly is 2880"],
-            ["Tank holds 600 gallons draining at 15 per minute", "Time to drain is 600 divided by 15", "Empties in 40 minutes"],
+            [
+                "Janet has 47 cookies",
+                "She gives 23 to her brother",
+                "47 minus 23 equals 24 remaining",
+            ],
+            [
+                "A car drives 350 miles in 5 hours",
+                "Average speed is 350 divided by 5",
+                "Speed is 70 mph",
+            ],
+            [
+                "A box has 144 pencils and 12 boxes exist",
+                "Total pencils equals 12 times 144",
+                "Total is 1728",
+            ],
+            [
+                "Lisa earns 18 dollars per hour for 40 hours",
+                "Weekly earnings equal 720 dollars",
+                "Monthly is 2880",
+            ],
+            [
+                "Tank holds 600 gallons draining at 15 per minute",
+                "Time to drain is 600 divided by 15",
+                "Empties in 40 minutes",
+            ],
         ]
         contradictory_sets = [
             ["Janet has 47 cookies", "Average speed is 350 divided by 5", "Total is 1728 pencils"],
-            ["A car drives 350 miles in 5 hours", "Total pencils equals 12 times 144", "Tank empties in 40 minutes"],
-            ["A box has 144 pencils and 12 boxes exist", "Weekly earnings equal 720 dollars", "Speed is 70 mph"],
-            ["Lisa earns 18 dollars per hour for 40 hours", "Janet has 47 cookies", "Speed is 70 mph"],
-            ["Tank holds 600 gallons draining at 15 per minute", "She gives 23 to her brother", "Weekly earnings equal 720"],
+            [
+                "A car drives 350 miles in 5 hours",
+                "Total pencils equals 12 times 144",
+                "Tank empties in 40 minutes",
+            ],
+            [
+                "A box has 144 pencils and 12 boxes exist",
+                "Weekly earnings equal 720 dollars",
+                "Speed is 70 mph",
+            ],
+            [
+                "Lisa earns 18 dollars per hour for 40 hours",
+                "Janet has 47 cookies",
+                "Speed is 70 mph",
+            ],
+            [
+                "Tank holds 600 gallons draining at 15 per minute",
+                "She gives 23 to her brother",
+                "Weekly earnings equal 720",
+            ],
         ]
         all_stmts = [s for ss in coherent_sets + contradictory_sets for s in ss]
         embedder = TFIDFEmbedder(max_features=512)
@@ -336,7 +388,9 @@ class TestSCEnergyModelQuality:
         """
         model, coherent_sets, contradictory_sets = small_model
         mean_coh = sum(model.predict_coherent_score(s) for s in coherent_sets) / len(coherent_sets)
-        mean_inc = sum(model.predict_coherent_score(s) for s in contradictory_sets) / len(contradictory_sets)
+        mean_inc = sum(model.predict_coherent_score(s) for s in contradictory_sets) / len(
+            contradictory_sets
+        )
         assert mean_coh > mean_inc, (
             f"Expected mean coherent score ({mean_coh:.4f}) > mean incoherent score ({mean_inc:.4f})"
         )
@@ -354,6 +408,4 @@ class TestSCEnergyModelQuality:
             for c, i in zip(coherent_sets, contradictory_sets)
             if model.predict_coherent_score(c) > model.predict_coherent_score(i)
         )
-        assert n_correct >= 3, (
-            f"Expected at least 3/5 pairs ranked correctly, got {n_correct}/5"
-        )
+        assert n_correct >= 3, f"Expected at least 3/5 pairs ranked correctly, got {n_correct}/5"

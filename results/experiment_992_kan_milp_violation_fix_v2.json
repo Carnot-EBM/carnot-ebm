@@ -1,0 +1,15 @@
+{
+  "experiment": "exp992_kan_milp_violation_fix_v2",
+  "run_date": "2026-04-27T22:48:41Z",
+  "schema": "exp992_v1",
+  "duration_s": 3.343,
+  "violations_before": 11,
+  "violations_after": 0,
+  "monotonicity_violations_fixed": 7,
+  "boundary_violations_fixed": 4,
+  "speedup_ratio_after_fix": 1.8853525102890072,
+  "kan_milp_verified": true,
+  "honest_verdict": "violations_fixed",
+  "violations_remaining": [],
+  "notes": "Fix: UnivariateKAEMLayer.enforce_monotonicity() applies np.maximum.accumulate() (isotonic projection) then shifts minimum to 0. KAEMEnergy.fit() calls enforce_monotonicity() after every epoch. Fresh and fitted models are both verified with identical Exp 972 procedure."
+}

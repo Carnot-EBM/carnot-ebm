@@ -219,6 +219,41 @@ honest discipline at the planner layer alone.
 - **The energy function is ground truth.** It cannot be gamed. This is the invariant across all three phases.
 - **No-doomed-rerun discipline:** see "Failed-Experiment Rerun Discipline" above.
 
+## Overdue-Priority Forcing Function (MANDATORY)
+
+If a `ops/known-issues.md` "MANDATORY-NEXT-MILESTONE PRIORITIES" entry has been
+pending for 3+ consecutive milestones without pickup, the next planner Sonnet
+**MUST** include at least one of those entries as an experiment in its
+roadmap, taking precedence over fresh research-breadth exploration.
+
+The 2026-04-27 → 2026-04-28 sessions demonstrated the recurring failure mode:
+the planner Sonnet has a strong attention bias toward research breadth and
+will repeatedly skip operator-attention-reduction infrastructure work
+(`conductor-supervisor.md`, `roadmap-schema-validation.md`,
+`eval-metrics-canonical-and-self-heal-production-bug-detector.md` etc.)
+even when those are explicitly marked as `NEXT-MILESTONE PRIORITIES` in
+`ops/known-issues.md`. Three milestones in a row (.77, .78, .79) skipped
+the supervisor proposal despite it being the load-bearing fix for repeated
+log-handle-severance + commit-truncation incidents.
+
+**Mechanic:** the conductor's `_plan_next_milestone()` planner-prompt MUST
+include the section labelled `MANDATORY-NEXT-MILESTONE PRIORITIES` from
+`ops/known-issues.md` *prefixed* with the count of milestones each priority
+has been pending. Any priority with `pending_count >= 3` is a hard pickup
+requirement; the planner cannot skip it without producing an explicit
+written rationale in `research-roadmap-next.yaml` (which the activation
+guard then checks for plausibility before activating the milestone).
+
+**Reserved infrastructure slots:** every milestone with ≥10 tasks reserves
+at least 2 slots for infrastructure-class work (supervisor, schema
+validation, metric canonicalisation, audit scripts, etc.). The reservation
+is enforced at planner-output time by the same activation guard.
+
+**Why this is in CLAUDE.md, not just in known-issues.md:** the planner
+reads CLAUDE.md as required context; a rule that lives only in
+known-issues.md is advisory and routinely ignored. Mandatory rules need
+this file's authority.
+
 ## Development Workflow (MANDATORY)
 
 This project uses **spec-anchored development** (BMAD + OpenSpec). Every code change follows:

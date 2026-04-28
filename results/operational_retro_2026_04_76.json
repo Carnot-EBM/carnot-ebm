@@ -1,0 +1,141 @@
+{
+  "schema": "carnot.operational_retro.v52",
+  "milestone": "2026.04.76",
+  "retro_type": "full_milestone_augmented",
+  "title": "Milestone 2026.04.76 Operational Retrospective",
+  "generated_at": "2026-04-27T21:00:44Z",
+  "total_wall_time_minutes": 3199,
+  "total_wall_time_hours": 53.3,
+  "experiments_completed": 648,
+  "per_experiment_avg_minutes": 4.94,
+  "per_experiment_avg_minutes_reported": 5.0,
+  "prior_milestone_wall_time_minutes": 3242,
+  "wall_time_delta_minutes": -43,
+  "wall_time_delta_pct": -1.33,
+  "baseline_milestone": "2026.04.58",
+  "baseline_wall_time_minutes": 3415,
+  "delta_from_baseline_minutes": -216,
+  "delta_from_baseline_pct": -6.33,
+  "below_baseline": true,
+  "below_baseline_consecutive": 2,
+  "consecutive_improvement_streak": 5,
+  "improvement_magnitude_trend": [-91, -61, -10, -100, 57, -24, -268, -155, -213, -43],
+  "improvement_trend_note": "Fifth consecutive improvement: -43 min (-1.33%) vs .75 (3242 min). Second consecutive milestone BELOW the .58 baseline: 3199 min vs 3415 min = -216 min below baseline (-6.33%). Count analysis: 662 → 648 experiment count reduction (-14 experiments at ~5 min/exp = ~70 min volume savings) exceeds the observed -43 min wall-time delta — per-experiment latency INCREASED slightly (5.0 → 4.94 min reported, but ratio implies a soft uptick), with the count savings partially offset by heavier individual experiments. FIFTH CONSECUTIVE IMPROVEMENT IS THE LONGEST STREAK IN PROJECT HISTORY but decelerating sharply: -213, -43 min across two milestones. Structural causes unchanged: manifest unapplied, DualGPU not wired, five legacy carryovers.",
+  "count_analysis": {
+    "experiment_count": 648,
+    "count_delta_vs_prior": -14,
+    "count_delta_volume_minutes": 70,
+    "count_vs_cap_700": -52,
+    "count_above_cap_700": false,
+    "count_above_cap_note": "648 experiments: second consecutive milestone under the 700-experiment cap (662 in .75). Cap discipline holding. Declining from 806 peak in .72."
+  },
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment_id": "Exp 786",
+      "description": "Gemma4 OOM Fix v3 + VR Threshold Grid (GPU REQUIRED)",
+      "elapsed_minutes": 77,
+      "consecutive_milestone_appearances": 17,
+      "governance_status": "CRITICAL — 17th consecutive milestone appearance. Cumulative waste ~1,309 min (21.8 hours). Exclusion manifest unapplied for 17 consecutive milestones despite 17 consecutive retirement recommendations. Root cause (Gemma4 GPU VRAM exhaustion) remains completely undocumented in any artifact. Zero research value produced in any of these 17 runs. Single highest-waste item in the project's entire history.",
+      "action_required": "Add to ops/exclusion_manifest.yaml IMMEDIATELY. Human override required for any future re-execution. This is project governance failure #1 by cumulative waste."
+    },
+    {
+      "rank": 2,
+      "experiment_id": "Exp 627",
+      "description": "interwhen Mid-Generation Monitor — SymCodeVerifier sequential paragraph processing",
+      "elapsed_minutes": 51,
+      "consecutive_milestone_appearances": 17,
+      "governance_status": "CRITICAL — 17th consecutive milestone appearance. Batching fix implemented in .64 (RETRO-SYMCODE-SERIAL closed) but dispatch-site wiring never applied for 13 consecutive milestones. One-line wiring fix would reduce runtime to ~15 min. Cumulative post-fix waste ~442 min (7.4 hours).",
+      "action_required": "Wire SymCodeVerifier paragraph batching at dispatch site before .77 begins. If not applied in the next milestone, retire to exclusion_manifest.yaml."
+    },
+    {
+      "rank": 3,
+      "experiment_id": "Exp 603",
+      "description": "CoACEExtractorV4 — Data-Driven Live Training via GenP",
+      "elapsed_minutes": 44,
+      "consecutive_milestone_appearances": 17,
+      "governance_status": "CRITICAL — 17th consecutive milestone appearance. Timeout cap never applied. Runs 14 min over any reasonable 30-min gate. Root cause undiagnosed across 17 milestones.",
+      "action_required": "Apply CARNOT_EXPERIMENT_TIMEOUT_MINUTES=30 cap or add to exclusion_manifest.yaml."
+    },
+    {
+      "rank": 4,
+      "experiment_id": "Exp 641",
+      "description": "HermesVerifierAdapter v2 — LIVE Step-by-Step Generation",
+      "elapsed_minutes": 42,
+      "consecutive_milestone_appearances": 7,
+      "governance_status": "HIGH — 7th consecutive slow appearance, 4 milestones past CLAUDE.md mandatory gate (gate triggers at 3 consecutive without root-cause diagnosis). Zero diagnostic documentation produced in any of the 7 milestones it has appeared. Mandatory containment action was due 3 milestones ago.",
+      "action_required": "Read results/experiment_641_*.json. Document root cause. Apply 30-min timeout or retire to exclusion_manifest.yaml before .77."
+    },
+    {
+      "rank": 5,
+      "experiment_id": "Exp 906",
+      "description": "Code Repair 50q Scale-Up — IterativeSelfRepair with Gemma4",
+      "elapsed_minutes": 35,
+      "consecutive_milestone_appearances": 4,
+      "governance_status": "ELEVATED — 4th consecutive slow appearance, 1 milestone past CLAUDE.md mandatory gate. SOTA GGUF pre-download fix not applied across four consecutive milestones. retire_if_same_verdict must be evaluated.",
+      "action_required": "Diagnose root cause from results artifact. Pre-download Qwen3.6-35B-A3B-GGUF and Gemma-4-31B-it-GGUF before .77. Apply CARNOT_EXPERIMENT_TIMEOUT_MINUTES=40 cap."
+    }
+  ],
+  "gpu_state_at_close": {
+    "gpu_0_model": "NVIDIA GeForce RTX 3090",
+    "gpu_0_vram_mb": 4,
+    "gpu_0_util_pct": 0,
+    "gpu_0_temp_c": 52,
+    "gpu_1_model": "NVIDIA GeForce RTX 3090",
+    "gpu_1_vram_mb": 4,
+    "gpu_1_util_pct": 0,
+    "gpu_1_temp_c": 52,
+    "temp_differential_c": 0,
+    "clean_close": true,
+    "consecutive_clean_closes": 12,
+    "zombie_process_present": false,
+    "zombie_note": "GPU Zombie Killer holding. 4 MB residual on both GPUs is within normal driver baseline. 0C differential matches project best.",
+    "dualgpu_wired": false,
+    "dualgpu_consecutive_idle_milestones": 11,
+    "dualgpu_cumulative_foregone_savings_minutes": 660
+  },
+  "missing_experiments": {
+    "planned_range": "974-985",
+    "planned_count": 12,
+    "results_present": ["974", "976", "977", "978", "979", "980", "981", "982", "983", "984", "985"],
+    "results_absent": ["975"],
+    "absent_count": 1,
+    "absent_note": "Exp 975 produced no result artifact. Probable cause: EnvPropagationGuard block (same root cause as .75 Exps 964/965/966/969/971). EnvPropagationGuard root cause remains unresolved after multiple milestone cycles.",
+    "env_propagation_guard_note": "RETRO-015 (CARNOT_FORCE_LIVE env propagation) was closed in .66 (Exp 855) but has recurred in .75 and .76. Each recurrence blocks GPU-required experiments. Permanent fix confirmed in Exp 855 is not persisting across session boundaries — propagation context is lost between conductor invocations."
+  },
+  "bottlenecks_identified": [
+    "THREE 17TH-CONSECUTIVE LEGACY CARRYOVERS (Exp 786/627/603): cumulative waste now ~1,879 min (31.3 hours) just from these three experiments across 17 milestones. Exclusion manifest unapplied for 17 consecutive milestones — the longest-running unresolved governance failure in the project history.",
+    "EXP 641 (HermesVerifierAdapter v2): 7th consecutive slow appearance, 4 milestones past the CLAUDE.md mandatory-gate threshold. No root-cause documentation produced in any appearance. Each occurrence consumes 42 min with unknown yield.",
+    "EXP 906 (IterativeSelfRepair 50q): 4th consecutive slow appearance, 1 milestone past mandatory gate. SOTA GGUF pre-download fix deferred across 4 consecutive milestones despite being a known, diagnosed cause.",
+    "DUALGPU NOT WIRED: 11th consecutive idle milestone post-deployment. DualGPURunner benchmarked at 1.96-2.02x throughput (Exps 684/685, 932). Cumulative foregone savings now ~660 min (11 hours). Both RTX 3090s idle at 0%/52C at close.",
+    "COMPOSITION FREEZE FOURTH CONSECUTIVE: slowest-5 composition unchanged for four consecutive milestones (.73, .74, .75, .76). This directly mirrors the .60-.70 11-milestone frozen-composition streak that produced ~2,760 min of preventable waste. Entering the same structural failure mode.",
+    "ENVPROPAGATIONGUARD RECURRENCE: Exp 975 blocked despite RETRO-015 being nominally closed in .66. EnvPropagation context does not persist across conductor sessions — Exp 975 is the 6th experiment blocked by this root cause across two milestones (.75: 5 experiments, .76: 1 experiment). Fix must be made session-boundary-persistent.",
+    "IMPROVEMENT DECELERATING: fifth consecutive improvement but at -43 min, down from -213 min in .75. The improvement is again count-driven (-14 experiments), not structural. If count stabilizes at the 648 level, the streak terminates automatically.",
+    "DOC RECONCILIATION PASSES: per-experiment in-process reconciliation runs serially for each of the 648 experiments. Estimated 20 min/milestone recoverable via mid-milestone + end-of-milestone batching.",
+    "SC-ENERGY TIER 2 DEPLOYMENT BLOCKED: 3 test failures block production deployment as of .75 planning. Test failure root cause not addressed in .76 (SC-Energy visible in Exp 976 result but Tier 2 deployment status unclear without reading that artifact)."
+  ],
+  "improvements_suggested": [
+    "IMMEDIATE (before .77): Add Exp 786, Exp 627, and Exp 603 to ops/exclusion_manifest.yaml. This single governance action eliminates ~172 min of structural waste per milestone. It has been recommended for 17 consecutive milestones. Without this, all wall-time improvements remain count-driven and fragile.",
+    "IMMEDIATE: Document Exp 641 (HermesVerifierAdapter v2) root cause from results artifact. Apply CARNOT_EXPERIMENT_TIMEOUT_MINUTES=30 cap or retire to exclusion_manifest.yaml. Four milestones past mandatory gate — further deferral is a process violation.",
+    "IMMEDIATE: Pre-download Qwen3.6-35B-A3B-GGUF, Gemma-4-31B-it-GGUF, Gemma-4-26B-A4B-it-GGUF at milestone start before any experiment runs. Apply CARNOT_EXPERIMENT_TIMEOUT_MINUTES=40 cap to Exp 906. This is the fourth consecutive milestone with the same diagnosed root cause.",
+    "FIX ENVPROPAGATIONGUARD PERSISTENCE: Env propagation context must survive conductor session boundaries. The Exp 855 fix (RETRO-015 close) patches the in-session state but does not persist to new sessions. Fix: write CARNOT_FORCE_LIVE=1 to a conductor state file at session start, sourced by each experiment subprocess. Until fixed, GPU-required experiments will be blocked in any milestone that starts a new conductor session.",
+    "WIRE DUALGPU: Integrate DualGPURunner into VerifyRepairPipeline production path. This task has been explicitly deferred for 11 consecutive milestones. At 1.96-2.02x GPU throughput, the saving is ~60 min/milestone on GPU-bound experiments. Assign as a .77 hard prerequisite, not an optional task.",
+    "ADD EXPERIMENT TIMEOUT WATCHDOG: Apply CARNOT_EXPERIMENT_TIMEOUT_MINUTES=30 globally (per-experiment override allowed). Prevents overrun waste in the Exp 603/641 class. Estimated savings: 26 min/milestone.",
+    "DOC RECONCILIATION BATCHING: Batch all in-process doc reconciliation into two checkpoints (mid-milestone, end-of-milestone) rather than per-experiment. Estimated savings: 20 min/milestone.",
+    "BATCH INFERENCE ENFORCEMENT: Enforce batch_size=8-16 for all GPU inference calls per ExperimentTemplate contract. GPU monitor recommends DualGPURunner at every close. Single-process serial inference wastes both GPUs.",
+    "BREAK COMPOSITION FREEZE: If the slowest-5 composition is unchanged in .77, the fourth-consecutive-freeze pattern will reach the .60-.70 streak length in five more milestones. The only structural break is exclusion_manifest enforcement. Automate a pre-flight check: if any slowest-5 experiment from the prior three milestones appears in the .77 roadmap without a documented root-cause entry, block it."
+  ],
+  "estimated_time_savings_pct": 10.6,
+  "estimated_near_term_savings_minutes": 338,
+  "estimated_near_term_savings_breakdown": {
+    "manifest_enforcement_exp786_627_603": 172,
+    "dualgpu_wiring": 60,
+    "sota_gguf_predownload": 30,
+    "batch_inference_enforcement": 30,
+    "timeout_watchdog": 26,
+    "doc_reconciliation_batching": 20
+  },
+  "estimated_structural_savings_pct": 30.0,
+  "estimated_structural_savings_minutes": 960,
+  "honest_verdict": "full_milestone_FIFTH_CONSECUTIVE_IMPROVEMENT_minus43min_minus1pt33pct_DECELERATING_STREAK_SECOND_CONSECUTIVE_BELOW_58_BASELINE_3199min_vs_3415min_MINUS216min_MINUS6pt33pct_COUNT_DRIVEN_662_to_648_MINUS14_experiments_NOT_STRUCTURAL_THREE_LEGACY_CARRYOVERS_17TH_CONSECUTIVE_786_627_603_COMPOSITION_FREEZE_FOURTH_CONSECUTIVE_ENTERING_60_TO_70_STREAK_PATTERN_EXP641_SEVENTH_CONSECUTIVE_FOUR_PAST_MANDATORY_GATE_EXP906_FOURTH_CONSECUTIVE_ONE_PAST_MANDATORY_GATE_DUALGPU_ELEVENTH_CONSECUTIVE_IDLE_660min_FOREGONE_ENVPROPAGATIONGUARD_RECURRENCE_EXP975_BLOCKED_6TH_BLOCKED_EXPERIMENT_ACROSS_TWO_MILESTONES_GPU_CLEAN_0C_TWELFTH_CONSECUTIVE_52C_10pt6pct_near_term_338min_30pct_structural"
+}

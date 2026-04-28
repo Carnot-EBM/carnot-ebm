@@ -144,6 +144,9 @@ class UnivariateKAEMLayer:
         # Knot positions in [-1, 1], shared across all variables.
         self._knots: jax.Array = jnp.linspace(-1.0, 1.0, n_knots)
 
+        # Enforce MILP constraints at init so fresh models pass verification.
+        self.enforce_monotonicity()
+
     # ------------------------------------------------------------------
     # _eval_spline_single
     # ------------------------------------------------------------------
@@ -341,6 +344,49 @@ class UnivariateKAEMLayer:
         # Stability shift guarantees density >= 1 at the max point, so total > 0.
         cdf_vals /= total
         return grid, cdf_vals
+
+    def enforce_monotonicity(self) -> None:
+        """Enforce non-decreasing control points via isotonic projection + zero-shift.
+
+        Two-step post-processing applied after each fit() epoch:
+
+        Step 1 — isotonic projection via np.maximum.accumulate():
+            For each variable i, knot values ctrl[i, 0..n_knots-1] are
+            replaced with their running maximum so the sequence is
+            non-decreasing left-to-right. This is the unique isotonic
+            projection under the L_inf norm (Barlow et al., 1972).
+
+            Why this fixes monotonicity violations: the MILP verifier finds
+            counter-examples where ctrl[j] > ctrl[j+1] for adjacent knots.
+            After maximum.accumulate, ctrl[j] <= ctrl[j+1] by construction
+            for every j, which closes all such counter-examples.
+
+        Step 2 — shift minimum to zero:
+            Subtracts each variable's minimum knot value so all control
+            points are >= 0. This ensures energy(-1) = 0 per variable
+            and energy(+1) >= 0, fixing boundary polarity inversion.
+
+        Step 3 — normalize per-variable maximum to <= 1.0:
+            After the zero-shift, if a variable's max knot exceeds 1.0
+            (can happen after many training epochs), divide that variable's
+            control points by its max. This keeps the per-variable energy
+            contribution in [0, 1], so total energy <= n_vars, satisfying
+            the N-spins output range bound used by the MILP verifier.
+            Variables whose max is already <= 1.0 are left unchanged.
+
+        Spec: REQ-SAMPLE-015, REQ-KAN-VERIFY-001
+        """
+        ctrl = np.array(self.control_points)  # (n_vars, n_knots) float32
+        # Step 1: isotonic projection — enforce non-decreasing across knot axis
+        ctrl = np.maximum.accumulate(ctrl, axis=1)
+        # Step 2: shift each variable's minimum to 0
+        ctrl -= ctrl.min(axis=1, keepdims=True)
+        # Step 3: normalize per-variable max to <= 1.0 (output-range bound)
+        per_var_max = ctrl.max(axis=1, keepdims=True)
+        # Avoid division by zero for flat (all-zero) splines
+        scale = np.where(per_var_max > 1.0, 1.0 / np.maximum(per_var_max, 1e-12), 1.0)
+        ctrl = ctrl * scale
+        self.control_points = jnp.array(ctrl)
 
     def _invert_cdf(self, cdf_table: tuple[np.ndarray, np.ndarray], u: float) -> float:
         """Invert CDF via table lookup + linear interpolation.
@@ -562,6 +608,9 @@ class KAEMEnergy:
                 epoch_loss += float(jnp.mean(ctrl**2))
 
             losses.append(epoch_loss / self.n_vars)
+            # Enforce MILP-provable constraints after every epoch so monotonicity
+            # and boundary-condition properties hold throughout training.
+            self.layer.enforce_monotonicity()
 
         return losses
 

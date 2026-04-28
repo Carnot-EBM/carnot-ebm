@@ -1,9 +1,9 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 973 Experiments Across 81 Research Milestones
+## A Technical Report on 1,011 Experiments Across 84 Research Milestones
 
 **Author:** Ian Blenke
-**Date:** 2026-04-27
+**Date:** 2026-04-28
 **Repository:** github.com/Carnot-EBM/carnot-ebm
 **License:** Apache 2.0
 
@@ -26,8 +26,8 @@ can be selected by task; the production verify-repair API is a handful of
 lines of Python. All headline benchmark numbers are from **live GPU inference
 on real public models** (Qwen 3.5, Gemma 4), never from simulated runs.
 
-This report documents the research arc behind the framework — **973
-experiments across 81 milestones**, run between February and April 2026.
+This report documents the research arc behind the framework — **1,011
+experiments across 84 milestones**, run between February and April 2026.
 The story has moved through six distinct phases of understanding. A
 plain-English summary of that journey is in the next section; deeper
 analysis of each phase follows in Sections 3–6 and in the per-milestone
@@ -511,6 +511,76 @@ scratchpad technique applied to Gemma-4-31B, repair delta remained 0.0 at
 4.2% baseline on GSM8K — a clean honest negative that retires the
 scratchpad-repair hypothesis and defers math repair improvement to a future
 architecture change.
+
+Milestone 2026.04.76 (the 82nd) extended the record to **985 experiments**
+and achieved the first KV260 FPGA bitstream generation in project history.
+**KV260 bitstream** (Exp 982): Vivado 2025.2.1 synthesis and implementation
+completed for the Ising sampler BD wrapper; bitstream written to
+`output/carnot_ising_v4_bd/carnot_ising_v4.bit` with implementation_passes=true
+and cpu_baseline_latency_us=12.83 — the board was unreachable at milestone
+close (kv260.local DNS/network issue) but the artifact is ready for
+board-programming in .77. **Langevin SB sampler** (Exp 983, arXiv 2512.02323)
+deployed as the new default sampler at 1.17x speedup over the Ising baseline,
+with unit tests confirming correctness. **Preflight v26** (Exp 974) synced the
+exclusion manifest, added conductor IDs for legacy carryovers (786, 641), and
+documented the Exp 906 root cause (50q-scale per-question latency) — the
+first milestone with zero slowest-5 governance carryovers since the project
+began tracking composition. On the negative side, **EnvPropagationGuard** (Exp
+975) produced no artifact (missing try/finally guard pattern, same as Exp 971
+in .75), cascading to block six of ten success criteria (SC-Energy Tier 2,
+DualGPU, Triple Integration E2E, SpilledEnergy AUROC, PPSEBM live relay). A
+gate check config bug (op='') also blocked the KAN MILP fix (Exp 980)
+independently of Exp 975. Both issues — artifact-write guard enforcement and
+YAML op validation — carry forward as the primary structural blockers into .77.
+
+Milestone 2026.04.77 (the 83rd) extended the record to **999 experiments**
+and met 3 of 10 success criteria. The dominant failure was a gate schema mismatch:
+Exp 987 (EnvPropagationGuard fix) functionally succeeded — subprocess env-var
+propagation confirmed, state file written, RETRO-015 resolved — but the artifact
+field `env_propagation_persistent` was never written (its value remained `None`),
+causing every downstream gate that checked `exp987.env_propagation_persistent == True`
+to fail despite the underlying functionality being correct. This single field-name
+mismatch cascaded to block 7 of 10 success criteria (SC-Energy Tier 2, DualGPU,
+Triple Integration, SpilledEnergy AUROC, PPSEBM live relay, KV260 board
+programming, and the Fast-Path Probe). The three criteria that passed were:
+**EnvPropagationGuard functional** (Exp 987, RETRO-015 resolved at the subprocess
+level), **KAN-MILP violations eliminated** (Exp 992, 11 monotonicity + boundary
+violations fixed via isotonic projection — zero violations remain, 1.89x inference
+speedup confirmed), and the milestone retrospective itself (Exp 999). The KV260
+board was discovered at IP 192.168.51.98 (Exp 993) but network access remained
+blocked (scp failed), deferring the first live hardware latency measurement to the
+next session. Additionally, GS-KAN (Exp 996) and NK-Optimizer KAEMEnergy (Exp 997)
+were blocked by the gate-check system for missing `prior_failures:` fields. The
+PCIB hallucination probe (Exp 995) produced AUROC=0.5321 — below the 0.65
+deployment threshold — confirming that text-statistical approximation of
+internal-state signals is insufficient for Tier 0f; real SAE activations are
+required. The primary structural lesson from .77 is that artifact schema
+enforcement must be a pre-condition check, not only a downstream gate: if a fix
+experiment does not write a required boolean field, all gates that read it must
+report a diagnostic rather than silently failing. Carry-forward items entering
+.78: SC-Energy Tier 2 deployment (blocked 4 consecutive milestones), DualGPU
+wiring (12th consecutive idle milestone), KV260 board programming (human network
+access required), and gate schema mismatch enforcement.
+
+Milestone 2026.04.78 (the 84th, in progress as of 2026-04-28) pushed the record
+to **1,011 experiments** and resolved two of the most persistent infrastructure
+blockers. Exp 1000 patched the .77 schema mismatch by writing the missing
+`env_propagation_persistent` field to the Exp 987 artifact, setting
+`gate_schema_repaired=True` and unblocking downstream gates. Exp 1001 (SC-Energy
+Tier 2 v4) then wired SC-Energy as the production Tier 2 OOD detector: 143 tests
+ran with 0 failures, REQ-VERIFY-160 was added to the spec, and the pipeline's
+`load_default_tier2_model()` was updated to use `SCEnergyEnergyAdapter` (VJEPA v2
+retained as fallback). This closes a four-consecutive-milestone blocker. Exp 1002
+(DualGPU Pipeline v5) confirmed a **1.9932x throughput ratio** in synthetic
+validation and completed the production wiring of `DualGPURunner`, resolving the
+12-consecutive-idle-milestone pattern. Live GPU validation for the throughput
+result is pending a CUDA-capable session; the synthetic result validates the
+dispatch path but does not qualify as a live GPU headline claim. Exp 1003
+(SpilledEnergy live GPU v4) produced AUROC=0.5 with only 9 live violations
+collected — below the gate threshold of 10 — which blocked Exp 1005 (PPSEBM live
+relay v3). Experiments 1005-1008 and 1011 were each blocked by gate failures,
+primarily due to missing `prior_failures:` fields in the conductor YAML — the same
+planner discipline failure mode observed in .77.
 
 ---
 

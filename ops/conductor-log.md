@@ -2927,3 +2927,94 @@ python/ |
 | 2026-04-27 16:01 UTC | Milestone 2026.04.75 Retrospective | OK | 139 passed, 1 skipped, 3 warnings in 4.68s |
 | 2026-04-27 16:28 UTC | Plan milestone 2026.04.76 | OK | 12 tasks proposed |
 | 2026-04-27 16:38 UTC | Milestone 2026.04.76 activated | OK | 12 tasks queued |
+| 2026-04-27 16:52 UTC | Preflight v26 — Manifest Enforcement + Exp 906 Ret | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-04-27 17:02 UTC | Preflight v26 — Manifest Enforcement + Exp 906 Ret | OK | Deliverable already exists in repo |
+| 2026-04-27 17:04 UTC | EnvPropagationGuard Fix — Subprocess CARNOT_ Env V | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-04-27 17:22 UTC | EnvPropagationGuard Fix — Subprocess CARNOT_ Env V | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-04-27 17:37 UTC | EnvPropagationGuard Fix — Subprocess CARNOT_ Env V | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-04-27 17:47 UTC | SC-Energy Tier 2 v2 — Diagnose Test Failures + Dep | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp975-env-propagation-guard.honest_verdic |
+| 2026-04-27 17:57 UTC | SC-Energy Tier 2 v2 — Diagnose Test Failures + Dep | OK | Deliverable already exists in repo |
+| 2026-04-27 17:57 UTC | DualGPU Pipeline v3 — Fresh Timestamped Production | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp975-env-propagation-guard.honest_verdic |
+| 2026-04-27 18:07 UTC | DualGPU Pipeline v3 — Fresh Timestamped Production | OK | Deliverable already exists in repo |
+| 2026-04-27 18:07 UTC | Triple Integration v2 — SC-Energy + SpilledEnergy  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp976-sc-energy-tier2-v2.tier2_wired (act |
+| 2026-04-27 18:17 UTC | Triple Integration v2 — SC-Energy + SpilledEnergy | OK | Deliverable already exists in repo |
+| 2026-04-27 18:17 UTC | Fast-Path Probe Live GPU v2 — SpilledEnergy + Thin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp975-env-propagation-guard.honest_verdic |
+| 2026-04-27 18:27 UTC | Fast-Path Probe Live GPU v2 — SpilledEnergy + Thin | OK | Deliverable already exists in repo |
+| 2026-04-27 18:27 UTC | KAN MILP Violation Fix — Repair 11 Monotonicity an | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp972-kan-milp-formal-verification.n_viol |
+| 2026-04-27 18:37 UTC | KAN MILP Violation Fix — Repair 11 Monotonicity an | OK | Deliverable already exists in repo |
+| 2026-04-27 18:37 UTC | PPSEBM Live GPU Relay — Cross-Session Memory on Re | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp975-env-propagation-guard.honest_verdic |
+| 2026-04-27 18:47 UTC | PPSEBM Live GPU Relay — Cross-Session Memory on Re | OK | Deliverable already exists in repo |
+| 2026-04-27 18:51 UTC | KV260 Board Programming v2 — Vivado Bitstream + Ha | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-04-27 19:05 UTC | KV260 Board Programming v2 — Vivado Bitstream + Ha | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-04-27 20:00 UTC | KV260 Board Programming v2 — Vivado Bitstream + Ha | OK | 93 passed, 1 warning in 1.41s |
+| 2026-04-27 20:18 UTC | Langevin SB Parallelizable Boltzmann Sampler — arX | OK | 108 passed, 1 warning in 1.45s |
+| 2026-04-27 20:33 UTC | Arxiv Research Scan — EBM Verification + Self-Lear | OK | 148 passed, 1 warning in 9.11s |
+| 2026-04-27 20:46 UTC | Milestone 2026.04.76 Retrospective | OK | 148 passed, 1 warning in 9.14s |
+| 2026-04-27 21:17 UTC | Plan milestone 2026.04.77 | OK | 14 tasks proposed |
+| 2026-04-27 21:27 UTC | Milestone 2026.04.77 activated | OK | 14 tasks queued |
+| 2026-04-27 21:40 UTC | Preflight v27 — Manifest Enforcement + Gate Config | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-04-27 21:50 UTC | Preflight v27 — Manifest Enforcement + Gate Config | OK | Deliverable already exists in repo |
+| 2026-04-27 21:54 UTC | EnvPropagationGuard Fix v2 — Session-Boundary-Pers | OK | 148 passed, 1 warning in 9.37s |
+| 2026-04-27 22:04 UTC | SC-Energy Tier 2 v3 — Fix 3 Test Failures + Wire a | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp987-env-propagation-guard-v2.env_propag |
+| 2026-04-27 22:14 UTC | SC-Energy Tier 2 v3 — Fix 3 Test Failures + Wire a | OK | Deliverable already exists in repo |
+| 2026-04-27 22:14 UTC | DualGPU Pipeline v4 — Production Wiring with Fresh | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp987-env-propagation-guard-v2.env_propag |
+| 2026-04-27 22:24 UTC | DualGPU Pipeline v4 — Production Wiring with Fresh | OK | Deliverable already exists in repo |
+| 2026-04-27 22:24 UTC | Triple Integration E2E v3 — SC-Energy + SpilledEne | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp988-sc-energy-tier2-v3.tier2_wired (act |
+| 2026-04-27 22:34 UTC | Triple Integration E2E v3 — SC-Energy + SpilledEne | OK | Deliverable already exists in repo |
+| 2026-04-27 22:34 UTC | Fast-Path Probes Live GPU v3 — SpilledEnergy + NUP | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp987-env-propagation-guard-v2.env_propag |
+| 2026-04-27 22:44 UTC | Fast-Path Probes Live GPU v3 — SpilledEnergy + NUP | OK | Deliverable already exists in repo |
+| 2026-04-27 22:50 UTC | KAN MILP Violation Fix v2 — Repair 11 Monotonicity | OK | 158 passed, 1 warning in 9.43s |
+| 2026-04-27 23:04 UTC | KV260 Board Programming v3 — Network Discovery + B | OK | 170 passed, 1 warning in 13.01s |
+| 2026-04-27 23:14 UTC | PPSEBM Live GPU Relay v2 — Cross-Session Memory Va | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp991-fast-path-probe-live-gpu-v3.n_live_ |
+| 2026-04-27 23:24 UTC | PPSEBM Live GPU Relay v2 — Cross-Session Memory Va | OK | Deliverable already exists in repo |
+| 2026-04-27 23:30 UTC | PCIB Hallucination Tier 0f — Predictive Coding + I | FAIL | Claude Code error: Error: Reached max turns (30) |
+| 2026-04-27 23:40 UTC | PCIB Hallucination Tier 0f — Predictive Coding + I | OK | Deliverable already exists in repo |
+| 2026-04-27 23:40 UTC | GS-KAN Energy Tier — Parameter-Efficient Shared-Ba | DOOMED_RERUN_BLOCK | 10 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-04-27 23:50 UTC | GS-KAN Energy Tier — Parameter-Efficient Shared-Ba | OK | Deliverable already exists in repo |
+| 2026-04-27 23:50 UTC | NK-Optimizer KAEMEnergy — Newton-Kaczmarz Training | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-28 00:00 UTC | NK-Optimizer KAEMEnergy — Newton-Kaczmarz Training | OK | Deliverable already exists in repo |
+| 2026-04-28 00:04 UTC | arxiv Scan — Recent EBM/KAN/FPGA/Verification Pape | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-04-28 00:18 UTC | arxiv Scan — Recent EBM/KAN/FPGA/Verification Pape | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-04-28 00:33 UTC | arxiv Scan — Recent EBM/KAN/FPGA/Verification Pape | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-04-28 00:47 UTC | Milestone 2026.04.77 Retrospective | OK | 239 passed, 1 warning in 14.23s |
+| 2026-04-28 01:16 UTC | Plan milestone 2026.04.78 | OK | 13 tasks proposed |
+| 2026-04-28 01:26 UTC | Milestone 2026.04.78 activated | OK | 13 tasks queued |
+| 2026-04-28 01:37 UTC | Preflight v28 — Gate Schema Repair + Manifest Chec | OK | 239 passed, 1 warning in 14.18s |
+| 2026-04-28 01:54 UTC | SC-Energy Tier 2 v4 — Fix Test Failures + Wire as  | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-28 02:09 UTC | SC-Energy Tier 2 v4 — Fix Test Failures + Wire as  | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-28 02:19 UTC | SC-Energy Tier 2 v4 — Fix Test Failures + Wire as | OK | Deliverable already exists in repo |
+| 2026-04-28 02:23 UTC | DualGPU Pipeline v5 — Production Wiring, Fresh .78 | FAIL | Claude Code error: Error: Reached max turns (30) |
+| 2026-04-28 02:33 UTC | DualGPU Pipeline v5 — Production Wiring, Fresh .78 | OK | Deliverable already exists in repo |
+| 2026-04-28 02:44 UTC | SpilledEnergy + NUP Probe Live GPU v4 — AUROC on R | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-28 03:00 UTC | SpilledEnergy + NUP Probe Live GPU v4 — AUROC on R | OK | 281 passed, 1 warning in 16.29s |
+| 2026-04-28 04:10 UTC | Triple Integration E2E v4 — SC-Energy + SpilledEne | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 04:29 UTC | Triple Integration E2E v4 — SC-Energy + SpilledEne | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 04:44 UTC | Triple Integration E2E v4 — SC-Energy + SpilledEne | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 04:54 UTC | PPSEBM Live GPU Relay v3 — FR-11 Cross-Session Mem | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1003-spilled-energy-live-gpu-v4.n_live_ |
+| 2026-04-28 05:04 UTC | PPSEBM Live GPU Relay v3 — FR-11 Cross-Session Mem | OK | Deliverable already exists in repo |
+| 2026-04-28 05:04 UTC | Energy-Selection SSD — FR-11 Self-Distillation Usi | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-28 05:14 UTC | Energy-Selection SSD — FR-11 Self-Distillation Usi | OK | Deliverable already exists in repo |
+| 2026-04-28 05:14 UTC | ThinkPRM Step Verifier — CoT-Reasoning Probe Train | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-28 05:24 UTC | ThinkPRM Step Verifier — CoT-Reasoning Probe Train | OK | Deliverable already exists in repo |
+| 2026-04-28 05:24 UTC | VPRM Rule-Based Step Verifier v2 — Extended to 6+  | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-28 05:34 UTC | VPRM Rule-Based Step Verifier v2 — Extended to 6+ | OK | Deliverable already exists in repo |
+| 2026-04-28 05:47 UTC | GS-KAN Energy Tier v2 — Parameter-Efficient Shared | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 06:57 UTC | GS-KAN Energy Tier v2 — Parameter-Efficient Shared | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 07:13 UTC | GS-KAN Energy Tier v2 — Parameter-Efficient Shared | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 07:30 UTC | KV260 First Light v4 — Alternative SSH Paths + Hum | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 07:47 UTC | KV260 First Light v4 — Alternative SSH Paths + Hum | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 08:58 UTC | KV260 First Light v4 — Alternative SSH Paths + Hum | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 09:08 UTC | ALMC-ODE Annealed Sampler — Multimodal Energy Land | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-28 09:18 UTC | ALMC-ODE Annealed Sampler — Multimodal Energy Land | OK | Deliverable already exists in repo |
+| 2026-04-28 09:22 UTC | Milestone 2026.04.78 Retrospective | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 09:45 UTC | Milestone 2026.04.78 Retrospective | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 10:02 UTC | Milestone 2026.04.78 Retrospective | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 10:35 UTC | Plan milestone 2026.04.79 | OK | 13 tasks proposed |
+| 2026-04-28 10:45 UTC | Milestone 2026.04.79 activated | OK | 13 tasks queued |
+| 2026-04-28 11:07 UTC | Preflight v29 — Pre-Test Surgery + Manifest Retire | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 11:33 UTC | Preflight v29 — Pre-Test Surgery + Manifest Retire | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 12:43 UTC | Preflight v29 — Pre-Test Surgery + Manifest Retire | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 12:53 UTC | Triple Integration E2E v5 — SC-Energy + SpilledEne | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1013-preflight-v29.gate_schema_v79 (ups |
+| 2026-04-28 13:03 UTC | Triple Integration E2E v5 — SC-Energy + SpilledEne | OK | Deliverable already exists in repo |
+| 2026-04-28 13:07 UTC | Energy-Selection SSD v2 — FR-11 Mandatory Self-Lea | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 13:21 UTC | Energy-Selection SSD v2 — FR-11 Mandatory Self-Lea | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |

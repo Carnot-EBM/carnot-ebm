@@ -16153,3 +16153,78 @@ Exp 930 (gemma-4-E4B-it produced 12% baseline, leaving no room for repair improv
   math_repair_zero, math_repair_negative, or sota_model_not_found
 
 **Spec traces:** REQ-VER-030, REQ-VER-MATH-001, REQ-VER-MATH-002, Exp 942
+
+## REQ-INFRA-080: Session-Boundary-Persistent EnvPropagationGuard
+
+Carnot SHALL persist CARNOT_* environment variables across conductor session boundaries
+so that CARNOT_FORCE_LIVE=1 and related gates survive a full conductor restart.
+
+- REQ-INFRA-080-1: EnvPropagationGuard.propagate() SHALL source ~/.carnot/conductor_state.sh
+  (if it exists) before sourcing ~/.carnot_session_env, applying export KEY=VALUE lines.
+- REQ-INFRA-080-2: propagate() SHALL unconditionally set CARNOT_FORCE_LIVE=1 in os.environ
+  regardless of what the state file contains.
+- REQ-INFRA-080-3: propagate() SHALL return a dict of all CARNOT_*, ROCM_*, HSA_* vars
+  now present in os.environ.
+- REQ-INFRA-080-4: ExperimentTemplate.setup() SHALL call EnvPropagationGuard.propagate()
+  before any GPU work begins.
+
+### SCENARIO-INFRA-090: propagate() Sources State File and Sets CARNOT_FORCE_LIVE
+
+**Given** ~/.carnot/conductor_state.sh contains `export CARNOT_N_SPINS=128`
+**And** CARNOT_FORCE_LIVE is absent from os.environ
+**When** EnvPropagationGuard.propagate() is called
+**Then** os.environ['CARNOT_N_SPINS'] == '128'
+**And** os.environ['CARNOT_FORCE_LIVE'] == '1'
+**And** the returned dict contains both keys
+
+**Spec traces:** REQ-INFRA-080, Exp 987
+
+## REQ-INFRA-081: Write Carnot State File for Future Sessions
+
+Carnot SHALL provide EnvPropagationGuard.write_state_file() that writes all current
+CARNOT_* vars plus CARNOT_FORCE_LIVE=1 to ~/.carnot/conductor_state.sh in
+shell-sourceable `export KEY=VALUE` format.
+
+- REQ-INFRA-081-1: write_state_file() SHALL create ~/.carnot/ if it does not exist.
+- REQ-INFRA-081-2: The written file SHALL always include `export CARNOT_FORCE_LIVE=1`.
+- REQ-INFRA-081-3: The file SHALL begin with a `#!/bin/sh` shebang and a comment line.
+
+### SCENARIO-INFRA-091: write_state_file() Persists CARNOT_FORCE_LIVE=1
+
+**Given** CARNOT_FORCE_LIVE is set to '1' in os.environ
+**When** EnvPropagationGuard.write_state_file() is called
+**Then** ~/.carnot/conductor_state.sh is created (or updated)
+**And** it contains the line `export CARNOT_FORCE_LIVE=1`
+**And** it begins with `#!/bin/sh`
+**And** a fresh process that sources the file will have CARNOT_FORCE_LIVE=1
+
+**Spec traces:** REQ-INFRA-081, Exp 987
+
+## REQ-VERIFY-160: SC-Energy as Production Tier 2 OOD Detector
+
+SC-Energy (SetConsistencyVerifier) SHALL be the default Tier 2 OOD detector in
+ThreeTierPipeline, replacing VariationalJEPAPredictor (VJEPA v2) which is
+retained as an explicit override only.
+
+The rationale: SC-Energy achieves AUROC >= 0.75 on FoVer v2 with CPU-only
+inference and no pre-downloaded weights (training < 1 second).  VJEPA v2
+requires a safetensors checkpoint (Exp 884) and JAX GPU access to match its
+published OOD AUC=0.664.  SC-Energy's CPU portability makes it universally
+deployable — a sovereignty requirement (CLAUDE.md decentralization rule 5).
+
+- REQ-VERIFY-160-1: load_default_tier2_model() SHALL attempt SCEnergyEnergyAdapter first.
+- REQ-VERIFY-160-2: If SC-Energy init fails (JAX unavailable), fall back to VJEPAv2EnergyAdapter.
+- REQ-VERIFY-160-3: All SC-Energy tests SHALL pass (0 failures) before Tier 2 wiring is reported done.
+- REQ-VERIFY-160-4: The experiment artifact for this change SHALL include test_failures_before,
+  test_failures_after, tier2_wired, sc_energy_checkpoint, and honest_verdict fields.
+
+### SCENARIO-VERIFY-160: SC-Energy Wired as Default Tier 2
+
+**Given** a freshly initialised ThreeTierPipeline via load_default_tier2_model()
+**When** no VJEPA safetensors checkpoint is present
+**Then** eorm_model is an SCEnergyEnergyAdapter instance
+**And** the pipeline can score CoT responses without GPU access
+**And** coherent responses receive energy above sc_threshold
+**And** incoherent responses receive energy below sc_threshold
+
+**Spec traces:** REQ-VERIFY-160, Exp 1001, milestone .78

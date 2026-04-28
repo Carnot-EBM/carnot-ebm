@@ -1,0 +1,175 @@
+{
+  "experiment": 999,
+  "schema": "carnot.experiment.v1",
+  "title": "Milestone 2026.04.77 Retrospective",
+  "milestone": "2026.04.77",
+  "run_date": "20260428",
+  "started_at": "2026-04-28T00:46:43.951759+00:00",
+  "finished_at": "2026-04-28T00:46:43.952172+00:00",
+  "status": "success",
+  "honest_verdict": "milestone_failed_3_of_10_criteria_gate_schema_mismatch_cascaded_7_blocks_kan_milp_fixed_kv260_ip_discovered_env_guard_functional",
+  "criteria_results": {
+    "env_propagation_guard_persistent": true,
+    "sc_energy_tests_fixed": false,
+    "sc_energy_tier2_deployed": false,
+    "dualgpu_wiring_confirmed": false,
+    "triple_integration_e2e": false,
+    "spilled_energy_auroc_live_gpu": false,
+    "kan_milp_violations_zero": true,
+    "kv260_programmed_or_latency": false,
+    "ppsebm_live_relay_confirmed": false,
+    "retrospective_written": true
+  },
+  "criteria_details": {
+    "env_propagation_guard_persistent": {
+      "experiment": 987,
+      "verdict": "env_propagation_guard_verified",
+      "measured_value": {
+        "subprocess_propagation_ok": true,
+        "state_file_exists": true,
+        "retro_015_resolved": true
+      },
+      "threshold": "verdict == env_propagation_guard_verified AND propagation_ok AND state_file_exists",
+      "passed": true,
+      "note": "Exp 987 functionally succeeded: state file written, subprocess propagation confirmed.  However, the artifact field 'env_propagation_persistent' was never set (remains None), causing all downstream gates to fail."
+    },
+    "sc_energy_tests_fixed": {
+      "experiment": 988,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": "blocked_gate_check_failed",
+      "threshold": "!= 'blocked_gate_check_failed'",
+      "passed": false,
+      "note": "Blocked by gate on exp987.env_propagation_persistent == True (actual=None).  Field name mismatch in Exp 987 artifact cascaded the block despite the underlying functionality being correct."
+    },
+    "sc_energy_tier2_deployed": {
+      "experiment": 988,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": "blocked_gate_check_failed",
+      "threshold": "!= 'blocked_gate_check_failed'",
+      "passed": false,
+      "note": "Same block as criterion 2; both depend on Exp 988 completing."
+    },
+    "dualgpu_wiring_confirmed": {
+      "experiment": 989,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": "blocked_gate_check_failed",
+      "threshold": "!= 'blocked_gate_check_failed'",
+      "passed": false,
+      "note": "Blocked upstream by same Exp 988 gate failure cascade."
+    },
+    "triple_integration_e2e": {
+      "experiment": 990,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": "blocked_gate_check_failed",
+      "threshold": "!= 'blocked_gate_check_failed'",
+      "passed": false,
+      "note": "Blocked upstream \u2014 depends on 989 which depends on 988."
+    },
+    "spilled_energy_auroc_live_gpu": {
+      "experiment": 991,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": null,
+      "threshold": ">= 0.70",
+      "passed": false,
+      "note": "Blocked upstream \u2014 gate on exp987.env_propagation_persistent cascaded here too."
+    },
+    "kan_milp_violations_zero": {
+      "experiment": 992,
+      "verdict": "violations_fixed",
+      "measured_value": {
+        "violations_before": 11,
+        "violations_after": 0,
+        "monotonicity_violations_fixed": 7,
+        "boundary_violations_fixed": 4
+      },
+      "threshold": "violations_after == 0",
+      "passed": true,
+      "note": "MILESTONE BRIGHT SPOT.  11 violations (7 monotonicity + 4 boundary) fixed via isotonic projection in enforce_monotonicity().  1.89x speedup after fix.  No gates blocked this experiment."
+    },
+    "kv260_programmed_or_latency": {
+      "experiment": 993,
+      "verdict": "board_unreachable_human_required",
+      "measured_value": {
+        "board_discovered": true,
+        "board_ip": "192.168.51.98",
+        "board_programmed": false,
+        "hardware_latency_us": null,
+        "scp_ok": false,
+        "cpu_baseline_latency_us": 10.59779489878565
+      },
+      "threshold": "board_programmed == True OR hardware_latency_us is not None",
+      "passed": false,
+      "note": "Board discovered at 192.168.51.98 but SCP transfer failed.  Board programmed=False, latency not measured.  Human action required to enable SSH/SCP access from conductor host to kria@kv260."
+    },
+    "ppsebm_live_relay_confirmed": {
+      "experiment": 994,
+      "verdict": "blocked_gate_check_failed",
+      "measured_value": "blocked_gate_check_failed",
+      "threshold": "!= 'blocked_gate_check_failed'",
+      "passed": false,
+      "note": "Gated on Exp 991 (live GPU violations collected), which was itself blocked.  Three-hop dependency chain from the Exp 987 field mismatch."
+    },
+    "retrospective_written": {
+      "experiment": 999,
+      "verdict": "retro_written",
+      "measured_value": "experiment_999_milestone_retro_77.json",
+      "threshold": "artifact written",
+      "passed": true,
+      "note": "This script writes the artifact, satisfying criterion 10."
+    }
+  },
+  "criteria_met": 3,
+  "criteria_total": 10,
+  "additional_results": {
+    "exp986_preflight_v27": {
+      "verdict": "preflight_partial",
+      "status": "partial",
+      "summary": "Partial: SOTA models (Gemma-4-31B, Gemma-4-26B-A4B, Qwen3.6-35B) confirmed available. Exclusion manifest missing 4 entries (786/627/603/641) \u2014 YAML field not found, not a functional blocker."
+    },
+    "exp995_pcib_hallucination_tier0f": {
+      "verdict": "tier0f_below_threshold",
+      "pcib_auroc": 0.5321,
+      "nup_probe_auroc": 0.964,
+      "summary": "PCIB AUROC=0.532 \u2014 below 0.70 deployment threshold.  Text-statistical proxy (no LLM logits) insufficient; NUP probe dominates at AUROC=0.964.  Tier 0f not wired.  PCIB needs logit access to be competitive."
+    },
+    "exp996_gskan_energy_tier": {
+      "verdict": "blocked_gate_check_failed",
+      "summary": "Blocked: 10 prior failures match task scope but roadmap YAML missing 'prior_failures' field.  Planner must add prior_failures entries for tasks with >=3 prior failures before conductor will launch them."
+    },
+    "exp997_nk_optimizer_kaem_energy": {
+      "verdict": "blocked_gate_check_failed",
+      "summary": "Blocked: prior_failures field missing in roadmap YAML.  Same planner discipline gap as Exp 996."
+    },
+    "exp998_arxiv_scan": {
+      "verdict": "MISSING",
+      "summary": "No artifact found in results directory.  Experiment either did not run or artifact write failed without try/finally guard."
+    }
+  },
+  "biggest_gaps_78": [
+    "GAP-1 (CRITICAL): Gate schema contract enforcement. Exp 987 succeeded functionally but never emitted 'env_propagation_persistent=True' in its artifact.  Downstream gates checked exactly that field, got None, and blocked all 7 dependent experiments (criteria 2-6, 9 plus Exp 994).  Fix: the gate config spec must declare which artifact field it reads, and the upstream experiment MUST write that exact field.  Resolution: add env_propagation_persistent=True to Exp 987 output or update gate config to use 'subprocess_propagation_ok' which IS set.",
+    "GAP-2 (HARDWARE): KV260 SSH/SCP access from conductor host. Board discovered at 192.168.51.98 (three experiments now confirm the IP). SCP transfers fail; board cannot be programmed autonomously. The bitstream is ready (generated in .76, confirmed in .77 Exp 993). Human action required: enable key-based SSH from the conductor host to kria@192.168.51.98.  Once done, FPGA first-light is one experiment away.",
+    "GAP-3 (PROCESS): Planner prior_failures discipline. Exp 996 (GS-KAN) and Exp 997 (NK optimizer KAEM) were blocked because the roadmap YAML lacked 'prior_failures' entries for tasks with a history of failures.  The CLAUDE.md rule requiring prior_failures for re-proposed tasks is not being consistently applied at planning time. Resolution: .78 planner must audit research-complete.yaml for all tasks in the new roadmap and add prior_failures entries before the conductor runs."
+  ],
+  "milestone_successes": [
+    "Exp 987: EnvPropagationGuard verified \u2014 state file persists, subprocess propagation confirmed, RETRO-015 closed",
+    "Exp 992: KAN MILP violations eliminated \u2014 11 violations (7 monotonicity, 4 boundary) fixed via isotonic projection; 1.89x speedup",
+    "Exp 993: KV260 board discovered at 192.168.51.98 \u2014 IP now known; bitstream confirmed ready; only SSH access blocks first light"
+  ],
+  "process_observations": [
+    "THIRD consecutive milestone with a cascade-block root cause: .75 (Exp 975 no artifact), .76 (same), .77 (Exp 987 wrong field names). The pattern is always a single upstream experiment failing to emit the exact field that downstream gates expect. Gate schema contracts must be enforced at design time, not discovered at runtime.",
+    "Exp 987 is the clearest example of a 'near miss': the experiment succeeded, the functionality works, the artifact was written, but the field names differed from the gate contract. All 7 dependent experiments were blocked. Functional success \u2260 integration success.",
+    "Exp 992 (KAN MILP fix) succeeded precisely because it had no upstream gate dependencies. Experiments with direct CPU-only scope and no live-GPU requirement are reliably completing. The bottleneck is gate chain management, not research capability.",
+    "Exp 996 and 997 introduce a new failure mode: planner prior_failures discipline. The conductor's rerun guard is working (it blocked the experiments), but the planner should have added prior_failures entries to avoid wasting a milestone slot.",
+    "KV260 FPGA is tantalizingly close. The board is physically present, the bitstream is built, the IP is known. Only SSH key exchange blocks first light. This should be treated as a human-action prerequisite, not a research task \u2014 it should complete asynchronously before .78 planning.",
+    "Exp 995 (PCIB Tier 0f) produced a useful negative result: text-statistical hallucination proxies achieve AUROC=0.532, far below the 0.70 threshold. NUP probe at 0.964 dominates. PCIB needs LLM logit access to be competitive. This closes a research question cleanly."
+  ],
+  "root_cause_analysis": "Same cascade-block pattern for third consecutive milestone. Exp 987 artifact missing 'env_propagation_persistent' field (downstream gate expected True, got None). Seven experiments gated on this chain. Root cause: no gate schema contract validation at experiment design time.",
+  "carry_forwards_78": [
+    "SC-Energy Tier 2 deployment (Exp 988 scope) \u2014 gate schema fix required first",
+    "DualGPU fresh timestamp validation (Exp 989 scope)",
+    "Triple Integration E2E (Exp 990 scope)",
+    "SpilledEnergy live GPU AUROC >= 0.70 (Exp 991 scope)",
+    "PPSEBM live relay (Exp 994 scope)",
+    "KV260 first light \u2014 human action (SSH key) prerequisite"
+  ]
+}

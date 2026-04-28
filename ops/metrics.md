@@ -1,5 +1,55 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-28 Milestone 2026.04.79 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-28T10:20:46Z | 2026-04-28T10:34:42Z | Planned milestone 2026.04.79 "Pre-Test Surgery + Cascade Validation + Self-Learning Deployment + FoVer Expansion". Read 11 required project files + .78 experiment result JSONs. Root causes of .78 3/12 failure: (1) "comparison failed" pre-test blocked 4 experiments — SC-Energy Tier 2 wiring (Exp 1001) likely broke a test assertion; (2) DOOMED_RERUN_BLOCK for Exps 1006/1007/1008/1011 — planner forgot prior_failures YAML fields; (3) SpilledEnergy 9 violations < 10 gate. Arxiv scan: 6 new papers added to research-references.md (multilevel KAN 2603.04827, hardware KAN metrics 2604.03345, Mpemba init 2603.24183, Self-Distilled Reasoner 2601.18734, KAN universality 2604.23765, LagONN 2505.07179). Designed 13 experiments (Exps 1013-1025): Phase 0 pre-test surgery + manifest retirement (Exp 1013), Phase 1 cascade validation + mandatory self-learning (Exps 1014-1015), Phase 2 FoVer expansion 57→500+ pairs (Exp 1016), Phase 3 probe training on expanded corpus (Exps 1017-1019), Phase 4 sampler+training improvements (Exps 1020-1021), Phase 5 hardware+infrastructure (Exps 1022-1024), Phase 6 retro covering both .78 and .79 (Exp 1025). Wrote openspec/change-proposals/research-roadmap-v79.md and research-roadmap-next.yaml. All carry-forward tasks have prior_failures. Updated research-references.md. Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~180k |
+
+---
+
+## Session: 2026-04-28 Milestone 2026.04.78 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-28T10:16:35Z | 2026-04-28T10:20:13Z | Milestone 2026.04.78 operational process retrospective. Read ops/metrics.md, ops/changelog.md, docs/roadmap.md, results/experiment_100x JSONs. Analyzed 2800 min / 597 experiments. Seventh consecutive wall-time improvement (-264 min, -8.61%). Fourth consecutive below .58 baseline (2800 min, -18.0%). Gate cascade fourth consecutive (Exp 1004 no artifact → 6 blocked). 19th legacy carryover streak (786/641/906); Exp 641 ninth consecutive six past mandatory gate. DualGPU 13th consecutive idle (780 min foregone). Retro experiment (Exp 1012) not run. Exp 627 exited slowest-5 for first time. GPU close clean 1C differential, 14th consecutive. 3/12 criteria met. Wrote results/operational_retro_2026_04_78.json. Appended changelog entry. Appended row to docs/roadmap.md Completed Milestones table. | ~18k |
+
+---
+
+## Session: 2026-04-28 Milestone 2026.04.78 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-28T01:03:54Z | 2026-04-28T01:15:40Z | Planned milestone 2026.04.78 "Gate Schema Repair + .77 Carry-Forward Recovery + ThinkPRM + VPRM + ALMC-ODE". Read 11 required project files + experiment_999_milestone_retro_77.json + operational_retro_2026_04_77.json. Root cause of .77 3/10 failure: Exp 987 (EnvPropagationGuard) wrote 'subprocess_propagation_ok' instead of 'env_propagation_persistent' — third consecutive gate cascade block, 7 downstream experiments blocked. Exp 992 (KAN MILP 11→0 violations), Exp 993 (KV260 IP confirmed), Exp 995 (PCIB clean negative) succeeded as independent experiments. Arxiv scan: ThinkPRM (arXiv 2504.16828, +8% GPQA-Diamond), VPRMs (arXiv 2601.17223, +20% F1). Appended both to research-references.md. Designed 13 experiments (Exps 1000-1012) across 5 phases: Phase 0 gate schema repair preflight, Phase 1 .77 carry-forward recovery (SC-Energy/DualGPU/SpilledEnergy/Triple Integration), Phase 2 FR-11 self-learning (PPSEBM relay + Energy-Selection SSD mandatory), Phase 3 new research (ThinkPRM/VPRM/GS-KAN), Phase 4 hardware+sampling (KV260/ALMC-ODE), Phase 5 retro. Wrote openspec/change-proposals/research-roadmap-v78.md and research-roadmap-next.yaml. All re-proposed tasks have prior_failures fields. Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~160k |
+
+---
+
+## Session: 2026-04-28 Milestone 2026.04.77 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-28T01:00:22Z | 2026-04-28T01:03:28Z | Milestone 2026.04.77 operational process retrospective. Read ops/metrics.md, ops/changelog.md, results/experiment_999_milestone_retro_77.json. Analyzed 3064 min / 626 experiments. Sixth consecutive wall-time improvement (-135 min, -4.22%). Third consecutive below .58 baseline (3064 min). Gate schema contract mismatch (Exp 987 wrong field name) cascade-blocked 7 experiments — third consecutive milestone with this pattern. Three legacy carryovers 18th consecutive (786/627/641). Manifest unapplied 18th consecutive. Exp 641 fifth past mandatory gate. DualGPU 12th consecutive idle (720 min foregone). KV260 SSH blocked. Wrote results/operational_retro_2026_04_77.json (schema=carnot.operational_retro.v53). Appended changelog entry. Appended row to docs/roadmap.md Completed Milestones table. | ~12k |
+
+---
+
+## Session: 2026-04-27 Milestone 2026.04.77 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-27T21:00:44Z | 2026-04-27T21:16:48Z | Planned milestone 2026.04.77 "EnvPropagation Permanent Fix + Production Tier 2 + KV260 First Light". Read 11 required project files + operational_retro_2026_04_76.json + experiment_985_milestone_retro_76.json. Root cause of .76 2/10 failure: Exp 975 (EnvPropagationGuard) produced no artifact (missing try/finally) → cascade-blocked 6 downstream experiments; separate gate config bug (op='') blocked Exp 980 (KAN MILP). Arxiv scan via Explore sub-agent: 4 new papers added to research-references.md (arXiv 2604.16430 HalluSAE, arXiv 2602.11364 DiffuTruth, arXiv 2603.06875 Stochastic Attention Langevin, arXiv 2604.20052 ALMC-ODE). Identified 3 biggest gaps: (1) EnvPropagationGuard session-boundary persistence not fixed; (2) SC-Energy Tier 2 blocked by 3 test failures + KAN has 11 MILP violations; (3) KV260 bitstream ready but board unreachable at kv260.local. Wrote openspec/change-proposals/research-roadmap-v77.md (14 experiments Exps 986-999, 10 success criteria, dependency graph, try/finally mandate, gate op validation). Wrote research-roadmap-next.yaml (14 tasks: exp986-exp999 with all prior_failures, valid gated_on ops, max_turns; Exp 992 explicitly independent/no gated_on). Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. | ~150k |
+
+---
+
 ## Session: 2026-04-27 Milestone 2026.04.76 Planning
 
 ### Turn Log

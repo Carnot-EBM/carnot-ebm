@@ -1,0 +1,24 @@
+{
+  "experiment": 994,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-27",
+  "started_at": "2026-04-27T23:14:18.733955+00:00",
+  "finished_at": "2026-04-27T23:14:18.733955+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "PPSEBM Live GPU Relay v2 \u2014 Cross-Session Memory Validated on Real GPU Violations (FR-11)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp991-fast-path-probe-live-gpu-v3.n_live_violations_collected (numeric comparison rejected because one side is None (actual=None, expected=10))",
+  "gates_evaluated": [
+    {
+      "upstream": "exp991-fast-path-probe-live-gpu-v3",
+      "artifact_field": "n_live_violations_collected",
+      "op": ">=",
+      "expected": 10,
+      "actual": null,
+      "passed": false,
+      "reason": "numeric comparison rejected because one side is None (actual=None, expected=10)"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
