@@ -1,6 +1,30 @@
 # Zenil-Grounded Self-Distillation: Deployable Stack
 
-**Status:** Draft change proposal. Requested for milestone 2026.04.81 or .82.
+**Status:** Draft change proposal. **MAJOR REVISION 2026-04-28 evening**
+after Deep Think validation refuted four of five Gemini-derived claims.
+Requested for milestone 2026.04.81 or .82 with the corrected math.
+
+**REVISION SUMMARY:**
+- Q1 Φ formula corrected: spectral-gap reframing was wrong (verifier
+  is discrete pointwise reweighting, not Langevin diffusion). Correct:
+  $\Phi = \frac{1}{\delta_t} \mathrm{Cov}_{Q_t}(Q_t/\mu_P, E)$.
+- Q2 algebra fixed: $N_t > \sigma^2 T \tau_{\text{int}} / (2\Phi \delta_t)$
+  (linear, single Φ).
+- Q3 schedule replaced: constant-T floor, NOT logarithmic cooling.
+  Linear convergence $\Delta\delta_t = -\Phi/T_{\text{floor}}$.
+- Q4 factor corrected: $\Gamma = \exp(\kappa(2^{k-1}-1)/T)$, exponent ≈
+  127 at k=8 (Gemini's 1004 was a double-counted arithmetic error AND
+  a Kramers-physics violation).
+- Q5 PT acceptance unchanged from standard 0.234. The 0.35 Gemini number
+  was a hallucination conflating MALA and PT. **Drop the Exp C
+  hyperparameter change.**
+
+**NEW LOAD-BEARING FINDING (Deep Think):** the *orthogonality stall* —
+single-verifier distillation has a fundamental compute-immune ceiling
+when residual error rotates into the verifier's null space. Adds a
+NEW Exp E (multi-verifier rotation) to this proposal. See
+`docs/research-notes/zenil-deep-think-validation-results.md` and
+memory entry `project_orthogonality_stall.md`.
 **Origin:** 2026-04-28 Round-6 Deep Think response on the Zenil α_t ×
 Carnot verifier formalism. Three rounds of Gemini ↔ Carnot critique
 produced a deployable contractivity bound for verifier-filtered
@@ -65,7 +89,7 @@ Four targeted code artifacts that operationalise the Round-6 result:
 
 ## Proposed experiments
 
-### Exp A — Φ > 0 measurement module
+### Exp A — Φ > 0 measurement module (CORRECTED 2026-04-28)
 
 **Deliverable:** `python/carnot/eval/phi_test.py` +
 `tests/python/test_phi_test.py` +
@@ -73,23 +97,31 @@ Four targeted code artifacts that operationalise the Round-6 result:
 
 **What it does:**
 
-1. Implement `phi_test(Q_samples, mu_P_samples, log_mu_P) -> PhiTestResult`
+1. Implement `phi_test(Q_samples, log_mu_P_fn, E_fn, delta_t) -> PhiTestResult`
    returning:
-   - Estimated Φ via the bias-score inner product:
-     $\widehat\Phi = -\frac{1}{2}\widehat{\mathbb{E}}[\mathrm{sgn}(B(x)) \cdot (\log \mu_P(x) - \overline{\log \mu_P})]$
-     where $B(x) = \log Q_t(x) - \log \mu_P(x)$.
+   - Estimated Φ via the corrected covariance formula:
+     $\widehat\Phi = \frac{1}{\delta_t} \widehat{\mathrm{Cov}}_{Q_t}\!\left(\frac{Q_t}{\mu_P},\, E\right)$
+     where the importance ratio $Q_t/\mu_P$ is estimated pointwise via
+     `log_mu_P_fn(x) - log_Q_t(x)` and $E$ via `E_fn(x)`.
    - Bootstrap CI (1000 resamples) for $\widehat\Phi$.
    - Hypothesis test: reject $H_0: \Phi \le 0$ at $\alpha = 0.05$.
-2. Optional: spectral-gap proxy via Langevin generator power iteration
-   when $\nabla \log \mu_P$ is available analytically (used for Carnot's
-   constraint-derived energies).
-3. 15+ unit tests covering: monotone-likelihood case (Φ > 0), uniform
-   error case (Φ ≈ 0), miscalibrated-mode case (Φ < 0).
+2. Detection of the *orthogonality stall*: when $\widehat\Phi$ falls
+   below a configured noise threshold $\varepsilon$, return
+   `PhiTestResult(stalled=True, reason='orthogonality')` so the
+   self-distillation loop can halt or rotate verifier.
+3. 15+ unit tests covering:
+   - Aligned-error case (Φ > 0): hallucination modes correlate with E.
+   - Orthogonal-error case (Φ ≈ 0): residual rotated into E's null space.
+   - Anti-aligned case (Φ < 0): verifier reinforces hallucinations.
 
 **Acceptance:** module imports from `carnot.eval.phi_test`, tests pass,
 artifact reports `phi_test_module_complete`.
 
-### Exp B — Joint annealing schedule module
+**DROPPED FROM ORIGINAL DRAFT:** the spectral-gap proxy. The
+spectral-gap reframing was a Gemini category error (Deep Think Q1
+verdict). Phi is a covariance, not an eigenvalue.
+
+### Exp B — Constant-T schedule module (CORRECTED 2026-04-28)
 
 **Deliverable:** `python/carnot/training/anneal.py` +
 `tests/python/test_anneal_schedule.py` +
@@ -97,45 +129,49 @@ artifact reports `phi_test_module_complete`.
 
 **What it does:**
 
-1. Implement `zenil_schedule(t, t_0, T_0, N_0) -> AnnealStep` returning
-   `(T_t, N_t)` per the Round-6 formula:
-   $$T_t = T_0 \frac{\log t_0}{\log t}, \quad N_t = N_0 \left(\frac{\log t}{\log t_0}\right)^2$$
-2. Coupled budget mode: when current $\delta_t$ estimate is provided,
-   return $N_t = \lceil \sigma^2 T_t \tau_{\text{int}} / (2 \Phi^2 \delta_t)\rceil$
-   directly (the deterministic-α coupled bound).
-3. Hardware-tier mode: given a target tier (CPU / KV260 / Extropic /
-   photonic) with samples-per-second cap, returns the minimum $\delta_t$
-   the tier can sustain at a given $T_t$.
-4. 12+ unit tests covering monotone $T_t$ decrease, monotone $N_t$
-   increase, hardware-tier saturation thresholds.
+1. Implement `constant_t_schedule(t, T_floor, sigma2, tau_int, Phi, delta_t) -> AnnealStep`
+   returning `(T_t, N_t)` per the corrected formula:
+   $$T_t = T_{\text{floor}}, \qquad N_t = \left\lceil \frac{\sigma^2 \, T_{\text{floor}} \, \tau_{\text{int}}}{2 \, \Phi \, \delta_t}\right\rceil$$
+   with $T_{\text{floor}} \gtrsim T_{\text{crit}}$ provided by the caller.
+2. `T_floor` calibration helper: estimates $T_{\text{crit}}$ from the
+   energy landscape (heuristic: roughly the temperature at which the
+   filter's KL divergence to $\mu_P$ is half its high-T limit).
+3. Hardware-tier mode: given a target tier with samples-per-second
+   cap, returns the minimum $\delta_t$ the tier can sustain *before
+   reaching the orthogonality plateau* (delta_plateau).
+4. 12+ unit tests covering: $T_t$ stays constant; $N_t$ scales as
+   $1/\delta_t$ (linear); hardware tiers correctly compute
+   plateau-attainable depth.
 
 **Acceptance:** module callable from FR-11 experiments, tests pass,
 hardware-tier table matches `_bmad/architecture.md`.
 
-### Exp C — PT acceptance rate hyperparameter
+**DROPPED FROM ORIGINAL DRAFT:** logarithmic cooling. Deep Think Q3
+verdict: log cooling actively breaks the high-T Taylor expansion
+underlying Q1/Q2 and is unnecessary because PT bridges
+$\tau_{\text{int}}$ blowup at constant T.
 
-**Deliverable:** edit
-`python/carnot/hardware/transpiler/distill.py` to set
-`PT_TARGET_ACCEPTANCE = 0.35` with code-comment citation +
-`tests/python/test_transpiler_distill.py` updated assertion +
-`results/experiment_<N>_pt_acceptance_v035.json`.
+### Exp C — DROPPED (2026-04-28)
 
-**What it does:**
+**Original scope:** ship `PT_TARGET_ACCEPTANCE = 0.35`.
 
-1. Replace any implicit 0.23 default with the explicit constant
-   `PT_TARGET_ACCEPTANCE = 0.35`.
-2. Comment cites Round-6 Deep Think result: verifier-filtered
-   sampling shifts the acceptance-reward trade-off toward higher
-   temperatures; 0.35 prioritises mode-hopping over local convergence.
-3. Adaptive temperature-spacing logic targets the new acceptance rate.
-4. Existing test `test_distiller_train_epoch_returns_metrics` updated
-   to verify the new constant; new test asserts that PT runs achieve
-   acceptance ≈ 0.35 ± 0.05 on a synthetic bimodal target.
+**Why dropped:** Deep Think Q5 verdict refuted the 0.35 number as a
+Gemini hallucination conflating intra-chain MALA acceptance ($\sim 0.57$)
+with inter-chain PT swap acceptance (Roberts-Rosenthal-Gilks $\sim 0.234$).
+PT swaps evaluate existing states by thermodynamic overlap; CLT-Gaussian
+energies in high dimensions give the rigorous 0.234 optimum
+*regardless of how the proposals were generated*. The verifier-filter
+biases proposals (where a higher acceptance like 0.57 might apply for
+within-chain MALA), but PT *between* chains stays at 0.234.
 
-**Acceptance:** transpiler PT runs hit 0.35 ± 0.05 acceptance on the
-synthetic target; existing tests pass.
+**Action:** keep PT swap acceptance at 0.234. No code change required.
+The current transpiler (`python/carnot/hardware/transpiler/distill.py`)
+already defaults to 0.234 implicitly via Roberts-Rosenthal-Gilks; ensure
+the constant `PT_TARGET_ACCEPTANCE = 0.234` is *explicitly* named with
+a code-comment citation so future readers don't re-introduce the
+0.35 confusion.
 
-### Exp D — REQ-PHASE2-006 Gray-code factor measurement
+### Exp D — REQ-PHASE2-006 Gray-code factor measurement (CORRECTED 2026-04-28)
 
 **Deliverable:** `python/carnot/hardware/transpiler/measurements.py`
 (new) + `scripts/experiment_<N>_gray_code_factor.py` +
@@ -152,20 +188,87 @@ new spec entry REQ-PHASE2-006 in
 2. Measure $\tau_{\text{int}}$ for each via integrated-autocorrelation
    estimation (already in `diagnostics.py`).
 3. Compute empirical $\widehat\Gamma = \widehat\tau_{\text{int}}^{\text{binary}} / \widehat\tau_{\text{int}}^{\text{gray}}$.
-4. Compare to theoretical $\Gamma = \exp((\kappa/T)\sum_{i=1}^{8}(2^i - 1))$
-   for the lattice's measured coupling $\kappa$ and temperature $T$.
+4. Compare to **corrected** theoretical $\Gamma = \exp(\kappa(2^{k-1} - 1)/T)$
+   per Kramers' escape rate (single-largest-barrier, not summed). For
+   $k = 8$, theoretical exponent = 127.
 5. Report empirical vs theoretical ratio; pass condition is empirical
    $\ge$ theoretical / 10 (allowing for sub-leading corrections).
 6. New spec REQ-PHASE2-006: "The continuous-to-Ising transpiler's
    Gray-code visible-spin encoder reduces integrated autocorrelation
-   time by factor $\Gamma = \exp((\kappa/T)\sum_{i=1}^{k}(2^i - 1))$
-   vs standard binary encoding at bit width $k$."
+   time by factor $\Gamma \approx \exp(\kappa(2^{k-1} - 1)/T)$
+   vs standard binary encoding at bit width $k$, where $\kappa$ is the
+   underlying Hamiltonian's coupling strength."
 
 **Acceptance:** experiment artifact reports
 `gray_code_factor_confirmed` if empirical $\widehat\Gamma$ exceeds the
 threshold; else `gray_code_factor_below_theoretical` with diagnostic
 log of which terms in the Hamiltonian dominate.
 This is a falsifiable Phase 2 transpiler theorem result.
+
+**CORRECTED 2026-04-28:** Gemini's super-exponential factor
+$\exp((\kappa/T)\sum(2^i - 1))$ was wrong on both physics (Kramers
+depends on max barrier, not sum) and arithmetic (Σ for k=8 = 502,
+not 1004). Correct factor is exponential in $2^{k-1}$, still publishable
+as a Phase 2 theorem.
+
+### Exp E — Orthogonality-stall mitigation: multi-verifier rotation (NEW 2026-04-28)
+
+**Deliverable:** `python/carnot/training/multi_verifier.py` (new) +
+`tests/python/test_multi_verifier_rotation.py` +
+`results/experiment_<N>_orthogonality_stall_validation.json` +
+`results/experiment_<N>_multi_verifier_rotation_breaks_stall.json`.
+
+**Why this experiment exists:** Deep Think identified the *orthogonality
+stall* as a fundamental compute-immune ceiling for single-verifier
+self-distillation. As the model eliminates errors aligned with $E$,
+the residual rotates into $E$'s null space and $\Phi \to 0$. Infinite
+$N_t$ cannot rescue this. Mitigation: adversarial rotation among
+multiple verifiers $E_1, ..., E_k$ whose union spans the residual-error
+space.
+
+**What it does:**
+
+1. **Stall validation.** Run a single-verifier self-distillation loop
+   on a synthetic target with $E$ covering only a subspace of the
+   residual error space. Measure $\widehat\Phi$ each round via Exp A's
+   `phi_test`. Verify the orthogonality stall: $\widehat\Phi$ decays
+   to zero while $\delta_t$ remains bounded above $\delta_{\text{plateau}}$.
+   Artifact reports `stall_validated` with $(\delta_{\text{plateau}}, t_{\text{stall}})$.
+
+2. **Multi-verifier rotation.** Implement
+   `MultiVerifierRotator(verifiers: list[E_i])` that:
+   - At each round, computes $\widehat\Phi_i$ for each verifier $E_i$.
+   - Selects the verifier with maximum $\widehat\Phi_i$ for the next
+     round's filter.
+   - Rotates verifiers automatically when current $\widehat\Phi_i$
+     falls below $\varepsilon$.
+
+3. **Stall-break demonstration.** Run the same synthetic distillation
+   loop with the rotator. Demonstrate that $\delta_t$ continues to
+   decrease past $\delta_{\text{plateau}}$ from the single-verifier
+   case. Artifact reports `multi_verifier_breaks_stall` with the
+   delta improvement.
+
+4. **Multi-verifier ensemble combine.** Optional: when several
+   $\widehat\Phi_i$'s are simultaneously positive, combine the filter
+   gradients additively rather than rotating. Test that the combined
+   filter improves over any single verifier on synthetic data.
+
+5. 12+ unit tests covering: rotation triggers on stall detection,
+   max-Φ selection logic, ensemble-combine math, regression test
+   for stall-break.
+
+**Acceptance:**
+- Stall validation: empirical $\delta_{\text{plateau}}$ matches
+  theoretical orthogonality threshold.
+- Stall-break: $\delta_t$ continues decreasing under rotation, with
+  improvement factor at least 2× over the single-verifier plateau.
+- Tests pass.
+
+**Spec impact:** new REQ-PHASE3-001: "Phase 3 self-distillation must
+include multi-verifier rotation to escape the orthogonality stall.
+Single-verifier filtering converges only to $\delta_{\text{plateau}} > 0$
+determined by the residual error's projection onto $E$'s null space."
 
 ## Decentralization implications
 
