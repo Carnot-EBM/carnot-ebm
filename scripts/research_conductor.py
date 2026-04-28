@@ -2588,7 +2588,7 @@ def research_step(
 
         task_max_turns = _select_max_turns(task)
     except ImportError:
-        task_max_turns = 50
+        task_max_turns = 100
     success, output = run_agent(
         prompt,
         max_turns=task_max_turns,
@@ -2596,6 +2596,39 @@ def research_step(
         model_override=task_model,
         deliverable_path=task.get("deliverable"),
     )
+
+    # Tiered Opus escalation on max-turns failure (2026-04-28).
+    # When the configured (Sonnet by default) agent exits because it ran
+    # out of turns, the experiment is capacity-bound, not logic-bound:
+    # it was making progress but the budget was too small. Retry once
+    # with Opus and a 100-turn cap. Cost is ~5–10× per fail, but a single
+    # recovered experiment unblocks downstream cascade — see the .79→.80
+    # spiral where Preflight v29/v30 + FoVer Corpus v2 max-turns'd and
+    # cascade-blocked 8+ downstream slots. Per-task opt-out via
+    # `escalate_on_max_turns: false` in the YAML.
+    if (
+        not success
+        and task_model != "opus"
+        and "Reached max turns" in output
+        and task.get("escalate_on_max_turns", True)
+    ):
+        logger.warning(
+            "%s hit max-turns (%d); escalating to Opus 100 turns",
+            AGENT_DISPLAY,
+            task_max_turns,
+        )
+        log_step(
+            task["title"],
+            "ESCALATE_OPUS",
+            f"Sonnet max-turns at {task_max_turns}; retrying with Opus 100 turns",
+        )
+        success, output = run_agent(
+            prompt,
+            max_turns=100,
+            timeout=1800,
+            model_override="opus",
+            deliverable_path=task.get("deliverable"),
+        )
 
     if not success:
         logger.error("%s failed: %s", AGENT_DISPLAY, output[:200])
