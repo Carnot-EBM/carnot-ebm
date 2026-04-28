@@ -33,6 +33,30 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-28 user-flagged Self-Improvement Limits Theory
+
+### On the Limits of Self-Improving in LLMs (Zenil 2026)
+- **Paper:** arXiv 2601.05280v2 — "On the Limits of Self-Improving in Large Language Models: The Singularity Is Not Near Without Symbolic Model Synthesis"
+- **Author:** Hector Zenil
+- **What:** Formalises recursive self-training as a dynamical system μ_{t+1} = (1−α_t)μ_t + α_t μ_P + ξ_t where μ_P is the true distribution and α_t is the proportion of exogenously-grounded data per round. Theorem 2: 𝔼[H(Q_{t+1})] ≤ H(Q_t) − Δ(N) (entropy strictly decreases). Theorem 4: as α_t → 0 the model becomes a random walk. Theorem 5: convergence to truth P requires inf_t α_t > 0 (a non-vanishing grounding signal). Escape route: Coding Theorem Method m̂_{CTM}(o) = (1/|M|) Σ 𝟙{U_M↓=o} and Block Decomposition Method BDM_k(o) = Σ_i CTM(b_i) + log n_i, which break the Data Processing Inequality via the universal prior m(p) ∝ 2^{−|p|}.
+- **Why this matters for Carnot:** This is the formal mathematical statement of why Carnot's verifier exists. Theorem 4's `α_t μ_P` term IS what an external verifier provides to a self-distilling LLM. The paper gives Phase 3's foundation-model architecture a falsifiable prediction: any training loop where the verifier signal vanishes will collapse — measurably.
+- **Phase relevance:**
+  - Phase 1 (verify-repair): legitimises the verifier-as-grounding role; Carnot's energy function = α_t μ_P contribution.
+  - Phase 3 (foundation model): foundational. Any Carnot self-improvement loop (autoresearch, EBT pretraining) must track α_t as a first-class metric.
+- **Adversarial check vs SSD:** Apple SSD self-distillation (already in MEMORY) claims +12.9pp on LiveCodeBench *without* an external verifier. Zenil predicts this either silently relies on residual α_t > 0 from the base model's pretraining, or will collapse over multiple rounds. Worth instrumenting: replicate SSD over N rounds and measure KL(Q_t ‖ P) drift.
+- **Reusable primitives:**
+  - **BDM_k as a complexity-energy term:** add E_complexity(x) = BDM_k(x) to Carnot's repair scorer for tie-breaking when energies are degenerate. Tractable proxy for Kolmogorov complexity over discrete outputs (code, proofs).
+  - **α_t accounting in autoresearch:** instrument the conductor's self-improvement loop so each milestone reports the α_t (verifier-grounding ratio) for any self-distillation it ran. Doomed-rerun discipline already retires repeating failures; α_t < threshold should be a separate retire trigger for self-distillation experiments.
+  - **Theorem 5 contractivity bound:** falsifiable test for any future Carnot training loop — measure KL(Q_t ‖ P) against α_t and verify the predicted regime. If empirical drift contradicts Zenil's bound, that's a publishable counterexample.
+- **Two-source check:**
+  - **Builds on:** Shumailov et al. 2023/2024 (model collapse, empirical), Alemohammad et al. 2023 (MAD self-consuming generative models), Gerstgrasser et al. 2024 (real/synthetic ratio).
+  - **In tension with:** Apple SSD (no verifier, claimed gains), various "self-rewarding" approaches. Worth fast-following Shumailov 2024 and Alemohammad 2023 next; both are empirical baselines to which Zenil's theorem can be applied.
+- **How Carnot should use it:**
+  - Cite in any future paper that motivates the verifier role.
+  - Add α_t metric collection to the autoresearch loop (tie into ops/metrics.md or a new α_t.csv).
+  - Audit any planned SSD-style experiment against Theorem 5 — if the experiment cannot articulate where α_t comes from, the experiment is doomed.
+- **Caveats:** The constructive escape route (CTM/BDM) requires symbolic model synthesis machinery Carnot does not currently have; the paper's prescriptive arc would push Carnot toward a hybrid energy-+-CTM-scorer, which is a substantive Phase 3 architectural choice, not a trivial integration.
+
 ## 2026-04-28 arxiv Scan (Milestone 2026.04.79 Planning)
 
 ### Multilevel Training for Kolmogorov-Arnold Networks
@@ -5408,3 +5432,62 @@ thermodynamic computing Ising FPGA
   consistency, logical entailment, code correctness, factual grounding). Evaluate on the
   57-pair FoVer corpus with per-step labels. Target: F1 >= 0.90 on step-level verification.
 - **When to incorporate:** Milestone 2026.04.78 (Phase 3 — extends proven Exp 454 pattern).
+
+## 2026-04-28 arxiv Scan (Milestone 2026.04.80 Planning)
+
+### QuantKAN: A Unified Quantization Framework for Kolmogorov-Arnold Networks
+- **Paper:** arXiv 2511.18689 (November 2025)
+- **Authors:** Zhang et al.
+- **What:** Proposes post-training quantization (PTQ) and quantization-aware training (QAT)
+  for KANs. Key finding: B-spline activations in KANs are highly sensitive to weight precision
+  due to the basis-function product structure — naive INT8 quantization loses 15–30% accuracy,
+  but the QuantKAN framework recovers to within 1% of FP32 via per-knot scale factors and
+  activation-range-aware rounding. Includes FPGA-deployable fixed-point recipes for KAN layers.
+- **Relevance to Carnot:** Carnot's GS-KAN energy tier (KANELÉ-inspired, G=4 shared basis)
+  needs to run on KV260 (constrained BRAM). QuantKAN's FPGA recipes directly address the
+  LUT/BRAM budget constraint identified in Exp 1019 (GS-KAN FPGA analysis): INT8 KAN activations
+  cut DSP usage by ~4x vs FP32. The per-knot scale factor approach is compatible with the
+  Multilevel KAN training (arXiv 2603.04827) — quantize after multilevel convergence.
+- **Concrete experiment:** Milestone 2026.04.80 — apply QuantKAN INT8 recipe to GS-KAN energy
+  tier before FPGA synthesis. Target: verify BRAM < 512 blocks and DSP48 < 200 on KV260.
+- **When to incorporate:** Milestone 2026.04.80 (Phase 2 — FPGA synthesis prerequisite for KV260 first light).
+
+### MetaQA: Hallucination Detection in LLMs via Metamorphic Relations
+- **Paper:** arXiv 2502.15844 (February 2026)
+- **Authors:** Anon submission (OpenReview)
+- **What:** Frames hallucination detection as a metamorphic testing problem: a claim C is a
+  hallucination if semantically equivalent rephrasing C' yields inconsistent model outputs.
+  Introduces a suite of 12 metamorphic relations (negation, synonym substitution, entity
+  replacement, etc.) that a non-hallucinating model must satisfy. Achieves 88% detection rate
+  on TruthfulQA with 0 training labels — a purely black-box, model-agnostic test.
+- **Relevance to Carnot:** Carnot's Tier 0 verification chain (SpilledEnergy, NUP Probe,
+  HallucinationBasin) currently requires labeled FoVer data to train probes. MetaQA's
+  zero-shot metamorphic approach could generate additional training signal for the FoVer
+  corpus WITHOUT needing Z3 labels: if a CoT step fails metamorphic consistency, it is
+  labeled as a potential hallucination. This directly addresses the FoVer corpus expansion
+  bottleneck (57 → 500+ pairs).
+- **Concrete experiment:** Milestone 2026.04.80 — integrate MetaQA's top-5 metamorphic
+  relations into the FoVer corpus expansion pipeline as a weak labeler alongside Z3. Target:
+  50+ additional labeled pairs from metamorphic inconsistency detection.
+- **When to incorporate:** Milestone 2026.04.80 (Phase 1 — directly addresses FoVer bottleneck).
+
+### Ontology Neural Networks for Topologically Conditioned Constraint Satisfaction
+- **Paper:** arXiv 2601.05304 (January 2026)
+- **Authors:** Anon submission
+- **What:** Proposes a neural architecture where constraint satisfaction is encoded as
+  topological invariants over a learned ontology graph. The ontology is a DAG of constraint
+  classes; the network learns to route activations through constraint-satisfied paths.
+  Achieves 95% constraint satisfaction on combinatorial planning benchmarks vs 73% for
+  unconstrained baseline. Key: constraints are type-level, not loss-level — violations are
+  structurally impossible in the architecture, not just penalized.
+- **Relevance to Carnot:** Carnot's SOS-Integrated KAN (research-studying.md) and the
+  Phase 3 EBT foundation model both need constraint satisfaction as a structural property,
+  not a training objective. Ontology NN's topological routing is the neural analogue of
+  SOS-on-derivative for monotonicity — and it generalizes to arbitrary constraint classes
+  (arithmetic consistency, logical entailment, factual grounding). Relevant to Phase 3
+  non-autoregressive reasoning path where constraint satisfaction must be verified at
+  generation time without Z3 calls.
+- **Concrete experiment:** Milestone 2026.04.81+ — after VPRM rule families are established
+  in .80, evaluate whether Ontology NN routing could replace the Z3-backed VeriCoTStepValidator
+  for constraint classes where Z3 is too slow (>1s per step).
+- **When to incorporate:** Milestone 2026.04.81 (Phase 3 — requires VPRM baseline from .80 first).
