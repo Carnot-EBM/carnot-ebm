@@ -103,12 +103,18 @@ repos:
         pass_filenames: false
 
       # Spec coverage: every test must reference a REQ-* or SCENARIO-*
+      # Staged-only scope (pass_filenames: true) — catches NEW untraceable
+      # tests at commit time. Whole-repo audits run via:
+      #   .venv/bin/python scripts/check_spec_coverage.py
+      # (no args). Switched to staged-only on 2026-04-28 after the .80
+      # rescue blocker — the previous whole-repo scope blocked unrelated
+      # commits on 41 pre-existing untraceable conductor-generated tests.
       - id: spec-coverage
         name: spec coverage check
         entry: .venv/bin/python scripts/check_spec_coverage.py
         language: system
         types_or: [python, rust]
-        pass_filenames: false
+        pass_filenames: true
 
       # Batching enforcement: prevent new sequential question loops in experiment scripts
       # (RETRO-045) — documentation alone (Exp 481, 77 violations) did not prevent new

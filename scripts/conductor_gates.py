@@ -301,7 +301,7 @@ def write_blocked_artifact(
     return target
 
 
-def select_max_turns(task: dict, default: int = 50) -> int:
+def select_max_turns(task: dict, default: int = 100) -> int:
     """Pick the per-task max_turns value with a sensible default.
 
     Per-experiment override lives in research-roadmap.yaml as a top-level
@@ -309,9 +309,11 @@ def select_max_turns(task: dict, default: int = 50) -> int:
     documentation passes, configuration changes) can opt into a smaller
     budget, freeing API quota and shaving wall time on the Sonnet call.
 
-    The default of 50 mirrors the historical hard-coded value at
-    scripts/research_conductor.py:2124 — keeping ungaged tasks behaving
-    exactly as they did before this hint was introduced.
+    Default raised from 50 to 100 on 2026-04-28 after the .80 cascade:
+    Exps 1028 (Preflight v30), 1029 (FoVer Corpus v2) both hit the 50-turn
+    cap on tasks that were genuinely making progress. The capacity-bound
+    failure mode produced no artifact and cascade-blocked downstream
+    experiments. 100 is the upper bound enforced below.
     """
     val = task.get("max_turns", default)
     if not isinstance(val, int):

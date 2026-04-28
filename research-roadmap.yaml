@@ -1,984 +1,1009 @@
-milestone: 2026.04.79
-milestone_title: Pre-Test Surgery + Cascade Validation + Self-Learning Deployment + FoVer Expansion
-milestone_doc: openspec/change-proposals/research-roadmap-v79.md
+milestone: 2026.04.80
+milestone_title: Infrastructure Hardening + Cascade Recovery + FR-11 Closure + KV260 Unblock
+milestone_doc: openspec/change-proposals/research-roadmap-v80.md
 tasks:
 
-- id: exp1013-preflight-v29
-  milestone: 2026.04.79
-  deliverable: results/experiment_1013_preflight_v29.json
-  title: "Preflight v29 — Pre-Test Surgery + Manifest Retirement 786/641/906 + .78 Retro Coverage"
+- id: exp1026-schema-validation
+  milestone: 2026.04.80
+  deliverable: results/experiment_1026_schema_validation.json
+  title: "Roadmap Schema Validation + Prior-Failures YAML Linter (MANDATORY INFRASTRUCTURE)"
+  prior_failures:
+    - experiment_id: exp1026-schema-validation-prior-block
+      verdict: blocked_doomed_rerun_no_root_cause
+      addressed_by: |
+        The first attempt (2026-04-28 17:18Z) was DOOMED_RERUN_BLOCKed because the
+        planner Sonnet emitted this task without a prior_failures field. This task
+        is itself the linter that prevents that omission. Manual rescue 2026-04-28:
+        added this prior_failures block, deleted the prior block-artifact, restored
+        the canonical PR scope. No code-level scope change — the planner's miss was
+        operator-layer, not experiment-design-layer.
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    Milestone 2026.04.78 closed with 3/12 criteria met. A critical new failure mode appeared:
-    "comparison failed" pre-test errors blocked Exps 1004, 1009, 1010, 1012 — 4 experiments that
-    never ran including the retro. Root cause: Exp 1001 fixed SC-Energy test failures by wiring
-    SC-Energy as Tier 2 in verify_repair.py. This change likely altered pipeline output behavior
-    such that a pre-existing test's expected value no longer matches actual output (snapshot test,
-    assertEqual, or hardcoded float comparison). The conductor's self-heal mechanism tried 3x per
-    experiment and failed each time.
-
-    Additionally, Exps 786, 641, and 906 ran for the 19th consecutive milestone. Per CLAUDE.md
-    no-doomed-rerun discipline: Exp 641 is 9 consecutive (6 past mandatory gate), Exp 906 is 6
-    consecutive (3 past mandatory gate), Exp 786 is 19 consecutive — all MUST be retired.
-
-    This preflight must:
-    1. Find and fix the "comparison failed" pre-test failure
-    2. Retire Exps 786, 641, 906 to both exclusion manifests
-    3. Write a summary of .78 milestone outcomes (Exp 1012 never ran)
-    4. Write gate artifact gate_schema_v79=True so downstream experiments can proceed
+    This is a MANDATORY infrastructure experiment per CLAUDE.md forcing function (3+ milestones
+    overdue). The roadmap-schema-validation.md change proposal has been pending since .77. The
+    DOOMED_RERUN_BLOCK failure recurred in .77 (4 times), .78 (4 times), .79 (2 times) — 10 total
+    violations from the planner forgetting to add prior_failures YAML fields. A mechanical linter
+    that catches these omissions at planner output time would have prevented all 10 blocks.
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/verify_repair.py (SC-Energy wiring from Exp 1001)
-    - tests/python/ (find test files most recently modified — look for snapshot/assertEqual)
-    - results/experiment_1001_sc_energy_tier2_v4.json (what changed in .78)
-    - scripts/conductor_exclusion_manifest.json (current exclusion list)
-    - ops/exclusion_manifest.yaml (current YAML exclusion list)
-    - results/experiment_100{0,1,2,3,5,6,7,8,11}_*.json (collect .78 verdicts for retro summary)
+    - openspec/change-proposals/roadmap-schema-validation.md (full spec — read entirely)
+    - scripts/research_conductor.py lines 730-750, 890-910, 1460-1480 (bare lookup sites to wire)
+    - research-roadmap.yaml (example valid .79 roadmap to validate against)
+    - research-complete.yaml (failure ledger for prior_failures matching)
 
     TASK:
-    1. RUN pytest to find the comparison failure:
-       pytest tests/python/ -x -v 2>&1 | head -80
-       Look for "AssertionError" or "comparison failed" with specific test name and expected vs actual.
-    2. DIAGNOSE: What exactly is different? Is it a hardcoded float? A string comparison? A structure
-       that changed because SC-Energy is now Tier 2 instead of VariationalJEPAPredictor?
-    3. FIX: Update the test's expected value to match the new behavior. Do NOT skip the test.
-       Run pytest again to confirm 0 failures before proceeding.
-    4. RETIRE to conductor_exclusion_manifest.json: add integers 786, 641, 906 to the
-       'retired_experiment_ids' array if not already present. Write atomically (tmp+rename).
-    5. RETIRE to ops/exclusion_manifest.yaml: add entries for experiments 786, 641, 906 with
-       retire_reason: "19/9/6 consecutive appearances, mandatory gate reached per CLAUDE.md"
-    6. COLLECT .78 summary from result files:
-       For each: experiment_1000 through 1011, read honest_verdict (N/A if file missing).
-       Count: n_met (tier2_deployed + gate_schema_repaired = 2 min), n_total=12.
-    7. WRITE results/experiment_1013_preflight_v29.json (try/finally):
-       - pre_test_fixed: bool (True if pytest passes after fix)
-       - failing_test_name: str (the test that was failing)
-       - failing_test_root_cause: str (why it failed — e.g. "SC-Energy wiring changed pipeline structure check")
-       - manifest_786_retired: bool
-       - manifest_641_retired: bool
-       - manifest_906_retired: bool
-       - retro_78_verdicts: dict (exp_id -> verdict string for 1000-1011)
-       - retro_78_criteria_met: int
-       - gate_schema_v79: bool (True if pre_test_fixed=True AND all three retired)
-       - honest_verdict: "preflight_complete" | "tests_still_failing" | "partial_retirement_only"
+    1. Create scripts/roadmap_schema.py with Pydantic v2 models:
+       - ResearchTask: id (str), milestone (str), deliverable (str), title (str), prompt (str),
+         priority (Literal["critical","high","medium"]), requires_gpu (bool), max_turns (int),
+         estimated_wall_time_min (int), gated_on (list[GateSpec] = []),
+         prior_failures (list[PriorFailure] = [])
+       - GateSpec: upstream (str), artifact_field (str), op (str), value (Any)
+       - PriorFailure: experiment_id (str), verdict (str), addressed_by (str),
+         retire_if_same_verdict (bool = False)
+       - Roadmap: milestone (str), milestone_title (str), milestone_doc (str),
+         tasks (list[ResearchTask])
+    2. Create scripts/validate_prior_failures.py — standalone linter:
+       - Reads any roadmap YAML file passed as CLI argument
+       - Loads research-complete.yaml to build scope-match index
+       - For each task in roadmap: check if any prior experiment in research-complete.yaml
+         has matching scope keywords (title words intersection >= 3 tokens)
+       - If match found AND task has no prior_failures field: report violation
+       - Exit code 1 if any violations, 0 if clean
+       - Also validates Pydantic schema for all tasks (report schema errors)
+    3. Wire schema validation into research_conductor.py at the 3 identified lookup sites
+       (lines 736, 896, 1464) — fail-open for .80 (log warning, don't block), fail-closed
+       comment noting this should become fail-closed in .81.
+    4. Create tests/python/test_roadmap_schema.py with at least 5 tests:
+       - valid ResearchTask validates without error
+       - missing prior_failures on known-failed scope raises warning
+       - invalid gate op type raises ValidationError
+       - validate_prior_failures.py reports violations on .79 roadmap (Exps 1016, 1021)
+       - validate_prior_failures.py passes clean on .80 roadmap (research-roadmap-next.yaml)
+    5. Run the linter on both roadmaps:
+       python scripts/validate_prior_failures.py research-roadmap.yaml
+       python scripts/validate_prior_failures.py research-roadmap-next.yaml
+    6. Run pytest tests/python/test_roadmap_schema.py -v to confirm all 5 tests pass.
 
     CONCRETE STEPS:
-    - pytest tests/python/ -x -v 2>&1 | grep -A10 "FAILED\|comparison failed\|AssertionError" | head -60
-    - git log --oneline -5 tests/python/ python/carnot/pipeline/verify_repair.py 2>/dev/null | head -10
-    - python3 -c "import json; d=json.load(open('scripts/conductor_exclusion_manifest.json')); ids=d.get('retired_experiment_ids', []); print('786:', 786 in ids, '641:', 641 in ids, '906:', 906 in ids)"
-    - for f in results/experiment_100{0,1,2,3,5,6,7,8,11}_*.json; do echo "$(basename $f):"; python3 -c "import json,sys; print(json.load(open('$f')).get('honest_verdict','N/A'))" 2>/dev/null || echo "N/A"; done
+    - Read openspec/change-proposals/roadmap-schema-validation.md fully before coding
+    - pip install pydantic>=2.0 pyyaml if not present (check first: python -c "import pydantic; print(pydantic.__version__)")
+    - Write scripts/roadmap_schema.py
+    - Write scripts/validate_prior_failures.py
+    - Edit scripts/research_conductor.py at the 3 sites (add validation call, fail-open)
+    - Write tests/python/test_roadmap_schema.py
+    - python scripts/validate_prior_failures.py research-roadmap.yaml
+    - python scripts/validate_prior_failures.py research-roadmap-next.yaml
+    - pytest tests/python/test_roadmap_schema.py -v
+    - Write results/experiment_1026_schema_validation.json
 
-    Run: python scripts/experiment_1013_preflight_v29.py
+    ARTIFACT FIELDS:
+    - schema_validation_installed: bool
+    - lint_gate_active: bool
+    - pydantic_version: str
+    - violations_in_79_roadmap: int (should be >= 2)
+    - violations_in_80_roadmap: int (should be 0)
+    - test_results: dict (test_name -> pass/fail)
+    - honest_verdict: "schema_validation_complete" | "partial_linter_only" | "failed"
+
+    Run: python scripts/experiment_1026_schema_validation.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py beyond the 3 wiring sites.
+
+  priority: critical
+  requires_gpu: false
+  max_turns: 25
+  estimated_wall_time_min: 25
+
+- id: exp1027-conductor-supervisor
+  milestone: 2026.04.80
+  deliverable: results/experiment_1027_conductor_supervisor.json
+  title: "Conductor Supervisor v1 — External Watchdog + Orphan Reap + Log-Handle Reset (MANDATORY INFRASTRUCTURE)"
+  prior_failures:
+    - experiment_id: exp1027-conductor-supervisor-prior-block
+      verdict: blocked_doomed_rerun_no_root_cause
+      addressed_by: |
+        The first attempt (2026-04-28 17:28Z) was DOOMED_RERUN_BLOCKed because the
+        planner Sonnet emitted this task without a prior_failures field. The
+        supervisor proposal has been pending since .77 (1 prior matching scope from
+        the .77 deferral). Manual rescue 2026-04-28: added this prior_failures
+        block, deleted the prior block-artifact. No design change — the planner's
+        miss was operator-layer, not experiment-design-layer.
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    This is a MANDATORY infrastructure experiment per CLAUDE.md forcing function (3+ milestones
+    overdue). The conductor-supervisor.md change proposal has been pending since .77. The incidents
+    in .77-.79 included log-handle severance, orphan subagent accumulation, and conductor state
+    drift where claimed-running experiments had no artifact. An external supervisor process (no
+    LLM calls) that watches the conductor would have caught and self-healed each of these.
+
+    EXISTING CODE TO READ FIRST:
+    - openspec/change-proposals/conductor-supervisor.md (full spec — read entirely)
+    - scripts/research_conductor.py (understand what state files it writes: ops/conductor-heartbeat.json,
+      ops/conductor-state.json, which log it writes to)
+    - ops/conductor-log.md (understand log format)
+
+    TASK:
+    Implement scripts/conductor_supervisor.py — ~300 LOC pure Python, no LLM calls.
+    The supervisor is a standalone daemon that can be started independently of the conductor.
+
+    1. HEARTBEAT MONITOR: Every 30 seconds, read ops/conductor-heartbeat.json.
+       - If file doesn't exist OR last_beat timestamp > 90s ago: write alert to
+         ops/supervisor-alerts.json (append-mode, JSONL format with timestamp+alert_type+detail).
+       - Also attempt log-handle reset (see step 4).
+    2. ORPHAN REAPER: Every 60 seconds:
+       - Read ops/conductor-state.json to get the conductor's PID.
+       - Run `pgrep -f 'research_conductor'` to find all matching PIDs.
+       - Any PID matching 'research_conductor' that is NOT the conductor's claimed PID:
+         send SIGTERM (not SIGKILL — give it 5s to clean up, then SIGKILL if still alive).
+       - Log reap events to ops/supervisor-alerts.json.
+    3. STATE RECONCILER: Every 120 seconds:
+       - Read ops/conductor-state.json for claimed current_experiment and start_time.
+       - Check if results/experiment_(claimed_id)_*.json exists.
+       - If claimed start_time > estimated_wall_time_min * 1.5 minutes ago AND artifact
+         doesn't exist: write stale_experiment alert.
+    4. LOG-HANDLE RESET: When heartbeat alert fires:
+       - Copy ops/conductor-log.md to ops/conductor-log-archive-(timestamp).md
+       - Truncate ops/conductor-log.md (open in 'w' mode and close immediately)
+       - Write reset event to ops/supervisor-alerts.json
+    5. PID FILE: Write ops/conductor-supervisor.pid on startup. Check for existing PID on
+       startup — if supervisor already running, exit with message "supervisor already running".
+    6. GRACEFUL SHUTDOWN: Handle SIGTERM by writing shutdown event to alerts log and cleaning
+       up PID file.
+
+    Also create tests/python/test_conductor_supervisor.py with at least 4 tests:
+    - supervisor starts, writes PID file, stops on SIGTERM
+    - heartbeat alert fires when heartbeat file is stale
+    - orphan detection works when pgrep finds extra PIDs
+    - log-handle reset creates archive and truncates working log
+
+    CONCRETE STEPS:
+    - Read openspec/change-proposals/conductor-supervisor.md fully
+    - Check what state files research_conductor.py actually writes: grep -n "conductor-heartbeat\|conductor-state\|supervisor" scripts/research_conductor.py | head -30
+    - Write scripts/conductor_supervisor.py
+    - Write tests/python/test_conductor_supervisor.py
+    - pytest tests/python/test_conductor_supervisor.py -v
+    - python scripts/conductor_supervisor.py --dry-run 2>&1 | head -20 (verify starts cleanly)
+    - Write results/experiment_1027_conductor_supervisor.json
+
+    ARTIFACT FIELDS:
+    - supervisor_running: bool (true if --dry-run exits 0)
+    - heartbeat_interval_s: int (30)
+    - orphan_reap_interval_s: int (60)
+    - state_reconcile_interval_s: int (120)
+    - test_results: dict (test_name -> pass/fail)
+    - honest_verdict: "supervisor_complete" | "partial" | "failed"
+
+    Run: python scripts/experiment_1027_conductor_supervisor.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  priority: critical
+  requires_gpu: false
+  max_turns: 25
+  estimated_wall_time_min: 25
+
+- id: exp1028-preflight-v30
+  milestone: 2026.04.80
+  deliverable: results/experiment_1028_preflight_v30.json
+  title: "Preflight v30 — Hardened Artifact Write + ROCm GPU Probe + Manifest Retirement 786/641/906"
+  prompt: |
+    CONTEXT:
+    Milestone 2026.04.79 had 9 experiments blocked because Exp 1013 (preflight) never wrote
+    an artifact. The conductor's pre-test comparison failure mechanism caused the preflight to
+    exit before writing results/experiment_1013_preflight_v29.json. Downstream gates checked
+    for this file and found nothing, blocking 4 experiments in cascade. This is the same root
+    cause that blocked experiments in .77 and .78 as well. The fix is to write the artifact
+    FIRST (with partial state), then update it as tasks complete.
+
+    Additionally, Exp 1023 (DualGPU) reported 0 CUDA GPUs despite 2x RTX 3090 being present.
+    Root cause: torch.cuda.device_count() returns 0 under ROCm unless CUDA_VISIBLE_DEVICES is
+    explicitly set. Fix: use nvidia-smi as fallback when torch.cuda returns 0.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/experiment_template.py (setup_gpu() method — this is what needs patching)
+    - python/carnot/pipeline/verify_repair.py (SC-Energy wiring from Exp 1001 — likely broke a snapshot test)
+    - tests/python/ (find most recently modified test files)
+    - scripts/conductor_exclusion_manifest.json (current exclusion list)
+    - ops/exclusion_manifest.yaml (current YAML exclusion list)
+    - results/experiment_1025_milestone_retro_79.json (already written — read honest_verdict)
+
+    CRITICAL: Write the artifact file FIRST before doing anything else:
+    import json, os, tempfile, time
+    artifact = ("experiment": 1028, "status": "running", "preflight_started": True,
+                "pre_test_fixed": False, "gpu_probe_rocm": False,
+                "manifest_786_retired": False, "manifest_641_retired": False,
+                "manifest_906_retired": False, "gate_schema_v80": False)
+    with tempfile.NamedTemporaryFile('w', dir='results/', delete=False, suffix='.tmp') as f:
+        json.dump(artifact, f)
+    os.rename(f.name, 'results/experiment_1028_preflight_v30.json')
+
+    TASK:
+    1. ATOMIC FIRST WRITE (see above — do this before any other step)
+    2. ROCm GPU probe patch — add to scripts/experiment_template.py:
+       def _detect_gpu_count_rocm_aware():
+           import subprocess, torch
+           cuda_count = torch.cuda.device_count()
+           if cuda_count > 0:
+               return cuda_count
+           try:
+               result = subprocess.run(
+                   ['nvidia-smi', '--query-gpu=name', '--format=csv,noheader'],
+                   capture_output=True, text=True, timeout=5
+               )
+               if result.returncode == 0:
+                   return len([l for l in result.stdout.strip().split('\\n') if l.strip()])
+           except Exception:
+               pass
+           return 0
+       Verify: nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | wc -l
+       Update artifact: gpu_probe_rocm=True, gpu_count_detected=N
+    3. PRE-TEST FIX — run pytest to find comparison failure:
+       pytest tests/python/ -x -v 2>&1 | head -80
+       Look for AssertionError, "comparison failed", or hardcoded float comparison.
+       Diagnose: likely a snapshot test or assertEqual that expected old pipeline structure
+       before SC-Energy Tier 2 was wired (Exp 1001). Fix the test — do NOT skip it.
+       Run pytest again. If all tests pass: update artifact pre_test_fixed=True.
+       If tests still fail: update artifact pre_test_fixed=False, failing_test_detail=str.
+    4. MANIFEST RETIREMENT — retire Exps 786, 641, 906:
+       - scripts/conductor_exclusion_manifest.json: add 786, 641, 906 to retired_experiment_ids array
+       - ops/exclusion_manifest.yaml: add entries with retire_reason, retire_date=2026-04-28
+       Update artifact: manifest_786_retired=True, manifest_641_retired=True, manifest_906_retired=True
+    5. FINAL ARTIFACT UPDATE — set gate_schema_v80=True if pre_test_fixed AND all 3 retired.
+       Set honest_verdict: "preflight_complete" | "partial:tests_still_failing" | "partial:manifest_only"
+       Set status: "success" if gate_schema_v80 else "partial"
+
+    CONCRETE STEPS:
+    - nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | wc -l
+    - python -c "import torch; print('CUDA GPUs:', torch.cuda.device_count())"
+    - pytest tests/python/ -x -v 2>&1 | head -80
+    - git log --oneline -5 tests/python/ python/carnot/pipeline/ 2>/dev/null | head -15
+    - python3 -c "import json; d=json.load(open('scripts/conductor_exclusion_manifest.json')); ids=d.get('retired_experiment_ids',[]); print('786:', 786 in ids, '641:', 641 in ids, '906:', 906 in ids)"
+    - (fix the test, fix manifest, update artifact)
+    - pytest tests/python/ -v 2>&1 | tail -20
+    - python -c "import json; d=json.load(open('results/experiment_1028_preflight_v30.json')); print(json.dumps(d, indent=2))"
+
+    Run: python scripts/experiment_1028_preflight_v30.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   priority: critical
   requires_gpu: false
   max_turns: 30
-  estimated_wall_time_min: 25
-
-- id: exp1014-triple-integration-v5
-  milestone: 2026.04.79
-  deliverable: results/experiment_1014_triple_integration_v5.json
-  title: "Triple Integration E2E v5 — SC-Energy + SpilledEnergy + ThinkPRM Cascade (Post Pre-Test Fix)"
-  prompt: |
-    CONTEXT:
-    The full 3-tier cascade (ThinkPRM Tier 0a → SpilledEnergy Tier 0b → SC-Energy Tier 2 →
-    Ising) has been attempted 4 times and blocked every time:
-    - .75: deliverable_already_exists without fresh results
-    - .76/.77: gate cascade from EnvPropagationGuard field mismatch
-    - .78: pre-test "comparison failed" errors (Exp 1013 has now fixed this)
-
-    SC-Energy is deployed as production Tier 2 (Exp 1001). The pre-test fix from Exp 1013
-    (gate_schema_v79=True) means the test suite now passes. This experiment validates the full
-    cascade end-to-end with fresh results and a {date} run_date.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/verify_repair.py (full pipeline — ThinkPRM + SpilledEnergy + SC-Energy)
-    - results/experiment_1001_sc_energy_tier2_v4.json (tier2_wired=True confirmed)
-    - results/experiment_1013_preflight_v29.json (pre_test_fixed=True confirmed)
-    - python/carnot/pipeline/think_probe.py (CarnotThinkProbe — Tier 0a)
-    - python/carnot/verify/spilled_energy.py (SpilledEnergyDetector — Tier 0b)
-    - python/carnot/verify/sc_energy.py or similar (SC-Energy Tier 2 — find the class)
-
-    TASK:
-    1. CONFIRM Exp 1013 fixed the pre-test: python3 -c "import json; d=json.load(open('results/experiment_1013_preflight_v29.json')); print('pre_test_fixed:', d.get('pre_test_fixed'))"
-    2. IMPORT VerifyRepairPipeline and confirm all tiers are present:
-       python3 -c "from python.carnot.pipeline.verify_repair import VerifyRepairPipeline; p=VerifyRepairPipeline(); print(dir(p))"
-    3. RUN cascade on 50 synthetic GSM8K questions (CPU, no GPU needed):
-       For each question, generate a synthetic response (use a deterministic Python function to
-       produce a response with ~30% arithmetic errors for realistic violation rates).
-       Run the full cascade: ThinkPRM → SpilledEnergy → SC-Energy → Ising.
-       Measure:
-       - tier0a_skip_rate: fraction passing ThinkPRM without reaching SpilledEnergy
-       - tier0b_skip_rate: fraction passing SpilledEnergy without reaching SC-Energy
-       - tier2_skip_rate: fraction passing SC-Energy without reaching Ising (MUST be > 0)
-       - full_pipeline_skip_rate: fraction never reaching Ising
-    4. MEASURE accuracy_delta_vs_ising_only: run same 50 questions through Ising-only,
-       compare accuracy. Cascade must not regress.
-    5. WRITE results/experiment_1014_triple_integration_v5.json (try/finally):
-       - cascade_validated: bool (tier2_skip_rate > 0 AND accuracy_delta >= 0)
-       - tier0a_skip_rate: float
-       - tier0b_skip_rate: float
-       - tier2_skip_rate: float (target > 0.05)
-       - full_pipeline_skip_rate: float
-       - accuracy_delta_vs_ising_only: float (must be >= -0.02)
-       - run_date: "{date}"
-       - honest_verdict: "cascade_validated" | "tier2_not_skipping" | "regression_detected"
-
-    CONCRETE STEPS:
-    - python3 -c "import json; d=json.load(open('results/experiment_1013_preflight_v29.json')); print('gate_schema_v79:', d.get('gate_schema_v79'))"
-    - python3 -c "from python.carnot.pipeline.verify_repair import VerifyRepairPipeline; print('import ok')" 2>&1
-    - grep -n "SCEnergy\|SpilledEnergy\|CarnotThinkProbe\|tier0a\|tier0b\|tier2" python/carnot/pipeline/verify_repair.py | head -30
-
-    Run: python scripts/experiment_1014_triple_integration_v5.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: high
-  requires_gpu: false
-  max_turns: 30
-  estimated_wall_time_min: 20
-  gated_on:
-    - upstream: exp1013-preflight-v29
-      artifact_field: gate_schema_v79
-      op: '=='
-      value: true
-  prior_failures:
-  - experiment_id: exp1004-triple-integration-v4
-    verdict: pre_test_comparison_failed
-    addressed_by: "Exp 1004 (.78) blocked by 'comparison failed' pre-test error. Exp 1013 (preflight v29) diagnosed and fixed the specific failing test. Exp 1014 gates on exp1013.gate_schema_v79=True which requires pre_test_fixed=True."
-    retire_if_same_verdict: false
-  - experiment_id: exp990-triple-integration-v3
-    verdict: blocked_gate_check_failed
-    addressed_by: "Exp 990 (.77) blocked by SC-Energy gate cascade from env_propagation field mismatch. SC-Energy is now deployed (Exp 1001) with tier2_wired=True. Direct gate on exp1013.gate_schema_v79."
-    retire_if_same_verdict: false
-  - experiment_id: exp978-triple-integration-v2
-    verdict: blocked_gate_check_failed
-    addressed_by: "Exp 978 (.76) blocked by env propagation cascade. Root cause fixed through exp1013."
-    retire_if_same_verdict: false
-  - experiment_id: exp965-triple-integration
-    verdict: deliverable_already_exists
-    addressed_by: "Exp 965 (.75) returned deliverable_already_exists without fresh results. Exp 1014 mandates fresh run_date={date} and fresh 50-question cascade run regardless of prior artifacts."
-    retire_if_same_verdict: true
-
-- id: exp1015-energy-selection-ssd-v2
-  milestone: 2026.04.79
-  deliverable: results/experiment_1015_energy_selection_ssd_v2.json
-  title: "Energy-Selection SSD v2 — FR-11 Mandatory Self-Learning (Self-Distilled Reasoner Integration)"
-  prompt: |
-    CONTEXT:
-    Energy-Selection SSD is the MANDATORY self-learning experiment for Milestone 2026.04.79.
-    FR-11 (Continuous Self-Learning) has not been advanced since Milestone .33 (46 milestones
-    ago). Exp 1006 (.78) was DOOMED_RERUN_BLOCKed because the planning agent forgot to add
-    prior_failures to the YAML (conductor found 4 prior experiments matching "self-distillation"
-    scope). This v2 includes proper prior_failures documentation.
-
-    Two research inspirations:
-    1. SSD (arXiv 2604.01193, Apple Research): sample model's own outputs, filter by
-       temperature/truncation, apply SFT. +12.9pp LiveCodeBench from self-distillation alone.
-    2. Self-Distilled Reasoner (arXiv 2601.18734): teacher conditioned on verified reasoning
-       traces, student learns from them. Only 1% of process labels needed vs RLVR.
-
-    Carnot's version (Energy-Selection SSD): use the energy function as the SSD filter
-    instead of temperature/truncation. Low-energy outputs = high-confidence-correct =
-    better training signal. Also test combined approach: energy filter + FoVer step labels.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline — energy scoring)
-    - python/carnot/models/kaem_energy.py (KAEMEnergy — energy scorer for filtering)
-    - openspec/capabilities/verifiable-reasoning/spec.md (FR-11 requirements)
-    - results/fover_labeled_steps_live.json (57 real CoT pairs — step labels for conditioning)
-    - scripts/experiment_template.py (ExperimentTemplate, build_result pattern)
-    - results/experiment_862_lagrange_self_learning.json (prior FR-11 attempt, no_improvement)
-
-    TASK:
-    1. IMPLEMENT EnergySSDv2 in python/carnot/pipeline/energy_ssd.py:
-       class EnergySSDv2:
-           def score_responses(responses, questions, energy_scorer):
-               # Score each response with energy_scorer.energy(text)
-               # Returns list of (response, energy_score) sorted by energy ascending
-           def filter_by_energy(scored, threshold_pct=50):
-               # Keep responses below threshold_pct percentile of energy scores
-               # Returns (kept, rejected, stats)
-           def filter_by_labels(scored, fover_pairs):
-               # Keep responses whose steps match FoVer labels as "correct"
-               # Returns (kept, rejected, stats)
-           def simulate_self_distillation(questions, energy_scorer, n_rounds=3,
-                                          mode="energy" | "labels" | "combined"):
-               # Simulate 3 rounds of SSD filtering
-               # Round 0: all responses kept (baseline)
-               # Round i: filter to top-quality subset per mode, track quality improvement
-               # Returns dict: round -> {n_kept, threshold, precision_estimate, improvement}
-    2. ADD REQ-LEARN-050/051/052 + SCENARIO-LEARN-070/071/072 to spec.
-    3. BENCHMARK all three modes on 30 synthetic GSM8K questions:
-       Mode A: energy-only filter (SSD paper's approach but with Carnot energy)
-       Mode B: label-conditioned filter (Self-Distilled Reasoner's approach)
-       Mode C: combined (energy threshold + label conditioning)
-       Track precision_estimate per round for each mode.
-    4. COMPARE to temperature-SSD baseline (filter by top-50% token probability).
-    5. DETERMINE which mode closes FR-11:
-       self_learning_closed = (best_mode_round3_precision > round0_precision) by > 0.05
-    6. Write 100% coverage tests for energy_ssd.py.
-    7. WRITE results/experiment_1015_energy_selection_ssd_v2.json (try/finally):
-       - mode_a_precision_r0: float (baseline)
-       - mode_a_precision_r3: float (energy-only after 3 rounds)
-       - mode_b_precision_r3: float (label-conditioned after 3 rounds)
-       - mode_c_precision_r3: float (combined after 3 rounds)
-       - temperature_ssd_precision_r3: float (comparison baseline)
-       - best_mode: str ("energy" | "labels" | "combined" | "temperature_ssd")
-       - self_learning_closed: bool (best_mode_r3 > r0 by > 0.05)
-       - fr11_tier: "tier2_online" (cross-session confirmed) if self_learning_closed else "partial"
-       - honest_verdict: "energy_ssd_improves" | "energy_ssd_parity" | "energy_ssd_no_improvement"
-
-    CONCRETE STEPS:
-    - python3 -c "from python.carnot.models.kaem_energy import KAEMEnergy; m=KAEMEnergy(10); print('KAEMEnergy ok')"
-    - python3 -c "import json; d=json.load(open('results/fover_labeled_steps_live.json')); print(len(d), 'pairs')"
-    - grep -n "FR-11\|REQ-LEARN" openspec/capabilities/verifiable-reasoning/spec.md | tail -20
-
-    Run: python scripts/experiment_1015_energy_selection_ssd_v2.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: high
-  requires_gpu: false
-  max_turns: 30
-  estimated_wall_time_min: 20
-  prior_failures:
-  - experiment_id: exp1006-energy-selection-ssd
-    verdict: blocked_doomed_rerun_no_prior_failures
-    addressed_by: "Exp 1006 (.78) was DOOMED_RERUN_BLOCKed because the planning agent failed to add prior_failures field to the YAML (conductor found 4 prior matching-scope experiments). Exp 1015 v2 includes this prior_failures documentation. The experiment scope is intentionally similar to prior self-learning experiments but uses a DIFFERENT mechanism: energy-threshold filtering, not weight reweighting."
-    retire_if_same_verdict: false
-  - experiment_id: exp862-lagrange-self-learning
-    verdict: no_improvement
-    addressed_by: "Exp 862 (.66) tested Lagrange weight FORGETTING (Tier 1 reweighting). Exp 1015 tests energy-threshold SELECTION (filter training data by energy, not weights). Lagrange affected which constraints are weighted; energy SSD affects which OUTPUTS are kept for training. Different mechanism, different failure mode."
-    retire_if_same_verdict: false
-  - experiment_id: exp134-tier1-precision-reweighting
-    verdict: fixed_equals_adaptive
-    addressed_by: "Exp 134 tested CONSTRAINT WEIGHT reweighting (adjust which constraints apply more strongly). Exp 1015 tests OUTPUT SELECTION filtering (which model outputs are used for self-training). Completely different intervention — reweighting changes the verifier, selection filtering changes the training set."
-    retire_if_same_verdict: false
-  - experiment_id: exp761-tier1-constraint-addition
-    verdict: constraint_addition_works_single_session
-    addressed_by: "Exp 761 tested adding new constraints from session memory. Exp 1015 tests using the energy function to select which model outputs are worth imitating for self-distillation. Different axis of self-learning: constraint addition vs output quality filtering."
-    retire_if_same_verdict: false
-
-- id: exp1016-fover-corpus-expansion
-  milestone: 2026.04.79
-  deliverable: results/experiment_1016_fover_corpus_expansion.json
-  title: "FoVer Corpus Expansion — Z3 Auto-Label 500+ CoT Pairs for Probe Training"
-  prompt: |
-    CONTEXT:
-    The FoVer corpus has 57 labeled CoT pairs (Exp 442, live GPU). All probe training
-    (ThinkPRM, VPRM, GS-KAN, JEPA) uses this 57-pair corpus. It is too small for reliable
-    generalization. Per arXiv 2505.15960 (Generalizable PRMs via Formal Annotations), Z3
-    labels outperform human labels for PRM generalization by 12-18%.
-
-    This experiment uses the existing VeriCoT/Z3 labeling pipeline (Exp 453/564) to
-    auto-generate and label 500+ CoT steps from synthetic arithmetic problems. The expanded
-    corpus unlocks better probe training in downstream experiments AND provides 100+ violation
-    pairs for PPSEBM live relay (Exp 1024).
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/extraction/vericot.py (VeriCoTStepValidator — Z3-based step labeler)
-    - python/carnot/extraction/coace_extractor.py (CoACEExtractor — constraint extraction)
-    - results/fover_labeled_steps_live.json (57-pair baseline)
-    - results/experiment_453_vericot.json (VeriCoT baseline: 8/20 violations detected)
-    - scripts/experiment_template.py (ExperimentTemplate)
-    - openspec/capabilities/verifiable-reasoning/spec.md (FoVer corpus spec)
-
-    TASK:
-    1. GENERATE 200 synthetic arithmetic word problems (GSM8K-style):
-       Format: "Alice has X apples. She gives Y to Bob. Then she buys Z more. How many does she have?"
-       Generate with random parameters ensuring a mix of easy/medium/hard.
-       For 30% of problems, intentionally inject arithmetic errors into a synthetic "model response."
-    2. FOR EACH problem-response pair:
-       a. Use VeriCoTStepValidator.validate_steps(response, problem) to get per-step labels.
-       b. Each step labeled: correct/incorrect/uncertain by Z3 symbolic verification.
-       c. Append to expanded corpus with provenance: {"source": "z3_synthetic", "problem": ...,
-          "response": ..., "steps": [{text, label, z3_verdict}, ...]}
-    3. ALSO include the 57 live GPU pairs (source: "live_gpu") for continuity.
-    4. SAVE expanded corpus to results/fover_expanded_corpus.json:
-       - List of {source, problem, response, steps, n_steps, n_violations, n_correct}
-       - Target: n_labeled_pairs >= 500 (including steps from multi-step responses)
-       - Violations (n_violations > 0) must be >= 100 pairs for PPSEBM gate
-    5. WRITE results/experiment_1016_fover_corpus_expansion.json (try/finally):
-       - n_synthetic_problems: int
-       - n_labeled_pairs: int (target >= 500 step-level labels)
-       - n_violation_pairs: int (target >= 100)
-       - n_live_gpu_pairs: int (57 carried over)
-       - corpus_file: "results/fover_expanded_corpus.json"
-       - z3_label_rate: float (fraction successfully Z3-labeled vs uncertain)
-       - honest_verdict: "corpus_expanded" (n_labeled >= 500) | "corpus_partial" | "z3_labeling_failed"
-
-    CONCRETE STEPS:
-    - python3 -c "from python.carnot.extraction.vericot import VeriCoTStepValidator; v=VeriCoTStepValidator(); print('import ok')" 2>&1
-    - python3 -c "import json; d=json.load(open('results/fover_labeled_steps_live.json')); print(len(d), 'live pairs; first step labels:', d[0].get('steps', d[0].get('label', 'N/A'))[:2] if d else 'empty')"
-    - grep -n "class VeriCoT\|def validate" python/carnot/extraction/vericot.py | head -15
-
-    Run: python scripts/experiment_1016_fover_corpus_expansion.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: high
-  requires_gpu: false
-  max_turns: 30
-  estimated_wall_time_min: 20
-
-- id: exp1017-thinkprm-step-verifier-v3
-  milestone: 2026.04.79
-  deliverable: results/experiment_1017_thinkprm_step_verifier_v3.json
-  title: "ThinkPRM Step Verifier v3 — Trained on Expanded FoVer Corpus (500+ Pairs)"
-  prompt: |
-    CONTEXT:
-    ThinkPRMProbe was implemented in Exp 945 (.73) as a KAN-based CoT step verifier.
-    Exp 1007 (.78) was DOOMED_RERUN_BLOCKed because the planning agent forgot to add
-    prior_failures field to the YAML (conductor matched 7 prior think_probe experiments).
-    Exp 1016 has now expanded the FoVer corpus to 500+ labeled pairs — 10x more training data.
-
-    This v3 trains ThinkPRMProbe on the 500-pair expanded corpus and measures AUC improvement
-    from more data. Hypothesis: 10x more data gives ≥10 AUC point improvement on held-out test.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/verify/thinkprm_probe.py (ThinkPRMProbe — look for it; check Exp 945/1007)
-    - python/carnot/pipeline/think_probe.py (CarnotThinkProbe — zero-shot baseline)
-    - results/experiment_1016_fover_corpus_expansion.json (n_labeled_pairs, corpus_file)
-    - results/fover_expanded_corpus.json (500+ labeled pairs)
-    - results/experiment_945_thinkprm_tier29.json (prior ThinkPRM training result)
-    - openspec/capabilities/verifiable-reasoning/spec.md (REQ-PROBE-010/011 if added)
-
-    TASK:
-    1. READ results/fover_expanded_corpus.json. Confirm n_labeled >= 500.
-       If file missing, use results/fover_labeled_steps_live.json (57 pairs) as fallback.
-    2. FIND ThinkPRMProbe class. If not in python/carnot/verify/thinkprm_probe.py,
-       search python/carnot/ for the implementation and document where it is.
-    3. TRAIN ThinkPRMProbe on expanded corpus:
-       Split: 80% train / 20% test (randomized with seed=42).
-       For each pair: use generate_verification_cot() to create features.
-       Train KAN classifier on extracted features.
-    4. COMPUTE AUC on test set. Compare to:
-       a. Zero-shot CarnotThinkProbe baseline
-       b. 57-pair trained version (from Exp 945/1007, read their AUC from results JSON)
-    5. ADD REQ-PROBE-010/011 to spec if not already present (check first).
-    6. Write 100% coverage tests for thinkprm_probe.py changes.
-    7. WRITE results/experiment_1017_thinkprm_step_verifier_v3.json (try/finally):
-       - thinkprm_probe_auc_v3: float (trained on 500-pair corpus)
-       - thinkprm_probe_auc_57: float (trained on 57-pair corpus, from prior experiment)
-       - zero_shot_baseline_auc: float
-       - auc_improvement_vs_57: float
-       - n_training_pairs: int
-       - n_test_pairs: int
-       - honest_verdict: "thinkprm_v3_improved" (v3_auc > 57_auc by > 0.02) | "thinkprm_v3_parity" | "thinkprm_v3_no_improvement"
-
-    CONCRETE STEPS:
-    - python3 -c "import json; d=json.load(open('results/fover_expanded_corpus.json') if __import__('os').path.exists('results/fover_expanded_corpus.json') else open('results/fover_labeled_steps_live.json')); print(len(d), 'pairs')"
-    - find python/carnot -name "*.py" | xargs grep -l "ThinkPRMProbe\|thinkprm_probe" 2>/dev/null | head -5
-    - python3 -c "from python.carnot.pipeline.think_probe import CarnotThinkProbe; print('baseline importable')" 2>&1
-
-    Run: python scripts/experiment_1017_thinkprm_step_verifier_v3.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: medium
-  requires_gpu: false
-  max_turns: 30
-  estimated_wall_time_min: 20
-  gated_on:
-    - upstream: exp1016-fover-corpus-expansion
-      artifact_field: n_labeled_pairs
-      op: '>='
-      value: 100
-  prior_failures:
-  - experiment_id: exp1007-thinkprm-step-verifier
-    verdict: blocked_doomed_rerun_no_prior_failures
-    addressed_by: "Exp 1007 (.78) was DOOMED_RERUN_BLOCKed because the planning agent forgot to add prior_failures YAML field. Conductor found 7 prior think_probe experiments. Exp 1017 v3 includes this prior_failures documentation. Uses 500-pair corpus (10x) vs 57-pair (.78 plan)."
-    retire_if_same_verdict: false
-  - experiment_id: exp945-thinkprm-tier29
-    verdict: partial
-    addressed_by: "Exp 945 (.73) implemented ThinkPRMProbe on the 57-pair corpus. AUC was limited by data. Exp 1017 uses the expanded 500-pair corpus from Exp 1016 — the primary change is data quantity, not algorithm."
-    retire_if_same_verdict: false
-  - experiment_id: exp444-think-probe
-    verdict: timed_out
-    addressed_by: "Exp 444 (.33) timed out at 20 min — budget was too small. Exp 455 redesigned with 60-min budget. ThinkPRMProbe is a different implementation (trained, not zero-shot). Budget issue is resolved."
-    retire_if_same_verdict: false
-
-- id: exp1018-vprm-rule-based-v3
-  milestone: 2026.04.79
-  deliverable: results/experiment_1018_vprm_rule_based_v3.json
-  title: "VPRM Rule-Based Step Verifier v3 — 10 Rule Families on Expanded Corpus"
-  prompt: |
-    CONTEXT:
-    VPRMArithmeticVerifier (Exp 454) achieved F1=1.0 on 20 IT-format arithmetic samples.
-    Exp 1008 (.78) was DOOMED_RERUN_BLOCKed because the planning agent forgot to add
-    prior_failures field (conductor matched 7 prior arithmetic-verifier experiments).
-    Exp 1016 has now expanded the FoVer corpus to 500+ labeled pairs.
-
-    This v3 extends VPRMArithmeticVerifier to 10+ rule families and evaluates on the full
-    expanded corpus. Includes 4 new rule families: LogicalEntailment, ComparativeConsistency,
-    OrderOfMagnitudeCheck, UnitDimensionConsistency.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/extraction/vprm_verifier.py (VPRMArithmeticVerifier, existing rule families)
-    - results/experiment_454_vprm_verifier.json (F1=1.0, 6 arithmetic families baseline)
-    - results/fover_expanded_corpus.json (500+ labeled pairs from Exp 1016)
-    - openspec/capabilities/verifiable-reasoning/spec.md (REQ-EXTRACT-027-031)
-
-    TASK:
-    1. READ vprm_verifier.py to see current rule families (count them).
-    2. ADD 4 new rule families to VPRMArithmeticVerifier:
-       a. LogicalEntailment: check if conclusion follows from explicitly stated premises
-          (simple linear chain: "if A then B, A is true, therefore B" pattern check)
-       b. ComparativeConsistency: transitivity check for comparatives
-          ("A > B AND B > C" → check if result consistent with "A > C")
-       c. OrderOfMagnitudeCheck: if a step claims a result, check it's within 2 orders of
-          magnitude of a rough estimate (e.g., if adding two 3-digit numbers, result should
-          be 3-4 digits, not 6)
-       d. UnitDimensionConsistency: if unit labels appear (kg, meters, dollars), check
-          that the result unit is consistent with the operation
-    3. EVALUATE on expanded corpus (Exp 1016):
-       For each pair: run VPRMArithmeticVerifier.verify(step_text) on each step.
-       Compute: precision, recall, F1 for step-level detection (vs Z3 ground truth).
-       Also compute outcome-level F1 (whole-response, not step-level).
-    4. ADD REQ-EXTRACT-030/031/032/033 + SCENARIO-EXTRACT-055/056/057/058 to spec.
-    5. Write 100% coverage tests for the 4 new rule families.
-    6. WRITE results/experiment_1018_vprm_rule_based_v3.json (try/finally):
-       - n_rule_families: int (target: >= 10)
-       - step_level_f1: float (target >= 0.70 on expanded corpus)
-       - outcome_level_f1: float (comparison baseline)
-       - f1_delta_step_vs_outcome: float
-       - n_corpus_pairs_evaluated: int
-       - honest_verdict: "step_level_beats_outcome" | "step_level_parity" | "step_level_below_outcome"
-
-    CONCRETE STEPS:
-    - python3 -c "from python.carnot.extraction.vprm_verifier import VPRMArithmeticVerifier; v=VPRMArithmeticVerifier(); print('n_rules:', len(v.rules) if hasattr(v, 'rules') else 'unknown')" 2>&1
-    - python3 -c "import json, os; corpus = 'results/fover_expanded_corpus.json' if os.path.exists('results/fover_expanded_corpus.json') else 'results/fover_labeled_steps_live.json'; d=json.load(open(corpus)); print(len(d), 'pairs in', corpus)"
-    - grep -n "class.*Rule\|class.*Verifier\|def verify" python/carnot/extraction/vprm_verifier.py | head -20
-
-    Run: python scripts/experiment_1018_vprm_rule_based_v3.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: medium
-  requires_gpu: false
-  max_turns: 30
-  estimated_wall_time_min: 20
-  gated_on:
-    - upstream: exp1016-fover-corpus-expansion
-      artifact_field: n_labeled_pairs
-      op: '>='
-      value: 100
-  prior_failures:
-  - experiment_id: exp1008-vprm-rule-based-step-verifier
-    verdict: blocked_doomed_rerun_no_prior_failures
-    addressed_by: "Exp 1008 (.78) was DOOMED_RERUN_BLOCKed because the planning agent forgot to add prior_failures YAML field. Conductor found 7 prior arithmetic-verifier experiments. Exp 1018 v3 includes this documentation and uses 500-pair expanded corpus."
-    retire_if_same_verdict: false
-  - experiment_id: exp454-vprm-verifier
-    verdict: success_f1_1_0
-    addressed_by: "Exp 454 achieved F1=1.0 on 20 IT-format arithmetic samples — this was the baseline, not a failure. Exp 1018 v3 extends to 10+ rule families and evaluates on the 500-pair expanded corpus for better generalization estimates."
-    retire_if_same_verdict: false
-
-- id: exp1019-gskan-energy-tier-v3
-  milestone: 2026.04.79
-  deliverable: results/experiment_1019_gskan_energy_tier_v3.json
-  title: "GS-KAN Energy Tier v3 — Hardware FPGA Complexity Analysis (RM/BOP/NABS Metrics)"
-  prompt: |
-    CONTEXT:
-    GS-KAN (arXiv 2512.09084) is a parameter-efficient KAN that uses a shared parent basis
-    function per layer and learnable linear transforms per edge. It reduces KAN parameters by
-    ~N_edges/1 per layer — addressing KV260 BRAM overflow (RETRO-072: N=128 LUT overflow at 2.48x).
-
-    Exp 1009 (.78) was blocked by "comparison failed" pre-test errors. Exp 1013 fixed those.
-    This v3 adds hardware complexity analysis using RM/BOP/NABS metrics from arXiv 2604.03345:
-    - RM (Rational Multiplications): measures compute cost
-    - BOP (Bit Operations Per weight): measures memory cost
-    - NABS (Normalized Activation Bit Sparsity): measures activation pattern cost
-    These metrics let us analytically predict KV260 LUT usage without running synthesis.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/models/kaem_energy.py (KAEMEnergy, UnivariateKAEMLayer)
-    - python/carnot/models/kan.py (existing KAN energy tier)
-    - results/experiment_947_symbolic_kan.json (Symbolic-KAN AUROC=0.9344 baseline)
-    - results/fover_expanded_corpus.json (500+ pair corpus from Exp 1016, or 57-pair fallback)
-    - openspec/capabilities/training-inference/spec.md (REQ-SAMPLE-015-021)
-    - results/experiment_1013_preflight_v29.json (pre_test_fixed=True confirmed)
-
-    TASK:
-    1. IMPLEMENT GSKANEnergyTier in python/carnot/models/gskan_energy.py:
-       class HardwareComplexityMetrics:
-           def compute_rm(n_inputs, n_hidden, n_layers, G) -> int:
-               # RM = n_inputs * n_hidden * G per layer * n_layers
-           def compute_bop(rm, bits_per_weight=16) -> int:
-               # BOP = rm * bits_per_weight
-           def estimate_lut_count(rm, bits_per_weight=16) -> int:
-               # LUT_estimate = BOP (rough: 1 BOP ~ 1 LUT for DSP-like operations)
-       class SharedParentBasisLayer(n_inputs, n_outputs, G=4):
-           # Single B-spline basis per layer, learnable (scale, shift) per edge
-           # RM = n_inputs * n_outputs * 1 (shared basis: G=1 rational multiply per edge)
-       class GSKANEnergyTier(n_inputs=64, n_hidden=8, n_layers=2):
-           def energy(x) -> float: ...
-           def fit(X_positive, X_negative): ...
-           def hardware_complexity(bits=16) -> dict:
-               # Returns {rm, bop, lut_estimate, kv260_fits: lut < 117000}
-    2. COMPUTE hardware complexity for both:
-       a. Standard KAEMEnergy(n=64, h=8, G=10): rm=5120, lut_estimate=~82K
-       b. GSKANEnergyTier(n=64, h=8, G=4, shared): rm=512, lut_estimate=~8K
-    3. TRAIN both on corpus (fover_expanded or 57-pair fallback). Compare AUROC.
-    4. ADD REQ-SAMPLE-020/021 + SCENARIO-SAMPLE-035/036 to spec.
-    5. Write 100% coverage tests.
-    6. WRITE results/experiment_1019_gskan_energy_tier_v3.json (try/finally):
-       - gs_kan_auroc: float
-       - standard_kan_auroc: float
-       - auroc_delta: float (gs_kan - standard)
-       - gs_kan_rm: int (target < 20% of standard)
-       - standard_kan_rm: int
-       - rm_reduction_pct: float (target > 80%)
-       - gs_kan_lut_estimate: int (target < 20000)
-       - standard_kan_lut_estimate: int
-       - kv260_budget_fit: bool (gs_kan_lut < 60000)
-       - honest_verdict: "gs_kan_viable" (auroc >= standard - 0.03 AND rm_reduction > 70%) | "gs_kan_below_threshold" | "gs_kan_better"
-
-    CONCRETE STEPS:
-    - python3 -c "import json, os; corpus = 'results/fover_expanded_corpus.json' if os.path.exists('results/fover_expanded_corpus.json') else 'results/fover_labeled_steps_live.json'; d=json.load(open(corpus)); print(len(d), 'pairs')"
-    - python3 -c "from python.carnot.models.kaem_energy import KAEMEnergy; m=KAEMEnergy(10,8); print('param_count:', sum(p.numel() for p in m.parameters()) if hasattr(m, 'parameters') else 'N/A')" 2>&1
-    - grep -n "class.*Layer\|class.*KAN\|def energy\|def fit" python/carnot/models/kaem_energy.py | head -20
-
-    Run: python scripts/experiment_1019_gskan_energy_tier_v3.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: medium
-  requires_gpu: false
-  max_turns: 50
-  estimated_wall_time_min: 30
-  prior_failures:
-  - experiment_id: exp1009-gskan-energy-tier-v2
-    verdict: pre_test_comparison_failed
-    addressed_by: "Exp 1009 (.78) was blocked by 'comparison failed' pre-test errors. Exp 1013 fixed those. Exp 1019 v3 gates on exp1013.gate_schema_v79=True."
-    retire_if_same_verdict: false
-  - experiment_id: exp996-gskan-energy-tier
-    verdict: blocked_gate_check_failed
-    addressed_by: "Exp 996 (.77) was blocked by the conductor rerun guard because the roadmap YAML was missing prior_failures field. Exp 1019 includes proper prior_failures documentation AND adds hardware complexity metrics (RM/BOP/NABS from arXiv 2604.03345) — genuinely different scope from prior attempts."
-    retire_if_same_verdict: false
-  gated_on:
-    - upstream: exp1013-preflight-v29
-      artifact_field: gate_schema_v79
-      op: '=='
-      value: true
-
-- id: exp1020-almc-ode-v2
-  milestone: 2026.04.79
-  deliverable: results/experiment_1020_almc_ode_v2.json
-  title: "ALMC-ODE Annealed Sampler v2 — Multimodal Escape + Mpemba Initialization"
-  prompt: |
-    CONTEXT:
-    ALMC-ODE (arXiv 2604.20052, April 2026): Annealed Langevin Monte Carlo via ODE for
-    high-dimensional multimodal distributions. Addresses Carnot's LSB sampler limitation:
-    LSB doesn't explicitly handle multimodal energy landscapes and can get stuck in local minima.
-
-    Exp 1011 (.78) was DOOMED_RERUN_BLOCKed because the planning agent forgot to add
-    prior_failures YAML field. This v2 adds Mpemba-optimized initialization from
-    arXiv 2603.24183 (Digitally Optimized Initializations for Fast Thermodynamic Computing):
-    compute the mean-field equilibrium as warm start, reducing convergence steps by 2-5x vs
-    random initialization.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/samplers/lsb_sampler.py (LSB sampler — baseline)
-    - python/carnot/samplers/ (find sampler base class/protocol)
-    - results/experiment_983_langevin_sb_boltzmann_sampler.json (LSB baseline results)
-    - python/carnot/models/ising.py (IsingEBM — energy function being sampled)
-    - openspec/capabilities/training-inference/spec.md (REQ-SAMPLE-007)
-
-    TASK:
-    1. IMPLEMENT ALMCODESampler in python/carnot/samplers/almc_ode_sampler.py:
-       class MpembaInitializer:
-           def compute_mean_field_equilibrium(energy_fn, n_spins) -> np.ndarray:
-               # Mean-field: x_i = tanh(-beta * sum_j J_ij * x_j) solved iteratively
-               # 10 iterations of fixed-point update from x=0 start
-               # This is the "warm" state that's close to thermal equilibrium
-       class ALMCODESampler:
-           def sample(energy_fn, x0=None, n_steps=100, T_max=2.0, tau=50.0,
-                      use_mpemba_init=True) -> np.ndarray:
-               # If use_mpemba_init and x0 is None: use MpembaInitializer
-               # Temperature schedule: T(t) = T_max * exp(-t/tau)
-               # Langevin update: x_{t+1} = x_t - eta * grad_E(x_t, T(t)) + noise(T(t))
-           def convergence_curve(energy_fn, x0=None, n_steps=100) -> list[float]
-    2. BENCHMARK on 3 synthetic constraint problems:
-       a. Unimodal: compare LSB, ALMC-random-init, ALMC-Mpemba-init (LSB expected best)
-       b. Bimodal: two-well Ising — ALMC must escape local min; Mpemba should help find right well
-       c. FoVer constraints: 10 pairs from fover_labeled or expanded corpus
-    3. COMPARE convergence_steps_to_threshold AND multimodal_escape_rate for all three methods.
-    4. ADD REQ-SAMPLE-022/023 + SCENARIO-SAMPLE-037/038 to spec.
-    5. Write 100% coverage tests.
-    6. WRITE results/experiment_1020_almc_ode_v2.json (try/finally):
-       - unimodal_convergence_lsb: int
-       - unimodal_convergence_almc_random: int
-       - unimodal_convergence_almc_mpemba: int
-       - bimodal_escape_rate_lsb: float
-       - bimodal_escape_rate_almc_random: float
-       - bimodal_escape_rate_almc_mpemba: float (target > lsb AND > random)
-       - mpemba_speedup: float (random_steps / mpemba_steps on bimodal)
-       - honest_verdict: "almc_mpemba_wins_both" | "almc_improves_multimodal_only" | "almc_parity" | "almc_no_improvement"
-
-    CONCRETE STEPS:
-    - ls python/carnot/samplers/ 2>/dev/null
-    - python3 -c "from python.carnot.samplers.lsb_sampler import LangevinSBSampler; print('LSB importable')" 2>&1
-    - python3 -c "import json; d=json.load(open('results/experiment_983_langevin_sb_boltzmann_sampler.json')); print('LSB verdict:', d.get('honest_verdict'))" 2>/dev/null || echo "EXP983_NOT_FOUND"
-
-    Run: python scripts/experiment_1020_almc_ode_v2.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: medium
-  requires_gpu: false
-  max_turns: 30
-  estimated_wall_time_min: 20
-  prior_failures:
-  - experiment_id: exp1011-almc-ode-annealed-sampler
-    verdict: blocked_doomed_rerun_no_prior_failures
-    addressed_by: "Exp 1011 (.78) was DOOMED_RERUN_BLOCKed because the planning agent forgot to add prior_failures YAML field. Exp 1020 v2 adds this documentation AND includes Mpemba initialization from arXiv 2603.24183 — genuinely different from the original arXiv 2604.20052 implementation (random init only)."
-    retire_if_same_verdict: false
-
-- id: exp1021-nk-kaem-multilevel
-  milestone: 2026.04.79
-  deliverable: results/experiment_1021_nk_kaem_multilevel.json
-  title: "NK-KAEMEnergy + Multilevel KAN Training — 40x Convergence Speedup Target"
-  prompt: |
-    CONTEXT:
-    Two complementary training speedup techniques from recent arxiv:
-    1. Newton-Kaczmarz (NK) optimizer (arXiv 2512.18921): second-order optimizer for KAN
-       achieving "40x faster than neural networks" at equivalent accuracy. More suitable than
-       Adam for small-N datasets (57-500 pairs) where second-order methods aren't dominated by
-       gradient noise.
-    2. Multilevel KAN training (arXiv 2603.04827): hierarchical grid refinement (coarse → fine
-       spline knots) achieving "orders-of-magnitude accuracy improvement." Natural fit with NK:
-       NK convergence per grid level, then refine.
-
-    Combining both: NK optimizer with multilevel grid G=4→8→16. Expected: 3x faster convergence
-    (multilevel) × some NK factor on small data → dramatically faster KAEMEnergy iteration in
-    the autoresearch loop.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/models/kaem_energy.py (KAEMEnergy — implement NK + multilevel here)
-    - python/carnot/models/kan.py (existing KAN energy tier)
-    - results/experiment_936_kan_tier4_real_data.json (Adam training baseline)
-    - results/fover_expanded_corpus.json (500+ pair corpus, or 57 fallback)
-    - openspec/capabilities/training-inference/spec.md (REQ-SAMPLE-015)
-
-    TASK:
-    1. IMPLEMENT NKMultilevelTrainer in python/carnot/models/nk_multilevel_trainer.py:
-       class NewtonKaczmarzOptimizer:
-           # Second-order row-action method for KAN spline coefficients
-           # Update rule: c = c - (J^T J + lambda * I)^{-1} J^T r
-           # Where J is the spline Jacobian, r is the residual vector
-           # Uses Sherman-Morrison for efficient inverse update
-           def step(model, X_batch, y_batch): ...
-       class MultilevelKANSchedule:
-           # Coarse-to-fine grid refinement: G=4 → G=8 → G=16
-           # At each level: train until convergence, then refine grid
-           def fit(model, X, y, grid_levels=[4, 8, 16], epochs_per_level=20): ...
-           # Returns: {level: {epochs, final_loss, auc}} for convergence analysis
-    2. INTEGRATE into KAEMEnergy: add fit_nk_multilevel() as alternative to fit()
-    3. BENCHMARK on expanded corpus:
-       a. Adam single-level (G=10): current default — wall_time + AUC
-       b. NK single-level (G=10): same grid, different optimizer
-       c. NK multilevel (G=4→8→16): full combined approach
-       Metric: wall_time_to_auc_095 (seconds to reach AUC = 0.95 or best achievable)
-    4. ADD REQ-SAMPLE-024/025 + SCENARIO-SAMPLE-039/040 to spec.
-    5. Write 100% coverage tests.
-    6. WRITE results/experiment_1021_nk_kaem_multilevel.json (try/finally):
-       - adam_wall_time_s: float
-       - nk_single_wall_time_s: float
-       - nk_multilevel_wall_time_s: float
-       - adam_auc: float
-       - nk_single_auc: float
-       - nk_multilevel_auc: float
-       - speedup_nk_vs_adam: float (adam_time / nk_multilevel_time)
-       - auc_delta_nk_vs_adam: float (nk_multilevel_auc - adam_auc)
-       - honest_verdict: "nk_multilevel_faster_and_better" | "nk_faster_same_auc" | "nk_slower" | "convergence_failed"
-
-    CONCRETE STEPS:
-    - python3 -c "import json, os; corpus = 'results/fover_expanded_corpus.json' if os.path.exists('results/fover_expanded_corpus.json') else 'results/fover_labeled_steps_live.json'; d=json.load(open(corpus)); print(len(d), 'pairs')"
-    - python3 -c "from python.carnot.models.kaem_energy import KAEMEnergy; import time; m=KAEMEnergy(5); print('import ok')" 2>&1
-    - grep -n "def fit\|Adam\|SGD\|optimizer" python/carnot/models/kaem_energy.py | head -20
-
-    Run: python scripts/experiment_1021_nk_kaem_multilevel.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  priority: medium
-  requires_gpu: false
-  max_turns: 50
   estimated_wall_time_min: 30
 
-- id: exp1022-kv260-first-light-v5
-  milestone: 2026.04.79
-  deliverable: results/experiment_1022_kv260_first_light_v5.json
-  title: "KV260 First Light v5 — SD Re-Flash Guide + USB Serial + JTAG Approach"
+- id: exp1029-fover-expansion-v2
+  milestone: 2026.04.80
+  deliverable: results/experiment_1029_fover_expansion_v2.json
+  title: "FoVer Corpus Expansion v2 — Z3 Real Labels + MetaQA Weak Labeler (500+ pairs)"
   prompt: |
     CONTEXT:
-    KV260 board at 192.168.51.98 (confirmed Exp 993). Bitstream at output/carnot_ising_v4_bd/.
-    Exp 1010 (.78) was blocked by "comparison failed" pre-test errors — never ran.
-    Exp 1013 (preflight) fixed those.
+    The FoVer corpus has been stuck at 57 labeled CoT pairs since Exp 442. All probe training
+    (ThinkPRM, VPRM, GS-KAN, PPSEBM relay) depends on this corpus. Exp 542 was blocked
+    (synthetic_fallback: used GPT-generated GSM8K templates rather than real Z3 labels on real
+    arithmetic problems). Exp 1016 in .79 was DOOMED_RERUN_BLOCKed because the planner forgot
+    to add a prior_failures field. This experiment is STANDALONE — it does NOT gate on preflight
+    and does not require any other experiment to complete first.
 
-    Prior attempts (v1-v4) all tried SSH directly. The board's SSH service may not be enabled
-    by default on the Kria Ubuntu image, or the board may not have the key exchange done.
-
-    This v5 tries THREE new approaches not attempted before:
-    1. USB serial console (minicom/picocom to UART — bypasses SSH entirely)
-    2. SD card re-flash: download and flash a fresh Kria Ubuntu 22.04 image with SSH enabled
-       by default, then reboot board from new SD
-    3. JTAG: check if OpenOCD is available and can connect to board via JTAG cable
-
-    If automated paths fail, write a precise 3-command human action guide.
+    Key improvements over prior attempts:
+    - Real Z3 labels: use the MATH and AOPS arithmetic sub-corpus (real student solutions),
+      not synthetic GSM8K templates
+    - MetaQA weak labeler: apply 5 metamorphic relations as additional labeling signal
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_1010_kv260_first_light_v4.json (if exists — may be empty/blocked)
-    - results/experiment_993_kv260_board_programming_v3.json (board IP 192.168.51.98 confirmed)
-    - results/experiment_982_kv260_board_programming_v2.json (bitstream path)
-    - research-hardware-wishlist.md (KV260 bring-up steps)
-    - hardware/kv260/build_bd.tcl (block design)
-    - output/carnot_ising_v4_bd/carnot_ising.bit (bitstream location)
+    - python/carnot/data/fover_corpus.py (or wherever the 57-pair corpus lives — search for it)
+    - python/carnot/verify/step_verifier.py or equivalent (VeriCoTStepValidator from Exp 453/564)
+    - scripts/experiment_442_*.py (original corpus generation — understand the schema)
+    - scripts/experiment_1016_*.py (if it exists — understand what was planned)
+    - research-references.md section "MetaQA: Hallucination Detection" (new, 2026-04-28 scan)
 
     TASK:
-    1. CONFIRM bitstream exists:
-       ls output/carnot_ising_v4_bd/*.bit 2>/dev/null || ls output/carnot_ising_*/*.bit 2>/dev/null
-    2. TRY USB serial:
-       ls /dev/ttyUSB* /dev/ttyACM* 2>/dev/null → if found, document connection commands
-       Check if picocom or minicom is installed
-    3. TRY network ping and SSH with more aggressive timeouts:
-       ping -c 3 192.168.51.98 2>/dev/null
-       ssh -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=no kria@192.168.51.98 "hostname" 2>&1
-       Also try: ubuntu@192.168.51.98, root@192.168.51.98
-    4. TRY JTAG: which openocd 2>/dev/null; ls /dev/bus/usb/ 2>/dev/null | head -5
-    5. WRITE SD re-flash guide IF all automated paths fail:
-       Download URL for Kria Ubuntu 22.04 LTS image from Xilinx
-       Flash command: sudo dd if=kria_ubuntu.img of=/dev/sdX bs=4M status=progress
-       Expected default username/password, SSH status on fresh image
-    6. IF any path connects: run hardware latency test and record hardware_latency_us
-    7. WRITE results/experiment_1022_kv260_first_light_v5.json (try/finally):
-       - bitstream_confirmed: bool
-       - usb_serial_found: bool
-       - usb_serial_device: str | null
-       - ssh_connected: bool
-       - jtag_available: bool
-       - board_programmed: bool
-       - hardware_latency_us: float | null
-       - human_action_guide: str (exact commands for SD re-flash or SSH enable)
-       - human_action_required: bool
-       - honest_verdict: "hardware_working" | "board_reachable_programming_pending" | "all_automated_paths_failed_guide_written"
+    1. LOAD EXISTING CORPUS: Find and load the 57-pair FoVer corpus. Confirm schema:
+       (step_text, label (correct/incorrect), violation_type, source_problem).
+    2. COLLECT REAL ARITHMETIC PROBLEMS: Load 500+ arithmetic CoT problems from the MATH
+       dataset (available via HuggingFace: lighteval/MATH). For each problem, extract
+       individual reasoning steps using sentence boundaries. Target: 1000+ candidate steps.
+    3. Z3 LABELING: For each candidate step, apply VeriCoTStepValidator:
+       - If step contains arithmetic (addition, subtraction, multiplication, division,
+         inequality), extract the assertion and check with Z3.
+       - Label: correct (Z3 UNSAT for negation), incorrect (Z3 SAT for negation), unknown.
+       - Keep only correct and incorrect labels. Discard unknown.
+    4. MetaQA WEAK LABELER (NEW): For a 200-step sample, apply 5 metamorphic relations using
+       unsloth/gemma-4-26B-A4B-it-GGUF (fast MoE model):
+       a. Numeric paraphrase: restate calculation with different notation; expect same result
+       b. Negation consistency: negate the step; expect model to agree it's now wrong
+       c. Synonym substitution: replace "equals" with "is", "multiply" with "times"
+       d. Unit replacement: change units; verify model flags inconsistency if units matter
+       e. Step decomposition: split step into 2 sub-steps; expect equivalent result
+       Any step where model gives INCONSISTENT answers under 2+ relations = candidate violation.
+       Cross-validate MetaQA candidates against Z3 labels where overlap exists.
+    5. COMBINE: Merge Z3 labels + MetaQA weak labels. Deduplicate by step_hash.
+       Count: n_labeled_pairs (Z3-confirmed), n_metamorphic_candidates, n_violation_pairs.
+    6. SAVE: Write expanded corpus to python/carnot/data/fover_corpus_expanded.json or
+       data/fover_corpus_500plus.json. Also write a split: fover_train.json (80%) and
+       fover_test.json (20%).
 
-    CONCRETE STEPS:
-    - ls output/carnot_ising_v4_bd/*.bit 2>/dev/null || ls output/carnot_ising*/*.bit 2>/dev/null || echo "BITSTREAM_NOT_FOUND"
-    - ls /dev/ttyUSB* /dev/ttyACM* 2>/dev/null || echo "NO_USB_SERIAL"
-    - ping -c 2 192.168.51.98 2>/dev/null | tail -3 || echo "PING_FAILED"
-    - ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no kria@192.168.51.98 hostname 2>&1 | head -3 || echo "SSH_FAILED"
-    - which openocd minicom picocom screen 2>/dev/null
+    USE GPU: sg render -c 'JAX_PLATFORMS=cpu TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1 python scripts/experiment_1029_fover_expansion_v2.py'
+    MODEL: unsloth/gemma-4-26B-A4B-it-GGUF (use cached_sota_pair() from experiment_template.py)
 
-    Run: python scripts/experiment_1022_kv260_first_light_v5.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+    ARTIFACT FIELDS:
+    - n_labeled_pairs: int (Z3-confirmed correct+incorrect labels)
+    - n_violation_pairs: int (incorrect-labeled steps, Z3-confirmed)
+    - n_metamorphic_candidates: int (MetaQA-flagged steps)
+    - n_metamorphic_z3_agreement: int (MetaQA candidates confirmed by Z3)
+    - corpus_path: str (path to saved expanded corpus)
+    - honest_verdict: "corpus_expanded_500plus" | "partial_z3_only" | "below_target" | "failed"
 
-  priority: high
-  requires_gpu: false
-  max_turns: 25
-  estimated_wall_time_min: 20
-  prior_failures:
-  - experiment_id: exp1010-kv260-first-light-v4
-    verdict: pre_test_comparison_failed
-    addressed_by: "Exp 1010 (.78) blocked by 'comparison failed' pre-test errors — never ran. Exp 1013 fixed those. Exp 1022 v5 tries completely new approaches: USB serial console, alternative SSH credentials, JTAG. All prior v1-v4 used only direct SSH + ssh-keyscan."
-    retire_if_same_verdict: false
-  - experiment_id: exp993-kv260-board-programming-v3
-    verdict: board_unreachable_human_required
-    addressed_by: "Exp 993 (.77) found IP 192.168.51.98 but SCP failed. Exp 1022 tries USB serial and JTAG which bypass the SSH/SCP requirement entirely. Also documents SD re-flash procedure for guaranteed connectivity reset."
-    retire_if_same_verdict: false
-  gated_on:
-    - upstream: exp1013-preflight-v29
-      artifact_field: gate_schema_v79
-      op: '=='
-      value: true
-
-- id: exp1023-dualgpu-live-v2
-  milestone: 2026.04.79
-  deliverable: results/experiment_1023_dualgpu_live_v2.json
-  title: "DualGPU Live Inference v2 — Activate Live GPU Path on Real Models (14th Milestone)"
-  prompt: |
-    CONTEXT:
-    DualGPURunner benchmarked at 1.96x throughput (Exp 932). DualGPU has been wired
-    synthetically for 13 consecutive milestones. Cumulative foregone savings ~780 min (13 hours).
-    Exp 1002 (.78) produced wired_synthetic_only — the code was wired but live inference wasn't
-    confirmed. The wiring exists; this experiment activates it.
-
-    MANDATORY: This experiment must run with CARNOT_FORCE_LIVE=1 and real models.
-    If CARNOT_FORCE_LIVE=1 is not set, the script must EXIT with status=blocked_no_live_flag.
-    If GPU count < 2, write human_action_required=True with setup instructions.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/verify_repair.py (DualGPU wiring from Exp 1002)
-    - python/carnot/pipeline/dual_gpu_runner.py (DualGPURunner implementation)
-    - results/experiment_932_dualgpu_benchmark.json (baseline: 1.96x)
-    - results/experiment_1002_dualgpu_pipeline_v5.json (wired_synthetic_only)
-    - scripts/experiment_template.py (ExperimentTemplate, setup_gpu with requires_dual_gpu)
-    - python/carnot/pipeline/env_autofix.py (apply_env_autofix — CALL FIRST)
-
-    TASK:
-    1. CALL apply_env_autofix() FIRST before any GPU import.
-    2. CHECK environment: import os; live = os.environ.get('CARNOT_FORCE_LIVE','0')
-       If live != '1': write artifact with honest_verdict='blocked_no_live_flag' and exit.
-    3. CHECK GPU count: import torch; n_gpus = torch.cuda.device_count()
-       If n_gpus < 2: write artifact with human_action_required=True and exit.
-    4. LOAD one small model per GPU (CPU-side mock if models not cached):
-       GPU 0: unsloth/gemma-4-26B-A4B-it-GGUF (smaller, faster load) or CPU mock
-       GPU 1: parallel inference target
-    5. RUN 10-question throughput benchmark using DualGPURunner:
-       Sequential baseline: run 10 questions on GPU 0 only
-       Dual GPU: run same 10 questions split across both GPUs
-       Measure: sequential_q_per_min, dual_q_per_min, throughput_ratio
-    6. WRITE results/experiment_1023_dualgpu_live_v2.json (try/finally):
-       - n_gpus_available: int
-       - inference_mode: "live_gpu" | "cpu_mock" | "blocked_no_live_flag"
-       - sequential_q_per_min: float
-       - dual_q_per_min: float
-       - throughput_ratio: float (target >= 1.5)
-       - run_date: "{date}"
-       - human_action_required: bool
-       - honest_verdict: "dualgpu_live_confirmed" | "dualgpu_cpu_mock_only" | "blocked_no_live_flag" | "insufficient_gpus"
-
-    CONCRETE STEPS:
-    - python3 -c "import os; print('CARNOT_FORCE_LIVE:', os.environ.get('CARNOT_FORCE_LIVE','NOT_SET'))"
-    - python3 -c "import torch; print('GPUs:', torch.cuda.device_count(), [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())])" 2>&1
-    - python3 -c "from python.carnot.pipeline.dual_gpu_runner import DualGPURunner; print('DualGPU importable')" 2>&1
-    - grep -n "DualGPU\|dual_gpu\|device_count" python/carnot/pipeline/verify_repair.py | head -10
-
-    Run: CARNOT_FORCE_LIVE=1 sg render -c 'python scripts/experiment_1023_dualgpu_live_v2.py'
+    Run: python scripts/experiment_1029_fover_expansion_v2.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   priority: high
   requires_gpu: true
-  max_turns: 30
-  estimated_wall_time_min: 25
+  max_turns: 50
+  estimated_wall_time_min: 60
   prior_failures:
-  - experiment_id: exp1002-dualgpu-pipeline-v5
-    verdict: wired_synthetic_only
-    addressed_by: "Exp 1002 (.78) wired DualGPU synthetically — the wiring exists but live inference wasn't confirmed. Exp 1023 mandates CARNOT_FORCE_LIVE=1 and exits immediately with blocked verdict if the flag is not set. This prevents a fourth 'synthetic_only' result."
-    retire_if_same_verdict: true
+    - experiment_id: exp542-fover-expansion
+      verdict: synthetic_fallback
+      addressed_by: "Root cause: used synthetic GSM8K templates instead of real arithmetic problems. Fix: use MATH dataset (real student solutions) + Z3 labels from VeriCoTStepValidator. MetaQA weak labeler added as secondary signal (arXiv 2502.15844)."
+      retire_if_same_verdict: true
+    - experiment_id: exp1016-fover-corpus-expansion
+      verdict: blocked_doomed_rerun_no_prior_failures
+      addressed_by: "Prior_failures field was missing in .79 YAML (planner omission). Added here. Root cause of synthetic_fallback (Exp 542) is now addressed by using MATH corpus + real Z3 labels."
+      retire_if_same_verdict: false
 
-- id: exp1024-ppsebm-live-relay-v4
-  milestone: 2026.04.79
-  deliverable: results/experiment_1024_ppsebm_live_relay_v4.json
-  title: "PPSEBM Live Relay v4 — FR-11 Cross-Session Memory on Expanded FoVer Violations"
+- id: exp1030-triple-integration-v6
+  milestone: 2026.04.80
+  deliverable: results/experiment_1030_triple_integration_v6.json
+  title: "Triple Integration E2E v6 — Full Cascade Validation (ThinkPRM → SpilledEnergy → SC-Energy → Ising)"
   prompt: |
     CONTEXT:
-    PPSEBM cross-session constraint memory achieved sessions_with_new_templates >= 3 on CPU
-    synthetic (Exp 970, .75). FR-11 real-data relay: last confirmed Milestone .33 (46 milestones
-    ago). Exp 1005 (.78) was gated on exp1003.n_live_violations_collected >= 10 but only 9
-    were collected — 1 violation short of the gate.
-
-    Exp 1016 (FoVer Corpus Expansion) produces 500+ labeled pairs including >= 100 violations.
-    This experiment uses THAT corpus, not live GPU violations. This decouples FR-11 relay from
-    GPU availability — the expanded corpus provides abundant real violations (Z3-verified, not
-    just model outputs on easy benchmarks).
+    The full 3-tier verification cascade has never been validated end-to-end. Exp 1004 (.78)
+    never ran due to pre-test comparison failure. Exp 1014 (.79) was blocked because the
+    preflight never wrote an artifact. SC-Energy is deployed as Tier 2 (Exp 1001, .78).
+    Exp 1028 (preflight v30) must have pre_test_fixed=True before this experiment runs.
 
     EXISTING CODE TO READ FIRST:
-    - python/carnot/samplers/lsb_sampler.py (check for PPSEBM class)
-    - python/carnot/pipeline/ppsebm.py (PPSEBM, if exists)
-    - results/experiment_970_ppsebm_cpu_synthetic.json (baseline: sessions_with_new_templates >= 3)
-    - results/experiment_1016_fover_corpus_expansion.json (n_violation_pairs)
-    - results/fover_expanded_corpus.json (violation pairs for training signal)
-    - scripts/experiment_template.py
+    - python/carnot/pipeline/verify_repair.py (full cascade — understand tier routing)
+    - python/carnot/verify/tier0_probes.py or equivalent (ThinkPRM Tier 0a, SpilledEnergy Tier 0b)
+    - python/carnot/models/sc_energy.py or equivalent (SC-Energy Tier 2)
+    - tests/python/test_verify_repair*.py (understand current test coverage)
+    - results/experiment_1001_sc_energy_tier2_v4.json (confirms tier2_wired=True)
 
     TASK:
-    1. READ results/fover_expanded_corpus.json. Extract violation pairs:
-       violations = [pair for pair in corpus if pair.get('n_violations', 0) > 0]
-       If len(violations) < 10: emit honest_verdict='insufficient_violations' and stop.
-    2. Run 5 PPSEBM sessions using the violation pairs as training signal:
-       For each session i in range(5):
-       - Sample a batch of violations from the expanded corpus
-       - Run PPSEBM to generate new constraint templates
-       - Count new templates added in this session
-    3. Measure sessions_with_new_templates (target >= 3).
-    4. Compare to synthetic baseline (Exp 970: sessions_with_new_templates >= 3 on synthetic)
-    5. WRITE results/experiment_1024_ppsebm_live_relay_v4.json (try/finally):
-       - n_violations_from_corpus: int
-       - sessions_with_new_templates: int
-       - total_new_templates: int
-       - live_relay_confirmed: bool (sessions_with_new_templates >= 3 AND n_violations > 0)
-       - vs_synthetic_baseline_delta: int (sessions_with_new_templates - 3)
-       - inference_mode: "z3_labeled_corpus" | "insufficient_violations"
-       - honest_verdict: "fr11_relay_confirmed" | "fr11_insufficient_data" | "fr11_no_new_templates"
+    1. VERIFY SETUP: Confirm pytest tests/python/ -v passes 0 failures (should be true if
+       preflight did its job). If tests fail despite this experiment being gated on pre_test_fixed,
+       write blocked_tests_still_failing verdict and exit.
+    2. GENERATE TEST QUESTIONS: Create 50 synthetic arithmetic+reasoning questions spanning:
+       - 20 correct arithmetic (should pass all tiers)
+       - 20 incorrect arithmetic with known errors (should fail at Tier 0 or Tier 3)
+       - 10 ambiguous (interesting for skip rate analysis)
+    3. RUN CASCADE: For each of the 50 questions, run the full verify_repair pipeline:
+       ThinkPRM Tier 0a → SpilledEnergy Tier 0b → SC-Energy Tier 2 → Ising Tier 3
+       Record per-question: which tiers fired, energy scores, final verdict, latency_ms.
+    4. MEASURE:
+       - tier_0a_skip_rate: fraction where Tier 0a fired (changed verdict)
+       - tier_0b_skip_rate: fraction where Tier 0b fired
+       - tier_2_skip_rate: fraction where SC-Energy Tier 2 changed verdict
+       - tier_3_skip_rate: fraction where Ising Tier 3 fired
+       - cascade_latency_p50_ms, cascade_latency_p95_ms
+       - no_exceptions: bool (no Python exceptions during 50 questions)
+    5. GATE: all_tier_skip_rates_nonzero = all skip rates > 0.05 (at least 3/50 questions
+       trigger each tier). If any tier never fires, log which tier is dead and why.
 
     CONCRETE STEPS:
-    - python3 -c "import json, os; corpus='results/fover_expanded_corpus.json'; d=json.load(open(corpus)) if os.path.exists(corpus) else []; viols=[p for p in d if p.get('n_violations',0)>0]; print(len(d),'total,',len(viols),'violations')"
-    - grep -r "PPSEBM\|ppsebm" python/carnot/ --include="*.py" -l
-    - python3 -c "import json; d=json.load(open('results/experiment_970_ppsebm_cpu_synthetic.json')); print('baseline sessions:', d.get('sessions_with_new_templates'))" 2>/dev/null || echo "EXP970_NOT_FOUND"
+    - pytest tests/python/ -v 2>&1 | tail -10
+    - python -c "from python.carnot.pipeline import verify_repair; print('import OK')"
+    - JAX_PLATFORMS=cpu python scripts/experiment_1030_triple_integration_v6.py
 
-    Run: python scripts/experiment_1024_ppsebm_live_relay_v4.py
+    ARTIFACT FIELDS:
+    - tier_0a_skip_rate: float
+    - tier_0b_skip_rate: float
+    - tier_2_skip_rate: float
+    - tier_3_skip_rate: float
+    - all_tier_skip_rates_nonzero: bool
+    - cascade_e2e_pass: bool
+    - cascade_latency_p95_ms: float
+    - no_exceptions: bool
+    - honest_verdict: "cascade_validated" | "partial_some_tiers_dead" | "blocked_tests_failing" | "failed"
+
+    Run: python scripts/experiment_1030_triple_integration_v6.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   priority: high
   requires_gpu: false
   max_turns: 30
-  estimated_wall_time_min: 20
+  estimated_wall_time_min: 30
   gated_on:
-    - upstream: exp1016-fover-corpus-expansion
+    - upstream: exp1028-preflight-v30
+      artifact_field: pre_test_fixed
+      op: '=='
+      value: true
+  prior_failures:
+    - experiment_id: exp1004-triple-integration-v4
+      verdict: never_ran_comparison_failure
+      addressed_by: "Pre-test comparison failure blocked Exp 1004 in .78. Exp 1028 preflight v30 hardened to always write artifact and fix pre-test failure first. Exp 1030 gated on exp1028.pre_test_fixed=true rather than exp1028.gate_schema_v80=true (softer gate)."
+      retire_if_same_verdict: false
+    - experiment_id: exp1014-triple-integration-v5
+      verdict: blocked_gate_artifact_missing
+      addressed_by: "Exp 1013 preflight never wrote artifact in .79. Exp 1028 preflight v30 atomic-first-write fix ensures artifact always exists. Exp 1030 gated on pre_test_fixed field which is written even if preflight partially fails."
+      retire_if_same_verdict: false
+
+- id: exp1031-energy-ssd-v3
+  milestone: 2026.04.80
+  deliverable: results/experiment_1031_energy_ssd_v3.json
+  title: "Energy-Selection SSD v3 — FR-11 Mandatory Self-Learning Experiment (Standalone)"
+  prompt: |
+    CONTEXT:
+    This is the MANDATORY continuous self-learning experiment for milestone .80 per
+    research-program.md FR-11 (Autonomous Self-Learning Loop). Energy-Selection SSD has been
+    blocked for 3 consecutive milestones: Exp 733 (below_baseline, synthetic data only),
+    Exp 1006 (.78, DOOMED_RERUN_BLOCK — missing prior_failures), Exp 1015 (.79, blocked because
+    preflight never ran). This experiment is STANDALONE — it does NOT gate on preflight.
+
+    Core idea: use Carnot's energy function as the selection filter for self-distillation.
+    Generate N candidate outputs from a SOTA LLM; keep only outputs where energy(output) <
+    energy_threshold (high confidence = low energy = correct). Train a small student on the
+    filtered set. Compare to temperature-only SSD baseline (no energy filtering).
+
+    Inspired by arXiv 2604.01193 (SSD: Self-Distillation without a Teacher) and arXiv 2601.18734
+    (Self-Distilled Reasoner). SSD's key finding: models improve by training on their own
+    high-confidence outputs (bottom 25% temperature) without any external teacher.
+    Carnot's energy function is a better confidence proxy than temperature for reasoning tasks.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/models/sc_energy.py or equivalent (energy function for filtering)
+    - python/carnot/data/fover_corpus.py (current 57-pair corpus for labeling)
+    - scripts/experiment_template.py (cached_sota_pair() for SOTA model loading)
+    - research-references.md sections on SSD Self-Distillation (2026-04-28 scan)
+
+    TASK:
+    1. LOAD ENERGY MODEL: Load SC-Energy model (deployed as Tier 2, Exp 1001). This is the
+       energy function used for filtering. If SC-Energy not loadable, fall back to KAEMEnergy.
+    2. GENERATE CANDIDATES: For each of 50 test questions (arithmetic/reasoning), generate
+       8 candidate answers from unsloth/Qwen3.6-35B-A3B-GGUF (use cached_sota_pair()).
+       Record temperature, token probabilities, and Carnot energy score per candidate.
+    3. THREE FILTERING VARIANTS:
+       a. Temperature baseline: keep bottom-25% by temperature (SSD recipe)
+       b. Carnot energy filter: keep candidates where energy < median(energies)
+       c. Combined: keep candidates where energy < threshold AND temperature < threshold
+    4. SELF-DISTILLATION SIGNAL: For each filter variant, measure:
+       - diversity: average pairwise BLEU between selected candidates (higher = more diverse training signal)
+       - accuracy: fraction of selected candidates that are arithmetically correct (check with eval)
+       - energy_gap: mean(energy_rejected) - mean(energy_kept) (should be positive for Carnot filter)
+    5. FR-11 LOOP: Pick the best filter variant (highest accuracy * diversity product).
+       Write 100+ training examples to data/fr11_ssd_training_v3.jsonl for future student training.
+       FR-11 loop is "closed" when this file exists with >= 100 examples.
+    6. Measure energy_filter_vs_baseline_delta = accuracy_carnot_filter - accuracy_temperature_filter.
+       If delta >= 0: Carnot filter is at least as good as baseline.
+       If delta < 0: temperature filter was better — report honestly, investigate why.
+
+    USE GPU: sg render -c 'JAX_PLATFORMS=cpu TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1 python scripts/experiment_1031_energy_ssd_v3.py'
+    MODEL: unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE — use cached_sota_pair())
+
+    ARTIFACT FIELDS:
+    - energy_filter_vs_baseline_delta: float
+    - accuracy_temperature_filter: float
+    - accuracy_carnot_filter: float
+    - accuracy_combined_filter: float
+    - fr11_training_examples_written: int
+    - fr11_loop_closed: bool (true if fr11_training_examples_written >= 100)
+    - honest_verdict: "fr11_loop_closed" | "partial_below_100_examples" | "carnot_filter_below_baseline" | "failed"
+
+    Run: python scripts/experiment_1031_energy_ssd_v3.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  priority: high
+  requires_gpu: true
+  max_turns: 50
+  estimated_wall_time_min: 60
+  prior_failures:
+    - experiment_id: exp733-energy-selection-ssd
+      verdict: below_baseline
+      addressed_by: "Root cause: training data was synthetic only (no live GPU inference labels). Fix: now uses live SOTA model generation (Qwen3.6-35B-A3B-GGUF) + Carnot energy scores from SC-Energy Tier 2 (deployed in Exp 1001). Combined filter variant added. Energy model is now production-quality (AUROC>=0.75 from Exp 1001)."
+      retire_if_same_verdict: false
+    - experiment_id: exp1006-energy-selection-ssd
+      verdict: blocked_doomed_rerun_no_prior_failures
+      addressed_by: "Prior_failures field was missing in .78 YAML (planner omission). Added here. Exp 733 root cause (synthetic data) is now addressed."
+      retire_if_same_verdict: false
+    - experiment_id: exp1015-energy-selection-ssd-v2
+      verdict: blocked_gate_artifact_missing
+      addressed_by: "Exp 1013 preflight never wrote artifact in .79. Exp 1031 is STANDALONE — no gate on preflight. Can run regardless of preflight outcome."
+      retire_if_same_verdict: false
+
+- id: exp1032-ppsebm-relay-v4
+  milestone: 2026.04.80
+  deliverable: results/experiment_1032_ppsebm_relay_v4.json
+  title: "PPSEBM FR-11 Relay v4 — Live Violation Detection on Expanded FoVer Corpus"
+  prompt: |
+    CONTEXT:
+    PPSEBM (Phase-Penalized Sparse EBM) has been blocked for 3 consecutive milestones:
+    Exp 1003 (.78: 9 live violations < 10 gate threshold), Exp 1005 (.78: gate check failed,
+    9 violations), Exp 1024 (.79: FoVer expansion never ran, n_violation_pairs=None). This
+    experiment gates on Exp 1029 delivering n_violation_pairs >= 10. Gate is intentionally
+    soft (10, not 50) to avoid blocking if MetaQA weak labels don't all reach Z3 quality.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/models/ppsebm.py or equivalent (PPSEBM implementation)
+    - results/experiment_1029_fover_expansion_v2.json (corpus path, n_violation_pairs)
+    - python/carnot/data/fover_corpus_expanded.json (or wherever Exp 1029 saved corpus)
+    - research-program.md FR-11 section (cross-session memory architecture)
+
+    TASK:
+    1. LOAD CORPUS: Read the violation pairs from Exp 1029 expanded corpus. If n_violation_pairs
+       < 10, write blocked verdict explaining exactly how many were found.
+    2. TRAIN PPSEBM: Train PPSEBM on violation pairs from expanded corpus (80% train / 20% test).
+       Measure: AUROC on held-out test set. Target: AUROC >= 0.70.
+    3. LIVE RELAY: Run FR-11 relay on 10 live inference questions using unsloth/gemma-4-31B-it-GGUF:
+       - Generate answers to 10 arithmetic+reasoning questions
+       - Score each with PPSEBM energy function
+       - Flag answers with energy > violation_threshold as potential violations
+       - Collect flagged answers into cross-session memory store (data/ppsebm_relay_memory.jsonl)
+    4. MEASURE: n_real_violations (answers flagged from live inference),
+       relay_live (bool: at least 1 violation detected in live session),
+       ppsebm_auroc (test AUROC from training)
+
+    USE GPU: sg render -c 'JAX_PLATFORMS=cpu TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1 python scripts/experiment_1032_ppsebm_relay_v4.py'
+
+    ARTIFACT FIELDS:
+    - n_violation_pairs_used: int (from Exp 1029 corpus)
+    - ppsebm_auroc: float
+    - n_real_violations: int (from live inference relay)
+    - relay_live: bool
+    - honest_verdict: "relay_live" | "ppsebm_trained_relay_below_threshold" | "blocked_insufficient_violations" | "failed"
+
+    Run: python scripts/experiment_1032_ppsebm_relay_v4.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  priority: high
+  requires_gpu: true
+  max_turns: 50
+  estimated_wall_time_min: 45
+  gated_on:
+    - upstream: exp1029-fover-expansion-v2
       artifact_field: n_violation_pairs
       op: '>='
       value: 10
   prior_failures:
-  - experiment_id: exp1005-ppsebm-live-relay-v3
-    verdict: blocked_gate_check_failed
-    addressed_by: "Exp 1005 (.78) was gated on exp1003.n_live_violations_collected >= 10 but only 9 were collected. Root cause: SOTA models don't violate often on standard GSM8K (they're too good). Fix: use Z3-labeled FoVer violations from Exp 1016 (100+ violations) rather than live GPU violations from Exp 1003."
-    retire_if_same_verdict: false
-  - experiment_id: exp994-ppsebm-live-gpu-relay-v2
-    verdict: blocked_gate_check_failed
-    addressed_by: "Exp 994 (.77) blocked by exp991 cascade (env propagation). Same root cause resolved through preflight. Exp 1024 uses FoVer corpus violations not live GPU violations."
-    retire_if_same_verdict: false
+    - experiment_id: exp1003-spilled-energy-live-gpu-v4
+      verdict: live_below_threshold
+      addressed_by: "9 live violations < 10 gate threshold in .78. Root cause: SOTA models rarely produce violations on standard GSM8K questions. Fix: train on pre-labeled violation corpus from FoVer expansion (Exp 1029) rather than relying on live violation collection."
+      retire_if_same_verdict: false
+    - experiment_id: exp1005-ppsebm-live-relay-v3
+      verdict: blocked_gate_check_failed
+      addressed_by: "Gate required 10 live violations; only 9 collected. Fix: use expanded FoVer corpus violations (from Exp 1029) as training set, decoupled from live collection rate."
+      retire_if_same_verdict: false
+    - experiment_id: exp1024-ppsebm-live-relay-v4
+      verdict: blocked_gate_artifact_missing
+      addressed_by: "Exp 1016 (FoVer expansion) never produced artifact in .79 (DOOMED_RERUN_BLOCK). Fix: Exp 1029 FoVer expansion v2 is standalone with proper prior_failures; this experiment gates on n_violation_pairs>=10 (not >=50) to allow partial-success FoVer to unblock PPSEBM."
+      retire_if_same_verdict: false
 
-- id: exp1025-milestone-retro-79
-  milestone: 2026.04.79
-  deliverable: results/experiment_1025_milestone_retro_79.json
-  title: "Milestone 2026.04.79 Retrospective (covers .78 retro too — Exp 1012 never ran)"
+- id: exp1033-thinkprm-v4
+  milestone: 2026.04.80
+  deliverable: results/experiment_1033_thinkprm_v4.json
+  title: "ThinkPRM Step Verifier v4 — Trained on Expanded FoVer Corpus (500+ pairs)"
   prompt: |
     CONTEXT:
-    This retro covers TWO milestones: .78 (whose retro Exp 1012 never ran) and .79.
-    Milestone 2026.04.79 is complete. All experiments 1013-1024 have run (or been gated/blocked).
+    ThinkPRMProbe was implemented in .77 (Exp 945). Training on the full expanded corpus has
+    been blocked twice: Exp 1007 (.78, DOOMED_RERUN_BLOCK — missing prior_failures for Exp 945
+    scope), Exp 1017 (.79, blocked because FoVer expansion never ran). This experiment gates on
+    Exp 1029 delivering n_labeled_pairs >= 50 (soft gate — allows partial-expansion FoVer corpus
+    to unblock this experiment).
 
-    EXISTING FILES TO READ FIRST:
-    - results/experiment_1013_preflight_v29.json
-    - results/experiment_1014_triple_integration_v5.json
-    - results/experiment_1015_energy_selection_ssd_v2.json
-    - results/experiment_1016_fover_corpus_expansion.json
-    - results/experiment_1017_thinkprm_step_verifier_v3.json
-    - results/experiment_1018_vprm_rule_based_v3.json
-    - results/experiment_1019_gskan_energy_tier_v3.json
-    - results/experiment_1020_almc_ode_v2.json
-    - results/experiment_1021_nk_kaem_multilevel.json
-    - results/experiment_1022_kv260_first_light_v5.json
-    - results/experiment_1023_dualgpu_live_v2.json
-    - results/experiment_1024_ppsebm_live_relay_v4.json
-    - openspec/change-proposals/research-roadmap-v79.md (success criteria)
-    - ops/status.md (update with .79 results)
-    - ops/changelog.md (add .79 milestone summary)
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/verify/thinkprm_probe.py or equivalent (ThinkPRMProbe from Exp 945)
+    - results/experiment_1029_fover_expansion_v2.json (n_labeled_pairs, corpus_path)
+    - python/carnot/data/fover_corpus_expanded.json (expanded corpus from Exp 1029)
+    - python/carnot/data/fover_corpus.py (original 57-pair corpus as fallback)
 
     TASK:
-    1. READ all .79 experiment artifacts.
-    2. EVALUATE each .79 success criterion from research-roadmap-v79.md.
-    3. ALSO summarize .78 results (read experiment_1000-1011 verdicts from artifacts
-       collected in Exp 1013 retro_78_verdicts field).
-    4. UPDATE ops/status.md: add .79 milestone result section. Do NOT remove existing content.
-    5. UPDATE ops/changelog.md: add .79 + .78 summary entries.
-    6. CHECK GPU state: nvidia-smi --query-gpu=name,memory.used,utilization.gpu,temperature.gpu --format=csv,noheader 2>/dev/null
-    7. IDENTIFY the 3 biggest gaps for milestone .80.
-    8. WRITE results/experiment_1025_milestone_retro_79.json (try/finally):
-       - experiment: 1025
-       - milestone: "2026.04.79"
-       - covers_missed_retro: "2026.04.78"
-       - criteria_results: dict (criterion_name: bool)
-       - criteria_met: int
-       - criteria_total: 11
-       - retro_78_criteria_met: int
-       - retro_78_summary: str
-       - biggest_gaps_80: list[str]
-       - milestone_successes: list[str]
-       - process_observations: list[str]
-       - honest_verdict: "milestone_N_of_11_criteria_..."
+    1. LOAD CORPUS: Load labeled pairs from Exp 1029 expanded corpus. Use 80/20 train/test split.
+       If n_labeled_pairs < 50 from Exp 1029, combine with the original 57-pair corpus.
+    2. TRAIN ThinkPRMProbe: Train on the training split. Log per-epoch AUROC and F1.
+    3. EVALUATE on test split: compute AUROC, F1, precision, recall.
+    4. BASELINE COMPARISON:
+       - zero-shot CarnotThinkProbe baseline AUROC (run on same test split without training)
+       - 57-pair corpus trained version AUROC (if available from prior milestones)
+    5. MODEL FOR PROBE INFERENCE: Use unsloth/gemma-4-31B-it-GGUF for step-level inference
+       scoring (dense instruction-tuned — best reasoning quality for step verification).
+    6. TARGET: AUROC >= 0.75, delta_vs_zeroshot >= 0.10.
+
+    USE GPU: sg render -c 'JAX_PLATFORMS=cpu TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1 python scripts/experiment_1033_thinkprm_v4.py'
+
+    ARTIFACT FIELDS:
+    - n_labeled_pairs_used: int
+    - auroc_thinkprm_trained: float
+    - auroc_zeroshot_baseline: float
+    - delta_vs_zeroshot: float
+    - f1_thinkprm_trained: float
+    - honest_verdict: "probe_trained_above_threshold" | "probe_trained_below_threshold" | "blocked_insufficient_labels" | "failed"
+
+    Run: python scripts/experiment_1033_thinkprm_v4.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  priority: high
+  requires_gpu: true
+  max_turns: 50
+  estimated_wall_time_min: 45
+  gated_on:
+    - upstream: exp1029-fover-expansion-v2
+      artifact_field: n_labeled_pairs
+      op: '>='
+      value: 50
+  prior_failures:
+    - experiment_id: exp945-thinkprm-step-verifier
+      verdict: implementation_only_no_training
+      addressed_by: "Exp 945 implemented ThinkPRMProbe but did not train on a large corpus (only 57 pairs available at the time). Fix: Exp 1029 expands corpus to 500+ pairs. Exp 1033 trains on the expanded corpus."
+      retire_if_same_verdict: false
+    - experiment_id: exp1007-thinkprm-step-verifier
+      verdict: blocked_doomed_rerun_no_prior_failures
+      addressed_by: "Prior_failures field was missing in .78 YAML (planner omission). Added here. Training corpus shortage (root cause of .77 partial) is addressed by Exp 1029 expansion."
+      retire_if_same_verdict: false
+    - experiment_id: exp1017-thinkprm-step-verifier-v3
+      verdict: blocked_gate_artifact_missing
+      addressed_by: "Exp 1016 (FoVer expansion) never produced artifact in .79. Fix: Exp 1029 FoVer expansion v2 is standalone with proper prior_failures; Exp 1033 gates on n_labeled_pairs>=50 (soft gate allowing partial expansion)."
+      retire_if_same_verdict: false
+
+- id: exp1034-gskan-v4
+  milestone: 2026.04.80
+  deliverable: results/experiment_1034_gskan_v4.json
+  title: "GS-KAN Energy Tier v4 — QuantKAN INT8 Quantization + FPGA Budget Confirmation"
+  prompt: |
+    CONTEXT:
+    GS-KAN (Group-Shared KAN, arXiv 2512.09084) reduces LUT count for KV260 from ~82K
+    (standard KAEMEnergy) to ~8K estimated (G=4 shared basis). Exp 1009 (.78, never ran —
+    pre-test comparison failure blocked it). Exp 1019 (.79, blocked — gate exp1013 not found).
+    This experiment is STANDALONE — no gate on preflight. Adding QuantKAN INT8 quantization
+    (arXiv 2511.18689) to further reduce DSP48 usage for KV260.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/models/gskan.py or equivalent (GS-KAN implementation — may not exist yet)
+    - python/carnot/models/kaem_energy.py (KAEMEnergy baseline — GS-KAN extends this)
+    - research-references.md: QuantKAN section (2026-04-28 arxiv scan) for INT8 recipe
+    - research-references.md: GS-KAN section (arXiv 2512.09084) for architecture details
+    - python/carnot/data/fover_corpus.py (57-pair corpus — use as training/test data)
+    - results/experiment_1029_fover_expansion_v2.json (if Exp 1029 ran first, use expanded corpus)
+
+    TASK:
+    1. IMPLEMENT GS-KAN (if not already implemented):
+       - G=4 groups, each group shares a parent B-spline basis
+       - Group-wise linear projection from shared basis to group-specific output
+       - Should be compatible with KAEMEnergy.fit() interface
+    2. TRAIN: Train GS-KAN on FoVer corpus (expanded if available, else 57-pair).
+       Compare training time and convergence vs standard KAEMEnergy (KAN with G=1).
+    3. EVALUATE: Compute AUROC on test split. Target: AUROC >= 0.70 (within 0.02 of
+       KAEMEnergy baseline — GS-KAN trades slight accuracy for hardware efficiency).
+    4. QuantKAN INT8 QUANTIZATION:
+       Apply post-training quantization per arXiv 2511.18689:
+       - Per-knot scale factors: for each B-spline knot, compute optimal scale = max(abs(weights))/127
+       - Round weights to INT8: quantized_w = round(w / scale) clipped to [-127, 127]
+       - Reconstruct: w_reconstructed = quantized_w * scale
+       - Measure AUROC degradation vs FP32 GS-KAN. Target: degradation < 0.02.
+    5. FPGA RESOURCE ESTIMATION:
+       Count model parameters at INT8 precision.
+       Estimate LUT count: 1 INT8 multiply ≈ 3 LUTs on Xilinx (vs 10 LUTs for FP32).
+       Estimate BRAM: INT8 weight storage ≈ 1/4 of FP32.
+       Estimate DSP48: INT8 arithmetic uses DSP48 efficiently (target: < 200 DSP48s).
+       Compare to prior GS-KAN FP32 estimate (Exp 1019's analysis if available).
+    6. HARDWARE COMPLEXITY METRICS (arXiv 2604.03345):
+       RM (Resource Multiplier) = LUT_gskan_int8 / LUT_kaem_baseline
+       BOP (Bit Operations per inference) = 8 * num_multiplications (INT8)
+       NABS (Normalized Area-Budget Score) = RM * (1 - AUROC_delta) (lower is better)
+
+    ARTIFACT FIELDS:
+    - auroc_gskan_fp32: float
+    - auroc_gskan_int8: float
+    - auroc_kaem_baseline: float
+    - int8_quantized: bool
+    - fpga_lut_estimate_fp32: int
+    - fpga_lut_estimate_int8: int
+    - fpga_dsp48_estimate: int
+    - fpga_bram_estimate: int
+    - rm_metric: float
+    - bop_metric: int
+    - nabs_metric: float
+    - honest_verdict: "gskan_quantized_budget_confirmed" | "gskan_quantized_auroc_regression" | "gskan_budget_exceeded" | "failed"
+
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_1034_gskan_v4.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  priority: medium
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 30
+  prior_failures:
+    - experiment_id: exp1009-gskan-energy-tier-v2
+      verdict: never_ran_comparison_failure
+      addressed_by: "Pre-test comparison failure blocked Exp 1009 in .78. Exp 1034 is STANDALONE — no gate on preflight. Will run regardless of test status. QuantKAN INT8 quantization (arXiv 2511.18689) added as new deliverable."
+      retire_if_same_verdict: false
+    - experiment_id: exp1019-gskan-energy-tier-v3
+      verdict: blocked_gate_artifact_missing
+      addressed_by: "Exp 1013 preflight never wrote artifact in .79. Exp 1034 is STANDALONE — no gate on any upstream experiment. Standalone path confirmed by removing all gated_on entries."
+      retire_if_same_verdict: false
+
+- id: exp1035-dualgpu-rocm-v3
+  milestone: 2026.04.80
+  deliverable: results/experiment_1035_dualgpu_rocm_v3.json
+  title: "DualGPU ROCm Fix + Live Inference v3 — nvidia-smi GPU Probe Patch"
+  prompt: |
+    CONTEXT:
+    Exp 1023 (.79) reported insufficient_gpus=0 CUDA GPUs despite 2x RTX 3090 being present
+    (nvidia-smi confirms: GeForce RTX 3090 x2, 4 MiB used, 0% util, 53C/54C). Root cause:
+    torch.cuda.device_count() returns 0 under ROCm unless HIP_VISIBLE_DEVICES or
+    ROCR_VISIBLE_DEVICES is explicitly set. The DualGPU path has been wired synthetically
+    since .78 (Exp 1002: wired_synthetic_only). This experiment patches the GPU detection
+    and activates the live DualGPU path.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/experiment_template.py (setup_gpu() method — find the GPU detection logic)
+    - python/carnot/pipeline/verify_repair.py (DualGPU path wired in Exp 1002)
+    - results/experiment_1023_dualgpu_live_v2.json (exact error message and GPU state)
+    - results/experiment_1002_dualgpu_pipeline_v5.json (wired_synthetic_only state)
+
+    TASK:
+    1. DIAGNOSE: Confirm the exact torch.cuda issue:
+       python -c "import torch; print('CUDA:', torch.cuda.device_count())"
+       nvidia-smi --query-gpu=name --format=csv,noheader
+       python -c "import subprocess; r=subprocess.run(['nvidia-smi','--query-gpu=name','--format=csv,noheader'],capture_output=True,text=True); print('nvidia-smi GPUs:', len([l for l in r.stdout.strip().split('\\n') if l.strip()]))"
+    2. PATCH scripts/experiment_template.py:
+       Add _detect_gpu_count_rocm_aware() function as described in the milestone design doc.
+       Replace existing torch.cuda.device_count() call in setup_gpu() with this function.
+       Keep backward compatibility: if torch.cuda.device_count() > 0, use it (no nvidia-smi call).
+    3. VERIFY PATCH: Confirm gpu_count_detected >= 2 after patch.
+    4. LIVE DUALGPU INFERENCE: Run DualGPU path with CARNOT_FORCE_LIVE=1:
+       sg render -c 'CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1 python scripts/experiment_1035_dualgpu_rocm_v3.py'
+       Load unsloth/gemma-4-26B-A4B-it-GGUF on GPU 0, unsloth/Qwen3.6-35B-A3B-GGUF on GPU 1.
+       Run 10 test questions. Measure: throughput_ratio (dual vs single GPU wall time).
+    5. TARGET: gpu_count_detected >= 2, dualgpu_live=true, throughput_ratio >= 1.3.
+       If throughput_ratio < 1.3: report honestly (inter-GPU coordination overhead may
+       dominate for small batches). Still counts as dualgpu_live=true.
+    6. FALLBACK: If nvidia-smi ALSO returns 0 GPUs (truly no CUDA/ROCm access under sg render),
+       write honest_verdict: "dualgpu_rocm_unresolvable" with full diagnostic. Retire
+       DualGPU live path from future milestones (add to exclusion manifest with
+       retire_reason: "ROCm environment does not expose GPUs to Python even via nvidia-smi").
 
     CONCRETE STEPS:
-    - for f in results/experiment_101{3,4,5,6,7,8,9}_*.json results/experiment_102{0,1,2,3,4}_*.json; do echo "=== $(basename $f) ==="; python3 -c "import json,sys; d=json.load(open('$f')); print('verdict:', d.get('honest_verdict','N/A'))" 2>/dev/null; done
-    - nvidia-smi --query-gpu=name,memory.used,utilization.gpu,temperature.gpu --format=csv,noheader 2>/dev/null || echo "GPU_NOT_AVAILABLE"
+    - python -c "import torch; print('CUDA:', torch.cuda.device_count())"
+    - nvidia-smi --query-gpu=name,index --format=csv,noheader
+    - sg render -c 'python -c "import torch; print(torch.cuda.device_count())"'
+    - (patch template.py, verify patch, run live inference)
 
-    Run: python scripts/experiment_1025_milestone_retro_79.py
+    ARTIFACT FIELDS:
+    - torch_cuda_count: int (before patch)
+    - nvidia_smi_count: int (from nvidia-smi)
+    - gpu_count_detected: int (after patch)
+    - dualgpu_live: bool
+    - throughput_ratio: float (dual/single GPU throughput, null if live failed)
+    - honest_verdict: "dualgpu_live_confirmed" | "dualgpu_detected_but_below_throughput_target" | "dualgpu_rocm_unresolvable" | "failed"
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  priority: medium
+  requires_gpu: true
+  max_turns: 20
+  estimated_wall_time_min: 20
+  prior_failures:
+    - experiment_id: exp1002-dualgpu-pipeline-v5
+      verdict: wired_synthetic_only
+      addressed_by: "Synthetic wiring confirmed DualGPU path exists in verify_repair.py. Live activation failed because torch.cuda.device_count()=0 under ROCm. This experiment patches the GPU probe to use nvidia-smi fallback, enabling live activation."
+      retire_if_same_verdict: false
+    - experiment_id: exp1023-dualgpu-live-v2
+      verdict: blocked_insufficient_gpus
+      addressed_by: "Root cause diagnosed: torch.cuda.device_count()=0 under ROCm even with 2x RTX 3090 present (nvidia-smi confirms). Fix: patch _detect_gpu_count_rocm_aware() uses nvidia-smi as fallback when CUDA count=0. retire_if_same_verdict=true: if nvidia-smi ALSO returns 0, DualGPU live path is retired."
+      retire_if_same_verdict: true
+
+- id: exp1036-nk-kaem-v2
+  milestone: 2026.04.80
+  deliverable: results/experiment_1036_nk_kaem_v2.json
+  title: "NK-KAEMEnergy + Multilevel KAN Training v2 — Warm-Start + LR Decay Fix"
+  prompt: |
+    CONTEXT:
+    Newton-Kaczmarz optimizer (arXiv 2512.18921) combined with multilevel spline grid training
+    (arXiv 2603.04827) is expected to give 3-10x convergence speedup for KAEMEnergy training.
+    Exp 936 (.76, partial: optimizer unstable — NK diverged on cold initialization, deep layers
+    destabilized). Exp 1021 (.79, DOOMED_RERUN_BLOCK — missing prior_failures for Exp 936 scope).
+
+    Key fixes from Exp 936's instability:
+    - Warm-start from Adam-converged weights before NK optimization
+    - Per-layer LR decay: lr_layer = base_lr / (1 + layer_depth)
+    - Gradient clipping: ||∇|| <= 1.0 per NK step
+    - Multilevel grid schedule: G=4 → G=8 → G=16 (from arXiv 2603.04827)
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/models/kaem_energy.py (KAEMEnergy — NK optimizer would be added here)
+    - research-references.md: NK optimizer section (arXiv 2512.18921) and Multilevel KAN (arXiv 2603.04827)
+    - results/experiment_936_*.json (Exp 936 partial result — understand what "unstable" meant)
+    - python/carnot/data/fover_corpus.py (57-pair corpus as baseline test data)
+    - results/experiment_1029_fover_expansion_v2.json (if available, use expanded corpus)
+
+    TASK:
+    1. LOAD BASELINE: Run standard Adam single-level (G=8) KAEMEnergy training on FoVer corpus.
+       Record: training_wall_time_s, final AUROC, epochs-to-convergence. This is the baseline.
+    2. IMPLEMENT NK-KAEM:
+       - Step 1: Train with Adam for 20 epochs at G=4 (warm-start). Save weights.
+       - Step 2: Switch to Newton-Kaczmarz optimizer (K=10 rows per step per arXiv 2512.18921).
+         NK step: w_new = w - (J^T J + λI)^(-1) J^T r where J is Jacobian, r is residual.
+         Implement per-layer LR decay: lr_layer_i = base_lr / (1 + i).
+         Implement gradient clipping: torch.nn.utils.clip_grad_norm_(params, 1.0).
+       - Step 3: Multilevel promotion: once loss delta < 1e-4 at G=4, promote to G=8.
+         Re-initialize knots (interpolate from G=4 grid). Continue NK at G=8.
+       - Step 4: Promote to G=16 when G=8 converges.
+    3. COMPARE: NK-multilevel wall time vs Adam single-level wall time.
+       Target: convergence_speedup = adam_wall_time / nk_wall_time >= 2.0.
+       Record: final AUROC for NK-multilevel. Must not regress by more than 0.02 vs Adam.
+    4. FALLBACK: If NK diverges again (loss NaN or AUROC drops to < 0.4), try reducing NK
+       step size (λ = 1.0 instead of 0.1). Report NK_lambda_used in artifact.
+
+    ARTIFACT FIELDS:
+    - adam_wall_time_s: float
+    - nk_wall_time_s: float
+    - convergence_speedup: float
+    - auroc_adam: float
+    - auroc_nk_multilevel: float
+    - auroc_no_regression: bool (auroc_nk_multilevel >= auroc_adam - 0.02)
+    - nk_lambda_used: float
+    - grid_levels_used: list[int] (e.g. [4, 8, 16])
+    - honest_verdict: "nk_speedup_confirmed" | "nk_partial_speedup_below_2x" | "nk_diverged_fallback_used" | "failed"
+
+    Run: JAX_PLATFORMS=cpu python scripts/experiment_1036_nk_kaem_v2.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  priority: medium
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 30
+  prior_failures:
+    - experiment_id: exp936-nk-kaem-multilevel
+      verdict: partial_optimizer_unstable
+      addressed_by: "Root cause: NK diverged on cold initialization; deep layers destabilized without LR decay. Fix: (1) warm-start from Adam at G=4 before switching to NK; (2) per-layer LR decay lr_i = base_lr/(1+i); (3) gradient clipping ||∇|| <= 1.0; (4) multilevel schedule from coarse to fine grid."
+      retire_if_same_verdict: false
+    - experiment_id: exp1021-nk-kaem-multilevel
+      verdict: blocked_doomed_rerun_no_prior_failures
+      addressed_by: "Prior_failures field was missing in .79 YAML (planner omission). Added here. Exp 936 root cause (optimizer instability) is now addressed by warm-start + LR decay + gradient clipping."
+      retire_if_same_verdict: false
+
+- id: exp1037-kv260-v6
+  milestone: 2026.04.80
+  deliverable: results/experiment_1037_kv260_v6.json
+  title: "KV260 First Light v6 — Standalone, USB Serial + SD Re-Flash Escalation"
+  prompt: |
+    CONTEXT:
+    The KV260 FPGA board (AMD Kria KV260) arrived 2026-04-20 and has been pending for 8+
+    consecutive milestones. The bitstream is at output/carnot_ising_v4_bd/. The board is
+    at 192.168.51.98. SSH has been blocked in all prior attempts (Exps 1010, 1022, and earlier).
+    This experiment is STANDALONE — it does NOT gate on preflight. Even if all other experiments
+    fail this milestone, KV260 must be attempted. Prior Exp 1022 (.79) was blocked because
+    preflight never ran; this will not happen again.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_1022_kv260_first_light_v5.json (prior attempt status — what was tried)
+    - output/carnot_ising_v4_bd/ (bitstream files — what's there)
+    - scripts/kv260_ising_smoke_test.py (if it exists — smoke test script)
+    - research-hardware-wishlist.md KV260 section
+
+    TASK:
+    Approach order (escalating intervention — stop at first success):
+
+    APPROACH 1 — SSH retry with different settings:
+    - ping 192.168.51.98 (is board reachable?)
+    - ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ubuntu@192.168.51.98
+      (default Kria Ubuntu credentials: ubuntu/ubuntu)
+    - ssh -o StrictHostKeyChecking=no -p 8022 ubuntu@192.168.51.98
+    - If SSH succeeds: jump to BITSTREAM LOADING below.
+
+    APPROACH 2 — USB serial console:
+    - ls /dev/ttyUSB* /dev/ttyACM* 2>/dev/null (find serial device)
+    - sudo minicom -b 115200 -D /dev/ttyUSB0 (or whichever device found)
+    - Log in: username=ubuntu password=ubuntu (default Kria)
+    - Once logged in via serial: sudo systemctl enable ssh && sudo systemctl start ssh
+    - Then retry SSH (Approach 1).
+
+    APPROACH 3 — SD card re-flash:
+    - Download Kria Ubuntu 22.04 image (check for cached copy first: ls ~/Downloads/kria*.img 2>/dev/null)
+    - Flash: sudo dd if=kria-ubuntu-22.04.img of=/dev/sdX bs=4M status=progress
+      (CRITICAL: verify /dev/sdX is the SD card, NOT the system drive — use lsblk first)
+    - Boot KV260 with new SD card, connect via serial, confirm boot, enable SSH.
+
+    BITSTREAM LOADING (if any approach succeeds):
+    - scp -r output/carnot_ising_v4_bd/ ubuntu@192.168.51.98:/tmp/
+    - ssh ubuntu@192.168.51.98 'sudo cp /tmp/carnot_ising_v4_bd/*.bit /lib/firmware/'
+    - ssh ubuntu@192.168.51.98 'sudo xmutil loadapp carnot_ising_v4'
+    - Run smoke test: python scripts/kv260_ising_smoke_test.py --host 192.168.51.98
+      (if smoke test doesn't exist: write a minimal one that generates 100 random spin samples
+       and verifies energy distribution is non-uniform — uniform would mean hardware isn't computing)
+
+    IF ALL AUTOMATED PATHS FAIL:
+    - Write a 5-command human action guide as part of the artifact. Be specific:
+      exact commands, device names, credential format, what to look for in output.
+    - kv260_guide_written=True counts as soft success for this milestone.
+
+    ARTIFACT FIELDS:
+    - ssh_reachable: bool
+    - ssh_approach_used: str ("direct" | "port_8022" | "serial_then_ssh" | "none")
+    - bitstream_loaded: bool
+    - smoke_test_passed: bool (null if bitstream not loaded)
+    - energy_distribution_nonuniform: bool (null if smoke test didn't run)
+    - kv260_guide_written: bool (if automated failed)
+    - guide_commands: list[str] (if guide written — the exact 5 commands)
+    - honest_verdict: "first_light_achieved" | "ssh_restored_bitstream_loaded" | "guide_written" | "all_paths_blocked"
+
+    Run: python scripts/experiment_1037_kv260_v6.py
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  priority: high
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 25
+  prior_failures:
+    - experiment_id: exp1010-kv260-first-light-v4
+      verdict: never_ran_comparison_failure
+      addressed_by: "Pre-test comparison failure blocked Exp 1010 in .78. Exp 1037 is STANDALONE — no gate on preflight. Will run regardless of test status."
+      retire_if_same_verdict: false
+    - experiment_id: exp1022-kv260-first-light-v5
+      verdict: blocked_gate_artifact_missing
+      addressed_by: "Exp 1013 preflight never wrote artifact in .79. Exp 1037 is STANDALONE — no gate on any upstream experiment. USB serial + SD re-flash escalation added as new approaches not tried in v5."
+      retire_if_same_verdict: false
+
+- id: exp1038-milestone-retro-80
+  milestone: 2026.04.80
+  deliverable: results/experiment_1038_milestone_retro_80.json
+  title: "Milestone 2026.04.80 Retrospective — Evaluate All 13 Success Criteria"
+  prompt: |
+    CONTEXT:
+    This is the final experiment of milestone 2026.04.80. It evaluates all 13 success criteria
+    (Exps 1026-1037), writes honest verdicts for each, documents the milestone outcome, and
+    updates ops/ docs. This is a pure documentation and analysis experiment — no code changes,
+    no GPU needed.
+
+    EXISTING FILES TO READ (in order):
+    1. results/experiment_1026_schema_validation.json
+    2. results/experiment_1027_conductor_supervisor.json
+    3. results/experiment_1028_preflight_v30.json
+    4. results/experiment_1029_fover_expansion_v2.json
+    5. results/experiment_1030_triple_integration_v6.json
+    6. results/experiment_1031_energy_ssd_v3.json
+    7. results/experiment_1032_ppsebm_relay_v4.json
+    8. results/experiment_1033_thinkprm_v4.json
+    9. results/experiment_1034_gskan_v4.json
+    10. results/experiment_1035_dualgpu_rocm_v3.json
+    11. results/experiment_1036_nk_kaem_v2.json
+    12. results/experiment_1037_kv260_v6.json
+    13. openspec/change-proposals/research-roadmap-v80.md (success criteria table)
+
+    TASK:
+    1. For each of the 13 success criteria in the milestone design doc, evaluate whether the
+       criterion was met, partially met, or not met. Record the determining artifact field and value.
+    2. Count criteria_met / criteria_total.
+    3. Identify the top 3 successes and the top 3 gaps (unmet criteria + root cause analysis).
+    4. Write process observations: what structural improvements in .80 worked vs .79?
+       (Specifically: did the standalone design reduce cascade failures? Did the YAML linter
+        catch prior_failures omissions? Did the hardened preflight write an artifact even when
+        tests failed?)
+    5. Write biggest_gaps_81 — the 3 most important items for milestone .81 to address.
+    6. Update ops/changelog.md: append a .80 milestone entry with all 13 experiment verdicts.
+    7. Update ops/conductor-log.md: append .80 retro summary.
+    8. Compute honest_verdict: "milestone_N_of_13_criteria_met_(descriptor)"
+
+    CONCRETE STEPS:
+    - for f in results/experiment_10(26,27,28,29,30,31,32,33,34,35,36,37)_*.json; do echo "==="; echo $f; python3 -c "import json,sys; d=json.load(open('$f')); print('honest_verdict:', d.get('honest_verdict','N/A'), '| status:', d.get('status','N/A'))"; done 2>/dev/null
+    - (build criteria table from artifact fields)
+    - (write result JSON)
+    - (update ops/changelog.md — append only, never overwrite existing content per CLAUDE.md)
+    - (update ops/conductor-log.md — append only)
+
+    ARTIFACT FIELDS:
+    - experiment: 1038
+    - milestone: "2026.04.80"
+    - criteria_results: dict (criterion_name -> bool)
+    - criteria_met: int
+    - criteria_total: 13
+    - criteria_detail: dict (criterion_name -> pass/fail reason string)
+    - milestone_successes: list[str] (top 3 successes)
+    - biggest_gaps_81: list[str] (top 3 gaps with root cause)
+    - process_observations: list[str]
+    - honest_verdict: str
+
+    Run: python scripts/experiment_1038_milestone_retro_80.py
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   priority: critical
   requires_gpu: false
   max_turns: 20
-  estimated_wall_time_min: 20
+  estimated_wall_time_min: 15
