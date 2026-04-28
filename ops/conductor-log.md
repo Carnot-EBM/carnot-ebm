@@ -3023,3 +3023,5 @@ python/ |
 | 2026-04-28 14:52 UTC | FoVer Corpus Expansion — Z3 Auto-Label 500+ CoT Pa | OK | Deliverable already exists in repo |
 | 2026-04-28 14:52 UTC | ThinkPRM Step Verifier v3 — Trained on Expanded Fo | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1016-fover-corpus-expansion.n_labeled_p |
 | 2026-04-28 15:02 UTC | ThinkPRM Step Verifier v3 — Trained on Expanded Fo | OK | Deliverable already exists in repo |
+| 2026-04-28 15:02 UTC | VPRM Rule-Based Step Verifier v3 — 10 Rule Familie | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1016-fover-corpus-expansion.n_labeled_p |
+| 2026-04-28 15:12 UTC | VPRM Rule-Based Step Verifier v3 — 10 Rule Familie | OK | Deliverable already exists in repo |
