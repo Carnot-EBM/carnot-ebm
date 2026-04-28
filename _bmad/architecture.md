@@ -163,3 +163,50 @@ CarnotThinkProbe is optional in VerifyRepairPipeline.verify() — pass `think_pr
 **Why this matters:** The Kolmogorov-Arnold theorem decomposes the energy into univariate per-variable terms. Each marginal CDF can be computed and inverted in closed form — no burn-in, no autocorrelation. Target speedup: 10-100x for sub-100-variable problems. Hardware path: bisection is pure arithmetic, FPGA-native. Exported from `carnot.models.__init__`.
 
 Spec: REQ-SAMPLE-015, REQ-SAMPLE-016, SCENARIO-SAMPLE-027/028/029.
+
+## Asymptotic Hardware Mandate (Phase 2 → Phase 3)
+
+**Core insight:** Hardware acceleration via the continuous-to-Ising transpiler is **not a performance optimisation** for the EBM verifier. It is a **mathematical requirement** for self-distillation to avoid divergent sample budgets as the model converges.
+
+### The stochastic bottleneck
+
+In a deterministic framework, error contracts geometrically. With finite-sample noise from MCMC (PT-PCD / Gibbs), the variance scales as $\sigma^2 \tau_{\text{int}} / N$ where $\tau_{\text{int}}$ is integrated autocorrelation time. To maintain strict contractivity (signal exceeds noise floor):
+
+$$
+N > \frac{\sigma^2 \, T \, \tau_{\text{int}}}{2 \, \Phi \, \delta_t}
+$$
+
+where $T$ = filter temperature, $\Phi$ = structural restorative force in $L^2(\mu_P)$, $\delta_t$ = current model error. Derivation in `docs/research-notes/zenil-alpha-verifier-derivation.md`.
+
+### Implications
+
+1. **Asymptotic divergence.** As $\delta_t \to 0$, required $N$ diverges to infinity.
+2. **Phase-transition blowup.** At critical points in the energy landscape, $\tau_{\text{int}} \to \infty$, further exploding $N$.
+3. **The Phase 2 mandate.** CPU/GPU caps at $\sim 10^6$ samples/sec — sufficient for $\delta_t \gtrsim 10^{-3}$. Phase 3 foundation-model regime requires $\delta_t \to 10^{-9}$ or beyond, which mathematically forbids the $10^6$ ceiling.
+
+### Hardware path
+
+| Phase | Hardware | Samples/sec | Convergence depth |
+|-------|----------|-------------|-------------------|
+| 1 | CPU / ROCm | $10^6$ | $\delta_t \gtrsim 10^{-3}$ |
+| 2 | KV260 / FPGA Ising | $10^9$ | $\delta_t \gtrsim 10^{-6}$ |
+| 2+ | Extropic XTR-0 (TSU) | $10^{11}$–$10^{12}$ | $\delta_t \gtrsim 10^{-9}$ |
+| 3 | photonic / Ising-machine cluster | $\gtrsim 10^{13}$ | foundation-model regime |
+
+### Mitigations against $\tau_{\text{int}}$ blowup
+
+The continuous-to-Ising transpiler ships three structural mitigations against autocorrelation explosion at phase transitions:
+
+- **Gray-code visible-spin encoder** (`python/carnot/hardware/transpiler/gray_code.py`): Hamming-distance-1 between adjacent quantization cells eliminates artificial barriers from binary-encoding cliffs.
+- **Persistent Parallel Tempering with replica exchange** (`python/carnot/hardware/transpiler/distill.py`): high-T mode discovery bridges to low-T precision via swap acceptance.
+- **In-loop $\tau_{\text{int}}$ diagnostics** (`python/carnot/hardware/transpiler/diagnostics.py`): explicit autocorrelation tracking flags mixing degradation before contractivity is lost.
+
+### Decentralisation-respecting consequence
+
+This argument compounds with rule 5 (hardware portability as political requirement). Sovereign access to high-throughput EBM sampling is a *prerequisite* for sovereign Phase 3 training, not an optional accelerator. Carnot's KV260/Extropic/photonic tracks are sovereignty infrastructure on this argument.
+
+Cross-refs:
+- `docs/research-notes/zenil-alpha-verifier-derivation.md` (full derivation)
+- `memory/project_zenil_alpha_grounding.md`
+- `research-references.md` → "Zenil 2026 self-improvement limits"
+- `openspec/change-proposals/continuous-to-ising-transpiler.md` (Phase 2 module)
