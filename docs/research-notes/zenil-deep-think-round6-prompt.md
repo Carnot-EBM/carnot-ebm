@@ -145,7 +145,17 @@ After Deep Think replies:
 5. If (4) confirms exponential Gray-code improvement, that's
    publishable as a Phase 2 transpiler theorem (REQ-PHASE2-006).
 
-## Deep Think Round-6 response (2026-04-28)
+## CORRECTION (2026-04-28 evening): Round-6 results were Gemini, not Deep Think
+
+The "Deep Think Round-6 response" originally captured below was actually
+from a Gemini model. A separate validation pass with Deep Think (prompt
+in `zenil-deep-think-validation-prompt.md`) refuted four of five claims
+and surfaced one fatal new result. **The Gemini claims below are
+preserved for record but the corrected math is in
+`zenil-deep-think-validation-results.md`.** Do not use the Gemini
+results below for deployment.
+
+## Gemini Round-6 response (2026-04-28, since refuted by Deep Think)
 
 ### Q1: Φ > 0 condition
 
