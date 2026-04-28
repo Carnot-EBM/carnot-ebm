@@ -144,3 +144,109 @@ After Deep Think replies:
    throughput-vs-depth table with concrete bounds.
 5. If (4) confirms exponential Gray-code improvement, that's
    publishable as a Phase 2 transpiler theorem (REQ-PHASE2-006).
+
+## Deep Think Round-6 response (2026-04-28)
+
+### Q1: Φ > 0 condition
+
+**Deep Think:** Φ defined as the **spectral gap of the Langevin generator**:
+$$\Phi = \inf_{f: \|f\|_2=1} \langle f, \mathcal{L}_E f\rangle_{L^2(\mu_P)}$$
+
+Sufficient condition:
+$$\int B(x) \nabla \log \mu_P(x) \, d\mu_P(x) < 0$$
+where $B(x) = \log Q_t(x) - \log \mu_P(x)$ is the verifier's bias —
+i.e., bias is anti-aligned with the score of truth.
+
+**Diff vs prediction:** spectral reframing is a meaningful upgrade
+(connects to Poincaré inequality, log-Sobolev). Our correlation-inner-
+product intuition was on the right track but less powerful. Sufficient
+condition is more precisely stated than monotone-likelihood.
+
+### Q2: Stochastic MCMC bound
+
+**Deep Think:**
+$$N_t > \frac{\sigma^2 \tau_{\text{int}}}{2 \alpha_t \Phi \delta_t^2}$$
+
+**Diff vs prediction:** Deep Think keeps $\alpha_t$ as a free parameter,
+giving quadratic-in-$1/\delta_t$ scaling. When we substitute
+$\alpha_t = \Phi/(T\delta_t)$ from the deterministic Round-5 derivation
+(Carnot's parameterization), we recover linear-in-$1/\delta_t$:
+$$N_t > \frac{\sigma^2 T_t \tau_{\text{int}}}{2 \Phi^2 \delta_t}.$$
+Both bounds are correct in their parameterization. Carnot's
+deployment uses the linear form — coupled $\alpha_t$ is what the
+verifier-filter actually delivers.
+
+### Q3: Asymptotic annealing schedule
+
+**Deep Think:**
+$$T_t = T_0 \frac{\log t_0}{\log t}, \quad N_t = N_0 \left(\frac{\log t}{\log t_0}\right)^2$$
+with $N_t \approx \sigma^2 \tau_{\text{int}} / (\lambda_{\min} T_t)$ tying
+the budget to the Ising lattice's spectral gap.
+
+**Diff vs prediction:** confirmed exactly. $T_t \sim 1/\log(t)$ as
+guessed, $N_t \sim (\log t)^2$ adds the quadratic-N-in-log-t scaling.
+Convergence is logarithmic in $t$.
+
+### Q4: Gray-code improvement factor
+
+**Deep Think:**
+$$\tau_{\text{int}}^{\text{binary}} \propto \exp\left(\frac{2^k \kappa}{T}\right), \quad \tau_{\text{int}}^{\text{gray}} \propto \exp\left(\frac{\Delta E_{\text{physical}}}{T}\right)$$
+$$\Gamma = \exp\left(\frac{\kappa}{T}\sum_{i=1}^{k}(2^i - 1)\right)$$
+
+For $k=8$ (typical Carnot transpiler bit width): $\sum = 1004$, so
+$\Gamma \approx \exp(1004 \kappa/T)$. Doubly massive at low T.
+
+**Diff vs prediction:** confirmed exponential improvement, *and* gave
+the exact super-exponential scaling in bit width. Stronger than
+predicted.
+
+### Bonus deployable: PT acceptance rate
+
+**Deep Think:** for verifier-filtered sampling, target **0.35**
+swap acceptance rate (vs Roberts-Rosenthal 0.23 for standard
+Metropolis). Higher acceptance prioritises mode-hopping over local
+convergence.
+
+### Where Carnot's intuition was right
+
+- Φ > 0 sufficient condition (monotone-likelihood was on track).
+- $T_t \sim 1/\log(t)$ exactly.
+- Gray-code exponential improvement.
+- Stochastic bound coupling structure.
+
+### Where Carnot's intuition was upgraded
+
+- Φ as spectral gap (Langevin generator eigenvalue), not just
+  correlation inner product.
+- $N_t \sim (\log t)^2$ explicit budget scaling.
+- 0.35 acceptance rate (different from Metropolis 0.23).
+- Super-exponential Gray-code scaling: $\Gamma \sim \exp(\kappa \cdot 2^{k+1}/T)$.
+
+### Where Carnot was surprised
+
+- Quadratic-vs-linear $N$ scaling depends on parameterization.
+  Deep Think's framework is more general; ours is more deployable.
+
+## Shippable artifacts (post-Round-6)
+
+1. **`python/carnot/eval/phi_test.py`** (new): estimate Φ via the
+   bias-score inner product $\int B \nabla \log \mu_P \, d\mu_P$ on
+   held-out data; bootstrap CI; report $\Phi > 0$ rejection at
+   $\alpha=0.05$.
+
+2. **`python/carnot/hardware/transpiler/distill.py`** (existing):
+   set PT swap-acceptance target to 0.35 (constant
+   `PT_TARGET_ACCEPTANCE = 0.35` with cite to Round-6 result).
+
+3. **`python/carnot/training/anneal.py`** (new): deployable formula
+   for $T_t$, $N_t$ given $T_0$, $N_0$, $t_0$, current $\delta_t$.
+   Used by FR-11 self-distillation loops.
+
+4. **REQ-PHASE2-006** (new spec requirement): "Gray-code visible-spin
+   encoder reduces integrated autocorrelation time by factor
+   $\Gamma = \exp((\kappa/T)\sum_{i=1}^{k}(2^i - 1))$ vs standard
+   binary encoding at bit width $k$." Falsifiable on identical
+   Hamiltonian, two encodings — concrete experiment for .81/.82.
+
+5. **Spec citation in transpiler module:** `gray_code.py` should
+   reference REQ-PHASE2-006 once formalised.
