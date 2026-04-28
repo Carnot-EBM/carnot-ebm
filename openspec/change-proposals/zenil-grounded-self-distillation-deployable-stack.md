@@ -211,7 +211,23 @@ depends on max barrier, not sum) and arithmetic (Σ for k=8 = 502,
 not 1004). Correct factor is exponential in $2^{k-1}$, still publishable
 as a Phase 2 theorem.
 
-### Exp E — Orthogonality-stall mitigation: multi-verifier rotation (NEW 2026-04-28)
+### Exp E — Multi-verifier pre-emptive rotation (NEW 2026-04-28; UPDATED Round-7)
+
+**Round-7 update:** Deep Think confirmed that **rotation strictly
+dominates ensemble combine** asymptotically — ensemble combine creates
+multi-modal glassy frustrated MCMC landscapes ($\tau_{\text{int}}^{\text{ens}}$
+blows up factorially). Pre-emptive rotation (every round, $\arg\max_i \widehat\Phi_i$)
+is strictly optimal — staying causes exponential Φ decay. Rejected
+all ensemble-combine architecture from this proposal.
+
+**Round-7 also identified the load-bearing security finding:** the Q3
+discriminating test has ZERO POWER against null-space mimicry attacks.
+Adversarial specification gaming on Boolean $E$ (e.g., Z3 satisfaction)
+produces $\mathrm{Cov}_{\mu_P}(g_t, E^m) = 0$ for all $m$, perfectly
+mimicking the orthogonality stall. Multi-verifier pre-emptive rotation
+is the **unique** mathematically-rigorous defence.
+
+### Exp E — orig draft retained below (now superseded by E.rev)
 
 **Deliverable:** `python/carnot/training/multi_verifier.py` (new) +
 `tests/python/test_multi_verifier_rotation.py` +
