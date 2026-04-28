@@ -157,6 +157,94 @@ the start of training is *not* good enough late. Either:
 3. Acceptance of slow-but-stable convergence — possibly logarithmic
    in pathological cases.
 
+## Stochastic extension (Gemini Round-6 preliminary)
+
+Gemini provided a preliminary derivation for the noise term (open
+question 2 below). Key result: *the required sample size diverges as
+the model converges*.
+
+Setup: introduce finite-sample noise $\xi_t$ with $\mathbb{E}[\xi_t] = 0$
+and $\mathbb{E}[\|\xi_t\|^2] \approx \sigma^2/N$ (IID Monte Carlo
+approximation). Filtered update becomes stochastic:
+
+$$
+\hat Q_{t+1} = Q_{t+1} + \xi_t.
+$$
+
+Expected squared $L^2$ contraction:
+
+$$
+\mathbb{E}[\delta_{t+1}^2] \le (1 - \alpha_t^{\text{eff}})^2 \delta_t^2 + \frac{\sigma^2}{N}.
+$$
+
+For strict contractivity (model improves), $\delta_t^2 - \mathbb{E}[\delta_{t+1}^2] > 0$.
+Substituting $\alpha_t^{\text{eff}} \sim \Phi/(T \delta_t)$ from the
+deterministic derivation and using $(1-\alpha)^2 \approx 1 - 2\alpha$
+for small $\alpha$:
+
+$$
+\boxed{N > \frac{\sigma^2 T}{2\Phi \delta_t}}.
+$$
+
+**Interpretation.** As the model converges ($\delta_t \to 0$), the
+required sample size $N$ *diverges to infinity*. This is the deployable
+bound — the inflection point where naïve self-distillation stops
+working and additional compute (or hardware) is required to maintain
+contractivity.
+
+**Three caveats not yet in the derivation, worth pushing to Deep Think:**
+
+1. **MCMC autocorrelation.** The IID variance scaling $\sigma^2/N$ is
+   too generous for the EBM samplers Carnot will actually use. For
+   PT-PCD and Gibbs samplers, effective sample size is $N/\tau_{\text{int}}$,
+   so the deployable bound is
+   $$N > \frac{\sigma^2 T \tau_{\text{int}}}{2\Phi \delta_t}.$$
+   Near phase transitions, $\tau_{\text{int}}$ blows up — a separate
+   failure mode that the deterministic derivation does not capture.
+
+2. **Norm consistency.** The deterministic derivation lives in TV;
+   the noise extension uses squared $L^2$. Pinsker's inequality
+   bridges the two but the constants are loose. A clean derivation
+   should pick one norm — $L^2(\mu_P)$ is the most natural for the
+   verifier-filter formalism.
+
+3. **The $\Phi > 0$ assumption is load-bearing.** If the structural
+   assumption (open question 1 below) fails, $\Phi$ can be
+   non-positive, the contraction step has indefinite sign, and the
+   noise bound is vacuous. The three open questions are *nested*:
+   1 → 2 → 3.
+
+## Phase 2 hardware connection (this is the load-bearing argument)
+
+The bound $N > \sigma^2 T \tau_{\text{int}} / (2\Phi \delta_t)$ is
+*why Carnot's continuous-to-Ising transpiler exists*. The Phase 1 →
+Phase 2 → Phase 3 arc is not "speed up sampling because faster is
+better." It is *self-distillation provably collapses without
+hardware-accelerated sampling as $\delta_t \to 0$*.
+
+Concrete throughput targets:
+
+| Phase | Hardware | Samples/sec | Convergence depth $\delta_t$ supported |
+|-------|----------|-------------|---------------------------------------|
+| 1 | CPU / ROCm | $\sim 10^6$ | $\delta_t \gtrsim 10^{-3}$ |
+| 2 | KV260 / FPGA Ising | $\sim 10^9$ | $\delta_t \gtrsim 10^{-6}$ |
+| 2+ | Extropic XTR-0 (TSU) | $\sim 10^{11}$–$10^{12}$ | $\delta_t \gtrsim 10^{-9}$ |
+| 3 | photonic / Ising-machine cluster | $\gtrsim 10^{13}$ | foundation-model regime |
+
+(Numbers are illustrative — exact bounds depend on $\sigma^2$, $T$,
+$\tau_{\text{int}}$, $\Phi$ for each task class.)
+
+**This is the cleanest narrative argument for Phase 2 we have.** The
+KV260 / Extropic / photonic tracks are not capabilities-shopping;
+they are *necessary infrastructure for the Phase 3 foundation
+model's training loop to remain non-collapsing*. Without them, every
+self-distillation loop hits the deterministic deployment blocker
+identified above. Decentralization-respecting design rule 5
+(hardware portability as political requirement) compounds:
+sovereign access to high-throughput EBM sampling becomes a
+prerequisite for sovereign Phase 3 training, not an optional
+accelerator.
+
 ## Open questions / Deep Think follow-ups
 
 1. **Tighten $\Phi > 0$ assumption.** Under what *provable* structural
