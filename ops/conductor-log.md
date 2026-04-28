@@ -3025,3 +3025,5 @@ python/ |
 | 2026-04-28 15:02 UTC | ThinkPRM Step Verifier v3 — Trained on Expanded Fo | OK | Deliverable already exists in repo |
 | 2026-04-28 15:02 UTC | VPRM Rule-Based Step Verifier v3 — 10 Rule Familie | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1016-fover-corpus-expansion.n_labeled_p |
 | 2026-04-28 15:12 UTC | VPRM Rule-Based Step Verifier v3 — 10 Rule Familie | OK | Deliverable already exists in repo |
+| 2026-04-28 15:12 UTC | GS-KAN Energy Tier v3 — Hardware FPGA Complexity A | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1013-preflight-v29.gate_schema_v79 (ups |
+| 2026-04-28 15:22 UTC | GS-KAN Energy Tier v3 — Hardware FPGA Complexity A | OK | Deliverable already exists in repo |
