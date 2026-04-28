@@ -1,0 +1,24 @@
+{
+  "experiment": 1018,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-04-28",
+  "started_at": "2026-04-28T15:02:24.762316+00:00",
+  "finished_at": "2026-04-28T15:02:24.762316+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "VPRM Rule-Based Step Verifier v3 \u2014 10 Rule Families on Expanded Corpus",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1016-fover-corpus-expansion.n_labeled_pairs (numeric comparison rejected because one side is None (actual=None, expected=100))",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1016-fover-corpus-expansion",
+      "artifact_field": "n_labeled_pairs",
+      "op": ">=",
+      "expected": 100,
+      "actual": null,
+      "passed": false,
+      "reason": "numeric comparison rejected because one side is None (actual=None, expected=100)"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
