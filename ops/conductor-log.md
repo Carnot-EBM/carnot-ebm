@@ -3019,3 +3019,5 @@ python/ |
 | 2026-04-28 13:07 UTC | Energy-Selection SSD v2 — FR-11 Mandatory Self-Lea | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
 | 2026-04-28 13:21 UTC | Energy-Selection SSD v2 — FR-11 Mandatory Self-Lea | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
 | 2026-04-28 14:32 UTC | Energy-Selection SSD v2 — FR-11 Mandatory Self-Lea | SKIP | Pre-tests failing, self-heal failed: E         comparison failed |
+| 2026-04-28 14:42 UTC | FoVer Corpus Expansion — Z3 Auto-Label 500+ CoT Pa | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-28 14:52 UTC | FoVer Corpus Expansion — Z3 Auto-Label 500+ CoT Pa | OK | Deliverable already exists in repo |
