@@ -38,6 +38,17 @@ roadmap:
     — depends on the supervisor; lower priority but the natural next
     step.
 
+  - **`openspec/change-proposals/zenil-grounded-self-distillation-deployable-stack.md`**
+    (4 exps, drafted 2026-04-28) — ships the four code artifacts that
+    operationalise the Round-6 Deep Think result on verifier-filtered
+    self-distillation: Φ > 0 measurement module, joint annealing
+    schedule, PT acceptance hyperparameter (0.35), and the
+    REQ-PHASE2-006 Gray-code factor experiment. Mathematically
+    justifies the Phase 2 hardware mandate (`_bmad/architecture.md`)
+    and produces a publishable Phase 2 transpiler theorem result if
+    the empirical Gray-code factor confirms. **Target .81 or .82**
+    depending on planner load.
+
 ## Operational watchdog scripts (newly shipped 2026-04-28)
 
 Run these between conductor-supervisor landing:
