@@ -587,6 +587,12 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
                         if (PROJECT_ROOT / c).exists() and c not in test_files:
                             test_files.append(c)
                 elif f.startswith("tests/python/") and f.endswith(".py"):
+                    # Skip quarantine — those are tests we've explicitly
+                    # excluded from default discovery (e.g., known to deadlock
+                    # with the rest of the smart subset). See 2026-04-28 .80
+                    # debug for the test_conductor_supervisor.py incident.
+                    if "/quarantine/" in f:
+                        continue
                     if f not in test_files:
                         test_files.append(f)
         except Exception:
