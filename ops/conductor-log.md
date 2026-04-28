@@ -3027,3 +3027,23 @@ python/ |
 | 2026-04-28 15:12 UTC | VPRM Rule-Based Step Verifier v3 — 10 Rule Familie | OK | Deliverable already exists in repo |
 | 2026-04-28 15:12 UTC | GS-KAN Energy Tier v3 — Hardware FPGA Complexity A | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1013-preflight-v29.gate_schema_v79 (ups |
 | 2026-04-28 15:22 UTC | GS-KAN Energy Tier v3 — Hardware FPGA Complexity A | OK | Deliverable already exists in repo |
+| 2026-04-28 15:28 UTC | ALMC-ODE Annealed Sampler v2 — Multimodal Escape + | OK | 81 passed, 1 warning in 2.07s |
+| 2026-04-28 15:38 UTC | NK-KAEMEnergy + Multilevel KAN Training — 40x Conv | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-28 15:48 UTC | NK-KAEMEnergy + Multilevel KAN Training — 40x Conv | OK | Deliverable already exists in repo |
+| 2026-04-28 15:48 UTC | KV260 First Light v5 — SD Re-Flash Guide + USB Ser | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1013-preflight-v29.gate_schema_v79 (ups |
+| 2026-04-28 15:58 UTC | KV260 First Light v5 — SD Re-Flash Guide + USB Ser | OK | Deliverable already exists in repo |
+| 2026-04-28 16:02 UTC | DualGPU Live Inference v2 — Activate Live GPU Path | OK | 125 passed, 1 warning in 3.99s |
+| 2026-04-28 16:12 UTC | PPSEBM Live Relay v4 — FR-11 Cross-Session Memory  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1016-fover-corpus-expansion.n_violation |
+| 2026-04-28 16:22 UTC | PPSEBM Live Relay v4 — FR-11 Cross-Session Memory | OK | Deliverable already exists in repo |
+| 2026-04-28 16:25 UTC | Milestone 2026.04.79 Retrospective (covers .78 ret | OK | 133 passed, 1 warning in 5.01s |
+| 2026-04-28 16:58 UTC | Plan milestone 2026.04.80 | OK | 13 tasks proposed |
+| 2026-04-28 17:08 UTC | Milestone 2026.04.80 activated | OK | 13 tasks queued |
+| 2026-04-28 17:18 UTC | Roadmap Schema Validation + Prior-Failures YAML Li | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-28 17:28 UTC | Roadmap Schema Validation + Prior-Failures YAML Li | INVALIDATED | Prior OK was from BLOCK artifact; rescue 18:54Z re-cleared deliverable |
+| 2026-04-28 17:28 UTC | Conductor Supervisor v1 — External Watchdog + Orph | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-04-28 17:38 UTC | Conductor Supervisor v1 — External Watchdog + Orph | INVALIDATED | Prior OK was from BLOCK artifact; rescue 18:54Z re-cleared deliverable |
+| 2026-04-28 17:41 UTC | Preflight v30 — Hardened Artifact Write + ROCm GPU | INVALIDATED | Prior OK was from pretest pass but Sonnet max-turns'd; artifact quarantined 18:30Z |
+| 2026-04-28 17:55 UTC | FoVer Corpus Expansion v2 — Z3 Real Labels + MetaQ | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-28 18:09 UTC | FoVer Corpus Expansion v2 — Z3 Real Labels + MetaQ | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-28 18:26 UTC | FoVer Corpus Expansion v2 — Z3 Real Labels + MetaQ | OK | 133 passed, 1 warning in 5.19s |
+| 2026-04-28 18:48 UTC | Triple Integration E2E v6 — Full Cascade Validatio | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1028-preflight-v30.pre_test_fixed (upst |
