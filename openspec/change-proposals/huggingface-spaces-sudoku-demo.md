@@ -29,14 +29,28 @@ math or core code required.
 ## Summary
 
 Ship a HuggingFace Spaces app at **`Carnot-EBM/sudoku-energy-solver`**
-that:
+that presents an animated **WarGames WOPR-style terminal** in which
+the Carnot EBM "plays" Sudoku:
 
 1. Accepts a partial Sudoku grid (manual entry or preset puzzle).
 2. Solves it via Carnot's existing constraint-energy + sampler stack.
-3. Visualises the energy-descent process live (cell-by-cell heatmap +
-   energy-vs-iteration plot).
+3. Visualises the energy-descent process as if a 1983-era
+   military-grade reasoning system were thinking aloud — green-on-
+   black CRT terminal, typewriter-clack streaming output, animated
+   energy-bar status, "EVALUATING CONSTRAINT 17/27..." progress
+   indicators, periodic WarGames-flavoured commentary
+   ("ENERGY GRADIENT: -3.42 / SHALL WE CONTINUE?").
 4. Reports timing and step counts; offers side-by-side comparison
    against a naive backtracking baseline.
+
+The aesthetic is intentional and load-bearing: visitors immediately
+recognise the visual paradigm, the "computer is thinking" experience
+is celebrated rather than hidden, and the mapping
+**energy descent = WOPR computing** is thematically perfect for
+demonstrating the energy-based reasoning paradigm. WOPR's famous
+conclusion ("the only winning move is not to play") is also a
+delightful in-joke for the foundation-model self-distillation
+collapse-mode the position paper analyses.
 
 The demo has two operational regimes:
 
@@ -71,37 +85,75 @@ The demo has two operational regimes:
 
 ## Proposed experiments / shipping increments
 
-### Increment 1 — Core Spaces app (1-2 days)
+### Increment 1 — Core Spaces app with WOPR terminal aesthetic (2 days)
 
 **Deliverable:** `spaces/sudoku-energy-solver/` directory with:
 - `app.py` — Gradio UI + Carnot sampler invocation
 - `requirements.txt` — `carnot`, `gradio`, `numpy`, `jax[cpu]`,
   `matplotlib`, `pillow`
+- `static/wopr.css` — green-on-black CRT styling with scanline overlay
+- `static/typewriter.js` — character-by-character streaming output
 - `README.md` — explains the energy formulation, links to
   technical-report.html and the new blog post
 - `.huggingface.yml` — Spaces metadata (CPU tier, hardware: cpu-basic)
 
+**WOPR aesthetic specifications:**
+- Background: `#000000`; primary text: `#33ff33` (CRT green);
+  secondary: `#ff8c00` (warning orange) for high-energy states.
+- Font: a single monospace face with optional CRT-flicker animation
+  (~1Hz subtle) and curved-screen barrel-distortion CSS filter.
+- Scanline overlay: 2px alternating-opacity horizontal lines
+  (subtle, no nausea-inducing strobe).
+- Streaming output: every line types in character-by-character at
+  ~80 chars/sec with random ±10% jitter.
+- Status bar header: `>>> CARNOT-EBM REASONING SUBSYSTEM <<<` with
+  blinking cursor.
+- Energy bar: ASCII art progress meter with
+  `[██████░░░░░░░░░] -2.41` updating in place.
+- Periodic flavour text every ~5 seconds while solving:
+  - `LOGIC SUBSYSTEM ENGAGED.`
+  - `EVALUATING CONSTRAINT 17 OF 27.`
+  - `ROW UNIQUENESS VIOLATION DETECTED. ADJUSTING.`
+  - `ENERGY GRADIENT: -3.42. CONVERGENCE PROBABLE.`
+  - `SHALL WE PLAY A GAME?` (Easter egg on first launch)
+- On solve completion: ASCII-banner style success message
+  `SOLUTION ACQUIRED. ENERGY: 0.00. EXIT STATE: VALID.`
+
 **What it does:**
 
-1. UI presents an empty 9×9 grid + library of preset puzzles
-   (Easy / Medium / Hard / Diabolical from public datasets).
-2. User clicks "Solve" → backend instantiates
+1. UI opens with a WOPR boot sequence: scanlines initialise, prompt
+   types `GREETINGS PROFESSOR FALKEN.`, then `CONSTRAINT SUBSYSTEM
+   READY.`, then presents the 9×9 grid + difficulty selector.
+2. User loads a preset puzzle (Easy / Medium / Hard / Diabolical
+   from public datasets) or types one in. The terminal acknowledges
+   `PUZZLE LOADED. CLUE COUNT: N.`
+3. User clicks "BEGIN ENERGY MINIMISATION" → backend instantiates
    `build_sudoku_energy(clues)` from `python/carnot/verify/sudoku.py`,
    runs Langevin dynamics or PT-PCD sampler from
    `python/carnot/samplers/`, returns iteration trajectory.
-3. UI streams the trajectory: animated grid showing cells flipping +
-   energy-vs-iteration plot updating live + cell-energy heatmap
-   overlay.
-4. On convergence: show solved grid + total iterations + wall-clock
-   time + total energy evaluations.
-5. Side-by-side comparison option: same puzzle solved by a Norvig-
-   style backtracking solver, shown alongside the Carnot trajectory.
+4. UI streams the trajectory in WOPR style: animated grid (cells
+   flip with brief amber highlight before settling green), live
+   energy-bar progress meter, periodic flavour-text logs in the
+   terminal, energy-vs-iteration ASCII plot updating in place.
+5. On convergence: ASCII-banner success message; solved grid
+   highlighted in bright green; report total iterations, wall-clock
+   time, energy evaluations.
+6. Side-by-side comparison option: same puzzle solved by a Norvig-
+   style backtracking solver, shown in a separate WOPR pane labelled
+   `CLASSICAL DETERMINISTIC SUBSYSTEM` for comparison aesthetics.
 
 **Acceptance:**
+- WOPR aesthetic feels like 1983 — visitors immediately recognise
+  the WarGames reference without explanation.
 - Solves all 4 difficulty tiers on free Spaces CPU tier in <30s
-  each.
-- Visualisation runs at >5 FPS during animation.
+  each (excluding deliberate aesthetic delay).
+- Typewriter streaming runs at ≥80 chars/sec, energy-bar updates at
+  ≥5 Hz.
 - Comparison-mode shows both solvers in <60s combined.
+- Easter egg: typing "global thermonuclear war" in the puzzle entry
+  triggers a flavour message `A STRANGE GAME. THE ONLY WINNING MOVE
+  IS NOT TO PLAY. HOW ABOUT A NICE GAME OF SUDOKU?` and resets to
+  the puzzle picker.
 
 ### Increment 2 — Educational explainer (1 day)
 
@@ -282,6 +334,13 @@ visitor.
 
 ## Forward links
 
+- **Multi-game gallery extension** (separate proposal:
+  `wopr-games-gallery-extension.md`) — extends the WOPR aesthetic
+  to checkers, tic-tac-toe (the literal WarGames game), Connect Four,
+  Reversi/Othello, and possibly chess. Each game is a separate
+  energy formulation under the same WOPR shell. Multi-game
+  experience reinforces the "general energy-based reasoning"
+  paradigm rather than a one-off Sudoku trick.
 - Phase 2 KV260 follow-up: when the Hybrid Coprocessor demo lands,
   add a "GPU/FPGA mode" tab to the Spaces app showing the same
   puzzles solved at $\geq 100\times$ throughput.
