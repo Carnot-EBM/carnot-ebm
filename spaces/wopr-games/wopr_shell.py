@@ -55,22 +55,47 @@ BOOT_LINES: list[str] = [
 # Easter eggs — strings the user can type to trigger WarGames responses
 # ---------------------------------------------------------------------------
 
+_GAMES_LIST = (
+    "AVAILABLE GAMES: SUDOKU, TIC-TAC-TOE, LIGHTS_OUT, "
+    "GLOBAL_THERMONUCLEAR_WAR. SELECT A CARTRIDGE FROM THE DROPDOWN "
+    "AND PRESS LOAD AND PLAY."
+)
+
 EASTER_EGGS: dict[str, str] = {
     "joshua": "GREETINGS PROFESSOR FALKEN.",
+    "hello": "HELLO. SHALL WE PLAY A GAME?",
     "falken": "DR. STEPHEN FALKEN. SYSTEM ARCHITECT.",
-    "global thermonuclear war": ("WOULDN'T YOU PREFER A NICE GAME OF CHESS?"),
+    "professor falken": "DR. STEPHEN FALKEN. SYSTEM ARCHITECT.",
+    "global thermonuclear war": "WOULDN'T YOU PREFER A NICE GAME OF CHESS?",
     "chess": "WHITE OPENS WITH e4. YOUR MOVE.",
-    "help": (
-        "AVAILABLE GAMES: SUDOKU, TIC-TAC-TOE, LIGHTS_OUT, "
-        "GLOBAL_THERMONUCLEAR_WAR. SELECT A CARTRIDGE TO BEGIN."
-    ),
+    "help": _GAMES_LIST,
+    "list": _GAMES_LIST,
+    "ls": _GAMES_LIST,
+    "list games": _GAMES_LIST,
+    "games": _GAMES_LIST,
+    "menu": _GAMES_LIST,
+    "?": _GAMES_LIST,
     "how about a nice game of chess": "WOULDN'T YOU PREFER A NICE GAME OF CHESS?",
     "shall we play a game": "WHICH GAME WOULD YOU LIKE TO PLAY?",
     "let's play": "WHICH GAME WOULD YOU LIKE TO PLAY?",
+    "let's play a game": "WHICH GAME WOULD YOU LIKE TO PLAY?",
+    "play": "WHICH GAME WOULD YOU LIKE TO PLAY?",
     "carnot": (
         "CARNOT VERIFIER ONLINE. ENERGY MINIMISATION ACTIVE. "
         "EVERY GAME IS A CONSTRAINT-SATISFACTION PROBLEM."
     ),
+    "energy": (
+        "ENERGY IS THE CARNOT VERIFIER'S GROUND TRUTH. "
+        "MINIMISE TO ZERO AND THE CONSTRAINT IS SATISFIED."
+    ),
+    "wopr": "WAR OPERATION PLAN RESPONSE. JOSHUA SUBSYSTEM ONLINE.",
+    "joshua login": "GREETINGS PROFESSOR FALKEN.",
+    "logon": "USERNAME?",
+    "login": "USERNAME?",
+    "logon: joshua": "GREETINGS PROFESSOR FALKEN.",
+    "quit": "GAME OVER.",
+    "exit": "GAME OVER.",
+    "stop": "GAME OVER.",
 }
 
 
