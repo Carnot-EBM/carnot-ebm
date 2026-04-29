@@ -4,6 +4,36 @@
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.82 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-04-29: parallel-multi-agent-conductor (HIGH PRIORITY — unblocks WOPR sprint)
+
+**`openspec/change-proposals/parallel-multi-agent-conductor.md`**
+(drafted 2026-04-29, ready for .82 implementation) — cross-backend
+parallel execution via per-agent-type git worktrees. Two `systemctl
+--user` instances: `carnot-conductor` (main, claude) +
+`carnot-conductor-codex` (codex worktree, AGENT_TYPE=codex).
+
+Without this, the WOPR-games-gallery cartridge sprint stretches
+~3 weeks (single-stream serial). With it, ~1 week. **Target dates
+depend on this:**
+- 2026-05-08 Sudoku v1 + WarGames + Lights Out MVP → live on HF Spaces
+- 2026-05-15 position paper preprint → arXiv
+
+Tier A (week 1 of .82): dual-conductor (claude + codex), ~2-3 days.
+Tier B (week 2): add gemini worktree for long-context audits.
+Tier C (later): within-backend parallelism, deferred.
+
+Schema field `worktree: Literal["main", "codex", "gemini"]`
+orthogonal to today's `agent_type` field (commit `aa3c2707`).
+Per-worktree state-file suffixing + merge-back protocol.
+
+**Acceptance for .82 mandatory pickup:** the .82 planner output
+must include `worktree: codex` on at least 3 WOPR-cartridge tasks
+to validate the routing. The schema + conductor patches must
+ship before the cartridge sprint begins.
+
+Estimated total .82 effort: 5 days for Tier A+B; recoupable inside
+the first compressed milestone.
+
 ### NEW 2026-04-29: huggingface-spaces-sudoku-demo + WOPR games gallery (HIGH-VISIBILITY MARKETING)
 
 **`openspec/change-proposals/huggingface-spaces-sudoku-demo.md`**
