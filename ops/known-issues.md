@@ -4,6 +4,41 @@
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.82 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-04-29: no-permanent-retirement-on-environmental-failures (HIGH PRIORITY — research-progress discipline)
+
+**`openspec/change-proposals/no-permanent-retirement-on-environmental-failures.md`**
+(drafted 2026-04-29 evening, ready for .82 implementation) — formalize
+the operator directive: *"don't give up entirely on experiments due
+to operational interruptions and issues; find a way to divide up
+the experiment into smaller experiments or find another way for
+the experiments themselves to make forward progress until their
+merits are proven or disproven."*
+
+Mechanism: respawn queue (`ops/respawn-queue.json`) lists tasks
+retired due to environmental failures (NOT merit-based). The .82+
+planner reads the queue and emits respawn tasks with auto-populated
+`prior_failures` blocks. Conductor classifies retirement kind
+(environmental vs. merit) and auto-populates the queue.
+
+**Initial queue seeded with today's 3 .81 retirements:**
+1. exp1039-conductor-fastpath-gate-coercion (pre-test wedge —
+   fixes 7a13304d + b2c73a08)
+2. exp1042-dualgpu-rocm-torch-v4 (pre-test wedge + max_turns too
+   tight — fixes 7a13304d + b2c73a08)
+3. exp1044-triple-integration-v7 (gated on exp1039 retirement —
+   fixes 7a13304d + b2c73a08 + 4e46ede6; must run AFTER exp1039
+   respawn)
+
+**Acceptance for .82 mandatory pickup:** the .82 planner output
+must include all three respawn tasks (with auto-populated
+prior_failures) AND the conductor's `pick_next_task` must be
+patched to classify retirement kind and auto-populate the queue
+on environmental retirements going forward.
+
+This is the SEVENTH operator-attention-reduction infrastructure
+proposal in the recent series. Ensures research progress is not
+silently lost to operational interruptions.
+
 ### NEW 2026-04-29: parallel-multi-agent-conductor (HIGH PRIORITY — unblocks WOPR sprint)
 
 **`openspec/change-proposals/parallel-multi-agent-conductor.md`**
