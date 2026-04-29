@@ -2,6 +2,30 @@
 
 **Last Updated:** 2026-04-28
 
+## MANDATORY-NEXT-MILESTONE PRIORITIES (.81 planner — hard pickup per CLAUDE.md)
+
+### NEW 2026-04-29: verdict-reproducibility-audit (high priority)
+
+**`openspec/change-proposals/verdict-reproducibility-audit.md`**
+(3 exps, drafted 2026-04-29) — addresses the verdict-change incident
+observed at 01:13Z when exp1031 SSD v3 produced
+`carnot_filter_below_baseline` on rerun, having earlier produced
+`fr11_loop_closed`. **Same code path, different headline result.**
+
+The 12-round Zenil chain + Kinematic Layer Routing produced ~12
+publishable theorems, several of which will be backed by empirical
+experiments. **If those empirical verdicts are non-reproducible, the
+position paper is vulnerable to reviewer reproducibility audit.**
+Credibility risk is now load-bearing.
+
+Three scoped experiments:
+  - Exp A: rerun-audit of last 5 flagship verdicts; quantify stability rate
+  - Exp B: seed discipline + canonical RNG initialization in `experiment_template.py`
+  - Exp C: reproducibility checksum (SHA of seed + code SHAs + data hashes) +
+           audit utility for `research-complete.yaml` flagship entries
+
+Estimated: 6 hours. Pin to .81 mandatory pickup.
+
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.80 planner — hard pickup per CLAUDE.md)
 
 Per the **CLAUDE.md "Overdue-Priority Forcing Function"** rule, any priority
