@@ -147,6 +147,51 @@ def _cuda_is_available() -> bool:
         return False
 
 
+def _detect_gpu_count_rocm_aware() -> int:
+    """Return the number of NVIDIA GPUs visible to this process.
+
+    Why we need a ROCm-aware fallback: on ROCm systems (AMD GPU driver stack),
+    ``torch.cuda.device_count()`` returns 0 even when NVIDIA GPUs are physically
+    present unless ``CUDA_VISIBLE_DEVICES`` is explicitly set.  This happens because
+    ROCm's HIP-over-CUDA shim intercepts the CUDA device enumeration before PyTorch
+    can see the real NVIDIA cards.  ``nvidia-smi`` bypasses the driver shim entirely
+    and queries the NVIDIA kernel module directly, so it reliably reports the true
+    GPU count regardless of what ROCm has done to the CUDA environment.
+
+    Fall-through order:
+    1. ``torch.cuda.device_count()`` — fast, authoritative on pure-CUDA hosts.
+    2. ``nvidia-smi`` subprocess — authoritative on ROCm hosts or any host where
+       torch returns 0 but NVIDIA hardware is actually present.
+    3. Return 0 — no NVIDIA GPU tooling available (CPU-only host).
+    """
+    try:
+        import torch  # noqa: PLC0415
+
+        cuda_count = torch.cuda.device_count()
+        if cuda_count > 0:
+            return cuda_count
+    except Exception:
+        pass
+
+    # ROCm fallback: ask nvidia-smi directly.
+    try:
+        import subprocess
+
+        result = subprocess.run(
+            ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        if result.returncode == 0:
+            lines = [ln for ln in result.stdout.strip().split("\n") if ln.strip()]
+            return len(lines)
+    except Exception:
+        pass
+
+    return 0
+
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -916,6 +961,53 @@ class ExperimentTemplate:
                 "EOF"
             )
 
+    @staticmethod
+    def _caller_main_module() -> str:
+        """Return the __name__ of the script that called setup().
+
+        Used by setup() to detect import-time calls (test files importing
+        helper symbols from experiment scripts) versus run-time calls
+        (`python scripts/experiment_X.py`).
+
+        We want the *direct* caller's __name__, not pytest's outermost
+        frame: when pytest imports an experiment script for collection,
+        the script's module-top-level `tmpl.setup()` runs in the script's
+        own module scope, while pytest itself is __main__ at the outermost
+        frame. Walk inward from setup() to the first frame whose globals
+        come from a `scripts/experiment_*.py` file, and read THAT frame's
+        __name__.
+        """
+        import inspect
+
+        try:
+            frame = inspect.currentframe()
+            # Skip our own frame and the setup() frame above us.
+            if frame is not None:
+                frame = frame.f_back  # _caller_main_module's caller (setup)
+            if frame is not None:
+                frame = frame.f_back  # setup's caller (the script)
+            while frame is not None:
+                filename = frame.f_globals.get("__file__", "")
+                # Match an experiment script file at module scope. Module
+                # scope is identified by frame.f_code.co_name == "<module>";
+                # only the script's top-level setup() call satisfies this.
+                if (
+                    filename.endswith(".py")
+                    and "/experiment_" in filename
+                    and frame.f_code.co_name == "<module>"
+                ):
+                    return frame.f_globals.get("__name__", "<unknown>")
+                frame = frame.f_back
+            # No experiment-script module-scope frame found. Likely
+            # invoked from a non-script context (test setup, REPL, etc.).
+            return "<not_experiment_script_module>"
+        except Exception:  # noqa: BLE001
+            # On any introspection failure, default to "imported" semantics
+            # so we err on the side of NOT taking the lock (the cost of a
+            # missed lock is "concurrent run might be allowed"; the cost
+            # of a wrong lock is "every test SKIPs forever").
+            return "<introspection_failed>"
+
     def setup(self) -> None:
         """Create output directories and load any existing checkpoint.
 
@@ -944,21 +1036,38 @@ class ExperimentTemplate:
         # at the entry point fails the second launch immediately rather
         # than letting both stack memory + GPU pressure. The lock is
         # released on process exit (kernel releases flock on death).
-        from carnot.conductor import SingleRunHeld, acquire as _acquire_single_run
+        #
+        # Import-time skip (2026-04-29): many experiment scripts call
+        # tmpl.setup() at module top level. Test files that import helper
+        # functions from those scripts trigger setup() during pytest
+        # collection. If another instance of the same experiment is running
+        # in the conductor, the test process hits sys.exit(0) here, which
+        # crashes pytest-xdist with KeyError: <WorkerController> and
+        # cascades the conductor's pre-test self-heal to SKIP every
+        # downstream task. Fix: only acquire the lock when the caller's
+        # module is __main__. Test imports never satisfy this, so the
+        # cascade is closed; legitimate `python scripts/experiment_X.py`
+        # invocations still acquire the lock as before.
+        import sys
 
-        try:
-            self._single_run_lock_cm = _acquire_single_run(f"experiment_{self.exp_id}")
-            self._single_run_lock_cm.__enter__()
-        except SingleRunHeld:
-            import sys
+        _caller_module = self._caller_main_module()
+        if _caller_module != "__main__":
+            # Skip lock acquisition: imported, not invoked.
+            self._single_run_lock_cm = None
+        else:
+            from carnot.conductor import SingleRunHeld, acquire as _acquire_single_run
 
-            print(
-                f"experiment_{self.exp_id}: another instance is already running; "
-                f"this attempt is exiting cleanly per the single-run guard. "
-                f"The other instance will produce the artifact at {self.deliverable}.",
-                file=sys.stderr,
-            )
-            sys.exit(0)
+            try:
+                self._single_run_lock_cm = _acquire_single_run(f"experiment_{self.exp_id}")
+                self._single_run_lock_cm.__enter__()
+            except SingleRunHeld:
+                print(
+                    f"experiment_{self.exp_id}: another instance is already running; "
+                    f"this attempt is exiting cleanly per the single-run guard. "
+                    f"The other instance will produce the artifact at {self.deliverable}.",
+                    file=sys.stderr,
+                )
+                sys.exit(0)
 
         # REQ-INFRA-070: assert CARNOT_FORCE_LIVE is set for GPU experiments
         # BEFORE kill_gpu_zombies() or any GPU work starts.
@@ -1217,7 +1326,8 @@ class ExperimentTemplate:
         # CARNOT_NO_SERVER=1 is the env-var equivalent of passing --no-server on the CLI.
         no_server_env = os.environ.get("CARNOT_NO_SERVER", "0") == "1"
         server_enabled = use_server and not no_server_env
-        cuda_available = _cuda_is_available()
+        # Use ROCm-aware probe so nvidia-smi is consulted when torch returns 0 under ROCm.
+        cuda_available = _detect_gpu_count_rocm_aware() > 0
         cpu_fallback = not cuda_available
 
         if cpu_fallback:
@@ -1754,15 +1864,14 @@ class ExperimentTemplate:
         if metrics_used is not None:
             try:
                 from carnot.eval import __version__ as _eval_version
+
                 result["metrics_provenance"] = {
-                    m: f"carnot.eval.metrics.{m}:v{_eval_version}"
-                    for m in metrics_used
+                    m: f"carnot.eval.metrics.{m}:v{_eval_version}" for m in metrics_used
                 }
             except ImportError:
                 # Bare venv without carnot.eval available — record name only
                 result["metrics_provenance"] = {
-                    m: f"carnot.eval.metrics.{m}:v?"
-                    for m in metrics_used
+                    m: f"carnot.eval.metrics.{m}:v?" for m in metrics_used
                 }
 
         # Merge extra_fields first (lower priority), then data (higher priority)
