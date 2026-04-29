@@ -336,13 +336,31 @@ def run_agent(
         # inside experiment scripts, but run_agent spawns the Claude CLI which
         # itself can hang past its turn limit (observed Exp 426: 90+ min with
         # no output, still alive). This is the orchestrator-level counterpart.
-        # Default 60 min is a compromise: long enough for scaffolding-heavy
-        # experiments that write specs + tests + implementation in one pass,
-        # short enough to bound silent hangs. Experiments that legitimately
-        # require >60 min of inference should be split: subagent writes the
-        # script (under 60 min), a separate long-running executor runs it.
-        # Configurable via CARNOT_CONDUCTOR_TIMEOUT_MINUTES.
-        WALL_CLOCK_TIMEOUT = int(os.environ.get("CARNOT_CONDUCTOR_TIMEOUT_MINUTES", "60")) * 60
+        #
+        # Resolution order (2026-04-29 fix — was previously a silent dead-code bug):
+        #   1. Honor the explicit ``timeout`` parameter when > 0. All 5
+        #      production call sites pass explicit values (600s for doc
+        #      reconciliation + self-heal; 1200s for planning + research
+        #      steps), so this is the active path.
+        #   2. Fall back to the CARNOT_CONDUCTOR_TIMEOUT_MINUTES env var (60
+        #      min default) when the caller passes 0 or omits the arg.
+        #
+        # Prior bug (caused 5+ stuck-Sonnet wedges on 2026-04-29): the
+        # ``timeout`` parameter was ignored entirely; only the env-var
+        # 60-minute default applied. Self-heal calls expected 10 min but
+        # actually got 60 min, allowing pre-test self-heal to hang for
+        # 49 min before manual intervention. Honoring the explicit
+        # parameter caps doc-recon + self-heal at 10 min, planning +
+        # research at 20 min — matching what the call sites intend.
+        #
+        # Configurable via CARNOT_CONDUCTOR_TIMEOUT_MINUTES (only when
+        # explicit timeout is 0). Experiments that legitimately require
+        # >20 min should split: subagent writes the script (under 20 min),
+        # a separate long-running executor runs it.
+        if timeout and timeout > 0:
+            WALL_CLOCK_TIMEOUT = timeout
+        else:
+            WALL_CLOCK_TIMEOUT = int(os.environ.get("CARNOT_CONDUCTOR_TIMEOUT_MINUTES", "60")) * 60
         start_time = time.time()
 
         output_lines = []
