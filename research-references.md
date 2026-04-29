@@ -33,6 +33,53 @@ Not content itself, but signals to prioritise what to read next.
   seen. Also useful mid-experiment when deciding whether to invest in integrating a
   third-party tool (use the defensibility/composability score as a risk input).
 
+## 2026-04-29 user-flagged Apple ParaRNN Research
+
+### ParaRNN: Large-Scale Nonlinear RNNs Trainable in Parallel (Apple 2025/2026)
+- **URL:** https://machinelearning.apple.com/research/large-scale-rnns
+- **Code:** https://github.com/apple/ml-pararnn (Apache-licensed)
+- **What:** Newton's method applied to nonlinear RNN recurrence equations,
+  reducing each step to a parallelizable linear system (~3 Newton iterations).
+  ParaGRU / ParaLSTM use diagonal / block-diagonal gate matrices yielding
+  structured Jacobians for cheap inner solves. Three-tier implementation
+  (PyTorch autodiff → CUDA kernels for structured Jacobians → fully-fused
+  single-kernel Newton routine). 400M-7B parameter models reach transformer
+  parity in perplexity AND surpass linear SSMs (Mamba) on state-tracking
+  and recall tasks.
+- **Strategic implication for Carnot:** the 13-contribution math chain
+  (Zenil + Kinematic + Ising-Rank) proved verifier-rotation architecture
+  is provably optimal for Boolean verifiers + smooth EBM core. *It does
+  not constrain what the smooth EBM core is.* We've been implicitly
+  assuming energy-based *transformers*. ParaRNN suggests energy-based
+  *recurrent models* may be the more natural Phase 3 substrate:
+  constant-cost-per-token generation, better recall than Mamba,
+  diagonal Jacobians map cleanly to Phase 2 transpiler's local Ising
+  couplings. **Phase 3 architectural decision deferred to a future
+  proposal: transformer-EBT vs recurrent-EBT.**
+- **Newton-iteration trick is reusable for EBT energy descent.** Newton
+  solves $\nabla E = 0$ — mathematically identical template to RNN
+  hidden-state recurrence. Carnot can adopt the parallelization template
+  directly for EBT inference.
+- **Strengthens Hybrid Coprocessor Pipeline (Round-13).** Structured-
+  Jacobian discipline + diagonal hidden state is exactly what the
+  FPGA-side smooth EBM core wants.
+- **Lineage gap surfaced:** prior work on Newton/quasi-Newton parallel
+  RNN training that Carnot didn't track:
+  - **DEER (Lim et al. 2024)**: Differential Equation-style RNN
+    parallelization via Newton iteration.
+  - **ELK (Gonzalez et al. 2024)**: extension of DEER with broader
+    nonlinear classes.
+  Carnot's literature-priority discipline missed these. Should be
+  audited per the `feedback_literature_priority_discipline` memory.
+- **Touch-points:** long-context reasoning (constant-cost generation),
+  continuous latent space (relevant to EBT vision), hardware
+  acceleration (CUDA tiers + structured Jacobians map to FPGA).
+  NOT relevant to: self-distillation / α_t grounding (orthogonal),
+  Phase 1 verify-repair (orthogonal).
+- **Decentralization status:** Apache-licensed open source; satisfies
+  rules 1 (local-first) and 3 (mirroring) once we add it to the
+  Carnot-tracked dependency set.
+
 ## 2026-04-28 user-flagged Self-Improvement Limits Theory
 
 ### On the Limits of Self-Improving in LLMs (Zenil 2026)
