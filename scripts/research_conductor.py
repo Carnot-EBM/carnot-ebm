@@ -61,7 +61,7 @@ elif RAW_AGENT_TYPE == "opencode":
 elif RAW_AGENT_TYPE == "codex":
     AGENT_TYPE = "codex"
     AGENT_BIN = os.environ.get("CODEX_BIN", "codex")
-    DEFAULT_MODEL = "gpt-5.4"
+    DEFAULT_MODEL = "gpt-5.5"
 else:
     AGENT_TYPE = "claude"
     AGENT_BIN = os.environ.get("CLAUDE_BIN", "claude")
