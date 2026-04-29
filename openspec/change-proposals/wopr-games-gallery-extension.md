@@ -142,6 +142,169 @@ without it. Chess is included only if it strengthens the
 "foundation-model self-distillation" narrative for the position
 paper.
 
+## Additional cartridges (2026-04-29 expansion)
+
+The following additional cartridges were identified post-draft as
+exceptionally well-served by Carnot's energy formulation. They
+broaden the gallery's "general energy-based reasoning" claim without
+requiring much per-cartridge effort.
+
+### Increment 1a — Global Thermonuclear War (1 day) ⭐ MARKETING ANCHOR
+
+The most iconic WarGames moment as a *non-game game*. WOPR
+"computes scenarios" with frantic CRT noise, energy bars climbing
+across animated world-map visualisation, then concludes:
+
+> **"A STRANGE GAME. THE ONLY WINNING MOVE IS NOT TO PLAY. HOW ABOUT
+> A NICE GAME OF CHESS?"**
+
+The "game" is to refuse to play. Pure aesthetic + cultural
+anchor + 1 day of work. **Should ship in week 1 alongside
+Sudoku** — it's the cultural reference frame that makes everything
+else memorable.
+
+**Deliverable:** `spaces/wopr-games/games/global_thermonuclear_war.py`
+with no-input loop animation and the iconic quote on completion.
+
+### Increment 8 — Lights Out (1 day) ⭐ PERFECT CARNOT FIT
+
+5×5 grid; clicking a cell toggles it and its four neighbours; goal
+is all-off. Mathematically this is a **pure XOR linear-algebra
+problem** — every Lights Out instance has a closed-form solution
+via Gaussian elimination on $\mathbb{F}_2$, and *exactly* maps to
+Ising-model ground-state search.
+
+**Why this is the single best Carnot demo:** Carnot's energy
+formulation directly recovers the XOR-cancellation algorithm, so
+the visualisation can show the energy descent as the cells
+cascade off. Extremely satisfying visual + mathematically rigorous
+"this is what Carnot is built for."
+
+**Deliverable:** `spaces/wopr-games/games/lights_out.py` with
+adjustable grid size (5×5, 7×7, 9×9).
+
+### Increment 9 — Nonograms / Picross (2 days) ⭐ PICTURE REVEAL
+
+Row/column count constraints; the solution decodes a hidden image.
+Each puzzle is a Boolean CSP. Carnot's energy descent gradually
+reveals the image — one of the most "wow"-factor visualisations in
+the gallery.
+
+**WarGames-themed puzzle library:** ship preset puzzles whose
+solutions are recognisable shapes from the era — FALKEN
+silhouette, JOSHUA logo, missile-silo cross-section, the
+"WARGAMES" title text, a CRT terminal outline.
+
+**Deliverable:** `spaces/wopr-games/games/nonogram.py` with 8-12
+preset puzzles, sized 10×10 to 20×20.
+
+### Increment 10 — Conway's Game of Life Reverse Engineering (1-2 days)
+
+*Given a target pattern at step k, find a starting state that
+produces it.* This is **EBM-as-search** in its purest form —
+Carnot doesn't simulate forward; it minimises energy over the
+input-state space.
+
+**Compelling demo of EBM versatility** beyond CSP / adversarial
+games. The visualisation shows Carnot proposing candidate starts,
+running them forward k steps, scoring against target, and
+descending toward a feasible solution.
+
+Bonus: includes preset target patterns (gliders, blinkers,
+spaceships). The "find a Garden of Eden state for this glider" task
+is genuinely hard and showcases Carnot's strength.
+
+**Deliverable:** `spaces/wopr-games/games/life_reverse.py` with
+preset target patterns and adjustable simulation depth $k$.
+
+### Increment 11 — Slitherlink (2-3 days)
+
+Edges drawn around grid cells must form a single closed loop
+satisfying number constraints. **Visually stunning** — the loop
+forms on-screen as Carnot's energy descends.
+
+**Deliverable:** `spaces/wopr-games/games/slitherlink.py` with
+preset 7×7 to 15×15 puzzles.
+
+### Increment 12 — Hex (2-3 days)
+
+Provably no draw, perfect-info adversarial game on a hexagonal
+grid. **Replaces or complements chess as the "deep adversarial
+game"** at a fraction of implementation cost. 7×7 board fits CPU
+budget cleanly. Players try to connect their two opposite sides.
+
+**Deliverable:** `spaces/wopr-games/games/hex.py` with selectable
+7×7, 9×9, 11×11 boards.
+
+### Increment 13 — Hashiwokakero / Bridges (2 days)
+
+Connect numbered islands with bridges respecting count constraints.
+Strong island-and-bridge visualisation; lesser-known but rewarding
+when solved.
+
+**Deliverable:** `spaces/wopr-games/games/hashi.py` with preset
+puzzles.
+
+### Increment 14 — Sokoban (2-3 days)
+
+Classic warehouse-keeper puzzle: push boxes onto target squares.
+Planning under constraints. Broadly recognisable.
+
+**Deliverable:** `spaces/wopr-games/games/sokoban.py` with classic
+preset levels.
+
+### Increment 15 — Cryptarithmetic (1 day) — `SEND + MORE = MONEY`
+
+Letter-to-digit substitution puzzles. Pure CSP. Cheap to implement,
+quirky enough to delight. Bonus: framed as "DECRYPT MISSILE LAUNCH
+CODES" or "DECODE THE CIPHER" for full WarGames teletype aesthetic.
+
+**Deliverable:** `spaces/wopr-games/games/cryptarithmetic.py` with
+classic puzzle library (SEND+MORE=MONEY, EAT+THAT=APPLE, etc.).
+
+### Increment 16 — Mastermind (1-2 days)
+
+Pegboard colour-guessing game. **Partial-information** game
+(different from full-info CSPs) — adds variety to the gallery's
+problem-class coverage. Coloured pegs in a CRT terminal looks
+fantastic in WOPR aesthetic.
+
+**Deliverable:** `spaces/wopr-games/games/mastermind.py` with
+selectable code length and colour count.
+
+## Recommended shipping order (revised, 4-week sprint)
+
+| Week | Days | Cartridges | Cumulative gallery |
+|------|------|-----------|--------------------|
+| 1 | 5 | Sudoku v1 (3d, base infra) + Tic-Tac-Toe (1d) + **Global Thermonuclear War** (1d) | 3 |
+| 2 | 5 | **Lights Out** (1d) + N-Queens (1d) + **Nonograms** (2d) + **Conway's Life reverse** (1d) | 7 |
+| 3 | 5 | Connect Four (2d) + Slitherlink (2-3d) | 9 |
+| 4 | 5 | Hex (2-3d) + Hashi (2d) + **Cryptarithmetic** (1d) | 12 |
+| 5+ | optional | Checkers, Reversi, Sokoban, Mastermind, Quoridor, Chess | 16-18 |
+
+**Total at end of week 4: ~12 cartridges shipped.** The gallery
+becomes a *credible* general-energy-based-reasoning demonstration
+rather than a one-off Sudoku app.
+
+## Strategic notes for the additional cartridges
+
+1. **Global Thermonuclear War on day 1.** It's the cultural anchor
+   that makes everything else memorable. Marketing > engineering
+   complexity. The whole gallery's WOPR aesthetic builds on this
+   single iconic reference.
+2. **Lights Out is the single best Carnot demo** in the bunch —
+   pure Ising mapping, instant solver, visually clean. Should be
+   cartridge #2 after Sudoku.
+3. **Nonograms gives the gallery its "decode a picture" moment** —
+   pick puzzles whose solutions are recognisable shapes for the
+   target audience.
+4. **Hex over Chess for the deep-adversarial slot.** Same
+   intellectual claim at 1/10th the implementation effort. Save
+   chess for the position-paper-launch ribbon-cutting capstone.
+5. **Cryptarithmetic adds quirky charm** for very little cost
+   (1 day) — perfect filler when the more complex cartridges hit
+   bugs.
+
 ## Architecture notes
 
 The gallery uses a single Spaces app with a game selector. Each

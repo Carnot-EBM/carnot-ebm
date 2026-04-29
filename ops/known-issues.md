@@ -36,17 +36,57 @@ Strategic miss — the Sudoku demo:
 4. Targets the carnot-ebm.org/blog/ audience and HuggingFace
    visibility, both already-established distribution channels
 
-**Acceptance for .82 mandatory pickup:** the .82 planner output
-must include the Sudoku v1 demo as one of its tasks
-(`model: opus` recommended — Spaces deployment is multi-step
-infrastructure-class work prone to Sonnet bootstrap-and-bail), and
-file at least one game increment from the gallery as a follow-on
-task. Suggested .82 tasks:
-- `expNNNN-spaces-sudoku-v1-wopr-aesthetic` (Sudoku v1, model: opus)
-- `expNNNN-wopr-games-tic-tac-toe-cartridge` (1-day increment after
-  Sudoku v1 lands)
+**Acceptance for .82 mandatory pickup (TIGHTENED 2026-04-29):** the
+.82 planner output **MUST** include all THREE of the following
+week-1 minimum-viable-gallery tasks. Anything less leaves the demo
+incomplete and undermines the cultural anchor.
 
-Estimated total .82 effort: 4-6 days for v1 + first game increment.
+1. **`expNNNN-spaces-sudoku-v1-wopr-aesthetic`** (3 days)
+   - `model: opus` — Spaces deployment is multi-step infra-class
+     work prone to Sonnet bootstrap-and-bail
+   - Base WOPR shell (CRT terminal, typewriter streaming, energy bar)
+   - Sudoku solver with energy descent visualisation
+   - Easter eggs: `LIST GAMES`, `GLOBAL THERMONUCLEAR WAR`,
+     `HOW ABOUT A NICE GAME OF CHESS`, `GREETINGS PROFESSOR FALKEN`
+   - Deliverable: deployed HuggingFace Space + JSON artifact
+     describing the deployment
+
+2. **`expNNNN-wopr-games-global-thermonuclear-war-cartridge`** (1 day) ⭐
+   - `model: sonnet` (simple cartridge, no infra)
+   - The cultural anchor — WOPR "computes scenarios" with frantic
+     CRT animation, then concludes:
+     "A STRANGE GAME. THE ONLY WINNING MOVE IS NOT TO PLAY.
+      HOW ABOUT A NICE GAME OF CHESS?"
+   - Pure marketing win. Must ship in week 1 — it's the cultural
+     reference frame that makes the rest of the gallery memorable
+
+3. **`expNNNN-wopr-games-lights-out-cartridge`** (1 day) ⭐
+   - `model: sonnet` (well-defined CSP, low complexity)
+   - The single best Carnot demo in the gallery: 5×5 grid, XOR
+     toggling, all-off goal. Mathematically a pure Ising-model
+     ground-state search — Carnot's energy formulation literally
+     IS the natural-language solver
+   - Visually satisfying: cells cascade off as energy descends
+   - Critical for the "this is what Carnot is built for"
+     narrative when paired with the position paper
+
+**Estimated total .82 week-1 effort: 5 days for the three-cartridge
+MVP.** This is the minimum viable gallery for a credible launch
+alongside the position paper.
+
+**Optional .82 stretch tasks (week 2+):**
+- `expNNNN-wopr-games-tic-tac-toe-cartridge` (1d, classic increment)
+- `expNNNN-wopr-games-nqueens-cartridge` (1d, classic CSP)
+- `expNNNN-wopr-games-nonogram-cartridge` (2d, "picture reveal" wow factor)
+- `expNNNN-wopr-games-life-reverse-cartridge` (1-2d, EBM-as-search demo)
+
+If .82 has bandwidth for stretch tasks, prioritise nonograms (the
+"decode a picture" moment is the gallery's second-best wow factor
+after Lights Out).
+
+See `openspec/change-proposals/wopr-games-gallery-extension.md`
+for the full updated cartridge inventory (16 cartridges
+specified, including the additional 9 added 2026-04-29).
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.81 planner — historical, picked up at 15:13Z 2026-04-29)
 
