@@ -1,8 +1,54 @@
 # Carnot — Known Issues
 
-**Last Updated:** 2026-04-28
+**Last Updated:** 2026-04-29
 
-## MANDATORY-NEXT-MILESTONE PRIORITIES (.81 planner — hard pickup per CLAUDE.md)
+## MANDATORY-NEXT-MILESTONE PRIORITIES (.82 planner — hard pickup per CLAUDE.md)
+
+### NEW 2026-04-29: huggingface-spaces-sudoku-demo + WOPR games gallery (HIGH-VISIBILITY MARKETING)
+
+**`openspec/change-proposals/huggingface-spaces-sudoku-demo.md`**
+(drafted 2026-04-29, not yet built) — v1 Sudoku-with-WOPR-aesthetic
+HuggingFace Spaces demo. Scope: 3-5 days. Highest-leverage public
+artifact Carnot can ship this month — pairs with the position paper
+(theory-heavy) by giving reviewers and Twitter a *clickable* working
+demo of energy-based Sudoku solving with the iconic WarGames
+aesthetic.
+
+**`openspec/change-proposals/wopr-games-gallery-extension.md`**
+(drafted 2026-04-29, depends on Sudoku v1 landing first) — gallery
+extension over the v1: tic-tac-toe (1d) → n-queens (1d) → connect
+four (2d) → checkers (2-3d) → reversi (2d) → graph coloring (1-2d).
+Optional chess (1-2 weeks). Each game is a `WOPRGame` cartridge
+under `spaces/wopr-games/games/*.py`. Total ~9-11 days for the base
+gallery (2 weeks part-time), +1-2 weeks for chess.
+
+**Iconic moment to capture:** WOPR plays tic-tac-toe to a draw, then
+displays *"A STRANGE GAME. THE ONLY WINNING MOVE IS NOT TO PLAY."*
+
+**Why this is mandatory for .82:** the .81 planner deprioritized
+this in favor of architecture work and infrastructure close-out.
+Strategic miss — the Sudoku demo:
+1. Provides empirical demonstration paired with the theoretical
+   position paper (which targets arxiv submission ~2026-05-15)
+2. Has high viral potential via the WOPR aesthetic
+3. Is independent of FPGA / Phase-3-7 architecture work — can ship
+   in parallel
+4. Targets the carnot-ebm.org/blog/ audience and HuggingFace
+   visibility, both already-established distribution channels
+
+**Acceptance for .82 mandatory pickup:** the .82 planner output
+must include the Sudoku v1 demo as one of its tasks
+(`model: opus` recommended — Spaces deployment is multi-step
+infrastructure-class work prone to Sonnet bootstrap-and-bail), and
+file at least one game increment from the gallery as a follow-on
+task. Suggested .82 tasks:
+- `expNNNN-spaces-sudoku-v1-wopr-aesthetic` (Sudoku v1, model: opus)
+- `expNNNN-wopr-games-tic-tac-toe-cartridge` (1-day increment after
+  Sudoku v1 lands)
+
+Estimated total .82 effort: 4-6 days for v1 + first game increment.
+
+## MANDATORY-NEXT-MILESTONE PRIORITIES (.81 planner — historical, picked up at 15:13Z 2026-04-29)
 
 ### NEW 2026-04-29: differential-agent-routing (MEDIUM PRIORITY — pre-emptive Opus for complex tasks)
 
