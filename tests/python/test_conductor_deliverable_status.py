@@ -152,3 +152,63 @@ def test_artifact_finished_no_status_trusts_ok(tmp_path, monkeypatch):
     deliverable.parent.mkdir(parents=True)
     deliverable.write_text(json.dumps({"data": "old"}))
     assert research_conductor._artifact_is_finished(_make_task("results/exp.json")) is True
+
+
+# ---------------------------------------------------------------------------
+# _log_experiment_completion — third patch: prevent infinite OK-burn loop
+# ---------------------------------------------------------------------------
+
+
+def test_log_completion_ok_when_artifact_finished(tmp_path, monkeypatch):
+    """When artifact is success, log OK with the test summary."""
+    monkeypatch.setattr(research_conductor, "PROJECT_ROOT", tmp_path)
+    deliverable = tmp_path / "results" / "exp.json"
+    deliverable.parent.mkdir(parents=True)
+    deliverable.write_text(json.dumps({"status": "success"}))
+    captured = []
+    monkeypatch.setattr(
+        research_conductor,
+        "log_step",
+        lambda title, status, summary: captured.append((title, status, summary)),
+    )
+    research_conductor._log_experiment_completion(
+        {"title": "MyTask", "deliverable": "results/exp.json"},
+        "100 passed",
+    )
+    assert captured == [("MyTask", "OK", "100 passed")]
+
+
+def test_log_completion_fail_when_artifact_bootstrap(tmp_path, monkeypatch):
+    """When artifact is status=running, downgrade OK -> FAIL."""
+    monkeypatch.setattr(research_conductor, "PROJECT_ROOT", tmp_path)
+    deliverable = tmp_path / "results" / "exp.json"
+    deliverable.parent.mkdir(parents=True)
+    deliverable.write_text(json.dumps({"status": "running"}))
+    captured = []
+    monkeypatch.setattr(
+        research_conductor,
+        "log_step",
+        lambda title, status, summary: captured.append((title, status, summary)),
+    )
+    research_conductor._log_experiment_completion(
+        {"title": "MyTask", "deliverable": "results/exp.json"},
+        "100 passed",
+    )
+    assert len(captured) == 1
+    title, status, summary = captured[0]
+    assert title == "MyTask"
+    assert status == "FAIL"
+    assert "artifact_not_updated_past_bootstrap" in summary
+    assert "100 passed" in summary
+
+
+def test_log_completion_ok_when_no_deliverable(monkeypatch):
+    """Tasks without a deliverable (planning, retros) always log OK."""
+    captured = []
+    monkeypatch.setattr(
+        research_conductor,
+        "log_step",
+        lambda title, status, summary: captured.append((title, status, summary)),
+    )
+    research_conductor._log_experiment_completion({"title": "Plan .81"}, "ok")
+    assert captured == [("Plan .81", "OK", "ok")]
