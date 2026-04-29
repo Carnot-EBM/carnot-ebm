@@ -875,18 +875,50 @@ def compute_adaptive_sleep_min(iter_duration_s: float, interval_min: int) -> tup
     return interval_min, "long (GPU/planner)"
 
 
-def _deliverable_exists(task: dict) -> bool:
-    """Check if a task's deliverable file already exists in the repo.
+_BOOTSTRAP_STATUSES = frozenset({"running", "blocked", "partial", "in_progress"})
 
-    If the task has a "deliverable" key (a file path), check if it exists.
-    This catches the case where the conductor built something but the log
-    didn't record it as OK (e.g., coverage failure at commit time, power loss).
+
+def _deliverable_exists(task: dict) -> bool:
+    """Check if a task's deliverable file already exists *and is finished*.
+
+    Background: the original implementation returned True for any file at the
+    deliverable path, which caused the .80 milestone to wedge on 2026-04-29:
+    Sonnet's "CRITICAL: write artifact FIRST" defensive pattern landed
+    bootstrap-only artifacts (status=running, all-fields-False) and the
+    fast-path then short-circuited every retry. Downstream gated tasks read
+    `False` forever. This function now reads the JSON status field and
+    refuses to fast-path artifacts whose status indicates incompletion.
+
+    Rules:
+      - file missing                          -> not done (False)
+      - file exists, not JSON                 -> assume done (True; legacy)
+      - JSON with status in BOOTSTRAP_STATUSES -> not done (False)
+      - JSON with no status field             -> assume done (True; legacy)
+      - any other JSON status (e.g. success)  -> done (True)
+
+    Test coverage: tests/python/test_conductor_deliverable_status.py.
+    Change proposal: openspec/change-proposals/conductor-fastpath-bootstrap-skip.md.
     """
     deliverable = task.get("deliverable")
     if not deliverable:
         return False
     path = PROJECT_ROOT / deliverable
-    return path.exists()
+    if not path.exists():
+        return False
+    try:
+        with path.open("r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+    except (OSError, json.JSONDecodeError):
+        return True  # legacy / non-JSON deliverables: preserve old behavior
+    status = payload.get("status") if isinstance(payload, dict) else None
+    if isinstance(status, str) and status.lower() in _BOOTSTRAP_STATUSES:
+        logger.info(
+            "Deliverable %s exists but status=%r is bootstrap-only; not skipping",
+            deliverable,
+            status,
+        )
+        return False
+    return True
 
 
 # ---------------------------------------------------------------------------
