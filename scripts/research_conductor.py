@@ -814,6 +814,67 @@ def _shutdown_recon_executor(wait: bool = True, timeout: float = 600.0) -> None:
             _recon_executor = None
 
 
+def _check_auroc_anomaly(task: dict) -> None:
+    """Detect suspicious AUROC values in a deliverable and page the operator.
+
+    Background — exp995 and exp1003 both shipped pathological AUROC values
+    (0.0 and 1.0 respectively) for ~24h before the inverted-sign bug was
+    caught. Verdicts read directionally correct, but the underlying signals
+    were anti-correlated, so headline narratives were silently wrong.
+    Detecting AUROC == 0 / ≈0.001 / ≈0.999 / 1.0 at deliverable-write time
+    converts a 24h silent regression into an instant operator page.
+
+    Reads ``task["deliverable"]`` relative to ``PROJECT_ROOT``, extracts the
+    top-level ``auroc`` field (if present), and appends one JSON-line record
+    to ``ops/supervisor-alerts.json`` when the value is at a suspicious edge.
+    Normal values (anything else) are silent.
+
+    Spec: REQ-CONDUCTOR-AUROC-ANOMALY, SCENARIO-CONDUCTOR-AUROC-1, -2.
+    """
+    import json as _json
+
+    deliverable = task.get("deliverable")
+    if not deliverable:
+        return
+    try:
+        path = PROJECT_ROOT / deliverable
+        if not path.exists():
+            return
+        data = _json.loads(path.read_text())
+    except (OSError, ValueError):
+        return
+
+    auroc = data.get("auroc")
+    if auroc is None or not isinstance(auroc, (int, float)):
+        return
+
+    # Edge values that historically indicated sign-error bugs or trivial
+    # data, not genuine separability. The 0.001 / 0.999 epsilons absorb
+    # rounding noise without paging on legitimate near-perfect results.
+    epsilon = 0.005
+    is_anomaly = auroc <= epsilon or auroc >= 1.0 - epsilon
+    if not is_anomaly:
+        return
+
+    alerts_path = PROJECT_ROOT / "ops" / "supervisor-alerts.json"
+    alerts_path.parent.mkdir(parents=True, exist_ok=True)
+    record = {
+        "alert_type": "AUROC_ANOMALY",
+        "timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "task_id": task.get("id", "unknown"),
+        "deliverable": deliverable,
+        "auroc": auroc,
+        "detail": (
+            f"AUROC={auroc} for task {task.get('id', 'unknown')} is at a "
+            f"suspicious edge value. Inspect the experiment for sign errors "
+            f"(see exp995/exp1003 inverted-AUROC pattern) before trusting "
+            f"the verdict."
+        ),
+    }
+    with open(alerts_path, "a") as f:
+        f.write(_json.dumps(record) + "\n")
+
+
 def log_step(task: str, status: str, details: str = "") -> None:
     """Append to conductor log."""
     timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
