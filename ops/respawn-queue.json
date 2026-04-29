@@ -1,0 +1,71 @@
+{
+  "schema": "carnot.respawn_queue.v1",
+  "description": "Tasks retired due to environmental causes (NOT merit-based failures). The .82+ planner reads this queue and emits respawn tasks with auto-populated prior_failures blocks. See openspec/change-proposals/no-permanent-retirement-on-environmental-failures.md for the policy.",
+  "last_updated": "2026-04-29",
+  "queue": [
+    {
+      "original_id": "exp1039-conductor-fastpath-gate-coercion",
+      "title_stub": "Conductor Fastpath Bootstrap Skip + Gate Coercion Fix",
+      "retire_milestone": "2026.04.81",
+      "retire_verdicts": [
+        "pre_test_wedge_SKIP",
+        "max_turns_FAIL",
+        "pre_test_wedge_SKIP"
+      ],
+      "diagnosed_root_cause": "test_conductor_gates default 50 vs function default 100 (mismatch) + run_agent timeout parameter was dead code (the 60-min env-default applied regardless of caller intent).",
+      "fixes_landed": [
+        "7a13304d",
+        "b2c73a08"
+      ],
+      "respawn_attempt": 1,
+      "max_respawn_attempts": 3,
+      "model": "opus",
+      "max_turns": 100,
+      "depends_on_respawn": []
+    },
+    {
+      "original_id": "exp1042-dualgpu-rocm-torch-v4",
+      "title_stub": "DualGPU ROCm/CUDA Torch Install + Live Inference v4 — pip install fix",
+      "retire_milestone": "2026.04.81",
+      "retire_verdicts": [
+        "max_turns_FAIL",
+        "pre_test_wedge_SKIP",
+        "pre_test_wedge_SKIP"
+      ],
+      "diagnosed_root_cause": "Same wedge as exp1039 (test_conductor_gates default mismatch + run_agent timeout dead-code bug). Additionally, the .81 planner set model: opus but max_turns: 25 was too tight even for Opus on hardware-integration tasks (need 100).",
+      "fixes_landed": [
+        "7a13304d",
+        "b2c73a08"
+      ],
+      "respawn_attempt": 1,
+      "max_respawn_attempts": 3,
+      "model": "opus",
+      "max_turns": 100,
+      "depends_on_respawn": []
+    },
+    {
+      "original_id": "exp1044-triple-integration-v7",
+      "title_stub": "Triple Integration E2E v7 — Post Gate Coercion Fix",
+      "retire_milestone": "2026.04.81",
+      "retire_verdicts": [
+        "GATE_BLOCK",
+        "GATE_BLOCK",
+        "GATE_BLOCK"
+      ],
+      "diagnosed_root_cause": "Gated on exp1039.gate_coercion_fixed = true; exp1039 was retired without producing the gate field. exp1044 GATE_BLOCKed indefinitely until commit 4e46ede6 made GATE_BLOCK count toward MAX_FAILURES.",
+      "fixes_landed": [
+        "7a13304d",
+        "b2c73a08",
+        "4e46ede6"
+      ],
+      "respawn_attempt": 1,
+      "max_respawn_attempts": 3,
+      "model": "sonnet",
+      "max_turns": 50,
+      "depends_on_respawn": [
+        "exp1039-conductor-fastpath-gate-coercion"
+      ],
+      "notes": "Must respawn AFTER exp1039 respawn produces the gate_coercion_fixed=true artifact. Planner should order this after exp1039's respawn in the .82 task sequence."
+    }
+  ]
+}
