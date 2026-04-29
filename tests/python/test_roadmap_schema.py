@@ -255,3 +255,71 @@ def test_model_opus_round_trips_through_yaml():
     dumped = task.model_dump()
     rehydrated = ResearchTask.model_validate(dumped)
     assert rehydrated.model == "opus"
+
+
+# ---------------------------------------------------------------------------
+# Multi-agent routing — `agent_type` field validation (REQ-INFRA-083)
+# ---------------------------------------------------------------------------
+
+
+def test_agent_type_default_is_none():
+    """REQ-INFRA-083 / SCENARIO-INFRA-083-A: absent agent_type falls through to module AGENT_TYPE."""
+    task = ResearchTask(**_valid_task_kwargs())
+    assert task.agent_type is None
+
+
+def test_agent_type_accepts_claude():
+    """REQ-INFRA-083 / SCENARIO-INFRA-083-B: explicit claude routing for synthesis-heavy tasks."""
+    task = ResearchTask(**_valid_task_kwargs(agent_type="claude"))
+    assert task.agent_type == "claude"
+
+
+def test_agent_type_accepts_codex():
+    """REQ-INFRA-083 / SCENARIO-INFRA-083-C: codex routing for formulaic code generation
+    (WOPR cartridges, verifier implementations, test scaffolding, FFI bindings)."""
+    task = ResearchTask(**_valid_task_kwargs(agent_type="codex"))
+    assert task.agent_type == "codex"
+
+
+def test_agent_type_accepts_gemini():
+    """REQ-INFRA-083 / SCENARIO-INFRA-083-D: gemini routing for long-context tasks
+    (1M-token coherence audits, failure-ledger analysis, multi-paper synthesis)."""
+    task = ResearchTask(**_valid_task_kwargs(agent_type="gemini"))
+    assert task.agent_type == "gemini"
+
+
+def test_agent_type_accepts_opencode():
+    """REQ-INFRA-083 / SCENARIO-INFRA-083-E: opencode routing for experimental backend."""
+    task = ResearchTask(**_valid_task_kwargs(agent_type="opencode"))
+    assert task.agent_type == "opencode"
+
+
+def test_agent_type_rejects_unknown_string():
+    """REQ-INFRA-083 / SCENARIO-INFRA-083-F: typos and unsupported backends fail validation."""
+    import pytest
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError):
+        ResearchTask(**_valid_task_kwargs(agent_type="anthropic"))  # not a CLI name
+    with pytest.raises(ValidationError):
+        ResearchTask(**_valid_task_kwargs(agent_type="gpt-5"))  # model name, not agent_type
+    with pytest.raises(ValidationError):
+        ResearchTask(**_valid_task_kwargs(agent_type="cluade"))  # typo
+
+
+def test_agent_type_codex_round_trips_through_yaml():
+    """REQ-INFRA-083: agent_type=codex with model=gpt-5.5 survives YAML round-trip."""
+    task = ResearchTask(**_valid_task_kwargs(agent_type="codex", model="gpt-5.5"))
+    dumped = task.model_dump()
+    rehydrated = ResearchTask.model_validate(dumped)
+    assert rehydrated.agent_type == "codex"
+    assert rehydrated.model == "gpt-5.5"
+
+
+def test_agent_type_gemini_with_model_round_trips():
+    """REQ-INFRA-083: agent_type=gemini with vendor-specific model name round-trips."""
+    task = ResearchTask(**_valid_task_kwargs(agent_type="gemini", model="gemini-3.1-pro-preview"))
+    dumped = task.model_dump()
+    rehydrated = ResearchTask.model_validate(dumped)
+    assert rehydrated.agent_type == "gemini"
+    assert rehydrated.model == "gemini-3.1-pro-preview"

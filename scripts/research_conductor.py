@@ -48,24 +48,32 @@ logging.basicConfig(
 logger = logging.getLogger("conductor")
 
 PROJECT_ROOT = Path(__file__).parent.parent
+
+# Per-agent-type lookup tables. Module-level constants for the four supported
+# CLI backends; per-task agent_type override (added 2026-04-29) reads from
+# these instead of the process-startup AGENT_TYPE constant. See
+# openspec/change-proposals/multi-agent-routing.md.
+AGENT_BIN_BY_TYPE = {
+    "claude": os.environ.get("CLAUDE_BIN", "claude"),
+    "gemini": os.environ.get("GEMINI_BIN", "gemini"),
+    "opencode": os.environ.get("OPENCODE_BIN", "opencode"),
+    "codex": os.environ.get("CODEX_BIN", "codex"),
+}
+DEFAULT_MODEL_BY_TYPE = {
+    "claude": "sonnet",
+    "gemini": "gemini-3.1-pro-preview",
+    "opencode": "opencode/big-pickle",
+    "codex": "gpt-5.5",
+}
+
 # Flexible agent configuration: AGENT_TYPE can be 'claude', 'gemini', 'opencode', or 'codex'
 RAW_AGENT_TYPE = os.environ.get("AGENT_TYPE", "claude").lower()
-if RAW_AGENT_TYPE == "gemini":
-    AGENT_TYPE = "gemini"
-    AGENT_BIN = os.environ.get("GEMINI_BIN", "gemini")
-    DEFAULT_MODEL = "gemini-3.1-pro-preview"
-elif RAW_AGENT_TYPE == "opencode":
-    AGENT_TYPE = "opencode"
-    AGENT_BIN = os.environ.get("OPENCODE_BIN", "opencode")
-    DEFAULT_MODEL = "opencode/big-pickle"
-elif RAW_AGENT_TYPE == "codex":
-    AGENT_TYPE = "codex"
-    AGENT_BIN = os.environ.get("CODEX_BIN", "codex")
-    DEFAULT_MODEL = "gpt-5.5"
+if RAW_AGENT_TYPE in AGENT_BIN_BY_TYPE:
+    AGENT_TYPE = RAW_AGENT_TYPE
 else:
     AGENT_TYPE = "claude"
-    AGENT_BIN = os.environ.get("CLAUDE_BIN", "claude")
-    DEFAULT_MODEL = "sonnet"
+AGENT_BIN = AGENT_BIN_BY_TYPE[AGENT_TYPE]
+DEFAULT_MODEL = DEFAULT_MODEL_BY_TYPE[AGENT_TYPE]
 
 AGENT_MODEL = os.environ.get("AGENT_MODEL", DEFAULT_MODEL)
 # Per-role model overrides (none = fall through to AGENT_MODEL). Rationale:
@@ -77,18 +85,20 @@ AGENT_MODEL_PLANNER = os.environ.get("AGENT_MODEL_PLANNER")  # e.g. "opus"
 AGENT_MODEL_RETRO = os.environ.get("AGENT_MODEL_RETRO")  # e.g. "opus"
 CONDUCTOR_LOG = PROJECT_ROOT / "ops" / "conductor-log.md"
 DOGFOOD_MEMORY_FILE = PROJECT_ROOT / "ops" / "dogfood-memory.json"
-AGENT_DISPLAY = {
+AGENT_DISPLAY_BY_TYPE = {
     "claude": "Claude Code",
     "gemini": "Gemini CLI",
     "opencode": "OpenCode CLI",
     "codex": "Codex CLI",
-}[AGENT_TYPE]
-AGENT_SIGNATURE = {
+}
+AGENT_DISPLAY = AGENT_DISPLAY_BY_TYPE[AGENT_TYPE]
+AGENT_SIGNATURE_BY_TYPE = {
     "claude": "\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>",
     "gemini": "\n\nCo-Authored-By: Gemini CLI <noreply@google.com>",
     "opencode": "\n\nCo-Authored-By: OpenCode CLI <noreply@opencode.ai>",
     "codex": "\n\nCo-Authored-By: Codex CLI <noreply@openai.com>",
-}[AGENT_TYPE]
+}
+AGENT_SIGNATURE = AGENT_SIGNATURE_BY_TYPE[AGENT_TYPE]
 
 
 def run_cmd(
@@ -122,13 +132,41 @@ def _build_agent_command(
     prompt: str,
     max_turns: int,
     model_override: str | None = None,
+    agent_type_override: str | None = None,
 ) -> tuple[list[str], str | None, str]:
-    """Build the command, optional stdin payload, and log message."""
-    model = model_override or AGENT_MODEL
-    if AGENT_TYPE == "gemini":
+    """Build the command, optional stdin payload, and log message.
+
+    agent_type_override: per-task agent backend (claude/codex/gemini/opencode).
+    Falls through to module-level AGENT_TYPE when None. See multi-agent-routing
+    proposal: openspec/change-proposals/multi-agent-routing.md.
+    """
+    effective_agent_type = agent_type_override or AGENT_TYPE
+    if effective_agent_type not in AGENT_BIN_BY_TYPE:
+        # Defensive: unknown agent_type silently falls back to default rather
+        # than crashing the conductor mid-iteration. The schema validator
+        # catches typos at planner output time.
+        logger.warning(
+            "Unknown agent_type %r — falling back to module default %r",
+            effective_agent_type,
+            AGENT_TYPE,
+        )
+        effective_agent_type = AGENT_TYPE
+
+    bin_path = AGENT_BIN_BY_TYPE[effective_agent_type]
+    display = AGENT_DISPLAY_BY_TYPE[effective_agent_type]
+    # Model resolution: explicit override > AGENT_MODEL (when type matches the
+    # process default) > per-agent-type DEFAULT_MODEL_BY_TYPE.
+    if model_override:
+        model = model_override
+    elif effective_agent_type == AGENT_TYPE:
+        model = AGENT_MODEL
+    else:
+        model = DEFAULT_MODEL_BY_TYPE[effective_agent_type]
+
+    if effective_agent_type == "gemini":
         return (
             [
-                AGENT_BIN,
+                bin_path,
                 "-p",
                 prompt,
                 "--yolo",
@@ -136,13 +174,13 @@ def _build_agent_command(
                 model,
             ],
             None,
-            f"Calling {AGENT_DISPLAY} (model: {model})...",
+            f"Calling {display} (model: {model})...",
         )
 
-    if AGENT_TYPE == "opencode":
+    if effective_agent_type == "opencode":
         return (
             [
-                AGENT_BIN,
+                bin_path,
                 "run",
                 "--dangerously-skip-permissions",
                 "--model",
@@ -152,13 +190,13 @@ def _build_agent_command(
                 prompt,
             ],
             None,
-            f"Calling {AGENT_DISPLAY} (model: {model})...",
+            f"Calling {display} (model: {model})...",
         )
 
-    if AGENT_TYPE == "codex":
+    if effective_agent_type == "codex":
         return (
             [
-                AGENT_BIN,
+                bin_path,
                 "exec",
                 "--dangerously-bypass-approvals-and-sandbox",
                 "--color",
@@ -175,12 +213,13 @@ def _build_agent_command(
                 "-",
             ],
             prompt,
-            f"Calling {AGENT_DISPLAY} (model: {model})...",
+            f"Calling {display} (model: {model})...",
         )
 
+    # Default path: claude
     return (
         [
-            AGENT_BIN,
+            bin_path,
             "-p",
             "--dangerously-skip-permissions",
             "--verbose",
@@ -190,7 +229,7 @@ def _build_agent_command(
             model,
         ],
         prompt,
-        f"Calling {AGENT_DISPLAY} ({max_turns} max turns, model: {model})...",
+        f"Calling {display} ({max_turns} max turns, model: {model})...",
     )
 
 
@@ -200,6 +239,7 @@ def run_agent(
     timeout: int = 600,
     model_override: str | None = None,
     deliverable_path: str | None = None,
+    agent_type_override: str | None = None,
 ) -> tuple[bool, str]:
     """Run the configured agent with a research prompt.
 
@@ -217,8 +257,14 @@ def run_agent(
             that finishes its real work inside the first 10 min but keeps the
             subagent alive running extra tests until the 60-min wall-clock
             cap fires.  See observations around Exp 447/448 on 2026-04-18.
+        agent_type_override: per-task agent backend (claude/codex/gemini/
+            opencode). Falls through to module-level AGENT_TYPE when None.
+            Multi-agent routing per
+            openspec/change-proposals/multi-agent-routing.md.
     """
-    cmd, stdin_text, msg = _build_agent_command(prompt, max_turns, model_override)
+    cmd, stdin_text, msg = _build_agent_command(
+        prompt, max_turns, model_override, agent_type_override
+    )
 
     logger.info(msg)
 
@@ -1884,6 +1930,44 @@ def _plan_next_milestone(push: bool = True) -> bool:
         f"    Routine experiments (single-question evaluation, training\n"
         f"    loops with established pipelines, deliverable-already-exists\n"
         f"    fast-paths) keep the default Sonnet — those succeed >95%.\n\n"
+        f"  agent_type: [optional, 'claude' | 'codex' | 'gemini' | 'opencode']\n"
+        f"    Per-task agent backend selection (orthogonal to `model`). The\n"
+        f"    conductor defaults to AGENT_TYPE=claude for synthesis-heavy\n"
+        f"    work. Use this field to route specific task categories to their\n"
+        f"    strongest backend. Multi-agent routing per\n"
+        f"    openspec/change-proposals/multi-agent-routing.md.\n\n"
+        f"    Set `agent_type: codex` + `model: gpt-5.5` for FORMULAIC CODE:\n"
+        f"      - WOPR-games-gallery cartridges (Sudoku, Lights Out,\n"
+        f"        N-Queens, Connect Four, Hex, Slitherlink, Hashi, etc.)\n"
+        f"      - New verifier implementations (constraint encoding follows\n"
+        f"        well-known patterns: Z3, SAT, graph coloring, etc.)\n"
+        f"      - Test scaffolding (after Claude designs the module, use\n"
+        f"        Codex to generate the comprehensive test suite)\n"
+        f"      - PyO3 / Rust binding boilerplate\n"
+        f"      - Sampler / MCMC implementations (well-documented Bayesian)\n"
+        f"      - Dataset generation pipelines (FoVer expansion, Z3 labeling)\n\n"
+        f"    Set `agent_type: gemini` + `model: gemini-3.1-pro-preview` for\n"
+        f"    LONG-CONTEXT WORK (1M token window):\n"
+        f"      - Failure-ledger pattern detection across milestone history\n"
+        f"        (feed entire research-complete.yaml + conductor logs)\n"
+        f"      - Architecture coherence audits (Phase-3..7 chain + outline)\n"
+        f"      - Multi-paper literature synthesis (3-5 papers full text)\n"
+        f"      - Multimodal verification (FPGA bitstream / oscilloscope —\n"
+        f"        future)\n\n"
+        f"    Keep DEFAULT (Claude, no agent_type) for SYNTHESIS / JUDGMENT:\n"
+        f"      - Routine experiments (most tasks)\n"
+        f"      - Retros / milestone-N analysis\n"
+        f"      - Planning / roadmap design / hardware integration\n"
+        f"      - Position paper drafting / multi-file coordination\n\n"
+        f"    CAVEAT: Gemini Deep Think (the deeper extended-reasoning mode\n"
+        f"    used for Phase-3 → Phase-7 architectural derivation) is NOT in\n"
+        f"    the standard Gemini API as of 2026-04-29 — only via consumer\n"
+        f"    Gemini app or early-access program. agent_type=gemini routes\n"
+        f"    to standard Gemini API thinking, comparable to Claude extended\n"
+        f"    thinking but NOT Deep Think.\n\n"
+        f"    NOTE: When agent_type is set, C+E (Sonnet→Opus) escalation is\n"
+        f"    skipped for that task because the escalation logic is\n"
+        f"    Claude-specific (max-turns signal is a Claude-CLI output).\n\n"
         f"IMPORTANT:\n"
         f"- Do NOT modify research-roadmap.yaml\n"
         f"- Do NOT modify scripts/research_conductor.py\n"
@@ -2680,6 +2764,11 @@ def research_step(
     # Phase 3 / infrastructure work, Sonnet for routine scaffolding. Absence of
     # the field falls through to AGENT_MODEL (default Sonnet).
     task_model = task.get("model")
+    # Per-experiment agent_type override via YAML "agent_type:" field. Routes
+    # the task to a specific CLI backend (claude/codex/gemini/opencode)
+    # regardless of the conductor's startup AGENT_TYPE. Multi-agent routing
+    # per openspec/change-proposals/multi-agent-routing.md.
+    task_agent_type = task.get("agent_type")
     # Per-experiment max_turns hint via YAML "max_turns:" field. Default 50
     # mirrors the historical hard-coded value; simple experiments (CPU-only
     # retros, doc passes, configuration changes) can opt into a smaller budget
@@ -2698,6 +2787,7 @@ def research_step(
         timeout=1200,
         model_override=task_model,
         deliverable_path=task.get("deliverable"),
+        agent_type_override=task_agent_type,
     )
 
     # Tiered Opus escalation on max-turns failure (2026-04-28).
@@ -2709,9 +2799,16 @@ def research_step(
     # spiral where Preflight v29/v30 + FoVer Corpus v2 max-turns'd and
     # cascade-blocked 8+ downstream slots. Per-task opt-out via
     # `escalate_on_max_turns: false` in the YAML.
+    #
+    # NOTE on multi-agent: C+E escalation is Claude-specific (Sonnet→Opus).
+    # When agent_type=codex or =gemini, we skip the escalation — those
+    # backends have their own retry semantics and the "Reached max turns"
+    # signal is a Claude-CLI-specific output string. Future work: per-agent
+    # escalation policies (e.g. codex gpt-5.5 → gpt-5.5-extended-thinking).
     if (
         not success
         and task_model != "opus"
+        and (task_agent_type or AGENT_TYPE) == "claude"
         and "Reached max turns" in output
         and task.get("escalate_on_max_turns", True)
     ):
