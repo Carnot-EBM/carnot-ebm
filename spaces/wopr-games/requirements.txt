@@ -1,2 +1,5 @@
 gradio>=5.0,<6.0
 numpy>=1.26
+# gradio's oauth.py imports HfFolder, which was removed in huggingface_hub 0.27.
+# Pinning to <0.27 keeps that symbol available until gradio's import is updated.
+huggingface_hub>=0.20,<0.27
